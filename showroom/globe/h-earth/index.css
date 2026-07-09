@@ -1,56 +1,43 @@
 /*
   /showroom/globe/h-earth/index.css
   COMPLETE RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033K_033B_033I_LOCAL_COPY_ALIGNMENT_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_034B_PUBLIC_ROUTE_RECOVERY_SCENE_FIRST_CSS_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033J_CHILD_DETAIL_VISIBILITY_CALIBRATION_v1
-
-  Restores visual grammar from:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_030F_GROUND_LEVEL_LANDSCAPE_VISUAL_INTERPRETATION_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_033K_033B_033I_LOCAL_COPY_ALIGNMENT_v1
 
   Companion route shell:
   /showroom/globe/h-earth/index.html
-  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_033I_PUBLIC_SHELL_033B_033J_LOCAL_RECEIPT_COPY_ALIGNMENT_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_BIRTH_STEP_034A_PUBLIC_ROUTE_RECOVERY_SCENE_FIRST_SHELL_v1
 
-  Current public bootstrap:
+  Companion public bootstrap:
   /showroom/globe/h-earth/index.js
   H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_033B_STRUCTURAL_BASELINE_HANDOFF_AND_PUBLIC_SPLIT_ALIGNMENT_v1
 
-  Current diagnostic transition target:
-  /showroom/globe/h-earth/diagnostic/
-  H_EARTH_3D_DIAGNOSTIC_TRANSITION_001_STRUCTURAL_PIPELINE_BASELINE_TO_VISUAL_COMPOSITION_v1
+  Purpose:
+  Recover the public route as a functional scene-first page.
 
-  Current renderer / render ports:
-  /showroom/globe/h-earth/renderer.js
-  H_EARTH_3D_RENDERER_FILE_BIRTH_STEP_032E_GEOMETRY_032D_ORGANIC_VARIATION_SYNC_v1
+  034B correction:
+  - The renderer stage is renderer-only space.
+  - Public HUD/status/action controls are normal document flow above the stage.
+  - Selected-surface panel is normal document flow below the stage.
+  - Developer receipt drawer stays collapsed below public content.
+  - Receipt copy controls remain local same-page copy controls.
+  - Prior absolute overlay assumptions for selected target card are removed.
+  - No new renderer visual rescue pass is attempted here.
 
-  /showroom/globe/h-earth/render/geometry.js
-  H_EARTH_3D_RENDER_GEOMETRY_PORT_FILE_BIRTH_STEP_032D_ORGANIC_LANDSCAPE_CHILD_VARIATION_v1
+  Fix target:
+  PUBLIC ROUTE SHELL COMPOSITION
 
-  Live receipt basis:
-  The same-origin public renderer receipt handoff proves the public route mounted
-  172 DOM/CSS3D candidate nodes from 12 composed source descriptors, with 11
-  parent descriptor nodes and 161 geometry child nodes. Renderer 032E and
-  geometry 032D child variation are current. Geometry expansion applied.
-  Organic class emission reached 172 nodes. Organic variation ready count is
-  172. Warning and failure codes are empty.
+  Not fixed by this file:
+  Renderer visual adequacy.
+  Scene realism.
+  Geometry distribution.
+  Visual-composition diagnosis.
+  Diagnostic transition implementation.
 
-  033K correction:
-  Preserves the 033J visual calibration as the last public CSS visual attempt.
-  Aligns CSS metadata with the 033B public bootstrap and 033I public shell.
-  Adds local receipt copy-control styling for same-page receipt copy buttons.
-  Does not attempt another scene visual fix. Visual-composition diagnosis now
-  belongs to the diagnostic transition track.
-
-  Scope:
+  Boundary:
   CSS only.
-  This file styles shell, renderer mount, visible candidate descriptors,
-  public controls, compact public diagnostic drawer, local receipt copy controls,
-  renderer-owned candidate nodes, organic child detail interpretation, and the
-  preserved 033J visibility calibration.
-
-  Boundaries:
   No WebGL activation.
   No canvas activation.
   No SVG activation.
@@ -75,12 +62,10 @@
 :root {
   color-scheme: dark;
 
-  --h-earth-bg-deep: #061018;
   --h-earth-bg-page: #02060d;
   --h-earth-bg-panel: rgba(7, 17, 25, 0.82);
   --h-earth-bg-panel-soft: rgba(7, 17, 25, 0.62);
   --h-earth-bg-panel-strong: rgba(7, 17, 25, 0.94);
-  --h-earth-bg-glass: rgba(5, 13, 20, 0.68);
 
   --h-earth-border: rgba(221, 234, 239, 0.18);
   --h-earth-border-strong: rgba(221, 234, 239, 0.34);
@@ -96,8 +81,8 @@
   --h-earth-error: #ffb0a3;
 
   --h-earth-stage-width: min(100%, 1320px);
-  --h-earth-stage-height: clamp(700px, 80vh, 940px);
-  --h-earth-mobile-stage-height: clamp(560px, 76svh, 760px);
+  --h-earth-stage-height: clamp(620px, 74vh, 900px);
+  --h-earth-mobile-stage-height: clamp(460px, 62svh, 680px);
 
   --h-earth-radius-xl: 34px;
   --h-earth-radius-lg: 26px;
@@ -106,19 +91,12 @@
 
   --h-earth-shadow-stage: 0 34px 94px rgba(0, 0, 0, 0.50);
   --h-earth-shadow-panel: 0 18px 42px rgba(0, 0, 0, 0.28);
-  --h-earth-shadow-overlay: 0 20px 54px rgba(0, 0, 0, 0.36);
 
   --h-earth-render-band-wide: min(104vw, 1280px);
   --h-earth-render-band-medium: min(92vw, 1040px);
-  --h-earth-render-band-narrow: min(72vw, 780px);
   --h-earth-render-detail-size: clamp(18px, 3.2vw, 42px);
   --h-earth-render-rock-size: clamp(34px, 6vw, 96px);
   --h-earth-render-anchor-size: clamp(18px, 3vw, 32px);
-
-  --h-earth-render-width: 48px;
-  --h-earth-render-height: 24px;
-  --h-earth-render-depth: 1px;
-  --h-earth-render-depth-scale: 1;
 
   --h-earth-wetSand-base: #5f5146;
   --h-earth-drySand-base: #b79a71;
@@ -132,19 +110,6 @@
   --h-earth-manorContext-base: #6c5d4a;
   --h-earth-distantRock-base: #49545a;
   --h-earth-inspectionAnchor-base: #f4e7b6;
-
-  --h-earth-wet-sand-base: var(--h-earth-wetSand-base);
-  --h-earth-dry-sand-base: var(--h-earth-drySand-base);
-  --h-earth-foam-base-current: var(--h-earth-foam-base);
-  --h-earth-tide-pool-base: var(--h-earth-tidePool-base);
-  --h-earth-stone-base-current: var(--h-earth-stone-base);
-  --h-earth-jagged-rock-base: var(--h-earth-jaggedRock-base);
-  --h-earth-water-base-current: var(--h-earth-water-base);
-  --h-earth-nearshore-wave-base: var(--h-earth-nearshoreWave-base);
-  --h-earth-air-haze-base: var(--h-earth-airHaze-base);
-  --h-earth-manor-context-base: var(--h-earth-manorContext-base);
-  --h-earth-distant-rock-base: var(--h-earth-distantRock-base);
-  --h-earth-inspection-anchor-base: var(--h-earth-inspectionAnchor-base);
 }
 
 * {
@@ -188,7 +153,7 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.12;
+  opacity: 0.10;
   background:
     radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.11) 0 1px, transparent 1.6px),
     radial-gradient(circle at 72% 22%, rgba(255, 255, 255, 0.10) 0 1px, transparent 1.7px);
@@ -247,7 +212,7 @@ summary:focus-visible,
   margin: 0 auto;
 }
 
-/* Public route header */
+/* Public header */
 
 .h-earth-3d-public-header {
   display: grid;
@@ -342,17 +307,15 @@ summary:focus-visible,
 /* Shared panels */
 
 .h-earth-3d-arrival,
+.h-earth-3d-public-control-strip,
 .h-earth-3d-readout-card,
 .h-earth-3d-target-drawer,
 .h-earth-3d-developer-drawer,
-.h-earth-3d-spatial-inspector,
 .h-earth-3d-panel,
-.h-earth-3d-copy-toolbar,
 .h-earth-3d-claim-boundary,
-.h-earth-3d-spatial-diagnosis-card,
 .h-earth-3d-arrival-note,
 .h-earth-3d-hud-panel,
-.h-earth-3d-selected-target-card {
+.h-earth-3d-selected-target-panel {
   border: 1px solid var(--h-earth-border);
   border-radius: var(--h-earth-radius-md);
   background:
@@ -364,7 +327,7 @@ summary:focus-visible,
   backdrop-filter: blur(16px);
 }
 
-/* Public arrival */
+/* Arrival */
 
 .h-earth-3d-arrival {
   display: grid;
@@ -443,7 +406,69 @@ summary:focus-visible,
   line-height: 1.45;
 }
 
-/* Scene route */
+/* Scene-first public controls outside stage */
+
+.h-earth-3d-public-control-strip {
+  padding: clamp(0.75rem, 1.8vw, 1rem);
+}
+
+.h-earth-3d-public-control-strip .h-earth-3d-hud {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.26fr);
+  gap: 0.8rem;
+  align-items: stretch;
+}
+
+.h-earth-3d-hud-panel {
+  display: grid;
+  align-content: center;
+  gap: 0.48rem;
+  padding: 0.8rem;
+  background: rgba(7, 16, 25, 0.64);
+  box-shadow: none;
+}
+
+.h-earth-3d-panel-title {
+  margin: 0;
+  color: var(--h-earth-text);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.h-earth-3d-status {
+  min-height: 42px;
+  display: grid;
+  place-items: center start;
+  padding: 9px 11px;
+  border: 1px solid var(--h-earth-border);
+  border-radius: var(--h-earth-radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--h-earth-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  overflow-wrap: anywhere;
+}
+
+.h-earth-3d-action-button,
+.h-earth-3d-copy-button,
+.h-earth-3d-inline-copy-button,
+.h-earth-3d-target-button {
+  border: 1px solid rgba(149, 213, 232, 0.38);
+  border-radius: var(--h-earth-radius-sm);
+  background:
+    linear-gradient(180deg, rgba(149, 213, 232, 0.20), rgba(149, 213, 232, 0.08));
+  color: var(--h-earth-text);
+  font-weight: 800;
+}
+
+.h-earth-3d-action-button {
+  width: 100%;
+  min-height: 42px;
+}
+
+/* Renderer-only stage */
 
 .h-earth-3d-world-shell {
   display: grid;
@@ -551,83 +576,20 @@ summary:focus-visible,
   display: none;
 }
 
-/* Scene overlay */
+/* Selected-surface panel outside stage */
 
-.h-earth-3d-world-overlay {
-  position: absolute;
-  z-index: 40;
-  inset: 18px;
-  pointer-events: none;
-}
-
-.h-earth-3d-primary-hud {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: min(360px, 100%);
-  pointer-events: auto;
-}
-
-.h-earth-3d-hud {
+.h-earth-3d-selected-target-panel {
+  position: static;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
-}
-
-.h-earth-3d-hud-panel,
-.h-earth-3d-selected-target-card {
-  padding: 12px;
-  background: rgba(7, 16, 25, 0.70);
-  box-shadow: var(--h-earth-shadow-overlay);
-}
-
-.h-earth-3d-panel-title {
-  margin: 0 0 8px;
-  color: var(--h-earth-text);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.h-earth-3d-status {
-  min-height: 38px;
-  display: grid;
-  place-items: center start;
-  padding: 9px 11px;
-  border: 1px solid var(--h-earth-border);
-  border-radius: var(--h-earth-radius-sm);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--h-earth-accent);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  overflow-wrap: anywhere;
-}
-
-.h-earth-3d-action-button,
-.h-earth-3d-copy-button,
-.h-earth-3d-inline-copy-button,
-.h-earth-3d-target-button {
-  border: 1px solid rgba(149, 213, 232, 0.38);
-  border-radius: var(--h-earth-radius-sm);
-  background:
-    linear-gradient(180deg, rgba(149, 213, 232, 0.20), rgba(149, 213, 232, 0.08));
-  color: var(--h-earth-text);
-  font-weight: 800;
-}
-
-.h-earth-3d-action-button {
-  width: 100%;
-  min-height: 46px;
-}
-
-.h-earth-3d-selected-target-card {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: min(390px, 100%);
-  pointer-events: auto;
+  grid-template-columns: minmax(14rem, 0.34fr) minmax(0, 1fr);
+  gap: 0.95rem;
+  align-items: center;
+  padding: clamp(0.95rem, 2vw, 1.25rem);
   background: rgba(4, 12, 18, 0.76);
+}
+
+.h-earth-3d-selected-target-panel .h-earth-3d-card-kicker {
+  grid-column: 1 / -1;
 }
 
 .h-earth-3d-card-title {
@@ -640,14 +602,14 @@ summary:focus-visible,
 
 .h-earth-3d-selected-target-facts {
   display: grid;
-  gap: 7px;
-  margin: 10px 0 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 0;
 }
 
 .h-earth-3d-selected-target-facts div {
   display: grid;
-  grid-template-columns: minmax(82px, 0.34fr) 1fr;
-  gap: 8px;
+  gap: 0.24rem;
   min-width: 0;
 }
 
@@ -661,8 +623,8 @@ summary:focus-visible,
 .h-earth-3d-selected-target-facts dd {
   margin: 0;
   color: var(--h-earth-text-muted);
-  font-size: 0.74rem;
-  line-height: 1.25;
+  font-size: 0.78rem;
+  line-height: 1.3;
   overflow-wrap: anywhere;
 }
 
@@ -744,7 +706,7 @@ summary:focus-visible,
   line-height: 1.4;
 }
 
-/* Drawers and compact public diagnostics */
+/* Drawers and compact public receipts */
 
 .h-earth-3d-target-drawer,
 .h-earth-3d-developer-drawer {
@@ -752,8 +714,7 @@ summary:focus-visible,
 }
 
 .h-earth-3d-target-drawer-toggle,
-.h-earth-3d-developer-drawer-toggle,
-.h-earth-3d-spatial-inspector-toggle {
+.h-earth-3d-developer-drawer-toggle {
   min-height: 50px;
   display: flex;
   align-items: center;
@@ -770,14 +731,12 @@ summary:focus-visible,
 }
 
 .h-earth-3d-target-drawer-toggle::-webkit-details-marker,
-.h-earth-3d-developer-drawer-toggle::-webkit-details-marker,
-.h-earth-3d-spatial-inspector-toggle::-webkit-details-marker {
+.h-earth-3d-developer-drawer-toggle::-webkit-details-marker {
   display: none;
 }
 
 .h-earth-3d-target-drawer-toggle::after,
-.h-earth-3d-developer-drawer-toggle::after,
-.h-earth-3d-spatial-inspector-toggle::after {
+.h-earth-3d-developer-drawer-toggle::after {
   content: "+";
   display: inline-grid;
   place-items: center;
@@ -791,8 +750,7 @@ summary:focus-visible,
 }
 
 .h-earth-3d-target-drawer[open] > .h-earth-3d-target-drawer-toggle::after,
-.h-earth-3d-developer-drawer[open] > .h-earth-3d-developer-drawer-toggle::after,
-.h-earth-3d-spatial-inspector[open] > .h-earth-3d-spatial-inspector-toggle::after {
+.h-earth-3d-developer-drawer[open] > .h-earth-3d-developer-drawer-toggle::after {
   content: "–";
 }
 
@@ -865,9 +823,6 @@ summary:focus-visible,
   font-size: 0.72rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-button.h-earth-3d-inline-copy-button {
   appearance: none;
 }
 
@@ -1059,7 +1014,7 @@ button.h-earth-3d-inline-copy-button {
   --h-earth-render-class-surface-confirmed: 1;
 }
 
-/* Landscape-grade descriptor interpretation */
+/* Descriptor and geometry visual interpretation preserved from 033J */
 
 .h-earth-landscape-ground-plane,
 .h-earth-landscape-ground-wet-sand,
@@ -1085,8 +1040,6 @@ button.h-earth-3d-inline-copy-button {
 .h-earth-landscape-generic-candidate {
   backface-visibility: visible;
 }
-
-/* Renderer descriptor scale rules */
 
 .h-earth-layer-water-surface-plane
   .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
@@ -1198,8 +1151,6 @@ button.h-earth-3d-inline-copy-button {
   border-radius: 999px;
 }
 
-/* Expanded geometry children */
-
 .h-earth-render-candidate-geometry-only,
 .h-earth-render-object[class*="h-earth-geometry-node-"],
 .h-earth-render-object[class*="h-earth-geometry-"] {
@@ -1212,175 +1163,6 @@ button.h-earth-3d-inline-copy-button {
   border-radius: 999px;
   transform-style: preserve-3d;
 }
-
-.h-earth-render-candidate-geometry-only.h-earth-material-wet-sand,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-wet-sand,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-wet-sand {
-  width: clamp(14px, 3vw, 46px);
-  height: clamp(5px, 1.2vw, 16px);
-  border-radius: 48% 52% 44% 56%;
-  opacity: 0.58;
-  filter: saturate(1.04) contrast(1.04);
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-dry-sand,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-dry-sand,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-dry-sand {
-  width: clamp(16px, 3.4vw, 54px);
-  height: clamp(5px, 1.25vw, 18px);
-  border-radius: 50% 48% 56% 42%;
-  opacity: 0.58;
-  filter: saturate(1.02) contrast(1.02);
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-water,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-water,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-water {
-  width: clamp(24px, 6vw, 92px);
-  height: clamp(5px, 1.7vw, 24px);
-  border-radius: 999px;
-  opacity: 0.46;
-  filter: saturate(1.05) blur(0.15px);
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-nearshore-wave,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-nearshore-wave,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-nearshore-wave {
-  width: clamp(28px, 7vw, 120px);
-  height: clamp(4px, 1vw, 14px);
-  border-radius: 999px;
-  opacity: 0.72;
-  filter: blur(0.18px) brightness(1.04);
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-foam,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-foam,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-foam {
-  width: clamp(18px, 5vw, 92px);
-  height: clamp(3px, 0.8vw, 10px);
-  border-radius: 999px;
-  opacity: 0.82;
-  filter: blur(0.15px) brightness(1.08);
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-air-haze,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-air-haze,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-air-haze {
-  width: clamp(42px, 12vw, 190px);
-  height: clamp(18px, 5vw, 72px);
-  border-radius: 999px;
-  opacity: 0.18;
-  filter: blur(2px);
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-tide-pool,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-tide-pool,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-tide-pool {
-  width: clamp(18px, 4.8vw, 74px);
-  height: clamp(7px, 2vw, 28px);
-  border-radius: 56% 44% 58% 42%;
-  opacity: 0.88;
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-stone,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-stone,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-stone {
-  width: clamp(8px, 2.4vw, 34px);
-  height: clamp(6px, 1.8vw, 26px);
-  border-radius: 52% 48% 46% 54%;
-  opacity: 0.94;
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-jagged-rock,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-jagged-rock,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-jagged-rock {
-  width: clamp(14px, 4.2vw, 68px);
-  height: clamp(12px, 3.4vw, 54px);
-  border-radius: 28% 58% 34% 44%;
-  clip-path: polygon(8% 86%, 20% 36%, 34% 62%, 48% 18%, 62% 58%, 78% 28%, 94% 86%);
-  opacity: 0.96;
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-distant-rock,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-distant-rock,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-distant-rock {
-  width: clamp(18px, 5vw, 82px);
-  height: clamp(10px, 3vw, 44px);
-  border-radius: 34% 48% 24% 42%;
-  clip-path: polygon(0 88%, 12% 52%, 28% 66%, 42% 34%, 58% 72%, 72% 42%, 100% 88%, 100% 100%, 0 100%);
-  opacity: 0.72;
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-manor-context,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-manor-context,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-manor-context {
-  width: clamp(18px, 4.2vw, 62px);
-  height: clamp(20px, 5vw, 72px);
-  border-radius: 7px 7px 3px 3px;
-  opacity: 0.82;
-}
-
-.h-earth-render-candidate-geometry-only.h-earth-material-inspection-anchor,
-.h-earth-render-object[class*="h-earth-geometry-node-"].h-earth-material-inspection-anchor,
-.h-earth-render-object[class*="h-earth-geometry-"].h-earth-material-inspection-anchor {
-  width: clamp(12px, 3vw, 26px);
-  height: clamp(12px, 3vw, 26px);
-  border-radius: 999px;
-  opacity: 0.72;
-}
-
-/* Layer classes */
-
-.h-earth-layer-distant-world-context {
-  z-index: 10;
-}
-
-.h-earth-layer-air-haze-light {
-  z-index: 20;
-  opacity: 0.76;
-}
-
-.h-earth-layer-water-surface-plane {
-  z-index: 30;
-}
-
-.h-earth-layer-nearshore-wave-band {
-  z-index: 40;
-}
-
-.h-earth-layer-shoreline-foam-line {
-  z-index: 50;
-}
-
-.h-earth-layer-manor-exterior-context {
-  z-index: 60;
-}
-
-.h-earth-layer-dry-sand-transition {
-  z-index: 70;
-}
-
-.h-earth-layer-foreground-wet-sand {
-  z-index: 80;
-}
-
-.h-earth-layer-tide-pools-stones-rocks-detail {
-  z-index: 90;
-}
-
-.h-earth-layer-inspection-anchor-overlay {
-  z-index: 100;
-}
-
-.h-earth-layer-unclassified-render {
-  z-index: 999;
-}
-
-.h-earth-layer-member {
-  isolation: isolate;
-}
-
-/* Material classes. Candidate tokens only. Not final material validation. */
 
 .h-earth-material-wet-sand {
   background:
@@ -1508,7 +1290,58 @@ button.h-earth-3d-inline-copy-button {
   color: var(--h-earth-error);
 }
 
-/* Primitive interpretation compatibility */
+/* Layer classes */
+
+.h-earth-layer-distant-world-context {
+  z-index: 10;
+}
+
+.h-earth-layer-air-haze-light {
+  z-index: 20;
+  opacity: 0.76;
+}
+
+.h-earth-layer-water-surface-plane {
+  z-index: 40;
+}
+
+.h-earth-layer-nearshore-wave-band {
+  z-index: 80;
+}
+
+.h-earth-layer-shoreline-foam-line {
+  z-index: 120;
+}
+
+.h-earth-layer-manor-exterior-context {
+  z-index: 95;
+}
+
+.h-earth-layer-dry-sand-transition {
+  z-index: 70;
+}
+
+.h-earth-layer-foreground-wet-sand {
+  z-index: 100;
+}
+
+.h-earth-layer-tide-pools-stones-rocks-detail {
+  z-index: 140;
+}
+
+.h-earth-layer-inspection-anchor-overlay {
+  z-index: 160;
+}
+
+.h-earth-layer-unclassified-render {
+  z-index: 999;
+}
+
+.h-earth-layer-member {
+  isolation: isolate;
+}
+
+/* Primitive/context classes */
 
 .h-earth-primitive-contoured-terrain-band,
 .h-earth-primitive-terrain-band {
@@ -1549,8 +1382,6 @@ button.h-earth-3d-inline-copy-button {
 .h-earth-primitive-inspection-anchor {
   mix-blend-mode: screen;
 }
-
-/* Context classes */
 
 .h-earth-context-primary-inspection {
   outline: 1px solid rgba(216, 189, 142, 0.32);
@@ -1647,22 +1478,18 @@ button.h-earth-3d-inline-copy-button {
   width: clamp(22px, 5.4vw, 86px);
   height: clamp(4px, 1vw, 12px);
   border-radius: 999px;
-  opacity: 0.44;
 }
 
 [data-h-earth-organic-placement-role="wet-sand-moisture"] {
   width: clamp(16px, 4vw, 62px);
   height: clamp(5px, 1.2vw, 16px);
   border-radius: 62% 38% 58% 42%;
-  opacity: 0.38;
-  filter: blur(0.2px) saturate(1.08);
 }
 
 [data-h-earth-organic-placement-role="wet-sand-sheen"] {
   width: clamp(28px, 7vw, 118px);
   height: clamp(3px, 0.7vw, 8px);
   border-radius: 999px;
-  opacity: 0.48;
   mix-blend-mode: screen;
 }
 
@@ -1672,7 +1499,6 @@ button.h-earth-3d-inline-copy-button {
   width: clamp(8px, 2.4vw, 38px);
   height: clamp(3px, 1vw, 12px);
   border-radius: 999px;
-  opacity: 0.58;
 }
 
 [data-h-earth-organic-placement-role="shoreline-edge"],
@@ -1680,16 +1506,12 @@ button.h-earth-3d-inline-copy-button {
   width: clamp(24px, 6vw, 108px);
   height: clamp(3px, 0.8vw, 10px);
   border-radius: 999px;
-  opacity: 0.82;
-  filter: blur(0.12px) brightness(1.08);
 }
 
 [data-h-earth-organic-placement-role="nearshore-ripple"] {
   width: clamp(32px, 8vw, 132px);
   height: clamp(3px, 0.85vw, 11px);
   border-radius: 999px;
-  opacity: 0.54;
-  filter: blur(0.18px);
 }
 
 [data-h-earth-organic-placement-role="water-depth"],
@@ -1697,8 +1519,6 @@ button.h-earth-3d-inline-copy-button {
   width: clamp(30px, 8vw, 140px);
   height: clamp(5px, 1.6vw, 22px);
   border-radius: 999px;
-  opacity: 0.38;
-  filter: blur(0.25px) saturate(1.08);
 }
 
 [data-h-earth-organic-placement-role="rock-member"] {
@@ -1706,14 +1526,12 @@ button.h-earth-3d-inline-copy-button {
   height: clamp(10px, 3vw, 46px);
   border-radius: 28% 58% 34% 44%;
   clip-path: polygon(8% 86%, 20% 36%, 34% 62%, 48% 18%, 62% 58%, 78% 28%, 94% 86%);
-  opacity: 0.96;
 }
 
 [data-h-earth-organic-placement-role="surface-scatter"] {
   width: clamp(5px, 1.8vw, 22px);
   height: clamp(4px, 1.4vw, 18px);
   border-radius: 52% 48% 46% 54%;
-  opacity: 0.82;
 }
 
 [data-h-earth-organic-placement-role="air-haze"],
@@ -1721,7 +1539,6 @@ button.h-earth-3d-inline-copy-button {
   width: clamp(48px, 14vw, 210px);
   height: clamp(18px, 5vw, 78px);
   border-radius: 999px;
-  opacity: 0.16;
   filter: blur(2.4px);
   mix-blend-mode: screen;
 }
@@ -1730,8 +1547,6 @@ button.h-earth-3d-inline-copy-button {
   width: clamp(18px, 5vw, 86px);
   height: clamp(10px, 3vw, 46px);
   border-radius: 34% 48% 24% 42%;
-  opacity: 0.58;
-  filter: saturate(0.74) blur(0.18px);
 }
 
 [data-h-earth-organic-placement-role="manor-body"],
@@ -1740,7 +1555,6 @@ button.h-earth-3d-inline-copy-button {
   width: clamp(12px, 3.8vw, 52px);
   height: clamp(14px, 4.2vw, 62px);
   border-radius: 6px 6px 2px 2px;
-  opacity: 0.78;
 }
 
 [data-h-earth-organic-placement-role="manor-roof"] {
@@ -1752,11 +1566,10 @@ button.h-earth-3d-inline-copy-button {
   width: clamp(12px, 3vw, 26px);
   height: clamp(12px, 3vw, 26px);
   border-radius: 999px;
-  opacity: 0.72;
   mix-blend-mode: screen;
 }
 
-/* 033J visibility calibration preserved */
+/* 033J visibility calibration preserved, not extended */
 
 .h-earth-render-descriptor-only,
 [class*="h-earth-parent-object-"] {
@@ -1807,43 +1620,13 @@ button.h-earth-3d-inline-copy-button {
   opacity: 0.9;
 }
 
-.h-earth-layer-water-surface-plane {
-  z-index: 40;
-}
-
-.h-earth-layer-nearshore-wave-band {
-  z-index: 80;
-}
-
-.h-earth-layer-shoreline-foam-line {
-  z-index: 120;
-}
-
-.h-earth-layer-manor-exterior-context {
-  z-index: 95;
-}
-
-.h-earth-layer-dry-sand-transition {
-  z-index: 70;
-}
-
-.h-earth-layer-foreground-wet-sand {
-  z-index: 100;
-}
-
-.h-earth-layer-tide-pools-stones-rocks-detail {
-  z-index: 140;
-}
-
-.h-earth-layer-inspection-anchor-overlay {
-  z-index: 160;
-}
-
 /* Responsive */
 
 @media (max-width: 1120px) {
   .h-earth-3d-public-header,
-  .h-earth-3d-arrival {
+  .h-earth-3d-arrival,
+  .h-earth-3d-public-control-strip .h-earth-3d-hud,
+  .h-earth-3d-selected-target-panel {
     grid-template-columns: 1fr;
   }
 
@@ -1856,11 +1639,7 @@ button.h-earth-3d-inline-copy-button {
   }
 
   .h-earth-3d-readout-facts,
-  .h-earth-3d-landscape-diagnosis,
-  .h-earth-3d-composition-readout,
-  .h-earth-3d-control-grid,
-  .h-earth-3d-receipt-stack,
-  .h-earth-3d-receipt-grid {
+  .h-earth-3d-selected-target-facts {
     grid-template-columns: 1fr;
   }
 }
@@ -1913,41 +1692,14 @@ button.h-earth-3d-inline-copy-button {
     display: none;
   }
 
-  .h-earth-3d-world-stage,
-  .h-earth-3d-stage {
-    min-height: var(--h-earth-mobile-stage-height);
-    max-height: 78svh;
-    border-radius: 20px;
-  }
-
-  .h-earth-3d-renderer-mount {
-    perspective: 860px;
-    perspective-origin: 50% 44%;
-  }
-
-  .h-earth-3d-world-overlay {
-    inset: 8px;
-  }
-
-  .h-earth-3d-primary-hud {
-    left: 0;
-    right: 0;
-    width: auto;
-  }
-
-  .h-earth-3d-hud {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px;
+  .h-earth-3d-public-control-strip {
+    padding: 0.65rem;
+    border-radius: 16px;
   }
 
   .h-earth-3d-hud-panel {
-    padding: 7px;
+    padding: 0.65rem;
     border-radius: 12px;
-    box-shadow: none;
-  }
-
-  .h-earth-3d-hud-panel .h-earth-3d-panel-title {
-    display: none;
   }
 
   .h-earth-3d-status {
@@ -1959,52 +1711,44 @@ button.h-earth-3d-inline-copy-button {
   }
 
   .h-earth-3d-action-button {
-    width: auto;
-    min-width: 128px;
-    min-height: 36px;
+    min-height: 38px;
     padding: 6px 10px;
     font-size: 0.82rem;
-    white-space: nowrap;
   }
 
-  .h-earth-3d-selected-target-card {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: auto;
-    padding: 8px 10px;
-    border-radius: 14px;
-    box-shadow: none;
+  .h-earth-3d-world-stage,
+  .h-earth-3d-stage {
+    min-height: var(--h-earth-mobile-stage-height);
+    max-height: none;
+    border-radius: 20px;
   }
 
-  .h-earth-3d-selected-target-card .h-earth-3d-card-kicker {
-    margin-bottom: 2px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    font-size: 0.56rem;
-  }
-
-  .h-earth-3d-selected-target-card .h-earth-3d-card-kicker::before {
-    display: none;
-  }
-
-  .h-earth-3d-selected-target-card .h-earth-3d-card-title {
-    font-size: 1rem;
-    line-height: 1.05;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .h-earth-3d-selected-target-facts {
-    display: none;
+  .h-earth-3d-renderer-mount {
+    perspective: 860px;
+    perspective-origin: 50% 44%;
   }
 
   .h-earth-3d-renderer-mount:empty::before {
     left: 10px;
-    bottom: 72px;
+    bottom: 12px;
     font-size: 0.62rem;
+  }
+
+  .h-earth-3d-selected-target-panel {
+    padding: 0.8rem;
+    border-radius: 16px;
+  }
+
+  .h-earth-3d-selected-target-panel .h-earth-3d-card-kicker {
+    margin-bottom: 0.35rem;
+  }
+
+  .h-earth-3d-selected-target-panel .h-earth-3d-card-title {
+    font-size: 1.08rem;
+  }
+
+  .h-earth-3d-selected-target-facts {
+    gap: 0.55rem;
   }
 
   .h-earth-3d-readout-card {
@@ -2044,8 +1788,7 @@ button.h-earth-3d-inline-copy-button {
   }
 
   .h-earth-3d-target-drawer-toggle,
-  .h-earth-3d-developer-drawer-toggle,
-  .h-earth-3d-spatial-inspector-toggle {
+  .h-earth-3d-developer-drawer-toggle {
     min-height: 42px;
     padding: 10px 12px;
     font-size: 0.70rem;
@@ -2130,17 +1873,8 @@ button.h-earth-3d-inline-copy-button {
 
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
-    min-height: 72svh;
-    max-height: 76svh;
+    min-height: 58svh;
     border-radius: 18px;
-  }
-
-  .h-earth-3d-hud {
-    grid-template-columns: 1fr;
-  }
-
-  .h-earth-3d-action-button {
-    width: 100%;
   }
 
   .h-earth-3d-readout-facts div {
@@ -2152,8 +1886,7 @@ button.h-earth-3d-inline-copy-button {
 @media (max-height: 700px) and (max-width: 760px) {
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
-    min-height: 70svh;
-    max-height: 74svh;
+    min-height: 56svh;
   }
 }
 

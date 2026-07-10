@@ -147,42 +147,8 @@ function isFiniteNumber(value) {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
-function clampInteger(value, min, max) {
-  const numericValue = Number(value);
-
-  if (!Number.isFinite(numericValue)) {
-    return null;
-  }
-
-  return Math.max(min, Math.min(max, Math.floor(numericValue)));
-}
-
 function padLatticeIndex(value) {
   return String(value).padStart(2, '0');
-}
-
-export function createHEarthRegionCellId(latticeX, latticeZ) {
-  const normalizedLatticeX = clampInteger(
-    latticeX,
-    H_EARTH_REGION_LATTICE_DIMENSIONS.latticeXMin,
-    H_EARTH_REGION_LATTICE_DIMENSIONS.latticeXMax
-  );
-
-  const normalizedLatticeZ = clampInteger(
-    latticeZ,
-    H_EARTH_REGION_LATTICE_DIMENSIONS.latticeZMin,
-    H_EARTH_REGION_LATTICE_DIMENSIONS.latticeZMax
-  );
-
-  if (normalizedLatticeX === null || normalizedLatticeZ === null) {
-    return null;
-  }
-
-  return (
-    `H_EARTH_REGION_CELL_` +
-    `X${padLatticeIndex(normalizedLatticeX)}_` +
-    `Z${padLatticeIndex(normalizedLatticeZ)}`
-  );
 }
 
 export function isHEarthLatticeIndexValid(latticeX, latticeZ) {
@@ -193,6 +159,18 @@ export function isHEarthLatticeIndexValid(latticeX, latticeZ) {
     latticeX <= H_EARTH_REGION_LATTICE_DIMENSIONS.latticeXMax &&
     latticeZ >= H_EARTH_REGION_LATTICE_DIMENSIONS.latticeZMin &&
     latticeZ <= H_EARTH_REGION_LATTICE_DIMENSIONS.latticeZMax
+  );
+}
+
+export function createHEarthRegionCellId(latticeX, latticeZ) {
+  if (!isHEarthLatticeIndexValid(latticeX, latticeZ)) {
+    return null;
+  }
+
+  return (
+    `H_EARTH_REGION_CELL_` +
+    `X${padLatticeIndex(latticeX)}_` +
+    `Z${padLatticeIndex(latticeZ)}`
   );
 }
 
@@ -503,8 +481,10 @@ export function isHEarthCoordinateInsideCell(
   }
 
   const regionBounds = H_EARTH_REGION_SPACE.bounds;
+
   const isTerminalXCell =
     cell.latticeX === H_EARTH_REGION_LATTICE_DIMENSIONS.latticeXMax;
+
   const isTerminalZCell =
     cell.latticeZ === H_EARTH_REGION_LATTICE_DIMENSIONS.latticeZMax;
 
@@ -548,22 +528,22 @@ export function getHEarthRegionCellStructuralAdjacency(cellOrCellId) {
     return null;
   }
 
-  const west = getHEarthRegionCellByLatticeIndex(
+  const negativeXCell = getHEarthRegionCellByLatticeIndex(
     cell.latticeX - 1,
     cell.latticeZ
   );
 
-  const east = getHEarthRegionCellByLatticeIndex(
+  const positiveXCell = getHEarthRegionCellByLatticeIndex(
     cell.latticeX + 1,
     cell.latticeZ
   );
 
-  const south = getHEarthRegionCellByLatticeIndex(
+  const negativeZCell = getHEarthRegionCellByLatticeIndex(
     cell.latticeX,
     cell.latticeZ - 1
   );
 
-  const north = getHEarthRegionCellByLatticeIndex(
+  const positiveZCell = getHEarthRegionCellByLatticeIndex(
     cell.latticeX,
     cell.latticeZ + 1
   );
@@ -571,13 +551,18 @@ export function getHEarthRegionCellStructuralAdjacency(cellOrCellId) {
   return Object.freeze({
     cellId: cell.cellId,
 
-    westCellId: west?.cellId || null,
-    eastCellId: east?.cellId || null,
-    southCellId: south?.cellId || null,
-    northCellId: north?.cellId || null,
+    negativeXCellId: negativeXCell?.cellId || null,
+    positiveXCellId: positiveXCell?.cellId || null,
+    negativeZCellId: negativeZCell?.cellId || null,
+    positiveZCellId: positiveZCell?.cellId || null,
 
     adjacentCellIds: Object.freeze(
-      [west, east, south, north]
+      [
+        negativeXCell,
+        positiveXCell,
+        negativeZCell,
+        positiveZCell
+      ]
         .filter(Boolean)
         .map((adjacentCell) => adjacentCell.cellId)
     ),
@@ -651,15 +636,22 @@ export function getHEarthRegionLatticeReceipt() {
 
     columnsX: H_EARTH_REGION_LATTICE_DIMENSIONS.columnsX,
     rowsZ: H_EARTH_REGION_LATTICE_DIMENSIONS.rowsZ,
+
     expectedCellCount:
       H_EARTH_REGION_LATTICE_DIMENSIONS.totalCells,
+
     actualCellCount:
       H_EARTH_REGION_LATTICE_CELLS.length,
 
     cellWidthX:
       H_EARTH_REGION_LATTICE_DIMENSIONS.cellWidthX,
+
     cellDepthZ:
       H_EARTH_REGION_LATTICE_DIMENSIONS.cellDepthZ,
+
+    cellCountMatchesExpected:
+      H_EARTH_REGION_LATTICE_CELLS.length ===
+      H_EARTH_REGION_LATTICE_DIMENSIONS.totalCells,
 
     coordinateLookupDefined:
       typeof getHEarthRegionCellAtCoordinate === 'function',
@@ -669,6 +661,11 @@ export function getHEarthRegionLatticeReceipt() {
 
     structuralAdjacencyDefined:
       typeof getHEarthRegionCellStructuralAdjacency === 'function',
+
+    invalidIndexesRejectedByCellIdFactory:
+      createHEarthRegionCellId(99, 99) === null,
+
+    structuralAdjacencyUsesAxisLanguage: true,
 
     createsRenderer: false,
     createsCamera: false,

@@ -1,62 +1,57 @@
 /**
  * /h-earth-3d/readouts/ground-condition-read.js
  * COMPLETE RENEWED FILE
+ * H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1
+ *
+ * Renews:
  * H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_031F_OBJECT_READOUT_BINDING_v1
  *
- * Based on Drive scratch baseline:
- * File: readouts/ground-condition-read.js
- *
- * Prior status:
- * - Drive scratch raw-file construction only.
- * - Bounded environmental ground condition read only.
- * - No runtime result.
- * - No renderer result.
- * - No visual-pass claim.
- * - No validation claim.
- * - No open-world scan.
- * - No survival simulation.
- * - No swimming.
- * - No fluid simulation.
- * - No production readiness.
- * - No matrix collapse.
- *
- * Renewal room:
- * ROOM 5 / READOUT PREPARATION
- *
- * Upstream source authority:
+ * Consumes:
  * /h-earth-3d/h-earth.matrix.js
- * H_EARTH_SOURCE_MATRIX_FILE_RENEWAL_STEP_031A_SCENE_SCOPED_LATTICE_AUTHORITY_v1
+ * H_EARTH_MATRIX_FILE_RENEWAL_STEP_009D_REJECTED_BINDING_CLASSIFICATION_GUARD_v1
  *
- * Upstream cell binding:
  * /h-earth-3d/cells/ground-cell-001.js
- * H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_031B_CELL_TO_LATTICE_BINDING_v1
+ * H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_011A_PATH3_DOMAIN_BINDING_CONSUMER_v1
  *
- * Upstream zone binding:
  * /h-earth-3d/zones/ground-cell-001.zones.js
- * H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1
+ * H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1
  *
- * Upstream object binding:
  * /h-earth-3d/objects/ground-cell-001.objects.js
- * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1
+ * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1
  *
- * Upstream action binding:
  * /h-earth-3d/actions/inspect-ground.js
- * H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_031E_OBJECT_ANCHOR_BINDING_v1
+ * H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v1
  *
  * Purpose:
- * Renew the existing Drive scratch Ground Condition Read into an object-bound,
- * action-output-aware, descriptor-only readout file for
- * H_EARTH_GROUND_CELL_001.
+ * Renew the existing Drive scratch Ground Condition Read from the retired
+ * lattice-zone-object-action readout model into a Path 3-bound object/action
+ * readout descriptor for H_EARTH_GROUND_CELL_001.
+ *
+ * Canonical upstream relation:
+ * H_EARTH_REGION_CELL_X07_Z08
+ *   -> H_EARTH_GROUND_CELL_001
  *
  * Room 5 authority:
+ * Room 5 does not create Path 3 authority.
  * Room 5 does not create matrix authority.
  * Room 5 does not create cell authority.
  * Room 5 does not create zone authority.
  * Room 5 does not create object authority.
  * Room 5 does not create action authority.
  * Room 5 does not execute Inspect Ground.
- * Room 5 binds Ground Condition Read to the renewed Inspect Ground action
+ * Room 5 binds Ground Condition Read to the Step 011D Inspect Ground action
  * output surface and prepares the lawful Room 6 receipt handoff.
+ *
+ * Compatibility:
+ * The old lattice/address readout model remains available only as retired
+ * compatibility metadata through upstream compatibility surfaces. It does not
+ * create spatial authority, traversal authority, renderer authority, runtime
+ * execution, validation evidence, production readiness, or visual-pass proof.
+ *
+ * Fail-closed action descriptor rule:
+ * This file does not accept externally supplied actionDescriptor objects.
+ * Ground Condition Read always rebuilds the Step 011D Inspect Ground action
+ * descriptor through buildHEarthInspectGroundActionDescriptor().
  *
  * Boundary:
  * This file defines readout structure only.
@@ -72,26 +67,32 @@
 
 import {
   H_EARTH_MATRIX_SEPARATION,
+  H_EARTH_MATRIX_PATH3_DOMAIN_BINDING,
+  H_EARTH_MATRIX_PATH3_BINDING_ADMISSION,
   H_EARTH_SOURCE_LATTICE_AUTHORITY,
   H_EARTH_SOURCE_LATTICE_ADDRESS_FIELD_SCHEMA,
   H_EARTH_GROUND_CELL_001_LATTICE_SCOPE,
   getHEarthMatrixReceipt,
   getHEarthSourceLatticeAuthority,
   getHEarthGroundCell001LatticeScope,
-  getHEarthSourceLatticeAddressFieldSchema
+  getHEarthSourceLatticeAddressFieldSchema,
+  getHEarthMatrixPath3DomainBinding,
+  getHEarthMatrixPath3BindingAdmission
 } from '../h-earth.matrix.js';
 
 import {
   H_EARTH_GROUND_CELL_001,
   H_EARTH_GROUND_CELL_001_CONTRACT,
   H_EARTH_GROUND_CELL_001_SCENE_BINDING,
+  H_EARTH_GROUND_CELL_001_PATH3_BINDING,
   H_EARTH_GROUND_CELL_001_LATTICE_BINDING,
   H_EARTH_GROUND_CELL_001_ADDRESS_FIELD_SUMMARY,
   H_EARTH_GROUND_CELL_001_SPAWN_ANCHOR_SCOPE,
-  H_EARTH_GROUND_CELL_001_BOUNDARY_FLAGS,
   H_EARTH_GROUND_CELL_001_RECEIPT,
   H_EARTH_ROOM_3_UNBLOCK_RECEIPT,
+  H_EARTH_GROUND_CELL_001_DOWNSTREAM_INTERFACE,
   getHEarthGroundCell001Receipt,
+  getHEarthGroundCell001Path3Binding,
   getHEarthGroundCell001LatticeBinding,
   getHEarthGroundCell001AddressFieldSummary,
   getHEarthRoom3UnblockReceipt
@@ -104,6 +105,7 @@ import {
   H_EARTH_GROUND_CELL_001_ZONES_BOUNDARY_FLAGS,
   H_EARTH_GROUND_CELL_001_ZONE_IDS,
   H_EARTH_GROUND_CELL_001_ZONE_MAPPING_MODEL,
+  H_EARTH_GROUND_CELL_001_ZONE_REGION_RULES,
   H_EARTH_GROUND_CELL_001_ZONE_ADDRESS_REGIONS,
   H_EARTH_GROUND_CELL_001_ZONE_BOUNDARY_ROLES,
   H_EARTH_GROUND_CELL_001_ZONE_ADJACENCY,
@@ -131,7 +133,7 @@ import {
   H_EARTH_CONTEXT_OBJECTS,
   H_EARTH_GROUND_CELL_001_OBJECTS_BOUNDARY_FLAGS,
   H_EARTH_GROUND_CELL_001_OBJECT_IDS,
-  H_EARTH_GROUND_CELL_001_OBJECT_COMPRESSION_MODEL,
+  H_EARTH_GROUND_CELL_001_OBJECT_COMPOSITION_MODEL,
   H_EARTH_GROUND_CELL_001_OBJECT_ZONE_BINDINGS,
   H_EARTH_GROUND_CELL_001_OBJECT_ADDRESS_BINDINGS,
   H_EARTH_GROUND_CELL_001_OBJECT_INSPECTION_ROLES,
@@ -183,21 +185,39 @@ import {
 
 export const H_EARTH_GROUND_CONDITION_READ_CONTRACT = Object.freeze({
   contractId:
+    'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1',
+
+  renewsContractId:
     'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_031F_OBJECT_READOUT_BINDING_v1',
 
   upstreamMatrixContractId:
-    'H_EARTH_SOURCE_MATRIX_FILE_RENEWAL_STEP_031A_SCENE_SCOPED_LATTICE_AUTHORITY_v1',
+    'H_EARTH_MATRIX_FILE_RENEWAL_STEP_009D_REJECTED_BINDING_CLASSIFICATION_GUARD_v1',
 
   upstreamCellContractId:
-    'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_031B_CELL_TO_LATTICE_BINDING_v1',
+    'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_011A_PATH3_DOMAIN_BINDING_CONSUMER_v1',
 
   upstreamZoneContractId:
-    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1',
+    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
 
   upstreamObjectContractId:
-    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1',
+    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
 
   upstreamActionContractId:
+    'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v1',
+
+  retiredUpstreamMatrixContractId:
+    'H_EARTH_SOURCE_MATRIX_FILE_RENEWAL_STEP_031A_SCENE_SCOPED_LATTICE_AUTHORITY_v1',
+
+  retiredUpstreamCellContractId:
+    'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_031B_CELL_TO_LATTICE_BINDING_v1',
+
+  retiredUpstreamZoneContractId:
+    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1',
+
+  retiredUpstreamObjectContractId:
+    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1',
+
+  retiredUpstreamActionContractId:
     'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_031E_OBJECT_ANCHOR_BINDING_v1',
 
   file: '/h-earth-3d/readouts/ground-condition-read.js',
@@ -212,21 +232,52 @@ export const H_EARTH_GROUND_CONDITION_READ_CONTRACT = Object.freeze({
   upstreamRoom: 'ROOM_4_ACTIONS',
   downstreamRoom: 'ROOM_6_RECEIPTS_AND_INTEGRITY_AFTER_READOUT',
 
-  fileClass: 'SOURCE_READOUT_BINDING_DESCRIPTOR_ONLY',
+  fileClass:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+      ? 'PATH3_OBJECT_READOUT_BINDING_DESCRIPTOR_ONLY'
+      : 'PATH3_OBJECT_READOUT_BINDING_REJECTED_DESCRIPTOR_ONLY',
 
   matrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
+  domainCellId: 'H_EARTH_GROUND_CELL_001',
+  spatialCellId: H_EARTH_GROUND_CELL_001_PATH3_BINDING.spatialCellId,
   sceneIdentity: 'earth-water-air-survival-shoreline-manor',
+
+  expectedSpatialCellId: 'H_EARTH_REGION_CELL_X07_Z08',
+  expectedDomainCellId: 'H_EARTH_GROUND_CELL_001',
+
+  path3BindingAdmission: H_EARTH_MATRIX_PATH3_BINDING_ADMISSION,
+  path3DomainBinding: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING,
+  cellPath3Binding: H_EARTH_GROUND_CELL_001_PATH3_BINDING,
+
+  zoneCompositionContract:
+    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
+
+  objectCompositionContract:
+    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
+  actionBindingContract:
+    'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v1',
 
   readoutId: 'H_EARTH_GROUND_CONDITION_READ',
   readoutLabel: 'Ground Condition Read',
   readoutRole: 'FIRST_GROUND_VIEW_READOUT',
 
   sourceAction: 'Inspect Ground',
-  sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  runtimeIntentId: 'INSPECT_GROUND',
   expectedReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
   harnessReceipt: 'H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT',
+
+  failClosedActionDescriptorPolicy: Object.freeze({
+    externalActionDescriptorAcceptance: false,
+    readoutAlwaysRebuildsStep011DDescriptor: true,
+    arbitraryActionDescriptorInjectionAllowed: false,
+    validatorImplementedHere: false,
+    reason:
+      'Ground Condition Read must derive the action descriptor from Step 011D builder inputs, not accept unverified caller-supplied descriptor objects.'
+  }),
 
   baselinePreserved: Object.freeze({
     driveScratchBaselineConsumed: true,
@@ -252,15 +303,23 @@ export const H_EARTH_GROUND_CONDITION_READ_CONTRACT = Object.freeze({
   }),
 
   renewalPurpose:
-    'Bind Ground Condition Read to the renewed Inspect Ground action, Room 3 object compression, zone map, cell binding, and matrix source authority without creating runtime execution, renderer facts, diagnostic scoring, validation, production, or receipt persistence.',
+    'Bind Ground Condition Read to the Step 011D Inspect Ground action output, Step 011C object composition, Step 011B zone composition, Step 011A cell binding, and Step 009D Path 3 matrix boundary without creating runtime execution, renderer facts, diagnostic scoring, validation, production, or receipt persistence.',
 
   renewalScope: Object.freeze({
-    upstreamMatrixAuthorityConsumed: true,
-    upstreamCellLatticeBindingConsumed: true,
-    upstreamZoneMappingConsumed: true,
-    upstreamObjectCompressionConsumedCautiously: true,
+    upstreamMatrixPath3BindingConsumed: true,
+    upstreamCellPath3BindingConsumed: true,
+    upstreamZoneCompositionConsumed: true,
+    upstreamObjectCompositionConsumed: true,
     upstreamInspectGroundActionConsumed: true,
     actionOutputSurfaceConsumed: true,
+
+    externalActionDescriptorAcceptanceDisallowed: true,
+    readoutAlwaysRebuildsStep011DDescriptor: true,
+
+    retiredLatticeReadoutModelPreservedAsCompatibility: true,
+    retiredObjectAddressBindingConsumedAsCompatibility: true,
+    retiredActionAddressBindingConsumedAsCompatibility: true,
+
     primaryReadoutObjectBound: true,
     supportingReadoutObjectsBound: true,
     surfaceTransitionContextBound: true,
@@ -271,8 +330,12 @@ export const H_EARTH_GROUND_CONDITION_READ_CONTRACT = Object.freeze({
     descriptorBuilderDefined: true,
     receiptHandoffPrepared: true,
 
+    room6ReceiptBindingUnblocked:
+      H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+
     sourceLatticeAuthorityCreatedHere: false,
     activeCellBindingCreatedHere: false,
+    path3AuthorityCreatedHere: false,
     zoneAuthorityCreatedHere: false,
     objectAuthorityCreatedHere: false,
     actionAuthorityCreatedHere: false,
@@ -287,12 +350,13 @@ export const H_EARTH_GROUND_CONDITION_READ_CONTRACT = Object.freeze({
     routeExposureAdded: false,
     receiptRuntimePersistenceAdded: false,
     validationAdded: false,
-    productionAdded: false
+    productionAdded: false,
+    runtimeActivated: false
   }),
 
   archiveExpectation: Object.freeze({
     expectedArchiveTitle:
-      'ground-condition-read_BACKUP_2026-07-08_STEP_031F',
+      'h-earth-ground-condition-read-step-011e-backup',
     googleNativeArchiveRequiredForNetworkCompletion: true,
     finalMarkerRequired:
       'export default H_EARTH_GROUND_CONDITION_READ_AGGREGATE;',
@@ -305,19 +369,40 @@ export const H_EARTH_GROUND_CONDITION_READ_BOUNDARIES = Object.freeze({
   descriptorOnlyReadoutAuthority: true,
   objectBoundReadoutAuthority: true,
   actionOutputAwareReadoutAuthority: true,
-  cellLatticeConsumed: true,
-  zoneMappingConsumed: true,
-  objectCompressionConsumed: true,
-  inspectGroundActionConsumed: true,
+
+  externalActionDescriptorAcceptance: false,
+  readoutAlwaysRebuildsStep011DDescriptor: true,
+
+  path3CellBindingConsumed:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+  path3ZoneCompositionConsumed:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+  path3ObjectCompositionConsumed:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+  path3ActionBindingConsumed:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+  path3SpatialAuthorityOnly: true,
+
+  cellLatticeConsumed: false,
+  zoneMappingConsumed: false,
+  objectCompressionConsumed: false,
+  inspectGroundLegacyActionConsumed: false,
+  sceneScopedAddressabilityConsumed: false,
+  legacyReadoutAddressModelCompatibilityOnly: true,
+  legacyReadoutAddressModelCreatesSpatialAuthority: false,
 
   rawDriveScratchFileOnly: false,
   renewedSourceReadoutDescriptor: true,
 
   sourceMatrixAuthorityCreatedHere: false,
   cellLatticeBindingCreatedHere: false,
+  cellPath3BindingCreatedHere: false,
   zoneMappingCreatedHere: false,
+  zoneAuthorityCreatedHere: false,
   objectMappingCreatedHere: false,
+  objectAuthorityCreatedHere: false,
   actionBindingCreatedHere: false,
+  actionAuthorityCreatedHere: false,
   receiptAuthorityCreatedHere: false,
   materialChannelMappingCreatedHere: false,
   rendererGeometryCreatedHere: false,
@@ -381,7 +466,7 @@ export const H_EARTH_GROUND_CONDITION_READ_BOUNDARIES = Object.freeze({
 
 export const H_EARTH_GROUND_CONDITION_READ_TARGETS = Object.freeze({
   targetModelId: 'H_EARTH_GROUND_CONDITION_READ_TARGETS',
-  status: 'OBJECT_BOUND_READOUT_TARGETS_DEFINED_DESCRIPTOR_ONLY',
+  status: 'PATH3_OBJECT_BOUND_READOUT_TARGETS_DEFINED_DESCRIPTOR_ONLY',
 
   primaryReadoutObject: H_EARTH_PRIMARY_INSPECTION_TARGET,
 
@@ -416,7 +501,8 @@ export const H_EARTH_GROUND_CONDITION_READ_TARGETS = Object.freeze({
       .contextReadoutObjects,
 
   sourceAction: 'Inspect Ground',
-  sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  runtimeIntentId: 'INSPECT_GROUND',
   expectedReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
 
   targetPolicy: Object.freeze({
@@ -440,16 +526,22 @@ export const H_EARTH_GROUND_CONDITION_READ_TARGETS = Object.freeze({
 
 export const H_EARTH_GROUND_CONDITION_READ_INPUT_MODEL = Object.freeze({
   inputModelId: 'H_EARTH_GROUND_CONDITION_READ_INPUT_MODEL',
-  status: 'ACTION_OUTPUT_AWARE_READOUT_INPUT_DESCRIPTOR_ONLY',
+  status:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+      ? 'PATH3_ACTION_OUTPUT_AWARE_READOUT_INPUT_DESCRIPTOR_ONLY'
+      : 'PATH3_ACTION_OUTPUT_AWARE_READOUT_BLOCKED_BY_BINDING_REJECTION',
 
   expectedReadout: 'Ground Condition Read',
   expectedReadoutId: 'H_EARTH_GROUND_CONDITION_READ',
   expectedAction: 'Inspect Ground',
-  expectedActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  expectedDescriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  expectedRuntimeIntentId: 'INSPECT_GROUND',
 
   activeMatrix: 'H-Earth',
   activeMatrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
+  domainCellId: 'H_EARTH_GROUND_CELL_001',
+  spatialCellId: H_EARTH_GROUND_CELL_001_PATH3_BINDING.spatialCellId,
   sceneIdentity: 'earth-water-air-survival-shoreline-manor',
 
   previousState: H_EARTH_INSPECT_GROUND_STATE_PATH.previousState,
@@ -465,13 +557,20 @@ export const H_EARTH_GROUND_CONDITION_READ_INPUT_MODEL = Object.freeze({
     'sceneIdentity',
     'sourceAction',
     'sourceActionId',
+    'runtimeIntentId',
     'readoutName',
     'readoutId',
     'primaryFocusTarget',
     'supportingInspectionTargets',
-    'requestedReceipt',
+    'requestedReceipt'
+  ]),
+
+  rejectedInputKeys: Object.freeze([
     'actionDescriptor'
   ]),
+
+  externalActionDescriptorAcceptance: false,
+  readoutAlwaysRebuildsStep011DDescriptor: true,
 
   defaultInput: Object.freeze({
     activeMatrix: 'H-Earth',
@@ -480,12 +579,14 @@ export const H_EARTH_GROUND_CONDITION_READ_INPUT_MODEL = Object.freeze({
     sceneIdentity: 'earth-water-air-survival-shoreline-manor',
     sourceAction: 'Inspect Ground',
     sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    runtimeIntentId: 'INSPECT_GROUND',
     readoutName: 'Ground Condition Read',
     readoutId: 'H_EARTH_GROUND_CONDITION_READ',
     primaryFocusTarget: H_EARTH_PRIMARY_INSPECTION_TARGET,
     supportingInspectionTargets: H_EARTH_SUPPORTING_INSPECTION_TARGETS,
     requestedReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-    actionDescriptor: null
+    actionDescriptor: null,
+    externalActionDescriptorAccepted: false
   }),
 
   inputCreatesRuntimeExecution: false,
@@ -620,6 +721,7 @@ export function getHEarthGroundConditionReadObjectDescriptor(objectId) {
     objectDescriptor,
     zoneBinding,
     addressBinding,
+    addressBindingAuthorityStatus: 'RETIRED_COMPATIBILITY_ONLY',
     zoneDescriptor,
 
     isPrimaryReadoutObject:
@@ -739,6 +841,10 @@ export function buildHEarthGroundConditionReadInput(input = {}) {
       safeInput.sourceActionId,
       defaultInput.sourceActionId
     ),
+    runtimeIntentId: normalizeHEarthGroundConditionReadString(
+      safeInput.runtimeIntentId,
+      defaultInput.runtimeIntentId
+    ),
     readoutName: normalizeHEarthGroundConditionReadString(
       safeInput.readoutName,
       defaultInput.readoutName
@@ -753,10 +859,14 @@ export function buildHEarthGroundConditionReadInput(input = {}) {
       safeInput.requestedReceipt,
       defaultInput.requestedReceipt
     ),
-    actionDescriptor:
-      safeInput.actionDescriptor && typeof safeInput.actionDescriptor === 'object'
-        ? safeInput.actionDescriptor
-        : null,
+
+    actionDescriptor: null,
+    externalActionDescriptorAccepted: false,
+    externalActionDescriptorRejected: Boolean(
+      safeInput.actionDescriptor &&
+        typeof safeInput.actionDescriptor === 'object'
+    ),
+
     descriptorOnly: true,
     runtimeExecutionClaim: false,
     receiptPersistenceClaim: false
@@ -772,6 +882,17 @@ export function checkHEarthGroundConditionReadInput(input = {}) {
     );
 
   const checks = Object.freeze({
+    path3BindingAccepted:
+      H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+    matrixBindingAccepted:
+      H_EARTH_MATRIX_PATH3_BINDING_ADMISSION.admitted === true,
+    room5ReadoutBindingAllowed:
+      H_EARTH_ROOM_5_READOUT_BINDING_UNBLOCK_RECEIPT
+        .room5ReadoutFileMayProceed === true,
+
+    externalActionDescriptorRejectedIfProvided:
+      normalizedInput.externalActionDescriptorAccepted === false,
+
     activeMatrixAccepted: normalizedInput.activeMatrix === 'H-Earth',
 
     activeMatrixRoleAccepted:
@@ -788,6 +909,9 @@ export function checkHEarthGroundConditionReadInput(input = {}) {
 
     sourceActionIdAccepted:
       normalizedInput.sourceActionId === 'H_EARTH_INSPECT_GROUND_ACTION',
+
+    runtimeIntentIdKnown:
+      normalizedInput.runtimeIntentId === 'INSPECT_GROUND',
 
     readoutNameAccepted:
       normalizedInput.readoutName === 'Ground Condition Read',
@@ -868,6 +992,7 @@ export function buildHEarthGroundConditionReadObjectBinding(objectId) {
     supportingAddresses:
       descriptor.addressBinding?.supportingAddresses || Object.freeze([]),
     addressRole: descriptor.addressBinding?.addressRole || null,
+    addressBindingAuthorityStatus: 'RETIRED_COMPATIBILITY_ONLY',
 
     readoutContribution: Object.freeze({
       primaryReadoutAnchor:
@@ -906,7 +1031,7 @@ export function buildHEarthGroundConditionReadObjectBinding(objectId) {
 
 export const H_EARTH_GROUND_CONDITION_READ_OBJECT_BINDINGS = Object.freeze({
   bindingId: 'H_EARTH_GROUND_CONDITION_READ_OBJECT_BINDINGS',
-  status: 'GROUND_CONDITION_READ_OBJECT_BINDINGS_DEFINED_DESCRIPTOR_ONLY',
+  status: 'PATH3_GROUND_CONDITION_READ_OBJECT_BINDINGS_DEFINED_DESCRIPTOR_ONLY',
 
   objectToReadoutReference:
     H_EARTH_GROUND_CELL_001_OBJECT_TO_READOUT_REFERENCE,
@@ -944,7 +1069,8 @@ export const H_EARTH_GROUND_CONDITION_READ_OBJECT_BINDINGS = Object.freeze({
     )
   ),
 
-  readoutPayloadDefinedHere: true,
+  readoutPayloadDefinedHere: false,
+  readoutPayloadTemplateDefinedHere: true,
   actionExecutionDefinedHere: false,
   receiptPersistenceDefinedHere: false,
   rendererGeometryDefinedHere: false,
@@ -960,7 +1086,8 @@ export const H_EARTH_GROUND_CONDITION_READ_PAYLOAD_TEMPLATE = Object.freeze({
   readoutId: 'H_EARTH_GROUND_CONDITION_READ',
   readoutRole: 'FIRST_GROUND_VIEW_READOUT',
   sourceAction: 'Inspect Ground',
-  sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  runtimeIntentId: 'INSPECT_GROUND',
 
   requiredFields: Object.freeze([
     'readoutType',
@@ -968,8 +1095,11 @@ export const H_EARTH_GROUND_CONDITION_READ_PAYLOAD_TEMPLATE = Object.freeze({
     'activeMatrix',
     'activeMatrixRole',
     'activeCell',
+    'domainCellId',
+    'spatialCellId',
     'sceneIdentity',
     'sourceAction',
+    'descriptorActionId',
     'primaryFocusTarget',
     'surfaceCondition',
     'moistureCondition',
@@ -1036,21 +1166,19 @@ export const H_EARTH_GROUND_CONDITION_READ_PAYLOAD_TEMPLATE = Object.freeze({
 export function buildHEarthGroundConditionReadDescriptor(input = {}) {
   const inputCheck = checkHEarthGroundConditionReadInput(input);
 
-  const actionDescriptor =
-    inputCheck.input.actionDescriptor ||
-    buildHEarthInspectGroundActionDescriptor({
-      activeMatrix: inputCheck.input.activeMatrix,
-      activeMatrixRole: inputCheck.input.activeMatrixRole,
-      activeCell: inputCheck.input.activeCell,
-      sceneIdentity: inputCheck.input.sceneIdentity,
-      userAction: inputCheck.input.sourceAction,
-      actionId: inputCheck.input.sourceActionId,
-      primaryFocusTarget: inputCheck.input.primaryFocusTarget,
-      supportingInspectionTargets:
-        inputCheck.input.supportingInspectionTargets,
-      requestedReadout: inputCheck.input.readoutName,
-      requestedReceipt: inputCheck.input.requestedReceipt
-    });
+  const actionDescriptor = buildHEarthInspectGroundActionDescriptor({
+    activeMatrix: inputCheck.input.activeMatrix,
+    activeMatrixRole: inputCheck.input.activeMatrixRole,
+    activeCell: inputCheck.input.activeCell,
+    sceneIdentity: inputCheck.input.sceneIdentity,
+    userAction: inputCheck.input.sourceAction,
+    actionId: inputCheck.input.sourceActionId,
+    primaryFocusTarget: inputCheck.input.primaryFocusTarget,
+    supportingInspectionTargets:
+      inputCheck.input.supportingInspectionTargets,
+    requestedReadout: inputCheck.input.readoutName,
+    requestedReceipt: inputCheck.input.requestedReceipt
+  });
 
   return Object.freeze({
     descriptorType: 'H_EARTH_GROUND_CONDITION_READ_DESCRIPTOR',
@@ -1062,11 +1190,18 @@ export function buildHEarthGroundConditionReadDescriptor(input = {}) {
     activeMatrix: inputCheck.input.activeMatrix,
     activeMatrixRole: inputCheck.input.activeMatrixRole,
     activeCell: inputCheck.input.activeCell,
+    domainCellId: 'H_EARTH_GROUND_CELL_001',
+    spatialCellId: H_EARTH_GROUND_CELL_001_PATH3_BINDING.spatialCellId,
     sceneIdentity: inputCheck.input.sceneIdentity,
 
     sourceAction: inputCheck.input.sourceAction,
-    sourceActionId: inputCheck.input.sourceActionId,
+    descriptorActionId: inputCheck.input.sourceActionId,
+    runtimeIntentId: inputCheck.input.runtimeIntentId,
     sourceActionDescriptor: actionDescriptor,
+    sourceActionDescriptorSource: 'REBUILT_FROM_STEP_011D_BUILDER',
+    externalActionDescriptorAccepted: false,
+    externalActionDescriptorRejected:
+      inputCheck.input.externalActionDescriptorRejected === true,
     sourceActionReceipt: H_EARTH_INSPECT_GROUND_ACTION_RECEIPT,
 
     previousState: H_EARTH_INSPECT_GROUND_STATE_PATH.previousState,
@@ -1151,9 +1286,10 @@ export function buildHEarthGroundConditionReadDescriptor(input = {}) {
       expectedReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
       receiptAuthorityCreatedHere: false,
       receiptRuntimePersistenceCreatedHere: false,
-      room6ReceiptMayProceedAfterReadout: true,
+      room6ReceiptMayProceedAfterReadout:
+        H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
       requiredRoom6ReceiptAuthority:
-        '/h-earth-3d/h-earth.receipts.js or dedicated receipt renewal authority'
+        '/h-earth-3d/h-earth.receipts.js'
     }),
 
     inputCheck,
@@ -1180,6 +1316,8 @@ export function getHEarthGroundConditionReadForObject(objectId, input = {}) {
     readoutType: 'Ground Condition Read',
     readoutId: 'H_EARTH_GROUND_CONDITION_READ',
     sourceAction: 'Inspect Ground',
+    descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    runtimeIntentId: 'INSPECT_GROUND',
     primaryDescriptor: descriptor,
     objectReadoutResolved: objectBinding.bindingResolved === true,
     descriptorOnly: true,
@@ -1206,7 +1344,8 @@ export function groundConditionRead(input = {}) {
     readoutType: 'Ground Condition Read',
     readoutId: 'H_EARTH_GROUND_CONDITION_READ',
     sourceAction: 'Inspect Ground',
-    sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    runtimeIntentId: 'INSPECT_GROUND',
 
     descriptor,
 
@@ -1218,7 +1357,7 @@ export function groundConditionRead(input = {}) {
       activeCell: descriptor.activeCell,
       sceneIdentity: descriptor.sceneIdentity,
       userAction: descriptor.sourceAction,
-      actionId: descriptor.sourceActionId,
+      actionId: descriptor.descriptorActionId,
       primaryFocusTarget: descriptor.primaryFocusTarget,
       supportingInspectionTargets: descriptor.supportingInspectionTargets,
       requestedReadout: 'Ground Condition Read',
@@ -1254,7 +1393,8 @@ export const H_EARTH_GROUND_CONDITION_READ_OUTPUT_MODEL = Object.freeze({
   readoutId: 'H_EARTH_GROUND_CONDITION_READ',
   readoutLabel: 'Ground Condition Read',
 
-  sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  runtimeIntentId: 'INSPECT_GROUND',
   sourceActionLabel: 'Inspect Ground',
 
   outputReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
@@ -1266,9 +1406,13 @@ export const H_EARTH_GROUND_CONDITION_READ_OUTPUT_MODEL = Object.freeze({
     activeMatrix: 'H-Earth',
     activeMatrixRole: 'Ground-View Matrix',
     activeCell: 'H_EARTH_GROUND_CELL_001',
+    domainCellId: 'H_EARTH_GROUND_CELL_001',
+    spatialCellId: H_EARTH_GROUND_CELL_001_PATH3_BINDING.spatialCellId,
     previousState: H_EARTH_INSPECT_GROUND_STATE_PATH.previousState,
     newState: H_EARTH_INSPECT_GROUND_STATE_PATH.newState,
     userAction: 'Inspect Ground',
+    descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    runtimeIntentId: 'INSPECT_GROUND',
     terrainReadout: 'Ground Condition Read',
     primaryFocusTarget: H_EARTH_PRIMARY_INSPECTION_TARGET,
     supportingInspectionTargets: H_EARTH_SUPPORTING_INSPECTION_TARGETS,
@@ -1294,10 +1438,13 @@ export const H_EARTH_GROUND_CONDITION_READ = Object.freeze({
   activeMatrix: 'H-Earth',
   activeMatrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
+  domainCellId: 'H_EARTH_GROUND_CELL_001',
+  spatialCellId: H_EARTH_GROUND_CELL_001_PATH3_BINDING.spatialCellId,
   sceneIdentity: 'earth-water-air-survival-shoreline-manor',
 
   sourceAction: 'Inspect Ground',
-  sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  runtimeIntentId: 'INSPECT_GROUND',
   sourceActionObject: H_EARTH_INSPECT_GROUND_ACTION,
 
   primaryFocusTarget: H_EARTH_PRIMARY_INSPECTION_TARGET,
@@ -1320,7 +1467,8 @@ export const H_EARTH_GROUND_CONDITION_READ = Object.freeze({
   descriptorBuilder: buildHEarthGroundConditionReadDescriptor,
   readoutFunction: groundConditionRead,
 
-  readoutPayloadDefinedHere: true,
+  readoutPayloadDefinedHere: false,
+  readoutPayloadTemplateDefinedHere: true,
   readoutPayloadClass: 'CONTRACT_ONLY_DESCRIPTOR_READOUT',
   runtimeReadoutExecutionClaim: false,
   gameplayExecutionClaim: false,
@@ -1344,28 +1492,52 @@ export const H_EARTH_GROUND_CONDITION_READ_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_GROUND_CONDITION_READ_RECEIPT',
 
   contractId:
+    'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1',
+
+  renewsContractId:
     'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_031F_OBJECT_READOUT_BINDING_v1',
 
   file: '/h-earth-3d/readouts/ground-condition-read.js',
   room: 'ROOM_5_READOUT_PREPARATION',
 
   status:
-    'GROUND_CONDITION_READ_RENEWED_FROM_DRIVE_SCRATCH_AND_BOUND_TO_INSPECT_GROUND_OUTPUT_DESCRIPTOR_ONLY',
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+      ? 'GROUND_CONDITION_READ_RENEWED_AS_PATH3_OBJECT_READOUT_BINDING_DESCRIPTOR_ONLY'
+      : 'GROUND_CONDITION_READ_HELD_BY_REJECTED_PATH3_CELL_BINDING',
 
   upstreamMatrixFile: '/h-earth-3d/h-earth.matrix.js',
   upstreamMatrixContract:
-    'H_EARTH_SOURCE_MATRIX_FILE_RENEWAL_STEP_031A_SCENE_SCOPED_LATTICE_AUTHORITY_v1',
+    'H_EARTH_MATRIX_FILE_RENEWAL_STEP_009D_REJECTED_BINDING_CLASSIFICATION_GUARD_v1',
+
   upstreamCellFile: '/h-earth-3d/cells/ground-cell-001.js',
   upstreamCellContract:
-    'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_031B_CELL_TO_LATTICE_BINDING_v1',
+    'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_011A_PATH3_DOMAIN_BINDING_CONSUMER_v1',
+
   upstreamZoneFile: '/h-earth-3d/zones/ground-cell-001.zones.js',
   upstreamZoneContract:
-    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1',
+    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
+
   upstreamObjectFile: '/h-earth-3d/objects/ground-cell-001.objects.js',
   upstreamObjectContract:
-    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1',
+    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
   upstreamActionFile: '/h-earth-3d/actions/inspect-ground.js',
   upstreamActionContract:
+    'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v1',
+
+  retiredUpstreamMatrixContract:
+    'H_EARTH_SOURCE_MATRIX_FILE_RENEWAL_STEP_031A_SCENE_SCOPED_LATTICE_AUTHORITY_v1',
+
+  retiredUpstreamCellContract:
+    'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_031B_CELL_TO_LATTICE_BINDING_v1',
+
+  retiredUpstreamZoneContract:
+    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1',
+
+  retiredUpstreamObjectContract:
+    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1',
+
+  retiredUpstreamActionContract:
     'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_031E_OBJECT_ANCHOR_BINDING_v1',
 
   upstreamMatrixReceipt: getHEarthMatrixReceipt(),
@@ -1381,12 +1553,13 @@ export const H_EARTH_GROUND_CONDITION_READ_RECEIPT = Object.freeze({
   upstreamRoom5ReadoutBindingUnblockReceipt:
     getHEarthRoom5ReadoutBindingUnblockReceipt(),
 
-  step031DObjectArchiveStatus: Object.freeze({
-    sourceArchivePartialNotFinal: true,
-    finalExportMarkerVerified: false,
-    networkComplete: false,
-    objectContextSufficientToProceedWithCaution: true
-  }),
+  path3BindingAdmission: H_EARTH_MATRIX_PATH3_BINDING_ADMISSION,
+  cellPath3Binding: H_EARTH_GROUND_CELL_001_PATH3_BINDING,
+  cellPath3BindingAdmitted:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+
+  externalActionDescriptorAcceptance: false,
+  readoutAlwaysRebuildsStep011DDescriptor: true,
 
   driveScratchBaselineConsumed: true,
   baselineReadoutExportPreserved: true,
@@ -1396,6 +1569,8 @@ export const H_EARTH_GROUND_CONDITION_READ_RECEIPT = Object.freeze({
   matrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
+  domainCellId: 'H_EARTH_GROUND_CELL_001',
+  spatialCellId: H_EARTH_GROUND_CELL_001_PATH3_BINDING.spatialCellId,
   sceneIdentity: 'earth-water-air-survival-shoreline-manor',
 
   readoutId: 'H_EARTH_GROUND_CONDITION_READ',
@@ -1404,29 +1579,38 @@ export const H_EARTH_GROUND_CONDITION_READ_RECEIPT = Object.freeze({
   readoutScope: 'BOUNDED_ENVIRONMENTAL_GROUND_CONDITION_READ_ONLY',
 
   sourceAction: 'Inspect Ground',
-  sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  runtimeIntentId: 'INSPECT_GROUND',
   expectedReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
   harnessReceipt: 'H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT',
 
   previousState: 'H_EARTH_GROUND_VIEW_ACTIVE',
   currentState: 'H_EARTH_SURFACE_INSPECTION_ACTIVE',
 
-  sourceLatticeAuthorityConsumed: true,
+  sourceLatticeAuthorityConsumedAsActiveAuthority: false,
+  sourceLatticeAuthorityRetainedAsCompatibility: true,
   sourceLatticeAuthorityCreatedHere: false,
-  cellLatticeBindingConsumed: true,
+
+  cellLatticeBindingConsumedAsActiveAuthority: false,
+  cellLatticeBindingRetainedAsCompatibility: true,
   cellLatticeBindingCreatedHere: false,
-  zoneMappingConsumed: true,
+
+  zoneMappingConsumedAsActiveAuthority: false,
+  zoneCompositionConsumedAsActiveAuthority: true,
   zoneMappingCreatedHere: false,
-  objectCompressionConsumed: true,
+
+  objectCompressionConsumedAsActiveAuthority: false,
+  objectCompositionConsumedAsActiveAuthority: true,
   objectCompressionCreatedHere: false,
-  actionBindingConsumed: true,
+
+  actionBindingConsumedAsActiveAuthority: true,
   actionBindingCreatedHere: false,
 
-  latticeShape: '16x16',
-  rowCount: 16,
-  columnCount: 16,
-  addressCount: 256,
-  addressFormat: 'H_EARTH_GROUND_CELL_001:R{row}:C{column}',
+  legacyLatticeShape: '16x16',
+  legacyRowCount: 16,
+  legacyColumnCount: 16,
+  legacyAddressCount: 256,
+  legacyAddressFormat: 'H_EARTH_GROUND_CELL_001:R{row}:C{column}',
 
   readoutTargetsDefined: true,
   primaryReadoutObjectBound: true,
@@ -1456,9 +1640,14 @@ export const H_EARTH_GROUND_CONDITION_READ_RECEIPT = Object.freeze({
   validationCompletedHere: false,
   productionCompletedHere: false,
 
-  room6ReceiptFileMayProceed: true,
+  room6ReceiptFileMayProceed:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+
   room6NextFile: '/h-earth-3d/h-earth.receipts.js',
   room6NextStep:
+    'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_011F_PATH3_GROUND_INSPECTION_RECEIPT_BINDING_v1',
+
+  retiredRoom6NextStep:
     'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_031G_GROUND_INSPECTION_RECEIPT_BINDING_v1',
 
   routeMayProceedNow: false,
@@ -1467,7 +1656,7 @@ export const H_EARTH_GROUND_CONDITION_READ_RECEIPT = Object.freeze({
 
   archiveCompletionStatus: Object.freeze({
     expectedArchiveTitle:
-      'ground-condition-read_BACKUP_2026-07-08_STEP_031F',
+      'h-earth-ground-condition-read-step-011e-backup',
     googleNativeArchivePresent: false,
     sourceBodyPopulated: true,
     finalMarkerVerified: false,
@@ -1483,45 +1672,78 @@ export const H_EARTH_ROOM_6_RECEIPT_BINDING_UNBLOCK_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_ROOM_6_RECEIPT_BINDING_UNBLOCK_RECEIPT',
 
   contractId:
-    'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_031F_OBJECT_READOUT_BINDING_v1',
+    'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1',
 
   status:
-    'ROOM_6_GROUND_INSPECTION_RECEIPT_BINDING_UNBLOCKED_BY_GROUND_CONDITION_READ_BINDING',
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+      ? 'ROOM_6_GROUND_INSPECTION_RECEIPT_BINDING_READY_BY_PATH3_READOUT_BINDING'
+      : 'ROOM_6_GROUND_INSPECTION_RECEIPT_BINDING_BLOCKED_BY_REJECTED_PATH3_CELL_BINDING',
 
-  sourceMatrixAuthorityReady: true,
-  sourceLatticeAuthorityDefined: true,
-  cellLatticeBindingComplete: true,
-  zoneLatticeMappingComplete: true,
-  objectLatticeCompressionContextSufficient: true,
-  inspectGroundActionBindingComplete: true,
-  groundConditionReadBindingComplete: true,
+  path3BindingAdmission: H_EARTH_MATRIX_PATH3_BINDING_ADMISSION,
+  cellPath3Binding: H_EARTH_GROUND_CELL_001_PATH3_BINDING,
+
+  sourceMatrixAuthorityReady: false,
+  sourceLatticeAuthorityDefined: false,
+  cellLatticeBindingComplete: false,
+  zoneLatticeMappingComplete: false,
+  objectLatticeCompressionContextSufficient: false,
+
+  activeSpatialAuthorityReady:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+  activeDomainBindingReady:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+  localZoneCompositionComplete:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+  localObjectCompositionComplete:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+  inspectGroundActionBindingComplete:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+  groundConditionReadBindingComplete:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+
   driveScratchReadoutBaselinePreserved: true,
 
   activeCell: 'H_EARTH_GROUND_CELL_001',
+  domainCellId: 'H_EARTH_GROUND_CELL_001',
+  spatialCellId: H_EARTH_GROUND_CELL_001_PATH3_BINDING.spatialCellId,
   sceneIdentity: 'earth-water-air-survival-shoreline-manor',
 
   requiredRoom6ReceiptFile:
     '/h-earth-3d/h-earth.receipts.js',
 
   requiredRoom6ReceiptStep:
-    'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_031G_GROUND_INSPECTION_RECEIPT_BINDING_v1',
+    'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_011F_PATH3_GROUND_INSPECTION_RECEIPT_BINDING_v1',
 
   readoutId: 'H_EARTH_GROUND_CONDITION_READ',
   readoutLabel: 'Ground Condition Read',
-  sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  runtimeIntentId: 'INSPECT_GROUND',
   sourceActionLabel: 'Inspect Ground',
 
   primaryInspectionTarget: H_EARTH_PRIMARY_INSPECTION_TARGET,
   supportingInspectionTargets: H_EARTH_SUPPORTING_INSPECTION_TARGETS,
 
-  room6ReceiptFileAllowedWork: Object.freeze([
-    'bind H_EARTH_GROUND_INSPECTION_RECEIPT to Inspect Ground',
-    'bind H_EARTH_GROUND_INSPECTION_RECEIPT to Ground Condition Read',
-    'consume descriptor-only readout handoff',
-    'preserve matrix separation',
-    'preserve all no-runtime, no-renderer, no-validation, no-production claims',
-    'prepare integrity harness handoff'
-  ]),
+  room6ReceiptFileMayProceed:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+
+  room6ReceiptFileAllowedWork: Object.freeze(
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+      ? [
+          'consume admitted H_EARTH_GROUND_CELL_001_PATH3_BINDING',
+          'consume Step 011D Path 3-bound Inspect Ground action binding',
+          'consume Step 011E Ground Condition Read descriptor handoff',
+          'bind H_EARTH_GROUND_INSPECTION_RECEIPT to Inspect Ground',
+          'bind H_EARTH_GROUND_INSPECTION_RECEIPT to Ground Condition Read',
+          'preserve matrix separation',
+          'preserve all no-runtime, no-renderer, no-validation, no-production claims',
+          'prepare integrity harness handoff'
+        ]
+      : [
+          'inspect rejected Path 3 cell binding report only',
+          'preserve existing Drive baseline for later renewal',
+          'do not renew receipt authority until binding admission passes'
+        ]
+  ),
 
   room6ReceiptFileNotAuthorized: Object.freeze([
     'create runtime receipt persistence',
@@ -1552,6 +1774,16 @@ export const H_EARTH_ROOM_6_RECEIPT_BINDING_UNBLOCK_RECEIPT = Object.freeze({
     'groundConditionRead',
     'buildHEarthGroundConditionReadDescriptor',
     'getHEarthGroundConditionReadReceipt'
+  ]),
+
+  retiredCompatibilityExports: Object.freeze([
+    'H_EARTH_SOURCE_LATTICE_AUTHORITY',
+    'H_EARTH_GROUND_CELL_001_LATTICE_SCOPE',
+    'H_EARTH_SOURCE_LATTICE_ADDRESS_FIELD_SCHEMA',
+    'H_EARTH_GROUND_CELL_001_LATTICE_BINDING',
+    'H_EARTH_GROUND_CELL_001_ADDRESS_FIELD_SUMMARY',
+    'H_EARTH_GROUND_CELL_001_ZONE_ADDRESS_REGIONS',
+    'H_EARTH_GROUND_CELL_001_OBJECT_ADDRESS_BINDINGS'
   ]),
 
   boundary: H_EARTH_GROUND_CONDITION_READ_BOUNDARIES
@@ -1586,11 +1818,13 @@ export const H_EARTH_GROUND_CONDITION_READ_AGGREGATE = Object.freeze({
   file: '/h-earth-3d/readouts/ground-condition-read.js',
   room: 'ROOM_5_READOUT_PREPARATION',
   step:
-    'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_031F_OBJECT_READOUT_BINDING_v1',
+    'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1',
 
   matrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
   activeCell: 'H_EARTH_GROUND_CELL_001',
+  domainCellId: 'H_EARTH_GROUND_CELL_001',
+  spatialCellId: H_EARTH_GROUND_CELL_001_PATH3_BINDING.spatialCellId,
   sceneIdentity: 'earth-water-air-survival-shoreline-manor',
 
   readoutId: 'H_EARTH_GROUND_CONDITION_READ',
@@ -1598,7 +1832,8 @@ export const H_EARTH_GROUND_CONDITION_READ_AGGREGATE = Object.freeze({
   readoutRole: 'FIRST_GROUND_VIEW_READOUT',
 
   sourceAction: 'Inspect Ground',
-  sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+  runtimeIntentId: 'INSPECT_GROUND',
   firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
   harnessReceipt: 'H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT',
 
@@ -1608,27 +1843,33 @@ export const H_EARTH_GROUND_CONDITION_READ_AGGREGATE = Object.freeze({
     H_EARTH_GROUND_CONDITION_READ
   }),
 
-  upstreamMatrixAuthority: getHEarthSourceLatticeAuthority(),
+  upstreamMatrixPath3DomainBinding: getHEarthMatrixPath3DomainBinding(),
+  upstreamMatrixPath3BindingAdmission: getHEarthMatrixPath3BindingAdmission(),
   upstreamMatrixReceipt: getHEarthMatrixReceipt(),
-  upstreamSourceLatticeAddressFieldSchema:
+
+  upstreamRetiredMatrixAuthority: getHEarthSourceLatticeAuthority(),
+  upstreamRetiredSourceLatticeAddressFieldSchema:
     getHEarthSourceLatticeAddressFieldSchema(),
-  upstreamGroundCell001LatticeScope:
+  upstreamRetiredGroundCell001LatticeScope:
     getHEarthGroundCell001LatticeScope(),
 
   upstreamCell: H_EARTH_GROUND_CELL_001,
   upstreamCellContract: H_EARTH_GROUND_CELL_001_CONTRACT,
   upstreamCellSceneBinding: H_EARTH_GROUND_CELL_001_SCENE_BINDING,
+  upstreamCellPath3Binding: getHEarthGroundCell001Path3Binding(),
   upstreamCellLatticeBinding: getHEarthGroundCell001LatticeBinding(),
   upstreamCellAddressFieldSummary: getHEarthGroundCell001AddressFieldSummary(),
   upstreamCellSpawnAnchorScope: H_EARTH_GROUND_CELL_001_SPAWN_ANCHOR_SCOPE,
   upstreamCellReceipt: H_EARTH_GROUND_CELL_001_RECEIPT,
   upstreamRoom3UnblockReceipt: H_EARTH_ROOM_3_UNBLOCK_RECEIPT,
+  upstreamCellDownstreamInterface: H_EARTH_GROUND_CELL_001_DOWNSTREAM_INTERFACE,
 
   upstreamZoneContract: H_EARTH_GROUND_CELL_001_ZONES_CONTRACT,
   upstreamZoneBoundaries: H_EARTH_ZONE_BOUNDARIES,
   upstreamZones: H_EARTH_GROUND_CELL_001_ZONES,
   upstreamZoneIds: H_EARTH_GROUND_CELL_001_ZONE_IDS,
   upstreamZoneMappingModel: H_EARTH_GROUND_CELL_001_ZONE_MAPPING_MODEL,
+  upstreamZoneRegionRules: H_EARTH_GROUND_CELL_001_ZONE_REGION_RULES,
   upstreamZoneAddressRegions: H_EARTH_GROUND_CELL_001_ZONE_ADDRESS_REGIONS,
   upstreamZoneBoundaryRoles: H_EARTH_GROUND_CELL_001_ZONE_BOUNDARY_ROLES,
   upstreamZoneAdjacency: H_EARTH_GROUND_CELL_001_ZONE_ADJACENCY,
@@ -1646,8 +1887,8 @@ export const H_EARTH_GROUND_CONDITION_READ_AGGREGATE = Object.freeze({
 
   upstreamObjectContract: H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT,
   upstreamObjectIds: H_EARTH_GROUND_CELL_001_OBJECT_IDS,
-  upstreamObjectCompressionModel:
-    H_EARTH_GROUND_CELL_001_OBJECT_COMPRESSION_MODEL,
+  upstreamObjectCompositionModel:
+    H_EARTH_GROUND_CELL_001_OBJECT_COMPOSITION_MODEL,
   upstreamObjectZoneBindings: H_EARTH_GROUND_CELL_001_OBJECT_ZONE_BINDINGS,
   upstreamObjectAddressBindings:
     H_EARTH_GROUND_CELL_001_OBJECT_ADDRESS_BINDINGS,
@@ -1743,5 +1984,4 @@ export const H_EARTH_GROUND_CONDITION_READ_AGGREGATE = Object.freeze({
   getHEarthGroundCell001ExpectedObjectsForZone
 });
 
-// FINAL MARKER — STEP 031F
 export default H_EARTH_GROUND_CONDITION_READ_AGGREGATE;

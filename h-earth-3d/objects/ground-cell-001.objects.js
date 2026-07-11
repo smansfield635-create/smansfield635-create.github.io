@@ -19,7 +19,8 @@
  *   /h-earth-3d/h-earth.receipts.js
  * - Normalizes supporting-inspection authority field identities to:
  *   supportingInspectionTargetsPublicReadable
- *   supportingInspectionTargetsPublicReadableByReferencedAuthority
+ *   supportingInspectionTargetsReadabilityDefinedByStep034J
+ *   supportingInspectionTargetsReadabilityConsistentWithStep034IObjectScope
  *
  * Renews:
  * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1
@@ -135,12 +136,17 @@ export const H_EARTH_STEP_034I_PUBLIC_STAGE_AUTHORITY_REFERENCE =
     referencedAdmission: Object.freeze({
       objectDescriptorProjectionAllowed: true,
       primaryInspectionObjectPublicReadable: true,
-      supportingInspectionTargetsPublicReadable: true,
       contextOnlyObjectsPublicVisibleAsContext: true,
       cssDescriptorClassProjectionAllowed: true,
       dataAttributeDescriptorProjectionAllowed: true,
-
       secondarySurfaceContextPublicReadable: false
+    }),
+
+    step034JReadabilityDefinition: Object.freeze({
+      supportingInspectionTargetsPublicReadable: true,
+      supportingInspectionTargetsReadabilityDefinedByStep034J: true,
+      supportingInspectionTargetsReadabilityConsistentWithStep034IObjectScope:
+        true
     }),
 
     referencedInvariants: Object.freeze({
@@ -429,7 +435,12 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_BOUNDARY_FLAGS =
 
     objectDescriptorProjectionAllowedByReferencedAuthority: true,
     primaryInspectionObjectPublicReadableByReferencedAuthority: true,
-    supportingInspectionTargetsPublicReadableByReferencedAuthority: true,
+
+    supportingInspectionTargetsPublicReadable: true,
+    supportingInspectionTargetsReadabilityDefinedByStep034J: true,
+    supportingInspectionTargetsReadabilityConsistentWithStep034IObjectScope:
+      true,
+
     contextOnlyObjectsPublicVisibleByReferencedAuthority: true,
     secondarySurfaceContextPublicReadableByReferencedAuthority: false,
 

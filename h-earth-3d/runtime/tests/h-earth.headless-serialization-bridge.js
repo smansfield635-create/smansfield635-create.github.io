@@ -1,6 +1,6 @@
 /**
  * /h-earth-3d/runtime/tests/h-earth.headless-serialization-bridge.js
- * COMPLETE NEW FILE CANDIDATE
+ * COMPLETE NEW FILE
  * H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FILE_BIRTH_STEP_012J_v1
  *
  * Source family:
@@ -33,6 +33,9 @@
  * Step 012H.1 historical headless replay fixture fields to Step 012I canonical
  * serialization/evidence law without mutating either source and without
  * executing replay, vectors, runtime, route, renderer, DOM, or validation.
+ *
+ * This file is the Step 012J static bridge descriptor source.
+ * It is not a request for another bridge descriptor file.
  *
  * This file is not:
  * - a route bridge;
@@ -213,6 +216,15 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AUTHORITY =
     createsSeparateBridgeSourceOccurrence:
       true,
 
+    step012JIsStaticBridgeDescriptorSource:
+      true,
+
+    futureOperationalBridgeSourceRequiredNow:
+      false,
+
+    futureExecutionCapableConsumerHeld:
+      true,
+
     sourceCandidateOnlyUntilBacked:
       true,
 
@@ -288,8 +300,11 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AUTHORITY =
     step012IConsumesStep012H1:
       false,
 
-    bridgeDescribesFutureAwareness:
+    bridgeDescribesCurrentRelationshipJurisdiction:
       true,
+
+    bridgeExecutesRelationship:
+      false,
 
     bridgeExecutesFutureAwareness:
       false,
@@ -377,6 +392,12 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AUTHORITY =
 
     replayEqualityProven:
       false,
+
+    aggregateIsCanonicalSnapshotInput:
+      false,
+
+    onlyExplicitPlainDataProjectionsMayEnterStep012I:
+      true,
 
     importResolutionProof:
       false,
@@ -561,14 +582,16 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_LAW =
       FREEZE([
         'STEP_012H_1_REMAINS_ACTIVE_HISTORICAL_HEADLESS_REPLAY_FIXTURE_ALIGNMENT_SCAFFOLD',
         'STEP_012I_REMAINS_ACTIVE_CANONICAL_STATE_SERIALIZATION_LAW',
+        'STEP_012J_IS_THE_STATIC_BRIDGE_DESCRIPTOR_SOURCE',
         'STEP_012J_DEFINES_SEPARATE_RELATIONSHIP_SURFACE_ONLY',
+        'STEP_012J_DOES_NOT_REQUIRE_ANOTHER_BRIDGE_DESCRIPTOR_SOURCE',
         'STEP_012J_DOES_NOT_MUTATE_STEP_012H_1',
         'STEP_012J_DOES_NOT_MUTATE_STEP_012I',
         'STEP_012J_DOES_NOT_MUTATE_STEP_012I_RUNNER',
         'STEP_012J_DOES_NOT_MUTATE_TARGET_003_CANONICAL_REPLAY',
         'STEP_012J_DOES_NOT_MERGE_STEP_012H_1_AND_STEP_012I_DIRECTLY',
         'STEP_012J_DOES_NOT_CLAIM_STEP_012H_1_CONSUMES_STEP_012I',
-        'STEP_012J_ONLY_DEFINES_CONDITIONS_FOR_A_FUTURE_LAWFUL_RELATIONSHIP'
+        'STEP_012J_PREPARES_FRONT_LAYER_HANDOFF_WITHOUT_LETTING_FRONT_FILES_LEAD'
       ]),
 
     directConsumptionClaimAllowed:
@@ -596,11 +619,27 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AWARENESS_MODEL =
     modelId:
       'H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_STEP_012J_AWARENESS_MODEL',
 
-    allowedFutureAwareness:
-      'A future bridge source may describe that Step 012H.1 historical fixture fields could be compared using Step 012I canonical evidence records.',
+    descriptorAwareness:
+      'This Step 012J source is the static bridge descriptor source. It records that Step 012H.1 historical fixture fields and Step 012I canonical evidence law may be related without mutating either side.',
 
-    currentPacketAndSourceLimit:
-      'This source defines descriptor awareness only and does not execute bridge comparisons.',
+    currentSourceLimit:
+      'This source defines relationship awareness only and does not execute bridge comparisons.',
+
+    noAdditionalBridgeDescriptorRequiredNow:
+      true,
+
+    futureOperationalConsumerHeld:
+      true,
+
+    futureOperationalConsumerMayOnlyBeAuthorizedIf:
+      FREEZE([
+        'IT_CONSUMES_ONLY_EXPLICIT_ALLOWED_SURFACES',
+        'IT_RUNS_NOTHING_AT_MODULE_LOAD',
+        'IT_REPORTS_DESCRIPTOR_READINESS_SEPARATELY_FROM_EXECUTION_OBSERVATION',
+        'IT_REFUSES_VALIDATION_LANGUAGE',
+        'IT_REFUSES_PRODUCTION_LANGUAGE',
+        'IT_REFUSES_MATRIX_COLLAPSE'
+      ]),
 
     notAllowedHere:
       FREEZE([
@@ -617,19 +656,56 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AWARENESS_MODEL =
         'CLAIM_VALIDATION',
         'CLAIM_PRODUCTION',
         'CLAIM_MATRIX_COLLAPSE'
+      ])
+  });
+
+
+export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_CANONICAL_INPUT_DISCIPLINE =
+  FREEZE({
+    disciplineId:
+      'H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_STEP_012J_CANONICAL_INPUT_DISCIPLINE',
+
+    step012JAggregateIsCanonicalSnapshotInput:
+      false,
+
+    aggregateContainsCallableOrImportedSurfaces:
+      true,
+
+    wholeAggregateCanonicalizationAllowed:
+      false,
+
+    onlyExplicitPlainDataProjectionsMayEnterStep012I:
+      true,
+
+    purpose:
+      'Prevent the Step 012J aggregate from being mistaken for direct canonical evidence input. Step 012I may only receive explicit plain-data projections from authorized future consumers.',
+
+    rejectedFutureInputs:
+      FREEZE([
+        'WHOLE_STEP_012J_AGGREGATE',
+        'IMPORTED_MODULE_AGGREGATE',
+        'FUNCTION_VALUE',
+        'CLASS_VALUE',
+        'ACCESSOR_VALUE',
+        'NON_PLAIN_OBJECT',
+        'DOM_NODE',
+        'CONTROLLER_OBJECT',
+        'COMPOSITOR_OBJECT',
+        'RENDERER_OBJECT',
+        'ROUTE_RUNTIME_OBJECT'
       ]),
 
-    futureBridgeMayOnlyBePromotedIf:
-      FREEZE([
-        'CREATED_AS_SEPARATE_SOURCE_OCCURRENCE',
-        'PRESERVES_STEP_012H_1_AND_STEP_012I_AS_INDEPENDENT_BACKED_SURFACES',
-        'IMPORTS_ONLY_MINIMUM_REQUIRED_SURFACES',
-        'RUNS_NOTHING_AT_MODULE_LOAD',
-        'REPORTS_DESCRIPTOR_READINESS_SEPARATELY_FROM_EXECUTION_OBSERVATION',
-        'REFUSES_VALIDATION_LANGUAGE',
-        'REFUSES_PRODUCTION_LANGUAGE',
-        'REFUSES_MATRIX_COLLAPSE'
-      ])
+    allowedFutureInputClass:
+      'EXPLICIT_PLAIN_DATA_PROJECTION_ONLY',
+
+    projectionDefinedHere:
+      false,
+
+    projectionExecutedHere:
+      false,
+
+    canonicalDigestGeneratedHere:
+      false
   });
 
 
@@ -870,7 +946,7 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FOUR_LAYER_MODEL =
       ]),
 
     step012JLayerRelation:
-      'STEP_012J_OPERATES_INSIDE_LAYER_4_AS_A_SEPARATE_BOUNDARY_AND_RELATIONSHIP_SOURCE',
+      'STEP_012J_OPERATES_INSIDE_LAYER_4_AS_THE_STATIC_RELATIONSHIP_HANDOFF_TO_FRONT_LAYER_PREPARATION',
 
     redefinesLayer1:
       false,
@@ -882,6 +958,12 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FOUR_LAYER_MODEL =
       false,
 
     redefinesPublicFront:
+      false,
+
+    authorizesNewRuntimeBridgeFile:
+      false,
+
+    authorizesFrontLayerMutation:
       false
   });
 
@@ -896,6 +978,7 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_ALLOWED_DESCRIPTOR_CLAIMS =
     'canonicalizationIdentityClassified',
     'bridgeFieldMapDefined',
     'bridgeAwarenessModelDefined',
+    'canonicalInputDisciplineDefined',
     'legacyFrontExtractionPolicyDefined',
     'fourLayerModelPreserved',
     'boundaryRecorded'
@@ -907,6 +990,7 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_BLOCKED_CLAIMS =
     'PASS_CANDIDATE',
     'HEADLESS_SERIALIZATION_BRIDGE_EXECUTED',
     'bridgeExecuted',
+    'anotherBridgeDescriptorRequired',
     'step012H1ConsumedStep012I',
     'step012IConsumedStep012H1',
     'step012H1Mutated',
@@ -923,6 +1007,7 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_BLOCKED_CLAIMS =
     'tickCommitted',
     'snapshotGenerated',
     'canonicalDigestGenerated',
+    'wholeAggregateCanonicalized',
     'replayEqualityProven',
     'importResolutionVerified',
     'installedModuleEvaluationVerified',
@@ -1094,6 +1179,9 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_DESCRIPTOR =
     awarenessModel:
       H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AWARENESS_MODEL,
 
+    canonicalInputDiscipline:
+      H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_CANONICAL_INPUT_DISCIPLINE,
+
     fieldMap:
       H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FIELD_MAP,
 
@@ -1108,6 +1196,15 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_DESCRIPTOR =
 
     renewsExistingFileInPlace:
       false,
+
+    step012JIsStaticBridgeDescriptorSource:
+      true,
+
+    futureOperationalBridgeSourceRequiredNow:
+      false,
+
+    futureExecutionCapableConsumerHeld:
+      true,
 
     mutatesStep012H1:
       false,
@@ -1139,6 +1236,12 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_DESCRIPTOR =
     bridgeRunFunctionDefinedHere:
       false,
 
+    wholeAggregateCanonicalizationAllowed:
+      false,
+
+    onlyExplicitPlainDataProjectionsMayEnterStep012I:
+      true,
+
     replayProofClaim:
       false,
 
@@ -1158,7 +1261,7 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_DESCRIPTOR =
       false,
 
     operationalBoundary:
-      'This source defines a static bridge descriptor that relates the Step 012H.1 historical fixture surface to the Step 012I canonical serialization law. It does not execute replay, vectors, runtime, route, renderer, front files, controller, compositor, DOM mutation, validation, production, or matrix collapse.',
+      'This source defines the Step 012J static bridge descriptor that relates the Step 012H.1 historical fixture surface to the Step 012I canonical serialization law. It does not execute replay, vectors, runtime, route, renderer, front files, controller, compositor, DOM mutation, validation, production, or matrix collapse. It does not require another bridge descriptor file.',
 
     finalMarker:
       'export default H_EARTH_HEADLESS_SERIALIZATION_BRIDGE;'
@@ -1182,6 +1285,16 @@ export function getHEarthHeadlessSerializationBridgeTargetClassification() {
 
 export function getHEarthHeadlessSerializationBridgeRelationshipMembers() {
   return H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_RELATIONSHIP_MEMBERS;
+}
+
+
+export function getHEarthHeadlessSerializationBridgeAwarenessModel() {
+  return H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AWARENESS_MODEL;
+}
+
+
+export function getHEarthHeadlessSerializationBridgeCanonicalInputDiscipline() {
+  return H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_CANONICAL_INPUT_DISCIPLINE;
 }
 
 
@@ -1235,6 +1348,15 @@ export function getHEarthHeadlessSerializationBridgeReceipt() {
     networkBackupCompleteClaim:
       false,
 
+    step012JIsStaticBridgeDescriptorSource:
+      true,
+
+    futureOperationalBridgeSourceRequiredNow:
+      false,
+
+    futureExecutionCapableConsumerHeld:
+      true,
+
     step012H1ContractId:
       H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_IMPORTED_STEP_012H_1_CONTRACT_ID,
 
@@ -1272,6 +1394,9 @@ export function getHEarthHeadlessSerializationBridgeReceipt() {
       true,
 
     bridgeAwarenessModelDefined:
+      true,
+
+    canonicalInputDisciplineDefined:
       true,
 
     legacyFrontExtractionPolicyDefined:
@@ -1361,6 +1486,12 @@ export function getHEarthHeadlessSerializationBridgeReceipt() {
     canonicalDigestGeneratedByBridge:
       false,
 
+    wholeAggregateCanonicalized:
+      false,
+
+    onlyExplicitPlainDataProjectionsMayEnterStep012I:
+      true,
+
     replayEqualityProven:
       false,
 
@@ -1449,6 +1580,9 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE =
     awarenessModel:
       H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AWARENESS_MODEL,
 
+    canonicalInputDiscipline:
+      H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_CANONICAL_INPUT_DISCIPLINE,
+
     fieldMap:
       H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FIELD_MAP,
 
@@ -1509,6 +1643,15 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE =
     archiveOccurrenceClaim:
       false,
 
+    step012JIsStaticBridgeDescriptorSource:
+      true,
+
+    futureOperationalBridgeSourceRequiredNow:
+      false,
+
+    futureExecutionCapableConsumerHeld:
+      true,
+
     bridgeDescriptorConstructedHere:
       true,
 
@@ -1529,6 +1672,15 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE =
 
     step012IRunnerExecuted:
       false,
+
+    aggregateIsCanonicalSnapshotInput:
+      false,
+
+    wholeAggregateCanonicalizationAllowed:
+      false,
+
+    onlyExplicitPlainDataProjectionsMayEnterStep012I:
+      true,
 
     frontFileExtractionPolicyDefined:
       true,
@@ -1580,6 +1732,12 @@ export const H_EARTH_HEADLESS_SERIALIZATION_BRIDGE =
 
     getRelationshipMembers:
       getHEarthHeadlessSerializationBridgeRelationshipMembers,
+
+    getAwarenessModel:
+      getHEarthHeadlessSerializationBridgeAwarenessModel,
+
+    getCanonicalInputDiscipline:
+      getHEarthHeadlessSerializationBridgeCanonicalInputDiscipline,
 
     getFieldMap:
       getHEarthHeadlessSerializationBridgeFieldMap,

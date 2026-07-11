@@ -1,35 +1,46 @@
 /**
  * /h-earth-3d/runtime/tests/h-earth.headless-replay.contract.js
  * COMPLETE RENEWED FILE
- * H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_TEST_SCAFFOLD_REVIEW_v1
+ * H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_1_HISTORICAL_FIXTURE_ALIGNMENT_v1
  *
  * Renews existing file in place:
  * /h-earth-3d/runtime/tests/h-earth.headless-replay.contract.js
  *
- * Prior known or reported contract:
+ * Prior backed Step 012H contract:
+ * H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_TEST_SCAFFOLD_REVIEW_v1
+ *
+ * Prior known pre-renewal contract:
  * H_EARTH_HEADLESS_REPLAY_CONTRACT_TEST_v1
  *
- * Prior contract verification posture:
- * priorVerifiedContractId = null
- * priorContractIdVerified = false
- *
  * Step:
- * STEP_012H_HEADLESS_REPLAY_TEST_SCAFFOLD_REVIEW
+ * STEP_012H_1_HEADLESS_REPLAY_HISTORICAL_FIXTURE_ALIGNMENT
  *
- * Current active backed chain end before this renewal:
- * STEP_012G_TARGET_003_CANONICAL_REPLAY
+ * Source class:
+ * MATERIAL RENEWAL OF STEP 012H SCAFFOLD
+ *
+ * Occurrence discipline:
+ * This file does not reuse the prior Step 012H occurrence identity.
+ * The prior Step 012H source body remains its own backed occurrence.
+ * This file is a Step 012H.1 renewal that aligns the headless replay scaffold
+ * with backed Target 002 and Target 003 implementation surfaces while preserving
+ * the historical future-intent fixture identity.
+ *
+ * Chain-position note:
+ * This file imports Target 002 and Target 003 only. It does not import, consume,
+ * or integrate Step 012I canonical state serialization law or the Step 012I
+ * serialization vector runner.
  *
  * Purpose:
- * Renew the existing headless replay contract test file into a Step 012H
- * static test-scaffold review target while preserving import-surface awareness,
- * reference intent cases, check definitions, and no-proof/no-execution claim
- * boundaries.
+ * Define a callable headless replay scaffold that preserves:
+ * - deterministic runtime import-surface awareness;
+ * - canonical replay import-surface awareness;
+ * - backed Target 002 pendingIntents queue surface;
+ * - backed Target 003 replay pending-intent snapshot surface;
+ * - backed Target 003 sparse-array rejection prefix;
+ * - historical future-intent vector identity;
+ * - no-proof/no-execution claim boundaries at module load.
  *
- * This file defines callable test-scaffold functions.
  * Function definition is not function execution.
- *
- * This file declares imports from deterministic runtime support.
- * This file declares imports from canonical replay support.
  *
  * This source file does not prove import resolution.
  * This source file does not prove installed module evaluation.
@@ -72,13 +83,10 @@ import {
 
 
 export const H_EARTH_HEADLESS_REPLAY_CONTRACT_ID =
+  'H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_1_HISTORICAL_FIXTURE_ALIGNMENT_v1';
+
+export const H_EARTH_HEADLESS_REPLAY_PRIOR_BACKED_STEP_012H_CONTRACT_ID =
   'H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_TEST_SCAFFOLD_REVIEW_v1';
-
-export const H_EARTH_HEADLESS_REPLAY_PRIOR_VERIFIED_CONTRACT_ID =
-  null;
-
-export const H_EARTH_HEADLESS_REPLAY_PRIOR_CONTRACT_ID_VERIFIED =
-  false;
 
 export const H_EARTH_HEADLESS_REPLAY_PRIOR_KNOWN_OR_REPORTED_CONTRACT_ID =
   'H_EARTH_HEADLESS_REPLAY_CONTRACT_TEST_v1';
@@ -95,10 +103,11 @@ export const H_EARTH_HEADLESS_REPLAY_EXPECTED_TARGET_003_CONTRACT =
 export const H_EARTH_HEADLESS_REPLAY_IMPORTED_TARGET_003_CONTRACT =
   H_EARTH_CANONICAL_REPLAY_CONTRACT_ID;
 
+
 export const H_EARTH_HEADLESS_REPLAY_TARGET_CONTRACT_CLASSIFICATION =
   Object.freeze({
     classificationId:
-      'H_EARTH_HEADLESS_REPLAY_TARGET_002_AND_TARGET_003_CONTRACT_IDENTITY_CLASSIFICATION',
+      'H_EARTH_HEADLESS_REPLAY_STEP_012H_1_TARGET_002_AND_TARGET_003_CONTRACT_IDENTITY_CLASSIFICATION',
 
     expectedTarget002Contract:
       H_EARTH_HEADLESS_REPLAY_EXPECTED_TARGET_002_CONTRACT,
@@ -143,40 +152,58 @@ export const H_EARTH_HEADLESS_REPLAY_TARGET_CONTRACT_CLASSIFICATION =
 export const H_EARTH_HEADLESS_REPLAY_AUTHORITY =
   Object.freeze({
     authorityId:
-      'H_EARTH_HEADLESS_REPLAY_STEP_012H_AUTHORITY_BOUNDARY',
+      'H_EARTH_HEADLESS_REPLAY_STEP_012H_1_AUTHORITY_BOUNDARY',
 
     file:
       '/h-earth-3d/runtime/tests/h-earth.headless-replay.contract.js',
 
     currentStep:
-      'STEP_012H',
+      'STEP_012H_1',
 
     contractId:
       H_EARTH_HEADLESS_REPLAY_CONTRACT_ID,
 
-    priorVerifiedContractId:
-      H_EARTH_HEADLESS_REPLAY_PRIOR_VERIFIED_CONTRACT_ID,
-
-    priorContractIdVerified:
-      H_EARTH_HEADLESS_REPLAY_PRIOR_CONTRACT_ID_VERIFIED,
+    priorBackedStep012HContractId:
+      H_EARTH_HEADLESS_REPLAY_PRIOR_BACKED_STEP_012H_CONTRACT_ID,
 
     priorKnownOrReportedContractId:
       H_EARTH_HEADLESS_REPLAY_PRIOR_KNOWN_OR_REPORTED_CONTRACT_ID,
 
+    renewalRelationToStep012H:
+      'MATERIAL_RENEWAL_SUPERSEDING_SOURCE_BODY_WITH_NEW_CONTRACT_ID',
+
     currentContractRoom:
-      'ROOM_6_HEADLESS_REPLAY_TEST_SCAFFOLD_REVIEW',
+      'ROOM_6_HEADLESS_REPLAY_HISTORICAL_FIXTURE_ALIGNMENT',
 
     historicalFileClass:
-      'HEADLESS_REPLAY_CONTRACT_TEST_CANDIDATE',
+      'HEADLESS_REPLAY_CONTRACT_TEST_SCAFFOLD',
 
     authorityClass:
-      'STATIC_HEADLESS_REPLAY_TEST_SCAFFOLD_REVIEW_ONLY',
+      'STATIC_HEADLESS_REPLAY_HISTORICAL_FIXTURE_ALIGNMENT_ONLY',
 
     fileClass:
       'HEADLESS_REPLAY_CONTRACT_TEST_SPEC_SCAFFOLD_ONLY',
 
     activeStatusCeiling:
-      'STATIC_HEADLESS_REPLAY_TEST_SCAFFOLD_REVIEW_ONLY',
+      'STATIC_HEADLESS_REPLAY_HISTORICAL_FIXTURE_ALIGNMENT_ONLY',
+
+    originalStep012HExactSourceBodyEquivalence:
+      false,
+
+    sameContractIdAsPriorStep012H:
+      false,
+
+    materialRenewal:
+      true,
+
+    chainPosition:
+      'STEP_012H_1_TARGET_002_TARGET_003_HISTORICAL_FIXTURE_ALIGNMENT',
+
+    step012IIntegrationPresent:
+      false,
+
+    step012IConsumption:
+      false,
 
     ownModuleInitializationExecution:
       true,
@@ -204,6 +231,24 @@ export const H_EARTH_HEADLESS_REPLAY_AUTHORITY =
 
     headlessReplayContractChecksExecutedAtModuleLoad:
       false,
+
+    historicalFutureIntentVectorDefinedHere:
+      true,
+
+    futureIntentRuntimeQueueCheckDefinedHere:
+      true,
+
+    futureIntentReplayResultCheckDefinedHere:
+      true,
+
+    futureIntentSnapshotQueueCheckDefinedHere:
+      true,
+
+    futureIntentPendingQueueHashCheckDefinedHere:
+      true,
+
+    replayPendingIntentComparisonChecksDefinedHere:
+      true,
 
     replayScenarioExecutedAtModuleLoad:
       false,
@@ -308,11 +353,8 @@ export const H_EARTH_HEADLESS_REPLAY_CONTRACT_DESCRIPTOR =
     contractId:
       H_EARTH_HEADLESS_REPLAY_CONTRACT_ID,
 
-    priorVerifiedContractId:
-      H_EARTH_HEADLESS_REPLAY_PRIOR_VERIFIED_CONTRACT_ID,
-
-    priorContractIdVerified:
-      H_EARTH_HEADLESS_REPLAY_PRIOR_CONTRACT_ID_VERIFIED,
+    priorBackedStep012HContractId:
+      H_EARTH_HEADLESS_REPLAY_PRIOR_BACKED_STEP_012H_CONTRACT_ID,
 
     priorKnownOrReportedContractId:
       H_EARTH_HEADLESS_REPLAY_PRIOR_KNOWN_OR_REPORTED_CONTRACT_ID,
@@ -335,8 +377,26 @@ export const H_EARTH_HEADLESS_REPLAY_CONTRACT_DESCRIPTOR =
     activeStatusCeiling:
       H_EARTH_HEADLESS_REPLAY_AUTHORITY.activeStatusCeiling,
 
+    originalStep012HExactSourceBodyEquivalence:
+      false,
+
+    sameContractIdAsPriorStep012H:
+      false,
+
+    materialRenewal:
+      true,
+
+    chainPosition:
+      H_EARTH_HEADLESS_REPLAY_AUTHORITY.chainPosition,
+
+    step012IIntegrationPresent:
+      false,
+
+    step012IConsumption:
+      false,
+
     renewalPurpose:
-      'Renew the existing headless replay contract test file into a Step 012H static test-scaffold review target while preserving callable test-function definition, deterministic-runtime import awareness, canonical-replay import awareness, source-defined imported contract identity classifications, and no-proof/no-execution claim boundaries.',
+      'Renew the existing headless replay contract test scaffold into a Step 012H.1 historical fixture alignment target with a new contract ID, preserving callable test-function definition, deterministic-runtime import awareness, canonical-replay import awareness, source-defined imported contract identity classifications, backed Target 002 pendingIntents surface, backed Target 003 pending-intent replay/snapshot surface, historical future-intent fixture identity, and no-proof/no-execution claim boundaries.',
 
     operationalBoundary:
       'Callable headless replay contract checks are defined here. They are not executed by module initialization and do not create harness execution, test execution, replay proof, validation authority, runtime activation, renderer authority, route authority, production authority, deployment authority, visual-pass authority, or matrix-collapse authority.',
@@ -358,6 +418,9 @@ export const H_EARTH_HEADLESS_REPLAY_CONTRACT_DESCRIPTOR =
 
         relationship:
           'DIRECT_DETERMINISTIC_RUNTIME_SUPPORT_IMPORT_TARGET',
+
+        expectedRuntimePendingIntentQueueProperty:
+          'pendingIntents',
 
         importDeclarationPresent:
           true,
@@ -392,6 +455,30 @@ export const H_EARTH_HEADLESS_REPLAY_CONTRACT_DESCRIPTOR =
 
         relationship:
           'DIRECT_CANONICAL_REPLAY_SUPPORT_IMPORT_TARGET',
+
+        expectedSparseArrayErrorPrefix:
+          'SPARSE_ARRAY_ENTRY_REJECTED',
+
+        expectedReplayPendingIntentSurface:
+          Object.freeze({
+            replayResultPendingIntents:
+              true,
+
+            snapshotPendingIntentCount:
+              true,
+
+            snapshotPendingIntentQueue:
+              true,
+
+            snapshotPendingIntentQueueHash:
+              true,
+
+            comparisonPendingIntentCountEqual:
+              true,
+
+            comparisonPendingIntentQueueHashEqual:
+              true
+          }),
 
         importDeclarationPresent:
           true,
@@ -496,16 +583,16 @@ export const H_EARTH_HEADLESS_REPLAY_REFERENCE_INTENTS =
 export const H_EARTH_HEADLESS_REPLAY_FUTURE_INTENT =
   Object.freeze({
     mutationId:
-      'MUTATION_0004_FUTURE_INSPECT_GROUND',
+      'MUTATION_0099_FUTURE_INSPECT_GROUND',
 
     targetTick:
-      3,
+      10,
 
     sourceClass:
       'ACTOR',
 
     sourceSequence:
-      4,
+      99,
 
     actorId:
       'H_EARTH_REFERENCE_ACTOR_001',
@@ -524,7 +611,7 @@ export const H_EARTH_HEADLESS_REPLAY_FUTURE_INTENT =
 export const H_EARTH_HEADLESS_REPLAY_CHECK_DEFINITIONS =
   Object.freeze({
     checkSetId:
-      'H_EARTH_HEADLESS_REPLAY_STEP_012H_CHECK_DEFINITIONS',
+      'H_EARTH_HEADLESS_REPLAY_STEP_012H_1_CHECK_DEFINITIONS',
 
     checksExecutedAtModuleLoad:
       false,
@@ -547,6 +634,9 @@ export const H_EARTH_HEADLESS_REPLAY_CHECK_DEFINITIONS =
     replayEqualityCheckDefined:
       true,
 
+    replayPendingIntentComparisonChecksDefined:
+      true,
+
     canonicalPropertyOrderCheckDefined:
       true,
 
@@ -562,6 +652,9 @@ export const H_EARTH_HEADLESS_REPLAY_CHECK_DEFINITIONS =
     sparseArrayRejectionCheckDefined:
       true,
 
+    sparseArrayErrorPrefix:
+      'SPARSE_ARRAY_ENTRY_REJECTED',
+
     nonPlainObjectRejectionCheckDefined:
       true,
 
@@ -571,11 +664,38 @@ export const H_EARTH_HEADLESS_REPLAY_CHECK_DEFINITIONS =
     futureIntentPendingQueueCheckDefined:
       true,
 
+    futureIntentPendingQueueProperty:
+      'pendingIntents',
+
+    futureIntentHistoricalVectorId:
+      'MUTATION_0099_FUTURE_INSPECT_GROUND',
+
+    futureIntentHistoricalTargetTick:
+      10,
+
+    futureIntentHistoricalSourceSequence:
+      99,
+
+    futureIntentReplayResultCheckDefined:
+      true,
+
+    futureIntentSnapshotCountCheckDefined:
+      true,
+
+    futureIntentSnapshotQueueCheckDefined:
+      true,
+
+    futureIntentPendingQueueHashCheckDefined:
+      true,
+
     target002ContractIdentityCheckDefined:
       true,
 
     target003ContractIdentityCheckDefined:
       true,
+
+    step012IIntegrationPresent:
+      false,
 
     passClaimDefinedHere:
       false,
@@ -714,12 +834,12 @@ export function runHEarthHeadlessReplayContract() {
   );
 
   assert(
-    runtime.pendingIntentQueue.length === 1,
+    runtime.pendingIntents.length === 1,
     'FUTURE_INTENT_PENDING_QUEUE_COUNT_NOT_ONE'
   );
 
   assert(
-    runtime.pendingIntentQueue[0].mutationId ===
+    runtime.pendingIntents[0].mutationId ===
       H_EARTH_HEADLESS_REPLAY_FUTURE_INTENT.mutationId,
     'FUTURE_INTENT_PENDING_QUEUE_ID_MISMATCH'
   );
@@ -764,6 +884,65 @@ export function runHEarthHeadlessReplayContract() {
   );
 
   assert(
+    comparison.checks.pendingIntentCountEqual === true,
+    'PENDING_INTENT_COUNT_EQUALITY_NOT_CHECKED'
+  );
+
+  assert(
+    comparison.checks.pendingIntentQueueHashEqual === true,
+    'PENDING_INTENT_QUEUE_HASH_EQUALITY_NOT_CHECKED'
+  );
+
+  const futureIntentReplay =
+    replayHEarthScenario({
+      initialState,
+
+      orderedIntents:
+        [
+          H_EARTH_HEADLESS_REPLAY_FUTURE_INTENT
+        ],
+
+      finalTick:
+        0,
+
+      versionEnvelope:
+        H_EARTH_VERSION_ENVELOPE
+    });
+
+  assert(
+    futureIntentReplay.pendingIntents.length === 1,
+    'FUTURE_INTENT_NOT_PRESERVED_IN_REPLAY_RESULT'
+  );
+
+  assert(
+    futureIntentReplay.pendingIntents[0].mutationId ===
+      H_EARTH_HEADLESS_REPLAY_FUTURE_INTENT.mutationId,
+    'FUTURE_INTENT_REPLAY_RESULT_ID_MISMATCH'
+  );
+
+  assert(
+    futureIntentReplay.snapshot.pendingIntentCount === 1,
+    'FUTURE_INTENT_NOT_PRESERVED_IN_SNAPSHOT_COUNT'
+  );
+
+  assert(
+    futureIntentReplay.snapshot.pendingIntentQueue.length === 1,
+    'FUTURE_INTENT_NOT_PRESERVED_IN_SNAPSHOT_QUEUE'
+  );
+
+  assert(
+    futureIntentReplay.snapshot.pendingIntentQueue[0].mutationId ===
+      H_EARTH_HEADLESS_REPLAY_FUTURE_INTENT.mutationId,
+    'FUTURE_INTENT_SNAPSHOT_QUEUE_ID_MISMATCH'
+  );
+
+  assert(
+    typeof futureIntentReplay.snapshot.pendingIntentQueueHash === 'string' &&
+      futureIntentReplay.snapshot.pendingIntentQueueHash.length === 64,
+    'FUTURE_INTENT_PENDING_QUEUE_HASH_MISSING'
+  );
+
+  assert(
     canonicalizeHEarthValue({
       b:
         2,
@@ -803,7 +982,7 @@ export function runHEarthHeadlessReplayContract() {
       ,
       'present'
     ]),
-    'SPARSE_ARRAY_REJECTED',
+    'SPARSE_ARRAY_ENTRY_REJECTED',
     'SPARSE_ARRAY_NOT_REJECTED'
   );
 
@@ -835,8 +1014,11 @@ export function runHEarthHeadlessReplayContract() {
     contractId:
       H_EARTH_HEADLESS_REPLAY_CONTRACT_ID,
 
+    priorBackedStep012HContractId:
+      H_EARTH_HEADLESS_REPLAY_PRIOR_BACKED_STEP_012H_CONTRACT_ID,
+
     status:
-      'STEP_012H_HEADLESS_REPLAY_CONTRACT_FUNCTION_EXECUTION_OBSERVED',
+      'STEP_012H_1_HEADLESS_REPLAY_CONTRACT_FUNCTION_EXECUTION_OBSERVED',
 
     executionWasRequestedByFunctionCall:
       true,
@@ -870,6 +1052,33 @@ export function runHEarthHeadlessReplayContract() {
         futureIntentPendingQueue:
           true,
 
+        futureIntentPendingQueueProperty:
+          'pendingIntents',
+
+        futureIntentHistoricalVectorId:
+          H_EARTH_HEADLESS_REPLAY_FUTURE_INTENT.mutationId,
+
+        futureIntentHistoricalTargetTick:
+          H_EARTH_HEADLESS_REPLAY_FUTURE_INTENT.targetTick,
+
+        futureIntentHistoricalSourceSequence:
+          H_EARTH_HEADLESS_REPLAY_FUTURE_INTENT.sourceSequence,
+
+        futureIntentPreservedInReplayResult:
+          true,
+
+        futureIntentPreservedInSnapshot:
+          true,
+
+        futureIntentPendingQueueHashDefined:
+          true,
+
+        pendingIntentCountEqual:
+          comparison.checks.pendingIntentCountEqual,
+
+        pendingIntentQueueHashEqual:
+          comparison.checks.pendingIntentQueueHashEqual,
+
         canonicalPropertyOrder:
           true,
 
@@ -884,6 +1093,9 @@ export function runHEarthHeadlessReplayContract() {
 
         sparseArrayRejected:
           true,
+
+        sparseArrayErrorPrefix:
+          'SPARSE_ARRAY_ENTRY_REJECTED',
 
         nonPlainObjectRejected:
           true,
@@ -904,14 +1116,23 @@ export function runHEarthHeadlessReplayContract() {
     snapshotHash:
       firstReplay.snapshot.snapshotHash,
 
+    futureIntentSnapshotHash:
+      futureIntentReplay.snapshot.snapshotHash,
+
+    futureIntentPendingIntentQueueHash:
+      futureIntentReplay.snapshot.pendingIntentQueueHash,
+
     importResolutionObserved:
       true,
 
     installedModuleEvaluationObserved:
       true,
 
-    moduleGraphExecutionObserved:
+    boundedImportedModuleGraphExecutionObserved:
       true,
+
+    fullRuntimeModuleGraphVerified:
+      false,
 
     neighboringSourceModuleExecutionObserved:
       true,
@@ -924,6 +1145,12 @@ export function runHEarthHeadlessReplayContract() {
 
     replayComparisonObserved:
       true,
+
+    step012IIntegrationPresent:
+      false,
+
+    step012IConsumed:
+      false,
 
     replayProofClaim:
       false,
@@ -953,7 +1180,12 @@ export const H_EARTH_HEADLESS_REPLAY_ALLOWED_DESCRIPTOR_CLAIMS =
     'referenceIntentCasesDefined',
     'target002ContractIdentityClassified',
     'target003ContractIdentityClassified',
+    'historicalFutureIntentFixtureDefined',
     'futureIntentPendingQueueCheckDefined',
+    'futureIntentReplayResultCheckDefined',
+    'futureIntentSnapshotQueueCheckDefined',
+    'futureIntentPendingQueueHashCheckDefined',
+    'pendingIntentReplayComparisonChecksDefined',
     'canonicalizationRejectionChecksDefined',
     'sha256KnownVectorCheckDefined',
     'replayEqualityCheckDefined',
@@ -1002,7 +1234,7 @@ export const H_EARTH_HEADLESS_REPLAY_BLOCKED_CLAIMS =
 export const H_EARTH_HEADLESS_REPLAY_CLAIM_GUARD_MODEL =
   Object.freeze({
     modelId:
-      'H_EARTH_HEADLESS_REPLAY_CLAIM_GUARD_MODEL',
+      'H_EARTH_HEADLESS_REPLAY_STEP_012H_1_CLAIM_GUARD_MODEL',
 
     securityProperty:
       'ALLOWLIST_WITH_UNKNOWN_REJECTION',
@@ -1070,7 +1302,7 @@ export function classifyHEarthHeadlessReplayClaim(claimName) {
         true,
 
       classification:
-        'ALLOW_STATIC_HEADLESS_REPLAY_TEST_SCAFFOLD_DESCRIPTOR_READ_ONLY',
+        'ALLOW_STATIC_HEADLESS_REPLAY_HISTORICAL_FIXTURE_ALIGNMENT_DESCRIPTOR_READ_ONLY',
 
       failClosed:
         true
@@ -1147,19 +1379,16 @@ export function getHEarthHeadlessReplayClaimGuardModel() {
 export function getHEarthHeadlessReplayDescriptorReceipt() {
   return Object.freeze({
     receiptType:
-      'H_EARTH_HEADLESS_REPLAY_STEP_012H_DESCRIPTOR_RECEIPT',
+      'H_EARTH_HEADLESS_REPLAY_STEP_012H_1_DESCRIPTOR_RECEIPT',
 
     receiptId:
-      'H_EARTH_HEADLESS_REPLAY_STEP_012H_TEST_SCAFFOLD_REVIEW_DESCRIPTOR_RECEIPT_v1',
+      'H_EARTH_HEADLESS_REPLAY_STEP_012H_1_HISTORICAL_FIXTURE_ALIGNMENT_DESCRIPTOR_RECEIPT_v1',
 
     contractId:
       H_EARTH_HEADLESS_REPLAY_CONTRACT_ID,
 
-    priorVerifiedContractId:
-      H_EARTH_HEADLESS_REPLAY_PRIOR_VERIFIED_CONTRACT_ID,
-
-    priorContractIdVerified:
-      H_EARTH_HEADLESS_REPLAY_PRIOR_CONTRACT_ID_VERIFIED,
+    priorBackedStep012HContractId:
+      H_EARTH_HEADLESS_REPLAY_PRIOR_BACKED_STEP_012H_CONTRACT_ID,
 
     priorKnownOrReportedContractId:
       H_EARTH_HEADLESS_REPLAY_PRIOR_KNOWN_OR_REPORTED_CONTRACT_ID,
@@ -1168,7 +1397,25 @@ export function getHEarthHeadlessReplayDescriptorReceipt() {
       '/h-earth-3d/runtime/tests/h-earth.headless-replay.contract.js',
 
     status:
-      'STEP_012H_STATIC_HEADLESS_REPLAY_TEST_SCAFFOLD_DESCRIPTOR_DEFINED',
+      'STEP_012H_1_STATIC_HEADLESS_REPLAY_HISTORICAL_FIXTURE_ALIGNMENT_DESCRIPTOR_DEFINED',
+
+    originalStep012HExactSourceBodyEquivalence:
+      false,
+
+    sameContractIdAsPriorStep012H:
+      false,
+
+    materialRenewal:
+      true,
+
+    chainPosition:
+      H_EARTH_HEADLESS_REPLAY_AUTHORITY.chainPosition,
+
+    step012IIntegrationPresent:
+      false,
+
+    step012IConsumption:
+      false,
 
     authorityBoundaryRecorded:
       true,
@@ -1202,6 +1449,30 @@ export function getHEarthHeadlessReplayDescriptorReceipt() {
 
     headlessReplayContractChecksExecutedAtModuleLoad:
       false,
+
+    futureIntentRuntimeQueueCheckDefinedHere:
+      true,
+
+    futureIntentHistoricalVectorId:
+      'MUTATION_0099_FUTURE_INSPECT_GROUND',
+
+    futureIntentHistoricalTargetTick:
+      10,
+
+    futureIntentHistoricalSourceSequence:
+      99,
+
+    futureIntentReplayResultCheckDefinedHere:
+      true,
+
+    futureIntentSnapshotQueueCheckDefinedHere:
+      true,
+
+    futureIntentPendingQueueHashCheckDefinedHere:
+      true,
+
+    replayPendingIntentComparisonChecksDefinedHere:
+      true,
 
     checkDefinitions:
       H_EARTH_HEADLESS_REPLAY_CHECK_DEFINITIONS,
@@ -1303,11 +1574,8 @@ export const H_EARTH_HEADLESS_REPLAY_CONTRACT =
     contractId:
       H_EARTH_HEADLESS_REPLAY_CONTRACT_ID,
 
-    priorVerifiedContractId:
-      H_EARTH_HEADLESS_REPLAY_PRIOR_VERIFIED_CONTRACT_ID,
-
-    priorContractIdVerified:
-      H_EARTH_HEADLESS_REPLAY_PRIOR_CONTRACT_ID_VERIFIED,
+    priorBackedStep012HContractId:
+      H_EARTH_HEADLESS_REPLAY_PRIOR_BACKED_STEP_012H_CONTRACT_ID,
 
     priorKnownOrReportedContractId:
       H_EARTH_HEADLESS_REPLAY_PRIOR_KNOWN_OR_REPORTED_CONTRACT_ID,
@@ -1343,10 +1611,28 @@ export const H_EARTH_HEADLESS_REPLAY_CONTRACT =
       H_EARTH_HEADLESS_REPLAY_BLOCKED_CLAIMS,
 
     mode:
-      'STATIC_HEADLESS_REPLAY_TEST_SCAFFOLD_REVIEW_ONLY',
+      'STATIC_HEADLESS_REPLAY_HISTORICAL_FIXTURE_ALIGNMENT_ONLY',
 
     fileClass:
       'HEADLESS_REPLAY_CONTRACT_TEST_SPEC_SCAFFOLD_ONLY',
+
+    originalStep012HExactSourceBodyEquivalence:
+      false,
+
+    sameContractIdAsPriorStep012H:
+      false,
+
+    materialRenewal:
+      true,
+
+    chainPosition:
+      H_EARTH_HEADLESS_REPLAY_AUTHORITY.chainPosition,
+
+    step012IIntegrationPresent:
+      false,
+
+    step012IConsumption:
+      false,
 
     deterministicRuntimeImportDeclaration:
       true,
@@ -1380,6 +1666,30 @@ export const H_EARTH_HEADLESS_REPLAY_CONTRACT =
 
     headlessReplayContractChecksExecutedAtModuleLoad:
       false,
+
+    futureIntentRuntimeQueueCheckDefinedHere:
+      true,
+
+    futureIntentHistoricalVectorId:
+      'MUTATION_0099_FUTURE_INSPECT_GROUND',
+
+    futureIntentHistoricalTargetTick:
+      10,
+
+    futureIntentHistoricalSourceSequence:
+      99,
+
+    futureIntentReplayResultCheckDefinedHere:
+      true,
+
+    futureIntentSnapshotQueueCheckDefinedHere:
+      true,
+
+    futureIntentPendingQueueHashCheckDefinedHere:
+      true,
+
+    replayPendingIntentComparisonChecksDefinedHere:
+      true,
 
     harnessExecuted:
       false,

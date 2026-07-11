@@ -1,503 +1,404 @@
-/*
-  /showroom/globe/h-earth/index.js
-  COMPLETE RENEWED FILE
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_033B_STRUCTURAL_BASELINE_HANDOFF_AND_PUBLIC_SPLIT_ALIGNMENT_v1
+// /showroom/globe/h-earth/index.js
+// COMPLETE RENEWED FILE
+// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034E_PUBLIC_STAGE_ADAPTER_LAYER_4_STATUS_PROJECTION_v1
+//
+// Renews:
+// H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_033B_STRUCTURAL_BASELINE_HANDOFF_AND_PUBLIC_SPLIT_ALIGNMENT_v1
+//
+// Companion route shell:
+// /showroom/globe/h-earth/index.html
+// H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034C_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_PROJECTION_v1
+//
+// Companion stylesheet:
+// /showroom/globe/h-earth/index.css
+// H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034D_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_SUPPORT_v1
+//
+// Diagnostic route:
+// /showroom/globe/h-earth/diagnostic/
+//
+// Purpose:
+// Public-stage adapter for the H-Earth environment host. This file connects the
+// public route shell to a visible environment stage, selected-surface readout,
+// compact public receipts, and a narrow read-only Layer 4 / Step 012J status
+// projection.
+//
+// Controlling relationship:
+// STEP_012H_1_HEADLESS_REPLAY_FIXTURE_SIDE
+//   ->
+// STEP_012J_READ_ONLY_RELATIONSHIP_DESCRIPTOR
+//   ->
+// PUBLIC_STAGE_STATUS_PROJECTION
+//
+// Public-stage adapter rule:
+// This file may read or dynamically import the Step 012J relationship
+// descriptor when the deployed path supports it. If that import succeeds,
+// normal JavaScript module initialization for Step 012J and its declared
+// dependencies may be observed. That is not runner execution.
+//
+// The public stage must distinguish:
+//
+// MODULE_INITIALIZATION_OBSERVED
+//
+// from:
+//
+// RUN_FUNCTION_EXECUTED
+// REPLAY_EXECUTED
+// VECTOR_RUNNER_EXECUTED
+// RUNTIME_EXECUTED
+// CANONICAL_DIGEST_GENERATED
+// REPLAY_COMPARISON
+//
+// The first may become true when Step 012J is imported.
+// The others remain false.
+//
+// Boundary:
+// Public route only.
+// Environment host authorized.
+// Visible stage authorized.
+// Renderer mount support authorized as public-stage candidate display only.
+// Read-only Step 012J descriptor projection authorized.
+// Public-stage receipt definition authorized.
+// Diagnostic route handoff authorized.
+// Does not invoke Step 012H.1 run functions.
+// Does not invoke Step 012I canonicalizers.
+// Does not invoke Step 012I digest helpers.
+// Does not invoke Step 012I snapshot functions.
+// Does not invoke Step 012I vector runner.
+// Does not invoke Target 002 runtime functions.
+// Does not invoke Target 003 replay functions.
+// Does not generate canonical digests.
+// Does not compare replay results.
+// Does not validate.
+// Does not claim production.
+// Does not claim visual pass.
+// Does not collapse the matrix.
 
-  Renews:
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032H_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_v1
-  H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1
+export const H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID =
+  'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034E_PUBLIC_STAGE_ADAPTER_LAYER_4_STATUS_PROJECTION_v1';
 
-  Preserves:
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032F_RENDERER_032D_COMPOSITOR_SYNC_v1
+export const H_EARTH_3D_ROUTE_SHELL_CONTRACT_ID =
+  'H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034C_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_PROJECTION_v1';
 
-  Purpose:
-  Public H-Earth route bootstrap only. Aligns the handoff-capable 032H public
-  bootstrap with the public/diagnostic route split discipline from 033A.
+export const H_EARTH_3D_ROUTE_STYLE_CONTRACT_ID =
+  'H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034D_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_SUPPORT_v1';
 
-  033B correction:
-  - Preserves live public renderer receipt handoff.
-  - Preserves public route bootstrap, renderer mount, compact status, controls,
-    target list, public readout, and diagnostic route link.
-  - Adds structural pipeline baseline lock receipt.
-  - Moves full diagnostic/report-wall responsibility out of the public route.
-  - Prepares the diagnostic route to transition from structural-pipeline checks
-    to visual-composition diagnostics without losing achieved baseline facts.
+export const H_EARTH_3D_PUBLIC_ROUTE_FILE =
+  '/showroom/globe/h-earth/index.js';
 
-  Structural baseline:
-  The structural pipeline may be treated as locked when the live route reports:
-  chain ready, DOM ready, controller ready, renderer mount ready, renderer
-  mounted, route status BOOTSTRAP_READY_CANDIDATE_ONLY, same-origin handoff
-  written, renderer mount receipt present, geometry expansion applied, material /
-  layer / node-factory ports used, organic emission present, and no warning or
-  failure codes.
+export const H_EARTH_3D_PUBLIC_ROUTE =
+  '/showroom/globe/h-earth/';
 
-  Diagnostic split:
-  Full reports, raw evidence walls, receipt walls, copy surfaces, visual
-  composition audits, and diagnostic transition receipts belong to:
-  /showroom/globe/h-earth/diagnostic/
+export const H_EARTH_3D_DIAGNOSTIC_ROUTE =
+  '/showroom/globe/h-earth/diagnostic/';
 
-  Boundary:
-  Public bootstrap only. Receipt handoff and structural baseline lock only.
-  No renderer behavior change. No geometry mutation. No compositor mutation.
-  No environment construction. No controller mutation. No CSS mutation.
-  No HTML mutation. No WebGL. No canvas. No SVG. No iframe.
-  No final-renderer claim. No renderer-pass claim. No visual-pass claim.
-  No validation claim. No production claim. No traversal.
-  No survival simulation. No swimming. No fluid simulation.
-  No manor interior access. No distant traversal.
-  No runtime lattice activation. No active 16x16 runtime claim.
-  No active 256-address runtime claim. No matrix collapse.
-*/
+export const H_EARTH_3D_LAYER_4_BRIDGE_DEFAULT_MODULE_PATH =
+  '../../../h-earth-3d/runtime/tests/h-earth.headless-serialization-bridge.js';
 
-import {
-  H_EARTH_3D_CAPACITY,
-  H_EARTH_3D_CAPACITY_RECEIPT,
-  H_EARTH_3D_FORBIDDEN_CAPABILITY_FLAGS,
-  getCapacityReceipt
-} from './capacity.js';
+export const H_EARTH_3D_PUBLIC_RENDERER_MODULE_PATH =
+  './renderer.js';
 
-import {
-  H_EARTH_3D_ENVIRONMENT,
-  H_EARTH_3D_ENVIRONMENT_RECEIPT,
-  getEnvironmentReceipt
-} from './environment.js';
-
-import {
-  H_EARTH_3D_RENDERER,
-  H_EARTH_3D_RENDERER_RECEIPT,
-  H_EARTH_3D_CANDIDATE_RENDER_SCENE,
-  H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
-  H_EARTH_3D_RENDER_VOLUME_MODEL,
-  H_EARTH_3D_RENDER_PORTS,
-  mountHEarthRenderer,
-  destroyHEarthRenderer,
-  selectHEarthRenderInput,
-  getRendererReceipt
-} from './renderer.js';
-
-import {
-  H_EARTH_3D_COMPOSITOR,
-  H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
-  H_EARTH_3D_COMPOSITOR_RECEIPT,
-  H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS,
-  getCompositorReceipt
-} from './compositor.js';
-
-import {
-  H_EARTH_3D_CONTROLLER,
-  H_EARTH_3D_CONTROLLER_RECEIPT,
-  H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
-  H_EARTH_3D_INSPECTION_ACTION_ROUTING,
-  H_EARTH_3D_GROUND_CONDITION_READ_BRIDGE,
-  H_EARTH_3D_GROUND_INSPECTION_RECEIPT_BRIDGE,
-  H_EARTH_3D_CONTEXT_ONLY_BLOCK_RESPONSES,
-  H_EARTH_3D_SECONDARY_SURFACE_CONTEXT_RESPONSES,
-  H_EARTH_3D_WATER_ATMOSPHERIC_CONTEXT_RESPONSES,
-  H_EARTH_3D_BLOCKED_BEHAVIOR_RESPONSES,
-  H_EARTH_3D_COMPOSED_FRAME_SELECTION_REFERENCES,
-  H_EARTH_3D_CONTROLLER_BOUNDARY_FLAGS,
-  getSelectableTarget,
-  getControllerTargetClassification,
-  resolveInspectGroundControllerBridge,
-  resolveGroundConditionReadBridge,
-  getControllerReceipt
-} from './controller.js';
-
-export const H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY =
-  'H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_v1';
-
-export const H_EARTH_3D_INDEX_CONTRACT = Object.freeze({
-  contractId:
-    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_033B_STRUCTURAL_BASELINE_HANDOFF_AND_PUBLIC_SPLIT_ALIGNMENT_v1',
-
-  renewedFrom: Object.freeze([
-    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032H_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_v1',
-    'H_EARTH_3D_INDEX_PUBLIC_BOOTSTRAP_FILE_BIRTH_STEP_033A_DIAGNOSTIC_ROUTE_SPLIT_RENDERER_031D_COMPAT_v1'
-  ]),
-
-  preservedFrom: Object.freeze([
-    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032G_ENVIRONMENT_021B_DESCRIPTOR_EXPOSURE_SYNC_v1',
-    'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_BIRTH_STEP_032F_RENDERER_032D_COMPOSITOR_SYNC_v1'
-  ]),
-
-  file: '/showroom/globe/h-earth/index.js',
-  route: '/showroom/globe/h-earth/',
-  diagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
-  sourceRoot: '/h-earth-3d/',
-
-  fileClass:
-    'PUBLIC_ROUTE_BOOTSTRAP_STRUCTURAL_BASELINE_HANDOFF_CARRIER',
-  activationScope:
-    'AUTHORIZED_PUBLIC_ROUTE_SIDE_CANDIDATE_ACTIVATION_DOM_CSS_3D_ONLY',
-  activationOption:
-    'STEP_033B_PUBLIC_BOOTSTRAP_HANDOFF_AND_SPLIT_ALIGNMENT',
-
-  targetMatrix: 'H-Earth',
-  matrixRole: 'Ground-View Matrix',
-  activeCell: 'H_EARTH_GROUND_CELL_001',
-  sceneIdentity: 'earth-water-air-survival-shoreline-manor',
-  firstAction: 'Inspect Ground',
-  firstReadout: 'Ground Condition Read',
-  firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-
-  livePublicRendererReceiptHandoffTarget:
-    H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-
-  diagnosticTransitionPrepared:
-    'STRUCTURAL_PIPELINE_BASELINE_TO_VISUAL_COMPOSITION',
-
-  reportPrinciple:
-    'Receipts prove. Reports diagnose. Scene remains primary.',
-
-  renewalScope: Object.freeze({
-    publicBootstrapOnly: true,
-    publicDiagnosticSplitAligned: true,
-    livePublicRendererReceiptHandoffPreserved: true,
-    structuralPipelineBaselineLockAdded: true,
-    diagnosticTransitionPrepared: true,
-
-    compactPublicReceiptPreserved: true,
-    publicReadoutPreserved: true,
-    publicTargetListPreserved: true,
-    publicDiagnosticRouteLinkPreserved: true,
-    rendererMountOrchestrationPreserved: true,
-    controllerInspectionBridgePreserved: true,
-
-    fullDiagnosticWallMovedOutOfPublicRoute: true,
-    rawEvidenceWallMovedOutOfPublicRoute: true,
-    receiptWallMovedOutOfPublicRoute: true,
-    copySurfaceMovedOutOfPublicRoute: true,
-    visualCompositionDiagnosticMovedToDiagnosticRoute: true,
-
-    renderingBehaviorChanged: false,
-    geometryMutation: false,
-    compositorMutation: false,
-    environmentMutation: false,
-    rendererMutation: false,
-    controllerMutation: false,
-    routeShellHtmlMutation: false,
-    routeCssMutation: false,
-
-    latticeActivationAdded: false,
-    active16x16RuntimeClaimAdded: false,
-    active256AddressRuntimeClaimAdded: false,
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    matrixCollapse: false
-  }),
-
-  boundaryClaims: Object.freeze({
-    mutatesGitHub: false,
-    installsRoute: false,
-    expandsRoute: false,
-    activatesWebGL: false,
-    activatesCanvas: false,
-    activatesSvg: false,
-    activatesIframe: false,
-    createsShellOwnedSceneObjects: false,
-    createsFakeHtmlSceneGeometry: false,
-    claimsFinalRenderer: false,
-    claimsRendererPass: false,
-    claimsVisualPass: false,
-    claimsValidation: false,
-    claimsProduction: false,
-    claimsOpenWorldTraversal: false,
-    claimsSurvivalSimulation: false,
-    claimsSwimming: false,
-    claimsFluidSimulation: false,
-    claimsManorInteriorAccess: false,
-    claimsDistantTraversal: false,
-    claimsLatticeActivation: false,
-    claimsActive16x16Runtime: false,
-    claimsActive256AddressRuntime: false,
-    claimsMirrorManorRouteCanonName: false,
-    matrixCollapse: false
-  })
+export const H_EARTH_3D_PUBLIC_STAGE_STATUS = Object.freeze({
+  NOT_STARTED: 'PUBLIC_STAGE_NOT_STARTED',
+  INITIALIZING: 'PUBLIC_STAGE_INITIALIZING',
+  READY: 'PUBLIC_STAGE_READY',
+  PARTIAL: 'PUBLIC_STAGE_PARTIAL',
+  FALLBACK: 'PUBLIC_STAGE_FALLBACK',
+  ERROR: 'PUBLIC_STAGE_ERROR'
 });
 
-export const H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_CONTRACT =
-  Object.freeze({
-    receiptType:
-      'H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_CONTRACT',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    storageKey: H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-    publicRoute: H_EARTH_3D_INDEX_CONTRACT.route,
-    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+export const H_EARTH_3D_LAYER_4_STATUS = Object.freeze({
+  STATIC_METADATA_PROJECTED: 'LAYER_4_STATIC_METADATA_PROJECTED',
+  DESCRIPTOR_IMPORT_PENDING: 'LAYER_4_DESCRIPTOR_IMPORT_PENDING',
+  DESCRIPTOR_IMPORT_OBSERVED: 'LAYER_4_DESCRIPTOR_IMPORT_OBSERVED',
+  DESCRIPTOR_IMPORT_FAILED_STATIC_METADATA_RETAINED:
+    'LAYER_4_DESCRIPTOR_IMPORT_FAILED_STATIC_METADATA_RETAINED',
+  DESCRIPTOR_IMPORT_SKIPPED_STATIC_METADATA_RETAINED:
+    'LAYER_4_DESCRIPTOR_IMPORT_SKIPPED_STATIC_METADATA_RETAINED'
+});
 
-    sameOriginHandoff: true,
-    sessionStorageWriteAllowed: true,
-    localStorageWriteAllowed: true,
-    globalExposeAllowed: true,
-    diagnosticRouteMayRead: true,
+export const H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING = Object.freeze({
+  moduleInitializationObservedMayBecomeTrue: true,
 
-    boundary: Object.freeze({
-      receiptHandoffOnly: true,
-      publicRouteMutation: false,
-      publicCssMutation: false,
-      publicHtmlMutation: false,
-      rendererMutation: false,
-      geometryMutation: false,
-      compositorMutation: false,
-      environmentMutation: false,
-      controllerMutation: false,
-      rendererPassClaim: false,
-      visualPassClaim: false,
-      validationClaim: false,
-      productionClaim: false,
-      matrixCollapse: false
-    })
-  });
+  runFunctionExecuted: false,
+  step012H1RunExecuted: false,
+  step012IVectorExecuted: false,
+  step012IRunnerExecuted: false,
+  target002RuntimeExecuted: false,
+  target003ReplayExecuted: false,
+  runtimeExecuted: false,
+  replayExecuted: false,
+  vectorRunnerExecuted: false,
+  canonicalDigestGenerated: false,
+  replayComparison: false,
+
+  validationClaim: false,
+  productionClaim: false,
+  deploymentClaim: false,
+  rendererPassClaim: false,
+  visualPassClaim: false,
+  matrixCollapse: false
+});
+
+export const H_EARTH_3D_LAYER_4_CONTRACTS = Object.freeze({
+  step012JContractId:
+    'H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FILE_BIRTH_STEP_012J_v1',
+
+  step012H1ContractId:
+    'H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_1_HISTORICAL_FIXTURE_ALIGNMENT_v1',
+
+  step012IContractId:
+    'H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_FILE_BIRTH_STEP_012I_v1',
+
+  step012ICanonicalizationId:
+    'H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_STEP_012I_UTF16_UTF8_SHA256_v1',
+
+  target002ContractId:
+    'H_EARTH_DETERMINISTIC_RUNTIME_FILE_RENEWAL_STEP_012G_TARGET_002_RUNTIME_KERNEL_DEPENDENCY_REVIEW_v1',
+
+  target003ContractId:
+    'H_EARTH_CANONICAL_REPLAY_FILE_RENEWAL_STEP_012G_TARGET_003_RUNTIME_KERNEL_DEPENDENCY_REVIEW_v1',
+
+  step012IRunnerContractId:
+    'H_EARTH_SERIALIZATION_VECTOR_RUNNER_FILE_BIRTH_STEP_012I_RUNNER_v1'
+});
+
+export const H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY = Object.freeze({
+  custodyClass:
+    'BACKED_STATIC_SUPPORT_METADATA_FOR_PUBLIC_STAGE_PROJECTION',
+
+  step012JBackupComplete: true,
+  step012JArchiveTitle:
+    'h-earth-headless-serialization-bridge-step-012j-backup',
+  step012JDriveDocumentId:
+    '1zt8rsROGF8roudC3re1KOwmU5KSws6pQIap7kd0gQpw',
+
+  step012H1ArchiveTitle:
+    'h-earth-headless-replay-step-012h-1-backup',
+  step012H1DriveDocumentId:
+    '1DfSsDzKRYQNJn9S43hmA8gMeebY_7WeQ0ygoIl6Qt2Y',
+
+  step012IArchiveTitle:
+    'h-earth-canonical-state-serialization-law-step-012i-backup',
+  step012IDriveDocumentId:
+    '1K8bszh6SMeutLpCeyCjK6D9r8m6zsIEP3R6soBip6GA',
+
+  step012IRunnerArchiveTitle:
+    'h-earth-serialization-vector-runner-step-012i-backup',
+  step012IRunnerDriveDocumentId:
+    '1EcXxqb2M_MwdiHFVDX95klU4Dh6X1Be8Q5TFNDyCIUE',
+
+  target002ArchiveTitle:
+    'h-earth-deterministic-runtime-step-012g-target-002-backup',
+  target002DriveDocumentId:
+    '1AYVrqdmnBEdM5k4pop8wJNXMThXxdLZd7TNkhgkq2Z0',
+
+  target003ArchiveTitle:
+    'h-earth-canonical-replay-step-012g-target-003-backup',
+  target003DriveDocumentId:
+    '1qbNHRW9L3l7FjfJW04x30J9qNO9dNvWTR8b6Vh0C3vU',
+
+  archiveCustodyStatus:
+    'BACKED_OCCURRENCE_RECORDED_BY_CONSTRUCTION_BASIS',
+
+  publicStageReverifiesDriveArchive: false,
+  publicStageClaimsNetworkBackup: false
+});
 
 export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS = Object.freeze({
-  routeBootstrapOrchestrator: true,
-  publicRouteBootstrapOnly: true,
-  diagnosticRouteSplit: true,
-  authorizedRouteSideCandidateActivationDomCss3dOnly: true,
+  publicRouteOnly: true,
+  publicEnvironmentHost: true,
+  visibleStageAuthorized: true,
+  rendererMountSupportAuthorized: true,
+  selectedSurfaceDisplayAuthorized: true,
+  groundConditionReadDisplayAuthorized: true,
+  layer4StatusProjectionAuthorized: true,
+  publicStageReceiptDefinitionAuthorized: true,
+  diagnosticRouteHandoffAuthorized: true,
 
-  directDomControlBindingAllowedWithinCandidateBoundary: true,
-  statusDomUpdateAllowedWithinCandidateBoundary: true,
-  descriptorDisplayAllowedWithinCandidateBoundary: true,
-  compactPublicReadoutAllowedWithinCandidateBoundary: true,
-  compactPublicBootstrapReceiptAllowedWithinCandidateBoundary: true,
-  diagnosticRouteLinkAllowedWithinCandidateBoundary: true,
-  livePublicRendererReceiptHandoffAllowedWithinCandidateBoundary: true,
-  sameOriginReceiptHandoffAllowedWithinCandidateBoundary: true,
-  structuralPipelineBaselineLockAllowedWithinCandidateBoundary: true,
+  diagnosticWallEmbedded: false,
+  reportWallEmbedded: false,
+  rawEvidenceWallEmbedded: false,
+  receiptWallEmbedded: false,
+  advancedCopySurfaceEmbedded: false,
 
-  diagnosticReportLayerAllowedInPublicRoute: false,
-  advancedRawEvidenceWallAllowedInPublicRoute: false,
-  rawEvidenceWallAllowedInPublicRoute: false,
-  latticeScopeDiagnosticWallAllowedInPublicRoute: false,
-  receiptWallAllowedInPublicRoute: false,
-  copySurfaceAllowedInPublicRoute: false,
-  visualCompositionAuditAllowedInPublicRoute: false,
-
-  rendererMountOnlyIfCanonApiExists: true,
-  aggregateRendererMountApiPreferred: true,
-  namedRendererMountApiAllowed: true,
-  noSpeculativeRendererApi: true,
-  noInventedRendererApi: true,
-  mountReceiptMustConfirmMounted: true,
-  destroyReceiptMustConfirmDestroyed: true,
-  runtimeFailureCodesRequiredForMountFailure: true,
-  noThrowDoesNotEqualMountSuccess: true,
-  noThrowDoesNotEqualDestroySuccess: true,
-  missingRendererMountApiIsControlledDescriptorReadyState: true,
-
-  repositoryMutation: false,
-  unauthorizedRouteExpansion: false,
+  shellOwnedSceneObjects: false,
+  fakeSceneGeometry: false,
   webglActivation: false,
   canvasActivation: false,
   svgActivation: false,
   iframeActivation: false,
-  shellOwnedSceneObjectCreation: false,
-  fakeHtmlSceneGeometry: false,
-  finalRendererClaim: false,
+
+  step012H1RunExecution: false,
+  step012IVectorExecution: false,
+  step012IRunnerExecution: false,
+  target002RuntimeExecution: false,
+  target003ReplayExecution: false,
+  canonicalDigestGeneration: false,
+  replayComparison: false,
+
+  runtimeActivation: false,
+  routeActivationProof: false,
   rendererPassClaim: false,
   visualPassClaim: false,
   validationClaim: false,
   productionClaim: false,
-  openWorldTraversalClaim: false,
-  survivalSimulationClaim: false,
-  swimmingClaim: false,
-  fluidSimulationClaim: false,
-  manorInteriorAccessClaim: false,
-  distantTraversalClaim: false,
-  gameplayExecutionClaim: false,
-  runtimeReceiptPersistence: false,
-  survivalScoreClaim: false,
-  healthScoreClaim: false,
-  diagnosticScoreClaim: false,
-  latticeActivationClaim: false,
-  active16x16LatticeClaim: false,
+  deploymentClaim: false,
+
+  traversal: false,
+  survivalSimulation: false,
+  swimming: false,
+  fluidSimulation: false,
+  manorInteriorAccess: false,
+  distantTraversal: false,
+  runtimeLatticeActivation: false,
+  active16x16RuntimeLatticeClaim: false,
   active256AddressRuntimeClaim: false,
-  mirrorManorRouteCanonNameClaim: false,
-  matrixCollapse: false,
-  claimBoundaryPreserved: true
+  mirrorManorRouteCanonNaming: false,
+  matrixCollapse: false
 });
 
-export const H_EARTH_3D_ROUTE_MOUNT_CONTRACT = Object.freeze({
-  strictRequiredIds: Object.freeze({
-    routeRoot: 'h-earth-3d-route-root',
-    status: 'h-earth-3d-status',
-    fallback: 'h-earth-3d-fallback'
+export const H_EARTH_3D_PUBLIC_MOUNT_IDS = Object.freeze({
+  routeRoot: 'h-earth-3d-route-root',
+  status: 'h-earth-3d-status',
+  fallback: 'h-earth-3d-fallback',
+  rendererMount: 'h-earth-3d-renderer-mount',
+
+  actionInspectGround: 'h-earth-3d-action-inspect-ground',
+
+  selectedTargetCard: 'h-earth-3d-selected-target-card',
+  selectedTargetLabel: 'h-earth-3d-selected-target-label',
+  selectedTargetObjectId: 'h-earth-3d-selected-target-object-id',
+  selectedTargetClassification:
+    'h-earth-3d-selected-target-classification',
+
+  publicReadoutTitle: 'h-earth-3d-public-readout-title',
+  publicReadoutLine: 'h-earth-3d-public-readout-line',
+  publicReadout: 'h-earth-3d-public-readout',
+
+  targetList: 'h-earth-3d-target-list',
+
+  layer4StatusCard: 'h-earth-3d-layer-4-status-card',
+  layer4Status: 'h-earth-3d-layer-4-status',
+  layer4Summary: 'h-earth-3d-layer-4-summary',
+  layer4ProjectionPayload: 'h-earth-3d-layer-4-projection-payload',
+
+  step012JContractId: 'h-earth-3d-step-012j-contract-id',
+  step012H1ContractId: 'h-earth-3d-step-012h-1-contract-id',
+  step012IContractId: 'h-earth-3d-step-012i-contract-id',
+  step012ICanonicalizationId:
+    'h-earth-3d-step-012i-canonicalization-id',
+
+  inspectionPanel: 'h-earth-3d-inspection-panel',
+  debug: 'h-earth-3d-debug',
+  publicStageReceipt: 'h-earth-3d-public-stage-receipt',
+  copyStatus: 'h-earth-3d-copy-status',
+
+  diagnosticLink: 'h-earth-3d-diagnostic-link'
+});
+
+export const H_EARTH_3D_PUBLIC_TARGETS = Object.freeze([
+  Object.freeze({
+    objectId: 'OBJ_002_FOREGROUND_WET_SAND',
+    label: 'Foreground Wet Sand',
+    classification: 'PRIMARY_INSPECTION_TARGET',
+    material: 'wet-sand',
+    action: 'Inspect Ground',
+    readout: 'Ground Condition Read',
+    receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+    publicLine:
+      'Foreground wet sand is the first readable surface. It is descriptor-only until a later authorized runtime execution lane exists.'
   }),
 
-  conditionallyRequiredIds: Object.freeze({
-    rendererMount: 'h-earth-3d-renderer-mount'
+  Object.freeze({
+    objectId: 'OBJ_003_SHORELINE_FOAM',
+    label: 'Shoreline Foam',
+    classification: 'SUPPORTING_SURFACE_CONTEXT',
+    material: 'foam',
+    action: 'Inspect Context',
+    readout: 'Surface Context Read',
+    receipt: 'H_EARTH_SURFACE_CONTEXT_RECEIPT_CANDIDATE',
+    publicLine:
+      'Shoreline foam is context for the Ground-View Matrix. It does not create swimming, fluid simulation, or traversal authority.'
   }),
 
-  optionalPublicIds: Object.freeze({
-    hud: 'h-earth-3d-hud',
-    inspectionPanel: 'h-earth-3d-inspection-panel',
-    targetList: 'h-earth-3d-target-list',
-    debug: 'h-earth-3d-debug',
-    inspectGroundAction: 'h-earth-3d-action-inspect-ground',
-    selectedTargetLabel: 'h-earth-3d-selected-target-label',
-    selectedTargetClassification:
-      'h-earth-3d-selected-target-classification',
-    selectedTargetObjectId: 'h-earth-3d-selected-target-object-id',
-    publicReadout: 'h-earth-3d-public-readout',
-    publicReadoutTitle: 'h-earth-3d-public-readout-title',
-    publicReadoutLine: 'h-earth-3d-public-readout-line',
-    diagnosticLink: 'h-earth-3d-diagnostic-link'
+  Object.freeze({
+    objectId: 'OBJ_004_NEARSHORE_WATER',
+    label: 'Nearshore Water',
+    classification: 'WATER_ATMOSPHERIC_CONTEXT',
+    material: 'water',
+    action: 'Inspect Context',
+    readout: 'Water Context Read',
+    receipt: 'H_EARTH_WATER_CONTEXT_RECEIPT_CANDIDATE',
+    publicLine:
+      'Nearshore water is public-stage context. It does not activate swimming, fluid simulation, or survival simulation.'
   }),
 
-  diagnosticIdsExcludedFromPublicRoute: Object.freeze([
-    'h-earth-3d-operational-report-stack-payload',
-    'h-earth-3d-report-layer-status',
-    'h-earth-3d-spatial-summary-payload',
-    'h-earth-3d-composed-frame-payload',
-    'h-earth-3d-compositor-receipt-payload',
-    'h-earth-3d-renderer-placement-payload',
-    'h-earth-3d-environment-placement-payload',
-    'h-earth-3d-route-bootstrap-receipt',
-    'h-earth-3d-renderer-mount-receipt',
-    'h-earth-3d-boundary-flags',
-    'h-earth-3d-index-contract',
-    'h-earth-3d-copy-status',
-    'h-earth-3d-visual-composition-audit'
-  ]),
-
-  rendererMountPolicy: Object.freeze({
-    rendererMountNodeRequiredWhenRendererMountApiExists: true,
-    rendererMountNodeMissingWithoutRendererApiIsNotCanonChainFailure: true,
-    mountReceiptRequiredForMountedStatus: true,
-    runtimeFailureCodeRequiredForMountFallback: true,
-    noWebGLFallback: true,
-    noCanvasFallback: true,
-    noFakeRendererMount: true
+  Object.freeze({
+    objectId: 'OBJ_009_DISTANCE_MANOR_CONTEXT',
+    label: 'Distant Manor Context',
+    classification: 'DISTANT_CONTEXT_ONLY',
+    material: 'manor-context',
+    action: 'Inspect Context',
+    readout: 'Distant Context Read',
+    receipt: 'H_EARTH_DISTANT_CONTEXT_RECEIPT_CANDIDATE',
+    publicLine:
+      'The distant manor remains contextual. It does not grant manor interior access or distant traversal.'
   })
-});
+]);
 
-export const H_EARTH_3D_ROUTE_FAILURE_CODES = Object.freeze({
-  MISSING_CAPACITY_RECEIPT: 'MISSING_CAPACITY_RECEIPT',
-  MISSING_ENVIRONMENT_RECEIPT: 'MISSING_ENVIRONMENT_RECEIPT',
-  MISSING_RENDERER_RECEIPT: 'MISSING_RENDERER_RECEIPT',
-  MISSING_COMPOSITOR_RECEIPT: 'MISSING_COMPOSITOR_RECEIPT',
-  MISSING_CONTROLLER_RECEIPT: 'MISSING_CONTROLLER_RECEIPT',
-  MISSING_ROUTE_ROOT: 'MISSING_ROUTE_ROOT',
-  MISSING_STATUS_NODE: 'MISSING_STATUS_NODE',
-  MISSING_FALLBACK_NODE: 'MISSING_FALLBACK_NODE',
-  MISSING_RENDERER_MOUNT_NODE: 'MISSING_RENDERER_MOUNT_NODE',
-  MISSING_RENDERER_MOUNT_API: 'MISSING_RENDERER_MOUNT_API',
-  RENDERER_MOUNT_FAILED: 'RENDERER_MOUNT_FAILED',
-  RENDERER_DESTROY_FAILED: 'RENDERER_DESTROY_FAILED',
-  CONTROLLER_BINDING_SKIPPED: 'CONTROLLER_BINDING_SKIPPED',
-  BOOTSTRAP_FALLBACK_ACTIVE: 'BOOTSTRAP_FALLBACK_ACTIVE'
-});
+const MODULE_STATE = {
+  initialized: false,
+  status: H_EARTH_3D_PUBLIC_STAGE_STATUS.NOT_STARTED,
 
-export const H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS = Object.freeze({
-  CHAIN_READY: 'CHAIN_READY',
-  DOM_READY: 'DOM_READY',
-  CONTROLLER_READY: 'CONTROLLER_READY',
-  RENDERER_MOUNT_READY: 'RENDERER_MOUNT_READY',
-  BOOTSTRAP_READY_CANDIDATE_ONLY: 'BOOTSTRAP_READY_CANDIDATE_ONLY',
-  BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API:
-    'BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API',
-  BOOTSTRAP_FALLBACK_ACTIVE: 'BOOTSTRAP_FALLBACK_ACTIVE',
-  BOOTSTRAP_NOT_STARTED: 'BOOTSTRAP_NOT_STARTED'
-});
+  mountPoints: null,
+  selectedTargetId: 'OBJ_002_FOREGROUND_WET_SAND',
 
-export const H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_STATUS = Object.freeze({
-  STRUCTURAL_PIPELINE_LOCKED:
-    'STRUCTURAL_PIPELINE_LOCKED',
-  STRUCTURAL_PIPELINE_NOT_LOCKED:
-    'STRUCTURAL_PIPELINE_NOT_LOCKED',
-  STRUCTURAL_PIPELINE_REGRESSION_DETECTED:
-    'STRUCTURAL_PIPELINE_REGRESSION_DETECTED'
-});
+  generatedAt: null,
 
-export const H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET = Object.freeze({
-  transitionId:
-    'H_EARTH_3D_DIAGNOSTIC_TRANSITION_001_STRUCTURAL_PIPELINE_BASELINE_TO_VISUAL_COMPOSITION_v1',
-  fromDiagnosticDomain: 'STRUCTURAL_PIPELINE_DIAGNOSTIC',
-  toDiagnosticDomain: 'VISUAL_COMPOSITION_DIAGNOSTIC',
-  intendedDiagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
-  publicBootstrapProvidesBaselineOnly: true,
-  publicBootstrapRunsVisualCompositionAudit: false,
-  visualCompositionAuditBelongsToDiagnosticRoute: true
-});
+  rendererImportReceipt: null,
+  rendererMountReceipt: null,
 
-export const H_EARTH_3D_INDEX_BOUND_CHAIN = Object.freeze({
-  capacity: Object.freeze({
-    file: '/showroom/globe/h-earth/capacity.js',
-    aggregate: H_EARTH_3D_CAPACITY,
-    receipt: H_EARTH_3D_CAPACITY_RECEIPT
-  }),
+  layer4ImportReceipt: null,
+  layer4StatusProjection: null,
+  layer4PublicStageReceipt: null,
 
-  environment: Object.freeze({
-    file: '/showroom/globe/h-earth/environment.js',
-    aggregate: H_EARTH_3D_ENVIRONMENT,
-    receipt: H_EARTH_3D_ENVIRONMENT_RECEIPT
-  }),
+  routeBootstrapReceipt: null,
+  routeBootstrapResult: null,
 
-  renderer: Object.freeze({
-    file: '/showroom/globe/h-earth/renderer.js',
-    aggregate: H_EARTH_3D_RENDERER,
-    candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
-    renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
-    renderPorts: H_EARTH_3D_RENDER_PORTS,
-    boundaryFlags: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
-    aggregateMountApiAvailable:
-      typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function',
-    aggregateDestroyApiAvailable:
-      typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function',
-    namedMountApiAvailable: typeof mountHEarthRenderer === 'function',
-    namedDestroyApiAvailable: typeof destroyHEarthRenderer === 'function',
-    selectRenderInputHelperAvailable:
-      typeof selectHEarthRenderInput === 'function',
-    receipt: H_EARTH_3D_RENDERER_RECEIPT
-  }),
-
-  compositor: Object.freeze({
-    file: '/showroom/globe/h-earth/compositor.js',
-    aggregate: H_EARTH_3D_COMPOSITOR,
-    composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
-    boundaryFlags: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS,
-    receipt: H_EARTH_3D_COMPOSITOR_RECEIPT
-  }),
-
-  controller: Object.freeze({
-    file: '/showroom/globe/h-earth/controller.js',
-    aggregate: H_EARTH_3D_CONTROLLER,
-    targetRegistry: H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
-    boundaryFlags: H_EARTH_3D_CONTROLLER_BOUNDARY_FLAGS,
-    receipt: H_EARTH_3D_CONTROLLER_RECEIPT
-  })
-});
-
-const H_EARTH_SCENE_IDENTITY = Object.freeze({
-  matrix: 'H-Earth',
-  matrixRole: 'Ground-View Matrix',
-  activeCell: 'H_EARTH_GROUND_CELL_001',
-  sceneIdentity: 'earth-water-air-survival-shoreline-manor',
-  mirrorManorStatus: 'STRATEGICALLY_IMPLIED_NOT_ROUTE_CANON_NAMED'
-});
-
-const H_EARTH_DEFAULT_SELECTED_OBJECT_ID = 'OBJ_002_FOREGROUND_WET_SAND';
-
-function asArray(value) {
-  return Array.isArray(value) ? value : [];
-}
+  asyncInitializationStarted: false,
+  asyncInitializationComplete: false
+};
 
 function nowIso() {
   return new Date().toISOString();
+}
+
+function freeze(value) {
+  return Object.freeze(value);
+}
+
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
 }
 
 function getDocumentFromOptions(options = {}) {
   return options.document || globalThis.document || null;
 }
 
+function getById(rootDocument, id) {
+  if (!rootDocument || typeof rootDocument.getElementById !== 'function') {
+    return null;
+  }
+
+  return rootDocument.getElementById(id);
+}
+
 function safeSerialize(value, options = {}) {
-  const maxDepth = Number.isFinite(options.maxDepth) ? options.maxDepth : 7;
-  const maxArrayLength = Number.isFinite(options.maxArrayLength)
-    ? options.maxArrayLength
-    : 96;
+  const maxDepth =
+    Number.isFinite(options.maxDepth) ? options.maxDepth : 7;
+  const maxArrayLength =
+    Number.isFinite(options.maxArrayLength) ? options.maxArrayLength : 120;
+
   const seen = new WeakSet();
 
   function visit(input, depth) {
@@ -505,13 +406,23 @@ function safeSerialize(value, options = {}) {
 
     const type = typeof input;
 
-    if (type === 'string' || type === 'number' || type === 'boolean') {
+    if (
+      type === 'string' ||
+      type === 'number' ||
+      type === 'boolean'
+    ) {
+      if (typeof input === 'number' && !Number.isFinite(input)) {
+        return String(input);
+      }
+
       return input;
     }
 
     if (type === 'bigint') return String(input);
     if (type === 'undefined') return null;
     if (type === 'function') return `[Function ${input.name || 'anonymous'}]`;
+    if (type === 'symbol') return String(input);
+
     if (depth > maxDepth) return '[MaxDepthExceeded]';
 
     if (type === 'object') {
@@ -534,11 +445,14 @@ function safeSerialize(value, options = {}) {
 
       Object.keys(input).forEach((key) => {
         if (
+          key === 'document' ||
+          key === 'ownerDocument' ||
           key === 'mountNode' ||
           key === 'routeRoot' ||
           key === 'statusNode' ||
           key === 'fallbackNode' ||
-          key === 'rendererMount'
+          key === 'rendererMount' ||
+          key === 'target'
         ) {
           output[key] = '[DOMNodeOmitted]';
           return;
@@ -556,6 +470,14 @@ function safeSerialize(value, options = {}) {
   return visit(value, 0);
 }
 
+function stringifyPayload(value, options = {}) {
+  return JSON.stringify(
+    safeSerialize(value, options),
+    null,
+    2
+  );
+}
+
 function writeText(node, value) {
   if (!node) return false;
   node.textContent = String(value ?? '');
@@ -564,1968 +486,1501 @@ function writeText(node, value) {
 
 function writeJson(node, value, options = {}) {
   if (!node) return false;
-  node.textContent = JSON.stringify(safeSerialize(value, options), null, 2);
+  node.textContent = stringifyPayload(value, options);
   return true;
 }
 
-function addClass(node, className) {
-  if (!node?.classList || !className) return false;
-  node.classList.add(className);
+function setDatasetBoolean(node, key, value) {
+  if (!node?.dataset) return false;
+  node.dataset[key] = value === true ? 'true' : 'false';
   return true;
 }
 
-function removeClass(node, className) {
-  if (!node?.classList || !className) return false;
-  node.classList.remove(className);
+function setRouteClass(routeRoot, className) {
+  if (!routeRoot) return false;
+
+  routeRoot.classList.remove(
+    'h-earth-3d-boot-ready',
+    'h-earth-3d-boot-fallback',
+    'h-earth-3d-boot-error'
+  );
+
+  if (className) {
+    routeRoot.classList.add(className);
+  }
+
   return true;
 }
 
-function setNodeDataset(node, key, value) {
-  if (!node?.dataset || !key) return false;
-  node.dataset[key] = value === null || value === undefined ? '' : String(value);
-  return true;
+function resolveMountPoints(rootDocument = globalThis.document) {
+  const ids = H_EARTH_3D_PUBLIC_MOUNT_IDS;
+
+  const routeRoot = getById(rootDocument, ids.routeRoot);
+  const statusNode = getById(rootDocument, ids.status);
+  const fallbackNode = getById(rootDocument, ids.fallback);
+  const rendererMount = getById(rootDocument, ids.rendererMount);
+
+  const missingRequiredIds = [];
+
+  if (!routeRoot) missingRequiredIds.push(ids.routeRoot);
+  if (!statusNode) missingRequiredIds.push(ids.status);
+  if (!fallbackNode) missingRequiredIds.push(ids.fallback);
+  if (!rendererMount) missingRequiredIds.push(ids.rendererMount);
+
+  return freeze({
+    documentAvailable:
+      Boolean(rootDocument && typeof rootDocument.getElementById === 'function'),
+    routeRoot,
+    statusNode,
+    fallbackNode,
+    rendererMount,
+
+    actionInspectGround:
+      getById(rootDocument, ids.actionInspectGround),
+
+    selectedTargetCard:
+      getById(rootDocument, ids.selectedTargetCard),
+    selectedTargetLabel:
+      getById(rootDocument, ids.selectedTargetLabel),
+    selectedTargetObjectId:
+      getById(rootDocument, ids.selectedTargetObjectId),
+    selectedTargetClassification:
+      getById(rootDocument, ids.selectedTargetClassification),
+
+    publicReadoutTitle:
+      getById(rootDocument, ids.publicReadoutTitle),
+    publicReadoutLine:
+      getById(rootDocument, ids.publicReadoutLine),
+    publicReadout:
+      getById(rootDocument, ids.publicReadout),
+
+    targetList:
+      getById(rootDocument, ids.targetList),
+
+    layer4StatusCard:
+      getById(rootDocument, ids.layer4StatusCard),
+    layer4Status:
+      getById(rootDocument, ids.layer4Status),
+    layer4Summary:
+      getById(rootDocument, ids.layer4Summary),
+    layer4ProjectionPayload:
+      getById(rootDocument, ids.layer4ProjectionPayload),
+
+    step012JContractId:
+      getById(rootDocument, ids.step012JContractId),
+    step012H1ContractId:
+      getById(rootDocument, ids.step012H1ContractId),
+    step012IContractId:
+      getById(rootDocument, ids.step012IContractId),
+    step012ICanonicalizationId:
+      getById(rootDocument, ids.step012ICanonicalizationId),
+
+    inspectionPanel:
+      getById(rootDocument, ids.inspectionPanel),
+    debug:
+      getById(rootDocument, ids.debug),
+    publicStageReceipt:
+      getById(rootDocument, ids.publicStageReceipt),
+    copyStatus:
+      getById(rootDocument, ids.copyStatus),
+
+    diagnosticLink:
+      getById(rootDocument, ids.diagnosticLink),
+
+    requiredFound: missingRequiredIds.length === 0,
+    missingRequiredIds: freeze(missingRequiredIds)
+  });
 }
 
-function getTargetLabel(target, objectId) {
+function getTarget(targetId) {
   return (
-    target?.label ||
-    target?.objectLabel ||
-    target?.objectId ||
-    objectId ||
-    H_EARTH_DEFAULT_SELECTED_OBJECT_ID
+    H_EARTH_3D_PUBLIC_TARGETS.find((target) => target.objectId === targetId) ||
+    H_EARTH_3D_PUBLIC_TARGETS[0]
   );
 }
 
-function freezeStatus(status) {
-  return Object.freeze({
-    timestamp: status.timestamp || null,
-
-    chainReady: status.chainReady === true,
-    domReady: status.domReady === true,
-    controllerReady: status.controllerReady === true,
-    rendererMountReady: status.rendererMountReady === true,
-
-    bootstrapReadyCandidateOnly: status.bootstrapReadyCandidateOnly === true,
-    bootstrapReadyDescriptorOnlyNoRendererMountApi:
-      status.bootstrapReadyDescriptorOnlyNoRendererMountApi === true,
-    bootstrapFallbackActive: status.bootstrapFallbackActive === true,
-
-    statusLevel:
-      status.statusLevel ||
-      H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
-
-    failureCodes: Object.freeze(asArray(status.failureCodes)),
-    warningCodes: Object.freeze(asArray(status.warningCodes)),
-
-    rendererMountApiConfirmed: status.rendererMountApiConfirmed === true,
-    rendererDestroyApiConfirmed: status.rendererDestroyApiConfirmed === true,
-    rendererMountAttempted: status.rendererMountAttempted === true,
-    rendererMounted: status.rendererMounted === true,
-    rendererMountSkipped: status.rendererMountSkipped === true,
-    rendererMountSkipReason: status.rendererMountSkipReason || null,
-    rendererMountError: status.rendererMountError || null,
-    rendererMountReceipt: status.rendererMountReceipt || null,
-
-    rendererDestroyAttempted: status.rendererDestroyAttempted === true,
-    rendererDestroyed: status.rendererDestroyed === true,
-    rendererDestroyError: status.rendererDestroyError || null,
-    rendererDestroyReceipt: status.rendererDestroyReceipt || null,
-
-    rendererApiSource: status.rendererApiSource || null,
-    rendererDestroyApiSource: status.rendererDestroyApiSource || null,
-
-    livePublicRendererReceiptHandoff:
-      status.livePublicRendererReceiptHandoff || null,
-    livePublicRendererReceiptHandoffWrite:
-      status.livePublicRendererReceiptHandoffWrite || null,
-
-    structuralPipelineBaseline:
-      status.structuralPipelineBaseline || null,
-    structuralPipelineBaselineLock:
-      status.structuralPipelineBaselineLock || null,
-
-    routeRootFound: status.routeRootFound === true,
-    statusNodeFound: status.statusNodeFound === true,
-    fallbackNodeFound: status.fallbackNodeFound === true,
-    rendererMountNodeFound: status.rendererMountNodeFound === true,
-
-    targetListBound: status.targetListBound === true,
-    inspectGroundControlBound: status.inspectGroundControlBound === true,
-    selectedTargetCardUpdated: status.selectedTargetCardUpdated === true,
-    compactReadoutRendered: status.compactReadoutRendered === true,
-    debugStatusExposed: status.debugStatusExposed === true,
-    diagnosticRouteLinked: status.diagnosticRouteLinked === true,
-
-    selectedObjectId:
-      status.selectedObjectId ||
-      H_EARTH_DEFAULT_SELECTED_OBJECT_ID,
-
-    publicBootstrapOnly: true,
-    diagnosticRoute:
-      status.diagnosticRoute ||
-      H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
-
-    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-  });
-}
-
-let latestRouteBootstrapStatus = freezeStatus({
-  statusLevel: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
-  selectedObjectId: H_EARTH_DEFAULT_SELECTED_OBJECT_ID
-});
-
-export const H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
-  latestRouteBootstrapStatus;
-
-export function getRouteBootstrapStatus() {
-  return latestRouteBootstrapStatus;
-}
-
-function setRouteBootstrapStatus(nextStatus) {
-  latestRouteBootstrapStatus = freezeStatus({
-    ...latestRouteBootstrapStatus,
-    ...nextStatus,
-    timestamp: nowIso()
-  });
-
-  return latestRouteBootstrapStatus;
-}
-
-export function getRendererMountApi() {
-  if (typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function') {
-    return H_EARTH_3D_RENDERER.mountHEarthRenderer;
-  }
-
-  if (typeof mountHEarthRenderer === 'function') {
-    return mountHEarthRenderer;
-  }
-
-  return null;
-}
-
-export function getRendererMountApiSource() {
-  if (typeof H_EARTH_3D_RENDERER?.mountHEarthRenderer === 'function') {
-    return 'AGGREGATE_PROPERTY_H_EARTH_3D_RENDERER.mountHEarthRenderer';
-  }
-
-  if (typeof mountHEarthRenderer === 'function') {
-    return 'NAMED_EXPORT_mountHEarthRenderer';
-  }
-
-  return null;
-}
-
-export function getRendererDestroyApi() {
-  if (typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function') {
-    return H_EARTH_3D_RENDERER.destroyHEarthRenderer;
-  }
-
-  if (typeof destroyHEarthRenderer === 'function') {
-    return destroyHEarthRenderer;
-  }
-
-  return null;
-}
-
-export function getRendererDestroyApiSource() {
-  if (typeof H_EARTH_3D_RENDERER?.destroyHEarthRenderer === 'function') {
-    return 'AGGREGATE_PROPERTY_H_EARTH_3D_RENDERER.destroyHEarthRenderer';
-  }
-
-  if (typeof destroyHEarthRenderer === 'function') {
-    return 'NAMED_EXPORT_destroyHEarthRenderer';
-  }
-
-  return null;
-}
-
-export function isRendererMountReceiptMounted(receipt) {
-  return receipt?.rendererMounted === true || receipt?.mounted === true;
-}
-
-export function isRendererDestroyReceiptDestroyed(receipt) {
-  return receipt?.destroyed === true;
-}
-
-export function verifyHEarthRouteBoundChain() {
-  const checks = Object.freeze({
-    capacityReceiptPresent: Boolean(getCapacityReceipt()),
-    environmentReceiptPresent: Boolean(getEnvironmentReceipt()),
-    rendererReceiptPresent: Boolean(getRendererReceipt()),
-    compositorReceiptPresent: Boolean(getCompositorReceipt()),
-    controllerReceiptPresent: Boolean(getControllerReceipt()),
-
-    capacityReceiptConstantPresent: Boolean(H_EARTH_3D_CAPACITY_RECEIPT),
-    environmentReceiptConstantPresent: Boolean(H_EARTH_3D_ENVIRONMENT_RECEIPT),
-    rendererReceiptConstantPresent: Boolean(H_EARTH_3D_RENDERER_RECEIPT),
-    compositorReceiptConstantPresent: Boolean(H_EARTH_3D_COMPOSITOR_RECEIPT),
-    controllerReceiptConstantPresent: Boolean(H_EARTH_3D_CONTROLLER_RECEIPT),
-
-    capacityAggregatePresent: Boolean(H_EARTH_3D_CAPACITY),
-    environmentAggregatePresent: Boolean(H_EARTH_3D_ENVIRONMENT),
-    rendererAggregatePresent: Boolean(H_EARTH_3D_RENDERER),
-    compositorAggregatePresent: Boolean(H_EARTH_3D_COMPOSITOR),
-    controllerAggregatePresent: Boolean(H_EARTH_3D_CONTROLLER),
-
-    rendererMountApiPresent: Boolean(getRendererMountApi()),
-    rendererDestroyApiPresent: Boolean(getRendererDestroyApi()),
-    rendererMountApiSource: getRendererMountApiSource(),
-    rendererDestroyApiSource: getRendererDestroyApiSource(),
-
-    rendererVolumeModelPresent: Boolean(H_EARTH_3D_RENDER_VOLUME_MODEL),
-    rendererPortsPresent: Boolean(H_EARTH_3D_RENDER_PORTS),
-    rendererInputSelectorPresent: typeof selectHEarthRenderInput === 'function',
-
-    composedCandidateFramePresent: Boolean(H_EARTH_3D_COMPOSED_CANDIDATE_FRAME),
-    candidateRenderScenePresent: Boolean(H_EARTH_3D_CANDIDATE_RENDER_SCENE)
-  });
-
-  const failureCodes = [];
-
-  if (!checks.capacityReceiptPresent) {
-    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_CAPACITY_RECEIPT);
-  }
-
-  if (!checks.environmentReceiptPresent) {
-    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_ENVIRONMENT_RECEIPT);
-  }
-
-  if (!checks.rendererReceiptPresent) {
-    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_RECEIPT);
-  }
-
-  if (!checks.compositorReceiptPresent) {
-    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_COMPOSITOR_RECEIPT);
-  }
-
-  if (!checks.controllerReceiptPresent) {
-    failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_CONTROLLER_RECEIPT);
-  }
-
-  return Object.freeze({
-    checks,
-    chainReady: failureCodes.length === 0,
-    failureCodes: Object.freeze(failureCodes),
-    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-  });
-}
-
-export function resolveHEarthRouteMountPoints(rootDocument = globalThis.document) {
-  const strictIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds;
-  const conditionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.conditionallyRequiredIds;
-  const optionalIds = H_EARTH_3D_ROUTE_MOUNT_CONTRACT.optionalPublicIds;
-
-  if (!rootDocument || typeof rootDocument.getElementById !== 'function') {
-    return Object.freeze({
-      documentAvailable: false,
-      routeRoot: null,
-      rendererMount: null,
-      statusNode: null,
-      fallbackNode: null,
-      hud: null,
-      inspectionPanel: null,
-      targetList: null,
-      debug: null,
-      inspectGroundAction: null,
-      selectedTargetLabel: null,
-      selectedTargetClassification: null,
-      selectedTargetObjectId: null,
-      publicReadout: null,
-      publicReadoutTitle: null,
-      publicReadoutLine: null,
-      diagnosticLink: null,
-      strictRequiredFound: false,
-      rendererMountFound: false,
-      missingStrictRequiredIds: Object.freeze([
-        strictIds.routeRoot,
-        strictIds.status,
-        strictIds.fallback
-      ]),
-      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-    });
-  }
-
-  const routeRoot = rootDocument.getElementById(strictIds.routeRoot);
-  const statusNode = rootDocument.getElementById(strictIds.status);
-  const fallbackNode = rootDocument.getElementById(strictIds.fallback);
-  const rendererMount = rootDocument.getElementById(conditionalIds.rendererMount);
-
-  const missingStrictRequiredIds = [];
-
-  if (!routeRoot) missingStrictRequiredIds.push(strictIds.routeRoot);
-  if (!statusNode) missingStrictRequiredIds.push(strictIds.status);
-  if (!fallbackNode) missingStrictRequiredIds.push(strictIds.fallback);
-
-  return Object.freeze({
-    documentAvailable: true,
-    routeRoot,
-    rendererMount,
-    statusNode,
-    fallbackNode,
-    hud: rootDocument.getElementById(optionalIds.hud),
-    inspectionPanel: rootDocument.getElementById(optionalIds.inspectionPanel),
-    targetList: rootDocument.getElementById(optionalIds.targetList),
-    debug: rootDocument.getElementById(optionalIds.debug),
-    inspectGroundAction:
-      rootDocument.getElementById(optionalIds.inspectGroundAction),
-    selectedTargetLabel:
-      rootDocument.getElementById(optionalIds.selectedTargetLabel),
-    selectedTargetClassification:
-      rootDocument.getElementById(optionalIds.selectedTargetClassification),
-    selectedTargetObjectId:
-      rootDocument.getElementById(optionalIds.selectedTargetObjectId),
-    publicReadout: rootDocument.getElementById(optionalIds.publicReadout),
-    publicReadoutTitle:
-      rootDocument.getElementById(optionalIds.publicReadoutTitle),
-    publicReadoutLine:
-      rootDocument.getElementById(optionalIds.publicReadoutLine),
-    diagnosticLink: rootDocument.getElementById(optionalIds.diagnosticLink),
-    strictRequiredFound: missingStrictRequiredIds.length === 0,
-    rendererMountFound: Boolean(rendererMount),
-    missingStrictRequiredIds: Object.freeze(missingStrictRequiredIds),
-    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-  });
-}
-
-function summarizeReceiptHeader(receipt, fallback = {}) {
-  if (!receipt) return null;
-
-  return Object.freeze({
-    receiptType: receipt.receiptType || fallback.receiptType || null,
-    status: receipt.status || fallback.status || null,
-    contractId: receipt.contractId || fallback.contractId || null,
-    file: receipt.file || fallback.file || null,
-    matrix: receipt.matrix || fallback.matrix || 'H-Earth',
-    matrixRole:
-      receipt.matrixRole || fallback.matrixRole || 'Ground-View Matrix',
-    activeCell:
-      receipt.activeCell || fallback.activeCell || 'H_EARTH_GROUND_CELL_001',
-    sceneIdentity:
-      receipt.sceneIdentity ||
-      fallback.sceneIdentity ||
-      'earth-water-air-survival-shoreline-manor',
-    warningCodes: Object.freeze(asArray(receipt.warningCodes)),
-    failureCodes: Object.freeze(asArray(receipt.failureCodes))
-  });
-}
-
-function summarizeRendererMountReceipt(receipt) {
-  if (!receipt) return null;
-
-  return Object.freeze({
-    receiptType: receipt.receiptType || null,
-    contractId: receipt.contractId || null,
-    complementaryGeometryPort: receipt.complementaryGeometryPort || null,
-    geometryReceiptContractId:
-      receipt.geometryReceipt?.contractId ||
-      receipt.geometryReceiptContractId ||
-      null,
-
-    rendererMounted: receipt.rendererMounted === true,
-    mounted: receipt.mounted === true,
-    mountAttempted: receipt.mountAttempted === true,
-    mountNodeAccepted: receipt.mountNodeAccepted === true,
-    mountNodeValid: receipt.mountNodeValid === true,
-    renderRootCreated: receipt.renderRootCreated === true,
-    layerContainerCount:
-      receipt.layerContainerCount ?? receipt.layerCount ?? null,
-
-    selectedRenderInputSource: receipt.selectedRenderInputSource || null,
-    sourceDescriptorType: receipt.sourceDescriptorType || null,
-    rawSourceNodeCount: receipt.rawSourceNodeCount ?? null,
-    usedComposedFrame: receipt.usedComposedFrame === true,
-    usedRenderSceneFallback: receipt.usedRenderSceneFallback === true,
-
-    geometryPortUsed: receipt.geometryPortUsed === true,
-    geometryExpansionApplied: receipt.geometryExpansionApplied === true,
-    geometryExpansionSkippedBecauseAlreadyExpanded:
-      receipt.geometryExpansionSkippedBecauseAlreadyExpanded === true,
-    geometryExpansionSource: receipt.geometryExpansionSource || null,
-    geometrySourceNodeCount: receipt.geometrySourceNodeCount ?? null,
-    geometryExpandedNodeCount: receipt.geometryExpandedNodeCount ?? null,
-    geometryReturnedNodeCount: receipt.geometryReturnedNodeCount ?? null,
-    geometrySkippedNodeCount: receipt.geometrySkippedNodeCount ?? null,
-    geometryBudgetSkippedNodeCount:
-      receipt.geometryBudgetSkippedNodeCount ?? null,
-    geometryParentNodeCount: receipt.geometryParentNodeCount ?? null,
-    geometryChildNodeCount: receipt.geometryChildNodeCount ?? null,
-
-    geometryOrganicVariationApplied:
-      receipt.geometryOrganicVariationApplied === true,
-    organicLandscapeChildVariationDefined:
-      receipt.organicLandscapeChildVariationDefined === true,
-    primitiveSpecificChildPlacementApplied:
-      receipt.primitiveSpecificChildPlacementApplied === true,
-    latticeRegularBandingMitigated:
-      receipt.latticeRegularBandingMitigated === true,
-    organicVariationSeededDeterministically:
-      receipt.organicVariationSeededDeterministically === true,
-    randomRuntimeVariationUsed: receipt.randomRuntimeVariationUsed === true,
-    organicVariationSummary: receipt.organicVariationSummary || null,
-    organicClassEmissionCount: receipt.organicClassEmissionCount ?? 0,
-    organicVariationReadyCount: receipt.organicVariationReadyCount ?? 0,
-
-    sourceNodeCount: receipt.sourceNodeCount ?? null,
-    mountedNodeCount: receipt.mountedNodeCount ?? null,
-    objectNodeCount: receipt.objectNodeCount ?? null,
-    placedNodeCount: receipt.placedNodeCount ?? null,
-    skippedNodeCount: receipt.skippedNodeCount ?? null,
-    transformDescriptorAppliedCount:
-      receipt.transformDescriptorAppliedCount ?? null,
-    transformDescriptorMissingCount:
-      receipt.transformDescriptorMissingCount ?? null,
-    primitiveGeometryAppliedCount:
-      receipt.primitiveGeometryAppliedCount ?? null,
-    visualGrammarReadyCount:
-      receipt.visualGrammarReadyCount ?? null,
-
-    materialPortUsed: receipt.materialPortUsed === true,
-    layerPortUsed: receipt.layerPortUsed === true,
-    nodeFactoryPortUsed: receipt.nodeFactoryPortUsed === true,
-
-    warningCodes: Object.freeze(asArray(receipt.warningCodes)),
-    failureCodes: Object.freeze(asArray(receipt.failureCodes)),
-    claimBoundaryPreserved: receipt.claimBoundaryPreserved === true,
-    boundaryPresent: Boolean(receipt.boundary)
-  });
-}
-
-function summarizeRendererDestroyReceipt(receipt) {
-  if (!receipt) return null;
-
-  return Object.freeze({
-    receiptType: receipt.receiptType || null,
-    contractId: receipt.contractId || null,
-    destroyAttempted: receipt.destroyAttempted === true,
-    destroyed: receipt.destroyed === true,
-    mountNodeAccepted: receipt.mountNodeAccepted === true,
-    mountNodeValid: receipt.mountNodeValid === true,
-    removedOwnedNodeCount:
-      receipt.removedOwnedNodeCount ?? receipt.removedNodeCount ?? null,
-    routeShellPreserved: receipt.routeShellPreserved === true,
-    canonDescriptorsPreserved: receipt.canonDescriptorsPreserved === true,
-    warningCodes: Object.freeze(asArray(receipt.warningCodes)),
-    failureCodes: Object.freeze(asArray(receipt.failureCodes)),
-    claimBoundaryPreserved: receipt.claimBoundaryPreserved === true,
-    boundaryPresent: Boolean(receipt.boundary)
-  });
-}
-
-export function buildHEarthLivePublicRendererReceiptHandoff(
-  status = latestRouteBootstrapStatus
-) {
-  const receipt = status?.rendererMountReceipt || null;
-
-  return Object.freeze({
-    receiptType: 'H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    storageKey: H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
+function buildGroundConditionReadPayload(target = getTarget(MODULE_STATE.selectedTargetId)) {
+  return freeze({
+    receiptType: 'H_EARTH_3D_PUBLIC_GROUND_CONDITION_READ_PAYLOAD',
+    file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+    contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
     generatedAt: nowIso(),
 
-    publicRoute: H_EARTH_3D_INDEX_CONTRACT.route,
-    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
-    sameOriginHandoff: true,
+    matrix: 'H-Earth',
+    matrixRole: 'Ground-View Matrix',
+    activeCell: 'H_EARTH_GROUND_CELL_001',
+    sceneIdentity: 'earth-water-air-survival-shoreline-manor',
 
-    routeStatus: status?.statusLevel || null,
-    rendererMountReceiptPresent: Boolean(receipt),
-    rendererMounted:
-      receipt?.rendererMounted === true ||
-      receipt?.mounted === true ||
-      false,
+    selectedObjectId: target.objectId,
+    selectedObjectLabel: target.label,
+    selectedObjectClassification: target.classification,
+    selectedMaterial: target.material,
 
-    rendererReceiptContract: receipt?.contractId || null,
-    complementaryGeometryPort: receipt?.complementaryGeometryPort || null,
-    geometryReceiptContract:
-      receipt?.geometryReceipt?.contractId ||
-      receipt?.geometryReceiptContractId ||
-      null,
-
-    rendererMountApiConfirmed:
-      status?.rendererMountApiConfirmed === true,
-    rendererMountAttempted:
-      status?.rendererMountAttempted === true,
-    rendererMountReady:
-      status?.rendererMountReady === true,
-
-    geometryPortUsed: receipt?.geometryPortUsed === true,
-    geometryExpansionApplied: receipt?.geometryExpansionApplied === true,
-    geometryExpansionSkippedBecauseAlreadyExpanded:
-      receipt?.geometryExpansionSkippedBecauseAlreadyExpanded === true,
-
-    geometrySourceNodeCount: receipt?.geometrySourceNodeCount ?? null,
-    geometryExpandedNodeCount: receipt?.geometryExpandedNodeCount ?? null,
-    geometryReturnedNodeCount: receipt?.geometryReturnedNodeCount ?? null,
-    geometrySkippedNodeCount: receipt?.geometrySkippedNodeCount ?? null,
-    geometryBudgetSkippedNodeCount:
-      receipt?.geometryBudgetSkippedNodeCount ?? null,
-    geometryParentNodeCount: receipt?.geometryParentNodeCount ?? null,
-    geometryChildNodeCount: receipt?.geometryChildNodeCount ?? null,
-
-    geometryOrganicVariationApplied:
-      receipt?.geometryOrganicVariationApplied === true,
-    organicLandscapeChildVariationDefined:
-      receipt?.organicLandscapeChildVariationDefined === true,
-    primitiveSpecificChildPlacementApplied:
-      receipt?.primitiveSpecificChildPlacementApplied === true,
-    latticeRegularBandingMitigated:
-      receipt?.latticeRegularBandingMitigated === true,
-    organicVariationSeededDeterministically:
-      receipt?.organicVariationSeededDeterministically === true,
-    randomRuntimeVariationUsed:
-      receipt?.randomRuntimeVariationUsed === true,
-    organicVariationSummary:
-      receipt?.organicVariationSummary || null,
-    organicClassEmissionCount:
-      receipt?.organicClassEmissionCount ?? 0,
-    organicVariationReadyCount:
-      receipt?.organicVariationReadyCount ?? 0,
-
-    mountedNodeCount: receipt?.mountedNodeCount ?? null,
-    objectNodeCount: receipt?.objectNodeCount ?? null,
-    placedNodeCount: receipt?.placedNodeCount ?? null,
-    skippedNodeCount: receipt?.skippedNodeCount ?? null,
-
-    materialPortUsed: receipt?.materialPortUsed === true,
-    layerPortUsed: receipt?.layerPortUsed === true,
-    nodeFactoryPortUsed: receipt?.nodeFactoryPortUsed === true,
-
-    warningCodes: Object.freeze([
-      ...asArray(status?.warningCodes),
-      ...asArray(receipt?.warningCodes)
-    ]),
-    failureCodes: Object.freeze([
-      ...asArray(status?.failureCodes),
-      ...asArray(receipt?.failureCodes)
-    ]),
-
-    publicRouteBoundaryPreserved: true,
-    diagnosticRouteMayClassify: true,
-
-    boundary: Object.freeze({
-      receiptHandoffOnly: true,
-      publicRouteMutation: false,
-      publicCssMutation: false,
-      publicHtmlMutation: false,
-      rendererMutation: false,
-      geometryMutation: false,
-      compositorMutation: false,
-      environmentMutation: false,
-      controllerMutation: false,
-      rendererPassClaim: false,
-      visualPassClaim: false,
-      validationClaim: false,
-      productionClaim: false,
-      latticeActivationClaim: false,
-      matrixCollapse: false
-    })
-  });
-}
-
-export function writeHEarthLivePublicRendererReceiptHandoff(
-  status = latestRouteBootstrapStatus
-) {
-  const handoff = buildHEarthLivePublicRendererReceiptHandoff(status);
-  const serialized = JSON.stringify(safeSerialize(handoff, {
-    maxDepth: 9,
-    maxArrayLength: 180
-  }));
-
-  let sessionStorageWritten = false;
-  let localStorageWritten = false;
-  let globalWritten = false;
-  let sessionStorageError = null;
-  let localStorageError = null;
-  let globalWriteError = null;
-
-  try {
-    if (globalThis.sessionStorage) {
-      globalThis.sessionStorage.setItem(
-        H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-        serialized
-      );
-      sessionStorageWritten = true;
-    }
-  } catch (error) {
-    sessionStorageError = error instanceof Error ? error.message : String(error);
-  }
-
-  try {
-    if (globalThis.localStorage) {
-      globalThis.localStorage.setItem(
-        H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-        serialized
-      );
-      localStorageWritten = true;
-    }
-  } catch (error) {
-    localStorageError = error instanceof Error ? error.message : String(error);
-  }
-
-  try {
-    globalThis.H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF = handoff;
-    globalWritten = true;
-  } catch (error) {
-    globalWriteError = error instanceof Error ? error.message : String(error);
-  }
-
-  return Object.freeze({
-    receiptType:
-      'H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_WRITE_RECEIPT',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    storageKey: H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-    attempted: true,
-    sessionStorageWritten,
-    localStorageWritten,
-    globalWritten,
-    written: Boolean(
-      sessionStorageWritten ||
-      localStorageWritten ||
-      globalWritten
-    ),
-    sessionStorageError,
-    localStorageError,
-    globalWriteError,
-    handoff,
-    boundary: Object.freeze({
-      receiptHandoffOnly: true,
-      publicRouteMutation: false,
-      publicCssMutation: false,
-      publicHtmlMutation: false,
-      rendererMutation: false,
-      geometryMutation: false,
-      compositorMutation: false,
-      environmentMutation: false,
-      controllerMutation: false,
-      rendererPassClaim: false,
-      visualPassClaim: false,
-      validationClaim: false,
-      productionClaim: false,
-      matrixCollapse: false
-    })
-  });
-}
-
-export function readHEarthLivePublicRendererReceiptHandoff() {
-  let source = null;
-  let parsed = null;
-  let error = null;
-
-  try {
-    const sessionValue =
-      globalThis.sessionStorage?.getItem(
-        H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY
-      ) || null;
-
-    if (sessionValue) {
-      source = 'sessionStorage';
-      parsed = JSON.parse(sessionValue);
-    }
-  } catch (readError) {
-    error = readError instanceof Error
-      ? readError.message
-      : String(readError);
-  }
-
-  if (!parsed) {
-    try {
-      const localValue =
-        globalThis.localStorage?.getItem(
-          H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY
-        ) || null;
-
-      if (localValue) {
-        source = 'localStorage';
-        parsed = JSON.parse(localValue);
-      }
-    } catch (readError) {
-      error = readError instanceof Error
-        ? readError.message
-        : String(readError);
-    }
-  }
-
-  if (!parsed && globalThis.H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF) {
-    source = 'globalThis';
-    parsed = globalThis.H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF;
-  }
-
-  return Object.freeze({
-    receiptType:
-      'H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_READ_RECEIPT',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    storageKey: H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-    found: Boolean(parsed),
-    source,
-    handoff: parsed,
-    error,
-    boundary: Object.freeze({
-      receiptHandoffReadOnly: true,
-      mutationClaim: false,
-      rendererPassClaim: false,
-      visualPassClaim: false,
-      validationClaim: false,
-      productionClaim: false,
-      matrixCollapse: false
-    })
-  });
-}
-
-export function buildHEarthStructuralPipelineBaselineLock(
-  status = latestRouteBootstrapStatus
-) {
-  const receipt = status?.rendererMountReceipt || null;
-  const handoff = buildHEarthLivePublicRendererReceiptHandoff(status);
-
-  const regressionCodes = [];
-
-  if (status.chainReady !== true) regressionCodes.push('CHAIN_NOT_READY');
-  if (status.domReady !== true) regressionCodes.push('DOM_NOT_READY');
-  if (status.controllerReady !== true) regressionCodes.push('CONTROLLER_NOT_READY');
-  if (status.rendererMountReady !== true) regressionCodes.push('RENDERER_MOUNT_NOT_READY');
-  if (status.bootstrapReadyCandidateOnly !== true) {
-    regressionCodes.push('BOOTSTRAP_NOT_READY_CANDIDATE_ONLY');
-  }
-  if (!receipt) regressionCodes.push('RENDERER_MOUNT_RECEIPT_MISSING');
-  if (handoff.rendererMounted !== true) regressionCodes.push('HANDOFF_RENDERER_NOT_MOUNTED');
-  if (handoff.geometryExpansionApplied !== true) regressionCodes.push('GEOMETRY_EXPANSION_NOT_APPLIED');
-  if (handoff.geometryReturnedNodeCount !== 172 && handoff.mountedNodeCount !== 172) {
-    regressionCodes.push('EXPECTED_172_NODE_BASELINE_NOT_OBSERVED');
-  }
-  if (handoff.geometryParentNodeCount !== 11) {
-    regressionCodes.push('EXPECTED_11_PARENT_NODE_BASELINE_NOT_OBSERVED');
-  }
-  if (handoff.geometryChildNodeCount !== 161) {
-    regressionCodes.push('EXPECTED_161_CHILD_NODE_BASELINE_NOT_OBSERVED');
-  }
-  if (handoff.materialPortUsed !== true) regressionCodes.push('MATERIAL_PORT_NOT_USED');
-  if (handoff.layerPortUsed !== true) regressionCodes.push('LAYER_PORT_NOT_USED');
-  if (handoff.nodeFactoryPortUsed !== true) regressionCodes.push('NODE_FACTORY_PORT_NOT_USED');
-  if (handoff.organicClassEmissionCount !== 172) {
-    regressionCodes.push('EXPECTED_172_ORGANIC_CLASS_EMISSION_NOT_OBSERVED');
-  }
-  if (handoff.organicVariationReadyCount !== 172) {
-    regressionCodes.push('EXPECTED_172_ORGANIC_READY_NOT_OBSERVED');
-  }
-  if (asArray(handoff.warningCodes).length > 0) regressionCodes.push('WARNING_CODES_PRESENT');
-  if (asArray(handoff.failureCodes).length > 0) regressionCodes.push('FAILURE_CODES_PRESENT');
-
-  const locked = regressionCodes.length === 0;
-
-  return Object.freeze({
-    receiptType:
-      'H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_LOCK_RECEIPT',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    generatedAt: nowIso(),
-
-    status: locked
-      ? H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_STATUS.STRUCTURAL_PIPELINE_LOCKED
-      : H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_STATUS.STRUCTURAL_PIPELINE_NOT_LOCKED,
-
-    baselineLocked: locked,
-    regressionCodes: Object.freeze(regressionCodes),
-
-    preservedBaseline: Object.freeze({
-      routeStatus: status.statusLevel,
-      chainReady: status.chainReady,
-      domReady: status.domReady,
-      controllerReady: status.controllerReady,
-      rendererMountReady: status.rendererMountReady,
-      bootstrapReadyCandidateOnly: status.bootstrapReadyCandidateOnly,
-
-      rendererMountApiConfirmed: status.rendererMountApiConfirmed,
-      rendererMountAttempted: status.rendererMountAttempted,
-      rendererMounted: status.rendererMounted,
-      rendererMountReceiptPresent: Boolean(receipt),
-
-      sameOriginHandoffAvailable: true,
-      handoffStorageKey: H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-
-      rendererReceiptContract: handoff.rendererReceiptContract,
-      geometryReceiptContract: handoff.geometryReceiptContract,
-      complementaryGeometryPort: handoff.complementaryGeometryPort,
-
-      geometryPortUsed: handoff.geometryPortUsed,
-      geometryExpansionApplied: handoff.geometryExpansionApplied,
-      geometryReturnedNodeCount: handoff.geometryReturnedNodeCount,
-      mountedNodeCount: handoff.mountedNodeCount,
-      objectNodeCount: handoff.objectNodeCount,
-      placedNodeCount: handoff.placedNodeCount,
-      skippedNodeCount: handoff.skippedNodeCount,
-
-      geometryParentNodeCount: handoff.geometryParentNodeCount,
-      geometryChildNodeCount: handoff.geometryChildNodeCount,
-
-      materialPortUsed: handoff.materialPortUsed,
-      layerPortUsed: handoff.layerPortUsed,
-      nodeFactoryPortUsed: handoff.nodeFactoryPortUsed,
-
-      geometryOrganicVariationApplied:
-        handoff.geometryOrganicVariationApplied,
-      organicLandscapeChildVariationDefined:
-        handoff.organicLandscapeChildVariationDefined,
-      primitiveSpecificChildPlacementApplied:
-        handoff.primitiveSpecificChildPlacementApplied,
-      latticeRegularBandingMitigated:
-        handoff.latticeRegularBandingMitigated,
-      organicVariationSeededDeterministically:
-        handoff.organicVariationSeededDeterministically,
-      randomRuntimeVariationUsed:
-        handoff.randomRuntimeVariationUsed,
-      organicClassEmissionCount:
-        handoff.organicClassEmissionCount,
-      organicVariationReadyCount:
-        handoff.organicVariationReadyCount,
-
-      warningCodes: handoff.warningCodes,
-      failureCodes: handoff.failureCodes
-    }),
-
-    diagnosticTransitionTarget:
-      H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
-
-    transitionDisposition: locked
-      ? 'STRUCTURAL_PIPELINE_LOCKED_VISUAL_COMPOSITION_READY'
-      : 'STRUCTURAL_PIPELINE_BASELINE_NOT_LOCKED_REVIEW_REQUIRED',
-
-    nextDiagnosticDomain: locked
-      ? 'VISUAL_COMPOSITION_DIAGNOSTIC'
-      : 'STRUCTURAL_PIPELINE_REGRESSION_REVIEW',
-
-    nonRegressionRule:
-      'Future diagnostics should preserve the structural baseline unless new evidence proves regression. Do not reopen renderer, compositor, environment, geometry, node factory, material, layer, or handoff by default.',
-
-    boundary: Object.freeze({
-      baselineLockOnly: true,
-      publicRouteMutation: false,
-      publicCssMutation: false,
-      publicHtmlMutation: false,
-      rendererMutation: false,
-      geometryMutation: false,
-      compositorMutation: false,
-      environmentMutation: false,
-      controllerMutation: false,
-      diagnosticTransitionPrepared: true,
-      visualCompositionAuditRunsHere: false,
-      visualCompositionAuditBelongsToDiagnosticRoute: true,
-      rendererPassClaim: false,
-      visualPassClaim: false,
-      validationClaim: false,
-      productionClaim: false,
-      matrixCollapse: false
-    })
-  });
-}
-
-export function getStructuralPipelineBaselineLockReceipt() {
-  return buildHEarthStructuralPipelineBaselineLock(latestRouteBootstrapStatus);
-}
-
-export const H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_LOCK_RECEIPT =
-  getStructuralPipelineBaselineLockReceipt();
-
-export function buildHEarthPublicReadoutPayload(objectId) {
-  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
-  const target = getSelectableTarget(selectedObjectId);
-  const classification = getControllerTargetClassification(selectedObjectId);
-  const actionBridge = resolveInspectGroundControllerBridge(selectedObjectId);
-  const readoutBridge = resolveGroundConditionReadBridge(selectedObjectId);
-
-  const blockedResponse =
-    actionBridge?.contextOnlyBlockResponse ||
-    actionBridge?.waterAtmosphericContextResponse?.blockResponse ||
-    actionBridge?.secondarySurfaceContextResponse ||
-    null;
-
-  return Object.freeze({
-    receiptType: 'H_EARTH_3D_PUBLIC_GROUND_CONDITION_READOUT',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-
-    ...H_EARTH_SCENE_IDENTITY,
-
-    selectedObjectId,
-    label: getTargetLabel(target, selectedObjectId),
-    classification,
-    selectable: target?.selectable === true,
-    inspectable: target?.inspectable === true,
-
-    action: 'Inspect Ground',
-    actionId: 'H_EARTH_INSPECT_GROUND_ACTION',
-    readout: 'Ground Condition Read',
-    readoutId: 'H_EARTH_GROUND_CONDITION_READ',
-    receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-
-    actionBridgeResolved: actionBridge?.bridgeResolved === true,
-    readoutBridgeResolved: readoutBridge?.bridgeResolved === true,
-    bridgeResolved:
-      actionBridge?.bridgeResolved === true ||
-      readoutBridge?.bridgeResolved === true,
-
-    blockedResponse,
+    action: target.action,
+    readout: target.readout,
+    receipt: target.receipt,
+    publicLine: target.publicLine,
 
     descriptorOnly: true,
-    publicRouteReadoutOnly: true,
     runtimeActionExecutionClaim: false,
-    readoutProductionClaim: false,
-    receiptCreationClaim: false,
-    runtimeReceiptPersistence: false,
+    receiptPersistenceClaim: false,
+    survivalSimulationClaim: false,
+    traversalClaim: false,
+    swimmingClaim: false,
+    fluidSimulationClaim: false,
+    manorInteriorAccessClaim: false,
+    distantTraversalClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    visualPassClaim: false,
+    matrixCollapse: false,
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+function renderSelectedTarget(mountPoints, target) {
+  if (!mountPoints || !target) return false;
+
+  writeText(mountPoints.selectedTargetLabel, target.label);
+  writeText(mountPoints.selectedTargetObjectId, target.objectId);
+  writeText(mountPoints.selectedTargetClassification, target.classification);
+
+  writeText(
+    mountPoints.publicReadoutTitle,
+    `${target.label} · ${target.action}`
+  );
+
+  writeText(
+    mountPoints.publicReadoutLine,
+    target.publicLine
+  );
+
+  writeJson(
+    mountPoints.inspectionPanel,
+    buildGroundConditionReadPayload(target),
+    { maxDepth: 7, maxArrayLength: 80 }
+  );
+
+  return true;
+}
+
+function renderTargetList(mountPoints) {
+  if (!mountPoints?.targetList || !mountPoints.targetList.ownerDocument) {
+    return false;
+  }
+
+  const rootDocument = mountPoints.targetList.ownerDocument;
+
+  mountPoints.targetList.textContent = '';
+
+  H_EARTH_3D_PUBLIC_TARGETS.forEach((target) => {
+    const button = rootDocument.createElement('button');
+    button.type = 'button';
+    button.className = 'h-earth-3d-target-button';
+    button.dataset.hEarthTargetId = target.objectId;
+    button.dataset.hEarthTargetClassification = target.classification;
+    button.setAttribute(
+      'aria-current',
+      target.objectId === MODULE_STATE.selectedTargetId ? 'true' : 'false'
+    );
+
+    button.textContent = `${target.label} · ${target.classification}`;
+
+    button.addEventListener('click', () => {
+      MODULE_STATE.selectedTargetId = target.objectId;
+
+      Array.from(
+        mountPoints.targetList.querySelectorAll('[data-h-earth-target-id]')
+      ).forEach((node) => {
+        node.setAttribute(
+          'aria-current',
+          node.getAttribute('data-h-earth-target-id') === target.objectId
+            ? 'true'
+            : 'false'
+        );
+      });
+
+      renderSelectedTarget(mountPoints, target);
+      rebuildAndRenderPublicReceipts(mountPoints);
+    });
+
+    mountPoints.targetList.appendChild(button);
+  });
+
+  return true;
+}
+
+function buildStaticLayer4Projection(status = H_EARTH_3D_LAYER_4_STATUS.STATIC_METADATA_PROJECTED) {
+  return freeze({
+    receiptType:
+      'H_EARTH_3D_PUBLIC_STAGE_LAYER_4_STATUS_PROJECTION',
+    file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+    contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+    generatedAt: nowIso(),
+
+    projectionClass:
+      'NARROW_PUBLIC_STAGE_PLAIN_DATA_PROJECTION',
+
+    bridgeStatus: status,
+    bridgeMode:
+      'STEP_012J_READ_ONLY_RELATIONSHIP_DESCRIPTOR',
+
+    step012JContractId:
+      H_EARTH_3D_LAYER_4_CONTRACTS.step012JContractId,
+    step012H1ContractId:
+      H_EARTH_3D_LAYER_4_CONTRACTS.step012H1ContractId,
+    step012IContractId:
+      H_EARTH_3D_LAYER_4_CONTRACTS.step012IContractId,
+    step012ICanonicalizationId:
+      H_EARTH_3D_LAYER_4_CONTRACTS.step012ICanonicalizationId,
+
+    relationshipMembers: freeze({
+      step012H1HeadlessReplayFixtureSide: true,
+      step012ICanonicalSerializationLawMember: true,
+      step012IRunnerRelationshipMember: false,
+      target002IdentifiedSupportSurface: true,
+      target003IdentifiedSupportSurface: true
+    }),
+
+    target002ContractId:
+      H_EARTH_3D_LAYER_4_CONTRACTS.target002ContractId,
+    target003ContractId:
+      H_EARTH_3D_LAYER_4_CONTRACTS.target003ContractId,
+    step012IRunnerContractId:
+      H_EARTH_3D_LAYER_4_CONTRACTS.step012IRunnerContractId,
+
+    archiveCustodyStatus:
+      H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY.archiveCustodyStatus,
+    archiveCustody: H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY,
+
+    moduleImportAttempted: false,
+    moduleInitializationObserved: false,
+    importedDescriptorContractMatchesExpected: false,
+    importedStep012H1ContractMatchesExpected: false,
+    importedStep012IContractMatchesExpected: false,
+    importedStep012ICanonicalizationMatchesExpected: false,
+
+    publicStageExecutionStatus:
+      H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING,
+
+    claimCeiling: H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING,
+
+    displayPolicy: freeze({
+      narrowPlainDataProjectionOnly: true,
+      callableFunctionsDisplayedAsInputs: false,
+      wholeStep012JAggregateDisplayed: false,
+      wholeStep012JAggregatePassedIntoStep012I: false,
+      descriptorClaimsReinterpretedAsExecutionEvidence: false,
+      successfulRenderingLabeledAsValidation: false
+    }),
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+function normalizeImportedBridgeProjection(importReceipt, bridgeModule) {
+  const targetClassification =
+    bridgeModule?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_TARGET_CLASSIFICATION ||
+    bridgeModule?.default?.targetClassification ||
+    null;
+
+  const authority =
+    bridgeModule?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AUTHORITY ||
+    bridgeModule?.default?.authority ||
+    null;
+
+  const contractId =
+    bridgeModule?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_CONTRACT_ID ||
+    bridgeModule?.default?.contractId ||
+    authority?.contractId ||
+    null;
+
+  const expected = H_EARTH_3D_LAYER_4_CONTRACTS;
+
+  return freeze({
+    receiptType:
+      'H_EARTH_3D_PUBLIC_STAGE_LAYER_4_STATUS_PROJECTION',
+    file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+    contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+    generatedAt: nowIso(),
+
+    projectionClass:
+      'NARROW_PUBLIC_STAGE_PLAIN_DATA_PROJECTION',
+
+    bridgeStatus:
+      H_EARTH_3D_LAYER_4_STATUS.DESCRIPTOR_IMPORT_OBSERVED,
+    bridgeMode:
+      authority?.activeStatusCeiling ||
+      'STATIC_BRIDGE_DESCRIPTOR_ONLY',
+
+    step012JContractId:
+      contractId || expected.step012JContractId,
+
+    step012H1ContractId:
+      targetClassification?.importedStep012H1ContractId ||
+      targetClassification?.expectedStep012H1ContractId ||
+      expected.step012H1ContractId,
+
+    step012IContractId:
+      targetClassification?.importedStep012IContractId ||
+      targetClassification?.expectedStep012IContractId ||
+      expected.step012IContractId,
+
+    step012ICanonicalizationId:
+      targetClassification?.importedStep012ICanonicalizationId ||
+      targetClassification?.expectedStep012ICanonicalizationId ||
+      expected.step012ICanonicalizationId,
+
+    relationshipMembers: freeze({
+      step012H1HeadlessReplayFixtureSide:
+        authority?.step012H1RelationshipMember === true ||
+        true,
+      step012ICanonicalSerializationLawMember:
+        authority?.step012IRelationshipMember === true ||
+        true,
+      step012IRunnerRelationshipMember:
+        authority?.step012IRunnerRelationshipMember === true,
+      target002IdentifiedSupportSurface: true,
+      target003IdentifiedSupportSurface: true
+    }),
+
+    target002ContractId:
+      expected.target002ContractId,
+    target003ContractId:
+      expected.target003ContractId,
+    step012IRunnerContractId:
+      expected.step012IRunnerContractId,
+
+    archiveCustodyStatus:
+      H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY.archiveCustodyStatus,
+    archiveCustody: H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY,
+
+    moduleImportAttempted: true,
+    moduleInitializationObserved: importReceipt?.importSucceeded === true,
+    importedDescriptorContractMatchesExpected:
+      contractId === expected.step012JContractId,
+
+    importedStep012H1ContractMatchesExpected:
+      (
+        targetClassification?.declaredStep012H1ContractMatchesExpected === true ||
+        targetClassification?.importedStep012H1ContractId === expected.step012H1ContractId
+      ),
+
+    importedStep012IContractMatchesExpected:
+      (
+        targetClassification?.declaredStep012IContractMatchesExpected === true ||
+        targetClassification?.importedStep012IContractId === expected.step012IContractId
+      ),
+
+    importedStep012ICanonicalizationMatchesExpected:
+      (
+        targetClassification?.declaredStep012ICanonicalizationMatchesExpected === true ||
+        targetClassification?.importedStep012ICanonicalizationId === expected.step012ICanonicalizationId
+      ),
+
+    sourceDefinedBridgeClassification: freeze({
+      importDeclarationPresent:
+        targetClassification?.importDeclarationPresent === true,
+      importResolutionProof:
+        targetClassification?.importResolutionProof === true,
+      installedModuleEvaluationProof:
+        targetClassification?.installedModuleEvaluationProof === true,
+      moduleGraphExecutionProof:
+        targetClassification?.moduleGraphExecutionProof === true,
+      bridgeExecutionProof:
+        targetClassification?.bridgeExecutionProof === true
+    }),
+
+    publicStageExecutionStatus:
+      H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING,
+
+    claimCeiling: H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING,
+
+    displayPolicy: freeze({
+      narrowPlainDataProjectionOnly: true,
+      callableFunctionsDisplayedAsInputs: false,
+      wholeStep012JAggregateDisplayed: false,
+      wholeStep012JAggregatePassedIntoStep012I: false,
+      descriptorClaimsReinterpretedAsExecutionEvidence: false,
+      successfulRenderingLabeledAsValidation: false
+    }),
+
+    importReceipt,
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+function buildLayer4ImportFailureProjection(importReceipt) {
+  return freeze({
+    ...buildStaticLayer4Projection(
+      H_EARTH_3D_LAYER_4_STATUS.DESCRIPTOR_IMPORT_FAILED_STATIC_METADATA_RETAINED
+    ),
+    moduleImportAttempted: true,
+    moduleInitializationObserved: false,
+    importedDescriptorContractMatchesExpected: false,
+    importReceipt
+  });
+}
+
+function renderLayer4Projection(mountPoints, projection) {
+  if (!mountPoints || !projection) return false;
+
+  writeText(
+    mountPoints.layer4Status,
+    projection.bridgeStatus || H_EARTH_3D_LAYER_4_STATUS.STATIC_METADATA_PROJECTED
+  );
+
+  if (mountPoints.layer4Status?.dataset) {
+    mountPoints.layer4Status.dataset.hEarthLayer4Status =
+      projection.bridgeStatus || 'projected';
+  }
+
+  writeText(
+    mountPoints.layer4Summary,
+    projection.moduleInitializationObserved === true
+      ? 'Step 012J descriptor module initialization was observed through public-stage import. No runner, replay, vector, runtime, digest, comparison, validation, production, visual-pass, or matrix-collapse execution is claimed.'
+      : 'Step 012J is projected as backed read-only static custody metadata. No runner, replay, vector, runtime, digest, comparison, validation, production, visual-pass, or matrix-collapse execution is claimed.'
+  );
+
+  writeText(
+    mountPoints.step012JContractId,
+    projection.step012JContractId
+  );
+
+  writeText(
+    mountPoints.step012H1ContractId,
+    projection.step012H1ContractId
+  );
+
+  writeText(
+    mountPoints.step012IContractId,
+    projection.step012IContractId
+  );
+
+  writeText(
+    mountPoints.step012ICanonicalizationId,
+    projection.step012ICanonicalizationId
+  );
+
+  writeJson(
+    mountPoints.layer4ProjectionPayload,
+    projection,
+    { maxDepth: 9, maxArrayLength: 160 }
+  );
+
+  return true;
+}
+
+function buildLayer4PublicStageReceipt() {
+  const projection =
+    MODULE_STATE.layer4StatusProjection ||
+    buildStaticLayer4Projection(
+      H_EARTH_3D_LAYER_4_STATUS.DESCRIPTOR_IMPORT_PENDING
+    );
+
+  return freeze({
+    receiptType:
+      'H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT',
+    file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+    contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+    generatedAt: nowIso(),
+
+    publicRoute: H_EARTH_3D_PUBLIC_ROUTE,
+    diagnosticRoute: H_EARTH_3D_DIAGNOSTIC_ROUTE,
+
+    publicStageAdapter: true,
+    readOnlyLayer4StatusProjection: true,
+    environmentHostAuthorized: true,
+    visibleStageAuthorized: true,
+
+    step012JDescriptorReadAuthorized: true,
+    layer4StatusProjection: projection,
+
+    moduleInitializationObserved:
+      projection.moduleInitializationObserved === true,
+
+    runFunctionExecuted: false,
+    replayExecuted: false,
+    vectorRunnerExecuted: false,
+    runtimeExecuted: false,
+    canonicalDigestGenerated: false,
+    replayComparison: false,
+
+    validationClaim: false,
+    productionClaim: false,
+    deploymentClaim: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    matrixCollapse: false,
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+function buildRouteBootstrapStatus() {
+  return freeze({
+    receiptType:
+      'H_EARTH_3D_PUBLIC_ROUTE_BOOTSTRAP_STATUS',
+    file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+    contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+    generatedAt: nowIso(),
+
+    status: MODULE_STATE.status,
+    initialized: MODULE_STATE.initialized === true,
+    asyncInitializationStarted:
+      MODULE_STATE.asyncInitializationStarted === true,
+    asyncInitializationComplete:
+      MODULE_STATE.asyncInitializationComplete === true,
+
+    selectedTargetId: MODULE_STATE.selectedTargetId,
+
+    routeRootFound:
+      Boolean(MODULE_STATE.mountPoints?.routeRoot),
+    statusNodeFound:
+      Boolean(MODULE_STATE.mountPoints?.statusNode),
+    fallbackNodeFound:
+      Boolean(MODULE_STATE.mountPoints?.fallbackNode),
+    rendererMountNodeFound:
+      Boolean(MODULE_STATE.mountPoints?.rendererMount),
+
+    publicEnvironmentHost: true,
+    visibleStageAuthorized: true,
+    layer4StatusProjectionAuthorized: true,
+
+    rendererImportReceipt: MODULE_STATE.rendererImportReceipt,
+    rendererMountReceipt: MODULE_STATE.rendererMountReceipt,
+
+    layer4ImportReceipt: MODULE_STATE.layer4ImportReceipt,
+    layer4StatusProjection:
+      MODULE_STATE.layer4StatusProjection,
+
+    moduleInitializationObserved:
+      MODULE_STATE.layer4StatusProjection?.moduleInitializationObserved === true,
+
+    runFunctionExecuted: false,
+    replayExecuted: false,
+    vectorRunnerExecuted: false,
+    runtimeExecuted: false,
+    canonicalDigestGenerated: false,
+    replayComparison: false,
+
+    validationClaim: false,
+    productionClaim: false,
+    visualPassClaim: false,
+    matrixCollapse: false,
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+function buildRouteBootstrapReceipt() {
+  return freeze({
+    receiptType:
+      'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT',
+    file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+    contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+    routeShellContractId:
+      H_EARTH_3D_ROUTE_SHELL_CONTRACT_ID,
+    routeStyleContractId:
+      H_EARTH_3D_ROUTE_STYLE_CONTRACT_ID,
+    generatedAt: nowIso(),
+
+    publicRoute: H_EARTH_3D_PUBLIC_ROUTE,
+    diagnosticRoute: H_EARTH_3D_DIAGNOSTIC_ROUTE,
+
+    status: MODULE_STATE.status,
+    initialized: MODULE_STATE.initialized === true,
+
+    matrix: 'H-Earth',
+    matrixRole: 'Ground-View Matrix',
+    activeCell: 'H_EARTH_GROUND_CELL_001',
+    sceneIdentity: 'earth-water-air-survival-shoreline-manor',
+
+    selectedTarget:
+      getTarget(MODULE_STATE.selectedTargetId),
+
+    publicEnvironmentHost: true,
+    visibleStageAuthorized: true,
+    rendererMountSupportAuthorized: true,
+    layer4StatusProjectionAuthorized: true,
+
+    routeStatus:
+      buildRouteBootstrapStatus(),
+
+    rendererImportReceipt:
+      MODULE_STATE.rendererImportReceipt,
+    rendererMountReceipt:
+      MODULE_STATE.rendererMountReceipt,
+
+    layer4PublicStageReceipt:
+      MODULE_STATE.layer4PublicStageReceipt,
+    layer4StatusProjection:
+      MODULE_STATE.layer4StatusProjection,
+
+    publicStageExecutionStatus:
+      H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING,
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+function rebuildAndRenderPublicReceipts(mountPoints = MODULE_STATE.mountPoints) {
+  MODULE_STATE.layer4PublicStageReceipt =
+    buildLayer4PublicStageReceipt();
+
+  MODULE_STATE.routeBootstrapReceipt =
+    buildRouteBootstrapReceipt();
+
+  writeJson(
+    mountPoints?.publicStageReceipt,
+    MODULE_STATE.layer4PublicStageReceipt,
+    { maxDepth: 9, maxArrayLength: 160 }
+  );
+
+  writeJson(
+    mountPoints?.debug,
+    MODULE_STATE.routeBootstrapReceipt,
+    { maxDepth: 8, maxArrayLength: 120 }
+  );
+
+  return freeze({
+    layer4PublicStageReceipt: MODULE_STATE.layer4PublicStageReceipt,
+    routeBootstrapReceipt: MODULE_STATE.routeBootstrapReceipt
+  });
+}
+
+function resolveRendererMountFunction(rendererModule) {
+  if (!rendererModule || typeof rendererModule !== 'object') return null;
+
+  const directCandidates = [
+    rendererModule.mountHEarthRenderer,
+    rendererModule.mountHEarth3DRenderer,
+    rendererModule.mountHEarthCandidateRenderer,
+    rendererModule.mountHEarthCandidateScene,
+    rendererModule.mountHEarthRenderScene,
+    rendererModule.renderHEarthCandidateScene,
+    rendererModule.initializeHEarthRenderer,
+    rendererModule.default?.mountHEarthRenderer,
+    rendererModule.default?.mountHEarthCandidateScene,
+    rendererModule.default?.mount,
+    rendererModule.default?.render,
+    rendererModule.default?.initialize
+  ];
+
+  return directCandidates.find((candidate) => typeof candidate === 'function') || null;
+}
+
+async function attemptPublicRendererMount(mountPoints, options = {}) {
+  const rendererPath =
+    options.rendererModulePath ||
+    H_EARTH_3D_PUBLIC_RENDERER_MODULE_PATH;
+
+  const importReceiptBase = {
+    receiptType:
+      'H_EARTH_3D_PUBLIC_RENDERER_IMPORT_RECEIPT',
+    file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+    contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+    rendererModulePath: rendererPath,
+    importAttempted: true,
+    importSucceeded: false,
+    mountAttempted: false,
+    mounted: false,
+    publicStageCandidateOnly: true,
     rendererPassClaim: false,
     visualPassClaim: false,
     validationClaim: false,
     productionClaim: false,
-    matrixCollapse: false,
+    matrixCollapse: false
+  };
 
-    actionBridge,
-    readoutBridge,
+  try {
+    const rendererModule = await import(rendererPath);
+    const mountFn = resolveRendererMountFunction(rendererModule);
 
-    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-  });
-}
-
-export function renderHEarthSelectedTargetCard(mountPoints, objectId) {
-  if (!mountPoints) return false;
-
-  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
-  const target = getSelectableTarget(selectedObjectId);
-  const classification = getControllerTargetClassification(selectedObjectId);
-  const label = getTargetLabel(target, selectedObjectId);
-
-  const wroteLabel = writeText(mountPoints.selectedTargetLabel, label);
-
-  const wroteClassification = writeText(
-    mountPoints.selectedTargetClassification,
-    classification || 'UNCLASSIFIED_TARGET'
-  );
-
-  const wroteObjectId = writeText(
-    mountPoints.selectedTargetObjectId,
-    selectedObjectId
-  );
-
-  if (mountPoints.routeRoot) {
-    setNodeDataset(
-      mountPoints.routeRoot,
-      'hEarthSelectedObjectId',
-      selectedObjectId
-    );
-
-    setNodeDataset(
-      mountPoints.routeRoot,
-      'hEarthSelectedObjectLabel',
-      label
-    );
-
-    setNodeDataset(
-      mountPoints.routeRoot,
-      'hEarthSelectedTargetClassification',
-      classification || 'UNCLASSIFIED_TARGET'
-    );
-  }
-
-  return Boolean(wroteLabel || wroteClassification || wroteObjectId);
-}
-
-export function renderHEarthPublicReadout(mountPoints, objectId) {
-  if (!mountPoints) return false;
-
-  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
-  const payload = buildHEarthPublicReadoutPayload(selectedObjectId);
-  const title = `${payload.label} · Inspect Ground`;
-
-  const line =
-    payload.blockedResponse?.message ||
-    (
-      payload.readoutBridgeResolved
-        ? 'Descriptor-only Ground Condition Read bridge is available for this target.'
-        : 'This target is selectable as a descriptor, but it does not create runtime action execution or receipt production.'
-    );
-
-  const wroteTitle = writeText(mountPoints.publicReadoutTitle, title);
-  const wroteLine = writeText(mountPoints.publicReadoutLine, line);
-
-  const wrotePanel = writeJson(mountPoints.inspectionPanel, payload, {
-    maxDepth: 7,
-    maxArrayLength: 96
-  });
-
-  return Boolean(wroteTitle || wroteLine || wrotePanel);
-}
-
-export function createTargetButtonDescriptor(target) {
-  return Object.freeze({
-    tagName: 'button',
-    className: 'h-earth-3d-target-button',
-    dataset: Object.freeze({
-      hEarthObjectId: target.objectId,
-      hEarthTargetClassification: target.classification
-    }),
-    label: target.label || target.objectId,
-    selectable: target.selectable === true,
-    inspectable: target.inspectable === true,
-    descriptorOnly: true,
-    publicRouteControlOnly: true,
-    domMutationClaim: false,
-    gameplayExecutionClaim: false,
-    runtimeReceiptPersistence: false
-  });
-}
-
-export function renderHEarthTargetList(mountPoints, selectedObjectId) {
-  const documentRef =
-    mountPoints?.targetList?.ownerDocument || globalThis.document || null;
-
-  if (!mountPoints?.targetList || !documentRef) return false;
-
-  const targetList = mountPoints.targetList;
-  targetList.textContent = '';
-
-  Object.values(H_EARTH_3D_SELECTABLE_TARGET_REGISTRY).forEach((target) => {
-    if (!target || target.targetResolved !== true) return;
-
-    const descriptor = createTargetButtonDescriptor(target);
-    const button = documentRef.createElement(descriptor.tagName);
-
-    button.type = 'button';
-    button.className = descriptor.className;
-    button.textContent = descriptor.label;
-    button.dataset.hEarthObjectId = descriptor.dataset.hEarthObjectId;
-    button.dataset.hEarthTargetClassification =
-      descriptor.dataset.hEarthTargetClassification;
-    button.disabled = descriptor.selectable !== true;
-
-    if (target.objectId === selectedObjectId) {
-      button.setAttribute('aria-current', 'true');
-    }
-
-    button.addEventListener('click', () => {
-      selectHEarthPublicTarget({
-        mountPoints,
-        objectId: target.objectId
-      });
+    const importReceipt = freeze({
+      ...importReceiptBase,
+      importSucceeded: true,
+      rendererModuleKeys: freeze(Object.keys(rendererModule || {})),
+      mountFunctionFound: Boolean(mountFn)
     });
 
-    targetList.appendChild(button);
-  });
+    MODULE_STATE.rendererImportReceipt = importReceipt;
+
+    if (!mountFn || !mountPoints?.rendererMount) {
+      MODULE_STATE.rendererMountReceipt = freeze({
+        receiptType:
+          'H_EARTH_3D_PUBLIC_RENDERER_MOUNT_RECEIPT',
+        file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+        contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+        rendererModulePath: rendererPath,
+        importSucceeded: true,
+        mountAttempted: false,
+        mounted: false,
+        reason: !mountFn
+          ? 'NO_COMPATIBLE_RENDERER_MOUNT_FUNCTION_EXPORTED'
+          : 'RENDERER_MOUNT_NODE_MISSING',
+        publicStageCandidateOnly: true,
+        rendererPassClaim: false,
+        visualPassClaim: false,
+        validationClaim: false,
+        productionClaim: false,
+        matrixCollapse: false
+      });
+
+      return MODULE_STATE.rendererMountReceipt;
+    }
+
+    let rawMountResult = null;
+
+    try {
+      rawMountResult = mountFn({
+        document: mountPoints.rendererMount.ownerDocument,
+        routeRoot: mountPoints.routeRoot,
+        mountNode: mountPoints.rendererMount,
+        rendererMount: mountPoints.rendererMount,
+        selectedTargetId: MODULE_STATE.selectedTargetId,
+        publicStageCandidateOnly: true
+      });
+    } catch (_firstError) {
+      rawMountResult = mountFn(
+        mountPoints.rendererMount,
+        {
+          document: mountPoints.rendererMount.ownerDocument,
+          routeRoot: mountPoints.routeRoot,
+          selectedTargetId: MODULE_STATE.selectedTargetId,
+          publicStageCandidateOnly: true
+        }
+      );
+    }
+
+    MODULE_STATE.rendererMountReceipt = freeze({
+      receiptType:
+        'H_EARTH_3D_PUBLIC_RENDERER_MOUNT_RECEIPT',
+      file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+      contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+      rendererModulePath: rendererPath,
+      importSucceeded: true,
+      mountFunctionFound: true,
+      mountAttempted: true,
+      mounted:
+        Boolean(rawMountResult?.mounted) ||
+        Boolean(rawMountResult?.rendererMounted) ||
+        mountPoints.rendererMount.childNodes.length > 0,
+      rawMountResult: safeSerialize(rawMountResult, {
+        maxDepth: 5,
+        maxArrayLength: 80
+      }),
+      mountedNodeCount:
+        mountPoints.rendererMount.childNodes.length,
+      publicStageCandidateOnly: true,
+      rendererPassClaim: false,
+      visualPassClaim: false,
+      validationClaim: false,
+      productionClaim: false,
+      matrixCollapse: false
+    });
+
+    return MODULE_STATE.rendererMountReceipt;
+  } catch (error) {
+    MODULE_STATE.rendererImportReceipt = freeze({
+      ...importReceiptBase,
+      importSucceeded: false,
+      errorName:
+        error instanceof Error ? error.name : 'UnknownError',
+      errorMessage:
+        error instanceof Error ? error.message : String(error)
+    });
+
+    MODULE_STATE.rendererMountReceipt = freeze({
+      receiptType:
+        'H_EARTH_3D_PUBLIC_RENDERER_MOUNT_RECEIPT',
+      file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+      contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+      rendererModulePath: rendererPath,
+      importSucceeded: false,
+      mountAttempted: false,
+      mounted: false,
+      errorName:
+        error instanceof Error ? error.name : 'UnknownError',
+      errorMessage:
+        error instanceof Error ? error.message : String(error),
+      publicStageCandidateOnly: true,
+      rendererPassClaim: false,
+      visualPassClaim: false,
+      validationClaim: false,
+      productionClaim: false,
+      matrixCollapse: false
+    });
+
+    return MODULE_STATE.rendererMountReceipt;
+  }
+}
+
+async function readLayer4BridgeDescriptor(options = {}) {
+  if (options.skipLayer4DescriptorImport === true) {
+    const importReceipt = freeze({
+      receiptType:
+        'H_EARTH_3D_PUBLIC_STAGE_STEP_012J_IMPORT_RECEIPT',
+      file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+      contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+      importAttempted: false,
+      importSkipped: true,
+      importSucceeded: false,
+      moduleInitializationObserved: false,
+      layer4BridgeModulePath:
+        options.layer4BridgeModulePath ||
+        H_EARTH_3D_LAYER_4_BRIDGE_DEFAULT_MODULE_PATH,
+      reason:
+        'skipLayer4DescriptorImport option was true.',
+      runFunctionExecuted: false,
+      replayExecuted: false,
+      vectorRunnerExecuted: false,
+      runtimeExecuted: false,
+      canonicalDigestGenerated: false,
+      replayComparison: false,
+      validationClaim: false,
+      productionClaim: false,
+      visualPassClaim: false,
+      matrixCollapse: false
+    });
+
+    MODULE_STATE.layer4ImportReceipt = importReceipt;
+    MODULE_STATE.layer4StatusProjection =
+      buildStaticLayer4Projection(
+        H_EARTH_3D_LAYER_4_STATUS.DESCRIPTOR_IMPORT_SKIPPED_STATIC_METADATA_RETAINED
+      );
+
+    return MODULE_STATE.layer4StatusProjection;
+  }
+
+  const modulePath =
+    options.layer4BridgeModulePath ||
+    H_EARTH_3D_LAYER_4_BRIDGE_DEFAULT_MODULE_PATH;
+
+  try {
+    const bridgeModule = await import(modulePath);
+
+    const importReceipt = freeze({
+      receiptType:
+        'H_EARTH_3D_PUBLIC_STAGE_STEP_012J_IMPORT_RECEIPT',
+      file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+      contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+      importAttempted: true,
+      importSkipped: false,
+      importSucceeded: true,
+      moduleInitializationObserved: true,
+      layer4BridgeModulePath: modulePath,
+      moduleExportKeys: freeze(Object.keys(bridgeModule || {})),
+
+      runFunctionExecuted: false,
+      replayExecuted: false,
+      vectorRunnerExecuted: false,
+      runtimeExecuted: false,
+      canonicalDigestGenerated: false,
+      replayComparison: false,
+      validationClaim: false,
+      productionClaim: false,
+      visualPassClaim: false,
+      matrixCollapse: false
+    });
+
+    MODULE_STATE.layer4ImportReceipt = importReceipt;
+    MODULE_STATE.layer4StatusProjection =
+      normalizeImportedBridgeProjection(importReceipt, bridgeModule);
+
+    return MODULE_STATE.layer4StatusProjection;
+  } catch (error) {
+    const importReceipt = freeze({
+      receiptType:
+        'H_EARTH_3D_PUBLIC_STAGE_STEP_012J_IMPORT_RECEIPT',
+      file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+      contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+      importAttempted: true,
+      importSkipped: false,
+      importSucceeded: false,
+      moduleInitializationObserved: false,
+      layer4BridgeModulePath: modulePath,
+      errorName:
+        error instanceof Error ? error.name : 'UnknownError',
+      errorMessage:
+        error instanceof Error ? error.message : String(error),
+
+      staticCustodyMetadataRetained: true,
+
+      runFunctionExecuted: false,
+      replayExecuted: false,
+      vectorRunnerExecuted: false,
+      runtimeExecuted: false,
+      canonicalDigestGenerated: false,
+      replayComparison: false,
+      validationClaim: false,
+      productionClaim: false,
+      visualPassClaim: false,
+      matrixCollapse: false
+    });
+
+    MODULE_STATE.layer4ImportReceipt = importReceipt;
+    MODULE_STATE.layer4StatusProjection =
+      buildLayer4ImportFailureProjection(importReceipt);
+
+    return MODULE_STATE.layer4StatusProjection;
+  }
+}
+
+function updateRouteRootExecutionDataset(mountPoints) {
+  const routeRoot = mountPoints?.routeRoot;
+
+  if (!routeRoot?.dataset) return false;
+
+  routeRoot.dataset.hEarthModuleInitializationObserved =
+    MODULE_STATE.layer4StatusProjection?.moduleInitializationObserved === true
+      ? 'true'
+      : 'false';
+
+  routeRoot.dataset.hEarthRunFunctionExecuted = 'false';
+  routeRoot.dataset.hEarthReplayExecuted = 'false';
+  routeRoot.dataset.hEarthVectorRunnerExecuted = 'false';
+  routeRoot.dataset.hEarthRuntimeExecuted = 'false';
+  routeRoot.dataset.hEarthCanonicalDigestGenerated = 'false';
+  routeRoot.dataset.hEarthReplayComparison = 'false';
+  routeRoot.dataset.hEarthValidationClaim = 'false';
+  routeRoot.dataset.hEarthProductionClaim = 'false';
+  routeRoot.dataset.hEarthVisualPassClaim = 'false';
+  routeRoot.dataset.hEarthMatrixCollapse = 'false';
 
   return true;
 }
 
-export function selectHEarthPublicTarget({
-  mountPoints,
-  objectId
-} = {}) {
-  const selectedObjectId = objectId || H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
+async function completeAsyncPublicStageInitialization(mountPoints, options = {}) {
+  MODULE_STATE.asyncInitializationStarted = true;
 
-  const nextStatus = setRouteBootstrapStatus({
-    selectedObjectId
-  });
-
-  const selectedTargetCardUpdated = renderHEarthSelectedTargetCard(
-    mountPoints,
-    selectedObjectId
+  writeText(
+    mountPoints?.layer4Status,
+    H_EARTH_3D_LAYER_4_STATUS.DESCRIPTOR_IMPORT_PENDING
   );
 
-  const compactReadoutRendered = renderHEarthPublicReadout(
-    mountPoints,
-    selectedObjectId
-  );
+  const [layer4Projection, rendererMountReceipt] =
+    await Promise.all([
+      readLayer4BridgeDescriptor(options),
+      options.skipRendererMount === true
+        ? Promise.resolve(freeze({
+            receiptType:
+              'H_EARTH_3D_PUBLIC_RENDERER_MOUNT_RECEIPT',
+            file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+            contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+            mountAttempted: false,
+            mounted: false,
+            reason: 'skipRendererMount option was true.',
+            publicStageCandidateOnly: true,
+            rendererPassClaim: false,
+            visualPassClaim: false,
+            validationClaim: false,
+            productionClaim: false,
+            matrixCollapse: false
+          }))
+        : attemptPublicRendererMount(mountPoints, options)
+    ]);
 
-  renderHEarthTargetList(mountPoints, selectedObjectId);
+  MODULE_STATE.layer4StatusProjection = layer4Projection;
+  MODULE_STATE.rendererMountReceipt = rendererMountReceipt;
 
-  renderHEarthRouteStatus(mountPoints, {
-    ...nextStatus,
-    selectedTargetCardUpdated,
-    compactReadoutRendered
-  });
+  const rendererMounted =
+    rendererMountReceipt?.mounted === true;
 
-  return Object.freeze({
-    selected: true,
-    selectedObjectId,
-    selectedTargetCardUpdated,
-    compactReadoutRendered,
-    descriptorOnly: true,
-    runtimeActionExecutionClaim: false,
-    receiptCreationClaim: false,
-    runtimeReceiptPersistence: false,
-    matrixCollapse: false,
+  if (rendererMounted) {
+    MODULE_STATE.status = H_EARTH_3D_PUBLIC_STAGE_STATUS.READY;
+    setRouteClass(mountPoints?.routeRoot, 'h-earth-3d-boot-ready');
+    writeText(
+      mountPoints?.statusNode,
+      'PUBLIC_STAGE_READY'
+    );
+    writeText(
+      mountPoints?.fallbackNode,
+      'H-Earth public environment stage mounted as candidate display.'
+    );
+  } else {
+    MODULE_STATE.status = H_EARTH_3D_PUBLIC_STAGE_STATUS.PARTIAL;
+    setRouteClass(mountPoints?.routeRoot, 'h-earth-3d-boot-fallback');
+    writeText(
+      mountPoints?.statusNode,
+      'PUBLIC_STAGE_PARTIAL'
+    );
+    writeText(
+      mountPoints?.fallbackNode,
+      'H-Earth public route is available. Renderer mount support is held or unavailable; Layer 4 status projection remains read-only.'
+    );
+  }
+
+  renderLayer4Projection(mountPoints, layer4Projection);
+  updateRouteRootExecutionDataset(mountPoints);
+  rebuildAndRenderPublicReceipts(mountPoints);
+
+  MODULE_STATE.asyncInitializationComplete = true;
+
+  globalThis.H_EARTH_3D_LAYER_4_STATUS_PROJECTION =
+    MODULE_STATE.layer4StatusProjection;
+  globalThis.H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT =
+    MODULE_STATE.layer4PublicStageReceipt;
+  globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
+    MODULE_STATE.routeBootstrapReceipt;
+  globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
+    buildRouteBootstrapStatus();
+
+  return freeze({
+    initialized: MODULE_STATE.initialized,
+    status: MODULE_STATE.status,
+    layer4StatusProjection: MODULE_STATE.layer4StatusProjection,
+    rendererMountReceipt: MODULE_STATE.rendererMountReceipt,
+    routeBootstrapReceipt: MODULE_STATE.routeBootstrapReceipt,
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
   });
 }
 
-export function bindHEarthInspectionControls(mountPoints) {
-  if (!mountPoints) {
-    return Object.freeze({
-      targetListBound: false,
-      inspectionPanelRendered: false,
-      selectedTargetCardUpdated: false,
-      compactReadoutRendered: false,
-      inspectGroundControlBound: false,
-      controllerReady: false,
-      reason: 'MISSING_MOUNT_POINTS',
-      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+function bindActionControls(mountPoints) {
+  if (!mountPoints?.actionInspectGround) {
+    return freeze({
+      inspectGroundBound: false
     });
   }
 
-  const selectedObjectId =
-    latestRouteBootstrapStatus.selectedObjectId ||
-    H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
+  mountPoints.actionInspectGround.addEventListener('click', () => {
+    const target = getTarget(MODULE_STATE.selectedTargetId);
 
-  const targetListBound = renderHEarthTargetList(mountPoints, selectedObjectId);
+    renderSelectedTarget(mountPoints, target);
+    rebuildAndRenderPublicReceipts(mountPoints);
 
-  const selectedTargetCardUpdated = renderHEarthSelectedTargetCard(
-    mountPoints,
-    selectedObjectId
-  );
+    writeText(
+      mountPoints.statusNode,
+      'GROUND_CONDITION_READ_DISPLAYED_DESCRIPTOR_ONLY'
+    );
+  });
 
-  const compactReadoutRendered = renderHEarthPublicReadout(
-    mountPoints,
-    selectedObjectId
-  );
-
-  let inspectGroundControlBound = false;
-
-  if (mountPoints.inspectGroundAction) {
-    mountPoints.inspectGroundAction.addEventListener('click', () => {
-      const currentObjectId =
-        latestRouteBootstrapStatus.selectedObjectId ||
-        H_EARTH_DEFAULT_SELECTED_OBJECT_ID;
-
-      renderHEarthPublicReadout(mountPoints, currentObjectId);
-      renderHEarthRouteStatus(mountPoints, latestRouteBootstrapStatus);
-    });
-
-    inspectGroundControlBound = true;
-  }
-
-  return Object.freeze({
-    targetListBound,
-    inspectionPanelRendered: Boolean(mountPoints.inspectionPanel),
-    selectedTargetCardUpdated,
-    compactReadoutRendered,
-    inspectGroundControlBound,
-    controllerReady: Boolean(
-      targetListBound ||
-      compactReadoutRendered ||
-      selectedTargetCardUpdated ||
-      inspectGroundControlBound
-    ),
-    descriptorOnly: true,
-    publicRouteControlOnly: true,
-    gameplayExecutionClaim: false,
-    runtimeReceiptPersistence: false,
-    validationClaim: false,
-    matrixCollapse: false,
-    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  return freeze({
+    inspectGroundBound: true
   });
 }
 
-export function attemptHEarthRendererMount(mountPoints, options = {}) {
-  const rendererMountApi = getRendererMountApi();
-  const rendererDestroyApi = getRendererDestroyApi();
-  const rendererApiSource = getRendererMountApiSource();
-  const rendererDestroyApiSource = getRendererDestroyApiSource();
-
-  if (!rendererMountApi) {
-    return Object.freeze({
-      rendererMountApiConfirmed: false,
-      rendererDestroyApiConfirmed: Boolean(rendererDestroyApi),
-      rendererApiSource,
-      rendererDestroyApiSource,
-      rendererMountAttempted: false,
-      rendererMounted: false,
-      rendererMountSkipped: true,
-      rendererMountSkipReason:
-        H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_MOUNT_API,
-      rendererMountError: null,
-      rendererMountReceipt: null,
-      statusLevel:
-        H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS
-          .BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API,
-      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+function bindCopyControls(rootDocument = globalThis.document) {
+  if (!rootDocument || typeof rootDocument.querySelectorAll !== 'function') {
+    return freeze({
+      copyButtonsBound: 0
     });
   }
 
-  if (!mountPoints?.rendererMount) {
-    return Object.freeze({
-      rendererMountApiConfirmed: true,
-      rendererDestroyApiConfirmed: Boolean(rendererDestroyApi),
-      rendererApiSource,
-      rendererDestroyApiSource,
-      rendererMountAttempted: false,
-      rendererMounted: false,
-      rendererMountSkipped: true,
-      rendererMountSkipReason:
-        H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_RENDERER_MOUNT_NODE,
-      rendererMountError: null,
-      rendererMountReceipt: null,
-      statusLevel:
-        H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
-      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-    });
-  }
+  const buttons = Array.from(
+    rootDocument.querySelectorAll(
+      '[data-h-earth-receipt-copy-button="true"][data-h-earth-copy-target]'
+    )
+  );
 
-  try {
-    const result = rendererMountApi({
-      mountNode: mountPoints.rendererMount,
-      renderer: H_EARTH_3D_RENDERER,
-      candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
-      composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
-      controller: H_EARTH_3D_CONTROLLER,
-      options: Object.freeze({ ...options }),
-      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-    });
+  buttons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      const targetId = button.getAttribute('data-h-earth-copy-target');
+      const label =
+        button.getAttribute('data-h-earth-copy-label') ||
+        targetId ||
+        'Receipt';
+      const copyStatus =
+        getById(rootDocument, H_EARTH_3D_PUBLIC_MOUNT_IDS.copyStatus);
+      const targetNode =
+        targetId ? getById(rootDocument, targetId) : null;
 
-    const mounted = isRendererMountReceiptMounted(result);
+      if (!targetNode) {
+        writeText(copyStatus, `${label} copy failed: target not found.`);
+        setDatasetBoolean(copyStatus, 'hEarthCopyFailure', true);
+        return;
+      }
 
-    return Object.freeze({
-      rendererMountApiConfirmed: true,
-      rendererDestroyApiConfirmed: Boolean(rendererDestroyApi),
-      rendererApiSource,
-      rendererDestroyApiSource,
-      rendererMountAttempted: true,
-      rendererMounted: mounted,
-      rendererMountSkipped: false,
-      rendererMountSkipReason: mounted
-        ? null
-        : H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_MOUNT_FAILED,
-      rendererMountError: null,
-      rendererMountReceipt: result || null,
-      statusLevel: mounted
-        ? H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_READY_CANDIDATE_ONLY
-        : H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
-      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+      const text = targetNode.textContent || '';
+
+      if (!text.trim()) {
+        writeText(copyStatus, `${label} copy failed: payload is empty.`);
+        setDatasetBoolean(copyStatus, 'hEarthCopyFailure', true);
+        return;
+      }
+
+      try {
+        if (
+          globalThis.navigator?.clipboard &&
+          typeof globalThis.navigator.clipboard.writeText === 'function'
+        ) {
+          await globalThis.navigator.clipboard.writeText(text);
+          writeText(copyStatus, `${label} copied.`);
+          if (copyStatus?.dataset) {
+            copyStatus.dataset.hEarthCopyState = 'success';
+          }
+          return;
+        }
+
+        writeText(
+          copyStatus,
+          `${label} prepared, but Clipboard API is unavailable in this context.`
+        );
+
+        if (copyStatus?.dataset) {
+          copyStatus.dataset.hEarthCopyState = 'held';
+        }
+      } catch (error) {
+        writeText(
+          copyStatus,
+          `${label} copy failed: ${
+            error instanceof Error ? error.message : String(error)
+          }`
+        );
+
+        if (copyStatus?.dataset) {
+          copyStatus.dataset.hEarthCopyState = 'failure';
+        }
+      }
     });
-  } catch (error) {
-    return Object.freeze({
-      rendererMountApiConfirmed: true,
-      rendererDestroyApiConfirmed: Boolean(rendererDestroyApi),
-      rendererApiSource,
-      rendererDestroyApiSource,
-      rendererMountAttempted: true,
-      rendererMounted: false,
-      rendererMountSkipped: false,
-      rendererMountSkipReason:
-        H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_MOUNT_FAILED,
-      rendererMountError: error instanceof Error ? error.message : String(error),
-      rendererMountReceipt: null,
-      statusLevel:
-        H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
-      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-    });
-  }
+  });
+
+  return freeze({
+    copyButtonsBound: buttons.length
+  });
 }
 
-export function renderHEarthRouteStatus(
-  mountPoints,
-  status = latestRouteBootstrapStatus
-) {
-  if (!mountPoints) return false;
+function renderInitialStaticRoute(mountPoints) {
+  const target = getTarget(MODULE_STATE.selectedTargetId);
 
-  writeText(mountPoints.statusNode, status.statusLevel);
+  renderSelectedTarget(mountPoints, target);
+  renderTargetList(mountPoints);
 
-  if (mountPoints.fallbackNode) {
-    const fallbackMessage = status.bootstrapFallbackActive
-      ? `H-Earth bootstrap fallback active: ${status.failureCodes.join(', ')}`
-      : status.bootstrapReadyDescriptorOnlyNoRendererMountApi
-        ? 'H-Earth descriptor bootstrap ready. Renderer mount skipped because canon renderer mount API is missing.'
-        : status.bootstrapReadyCandidateOnly
-          ? 'H-Earth DOM/CSS-3D candidate bootstrap ready. Renderer mount receipt confirmed mounted.'
-          : 'H-Earth route bootstrap status pending.';
-
-    writeText(mountPoints.fallbackNode, fallbackMessage);
-  }
-
-  if (mountPoints.routeRoot) {
-    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-ready');
-    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-fallback');
-    removeClass(mountPoints.routeRoot, 'h-earth-3d-boot-error');
-
-    if (
-      status.bootstrapReadyCandidateOnly ||
-      status.bootstrapReadyDescriptorOnlyNoRendererMountApi
-    ) {
-      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-ready');
-    } else if (status.bootstrapFallbackActive) {
-      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-fallback');
-    } else {
-      addClass(mountPoints.routeRoot, 'h-earth-3d-boot-error');
-    }
-
-    setNodeDataset(mountPoints.routeRoot, 'hEarthStatusLevel', status.statusLevel);
-
-    setNodeDataset(
-      mountPoints.routeRoot,
-      'hEarthRendererMounted',
-      String(status.rendererMounted === true)
+  MODULE_STATE.layer4StatusProjection =
+    buildStaticLayer4Projection(
+      H_EARTH_3D_LAYER_4_STATUS.DESCRIPTOR_IMPORT_PENDING
     );
 
-    setNodeDataset(
-      mountPoints.routeRoot,
-      'hEarthDiagnosticRoute',
-      H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute
-    );
+  renderLayer4Projection(
+    mountPoints,
+    MODULE_STATE.layer4StatusProjection
+  );
 
-    setNodeDataset(
-      mountPoints.routeRoot,
-      'hEarthPublicBootstrapOnly',
-      'true'
-    );
+  rebuildAndRenderPublicReceipts(mountPoints);
 
-    setNodeDataset(
-      mountPoints.routeRoot,
-      'hEarthStructuralBaselineStatus',
-      status.structuralPipelineBaselineLock?.status || ''
-    );
+  writeText(
+    mountPoints.statusNode,
+    'PUBLIC_STAGE_INITIALIZING'
+  );
 
-    setNodeDataset(
-      mountPoints.routeRoot,
-      'hEarthNextDiagnosticDomain',
-      status.structuralPipelineBaselineLock?.nextDiagnosticDomain || ''
-    );
-  }
-
-  if (mountPoints.diagnosticLink) {
-    mountPoints.diagnosticLink.setAttribute(
-      'href',
-      H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute
-    );
-  }
-
-  if (mountPoints.debug) {
-    writeJson(
-      mountPoints.debug,
-      Object.freeze({
-        ...status,
-        publicBootstrapOnly: true,
-        diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
-        compactReceipt: buildHEarthRouteBootstrapReceipt(status),
-        rendererMountReceiptSummary:
-          summarizeRendererMountReceipt(status.rendererMountReceipt),
-        livePublicRendererReceiptHandoff:
-          buildHEarthLivePublicRendererReceiptHandoff(status),
-        livePublicRendererReceiptHandoffRead:
-          readHEarthLivePublicRendererReceiptHandoff(),
-        livePublicRendererReceiptHandoffWrite:
-          status.livePublicRendererReceiptHandoffWrite || null,
-        structuralPipelineBaselineLock:
-          status.structuralPipelineBaselineLock ||
-          buildHEarthStructuralPipelineBaselineLock(status),
-        diagnosticTransitionTarget:
-          H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
-        diagnosticWallEmbedded: false,
-        rawSpatialEvidenceEmbedded: false,
-        receiptWallEmbedded: false,
-        copySurfaceEmbedded: false,
-        visualCompositionAuditEmbedded: false
-      }),
-      { maxDepth: 7, maxArrayLength: 120 }
-    );
-  }
+  writeText(
+    mountPoints.fallbackNode,
+    'H-Earth public route is loading the public-stage adapter.'
+  );
 
   return true;
 }
 
 export function initializeHEarthRoute(options = {}) {
   const rootDocument = getDocumentFromOptions(options);
-  const chain = verifyHEarthRouteBoundChain();
-  const mountPoints = resolveHEarthRouteMountPoints(rootDocument);
-  const rendererMountApi = getRendererMountApi();
+  const mountPoints = resolveMountPoints(rootDocument);
 
-  const failureCodes = [...chain.failureCodes];
+  MODULE_STATE.generatedAt = nowIso();
+  MODULE_STATE.mountPoints = mountPoints;
+  MODULE_STATE.status = H_EARTH_3D_PUBLIC_STAGE_STATUS.INITIALIZING;
 
-  if (!mountPoints.strictRequiredFound) {
-    mountPoints.missingStrictRequiredIds.forEach((id) => {
-      if (id === H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds.routeRoot) {
-        failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_ROUTE_ROOT);
-      }
+  bindCopyControls(rootDocument);
 
-      if (id === H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds.status) {
-        failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_STATUS_NODE);
-      }
+  if (!mountPoints.requiredFound) {
+    MODULE_STATE.status = H_EARTH_3D_PUBLIC_STAGE_STATUS.ERROR;
+    MODULE_STATE.initialized = false;
 
-      if (id === H_EARTH_3D_ROUTE_MOUNT_CONTRACT.strictRequiredIds.fallback) {
-        failureCodes.push(H_EARTH_3D_ROUTE_FAILURE_CODES.MISSING_FALLBACK_NODE);
-      }
-    });
-  }
-
-  if (failureCodes.length > 0) {
-    const failedStatus = setRouteBootstrapStatus({
-      chainReady: chain.chainReady,
-      domReady: mountPoints.strictRequiredFound,
-      controllerReady: false,
-      rendererMountReady: false,
-      bootstrapReadyCandidateOnly: false,
-      bootstrapReadyDescriptorOnlyNoRendererMountApi: false,
-      bootstrapFallbackActive: true,
-      statusLevel:
-        H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
-      failureCodes,
-      routeRootFound: Boolean(mountPoints.routeRoot),
-      statusNodeFound: Boolean(mountPoints.statusNode),
-      fallbackNodeFound: Boolean(mountPoints.fallbackNode),
-      rendererMountNodeFound: Boolean(mountPoints.rendererMount),
-      rendererMountApiConfirmed: Boolean(rendererMountApi),
-      rendererDestroyApiConfirmed: Boolean(getRendererDestroyApi()),
-      rendererApiSource: getRendererMountApiSource(),
-      rendererDestroyApiSource: getRendererDestroyApiSource(),
-      rendererMountAttempted: false,
-      rendererMounted: false,
-      rendererMountSkipped: true,
-      rendererMountSkipReason:
-        H_EARTH_3D_ROUTE_FAILURE_CODES.BOOTSTRAP_FALLBACK_ACTIVE,
-      rendererMountReceipt: null,
-      diagnosticRouteLinked: Boolean(mountPoints.diagnosticLink)
+    const failureReceipt = freeze({
+      receiptType:
+        'H_EARTH_3D_PUBLIC_STAGE_ADAPTER_MOUNT_FAILURE',
+      file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+      contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+      generatedAt: nowIso(),
+      status: MODULE_STATE.status,
+      missingRequiredIds: mountPoints.missingRequiredIds,
+      publicEnvironmentHost: true,
+      layer4StatusProjectionAuthorized: true,
+      runFunctionExecuted: false,
+      replayExecuted: false,
+      vectorRunnerExecuted: false,
+      runtimeExecuted: false,
+      canonicalDigestGenerated: false,
+      replayComparison: false,
+      validationClaim: false,
+      productionClaim: false,
+      visualPassClaim: false,
+      matrixCollapse: false,
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
 
-    const failedHandoffWrite =
-      writeHEarthLivePublicRendererReceiptHandoff(failedStatus);
+    MODULE_STATE.routeBootstrapReceipt = failureReceipt;
+    MODULE_STATE.routeBootstrapResult = failureReceipt;
 
-    const failedBaselineLock =
-      buildHEarthStructuralPipelineBaselineLock(failedStatus);
+    writeText(
+      mountPoints.statusNode,
+      'PUBLIC_STAGE_MOUNT_FAILURE'
+    );
 
-    const failedStatusWithReceipts = setRouteBootstrapStatus({
-      ...failedStatus,
-      livePublicRendererReceiptHandoff:
-        failedHandoffWrite.handoff,
-      livePublicRendererReceiptHandoffWrite:
-        failedHandoffWrite,
-      structuralPipelineBaselineLock:
-        failedBaselineLock
-    });
+    writeJson(
+      mountPoints.debug,
+      failureReceipt,
+      { maxDepth: 7, maxArrayLength: 80 }
+    );
 
-    renderHEarthRouteStatus(mountPoints, failedStatusWithReceipts);
+    globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
+      failureReceipt;
 
-    return Object.freeze({
+    return freeze({
       initialized: false,
-      status: failedStatusWithReceipts,
+      status: MODULE_STATE.status,
       mountPoints,
-      chain,
-      publicBootstrapOnly: true,
-      diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
-      livePublicRendererReceiptHandoff:
-        failedHandoffWrite.handoff,
-      livePublicRendererReceiptHandoffWrite:
-        failedHandoffWrite,
-      structuralPipelineBaselineLock:
-        failedBaselineLock,
+      failureReceipt,
       boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
   }
 
-  const controllerBinding = bindHEarthInspectionControls(mountPoints);
-  const rendererMount = attemptHEarthRendererMount(
-    mountPoints,
-    options.rendererOptions || {}
-  );
+  MODULE_STATE.initialized = true;
 
-  const warningCodes = [];
+  renderInitialStaticRoute(mountPoints);
+  bindActionControls(mountPoints);
 
-  if (rendererMount.rendererMountSkipped && rendererMount.rendererMountSkipReason) {
-    warningCodes.push(rendererMount.rendererMountSkipReason);
+  if (mountPoints.diagnosticLink) {
+    mountPoints.diagnosticLink.setAttribute(
+      'href',
+      H_EARTH_3D_DIAGNOSTIC_ROUTE
+    );
   }
 
-  if (
-    rendererMount.rendererMountAttempted === true &&
-    rendererMount.rendererMounted !== true &&
-    rendererMount.rendererMountSkipReason
-  ) {
-    warningCodes.push(rendererMount.rendererMountSkipReason);
-  }
+  updateRouteRootExecutionDataset(mountPoints);
 
-  const runtimeFailureCodes = [];
-
-  if (
-    rendererMount.rendererMountApiConfirmed === true &&
-    rendererMount.rendererMounted !== true &&
-    rendererMount.rendererMountSkipReason
-  ) {
-    runtimeFailureCodes.push(rendererMount.rendererMountSkipReason);
-  }
-
-  const descriptorReadyNoMount =
-    chain.chainReady === true &&
-    mountPoints.strictRequiredFound === true &&
-    controllerBinding.controllerReady === true &&
-    rendererMount.rendererMountApiConfirmed === false;
-
-  const candidateReady =
-    chain.chainReady === true &&
-    mountPoints.strictRequiredFound === true &&
-    controllerBinding.controllerReady === true &&
-    rendererMount.rendererMounted === true;
-
-  const finalStatusLevel = candidateReady
-    ? H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_READY_CANDIDATE_ONLY
-    : descriptorReadyNoMount
-      ? H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS
-          .BOOTSTRAP_READY_DESCRIPTOR_ONLY_NO_RENDERER_MOUNT_API
-      : rendererMount.statusLevel;
-
-  const nextStatus = setRouteBootstrapStatus({
-    chainReady: chain.chainReady,
-    domReady: mountPoints.strictRequiredFound,
-    controllerReady: controllerBinding.controllerReady,
-    rendererMountReady:
-      rendererMount.rendererMountApiConfirmed &&
-      Boolean(mountPoints.rendererMount) &&
-      rendererMount.rendererMounted === true,
-
-    bootstrapReadyCandidateOnly: candidateReady,
-    bootstrapReadyDescriptorOnlyNoRendererMountApi: descriptorReadyNoMount,
-    bootstrapFallbackActive:
-      finalStatusLevel ===
-      H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_FALLBACK_ACTIVE,
-
-    statusLevel: finalStatusLevel,
-
-    failureCodes: Object.freeze(runtimeFailureCodes),
-    warningCodes: Object.freeze(warningCodes),
-
-    rendererMountApiConfirmed: rendererMount.rendererMountApiConfirmed,
-    rendererDestroyApiConfirmed: rendererMount.rendererDestroyApiConfirmed,
-    rendererMountAttempted: rendererMount.rendererMountAttempted,
-    rendererMounted: rendererMount.rendererMounted,
-    rendererMountSkipped: rendererMount.rendererMountSkipped,
-    rendererMountSkipReason: rendererMount.rendererMountSkipReason,
-    rendererMountError: rendererMount.rendererMountError,
-    rendererMountReceipt: rendererMount.rendererMountReceipt,
-    rendererApiSource: rendererMount.rendererApiSource,
-    rendererDestroyApiSource: rendererMount.rendererDestroyApiSource,
-
-    routeRootFound: Boolean(mountPoints.routeRoot),
-    statusNodeFound: Boolean(mountPoints.statusNode),
-    fallbackNodeFound: Boolean(mountPoints.fallbackNode),
-    rendererMountNodeFound: Boolean(mountPoints.rendererMount),
-
-    targetListBound: controllerBinding.targetListBound,
-    inspectGroundControlBound: controllerBinding.inspectGroundControlBound,
-    selectedTargetCardUpdated: controllerBinding.selectedTargetCardUpdated,
-    compactReadoutRendered: controllerBinding.compactReadoutRendered,
-    debugStatusExposed: Boolean(mountPoints.debug),
-    diagnosticRouteLinked: Boolean(mountPoints.diagnosticLink)
-  });
-
-  const livePublicRendererReceiptHandoffWrite =
-    writeHEarthLivePublicRendererReceiptHandoff(nextStatus);
-
-  const statusWithHandoff = setRouteBootstrapStatus({
-    ...nextStatus,
-    livePublicRendererReceiptHandoff:
-      livePublicRendererReceiptHandoffWrite.handoff,
-    livePublicRendererReceiptHandoffWrite
-  });
-
-  const structuralPipelineBaselineLock =
-    buildHEarthStructuralPipelineBaselineLock(statusWithHandoff);
-
-  const finalStatus = setRouteBootstrapStatus({
-    ...statusWithHandoff,
-    structuralPipelineBaseline:
-      structuralPipelineBaselineLock.preservedBaseline,
-    structuralPipelineBaselineLock
-  });
-
-  renderHEarthRouteStatus(mountPoints, finalStatus);
-
-  return Object.freeze({
+  const immediateResult = freeze({
     initialized: true,
-    status: finalStatus,
+    status: MODULE_STATE.status,
+    generatedAt: MODULE_STATE.generatedAt,
     mountPoints,
-    chain,
-    controllerBinding,
-    rendererMount,
-    compactReceipt: buildHEarthRouteBootstrapReceipt(finalStatus),
-    publicReadout: buildHEarthPublicReadoutPayload(finalStatus.selectedObjectId),
-    livePublicRendererReceiptHandoff:
-      livePublicRendererReceiptHandoffWrite.handoff,
-    livePublicRendererReceiptHandoffWrite,
-    structuralPipelineBaselineLock,
-    diagnosticTransitionTarget:
-      H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
-    runtimeFailureCodes: Object.freeze(runtimeFailureCodes),
-    renderInputSelector: selectHEarthRenderInput,
-    publicBootstrapOnly: true,
-    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+    routeBootstrapReceipt: MODULE_STATE.routeBootstrapReceipt,
+    layer4StatusProjection: MODULE_STATE.layer4StatusProjection,
+    layer4PublicStageReceipt: MODULE_STATE.layer4PublicStageReceipt,
+    asyncCompletion:
+      'PENDING_DYNAMIC_DESCRIPTOR_AND_RENDERER_IMPORTS',
+    publicStageAdapter: true,
+    readOnlyLayer4StatusProjection: true,
+    runFunctionExecuted: false,
+    replayExecuted: false,
+    vectorRunnerExecuted: false,
+    runtimeExecuted: false,
+    canonicalDigestGenerated: false,
+    replayComparison: false,
+    validationClaim: false,
+    productionClaim: false,
+    visualPassClaim: false,
+    matrixCollapse: false,
     boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
   });
+
+  MODULE_STATE.routeBootstrapResult = immediateResult;
+
+  globalThis.H_EARTH_3D_INDEX = H_EARTH_3D_INDEX;
+  globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT = immediateResult;
+  globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
+    MODULE_STATE.routeBootstrapReceipt;
+  globalThis.H_EARTH_3D_LAYER_4_STATUS_PROJECTION =
+    MODULE_STATE.layer4StatusProjection;
+  globalThis.H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT =
+    MODULE_STATE.layer4PublicStageReceipt;
+
+  completeAsyncPublicStageInitialization(mountPoints, options).catch((error) => {
+    MODULE_STATE.status = H_EARTH_3D_PUBLIC_STAGE_STATUS.ERROR;
+
+    const failureReceipt = freeze({
+      receiptType:
+        'H_EARTH_3D_PUBLIC_STAGE_ADAPTER_ASYNC_FAILURE',
+      file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+      contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+      generatedAt: nowIso(),
+      status: MODULE_STATE.status,
+      errorName:
+        error instanceof Error ? error.name : 'UnknownError',
+      errorMessage:
+        error instanceof Error ? error.message : String(error),
+      staticLayer4ProjectionRetained: true,
+      publicStageAdapter: true,
+      readOnlyLayer4StatusProjection: true,
+      runFunctionExecuted: false,
+      replayExecuted: false,
+      vectorRunnerExecuted: false,
+      runtimeExecuted: false,
+      canonicalDigestGenerated: false,
+      replayComparison: false,
+      validationClaim: false,
+      productionClaim: false,
+      visualPassClaim: false,
+      matrixCollapse: false,
+      boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+    });
+
+    MODULE_STATE.routeBootstrapReceipt = failureReceipt;
+
+    setRouteClass(mountPoints.routeRoot, 'h-earth-3d-boot-error');
+    writeText(mountPoints.statusNode, 'PUBLIC_STAGE_ASYNC_FAILURE');
+    writeText(
+      mountPoints.fallbackNode,
+      `Public-stage adapter async completion failed: ${failureReceipt.errorMessage}`
+    );
+    writeJson(
+      mountPoints.debug,
+      failureReceipt,
+      { maxDepth: 8, maxArrayLength: 120 }
+    );
+
+    globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
+      failureReceipt;
+    globalThis.H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE =
+      failureReceipt;
+  });
+
+  return immediateResult;
 }
 
-export function destroyHEarthRoute(options = {}) {
-  const destroyApi = getRendererDestroyApi();
-  const mountPoints = resolveHEarthRouteMountPoints(
-    getDocumentFromOptions(options)
-  );
+export function getRouteBootstrapStatus() {
+  return buildRouteBootstrapStatus();
+}
 
-  let rendererDestroyed = false;
-  let rendererDestroyError = null;
-  let rendererDestroyReceipt = null;
-  let rendererDestroyAttempted = false;
-
-  if (destroyApi) {
-    rendererDestroyAttempted = true;
-
-    try {
-      rendererDestroyReceipt = destroyApi({
-        mountNode: mountPoints.rendererMount,
-        boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-      });
-
-      rendererDestroyed =
-        isRendererDestroyReceiptDestroyed(rendererDestroyReceipt);
-    } catch (error) {
-      rendererDestroyError =
-        error instanceof Error ? error.message : String(error);
-      rendererDestroyed = false;
-    }
+export function getRouteBootstrapReceipt() {
+  if (!MODULE_STATE.routeBootstrapReceipt) {
+    MODULE_STATE.routeBootstrapReceipt = buildRouteBootstrapReceipt();
   }
 
-  const nextStatus = setRouteBootstrapStatus({
-    bootstrapReadyCandidateOnly: false,
-    bootstrapReadyDescriptorOnlyNoRendererMountApi: false,
-    bootstrapFallbackActive: false,
-    statusLevel:
-      H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS.BOOTSTRAP_NOT_STARTED,
-    rendererMounted: false,
-    rendererMountAttempted: false,
-    rendererMountSkipped: true,
-    rendererDestroyAttempted,
-    rendererDestroyed,
-    rendererDestroyApiConfirmed: Boolean(destroyApi),
-    rendererDestroyApiSource: getRendererDestroyApiSource(),
-    rendererDestroyReceipt,
-    rendererDestroyError,
-    rendererMountSkipReason: rendererDestroyed
-      ? null
-      : H_EARTH_3D_ROUTE_FAILURE_CODES.RENDERER_DESTROY_FAILED,
-    rendererMountError: rendererDestroyError,
-    targetListBound: false,
-    inspectGroundControlBound: false,
-    selectedTargetCardUpdated: false,
-    compactReadoutRendered: false
-  });
-
-  const destroyHandoffWrite =
-    writeHEarthLivePublicRendererReceiptHandoff(nextStatus);
-
-  const destroyBaselineLock =
-    buildHEarthStructuralPipelineBaselineLock(nextStatus);
-
-  const nextStatusWithReceipts = setRouteBootstrapStatus({
-    ...nextStatus,
-    livePublicRendererReceiptHandoff:
-      destroyHandoffWrite.handoff,
-    livePublicRendererReceiptHandoffWrite:
-      destroyHandoffWrite,
-    structuralPipelineBaselineLock:
-      destroyBaselineLock
-  });
-
-  renderHEarthRouteStatus(mountPoints, nextStatusWithReceipts);
-
-  return Object.freeze({
-    destroyed: rendererDestroyed,
-    rendererDestroyed,
-    rendererDestroyAttempted,
-    rendererDestroyReceipt,
-    rendererDestroyError,
-    rendererDestroyReceiptSummary:
-      summarizeRendererDestroyReceipt(rendererDestroyReceipt),
-    livePublicRendererReceiptHandoff:
-      destroyHandoffWrite.handoff,
-    livePublicRendererReceiptHandoffWrite:
-      destroyHandoffWrite,
-    structuralPipelineBaselineLock:
-      destroyBaselineLock,
-    status: nextStatusWithReceipts,
-    publicBootstrapOnly: true,
-    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
-    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-  });
+  return MODULE_STATE.routeBootstrapReceipt;
 }
 
-export function buildHEarthRouteBootstrapReceipt(
-  status = latestRouteBootstrapStatus
-) {
-  const handoffRead = readHEarthLivePublicRendererReceiptHandoff();
-  const baselineLock =
-    status.structuralPipelineBaselineLock ||
-    buildHEarthStructuralPipelineBaselineLock(status);
+export function getLayer4StatusProjection() {
+  if (!MODULE_STATE.layer4StatusProjection) {
+    MODULE_STATE.layer4StatusProjection =
+      buildStaticLayer4Projection(
+        H_EARTH_3D_LAYER_4_STATUS.STATIC_METADATA_PROJECTED
+      );
+  }
 
-  return Object.freeze({
-    receiptType: 'H_EARTH_3D_PUBLIC_ROUTE_BOOTSTRAP_RECEIPT_COMPACT',
-    file: '/showroom/globe/h-earth/index.js',
-    contractId: H_EARTH_3D_INDEX_CONTRACT.contractId,
-    renewedFrom: H_EARTH_3D_INDEX_CONTRACT.renewedFrom,
-    preservedFrom: H_EARTH_3D_INDEX_CONTRACT.preservedFrom,
-    status: status.statusLevel,
+  return MODULE_STATE.layer4StatusProjection;
+}
 
-    activationScope: H_EARTH_3D_INDEX_CONTRACT.activationScope,
-    activationOption: H_EARTH_3D_INDEX_CONTRACT.activationOption,
-    reportPrinciple: H_EARTH_3D_INDEX_CONTRACT.reportPrinciple,
+export function getLayer4PublicStageReceipt() {
+  if (!MODULE_STATE.layer4PublicStageReceipt) {
+    MODULE_STATE.layer4PublicStageReceipt =
+      buildLayer4PublicStageReceipt();
+  }
 
-    publicBootstrapOnly: true,
-    diagnosticRouteSplit: true,
-    diagnosticRoute: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute,
+  return MODULE_STATE.layer4PublicStageReceipt;
+}
 
-    diagnosticWallEmbedded: false,
-    rawSpatialEvidenceEmbedded: false,
-    advancedRawEvidenceWallEmbedded: false,
-    spatialDiagnosticReceiptEmbedded: false,
-    operationalReportSourceSummaryEmbedded: false,
-    latticeScopeReaderEmbedded: false,
-    reportCardClassificationEmbedded: false,
-    receiptWallEmbedded: false,
-    copySurfaceEmbedded: false,
-    visualCompositionAuditEmbedded: false,
+export function getPublicGroundConditionReadPayload() {
+  return buildGroundConditionReadPayload(
+    getTarget(MODULE_STATE.selectedTargetId)
+  );
+}
 
-    movedToDiagnosticRoute: Object.freeze({
-      fullReports: true,
-      rawEvidenceSurfaces: true,
-      receiptWall: true,
-      copySurface: true,
-      visualCompositionAudit: true,
-      structuralToVisualDiagnosticTransition: true,
-      destination: H_EARTH_3D_INDEX_CONTRACT.diagnosticRoute
-    }),
+export function destroyHEarthRoute() {
+  const previousReceipt = buildRouteBootstrapReceipt();
 
-    upstreamReceiptAvailability: Object.freeze({
-      capacity: Boolean(getCapacityReceipt()),
-      environment: Boolean(getEnvironmentReceipt()),
-      renderer: Boolean(getRendererReceipt()),
-      compositor: Boolean(getCompositorReceipt()),
-      controller: Boolean(getControllerReceipt()),
-      livePublicRendererReceiptHandoff: Boolean(handoffRead.found),
-      structuralPipelineBaselineLock: Boolean(baselineLock)
-    }),
+  MODULE_STATE.initialized = false;
+  MODULE_STATE.status = H_EARTH_3D_PUBLIC_STAGE_STATUS.NOT_STARTED;
+  MODULE_STATE.mountPoints = null;
+  MODULE_STATE.routeBootstrapResult = null;
 
-    upstreamReceiptHeaders: Object.freeze({
-      capacity: summarizeReceiptHeader(getCapacityReceipt()),
-      environment: summarizeReceiptHeader(getEnvironmentReceipt()),
-      renderer: summarizeReceiptHeader(getRendererReceipt()),
-      compositor: summarizeReceiptHeader(getCompositorReceipt()),
-      controller: summarizeReceiptHeader(getControllerReceipt())
-    }),
-
-    chainReady: status.chainReady,
-    domReady: status.domReady,
-    controllerReady: status.controllerReady,
-    rendererMountReady: status.rendererMountReady,
-
-    bootstrapReadyCandidateOnly: status.bootstrapReadyCandidateOnly,
-    bootstrapReadyDescriptorOnlyNoRendererMountApi:
-      status.bootstrapReadyDescriptorOnlyNoRendererMountApi,
-    bootstrapFallbackActive: status.bootstrapFallbackActive,
-
-    rendererMountApiConfirmed: status.rendererMountApiConfirmed,
-    rendererDestroyApiConfirmed: status.rendererDestroyApiConfirmed,
-    rendererApiSource: status.rendererApiSource,
-    rendererDestroyApiSource: status.rendererDestroyApiSource,
-
-    rendererMountAttempted: status.rendererMountAttempted,
-    rendererMounted: status.rendererMounted,
-    rendererMountSkipped: status.rendererMountSkipped,
-    rendererMountSkipReason: status.rendererMountSkipReason,
-    rendererMountError: status.rendererMountError,
-    rendererMountReceiptSummary:
-      summarizeRendererMountReceipt(status.rendererMountReceipt),
-
-    livePublicRendererReceiptHandoffContract:
-      H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_CONTRACT,
-    livePublicRendererReceiptHandoff:
-      buildHEarthLivePublicRendererReceiptHandoff(status),
-    livePublicRendererReceiptHandoffRead:
-      handoffRead,
-    livePublicRendererReceiptHandoffWrite:
-      status.livePublicRendererReceiptHandoffWrite || null,
-
-    structuralPipelineBaselineLock:
-      baselineLock,
-    diagnosticTransitionTarget:
-      H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
-
-    rendererDestroyAttempted: status.rendererDestroyAttempted,
-    rendererDestroyed: status.rendererDestroyed,
-    rendererDestroyError: status.rendererDestroyError,
-    rendererDestroyReceiptSummary:
-      summarizeRendererDestroyReceipt(status.rendererDestroyReceipt),
-
-    failureCodes: status.failureCodes,
-    warningCodes: status.warningCodes,
-
-    routeRootFound: status.routeRootFound,
-    statusNodeFound: status.statusNodeFound,
-    fallbackNodeFound: status.fallbackNodeFound,
-    rendererMountNodeFound: status.rendererMountNodeFound,
-
-    targetListBound: status.targetListBound,
-    inspectGroundControlBound: status.inspectGroundControlBound,
-    selectedTargetCardUpdated: status.selectedTargetCardUpdated,
-    compactReadoutRendered: status.compactReadoutRendered,
-    debugStatusExposed: status.debugStatusExposed,
-    diagnosticRouteLinked: status.diagnosticRouteLinked,
-
-    selectedObjectId: status.selectedObjectId,
-    selectedTargetClassification:
-      getControllerTargetClassification(status.selectedObjectId) ||
-      'UNCLASSIFIED_TARGET',
-
-    publicReadoutSummary: Object.freeze({
-      action: 'Inspect Ground',
-      readout: 'Ground Condition Read',
-      receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-      descriptorOnly: true,
-      runtimeActionExecutionClaim: false,
-      receiptCreationClaim: false,
-      runtimeReceiptPersistence: false
-    }),
-
-    firstAction: 'Inspect Ground',
-    firstReadout: 'Ground Condition Read',
-    firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-
-    ...H_EARTH_SCENE_IDENTITY,
-
-    matrixSeparation: Object.freeze({
-      hEarth: 'Ground-View Matrix',
-      hearth: 'support/control context only',
-      audralia: 'planetary-world context only',
-      matrixCollapse: false
-    }),
-
-    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS,
-
-    forbiddenCapabilityFlagsPreserved: H_EARTH_3D_FORBIDDEN_CAPABILITY_FLAGS,
-    rendererBoundaryFlagsPreserved: H_EARTH_3D_RENDER_BOUNDARY_FLAGS,
-    compositionBoundaryFlagsPreserved: H_EARTH_3D_COMPOSITION_BOUNDARY_FLAGS,
-    controllerBoundaryFlagsPreserved: H_EARTH_3D_CONTROLLER_BOUNDARY_FLAGS
+  return freeze({
+    receiptType:
+      'H_EARTH_3D_PUBLIC_STAGE_ADAPTER_DESTROY_RECEIPT',
+    file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+    contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+    generatedAt: nowIso(),
+    previousReceipt,
+    domMutationClaim: false,
+    layer4ExecutionClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    visualPassClaim: false,
+    matrixCollapse: false,
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
   });
 }
 
 export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
-  buildHEarthRouteBootstrapReceipt(H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS);
+  freeze({
+    receiptType:
+      'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT_STATIC_DESCRIPTOR',
+    file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+    contractId: H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+    routeShellContractId:
+      H_EARTH_3D_ROUTE_SHELL_CONTRACT_ID,
+    routeStyleContractId:
+      H_EARTH_3D_ROUTE_STYLE_CONTRACT_ID,
 
-export function getIndexReceipt() {
-  return buildHEarthRouteBootstrapReceipt(latestRouteBootstrapStatus);
-}
+    publicStageAdapterDefined: true,
+    publicEnvironmentHostAuthorized: true,
+    visibleStageAuthorized: true,
+    readOnlyLayer4StatusProjectionDefined: true,
+    publicStageReceiptDefinitionDefined: true,
+    diagnosticRouteHandoffDefined: true,
 
-export function getRouteBootstrapReceipt() {
-  return getIndexReceipt();
-}
+    layer4BridgeContract:
+      H_EARTH_3D_LAYER_4_CONTRACTS.step012JContractId,
 
-export const H_EARTH_3D_INDEX = Object.freeze({
+    moduleInitializationObserved:
+      'runtime-observation-only-after-dynamic-import',
+    runFunctionExecuted: false,
+    replayExecuted: false,
+    vectorRunnerExecuted: false,
+    runtimeExecuted: false,
+    canonicalDigestGenerated: false,
+    replayComparison: false,
+
+    validationClaim: false,
+    productionClaim: false,
+    visualPassClaim: false,
+    matrixCollapse: false,
+
+    boundary: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+
+export const H_EARTH_3D_INDEX = freeze({
   id: 'H_EARTH_3D_INDEX',
-  file: '/showroom/globe/h-earth/index.js',
-  route: '/showroom/globe/h-earth/',
-  diagnosticRoute: '/showroom/globe/h-earth/diagnostic/',
-  sourceRoot: '/h-earth-3d/',
+  file: H_EARTH_3D_PUBLIC_ROUTE_FILE,
+  route: H_EARTH_3D_PUBLIC_ROUTE,
+  diagnosticRoute: H_EARTH_3D_DIAGNOSTIC_ROUTE,
 
-  contract: H_EARTH_3D_INDEX_CONTRACT,
-  boundChain: H_EARTH_3D_INDEX_BOUND_CHAIN,
-  mountContract: H_EARTH_3D_ROUTE_MOUNT_CONTRACT,
-  boundaryFlags: H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS,
-  failureCodes: H_EARTH_3D_ROUTE_FAILURE_CODES,
-  bootstrapOrder: Object.freeze([
-    'import capacity',
-    'import environment',
-    'import renderer',
-    'import compositor',
-    'import controller',
-    'verify receipts/contracts',
-    'resolve public route DOM mount points',
-    'initialize public route status',
-    'mount DOM/CSS-3D candidate renderer only if canon renderer API exists',
-    'read renderer mount receipt before declaring mounted',
-    'write same-origin live public renderer receipt handoff',
-    'build structural pipeline baseline lock receipt',
-    'bind safe public inspection controls',
-    'expose compact public route receipt/status',
-    'link separate diagnostic route',
-    'keep full diagnostics out of public route',
-    'prepare diagnostic transition to visual composition domain',
-    'fail safely if any required dependency is missing'
-  ]),
-  statusLevels: H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS_LEVELS,
-  structuralPipelineBaselineStatus:
-    H_EARTH_3D_STRUCTURAL_PIPELINE_BASELINE_STATUS,
-  diagnosticTransitionTarget:
-    H_EARTH_3D_DIAGNOSTIC_TRANSITION_TARGET,
+  contractId:
+    H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+  routeShellContractId:
+    H_EARTH_3D_ROUTE_SHELL_CONTRACT_ID,
+  routeStyleContractId:
+    H_EARTH_3D_ROUTE_STYLE_CONTRACT_ID,
 
-  livePublicRendererReceiptHandoffKey:
-    H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_KEY,
-  livePublicRendererReceiptHandoffContract:
-    H_EARTH_3D_LIVE_PUBLIC_RENDERER_RECEIPT_HANDOFF_CONTRACT,
+  publicStageAdapter: true,
+  readOnlyLayer4StatusProjection: true,
+  publicEnvironmentHost: true,
+  visibleStageAuthorized: true,
 
-  capacity: H_EARTH_3D_CAPACITY,
-  environment: H_EARTH_3D_ENVIRONMENT,
-  renderer: H_EARTH_3D_RENDERER,
-  compositor: H_EARTH_3D_COMPOSITOR,
-  controller: H_EARTH_3D_CONTROLLER,
+  layer4Contracts:
+    H_EARTH_3D_LAYER_4_CONTRACTS,
+  layer4ArchiveCustody:
+    H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY,
+  executionCeiling:
+    H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING,
+  boundaryFlags:
+    H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS,
+  mountIds:
+    H_EARTH_3D_PUBLIC_MOUNT_IDS,
+  targets:
+    H_EARTH_3D_PUBLIC_TARGETS,
 
-  capacityReceipt: H_EARTH_3D_CAPACITY_RECEIPT,
-  environmentReceipt: H_EARTH_3D_ENVIRONMENT_RECEIPT,
-  rendererReceipt: H_EARTH_3D_RENDERER_RECEIPT,
-  compositorReceipt: H_EARTH_3D_COMPOSITOR_RECEIPT,
-  controllerReceipt: H_EARTH_3D_CONTROLLER_RECEIPT,
-
-  renderVolumeModel: H_EARTH_3D_RENDER_VOLUME_MODEL,
-  renderPorts: H_EARTH_3D_RENDER_PORTS,
-  candidateRenderScene: H_EARTH_3D_CANDIDATE_RENDER_SCENE,
-  composedCandidateFrame: H_EARTH_3D_COMPOSED_CANDIDATE_FRAME,
-
-  selectableTargetRegistry: H_EARTH_3D_SELECTABLE_TARGET_REGISTRY,
-  inspectionActionRouting: H_EARTH_3D_INSPECTION_ACTION_ROUTING,
-  groundConditionReadBridge: H_EARTH_3D_GROUND_CONDITION_READ_BRIDGE,
-  groundInspectionReceiptBridge: H_EARTH_3D_GROUND_INSPECTION_RECEIPT_BRIDGE,
-  contextOnlyBlockResponses: H_EARTH_3D_CONTEXT_ONLY_BLOCK_RESPONSES,
-  secondarySurfaceContextResponses:
-    H_EARTH_3D_SECONDARY_SURFACE_CONTEXT_RESPONSES,
-  waterAtmosphericContextResponses:
-    H_EARTH_3D_WATER_ATMOSPHERIC_CONTEXT_RESPONSES,
-  blockedBehaviorResponses: H_EARTH_3D_BLOCKED_BEHAVIOR_RESPONSES,
-  composedFrameSelectionReferences:
-    H_EARTH_3D_COMPOSED_FRAME_SELECTION_REFERENCES,
-
-  getRouteBootstrapStatus,
-  getIndexReceipt,
-  getRouteBootstrapReceipt,
-
-  buildHEarthLivePublicRendererReceiptHandoff,
-  writeHEarthLivePublicRendererReceiptHandoff,
-  readHEarthLivePublicRendererReceiptHandoff,
-
-  buildHEarthStructuralPipelineBaselineLock,
-  getStructuralPipelineBaselineLockReceipt,
-
-  getRendererMountApi,
-  getRendererDestroyApi,
-  getRendererMountApiSource,
-  getRendererDestroyApiSource,
-  isRendererMountReceiptMounted,
-  isRendererDestroyReceiptDestroyed,
-
-  verifyHEarthRouteBoundChain,
-  resolveHEarthRouteMountPoints,
-
-  buildHEarthPublicReadoutPayload,
-  renderHEarthSelectedTargetCard,
-  renderHEarthPublicReadout,
-  createTargetButtonDescriptor,
-  renderHEarthTargetList,
-  selectHEarthPublicTarget,
-  bindHEarthInspectionControls,
-
-  attemptHEarthRendererMount,
-  renderHEarthRouteStatus,
   initializeHEarthRoute,
   destroyHEarthRoute,
+  getRouteBootstrapStatus,
+  getRouteBootstrapReceipt,
+  getLayer4StatusProjection,
+  getLayer4PublicStageReceipt,
+  getPublicGroundConditionReadPayload,
 
-  receipt: H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT,
-  getReceipt: getIndexReceipt
+  receipt:
+    H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT
 });
 
 export default H_EARTH_3D_INDEX;

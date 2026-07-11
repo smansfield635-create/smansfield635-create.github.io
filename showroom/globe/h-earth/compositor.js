@@ -11,7 +11,7 @@
 // H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1
 // H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP_FILE_RENEWAL_STEP_034L_LANDSCAPE_LATTICE_ZONE_AND_RENDER_TARGET_ALIGNMENT_v1
 //
-// Step 034L active shared Drive occurrence:
+// Step 034L recorded shared Drive occurrence:
 // h-earth-256-lattice-landscape-step-034l-zone-and-render-target-alignment-backup
 // Google Drive document ID:
 // 10HUxO6UsqD0CoSLIB4v6bgJpwLehVFH5bLY-n0jsQnU
@@ -58,3597 +58,3518 @@ import * as CapacityModule from './capacity.js';
 import * as EnvironmentModule from './environment.js';
 
 import * as MatrixBoundaryModule from
-  '../../../h-earth-3d/boundaries/matrix-boundaries.js';
+'../../../h-earth-3d/boundaries/matrix-boundaries.js';
 
 import * as ObjectAuthorityModule from
-  '../../../h-earth-3d/objects/ground-cell-001.objects.js';
+'../../../h-earth-3d/objects/ground-cell-001.objects.js';
 
 import * as ZoneAuthorityModule from
-  '../../../h-earth-3d/zones/ground-cell-001.zones.js';
+'../../../h-earth-3d/zones/ground-cell-001.zones.js';
 
 import * as LandscapeLatticeModule from
-  '../../../h-earth-3d/zones/ground-cell-001.landscape-lattice.js';
+'../../../h-earth-3d/zones/ground-cell-001.landscape-lattice.js';
 
 const EMPTY_FROZEN_ARRAY = Object.freeze([]);
 const EMPTY_FROZEN_OBJECT = Object.freeze({});
 
 const freezeArray = (value) =>
-  Object.freeze(
-    Array.isArray(value)
-      ? [...value]
-      : []
-  );
+Object.freeze(
+Array.isArray(value)
+? [...value]
+: []
+);
 
 const freezeObject = (value) =>
-  Object.freeze({
-    ...(value && typeof value === 'object'
-      ? value
-      : {})
-  });
+Object.freeze({
+...(value && typeof value === 'object'
+? value
+: {})
+});
 
 export const H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_CONTRACT =
-  Object.freeze({
-    contractId:
-      'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_v1',
+Object.freeze({
+contractId:
+'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_v1',
 
-    currentStep:
-      'STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE',
+currentStep:  
+  'STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE',  
 
-    renewsContractId:
-      'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_032F_RENDERER_032D_PARENT_DESCRIPTOR_COMPOSITION_ALIGNMENT_v1',
+renewsContractId:  
+  'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_032F_RENDERER_032D_PARENT_DESCRIPTOR_COMPOSITION_ALIGNMENT_v1',  
 
-    file:
-      '/showroom/globe/h-earth/compositor.js',
+file:  
+  '/showroom/globe/h-earth/compositor.js',  
 
-    fileClass:
-      'PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_DESCRIPTOR_ONLY',
+fileClass:  
+  'PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_DESCRIPTOR_ONLY',  
 
-    route:
-      '/showroom/globe/h-earth/',
+route:  
+  '/showroom/globe/h-earth/',  
 
-    sourceRoot:
-      '/h-earth-3d/',
+sourceRoot:  
+  '/h-earth-3d/',  
 
-    matrix:
-      'H-Earth',
+matrix:  
+  'H-Earth',  
 
-    matrixRole:
-      'Ground-View Matrix',
+matrixRole:  
+  'Ground-View Matrix',  
 
-    activeCell:
-      'H_EARTH_GROUND_CELL_001',
+activeCell:  
+  'H_EARTH_GROUND_CELL_001',  
 
-    sceneIdentity:
-      'earth-water-air-survival-shoreline-manor',
+sceneIdentity:  
+  'earth-water-air-survival-shoreline-manor',  
 
-    firstAction:
-      'Inspect Ground',
+firstAction:  
+  'Inspect Ground',  
 
-    firstReadout:
-      'Ground Condition Read',
+firstReadout:  
+  'Ground Condition Read',  
 
-    firstReceipt:
-      'H_EARTH_GROUND_INSPECTION_RECEIPT',
+firstReceipt:  
+  'H_EARTH_GROUND_INSPECTION_RECEIPT',  
 
-    dependencyDirection:
-      'CAPACITY_ENVIRONMENT_SOURCE_SPINE_TO_COMPOSITOR_TO_RENDERER_TO_PUBLIC_STAGE',
+dependencyDirection:  
+  'CAPACITY_ENVIRONMENT_SOURCE_SPINE_TO_COMPOSITOR_TO_RENDERER_TO_PUBLIC_STAGE',  
 
-    legacyDependencyDirectionRetired:
-      'RENDERER_SCENE_TO_COMPOSITOR',
+legacyDependencyDirectionRetired:  
+  'RENDERER_SCENE_TO_COMPOSITOR',  
 
-    importsRendererModule:
-      false,
+importsRendererModule:  
+  false,  
 
-    consumes: Object.freeze([
-      '/showroom/globe/h-earth/capacity.js',
-      '/showroom/globe/h-earth/environment.js',
-      '/h-earth-3d/boundaries/matrix-boundaries.js',
-      '/h-earth-3d/objects/ground-cell-001.objects.js',
-      '/h-earth-3d/zones/ground-cell-001.zones.js',
-      '/h-earth-3d/zones/ground-cell-001.landscape-lattice.js'
-    ]),
+consumes: Object.freeze([  
+  '/showroom/globe/h-earth/capacity.js',  
+  '/showroom/globe/h-earth/environment.js',  
+  '/h-earth-3d/boundaries/matrix-boundaries.js',  
+  '/h-earth-3d/objects/ground-cell-001.objects.js',  
+  '/h-earth-3d/zones/ground-cell-001.zones.js',  
+  '/h-earth-3d/zones/ground-cell-001.landscape-lattice.js'  
+]),  
 
-    intendedDownstreamConsumers:
-      Object.freeze([
-        '/showroom/globe/h-earth/renderer.js',
-        '/showroom/globe/h-earth/index.js'
-      ]),
+intendedDownstreamConsumers:  
+  Object.freeze([  
+    '/showroom/globe/h-earth/renderer.js',  
+    '/showroom/globe/h-earth/index.js'  
+  ]),  
 
-    governingSourceSpine:
-      Object.freeze({
-        step034I:
-          'H_EARTH_MATRIX_BOUNDARIES_FILE_RENEWAL_STEP_034I_PUBLIC_STAGE_AUTHORITY_AMENDMENT_v1',
+governingSourceSpine:  
+  Object.freeze({  
+    step034I:  
+      'H_EARTH_MATRIX_BOUNDARIES_FILE_RENEWAL_STEP_034I_PUBLIC_STAGE_AUTHORITY_AMENDMENT_v1',  
 
-        step034J:
-          'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+    step034J:  
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',  
 
-        step034K:
-          'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+    step034K:  
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',  
 
-        step034L:
-          'H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP_FILE_RENEWAL_STEP_034L_LANDSCAPE_LATTICE_ZONE_AND_RENDER_TARGET_ALIGNMENT_v1'
-      }),
+    step034L:  
+      'H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP_FILE_RENEWAL_STEP_034L_LANDSCAPE_LATTICE_ZONE_AND_RENDER_TARGET_ALIGNMENT_v1'  
+  }),  
 
-    step034LDriveOccurrence:
-      Object.freeze({
-        archiveTitle:
-          'h-earth-256-lattice-landscape-step-034l-zone-and-render-target-alignment-backup',
+step034LDriveOccurrence:  
+  Object.freeze({  
+    archiveTitle:  
+      'h-earth-256-lattice-landscape-step-034l-zone-and-render-target-alignment-backup',  
 
-        driveDocumentId:
-          '10HUxO6UsqD0CoSLIB4v6bgJpwLehVFH5bLY-n0jsQnU',
+    driveDocumentId:  
+      '10HUxO6UsqD0CoSLIB4v6bgJpwLehVFH5bLY-n0jsQnU',  
 
-        activeBackedOccurrence:
-          true,
+    step034LReferenced:  
+      true,  
 
-        connectorReadbackVerified:
-          true,
+    step034LDriveOccurrenceRecorded:  
+      true,  
 
-        byteForByteIdentityClaimed:
-          false
-      }),
+    connectorReadbackVerified:  
+      false,  
 
-    compositionAuthority:
-      Object.freeze({
-        sourceDriven:
-          true,
+    byteForByteIdentityClaimed:  
+      false  
+  }),  
 
-        rendererIndependent:
-          true,
+compositionAuthority:  
+  Object.freeze({  
+    sourceDriven:  
+      true,  
 
-        deterministic:
-          true,
+    rendererIndependent:  
+      true,  
 
-        descriptorOnly:
-          true,
+    deterministic:  
+      true,  
 
-        orderedVisualSpineDefined:
-          true,
+    descriptorOnly:  
+      true,  
 
-        cameraFrameDefined:
-          true,
+    orderedVisualSpineDefined:  
+      true,  
 
-        depthBandsDefined:
-          true,
+    cameraFrameDefined:  
+      true,  
 
-        layerOrderDefined:
-          true,
+    depthBandsDefined:  
+      true,  
 
-        sourceBindingsDefined:
-          true,
+    layerOrderDefined:  
+      true,  
 
-        rendererHandoffDefined:
-          true,
+    sourceBindingsDefined:  
+      true,  
 
-        publicStageHandoffDefined:
-          true
-      }),
+    rendererHandoffDefined:  
+      true,  
 
-    legacyStep032RendererSurfacesRetired:
-      Object.freeze([
-        'H_EARTH_3D_CANDIDATE_RENDER_SCENE',
-        'H_EARTH_3D_RENDER_PROJECTION_MODEL',
-        'H_EARTH_3D_RENDER_VOLUME_MODEL',
-        'H_EARTH_3D_RENDER_LAYER_ORDER',
-        'H_EARTH_3D_RENDER_NODE_BUDGET',
-        'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL',
-        'H_EARTH_3D_RENDER_BOUNDARY_FLAGS',
-        'getRendererCandidateParentNodes',
-        'resolveComposedCandidateFrame',
-        'H_EARTH_3D_COMPOSED_CANDIDATE_FRAME',
-        'upstreamRendererReceipt',
-        'upstreamRenderer'
-      ]),
+    publicStageHandoffDefined:  
+      true  
+  }),  
 
-    status:
-      'PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_DEFINED_DESCRIPTOR_ONLY',
+legacyStep032RendererSurfacesRetired:  
+  Object.freeze([  
+    'H_EARTH_3D_CANDIDATE_RENDER_SCENE',  
+    'H_EARTH_3D_RENDER_PROJECTION_MODEL',  
+    'H_EARTH_3D_RENDER_VOLUME_MODEL',  
+    'H_EARTH_3D_RENDER_LAYER_ORDER',  
+    'H_EARTH_3D_RENDER_NODE_BUDGET',  
+    'H_EARTH_3D_RENDER_CONTEXT_COMPRESSION_MODEL',  
+    'H_EARTH_3D_RENDER_BOUNDARY_FLAGS',  
+    'getRendererCandidateParentNodes',  
+    'resolveComposedCandidateFrame',  
+    'H_EARTH_3D_COMPOSED_CANDIDATE_FRAME',  
+    'upstreamRendererReceipt',  
+    'upstreamRenderer'  
+  ]),  
 
-    sourceConstructionAuthorized:
-      true,
+status:  
+  'PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_DEFINED_DESCRIPTOR_ONLY',  
 
-    installationAuthorized:
-      false,
+sourceConstructionAuthorized:  
+  true,  
 
-    repositoryMutationAuthorized:
-      false,
+installationAuthorized:  
+  false,  
 
-    backupComplete:
-      false,
+repositoryMutationAuthorized:  
+  false,  
 
-    activeBackedOccurrenceClaim:
-      false
-  });
+backupComplete:  
+  false,  
+
+activeBackedOccurrenceClaim:  
+  false
+
+});
 
 export const H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS =
-  Object.freeze({
-    descriptorOnly:
-      true,
+Object.freeze({
+descriptorOnly: true,
+compositionAuthorityDefined: true,
+rendererIndependentComposition: true,
+importsRendererModule: false,
+consumesLegacyRendererScene: false,
 
-    compositionAuthorityDefined:
-      true,
+createsDom: false,  
+mutatesDom: false,  
+createsCss: false,  
+mutatesCss: false,  
 
-    rendererIndependentComposition:
-      true,
+createsRendererGeometry: false,  
+createsTerrainGeometry: false,  
+invokesGeometryPort: false,  
+invokesNodeFactory: false,  
 
-    importsRendererModule:
-      false,
+activatesRenderer: false,  
+activatesRuntime: false,  
+activatesRoute: false,  
+activatesCanvas: false,  
+activatesWebgl: false,  
 
-    consumesLegacyRendererScene:
-      false,
+createsVisualPass: false,  
+claimsVisualPass: false,  
+claimsRendererPass: false,  
+claimsValidation: false,  
+claimsProduction: false,  
+claimsDeployment: false,  
 
-    createsDom:
-      false,
+createsTraversal: false,  
+createsGameplay: false,  
+createsCollision: false,  
+createsPhysics: false,  
+createsSwimming: false,  
+createsFluidSimulation: false,  
+createsSurvivalSimulation: false,  
+createsManorInteriorAccess: false,  
+createsDistantTraversal: false,  
+createsOpenWorldAuthority: false,  
 
-    mutatesDom:
-      false,
+matrixCollapse: false,  
+claimBoundaryPreserved: true
 
-    createsCss:
-      false,
-
-    mutatesCss:
-      false,
-
-    createsRendererGeometry:
-      false,
-
-    createsTerrainGeometry:
-      false,
-
-    invokesGeometryPort:
-      false,
-
-    invokesNodeFactory:
-      false,
-
-    activatesRenderer:
-      false,
-
-    activatesRuntime:
-      false,
-
-    activatesRoute:
-      false,
-
-    activatesCanvas:
-      false,
-
-    activatesWebgl:
-      false,
-
-    createsVisualPass:
-      false,
-
-    claimsVisualPass:
-      false,
-
-    claimsRendererPass:
-      false,
-
-    claimsValidation:
-      false,
-
-    claimsProduction:
-      false,
-
-    claimsDeployment:
-      false,
-
-    createsTraversal:
-      false,
-
-    createsGameplay:
-      false,
-
-    createsCollision:
-      false,
-
-    createsPhysics:
-      false,
-
-    createsSwimming:
-      false,
-
-    createsFluidSimulation:
-      false,
-
-    createsSurvivalSimulation:
-      false,
-
-    createsManorInteriorAccess:
-      false,
-
-    createsDistantTraversal:
-      false,
-
-    createsOpenWorldAuthority:
-      false,
-
-    matrixCollapse:
-      false,
-
-    claimBoundaryPreserved:
-      true
-  });
+});
 
 export const H_EARTH_3D_PUBLIC_STAGE_SOURCE_REFERENCES =
-  Object.freeze({
-    capacity:
-      Object.freeze({
-        file:
-          '/showroom/globe/h-earth/capacity.js',
+Object.freeze({
+capacity:
+Object.freeze({
+file:
+'/showroom/globe/h-earth/capacity.js',
 
-        contract:
-          CapacityModule.H_EARTH_3D_CAPACITY_CONTRACT ||
-          CapacityModule.H_EARTH_3D_CAMERA_CAPACITY ||
-          null,
+contract:  
+      CapacityModule.H_EARTH_3D_CAPACITY_CONTRACT ||  
+      CapacityModule.H_EARTH_3D_CAMERA_CAPACITY ||  
+      null,  
 
-        receipt:
-          typeof CapacityModule.getCapacityReceipt ===
-          'function'
-            ? CapacityModule.getCapacityReceipt()
-            : CapacityModule.H_EARTH_3D_CAPACITY_RECEIPT ||
-              null
-      }),
+    receipt:  
+      typeof CapacityModule.getCapacityReceipt ===  
+      'function'  
+        ? CapacityModule.getCapacityReceipt()  
+        : CapacityModule.H_EARTH_3D_CAPACITY_RECEIPT ||  
+          null  
+  }),  
 
-    environment:
-      Object.freeze({
-        file:
-          '/showroom/globe/h-earth/environment.js',
+environment:  
+  Object.freeze({  
+    file:  
+      '/showroom/globe/h-earth/environment.js',  
 
-        contract:
-          EnvironmentModule.H_EARTH_3D_ENVIRONMENT_CONTRACT ||
-          EnvironmentModule.H_EARTH_3D_ENVIRONMENT ||
-          null,
+    contract:  
+      EnvironmentModule.H_EARTH_3D_ENVIRONMENT_CONTRACT ||  
+      EnvironmentModule.H_EARTH_3D_ENVIRONMENT ||  
+      null,  
 
-        receipt:
-          typeof EnvironmentModule.getEnvironmentReceipt ===
-          'function'
-            ? EnvironmentModule.getEnvironmentReceipt()
-            : EnvironmentModule.H_EARTH_3D_ENVIRONMENT_RECEIPT ||
-              null
-      }),
+    receipt:  
+      typeof EnvironmentModule.getEnvironmentReceipt ===  
+      'function'  
+        ? EnvironmentModule.getEnvironmentReceipt()  
+        : EnvironmentModule.H_EARTH_3D_ENVIRONMENT_RECEIPT ||  
+          null  
+  }),  
 
-    matrixBoundary:
-      Object.freeze({
-        file:
-          '/h-earth-3d/boundaries/matrix-boundaries.js',
+matrixBoundary:  
+  Object.freeze({  
+    file:  
+      '/h-earth-3d/boundaries/matrix-boundaries.js',  
 
-        contractId:
-          'H_EARTH_MATRIX_BOUNDARIES_FILE_RENEWAL_STEP_034I_PUBLIC_STAGE_AUTHORITY_AMENDMENT_v1',
+    contractId:  
+      'H_EARTH_MATRIX_BOUNDARIES_FILE_RENEWAL_STEP_034I_PUBLIC_STAGE_AUTHORITY_AMENDMENT_v1',  
 
-        module:
-          MatrixBoundaryModule,
+    module:  
+      MatrixBoundaryModule,  
 
-        referenced:
-          true
-      }),
+    referenced:  
+      true  
+  }),  
 
-    objects:
-      Object.freeze({
-        file:
-          '/h-earth-3d/objects/ground-cell-001.objects.js',
+objects:  
+  Object.freeze({  
+    file:  
+      '/h-earth-3d/objects/ground-cell-001.objects.js',  
 
-        contractId:
-          'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+    contractId:  
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',  
 
-        module:
-          ObjectAuthorityModule,
+    module:  
+      ObjectAuthorityModule,  
 
-        referenced:
-          true
-      }),
+    referenced:  
+      true  
+  }),  
 
-    zones:
-      Object.freeze({
-        file:
-          '/h-earth-3d/zones/ground-cell-001.zones.js',
+zones:  
+  Object.freeze({  
+    file:  
+      '/h-earth-3d/zones/ground-cell-001.zones.js',  
 
-        contractId:
-          'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+    contractId:  
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',  
 
-        module:
-          ZoneAuthorityModule,
+    module:  
+      ZoneAuthorityModule,  
 
-        referenced:
-          true
-      }),
+    referenced:  
+      true  
+  }),  
 
-    landscapeLattice:
-      Object.freeze({
-        file:
-          '/h-earth-3d/zones/ground-cell-001.landscape-lattice.js',
+landscapeLattice:  
+  Object.freeze({  
+    file:  
+      '/h-earth-3d/zones/ground-cell-001.landscape-lattice.js',  
 
-        contractId:
-          'H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP_FILE_RENEWAL_STEP_034L_LANDSCAPE_LATTICE_ZONE_AND_RENDER_TARGET_ALIGNMENT_v1',
+    contractId:  
+      'H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP_FILE_RENEWAL_STEP_034L_LANDSCAPE_LATTICE_ZONE_AND_RENDER_TARGET_ALIGNMENT_v1',  
 
-        aggregate:
-          LandscapeLatticeModule
-            .H_EARTH_256_LATTICE_LANDSCAPE_AGGREGATE ||
-          null,
+    aggregate:  
+      LandscapeLatticeModule  
+        .H_EARTH_256_LATTICE_LANDSCAPE_AGGREGATE ||  
+      null,  
 
-        receipt:
-          LandscapeLatticeModule
-            .H_EARTH_256_LATTICE_LANDSCAPE_RECEIPT ||
-          null,
+    receipt:  
+      LandscapeLatticeModule  
+        .H_EARTH_256_LATTICE_LANDSCAPE_RECEIPT ||  
+      null,  
 
-        referenced:
-          true,
+    referenced:  
+      true,  
 
-        activeDriveOccurrence:
-          true
-      })
-  });
+    activeDriveOccurrence:  
+      true  
+  })
+
+});
 
 export const H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS =
-  Object.freeze({
-    sky:
-      'PUBLIC_STAGE_LAYER_SKY',
+Object.freeze({
+sky:
+'PUBLIC_STAGE_LAYER_SKY',
 
-    airHaze:
-      'PUBLIC_STAGE_LAYER_AIR_HAZE',
+airHaze:  
+  'PUBLIC_STAGE_LAYER_AIR_HAZE',  
 
-    horizon:
-      'PUBLIC_STAGE_LAYER_HORIZON',
+horizon:  
+  'PUBLIC_STAGE_LAYER_HORIZON',  
 
-    offshoreIslets:
-      'PUBLIC_STAGE_LAYER_OFFSHORE_ISLETS',
+offshoreIslets:  
+  'PUBLIC_STAGE_LAYER_OFFSHORE_ISLETS',  
 
-    manorBluff:
-      'PUBLIC_STAGE_LAYER_MANOR_BLUFF',
+manorBluff:  
+  'PUBLIC_STAGE_LAYER_MANOR_BLUFF',  
 
-    waterPlane:
-      'PUBLIC_STAGE_LAYER_WATER_PLANE',
+waterPlane:  
+  'PUBLIC_STAGE_LAYER_WATER_PLANE',  
 
-    nearshoreWave:
-      'PUBLIC_STAGE_LAYER_NEARSHORE_WAVE',
+nearshoreWave:  
+  'PUBLIC_STAGE_LAYER_NEARSHORE_WAVE',  
 
-    foamLine:
-      'PUBLIC_STAGE_LAYER_FOAM_LINE',
+foamLine:  
+  'PUBLIC_STAGE_LAYER_FOAM_LINE',  
 
-    drySand:
-      'PUBLIC_STAGE_LAYER_DRY_SAND',
+drySand:  
+  'PUBLIC_STAGE_LAYER_DRY_SAND',  
 
-    wetSand:
-      'PUBLIC_STAGE_LAYER_WET_SAND',
+wetSand:  
+  'PUBLIC_STAGE_LAYER_WET_SAND',  
 
-    tidePools:
-      'PUBLIC_STAGE_LAYER_TIDE_POOLS',
+tidePools:  
+  'PUBLIC_STAGE_LAYER_TIDE_POOLS',  
 
-    stones:
-      'PUBLIC_STAGE_LAYER_SMALL_STONES',
+stones:  
+  'PUBLIC_STAGE_LAYER_SMALL_STONES',  
 
-    jaggedRocks:
-      'PUBLIC_STAGE_LAYER_JAGGED_ROCKS',
+jaggedRocks:  
+  'PUBLIC_STAGE_LAYER_JAGGED_ROCKS',  
 
-    inspectionAnchor:
-      'PUBLIC_STAGE_LAYER_INSPECTION_ANCHOR',
+inspectionAnchor:  
+  'PUBLIC_STAGE_LAYER_INSPECTION_ANCHOR',  
 
-    overlayAttachment:
-      'PUBLIC_STAGE_LAYER_OVERLAY_ATTACHMENT'
-  });
+overlayAttachment:  
+  'PUBLIC_STAGE_LAYER_OVERLAY_ATTACHMENT'
+
+});
 
 export const H_EARTH_3D_PUBLIC_STAGE_LAYER_ORDER =
-  Object.freeze([
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.sky,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.airHaze,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.horizon,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.offshoreIslets,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.manorBluff,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.waterPlane,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.nearshoreWave,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.foamLine,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.drySand,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.wetSand,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.tidePools,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.stones,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.jaggedRocks,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.inspectionAnchor,
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.overlayAttachment
-  ]);
+Object.freeze([
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.sky,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.airHaze,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.horizon,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.offshoreIslets,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.manorBluff,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.waterPlane,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.nearshoreWave,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.foamLine,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.drySand,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.wetSand,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.tidePools,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.stones,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.jaggedRocks,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.inspectionAnchor,
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS.overlayAttachment
+]);
 
 export const H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS =
-  Object.freeze({
-    sky:
-      Object.freeze({
-        depthBand:
-          'sky',
+Object.freeze({
+sky:
+Object.freeze({
+depthBand:
+'sky',
 
-        normalizedDepth:
-          1,
+normalizedDepth:  
+      1,  
 
-        sceneDistance:
-          'farthest'
-      }),
+    sceneDistance:  
+      'farthest'  
+  }),  
 
-    horizon:
-      Object.freeze({
-        depthBand:
-          'horizon',
+horizon:  
+  Object.freeze({  
+    depthBand:  
+      'horizon',  
 
-        normalizedDepth:
-          0.94,
+    normalizedDepth:  
+      0.94,  
 
-        sceneDistance:
-          'distant'
-      }),
+    sceneDistance:  
+      'distant'  
+  }),  
 
-    horizonContext:
-      Object.freeze({
-        depthBand:
-          'horizon-context',
+horizonContext:  
+  Object.freeze({  
+    depthBand:  
+      'horizon-context',  
 
-        normalizedDepth:
-          0.86,
+    normalizedDepth:  
+      0.86,  
 
-        sceneDistance:
-          'distant-context'
-      }),
+    sceneDistance:  
+      'distant-context'  
+  }),  
 
-    elevatedBackground:
-      Object.freeze({
-        depthBand:
-          'elevated-background',
+elevatedBackground:  
+  Object.freeze({  
+    depthBand:  
+      'elevated-background',  
 
-        normalizedDepth:
-          0.78,
+    normalizedDepth:  
+      0.78,  
 
-        sceneDistance:
-          'background'
-      }),
+    sceneDistance:  
+      'background'  
+  }),  
 
-    water:
-      Object.freeze({
-        depthBand:
-          'water',
+water:  
+  Object.freeze({  
+    depthBand:  
+      'water',  
 
-        normalizedDepth:
-          0.68,
+    normalizedDepth:  
+      0.68,  
 
-        sceneDistance:
-          'middle-distance'
-      }),
+    sceneDistance:  
+      'middle-distance'  
+  }),  
 
-    nearshore:
-      Object.freeze({
-        depthBand:
-          'nearshore',
+nearshore:  
+  Object.freeze({  
+    depthBand:  
+      'nearshore',  
 
-        normalizedDepth:
-          0.56,
+    normalizedDepth:  
+      0.56,  
 
-        sceneDistance:
-          'near-middle-distance'
-      }),
+    sceneDistance:  
+      'near-middle-distance'  
+  }),  
 
-    shoreline:
-      Object.freeze({
-        depthBand:
-          'shoreline',
+shoreline:  
+  Object.freeze({  
+    depthBand:  
+      'shoreline',  
 
-        normalizedDepth:
-          0.43,
+    normalizedDepth:  
+      0.43,  
 
-        sceneDistance:
-          'transition'
-      }),
+    sceneDistance:  
+      'transition'  
+  }),  
 
-    foregroundTransition:
-      Object.freeze({
-        depthBand:
-          'foreground-transition',
+foregroundTransition:  
+  Object.freeze({  
+    depthBand:  
+      'foreground-transition',  
 
-        normalizedDepth:
-          0.3,
+    normalizedDepth:  
+      0.3,  
 
-        sceneDistance:
-          'near'
-      }),
+    sceneDistance:  
+      'near'  
+  }),  
 
-    foreground:
-      Object.freeze({
-        depthBand:
-          'foreground',
+foreground:  
+  Object.freeze({  
+    depthBand:  
+      'foreground',  
 
-        normalizedDepth:
-          0.14,
+    normalizedDepth:  
+      0.14,  
 
-        sceneDistance:
-          'nearest'
-      }),
+    sceneDistance:  
+      'nearest'  
+  }),  
 
-    overlay:
-      Object.freeze({
-        depthBand:
-          'overlay',
+overlay:  
+  Object.freeze({  
+    depthBand:  
+      'overlay',  
 
-        normalizedDepth:
-          0,
+    normalizedDepth:  
+      0,  
 
-        sceneDistance:
-          'screen-space-attachment'
-      })
-  });
+    sceneDistance:  
+      'screen-space-attachment'  
+  })
+
+});
 
 export const H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL =
-  Object.freeze({
-    cameraModelId:
-      'H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL_STEP_034N',
+Object.freeze({
+cameraModelId:
+'H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL_STEP_034N',
 
-    cameraType:
-      'bounded-ground-view-composition-camera',
+cameraType:  
+  'bounded-ground-view-composition-camera',  
 
-    compositionPosture:
-      'LOW_GROUND_INSPECTION_WITH_OPEN_HORIZON',
+compositionPosture:  
+  'LOW_GROUND_INSPECTION_WITH_OPEN_HORIZON',  
 
-    primaryFocusObjectId:
-      'OBJ_002_FOREGROUND_WET_SAND',
+primaryFocusObjectId:  
+  'OBJ_002_FOREGROUND_WET_SAND',  
 
-    secondaryFocusObjectIds:
-      Object.freeze([
-        'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
-        'OBJ_010_SMALL_BEACH_STONES',
-        'OBJ_011_FOREGROUND_JAGGED_ROCKS',
-        'OBJ_005_SHORELINE_FOAM_LINE'
-      ]),
+secondaryFocusObjectIds:  
+  Object.freeze([  
+    'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',  
+    'OBJ_010_SMALL_BEACH_STONES',  
+    'OBJ_011_FOREGROUND_JAGGED_ROCKS',  
+    'OBJ_005_SHORELINE_FOAM_LINE'  
+  ]),  
 
-    contextObjectIds:
-      Object.freeze([
-        'OBJ_007_WATER_SURFACE_PLANE',
-        'OBJ_008_AIR_HAZE_LIGHT_LAYER',
-        'OBJ_009_MANOR_EXTERIOR_CONTEXT',
-        'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS'
-      ]),
+contextObjectIds:  
+  Object.freeze([  
+    'OBJ_007_WATER_SURFACE_PLANE',  
+    'OBJ_008_AIR_HAZE_LIGHT_LAYER',  
+    'OBJ_009_MANOR_EXTERIOR_CONTEXT',  
+    'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS'  
+  ]),  
 
-    defaultPosition:
-      freezeObject(
-        CapacityModule
-          .H_EARTH_3D_CAMERA_CAPACITY
-          ?.defaultPosition || {
-          x: 0,
-          y: 2.4,
-          z: 8
-        }
-      ),
+defaultPosition:  
+  freezeObject(  
+    CapacityModule  
+      .H_EARTH_3D_CAMERA_CAPACITY  
+      ?.defaultPosition || {  
+      x: 0,  
+      y: 2.4,  
+      z: 8  
+    }  
+  ),  
 
-    defaultLookAt:
-      freezeObject(
-        CapacityModule
-          .H_EARTH_3D_CAMERA_CAPACITY
-          ?.defaultLookAt || {
-          x: 0,
-          y: 0,
-          z: -7
-        }
-      ),
+defaultLookAt:  
+  freezeObject(  
+    CapacityModule  
+      .H_EARTH_3D_CAMERA_CAPACITY  
+      ?.defaultLookAt || {  
+      x: 0,  
+      y: 0,  
+      z: -7  
+    }  
+  ),  
 
-    perspective:
-      Object.freeze({
-        horizonOpen:
-          true,
+perspective:  
+  Object.freeze({  
+    horizonOpen:  
+      true,  
 
-        foregroundDominant:
-          true,
+    foregroundDominant:  
+      true,  
 
-        waterPlaneVisible:
-          true,
+    waterPlaneVisible:  
+      true,  
 
-        manorContextVisible:
-          true,
+    manorContextVisible:  
+      true,  
 
-        offshoreContextVisible:
-          true,
+    offshoreContextVisible:  
+      true,  
 
-        inspectionSurfaceReadable:
-          true,
+    inspectionSurfaceReadable:  
+      true,  
 
-        overlayAttachedOutsideWorldGeometry:
-          true
-      }),
+    overlayAttachedOutsideWorldGeometry:  
+      true  
+  }),  
 
-    movementConstraints:
-      Object.freeze({
-        panLimits:
-          CapacityModule
-            .H_EARTH_3D_CAMERA_CAPACITY
-            ?.panLimits || null,
+movementConstraints:  
+  Object.freeze({  
+    panLimits:  
+      CapacityModule  
+        .H_EARTH_3D_CAMERA_CAPACITY  
+        ?.panLimits || null,  
 
-        tiltLimitsDegrees:
-          CapacityModule
-            .H_EARTH_3D_CAMERA_CAPACITY
-            ?.tiltLimitsDegrees || null,
+    tiltLimitsDegrees:  
+      CapacityModule  
+        .H_EARTH_3D_CAMERA_CAPACITY  
+        ?.tiltLimitsDegrees || null,  
 
-        zoomLimits:
-          CapacityModule
-            .H_EARTH_3D_CAMERA_CAPACITY
-            ?.zoomLimits || null,
+    zoomLimits:  
+      CapacityModule  
+        .H_EARTH_3D_CAMERA_CAPACITY  
+        ?.zoomLimits || null,  
 
-        freeFlight:
-          false,
+    freeFlight:  
+      false,  
 
-        walking:
-          false,
+    walking:  
+      false,  
 
-        swimming:
-          false,
+    swimming:  
+      false,  
 
-        manorEntry:
-          false,
+    manorEntry:  
+      false,  
 
-        distantTraversal:
-          false
-      }),
+    distantTraversal:  
+      false  
+  }),  
 
-    descriptorOnly:
-      true
-  });
+descriptorOnly:  
+  true
+
+});
 
 export const H_EARTH_3D_PUBLIC_STAGE_VIEWPORT_MODEL =
-  Object.freeze({
-    viewportModelId:
-      'H_EARTH_3D_PUBLIC_STAGE_VIEWPORT_MODEL_STEP_034N',
+Object.freeze({
+viewportModelId:
+'H_EARTH_3D_PUBLIC_STAGE_VIEWPORT_MODEL_STEP_034N',
 
-    compositionTarget:
-      'LARGE_SCENE_FIRST',
+compositionTarget:  
+  'LARGE_SCENE_FIRST',  
 
-    layoutPolicy:
-      'WORLD_STAGE_PRIMARY_OVERLAY_SECONDARY',
+layoutPolicy:  
+  'WORLD_STAGE_PRIMARY_OVERLAY_SECONDARY',  
 
-    worldStage:
-      Object.freeze({
-        widthRole:
-          'PRIMARY_AVAILABLE_ROUTE_WIDTH',
+worldStage:  
+  Object.freeze({  
+    widthRole:  
+      'PRIMARY_AVAILABLE_ROUTE_WIDTH',  
 
-        heightRole:
-          'PRIMARY_AVAILABLE_ROUTE_HEIGHT',
+    heightRole:  
+      'PRIMARY_AVAILABLE_ROUTE_HEIGHT',  
 
-        minimumReadableHeight:
-          'large-scene',
+    minimumReadableHeight:  
+      'large-scene',  
 
-        overflowPolicy:
-          'CONSTRAINED_WITHIN_PUBLIC_STAGE'
-      }),
+    overflowPolicy:  
+      'CONSTRAINED_WITHIN_PUBLIC_STAGE'  
+  }),  
 
-    overlay:
-      Object.freeze({
-        role:
-          'SECONDARY_COMPACT_READOUT_ATTACHMENT',
+overlay:  
+  Object.freeze({  
+    role:  
+      'SECONDARY_COMPACT_READOUT_ATTACHMENT',  
 
-        worldGeometryParticipant:
-          false,
+    worldGeometryParticipant:  
+      false,  
 
-        mayCoverPrimaryInspectionSurface:
-          false,
+    mayCoverPrimaryInspectionSurface:  
+      false,  
 
-        collapsedDiagnosticsDefault:
-          true
-      }),
+    collapsedDiagnosticsDefault:  
+      true  
+  }),  
 
-    descriptorOnly:
-      true,
+descriptorOnly:  
+  true,  
 
-    createsDom:
-      false,
+createsDom:  
+  false,  
 
-    createsCss:
-      false
-  });
+createsCss:  
+  false
+
+});
 
 export const H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RULES =
-  Object.freeze({
-    ruleSetId:
-      'H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RULES_STEP_034N',
+Object.freeze({
+ruleSetId:
+'H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RULES_STEP_034N',
 
-    controllingStatement:
-      'PublicStageComposition = CurrentSourceSpine + Capacity + Environment + OrderedSceneLayers + CameraFrame + DepthBands + RendererHandoff + PublicStageAttachmentDescriptors',
+controllingStatement:  
+  'PublicStageComposition = CurrentSourceSpine + Capacity + Environment + OrderedSceneLayers + CameraFrame + DepthBands + RendererHandoff + PublicStageAttachmentDescriptors',  
 
-    lockedRules:
-      Object.freeze([
-        'Compositor is upstream of renderer.',
-        'Compositor must not import renderer.js.',
-        'Current Step 034 source authority governs composition.',
-        'Landscape-lattice descriptors govern ground and context-region placement.',
-        'Step 034K zones govern five-zone render-target composition.',
-        'Step 034J object authority governs object identity and readability.',
-        'Step 034I boundaries govern public-stage claim discipline.',
-        'Foreground wet sand remains the primary inspection surface.',
-        'Tide pools, small stones, jagged rocks, and foam remain supporting inspection cues.',
-        'Dry sand remains primary Zone 002 context.',
-        'Nearshore wave and water plane remain primary Zone 003 context.',
-        'Air haze remains primary Zone 003 with secondary Zone 005 relation.',
-        'Mirror Manor remains elevated, set back, exterior-only, and non-traversable.',
-        'Offshore rock stacks and islets remain distant Zone 005 context.',
-        'Rows 14 and 15 preserve distinct islet and manor composition regions.',
-        'Overlay/readout attachment remains outside world geometry.',
-        'Composition descriptors do not create renderer geometry.',
-        'Composition descriptors do not create runtime activation.',
-        'No visual pass, validation, production, deployment, or matrix-collapse claim.'
-      ]),
+lockedRules:  
+  Object.freeze([  
+    'Compositor is upstream of renderer.',  
+    'Compositor must not import renderer.js.',  
+    'Current Step 034 source authority governs composition.',  
+    'Landscape-lattice descriptors govern ground and context-region placement.',  
+    'Step 034K zones govern five-zone render-target composition.',  
+    'Step 034J object authority governs object identity and readability.',  
+    'Step 034I boundaries govern public-stage claim discipline.',  
+    'Foreground wet sand remains the primary inspection surface.',  
+    'Tide pools, small stones, jagged rocks, and foam remain supporting inspection cues.',  
+    'Dry sand remains primary Zone 002 context.',  
+    'Nearshore wave and water plane remain primary Zone 003 context.',  
+    'Air haze remains primary Zone 003 with secondary Zone 005 relation.',  
+    'Mirror Manor remains elevated, set back, exterior-only, and non-traversable.',  
+    'Offshore rock stacks and islets remain distant Zone 005 context.',  
+    'Rows 14 and 15 preserve distinct islet and manor composition regions.',  
+    'Overlay/readout attachment remains outside world geometry.',  
+    'Composition descriptors do not create renderer geometry.',  
+    'Composition descriptors do not create runtime activation.',  
+    'No visual pass, validation, production, deployment, or matrix-collapse claim.'  
+  ]),  
 
-    rendererHandoffRequirements:
-      Object.freeze([
-        'orderedLayers',
-        'cameraFrame',
-        'viewportModel',
-        'depthBands',
-        'sourceBindings',
-        'zoneComposition',
-        'landscapeComposition',
-        'objectComposition',
-        'inspectionComposition',
-        'contextComposition',
-        'overlayAttachment',
-        'boundary'
-      ])
-  });
+rendererHandoffRequirements:  
+  Object.freeze([  
+    'orderedLayers',  
+    'cameraFrame',  
+    'viewportModel',  
+    'depthBands',  
+    'sourceBindings',  
+    'zoneComposition',  
+    'landscapeComposition',  
+    'objectComposition',  
+    'inspectionComposition',  
+    'contextComposition',  
+    'overlayAttachment',  
+    'boundary'  
+  ])
+
+});
 
 export const H_EARTH_3D_PUBLIC_STAGE_LAYER_DEFINITIONS =
-  Object.freeze({
-    PUBLIC_STAGE_LAYER_SKY:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_SKY',
+Object.freeze({
+PUBLIC_STAGE_LAYER_SKY:
+Object.freeze({
+layerId:
+'PUBLIC_STAGE_LAYER_SKY',
 
-        order:
-          10,
+order:  
+      10,  
 
-        label:
-          'Sky',
+    label:  
+      'Sky',  
 
-        role:
-          'sky-volume',
+    role:  
+      'sky-volume',  
 
-        regionId:
-          'AIR_HAZE_DISTANT_ATMOSPHERE',
+    regionId:  
+      'AIR_HAZE_DISTANT_ATMOSPHERE',  
 
-        primaryZoneId:
-          'ZONE_003_WATER_SURFACE_ZONE',
+    primaryZoneId:  
+      'ZONE_003_WATER_SURFACE_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
+    secondaryZoneId:  
+      'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_008_AIR_HAZE_LIGHT_LAYER'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_008_AIR_HAZE_LIGHT_LAYER'  
+      ]),  
 
-        surfaceFamily:
-          'airHaze',
+    surfaceFamily:  
+      'airHaze',  
 
-        materialKey:
-          'airHaze',
+    materialKey:  
+      'airHaze',  
 
-        primitiveIntent:
-          'skyVolume',
+    primitiveIntent:  
+      'skyVolume',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.sky,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.sky,  
 
-        worldGeometryRole:
-          'BACKGROUND_ATMOSPHERE',
+    worldGeometryRole:  
+      'BACKGROUND_ATMOSPHERE',  
 
-        inspectionRole:
-          'CONTEXT',
+    inspectionRole:  
+      'CONTEXT',  
 
-        publicStageReadable:
-          false,
+    publicStageReadable:  
+      false,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_AIR_HAZE:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_AIR_HAZE',
+PUBLIC_STAGE_LAYER_AIR_HAZE:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_AIR_HAZE',  
 
-        order:
-          20,
+    order:  
+      20,  
 
-        label:
-          'Air Haze',
+    label:  
+      'Air Haze',  
 
-        role:
-          'atmospheric-depth-layer',
+    role:  
+      'atmospheric-depth-layer',  
 
-        regionId:
-          'AIR_HAZE_DISTANT_ATMOSPHERE',
+    regionId:  
+      'AIR_HAZE_DISTANT_ATMOSPHERE',  
 
-        primaryZoneId:
-          'ZONE_003_WATER_SURFACE_ZONE',
+    primaryZoneId:  
+      'ZONE_003_WATER_SURFACE_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
+    secondaryZoneId:  
+      'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_008_AIR_HAZE_LIGHT_LAYER'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_008_AIR_HAZE_LIGHT_LAYER'  
+      ]),  
 
-        surfaceFamily:
-          'airHaze',
+    surfaceFamily:  
+      'airHaze',  
 
-        materialKey:
-          'airHaze',
+    materialKey:  
+      'airHaze',  
 
-        primitiveIntent:
-          'atmosphericLayer',
+    primitiveIntent:  
+      'atmosphericLayer',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.horizon,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.horizon,  
 
-        worldGeometryRole:
-          'ATMOSPHERIC_COMPRESSION',
+    worldGeometryRole:  
+      'ATMOSPHERIC_COMPRESSION',  
 
-        inspectionRole:
-          'CONTEXT',
+    inspectionRole:  
+      'CONTEXT',  
 
-        publicStageReadable:
-          false,
+    publicStageReadable:  
+      false,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_HORIZON:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_HORIZON',
+PUBLIC_STAGE_LAYER_HORIZON:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_HORIZON',  
 
-        order:
-          30,
+    order:  
+      30,  
 
-        label:
-          'Horizon',
+    label:  
+      'Horizon',  
 
-        role:
-          'horizon-separation-band',
+    role:  
+      'horizon-separation-band',  
 
-        regionId:
-          'AIR_HAZE_DISTANT_ATMOSPHERE',
+    regionId:  
+      'AIR_HAZE_DISTANT_ATMOSPHERE',  
 
-        primaryZoneId:
-          'ZONE_003_WATER_SURFACE_ZONE',
+    primaryZoneId:  
+      'ZONE_003_WATER_SURFACE_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
+    secondaryZoneId:  
+      'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_008_AIR_HAZE_LIGHT_LAYER',
-            'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_008_AIR_HAZE_LIGHT_LAYER',  
+        'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS'  
+      ]),  
 
-        surfaceFamily:
-          'horizon',
+    surfaceFamily:  
+      'horizon',  
 
-        materialKey:
-          'airHaze',
+    materialKey:  
+      'airHaze',  
 
-        primitiveIntent:
-          'horizonBand',
+    primitiveIntent:  
+      'horizonBand',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.horizon,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.horizon,  
 
-        worldGeometryRole:
-          'DISTANT_SCENE_SEPARATOR',
+    worldGeometryRole:  
+      'DISTANT_SCENE_SEPARATOR',  
 
-        inspectionRole:
-          'CONTEXT',
+    inspectionRole:  
+      'CONTEXT',  
 
-        publicStageReadable:
-          false,
+    publicStageReadable:  
+      false,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_OFFSHORE_ISLETS:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_OFFSHORE_ISLETS',
+PUBLIC_STAGE_LAYER_OFFSHORE_ISLETS:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_OFFSHORE_ISLETS',  
 
-        order:
-          40,
+    order:  
+      40,  
 
-        label:
-          'Offshore Rock Stacks and Islets',
+    label:  
+      'Offshore Rock Stacks and Islets',  
 
-        role:
-          'distant-offshore-context',
+    role:  
+      'distant-offshore-context',  
 
-        regionId:
-          'OFFSHORE_ROCK_STACKS_AND_ISLETS',
+    regionId:  
+      'OFFSHORE_ROCK_STACKS_AND_ISLETS',  
 
-        primaryZoneId:
-          'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
+    primaryZoneId:  
+      'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',  
 
-        secondaryZoneId:
-          null,
+    secondaryZoneId:  
+      null,  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS'  
+      ]),  
 
-        surfaceFamily:
-          'distantRock',
+    surfaceFamily:  
+      'distantRock',  
 
-        materialKey:
-          'distantRock',
+    materialKey:  
+      'distantRock',  
 
-        primitiveIntent:
-          'offshoreDistantCluster',
+    primitiveIntent:  
+      'offshoreDistantCluster',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS
-            .horizonContext,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS  
+        .horizonContext,  
 
-        worldGeometryRole:
-          'DISTANT_PLANETARY_CONTEXT',
+    worldGeometryRole:  
+      'DISTANT_PLANETARY_CONTEXT',  
 
-        inspectionRole:
-          'CONTEXT',
+    inspectionRole:  
+      'CONTEXT',  
 
-        publicStageReadable:
-          false,
+    publicStageReadable:  
+      false,  
 
-        offshoreContext:
-          true,
+    offshoreContext:  
+      true,  
 
-        distantTraversalAuthorized:
-          false,
+    distantTraversalAuthorized:  
+      false,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_MANOR_BLUFF:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_MANOR_BLUFF',
+PUBLIC_STAGE_LAYER_MANOR_BLUFF:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_MANOR_BLUFF',  
 
-        order:
-          50,
+    order:  
+      50,  
 
-        label:
-          'Elevated Mirror Manor and Bluff Context',
+    label:  
+      'Elevated Mirror Manor and Bluff Context',  
 
-        role:
-          'elevated-manor-exterior-context',
+    role:  
+      'elevated-manor-exterior-context',  
 
-        regionId:
-          'ELEVATED_MANOR_CONTEXT',
+    regionId:  
+      'ELEVATED_MANOR_CONTEXT',  
 
-        primaryZoneId:
-          'ZONE_004_MANOR_CONTEXT_ZONE',
+    primaryZoneId:  
+      'ZONE_004_MANOR_CONTEXT_ZONE',  
 
-        secondaryZoneId:
-          null,
+    secondaryZoneId:  
+      null,  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_009_MANOR_EXTERIOR_CONTEXT'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_009_MANOR_EXTERIOR_CONTEXT'  
+      ]),  
 
-        surfaceFamily:
-          'manorExterior',
+    surfaceFamily:  
+      'manorExterior',  
 
-        materialKey:
-          'manorExterior',
+    materialKey:  
+      'manorContext',  
 
-        primitiveIntent:
-          'elevatedArchitecturalCluster',
+    primitiveIntent:  
+      'elevatedArchitecturalCluster',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS
-            .elevatedBackground,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS  
+        .elevatedBackground,  
 
-        worldGeometryRole:
-          'ELEVATED_BACKGROUND_CONTEXT',
+    worldGeometryRole:  
+      'ELEVATED_BACKGROUND_CONTEXT',  
 
-        inspectionRole:
-          'CONTEXT',
+    inspectionRole:  
+      'CONTEXT',  
 
-        publicStageReadable:
-          false,
+    publicStageReadable:  
+      false,  
 
-        elevatedAboveShoreline:
-          true,
+    elevatedAboveShoreline:  
+      true,  
 
-        setBackFromShoreline:
-          true,
+    setBackFromShoreline:  
+      true,  
 
-        hillOrCliffContext:
-          true,
+    hillOrCliffContext:  
+      true,  
 
-        exteriorOnly:
-          true,
+    exteriorOnly:  
+      true,  
 
-        traversable:
-          false,
+    traversable:  
+      false,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_WATER_PLANE:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_WATER_PLANE',
+PUBLIC_STAGE_LAYER_WATER_PLANE:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_WATER_PLANE',  
 
-        order:
-          60,
+    order:  
+      60,  
 
-        label:
-          'Water Surface Plane',
+    label:  
+      'Water Surface Plane',  
 
-        role:
-          'open-water-stage',
+    role:  
+      'open-water-stage',  
 
-        regionId:
-          'WATER_SURFACE_PLANE',
+    regionId:  
+      'WATER_SURFACE_PLANE',  
 
-        primaryZoneId:
-          'ZONE_003_WATER_SURFACE_ZONE',
+    primaryZoneId:  
+      'ZONE_003_WATER_SURFACE_ZONE',  
 
-        secondaryZoneId:
-          null,
+    secondaryZoneId:  
+      null,  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_007_WATER_SURFACE_PLANE',
-            'OBJ_008_AIR_HAZE_LIGHT_LAYER'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_007_WATER_SURFACE_PLANE',  
+        'OBJ_008_AIR_HAZE_LIGHT_LAYER'  
+      ]),  
 
-        surfaceFamily:
-          'water',
+    surfaceFamily:  
+      'water',  
 
-        materialKey:
-          'water',
+    materialKey:  
+      'water',  
 
-        primitiveIntent:
-          'waterPlane',
+    primitiveIntent:  
+      'waterPlane',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.water,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.water,  
 
-        worldGeometryRole:
-          'MIDDLE_DISTANCE_WATER_SURFACE',
+    worldGeometryRole:  
+      'MIDDLE_DISTANCE_WATER_SURFACE',  
 
-        inspectionRole:
-          'CONTEXT',
+    inspectionRole:  
+      'CONTEXT',  
 
-        publicStageReadable:
-          false,
+    publicStageReadable:  
+      false,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_NEARSHORE_WAVE:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_NEARSHORE_WAVE',
+PUBLIC_STAGE_LAYER_NEARSHORE_WAVE:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_NEARSHORE_WAVE',  
 
-        order:
-          70,
+    order:  
+      70,  
 
-        label:
-          'Nearshore Wave Band',
+    label:  
+      'Nearshore Wave Band',  
 
-        role:
-          'nearshore-water-depth-transition',
+    role:  
+      'nearshore-water-depth-transition',  
 
-        regionId:
-          'NEARSHORE_WAVE_BAND',
+    regionId:  
+      'NEARSHORE_WAVE_BAND',  
 
-        primaryZoneId:
-          'ZONE_003_WATER_SURFACE_ZONE',
+    primaryZoneId:  
+      'ZONE_003_WATER_SURFACE_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_002_SHORELINE_CONTACT_ZONE',
+    secondaryZoneId:  
+      'ZONE_002_SHORELINE_CONTACT_ZONE',  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_006_NEARSHORE_WAVE_BAND'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_006_NEARSHORE_WAVE_BAND'  
+      ]),  
 
-        surfaceFamily:
-          'nearshoreWave',
+    surfaceFamily:  
+      'nearshoreWave',  
 
-        materialKey:
-          'nearshoreWave',
+    materialKey:  
+      'nearshoreWave',  
 
-        primitiveIntent:
-          'waterDepthBand',
+    primitiveIntent:  
+      'waterDepthBand',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.nearshore,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.nearshore,  
 
-        worldGeometryRole:
-          'NEARSHORE_TRANSITION',
+    worldGeometryRole:  
+      'NEARSHORE_TRANSITION',  
 
-        inspectionRole:
-          'CONTEXT',
+    inspectionRole:  
+      'CONTEXT',  
 
-        publicStageReadable:
-          false,
+    publicStageReadable:  
+      false,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_FOAM_LINE:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_FOAM_LINE',
+PUBLIC_STAGE_LAYER_FOAM_LINE:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_FOAM_LINE',  
 
-        order:
-          80,
+    order:  
+      80,  
 
-        label:
-          'Shoreline Foam Line',
+    label:  
+      'Shoreline Foam Line',  
 
-        role:
-          'earth-water-contact-boundary',
+    role:  
+      'earth-water-contact-boundary',  
 
-        regionId:
-          'SHORELINE_CONTACT',
+    regionId:  
+      'SHORELINE_CONTACT',  
 
-        primaryZoneId:
-          'ZONE_002_SHORELINE_CONTACT_ZONE',
+    primaryZoneId:  
+      'ZONE_002_SHORELINE_CONTACT_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_003_WATER_SURFACE_ZONE',
+    secondaryZoneId:  
+      'ZONE_003_WATER_SURFACE_ZONE',  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_005_SHORELINE_FOAM_LINE'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_005_SHORELINE_FOAM_LINE'  
+      ]),  
 
-        surfaceFamily:
-          'foam',
+    surfaceFamily:  
+      'foam',  
 
-        materialKey:
-          'foam',
+    materialKey:  
+      'foam',  
 
-        primitiveIntent:
-          'irregularShorelineBand',
+    primitiveIntent:  
+      'irregularShorelineBand',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.shoreline,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.shoreline,  
 
-        worldGeometryRole:
-          'SHORELINE_BOUNDARY',
+    worldGeometryRole:  
+      'SHORELINE_BOUNDARY',  
 
-        inspectionRole:
-          'SUPPORTING_INSPECTION',
+    inspectionRole:  
+      'SUPPORTING_INSPECTION',  
 
-        publicStageReadable:
-          true,
+    publicStageReadable:  
+      true,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_DRY_SAND:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_DRY_SAND',
+PUBLIC_STAGE_LAYER_DRY_SAND:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_DRY_SAND',  
 
-        order:
-          90,
+    order:  
+      90,  
 
-        label:
-          'Dry-Sand Transition',
+    label:  
+      'Dry-Sand Transition',  
 
-        role:
-          'upper-beach-transition',
+    role:  
+      'upper-beach-transition',  
 
-        regionId:
-          'DRY_SAND_UPPER_BEACH',
+    regionId:  
+      'DRY_SAND_UPPER_BEACH',  
 
-        primaryZoneId:
-          'ZONE_002_SHORELINE_CONTACT_ZONE',
+    primaryZoneId:  
+      'ZONE_002_SHORELINE_CONTACT_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+    secondaryZoneId:  
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_003_DRY_SAND_TRANSITION'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_003_DRY_SAND_TRANSITION'  
+      ]),  
 
-        surfaceFamily:
-          'drySand',
+    surfaceFamily:  
+      'drySand',  
 
-        materialKey:
-          'drySand',
+    materialKey:  
+      'drySand',  
 
-        primitiveIntent:
-          'terrainBand',
+    primitiveIntent:  
+      'terrainBand',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS
-            .foregroundTransition,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS  
+        .foregroundTransition,  
 
-        worldGeometryRole:
-          'UPPER_BEACH_TRANSITION',
+    worldGeometryRole:  
+      'UPPER_BEACH_TRANSITION',  
 
-        inspectionRole:
-          'SECONDARY_SURFACE_CONTEXT',
+    inspectionRole:  
+      'SECONDARY_SURFACE_CONTEXT',  
 
-        publicStageReadable:
-          false,
+    publicStageReadable:  
+      false,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_WET_SAND:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_WET_SAND',
+PUBLIC_STAGE_LAYER_WET_SAND:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_WET_SAND',  
 
-        order:
-          100,
+    order:  
+      100,  
 
-        label:
-          'Foreground Wet Sand',
+    label:  
+      'Foreground Wet Sand',  
 
-        role:
-          'primary-inspection-surface',
+    role:  
+      'primary-inspection-surface',  
 
-        regionId:
-          'FOREGROUND_INSPECTION_GROUND',
+    regionId:  
+      'FOREGROUND_INSPECTION_GROUND',  
 
-        primaryZoneId:
-          'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+    primaryZoneId:  
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',  
 
-        secondaryZoneId:
-          null,
+    secondaryZoneId:  
+      null,  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_002_FOREGROUND_WET_SAND'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_002_FOREGROUND_WET_SAND'  
+      ]),  
 
-        surfaceFamily:
-          'wetSand',
+    surfaceFamily:  
+      'wetSand',  
 
-        materialKey:
-          'wetSand',
+    materialKey:  
+      'wetSand',  
 
-        primitiveIntent:
-          'contouredTerrainBand',
+    primitiveIntent:  
+      'contouredTerrainBand',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,  
 
-        worldGeometryRole:
-          'PRIMARY_FOREGROUND_SURFACE',
+    worldGeometryRole:  
+      'PRIMARY_FOREGROUND_SURFACE',  
 
-        inspectionRole:
-          'PRIMARY_INSPECTION',
+    inspectionRole:  
+      'PRIMARY_INSPECTION',  
 
-        publicStageReadable:
-          true,
+    publicStageReadable:  
+      true,  
 
-        primaryInspectionSurface:
-          true,
+    primaryInspectionSurface:  
+      true,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_TIDE_POOLS:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_TIDE_POOLS',
+PUBLIC_STAGE_LAYER_TIDE_POOLS:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_TIDE_POOLS',  
 
-        order:
-          110,
+    order:  
+      110,  
 
-        label:
-          'Tide Pools and Reflective Puddles',
+    label:  
+      'Tide Pools and Reflective Puddles',  
 
-        role:
-          'supporting-moisture-inspection-cue',
+    role:  
+      'supporting-moisture-inspection-cue',  
 
-        regionId:
-          'SHORELINE_CONTACT',
+    regionId:  
+      'SHORELINE_CONTACT',  
 
-        primaryZoneId:
-          'ZONE_002_SHORELINE_CONTACT_ZONE',
+    primaryZoneId:  
+      'ZONE_002_SHORELINE_CONTACT_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+    secondaryZoneId:  
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES'  
+      ]),  
 
-        surfaceFamily:
-          'tidePool',
+    surfaceFamily:  
+      'tidePool',  
 
-        materialKey:
-          'reflectiveWater',
+    materialKey:  
+      'tidePool',  
 
-        primitiveIntent:
-          'surfacePoolCluster',
+    primitiveIntent:  
+      'surfacePoolCluster',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,  
 
-        worldGeometryRole:
-          'FOREGROUND_REFLECTIVE_DETAIL',
+    worldGeometryRole:  
+      'FOREGROUND_REFLECTIVE_DETAIL',  
 
-        inspectionRole:
-          'SUPPORTING_INSPECTION',
+    inspectionRole:  
+      'SUPPORTING_INSPECTION',  
 
-        publicStageReadable:
-          true,
+    publicStageReadable:  
+      true,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_SMALL_STONES:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_SMALL_STONES',
+PUBLIC_STAGE_LAYER_SMALL_STONES:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_SMALL_STONES',  
 
-        order:
-          120,
+    order:  
+      120,  
 
-        label:
-          'Small Beach Stones',
+    label:  
+      'Small Beach Stones',  
 
-        role:
-          'supporting-footing-friction-cue',
+    role:  
+      'supporting-footing-friction-cue',  
 
-        regionId:
-          'FOREGROUND_INSPECTION_GROUND',
+    regionId:  
+      'FOREGROUND_INSPECTION_GROUND',  
 
-        primaryZoneId:
-          'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+    primaryZoneId:  
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_002_SHORELINE_CONTACT_ZONE',
+    secondaryZoneId:  
+      'ZONE_002_SHORELINE_CONTACT_ZONE',  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_010_SMALL_BEACH_STONES'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_010_SMALL_BEACH_STONES'  
+      ]),  
 
-        surfaceFamily:
-          'smallStone',
+    surfaceFamily:  
+      'smallStone',  
 
-        materialKey:
-          'smallStone',
+    materialKey:  
+      'stone',  
 
-        primitiveIntent:
-          'smallStoneCluster',
+    primitiveIntent:  
+      'smallStoneCluster',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,  
 
-        worldGeometryRole:
-          'FOREGROUND_DETAIL',
+    worldGeometryRole:  
+      'FOREGROUND_DETAIL',  
 
-        inspectionRole:
-          'SUPPORTING_INSPECTION',
+    inspectionRole:  
+      'SUPPORTING_INSPECTION',  
 
-        publicStageReadable:
-          true,
+    publicStageReadable:  
+      true,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_JAGGED_ROCKS:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_JAGGED_ROCKS',
+PUBLIC_STAGE_LAYER_JAGGED_ROCKS:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_JAGGED_ROCKS',  
 
-        order:
-          130,
+    order:  
+      130,  
 
-        label:
-          'Foreground Jagged Rocks',
+    label:  
+      'Foreground Jagged Rocks',  
 
-        role:
-          'supporting-terrain-hazard-cue',
+    role:  
+      'supporting-terrain-hazard-cue',  
 
-        regionId:
-          'FOREGROUND_INSPECTION_GROUND',
+    regionId:  
+      'FOREGROUND_INSPECTION_GROUND',  
 
-        primaryZoneId:
-          'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+    primaryZoneId:  
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_002_SHORELINE_CONTACT_ZONE',
+    secondaryZoneId:  
+      'ZONE_002_SHORELINE_CONTACT_ZONE',  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_011_FOREGROUND_JAGGED_ROCKS'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_011_FOREGROUND_JAGGED_ROCKS'  
+      ]),  
 
-        surfaceFamily:
-          'jaggedRock',
+    surfaceFamily:  
+      'jaggedRock',  
 
-        materialKey:
-          'jaggedRock',
+    materialKey:  
+      'jaggedRock',  
 
-        primitiveIntent:
-          'jaggedRockCluster',
+    primitiveIntent:  
+      'jaggedRockCluster',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,  
 
-        worldGeometryRole:
-          'FOREGROUND_HAZARD_DETAIL',
+    worldGeometryRole:  
+      'FOREGROUND_HAZARD_DETAIL',  
 
-        inspectionRole:
-          'SUPPORTING_INSPECTION',
+    inspectionRole:  
+      'SUPPORTING_INSPECTION',  
 
-        publicStageReadable:
-          true,
+    publicStageReadable:  
+      true,  
 
-        rendererMayCreateGeometry:
-          true,
+    rendererMayCreateGeometry:  
+      true,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_INSPECTION_ANCHOR:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_INSPECTION_ANCHOR',
+PUBLIC_STAGE_LAYER_INSPECTION_ANCHOR:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_INSPECTION_ANCHOR',  
 
-        order:
-          140,
+    order:  
+      140,  
 
-        label:
-          'Inspection Anchor',
+    label:  
+      'Inspection Anchor',  
 
-        role:
-          'ground-inspection-focus-anchor',
+    role:  
+      'ground-inspection-focus-anchor',  
 
-        regionId:
-          'FOREGROUND_INSPECTION_GROUND',
+    regionId:  
+      'FOREGROUND_INSPECTION_GROUND',  
 
-        primaryZoneId:
-          'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+    primaryZoneId:  
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',  
 
-        secondaryZoneId:
-          null,
+    secondaryZoneId:  
+      null,  
 
-        objectIds:
-          Object.freeze([
-            'OBJ_001_GROUND_SPAWN_ANCHOR'
-          ]),
+    objectIds:  
+      Object.freeze([  
+        'OBJ_001_GROUND_SPAWN_ANCHOR'  
+      ]),  
 
-        surfaceFamily:
-          'inspectionAnchor',
+    surfaceFamily:  
+      'inspectionAnchor',  
 
-        materialKey:
-          'none',
+    materialKey:  
+      'none',  
 
-        primitiveIntent:
-          'logicalAnchor',
+    primitiveIntent:  
+      'logicalAnchor',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.foreground,  
 
-        worldGeometryRole:
-          'LOGICAL_INSPECTION_FOCUS',
+    worldGeometryRole:  
+      'LOGICAL_INSPECTION_FOCUS',  
 
-        inspectionRole:
-          'PRIMARY_ACTION_ANCHOR',
+    inspectionRole:  
+      'PRIMARY_ACTION_ANCHOR',  
 
-        publicStageReadable:
-          false,
+    publicStageReadable:  
+      false,  
 
-        rendererMayCreateGeometry:
-          false,
+    rendererMayCreateGeometry:  
+      false,  
 
-        compositorCreatesGeometry:
-          false
-      }),
+    compositorCreatesGeometry:  
+      false  
+  }),  
 
-    PUBLIC_STAGE_LAYER_OVERLAY_ATTACHMENT:
-      Object.freeze({
-        layerId:
-          'PUBLIC_STAGE_LAYER_OVERLAY_ATTACHMENT',
+PUBLIC_STAGE_LAYER_OVERLAY_ATTACHMENT:  
+  Object.freeze({  
+    layerId:  
+      'PUBLIC_STAGE_LAYER_OVERLAY_ATTACHMENT',  
 
-        order:
-          150,
+    order:  
+      150,  
 
-        label:
-          'Ground Condition Read Attachment',
+    label:  
+      'Ground Condition Read Attachment',  
 
-        role:
-          'public-stage-overlay-attachment',
+    role:  
+      'public-stage-overlay-attachment',  
 
-        regionId:
-          null,
+    regionId:  
+      null,  
 
-        primaryZoneId:
-          'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+    primaryZoneId:  
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',  
 
-        secondaryZoneId:
-          null,
+    secondaryZoneId:  
+      null,  
 
-        objectIds:
-          EMPTY_FROZEN_ARRAY,
+    objectIds:  
+      EMPTY_FROZEN_ARRAY,  
 
-        surfaceFamily:
-          'overlayAttachment',
+    surfaceFamily:  
+      'overlayAttachment',  
 
-        materialKey:
-          'none',
+    materialKey:  
+      'none',  
 
-        primitiveIntent:
-          'screenSpaceAttachment',
+    primitiveIntent:  
+      'screenSpaceAttachment',  
 
-        depth:
-          H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.overlay,
+    depth:  
+      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS.overlay,  
 
-        worldGeometryRole:
-          'NON_WORLD_OVERLAY_ATTACHMENT',
+    worldGeometryRole:  
+      'NON_WORLD_OVERLAY_ATTACHMENT',  
 
-        inspectionRole:
-          'READOUT_ATTACHMENT',
+    inspectionRole:  
+      'READOUT_ATTACHMENT',  
 
-        publicStageReadable:
-          true,
+    publicStageReadable:  
+      true,  
 
-        readoutId:
-          'Ground Condition Read',
+    readoutId:  
+      'Ground Condition Read',  
 
-        firstAction:
-          'Inspect Ground',
+    firstAction:  
+      'Inspect Ground',  
 
-        worldGeometryParticipant:
-          false,
+    worldGeometryParticipant:  
+      false,  
 
-        rendererMayCreateGeometry:
-          false,
+    rendererMayCreateGeometry:  
+      false,  
 
-        compositorCreatesGeometry:
-          false
-      })
-  });
+    compositorCreatesGeometry:  
+      false  
+  })
+
+});
 
 export function isHEarthPublicStagePlainObject(value) {
-  return (
-    value !== null &&
-    typeof value === 'object' &&
-    Array.isArray(value) === false
-  );
+return (
+value !== null &&
+typeof value === 'object' &&
+Array.isArray(value) === false
+);
 }
 
 export function normalizeHEarthPublicStageNumber(
-  value,
-  fallback = 0
+value,
+fallback = 0
 ) {
-  const numericValue = Number(value);
+const numericValue = Number(value);
 
-  return Number.isFinite(numericValue)
-    ? numericValue
-    : fallback;
+return Number.isFinite(numericValue)
+? numericValue
+: fallback;
 }
 
 export function clampHEarthPublicStageNumber(
-  value,
-  min,
-  max
+value,
+min,
+max
 ) {
-  return Math.min(
-    Math.max(
-      normalizeHEarthPublicStageNumber(
-        value,
-        min
-      ),
-      min
-    ),
-    max
-  );
+return Math.min(
+Math.max(
+normalizeHEarthPublicStageNumber(
+value,
+min
+),
+min
+),
+max
+);
 }
 
 export function clampHEarthPublicStage01(value) {
-  return clampHEarthPublicStageNumber(
-    value,
-    0,
-    1
-  );
+return clampHEarthPublicStageNumber(
+value,
+0,
+1
+);
 }
 
 export function getLandscapeAggregate() {
-  return (
-    LandscapeLatticeModule
-      .H_EARTH_256_LATTICE_LANDSCAPE_AGGREGATE ||
-    EMPTY_FROZEN_OBJECT
-  );
+return (
+LandscapeLatticeModule
+.H_EARTH_256_LATTICE_LANDSCAPE_AGGREGATE ||
+EMPTY_FROZEN_OBJECT
+);
 }
 
 export function getLandscapeMap() {
-  if (
-    typeof LandscapeLatticeModule
-      .getHEarthLandscapeLatticeMap ===
-    'function'
-  ) {
-    return (
-      LandscapeLatticeModule
-        .getHEarthLandscapeLatticeMap() ||
-      EMPTY_FROZEN_OBJECT
-    );
-  }
+if (
+typeof LandscapeLatticeModule
+.getHEarthLandscapeLatticeMap ===
+'function'
+) {
+return (
+LandscapeLatticeModule
+.getHEarthLandscapeLatticeMap() ||
+EMPTY_FROZEN_OBJECT
+);
+}
 
-  return (
-    LandscapeLatticeModule
-      .H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP ||
-    EMPTY_FROZEN_OBJECT
-  );
+return (
+LandscapeLatticeModule
+.H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP ||
+EMPTY_FROZEN_OBJECT
+);
 }
 
 export function getLandscapeRegionSummary() {
-  return (
-    LandscapeLatticeModule
-      .H_EARTH_256_LATTICE_LANDSCAPE_REGION_SUMMARY ||
-    EMPTY_FROZEN_OBJECT
-  );
+return (
+LandscapeLatticeModule
+.H_EARTH_256_LATTICE_LANDSCAPE_REGION_SUMMARY ||
+EMPTY_FROZEN_OBJECT
+);
 }
 
 export function getLandscapeZoneSummary() {
-  return (
-    LandscapeLatticeModule
-      .H_EARTH_256_LATTICE_LANDSCAPE_ZONE_SUMMARY ||
-    EMPTY_FROZEN_OBJECT
-  );
+return (
+LandscapeLatticeModule
+.H_EARTH_256_LATTICE_LANDSCAPE_ZONE_SUMMARY ||
+EMPTY_FROZEN_OBJECT
+);
 }
 
 export function getLandscapeObjectHintSummary() {
-  return (
-    LandscapeLatticeModule
-      .H_EARTH_256_LATTICE_OBJECT_HINT_ADDRESS_SUMMARY ||
-    EMPTY_FROZEN_OBJECT
-  );
+return (
+LandscapeLatticeModule
+.H_EARTH_256_LATTICE_OBJECT_HINT_ADDRESS_SUMMARY ||
+EMPTY_FROZEN_OBJECT
+);
 }
 
 export function getZoneDescriptors() {
-  return (
-    ZoneAuthorityModule
-      .H_EARTH_GROUND_CELL_001_ZONE_DESCRIPTORS ||
-    EMPTY_FROZEN_OBJECT
-  );
+return (
+ZoneAuthorityModule
+.H_EARTH_GROUND_CELL_001_ZONE_DESCRIPTORS ||
+EMPTY_FROZEN_OBJECT
+);
 }
 
 export function getZoneRenderTargetRoles() {
-  return (
-    ZoneAuthorityModule
-      .H_EARTH_GROUND_CELL_001_ZONE_RENDER_TARGET_ROLES ||
-    EMPTY_FROZEN_OBJECT
-  );
+return (
+ZoneAuthorityModule
+.H_EARTH_GROUND_CELL_001_ZONE_RENDER_TARGET_ROLES ||
+EMPTY_FROZEN_OBJECT
+);
 }
 
 export function getEnvironmentObjectCollection() {
-  const collection =
-    EnvironmentModule
-      .H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS;
+const collection =
+EnvironmentModule
+.H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS;
 
-  if (Array.isArray(collection)) {
-    return Object.freeze([...collection]);
-  }
+if (Array.isArray(collection)) {
+return Object.freeze([...collection]);
+}
 
-  if (
-    collection &&
-    typeof collection === 'object'
-  ) {
-    return Object.freeze(
-      Object.values(collection)
-    );
-  }
+if (
+collection &&
+typeof collection === 'object'
+) {
+return Object.freeze(
+Object.values(collection)
+);
+}
 
-  return EMPTY_FROZEN_ARRAY;
+return EMPTY_FROZEN_ARRAY;
 }
 
 export function getEnvironmentObject(objectId) {
-  if (
-    !objectId ||
-    typeof objectId !== 'string'
-  ) {
-    return null;
-  }
+if (
+!objectId ||
+typeof objectId !== 'string'
+) {
+return null;
+}
 
-  const collection =
-    EnvironmentModule
-      .H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS;
+const collection =
+EnvironmentModule
+.H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS;
 
-  if (
-    collection &&
-    !Array.isArray(collection) &&
-    collection[objectId]
-  ) {
-    return collection[objectId];
-  }
+if (
+collection &&
+!Array.isArray(collection) &&
+collection[objectId]
+) {
+return collection[objectId];
+}
 
-  return (
-    getEnvironmentObjectCollection()
-      .find((object) => (
-        object?.objectId === objectId
-      )) ||
-    null
-  );
+return (
+getEnvironmentObjectCollection()
+.find((object) => (
+object?.objectId === objectId
+)) ||
+null
+);
 }
 
 export function getLandscapeRegionProfile(
-  regionId
+regionId
 ) {
-  if (
-    !regionId ||
-    typeof regionId !== 'string'
-  ) {
-    return null;
-  }
+if (
+!regionId ||
+typeof regionId !== 'string'
+) {
+return null;
+}
 
-  if (
-    typeof LandscapeLatticeModule
-      .getHEarthLandscapeRegionProfile ===
-    'function'
-  ) {
-    return (
-      LandscapeLatticeModule
-        .getHEarthLandscapeRegionProfile(
-          regionId
-        ) ||
-      null
-    );
-  }
+if (
+typeof LandscapeLatticeModule
+.getHEarthLandscapeRegionProfile ===
+'function'
+) {
+return (
+LandscapeLatticeModule
+.getHEarthLandscapeRegionProfile(
+regionId
+) ||
+null
+);
+}
 
-  return (
-    LandscapeLatticeModule
-      .H_EARTH_256_LATTICE_REGION_PROFILES?.[
-        regionId
-      ] ||
-    null
-  );
+return (
+LandscapeLatticeModule
+.H_EARTH_256_LATTICE_REGION_PROFILES?.[
+regionId
+] ||
+null
+);
 }
 
 export function getLandscapeRegionAddresses(
-  regionId
+regionId
 ) {
-  if (
-    !regionId ||
-    typeof regionId !== 'string'
-  ) {
-    return EMPTY_FROZEN_ARRAY;
-  }
+if (
+!regionId ||
+typeof regionId !== 'string'
+) {
+return EMPTY_FROZEN_ARRAY;
+}
 
-  const map =
-    getLandscapeMap();
+const map =
+getLandscapeMap();
 
-  return Object.freeze(
-    Object.values(map)
-      .filter((record) => (
-        record?.regionId === regionId
-      ))
-      .map((record) => record.address)
-  );
+return Object.freeze(
+Object.values(map)
+.filter((record) => (
+record?.regionId === regionId
+))
+.map((record) => record.address)
+);
 }
 
 export function getLandscapeObjectAddresses(
-  objectId
+objectId
 ) {
-  if (
-    !objectId ||
-    typeof objectId !== 'string'
-  ) {
-    return EMPTY_FROZEN_ARRAY;
-  }
+if (
+!objectId ||
+typeof objectId !== 'string'
+) {
+return EMPTY_FROZEN_ARRAY;
+}
 
-  const summary =
-    getLandscapeObjectHintSummary();
+const summary =
+getLandscapeObjectHintSummary();
 
-  return freezeArray(
-    summary?.[objectId]?.addresses
-  );
+return freezeArray(
+summary?.[objectId]?.addresses
+);
 }
 
 export function getLayerDefinition(layerId) {
-  if (
-    !layerId ||
-    typeof layerId !== 'string'
-  ) {
-    return null;
-  }
+if (
+!layerId ||
+typeof layerId !== 'string'
+) {
+return null;
+}
 
-  return (
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_DEFINITIONS[
-      layerId
-    ] ||
-    null
-  );
+return (
+H_EARTH_3D_PUBLIC_STAGE_LAYER_DEFINITIONS[
+layerId
+] ||
+null
+);
 }
 
 export function resolvePublicStageCameraFrame() {
-  const cameraCapacity =
-    CapacityModule
-      .H_EARTH_3D_CAMERA_CAPACITY ||
-    EMPTY_FROZEN_OBJECT;
+const cameraCapacity =
+CapacityModule
+.H_EARTH_3D_CAMERA_CAPACITY ||
+EMPTY_FROZEN_OBJECT;
 
-  const primaryEnvironmentObject =
-    getEnvironmentObject(
-      H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
-        .primaryFocusObjectId
-    );
+const primaryEnvironmentObject =
+getEnvironmentObject(
+H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
+.primaryFocusObjectId
+);
 
-  const sourceCenter =
-    primaryEnvironmentObject?.center ||
-    cameraCapacity.defaultLookAt ||
-    H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
-      .defaultLookAt;
+const sourceCenter =
+primaryEnvironmentObject?.center ||
+cameraCapacity.defaultLookAt ||
+H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
+.defaultLookAt;
 
-  const defaultPosition =
-    cameraCapacity.defaultPosition ||
-    H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
-      .defaultPosition;
+const defaultPosition =
+cameraCapacity.defaultPosition ||
+H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
+.defaultPosition;
 
-  const defaultLookAt =
-    cameraCapacity.defaultLookAt ||
-    H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
-      .defaultLookAt;
+const defaultLookAt =
+cameraCapacity.defaultLookAt ||
+H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
+.defaultLookAt;
 
-  const requestedPosition =
-    Object.freeze({
-      x:
-        normalizeHEarthPublicStageNumber(
-          defaultPosition?.x,
-          0
-        ),
+const requestedPosition =
+Object.freeze({
+x:
+normalizeHEarthPublicStageNumber(
+defaultPosition?.x,
+0
+),
 
-      y:
-        normalizeHEarthPublicStageNumber(
-          defaultPosition?.y,
-          2.4
-        ),
+y:  
+    normalizeHEarthPublicStageNumber(  
+      defaultPosition?.y,  
+      2.4  
+    ),  
 
-      z:
-        normalizeHEarthPublicStageNumber(
-          defaultPosition?.z,
-          8
-        )
-    });
+  z:  
+    normalizeHEarthPublicStageNumber(  
+      defaultPosition?.z,  
+      8  
+    )  
+});
 
-  const requestedLookAt =
-    Object.freeze({
-      x:
-        normalizeHEarthPublicStageNumber(
-          sourceCenter?.x,
-          defaultLookAt?.x || 0
-        ),
+const requestedLookAt =
+Object.freeze({
+x:
+normalizeHEarthPublicStageNumber(
+sourceCenter?.x,
+defaultLookAt?.x || 0
+),
 
-      y:
-        normalizeHEarthPublicStageNumber(
-          sourceCenter?.y,
-          defaultLookAt?.y || 0
-        ),
+y:  
+    normalizeHEarthPublicStageNumber(  
+      sourceCenter?.y,  
+      defaultLookAt?.y || 0  
+    ),  
 
-      z:
-        normalizeHEarthPublicStageNumber(
-          sourceCenter?.z,
-          defaultLookAt?.z || -7
-        )
-    });
+  z:  
+    normalizeHEarthPublicStageNumber(  
+      sourceCenter?.z,  
+      defaultLookAt?.z || -7  
+    )  
+});
 
-  const resolvedPosition =
-    typeof CapacityModule.clampCameraPan ===
-    'function'
-      ? CapacityModule.clampCameraPan(
-          requestedPosition
-        )
-      : requestedPosition;
+const resolvedPosition =
+typeof CapacityModule.clampCameraPan ===
+'function'
+? CapacityModule.clampCameraPan(
+requestedPosition
+)
+: requestedPosition;
 
-  const resolvedTiltDegrees =
-    typeof CapacityModule.clampCameraTilt ===
-    'function'
-      ? CapacityModule.clampCameraTilt(0)
-      : 0;
+const resolvedTiltDegrees =
+typeof CapacityModule.clampCameraTilt ===
+'function'
+? CapacityModule.clampCameraTilt(0)
+: 0;
 
-  const resolvedZoom =
-    typeof CapacityModule.clampCameraZoom ===
-    'function'
-      ? CapacityModule.clampCameraZoom(1)
-      : 1;
+const resolvedZoom =
+typeof CapacityModule.clampCameraZoom ===
+'function'
+? CapacityModule.clampCameraZoom(1)
+: 1;
 
-  return Object.freeze({
-    cameraFrameId:
-      'H_EARTH_3D_PUBLIC_STAGE_CAMERA_FRAME',
+return Object.freeze({
+cameraFrameId:
+'H_EARTH_3D_PUBLIC_STAGE_CAMERA_FRAME',
 
-    model:
-      H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL,
+model:  
+  H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL,  
 
-    primaryFocusObjectId:
-      H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
-        .primaryFocusObjectId,
+primaryFocusObjectId:  
+  H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL  
+    .primaryFocusObjectId,  
 
-    requestedPosition,
+requestedPosition,  
 
-    position:
-      freezeObject(resolvedPosition),
+position:  
+  freezeObject(resolvedPosition),  
 
-    lookAt:
-      requestedLookAt,
+lookAt:  
+  requestedLookAt,  
 
-    tiltDegrees:
-      resolvedTiltDegrees,
+tiltDegrees:  
+  resolvedTiltDegrees,  
 
-    zoom:
-      resolvedZoom,
+zoom:  
+  resolvedZoom,  
 
-    frameHint:
-      typeof CapacityModule
-        .getCameraFrameHint ===
-      'function'
-        ? CapacityModule.getCameraFrameHint(
-            H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL
-              .primaryFocusObjectId
-          )
-        : null,
+frameHint:  
+  typeof CapacityModule  
+    .getCameraFrameHint ===  
+  'function'  
+    ? CapacityModule.getCameraFrameHint(  
+        H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL  
+          .primaryFocusObjectId  
+      )  
+    : null,  
 
-    scenePosture:
-      'LOW_GROUND_INSPECTION_WITH_OPEN_HORIZON',
+scenePosture:  
+  'LOW_GROUND_INSPECTION_WITH_OPEN_HORIZON',  
 
-    foregroundDominant:
-      true,
+foregroundDominant:  
+  true,  
 
-    horizonOpen:
-      true,
+horizonOpen:  
+  true,  
 
-    overlayAttachedOutsideWorldGeometry:
-      true,
+overlayAttachedOutsideWorldGeometry:  
+  true,  
 
-    descriptorOnly:
-      true,
+descriptorOnly:  
+  true,  
 
-    activatesCameraControls:
-      false,
+activatesCameraControls:  
+  false,  
 
-    createsTraversal:
-      false,
+createsTraversal:  
+  false,  
 
-    boundary:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS
-  });
+boundary:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS
+
+});
 }
 
 export function resolveLayerSourceBinding(
-  layerDefinition
+layerDefinition
 ) {
-  if (!layerDefinition) {
-    return null;
-  }
+if (!layerDefinition) {
+return null;
+}
 
-  const regionProfile =
-    getLandscapeRegionProfile(
-      layerDefinition.regionId
-    );
+const regionProfile =
+getLandscapeRegionProfile(
+layerDefinition.regionId
+);
 
-  const regionSummary =
-    layerDefinition.regionId
-      ? getLandscapeRegionSummary()?.[
-          layerDefinition.regionId
-        ] || null
-      : null;
+const regionSummary =
+layerDefinition.regionId
+? getLandscapeRegionSummary()?.[
+layerDefinition.regionId
+] || null
+: null;
 
-  const zoneDescriptor =
-    layerDefinition.primaryZoneId
-      ? getZoneDescriptors()?.[
-          layerDefinition.primaryZoneId
-        ] || null
-      : null;
+const zoneDescriptor =
+layerDefinition.primaryZoneId
+? getZoneDescriptors()?.[
+layerDefinition.primaryZoneId
+] || null
+: null;
 
-  const zoneRenderTargetRole =
-    layerDefinition.primaryZoneId
-      ? getZoneRenderTargetRoles()?.[
-          layerDefinition.primaryZoneId
-        ] || null
-      : null;
+const zoneRenderTargetRole =
+layerDefinition.primaryZoneId
+? getZoneRenderTargetRoles()?.[
+layerDefinition.primaryZoneId
+] || null
+: null;
 
-  const objectBindings =
-    Object.freeze(
-      layerDefinition.objectIds.map(
-        (objectId) => {
-          const environmentObject =
-            getEnvironmentObject(objectId);
+const objectBindings =
+Object.freeze(
+layerDefinition.objectIds.map(
+(objectId) => {
+const environmentObject =
+getEnvironmentObject(objectId);
 
-          const objectAuthority =
-            ObjectAuthorityModule
-              .H_EARTH_GROUND_CELL_001_OBJECTS?.[
-                objectId
-              ] ||
-            ObjectAuthorityModule
-              .H_EARTH_GROUND_CELL_001_OBJECT_DESCRIPTORS?.[
-                objectId
-              ] ||
-            null;
+const objectAuthority =  
+        ObjectAuthorityModule  
+          .H_EARTH_GROUND_CELL_001_OBJECTS?.[  
+            objectId  
+          ] ||  
+        ObjectAuthorityModule  
+          .H_EARTH_GROUND_CELL_001_OBJECT_DESCRIPTORS?.[  
+            objectId  
+          ] ||  
+        null;  
 
-          return Object.freeze({
-            objectId,
+      return Object.freeze({  
+        objectId,  
 
-            environmentObject,
+        environmentObject,  
 
-            objectAuthority,
+        objectAuthority,  
 
-            latticeAddresses:
-              getLandscapeObjectAddresses(
-                objectId
-              ),
+        latticeAddresses:  
+          getLandscapeObjectAddresses(  
+            objectId  
+          ),  
 
-            sourcePresent:
-              Boolean(
-                environmentObject ||
-                objectAuthority
-              )
-          });
-        }
-      )
-    );
+        sourcePresent:  
+          Boolean(  
+            environmentObject ||  
+            objectAuthority  
+          )  
+      });  
+    }  
+  )  
+);
 
-  return Object.freeze({
-    layerId:
-      layerDefinition.layerId,
+return Object.freeze({
+layerId:
+layerDefinition.layerId,
 
-    regionId:
-      layerDefinition.regionId,
+regionId:  
+  layerDefinition.regionId,  
 
-    primaryZoneId:
-      layerDefinition.primaryZoneId,
+primaryZoneId:  
+  layerDefinition.primaryZoneId,  
 
-    secondaryZoneId:
-      layerDefinition.secondaryZoneId,
+secondaryZoneId:  
+  layerDefinition.secondaryZoneId,  
 
-    regionProfile,
+regionProfile,  
 
-    regionSummary,
+regionSummary,  
 
-    regionAddresses:
-      layerDefinition.regionId
-        ? getLandscapeRegionAddresses(
-            layerDefinition.regionId
-          )
-        : EMPTY_FROZEN_ARRAY,
+regionAddresses:  
+  layerDefinition.regionId  
+    ? getLandscapeRegionAddresses(  
+        layerDefinition.regionId  
+      )  
+    : EMPTY_FROZEN_ARRAY,  
 
-    zoneDescriptor,
+zoneDescriptor,  
 
-    zoneRenderTargetRole,
+zoneRenderTargetRole,  
 
-    objectBindings,
+objectBindings,  
 
-    sourceSpine:
-      H_EARTH_3D_PUBLIC_STAGE_SOURCE_REFERENCES,
+sourceSpine:  
+  H_EARTH_3D_PUBLIC_STAGE_SOURCE_REFERENCES,  
 
-    descriptorOnly:
-      true
-  });
+descriptorOnly:  
+  true
+
+});
 }
 
 export function resolvePublicStageLayer(
-  layerId
+layerId
 ) {
-  const definition =
-    getLayerDefinition(layerId);
+const definition =
+getLayerDefinition(layerId);
 
-  if (!definition) {
-    return null;
-  }
+if (!definition) {
+return null;
+}
 
-  const sourceBinding =
-    resolveLayerSourceBinding(definition);
+const sourceBinding =
+resolveLayerSourceBinding(definition);
 
-  const addressCount =
-    sourceBinding?.regionAddresses?.length ||
-    0;
+const addressCount =
+sourceBinding?.regionAddresses?.length ||
+0;
 
-  const sourceObjectCount =
-    sourceBinding?.objectBindings?.filter(
-      (binding) => (
-        binding.sourcePresent === true
-      )
-    ).length ||
-    0;
+const sourceObjectCount =
+sourceBinding?.objectBindings?.filter(
+(binding) => (
+binding.sourcePresent === true
+)
+).length ||
+0;
 
-  return Object.freeze({
-    layerId:
-      definition.layerId,
+return Object.freeze({
+layerId:
+definition.layerId,
 
-    order:
-      definition.order,
+order:  
+  definition.order,  
 
-    label:
-      definition.label,
+label:  
+  definition.label,  
 
-    role:
-      definition.role,
+role:  
+  definition.role,  
 
-    regionId:
-      definition.regionId,
+regionId:  
+  definition.regionId,  
 
-    primaryZoneId:
-      definition.primaryZoneId,
+primaryZoneId:  
+  definition.primaryZoneId,  
 
-    secondaryZoneId:
-      definition.secondaryZoneId,
+secondaryZoneId:  
+  definition.secondaryZoneId,  
 
-    objectIds:
-      definition.objectIds,
+objectIds:  
+  definition.objectIds,  
 
-    surfaceFamily:
-      definition.surfaceFamily,
+surfaceFamily:  
+  definition.surfaceFamily,  
 
-    materialKey:
-      definition.materialKey,
+materialKey:  
+  definition.materialKey,  
 
-    primitiveIntent:
-      definition.primitiveIntent,
+primitiveIntent:  
+  definition.primitiveIntent,  
 
-    depth:
-      definition.depth,
+depth:  
+  definition.depth,  
 
-    worldGeometryRole:
-      definition.worldGeometryRole,
+worldGeometryRole:  
+  definition.worldGeometryRole,  
 
-    inspectionRole:
-      definition.inspectionRole,
+inspectionRole:  
+  definition.inspectionRole,  
 
-    publicStageReadable:
-      definition.publicStageReadable,
+publicStageReadable:  
+  definition.publicStageReadable,  
 
-    sourceBinding,
+sourceBinding,  
 
-    sourceAddressCount:
-      addressCount,
+sourceAddressCount:  
+  addressCount,  
 
-    sourceObjectCount,
+sourceObjectCount,  
 
-    rendererMayCreateGeometry:
-      definition.rendererMayCreateGeometry ===
-      true,
+rendererMayCreateGeometry:  
+  definition.rendererMayCreateGeometry ===  
+  true,  
 
-    compositorCreatesGeometry:
-      false,
+compositorCreatesGeometry:  
+  false,  
 
-    descriptorOnly:
-      true,
+descriptorOnly:  
+  true,  
 
-    claimFlags:
-      Object.freeze({
-        compositionDescriptor:
-          true,
+claimFlags:  
+  Object.freeze({  
+    compositionDescriptor:  
+      true,  
 
-        rendererInputDescriptor:
-          true,
+    rendererInputDescriptor:  
+      true,  
 
-        domDescriptorOnly:
-          true,
+    domDescriptorOnly:  
+      true,  
 
-        geometryCreated:
-          false,
+    geometryCreated:  
+      false,  
 
-        rendererActivated:
-          false,
+    rendererActivated:  
+      false,  
 
-        runtimeActivated:
-          false,
+    runtimeActivated:  
+      false,  
 
-        visualPassClaim:
-          false,
+    visualPassClaim:  
+      false,  
 
-        validationClaim:
-          false,
+    validationClaim:  
+      false,  
 
-        productionClaim:
-          false,
+    productionClaim:  
+      false,  
 
-        deploymentClaim:
-          false,
+    deploymentClaim:  
+      false,  
 
-        traversalClaim:
-          false,
+    traversalClaim:  
+      false,  
 
-        physicsClaim:
-          false,
+    physicsClaim:  
+      false,  
 
-        matrixCollapse:
-          false
-      }),
+    matrixCollapse:  
+      false  
+  }),  
 
-    boundary:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS
-  });
+boundary:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS
+
+});
 }
 
 export function resolvePublicStageLayers() {
-  return Object.freeze(
-    H_EARTH_3D_PUBLIC_STAGE_LAYER_ORDER
-      .map(resolvePublicStageLayer)
-      .filter(Boolean)
-  );
+return Object.freeze(
+H_EARTH_3D_PUBLIC_STAGE_LAYER_ORDER
+.map(resolvePublicStageLayer)
+.filter(Boolean)
+);
 }
 
 export function resolvePublicStageZoneComposition(
-  layers = resolvePublicStageLayers()
+layers = resolvePublicStageLayers()
 ) {
-  const entries = {};
+const entries = {};
 
-  layers.forEach((layer) => {
-    const zoneId =
-      layer.primaryZoneId;
+layers.forEach((layer) => {
+const zoneId =
+layer.primaryZoneId;
 
-    if (!zoneId) {
-      return;
-    }
+if (!zoneId) {  
+  return;  
+}  
 
-    if (!entries[zoneId]) {
-      entries[zoneId] = {
-        zoneId,
+if (!entries[zoneId]) {  
+  entries[zoneId] = {  
+    zoneId,  
+    layerIds: [],  
+    regionIds: new Set(),  
+    objectIds: new Set(),  
+    publicStageReadableLayerIds: [],  
+    rendererGeometryEligibleLayerIds: []  
+  };  
+}  
 
-        layerIds:
-          [],
+entries[zoneId]  
+  .layerIds.push(layer.layerId);  
 
-        regionIds:
-          new Set(),
+if (layer.regionId) {  
+  entries[zoneId]  
+    .regionIds.add(layer.regionId);  
+}  
 
-        objectIds:
-          new Set(),
+layer.objectIds.forEach(  
+  (objectId) => {  
+    entries[zoneId]  
+      .objectIds.add(objectId);  
+  }  
+);  
 
-        publicStageReadableLayerIds:
-          [],
+if (  
+  layer.publicStageReadable === true  
+) {  
+  entries[zoneId]  
+    .publicStageReadableLayerIds  
+    .push(layer.layerId);  
+}  
 
-        rendererGeometryEligibleLayerIds:
-          []
-      };
-    }
+if (  
+  layer.rendererMayCreateGeometry ===  
+  true  
+) {  
+  entries[zoneId]  
+    .rendererGeometryEligibleLayerIds  
+    .push(layer.layerId);  
+}
 
-    entries[zoneId]
-      .layerIds.push(layer.layerId);
+});
 
-    if (layer.regionId) {
-      entries[zoneId]
-        .regionIds.add(layer.regionId);
-    }
+return Object.freeze(
+Object.fromEntries(
+Object.entries(entries).map(
+([zoneId, entry]) => [
+zoneId,
 
-    layer.objectIds.forEach(
-      (objectId) => {
-        entries[zoneId]
-          .objectIds.add(objectId);
-      }
-    );
+Object.freeze({  
+        zoneId,  
 
-    if (
-      layer.publicStageReadable === true
-    ) {
-      entries[zoneId]
-        .publicStageReadableLayerIds
-        .push(layer.layerId);
-    }
+        zoneDescriptor:  
+          getZoneDescriptors()?.[  
+            zoneId  
+          ] || null,  
 
-    if (
-      layer.rendererMayCreateGeometry ===
-      true
-    ) {
-      entries[zoneId]
-        .rendererGeometryEligibleLayerIds
-        .push(layer.layerId);
-    }
-  });
+        zoneRenderTargetRole:  
+          getZoneRenderTargetRoles()?.[  
+            zoneId  
+          ] || null,  
 
-  return Object.freeze(
-    Object.fromEntries(
-      Object.entries(entries).map(
-        ([zoneId, entry]) => [
-          zoneId,
+        zoneLandscapeSummary:  
+          getLandscapeZoneSummary()?.[  
+            zoneId  
+          ] || null,  
 
-          Object.freeze({
-            zoneId,
+        layerIds:  
+          Object.freeze([  
+            ...entry.layerIds  
+          ]),  
 
-            zoneDescriptor:
-              getZoneDescriptors()?.[
-                zoneId
-              ] || null,
+        regionIds:  
+          Object.freeze([  
+            ...entry.regionIds  
+          ]),  
 
-            zoneRenderTargetRole:
-              getZoneRenderTargetRoles()?.[
-                zoneId
-              ] || null,
+        objectIds:  
+          Object.freeze([  
+            ...entry.objectIds  
+          ]),  
 
-            zoneLandscapeSummary:
-              getLandscapeZoneSummary()?.[
-                zoneId
-              ] || null,
+        publicStageReadableLayerIds:  
+          Object.freeze([  
+            ...entry  
+              .publicStageReadableLayerIds  
+          ]),  
 
-            layerIds:
-              Object.freeze([
-                ...entry.layerIds
-              ]),
+        rendererGeometryEligibleLayerIds:  
+          Object.freeze([  
+            ...entry  
+              .rendererGeometryEligibleLayerIds  
+          ]),  
 
-            regionIds:
-              Object.freeze([
-                ...entry.regionIds
-              ]),
+        descriptorOnly:  
+          true  
+      })  
+    ]  
+  )  
+)
 
-            objectIds:
-              Object.freeze([
-                ...entry.objectIds
-              ]),
-
-            publicStageReadableLayerIds:
-              Object.freeze([
-                ...entry
-                  .publicStageReadableLayerIds
-              ]),
-
-            rendererGeometryEligibleLayerIds:
-              Object.freeze([
-                ...entry
-                  .rendererGeometryEligibleLayerIds
-              ]),
-
-            descriptorOnly:
-              true
-          })
-        ]
-      )
-    )
-  );
+);
 }
 
 export function resolvePublicStageInspectionComposition(
-  layers = resolvePublicStageLayers()
+layers = resolvePublicStageLayers()
 ) {
-  const primaryLayers =
-    layers.filter((layer) => (
-      layer.inspectionRole ===
-        'PRIMARY_INSPECTION' ||
-      layer.inspectionRole ===
-        'PRIMARY_ACTION_ANCHOR'
-    ));
+const primaryLayers =
+layers.filter((layer) => (
+layer.inspectionRole ===
+'PRIMARY_INSPECTION' ||
+layer.inspectionRole ===
+'PRIMARY_ACTION_ANCHOR'
+));
 
-  const supportingLayers =
-    layers.filter((layer) => (
-      layer.inspectionRole ===
-      'SUPPORTING_INSPECTION'
-    ));
+const supportingLayers =
+layers.filter((layer) => (
+layer.inspectionRole ===
+'SUPPORTING_INSPECTION'
+));
 
-  const secondarySurfaceLayers =
-    layers.filter((layer) => (
-      layer.inspectionRole ===
-      'SECONDARY_SURFACE_CONTEXT'
-    ));
+const secondarySurfaceLayers =
+layers.filter((layer) => (
+layer.inspectionRole ===
+'SECONDARY_SURFACE_CONTEXT'
+));
 
-  return Object.freeze({
-    compositionId:
-      'H_EARTH_3D_PUBLIC_STAGE_INSPECTION_COMPOSITION',
+return Object.freeze({
+compositionId:
+'H_EARTH_3D_PUBLIC_STAGE_INSPECTION_COMPOSITION',
 
-    firstAction:
-      'Inspect Ground',
+firstAction:  
+  'Inspect Ground',  
 
-    firstReadout:
-      'Ground Condition Read',
+firstReadout:  
+  'Ground Condition Read',  
 
-    firstReceipt:
-      'H_EARTH_GROUND_INSPECTION_RECEIPT',
+firstReceipt:  
+  'H_EARTH_GROUND_INSPECTION_RECEIPT',  
 
-    primaryFocusObjectId:
-      'OBJ_002_FOREGROUND_WET_SAND',
+primaryFocusObjectId:  
+  'OBJ_002_FOREGROUND_WET_SAND',  
 
-    primaryLayerIds:
-      Object.freeze(
-        primaryLayers.map(
-          (layer) => layer.layerId
-        )
-      ),
+primaryLayerIds:  
+  Object.freeze(  
+    primaryLayers.map(  
+      (layer) => layer.layerId  
+    )  
+  ),  
 
-    supportingLayerIds:
-      Object.freeze(
-        supportingLayers.map(
-          (layer) => layer.layerId
-        )
-      ),
+supportingLayerIds:  
+  Object.freeze(  
+    supportingLayers.map(  
+      (layer) => layer.layerId  
+    )  
+  ),  
 
-    secondarySurfaceLayerIds:
-      Object.freeze(
-        secondarySurfaceLayers.map(
-          (layer) => layer.layerId
-        )
-      ),
+secondarySurfaceLayerIds:  
+  Object.freeze(  
+    secondarySurfaceLayers.map(  
+      (layer) => layer.layerId  
+    )  
+  ),  
 
-    primaryObjectIds:
-      Object.freeze(
-        primaryLayers.flatMap(
-          (layer) => layer.objectIds
-        )
-      ),
+primaryObjectIds:  
+  Object.freeze(  
+    primaryLayers.flatMap(  
+      (layer) => layer.objectIds  
+    )  
+  ),  
 
-    supportingObjectIds:
-      Object.freeze(
-        supportingLayers.flatMap(
-          (layer) => layer.objectIds
-        )
-      ),
+supportingObjectIds:  
+  Object.freeze(  
+    supportingLayers.flatMap(  
+      (layer) => layer.objectIds  
+    )  
+  ),  
 
-    primaryInspectionSurfacePresent:
-      primaryLayers.some((layer) => (
-        layer.objectIds.includes(
-          'OBJ_002_FOREGROUND_WET_SAND'
-        )
-      )),
+primaryInspectionSurfacePresent:  
+  primaryLayers.some((layer) => (  
+    layer.objectIds.includes(  
+      'OBJ_002_FOREGROUND_WET_SAND'  
+    )  
+  )),  
 
-    inspectionAnchorPresent:
-      primaryLayers.some((layer) => (
-        layer.objectIds.includes(
-          'OBJ_001_GROUND_SPAWN_ANCHOR'
-        )
-      )),
+inspectionAnchorPresent:  
+  primaryLayers.some((layer) => (  
+    layer.objectIds.includes(  
+      'OBJ_001_GROUND_SPAWN_ANCHOR'  
+    )  
+  )),  
 
-    descriptorOnly:
-      true,
+descriptorOnly:  
+  true,  
 
-    createsInteraction:
-      false,
+createsInteraction:  
+  false,  
 
-    createsReceipt:
-      false,
+createsReceipt:  
+  false,  
 
-    activatesInspection:
-      false
-  });
+activatesInspection:  
+  false
+
+});
 }
 
 export function resolvePublicStageContextComposition(
-  layers = resolvePublicStageLayers()
+layers = resolvePublicStageLayers()
 ) {
-  const manorLayer =
-    layers.find((layer) => (
-      layer.layerId ===
-      H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
-        .manorBluff
-    )) ||
-    null;
+const manorLayer =
+layers.find((layer) => (
+layer.layerId ===
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
+.manorBluff
+)) ||
+null;
 
-  const offshoreLayer =
-    layers.find((layer) => (
-      layer.layerId ===
-      H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
-        .offshoreIslets
-    )) ||
-    null;
+const offshoreLayer =
+layers.find((layer) => (
+layer.layerId ===
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
+.offshoreIslets
+)) ||
+null;
 
-  const atmosphericLayers =
-    layers.filter((layer) => (
-      layer.layerId ===
-        H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
-          .sky ||
-      layer.layerId ===
-        H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
-          .airHaze ||
-      layer.layerId ===
-        H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
-          .horizon
-    ));
+const atmosphericLayers =
+layers.filter((layer) => (
+layer.layerId ===
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
+.sky ||
+layer.layerId ===
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
+.airHaze ||
+layer.layerId ===
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
+.horizon
+));
 
-  return Object.freeze({
-    compositionId:
-      'H_EARTH_3D_PUBLIC_STAGE_CONTEXT_COMPOSITION',
+return Object.freeze({
+compositionId:
+'H_EARTH_3D_PUBLIC_STAGE_CONTEXT_COMPOSITION',
 
-    manor:
-      manorLayer,
+manor:  
+  manorLayer,  
 
-    offshore:
-      offshoreLayer,
+offshore:  
+  offshoreLayer,  
 
-    atmosphericLayerIds:
-      Object.freeze(
-        atmosphericLayers.map(
-          (layer) => layer.layerId
-        )
-      ),
+atmosphericLayerIds:  
+  Object.freeze(  
+    atmosphericLayers.map(  
+      (layer) => layer.layerId  
+    )  
+  ),  
 
-    matrixSeparation:
-      Object.freeze({
-        hEarth:
-          'Ground-View Matrix',
+matrixSeparation:  
+  Object.freeze({  
+    hEarth:  
+      'Ground-View Matrix',  
 
-        hearth:
-          'support/control context only',
+    hearth:  
+      'support/control context only',  
 
-        audralia:
-          'planetary-world context only',
+    audralia:  
+      'planetary-world context only',  
 
-        matrixCollapse:
-          false
-      }),
+    matrixCollapse:  
+      false  
+  }),  
 
-    manorRules:
-      Object.freeze({
-        elevatedAboveShoreline:
-          true,
+manorRules:  
+  Object.freeze({  
+    elevatedAboveShoreline:  
+      true,  
 
-        setBackFromShoreline:
-          true,
+    setBackFromShoreline:  
+      true,  
 
-        hillOrCliffContext:
-          true,
+    hillOrCliffContext:  
+      true,  
 
-        exteriorOnly:
-          true,
+    exteriorOnly:  
+      true,  
 
-        traversable:
-          false,
+    traversable:  
+      false,  
 
-        interiorAccess:
-          false
-      }),
+    interiorAccess:  
+      false  
+  }),  
 
-    offshoreRules:
-      Object.freeze({
-        contextOnly:
-          true,
+offshoreRules:  
+  Object.freeze({  
+    contextOnly:  
+      true,  
 
-        isletContext:
-          true,
+    isletContext:  
+      true,  
 
-        distantTraversalAuthorized:
-          false
-      }),
+    distantTraversalAuthorized:  
+      false  
+  }),  
 
-    atmosphericRules:
-      Object.freeze({
-        primaryZoneId:
-          'ZONE_003_WATER_SURFACE_ZONE',
+atmosphericRules:  
+  Object.freeze({  
+    primaryZoneId:  
+      'ZONE_003_WATER_SURFACE_ZONE',  
 
-        secondaryZoneId:
-          'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
+    secondaryZoneId:  
+      'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',  
 
-        createsWeatherSimulation:
-          false,
+    createsWeatherSimulation:  
+      false,  
 
-        createsFluidSimulation:
-          false
-      }),
+    createsFluidSimulation:  
+      false  
+  }),  
 
-    descriptorOnly:
-      true
-  });
+descriptorOnly:  
+  true
+
+});
 }
 
 export function resolvePublicStageOverlayAttachment() {
-  const layer =
-    resolvePublicStageLayer(
-      H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
-        .overlayAttachment
-    );
+const layer =
+resolvePublicStageLayer(
+H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS
+.overlayAttachment
+);
 
-  return Object.freeze({
-    attachmentId:
-      'H_EARTH_3D_PUBLIC_STAGE_OVERLAY_ATTACHMENT',
+return Object.freeze({
+attachmentId:
+'H_EARTH_3D_PUBLIC_STAGE_OVERLAY_ATTACHMENT',
 
-    layer,
+layer,  
 
-    firstAction:
-      'Inspect Ground',
+firstAction:  
+  'Inspect Ground',  
 
-    readoutId:
-      'Ground Condition Read',
+readoutId:  
+  'Ground Condition Read',  
 
-    statusAttachmentTarget:
-      'h-earth-3d-status',
+statusAttachmentTarget:  
+  'h-earth-3d-status',  
 
-    fallbackAttachmentTarget:
-      'h-earth-3d-fallback',
+fallbackAttachmentTarget:  
+  'h-earth-3d-fallback',  
 
-    hudAttachmentTarget:
-      'h-earth-3d-hud',
+hudAttachmentTarget:  
+  'h-earth-3d-hud',  
 
-    inspectionPanelAttachmentTarget:
-      'h-earth-3d-inspection-panel',
+inspectionPanelAttachmentTarget:  
+  'h-earth-3d-inspection-panel',  
 
-    compactOverlay:
-      true,
+compactOverlay:  
+  true,  
 
-    developerDiagnosticsCollapsedByDefault:
-      true,
+developerDiagnosticsCollapsedByDefault:  
+  true,  
 
-    worldGeometryParticipant:
-      false,
+worldGeometryParticipant:  
+  false,  
 
-    rendererGeometryParticipant:
-      false,
+rendererGeometryParticipant:  
+  false,  
 
-    descriptorOnly:
-      true,
+descriptorOnly:  
+  true,  
 
-    createsDom:
-      false,
+createsDom:  
+  false,  
 
-    createsCss:
-      false
-  });
+createsCss:  
+  false
+
+});
 }
 
 export function resolvePublicStageRendererHandoff(
-  layers = resolvePublicStageLayers()
+layers = resolvePublicStageLayers()
 ) {
-  return Object.freeze({
-    handoffId:
-      'H_EARTH_3D_PUBLIC_STAGE_RENDERER_HANDOFF',
+return Object.freeze({
+handoffId:
+'H_EARTH_3D_PUBLIC_STAGE_RENDERER_HANDOFF',
 
-    compositorContractId:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_CONTRACT
-        .contractId,
+compositorContractId:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_CONTRACT  
+    .contractId,  
 
-    intendedRendererFile:
-      '/showroom/globe/h-earth/renderer.js',
+intendedRendererFile:  
+  '/showroom/globe/h-earth/renderer.js',  
 
-    intendedRendererRenewal:
-      'STEP_034O_PUBLIC_STAGE_RENDERER_CONSUMPTION_RENEWAL',
+intendedRendererRenewal:  
+  'STEP_034O_PUBLIC_STAGE_RENDERER_CONSUMPTION_RENEWAL',  
 
-    rendererInputClass:
-      'PUBLIC_STAGE_COMPOSITION_DESCRIPTOR',
+rendererInputClass:  
+  'PUBLIC_STAGE_COMPOSITION_DESCRIPTOR',  
 
-    orderedLayerIds:
-      Object.freeze(
-        layers.map(
-          (layer) => layer.layerId
-        )
-      ),
+orderedLayerIds:  
+  Object.freeze(  
+    layers.map(  
+      (layer) => layer.layerId  
+    )  
+  ),  
 
-    rendererGeometryEligibleLayerIds:
-      Object.freeze(
-        layers
-          .filter((layer) => (
-            layer.rendererMayCreateGeometry ===
-            true
-          ))
-          .map((layer) => layer.layerId)
-      ),
+rendererGeometryEligibleLayerIds:  
+  Object.freeze(  
+    layers  
+      .filter((layer) => (  
+        layer.rendererMayCreateGeometry ===  
+        true  
+      ))  
+      .map((layer) => layer.layerId)  
+  ),  
 
-    nonGeometryLayerIds:
-      Object.freeze(
-        layers
-          .filter((layer) => (
-            layer.rendererMayCreateGeometry !==
-            true
-          ))
-          .map((layer) => layer.layerId)
-      ),
+nonGeometryLayerIds:  
+  Object.freeze(  
+    layers  
+      .filter((layer) => (  
+        layer.rendererMayCreateGeometry !==  
+        true  
+      ))  
+      .map((layer) => layer.layerId)  
+  ),  
 
-    rendererMustConsumeCompositorAuthority:
-      true,
+rendererMustConsumeCompositorAuthority:  
+  true,  
 
-    rendererMustNotReinventLayerOrder:
-      true,
+rendererMustNotReinventLayerOrder:  
+  true,  
 
-    rendererMustNotReinventZoneComposition:
-      true,
+rendererMustNotReinventZoneComposition:  
+  true,  
 
-    rendererMustNotReinventLandscapeComposition:
-      true,
+rendererMustNotReinventLandscapeComposition:  
+  true,  
 
-    rendererMayMaterializeGeometry:
-      true,
+rendererMayMaterializeGeometry:  
+  true,  
 
-    compositorMaterializesGeometry:
-      false,
+compositorMaterializesGeometry:  
+  false,  
 
-    nodeFactoryInvocationOwnedDownstream:
-      true,
+nodeFactoryInvocationOwnedDownstream:  
+  true,  
 
-    geometryPortInvocationOwnedDownstream:
-      true,
+geometryPortInvocationOwnedDownstream:  
+  true,  
 
-    descriptorOnly:
-      true,
+descriptorOnly:  
+  true,  
 
-    rendererActivated:
-      false,
+rendererActivated:  
+  false,  
 
-    rendererPassClaim:
-      false,
+rendererPassClaim:  
+  false,  
 
-    visualPassClaim:
-      false,
+visualPassClaim:  
+  false,  
 
-    validationClaim:
-      false
-  });
+validationClaim:  
+  false
+
+});
 }
 
 export function resolvePublicStageComposition() {
-  const orderedLayers =
-    resolvePublicStageLayers();
+const orderedLayers =
+resolvePublicStageLayers();
 
-  const cameraFrame =
-    resolvePublicStageCameraFrame();
+const cameraFrame =
+resolvePublicStageCameraFrame();
 
-  const zoneComposition =
-    resolvePublicStageZoneComposition(
-      orderedLayers
-    );
+const zoneComposition =
+resolvePublicStageZoneComposition(
+orderedLayers
+);
 
-  const inspectionComposition =
-    resolvePublicStageInspectionComposition(
-      orderedLayers
-    );
+const inspectionComposition =
+resolvePublicStageInspectionComposition(
+orderedLayers
+);
 
-  const contextComposition =
-    resolvePublicStageContextComposition(
-      orderedLayers
-    );
+const contextComposition =
+resolvePublicStageContextComposition(
+orderedLayers
+);
 
-  const overlayAttachment =
-    resolvePublicStageOverlayAttachment();
+const overlayAttachment =
+resolvePublicStageOverlayAttachment();
 
-  const rendererHandoff =
-    resolvePublicStageRendererHandoff(
-      orderedLayers
-    );
+const rendererHandoff =
+resolvePublicStageRendererHandoff(
+orderedLayers
+);
 
-  const landscapeMap =
-    getLandscapeMap();
+const landscapeMap =
+getLandscapeMap();
 
-  const landscapeAddressCount =
-    Object.keys(landscapeMap).length;
+const landscapeAddressCount =
+Object.keys(landscapeMap).length;
 
-  const rows14Profiles =
-    typeof LandscapeLatticeModule
-      .resolveRegionProfilesForRow ===
-    'function'
-      ? LandscapeLatticeModule
-          .resolveRegionProfilesForRow(14)
-      : EMPTY_FROZEN_ARRAY;
+const rows14Profiles =
+typeof LandscapeLatticeModule
+.resolveRegionProfilesForRow ===
+'function'
+? LandscapeLatticeModule
+.resolveRegionProfilesForRow(14)
+: EMPTY_FROZEN_ARRAY;
 
-  const rows15Profiles =
-    typeof LandscapeLatticeModule
-      .resolveRegionProfilesForRow ===
-    'function'
-      ? LandscapeLatticeModule
-          .resolveRegionProfilesForRow(15)
-      : EMPTY_FROZEN_ARRAY;
+const rows15Profiles =
+typeof LandscapeLatticeModule
+.resolveRegionProfilesForRow ===
+'function'
+? LandscapeLatticeModule
+.resolveRegionProfilesForRow(15)
+: EMPTY_FROZEN_ARRAY;
 
-  return Object.freeze({
-    compositionId:
-      'H_EARTH_3D_PUBLIC_STAGE_COMPOSITION',
+return Object.freeze({
+compositionId:
+'H_EARTH_3D_PUBLIC_STAGE_COMPOSITION',
 
-    contractId:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_CONTRACT
-        .contractId,
+contractId:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_CONTRACT  
+    .contractId,  
 
-    step:
-      'STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE',
+step:  
+  'STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE',  
 
-    status:
-      'PUBLIC_STAGE_VISUAL_COMPOSITION_DESCRIPTOR_DEFINED',
+status:  
+  'PUBLIC_STAGE_VISUAL_COMPOSITION_DESCRIPTOR_DEFINED',  
 
-    matrix:
-      'H-Earth',
+matrix:  
+  'H-Earth',  
 
-    matrixRole:
-      'Ground-View Matrix',
+matrixRole:  
+  'Ground-View Matrix',  
 
-    activeCell:
-      'H_EARTH_GROUND_CELL_001',
+activeCell:  
+  'H_EARTH_GROUND_CELL_001',  
 
-    sceneIdentity:
-      'earth-water-air-survival-shoreline-manor',
+sceneIdentity:  
+  'earth-water-air-survival-shoreline-manor',  
 
-    dependencyDirection:
-      'SOURCE_SPINE_TO_COMPOSITOR_TO_RENDERER_TO_PUBLIC_STAGE',
+dependencyDirection:  
+  'SOURCE_SPINE_TO_COMPOSITOR_TO_RENDERER_TO_PUBLIC_STAGE',  
 
-    sourceReferences:
-      H_EARTH_3D_PUBLIC_STAGE_SOURCE_REFERENCES,
+sourceReferences:  
+  H_EARTH_3D_PUBLIC_STAGE_SOURCE_REFERENCES,  
 
-    cameraFrame,
+cameraFrame,  
 
-    viewportModel:
-      H_EARTH_3D_PUBLIC_STAGE_VIEWPORT_MODEL,
+viewportModel:  
+  H_EARTH_3D_PUBLIC_STAGE_VIEWPORT_MODEL,  
 
-    depthBands:
-      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS,
+depthBands:  
+  H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS,  
 
-    orderedLayerIds:
-      H_EARTH_3D_PUBLIC_STAGE_LAYER_ORDER,
+orderedLayerIds:  
+  H_EARTH_3D_PUBLIC_STAGE_LAYER_ORDER,  
 
-    orderedLayers,
+orderedLayers,  
 
-    layerCount:
-      orderedLayers.length,
+layerCount:  
+  orderedLayers.length,  
 
-    zoneComposition,
+zoneComposition,  
 
-    inspectionComposition,
+inspectionComposition,  
 
-    contextComposition,
+contextComposition,  
 
-    overlayAttachment,
+overlayAttachment,  
 
-    rendererHandoff,
+rendererHandoff,  
 
-    landscapeLattice:
-      Object.freeze({
-        aggregate:
-          getLandscapeAggregate(),
+landscapeLattice:  
+  Object.freeze({  
+    aggregate:  
+      getLandscapeAggregate(),  
 
-        map:
-          landscapeMap,
+    map:  
+      landscapeMap,  
 
-        addressCount:
-          landscapeAddressCount,
+    addressCount:  
+      landscapeAddressCount,  
 
-        expectedAddressCount:
-          256,
+    expectedAddressCount:  
+      256,  
 
-        addressCountMatchesExpected:
-          landscapeAddressCount === 256,
+    addressCountMatchesExpected:  
+      landscapeAddressCount === 256,  
 
-        regionSummary:
-          getLandscapeRegionSummary(),
+    regionSummary:  
+      getLandscapeRegionSummary(),  
 
-        zoneSummary:
-          getLandscapeZoneSummary(),
+    zoneSummary:  
+      getLandscapeZoneSummary(),  
 
-        objectHintSummary:
-          getLandscapeObjectHintSummary(),
+    objectHintSummary:  
+      getLandscapeObjectHintSummary(),  
 
-        row14Profiles,
+    row14Profiles:  
+      rows14Profiles,  
 
-        row15Profiles,
+    row15Profiles:  
+      rows15Profiles,  
 
-        row14ProfileCount:
-          rows14Profiles.length,
+    row14ProfileCount:  
+      rows14Profiles.length,  
 
-        row15ProfileCount:
-          rows15Profiles.length,
+    row15ProfileCount:  
+      rows15Profiles.length,  
 
-        rows14And15ReturnBothProfiles:
-          rows14Profiles.length === 2 &&
-          rows15Profiles.length === 2,
+    rows14And15ReturnBothProfiles:  
+      rows14Profiles.length === 2 &&  
+      rows15Profiles.length === 2,  
 
-        descriptorOnly:
-          true,
+    descriptorOnly:  
+      true,  
 
-        runtimeLatticeActivation:
-          false
-      }),
+    runtimeLatticeActivation:  
+      false  
+  }),  
 
-    canonicalSceneProgression:
-      Object.freeze([
-        'sky',
-        'air haze',
-        'horizon',
-        'offshore rock stacks and islets',
-        'elevated Mirror Manor / bluff context',
-        'water surface plane',
-        'nearshore wave band',
-        'shoreline foam line',
-        'dry-sand transition',
-        'foreground wet sand',
-        'tide pools',
-        'small beach stones',
-        'foreground jagged rocks',
-        'inspection anchor',
-        'overlay/readout attachment descriptor'
-      ]),
+canonicalSceneProgression:  
+  Object.freeze([  
+    'sky',  
+    'air haze',  
+    'horizon',  
+    'offshore rock stacks and islets',  
+    'elevated Mirror Manor / bluff context',  
+    'water surface plane',  
+    'nearshore wave band',  
+    'shoreline foam line',  
+    'dry-sand transition',  
+    'foreground wet sand',  
+    'tide pools',  
+    'small beach stones',  
+    'foreground jagged rocks',  
+    'inspection anchor',  
+    'overlay/readout attachment descriptor'  
+  ]),  
 
-    currentSourceCompositionAuthority:
-      true,
+currentSourceCompositionAuthority:  
+  true,  
 
-    rendererIndependent:
-      true,
+rendererIndependent:  
+  true,  
 
-    rendererImported:
-      false,
+rendererImported:  
+  false,  
 
-    legacyRendererSceneConsumed:
-      false,
+legacyRendererSceneConsumed:  
+  false,  
 
-    immersiveCompositionDescriptorReady:
-      true,
+immersiveCompositionDescriptorReady:  
+  true,  
 
-    rendererConsumptionReady:
-      true,
+rendererConsumptionReady:  
+  true,  
 
-    publicStageConsumptionReady:
-      true,
+publicStageConsumptionReady:  
+  true,  
 
-    rendererGeometryCreated:
-      false,
+rendererGeometryCreated:  
+  false,  
 
-    terrainGeometryCreated:
-      false,
+terrainGeometryCreated:  
+  false,  
 
-    domCreated:
-      false,
+domCreated:  
+  false,  
 
-    cssCreated:
-      false,
+cssCreated:  
+  false,  
 
-    routeActivated:
-      false,
+routeActivated:  
+  false,  
 
-    runtimeActivated:
-      false,
+runtimeActivated:  
+  false,  
 
-    rendererActivated:
-      false,
+rendererActivated:  
+  false,  
 
-    visualPassClaim:
-      false,
+visualPassClaim:  
+  false,  
 
-    validationClaim:
-      false,
+validationClaim:  
+  false,  
 
-    productionClaim:
-      false,
+productionClaim:  
+  false,  
 
-    deploymentClaim:
-      false,
+deploymentClaim:  
+  false,  
 
-    matrixCollapse:
-      false,
+matrixCollapse:  
+  false,  
 
-    boundary:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS
-  });
+boundary:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS
+
+});
 }
 
 export const H_EARTH_3D_PUBLIC_STAGE_COMPOSITION =
-  resolvePublicStageComposition();
+resolvePublicStageComposition();
 
 export const H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RECEIPT =
-  Object.freeze({
-    receiptType:
-      'H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RECEIPT',
+Object.freeze({
+receiptType:
+'H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RECEIPT',
 
-    contractId:
-      'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_v1',
+contractId:  
+  'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_v1',  
 
-    renewsContractId:
-      'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_032F_RENDERER_032D_PARENT_DESCRIPTOR_COMPOSITION_ALIGNMENT_v1',
+renewsContractId:  
+  'H_EARTH_3D_COMPOSITOR_FILE_BIRTH_STEP_032F_RENDERER_032D_PARENT_DESCRIPTOR_COMPOSITION_ALIGNMENT_v1',  
 
-    file:
-      '/showroom/globe/h-earth/compositor.js',
+file:  
+  '/showroom/globe/h-earth/compositor.js',  
 
-    step:
-      'STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE',
+step:  
+  'STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE',  
 
-    status:
-      'PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_CANDIDATE_PENDING_INSTALLATION_AND_BACKUP',
+status:  
+  'PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_CANDIDATE_PENDING_INSTALLATION_AND_BACKUP',  
 
-    matrix:
-      'H-Earth',
+matrix:  
+  'H-Earth',  
 
-    matrixRole:
-      'Ground-View Matrix',
+matrixRole:  
+  'Ground-View Matrix',  
 
-    activeCell:
-      'H_EARTH_GROUND_CELL_001',
+activeCell:  
+  'H_EARTH_GROUND_CELL_001',  
 
-    sceneIdentity:
-      'earth-water-air-survival-shoreline-manor',
+sceneIdentity:  
+  'earth-water-air-survival-shoreline-manor',  
 
-    firstAction:
-      'Inspect Ground',
+firstAction:  
+  'Inspect Ground',  
 
-    firstReadout:
-      'Ground Condition Read',
+firstReadout:  
+  'Ground Condition Read',  
 
-    firstReceipt:
-      'H_EARTH_GROUND_INSPECTION_RECEIPT',
+firstReceipt:  
+  'H_EARTH_GROUND_INSPECTION_RECEIPT',  
 
-    dependencyDirectionCorrected:
-      true,
+dependencyDirectionCorrected:  
+  true,  
 
-    currentDependencyDirection:
-      'CAPACITY_ENVIRONMENT_SOURCE_SPINE_TO_COMPOSITOR_TO_RENDERER_TO_PUBLIC_STAGE',
+currentDependencyDirection:  
+  'CAPACITY_ENVIRONMENT_SOURCE_SPINE_TO_COMPOSITOR_TO_RENDERER_TO_PUBLIC_STAGE',  
 
-    legacyRendererParentDependencyRetired:
-      true,
+legacyRendererParentDependencyRetired:  
+  true,  
 
-    rendererModuleImported:
-      false,
+rendererModuleImported:  
+  false,  
 
-    legacyCandidateRenderSceneConsumed:
-      false,
+legacyCandidateRenderSceneConsumed:  
+  false,  
 
-    capacityReferenced:
-      true,
+capacityReferenced:  
+  true,  
 
-    environmentReferenced:
-      true,
+environmentReferenced:  
+  true,  
 
-    step034IMatrixBoundaryReferenced:
-      true,
+step034IMatrixBoundaryReferenced:  
+  true,  
 
-    step034JObjectAuthorityReferenced:
-      true,
+step034JObjectAuthorityReferenced:  
+  true,  
 
-    step034KZoneAuthorityReferenced:
-      true,
+step034KZoneAuthorityReferenced:  
+  true,  
 
-    step034LLandscapeLatticeReferenced:
-      true,
+step034LLandscapeLatticeReferenced:  
+  true,  
 
-    step034LActiveDriveOccurrenceReferenced:
-      true,
+step034LDriveOccurrenceRecorded:  
+  true,  
 
-    step034LDriveDocumentId:
-      '10HUxO6UsqD0CoSLIB4v6bgJpwLehVFH5bLY-n0jsQnU',
+step034LConnectorReadbackVerifiedHere:  
+  false,  
 
-    publicStageCompositionContractDefined:
-      true,
+step034LDriveDocumentId:  
+  '10HUxO6UsqD0CoSLIB4v6bgJpwLehVFH5bLY-n0jsQnU',  
 
-    publicStageBoundaryFlagsDefined:
-      true,
+publicStageCompositionContractDefined:  
+  true,  
 
-    publicStageSourceReferencesDefined:
-      true,
+publicStageBoundaryFlagsDefined:  
+  true,  
 
-    publicStageLayerIdsDefined:
-      true,
+publicStageSourceReferencesDefined:  
+  true,  
 
-    publicStageLayerOrderDefined:
-      true,
+publicStageLayerIdsDefined:  
+  true,  
 
-    publicStageDepthBandsDefined:
-      true,
+publicStageLayerOrderDefined:  
+  true,  
 
-    publicStageCameraModelDefined:
-      true,
+publicStageDepthBandsDefined:  
+  true,  
 
-    publicStageViewportModelDefined:
-      true,
+publicStageCameraModelDefined:  
+  true,  
 
-    publicStageCompositionRulesDefined:
-      true,
+publicStageViewportModelDefined:  
+  true,  
 
-    publicStageLayerDefinitionsDefined:
-      true,
+publicStageCompositionRulesDefined:  
+  true,  
 
-    publicStageCompositionResolved:
-      true,
+publicStageLayerDefinitionsDefined:  
+  true,  
 
-    publicStageZoneCompositionResolved:
-      true,
+publicStageCompositionResolved:  
+  true,  
 
-    publicStageInspectionCompositionResolved:
-      true,
+publicStageZoneCompositionResolved:  
+  true,  
 
-    publicStageContextCompositionResolved:
-      true,
+publicStageInspectionCompositionResolved:  
+  true,  
 
-    publicStageOverlayAttachmentResolved:
-      true,
+publicStageContextCompositionResolved:  
+  true,  
 
-    publicStageRendererHandoffResolved:
-      true,
+publicStageOverlayAttachmentResolved:  
+  true,  
 
-    canonicalSceneProgressionDefined:
-      true,
+publicStageRendererHandoffResolved:  
+  true,  
 
-    orderedLayerCount:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-        .layerCount,
+canonicalSceneProgressionDefined:  
+  true,  
 
-    landscapeAddressCount:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-        .landscapeLattice
-        .addressCount,
+orderedLayerCount:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION  
+    .layerCount,  
 
-    landscapeAddressCountExpected:
-      256,
+landscapeAddressCount:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION  
+    .landscapeLattice  
+    .addressCount,  
 
-    landscapeAddressCountMatchesExpected:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-        .landscapeLattice
-        .addressCountMatchesExpected,
+landscapeAddressCountExpected:  
+  256,  
 
-    row14ProfileCount:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-        .landscapeLattice
-        .row14ProfileCount,
+landscapeAddressCountMatchesExpected:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION  
+    .landscapeLattice  
+    .addressCountMatchesExpected,  
 
-    row15ProfileCount:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-        .landscapeLattice
-        .row15ProfileCount,
+row14ProfileCount:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION  
+    .landscapeLattice  
+    .row14ProfileCount,  
 
-    rows14And15ReturnBothProfiles:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-        .landscapeLattice
-        .rows14And15ReturnBothProfiles,
+row15ProfileCount:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION  
+    .landscapeLattice  
+    .row15ProfileCount,  
 
-    primaryInspectionSurfacePresent:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-        .inspectionComposition
-        .primaryInspectionSurfacePresent,
+rows14And15ReturnBothProfiles:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION  
+    .landscapeLattice  
+    .rows14And15ReturnBothProfiles,  
 
-    inspectionAnchorPresent:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-        .inspectionComposition
-        .inspectionAnchorPresent,
+primaryInspectionSurfacePresent:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION  
+    .inspectionComposition  
+    .primaryInspectionSurfacePresent,  
 
-    manorElevatedAndSetBack:
-      true,
+inspectionAnchorPresent:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION  
+    .inspectionComposition  
+    .inspectionAnchorPresent,  
 
-    manorExteriorOnly:
-      true,
+materialKeyAlignment:  
+  Object.freeze({  
+    manorContext:  
+      true,  
 
-    manorTraversable:
-      false,
+    tidePool:  
+      true,  
 
-    offshoreContextPresent:
-      true,
+    stone:  
+      true  
+  }),  
 
-    distantTraversalAuthorized:
-      false,
+manorElevatedAndSetBack:  
+  true,  
 
-    airHazePrimaryZone003:
-      true,
+manorExteriorOnly:  
+  true,  
 
-    airHazeSecondaryZone005:
-      true,
+manorTraversable:  
+  false,  
 
-    immersiveCompositionDescriptorReady:
-      true,
+offshoreContextPresent:  
+  true,  
 
-    rendererConsumptionReady:
-      true,
+distantTraversalAuthorized:  
+  false,  
 
-    publicStageConsumptionReady:
-      true,
+airHazePrimaryZone003:  
+  true,  
 
-    expectedNextFile:
-      '/showroom/globe/h-earth/renderer.js',
+airHazeSecondaryZone005:  
+  true,  
 
-    expectedNextStep:
-      'STEP_034O_PUBLIC_STAGE_RENDERER_CONSUMPTION_RENEWAL',
+immersiveCompositionDescriptorReady:  
+  true,  
 
-    sourceConstructionAuthorized:
-      true,
+rendererConsumptionReady:  
+  true,  
 
-    installationAuthorized:
-      false,
+publicStageConsumptionReady:  
+  true,  
 
-    repositoryMutationAuthorized:
-      false,
+importResolutionVerified:  
+  false,  
 
-    backupComplete:
-      false,
+moduleGraphExecutionVerified:  
+  false,  
 
-    activeBackedOccurrenceClaim:
-      false,
+expectedNextFile:  
+  '/showroom/globe/h-earth/renderer.js',  
 
-    archive:
-      Object.freeze({
-        archiveTitle:
-          'h-earth-compositor-step-034n-public-stage-visual-composition-bridge-backup',
+expectedNextStep:  
+  'STEP_034O_PUBLIC_STAGE_RENDERER_CONSUMPTION_RENEWAL',  
 
-        sourceFile:
-          '/showroom/globe/h-earth/compositor.js',
+sourceConstructionAuthorized:  
+  true,  
 
-        contractId:
-          'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_v1',
+installationAuthorized:  
+  false,  
 
-        backupStatus:
-          'PENDING_INSTALLATION_AND_DRIVE_BACKUP',
+repositoryMutationAuthorized:  
+  false,  
 
-        driveDocumentId:
-          null,
+backupComplete:  
+  false,  
 
-        connectorReadbackVerified:
-          false
-      }),
+activeBackedOccurrenceClaim:  
+  false,  
 
-    claimCeiling:
-      Object.freeze({
-        DOM_CREATION:
-          false,
+archive:  
+  Object.freeze({  
+    archiveTitle:  
+      'h-earth-compositor-step-034n-public-stage-visual-composition-bridge-backup',  
 
-        CSS_CREATION:
-          false,
+    sourceFile:  
+      '/showroom/globe/h-earth/compositor.js',  
 
-        RENDERER_GEOMETRY:
-          false,
+    contractId:  
+      'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE_v1',  
 
-        TERRAIN_GEOMETRY:
-          false,
+    backupStatus:  
+      'PENDING_INSTALLATION_AND_DRIVE_BACKUP',  
 
-        GEOMETRY_PORT_INVOCATION:
-          false,
+    driveDocumentId:  
+      null,  
 
-        NODE_FACTORY_INVOCATION:
-          false,
+    connectorReadbackVerified:  
+      false  
+  }),  
 
-        RUNTIME_ACTIVATION:
-          false,
+claimCeiling:  
+  Object.freeze({  
+    DOM_CREATION: false,  
+    CSS_CREATION: false,  
+    RENDERER_GEOMETRY: false,  
+    TERRAIN_GEOMETRY: false,  
+    GEOMETRY_PORT_INVOCATION: false,  
+    NODE_FACTORY_INVOCATION: false,  
+    RUNTIME_ACTIVATION: false,  
+    RENDERER_ACTIVATION: false,  
+    ROUTE_ACTIVATION: false,  
+    CANVAS_ACTIVATION: false,  
+    WEBGL_ACTIVATION: false,  
+    VISUAL_PASS_CLAIM: false,  
+    RENDERER_PASS_CLAIM: false,  
+    VALIDATION_CLAIM: false,  
+    PRODUCTION_CLAIM: false,  
+    DEPLOYMENT_CLAIM: false,  
+    TRAVERSAL: false,  
+    GAMEPLAY: false,  
+    COLLISION: false,  
+    PHYSICS: false,  
+    SURVIVAL_SIMULATION: false,  
+    SWIMMING: false,  
+    FLUID_SIMULATION: false,  
+    MANOR_INTERIOR_ACCESS: false,  
+    DISTANT_TRAVERSAL: false,  
+    MATRIX_COLLAPSE: false  
+  }),  
 
-        RENDERER_ACTIVATION:
-          false,
+boundary:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS
 
-        ROUTE_ACTIVATION:
-          false,
-
-        CANVAS_ACTIVATION:
-          false,
-
-        WEBGL_ACTIVATION:
-          false,
-
-        VISUAL_PASS_CLAIM:
-          false,
-
-        RENDERER_PASS_CLAIM:
-          false,
-
-        VALIDATION_CLAIM:
-          false,
-
-        PRODUCTION_CLAIM:
-          false,
-
-        DEPLOYMENT_CLAIM:
-          false,
-
-        TRAVERSAL:
-          false,
-
-        GAMEPLAY:
-          false,
-
-        COLLISION:
-          false,
-
-        PHYSICS:
-          false,
-
-        SURVIVAL_SIMULATION:
-          false,
-
-        SWIMMING:
-          false,
-
-        FLUID_SIMULATION:
-          false,
-
-        MANOR_INTERIOR_ACCESS:
-          false,
-
-        DISTANT_TRAVERSAL:
-          false,
-
-        MATRIX_COLLAPSE:
-          false
-      }),
-
-    boundary:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS
-  });
+});
 
 export function getPublicStageComposition() {
-  return H_EARTH_3D_PUBLIC_STAGE_COMPOSITION;
+return H_EARTH_3D_PUBLIC_STAGE_COMPOSITION;
 }
 
 export function getPublicStageCompositionReceipt() {
-  return H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RECEIPT;
+return H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RECEIPT;
 }
 
 export function getPublicStageLayer(layerId) {
-  return (
-    H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-      .orderedLayers
-      .find((layer) => (
-        layer.layerId === layerId
-      )) ||
-    null
-  );
+return (
+H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
+.orderedLayers
+.find((layer) => (
+layer.layerId === layerId
+)) ||
+null
+);
 }
 
 export function getPublicStageLayersForZone(
-  zoneId
+zoneId
 ) {
-  if (
-    !zoneId ||
-    typeof zoneId !== 'string'
-  ) {
-    return EMPTY_FROZEN_ARRAY;
-  }
+if (
+!zoneId ||
+typeof zoneId !== 'string'
+) {
+return EMPTY_FROZEN_ARRAY;
+}
 
-  return Object.freeze(
-    H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-      .orderedLayers
-      .filter((layer) => (
-        layer.primaryZoneId === zoneId ||
-        layer.secondaryZoneId === zoneId
-      ))
-  );
+return Object.freeze(
+H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
+.orderedLayers
+.filter((layer) => (
+layer.primaryZoneId === zoneId ||
+layer.secondaryZoneId === zoneId
+))
+);
 }
 
 export function getPublicStageLayersForObject(
-  objectId
+objectId
 ) {
-  if (
-    !objectId ||
-    typeof objectId !== 'string'
-  ) {
-    return EMPTY_FROZEN_ARRAY;
-  }
+if (
+!objectId ||
+typeof objectId !== 'string'
+) {
+return EMPTY_FROZEN_ARRAY;
+}
 
-  return Object.freeze(
-    H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-      .orderedLayers
-      .filter((layer) => (
-        layer.objectIds.includes(objectId)
-      ))
-  );
+return Object.freeze(
+H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
+.orderedLayers
+.filter((layer) => (
+layer.objectIds.includes(objectId)
+))
+);
 }
 
 export function getPublicStageRendererHandoff() {
-  return (
-    H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-      .rendererHandoff
-  );
+return (
+H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
+.rendererHandoff
+);
 }
 
 // Compatibility alias for existing controller/index imports.
 // This now returns the Step 034N public-stage composition receipt.
 export function getCompositorReceipt() {
-  return getPublicStageCompositionReceipt();
+return getPublicStageCompositionReceipt();
 }
 
 // Compatibility alias for existing consumers that still import the former
 // composed-candidate-frame name. The value is now the renderer-independent
 // Step 034N public-stage composition descriptor.
 export const H_EARTH_3D_COMPOSED_CANDIDATE_FRAME =
-  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION;
+H_EARTH_3D_PUBLIC_STAGE_COMPOSITION;
 
 // Compatibility alias for existing consumers.
 // This receipt now represents Step 034N, not Step 032F.
 export const H_EARTH_3D_COMPOSITOR_RECEIPT =
-  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RECEIPT;
+H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RECEIPT;
 
 export const H_EARTH_3D_COMPOSITOR =
-  Object.freeze({
-    id:
-      'H_EARTH_3D_COMPOSITOR',
+Object.freeze({
+id:
+'H_EARTH_3D_COMPOSITOR',
 
-    file:
-      '/showroom/globe/h-earth/compositor.js',
+file:  
+  '/showroom/globe/h-earth/compositor.js',  
 
-    step:
-      'STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE',
+step:  
+  'STEP_034N_PUBLIC_STAGE_VISUAL_COMPOSITION_BRIDGE',  
 
-    contract:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_CONTRACT,
+contract:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_CONTRACT,  
 
-    boundaryFlags:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS,
+boundaryFlags:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_BOUNDARY_FLAGS,  
 
-    sourceReferences:
-      H_EARTH_3D_PUBLIC_STAGE_SOURCE_REFERENCES,
+sourceReferences:  
+  H_EARTH_3D_PUBLIC_STAGE_SOURCE_REFERENCES,  
 
-    layerIds:
-      H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS,
+layerIds:  
+  H_EARTH_3D_PUBLIC_STAGE_LAYER_IDS,  
 
-    layerOrder:
-      H_EARTH_3D_PUBLIC_STAGE_LAYER_ORDER,
+layerOrder:  
+  H_EARTH_3D_PUBLIC_STAGE_LAYER_ORDER,  
 
-    layerDefinitions:
-      H_EARTH_3D_PUBLIC_STAGE_LAYER_DEFINITIONS,
+layerDefinitions:  
+  H_EARTH_3D_PUBLIC_STAGE_LAYER_DEFINITIONS,  
 
-    depthBands:
-      H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS,
+depthBands:  
+  H_EARTH_3D_PUBLIC_STAGE_DEPTH_BANDS,  
 
-    cameraModel:
-      H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL,
+cameraModel:  
+  H_EARTH_3D_PUBLIC_STAGE_CAMERA_MODEL,  
 
-    viewportModel:
-      H_EARTH_3D_PUBLIC_STAGE_VIEWPORT_MODEL,
+viewportModel:  
+  H_EARTH_3D_PUBLIC_STAGE_VIEWPORT_MODEL,  
 
-    compositionRules:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RULES,
+compositionRules:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RULES,  
 
-    publicStageComposition:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION,
+publicStageComposition:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION,  
 
-    rendererHandoff:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION
-        .rendererHandoff,
+rendererHandoff:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION  
+    .rendererHandoff,  
 
-    isPlainObject:
-      isHEarthPublicStagePlainObject,
+isPlainObject:  
+  isHEarthPublicStagePlainObject,  
 
-    normalizeNumber:
-      normalizeHEarthPublicStageNumber,
+normalizeNumber:  
+  normalizeHEarthPublicStageNumber,  
 
-    clampNumber:
-      clampHEarthPublicStageNumber,
+clampNumber:  
+  clampHEarthPublicStageNumber,  
 
-    clamp01:
-      clampHEarthPublicStage01,
+clamp01:  
+  clampHEarthPublicStage01,  
 
-    getLandscapeAggregate,
-    getLandscapeMap,
-    getLandscapeRegionSummary,
-    getLandscapeZoneSummary,
-    getLandscapeObjectHintSummary,
-    getZoneDescriptors,
-    getZoneRenderTargetRoles,
-    getEnvironmentObjectCollection,
-    getEnvironmentObject,
-    getLandscapeRegionProfile,
-    getLandscapeRegionAddresses,
-    getLandscapeObjectAddresses,
-    getLayerDefinition,
-    resolvePublicStageCameraFrame,
-    resolveLayerSourceBinding,
-    resolvePublicStageLayer,
-    resolvePublicStageLayers,
-    resolvePublicStageZoneComposition,
-    resolvePublicStageInspectionComposition,
-    resolvePublicStageContextComposition,
-    resolvePublicStageOverlayAttachment,
-    resolvePublicStageRendererHandoff,
-    resolvePublicStageComposition,
-    getPublicStageComposition,
-    getPublicStageCompositionReceipt,
-    getPublicStageLayer,
-    getPublicStageLayersForZone,
-    getPublicStageLayersForObject,
-    getPublicStageRendererHandoff,
-    getCompositorReceipt,
+getLandscapeAggregate,  
+getLandscapeMap,  
+getLandscapeRegionSummary,  
+getLandscapeZoneSummary,  
+getLandscapeObjectHintSummary,  
+getZoneDescriptors,  
+getZoneRenderTargetRoles,  
+getEnvironmentObjectCollection,  
+getEnvironmentObject,  
+getLandscapeRegionProfile,  
+getLandscapeRegionAddresses,  
+getLandscapeObjectAddresses,  
+getLayerDefinition,  
+resolvePublicStageCameraFrame,  
+resolveLayerSourceBinding,  
+resolvePublicStageLayer,  
+resolvePublicStageLayers,  
+resolvePublicStageZoneComposition,  
+resolvePublicStageInspectionComposition,  
+resolvePublicStageContextComposition,  
+resolvePublicStageOverlayAttachment,  
+resolvePublicStageRendererHandoff,  
+resolvePublicStageComposition,  
+getPublicStageComposition,  
+getPublicStageCompositionReceipt,  
+getPublicStageLayer,  
+getPublicStageLayersForZone,  
+getPublicStageLayersForObject,  
+getPublicStageRendererHandoff,  
+getCompositorReceipt,  
 
-    receipt:
-      H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RECEIPT
-  });
+receipt:  
+  H_EARTH_3D_PUBLIC_STAGE_COMPOSITION_RECEIPT
+
+});
 
 export default H_EARTH_3D_COMPOSITOR;

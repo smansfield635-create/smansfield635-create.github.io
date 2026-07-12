@@ -955,8 +955,8 @@ export function createHEarthNeutralGeometryRecord({
     providerOutput:
       false,
 
-      rendererMaterialized:
-        false
+    rendererMaterialized:
+      false
   });
 }
 
@@ -3003,8 +3003,8 @@ export function constructHEarthParametricSurfaceMesh({
       admitted:
         false,
 
-      admissionAuthority:
-        'WEST_ONLY'
+        admissionAuthority:
+          'WEST_ONLY'
     },
 
     source: {
@@ -5210,16 +5210,16 @@ function constructSphereFamilyPoleFan({
         indices:
           [],
 
-          issues: [
-            createSouthIssue(
-              'SOUTH_POLE_FAN_POLE_NONFINITE',
-              'ERROR',
-              'Sphere-family evaluator produced a nonfinite pole candidate.',
-              {
-                longitudeIndex
-              }
-            )
-          ]
+        issues: [
+          createSouthIssue(
+            'SOUTH_POLE_FAN_POLE_NONFINITE',
+            'ERROR',
+            'Sphere-family evaluator produced a nonfinite pole candidate.',
+            {
+              longitudeIndex
+            }
+          )
+        ]
       };
     }
 
@@ -5451,12 +5451,10 @@ function constructSphereFamilyPoleFan({
 
     indices.push(
       0,
-
       firstRingStart +
-        nextLongitude,
-
+        longitudeIndex,
       firstRingStart +
-        longitudeIndex
+        nextLongitude
     );
   }
 
@@ -5534,12 +5532,10 @@ function constructSphereFamilyPoleFan({
 
     indices.push(
       northPoleIndex,
-
       lastRingStart +
-        longitudeIndex,
-
+        nextLongitude,
       lastRingStart +
-        nextLongitude
+        longitudeIndex
     );
   }
 
@@ -6725,7 +6721,7 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS =
             'IMPLEMENTED_CANDIDATE',
 
           description:
-            'Sphere-family south fan, intermediate bands, and north fan use corrected outward winding.'
+            'Sphere-family topology reverses the south fan and north fan only, while preserving the intermediate band winding [a,c,b] [a,d,c].'
         }),
 
         deepFreeze({
@@ -6875,6 +6871,8 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_REQUIRED_FIXTURES =
     'RADIAL_SHELL_MESH_CONSTRUCTION_VALID',
 
     'NO_DIRECTED_EDGE_CONFLICT_FOR_ALL_SPHERE_FAMILY_MESHES',
+    'SOUTH_POLE_FAN_AND_NORTH_FAN_ARE_REVERSED_ONLY',
+    'INTERMEDIATE_BAND_WINDING_REMAINS_A_C_B_AND_A_D_C',
     'SOUTH_PARALLEL_ALIGNMENT_EPSILON_IS_LOCAL_NOT_NORTH_SCHEMA',
 
     'NO_PROVIDER_AUTHORITY_CREATED',

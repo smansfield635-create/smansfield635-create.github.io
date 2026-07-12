@@ -9,58 +9,21 @@
  * H_EARTH_3D_GEOMETRY_KERNEL_NORTH_FILE_BIRTH_STEP_034O_4N_FOUNDATIONAL_MATHEMATICS_v1
  * H_EARTH_3D_GEOMETRY_KERNEL_EAST_FILE_BIRTH_STEP_034O_4E_MATHEMATICAL_DESCRIPTION_ANALYSIS_AND_TOPOLOGY_v1
  *
- * GOVERNING MATHEMATICS:
- * STEP_034O_4A_GEOMETRY_MATHEMATICS_CONSTITUTION_AND_FREEZE_PACKET_v1
- *
- * OWNERSHIP CONTRACT:
- * STEP_034O_4C_NEWS_GEOMETRY_OWNERSHIP_AND_HANDOFF_CONTRACT_v1
- *
- * OWNERSHIP LOCK:
- * STEP_034O_4C_NEWS_GEOMETRY_OWNERSHIP_AND_HANDOFF_LOCK_BIND_FREEZE_RECEIPT_v1
- *
- * FINAL REFREEZE:
- * STEP_034O_4C_1_TRANSLATION_EXECUTION_CAPACITY_ENVIRONMENT_COMPOSITOR_HANDOFF_FINAL_REFREEZE_RECEIPT_v1
- *
  * CORRECTION SCOPE:
- * STEP_034O_4S_TARGETED_IMPORT_POLE_FAN_AND_OPEN_MESH_VALIDITY_CORRECTION_SCOPE_v1
+ * STEP_034O_4S_REQUIRED_TARGETED_CORRECTION_SCOPE_v1
+ *
+ * CORRECTION CLASS:
+ * SOUTH_TOPOLOGY_WINDING_AND_EXECUTABLE_FIXTURE_CORRECTION_ONLY.
  *
  * STATUS:
- * SOUTH PROJECTION-NEUTRAL PRIMITIVE AND NEUTRAL GEOMETRY
- * CONSTRUCTION CORRECTED IMPLEMENTATION CANDIDATE.
- *
- * AUTHORIZED JURISDICTION:
- * PROJECTION_NEUTRAL_PRIMITIVE_AND_NEUTRAL_GEOMETRY_CONSTRUCTION_ONLY.
- *
- * IMPORT LAW:
- * SOUTH MAY IMPORT NORTH AND EAST ONLY.
- *
- * CONSTRUCTION SUCCESS DOES NOT EQUAL WEST ADMISSION.
- *
- * THIS FILE DOES NOT:
- * - perform primitive admission
- * - perform provider admission
- * - consume capacity.js
- * - consume environment.js
- * - aggregate provider frames
- * - construct the public facade
- * - author compositor policy
- * - project or materialize geometry
- * - create DOM, CSS, canvas, or WebGL objects
- * - claim visual approval
- * - claim production authority
- * - claim public-release authority
+ * SOUTH TOPOLOGY-CORRECTED IMPLEMENTATION CANDIDATE.
  *
  * IMPLEMENTATION CONFORMANCE:
- * NOT_YET_EVALUATED.
+ * HOLD_PENDING_EXECUTABLE_CORRIDOR.
  *
  * SOUTH LOCAL ADMISSION:
  * FALSE.
  */
-
-
-/* ==========================================================================
- * 01 · NORTH IMPORT SURFACE
- * ========================================================================== */
 
 import {
   H_EARTH_3D_GEOMETRY_KERNEL_NORTH_CONTRACT_ID,
@@ -73,12 +36,10 @@ import {
 
   isHEarthFiniteNumber,
   isHEarthPositiveFiniteNumber,
-  isHEarthNonNegativeFiniteNumber,
   isHEarthNonNegativeSafeInteger,
   isHEarthPositiveSafeInteger,
   isHEarthNonEmptyString,
 
-  clampHEarthNumber,
   lerpHEarthNumber,
 
   createHEarthVector3,
@@ -87,7 +48,7 @@ import {
   subtractHEarthVector3,
   scaleHEarthVector3,
   dotHEarthVector3,
-  getHEarthVector3Length,
+  crossHEarthVector3,
   getHEarthVector3Distance,
   normalizeHEarthVector3,
 
@@ -101,11 +62,6 @@ import {
   deriveHEarthGeometryToleranceContext,
   isHEarthGeometryToleranceContext
 } from './geometry-kernel.north.js';
-
-
-/* ==========================================================================
- * 02 · EAST IMPORT SURFACE
- * ========================================================================== */
 
 import {
   H_EARTH_3D_GEOMETRY_KERNEL_EAST_CONTRACT_ID,
@@ -126,7 +82,7 @@ import {
 
 
 /* ==========================================================================
- * 03 · CONTRACT IDENTITY
+ * 01 · CONTRACT IDENTITY
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT_ID =
@@ -153,12 +109,16 @@ export const H_EARTH_3D_GEOMETRY_FINAL_REFREEZE_RECEIPT_ID =
   'STEP_034O_4C_1_TRANSLATION_EXECUTION_CAPACITY_ENVIRONMENT_COMPOSITOR_HANDOFF_FINAL_REFREEZE_RECEIPT_v1';
 
 export const H_EARTH_3D_GEOMETRY_SOUTH_CORRECTION_SCOPE_ID =
-  'STEP_034O_4S_TARGETED_IMPORT_POLE_FAN_AND_OPEN_MESH_VALIDITY_CORRECTION_SCOPE_v1';
+  'STEP_034O_4S_REQUIRED_TARGETED_CORRECTION_SCOPE_v1';
 
 
 /* ==========================================================================
- * 04 · INTERNAL STRUCTURE AND IMMUTABILITY
+ * 02 · INTERNAL STRUCTURE
  * ========================================================================== */
+
+const H_EARTH_3D_GEOMETRY_SOUTH_PARALLEL_ALIGNMENT_EPSILON =
+  1e-9;
+
 
 function deepFreeze(value) {
   if (
@@ -186,7 +146,8 @@ function isPlainObject(value) {
     return false;
   }
 
-  const prototype = Object.getPrototypeOf(value);
+  const prototype =
+    Object.getPrototypeOf(value);
 
   return (
     prototype === Object.prototype ||
@@ -254,7 +215,8 @@ function cloneVector3Array(values) {
     return null;
   }
 
-  const clones = values.map(cloneVector3);
+  const clones =
+    values.map(cloneVector3);
 
   return clones.every(isHEarthVector3)
     ? clones
@@ -338,6 +300,7 @@ function areValidTriangleIndices(
 ) {
   return (
     Array.isArray(indices) &&
+    indices.length > 0 &&
     indices.length % 3 === 0 &&
     indices.every(
       (index) =>
@@ -354,6 +317,7 @@ function areValidLineIndices(
 ) {
   return (
     Array.isArray(indices) &&
+    indices.length > 0 &&
     indices.length % 2 === 0 &&
     indices.every(
       (index) =>
@@ -364,9 +328,53 @@ function areValidLineIndices(
 }
 
 
+function isTriangleBearingPrimitiveType(
+  primitiveType
+) {
+  return [
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.TRIANGLE,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.TRIANGLE_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.HEIGHT_FIELD_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.PARAMETRIC_SURFACE_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.XZ_RIBBON_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.EXTRUSION_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.PRISM_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.GABLE_ROOF_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.SHED_ROOF_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.ELLIPSOID_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.SUPERELLIPSOID_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.RADIAL_SHELL_MESH
+  ].includes(primitiveType);
+}
+
+
+function isExtrusionPathPrimitiveType(
+  primitiveType
+) {
+  return [
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.EXTRUSION_MESH,
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.PRISM_MESH
+  ].includes(primitiveType);
+}
+
+
 function buildSequentialIndices(count) {
   if (
-    !isHEarthNonNegativeSafeInteger(count)
+    !isHEarthPositiveSafeInteger(count)
   ) {
     return null;
   }
@@ -374,6 +382,54 @@ function buildSequentialIndices(count) {
   return Array.from(
     { length: count },
     (_, index) => index
+  );
+}
+
+
+function reverseTriangleIndices(indices) {
+  if (
+    !Array.isArray(indices) ||
+    indices.length === 0 ||
+    indices.length % 3 !== 0
+  ) {
+    return null;
+  }
+
+  const reversed = [];
+
+  for (
+    let offset = 0;
+    offset < indices.length;
+    offset += 3
+  ) {
+    reversed.push(
+      indices[offset],
+      indices[offset + 2],
+      indices[offset + 1]
+    );
+  }
+
+  return reversed;
+}
+
+
+function offsetTriangleIndices(
+  indices,
+  vertexOffset
+) {
+  if (
+    !Array.isArray(indices) ||
+    !isHEarthNonNegativeSafeInteger(
+      vertexOffset
+    )
+  ) {
+    return null;
+  }
+
+  return indices.map(
+    (index) =>
+      index +
+      vertexOffset
   );
 }
 
@@ -467,8 +523,59 @@ function makeConstructionSuccess({
 }
 
 
+function hasZeroDirectedConflicts(
+  topologyAnalysis
+) {
+  const directedConflicts =
+    topologyAnalysis
+      ?.topology
+      ?.directedConflicts;
+
+  return (
+    Array.isArray(directedConflicts) &&
+    directedConflicts.length === 0
+  );
+}
+
+
+function isClosedOutwardTopologyAnalysis(
+  topologyAnalysis
+) {
+  return (
+    isPlainObject(topologyAnalysis) &&
+    topologyAnalysis.classification ===
+      H_EARTH_3D_GEOMETRY_EAST_ENUMS
+        .topologyClassification
+        .CLOSED_ORIENTED_MANIFOLD &&
+    topologyAnalysis.shellOrientation ===
+      H_EARTH_3D_GEOMETRY_EAST_ENUMS
+        ?.shellOrientation
+        ?.OUTWARD &&
+    hasZeroDirectedConflicts(
+      topologyAnalysis
+    ) &&
+    !hasHEarthBlockingIssues(
+      topologyAnalysis?.issues ?? []
+    )
+  );
+}
+
+
+function isOpenManifoldTopologyAnalysis(
+  topologyAnalysis
+) {
+  return (
+    isPlainObject(topologyAnalysis) &&
+    topologyAnalysis.classification ===
+      H_EARTH_3D_GEOMETRY_EAST_ENUMS
+        .topologyClassification
+        .OPEN_MANIFOLD
+  );
+}
+
+
 /* ==========================================================================
- * 05 · SOUTH ENUMERATIONS
+ * 03 · ENUMERATIONS
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_SOUTH_ENUMS =
@@ -583,7 +690,37 @@ export const H_EARTH_3D_GEOMETRY_SOUTH_ENUMS =
         'OPEN',
 
       CLOSED:
-        'CLOSED'
+        'CLOSED',
+
+      UNSPECIFIED:
+        'UNSPECIFIED'
+    }),
+
+    expectedClosure: deepFreeze({
+      OPEN_ALLOWED:
+        'OPEN_ALLOWED',
+
+      CLOSED_REQUIRED:
+        'CLOSED_REQUIRED',
+
+      UNSPECIFIED:
+        'UNSPECIFIED'
+    }),
+
+    extrusionPlanFacing: deepFreeze({
+      WITH_EXTRUSION:
+        'WITH_EXTRUSION',
+
+      AGAINST_EXTRUSION:
+        'AGAINST_EXTRUSION'
+    }),
+
+    profileBoundaryDirection: deepFreeze({
+      FORWARD:
+        'FORWARD',
+
+      REVERSED:
+        'REVERSED'
     }),
 
     sphereFamilyTopology: deepFreeze({
@@ -594,7 +731,7 @@ export const H_EARTH_3D_GEOMETRY_SOUTH_ENUMS =
 
 
 /* ==========================================================================
- * 06 · NEUTRAL GEOMETRY RECORD
+ * 04 · NEUTRAL RECORDS
  * ========================================================================== */
 
 export function createHEarthNeutralGeometryRecord({
@@ -743,10 +880,6 @@ export function createHEarthNeutralGeometryRecord({
 }
 
 
-/* ==========================================================================
- * 07 · NEUTRAL PRIMITIVE RECORD
- * ========================================================================== */
-
 export function createHEarthNeutralPrimitiveRecord({
   primitiveId,
   primitiveType,
@@ -768,7 +901,10 @@ export function createHEarthNeutralPrimitiveRecord({
     !isPlainObject(geometry) ||
     geometry.recordType !==
       'H_EARTH_PROJECTION_NEUTRAL_GEOMETRY_RECORD' ||
-    geometry.projectionNeutral !== true
+    geometry.projectionNeutral !== true ||
+    geometry.admitted !== false ||
+    geometry.admissionAuthority !==
+      'WEST_ONLY'
   ) {
     return null;
   }
@@ -834,7 +970,7 @@ export function createHEarthNeutralPrimitiveRecord({
 
 
 /* ==========================================================================
- * 08 · NORMAL ATTACHMENT
+ * 05 · NORMAL ATTACHMENT
  * ========================================================================== */
 
 function attachMeshNormals({
@@ -925,7 +1061,7 @@ function attachMeshNormals({
 
 
 /* ==========================================================================
- * 09 · GENERAL TRIANGLE-MESH CONSTRUCTION
+ * 06 · GENERAL TRIANGLE-MESH CONSTRUCTION
  * ========================================================================== */
 
 export function constructHEarthTriangleMesh({
@@ -940,6 +1076,9 @@ export function constructHEarthTriangleMesh({
   normalMode =
     H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
       .normalMode.FACE_AND_VERTEX,
+  expectedClosure =
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .expectedClosure.UNSPECIFIED,
   transform =
     createHEarthIdentityMatrix4(),
   semanticRole = null,
@@ -966,17 +1105,18 @@ export function constructHEarthTriangleMesh({
   }
 
   if (
-    !enumIncludes(
-      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-        .primitiveType,
+    !isTriangleBearingPrimitiveType(
       primitiveType
     )
   ) {
     issues.push(
       createSouthIssue(
-        'SOUTH_PRIMITIVE_TYPE_INVALID',
+        'SOUTH_TRIANGLE_BEARING_PRIMITIVE_TYPE_REQUIRED',
         'ERROR',
-        'Triangle-mesh construction received an unsupported primitive type.'
+        'Triangle-mesh construction requires a lawful triangle-bearing primitive type.',
+        {
+          primitiveType
+        }
       )
     );
   }
@@ -1000,8 +1140,7 @@ export function constructHEarthTriangleMesh({
       Array.isArray(vertices)
         ? vertices.length
         : 0
-    ) ||
-    indices.length === 0
+    )
   ) {
     issues.push(
       createSouthIssue(
@@ -1024,6 +1163,22 @@ export function constructHEarthTriangleMesh({
         'SOUTH_NORMAL_MODE_INVALID',
         'ERROR',
         'Triangle-mesh normal mode is unsupported.'
+      )
+    );
+  }
+
+  if (
+    !enumIncludes(
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure,
+      expectedClosure
+    )
+  ) {
+    issues.push(
+      createSouthIssue(
+        'SOUTH_EXPECTED_CLOSURE_INVALID',
+        'ERROR',
+        'Triangle-mesh expectedClosure is unsupported.'
       )
     );
   }
@@ -1116,16 +1271,101 @@ export function constructHEarthTriangleMesh({
   );
 
   const openNeutralMesh =
-    topologyAnalysis.classification ===
-      H_EARTH_3D_GEOMETRY_EAST_ENUMS
-        .topologyClassification.OPEN_MANIFOLD;
+    isOpenManifoldTopologyAnalysis(
+      topologyAnalysis
+    );
 
-  /*
-   * Open topology is lawful for a neutral South construction.
-   * Boundary edges alone do not imply South construction failure.
-   *
-   * Any East-issued blocking issue still fails closed.
-   */
+  const closedOutward =
+    isClosedOutwardTopologyAnalysis(
+      topologyAnalysis
+    );
+
+  if (
+    expectedClosure ===
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.CLOSED_REQUIRED &&
+    !closedOutward
+  ) {
+    issues.push(
+      createSouthIssue(
+        'SOUTH_CLOSED_OUTWARD_TOPOLOGY_REQUIRED',
+        'ERROR',
+        'This constructor requires a closed outward-oriented manifold with shellOrientation OUTWARD and no directed-edge conflicts.',
+        {
+          classification:
+            topologyAnalysis?.classification ??
+            null,
+
+          shellOrientation:
+            topologyAnalysis?.shellOrientation ??
+            null,
+
+          directedConflictCount:
+            Array.isArray(
+              topologyAnalysis
+                ?.topology
+                ?.directedConflicts
+            )
+              ? topologyAnalysis
+                  .topology
+                  .directedConflicts
+                  .length
+              : null
+        }
+      )
+    );
+  }
+
+  if (
+    expectedClosure ===
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.OPEN_ALLOWED &&
+    !openNeutralMesh &&
+    !closedOutward
+  ) {
+    issues.push(
+      createSouthIssue(
+        'SOUTH_OPEN_ALLOWED_TOPOLOGY_INVALID',
+        'ERROR',
+        'An open-by-design constructor may produce an open manifold or a lawful closed outward manifold, but not invalid topology.',
+        {
+          classification:
+            topologyAnalysis?.classification ??
+            null,
+
+          shellOrientation:
+            topologyAnalysis?.shellOrientation ??
+            null
+        }
+      )
+    );
+  }
+
+  if (
+    expectedClosure ===
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.UNSPECIFIED &&
+    !openNeutralMesh &&
+    !closedOutward
+  ) {
+    issues.push(
+      createSouthIssue(
+        'SOUTH_GENERAL_MESH_TOPOLOGY_INVALID',
+        'ERROR',
+        'General neutral mesh construction may not preserve invalid topology.',
+        {
+          classification:
+            topologyAnalysis?.classification ??
+            null,
+
+          shellOrientation:
+            topologyAnalysis?.shellOrientation ??
+            null
+        }
+      )
+    );
+  }
+
   if (
     hasHEarthBlockingIssues(issues)
   ) {
@@ -1137,6 +1377,7 @@ export function constructHEarthTriangleMesh({
 
       metadata: {
         ...metadata,
+        expectedClosure,
         topologyAnalysis
       }
     });
@@ -1166,10 +1407,21 @@ export function constructHEarthTriangleMesh({
 
       metadata: {
         ...metadata,
+        expectedClosure,
         topologyAnalysis
       }
     });
   }
+
+  const surfaceClosure =
+    openNeutralMesh
+      ? H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+          .surfaceClosure.OPEN
+      : closedOutward
+        ? H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+            .surfaceClosure.CLOSED
+        : H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+            .surfaceClosure.UNSPECIFIED;
 
   const geometry =
     createHEarthNeutralGeometryRecord({
@@ -1200,17 +1452,20 @@ export function constructHEarthTriangleMesh({
       metadata: {
         ...metadata,
 
+        expectedClosure,
+
         topologyAnalysis,
 
-        surfaceClosure:
-          openNeutralMesh
-            ? H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-                .surfaceClosure.OPEN
-            : H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-                .surfaceClosure.CLOSED,
+        surfaceClosure,
 
         openNeutralMeshConstructionValid:
-          openNeutralMesh,
+          openNeutralMesh &&
+          expectedClosure !==
+            H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+              .expectedClosure.CLOSED_REQUIRED,
+
+        closedOutwardConstructionValid:
+          closedOutward,
 
         admitted:
           false,
@@ -1221,19 +1476,19 @@ export function constructHEarthTriangleMesh({
     });
 
   if (!geometry) {
-    issues.push(
-      createSouthIssue(
-        'SOUTH_GEOMETRY_RECORD_CREATION_FAILED',
-        'ERROR',
-        'Triangle-mesh geometry record could not be created.'
-      )
-    );
-
     return makeConstructionFailure({
       constructionType:
         'TRIANGLE_MESH',
 
-      issues,
+      issues: [
+        ...issues,
+
+        createSouthIssue(
+          'SOUTH_GEOMETRY_RECORD_CREATION_FAILED',
+          'ERROR',
+          'Triangle-mesh geometry record could not be created.'
+        )
+      ],
 
       metadata
     });
@@ -1258,7 +1513,11 @@ export function constructHEarthTriangleMesh({
       metadata: {
         ...metadata,
 
+        expectedClosure,
+
         openNeutralMesh,
+
+        closedOutward,
 
         constructionValid:
           true,
@@ -1274,19 +1533,19 @@ export function constructHEarthTriangleMesh({
     });
 
   if (!primitiveRecord) {
-    issues.push(
-      createSouthIssue(
-        'SOUTH_PRIMITIVE_RECORD_CREATION_FAILED',
-        'ERROR',
-        'Triangle-mesh primitive record could not be created.'
-      )
-    );
-
     return makeConstructionFailure({
       constructionType:
         'TRIANGLE_MESH',
 
-      issues,
+      issues: [
+        ...issues,
+
+        createSouthIssue(
+          'SOUTH_PRIMITIVE_RECORD_CREATION_FAILED',
+          'ERROR',
+          'Triangle-mesh primitive record could not be created.'
+        )
+      ],
 
       metadata
     });
@@ -1302,7 +1561,15 @@ export function constructHEarthTriangleMesh({
 
     issues,
 
-    metadata,
+    metadata: {
+      ...metadata,
+
+      expectedClosure,
+
+      topologyAnalysis,
+
+      closedOutward
+    },
 
     openNeutralMesh
   });
@@ -1310,7 +1577,7 @@ export function constructHEarthTriangleMesh({
 
 
 /* ==========================================================================
- * 10 · POINT CONSTRUCTION
+ * 07 · BASIC CONSTRUCTION
  * ========================================================================== */
 
 export function constructHEarthPoint({
@@ -1423,10 +1690,6 @@ export function constructHEarthPoint({
   });
 }
 
-
-/* ==========================================================================
- * 11 · POINT-SET CONSTRUCTION
- * ========================================================================== */
 
 export function constructHEarthPointSet({
   primitiveId,
@@ -1542,10 +1805,6 @@ export function constructHEarthPointSet({
 }
 
 
-/* ==========================================================================
- * 12 · LINE-SEGMENT CONSTRUCTION
- * ========================================================================== */
-
 export function constructHEarthLineSegment({
   primitiveId,
   start,
@@ -1571,7 +1830,7 @@ export function constructHEarthLineSegment({
         createSouthIssue(
           'SOUTH_LINE_SEGMENT_INPUT_INVALID',
           'ERROR',
-          'Line-segment construction requires a primitiveId, finite endpoints, and valid transform.'
+          'Line-segment construction requires finite endpoints.'
         )
       ],
 
@@ -1685,7 +1944,7 @@ export function constructHEarthLineSegment({
         createSouthIssue(
           'SOUTH_LINE_SEGMENT_RECORD_CREATION_FAILED',
           'ERROR',
-          'Line-segment neutral records could not be created.'
+          'Line-segment records could not be created.'
         )
       ],
 
@@ -1705,10 +1964,6 @@ export function constructHEarthLineSegment({
   });
 }
 
-
-/* ==========================================================================
- * 13 · POLYLINE CONSTRUCTION
- * ========================================================================== */
 
 export function constructHEarthPolyline({
   primitiveId,
@@ -1803,6 +2058,7 @@ export function constructHEarthPolyline({
           {
             segmentIndex:
               index,
+
             length
           }
         )
@@ -1931,7 +2187,7 @@ export function constructHEarthPolyline({
         createSouthIssue(
           'SOUTH_POLYLINE_RECORD_CREATION_FAILED',
           'ERROR',
-          'Polyline neutral records could not be created.'
+          'Polyline records could not be created.'
         )
       ],
 
@@ -1951,10 +2207,6 @@ export function constructHEarthPolyline({
   });
 }
 
-
-/* ==========================================================================
- * 14 · TRIANGLE CONSTRUCTION
- * ========================================================================== */
 
 export function constructHEarthTriangle({
   primitiveId,
@@ -1989,6 +2241,27 @@ export function constructHEarthTriangle({
       toleranceContext,
       bounds
     );
+
+  if (
+    !isHEarthGeometryToleranceContext(
+      resolvedToleranceContext
+    )
+  ) {
+    return makeConstructionFailure({
+      constructionType:
+        'TRIANGLE',
+
+      issues: [
+        createSouthIssue(
+          'SOUTH_TRIANGLE_TOLERANCE_CONTEXT_INVALID',
+          'ERROR',
+          'Triangle construction requires a valid tolerance context.'
+        )
+      ],
+
+      metadata
+    });
+  }
 
   const evaluation =
     evaluateHEarthTriangleNormal(
@@ -2031,6 +2304,10 @@ export function constructHEarthTriangle({
 
     normalMode,
 
+    expectedClosure:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.OPEN_ALLOWED,
+
     transform,
 
     semanticRole,
@@ -2062,10 +2339,6 @@ export function constructHEarthTriangle({
 }
 
 
-/* ==========================================================================
- * 15 · BILLBOARD-NEUTRAL CONSTRUCTION
- * ========================================================================== */
-
 export function constructHEarthBillboard({
   primitiveId,
   center,
@@ -2093,7 +2366,7 @@ export function constructHEarthBillboard({
         createSouthIssue(
           'SOUTH_BILLBOARD_INPUT_INVALID',
           'ERROR',
-          'Billboard construction requires a center, positive dimensions, and valid transform.'
+          'Billboard construction requires a center and positive dimensions.'
         )
       ],
 
@@ -2194,7 +2467,7 @@ export function constructHEarthBillboard({
         createSouthIssue(
           'SOUTH_BILLBOARD_RECORD_CREATION_FAILED',
           'ERROR',
-          'Billboard neutral records could not be created.'
+          'Billboard records could not be created.'
         )
       ],
 
@@ -2216,7 +2489,7 @@ export function constructHEarthBillboard({
 
 
 /* ==========================================================================
- * 16 · RECTANGULAR GRID INDEX CONSTRUCTION
+ * 08 · GRID CONSTRUCTION
  * ========================================================================== */
 
 function constructGridTriangleIndices({
@@ -2319,10 +2592,6 @@ function constructGridTriangleIndices({
 }
 
 
-/* ==========================================================================
- * 17 · HEIGHT-FIELD MESH CONSTRUCTION
- * ========================================================================== */
-
 export function constructHEarthHeightFieldMesh({
   primitiveId,
   descriptor,
@@ -2354,7 +2623,7 @@ export function constructHEarthHeightFieldMesh({
         createSouthIssue(
           'SOUTH_HEIGHT_FIELD_SAMPLE_HELD',
           'ERROR',
-          'Height-field mesh construction is held because sampling did not complete lawfully.'
+          'Height-field sampling did not complete lawfully.'
         )
       ],
 
@@ -2463,6 +2732,14 @@ export function constructHEarthHeightFieldMesh({
 
     indices,
 
+    expectedClosure:
+      wrapRows &&
+      wrapColumns
+        ? H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+            .expectedClosure.CLOSED_REQUIRED
+        : H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+            .expectedClosure.OPEN_ALLOWED,
+
     transform,
 
     semanticRole,
@@ -2491,15 +2768,11 @@ export function constructHEarthHeightFieldMesh({
       rejectedSamplesCompacted:
         false,
 
-      openNeutralMeshExpected:
-        !wrapRows ||
-        !wrapColumns,
-
       admitted:
         false,
 
-      admissionAuthority:
-        'WEST_ONLY'
+        admissionAuthority:
+          'WEST_ONLY'
     },
 
     source: {
@@ -2515,10 +2788,6 @@ export function constructHEarthHeightFieldMesh({
   });
 }
 
-
-/* ==========================================================================
- * 18 · PARAMETRIC-SURFACE MESH CONSTRUCTION
- * ========================================================================== */
 
 export function constructHEarthParametricSurfaceMesh({
   primitiveId,
@@ -2551,7 +2820,7 @@ export function constructHEarthParametricSurfaceMesh({
         createSouthIssue(
           'SOUTH_PARAMETRIC_SURFACE_SAMPLE_HELD',
           'ERROR',
-          'Parametric-surface construction is held because sampling did not complete lawfully.'
+          'Parametric-surface sampling did not complete lawfully.'
         )
       ],
 
@@ -2644,6 +2913,14 @@ export function constructHEarthParametricSurfaceMesh({
 
     indices,
 
+    expectedClosure:
+      wrapRows &&
+      wrapColumns
+        ? H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+            .expectedClosure.CLOSED_REQUIRED
+        : H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+            .expectedClosure.OPEN_ALLOWED,
+
     transform,
 
     semanticRole,
@@ -2694,7 +2971,7 @@ export function constructHEarthParametricSurfaceMesh({
 
 
 /* ==========================================================================
- * 19 · XZ RIBBON SUPPORT
+ * 09 · XZ RIBBON
  * ========================================================================== */
 
 function getHEarthXZDirection(
@@ -2767,13 +3044,7 @@ function resolveBoundedMiterPoint({
     );
 
   const denominatorTolerance =
-    isHEarthPositiveFiniteNumber(
-      toleranceContext
-        .miterDenominatorTolerance
-    )
-      ? toleranceContext
-          .miterDenominatorTolerance
-      : 1e-9;
+    H_EARTH_3D_GEOMETRY_SOUTH_PARALLEL_ALIGNMENT_EPSILON;
 
   if (
     !isHEarthFiniteNumber(denominator) ||
@@ -2805,10 +3076,6 @@ function resolveBoundedMiterPoint({
   );
 }
 
-
-/* ==========================================================================
- * 20 · XZ RIBBON MESH CONSTRUCTION
- * ========================================================================== */
 
 export function constructHEarthXZRibbonMesh({
   primitiveId,
@@ -2856,7 +3123,7 @@ export function constructHEarthXZRibbonMesh({
         createSouthIssue(
           'SOUTH_XZ_RIBBON_INPUT_INVALID',
           'ERROR',
-          'XZ ribbon construction requires a finite centerline, positive width, and supported join/cap modes.'
+          'XZ ribbon construction received invalid input.'
         )
       ],
 
@@ -2939,7 +3206,6 @@ export function constructHEarthXZRibbonMesh({
     0.5;
 
   const leftVertices = [];
-
   const rightVertices = [];
 
   let bevelFallbackCount = 0;
@@ -2979,7 +3245,6 @@ export function constructHEarthXZRibbonMesh({
       );
 
     let leftPoint = null;
-
     let rightPoint = null;
 
     if (
@@ -3148,6 +3413,10 @@ export function constructHEarthXZRibbonMesh({
 
     indices,
 
+    expectedClosure:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.OPEN_ALLOWED,
+
     transform,
 
     semanticRole,
@@ -3175,15 +3444,11 @@ export function constructHEarthXZRibbonMesh({
       leftNormalLaw:
         '[-Tz,0,Tx]',
 
-      supportedJoinModes: [
-        'BEVEL',
-        'BOUNDED_MITER'
-      ],
+      parallelAlignmentEpsilon:
+        H_EARTH_3D_GEOMETRY_SOUTH_PARALLEL_ALIGNMENT_EPSILON,
 
-      supportedCapModes: [
-        'NONE',
-        'BUTT'
-      ],
+      parallelAlignmentEpsilonClass:
+        'SOUTH_LOCAL_CONSTANT',
 
       roundJoinClaim:
         false,
@@ -3205,7 +3470,7 @@ export function constructHEarthXZRibbonMesh({
 
 
 /* ==========================================================================
- * 21 · EXTRUSION SUPPORT
+ * 10 · EXTRUSION TOPOLOGY RESOLUTION
  * ========================================================================== */
 
 function resolveExtrusionVector({
@@ -3238,14 +3503,164 @@ function resolveExtrusionVector({
 }
 
 
-function createExtrusionSideIndices(
-  vertexCount
-) {
+function getTrianglePlanNormal({
+  vertices,
+  triangleIndices,
+  toleranceContext
+}) {
+  if (
+    !areFiniteVector3Array(vertices) ||
+    !Array.isArray(triangleIndices) ||
+    triangleIndices.length < 3
+  ) {
+    return null;
+  }
+
+  for (
+    let offset = 0;
+    offset < triangleIndices.length;
+    offset += 3
+  ) {
+    const a =
+      vertices[
+        triangleIndices[offset]
+      ];
+
+    const b =
+      vertices[
+        triangleIndices[offset + 1]
+      ];
+
+    const c =
+      vertices[
+        triangleIndices[offset + 2]
+      ];
+
+    if (
+      !isHEarthVector3(a) ||
+      !isHEarthVector3(b) ||
+      !isHEarthVector3(c)
+    ) {
+      continue;
+    }
+
+    const ab =
+      subtractHEarthVector3(
+        b,
+        a
+      );
+
+    const ac =
+      subtractHEarthVector3(
+        c,
+        a
+      );
+
+    const cross =
+      crossHEarthVector3(
+        ab,
+        ac
+      );
+
+    const normalized =
+      normalizeHEarthVector3(
+        cross,
+        toleranceContext
+          .lengthTolerance
+      );
+
+    if (normalized.valid) {
+      return normalized.vector;
+    }
+  }
+
+  return null;
+}
+
+
+function getProfileBoundaryNormal({
+  profilePoints,
+  toleranceContext
+}) {
+  if (
+    !areFiniteVector3Array(profilePoints) ||
+    profilePoints.length < 3
+  ) {
+    return null;
+  }
+
+  for (
+    let index = 0;
+    index < profilePoints.length;
+    index += 1
+  ) {
+    const a =
+      profilePoints[index];
+
+    const b =
+      profilePoints[
+        (
+          index + 1
+        ) %
+        profilePoints.length
+      ];
+
+    const c =
+      profilePoints[
+        (
+          index + 2
+        ) %
+        profilePoints.length
+      ];
+
+    const ab =
+      subtractHEarthVector3(
+        b,
+        a
+      );
+
+    const ac =
+      subtractHEarthVector3(
+        c,
+        a
+      );
+
+    const cross =
+      crossHEarthVector3(
+        ab,
+        ac
+      );
+
+    const normalized =
+      normalizeHEarthVector3(
+        cross,
+        toleranceContext
+          .lengthTolerance
+      );
+
+    if (normalized.valid) {
+      return normalized.vector;
+    }
+  }
+
+  return null;
+}
+
+
+function createExtrusionSideIndices({
+  vertexCount,
+  sideBoundaryDirection
+}) {
   if (
     !isHEarthPositiveSafeInteger(
       vertexCount
     ) ||
-    vertexCount < 3
+    vertexCount < 3 ||
+    !enumIncludes(
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .profileBoundaryDirection,
+      sideBoundaryDirection
+    )
   ) {
     return null;
   }
@@ -3277,23 +3692,476 @@ function createExtrusionSideIndices(
       next +
       vertexCount;
 
-    indices.push(
-      lowerA,
-      lowerB,
-      upperB,
+    if (
+      sideBoundaryDirection ===
+        H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+          .profileBoundaryDirection.FORWARD
+    ) {
+      indices.push(
+        lowerA,
+        lowerB,
+        upperB,
 
-      lowerA,
-      upperB,
-      upperA
-    );
+        lowerA,
+        upperB,
+        upperA
+      );
+    } else {
+      indices.push(
+        lowerB,
+        lowerA,
+        upperA,
+
+        lowerB,
+        upperA,
+        upperB
+      );
+    }
   }
 
   return indices;
 }
 
 
+function resolveOrientedExtrusionProfile({
+  profilePoints,
+  projectionPlane,
+  extrusionDirection,
+  toleranceContext
+}) {
+  const triangulationPlan =
+    triangulateHEarthConvexPolygon(
+      profilePoints,
+      projectionPlane,
+      toleranceContext
+    );
+
+  if (
+    !triangulationPlan.valid ||
+    triangulationPlan
+      .outputClassification !==
+      H_EARTH_3D_GEOMETRY_EAST_ENUMS
+        .triangulationOutputClassification
+        .ANALYSIS_LEVEL_TRIANGLE_INDEX_PLAN ||
+    triangulationPlan
+      .primitiveConstruction !==
+      false ||
+    triangulationPlan
+      .admittedGeometry !==
+      false ||
+    !areValidTriangleIndices(
+      triangulationPlan.triangleIndices,
+      profilePoints.length
+    )
+  ) {
+    return {
+      valid:
+        false,
+
+      profilePoints:
+        null,
+
+      triangulationPlan,
+
+      profileNormal:
+        null,
+
+      profileBoundaryNormal:
+        null,
+
+      profilePlanFacesExtrusionDirection:
+        null,
+
+      lowerCapTriangleIndices:
+        null,
+
+      upperCapTriangleIndices:
+        null,
+
+      sideTriangleIndices:
+        null,
+
+      sideWindingMode:
+        null,
+
+      issues: [
+        ...ensureArray(
+          triangulationPlan?.issues
+        ),
+
+        createSouthIssue(
+          'SOUTH_EXTRUSION_PROFILE_ANALYSIS_FAILED',
+          'ERROR',
+          'Extrusion profile did not produce a lawful East analysis-level triangle-index plan.'
+        )
+      ]
+    };
+  }
+
+  const profileNormal =
+    getTrianglePlanNormal({
+      vertices:
+        profilePoints,
+
+      triangleIndices:
+        triangulationPlan
+          .triangleIndices,
+
+      toleranceContext
+    });
+
+  const profileBoundaryNormal =
+    getProfileBoundaryNormal({
+      profilePoints,
+      toleranceContext
+    });
+
+  if (
+    !isHEarthVector3(profileNormal) ||
+    !isHEarthVector3(
+      profileBoundaryNormal
+    )
+  ) {
+    return {
+      valid:
+        false,
+
+      profilePoints:
+        null,
+
+      triangulationPlan,
+
+      profileNormal,
+
+      profileBoundaryNormal,
+
+      profilePlanFacesExtrusionDirection:
+        null,
+
+      lowerCapTriangleIndices:
+        null,
+
+      upperCapTriangleIndices:
+        null,
+
+      sideTriangleIndices:
+        null,
+
+      sideWindingMode:
+        null,
+
+      issues: [
+        createSouthIssue(
+          'SOUTH_EXTRUSION_PROFILE_NORMAL_INVALID',
+          'ERROR',
+          'Extrusion profile did not produce stable plan and boundary normals.'
+        )
+      ]
+    };
+  }
+
+  const planAlignment =
+    dotHEarthVector3(
+      profileNormal,
+      extrusionDirection
+    );
+
+  const boundaryToPlanAlignment =
+    dotHEarthVector3(
+      profileBoundaryNormal,
+      profileNormal
+    );
+
+  const alignmentTolerance =
+    H_EARTH_3D_GEOMETRY_SOUTH_PARALLEL_ALIGNMENT_EPSILON;
+
+  if (
+    !isHEarthFiniteNumber(
+      planAlignment
+    ) ||
+    Math.abs(planAlignment) <=
+      alignmentTolerance
+  ) {
+    return {
+      valid:
+        false,
+
+      profilePoints:
+        null,
+
+      triangulationPlan,
+
+      profileNormal,
+
+      profileBoundaryNormal,
+
+      profilePlanFacesExtrusionDirection:
+        null,
+
+      lowerCapTriangleIndices:
+        null,
+
+      upperCapTriangleIndices:
+        null,
+
+      sideTriangleIndices:
+        null,
+
+      sideWindingMode:
+        null,
+
+      issues: [
+        createSouthIssue(
+          'SOUTH_EXTRUSION_PROFILE_DIRECTION_ALIGNMENT_INVALID',
+          'ERROR',
+          'Extrusion profile plan normal must have a stable relationship with the extrusion direction.',
+          {
+            planAlignment,
+            alignmentTolerance,
+            alignmentEpsilonClass:
+              'SOUTH_LOCAL_CONSTANT'
+          }
+        )
+      ]
+    };
+  }
+
+  if (
+    !isHEarthFiniteNumber(
+      boundaryToPlanAlignment
+    ) ||
+    Math.abs(
+      boundaryToPlanAlignment
+    ) <=
+      alignmentTolerance
+  ) {
+    return {
+      valid:
+        false,
+
+      profilePoints:
+        null,
+
+      triangulationPlan,
+
+      profileNormal,
+
+      profileBoundaryNormal,
+
+      profilePlanFacesExtrusionDirection:
+        null,
+
+      lowerCapTriangleIndices:
+        null,
+
+      upperCapTriangleIndices:
+        null,
+
+      sideTriangleIndices:
+        null,
+
+      sideWindingMode:
+        null,
+
+      issues: [
+        createSouthIssue(
+          'SOUTH_EXTRUSION_PROFILE_BOUNDARY_ALIGNMENT_INVALID',
+          'ERROR',
+          'Extrusion profile boundary order must have a stable relationship with the East triangle plan.',
+          {
+            boundaryToPlanAlignment,
+            alignmentTolerance,
+            alignmentEpsilonClass:
+              'SOUTH_LOCAL_CONSTANT'
+          }
+        )
+      ]
+    };
+  }
+
+  const profilePlanFacesExtrusionDirection =
+    planAlignment > 0;
+
+  const profileBoundaryMatchesPlan =
+    boundaryToPlanAlignment > 0;
+
+  const forwardPlan =
+    triangulationPlan
+      .triangleIndices
+      .slice();
+
+  const reversedPlan =
+    reverseTriangleIndices(
+      forwardPlan
+    );
+
+  if (!reversedPlan) {
+    return {
+      valid:
+        false,
+
+      profilePoints:
+        null,
+
+      triangulationPlan,
+
+      profileNormal,
+
+      profileBoundaryNormal,
+
+      profilePlanFacesExtrusionDirection,
+
+      lowerCapTriangleIndices:
+        null,
+
+      upperCapTriangleIndices:
+        null,
+
+      sideTriangleIndices:
+        null,
+
+      sideWindingMode:
+        null,
+
+      issues: [
+        createSouthIssue(
+          'SOUTH_EXTRUSION_PLAN_REVERSAL_FAILED',
+          'ERROR',
+          'Extrusion triangle plan could not be reversed.'
+        )
+      ]
+    };
+  }
+
+  const lowerCapUsesForwardPlan =
+    !profilePlanFacesExtrusionDirection;
+
+  const lowerCapTriangleIndices =
+    lowerCapUsesForwardPlan
+      ? forwardPlan
+      : reversedPlan;
+
+  const upperCapLocalTriangleIndices =
+    lowerCapUsesForwardPlan
+      ? reversedPlan
+      : forwardPlan;
+
+  const upperCapTriangleIndices =
+    offsetTriangleIndices(
+      upperCapLocalTriangleIndices,
+      profilePoints.length
+    );
+
+  const lowerCapBoundaryUsesProfileForward =
+    lowerCapUsesForwardPlan
+      ? profileBoundaryMatchesPlan
+      : !profileBoundaryMatchesPlan;
+
+  const sideBoundaryDirection =
+    lowerCapBoundaryUsesProfileForward
+      ? H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+          .profileBoundaryDirection.REVERSED
+      : H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+          .profileBoundaryDirection.FORWARD;
+
+  const sideTriangleIndices =
+    createExtrusionSideIndices({
+      vertexCount:
+        profilePoints.length,
+
+      sideBoundaryDirection
+    });
+
+  if (
+    !upperCapTriangleIndices ||
+    !sideTriangleIndices
+  ) {
+    return {
+      valid:
+        false,
+
+      profilePoints:
+        null,
+
+      triangulationPlan,
+
+      profileNormal,
+
+      profileBoundaryNormal,
+
+      profilePlanFacesExtrusionDirection,
+
+      lowerCapTriangleIndices:
+        null,
+
+      upperCapTriangleIndices:
+        null,
+
+      sideTriangleIndices:
+        null,
+
+      sideWindingMode:
+        null,
+
+      issues: [
+        createSouthIssue(
+          'SOUTH_EXTRUSION_RESOLVED_INDEX_CONSTRUCTION_FAILED',
+          'ERROR',
+          'Extrusion cap or side indices could not be resolved.'
+        )
+      ]
+    };
+  }
+
+  return {
+    valid:
+      true,
+
+    profilePoints:
+      cloneVector3Array(
+        profilePoints
+      ),
+
+    triangulationPlan,
+
+    profileNormal,
+
+    profileBoundaryNormal,
+
+    profilePlanFacesExtrusionDirection,
+
+    profilePlanFacing:
+      profilePlanFacesExtrusionDirection
+        ? H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+            .extrusionPlanFacing.WITH_EXTRUSION
+        : H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+            .extrusionPlanFacing.AGAINST_EXTRUSION,
+
+    profileBoundaryMatchesPlan,
+
+    lowerCapUsesForwardPlan,
+
+    lowerCapBoundaryUsesProfileForward,
+
+    lowerCapTriangleIndices,
+
+    upperCapTriangleIndices,
+
+    sideTriangleIndices,
+
+    sideWindingMode:
+      sideBoundaryDirection,
+
+    issues:
+      ensureArray(
+        triangulationPlan.issues
+      )
+  };
+}
+
+
 /* ==========================================================================
- * 22 · CONVEX EXTRUSION CONSTRUCTION
+ * 11 · CONVEX EXTRUSION AND PRISM
  * ========================================================================== */
 
 export function constructHEarthConvexExtrusionMesh({
@@ -3309,6 +4177,9 @@ export function constructHEarthConvexExtrusionMesh({
       0
     ),
   distance,
+  primitiveType =
+    H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+      .primitiveType.EXTRUSION_MESH,
   transform =
     createHEarthIdentityMatrix4(),
   semanticRole = null,
@@ -3322,6 +4193,9 @@ export function constructHEarthConvexExtrusionMesh({
     profilePoints.length < 3 ||
     !isHEarthPositiveFiniteNumber(distance) ||
     !isHEarthVector3(direction) ||
+    !isExtrusionPathPrimitiveType(
+      primitiveType
+    ) ||
     !isHEarthMatrix4(transform)
   ) {
     return makeConstructionFailure({
@@ -3332,7 +4206,7 @@ export function constructHEarthConvexExtrusionMesh({
         createSouthIssue(
           'SOUTH_EXTRUSION_INPUT_INVALID',
           'ERROR',
-          'Extrusion construction requires a convex profile, direction, positive distance, and valid transform.'
+          'Extrusion construction requires a convex profile, direction, positive distance, lawful extrusion primitive type, and valid transform.'
         )
       ],
 
@@ -3372,38 +4246,23 @@ export function constructHEarthConvexExtrusionMesh({
     });
   }
 
-  const triangulationPlan =
-    triangulateHEarthConvexPolygon(
-      profilePoints,
-      projectionPlane,
+  const normalizedDirectionResult =
+    normalizeHEarthVector3(
+      direction,
       resolvedToleranceContext
+        .lengthTolerance
     );
 
-  if (
-    !triangulationPlan.valid ||
-    triangulationPlan
-      .outputClassification !==
-      H_EARTH_3D_GEOMETRY_EAST_ENUMS
-        .triangulationOutputClassification
-        .ANALYSIS_LEVEL_TRIANGLE_INDEX_PLAN ||
-    triangulationPlan
-      .primitiveConstruction !==
-      false ||
-    triangulationPlan
-      .admittedGeometry !==
-      false
-  ) {
+  if (!normalizedDirectionResult.valid) {
     return makeConstructionFailure({
       constructionType:
         'EXTRUSION_MESH',
 
       issues: [
-        ...triangulationPlan.issues,
-
         createSouthIssue(
-          'SOUTH_EXTRUSION_PROFILE_ANALYSIS_FAILED',
+          'SOUTH_EXTRUSION_DIRECTION_INVALID',
           'ERROR',
-          'Extrusion profile did not produce a lawful East analysis-only triangle-index plan.'
+          'Extrusion direction could not be normalized.'
         )
       ],
 
@@ -3411,10 +4270,37 @@ export function constructHEarthConvexExtrusionMesh({
     });
   }
 
+  const extrusionDirection =
+    normalizedDirectionResult.vector;
+
+  const resolvedTopology =
+    resolveOrientedExtrusionProfile({
+      profilePoints,
+      projectionPlane,
+      extrusionDirection,
+      toleranceContext:
+        resolvedToleranceContext
+    });
+
+  if (!resolvedTopology.valid) {
+    return makeConstructionFailure({
+      constructionType:
+        'EXTRUSION_MESH',
+
+      issues:
+        resolvedTopology.issues,
+
+      metadata
+    });
+  }
+
   const extrusionVector =
     resolveExtrusionVector({
-      direction,
+      direction:
+        extrusionDirection,
+
       distance,
+
       toleranceContext:
         resolvedToleranceContext
     });
@@ -3428,7 +4314,7 @@ export function constructHEarthConvexExtrusionMesh({
         createSouthIssue(
           'SOUTH_EXTRUSION_VECTOR_INVALID',
           'ERROR',
-          'Extrusion direction and distance could not produce a finite extrusion vector.'
+          'Extrusion direction and distance could not produce a finite vector.'
         )
       ],
 
@@ -3438,17 +4324,20 @@ export function constructHEarthConvexExtrusionMesh({
 
   const lowerVertices =
     cloneVector3Array(
-      profilePoints
+      resolvedTopology
+        .profilePoints
     );
 
   const upperVertices =
-    profilePoints.map(
-      (point) =>
-        addHEarthVector3(
-          point,
-          extrusionVector
-        )
-    );
+    resolvedTopology
+      .profilePoints
+      .map(
+        (point) =>
+          addHEarthVector3(
+            point,
+            extrusionVector
+          )
+      );
 
   if (
     !lowerVertices ||
@@ -3464,7 +4353,7 @@ export function constructHEarthConvexExtrusionMesh({
         createSouthIssue(
           'SOUTH_EXTRUSION_PROFILE_COPY_INVALID',
           'ERROR',
-          'Extrusion profiles could not be constructed as finite vertices.'
+          'Extrusion profiles could not be represented as finite vertices.'
         )
       ],
 
@@ -3477,81 +4366,29 @@ export function constructHEarthConvexExtrusionMesh({
     ...upperVertices
   ];
 
-  const vertexCount =
-    profilePoints.length;
+  const indices = [
+    ...resolvedTopology
+      .lowerCapTriangleIndices,
 
-  const indices = [];
+    ...resolvedTopology
+      .upperCapTriangleIndices,
 
-  for (
-    let offset = 0;
-    offset <
-      triangulationPlan
-        .triangleIndices.length;
-    offset += 3
-  ) {
-    const a =
-      triangulationPlan
-        .triangleIndices[offset];
-
-    const b =
-      triangulationPlan
-        .triangleIndices[
-          offset + 1
-        ];
-
-    const c =
-      triangulationPlan
-        .triangleIndices[
-          offset + 2
-        ];
-
-    indices.push(
-      c,
-      b,
-      a,
-
-      a + vertexCount,
-      b + vertexCount,
-      c + vertexCount
-    );
-  }
-
-  const sideIndices =
-    createExtrusionSideIndices(
-      vertexCount
-    );
-
-  if (!sideIndices) {
-    return makeConstructionFailure({
-      constructionType:
-        'EXTRUSION_MESH',
-
-      issues: [
-        createSouthIssue(
-          'SOUTH_EXTRUSION_SIDE_INDICES_INVALID',
-          'ERROR',
-          'Extrusion side indices could not be constructed.'
-        )
-      ],
-
-      metadata
-    });
-  }
-
-  indices.push(
-    ...sideIndices
-  );
+    ...resolvedTopology
+      .sideTriangleIndices
+  ];
 
   return constructHEarthTriangleMesh({
     primitiveId,
 
-    primitiveType:
-      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-        .primitiveType.EXTRUSION_MESH,
+    primitiveType,
 
     vertices,
 
     indices,
+
+    expectedClosure:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.CLOSED_REQUIRED,
 
     transform,
 
@@ -3564,9 +4401,49 @@ export function constructHEarthConvexExtrusionMesh({
 
       distance,
 
+      extrusionDirection,
+
       extrusionVector,
 
       projectionPlane,
+
+      profileNormal:
+        resolvedTopology
+          .profileNormal,
+
+      profileBoundaryNormal:
+        resolvedTopology
+          .profileBoundaryNormal,
+
+      profilePlanFacesExtrusionDirection:
+        resolvedTopology
+          .profilePlanFacesExtrusionDirection,
+
+      profilePlanFacing:
+        resolvedTopology
+          .profilePlanFacing,
+
+      profileBoundaryMatchesPlan:
+        resolvedTopology
+          .profileBoundaryMatchesPlan,
+
+      lowerCapUsesForwardPlan:
+        resolvedTopology
+          .lowerCapUsesForwardPlan,
+
+      lowerCapBoundaryUsesProfileForward:
+        resolvedTopology
+          .lowerCapBoundaryUsesProfileForward,
+
+      sideWindingMode:
+        resolvedTopology
+          .sideWindingMode,
+
+      lowerCapOrientation:
+        'OPPOSITE_EXTRUSION_DIRECTION',
+
+      upperCapOrientation:
+        'WITH_EXTRUSION_DIRECTION',
 
       capTriangulationSource:
         'EAST_ANALYSIS_LEVEL_TRIANGLE_INDEX_PLAN',
@@ -3580,18 +4457,23 @@ export function constructHEarthConvexExtrusionMesh({
       primitiveConstructionAuthority:
         'SOUTH',
 
-      admissionAuthority:
-        'WEST_ONLY',
+      expectedClosure:
+        'CLOSED_REQUIRED',
 
       admitted:
-        false
+        false,
+
+      admissionAuthority:
+        'WEST_ONLY'
     },
 
     source: {
       sourceType:
         'CONVEX_PROFILE_EXTRUSION',
 
-      triangulationPlan
+      triangulationPlan:
+        resolvedTopology
+          .triangulationPlan
     },
 
     toleranceContext:
@@ -3599,10 +4481,6 @@ export function constructHEarthConvexExtrusionMesh({
   });
 }
 
-
-/* ==========================================================================
- * 23 · PRISM CONSTRUCTION
- * ========================================================================== */
 
 export function constructHEarthPrismMesh({
   primitiveId,
@@ -3707,6 +4585,10 @@ export function constructHEarthPrismMesh({
     constructHEarthConvexExtrusionMesh({
       primitiveId,
 
+      primitiveType:
+        H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+          .primitiveType.PRISM_MESH,
+
       profilePoints,
 
       projectionPlane:
@@ -3740,7 +4622,10 @@ export function constructHEarthPrismMesh({
 
         sideCount,
 
-        rotationRadians
+        rotationRadians,
+
+        expectedClosure:
+          'CLOSED_REQUIRED'
       },
 
       toleranceContext
@@ -3754,22 +4639,13 @@ export function constructHEarthPrismMesh({
     ...result,
 
     constructionType:
-      'PRISM_MESH',
-
-    primitiveRecord:
-      deepFreeze({
-        ...result.primitiveRecord,
-
-        primitiveType:
-          H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-            .primitiveType.PRISM_MESH
-      })
+      'PRISM_MESH'
   });
 }
 
 
 /* ==========================================================================
- * 24 · SHED ROOF CONSTRUCTION
+ * 12 · ROOF CONSTRUCTION
  * ========================================================================== */
 
 export function constructHEarthShedRoofMesh({
@@ -3810,7 +4686,7 @@ export function constructHEarthShedRoofMesh({
         createSouthIssue(
           'SOUTH_SHED_ROOF_INPUT_INVALID',
           'ERROR',
-          'Shed-roof construction requires lawful extents and distinct low/high elevations.'
+          'Shed-roof construction requires lawful extents and distinct elevations.'
         )
       ],
 
@@ -3871,25 +4747,6 @@ export function constructHEarthShedRoofMesh({
           )
         ];
 
-  if (
-    !areFiniteVector3Array(vertices)
-  ) {
-    return makeConstructionFailure({
-      constructionType:
-        'SHED_ROOF_MESH',
-
-      issues: [
-        createSouthIssue(
-          'SOUTH_SHED_ROOF_VERTICES_INVALID',
-          'ERROR',
-          'Shed-roof vertices are nonfinite.'
-        )
-      ],
-
-      metadata
-    });
-  }
-
   return constructHEarthTriangleMesh({
     primitiveId,
 
@@ -3909,6 +4766,10 @@ export function constructHEarthShedRoofMesh({
       3
     ],
 
+    expectedClosure:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.OPEN_ALLOWED,
+
     transform,
 
     semanticRole,
@@ -3926,9 +4787,6 @@ export function constructHEarthShedRoofMesh({
       openNeutralMeshExpected:
         true,
 
-      constructionValidWhenOpen:
-        true,
-
       admitted:
         false,
 
@@ -3940,10 +4798,6 @@ export function constructHEarthShedRoofMesh({
   });
 }
 
-
-/* ==========================================================================
- * 25 · GABLE ROOF CONSTRUCTION
- * ========================================================================== */
 
 export function constructHEarthGableRoofMesh({
   primitiveId,
@@ -3983,7 +4837,7 @@ export function constructHEarthGableRoofMesh({
         createSouthIssue(
           'SOUTH_GABLE_ROOF_INPUT_INVALID',
           'ERROR',
-          'Gable-roof construction requires lawful extents and ridge elevation above the eaves.'
+          'Gable-roof construction requires lawful extents and a ridge above the eaves.'
         )
       ],
 
@@ -4122,25 +4976,6 @@ export function constructHEarthGableRoofMesh({
     ];
   }
 
-  if (
-    !areFiniteVector3Array(vertices)
-  ) {
-    return makeConstructionFailure({
-      constructionType:
-        'GABLE_ROOF_MESH',
-
-      issues: [
-        createSouthIssue(
-          'SOUTH_GABLE_ROOF_VERTICES_INVALID',
-          'ERROR',
-          'Gable-roof vertices are nonfinite.'
-        )
-      ],
-
-      metadata
-    });
-  }
-
   return constructHEarthTriangleMesh({
     primitiveId,
 
@@ -4151,6 +4986,10 @@ export function constructHEarthGableRoofMesh({
     vertices,
 
     indices,
+
+    expectedClosure:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.OPEN_ALLOWED,
 
     transform,
 
@@ -4169,9 +5008,6 @@ export function constructHEarthGableRoofMesh({
       openNeutralMeshExpected:
         true,
 
-      constructionValidWhenOpen:
-        true,
-
       admitted:
         false,
 
@@ -4185,7 +5021,7 @@ export function constructHEarthGableRoofMesh({
 
 
 /* ==========================================================================
- * 26 · SPHERE-FAMILY POLE-FAN TOPOLOGY
+ * 13 · SPHERE-FAMILY POLE-FAN TOPOLOGY
  * ========================================================================== */
 
 function constructSphereFamilyPoleFan({
@@ -4222,16 +5058,14 @@ function constructSphereFamilyPoleFan({
         createSouthIssue(
           'SOUTH_POLE_FAN_CONFIGURATION_INVALID',
           'ERROR',
-          'Sphere-family pole-fan construction requires lawful sample counts, evaluator, and tolerance context.'
+          'Sphere-family pole-fan construction received invalid configuration.'
         )
       ]
     };
   }
 
   const issues = [];
-
   const southPoleCandidates = [];
-
   const northPoleCandidates = [];
 
   for (
@@ -4294,8 +5128,10 @@ function constructSphereFamilyPoleFan({
           createSouthIssue(
             'SOUTH_POLE_FAN_EVALUATOR_THREW',
             'ERROR',
-            'Sphere-family point evaluator threw while resolving pole candidates.',
+            'Sphere-family evaluator threw while resolving pole candidates.',
             {
+              longitudeIndex,
+
               errorName:
                 error?.name ??
                 null,
@@ -4386,10 +5222,10 @@ function constructSphereFamilyPoleFan({
         createSouthIssue(
           'SOUTH_POLE_FAN_POLE_INCONSISTENT',
           'ERROR',
-          'Sphere-family evaluator is longitude-dependent at a pole and cannot use single-vertex pole topology.',
+          'Sphere-family evaluator is longitude-dependent at a pole.',
           {
             longitudeIndex:
-  index,
+              index,
 
             southDistance,
 
@@ -4494,7 +5330,7 @@ function constructSphereFamilyPoleFan({
             createSouthIssue(
               'SOUTH_POLE_FAN_EVALUATOR_THREW',
               'ERROR',
-              'Sphere-family point evaluator threw while resolving an intermediate ring.',
+              'Sphere-family evaluator threw while resolving an intermediate ring.',
               {
                 latitudeIndex,
                 longitudeIndex,
@@ -4527,7 +5363,7 @@ function constructSphereFamilyPoleFan({
             createSouthIssue(
               'SOUTH_POLE_FAN_RING_POINT_NONFINITE',
               'ERROR',
-              'Sphere-family evaluator produced a nonfinite intermediate-ring point.',
+              'Sphere-family evaluator produced a nonfinite ring point.',
               {
                 latitudeIndex,
                 longitudeIndex
@@ -4549,17 +5385,8 @@ function constructSphereFamilyPoleFan({
   );
 
   const indices = [];
+  const firstRingStart = 1;
 
-  const firstRingStart =
-    1;
-
-  /*
-   * South fan:
-   * [southPole, current, next]
-   *
-   * This produces outward-oriented pole triangles for the
-   * right-handed X/Y/Z coordinate frame.
-   */
   for (
     let longitudeIndex = 0;
     longitudeIndex < longitudeSampleCount;
@@ -4576,16 +5403,13 @@ function constructSphereFamilyPoleFan({
       0,
 
       firstRingStart +
-        longitudeIndex,
+        nextLongitude,
 
       firstRingStart +
-        nextLongitude
+        longitudeIndex
     );
   }
 
-  /*
-   * Intermediate wrapped quad bands.
-   */
   for (
     let ringIndex = 0;
     ringIndex <
@@ -4632,12 +5456,12 @@ function constructSphereFamilyPoleFan({
 
       indices.push(
         a,
-        b,
         c,
+        b,
 
         a,
-        c,
-        d
+        d,
+        c
       );
     }
   }
@@ -4650,10 +5474,6 @@ function constructSphereFamilyPoleFan({
     ) *
     longitudeSampleCount;
 
-  /*
-   * North fan:
-   * [northPole, next, current]
-   */
   for (
     let longitudeIndex = 0;
     longitudeIndex < longitudeSampleCount;
@@ -4670,10 +5490,10 @@ function constructSphereFamilyPoleFan({
       northPoleIndex,
 
       lastRingStart +
-        nextLongitude,
+        longitudeIndex,
 
       lastRingStart +
-        longitudeIndex
+        nextLongitude
     );
   }
 
@@ -4713,7 +5533,7 @@ function constructSphereFamilyPoleFan({
 
 
 /* ==========================================================================
- * 27 · ELLIPSOID POINT EVALUATION
+ * 14 · ELLIPSOID
  * ========================================================================== */
 
 export function evaluateHEarthEllipsoidPoint({
@@ -4759,21 +5579,13 @@ export function evaluateHEarthEllipsoidPoint({
       latitudeRadians
     );
 
-  const cosineLongitude =
-    Math.cos(
-      longitudeRadians
-    );
-
-  const sineLongitude =
-    Math.sin(
-      longitudeRadians
-    );
-
   return createHEarthVector3(
     center.x +
       radii.x *
       cosineLatitude *
-      cosineLongitude,
+      Math.cos(
+        longitudeRadians
+      ),
 
     center.y +
       radii.y *
@@ -4782,14 +5594,12 @@ export function evaluateHEarthEllipsoidPoint({
     center.z +
       radii.z *
       cosineLatitude *
-      sineLongitude
+      Math.sin(
+        longitudeRadians
+      )
   );
 }
 
-
-/* ==========================================================================
- * 28 · ELLIPSOID MESH CONSTRUCTION
- * ========================================================================== */
 
 export function constructHEarthEllipsoidMesh({
   primitiveId,
@@ -4848,38 +5658,30 @@ export function constructHEarthEllipsoidMesh({
     });
   }
 
-  const nominalMinimum =
-    createHEarthVector3(
-      center.x -
-        radii.x,
-
-      center.y -
-        radii.y,
-
-      center.z -
-        radii.z
-    );
-
-  const nominalMaximum =
-    createHEarthVector3(
-      center.x +
-        radii.x,
-
-      center.y +
-        radii.y,
-
-      center.z +
-        radii.z
-    );
-
   const nominalBounds =
-    nominalMinimum &&
-    nominalMaximum
-      ? createHEarthGeometryBounds([
-          nominalMinimum,
-          nominalMaximum
-        ])
-      : null;
+    createHEarthGeometryBounds([
+      createHEarthVector3(
+        center.x -
+          radii.x,
+
+        center.y -
+          radii.y,
+
+        center.z -
+          radii.z
+      ),
+
+      createHEarthVector3(
+        center.x +
+          radii.x,
+
+        center.y +
+          radii.y,
+
+        center.z +
+          radii.z
+      )
+    ]);
 
   const resolvedToleranceContext =
     resolveToleranceContext(
@@ -4954,6 +5756,10 @@ export function constructHEarthEllipsoidMesh({
     indices:
       poleFan.indices,
 
+    expectedClosure:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.CLOSED_REQUIRED,
+
     transform,
 
     semanticRole,
@@ -4992,8 +5798,8 @@ export function constructHEarthEllipsoidMesh({
       duplicateLongitudeTerminal:
         false,
 
-      equation:
-        '((x-cx)/rx)^2 + ((y-cy)/ry)^2 + ((z-cz)/rz)^2 = 1',
+      expectedClosure:
+        'CLOSED_REQUIRED',
 
       admitted:
         false,
@@ -5009,7 +5815,7 @@ export function constructHEarthEllipsoidMesh({
 
 
 /* ==========================================================================
- * 29 · SUPERELLIPSOID POINT EVALUATION
+ * 15 · SUPERELLIPSOID
  * ========================================================================== */
 
 export function evaluateHEarthSuperellipsoidPoint({
@@ -5085,23 +5891,6 @@ export function evaluateHEarthSuperellipsoidPoint({
       longitudeExponent
     );
 
-  if (
-    !isHEarthFiniteNumber(
-      latitudeCosine
-    ) ||
-    !isHEarthFiniteNumber(
-      latitudeSine
-    ) ||
-    !isHEarthFiniteNumber(
-      longitudeCosine
-    ) ||
-    !isHEarthFiniteNumber(
-      longitudeSine
-    )
-  ) {
-    return null;
-  }
-
   return createHEarthVector3(
     center.x +
       radii.x *
@@ -5119,10 +5908,6 @@ export function evaluateHEarthSuperellipsoidPoint({
   );
 }
 
-
-/* ==========================================================================
- * 30 · SUPERELLIPSOID MESH CONSTRUCTION
- * ========================================================================== */
 
 export function constructHEarthSuperellipsoidMesh({
   primitiveId,
@@ -5181,7 +5966,7 @@ export function constructHEarthSuperellipsoidMesh({
         createSouthIssue(
           'SOUTH_SUPERELLIPSOID_INPUT_INVALID',
           'ERROR',
-          'Superellipsoid construction requires positive radii, positive exponents, and lawful sampling counts.'
+          'Superellipsoid construction requires positive radii, exponents, and lawful sample counts.'
         )
       ],
 
@@ -5189,38 +5974,30 @@ export function constructHEarthSuperellipsoidMesh({
     });
   }
 
-  const nominalMinimum =
-    createHEarthVector3(
-      center.x -
-        radii.x,
-
-      center.y -
-        radii.y,
-
-      center.z -
-        radii.z
-    );
-
-  const nominalMaximum =
-    createHEarthVector3(
-      center.x +
-        radii.x,
-
-      center.y +
-        radii.y,
-
-      center.z +
-        radii.z
-    );
-
   const nominalBounds =
-    nominalMinimum &&
-    nominalMaximum
-      ? createHEarthGeometryBounds([
-          nominalMinimum,
-          nominalMaximum
-        ])
-      : null;
+    createHEarthGeometryBounds([
+      createHEarthVector3(
+        center.x -
+          radii.x,
+
+        center.y -
+          radii.y,
+
+        center.z -
+          radii.z
+      ),
+
+      createHEarthVector3(
+        center.x +
+          radii.x,
+
+        center.y +
+          radii.y,
+
+        center.z +
+          radii.z
+      )
+    ]);
 
   const resolvedToleranceContext =
     resolveToleranceContext(
@@ -5297,6 +6074,10 @@ export function constructHEarthSuperellipsoidMesh({
     indices:
       poleFan.indices,
 
+    expectedClosure:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.CLOSED_REQUIRED,
+
     transform,
 
     semanticRole,
@@ -5339,6 +6120,9 @@ export function constructHEarthSuperellipsoidMesh({
       duplicateLongitudeTerminal:
         false,
 
+      expectedClosure:
+        'CLOSED_REQUIRED',
+
       admitted:
         false,
 
@@ -5353,7 +6137,7 @@ export function constructHEarthSuperellipsoidMesh({
 
 
 /* ==========================================================================
- * 31 · RADIAL-SHELL MESH CONSTRUCTION
+ * 16 · RADIAL SHELL
  * ========================================================================== */
 
 export function constructHEarthRadialShellMesh({
@@ -5397,7 +6181,7 @@ export function constructHEarthRadialShellMesh({
         createSouthIssue(
           'SOUTH_RADIAL_SHELL_INPUT_INVALID',
           'ERROR',
-          'Radial-shell construction requires a center, evaluator, lawful sample counts, and valid transform.'
+          'Radial-shell construction received invalid input.'
         )
       ],
 
@@ -5438,19 +6222,13 @@ export function constructHEarthRadialShellMesh({
     longitudeIndex,
     latitudeIndex
   }) => {
-    let radius;
-
-    try {
-      radius =
-        radialEvaluator({
-          longitudeRadians,
-          latitudeRadians,
-          longitudeIndex,
-          latitudeIndex
-        });
-    } catch (error) {
-      throw error;
-    }
+    const radius =
+      radialEvaluator({
+        longitudeRadians,
+        latitudeRadians,
+        longitudeIndex,
+        latitudeIndex
+      });
 
     if (
       !isHEarthPositiveFiniteNumber(radius)
@@ -5513,7 +6291,7 @@ export function constructHEarthRadialShellMesh({
         createSouthIssue(
           'SOUTH_RADIAL_SHELL_POLE_FAN_FAILED',
           'ERROR',
-          'Radial-shell construction could not produce a lawful nondegenerate pole-fan topology.'
+          'Radial-shell construction could not produce a lawful pole fan.'
         )
       ],
 
@@ -5533,6 +6311,10 @@ export function constructHEarthRadialShellMesh({
 
     indices:
       poleFan.indices,
+
+    expectedClosure:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+        .expectedClosure.CLOSED_REQUIRED,
 
     transform,
 
@@ -5576,6 +6358,9 @@ export function constructHEarthRadialShellMesh({
       duplicateLongitudeTerminal:
         false,
 
+      expectedClosure:
+        'CLOSED_REQUIRED',
+
       admitted:
         false,
 
@@ -5590,7 +6375,7 @@ export function constructHEarthRadialShellMesh({
 
 
 /* ==========================================================================
- * 32 · CONSTRUCTION RECORD VALIDATION
+ * 17 · RECORD VALIDATION
  * ========================================================================== */
 
 export function isHEarthNeutralGeometryRecord(
@@ -5629,28 +6414,30 @@ export function isHEarthNeutralGeometryRecord(
   if (
     record.topologyMode ===
       H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-        .topologyMode.TRIANGLES &&
-    !areValidTriangleIndices(
+        .topologyMode.TRIANGLES
+  ) {
+    return areValidTriangleIndices(
       record.indices,
       record.vertices.length
-    )
-  ) {
-    return false;
+    );
   }
 
   if (
     record.topologyMode ===
       H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-        .topologyMode.LINES &&
-    !areValidLineIndices(
+        .topologyMode.LINES
+  ) {
+    return areValidLineIndices(
       record.indices,
       record.vertices.length
-    )
-  ) {
-    return false;
+    );
   }
 
-  return true;
+  return record.indices.every(
+    (index) =>
+      isHEarthNonNegativeSafeInteger(index) &&
+      index < record.vertices.length
+  );
 }
 
 
@@ -5683,7 +6470,7 @@ export function isHEarthNeutralPrimitiveRecord(
 
 
 /* ==========================================================================
- * 33 · SOUTH OWNERSHIP DECLARATION
+ * 18 · OWNERSHIP
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_OWNERSHIP =
@@ -5714,6 +6501,9 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_OWNERSHIP =
         'RADIAL_SHELL_CONSTRUCTION',
         'NONDEGENERATE_POLE_FAN_TOPOLOGY',
         'OPEN_NEUTRAL_MESH_CONSTRUCTION',
+        'CLOSED_OUTWARD_TOPOLOGY_ENFORCEMENT',
+        'EXTRUSION_CAP_PLAN_ORIENTATION',
+        'EXTRUSION_SIDE_BOUNDARY_WINDING',
         'NEUTRAL_NORMAL_ATTACHMENT',
         'NEUTRAL_BOUNDS_ATTACHMENT',
         'CONSTRUCTION_ISSUE_PRESERVATION'
@@ -5775,13 +6565,16 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_OWNERSHIP =
 
 
 /* ==========================================================================
- * 34 · TARGETED CORRECTION DECLARATION
+ * 19 · CORRECTION DECLARATION
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS =
   deepFreeze({
     correctionScopeId:
       H_EARTH_3D_GEOMETRY_SOUTH_CORRECTION_SCOPE_ID,
+
+    correctionScope:
+      'SOUTH_TOPOLOGY_WINDING_AND_EXECUTABLE_FIXTURE_CORRECTION_ONLY',
 
     architecturalRewrite:
       false,
@@ -5791,6 +6584,24 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS =
 
     southJurisdictionChange:
       false,
+
+    westAuthorityCreated:
+      false,
+
+    providerAuthorityCreated:
+      false,
+
+    rendererAuthorityCreated:
+      false,
+
+    westCompensation:
+      'PROHIBITED',
+
+    staticReviewOnlyApproval:
+      'PROHIBITED',
+
+    preBackingExecutableGate:
+      'REQUIRED',
 
     corrections:
       deepFreeze([
@@ -5802,7 +6613,7 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS =
             'IMPLEMENTED_CANDIDATE',
 
           description:
-            'North and East imports are reduced to symbols consumed by this file; unconfirmed and unused named imports are removed.'
+            'Triangle-mesh construction enforces OPEN_ALLOWED, CLOSED_REQUIRED, and UNSPECIFIED topology expectations.'
         }),
 
         deepFreeze({
@@ -5813,7 +6624,7 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS =
             'IMPLEMENTED_CANDIDATE',
 
           description:
-            'Ellipsoid, superellipsoid, and radial-shell meshes use one south pole vertex, intermediate wrapped rings, one north pole vertex, and nondegenerate pole fans.'
+            'CLOSED_REQUIRED succeeds only when East reports CLOSED_ORIENTED_MANIFOLD with shellOrientation OUTWARD and no directed-edge conflicts.'
         }),
 
         deepFreeze({
@@ -5824,7 +6635,7 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS =
             'IMPLEMENTED_CANDIDATE',
 
           description:
-            'Open neutral meshes are explicitly construction-valid when East reports lawful open-manifold topology, while remaining unadmitted.'
+            'Extrusion orientation is resolved from the East triangle plan without reversing and re-triangulating profilePoints.'
         }),
 
         deepFreeze({
@@ -5835,7 +6646,7 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS =
             'IMPLEMENTED_CANDIDATE',
 
           description:
-            'Every neutral geometry and primitive record preserves admitted false and admissionAuthority WEST_ONLY.'
+            'Extrusion lower-cap and upper-cap triangle indices are selected directly from forward and reversed East plans.'
         }),
 
         deepFreeze({
@@ -5846,70 +6657,185 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS =
             'IMPLEMENTED_CANDIDATE',
 
           description:
-            'South remains construction-only and creates no West, facade, provider, geometry-index, compositor, renderer, visual, production, or public-release authority.'
+            'Extrusion side winding is derived from the selected lower-cap boundary direction.'
+        }),
+
+        deepFreeze({
+          id:
+            'SOUTH_CORRECTION_06',
+
+          status:
+            'IMPLEMENTED_CANDIDATE',
+
+          description:
+            'Prism remains a closed-shell extrusion and cannot escape as a lawful open mesh.'
+        }),
+
+        deepFreeze({
+          id:
+            'SOUTH_CORRECTION_07',
+
+          status:
+            'IMPLEMENTED_CANDIDATE',
+
+          description:
+            'Sphere-family south fan, intermediate bands, and north fan use corrected outward winding.'
+        }),
+
+        deepFreeze({
+          id:
+            'SOUTH_CORRECTION_08',
+
+          status:
+            'IMPLEMENTED_CANDIDATE',
+
+          description:
+            'Open neutral mesh validity is restricted to open-by-design constructors.'
+        }),
+
+        deepFreeze({
+          id:
+            'SOUTH_CORRECTION_09',
+
+          status:
+            'IMPLEMENTED_CANDIDATE',
+
+          description:
+            'Triangle-bearing primitive types are restricted to lawful constructor paths.'
+        }),
+
+        deepFreeze({
+          id:
+            'SOUTH_CORRECTION_10',
+
+          status:
+            'IMPLEMENTED_CANDIDATE',
+
+          description:
+            'South does not depend on an unsupported North parallelTolerance field and instead uses an explicit South-local parallel alignment epsilon.'
+        }),
+
+        deepFreeze({
+          id:
+            'SOUTH_CORRECTION_11',
+
+          status:
+            'IMPLEMENTED_CANDIDATE',
+
+          description:
+            'All South records remain unadmitted with WEST_ONLY admission authority.'
+        }),
+
+        deepFreeze({
+          id:
+            'SOUTH_CORRECTION_12',
+
+          status:
+            'IMPLEMENTED_CANDIDATE',
+
+          description:
+            'The mandatory executable pre-backing corridor is declared but not claimed passed.'
         })
       ]),
 
     implementationConformance:
-      'NOT_YET_EVALUATED'
+      'HOLD_PENDING_EXECUTABLE_CORRIDOR'
   });
 
 
 /* ==========================================================================
- * 35 · REQUIRED SOUTH FIXTURE CORRIDOR
+ * 20 · REQUIRED FIXTURES
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_REQUIRED_FIXTURES =
   deepFreeze([
     'SOUTH_IMPORTS_NORTH_AND_EAST_ONLY',
-    'SOUTH_NAMED_IMPORTS_RESOLVE_AGAINST_ADMITTED_DEPENDENCIES',
+    'SOUTH_NAMED_IMPORTS_RESOLVE',
+    'SOUTH_NAMED_IMPORTS_ARE_USED',
+    'NO_PROHIBITED_IMPORTS',
+
     'NEUTRAL_GEOMETRY_RECORD_IS_PROJECTION_NEUTRAL',
     'NEUTRAL_GEOMETRY_RECORD_IS_NOT_ADMITTED',
     'NEUTRAL_GEOMETRY_RECORD_ADMISSION_AUTHORITY_IS_WEST_ONLY',
     'NEUTRAL_PRIMITIVE_RECORD_IS_NOT_ADMITTED',
     'NEUTRAL_PRIMITIVE_RECORD_ADMISSION_AUTHORITY_IS_WEST_ONLY',
+    'CONSTRUCTION_SUCCESS_DOES_NOT_EQUAL_WEST_ADMISSION',
+
     'POINT_CONSTRUCTION_PRESERVES_EXACT_POSITION',
     'LINE_SEGMENT_REJECTS_DEGENERATE_LENGTH',
     'POLYLINE_REJECTS_DEGENERATE_SEGMENT',
     'TRIANGLE_REJECTS_AREA_AT_OR_BELOW_TOLERANCE',
+    'TRIANGLE_MESH_REJECTS_NON_TRIANGLE_BEARING_PRIMITIVE_TYPE',
+    'EXTRUSION_REJECTS_NON_EXTRUSION_PATH_PRIMITIVE_TYPE',
     'SINGLE_TRIANGLE_OPEN_MESH_CONSTRUCTION_REMAINS_VALID',
     'SINGLE_TRIANGLE_OPEN_MESH_REMAINS_UNADMITTED',
     'TRIANGLE_MESH_REJECTS_INVALID_INDICES',
     'TRIANGLE_MESH_BOUNDS_MATCH_ACTUAL_VERTICES',
     'TRIANGLE_MESH_NORMALS_DERIVED_FROM_ACTUAL_TRIANGLES',
+
     'BILLBOARD_USES_CONSERVATIVE_RADIUS_BOUNDS',
+
     'HEIGHT_FIELD_REJECTED_SAMPLE_DOES_NOT_COMPACT_TOPOLOGY',
     'HEIGHT_FIELD_TRIANGLES_USE_A_C_B_AND_A_D_C',
     'HEIGHT_FIELD_UPWARD_ORIENTATION_USES_SV_CROSS_SU',
     'HEIGHT_FIELD_OPEN_MESH_CONSTRUCTION_REMAINS_VALID',
     'HEIGHT_FIELD_OPEN_MESH_REMAINS_UNADMITTED',
     'PERIODIC_PARAMETRIC_GRID_WRAPS_WITHOUT_DUPLICATE_TERMINAL_COLUMN',
+
     'XZ_RIBBON_LEFT_NORMAL_EQUALS_NEGATIVE_TZ_ZERO_TX',
     'XZ_RIBBON_REJECTS_DEGENERATE_SEGMENT',
     'XZ_RIBBON_BOUNDED_MITER_FALLS_BACK_TO_BEVEL',
     'XZ_RIBBON_ROUND_JOIN_NOT_CLAIMED',
     'XZ_RIBBON_ROUND_CAP_NOT_CLAIMED',
+
     'CONVEX_EXTRUSION_CONSUMES_EAST_ANALYSIS_PLAN_ONLY',
     'CONVEX_EXTRUSION_DOES_NOT_CREATE_ADMISSION',
+    'CONVEX_EXTRUSION_FORWARD_PROFILE_POSITIVE_DIRECTION_CLOSED_OUTWARD',
+    'CONVEX_EXTRUSION_REVERSED_PROFILE_POSITIVE_DIRECTION_CLOSED_OUTWARD',
+    'CONVEX_EXTRUSION_FORWARD_PROFILE_NEGATIVE_DIRECTION_CLOSED_OUTWARD',
+    'CONVEX_EXTRUSION_TRIANGULAR_PROFILE_CLOSED_OUTWARD',
+    'CONVEX_EXTRUSION_HAS_NO_DIRECTED_EDGE_CONFLICT',
+    'CONVEX_EXTRUSION_HAS_OUTWARD_SHELL_ORIENTATION',
+    'CONVEX_EXTRUSION_TOPOLOGY_IS_CLOSED_OUTWARD',
+
     'PRISM_SIDE_COUNT_BELOW_THREE_REJECTED',
+    'PRISM_MESH_HAS_NO_DIRECTED_EDGE_CONFLICT',
+    'PRISM_MESH_HAS_OUTWARD_SHELL_ORIENTATION',
+    'PRISM_TOPOLOGY_IS_CLOSED_OUTWARD',
+
     'GABLE_ROOF_OPEN_MESH_CONSTRUCTION_REMAINS_VALID',
     'GABLE_ROOF_OPEN_MESH_REMAINS_UNADMITTED',
     'SHED_ROOF_OPEN_MESH_CONSTRUCTION_REMAINS_VALID',
     'SHED_ROOF_OPEN_MESH_REMAINS_UNADMITTED',
+
     'ELLIPSOID_POINT_SATISFIES_EXACT_EQUATION_WITHIN_TOLERANCE',
     'ELLIPSOID_PERIODIC_LONGITUDE_EXCLUDES_DUPLICATE_TERMINAL',
     'ELLIPSOID_USES_SINGLE_NORTH_POLE_VERTEX',
     'ELLIPSOID_USES_SINGLE_SOUTH_POLE_VERTEX',
     'ELLIPSOID_POLE_FAN_HAS_NO_DEGENERATE_TRIANGLES',
+    'ELLIPSOID_MESH_HAS_NO_DIRECTED_EDGE_CONFLICT',
+    'ELLIPSOID_MESH_HAS_OUTWARD_SHELL_ORIENTATION',
+    'ELLIPSOID_TOPOLOGY_IS_CLOSED_OUTWARD',
     'ELLIPSOID_MESH_CONSTRUCTION_VALID',
+
     'SUPERELLIPSOID_REJECTS_NONPOSITIVE_EXPONENT',
     'SUPERELLIPSOID_USES_NONDEGENERATE_POLE_FAN',
+    'SUPERELLIPSOID_MESH_HAS_NO_DIRECTED_EDGE_CONFLICT',
+    'SUPERELLIPSOID_MESH_HAS_OUTWARD_SHELL_ORIENTATION',
+    'SUPERELLIPSOID_TOPOLOGY_IS_CLOSED_OUTWARD',
     'SUPERELLIPSOID_MESH_CONSTRUCTION_VALID',
+
     'RADIAL_SHELL_REJECTS_NONPOSITIVE_RADIUS',
     'RADIAL_SHELL_REJECTS_LONGITUDE_DEPENDENT_POLE_RADIUS',
     'RADIAL_SHELL_USES_NONDEGENERATE_POLE_FAN',
+    'RADIAL_SHELL_MESH_HAS_NO_DIRECTED_EDGE_CONFLICT',
+    'RADIAL_SHELL_MESH_HAS_OUTWARD_SHELL_ORIENTATION',
+    'RADIAL_SHELL_TOPOLOGY_IS_CLOSED_OUTWARD',
     'RADIAL_SHELL_MESH_CONSTRUCTION_VALID',
-    'CONSTRUCTION_SUCCESS_DOES_NOT_EQUAL_WEST_ADMISSION',
+
+    'NO_DIRECTED_EDGE_CONFLICT_FOR_ALL_SPHERE_FAMILY_MESHES',
+    'SOUTH_PARALLEL_ALIGNMENT_EPSILON_IS_LOCAL_NOT_NORTH_SCHEMA',
+
     'NO_PROVIDER_AUTHORITY_CREATED',
     'NO_GEOMETRY_INDEX_AUTHORITY_CREATED',
     'NO_COMPOSITOR_AUTHORITY_CREATED',
@@ -5921,30 +6847,110 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_REQUIRED_FIXTURES =
 
 
 /* ==========================================================================
- * 36 · SOUTH STATIC SELF-REVIEW
+ * 21 · PRE-BACKING GATE
+ * ========================================================================== */
+
+export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_PRE_BACKING_GATE =
+  deepFreeze({
+    gateId:
+      'SOUTH_PRE_BACKING_GATE_v1',
+
+    requiredSequence:
+      deepFreeze([
+        'NODE_SYNTAX_CHECK',
+        'NAMED_IMPORT_RESOLUTION',
+        'UNUSED_IMPORT_SCAN',
+        'PROHIBITED_IMPORT_SCAN',
+        'STATIC_SELF_REVIEW',
+        'EXECUTABLE_FIXTURE_CORRIDOR',
+        'EAST_TOPOLOGY_RECHECK',
+        'FIXTURES_FAILED_ZERO'
+      ]),
+
+    nodeSyntaxCheckCommand:
+      'node --check geometry-kernel.south.js',
+
+    allowedImports:
+      deepFreeze([
+        './geometry-kernel.north.js',
+        './geometry-kernel.east.js'
+      ]),
+
+    requiredFixtureCount:
+      H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_REQUIRED_FIXTURES
+        .length,
+
+    nodeSyntaxCheckPerformed:
+      false,
+
+    namedImportResolutionScanPerformed:
+      false,
+
+    unusedImportScanPerformed:
+      false,
+
+    prohibitedImportScanPerformed:
+      false,
+
+    staticSelfReviewPerformed:
+      false,
+
+    executableFixtureReviewPerformed:
+      false,
+
+    positiveFixtureExecutionPerformed:
+      false,
+
+    negativeFixtureExecutionPerformed:
+      false,
+
+    eastTopologyRecheckPerformed:
+      false,
+
+    fixturesFailed:
+      null,
+
+    gatePassed:
+      false
+  });
+
+
+/* ==========================================================================
+ * 22 · STATIC SELF-REVIEW
  * ========================================================================== */
 
 export function getHEarthGeometryKernelSouthStaticReview() {
-  const point =
-    createHEarthVector3(
-      0,
-      0,
-      0
-    );
+  const closedResultPasses =
+    (result) =>
+      result?.valid === true &&
+      result.openNeutralMesh === false &&
+      result.admitted === false &&
+      result.admissionAuthority ===
+        'WEST_ONLY' &&
+      isClosedOutwardTopologyAnalysis(
+        result
+          ?.geometry
+          ?.metadata
+          ?.topologyAnalysis
+      );
 
   const pointResult =
     constructHEarthPoint({
       primitiveId:
-        'STATIC_SELF_REVIEW_POINT',
+        'STATIC_POINT',
 
       position:
-        point
+        createHEarthVector3(
+          0,
+          0,
+          0
+        )
     });
 
   const triangleResult =
     constructHEarthTriangle({
       primitiveId:
-        'STATIC_SELF_REVIEW_TRIANGLE',
+        'STATIC_TRIANGLE',
 
       a:
         createHEarthVector3(
@@ -5968,10 +6974,159 @@ export function getHEarthGeometryKernelSouthStaticReview() {
         )
     });
 
+  const invalidPrimitiveTypeMeshResult =
+    constructHEarthTriangleMesh({
+      primitiveId:
+        'STATIC_INVALID_TRIANGLE_MESH_TYPE',
+
+      primitiveType:
+        H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+          .primitiveType.POINT,
+
+      vertices: [
+        createHEarthVector3(0, 0, 0),
+        createHEarthVector3(1, 0, 0),
+        createHEarthVector3(0, 0, 1)
+      ],
+
+      indices: [0, 1, 2]
+    });
+
+  const invalidExtrusionTypeResult =
+    constructHEarthConvexExtrusionMesh({
+      primitiveId:
+        'STATIC_INVALID_EXTRUSION_TYPE',
+
+      primitiveType:
+        H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
+          .primitiveType.BILLBOARD,
+
+      profilePoints: [
+        createHEarthVector3(-1, 0, -1),
+        createHEarthVector3(1, 0, -1),
+        createHEarthVector3(1, 0, 1),
+        createHEarthVector3(-1, 0, 1)
+      ],
+
+      distance: 1
+    });
+
+  const squareProfile = [
+    createHEarthVector3(
+      -1,
+      0,
+      -1
+    ),
+
+    createHEarthVector3(
+      1,
+      0,
+      -1
+    ),
+
+    createHEarthVector3(
+      1,
+      0,
+      1
+    ),
+
+    createHEarthVector3(
+      -1,
+      0,
+      1
+    )
+  ];
+
+  const extrusionPositive =
+    constructHEarthConvexExtrusionMesh({
+      primitiveId:
+        'STATIC_EXTRUSION_POSITIVE',
+
+      profilePoints:
+        squareProfile,
+
+      projectionPlane:
+        H_EARTH_3D_GEOMETRY_EAST_ENUMS
+          .polygonProjectionPlane.XZ,
+
+      direction:
+        createHEarthVector3(
+          0,
+          1,
+          0
+        ),
+
+      distance:
+        2
+    });
+
+  const extrusionReversed =
+    constructHEarthConvexExtrusionMesh({
+      primitiveId:
+        'STATIC_EXTRUSION_REVERSED_PROFILE',
+
+      profilePoints:
+        squareProfile
+          .slice()
+          .reverse(),
+
+      projectionPlane:
+        H_EARTH_3D_GEOMETRY_EAST_ENUMS
+          .polygonProjectionPlane.XZ,
+
+      direction:
+        createHEarthVector3(
+          0,
+          1,
+          0
+        ),
+
+      distance:
+        2
+    });
+
+  const extrusionNegative =
+    constructHEarthConvexExtrusionMesh({
+      primitiveId:
+        'STATIC_EXTRUSION_NEGATIVE',
+
+      profilePoints:
+        squareProfile,
+
+      projectionPlane:
+        H_EARTH_3D_GEOMETRY_EAST_ENUMS
+          .polygonProjectionPlane.XZ,
+
+      direction:
+        createHEarthVector3(
+          0,
+          -1,
+          0
+        ),
+
+      distance:
+        2
+    });
+
+  const prismResult =
+    constructHEarthPrismMesh({
+      primitiveId:
+        'STATIC_PRISM',
+
+      radius:
+        1,
+
+      height:
+        2,
+
+      sideCount:
+        6
+    });
+
   const ellipsoidResult =
     constructHEarthEllipsoidMesh({
       primitiveId:
-        'STATIC_SELF_REVIEW_ELLIPSOID',
+        'STATIC_ELLIPSOID',
 
       radii:
         createHEarthVector3(
@@ -5979,6 +7134,40 @@ export function getHEarthGeometryKernelSouthStaticReview() {
           1,
           1
         ),
+
+      longitudeSampleCount:
+        8,
+
+      latitudeSampleCount:
+        5
+    });
+
+  const superellipsoidResult =
+    constructHEarthSuperellipsoidMesh({
+      primitiveId:
+        'STATIC_SUPERELLIPSOID',
+
+      radii:
+        createHEarthVector3(
+          1,
+          1,
+          1
+        ),
+
+      longitudeSampleCount:
+        8,
+
+      latitudeSampleCount:
+        5
+    });
+
+  const radialShellResult =
+    constructHEarthRadialShellMesh({
+      primitiveId:
+        'STATIC_RADIAL_SHELL',
+
+      radialEvaluator:
+        () => 1,
 
       longitudeSampleCount:
         8,
@@ -5997,13 +7186,9 @@ export function getHEarthGeometryKernelSouthStaticReview() {
           H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_OWNERSHIP
             .imports.length === 2 &&
           H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_OWNERSHIP
-            .imports.includes(
-              './geometry-kernel.north.js'
-            ) &&
+            .imports.includes('./geometry-kernel.north.js') &&
           H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_OWNERSHIP
-            .imports.includes(
-              './geometry-kernel.east.js'
-            )
+            .imports.includes('./geometry-kernel.east.js')
       }),
 
       deepFreeze({
@@ -6044,66 +7229,119 @@ export function getHEarthGeometryKernelSouthStaticReview() {
 
       deepFreeze({
         id:
-          'SOUTH_JURISDICTION_DECLARED',
-
-        passed:
-          H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_OWNERSHIP
-            .jurisdiction ===
-            'PROJECTION_NEUTRAL_PRIMITIVE_AND_NEUTRAL_GEOMETRY_CONSTRUCTION_ONLY'
-      }),
-
-      deepFreeze({
-        id:
-          'POINT_RESULT_PROJECTION_NEUTRAL',
-
-        passed:
-          pointResult.valid === true &&
-          pointResult
-            .primitiveRecord
-            .projectionNeutral === true
-      }),
-
-      deepFreeze({
-        id:
           'POINT_RESULT_NOT_ADMITTED',
 
         passed:
           pointResult.valid === true &&
-          pointResult
-            .primitiveRecord
-            .admitted === false &&
-          pointResult
-            .primitiveRecord
-            .admissionAuthority ===
+          pointResult.admitted === false &&
+          pointResult.admissionAuthority ===
             'WEST_ONLY'
       }),
 
       deepFreeze({
         id:
-          'OPEN_TRIANGLE_CONSTRUCTION_VALID',
+          'OPEN_TRIANGLE_VALID',
 
         passed:
           triangleResult.valid === true &&
           triangleResult.openNeutralMesh === true &&
-          triangleResult
-            .primitiveRecord
-            .admitted === false
+          triangleResult.admitted === false
       }),
 
       deepFreeze({
         id:
-          'ELLIPSOID_POLE_FAN_CONSTRUCTION_VALID',
+          'TRIANGLE_MESH_REJECTS_NON_TRIANGLE_BEARING_PRIMITIVE_TYPE',
 
         passed:
-          ellipsoidResult.valid === true &&
-          ellipsoidResult
-            .primitiveRecord
-            .metadata
-            .duplicatePoleVertices === false &&
-          ellipsoidResult
-            .primitiveRecord
-            .metadata
-            .poleDegenerateTriangles === false
+          invalidPrimitiveTypeMeshResult.valid === false
+      }),
+
+      deepFreeze({
+        id:
+          'EXTRUSION_REJECTS_NON_EXTRUSION_PATH_PRIMITIVE_TYPE',
+
+        passed:
+          invalidExtrusionTypeResult.valid === false
+      }),
+
+      deepFreeze({
+        id:
+          'EXTRUSION_POSITIVE_CLOSED_OUTWARD',
+
+        passed:
+          closedResultPasses(
+            extrusionPositive
+          )
+      }),
+
+      deepFreeze({
+        id:
+          'EXTRUSION_REVERSED_PROFILE_CLOSED_OUTWARD',
+
+        passed:
+          closedResultPasses(
+            extrusionReversed
+          )
+      }),
+
+      deepFreeze({
+        id:
+          'EXTRUSION_NEGATIVE_DIRECTION_CLOSED_OUTWARD',
+
+        passed:
+          closedResultPasses(
+            extrusionNegative
+          )
+      }),
+
+      deepFreeze({
+        id:
+          'PRISM_CLOSED_OUTWARD',
+
+        passed:
+          closedResultPasses(
+            prismResult
+          )
+      }),
+
+      deepFreeze({
+        id:
+          'ELLIPSOID_CLOSED_OUTWARD',
+
+        passed:
+          closedResultPasses(
+            ellipsoidResult
+          )
+      }),
+
+      deepFreeze({
+        id:
+          'SUPERELLIPSOID_CLOSED_OUTWARD',
+
+        passed:
+          closedResultPasses(
+            superellipsoidResult
+          )
+      }),
+
+      deepFreeze({
+        id:
+          'RADIAL_SHELL_CLOSED_OUTWARD',
+
+        passed:
+          closedResultPasses(
+            radialShellResult
+          )
+      }),
+
+      deepFreeze({
+        id:
+          'SOUTH_PARALLEL_ALIGNMENT_EPSILON_IS_LOCAL',
+
+        passed:
+          isHEarthPositiveFiniteNumber(
+            H_EARTH_3D_GEOMETRY_SOUTH_PARALLEL_ALIGNMENT_EPSILON
+          )
       }),
 
       deepFreeze({
@@ -6137,7 +7375,7 @@ export function getHEarthGeometryKernelSouthStaticReview() {
 
   return deepFreeze({
     reviewId:
-      'H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTED_STATIC_SELF_REVIEW_v1',
+      'H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_TOPOLOGY_CORRECTED_STATIC_SELF_REVIEW_v2',
 
     contractId:
       H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT_ID,
@@ -6154,16 +7392,16 @@ export function getHEarthGeometryKernelSouthStaticReview() {
 
     checks,
 
-    prohibitedImportScanPerformed:
+    nodeSyntaxCheckPerformed:
       false,
 
     namedImportResolutionScanPerformed:
       false,
 
-    northReadbackCorrespondenceVerified:
+    unusedImportScanPerformed:
       false,
 
-    eastReadbackCorrespondenceVerified:
+    prohibitedImportScanPerformed:
       false,
 
     executableFixtureReviewPerformed:
@@ -6175,20 +7413,23 @@ export function getHEarthGeometryKernelSouthStaticReview() {
     negativeFixtureExecutionPerformed:
       false,
 
+    eastTopologyRecheckPerformed:
+      false,
+
     localImplementationConformance:
-      'NOT_YET_EVALUATED'
+      'HOLD_PENDING_EXECUTABLE_CORRIDOR'
   });
 }
 
 
 /* ==========================================================================
- * 37 · SOUTH RECEIPT
+ * 23 · RECEIPT
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_RECEIPT =
   deepFreeze({
     receiptId:
-      'H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTED_IMPLEMENTATION_CANDIDATE_RECEIPT_v1',
+      'H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_TOPOLOGY_CORRECTED_IMPLEMENTATION_CANDIDATE_RECEIPT_v2',
 
     contractId:
       H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT_ID,
@@ -6202,35 +7443,14 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_RECEIPT =
     correctionScopeId:
       H_EARTH_3D_GEOMETRY_SOUTH_CORRECTION_SCOPE_ID,
 
-    northDependencyContractId:
-      H_EARTH_3D_GEOMETRY_KERNEL_NORTH_CONTRACT_ID,
+    correctionReason:
+      'PREVIOUS_BACKING_APPROVAL_WAS_PREMATURE_BECAUSE_EXECUTABLE_TOPOLOGY_FIXTURES_WERE_NOT_RUN_BEFORE_BACKING',
 
-    northDependencySchemaVersion:
-      H_EARTH_3D_GEOMETRY_KERNEL_NORTH_SCHEMA_VERSION,
+    correctionScope:
+      'SOUTH_TOPOLOGY_WINDING_AND_EXECUTABLE_FIXTURE_CORRECTION_ONLY',
 
-    eastDependencyContractId:
-      H_EARTH_3D_GEOMETRY_KERNEL_EAST_CONTRACT_ID,
-
-    eastDependencySchemaVersion:
-      H_EARTH_3D_GEOMETRY_KERNEL_EAST_SCHEMA_VERSION,
-
-    mathematicsPacketId:
-      H_EARTH_3D_GEOMETRY_MATHEMATICS_PACKET_ID,
-
-    mathematicsAcceptanceReceiptId:
-      H_EARTH_3D_GEOMETRY_MATHEMATICS_ACCEPTANCE_RECEIPT_ID,
-
-    ownershipContractId:
-      H_EARTH_3D_GEOMETRY_OWNERSHIP_CONTRACT_ID,
-
-    ownershipLockReceiptId:
-      H_EARTH_3D_GEOMETRY_OWNERSHIP_LOCK_RECEIPT_ID,
-
-    finalRefreezeReceiptId:
-      H_EARTH_3D_GEOMETRY_FINAL_REFREEZE_RECEIPT_ID,
-
-    jurisdiction:
-      'PROJECTION_NEUTRAL_PRIMITIVE_AND_NEUTRAL_GEOMETRY_CONSTRUCTION_ONLY',
+    previousBackingApproval:
+      'PREMATURE',
 
     implementationBodyExists:
       true,
@@ -6238,16 +7458,25 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_RECEIPT =
     targetedCorrectionsImplemented:
       true,
 
-    northDependencyLocallyAdmitted:
-      true,
-
-    eastDependencyLocallyAdmitted:
-      true,
+    nodeSyntaxCheckPerformed:
+      false,
 
     prohibitedImportScanPerformed:
       false,
 
     namedImportResolutionScanPerformed:
+      false,
+
+    unusedImportScanPerformed:
+      false,
+
+    staticSelfReviewPerformed:
+      false,
+
+    executableFixtureReviewPerformed:
+      false,
+
+    eastTopologyRecheckPerformed:
       false,
 
     testExecutionPerformed:
@@ -6259,8 +7488,14 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_RECEIPT =
     negativeFixtureExecutionPerformed:
       false,
 
+    fixturesFailed:
+      null,
+
+    executableCorridorReceiptIssued:
+      false,
+
     localImplementationConformance:
-      'NOT_YET_EVALUATED',
+      'HOLD_PENDING_EXECUTABLE_CORRIDOR',
 
     southLocalAdmission:
       false,
@@ -6299,12 +7534,12 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_RECEIPT =
       false,
 
     nextRequired:
-      'CORRECTED_SOUTH_STATIC_OWNERSHIP_REVIEW_NAMED_IMPORT_RESOLUTION_PROHIBITED_IMPORT_SCAN_AND_EXECUTABLE_FIXTURE_CORRIDOR'
+      'NODE_SYNTAX_CHECK_THEN_NAMED_IMPORT_RESOLUTION_THEN_UNUSED_IMPORT_SCAN_THEN_PROHIBITED_IMPORT_SCAN_THEN_STATIC_SELF_REVIEW_THEN_EXECUTABLE_FIXTURE_CORRIDOR_THEN_EAST_TOPOLOGY_RECHECK_THEN_FIXTURES_FAILED_ZERO'
   });
 
 
 /* ==========================================================================
- * 38 · SOUTH PUBLIC API CANDIDATE MANIFEST
+ * 24 · PUBLIC API CANDIDATE
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_PUBLIC_API_CANDIDATE =
@@ -6327,6 +7562,7 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_PUBLIC_API_CANDIDATE =
         'H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_OWNERSHIP',
         'H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS',
         'H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_REQUIRED_FIXTURES',
+        'H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_PRE_BACKING_GATE',
         'createHEarthNeutralGeometryRecord',
         'createHEarthNeutralPrimitiveRecord',
         'constructHEarthTriangleMesh',
@@ -6359,15 +7595,15 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_PUBLIC_API_CANDIDATE =
       'NOT_YET_REVIEWED',
 
     implementationStatus:
-      'CORRECTED_IMPLEMENTATION_CANDIDATE',
+      'TOPOLOGY_CORRECTED_IMPLEMENTATION_CANDIDATE',
 
     conformanceStatus:
-      'NOT_YET_EVALUATED'
+      'HOLD_PENDING_EXECUTABLE_CORRIDOR'
   });
 
 
 /* ==========================================================================
- * 39 · SOUTH CONTRACT
+ * 25 · CONTRACT
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT =
@@ -6383,6 +7619,9 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT =
 
     correctionScopeId:
       H_EARTH_3D_GEOMETRY_SOUTH_CORRECTION_SCOPE_ID,
+
+    correctionScope:
+      'SOUTH_TOPOLOGY_WINDING_AND_EXECUTABLE_FIXTURE_CORRECTION_ONLY',
 
     northDependencyContractId:
       H_EARTH_3D_GEOMETRY_KERNEL_NORTH_CONTRACT_ID,
@@ -6438,6 +7677,9 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT =
     requiredFixtures:
       H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_REQUIRED_FIXTURES,
 
+    preBackingGate:
+      H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_PRE_BACKING_GATE,
+
     enums:
       H_EARTH_3D_GEOMETRY_SOUTH_ENUMS,
 
@@ -6448,7 +7690,7 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT =
       H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_RECEIPT,
 
     implementationConformance:
-      'NOT_YET_EVALUATED',
+      'HOLD_PENDING_EXECUTABLE_CORRIDOR',
 
     testExecutionPerformed:
       false,
@@ -6489,7 +7731,7 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT =
 
 
 /* ==========================================================================
- * 40 · ACCESSORS
+ * 26 · ACCESSORS
  * ========================================================================== */
 
 export function getHEarthGeometryKernelSouthReceipt() {

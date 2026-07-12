@@ -538,24 +538,104 @@ function hasZeroDirectedConflicts(
 }
 
 
+function hasSatisfiedClosureRequirements(
+  topologyAnalysis
+) {
+  const requirements =
+    topologyAnalysis
+      ?.closureRequirements;
+
+  return (
+    isPlainObject(requirements) &&
+    requirements.noInvalidTriangles === true &&
+    requirements.noBoundaryEdges === true &&
+    requirements.noNonmanifoldEdges === true &&
+    requirements.noDirectedConflicts === true &&
+    requirements.noIsolatedVertices === true &&
+    requirements.allClosedShellsOutward === true
+  );
+}
+
+
+function getTopologyDiagnosticDetails(
+  topologyAnalysis
+) {
+  return {
+    classification:
+      topologyAnalysis?.classification ??
+      null,
+
+    structurallyClosed:
+      topologyAnalysis?.structurallyClosed ??
+      false,
+
+    closed:
+      topologyAnalysis?.closed ??
+      false,
+
+    outwardClosed:
+      topologyAnalysis?.outwardClosed ??
+      false,
+
+    directedConflictCount:
+      Array.isArray(
+        topologyAnalysis
+          ?.topology
+          ?.directedConflicts
+      )
+        ? topologyAnalysis
+            .topology
+            .directedConflicts
+            .length
+        : null,
+
+    closureRequirements:
+      topologyAnalysis
+        ?.closureRequirements ??
+      null,
+
+    shellCount:
+      topologyAnalysis
+        ?.shellAnalysis
+        ?.shellCount ??
+      null,
+
+    outwardShellCount:
+      topologyAnalysis
+        ?.shellAnalysis
+        ?.outwardShellCount ??
+      null,
+
+    inwardShellCount:
+      topologyAnalysis
+        ?.shellAnalysis
+        ?.inwardShellCount ??
+      null
+  };
+}
+
+
 function isClosedOutwardTopologyAnalysis(
   topologyAnalysis
 ) {
   return (
     isPlainObject(topologyAnalysis) &&
+    topologyAnalysis.valid === true &&
     topologyAnalysis.classification ===
       H_EARTH_3D_GEOMETRY_EAST_ENUMS
         .topologyClassification
         .CLOSED_ORIENTED_MANIFOLD &&
-    topologyAnalysis.shellOrientation ===
-      H_EARTH_3D_GEOMETRY_EAST_ENUMS
-        ?.shellOrientation
-        ?.OUTWARD &&
+    topologyAnalysis.structurallyClosed === true &&
+    topologyAnalysis.closed === true &&
+    topologyAnalysis.outwardClosed === true &&
     hasZeroDirectedConflicts(
       topologyAnalysis
     ) &&
+    hasSatisfiedClosureRequirements(
+      topologyAnalysis
+    ) &&
     !hasHEarthBlockingIssues(
-      topologyAnalysis?.issues ?? []
+      topologyAnalysis.issues
     )
   );
 }
@@ -566,6 +646,7 @@ function isOpenManifoldTopologyAnalysis(
 ) {
   return (
     isPlainObject(topologyAnalysis) &&
+    topologyAnalysis.valid === true &&
     topologyAnalysis.classification ===
       H_EARTH_3D_GEOMETRY_EAST_ENUMS
         .topologyClassification
@@ -874,8 +955,8 @@ export function createHEarthNeutralGeometryRecord({
     providerOutput:
       false,
 
-    rendererMaterialized:
-      false
+      rendererMaterialized:
+        false
   });
 }
 
@@ -1290,28 +1371,10 @@ export function constructHEarthTriangleMesh({
       createSouthIssue(
         'SOUTH_CLOSED_OUTWARD_TOPOLOGY_REQUIRED',
         'ERROR',
-        'This constructor requires a closed outward-oriented manifold with shellOrientation OUTWARD and no directed-edge conflicts.',
-        {
-          classification:
-            topologyAnalysis?.classification ??
-            null,
-
-          shellOrientation:
-            topologyAnalysis?.shellOrientation ??
-            null,
-
-          directedConflictCount:
-            Array.isArray(
-              topologyAnalysis
-                ?.topology
-                ?.directedConflicts
-            )
-              ? topologyAnalysis
-                  .topology
-                  .directedConflicts
-                  .length
-              : null
-        }
+        'This constructor requires East to report a lawful closed outward result through classification, outwardClosed, directed-conflict-free topology, and satisfied closure requirements.',
+        getTopologyDiagnosticDetails(
+          topologyAnalysis
+        )
       )
     );
   }
@@ -1328,15 +1391,9 @@ export function constructHEarthTriangleMesh({
         'SOUTH_OPEN_ALLOWED_TOPOLOGY_INVALID',
         'ERROR',
         'An open-by-design constructor may produce an open manifold or a lawful closed outward manifold, but not invalid topology.',
-        {
-          classification:
-            topologyAnalysis?.classification ??
-            null,
-
-          shellOrientation:
-            topologyAnalysis?.shellOrientation ??
-            null
-        }
+        getTopologyDiagnosticDetails(
+          topologyAnalysis
+        )
       )
     );
   }
@@ -1353,15 +1410,9 @@ export function constructHEarthTriangleMesh({
         'SOUTH_GENERAL_MESH_TOPOLOGY_INVALID',
         'ERROR',
         'General neutral mesh construction may not preserve invalid topology.',
-        {
-          classification:
-            topologyAnalysis?.classification ??
-            null,
-
-          shellOrientation:
-            topologyAnalysis?.shellOrientation ??
-            null
-        }
+        getTopologyDiagnosticDetails(
+          topologyAnalysis
+        )
       )
     );
   }
@@ -2771,8 +2822,8 @@ export function constructHEarthHeightFieldMesh({
       admitted:
         false,
 
-        admissionAuthority:
-          'WEST_ONLY'
+      admissionAuthority:
+        'WEST_ONLY'
     },
 
     source: {
@@ -5159,16 +5210,16 @@ function constructSphereFamilyPoleFan({
         indices:
           [],
 
-        issues: [
-          createSouthIssue(
-            'SOUTH_POLE_FAN_POLE_NONFINITE',
-            'ERROR',
-            'Sphere-family evaluator produced a nonfinite pole candidate.',
-            {
-              longitudeIndex
-            }
-          )
-        ]
+          issues: [
+            createSouthIssue(
+              'SOUTH_POLE_FAN_POLE_NONFINITE',
+              'ERROR',
+              'Sphere-family evaluator produced a nonfinite pole candidate.',
+              {
+                longitudeIndex
+              }
+            )
+          ]
       };
     }
 
@@ -5394,8 +5445,7 @@ function constructSphereFamilyPoleFan({
   ) {
     const nextLongitude =
       (
-        longitudeIndex +
-        1
+        longitudeIndex + 1
       ) %
       longitudeSampleCount;
 
@@ -5413,8 +5463,7 @@ function constructSphereFamilyPoleFan({
   for (
     let ringIndex = 0;
     ringIndex <
-      intermediateRingCount -
-      1;
+      intermediateRingCount - 1;
     ringIndex += 1
   ) {
     const lowerRingStart =
@@ -5433,8 +5482,7 @@ function constructSphereFamilyPoleFan({
     ) {
       const nextLongitude =
         (
-          longitudeIndex +
-          1
+          longitudeIndex + 1
         ) %
         longitudeSampleCount;
 
@@ -5469,8 +5517,7 @@ function constructSphereFamilyPoleFan({
   const lastRingStart =
     1 +
     (
-      intermediateRingCount -
-      1
+      intermediateRingCount - 1
     ) *
     longitudeSampleCount;
 
@@ -5481,8 +5528,7 @@ function constructSphereFamilyPoleFan({
   ) {
     const nextLongitude =
       (
-        longitudeIndex +
-        1
+        longitudeIndex + 1
       ) %
       longitudeSampleCount;
 
@@ -6624,7 +6670,7 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CORRECTIONS =
             'IMPLEMENTED_CANDIDATE',
 
           description:
-            'CLOSED_REQUIRED succeeds only when East reports CLOSED_ORIENTED_MANIFOLD with shellOrientation OUTWARD and no directed-edge conflicts.'
+            'CLOSED_REQUIRED now consumes East indexed-mesh closure fields directly through valid, classification, structurallyClosed, closed, outwardClosed, directed conflicts, closureRequirements, and issues.'
         }),
 
         deepFreeze({
@@ -6795,12 +6841,10 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_REQUIRED_FIXTURES =
     'CONVEX_EXTRUSION_FORWARD_PROFILE_NEGATIVE_DIRECTION_CLOSED_OUTWARD',
     'CONVEX_EXTRUSION_TRIANGULAR_PROFILE_CLOSED_OUTWARD',
     'CONVEX_EXTRUSION_HAS_NO_DIRECTED_EDGE_CONFLICT',
-    'CONVEX_EXTRUSION_HAS_OUTWARD_SHELL_ORIENTATION',
     'CONVEX_EXTRUSION_TOPOLOGY_IS_CLOSED_OUTWARD',
 
     'PRISM_SIDE_COUNT_BELOW_THREE_REJECTED',
     'PRISM_MESH_HAS_NO_DIRECTED_EDGE_CONFLICT',
-    'PRISM_MESH_HAS_OUTWARD_SHELL_ORIENTATION',
     'PRISM_TOPOLOGY_IS_CLOSED_OUTWARD',
 
     'GABLE_ROOF_OPEN_MESH_CONSTRUCTION_REMAINS_VALID',
@@ -6814,14 +6858,12 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_REQUIRED_FIXTURES =
     'ELLIPSOID_USES_SINGLE_SOUTH_POLE_VERTEX',
     'ELLIPSOID_POLE_FAN_HAS_NO_DEGENERATE_TRIANGLES',
     'ELLIPSOID_MESH_HAS_NO_DIRECTED_EDGE_CONFLICT',
-    'ELLIPSOID_MESH_HAS_OUTWARD_SHELL_ORIENTATION',
     'ELLIPSOID_TOPOLOGY_IS_CLOSED_OUTWARD',
     'ELLIPSOID_MESH_CONSTRUCTION_VALID',
 
     'SUPERELLIPSOID_REJECTS_NONPOSITIVE_EXPONENT',
     'SUPERELLIPSOID_USES_NONDEGENERATE_POLE_FAN',
     'SUPERELLIPSOID_MESH_HAS_NO_DIRECTED_EDGE_CONFLICT',
-    'SUPERELLIPSOID_MESH_HAS_OUTWARD_SHELL_ORIENTATION',
     'SUPERELLIPSOID_TOPOLOGY_IS_CLOSED_OUTWARD',
     'SUPERELLIPSOID_MESH_CONSTRUCTION_VALID',
 
@@ -6829,7 +6871,6 @@ export const H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_REQUIRED_FIXTURES =
     'RADIAL_SHELL_REJECTS_LONGITUDE_DEPENDENT_POLE_RADIUS',
     'RADIAL_SHELL_USES_NONDEGENERATE_POLE_FAN',
     'RADIAL_SHELL_MESH_HAS_NO_DIRECTED_EDGE_CONFLICT',
-    'RADIAL_SHELL_MESH_HAS_OUTWARD_SHELL_ORIENTATION',
     'RADIAL_SHELL_TOPOLOGY_IS_CLOSED_OUTWARD',
     'RADIAL_SHELL_MESH_CONSTRUCTION_VALID',
 

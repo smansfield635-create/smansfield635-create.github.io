@@ -4388,7 +4388,8 @@ function constructSphereFamilyPoleFan({
           'ERROR',
           'Sphere-family evaluator is longitude-dependent at a pole and cannot use single-vertex pole topology.',
           {
-            longitudeIndex,
+            longitudeIndex:
+  index,
 
             southDistance,
 

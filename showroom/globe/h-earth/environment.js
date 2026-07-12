@@ -2,52 +2,70 @@
  * /showroom/globe/h-earth/environment.js
  * COMPLETE RENEWED FILE
  *
+ * H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_GROUND_CELL_SUBSTRATE_v1
+ *
+ * Renews:
  * H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034O_PRECHECK_GROUND_CELL_001_SUBSTRATE_v1
  *
  * Layer:
  * H-Earth Layer 4 · Showroom Execution Corridor
  *
+ * Role:
+ * FRAME_BASED_GROUND_CELL_001_SUBSTRATE_PROVIDER
+ *
  * Purpose:
  * Define the bounded Ground Cell 001 environmental substrate consumed by the
- * renewed Layer 4 compositor.
- *
- * Controlling source truth:
- * - Accepted H-Earth Layers 1–3.
- * - Accepted Path 3 → /h-earth-3d/ binding chain.
- * - H_EARTH_REGION_CELL_X07_Z08 → H_EARTH_GROUND_CELL_001.
- * - Step 034I boundaries.
- * - Step 034J objects.
- * - Step 034K zones.
- * - Step 034L landscape lattice.
- * - Renewed Layer 4 capacity contract.
+ * frame-based H-Earth compositor.
  *
  * This file owns:
- * - Ground Cell 001 environmental meaning.
- * - Continuous substrate descriptors.
- * - Dry-sand and wet-sand domains.
- * - Shoreline and foam-contact descriptors.
- * - Nearshore and open-water descriptors.
- * - Atmosphere and horizon descriptors.
- * - Minimal grounded-detail admission.
- * - Simplified background-context admission.
- * - Inspection-anchor environmental eligibility.
- * - Environment-to-compositor handoff.
- * - Conservative environment receipts.
+ * - environment identity
+ * - environment tier identity
+ * - material identity
+ * - ground substrate descriptors
+ * - shoreline descriptors
+ * - water descriptors
+ * - atmosphere descriptors
+ * - grounded-detail descriptors
+ * - background-context descriptors
+ * - inspection-anchor descriptor
+ * - actor-ready ground candidate descriptor
+ * - environment primitive accounting
+ * - capacity-alignment evaluation
+ * - environment-to-compositor handoff
+ * - environment receipts and claim ceilings
  *
  * This file does not own:
- * - Path 3 or matrix authority.
- * - Ground Cell binding admission.
- * - Global coordinate constitution.
- * - Camera projection.
- * - Semantic render order.
- * - DOM or CSS3D construction.
- * - Renderer mounting.
- * - Controller behavior.
- * - Actor creation.
- * - Collision.
- * - Ground-contact proof.
- * - Fluid simulation.
- * - Visual-pass judgment.
+ * - Path 3 authority
+ * - matrix authority
+ * - Ground Cell binding admission
+ * - boundary, object, zone, or landscape-lattice truth
+ * - camera state
+ * - camera pose
+ * - viewport state
+ * - navigation state
+ * - inertia state
+ * - compositor state
+ * - render-frame sequencing
+ * - semantic layer order
+ * - visibility mutation
+ * - projection mathematics
+ * - projected primitive construction
+ * - DOM/CSS materialization
+ * - renderer mount lifecycle
+ * - controller input normalization
+ * - controller intent dispatch
+ * - route bootstrap
+ * - action execution
+ * - readout construction
+ * - receipt issuance
+ * - actor creation
+ * - collision
+ * - ground-contact proof
+ * - traversal
+ * - gameplay
+ * - fluid simulation
+ * - renderer-pass approval
+ * - visual-pass approval
  */
 
 import {
@@ -55,23 +73,28 @@ import {
   H_EARTH_3D_CAPACITY_CONTRACT,
   H_EARTH_3D_CAPACITY_BINDING_IDENTITY,
   H_EARTH_3D_CAPACITY_SOURCE_REFERENCES,
+  H_EARTH_3D_PUBLIC_STAGE_IDS,
   H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS,
   H_EARTH_3D_VIEWPORT_CAPACITY,
   H_EARTH_3D_CAMERA_CAPACITY,
   H_EARTH_3D_RENDER_STAGE_LIMITS,
   H_EARTH_3D_NODE_BUDGET,
   H_EARTH_3D_INTERACTION_CAPACITY,
-  H_EARTH_3D_ACTOR_CANDIDATE_LIMITS,
+  H_EARTH_3D_RENDER_FRAME_CAPACITY,
+  H_EARTH_3D_COMPOSITOR_FRAME_ELIGIBILITY,
+  H_EARTH_3D_RENDERER_FRAME_CONSUMPTION_ELIGIBILITY,
   H_EARTH_3D_MOUNT_ELIGIBILITY,
   H_EARTH_3D_CAPACITY_CLAIM_CEILINGS,
+  evaluateHEarth3DNodeBudget,
   getHEarth3DCapacityContract,
-  getHEarth3DCapacityReceipt
+  getHEarth3DCapacityReceipt,
+  getHEarth3DCapacityPreflight
 } from './capacity.js';
 
 export const H_EARTH_3D_ENVIRONMENT_CONTRACT_ID =
-  'H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034O_PRECHECK_GROUND_CELL_001_SUBSTRATE_v1';
+  'H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_GROUND_CELL_SUBSTRATE_v1';
 
-export const H_EARTH_3D_ENVIRONMENT_SCHEMA_VERSION = 1;
+export const H_EARTH_3D_ENVIRONMENT_SCHEMA_VERSION = 2;
 
 const deepFreeze = (value) => {
   if (
@@ -89,11 +112,18 @@ const deepFreeze = (value) => {
   return Object.freeze(value);
 };
 
-const clamp = (value, minimum, maximum) =>
-  Math.min(maximum, Math.max(minimum, value));
+const isPlainObject = (value) =>
+  value !== null &&
+  typeof value === 'object' &&
+  !Array.isArray(value);
 
-const isFiniteNumber = (value) =>
-  typeof value === 'number' && Number.isFinite(value);
+const isNonEmptyString = (value) =>
+  typeof value === 'string' &&
+  value.trim().length > 0;
+
+const isNonNegativeInteger = (value) =>
+  Number.isInteger(value) &&
+  value >= 0;
 
 const createEnvironmentIssue = (
   code,
@@ -108,12 +138,22 @@ const createEnvironmentIssue = (
     details
   });
 
-const approximatelyEqual = (
-  left,
-  right,
-  tolerance = 0.000001
+const createEnvironmentCheck = (
+  id,
+  passed,
+  details = null
 ) =>
-  Math.abs(left - right) <= tolerance;
+  deepFreeze({
+    id,
+    passed: passed === true,
+    details
+  });
+
+const allChecksPass = (checks) =>
+  checks.every(
+    (check) =>
+      check.passed === true
+  );
 
 const CAPACITY_CONTRACT =
   getHEarth3DCapacityContract();
@@ -121,37 +161,54 @@ const CAPACITY_CONTRACT =
 const CAPACITY_RECEIPT =
   getHEarth3DCapacityReceipt();
 
-const CAPACITY_WORLD_BOUNDS =
-  H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.bounds;
-
-const CAPACITY_SPAN =
-  H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.span;
+const CAPACITY_PREFLIGHT =
+  getHEarth3DCapacityPreflight();
 
 /**
- * Environment boundary flags.
+ * Environment ownership boundary.
  */
 export const H_EARTH_3D_ENVIRONMENT_BOUNDARY_FLAGS = deepFreeze({
-  ownsEnvironmentMeaning: true,
-  ownsEnvironmentSubstrateDescriptors: true,
-  ownsMaterialIdentityDescriptors: true,
-  ownsMinimalDetailAdmission: true,
-  ownsBackgroundContextAdmission: true,
-  ownsInspectionEnvironmentalEligibility: true,
+  ownsEnvironmentIdentity: true,
+  ownsEnvironmentTierIdentity: true,
+  ownsMaterialIdentity: true,
+  ownsGroundSubstrateDescriptors: true,
+  ownsShorelineDescriptors: true,
+  ownsWaterDescriptors: true,
+  ownsAtmosphereDescriptors: true,
+  ownsGroundDetailDescriptors: true,
+  ownsBackgroundContextDescriptors: true,
+  ownsInspectionAnchorDescriptor: true,
+  ownsActorReadyGroundCandidateDescriptor: true,
+  ownsEnvironmentPrimitiveAccounting: true,
+  ownsEnvironmentCapacityAlignment: true,
+  ownsEnvironmentHandoff: true,
+  ownsEnvironmentReceipts: true,
 
+  ownsCapacityAuthority: false,
   ownsPath3Authority: false,
   ownsMatrixAuthority: false,
   ownsGroundCellBindingAuthority: false,
-  ownsCoordinateConstitution: false,
+  ownsBoundaryAuthority: false,
+  ownsObjectAuthority: false,
+  ownsZoneAuthority: false,
   ownsLandscapeLatticeAuthority: false,
 
-  ownsCameraProjection: false,
+  ownsSemanticComposition: false,
   ownsSemanticLayerOrder: false,
-  ownsRendererGeometry: false,
-  ownsDOMConstruction: false,
-  ownsRendererMount: false,
-  ownsControllerBehavior: false,
+  ownsVisibilityState: false,
+  ownsCameraState: false,
+  ownsCameraPose: false,
+  ownsViewportState: false,
+  ownsNavigationState: false,
+  ownsInertiaState: false,
+  ownsRenderFrameState: false,
+  ownsProjectionMathematics: false,
+  ownsProjectedPrimitiveConstruction: false,
+  ownsDOMCSSMaterialization: false,
+  ownsRendererLifecycle: false,
+  ownsControllerInputNormalization: false,
+  ownsControllerIntentDispatch: false,
   ownsRouteBootstrap: false,
-  ownsDiagnosticJudgment: false,
 
   createsActor: false,
   createsCollisionSystem: false,
@@ -164,7 +221,7 @@ export const H_EARTH_3D_ENVIRONMENT_BOUNDARY_FLAGS = deepFreeze({
 });
 
 /**
- * Binding identity consumed from the renewed capacity contract.
+ * Binding identity.
  */
 export const H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY = deepFreeze({
   capacityContractId:
@@ -188,113 +245,173 @@ export const H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY = deepFreeze({
   bindingExpression:
     H_EARTH_3D_CAPACITY_BINDING_IDENTITY.bindingExpression,
 
+  bindingClass:
+    H_EARTH_3D_CAPACITY_BINDING_IDENTITY.bindingClass,
+
   sceneIdentity:
     H_EARTH_3D_CAPACITY_BINDING_IDENTITY.sceneIdentity,
 
-  acceptedSourceBindingRecorded:
-    H_EARTH_3D_CAPACITY_BINDING_IDENTITY
-      .bindingChainAcceptedForSourceIdentity,
+  coordinateFrame:
+    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame,
 
-  descriptorOnly: true,
+  sourceAuthorityExternal: true,
+  descriptorOnlyAtEnvironmentLayer: true,
 
-  rendererExecutionAuthorized: false,
-  runtimeActivationAuthorized: false
+  matrixCollapse: false
 });
 
 /**
- * Source-spine requirements.
- *
- * Exact source-module export consumption remains subject to installed-source
- * verification. This renewed environment contract records the required
- * authorities without fabricating import names that have not been bound.
+ * Source requirements.
  */
 export const H_EARTH_3D_ENVIRONMENT_SOURCE_REQUIREMENTS = deepFreeze({
-  capacity: deepFreeze({
+  controllingCapacity: deepFreeze({
     path:
       '/showroom/globe/h-earth/capacity.js',
 
     contractId:
       H_EARTH_3D_CAPACITY_CONTRACT_ID,
 
-    consumedByCurrentModule: true
+    required: true,
+
+    usage: deepFreeze([
+      'binding identity',
+      'public-stage IDs',
+      'world bounds',
+      'render-stage limits',
+      'node budget',
+      'render-frame capacity context',
+      'compositor-frame eligibility context',
+      'renderer-consumption context',
+      'claim ceilings'
+    ])
   }),
 
-  acceptedBindingChain: deepFreeze({
-    regionPreflight:
-      '/showroom/globe/h-earth/region-domain-consumer-preflight.js',
+  acceptedSourceSpine: deepFreeze({
+    groundCell: deepFreeze({
+      role:
+        'GROUND_CELL',
 
-    matrix:
-      '/h-earth-3d/h-earth.matrix.js',
+      expectedPath:
+        '/h-earth-3d/cells/ground-cell-001.js',
 
-    groundCell:
-      '/h-earth-3d/cells/ground-cell-001.js',
+      expectedId:
+        'H_EARTH_GROUND_CELL_001',
 
-    integrity:
-      '/h-earth-3d/h-earth.integrity.js',
+      directlyImported: false
+    }),
+
+    boundaries: deepFreeze({
+      role:
+        'BOUNDARIES',
+
+      expectedPath:
+        '/h-earth-3d/boundaries/matrix-boundaries.js',
+
+      expectedStep:
+        'STEP_034I',
+
+      directlyImported: false
+    }),
+
+    objects: deepFreeze({
+      role:
+        'OBJECTS',
+
+      expectedPath:
+        '/h-earth-3d/objects/ground-cell-001.objects.js',
+
+      expectedStep:
+        'STEP_034J',
+
+      directlyImported: false
+    }),
+
+    zones: deepFreeze({
+      role:
+        'ZONES',
+
+      expectedPath:
+        '/h-earth-3d/zones/ground-cell-001.zones.js',
+
+      expectedStep:
+        'STEP_034K',
+
+      directlyImported: false
+    }),
+
+    landscapeLattice: deepFreeze({
+      role:
+        'LANDSCAPE_LATTICE',
+
+      expectedPath:
+        '/h-earth-3d/zones/ground-cell-001.landscape-lattice.js',
+
+      expectedStep:
+        'STEP_034L',
+
+      directlyImported: false
+    })
+  }),
+
+  admittedBinding: deepFreeze({
+    spatialCellId:
+      'H_EARTH_REGION_CELL_X07_Z08',
+
+    groundCellId:
+      'H_EARTH_GROUND_CELL_001',
 
     bindingExpression:
       'H_EARTH_REGION_CELL_X07_Z08 → H_EARTH_GROUND_CELL_001'
   }),
 
-  publicStageSourceSpine: deepFreeze({
-    step034I: deepFreeze({
-      role: 'BOUNDARIES',
-      expectedPath:
-        '/h-earth-3d/boundaries/matrix-boundaries.js',
+  downstreamConsumer: deepFreeze({
+    path:
+      '/showroom/globe/h-earth/compositor.js',
 
-      requiredForEnvironmentAdmission: true,
-      directInstalledExportVerified: false
-    }),
+    expectedRole:
+      'CAMERA_VIEWPORT_NAVIGATION_AND_RENDER_FRAME_COMPOSITION_AUTHORITY',
 
-    step034J: deepFreeze({
-      role: 'OBJECTS',
-      expectedPath:
-        '/h-earth-3d/objects/ground-cell-001.objects.js',
-
-      requiredForEnvironmentAdmission: true,
-      directInstalledExportVerified: false
-    }),
-
-    step034K: deepFreeze({
-      role: 'ZONES',
-      expectedPath:
-        '/h-earth-3d/zones/ground-cell-001.zones.js',
-
-      requiredForEnvironmentAdmission: true,
-      directInstalledExportVerified: false
-    }),
-
-    step034L: deepFreeze({
-      role: 'LANDSCAPE_LATTICE',
-
-      expectedPath:
-        '/h-earth-3d/zones/ground-cell-001.landscape-lattice.js',
-
-      expectedContractId:
-        'H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP_FILE_RENEWAL_STEP_034L_LANDSCAPE_LATTICE_ZONE_AND_RENDER_TARGET_ALIGNMENT_v1',
-
-      requiredForEnvironmentAdmission: true,
-      directInstalledExportVerified: false
-    })
-  }),
-
-  sourcePolicy: deepFreeze({
-    environmentMayNormalizeAdmittedDescriptors: true,
-    environmentMayCreateSourceAuthority: false,
-    environmentMayInventLatticeIdentity: false,
-    environmentMayInventBoundaryIdentity: false,
-    environmentMayInventZoneIdentity: false,
-    environmentMayInventObjectMembership: false
+    directlyImported: false
   })
 });
 
 /**
- * Environment-standard tier model.
+ * Environment tier identity.
  */
+export const H_EARTH_3D_ENVIRONMENT_TIER_IDS = deepFreeze({
+  essential:
+    'H_EARTH_ENVIRONMENT_TIER_1_ESSENTIAL',
+
+  detail:
+    'H_EARTH_ENVIRONMENT_TIER_2_DETAIL',
+
+  context:
+    'H_EARTH_ENVIRONMENT_TIER_3_CONTEXT',
+
+  interaction:
+    'H_EARTH_ENVIRONMENT_TIER_4_INTERACTION'
+});
+
+export const H_EARTH_3D_ENVIRONMENT_TIER_ORDER = deepFreeze([
+  H_EARTH_3D_ENVIRONMENT_TIER_IDS.essential,
+  H_EARTH_3D_ENVIRONMENT_TIER_IDS.detail,
+  H_EARTH_3D_ENVIRONMENT_TIER_IDS.context,
+  H_EARTH_3D_ENVIRONMENT_TIER_IDS.interaction
+]);
+
 export const H_EARTH_3D_ENVIRONMENT_TIERS = deepFreeze({
-  tier1: deepFreeze({
-    id: 'ENVIRONMENT_SUBSTRATE',
-    required: true,
+  essential: deepFreeze({
+    id:
+      H_EARTH_3D_ENVIRONMENT_TIER_IDS.essential,
+
+    label:
+      'Essential environment',
+
+    role:
+      'PRIMARY_ENVIRONMENT_READABILITY',
+
+    required:
+      true,
 
     members: deepFreeze([
       'SKY',
@@ -310,35 +427,73 @@ export const H_EARTH_3D_ENVIRONMENT_TIERS = deepFreeze({
     ])
   }),
 
-  tier2: deepFreeze({
-    id: 'MINIMAL_GROUNDED_DETAILS',
-    required: true,
+  detail: deepFreeze({
+    id:
+      H_EARTH_3D_ENVIRONMENT_TIER_IDS.detail,
+
+    label:
+      'Grounded environmental detail',
+
+    role:
+      'LOCAL_SURFACE_READABILITY',
+
+    required:
+      true,
 
     members: deepFreeze([
       'TIDE_POOLS',
       'STONES',
-      'JAGGED_ROCKS',
-      'INSPECTION_ANCHOR'
-    ]),
-
-    detailDensity: 'SPARSE'
+      'JAGGED_ROCKS'
+    ])
   }),
 
-  tier3: deepFreeze({
-    id: 'SIMPLIFIED_BACKGROUND_CONTEXT',
-    required: true,
+  context: deepFreeze({
+    id:
+      H_EARTH_3D_ENVIRONMENT_TIER_IDS.context,
+
+    label:
+      'Distant environmental context',
+
+    role:
+      'SCENE_DEPTH_AND_IDENTITY_CONTEXT',
+
+    required:
+      true,
 
     members: deepFreeze([
       'MANOR_BLUFF_CONTEXT',
       'OFFSHORE_ISLETS'
-    ]),
-
-    detailDensity: 'SILHOUETTE_ONLY'
+    ])
   }),
 
-  tier4: deepFreeze({
-    id: 'DEFERRED_REFINEMENT',
-    required: false,
+  interaction: deepFreeze({
+    id:
+      H_EARTH_3D_ENVIRONMENT_TIER_IDS.interaction,
+
+    label:
+      'Inspection interaction substrate',
+
+    role:
+      'PRIMARY_INSPECTION_TARGET_CONTEXT',
+
+    required:
+      true,
+
+    members: deepFreeze([
+      'INSPECTION_ANCHOR',
+      'ACTOR_READY_GROUND_CANDIDATE'
+    ])
+  }),
+
+  excludedExpansion: deepFreeze({
+    id:
+      'H_EARTH_ENVIRONMENT_TIER_EXCLUDED_EXPANSION',
+
+    required:
+      false,
+
+    admitted:
+      false,
 
     members: deepFreeze([
       'DETAILED_MANOR_ARCHITECTURE',
@@ -352,187 +507,508 @@ export const H_EARTH_3D_ENVIRONMENT_TIERS = deepFreeze({
   })
 });
 
+const createMaterialIdentity = ({
+  id,
+  label,
+  semanticRole,
+  materialClass,
+  opacityPolicy,
+  surfaceResponse,
+  rendererPresentationHints = {}
+}) =>
+  deepFreeze({
+    id,
+    label,
+    semanticRole,
+    materialClass,
+    opacityPolicy,
+    surfaceResponse,
+
+    rendererPresentationHints:
+      deepFreeze(rendererPresentationHints),
+
+    rendererMaySelectDOMRepresentation: true,
+    rendererMaySelectProjectionGeometry: true,
+    rendererMayChangeSemanticIdentity: false,
+
+    textureRequired: false,
+    shaderRequired: false,
+    imageRequired: false,
+
+    rendererPassClaim: false,
+    visualPassClaim: false
+  });
+
 /**
- * Ground Cell 001 environmental material identities.
- *
- * These are semantic material identities. They do not define final CSS,
- * shaders, images, textures, or rendering techniques.
+ * Material identities.
  */
 export const H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES = deepFreeze({
-  sky: deepFreeze({
-    id: 'H_EARTH_MATERIAL_SKY',
-    semanticRole: 'SKY'
+  sky: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_SKY',
+
+    label:
+      'H-Earth sky',
+
+    semanticRole:
+      'SKY',
+
+    materialClass:
+      'BACKGROUND_ATMOSPHERE',
+
+    opacityPolicy:
+      'OPAQUE_BACKGROUND',
+
+    surfaceResponse:
+      'NON_SURFACE_BACKGROUND',
+
+    rendererPresentationHints: {
+      gradientPermitted: true,
+      fullStageCoverageCandidate: true,
+      depthSortWithinLayer: false
+    }
   }),
 
-  atmosphere: deepFreeze({
-    id: 'H_EARTH_MATERIAL_ATMOSPHERE',
-    semanticRole: 'ATMOSPHERIC_DEPTH'
+  atmosphere: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_ATMOSPHERE',
+
+    label:
+      'H-Earth atmosphere',
+
+    semanticRole:
+      'ATMOSPHERE',
+
+    materialClass:
+      'ATMOSPHERIC_OVERLAY',
+
+    opacityPolicy:
+      'TRANSLUCENT',
+
+    surfaceResponse:
+      'DISTANCE_HAZE',
+
+    rendererPresentationHints: {
+      fullStageOverlayCandidate: true,
+      pointerEventsNone: true
+    }
   }),
 
-  haze: deepFreeze({
-    id: 'H_EARTH_MATERIAL_HAZE',
-    semanticRole: 'DISTANCE_COMPRESSION'
+  haze: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_HAZE',
+
+    label:
+      'H-Earth horizon haze',
+
+    semanticRole:
+      'HORIZON_HAZE',
+
+    materialClass:
+      'DISTANCE_HAZE',
+
+    opacityPolicy:
+      'TRANSLUCENT',
+
+    surfaceResponse:
+      'HORIZON_SOFTENING',
+
+    rendererPresentationHints: {
+      horizontalBandCandidate: true,
+      pointerEventsNone: true
+    }
   }),
 
-  drySand: deepFreeze({
-    id: 'H_EARTH_MATERIAL_DRY_SAND',
-    semanticRole: 'DRY_GROUND'
+  islet: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_OFFSHORE_ISLET',
+
+    label:
+      'Offshore islet',
+
+    semanticRole:
+      'OFFSHORE_ISLET',
+
+    materialClass:
+      'DISTANT_SOLID_CONTEXT',
+
+    opacityPolicy:
+      'OPAQUE',
+
+    surfaceResponse:
+      'ROCK_SILHOUETTE',
+
+    rendererPresentationHints: {
+      polygonCandidate: true,
+      cameraDepthSortPermitted: true
+    }
   }),
 
-  wetSand: deepFreeze({
-    id: 'H_EARTH_MATERIAL_WET_SAND',
-    semanticRole: 'WET_GROUND'
+  manorContext: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_MANOR_CONTEXT',
+
+    label:
+      'Manor and bluff context',
+
+    semanticRole:
+      'MANOR_BLUFF_CONTEXT',
+
+    materialClass:
+      'DISTANT_ARCHITECTURAL_CONTEXT',
+
+    opacityPolicy:
+      'OPAQUE',
+
+    surfaceResponse:
+      'DISTANT_SILHOUETTE',
+
+    rendererPresentationHints: {
+      clusteredPrimitiveCandidate: true,
+      cameraDepthSortPermitted: true
+    }
   }),
 
-  foam: deepFreeze({
-    id: 'H_EARTH_MATERIAL_FOAM',
-    semanticRole: 'SHORELINE_CONTACT'
+  openWater: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_OPEN_WATER',
+
+    label:
+      'Open water',
+
+    semanticRole:
+      'OPEN_WATER',
+
+    materialClass:
+      'WATER_SURFACE',
+
+    opacityPolicy:
+      'OPAQUE_OR_TRANSLUCENT_BY_RENDERER',
+
+    surfaceResponse:
+      'DISTANT_WATER_SURFACE',
+
+    rendererPresentationHints: {
+      projectedSurfaceBandCandidate: true,
+      horizontalContinuityPreferred: true
+    }
   }),
 
-  nearshoreWater: deepFreeze({
-    id: 'H_EARTH_MATERIAL_NEARSHORE_WATER',
-    semanticRole: 'NEARSHORE_WATER'
+  nearshoreWater: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_NEARSHORE_WATER',
+
+    label:
+      'Nearshore water',
+
+    semanticRole:
+      'NEARSHORE_WATER',
+
+    materialClass:
+      'WATER_SURFACE',
+
+    opacityPolicy:
+      'OPAQUE_OR_TRANSLUCENT_BY_RENDERER',
+
+    surfaceResponse:
+      'SHALLOW_WATER_SURFACE',
+
+    rendererPresentationHints: {
+      projectedSurfaceBandCandidate: true,
+      shorelineContactRequired: true
+    }
   }),
 
-  openWater: deepFreeze({
-    id: 'H_EARTH_MATERIAL_OPEN_WATER',
-    semanticRole: 'OPEN_WATER'
+  wave: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_WAVE',
+
+    label:
+      'Wave band',
+
+    semanticRole:
+      'WAVE_BAND',
+
+    materialClass:
+      'WATER_RIBBON',
+
+    opacityPolicy:
+      'TRANSLUCENT',
+
+    surfaceResponse:
+      'WAVE_HIGHLIGHT',
+
+    rendererPresentationHints: {
+      projectedCurveRibbonCandidate: true,
+      pointerEventsNone: true
+    }
   }),
 
-  wave: deepFreeze({
-    id: 'H_EARTH_MATERIAL_WAVE',
-    semanticRole: 'WAVE_BAND'
+  foam: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_FOAM',
+
+    label:
+      'Shoreline foam',
+
+    semanticRole:
+      'FOAM_CONTACT',
+
+    materialClass:
+      'SHORELINE_CONTACT_RIBBON',
+
+    opacityPolicy:
+      'TRANSLUCENT_TO_OPAQUE',
+
+    surfaceResponse:
+      'FOAM_CONTACT',
+
+    rendererPresentationHints: {
+      projectedCurveRibbonCandidate: true,
+      shorelineAlignmentRequired: true
+    }
   }),
 
-  tidePool: deepFreeze({
-    id: 'H_EARTH_MATERIAL_TIDE_POOL',
-    semanticRole: 'GROUND_ATTACHED_WATER_DETAIL'
+  wetSand: createMaterialIdentity({
+    id:
+      'H_EARTH_WET_SAND_DOMAIN',
+
+    label:
+      'Wet sand',
+
+    semanticRole:
+      'WET_SAND',
+
+    materialClass:
+      'GROUND_SURFACE',
+
+    opacityPolicy:
+      'OPAQUE',
+
+    surfaceResponse:
+      'DAMP_REFLECTIVE_GROUND',
+
+    rendererPresentationHints: {
+      projectedSurfaceBandCandidate: true,
+      inspectionGroundCandidate: true
+    }
   }),
 
-  stone: deepFreeze({
-    id: 'H_EARTH_MATERIAL_STONE',
-    semanticRole: 'GROUNDED_STONE'
+  drySand: createMaterialIdentity({
+    id:
+      'H_EARTH_DRY_SAND_DOMAIN',
+
+    label:
+      'Dry sand',
+
+    semanticRole:
+      'DRY_SAND',
+
+    materialClass:
+      'GROUND_SURFACE',
+
+    opacityPolicy:
+      'OPAQUE',
+
+    surfaceResponse:
+      'DRY_DIFFUSE_GROUND',
+
+    rendererPresentationHints: {
+      projectedSurfaceBandCandidate: true,
+      transitionGroundCandidate: true
+    }
   }),
 
-  rock: deepFreeze({
-    id: 'H_EARTH_MATERIAL_JAGGED_ROCK',
-    semanticRole: 'GROUNDED_ROCK'
+  tidePool: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_TIDE_POOL',
+
+    label:
+      'Tide pool',
+
+    semanticRole:
+      'TIDE_POOL',
+
+    materialClass:
+      'GROUND_EMBEDDED_WATER',
+
+    opacityPolicy:
+      'TRANSLUCENT',
+
+    surfaceResponse:
+      'SHALLOW_REFLECTIVE_WATER',
+
+    rendererPresentationHints: {
+      projectedEllipseCandidate: true,
+      groundEmbedded: true
+    }
   }),
 
-  bluff: deepFreeze({
-    id: 'H_EARTH_MATERIAL_BLUFF',
-    semanticRole: 'BACKGROUND_TERRAIN_CONTEXT'
+  stone: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_STONE',
+
+    label:
+      'Beach stone',
+
+    semanticRole:
+      'STONE',
+
+    materialClass:
+      'GROUNDED_DETAIL',
+
+    opacityPolicy:
+      'OPAQUE',
+
+    surfaceResponse:
+      'SMOOTH_STONE',
+
+    rendererPresentationHints: {
+      groundedDetailCandidate: true,
+      cameraDepthSortPermitted: true
+    }
   }),
 
-  manorContext: deepFreeze({
-    id: 'H_EARTH_MATERIAL_MANOR_CONTEXT',
-    semanticRole: 'DISTANT_MANOR_CONTEXT'
+  rock: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_JAGGED_ROCK',
+
+    label:
+      'Jagged rock',
+
+    semanticRole:
+      'JAGGED_ROCK',
+
+    materialClass:
+      'GROUNDED_DETAIL',
+
+    opacityPolicy:
+      'OPAQUE',
+
+    surfaceResponse:
+      'FACETED_ROCK',
+
+    rendererPresentationHints: {
+      polygonCandidate: true,
+      cameraDepthSortPermitted: true
+    }
   }),
 
-  islet: deepFreeze({
-    id: 'H_EARTH_MATERIAL_OFFSHORE_ISLET',
-    semanticRole: 'DISTANT_OFFSHORE_CONTEXT'
-  }),
+  inspectionAnchor: createMaterialIdentity({
+    id:
+      'H_EARTH_MATERIAL_INSPECTION_ANCHOR',
 
-  inspectionAnchor: deepFreeze({
-    id: 'H_EARTH_MATERIAL_INSPECTION_ANCHOR',
-    semanticRole: 'INSPECTION_REFERENCE'
+    label:
+      'Inspection anchor',
+
+    semanticRole:
+      'INSPECTION_ANCHOR',
+
+    materialClass:
+      'INTERACTION_TARGET',
+
+    opacityPolicy:
+      'RENDERER_SELECTED',
+
+    surfaceResponse:
+      'NON_PHYSICAL_INTERACTION_TARGET',
+
+    rendererPresentationHints: {
+      projectedInteractionTargetCandidate: true,
+      mayBeVisuallySubtle: true
+    }
   })
 });
 
 /**
- * Continuous ground model.
- *
- * This defines environmental domains and relationships only. The renderer
- * decides how these domains become projected polygons.
+ * Ground substrate.
  */
 export const H_EARTH_3D_GROUND_SUBSTRATE = deepFreeze({
-  id: 'H_EARTH_GROUND_CELL_001_CONTINUOUS_GROUND_SUBSTRATE',
+  id:
+    'H_EARTH_GROUND_CELL_001_CONTINUOUS_GROUND_SUBSTRATE',
 
-  model: 'CONTINUOUS_BOUNDED_SAND_SYSTEM',
+  cellId:
+    'H_EARTH_GROUND_CELL_001',
 
   coordinateFrame:
     H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame,
 
-  localGroundDatumY:
-    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.localGroundDatumY,
+  continuityRequired:
+    true,
 
-  domain: deepFreeze({
-    xMin: CAPACITY_WORLD_BOUNDS.xMin,
-    xMax: CAPACITY_WORLD_BOUNDS.xMax,
+  groundContactProofProvided:
+    false,
 
-    zMin: -2,
-    zMax: 14.25
-  }),
+  domains: deepFreeze({
+    wetSand: deepFreeze({
+      id:
+        'H_EARTH_GROUND_WET_SAND_FIELD',
 
-  drySand: deepFreeze({
-    id: 'H_EARTH_DRY_SAND_DOMAIN',
+      objectId:
+        'OBJ_002_FOREGROUND_WET_SAND',
 
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .drySand
-        .id,
+      primaryZoneId:
+        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
 
-    xMin: CAPACITY_WORLD_BOUNDS.xMin,
-    xMax: CAPACITY_WORLD_BOUNDS.xMax,
+      latticeRows:
+        'R01-R05',
 
-    zMin: -2,
-    zMax: 7.75,
+      role:
+        'PRIMARY_FOREGROUND_INSPECTION_GROUND',
 
-    transitionOverlap: deepFreeze({
-      zMin: 6.25,
-      zMax: 7.75
+      materialId:
+        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.wetSand.id,
+
+      surfaceFamily:
+        'wetSand'
+    }),
+
+    drySand: deepFreeze({
+      id:
+        'H_EARTH_GROUND_DRY_SAND_TRANSITION',
+
+      objectId:
+        'OBJ_003_DRY_SAND_TRANSITION',
+
+      primaryZoneId:
+        'ZONE_002_SHORELINE_CONTACT_ZONE',
+
+      latticeRows:
+        'R06-R07',
+
+      role:
+        'DRY_WET_TRANSITION_GROUND',
+
+      materialId:
+        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.drySand.id,
+
+      surfaceFamily:
+        'drySand'
     })
   }),
 
-  wetSand: deepFreeze({
-    id: 'H_EARTH_WET_SAND_DOMAIN',
+  transition: deepFreeze({
+    id:
+      'H_EARTH_GROUND_DRY_WET_TRANSITION',
 
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .wetSand
-        .id,
+    from:
+      'WET_SAND',
 
-    xMin: CAPACITY_WORLD_BOUNDS.xMin,
-    xMax: CAPACITY_WORLD_BOUNDS.xMax,
+    to:
+      'DRY_SAND',
 
-    zMin: 6.25,
-    zMax: 14.25,
+    boundaryClass:
+      'GRADUAL_SHORELINE_GROUND_TRANSITION',
 
-    transitionOverlap: deepFreeze({
-      zMin: 6.25,
-      zMax: 7.75
-    })
+    abruptSeamRequired:
+      false
   }),
 
-  elevationModel: deepFreeze({
-    modelId:
-      'H_EARTH_GROUND_CELL_001_SHALLOW_SURFACE_CANDIDATE',
-
-    baseElevationY: 0,
-
-    minimumCandidateElevationY: -0.18,
-    maximumCandidateElevationY: 0.12,
-
-    rendererMaySampleElevation: true,
-    environmentDefinesExactMesh: false,
-
-    collisionSurfaceClaim: false,
-    groundContactSurfaceClaim: false
-  }),
-
-  continuityRequirements: deepFreeze({
-    dryWetDomainsMustOverlap: true,
-    visibleHardSeamPermitted: false,
-    floatingGroundCardsPermitted: false,
-    independentScreenPlacementPermitted: false
-  }),
-
-  actorCandidateRelationship: deepFreeze({
-    maySupportActorReadyGroundCandidateLater: true,
-    actorReadyGroundDefinedNow: false,
-    groundContactProven: false,
-    collisionProven: false
+  rendererRules: deepFreeze({
+    continuousProjectionPreferred: true,
+    competingGroundPlanesPermitted: false,
+    rendererMaySubdivideForProjection: true,
+    rendererMayChangeDomainIdentity: false
   })
 });
 
@@ -540,576 +1016,627 @@ export const H_EARTH_3D_GROUND_SUBSTRATE = deepFreeze({
  * Shoreline model.
  */
 export const H_EARTH_3D_SHORELINE_MODEL = deepFreeze({
-  id: 'H_EARTH_GROUND_CELL_001_SHORELINE_MODEL',
+  id:
+    'H_EARTH_GROUND_CELL_001_SHORELINE_MODEL',
 
-  model:
-    'BOUNDED_WORLD_SPACE_SHORELINE_PROFILE',
+  primaryZoneId:
+    'ZONE_002_SHORELINE_CONTACT_ZONE',
 
-  xMin: CAPACITY_WORLD_BOUNDS.xMin,
-  xMax: CAPACITY_WORLD_BOUNDS.xMax,
+  latticeRows:
+    'R08-R09',
 
-  nominalDepthZ: 13.25,
+  shorelineContact: deepFreeze({
+    id:
+      'H_EARTH_SHORELINE_CONTACT_FIELD',
 
-  permittedDepthRange: deepFreeze({
-    zMin: 12.35,
-    zMax: 14.15
-  }),
+    role:
+      'WATER_GROUND_CONTACT_DESCRIPTOR',
 
-  profileCapacity: deepFreeze({
-    primaryAmplitudeMaximum: 0.65,
-    secondaryAmplitudeMaximum: 0.3,
+    groundContactProofProvided:
+      false,
 
-    minimumSampleCount: 17,
-    preferredSampleCount: 33,
-    maximumSampleCount: 49
+    physicalFluidBoundaryProvided:
+      false
   }),
 
   foamContact: deepFreeze({
-    id: 'H_EARTH_SHORELINE_FOAM_CONTACT',
+    id:
+      'H_EARTH_SHORELINE_FOAM_CONTACT',
+
+    objectId:
+      'OBJ_005_SHORELINE_FOAM_LINE',
 
     materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .foam
-        .id,
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.foam.id,
 
-    model: 'CONTINUOUS_SHORELINE_RIBBON',
-
-    minimumWidth: 0.35,
-    preferredWidth: 0.7,
-    maximumWidth: 1.1,
-
-    attachedToShoreline: true,
-    independentFoamCardsPermitted: false
+    role:
+      'VISIBLE_SHORELINE_CONTACT_CANDIDATE'
   }),
 
-  fluidSimulationClaim: false,
-  shorelinePhysicsClaim: false,
-  tideSimulationClaim: false
+  dryWetBoundary: deepFreeze({
+    id:
+      'H_EARTH_SHORELINE_DRY_WET_BOUNDARY',
+
+    role:
+      'GROUND_DOMAIN_RELATIONSHIP',
+
+    hardBoundary:
+      false
+  }),
+
+  rendererRules: deepFreeze({
+    preserveGroundWaterAdjacency: true,
+    preserveFoamContactRelation: true,
+    rendererMaySelectCurveSegmentation: true,
+    rendererMayInventNewShorelineTopology: false
+  })
 });
 
 /**
  * Water substrate.
  */
 export const H_EARTH_3D_WATER_SUBSTRATE = deepFreeze({
-  id: 'H_EARTH_GROUND_CELL_001_WATER_SUBSTRATE',
+  id:
+    'H_EARTH_GROUND_CELL_001_WATER_SUBSTRATE',
 
-  waterDatumY: -0.18,
+  primaryZoneId:
+    'ZONE_003_WATER_SURFACE_ZONE',
+
+  coordinateFrame:
+    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame,
 
   nearshore: deepFreeze({
-    id: 'H_EARTH_NEARSHORE_WATER_DOMAIN',
+    id:
+      'H_EARTH_NEARSHORE_WATER_FIELD',
+
+    objectId:
+      'OBJ_006_NEARSHORE_WAVE_BAND',
+
+    role:
+      'NEARSHORE_WATER_AND_WAVE_RELATION',
 
     materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .nearshoreWater
-        .id,
-
-    zMin: 13.35,
-    zMax: 19.25,
-
-    xMin: CAPACITY_WORLD_BOUNDS.xMin,
-    xMax: CAPACITY_WORLD_BOUNDS.xMax,
-
-    shorelineOverlapMinimum: 0.1,
-    openWaterOverlap: deepFreeze({
-      zMin: 18,
-      zMax: 19.25
-    })
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.nearshoreWater.id
   }),
 
   openWater: deepFreeze({
-    id: 'H_EARTH_OPEN_WATER_DOMAIN',
+    id:
+      'H_EARTH_OPEN_WATER_FIELD',
+
+    objectId:
+      'OBJ_007_WATER_SURFACE_PLANE',
+
+    role:
+      'OPEN_WATER_SURFACE',
 
     materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .openWater
-        .id,
-
-    zMin: 18,
-    zMax: CAPACITY_WORLD_BOUNDS.zMax,
-
-    xMin: CAPACITY_WORLD_BOUNDS.xMin,
-    xMax: CAPACITY_WORLD_BOUNDS.xMax
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.openWater.id
   }),
 
-  waveBands: deepFreeze({
-    id: 'H_EARTH_BASIC_WAVE_BANDS',
+  waveBands: deepFreeze([
+    deepFreeze({
+      id:
+        'H_EARTH_WAVE_BAND_001',
 
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .wave
-        .id,
+      sourceObjectId:
+        'OBJ_006_NEARSHORE_WAVE_BAND',
 
-    count: 2,
+      materialId:
+        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.wave.id,
 
-    depthCandidates: deepFreeze([
-      15.2,
-      17.4
-    ]),
+      role:
+        'PRIMARY_NEARSHORE_WAVE_BAND'
+    }),
 
-    minimumRibbonWidth: 0.1,
-    preferredRibbonWidth: 0.18,
-    maximumRibbonWidth: 0.32,
+    deepFreeze({
+      id:
+        'H_EARTH_WAVE_BAND_002',
 
-    decorativeOnly: true,
-    simulationClaim: false
-  }),
+      sourceObjectId:
+        'OBJ_006_NEARSHORE_WAVE_BAND',
 
-  traversal: deepFreeze({
-    swimmingAuthorized: false,
-    waterTraversalAuthorized: false,
-    actorWaterContactProven: false
-  }),
+      materialId:
+        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.wave.id,
 
-  simulation: deepFreeze({
-    fluidSimulation: false,
-    buoyancySimulation: false,
-    wavePhysics: false,
-    tidePhysics: false
+      role:
+        'SECONDARY_NEARSHORE_WAVE_BAND'
+    }),
+
+    deepFreeze({
+      id:
+        'H_EARTH_WAVE_BAND_003',
+
+      sourceObjectId:
+        'OBJ_006_NEARSHORE_WAVE_BAND',
+
+      materialId:
+        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.wave.id,
+
+      role:
+        'DISTANT_NEARSHORE_WAVE_BAND'
+    })
+  ]),
+
+  rendererRules: deepFreeze({
+    preserveNearshoreOpenWaterRelationship: true,
+    preserveShorelineContactRelationship: true,
+    rendererMaySegmentWaterSurface: true,
+    rendererMayCreateFluidSimulation: false
   })
 });
 
 /**
- * Atmosphere and horizon context.
+ * Atmosphere model.
  */
 export const H_EARTH_3D_ATMOSPHERE_MODEL = deepFreeze({
-  id: 'H_EARTH_GROUND_CELL_001_ATMOSPHERE',
+  id:
+    'H_EARTH_GROUND_CELL_001_ATMOSPHERE_MODEL',
+
+  primaryZoneId:
+    'ZONE_003_WATER_SURFACE_ZONE',
 
   sky: deepFreeze({
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .sky
-        .id,
+    id:
+      'H_EARTH_SKY_BACKGROUND',
 
-    rootBackgroundCandidate: true,
-    independentBackdropCardPermitted: false
+    materialId:
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.sky.id,
+
+    role:
+      'FULL_STAGE_SKY_BACKGROUND'
+  }),
+
+  atmosphere: deepFreeze({
+    id:
+      'H_EARTH_ATMOSPHERE_OVERLAY',
+
+    objectId:
+      'OBJ_008_AIR_HAZE_LIGHT_LAYER',
+
+    materialId:
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.atmosphere.id,
+
+    role:
+      'AIR_HAZE_LIGHT_RELATION'
   }),
 
   horizon: deepFreeze({
-    model:
-      'FAR_WATER_AND_ATMOSPHERE_INTEGRATION',
+    id:
+      'H_EARTH_WATER_HORIZON',
 
-    hardRectangularBackdropPermitted: false,
-
-    derivedFromFarWaterEdge: true,
-    derivedFromCameraProjection: true
-  }),
-
-  haze: deepFreeze({
     materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .haze
-        .id,
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.haze.id,
 
-    minimumDepthZ: 18,
-    maximumDepthZ: CAPACITY_WORLD_BOUNDS.zMax,
-
-    distanceCompressionRequired: true
+    role:
+      'DERIVED_WATER_HORIZON'
   }),
 
-  overlays: deepFreeze({
-    targetCount: 2,
-    maximumCount: 3,
-
-    pointerEventsPermitted: false
-  }),
-
-  atmosphericSimulationClaim: false,
-  weatherSimulationClaim: false
+  rendererRules: deepFreeze({
+    fullStageSkyPermitted: true,
+    hazeOverlayPermitted: true,
+    horizonBandPermitted: true,
+    rendererMayCreateWeatherSimulation: false
+  })
 });
 
 /**
- * Sparse tide-pool descriptors.
+ * Tide pools.
  */
 export const H_EARTH_3D_TIDE_POOL_DESCRIPTORS = deepFreeze([
   deepFreeze({
-    id: 'H_EARTH_TIDE_POOL_001',
+    id:
+      'H_EARTH_TIDE_POOL_001',
+
+    sourceObjectId:
+      'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
+
+    primaryZoneId:
+      'ZONE_002_SHORELINE_CONTACT_ZONE',
+
+    latticeRows:
+      'R08-R09',
 
     materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .tidePool
-        .id,
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.tidePool.id,
 
-    center: deepFreeze({
-      x: -4.5,
-      z: 8.8
-    }),
-
-    radiusX: 1.1,
-    radiusZ: 0.42,
-    rotationDegrees: -14,
-
-    candidateDepressionDepth: 0.07,
-
-    attachedToGround: true,
-    detailTier: 2
+    role:
+      'PRIMARY_GROUND_EMBEDDED_TIDE_POOL'
   }),
 
   deepFreeze({
-    id: 'H_EARTH_TIDE_POOL_002',
+    id:
+      'H_EARTH_TIDE_POOL_002',
+
+    sourceObjectId:
+      'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
+
+    primaryZoneId:
+      'ZONE_002_SHORELINE_CONTACT_ZONE',
+
+    latticeRows:
+      'R08-R09',
 
     materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .tidePool
-        .id,
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.tidePool.id,
 
-    center: deepFreeze({
-      x: 0.7,
-      z: 9.8
-    }),
-
-    radiusX: 1.35,
-    radiusZ: 0.5,
-    rotationDegrees: 8,
-
-    candidateDepressionDepth: 0.08,
-
-    attachedToGround: true,
-    detailTier: 2
+    role:
+      'SECONDARY_GROUND_EMBEDDED_TIDE_POOL'
   }),
 
   deepFreeze({
-    id: 'H_EARTH_TIDE_POOL_003',
+    id:
+      'H_EARTH_TIDE_POOL_003',
+
+    sourceObjectId:
+      'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
+
+    primaryZoneId:
+      'ZONE_002_SHORELINE_CONTACT_ZONE',
+
+    latticeRows:
+      'R08-R09',
 
     materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .tidePool
-        .id,
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.tidePool.id,
 
-    center: deepFreeze({
-      x: 5.1,
-      z: 11.15
-    }),
-
-    radiusX: 0.92,
-    radiusZ: 0.36,
-    rotationDegrees: -11,
-
-    candidateDepressionDepth: 0.06,
-
-    attachedToGround: true,
-    detailTier: 2
+    role:
+      'TERTIARY_GROUND_EMBEDDED_TIDE_POOL'
   })
 ]);
 
 /**
- * Sparse grounded-stone descriptors.
+ * Beach stones.
  */
 export const H_EARTH_3D_STONE_DESCRIPTORS = deepFreeze([
   deepFreeze({
-    id: 'H_EARTH_STONE_001',
-    x: -6.4,
-    z: 7.5,
-    radiusX: 0.24,
-    radiusZ: 0.17,
-    height: 0.13
-  }),
+    id:
+      'H_EARTH_BEACH_STONE_001',
 
-  deepFreeze({
-    id: 'H_EARTH_STONE_002',
-    x: -2.1,
-    z: 10.9,
-    radiusX: 0.18,
-    radiusZ: 0.13,
-    height: 0.1
-  }),
+    sourceObjectId:
+      'OBJ_010_SMALL_BEACH_STONES',
 
-  deepFreeze({
-    id: 'H_EARTH_STONE_003',
-    x: 1.8,
-    z: 8.1,
-    radiusX: 0.28,
-    radiusZ: 0.19,
-    height: 0.16
-  }),
-
-  deepFreeze({
-    id: 'H_EARTH_STONE_004',
-    x: 4.3,
-    z: 12.05,
-    radiusX: 0.16,
-    radiusZ: 0.11,
-    height: 0.09
-  }),
-
-  deepFreeze({
-    id: 'H_EARTH_STONE_005',
-    x: 7.1,
-    z: 9.45,
-    radiusX: 0.22,
-    radiusZ: 0.15,
-    height: 0.12
-  })
-].map((stone) =>
-  deepFreeze({
-    ...stone,
+    primaryZoneId:
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',
 
     materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .stone
-        .id,
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.stone.id,
 
-    attachedToGround: true,
-    detailTier: 2
+    role:
+      'FOREGROUND_GROUNDED_STONE'
+  }),
+
+  deepFreeze({
+    id:
+      'H_EARTH_BEACH_STONE_002',
+
+    sourceObjectId:
+      'OBJ_010_SMALL_BEACH_STONES',
+
+    primaryZoneId:
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+    materialId:
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.stone.id,
+
+    role:
+      'FOREGROUND_GROUNDED_STONE'
+  }),
+
+  deepFreeze({
+    id:
+      'H_EARTH_BEACH_STONE_003',
+
+    sourceObjectId:
+      'OBJ_010_SMALL_BEACH_STONES',
+
+    primaryZoneId:
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+    materialId:
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.stone.id,
+
+    role:
+      'FOREGROUND_GROUNDED_STONE'
+  }),
+
+  deepFreeze({
+    id:
+      'H_EARTH_BEACH_STONE_004',
+
+    sourceObjectId:
+      'OBJ_010_SMALL_BEACH_STONES',
+
+    primaryZoneId:
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+    materialId:
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.stone.id,
+
+    role:
+      'FOREGROUND_GROUNDED_STONE'
   })
-));
+]);
 
 /**
- * Sparse jagged-rock descriptors.
+ * Jagged rocks.
  */
 export const H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS = deepFreeze([
   deepFreeze({
-    id: 'H_EARTH_JAGGED_ROCK_001',
+    id:
+      'H_EARTH_JAGGED_ROCK_001',
 
-    center: deepFreeze({
-      x: -7.8,
-      z: 9
-    }),
+    sourceObjectId:
+      'OBJ_011_FOREGROUND_JAGGED_ROCKS',
 
-    width: 1.15,
-    depth: 0.78,
-    height: 1.05,
-
-    rotationDegrees: -8
-  }),
-
-  deepFreeze({
-    id: 'H_EARTH_JAGGED_ROCK_002',
-
-    center: deepFreeze({
-      x: 3,
-      z: 7.4
-    }),
-
-    width: 0.94,
-    depth: 0.72,
-    height: 0.88,
-
-    rotationDegrees: 13
-  }),
-
-  deepFreeze({
-    id: 'H_EARTH_JAGGED_ROCK_003',
-
-    center: deepFreeze({
-      x: 7.8,
-      z: 12.25
-    }),
-
-    width: 1.2,
-    depth: 0.84,
-    height: 1.18,
-
-    rotationDegrees: -5
-  })
-].map((rock) =>
-  deepFreeze({
-    ...rock,
+    primaryZoneId:
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',
 
     materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-        .rock
-        .id,
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.rock.id,
 
-    attachedToGround: true,
-    detailTier: 2
+    role:
+      'FOREGROUND_JAGGED_ROCK'
+  }),
+
+  deepFreeze({
+    id:
+      'H_EARTH_JAGGED_ROCK_002',
+
+    sourceObjectId:
+      'OBJ_011_FOREGROUND_JAGGED_ROCKS',
+
+    primaryZoneId:
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+    materialId:
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.rock.id,
+
+    role:
+      'FOREGROUND_JAGGED_ROCK'
+  }),
+
+  deepFreeze({
+    id:
+      'H_EARTH_JAGGED_ROCK_003',
+
+    sourceObjectId:
+      'OBJ_011_FOREGROUND_JAGGED_ROCKS',
+
+    primaryZoneId:
+      'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+    materialId:
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.rock.id,
+
+    role:
+      'FOREGROUND_JAGGED_ROCK'
   })
-));
+]);
 
 /**
- * Simplified background context.
+ * Background context.
  */
 export const H_EARTH_3D_BACKGROUND_CONTEXT = deepFreeze({
+  id:
+    'H_EARTH_GROUND_CELL_001_BACKGROUND_CONTEXT',
+
   manorBluff: deepFreeze({
-    id: 'H_EARTH_MANOR_BLUFF_CONTEXT',
+    id:
+      'H_EARTH_MANOR_BLUFF_CONTEXT',
 
-    contextOnly: true,
-    detailTier: 3,
+    sourceObjectId:
+      'OBJ_009_MANOR_EXTERIOR_CONTEXT',
 
-    bluff: deepFreeze({
-      materialId:
-        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-          .bluff
-          .id,
+    primaryZoneId:
+      'ZONE_004_MANOR_CONTEXT_ZONE',
 
-      center: deepFreeze({
-        x: 7.5,
-        z: 23.25
-      }),
+    latticeRows:
+      'R14-R15',
 
-      width: 11,
-      depth: 5.5,
+    materialId:
+      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.manorContext.id,
 
-      baseElevationY: -0.1,
-      plateauElevationY: 2.8
-    }),
+    role:
+      'DISTANT_MANOR_AND_BLUFF_CONTEXT',
 
-    manor: deepFreeze({
-      materialId:
-        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-          .manorContext
-          .id,
-
-      center: deepFreeze({
-        x: 7.5,
-        z: 23.8
-      }),
-
-      baseElevationY: 2.8,
-
-      silhouetteWidth: 5.8,
-      silhouetteHeight: 4.5,
-
-      geometryDetail:
-        'SIMPLIFIED_CONTEXT_SILHOUETTE',
-
-      interiorAuthorized: false,
-      traversalAuthorized: false
-    }),
-
-    primarySceneWorkload: false
+    detailedArchitectureAdmitted:
+      false
   }),
 
   offshoreIslets: deepFreeze([
     deepFreeze({
-      id: 'H_EARTH_OFFSHORE_ISLET_001',
+      id:
+        'H_EARTH_OFFSHORE_ISLET_001',
+
+      sourceFamily:
+        'OFFSHORE_ROCK_STACKS_AND_ISLETS',
+
+      primaryZoneId:
+        'ZONE_005_OFFSHORE_CONTEXT_ZONE',
+
+      latticeRows:
+        'R14-R15',
 
       materialId:
-        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-          .islet
-          .id,
+        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.islet.id,
 
-      center: deepFreeze({
-        x: -9.25,
-        z: 25
-      }),
-
-      width: 2,
-      height: 2.7,
-
-      contextOnly: true,
-      detailTier: 3
+      role:
+        'DISTANT_OFFSHORE_ISLET'
     }),
 
     deepFreeze({
-      id: 'H_EARTH_OFFSHORE_ISLET_002',
+      id:
+        'H_EARTH_OFFSHORE_ISLET_002',
+
+      sourceFamily:
+        'OFFSHORE_ROCK_STACKS_AND_ISLETS',
+
+      primaryZoneId:
+        'ZONE_005_OFFSHORE_CONTEXT_ZONE',
+
+      latticeRows:
+        'R14-R15',
 
       materialId:
-        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-          .islet
-          .id,
+        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.islet.id,
 
-      center: deepFreeze({
-        x: -4.9,
-        z: 26.4
-      }),
-
-      width: 1.25,
-      height: 1.75,
-
-      contextOnly: true,
-      detailTier: 3
+      role:
+        'DISTANT_OFFSHORE_ISLET'
     })
   ]),
 
-  refinementDeferred: true
+  rendererRules: deepFreeze({
+    preserveDistanceRole: true,
+    preserveManorContextIdentity: true,
+    preserveOffshoreContextIdentity: true,
+    rendererMayCreateDetailedManorArchitecture: false
+  })
 });
 
 /**
- * Inspection anchor environmental eligibility.
+ * Inspection anchor.
  */
 export const H_EARTH_3D_INSPECTION_ANCHOR = deepFreeze({
-  id: 'H_EARTH_GROUND_INSPECTION_ANCHOR',
+  id:
+    'H_EARTH_GROUND_CELL_001_INSPECTION_ANCHOR',
 
-  actionId: 'INSPECT_GROUND',
+  sourceObjectId:
+    'OBJ_001_GROUND_SPAWN_ANCHOR',
 
-  readoutId: 'GROUND_CONDITION_READ',
+  primaryZoneId:
+    'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+  latticeRows:
+    'R01-R05',
+
+  materialId:
+    H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.inspectionAnchor.id,
+
+  actionId:
+    'H_EARTH_INSPECT_GROUND_ACTION',
+
+  readoutId:
+    'GROUND_CONDITION_READ',
 
   receiptId:
     'H_EARTH_GROUND_INSPECTION_RECEIPT',
 
-  materialId:
-    H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES
-      .inspectionAnchor
-      .id,
+  role:
+    'PRIMARY_INSPECTION_INTENT_TARGET',
 
-  positionCandidate: deepFreeze({
-    x: 0,
-    z: 6.8
-  }),
+  actionExecutionOwnedHere:
+    false,
 
-  radius: 0.42,
+  readoutConstructionOwnedHere:
+    false,
 
-  environmentallyEligible: true,
-  descriptorIntentEligible: true,
-  readoutIntentEligible: true,
-
-  liveInspectionExecuted: false,
-  groundSampleExecuted: false,
-  actorInteractionExecuted: false,
-
-  collisionProof: false,
-  groundContactProof: false,
-  gameplayProof: false
+  receiptIssuanceOwnedHere:
+    false
 });
 
 /**
- * Actor-ready ground candidate envelope.
- *
- * This only narrows where a future environment-derived ground candidate may be
- * evaluated. It does not create a walkable or collidable surface.
+ * Actor-ready ground candidate.
  */
 export const H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE = deepFreeze({
-  status: 'CANDIDATE_ENVELOPE_ONLY',
+  id:
+    'H_EARTH_GROUND_CELL_001_ACTOR_READY_GROUND_CANDIDATE',
 
-  bounds: deepFreeze({
-    xMin:
-      H_EARTH_3D_ACTOR_CANDIDATE_LIMITS
-        .futureCandidateEnvelope
-        .xMin,
+  sourceGroundId:
+    H_EARTH_3D_GROUND_SUBSTRATE.id,
 
-    xMax:
-      H_EARTH_3D_ACTOR_CANDIDATE_LIMITS
-        .futureCandidateEnvelope
-        .xMax,
+  primaryDomainId:
+    H_EARTH_3D_GROUND_SUBSTRATE.domains.wetSand.id,
 
-    zMin:
-      H_EARTH_3D_ACTOR_CANDIDATE_LIMITS
-        .futureCandidateEnvelope
-        .zMin,
+  inspectionAnchorId:
+    H_EARTH_3D_INSPECTION_ANCHOR.id,
 
-    zMax: 10
-  }),
+  role:
+    'FUTURE_ACTOR_GROUND_REFERENCE_CANDIDATE',
 
-  shorelineClearanceMinimum: 1.2,
+  continuousGroundRequired:
+    true,
 
-  maximumCandidateSlopeDegrees:
-    H_EARTH_3D_ACTOR_CANDIDATE_LIMITS
-      .futureActorCapacity
-      .maximumCandidateSlopeDegrees,
+  actorCreated:
+    false,
 
-  mayBeSampledByFutureRendererOrActorStep: true,
+  actorReadyClaim:
+    false,
 
-  actorReadyGroundProven: false,
-  collisionProven: false,
-  groundContactProven: false,
-  traversalProven: false
+  collisionCreated:
+    false,
+
+  groundContactProven:
+    false,
+
+  traversalActivated:
+    false
 });
 
 /**
- * Environment primitive plan.
+ * Primitive accounting.
+ *
+ * estimatedEnvironmentPrimitiveCount remains the canonical count field.
  */
+const ENVIRONMENT_SUBSTRATE_PRIMITIVE_COUNT =
+  2 +
+  3 +
+  2 +
+  H_EARTH_3D_WATER_SUBSTRATE.waveBands.length;
+
+const ENVIRONMENT_DETAIL_PRIMITIVE_COUNT =
+  H_EARTH_3D_TIDE_POOL_DESCRIPTORS.length +
+  H_EARTH_3D_STONE_DESCRIPTORS.length +
+  H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS.length;
+
+const ENVIRONMENT_CONTEXT_PRIMITIVE_COUNT =
+  1 +
+  H_EARTH_3D_BACKGROUND_CONTEXT.offshoreIslets.length;
+
+const ENVIRONMENT_INTERACTION_PRIMITIVE_COUNT =
+  1;
+
+const ESTIMATED_ENVIRONMENT_PRIMITIVE_COUNT =
+  ENVIRONMENT_SUBSTRATE_PRIMITIVE_COUNT +
+  ENVIRONMENT_DETAIL_PRIMITIVE_COUNT +
+  ENVIRONMENT_CONTEXT_PRIMITIVE_COUNT +
+  ENVIRONMENT_INTERACTION_PRIMITIVE_COUNT;
+
+const ENVIRONMENT_NODE_BUDGET_EVALUATION =
+  evaluateHEarth3DNodeBudget({
+    semanticLayerContainers: 15,
+
+    environmentPrimitives:
+      ESTIMATED_ENVIRONMENT_PRIMITIVE_COUNT,
+
+    interactionNodes: 1,
+    routeOverlayNodes: 0,
+    diagnosticOwnedNodes: 0
+  });
+
 export const H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN = deepFreeze({
+  planId:
+    'H_EARTH_GROUND_CELL_001_FRAME_BASED_ENVIRONMENT_PRIMITIVE_PLAN',
+
+  coordinateFrame:
+    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame,
+
+  outputModel:
+    H_EARTH_3D_RENDER_STAGE_LIMITS.permittedOutputModel,
+
+  semanticLayerContainerEstimate:
+    15,
+
   substrate: deepFreeze({
     atmosphericOverlays: 2,
-    drySandBands: 3,
-    wetSandBands: 4,
-    foamRibbons: 1,
-    nearshoreWaterBands: 3,
-    openWaterBands: 4,
-    waveRibbons: 2
+    horizonBands: 1,
+    groundSurfaces: 2,
+    shorelineContactRibbons: 1,
+    waterSurfaces: 2,
+    waveBands:
+      H_EARTH_3D_WATER_SUBSTRATE.waveBands.length
   }),
 
-  minimalDetails: deepFreeze({
+  detail: deepFreeze({
     tidePools:
       H_EARTH_3D_TIDE_POOL_DESCRIPTORS.length,
 
@@ -1117,118 +1644,461 @@ export const H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN = deepFreeze({
       H_EARTH_3D_STONE_DESCRIPTORS.length,
 
     jaggedRocks:
-      H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS.length,
+      H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS.length
+  }),
 
+  context: deepFreeze({
+    manorBluffClusters: 1,
+
+    offshoreIslets:
+      H_EARTH_3D_BACKGROUND_CONTEXT.offshoreIslets.length
+  }),
+
+  interaction: deepFreeze({
     inspectionAnchors: 1
   }),
 
-  backgroundContext: deepFreeze({
-    manorBluffGroups: 1,
+  tierAccounting: deepFreeze({
+    essential:
+      ENVIRONMENT_SUBSTRATE_PRIMITIVE_COUNT,
 
-    offshoreIslets:
-      H_EARTH_3D_BACKGROUND_CONTEXT
-        .offshoreIslets
-        .length
+    detail:
+      ENVIRONMENT_DETAIL_PRIMITIVE_COUNT,
+
+    context:
+      ENVIRONMENT_CONTEXT_PRIMITIVE_COUNT,
+
+    interaction:
+      ENVIRONMENT_INTERACTION_PRIMITIVE_COUNT
   }),
 
   estimatedEnvironmentPrimitiveCount:
-    2 +
-    3 +
-    4 +
-    1 +
-    3 +
-    4 +
-    2 +
-    H_EARTH_3D_TIDE_POOL_DESCRIPTORS.length +
-    H_EARTH_3D_STONE_DESCRIPTORS.length +
-    H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS.length +
-    1 +
-    3 +
-    H_EARTH_3D_BACKGROUND_CONTEXT
-      .offshoreIslets
-      .length,
+    ESTIMATED_ENVIRONMENT_PRIMITIVE_COUNT,
 
-  withinCapacityTarget: true,
+  totalEnvironmentPrimitives:
+    ESTIMATED_ENVIRONMENT_PRIMITIVE_COUNT,
 
-  rendererGeometryDefined: false,
-  DOMNodesCreated: false
+  estimatedInteractionNodeCount: 1,
+  estimatedRouteOverlayNodeCount: 0,
+  estimatedDiagnosticOwnedNodeCount: 0,
+
+  nodeBudgetEvaluation:
+    ENVIRONMENT_NODE_BUDGET_EVALUATION,
+
+  eligible:
+    ENVIRONMENT_NODE_BUDGET_EVALUATION.eligible === true,
+
+  status:
+    ENVIRONMENT_NODE_BUDGET_EVALUATION.eligible === true
+      ? 'ENVIRONMENT_PRIMITIVE_PLAN_ELIGIBLE'
+      : 'ENVIRONMENT_PRIMITIVE_PLAN_NOT_ELIGIBLE',
+
+  rendererPassClaim: false,
+  visualPassClaim: false,
+  validationClaim: false
 });
 
 /**
- * Environment handoff supplied to the compositor.
- *
- * This preserves environmental meaning and tier membership without deciding
- * final visual order or projection geometry.
+ * Environment primitive-plan evaluation.
  */
-export const H_EARTH_3D_ENVIRONMENT_HANDOFF = deepFreeze({
-  handoffType:
-    'H_EARTH_GROUND_CELL_001_ENVIRONMENT_TO_COMPOSITOR',
+export function evaluateHEarth3DEnvironmentPrimitivePlan(
+  plan =
+    H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN
+) {
+  const checks = [];
+  const issues = [];
 
-  contractId:
-    H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
+  const planPresent =
+    isPlainObject(plan);
 
-  bindingIdentity:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY,
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_PRIMITIVE_PLAN_PRESENT',
+      planPresent
+    )
+  );
 
-  coordinateFrame:
-    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame,
+  if (!planPresent) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_PRIMITIVE_PLAN_MISSING',
+        'An environment primitive plan object is required.'
+      )
+    );
 
-  capacityContractId:
-    H_EARTH_3D_CAPACITY_CONTRACT_ID,
+    return deepFreeze({
+      eligible: false,
 
-  environmentTiers:
-    H_EARTH_3D_ENVIRONMENT_TIERS,
+      status:
+        'ENVIRONMENT_PRIMITIVE_PLAN_NOT_ELIGIBLE',
 
-  materials:
-    H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES,
+      checks:
+        deepFreeze(checks),
 
-  substrate: deepFreeze({
-    ground:
-      H_EARTH_3D_GROUND_SUBSTRATE,
+      issues:
+        deepFreeze(issues)
+    });
+  }
 
-    shoreline:
-      H_EARTH_3D_SHORELINE_MODEL,
+  const count =
+    plan.estimatedEnvironmentPrimitiveCount;
 
-    water:
-      H_EARTH_3D_WATER_SUBSTRATE,
+  const countEligible =
+    isNonNegativeInteger(count);
 
-    atmosphere:
-      H_EARTH_3D_ATMOSPHERE_MODEL
-  }),
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_PRIMITIVE_COUNT_ELIGIBLE',
+      countEligible,
+      count
+    )
+  );
 
-  minimalDetails: deepFreeze({
-    tidePools:
-      H_EARTH_3D_TIDE_POOL_DESCRIPTORS,
+  if (!countEligible) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_PRIMITIVE_COUNT_INVALID',
+        'estimatedEnvironmentPrimitiveCount must be a non-negative integer.',
+        count
+      )
+    );
+  }
 
-    stones:
-      H_EARTH_3D_STONE_DESCRIPTORS,
+  const semanticLayerContainerEstimate =
+    plan.semanticLayerContainerEstimate;
 
-    jaggedRocks:
-      H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS,
+  const semanticLayerEstimateEligible =
+    isNonNegativeInteger(
+      semanticLayerContainerEstimate
+    );
 
-    inspectionAnchor:
-      H_EARTH_3D_INSPECTION_ANCHOR
-  }),
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_SEMANTIC_LAYER_ESTIMATE_ELIGIBLE',
+      semanticLayerEstimateEligible,
+      semanticLayerContainerEstimate
+    )
+  );
 
-  backgroundContext:
-    H_EARTH_3D_BACKGROUND_CONTEXT,
+  if (!semanticLayerEstimateEligible) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_SEMANTIC_LAYER_ESTIMATE_INVALID',
+        'semanticLayerContainerEstimate must be a non-negative integer.',
+        semanticLayerContainerEstimate
+      )
+    );
+  }
 
-  actorReadyGroundCandidate:
-    H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE,
+  let nodeBudgetEvaluation = null;
 
-  primitivePlan:
-    H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN,
+  if (
+    countEligible &&
+    semanticLayerEstimateEligible
+  ) {
+    nodeBudgetEvaluation =
+      evaluateHEarth3DNodeBudget({
+        semanticLayerContainers:
+          semanticLayerContainerEstimate,
 
-  compositorMustDefineSemanticOrder: true,
-  rendererMustDefineProjection: true,
+        environmentPrimitives:
+          count,
 
-  environmentCreatesGeometry: false,
-  environmentCreatesDOM: false,
-  environmentMountsRenderer: false
-});
+        interactionNodes:
+          plan.estimatedInteractionNodeCount ?? 0,
+
+        routeOverlayNodes:
+          plan.estimatedRouteOverlayNodeCount ?? 0,
+
+        diagnosticOwnedNodes:
+          plan.estimatedDiagnosticOwnedNodeCount ?? 0
+      });
+  }
+
+  const nodeBudgetEligible =
+    nodeBudgetEvaluation?.eligible === true;
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_NODE_BUDGET_ELIGIBLE',
+      nodeBudgetEligible,
+      nodeBudgetEvaluation
+    )
+  );
+
+  if (!nodeBudgetEligible) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_NODE_BUDGET_NOT_ELIGIBLE',
+        'The environment primitive plan is outside the node-budget capacity.',
+        nodeBudgetEvaluation
+      )
+    );
+  }
+
+  const coordinateFrameMatches =
+    plan.coordinateFrame ===
+      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame;
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_PRIMITIVE_PLAN_COORDINATE_FRAME_MATCHES',
+      coordinateFrameMatches,
+      plan.coordinateFrame
+    )
+  );
+
+  if (!coordinateFrameMatches) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_PRIMITIVE_PLAN_COORDINATE_FRAME_MISMATCH',
+        'The primitive-plan coordinate frame does not match capacity.',
+        plan.coordinateFrame
+      )
+    );
+  }
+
+  const outputModelPermitted =
+    H_EARTH_3D_RENDER_STAGE_LIMITS
+      .permittedOutputModels
+      .includes(
+        plan.outputModel
+      );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_PRIMITIVE_PLAN_OUTPUT_MODEL_PERMITTED',
+      outputModelPermitted,
+      plan.outputModel
+    )
+  );
+
+  if (!outputModelPermitted) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_PRIMITIVE_PLAN_OUTPUT_MODEL_NOT_PERMITTED',
+        'The primitive-plan output model is not permitted by capacity.',
+        plan.outputModel
+      )
+    );
+  }
+
+  const eligible =
+    allChecksPass(checks);
+
+  return deepFreeze({
+    eligible,
+
+    status:
+      eligible
+        ? 'ENVIRONMENT_PRIMITIVE_PLAN_ELIGIBLE'
+        : 'ENVIRONMENT_PRIMITIVE_PLAN_NOT_ELIGIBLE',
+
+    checks:
+      deepFreeze(checks),
+
+    issues:
+      deepFreeze(issues),
+
+    count,
+
+    nodeBudgetEvaluation,
+
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false
+  });
+}
 
 /**
- * Claim ceilings.
+ * Environment alignment with the frame-based capacity corridor.
+ */
+export const H_EARTH_3D_ENVIRONMENT_FRAME_CAPACITY_ALIGNMENT =
+  deepFreeze({
+    capacityContractId:
+      H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+    capacityContractIdMatches:
+      CAPACITY_CONTRACT.contractId ===
+      H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+    activeCellMatches:
+      H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.activeCell ===
+      H_EARTH_3D_CAPACITY_BINDING_IDENTITY.activeCell,
+
+    spatialCellMatches:
+      H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.spatialCellId ===
+      H_EARTH_3D_CAPACITY_BINDING_IDENTITY.spatialCellId,
+
+    sceneIdentityMatches:
+      H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.sceneIdentity ===
+      H_EARTH_3D_CAPACITY_BINDING_IDENTITY.sceneIdentity,
+
+    coordinateFrameMatches:
+      H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.coordinateFrame ===
+      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame,
+
+    worldBoundsReferenced:
+      true,
+
+    outputModelPermitted:
+      H_EARTH_3D_RENDER_STAGE_LIMITS
+        .permittedOutputModels
+        .includes(
+          H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN.outputModel
+        ),
+
+    primitiveBudgetEligible:
+      H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN
+        .nodeBudgetEvaluation
+        .eligible === true,
+
+    semanticLayerCapacitySupported:
+      H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN
+        .semanticLayerContainerEstimate <=
+      H_EARTH_3D_RENDER_STAGE_LIMITS
+        .semanticLayerContainerMaximum,
+
+    inspectionAnchorCapacitySupported:
+      H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN
+        .estimatedInteractionNodeCount >= 1,
+
+    compositorFrameProviderRolePreserved:
+      true,
+
+    rendererProjectionBoundaryPreserved:
+      true,
+
+    controllerIntentBoundaryPreserved:
+      true,
+
+    compositorFrameConstructed:
+      false,
+
+    rendererFrameConsumed:
+      false,
+
+    rendererPassClaim:
+      false,
+
+    visualPassClaim:
+      false
+  });
+
+/**
+ * Evaluates environment/capacity alignment.
+ */
+export function evaluateHEarth3DEnvironmentCapacityAlignment(
+  alignment =
+    H_EARTH_3D_ENVIRONMENT_FRAME_CAPACITY_ALIGNMENT
+) {
+  const checks = [
+    createEnvironmentCheck(
+      'ENVIRONMENT_CAPACITY_CONTRACT_ID_MATCHES',
+      alignment.capacityContractIdMatches === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_ACTIVE_CELL_MATCHES',
+      alignment.activeCellMatches === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_SPATIAL_CELL_MATCHES',
+      alignment.spatialCellMatches === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_SCENE_IDENTITY_MATCHES',
+      alignment.sceneIdentityMatches === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_COORDINATE_FRAME_MATCHES',
+      alignment.coordinateFrameMatches === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_WORLD_BOUNDS_REFERENCED',
+      alignment.worldBoundsReferenced === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_OUTPUT_MODEL_PERMITTED',
+      alignment.outputModelPermitted === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_PRIMITIVE_BUDGET_ELIGIBLE',
+      alignment.primitiveBudgetEligible === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_SEMANTIC_LAYER_CAPACITY_SUPPORTED',
+      alignment.semanticLayerCapacitySupported === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_INSPECTION_ANCHOR_CAPACITY_SUPPORTED',
+      alignment.inspectionAnchorCapacitySupported === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_COMPOSITOR_PROVIDER_ROLE_PRESERVED',
+      alignment.compositorFrameProviderRolePreserved === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_RENDERER_BOUNDARY_PRESERVED',
+      alignment.rendererProjectionBoundaryPreserved === true
+    ),
+
+    createEnvironmentCheck(
+      'ENVIRONMENT_CONTROLLER_BOUNDARY_PRESERVED',
+      alignment.controllerIntentBoundaryPreserved === true
+    )
+  ];
+
+  const issues =
+    checks
+      .filter(
+        (check) =>
+          !check.passed
+      )
+      .map(
+        (check) =>
+          createEnvironmentIssue(
+            'ENVIRONMENT_CAPACITY_ALIGNMENT_CHECK_FAILED',
+            `Environment capacity-alignment check ${check.id} failed.`,
+            check.details
+          )
+      );
+
+  const eligible =
+    allChecksPass(checks);
+
+  return deepFreeze({
+    eligible,
+
+    status:
+      eligible
+        ? 'ENVIRONMENT_CAPACITY_ALIGNMENT_ELIGIBLE'
+        : 'ENVIRONMENT_CAPACITY_ALIGNMENT_NOT_ELIGIBLE',
+
+    checks:
+      deepFreeze(checks),
+
+    issues:
+      deepFreeze(issues),
+
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false
+  });
+}
+
+/**
+ * Environment claim ceilings.
  */
 export const H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS = deepFreeze({
   runtimeActivationClaim: false,
@@ -1237,8 +2107,19 @@ export const H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS = deepFreeze({
   playableEnvironmentClaim: false,
   validationClaim: false,
   productionClaim: false,
+  deploymentClaim: false,
+
+  compositorFrameConstructionClaim: false,
+  rendererFrameConsumptionClaim: false,
+  controllerIntentDispatchClaim: false,
+  routeMountClaim: false,
+
+  actionExecutionClaim: false,
+  readoutConstructionClaim: false,
+  inspectionReceiptConstructionClaim: false,
 
   actorClaim: false,
+  actorReadyClaim: false,
   groundContactClaim: false,
   collisionClaim: false,
   traversalClaim: false,
@@ -1249,35 +2130,35 @@ export const H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS = deepFreeze({
 });
 
 /**
- * Environment contract.
+ * Environment-to-compositor handoff.
  */
-export const H_EARTH_3D_ENVIRONMENT_CONTRACT = deepFreeze({
+export const H_EARTH_3D_ENVIRONMENT_HANDOFF = deepFreeze({
+  handoffType:
+    'H_EARTH_LAYER_4_ENVIRONMENT_TO_COMPOSITOR_FRAME_INPUT_HANDOFF',
+
+  compatibilityHandoffType:
+    'H_EARTH_GROUND_CELL_001_ENVIRONMENT_TO_COMPOSITOR',
+
   contractId:
     H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
 
-  schemaVersion:
-    H_EARTH_3D_ENVIRONMENT_SCHEMA_VERSION,
-
-  file:
-    '/showroom/globe/h-earth/environment.js',
-
-  layer:
-    'H_EARTH_LAYER_4_SHOWROOM_EXECUTION_CORRIDOR',
-
-  role:
-    'GROUND_CELL_001_ENVIRONMENT_SUBSTRATE_AUTHORITY',
-
-  status:
-    'CURRENT_ROLE_RENEWAL_CANDIDATE',
-
-  capacityContract:
-    H_EARTH_3D_CAPACITY_CONTRACT,
+  capacityContractId:
+    H_EARTH_3D_CAPACITY_CONTRACT_ID,
 
   bindingIdentity:
     H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY,
 
-  sourceRequirements:
-    H_EARTH_3D_ENVIRONMENT_SOURCE_REQUIREMENTS,
+  coordinateFrame:
+    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame,
+
+  worldBounds:
+    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS,
+
+  publicStageIds:
+    H_EARTH_3D_PUBLIC_STAGE_IDS,
+
+  environmentTierOrder:
+    H_EARTH_3D_ENVIRONMENT_TIER_ORDER,
 
   environmentTiers:
     H_EARTH_3D_ENVIRONMENT_TIERS,
@@ -1297,13 +2178,13 @@ export const H_EARTH_3D_ENVIRONMENT_CONTRACT = deepFreeze({
   atmosphereModel:
     H_EARTH_3D_ATMOSPHERE_MODEL,
 
-  tidePools:
+  tidePoolDescriptors:
     H_EARTH_3D_TIDE_POOL_DESCRIPTORS,
 
-  stones:
+  stoneDescriptors:
     H_EARTH_3D_STONE_DESCRIPTORS,
 
-  jaggedRocks:
+  jaggedRockDescriptors:
     H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS,
 
   backgroundContext:
@@ -1318,105 +2199,734 @@ export const H_EARTH_3D_ENVIRONMENT_CONTRACT = deepFreeze({
   primitivePlan:
     H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN,
 
-  compositorHandoff:
-    H_EARTH_3D_ENVIRONMENT_HANDOFF,
+  frameCapacityAlignment:
+    H_EARTH_3D_ENVIRONMENT_FRAME_CAPACITY_ALIGNMENT,
 
-  boundaryFlags:
-    H_EARTH_3D_ENVIRONMENT_BOUNDARY_FLAGS,
+  capacityContext: deepFreeze({
+    renderStageLimits:
+      H_EARTH_3D_RENDER_STAGE_LIMITS,
+
+    renderFrameCapacity:
+      H_EARTH_3D_RENDER_FRAME_CAPACITY,
+
+    compositorFrameEligibility:
+      H_EARTH_3D_COMPOSITOR_FRAME_ELIGIBILITY,
+
+    rendererFrameConsumptionEligibility:
+      H_EARTH_3D_RENDERER_FRAME_CONSUMPTION_ELIGIBILITY
+  }),
+
+  compositorRules: deepFreeze({
+    compositorMayOwnCameraState: true,
+    compositorMayOwnViewportState: true,
+    compositorMayOwnNavigationState: true,
+    compositorMayOwnInertiaState: true,
+    compositorMayOwnVisibilityState: true,
+    compositorMayOwnFrameSequencing: true,
+
+    compositorMayAlterEnvironmentTruth: false,
+    compositorMayInventMaterials: false,
+    compositorMayInventEnvironmentDescriptors: false,
+    compositorMayExpandWorldBounds: false
+  }),
+
+  rendererRules: deepFreeze({
+    rendererMayOwnProjectionMathematics: true,
+    rendererMayOwnProjectedPrimitiveConstruction: true,
+    rendererMayOwnDOMCSSMaterialization: true,
+
+    rendererMayOwnEnvironmentTruth: false,
+    rendererMayOwnCameraState: false,
+    rendererMayOwnViewportState: false,
+    rendererMayInventSemanticOrder: false
+  }),
+
+  controllerRules: deepFreeze({
+    controllerMayNormalizeInput: true,
+    controllerMayDispatchCompositorIntent: true,
+
+    controllerMayOwnEnvironmentTruth: false,
+    controllerMayOwnCameraState: false,
+    controllerMayMutateEnvironmentDescriptors: false
+  }),
 
   claimCeilings:
     H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS
 });
 
 /**
+ * Evaluates the compositor-ready environment handoff.
+ */
+export function evaluateHEarth3DEnvironmentHandoff(
+  handoff =
+    H_EARTH_3D_ENVIRONMENT_HANDOFF
+) {
+  const checks = [];
+  const issues = [];
+
+  const handoffPresent =
+    isPlainObject(handoff);
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_HANDOFF_PRESENT',
+      handoffPresent
+    )
+  );
+
+  if (!handoffPresent) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_HANDOFF_MISSING',
+        'An environment handoff object is required.'
+      )
+    );
+
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'ENVIRONMENT_HANDOFF_NOT_ELIGIBLE',
+
+      checks:
+        deepFreeze(checks),
+
+      issues:
+        deepFreeze(issues)
+    });
+  }
+
+  const requiredObjectFields = [
+    'bindingIdentity',
+    'worldBounds',
+    'environmentTiers',
+    'materialIdentities',
+    'groundSubstrate',
+    'shorelineModel',
+    'waterSubstrate',
+    'atmosphereModel',
+    'backgroundContext',
+    'inspectionAnchor',
+    'actorReadyGroundCandidate',
+    'primitivePlan',
+    'frameCapacityAlignment',
+    'compositorRules',
+    'rendererRules',
+    'controllerRules',
+    'claimCeilings'
+  ];
+
+  for (
+    const field
+    of requiredObjectFields
+  ) {
+    const passed =
+      isPlainObject(
+        handoff[field]
+      );
+
+    checks.push(
+      createEnvironmentCheck(
+        `ENVIRONMENT_HANDOFF_${field.toUpperCase()}_PRESENT`,
+        passed
+      )
+    );
+
+    if (!passed) {
+      issues.push(
+        createEnvironmentIssue(
+          'ENVIRONMENT_HANDOFF_REQUIRED_OBJECT_MISSING',
+          `Environment handoff field ${field} must be an object.`,
+          field
+        )
+      );
+    }
+  }
+
+  const requiredArrayFields = [
+    'environmentTierOrder',
+    'tidePoolDescriptors',
+    'stoneDescriptors',
+    'jaggedRockDescriptors'
+  ];
+
+  for (
+    const field
+    of requiredArrayFields
+  ) {
+    const passed =
+      Array.isArray(
+        handoff[field]
+      );
+
+    checks.push(
+      createEnvironmentCheck(
+        `ENVIRONMENT_HANDOFF_${field.toUpperCase()}_PRESENT`,
+        passed
+      )
+    );
+
+    if (!passed) {
+      issues.push(
+        createEnvironmentIssue(
+          'ENVIRONMENT_HANDOFF_REQUIRED_ARRAY_MISSING',
+          `Environment handoff field ${field} must be an array.`,
+          field
+        )
+      );
+    }
+  }
+
+  const contractIdMatches =
+    handoff.contractId ===
+      H_EARTH_3D_ENVIRONMENT_CONTRACT_ID;
+
+  const capacityContractIdMatches =
+    handoff.capacityContractId ===
+      H_EARTH_3D_CAPACITY_CONTRACT_ID;
+
+  const coordinateFrameMatches =
+    handoff.coordinateFrame ===
+      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame;
+
+  const primitivePlanEvaluation =
+    evaluateHEarth3DEnvironmentPrimitivePlan(
+      handoff.primitivePlan
+    );
+
+  const capacityAlignmentEvaluation =
+    evaluateHEarth3DEnvironmentCapacityAlignment(
+      handoff.frameCapacityAlignment
+    );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_HANDOFF_CONTRACT_ID_MATCHES',
+      contractIdMatches,
+      handoff.contractId
+    )
+  );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_HANDOFF_CAPACITY_CONTRACT_ID_MATCHES',
+      capacityContractIdMatches,
+      handoff.capacityContractId
+    )
+  );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_HANDOFF_COORDINATE_FRAME_MATCHES',
+      coordinateFrameMatches,
+      handoff.coordinateFrame
+    )
+  );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_HANDOFF_PRIMITIVE_PLAN_ELIGIBLE',
+      primitivePlanEvaluation.eligible,
+      primitivePlanEvaluation
+    )
+  );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_HANDOFF_CAPACITY_ALIGNMENT_ELIGIBLE',
+      capacityAlignmentEvaluation.eligible,
+      capacityAlignmentEvaluation
+    )
+  );
+
+  if (!contractIdMatches) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_HANDOFF_CONTRACT_ID_MISMATCH',
+        'Environment handoff contract ID does not match the renewed environment contract.',
+        handoff.contractId
+      )
+    );
+  }
+
+  if (!capacityContractIdMatches) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_HANDOFF_CAPACITY_CONTRACT_ID_MISMATCH',
+        'Environment handoff capacity contract ID does not match.',
+        handoff.capacityContractId
+      )
+    );
+  }
+
+  if (!coordinateFrameMatches) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_HANDOFF_COORDINATE_FRAME_MISMATCH',
+        'Environment handoff coordinate frame does not match capacity.',
+        handoff.coordinateFrame
+      )
+    );
+  }
+
+  if (!primitivePlanEvaluation.eligible) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_HANDOFF_PRIMITIVE_PLAN_NOT_ELIGIBLE',
+        'Environment handoff primitive plan is not eligible.',
+        primitivePlanEvaluation
+      )
+    );
+  }
+
+  if (!capacityAlignmentEvaluation.eligible) {
+    issues.push(
+      createEnvironmentIssue(
+        'ENVIRONMENT_HANDOFF_CAPACITY_ALIGNMENT_NOT_ELIGIBLE',
+        'Environment handoff capacity alignment is not eligible.',
+        capacityAlignmentEvaluation
+      )
+    );
+  }
+
+  const eligible =
+    allChecksPass(checks);
+
+  return deepFreeze({
+    eligible,
+
+    status:
+      eligible
+        ? 'ENVIRONMENT_HANDOFF_ELIGIBLE'
+        : 'ENVIRONMENT_HANDOFF_NOT_ELIGIBLE',
+
+    checks:
+      deepFreeze(checks),
+
+    issues:
+      deepFreeze(issues),
+
+    primitivePlanEvaluation,
+    capacityAlignmentEvaluation,
+
+    compositorFrameConstructed: false,
+    rendererFrameConsumed: false,
+
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false
+  });
+}
+
+/**
+ * Required material-key compatibility.
+ */
+const REQUIRED_MATERIAL_KEYS = deepFreeze([
+  'sky',
+  'atmosphere',
+  'haze',
+  'islet',
+  'manorContext',
+  'openWater',
+  'nearshoreWater',
+  'wave',
+  'foam',
+  'wetSand',
+  'drySand',
+  'tidePool',
+  'stone',
+  'rock',
+  'inspectionAnchor'
+]);
+
+/**
+ * Static frame-based environment preflight.
+ */
+export const H_EARTH_3D_ENVIRONMENT_PREFLIGHT = (() => {
+  const checks = [];
+  const issues = [];
+
+  const capacityContractAvailable =
+    isPlainObject(
+      CAPACITY_CONTRACT
+    ) &&
+    CAPACITY_CONTRACT.contractId ===
+      H_EARTH_3D_CAPACITY_CONTRACT_ID;
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_CAPACITY_CONTRACT_AVAILABLE',
+      capacityContractAvailable
+    )
+  );
+
+  const capacityReceiptAvailable =
+    isPlainObject(
+      CAPACITY_RECEIPT
+    ) &&
+    CAPACITY_RECEIPT.contractId ===
+      H_EARTH_3D_CAPACITY_CONTRACT_ID;
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_CAPACITY_RECEIPT_AVAILABLE',
+      capacityReceiptAvailable
+    )
+  );
+
+  const capacityPreflightAvailable =
+    isPlainObject(
+      CAPACITY_PREFLIGHT
+    );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_CAPACITY_PREFLIGHT_AVAILABLE',
+      capacityPreflightAvailable
+    )
+  );
+
+  const bindingIdentityAligned =
+    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.activeCell ===
+      H_EARTH_3D_CAPACITY_BINDING_IDENTITY.activeCell &&
+    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.spatialCellId ===
+      H_EARTH_3D_CAPACITY_BINDING_IDENTITY.spatialCellId &&
+    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.sceneIdentity ===
+      H_EARTH_3D_CAPACITY_BINDING_IDENTITY.sceneIdentity;
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_BINDING_IDENTITY_ALIGNED',
+      bindingIdentityAligned
+    )
+  );
+
+  const coordinateFrameAligned =
+    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.coordinateFrame ===
+      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame;
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_COORDINATE_FRAME_ALIGNED',
+      coordinateFrameAligned
+    )
+  );
+
+  const worldBoundsAvailable =
+    isPlainObject(
+      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS
+    );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_WORLD_BOUNDS_AVAILABLE',
+      worldBoundsAvailable
+    )
+  );
+
+  const requiredSubstrateDescriptorsPresent = [
+    H_EARTH_3D_GROUND_SUBSTRATE,
+    H_EARTH_3D_SHORELINE_MODEL,
+    H_EARTH_3D_WATER_SUBSTRATE,
+    H_EARTH_3D_ATMOSPHERE_MODEL,
+    H_EARTH_3D_BACKGROUND_CONTEXT,
+    H_EARTH_3D_INSPECTION_ANCHOR,
+    H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE
+  ].every(
+    isPlainObject
+  );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_REQUIRED_SUBSTRATE_DESCRIPTORS_PRESENT',
+      requiredSubstrateDescriptorsPresent
+    )
+  );
+
+  const materialKeysPresent =
+    REQUIRED_MATERIAL_KEYS.every(
+      (key) =>
+        isPlainObject(
+          H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES[
+            key
+          ]
+        ) &&
+        isNonEmptyString(
+          H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES[
+            key
+          ].id
+        )
+    );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_REQUIRED_MATERIAL_KEYS_PRESENT',
+      materialKeysPresent,
+      REQUIRED_MATERIAL_KEYS
+    )
+  );
+
+  const primitivePlanEvaluation =
+    evaluateHEarth3DEnvironmentPrimitivePlan();
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_PRIMITIVE_PLAN_ELIGIBLE',
+      primitivePlanEvaluation.eligible,
+      primitivePlanEvaluation
+    )
+  );
+
+  const capacityAlignmentEvaluation =
+    evaluateHEarth3DEnvironmentCapacityAlignment();
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_CAPACITY_ALIGNMENT_ELIGIBLE',
+      capacityAlignmentEvaluation.eligible,
+      capacityAlignmentEvaluation
+    )
+  );
+
+  const handoffEvaluation =
+    evaluateHEarth3DEnvironmentHandoff();
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_HANDOFF_ELIGIBLE',
+      handoffEvaluation.eligible,
+      handoffEvaluation
+    )
+  );
+
+  const claimCeilingsPreserved =
+    Object.values(
+      H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS
+    ).every(
+      (value) =>
+        value === false
+    );
+
+  checks.push(
+    createEnvironmentCheck(
+      'ENVIRONMENT_CLAIM_CEILINGS_PRESERVED',
+      claimCeilingsPreserved
+    )
+  );
+
+  for (
+    const check
+    of checks
+  ) {
+    if (!check.passed) {
+      issues.push(
+        createEnvironmentIssue(
+          'ENVIRONMENT_PREFLIGHT_CHECK_FAILED',
+          `Environment preflight check ${check.id} failed.`,
+          check.details
+        )
+      );
+    }
+  }
+
+  const eligible =
+    allChecksPass(checks);
+
+  return deepFreeze({
+    eligible,
+
+    status:
+      eligible
+        ? 'FRAME_BASED_ENVIRONMENT_PREFLIGHT_ELIGIBLE'
+        : 'FRAME_BASED_ENVIRONMENT_PREFLIGHT_NOT_ELIGIBLE',
+
+    checks:
+      deepFreeze(checks),
+
+    issues:
+      deepFreeze(issues),
+
+    primitivePlanEvaluation,
+    capacityAlignmentEvaluation,
+    handoffEvaluation,
+
+    compositorFrameConstructed: false,
+    rendererFrameConsumed: false,
+    controllerIntentDispatched: false,
+    routeMounted: false,
+
+    runtimeActivationClaim: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false
+  });
+})();
+
+/**
  * Static environment receipt.
  */
 export const H_EARTH_3D_ENVIRONMENT_RECEIPT = deepFreeze({
   receiptType:
-    'H_EARTH_3D_GROUND_CELL_001_ENVIRONMENT_SUBSTRATE_RECEIPT',
+    'H_EARTH_3D_FRAME_BASED_GROUND_CELL_001_ENVIRONMENT_SUBSTRATE_RECEIPT',
 
   contractId:
     H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
+
+  renewsContractId:
+    'H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034O_PRECHECK_GROUND_CELL_001_SUBSTRATE_v1',
 
   file:
     '/showroom/globe/h-earth/environment.js',
 
   capacityContractConsumed: true,
+  capacityBindingIdentityConsumed: true,
+  capacityWorldBoundsConsumed: true,
+  renderStageLimitsConsumed: true,
+  nodeBudgetEvaluatorConsumed: true,
+  renderFrameCapacityContextConsumed: true,
 
-  capacityContractId:
-    H_EARTH_3D_CAPACITY_CONTRACT_ID,
+  environmentTierIdentityDefined: true,
+  environmentTierOrderDefined: true,
+  materialIdentityDefined: true,
 
-  acceptedBindingIdentityConsumed: true,
-
-  bindingExpression:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY
-      .bindingExpression,
-
-  currentSourceSpineReferenced: true,
-
-  directStep034IExportVerified: false,
-  directStep034JExportVerified: false,
-  directStep034KExportVerified: false,
-  directStep034LExportVerified: false,
-
-  continuousGroundSubstrateDefined: true,
-  drySandDomainDefined: true,
-  wetSandDomainDefined: true,
+  groundSubstrateDefined: true,
   shorelineModelDefined: true,
-  foamContactDefined: true,
-  waterDatumDefined: true,
-  nearshoreWaterDefined: true,
-  openWaterDefined: true,
+  waterSubstrateDefined: true,
   atmosphereModelDefined: true,
 
-  minimalGroundedDetailsDefined: true,
-  simplifiedBackgroundContextDefined: true,
+  tidePoolDescriptorsDefined: true,
+  stoneDescriptorsDefined: true,
+  jaggedRockDescriptorsDefined: true,
 
-  inspectionEnvironmentalEligibilityDefined: true,
-  actorReadyGroundCandidateEnvelopeDefined: true,
+  backgroundContextDefined: true,
+  inspectionAnchorDefined: true,
+  actorReadyGroundCandidateDefined: true,
 
-  compositorHandoffDefined: true,
+  primitivePlanDefined: true,
 
-  semanticCompositionDefined: false,
-  rendererProjectionDefined: false,
-  rendererGeometryDefined: false,
-  controllerBehaviorDefined: false,
+  canonicalPrimitiveCountField:
+    'estimatedEnvironmentPrimitiveCount',
 
-  environmentPrimitiveCount:
+  estimatedEnvironmentPrimitiveCount:
     H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN
       .estimatedEnvironmentPrimitiveCount,
 
-  environmentPrimitiveBudgetTarget:
-    H_EARTH_3D_NODE_BUDGET
-      .environmentPrimitives
-      .target,
+  capacityAlignmentDefined: true,
+  compositorReadyHandoffDefined: true,
 
-  environmentPrimitiveBudgetMaximum:
-    H_EARTH_3D_NODE_BUDGET
-      .environmentPrimitives
-      .maximum,
+  preflightStatus:
+    H_EARTH_3D_ENVIRONMENT_PREFLIGHT.status,
 
-  compositorRenewalStatus:
-    'REQUIRED_NEXT',
-
-  rendererPreflightStatus:
-    'NOT_COMPLETE',
-
-  rendererMayMount: false,
-
-  nextRequired:
-    'RENEW_COMPOSITOR_JS_FROM_CURRENT_CAPACITY_AND_ENVIRONMENT_HANDOFF',
+  preflightEligible:
+    H_EARTH_3D_ENVIRONMENT_PREFLIGHT.eligible,
 
   repositoryInstallationVerified: false,
   importResolutionVerified: false,
   moduleGraphExecutionVerified: false,
-  sourceSpineReadbackVerified: false,
-  compositorConsumptionVerified: false,
-  rendererConsumptionVerified: false,
-  routeMountVerified: false,
+  compositorFrameConstructionVerified: false,
+  rendererFrameConsumptionVerified: false,
+  controllerIntentDispatchVerified: false,
+  routeIntegrationVerified: false,
+  rendererMountVerified: false,
   visualOutputInspected: false,
 
+  nextRequired:
+    'BACK_UP_RENEWED_ENVIRONMENT_THEN_FINALIZE_COMPOSITOR_AGAINST_CAPACITY_AND_ENVIRONMENT',
+
   ...H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS
+});
+
+/**
+ * Complete environment contract.
+ */
+export const H_EARTH_3D_ENVIRONMENT_CONTRACT = deepFreeze({
+  contractId:
+    H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
+
+  schemaVersion:
+    H_EARTH_3D_ENVIRONMENT_SCHEMA_VERSION,
+
+  renewsContractId:
+    'H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034O_PRECHECK_GROUND_CELL_001_SUBSTRATE_v1',
+
+  file:
+    '/showroom/globe/h-earth/environment.js',
+
+  layer:
+    'H_EARTH_LAYER_4_SHOWROOM_EXECUTION_CORRIDOR',
+
+  role:
+    'FRAME_BASED_GROUND_CELL_001_SUBSTRATE_PROVIDER',
+
+  status:
+    'CURRENT_ROLE_RENEWAL_CANDIDATE',
+
+  bindingIdentity:
+    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY,
+
+  sourceRequirements:
+    H_EARTH_3D_ENVIRONMENT_SOURCE_REQUIREMENTS,
+
+  tierIds:
+    H_EARTH_3D_ENVIRONMENT_TIER_IDS,
+
+  tierOrder:
+    H_EARTH_3D_ENVIRONMENT_TIER_ORDER,
+
+  tiers:
+    H_EARTH_3D_ENVIRONMENT_TIERS,
+
+  materialIdentities:
+    H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES,
+
+  groundSubstrate:
+    H_EARTH_3D_GROUND_SUBSTRATE,
+
+  shorelineModel:
+    H_EARTH_3D_SHORELINE_MODEL,
+
+  waterSubstrate:
+    H_EARTH_3D_WATER_SUBSTRATE,
+
+  atmosphereModel:
+    H_EARTH_3D_ATMOSPHERE_MODEL,
+
+  tidePoolDescriptors:
+    H_EARTH_3D_TIDE_POOL_DESCRIPTORS,
+
+  stoneDescriptors:
+    H_EARTH_3D_STONE_DESCRIPTORS,
+
+  jaggedRockDescriptors:
+    H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS,
+
+  backgroundContext:
+    H_EARTH_3D_BACKGROUND_CONTEXT,
+
+  inspectionAnchor:
+    H_EARTH_3D_INSPECTION_ANCHOR,
+
+  actorReadyGroundCandidate:
+    H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE,
+
+  primitivePlan:
+    H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN,
+
+  frameCapacityAlignment:
+    H_EARTH_3D_ENVIRONMENT_FRAME_CAPACITY_ALIGNMENT,
+
+  compositorHandoff:
+    H_EARTH_3D_ENVIRONMENT_HANDOFF,
+
+  preflight:
+    H_EARTH_3D_ENVIRONMENT_PREFLIGHT,
+
+  boundaryFlags:
+    H_EARTH_3D_ENVIRONMENT_BOUNDARY_FLAGS,
+
+  claimCeilings:
+    H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS
 });
 
 /**
@@ -1434,516 +2944,17 @@ export function getHEarth3DEnvironmentReceipt() {
 }
 
 /**
- * Returns the environment-to-compositor handoff.
+ * Returns the immutable environment-to-compositor handoff.
  */
 export function getHEarth3DEnvironmentHandoff() {
   return H_EARTH_3D_ENVIRONMENT_HANDOFF;
 }
 
 /**
- * Returns the continuous ground substrate descriptor.
+ * Returns the static frame-based environment preflight.
  */
-export function getHEarth3DGroundSubstrate() {
-  return H_EARTH_3D_GROUND_SUBSTRATE;
-}
-
-/**
- * Returns the shoreline descriptor.
- */
-export function getHEarth3DShorelineModel() {
-  return H_EARTH_3D_SHORELINE_MODEL;
-}
-
-/**
- * Returns the water substrate descriptor.
- */
-export function getHEarth3DWaterSubstrate() {
-  return H_EARTH_3D_WATER_SUBSTRATE;
-}
-
-/**
- * Returns the atmosphere descriptor.
- */
-export function getHEarth3DAtmosphereModel() {
-  return H_EARTH_3D_ATMOSPHERE_MODEL;
-}
-
-/**
- * Returns minimal grounded-detail descriptors.
- */
-export function getHEarth3DMinimalGroundedDetails() {
-  return deepFreeze({
-    tidePools:
-      H_EARTH_3D_TIDE_POOL_DESCRIPTORS,
-
-    stones:
-      H_EARTH_3D_STONE_DESCRIPTORS,
-
-    jaggedRocks:
-      H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS,
-
-    inspectionAnchor:
-      H_EARTH_3D_INSPECTION_ANCHOR
-  });
-}
-
-/**
- * Returns simplified background-context descriptors.
- */
-export function getHEarth3DBackgroundContext() {
-  return H_EARTH_3D_BACKGROUND_CONTEXT;
-}
-
-/**
- * Returns the actor-ready ground candidate envelope.
- */
-export function getHEarth3DActorReadyGroundCandidate() {
-  return H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE;
-}
-
-/**
- * Evaluates whether a local x/z point lies within the continuous ground domain.
- *
- * This is environmental-domain evaluation only. It does not prove walkability,
- * collision, or ground contact.
- */
-export function evaluateHEarth3DGroundDomainPoint({
-  x,
-  z
-} = {}) {
-  if (
-    !isFiniteNumber(x) ||
-    !isFiniteNumber(z)
-  ) {
-    return deepFreeze({
-      eligible: false,
-      status: 'INVALID_GROUND_DOMAIN_POINT',
-
-      issues: deepFreeze([
-        createEnvironmentIssue(
-          'INVALID_GROUND_DOMAIN_COORDINATES',
-          'Ground-domain x and z values must be finite numbers.'
-        )
-      ]),
-
-      groundContactClaim: false,
-      collisionClaim: false
-    });
-  }
-
-  const domain =
-    H_EARTH_3D_GROUND_SUBSTRATE.domain;
-
-  const inside =
-    x >= domain.xMin &&
-    x <= domain.xMax &&
-    z >= domain.zMin &&
-    z <= domain.zMax;
-
-  let surfaceClass = 'OUTSIDE_GROUND_DOMAIN';
-
-  if (inside) {
-    const dry =
-      H_EARTH_3D_GROUND_SUBSTRATE.drySand;
-
-    const wet =
-      H_EARTH_3D_GROUND_SUBSTRATE.wetSand;
-
-    const insideDry =
-      z >= dry.zMin &&
-      z <= dry.zMax;
-
-    const insideWet =
-      z >= wet.zMin &&
-      z <= wet.zMax;
-
-    if (insideDry && insideWet) {
-      surfaceClass = 'DRY_WET_TRANSITION';
-    } else if (insideWet) {
-      surfaceClass = 'WET_SAND';
-    } else if (insideDry) {
-      surfaceClass = 'DRY_SAND';
-    } else {
-      surfaceClass = 'GROUND_SUBSTRATE';
-    }
-  }
-
-  return deepFreeze({
-    eligible: inside,
-
-    status:
-      inside
-        ? 'POINT_WITHIN_GROUND_ENVIRONMENT_DOMAIN'
-        : 'POINT_OUTSIDE_GROUND_ENVIRONMENT_DOMAIN',
-
-    point: deepFreeze({
-      x,
-      z
-    }),
-
-    surfaceClass,
-
-    groundContactClaim: false,
-    collisionClaim: false,
-    walkabilityClaim: false
-  });
-}
-
-/**
- * Evaluates whether a local point lies within the actor-ready ground candidate
- * envelope.
- *
- * This remains candidate evaluation only.
- */
-export function evaluateHEarth3DActorReadyGroundCandidate({
-  x,
-  z,
-  shorelineDepthZ = null
-} = {}) {
-  if (
-    !isFiniteNumber(x) ||
-    !isFiniteNumber(z)
-  ) {
-    return deepFreeze({
-      candidate: false,
-      status: 'INVALID_ACTOR_GROUND_CANDIDATE_POINT',
-
-      issues: deepFreeze([
-        createEnvironmentIssue(
-          'INVALID_ACTOR_GROUND_COORDINATES',
-          'Actor-ground candidate x and z values must be finite numbers.'
-        )
-      ]),
-
-      actorReadyGroundProven: false,
-      groundContactProven: false,
-      collisionProven: false
-    });
-  }
-
-  const bounds =
-    H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE.bounds;
-
-  const insideCandidateBounds =
-    x >= bounds.xMin &&
-    x <= bounds.xMax &&
-    z >= bounds.zMin &&
-    z <= bounds.zMax;
-
-  const effectiveShorelineDepth =
-    isFiniteNumber(shorelineDepthZ)
-      ? shorelineDepthZ
-      : H_EARTH_3D_SHORELINE_MODEL.nominalDepthZ;
-
-  const shorelineClearance =
-    effectiveShorelineDepth - z;
-
-  const clearsShoreline =
-    shorelineClearance >=
-    H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE
-      .shorelineClearanceMinimum;
-
-  const candidate =
-    insideCandidateBounds &&
-    clearsShoreline;
-
-  return deepFreeze({
-    candidate,
-
-    status:
-      candidate
-        ? 'ACTOR_READY_GROUND_CANDIDATE_POINT'
-        : 'POINT_OUTSIDE_ACTOR_READY_GROUND_CANDIDATE',
-
-    point: deepFreeze({
-      x,
-      z
-    }),
-
-    shorelineDepthZ:
-      effectiveShorelineDepth,
-
-    shorelineClearance,
-
-    insideCandidateBounds,
-    clearsShoreline,
-
-    actorReadyGroundProven: false,
-    groundContactProven: false,
-    collisionProven: false,
-    traversalProven: false
-  });
-}
-
-/**
- * Evaluates a supplied Step 034I–034L source handoff.
- *
- * This function does not fetch or import source files. The caller supplies
- * observed facts from installed source or backed-file review.
- */
-export function evaluateHEarth3DEnvironmentSourceHandoff({
-  bindingIdentityMatches = false,
-
-  step034IBoundariesPresent = false,
-  step034JObjectsPresent = false,
-  step034KZonesPresent = false,
-  step034LLandscapeLatticePresent = false,
-
-  groundCellIdentityMatches = false,
-  spatialCellIdentityMatches = false,
-
-  sourceSpineContradictionDetected = false
-} = {}) {
-  const issues = [];
-
-  if (!bindingIdentityMatches) {
-    issues.push(
-      createEnvironmentIssue(
-        'BINDING_IDENTITY_UNVERIFIED',
-        'The environment handoff does not yet verify the accepted matrix/cell binding.'
-      )
-    );
-  }
-
-  if (!step034IBoundariesPresent) {
-    issues.push(
-      createEnvironmentIssue(
-        'STEP_034I_BOUNDARIES_MISSING',
-        'Step 034I boundary authority is missing or unverified.'
-      )
-    );
-  }
-
-  if (!step034JObjectsPresent) {
-    issues.push(
-      createEnvironmentIssue(
-        'STEP_034J_OBJECTS_MISSING',
-        'Step 034J object authority is missing or unverified.'
-      )
-    );
-  }
-
-  if (!step034KZonesPresent) {
-    issues.push(
-      createEnvironmentIssue(
-        'STEP_034K_ZONES_MISSING',
-        'Step 034K zone authority is missing or unverified.'
-      )
-    );
-  }
-
-  if (!step034LLandscapeLatticePresent) {
-    issues.push(
-      createEnvironmentIssue(
-        'STEP_034L_LANDSCAPE_LATTICE_MISSING',
-        'Step 034L landscape-lattice authority is missing or unverified.'
-      )
-    );
-  }
-
-  if (!groundCellIdentityMatches) {
-    issues.push(
-      createEnvironmentIssue(
-        'GROUND_CELL_IDENTITY_MISMATCH',
-        'The supplied environment source does not match H_EARTH_GROUND_CELL_001.'
-      )
-    );
-  }
-
-  if (!spatialCellIdentityMatches) {
-    issues.push(
-      createEnvironmentIssue(
-        'SPATIAL_CELL_IDENTITY_MISMATCH',
-        'The supplied environment source does not match H_EARTH_REGION_CELL_X07_Z08.'
-      )
-    );
-  }
-
-  if (sourceSpineContradictionDetected) {
-    issues.push(
-      createEnvironmentIssue(
-        'SOURCE_SPINE_CONTRADICTION',
-        'A contradiction was detected among the supplied source-spine facts.'
-      )
-    );
-  }
-
-  const admitted =
-    issues.length === 0;
-
-  return deepFreeze({
-    admitted,
-
-    status:
-      admitted
-        ? 'ENVIRONMENT_SOURCE_HANDOFF_ADMITTED'
-        : 'ENVIRONMENT_SOURCE_HANDOFF_NOT_ADMITTED',
-
-    observed: deepFreeze({
-      bindingIdentityMatches,
-
-      step034IBoundariesPresent,
-      step034JObjectsPresent,
-      step034KZonesPresent,
-      step034LLandscapeLatticePresent,
-
-      groundCellIdentityMatches,
-      spatialCellIdentityMatches,
-
-      sourceSpineContradictionDetected
-    }),
-
-    issues: deepFreeze(issues),
-
-    environmentHandoffPresent: admitted,
-
-    compositorMayConsume:
-      admitted,
-
-    rendererMayMount: false,
-
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false
-  });
-}
-
-/**
- * Evaluates environment primitive counts against the renewed capacity budget.
- *
- * This does not materialize primitives.
- */
-export function evaluateHEarth3DEnvironmentPrimitivePlan(
-  plan =
-    H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN
-) {
-  const count =
-    plan?.estimatedEnvironmentPrimitiveCount;
-
-  if (
-    !Number.isInteger(count) ||
-    count < 0
-  ) {
-    return deepFreeze({
-      eligible: false,
-
-      status:
-        'INVALID_ENVIRONMENT_PRIMITIVE_PLAN',
-
-      issues: deepFreeze([
-        createEnvironmentIssue(
-          'INVALID_ENVIRONMENT_PRIMITIVE_COUNT',
-          'Environment primitive count must be a non-negative integer.'
-        )
-      ]),
-
-      rendererPassClaim: false,
-      validationClaim: false
-    });
-  }
-
-  const budget =
-    H_EARTH_3D_NODE_BUDGET.environmentPrimitives;
-
-  const exceedsMaximum =
-    count > budget.maximum;
-
-  const exceedsWarning =
-    count > budget.warning;
-
-  return deepFreeze({
-    eligible: !exceedsMaximum,
-
-    status:
-      exceedsMaximum
-        ? 'ENVIRONMENT_PRIMITIVE_BUDGET_EXCEEDED'
-        : exceedsWarning
-          ? 'ENVIRONMENT_PRIMITIVE_BUDGET_WARNING'
-          : 'ENVIRONMENT_PRIMITIVE_PLAN_WITHIN_CAPACITY',
-
-    count,
-
-    target: budget.target,
-    warning: budget.warning,
-    maximum: budget.maximum,
-
-    rendererGeometryCreated: false,
-    rendererPassClaim: false,
-    performanceClaim: false,
-    validationClaim: false
-  });
-}
-
-/**
- * Evaluates whether the environment handoff is suitable for compositor renewal.
- */
-export function evaluateHEarth3DEnvironmentCompositorEligibility({
-  capacityContractMatches = false,
-  bindingIdentityMatches = false,
-  sourceHandoffAdmitted = false,
-  groundSubstratePresent = false,
-  shorelineModelPresent = false,
-  waterSubstratePresent = false,
-  atmosphereModelPresent = false,
-  primitivePlanWithinCapacity = false
-} = {}) {
-  const failures = [];
-
-  if (!capacityContractMatches) {
-    failures.push('capacity-contract-mismatch-or-unverified');
-  }
-
-  if (!bindingIdentityMatches) {
-    failures.push('binding-identity-mismatch-or-unverified');
-  }
-
-  if (!sourceHandoffAdmitted) {
-    failures.push('source-handoff-not-admitted');
-  }
-
-  if (!groundSubstratePresent) {
-    failures.push('ground-substrate-missing');
-  }
-
-  if (!shorelineModelPresent) {
-    failures.push('shoreline-model-missing');
-  }
-
-  if (!waterSubstratePresent) {
-    failures.push('water-substrate-missing');
-  }
-
-  if (!atmosphereModelPresent) {
-    failures.push('atmosphere-model-missing');
-  }
-
-  if (!primitivePlanWithinCapacity) {
-    failures.push('primitive-plan-outside-capacity');
-  }
-
-  const eligible =
-    failures.length === 0;
-
-  return deepFreeze({
-    compositorMayConsume: eligible,
-
-    status:
-      eligible
-        ? 'ENVIRONMENT_HANDOFF_ELIGIBLE_FOR_COMPOSITOR'
-        : 'ENVIRONMENT_HANDOFF_NOT_ELIGIBLE_FOR_COMPOSITOR',
-
-    failures: deepFreeze(failures),
-
-    compositorMounted: false,
-    rendererMayMount: false,
-
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    playableEnvironmentClaim: false,
-    validationClaim: false,
-    productionClaim: false
-  });
+export function getHEarth3DEnvironmentPreflight() {
+  return H_EARTH_3D_ENVIRONMENT_PREFLIGHT;
 }
 
 export default H_EARTH_3D_ENVIRONMENT_CONTRACT;

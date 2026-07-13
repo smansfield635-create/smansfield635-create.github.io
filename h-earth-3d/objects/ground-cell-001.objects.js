@@ -2,28 +2,45 @@
  * DGB_H_EARTH_SCRATCH_REBUILD — Step 034J
  * File: /h-earth-3d/objects/ground-cell-001.objects.js
  *
- * COMPLETE REPAIRED FILE
+ * COMPLETE PROVENANCE-ALIGNED FILE
+ * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v2
+ *
+ * Directly renews:
  * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1
  *
- * Narrow API Authority correction pass:
+ * Exact historical object-composition lineage:
+ * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1
+ *
+ * Active governing zone authority:
+ * H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1
+ *
+ * Exact historical zone-composition lineage:
+ * H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1
+ *
+ * Retired compatibility lineage preserved:
+ * H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1
+ * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1
+ *
+ * Narrow provenance-integration correction:
  * - Preserves H_EARTH_GROUND_CELL_001_OBJECT_COMPOSITION_MODEL.
  * - Preserves H_EARTH_GROUND_CELL_001_OBJECT_COMPRESSION_MODEL.
  * - Preserves aggregate compositionModel and compressionModel aliases.
  * - Uses OBJECT_AUTHORITY_PUBLIC_STAGE_READABILITY_ALIGNMENT.
  * - Preserves the static Step 034I authority reference.
+ * - Aligns active upstream zone authority to Step 034K.
+ * - Preserves Step 011B as historical zone lineage only.
+ * - Preserves Step 011C as historical object lineage only.
+ * - Preserves exact Step 031C and Step 031D retired compatibility identities.
  * - Applies PRIMARY_ZONE_MEMBERSHIP_ONLY to OBJECTS_BY_ZONE.
- * - Removes OBJ_006 from the Zone 002 primary-zone index.
- * - Reduces OBJ_003 to visible-only secondary surface context.
- * - Preserves the exact populated Step 011C legacy address arrays.
+ * - Preserves OBJ_006 outside the Zone 002 primary-zone index.
+ * - Preserves OBJ_003 as visible-only secondary surface context.
+ * - Preserves the populated Step 011C legacy address arrays.
  * - Preserves the corrected receipt path:
  *   /h-earth-3d/h-earth.receipts.js
- * - Normalizes supporting-inspection authority field identities to:
+ * - Preserves supporting-inspection authority field identities:
  *   supportingInspectionTargetsPublicReadable
  *   supportingInspectionTargetsReadabilityDefinedByStep034J
  *   supportingInspectionTargetsReadabilityConsistentWithStep034IObjectScope
- *
- * Renews:
- * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1
  *
  * Governing public-stage boundary authority:
  * /h-earth-3d/boundaries/matrix-boundaries.js
@@ -33,15 +50,21 @@
  * Source class:
  * OBJECT_AUTHORITY_PUBLIC_STAGE_READABILITY_ALIGNMENT
  *
- * Status:
- * Canonical renewal candidate pending preinstall re-audit.
- * Not installation-ready.
- * No repository mutation performed.
- * No local artifact created.
- * No Google Drive backup performed.
- * No active backed occurrence claimed.
+ * External evidence rule:
+ * - Backup evidence is owned externally.
+ * - Drive document identity is owned externally.
+ * - Connector readback evidence is owned externally.
+ * - Import-resolution evidence is owned externally.
+ * - Module-graph evidence is owned externally.
+ * - Execution evidence is owned externally.
+ * - Route-integration evidence is owned externally.
+ * - Digest evidence is owned externally.
+ * - Replay evidence is owned externally.
+ * - Installation and admission results are owned externally.
+ * - Exact baseline-diff and legacy-array-equivalence results are owned externally.
  *
  * Step 034J aligns beneath Step 034I.
+ * Step 034J consumes Step 034K as the active governing zone authority.
  * Step 034J does not create independent public-stage authority.
  *
  * This file feeds visualization descriptors.
@@ -130,8 +153,10 @@ export const H_EARTH_STEP_034I_PUBLIC_STAGE_AUTHORITY_REFERENCE =
     authorityCreatedHere: false,
     authorityImportedHere: false,
     importPerformedHere: false,
-    importResolutionProof: false,
-    moduleGraphExecutionProof: false,
+
+    executionEvidenceOwnedExternally: true,
+    importResolutionEvidenceOwnedExternally: true,
+    moduleGraphEvidenceOwnedExternally: true,
 
     referencedAdmission: Object.freeze({
       objectDescriptorProjectionAllowed: true,
@@ -170,13 +195,28 @@ export const H_EARTH_STEP_034I_PUBLIC_STAGE_AUTHORITY_REFERENCE =
 export const H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT =
   Object.freeze({
     contractId:
-      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v2',
 
     currentStep:
-      'STEP_034J_OBJECTS_PUBLIC_STAGE_READABILITY_AMENDMENT',
+      'STEP_034J_OBJECTS_PUBLIC_STAGE_READABILITY_AMENDMENT_V2_PROVENANCE_ALIGNMENT',
 
     renewsContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+
+    directRenewedFromContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+
+    exactHistoricalObjectLineageContractId:
       'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
+    activeGoverningZoneContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+    exactHistoricalZoneLineageContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
+
+    retiredZoneCompatibilityContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1',
 
     compatibilityBaselineContractId:
       'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1',
@@ -191,7 +231,23 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT =
       'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_011A_PATH3_DOMAIN_BINDING_CONSUMER_v1',
 
     upstreamZoneContractId:
-      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+    historicalLineage: Object.freeze({
+      objects:
+        'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
+      zones:
+        'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1'
+    }),
+
+    retiredCompatibilityLineage: Object.freeze({
+      zones:
+        'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1',
+
+      objects:
+        'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1'
+    }),
 
     file:
       '/h-earth-3d/objects/ground-cell-001.objects.js',
@@ -216,7 +272,8 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT =
     fileClass:
       'OBJECT_AUTHORITY_PUBLIC_STAGE_READABILITY_ALIGNMENT',
 
-    status: 'CANONICAL_RENEWAL_CANDIDATE',
+    status:
+      'SOURCE_DESCRIPTOR_AUTHORITY_PROVENANCE_ALIGNED',
 
     matrix: 'H-Earth',
     matrixRole: 'Ground-View Matrix',
@@ -233,6 +290,7 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT =
     publicStageAuthorityCreatedHere: false,
     step034IPublicStageAuthorityConsumed: true,
     step034IDirectImportPerformed: false,
+    step034KActiveZoneAuthorityConsumed: true,
 
     objectsByZoneMembershipPolicy:
       'PRIMARY_ZONE_MEMBERSHIP_ONLY',
@@ -240,30 +298,19 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT =
     secondaryMembershipSource:
       'H_EARTH_GROUND_CELL_001_OBJECT_ZONE_BINDINGS.secondaryZoneId',
 
-    sourceConstructionAuthorized: true,
-    installationAuthorized: false,
-    repositoryMutationAuthorized: false,
-    localArtifactCreationAuthorized: false,
-    googleBackupAuthorized: false,
-    backupComplete: false,
-    activeBackedOccurrenceClaimAuthorized: false,
-
-    archive: Object.freeze({
-      archiveTitle:
-        'h-earth-ground-cell-001-objects-step-034j-public-stage-readability-amendment-backup',
-
-      sourceFile:
-        '/h-earth-3d/objects/ground-cell-001.objects.js',
-
-      contractId:
-        'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
-
-      backupStatus:
-        'PENDING_USER_INSTALLATION_AND_DRIVE_BACKUP',
-
-      driveDocumentId: null,
-      connectorReadbackVerified: false
-    }),
+    backupEvidenceOwnedExternally: true,
+    driveOccurrenceEvidenceOwnedExternally: true,
+    connectorReadbackEvidenceOwnedExternally: true,
+    executionEvidenceOwnedExternally: true,
+    importResolutionEvidenceOwnedExternally: true,
+    moduleGraphEvidenceOwnedExternally: true,
+    routeIntegrationEvidenceOwnedExternally: true,
+    digestEvidenceOwnedExternally: true,
+    replayEvidenceOwnedExternally: true,
+    installationEvidenceOwnedExternally: true,
+    admissionEvidenceOwnedExternally: true,
+    baselineDiffEvidenceOwnedExternally: true,
+    legacyAddressEquivalenceEvidenceOwnedExternally: true,
 
     canonicalAnchorsPreserved: Object.freeze({
       hEarthMatrixIdentity: true,
@@ -286,9 +333,12 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT =
       objectDescriptorRegistryExportPreserved: true,
       legacyAddressSurfacePreserved: true,
       legacySupportingAddressesPreserved: true,
-      legacySupportingAddressesExactEquivalenceVerified: true,
       legacyAddressSurfaceActiveAuthority: false,
-      legacyLatticeCompressionActiveAuthority: false
+      legacyLatticeCompressionActiveAuthority: false,
+      step011BHistoricalOnly: true,
+      step011CHistoricalOnly: true,
+      step031CRetiredCompatibilityOnly: true,
+      step031DRetiredCompatibilityOnly: true
     }),
 
     authorityReference:
@@ -432,6 +482,7 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_BOUNDARY_FLAGS =
     publicStageAuthorityCreatedHere: false,
     step034IPublicStageAuthorityConsumed: true,
     step034IDirectImportPerformed: false,
+    step034KActiveZoneAuthorityConsumed: true,
 
     objectDescriptorProjectionAllowedByReferencedAuthority: true,
     primaryInspectionObjectPublicReadableByReferencedAuthority: true,
@@ -476,16 +527,14 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_BOUNDARY_FLAGS =
     groundConditionReadExecutedHere: false,
     receiptPersistedHere: false,
 
-    runtimeExecutionClaim: false,
-    target002RuntimeExecution: false,
-    target003ReplayExecution: false,
-    step012H1RunExecution: false,
-    step012IVectorExecution: false,
-    step012IRunnerExecution: false,
-    canonicalDigestGeneration: false,
-    replayComparison: false,
-    importResolutionProof: false,
-    moduleGraphExecutionProof: false,
+    executionEvidenceOwnedExternally: true,
+    importResolutionEvidenceOwnedExternally: true,
+    moduleGraphEvidenceOwnedExternally: true,
+    routeIntegrationEvidenceOwnedExternally: true,
+    digestEvidenceOwnedExternally: true,
+    replayEvidenceOwnedExternally: true,
+    baselineDiffEvidenceOwnedExternally: true,
+    legacyAddressEquivalenceEvidenceOwnedExternally: true,
 
     rendererActivation: false,
     finalRendererClaim: false,
@@ -725,11 +774,12 @@ export const H_EARTH_GROUND_CELL_001_OBJECT_COMPOSITION_MODEL =
       H_EARTH_GROUND_CELL_001_OBJECT_DESCRIPTOR_PROJECTION_ORDER,
 
     compositionPrinciple:
-      'The 12 canonical source objects remain primary-zone-indexed descriptor objects. Secondary zone relationships remain available only through secondaryZoneId. Step 034J aligns public-stage readability beneath Step 034I without creating boundary, renderer, runtime, route, traversal, validation, production, or matrix-collapse authority.',
+      'The 12 canonical source objects remain primary-zone-indexed descriptor objects. Secondary zone relationships remain available only through secondaryZoneId. Step 034J aligns public-stage readability beneath Step 034I and consumes Step 034K as active zone authority without creating boundary, renderer, runtime, route, traversal, validation, production, or matrix-collapse authority.',
 
     publicStageReadabilityAlignment: true,
     publicStageAuthorityCreatedHere: false,
     step034IPublicStageAuthorityConsumed: true,
+    step034KActiveZoneAuthorityConsumed: true,
 
     secondarySurfaceContextReadable: false,
     secondarySurfaceContextVisible: true,
@@ -951,22 +1001,23 @@ export const H_EARTH_GROUND_CELL_001_OBJECT_ZONE_BINDINGS =
       descriptorOnly: true
     }),
 
-    OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS: Object.freeze({
-      objectId:
-        'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS',
+    OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS:
+      Object.freeze({
+        objectId:
+          'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS',
 
-      zoneId:
-        'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
+        zoneId:
+          'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
 
-      secondaryZoneId: null,
+        secondaryZoneId: null,
 
-      zoneRole:
-        'context-only distant rock stacks and islets',
+        zoneRole:
+          'context-only distant rock stacks and islets',
 
-      primaryZone: true,
-      contextZone: true,
-      descriptorOnly: true
-    })
+        primaryZone: true,
+        contextZone: true,
+        descriptorOnly: true
+      })
   });
 
 export const H_EARTH_GROUND_CELL_001_OBJECT_ADDRESS_BINDINGS =
@@ -2694,10 +2745,22 @@ export const H_EARTH_GROUND_CELL_001_OBJECT_INSPECTION_ROLES =
 export const H_EARTH_GROUND_CELL_001_OBJECTS_PUBLIC_STAGE_CONTRACT =
   Object.freeze({
     contractId:
-      'H_EARTH_GROUND_CELL_001_OBJECTS_PUBLIC_STAGE_CONTRACT_STEP_034J_v1',
+      'H_EARTH_GROUND_CELL_001_OBJECTS_PUBLIC_STAGE_CONTRACT_STEP_034J_v2',
 
     sourceContractId:
       H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT.contractId,
+
+    directRenewedFromContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+
+    activeGoverningZoneContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+    exactHistoricalObjectLineageContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
+    exactHistoricalZoneLineageContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
 
     governingBoundaryReference:
       H_EARTH_STEP_034I_PUBLIC_STAGE_AUTHORITY_REFERENCE,
@@ -2707,11 +2770,12 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_PUBLIC_STAGE_CONTRACT =
     activeCell: 'H_EARTH_GROUND_CELL_001',
 
     alignmentStatus:
-      'PUBLIC_STAGE_OBJECT_READABILITY_ALIGNED_BENEATH_STEP_034I',
+      'PUBLIC_STAGE_OBJECT_READABILITY_ALIGNED_BENEATH_STEP_034I_AND_STEP_034K',
 
     publicStageReadabilityAlignment: true,
     publicStageAuthorityCreatedHere: false,
     step034IPublicStageAuthorityConsumed: true,
+    step034KActiveZoneAuthorityConsumed: true,
 
     descriptorOnly: true,
 
@@ -2754,10 +2818,13 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_PUBLIC_STAGE_CONTRACT =
     objectDescriptorProjection:
       H_EARTH_GROUND_CELL_001_OBJECT_DESCRIPTOR_PROJECTION,
 
-    currentConsumptionClaim: false,
-    importResolutionProof: false,
-    moduleGraphExecutionProof: false,
-    routeIntegrationClaim: false,
+    executionEvidenceOwnedExternally: true,
+    importResolutionEvidenceOwnedExternally: true,
+    moduleGraphEvidenceOwnedExternally: true,
+    routeIntegrationEvidenceOwnedExternally: true,
+    baselineDiffEvidenceOwnedExternally: true,
+    legacyAddressEquivalenceEvidenceOwnedExternally: true,
+
     rendererActivation: false,
     finalRendererClaim: false,
     rendererPassClaim: false,
@@ -2883,6 +2950,18 @@ export const H_EARTH_GROUND_CELL_001_OBJECT_DOWNSTREAM_INTERFACE =
     status:
       'STEP_034J_PUBLIC_STAGE_READABILITY_ALIGNMENT_INTERFACE_AVAILABLE',
 
+    sourceContractId:
+      H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT.contractId,
+
+    activeGoverningZoneContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+    exactHistoricalObjectLineageContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
+    exactHistoricalZoneLineageContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
+
     descriptorOnly: true,
 
     objectsByZoneMembershipPolicy:
@@ -2920,10 +2999,13 @@ export const H_EARTH_GROUND_CELL_001_OBJECT_DOWNSTREAM_INTERFACE =
         'H_EARTH_GROUND_CELL_001_OBJECT_PUBLIC_STAGE_RECEIPT'
       ]),
 
-    currentConsumptionClaim: false,
-    importResolutionProof: false,
-    moduleGraphExecutionProof: false,
-    routeIntegrationClaim: false,
+    executionEvidenceOwnedExternally: true,
+    importResolutionEvidenceOwnedExternally: true,
+    moduleGraphEvidenceOwnedExternally: true,
+    routeIntegrationEvidenceOwnedExternally: true,
+    baselineDiffEvidenceOwnedExternally: true,
+    legacyAddressEquivalenceEvidenceOwnedExternally: true,
+
     rendererActivation: false,
     visualPassClaim: false,
     validationClaim: false,
@@ -2941,14 +3023,34 @@ export const H_EARTH_GROUND_CELL_001_OBJECT_PUBLIC_STAGE_RECEIPT =
     contractId:
       H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT.contractId,
 
+    directRenewedFromContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+
+    activeGoverningZoneContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+    exactHistoricalObjectLineageContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
+    exactHistoricalZoneLineageContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
+
+    retiredCompatibilityLineage: Object.freeze({
+      zones:
+        'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1',
+
+      objects:
+        'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1'
+    }),
+
     file:
       '/h-earth-3d/objects/ground-cell-001.objects.js',
 
     step:
-      'STEP_034J_OBJECTS_PUBLIC_STAGE_READABILITY_AMENDMENT',
+      'STEP_034J_OBJECTS_PUBLIC_STAGE_READABILITY_AMENDMENT_V2_PROVENANCE_ALIGNMENT',
 
     status:
-      'PUBLIC_STAGE_OBJECT_READABILITY_ALIGNMENT_CANDIDATE_PENDING_PREINSTALL_REAUDIT',
+      'SOURCE_PUBLIC_STAGE_OBJECT_READABILITY_ALIGNMENT_RECEIPT',
 
     sourceClass:
       'OBJECT_AUTHORITY_PUBLIC_STAGE_READABILITY_ALIGNMENT',
@@ -2959,6 +3061,7 @@ export const H_EARTH_GROUND_CELL_001_OBJECT_PUBLIC_STAGE_RECEIPT =
     publicStageReadabilityAlignment: true,
     publicStageAuthorityCreatedHere: false,
     step034IPublicStageAuthorityConsumed: true,
+    step034KActiveZoneAuthorityConsumed: true,
 
     matrix: 'H-Earth',
     matrixRole: 'Ground-View Matrix',
@@ -2998,49 +3101,27 @@ export const H_EARTH_GROUND_CELL_001_OBJECT_PUBLIC_STAGE_RECEIPT =
     compressionModelAggregateAliasUsesNamedAlias: true,
 
     legacySupportingAddressesPreserved: true,
-    legacySupportingAddressesExactEquivalenceVerified: true,
-    legacyAddressArraysComparedToStep011C: true,
 
     receiptPathCorrected: true,
     receiptSourcePath:
       '/h-earth-3d/h-earth.receipts.js',
 
-    backup: Object.freeze({
-      archiveTitle:
-        'h-earth-ground-cell-001-objects-step-034j-public-stage-readability-amendment-backup',
-
-      sourceFile:
-        '/h-earth-3d/objects/ground-cell-001.objects.js',
-
-      contractId:
-        'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
-
-      backupStatus:
-        'PENDING_USER_INSTALLATION_AND_DRIVE_BACKUP',
-
-      driveDocumentId: null,
-      connectorReadbackVerified: false
-    }),
-
-    sourceConstructionAuthorized: true,
-    installationAuthorized: false,
-    repositoryMutationAuthorized: false,
-    localArtifactCreationAuthorized: false,
-    googleBackupAuthorized: false,
-    backupComplete: false,
-    activeBackedOccurrenceClaim: false,
+    backupEvidenceOwnedExternally: true,
+    driveOccurrenceEvidenceOwnedExternally: true,
+    connectorReadbackEvidenceOwnedExternally: true,
+    executionEvidenceOwnedExternally: true,
+    importResolutionEvidenceOwnedExternally: true,
+    moduleGraphEvidenceOwnedExternally: true,
+    routeIntegrationEvidenceOwnedExternally: true,
+    digestEvidenceOwnedExternally: true,
+    replayEvidenceOwnedExternally: true,
+    installationEvidenceOwnedExternally: true,
+    admissionEvidenceOwnedExternally: true,
+    baselineDiffEvidenceOwnedExternally: true,
+    legacyAddressEquivalenceEvidenceOwnedExternally: true,
 
     claimCeiling: Object.freeze({
-      RUNTIME_EXECUTION_CLAIM: false,
-      TARGET_002_RUNTIME_EXECUTION: false,
-      TARGET_003_REPLAY_EXECUTION: false,
-      STEP_012H_1_RUN_EXECUTION: false,
-      STEP_012I_VECTOR_EXECUTION: false,
-      STEP_012I_RUNNER_EXECUTION: false,
-      CANONICAL_DIGEST_GENERATION: false,
-      REPLAY_COMPARISON: false,
-      IMPORT_RESOLUTION_PROOF: false,
-      MODULE_GRAPH_EXECUTION_PROOF: false,
+      RUNTIME_EXECUTION_AUTHORITY_CREATED_HERE: false,
       RENDERER_ACTIVATION: false,
       FINAL_RENDERER_CLAIM: false,
       RENDERER_PASS_CLAIM: false,
@@ -3072,6 +3153,18 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_RECEIPT =
     contractId:
       H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT.contractId,
 
+    directRenewedFromContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+
+    activeGoverningZoneContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+    exactHistoricalObjectLineageContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
+    exactHistoricalZoneLineageContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
+
     file:
       '/h-earth-3d/objects/ground-cell-001.objects.js',
 
@@ -3079,7 +3172,7 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_RECEIPT =
       'ROOM_3_ENVIRONMENT',
 
     status:
-      'GROUND_CELL_001_OBJECTS_REPAIRED_FOR_STEP_034J_PREINSTALL_REAUDIT',
+      'GROUND_CELL_001_OBJECT_SOURCE_AUTHORITY_PROVENANCE_ALIGNED',
 
     sourceClass:
       'OBJECT_AUTHORITY_PUBLIC_STAGE_READABILITY_ALIGNMENT',
@@ -3152,8 +3245,6 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_RECEIPT =
     secondarySurfaceContextVisible: true,
 
     legacySupportingAddressesPreserved: true,
-    legacySupportingAddressesExactEquivalenceVerified: true,
-    legacyAddressArraysComparedToStep011C: true,
 
     receiptSourcePath:
       '/h-earth-3d/h-earth.receipts.js',
@@ -3161,16 +3252,19 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_RECEIPT =
     publicStageReadabilityAlignment: true,
     publicStageAuthorityCreatedHere: false,
     step034IPublicStageAuthorityConsumed: true,
+    step034KActiveZoneAuthorityConsumed: true,
 
-    installationAuthorized: false,
-
-    backupStatus:
-      'PENDING_USER_INSTALLATION_AND_DRIVE_BACKUP',
-
-    driveDocumentId: null,
-    connectorReadbackVerified: false,
-    backupComplete: false,
-    activeBackedOccurrenceClaim: false,
+    backupEvidenceOwnedExternally: true,
+    driveOccurrenceEvidenceOwnedExternally: true,
+    connectorReadbackEvidenceOwnedExternally: true,
+    executionEvidenceOwnedExternally: true,
+    importResolutionEvidenceOwnedExternally: true,
+    moduleGraphEvidenceOwnedExternally: true,
+    routeIntegrationEvidenceOwnedExternally: true,
+    installationEvidenceOwnedExternally: true,
+    admissionEvidenceOwnedExternally: true,
+    baselineDiffEvidenceOwnedExternally: true,
+    legacyAddressEquivalenceEvidenceOwnedExternally: true,
 
     publicStageReceipt:
       H_EARTH_GROUND_CELL_001_OBJECT_PUBLIC_STAGE_RECEIPT,
@@ -3186,6 +3280,18 @@ export const H_EARTH_ROOM_4_ACTION_BINDING_UNBLOCK_RECEIPT =
 
     contractId:
       H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT.contractId,
+
+    directRenewedFromContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+
+    activeGoverningZoneContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+    exactHistoricalObjectLineageContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
+    exactHistoricalZoneLineageContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
 
     status:
       'ROOM_4_DESCRIPTOR_REFERENCE_SURFACE_AVAILABLE_NO_EXECUTION_OR_INTEGRATION_CLAIM',
@@ -3223,9 +3329,14 @@ export const H_EARTH_ROOM_4_ACTION_BINDING_UNBLOCK_RECEIPT =
 
     actionModuleImportedHere: false,
     actionExecutionClaim: false,
-    importResolutionProof: false,
-    moduleGraphExecutionProof: false,
-    routeIntegrationClaim: false,
+
+    executionEvidenceOwnedExternally: true,
+    importResolutionEvidenceOwnedExternally: true,
+    moduleGraphEvidenceOwnedExternally: true,
+    routeIntegrationEvidenceOwnedExternally: true,
+    baselineDiffEvidenceOwnedExternally: true,
+    legacyAddressEquivalenceEvidenceOwnedExternally: true,
+
     rendererActivation: false,
     validationClaim: false,
     productionClaim: false,
@@ -3499,7 +3610,22 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_AGGREGATE =
       'ROOM_3_ENVIRONMENT',
 
     step:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v2',
+
+    directRenewedFromContractId:
       'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+
+    activeGoverningZoneContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+    exactHistoricalObjectLineageContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
+
+    exactHistoricalZoneLineageContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
+
+    retiredCompatibilityLineage:
+      H_EARTH_GROUND_CELL_001_OBJECTS_CONTRACT.retiredCompatibilityLineage,
 
     sourceClass:
       'OBJECT_AUTHORITY_PUBLIC_STAGE_READABILITY_ALIGNMENT',
@@ -3645,8 +3771,6 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_AGGREGATE =
       H_EARTH_GROUND_CELL_001_OBJECT_ADDRESS_BINDINGS,
 
     legacySupportingAddressesPreserved: true,
-    legacySupportingAddressesExactEquivalenceVerified: true,
-    legacyAddressArraysComparedToStep011C: true,
 
     inspectionRoles:
       H_EARTH_GROUND_CELL_001_OBJECT_INSPECTION_ROLES,
@@ -3693,6 +3817,19 @@ export const H_EARTH_GROUND_CELL_001_OBJECTS_AGGREGATE =
     publicStageReadabilityAlignment: true,
     publicStageAuthorityCreatedHere: false,
     step034IPublicStageAuthorityConsumed: true,
+    step034KActiveZoneAuthorityConsumed: true,
+
+    backupEvidenceOwnedExternally: true,
+    driveOccurrenceEvidenceOwnedExternally: true,
+    connectorReadbackEvidenceOwnedExternally: true,
+    executionEvidenceOwnedExternally: true,
+    importResolutionEvidenceOwnedExternally: true,
+    moduleGraphEvidenceOwnedExternally: true,
+    routeIntegrationEvidenceOwnedExternally: true,
+    digestEvidenceOwnedExternally: true,
+    replayEvidenceOwnedExternally: true,
+    baselineDiffEvidenceOwnedExternally: true,
+    legacyAddressEquivalenceEvidenceOwnedExternally: true,
 
     boundaryFlags:
       H_EARTH_GROUND_CELL_001_OBJECTS_BOUNDARY_FLAGS,

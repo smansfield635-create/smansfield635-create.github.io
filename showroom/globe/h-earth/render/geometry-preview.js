@@ -3,7 +3,7 @@
  * COMPLETE PREVIEW FILE
  *
  * CONTRACT:
- * H_EARTH_3D_GEOMETRY_PREVIEW_FILE_BIRTH_STEP_034O_5P_DEVELOPER_VISIBLE_PROVIDER_PREVIEW_BRIDGE_v1
+ * H_EARTH_3D_GEOMETRY_PREVIEW_FILE_BIRTH_STEP_034O_5P_DEVELOPER_VISIBLE_PROVIDER_PREVIEW_BRIDGE_v3
  *
  * DEPENDS ON:
  * H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_FILE_BIRTH_STEP_034O_4F_STABLE_DIRECTIONAL_KERNEL_EXPORT_SURFACE_v1
@@ -77,10 +77,10 @@ import {
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID =
-  'H_EARTH_3D_GEOMETRY_PREVIEW_FILE_BIRTH_STEP_034O_5P_DEVELOPER_VISIBLE_PROVIDER_PREVIEW_BRIDGE_v1';
+  'H_EARTH_3D_GEOMETRY_PREVIEW_FILE_BIRTH_STEP_034O_5P_DEVELOPER_VISIBLE_PROVIDER_PREVIEW_BRIDGE_v3';
 
 export const H_EARTH_3D_GEOMETRY_PREVIEW_SCHEMA_VERSION =
-  1;
+  3;
 
 export const H_EARTH_3D_GEOMETRY_PREVIEW_SOURCE_FILE =
   '/showroom/globe/h-earth/render/geometry-preview.js';
@@ -112,7 +112,6 @@ function deepFreeze(value) {
   return Object.freeze(value);
 }
 
-
 function isPlainObject(value) {
   if (
     value === null ||
@@ -130,7 +129,6 @@ function isPlainObject(value) {
     prototype === null
   );
 }
-
 
 function clonePlainValue(value) {
   if (Array.isArray(value)) {
@@ -151,13 +149,11 @@ function clonePlainValue(value) {
   return value;
 }
 
-
 function freezeClone(value) {
   return deepFreeze(
     clonePlainValue(value)
   );
 }
-
 
 function ensureArray(value) {
   return Array.isArray(value)
@@ -165,12 +161,10 @@ function ensureArray(value) {
     : [];
 }
 
-
 function enumIncludes(enumObject, value) {
   return Object.values(enumObject)
     .includes(value);
 }
-
 
 function createPreviewIssue(
   code,
@@ -193,7 +187,6 @@ function createPreviewIssue(
     }
   );
 }
-
 
 function normalizeStringIdArray(values) {
   const normalized = [];
@@ -218,7 +211,6 @@ function normalizeStringIdArray(values) {
   return deepFreeze(normalized);
 }
 
-
 function isNormalizedStringIdArray(values) {
   if (!Array.isArray(values)) {
     return false;
@@ -238,7 +230,6 @@ function isNormalizedStringIdArray(values) {
     )
   );
 }
-
 
 function areStringArraysEquivalent(
   left,
@@ -260,7 +251,6 @@ function areStringArraysEquivalent(
     )
   );
 }
-
 
 function countIssuesBySeverity(issues = []) {
   let fatalCount = 0;
@@ -303,7 +293,6 @@ function countIssuesBySeverity(issues = []) {
   });
 }
 
-
 function buildPreviewAuthority() {
   return deepFreeze({
     previewOnly:
@@ -327,7 +316,6 @@ function buildPreviewAuthority() {
   });
 }
 
-
 function isPreviewAuthority(value) {
   return (
     isPlainObject(value) &&
@@ -343,11 +331,9 @@ function isPreviewAuthority(value) {
   );
 }
 
-
 function getEmptyPreviewBounds() {
   return mergeHEarthGeometryBounds([]);
 }
-
 
 function resolvePreviewConstructionStatus({
   valid,
@@ -408,7 +394,243 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_ENUMS =
 
 
 /* ==========================================================================
- * 04 · RECEIPT / ACCOUNT / RESULT VALIDATION
+ * 04 · DISPLAY POLICY / INTEROP / SUMMARY / HANDOFF
+ * ========================================================================== */
+
+export const H_EARTH_3D_GEOMETRY_PREVIEW_DISPLAY_POLICY =
+  deepFreeze({
+    previewLane:
+      'ADDITIVE',
+    optionalOverlay:
+      true,
+    environmentFirstCompositorPreserved:
+      true,
+    previewMaySupplementCompositor:
+      true,
+    previewMayNotReplaceEnvironmentTruth:
+      true,
+    previewMayNotReplaceCompositorPolicy:
+      true,
+    previewMayNotCreateGeometryIndexAuthority:
+      true,
+    previewMayNotCreateRendererAuthority:
+      true,
+    visualApproval:
+      false,
+    productionAuthority:
+      false,
+    publicReleaseAuthority:
+      false
+  });
+
+export const H_EARTH_3D_GEOMETRY_PREVIEW_INTEROP =
+  deepFreeze({
+    compositorInteropMode:
+      'OPTIONAL_PREVIEW_OVERLAY_HANDOFF',
+    rendererInteropMode:
+      'OPTIONAL_PREVIEW_PRIMITIVE_DISPLAY',
+    geometryIndexAuthority:
+      false,
+    compositorAuthority:
+      false,
+    rendererAuthority:
+      false,
+    visualApproval:
+      false,
+    productionAuthority:
+      false,
+    publicReleaseAuthority:
+      false
+  });
+
+function buildPreviewSummary(previewResult) {
+  if (!isHEarthGeometryPreviewResult(previewResult)) {
+    return null;
+  }
+
+  return deepFreeze({
+    previewId:
+      previewResult.previewId,
+    previewRole:
+      previewResult.previewRole,
+    constructionStatus:
+      previewResult.constructionStatus,
+    valid:
+      previewResult.valid,
+    ineligible:
+      previewResult.ineligible,
+    fatal:
+      previewResult.fatal,
+    sourceProviderIds:
+      previewResult.sourceProviderIds,
+    sourceZoneIds:
+      previewResult.sourceZoneIds,
+    sourceObjectIds:
+      previewResult.sourceObjectIds,
+    primitiveCount:
+      previewResult.primitives.length,
+    bounds:
+      previewResult.bounds,
+    issueCounts:
+      countIssuesBySeverity(
+        previewResult.issues
+      ),
+    previewOnly:
+      true,
+    additivePreviewLane:
+      true,
+    environmentFirstCompositorPreserved:
+      true
+  });
+}
+
+function isHEarthGeometryPreviewSummary(value) {
+  return (
+    isPlainObject(value) &&
+    isHEarthNonEmptyString(
+      value.previewId
+    ) &&
+    enumIncludes(
+      H_EARTH_3D_GEOMETRY_PREVIEW_ENUMS
+        .previewRole,
+      value.previewRole
+    ) &&
+    enumIncludes(
+      H_EARTH_3D_GEOMETRY_PREVIEW_ENUMS
+        .constructionStatus,
+      value.constructionStatus
+    ) &&
+    typeof value.valid ===
+      'boolean' &&
+    typeof value.ineligible ===
+      'boolean' &&
+    typeof value.fatal ===
+      'boolean' &&
+    isNormalizedStringIdArray(
+      value.sourceProviderIds
+    ) &&
+    isNormalizedStringIdArray(
+      value.sourceZoneIds
+    ) &&
+    isNormalizedStringIdArray(
+      value.sourceObjectIds
+    ) &&
+    isHEarthNonNegativeSafeInteger(
+      value.primitiveCount
+    ) &&
+    isHEarthAABB3D(
+      value.bounds
+    ) &&
+    isIssueCountRecord(
+      value.issueCounts
+    ) &&
+    value.previewOnly === true &&
+    value.additivePreviewLane === true &&
+    value.environmentFirstCompositorPreserved === true
+  );
+}
+
+export function createHEarthGeometryPreviewHandoff(
+  previewResult
+) {
+  if (
+    !isHEarthGeometryPreviewResult(
+      previewResult
+    ) ||
+    previewResult.valid !== true
+  ) {
+    return null;
+  }
+
+  return deepFreeze({
+    recordType:
+      'H_EARTH_GEOMETRY_PREVIEW_HANDOFF',
+
+    handoffId:
+      `${previewResult.previewId}:preview-handoff`,
+
+    contractId:
+      H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
+
+    previewResult:
+      freezeClone(previewResult),
+
+    previewSummary:
+      buildPreviewSummary(
+        previewResult
+      ),
+
+    previewOnly:
+      true,
+    optionalOverlay:
+      true,
+    additivePreviewLane:
+      true,
+    environmentFirstCompositorPreserved:
+      true,
+
+    displayPolicy:
+      H_EARTH_3D_GEOMETRY_PREVIEW_DISPLAY_POLICY,
+
+    interop:
+      H_EARTH_3D_GEOMETRY_PREVIEW_INTEROP,
+
+    geometryIndexAuthority:
+      false,
+    compositorAuthority:
+      false,
+    rendererAuthority:
+      false,
+    visualApproval:
+      false,
+    productionAuthority:
+      false,
+    publicReleaseAuthority:
+      false
+  });
+}
+
+export function isHEarthGeometryPreviewHandoff(
+  handoff
+) {
+  return (
+    isPlainObject(handoff) &&
+    handoff.recordType ===
+      'H_EARTH_GEOMETRY_PREVIEW_HANDOFF' &&
+    isHEarthNonEmptyString(
+      handoff.handoffId
+    ) &&
+    handoff.contractId ===
+      H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID &&
+    isHEarthGeometryPreviewResult(
+      handoff.previewResult
+    ) &&
+    handoff.previewResult.valid === true &&
+    isHEarthGeometryPreviewSummary(
+      handoff.previewSummary
+    ) &&
+    handoff.previewSummary.previewId ===
+      handoff.previewResult.previewId &&
+    handoff.previewOnly === true &&
+    handoff.optionalOverlay === true &&
+    handoff.additivePreviewLane === true &&
+    handoff.environmentFirstCompositorPreserved === true &&
+    handoff.displayPolicy ===
+      H_EARTH_3D_GEOMETRY_PREVIEW_DISPLAY_POLICY &&
+    handoff.interop ===
+      H_EARTH_3D_GEOMETRY_PREVIEW_INTEROP &&
+    handoff.geometryIndexAuthority === false &&
+    handoff.compositorAuthority === false &&
+    handoff.rendererAuthority === false &&
+    handoff.visualApproval === false &&
+    handoff.productionAuthority === false &&
+    handoff.publicReleaseAuthority === false
+  );
+}
+
+
+/* ==========================================================================
+ * 05 · RECEIPT / ACCOUNT / RESULT VALIDATION
  * ========================================================================== */
 
 function isIssueCountRecord(value) {
@@ -441,7 +663,6 @@ function isIssueCountRecord(value) {
       value.totalCount
   );
 }
-
 
 export function isHEarthGeometryPreviewReceipt(
   receipt
@@ -491,7 +712,6 @@ export function isHEarthGeometryPreviewReceipt(
   );
 }
 
-
 export function isHEarthGeometryPreviewAccount(
   account
 ) {
@@ -521,18 +741,12 @@ export function isHEarthGeometryPreviewAccount(
     isHEarthNonNegativeSafeInteger(
       account.blockingIssueCount
     ) &&
-    isHEarthNonNegativeSafeInteger(
-      account.boundsPresent
-        ? 1
-        : 0
-    ) &&
     typeof account.boundsPresent ===
       'boolean' &&
     typeof account.emptyBounds ===
       'boolean'
   );
 }
-
 
 function doesPreviewAccountMatchIssues(
   record
@@ -550,7 +764,6 @@ function doesPreviewAccountMatchIssues(
       issueCounts.blockingCount
   );
 }
-
 
 function doPreviewReceiptsMatchResult(
   record
@@ -584,7 +797,6 @@ function doPreviewReceiptsMatchResult(
     )
   );
 }
-
 
 function doPreviewBoundsMatchPrimitives(
   record
@@ -691,7 +903,6 @@ function doPreviewBoundsMatchPrimitives(
       right.coordinateFrame
   );
 }
-
 
 export function isHEarthGeometryPreviewResult(
   record
@@ -845,13 +1056,19 @@ export function isHEarthGeometryPreviewResult(
       0 &&
     record.account
       .fatalProviderCount ===
+      record.providerResults.filter(
+        (providerResult) =>
+          providerResult.fatal === true
+      ).length &&
+    record.account
+      .fatalProviderCount <=
       1
   );
 }
 
 
 /* ==========================================================================
- * 05 · RESULT BUILDERS
+ * 06 · RESULT BUILDERS
  * ========================================================================== */
 
 function buildPreviewAccount({
@@ -910,7 +1127,6 @@ function buildPreviewAccount({
   });
 }
 
-
 function buildPreviewReceipt({
   previewId,
   previewRole,
@@ -963,7 +1179,6 @@ function buildPreviewReceipt({
       true
   });
 }
-
 
 function createHEarthGeometryPreviewResult({
   previewId,
@@ -1104,7 +1319,7 @@ function createHEarthGeometryPreviewResult({
 
 
 /* ==========================================================================
- * 06 · PREVIEW CONSTRUCTION
+ * 07 · DEFAULT OCCURRENCE / PREVIEW CONSTRUCTION
  * ========================================================================== */
 
 function resolvePreviewId(
@@ -1117,7 +1332,6 @@ function resolvePreviewId(
     : 'H_EARTH_GEOMETRY_PREVIEW';
 }
 
-
 function collectSourceZoneIdsFromProvider(
   providerResult
 ) {
@@ -1126,7 +1340,6 @@ function collectSourceZoneIdsFromProvider(
   );
 }
 
-
 function collectSourceObjectIdsFromProvider(
   providerResult
 ) {
@@ -1134,7 +1347,6 @@ function collectSourceObjectIdsFromProvider(
     providerResult?.sourceObjectIds
   );
 }
-
 
 export function constructHEarthGeometryPreview({
   previewId =
@@ -1168,6 +1380,37 @@ export function constructHEarthGeometryPreview({
   const resolvedPreviewId =
     resolvePreviewId(previewId);
 
+  if (
+    !enumIncludes(
+      H_EARTH_3D_GEOMETRY_PREVIEW_ENUMS
+        .previewRole,
+      previewRole
+    )
+  ) {
+    return createHEarthGeometryPreviewResult({
+      previewId:
+        resolvedPreviewId,
+      previewRole:
+        H_EARTH_3D_GEOMETRY_PREVIEW_ENUMS
+          .previewRole
+          .DEVELOPER_VISIBLE_PROVIDER_PREVIEW,
+      sourceProviderIds: [],
+      sourceZoneIds: [],
+      sourceObjectIds: [],
+      providerResults: [],
+      valid:
+        false,
+      ineligible:
+        false,
+      fatal:
+        true,
+      primitives: [],
+      bounds:
+        getEmptyPreviewBounds(),
+      issues
+    });
+  }
+
   const groundProviderResult =
     constructHEarthGroundProvider(
       groundProviderInput
@@ -1189,16 +1432,7 @@ export function constructHEarthGeometryPreview({
     return createHEarthGeometryPreviewResult({
       previewId:
         resolvedPreviewId,
-      previewRole:
-        enumIncludes(
-          H_EARTH_3D_GEOMETRY_PREVIEW_ENUMS
-            .previewRole,
-          previewRole
-        )
-          ? previewRole
-          : H_EARTH_3D_GEOMETRY_PREVIEW_ENUMS
-              .previewRole
-              .DEVELOPER_VISIBLE_PROVIDER_PREVIEW,
+      previewRole,
       sourceProviderIds: [],
       sourceZoneIds: [],
       sourceObjectIds: [],
@@ -1359,15 +1593,66 @@ export function constructHEarthGeometryPreview({
   });
 }
 
+export const H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_OCCURRENCE =
+  deepFreeze(
+    constructHEarthGeometryPreview({
+      previewId:
+        'H_EARTH_GEOMETRY_PREVIEW_DEFAULT_OCCURRENCE',
+      groundProviderInput: {
+        providerId:
+          'H_EARTH_PREVIEW_GROUND_PROVIDER_DEFAULT',
+        sourceZoneIds: [
+          'ZONE_001_FOREGROUND_INSPECTION_ZONE'
+        ],
+        sourceObjectIds: [
+          'OBJ_002_FOREGROUND_WET_SAND'
+        ],
+        descriptor: {
+          strategy:
+            'FLAT_PLANE',
+          flatPlane: {
+            minimumX:
+              -16,
+            maximumX:
+              16,
+            minimumZ:
+              -16,
+            maximumZ:
+              16,
+            y:
+              0
+          }
+        }
+      }
+    })
+  );
+
+export const H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_SUMMARY =
+  deepFreeze(
+    buildPreviewSummary(
+      H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_OCCURRENCE
+    )
+  );
+
+export const H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_HANDOFF =
+  createHEarthGeometryPreviewHandoff(
+    H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_OCCURRENCE
+  );
+
 
 /* ==========================================================================
- * 07 · OWNERSHIP
+ * 08 · OWNERSHIP
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_PREVIEW_OWNERSHIP =
   deepFreeze({
     jurisdiction:
       'DEVELOPER_VISIBLE_PROVIDER_PREVIEW_BRIDGE_ONLY',
+
+    additivePreviewLane:
+      true,
+    environmentFirstCompositorPreserved:
+      true,
 
     owns:
       deepFreeze([
@@ -1378,7 +1663,9 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_OWNERSHIP =
         'PREVIEW_BOUNDS_SUMMARY',
         'PREVIEW_ISSUE_SUMMARY',
         'PREVIEW_AUTHORITY_CEILING',
-        'GROUND_PROVIDER_PREVIEW_BRIDGE'
+        'GROUND_PROVIDER_PREVIEW_BRIDGE',
+        'OPTIONAL_PREVIEW_OVERLAY_HANDOFF',
+        'PREVIEW_STATUS_PASSTHROUGH'
       ]),
 
     mustNotOwn:
@@ -1390,7 +1677,8 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_OWNERSHIP =
         'RENDERER_MATERIALIZATION',
         'VISUAL_APPROVAL',
         'PRODUCTION_AUTHORITY',
-        'PUBLIC_RELEASE_AUTHORITY'
+        'PUBLIC_RELEASE_AUTHORITY',
+        'ENVIRONMENT_SOURCE_TRUTH'
       ]),
 
     imports:
@@ -1421,7 +1709,7 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_OWNERSHIP =
 
 
 /* ==========================================================================
- * 08 · REQUIRED FIXTURES
+ * 09 · REQUIRED FIXTURES
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_PREVIEW_REQUIRED_FIXTURES =
@@ -1445,18 +1733,23 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_REQUIRED_FIXTURES =
     'PREVIEW_RESULT_REJECTS_FORGED_COMPOSITOR_AUTHORITY',
     'PREVIEW_RESULT_REJECTS_FORGED_RENDERER_AUTHORITY',
     'PREVIEW_RESULT_REJECTS_MALFORMED_SOURCE_PROVIDER_IDS',
-    'PREVIEW_RESULT_REJECTS_DUPLICATE_SOURCE_PROVIDER_IDS'
+    'PREVIEW_RESULT_REJECTS_DUPLICATE_SOURCE_PROVIDER_IDS',
+    'INVALID_PREVIEW_ROLE_RETURNS_LAWFUL_FATAL_RESULT',
+    'INVALID_HANDOFF_INPUT_RETURNS_NULL',
+    'INELIGIBLE_PREVIEW_HANDOFF_RETURNS_NULL',
+    'FATAL_PREVIEW_HANDOFF_RETURNS_NULL',
+    'DEFAULT_VALID_HANDOFF_IS_LAWFUL'
   ]);
 
 
 /* ==========================================================================
- * 09 · PRE-BACKING GATE
+ * 10 · PRE-BACKING GATE
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_PREVIEW_PRE_BACKING_GATE =
   deepFreeze({
     gateId:
-      'GEOMETRY_PREVIEW_PRE_BACKING_GATE_v1',
+      'GEOMETRY_PREVIEW_PRE_BACKING_GATE_v3',
 
     requiredSequence:
       deepFreeze([
@@ -1508,7 +1801,7 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_PRE_BACKING_GATE =
 
 
 /* ==========================================================================
- * 10 · STATIC SELF-REVIEW
+ * 11 · STATIC SELF-REVIEW
  * ========================================================================== */
 
 export function getHEarthGeometryPreviewStaticReview() {
@@ -1585,6 +1878,14 @@ export function getHEarthGeometryPreviewStaticReview() {
             'HEIGHT_FELD'
         }
       }
+    });
+
+  const invalidRolePreview =
+    constructHEarthGeometryPreview({
+      previewId:
+        'STATIC_GEOMETRY_PREVIEW_INVALID_ROLE',
+      previewRole:
+        'UNSUPPORTED_PREVIEW_ROLE'
     });
 
   const forgedGeometryIndexAuthority = {
@@ -1849,6 +2150,57 @@ export function getHEarthGeometryPreviewStaticReview() {
 
     deepFreeze({
       id:
+        'INVALID_PREVIEW_ROLE_RETURNS_LAWFUL_FATAL_RESULT',
+      passed:
+        isHEarthGeometryPreviewResult(
+          invalidRolePreview
+        ) === true &&
+        invalidRolePreview.valid === false &&
+        invalidRolePreview.ineligible === false &&
+        invalidRolePreview.fatal === true &&
+        invalidRolePreview.constructionStatus ===
+          H_EARTH_3D_GEOMETRY_PREVIEW_ENUMS
+            .constructionStatus.FATAL
+    }),
+
+    deepFreeze({
+      id:
+        'INVALID_HANDOFF_INPUT_RETURNS_NULL',
+      passed:
+        createHEarthGeometryPreviewHandoff(
+          null
+        ) === null
+    }),
+
+    deepFreeze({
+      id:
+        'INELIGIBLE_PREVIEW_HANDOFF_RETURNS_NULL',
+      passed:
+        createHEarthGeometryPreviewHandoff(
+          ineligiblePreview
+        ) === null
+    }),
+
+    deepFreeze({
+      id:
+        'FATAL_PREVIEW_HANDOFF_RETURNS_NULL',
+      passed:
+        createHEarthGeometryPreviewHandoff(
+          fatalPreview
+        ) === null
+    }),
+
+    deepFreeze({
+      id:
+        'DEFAULT_VALID_HANDOFF_IS_LAWFUL',
+      passed:
+        isHEarthGeometryPreviewHandoff(
+          H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_HANDOFF
+        ) === true
+    }),
+
+    deepFreeze({
+      id:
         'FACADE_AND_GROUND_DEPENDENCY_IDENTITIES_MATCH',
       passed:
         facadeContract?.contractId ===
@@ -1875,7 +2227,7 @@ export function getHEarthGeometryPreviewStaticReview() {
 
   return deepFreeze({
     reviewId:
-      'H_EARTH_3D_GEOMETRY_PREVIEW_STATIC_SELF_REVIEW_v1',
+      'H_EARTH_3D_GEOMETRY_PREVIEW_STATIC_SELF_REVIEW_v3',
 
     contractId:
       H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
@@ -1904,7 +2256,7 @@ export function getHEarthGeometryPreviewStaticReview() {
       false,
     groundProviderPreviewFixturePerformed:
       false,
-    authorityHoldRecheckPerformed:
+      authorityHoldRecheckPerformed:
       false,
 
     localImplementationConformance:
@@ -1914,13 +2266,13 @@ export function getHEarthGeometryPreviewStaticReview() {
 
 
 /* ==========================================================================
- * 11 · RECEIPT
+ * 12 · RECEIPT
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_PREVIEW_RECEIPT =
   deepFreeze({
     receiptId:
-      'H_EARTH_3D_GEOMETRY_PREVIEW_IMPLEMENTATION_CANDIDATE_RECEIPT_v1',
+      'H_EARTH_3D_GEOMETRY_PREVIEW_IMPLEMENTATION_CANDIDATE_RECEIPT_v3',
 
     contractId:
       H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
@@ -1953,6 +2305,12 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_RECEIPT =
       ]),
 
     previewOnly:
+      true,
+    additivePreviewLane:
+      true,
+    optionalOverlay:
+      true,
+    environmentFirstCompositorPreserved:
       true,
 
     aggregateFrameAuthority:
@@ -1999,7 +2357,7 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_RECEIPT =
 
 
 /* ==========================================================================
- * 12 · PUBLIC API CANDIDATE
+ * 13 · PUBLIC API CANDIDATE
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_PREVIEW_PUBLIC_API_CANDIDATE =
@@ -2021,6 +2379,11 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_PUBLIC_API_CANDIDATE =
         'H_EARTH_3D_GEOMETRY_PREVIEW_STEP_ID',
         'H_EARTH_3D_GEOMETRY_PREVIEW_STATUS',
         'H_EARTH_3D_GEOMETRY_PREVIEW_ENUMS',
+        'H_EARTH_3D_GEOMETRY_PREVIEW_DISPLAY_POLICY',
+        'H_EARTH_3D_GEOMETRY_PREVIEW_INTEROP',
+        'H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_OCCURRENCE',
+        'H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_SUMMARY',
+        'H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_HANDOFF',
         'H_EARTH_3D_GEOMETRY_PREVIEW_OWNERSHIP',
         'H_EARTH_3D_GEOMETRY_PREVIEW_REQUIRED_FIXTURES',
         'H_EARTH_3D_GEOMETRY_PREVIEW_PRE_BACKING_GATE',
@@ -2030,10 +2393,15 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_PUBLIC_API_CANDIDATE =
         'isHEarthGeometryPreviewReceipt',
         'isHEarthGeometryPreviewAccount',
         'isHEarthGeometryPreviewResult',
+        'isHEarthGeometryPreviewHandoff',
         'constructHEarthGeometryPreview',
+        'createHEarthGeometryPreviewHandoff',
         'getHEarthGeometryPreviewStaticReview',
         'getHEarthGeometryPreviewReceipt',
-        'getHEarthGeometryPreviewContract'
+        'getHEarthGeometryPreviewContract',
+        'getHEarthGeometryPreviewDefaultOccurrence',
+        'getHEarthGeometryPreviewDefaultSummary',
+        'getHEarthGeometryPreviewDefaultHandoff'
       ]),
 
     collisionStatus:
@@ -2048,7 +2416,7 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_PUBLIC_API_CANDIDATE =
 
 
 /* ==========================================================================
- * 13 · CONTRACT
+ * 14 · CONTRACT
  * ========================================================================== */
 
 export const H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT =
@@ -2071,6 +2439,18 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT =
     coordinateFrame:
       H_EARTH_3D_GEOMETRY_COORDINATE_FRAME,
 
+    displayPolicy:
+      H_EARTH_3D_GEOMETRY_PREVIEW_DISPLAY_POLICY,
+
+    interop:
+      H_EARTH_3D_GEOMETRY_PREVIEW_INTEROP,
+
+    defaultOccurrence:
+      H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_OCCURRENCE,
+
+    defaultSummary:
+      H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_SUMMARY,
+
     ownership:
       H_EARTH_3D_GEOMETRY_PREVIEW_OWNERSHIP,
 
@@ -2092,6 +2472,15 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT =
     localAdmission:
       false,
 
+    previewOnly:
+      true,
+    additivePreviewLane:
+      true,
+    optionalOverlay:
+      true,
+    environmentFirstCompositorPreserved:
+      true,
+
     aggregateFrameAuthority:
       false,
     geometryIndexAuthority:
@@ -2110,17 +2499,27 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT =
 
 
 /* ==========================================================================
- * 14 · ACCESSORS
+ * 15 · ACCESSORS
  * ========================================================================== */
 
 export function getHEarthGeometryPreviewReceipt() {
   return H_EARTH_3D_GEOMETRY_PREVIEW_RECEIPT;
 }
 
-
 export function getHEarthGeometryPreviewContract() {
   return H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT;
 }
 
+export function getHEarthGeometryPreviewDefaultOccurrence() {
+  return H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_OCCURRENCE;
+}
+
+export function getHEarthGeometryPreviewDefaultSummary() {
+  return H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_SUMMARY;
+}
+
+export function getHEarthGeometryPreviewDefaultHandoff() {
+  return H_EARTH_3D_GEOMETRY_PREVIEW_DEFAULT_HANDOFF;
+}
 
 export default H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT;

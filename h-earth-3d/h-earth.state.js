@@ -640,42 +640,50 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     ruleId: 'H_EARTH_ACTIVE_MATRIX_IDENTITY_RULE_v1',
     jurisdiction: 'H_EARTH_GROUND_VIEW_MATRIX'
   }),
+
   constitutionalField({
     fieldId: 'matrixIdentity',
     ruleId: 'H_EARTH_MATRIX_IDENTITY_RULE_v1',
     jurisdiction: 'H_EARTH_GROUND_VIEW_MATRIX'
   }),
+
   constitutionalField({
     fieldId: 'sceneIdentity',
     ruleId: 'H_EARTH_SCENE_IDENTITY_RULE_v1',
     jurisdiction: 'H_EARTH_GROUND_CELL_001'
   }),
+
   constitutionalField({
     fieldId: 'canonicalRegionCellId',
     ruleId: 'H_EARTH_CANONICAL_REGION_CELL_RULE_v1',
     jurisdiction: 'PATH_3',
     versionSensitivity: 'REGION_SPACE_VERSION_BOUND'
   }),
+
   constitutionalField({
     fieldId: 'activeDomainCellId',
     ruleId: 'H_EARTH_DOMAIN_CELL_RULE_v1',
     jurisdiction: 'H_EARTH_GROUND_CELL_001'
   }),
+
   constitutionalField({
     fieldId: 'firstActionId',
     ruleId: 'H_EARTH_FIRST_ACTION_IDENTITY_RULE_v1',
     jurisdiction: 'H_EARTH_GROUND_CELL_001'
   }),
+
   constitutionalField({
     fieldId: 'firstReadoutId',
     ruleId: 'H_EARTH_FIRST_READOUT_IDENTITY_RULE_v1',
     jurisdiction: 'H_EARTH_GROUND_CELL_001'
   }),
+
   constitutionalField({
     fieldId: 'firstReceiptId',
     ruleId: 'H_EARTH_FIRST_RECEIPT_IDENTITY_RULE_v1',
     jurisdiction: 'H_EARTH_GROUND_CELL_001'
   }),
+
   runtimeMutableField({
     fieldId: 'simulationTick',
     authorityOwner: 'H_EARTH_DETERMINISTIC_RUNTIME',
@@ -683,6 +691,7 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     lifecycleOwner: 'H_EARTH_DETERMINISTIC_RUNTIME',
     orderingPolicy: 'MONOTONIC_INTEGER_ORDER'
   }),
+
   runtimeMutableField({
     fieldId: 'stateVersion',
     authorityOwner: 'H_EARTH_DETERMINISTIC_RUNTIME',
@@ -690,6 +699,7 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     lifecycleOwner: 'H_EARTH_DETERMINISTIC_RUNTIME',
     orderingPolicy: 'MONOTONIC_INTEGER_ORDER'
   }),
+
   runtimeMutableField({
     fieldId: 'cells.H_EARTH_GROUND_CELL_001.lifecycle',
     authorityOwner: 'H_EARTH_GROUND_CELL_001',
@@ -698,6 +708,7 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     orderingPolicy: 'DECLARED_LIFECYCLE_ORDER',
     versionSensitivity: 'CELL_SCHEMA_VERSION_BOUND'
   }),
+
   runtimeMutableField({
     fieldId: 'cells.H_EARTH_GROUND_CELL_001.admitted',
     authorityOwner: 'H_EARTH_GROUND_CELL_001',
@@ -706,6 +717,7 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     orderingPolicy: 'BOOLEAN_FALSE_TO_TRUE_ONLY',
     versionSensitivity: 'CELL_SCHEMA_VERSION_BOUND'
   }),
+
   runtimeMutableField({
     fieldId: 'cells.H_EARTH_GROUND_CELL_001.active',
     authorityOwner: 'H_EARTH_GROUND_CELL_001',
@@ -714,6 +726,7 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     orderingPolicy: 'BOOLEAN_FALSE_TO_TRUE_ONLY',
     versionSensitivity: 'CELL_SCHEMA_VERSION_BOUND'
   }),
+
   runtimeMutableField({
     fieldId: 'cells.H_EARTH_GROUND_CELL_001.inspectionCount',
     authorityOwner: 'H_EARTH_GROUND_CELL_001',
@@ -722,6 +735,7 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     orderingPolicy: 'MONOTONIC_INTEGER_ORDER',
     versionSensitivity: 'CELL_SCHEMA_VERSION_BOUND'
   }),
+
   runtimeMutableField({
     fieldId: 'cells.H_EARTH_GROUND_CELL_001.lastInspectionTick',
     authorityOwner: 'H_EARTH_GROUND_CELL_001',
@@ -731,24 +745,28 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     orderingPolicy: 'MONOTONIC_INTEGER_ORDER',
     versionSensitivity: 'CELL_SCHEMA_VERSION_BOUND'
   }),
+
   persistedEventField({
     fieldId: 'readouts',
     authorityOwner: 'H_EARTH_DETERMINISTIC_RUNTIME',
     eventSchemaId: 'H_EARTH_GROUND_CONDITION_READ_EVENT_v1',
     orderingPolicy: 'SIMULATION_TICK_THEN_MUTATION_ID'
   }),
+
   persistedEventField({
     fieldId: 'committedMutationIds',
     authorityOwner: 'H_EARTH_DETERMINISTIC_RUNTIME',
     eventSchemaId: 'H_EARTH_COMMITTED_MUTATION_EVENT_v1',
     orderingPolicy: 'COMMIT_SEQUENCE_ORDER'
   }),
+
   persistedEventField({
     fieldId: 'rejectedMutationIds',
     authorityOwner: 'H_EARTH_DETERMINISTIC_RUNTIME',
     eventSchemaId: 'H_EARTH_REJECTED_MUTATION_EVENT_v1',
     orderingPolicy: 'REJECTION_SEQUENCE_ORDER'
   }),
+
   Object.freeze({
     fieldId: 'diagnosticTiming',
     stateClass: 'DIAGNOSTIC_ONLY',
@@ -761,11 +779,12 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     undefinedPolicy: 'OMITTED_BY_SCHEMA',
     orderingPolicy: 'NON_AUTHORITATIVE',
     versionSensitivity: 'DIAGNOSTIC_HARNESS_VERSION_BOUND',
-    failureDisposition: 'AUTHORITATIVE_STATE_UNAFFECTED',
+    failureDisposition: 'WARN_ONLY',
     diagnosticKind: 'EXECUTION_TIMING',
     claimLevel: 'DIAGNOSTIC_ONLY',
     authoritativeExclusion: true
   }),
+
   Object.freeze({
     fieldId: 'ephemeralVisualState',
     stateClass: 'EPHEMERAL_VISUAL',
@@ -778,7 +797,7 @@ export const H_EARTH_STATE_FIELD_DECLARATIONS = Object.freeze([
     undefinedPolicy: 'OMITTED_BY_SCHEMA',
     orderingPolicy: 'NON_AUTHORITATIVE',
     versionSensitivity: 'RENDERER_VERSION_LOCAL',
-    failureDisposition: 'AUTHORITATIVE_STATE_UNAFFECTED',
+    failureDisposition: 'WARN_ONLY',
     rendererScope: 'PRESENTATION_ONLY',
     discardPolicy: 'DISCARD_WITHOUT_STATE_MUTATION'
   })

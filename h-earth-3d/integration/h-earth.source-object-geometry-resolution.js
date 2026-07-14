@@ -20,6 +20,10 @@
  * /h-earth-3d/zones/ground-cell-001.zones.js
  * /h-earth-3d/zones/ground-cell-001.landscape-lattice.js
  *
+ * Declared provider implementation target:
+ * /showroom/globe/h-earth/render/geometry-ground.js
+ * H_EARTH_3D_GEOMETRY_GROUND_PROVIDER_FILE_BIRTH_STEP_034O_5G_PROVIDER_LOCAL_GROUND_CONSTRUCTION_ADAPTER_v1
+ *
  * This file:
  * - accepts source identities through its public resolver;
  * - resolves authoritative descriptors internally;
@@ -29,9 +33,18 @@
  * - creates provider-request identity;
  * - returns an immutable provider-request descriptor;
  * - rejects caller-supplied authority descriptors;
+ * - rejects unknown public input keys;
+ * - requires strict plain-record public input;
+ * - guards upstream array shapes before array operations;
+ * - requires explicit requestId for live occurrence requests;
+ * - limits deterministic fallback request identity to preview and test
+ *   purposes only;
+ * - bridges logical provider identity to the current implementation contract
+ *   without importing or invoking the provider;
  * - fails closed on source disagreement.
  *
  * This file does not:
+ * - import the provider implementation;
  * - invoke the geometry provider;
  * - construct geometry;
  * - create geometry-candidate identity;
@@ -91,6 +104,12 @@ const WET_SAND_REGION_ID =
 const GROUND_PROVIDER_ID =
   'H_EARTH_GROUND_GEOMETRY_PROVIDER';
 
+const GROUND_PROVIDER_IMPLEMENTATION_FILE =
+  '/showroom/globe/h-earth/render/geometry-ground.js';
+
+const GROUND_PROVIDER_IMPLEMENTATION_CONTRACT_ID =
+  'H_EARTH_3D_GEOMETRY_GROUND_PROVIDER_FILE_BIRTH_STEP_034O_5G_PROVIDER_LOCAL_GROUND_CONSTRUCTION_ADAPTER_v1';
+
 const WET_SAND_PROVIDER_SELECTION_RULE_ID =
   'H_EARTH_WET_SAND_TO_GROUND_PROVIDER_SELECTION_RULE_v1';
 
@@ -103,6 +122,15 @@ const ALLOWED_REQUEST_PURPOSES = Object.freeze([
   'WET_SAND_GEOMETRY_TEST'
 ]);
 
+const ALLOWED_PUBLIC_INPUT_KEYS = Object.freeze([
+  'sourceObjectId',
+  'requestedPurpose',
+  'requestId'
+]);
+
+const ALLOWED_PUBLIC_INPUT_KEY_SET =
+  new Set(ALLOWED_PUBLIC_INPUT_KEYS);
+
 const FORBIDDEN_PUBLIC_DESCRIPTOR_KEYS = Object.freeze([
   'objectDescriptor',
   'zoneDescriptor',
@@ -112,10 +140,26 @@ const FORBIDDEN_PUBLIC_DESCRIPTOR_KEYS = Object.freeze([
   'providerSelection'
 ]);
 
+const PREVIEW_AND_TEST_PURPOSES = Object.freeze([
+  'WET_SAND_GEOMETRY_PREVIEW',
+  'WET_SAND_GEOMETRY_TEST'
+]);
+
 const EMPTY_FROZEN_ARRAY = Object.freeze([]);
 
-function freezeArray(values) {
-  return Object.freeze([...values]);
+function isPlainRecord(value) {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    Array.isArray(value) === false &&
+    Object.getPrototypeOf(value) === Object.prototype
+  );
+}
+
+function freezeArray(values = []) {
+  return Object.freeze(
+    Array.isArray(values) ? [...values] : []
+  );
 }
 
 function freezeIssues(issues) {
@@ -246,10 +290,10 @@ function makeRejectedResult({
 function checkDescriptorResolverInput(input) {
   const issues = [];
 
-  if (!input || typeof input !== 'object' || Array.isArray(input)) {
+  if (!isPlainRecord(input)) {
     issues.push({
       code: 'RESOLUTION_INPUT_NOT_RECORD',
-      message: 'Resolution input must be a non-array object.'
+      message: 'Resolution input must be a strict plain-record object.'
     });
 
     return issues;
@@ -263,6 +307,9 @@ function checkDescriptorResolverInput(input) {
 
   const requestId =
     normalizeOptionalString(input.requestId);
+
+  const deterministicFallbackAllowed =
+    PREVIEW_AND_TEST_PURPOSES.includes(requestedPurpose);
 
   if (!sourceObjectId) {
     issues.push({
@@ -297,6 +344,33 @@ function checkDescriptorResolverInput(input) {
       code: 'REQUEST_ID_INVALID',
       message: 'requestId must be a non-empty string when supplied.',
       field: 'requestId'
+    });
+  }
+
+  if (
+    requestedPurpose === DEFAULT_REQUEST_PURPOSE &&
+    !requestId
+  ) {
+    issues.push({
+      code: 'LIVE_REQUEST_ID_REQUIRED',
+      message:
+        'A live geometry-resolution request requires an explicit correlation identity.',
+      field: 'requestId'
+    });
+  }
+
+  if (
+    !requestId &&
+    requestedPurpose &&
+    requestedPurpose !== DEFAULT_REQUEST_PURPOSE &&
+    !deterministicFallbackAllowed
+  ) {
+    issues.push({
+      code: 'DETERMINISTIC_REQUEST_ID_FALLBACK_NOT_ALLOWED',
+      message:
+        'Deterministic request identity fallback is limited to preview and test purposes.',
+      field: 'requestedPurpose',
+      actual: requestedPurpose
     });
   }
 
@@ -459,18 +533,22 @@ function resolveHEarthSourceObjectGeometryRequestFromDescriptors({
     });
   }
 
-  if (
-    landscapeRegionProfile &&
-    !landscapeRegionProfile.primaryObjectHints?.includes(sourceObjectId)
-  ) {
+  const primaryObjectHints =
+    landscapeRegionProfile?.primaryObjectHints ?? null;
+
+  if (!Array.isArray(primaryObjectHints)) {
+    issues.push({
+      code: 'INVALID_REGION_PRIMARY_OBJECT_HINTS',
+      message:
+        'Landscape region primaryObjectHints must be a valid array before object-membership checks.'
+    });
+  } else if (!primaryObjectHints.includes(sourceObjectId)) {
     issues.push({
       code: 'LANDSCAPE_REGION_OBJECT_HINT_MISMATCH',
       message:
         'Landscape region does not identify sourceObjectId as a primary object hint.',
       expected: sourceObjectId,
-      actual:
-        landscapeRegionProfile.primaryObjectHints?.join('|') ??
-        null
+      actual: primaryObjectHints.join('|')
     });
   }
 
@@ -490,9 +568,27 @@ function resolveHEarthSourceObjectGeometryRequestFromDescriptors({
   const preferredColumns =
     latticeObjectHint?.preferredColumns ?? null;
 
+  const preferredRowsValid =
+    Array.isArray(preferredRows) &&
+    preferredRows.length > 0 &&
+    preferredRows.every(
+      (row) =>
+        Number.isInteger(row) &&
+        row >= 1 &&
+        row <= 16
+    );
+
+  if (!preferredRowsValid) {
+    issues.push({
+      code: 'INVALID_LATTICE_ROWS',
+      message:
+        'Preferred rows must be non-empty valid lattice rows.'
+    });
+  }
+
   if (
     derivedRows &&
-    preferredRows &&
+    preferredRowsValid &&
     !arraysEqual(derivedRows, preferredRows)
   ) {
     issues.push({
@@ -506,28 +602,31 @@ function resolveHEarthSourceObjectGeometryRequestFromDescriptors({
 
   if (
     derivedRows &&
-    preferredRows &&
+    preferredRowsValid &&
     preferredRows.some((row) => !derivedRows.includes(row))
   ) {
     issues.push({
       code: 'OBJECT_HINT_OUTSIDE_REGION',
-      message: 'One or more object-hint rows fall outside the region.'
+      message:
+        'One or more object-hint rows fall outside the region.'
     });
   }
 
-  if (
-    !Array.isArray(preferredColumns) ||
-    preferredColumns.length === 0 ||
-    preferredColumns.some(
+  const preferredColumnsValid =
+    Array.isArray(preferredColumns) &&
+    preferredColumns.length > 0 &&
+    preferredColumns.every(
       (column) =>
-        !Number.isInteger(column) ||
-        column < 1 ||
-        column > 16
-    )
-  ) {
+        Number.isInteger(column) &&
+        column >= 1 &&
+        column <= 16
+    );
+
+  if (!preferredColumnsValid) {
     issues.push({
       code: 'INVALID_LATTICE_COLUMNS',
-      message: 'Preferred columns must be non-empty valid lattice columns.'
+      message:
+        'Preferred columns must be non-empty valid lattice columns.'
     });
   }
 
@@ -656,7 +755,12 @@ function resolveHEarthSourceObjectGeometryRequestFromDescriptors({
 
   const providerSelection = Object.freeze({
     providerId: GROUND_PROVIDER_ID,
-
+    providerImplementationFile:
+      GROUND_PROVIDER_IMPLEMENTATION_FILE,
+    providerImplementationContractId:
+      GROUND_PROVIDER_IMPLEMENTATION_CONTRACT_ID,
+    providerIdentityRelationship:
+      'LOGICAL_PROVIDER_ID_TO_CURRENT_IMPLEMENTATION_CONTRACT',
     selectionRuleId:
       WET_SAND_PROVIDER_SELECTION_RULE_ID,
 
@@ -667,6 +771,7 @@ function resolveHEarthSourceObjectGeometryRequestFromDescriptors({
     ]),
 
     resolverCreatesProviderAuthority: false,
+    resolverImportsProviderImplementation: false,
     resolverInvokesProvider: false
   });
 
@@ -687,7 +792,9 @@ function resolveHEarthSourceObjectGeometryRequestFromDescriptors({
       'PRIMARY_INSPECTION_TARGET',
 
     objectZoneRole:
-      objectDescriptor.zoneRole,
+      objectZoneBinding?.zoneRole ??
+      objectDescriptor?.zoneRole ??
+      null,
 
     publicStageReadable:
       latticeObjectHint.publicStageReadable === true,
@@ -781,6 +888,15 @@ export const H_EARTH_SOURCE_OBJECT_GEOMETRY_RESOLUTION_CONTRACT =
     selectedProviderId:
       GROUND_PROVIDER_ID,
 
+    declaredProviderImplementationTarget: Object.freeze({
+      providerImplementationFile:
+        GROUND_PROVIDER_IMPLEMENTATION_FILE,
+      providerImplementationContractId:
+        GROUND_PROVIDER_IMPLEMENTATION_CONTRACT_ID,
+      relationship:
+        'DECLARED_PROVIDER_IMPLEMENTATION_TARGET_NOT_DIRECTLY_IMPORTED_NOT_INVOKED'
+    }),
+
     providerSelectionRuleId:
       WET_SAND_PROVIDER_SELECTION_RULE_ID,
 
@@ -856,8 +972,14 @@ export const H_EARTH_SOURCE_OBJECT_GEOMETRY_RESOLUTION_CONTRACT =
       })
     ]),
 
+    allowedPublicInputKeys:
+      ALLOWED_PUBLIC_INPUT_KEYS,
+
     allowedRequestPurposes:
       ALLOWED_REQUEST_PURPOSES,
+
+    liveOccurrenceRequestRequiresExplicitRequestId: true,
+    deterministicRequestKeyFallbackAllowedForPreviewAndTestOnly: true,
 
     providerImplementationImported: false,
     providerInvoked: false,
@@ -950,6 +1072,12 @@ export const H_EARTH_SOURCE_OBJECT_GEOMETRY_PROVIDER_RULES =
         providerId:
           GROUND_PROVIDER_ID,
 
+        providerImplementationFile:
+          GROUND_PROVIDER_IMPLEMENTATION_FILE,
+
+        providerImplementationContractId:
+          GROUND_PROVIDER_IMPLEMENTATION_CONTRACT_ID,
+
         selectionRuleId:
           WET_SAND_PROVIDER_SELECTION_RULE_ID,
 
@@ -969,25 +1097,34 @@ export const H_EARTH_SOURCE_OBJECT_GEOMETRY_PROVIDER_RULES =
 export function checkHEarthSourceObjectGeometryResolution(input) {
   const issues = [];
 
-  if (!input || typeof input !== 'object' || Array.isArray(input)) {
+  if (!isPlainRecord(input)) {
     return Object.freeze({
       ok: false,
       status: 'SOURCE_OBJECT_GEOMETRY_RESOLUTION_INPUT_REJECTED',
+      normalizedInput: Object.freeze({
+        sourceObjectId: null,
+        requestedPurpose: null,
+        requestId: null
+      }),
       issues: freezeIssues([
         {
           code: 'RESOLUTION_INPUT_NOT_RECORD',
-          message: 'Resolution input must be a non-array object.'
+          message:
+            'Resolution input must be a strict plain-record object.'
         }
       ])
     });
   }
 
-  for (const key of FORBIDDEN_PUBLIC_DESCRIPTOR_KEYS) {
-    if (Object.prototype.hasOwnProperty.call(input, key)) {
+  for (const key of Object.keys(input)) {
+    if (!ALLOWED_PUBLIC_INPUT_KEY_SET.has(key)) {
       issues.push({
-        code: 'EXTERNAL_DESCRIPTOR_INJECTION_REJECTED',
-        message:
-          'Caller-supplied authority descriptors are not accepted by the public resolver.',
+        code: FORBIDDEN_PUBLIC_DESCRIPTOR_KEYS.includes(key)
+          ? 'EXTERNAL_DESCRIPTOR_INJECTION_REJECTED'
+          : 'UNKNOWN_PUBLIC_INPUT_KEY_REJECTED',
+        message: FORBIDDEN_PUBLIC_DESCRIPTOR_KEYS.includes(key)
+          ? 'Caller-supplied authority descriptors are not accepted by the public resolver.'
+          : 'The public resolution surface accepts only declared input keys.',
         field: key
       });
     }
@@ -1021,11 +1158,19 @@ export function checkHEarthSourceObjectGeometryResolution(input) {
   ) {
     issues.push({
       code: 'SOURCE_OBJECT_NOT_SUPPORTED_BY_PACKET',
-      message: 'Packet 001 supports only the foreground wet-sand object.',
+      message:
+        'Packet 001 supports only the foreground wet-sand object.',
       expected: WET_SAND_OBJECT_ID,
       actual: sourceObjectId
     });
   }
+
+  const requestedPurpose =
+    normalizeRequiredString(input.requestedPurpose) ??
+    DEFAULT_REQUEST_PURPOSE;
+
+  const requestId =
+    normalizeOptionalString(input.requestId);
 
   return Object.freeze({
     ok: issues.length === 0,
@@ -1037,12 +1182,8 @@ export function checkHEarthSourceObjectGeometryResolution(input) {
 
     normalizedInput: Object.freeze({
       sourceObjectId,
-      requestedPurpose:
-        normalizeRequiredString(input.requestedPurpose) ??
-        DEFAULT_REQUEST_PURPOSE,
-
-      requestId:
-        normalizeOptionalString(input.requestId)
+      requestedPurpose,
+      requestId
     }),
 
     issues: freezeIssues(issues)
@@ -1129,6 +1270,12 @@ export const H_EARTH_SOURCE_OBJECT_GEOMETRY_RESOLUTION_RECEIPT =
     publicIdentityBasedResolverDefined: true,
     internalAuthorityLookupDefined: true,
     callerDescriptorInjectionRejected: true,
+    unknownPublicKeyRejectionDefined: true,
+    strictPlainRecordInputRequired: true,
+    upstreamArrayShapeGuardsDefined: true,
+    explicitLiveRequestIdLawDefined: true,
+    deterministicPreviewAndTestFallbackLawDefined: true,
+    logicalProviderToImplementationBridgeDefined: true,
 
     providerSelectionRuleDefined: true,
     providerRequestConstructionDefined: true,

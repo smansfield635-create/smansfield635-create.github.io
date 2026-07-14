@@ -14,16 +14,28 @@
  * H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_011A_PATH3_DOMAIN_BINDING_CONSUMER_v1
  *
  * /h-earth-3d/zones/ground-cell-001.zones.js
- * H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1
+ * H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1
  *
  * /h-earth-3d/objects/ground-cell-001.objects.js
- * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1
+ * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v2
  *
  * /h-earth-3d/actions/inspect-ground.js
- * H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v1
+ * H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v2
  *
  * /h-earth-3d/readouts/ground-condition-read.js
  * H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1
+ *
+ * Exact historical lineage retained:
+ * H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v1
+ *
+ * Retired noncontrolling compatibility lineage retained:
+ * H_EARTH_SOURCE_MATRIX_FILE_RENEWAL_STEP_031A_SCENE_SCOPED_LATTICE_AUTHORITY_v1
+ * H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_031B_CELL_TO_LATTICE_BINDING_v1
+ * H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1
+ * H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_031D_LATTICE_OBJECT_COMPRESSION_v1
+ * H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_031E_OBJECT_ANCHOR_BINDING_v1
+ * H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_031F_OBJECT_READOUT_BINDING_v1
+ * H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_031G_GROUND_INSPECTION_RECEIPT_BINDING_v1
  *
  * Purpose:
  * Renew the H-Earth receipts file from the retired Step 031G lattice-chain
@@ -33,8 +45,8 @@
  * Canonical upstream relation:
  * H_EARTH_REGION_CELL_X07_Z08
  *   -> H_EARTH_GROUND_CELL_001
- *   -> Inspect Ground
- *   -> Ground Condition Read
+ *   -> H_EARTH_INSPECT_GROUND_ACTION
+ *   -> H_EARTH_GROUND_CONDITION_READ
  *   -> H_EARTH_GROUND_INSPECTION_RECEIPT
  *
  * Room 6 authority:
@@ -43,7 +55,7 @@
  * Room 6 does not create matrix authority.
  * Room 6 does not create cell, zone, object, action, or readout authority.
  * Room 6 does not persist runtime receipts.
- * Room 6 does not execute actions or readouts.
+ * Room 6 does not execute runtime actions or runtime readouts.
  *
  * Compatibility:
  * Step 031A–031G identifiers remain referenced only as retired lineage /
@@ -52,8 +64,8 @@
  * Boundary:
  * This file defines receipt binding descriptors only.
  * This file does not persist runtime receipts.
- * This file does not execute actions.
- * This file does not execute readouts.
+ * This file does not execute runtime actions.
+ * This file does not execute runtime readouts.
  * This file does not activate route, runtime, lattice, renderer, compositor,
  * controller, canvas, WebGL, SVG, iframe, traversal, gameplay, simulation,
  * validation, production, public deployment, visual pass, score generation,
@@ -184,11 +196,213 @@ import {
   H_EARTH_GROUND_CONDITION_READ,
   H_EARTH_GROUND_CONDITION_READ_RECEIPT,
   H_EARTH_ROOM_6_RECEIPT_BINDING_UNBLOCK_RECEIPT,
+  groundConditionRead,
   getHEarthGroundConditionReadReceipt,
   getHEarthRoom6ReceiptBindingUnblockReceipt,
   getHEarthGroundConditionReadObjectBindings,
   getHEarthGroundConditionReadOutputModel
 } from './readouts/ground-condition-read.js';
+
+const EMPTY_FROZEN_ARRAY = Object.freeze([]);
+const EMPTY_FROZEN_OBJECT = Object.freeze({});
+
+const H_EARTH_RECEIPTS_ALLOWED_INPUT_KEYS = Object.freeze([
+  'activeMatrix',
+  'activeMatrixRole',
+  'activeCell',
+  'sceneIdentity',
+  'sourceAction',
+  'sourceActionId',
+  'runtimeIntentId',
+  'readoutName',
+  'readoutId',
+  'primaryFocusTarget',
+  'supportingInspectionTargets',
+  'requestedReceipt'
+]);
+
+const H_EARTH_RECEIPTS_REJECTED_INPUT_KEYS = Object.freeze([
+  'actionDescriptor',
+  'readoutDescriptor'
+]);
+
+const H_EARTH_RECEIPTS_ALLOWED_INPUT_KEY_SET = new Set(
+  H_EARTH_RECEIPTS_ALLOWED_INPUT_KEYS
+);
+
+const H_EARTH_RECEIPTS_REJECTED_INPUT_KEY_SET = new Set(
+  H_EARTH_RECEIPTS_REJECTED_INPUT_KEYS
+);
+
+const H_EARTH_CANONICAL_SUPPORTING_INSPECTION_TARGETS = Object.freeze([
+  ...H_EARTH_SUPPORTING_INSPECTION_TARGETS
+]);
+
+function isPlainRecord(value) {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    Array.isArray(value) === false &&
+    Object.getPrototypeOf(value) === Object.prototype
+  );
+}
+
+function hasOwn(record, key) {
+  return Object.prototype.hasOwnProperty.call(record, key);
+}
+
+function freezeArray(values = []) {
+  return Object.freeze(Array.isArray(values) ? [...values] : []);
+}
+
+function dedupeFrozen(values = []) {
+  return Object.freeze(
+    Array.isArray(values)
+      ? values.filter((value, index, array) => array.indexOf(value) === index)
+      : []
+  );
+}
+
+function resolveInputContainerStatus(input) {
+  if (input === undefined) {
+    return Object.freeze({
+      status: 'OMITTED_DEFAULT_INPUT_ALLOWED',
+      issue: null,
+      record: EMPTY_FROZEN_OBJECT
+    });
+  }
+
+  if (isPlainRecord(input)) {
+    return Object.freeze({
+      status: 'VALID_PLAIN_RECORD',
+      issue: null,
+      record: input
+    });
+  }
+
+  if (Array.isArray(input)) {
+    return Object.freeze({
+      status: 'MALFORMED_ARRAY_INPUT',
+      issue: 'H_EARTH_RECEIPTS_INPUT_CONTAINER_INVALID:ARRAY_NOT_ALLOWED',
+      record: EMPTY_FROZEN_OBJECT
+    });
+  }
+
+  if (input === null) {
+    return Object.freeze({
+      status: 'MALFORMED_NULL_INPUT',
+      issue: 'H_EARTH_RECEIPTS_INPUT_CONTAINER_INVALID:NULL_NOT_ALLOWED',
+      record: EMPTY_FROZEN_OBJECT
+    });
+  }
+
+  return Object.freeze({
+    status: 'MALFORMED_NON_RECORD_INPUT',
+    issue: 'H_EARTH_RECEIPTS_INPUT_CONTAINER_INVALID:PLAIN_RECORD_REQUIRED',
+    record: EMPTY_FROZEN_OBJECT
+  });
+}
+
+function resolveRequiredStringField(record, key, fallback) {
+  if (!hasOwn(record, key)) {
+    return Object.freeze({
+      supplied: false,
+      valid: true,
+      value: fallback,
+      issue: null
+    });
+  }
+
+  if (typeof record[key] !== 'string') {
+    return Object.freeze({
+      supplied: true,
+      valid: false,
+      value: null,
+      issue: `H_EARTH_RECEIPTS_INPUT_FIELD_INVALID_TYPE:${key}`
+    });
+  }
+
+  const value = record[key].trim();
+
+  if (value.length === 0) {
+    return Object.freeze({
+      supplied: true,
+      valid: false,
+      value: null,
+      issue: `H_EARTH_RECEIPTS_INPUT_FIELD_EMPTY:${key}`
+    });
+  }
+
+  return Object.freeze({
+    supplied: true,
+    valid: true,
+    value,
+    issue: null
+  });
+}
+
+export function normalizeHEarthReceiptsString(value, fallback = '') {
+  if (typeof value !== 'string') return fallback;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : fallback;
+}
+
+function normalizeHEarthReceiptsTargetEntries(targets = []) {
+  if (!Array.isArray(targets)) {
+    return Object.freeze({
+      validContainer: false,
+      entries: EMPTY_FROZEN_ARRAY,
+      invalidEntries: EMPTY_FROZEN_ARRAY,
+      duplicateSupportingTargets: EMPTY_FROZEN_ARRAY
+    });
+  }
+
+  const entries = [];
+  const invalidEntries = [];
+
+  targets.forEach((target, index) => {
+    if (typeof target !== 'string') {
+      invalidEntries.push(
+        Object.freeze({
+          index,
+          value: target,
+          issue: `H_EARTH_RECEIPTS_INPUT_SUPPORTING_TARGET_INVALID_TYPE:${index}`
+        })
+      );
+      return;
+    }
+
+    const normalized = target.trim();
+
+    if (normalized.length === 0) {
+      invalidEntries.push(
+        Object.freeze({
+          index,
+          value: target,
+          issue: `H_EARTH_RECEIPTS_INPUT_SUPPORTING_TARGET_EMPTY:${index}`
+        })
+      );
+      return;
+    }
+
+    entries.push(normalized);
+  });
+
+  const duplicateSupportingTargets = entries.filter(
+    (target, index, array) => array.indexOf(target) !== index
+  );
+
+  return Object.freeze({
+    validContainer: true,
+    entries: freezeArray(entries),
+    invalidEntries: freezeArray(invalidEntries),
+    duplicateSupportingTargets: dedupeFrozen(duplicateSupportingTargets)
+  });
+}
+
+export function normalizeHEarthReceiptsTargets(targets = []) {
+  return normalizeHEarthReceiptsTargetEntries(targets).entries;
+}
 
 export const H_EARTH_RECEIPTS_CONTRACT = Object.freeze({
   contractId:
@@ -209,17 +423,26 @@ export const H_EARTH_RECEIPTS_CONTRACT = Object.freeze({
   upstreamCellContractId:
     'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_011A_PATH3_DOMAIN_BINDING_CONSUMER_v1',
 
-  upstreamZoneContractId:
+  activeUpstreamZoneContractId:
+    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+  activeUpstreamObjectContractId:
+    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v2',
+
+  activeUpstreamActionContractId:
+    'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v2',
+
+  activeUpstreamReadoutContractId:
+    'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1',
+
+  exactHistoricalZoneLineageContractId:
     'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
 
-  upstreamObjectContractId:
+  exactHistoricalObjectLineageContractId:
     'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
 
-  upstreamActionContractId:
+  exactHistoricalActionLineageContractId:
     'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v1',
-
-  upstreamReadoutContractId:
-    'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1',
 
   retiredContractLineage: Object.freeze({
     matrix:
@@ -268,9 +491,9 @@ export const H_EARTH_RECEIPTS_CONTRACT = Object.freeze({
   renewalScope: Object.freeze({
     step009DMatrixConsumed: true,
     step011ACellConsumed: true,
-    step011BZonesConsumed: true,
-    step011CObjectsConsumed: true,
-    step011DInspectGroundConsumed: true,
+    step034KZonesConsumed: true,
+    step034Jv2ObjectsConsumed: true,
+    step011Dv2InspectGroundConsumed: true,
     step011EGroundConditionReadConsumed: true,
 
     groundInspectionReceiptBound: true,
@@ -296,12 +519,13 @@ export const H_EARTH_RECEIPTS_CONTRACT = Object.freeze({
     productionAdded: false
   }),
 
-  archiveExpectation: Object.freeze({
-    expectedArchiveTitle:
-      'h-earth-receipts-step-011f-backup',
-    googleNativeArchiveRequiredForNetworkCompletion: true,
-    finalMarkerRequired: 'export default H_EARTH_RECEIPTS_AGGREGATE;',
-    completionRequiresFinalMarkerVerification: true
+  sourceEvidenceSeparation: Object.freeze({
+    backupEvidenceOwnedExternally: true,
+    baselineDiffEvidenceOwnedExternally: true,
+    repositoryInstallationEvidenceOwnedExternally: true,
+    routeIntegrationEvidenceOwnedExternally: true,
+    runtimeExecutionEvidenceOwnedExternally: true,
+    fetchReadbackEvidenceOwnedExternally: true
   })
 });
 
@@ -381,9 +605,605 @@ export const H_EARTH_RECEIPTS_BOUNDARIES = Object.freeze({
   matrixCollapse: false
 });
 
+export const H_EARTH_RECEIPTS_INPUT_MODEL = Object.freeze({
+  inputModelId: 'H_EARTH_RECEIPTS_INPUT_MODEL',
+  status:
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+      ? 'PATH3_GROUND_INSPECTION_RECEIPT_INPUT_DESCRIPTOR_ONLY'
+      : 'PATH3_GROUND_INSPECTION_RECEIPT_INPUT_BLOCKED_BY_BINDING_REJECTION',
+
+  acceptedInputKeys: H_EARTH_RECEIPTS_ALLOWED_INPUT_KEYS,
+  rejectedInputKeys: H_EARTH_RECEIPTS_REJECTED_INPUT_KEYS,
+
+  defaultInput: Object.freeze({
+    activeMatrix: 'H-Earth',
+    activeMatrixRole: 'Ground-View Matrix',
+    activeCell: 'H_EARTH_GROUND_CELL_001',
+    sceneIdentity: 'earth-water-air-survival-shoreline-manor',
+    sourceAction: 'Inspect Ground',
+    sourceActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    runtimeIntentId: 'INSPECT_GROUND',
+    readoutName: 'Ground Condition Read',
+    readoutId: 'H_EARTH_GROUND_CONDITION_READ',
+    primaryFocusTarget: H_EARTH_PRIMARY_INSPECTION_TARGET,
+    supportingInspectionTargets: H_EARTH_SUPPORTING_INSPECTION_TARGETS,
+    requestedReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT'
+  }),
+
+  externalActionDescriptorAcceptance: false,
+  externalReadoutDescriptorAcceptance: false,
+  receiptsAlwaysConsumeStep011EResult: true,
+
+  inputCreatesRuntimeExecution: false,
+  inputCreatesReceiptPersistence: false,
+  inputCreatesRendererState: false,
+
+  boundary: H_EARTH_RECEIPTS_BOUNDARIES
+});
+
+export function buildHEarthReceiptsInput(input = undefined) {
+  const containerResolution = resolveInputContainerStatus(input);
+  const safeInput = containerResolution.record;
+  const defaultInput = H_EARTH_RECEIPTS_INPUT_MODEL.defaultInput;
+
+  const providedKeys = Object.keys(safeInput);
+
+  const unknownInputKeys = freezeArray(
+    providedKeys.filter(
+      (key) =>
+        H_EARTH_RECEIPTS_ALLOWED_INPUT_KEY_SET.has(key) === false &&
+        H_EARTH_RECEIPTS_REJECTED_INPUT_KEY_SET.has(key) === false
+    )
+  );
+
+  const rejectedInputKeysProvided = freezeArray(
+    providedKeys.filter((key) => H_EARTH_RECEIPTS_REJECTED_INPUT_KEY_SET.has(key))
+  );
+
+  const activeMatrixField = resolveRequiredStringField(
+    safeInput,
+    'activeMatrix',
+    defaultInput.activeMatrix
+  );
+  const activeMatrixRoleField = resolveRequiredStringField(
+    safeInput,
+    'activeMatrixRole',
+    defaultInput.activeMatrixRole
+  );
+  const activeCellField = resolveRequiredStringField(
+    safeInput,
+    'activeCell',
+    defaultInput.activeCell
+  );
+  const sceneIdentityField = resolveRequiredStringField(
+    safeInput,
+    'sceneIdentity',
+    defaultInput.sceneIdentity
+  );
+  const sourceActionField = resolveRequiredStringField(
+    safeInput,
+    'sourceAction',
+    defaultInput.sourceAction
+  );
+  const sourceActionIdField = resolveRequiredStringField(
+    safeInput,
+    'sourceActionId',
+    defaultInput.sourceActionId
+  );
+  const runtimeIntentIdField = resolveRequiredStringField(
+    safeInput,
+    'runtimeIntentId',
+    defaultInput.runtimeIntentId
+  );
+  const readoutNameField = resolveRequiredStringField(
+    safeInput,
+    'readoutName',
+    defaultInput.readoutName
+  );
+  const readoutIdField = resolveRequiredStringField(
+    safeInput,
+    'readoutId',
+    defaultInput.readoutId
+  );
+  const primaryFocusTargetField = resolveRequiredStringField(
+    safeInput,
+    'primaryFocusTarget',
+    defaultInput.primaryFocusTarget
+  );
+  const requestedReceiptField = resolveRequiredStringField(
+    safeInput,
+    'requestedReceipt',
+    defaultInput.requestedReceipt
+  );
+
+  const supportingTargetsSupplied = hasOwn(
+    safeInput,
+    'supportingInspectionTargets'
+  );
+
+  const rawSupportingTargetSource = supportingTargetsSupplied
+    ? safeInput.supportingInspectionTargets
+    : defaultInput.supportingInspectionTargets;
+
+  const supportingTargetSequence =
+    normalizeHEarthReceiptsTargetEntries(rawSupportingTargetSource);
+
+  const supportingTargetEntryIssues = supportingTargetSequence.invalidEntries.map(
+    (entry) => entry.issue
+  );
+
+  const fieldIssues = dedupeFrozen(
+    [
+      activeMatrixField.issue,
+      activeMatrixRoleField.issue,
+      activeCellField.issue,
+      sceneIdentityField.issue,
+      sourceActionField.issue,
+      sourceActionIdField.issue,
+      runtimeIntentIdField.issue,
+      readoutNameField.issue,
+      readoutIdField.issue,
+      primaryFocusTargetField.issue,
+      requestedReceiptField.issue,
+      supportingTargetsSupplied === true &&
+      Array.isArray(rawSupportingTargetSource) === false
+        ? 'H_EARTH_RECEIPTS_INPUT_FIELD_INVALID_TYPE:supportingInspectionTargets'
+        : null,
+      ...rejectedInputKeysProvided.map(
+        (key) => `H_EARTH_RECEIPTS_INPUT_REJECTED_KEY_PROVIDED:${key}`
+      ),
+      ...supportingTargetEntryIssues
+    ].filter(Boolean)
+  );
+
+  const allRequiredFieldsValid =
+    activeMatrixField.valid === true &&
+    activeMatrixRoleField.valid === true &&
+    activeCellField.valid === true &&
+    sceneIdentityField.valid === true &&
+    sourceActionField.valid === true &&
+    sourceActionIdField.valid === true &&
+    runtimeIntentIdField.valid === true &&
+    readoutNameField.valid === true &&
+    readoutIdField.valid === true &&
+    primaryFocusTargetField.valid === true &&
+    requestedReceiptField.valid === true &&
+    fieldIssues.length === 0;
+
+  return Object.freeze({
+    activeMatrix: activeMatrixField.value,
+    activeMatrixRole: activeMatrixRoleField.value,
+    activeCell: activeCellField.value,
+    sceneIdentity: sceneIdentityField.value,
+    sourceAction: sourceActionField.value,
+    sourceActionId: sourceActionIdField.value,
+    runtimeIntentId: runtimeIntentIdField.value,
+    readoutName: readoutNameField.value,
+    readoutId: readoutIdField.value,
+    primaryFocusTarget: primaryFocusTargetField.value,
+    supportingInspectionTargets: supportingTargetSequence.entries,
+    invalidSupportingTargetEntries: supportingTargetSequence.invalidEntries,
+    duplicateSupportingTargets:
+      supportingTargetSequence.duplicateSupportingTargets,
+    requestedReceipt: requestedReceiptField.value,
+
+    fieldIssues,
+    allRequiredFieldsValid,
+
+    inputContainerStatus: containerResolution.status,
+    inputContainerIssue: containerResolution.issue,
+    providedInputKeys: freezeArray(providedKeys),
+    unknownInputKeys,
+    rejectedInputKeysProvided,
+
+    descriptorOnly: true,
+    runtimeExecutionClaim: false,
+    receiptPersistenceClaim: false
+  });
+}
+
+export function checkHEarthReceiptsInput(input = undefined) {
+  const normalizedInput = buildHEarthReceiptsInput(input);
+
+  const supportingTargetsContainDuplicates =
+    normalizedInput.duplicateSupportingTargets.length > 0;
+
+  const supportingTargetsSetExact =
+    normalizedInput.supportingInspectionTargets.length ===
+      H_EARTH_CANONICAL_SUPPORTING_INSPECTION_TARGETS.length &&
+    H_EARTH_CANONICAL_SUPPORTING_INSPECTION_TARGETS.every((target) =>
+      normalizedInput.supportingInspectionTargets.includes(target)
+    );
+
+  const supportingTargetOrderCanonical =
+    normalizedInput.supportingInspectionTargets.length ===
+      H_EARTH_CANONICAL_SUPPORTING_INSPECTION_TARGETS.length &&
+    H_EARTH_CANONICAL_SUPPORTING_INSPECTION_TARGETS.every(
+      (target, index) =>
+        normalizedInput.supportingInspectionTargets[index] === target
+    );
+
+  const missingSupportingTargets =
+    H_EARTH_CANONICAL_SUPPORTING_INSPECTION_TARGETS.filter(
+      (target) =>
+        normalizedInput.supportingInspectionTargets.includes(target) === false
+    );
+
+  const extraSupportingTargets =
+    normalizedInput.supportingInspectionTargets.filter(
+      (target) =>
+        H_EARTH_CANONICAL_SUPPORTING_INSPECTION_TARGETS.includes(target) === false
+    );
+
+  const checks = Object.freeze({
+    inputContainerAccepted: normalizedInput.inputContainerIssue === null,
+    unknownInputKeysRejected: normalizedInput.unknownInputKeys.length === 0,
+    rejectedInputKeysRejected:
+      normalizedInput.rejectedInputKeysProvided.length === 0,
+    allRequiredFieldsValid: normalizedInput.allRequiredFieldsValid === true,
+    fieldIssuesEmpty: normalizedInput.fieldIssues.length === 0,
+
+    path3BindingAccepted:
+      H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
+    matrixBindingAccepted:
+      H_EARTH_MATRIX_PATH3_BINDING_ADMISSION.admitted === true,
+    room6ReceiptBindingAllowed:
+      H_EARTH_ROOM_6_RECEIPT_BINDING_UNBLOCK_RECEIPT
+        .room6ReceiptFileMayProceed === true,
+
+    activeMatrixAccepted: normalizedInput.activeMatrix === 'H-Earth',
+    activeMatrixRoleAccepted:
+      normalizedInput.activeMatrixRole === 'Ground-View Matrix',
+    activeCellAccepted:
+      normalizedInput.activeCell === 'H_EARTH_GROUND_CELL_001',
+    sceneIdentityAccepted:
+      normalizedInput.sceneIdentity ===
+      'earth-water-air-survival-shoreline-manor',
+
+    sourceActionAccepted: normalizedInput.sourceAction === 'Inspect Ground',
+    sourceActionIdAccepted:
+      normalizedInput.sourceActionId === 'H_EARTH_INSPECT_GROUND_ACTION',
+    runtimeIntentIdAccepted:
+      normalizedInput.runtimeIntentId === 'INSPECT_GROUND',
+    readoutNameAccepted:
+      normalizedInput.readoutName === 'Ground Condition Read',
+    readoutIdAccepted:
+      normalizedInput.readoutId === 'H_EARTH_GROUND_CONDITION_READ',
+
+    primaryFocusTargetAccepted:
+      normalizedInput.primaryFocusTarget === H_EARTH_PRIMARY_INSPECTION_TARGET,
+
+    supportingTargetEntriesValid:
+      normalizedInput.invalidSupportingTargetEntries.length === 0,
+    supportingTargetsContainNoDuplicates:
+      supportingTargetsContainDuplicates === false,
+    supportingTargetSetExact: supportingTargetsSetExact,
+    supportingTargetOrderCanonical,
+    requestedReceiptAccepted:
+      normalizedInput.requestedReceipt ===
+      'H_EARTH_GROUND_INSPECTION_RECEIPT'
+  });
+
+  const failureCodes = [];
+
+  if (normalizedInput.inputContainerIssue) {
+    failureCodes.push(normalizedInput.inputContainerIssue);
+  }
+
+  if (normalizedInput.unknownInputKeys.length > 0) {
+    failureCodes.push(
+      ...normalizedInput.unknownInputKeys.map(
+        (key) => `H_EARTH_RECEIPTS_INPUT_UNKNOWN_KEY_REJECTED:${key}`
+      )
+    );
+  }
+
+  if (normalizedInput.fieldIssues.length > 0) {
+    failureCodes.push(...normalizedInput.fieldIssues);
+  }
+
+  if (checks.supportingTargetsContainNoDuplicates !== true) {
+    failureCodes.push(
+      ...normalizedInput.duplicateSupportingTargets.map(
+        (target) =>
+          `H_EARTH_RECEIPTS_INPUT_DUPLICATE_SUPPORTING_TARGET:${target}`
+      )
+    );
+  }
+
+  if (checks.supportingTargetSetExact !== true) {
+    failureCodes.push(
+      'H_EARTH_RECEIPTS_INPUT_CHECK_FAILED:supportingTargetSetExact'
+    );
+  }
+
+  if (checks.supportingTargetOrderCanonical !== true) {
+    failureCodes.push(
+      'H_EARTH_RECEIPTS_INPUT_CHECK_FAILED:supportingTargetOrderCanonical'
+    );
+  }
+
+  for (const [key, value] of Object.entries(checks)) {
+    if (
+      value !== true &&
+      key !== 'supportingTargetsContainNoDuplicates' &&
+      key !== 'supportingTargetSetExact' &&
+      key !== 'supportingTargetOrderCanonical' &&
+      key !== 'inputContainerAccepted' &&
+      key !== 'unknownInputKeysRejected' &&
+      key !== 'fieldIssuesEmpty'
+    ) {
+      failureCodes.push(`H_EARTH_RECEIPTS_INPUT_CHECK_FAILED:${key}`);
+    }
+  }
+
+  return Object.freeze({
+    input: normalizedInput,
+    checks,
+    passed: Object.values(checks).every((value) => value === true),
+    missingSupportingTargets: freezeArray(missingSupportingTargets),
+    extraSupportingTargets: freezeArray(extraSupportingTargets),
+    failureCodes: dedupeFrozen(failureCodes),
+    descriptorOnly: true,
+    runtimeExecutionClaim: false,
+    validationClaim: false
+  });
+}
+
+export function buildHEarthGroundInspectionReceiptBinding(input = undefined) {
+  const inputCheck = checkHEarthReceiptsInput(input);
+
+  const readoutInput = Object.freeze({
+    activeMatrix: inputCheck.input.activeMatrix,
+    activeMatrixRole: inputCheck.input.activeMatrixRole,
+    activeCell: inputCheck.input.activeCell,
+    sceneIdentity: inputCheck.input.sceneIdentity,
+    sourceAction: inputCheck.input.sourceAction,
+    sourceActionId: inputCheck.input.sourceActionId,
+    runtimeIntentId: inputCheck.input.runtimeIntentId,
+    readoutName: inputCheck.input.readoutName,
+    readoutId: inputCheck.input.readoutId,
+    primaryFocusTarget: inputCheck.input.primaryFocusTarget,
+    supportingInspectionTargets: inputCheck.input.supportingInspectionTargets,
+    requestedReceipt: inputCheck.input.requestedReceipt
+  });
+
+  const readoutResult = groundConditionRead(readoutInput);
+  const sourceReadoutDescriptor = readoutResult?.descriptor || null;
+
+  const sourceReadoutLawful =
+    readoutResult?.lawful === true &&
+    readoutResult?.handoffEligible === true &&
+    Array.isArray(readoutResult?.issues) &&
+    readoutResult.issues.length === 0 &&
+    sourceReadoutDescriptor?.readoutDescriptorReady === true &&
+    sourceReadoutDescriptor?.sourceActionLawful === true &&
+    readoutResult?.receiptHandoff !== null &&
+    readoutResult?.receiptHandoff?.handoffEligible === true;
+
+  const receiptBindingReady =
+    inputCheck.passed === true && sourceReadoutLawful === true;
+
+  const combinedIssues = dedupeFrozen([
+    ...inputCheck.failureCodes,
+    ...(Array.isArray(readoutResult?.issues) ? readoutResult.issues : []),
+    ...(inputCheck.passed === true && sourceReadoutLawful !== true
+      ? [
+          'H_EARTH_RECEIPTS_READOUT_HANDOFF_REJECTED:SOURCE_READOUT_RESULT_NOT_LAWFUL'
+        ]
+      : [])
+  ]);
+
+  const receiptShape = receiptBindingReady
+    ? Object.freeze({
+        receiptType: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+        receiptId: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+        activeMatrix: inputCheck.input.activeMatrix,
+        activeMatrixRole: inputCheck.input.activeMatrixRole,
+        activeCell: inputCheck.input.activeCell,
+        domainCellId: 'H_EARTH_GROUND_CELL_001',
+        spatialCellId: H_EARTH_GROUND_CELL_001_PATH3_BINDING.spatialCellId,
+        sceneIdentity: inputCheck.input.sceneIdentity,
+        sourceAction: inputCheck.input.sourceAction,
+        descriptorActionId: inputCheck.input.sourceActionId,
+        runtimeIntentId: inputCheck.input.runtimeIntentId,
+        readoutName: inputCheck.input.readoutName,
+        readoutId: inputCheck.input.readoutId,
+        primaryFocusTarget: inputCheck.input.primaryFocusTarget,
+        supportingInspectionTargets: inputCheck.input.supportingInspectionTargets,
+        matrixSeparationPreserved: true,
+        receiptPersistenceDefinedHere: false,
+        matrixCollapse: false
+      })
+    : null;
+
+  return Object.freeze({
+    bindingId: 'H_EARTH_GROUND_INSPECTION_RECEIPT_BINDING',
+    receiptId: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+    receiptRole: 'FIRST_GROUND_VIEW_INSPECTION_RECEIPT_DESCRIPTOR',
+
+    matrix: 'H-Earth',
+    matrixRole: 'Ground-View Matrix',
+    spatialCellId: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING.spatialCellId,
+    domainCellId: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING.domainCellId,
+    activeCell: 'H_EARTH_GROUND_CELL_001',
+    sceneIdentity: 'earth-water-air-survival-shoreline-manor',
+
+    path3BindingAdmission: H_EARTH_MATRIX_PATH3_BINDING_ADMISSION,
+    path3DomainBinding: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING,
+    cellPath3Binding: H_EARTH_GROUND_CELL_001_PATH3_BINDING,
+
+    sourceAction: 'Inspect Ground',
+    descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    runtimeIntentId: 'INSPECT_GROUND',
+
+    sourceReadout: 'Ground Condition Read',
+    sourceReadoutId: 'H_EARTH_GROUND_CONDITION_READ',
+    expectedReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+
+    primaryObjectId: H_EARTH_PRIMARY_INSPECTION_TARGET,
+    supportingObjectIds: H_EARTH_SUPPORTING_INSPECTION_TARGETS,
+    contextObjectIds: H_EARTH_CONTEXT_OBJECTS,
+
+    expectedPrimaryObject: 'OBJ_002_FOREGROUND_WET_SAND',
+    expectedSupportingObjects: freezeArray([
+      'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
+      'OBJ_010_SMALL_BEACH_STONES',
+      'OBJ_011_FOREGROUND_JAGGED_ROCKS',
+      'OBJ_005_SHORELINE_FOAM_LINE'
+    ]),
+
+    sourceChain: Object.freeze({
+      matrixContract: H_EARTH_RECEIPTS_CONTRACT.upstreamMatrixContractId,
+      cellContract: H_EARTH_RECEIPTS_CONTRACT.upstreamCellContractId,
+      zoneContract: H_EARTH_RECEIPTS_CONTRACT.activeUpstreamZoneContractId,
+      objectContract: H_EARTH_RECEIPTS_CONTRACT.activeUpstreamObjectContractId,
+      actionContract: H_EARTH_RECEIPTS_CONTRACT.activeUpstreamActionContractId,
+      readoutContract:
+        H_EARTH_RECEIPTS_CONTRACT.activeUpstreamReadoutContractId,
+      receiptsContract: H_EARTH_RECEIPTS_CONTRACT.contractId
+    }),
+
+    inputCheck,
+    sourceReadoutInput: readoutInput,
+    sourceReadoutResult: readoutResult,
+    sourceReadoutDescriptor,
+    sourceReadoutLawful,
+
+    lawful: receiptBindingReady,
+    handoffEligible: receiptBindingReady,
+    receiptBindingReady,
+    issues: combinedIssues,
+
+    receiptShape,
+    descriptorOnly: true,
+    runtimeReceiptPersistence: false,
+    receiptCreationClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+
+    boundary: H_EARTH_RECEIPTS_BOUNDARIES
+  });
+}
+
+function buildHEarthGroundInspectionReceiptFromBinding(binding) {
+  const status =
+    binding.receiptBindingReady === true
+      ? 'PATH3_GROUND_INSPECTION_RECEIPT_BOUND_DESCRIPTOR_ONLY'
+      : 'PATH3_GROUND_INSPECTION_RECEIPT_REJECTED_DESCRIPTOR_ONLY';
+
+  return Object.freeze({
+    receiptType: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+    receiptId: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+    contractId:
+      'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_011F_PATH3_GROUND_INSPECTION_RECEIPT_BINDING_v1',
+
+    renewsReceiptContractId:
+      'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_031G_GROUND_INSPECTION_RECEIPT_BINDING_v1',
+
+    status,
+    lawful: binding.lawful === true,
+    handoffEligible: binding.handoffEligible === true,
+    issues: binding.issues,
+
+    file: '/h-earth-3d/h-earth.receipts.js',
+    matrix: 'H-Earth',
+    matrixRole: 'Ground-View Matrix',
+    spatialCellId: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING.spatialCellId,
+    domainCellId: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING.domainCellId,
+    activeCell: 'H_EARTH_GROUND_CELL_001',
+    sceneIdentity: 'earth-water-air-survival-shoreline-manor',
+
+    firstAction: 'Inspect Ground',
+    descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+    runtimeIntentId: 'INSPECT_GROUND',
+    firstReadout: 'Ground Condition Read',
+    firstReadoutId: 'H_EARTH_GROUND_CONDITION_READ',
+
+    selectedObjectId:
+      binding.receiptBindingReady === true
+        ? H_EARTH_PRIMARY_INSPECTION_TARGET
+        : null,
+    selectedSurface:
+      binding.receiptBindingReady === true ? 'Foreground Wet Sand' : null,
+    selectedZoneId:
+      binding.receiptBindingReady === true
+        ? 'ZONE_001_FOREGROUND_INSPECTION_ZONE'
+        : null,
+    classification:
+      binding.receiptBindingReady === true
+        ? 'PRIMARY_INSPECTION_TARGET'
+        : 'REJECTED_RECEIPT_BINDING',
+
+    supportingObjectIds: H_EARTH_SUPPORTING_INSPECTION_TARGETS,
+    contextObjectIds: H_EARTH_CONTEXT_OBJECTS,
+
+    upstreamMatrixReceipt: getHEarthMatrixReceipt(),
+    upstreamMatrixPath3DomainBinding: getHEarthMatrixPath3DomainBinding(),
+    upstreamMatrixPath3BindingAdmission: getHEarthMatrixPath3BindingAdmission(),
+    upstreamActionIdentifierBridge: getHEarthMatrixActionIdentifierBridge(),
+
+    upstreamCellReceipt: getHEarthGroundCell001Receipt(),
+    upstreamCellPath3Binding: getHEarthGroundCell001Path3Binding(),
+
+    upstreamZonesReceipt: getHEarthGroundCell001ZonesReceipt(),
+    upstreamObjectsReceipt: getHEarthGroundCell001ObjectsReceipt(),
+    upstreamActionReceipt: getHEarthInspectGroundActionReceipt(),
+    upstreamReadoutReceipt: getHEarthGroundConditionReadReceipt(),
+
+    binding,
+    actionDescriptor: H_EARTH_INSPECT_GROUND_ACTION,
+    actionOutputModel: H_EARTH_INSPECT_GROUND_OUTPUT_MODEL,
+    readoutDescriptor: H_EARTH_GROUND_CONDITION_READ,
+    readoutOutputModel: H_EARTH_GROUND_CONDITION_READ_OUTPUT_MODEL,
+    readoutReceipt: H_EARTH_GROUND_CONDITION_READ_RECEIPT,
+
+    receiptPosture: Object.freeze({
+      descriptorOnly: true,
+      sourceBindingReceiptOnly: true,
+      runtimeReceiptPersistence: false,
+      runtimeReceiptCreation: false,
+      runtimeActionExecutionClaim: false,
+      runtimeReadoutExecutionClaim: false,
+      readoutProductionClaim: false,
+      validationClaim: false,
+      productionClaim: false,
+      deploymentClaim: false,
+      visualPassClaim: false
+    }),
+
+    receiptShape: binding.receiptShape,
+    matrixSeparation: H_EARTH_MATRIX_SEPARATION,
+    boundary: H_EARTH_RECEIPTS_BOUNDARIES
+  });
+}
+
+export function buildHEarthGroundInspectionReceipt(input = undefined) {
+  return buildHEarthGroundInspectionReceiptFromBinding(
+    buildHEarthGroundInspectionReceiptBinding(input)
+  );
+}
+
+export function hEarthGroundInspectionReceipt(input = undefined) {
+  return buildHEarthGroundInspectionReceipt(input);
+}
+
+const H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING =
+  buildHEarthGroundInspectionReceiptBinding();
+
+const H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT =
+  buildHEarthGroundInspectionReceiptFromBinding(
+    H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING
+  );
+
+const H_EARTH_RECEIPT_BINDING_READY =
+  H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true;
+
 export const H_EARTH_RECEIPT_SOURCE_CHAIN_STATUS = Object.freeze({
   statusId: 'H_EARTH_RECEIPT_SOURCE_CHAIN_STATUS',
-  status: 'PATH3_SOURCE_CHAIN_BACKED_AND_READY_FOR_RECEIPT_BINDING_DESCRIPTOR_ONLY',
+  status: H_EARTH_RECEIPT_BINDING_READY
+    ? 'PATH3_SOURCE_CHAIN_BACKED_AND_READY_FOR_RECEIPT_BINDING_DESCRIPTOR_ONLY'
+    : 'PATH3_SOURCE_CHAIN_PRESENT_BUT_RECEIPT_BINDING_NOT_YET_LAWFUL_DESCRIPTOR_ONLY',
 
   activeChain: Object.freeze({
     step009D: Object.freeze({
@@ -391,11 +1211,12 @@ export const H_EARTH_RECEIPT_SOURCE_CHAIN_STATUS = Object.freeze({
       file: '/h-earth-3d/h-earth.matrix.js',
       contract:
         'H_EARTH_MATRIX_FILE_RENEWAL_STEP_009D_REJECTED_BINDING_CLASSIFICATION_GUARD_v1',
-      status: 'BACKED_ACTIVE_MATRIX_STANDARD',
+      status: H_EARTH_MATRIX_PATH3_BINDING_ADMISSION.admitted === true
+        ? 'BACKED_ACTIVE_MATRIX_STANDARD'
+        : 'BACKED_MATRIX_PRESENT_BUT_BINDING_NOT_ADMITTED',
       path3DomainBindingAvailable: true,
       path3BindingAdmissionAvailable: true,
-      finalMarkerVerified: true,
-      activeAuthority: true
+      activeAuthority: H_EARTH_MATRIX_PATH3_BINDING_ADMISSION.admitted === true
     }),
 
     step011A: Object.freeze({
@@ -403,38 +1224,43 @@ export const H_EARTH_RECEIPT_SOURCE_CHAIN_STATUS = Object.freeze({
       file: '/h-earth-3d/cells/ground-cell-001.js',
       contract:
         'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_011A_PATH3_DOMAIN_BINDING_CONSUMER_v1',
-      status: 'PATH3_DOMAIN_BINDING_CONSUMER',
-      activeAuthority: true
+      status: H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+        ? 'PATH3_DOMAIN_BINDING_CONSUMER'
+        : 'CELL_PRESENT_BUT_BINDING_NOT_ADMITTED',
+      activeAuthority: H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
     }),
 
-    step011B: Object.freeze({
-      step: '011B',
+    step034K: Object.freeze({
+      step: '034K',
       file: '/h-earth-3d/zones/ground-cell-001.zones.js',
       contract:
-        'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
-      status: 'BACKED_ACTIVE_ZONE_COMPOSITION_STANDARD',
-      finalMarkerVerified: true,
-      activeAuthority: true
+        'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+      status: H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+        ? 'BACKED_ACTIVE_ZONE_COMPOSITION_STANDARD'
+        : 'ZONE_PRESENT_BUT_UPSTREAM_BINDING_NOT_ADMITTED',
+      activeAuthority: H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
     }),
 
-    step011C: Object.freeze({
-      step: '011C',
+    step034Jv2: Object.freeze({
+      step: '034J_V2',
       file: '/h-earth-3d/objects/ground-cell-001.objects.js',
       contract:
-        'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
-      status: 'BACKED_ACTIVE_OBJECT_COMPOSITION_STANDARD',
-      finalMarkerVerified: true,
-      activeAuthority: true
+        'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v2',
+      status: H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+        ? 'BACKED_ACTIVE_OBJECT_COMPOSITION_STANDARD'
+        : 'OBJECTS_PRESENT_BUT_UPSTREAM_BINDING_NOT_ADMITTED',
+      activeAuthority: H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
     }),
 
-    step011D: Object.freeze({
-      step: '011D',
+    step011Dv2: Object.freeze({
+      step: '011D_V2',
       file: '/h-earth-3d/actions/inspect-ground.js',
       contract:
-        'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v1',
-      status: 'BACKED_ACTIVE_ACTION_BINDING_STANDARD',
-      finalMarkerVerified: true,
-      activeAuthority: true
+        'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v2',
+      status: H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
+        ? 'BACKED_ACTIVE_ACTION_BINDING_STANDARD'
+        : 'ACTION_PRESENT_BUT_UPSTREAM_BINDING_NOT_ADMITTED',
+      activeAuthority: H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true
     }),
 
     step011E: Object.freeze({
@@ -442,9 +1268,10 @@ export const H_EARTH_RECEIPT_SOURCE_CHAIN_STATUS = Object.freeze({
       file: '/h-earth-3d/readouts/ground-condition-read.js',
       contract:
         'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1',
-      status: 'BACKED_ACTIVE_READOUT_BINDING_STANDARD',
-      finalMarkerVerified: true,
-      activeAuthority: true
+      status: H_EARTH_RECEIPT_BINDING_READY
+        ? 'BACKED_ACTIVE_READOUT_BINDING_STANDARD'
+        : 'READOUT_PRESENT_BUT_TERMINAL_RESULT_NOT_LAWFUL',
+      activeAuthority: H_EARTH_RECEIPT_BINDING_READY
     })
   }),
 
@@ -466,145 +1293,25 @@ export const H_EARTH_RECEIPT_SOURCE_CHAIN_STATUS = Object.freeze({
     sceneIdentity: 'earth-water-air-survival-shoreline-manor'
   }),
 
-  sourceChainReadyForReceiptBinding: true,
+  sourceChainReadyForReceiptBinding: H_EARTH_RECEIPT_BINDING_READY,
   sourceChainReadyForRuntimeExecution: false,
   sourceChainReadyForRendererActivation: false,
   sourceChainReadyForValidation: false,
   sourceChainReadyForProduction: false,
 
-  boundary: H_EARTH_RECEIPTS_BOUNDARIES
-});
-
-export const H_EARTH_GROUND_INSPECTION_RECEIPT_BINDING = Object.freeze({
-  bindingId: 'H_EARTH_GROUND_INSPECTION_RECEIPT_BINDING',
-  receiptId: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-  receiptRole: 'FIRST_GROUND_VIEW_INSPECTION_RECEIPT_DESCRIPTOR',
-
-  matrix: 'H-Earth',
-  matrixRole: 'Ground-View Matrix',
-  spatialCellId: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING.spatialCellId,
-  domainCellId: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING.domainCellId,
-  activeCell: 'H_EARTH_GROUND_CELL_001',
-  sceneIdentity: 'earth-water-air-survival-shoreline-manor',
-
-  path3BindingAdmission: H_EARTH_MATRIX_PATH3_BINDING_ADMISSION,
-  path3DomainBinding: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING,
-  cellPath3Binding: H_EARTH_GROUND_CELL_001_PATH3_BINDING,
-
-  action: 'Inspect Ground',
-  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
-  runtimeIntentId: 'INSPECT_GROUND',
-
-  readout: 'Ground Condition Read',
-  readoutId: 'H_EARTH_GROUND_CONDITION_READ',
-
-  primaryObjectId: H_EARTH_PRIMARY_INSPECTION_TARGET,
-  supportingObjectIds: H_EARTH_SUPPORTING_INSPECTION_TARGETS,
-  contextObjectIds: H_EARTH_CONTEXT_OBJECTS,
-
-  expectedPrimaryObject: 'OBJ_002_FOREGROUND_WET_SAND',
-  expectedSupportingObjects: Object.freeze([
-    'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
-    'OBJ_010_SMALL_BEACH_STONES',
-    'OBJ_011_FOREGROUND_JAGGED_ROCKS',
-    'OBJ_005_SHORELINE_FOAM_LINE'
-  ]),
-
-  expectedContextObjects: Object.freeze([
-    'OBJ_009_MANOR_EXTERIOR_CONTEXT',
-    'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS'
-  ]),
-
-  sourceChain: Object.freeze({
-    matrixContract: H_EARTH_RECEIPTS_CONTRACT.upstreamMatrixContractId,
-    cellContract: H_EARTH_RECEIPTS_CONTRACT.upstreamCellContractId,
-    zoneContract: H_EARTH_RECEIPTS_CONTRACT.upstreamZoneContractId,
-    objectContract: H_EARTH_RECEIPTS_CONTRACT.upstreamObjectContractId,
-    actionContract: H_EARTH_RECEIPTS_CONTRACT.upstreamActionContractId,
-    readoutContract: H_EARTH_RECEIPTS_CONTRACT.upstreamReadoutContractId,
-    receiptsContract: H_EARTH_RECEIPTS_CONTRACT.contractId
-  }),
-
-  descriptorOnly: true,
-  runtimeReceiptPersistence: false,
-  receiptCreationClaim: false,
-  validationClaim: false,
-  productionClaim: false,
+  lawful: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.lawful === true,
+  handoffEligible:
+    H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true,
+  issues: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.issues,
 
   boundary: H_EARTH_RECEIPTS_BOUNDARIES
 });
 
-export const H_EARTH_GROUND_INSPECTION_RECEIPT = Object.freeze({
-  receiptType: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-  receiptId: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-  contractId:
-    'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_011F_PATH3_GROUND_INSPECTION_RECEIPT_BINDING_v1',
+export const H_EARTH_GROUND_INSPECTION_RECEIPT_BINDING =
+  H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING;
 
-  renewsReceiptContractId:
-    'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_031G_GROUND_INSPECTION_RECEIPT_BINDING_v1',
-
-  status: 'PATH3_GROUND_INSPECTION_RECEIPT_BOUND_DESCRIPTOR_ONLY',
-  file: '/h-earth-3d/h-earth.receipts.js',
-
-  matrix: 'H-Earth',
-  matrixRole: 'Ground-View Matrix',
-  spatialCellId: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING.spatialCellId,
-  domainCellId: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING.domainCellId,
-  activeCell: 'H_EARTH_GROUND_CELL_001',
-  sceneIdentity: 'earth-water-air-survival-shoreline-manor',
-
-  firstAction: 'Inspect Ground',
-  descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
-  runtimeIntentId: 'INSPECT_GROUND',
-  firstReadout: 'Ground Condition Read',
-  firstReadoutId: 'H_EARTH_GROUND_CONDITION_READ',
-
-  selectedObjectId: H_EARTH_PRIMARY_INSPECTION_TARGET,
-  selectedSurface: 'Foreground Wet Sand',
-  selectedZoneId: 'ZONE_001_FOREGROUND_INSPECTION_ZONE',
-  classification: 'PRIMARY_INSPECTION_TARGET',
-
-  supportingObjectIds: H_EARTH_SUPPORTING_INSPECTION_TARGETS,
-  contextObjectIds: H_EARTH_CONTEXT_OBJECTS,
-
-  upstreamMatrixReceipt: getHEarthMatrixReceipt(),
-  upstreamMatrixPath3DomainBinding: getHEarthMatrixPath3DomainBinding(),
-  upstreamMatrixPath3BindingAdmission: getHEarthMatrixPath3BindingAdmission(),
-  upstreamActionIdentifierBridge: getHEarthMatrixActionIdentifierBridge(),
-
-  upstreamCellReceipt: getHEarthGroundCell001Receipt(),
-  upstreamCellPath3Binding: getHEarthGroundCell001Path3Binding(),
-
-  upstreamZonesReceipt: getHEarthGroundCell001ZonesReceipt(),
-  upstreamObjectsReceipt: getHEarthGroundCell001ObjectsReceipt(),
-  upstreamActionReceipt: getHEarthInspectGroundActionReceipt(),
-  upstreamReadoutReceipt: getHEarthGroundConditionReadReceipt(),
-
-  binding: H_EARTH_GROUND_INSPECTION_RECEIPT_BINDING,
-
-  actionDescriptor: H_EARTH_INSPECT_GROUND_ACTION,
-  actionOutputModel: H_EARTH_INSPECT_GROUND_OUTPUT_MODEL,
-  readoutDescriptor: H_EARTH_GROUND_CONDITION_READ,
-  readoutOutputModel: H_EARTH_GROUND_CONDITION_READ_OUTPUT_MODEL,
-  readoutReceipt: H_EARTH_GROUND_CONDITION_READ_RECEIPT,
-
-  receiptPosture: Object.freeze({
-    descriptorOnly: true,
-    sourceBindingReceiptOnly: true,
-    runtimeReceiptPersistence: false,
-    runtimeReceiptCreation: false,
-    runtimeActionExecutionClaim: false,
-    runtimeReadoutExecutionClaim: false,
-    readoutProductionClaim: false,
-    validationClaim: false,
-    productionClaim: false,
-    deploymentClaim: false,
-    visualPassClaim: false
-  }),
-
-  matrixSeparation: H_EARTH_MATRIX_SEPARATION,
-  boundary: H_EARTH_RECEIPTS_BOUNDARIES
-});
+export const H_EARTH_GROUND_INSPECTION_RECEIPT =
+  H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT;
 
 export const H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT = Object.freeze({
   receiptType: 'H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT',
@@ -612,9 +1319,16 @@ export const H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT = Object.freeze({
   contractId:
     'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_011F_PATH3_GROUND_INSPECTION_RECEIPT_BINDING_v1',
 
-  status: 'NON_RENDERING_TEST_HARNESS_RECEIPT_BOUND_DESCRIPTOR_ONLY',
-  file: '/h-earth-3d/h-earth.receipts.js',
+  status: H_EARTH_RECEIPT_BINDING_READY
+    ? 'NON_RENDERING_TEST_HARNESS_RECEIPT_BOUND_DESCRIPTOR_ONLY'
+    : 'NON_RENDERING_TEST_HARNESS_RECEIPT_REJECTED_DESCRIPTOR_ONLY',
 
+  lawful: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.lawful === true,
+  handoffEligible:
+    H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true,
+  issues: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.issues,
+
+  file: '/h-earth-3d/h-earth.receipts.js',
   matrix: 'H-Earth',
   matrixRole: 'Ground-View Matrix',
   spatialCellId: H_EARTH_MATRIX_PATH3_DOMAIN_BINDING.spatialCellId,
@@ -630,9 +1344,10 @@ export const H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT = Object.freeze({
   firstReceipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
 
   verifiesSourceChainPresence: true,
-  verifiesDescriptorReceiptBinding: true,
-  verifiesBoundaryPreservation: true,
-  verifiesPath3BindingAdmissionPresent: true,
+  verifiesBoundaryPreservation: H_EARTH_RECEIPT_BINDING_READY,
+  verifiesPath3BindingAdmissionPresent:
+    H_EARTH_MATRIX_PATH3_BINDING_ADMISSION.admitted === true &&
+    H_EARTH_GROUND_CELL_001_PATH3_BINDING.admitted === true,
 
   doesNotExecuteRuntimeTests: true,
   doesNotActivateRuntime: true,
@@ -640,7 +1355,7 @@ export const H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT = Object.freeze({
   doesNotClaimValidation: true,
   doesNotClaimProduction: true,
 
-  receiptTargets: Object.freeze([
+  receiptTargets: freezeArray([
     'H_EARTH_GROUND_INSPECTION_RECEIPT',
     'H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT'
   ]),
@@ -651,19 +1366,21 @@ export const H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT = Object.freeze({
 
 export const H_EARTH_RECEIPT_CHAIN_MODEL = Object.freeze({
   modelId: 'H_EARTH_RECEIPT_CHAIN_MODEL',
-  status: 'PATH3_SOURCE_RECEIPT_CHAIN_BOUND_DESCRIPTOR_ONLY',
+  status: H_EARTH_RECEIPT_BINDING_READY
+    ? 'PATH3_SOURCE_RECEIPT_CHAIN_BOUND_DESCRIPTOR_ONLY'
+    : 'PATH3_SOURCE_RECEIPT_CHAIN_PRESENT_BUT_TERMINAL_RECEIPT_BINDING_REJECTED',
 
-  chainOrder: Object.freeze([
+  chainOrder: freezeArray([
     'H_EARTH_MATRIX_FILE_RENEWAL_STEP_009D_REJECTED_BINDING_CLASSIFICATION_GUARD_v1',
     'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_011A_PATH3_DOMAIN_BINDING_CONSUMER_v1',
-    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_011B_PATH3_CELL_ZONE_COMPOSITION_v1',
-    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_011C_PATH3_CELL_OBJECT_COMPOSITION_v1',
-    'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v1',
+    'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+    'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v2',
+    'H_EARTH_INSPECT_GROUND_ACTION_FILE_RENEWAL_STEP_011D_PATH3_OBJECT_ACTION_BINDING_v2',
     'H_EARTH_GROUND_CONDITION_READ_FILE_RENEWAL_STEP_011E_PATH3_OBJECT_READOUT_BINDING_v1',
     'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_011F_PATH3_GROUND_INSPECTION_RECEIPT_BINDING_v1'
   ]),
 
-  retiredChainOrder: Object.freeze([
+  retiredChainOrder: freezeArray([
     'H_EARTH_SOURCE_MATRIX_FILE_RENEWAL_STEP_031A_SCENE_SCOPED_LATTICE_AUTHORITY_v1',
     'H_EARTH_GROUND_CELL_001_FILE_RENEWAL_STEP_031B_CELL_TO_LATTICE_BINDING_v1',
     'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_031C_LATTICE_ZONE_MAPPING_v1',
@@ -675,7 +1392,7 @@ export const H_EARTH_RECEIPT_CHAIN_MODEL = Object.freeze({
 
   sourceFiles: H_EARTH_RECEIPTS_CONTRACT.upstreamFiles,
 
-  activeReceiptIds: Object.freeze([
+  activeReceiptIds: freezeArray([
     'H_EARTH_GROUND_INSPECTION_RECEIPT',
     'H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT'
   ]),
@@ -708,11 +1425,18 @@ export const H_EARTH_RECEIPT_CHAIN_MODEL = Object.freeze({
 
 export const H_EARTH_GROUND_INSPECTION_RECEIPT_HANDOFF = Object.freeze({
   handoffId: 'H_EARTH_GROUND_INSPECTION_RECEIPT_HANDOFF',
-  status: 'ROOM_6_PATH3_RECEIPT_BINDING_HANDOFF_DEFINED_DESCRIPTOR_ONLY',
+  status: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible
+    ? 'ROOM_6_PATH3_RECEIPT_BINDING_HANDOFF_DEFINED_DESCRIPTOR_ONLY'
+    : 'ROOM_6_PATH3_RECEIPT_BINDING_HANDOFF_REJECTED_DESCRIPTOR_ONLY',
+
+  lawful: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.lawful === true,
+  handoffEligible:
+    H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true,
+  issues: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.issues,
 
   fromRoom: 'ROOM_6_RECEIPTS_AND_INTEGRITY_AFTER_READOUT',
 
-  toConsumers: Object.freeze([
+  toConsumers: freezeArray([
     'source-integrity-review',
     'non-rendering-harness',
     'route-controller-readout-bridge-if-authorized',
@@ -722,27 +1446,33 @@ export const H_EARTH_GROUND_INSPECTION_RECEIPT_HANDOFF = Object.freeze({
   receiptId: H_EARTH_GROUND_INSPECTION_RECEIPT.receiptId,
   harnessReceiptId: H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT.receiptId,
 
-  handoffPayload: Object.freeze({
-    matrix: 'H-Earth',
-    matrixRole: 'Ground-View Matrix',
-    spatialCellId: 'H_EARTH_REGION_CELL_X07_Z08',
-    domainCellId: 'H_EARTH_GROUND_CELL_001',
-    activeCell: 'H_EARTH_GROUND_CELL_001',
-    sceneIdentity: 'earth-water-air-survival-shoreline-manor',
-    action: 'Inspect Ground',
-    descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
-    runtimeIntentId: 'INSPECT_GROUND',
-    readout: 'Ground Condition Read',
-    readoutId: 'H_EARTH_GROUND_CONDITION_READ',
-    receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
-    harnessReceipt: 'H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT',
-    descriptorOnly: true
-  }),
+  handoffPayload:
+    H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true
+      ? Object.freeze({
+          matrix: 'H-Earth',
+          matrixRole: 'Ground-View Matrix',
+          spatialCellId: 'H_EARTH_REGION_CELL_X07_Z08',
+          domainCellId: 'H_EARTH_GROUND_CELL_001',
+          activeCell: 'H_EARTH_GROUND_CELL_001',
+          sceneIdentity: 'earth-water-air-survival-shoreline-manor',
+          action: 'Inspect Ground',
+          descriptorActionId: 'H_EARTH_INSPECT_GROUND_ACTION',
+          runtimeIntentId: 'INSPECT_GROUND',
+          readout: 'Ground Condition Read',
+          readoutId: 'H_EARTH_GROUND_CONDITION_READ',
+          receipt: 'H_EARTH_GROUND_INSPECTION_RECEIPT',
+          harnessReceipt: 'H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT',
+          descriptorOnly: true
+        })
+      : null,
 
   allowedUse: Object.freeze({
-    sourceReceiptBindingReview: true,
-    nonRenderingHarnessReference: true,
-    descriptorOnlyRouteReadoutReferenceIfAuthorized: true,
+    sourceReceiptBindingReview:
+      H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true,
+    nonRenderingHarnessReference:
+      H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true,
+    descriptorOnlyRouteReadoutReferenceIfAuthorized:
+      H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true,
     runtimeReceiptPersistence: false,
     validationEvidence: false,
     productionEvidence: false,
@@ -755,13 +1485,22 @@ export const H_EARTH_GROUND_INSPECTION_RECEIPT_HANDOFF = Object.freeze({
 
 export const H_EARTH_RECEIPTS_INTEGRITY_HANDOFF = Object.freeze({
   handoffId: 'H_EARTH_RECEIPTS_INTEGRITY_HANDOFF',
-  status: 'SOURCE_CHAIN_INTEGRITY_HANDOFF_READY_DESCRIPTOR_ONLY',
+  status: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible
+    ? 'SOURCE_CHAIN_INTEGRITY_HANDOFF_READY_DESCRIPTOR_ONLY'
+    : 'SOURCE_CHAIN_INTEGRITY_HANDOFF_REJECTED_DESCRIPTOR_ONLY',
+
+  lawful: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.lawful === true,
+  handoffEligible:
+    H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true,
+  issues: H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.issues,
 
   receiptChainModel: H_EARTH_RECEIPT_CHAIN_MODEL,
   receiptSourceChainStatus: H_EARTH_RECEIPT_SOURCE_CHAIN_STATUS,
 
-  integrityReviewMayProceed: true,
-  nonRenderingHarnessMayReference: true,
+  integrityReviewMayProceed:
+    H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true,
+  nonRenderingHarnessMayReference:
+    H_EARTH_DEFAULT_GROUND_INSPECTION_RECEIPT_BINDING.handoffEligible === true,
   runtimeExecutionMayProceed: false,
   rendererExecutionMayProceed: false,
   routeActivationMayProceed: false,
@@ -784,15 +1523,11 @@ export const H_EARTH_RECEIPTS_ARCHIVE_STATUS = Object.freeze({
   sourceContract:
     'H_EARTH_RECEIPTS_FILE_RENEWAL_STEP_011F_PATH3_GROUND_INSPECTION_RECEIPT_BINDING_v1',
 
-  googleNativeArchivePresent: false,
-  sourceBodyPopulated: true,
-  connectorSourceReadback: false,
-  contractIdentifierVerified: false,
-  finalMarkerVerified: false,
-  networkComplete: false,
+  backupEvidenceOwnedExternally: true,
+  fetchReadbackEvidenceOwnedExternally: true,
+  repositoryIdentityEvidenceOwnedExternally: true,
 
   finalMarker: 'export default H_EARTH_RECEIPTS_AGGREGATE;',
-
   boundary: H_EARTH_RECEIPTS_BOUNDARIES
 });
 
@@ -839,7 +1574,7 @@ export const H_EARTH_RECEIPTS_AGGREGATE = Object.freeze({
       matrixReceipt: getHEarthMatrixReceipt(),
       sourceLatticeAuthority: getHEarthSourceLatticeAuthority(),
       groundCellLatticeScope: getHEarthGroundCell001LatticeScope(),
-      addressFieldSchema: getHEarthSourceLatticeAddressFieldSchema()
+      resolvedAddressFieldSchema: getHEarthSourceLatticeAddressFieldSchema()
     })
   }),
 
@@ -955,6 +1690,7 @@ export const H_EARTH_RECEIPTS_AGGREGATE = Object.freeze({
   }),
 
   receipts: Object.freeze({
+    inputModel: H_EARTH_RECEIPTS_INPUT_MODEL,
     groundInspectionReceipt: H_EARTH_GROUND_INSPECTION_RECEIPT,
     nonRenderingTestHarnessReceipt: H_EARTH_NON_RENDERING_TEST_HARNESS_RECEIPT,
     receiptChainModel: H_EARTH_RECEIPT_CHAIN_MODEL,
@@ -966,8 +1702,24 @@ export const H_EARTH_RECEIPTS_AGGREGATE = Object.freeze({
   sourceChainStatus: H_EARTH_RECEIPT_SOURCE_CHAIN_STATUS,
   archiveStatus: H_EARTH_RECEIPTS_ARCHIVE_STATUS,
 
-  finalMarker:
-    'export default H_EARTH_RECEIPTS_AGGREGATE;'
+  normalizeHEarthReceiptsString,
+  normalizeHEarthReceiptsTargets,
+  buildHEarthReceiptsInput,
+  checkHEarthReceiptsInput,
+  buildHEarthGroundInspectionReceiptBinding,
+  buildHEarthGroundInspectionReceipt,
+  hEarthGroundInspectionReceipt,
+  getHEarthGroundInspectionReceipt,
+  getHEarthNonRenderingTestHarnessReceipt,
+  getHEarthReceiptChainModel,
+  getHEarthGroundInspectionReceiptBinding,
+  getHEarthGroundInspectionReceiptHandoff,
+  getHEarthReceiptSourceChainStatus,
+  getHEarthReceiptsIntegrityHandoff,
+  getHEarthReceiptsArchiveStatus,
+  getHEarthReceiptsAggregate,
+
+  finalMarker: 'export default H_EARTH_RECEIPTS_AGGREGATE;'
 });
 
 export function getHEarthGroundInspectionReceipt() {

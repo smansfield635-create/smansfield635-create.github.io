@@ -22,34 +22,20 @@
  * → EXPLICIT SOURCE-PREVIEW TAKEOVER
  * → PUBLIC RECEIPTS
  *
- * Failure corridor:
+ * Stale-occurrence law:
  *
- * PRIMARY FAILURE OUTCOME PRESERVED
- * → RENDERER CLEANUP RECORDED SEPARATELY
- * → SOURCE PREVIEW RETAINED OR RESTORED
- * → PUBLIC FALLBACK STATUS
+ * AN INVALID INITIALIZATION TOKEN IS OBSERVATIONAL ONLY.
  *
- * Destruction corridor:
+ * A stale occurrence must not:
+ * - mutate shared route state;
+ * - mutate rendererBootstrapStatus;
+ * - publish import, handoff, construction, or mount evidence;
+ * - replace active module references;
+ * - release the current renderer;
+ * - restore or replace current DOM;
+ * - publish active global evidence.
  *
- * INVALIDATE ASYNC INITIALIZATION
- * → ABORT ROUTE-OWNED LISTENERS
- * → RELEASE RENDERER
- * → REMOVE ROUTE-OWNED PREVIEW DOM
- * → RESET ROUTE PRESENTATION DATASETS
- * → CLEAR ACTIVE OCCURRENCE EVIDENCE
- *
- * The route does not:
- * - construct Packet 002;
- * - construct an admitted geometry frame;
- * - reconstruct geometry;
- * - own camera state;
- * - own compositor viewport state;
- * - own visibility state;
- * - own compositor revisions;
- * - claim renderer pass;
- * - claim visual pass;
- * - claim validation;
- * - claim production.
+ * Destruction owns invalidation and renderer cleanup.
  */
 
 
@@ -287,13 +273,11 @@ function deepFreeze(
 }
 
 /**
- * Freezes only the initialization-key record.
- *
- * The key may contain a browser-owned Document reference. The Document is
- * compared by identity and must never be recursively frozen or traversed.
+ * The initialization key can hold a browser-owned Document reference.
+ * Freeze the key record only. Do not recursively freeze the Document.
  */
-function freezeInitializationKey(key) {
-  return Object.freeze(key);
+function freezeInitializationKey(value) {
+  return Object.freeze(value);
 }
 
 function getDocumentFromOptions(options = {}) {
@@ -756,6 +740,21 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS =
       true,
 
     staleAsyncCompletionGuarded:
+      true,
+
+    staleCompletionSharedStateMutation:
+      false,
+
+    staleCompletionRendererCleanup:
+      false,
+
+    staleCompletionDOMMutation:
+      false,
+
+    constructReceiptCommittedOnlyAfterActiveTokenCheck:
+      true,
+
+    mountReceiptCommittedOnlyAfterActiveTokenCheck:
       true,
 
     repeatedListenerBindingGuarded:
@@ -4502,11 +4501,9 @@ function evaluateRendererModule(
  * ========================================================================== */
 
 /**
- * Cleanup outcome is recorded separately.
+ * Cleanup records a separate receipt.
  *
- * This function must not modify rendererBootstrapStatus. The caller's primary
- * import, API, handoff, construction, mount, or stale-completion outcome remains
- * authoritative.
+ * It must never overwrite the primary renderer-bootstrap outcome.
  */
 function releaseRendererSafely({
   cleanupReason = null
@@ -4617,6 +4614,77 @@ function releaseRendererSafely({
  * 19 · STRICT RENDERER BOOTSTRAP
  * ========================================================================== */
 
+function createStaleRendererBootstrapReceipt({
+  phase
+} = {}) {
+  return deepFreeze({
+    receiptType:
+      'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
+
+    completed:
+      false,
+
+    mounted:
+      false,
+
+    stale:
+      true,
+
+    status:
+      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
+        .STALE_COMPLETION,
+
+    stalePhase:
+      phase ??
+      'UNSPECIFIED_STALE_PHASE',
+
+    sharedCurrentStateMutated:
+      false,
+
+    rendererBootstrapStatusMutated:
+      false,
+
+    activeImportEvidenceMutated:
+      false,
+
+    activeModuleReferencesMutated:
+      false,
+
+    activeHandoffEvidenceMutated:
+      false,
+
+    activeConstructEvidenceMutated:
+      false,
+
+    activeMountEvidenceMutated:
+      false,
+
+    activeGlobalEvidencePublished:
+      false,
+
+    rendererCleanupAttempted:
+      false,
+
+    currentDOMMutated:
+      false,
+
+    sourcePreviewRestorationAttempted:
+      false,
+
+    rendererPassClaim:
+      false,
+
+    visualPassClaim:
+      false,
+
+    validationClaim:
+      false,
+
+    productionClaim:
+      false
+  });
+}
+
 async function bootstrapRenderer(
   mountPoints,
   options,
@@ -4626,6 +4694,17 @@ async function bootstrapRenderer(
     evaluateRendererBootstrapInput(
       options
     );
+
+  if (
+    !isActiveInitializationToken(
+      token
+    )
+  ) {
+    return createStaleRendererBootstrapReceipt({
+      phase:
+        'INPUT_EVALUATION'
+    });
+  }
 
   if (inputEvaluation.skipped) {
     const primaryStatus =
@@ -4738,6 +4817,17 @@ async function bootstrapRenderer(
       )
     ]);
   } catch (error) {
+    if (
+      !isActiveInitializationToken(
+        token
+      )
+    ) {
+      return createStaleRendererBootstrapReceipt({
+        phase:
+          'IMPORT_REJECTION'
+      });
+    }
+
     const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .IMPORT_FAILED;
@@ -4796,17 +4886,11 @@ async function bootstrapRenderer(
           false
       });
 
-    if (
-      isActiveInitializationToken(
-        token
-      )
-    ) {
-      MODULE_STATE.compositorImportReceipt =
-        receipt;
+    MODULE_STATE.compositorImportReceipt =
+      receipt;
 
-      MODULE_STATE.rendererImportReceipt =
-        receipt;
-    }
+    MODULE_STATE.rendererImportReceipt =
+      receipt;
 
     return receipt;
   }
@@ -4816,28 +4900,9 @@ async function bootstrapRenderer(
       token
     )
   ) {
-    const primaryStatus =
-      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-        .STALE_COMPLETION;
-
-    MODULE_STATE.rendererBootstrapStatus =
-      primaryStatus;
-
-    return deepFreeze({
-      receiptType:
-        'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
-
-      completed:
-        false,
-
-      mounted:
-        false,
-
-      stale:
-        true,
-
-      status:
-        primaryStatus
+    return createStaleRendererBootstrapReceipt({
+      phase:
+        'IMPORT_RESOLUTION'
     });
   }
 
@@ -4981,6 +5046,17 @@ async function bootstrapRenderer(
             options.presentationMode
         });
   } catch (error) {
+    if (
+      !isActiveInitializationToken(
+        token
+      )
+    ) {
+      return createStaleRendererBootstrapReceipt({
+        phase:
+          'HANDOFF_REJECTION'
+      });
+    }
+
     const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .HANDOFF_REJECTED;
@@ -5046,41 +5122,11 @@ async function bootstrapRenderer(
       token
     )
   ) {
-    const primaryStatus =
-      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-        .STALE_COMPLETION;
-
-    MODULE_STATE.rendererBootstrapStatus =
-      primaryStatus;
-
-    const rendererReleaseReceipt =
-      releaseRendererSafely({
-        cleanupReason:
-          primaryStatus
-      });
-
-    return deepFreeze({
-      receiptType:
-        'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
-
-      completed:
-        false,
-
-      mounted:
-        false,
-
-      stale:
-        true,
-
-      status:
-        primaryStatus,
-
-      rendererReleaseReceipt
+    return createStaleRendererBootstrapReceipt({
+      phase:
+        'HANDOFF_RESOLUTION'
     });
   }
-
-  MODULE_STATE.compositorHandoff =
-    compositorHandoff;
 
   const okSignalObserved =
     compositorHandoff
@@ -5104,7 +5150,7 @@ async function bootstrapRenderer(
         ?.admittedGeometryFrame
     );
 
-  MODULE_STATE.compositorHandoffReceipt =
+  const localCompositorHandoffReceipt =
     deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_COMPOSITOR_HANDOFF_RECEIPT',
@@ -5161,6 +5207,23 @@ async function bootstrapRenderer(
     });
 
   if (
+    !isActiveInitializationToken(
+      token
+    )
+  ) {
+    return createStaleRendererBootstrapReceipt({
+      phase:
+        'HANDOFF_EVIDENCE_COMMIT'
+    });
+  }
+
+  MODULE_STATE.compositorHandoff =
+    compositorHandoff;
+
+  MODULE_STATE.compositorHandoffReceipt =
+    localCompositorHandoffReceipt;
+
+  if (
     !okSignalObserved ||
     !compositorContractIdMatchesExpected ||
     !admittedGeometryFrameContractIdPresent ||
@@ -5193,8 +5256,7 @@ async function bootstrapRenderer(
         primaryStatus,
 
       compositorHandoffReceipt:
-        MODULE_STATE
-          .compositorHandoffReceipt,
+        localCompositorHandoffReceipt,
 
       sourcePreviewRetained:
         sourcePreviewExists(
@@ -5230,6 +5292,17 @@ async function bootstrapRenderer(
           compositorHandoff
         );
   } catch (error) {
+    if (
+      !isActiveInitializationToken(
+        token
+      )
+    ) {
+      return createStaleRendererBootstrapReceipt({
+        phase:
+          'CONSTRUCTION_REJECTION'
+      });
+    }
+
     const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .CONSTRUCTION_REJECTED;
@@ -5270,8 +5343,7 @@ async function bootstrapRenderer(
           : String(error),
 
       compositorHandoffReceipt:
-        MODULE_STATE
-          .compositorHandoffReceipt,
+        localCompositorHandoffReceipt,
 
       sourcePreviewRetained:
         sourcePreviewExists(
@@ -5291,6 +5363,17 @@ async function bootstrapRenderer(
 
       productionClaim:
         false
+    });
+  }
+
+  if (
+    !isActiveInitializationToken(
+      token
+    )
+  ) {
+    return createStaleRendererBootstrapReceipt({
+      phase:
+        'CONSTRUCTION_RESOLUTION'
     });
   }
 
@@ -5329,8 +5412,7 @@ async function bootstrapRenderer(
         primaryStatus,
 
       compositorHandoffReceipt:
-        MODULE_STATE
-          .compositorHandoffReceipt,
+        localCompositorHandoffReceipt,
 
       rendererConstructReceipt:
         safeSerialize(
@@ -5365,44 +5447,6 @@ async function bootstrapRenderer(
     });
   }
 
-  if (
-    !isActiveInitializationToken(
-      token
-    )
-  ) {
-    const primaryStatus =
-      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-        .STALE_COMPLETION;
-
-    MODULE_STATE.rendererBootstrapStatus =
-      primaryStatus;
-
-    const rendererReleaseReceipt =
-      releaseRendererSafely({
-        cleanupReason:
-          primaryStatus
-      });
-
-    return deepFreeze({
-      receiptType:
-        'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
-
-      completed:
-        false,
-
-      mounted:
-        false,
-
-      stale:
-        true,
-
-      status:
-        primaryStatus,
-
-      rendererReleaseReceipt
-    });
-  }
-
   MODULE_STATE.rendererBootstrapStatus =
     H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
       .MOUNT_PENDING;
@@ -5417,6 +5461,17 @@ async function bootstrapRenderer(
             mountPoints.rendererMount
         });
   } catch (error) {
+    if (
+      !isActiveInitializationToken(
+        token
+      )
+    ) {
+      return createStaleRendererBootstrapReceipt({
+        phase:
+          'MOUNT_REJECTION'
+      });
+    }
+
     const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .MOUNT_REJECTED;
@@ -5500,6 +5555,17 @@ async function bootstrapRenderer(
 
       productionClaim:
         false
+    });
+  }
+
+  if (
+    !isActiveInitializationToken(
+      token
+    )
+  ) {
+    return createStaleRendererBootstrapReceipt({
+      phase:
+        'MOUNT_RESOLUTION'
     });
   }
 
@@ -5601,36 +5667,9 @@ async function bootstrapRenderer(
       token
     )
   ) {
-    const primaryStatus =
-      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-        .STALE_COMPLETION;
-
-    MODULE_STATE.rendererBootstrapStatus =
-      primaryStatus;
-
-    const rendererReleaseReceipt =
-      releaseRendererSafely({
-        cleanupReason:
-          primaryStatus
-      });
-
-    return deepFreeze({
-      receiptType:
-        'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
-
-      completed:
-        false,
-
-      mounted:
-        false,
-
-      stale:
-        true,
-
-      status:
-        primaryStatus,
-
-      rendererReleaseReceipt
+    return createStaleRendererBootstrapReceipt({
+      phase:
+        'PREVIEW_TAKEOVER'
     });
   }
 
@@ -5672,8 +5711,7 @@ async function bootstrapRenderer(
         .actualContractId,
 
     compositorHandoffReceipt:
-      MODULE_STATE
-        .compositorHandoffReceipt,
+      localCompositorHandoffReceipt,
 
     rendererConstructReceipt:
       safeSerialize(
@@ -6416,6 +6454,26 @@ async function completeAsyncPublicStageInitialization(
   options,
   token
 ) {
+  if (
+    !isActiveInitializationToken(
+      token
+    )
+  ) {
+    return deepFreeze({
+      completed:
+        false,
+
+      stale:
+        true,
+
+      status:
+        'STALE_ASYNC_INITIALIZATION_IGNORED',
+
+      sharedCurrentStateMutated:
+        false
+    });
+  }
+
   MODULE_STATE.asyncInitializationStarted =
     true;
 
@@ -6454,7 +6512,19 @@ async function completeAsyncPublicStageInitialization(
         true,
 
       status:
-        'STALE_ASYNC_INITIALIZATION_IGNORED'
+        'STALE_ASYNC_INITIALIZATION_IGNORED',
+
+      sharedCurrentStateMutated:
+        false,
+
+      rendererCleanupAttempted:
+        false,
+
+      currentDOMMutated:
+        false,
+
+      activeGlobalEvidencePublished:
+        false
     });
   }
 
@@ -6597,17 +6667,6 @@ async function completeAsyncPublicStageInitialization(
 export function initializeHEarthRoute(
   options = {}
 ) {
-  /*
-   * Required ordering:
-   *
-   * 1. Resolve rootDocument.
-   * 2. Build proposed initialization key.
-   * 3. Check exact duplicate.
-   * 4. Reject different active initialization.
-   * 5. Reset current-occurrence evidence.
-   * 6. Begin the new occurrence.
-   */
-
   const rootDocument =
     getDocumentFromOptions(
       options
@@ -6855,7 +6914,19 @@ export function initializeHEarthRoute(
               true,
 
             status:
-              'STALE_ASYNC_FAILURE_IGNORED'
+              'STALE_ASYNC_FAILURE_IGNORED',
+
+            sharedCurrentStateMutated:
+              false,
+
+            rendererCleanupAttempted:
+              false,
+
+            currentDOMMutated:
+              false,
+
+            activeGlobalEvidencePublished:
+              false
           });
         }
 
@@ -7559,6 +7630,24 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
     staleAsyncCompletionGuardDefined:
       true,
 
+    staleCompletionSharedStateMutation:
+      false,
+
+    staleCompletionRendererCleanup:
+      false,
+
+    staleCompletionDOMMutation:
+      false,
+
+    staleCompletionActiveGlobalPublication:
+      false,
+
+    constructReceiptCommittedOnlyAfterActiveTokenCheck:
+      true,
+
+    mountReceiptCommittedOnlyAfterActiveTokenCheck:
+      true,
+
     routeOwnedListenerAbortDefined:
       true,
 
@@ -7611,6 +7700,9 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
       false,
 
     destroyReinitializeEvidenceIsolationVerified:
+      false,
+
+    staleOccurrenceIsolationVerified:
       false,
 
     rendererReleaseVerified:
@@ -7806,7 +7898,13 @@ export const H_EARTH_3D_INDEX_CONTRACT =
           'TOKEN_GUARDED',
 
         staleAsyncCompletion:
-          'IGNORE_AND_RELEASE_RENDERER_WHEN_NECESSARY',
+          'RETURN_LOCAL_OBSERVATIONAL_RECEIPT_ONLY_WITHOUT_SHARED_STATE_CLEANUP_GLOBAL_OR_DOM_MUTATION',
+
+        constructReceiptCommitLaw:
+          'COMMIT_ONLY_AFTER_ACTIVE_TOKEN_RECONFIRMATION',
+
+        mountReceiptCommitLaw:
+          'COMMIT_ONLY_AFTER_ACTIVE_TOKEN_RECONFIRMATION',
 
         reinitializationAfterDestroy:
           'AUTHORIZED_AFTER_ACTIVE_EVIDENCE_RESET'
@@ -7854,6 +7952,9 @@ export const H_EARTH_3D_INDEX_CONTRACT =
           true,
 
         cleanupOutcomeRecordedSeparately:
+          true,
+
+        staleReceiptObservationalOnly:
           true
       },
 

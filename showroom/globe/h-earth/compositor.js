@@ -10,66 +10,12 @@
  * Renews:
  * H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_3_CAMERA_VIEWPORT_FRAME_COMPOSITION_v1
  *
- * Purpose:
- * Preserve compositor-owned camera, viewport, visibility, navigation, inertia,
- * intent, receipt, and revision authority while replacing the former
- * environment-descriptor render-frame path with the audited Step 034O.7
- * Packet 002 to admitted-geometry-frame path.
- *
  * Authoritative corridor:
  *
  * PACKET_002_TRANSFER
  * → admitted-geometry-frame.js
  * → compositor-owned state correspondence and frame sequencing
  * → renderer.js
- *
- * This file owns:
- * - camera composition state
- * - viewport composition state
- * - presentation visibility state
- * - navigation constraints
- * - bounded orbit, pan, zoom, reset, and replacement interpretation
- * - bounded inertia state and advancement
- * - normalized compositor-intent evaluation
- * - independent component revisions
- * - one frame-revision advancement per completed public mutation operation
- *   when at least one renderer-relevant component materially changes
- * - immutable compositor-state snapshots
- * - resolved camera-pose correspondence construction
- * - explicit Packet 002 to Step 034O.7 frame composition
- * - thin compositor-to-renderer handoff construction
- * - compositor receipts
- *
- * This file does not own:
- * - Packet 002 production
- * - Packet 002 occurrence authentication
- * - source-object resolution
- * - provider construction
- * - South geometry construction
- * - West admission
- * - environment-descriptor geometry reconstruction
- * - geometry indexing
- * - admitted-coordinate mutation
- * - admitted-index mutation
- * - admitted-bounds mutation
- * - renderer projection mathematics
- * - renderer primitive construction
- * - renderer-resource creation
- * - backend material creation
- * - renderer mount lifecycle
- * - DOM/CSS materialization
- * - controller event normalization
- * - action execution
- * - route bootstrap
- * - actor creation
- * - collision
- * - traversal
- * - gameplay
- * - fluid simulation
- * - renderer-pass approval
- * - visual-pass approval
- * - production validation
- * - matrix collapse
  */
 
 import {
@@ -150,6 +96,13 @@ function isPositiveFiniteNumber(value) {
   return (
     isFiniteNumber(value) &&
     value > 0
+  );
+}
+
+function isNonNegativeSafeInteger(value) {
+  return (
+    Number.isSafeInteger(value) &&
+    value >= 0
   );
 }
 
@@ -234,10 +187,24 @@ function deepFreeze(
     const key
     of Reflect.ownKeys(value)
   ) {
-    deepFreeze(
-      value[key],
-      seen
-    );
+    const descriptor =
+      Object.getOwnPropertyDescriptor(
+        value,
+        key
+      );
+
+    if (
+      descriptor &&
+      Object.prototype.hasOwnProperty.call(
+        descriptor,
+        'value'
+      )
+    ) {
+      deepFreeze(
+        descriptor.value,
+        seen
+      );
+    }
   }
 
   if (!Object.isFrozen(value)) {
@@ -247,9 +214,7 @@ function deepFreeze(
   return value;
 }
 
-function cloneKnownPlain(
-  value
-) {
+function cloneKnownPlain(value) {
   if (
     value === null ||
     typeof value !== 'object'
@@ -366,6 +331,128 @@ function evaluateExactKeySurface(
 
     missingKeys:
       Object.freeze(missingKeys)
+  });
+}
+
+function evaluateCompleteOwnKeySurface(
+  value,
+  requiredKeys
+) {
+  if (!isPlainRecord(value)) {
+    return deepFreeze({
+      ok: false,
+
+      unknownKeys:
+        EMPTY_FROZEN_ARRAY,
+
+      missingKeys:
+        Object.freeze([
+          ...requiredKeys
+        ]),
+
+      symbolKeysPresent:
+        false,
+
+      nonEnumerableKeys:
+        EMPTY_FROZEN_ARRAY,
+
+      accessorKeys:
+        EMPTY_FROZEN_ARRAY
+    });
+  }
+
+  const ownKeys =
+    Reflect.ownKeys(value);
+
+  const stringKeys =
+    ownKeys.filter(
+      (key) =>
+        typeof key === 'string'
+    );
+
+  const symbolKeys =
+    ownKeys.filter(
+      (key) =>
+        typeof key === 'symbol'
+    );
+
+  const requiredKeySet =
+    new Set(requiredKeys);
+
+  const unknownKeys =
+    stringKeys
+      .filter(
+        (key) =>
+          !requiredKeySet.has(key)
+      )
+      .sort();
+
+  const missingKeys =
+    requiredKeys
+      .filter(
+        (key) =>
+          !Object.prototype.hasOwnProperty.call(
+            value,
+            key
+          )
+      )
+      .sort();
+
+  const nonEnumerableKeys = [];
+  const accessorKeys = [];
+
+  for (const key of stringKeys) {
+    const descriptor =
+      Object.getOwnPropertyDescriptor(
+        value,
+        key
+      );
+
+    if (!descriptor) {
+      continue;
+    }
+
+    if (descriptor.enumerable !== true) {
+      nonEnumerableKeys.push(key);
+    }
+
+    if (
+      typeof descriptor.get === 'function' ||
+      typeof descriptor.set === 'function'
+    ) {
+      accessorKeys.push(key);
+    }
+  }
+
+  nonEnumerableKeys.sort();
+  accessorKeys.sort();
+
+  return deepFreeze({
+    ok:
+      unknownKeys.length === 0 &&
+      missingKeys.length === 0 &&
+      symbolKeys.length === 0 &&
+      nonEnumerableKeys.length === 0 &&
+      accessorKeys.length === 0,
+
+    unknownKeys:
+      Object.freeze(unknownKeys),
+
+    missingKeys:
+      Object.freeze(missingKeys),
+
+    symbolKeysPresent:
+      symbolKeys.length > 0,
+
+    nonEnumerableKeys:
+      Object.freeze(
+        nonEnumerableKeys
+      ),
+
+    accessorKeys:
+      Object.freeze(
+        accessorKeys
+      )
   });
 }
 
@@ -812,7 +899,7 @@ function vectorsEqual(
 
 
 /* ==========================================================================
- * 05 · CAPACITY-DERIVED CAMERA CONSTANTS
+ * 05 · CAPACITY CONSUMPTION SNAPSHOTS
  * ========================================================================== */
 
 const CAPACITY_CONTRACT =
@@ -827,27 +914,125 @@ const ADMITTED_FRAME_CONTRACT =
 const ADMITTED_FRAME_RECEIPT =
   getHEarth3DAdmittedGeometryFrameReceipt();
 
-const INITIAL_PROJECTION =
+const IMPORTED_INITIAL_PROJECTION =
   H_EARTH_3D_CAMERA_CAPACITY
     .initialProjectionCandidate;
 
-const FUTURE_CONTROLLER_CAPACITY =
+const IMPORTED_FUTURE_CONTROLLER_CAPACITY =
   H_EARTH_3D_CAMERA_CAPACITY
     .futureControllerCapacity;
 
+const CONSUMED_CAPACITY_VALUES =
+  deepFreeze({
+    publicStageWorldBounds:
+      cloneKnownPlain(
+        H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS
+      ),
+
+    viewportCapacity:
+      cloneKnownPlain(
+        H_EARTH_3D_VIEWPORT_CAPACITY
+      ),
+
+    interactionCapacity:
+      cloneKnownPlain(
+        H_EARTH_3D_INTERACTION_CAPACITY
+      ),
+
+    initialProjection:
+      cloneKnownPlain(
+        IMPORTED_INITIAL_PROJECTION
+      ),
+
+    positionBounds:
+      cloneKnownPlain(
+        IMPORTED_FUTURE_CONTROLLER_CAPACITY
+          .positionBounds
+      ),
+
+    targetBounds:
+      cloneKnownPlain(
+        IMPORTED_FUTURE_CONTROLLER_CAPACITY
+          .targetBounds
+      ),
+
+    yawDegrees:
+      cloneKnownPlain(
+        IMPORTED_FUTURE_CONTROLLER_CAPACITY
+          .yawDegrees
+      ),
+
+    pitchDegrees:
+      cloneKnownPlain(
+        IMPORTED_FUTURE_CONTROLLER_CAPACITY
+          .pitchDegrees
+      ),
+
+    verticalFovDegrees:
+      cloneKnownPlain(
+        IMPORTED_FUTURE_CONTROLLER_CAPACITY
+          .verticalFovDegrees
+      ),
+
+    zoomScale:
+      cloneKnownPlain(
+        IMPORTED_FUTURE_CONTROLLER_CAPACITY
+          .zoomScale
+      )
+  });
+
+const POSITION_BOUNDS =
+  CONSUMED_CAPACITY_VALUES
+    .positionBounds;
+
+const TARGET_BOUNDS =
+  CONSUMED_CAPACITY_VALUES
+    .targetBounds;
+
+const YAW_BOUNDS =
+  CONSUMED_CAPACITY_VALUES
+    .yawDegrees;
+
+const PITCH_BOUNDS =
+  CONSUMED_CAPACITY_VALUES
+    .pitchDegrees;
+
+const FOV_BOUNDS =
+  CONSUMED_CAPACITY_VALUES
+    .verticalFovDegrees;
+
+const ZOOM_SCALE_BOUNDS =
+  CONSUMED_CAPACITY_VALUES
+    .zoomScale;
+
+const VIEWPORT_CAPACITY =
+  CONSUMED_CAPACITY_VALUES
+    .viewportCapacity;
+
+const INTERACTION_CAPACITY =
+  CONSUMED_CAPACITY_VALUES
+    .interactionCapacity;
+
+const CAPACITY_INITIAL_PROJECTION =
+  CONSUMED_CAPACITY_VALUES
+    .initialProjection;
+
 const INITIAL_POSITION =
   cloneVector(
-    INITIAL_PROJECTION.position
+    CAPACITY_INITIAL_PROJECTION
+      .position
   );
 
 const INITIAL_TARGET =
   cloneVector(
-    INITIAL_PROJECTION.target
+    CAPACITY_INITIAL_PROJECTION
+      .target
   );
 
 const INITIAL_UP =
   cloneVector(
-    INITIAL_PROJECTION.up
+    CAPACITY_INITIAL_PROJECTION
+      .up
   );
 
 const INITIAL_OFFSET =
@@ -883,30 +1068,6 @@ const INITIAL_PITCH_DEGREES =
       )
     )
   );
-
-const POSITION_BOUNDS =
-  FUTURE_CONTROLLER_CAPACITY
-    .positionBounds;
-
-const TARGET_BOUNDS =
-  FUTURE_CONTROLLER_CAPACITY
-    .targetBounds;
-
-const YAW_BOUNDS =
-  FUTURE_CONTROLLER_CAPACITY
-    .yawDegrees;
-
-const PITCH_BOUNDS =
-  FUTURE_CONTROLLER_CAPACITY
-    .pitchDegrees;
-
-const FOV_BOUNDS =
-  FUTURE_CONTROLLER_CAPACITY
-    .verticalFovDegrees;
-
-const ZOOM_SCALE_BOUNDS =
-  FUTURE_CONTROLLER_CAPACITY
-    .zoomScale;
 
 
 /* ==========================================================================
@@ -1005,8 +1166,22 @@ export const H_EARTH_3D_COMPOSITOR_BOUNDARY_FLAGS =
     ownsThinRendererHandoffEnvelope: true,
 
     snapshotsPublicMutationInputsStrictly: true,
+    snapshotsDirectPublicEvaluatorInputsStrictly: true,
+    snapshotsDirectPublicCameraPoseResolverInputsStrictly: true,
+    requiresExplicitRevisionForExplicitCameraPoseResolution: true,
+    snapshotsConsumedCapacityValuesLocally: true,
+    embedsImportedMutableCapacityReferences: false,
     preservesPacket002ProducerOwnedReference: true,
+    deepFreezesPacket002Transfer: false,
     capturesCompositorStateOncePerComposition: true,
+
+    frameCompositionRootCompleteOwnKeyValidation: true,
+    frameCompositionRootAccessorRejection: true,
+    frameCompositionRootNonEnumerableRejection: true,
+    frameCompositionRootSymbolRejection: true,
+
+    resolvedCameraPoseIncludesCameraRevision: true,
+    resolvedCameraRevisionComesFromCapturedSnapshot: true,
 
     frameCompositionMutatesCompositorCompositionState: false,
     rendererHandoffMutatesCompositorCompositionState: false,
@@ -1055,28 +1230,42 @@ export const H_EARTH_3D_COMPOSITOR_BOUNDARY_FLAGS =
 export const H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS =
   deepFreeze({
     yawDegrees:
-      YAW_BOUNDS,
+      cloneKnownPlain(
+        YAW_BOUNDS
+      ),
 
     pitchDegrees:
-      PITCH_BOUNDS,
+      cloneKnownPlain(
+        PITCH_BOUNDS
+      ),
 
     zoomScale:
-      ZOOM_SCALE_BOUNDS,
+      cloneKnownPlain(
+        ZOOM_SCALE_BOUNDS
+      ),
 
     targetBounds:
-      TARGET_BOUNDS,
+      cloneKnownPlain(
+        TARGET_BOUNDS
+      ),
 
     positionBounds:
-      POSITION_BOUNDS,
+      cloneKnownPlain(
+        POSITION_BOUNDS
+      ),
 
     verticalFovDegrees:
-      FOV_BOUNDS,
+      cloneKnownPlain(
+        FOV_BOUNDS
+      ),
 
     nearPlane:
-      INITIAL_PROJECTION.nearPlane,
+      CAPACITY_INITIAL_PROJECTION
+        .nearPlane,
 
     farPlane:
-      INITIAL_PROJECTION.farPlane,
+      CAPACITY_INITIAL_PROJECTION
+        .farPlane,
 
     nearAndFarPlaneAuthority:
       'FIXED_CAPACITY_DERIVED_PROJECTION_VALUES',
@@ -1151,17 +1340,19 @@ export const H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE =
 
     verticalFovDegrees:
       clamp(
-        INITIAL_PROJECTION
+        CAPACITY_INITIAL_PROJECTION
           .verticalFovDegrees,
         FOV_BOUNDS.minimum,
         FOV_BOUNDS.maximum
       ),
 
     nearPlane:
-      INITIAL_PROJECTION.nearPlane,
+      CAPACITY_INITIAL_PROJECTION
+        .nearPlane,
 
     farPlane:
-      INITIAL_PROJECTION.farPlane
+      CAPACITY_INITIAL_PROJECTION
+        .farPlane
   });
 
 export const H_EARTH_3D_COMPOSITOR_INITIAL_VIEWPORT_STATE =
@@ -1188,17 +1379,17 @@ export const H_EARTH_3D_COMPOSITOR_INERTIA_POLICY =
     enabled: true,
 
     damping:
-      H_EARTH_3D_INTERACTION_CAPACITY
+      INTERACTION_CAPACITY
         .inertiaDamping ??
       0.88,
 
     minimumVelocity:
-      H_EARTH_3D_INTERACTION_CAPACITY
+      INTERACTION_CAPACITY
         .inertiaMinimumVelocity ??
       0.018,
 
     maximumFrames:
-      H_EARTH_3D_INTERACTION_CAPACITY
+      INTERACTION_CAPACITY
         .inertiaMaximumFrames ??
       90,
 
@@ -1668,7 +1859,7 @@ function commitCompositorMutation({
 
 
 /* ==========================================================================
- * 13 · CAMERA NORMALIZATION
+ * 13 · CAMERA NORMALIZATION AND EVALUATION
  * ========================================================================== */
 
 function clampTarget(target) {
@@ -1868,13 +2059,15 @@ function fitCameraToPositionBounds(
             derived.position,
 
           expected:
-            POSITION_BOUNDS
+            cloneKnownPlain(
+              POSITION_BOUNDS
+            )
         }
       )
   };
 }
 
-export function evaluateHEarth3DCompositorCameraState(
+function evaluateCompositorCameraStateSnapshot(
   cameraCandidate
 ) {
   const issues = [];
@@ -1998,7 +2191,8 @@ export function evaluateHEarth3DCompositorCameraState(
     ) &&
     !Object.is(
       cameraCandidate.nearPlane,
-      INITIAL_PROJECTION.nearPlane
+      CAPACITY_INITIAL_PROJECTION
+        .nearPlane
     )
   ) {
     issues.push(
@@ -2010,7 +2204,8 @@ export function evaluateHEarth3DCompositorCameraState(
             'nearPlane',
 
           expected:
-            INITIAL_PROJECTION.nearPlane,
+            CAPACITY_INITIAL_PROJECTION
+              .nearPlane,
 
           actual:
             cameraCandidate.nearPlane
@@ -2025,7 +2220,8 @@ export function evaluateHEarth3DCompositorCameraState(
     ) &&
     !Object.is(
       cameraCandidate.farPlane,
-      INITIAL_PROJECTION.farPlane
+      CAPACITY_INITIAL_PROJECTION
+        .farPlane
     )
   ) {
     issues.push(
@@ -2037,7 +2233,8 @@ export function evaluateHEarth3DCompositorCameraState(
             'farPlane',
 
           expected:
-            INITIAL_PROJECTION.farPlane,
+            CAPACITY_INITIAL_PROJECTION
+              .farPlane,
 
           actual:
             cameraCandidate.farPlane
@@ -2095,10 +2292,12 @@ export function evaluateHEarth3DCompositorCameraState(
       ),
 
     nearPlane:
-      INITIAL_PROJECTION.nearPlane,
+      CAPACITY_INITIAL_PROJECTION
+        .nearPlane,
 
     farPlane:
-      INITIAL_PROJECTION.farPlane
+      CAPACITY_INITIAL_PROJECTION
+        .farPlane
   };
 
   const fit =
@@ -2159,17 +2358,73 @@ export function evaluateHEarth3DCompositorCameraState(
   });
 }
 
+export function evaluateHEarth3DCompositorCameraState(
+  cameraCandidate
+) {
+  const snapshot =
+    strictSnapshot(
+      cameraCandidate,
+      'cameraCandidate'
+    );
+
+  if (!snapshot.ok) {
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'CAMERA_STATE_NOT_ELIGIBLE',
+
+      issues:
+        freezeIssues([
+          snapshot.issue
+        ])
+    });
+  }
+
+  return evaluateCompositorCameraStateSnapshot(
+    snapshot.value
+  );
+}
+
 
 /* ==========================================================================
  * 14 · RESOLVED CAMERA POSE
  * ========================================================================== */
 
-export function resolveHEarth3DCompositorCameraPose(
-  cameraState =
-    compositorState.camera
+function resolveCompositorCameraPoseSnapshot(
+  cameraState,
+  cameraRevision
 ) {
+  if (
+    !isNonNegativeSafeInteger(
+      cameraRevision
+    )
+  ) {
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'COMPOSITOR_CAMERA_REVISION_NOT_RESOLVED',
+
+      issues:
+        freezeIssues([
+          createCompositorIssue(
+            'CAMERA_REVISION_INVALID',
+            'Camera revision must be a nonnegative safe integer.',
+            {
+              field:
+                'cameraRevision',
+
+              actual:
+                cameraRevision
+            }
+          )
+        ])
+    });
+  }
+
   const evaluation =
-    evaluateHEarth3DCompositorCameraState(
+    evaluateCompositorCameraStateSnapshot(
       cameraState
     );
 
@@ -2252,6 +2507,8 @@ export function resolveHEarth3DCompositorCameraPose(
     status:
       'COMPOSITOR_CAMERA_POSE_RESOLVED',
 
+    cameraRevision,
+
     position:
       deepFreeze(position),
 
@@ -2304,12 +2561,79 @@ export function resolveHEarth3DCompositorCameraPose(
   });
 }
 
+export function resolveHEarth3DCompositorCameraPose(
+  cameraState,
+  cameraRevision
+) {
+  if (arguments.length === 0) {
+    return resolveCompositorCameraPoseSnapshot(
+      compositorState.camera,
+      compositorState.revisions.camera
+    );
+  }
+
+  const snapshot =
+    strictSnapshot(
+      cameraState,
+      'cameraState'
+    );
+
+  if (!snapshot.ok) {
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'COMPOSITOR_CAMERA_POSE_NOT_RESOLVED',
+
+      issues:
+        freezeIssues([
+          snapshot.issue
+        ])
+    });
+  }
+
+  if (
+    arguments.length < 2 ||
+    !isNonNegativeSafeInteger(
+      cameraRevision
+    )
+  ) {
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'COMPOSITOR_CAMERA_REVISION_NOT_RESOLVED',
+
+      issues:
+        freezeIssues([
+          createCompositorIssue(
+            'CAMERA_REVISION_REQUIRED_FOR_EXPLICIT_CAMERA_STATE',
+            'An explicit camera state requires an explicit nonnegative camera revision.',
+            {
+              field:
+                'cameraRevision',
+
+              actual:
+                cameraRevision ??
+                null
+            }
+          )
+        ])
+    });
+  }
+
+  return resolveCompositorCameraPoseSnapshot(
+    snapshot.value,
+    cameraRevision
+  );
+}
+
 
 /* ==========================================================================
  * 15 · VIEWPORT EVALUATION
  * ========================================================================== */
 
-export function evaluateHEarth3DCompositorViewport(
+function evaluateCompositorViewportSnapshot(
   viewportCandidate
 ) {
   const issues = [];
@@ -2320,6 +2644,12 @@ export function evaluateHEarth3DCompositorViewport(
 
       status:
         'VIEWPORT_NOT_ELIGIBLE',
+
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
 
       issues: freezeIssues([
         createCompositorIssue(
@@ -2371,7 +2701,8 @@ export function evaluateHEarth3DCompositorViewport(
             'widthPx',
 
           actual:
-            widthPx ?? null
+            widthPx ??
+            null
         }
       )
     );
@@ -2387,7 +2718,8 @@ export function evaluateHEarth3DCompositorViewport(
             'heightPx',
 
           actual:
-            heightPx ?? null
+            heightPx ??
+            null
         }
       )
     );
@@ -2403,7 +2735,8 @@ export function evaluateHEarth3DCompositorViewport(
             'pixelRatio',
 
           actual:
-            pixelRatio ?? null
+            pixelRatio ??
+            null
         }
       )
     );
@@ -2439,22 +2772,22 @@ export function evaluateHEarth3DCompositorViewport(
         : 'SQUARE';
 
   const minimumWidth =
-    H_EARTH_3D_VIEWPORT_CAPACITY
+    VIEWPORT_CAPACITY
       .minimumWidthPx ??
     1;
 
   const minimumHeight =
-    H_EARTH_3D_VIEWPORT_CAPACITY
+    VIEWPORT_CAPACITY
       .minimumHeightPx ??
     1;
 
   const maximumWidth =
-    H_EARTH_3D_VIEWPORT_CAPACITY
+    VIEWPORT_CAPACITY
       .maximumWidthPx ??
     Number.POSITIVE_INFINITY;
 
   const maximumHeight =
-    H_EARTH_3D_VIEWPORT_CAPACITY
+    VIEWPORT_CAPACITY
       .maximumHeightPx ??
     Number.POSITIVE_INFINITY;
 
@@ -2522,12 +2855,46 @@ export function evaluateHEarth3DCompositorViewport(
   });
 }
 
+export function evaluateHEarth3DCompositorViewport(
+  viewportCandidate
+) {
+  const snapshot =
+    strictSnapshot(
+      viewportCandidate,
+      'viewportCandidate'
+    );
+
+  if (!snapshot.ok) {
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'VIEWPORT_NOT_ELIGIBLE',
+
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+      issues:
+        freezeIssues([
+          snapshot.issue
+        ])
+    });
+  }
+
+  return evaluateCompositorViewportSnapshot(
+    snapshot.value
+  );
+}
+
 
 /* ==========================================================================
  * 16 · VISIBILITY EVALUATION
  * ========================================================================== */
 
-export function evaluateHEarth3DCompositorVisibility(
+function evaluateCompositorVisibilitySnapshot(
   visibilityCandidate
 ) {
   const issues = [];
@@ -2635,6 +3002,34 @@ export function evaluateHEarth3DCompositorVisibility(
   });
 }
 
+export function evaluateHEarth3DCompositorVisibility(
+  visibilityCandidate
+) {
+  const snapshot =
+    strictSnapshot(
+      visibilityCandidate,
+      'visibilityCandidate'
+    );
+
+  if (!snapshot.ok) {
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'VISIBILITY_NOT_ELIGIBLE',
+
+      issues:
+        freezeIssues([
+          snapshot.issue
+        ])
+    });
+  }
+
+  return evaluateCompositorVisibilitySnapshot(
+    snapshot.value
+  );
+}
+
 
 /* ==========================================================================
  * 17 · PUBLIC CAMERA, VIEWPORT, AND VISIBILITY MUTATIONS
@@ -2665,7 +3060,7 @@ export function setHEarth3DCompositorCameraState(
   }
 
   const evaluation =
-    evaluateHEarth3DCompositorCameraState(
+    evaluateCompositorCameraStateSnapshot(
       snapshot.value
     );
 
@@ -2765,7 +3160,7 @@ export function setHEarth3DCompositorViewport(
   }
 
   const evaluation =
-    evaluateHEarth3DCompositorViewport(
+    evaluateCompositorViewportSnapshot(
       snapshot.value
     );
 
@@ -2871,7 +3266,7 @@ export function setHEarth3DCompositorVisibility(
   }
 
   const evaluation =
-    evaluateHEarth3DCompositorVisibility(
+    evaluateCompositorVisibilitySnapshot(
       snapshot.value
     );
 
@@ -2999,7 +3394,7 @@ function applyCameraCandidate(
   candidate
 ) {
   const evaluation =
-    evaluateHEarth3DCompositorCameraState(
+    evaluateCompositorCameraStateSnapshot(
       candidate
     );
 
@@ -3590,7 +3985,7 @@ export function advanceHEarth3DCompositorInertia() {
     currentInertia.zoomVelocity;
 
   const cameraEvaluation =
-    evaluateHEarth3DCompositorCameraState(
+    evaluateCompositorCameraStateSnapshot(
       nextCamera
     );
 
@@ -3962,7 +4357,7 @@ export function evaluateHEarth3DCompositorIntent(
     case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setCameraState:
       {
         const evaluation =
-          evaluateHEarth3DCompositorCameraState(
+          evaluateCompositorCameraStateSnapshot(
             intentSnapshot.cameraState
           );
 
@@ -3977,7 +4372,7 @@ export function evaluateHEarth3DCompositorIntent(
     case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setViewport:
       {
         const evaluation =
-          evaluateHEarth3DCompositorViewport(
+          evaluateCompositorViewportSnapshot(
             intentSnapshot.viewport
           );
 
@@ -3992,7 +4387,7 @@ export function evaluateHEarth3DCompositorIntent(
     case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setVisibility:
       {
         const evaluation =
-          evaluateHEarth3DCompositorVisibility(
+          evaluateCompositorVisibilitySnapshot(
             intentSnapshot.visibility
           );
 
@@ -4418,7 +4813,7 @@ function evaluateFrameCompositionInput(
   const issues = [];
 
   if (!isPlainRecord(input)) {
-    return deepFreeze({
+    return Object.freeze({
       eligible: false,
 
       status:
@@ -4437,33 +4832,74 @@ function evaluateFrameCompositionInput(
     });
   }
 
-  const keyEvaluation =
-    evaluateExactKeySurface(
+  const rootSurfaceEvaluation =
+    evaluateCompleteOwnKeySurface(
       input,
       REQUIRED_FRAME_COMPOSITION_INPUT_KEYS
     );
 
-  if (!keyEvaluation.ok) {
+  if (!rootSurfaceEvaluation.ok) {
     issues.push(
       createCompositorIssue(
-        'COMPOSITOR_FRAME_INPUT_KEY_SURFACE_INVALID',
-        'The frame-composition input must contain exactly the declared fields.',
+        'COMPOSITOR_FRAME_INPUT_COMPLETE_OWN_KEY_SURFACE_INVALID',
+        'The frame-composition input root must contain exactly the declared enumerable data properties and no symbol, non-enumerable, or accessor properties.',
         {
           details:
             deepFreeze({
               unknownKeys:
-                keyEvaluation.unknownKeys,
+                rootSurfaceEvaluation
+                  .unknownKeys,
 
               missingKeys:
-                keyEvaluation.missingKeys
+                rootSurfaceEvaluation
+                  .missingKeys,
+
+              symbolKeysPresent:
+                rootSurfaceEvaluation
+                  .symbolKeysPresent,
+
+              nonEnumerableKeys:
+                rootSurfaceEvaluation
+                  .nonEnumerableKeys,
+
+              accessorKeys:
+                rootSurfaceEvaluation
+                  .accessorKeys
             })
         }
       )
     );
+
+    return Object.freeze({
+      eligible: false,
+
+      status:
+        'COMPOSITOR_FRAME_INPUT_NOT_ELIGIBLE',
+
+      input: null,
+
+      packet002Transfer: null,
+
+      issues:
+        freezeIssues(issues)
+    });
   }
 
   const packet002Transfer =
     input.packet002Transfer;
+
+  const packet002TransferOccurrenceId =
+    normalizeString(
+      input.packet002TransferOccurrenceId
+    );
+
+  const compositorFrameOccurrenceId =
+    normalizeString(
+      input.compositorFrameOccurrenceId
+    );
+
+  const presentationMode =
+    input.presentationMode;
 
   if (!isPlainRecord(packet002Transfer)) {
     issues.push(
@@ -4478,11 +4914,6 @@ function evaluateFrameCompositionInput(
     );
   }
 
-  const packet002TransferOccurrenceId =
-    normalizeString(
-      input.packet002TransferOccurrenceId
-    );
-
   if (!packet002TransferOccurrenceId) {
     issues.push(
       createCompositorIssue(
@@ -4495,11 +4926,6 @@ function evaluateFrameCompositionInput(
       )
     );
   }
-
-  const compositorFrameOccurrenceId =
-    normalizeString(
-      input.compositorFrameOccurrenceId
-    );
 
   if (!compositorFrameOccurrenceId) {
     issues.push(
@@ -4515,7 +4941,7 @@ function evaluateFrameCompositionInput(
   }
 
   if (
-    input.presentationMode !==
+    presentationMode !==
     H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE
   ) {
     issues.push(
@@ -4530,7 +4956,7 @@ function evaluateFrameCompositionInput(
             H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,
 
           actual:
-            input.presentationMode ??
+            presentationMode ??
             null
         }
       )
@@ -4540,14 +4966,9 @@ function evaluateFrameCompositionInput(
   const envelopeSnapshot =
     strictSnapshot(
       {
-        packet002TransferOccurrenceId:
-          input.packet002TransferOccurrenceId,
-
-        compositorFrameOccurrenceId:
-          input.compositorFrameOccurrenceId,
-
-        presentationMode:
-          input.presentationMode
+        packet002TransferOccurrenceId,
+        compositorFrameOccurrenceId,
+        presentationMode
       },
       'frameCompositionEnvelope'
     );
@@ -4558,7 +4979,7 @@ function evaluateFrameCompositionInput(
     );
   }
 
-  return deepFreeze({
+  return Object.freeze({
     eligible:
       issues.length === 0,
 
@@ -4700,8 +5121,11 @@ export function composeHEarth3DCompositorAdmittedFrame(
   }
 
   const resolvedCameraPose =
-    resolveHEarth3DCompositorCameraPose(
-      compositorStateSnapshot.camera
+    resolveCompositorCameraPoseSnapshot(
+      compositorStateSnapshot.camera,
+      compositorStateSnapshot
+        .revisions
+        .camera
     );
 
   if (!resolvedCameraPose.eligible) {
@@ -4838,6 +5262,10 @@ export function composeHEarth3DCompositorAdmittedFrame(
         compositorStateSnapshot
           .revisions
           .camera,
+
+      resolvedCameraRevision:
+        resolvedCameraPose
+          .cameraRevision,
 
       capacityAuthority:
         H_EARTH_3D_CAPACITY_CONTRACT_ID,
@@ -5061,7 +5489,7 @@ export const H_EARTH_3D_COMPOSITOR_STATIC_COHERENCE =
     }
 
     const initialCameraEvaluation =
-      evaluateHEarth3DCompositorCameraState(
+      evaluateCompositorCameraStateSnapshot(
         H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE
       );
 
@@ -5106,6 +5534,12 @@ export const H_EARTH_3D_COMPOSITOR_STATIC_COHERENCE =
         ADMITTED_FRAME_RECEIPT !==
         null,
 
+      capacityValuesLocallySnapshotted:
+        true,
+
+      compositorContractReferencesImportedCapacityObjectIdentities:
+        false,
+
       capacityAuthority:
         H_EARTH_3D_CAPACITY_CONTRACT_ID,
 
@@ -5121,6 +5555,21 @@ export const H_EARTH_3D_COMPOSITOR_STATIC_COHERENCE =
 
       fixedFarPlaneEnforced:
         true,
+
+      resolvedCameraPoseIncludesCameraRevision:
+        true,
+
+      directPublicEvaluatorSnapshottingDefined:
+        true,
+
+      directPublicCameraPoseResolverSnapshottingDefined:
+        true,
+
+      explicitCameraPoseRevisionRequired:
+        true,
+
+      packet002DeepFreezeByCompositor:
+        false,
 
       initialViewportResolved:
         false,
@@ -5329,6 +5778,63 @@ export const H_EARTH_3D_COMPOSITOR_RECEIPT =
     admittedGeometryFrameContractConsumed:
       true,
 
+    consumedCapacityValuesSnapshottedLocally:
+      true,
+
+    importedCapacityObjectIdentityEmbeddedInCompositorContract:
+      false,
+
+    importedCapacityFreezeStateMutationIntended:
+      false,
+
+    frameRootCompleteOwnKeyValidationDefined:
+      true,
+
+    frameRootSymbolKeyRejectionDefined:
+      true,
+
+    frameRootNonEnumerableKeyRejectionDefined:
+      true,
+
+    frameRootAccessorRejectionDefined:
+      true,
+
+    frameRootValidationOccursBeforePropertyRead:
+      true,
+
+    resolvedCameraPoseIncludesCameraRevision:
+      true,
+
+    resolvedCameraRevisionDerivedFromCapturedSnapshot:
+      true,
+
+    directCameraPoseResolverStrictSnapshottingDefined:
+      true,
+
+    explicitCameraStateRequiresExplicitRevision:
+      true,
+
+    zeroArgumentCameraPoseResolutionUsesInternalMatchingStateAndRevision:
+      true,
+
+    packet002TransferPreservedByReference:
+      true,
+
+    packet002TransferDeepFrozenByCompositor:
+      false,
+
+    frameInputEvaluationEnvelopeShallowFrozen:
+      true,
+
+    directCameraEvaluatorStrictSnapshottingDefined:
+      true,
+
+    directViewportEvaluatorStrictSnapshottingDefined:
+      true,
+
+    directVisibilityEvaluatorStrictSnapshottingDefined:
+      true,
+
     capacityAuthorityIdentifiedAsCapacityContract:
       true,
 
@@ -5431,6 +5937,12 @@ export const H_EARTH_3D_COMPOSITOR_RECEIPT =
     intentAcceptanceSeparatedFromMaterialChange:
       true,
 
+    rendererRelevantMaterialityNarrowed:
+      true,
+
+    intentHistoryClassifiedAsOperationalCorrelationState:
+      true,
+
     lawfulUnchangedIntentRecordedAsAccepted:
       true,
 
@@ -5438,9 +5950,6 @@ export const H_EARTH_3D_COMPOSITOR_RECEIPT =
       true,
 
     strictPublicMutationSnapshottingDefined:
-      true,
-
-    packet002ProducerOwnedReferencePreserved:
       true,
 
     thinOccurrenceBasedRendererHandoffDefined:
@@ -5459,6 +5968,33 @@ export const H_EARTH_3D_COMPOSITOR_RECEIPT =
       false,
 
     controlledBehaviorVerified:
+      false,
+
+    importedCapacityFreezeStateUnchangedVerified:
+      false,
+
+    compositorCapacitySnapshotIdentitySeparationVerified:
+      false,
+
+    frameRootCompleteOwnKeyRejectionVerified:
+      false,
+
+    resolvedCameraRevisionCorrespondenceVerified:
+      false,
+
+    directCameraPoseResolverHardeningVerified:
+      false,
+
+    explicitCameraRevisionRequirementVerified:
+      false,
+
+    mutablePacket002FreezeStatePreservationVerified:
+      false,
+
+    frozenPacket002ReferenceIdentityVerified:
+      false,
+
+    directPublicEvaluatorHardeningVerified:
       false,
 
     rejectedInertiaFailClosedShutdownVerified:
@@ -5534,8 +6070,20 @@ export const H_EARTH_3D_COMPOSITOR_CONTRACT =
     admittedGeometryFrameContractId:
       H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
 
+    consumedCapacityValues:
+      deepFreeze(
+        cloneKnownPlain(
+          CONSUMED_CAPACITY_VALUES
+        )
+      ),
+
     publicStageWorldBounds:
-      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS,
+      deepFreeze(
+        cloneKnownPlain(
+          CONSUMED_CAPACITY_VALUES
+            .publicStageWorldBounds
+        )
+      ),
 
     initialCameraState:
       H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE,
@@ -5567,11 +6115,32 @@ export const H_EARTH_3D_COMPOSITOR_CONTRACT =
     publicMutationSnapshotLaw:
       'STRICT_BOUNDED_SNAPSHOT_FOR_CALLER_OWNED_MUTATION_INPUTS',
 
+    publicEvaluatorSnapshotLaw:
+      'DIRECT_PUBLIC_CAMERA_VIEWPORT_AND_VISIBILITY_EVALUATORS_STRICTLY_SNAPSHOT_CALLER_OWNED_INPUT_BEFORE_INTERNAL_EVALUATION',
+
+    publicCameraPoseResolverLaw:
+      'ZERO_ARGUMENT_RESOLUTION_USES_MATCHING_INTERNAL_CAMERA_AND_REVISION_WHILE_EXPLICIT_CAMERA_INPUT_REQUIRES_STRICT_SNAPSHOTTING_AND_AN_EXPLICIT_NONNEGATIVE_SAFE_INTEGER_REVISION',
+
+    capacityConsumptionLaw:
+      'COMPOSITOR_CONTRACTS_AND_OPERATIONAL_ALIASES_USE_COMPOSITOR_OWNED_VALUE_SNAPSHOTS_NOT_IMPORTED_CAPACITY_OBJECT_IDENTITIES',
+
+    importedCapacityOwnershipLaw:
+      'COMPOSITOR_INITIALIZATION_MUST_NOT_CHANGE_IMPORTED_CAPACITY_OBJECT_FREEZE_STATE_OR_PROPERTY_DESCRIPTORS',
+
+    frameRootValidationLaw:
+      'FRAME_COMPOSITION_ROOT_COMPLETE_OWN_KEY_AND_DESCRIPTOR_VALIDATION_OCCURS_BEFORE_ANY_INPUT_PROPERTY_ACCESS',
+
     packet002ReferenceLaw:
-      'PRESERVE_PRODUCER_OWNED_DEEPLY_FROZEN_PACKET_002_REFERENCE',
+      'PRESERVE_PRODUCER_OWNED_PACKET_002_REFERENCE_WITHOUT_CLONING_OR_DEEP_FREEZING',
+
+    frameInputEnvelopeFreezeLaw:
+      'FRAME_INPUT_EVALUATION_RESULT_IS_SHALLOW_FROZEN_SO_PACKET_002_FREEZE_STATE_AND_IDENTITY_ARE_NOT_CHANGED',
 
     compositionReadLaw:
       'CAPTURE_COMPOSITOR_STATE_EXACTLY_ONCE_PER_FRAME_COMPOSITION',
+
+    cameraRevisionCorrespondenceLaw:
+      'RESOLVED_CAMERA_POSE_REVISION_IS_EXPLICIT_AND_DERIVED_FROM_THE_SAME_CAPTURED_COMPOSITOR_SNAPSHOT_AS_THE_CAMERA_STATE',
 
     compositionMutationLaw:
       'FRAME_COMPOSITION_MUTATES_NO_CAMERA_VIEWPORT_VISIBILITY_INERTIA_REVISION_OR_INTENT_STATE',
@@ -5592,7 +6161,10 @@ export const H_EARTH_3D_COMPOSITOR_CONTRACT =
       'NEAR_AND_FAR_PLANES_ARE_FIXED_CAPACITY_DERIVED_PROJECTION_VALUES',
 
     intentOutcomeLaw:
-      'ELIGIBILITY_IS_LAWFULNESS_ACCEPTANCE_IS_PROCESSING_AND_MATERIAL_CHANGE_IS_STATE_OR_REVISION_CHANGE',
+      'ELIGIBILITY_IS_LAWFULNESS_ACCEPTANCE_IS_PROCESSING_AND_MATERIAL_CHANGE_IS_RENDERER_RELEVANT_CAMERA_VIEWPORT_VISIBILITY_INERTIA_OR_ASSOCIATED_REVISION_CHANGE',
+
+    intentHistoryLaw:
+      'INTENT_SEQUENCE_AND_ACCEPTED_OR_REJECTED_HISTORY_ARE_OPERATIONAL_CORRELATION_STATE_AND_DO_NOT_BY_THEMSELVES_ADVANCE_RENDERER_RELEVANT_REVISIONS',
 
     rejectedInertiaAdvancementLaw:
       'REJECTED_INERTIA_ADVANCEMENT_MAY_PERFORM_FAIL_CLOSED_INERTIA_SHUTDOWN_AND_REPORT_ACCEPTED_FALSE_WITH_MATERIALLY_CHANGED_TRUE',

@@ -2,169 +2,205 @@
  * /showroom/globe/h-earth/compositor.js
  * COMPLETE RENEWED FILE
  *
- * H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_3_CAMERA_VIEWPORT_FRAME_COMPOSITION_v1
+ * H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1
  *
  * Layer:
  * H-Earth Layer 4 · Showroom Execution Corridor
  *
  * Renews:
- * H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_PRECHECK_ENVIRONMENT_FIRST_RENDERER_HANDOFF_v1
+ * H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_3_CAMERA_VIEWPORT_FRAME_COMPOSITION_v1
  *
  * Purpose:
- * Preserve environment-first semantic composition while adding the missing
- * camera, viewport, navigation, inertia, visibility, frame-sequencing, and
- * resolved renderer-handoff authority required by the H-Earth Layer 4
- * architecture.
+ * Preserve compositor-owned camera, viewport, visibility, navigation, inertia,
+ * intent, receipt, and revision authority while replacing the former
+ * environment-descriptor render-frame path with the audited Step 034O.7
+ * Packet 002 to admitted-geometry-frame path.
  *
- * Direct dependencies:
- * - /showroom/globe/h-earth/capacity.js
- * - /showroom/globe/h-earth/environment.js
+ * Authoritative corridor:
+ *
+ * PACKET_002_TRANSFER
+ * → admitted-geometry-frame.js
+ * → compositor-owned state correspondence and frame sequencing
+ * → renderer.js
  *
  * This file owns:
- * - environment-first semantic composition
- * - semantic layer identity and order
- * - render-tier admission
- * - visibility policy
  * - camera composition state
  * - viewport composition state
+ * - presentation visibility state
  * - navigation constraints
- * - normalized compositor-intent evaluation
- * - bounded pan, orbit, zoom, and reset interpretation
+ * - bounded orbit, pan, zoom, reset, and replacement interpretation
  * - bounded inertia state and advancement
- * - resolved camera-pose construction
- * - scene-navigation transform construction
- * - render-frame sequencing
- * - compositor-to-renderer frame handoff
+ * - normalized compositor-intent evaluation
+ * - independent component revisions
+ * - one frame-revision advancement per completed public mutation operation
+ *   when at least one renderer-relevant component materially changes
+ * - immutable compositor-state snapshots
+ * - resolved camera-pose correspondence construction
+ * - explicit Packet 002 to Step 034O.7 frame composition
+ * - thin compositor-to-renderer handoff construction
  * - compositor receipts
  *
  * This file does not own:
- * - Path 3 authority
- * - matrix authority
- * - Ground Cell binding authority
- * - boundary, object, zone, or landscape-lattice truth
- * - environment descriptor truth
+ * - Packet 002 production
+ * - Packet 002 occurrence authentication
+ * - source-object resolution
+ * - provider construction
+ * - South geometry construction
+ * - West admission
+ * - environment-descriptor geometry reconstruction
+ * - geometry indexing
+ * - admitted-coordinate mutation
+ * - admitted-index mutation
+ * - admitted-bounds mutation
  * - renderer projection mathematics
  * - renderer primitive construction
- * - DOM/CSS materialization
+ * - renderer-resource creation
+ * - backend material creation
  * - renderer mount lifecycle
+ * - DOM/CSS materialization
  * - controller event normalization
  * - action execution
- * - Ground Condition Read construction
- * - inspection receipt construction
  * - route bootstrap
- * - diagnostic judgment
  * - actor creation
  * - collision
- * - ground-contact proof
  * - traversal
  * - gameplay
  * - fluid simulation
  * - renderer-pass approval
  * - visual-pass approval
+ * - production validation
+ * - matrix collapse
  */
 
 import {
   H_EARTH_3D_CAPACITY_CONTRACT_ID,
-  H_EARTH_3D_CAPACITY_CONTRACT,
-  H_EARTH_3D_CAPACITY_BINDING_IDENTITY,
-  H_EARTH_3D_CAPACITY_SOURCE_REFERENCES,
   H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS,
   H_EARTH_3D_VIEWPORT_CAPACITY,
   H_EARTH_3D_CAMERA_CAPACITY,
-  H_EARTH_3D_RENDER_STAGE_LIMITS,
-  H_EARTH_3D_NODE_BUDGET,
   H_EARTH_3D_INTERACTION_CAPACITY,
-  H_EARTH_3D_MOUNT_ELIGIBILITY,
-  H_EARTH_3D_CAPACITY_CLAIM_CEILINGS,
+  evaluateHEarth3DViewportCapacity,
+  evaluateHEarth3DCameraPose,
   getHEarth3DCapacityContract,
-  getHEarth3DCapacityReceipt,
-  evaluateHEarth3DNodeBudget
+  getHEarth3DCapacityReceipt
 } from './capacity.js';
 
 import {
-  H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
-  H_EARTH_3D_ENVIRONMENT_CONTRACT,
-  H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY,
-  H_EARTH_3D_ENVIRONMENT_SOURCE_REQUIREMENTS,
-  H_EARTH_3D_ENVIRONMENT_TIERS,
-  H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES,
-  H_EARTH_3D_GROUND_SUBSTRATE,
-  H_EARTH_3D_SHORELINE_MODEL,
-  H_EARTH_3D_WATER_SUBSTRATE,
-  H_EARTH_3D_ATMOSPHERE_MODEL,
-  H_EARTH_3D_TIDE_POOL_DESCRIPTORS,
-  H_EARTH_3D_STONE_DESCRIPTORS,
-  H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS,
-  H_EARTH_3D_BACKGROUND_CONTEXT,
-  H_EARTH_3D_INSPECTION_ANCHOR,
-  H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE,
-  H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN,
-  H_EARTH_3D_ENVIRONMENT_HANDOFF,
-  H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS,
-  getHEarth3DEnvironmentContract,
-  getHEarth3DEnvironmentReceipt,
-  getHEarth3DEnvironmentHandoff,
-  evaluateHEarth3DEnvironmentPrimitivePlan
-} from './environment.js';
+  H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+  H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,
+  composeHEarth3DAdmittedGeometryFrame,
+  isHEarth3DAdmittedGeometryFrame,
+  getHEarth3DAdmittedGeometryFrameContract,
+  getHEarth3DAdmittedGeometryFrameReceipt
+} from './admitted-geometry-frame.js';
+
+
+/* ==========================================================================
+ * 01 · CONTRACT IDENTITY
+ * ========================================================================== */
 
 export const H_EARTH_3D_COMPOSITOR_CONTRACT_ID =
+  'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1';
+
+export const H_EARTH_3D_COMPOSITOR_SCHEMA_VERSION =
+  3;
+
+export const H_EARTH_3D_COMPOSITOR_SOURCE_FILE =
+  '/showroom/globe/h-earth/compositor.js';
+
+export const H_EARTH_3D_COMPOSITOR_ROLE =
+  'ADMITTED_GEOMETRY_CAMERA_VIEWPORT_VISIBILITY_AND_FRAME_SEQUENCE_COMPOSITION_AUTHORITY';
+
+export const H_EARTH_3D_COMPOSITOR_STATUS =
+  'ADMITTED_GEOMETRY_FRAME_PATH_RENEWAL_CANDIDATE';
+
+const RENEWS_COMPOSITOR_CONTRACT_ID =
   'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_3_CAMERA_VIEWPORT_FRAME_COMPOSITION_v1';
 
-export const H_EARTH_3D_COMPOSITOR_SCHEMA_VERSION = 2;
+const PRIMARY_PRESENTATION_VISIBILITY_KEY =
+  'PRIMARY_ADMITTED_WET_SAND_SURFACE';
 
-const deepFreeze = (value) => {
-  if (
-    value === null ||
-    typeof value !== 'object' ||
-    Object.isFrozen(value)
-  ) {
-    return value;
-  }
+const ROUTE_OVERLAY_VISIBILITY_KEY =
+  'ROUTE_OVERLAY';
 
-  for (const nestedValue of Object.values(value)) {
-    deepFreeze(nestedValue);
-  }
+const EMPTY_FROZEN_ARRAY =
+  Object.freeze([]);
 
-  return Object.freeze(value);
-};
 
-const clonePlain = (value) => {
-  if (
-    value === null ||
-    typeof value !== 'object'
-  ) {
-    return value;
-  }
+/* ==========================================================================
+ * 02 · GENERIC HELPERS
+ * ========================================================================== */
 
-  if (Array.isArray(value)) {
-    return value.map(clonePlain);
-  }
+function isPlainRecord(value) {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    Array.isArray(value) === false &&
+    Object.getPrototypeOf(value) === Object.prototype
+  );
+}
 
-  const output = {};
+function isFiniteNumber(value) {
+  return (
+    typeof value === 'number' &&
+    Number.isFinite(value)
+  );
+}
 
-  for (const [key, nestedValue] of Object.entries(value)) {
-    output[key] = clonePlain(nestedValue);
-  }
+function isPositiveFiniteNumber(value) {
+  return (
+    isFiniteNumber(value) &&
+    value > 0
+  );
+}
 
-  return output;
-};
+function isNonEmptyString(value) {
+  return (
+    typeof value === 'string' &&
+    value.trim().length > 0
+  );
+}
 
-const clamp = (value, minimum, maximum) =>
-  Math.min(maximum, Math.max(minimum, value));
+function normalizeString(value) {
+  return isNonEmptyString(value)
+    ? value.trim()
+    : null;
+}
 
-const lerp = (start, end, amount) =>
-  start + (end - start) * amount;
+function clamp(
+  value,
+  minimum,
+  maximum
+) {
+  return Math.min(
+    maximum,
+    Math.max(
+      minimum,
+      value
+    )
+  );
+}
 
-const isFiniteNumber = (value) =>
-  typeof value === 'number' &&
-  Number.isFinite(value);
+function toRadians(degrees) {
+  return (
+    degrees *
+    Math.PI /
+    180
+  );
+}
 
-const isNonEmptyString = (value) =>
-  typeof value === 'string' &&
-  value.trim().length > 0;
+function toDegrees(radians) {
+  return (
+    radians *
+    180 /
+    Math.PI
+  );
+}
 
-const normalizeAngleDegrees = (degrees) => {
-  let normalized = degrees % 360;
+function normalizeAngleDegrees(
+  degrees
+) {
+  let normalized =
+    degrees % 360;
 
   if (normalized > 180) {
     normalized -= 360;
@@ -175,95 +211,581 @@ const normalizeAngleDegrees = (degrees) => {
   }
 
   return normalized;
-};
+}
 
-const toRadians = (degrees) =>
-  degrees * Math.PI / 180;
-
-const toDegrees = (radians) =>
-  radians * 180 / Math.PI;
-
-const round = (
+function deepFreeze(
   value,
-  precision = 5
-) => {
-  const factor = 10 ** precision;
+  seen = new WeakSet()
+) {
+  if (
+    value === null ||
+    typeof value !== 'object'
+  ) {
+    return value;
+  }
 
-  return Math.round(value * factor) / factor;
-};
+  if (seen.has(value)) {
+    return value;
+  }
 
-const createVector = (
+  seen.add(value);
+
+  for (
+    const key
+    of Reflect.ownKeys(value)
+  ) {
+    deepFreeze(
+      value[key],
+      seen
+    );
+  }
+
+  if (!Object.isFrozen(value)) {
+    Object.freeze(value);
+  }
+
+  return value;
+}
+
+function cloneKnownPlain(
+  value
+) {
+  if (
+    value === null ||
+    typeof value !== 'object'
+  ) {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(
+      cloneKnownPlain
+    );
+  }
+
+  const output = {};
+
+  for (
+    const [key, nestedValue]
+    of Object.entries(value)
+  ) {
+    output[key] =
+      cloneKnownPlain(
+        nestedValue
+      );
+  }
+
+  return output;
+}
+
+function createCompositorIssue(
+  code,
+  message,
+  {
+    field = null,
+    expected = null,
+    actual = null,
+    details = null,
+    severity = 'ERROR'
+  } = {}
+) {
+  return deepFreeze({
+    code,
+    severity,
+    message,
+    field,
+    expected,
+    actual,
+    details
+  });
+}
+
+function freezeIssues(issues) {
+  return Object.freeze(
+    issues.map(
+      (issue) =>
+        createCompositorIssue(
+          issue.code,
+          issue.message,
+          issue
+        )
+    )
+  );
+}
+
+function evaluateExactKeySurface(
+  value,
+  requiredKeys
+) {
+  if (!isPlainRecord(value)) {
+    return Object.freeze({
+      ok: false,
+
+      unknownKeys:
+        EMPTY_FROZEN_ARRAY,
+
+      missingKeys:
+        Object.freeze([
+          ...requiredKeys
+        ])
+    });
+  }
+
+  const requiredKeySet =
+    new Set(requiredKeys);
+
+  const actualKeys =
+    Object.keys(value);
+
+  const unknownKeys =
+    actualKeys
+      .filter(
+        (key) =>
+          !requiredKeySet.has(key)
+      )
+      .sort();
+
+  const missingKeys =
+    requiredKeys
+      .filter(
+        (key) =>
+          !Object.prototype.hasOwnProperty.call(
+            value,
+            key
+          )
+      )
+      .sort();
+
+  return Object.freeze({
+    ok:
+      unknownKeys.length === 0 &&
+      missingKeys.length === 0,
+
+    unknownKeys:
+      Object.freeze(unknownKeys),
+
+    missingKeys:
+      Object.freeze(missingKeys)
+  });
+}
+
+
+/* ==========================================================================
+ * 03 · STRICT PUBLIC SNAPSHOT
+ * ========================================================================== */
+
+function strictSnapshot(
+  value,
+  path = 'root',
+  seen = new WeakSet()
+) {
+  if (
+    value === null ||
+    typeof value === 'string' ||
+    typeof value === 'boolean'
+  ) {
+    return {
+      ok: true,
+      value
+    };
+  }
+
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) {
+      return {
+        ok: false,
+
+        issue:
+          createCompositorIssue(
+            'NON_FINITE_NUMBER_REJECTED',
+            'Non-finite numbers are not admitted in compositor public inputs.',
+            {
+              field:
+                path,
+
+              actual:
+                value
+            }
+          )
+      };
+    }
+
+    return {
+      ok: true,
+      value
+    };
+  }
+
+  if (
+    typeof value === 'undefined' ||
+    typeof value === 'function' ||
+    typeof value === 'symbol' ||
+    typeof value === 'bigint'
+  ) {
+    return {
+      ok: false,
+
+      issue:
+        createCompositorIssue(
+          'UNSUPPORTED_PUBLIC_INPUT_VALUE_REJECTED',
+          'The public input contains an unsupported value type.',
+          {
+            field:
+              path,
+
+            actual:
+              typeof value
+          }
+        )
+    };
+  }
+
+  if (seen.has(value)) {
+    return {
+      ok: false,
+
+      issue:
+        createCompositorIssue(
+          'REPEATED_REFERENCE_OR_CYCLE_REJECTED',
+          'Repeated references and cyclic structures are not admitted.',
+          {
+            field:
+              path
+          }
+        )
+    };
+  }
+
+  if (Array.isArray(value)) {
+    const ownKeys =
+      Reflect.ownKeys(value);
+
+    for (const key of ownKeys) {
+      if (typeof key !== 'string') {
+        return {
+          ok: false,
+
+          issue:
+            createCompositorIssue(
+              'SYMBOL_PROPERTY_REJECTED',
+              'Symbol-keyed array properties are not admitted.',
+              {
+                field:
+                  path
+              }
+            )
+        };
+      }
+
+      if (key === 'length') {
+        continue;
+      }
+
+      if (!/^(0|[1-9]\d*)$/.test(key)) {
+        return {
+          ok: false,
+
+          issue:
+            createCompositorIssue(
+              'ARRAY_CUSTOM_PROPERTY_REJECTED',
+              'Custom array properties are not admitted.',
+              {
+                field:
+                  `${path}.${key}`
+              }
+            )
+        };
+      }
+
+      const descriptor =
+        Object.getOwnPropertyDescriptor(
+          value,
+          key
+        );
+
+      if (
+        !descriptor ||
+        descriptor.enumerable !== true
+      ) {
+        return {
+          ok: false,
+
+          issue:
+            createCompositorIssue(
+              'NON_ENUMERABLE_PROPERTY_REJECTED',
+              'Non-enumerable array properties are not admitted.',
+              {
+                field:
+                  `${path}.${key}`
+              }
+            )
+        };
+      }
+
+      if (
+        typeof descriptor.get === 'function' ||
+        typeof descriptor.set === 'function'
+      ) {
+        return {
+          ok: false,
+
+          issue:
+            createCompositorIssue(
+              'ACCESSOR_PROPERTY_REJECTED',
+              'Accessor-backed array properties are not admitted.',
+              {
+                field:
+                  `${path}.${key}`
+              }
+            )
+        };
+      }
+    }
+
+    seen.add(value);
+
+    const clone = [];
+
+    for (
+      let index = 0;
+      index < value.length;
+      index += 1
+    ) {
+      const nested =
+        strictSnapshot(
+          value[index],
+          `${path}[${index}]`,
+          seen
+        );
+
+      if (!nested.ok) {
+        return nested;
+      }
+
+      clone.push(
+        nested.value
+      );
+    }
+
+    return {
+      ok: true,
+      value:
+        deepFreeze(clone)
+    };
+  }
+
+  if (!isPlainRecord(value)) {
+    return {
+      ok: false,
+
+      issue:
+        createCompositorIssue(
+          'NON_PLAIN_RECORD_REJECTED',
+          'Only strict plain-record objects are admitted in public inputs.',
+          {
+            field:
+              path
+          }
+        )
+    };
+  }
+
+  const ownKeys =
+    Reflect.ownKeys(value);
+
+  for (const key of ownKeys) {
+    if (typeof key !== 'string') {
+      return {
+        ok: false,
+
+        issue:
+          createCompositorIssue(
+            'SYMBOL_PROPERTY_REJECTED',
+            'Symbol-keyed object properties are not admitted.',
+            {
+              field:
+                path
+            }
+          )
+      };
+    }
+
+    const descriptor =
+      Object.getOwnPropertyDescriptor(
+        value,
+        key
+      );
+
+    if (
+      !descriptor ||
+      descriptor.enumerable !== true
+    ) {
+      return {
+        ok: false,
+
+        issue:
+          createCompositorIssue(
+            'NON_ENUMERABLE_PROPERTY_REJECTED',
+            'Non-enumerable object properties are not admitted.',
+            {
+              field:
+                `${path}.${key}`
+            }
+          )
+      };
+    }
+
+    if (
+      typeof descriptor.get === 'function' ||
+      typeof descriptor.set === 'function'
+    ) {
+      return {
+        ok: false,
+
+        issue:
+          createCompositorIssue(
+            'ACCESSOR_PROPERTY_REJECTED',
+            'Accessor-backed properties are not admitted.',
+            {
+              field:
+                `${path}.${key}`
+            }
+          )
+      };
+    }
+  }
+
+  seen.add(value);
+
+  const clone = {};
+
+  for (
+    const [key, nestedValue]
+    of Object.entries(value)
+  ) {
+    const nested =
+      strictSnapshot(
+        nestedValue,
+        `${path}.${key}`,
+        seen
+      );
+
+    if (!nested.ok) {
+      return nested;
+    }
+
+    clone[key] =
+      nested.value;
+  }
+
+  return {
+    ok: true,
+    value:
+      deepFreeze(clone)
+  };
+}
+
+
+/* ==========================================================================
+ * 04 · VECTOR HELPERS
+ * ========================================================================== */
+
+function createVector(
   x = 0,
   y = 0,
   z = 0
-) => ({
-  x,
-  y,
-  z
-});
+) {
+  return {
+    x,
+    y,
+    z
+  };
+}
 
-const cloneVector = (vector) =>
-  createVector(
+function isVector3(value) {
+  return (
+    isPlainRecord(value) &&
+    isFiniteNumber(value.x) &&
+    isFiniteNumber(value.y) &&
+    isFiniteNumber(value.z)
+  );
+}
+
+function cloneVector(vector) {
+  return createVector(
     vector.x,
     vector.y,
     vector.z
   );
+}
 
-const addVector = (
+function addVector(
   left,
   right
-) =>
-  createVector(
+) {
+  return createVector(
     left.x + right.x,
     left.y + right.y,
     left.z + right.z
   );
+}
 
-const subtractVector = (
+function subtractVector(
   left,
   right
-) =>
-  createVector(
+) {
+  return createVector(
     left.x - right.x,
     left.y - right.y,
     left.z - right.z
   );
+}
 
-const scaleVector = (
+function scaleVector(
   vector,
   scalar
-) =>
-  createVector(
+) {
+  return createVector(
     vector.x * scalar,
     vector.y * scalar,
     vector.z * scalar
   );
+}
 
-const getVectorLength = (vector) =>
-  Math.hypot(
+function getVectorLength(vector) {
+  return Math.hypot(
     vector.x,
     vector.y,
     vector.z
   );
+}
 
-const normalizeVector = (vector) => {
-  const length = getVectorLength(vector);
+function normalizeVector(vector) {
+  const length =
+    getVectorLength(vector);
 
-  if (length <= Number.EPSILON) {
-    return createVector(0, 0, 0);
+  if (
+    !isFiniteNumber(length) ||
+    length <= Number.EPSILON
+  ) {
+    return createVector(
+      0,
+      0,
+      0
+    );
   }
 
   return scaleVector(
     vector,
     1 / length
   );
-};
+}
 
-const crossVector = (
+function crossVector(
   left,
   right
-) =>
-  createVector(
+) {
+  return createVector(
     left.y * right.z -
       left.z * right.y,
 
@@ -273,19 +795,25 @@ const crossVector = (
     left.x * right.y -
       left.y * right.x
   );
+}
 
-const createCompositorIssue = (
-  code,
-  message,
-  details = null,
-  severity = 'ERROR'
-) =>
-  deepFreeze({
-    code,
-    severity,
-    message,
-    details
-  });
+function vectorsEqual(
+  left,
+  right
+) {
+  return (
+    isVector3(left) &&
+    isVector3(right) &&
+    Object.is(left.x, right.x) &&
+    Object.is(left.y, right.y) &&
+    Object.is(left.z, right.z)
+  );
+}
+
+
+/* ==========================================================================
+ * 05 · CAPACITY-DERIVED CAMERA CONSTANTS
+ * ========================================================================== */
 
 const CAPACITY_CONTRACT =
   getHEarth3DCapacityContract();
@@ -293,14 +821,11 @@ const CAPACITY_CONTRACT =
 const CAPACITY_RECEIPT =
   getHEarth3DCapacityReceipt();
 
-const ENVIRONMENT_CONTRACT =
-  getHEarth3DEnvironmentContract();
+const ADMITTED_FRAME_CONTRACT =
+  getHEarth3DAdmittedGeometryFrameContract();
 
-const ENVIRONMENT_RECEIPT =
-  getHEarth3DEnvironmentReceipt();
-
-const ENVIRONMENT_HANDOFF =
-  getHEarth3DEnvironmentHandoff();
+const ADMITTED_FRAME_RECEIPT =
+  getHEarth3DAdmittedGeometryFrameReceipt();
 
 const INITIAL_PROJECTION =
   H_EARTH_3D_CAMERA_CAPACITY
@@ -383,914 +908,55 @@ const ZOOM_SCALE_BOUNDS =
   FUTURE_CONTROLLER_CAPACITY
     .zoomScale;
 
-/**
- * Boundary flags.
- */
-export const H_EARTH_3D_COMPOSITOR_BOUNDARY_FLAGS = deepFreeze({
-  ownsSemanticComposition: true,
-  ownsSemanticLayerOrder: true,
-  ownsRenderTierAdmission: true,
-  ownsVisibilityPolicy: true,
 
-  ownsCameraCompositionState: true,
-  ownsViewportCompositionState: true,
-  ownsNavigationConstraints: true,
-  ownsIntentEvaluation: true,
-  ownsInertiaState: true,
-  ownsRenderFrameSequencing: true,
-  ownsResolvedRendererHandoff: true,
-
-  ownsProjectionMathematics: false,
-  ownsProjectedPrimitiveConstruction: false,
-  ownsDOMCSSMaterialization: false,
-  ownsRendererMountLifecycle: false,
-  ownsControllerInputNormalization: false,
-
-  ownsPath3Authority: false,
-  ownsMatrixAuthority: false,
-  ownsGroundCellBindingAuthority: false,
-  ownsBoundaryAuthority: false,
-  ownsObjectAuthority: false,
-  ownsZoneAuthority: false,
-  ownsLandscapeLatticeAuthority: false,
-  ownsEnvironmentDescriptorTruth: false,
-
-  ownsActionExecution: false,
-  ownsReadoutConstruction: false,
-  ownsInspectionReceiptConstruction: false,
-  ownsRouteBootstrap: false,
-  ownsDiagnosticJudgment: false,
-
-  createsActor: false,
-  createsCollisionSystem: false,
-  createsGroundContactSystem: false,
-  createsTraversalSystem: false,
-  createsGameplayLoop: false,
-  createsFluidSimulation: false,
-
-  matrixCollapse: false
-});
-
-/**
- * Binding identity.
- */
-export const H_EARTH_3D_COMPOSITOR_BINDING_IDENTITY = deepFreeze({
-  capacityContractId:
-    H_EARTH_3D_CAPACITY_CONTRACT_ID,
-
-  environmentContractId:
-    H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
-
-  matrix:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.matrix,
-
-  matrixRole:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.matrixRole,
-
-  activeCell:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.activeCell,
-
-  domainCellId:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.domainCellId,
-
-  spatialCellId:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.spatialCellId,
-
-  bindingExpression:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.bindingExpression,
-
-  sceneIdentity:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.sceneIdentity,
-
-  coordinateFrame:
-    H_EARTH_3D_ENVIRONMENT_HANDOFF.coordinateFrame,
-
-  descriptorOnlyUpstream: true,
-
-  rendererMounted: false,
-  controllerInitialized: false,
-  runtimeActivationClaim: false
-});
-
-/**
- * Source references.
- */
-export const H_EARTH_3D_COMPOSITOR_SOURCE_REFERENCES = deepFreeze({
-  capacity: deepFreeze({
-    path:
-      '/showroom/globe/h-earth/capacity.js',
-
-    contractId:
-      H_EARTH_3D_CAPACITY_CONTRACT_ID,
-
-    backedOccurrenceRecorded: true,
-
-    usage: deepFreeze([
-      'public-stage world bounds',
-      'viewport capacity',
-      'camera capacity',
-      'future controller capacity',
-      'render-stage limits',
-      'node budget',
-      'interaction capacity',
-      'mount eligibility',
-      'claim ceilings'
-    ])
-  }),
-
-  environment: deepFreeze({
-    path:
-      '/showroom/globe/h-earth/environment.js',
-
-    contractId:
-      H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
-
-    backedOccurrenceRecorded: true,
-
-    usage: deepFreeze([
-      'environment handoff',
-      'environment tiers',
-      'material identities',
-      'ground substrate',
-      'shoreline model',
-      'water substrate',
-      'atmosphere model',
-      'tide-pool descriptors',
-      'stone descriptors',
-      'jagged-rock descriptors',
-      'background context',
-      'inspection anchor',
-      'primitive plan'
-    ])
-  }),
-
-  normalizedSourceSpine: deepFreeze({
-    path3Binding:
-      'H_EARTH_REGION_CELL_X07_Z08 → H_EARTH_GROUND_CELL_001',
-
-    step034I:
-      '/h-earth-3d/boundaries/matrix-boundaries.js',
-
-    step034J:
-      '/h-earth-3d/objects/ground-cell-001.objects.js',
-
-    step034K:
-      '/h-earth-3d/zones/ground-cell-001.zones.js',
-
-    step034L:
-      '/h-earth-3d/zones/ground-cell-001.landscape-lattice.js',
-
-    directlyImported: false
-  })
-});
-
-/**
- * Semantic composition groups.
- */
-export const H_EARTH_3D_COMPOSITION_GROUPS = deepFreeze({
-  background: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITION_GROUP_BACKGROUND',
-
-    label:
-      'Background and atmosphere'
-  }),
-
-  distance: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITION_GROUP_DISTANCE',
-
-    label:
-      'Distant context'
-  }),
-
-  water: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITION_GROUP_WATER',
-
-    label:
-      'Water and shoreline transition'
-  }),
-
-  ground: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITION_GROUP_GROUND',
-
-    label:
-      'Ground substrate'
-  }),
-
-  details: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITION_GROUP_DETAILS',
-
-    label:
-      'Grounded environmental details'
-  }),
-
-  interaction: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITION_GROUP_INTERACTION',
-
-    label:
-      'Inspection interaction'
-  }),
-
-  overlay: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITION_GROUP_OVERLAY',
-
-    label:
-      'Route-owned overlay'
-  })
-});
-
-/**
- * Semantic layer IDs.
- */
-export const H_EARTH_3D_COMPOSITION_LAYER_IDS = deepFreeze({
-  sky:
-    'H_EARTH_COMPOSITION_LAYER_SKY',
-
-  atmosphere:
-    'H_EARTH_COMPOSITION_LAYER_ATMOSPHERE',
-
-  horizon:
-    'H_EARTH_COMPOSITION_LAYER_HORIZON',
-
-  offshoreIslets:
-    'H_EARTH_COMPOSITION_LAYER_OFFSHORE_ISLETS',
-
-  manorBluffContext:
-    'H_EARTH_COMPOSITION_LAYER_MANOR_BLUFF_CONTEXT',
-
-  openWater:
-    'H_EARTH_COMPOSITION_LAYER_OPEN_WATER',
-
-  nearshoreWater:
-    'H_EARTH_COMPOSITION_LAYER_NEARSHORE_WATER',
-
-  waveBands:
-    'H_EARTH_COMPOSITION_LAYER_WAVE_BANDS',
-
-  shorelineFoam:
-    'H_EARTH_COMPOSITION_LAYER_SHORELINE_FOAM',
-
-  wetSand:
-    'H_EARTH_COMPOSITION_LAYER_WET_SAND',
-
-  drySand:
-    'H_EARTH_COMPOSITION_LAYER_DRY_SAND',
-
-  tidePools:
-    'H_EARTH_COMPOSITION_LAYER_TIDE_POOLS',
-
-  stones:
-    'H_EARTH_COMPOSITION_LAYER_STONES',
-
-  jaggedRocks:
-    'H_EARTH_COMPOSITION_LAYER_JAGGED_ROCKS',
-
-  inspectionAnchor:
-    'H_EARTH_COMPOSITION_LAYER_INSPECTION_ANCHOR',
-
-  overlay:
-    'H_EARTH_COMPOSITION_LAYER_ROUTE_OVERLAY'
-});
-
-/**
- * Environment-first semantic layer order.
- */
-export const H_EARTH_3D_COMPOSITION_LAYER_ORDER = deepFreeze([
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.sky,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.atmosphere,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.horizon,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.offshoreIslets,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.manorBluffContext,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.openWater,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.nearshoreWater,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.waveBands,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.shorelineFoam,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.wetSand,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.drySand,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.tidePools,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.stones,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.jaggedRocks,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.inspectionAnchor,
-  H_EARTH_3D_COMPOSITION_LAYER_IDS.overlay
-]);
-
-const makeLayer = ({
-  id,
-  key,
-  groupId,
-  semanticRole,
-  materialId,
-  required,
-  environmentSource,
-  rendererPrimitiveClass,
-  interactive = false,
-  routeOwned = false
-}) =>
-  deepFreeze({
-    id,
-    key,
-    groupId,
-    semanticRole,
-    materialId,
-    required,
-    environmentSource,
-    rendererPrimitiveClass,
-    interactive,
-    routeOwned
-  });
-
-/**
- * Semantic layer descriptors.
- */
-export const H_EARTH_3D_COMPOSITION_LAYERS = deepFreeze([
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.sky,
-
-    key:
-      'sky',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.background.id,
-
-    semanticRole:
-      'FULL_STAGE_SKY_BACKGROUND',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.sky.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_ATMOSPHERE_MODEL.sky',
-
-    rendererPrimitiveClass:
-      'FULL_STAGE_BACKGROUND'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.atmosphere,
-
-    key:
-      'atmosphere',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.background.id,
-
-    semanticRole:
-      'ATMOSPHERE_AND_DISTANCE_HAZE',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.atmosphere.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_ATMOSPHERE_MODEL',
-
-    rendererPrimitiveClass:
-      'FULL_STAGE_OVERLAY'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.horizon,
-
-    key:
-      'horizon',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.background.id,
-
-    semanticRole:
-      'DERIVED_WATER_HORIZON',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.haze.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_ATMOSPHERE_MODEL.horizon',
-
-    rendererPrimitiveClass:
-      'HORIZON_BAND'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.offshoreIslets,
-
-    key:
-      'offshore-islets',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.distance.id,
-
-    semanticRole:
-      'DISTANT_OFFSHORE_CONTEXT',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.islet.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_BACKGROUND_CONTEXT.offshoreIslets',
-
-    rendererPrimitiveClass:
-      'DISTANT_POLYGON_CONTEXT'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.manorBluffContext,
-
-    key:
-      'manor-bluff-context',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.distance.id,
-
-    semanticRole:
-      'DISTANT_MANOR_AND_BLUFF_CONTEXT',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.manorContext.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_BACKGROUND_CONTEXT.manorBluff',
-
-    rendererPrimitiveClass:
-      'DISTANT_CONTEXT_CLUSTER'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.openWater,
-
-    key:
-      'open-water',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.water.id,
-
-    semanticRole:
-      'OPEN_WATER_SUBSTRATE',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.openWater.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_WATER_SUBSTRATE.openWater',
-
-    rendererPrimitiveClass:
-      'PROJECTED_SURFACE_BANDS'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.nearshoreWater,
-
-    key:
-      'nearshore-water',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.water.id,
-
-    semanticRole:
-      'NEARSHORE_WATER_SUBSTRATE',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.nearshoreWater.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_WATER_SUBSTRATE.nearshore',
-
-    rendererPrimitiveClass:
-      'PROJECTED_SURFACE_BANDS'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.waveBands,
-
-    key:
-      'wave-bands',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.water.id,
-
-    semanticRole:
-      'NEARSHORE_WAVE_RIBBONS',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.wave.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_WATER_SUBSTRATE.waveBands',
-
-    rendererPrimitiveClass:
-      'PROJECTED_CURVE_RIBBONS'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.shorelineFoam,
-
-    key:
-      'shoreline-foam',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.water.id,
-
-    semanticRole:
-      'SHORELINE_CONTACT_FOAM',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.foam.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_SHORELINE_MODEL.foamContact',
-
-    rendererPrimitiveClass:
-      'PROJECTED_CURVE_RIBBON'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.wetSand,
-
-    key:
-      'wet-sand',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.ground.id,
-
-    semanticRole:
-      'PRIMARY_INSPECTION_GROUND',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.wetSand.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_GROUND_SUBSTRATE.wetSand',
-
-    rendererPrimitiveClass:
-      'PROJECTED_SURFACE_BANDS'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.drySand,
-
-    key:
-      'dry-sand',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.ground.id,
-
-    semanticRole:
-      'DRY_SAND_TRANSITION_GROUND',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.drySand.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_GROUND_SUBSTRATE.drySand',
-
-    rendererPrimitiveClass:
-      'PROJECTED_SURFACE_BANDS'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.tidePools,
-
-    key:
-      'tide-pools',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.details.id,
-
-    semanticRole:
-      'GROUND_EMBEDDED_TIDE_POOLS',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.tidePool.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_TIDE_POOL_DESCRIPTORS',
-
-    rendererPrimitiveClass:
-      'PROJECTED_ELLIPTICAL_DETAILS'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.stones,
-
-    key:
-      'stones',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.details.id,
-
-    semanticRole:
-      'SPARSE_GROUNDED_STONES',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.stone.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_STONE_DESCRIPTORS',
-
-    rendererPrimitiveClass:
-      'PROJECTED_GROUNDED_DETAILS'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.jaggedRocks,
-
-    key:
-      'jagged-rocks',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.details.id,
-
-    semanticRole:
-      'SPARSE_JAGGED_ROCKS',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.rock.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS',
-
-    rendererPrimitiveClass:
-      'PROJECTED_POLYGON_DETAILS'
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.inspectionAnchor,
-
-    key:
-      'inspection-anchor',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.interaction.id,
-
-    semanticRole:
-      'PRIMARY_INSPECTION_INTENT_TARGET',
-
-    materialId:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES.inspectionAnchor.id,
-
-    required: true,
-
-    environmentSource:
-      'H_EARTH_3D_INSPECTION_ANCHOR',
-
-    rendererPrimitiveClass:
-      'PROJECTED_INTERACTION_ANCHOR',
-
-    interactive: true
-  }),
-
-  makeLayer({
-    id:
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.overlay,
-
-    key:
-      'route-overlay',
-
-    groupId:
-      H_EARTH_3D_COMPOSITION_GROUPS.overlay.id,
-
-    semanticRole:
-      'ROUTE_OWNED_OVERLAY_PLACEHOLDER',
-
-    materialId: null,
-
-    required: false,
-
-    environmentSource: null,
-
-    rendererPrimitiveClass:
-      'ROUTE_OWNED_NOT_ENVIRONMENT',
-
-    routeOwned: true
-  })
-]);
-
-export const H_EARTH_3D_COMPOSITION_LAYER_MAP = deepFreeze(
-  Object.fromEntries(
-    H_EARTH_3D_COMPOSITION_LAYERS.map(
-      (layer) => [
-        layer.id,
-        layer
-      ]
-    )
-  )
-);
-
-/**
- * Render tiers.
- */
-export const H_EARTH_3D_COMPOSITOR_RENDER_TIERS = deepFreeze({
-  tier1: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITOR_RENDER_TIER_1',
-
-    label:
-      'Essential environment',
-
-    layerIds: deepFreeze([
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.sky,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.atmosphere,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.horizon,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.openWater,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.nearshoreWater,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.shorelineFoam,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.wetSand,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.drySand,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.inspectionAnchor
-    ])
-  }),
-
-  tier2: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITOR_RENDER_TIER_2',
-
-    label:
-      'Environmental readability',
-
-    layerIds: deepFreeze([
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.waveBands,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.tidePools,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.stones
-    ])
-  }),
-
-  tier3: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITOR_RENDER_TIER_3',
-
-    label:
-      'Context and silhouette',
-
-    layerIds: deepFreeze([
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.offshoreIslets,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.manorBluffContext,
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.jaggedRocks
-    ])
-  }),
-
-  tier4: deepFreeze({
-    id:
-      'H_EARTH_COMPOSITOR_RENDER_TIER_4',
-
-    label:
-      'Route overlay',
-
-    layerIds: deepFreeze([
-      H_EARTH_3D_COMPOSITION_LAYER_IDS.overlay
-    ])
-  })
-});
-
-/**
- * Visibility policy.
- */
-export const H_EARTH_3D_COMPOSITOR_VISIBILITY_POLICY = deepFreeze({
-  requiredLayerIds: deepFreeze(
-    H_EARTH_3D_COMPOSITION_LAYERS
-      .filter((layer) => layer.required)
-      .map((layer) => layer.id)
-  ),
-
-  optionalLayerIds: deepFreeze(
-    H_EARTH_3D_COMPOSITION_LAYERS
-      .filter((layer) => !layer.required)
-      .map((layer) => layer.id)
-  ),
-
-  defaultVisibleLayerIds: deepFreeze(
-    H_EARTH_3D_COMPOSITION_LAYERS
-      .filter((layer) => !layer.routeOwned)
-      .map((layer) => layer.id)
-  ),
-
-  hiddenByDefaultLayerIds: deepFreeze([
-    H_EARTH_3D_COMPOSITION_LAYER_IDS.overlay
-  ]),
-
-  semanticOrderMutable: false,
-  requiredLayerSuppressionAllowed: false,
-  routeOverlayEnvironmentOwned: false
-});
-
-/**
- * Primitive accounting.
- */
-export const H_EARTH_3D_COMPOSITOR_PRIMITIVE_ACCOUNTING = deepFreeze({
-  semanticLayerContainers:
-    H_EARTH_3D_COMPOSITION_LAYERS
-      .filter((layer) => !layer.routeOwned)
-      .length,
-
-  environmentPrimitives:
-    H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN
-      .estimatedEnvironmentPrimitiveCount,
-
-  interactionNodes: 1,
-  diagnosticOwnedNodes: 0
-});
-
-/**
- * Camera-capacity normalization.
- */
-export const H_EARTH_3D_COMPOSITOR_CAMERA_CAPACITY = deepFreeze({
-  source:
-    'H_EARTH_3D_CAMERA_CAPACITY',
-
-  initialProjectionCandidate:
-    H_EARTH_3D_CAMERA_CAPACITY
-      .initialProjectionCandidate,
-
-  positionBounds:
-    FUTURE_CONTROLLER_CAPACITY
-      .positionBounds,
-
-  targetBounds:
-    FUTURE_CONTROLLER_CAPACITY
-      .targetBounds,
-
-  yawDegrees:
-    FUTURE_CONTROLLER_CAPACITY
-      .yawDegrees,
-
-  pitchDegrees:
-    FUTURE_CONTROLLER_CAPACITY
-      .pitchDegrees,
-
-  verticalFovDegrees:
-    FUTURE_CONTROLLER_CAPACITY
-      .verticalFovDegrees,
-
-  zoomScale:
-    FUTURE_CONTROLLER_CAPACITY
-      .zoomScale,
-
-  distanceModel:
-    'INITIAL_RENDERER_DISTANCE_MULTIPLIED_BY_ZOOM_SCALE',
-
-  initialDistance:
-    INITIAL_DISTANCE,
-
-  minimumDistance:
-    INITIAL_DISTANCE *
-    ZOOM_SCALE_BOUNDS.minimum,
-
-  maximumDistance:
-    INITIAL_DISTANCE *
-    ZOOM_SCALE_BOUNDS.maximum
-});
-
-/**
- * Camera state schema.
- */
-export const H_EARTH_3D_COMPOSITOR_CAMERA_STATE_SCHEMA = deepFreeze({
-  requiredFields: deepFreeze([
+/* ==========================================================================
+ * 06 · PUBLIC SCHEMAS
+ * ========================================================================== */
+
+const REQUIRED_BRIDGE_COMPOSITOR_SNAPSHOT_KEYS =
+  Object.freeze([
+    'camera',
+    'viewport',
+    'visibility',
+    'inertia',
+    'revisions',
+    'intentSequence',
+    'lastAcceptedIntent',
+    'lastRejectedIntent'
+  ]);
+
+const REQUIRED_REVISION_KEYS =
+  Object.freeze([
+    'camera',
+    'viewport',
+    'visibility',
+    'inertia',
+    'frame'
+  ]);
+
+const REQUIRED_FRAME_COMPOSITION_INPUT_KEYS =
+  Object.freeze([
+    'packet002Transfer',
+    'packet002TransferOccurrenceId',
+    'compositorFrameOccurrenceId',
+    'presentationMode'
+  ]);
+
+const REQUIRED_VIEWPORT_INPUT_KEYS =
+  Object.freeze([
+    'widthPx',
+    'heightPx',
+    'pixelRatio'
+  ]);
+
+const REQUIRED_VISIBILITY_INPUT_KEYS =
+  Object.freeze([
+    PRIMARY_PRESENTATION_VISIBILITY_KEY,
+    ROUTE_OVERLAY_VISIBILITY_KEY
+  ]);
+
+const REQUIRED_CAMERA_STATE_KEYS =
+  Object.freeze([
     'yawDegrees',
     'pitchDegrees',
     'zoomScale',
@@ -1298,293 +964,250 @@ export const H_EARTH_3D_COMPOSITOR_CAMERA_STATE_SCHEMA = deepFreeze({
     'verticalFovDegrees',
     'nearPlane',
     'farPlane'
-  ]),
+  ]);
 
-  targetFields: deepFreeze([
+const REQUIRED_TARGET_KEYS =
+  Object.freeze([
     'x',
     'y',
     'z'
-  ]),
+  ]);
 
-  derivedFields: deepFreeze([
-    'distance',
-    'position',
-    'forward',
-    'right',
-    'up'
-  ])
-});
-
-/**
- * Camera constraints.
- */
-export const H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS = deepFreeze({
-  yawDegrees:
-    YAW_BOUNDS,
-
-  pitchDegrees:
-    PITCH_BOUNDS,
-
-  zoomScale:
-    ZOOM_SCALE_BOUNDS,
-
-  targetBounds:
-    TARGET_BOUNDS,
-
-  positionBounds:
-    POSITION_BOUNDS,
-
-  verticalFovDegrees:
-    FOV_BOUNDS,
-
-  nearPlane:
-    INITIAL_PROJECTION.nearPlane,
-
-  farPlane:
-    INITIAL_PROJECTION.farPlane,
-
-  positionViolationPolicy:
-    'REDUCE_ZOOM_SCALE_THEN_CLAMP_TARGET_THEN_REJECT_IF_UNRESOLVED',
-
-  malformedIntentPolicy:
-    'FAIL_CLOSED'
-});
-
-/**
- * Initial camera state.
- */
-export const H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE = deepFreeze({
-  yawDegrees:
-    clamp(
-      normalizeAngleDegrees(
-        INITIAL_YAW_DEGREES
-      ),
-      YAW_BOUNDS.minimum,
-      YAW_BOUNDS.maximum
-    ),
-
-  pitchDegrees:
-    clamp(
-      INITIAL_PITCH_DEGREES,
-      PITCH_BOUNDS.minimum,
-      PITCH_BOUNDS.maximum
-    ),
-
-  zoomScale: 1,
-
-  target: deepFreeze({
-    x:
-      clamp(
-        INITIAL_TARGET.x,
-        TARGET_BOUNDS.xMin,
-        TARGET_BOUNDS.xMax
-      ),
-
-    y:
-      clamp(
-        INITIAL_TARGET.y,
-        TARGET_BOUNDS.yMin,
-        TARGET_BOUNDS.yMax
-      ),
-
-    z:
-      clamp(
-        INITIAL_TARGET.z,
-        TARGET_BOUNDS.zMin,
-        TARGET_BOUNDS.zMax
-      )
-  }),
-
-  verticalFovDegrees:
-    clamp(
-      INITIAL_PROJECTION
-        .verticalFovDegrees,
-      FOV_BOUNDS.minimum,
-      FOV_BOUNDS.maximum
-    ),
-
-  nearPlane:
-    INITIAL_PROJECTION.nearPlane,
-
-  farPlane:
-    INITIAL_PROJECTION.farPlane
-});
-
-/**
- * Viewport state schema.
- */
-export const H_EARTH_3D_COMPOSITOR_VIEWPORT_STATE_SCHEMA = deepFreeze({
-  requiredFields: deepFreeze([
-    'widthPx',
-    'heightPx',
-    'pixelRatio'
-  ]),
-
-  derivedFields: deepFreeze([
-    'aspectRatio',
-    'orientation',
-    'capacityStatus',
-    'revision'
-  ])
-});
-
-/**
- * Initial viewport state.
- */
-export const H_EARTH_3D_COMPOSITOR_INITIAL_VIEWPORT_STATE = deepFreeze({
-  widthPx: 0,
-  heightPx: 0,
-  aspectRatio: 0,
-  pixelRatio: 1,
-  orientation: 'UNRESOLVED',
-  capacityStatus: 'UNRESOLVED',
-  revision: 0
-});
-
-/**
- * Intent types.
- */
-export const H_EARTH_3D_COMPOSITOR_INTENT_TYPES = deepFreeze({
-  orbit:
-    'H_EARTH_COMPOSITOR_INTENT_ORBIT',
-
-  pan:
-    'H_EARTH_COMPOSITOR_INTENT_PAN',
-
-  zoom:
-    'H_EARTH_COMPOSITOR_INTENT_ZOOM',
-
-  resetView:
-    'H_EARTH_COMPOSITOR_INTENT_RESET_VIEW',
-
-  setCameraState:
-    'H_EARTH_COMPOSITOR_INTENT_SET_CAMERA_STATE',
-
-  setViewport:
-    'H_EARTH_COMPOSITOR_INTENT_SET_VIEWPORT',
-
-  setVisibleLayers:
-    'H_EARTH_COMPOSITOR_INTENT_SET_VISIBLE_LAYERS',
-
-  startInertia:
-    'H_EARTH_COMPOSITOR_INTENT_START_INERTIA',
-
-  advanceInertia:
-    'H_EARTH_COMPOSITOR_INTENT_ADVANCE_INERTIA',
-
-  stopInertia:
-    'H_EARTH_COMPOSITOR_INTENT_STOP_INERTIA'
-});
-
-/**
- * Intent schema.
- */
-export const H_EARTH_3D_COMPOSITOR_INTENT_SCHEMA = deepFreeze({
-  commonRequiredFields: deepFreeze([
-    'type'
-  ]),
-
-  acceptedTypes: deepFreeze(
-    Object.values(
-      H_EARTH_3D_COMPOSITOR_INTENT_TYPES
-    )
-  ),
-
-  orbitFields: deepFreeze([
-    'yawDeltaDegrees',
-    'pitchDeltaDegrees'
-  ]),
-
-  panFields: deepFreeze([
-    'horizontalDelta',
-    'verticalDelta',
-    'depthDelta'
-  ]),
-
-  zoomFields: deepFreeze([
-    'zoomScaleDelta'
-  ]),
-
-  viewportFields: deepFreeze([
-    'widthPx',
-    'heightPx',
-    'pixelRatio'
-  ]),
-
-  visibilityFields: deepFreeze([
-    'visibleLayerIds'
-  ])
-});
-
-/**
- * Inertia policy.
- */
-export const H_EARTH_3D_COMPOSITOR_INERTIA_POLICY = deepFreeze({
-  enabled: true,
-
-  damping:
-    H_EARTH_3D_INTERACTION_CAPACITY
-      .inertiaDamping ??
-    0.88,
-
-  minimumVelocity:
-    H_EARTH_3D_INTERACTION_CAPACITY
-      .inertiaMinimumVelocity ??
-    0.018,
-
-  maximumFrames:
-    H_EARTH_3D_INTERACTION_CAPACITY
-      .inertiaMaximumFrames ??
-    90,
-
-  acceptedVelocityFields: deepFreeze([
+const REQUIRED_INERTIA_VELOCITY_KEYS =
+  Object.freeze([
+    'mode',
     'yawVelocity',
     'pitchVelocity',
     'panHorizontalVelocity',
     'panVerticalVelocity',
     'panDepthVelocity',
     'zoomVelocity'
-  ])
-});
+  ]);
 
-/**
- * Navigation constraints.
- */
-export const H_EARTH_3D_COMPOSITOR_NAVIGATION_CONSTRAINTS = deepFreeze({
-  camera:
-    H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS,
 
-  inertia:
-    H_EARTH_3D_COMPOSITOR_INERTIA_POLICY,
+/* ==========================================================================
+ * 07 · BOUNDARY FLAGS
+ * ========================================================================== */
 
-  semanticOrderMutable: false,
-  requiredLayerSuppressionAllowed: false,
+export const H_EARTH_3D_COMPOSITOR_BOUNDARY_FLAGS =
+  deepFreeze({
+    ownsCameraCompositionState: true,
+    ownsViewportCompositionState: true,
+    ownsPresentationVisibilityState: true,
+    ownsNavigationConstraints: true,
+    ownsIntentEvaluation: true,
+    ownsInertiaState: true,
+    ownsIndependentComponentRevisions: true,
+    ownsFrameRevisionSequencing: true,
+    ownsResolvedCameraPoseCorrespondence: true,
+    ownsCompositorReceipts: true,
+    ownsAdmittedFrameCompositionInvocation: true,
+    ownsThinRendererHandoffEnvelope: true,
 
-  projectionOwnedByRenderer: true,
-  inputNormalizationOwnedByController: true
-});
+    snapshotsPublicMutationInputsStrictly: true,
+    preservesPacket002ProducerOwnedReference: true,
+    capturesCompositorStateOncePerComposition: true,
 
-const initialState = {
-  camera:
-    clonePlain(
-      H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE
-    ),
+    frameCompositionMutatesCompositorCompositionState: false,
+    rendererHandoffMutatesCompositorCompositionState: false,
+    frameCompositionMayUpdateReceiptLedger: true,
+    rendererHandoffMayUpdateReceiptLedger: true,
+    composeFrameAdvancesRevision: false,
 
-  viewport:
-    clonePlain(
-      H_EARTH_3D_COMPOSITOR_INITIAL_VIEWPORT_STATE
-    ),
+    rejectedInertiaAdvancementMayStopInertiaFailClosed: true,
 
-  visibility: {
-    visibleLayerIds: [
-      ...H_EARTH_3D_COMPOSITOR_VISIBILITY_POLICY
-        .defaultVisibleLayerIds
-    ],
+    ownsPacket002Production: false,
+    authenticatesPacket002Occurrence: false,
+    ownsSourceObjectResolution: false,
+    ownsProviderConstruction: false,
+    ownsSouthGeometryConstruction: false,
+    ownsWestAdmission: false,
+    ownsGeometryConstruction: false,
+    ownsGeometryIndexing: false,
+    ownsEnvironmentDescriptorGeometryComposition: false,
 
-    revision: 0
-  },
+    mutatesAdmittedGeometry: false,
+    mutatesAdmittedCoordinates: false,
+    mutatesAdmittedIndices: false,
+    mutatesAdmittedBounds: false,
+    mutatesPacket002Transfer: false,
 
-  inertia: {
+    ownsRendererProjectionMathematics: false,
+    ownsRendererPrimitiveConstruction: false,
+    ownsRendererResourceCreation: false,
+    ownsBackendMaterialCreation: false,
+    ownsRendererMountLifecycle: false,
+    ownsDOMCSSMaterialization: false,
+
+    runtimeActivationClaim: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    matrixCollapse: false
+  });
+
+
+/* ==========================================================================
+ * 08 · CAMERA, VIEWPORT, VISIBILITY, AND INERTIA CONTRACTS
+ * ========================================================================== */
+
+export const H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS =
+  deepFreeze({
+    yawDegrees:
+      YAW_BOUNDS,
+
+    pitchDegrees:
+      PITCH_BOUNDS,
+
+    zoomScale:
+      ZOOM_SCALE_BOUNDS,
+
+    targetBounds:
+      TARGET_BOUNDS,
+
+    positionBounds:
+      POSITION_BOUNDS,
+
+    verticalFovDegrees:
+      FOV_BOUNDS,
+
+    nearPlane:
+      INITIAL_PROJECTION.nearPlane,
+
+    farPlane:
+      INITIAL_PROJECTION.farPlane,
+
+    nearAndFarPlaneAuthority:
+      'FIXED_CAPACITY_DERIVED_PROJECTION_VALUES',
+
+    nearPlaneMutable:
+      false,
+
+    farPlaneMutable:
+      false,
+
+    distanceModel:
+      'INITIAL_DISTANCE_MULTIPLIED_BY_ZOOM_SCALE',
+
+    positionViolationPolicy:
+      'CLAMP_TARGET_THEN_REDUCE_ZOOM_SCALE_THEN_REJECT',
+
+    capacityAuthority:
+      H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+    finalFrameEligibilityAuthority:
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID
+  });
+
+export const H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE =
+  deepFreeze({
+    yawDegrees:
+      clamp(
+        normalizeAngleDegrees(
+          INITIAL_YAW_DEGREES
+        ),
+        YAW_BOUNDS.minimum,
+        YAW_BOUNDS.maximum
+      ),
+
+    pitchDegrees:
+      clamp(
+        INITIAL_PITCH_DEGREES,
+        PITCH_BOUNDS.minimum,
+        PITCH_BOUNDS.maximum
+      ),
+
+    zoomScale:
+      clamp(
+        1,
+        ZOOM_SCALE_BOUNDS.minimum,
+        ZOOM_SCALE_BOUNDS.maximum
+      ),
+
+    target:
+      deepFreeze({
+        x:
+          clamp(
+            INITIAL_TARGET.x,
+            TARGET_BOUNDS.xMin,
+            TARGET_BOUNDS.xMax
+          ),
+
+        y:
+          clamp(
+            INITIAL_TARGET.y,
+            TARGET_BOUNDS.yMin,
+            TARGET_BOUNDS.yMax
+          ),
+
+        z:
+          clamp(
+            INITIAL_TARGET.z,
+            TARGET_BOUNDS.zMin,
+            TARGET_BOUNDS.zMax
+          )
+      }),
+
+    verticalFovDegrees:
+      clamp(
+        INITIAL_PROJECTION
+          .verticalFovDegrees,
+        FOV_BOUNDS.minimum,
+        FOV_BOUNDS.maximum
+      ),
+
+    nearPlane:
+      INITIAL_PROJECTION.nearPlane,
+
+    farPlane:
+      INITIAL_PROJECTION.farPlane
+  });
+
+export const H_EARTH_3D_COMPOSITOR_INITIAL_VIEWPORT_STATE =
+  deepFreeze({
+    widthPx: 0,
+    heightPx: 0,
+    pixelRatio: 1,
+    aspectRatio: 0,
+    orientation: 'UNRESOLVED',
+    capacityStatus: 'UNRESOLVED'
+  });
+
+export const H_EARTH_3D_COMPOSITOR_INITIAL_VISIBILITY_STATE =
+  deepFreeze({
+    [PRIMARY_PRESENTATION_VISIBILITY_KEY]:
+      true,
+
+    [ROUTE_OVERLAY_VISIBILITY_KEY]:
+      false
+  });
+
+export const H_EARTH_3D_COMPOSITOR_INERTIA_POLICY =
+  deepFreeze({
+    enabled: true,
+
+    damping:
+      H_EARTH_3D_INTERACTION_CAPACITY
+        .inertiaDamping ??
+      0.88,
+
+    minimumVelocity:
+      H_EARTH_3D_INTERACTION_CAPACITY
+        .inertiaMinimumVelocity ??
+      0.018,
+
+    maximumFrames:
+      H_EARTH_3D_INTERACTION_CAPACITY
+        .inertiaMaximumFrames ??
+      90,
+
+    invalidAdvancementPolicy:
+      'REJECT_ADVANCEMENT_AND_STOP_INERTIA_FAIL_CLOSED'
+  });
+
+export const H_EARTH_3D_COMPOSITOR_INITIAL_INERTIA_STATE =
+  deepFreeze({
     active: false,
     mode: 'IDLE',
 
@@ -1598,7 +1221,8 @@ const initialState = {
     zoomVelocity: 0,
 
     damping:
-      H_EARTH_3D_COMPOSITOR_INERTIA_POLICY.damping,
+      H_EARTH_3D_COMPOSITOR_INERTIA_POLICY
+        .damping,
 
     frameCount: 0,
 
@@ -1609,92 +1233,446 @@ const initialState = {
     minimumVelocity:
       H_EARTH_3D_COMPOSITOR_INERTIA_POLICY
         .minimumVelocity
-  }
-};
+  });
 
-/**
- * Controlled module state.
- */
+export const H_EARTH_3D_COMPOSITOR_REVISION_LAW =
+  deepFreeze({
+    camera:
+      'ADVANCE_ONCE_WHEN_EFFECTIVE_CAMERA_STATE_CHANGES',
+
+    viewport:
+      'ADVANCE_ONCE_WHEN_EFFECTIVE_VIEWPORT_STATE_CHANGES',
+
+    visibility:
+      'ADVANCE_ONCE_WHEN_EFFECTIVE_PRESENTATION_VISIBILITY_CHANGES',
+
+    inertia:
+      'ADVANCE_ONCE_WHEN_EFFECTIVE_INERTIA_STATE_CHANGES',
+
+    frame:
+      'ADVANCE_ONCE_PER_COMPLETED_PUBLIC_MUTATION_OPERATION_WHEN_ANY_RENDERER_RELEVANT_COMPONENT_MATERIALLY_CHANGES',
+
+    composition:
+      'FRAME_COMPOSITION_ADVANCES_NO_REVISIONS',
+
+    rejectedInertiaAdvancement:
+      'A_REJECTED_INERTIA_ADVANCEMENT_MAY_ADVANCE_INERTIA_AND_FRAME_REVISIONS_ONLY_TO_RECORD_FAIL_CLOSED_INERTIA_SHUTDOWN'
+  });
+
+
+/* ==========================================================================
+ * 09 · INTENT TYPES AND EXACT PUBLIC INTENT SURFACES
+ * ========================================================================== */
+
+export const H_EARTH_3D_COMPOSITOR_INTENT_TYPES =
+  deepFreeze({
+    orbit:
+      'H_EARTH_COMPOSITOR_INTENT_ORBIT',
+
+    pan:
+      'H_EARTH_COMPOSITOR_INTENT_PAN',
+
+    zoom:
+      'H_EARTH_COMPOSITOR_INTENT_ZOOM',
+
+    resetView:
+      'H_EARTH_COMPOSITOR_INTENT_RESET_VIEW',
+
+    setCameraState:
+      'H_EARTH_COMPOSITOR_INTENT_SET_CAMERA_STATE',
+
+    setViewport:
+      'H_EARTH_COMPOSITOR_INTENT_SET_VIEWPORT',
+
+    setVisibility:
+      'H_EARTH_COMPOSITOR_INTENT_SET_VISIBILITY',
+
+    startInertia:
+      'H_EARTH_COMPOSITOR_INTENT_START_INERTIA',
+
+    advanceInertia:
+      'H_EARTH_COMPOSITOR_INTENT_ADVANCE_INERTIA',
+
+    stopInertia:
+      'H_EARTH_COMPOSITOR_INTENT_STOP_INERTIA'
+  });
+
+const REQUIRED_INTENT_KEYS_BY_TYPE =
+  deepFreeze({
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.orbit]:
+      Object.freeze([
+        'type',
+        'yawDeltaDegrees',
+        'pitchDeltaDegrees'
+      ]),
+
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.pan]:
+      Object.freeze([
+        'type',
+        'horizontalDelta',
+        'verticalDelta',
+        'depthDelta'
+      ]),
+
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.zoom]:
+      Object.freeze([
+        'type',
+        'zoomScaleDelta'
+      ]),
+
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.resetView]:
+      Object.freeze([
+        'type'
+      ]),
+
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setCameraState]:
+      Object.freeze([
+        'type',
+        'cameraState'
+      ]),
+
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setViewport]:
+      Object.freeze([
+        'type',
+        'viewport'
+      ]),
+
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setVisibility]:
+      Object.freeze([
+        'type',
+        'visibility'
+      ]),
+
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.startInertia]:
+      Object.freeze([
+        'type',
+        'velocity'
+      ]),
+
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.advanceInertia]:
+      Object.freeze([
+        'type'
+      ]),
+
+    [H_EARTH_3D_COMPOSITOR_INTENT_TYPES.stopInertia]:
+      Object.freeze([
+        'type'
+      ])
+  });
+
+
+/* ==========================================================================
+ * 10 · INTERNAL CONTROLLED STATE AND RECEIPT LEDGER
+ * ========================================================================== */
+
 const compositorState = {
   camera:
-    clonePlain(initialState.camera),
+    cloneKnownPlain(
+      H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE
+    ),
 
   viewport:
-    clonePlain(initialState.viewport),
+    cloneKnownPlain(
+      H_EARTH_3D_COMPOSITOR_INITIAL_VIEWPORT_STATE
+    ),
 
   visibility:
-    clonePlain(initialState.visibility),
+    cloneKnownPlain(
+      H_EARTH_3D_COMPOSITOR_INITIAL_VISIBILITY_STATE
+    ),
 
   inertia:
-    clonePlain(initialState.inertia),
+    cloneKnownPlain(
+      H_EARTH_3D_COMPOSITOR_INITIAL_INERTIA_STATE
+    ),
 
-  cameraRevision: 0,
-  viewportRevision: 0,
-  visibilityRevision: 0,
-  inertiaRevision: 0,
-  frameRevision: 0,
+  revisions: {
+    camera: 0,
+    viewport: 0,
+    visibility: 0,
+    inertia: 0,
+    frame: 0
+  },
+
   intentSequence: 0,
 
   lastAcceptedIntent: null,
-  lastRejectedIntent: null,
-  lastIntentReceipt: null,
-  lastFrameReceipt: null,
-  lastViewportReceipt: null,
-  lastVisibilityReceipt: null,
-  lastResetReceipt: null
+  lastRejectedIntent: null
 };
 
-const cloneCameraState = () =>
-  clonePlain(
-    compositorState.camera
-  );
+const compositorOperationalReceipts = {
+  intent: null,
+  camera: null,
+  viewport: null,
+  visibility: null,
+  inertia: null,
+  reset: null,
+  frame: null,
+  handoff: null
+};
 
-const cloneViewportState = () =>
-  clonePlain(
-    compositorState.viewport
-  );
 
-const cloneVisibilityState = () =>
-  clonePlain(
-    compositorState.visibility
-  );
+/* ==========================================================================
+ * 11 · STATE EQUALITY
+ * ========================================================================== */
 
-const cloneInertiaState = () =>
-  clonePlain(
+function cameraStatesEqual(
+  left,
+  right
+) {
+  return (
+    isPlainRecord(left) &&
+    isPlainRecord(right) &&
+    Object.is(
+      left.yawDegrees,
+      right.yawDegrees
+    ) &&
+    Object.is(
+      left.pitchDegrees,
+      right.pitchDegrees
+    ) &&
+    Object.is(
+      left.zoomScale,
+      right.zoomScale
+    ) &&
+    vectorsEqual(
+      left.target,
+      right.target
+    ) &&
+    Object.is(
+      left.verticalFovDegrees,
+      right.verticalFovDegrees
+    ) &&
+    Object.is(
+      left.nearPlane,
+      right.nearPlane
+    ) &&
+    Object.is(
+      left.farPlane,
+      right.farPlane
+    )
+  );
+}
+
+function viewportStatesEqual(
+  left,
+  right
+) {
+  return (
+    isPlainRecord(left) &&
+    isPlainRecord(right) &&
+    Object.is(
+      left.widthPx,
+      right.widthPx
+    ) &&
+    Object.is(
+      left.heightPx,
+      right.heightPx
+    ) &&
+    Object.is(
+      left.pixelRatio,
+      right.pixelRatio
+    ) &&
+    Object.is(
+      left.aspectRatio,
+      right.aspectRatio
+    ) &&
+    left.orientation ===
+      right.orientation &&
+    left.capacityStatus ===
+      right.capacityStatus
+  );
+}
+
+function visibilityStatesEqual(
+  left,
+  right
+) {
+  return (
+    isPlainRecord(left) &&
+    isPlainRecord(right) &&
+    left[
+      PRIMARY_PRESENTATION_VISIBILITY_KEY
+    ] ===
+      right[
+        PRIMARY_PRESENTATION_VISIBILITY_KEY
+      ] &&
+    left[
+      ROUTE_OVERLAY_VISIBILITY_KEY
+    ] ===
+      right[
+        ROUTE_OVERLAY_VISIBILITY_KEY
+      ]
+  );
+}
+
+function inertiaStatesEqual(
+  left,
+  right
+) {
+  return (
+    isPlainRecord(left) &&
+    isPlainRecord(right) &&
+    left.active === right.active &&
+    left.mode === right.mode &&
+    Object.is(
+      left.yawVelocity,
+      right.yawVelocity
+    ) &&
+    Object.is(
+      left.pitchVelocity,
+      right.pitchVelocity
+    ) &&
+    Object.is(
+      left.panHorizontalVelocity,
+      right.panHorizontalVelocity
+    ) &&
+    Object.is(
+      left.panVerticalVelocity,
+      right.panVerticalVelocity
+    ) &&
+    Object.is(
+      left.panDepthVelocity,
+      right.panDepthVelocity
+    ) &&
+    Object.is(
+      left.zoomVelocity,
+      right.zoomVelocity
+    ) &&
+    Object.is(
+      left.damping,
+      right.damping
+    ) &&
+    left.frameCount ===
+      right.frameCount &&
+    left.maximumFrames ===
+      right.maximumFrames &&
+    Object.is(
+      left.minimumVelocity,
+      right.minimumVelocity
+    )
+  );
+}
+
+
+/* ==========================================================================
+ * 12 · TRANSACTIONAL STATE COMMIT
+ * ========================================================================== */
+
+function commitCompositorMutation({
+  nextCamera =
+    compositorState.camera,
+
+  nextViewport =
+    compositorState.viewport,
+
+  nextVisibility =
+    compositorState.visibility,
+
+  nextInertia =
     compositorState.inertia
-  );
+}) {
+  const cameraChanged =
+    !cameraStatesEqual(
+      compositorState.camera,
+      nextCamera
+    );
 
-const isWithinBounds = (
-  value,
-  minimum,
-  maximum
-) =>
-  value >= minimum &&
-  value <= maximum;
+  const viewportChanged =
+    !viewportStatesEqual(
+      compositorState.viewport,
+      nextViewport
+    );
 
-const isPositionWithinBounds = (
-  position
-) =>
-  isWithinBounds(
-    position.x,
-    POSITION_BOUNDS.xMin,
-    POSITION_BOUNDS.xMax
-  ) &&
-  isWithinBounds(
-    position.y,
-    POSITION_BOUNDS.yMin,
-    POSITION_BOUNDS.yMax
-  ) &&
-  isWithinBounds(
-    position.z,
-    POSITION_BOUNDS.zMin,
-    POSITION_BOUNDS.zMax
-  );
+  const visibilityChanged =
+    !visibilityStatesEqual(
+      compositorState.visibility,
+      nextVisibility
+    );
 
-const clampTarget = (
-  target
-) =>
-  createVector(
+  const inertiaChanged =
+    !inertiaStatesEqual(
+      compositorState.inertia,
+      nextInertia
+    );
+
+  if (cameraChanged) {
+    compositorState.camera =
+      cloneKnownPlain(
+        nextCamera
+      );
+
+    compositorState
+      .revisions
+      .camera += 1;
+  }
+
+  if (viewportChanged) {
+    compositorState.viewport =
+      cloneKnownPlain(
+        nextViewport
+      );
+
+    compositorState
+      .revisions
+      .viewport += 1;
+  }
+
+  if (visibilityChanged) {
+    compositorState.visibility =
+      cloneKnownPlain(
+        nextVisibility
+      );
+
+    compositorState
+      .revisions
+      .visibility += 1;
+  }
+
+  if (inertiaChanged) {
+    compositorState.inertia =
+      cloneKnownPlain(
+        nextInertia
+      );
+
+    compositorState
+      .revisions
+      .inertia += 1;
+  }
+
+  const materiallyChanged =
+    cameraChanged ||
+    viewportChanged ||
+    visibilityChanged ||
+    inertiaChanged;
+
+  if (materiallyChanged) {
+    compositorState
+      .revisions
+      .frame += 1;
+  }
+
+  return deepFreeze({
+    materiallyChanged,
+    cameraChanged,
+    viewportChanged,
+    visibilityChanged,
+    inertiaChanged,
+
+    revisions:
+      cloneKnownPlain(
+        compositorState.revisions
+      )
+  });
+}
+
+
+/* ==========================================================================
+ * 13 · CAMERA NORMALIZATION
+ * ========================================================================== */
+
+function clampTarget(target) {
+  return createVector(
     clamp(
       target.x,
       TARGET_BOUNDS.xMin,
@@ -1713,18 +1691,23 @@ const clampTarget = (
       TARGET_BOUNDS.zMax
     )
   );
+}
 
-const deriveCameraPosition = ({
+function deriveCameraPosition({
   yawDegrees,
   pitchDegrees,
   zoomScale,
   target
-}) => {
+}) {
   const yawRadians =
-    toRadians(yawDegrees);
+    toRadians(
+      yawDegrees
+    );
 
   const pitchRadians =
-    toRadians(pitchDegrees);
+    toRadians(
+      pitchDegrees
+    );
 
   const distance =
     INITIAL_DISTANCE *
@@ -1732,17 +1715,25 @@ const deriveCameraPosition = ({
 
   const horizontalDistance =
     distance *
-    Math.cos(pitchRadians);
+    Math.cos(
+      pitchRadians
+    );
 
   const offset =
     createVector(
-      Math.sin(yawRadians) *
+      Math.sin(
+        yawRadians
+      ) *
         horizontalDistance,
 
-      Math.sin(pitchRadians) *
+      Math.sin(
+        pitchRadians
+      ) *
         distance,
 
-      Math.cos(yawRadians) *
+      Math.cos(
+        yawRadians
+      ) *
         horizontalDistance
     );
 
@@ -1755,11 +1746,30 @@ const deriveCameraPosition = ({
         offset
       )
   };
-};
+}
 
-const fitCameraToPositionBounds = (
+function isPositionWithinBounds(
+  position
+) {
+  return (
+    position.x >=
+      POSITION_BOUNDS.xMin &&
+    position.x <=
+      POSITION_BOUNDS.xMax &&
+    position.y >=
+      POSITION_BOUNDS.yMin &&
+    position.y <=
+      POSITION_BOUNDS.yMax &&
+    position.z >=
+      POSITION_BOUNDS.zMin &&
+    position.z <=
+      POSITION_BOUNDS.zMax
+  );
+}
+
+function fitCameraToPositionBounds(
   candidate
-) => {
+) {
   const normalized = {
     ...candidate,
 
@@ -1776,43 +1786,39 @@ const fitCameraToPositionBounds = (
       )
   };
 
-  const initialDerived =
+  let derived =
     deriveCameraPosition(
       normalized
     );
 
   if (
     isPositionWithinBounds(
-      initialDerived.position
+      derived.position
     )
   ) {
     return {
       eligible: true,
       adjusted: false,
       cameraState: normalized,
-      derived: initialDerived
+      derived
     };
   }
-
-  const minimumScale =
-    ZOOM_SCALE_BOUNDS.minimum;
-
-  const maximumAttempts = 24;
 
   let fittedScale =
     normalized.zoomScale;
 
   for (
     let attempt = 0;
-    attempt < maximumAttempts;
+    attempt < 32;
     attempt += 1
   ) {
     fittedScale =
-      lerp(
-        fittedScale,
-        minimumScale,
-        0.24
-      );
+      fittedScale -
+      (
+        fittedScale -
+        ZOOM_SCALE_BOUNDS.minimum
+      ) *
+      0.25;
 
     const fittedCandidate = {
       ...normalized,
@@ -1820,19 +1826,19 @@ const fitCameraToPositionBounds = (
       zoomScale:
         clamp(
           fittedScale,
-          minimumScale,
+          ZOOM_SCALE_BOUNDS.minimum,
           ZOOM_SCALE_BOUNDS.maximum
         )
     };
 
-    const fittedDerived =
+    derived =
       deriveCameraPosition(
         fittedCandidate
       );
 
     if (
       isPositionWithinBounds(
-        fittedDerived.position
+        derived.position
       )
     ) {
       return {
@@ -1845,98 +1851,125 @@ const fitCameraToPositionBounds = (
         cameraState:
           fittedCandidate,
 
-        derived:
-          fittedDerived
+        derived
       };
     }
   }
 
   return {
     eligible: false,
-    adjusted: true,
 
     issue:
       createCompositorIssue(
-        'CAMERA_POSITION_OUTSIDE_CAPACITY_BOUNDS',
-        'The proposed camera state cannot be resolved inside capacity position bounds.',
-        deepFreeze({
-          proposedPosition:
-            initialDerived.position,
+        'CAMERA_POSITION_OUTSIDE_NAVIGATION_BOUNDS',
+        'The camera state cannot be resolved inside compositor navigation bounds.',
+        {
+          actual:
+            derived.position,
 
-          positionBounds:
+          expected:
             POSITION_BOUNDS
-        })
+        }
       )
   };
-};
+}
 
-/**
- * Evaluates and normalizes a camera state.
- */
 export function evaluateHEarth3DCompositorCameraState(
   cameraCandidate
 ) {
   const issues = [];
 
-  if (
-    !cameraCandidate ||
-    typeof cameraCandidate !== 'object'
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'CAMERA_STATE_MISSING',
-        'A camera state object is required.'
-      )
-    );
-
+  if (!isPlainRecord(cameraCandidate)) {
     return deepFreeze({
       eligible: false,
 
       status:
         'CAMERA_STATE_NOT_ELIGIBLE',
 
-      issues:
-        deepFreeze(issues)
+      issues: freezeIssues([
+        createCompositorIssue(
+          'CAMERA_STATE_NOT_RECORD',
+          'The camera state must be a strict plain-record object.'
+        )
+      ])
     });
   }
 
+  const keyEvaluation =
+    evaluateExactKeySurface(
+      cameraCandidate,
+      REQUIRED_CAMERA_STATE_KEYS
+    );
+
+  if (!keyEvaluation.ok) {
+    issues.push(
+      createCompositorIssue(
+        'CAMERA_STATE_KEY_SURFACE_INVALID',
+        'The camera replacement input must contain exactly the declared fields.',
+        {
+          details:
+            deepFreeze({
+              unknownKeys:
+                keyEvaluation.unknownKeys,
+
+              missingKeys:
+                keyEvaluation.missingKeys
+            })
+        }
+      )
+    );
+  }
+
+  if (!isPlainRecord(cameraCandidate.target)) {
+    issues.push(
+      createCompositorIssue(
+        'CAMERA_TARGET_NOT_RECORD',
+        'Camera target must be a strict plain-record object.',
+        {
+          field:
+            'target'
+        }
+      )
+    );
+  } else {
+    const targetKeyEvaluation =
+      evaluateExactKeySurface(
+        cameraCandidate.target,
+        REQUIRED_TARGET_KEYS
+      );
+
+    if (!targetKeyEvaluation.ok) {
+      issues.push(
+        createCompositorIssue(
+          'CAMERA_TARGET_KEY_SURFACE_INVALID',
+          'Camera target must contain exactly x, y, and z.',
+          {
+            details:
+              deepFreeze({
+                unknownKeys:
+                  targetKeyEvaluation
+                    .unknownKeys,
+
+                missingKeys:
+                  targetKeyEvaluation
+                    .missingKeys
+              })
+          }
+        )
+      );
+    }
+  }
+
   const requiredNumbers = [
-    [
-      'yawDegrees',
-      cameraCandidate.yawDegrees
-    ],
-    [
-      'pitchDegrees',
-      cameraCandidate.pitchDegrees
-    ],
-    [
-      'zoomScale',
-      cameraCandidate.zoomScale
-    ],
-    [
-      'verticalFovDegrees',
-      cameraCandidate.verticalFovDegrees
-    ],
-    [
-      'nearPlane',
-      cameraCandidate.nearPlane
-    ],
-    [
-      'farPlane',
-      cameraCandidate.farPlane
-    ],
-    [
-      'target.x',
-      cameraCandidate.target?.x
-    ],
-    [
-      'target.y',
-      cameraCandidate.target?.y
-    ],
-    [
-      'target.z',
-      cameraCandidate.target?.z
-    ]
+    ['yawDegrees', cameraCandidate.yawDegrees],
+    ['pitchDegrees', cameraCandidate.pitchDegrees],
+    ['zoomScale', cameraCandidate.zoomScale],
+    ['verticalFovDegrees', cameraCandidate.verticalFovDegrees],
+    ['nearPlane', cameraCandidate.nearPlane],
+    ['farPlane', cameraCandidate.farPlane],
+    ['target.x', cameraCandidate.target?.x],
+    ['target.y', cameraCandidate.target?.y],
+    ['target.z', cameraCandidate.target?.z]
   ];
 
   for (
@@ -1947,14 +1980,70 @@ export function evaluateHEarth3DCompositorCameraState(
       issues.push(
         createCompositorIssue(
           'CAMERA_FIELD_NOT_FINITE',
-          `Camera field ${field} must be finite.`,
-          deepFreeze({
+          `${field} must be finite.`,
+          {
             field,
-            value
-          })
+
+            actual:
+              value ?? null
+          }
         )
       );
     }
+  }
+
+  if (
+    isFiniteNumber(
+      cameraCandidate.nearPlane
+    ) &&
+    !Object.is(
+      cameraCandidate.nearPlane,
+      INITIAL_PROJECTION.nearPlane
+    )
+  ) {
+    issues.push(
+      createCompositorIssue(
+        'CAMERA_NEAR_PLANE_NOT_PERMITTED',
+        'The compositor camera replacement must preserve the fixed capacity-derived near plane.',
+        {
+          field:
+            'nearPlane',
+
+          expected:
+            INITIAL_PROJECTION.nearPlane,
+
+          actual:
+            cameraCandidate.nearPlane
+        }
+      )
+    );
+  }
+
+  if (
+    isFiniteNumber(
+      cameraCandidate.farPlane
+    ) &&
+    !Object.is(
+      cameraCandidate.farPlane,
+      INITIAL_PROJECTION.farPlane
+    )
+  ) {
+    issues.push(
+      createCompositorIssue(
+        'CAMERA_FAR_PLANE_NOT_PERMITTED',
+        'The compositor camera replacement must preserve the fixed capacity-derived far plane.',
+        {
+          field:
+            'farPlane',
+
+          expected:
+            INITIAL_PROJECTION.farPlane,
+
+          actual:
+            cameraCandidate.farPlane
+        }
+      )
+    );
   }
 
   if (issues.length > 0) {
@@ -1965,7 +2054,7 @@ export function evaluateHEarth3DCompositorCameraState(
         'CAMERA_STATE_NOT_ELIGIBLE',
 
       issues:
-        deepFreeze(issues)
+        freezeIssues(issues)
     });
   }
 
@@ -2024,7 +2113,7 @@ export function evaluateHEarth3DCompositorCameraState(
       status:
         'CAMERA_STATE_NOT_ELIGIBLE',
 
-      issues: deepFreeze([
+      issues: freezeIssues([
         fit.issue
       ])
     });
@@ -2035,7 +2124,7 @@ export function evaluateHEarth3DCompositorCameraState(
 
     status:
       fit.adjusted
-        ? 'CAMERA_STATE_ELIGIBLE_WITH_CAPACITY_ADJUSTMENT'
+        ? 'CAMERA_STATE_ELIGIBLE_WITH_NAVIGATION_ADJUSTMENT'
         : 'CAMERA_STATE_ELIGIBLE',
 
     adjusted:
@@ -2047,31 +2136,34 @@ export function evaluateHEarth3DCompositorCameraState(
 
     cameraState:
       deepFreeze(
-        clonePlain(
+        cloneKnownPlain(
           fit.cameraState
         )
       ),
 
-    derived: deepFreeze({
-      distance:
-        fit.derived.distance,
+    derived:
+      deepFreeze({
+        distance:
+          fit.derived.distance,
 
-      position:
-        deepFreeze(
-          cloneVector(
-            fit.derived.position
+        position:
+          deepFreeze(
+            cloneVector(
+              fit.derived.position
+            )
           )
-        )
-    }),
+      }),
 
     issues:
-      deepFreeze([])
+      EMPTY_FROZEN_ARRAY
   });
 }
 
-/**
- * Resolves compositor-owned camera pose.
- */
+
+/* ==========================================================================
+ * 14 · RESOLVED CAMERA POSE
+ * ========================================================================== */
+
 export function resolveHEarth3DCompositorCameraPose(
   cameraState =
     compositorState.camera
@@ -2086,7 +2178,7 @@ export function resolveHEarth3DCompositorCameraPose(
       eligible: false,
 
       status:
-        evaluation.status,
+        'COMPOSITOR_CAMERA_POSE_NOT_RESOLVED',
 
       issues:
         evaluation.issues
@@ -2095,12 +2187,16 @@ export function resolveHEarth3DCompositorCameraPose(
 
   const position =
     cloneVector(
-      evaluation.derived.position
+      evaluation
+        .derived
+        .position
     );
 
   const target =
     cloneVector(
-      evaluation.cameraState.target
+      evaluation
+        .cameraState
+        .target
     );
 
   const forward =
@@ -2111,15 +2207,10 @@ export function resolveHEarth3DCompositorCameraPose(
       )
     );
 
-  const worldUp =
-    cloneVector(
-      INITIAL_UP
-    );
-
   const right =
     normalizeVector(
       crossVector(
-        worldUp,
+        INITIAL_UP,
         forward
       )
     );
@@ -2132,30 +2223,34 @@ export function resolveHEarth3DCompositorCameraPose(
       )
     );
 
+  if (
+    getVectorLength(forward) <=
+      Number.EPSILON ||
+    getVectorLength(right) <=
+      Number.EPSILON ||
+    getVectorLength(up) <=
+      Number.EPSILON
+  ) {
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'COMPOSITOR_CAMERA_BASIS_NOT_RESOLVED',
+
+      issues: freezeIssues([
+        createCompositorIssue(
+          'CAMERA_BASIS_DEGENERATE',
+          'The resolved camera basis is degenerate.'
+        )
+      ])
+    });
+  }
+
   return deepFreeze({
     eligible: true,
 
     status:
       'COMPOSITOR_CAMERA_POSE_RESOLVED',
-
-    model:
-      H_EARTH_3D_CAMERA_CAPACITY
-        .cameraModel,
-
-    yawDegrees:
-      evaluation.cameraState
-        .yawDegrees,
-
-    pitchDegrees:
-      evaluation.cameraState
-        .pitchDegrees,
-
-    zoomScale:
-      evaluation.cameraState
-        .zoomScale,
-
-    distance:
-      evaluation.derived.distance,
 
     position:
       deepFreeze(position),
@@ -2163,112 +2258,153 @@ export function resolveHEarth3DCompositorCameraPose(
     target:
       deepFreeze(target),
 
+    up:
+      deepFreeze(up),
+
+    verticalFovDegrees:
+      evaluation
+        .cameraState
+        .verticalFovDegrees,
+
+    nearPlane:
+      evaluation
+        .cameraState
+        .nearPlane,
+
+    farPlane:
+      evaluation
+        .cameraState
+        .farPlane,
+
     forward:
       deepFreeze(forward),
 
     right:
       deepFreeze(right),
 
-    up:
-      deepFreeze(up),
+    yawDegrees:
+      evaluation
+        .cameraState
+        .yawDegrees,
 
-    verticalFovDegrees:
-      evaluation.cameraState
-        .verticalFovDegrees,
+    pitchDegrees:
+      evaluation
+        .cameraState
+        .pitchDegrees,
 
-    nearPlane:
-      evaluation.cameraState
-        .nearPlane,
+    zoomScale:
+      evaluation
+        .cameraState
+        .zoomScale,
 
-    farPlane:
-      evaluation.cameraState
-        .farPlane,
-
-    positionWithinCapacityBounds:
-      isPositionWithinBounds(
-        position
-      ),
-
-    cameraRevision:
-      compositorState.cameraRevision
+    distance:
+      evaluation
+        .derived
+        .distance
   });
 }
 
-/**
- * Evaluates a viewport candidate.
- */
+
+/* ==========================================================================
+ * 15 · VIEWPORT EVALUATION
+ * ========================================================================== */
+
 export function evaluateHEarth3DCompositorViewport(
   viewportCandidate
 ) {
   const issues = [];
 
-  if (
-    !viewportCandidate ||
-    typeof viewportCandidate !== 'object'
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'VIEWPORT_MISSING',
-        'A viewport object is required.'
-      )
-    );
-
+  if (!isPlainRecord(viewportCandidate)) {
     return deepFreeze({
       eligible: false,
 
       status:
         'VIEWPORT_NOT_ELIGIBLE',
 
-      issues:
-        deepFreeze(issues)
+      issues: freezeIssues([
+        createCompositorIssue(
+          'VIEWPORT_NOT_RECORD',
+          'The viewport input must be a strict plain-record object.'
+        )
+      ])
     });
   }
 
-  const widthPx =
-    viewportCandidate.widthPx;
+  const keyEvaluation =
+    evaluateExactKeySurface(
+      viewportCandidate,
+      REQUIRED_VIEWPORT_INPUT_KEYS
+    );
 
-  const heightPx =
-    viewportCandidate.heightPx;
+  if (!keyEvaluation.ok) {
+    issues.push(
+      createCompositorIssue(
+        'VIEWPORT_KEY_SURFACE_INVALID',
+        'The viewport input must contain exactly widthPx, heightPx, and pixelRatio.',
+        {
+          details:
+            deepFreeze({
+              unknownKeys:
+                keyEvaluation.unknownKeys,
 
-  const pixelRatio =
-    viewportCandidate.pixelRatio ??
-    1;
+              missingKeys:
+                keyEvaluation.missingKeys
+            })
+        }
+      )
+    );
+  }
 
-  if (
-    !isFiniteNumber(widthPx) ||
-    widthPx <= 0
-  ) {
+  const {
+    widthPx,
+    heightPx,
+    pixelRatio
+  } = viewportCandidate;
+
+  if (!isPositiveFiniteNumber(widthPx)) {
     issues.push(
       createCompositorIssue(
         'VIEWPORT_WIDTH_INVALID',
-        'Viewport width must be a positive finite number.',
-        widthPx
+        'Viewport width must be positive and finite.',
+        {
+          field:
+            'widthPx',
+
+          actual:
+            widthPx ?? null
+        }
       )
     );
   }
 
-  if (
-    !isFiniteNumber(heightPx) ||
-    heightPx <= 0
-  ) {
+  if (!isPositiveFiniteNumber(heightPx)) {
     issues.push(
       createCompositorIssue(
         'VIEWPORT_HEIGHT_INVALID',
-        'Viewport height must be a positive finite number.',
-        heightPx
+        'Viewport height must be positive and finite.',
+        {
+          field:
+            'heightPx',
+
+          actual:
+            heightPx ?? null
+        }
       )
     );
   }
 
-  if (
-    !isFiniteNumber(pixelRatio) ||
-    pixelRatio <= 0
-  ) {
+  if (!isPositiveFiniteNumber(pixelRatio)) {
     issues.push(
       createCompositorIssue(
         'VIEWPORT_PIXEL_RATIO_INVALID',
-        'Viewport pixel ratio must be a positive finite number.',
-        pixelRatio
+        'Viewport pixel ratio must be positive and finite.',
+        {
+          field:
+            'pixelRatio',
+
+          actual:
+            pixelRatio ?? null
+        }
       )
     );
   }
@@ -2280,10 +2416,27 @@ export function evaluateHEarth3DCompositorViewport(
       status:
         'VIEWPORT_NOT_ELIGIBLE',
 
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
       issues:
-        deepFreeze(issues)
+        freezeIssues(issues)
     });
   }
+
+  const aspectRatio =
+    widthPx /
+    heightPx;
+
+  const orientation =
+    aspectRatio > 1.05
+      ? 'LANDSCAPE'
+      : aspectRatio < 0.95
+        ? 'PORTRAIT'
+        : 'SQUARE';
 
   const minimumWidth =
     H_EARTH_3D_VIEWPORT_CAPACITY
@@ -2305,39 +2458,35 @@ export function evaluateHEarth3DCompositorViewport(
       .maximumHeightPx ??
     Number.POSITIVE_INFINITY;
 
-  const withinCapacity =
+  const locallyWithinEnvelope =
     widthPx >= minimumWidth &&
     heightPx >= minimumHeight &&
     widthPx <= maximumWidth &&
     heightPx <= maximumHeight;
 
-  if (!withinCapacity) {
+  if (!locallyWithinEnvelope) {
     issues.push(
       createCompositorIssue(
-        'VIEWPORT_OUTSIDE_CAPACITY',
-        'Viewport dimensions fall outside the renewed capacity envelope.',
-        deepFreeze({
-          widthPx,
-          heightPx,
-          minimumWidth,
-          minimumHeight,
-          maximumWidth,
-          maximumHeight
-        })
+        'VIEWPORT_OUTSIDE_LOCAL_CAPACITY_ENVELOPE',
+        'The viewport falls outside the compositor fail-fast capacity envelope.',
+        {
+          expected:
+            deepFreeze({
+              minimumWidth,
+              minimumHeight,
+              maximumWidth,
+              maximumHeight
+            }),
+
+          actual:
+            deepFreeze({
+              widthPx,
+              heightPx
+            })
+        }
       )
     );
   }
-
-  const aspectRatio =
-    widthPx /
-    heightPx;
-
-  const orientation =
-    aspectRatio > 1.05
-      ? 'LANDSCAPE'
-      : aspectRatio < 0.95
-        ? 'PORTRAIT'
-        : 'SQUARE';
 
   return deepFreeze({
     eligible:
@@ -2345,76 +2494,308 @@ export function evaluateHEarth3DCompositorViewport(
 
     status:
       issues.length === 0
-        ? 'VIEWPORT_ELIGIBLE'
+        ? 'VIEWPORT_LOCALLY_ELIGIBLE'
         : 'VIEWPORT_NOT_ELIGIBLE',
 
-    viewport: deepFreeze({
-      widthPx,
-      heightPx,
-      pixelRatio,
-      aspectRatio,
-      orientation,
+    viewport:
+      deepFreeze({
+        widthPx,
+        heightPx,
+        pixelRatio,
+        aspectRatio,
+        orientation,
 
-      capacityStatus:
-        withinCapacity
-          ? 'WITHIN_CAPACITY'
-          : 'OUTSIDE_CAPACITY'
-    }),
+        capacityStatus:
+          locallyWithinEnvelope
+            ? 'WITHIN_CAPACITY'
+            : 'OUTSIDE_CAPACITY'
+      }),
+
+    capacityAuthority:
+      H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+    finalFrameEligibilityAuthority:
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
 
     issues:
-      deepFreeze(issues)
+      freezeIssues(issues)
   });
 }
 
-/**
- * Sets compositor-owned viewport state.
- */
-export function setHEarth3DCompositorViewport(
-  viewportCandidate
+
+/* ==========================================================================
+ * 16 · VISIBILITY EVALUATION
+ * ========================================================================== */
+
+export function evaluateHEarth3DCompositorVisibility(
+  visibilityCandidate
 ) {
+  const issues = [];
+
+  if (!isPlainRecord(visibilityCandidate)) {
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'VISIBILITY_NOT_ELIGIBLE',
+
+      issues: freezeIssues([
+        createCompositorIssue(
+          'VISIBILITY_NOT_RECORD',
+          'The visibility input must be a strict plain-record object.'
+        )
+      ])
+    });
+  }
+
+  const keyEvaluation =
+    evaluateExactKeySurface(
+      visibilityCandidate,
+      REQUIRED_VISIBILITY_INPUT_KEYS
+    );
+
+  if (!keyEvaluation.ok) {
+    issues.push(
+      createCompositorIssue(
+        'VISIBILITY_KEY_SURFACE_INVALID',
+        'The visibility input must contain exactly the declared presentation controls.',
+        {
+          details:
+            deepFreeze({
+              unknownKeys:
+                keyEvaluation.unknownKeys,
+
+              missingKeys:
+                keyEvaluation.missingKeys
+            })
+        }
+      )
+    );
+  }
+
+  for (
+    const field
+    of REQUIRED_VISIBILITY_INPUT_KEYS
+  ) {
+    if (
+      typeof visibilityCandidate[field] !==
+      'boolean'
+    ) {
+      issues.push(
+        createCompositorIssue(
+          'VISIBILITY_FIELD_NOT_BOOLEAN',
+          `${field} must be boolean.`,
+          {
+            field,
+
+            actual:
+              visibilityCandidate[field] ??
+              null
+          }
+        )
+      );
+    }
+  }
+
+  return deepFreeze({
+    eligible:
+      issues.length === 0,
+
+    status:
+      issues.length === 0
+        ? 'VISIBILITY_ELIGIBLE'
+        : 'VISIBILITY_NOT_ELIGIBLE',
+
+    visibility:
+      issues.length === 0
+        ? deepFreeze({
+            [PRIMARY_PRESENTATION_VISIBILITY_KEY]:
+              visibilityCandidate[
+                PRIMARY_PRESENTATION_VISIBILITY_KEY
+              ],
+
+            [ROUTE_OVERLAY_VISIBILITY_KEY]:
+              visibilityCandidate[
+                ROUTE_OVERLAY_VISIBILITY_KEY
+              ]
+          })
+        : null,
+
+    admittedGeometryMutated:
+      false,
+
+    presentationAssignmentMutated:
+      false,
+
+    rendererConsumptionRequired:
+      true,
+
+    issues:
+      freezeIssues(issues)
+  });
+}
+
+
+/* ==========================================================================
+ * 17 · PUBLIC CAMERA, VIEWPORT, AND VISIBILITY MUTATIONS
+ * ========================================================================== */
+
+export function setHEarth3DCompositorCameraState(
+  cameraCandidate
+) {
+  const snapshot =
+    strictSnapshot(
+      cameraCandidate,
+      'cameraCandidate'
+    );
+
+  if (!snapshot.ok) {
+    return deepFreeze({
+      accepted: false,
+      updated: false,
+      materiallyChanged: false,
+
+      status:
+        'CAMERA_UPDATE_REJECTED',
+
+      issues: freezeIssues([
+        snapshot.issue
+      ])
+    });
+  }
+
   const evaluation =
-    evaluateHEarth3DCompositorViewport(
-      viewportCandidate
+    evaluateHEarth3DCompositorCameraState(
+      snapshot.value
     );
 
   if (!evaluation.eligible) {
-    const receipt =
-      deepFreeze({
-        receiptType:
-          'H_EARTH_3D_COMPOSITOR_VIEWPORT_RECEIPT',
+    return deepFreeze({
+      accepted: false,
+      updated: false,
+      materiallyChanged: false,
 
-        contractId:
-          H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+      status:
+        'CAMERA_UPDATE_REJECTED',
 
-        updated: false,
+      evaluation,
 
-        status:
-          'VIEWPORT_UPDATE_REJECTED',
-
-        evaluation,
-
-        rendererPassClaim: false,
-        visualPassClaim: false
-      });
-
-    compositorState.lastViewportReceipt =
-      receipt;
-
-    return receipt;
+      issues:
+        evaluation.issues
+    });
   }
 
-  compositorState.viewport = {
-    ...clonePlain(
-      evaluation.viewport
-    ),
+  const transaction =
+    commitCompositorMutation({
+      nextCamera:
+        evaluation.cameraState
+    });
 
-    revision:
-      compositorState.viewportRevision +
-      1
-  };
+  const receipt =
+    deepFreeze({
+      receiptType:
+        'H_EARTH_3D_COMPOSITOR_CAMERA_RECEIPT',
 
-  compositorState.viewportRevision += 1;
-  compositorState.frameRevision += 1;
+      contractId:
+        H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+
+      accepted:
+        true,
+
+      updated:
+        transaction.cameraChanged,
+
+      materiallyChanged:
+        transaction.materiallyChanged,
+
+      status:
+        transaction.cameraChanged
+          ? 'CAMERA_STATE_UPDATED'
+          : 'CAMERA_STATE_UNCHANGED',
+
+      camera:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.camera
+          )
+        ),
+
+      revisions:
+        transaction.revisions,
+
+      rendererPassClaim: false,
+      visualPassClaim: false,
+      validationClaim: false
+    });
+
+  compositorOperationalReceipts.camera =
+    receipt;
+
+  return receipt;
+}
+
+export function setHEarth3DCompositorViewport(
+  viewportCandidate
+) {
+  const snapshot =
+    strictSnapshot(
+      viewportCandidate,
+      'viewportCandidate'
+    );
+
+  if (!snapshot.ok) {
+    return deepFreeze({
+      accepted: false,
+      updated: false,
+      materiallyChanged: false,
+
+      status:
+        'VIEWPORT_UPDATE_REJECTED',
+
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+      issues: freezeIssues([
+        snapshot.issue
+      ])
+    });
+  }
+
+  const evaluation =
+    evaluateHEarth3DCompositorViewport(
+      snapshot.value
+    );
+
+  if (!evaluation.eligible) {
+    return deepFreeze({
+      accepted: false,
+      updated: false,
+      materiallyChanged: false,
+
+      status:
+        'VIEWPORT_UPDATE_REJECTED',
+
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+      evaluation,
+
+      issues:
+        evaluation.issues
+    });
+  }
+
+  const transaction =
+    commitCompositorMutation({
+      nextViewport:
+        evaluation.viewport
+    });
 
   const receipt =
     deepFreeze({
@@ -2424,303 +2805,97 @@ export function setHEarth3DCompositorViewport(
       contractId:
         H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-      updated: true,
+      accepted:
+        true,
+
+      updated:
+        transaction.viewportChanged,
+
+      materiallyChanged:
+        transaction.materiallyChanged,
 
       status:
-        'VIEWPORT_STATE_UPDATED',
+        transaction.viewportChanged
+          ? 'VIEWPORT_STATE_UPDATED'
+          : 'VIEWPORT_STATE_UNCHANGED',
 
       viewport:
         deepFreeze(
-          cloneViewportState()
+          cloneKnownPlain(
+            compositorState.viewport
+          )
         ),
 
-      viewportRevision:
-        compositorState.viewportRevision,
+      revisions:
+        transaction.revisions,
 
-      frameRevision:
-        compositorState.frameRevision,
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
 
       rendererPassClaim: false,
-      visualPassClaim: false
+      visualPassClaim: false,
+      validationClaim: false
     });
 
-  compositorState.lastViewportReceipt =
+  compositorOperationalReceipts.viewport =
     receipt;
 
   return receipt;
 }
 
-/**
- * Evaluates semantic layer order.
- */
-export function evaluateHEarth3DCompositionLayerOrder() {
-  const issues = [];
-
-  const layerIds =
-    H_EARTH_3D_COMPOSITION_LAYERS
-      .map((layer) => layer.id);
-
-  const uniqueLayerIds =
-    new Set(layerIds);
-
-  if (
-    uniqueLayerIds.size !==
-    layerIds.length
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'DUPLICATE_LAYER_ID_IN_ORDER',
-        'The semantic layer order contains duplicate layer IDs.'
-      )
-    );
-  }
-
-  const unorderedDescriptors =
-    layerIds.filter(
-      (layerId) =>
-        !H_EARTH_3D_COMPOSITION_LAYER_ORDER
-          .includes(layerId)
+export function setHEarth3DCompositorVisibility(
+  visibilityCandidate
+) {
+  const snapshot =
+    strictSnapshot(
+      visibilityCandidate,
+      'visibilityCandidate'
     );
 
-  if (
-    unorderedDescriptors.length > 0
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'LAYER_DESCRIPTOR_NOT_ORDERED',
-        'One or more layer descriptors are absent from semantic order.',
-        deepFreeze({
-          unorderedDescriptors
-        })
-      )
-    );
-  }
-
-  const orderedUnknownIds =
-    H_EARTH_3D_COMPOSITION_LAYER_ORDER
-      .filter(
-        (layerId) =>
-          !H_EARTH_3D_COMPOSITION_LAYER_MAP[
-            layerId
-          ]
-      );
-
-  if (
-    orderedUnknownIds.length > 0
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'ORDERED_LAYER_DESCRIPTOR_MISSING',
-        'One or more ordered layer IDs do not have descriptors.',
-        deepFreeze({
-          orderedUnknownIds
-        })
-      )
-    );
-  }
-
-  const requiredMissingFromOrder =
-    H_EARTH_3D_COMPOSITOR_VISIBILITY_POLICY
-      .requiredLayerIds
-      .filter(
-        (layerId) =>
-          !H_EARTH_3D_COMPOSITION_LAYER_ORDER
-            .includes(layerId)
-      );
-
-  if (
-    requiredMissingFromOrder.length > 0
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'REQUIRED_LAYER_MISSING_FROM_ORDER',
-        'One or more required semantic layers are absent from order.',
-        deepFreeze({
-          requiredMissingFromOrder
-        })
-      )
-    );
-  }
-
-  return deepFreeze({
-    eligible:
-      issues.length === 0,
-
-    status:
-      issues.length === 0
-        ? 'SEMANTIC_LAYER_ORDER_COHERENT'
-        : 'SEMANTIC_LAYER_ORDER_NOT_COHERENT',
-
-    issues:
-      deepFreeze(issues),
-
-    orderedLayerIds:
-      H_EARTH_3D_COMPOSITION_LAYER_ORDER
-  });
-}
-
-/**
- * Evaluates a visibility request.
- */
-export function evaluateHEarth3DCompositionVisibility({
-  visibleLayerIds
-} = {}) {
-  const issues = [];
-
-  if (
-    !Array.isArray(
-      visibleLayerIds
-    )
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'VISIBLE_LAYER_IDS_NOT_ARRAY',
-        'Visible layer IDs must be supplied as an array.'
-      )
-    );
-
+  if (!snapshot.ok) {
     return deepFreeze({
-      eligible: false,
+      accepted: false,
+      updated: false,
+      materiallyChanged: false,
 
       status:
-        'COMPOSITION_VISIBILITY_NOT_ELIGIBLE',
+        'VISIBILITY_UPDATE_REJECTED',
 
-      issues:
-        deepFreeze(issues)
+      issues: freezeIssues([
+        snapshot.issue
+      ])
     });
   }
 
-  const normalizedIds =
-    [...new Set(visibleLayerIds)];
-
-  const unknownIds =
-    normalizedIds.filter(
-      (layerId) =>
-        !H_EARTH_3D_COMPOSITION_LAYER_MAP[
-          layerId
-        ]
-    );
-
-  if (
-    unknownIds.length > 0
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'UNKNOWN_VISIBLE_LAYER_ID',
-        'The visibility request includes unknown layer IDs.',
-        deepFreeze({
-          unknownIds
-        })
-      )
-    );
-  }
-
-  const missingRequiredIds =
-    H_EARTH_3D_COMPOSITOR_VISIBILITY_POLICY
-      .requiredLayerIds
-      .filter(
-        (layerId) =>
-          !normalizedIds.includes(
-            layerId
-          )
-      );
-
-  if (
-    missingRequiredIds.length > 0
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'REQUIRED_VISIBLE_LAYER_MISSING',
-        'The visibility request suppresses one or more required layers.',
-        deepFreeze({
-          missingRequiredIds
-        })
-      )
-    );
-  }
-
-  const orderedVisibleLayerIds =
-    H_EARTH_3D_COMPOSITION_LAYER_ORDER
-      .filter(
-        (layerId) =>
-          normalizedIds.includes(
-            layerId
-          )
-      );
-
-  return deepFreeze({
-    eligible:
-      issues.length === 0,
-
-    status:
-      issues.length === 0
-        ? 'COMPOSITION_VISIBILITY_ELIGIBLE'
-        : 'COMPOSITION_VISIBILITY_NOT_ELIGIBLE',
-
-    visibleLayerIds:
-      deepFreeze(
-        normalizedIds
-      ),
-
-    orderedVisibleLayerIds:
-      deepFreeze(
-        orderedVisibleLayerIds
-      ),
-
-    issues:
-      deepFreeze(issues)
-  });
-}
-
-/**
- * Applies a visibility request.
- */
-export function setHEarth3DCompositorVisibleLayers(
-  visibleLayerIds
-) {
   const evaluation =
-    evaluateHEarth3DCompositionVisibility({
-      visibleLayerIds
-    });
+    evaluateHEarth3DCompositorVisibility(
+      snapshot.value
+    );
 
   if (!evaluation.eligible) {
-    const receipt =
-      deepFreeze({
-        receiptType:
-          'H_EARTH_3D_COMPOSITOR_VISIBILITY_RECEIPT',
+    return deepFreeze({
+      accepted: false,
+      updated: false,
+      materiallyChanged: false,
 
-        contractId:
-          H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+      status:
+        'VISIBILITY_UPDATE_REJECTED',
 
-        updated: false,
+      evaluation,
 
-        status:
-          'VISIBILITY_UPDATE_REJECTED',
-
-        evaluation,
-
-        rendererPassClaim: false,
-        visualPassClaim: false
-      });
-
-    compositorState.lastVisibilityReceipt =
-      receipt;
-
-    return receipt;
+      issues:
+        evaluation.issues
+    });
   }
 
-  compositorState.visibility = {
-    visibleLayerIds: [
-      ...evaluation.orderedVisibleLayerIds
-    ],
-
-    revision:
-      compositorState.visibilityRevision +
-      1
-  };
-
-  compositorState.visibilityRevision += 1;
-  compositorState.frameRevision += 1;
+  const transaction =
+    commitCompositorMutation({
+      nextVisibility:
+        evaluation.visibility
+    });
 
   const receipt =
     deepFreeze({
@@ -2730,330 +2905,298 @@ export function setHEarth3DCompositorVisibleLayers(
       contractId:
         H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-      updated: true,
+      accepted:
+        true,
+
+      updated:
+        transaction.visibilityChanged,
+
+      materiallyChanged:
+        transaction.materiallyChanged,
 
       status:
-        'VISIBILITY_STATE_UPDATED',
+        transaction.visibilityChanged
+          ? 'VISIBILITY_STATE_UPDATED'
+          : 'VISIBILITY_STATE_UNCHANGED',
 
-      visibleLayerIds:
-        deepFreeze([
-          ...compositorState
-            .visibility
-            .visibleLayerIds
-        ]),
+      visibility:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.visibility
+          )
+        ),
 
-      visibilityRevision:
-        compositorState.visibilityRevision,
+      admittedGeometryMutated:
+        false,
 
-      frameRevision:
-        compositorState.frameRevision,
+      presentationAssignmentMutated:
+        false,
 
-      semanticOrderChanged: false,
+      revisions:
+        transaction.revisions,
 
       rendererPassClaim: false,
-      visualPassClaim: false
+      visualPassClaim: false,
+      validationClaim: false
     });
 
-  compositorState.lastVisibilityReceipt =
+  compositorOperationalReceipts.visibility =
     receipt;
 
   return receipt;
 }
 
-/**
- * Resolves camera-relative planar movement axes.
- */
-const resolveNavigationAxes = (
+
+/* ==========================================================================
+ * 18 · NAVIGATION OPERATIONS
+ * ========================================================================== */
+
+function resolveNavigationAxes(
   cameraState
-) => {
+) {
   const yawRadians =
     toRadians(
       cameraState.yawDegrees
     );
 
-  const right =
-    normalizeVector(
-      createVector(
-        Math.cos(yawRadians),
-        0,
-        -Math.sin(yawRadians)
-      )
-    );
-
-  const forward =
-    normalizeVector(
-      createVector(
-        -Math.sin(yawRadians),
-        0,
-        -Math.cos(yawRadians)
-      )
-    );
-
   return {
-    right,
-    forward,
+    right:
+      normalizeVector(
+        createVector(
+          Math.cos(
+            yawRadians
+          ),
+          0,
+          -Math.sin(
+            yawRadians
+          )
+        )
+      ),
+
+    forward:
+      normalizeVector(
+        createVector(
+          -Math.sin(
+            yawRadians
+          ),
+          0,
+          -Math.cos(
+            yawRadians
+          )
+        )
+      ),
+
     up:
-      createVector(0, 1, 0)
+      createVector(
+        0,
+        1,
+        0
+      )
   };
-};
+}
 
-/**
- * Resolves navigation transform.
- */
-export function resolveHEarth3DCompositorSceneTransform() {
-  const pose =
-    resolveHEarth3DCompositorCameraPose();
+function applyCameraCandidate(
+  candidate
+) {
+  const evaluation =
+    evaluateHEarth3DCompositorCameraState(
+      candidate
+    );
 
-  if (!pose.eligible) {
+  if (!evaluation.eligible) {
     return deepFreeze({
-      eligible: false,
-
-      status:
-        'SCENE_TRANSFORM_NOT_RESOLVED',
-
-      issues:
-        pose.issues
+      accepted: false,
+      materiallyChanged: false,
+      evaluation
     });
   }
 
-  const viewport =
-    cloneViewportState();
+  const transaction =
+    commitCompositorMutation({
+      nextCamera:
+        evaluation.cameraState
+    });
 
   return deepFreeze({
-    eligible: true,
+    accepted: true,
 
-    status:
-      'SCENE_NAVIGATION_TRANSFORM_RESOLVED',
+    materiallyChanged:
+      transaction.materiallyChanged,
 
-    coordinateFrame:
-      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS
-        .coordinateFrame,
-
-    cameraPosition:
-      pose.position,
-
-    cameraTarget:
-      pose.target,
-
-    forward:
-      pose.forward,
-
-    right:
-      pose.right,
-
-    up:
-      pose.up,
-
-    yawDegrees:
-      pose.yawDegrees,
-
-    pitchDegrees:
-      pose.pitchDegrees,
-
-    zoomScale:
-      pose.zoomScale,
-
-    distance:
-      pose.distance,
-
-    verticalFovDegrees:
-      pose.verticalFovDegrees,
-
-    nearPlane:
-      pose.nearPlane,
-
-    farPlane:
-      pose.farPlane,
-
-    viewport,
-
-    aspectRatio:
-      viewport.aspectRatio,
-
-    semanticLayerOrder:
-      H_EARTH_3D_COMPOSITION_LAYER_ORDER,
-
-    cameraRevision:
-      compositorState.cameraRevision,
-
-    viewportRevision:
-      compositorState.viewportRevision
+    evaluation,
+    transaction
   });
 }
 
-/**
- * Evaluates a normalized compositor intent.
- */
-export function evaluateHEarth3DCompositorIntent(
+function applyOrbitOperation(
   intent
 ) {
-  const issues = [];
+  const candidate =
+    cloneKnownPlain(
+      compositorState.camera
+    );
 
-  if (
-    !intent ||
-    typeof intent !== 'object'
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'COMPOSITOR_INTENT_MISSING',
-        'A compositor intent object is required.'
+  candidate.yawDegrees +=
+    intent.yawDeltaDegrees;
+
+  candidate.pitchDegrees +=
+    intent.pitchDeltaDegrees;
+
+  return applyCameraCandidate(
+    candidate
+  );
+}
+
+function applyPanOperation(
+  intent
+) {
+  const candidate =
+    cloneKnownPlain(
+      compositorState.camera
+    );
+
+  const axes =
+    resolveNavigationAxes(
+      candidate
+    );
+
+  candidate.target =
+    addVector(
+      candidate.target,
+      addVector(
+        scaleVector(
+          axes.right,
+          intent.horizontalDelta
+        ),
+        addVector(
+          scaleVector(
+            axes.up,
+            intent.verticalDelta
+          ),
+          scaleVector(
+            axes.forward,
+            intent.depthDelta
+          )
+        )
       )
     );
 
+  return applyCameraCandidate(
+    candidate
+  );
+}
+
+function applyZoomOperation(
+  intent
+) {
+  const candidate =
+    cloneKnownPlain(
+      compositorState.camera
+    );
+
+  candidate.zoomScale +=
+    intent.zoomScaleDelta;
+
+  return applyCameraCandidate(
+    candidate
+  );
+}
+
+
+/* ==========================================================================
+ * 19 · INERTIA
+ * ========================================================================== */
+
+function evaluateInertiaVelocity(
+  velocityCandidate
+) {
+  const issues = [];
+
+  if (!isPlainRecord(velocityCandidate)) {
     return deepFreeze({
       eligible: false,
 
       status:
-        'COMPOSITOR_INTENT_NOT_ELIGIBLE',
+        'INERTIA_VELOCITY_NOT_ELIGIBLE',
 
-      issues:
-        deepFreeze(issues)
+      issues: freezeIssues([
+        createCompositorIssue(
+          'INERTIA_VELOCITY_NOT_RECORD',
+          'The inertia velocity input must be a strict plain-record object.'
+        )
+      ])
     });
+  }
+
+  const keyEvaluation =
+    evaluateExactKeySurface(
+      velocityCandidate,
+      REQUIRED_INERTIA_VELOCITY_KEYS
+    );
+
+  if (!keyEvaluation.ok) {
+    issues.push(
+      createCompositorIssue(
+        'INERTIA_VELOCITY_KEY_SURFACE_INVALID',
+        'The inertia velocity input must contain exactly the declared fields.',
+        {
+          details:
+            deepFreeze({
+              unknownKeys:
+                keyEvaluation.unknownKeys,
+
+              missingKeys:
+                keyEvaluation.missingKeys
+            })
+        }
+      )
+    );
   }
 
   if (
     !isNonEmptyString(
-      intent.type
+      velocityCandidate.mode
     )
   ) {
     issues.push(
       createCompositorIssue(
-        'COMPOSITOR_INTENT_TYPE_MISSING',
-        'Compositor intent type is required.'
+        'INERTIA_MODE_INVALID',
+        'Inertia mode must be a non-empty string.',
+        {
+          field:
+            'mode'
+        }
       )
     );
   }
 
-  if (
-    isNonEmptyString(
-      intent.type
-    ) &&
-    !Object.values(
-      H_EARTH_3D_COMPOSITOR_INTENT_TYPES
-    ).includes(
-      intent.type
-    )
+  for (
+    const field
+    of REQUIRED_INERTIA_VELOCITY_KEYS
   ) {
-    issues.push(
-      createCompositorIssue(
-        'COMPOSITOR_INTENT_TYPE_UNKNOWN',
-        'The compositor intent type is not recognized.',
-        intent.type
-      )
-    );
-  }
-
-  const requireFiniteFields = (
-    fields
-  ) => {
-    for (
-      const field
-      of fields
-    ) {
-      if (
-        intent[field] !== undefined &&
-        !isFiniteNumber(
-          intent[field]
-        )
-      ) {
-        issues.push(
-          createCompositorIssue(
-            'COMPOSITOR_INTENT_FIELD_NOT_FINITE',
-            `Intent field ${field} must be finite when supplied.`,
-            deepFreeze({
-              field,
-              value:
-                intent[field]
-            })
-          )
-        );
-      }
+    if (field === 'mode') {
+      continue;
     }
-  };
 
-  switch (intent.type) {
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.orbit:
-      requireFiniteFields([
-        'yawDeltaDegrees',
-        'pitchDeltaDegrees'
-      ]);
-      break;
+    if (
+      !isFiniteNumber(
+        velocityCandidate[field]
+      )
+    ) {
+      issues.push(
+        createCompositorIssue(
+          'INERTIA_VELOCITY_NOT_FINITE',
+          `${field} must be finite.`,
+          {
+            field,
 
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.pan:
-      requireFiniteFields([
-        'horizontalDelta',
-        'verticalDelta',
-        'depthDelta'
-      ]);
-      break;
-
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.zoom:
-      requireFiniteFields([
-        'zoomScaleDelta'
-      ]);
-      break;
-
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setViewport:
-      {
-        const viewportEvaluation =
-          evaluateHEarth3DCompositorViewport(
-            intent.viewport ??
-            intent
-          );
-
-        if (!viewportEvaluation.eligible) {
-          issues.push(
-            ...viewportEvaluation.issues
-          );
-        }
-      }
-      break;
-
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setVisibleLayers:
-      {
-        const visibilityEvaluation =
-          evaluateHEarth3DCompositionVisibility({
-            visibleLayerIds:
-              intent.visibleLayerIds
-          });
-
-        if (!visibilityEvaluation.eligible) {
-          issues.push(
-            ...visibilityEvaluation.issues
-          );
-        }
-      }
-      break;
-
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setCameraState:
-      {
-        const cameraEvaluation =
-          evaluateHEarth3DCompositorCameraState(
-            intent.cameraState
-          );
-
-        if (!cameraEvaluation.eligible) {
-          issues.push(
-            ...cameraEvaluation.issues
-          );
-        }
-      }
-      break;
-
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.startInertia:
-      requireFiniteFields(
-        H_EARTH_3D_COMPOSITOR_INERTIA_POLICY
-          .acceptedVelocityFields
+            actual:
+              velocityCandidate[field] ??
+              null
+          }
+        )
       );
-      break;
-
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.advanceInertia:
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.stopInertia:
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.resetView:
-      break;
-
-    default:
-      break;
+    }
   }
 
   return deepFreeze({
@@ -3062,203 +3205,157 @@ export function evaluateHEarth3DCompositorIntent(
 
     status:
       issues.length === 0
-        ? 'COMPOSITOR_INTENT_ELIGIBLE'
-        : 'COMPOSITOR_INTENT_NOT_ELIGIBLE',
+        ? 'INERTIA_VELOCITY_ELIGIBLE'
+        : 'INERTIA_VELOCITY_NOT_ELIGIBLE',
 
-    intent:
-      deepFreeze(
-        clonePlain(intent)
-      ),
+    velocity:
+      issues.length === 0
+        ? deepFreeze({
+            mode:
+              velocityCandidate.mode.trim(),
+
+            yawVelocity:
+              velocityCandidate.yawVelocity,
+
+            pitchVelocity:
+              velocityCandidate.pitchVelocity,
+
+            panHorizontalVelocity:
+              velocityCandidate.panHorizontalVelocity,
+
+            panVerticalVelocity:
+              velocityCandidate.panVerticalVelocity,
+
+            panDepthVelocity:
+              velocityCandidate.panDepthVelocity,
+
+            zoomVelocity:
+              velocityCandidate.zoomVelocity
+          })
+        : null,
 
     issues:
-      deepFreeze(issues)
+      freezeIssues(issues)
   });
 }
 
-const acceptCameraState = (
-  candidate,
-  reason
-) => {
-  const evaluation =
-    evaluateHEarth3DCompositorCameraState(
-      candidate
-    );
-
-  if (!evaluation.eligible) {
-    return {
-      accepted: false,
-      evaluation
-    };
-  }
-
-  compositorState.camera =
-    clonePlain(
-      evaluation.cameraState
-    );
-
-  compositorState.cameraRevision += 1;
-  compositorState.frameRevision += 1;
-
-  return {
-    accepted: true,
-    reason,
-    evaluation
-  };
-};
-
-const applyOrbitIntent = (
-  intent
-) => {
-  const candidate =
-    cloneCameraState();
-
-  candidate.yawDegrees +=
-    intent.yawDeltaDegrees ??
-    0;
-
-  candidate.pitchDegrees +=
-    intent.pitchDeltaDegrees ??
-    0;
-
-  return acceptCameraState(
-    candidate,
-    'ORBIT_INTENT_APPLIED'
-  );
-};
-
-const applyPanIntent = (
-  intent
-) => {
-  const candidate =
-    cloneCameraState();
-
-  const axes =
-    resolveNavigationAxes(
-      candidate
-    );
-
-  const horizontal =
-    scaleVector(
-      axes.right,
-      intent.horizontalDelta ??
-      0
-    );
-
-  const vertical =
-    scaleVector(
-      axes.up,
-      intent.verticalDelta ??
-      0
-    );
-
-  const depth =
-    scaleVector(
-      axes.forward,
-      intent.depthDelta ??
-      0
-    );
-
-  candidate.target =
-    addVector(
-      candidate.target,
-      addVector(
-        horizontal,
-        addVector(
-          vertical,
-          depth
-        )
-      )
-    );
-
-  return acceptCameraState(
-    candidate,
-    'PAN_INTENT_APPLIED'
-  );
-};
-
-const applyZoomIntent = (
-  intent
-) => {
-  const candidate =
-    cloneCameraState();
-
-  candidate.zoomScale +=
-    intent.zoomScaleDelta ??
-    0;
-
-  return acceptCameraState(
-    candidate,
-    'ZOOM_INTENT_APPLIED'
-  );
-};
-
-const applyResetIntent = () => {
-  const result =
-    acceptCameraState(
-      clonePlain(
-        H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE
-      ),
-      'RESET_VIEW_INTENT_APPLIED'
-    );
-
-  compositorState.inertia =
-    clonePlain(
-      initialState.inertia
-    );
-
-  compositorState.inertiaRevision += 1;
-
-  return result;
-};
-
-/**
- * Starts compositor-owned inertia.
- */
 export function startHEarth3DCompositorInertia(
-  velocityCandidate = {}
+  velocityCandidate
 ) {
-  if (
-    !H_EARTH_3D_COMPOSITOR_INERTIA_POLICY
-      .enabled
-  ) {
+  const snapshot =
+    strictSnapshot(
+      velocityCandidate,
+      'velocityCandidate'
+    );
+
+  if (!snapshot.ok) {
     return deepFreeze({
+      accepted: false,
       started: false,
+      updated: false,
+      materiallyChanged: false,
 
       status:
-        'COMPOSITOR_INERTIA_DISABLED'
+        'COMPOSITOR_INERTIA_START_REJECTED',
+
+      issues: freezeIssues([
+        snapshot.issue
+      ])
     });
   }
 
-  const normalized = {
-    active: true,
+  const evaluation =
+    evaluateInertiaVelocity(
+      snapshot.value
+    );
+
+  if (!evaluation.eligible) {
+    return deepFreeze({
+      accepted: false,
+      started: false,
+      updated: false,
+      materiallyChanged: false,
+
+      status:
+        'COMPOSITOR_INERTIA_START_REJECTED',
+
+      evaluation,
+
+      issues:
+        evaluation.issues
+    });
+  }
+
+  const velocity =
+    evaluation.velocity;
+
+  const maximumVelocity =
+    Math.max(
+      Math.abs(
+        velocity.yawVelocity
+      ),
+      Math.abs(
+        velocity.pitchVelocity
+      ),
+      Math.abs(
+        velocity.panHorizontalVelocity
+      ),
+      Math.abs(
+        velocity.panVerticalVelocity
+      ),
+      Math.abs(
+        velocity.panDepthVelocity
+      ),
+      Math.abs(
+        velocity.zoomVelocity
+      )
+    );
+
+  const shouldBeActive =
+    H_EARTH_3D_COMPOSITOR_INERTIA_POLICY
+      .enabled &&
+    maximumVelocity >=
+      H_EARTH_3D_COMPOSITOR_INERTIA_POLICY
+        .minimumVelocity;
+
+  const nextInertia = {
+    active:
+      shouldBeActive,
 
     mode:
-      velocityCandidate.mode ??
-      'COMPOSITOR_NAVIGATION_INERTIA',
+      shouldBeActive
+        ? velocity.mode
+        : 'IDLE',
 
     yawVelocity:
-      velocityCandidate.yawVelocity ??
-      0,
+      shouldBeActive
+        ? velocity.yawVelocity
+        : 0,
 
     pitchVelocity:
-      velocityCandidate.pitchVelocity ??
-      0,
+      shouldBeActive
+        ? velocity.pitchVelocity
+        : 0,
 
     panHorizontalVelocity:
-      velocityCandidate.panHorizontalVelocity ??
-      0,
+      shouldBeActive
+        ? velocity.panHorizontalVelocity
+        : 0,
 
     panVerticalVelocity:
-      velocityCandidate.panVerticalVelocity ??
-      0,
+      shouldBeActive
+        ? velocity.panVerticalVelocity
+        : 0,
 
     panDepthVelocity:
-      velocityCandidate.panDepthVelocity ??
-      0,
+      shouldBeActive
+        ? velocity.panDepthVelocity
+        : 0,
 
     zoomVelocity:
-      velocityCandidate.zoomVelocity ??
-      0,
+      shouldBeActive
+        ? velocity.zoomVelocity
+        : 0,
 
     damping:
       H_EARTH_3D_COMPOSITOR_INERTIA_POLICY
@@ -3275,248 +3372,697 @@ export function startHEarth3DCompositorInertia(
         .minimumVelocity
   };
 
-  for (
-    const field
-    of H_EARTH_3D_COMPOSITOR_INERTIA_POLICY
-      .acceptedVelocityFields
-  ) {
-    if (
-      !isFiniteNumber(
-        normalized[field]
-      )
-    ) {
-      return deepFreeze({
-        started: false,
+  const transaction =
+    commitCompositorMutation({
+      nextInertia
+    });
 
-        status:
-          'COMPOSITOR_INERTIA_VELOCITY_INVALID',
+  const receipt =
+    deepFreeze({
+      receiptType:
+        'H_EARTH_3D_COMPOSITOR_INERTIA_RECEIPT',
 
-        issue:
-          createCompositorIssue(
-            'INERTIA_VELOCITY_NOT_FINITE',
-            `Inertia velocity ${field} must be finite.`,
-            normalized[field]
-          )
-      });
-    }
-  }
+      contractId:
+        H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-  compositorState.inertia =
-    normalized;
+      accepted:
+        true,
 
-  compositorState.inertiaRevision += 1;
-  compositorState.frameRevision += 1;
+      started:
+        shouldBeActive &&
+        transaction.inertiaChanged,
 
-  return deepFreeze({
-    started: true,
+      updated:
+        transaction.inertiaChanged,
 
-    status:
-      'COMPOSITOR_INERTIA_STARTED',
-
-    inertia:
-      deepFreeze(
-        cloneInertiaState()
-      ),
-
-    inertiaRevision:
-      compositorState.inertiaRevision,
-
-    frameRevision:
-      compositorState.frameRevision
-  });
-}
-
-/**
- * Stops compositor-owned inertia.
- */
-export function stopHEarth3DCompositorInertia() {
-  const wasActive =
-    compositorState.inertia.active;
-
-  compositorState.inertia =
-    clonePlain(
-      initialState.inertia
-    );
-
-  compositorState.inertiaRevision += 1;
-  compositorState.frameRevision += 1;
-
-  return deepFreeze({
-    stopped:
-      wasActive,
-
-    status:
-      wasActive
-        ? 'COMPOSITOR_INERTIA_STOPPED'
-        : 'COMPOSITOR_INERTIA_ALREADY_IDLE',
-
-    inertiaRevision:
-      compositorState.inertiaRevision,
-
-    frameRevision:
-      compositorState.frameRevision
-  });
-}
-
-/**
- * Advances one compositor-owned inertia frame.
- */
-export function advanceHEarth3DCompositorInertia() {
-  const inertia =
-    compositorState.inertia;
-
-  if (!inertia.active) {
-    return deepFreeze({
-      advanced: false,
+      materiallyChanged:
+        transaction.materiallyChanged,
 
       status:
-        'COMPOSITOR_INERTIA_NOT_ACTIVE'
+        shouldBeActive
+          ? transaction.inertiaChanged
+            ? 'COMPOSITOR_INERTIA_STARTED'
+            : 'COMPOSITOR_INERTIA_UNCHANGED'
+          : transaction.inertiaChanged
+            ? 'COMPOSITOR_INERTIA_NORMALIZED_TO_IDLE'
+            : 'COMPOSITOR_INERTIA_ALREADY_IDLE',
+
+      inertia:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.inertia
+          )
+        ),
+
+      revisions:
+        transaction.revisions
     });
+
+  compositorOperationalReceipts.inertia =
+    receipt;
+
+  return receipt;
+}
+
+export function stopHEarth3DCompositorInertia() {
+  const nextInertia =
+    cloneKnownPlain(
+      H_EARTH_3D_COMPOSITOR_INITIAL_INERTIA_STATE
+    );
+
+  const transaction =
+    commitCompositorMutation({
+      nextInertia
+    });
+
+  const receipt =
+    deepFreeze({
+      receiptType:
+        'H_EARTH_3D_COMPOSITOR_INERTIA_RECEIPT',
+
+      contractId:
+        H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+
+      accepted:
+        true,
+
+      stopped:
+        transaction.inertiaChanged,
+
+      materiallyChanged:
+        transaction.materiallyChanged,
+
+      status:
+        transaction.inertiaChanged
+          ? 'COMPOSITOR_INERTIA_STOPPED'
+          : 'COMPOSITOR_INERTIA_ALREADY_IDLE',
+
+      inertia:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.inertia
+          )
+        ),
+
+      revisions:
+        transaction.revisions
+    });
+
+  compositorOperationalReceipts.inertia =
+    receipt;
+
+  return receipt;
+}
+
+export function advanceHEarth3DCompositorInertia() {
+  const currentInertia =
+    cloneKnownPlain(
+      compositorState.inertia
+    );
+
+  if (!currentInertia.active) {
+    const receipt =
+      deepFreeze({
+        receiptType:
+          'H_EARTH_3D_COMPOSITOR_INERTIA_RECEIPT',
+
+        contractId:
+          H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+
+        accepted:
+          true,
+
+        advanced:
+          false,
+
+        materiallyChanged:
+          false,
+
+        status:
+          'COMPOSITOR_INERTIA_NOT_ACTIVE',
+
+        revisions:
+          deepFreeze(
+            cloneKnownPlain(
+              compositorState.revisions
+            )
+          )
+      });
+
+    compositorOperationalReceipts.inertia =
+      receipt;
+
+    return receipt;
   }
 
   const maximumVelocity =
     Math.max(
       Math.abs(
-        inertia.yawVelocity
+        currentInertia.yawVelocity
       ),
       Math.abs(
-        inertia.pitchVelocity
+        currentInertia.pitchVelocity
       ),
       Math.abs(
-        inertia.panHorizontalVelocity
+        currentInertia.panHorizontalVelocity
       ),
       Math.abs(
-        inertia.panVerticalVelocity
+        currentInertia.panVerticalVelocity
       ),
       Math.abs(
-        inertia.panDepthVelocity
+        currentInertia.panDepthVelocity
       ),
       Math.abs(
-        inertia.zoomVelocity
+        currentInertia.zoomVelocity
       )
     );
 
   if (
     maximumVelocity <
-      inertia.minimumVelocity ||
-    inertia.frameCount >=
-      inertia.maximumFrames
+      currentInertia.minimumVelocity ||
+    currentInertia.frameCount >=
+      currentInertia.maximumFrames
   ) {
     return stopHEarth3DCompositorInertia();
   }
 
-  const candidate =
-    cloneCameraState();
+  const nextCamera =
+    cloneKnownPlain(
+      compositorState.camera
+    );
 
-  candidate.yawDegrees +=
-    inertia.yawVelocity;
+  nextCamera.yawDegrees +=
+    currentInertia.yawVelocity;
 
-  candidate.pitchDegrees +=
-    inertia.pitchVelocity;
+  nextCamera.pitchDegrees +=
+    currentInertia.pitchVelocity;
 
   const axes =
     resolveNavigationAxes(
-      candidate
+      nextCamera
     );
 
-  candidate.target =
+  nextCamera.target =
     addVector(
-      candidate.target,
+      nextCamera.target,
       addVector(
         scaleVector(
           axes.right,
-          inertia.panHorizontalVelocity
+          currentInertia
+            .panHorizontalVelocity
         ),
         addVector(
           scaleVector(
             axes.up,
-            inertia.panVerticalVelocity
+            currentInertia
+              .panVerticalVelocity
           ),
           scaleVector(
             axes.forward,
-            inertia.panDepthVelocity
+            currentInertia
+              .panDepthVelocity
           )
         )
       )
     );
 
-  candidate.zoomScale +=
-    inertia.zoomVelocity;
+  nextCamera.zoomScale +=
+    currentInertia.zoomVelocity;
 
-  const cameraResult =
-    acceptCameraState(
-      candidate,
-      'INERTIA_FRAME_APPLIED'
+  const cameraEvaluation =
+    evaluateHEarth3DCompositorCameraState(
+      nextCamera
     );
 
-  if (!cameraResult.accepted) {
-    stopHEarth3DCompositorInertia();
+  if (!cameraEvaluation.eligible) {
+    const stopReceipt =
+      stopHEarth3DCompositorInertia();
 
-    return deepFreeze({
-      advanced: false,
+    const receipt =
+      deepFreeze({
+        receiptType:
+          'H_EARTH_3D_COMPOSITOR_INERTIA_RECEIPT',
+
+        contractId:
+          H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+
+        accepted:
+          false,
+
+        advanced:
+          false,
+
+        materiallyChanged:
+          stopReceipt
+            .materiallyChanged === true,
+
+        failClosedShutdownPerformed:
+          stopReceipt
+            .materiallyChanged === true,
+
+        status:
+          'COMPOSITOR_INERTIA_CAMERA_UPDATE_REJECTED_AND_STOPPED_FAIL_CLOSED',
+
+        cameraEvaluation,
+
+        stopReceipt,
+
+        revisions:
+          deepFreeze(
+            cloneKnownPlain(
+              compositorState.revisions
+            )
+          )
+      });
+
+    compositorOperationalReceipts.inertia =
+      receipt;
+
+    return receipt;
+  }
+
+  const nextInertia = {
+    ...currentInertia,
+
+    yawVelocity:
+      currentInertia.yawVelocity *
+      currentInertia.damping,
+
+    pitchVelocity:
+      currentInertia.pitchVelocity *
+      currentInertia.damping,
+
+    panHorizontalVelocity:
+      currentInertia
+        .panHorizontalVelocity *
+      currentInertia.damping,
+
+    panVerticalVelocity:
+      currentInertia
+        .panVerticalVelocity *
+      currentInertia.damping,
+
+    panDepthVelocity:
+      currentInertia
+        .panDepthVelocity *
+      currentInertia.damping,
+
+    zoomVelocity:
+      currentInertia.zoomVelocity *
+      currentInertia.damping,
+
+    frameCount:
+      currentInertia.frameCount +
+      1
+  };
+
+  const transaction =
+    commitCompositorMutation({
+      nextCamera:
+        cameraEvaluation.cameraState,
+
+      nextInertia
+    });
+
+  const receipt =
+    deepFreeze({
+      receiptType:
+        'H_EARTH_3D_COMPOSITOR_INERTIA_RECEIPT',
+
+      contractId:
+        H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+
+      accepted:
+        true,
+
+      advanced:
+        transaction.materiallyChanged,
+
+      materiallyChanged:
+        transaction.materiallyChanged,
+
+      failClosedShutdownPerformed:
+        false,
 
       status:
-        'COMPOSITOR_INERTIA_CAMERA_UPDATE_REJECTED',
+        transaction.materiallyChanged
+          ? 'COMPOSITOR_INERTIA_FRAME_ADVANCED'
+          : 'COMPOSITOR_INERTIA_FRAME_UNCHANGED',
 
-      cameraEvaluation:
-        cameraResult.evaluation
+      frameCount:
+        compositorState
+          .inertia
+          .frameCount,
+
+      cameraChanged:
+        transaction.cameraChanged,
+
+      inertiaChanged:
+        transaction.inertiaChanged,
+
+      revisions:
+        transaction.revisions,
+
+      inertia:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.inertia
+          )
+        )
+    });
+
+  compositorOperationalReceipts.inertia =
+    receipt;
+
+  return receipt;
+}
+
+
+/* ==========================================================================
+ * 20 · INTENT EVALUATION
+ * ========================================================================== */
+
+export function evaluateHEarth3DCompositorIntent(
+  intent
+) {
+  const snapshot =
+    strictSnapshot(
+      intent,
+      'intent'
+    );
+
+  if (!snapshot.ok) {
+    return deepFreeze({
+      eligible: false,
+
+      status:
+        'COMPOSITOR_INTENT_NOT_ELIGIBLE',
+
+      intent: null,
+
+      issues: freezeIssues([
+        snapshot.issue
+      ])
     });
   }
 
-  inertia.yawVelocity *=
-    inertia.damping;
+  const intentSnapshot =
+    snapshot.value;
 
-  inertia.pitchVelocity *=
-    inertia.damping;
+  if (!isPlainRecord(intentSnapshot)) {
+    return deepFreeze({
+      eligible: false,
 
-  inertia.panHorizontalVelocity *=
-    inertia.damping;
+      status:
+        'COMPOSITOR_INTENT_NOT_ELIGIBLE',
 
-  inertia.panVerticalVelocity *=
-    inertia.damping;
+      intent: null,
 
-  inertia.panDepthVelocity *=
-    inertia.damping;
+      issues: freezeIssues([
+        createCompositorIssue(
+          'COMPOSITOR_INTENT_NOT_RECORD',
+          'A compositor intent must be a strict plain-record object.'
+        )
+      ])
+    });
+  }
 
-  inertia.zoomVelocity *=
-    inertia.damping;
+  const type =
+    normalizeString(
+      intentSnapshot.type
+    );
 
-  inertia.frameCount += 1;
+  if (
+    !type ||
+    !Object.prototype.hasOwnProperty.call(
+      REQUIRED_INTENT_KEYS_BY_TYPE,
+      type
+    )
+  ) {
+    return deepFreeze({
+      eligible: false,
 
-  compositorState.inertiaRevision += 1;
+      status:
+        'COMPOSITOR_INTENT_NOT_ELIGIBLE',
+
+      intent:
+        intentSnapshot,
+
+      issues: freezeIssues([
+        createCompositorIssue(
+          'COMPOSITOR_INTENT_TYPE_INVALID',
+          'The compositor intent type is missing or unknown.',
+          {
+            field:
+              'type',
+
+            actual:
+              type
+          }
+        )
+      ])
+    });
+  }
+
+  const requiredKeys =
+    REQUIRED_INTENT_KEYS_BY_TYPE[
+      type
+    ];
+
+  const keyEvaluation =
+    evaluateExactKeySurface(
+      intentSnapshot,
+      requiredKeys
+    );
+
+  const issues = [];
+
+  if (!keyEvaluation.ok) {
+    issues.push(
+      createCompositorIssue(
+        'COMPOSITOR_INTENT_KEY_SURFACE_INVALID',
+        'The intent must contain exactly the fields declared for its type.',
+        {
+          details:
+            deepFreeze({
+              unknownKeys:
+                keyEvaluation.unknownKeys,
+
+              missingKeys:
+                keyEvaluation.missingKeys
+            })
+        }
+      )
+    );
+  }
+
+  switch (type) {
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.orbit:
+      if (
+        !isFiniteNumber(
+          intentSnapshot.yawDeltaDegrees
+        ) ||
+        !isFiniteNumber(
+          intentSnapshot.pitchDeltaDegrees
+        )
+      ) {
+        issues.push(
+          createCompositorIssue(
+            'ORBIT_DELTA_INVALID',
+            'Orbit deltas must be finite.'
+          )
+        );
+      } else if (
+        Object.is(
+          intentSnapshot.yawDeltaDegrees,
+          0
+        ) &&
+        Object.is(
+          intentSnapshot.pitchDeltaDegrees,
+          0
+        )
+      ) {
+        issues.push(
+          createCompositorIssue(
+            'ZERO_EFFECT_ORBIT_REJECTED',
+            'An orbit intent must request a material change.'
+          )
+        );
+      }
+      break;
+
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.pan:
+      if (
+        !isFiniteNumber(
+          intentSnapshot.horizontalDelta
+        ) ||
+        !isFiniteNumber(
+          intentSnapshot.verticalDelta
+        ) ||
+        !isFiniteNumber(
+          intentSnapshot.depthDelta
+        )
+      ) {
+        issues.push(
+          createCompositorIssue(
+            'PAN_DELTA_INVALID',
+            'Pan deltas must be finite.'
+          )
+        );
+      } else if (
+        Object.is(
+          intentSnapshot.horizontalDelta,
+          0
+        ) &&
+        Object.is(
+          intentSnapshot.verticalDelta,
+          0
+        ) &&
+        Object.is(
+          intentSnapshot.depthDelta,
+          0
+        )
+      ) {
+        issues.push(
+          createCompositorIssue(
+            'ZERO_EFFECT_PAN_REJECTED',
+            'A pan intent must request a material change.'
+          )
+        );
+      }
+      break;
+
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.zoom:
+      if (
+        !isFiniteNumber(
+          intentSnapshot.zoomScaleDelta
+        )
+      ) {
+        issues.push(
+          createCompositorIssue(
+            'ZOOM_DELTA_INVALID',
+            'Zoom delta must be finite.'
+          )
+        );
+      } else if (
+        Object.is(
+          intentSnapshot.zoomScaleDelta,
+          0
+        )
+      ) {
+        issues.push(
+          createCompositorIssue(
+            'ZERO_EFFECT_ZOOM_REJECTED',
+            'A zoom intent must request a material change.'
+          )
+        );
+      }
+      break;
+
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setCameraState:
+      {
+        const evaluation =
+          evaluateHEarth3DCompositorCameraState(
+            intentSnapshot.cameraState
+          );
+
+        if (!evaluation.eligible) {
+          issues.push(
+            ...evaluation.issues
+          );
+        }
+      }
+      break;
+
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setViewport:
+      {
+        const evaluation =
+          evaluateHEarth3DCompositorViewport(
+            intentSnapshot.viewport
+          );
+
+        if (!evaluation.eligible) {
+          issues.push(
+            ...evaluation.issues
+          );
+        }
+      }
+      break;
+
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setVisibility:
+      {
+        const evaluation =
+          evaluateHEarth3DCompositorVisibility(
+            intentSnapshot.visibility
+          );
+
+        if (!evaluation.eligible) {
+          issues.push(
+            ...evaluation.issues
+          );
+        }
+      }
+      break;
+
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.startInertia:
+      {
+        const evaluation =
+          evaluateInertiaVelocity(
+            intentSnapshot.velocity
+          );
+
+        if (!evaluation.eligible) {
+          issues.push(
+            ...evaluation.issues
+          );
+        }
+      }
+      break;
+
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.resetView:
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.advanceInertia:
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.stopInertia:
+      break;
+
+    default:
+      issues.push(
+        createCompositorIssue(
+          'COMPOSITOR_INTENT_OPERATION_UNRESOLVED',
+          'The compositor intent operation is unresolved.'
+        )
+      );
+      break;
+  }
 
   return deepFreeze({
-    advanced: true,
+    eligible:
+      issues.length === 0,
 
     status:
-      'COMPOSITOR_INERTIA_FRAME_ADVANCED',
+      issues.length === 0
+        ? 'COMPOSITOR_INTENT_ELIGIBLE'
+        : 'COMPOSITOR_INTENT_NOT_ELIGIBLE',
 
-    frameCount:
-      inertia.frameCount,
+    intent:
+      intentSnapshot,
 
-    cameraRevision:
-      compositorState.cameraRevision,
-
-    inertiaRevision:
-      compositorState.inertiaRevision,
-
-    frameRevision:
-      compositorState.frameRevision,
-
-    inertia:
-      deepFreeze(
-        cloneInertiaState()
-      )
+    issues:
+      freezeIssues(issues)
   });
 }
 
-/**
- * Applies one normalized compositor intent.
- */
+
+/* ==========================================================================
+ * 21 · INTENT APPLICATION
+ * ========================================================================== */
+
 export function applyHEarth3DCompositorIntent(
   intent
 ) {
   compositorState.intentSequence += 1;
+
+  const sequence =
+    compositorState.intentSequence;
 
   const evaluation =
     evaluateHEarth3DCompositorIntent(
@@ -3526,15 +4072,13 @@ export function applyHEarth3DCompositorIntent(
   if (!evaluation.eligible) {
     const rejectedIntent =
       deepFreeze({
-        sequence:
-          compositorState.intentSequence,
+        sequence,
 
         intent:
-          deepFreeze(
-            clonePlain(intent)
-          ),
+          evaluation.intent,
 
-        evaluation
+        issues:
+          evaluation.issues
       });
 
     compositorState.lastRejectedIntent =
@@ -3548,92 +4092,87 @@ export function applyHEarth3DCompositorIntent(
         contractId:
           H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-        sequence:
-          compositorState.intentSequence,
+        sequence,
 
         accepted: false,
+
+        materiallyChanged: false,
 
         status:
           'COMPOSITOR_INTENT_REJECTED',
 
         evaluation,
 
-        cameraRevision:
-          compositorState.cameraRevision,
-
-        viewportRevision:
-          compositorState.viewportRevision,
-
-        visibilityRevision:
-          compositorState.visibilityRevision,
-
-        inertiaRevision:
-          compositorState.inertiaRevision,
-
-        frameRevision:
-          compositorState.frameRevision,
+        revisions:
+          deepFreeze(
+            cloneKnownPlain(
+              compositorState.revisions
+            )
+          ),
 
         rendererPassClaim: false,
         visualPassClaim: false,
         validationClaim: false
       });
 
-    compositorState.lastIntentReceipt =
+    compositorOperationalReceipts.intent =
       receipt;
 
     return receipt;
   }
 
+  const intentSnapshot =
+    evaluation.intent;
+
   let operationResult;
 
-  switch (intent.type) {
+  switch (intentSnapshot.type) {
     case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.orbit:
       operationResult =
-        applyOrbitIntent(intent);
+        applyOrbitOperation(
+          intentSnapshot
+        );
       break;
 
     case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.pan:
       operationResult =
-        applyPanIntent(intent);
+        applyPanOperation(
+          intentSnapshot
+        );
       break;
 
     case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.zoom:
       operationResult =
-        applyZoomIntent(intent);
-      break;
-
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.resetView:
-      operationResult =
-        applyResetIntent();
+        applyZoomOperation(
+          intentSnapshot
+        );
       break;
 
     case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setCameraState:
       operationResult =
-        acceptCameraState(
-          intent.cameraState,
-          'SET_CAMERA_STATE_INTENT_APPLIED'
+        setHEarth3DCompositorCameraState(
+          intentSnapshot.cameraState
         );
       break;
 
     case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setViewport:
       operationResult =
         setHEarth3DCompositorViewport(
-          intent.viewport ??
-          intent
+          intentSnapshot.viewport
         );
       break;
 
-    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setVisibleLayers:
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.setVisibility:
       operationResult =
-        setHEarth3DCompositorVisibleLayers(
-          intent.visibleLayerIds
+        setHEarth3DCompositorVisibility(
+          intentSnapshot.visibility
         );
       break;
 
     case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.startInertia:
       operationResult =
         startHEarth3DCompositorInertia(
-          intent
+          intentSnapshot.velocity
         );
       break;
 
@@ -3647,37 +4186,86 @@ export function applyHEarth3DCompositorIntent(
         stopHEarth3DCompositorInertia();
       break;
 
-    default:
-      operationResult = {
-        accepted: false,
+    case H_EARTH_3D_COMPOSITOR_INTENT_TYPES.resetView:
+      {
+        const transaction =
+          commitCompositorMutation({
+            nextCamera:
+              H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE,
 
-        status:
-          'COMPOSITOR_INTENT_OPERATION_UNRESOLVED'
-      };
+            nextInertia:
+              H_EARTH_3D_COMPOSITOR_INITIAL_INERTIA_STATE
+          });
+
+        operationResult =
+          deepFreeze({
+            accepted:
+              true,
+
+            reset:
+              transaction.materiallyChanged,
+
+            materiallyChanged:
+              transaction.materiallyChanged,
+
+            cameraChanged:
+              transaction.cameraChanged,
+
+            inertiaChanged:
+              transaction.inertiaChanged,
+
+            status:
+              transaction.materiallyChanged
+                ? 'COMPOSITOR_VIEW_RESET'
+                : 'COMPOSITOR_VIEW_ALREADY_RESET',
+
+            revisions:
+              transaction.revisions
+          });
+
+        compositorOperationalReceipts.reset =
+          operationResult;
+      }
+      break;
+
+    default:
+      operationResult =
+        deepFreeze({
+          accepted: false,
+
+          materiallyChanged: false,
+
+          status:
+            'COMPOSITOR_INTENT_OPERATION_UNRESOLVED'
+        });
       break;
   }
 
   const accepted =
-    operationResult.accepted === true ||
-    operationResult.updated === true ||
-    operationResult.started === true ||
-    operationResult.stopped === true ||
-    operationResult.advanced === true ||
-    operationResult.reason !== undefined;
+    operationResult.accepted ===
+    true;
+
+  const materiallyChanged =
+    operationResult.materiallyChanged ===
+      true ||
+    operationResult.transaction
+      ?.materiallyChanged ===
+      true;
 
   const recordedIntent =
     deepFreeze({
-      sequence:
-        compositorState.intentSequence,
+      sequence,
 
       intent:
-        deepFreeze(
-          clonePlain(intent)
-        ),
+        intentSnapshot,
+
+      accepted,
+
+      materiallyChanged,
 
       operationResult:
         deepFreeze(
-          clonePlain(
+          cloneKnownPlain(
             operationResult
           )
         )
@@ -3699,262 +4287,274 @@ export function applyHEarth3DCompositorIntent(
       contractId:
         H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-      sequence:
-        compositorState.intentSequence,
+      sequence,
 
       accepted,
 
+      materiallyChanged,
+
       status:
         accepted
-          ? 'COMPOSITOR_INTENT_ACCEPTED'
-          : 'COMPOSITOR_INTENT_OPERATION_REJECTED',
+          ? materiallyChanged
+            ? 'COMPOSITOR_INTENT_ACCEPTED_CHANGED'
+            : 'COMPOSITOR_INTENT_ACCEPTED_UNCHANGED'
+          : materiallyChanged
+            ? 'COMPOSITOR_INTENT_REJECTED_WITH_FAIL_CLOSED_STATE_CHANGE'
+            : 'COMPOSITOR_INTENT_OPERATION_REJECTED',
 
       intent:
-        deepFreeze(
-          clonePlain(intent)
-        ),
+        intentSnapshot,
 
       operationResult:
         deepFreeze(
-          clonePlain(
+          cloneKnownPlain(
             operationResult
           )
         ),
 
-      cameraRevision:
-        compositorState.cameraRevision,
-
-      viewportRevision:
-        compositorState.viewportRevision,
-
-      visibilityRevision:
-        compositorState.visibilityRevision,
-
-      inertiaRevision:
-        compositorState.inertiaRevision,
-
-      frameRevision:
-        compositorState.frameRevision,
+      revisions:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.revisions
+          )
+        ),
 
       rendererPassClaim: false,
       visualPassClaim: false,
       validationClaim: false
     });
 
-  compositorState.lastIntentReceipt =
+  compositorOperationalReceipts.intent =
     receipt;
 
   return receipt;
 }
 
-/**
- * Composes ordered semantic layers.
- */
-export function composeHEarth3DRendererLayers({
-  visibleLayerIds =
-    compositorState
-      .visibility
-      .visibleLayerIds,
 
-  includeOverlay = false
-} = {}) {
-  const requestedIds =
-    includeOverlay
-      ? [
-          ...visibleLayerIds,
-          H_EARTH_3D_COMPOSITION_LAYER_IDS.overlay
-        ]
-      : visibleLayerIds.filter(
-          (layerId) =>
-            layerId !==
-            H_EARTH_3D_COMPOSITION_LAYER_IDS.overlay
-        );
+/* ==========================================================================
+ * 22 · PUBLIC COMPOSITOR STATE SNAPSHOT
+ * ========================================================================== */
 
-  const visibilityEvaluation =
-    evaluateHEarth3DCompositionVisibility({
-      visibleLayerIds:
-        requestedIds
+export function getHEarth3DCompositorState() {
+  const snapshot =
+    deepFreeze({
+      camera:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.camera
+          )
+        ),
+
+      viewport:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.viewport
+          )
+        ),
+
+      visibility:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.visibility
+          )
+        ),
+
+      inertia:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.inertia
+          )
+        ),
+
+      revisions:
+        deepFreeze(
+          cloneKnownPlain(
+            compositorState.revisions
+          )
+        ),
+
+      intentSequence:
+        compositorState.intentSequence,
+
+      lastAcceptedIntent:
+        compositorState.lastAcceptedIntent,
+
+      lastRejectedIntent:
+        compositorState.lastRejectedIntent
     });
 
-  if (!visibilityEvaluation.eligible) {
+  const snapshotKeyEvaluation =
+    evaluateExactKeySurface(
+      snapshot,
+      REQUIRED_BRIDGE_COMPOSITOR_SNAPSHOT_KEYS
+    );
+
+  const revisionKeyEvaluation =
+    evaluateExactKeySurface(
+      snapshot.revisions,
+      REQUIRED_REVISION_KEYS
+    );
+
+  if (
+    !snapshotKeyEvaluation.ok ||
+    !revisionKeyEvaluation.ok
+  ) {
+    throw new Error(
+      'COMPOSITOR_INTERNAL_SNAPSHOT_CONTRACT_VIOLATION'
+    );
+  }
+
+  return snapshot;
+}
+
+
+/* ==========================================================================
+ * 23 · FRAME COMPOSITION INPUT
+ * ========================================================================== */
+
+function evaluateFrameCompositionInput(
+  input
+) {
+  const issues = [];
+
+  if (!isPlainRecord(input)) {
     return deepFreeze({
       eligible: false,
 
       status:
-        'RENDERER_LAYER_COMPOSITION_NOT_ELIGIBLE',
+        'COMPOSITOR_FRAME_INPUT_NOT_ELIGIBLE',
 
-      visibilityEvaluation,
+      input: null,
 
-      orderedLayerIds:
-        deepFreeze([]),
+      packet002Transfer: null,
 
-      orderedLayers:
-        deepFreeze([])
+      issues: freezeIssues([
+        createCompositorIssue(
+          'COMPOSITOR_FRAME_INPUT_NOT_RECORD',
+          'The frame-composition input must be a strict plain-record object.'
+        )
+      ])
     });
   }
 
-  const orderedLayers =
-    visibilityEvaluation
-      .orderedVisibleLayerIds
-      .map(
-        (layerId) =>
-          H_EARTH_3D_COMPOSITION_LAYER_MAP[
-            layerId
-          ]
-      );
+  const keyEvaluation =
+    evaluateExactKeySurface(
+      input,
+      REQUIRED_FRAME_COMPOSITION_INPUT_KEYS
+    );
 
-  return deepFreeze({
-    eligible: true,
-
-    status:
-      'RENDERER_LAYER_COMPOSITION_ELIGIBLE',
-
-    orderedLayerIds:
-      visibilityEvaluation
-        .orderedVisibleLayerIds,
-
-    orderedLayers:
-      deepFreeze(
-        orderedLayers
-      ),
-
-    visibilityEvaluation
-  });
-}
-
-/**
- * Static identity alignment.
- */
-export const H_EARTH_3D_COMPOSITOR_IDENTITY_ALIGNMENT = deepFreeze({
-  capacityEnvironmentIdentityAligned:
-    H_EARTH_3D_CAPACITY_BINDING_IDENTITY.activeCell ===
-      H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.activeCell &&
-    H_EARTH_3D_CAPACITY_BINDING_IDENTITY.spatialCellId ===
-      H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.spatialCellId &&
-    H_EARTH_3D_CAPACITY_BINDING_IDENTITY.sceneIdentity ===
-      H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.sceneIdentity,
-
-  coordinateFrameMatches:
-    H_EARTH_3D_ENVIRONMENT_HANDOFF.coordinateFrame ===
-    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.coordinateFrame,
-
-  activeCell:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.activeCell,
-
-  spatialCellId:
-    H_EARTH_3D_ENVIRONMENT_BINDING_IDENTITY.spatialCellId
-});
-
-export const H_EARTH_3D_COMPOSITOR_NODE_BUDGET_EVALUATION =
-  deepFreeze(
-    evaluateHEarth3DNodeBudget({
-      semanticLayerContainers:
-        H_EARTH_3D_COMPOSITOR_PRIMITIVE_ACCOUNTING
-          .semanticLayerContainers,
-
-      environmentPrimitives:
-        H_EARTH_3D_COMPOSITOR_PRIMITIVE_ACCOUNTING
-          .environmentPrimitives,
-
-      interactionNodes:
-        H_EARTH_3D_COMPOSITOR_PRIMITIVE_ACCOUNTING
-          .interactionNodes,
-
-      diagnosticOwnedNodes:
-        H_EARTH_3D_COMPOSITOR_PRIMITIVE_ACCOUNTING
-          .diagnosticOwnedNodes
-    })
-  );
-
-export const H_EARTH_3D_COMPOSITOR_ENVIRONMENT_PLAN_EVALUATION =
-  deepFreeze(
-    evaluateHEarth3DEnvironmentPrimitivePlan()
-  );
-
-export const H_EARTH_3D_COMPOSITOR_LAYER_ORDER_EVALUATION =
-  evaluateHEarth3DCompositionLayerOrder();
-
-/**
- * Renderer preflight.
- */
-export const H_EARTH_3D_COMPOSITOR_RENDERER_PREFLIGHT = (() => {
-  const issues = [];
-
-  if (
-    !H_EARTH_3D_COMPOSITOR_IDENTITY_ALIGNMENT
-      .capacityEnvironmentIdentityAligned
-  ) {
+  if (!keyEvaluation.ok) {
     issues.push(
       createCompositorIssue(
-        'CAPACITY_ENVIRONMENT_IDENTITY_MISMATCH',
-        'Capacity and environment binding identities do not align.'
+        'COMPOSITOR_FRAME_INPUT_KEY_SURFACE_INVALID',
+        'The frame-composition input must contain exactly the declared fields.',
+        {
+          details:
+            deepFreeze({
+              unknownKeys:
+                keyEvaluation.unknownKeys,
+
+              missingKeys:
+                keyEvaluation.missingKeys
+            })
+        }
+      )
+    );
+  }
+
+  const packet002Transfer =
+    input.packet002Transfer;
+
+  if (!isPlainRecord(packet002Transfer)) {
+    issues.push(
+      createCompositorIssue(
+        'PACKET_002_TRANSFER_NOT_RECORD',
+        'packet002Transfer must be a strict plain-record object.',
+        {
+          field:
+            'packet002Transfer'
+        }
+      )
+    );
+  }
+
+  const packet002TransferOccurrenceId =
+    normalizeString(
+      input.packet002TransferOccurrenceId
+    );
+
+  if (!packet002TransferOccurrenceId) {
+    issues.push(
+      createCompositorIssue(
+        'PACKET_002_TRANSFER_OCCURRENCE_ID_INVALID',
+        'packet002TransferOccurrenceId must be a non-empty string.',
+        {
+          field:
+            'packet002TransferOccurrenceId'
+        }
+      )
+    );
+  }
+
+  const compositorFrameOccurrenceId =
+    normalizeString(
+      input.compositorFrameOccurrenceId
+    );
+
+  if (!compositorFrameOccurrenceId) {
+    issues.push(
+      createCompositorIssue(
+        'COMPOSITOR_FRAME_OCCURRENCE_ID_INVALID',
+        'compositorFrameOccurrenceId must be a non-empty string.',
+        {
+          field:
+            'compositorFrameOccurrenceId'
+        }
       )
     );
   }
 
   if (
-    !H_EARTH_3D_COMPOSITOR_IDENTITY_ALIGNMENT
-      .coordinateFrameMatches
+    input.presentationMode !==
+    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE
   ) {
     issues.push(
       createCompositorIssue(
-        'CAPACITY_ENVIRONMENT_COORDINATE_FRAME_MISMATCH',
-        'Capacity and environment coordinate frames do not align.'
+        'COMPOSITOR_PRESENTATION_MODE_INVALID',
+        'The current compositor admits only FIRST_ADMITTED_WET_SAND_PROOF.',
+        {
+          field:
+            'presentationMode',
+
+          expected:
+            H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,
+
+          actual:
+            input.presentationMode ??
+            null
+        }
       )
     );
   }
 
-  if (
-    !H_EARTH_3D_COMPOSITOR_NODE_BUDGET_EVALUATION
-      .eligible
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'COMPOSITOR_NODE_BUDGET_NOT_ELIGIBLE',
-        'The compositor primitive plan exceeds the renewed node budget.',
-        H_EARTH_3D_COMPOSITOR_NODE_BUDGET_EVALUATION
-      )
-    );
-  }
+  const envelopeSnapshot =
+    strictSnapshot(
+      {
+        packet002TransferOccurrenceId:
+          input.packet002TransferOccurrenceId,
 
-  if (
-    !H_EARTH_3D_COMPOSITOR_ENVIRONMENT_PLAN_EVALUATION
-      .eligible
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'ENVIRONMENT_PRIMITIVE_PLAN_NOT_ELIGIBLE',
-        'The environment primitive plan is not eligible.',
-        H_EARTH_3D_COMPOSITOR_ENVIRONMENT_PLAN_EVALUATION
-      )
-    );
-  }
+        compositorFrameOccurrenceId:
+          input.compositorFrameOccurrenceId,
 
-  if (
-    !H_EARTH_3D_COMPOSITOR_LAYER_ORDER_EVALUATION
-      .eligible
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'SEMANTIC_LAYER_ORDER_NOT_ELIGIBLE',
-        'The semantic layer order is not eligible.',
-        H_EARTH_3D_COMPOSITOR_LAYER_ORDER_EVALUATION
-      )
-    );
-  }
-
-  const cameraEvaluation =
-    evaluateHEarth3DCompositorCameraState(
-      H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE
+        presentationMode:
+          input.presentationMode
+      },
+      'frameCompositionEnvelope'
     );
 
-  if (!cameraEvaluation.eligible) {
+  if (!envelopeSnapshot.ok) {
     issues.push(
-      createCompositorIssue(
-        'INITIAL_CAMERA_STATE_NOT_ELIGIBLE',
-        'The initial compositor camera state is not eligible.',
-        cameraEvaluation
-      )
+      envelopeSnapshot.issue
     );
   }
 
@@ -3964,321 +4564,307 @@ export const H_EARTH_3D_COMPOSITOR_RENDERER_PREFLIGHT = (() => {
 
     status:
       issues.length === 0
-        ? 'COMPOSITOR_RENDERER_PREFLIGHT_ELIGIBLE'
-        : 'COMPOSITOR_RENDERER_PREFLIGHT_NOT_ELIGIBLE',
+        ? 'COMPOSITOR_FRAME_INPUT_ELIGIBLE'
+        : 'COMPOSITOR_FRAME_INPUT_NOT_ELIGIBLE',
+
+    packet002Transfer,
+
+    input:
+      envelopeSnapshot.ok
+        ? envelopeSnapshot.value
+        : null,
 
     issues:
-      deepFreeze(issues),
-
-    primitivePlanWithinCapacity:
-      H_EARTH_3D_COMPOSITOR_NODE_BUDGET_EVALUATION
-        .eligible === true,
-
-    semanticLayerOrderEligible:
-      H_EARTH_3D_COMPOSITOR_LAYER_ORDER_EVALUATION
-        .eligible === true,
-
-    initialCameraStateEligible:
-      cameraEvaluation.eligible ===
-      true,
-
-    viewportResolved: false,
-
-    rendererImported: false,
-    rendererMounted: false,
-
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false
+      freezeIssues(issues)
   });
-})();
+}
 
-/**
- * Claim ceilings.
- */
-export const H_EARTH_3D_COMPOSITOR_CLAIM_CEILINGS = deepFreeze({
-  runtimeActivationClaim: false,
-  rendererPassClaim: false,
-  visualPassClaim: false,
-  playableEnvironmentClaim: false,
-  validationClaim: false,
-  productionClaim: false,
 
-  actionExecutionClaim: false,
-  readoutConstructionClaim: false,
-  inspectionReceiptConstructionClaim: false,
+/* ==========================================================================
+ * 24 · REJECTED COMPOSITION RESULT
+ * ========================================================================== */
 
-  actorClaim: false,
-  groundContactClaim: false,
-  collisionClaim: false,
-  traversalClaim: false,
-  gameplayClaim: false,
-  fluidSimulationClaim: false,
+function createRejectedCompositionResult(
+  status,
+  issues,
+  {
+    packet002TransferOccurrenceId = null,
+    compositorFrameOccurrenceId = null
+  } = {}
+) {
+  return deepFreeze({
+    ok: false,
 
-  matrixCollapse: false
-});
-
-/**
- * Produces the current immutable render frame.
- */
-export function composeHEarth3DRenderFrame({
-  includeOverlay = false
-} = {}) {
-  const cameraPose =
-    resolveHEarth3DCompositorCameraPose();
-
-  const navigationTransform =
-    resolveHEarth3DCompositorSceneTransform();
-
-  const layerComposition =
-    composeHEarth3DRendererLayers({
-      visibleLayerIds:
-        compositorState
-          .visibility
-          .visibleLayerIds,
-
-      includeOverlay
-    });
-
-  const issues = [];
-
-  if (!cameraPose.eligible) {
-    issues.push(
-      createCompositorIssue(
-        'RENDER_FRAME_CAMERA_POSE_NOT_ELIGIBLE',
-        'The render frame camera pose is not eligible.',
-        cameraPose
-      )
-    );
-  }
-
-  if (
-    !navigationTransform.eligible
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'RENDER_FRAME_NAVIGATION_TRANSFORM_NOT_ELIGIBLE',
-        'The render frame navigation transform is not eligible.',
-        navigationTransform
-      )
-    );
-  }
-
-  if (
-    !layerComposition.eligible
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'RENDER_FRAME_LAYER_COMPOSITION_NOT_ELIGIBLE',
-        'The render frame semantic layer composition is not eligible.',
-        layerComposition
-      )
-    );
-  }
-
-  const viewport =
-    cloneViewportState();
-
-  if (
-    viewport.capacityStatus ===
-    'OUTSIDE_CAPACITY'
-  ) {
-    issues.push(
-      createCompositorIssue(
-        'RENDER_FRAME_VIEWPORT_OUTSIDE_CAPACITY',
-        'The current viewport is outside capacity.',
-        viewport
-      )
-    );
-  }
-
-  const eligible =
-    issues.length === 0;
-
-  const frame = deepFreeze({
-    frameType:
-      'H_EARTH_3D_COMPOSITOR_RENDER_FRAME',
+    status,
 
     contractId:
       H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-    frameId:
-      `H_EARTH_3D_RENDER_FRAME_${String(
-        compositorState.frameRevision
-      ).padStart(6, '0')}`,
+    admittedGeometryFrameContractId:
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
 
-    frameRevision:
-      compositorState.frameRevision,
+    packet002TransferOccurrenceId,
 
-    cameraRevision:
-      compositorState.cameraRevision,
+    compositorFrameOccurrenceId,
 
-    viewportRevision:
-      compositorState.viewportRevision,
+    compositorCompositionStateMutated:
+      false,
 
-    visibilityRevision:
-      compositorState.visibilityRevision,
+    revisionAdvanced:
+      false,
 
-    inertiaRevision:
-      compositorState.inertiaRevision,
+    receiptLedgerMayBeUpdated:
+      true,
 
-    eligible,
+    admittedGeometryFrame:
+      null,
 
-    status:
-      eligible
-        ? 'COMPOSITOR_RENDER_FRAME_ELIGIBLE'
-        : 'COMPOSITOR_RENDER_FRAME_NOT_ELIGIBLE',
+    rendererImported:
+      false,
+
+    rendererMounted:
+      false,
+
+    rendererResourceCreated:
+      false,
+
+    visibleOutputConfirmed:
+      false,
 
     issues:
-      deepFreeze(issues),
-
-    bindingIdentity:
-      H_EARTH_3D_COMPOSITOR_BINDING_IDENTITY,
-
-    coordinateFrame:
-      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS
-        .coordinateFrame,
-
-    worldBounds:
-      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS,
-
-    viewport:
-      deepFreeze(viewport),
-
-    resolvedCameraPose:
-      cameraPose,
-
-    navigationTransform,
-
-    inertiaState:
-      deepFreeze(
-        cloneInertiaState()
-      ),
-
-    composition: deepFreeze({
-      orderedLayerIds:
-        layerComposition
-          .orderedLayerIds,
-
-      orderedLayers:
-        layerComposition
-          .orderedLayers,
-
-      visibilityPolicy:
-        H_EARTH_3D_COMPOSITOR_VISIBILITY_POLICY,
-
-      visibleLayerIds:
-        deepFreeze([
-          ...compositorState
-            .visibility
-            .visibleLayerIds
-        ]),
-
-      renderTiers:
-        H_EARTH_3D_COMPOSITOR_RENDER_TIERS
-    }),
-
-    environment: deepFreeze({
-      contractId:
-        H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
-
-      tiers:
-        H_EARTH_3D_ENVIRONMENT_TIERS,
-
-      materials:
-        H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES,
-
-      ground:
-        H_EARTH_3D_GROUND_SUBSTRATE,
-
-      shoreline:
-        H_EARTH_3D_SHORELINE_MODEL,
-
-      water:
-        H_EARTH_3D_WATER_SUBSTRATE,
-
-      atmosphere:
-        H_EARTH_3D_ATMOSPHERE_MODEL,
-
-      tidePools:
-        H_EARTH_3D_TIDE_POOL_DESCRIPTORS,
-
-      stones:
-        H_EARTH_3D_STONE_DESCRIPTORS,
-
-      jaggedRocks:
-        H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS,
-
-      backgroundContext:
-        H_EARTH_3D_BACKGROUND_CONTEXT,
-
-      inspectionAnchor:
-        H_EARTH_3D_INSPECTION_ANCHOR,
-
-      actorReadyGroundCandidate:
-        H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE,
-
-      primitivePlan:
-        H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN
-    }),
-
-    rendererRules: deepFreeze({
-      outputModel:
-        H_EARTH_3D_RENDER_STAGE_LIMITS
-          .permittedOutputModel,
-
-      projectionOwnedByRenderer: true,
-      primitiveConstructionOwnedByRenderer: true,
-      DOMCSSMaterializationOwnedByRenderer: true,
-
-      cameraStateOwnedByRenderer: false,
-      viewportStateOwnedByRenderer: false,
-      navigationConstraintsOwnedByRenderer: false,
-      semanticLayerOrderOwnedByRenderer: false,
-
-      rendererMustConsumeFrameRevision: true
-    }),
-
-    claimCeilings:
-      H_EARTH_3D_COMPOSITOR_CLAIM_CEILINGS
+      freezeIssues(issues)
   });
+}
+
+
+/* ==========================================================================
+ * 25 · AUTHORITATIVE ADMITTED-FRAME COMPOSITION
+ * ========================================================================== */
+
+export function composeHEarth3DCompositorAdmittedFrame(
+  input
+) {
+  const inputEvaluation =
+    evaluateFrameCompositionInput(
+      input
+    );
+
+  if (!inputEvaluation.eligible) {
+    return createRejectedCompositionResult(
+      'COMPOSITOR_ADMITTED_FRAME_INPUT_REJECTED',
+      inputEvaluation.issues
+    );
+  }
+
+  const {
+    packet002Transfer
+  } = inputEvaluation;
+
+  const {
+    packet002TransferOccurrenceId,
+    compositorFrameOccurrenceId,
+    presentationMode
+  } = inputEvaluation.input;
+
+  const compositorStateSnapshot =
+    getHEarth3DCompositorState();
+
+  if (
+    compositorStateSnapshot
+      .viewport
+      .capacityStatus !==
+      'WITHIN_CAPACITY'
+  ) {
+    return createRejectedCompositionResult(
+      'COMPOSITOR_VIEWPORT_UNRESOLVED_OR_NOT_ELIGIBLE',
+      [
+        createCompositorIssue(
+          'COMPOSITOR_VIEWPORT_NOT_READY_FOR_FRAME',
+          'A capacity-eligible resolved viewport is required before admitted-frame composition.',
+          {
+            actual:
+              compositorStateSnapshot
+                .viewport
+                .capacityStatus,
+
+            expected:
+              'WITHIN_CAPACITY'
+          }
+        )
+      ],
+      {
+        packet002TransferOccurrenceId,
+        compositorFrameOccurrenceId
+      }
+    );
+  }
+
+  const resolvedCameraPose =
+    resolveHEarth3DCompositorCameraPose(
+      compositorStateSnapshot.camera
+    );
+
+  if (!resolvedCameraPose.eligible) {
+    return createRejectedCompositionResult(
+      'COMPOSITOR_CAMERA_POSE_NOT_ELIGIBLE',
+      resolvedCameraPose.issues,
+      {
+        packet002TransferOccurrenceId,
+        compositorFrameOccurrenceId
+      }
+    );
+  }
+
+  const earlyViewportEvaluation =
+    evaluateHEarth3DViewportCapacity(
+      compositorStateSnapshot.viewport
+    );
+
+  if (
+    !isPlainRecord(
+      earlyViewportEvaluation
+    ) ||
+    earlyViewportEvaluation.eligible !==
+      true
+  ) {
+    return createRejectedCompositionResult(
+      'COMPOSITOR_EARLY_VIEWPORT_CAPACITY_REJECTION',
+      [
+        createCompositorIssue(
+          'EARLY_VIEWPORT_CAPACITY_NOT_ELIGIBLE',
+          'The viewport failed compositor fail-fast capacity evaluation.',
+          {
+            details:
+              earlyViewportEvaluation ??
+              null
+          }
+        )
+      ],
+      {
+        packet002TransferOccurrenceId,
+        compositorFrameOccurrenceId
+      }
+    );
+  }
+
+  const earlyCameraEvaluation =
+    evaluateHEarth3DCameraPose(
+      resolvedCameraPose
+    );
+
+  if (
+    !isPlainRecord(
+      earlyCameraEvaluation
+    ) ||
+    earlyCameraEvaluation.eligible !==
+      true
+  ) {
+    return createRejectedCompositionResult(
+      'COMPOSITOR_EARLY_CAMERA_CAPACITY_REJECTION',
+      [
+        createCompositorIssue(
+          'EARLY_CAMERA_CAPACITY_NOT_ELIGIBLE',
+          'The resolved camera pose failed compositor fail-fast capacity evaluation.',
+          {
+            details:
+              earlyCameraEvaluation ??
+              null
+          }
+        )
+      ],
+      {
+        packet002TransferOccurrenceId,
+        compositorFrameOccurrenceId
+      }
+    );
+  }
+
+  const admittedGeometryFrame =
+    composeHEarth3DAdmittedGeometryFrame({
+      packet002Transfer,
+
+      packet002TransferOccurrenceId,
+
+      compositorState:
+        compositorStateSnapshot,
+
+      resolvedCameraPoseCorrespondence: {
+        sourceCameraRevision:
+          compositorStateSnapshot
+            .revisions
+            .camera,
+
+        resolvedCameraPose
+      },
+
+      presentationMode,
+
+      compositorFrameOccurrenceId
+    });
+
+  const accepted =
+    isHEarth3DAdmittedGeometryFrame(
+      admittedGeometryFrame
+    );
 
   const receipt =
     deepFreeze({
       receiptType:
-        'H_EARTH_3D_COMPOSITOR_RENDER_FRAME_RECEIPT',
+        'H_EARTH_3D_COMPOSITOR_ADMITTED_FRAME_RECEIPT',
 
       contractId:
         H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-      frameId:
-        frame.frameId,
+      admittedGeometryFrameContractId:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
 
-      frameRevision:
-        frame.frameRevision,
-
-      eligible:
-        frame.eligible,
+      accepted,
 
       status:
-        frame.status,
+        accepted
+          ? 'COMPOSITOR_ADMITTED_FRAME_COMPOSED'
+          : 'COMPOSITOR_ADMITTED_FRAME_REJECTED_BY_AUTHORITATIVE_VALIDATOR',
 
-      cameraRevision:
-        frame.cameraRevision,
+      packet002TransferOccurrenceId,
 
-      viewportRevision:
-        frame.viewportRevision,
+      compositorFrameOccurrenceId,
 
-      visibilityRevision:
-        frame.visibilityRevision,
+      capturedFrameRevision:
+        compositorStateSnapshot
+          .revisions
+          .frame,
 
-      inertiaRevision:
-        frame.inertiaRevision,
+      capturedCameraRevision:
+        compositorStateSnapshot
+          .revisions
+          .camera,
 
-      rendererConsumed: false,
-      rendererMounted: false,
-      visualOutputInspected: false,
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+      compositorCompositionStateMutated:
+        false,
+
+      revisionAdvanced:
+        false,
+
+      nonAuthoritativeReceiptLedgerUpdated:
+        true,
+
+      rendererImported:
+        false,
+
+      rendererMounted:
+        false,
+
+      rendererResourceCreated:
+        false,
+
+      visibleOutputConfirmed:
+        false,
 
       rendererPassClaim: false,
       visualPassClaim: false,
@@ -4286,183 +4872,321 @@ export function composeHEarth3DRenderFrame({
       productionClaim: false
     });
 
-  compositorState.lastFrameReceipt =
+  compositorOperationalReceipts.frame =
     receipt;
 
-  return frame;
+  return admittedGeometryFrame;
 }
 
-/**
- * Returns the current compositor render frame.
- */
-export function getHEarth3DCompositorRenderFrame() {
-  return composeHEarth3DRenderFrame();
+
+/* ==========================================================================
+ * 26 · COMPATIBILITY FRAME ALIASES
+ * ========================================================================== */
+
+export function composeHEarth3DRenderFrame(
+  input
+) {
+  return composeHEarth3DCompositorAdmittedFrame(
+    input
+  );
 }
 
-/**
- * Compatibility renderer-consumption evaluator.
- */
-export function evaluateHEarth3DRendererConsumption({
-  compositorContractIdMatches = false,
-  capacityContractIdMatches = false,
-  environmentContractIdMatches = false,
-  bindingIdentityMatches = false,
-  coordinateFrameMatches = false,
-  requiredLayerOrderConsumed = false,
-  requiredLayersPresent = false,
-  primitiveBudgetWithinCapacity = false,
-  rendererOutputModelAllowed = false,
-  rendererImportedSuccessfully = false,
-  rendererConstructedSuccessfully = false,
-  compositorFrameConsumed = false,
-  compositorFrameRevisionRecorded = false
-} = {}) {
-  const checks = deepFreeze({
-    compositorContractIdMatches,
-    capacityContractIdMatches,
-    environmentContractIdMatches,
-    bindingIdentityMatches,
-    coordinateFrameMatches,
-    requiredLayerOrderConsumed,
-    requiredLayersPresent,
-    primitiveBudgetWithinCapacity,
-    rendererOutputModelAllowed,
-    rendererImportedSuccessfully,
-    rendererConstructedSuccessfully,
-    compositorFrameConsumed,
-    compositorFrameRevisionRecorded
-  });
-
-  const rendererPreflightEligible =
-    Object.values(checks)
-      .every(Boolean);
-
-  return deepFreeze({
-    rendererPreflightEligible,
-
-    status:
-      rendererPreflightEligible
-        ? 'RENDERER_CONSUMPTION_ELIGIBLE'
-        : 'RENDERER_CONSUMPTION_NOT_ELIGIBLE',
-
-    checks,
-
-    rendererPassClaim: false,
-    visualPassClaim: false,
-    validationClaim: false,
-    productionClaim: false
-  });
+export function composeHEarth3DRendererFrame(
+  input
+) {
+  return composeHEarth3DCompositorAdmittedFrame(
+    input
+  );
 }
 
-/**
- * Current compositor state.
- */
-export function getHEarth3DCompositorState() {
-  return deepFreeze({
-    camera:
-      deepFreeze(
-        cloneCameraState()
-      ),
-
-    viewport:
-      deepFreeze(
-        cloneViewportState()
-      ),
-
-    visibility:
-      deepFreeze(
-        cloneVisibilityState()
-      ),
-
-    inertia:
-      deepFreeze(
-        cloneInertiaState()
-      ),
-
-    revisions: deepFreeze({
-      camera:
-        compositorState.cameraRevision,
-
-      viewport:
-        compositorState.viewportRevision,
-
-      visibility:
-        compositorState.visibilityRevision,
-
-      inertia:
-        compositorState.inertiaRevision,
-
-      frame:
-        compositorState.frameRevision
-    }),
-
-    intentSequence:
-      compositorState.intentSequence,
-
-    lastAcceptedIntent:
-      compositorState.lastAcceptedIntent,
-
-    lastRejectedIntent:
-      compositorState.lastRejectedIntent
-  });
+export function getHEarth3DCompositorRenderFrame(
+  input
+) {
+  return composeHEarth3DCompositorAdmittedFrame(
+    input
+  );
 }
 
-/**
- * Operational receipts.
- */
+
+/* ==========================================================================
+ * 27 · THIN RENDERER HANDOFF
+ * ========================================================================== */
+
+export function getHEarth3DCompositorRendererHandoff(
+  input
+) {
+  const admittedGeometryFrame =
+    composeHEarth3DCompositorAdmittedFrame(
+      input
+    );
+
+  const ok =
+    isHEarth3DAdmittedGeometryFrame(
+      admittedGeometryFrame
+    );
+
+  const handoff =
+    deepFreeze({
+      ok,
+
+      status:
+        ok
+          ? 'COMPOSITOR_RENDERER_HANDOFF_READY'
+          : 'COMPOSITOR_RENDERER_HANDOFF_NOT_READY',
+
+      contractId:
+        H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+
+      admittedGeometryFrameContractId:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+      admittedGeometryFrame,
+
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+      compositorCompositionStateMutated:
+        false,
+
+      revisionAdvanced:
+        false,
+
+      nonAuthoritativeReceiptLedgerUpdated:
+        true,
+
+      rendererImported:
+        false,
+
+      rendererMounted:
+        false,
+
+      rendererResourceCreated:
+        false,
+
+      renderInstanceCreated:
+        false,
+
+      visibleOutputConfirmed:
+        false,
+
+      rendererPassClaim:
+        false,
+
+      visualPassClaim:
+        false,
+
+      validationClaim:
+        false,
+
+      productionClaim:
+        false
+    });
+
+  compositorOperationalReceipts.handoff =
+    deepFreeze({
+      receiptType:
+        'H_EARTH_3D_COMPOSITOR_RENDERER_HANDOFF_RECEIPT',
+
+      contractId:
+        H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+
+      ok,
+
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+      compositorCompositionStateMutated:
+        false,
+
+      revisionAdvanced:
+        false,
+
+      nonAuthoritativeReceiptLedgerUpdated:
+        true,
+
+      rendererImported:
+        false,
+
+      rendererMounted:
+        false,
+
+      rendererResourceCreated:
+        false,
+
+      visibleOutputConfirmed:
+        false
+    });
+
+  return handoff;
+}
+
+
+/* ==========================================================================
+ * 28 · STATIC CONFIGURATION COHERENCE
+ * ========================================================================== */
+
+export const H_EARTH_3D_COMPOSITOR_STATIC_COHERENCE =
+  (() => {
+    const issues = [];
+
+    if (
+      CAPACITY_CONTRACT?.contractId !==
+      H_EARTH_3D_CAPACITY_CONTRACT_ID
+    ) {
+      issues.push(
+        createCompositorIssue(
+          'CAPACITY_CONTRACT_ID_MISMATCH',
+          'The imported capacity contract does not match the expected identity.'
+        )
+      );
+    }
+
+    if (
+      ADMITTED_FRAME_CONTRACT
+        ?.contractId !==
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID
+    ) {
+      issues.push(
+        createCompositorIssue(
+          'ADMITTED_FRAME_CONTRACT_ID_MISMATCH',
+          'The admitted-geometry frame contract does not match the expected identity.'
+        )
+      );
+    }
+
+    const initialCameraEvaluation =
+      evaluateHEarth3DCompositorCameraState(
+        H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE
+      );
+
+    if (!initialCameraEvaluation.eligible) {
+      issues.push(
+        createCompositorIssue(
+          'INITIAL_CAMERA_STATE_NOT_ELIGIBLE',
+          'The initial camera state is not locally eligible.',
+          {
+            details:
+              initialCameraEvaluation
+          }
+        )
+      );
+    }
+
+    return deepFreeze({
+      eligible:
+        issues.length === 0,
+
+      status:
+        issues.length === 0
+          ? 'COMPOSITOR_STATIC_CONFIGURATION_COHERENT'
+          : 'COMPOSITOR_STATIC_CONFIGURATION_NOT_COHERENT',
+
+      issues:
+        freezeIssues(issues),
+
+      capacityContractPresent:
+        CAPACITY_CONTRACT !==
+        null,
+
+      capacityReceiptPresent:
+        CAPACITY_RECEIPT !==
+        null,
+
+      admittedFrameContractPresent:
+        ADMITTED_FRAME_CONTRACT !==
+        null,
+
+      admittedFrameReceiptPresent:
+        ADMITTED_FRAME_RECEIPT !==
+        null,
+
+      capacityAuthority:
+        H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+      finalFrameEligibilityAuthority:
+        H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+      initialCameraStateEligible:
+        initialCameraEvaluation
+          .eligible === true,
+
+      fixedNearPlaneEnforced:
+        true,
+
+      fixedFarPlaneEnforced:
+        true,
+
+      initialViewportResolved:
+        false,
+
+      packet002OccurrencePresent:
+        false,
+
+      admittedGeometryFramePresent:
+        false,
+
+      rendererImported:
+        false,
+
+      rendererMounted:
+        false,
+
+      visibleOutputConfirmed:
+        false,
+
+      rendererPassClaim:
+        false,
+
+      visualPassClaim:
+        false,
+
+      validationClaim:
+        false,
+
+      productionClaim:
+        false
+    });
+  })();
+
+
+/* ==========================================================================
+ * 29 · OPERATIONAL RECEIPTS
+ * ========================================================================== */
+
 export function getHEarth3DCompositorOperationalReceipts() {
-  return deepFreeze({
-    intent:
-      compositorState
-        .lastIntentReceipt,
-
-    frame:
-      compositorState
-        .lastFrameReceipt,
-
-    viewport:
-      compositorState
-        .lastViewportReceipt,
-
-    visibility:
-      compositorState
-        .lastVisibilityReceipt,
-
-    reset:
-      compositorState
-        .lastResetReceipt
-  });
+  return deepFreeze(
+    cloneKnownPlain(
+      compositorOperationalReceipts
+    )
+  );
 }
 
-/**
- * Resets all mutable compositor state.
- */
+
+/* ==========================================================================
+ * 30 · RESET
+ * ========================================================================== */
+
 export function resetHEarth3DCompositorState() {
-  compositorState.camera =
-    clonePlain(
-      initialState.camera
-    );
+  const transaction =
+    commitCompositorMutation({
+      nextCamera:
+        H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE,
 
-  compositorState.viewport =
-    clonePlain(
-      initialState.viewport
-    );
+      nextViewport:
+        H_EARTH_3D_COMPOSITOR_INITIAL_VIEWPORT_STATE,
 
-  compositorState.visibility =
-    clonePlain(
-      initialState.visibility
-    );
+      nextVisibility:
+        H_EARTH_3D_COMPOSITOR_INITIAL_VISIBILITY_STATE,
 
-  compositorState.inertia =
-    clonePlain(
-      initialState.inertia
-    );
-
-  compositorState.cameraRevision += 1;
-  compositorState.viewportRevision += 1;
-  compositorState.visibilityRevision += 1;
-  compositorState.inertiaRevision += 1;
-  compositorState.frameRevision += 1;
+      nextInertia:
+        H_EARTH_3D_COMPOSITOR_INITIAL_INERTIA_STATE
+    });
 
   const receipt =
     deepFreeze({
@@ -4472,405 +5196,545 @@ export function resetHEarth3DCompositorState() {
       contractId:
         H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-      reset: true,
+      accepted:
+        true,
+
+      reset:
+        transaction.materiallyChanged,
+
+      materiallyChanged:
+        transaction.materiallyChanged,
 
       status:
-        'COMPOSITOR_STATE_RESET',
+        transaction.materiallyChanged
+          ? 'COMPOSITOR_STATE_RESET'
+          : 'COMPOSITOR_STATE_ALREADY_INITIAL',
 
-      cameraRevision:
-        compositorState.cameraRevision,
+      cameraChanged:
+        transaction.cameraChanged,
 
-      viewportRevision:
-        compositorState.viewportRevision,
+      viewportChanged:
+        transaction.viewportChanged,
 
-      visibilityRevision:
-        compositorState.visibilityRevision,
+      visibilityChanged:
+        transaction.visibilityChanged,
 
-      inertiaRevision:
-        compositorState.inertiaRevision,
+      inertiaChanged:
+        transaction.inertiaChanged,
 
-      frameRevision:
-        compositorState.frameRevision,
+      revisions:
+        transaction.revisions,
 
       rendererPassClaim: false,
       visualPassClaim: false,
       validationClaim: false
     });
 
-  compositorState.lastResetReceipt =
+  compositorOperationalReceipts.reset =
     receipt;
 
   return receipt;
 }
 
-/**
- * Renderer handoff.
- */
-export const H_EARTH_3D_COMPOSITOR_RENDERER_HANDOFF = deepFreeze({
-  handoffType:
-    'H_EARTH_LAYER_4_COMPOSITOR_TO_RENDERER_RESOLVED_FRAME_HANDOFF',
 
-  contractId:
-    H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+/* ==========================================================================
+ * 31 · CLAIM CEILINGS
+ * ========================================================================== */
 
-  capacityContractId:
-    H_EARTH_3D_CAPACITY_CONTRACT_ID,
+export const H_EARTH_3D_COMPOSITOR_CLAIM_CEILINGS =
+  deepFreeze({
+    packet002ProductionClaim:
+      false,
 
-  environmentContractId:
-    H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
+    packet002OccurrenceAuthenticationClaim:
+      false,
 
-  bindingIdentity:
-    H_EARTH_3D_COMPOSITOR_BINDING_IDENTITY,
+    sourceResolutionClaim:
+      false,
 
-  coordinateFrame:
-    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS
-      .coordinateFrame,
+    providerConstructionClaim:
+      false,
 
-  worldBounds:
-    H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS,
+    geometryConstructionClaim:
+      false,
 
-  cameraCapacity:
-    H_EARTH_3D_COMPOSITOR_CAMERA_CAPACITY,
+    westAdmissionClaim:
+      false,
 
-  cameraConstraints:
-    H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS,
+    geometryIndexClaim:
+      false,
 
-  viewportSchema:
-    H_EARTH_3D_COMPOSITOR_VIEWPORT_STATE_SCHEMA,
+    rendererProjectionClaim:
+      false,
 
-  intentTypes:
-    H_EARTH_3D_COMPOSITOR_INTENT_TYPES,
+    rendererPrimitiveConstructionClaim:
+      false,
 
-  navigationConstraints:
-    H_EARTH_3D_COMPOSITOR_NAVIGATION_CONSTRAINTS,
+    rendererResourceCreationClaim:
+      false,
 
-  composition: deepFreeze({
-    orderedLayerIds:
-      H_EARTH_3D_COMPOSITION_LAYER_ORDER,
+    backendMaterialCreationClaim:
+      false,
 
-    layers:
-      H_EARTH_3D_COMPOSITION_LAYERS,
+    renderInstanceCreationClaim:
+      false,
 
-    layerMap:
-      H_EARTH_3D_COMPOSITION_LAYER_MAP,
+    rendererMountClaim:
+      false,
 
-    visibilityPolicy:
-      H_EARTH_3D_COMPOSITOR_VISIBILITY_POLICY,
+    runtimeActivationClaim:
+      false,
 
-    renderTiers:
-      H_EARTH_3D_COMPOSITOR_RENDER_TIERS
-  }),
+    visibleOutputClaim:
+      false,
 
-  environment: deepFreeze({
+    rendererPassClaim:
+      false,
+
+    visualPassClaim:
+      false,
+
+    validationClaim:
+      false,
+
+    productionClaim:
+      false,
+
+    matrixCollapse:
+      false
+  });
+
+
+/* ==========================================================================
+ * 32 · STATIC RECEIPT
+ * ========================================================================== */
+
+export const H_EARTH_3D_COMPOSITOR_RECEIPT =
+  deepFreeze({
+    receiptType:
+      'H_EARTH_3D_ADMITTED_GEOMETRY_COMPOSITOR_RENEWAL_RECEIPT',
+
     contractId:
-      H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
+      H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-    tiers:
-      H_EARTH_3D_ENVIRONMENT_TIERS,
+    renewsContractId:
+      RENEWS_COMPOSITOR_CONTRACT_ID,
 
-    materials:
-      H_EARTH_3D_ENVIRONMENT_MATERIAL_IDENTITIES,
+    sourceFile:
+      H_EARTH_3D_COMPOSITOR_SOURCE_FILE,
 
-    ground:
-      H_EARTH_3D_GROUND_SUBSTRATE,
+    capacityContractConsumed:
+      true,
 
-    shoreline:
-      H_EARTH_3D_SHORELINE_MODEL,
+    admittedGeometryFrameContractConsumed:
+      true,
 
-    water:
-      H_EARTH_3D_WATER_SUBSTRATE,
+    capacityAuthorityIdentifiedAsCapacityContract:
+      true,
 
-    atmosphere:
-      H_EARTH_3D_ATMOSPHERE_MODEL,
+    finalFrameEligibilityAuthorityIdentifiedAsStep034O7:
+      true,
 
-    tidePools:
-      H_EARTH_3D_TIDE_POOL_DESCRIPTORS,
+    capacityAuthority:
+      H_EARTH_3D_CAPACITY_CONTRACT_ID,
 
-    stones:
-      H_EARTH_3D_STONE_DESCRIPTORS,
+    finalFrameEligibilityAuthority:
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
 
-    jaggedRocks:
-      H_EARTH_3D_JAGGED_ROCK_DESCRIPTORS,
+    environmentDescriptorFramePathRemoved:
+      true,
 
-    backgroundContext:
-      H_EARTH_3D_BACKGROUND_CONTEXT,
+    staticDescriptorHandoffRemoved:
+      true,
 
-    inspectionAnchor:
-      H_EARTH_3D_INSPECTION_ANCHOR,
-
-    actorReadyGroundCandidate:
-      H_EARTH_3D_ACTOR_READY_GROUND_CANDIDATE,
-
-    primitivePlan:
-      H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN
-  }),
-
-  preflight:
-    H_EARTH_3D_COMPOSITOR_RENDERER_PREFLIGHT,
+    packet002InputExplicit:
+      true,
 
-  currentFrameGetter:
-    'getHEarth3DCompositorRenderFrame',
-
-  rendererMustConsumeCurrentFrame: true,
-
-  rendererMayOwnCameraState: false,
-  rendererMayOwnViewportState: false,
-  rendererMayOwnNavigationConstraints: false,
-
-  rendererPassClaim: false,
-  visualPassClaim: false,
-  validationClaim: false,
-  productionClaim: false
-});
-
-/**
- * Static compositor receipt.
- */
-export const H_EARTH_3D_COMPOSITOR_RECEIPT = deepFreeze({
-  receiptType:
-    'H_EARTH_3D_CAMERA_VIEWPORT_FRAME_COMPOSITOR_RECEIPT',
+    presentationModeDefault:
+      null,
 
-  contractId:
-    H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+    presentationModeMustBeExplicit:
+      true,
 
-  renewsContractId:
-    'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_PRECHECK_ENVIRONMENT_FIRST_RENDERER_HANDOFF_v1',
+    compositorStateSnapshotExact:
+      true,
 
-  file:
-    '/showroom/globe/h-earth/compositor.js',
+    compositorStateCapturedOncePerComposition:
+      true,
 
-  capacityContractConsumed: true,
-  environmentContractConsumed: true,
-  environmentHandoffConsumed: true,
+    cameraPoseCorrespondenceDerivedFromCapturedSnapshot:
+      true,
 
-  semanticCompositionDefined: true,
-  semanticLayerOrderDefined: true,
-  renderTierAdmissionDefined: true,
-  visibilityPolicyDefined: true,
+    unresolvedViewportRejectedForComposition:
+      true,
 
-  environmentPrimitiveAccountingField:
-    'estimatedEnvironmentPrimitiveCount',
+    frameCompositionMutatesCompositorCompositionState:
+      false,
 
-  cameraCompositionStateDefined: true,
-  capacityCameraShapeConsumed: true,
-  futureControllerCapacityConsumed: true,
-  positionBoundsConsumed: true,
-  targetBoundsConsumed: true,
-  yawBoundsConsumed: true,
-  pitchBoundsConsumed: true,
-  verticalFovBoundsConsumed: true,
-  zoomScaleBoundsConsumed: true,
+    rendererHandoffMutatesCompositorCompositionState:
+      false,
 
-  viewportCompositionDefined: true,
-  navigationConstraintsDefined: true,
-  compositorIntentEvaluationDefined: true,
-  orbitIntentDefined: true,
-  panIntentDefined: true,
-  zoomIntentDefined: true,
-  resetIntentDefined: true,
-  visibilityIntentDefined: true,
-  viewportIntentDefined: true,
+    frameCompositionMayUpdateNonAuthoritativeReceiptLedger:
+      true,
 
-  inertiaStateDefined: true,
-  inertiaAdvanceDefined: true,
-  inertiaStopDefined: true,
+    rendererHandoffMayUpdateNonAuthoritativeReceiptLedger:
+      true,
 
-  resolvedCameraPoseDefined: true,
-  sceneNavigationTransformDefined: true,
-  renderFrameSequencingDefined: true,
-  resolvedRendererFrameHandoffDefined: true,
+    frameCompositionAdvancesRevision:
+      false,
 
-  rendererProjectionAuthorityPreserved: true,
-  rendererCameraStateAuthorityRemovedByContract: true,
-  controllerInputNormalizationBoundaryPreserved: true,
+    operationalReceiptLedgerSeparatedFromCompositorState:
+      true,
 
-  dependencyPreflightStatus:
-    H_EARTH_3D_COMPOSITOR_RENDERER_PREFLIGHT
-      .status,
+    transactionStyleRevisionAdvancementDefined:
+      true,
 
-  dependencyPreflightEligible:
-    H_EARTH_3D_COMPOSITOR_RENDERER_PREFLIGHT
-      .eligible,
+    oneFrameRevisionAdvancePerMaterialPublicMutation:
+      true,
 
-  repositoryInstallationVerified: false,
-  importResolutionVerified: false,
-  moduleGraphExecutionVerified: false,
-  rendererFrameConsumptionVerified: false,
-  rendererMountVerified: false,
-  controllerIntentDispatchVerified: false,
-  routeIntegrationVerified: false,
-  visualOutputInspected: false,
+    identicalCameraStateDoesNotAdvanceRevision:
+      true,
 
-  nextRequired:
-    'BACK_UP_RENEWED_COMPOSITOR_THEN_RENEW_RENDERER_FOR_COMPOSITOR_FRAME_CONSUMPTION',
+    identicalViewportStateDoesNotAdvanceRevision:
+      true,
 
-  ...H_EARTH_3D_COMPOSITOR_CLAIM_CEILINGS
-});
+    identicalVisibilityStateDoesNotAdvanceRevision:
+      true,
 
-/**
- * Complete compositor contract.
- */
-export const H_EARTH_3D_COMPOSITOR_CONTRACT = deepFreeze({
-  contractId:
-    H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+    idleInertiaStopDoesNotAdvanceRevision:
+      true,
 
-  schemaVersion:
-    H_EARTH_3D_COMPOSITOR_SCHEMA_VERSION,
+    rejectedInertiaAdvancementMayStopInertiaFailClosed:
+      true,
 
-  renewsContractId:
-    'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_PRECHECK_ENVIRONMENT_FIRST_RENDERER_HANDOFF_v1',
+    rejectedInertiaFailClosedShutdownAuditRequired:
+      true,
 
-  file:
-    '/showroom/globe/h-earth/compositor.js',
+    zeroEffectOrbitRejected:
+      true,
 
-  layer:
-    'H_EARTH_LAYER_4_SHOWROOM_EXECUTION_CORRIDOR',
+    zeroEffectPanRejected:
+      true,
 
-  role:
-    'ENVIRONMENT_SEMANTIC_CAMERA_VIEWPORT_AND_RENDER_FRAME_COMPOSITION_AUTHORITY',
+    zeroEffectZoomRejected:
+      true,
 
-  status:
-    'CURRENT_ROLE_RENEWAL_CANDIDATE',
+    fixedNearPlaneEnforced:
+      true,
 
-  bindingIdentity:
-    H_EARTH_3D_COMPOSITOR_BINDING_IDENTITY,
+    fixedFarPlaneEnforced:
+      true,
 
-  sourceReferences:
-    H_EARTH_3D_COMPOSITOR_SOURCE_REFERENCES,
+    invalidProjectionPlaneReplacementRejected:
+      true,
 
-  compositionGroups:
-    H_EARTH_3D_COMPOSITION_GROUPS,
+    intentAcceptanceSeparatedFromMaterialChange:
+      true,
 
-  compositionLayerIds:
-    H_EARTH_3D_COMPOSITION_LAYER_IDS,
+    lawfulUnchangedIntentRecordedAsAccepted:
+      true,
 
-  compositionLayerOrder:
-    H_EARTH_3D_COMPOSITION_LAYER_ORDER,
+    rejectedOperationResultsExposeAcceptedFalse:
+      true,
 
-  compositionLayers:
-    H_EARTH_3D_COMPOSITION_LAYERS,
+    strictPublicMutationSnapshottingDefined:
+      true,
 
-  compositionLayerMap:
-    H_EARTH_3D_COMPOSITION_LAYER_MAP,
+    packet002ProducerOwnedReferencePreserved:
+      true,
 
-  renderTiers:
-    H_EARTH_3D_COMPOSITOR_RENDER_TIERS,
+    thinOccurrenceBasedRendererHandoffDefined:
+      true,
 
-  visibilityPolicy:
-    H_EARTH_3D_COMPOSITOR_VISIBILITY_POLICY,
+    compatibilityAliasesDelegateOnlyToAdmittedPath:
+      true,
 
-  primitiveAccounting:
-    H_EARTH_3D_COMPOSITOR_PRIMITIVE_ACCOUNTING,
+    moduleSyntaxVerified:
+      false,
 
-  cameraCapacity:
-    H_EARTH_3D_COMPOSITOR_CAMERA_CAPACITY,
+    importResolutionVerified:
+      false,
 
-  cameraStateSchema:
-    H_EARTH_3D_COMPOSITOR_CAMERA_STATE_SCHEMA,
+    moduleInitializationVerified:
+      false,
 
-  cameraConstraints:
-    H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS,
+    controlledBehaviorVerified:
+      false,
 
-  initialCameraState:
-    H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE,
+    rejectedInertiaFailClosedShutdownVerified:
+      false,
 
-  viewportStateSchema:
-    H_EARTH_3D_COMPOSITOR_VIEWPORT_STATE_SCHEMA,
+    liveRepositoryExecutionVerified:
+      false,
 
-  initialViewportState:
-    H_EARTH_3D_COMPOSITOR_INITIAL_VIEWPORT_STATE,
+    routeIntegrationVerified:
+      false,
 
-  intentTypes:
-    H_EARTH_3D_COMPOSITOR_INTENT_TYPES,
+    rendererConsumptionVerified:
+      false,
 
-  intentSchema:
-    H_EARTH_3D_COMPOSITOR_INTENT_SCHEMA,
+    rendererMountVerified:
+      false,
 
-  inertiaPolicy:
-    H_EARTH_3D_COMPOSITOR_INERTIA_POLICY,
+    visibleOutputConfirmed:
+      false,
 
-  navigationConstraints:
-    H_EARTH_3D_COMPOSITOR_NAVIGATION_CONSTRAINTS,
+    claimCeilings:
+      H_EARTH_3D_COMPOSITOR_CLAIM_CEILINGS
+  });
 
-  rendererPreflight:
-    H_EARTH_3D_COMPOSITOR_RENDERER_PREFLIGHT,
 
-  rendererHandoff:
-    H_EARTH_3D_COMPOSITOR_RENDERER_HANDOFF,
+/* ==========================================================================
+ * 33 · COMPLETE CONTRACT
+ * ========================================================================== */
 
-  boundaryFlags:
-    H_EARTH_3D_COMPOSITOR_BOUNDARY_FLAGS,
+export const H_EARTH_3D_COMPOSITOR_CONTRACT =
+  deepFreeze({
+    contractId:
+      H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
 
-  claimCeilings:
-    H_EARTH_3D_COMPOSITOR_CLAIM_CEILINGS
-});
+    schemaVersion:
+      H_EARTH_3D_COMPOSITOR_SCHEMA_VERSION,
 
-/**
- * Returns the immutable compositor contract.
- */
+    renewsContractId:
+      RENEWS_COMPOSITOR_CONTRACT_ID,
+
+    sourceFile:
+      H_EARTH_3D_COMPOSITOR_SOURCE_FILE,
+
+    layer:
+      'H_EARTH_LAYER_4_SHOWROOM_EXECUTION_CORRIDOR',
+
+    role:
+      H_EARTH_3D_COMPOSITOR_ROLE,
+
+    status:
+      H_EARTH_3D_COMPOSITOR_STATUS,
+
+    authoritativeCorridor:
+      deepFreeze([
+        'PACKET_002_TRANSFER',
+        'admitted-geometry-frame.js',
+        'COMPOSITOR_STATE_CORRESPONDENCE_AND_FRAME_SEQUENCING',
+        'renderer.js'
+      ]),
+
+    directDependencies:
+      deepFreeze({
+        capacity:
+          './capacity.js',
+
+        admittedGeometryFrame:
+          './admitted-geometry-frame.js'
+      }),
+
+    capacityContractId:
+      H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+    admittedGeometryFrameContractId:
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+    publicStageWorldBounds:
+      H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS,
+
+    initialCameraState:
+      H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE,
+
+    initialViewportState:
+      H_EARTH_3D_COMPOSITOR_INITIAL_VIEWPORT_STATE,
+
+    initialVisibilityState:
+      H_EARTH_3D_COMPOSITOR_INITIAL_VISIBILITY_STATE,
+
+    initialInertiaState:
+      H_EARTH_3D_COMPOSITOR_INITIAL_INERTIA_STATE,
+
+    cameraConstraints:
+      H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS,
+
+    inertiaPolicy:
+      H_EARTH_3D_COMPOSITOR_INERTIA_POLICY,
+
+    intentTypes:
+      H_EARTH_3D_COMPOSITOR_INTENT_TYPES,
+
+    revisionLaw:
+      H_EARTH_3D_COMPOSITOR_REVISION_LAW,
+
+    compositorSnapshotLaw:
+      'EXACT_EXTERNAL_BRIDGE_SNAPSHOT_WITH_IMPLEMENTATION_PRIVATE_INTERNAL_STATE',
+
+    publicMutationSnapshotLaw:
+      'STRICT_BOUNDED_SNAPSHOT_FOR_CALLER_OWNED_MUTATION_INPUTS',
+
+    packet002ReferenceLaw:
+      'PRESERVE_PRODUCER_OWNED_DEEPLY_FROZEN_PACKET_002_REFERENCE',
+
+    compositionReadLaw:
+      'CAPTURE_COMPOSITOR_STATE_EXACTLY_ONCE_PER_FRAME_COMPOSITION',
+
+    compositionMutationLaw:
+      'FRAME_COMPOSITION_MUTATES_NO_CAMERA_VIEWPORT_VISIBILITY_INERTIA_REVISION_OR_INTENT_STATE',
+
+    rendererHandoffMutationLaw:
+      'RENDERER_HANDOFF_MUTATES_NO_CAMERA_VIEWPORT_VISIBILITY_INERTIA_REVISION_OR_INTENT_STATE',
+
+    receiptLedgerLaw:
+      'NON_AUTHORITATIVE_OPERATIONAL_RECEIPTS_ARE_RECORDED_OUTSIDE_COMPOSITOR_COMPOSITION_STATE',
+
+    capacityAuthorityLaw:
+      'CAPACITY_JS_REMAINS_THE_CAMERA_AND_VIEWPORT_CAPACITY_AUTHORITY',
+
+    finalFrameEligibilityLaw:
+      'STEP_034O_7_REVALIDATES_CAPACITY_AND_IS_THE_FINAL_ADMITTED_FRAME_ELIGIBILITY_BOUNDARY',
+
+    projectionPlaneAuthorityLaw:
+      'NEAR_AND_FAR_PLANES_ARE_FIXED_CAPACITY_DERIVED_PROJECTION_VALUES',
+
+    intentOutcomeLaw:
+      'ELIGIBILITY_IS_LAWFULNESS_ACCEPTANCE_IS_PROCESSING_AND_MATERIAL_CHANGE_IS_STATE_OR_REVISION_CHANGE',
+
+    rejectedInertiaAdvancementLaw:
+      'REJECTED_INERTIA_ADVANCEMENT_MAY_PERFORM_FAIL_CLOSED_INERTIA_SHUTDOWN_AND_REPORT_ACCEPTED_FALSE_WITH_MATERIALLY_CHANGED_TRUE',
+
+    presentationModeDefault:
+      null,
+
+    presentationModeMustBeExplicit:
+      true,
+
+    visibilityLaw:
+      'PRESENTATION_VISIBILITY_IS_RENDERER_CONSUMED_CONTROL_NOT_ADMISSION_OR_GEOMETRY_MUTATION',
+
+    compatibilityLaw:
+      'LEGACY_FRAME_FUNCTION_NAMES_DELEGATE_DIRECTLY_TO_THE_ADMITTED_FRAME_PATH',
+
+    staticCoherence:
+      H_EARTH_3D_COMPOSITOR_STATIC_COHERENCE,
+
+    boundaryFlags:
+      H_EARTH_3D_COMPOSITOR_BOUNDARY_FLAGS,
+
+    claimCeilings:
+      H_EARTH_3D_COMPOSITOR_CLAIM_CEILINGS
+  });
+
+
+/* ==========================================================================
+ * 34 · PUBLIC GETTERS
+ * ========================================================================== */
+
 export function getHEarth3DCompositorContract() {
   return H_EARTH_3D_COMPOSITOR_CONTRACT;
 }
 
-/**
- * Returns the immutable static compositor receipt.
- */
 export function getHEarth3DCompositorReceipt() {
   return H_EARTH_3D_COMPOSITOR_RECEIPT;
 }
 
-/**
- * Returns the normalized compositor-to-renderer handoff.
- */
-export function getHEarth3DCompositorRendererHandoff() {
-  return deepFreeze({
-    ...H_EARTH_3D_COMPOSITOR_RENDERER_HANDOFF,
+export function getHEarth3DCompositorStaticCoherence() {
+  return H_EARTH_3D_COMPOSITOR_STATIC_COHERENCE;
+}
 
-    currentFrame:
-      getHEarth3DCompositorRenderFrame()
+export function getHEarth3DCompositorBoundaryFlags() {
+  return H_EARTH_3D_COMPOSITOR_BOUNDARY_FLAGS;
+}
+
+export function getHEarth3DCompositorClaimCeilings() {
+  return H_EARTH_3D_COMPOSITOR_CLAIM_CEILINGS;
+}
+
+
+/* ==========================================================================
+ * 35 · COMPATIBILITY COMPOSITION GETTER
+ * ========================================================================== */
+
+export function getHEarth3DComposition(
+  input
+) {
+  return getHEarth3DCompositorRendererHandoff(
+    input
+  );
+}
+
+
+/* ==========================================================================
+ * 36 · AGGREGATE EXPORT
+ * ========================================================================== */
+
+export const H_EARTH_3D_COMPOSITOR_AGGREGATE =
+  deepFreeze({
+    contractId:
+      H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
+
+    contract:
+      H_EARTH_3D_COMPOSITOR_CONTRACT,
+
+    receipt:
+      H_EARTH_3D_COMPOSITOR_RECEIPT,
+
+    staticCoherence:
+      H_EARTH_3D_COMPOSITOR_STATIC_COHERENCE,
+
+    boundaryFlags:
+      H_EARTH_3D_COMPOSITOR_BOUNDARY_FLAGS,
+
+    claimCeilings:
+      H_EARTH_3D_COMPOSITOR_CLAIM_CEILINGS,
+
+    evaluateHEarth3DCompositorCameraState,
+
+    resolveHEarth3DCompositorCameraPose,
+
+    evaluateHEarth3DCompositorViewport,
+
+    evaluateHEarth3DCompositorVisibility,
+
+    setHEarth3DCompositorCameraState,
+
+    setHEarth3DCompositorViewport,
+
+    setHEarth3DCompositorVisibility,
+
+    evaluateHEarth3DCompositorIntent,
+
+    applyHEarth3DCompositorIntent,
+
+    startHEarth3DCompositorInertia,
+
+    advanceHEarth3DCompositorInertia,
+
+    stopHEarth3DCompositorInertia,
+
+    getHEarth3DCompositorState,
+
+    resetHEarth3DCompositorState,
+
+    composeHEarth3DCompositorAdmittedFrame,
+
+    composeHEarth3DRenderFrame,
+
+    composeHEarth3DRendererFrame,
+
+    getHEarth3DCompositorRenderFrame,
+
+    getHEarth3DCompositorRendererHandoff,
+
+    getHEarth3DCompositorOperationalReceipts,
+
+    getHEarth3DCompositorContract,
+
+    getHEarth3DCompositorReceipt,
+
+    getHEarth3DCompositorStaticCoherence,
+
+    getHEarth3DCompositorBoundaryFlags,
+
+    getHEarth3DCompositorClaimCeilings,
+
+    getHEarth3DComposition,
+
+    isHEarth3DAdmittedGeometryFrame
   });
-}
 
-/**
- * Returns current compositor renderer preflight.
- */
-export function getHEarth3DCompositorRendererPreflight() {
-  return H_EARTH_3D_COMPOSITOR_RENDERER_PREFLIGHT;
-}
-
-/**
- * Compatibility composition getter.
- */
-export function getHEarth3DComposition() {
-  return getHEarth3DCompositorRendererHandoff();
-}
-
-/**
- * Compatibility public-stage composition surface.
- */
-export const H_EARTH_3D_PUBLIC_STAGE_COMPOSITION =
-  H_EARTH_3D_COMPOSITOR_RENDERER_HANDOFF;
-
-/**
- * Compatibility alias for visibility evaluation.
- */
-export function evaluateHEarth3DCompositorVisibility(
-  options = {}
-) {
-  return evaluateHEarth3DCompositionVisibility(
-    options
-  );
-}
-
-/**
- * Compatibility alias for frame construction.
- */
-export function composeHEarth3DRendererFrame(
-  options = {}
-) {
-  return composeHEarth3DRenderFrame(
-    options
-  );
-}
-
-export default H_EARTH_3D_COMPOSITOR_CONTRACT;
+export default H_EARTH_3D_COMPOSITOR_AGGREGATE;

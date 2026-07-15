@@ -1,37 +1,42 @@
 /*
   /showroom/globe/h-earth/index.css
   COMPLETE RENEWED FILE
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034D_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_SUPPORT_v1
+
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034R_STEP_034Q_PUBLIC_ENVIRONMENT_AND_RENDERER_SURFACE_SUPPORT_v1
 
   Renews:
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_BIRTH_STEP_034B_PUBLIC_ROUTE_RECOVERY_SCENE_FIRST_CSS_v1
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034D_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_SUPPORT_v1
 
   Companion route shell:
   /showroom/globe/h-earth/index.html
-  H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034C_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_PROJECTION_v1
+  H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034Q_STEP_034P_BOOTSTRAP_ENTRY_AND_DIAGNOSTIC_READINESS_v1
 
-  Companion public bootstrap:
+  Backed companion bootstrap:
   /showroom/globe/h-earth/index.js
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034E_PUBLIC_STAGE_ADAPTER_LAYER_4_STATUS_PROJECTION_v1
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1
 
   Diagnostic route:
   /showroom/globe/h-earth/diagnostic/
 
   Purpose:
-  Style the H-Earth public route as the environment host and visible stage,
-  with public controls, selected surface, Ground Condition Read, compact public
-  receipts, and a read-only Layer 4 / Step 012J status projection outside the
-  renderer stage.
+  Style the Step 034Q H-Earth public route shell, the Step 034P temporary
+  descriptor preview, and the renderer-generated admitted-frame materialization
+  surface without claiming renderer pass, visual correspondence, validation,
+  production readiness, deployment readiness, runtime lattice activation, or
+  matrix collapse.
 
   Public route jurisdiction:
-  - environment host
-  - visible stage
-  - renderer mount support
+  - semantic public route shell
+  - visible environment stage
+  - unique renderer mount support
+  - temporary descriptor-preview support
+  - renderer-generated class-surface interpretation
   - selected surface display
   - compact Ground Condition Read
   - compact public status
   - read-only Layer 4 status projection
-  - same-page receipt copy surfaces
+  - index-owned same-page receipt copy surfaces
+  - HTML-entry and Step 034P lifecycle-state presentation
 
   Diagnostic route jurisdiction:
   - custody-chain inspection
@@ -40,17 +45,43 @@
   - receipt wall
   - mismatch reporting
   - advanced copy surfaces
+  - live execution evidence interpretation
+
+  Ownership:
+  HTML owns the semantic shell and unique renderer mount.
+
+  index.js owns:
+  - route lifecycle
+  - preview lifecycle
+  - renderer orchestration
+  - target controls
+  - receipt copy controls
+  - receipt construction
+  - active-global publication
+  - exceptional-path publication
+  - destruction and occurrence isolation
+
+  CSS interprets classes and data attributes emitted by the backed HTML and
+  JavaScript surfaces. CSS does not construct geometry or create execution
+  evidence.
 
   Stage rule:
   The renderer stage is renderer-only space.
-  Public HUD/status/action controls are normal document flow above the stage.
-  Selected-surface panel is normal document flow below the stage.
-  Layer 4 status projection is normal document flow below the public readout.
-  Developer receipt drawer stays collapsed below public content.
-  Receipt copy controls remain local same-page copy controls.
+
+  Public HUD, route status, action controls, selected-surface presentation,
+  Ground Condition Read, Layer 4 status, compact receipts, and diagnostic
+  navigation remain outside the renderer stage.
 
   Boundary:
   CSS only.
+  No Packet 002 construction.
+  No admitted-frame construction.
+  No geometry construction.
+  No compositor construction.
+  No renderer construction.
+  No route lifecycle ownership.
+  No active-global publication.
+  No listener ownership.
   No WebGL activation.
   No canvas activation.
   No SVG activation.
@@ -67,6 +98,7 @@
   No visual-pass claim.
   No validation claim.
   No production claim.
+  No deployment claim.
   No traversal.
   No survival simulation.
   No swimming.
@@ -112,7 +144,7 @@
   --h-earth-radius-md: 18px;
   --h-earth-radius-sm: 10px;
 
-  --h-earth-shadow-stage: 0 34px 94px rgba(0, 0, 0, 0.50);
+  --h-earth-shadow-stage: 0 34px 94px rgba(0, 0, 0, 0.5);
   --h-earth-shadow-panel: 0 18px 42px rgba(0, 0, 0, 0.28);
 
   --h-earth-render-band-wide: min(104vw, 1280px);
@@ -170,10 +202,27 @@ body {
     sans-serif;
   line-height: 1.5;
   background:
-    radial-gradient(circle at 18% -8%, rgba(149, 213, 232, 0.16), transparent 28rem),
-    radial-gradient(circle at 88% 12%, rgba(216, 189, 142, 0.12), transparent 30rem),
-    radial-gradient(circle at 78% 54%, rgba(201, 187, 255, 0.07), transparent 32rem),
-    linear-gradient(180deg, #071019 0%, #030812 58%, #01040a 100%);
+    radial-gradient(
+      circle at 18% -8%,
+      rgba(149, 213, 232, 0.16),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(216, 189, 142, 0.12),
+      transparent 30rem
+    ),
+    radial-gradient(
+      circle at 78% 54%,
+      rgba(201, 187, 255, 0.07),
+      transparent 32rem
+    ),
+    linear-gradient(
+      180deg,
+      #071019 0%,
+      #030812 58%,
+      #01040a 100%
+    );
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
 }
@@ -184,12 +233,28 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.10;
+  opacity: 0.1;
   background:
-    radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.11) 0 1px, transparent 1.6px),
-    radial-gradient(circle at 72% 22%, rgba(255, 255, 255, 0.10) 0 1px, transparent 1.7px);
-  background-size: 220px 260px, 310px 280px;
-  mask-image: linear-gradient(180deg, black, rgba(0, 0, 0, 0.48) 62%, transparent);
+    radial-gradient(
+      circle at 20% 12%,
+      rgba(255, 255, 255, 0.11) 0 1px,
+      transparent 1.6px
+    ),
+    radial-gradient(
+      circle at 72% 22%,
+      rgba(255, 255, 255, 0.1) 0 1px,
+      transparent 1.7px
+    );
+  background-size:
+    220px 260px,
+    310px 280px;
+  mask-image:
+    linear-gradient(
+      180deg,
+      black,
+      rgba(0, 0, 0, 0.48) 62%,
+      transparent
+    );
 }
 
 a {
@@ -232,29 +297,51 @@ summary:focus-visible,
   background: rgba(221, 255, 245, 0.84);
 }
 
-/* Route shell */
+
+/* ==========================================================================
+ * ROUTE SHELL
+ * ========================================================================== */
 
 .h-earth-3d-route-root {
   position: relative;
   z-index: 1;
   min-height: 100vh;
-  padding: max(14px, env(safe-area-inset-top)) clamp(12px, 2.4vw, 34px) max(36px, env(safe-area-inset-bottom));
+  padding:
+    max(14px, env(safe-area-inset-top))
+    clamp(12px, 2.4vw, 34px)
+    max(36px, env(safe-area-inset-bottom));
 }
 
-.h-earth-3d-route-root[data-h-earth-public-environment-host="true"] {
+.h-earth-3d-route-root[
+  data-h-earth-public-environment-host="true"
+] {
   --h-earth-public-environment-host-bound: 1;
 }
 
-.h-earth-3d-route-root[data-h-earth-layer-4-status-projection="true"] {
+.h-earth-3d-route-root[
+  data-h-earth-layer-4-status-projection="true"
+] {
   --h-earth-layer-4-status-projection-bound: 1;
 }
 
-.h-earth-3d-route-root[data-h-earth-run-function-executed="false"],
-.h-earth-3d-route-root[data-h-earth-replay-executed="false"],
-.h-earth-3d-route-root[data-h-earth-vector-runner-executed="false"],
-.h-earth-3d-route-root[data-h-earth-runtime-executed="false"],
-.h-earth-3d-route-root[data-h-earth-canonical-digest-generated="false"],
-.h-earth-3d-route-root[data-h-earth-replay-comparison="false"] {
+.h-earth-3d-route-root[
+  data-h-earth-run-function-executed="false"
+],
+.h-earth-3d-route-root[
+  data-h-earth-replay-executed="false"
+],
+.h-earth-3d-route-root[
+  data-h-earth-vector-runner-executed="false"
+],
+.h-earth-3d-route-root[
+  data-h-earth-runtime-executed="false"
+],
+.h-earth-3d-route-root[
+  data-h-earth-canonical-digest-generated="false"
+],
+.h-earth-3d-route-root[
+  data-h-earth-replay-comparison="false"
+] {
   --h-earth-public-stage-execution-denied: 1;
 }
 
@@ -265,18 +352,25 @@ summary:focus-visible,
   margin: 0 auto;
 }
 
-/* Public header */
+
+/* ==========================================================================
+ * PUBLIC HEADER
+ * ========================================================================== */
 
 .h-earth-3d-public-header {
   display: grid;
-  grid-template-columns: auto minmax(12rem, 1fr);
+  grid-template-columns:
+    auto
+    minmax(12rem, 1fr);
   gap: 1rem;
   align-items: center;
 }
 
 .h-earth-3d-brand {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns:
+    auto
+    1fr;
   gap: 0.82rem;
   align-items: center;
   min-width: 0;
@@ -287,12 +381,37 @@ summary:focus-visible,
   height: 3.65rem;
   display: grid;
   place-items: center;
-  clip-path: polygon(50% 0%, 78% 10%, 100% 35%, 90% 74%, 50% 100%, 10% 74%, 0 35%, 22% 10%);
+  clip-path:
+    polygon(
+      50% 0%,
+      78% 10%,
+      100% 35%,
+      90% 74%,
+      50% 100%,
+      10% 74%,
+      0 35%,
+      22% 10%
+    );
   border: 1px solid rgba(149, 213, 232, 0.32);
   background:
-    radial-gradient(circle at 32% 18%, rgba(255, 255, 255, 0.34), transparent 26%),
-    conic-gradient(from 45deg, rgba(255, 255, 255, 0.18), rgba(149, 213, 232, 0.38), rgba(3, 10, 28, 0.92), rgba(216, 189, 142, 0.18), rgba(255, 255, 255, 0.18)),
-    linear-gradient(145deg, #172a3c, #06101c);
+    radial-gradient(
+      circle at 32% 18%,
+      rgba(255, 255, 255, 0.34),
+      transparent 26%
+    ),
+    conic-gradient(
+      from 45deg,
+      rgba(255, 255, 255, 0.18),
+      rgba(149, 213, 232, 0.38),
+      rgba(3, 10, 28, 0.92),
+      rgba(216, 189, 142, 0.18),
+      rgba(255, 255, 255, 0.18)
+    ),
+    linear-gradient(
+      145deg,
+      #172a3c,
+      #06101c
+    );
   box-shadow:
     0 1rem 2rem rgba(0, 0, 0, 0.42),
     0 0 1.6rem rgba(149, 213, 232, 0.16),
@@ -348,7 +467,8 @@ summary:focus-visible,
   font-weight: 850;
   letter-spacing: 0.055em;
   text-transform: uppercase;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .h-earth-3d-public-nav a:hover,
@@ -357,7 +477,10 @@ summary:focus-visible,
   background: rgba(149, 213, 232, 0.09);
 }
 
-/* Shared public panels */
+
+/* ==========================================================================
+ * SHARED PUBLIC PANELS
+ * ========================================================================== */
 
 .h-earth-3d-arrival,
 .h-earth-3d-public-control-strip,
@@ -373,19 +496,36 @@ summary:focus-visible,
   border: 1px solid var(--h-earth-border);
   border-radius: var(--h-earth-radius-md);
   background:
-    radial-gradient(circle at 14% 0%, rgba(149, 213, 232, 0.10), transparent 28rem),
-    radial-gradient(circle at 88% 16%, rgba(216, 189, 142, 0.10), transparent 30rem),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.022)),
+    radial-gradient(
+      circle at 14% 0%,
+      rgba(149, 213, 232, 0.1),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 88% 16%,
+      rgba(216, 189, 142, 0.1),
+      transparent 30rem
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.065),
+      rgba(255, 255, 255, 0.022)
+    ),
     var(--h-earth-bg-panel);
   box-shadow: var(--h-earth-shadow-panel);
   backdrop-filter: blur(16px);
 }
 
-/* Arrival */
+
+/* ==========================================================================
+ * ARRIVAL
+ * ========================================================================== */
 
 .h-earth-3d-arrival {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.34fr);
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(16rem, 0.34fr);
   gap: 1rem;
   align-items: stretch;
   padding: clamp(1rem, 3vw, 1.65rem);
@@ -422,13 +562,26 @@ summary:focus-visible,
   height: 0.62rem;
   border-radius: 0.16rem;
   transform: rotate(45deg);
-  background: linear-gradient(135deg, #f6e3b5, var(--h-earth-accent-warm));
-  box-shadow: 0 0 0.9rem rgba(216, 189, 142, 0.40);
+  background:
+    linear-gradient(
+      135deg,
+      #f6e3b5,
+      var(--h-earth-accent-warm)
+    );
+  box-shadow:
+    0 0 0.9rem rgba(216, 189, 142, 0.4);
 }
 
-.h-earth-3d-layer-4-status-card .h-earth-3d-card-kicker::before {
-  background: linear-gradient(135deg, var(--h-earth-layer-4-strong), var(--h-earth-layer-4));
-  box-shadow: 0 0 0.9rem rgba(201, 187, 255, 0.42);
+.h-earth-3d-layer-4-status-card
+  .h-earth-3d-card-kicker::before {
+  background:
+    linear-gradient(
+      135deg,
+      var(--h-earth-layer-4-strong),
+      var(--h-earth-layer-4)
+    );
+  box-shadow:
+    0 0 0.9rem rgba(201, 187, 255, 0.42);
 }
 
 .h-earth-3d-title {
@@ -454,7 +607,7 @@ summary:focus-visible,
   align-content: center;
   min-width: 0;
   padding: 1rem;
-  border-color: rgba(216, 189, 142, 0.20);
+  border-color: rgba(216, 189, 142, 0.2);
   background: rgba(216, 189, 142, 0.06);
 }
 
@@ -465,15 +618,21 @@ summary:focus-visible,
   line-height: 1.45;
 }
 
-/* Scene-first public controls outside stage */
+
+/* ==========================================================================
+ * PUBLIC CONTROLS OUTSIDE STAGE
+ * ========================================================================== */
 
 .h-earth-3d-public-control-strip {
   padding: clamp(0.75rem, 1.8vw, 1rem);
 }
 
-.h-earth-3d-public-control-strip .h-earth-3d-hud {
+.h-earth-3d-public-control-strip
+  .h-earth-3d-hud {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.26fr);
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(12rem, 0.26fr);
   gap: 0.8rem;
   align-items: stretch;
 }
@@ -517,7 +676,11 @@ summary:focus-visible,
   border: 1px solid rgba(149, 213, 232, 0.38);
   border-radius: var(--h-earth-radius-sm);
   background:
-    linear-gradient(180deg, rgba(149, 213, 232, 0.20), rgba(149, 213, 232, 0.08));
+    linear-gradient(
+      180deg,
+      rgba(149, 213, 232, 0.2),
+      rgba(149, 213, 232, 0.08)
+    );
   color: var(--h-earth-text);
   font-weight: 800;
 }
@@ -527,7 +690,10 @@ summary:focus-visible,
   min-height: 42px;
 }
 
-/* Renderer-only environment stage */
+
+/* ==========================================================================
+ * RENDERER-ONLY ENVIRONMENT STAGE
+ * ========================================================================== */
 
 .h-earth-3d-world-shell {
   display: grid;
@@ -543,9 +709,24 @@ summary:focus-visible,
   border: 1px solid var(--h-earth-border-strong);
   border-radius: var(--h-earth-radius-xl);
   background:
-    linear-gradient(180deg, rgba(176, 210, 222, 0.24) 0%, rgba(97, 151, 169, 0.16) 20%, rgba(21, 70, 91, 0.16) 43%, rgba(7, 24, 35, 0.72) 62%, rgba(4, 12, 18, 0.98) 100%),
-    radial-gradient(ellipse at 50% 100%, rgba(216, 189, 142, 0.28), transparent 46%),
-    linear-gradient(180deg, #061421, #02070d);
+    linear-gradient(
+      180deg,
+      rgba(176, 210, 222, 0.24) 0%,
+      rgba(97, 151, 169, 0.16) 20%,
+      rgba(21, 70, 91, 0.16) 43%,
+      rgba(7, 24, 35, 0.72) 62%,
+      rgba(4, 12, 18, 0.98) 100%
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(216, 189, 142, 0.28),
+      transparent 46%
+    ),
+    linear-gradient(
+      180deg,
+      #061421,
+      #02070d
+    );
   box-shadow: var(--h-earth-shadow-stage);
   isolation: isolate;
   perspective: 1080px;
@@ -561,8 +742,18 @@ summary:focus-visible,
   z-index: 9;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 50% 42%, rgba(197, 214, 223, 0.08), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 18%, transparent 70%, rgba(0, 0, 0, 0.18) 100%);
+    radial-gradient(
+      ellipse at 50% 42%,
+      rgba(197, 214, 223, 0.08),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 18%,
+      transparent 70%,
+      rgba(0, 0, 0, 0.18) 100%
+    );
   opacity: 0.52;
 }
 
@@ -577,9 +768,20 @@ summary:focus-visible,
   z-index: 10;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 50% 10%, rgba(216, 189, 142, 0.12), transparent 48%),
-    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.14) 52%, rgba(0, 0, 0, 0.36) 100%);
-  transform: perspective(900px) rotateX(64deg);
+    radial-gradient(
+      ellipse at 50% 10%,
+      rgba(216, 189, 142, 0.12),
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.14) 52%,
+      rgba(0, 0, 0, 0.36) 100%
+    );
+  transform:
+    perspective(900px)
+    rotateX(64deg);
   transform-origin: 50% 100%;
   opacity: 0.34;
 }
@@ -623,7 +825,7 @@ summary:focus-visible,
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   padding: 9px 11px;
-  border: 1px solid rgba(242, 212, 146, 0.30);
+  border: 1px solid rgba(242, 212, 146, 0.3);
   border-radius: var(--h-earth-radius-sm);
   background: rgba(20, 20, 12, 0.62);
   color: var(--h-earth-fallback);
@@ -631,23 +833,30 @@ summary:focus-visible,
   line-height: 1.35;
 }
 
-.h-earth-3d-boot-ready .h-earth-3d-fallback {
+.h-earth-3d-boot-ready
+  .h-earth-3d-fallback {
   display: none;
 }
 
-/* Selected-surface panel outside stage */
+
+/* ==========================================================================
+ * SELECTED SURFACE OUTSIDE STAGE
+ * ========================================================================== */
 
 .h-earth-3d-selected-target-panel {
   position: static;
   display: grid;
-  grid-template-columns: minmax(14rem, 0.34fr) minmax(0, 1fr);
+  grid-template-columns:
+    minmax(14rem, 0.34fr)
+    minmax(0, 1fr);
   gap: 0.95rem;
   align-items: center;
   padding: clamp(0.95rem, 2vw, 1.25rem);
   background: rgba(4, 12, 18, 0.76);
 }
 
-.h-earth-3d-selected-target-panel .h-earth-3d-card-kicker {
+.h-earth-3d-selected-target-panel
+  .h-earth-3d-card-kicker {
   grid-column: 1 / -1;
 }
 
@@ -661,7 +870,8 @@ summary:focus-visible,
 
 .h-earth-3d-selected-target-facts {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
   gap: 0.7rem;
   margin: 0;
 }
@@ -675,7 +885,7 @@ summary:focus-visible,
 .h-earth-3d-selected-target-facts dt {
   color: var(--h-earth-text-dim);
   font-size: 0.62rem;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -687,11 +897,16 @@ summary:focus-visible,
   overflow-wrap: anywhere;
 }
 
-/* Compact public readout */
+
+/* ==========================================================================
+ * COMPACT PUBLIC READOUT
+ * ========================================================================== */
 
 .h-earth-3d-readout-card {
   display: grid;
-  grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr);
+  grid-template-columns:
+    minmax(220px, 0.34fr)
+    minmax(0, 1fr);
   gap: 1rem;
   padding: clamp(1rem, 2.4vw, 1.35rem);
 }
@@ -729,7 +944,8 @@ summary:focus-visible,
 
 .h-earth-3d-readout-facts {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
   gap: 0.7rem;
   margin: 0.85rem 0 0;
 }
@@ -743,7 +959,7 @@ summary:focus-visible,
 .h-earth-3d-readout-facts dt {
   color: var(--h-earth-text-dim);
   font-size: 0.66rem;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -766,7 +982,10 @@ summary:focus-visible,
   line-height: 1.4;
 }
 
-/* Layer 4 public-stage projection */
+
+/* ==========================================================================
+ * LAYER 4 PUBLIC-STAGE PROJECTION
+ * ========================================================================== */
 
 .h-earth-3d-layer-4-status-card {
   display: grid;
@@ -774,15 +993,29 @@ summary:focus-visible,
   padding: clamp(1rem, 2.4vw, 1.35rem);
   border-color: var(--h-earth-border-layer-4);
   background:
-    radial-gradient(circle at 90% 8%, rgba(201, 187, 255, 0.18), transparent 30rem),
-    radial-gradient(circle at 10% 0%, rgba(149, 213, 232, 0.10), transparent 24rem),
-    linear-gradient(180deg, rgba(201, 187, 255, 0.075), rgba(255, 255, 255, 0.022)),
+    radial-gradient(
+      circle at 90% 8%,
+      rgba(201, 187, 255, 0.18),
+      transparent 30rem
+    ),
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(149, 213, 232, 0.1),
+      transparent 24rem
+    ),
+    linear-gradient(
+      180deg,
+      rgba(201, 187, 255, 0.075),
+      rgba(255, 255, 255, 0.022)
+    ),
     rgba(7, 12, 22, 0.86);
 }
 
 .h-earth-3d-layer-4-heading {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(12rem, auto);
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(12rem, auto);
   gap: 1rem;
   align-items: start;
 }
@@ -806,7 +1039,9 @@ summary:focus-visible,
   overflow-wrap: anywhere;
 }
 
-.h-earth-3d-layer-4-status[data-h-earth-layer-4-status="pending"],
+.h-earth-3d-layer-4-status[
+  data-h-earth-layer-4-status="pending"
+],
 .h-earth-3d-layer-4-status:empty {
   color: var(--h-earth-fallback);
   border-color: rgba(242, 212, 146, 0.36);
@@ -815,7 +1050,8 @@ summary:focus-visible,
 
 .h-earth-3d-layer-4-facts {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
   gap: 0.7rem;
   margin: 0;
 }
@@ -833,7 +1069,7 @@ summary:focus-visible,
 .h-earth-3d-layer-4-facts dt {
   color: rgba(238, 232, 255, 0.66);
   font-size: 0.62rem;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -874,10 +1110,14 @@ summary:focus-visible,
   padding: 14px;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-  border: 1px solid rgba(201, 187, 255, 0.20);
+  border: 1px solid rgba(201, 187, 255, 0.2);
   border-radius: var(--h-earth-radius-sm);
   background:
-    linear-gradient(180deg, rgba(201, 187, 255, 0.04), transparent 100px),
+    linear-gradient(
+      180deg,
+      rgba(201, 187, 255, 0.04),
+      transparent 100px
+    ),
     rgba(0, 0, 0, 0.24);
   color: rgba(238, 232, 255, 0.86);
   font-family: var(--h-earth-mono);
@@ -887,7 +1127,10 @@ summary:focus-visible,
   overflow-wrap: anywhere;
 }
 
-/* Drawers and compact public receipts */
+
+/* ==========================================================================
+ * DRAWERS AND COMPACT PUBLIC RECEIPTS
+ * ========================================================================== */
 
 .h-earth-3d-target-drawer,
 .h-earth-3d-developer-drawer {
@@ -930,8 +1173,12 @@ summary:focus-visible,
   line-height: 1;
 }
 
-.h-earth-3d-target-drawer[open] > .h-earth-3d-target-drawer-toggle::after,
-.h-earth-3d-developer-drawer[open] > .h-earth-3d-developer-drawer-toggle::after {
+.h-earth-3d-target-drawer[
+  open
+] > .h-earth-3d-target-drawer-toggle::after,
+.h-earth-3d-developer-drawer[
+  open
+] > .h-earth-3d-developer-drawer-toggle::after {
   content: "–";
 }
 
@@ -963,7 +1210,9 @@ summary:focus-visible,
   text-align: left;
 }
 
-.h-earth-3d-target-button[aria-current="true"] {
+.h-earth-3d-target-button[
+  aria-current="true"
+] {
   border-color: rgba(216, 189, 142, 0.58);
   background: rgba(216, 189, 142, 0.12);
   color: var(--h-earth-accent-warm);
@@ -986,7 +1235,11 @@ summary:focus-visible,
 .h-earth-3d-layer-4-receipt-panel {
   border-color: rgba(201, 187, 255, 0.24);
   background:
-    radial-gradient(circle at 92% 8%, rgba(201, 187, 255, 0.12), transparent 24rem),
+    radial-gradient(
+      circle at 92% 8%,
+      rgba(201, 187, 255, 0.12),
+      transparent 24rem
+    ),
     rgba(4, 10, 18, 0.72);
 }
 
@@ -998,7 +1251,8 @@ summary:focus-visible,
   margin-bottom: 12px;
 }
 
-.h-earth-3d-panel-heading-row .h-earth-3d-panel-title {
+.h-earth-3d-panel-heading-row
+  .h-earth-3d-panel-title {
   margin: 0;
 }
 
@@ -1014,17 +1268,26 @@ summary:focus-visible,
   appearance: none;
 }
 
-.h-earth-3d-inline-copy-button[data-h-earth-route-to-diagnostic="false"] {
+.h-earth-3d-inline-copy-button[
+  data-h-earth-route-to-diagnostic="false"
+] {
   border-color: rgba(149, 213, 232, 0.38);
 }
 
-.h-earth-3d-layer-4-receipt-panel .h-earth-3d-inline-copy-button {
+.h-earth-3d-layer-4-receipt-panel
+  .h-earth-3d-inline-copy-button {
   border-color: rgba(201, 187, 255, 0.34);
   background:
-    linear-gradient(180deg, rgba(201, 187, 255, 0.20), rgba(201, 187, 255, 0.08));
+    linear-gradient(
+      180deg,
+      rgba(201, 187, 255, 0.2),
+      rgba(201, 187, 255, 0.08)
+    );
 }
 
-.h-earth-3d-inline-copy-button[data-h-earth-receipt-copy-button="true"] {
+.h-earth-3d-inline-copy-button[
+  data-h-earth-receipt-copy-button="true"
+] {
   min-width: 8.75rem;
 }
 
@@ -1039,13 +1302,17 @@ summary:focus-visible,
   line-height: 1.35;
 }
 
-.h-earth-3d-copy-status[data-h-earth-copy-state="success"] {
+.h-earth-3d-copy-status[
+  data-h-earth-copy-state="success"
+] {
   border-color: rgba(174, 232, 194, 0.42);
   background: rgba(174, 232, 194, 0.08);
   color: var(--h-earth-ready);
 }
 
-.h-earth-3d-copy-status[data-h-earth-copy-state="failure"] {
+.h-earth-3d-copy-status[
+  data-h-earth-copy-state="failure"
+] {
   border-color: rgba(255, 176, 163, 0.46);
   background: rgba(255, 176, 163, 0.08);
   color: var(--h-earth-error);
@@ -1086,42 +1353,150 @@ summary:focus-visible,
   margin-top: 0.75rem;
 }
 
-/* Bootstrap and status state */
 
-.h-earth-3d-boot-ready .h-earth-3d-status {
+/* ==========================================================================
+ * STEP 034Q HTML-ENTRY AND STEP 034P OWNERSHIP STATES
+ * ========================================================================== */
+
+.h-earth-3d-route-root[
+  data-h-earth-index-module-imported="false"
+] .h-earth-3d-status {
+  border-color: rgba(149, 213, 232, 0.28);
+  color: var(--h-earth-accent);
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-index-module-imported="true"
+][
+  data-h-earth-index-contract-verified="false"
+] .h-earth-3d-status {
+  border-color: rgba(242, 212, 146, 0.46);
+  color: var(--h-earth-fallback);
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-index-contract-verified="true"
+] .h-earth-3d-status {
+  border-color: rgba(174, 232, 194, 0.34);
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-preview-only-hold="true"
+] .h-earth-3d-world-stage,
+.h-earth-3d-route-root[
+  data-h-earth-preview-only-hold="true"
+] .h-earth-3d-stage {
+  border-color: rgba(242, 212, 146, 0.34);
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-preview-only-hold="true"
+] .h-earth-3d-fallback {
+  display: block;
+  border-color: rgba(242, 212, 146, 0.38);
+  background: rgba(20, 20, 12, 0.72);
+  color: var(--h-earth-fallback);
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-renderer-bootstrap-requested="true"
+] .h-earth-3d-world-stage,
+.h-earth-3d-route-root[
+  data-h-earth-renderer-bootstrap-requested="true"
+] .h-earth-3d-stage {
+  border-color: rgba(149, 213, 232, 0.42);
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-route-entry-input-observed="ineligible"
+] .h-earth-3d-status {
+  border-color: rgba(242, 212, 146, 0.46);
+  color: var(--h-earth-fallback);
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-index-initialization-started="false"
+] .h-earth-3d-action-button,
+.h-earth-3d-route-root[
+  data-h-earth-index-initialization-started="false"
+] .h-earth-3d-inline-copy-button {
+  cursor: wait;
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-index-initialization-started="false"
+] .h-earth-3d-action-button {
+  opacity: 0.68;
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-html-entry-mode="EXPLICIT_PREVIEW_ONLY_HOLD"
+] .h-earth-source-preview-caption {
+  border-color: rgba(242, 212, 146, 0.28);
+  color: rgba(250, 230, 180, 0.88);
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-html-entry-mode="AUTHORIZED_RENDERER_CORRIDOR"
+] .h-earth-source-preview-caption {
+  border-color: rgba(149, 213, 232, 0.28);
+  color: rgba(224, 245, 251, 0.88);
+}
+
+.h-earth-3d-route-root[
+  data-h-earth-index-initialization-started="true"
+] {
+  --h-earth-step-034p-route-ownership-established: 1;
+}
+
+
+/* ==========================================================================
+ * BOOTSTRAP AND STATUS STATE
+ * ========================================================================== */
+
+.h-earth-3d-boot-ready
+  .h-earth-3d-status {
   border-color: rgba(174, 232, 194, 0.42);
   color: var(--h-earth-ready);
 }
 
-.h-earth-3d-boot-fallback .h-earth-3d-status {
+.h-earth-3d-boot-fallback
+  .h-earth-3d-status {
   border-color: rgba(242, 212, 146, 0.52);
   color: var(--h-earth-fallback);
 }
 
-.h-earth-3d-boot-error .h-earth-3d-status {
+.h-earth-3d-boot-error
+  .h-earth-3d-status {
   border-color: rgba(255, 176, 163, 0.52);
   color: var(--h-earth-error);
 }
 
-.h-earth-3d-boot-ready .h-earth-3d-layer-4-status {
+.h-earth-3d-boot-ready
+  .h-earth-3d-layer-4-status {
   border-color: rgba(174, 232, 194, 0.34);
   background: rgba(174, 232, 194, 0.07);
   color: var(--h-earth-ready);
 }
 
-.h-earth-3d-boot-fallback .h-earth-3d-layer-4-status {
+.h-earth-3d-boot-fallback
+  .h-earth-3d-layer-4-status {
   border-color: rgba(242, 212, 146, 0.42);
   background: rgba(242, 212, 146, 0.07);
   color: var(--h-earth-fallback);
 }
 
-.h-earth-3d-boot-error .h-earth-3d-layer-4-status {
+.h-earth-3d-boot-error
+  .h-earth-3d-layer-4-status {
   border-color: rgba(255, 176, 163, 0.46);
   background: rgba(255, 176, 163, 0.07);
   color: var(--h-earth-error);
 }
 
-/* Renderer-generated root/layer/object support */
+
+/* ==========================================================================
+ * RENDERER-GENERATED ROOT / LAYER / OBJECT SUPPORT
+ * ========================================================================== */
 
 .h-earth-render-root,
 .h-earth-css-3d-candidate-root,
@@ -1157,7 +1532,10 @@ summary:focus-visible,
   transform-style: preserve-3d;
   transform-origin: 50% 50%;
   pointer-events: auto;
-  will-change: transform, opacity, filter;
+  will-change:
+    transform,
+    opacity,
+    filter;
   box-shadow: none;
   backface-visibility: visible;
 }
@@ -1179,7 +1557,11 @@ summary:focus-visible,
   color: var(--h-earth-text-muted);
   font-size: 0.7rem;
   white-space: nowrap;
-  transform: translate(-50%, -125%);
+  transform:
+    translate(
+      -50%,
+      -125%
+    );
   pointer-events: none;
 }
 
@@ -1201,8 +1583,12 @@ summary:focus-visible,
 }
 
 .h-earth-render-candidate-geometry-only::after,
-.h-earth-render-object[class*="h-earth-geometry-node-"]::after,
-.h-earth-render-object[class*="h-earth-geometry-"]::after {
+.h-earth-render-object[
+  class*="h-earth-geometry-node-"
+]::after,
+.h-earth-render-object[
+  class*="h-earth-geometry-"
+]::after {
   content: "";
   position: absolute;
   inset: -1px;
@@ -1222,11 +1608,13 @@ summary:focus-visible,
   --h-earth-render-class-surface-confirmed: 1;
 }
 
-/*
-  Descriptor and geometry visual interpretation.
-  These classes interpret renderer-generated output inside the public renderer
-  mount. They do not make the HTML/CSS shell the source of scene truth.
-*/
+
+/* ==========================================================================
+ * DESCRIPTOR AND GEOMETRY VISUAL INTERPRETATION
+ *
+ * These classes interpret renderer-generated output inside the public renderer
+ * mount. They do not make the HTML or CSS shell the source of scene truth.
+ * ========================================================================== */
 
 .h-earth-landscape-ground-plane,
 .h-earth-landscape-ground-wet-sand,
@@ -1254,118 +1642,218 @@ summary:focus-visible,
 }
 
 .h-earth-layer-water-surface-plane
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ):not(
+    [class*="h-earth-geometry-"]
+  ),
 .h-earth-render-descriptor-only.h-earth-material-water,
-[class*="h-earth-parent-object-"].h-earth-material-water {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-water {
   width: var(--h-earth-render-band-wide);
   height: clamp(220px, 30vh, 340px);
-  border-radius: 46% 46% 18% 18% / 64% 64% 20% 20%;
+  border-radius:
+    46% 46% 18% 18% /
+    64% 64% 20% 20%;
 }
 
 .h-earth-layer-nearshore-wave-band
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ):not(
+    [class*="h-earth-geometry-"]
+  ),
 .h-earth-render-descriptor-only.h-earth-material-nearshore-wave,
-[class*="h-earth-parent-object-"].h-earth-material-nearshore-wave {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-nearshore-wave {
   width: var(--h-earth-render-band-wide);
   height: clamp(26px, 5.5vh, 64px);
   border-radius: 999px;
 }
 
 .h-earth-layer-shoreline-foam-line
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ):not(
+    [class*="h-earth-geometry-"]
+  ),
 .h-earth-render-descriptor-only.h-earth-material-foam,
-[class*="h-earth-parent-object-"].h-earth-material-foam {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-foam {
   width: var(--h-earth-render-band-medium);
   height: clamp(7px, 1.6vh, 18px);
   border-radius: 999px;
 }
 
 .h-earth-layer-dry-sand-transition
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ):not(
+    [class*="h-earth-geometry-"]
+  ),
 .h-earth-render-descriptor-only.h-earth-material-dry-sand,
-[class*="h-earth-parent-object-"].h-earth-material-dry-sand {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-dry-sand {
   width: var(--h-earth-render-band-wide);
   height: clamp(120px, 17vh, 220px);
-  border-radius: 44% 44% 18% 18% / 32% 32% 58% 58%;
+  border-radius:
+    44% 44% 18% 18% /
+    32% 32% 58% 58%;
 }
 
 .h-earth-layer-foreground-wet-sand
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ):not(
+    [class*="h-earth-geometry-"]
+  ),
 .h-earth-render-descriptor-only.h-earth-material-wet-sand,
-[class*="h-earth-parent-object-"].h-earth-material-wet-sand {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-wet-sand {
   width: var(--h-earth-render-band-wide);
   height: clamp(210px, 32vh, 380px);
-  border-radius: 42% 42% 18% 18% / 30% 30% 60% 60%;
+  border-radius:
+    42% 42% 18% 18% /
+    30% 30% 60% 60%;
 }
 
 .h-earth-layer-tide-pools-stones-rocks-detail
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]).h-earth-material-tide-pool,
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ).h-earth-material-tide-pool,
 .h-earth-render-descriptor-only.h-earth-material-tide-pool,
-[class*="h-earth-parent-object-"].h-earth-material-tide-pool {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-tide-pool {
   width: clamp(54px, 10vw, 150px);
   height: clamp(18px, 4vw, 58px);
-  border-radius: 56% 44% 58% 42%;
+  border-radius:
+    56% 44% 58% 42%;
 }
 
 .h-earth-layer-tide-pools-stones-rocks-detail
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]).h-earth-material-stone,
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ).h-earth-material-stone,
 .h-earth-render-descriptor-only.h-earth-material-stone,
-[class*="h-earth-parent-object-"].h-earth-material-stone {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-stone {
   width: clamp(18px, 3.6vw, 52px);
   height: clamp(12px, 2.6vw, 36px);
-  border-radius: 52% 48% 46% 54%;
+  border-radius:
+    52% 48% 46% 54%;
 }
 
 .h-earth-layer-tide-pools-stones-rocks-detail
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]).h-earth-material-jagged-rock,
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ).h-earth-material-jagged-rock,
 .h-earth-render-descriptor-only.h-earth-material-jagged-rock,
-[class*="h-earth-parent-object-"].h-earth-material-jagged-rock {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-jagged-rock {
   width: var(--h-earth-render-rock-size);
   height: clamp(38px, 6.4vw, 106px);
-  border-radius: 28% 58% 34% 44%;
-  clip-path: polygon(8% 86%, 20% 36%, 34% 62%, 48% 18%, 62% 58%, 78% 28%, 94% 86%);
+  border-radius:
+    28% 58% 34% 44%;
+  clip-path:
+    polygon(
+      8% 86%,
+      20% 36%,
+      34% 62%,
+      48% 18%,
+      62% 58%,
+      78% 28%,
+      94% 86%
+    );
 }
 
 .h-earth-layer-air-haze-light
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ):not(
+    [class*="h-earth-geometry-"]
+  ),
 .h-earth-render-descriptor-only.h-earth-material-air-haze,
-[class*="h-earth-parent-object-"].h-earth-material-air-haze {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-air-haze {
   width: min(112vw, 1360px);
   height: clamp(300px, 48vh, 540px);
   border-radius: 999px;
 }
 
 .h-earth-layer-manor-exterior-context
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ):not(
+    [class*="h-earth-geometry-"]
+  ),
 .h-earth-render-descriptor-only.h-earth-material-manor-context,
-[class*="h-earth-parent-object-"].h-earth-material-manor-context {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-manor-context {
   width: clamp(80px, 15vw, 190px);
   height: clamp(70px, 12vw, 160px);
   border-radius: 10px 10px 4px 4px;
 }
 
 .h-earth-layer-distant-world-context
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ):not(
+    [class*="h-earth-geometry-"]
+  ),
 .h-earth-render-descriptor-only.h-earth-material-distant-rock,
-[class*="h-earth-parent-object-"].h-earth-material-distant-rock {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-distant-rock {
   width: clamp(92px, 18vw, 230px);
   height: clamp(42px, 8.5vw, 104px);
-  border-radius: 34% 48% 24% 42%;
-  clip-path: polygon(0 88%, 12% 52%, 28% 66%, 42% 34%, 58% 72%, 72% 42%, 100% 88%, 100% 100%, 0 100%);
+  border-radius:
+    34% 48% 24% 42%;
+  clip-path:
+    polygon(
+      0 88%,
+      12% 52%,
+      28% 66%,
+      42% 34%,
+      58% 72%,
+      72% 42%,
+      100% 88%,
+      100% 100%,
+      0 100%
+    );
 }
 
 .h-earth-layer-inspection-anchor-overlay
-  .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+  .h-earth-render-object:not(
+    [class*="h-earth-geometry-node-"]
+  ):not(
+    [class*="h-earth-geometry-"]
+  ),
 .h-earth-render-descriptor-only.h-earth-material-inspection-anchor,
-[class*="h-earth-parent-object-"].h-earth-material-inspection-anchor {
+[
+  class*="h-earth-parent-object-"
+].h-earth-material-inspection-anchor {
   width: var(--h-earth-render-anchor-size);
   height: var(--h-earth-render-anchor-size);
   border-radius: 999px;
 }
 
 .h-earth-render-candidate-geometry-only,
-.h-earth-render-object[class*="h-earth-geometry-node-"],
-.h-earth-render-object[class*="h-earth-geometry-"] {
+.h-earth-render-object[
+  class*="h-earth-geometry-node-"
+],
+.h-earth-render-object[
+  class*="h-earth-geometry-"
+] {
   width: var(--h-earth-render-detail-size);
   height: var(--h-earth-render-detail-size);
   min-width: 6px;
@@ -1376,21 +1864,48 @@ summary:focus-visible,
   transform-style: preserve-3d;
 }
 
+
+/* ==========================================================================
+ * MATERIAL CLASSES
+ * ========================================================================== */
+
 .h-earth-material-wet-sand {
   background:
-    radial-gradient(ellipse at 40% 16%, rgba(255, 255, 255, 0.18), transparent 28%),
-    radial-gradient(ellipse at 60% 72%, rgba(27, 34, 33, 0.34), transparent 40%),
-    linear-gradient(180deg, rgba(129, 113, 93, 0.96), rgba(67, 56, 48, 0.98)),
+    radial-gradient(
+      ellipse at 40% 16%,
+      rgba(255, 255, 255, 0.18),
+      transparent 28%
+    ),
+    radial-gradient(
+      ellipse at 60% 72%,
+      rgba(27, 34, 33, 0.34),
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(129, 113, 93, 0.96),
+      rgba(67, 56, 48, 0.98)
+    ),
     var(--h-earth-wetSand-base);
   color: #f5e8d4;
   opacity: 0.98;
-  filter: saturate(0.98) contrast(1.03);
+  filter:
+    saturate(0.98)
+    contrast(1.03);
 }
 
 .h-earth-material-dry-sand {
   background:
-    radial-gradient(ellipse at 38% 26%, rgba(255, 255, 255, 0.20), transparent 28%),
-    linear-gradient(180deg, rgba(208, 176, 126, 0.96), rgba(139, 107, 73, 0.96)),
+    radial-gradient(
+      ellipse at 38% 26%,
+      rgba(255, 255, 255, 0.2),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(208, 176, 126, 0.96),
+      rgba(139, 107, 73, 0.96)
+    ),
     var(--h-earth-drySand-base);
   color: #382c20;
   opacity: 0.96;
@@ -1398,7 +1913,14 @@ summary:focus-visible,
 
 .h-earth-material-foam {
   background:
-    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.84) 18%, rgba(234, 248, 245, 0.58) 50%, rgba(255, 255, 255, 0.82) 82%, transparent 100%);
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.84) 18%,
+      rgba(234, 248, 245, 0.58) 50%,
+      rgba(255, 255, 255, 0.82) 82%,
+      transparent 100%
+    );
   color: #183238;
   opacity: 0.92;
   filter: blur(0.2px);
@@ -1406,8 +1928,16 @@ summary:focus-visible,
 
 .h-earth-material-tide-pool {
   background:
-    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.30), transparent 34%),
-    linear-gradient(180deg, rgba(85, 134, 148, 0.88), rgba(39, 84, 96, 0.96)),
+    radial-gradient(
+      circle at 35% 35%,
+      rgba(255, 255, 255, 0.3),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(85, 134, 148, 0.88),
+      rgba(39, 84, 96, 0.96)
+    ),
     var(--h-earth-tidePool-base);
   color: #e8fbff;
   opacity: 0.88;
@@ -1418,26 +1948,45 @@ summary:focus-visible,
 
 .h-earth-material-stone {
   background:
-    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.14), transparent 30%),
+    radial-gradient(
+      circle at 35% 30%,
+      rgba(255, 255, 255, 0.14),
+      transparent 30%
+    ),
     var(--h-earth-stone-base);
   color: #f0eee8;
   opacity: 0.98;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.28);
 }
 
 .h-earth-material-jagged-rock {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12),
+      transparent
+    ),
     var(--h-earth-jaggedRock-base);
   color: #edf2f4;
   opacity: 0.98;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.38);
 }
 
 .h-earth-material-water {
   background:
-    radial-gradient(ellipse at 50% 24%, rgba(255, 255, 255, 0.14), transparent 28%),
-    linear-gradient(180deg, rgba(83, 151, 173, 0.54), rgba(29, 88, 108, 0.76) 58%, rgba(12, 42, 60, 0.88));
+    radial-gradient(
+      ellipse at 50% 24%,
+      rgba(255, 255, 255, 0.14),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(83, 151, 173, 0.54),
+      rgba(29, 88, 108, 0.76) 58%,
+      rgba(12, 42, 60, 0.88)
+    );
   color: #e4fbff;
   opacity: 0.78;
   filter: saturate(0.96);
@@ -1445,7 +1994,14 @@ summary:focus-visible,
 
 .h-earth-material-nearshore-wave {
   background:
-    linear-gradient(90deg, transparent 0%, rgba(234, 248, 245, 0.50) 12%, rgba(107, 169, 177, 0.52) 52%, rgba(234, 248, 245, 0.48) 86%, transparent 100%);
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(234, 248, 245, 0.5) 12%,
+      rgba(107, 169, 177, 0.52) 52%,
+      rgba(234, 248, 245, 0.48) 86%,
+      transparent 100%
+    );
   color: #f7ffff;
   opacity: 0.82;
   filter: blur(0.3px);
@@ -1453,7 +2009,12 @@ summary:focus-visible,
 
 .h-earth-material-air-haze {
   background:
-    radial-gradient(ellipse at 50% 44%, rgba(197, 214, 223, 0.30), rgba(197, 214, 223, 0.04) 64%, transparent 78%);
+    radial-gradient(
+      ellipse at 50% 44%,
+      rgba(197, 214, 223, 0.3),
+      rgba(197, 214, 223, 0.04) 64%,
+      transparent 78%
+    );
   color: #f7fbff;
   opacity: 0.36;
   border-color: rgba(255, 255, 255, 0.04);
@@ -1462,11 +2023,20 @@ summary:focus-visible,
 
 .h-earth-material-manor-context {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 45%),
-    linear-gradient(180deg, rgba(108, 93, 74, 0.94), rgba(62, 51, 41, 0.98));
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12),
+      transparent 45%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(108, 93, 74, 0.94),
+      rgba(62, 51, 41, 0.98)
+    );
   color: #fff2df;
   opacity: 0.82;
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.36);
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.36);
 }
 
 .h-earth-material-manor-context::before {
@@ -1477,12 +2047,21 @@ summary:focus-visible,
   top: -16%;
   height: 38%;
   background: rgba(58, 47, 38, 0.98);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  clip-path:
+    polygon(
+      50% 0,
+      100% 100%,
+      0 100%
+    );
 }
 
 .h-earth-material-distant-rock {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.09), transparent 50%),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.09),
+      transparent 50%
+    ),
     var(--h-earth-distantRock-base);
   color: #dfe7eb;
   opacity: 0.76;
@@ -1491,9 +2070,16 @@ summary:focus-visible,
 
 .h-earth-material-inspection-anchor {
   background:
-    radial-gradient(circle at 50% 50%, #f8f0ce 0 18%, #a7b0a0 20% 42%, #4f5a55 44% 58%, rgba(244, 231, 182, 0.86) 60% 100%);
+    radial-gradient(
+      circle at 50% 50%,
+      #f8f0ce 0 18%,
+      #a7b0a0 20% 42%,
+      #4f5a55 44% 58%,
+      rgba(244, 231, 182, 0.86) 60% 100%
+    );
   color: #2d2513;
-  box-shadow: 0 0 18px rgba(244, 231, 182, 0.38);
+  box-shadow:
+    0 0 18px rgba(244, 231, 182, 0.38);
   opacity: 0.62;
 }
 
@@ -1502,7 +2088,10 @@ summary:focus-visible,
   color: var(--h-earth-error);
 }
 
-/* Layer classes */
+
+/* ==========================================================================
+ * LAYER CLASSES
+ * ========================================================================== */
 
 .h-earth-layer-distant-world-context {
   z-index: 10;
@@ -1553,7 +2142,10 @@ summary:focus-visible,
   isolation: isolate;
 }
 
-/* Primitive/context classes */
+
+/* ==========================================================================
+ * PRIMITIVE AND CONTEXT CLASSES
+ * ========================================================================== */
 
 .h-earth-primitive-contoured-terrain-band,
 .h-earth-primitive-terrain-band {
@@ -1576,7 +2168,9 @@ summary:focus-visible,
 }
 
 .h-earth-primitive-rock-cluster {
-  filter: contrast(1.05) saturate(0.88);
+  filter:
+    contrast(1.05)
+    saturate(0.88);
 }
 
 .h-earth-primitive-atmospheric-layer {
@@ -1584,11 +2178,27 @@ summary:focus-visible,
 }
 
 .h-earth-primitive-layered-silhouette {
-  clip-path: polygon(8% 100%, 8% 34%, 22% 34%, 22% 22%, 36% 22%, 36% 12%, 55% 12%, 55% 24%, 72% 24%, 72% 42%, 88% 42%, 88% 100%);
+  clip-path:
+    polygon(
+      8% 100%,
+      8% 34%,
+      22% 34%,
+      22% 22%,
+      36% 22%,
+      36% 12%,
+      55% 12%,
+      55% 24%,
+      72% 24%,
+      72% 42%,
+      88% 42%,
+      88% 100%
+    );
 }
 
 .h-earth-primitive-distant-cluster {
-  filter: saturate(0.78) blur(0.2px);
+  filter:
+    saturate(0.78)
+    blur(0.2px);
 }
 
 .h-earth-primitive-inspection-anchor {
@@ -1596,17 +2206,20 @@ summary:focus-visible,
 }
 
 .h-earth-context-primary-inspection {
-  outline: 1px solid rgba(216, 189, 142, 0.32);
+  outline:
+    1px solid rgba(216, 189, 142, 0.32);
   outline-offset: 2px;
 }
 
 .h-earth-context-supporting-inspection {
-  outline: 1px solid rgba(149, 213, 232, 0.30);
+  outline:
+    1px solid rgba(149, 213, 232, 0.3);
   outline-offset: 2px;
 }
 
 .h-earth-context-secondary-surface {
-  outline: 1px dashed rgba(216, 189, 142, 0.30);
+  outline:
+    1px dashed rgba(216, 189, 142, 0.3);
   outline-offset: 2px;
 }
 
@@ -1615,11 +2228,15 @@ summary:focus-visible,
 }
 
 .h-earth-context-hearth-only {
-  filter: sepia(0.14) saturate(0.82);
+  filter:
+    sepia(0.14)
+    saturate(0.82);
 }
 
 .h-earth-context-audralia-only {
-  filter: saturate(0.62) contrast(0.92);
+  filter:
+    saturate(0.62)
+    contrast(0.92);
 }
 
 .h-earth-context-only {
@@ -1627,10 +2244,14 @@ summary:focus-visible,
 }
 
 .h-earth-context-unclassified {
-  outline: 1px dotted rgba(255, 176, 163, 0.54);
+  outline:
+    1px dotted rgba(255, 176, 163, 0.54);
 }
 
-/* Interaction classes */
+
+/* ==========================================================================
+ * INTERACTION CLASSES
+ * ========================================================================== */
 
 .h-earth-target-selectable {
   cursor: pointer;
@@ -1639,7 +2260,7 @@ summary:focus-visible,
 .h-earth-target-inspectable {
   box-shadow:
     0 0 0 1px rgba(216, 189, 142, 0.24),
-    0 0 18px rgba(216, 189, 142, 0.10);
+    0 0 18px rgba(216, 189, 142, 0.1);
 }
 
 .h-earth-target-blocked {
@@ -1649,7 +2270,7 @@ summary:focus-visible,
 
 .h-earth-target-context-only {
   cursor: default;
-  opacity: 0.70;
+  opacity: 0.7;
 }
 
 .h-earth-3d-blocked-response {
@@ -1657,97 +2278,165 @@ summary:focus-visible,
   color: var(--h-earth-error);
 }
 
-/* Dynamic current renderer class-surface support */
 
-[class*="h-earth-object-"],
-[class*="h-earth-source-object-"],
-[class*="h-earth-parent-object-"] {
+/* ==========================================================================
+ * DYNAMIC CURRENT RENDERER CLASS-SURFACE SUPPORT
+ * ========================================================================== */
+
+[
+  class*="h-earth-object-"
+],
+[
+  class*="h-earth-source-object-"
+],
+[
+  class*="h-earth-parent-object-"
+] {
   --h-earth-object-class-bound: 1;
 }
 
-[class*="h-earth-geometry-node-"] {
+[
+  class*="h-earth-geometry-node-"
+] {
   --h-earth-geometry-node-class-bound: 1;
 }
 
-[class*="h-earth-geometry-"] {
+[
+  class*="h-earth-geometry-"
+] {
   --h-earth-geometry-class-bound: 1;
 }
 
-.h-earth-layer-member[class*="h-earth-geometry-node-"],
-.h-earth-layer-member[class*="h-earth-geometry-"] {
+.h-earth-layer-member[
+  class*="h-earth-geometry-node-"
+],
+.h-earth-layer-member[
+  class*="h-earth-geometry-"
+] {
   --h-earth-layered-geometry-class-bound: 1;
 }
 
-/* Organic placement-role interpretation */
 
-[data-h-earth-organic-variation-applied="true"],
-[data-h-earth-deterministic-organic-variation="true"],
-[data-h-earth-organic-placement-role] {
+/* ==========================================================================
+ * ORGANIC PLACEMENT-ROLE INTERPRETATION
+ * ========================================================================== */
+
+[
+  data-h-earth-organic-variation-applied="true"
+],
+[
+  data-h-earth-deterministic-organic-variation="true"
+],
+[
+  data-h-earth-organic-placement-role
+] {
   --h-earth-live-organic-css-interpreted: 1;
 }
 
-[data-h-earth-organic-placement-role="wet-sand-contour"] {
+[
+  data-h-earth-organic-placement-role="wet-sand-contour"
+] {
   width: clamp(22px, 5.4vw, 86px);
   height: clamp(4px, 1vw, 12px);
   border-radius: 999px;
 }
 
-[data-h-earth-organic-placement-role="wet-sand-moisture"] {
+[
+  data-h-earth-organic-placement-role="wet-sand-moisture"
+] {
   width: clamp(16px, 4vw, 62px);
   height: clamp(5px, 1.2vw, 16px);
-  border-radius: 62% 38% 58% 42%;
+  border-radius:
+    62% 38% 58% 42%;
 }
 
-[data-h-earth-organic-placement-role="wet-sand-sheen"] {
+[
+  data-h-earth-organic-placement-role="wet-sand-sheen"
+] {
   width: clamp(28px, 7vw, 118px);
   height: clamp(3px, 0.7vw, 8px);
   border-radius: 999px;
   mix-blend-mode: screen;
 }
 
-[data-h-earth-organic-placement-role="wet-sand-grain"],
-[data-h-earth-organic-placement-role="dry-sand-ridge"],
-[data-h-earth-organic-placement-role="dry-sand-patch"] {
+[
+  data-h-earth-organic-placement-role="wet-sand-grain"
+],
+[
+  data-h-earth-organic-placement-role="dry-sand-ridge"
+],
+[
+  data-h-earth-organic-placement-role="dry-sand-patch"
+] {
   width: clamp(8px, 2.4vw, 38px);
   height: clamp(3px, 1vw, 12px);
   border-radius: 999px;
 }
 
-[data-h-earth-organic-placement-role="shoreline-edge"],
-[data-h-earth-organic-placement-role="shoreline-foam-break"] {
+[
+  data-h-earth-organic-placement-role="shoreline-edge"
+],
+[
+  data-h-earth-organic-placement-role="shoreline-foam-break"
+] {
   width: clamp(24px, 6vw, 108px);
   height: clamp(3px, 0.8vw, 10px);
   border-radius: 999px;
 }
 
-[data-h-earth-organic-placement-role="nearshore-ripple"] {
+[
+  data-h-earth-organic-placement-role="nearshore-ripple"
+] {
   width: clamp(32px, 8vw, 132px);
   height: clamp(3px, 0.85vw, 11px);
   border-radius: 999px;
 }
 
-[data-h-earth-organic-placement-role="water-depth"],
-[data-h-earth-organic-placement-role="water-reflection"] {
+[
+  data-h-earth-organic-placement-role="water-depth"
+],
+[
+  data-h-earth-organic-placement-role="water-reflection"
+] {
   width: clamp(30px, 8vw, 140px);
   height: clamp(5px, 1.6vw, 22px);
   border-radius: 999px;
 }
 
-[data-h-earth-organic-placement-role="rock-member"] {
+[
+  data-h-earth-organic-placement-role="rock-member"
+] {
   width: clamp(12px, 3.8vw, 58px);
   height: clamp(10px, 3vw, 46px);
-  border-radius: 28% 58% 34% 44%;
-  clip-path: polygon(8% 86%, 20% 36%, 34% 62%, 48% 18%, 62% 58%, 78% 28%, 94% 86%);
+  border-radius:
+    28% 58% 34% 44%;
+  clip-path:
+    polygon(
+      8% 86%,
+      20% 36%,
+      34% 62%,
+      48% 18%,
+      62% 58%,
+      78% 28%,
+      94% 86%
+    );
 }
 
-[data-h-earth-organic-placement-role="surface-scatter"] {
+[
+  data-h-earth-organic-placement-role="surface-scatter"
+] {
   width: clamp(5px, 1.8vw, 22px);
   height: clamp(4px, 1.4vw, 18px);
-  border-radius: 52% 48% 46% 54%;
+  border-radius:
+    52% 48% 46% 54%;
 }
 
-[data-h-earth-organic-placement-role="air-haze"],
-[data-h-earth-organic-placement-role="air-light"] {
+[
+  data-h-earth-organic-placement-role="air-haze"
+],
+[
+  data-h-earth-organic-placement-role="air-light"
+] {
   width: clamp(48px, 14vw, 210px);
   height: clamp(18px, 5vw, 78px);
   border-radius: 999px;
@@ -1755,89 +2444,173 @@ summary:focus-visible,
   mix-blend-mode: screen;
 }
 
-[data-h-earth-organic-placement-role="distant-context-form"] {
+[
+  data-h-earth-organic-placement-role="distant-context-form"
+] {
   width: clamp(18px, 5vw, 86px);
   height: clamp(10px, 3vw, 46px);
-  border-radius: 34% 48% 24% 42%;
+  border-radius:
+    34% 48% 24% 42%;
 }
 
-[data-h-earth-organic-placement-role="manor-body"],
-[data-h-earth-organic-placement-role="manor-roof"],
-[data-h-earth-organic-placement-role="manor-segment"] {
+[
+  data-h-earth-organic-placement-role="manor-body"
+],
+[
+  data-h-earth-organic-placement-role="manor-roof"
+],
+[
+  data-h-earth-organic-placement-role="manor-segment"
+] {
   width: clamp(12px, 3.8vw, 52px);
   height: clamp(14px, 4.2vw, 62px);
   border-radius: 6px 6px 2px 2px;
 }
 
-[data-h-earth-organic-placement-role="manor-roof"] {
+[
+  data-h-earth-organic-placement-role="manor-roof"
+] {
   height: clamp(8px, 2.4vw, 34px);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  clip-path:
+    polygon(
+      50% 0,
+      100% 100%,
+      0 100%
+    );
 }
 
-[data-h-earth-organic-placement-role="inspection-anchor"] {
+[
+  data-h-earth-organic-placement-role="inspection-anchor"
+] {
   width: clamp(12px, 3vw, 26px);
   height: clamp(12px, 3vw, 26px);
   border-radius: 999px;
   mix-blend-mode: screen;
 }
 
-/* Visibility calibration preserved, not extended into proof language */
+
+/* ==========================================================================
+ * VISIBILITY CALIBRATION
+ *
+ * Preserved as visual interpretation only. These rules do not establish
+ * renderer pass, visual correspondence, validation, or production evidence.
+ * ========================================================================== */
 
 .h-earth-render-descriptor-only,
-[class*="h-earth-parent-object-"] {
+[
+  class*="h-earth-parent-object-"
+] {
   opacity: 0.62;
-  filter: saturate(0.82) brightness(0.82) contrast(0.94);
+  filter:
+    saturate(0.82)
+    brightness(0.82)
+    contrast(0.94);
   z-index: 1;
 }
 
 .h-earth-render-candidate-geometry-only,
-.h-earth-render-object[class*="h-earth-geometry-node-"],
-.h-earth-render-object[class*="h-earth-geometry-"],
-[data-h-earth-organic-placement-role] {
+.h-earth-render-object[
+  class*="h-earth-geometry-node-"
+],
+.h-earth-render-object[
+  class*="h-earth-geometry-"
+],
+[
+  data-h-earth-organic-placement-role
+] {
   opacity: 0.95;
   z-index: 5;
-  filter: saturate(1.28) brightness(1.18) contrast(1.28);
+  filter:
+    saturate(1.28)
+    brightness(1.18)
+    contrast(1.28);
   box-shadow:
-    0 0 8px rgba(255, 255, 255, 0.20),
+    0 0 8px rgba(255, 255, 255, 0.2),
     0 2px 10px rgba(0, 0, 0, 0.34);
 }
 
-[data-h-earth-organic-placement-role="water-depth"],
-[data-h-earth-organic-placement-role="water-reflection"],
-[data-h-earth-organic-placement-role="nearshore-ripple"],
-[data-h-earth-organic-placement-role="shoreline-edge"],
-[data-h-earth-organic-placement-role="shoreline-foam-break"],
-[data-h-earth-organic-placement-role="wet-sand-contour"],
-[data-h-earth-organic-placement-role="wet-sand-moisture"],
-[data-h-earth-organic-placement-role="wet-sand-sheen"],
-[data-h-earth-organic-placement-role="wet-sand-grain"],
-[data-h-earth-organic-placement-role="dry-sand-ridge"],
-[data-h-earth-organic-placement-role="dry-sand-patch"],
-[data-h-earth-organic-placement-role="rock-member"],
-[data-h-earth-organic-placement-role="surface-scatter"],
-[data-h-earth-organic-placement-role="tide-pool"],
-[data-h-earth-organic-placement-role="inspection-anchor"] {
+[
+  data-h-earth-organic-placement-role="water-depth"
+],
+[
+  data-h-earth-organic-placement-role="water-reflection"
+],
+[
+  data-h-earth-organic-placement-role="nearshore-ripple"
+],
+[
+  data-h-earth-organic-placement-role="shoreline-edge"
+],
+[
+  data-h-earth-organic-placement-role="shoreline-foam-break"
+],
+[
+  data-h-earth-organic-placement-role="wet-sand-contour"
+],
+[
+  data-h-earth-organic-placement-role="wet-sand-moisture"
+],
+[
+  data-h-earth-organic-placement-role="wet-sand-sheen"
+],
+[
+  data-h-earth-organic-placement-role="wet-sand-grain"
+],
+[
+  data-h-earth-organic-placement-role="dry-sand-ridge"
+],
+[
+  data-h-earth-organic-placement-role="dry-sand-patch"
+],
+[
+  data-h-earth-organic-placement-role="rock-member"
+],
+[
+  data-h-earth-organic-placement-role="surface-scatter"
+],
+[
+  data-h-earth-organic-placement-role="tide-pool"
+],
+[
+  data-h-earth-organic-placement-role="inspection-anchor"
+] {
   opacity: 1;
 }
 
-[data-h-earth-organic-placement-role="air-haze"],
-[data-h-earth-organic-placement-role="air-light"],
-[data-h-earth-organic-placement-role="distant-context-form"] {
+[
+  data-h-earth-organic-placement-role="air-haze"
+],
+[
+  data-h-earth-organic-placement-role="air-light"
+],
+[
+  data-h-earth-organic-placement-role="distant-context-form"
+] {
   opacity: 0.72;
 }
 
-[data-h-earth-organic-placement-role="manor-body"],
-[data-h-earth-organic-placement-role="manor-roof"],
-[data-h-earth-organic-placement-role="manor-segment"] {
+[
+  data-h-earth-organic-placement-role="manor-body"
+],
+[
+  data-h-earth-organic-placement-role="manor-roof"
+],
+[
+  data-h-earth-organic-placement-role="manor-segment"
+] {
   opacity: 0.9;
 }
 
-/* Responsive */
+
+/* ==========================================================================
+ * RESPONSIVE
+ * ========================================================================== */
 
 @media (max-width: 1120px) {
   .h-earth-3d-public-header,
   .h-earth-3d-arrival,
-  .h-earth-3d-public-control-strip .h-earth-3d-hud,
+  .h-earth-3d-public-control-strip
+    .h-earth-3d-hud,
   .h-earth-3d-selected-target-panel,
   .h-earth-3d-layer-4-heading {
     grid-template-columns: 1fr;
@@ -1864,7 +2637,10 @@ summary:focus-visible,
 
 @media (max-width: 760px) {
   .h-earth-3d-route-root {
-    padding: max(10px, env(safe-area-inset-top)) 8px max(28px, env(safe-area-inset-bottom));
+    padding:
+      max(10px, env(safe-area-inset-top))
+      8px
+      max(28px, env(safe-area-inset-bottom));
   }
 
   .h-earth-3d-shell {
@@ -1897,7 +2673,7 @@ summary:focus-visible,
 
   .h-earth-3d-title {
     font-size: clamp(2.15rem, 11vw, 3.35rem);
-    line-height: 0.90;
+    line-height: 0.9;
     letter-spacing: -0.095em;
   }
 
@@ -1923,7 +2699,7 @@ summary:focus-visible,
   .h-earth-3d-status {
     min-height: 36px;
     padding: 6px 8px;
-    font-size: 0.60rem;
+    font-size: 0.6rem;
     line-height: 1.2;
     letter-spacing: 0.035em;
   }
@@ -1958,12 +2734,15 @@ summary:focus-visible,
     border-radius: 16px;
   }
 
-  .h-earth-3d-selected-target-panel .h-earth-3d-card-kicker {
+  .h-earth-3d-selected-target-panel
+    .h-earth-3d-card-kicker {
     margin-bottom: 0.35rem;
   }
 
-  .h-earth-3d-selected-target-panel .h-earth-3d-card-title,
-  .h-earth-3d-layer-4-status-card .h-earth-3d-card-title {
+  .h-earth-3d-selected-target-panel
+    .h-earth-3d-card-title,
+  .h-earth-3d-layer-4-status-card
+    .h-earth-3d-card-title {
     font-size: 1.08rem;
   }
 
@@ -1975,7 +2754,7 @@ summary:focus-visible,
   .h-earth-3d-layer-4-status {
     min-height: 36px;
     padding: 7px 9px;
-    font-size: 0.60rem;
+    font-size: 0.6rem;
     line-height: 1.2;
     white-space: normal;
   }
@@ -2003,7 +2782,8 @@ summary:focus-visible,
     font-size: 0.58rem;
   }
 
-  .h-earth-3d-readout-card .h-earth-3d-card-title {
+  .h-earth-3d-readout-card
+    .h-earth-3d-card-title {
     margin-top: 0.55rem;
     font-size: 1.18rem;
   }
@@ -2024,7 +2804,9 @@ summary:focus-visible,
   }
 
   .h-earth-3d-readout-facts div {
-    grid-template-columns: 8.5rem minmax(0, 1fr);
+    grid-template-columns:
+      8.5rem
+      minmax(0, 1fr);
     gap: 0.55rem;
   }
 
@@ -2032,7 +2814,7 @@ summary:focus-visible,
   .h-earth-3d-developer-drawer-toggle {
     min-height: 42px;
     padding: 10px 12px;
-    font-size: 0.70rem;
+    font-size: 0.7rem;
   }
 
   .h-earth-3d-panel-heading-row {
@@ -2064,33 +2846,66 @@ summary:focus-visible,
   }
 
   .h-earth-layer-water-surface-plane
-    .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+    .h-earth-render-object:not(
+      [class*="h-earth-geometry-node-"]
+    ):not(
+      [class*="h-earth-geometry-"]
+    ),
   .h-earth-render-descriptor-only.h-earth-material-water,
-  [class*="h-earth-parent-object-"].h-earth-material-water,
+  [
+    class*="h-earth-parent-object-"
+  ].h-earth-material-water,
   .h-earth-layer-dry-sand-transition
-    .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+    .h-earth-render-object:not(
+      [class*="h-earth-geometry-node-"]
+    ):not(
+      [class*="h-earth-geometry-"]
+    ),
   .h-earth-render-descriptor-only.h-earth-material-dry-sand,
-  [class*="h-earth-parent-object-"].h-earth-material-dry-sand,
+  [
+    class*="h-earth-parent-object-"
+  ].h-earth-material-dry-sand,
   .h-earth-layer-foreground-wet-sand
-    .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+    .h-earth-render-object:not(
+      [class*="h-earth-geometry-node-"]
+    ):not(
+      [class*="h-earth-geometry-"]
+    ),
   .h-earth-render-descriptor-only.h-earth-material-wet-sand,
-  [class*="h-earth-parent-object-"].h-earth-material-wet-sand {
+  [
+    class*="h-earth-parent-object-"
+  ].h-earth-material-wet-sand {
     width: 106vw;
   }
 
   .h-earth-layer-air-haze-light
-    .h-earth-render-object:not([class*="h-earth-geometry-node-"]):not([class*="h-earth-geometry-"]),
+    .h-earth-render-object:not(
+      [class*="h-earth-geometry-node-"]
+    ):not(
+      [class*="h-earth-geometry-"]
+    ),
   .h-earth-render-descriptor-only.h-earth-material-air-haze,
-  [class*="h-earth-parent-object-"].h-earth-material-air-haze {
+  [
+    class*="h-earth-parent-object-"
+  ].h-earth-material-air-haze {
     width: 112vw;
   }
 
   .h-earth-render-candidate-geometry-only,
-  .h-earth-render-object[class*="h-earth-geometry-node-"],
-  .h-earth-render-object[class*="h-earth-geometry-"],
-  [data-h-earth-organic-placement-role] {
+  .h-earth-render-object[
+    class*="h-earth-geometry-node-"
+  ],
+  .h-earth-render-object[
+    class*="h-earth-geometry-"
+  ],
+  [
+    data-h-earth-organic-placement-role
+  ] {
     opacity: 1;
-    filter: saturate(1.34) brightness(1.22) contrast(1.34);
+    filter:
+      saturate(1.34)
+      brightness(1.22)
+      contrast(1.34);
   }
 }
 
@@ -2132,14 +2947,21 @@ summary:focus-visible,
   }
 }
 
-@media (max-height: 700px) and (max-width: 760px) {
+@media (
+  max-height: 700px
+) and (
+  max-width: 760px
+) {
   .h-earth-3d-world-stage,
   .h-earth-3d-stage {
     min-height: 56svh;
   }
 }
 
-/* Reduced-motion safety */
+
+/* ==========================================================================
+ * REDUCED-MOTION SAFETY
+ * ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   *,

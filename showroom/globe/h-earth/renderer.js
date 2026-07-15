@@ -13,7 +13,7 @@
  * → RENDERER MATERIALIZATION EXTENT
  * → CANONICAL ADMITTED GEOMETRY CONSUMPTION
  * → VISIBILITY CORRESPONDENCE
- * → NEAR/FAR CLIPPING
+ * → SCALE-AWARE NEAR/FAR CLIPPING
  * → PRESENTATION CORRELATION
  * → FIFTEEN SEMANTIC LAYER CONTAINERS
  * → ONE INTERACTION-BOUNDARY NODE
@@ -42,10 +42,11 @@
  * - compositor-handoff consumption;
  * - admitted-frame validation at the renderer boundary;
  * - frame occurrence and revision application law;
+ * - exact-duplicate no-op behavior;
  * - frame-derived projection mathematics;
  * - renderer materialization-extent management;
  * - canonical admitted point, line, and triangle consumption;
- * - near/far depth clipping;
+ * - scale-aware near/far depth clipping;
  * - presentation-assignment and visibility correspondence;
  * - fifteen semantic DOM containers;
  * - one non-controller interaction-boundary node;
@@ -98,7 +99,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT_ID =
   'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1';
 
 export const H_EARTH_3D_RENDERER_SCHEMA_VERSION =
-  3;
+  4;
 
 export const H_EARTH_3D_RENDERER_SOURCE_FILE =
   '/showroom/globe/h-earth/renderer.js';
@@ -107,7 +108,7 @@ export const H_EARTH_3D_RENDERER_ROLE =
   'FRAME_AUTHENTICATED_ADMITTED_GEOMETRY_PROJECTION_AND_DOM_CSS_MATERIALIZATION_CONSUMER';
 
 export const H_EARTH_3D_RENDERER_STATUS =
-  'FROZEN_CANON_API_AND_SCANNING_CORRECTION_CANDIDATE';
+  'FROZEN_CANON_DUPLICATE_CLIPPING_AND_LIFECYCLE_CORRECTION_CANDIDATE';
 
 const RENEWS_RENDERER_CONTRACT_ID =
   'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_1_ENVIRONMENT_GEOMETRY_MATERIALIZATION_v1';
@@ -701,6 +702,21 @@ export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
     exposesArbitraryProjectionContext:
       false,
 
+    duplicateApplyRebuildsProjection:
+      false,
+
+    duplicateApplyReplacesDOM:
+      false,
+
+    duplicateApplyAdvancesSequence:
+      false,
+
+    repeatedConstructMayReplaceFrame:
+      false,
+
+    failedMaterializationAdvancesExtentRevision:
+      false,
+
     mutatesInputHandoff:
       false,
 
@@ -853,7 +869,16 @@ export const H_EARTH_3D_RENDERER_STAGE_MODEL =
       'LAWFUL_NONVISIBLE_RENDERER_OCCURRENCE_WITHOUT_ENVIRONMENT_PRIMITIVE_BUDGET_CLAIM',
 
     clippingPolicy:
-      'NEAR_AND_FAR_DEPTH_CLIPPING_ONLY',
+      'SCALE_AWARE_NEAR_AND_FAR_DEPTH_CLIPPING_ONLY',
+
+    duplicateFramePolicy:
+      'EXACT_DUPLICATE_ACCEPTED_AS_IMMEDIATE_NO_OP',
+
+    repeatedConstructionPolicy:
+      'ONLY_FIRST_FRAME_OR_EXACT_DUPLICATE_ALLOWED',
+
+    materializationExtentRevisionPolicy:
+      'ADVANCE_ONLY_AFTER_SUCCESSFUL_MATERIALIZATION_COMMIT',
 
     stageClass:
       'h-earth-3d-render-stage',
@@ -1403,7 +1428,9 @@ function createFrameViewport(
 
 function createMaterializationExtent(
   frameViewport,
-  extentOverride = null
+  extentOverride = null,
+  extentRevision =
+    rendererState.materializationExtentRevision
 ) {
   if (extentOverride === null) {
     return deepFreeze({
@@ -1426,7 +1453,7 @@ function createMaterializationExtent(
         'FRAME_VIEWPORT',
 
       rendererMaterializationExtentRevision:
-        rendererState.materializationExtentRevision
+        extentRevision
     });
   }
 
@@ -1473,7 +1500,7 @@ function createMaterializationExtent(
       'RENDERER_MOUNT_EXTENT',
 
     rendererMaterializationExtentRevision:
-      rendererState.materializationExtentRevision
+      extentRevision
   });
 }
 
@@ -1622,7 +1649,9 @@ function createCameraBasisFromFrame(
 
 function createProjectionContextFromFrame(
   frame,
-  materializationExtentOverride = null
+  materializationExtentOverride = null,
+  materializationExtentRevision =
+    rendererState.materializationExtentRevision
 ) {
   const frameViewport =
     createFrameViewport(
@@ -1644,7 +1673,8 @@ function createProjectionContextFromFrame(
   const materializationExtent =
     createMaterializationExtent(
       frameViewport,
-      materializationExtentOverride
+      materializationExtentOverride,
+      materializationExtentRevision
     );
 
   if (!materializationExtent) {
@@ -1674,7 +1704,7 @@ function createProjectionContextFromFrame(
       frame.revisions.visibility,
 
     rendererMaterializationExtentRevision:
-      rendererState.materializationExtentRevision
+      materializationExtentRevision
   });
 }
 
@@ -2383,8 +2413,98 @@ function getMaterialPresentation(
 
 
 /* ==========================================================================
- * 19 · NEAR/FAR CLIPPING
+ * 19 · SCALE-AWARE NEAR/FAR CLIPPING
  * ========================================================================== */
+
+function resolveDepthTolerance(
+  nearPlane,
+  farPlane
+) {
+  const scale =
+    Math.max(
+      1,
+      Math.abs(nearPlane),
+      Math.abs(farPlane),
+      Math.abs(
+        farPlane -
+        nearPlane
+      )
+    );
+
+  const relativeTolerance =
+    scale *
+    1e-9;
+
+  const ulpTolerance =
+    Number.EPSILON *
+    scale *
+    256;
+
+  const maximumTolerance =
+    Math.max(
+      Number.EPSILON,
+      (
+        farPlane -
+        nearPlane
+      ) *
+      1e-6
+    );
+
+  return Math.min(
+    maximumTolerance,
+    Math.max(
+      relativeTolerance,
+      ulpTolerance
+    )
+  );
+}
+
+function getInteriorDepthBounds(
+  nearPlane,
+  farPlane
+) {
+  const tolerance =
+    resolveDepthTolerance(
+      nearPlane,
+      farPlane
+    );
+
+  const nearInterior =
+    nearPlane +
+    tolerance;
+
+  const farInterior =
+    farPlane -
+    tolerance;
+
+  if (
+    !isFiniteNumber(nearInterior) ||
+    !isFiniteNumber(farInterior) ||
+    nearInterior >=
+      farInterior
+  ) {
+    return null;
+  }
+
+  return deepFreeze({
+    tolerance,
+    nearInterior,
+    farInterior
+  });
+}
+
+function isDepthInside(
+  depth,
+  nearInterior,
+  farInterior
+) {
+  return (
+    depth >
+      nearInterior &&
+    depth <
+      farInterior
+  );
+}
 
 function clipCameraLineAgainstDepthRange(
   start,
@@ -2392,11 +2512,61 @@ function clipCameraLineAgainstDepthRange(
   nearPlane,
   farPlane
 ) {
-  let tMinimum =
-    0;
+  const interiorBounds =
+    getInteriorDepthBounds(
+      nearPlane,
+      farPlane
+    );
 
-  let tMaximum =
-    1;
+  if (!interiorBounds) {
+    return null;
+  }
+
+  const {
+    nearInterior,
+    farInterior
+  } =
+    interiorBounds;
+
+  const startInside =
+    isDepthInside(
+      start.z,
+      nearInterior,
+      farInterior
+    );
+
+  const endInside =
+    isDepthInside(
+      end.z,
+      nearInterior,
+      farInterior
+    );
+
+  if (
+    startInside &&
+    endInside
+  ) {
+    return deepFreeze({
+      start:
+        cloneAndFreeze(
+          start
+        ),
+
+      end:
+        cloneAndFreeze(
+          end
+        ),
+
+      clipped:
+        false,
+
+      clippedNear:
+        false,
+
+      clippedFar:
+        false
+    });
+  }
 
   const deltaZ =
     end.z -
@@ -2406,61 +2576,91 @@ function clipCameraLineAgainstDepthRange(
     Math.abs(deltaZ) <=
     Number.EPSILON
   ) {
-    if (
-      start.z <= nearPlane ||
-      start.z >= farPlane
-    ) {
-      return null;
-    }
-
-    return deepFreeze({
-      start:
-        cloneAndFreeze(start),
-
-      end:
-        cloneAndFreeze(end),
-
-      clipped:
-        false
-    });
+    return null;
   }
 
-  const nearT =
-    (
-      nearPlane -
-      start.z
-    ) /
-    deltaZ;
+  let tMinimum =
+    0;
 
-  const farT =
-    (
-      farPlane -
-      start.z
-    ) /
-    deltaZ;
+  let tMaximum =
+    1;
 
-  const entryT =
-    Math.min(
-      nearT,
-      farT
-    );
+  let clippedNear =
+    false;
 
-  const exitT =
-    Math.max(
-      nearT,
-      farT
-    );
+  let clippedFar =
+    false;
+
+  if (
+    start.z <=
+      nearInterior ||
+    end.z <=
+      nearInterior
+  ) {
+    const nearT =
+      (
+        nearInterior -
+        start.z
+      ) /
+      deltaZ;
+
+    if (deltaZ > 0) {
+      if (nearT > tMinimum) {
+        tMinimum =
+          nearT;
+
+        clippedNear =
+          true;
+      }
+    } else if (nearT < tMaximum) {
+      tMaximum =
+        nearT;
+
+      clippedNear =
+        true;
+    }
+  }
+
+  if (
+    start.z >=
+      farInterior ||
+    end.z >=
+      farInterior
+  ) {
+    const farT =
+      (
+        farInterior -
+        start.z
+      ) /
+      deltaZ;
+
+    if (deltaZ > 0) {
+      if (farT < tMaximum) {
+        tMaximum =
+          farT;
+
+        clippedFar =
+          true;
+      }
+    } else if (farT > tMinimum) {
+      tMinimum =
+        farT;
+
+      clippedFar =
+        true;
+    }
+  }
 
   tMinimum =
     Math.max(
-      tMinimum,
-      entryT
+      0,
+      tMinimum
     );
 
   tMaximum =
     Math.min(
-      tMaximum,
-      exitT
+      1,
+      tMaximum
     );
 
   if (
@@ -2470,33 +2670,39 @@ function clipCameraLineAgainstDepthRange(
     return null;
   }
 
-  const epsilon =
-    Number.EPSILON *
-    32;
+  const clippedStart =
+    tMinimum === 0
+      ? cloneKnownPlain(
+          start
+        )
+      : interpolateVector(
+          start,
+          end,
+          tMinimum
+        );
 
-  const resolvedMinimum =
-    Math.max(
-      0,
-      Math.min(
-        1,
-        tMinimum +
-        epsilon
-      )
-    );
-
-  const resolvedMaximum =
-    Math.max(
-      0,
-      Math.min(
-        1,
-        tMaximum -
-        epsilon
-      )
-    );
+  const clippedEnd =
+    tMaximum === 1
+      ? cloneKnownPlain(
+          end
+        )
+      : interpolateVector(
+          start,
+          end,
+          tMaximum
+        );
 
   if (
-    resolvedMinimum >
-    resolvedMaximum
+    !isDepthInside(
+      clippedStart.z,
+      nearPlane,
+      farPlane
+    ) ||
+    !isDepthInside(
+      clippedEnd.z,
+      nearPlane,
+      farPlane
+    )
   ) {
     return null;
   }
@@ -2504,25 +2710,21 @@ function clipCameraLineAgainstDepthRange(
   return deepFreeze({
     start:
       deepFreeze(
-        interpolateVector(
-          start,
-          end,
-          resolvedMinimum
-        )
+        clippedStart
       ),
 
     end:
       deepFreeze(
-        interpolateVector(
-          start,
-          end,
-          resolvedMaximum
-        )
+        clippedEnd
       ),
 
     clipped:
-      resolvedMinimum > 0 ||
-      resolvedMaximum < 1
+      tMinimum !== 0 ||
+      tMaximum !== 1,
+
+    clippedNear,
+
+    clippedFar
   });
 }
 
@@ -2542,8 +2744,10 @@ function clipCameraPolygonAgainstPlane(
   const isInside =
     (point) =>
       keepGreater
-        ? point.z > boundary
-        : point.z < boundary;
+        ? point.z >
+          boundary
+        : point.z <
+          boundary;
 
   const intersect =
     (
@@ -2641,37 +2845,139 @@ function clipCameraPolygonAgainstDepthRange(
   nearPlane,
   farPlane
 ) {
-  const epsilon =
-    Number.EPSILON *
-    32;
+  const interiorBounds =
+    getInteriorDepthBounds(
+      nearPlane,
+      farPlane
+    );
+
+  if (!interiorBounds) {
+    return deepFreeze({
+      points:
+        EMPTY_FROZEN_ARRAY,
+
+      clipped:
+        false,
+
+      clippedNear:
+        false,
+
+      clippedFar:
+        false
+    });
+  }
+
+  const {
+    nearInterior,
+    farInterior
+  } =
+    interiorBounds;
+
+  const fullyInside =
+    cameraPoints.every(
+      (point) =>
+        isDepthInside(
+          point.z,
+          nearInterior,
+          farInterior
+        )
+    );
+
+  if (fullyInside) {
+    return deepFreeze({
+      points:
+        Object.freeze([
+          ...cameraPoints
+        ]),
+
+      clipped:
+        false,
+
+      clippedNear:
+        false,
+
+      clippedFar:
+        false
+    });
+  }
+
+  const requiresNearClip =
+    cameraPoints.some(
+      (point) =>
+        point.z <=
+        nearInterior
+    );
+
+  const requiresFarClip =
+    cameraPoints.some(
+      (point) =>
+        point.z >=
+        farInterior
+    );
 
   const nearClipped =
-    clipCameraPolygonAgainstPlane(
-      cameraPoints,
-      {
-        boundary:
-          nearPlane +
-          epsilon,
+    requiresNearClip
+      ? clipCameraPolygonAgainstPlane(
+          cameraPoints,
+          {
+            boundary:
+              nearInterior,
 
-        keepGreater:
-          true
-      }
-    );
+            keepGreater:
+              true
+          }
+        )
+      : [
+          ...cameraPoints
+        ];
 
   const farClipped =
-    clipCameraPolygonAgainstPlane(
-      nearClipped,
-      {
-        boundary:
-          farPlane -
-          epsilon,
+    requiresFarClip
+      ? clipCameraPolygonAgainstPlane(
+          nearClipped,
+          {
+            boundary:
+              farInterior,
 
-        keepGreater:
-          false
-      }
+            keepGreater:
+              false
+          }
+        )
+      : nearClipped;
+
+  const validPoints =
+    farClipped.filter(
+      (point) =>
+        isDepthInside(
+          point.z,
+          nearPlane,
+          farPlane
+        )
     );
 
-  return farClipped;
+  return deepFreeze({
+    points:
+      Object.freeze(
+        validPoints.map(
+          (point) =>
+            deepFreeze(
+              cloneKnownPlain(
+                point
+              )
+            )
+        )
+      ),
+
+    clipped:
+      requiresNearClip ||
+      requiresFarClip,
+
+    clippedNear:
+      requiresNearClip,
+
+    clippedFar:
+      requiresFarClip
+  });
 }
 
 
@@ -2893,6 +3199,7 @@ function createLineDescriptorFromIndices({
   return createProjectedLineDescriptor({
     primitiveId,
     assignment,
+
     sourceVertexIndices:
       sourceIndices,
 
@@ -3004,7 +3311,7 @@ function createClippedTriangleDescriptors({
         )
     );
 
-  const clippedPolygon =
+  const clippingResult =
     clipCameraPolygonAgainstDepthRange(
       cameraPoints,
       projectionContext
@@ -3015,6 +3322,9 @@ function createClippedTriangleDescriptors({
         .farPlane
     );
 
+  const clippedPolygon =
+    clippingResult.points;
+
   if (
     clippedPolygon.length < 3
   ) {
@@ -3022,24 +3332,6 @@ function createClippedTriangleDescriptors({
   }
 
   const descriptors = [];
-
-  const depthClipped =
-    clippedPolygon.length !==
-      cameraPoints.length ||
-    clippedPolygon.some(
-      (
-        point,
-        index
-      ) =>
-        cameraPoints[index] ===
-          undefined ||
-        point.x !==
-          cameraPoints[index].x ||
-        point.y !==
-          cameraPoints[index].y ||
-        point.z !==
-          cameraPoints[index].z
-    );
 
   const anchor =
     clippedPolygon[0];
@@ -3075,10 +3367,14 @@ function createClippedTriangleDescriptors({
         createProjectedTriangleDescriptor({
           primitiveId,
           assignment,
+
           sourceVertexIndices:
             sourceIndices,
+
           projectedPoints,
-          depthClipped
+
+          depthClipped:
+            clippingResult.clipped
         })
       );
     }
@@ -3537,14 +3833,17 @@ function resolveDescriptorSemanticContainerId(
 
 function createFrameProjectionPlan(
   frame,
-  materializationExtentOverride = null
+  materializationExtentOverride = null,
+  materializationExtentRevision =
+    rendererState.materializationExtentRevision
 ) {
   const issues = [];
 
   const projectionContext =
     createProjectionContextFromFrame(
       frame,
-      materializationExtentOverride
+      materializationExtentOverride,
+      materializationExtentRevision
     );
 
   if (!projectionContext) {
@@ -4234,11 +4533,6 @@ function resolveDepthZIndex(
   );
 }
 
-
-/* ==========================================================================
- * 29 · POINT DOM
- * ========================================================================== */
-
 function createPointElement(
   descriptor,
   descriptorIndex
@@ -4316,11 +4610,6 @@ function createPointElement(
     descriptor.assignment
   );
 }
-
-
-/* ==========================================================================
- * 30 · LINE DOM
- * ========================================================================== */
 
 function createLineElement(
   descriptor,
@@ -4433,11 +4722,6 @@ function createLineElement(
     descriptor.assignment
   );
 }
-
-
-/* ==========================================================================
- * 31 · TRIANGLE DOM
- * ========================================================================== */
 
 function createTriangleElement(
   descriptor,
@@ -4637,11 +4921,6 @@ function createDescriptorElement(
   }
 }
 
-
-/* ==========================================================================
- * 32 · SCENE FRAGMENT
- * ========================================================================== */
-
 function buildSceneFragment(
   projectionPlan
 ) {
@@ -4738,7 +5017,7 @@ function buildSceneFragment(
 
 
 /* ==========================================================================
- * 33 · CONSTRUCTION
+ * 29 · CONSTRUCTION
  * ========================================================================== */
 
 export function constructHEarth3DRenderer(
@@ -4762,19 +5041,25 @@ export function constructHEarth3DRenderer(
           false,
 
         rendererStateConstructed:
-          false,
+          rendererState.constructed,
 
         projectionPlanConstructed:
           false,
 
         rendererDOMResourcesCreated:
-          false,
+          rendererState.mounted,
 
         rendererMounted:
-          false,
+          rendererState.mounted,
 
         status:
           'RENDERER_CONSTRUCTION_REJECTED',
+
+        currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
+          true,
 
         issues:
           handoffEvaluation.issues,
@@ -4801,9 +5086,83 @@ export function constructHEarth3DRenderer(
     );
 
   if (
-    !applicationEvaluation.eligible &&
-    !applicationEvaluation.duplicate
+    rendererState.constructed
   ) {
+    if (
+      applicationEvaluation.duplicate ===
+      true
+    ) {
+      const receipt =
+        deepFreeze({
+          receiptType:
+            'H_EARTH_3D_RENDERER_CONSTRUCT_RECEIPT',
+
+          contractId:
+            H_EARTH_3D_RENDERER_CONTRACT_ID,
+
+          constructed:
+            true,
+
+          rendererStateConstructed:
+            true,
+
+          projectionPlanConstructed:
+            rendererState
+              .currentProjectionPlan !==
+            null,
+
+          rendererDOMResourcesCreated:
+            rendererState.mounted,
+
+          rendererMounted:
+            rendererState.mounted,
+
+          status:
+            'RENDERER_ALREADY_CONSTRUCTED_FOR_FRAME',
+
+          frameApplicationStatus:
+            FRAME_APPLICATION_STATUS
+              .DUPLICATE_FRAME,
+
+          compositorFrameOccurrenceId:
+            rendererState
+              .currentFrameOccurrenceId,
+
+          compositorFrameRevision:
+            rendererState
+              .currentFrameRevision,
+
+          duplicateFrame:
+            true,
+
+          materiallyChanged:
+            false,
+
+          currentFramePreserved:
+            true,
+
+          currentDOMPreserved:
+            true,
+
+          constructSequenceAdvanced:
+            false,
+
+          issues:
+            EMPTY_FROZEN_ARRAY,
+
+          rendererPassClaim:
+            false,
+
+          visualPassClaim:
+            false
+        });
+
+      rendererState.lastConstructReceipt =
+        receipt;
+
+      return receipt;
+    }
+
     const receipt =
       deepFreeze({
         receiptType:
@@ -4816,19 +5175,21 @@ export function constructHEarth3DRenderer(
           false,
 
         rendererStateConstructed:
-          false,
+          true,
 
         projectionPlanConstructed:
-          false,
+          rendererState
+            .currentProjectionPlan !==
+          null,
 
         rendererDOMResourcesCreated:
-          false,
+          rendererState.mounted,
 
         rendererMounted:
-          false,
+          rendererState.mounted,
 
         status:
-          'RENDERER_FRAME_APPLICATION_REJECTED',
+          'RENDERER_ALREADY_CONSTRUCTED_USE_APPLY_FOR_REPLACEMENT',
 
         frameApplicationStatus:
           applicationEvaluation.status,
@@ -4839,8 +5200,22 @@ export function constructHEarth3DRenderer(
         compositorFrameRevision:
           frame.revisions.frame,
 
+        currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
+          true,
+
+        constructSequenceAdvanced:
+          false,
+
         issues:
-          applicationEvaluation.issues,
+          freezeIssues([
+            createRendererIssue(
+              'RENDERER_REPLACEMENT_REQUIRES_APPLY',
+              'An established renderer may accept only an exact duplicate through constructHEarth3DRenderer(); replacement frames must use applyHEarth3DRendererHandoff().'
+            )
+          ]),
 
         rendererPassClaim:
           false,
@@ -4856,8 +5231,11 @@ export function constructHEarth3DRenderer(
   }
 
   if (
-    applicationEvaluation.duplicate &&
-    rendererState.constructed
+    applicationEvaluation.eligible !==
+    true ||
+    applicationEvaluation.status !==
+      FRAME_APPLICATION_STATUS
+        .FIRST_FRAME
   ) {
     const receipt =
       deepFreeze({
@@ -4868,22 +5246,22 @@ export function constructHEarth3DRenderer(
           H_EARTH_3D_RENDERER_CONTRACT_ID,
 
         constructed:
-          true,
+          false,
 
         rendererStateConstructed:
-          true,
+          false,
 
         projectionPlanConstructed:
-          true,
+          false,
 
         rendererDOMResourcesCreated:
-          rendererState.mounted,
+          false,
 
         rendererMounted:
-          rendererState.mounted,
+          false,
 
         status:
-          'RENDERER_ALREADY_CONSTRUCTED_FOR_FRAME',
+          'RENDERER_FIRST_FRAME_CONSTRUCTION_REJECTED',
 
         frameApplicationStatus:
           applicationEvaluation.status,
@@ -4894,11 +5272,14 @@ export function constructHEarth3DRenderer(
         compositorFrameRevision:
           frame.revisions.frame,
 
-        duplicateFrame:
+        currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
           true,
 
         issues:
-          EMPTY_FROZEN_ARRAY,
+          applicationEvaluation.issues,
 
         rendererPassClaim:
           false,
@@ -4953,6 +5334,12 @@ export function constructHEarth3DRenderer(
 
         compositorFrameRevision:
           frame.revisions.frame,
+
+        currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
+          true,
 
         issues:
           projectionPlan.issues,
@@ -5012,6 +5399,12 @@ export function constructHEarth3DRenderer(
 
         compositorFrameRevision:
           frame.revisions.frame,
+
+        currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
+          true,
 
         nodeBudgetEvaluation,
 
@@ -5202,11 +5595,13 @@ export function constructHEarth3DRenderer(
 
 
 /* ==========================================================================
- * 34 · MATERIALIZATION
+ * 30 · MATERIALIZATION
  * ========================================================================== */
 
-function materializeCurrentFrame(
-  materializationExtentOverride = null
+function prepareCurrentFrameMaterialization(
+  materializationExtentOverride = null,
+  proposedExtentRevision =
+    rendererState.materializationExtentRevision
 ) {
   if (
     !rendererState.constructed ||
@@ -5214,11 +5609,17 @@ function materializeCurrentFrame(
     !rendererState.sceneElement
   ) {
     return deepFreeze({
-      rendered:
+      prepared:
         false,
 
       status:
         'RENDERER_NOT_READY_FOR_MATERIALIZATION',
+
+      projectionPlan:
+        null,
+
+      nodeBudgetEvaluation:
+        null,
 
       issues:
         freezeIssues([
@@ -5233,18 +5634,22 @@ function materializeCurrentFrame(
   const projectionPlan =
     createFrameProjectionPlan(
       rendererState.currentFrame,
-      materializationExtentOverride
+      materializationExtentOverride,
+      proposedExtentRevision
     );
 
   if (!projectionPlan.eligible) {
     return deepFreeze({
-      rendered:
+      prepared:
         false,
 
       status:
         'RENDERER_PROJECTION_PLAN_REJECTED',
 
       projectionPlan,
+
+      nodeBudgetEvaluation:
+        null,
 
       issues:
         projectionPlan.issues
@@ -5260,11 +5665,13 @@ function materializeCurrentFrame(
 
   if (!nodeBudgetEvaluation.eligible) {
     return deepFreeze({
-      rendered:
+      prepared:
         false,
 
       status:
         'RENDERER_NODE_BUDGET_REJECTED',
+
+      projectionPlan,
 
       nodeBudgetEvaluation,
 
@@ -5277,6 +5684,58 @@ function materializeCurrentFrame(
         ])
     });
   }
+
+  return deepFreeze({
+    prepared:
+      true,
+
+    status:
+      'RENDERER_MATERIALIZATION_PREPARED',
+
+    projectionPlan,
+
+    nodeBudgetEvaluation,
+
+    issues:
+      EMPTY_FROZEN_ARRAY
+  });
+}
+
+function commitPreparedMaterialization(
+  preparation,
+  {
+    commitExtentRevision =
+      false,
+
+    proposedExtentRevision =
+      rendererState.materializationExtentRevision
+  } = {}
+) {
+  if (
+    preparation?.prepared !==
+      true ||
+    !rendererState.sceneElement
+  ) {
+    return deepFreeze({
+      rendered:
+        false,
+
+      status:
+        'RENDERER_MATERIALIZATION_NOT_PREPARED',
+
+      issues:
+        preparation?.issues ??
+        freezeIssues([
+          createRendererIssue(
+            'RENDERER_MATERIALIZATION_PREPARATION_REQUIRED',
+            'A lawful materialization preparation is required before commit.'
+          )
+        ])
+    });
+  }
+
+  const projectionPlan =
+    preparation.projectionPlan;
 
   const sceneResources =
     buildSceneFragment(
@@ -5306,6 +5765,11 @@ function materializeCurrentFrame(
 
   rendererState.currentProjectionPlan =
     projectionPlan;
+
+  if (commitExtentRevision) {
+    rendererState.materializationExtentRevision =
+      proposedExtentRevision;
+  }
 
   rendererState.applySequence +=
     1;
@@ -5379,7 +5843,9 @@ function materializeCurrentFrame(
 
     projectionPlan,
 
-    nodeBudgetEvaluation,
+    nodeBudgetEvaluation:
+      preparation
+        .nodeBudgetEvaluation,
 
     rendererDOMResourcesCreated:
       true,
@@ -5412,7 +5878,7 @@ function materializeCurrentFrame(
 
 
 /* ==========================================================================
- * 35 · MOUNT
+ * 31 · MOUNT
  * ========================================================================== */
 
 export function mountHEarth3DRenderer({
@@ -5626,15 +6092,99 @@ export function mountHEarth3DRenderer({
         }
       : null;
 
-  if (extentOverride !== null) {
-    rendererState
-      .materializationExtentRevision +=
-      1;
+  const extentChangeRequested =
+    extentOverride !==
+    null;
+
+  const proposedExtentRevision =
+    extentChangeRequested
+      ? rendererState
+          .materializationExtentRevision +
+        1
+      : rendererState
+          .materializationExtentRevision;
+
+  const preparation =
+    prepareCurrentFrameMaterialization(
+      extentOverride,
+      proposedExtentRevision
+    );
+
+  if (!preparation.prepared) {
+    resolvedMountElement.replaceChildren();
+
+    rendererState.mountElement =
+      null;
+
+    rendererState.stageElement =
+      null;
+
+    rendererState.sceneElement =
+      null;
+
+    rendererState.semanticLayerElements =
+      new Map();
+
+    rendererState.interactionBoundaryElement =
+      null;
+
+    rendererState.primitiveElements =
+      [];
+
+    rendererState.mounted =
+      false;
+
+    const receipt =
+      deepFreeze({
+        receiptType:
+          'H_EARTH_3D_RENDERER_MOUNT_RECEIPT',
+
+        contractId:
+          H_EARTH_3D_RENDERER_CONTRACT_ID,
+
+        mounted:
+          false,
+
+        rendererDOMResourcesCreated:
+          false,
+
+        status:
+          'INITIAL_FRAME_MATERIALIZATION_FAILED',
+
+        materializationExtentRevisionAdvanced:
+          false,
+
+        rendererMaterializationExtentRevision:
+          rendererState
+            .materializationExtentRevision,
+
+        preparation,
+
+        issues:
+          preparation.issues,
+
+        rendererPassClaim:
+          false,
+
+        visualPassClaim:
+          false
+      });
+
+    rendererState.lastMountReceipt =
+      receipt;
+
+    return receipt;
   }
 
   const materialization =
-    materializeCurrentFrame(
-      extentOverride
+    commitPreparedMaterialization(
+      preparation,
+      {
+        commitExtentRevision:
+          extentChangeRequested,
+
+        proposedExtentRevision
+      }
     );
 
   if (!materialization.rendered) {
@@ -5676,7 +6226,14 @@ export function mountHEarth3DRenderer({
           false,
 
         status:
-          'INITIAL_FRAME_MATERIALIZATION_FAILED',
+          'INITIAL_FRAME_MATERIALIZATION_COMMIT_FAILED',
+
+        materializationExtentRevisionAdvanced:
+          false,
+
+        rendererMaterializationExtentRevision:
+          rendererState
+            .materializationExtentRevision,
 
         materialization,
 
@@ -5744,6 +6301,9 @@ export function mountHEarth3DRenderer({
       visibilityRevision:
         rendererState
           .currentVisibilityRevision,
+
+      materializationExtentRevisionAdvanced:
+        extentChangeRequested,
 
       rendererMaterializationExtentRevision:
         rendererState
@@ -5819,7 +6379,7 @@ export function mountHEarth3DRenderer({
 
 
 /* ==========================================================================
- * 36 · APPLY OR REPLACE FRAME
+ * 32 · APPLY OR REPLACE FRAME
  * ========================================================================== */
 
 export function applyHEarth3DRendererHandoff(
@@ -5854,6 +6414,9 @@ export function applyHEarth3DRendererHandoff(
 
         currentDOMPreserved:
           true,
+
+        applySequenceAdvanced:
+          false,
 
         issues:
           handoffEvaluation.issues,
@@ -5896,6 +6459,9 @@ export function applyHEarth3DRendererHandoff(
         currentDOMPreserved:
           true,
 
+        applySequenceAdvanced:
+          false,
+
         issues:
           freezeIssues([
             createRendererIssue(
@@ -5925,6 +6491,83 @@ export function applyHEarth3DRendererHandoff(
       frame
     );
 
+  if (
+    applicationEvaluation.duplicate ===
+    true
+  ) {
+    const receipt =
+      deepFreeze({
+        receiptType:
+          'H_EARTH_3D_RENDERER_FRAME_APPLY_RECEIPT',
+
+        contractId:
+          H_EARTH_3D_RENDERER_CONTRACT_ID,
+
+        applied:
+          true,
+
+        status:
+          'RENDERER_DUPLICATE_FRAME_NO_OP',
+
+        frameApplicationStatus:
+          FRAME_APPLICATION_STATUS
+            .DUPLICATE_FRAME,
+
+        duplicateFrame:
+          true,
+
+        materiallyChanged:
+          false,
+
+        currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
+          true,
+
+        projectionRebuilt:
+          false,
+
+        nodeBudgetEvaluated:
+          false,
+
+        DOMReplaced:
+          false,
+
+        frameStateAssigned:
+          false,
+
+        applySequenceAdvanced:
+          false,
+
+        compositorFrameOccurrenceId:
+          rendererState
+            .currentFrameOccurrenceId,
+
+        compositorFrameRevision:
+          rendererState
+            .currentFrameRevision,
+
+        applySequence:
+          rendererState
+            .applySequence,
+
+        issues:
+          EMPTY_FROZEN_ARRAY,
+
+        rendererPassClaim:
+          false,
+
+        visualPassClaim:
+          false
+      });
+
+    rendererState.lastApplyReceipt =
+      receipt;
+
+    return receipt;
+  }
+
   if (!applicationEvaluation.eligible) {
     const receipt =
       deepFreeze({
@@ -5935,18 +6578,16 @@ export function applyHEarth3DRendererHandoff(
           H_EARTH_3D_RENDERER_CONTRACT_ID,
 
         applied:
-          applicationEvaluation.duplicate,
+          false,
 
         status:
-          applicationEvaluation.duplicate
-            ? 'RENDERER_DUPLICATE_FRAME_NO_OP'
-            : 'RENDERER_FRAME_REPLACEMENT_REJECTED',
+          'RENDERER_FRAME_REPLACEMENT_REJECTED',
 
         frameApplicationStatus:
           applicationEvaluation.status,
 
         duplicateFrame:
-          applicationEvaluation.duplicate,
+          false,
 
         materiallyChanged:
           false,
@@ -5956,6 +6597,9 @@ export function applyHEarth3DRendererHandoff(
 
         currentDOMPreserved:
           true,
+
+        applySequenceAdvanced:
+          false,
 
         compositorFrameOccurrenceId:
           frame.compositorFrameOccurrenceId,
@@ -6010,7 +6654,9 @@ export function applyHEarth3DRendererHandoff(
   const projectionPlan =
     createFrameProjectionPlan(
       frame,
-      extentOverride
+      extentOverride,
+      rendererState
+        .materializationExtentRevision
     );
 
   if (!projectionPlan.eligible) {
@@ -6036,6 +6682,9 @@ export function applyHEarth3DRendererHandoff(
 
         currentDOMPreserved:
           true,
+
+        applySequenceAdvanced:
+          false,
 
         compositorFrameOccurrenceId:
           frame.compositorFrameOccurrenceId,
@@ -6090,6 +6739,9 @@ export function applyHEarth3DRendererHandoff(
         currentDOMPreserved:
           true,
 
+        applySequenceAdvanced:
+          false,
+
         compositorFrameOccurrenceId:
           frame.compositorFrameOccurrenceId,
 
@@ -6129,6 +6781,17 @@ export function applyHEarth3DRendererHandoff(
         )
       : null;
 
+  if (
+    replacementResources &&
+    rendererState.sceneElement
+  ) {
+    rendererState
+      .sceneElement
+      .replaceChildren(
+        replacementResources.fragment
+      );
+  }
+
   rendererState.currentHandoff =
     handoff;
 
@@ -6156,16 +6819,7 @@ export function applyHEarth3DRendererHandoff(
   rendererState.currentProjectionPlan =
     projectionPlan;
 
-  if (
-    replacementResources &&
-    rendererState.sceneElement
-  ) {
-    rendererState
-      .sceneElement
-      .replaceChildren(
-        replacementResources.fragment
-      );
-
+  if (replacementResources) {
     rendererState.semanticLayerElements =
       replacementResources
         .semanticLayerElements;
@@ -6216,6 +6870,22 @@ export function applyHEarth3DRendererHandoff(
       currentDOMPreserved:
         replacementResources ===
         null,
+
+      projectionRebuilt:
+        true,
+
+      nodeBudgetEvaluated:
+        true,
+
+      DOMReplaced:
+        replacementResources !==
+        null,
+
+      frameStateAssigned:
+        true,
+
+      applySequenceAdvanced:
+        true,
 
       compositorFrameOccurrenceId:
         frame.compositorFrameOccurrenceId,
@@ -6316,7 +6986,7 @@ export function applyHEarth3DRendererHandoff(
 
 
 /* ==========================================================================
- * 37 · RESIZE / REPROJECT
+ * 33 · RESIZE / REPROJECT
  * ========================================================================== */
 
 export function resizeHEarth3DRenderer({
@@ -6341,6 +7011,9 @@ export function resizeHEarth3DRenderer({
 
         status:
           'RENDERER_NOT_MOUNTED',
+
+        materializationExtentRevisionAdvanced:
+          false,
 
         issues:
           freezeIssues([
@@ -6414,6 +7087,13 @@ export function resizeHEarth3DRenderer({
         status:
           'RENDERER_MATERIALIZATION_EXTENT_INVALID',
 
+        materializationExtentRevisionAdvanced:
+          false,
+
+        rendererMaterializationExtentRevision:
+          rendererState
+            .materializationExtentRevision,
+
         issues:
           freezeIssues([
             createRendererIssue(
@@ -6435,18 +7115,80 @@ export function resizeHEarth3DRenderer({
     return receipt;
   }
 
-  rendererState
-    .materializationExtentRevision +=
+  const proposedExtentRevision =
+    rendererState
+      .materializationExtentRevision +
     1;
 
-  const materialization =
-    materializeCurrentFrame({
-      widthPx:
-        resolvedWidth,
+  const preparation =
+    prepareCurrentFrameMaterialization(
+      {
+        widthPx:
+          resolvedWidth,
 
-      heightPx:
-        resolvedHeight
-    });
+        heightPx:
+          resolvedHeight
+      },
+      proposedExtentRevision
+    );
+
+  if (!preparation.prepared) {
+    const receipt =
+      deepFreeze({
+        receiptType:
+          'H_EARTH_3D_RENDERER_REPROJECT_RECEIPT',
+
+        contractId:
+          H_EARTH_3D_RENDERER_CONTRACT_ID,
+
+        reprojected:
+          false,
+
+        status:
+          'RENDERER_REPROJECTION_PREPARATION_FAILED',
+
+        compositorViewportRevision:
+          rendererState
+            .currentCompositorViewportRevision,
+
+        materializationExtentRevisionAdvanced:
+          false,
+
+        rendererMaterializationExtentRevision:
+          rendererState
+            .materializationExtentRevision,
+
+        proposedRendererMaterializationExtentRevision:
+          proposedExtentRevision,
+
+        preparation,
+
+        issues:
+          preparation.issues,
+
+        rendererPassClaim:
+          false,
+
+        visualPassClaim:
+          false
+      });
+
+    rendererState.lastReprojectReceipt =
+      receipt;
+
+    return receipt;
+  }
+
+  const materialization =
+    commitPreparedMaterialization(
+      preparation,
+      {
+        commitExtentRevision:
+          true,
+
+        proposedExtentRevision
+      }
+    );
 
   if (!materialization.rendered) {
     const receipt =
@@ -6461,15 +7203,21 @@ export function resizeHEarth3DRenderer({
           false,
 
         status:
-          'RENDERER_REPROJECTION_FAILED',
+          'RENDERER_REPROJECTION_COMMIT_FAILED',
 
         compositorViewportRevision:
           rendererState
             .currentCompositorViewportRevision,
 
+        materializationExtentRevisionAdvanced:
+          false,
+
         rendererMaterializationExtentRevision:
           rendererState
             .materializationExtentRevision,
+
+        proposedRendererMaterializationExtentRevision:
+          proposedExtentRevision,
 
         materialization,
 
@@ -6522,6 +7270,9 @@ export function resizeHEarth3DRenderer({
       compositorViewportRevision:
         rendererState
           .currentCompositorViewportRevision,
+
+      materializationExtentRevisionAdvanced:
+        true,
 
       rendererMaterializationExtentRevision:
         rendererState
@@ -6582,7 +7333,7 @@ export function resizeHEarth3DRenderer({
 
 
 /* ==========================================================================
- * 38 · DESTROY
+ * 34 · DESTROY
  * ========================================================================== */
 
 export function destroyHEarth3DRenderer() {
@@ -6684,6 +7435,9 @@ export function destroyHEarth3DRenderer() {
       compositorViewportStatePreserved:
         true,
 
+      materializationExtentRevisionPreserved:
+        true,
+
       routeDOMRemoved:
         false,
 
@@ -6711,7 +7465,7 @@ export function destroyHEarth3DRenderer() {
 
 
 /* ==========================================================================
- * 39 · COMPLETE RELEASE
+ * 35 · COMPLETE RELEASE
  * ========================================================================== */
 
 export function releaseHEarth3DRenderer() {
@@ -6778,6 +7532,9 @@ export function releaseHEarth3DRenderer() {
     rendererMounted:
       false,
 
+    rendererMaterializationExtentRevision:
+      0,
+
     issues:
       EMPTY_FROZEN_ARRAY,
 
@@ -6791,7 +7548,7 @@ export function releaseHEarth3DRenderer() {
 
 
 /* ==========================================================================
- * 40 · STATE AND OPERATIONAL RECEIPTS
+ * 36 · STATE AND OPERATIONAL RECEIPTS
  * ========================================================================== */
 
 export function getHEarth3DRendererState() {
@@ -6952,7 +7709,7 @@ export function getHEarth3DRendererOperationalReceipts() {
 
 
 /* ==========================================================================
- * 41 · STATIC COHERENCE
+ * 37 · STATIC COHERENCE
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
@@ -7129,6 +7886,15 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
       zeroDescriptorsMisreportedAsBudgetOverflow:
         false,
 
+      fullyInteriorLinesPreserveEndpoints:
+        true,
+
+      clippingToleranceScaleAware:
+        true,
+
+      clippingInsetAppliedOnlyWhenRequired:
+        true,
+
       nearFarLineClippingDefined:
         true,
 
@@ -7136,6 +7902,27 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
         true,
 
       horizontalVerticalFrustumClippingDefined:
+        false,
+
+      exactDuplicateApplyImmediateNoOp:
+        true,
+
+      exactDuplicateApplyRebuildsProjection:
+        false,
+
+      exactDuplicateApplyReplacesDOM:
+        false,
+
+      exactDuplicateApplyAdvancesSequence:
+        false,
+
+      repeatedConstructReplacementRejected:
+        true,
+
+      materializationExtentRevisionTransactional:
+        true,
+
+      failedMaterializationAdvancesExtentRevision:
         false,
 
       geometryReconstructed:
@@ -7175,7 +7962,7 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
 
 
 /* ==========================================================================
- * 42 · CLAIM CEILINGS
+ * 38 · CLAIM CEILINGS
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_CLAIM_CEILINGS =
@@ -7255,7 +8042,7 @@ export const H_EARTH_3D_RENDERER_CLAIM_CEILINGS =
 
 
 /* ==========================================================================
- * 43 · STATIC RECEIPT
+ * 39 · STATIC RECEIPT
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_RECEIPT =
@@ -7323,6 +8110,36 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
     zeroProjectedDescriptorsSubmittedAsBudgetOverflow:
       false,
 
+    exactDuplicateApplyPolicy:
+      'IMMEDIATE_NO_OP',
+
+    exactDuplicateProjectionRebuilt:
+      false,
+
+    exactDuplicateBudgetEvaluated:
+      false,
+
+    exactDuplicateDOMReplaced:
+      false,
+
+    exactDuplicateFrameStateAssigned:
+      false,
+
+    exactDuplicateApplySequenceAdvanced:
+      false,
+
+    repeatedConstructReplacementPolicy:
+      'REJECT_AND_REQUIRE_APPLY',
+
+    fullyInteriorLineEndpointCorrespondencePreserved:
+      true,
+
+    scaleAwareDepthToleranceDefined:
+      true,
+
+    clippingInsetAppliedOnlyForActualBoundaryCrossing:
+      true,
+
     nearFarLineClippingDefined:
       true,
 
@@ -7330,6 +8147,15 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
       true,
 
     screenRectangleClippingDefined:
+      false,
+
+    materializationExtentRevisionPolicy:
+      'COMMIT_AFTER_SUCCESSFUL_MATERIALIZATION_ONLY',
+
+    failedMountMaterializationAdvancesExtentRevision:
+      false,
+
+    failedResizeMaterializationAdvancesExtentRevision:
       false,
 
     semanticLayerContainerCount:
@@ -7377,19 +8203,37 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
     emptyScenePolicyVerified:
       false,
 
-    nearFarLineClippingVerified:
+    fullyInteriorLinePreservationVerified:
       false,
 
-    nearFarTriangleClippingVerified:
+    nearCrossingLineVerified:
+      false,
+
+    farCrossingLineVerified:
+      false,
+
+    nearCrossingTriangleVerified:
+      false,
+
+    farCrossingTriangleVerified:
+      false,
+
+    fullyOutsideGeometryRejectionVerified:
+      false,
+
+    exactDuplicateNoOpVerified:
+      false,
+
+    repeatedConstructReplacementRejectionVerified:
+      false,
+
+    materializationExtentRevisionRollbackVerified:
       false,
 
     firstFrameMaterializationVerified:
       false,
 
     replacementFrameVerified:
-      false,
-
-    duplicateFrameVerified:
       false,
 
     staleFrameRejectionVerified:
@@ -7425,7 +8269,7 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
 
 
 /* ==========================================================================
- * 44 · COMPLETE CONTRACT
+ * 40 · COMPLETE CONTRACT
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_CONTRACT =
@@ -7534,9 +8378,12 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
           'PHYSICAL_DOM_PROJECTION_DIMENSIONS',
 
         resizeEffect:
-          'ADVANCE_RENDERER_MATERIALIZATION_EXTENT_REVISION_ONLY',
+          'ADVANCE_RENDERER_MATERIALIZATION_EXTENT_REVISION_AFTER_SUCCESSFUL_COMMIT_ONLY',
 
         resizeMutatesCompositorViewport:
+          false,
+
+        failedMaterializationAdvancesRevision:
           false
       }),
 
@@ -7591,17 +8438,29 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
 
     clippingLaw:
       deepFreeze({
-        lineNearFarClipping:
-          true,
+        tolerance:
+          'SCALE_AWARE_DEPTH_TOLERANCE',
 
-        triangleNearFarClipping:
-          true,
+        fullyInteriorLine:
+          'PRESERVE_EXACT_ENDPOINT_VALUES_AND_REPORT_UNCLIPPED',
+
+        nearCrossingLine:
+          'CLIP_TO_SCALE_AWARE_NEAR_INTERIOR_BOUNDARY',
+
+        farCrossingLine:
+          'CLIP_TO_SCALE_AWARE_FAR_INTERIOR_BOUNDARY',
+
+        nearCrossingTriangle:
+          'POLYGON_CLIP_TO_SCALE_AWARE_NEAR_INTERIOR_BOUNDARY',
+
+        farCrossingTriangle:
+          'POLYGON_CLIP_TO_SCALE_AWARE_FAR_INTERIOR_BOUNDARY',
+
+        fullyOutsideGeometry:
+          'REJECT',
 
         horizontalVerticalFrustumClipping:
-          false,
-
-        initialCorridor:
-          'BOUNDED_NEAR_FAR_DEPTH_CLIPPING'
+          false
       }),
 
     emptySceneLaw:
@@ -7646,7 +8505,22 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
           'ACCEPT_AND_CONSTRUCT',
 
         exactDuplicate:
-          'ACCEPT_AS_NO_OP',
+          'IMMEDIATE_NO_OP',
+
+        exactDuplicateRebuildsProjection:
+          false,
+
+        exactDuplicateEvaluatesBudget:
+          false,
+
+        exactDuplicateReplacesDOM:
+          false,
+
+        exactDuplicateAssignsFrameState:
+          false,
+
+        exactDuplicateAdvancesApplySequence:
+          false,
 
         sameOccurrenceAndRevisionDifferentIdentity:
           'REJECT',
@@ -7658,13 +8532,34 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
           'REJECT_AS_STALE_FRAME',
 
         higherFrameRevision:
-          'ACCEPT_AS_REPLACEMENT',
+          'ACCEPT_AS_REPLACEMENT_THROUGH_APPLY_ONLY',
 
         failedReplacement:
           'PRESERVE_CURRENT_FRAME_AND_CURRENT_DOM',
 
         applyBeforeConstruction:
-          'REJECT'
+          'REJECT',
+
+        constructAfterInitialFrame:
+          'ALLOW_EXACT_DUPLICATE_ONLY',
+
+        constructReplacementFrame:
+          'REJECT_AND_REQUIRE_applyHEarth3DRendererHandoff'
+      }),
+
+    materializationTransactionLaw:
+      deepFreeze({
+        prepare:
+          'VALIDATE_PROJECTION_AND_BUDGET_WITH_PROPOSED_EXTENT_REVISION',
+
+        commit:
+          'REPLACE_DOM_AND_COMMIT_EXTENT_REVISION_ATOMICALLY',
+
+        failedPreparation:
+          'PRESERVE_CURRENT_EXTENT_REVISION',
+
+        failedCommit:
+          'DO_NOT_ADVANCE_EXTENT_REVISION'
       }),
 
     publicLifecycle:
@@ -7706,7 +8601,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
 
 
 /* ==========================================================================
- * 45 · PUBLIC GETTERS
+ * 41 · PUBLIC GETTERS
  * ========================================================================== */
 
 export function getHEarth3DRendererContract() {
@@ -7731,7 +8626,7 @@ export function getHEarth3DRendererClaimCeilings() {
 
 
 /* ==========================================================================
- * 46 · COMPATIBILITY ALIASES
+ * 42 · COMPATIBILITY ALIASES
  * ========================================================================== */
 
 export function mountHEarthCandidateRenderer(
@@ -7748,7 +8643,7 @@ export function destroyHEarthCandidateRenderer() {
 
 
 /* ==========================================================================
- * 47 · AGGREGATE EXPORT
+ * 43 · AGGREGATE EXPORT
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_AGGREGATE =

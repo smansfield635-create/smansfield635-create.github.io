@@ -5,159 +5,101 @@
     /showroom/globe/h-earth/index.html
     COMPLETE RENEWED FILE
 
-    H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034V_STEP_034P_MANDATORY_PACKET_002_ENTRY_AND_RENDERER_CORRIDOR_v1
+    H_EARTH_3D_ROUTE_ENTRY_FILE_RENEWAL_STEP_034V_PACKET_001_TO_PACKET_002_TO_STEP_034P_BROWSER_EXECUTION_v1
 
-    Renews:
-    H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034Q_STEP_034P_BOOTSTRAP_ENTRY_AND_DIAGNOSTIC_READINESS_v1
+    Runtime compatibility dependencies currently declared by backed Step 034P:
 
-    Companion stylesheet:
+    H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034C_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_PROJECTION_v1
+
+    H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034D_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_SUPPORT_v1
+
+    Installed companion stylesheet target:
+
     /showroom/globe/h-earth/index.css
+
     H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034R_STEP_034Q_PUBLIC_ENVIRONMENT_AND_RENDERER_SURFACE_SUPPORT_v1
 
-    Backed companion bootstrap:
+    Backed route bootstrap:
+
     /showroom/globe/h-earth/index.js
+
     H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1
 
-    Backed compositor:
+    Verified executable browser corridor:
+
+    /showroom/globe/h-earth/render/geometry-preview.js
+      previewHEarthWetSandGeometry(...)
+        ->
+    /showroom/globe/h-earth/render/geometry-kernel.js
+      admitHEarthPrimitiveBatch(...)
+        ->
+    /h-earth-3d/integration/
+      h-earth.post-west-admitted-geometry-transfer.js
+      buildHEarthPostWestAdmittedGeometryTransfer(...)
+        ->
+    /showroom/globe/h-earth/index.js
+      initializeHEarthRoute(...)
+        ->
     /showroom/globe/h-earth/compositor.js
-    H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1
-
-    Backed renderer:
+        ->
+    /showroom/globe/h-earth/admitted-geometry-frame.js
+        ->
     /showroom/globe/h-earth/renderer.js
-    H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1
+        ->
+    #h-earth-3d-renderer-mount
 
-    Diagnostic route:
-    /showroom/globe/h-earth/diagnostic/
+    Execution law:
 
-    Corrected route corridor:
+    This file invokes the backed Packet 001-to-Packet 002 source corridor.
 
-    EXACT HTML ENTRY
-      ->
-    EXACT STEP 034P MODULE IMPORT
-      ->
-    EXACT STEP 034P CONTRACT VERIFICATION
-      ->
-    MANDATORY AUTHORIZED ROUTE-ENTRY INPUT RESOLUTION
-      ->
-    EXACT PACKET 002 INPUT VALIDATION
-      ->
-    initializeHEarthRoute({
-      document,
-      packet002Transfer,
-      packet002TransferOccurrenceId,
-      compositorFrameOccurrenceId,
-      presentationMode
-    })
-      ->
-    INDEX-OWNED COMPOSITOR IMPORT
-      ->
-    INDEX-OWNED RENDERER IMPORT
-      ->
-    COMPOSITOR HANDOFF
-      ->
-    RENDERER CONSTRUCTION
-      ->
-    RENDERER MOUNT
-      ->
-    INDEX-OWNED RECEIPTS AND ACTIVE GLOBALS
-      ->
-    FIRST VISIBLE EXECUTION EVIDENCE
+    It does not wait for, require, or invent:
 
-    Mandatory route-entry input law:
+      globalThis.H_EARTH_3D_ROUTE_ENTRY_INPUT
 
-    This HTML file does not construct Packet 002.
+    It does not construct geometry directly.
 
-    It requires an authorized upstream browser-entry producer to publish:
+    It invokes the authoritative modules that own:
 
-    globalThis.H_EARTH_3D_ROUTE_ENTRY_INPUT = {
-      packet002Transfer,
-      packet002TransferOccurrenceId,
-      compositorFrameOccurrenceId,
-      presentationMode
-    };
+    - Packet 001 source-object resolution;
+    - environment profile consumption;
+    - provider-local wet-sand construction;
+    - South neutral geometry construction;
+    - West primitive admission;
+    - West aggregate-frame admission;
+    - Packet 002 transfer construction;
+    - compositor handoff;
+    - renderer construction;
+    - renderer mount.
 
-    The route no longer converts missing input into:
+    The HTML owns only:
 
-    skipRendererBootstrap = true
+    - route-entry occurrence correlation identities;
+    - exact module imports;
+    - exact contract verification;
+    - exact upstream invocation order;
+    - exact transfer of Packet 002 into Step 034P;
+    - visible pre-Step-034P failure reporting.
 
-    Missing or invalid input is now a hard and visible route-entry failure.
+    Route-entry occurrence identities are correlation identities.
 
-    This prevents a descriptor preview from impersonating renderer progress and
-    prevents the route from silently bypassing the backed compositor-renderer
-    corridor.
+    They are not:
 
-    Honest execution law:
+    - geometry identities;
+    - West admission identities;
+    - Packet 002 producer-authentication claims;
+    - renderer identities;
+    - production evidence;
+    - validation evidence.
 
-    If authorized Packet 002 input exists, the exact Step 034P renderer
-    corridor is requested.
+    No preview-only bypass is authorized.
 
-    If authorized Packet 002 input does not exist, the route visibly fails at
-    the HTML-to-Step-034P boundary.
+    Any failure before Step 034P ownership remains visible and is published as:
 
-    The shell does not fabricate Packet 002, occurrence identities, admitted
-    geometry, compositor state, renderer state, camera state, viewport state,
-    visibility state, or presentation authority.
+      globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE
 
-    Authority division:
+    Successful HTML-to-Step-034P entry is published as:
 
-    HTML OWNS:
-    - semantic route shell;
-    - unique renderer mount target;
-    - unique fallback and status targets;
-    - exact Step 034P module import;
-    - exact Step 034P contract verification;
-    - mandatory route-entry input observation;
-    - route-entry input eligibility verification;
-    - hard failure before index ownership when required input is unavailable.
-
-    INDEX.JS OWNS:
-    - route-control listeners;
-    - copy-control listeners;
-    - initialization identity;
-    - stale-occurrence isolation;
-    - Layer 4 descriptor import;
-    - compositor import and handoff;
-    - renderer import, construction, and mount;
-    - source-preview takeover and restoration;
-    - route lifecycle;
-    - route destruction;
-    - receipt construction;
-    - active-global publication;
-    - all post-initialization normal and exceptional state.
-
-    Boundary:
-
-    HTML route shell only.
-    No Packet 002 construction.
-    No admitted-frame construction.
-    No geometry construction.
-    No compositor construction.
-    No renderer construction.
-    No renderer mount implementation.
-    No camera authority.
-    No viewport authority.
-    No visibility authority.
-    No synthetic route-entry values.
-    No silent renderer-bootstrap skip.
-    No descriptor-preview success state.
-    No active index-global republication.
-    No duplicate route-control listeners.
-    No duplicate copy-control listeners.
-    No diagnostic wall.
-    No report wall.
-    No raw evidence wall.
-    No receipt wall.
-    No WebGL activation by HTML.
-    No canvas activation by HTML.
-    No SVG activation by HTML.
-    No iframe activation.
-    No renderer-pass claim.
-    No visual-pass claim.
-    No validation claim.
-    No production claim.
-    No deployment claim.
-    No runtime lattice activation.
-    No matrix collapse.
+      globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_RECEIPT
   -->
 
   <meta charset="utf-8" />
@@ -176,72 +118,72 @@
 
   <meta
     name="description"
-    content="Public H-Earth environment host for the mandatory Step 034P Packet 002 compositor-to-renderer corridor."
+    content="Executable public H-Earth route entry for the backed Packet 001, provider, West admission, Packet 002, compositor, and renderer corridor."
   />
 
   <meta
-    name="h-earth-route-shell-contract"
-    content="H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034V_STEP_034P_MANDATORY_PACKET_002_ENTRY_AND_RENDERER_CORRIDOR_v1"
+    name="h-earth-route-entry-contract"
+    content="H_EARTH_3D_ROUTE_ENTRY_FILE_RENEWAL_STEP_034V_PACKET_001_TO_PACKET_002_TO_STEP_034P_BROWSER_EXECUTION_v1"
   />
 
   <meta
-    name="h-earth-route-shell-renewed-from"
-    content="H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034Q_STEP_034P_BOOTSTRAP_ENTRY_AND_DIAGNOSTIC_READINESS_v1"
+    name="h-earth-step-034p-shell-compatibility-contract"
+    content="H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034C_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_PROJECTION_v1"
   />
 
   <meta
-    name="h-earth-public-stylesheet-target"
+    name="h-earth-step-034p-style-compatibility-contract"
+    content="H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034D_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_SUPPORT_v1"
+  />
+
+  <meta
+    name="h-earth-installed-stylesheet-contract"
     content="H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034R_STEP_034Q_PUBLIC_ENVIRONMENT_AND_RENDERER_SURFACE_SUPPORT_v1"
   />
 
   <meta
-    name="h-earth-public-bootstrap-target"
+    name="h-earth-index-contract"
     content="H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1"
   />
 
   <meta
-    name="h-earth-public-bootstrap-module"
-    content="/showroom/globe/h-earth/index.js"
+    name="h-earth-preview-contract"
+    content="H_EARTH_3D_GEOMETRY_PREVIEW_FILE_RENEWAL_STEP_034O_6_PREVIEW_PACKET_001_WET_SAND_PROVIDER_TRANSLATION_v1"
   />
 
   <meta
-    name="h-earth-route-entry-input-global"
-    content="H_EARTH_3D_ROUTE_ENTRY_INPUT"
+    name="h-earth-kernel-facade-contract"
+    content="H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_FILE_BIRTH_STEP_034O_4F_STABLE_DIRECTIONAL_KERNEL_EXPORT_SURFACE_v1"
   />
 
   <meta
-    name="h-earth-route-entry-input-policy"
-    content="mandatory-authorized-input; no-silent-renderer-skip; hard-visible-failure-when-missing-or-invalid"
+    name="h-earth-west-contract"
+    content="H_EARTH_3D_GEOMETRY_KERNEL_WEST_FILE_BIRTH_STEP_034O_4W_PRIMITIVE_ADMISSION_AND_AGGREGATE_FRAME_ADMISSION_v1"
   />
 
   <meta
-    name="h-earth-layer-4-bridge-contract"
-    content="H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FILE_BIRTH_STEP_012J_v1"
+    name="h-earth-packet-002-contract"
+    content="H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_FILE_BIRTH_PACKET_002_PROVISIONAL_HANDOFF_v1"
   />
 
   <meta
-    name="h-earth-step-012h-1-contract"
-    content="H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_1_HISTORICAL_FIXTURE_ALIGNMENT_v1"
+    name="h-earth-admitted-frame-contract"
+    content="H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_FILE_BIRTH_STEP_034O_7_PACKET_002_TO_COMPOSITOR_RENDER_FRAME_ADAPTER_v1"
   />
 
   <meta
-    name="h-earth-step-012i-contract"
-    content="H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_FILE_BIRTH_STEP_012I_v1"
+    name="h-earth-compositor-contract"
+    content="H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1"
   />
 
   <meta
-    name="h-earth-step-012i-canonicalization"
-    content="H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_STEP_012I_UTF16_UTF8_SHA256_v1"
+    name="h-earth-renderer-contract"
+    content="H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1"
   />
 
   <meta
-    name="h-earth-diagnostic-route"
-    content="/showroom/globe/h-earth/diagnostic/"
-  />
-
-  <meta
-    name="h-earth-boundary"
-    content="mandatory-packet-002-entry; exact-step-034p-import; exact-step-034p-contract-verification; no-silent-renderer-bootstrap-skip; hard-visible-entry-failure; index-owned-compositor-renderer-lifecycle; no-packet-002-construction; no-admitted-frame-construction; no-geometry-construction; no-compositor-construction-by-html; no-renderer-construction-by-html; no-renderer-mount-by-html; no-fabricated-occurrence-identities; no-descriptor-preview-success-state; no-diagnostic-wall; no-report-wall; no-raw-evidence-wall; no-active-index-global-republication; no-validation-claim; no-production-claim; no-visual-pass-claim; no-runtime-lattice-activation; no-matrix-collapse"
+    name="h-earth-route-entry-policy"
+    content="execute-real-packet-001-to-packet-002-corridor; no-invented-global; no-preview-only-bypass; fail-at-first-real-operation"
   />
 
   <link
@@ -256,58 +198,45 @@
     class="h-earth-3d-route-root"
     data-h-earth-route="public-environment-host"
     data-h-earth-page-mode="public-scene-route"
-    data-h-earth-route-shell-contract="H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034V_STEP_034P_MANDATORY_PACKET_002_ENTRY_AND_RENDERER_CORRIDOR_v1"
-    data-h-earth-stylesheet-contract="H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034R_STEP_034Q_PUBLIC_ENVIRONMENT_AND_RENDERER_SURFACE_SUPPORT_v1"
+    data-h-earth-route-entry-contract="H_EARTH_3D_ROUTE_ENTRY_FILE_RENEWAL_STEP_034V_PACKET_001_TO_PACKET_002_TO_STEP_034P_BROWSER_EXECUTION_v1"
     data-h-earth-bootstrap-contract="H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1"
-    data-h-earth-public-bootstrap-only="true"
-    data-h-earth-public-environment-host="true"
-    data-h-earth-visible-stage-authorized="true"
-    data-h-earth-layer-4-status-projection="true"
-    data-h-earth-public-stage-adapter="true"
-    data-h-earth-route-entry-input-global="H_EARTH_3D_ROUTE_ENTRY_INPUT"
-    data-h-earth-route-entry-input-required="true"
-    data-h-earth-route-entry-input-observed="unknown"
-    data-h-earth-route-entry-input-eligible="unknown"
-    data-h-earth-renderer-bootstrap-requested="unknown"
-    data-h-earth-preview-only-hold="false"
-    data-h-earth-silent-renderer-skip-authorized="false"
+    data-h-earth-installed-stylesheet-contract="H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034R_STEP_034Q_PUBLIC_ENVIRONMENT_AND_RENDERER_SURFACE_SUPPORT_v1"
+    data-h-earth-executable-browser-corridor="true"
+    data-h-earth-route-entry-input-global-required="false"
+    data-h-earth-preview-only-bypass-authorized="false"
+    data-h-earth-preview-module-imported="false"
+    data-h-earth-preview-contract-verified="false"
+    data-h-earth-preview-executed="false"
+    data-h-earth-preview-result-eligible="false"
+    data-h-earth-kernel-module-imported="false"
+    data-h-earth-kernel-contract-verified="false"
+    data-h-earth-west-admission-executed="false"
+    data-h-earth-west-admission-eligible="false"
+    data-h-earth-packet-002-module-imported="false"
+    data-h-earth-packet-002-contract-verified="false"
+    data-h-earth-packet-002-constructed="false"
+    data-h-earth-packet-002-eligible="false"
+    data-h-earth-admitted-frame-module-imported="false"
+    data-h-earth-admitted-frame-contract-verified="false"
     data-h-earth-index-module-imported="false"
     data-h-earth-index-contract-verified="false"
     data-h-earth-index-initialization-started="false"
+    data-h-earth-renderer-bootstrap-requested="false"
     data-h-earth-html-entry-task-complete="false"
     data-h-earth-stage-contains-controls="false"
     data-h-earth-stage-contains-selected-card="false"
     data-h-earth-stage-contains-receipts="false"
-    data-h-earth-diagnostic-wall-embedded="false"
-    data-h-earth-report-wall-embedded="false"
-    data-h-earth-raw-spatial-evidence-embedded="false"
-    data-h-earth-receipt-wall-embedded="false"
     data-h-earth-shell-owned-scene-objects="false"
     data-h-earth-fake-scene-geometry="false"
-    data-h-earth-html-owned-route-listeners="false"
-    data-h-earth-html-owned-copy-listeners="false"
-    data-h-earth-html-owned-active-global-publication="false"
     data-h-earth-packet-002-constructed-by-html="false"
-    data-h-earth-admitted-frame-constructed-by-html="false"
+    data-h-earth-west-admission-owned-by-html="false"
     data-h-earth-compositor-constructed-by-html="false"
     data-h-earth-renderer-constructed-by-html="false"
     data-h-earth-renderer-mounted-by-html="false"
-    data-h-earth-step-012j-descriptor-read="authorized"
-    data-h-earth-module-initialization-observed="unknown"
-    data-h-earth-run-function-executed="false"
-    data-h-earth-replay-executed="false"
-    data-h-earth-vector-runner-executed="false"
-    data-h-earth-runtime-executed="false"
-    data-h-earth-canonical-digest-generated="false"
-    data-h-earth-replay-comparison="false"
     data-h-earth-renderer-pass-claim="false"
+    data-h-earth-visual-pass-claim="false"
     data-h-earth-validation-claim="false"
     data-h-earth-production-claim="false"
-    data-h-earth-visual-pass-claim="false"
-    data-h-earth-matrix="H-Earth"
-    data-h-earth-matrix-role="Ground-View Matrix"
-    data-h-earth-active-cell="H_EARTH_GROUND_CELL_001"
-    data-h-earth-scene-identity="earth-water-air-survival-shoreline-manor"
     data-h-earth-matrix-collapse="false"
   >
     <div class="h-earth-3d-shell">
@@ -366,33 +295,33 @@
       >
         <div class="h-earth-3d-arrival-copy">
           <p class="h-earth-3d-kicker">
-            H-Earth · Public Environment Host
+            H-Earth · Executable Public Route
           </p>
 
           <h1
             id="h-earth-3d-title"
             class="h-earth-3d-title"
           >
-            Inspect the ground before the world opens.
+            Execute the admitted ground corridor.
           </h1>
 
           <p class="h-earth-3d-lead">
-            This route now requires the exact authorized Packet 002 occurrence
-            before it requests the backed compositor and renderer corridor.
-            Missing input is reported as a visible entry failure rather than
-            being converted into a descriptor-only success surface.
+            This route invokes the backed wet-sand source-resolution,
+            environment, provider, South construction, West admission,
+            Packet 002, compositor, and renderer corridor. It exposes the
+            first real failed operation rather than substituting a visual
+            preview for execution.
           </p>
         </div>
 
         <aside
           class="h-earth-3d-arrival-note"
-          aria-label="Public route execution boundary"
+          aria-label="Route execution boundary"
         >
           <p>
-            The renderer corridor either receives its real Packet 002 input and
-            executes, or the route reports the exact missing connection. This
-            shell does not fabricate the universe and does not silently skip
-            the renderer.
+            A visible environment may appear only after a lawful Packet 002
+            occurrence reaches Step 034P and the compositor-renderer corridor
+            completes renderer mount.
           </p>
         </aside>
       </section>
@@ -472,8 +401,6 @@
             aria-label="H-Earth public environment renderer mount"
             data-h-earth-renderer-mount="true"
             data-h-earth-public-stage-renderer-mount="true"
-            data-h-earth-shell-owned-scene-objects="false"
-            data-h-earth-fake-scene-geometry="false"
           ></div>
 
           <div
@@ -482,7 +409,7 @@
             role="status"
             aria-live="polite"
           >
-            Waiting for mandatory authorized Packet 002 route-entry input.
+            Preparing the backed Packet 001-to-renderer corridor.
           </div>
         </section>
       </section>
@@ -545,8 +472,7 @@
           id="h-earth-3d-public-readout-line"
           class="h-earth-3d-public-readout-line"
         >
-          Ground Condition Read is waiting for the exact Step 034P route
-          bootstrap and renderer corridor.
+          Waiting for current Step 034P execution evidence.
         </p>
 
         <details
@@ -594,16 +520,14 @@
             </div>
 
             <div>
-              <dt>Receipt</dt>
-              <dd>H_EARTH_GROUND_INSPECTION_RECEIPT</dd>
+              <dt>Presentation mode</dt>
+              <dd>FIRST_ADMITTED_WET_SAND_PROOF</dd>
             </div>
           </dl>
 
           <p class="h-earth-3d-readout-boundary">
-            This surface remains descriptive until the backed route bootstrap
-            publishes current execution evidence. The shell does not create
-            geometry or claim renderer, visual, validation, production, or
-            deployment success.
+            Route-entry execution does not itself prove renderer pass, visual
+            pass, validation, production, deployment, or matrix collapse.
           </p>
         </details>
       </section>
@@ -621,7 +545,7 @@
             </p>
 
             <h2 class="h-earth-3d-card-title">
-              Step 012J read-only relationship projection.
+              Step 034P read-only relationship projection.
             </h2>
           </div>
 
@@ -636,47 +560,12 @@
           </div>
         </div>
 
-        <dl class="h-earth-3d-layer-4-facts">
-          <div>
-            <dt>Bridge descriptor</dt>
-
-            <dd id="h-earth-3d-step-012j-contract-id">
-              H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FILE_BIRTH_STEP_012J_v1
-            </dd>
-          </div>
-
-          <div>
-            <dt>Fixture side</dt>
-
-            <dd id="h-earth-3d-step-012h-1-contract-id">
-              H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_1_HISTORICAL_FIXTURE_ALIGNMENT_v1
-            </dd>
-          </div>
-
-          <div>
-            <dt>Serialization law</dt>
-
-            <dd id="h-earth-3d-step-012i-contract-id">
-              H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_FILE_BIRTH_STEP_012I_v1
-            </dd>
-          </div>
-
-          <div>
-            <dt>Canonicalization</dt>
-
-            <dd id="h-earth-3d-step-012i-canonicalization-id">
-              H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_STEP_012I_UTF16_UTF8_SHA256_v1
-            </dd>
-          </div>
-        </dl>
-
         <p
           id="h-earth-3d-layer-4-summary"
           class="h-earth-3d-layer-4-summary"
         >
-          Step 012J may be projected by the backed index as a read-only
-          relationship descriptor. That observation does not replace Packet
-          002 renderer input and does not prove renderer execution.
+          Layer 4 projection remains under Step 034P ownership after route
+          initialization begins.
         </p>
 
         <details
@@ -691,7 +580,7 @@
             id="h-earth-3d-layer-4-projection-payload"
             class="h-earth-3d-layer-4-projection-payload"
             aria-label="Read-only Layer 4 public-stage projection payload"
-          >Layer 4 projection pending Step 034P bootstrap.</pre>
+          >Layer 4 projection pending.</pre>
         </details>
       </section>
 
@@ -756,7 +645,6 @@
                 data-h-earth-copy-target="h-earth-3d-inspection-panel"
                 data-h-earth-copy-label="Public Inspection Payload"
                 data-h-earth-receipt-copy-button="true"
-                data-h-earth-route-to-diagnostic="false"
               >
                 Copy Receipt
               </button>
@@ -765,7 +653,6 @@
             <pre
               id="h-earth-3d-inspection-panel"
               class="h-earth-3d-inspection-panel"
-              aria-label="Ground Condition Read bridge payload"
             >Public inspection payload pending.</pre>
           </section>
 
@@ -775,7 +662,7 @@
           >
             <div class="h-earth-3d-panel-heading-row">
               <p class="h-earth-3d-panel-title">
-                Compact Public Bootstrap
+                Route Entry / Bootstrap
               </p>
 
               <button
@@ -783,9 +670,8 @@
                 class="h-earth-3d-inline-copy-button"
                 type="button"
                 data-h-earth-copy-target="h-earth-3d-debug"
-                data-h-earth-copy-label="Compact Public Bootstrap"
+                data-h-earth-copy-label="Route Entry Bootstrap"
                 data-h-earth-receipt-copy-button="true"
-                data-h-earth-route-to-diagnostic="false"
               >
                 Copy Receipt
               </button>
@@ -794,8 +680,7 @@
             <pre
               id="h-earth-3d-debug"
               class="h-earth-3d-debug"
-              aria-label="Compact public bootstrap payload"
-            >Compact public bootstrap receipt pending.</pre>
+            >Route-entry execution pending.</pre>
           </section>
 
           <section
@@ -814,7 +699,6 @@
                 data-h-earth-copy-target="h-earth-3d-public-stage-receipt"
                 data-h-earth-copy-label="Layer 4 Public-Stage Receipt"
                 data-h-earth-receipt-copy-button="true"
-                data-h-earth-route-to-diagnostic="false"
               >
                 Copy Receipt
               </button>
@@ -823,7 +707,6 @@
             <pre
               id="h-earth-3d-public-stage-receipt"
               class="h-earth-3d-public-stage-receipt"
-              aria-label="Layer 4 public-stage receipt payload"
             >Layer 4 public-stage receipt pending.</pre>
           </section>
 
@@ -832,26 +715,9 @@
             class="h-earth-3d-copy-status"
             role="status"
             aria-live="polite"
-            data-h-earth-copy-status="true"
           >
-            Copy controls will be owned by the Step 034P index bootstrap.
+            Step 034P will own copy-control listeners after initialization.
           </p>
-
-          <section
-            class="h-earth-3d-claim-boundary"
-            aria-label="Public route claim boundary"
-          >
-            <p>
-              This route now exposes missing entry input as a hard failure. It
-              no longer treats an absent Packet 002 occurrence as an acceptable
-              renderer-preview mode.
-            </p>
-
-            <p>
-              Full reports and raw evidence remain assigned to the diagnostic
-              route.
-            </p>
-          </section>
         </section>
       </details>
     </div>
@@ -859,21 +725,57 @@
 
   <script type="module">
     const HTML_CONTRACT_ID =
-      'H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034V_STEP_034P_MANDATORY_PACKET_002_ENTRY_AND_RENDERER_CORRIDOR_v1';
+      'H_EARTH_3D_ROUTE_ENTRY_FILE_RENEWAL_STEP_034V_PACKET_001_TO_PACKET_002_TO_STEP_034P_BROWSER_EXECUTION_v1';
+
+    const EXPECTED_PREVIEW_CONTRACT_ID =
+      'H_EARTH_3D_GEOMETRY_PREVIEW_FILE_RENEWAL_STEP_034O_6_PREVIEW_PACKET_001_WET_SAND_PROVIDER_TRANSLATION_v1';
+
+    const EXPECTED_KERNEL_CONTRACT_ID =
+      'H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_FILE_BIRTH_STEP_034O_4F_STABLE_DIRECTIONAL_KERNEL_EXPORT_SURFACE_v1';
+
+    const EXPECTED_WEST_CONTRACT_ID =
+      'H_EARTH_3D_GEOMETRY_KERNEL_WEST_FILE_BIRTH_STEP_034O_4W_PRIMITIVE_ADMISSION_AND_AGGREGATE_FRAME_ADMISSION_v1';
+
+    const EXPECTED_PACKET_002_CONTRACT_ID =
+      'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_FILE_BIRTH_PACKET_002_PROVISIONAL_HANDOFF_v1';
+
+    const EXPECTED_ADMITTED_FRAME_CONTRACT_ID =
+      'H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_FILE_BIRTH_STEP_034O_7_PACKET_002_TO_COMPOSITOR_RENDER_FRAME_ADAPTER_v1';
 
     const EXPECTED_INDEX_CONTRACT_ID =
       'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1';
 
-    const PUBLIC_MODULE_PATH =
+    const EXPECTED_INDEX_SHELL_COMPATIBILITY_CONTRACT_ID =
+      'H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034C_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_PROJECTION_v1';
+
+    const EXPECTED_INDEX_STYLE_COMPATIBILITY_CONTRACT_ID =
+      'H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034D_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_SUPPORT_v1';
+
+    const PREVIEW_MODULE_PATH =
+      './render/geometry-preview.js?v=034o6';
+
+    const KERNEL_MODULE_PATH =
+      './render/geometry-kernel.js?v=034o4f';
+
+    const PACKET_002_MODULE_PATH =
+      '../../../h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js?v=packet002';
+
+    const ADMITTED_FRAME_MODULE_PATH =
+      './admitted-geometry-frame.js?v=034o7';
+
+    const INDEX_MODULE_PATH =
       './index.js?v=034p';
 
-    const ROUTE_ENTRY_INPUT_GLOBAL =
-      'H_EARTH_3D_ROUTE_ENTRY_INPUT';
+    const SOURCE_OBJECT_ID =
+      'OBJ_002_FOREGROUND_WET_SAND';
 
-    const HTML_FAILURE_GLOBAL =
+    const REQUESTED_PURPOSE =
+      'WET_SAND_GEOMETRY_PREVIEW';
+
+    const FAILURE_GLOBAL =
       'H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE';
 
-    const HTML_RECEIPT_GLOBAL =
+    const RECEIPT_GLOBAL =
       'H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_RECEIPT';
 
     const routeRoot =
@@ -889,11 +791,6 @@
     const fallbackNode =
       document.getElementById(
         'h-earth-3d-fallback'
-      );
-
-    const copyStatusNode =
-      document.getElementById(
-        'h-earth-3d-copy-status'
       );
 
     const debugNode =
@@ -914,6 +811,11 @@
     const layer4ProjectionNode =
       document.getElementById(
         'h-earth-3d-layer-4-projection-payload'
+      );
+
+    const copyStatusNode =
+      document.getElementById(
+        'h-earth-3d-copy-status'
       );
 
     function nowIso() {
@@ -938,21 +840,35 @@
       );
     }
 
-    function writeText(node, value) {
+    function setDataset(
+      key,
+      value
+    ) {
+      if (!routeRoot?.dataset) {
+        return false;
+      }
+
+      routeRoot.dataset[key] =
+        String(value);
+
+      return true;
+    }
+
+    function writeText(
+      node,
+      value
+    ) {
       if (!node) {
         return false;
       }
 
       node.textContent =
-        String(
-          value ??
-          ''
-        );
+        String(value ?? '');
 
       return true;
     }
 
-    function safeSerialize(value) {
+    function serializeForDisplay(value) {
       const seen =
         new WeakSet();
 
@@ -963,15 +879,14 @@
             key === 'document' ||
             key === 'ownerDocument' ||
             key === 'mountElement' ||
-            key === 'mountNode' ||
-            key === 'rendererMount' ||
-            key === 'routeRoot'
+            key === 'routeRoot' ||
+            key === 'rendererMount'
           ) {
             return '[DOMNodeOmitted]';
           }
 
           if (
-            input &&
+            input !== null &&
             typeof input === 'object'
           ) {
             if (seen.has(input)) {
@@ -991,23 +906,23 @@
       );
     }
 
-    function writeJson(node, value) {
+    function writeJson(
+      node,
+      value
+    ) {
       if (!node) {
         return false;
       }
 
       try {
         node.textContent =
-          safeSerialize(value);
+          serializeForDisplay(value);
       } catch (error) {
         node.textContent =
           JSON.stringify(
             {
-              receiptType:
-                'H_EARTH_3D_PUBLIC_ROUTE_HTML_SERIALIZATION_FAILURE',
-
               status:
-                'HTML_FAILURE_PAYLOAD_COULD_NOT_BE_SERIALIZED',
+                'DISPLAY_SERIALIZATION_FAILED',
 
               errorName:
                 error instanceof Error
@@ -1027,193 +942,224 @@
       return true;
     }
 
-    function setRouteClass(className) {
-      if (!routeRoot) {
-        return false;
-      }
+    function createOccurrenceToken() {
+      const randomComponent =
+        globalThis.crypto &&
+        typeof globalThis.crypto.randomUUID ===
+          'function'
+          ? globalThis.crypto.randomUUID()
+          : [
+              Math.random()
+                .toString(16)
+                .slice(2),
+              Math.random()
+                .toString(16)
+                .slice(2)
+            ].join('-');
 
-      routeRoot.classList.remove(
-        'h-earth-3d-boot-ready',
-        'h-earth-3d-boot-fallback',
-        'h-earth-3d-boot-error'
-      );
-
-      if (className) {
-        routeRoot.classList.add(
-          className
-        );
-      }
-
-      return true;
+      return [
+        Date.now(),
+        randomComponent
+      ].join(':');
     }
 
-    function writeHtmlEntryDataset(
-      key,
-      value
-    ) {
-      if (!routeRoot?.dataset) {
-        return false;
-      }
-
-      routeRoot.dataset[key] =
-        String(value);
-
-      return true;
-    }
-
-    function evaluateRouteEntryInput(value) {
-      const issues = [];
-
-      if (!isPlainRecord(value)) {
-        issues.push(
-          'H_EARTH_3D_ROUTE_ENTRY_INPUT is not a strict plain record.'
-        );
-
-        return Object.freeze({
-          eligible:
-            false,
-
-          issues:
-            Object.freeze(issues)
-        });
-      }
-
-      if (
-        !isPlainRecord(
-          value.packet002Transfer
-        )
-      ) {
-        issues.push(
-          'packet002Transfer is not a strict plain record.'
-        );
-      }
-
-      if (
-        !isNonEmptyExactString(
-          value.packet002TransferOccurrenceId
-        )
-      ) {
-        issues.push(
-          'packet002TransferOccurrenceId is not an exact nonempty string.'
-        );
-      }
-
-      if (
-        !isNonEmptyExactString(
-          value.compositorFrameOccurrenceId
-        )
-      ) {
-        issues.push(
-          'compositorFrameOccurrenceId is not an exact nonempty string.'
-        );
-      }
-
-      if (
-        !isNonEmptyExactString(
-          value.presentationMode
-        )
-      ) {
-        issues.push(
-          'presentationMode is not an exact nonempty string.'
-        );
-      }
+    function createRouteOccurrence() {
+      const token =
+        createOccurrenceToken();
 
       return Object.freeze({
-        eligible:
-          issues.length === 0,
+        token,
 
-        issues:
-          Object.freeze([
-            ...issues
-          ])
+        requestId:
+          `H_EARTH_WET_SAND_ROUTE_REQUEST:${token}`,
+
+        aggregateFrameId:
+          `H_EARTH_WEST_AGGREGATE_FRAME:${token}`,
+
+        packet002TransferOccurrenceId:
+          `H_EARTH_PACKET_002_TRANSFER_OCCURRENCE:${token}`,
+
+        compositorFrameOccurrenceId:
+          `H_EARTH_COMPOSITOR_FRAME_OCCURRENCE:${token}`
       });
     }
 
-    function resolveMandatoryInitializationOptions() {
-      const entryInput =
-        globalThis[
-          ROUTE_ENTRY_INPUT_GLOBAL
-        ] ??
+    function verifyExactExport({
+      moduleNamespace,
+      exportName,
+      expectedValue,
+      phase
+    }) {
+      const observedValue =
+        moduleNamespace?.[exportName] ??
         null;
 
-      writeHtmlEntryDataset(
-        'hEarthRouteEntryInputObserved',
-        entryInput === null
-          ? 'false'
-          : 'true'
-      );
-
-      const evaluation =
-        evaluateRouteEntryInput(
-          entryInput
-        );
-
-      writeHtmlEntryDataset(
-        'hEarthRouteEntryInputEligible',
-        evaluation.eligible
-          ? 'true'
-          : 'false'
-      );
-
-      if (!evaluation.eligible) {
+      if (observedValue !== expectedValue) {
         const error =
           new Error(
-            [
-              'Mandatory authorized H_EARTH_3D_ROUTE_ENTRY_INPUT is unavailable or invalid.',
-              ...evaluation.issues
-            ].join(' ')
+            `${phase}: expected ${exportName}=${expectedValue}; observed ${String(observedValue)}.`
           );
 
         error.name =
-          'HEarthRouteEntryInputError';
-
-        error.routeEntryInputEvaluation =
-          evaluation;
+          'HEarthContractMismatchError';
 
         throw error;
       }
 
-      writeHtmlEntryDataset(
-        'hEarthRendererBootstrapRequested',
-        'true'
-      );
-
-      writeHtmlEntryDataset(
-        'hEarthPreviewOnlyHold',
-        'false'
-      );
-
-      return Object.freeze({
-        document,
-
-        packet002Transfer:
-          entryInput.packet002Transfer,
-
-        packet002TransferOccurrenceId:
-          entryInput.packet002TransferOccurrenceId,
-
-        compositorFrameOccurrenceId:
-          entryInput.compositorFrameOccurrenceId,
-
-        presentationMode:
-          entryInput.presentationMode
-      });
+      return observedValue;
     }
 
-    function buildHtmlEntryFailure(
+    function verifyFunction({
+      moduleNamespace,
+      exportName,
+      phase
+    }) {
+      const observedValue =
+        moduleNamespace?.[exportName];
+
+      if (typeof observedValue !== 'function') {
+        const error =
+          new Error(
+            `${phase}: required function export ${exportName} is unavailable.`
+          );
+
+        error.name =
+          'HEarthApiMismatchError';
+
+        throw error;
+      }
+
+      return observedValue;
+    }
+
+    function assertPreviewResult(
+      previewResult
+    ) {
+      if (
+        !isPlainRecord(previewResult) ||
+        previewResult.ok !== true ||
+        previewResult.admitted !== false ||
+        previewResult.WestAdmissionPerformed !==
+          false ||
+        !Array.isArray(
+          previewResult.primitives
+        ) ||
+        previewResult.primitives.length ===
+          0 ||
+        !isNonEmptyExactString(
+          previewResult.requestId
+        ) ||
+        !isNonEmptyExactString(
+          previewResult.providerRequestId
+        ) ||
+        !isNonEmptyExactString(
+          previewResult.resolutionReceiptId
+        )
+      ) {
+        const error =
+          new Error(
+            'The wet-sand preview result is not eligible for West batch admission.'
+          );
+
+        error.name =
+          'HEarthPreviewResultRejectedError';
+
+        error.details =
+          previewResult;
+
+        throw error;
+      }
+
+      return previewResult;
+    }
+
+    function assertWestAdmissionResult(
+      result
+    ) {
+      if (
+        !isPlainRecord(result) ||
+        result.valid !== true ||
+        !Array.isArray(
+          result.primitiveAdmissions
+        ) ||
+        result.primitiveAdmissions.length ===
+          0 ||
+        !isPlainRecord(result.frame) ||
+        !isNonEmptyExactString(
+          result.frame.frameId
+        )
+      ) {
+        const error =
+          new Error(
+            'West primitive-batch or aggregate-frame admission did not produce a lawful admitted occurrence.'
+          );
+
+        error.name =
+          'HEarthWestAdmissionRejectedError';
+
+        error.details =
+          result;
+
+        throw error;
+      }
+
+      return result;
+    }
+
+    function assertPacket002Transfer(
+      transfer
+    ) {
+      if (
+        !isPlainRecord(transfer) ||
+        transfer.ok !== true ||
+        transfer.status !==
+          'WEST_ADMISSION_COMPLETE_INDEX_NOT_YET_DEFINED' ||
+        transfer.contractId !==
+          EXPECTED_PACKET_002_CONTRACT_ID ||
+        !Array.isArray(
+          transfer.admittedPrimitives
+        ) ||
+        transfer.admittedPrimitives.length ===
+          0 ||
+        !isPlainRecord(
+          transfer.aggregateFrameAdmissionRecord
+        ) ||
+        !isNonEmptyExactString(
+          transfer.frameId
+        )
+      ) {
+        const error =
+          new Error(
+            'Packet 002 construction did not produce a lawful provisional post-West transfer.'
+          );
+
+        error.name =
+          'HEarthPacket002RejectedError';
+
+        error.details =
+          transfer;
+
+        throw error;
+      }
+
+      return transfer;
+    }
+
+    function buildFailureReceipt({
       error,
       phase,
-      extra = {}
-    ) {
+      routeOccurrence = null,
+      evidence = {}
+    }) {
       return Object.freeze({
         receiptType:
           'H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE',
 
-        file:
-          '/showroom/globe/h-earth/index.html',
-
         contractId:
           HTML_CONTRACT_ID,
+
+        file:
+          '/showroom/globe/h-earth/index.html',
 
         generatedAt:
           nowIso(),
@@ -1222,12 +1168,6 @@
 
         status:
           'PUBLIC_ROUTE_HTML_ENTRY_FAILURE',
-
-        modulePath:
-          PUBLIC_MODULE_PATH,
-
-        expectedIndexContractId:
-          EXPECTED_INDEX_CONTRACT_ID,
 
         errorName:
           error instanceof Error
@@ -1239,49 +1179,32 @@
             ? error.message
             : String(error),
 
-        routeEntryInputRequired:
-          true,
+        routeOccurrence,
 
-        routeEntryInputObserved:
-          routeRoot
-            ?.dataset
-            ?.hEarthRouteEntryInputObserved ??
-          'unknown',
+        evidence,
 
-        routeEntryInputEligible:
-          routeRoot
-            ?.dataset
-            ?.hEarthRouteEntryInputEligible ??
-          'unknown',
-
-        rendererBootstrapSkipped:
+        routeEntryInputGlobalRequired:
           false,
 
-        rendererBootstrapRequested:
+        previewOnlyBypassAuthorized:
+          false,
+
+        packet002ConstructedByHtml:
+          false,
+
+        westAdmissionOwnedByHtml:
           false,
 
         indexRouteOwnershipEstablished:
           false,
 
-        htmlFailurePublicationOnly:
-          true,
-
-        packet002ConstructedByHtml:
+        compositorHandoffObserved:
           false,
 
-        admittedFrameConstructedByHtml:
+        rendererConstructionObserved:
           false,
 
-        compositorConstructedByHtml:
-          false,
-
-        rendererConstructedByHtml:
-          false,
-
-        rendererMountedByHtml:
-          false,
-
-        activeIndexGlobalsRepublishedByHtml:
+        rendererMountObserved:
           false,
 
         rendererPassClaim:
@@ -1297,15 +1220,37 @@
           false,
 
         matrixCollapse:
-          false,
-
-        ...extra
+          false
       });
     }
 
-    function publishHtmlEntryFailure(
+    function publishFailure(
       failureReceipt
     ) {
+      setDataset(
+        'hEarthHtmlEntryTaskComplete',
+        'true'
+      );
+
+      setDataset(
+        'hEarthIndexInitializationStarted',
+        'false'
+      );
+
+      setDataset(
+        'hEarthRendererBootstrapRequested',
+        'false'
+      );
+
+      routeRoot?.classList.remove(
+        'h-earth-3d-boot-ready',
+        'h-earth-3d-boot-fallback'
+      );
+
+      routeRoot?.classList.add(
+        'h-earth-3d-boot-error'
+      );
+
       writeText(
         statusNode,
         failureReceipt.status
@@ -1313,7 +1258,7 @@
 
       writeText(
         fallbackNode,
-        `H-Earth route-entry failure: ${failureReceipt.errorMessage}`
+        `${failureReceipt.phase}: ${failureReceipt.errorMessage}`
       );
 
       writeText(
@@ -1340,190 +1285,528 @@
       writeJson(
         layer4ProjectionNode,
         {
-          receiptType:
-            'H_EARTH_3D_LAYER_4_PROJECTION_NOT_REACHED',
-
           status:
             'LAYER_4_PROJECTION_NOT_REACHED',
 
           reason:
-            'The mandatory public route entry did not reach Step 034P route ownership.',
+            'The executable route entry failed before Step 034P assumed ownership.',
 
-          htmlEntryFailure:
+          failure:
             failureReceipt
         }
       );
 
       writeText(
         copyStatusNode,
-        'Step 034P did not assume listener ownership.'
-      );
-
-      setRouteClass(
-        'h-earth-3d-boot-error'
-      );
-
-      writeHtmlEntryDataset(
-        'hEarthIndexInitializationStarted',
-        'false'
-      );
-
-      writeHtmlEntryDataset(
-        'hEarthRendererBootstrapRequested',
-        'false'
-      );
-
-      writeHtmlEntryDataset(
-        'hEarthHtmlEntryTaskComplete',
-        'true'
+        'Step 034P did not assume route or copy-control ownership.'
       );
 
       globalThis[
-        HTML_FAILURE_GLOBAL
+        FAILURE_GLOBAL
       ] = failureReceipt;
+
+      console.error(
+        '[H-Earth executable route-entry failure]',
+        failureReceipt
+      );
     }
 
-    async function bootHEarthEntry() {
+    async function importAndVerifyModules() {
       writeText(
         statusNode,
-        'HTML_ENTRY_IMPORTING_STEP_034P'
+        'IMPORTING_PACKET_001_TO_PACKET_002_CORRIDOR'
       );
 
       writeText(
         fallbackNode,
-        'Importing the backed H-Earth Step 034P route orchestrator.'
+        'Importing preview, geometry kernel, Packet 002, admitted-frame, and Step 034P modules.'
       );
 
-      writeText(
-        layer4StatusNode,
-        'LAYER_4_STATUS_WAITING_FOR_STEP_034P'
-      );
+      const [
+        previewModule,
+        kernelModule,
+        packet002Module,
+        admittedFrameModule,
+        indexModule
+      ] =
+        await Promise.all([
+          import(
+            PREVIEW_MODULE_PATH
+          ),
 
-      writeText(
-        copyStatusNode,
-        'Waiting for Step 034P listener ownership.'
-      );
+          import(
+            KERNEL_MODULE_PATH
+          ),
 
-      let publicModule;
+          import(
+            PACKET_002_MODULE_PATH
+          ),
 
-      try {
-        publicModule =
-          await import(
-            PUBLIC_MODULE_PATH
-          );
-      } catch (error) {
-        publishHtmlEntryFailure(
-          buildHtmlEntryFailure(
-            error,
-            'STEP_034P_DYNAMIC_IMPORT'
+          import(
+            ADMITTED_FRAME_MODULE_PATH
+          ),
+
+          import(
+            INDEX_MODULE_PATH
           )
-        );
+        ]);
 
-        console.error(
-          '[H-Earth HTML entry import failure]',
-          error
-        );
+      setDataset(
+        'hEarthPreviewModuleImported',
+        'true'
+      );
 
-        return;
-      }
+      setDataset(
+        'hEarthKernelModuleImported',
+        'true'
+      );
 
-      writeHtmlEntryDataset(
+      setDataset(
+        'hEarthPacket002ModuleImported',
+        'true'
+      );
+
+      setDataset(
+        'hEarthAdmittedFrameModuleImported',
+        'true'
+      );
+
+      setDataset(
         'hEarthIndexModuleImported',
         'true'
       );
 
-      const observedContractId =
-        publicModule
-          ?.H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID ??
-        null;
+      verifyExactExport({
+        moduleNamespace:
+          previewModule,
 
-      if (
-        observedContractId !==
-        EXPECTED_INDEX_CONTRACT_ID
-      ) {
-        const error =
-          new Error(
-            `Imported H-Earth index contract mismatch. Expected ${EXPECTED_INDEX_CONTRACT_ID}; observed ${String(observedContractId)}.`
-          );
+        exportName:
+          'H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID',
 
-        publishHtmlEntryFailure(
-          buildHtmlEntryFailure(
-            error,
-            'STEP_034P_CONTRACT_VERIFICATION',
-            {
-              observedIndexContractId:
-                observedContractId
-            }
-          )
-        );
+        expectedValue:
+          EXPECTED_PREVIEW_CONTRACT_ID,
 
-        console.error(
-          '[H-Earth HTML entry contract mismatch]',
-          error
-        );
+        phase:
+          'PREVIEW_CONTRACT_VERIFICATION'
+      });
 
-        return;
-      }
+      setDataset(
+        'hEarthPreviewContractVerified',
+        'true'
+      );
 
-      if (
-        typeof publicModule
-          .initializeHEarthRoute !==
-        'function'
-      ) {
-        const error =
-          new Error(
-            'The exact Step 034P module was imported, but initializeHEarthRoute is unavailable.'
-          );
+      verifyExactExport({
+        moduleNamespace:
+          kernelModule,
 
-        publishHtmlEntryFailure(
-          buildHtmlEntryFailure(
-            error,
-            'STEP_034P_API_VERIFICATION',
-            {
-              observedIndexContractId:
-                observedContractId
-            }
-          )
-        );
+        exportName:
+          'H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_CONTRACT_ID',
 
-        console.error(
-          '[H-Earth HTML entry API mismatch]',
-          error
-        );
+        expectedValue:
+          EXPECTED_KERNEL_CONTRACT_ID,
 
-        return;
-      }
+        phase:
+          'KERNEL_FACADE_CONTRACT_VERIFICATION'
+      });
 
-      writeHtmlEntryDataset(
+      verifyExactExport({
+        moduleNamespace:
+          kernelModule,
+
+        exportName:
+          'H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID',
+
+        expectedValue:
+          EXPECTED_WEST_CONTRACT_ID,
+
+        phase:
+          'WEST_CONTRACT_VERIFICATION'
+      });
+
+      setDataset(
+        'hEarthKernelContractVerified',
+        'true'
+      );
+
+      verifyExactExport({
+        moduleNamespace:
+          packet002Module,
+
+        exportName:
+          'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID',
+
+        expectedValue:
+          EXPECTED_PACKET_002_CONTRACT_ID,
+
+        phase:
+          'PACKET_002_CONTRACT_VERIFICATION'
+      });
+
+      setDataset(
+        'hEarthPacket002ContractVerified',
+        'true'
+      );
+
+      verifyExactExport({
+        moduleNamespace:
+          admittedFrameModule,
+
+        exportName:
+          'H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID',
+
+        expectedValue:
+          EXPECTED_ADMITTED_FRAME_CONTRACT_ID,
+
+        phase:
+          'ADMITTED_FRAME_CONTRACT_VERIFICATION'
+      });
+
+      setDataset(
+        'hEarthAdmittedFrameContractVerified',
+        'true'
+      );
+
+      verifyExactExport({
+        moduleNamespace:
+          indexModule,
+
+        exportName:
+          'H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID',
+
+        expectedValue:
+          EXPECTED_INDEX_CONTRACT_ID,
+
+        phase:
+          'STEP_034P_CONTRACT_VERIFICATION'
+      });
+
+      verifyExactExport({
+        moduleNamespace:
+          indexModule,
+
+        exportName:
+          'H_EARTH_3D_ROUTE_SHELL_CONTRACT_ID',
+
+        expectedValue:
+          EXPECTED_INDEX_SHELL_COMPATIBILITY_CONTRACT_ID,
+
+        phase:
+          'STEP_034P_SHELL_DEPENDENCY_VERIFICATION'
+      });
+
+      verifyExactExport({
+        moduleNamespace:
+          indexModule,
+
+        exportName:
+          'H_EARTH_3D_ROUTE_STYLE_CONTRACT_ID',
+
+        expectedValue:
+          EXPECTED_INDEX_STYLE_COMPATIBILITY_CONTRACT_ID,
+
+        phase:
+          'STEP_034P_STYLE_DEPENDENCY_VERIFICATION'
+      });
+
+      setDataset(
         'hEarthIndexContractVerified',
         'true'
       );
 
-      let initializationOptions;
+      return Object.freeze({
+        previewModule,
+        kernelModule,
+        packet002Module,
+        admittedFrameModule,
+        indexModule
+      });
+    }
+
+    async function executeRouteEntry() {
+      const routeOccurrence =
+        createRouteOccurrence();
+
+      let modules;
 
       try {
-        initializationOptions =
-          resolveMandatoryInitializationOptions();
+        modules =
+          await importAndVerifyModules();
       } catch (error) {
-        publishHtmlEntryFailure(
-          buildHtmlEntryFailure(
+        publishFailure(
+          buildFailureReceipt({
             error,
-            'MANDATORY_ROUTE_ENTRY_INPUT_RESOLUTION',
-            {
-              observedIndexContractId:
-                observedContractId,
-
-              entryInputEvaluation:
-                error
-                  ?.routeEntryInputEvaluation ??
-                null
-            }
-          )
+            phase:
+              'MODULE_IMPORT_OR_CONTRACT_VERIFICATION',
+            routeOccurrence
+          })
         );
 
-        console.error(
-          '[H-Earth mandatory route-entry input failure]',
-          error
+        return;
+      }
+
+      const previewFunction =
+        verifyFunction({
+          moduleNamespace:
+            modules.previewModule,
+
+          exportName:
+            'previewHEarthWetSandGeometry',
+
+          phase:
+            'PREVIEW_API_VERIFICATION'
+        });
+
+      const westBatchFunction =
+        verifyFunction({
+          moduleNamespace:
+            modules.kernelModule,
+
+          exportName:
+            'admitHEarthPrimitiveBatch',
+
+          phase:
+            'WEST_BATCH_API_VERIFICATION'
+        });
+
+      const packet002Function =
+        verifyFunction({
+          moduleNamespace:
+            modules.packet002Module,
+
+          exportName:
+            'buildHEarthPostWestAdmittedGeometryTransfer',
+
+          phase:
+            'PACKET_002_API_VERIFICATION'
+        });
+
+      const initializeRoute =
+        verifyFunction({
+          moduleNamespace:
+            modules.indexModule,
+
+          exportName:
+            'initializeHEarthRoute',
+
+          phase:
+            'STEP_034P_API_VERIFICATION'
+        });
+
+      let previewResult;
+
+      try {
+        writeText(
+          statusNode,
+          'PACKET_001_AND_PROVIDER_PREVIEW_EXECUTING'
+        );
+
+        writeText(
+          fallbackNode,
+          'Resolving the wet-sand source occurrence and invoking the backed ground provider.'
+        );
+
+        previewResult =
+          assertPreviewResult(
+            previewFunction({
+              sourceObjectId:
+                SOURCE_OBJECT_ID,
+
+              requestedPurpose:
+                REQUESTED_PURPOSE,
+
+              requestId:
+                routeOccurrence.requestId
+            })
+          );
+
+        setDataset(
+          'hEarthPreviewExecuted',
+          'true'
+        );
+
+        setDataset(
+          'hEarthPreviewResultEligible',
+          'true'
+        );
+      } catch (error) {
+        publishFailure(
+          buildFailureReceipt({
+            error,
+            phase:
+              'PACKET_001_PREVIEW_PROVIDER_EXECUTION',
+            routeOccurrence,
+            evidence: {
+              previewResult:
+                error?.details ??
+                previewResult ??
+                null
+            }
+          })
+        );
+
+        return;
+      }
+
+      let westBatchAdmissionResult;
+
+      try {
+        writeText(
+          statusNode,
+          'WEST_PRIMITIVE_AND_FRAME_ADMISSION_EXECUTING'
+        );
+
+        writeText(
+          fallbackNode,
+          'Submitting the provider-produced neutral primitives to the backed West admission authority.'
+        );
+
+        westBatchAdmissionResult =
+          assertWestAdmissionResult(
+            westBatchFunction(
+              previewResult.primitives,
+              {
+                frameId:
+                  routeOccurrence
+                    .aggregateFrameId,
+
+                metadata:
+                  Object.freeze({
+                    requestId:
+                      previewResult.requestId,
+
+                    providerRequestId:
+                      previewResult
+                        .providerRequestId,
+
+                    resolutionReceiptId:
+                      previewResult
+                        .resolutionReceiptId,
+
+                    sourceObjectIds:
+                      Object.freeze([
+                        previewResult
+                          .sourceObjectId
+                      ]),
+
+                    sourceZoneIds:
+                      previewResult
+                        .sourceZoneIds,
+
+                    latticeRegionIds:
+                      previewResult
+                        .latticeRegionIds
+                  })
+              }
+            )
+          );
+
+        setDataset(
+          'hEarthWestAdmissionExecuted',
+          'true'
+        );
+
+        setDataset(
+          'hEarthWestAdmissionEligible',
+          'true'
+        );
+      } catch (error) {
+        publishFailure(
+          buildFailureReceipt({
+            error,
+            phase:
+              'WEST_PRIMITIVE_AND_AGGREGATE_FRAME_ADMISSION',
+            routeOccurrence,
+            evidence: {
+              previewResult,
+              westBatchAdmissionResult:
+                error?.details ??
+                westBatchAdmissionResult ??
+                null
+            }
+          })
+        );
+
+        return;
+      }
+
+      let packet002Transfer;
+
+      try {
+        writeText(
+          statusNode,
+          'PACKET_002_TRANSFER_CONSTRUCTING'
+        );
+
+        writeText(
+          fallbackNode,
+          'Constructing the provisional post-West Packet 002 transfer.'
+        );
+
+        packet002Transfer =
+          assertPacket002Transfer(
+            packet002Function({
+              previewResult,
+              westBatchAdmissionResult
+            })
+          );
+
+        setDataset(
+          'hEarthPacket002Constructed',
+          'true'
+        );
+
+        setDataset(
+          'hEarthPacket002Eligible',
+          'true'
+        );
+      } catch (error) {
+        publishFailure(
+          buildFailureReceipt({
+            error,
+            phase:
+              'PACKET_002_TRANSFER_CONSTRUCTION',
+            routeOccurrence,
+            evidence: {
+              previewResult,
+              westBatchAdmissionResult,
+              packet002Transfer:
+                error?.details ??
+                packet002Transfer ??
+                null
+            }
+          })
+        );
+
+        return;
+      }
+
+      const presentationMode =
+        modules
+          .admittedFrameModule
+          .H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE;
+
+      if (
+        presentationMode !==
+        'FIRST_ADMITTED_WET_SAND_PROOF'
+      ) {
+        const error =
+          new Error(
+            `Unexpected admitted presentation mode: ${String(presentationMode)}.`
+          );
+
+        error.name =
+          'HEarthPresentationModeMismatchError';
+
+        publishFailure(
+          buildFailureReceipt({
+            error,
+            phase:
+              'PRESENTATION_MODE_VERIFICATION',
+            routeOccurrence,
+            evidence: {
+              presentationMode
+            }
+          })
         );
 
         return;
@@ -1531,16 +1814,21 @@
 
       writeText(
         statusNode,
-        'STEP_034P_AUTHORIZED_RENDERER_CORRIDOR_STARTING'
+        'STEP_034P_RENDERER_CORRIDOR_STARTING'
       );
 
       writeText(
         fallbackNode,
-        'Authorized Packet 002 route-entry input observed. Step 034P is assuming compositor and renderer orchestration authority.'
+        'Lawful Packet 002 transfer constructed. Step 034P is assuming compositor and renderer orchestration authority.'
       );
 
-      writeHtmlEntryDataset(
+      setDataset(
         'hEarthIndexInitializationStarted',
+        'true'
+      );
+
+      setDataset(
+        'hEarthRendererBootstrapRequested',
         'true'
       );
 
@@ -1548,31 +1836,35 @@
 
       try {
         immediateResult =
-          publicModule
-            .initializeHEarthRoute(
-              initializationOptions
-            );
+          initializeRoute({
+            document,
+
+            packet002Transfer,
+
+            packet002TransferOccurrenceId:
+              routeOccurrence
+                .packet002TransferOccurrenceId,
+
+            compositorFrameOccurrenceId:
+              routeOccurrence
+                .compositorFrameOccurrenceId,
+
+            presentationMode
+          });
       } catch (error) {
-        publishHtmlEntryFailure(
-          buildHtmlEntryFailure(
+        publishFailure(
+          buildFailureReceipt({
             error,
-            'STEP_034P_INITIALIZATION_CALL',
-            {
-              observedIndexContractId:
-                observedContractId,
-
-              indexRouteOwnershipEstablished:
-                false,
-
-              rendererBootstrapRequested:
-                true
+            phase:
+              'STEP_034P_INITIALIZATION_CALL',
+            routeOccurrence,
+            evidence: {
+              previewResult,
+              westBatchAdmissionResult,
+              packet002Transfer,
+              presentationMode
             }
-          )
-        );
-
-        console.error(
-          '[H-Earth HTML entry initialization failure]',
-          error
+          })
         );
 
         return;
@@ -1584,10 +1876,12 @@
       );
 
       const completion =
-        typeof publicModule
+        typeof modules
+          .indexModule
           .getRouteBootstrapCompletion ===
           'function'
-          ? publicModule
+          ? modules
+              .indexModule
               .getRouteBootstrapCompletion()
           : null;
 
@@ -1606,64 +1900,100 @@
         }
       }
 
-      writeHtmlEntryDataset(
-        'hEarthHtmlEntryTaskComplete',
-        'true'
-      );
+      const routeReceipt =
+        typeof modules
+          .indexModule
+          .getRouteBootstrapReceipt ===
+          'function'
+          ? modules
+              .indexModule
+              .getRouteBootstrapReceipt()
+          : null;
 
-      writeHtmlEntryDataset(
-        'hEarthHtmlEntryMode',
-        'MANDATORY_AUTHORIZED_RENDERER_CORRIDOR'
-      );
+      const rendererReceipt =
+        typeof modules
+          .indexModule
+          .getRendererBootstrapReceipt ===
+          'function'
+          ? modules
+              .indexModule
+              .getRendererBootstrapReceipt()
+          : null;
 
-      globalThis[
-        HTML_RECEIPT_GLOBAL
-      ] =
+      const entryReceipt =
         Object.freeze({
           receiptType:
             'H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_RECEIPT',
 
-          file:
-            '/showroom/globe/h-earth/index.html',
-
           contractId:
             HTML_CONTRACT_ID,
+
+          file:
+            '/showroom/globe/h-earth/index.html',
 
           generatedAt:
             nowIso(),
 
-          importedModulePath:
-            PUBLIC_MODULE_PATH,
+          status:
+            'STEP_034P_ROUTE_OWNERSHIP_ESTABLISHED',
 
-          expectedIndexContractId:
+          routeOccurrence,
+
+          previewContractId:
+            EXPECTED_PREVIEW_CONTRACT_ID,
+
+          kernelFacadeContractId:
+            EXPECTED_KERNEL_CONTRACT_ID,
+
+          westContractId:
+            EXPECTED_WEST_CONTRACT_ID,
+
+          packet002ContractId:
+            EXPECTED_PACKET_002_CONTRACT_ID,
+
+          admittedFrameContractId:
+            EXPECTED_ADMITTED_FRAME_CONTRACT_ID,
+
+          indexContractId:
             EXPECTED_INDEX_CONTRACT_ID,
 
-          observedIndexContractId:
-            observedContractId,
+          previewResultStatus:
+            previewResult.status,
 
-          indexModuleImported:
+          previewPrimitiveCount:
+            previewResult.primitives.length,
+
+          westAdmissionValid:
+            westBatchAdmissionResult.valid ===
             true,
 
-          indexContractVerified:
-            true,
+          westPrimitiveAdmissionCount:
+            westBatchAdmissionResult
+              .primitiveAdmissions
+              .length,
 
-          indexInitializationStarted:
-            true,
+          westAggregateFrameId:
+            westBatchAdmissionResult
+              .frame
+              .frameId,
 
-          entryMode:
-            'MANDATORY_AUTHORIZED_RENDERER_CORRIDOR',
+          packet002Status:
+            packet002Transfer.status,
 
-          routeEntryInputRequired:
-            true,
+          packet002AdmittedPrimitiveCount:
+            packet002Transfer
+              .admittedPrimitives
+              .length,
 
-          eligibleRouteEntryInputObserved:
-            true,
+          packet002TransferOccurrenceId:
+            routeOccurrence
+              .packet002TransferOccurrenceId,
 
-          rendererBootstrapRequested:
-            true,
+          compositorFrameOccurrenceId:
+            routeOccurrence
+              .compositorFrameOccurrenceId,
 
-          rendererBootstrapSkipped:
-            false,
+          presentationMode,
 
           immediateInitializationReturned:
             immediateResult !==
@@ -1676,31 +2006,25 @@
                 'function'
             ),
 
-          htmlOwnsRouteLifecycle:
+          routeReceiptObserved:
+            routeReceipt !== null,
+
+          rendererBootstrapReceiptObserved:
+            rendererReceipt !== null,
+
+          htmlConstructedPacket002:
             false,
 
-          htmlOwnsCopyListeners:
+          htmlOwnedWestAdmission:
             false,
 
-          htmlOwnsActionListeners:
+          htmlConstructedCompositor:
             false,
 
-          htmlRepublishesIndexActiveGlobals:
+          htmlConstructedRenderer:
             false,
 
-          packet002ConstructedByHtml:
-            false,
-
-          admittedFrameConstructedByHtml:
-            false,
-
-          compositorConstructedByHtml:
-            false,
-
-          rendererConstructedByHtml:
-            false,
-
-          rendererMountedByHtml:
+          htmlMountedRenderer:
             false,
 
           rendererPassClaim:
@@ -1718,6 +2042,27 @@
           matrixCollapse:
             false
         });
+
+      globalThis[
+        RECEIPT_GLOBAL
+      ] = entryReceipt;
+
+      setDataset(
+        'hEarthHtmlEntryTaskComplete',
+        'true'
+      );
+
+      writeJson(
+        debugNode,
+        {
+          htmlEntryReceipt:
+            entryReceipt,
+
+          routeReceipt,
+
+          rendererReceipt
+        }
+      );
     }
 
     if (
@@ -1726,14 +2071,13 @@
     ) {
       document.addEventListener(
         'DOMContentLoaded',
-        bootHEarthEntry,
+        executeRouteEntry,
         {
-          once:
-            true
+          once: true
         }
       );
     } else {
-      bootHEarthEntry();
+      executeRouteEntry();
     }
   </script>
 </body>

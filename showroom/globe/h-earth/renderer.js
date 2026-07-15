@@ -9,46 +9,60 @@
  * COMPOSITOR RENDERER HANDOFF
  * → ADMITTED GEOMETRY FRAME VALIDATION
  * → FRAME OCCURRENCE CORRESPONDENCE
- * → ADMITTED PRIMITIVE PROJECTION
- * → PRESENTATION ASSIGNMENT CORRELATION
+ * → FRAME-OWNED CAMERA AND VIEWPORT
+ * → RENDERER MATERIALIZATION EXTENT
+ * → CANONICAL ADMITTED GEOMETRY CONSUMPTION
+ * → VISIBILITY CORRESPONDENCE
+ * → NEAR/FAR CLIPPING
+ * → PRESENTATION CORRELATION
  * → FIFTEEN SEMANTIC LAYER CONTAINERS
- * → ONE RENDERER INTERACTION-BOUNDARY NODE
- * → DOM/CSS RESOURCE CONSTRUCTION
- * → MOUNT / APPLY FRAME / REPROJECT / DESTROY
+ * → ONE INTERACTION-BOUNDARY NODE
+ * → DOM/CSS MATERIALIZATION
+ * → MOUNT / APPLY / REPROJECT / DESTROY
  * → RENDERER RECEIPTS
  *
  * Canonical public input:
  *
  * {
  *   ok: true,
+ *   contractId: <backed compositor contract>,
+ *   admittedGeometryFrameContractId: <backed admitted-frame contract>,
  *   admittedGeometryFrame: <lawful admitted frame>
  * }
+ *
+ * Public projection law:
+ *
+ * point + admittedGeometryFrame
+ * → internal frame-derived projection context
+ * → projected point
+ *
+ * No public caller may supply independent camera or viewport authority.
  *
  * This file owns:
  * - compositor-handoff consumption;
  * - admitted-frame validation at the renderer boundary;
  * - frame occurrence and revision application law;
- * - projection of already-admitted vertices;
- * - projected point, line, and triangle construction;
- * - presentation-assignment consumption;
- * - fifteen renderer-owned semantic layer containers;
- * - one renderer interaction-boundary node without controller behavior;
- * - renderer-owned DOM/CSS resources;
- * - renderer mount, frame replacement, reprojection, and destroy lifecycle;
+ * - frame-derived projection mathematics;
+ * - renderer materialization-extent management;
+ * - canonical admitted point, line, and triangle consumption;
+ * - near/far depth clipping;
+ * - presentation-assignment and visibility correspondence;
+ * - fifteen semantic DOM containers;
+ * - one non-controller interaction-boundary node;
+ * - DOM/CSS materialization;
+ * - mount, replacement, reprojection, destroy, and release lifecycle;
  * - renderer operational receipts.
  *
  * This file does not own:
  * - Packet 002 construction;
+ * - compositor handoff construction;
  * - admitted-frame construction;
- * - geometry construction;
+ * - geometry creation or reconstruction;
  * - geometry admission;
- * - admitted-coordinate mutation;
- * - admitted-index mutation;
- * - admitted-bounds mutation;
  * - camera state;
- * - viewport state;
+ * - compositor viewport state;
  * - visibility state;
- * - compositor revisions;
+ * - compositor revision advancement;
  * - route bootstrap;
  * - controller behavior;
  * - diagnostic judgment;
@@ -84,19 +98,28 @@ export const H_EARTH_3D_RENDERER_CONTRACT_ID =
   'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1';
 
 export const H_EARTH_3D_RENDERER_SCHEMA_VERSION =
-  2;
+  3;
 
 export const H_EARTH_3D_RENDERER_SOURCE_FILE =
   '/showroom/globe/h-earth/renderer.js';
 
 export const H_EARTH_3D_RENDERER_ROLE =
-  'ADMITTED_GEOMETRY_FRAME_PROJECTION_AND_DOM_CSS_MATERIALIZATION_CONSUMER';
+  'FRAME_AUTHENTICATED_ADMITTED_GEOMETRY_PROJECTION_AND_DOM_CSS_MATERIALIZATION_CONSUMER';
 
 export const H_EARTH_3D_RENDERER_STATUS =
-  'FROZEN_CANON_TARGETED_CORRECTION_CANDIDATE';
+  'FROZEN_CANON_API_AND_SCANNING_CORRECTION_CANDIDATE';
 
 const RENEWS_RENDERER_CONTRACT_ID =
   'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_1_ENVIRONMENT_GEOMETRY_MATERIALIZATION_v1';
+
+const DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL =
+  'DOM_CSS3D_PROJECTED_ENVIRONMENT';
+
+const RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT =
+  15;
+
+const RENDERER_INTERACTION_NODE_COUNT =
+  1;
 
 const EMPTY_FROZEN_ARRAY =
   Object.freeze([]);
@@ -148,15 +171,6 @@ const TOPOLOGY_MODE =
     TRIANGLE_FAN:
       'TRIANGLE_FAN'
   });
-
-const DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL =
-  'DOM_CSS3D_PROJECTED_ENVIRONMENT';
-
-const RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT =
-  15;
-
-const RENDERER_INTERACTION_NODE_COUNT =
-  1;
 
 const RENDERER_SEMANTIC_LAYER_CONTAINER_IDS =
   Object.freeze(
@@ -386,6 +400,26 @@ function setStyles(
   return element;
 }
 
+function arraysEqual(
+  left,
+  right
+) {
+  return (
+    Array.isArray(left) &&
+    Array.isArray(right) &&
+    left.length === right.length &&
+    left.every(
+      (value, index) =>
+        value === right[index]
+    )
+  );
+}
+
+
+/* ==========================================================================
+ * 03 · VECTOR HELPERS
+ * ========================================================================== */
+
 function createVector(
   x = 0,
   y = 0,
@@ -404,6 +438,17 @@ function isVector3(value) {
     isFiniteNumber(value.x) &&
     isFiniteNumber(value.y) &&
     isFiniteNumber(value.z)
+  );
+}
+
+function addVector(
+  left,
+  right
+) {
+  return createVector(
+    left.x + right.x,
+    left.y + right.y,
+    left.z + right.z
   );
 }
 
@@ -426,6 +471,23 @@ function scaleVector(
     vector.x * scalar,
     vector.y * scalar,
     vector.z * scalar
+  );
+}
+
+function interpolateVector(
+  start,
+  end,
+  amount
+) {
+  return addVector(
+    start,
+    scaleVector(
+      subtractVector(
+        end,
+        start
+      ),
+      amount
+    )
   );
 }
 
@@ -485,24 +547,9 @@ function normalizeVector(vector) {
   );
 }
 
-function arraysEqual(
-  left,
-  right
-) {
-  return (
-    Array.isArray(left) &&
-    Array.isArray(right) &&
-    left.length === right.length &&
-    left.every(
-      (value, index) =>
-        value === right[index]
-    )
-  );
-}
-
 
 /* ==========================================================================
- * 03 · DEPENDENCY SNAPSHOTS
+ * 04 · DEPENDENCY SNAPSHOTS
  * ========================================================================== */
 
 const ADMITTED_FRAME_CONTRACT =
@@ -547,7 +594,7 @@ const DOM_CSS3D_OUTPUT_AUTHORIZED =
 
 
 /* ==========================================================================
- * 04 · BOUNDARY FLAGS
+ * 05 · BOUNDARY FLAGS
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
@@ -564,7 +611,13 @@ export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
     ownsProjectionMathematics:
       true,
 
+    ownsRendererMaterializationExtent:
+      true,
+
     ownsProjectedPrimitiveConstruction:
+      true,
+
+    ownsNearFarClipping:
       true,
 
     ownsDOMCSSMaterialization:
@@ -575,9 +628,6 @@ export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
 
     ownsInteractionBoundaryNode:
       true,
-
-    ownsControllerBehavior:
-      false,
 
     ownsRendererResourceLifecycle:
       true,
@@ -591,22 +641,22 @@ export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
     ownsPacket002Construction:
       false,
 
+    ownsCompositorHandoffConstruction:
+      false,
+
     ownsAdmittedFrameConstruction:
       false,
 
     ownsGeometryConstruction:
       false,
 
-    ownsWestAdmission:
-      false,
-
-    ownsGeometryIndex:
+    ownsGeometryAdmission:
       false,
 
     ownsCameraState:
       false,
 
-    ownsViewportState:
+    ownsCompositorViewportState:
       false,
 
     ownsVisibilityState:
@@ -618,10 +668,19 @@ export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
     ownsRouteBootstrap:
       false,
 
+    ownsControllerBehavior:
+      false,
+
     ownsDiagnosticJudgment:
       false,
 
     reconstructsSourceGeometry:
+      false,
+
+    acceptsNoncanonicalGeometryFallbacks:
+      false,
+
+    generatesMissingIndices:
       false,
 
     altersAdmittedCoordinates:
@@ -634,6 +693,12 @@ export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
       false,
 
     altersPrimitiveIdentity:
+      false,
+
+    defaultsUnknownVisibilityRoleToVisible:
+      false,
+
+    exposesArbitraryProjectionContext:
       false,
 
     mutatesInputHandoff:
@@ -681,7 +746,7 @@ export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
 
 
 /* ==========================================================================
- * 05 · MATERIAL PRESENTATION
+ * 06 · MATERIAL PRESENTATION
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_MATERIAL_PRESENTATION =
@@ -755,7 +820,7 @@ export const H_EARTH_3D_RENDERER_MATERIAL_PRESENTATION =
 
 
 /* ==========================================================================
- * 06 · RENDERER STAGE MODEL
+ * 07 · STAGE MODEL
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_STAGE_MODEL =
@@ -784,11 +849,11 @@ export const H_EARTH_3D_RENDERER_STAGE_MODEL =
     interactionNodeCount:
       RENDERER_INTERACTION_NODE_COUNT,
 
-    semanticLayerContainerModel:
-      'FIFTEEN_RENDERER_OWNED_DOM_SEMANTIC_LAYER_CONTAINERS',
+    emptyProjectedScenePolicy:
+      'LAWFUL_NONVISIBLE_RENDERER_OCCURRENCE_WITHOUT_ENVIRONMENT_PRIMITIVE_BUDGET_CLAIM',
 
-    interactionNodeModel:
-      'ONE_RENDERER_INTERACTION_BOUNDARY_NODE_WITHOUT_CONTROLLER_BEHAVIOR',
+    clippingPolicy:
+      'NEAR_AND_FAR_DEPTH_CLIPPING_ONLY',
 
     stageClass:
       'h-earth-3d-render-stage',
@@ -838,7 +903,7 @@ export const H_EARTH_3D_RENDERER_STAGE_MODEL =
 
 
 /* ==========================================================================
- * 07 · INTERNAL RENDERER STATE
+ * 08 · INTERNAL STATE
  * ========================================================================== */
 
 const rendererState = {
@@ -881,13 +946,16 @@ const rendererState = {
   currentCameraRevision:
     null,
 
-  currentViewportRevision:
+  currentCompositorViewportRevision:
     null,
 
   currentVisibilityRevision:
     null,
 
   currentProjectionContext:
+    null,
+
+  currentProjectionPlan:
     null,
 
   constructSequence:
@@ -900,6 +968,9 @@ const rendererState = {
     0,
 
   reprojectSequence:
+    0,
+
+  materializationExtentRevision:
     0,
 
   destroySequence:
@@ -923,7 +994,7 @@ const rendererState = {
 
 
 /* ==========================================================================
- * 08 · HANDOFF AND FRAME VALIDATION
+ * 09 · HANDOFF VALIDATION
  * ========================================================================== */
 
 function evaluateCompositorHandoff(
@@ -1077,6 +1148,11 @@ function evaluateCompositorHandoff(
   });
 }
 
+
+/* ==========================================================================
+ * 10 · FRAME APPLICATION LAW
+ * ========================================================================== */
+
 function evaluateFrameApplication(
   frame
 ) {
@@ -1188,7 +1264,7 @@ function evaluateFrameApplication(
           : freezeIssues([
               createRendererIssue(
                 'FRAME_OCCURRENCE_REUSED_WITH_DIFFERENT_IDENTITY',
-                'An existing occurrence identity and frame revision may not be reused for a different frame object.'
+                'An existing occurrence identity and frame revision may not identify a different frame object.'
               )
             ])
     });
@@ -1269,10 +1345,10 @@ function evaluateFrameApplication(
 
 
 /* ==========================================================================
- * 09 · FRAME-OWNED VIEWPORT AND CAMERA
+ * 11 · FRAME VIEWPORT AND MATERIALIZATION EXTENT
  * ========================================================================== */
 
-function createViewportFromFrame(
+function createFrameViewport(
   frame
 ) {
   const viewport =
@@ -1315,9 +1391,96 @@ function createViewportFromFrame(
       viewport.orientation,
 
     capacityStatus:
-      viewport.capacityStatus
+      viewport.capacityStatus,
+
+    authority:
+      'COMPOSITOR_ADMITTED_FRAME',
+
+    compositorViewportRevision:
+      frame.revisions.viewport
   });
 }
+
+function createMaterializationExtent(
+  frameViewport,
+  extentOverride = null
+) {
+  if (extentOverride === null) {
+    return deepFreeze({
+      widthPx:
+        frameViewport.widthPx,
+
+      heightPx:
+        frameViewport.heightPx,
+
+      pixelRatio:
+        frameViewport.pixelRatio,
+
+      aspectRatio:
+        frameViewport.aspectRatio,
+
+      orientation:
+        frameViewport.orientation,
+
+      source:
+        'FRAME_VIEWPORT',
+
+      rendererMaterializationExtentRevision:
+        rendererState.materializationExtentRevision
+    });
+  }
+
+  if (
+    !isPlainRecord(
+      extentOverride
+    ) ||
+    !isPositiveFiniteNumber(
+      extentOverride.widthPx
+    ) ||
+    !isPositiveFiniteNumber(
+      extentOverride.heightPx
+    )
+  ) {
+    return null;
+  }
+
+  const widthPx =
+    extentOverride.widthPx;
+
+  const heightPx =
+    extentOverride.heightPx;
+
+  return deepFreeze({
+    widthPx,
+
+    heightPx,
+
+    pixelRatio:
+      frameViewport.pixelRatio,
+
+    aspectRatio:
+      widthPx /
+      heightPx,
+
+    orientation:
+      widthPx === heightPx
+        ? 'SQUARE'
+        : widthPx > heightPx
+          ? 'LANDSCAPE'
+          : 'PORTRAIT',
+
+    source:
+      'RENDERER_MOUNT_EXTENT',
+
+    rendererMaterializationExtentRevision:
+      rendererState.materializationExtentRevision
+  });
+}
+
+
+/* ==========================================================================
+ * 12 · CAMERA BASIS
+ * ========================================================================== */
 
 function createCameraBasisFromFrame(
   frame
@@ -1452,12 +1615,17 @@ function createCameraBasisFromFrame(
   });
 }
 
+
+/* ==========================================================================
+ * 13 · PROJECTION CONTEXT
+ * ========================================================================== */
+
 function createProjectionContextFromFrame(
   frame,
-  viewportOverride = null
+  materializationExtentOverride = null
 ) {
   const frameViewport =
-    createViewportFromFrame(
+    createFrameViewport(
       frame
     );
 
@@ -1473,56 +1641,21 @@ function createProjectionContextFromFrame(
     return null;
   }
 
-  let viewport =
-    frameViewport;
+  const materializationExtent =
+    createMaterializationExtent(
+      frameViewport,
+      materializationExtentOverride
+    );
 
-  if (viewportOverride !== null) {
-    if (
-      !isPlainRecord(
-        viewportOverride
-      ) ||
-      !isPositiveFiniteNumber(
-        viewportOverride.widthPx
-      ) ||
-      !isPositiveFiniteNumber(
-        viewportOverride.heightPx
-      )
-    ) {
-      return null;
-    }
-
-    viewport =
-      deepFreeze({
-        widthPx:
-          viewportOverride.widthPx,
-
-        heightPx:
-          viewportOverride.heightPx,
-
-        pixelRatio:
-          frameViewport.pixelRatio,
-
-        aspectRatio:
-          viewportOverride.widthPx /
-          viewportOverride.heightPx,
-
-        orientation:
-          viewportOverride.widthPx ===
-            viewportOverride.heightPx
-            ? 'SQUARE'
-            : viewportOverride.widthPx >
-                viewportOverride.heightPx
-              ? 'LANDSCAPE'
-              : 'PORTRAIT',
-
-        capacityStatus:
-          frameViewport.capacityStatus
-      });
+  if (!materializationExtent) {
+    return null;
   }
 
   return deepFreeze({
-    viewport,
     frameViewport,
+
+    materializationExtent,
+
     cameraBasis,
 
     compositorFrameOccurrenceId:
@@ -1534,76 +1667,66 @@ function createProjectionContextFromFrame(
     cameraRevision:
       frame.revisions.camera,
 
-    viewportRevision:
+    compositorViewportRevision:
       frame.revisions.viewport,
 
     visibilityRevision:
-      frame.revisions.visibility
+      frame.revisions.visibility,
+
+    rendererMaterializationExtentRevision:
+      rendererState.materializationExtentRevision
   });
 }
 
 
 /* ==========================================================================
- * 10 · WORLD-SPACE PROJECTION
+ * 14 · CAMERA-SPACE AND SCREEN PROJECTION
  * ========================================================================== */
 
-export function projectHEarth3DAdmittedWorldPoint(
+function transformWorldPointToCamera(
   point,
-  projectionContext
+  cameraBasis
 ) {
-  if (
-    !isVector3(point) ||
-    !isPlainRecord(projectionContext) ||
-    !isPlainRecord(
-      projectionContext.cameraBasis
-    ) ||
-    !isPlainRecord(
-      projectionContext.viewport
-    )
-  ) {
-    return deepFreeze({
-      visible:
-        false,
-
-      reason:
-        'INVALID_POINT_OR_PROJECTION_CONTEXT'
-    });
-  }
-
-  const cameraBasis =
-    projectionContext.cameraBasis;
-
-  const viewport =
-    projectionContext.viewport;
-
   const relative =
     subtractVector(
       point,
       cameraBasis.position
     );
 
-  const cameraX =
-    dotVector(
-      relative,
-      cameraBasis.right
-    );
+  return deepFreeze({
+    x:
+      dotVector(
+        relative,
+        cameraBasis.right
+      ),
 
-  const cameraY =
-    dotVector(
-      relative,
-      cameraBasis.up
-    );
+    y:
+      dotVector(
+        relative,
+        cameraBasis.up
+      ),
 
-  const cameraZ =
-    dotVector(
-      relative,
-      cameraBasis.forward
-    );
+    z:
+      dotVector(
+        relative,
+        cameraBasis.forward
+      )
+  });
+}
+
+function projectCameraPointToScreen(
+  cameraPoint,
+  projectionContext
+) {
+  const {
+    cameraBasis,
+    materializationExtent
+  } = projectionContext;
 
   if (
-    cameraZ <=
+    cameraPoint.z <=
       cameraBasis.nearPlane ||
-    cameraZ >=
+    cameraPoint.z >=
       cameraBasis.farPlane
   ) {
     return deepFreeze({
@@ -1611,7 +1734,7 @@ export function projectHEarth3DAdmittedWorldPoint(
         false,
 
       cameraDepth:
-        cameraZ,
+        cameraPoint.z,
 
       reason:
         'OUTSIDE_CAMERA_DEPTH_RANGE'
@@ -1620,48 +1743,29 @@ export function projectHEarth3DAdmittedWorldPoint(
 
   const ndcX =
     (
-      cameraX *
+      cameraPoint.x *
       cameraBasis.focalLength
     ) /
     (
-      cameraZ *
-      viewport.aspectRatio
+      cameraPoint.z *
+      materializationExtent.aspectRatio
     );
 
   const ndcY =
     (
-      cameraY *
+      cameraPoint.y *
       cameraBasis.focalLength
     ) /
-    cameraZ;
+    cameraPoint.z;
 
   return deepFreeze({
     visible:
       true,
 
-    world:
-      deepFreeze({
-        x:
-          point.x,
-
-        y:
-          point.y,
-
-        z:
-          point.z
-      }),
-
     camera:
-      deepFreeze({
-        x:
-          cameraX,
-
-        y:
-          cameraY,
-
-        z:
-          cameraZ
-      }),
+      cloneAndFreeze(
+        cameraPoint
+      ),
 
     ndc:
       deepFreeze({
@@ -1680,7 +1784,7 @@ export function projectHEarth3DAdmittedWorldPoint(
             1
           ) *
           0.5 *
-          viewport.widthPx,
+          materializationExtent.widthPx,
 
         y:
           (
@@ -1688,20 +1792,236 @@ export function projectHEarth3DAdmittedWorldPoint(
             ndcY
           ) *
           0.5 *
-          viewport.heightPx
+          materializationExtent.heightPx
       }),
 
     cameraDepth:
-      cameraZ
+      cameraPoint.z
+  });
+}
+
+function projectWorldPointWithFrameProjectionContext(
+  point,
+  projectionContext
+) {
+  if (
+    !isVector3(point) ||
+    !isPlainRecord(projectionContext) ||
+    !isPlainRecord(
+      projectionContext.cameraBasis
+    ) ||
+    !isPlainRecord(
+      projectionContext.materializationExtent
+    )
+  ) {
+    return deepFreeze({
+      visible:
+        false,
+
+      reason:
+        'INVALID_POINT_OR_FRAME_PROJECTION_CONTEXT'
+    });
+  }
+
+  const cameraPoint =
+    transformWorldPointToCamera(
+      point,
+      projectionContext.cameraBasis
+    );
+
+  const projected =
+    projectCameraPointToScreen(
+      cameraPoint,
+      projectionContext
+    );
+
+  if (!projected.visible) {
+    return projected;
+  }
+
+  return deepFreeze({
+    ...projected,
+
+    world:
+      cloneAndFreeze(
+        point
+      )
   });
 }
 
 
 /* ==========================================================================
- * 11 · ADMITTED GEOMETRY EXTRACTION
+ * 15 · FRAME-AUTHENTICATED PUBLIC PROJECTION API
  * ========================================================================== */
 
-function getPrimitiveGeometry(
+export function projectHEarth3DAdmittedWorldPoint(
+  point,
+  admittedGeometryFrame
+) {
+  if (
+    !isHEarth3DAdmittedGeometryFrame(
+      admittedGeometryFrame
+    ) ||
+    admittedGeometryFrame
+      .rendererConsumerEligibility !==
+      true
+  ) {
+    return deepFreeze({
+      projected:
+        false,
+
+      visible:
+        false,
+
+      status:
+        'PUBLIC_POINT_PROJECTION_FRAME_REJECTED',
+
+      compositorFrameOccurrenceId:
+        admittedGeometryFrame
+          ?.compositorFrameOccurrenceId ??
+        null,
+
+      compositorFrameRevision:
+        admittedGeometryFrame
+          ?.revisions
+          ?.frame ??
+        null,
+
+      issues:
+        freezeIssues([
+          createRendererIssue(
+            'PUBLIC_POINT_PROJECTION_REQUIRES_ADMITTED_FRAME',
+            'Public point projection requires a lawful renderer-eligible admitted geometry frame.'
+          )
+        ])
+    });
+  }
+
+  if (!isVector3(point)) {
+    return deepFreeze({
+      projected:
+        false,
+
+      visible:
+        false,
+
+      status:
+        'PUBLIC_POINT_PROJECTION_POINT_REJECTED',
+
+      compositorFrameOccurrenceId:
+        admittedGeometryFrame
+          .compositorFrameOccurrenceId,
+
+      compositorFrameRevision:
+        admittedGeometryFrame
+          .revisions
+          .frame,
+
+      issues:
+        freezeIssues([
+          createRendererIssue(
+            'PUBLIC_POINT_PROJECTION_REQUIRES_VECTOR3',
+            'Public point projection requires a finite Vector3 record.'
+          )
+        ])
+    });
+  }
+
+  const projectionContext =
+    createProjectionContextFromFrame(
+      admittedGeometryFrame
+    );
+
+  if (!projectionContext) {
+    return deepFreeze({
+      projected:
+        false,
+
+      visible:
+        false,
+
+      status:
+        'PUBLIC_POINT_PROJECTION_CONTEXT_REJECTED',
+
+      compositorFrameOccurrenceId:
+        admittedGeometryFrame
+          .compositorFrameOccurrenceId,
+
+      compositorFrameRevision:
+        admittedGeometryFrame
+          .revisions
+          .frame,
+
+      issues:
+        freezeIssues([
+          createRendererIssue(
+            'PUBLIC_POINT_PROJECTION_CONTEXT_UNAVAILABLE',
+            'The admitted frame did not produce a lawful renderer projection context.'
+          )
+        ])
+    });
+  }
+
+  const projection =
+    projectWorldPointWithFrameProjectionContext(
+      point,
+      projectionContext
+    );
+
+  return deepFreeze({
+    projected:
+      projection.visible ===
+      true,
+
+    visible:
+      projection.visible ===
+      true,
+
+    status:
+      projection.visible
+        ? 'PUBLIC_POINT_PROJECTED'
+        : 'PUBLIC_POINT_NOT_VISIBLE',
+
+    compositorFrameOccurrenceId:
+      admittedGeometryFrame
+        .compositorFrameOccurrenceId,
+
+    compositorFrameRevision:
+      admittedGeometryFrame
+        .revisions
+        .frame,
+
+    cameraRevision:
+      admittedGeometryFrame
+        .revisions
+        .camera,
+
+    compositorViewportRevision:
+      admittedGeometryFrame
+        .revisions
+        .viewport,
+
+    frameViewport:
+      projectionContext
+        .frameViewport,
+
+    materializationExtent:
+      projectionContext
+        .materializationExtent,
+
+    projection,
+
+    issues:
+      EMPTY_FROZEN_ARRAY
+  });
+}
+
+
+/* ==========================================================================
+ * 16 · CANONICAL ADMITTED GEOMETRY EXTRACTION
+ * ========================================================================== */
+
+function getCanonicalPrimitiveGeometry(
   admittedPrimitive
 ) {
   return isPlainRecord(
@@ -1711,130 +2031,7 @@ function getPrimitiveGeometry(
     : null;
 }
 
-function getPrimitiveTopologyMode(
-  admittedPrimitive
-) {
-  const geometry =
-    getPrimitiveGeometry(
-      admittedPrimitive
-    );
-
-  const candidate =
-    geometry?.topologyMode ??
-    geometry?.topology ??
-    geometry?.primitiveMode ??
-    null;
-
-  return isNonEmptyExactString(candidate)
-    ? candidate
-    : null;
-}
-
-function getPrimitiveVertices(
-  admittedPrimitive
-) {
-  const geometry =
-    getPrimitiveGeometry(
-      admittedPrimitive
-    );
-
-  const vertices =
-    geometry?.vertices;
-
-  if (!Array.isArray(vertices)) {
-    return null;
-  }
-
-  if (
-    vertices.every(
-      isVector3
-    )
-  ) {
-    return vertices;
-  }
-
-  if (
-    vertices.length % 3 === 0 &&
-    vertices.every(
-      isFiniteNumber
-    )
-  ) {
-    const expanded = [];
-
-    for (
-      let index = 0;
-      index < vertices.length;
-      index += 3
-    ) {
-      expanded.push(
-        deepFreeze({
-          x:
-            vertices[index],
-
-          y:
-            vertices[index + 1],
-
-          z:
-            vertices[index + 2]
-        })
-      );
-    }
-
-    return Object.freeze(
-      expanded
-    );
-  }
-
-  return null;
-}
-
-function getPrimitiveIndices(
-  admittedPrimitive,
-  vertexCount
-) {
-  const geometry =
-    getPrimitiveGeometry(
-      admittedPrimitive
-    );
-
-  const indices =
-    geometry?.indices;
-
-  if (
-    indices === undefined ||
-    indices === null
-  ) {
-    return Object.freeze(
-      Array.from(
-        {
-          length:
-            vertexCount
-        },
-        (
-          _unused,
-          index
-        ) =>
-          index
-      )
-    );
-  }
-
-  if (
-    !Array.isArray(indices) ||
-    !indices.every(
-      (index) =>
-        Number.isSafeInteger(index) &&
-        index >= 0 &&
-        index < vertexCount
-    )
-  ) {
-    return null;
-  }
-
-  return indices;
-}
-
-function evaluateAdmittedPrimitiveForRenderer(
+function evaluateCanonicalAdmittedPrimitive(
   admittedPrimitive
 ) {
   const issues = [];
@@ -1888,50 +2085,72 @@ function evaluateAdmittedPrimitiveForRenderer(
     );
   }
 
-  const topologyMode =
-    getPrimitiveTopologyMode(
+  const geometry =
+    getCanonicalPrimitiveGeometry(
       admittedPrimitive
     );
 
-  if (!topologyMode) {
+  if (!geometry) {
     issues.push(
       createRendererIssue(
-        'ADMITTED_PRIMITIVE_TOPOLOGY_UNRESOLVED',
-        'The admitted primitive geometry must expose a topology mode.'
+        'ADMITTED_PRIMITIVE_GEOMETRY_INVALID',
+        'Each admitted primitive must expose a canonical geometry record.'
+      )
+    );
+  }
+
+  const topologyMode =
+    geometry?.topologyMode;
+
+  if (
+    !isNonEmptyExactString(
+      topologyMode
+    )
+  ) {
+    issues.push(
+      createRendererIssue(
+        'ADMITTED_PRIMITIVE_TOPOLOGY_MODE_INVALID',
+        'Canonical admitted geometry must expose geometry.topologyMode.'
       )
     );
   }
 
   const vertices =
-    getPrimitiveVertices(
-      admittedPrimitive
-    );
+    geometry?.vertices;
 
   if (
     !Array.isArray(vertices) ||
-    vertices.length === 0
+    vertices.length === 0 ||
+    vertices.every(
+      isVector3
+    ) === false
   ) {
     issues.push(
       createRendererIssue(
         'ADMITTED_PRIMITIVE_VERTICES_INVALID',
-        'The admitted primitive geometry must expose nonempty finite vertices.'
+        'Canonical admitted geometry must expose nonempty Vector3-record vertices.'
       )
     );
   }
 
   const indices =
-    Array.isArray(vertices)
-      ? getPrimitiveIndices(
-          admittedPrimitive,
-          vertices.length
-        )
-      : null;
+    geometry?.indices;
 
-  if (!Array.isArray(indices)) {
+  if (
+    !Array.isArray(indices) ||
+    indices.length === 0 ||
+    !Array.isArray(vertices) ||
+    indices.every(
+      (index) =>
+        Number.isSafeInteger(index) &&
+        index >= 0 &&
+        index < vertices.length
+    ) === false
+  ) {
     issues.push(
       createRendererIssue(
         'ADMITTED_PRIMITIVE_INDICES_INVALID',
-        'The admitted primitive geometry indices are invalid.'
+        'Canonical admitted geometry must expose explicit in-range indices.'
       )
     );
   }
@@ -1967,7 +2186,152 @@ function evaluateAdmittedPrimitiveForRenderer(
 
 
 /* ==========================================================================
- * 12 · PRESENTATION ASSIGNMENT CORRELATION
+ * 17 · VISIBILITY CORRESPONDENCE
+ * ========================================================================== */
+
+function evaluatePresentationAssignmentVisibility(
+  assignment,
+  visibilitySnapshot
+) {
+  if (
+    !isPlainRecord(
+      assignment
+    ) ||
+    !isNonEmptyExactString(
+      assignment.presentationRole
+    )
+  ) {
+    return deepFreeze({
+      eligible:
+        false,
+
+      visible:
+        false,
+
+      status:
+        'PRESENTATION_VISIBILITY_ASSIGNMENT_INVALID',
+
+      issues:
+        freezeIssues([
+          createRendererIssue(
+            'PRESENTATION_ROLE_INVALID',
+            'The presentation assignment must expose an exact presentation role.'
+          )
+        ])
+    });
+  }
+
+  if (
+    !isPlainRecord(
+      visibilitySnapshot
+    )
+  ) {
+    return deepFreeze({
+      eligible:
+        false,
+
+      visible:
+        false,
+
+      status:
+        'FRAME_VISIBILITY_SNAPSHOT_INVALID',
+
+      issues:
+        freezeIssues([
+          createRendererIssue(
+            'VISIBILITY_SNAPSHOT_NOT_RECORD',
+            'The admitted frame visibility snapshot must be a strict plain record.'
+          )
+        ])
+    });
+  }
+
+  const role =
+    assignment.presentationRole;
+
+  if (
+    !Object.prototype.hasOwnProperty.call(
+      visibilitySnapshot,
+      role
+    )
+  ) {
+    return deepFreeze({
+      eligible:
+        false,
+
+      visible:
+        false,
+
+      status:
+        'PRESENTATION_ROLE_UNRESOLVED',
+
+      issues:
+        freezeIssues([
+          createRendererIssue(
+            'PRESENTATION_ROLE_NOT_IN_VISIBILITY_SNAPSHOT',
+            'The presentation role cannot be correlated to the admitted frame visibility snapshot.',
+            {
+              field:
+                role
+            }
+          )
+        ])
+    });
+  }
+
+  if (
+    typeof visibilitySnapshot[role] !==
+    'boolean'
+  ) {
+    return deepFreeze({
+      eligible:
+        false,
+
+      visible:
+        false,
+
+      status:
+        'PRESENTATION_ROLE_VISIBILITY_NOT_BOOLEAN',
+
+      issues:
+        freezeIssues([
+          createRendererIssue(
+            'PRESENTATION_ROLE_VISIBILITY_INVALID',
+            'The admitted visibility value for the presentation role must be boolean.',
+            {
+              field:
+                role,
+
+              actual:
+                visibilitySnapshot[
+                  role
+                ]
+            }
+          )
+        ])
+    });
+  }
+
+  return deepFreeze({
+    eligible:
+      true,
+
+    visible:
+      visibilitySnapshot[role],
+
+    status:
+      visibilitySnapshot[role]
+        ? 'PRESENTATION_ROLE_VISIBLE'
+        : 'PRESENTATION_ROLE_HIDDEN',
+
+    issues:
+      EMPTY_FROZEN_ARRAY
+  });
+}
+
+
+/* ==========================================================================
+ * 18 · PRESENTATION ASSIGNMENT MAP
  * ========================================================================== */
 
 function buildPresentationAssignmentMap(
@@ -2005,43 +2369,6 @@ function buildPresentationAssignmentMap(
   return map;
 }
 
-function isPresentationAssignmentVisible(
-  assignment,
-  visibilitySnapshot
-) {
-  if (
-    assignment.visibleEligible !==
-    true
-  ) {
-    return false;
-  }
-
-  if (
-    !isPlainRecord(
-      visibilitySnapshot
-    )
-  ) {
-    return false;
-  }
-
-  const role =
-    assignment.presentationRole;
-
-  if (
-    Object.prototype.hasOwnProperty.call(
-      visibilitySnapshot,
-      role
-    )
-  ) {
-    return (
-      visibilitySnapshot[role] ===
-      true
-    );
-  }
-
-  return true;
-}
-
 function getMaterialPresentation(
   assignment
 ) {
@@ -2056,7 +2383,300 @@ function getMaterialPresentation(
 
 
 /* ==========================================================================
- * 13 · PROJECTED PRIMITIVE DESCRIPTORS
+ * 19 · NEAR/FAR CLIPPING
+ * ========================================================================== */
+
+function clipCameraLineAgainstDepthRange(
+  start,
+  end,
+  nearPlane,
+  farPlane
+) {
+  let tMinimum =
+    0;
+
+  let tMaximum =
+    1;
+
+  const deltaZ =
+    end.z -
+    start.z;
+
+  if (
+    Math.abs(deltaZ) <=
+    Number.EPSILON
+  ) {
+    if (
+      start.z <= nearPlane ||
+      start.z >= farPlane
+    ) {
+      return null;
+    }
+
+    return deepFreeze({
+      start:
+        cloneAndFreeze(start),
+
+      end:
+        cloneAndFreeze(end),
+
+      clipped:
+        false
+    });
+  }
+
+  const nearT =
+    (
+      nearPlane -
+      start.z
+    ) /
+    deltaZ;
+
+  const farT =
+    (
+      farPlane -
+      start.z
+    ) /
+    deltaZ;
+
+  const entryT =
+    Math.min(
+      nearT,
+      farT
+    );
+
+  const exitT =
+    Math.max(
+      nearT,
+      farT
+    );
+
+  tMinimum =
+    Math.max(
+      tMinimum,
+      entryT
+    );
+
+  tMaximum =
+    Math.min(
+      tMaximum,
+      exitT
+    );
+
+  if (
+    tMinimum >
+    tMaximum
+  ) {
+    return null;
+  }
+
+  const epsilon =
+    Number.EPSILON *
+    32;
+
+  const resolvedMinimum =
+    Math.max(
+      0,
+      Math.min(
+        1,
+        tMinimum +
+        epsilon
+      )
+    );
+
+  const resolvedMaximum =
+    Math.max(
+      0,
+      Math.min(
+        1,
+        tMaximum -
+        epsilon
+      )
+    );
+
+  if (
+    resolvedMinimum >
+    resolvedMaximum
+  ) {
+    return null;
+  }
+
+  return deepFreeze({
+    start:
+      deepFreeze(
+        interpolateVector(
+          start,
+          end,
+          resolvedMinimum
+        )
+      ),
+
+    end:
+      deepFreeze(
+        interpolateVector(
+          start,
+          end,
+          resolvedMaximum
+        )
+      ),
+
+    clipped:
+      resolvedMinimum > 0 ||
+      resolvedMaximum < 1
+  });
+}
+
+function clipCameraPolygonAgainstPlane(
+  points,
+  {
+    boundary,
+    keepGreater
+  }
+) {
+  if (points.length === 0) {
+    return [];
+  }
+
+  const output = [];
+
+  const isInside =
+    (point) =>
+      keepGreater
+        ? point.z > boundary
+        : point.z < boundary;
+
+  const intersect =
+    (
+      start,
+      end
+    ) => {
+      const deltaZ =
+        end.z -
+        start.z;
+
+      if (
+        Math.abs(deltaZ) <=
+        Number.EPSILON
+      ) {
+        return cloneKnownPlain(
+          start
+        );
+      }
+
+      const amount =
+        (
+          boundary -
+          start.z
+        ) /
+        deltaZ;
+
+      return interpolateVector(
+        start,
+        end,
+        amount
+      );
+    };
+
+  let previous =
+    points[
+      points.length - 1
+    ];
+
+  let previousInside =
+    isInside(
+      previous
+    );
+
+  for (const current of points) {
+    const currentInside =
+      isInside(
+        current
+      );
+
+    if (
+      currentInside &&
+      previousInside
+    ) {
+      output.push(
+        current
+      );
+    } else if (
+      currentInside &&
+      !previousInside
+    ) {
+      output.push(
+        intersect(
+          previous,
+          current
+        )
+      );
+
+      output.push(
+        current
+      );
+    } else if (
+      !currentInside &&
+      previousInside
+    ) {
+      output.push(
+        intersect(
+          previous,
+          current
+        )
+      );
+    }
+
+    previous =
+      current;
+
+    previousInside =
+      currentInside;
+  }
+
+  return output;
+}
+
+function clipCameraPolygonAgainstDepthRange(
+  cameraPoints,
+  nearPlane,
+  farPlane
+) {
+  const epsilon =
+    Number.EPSILON *
+    32;
+
+  const nearClipped =
+    clipCameraPolygonAgainstPlane(
+      cameraPoints,
+      {
+        boundary:
+          nearPlane +
+          epsilon,
+
+        keepGreater:
+          true
+      }
+    );
+
+  const farClipped =
+    clipCameraPolygonAgainstPlane(
+      nearClipped,
+      {
+        boundary:
+          farPlane -
+          epsilon,
+
+        keepGreater:
+          false
+      }
+    );
+
+  return farClipped;
+}
+
+
+/* ==========================================================================
+ * 20 · PROJECTED DESCRIPTORS
  * ========================================================================== */
 
 function createProjectedPointDescriptor({
@@ -2084,7 +2704,10 @@ function createProjectedPointDescriptor({
     projectedPoints:
       Object.freeze([
         projectedPoint
-      ])
+      ]),
+
+    depthClipped:
+      false
   });
 }
 
@@ -2092,17 +2715,9 @@ function createProjectedLineDescriptor({
   primitiveId,
   assignment,
   sourceVertexIndices,
-  projectedPoints
+  projectedPoints,
+  depthClipped
 }) {
-  if (
-    projectedPoints.some(
-      (point) =>
-        point.visible !== true
-    )
-  ) {
-    return null;
-  }
-
   return deepFreeze({
     type:
       'LINE',
@@ -2126,7 +2741,9 @@ function createProjectedLineDescriptor({
     projectedPoints:
       Object.freeze([
         ...projectedPoints
-      ])
+      ]),
+
+    depthClipped
   });
 }
 
@@ -2134,17 +2751,9 @@ function createProjectedTriangleDescriptor({
   primitiveId,
   assignment,
   sourceVertexIndices,
-  projectedPoints
+  projectedPoints,
+  depthClipped
 }) {
-  if (
-    projectedPoints.some(
-      (point) =>
-        point.visible !== true
-    )
-  ) {
-    return null;
-  }
-
   return deepFreeze({
     type:
       'TRIANGLE',
@@ -2168,14 +2777,21 @@ function createProjectedTriangleDescriptor({
           point.cameraDepth,
         0
       ) /
-      3,
+      projectedPoints.length,
 
     projectedPoints:
       Object.freeze([
         ...projectedPoints
-      ])
+      ]),
+
+    depthClipped
   });
 }
+
+
+/* ==========================================================================
+ * 21 · POINT TOPOLOGY
+ * ========================================================================== */
 
 function createPointDescriptors({
   primitiveId,
@@ -2187,13 +2803,13 @@ function createPointDescriptors({
   const descriptors = [];
 
   for (const index of indices) {
-    const point =
-      projectHEarth3DAdmittedWorldPoint(
+    const projectedPoint =
+      projectWorldPointWithFrameProjectionContext(
         vertices[index],
         projectionContext
       );
 
-    if (point.visible) {
+    if (projectedPoint.visible) {
       descriptors.push(
         createProjectedPointDescriptor({
           primitiveId,
@@ -2202,14 +2818,93 @@ function createPointDescriptors({
           sourceVertexIndex:
             index,
 
-          projectedPoint:
-            point
+          projectedPoint
         })
       );
     }
   }
 
   return descriptors;
+}
+
+
+/* ==========================================================================
+ * 22 · LINE TOPOLOGY
+ * ========================================================================== */
+
+function createLineDescriptorFromIndices({
+  primitiveId,
+  assignment,
+  vertices,
+  sourceIndices,
+  projectionContext
+}) {
+  const startCamera =
+    transformWorldPointToCamera(
+      vertices[
+        sourceIndices[0]
+      ],
+      projectionContext.cameraBasis
+    );
+
+  const endCamera =
+    transformWorldPointToCamera(
+      vertices[
+        sourceIndices[1]
+      ],
+      projectionContext.cameraBasis
+    );
+
+  const clippedLine =
+    clipCameraLineAgainstDepthRange(
+      startCamera,
+      endCamera,
+      projectionContext
+        .cameraBasis
+        .nearPlane,
+      projectionContext
+        .cameraBasis
+        .farPlane
+    );
+
+  if (!clippedLine) {
+    return null;
+  }
+
+  const projectedStart =
+    projectCameraPointToScreen(
+      clippedLine.start,
+      projectionContext
+    );
+
+  const projectedEnd =
+    projectCameraPointToScreen(
+      clippedLine.end,
+      projectionContext
+    );
+
+  if (
+    !projectedStart.visible ||
+    !projectedEnd.visible
+  ) {
+    return null;
+  }
+
+  return createProjectedLineDescriptor({
+    primitiveId,
+    assignment,
+    sourceVertexIndices:
+      sourceIndices,
+
+    projectedPoints:
+      [
+        projectedStart,
+        projectedEnd
+      ],
+
+    depthClipped:
+      clippedLine.clipped
+  });
 }
 
 function createLineListDescriptors({
@@ -2226,29 +2921,18 @@ function createLineListDescriptors({
     index + 1 < indices.length;
     index += 2
   ) {
-    const sourceIndices = [
-      indices[index],
-      indices[index + 1]
-    ];
-
-    const projectedPoints =
-      sourceIndices.map(
-        (sourceIndex) =>
-          projectHEarth3DAdmittedWorldPoint(
-            vertices[sourceIndex],
-            projectionContext
-          )
-      );
-
     const descriptor =
-      createProjectedLineDescriptor({
+      createLineDescriptorFromIndices({
         primitiveId,
         assignment,
+        vertices,
 
-        sourceVertexIndices:
-          sourceIndices,
+        sourceIndices: [
+          indices[index],
+          indices[index + 1]
+        ],
 
-        projectedPoints
+        projectionContext
       });
 
     if (descriptor) {
@@ -2275,34 +2959,127 @@ function createLineStripDescriptors({
     index + 1 < indices.length;
     index += 1
   ) {
-    const sourceIndices = [
-      indices[index],
-      indices[index + 1]
-    ];
-
-    const projectedPoints =
-      sourceIndices.map(
-        (sourceIndex) =>
-          projectHEarth3DAdmittedWorldPoint(
-            vertices[sourceIndex],
-            projectionContext
-          )
-      );
-
     const descriptor =
-      createProjectedLineDescriptor({
+      createLineDescriptorFromIndices({
         primitiveId,
         assignment,
+        vertices,
 
-        sourceVertexIndices:
-          sourceIndices,
+        sourceIndices: [
+          indices[index],
+          indices[index + 1]
+        ],
 
-        projectedPoints
+        projectionContext
       });
 
     if (descriptor) {
       descriptors.push(
         descriptor
+      );
+    }
+  }
+
+  return descriptors;
+}
+
+
+/* ==========================================================================
+ * 23 · TRIANGLE TOPOLOGY
+ * ========================================================================== */
+
+function createClippedTriangleDescriptors({
+  primitiveId,
+  assignment,
+  vertices,
+  sourceIndices,
+  projectionContext
+}) {
+  const cameraPoints =
+    sourceIndices.map(
+      (sourceIndex) =>
+        transformWorldPointToCamera(
+          vertices[sourceIndex],
+          projectionContext.cameraBasis
+        )
+    );
+
+  const clippedPolygon =
+    clipCameraPolygonAgainstDepthRange(
+      cameraPoints,
+      projectionContext
+        .cameraBasis
+        .nearPlane,
+      projectionContext
+        .cameraBasis
+        .farPlane
+    );
+
+  if (
+    clippedPolygon.length < 3
+  ) {
+    return [];
+  }
+
+  const descriptors = [];
+
+  const depthClipped =
+    clippedPolygon.length !==
+      cameraPoints.length ||
+    clippedPolygon.some(
+      (
+        point,
+        index
+      ) =>
+        cameraPoints[index] ===
+          undefined ||
+        point.x !==
+          cameraPoints[index].x ||
+        point.y !==
+          cameraPoints[index].y ||
+        point.z !==
+          cameraPoints[index].z
+    );
+
+  const anchor =
+    clippedPolygon[0];
+
+  for (
+    let index = 1;
+    index + 1 <
+      clippedPolygon.length;
+    index += 1
+  ) {
+    const triangleCameraPoints = [
+      anchor,
+      clippedPolygon[index],
+      clippedPolygon[index + 1]
+    ];
+
+    const projectedPoints =
+      triangleCameraPoints.map(
+        (cameraPoint) =>
+          projectCameraPointToScreen(
+            cameraPoint,
+            projectionContext
+          )
+      );
+
+    if (
+      projectedPoints.every(
+        (point) =>
+          point.visible === true
+      )
+    ) {
+      descriptors.push(
+        createProjectedTriangleDescriptor({
+          primitiveId,
+          assignment,
+          sourceVertexIndices:
+            sourceIndices,
+          projectedPoints,
+          depthClipped
+        })
       );
     }
   }
@@ -2324,37 +3101,21 @@ function createTriangleListDescriptors({
     index + 2 < indices.length;
     index += 3
   ) {
-    const sourceIndices = [
-      indices[index],
-      indices[index + 1],
-      indices[index + 2]
-    ];
-
-    const projectedPoints =
-      sourceIndices.map(
-        (sourceIndex) =>
-          projectHEarth3DAdmittedWorldPoint(
-            vertices[sourceIndex],
-            projectionContext
-          )
-      );
-
-    const descriptor =
-      createProjectedTriangleDescriptor({
+    descriptors.push(
+      ...createClippedTriangleDescriptors({
         primitiveId,
         assignment,
+        vertices,
 
-        sourceVertexIndices:
-          sourceIndices,
+        sourceIndices: [
+          indices[index],
+          indices[index + 1],
+          indices[index + 2]
+        ],
 
-        projectedPoints
-      });
-
-    if (descriptor) {
-      descriptors.push(
-        descriptor
-      );
-    }
+        projectionContext
+      })
+    );
   }
 
   return descriptors;
@@ -2387,31 +3148,15 @@ function createTriangleStripDescriptors({
             indices[index + 2]
           ];
 
-    const projectedPoints =
-      sourceIndices.map(
-        (sourceIndex) =>
-          projectHEarth3DAdmittedWorldPoint(
-            vertices[sourceIndex],
-            projectionContext
-          )
-      );
-
-    const descriptor =
-      createProjectedTriangleDescriptor({
+    descriptors.push(
+      ...createClippedTriangleDescriptors({
         primitiveId,
         assignment,
-
-        sourceVertexIndices:
-          sourceIndices,
-
-        projectedPoints
-      });
-
-    if (descriptor) {
-      descriptors.push(
-        descriptor
-      );
-    }
+        vertices,
+        sourceIndices,
+        projectionContext
+      })
+    );
   }
 
   return descriptors;
@@ -2438,41 +3183,30 @@ function createTriangleFanDescriptors({
     index + 1 < indices.length;
     index += 1
   ) {
-    const sourceIndices = [
-      centerIndex,
-      indices[index],
-      indices[index + 1]
-    ];
-
-    const projectedPoints =
-      sourceIndices.map(
-        (sourceIndex) =>
-          projectHEarth3DAdmittedWorldPoint(
-            vertices[sourceIndex],
-            projectionContext
-          )
-      );
-
-    const descriptor =
-      createProjectedTriangleDescriptor({
+    descriptors.push(
+      ...createClippedTriangleDescriptors({
         primitiveId,
         assignment,
+        vertices,
 
-        sourceVertexIndices:
-          sourceIndices,
+        sourceIndices: [
+          centerIndex,
+          indices[index],
+          indices[index + 1]
+        ],
 
-        projectedPoints
-      });
-
-    if (descriptor) {
-      descriptors.push(
-        descriptor
-      );
-    }
+        projectionContext
+      })
+    );
   }
 
   return descriptors;
 }
+
+
+/* ==========================================================================
+ * 24 · PRIMITIVE PROJECTION
+ * ========================================================================== */
 
 function projectAdmittedPrimitive({
   admittedPrimitive,
@@ -2480,7 +3214,7 @@ function projectAdmittedPrimitive({
   projectionContext
 }) {
   const evaluation =
-    evaluateAdmittedPrimitiveForRenderer(
+    evaluateCanonicalAdmittedPrimitive(
       admittedPrimitive
     );
 
@@ -2490,8 +3224,12 @@ function projectAdmittedPrimitive({
         false,
 
       primitiveId:
-        admittedPrimitive?.primitiveId ??
+        admittedPrimitive
+          ?.primitiveId ??
         null,
+
+      visible:
+        false,
 
       descriptors:
         EMPTY_FROZEN_ARRAY,
@@ -2586,6 +3324,9 @@ function projectAdmittedPrimitive({
 
         primitiveId,
 
+        visible:
+          false,
+
         descriptors:
           EMPTY_FROZEN_ARRAY,
 
@@ -2593,7 +3334,7 @@ function projectAdmittedPrimitive({
           freezeIssues([
             createRendererIssue(
               'ADMITTED_TOPOLOGY_MODE_UNSUPPORTED',
-              'The admitted primitive topology mode is not supported by the DOM/CSS renderer.',
+              'The canonical admitted topology mode is not supported by the DOM/CSS renderer.',
               {
                 expected:
                   Object.values(
@@ -2616,11 +3357,17 @@ function projectAdmittedPrimitive({
 
     topologyMode,
 
+    visible:
+      descriptors.length > 0,
+
     sourceVertexCount:
       vertices.length,
 
     sourceIndexCount:
       indices.length,
+
+    projectedDescriptorCount:
+      descriptors.length,
 
     descriptors:
       Object.freeze(
@@ -2634,7 +3381,7 @@ function projectAdmittedPrimitive({
 
 
 /* ==========================================================================
- * 14 · SEMANTIC LAYER PLAN
+ * 25 · SEMANTIC LAYER PLAN
  * ========================================================================== */
 
 function createSemanticLayerPlan(
@@ -2785,19 +3532,19 @@ function resolveDescriptorSemanticContainerId(
 
 
 /* ==========================================================================
- * 15 · FRAME PROJECTION PLAN
+ * 26 · FRAME PROJECTION PLAN
  * ========================================================================== */
 
 function createFrameProjectionPlan(
   frame,
-  viewportOverride = null
+  materializationExtentOverride = null
 ) {
   const issues = [];
 
   const projectionContext =
     createProjectionContextFromFrame(
       frame,
-      viewportOverride
+      materializationExtentOverride
     );
 
   if (!projectionContext) {
@@ -2807,6 +3554,9 @@ function createFrameProjectionPlan(
 
       status:
         'FRAME_PROJECTION_CONTEXT_NOT_RESOLVED',
+
+      emptyProjectedScene:
+        false,
 
       projectionContext:
         null,
@@ -2823,8 +3573,8 @@ function createFrameProjectionPlan(
       issues:
         freezeIssues([
           createRendererIssue(
-            'FRAME_CAMERA_OR_VIEWPORT_INVALID',
-            'The renderer could not resolve the frame-owned camera and viewport.'
+            'FRAME_CAMERA_VIEWPORT_OR_EXTENT_INVALID',
+            'The renderer could not resolve the frame camera, compositor viewport, or renderer materialization extent.'
           )
         ])
     });
@@ -2842,6 +3592,9 @@ function createFrameProjectionPlan(
 
       status:
         'FRAME_PRESENTATION_ASSIGNMENTS_INVALID',
+
+      emptyProjectedScene:
+        false,
 
       projectionContext,
 
@@ -2880,7 +3633,7 @@ function createFrameProjectionPlan(
       );
 
     if (!assignment) {
-      issues.push(
+      const issue =
         createRendererIssue(
           'PRIMITIVE_PRESENTATION_ASSIGNMENT_MISSING',
           'Every admitted primitive requires exactly one presentation assignment.',
@@ -2889,18 +3642,111 @@ function createFrameProjectionPlan(
               primitiveId ??
               null
           }
-        )
+        );
+
+      issues.push(
+        issue
+      );
+
+      primitivePlans.push(
+        deepFreeze({
+          eligible:
+            false,
+
+          primitiveId:
+            primitiveId ??
+            null,
+
+          visible:
+            false,
+
+          descriptors:
+            EMPTY_FROZEN_ARRAY,
+
+          issues:
+            Object.freeze([
+              issue
+            ])
+        })
       );
 
       continue;
     }
 
-    if (
-      !isPresentationAssignmentVisible(
+    const visibilityEvaluation =
+      evaluatePresentationAssignmentVisibility(
         assignment,
         frame.visibilitySnapshot
-      )
-    ) {
+      );
+
+    if (!visibilityEvaluation.eligible) {
+      issues.push(
+        ...visibilityEvaluation.issues
+      );
+
+      primitivePlans.push(
+        deepFreeze({
+          eligible:
+            false,
+
+          primitiveId,
+
+          topologyMode:
+            admittedPrimitive
+              ?.geometry
+              ?.topologyMode ??
+            null,
+
+          visible:
+            false,
+
+          descriptors:
+            EMPTY_FROZEN_ARRAY,
+
+          visibilityEvaluation,
+
+          issues:
+            visibilityEvaluation.issues
+        })
+      );
+
+      continue;
+    }
+
+    if (!visibilityEvaluation.visible) {
+      const canonicalEvaluation =
+        evaluateCanonicalAdmittedPrimitive(
+          admittedPrimitive
+        );
+
+      if (!canonicalEvaluation.eligible) {
+        issues.push(
+          ...canonicalEvaluation.issues
+        );
+
+        primitivePlans.push(
+          deepFreeze({
+            eligible:
+              false,
+
+            primitiveId,
+
+            visible:
+              false,
+
+            descriptors:
+              EMPTY_FROZEN_ARRAY,
+
+            visibilityEvaluation,
+
+            issues:
+              canonicalEvaluation.issues
+          })
+        );
+
+        continue;
+      }
+
       primitivePlans.push(
         deepFreeze({
           eligible:
@@ -2909,24 +3755,29 @@ function createFrameProjectionPlan(
           primitiveId,
 
           topologyMode:
-            getPrimitiveTopologyMode(
-              admittedPrimitive
-            ),
+            canonicalEvaluation
+              .topologyMode,
 
           visible:
             false,
 
           sourceVertexCount:
-            getPrimitiveVertices(
-              admittedPrimitive
-            )?.length ??
-            0,
+            canonicalEvaluation
+              .vertices
+              .length,
 
           sourceIndexCount:
+            canonicalEvaluation
+              .indices
+              .length,
+
+          projectedDescriptorCount:
             0,
 
           descriptors:
             EMPTY_FROZEN_ARRAY,
+
+          visibilityEvaluation,
 
           issues:
             EMPTY_FROZEN_ARRAY
@@ -2944,7 +3795,10 @@ function createFrameProjectionPlan(
       });
 
     primitivePlans.push(
-      primitivePlan
+      deepFreeze({
+        ...primitivePlan,
+        visibilityEvaluation
+      })
     );
 
     if (!primitivePlan.eligible) {
@@ -2990,14 +3844,22 @@ function createFrameProjectionPlan(
     );
   }
 
+  const emptyProjectedScene =
+    issues.length === 0 &&
+    projectedDescriptors.length === 0;
+
   return deepFreeze({
     eligible:
       issues.length === 0,
 
     status:
-      issues.length === 0
-        ? 'FRAME_PROJECTION_PLAN_ELIGIBLE'
-        : 'FRAME_PROJECTION_PLAN_NOT_ELIGIBLE',
+      issues.length > 0
+        ? 'FRAME_PROJECTION_PLAN_NOT_ELIGIBLE'
+        : emptyProjectedScene
+          ? 'FRAME_PROJECTION_PLAN_ELIGIBLE_EMPTY_SCENE'
+          : 'FRAME_PROJECTION_PLAN_ELIGIBLE',
+
+    emptyProjectedScene,
 
     projectionContext,
 
@@ -3020,7 +3882,117 @@ function createFrameProjectionPlan(
 
 
 /* ==========================================================================
- * 16 · DOM RESOURCE CONSTRUCTION
+ * 27 · NODE-BUDGET POLICY
+ * ========================================================================== */
+
+function evaluateRendererNodeBudget(
+  projectedDescriptorCount
+) {
+  if (
+    !isNonNegativeSafeInteger(
+      projectedDescriptorCount
+    )
+  ) {
+    return deepFreeze({
+      eligible:
+        false,
+
+      status:
+        'RENDERER_NODE_BUDGET_INPUT_INVALID',
+
+      emptyProjectedScene:
+        false,
+
+      authorityEvaluation:
+        null
+    });
+  }
+
+  if (
+    projectedDescriptorCount ===
+    0
+  ) {
+    return deepFreeze({
+      eligible:
+        true,
+
+      status:
+        'EMPTY_PROJECTED_SCENE_NOT_SUBMITTED_AS_ENVIRONMENT_PRIMITIVE_BUDGET',
+
+      emptyProjectedScene:
+        true,
+
+      semanticLayerContainers:
+        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+      environmentPrimitives:
+        0,
+
+      interactionNodes:
+        RENDERER_INTERACTION_NODE_COUNT,
+
+      diagnosticOwnedNodes:
+        0,
+
+      authorityEvaluation:
+        null,
+
+      authorityClaim:
+        false,
+
+      rationale:
+        'ZERO_PROJECTED_DESCRIPTORS_IS_CHARACTERIZED_AS_A_LAWFUL_NONVISIBLE_RENDERER_OCCURRENCE_NOT_AS_A_NODE_BUDGET_OVERFLOW'
+    });
+  }
+
+  const authorityEvaluation =
+    evaluateHEarth3DNodeBudget({
+      semanticLayerContainers:
+        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+      environmentPrimitives:
+        projectedDescriptorCount,
+
+      interactionNodes:
+        RENDERER_INTERACTION_NODE_COUNT,
+
+      diagnosticOwnedNodes:
+        0
+    });
+
+  return deepFreeze({
+    eligible:
+      authorityEvaluation
+        ?.eligible === true,
+
+    status:
+      authorityEvaluation
+        ?.eligible === true
+        ? 'RENDERER_NODE_BUDGET_ELIGIBLE'
+        : 'RENDERER_NODE_BUDGET_NOT_ELIGIBLE',
+
+    emptyProjectedScene:
+      false,
+
+    semanticLayerContainers:
+      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+    environmentPrimitives:
+      projectedDescriptorCount,
+
+    interactionNodes:
+      RENDERER_INTERACTION_NODE_COUNT,
+
+    diagnosticOwnedNodes:
+      0,
+
+    authorityEvaluation
+  });
+}
+
+
+/* ==========================================================================
+ * 28 · DOM RESOURCE CONSTRUCTION
  * ========================================================================== */
 
 function createStageElement() {
@@ -3262,6 +4234,11 @@ function resolveDepthZIndex(
   );
 }
 
+
+/* ==========================================================================
+ * 29 · POINT DOM
+ * ========================================================================== */
+
 function createPointElement(
   descriptor,
   descriptorIndex
@@ -3287,6 +4264,11 @@ function createPointElement(
   element.dataset.sourceVertexIndices =
     descriptor.sourceVertexIndices.join(
       ','
+    );
+
+  element.dataset.depthClipped =
+    String(
+      descriptor.depthClipped
     );
 
   setStyles(
@@ -3334,6 +4316,11 @@ function createPointElement(
     descriptor.assignment
   );
 }
+
+
+/* ==========================================================================
+ * 30 · LINE DOM
+ * ========================================================================== */
 
 function createLineElement(
   descriptor,
@@ -3389,6 +4376,11 @@ function createLineElement(
       ','
     );
 
+  element.dataset.depthClipped =
+    String(
+      descriptor.depthClipped
+    );
+
   setStyles(
     element,
     {
@@ -3441,6 +4433,11 @@ function createLineElement(
     descriptor.assignment
   );
 }
+
+
+/* ==========================================================================
+ * 31 · TRIANGLE DOM
+ * ========================================================================== */
 
 function createTriangleElement(
   descriptor,
@@ -3554,6 +4551,11 @@ function createTriangleElement(
       ','
     );
 
+  element.dataset.depthClipped =
+    String(
+      descriptor.depthClipped
+    );
+
   setStyles(
     element,
     {
@@ -3634,6 +4636,11 @@ function createDescriptorElement(
       return null;
   }
 }
+
+
+/* ==========================================================================
+ * 32 · SCENE FRAGMENT
+ * ========================================================================== */
 
 function buildSceneFragment(
   projectionPlan
@@ -3731,30 +4738,7 @@ function buildSceneFragment(
 
 
 /* ==========================================================================
- * 17 · NODE BUDGET
- * ========================================================================== */
-
-function evaluateRendererNodeBudget(
-  projectedDescriptorCount
-) {
-  return evaluateHEarth3DNodeBudget({
-    semanticLayerContainers:
-      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
-
-    environmentPrimitives:
-      projectedDescriptorCount,
-
-    interactionNodes:
-      RENDERER_INTERACTION_NODE_COUNT,
-
-    diagnosticOwnedNodes:
-      0
-  });
-}
-
-
-/* ==========================================================================
- * 18 · RESOURCE CONSTRUCTION
+ * 33 · CONSTRUCTION
  * ========================================================================== */
 
 export function constructHEarth3DRenderer(
@@ -3791,17 +4775,6 @@ export function constructHEarth3DRenderer(
 
         status:
           'RENDERER_CONSTRUCTION_REJECTED',
-
-        compositorFrameOccurrenceId:
-          handoff?.admittedGeometryFrame
-            ?.compositorFrameOccurrenceId ??
-          null,
-
-        compositorFrameRevision:
-          handoff?.admittedGeometryFrame
-            ?.revisions
-            ?.frame ??
-          null,
 
         issues:
           handoffEvaluation.issues,
@@ -4004,13 +4977,7 @@ export function constructHEarth3DRenderer(
         .length
     );
 
-  if (
-    !isPlainRecord(
-      nodeBudgetEvaluation
-    ) ||
-    nodeBudgetEvaluation.eligible !==
-      true
-  ) {
+  if (!nodeBudgetEvaluation.eligible) {
     const receipt =
       deepFreeze({
         receiptType:
@@ -4046,24 +5013,13 @@ export function constructHEarth3DRenderer(
         compositorFrameRevision:
           frame.revisions.frame,
 
-        semanticLayerContainerCount:
-          RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
-
-        interactionNodeCount:
-          RENDERER_INTERACTION_NODE_COUNT,
-
-        projectedEnvironmentPrimitiveCount:
-          projectionPlan
-            .projectedDescriptors
-            .length,
-
         nodeBudgetEvaluation,
 
         issues:
           freezeIssues([
             createRendererIssue(
               'RENDERER_NODE_BUDGET_NOT_ELIGIBLE',
-              'The renderer stage plan does not satisfy the backed node-budget authority.'
+              'The nonempty renderer projection plan does not satisfy the backed node-budget authority.'
             )
           ]),
 
@@ -4101,7 +5057,7 @@ export function constructHEarth3DRenderer(
   rendererState.currentCameraRevision =
     frame.revisions.camera;
 
-  rendererState.currentViewportRevision =
+  rendererState.currentCompositorViewportRevision =
     frame.revisions.viewport;
 
   rendererState.currentVisibilityRevision =
@@ -4109,6 +5065,9 @@ export function constructHEarth3DRenderer(
 
   rendererState.currentProjectionContext =
     projectionPlan.projectionContext;
+
+  rendererState.currentProjectionPlan =
+    projectionPlan;
 
   const receipt =
     deepFreeze({
@@ -4137,7 +5096,9 @@ export function constructHEarth3DRenderer(
         false,
 
       status:
-        'RENDERER_STATE_AND_PROJECTION_PLAN_CONSTRUCTED',
+        projectionPlan.emptyProjectedScene
+          ? 'RENDERER_STATE_CONSTRUCTED_FOR_LAWFUL_EMPTY_SCENE'
+          : 'RENDERER_STATE_AND_PROJECTION_PLAN_CONSTRUCTED',
 
       frameApplicationStatus:
         applicationEvaluation.status,
@@ -4154,11 +5115,25 @@ export function constructHEarth3DRenderer(
       cameraRevision:
         frame.revisions.camera,
 
-      viewportRevision:
+      compositorViewportRevision:
         frame.revisions.viewport,
 
       visibilityRevision:
         frame.revisions.visibility,
+
+      frameViewport:
+        projectionPlan
+          .projectionContext
+          .frameViewport,
+
+      materializationExtent:
+        projectionPlan
+          .projectionContext
+          .materializationExtent,
+
+      rendererMaterializationExtentRevision:
+        rendererState
+          .materializationExtentRevision,
 
       admittedPrimitiveCount:
         frame.admittedPrimitives.length,
@@ -4167,6 +5142,10 @@ export function constructHEarth3DRenderer(
         projectionPlan
           .projectedDescriptors
           .length,
+
+      emptyProjectedScene:
+        projectionPlan
+          .emptyProjectedScene,
 
       semanticLayerContainerCount:
         RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
@@ -4179,6 +5158,12 @@ export function constructHEarth3DRenderer(
 
       sourcePrimitiveIdentityPreserved:
         true,
+
+      canonicalGeometryFieldsOnly:
+        true,
+
+      missingIndicesGenerated:
+        false,
 
       sourceGeometryReconstructed:
         false,
@@ -4217,11 +5202,11 @@ export function constructHEarth3DRenderer(
 
 
 /* ==========================================================================
- * 19 · FRAME MATERIALIZATION
+ * 34 · MATERIALIZATION
  * ========================================================================== */
 
 function materializeCurrentFrame(
-  viewportOverride = null
+  materializationExtentOverride = null
 ) {
   if (
     !rendererState.constructed ||
@@ -4238,7 +5223,7 @@ function materializeCurrentFrame(
       issues:
         freezeIssues([
           createRendererIssue(
-            'RENDERER_RESOURCES_OR_SCENE_UNAVAILABLE',
+            'RENDERER_STATE_OR_SCENE_UNAVAILABLE',
             'The renderer must be constructed and mounted before materialization.'
           )
         ])
@@ -4248,7 +5233,7 @@ function materializeCurrentFrame(
   const projectionPlan =
     createFrameProjectionPlan(
       rendererState.currentFrame,
-      viewportOverride
+      materializationExtentOverride
     );
 
   if (!projectionPlan.eligible) {
@@ -4273,13 +5258,7 @@ function materializeCurrentFrame(
         .length
     );
 
-  if (
-    !isPlainRecord(
-      nodeBudgetEvaluation
-    ) ||
-    nodeBudgetEvaluation.eligible !==
-      true
-  ) {
+  if (!nodeBudgetEvaluation.eligible) {
     return deepFreeze({
       rendered:
         false,
@@ -4287,24 +5266,13 @@ function materializeCurrentFrame(
       status:
         'RENDERER_NODE_BUDGET_REJECTED',
 
-      semanticLayerContainerCount:
-        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
-
-      interactionNodeCount:
-        RENDERER_INTERACTION_NODE_COUNT,
-
-      projectedEnvironmentPrimitiveCount:
-        projectionPlan
-          .projectedDescriptors
-          .length,
-
       nodeBudgetEvaluation,
 
       issues:
         freezeIssues([
           createRendererIssue(
             'RENDERER_NODE_BUDGET_NOT_ELIGIBLE',
-            'The renderer stage plan does not satisfy the backed node-budget authority.'
+            'The nonempty renderer projection plan does not satisfy the backed node-budget authority.'
           )
         ])
     });
@@ -4336,6 +5304,9 @@ function materializeCurrentFrame(
   rendererState.currentProjectionContext =
     projectionPlan.projectionContext;
 
+  rendererState.currentProjectionPlan =
+    projectionPlan;
+
   rendererState.applySequence +=
     1;
 
@@ -4344,7 +5315,9 @@ function materializeCurrentFrame(
       true,
 
     status:
-      'ADMITTED_GEOMETRY_FRAME_MATERIALIZED',
+      projectionPlan.emptyProjectedScene
+        ? 'LAWFUL_EMPTY_RENDERER_SCENE_MATERIALIZED'
+        : 'ADMITTED_GEOMETRY_FRAME_MATERIALIZED',
 
     applySequence:
       rendererState.applySequence,
@@ -4361,13 +5334,27 @@ function materializeCurrentFrame(
       rendererState
         .currentCameraRevision,
 
-    viewportRevision:
+    compositorViewportRevision:
       rendererState
-        .currentViewportRevision,
+        .currentCompositorViewportRevision,
 
     visibilityRevision:
       rendererState
         .currentVisibilityRevision,
+
+    rendererMaterializationExtentRevision:
+      rendererState
+        .materializationExtentRevision,
+
+    frameViewport:
+      projectionPlan
+        .projectionContext
+        .frameViewport,
+
+    materializationExtent:
+      projectionPlan
+        .projectionContext
+        .materializationExtent,
 
     semanticLayerContainerCount:
       rendererState
@@ -4386,6 +5373,10 @@ function materializeCurrentFrame(
         .primitiveElements
         .length,
 
+    emptyProjectedScene:
+      projectionPlan
+        .emptyProjectedScene,
+
     projectionPlan,
 
     nodeBudgetEvaluation,
@@ -4398,6 +5389,12 @@ function materializeCurrentFrame(
 
     sourcePrimitiveIdentityPreserved:
       true,
+
+    canonicalGeometryFieldsOnly:
+      true,
+
+    missingIndicesGenerated:
+      false,
 
     sourceGeometryReconstructed:
       false,
@@ -4415,7 +5412,7 @@ function materializeCurrentFrame(
 
 
 /* ==========================================================================
- * 20 · MOUNT
+ * 35 · MOUNT
  * ========================================================================== */
 
 export function mountHEarth3DRenderer({
@@ -4611,31 +5608,34 @@ export function mountHEarth3DRenderer({
       resolvedMountElement.clientHeight
     );
 
-  const widthPx =
-    isPositiveFiniteNumber(
-      measuredWidth
+  const extentOverride =
+    (
+      isPositiveFiniteNumber(
+        measuredWidth
+      ) &&
+      isPositiveFiniteNumber(
+        measuredHeight
+      )
     )
-      ? measuredWidth
-      : rendererState
-          .currentFrame
-          .viewportSnapshot
-          .widthPx;
+      ? {
+          widthPx:
+            measuredWidth,
 
-  const heightPx =
-    isPositiveFiniteNumber(
-      measuredHeight
-    )
-      ? measuredHeight
-      : rendererState
-          .currentFrame
-          .viewportSnapshot
-          .heightPx;
+          heightPx:
+            measuredHeight
+        }
+      : null;
+
+  if (extentOverride !== null) {
+    rendererState
+      .materializationExtentRevision +=
+      1;
+  }
 
   const materialization =
-    materializeCurrentFrame({
-      widthPx,
-      heightPx
-    });
+    materializeCurrentFrame(
+      extentOverride
+    );
 
   if (!materialization.rendered) {
     resolvedMountElement.replaceChildren();
@@ -4717,7 +5717,9 @@ export function mountHEarth3DRenderer({
         true,
 
       status:
-        'RENDERER_MOUNTED_WITH_ADMITTED_FRAME',
+        materialization.emptyProjectedScene
+          ? 'RENDERER_MOUNTED_WITH_LAWFUL_EMPTY_SCENE'
+          : 'RENDERER_MOUNTED_WITH_ADMITTED_FRAME',
 
       mountId:
         resolvedMountElement.id ||
@@ -4735,13 +5737,25 @@ export function mountHEarth3DRenderer({
         rendererState
           .currentCameraRevision,
 
-      viewportRevision:
+      compositorViewportRevision:
         rendererState
-          .currentViewportRevision,
+          .currentCompositorViewportRevision,
 
       visibilityRevision:
         rendererState
           .currentVisibilityRevision,
+
+      rendererMaterializationExtentRevision:
+        rendererState
+          .materializationExtentRevision,
+
+      frameViewport:
+        materialization
+          .frameViewport,
+
+      materializationExtent:
+        materialization
+          .materializationExtent,
 
       semanticLayerContainerCount:
         rendererState
@@ -4754,6 +5768,15 @@ export function mountHEarth3DRenderer({
         null
           ? 0
           : 1,
+
+      projectedPrimitiveFragmentCount:
+        rendererState
+          .primitiveElements
+          .length,
+
+      emptyProjectedScene:
+        materialization
+          .emptyProjectedScene,
 
       materialization,
 
@@ -4796,7 +5819,7 @@ export function mountHEarth3DRenderer({
 
 
 /* ==========================================================================
- * 21 · APPLY OR REPLACE FRAME
+ * 36 · APPLY OR REPLACE FRAME
  * ========================================================================== */
 
 export function applyHEarth3DRendererHandoff(
@@ -4827,6 +5850,9 @@ export function applyHEarth3DRendererHandoff(
             .INVALID_FRAME,
 
         currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
           true,
 
         issues:
@@ -4865,6 +5891,9 @@ export function applyHEarth3DRendererHandoff(
             .INVALID_FRAME,
 
         currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
           true,
 
         issues:
@@ -4906,7 +5935,7 @@ export function applyHEarth3DRendererHandoff(
           H_EARTH_3D_RENDERER_CONTRACT_ID,
 
         applied:
-          false,
+          applicationEvaluation.duplicate,
 
         status:
           applicationEvaluation.duplicate
@@ -4919,7 +5948,13 @@ export function applyHEarth3DRendererHandoff(
         duplicateFrame:
           applicationEvaluation.duplicate,
 
+        materiallyChanged:
+          false,
+
         currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
           true,
 
         compositorFrameOccurrenceId:
@@ -4944,91 +5979,38 @@ export function applyHEarth3DRendererHandoff(
     return receipt;
   }
 
-  if (applicationEvaluation.duplicate) {
-    const receipt =
-      deepFreeze({
-        receiptType:
-          'H_EARTH_3D_RENDERER_FRAME_APPLY_RECEIPT',
-
-        contractId:
-          H_EARTH_3D_RENDERER_CONTRACT_ID,
-
-        applied:
-          true,
-
-        status:
-          'RENDERER_DUPLICATE_FRAME_NO_OP',
-
-        frameApplicationStatus:
-          applicationEvaluation.status,
-
-        duplicateFrame:
-          true,
-
-        materiallyChanged:
-          false,
-
-        currentFramePreserved:
-          true,
-
-        compositorFrameOccurrenceId:
-          frame.compositorFrameOccurrenceId,
-
-        compositorFrameRevision:
-          frame.revisions.frame,
-
-        issues:
-          EMPTY_FROZEN_ARRAY,
-
-        rendererPassClaim:
-          false,
-
-        visualPassClaim:
-          false
-      });
-
-    rendererState.lastApplyReceipt =
-      receipt;
-
-    return receipt;
-  }
-
-  const viewportOverride =
+  const extentOverride =
     (
       rendererState.mounted &&
-      rendererState.mountElement
+      rendererState.mountElement &&
+      isPositiveFiniteNumber(
+        rendererState
+          .mountElement
+          .clientWidth
+      ) &&
+      isPositiveFiniteNumber(
+        rendererState
+          .mountElement
+          .clientHeight
+      )
     )
-      ? (() => {
-          const widthPx =
+      ? {
+          widthPx:
             rendererState
               .mountElement
-              .clientWidth;
+              .clientWidth,
 
-          const heightPx =
+          heightPx:
             rendererState
               .mountElement
-              .clientHeight;
-
-          return (
-            isPositiveFiniteNumber(
-              widthPx
-            ) &&
-            isPositiveFiniteNumber(
-              heightPx
-            )
-          )
-            ? {
-                widthPx,
-                heightPx
-              }
-            : null;
-        })()
+              .clientHeight
+        }
       : null;
 
   const projectionPlan =
     createFrameProjectionPlan(
       frame,
-      viewportOverride
+      extentOverride
     );
 
   if (!projectionPlan.eligible) {
@@ -5050,6 +6032,9 @@ export function applyHEarth3DRendererHandoff(
           applicationEvaluation.status,
 
         currentFramePreserved:
+          true,
+
+        currentDOMPreserved:
           true,
 
         compositorFrameOccurrenceId:
@@ -5081,13 +6066,7 @@ export function applyHEarth3DRendererHandoff(
         .length
     );
 
-  if (
-    !isPlainRecord(
-      nodeBudgetEvaluation
-    ) ||
-    nodeBudgetEvaluation.eligible !==
-      true
-  ) {
+  if (!nodeBudgetEvaluation.eligible) {
     const receipt =
       deepFreeze({
         receiptType:
@@ -5108,22 +6087,14 @@ export function applyHEarth3DRendererHandoff(
         currentFramePreserved:
           true,
 
+        currentDOMPreserved:
+          true,
+
         compositorFrameOccurrenceId:
           frame.compositorFrameOccurrenceId,
 
         compositorFrameRevision:
           frame.revisions.frame,
-
-        semanticLayerContainerCount:
-          RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
-
-        interactionNodeCount:
-          RENDERER_INTERACTION_NODE_COUNT,
-
-        projectedEnvironmentPrimitiveCount:
-          projectionPlan
-            .projectedDescriptors
-            .length,
 
         nodeBudgetEvaluation,
 
@@ -5131,7 +6102,7 @@ export function applyHEarth3DRendererHandoff(
           freezeIssues([
             createRendererIssue(
               'RENDERER_NODE_BUDGET_NOT_ELIGIBLE',
-              'The replacement frame does not satisfy the backed node-budget authority.'
+              'The nonempty replacement projection plan does not satisfy the backed node-budget authority.'
             )
           ]),
 
@@ -5173,7 +6144,7 @@ export function applyHEarth3DRendererHandoff(
   rendererState.currentCameraRevision =
     frame.revisions.camera;
 
-  rendererState.currentViewportRevision =
+  rendererState.currentCompositorViewportRevision =
     frame.revisions.viewport;
 
   rendererState.currentVisibilityRevision =
@@ -5181,6 +6152,9 @@ export function applyHEarth3DRendererHandoff(
 
   rendererState.currentProjectionContext =
     projectionPlan.projectionContext;
+
+  rendererState.currentProjectionPlan =
+    projectionPlan;
 
   if (
     replacementResources &&
@@ -5223,7 +6197,9 @@ export function applyHEarth3DRendererHandoff(
         true,
 
       status:
-        'RENDERER_FRAME_REPLACED',
+        projectionPlan.emptyProjectedScene
+          ? 'RENDERER_FRAME_REPLACED_WITH_LAWFUL_EMPTY_SCENE'
+          : 'RENDERER_FRAME_REPLACED',
 
       frameApplicationStatus:
         applicationEvaluation.status,
@@ -5237,6 +6213,10 @@ export function applyHEarth3DRendererHandoff(
       currentFramePreserved:
         false,
 
+      currentDOMPreserved:
+        replacementResources ===
+        null,
+
       compositorFrameOccurrenceId:
         frame.compositorFrameOccurrenceId,
 
@@ -5249,11 +6229,34 @@ export function applyHEarth3DRendererHandoff(
       cameraRevision:
         frame.revisions.camera,
 
-      viewportRevision:
+      compositorViewportRevision:
         frame.revisions.viewport,
 
       visibilityRevision:
         frame.revisions.visibility,
+
+      rendererMaterializationExtentRevision:
+        rendererState
+          .materializationExtentRevision,
+
+      frameViewport:
+        projectionPlan
+          .projectionContext
+          .frameViewport,
+
+      materializationExtent:
+        projectionPlan
+          .projectionContext
+          .materializationExtent,
+
+      emptyProjectedScene:
+        projectionPlan
+          .emptyProjectedScene,
+
+      projectedPrimitiveFragmentCount:
+        projectionPlan
+          .projectedDescriptors
+          .length,
 
       semanticLayerContainerCount:
         RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
@@ -5261,13 +6264,14 @@ export function applyHEarth3DRendererHandoff(
       interactionNodeCount:
         RENDERER_INTERACTION_NODE_COUNT,
 
-      projectedPrimitiveFragmentCount:
-        projectionPlan
-          .projectedDescriptors
-          .length,
-
       sourcePrimitiveIdentityPreserved:
         true,
+
+      canonicalGeometryFieldsOnly:
+        true,
+
+      missingIndicesGenerated:
+        false,
 
       sourceGeometryReconstructed:
         false,
@@ -5312,7 +6316,7 @@ export function applyHEarth3DRendererHandoff(
 
 
 /* ==========================================================================
- * 22 · RESIZE / REPROJECT
+ * 37 · RESIZE / REPROJECT
  * ========================================================================== */
 
 export function resizeHEarth3DRenderer({
@@ -5408,13 +6412,13 @@ export function resizeHEarth3DRenderer({
           false,
 
         status:
-          'RENDERER_REPROJECT_VIEWPORT_INVALID',
+          'RENDERER_MATERIALIZATION_EXTENT_INVALID',
 
         issues:
           freezeIssues([
             createRendererIssue(
-              'REPROJECT_VIEWPORT_INVALID',
-              'Renderer reprojection requires positive finite mount dimensions.'
+              'MATERIALIZATION_EXTENT_INVALID',
+              'Renderer reprojection requires positive finite materialization dimensions.'
             )
           ]),
 
@@ -5430,6 +6434,10 @@ export function resizeHEarth3DRenderer({
 
     return receipt;
   }
+
+  rendererState
+    .materializationExtentRevision +=
+    1;
 
   const materialization =
     materializeCurrentFrame({
@@ -5454,6 +6462,14 @@ export function resizeHEarth3DRenderer({
 
         status:
           'RENDERER_REPROJECTION_FAILED',
+
+        compositorViewportRevision:
+          rendererState
+            .currentCompositorViewportRevision,
+
+        rendererMaterializationExtentRevision:
+          rendererState
+            .materializationExtentRevision,
 
         materialization,
 
@@ -5491,7 +6507,9 @@ export function resizeHEarth3DRenderer({
         true,
 
       status:
-        'RENDERER_REPROJECTED',
+        materialization.emptyProjectedScene
+          ? 'RENDERER_REPROJECTED_TO_LAWFUL_EMPTY_SCENE'
+          : 'RENDERER_REPROJECTED',
 
       compositorFrameOccurrenceId:
         rendererState
@@ -5501,11 +6519,27 @@ export function resizeHEarth3DRenderer({
         rendererState
           .currentFrameRevision,
 
-      widthPx:
-        resolvedWidth,
+      compositorViewportRevision:
+        rendererState
+          .currentCompositorViewportRevision,
 
-      heightPx:
-        resolvedHeight,
+      rendererMaterializationExtentRevision:
+        rendererState
+          .materializationExtentRevision,
+
+      frameViewport:
+        materialization
+          .frameViewport,
+
+      materializationExtent:
+        materialization
+          .materializationExtent,
+
+      compositorViewportMutated:
+        false,
+
+      compositorViewportRevisionAdvanced:
+        false,
 
       semanticLayerContainerCount:
         rendererState
@@ -5518,6 +6552,15 @@ export function resizeHEarth3DRenderer({
         null
           ? 0
           : 1,
+
+      projectedPrimitiveFragmentCount:
+        rendererState
+          .primitiveElements
+          .length,
+
+      emptyProjectedScene:
+        materialization
+          .emptyProjectedScene,
 
       materialization,
 
@@ -5539,7 +6582,7 @@ export function resizeHEarth3DRenderer({
 
 
 /* ==========================================================================
- * 23 · DESTROY
+ * 38 · DESTROY
  * ========================================================================== */
 
 export function destroyHEarth3DRenderer() {
@@ -5638,6 +6681,9 @@ export function destroyHEarth3DRenderer() {
       rendererConstructionPreserved:
         rendererState.constructed,
 
+      compositorViewportStatePreserved:
+        true,
+
       routeDOMRemoved:
         false,
 
@@ -5665,7 +6711,7 @@ export function destroyHEarth3DRenderer() {
 
 
 /* ==========================================================================
- * 24 · COMPLETE RELEASE
+ * 39 · COMPLETE RELEASE
  * ========================================================================== */
 
 export function releaseHEarth3DRenderer() {
@@ -5690,7 +6736,7 @@ export function releaseHEarth3DRenderer() {
   rendererState.currentCameraRevision =
     null;
 
-  rendererState.currentViewportRevision =
+  rendererState.currentCompositorViewportRevision =
     null;
 
   rendererState.currentVisibilityRevision =
@@ -5698,6 +6744,12 @@ export function releaseHEarth3DRenderer() {
 
   rendererState.currentProjectionContext =
     null;
+
+  rendererState.currentProjectionPlan =
+    null;
+
+  rendererState.materializationExtentRevision =
+    0;
 
   return deepFreeze({
     receiptType:
@@ -5739,7 +6791,7 @@ export function releaseHEarth3DRenderer() {
 
 
 /* ==========================================================================
- * 25 · STATE AND OPERATIONAL RECEIPTS
+ * 40 · STATE AND OPERATIONAL RECEIPTS
  * ========================================================================== */
 
 export function getHEarth3DRendererState() {
@@ -5778,13 +6830,29 @@ export function getHEarth3DRendererState() {
       rendererState
         .currentCameraRevision,
 
-    viewportRevision:
+    compositorViewportRevision:
       rendererState
-        .currentViewportRevision,
+        .currentCompositorViewportRevision,
 
     visibilityRevision:
       rendererState
         .currentVisibilityRevision,
+
+    rendererMaterializationExtentRevision:
+      rendererState
+        .materializationExtentRevision,
+
+    frameViewport:
+      rendererState
+        .currentProjectionContext
+        ?.frameViewport ??
+      null,
+
+    materializationExtent:
+      rendererState
+        .currentProjectionContext
+        ?.materializationExtent ??
+      null,
 
     admittedPrimitiveCount:
       rendererState
@@ -5809,6 +6877,12 @@ export function getHEarth3DRendererState() {
       rendererState
         .primitiveElements
         .length,
+
+    emptyProjectedScene:
+      rendererState
+        .currentProjectionPlan
+        ?.emptyProjectedScene ??
+      null,
 
     constructSequence:
       rendererState
@@ -5878,7 +6952,7 @@ export function getHEarth3DRendererOperationalReceipts() {
 
 
 /* ==========================================================================
- * 26 · STATIC COHERENCE
+ * 41 · STATIC COHERENCE
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
@@ -5948,28 +7022,6 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
     }
 
     if (
-      !Number.isSafeInteger(
-        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT
-      ) ||
-      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT !==
-        15
-    ) {
-      issues.push(
-        createRendererIssue(
-          'RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT_INVALID',
-          'The renderer semantic-layer-container model must contain exactly fifteen containers.',
-          {
-            expected:
-              15,
-
-            actual:
-              RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT
-          }
-        )
-      );
-    }
-
-    if (
       RENDERER_SEMANTIC_LAYER_CONTAINER_IDS
         .length !==
       RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT
@@ -5983,23 +7035,13 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
     }
 
     if (
-      !Number.isSafeInteger(
-        RENDERER_INTERACTION_NODE_COUNT
-      ) ||
       RENDERER_INTERACTION_NODE_COUNT !==
-        1
+      1
     ) {
       issues.push(
         createRendererIssue(
           'RENDERER_INTERACTION_NODE_COUNT_INVALID',
-          'The renderer interaction-boundary model must contain exactly one node.',
-          {
-            expected:
-              1,
-
-            actual:
-              RENDERER_INTERACTION_NODE_COUNT
-          }
+          'The renderer interaction-boundary model must contain exactly one node.'
         )
       );
     }
@@ -6039,68 +7081,62 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
       admittedFrameValidatorImportedDirectly:
         true,
 
+      publicProjectionRequiresAdmittedFrame:
+        true,
+
+      arbitraryPublicProjectionContextAccepted:
+        false,
+
       cameraBasisDerivedFromPublishedPoseFields:
         true,
 
-      unpublishedForwardFieldRequired:
-        false,
-
-      unpublishedRightFieldRequired:
-        false,
-
-      permittedOutputModel:
-        PERMITTED_OUTPUT_MODEL,
-
-      permittedOutputModels:
-        PERMITTED_OUTPUT_MODELS,
-
-      DOMCSS3DOutputAuthorizationDerivedFromExactModel:
+      permittedOutputAuthorizationDerivedFromExactModel:
         true,
 
-      DOMCSS3DOutputAuthorized:
-        DOM_CSS3D_OUTPUT_AUTHORIZED,
+      compositorViewportSeparatedFromMaterializationExtent:
+        true,
+
+      resizeAdvancesCompositorViewportRevision:
+        false,
+
+      unknownVisibilityRoleRejectsProjectionPlan:
+        true,
+
+      unknownVisibilityRoleDefaultsVisible:
+        false,
+
+      canonicalTopologyFieldOnly:
+        true,
+
+      vectorRecordVerticesOnly:
+        true,
+
+      explicitAdmittedIndicesRequired:
+        true,
+
+      missingIndicesGenerated:
+        false,
 
       semanticLayerContainerCount:
         RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
 
-      semanticLayerContainerBudgetCorrespondenceDefined:
-        true,
-
-      semanticLayerContainersActuallyConstructedAtMount:
-        true,
-
       interactionNodeCount:
         RENDERER_INTERACTION_NODE_COUNT,
 
-      interactionNodeBudgetCorrespondenceDefined:
+      zeroDescriptorPolicyDefined:
         true,
 
-      interactionBoundaryActuallyConstructedAtMount:
+      zeroDescriptorsMisreportedAsBudgetOverflow:
+        false,
+
+      nearFarLineClippingDefined:
         true,
 
-      admittedVerticesConsumed:
+      nearFarTriangleClippingDefined:
         true,
 
-      admittedIndicesConsumed:
-        true,
-
-      admittedTopologyConsumed:
-        true,
-
-      presentationAssignmentsConsumed:
-        true,
-
-      frameCameraConsumed:
-        true,
-
-      frameViewportConsumed:
-        true,
-
-      frameVisibilityConsumed:
-        true,
-
-      frameRevisionsConsumed:
-        true,
+      horizontalVerticalFrustumClippingDefined:
+        false,
 
       geometryReconstructed:
         false,
@@ -6108,7 +7144,7 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
       independentCameraAuthority:
         false,
 
-      independentViewportAuthority:
+      independentCompositorViewportAuthority:
         false,
 
       independentVisibilityAuthority:
@@ -6139,12 +7175,15 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
 
 
 /* ==========================================================================
- * 27 · CLAIM CEILINGS
+ * 42 · CLAIM CEILINGS
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_CLAIM_CEILINGS =
   deepFreeze({
     packet002ConstructionClaim:
+      false,
+
+    compositorHandoffConstructionClaim:
       false,
 
     admittedFrameConstructionClaim:
@@ -6153,16 +7192,13 @@ export const H_EARTH_3D_RENDERER_CLAIM_CEILINGS =
     geometryConstructionClaim:
       false,
 
-    westAdmissionClaim:
-      false,
-
-    geometryIndexClaim:
+    geometryAdmissionClaim:
       false,
 
     cameraAuthorityClaim:
       false,
 
-    viewportAuthorityClaim:
+    compositorViewportAuthorityClaim:
       false,
 
     visibilityAuthorityClaim:
@@ -6219,7 +7255,7 @@ export const H_EARTH_3D_RENDERER_CLAIM_CEILINGS =
 
 
 /* ==========================================================================
- * 28 · STATIC RECEIPT
+ * 43 · STATIC RECEIPT
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_RECEIPT =
@@ -6239,131 +7275,71 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
     canonicalInputSelected:
       'COMPOSITOR_RENDERER_HANDOFF',
 
-    admittedFrameCompatibilityWrapperDefined:
+    publicProjectionTopology:
+      'ADMITTED_FRAME_INPUT_WITH_INTERNAL_CONTEXT_DERIVATION',
+
+    arbitraryPublicProjectionContextRemoved:
+      true,
+
+    unresolvedVisibilityRolePolicy:
+      'REJECT_COMPLETE_FRAME_PROJECTION_PLAN',
+
+    permissiveVisibilityFallbackRemoved:
+      true,
+
+    compositorViewportAndMaterializationExtentSeparated:
+      true,
+
+    rendererResizeMutatesCompositorViewport:
       false,
 
-    compositorGetterInvokedAtModuleScope:
+    rendererResizeAdvancesCompositorViewportRevision:
       false,
 
-    directAdmittedFrameValidatorImported:
+    canonicalGeometryFieldsOnly:
       true,
 
-    cameraBasisDerivedFromPublishedPoseFields:
+    acceptedTopologyField:
+      'geometry.topologyMode',
+
+    acceptedVertexSurface:
+      'geometry.vertices_VECTOR3_RECORDS',
+
+    acceptedIndexSurface:
+      'geometry.indices_EXPLICIT',
+
+    topologyFallbacksRemoved:
       true,
 
-    permittedOutputAuthorizationDerivedFromExactModel:
+    flatNumericVertexFallbackRemoved:
       true,
+
+    sequentialIndexGenerationRemoved:
+      true,
+
+    zeroProjectedDescriptorPolicy:
+      'LAWFUL_NONVISIBLE_RENDERER_OCCURRENCE',
+
+    zeroProjectedDescriptorsSubmittedAsBudgetOverflow:
+      false,
+
+    nearFarLineClippingDefined:
+      true,
+
+    nearFarTriangleClippingDefined:
+      true,
+
+    screenRectangleClippingDefined:
+      false,
 
     semanticLayerContainerCount:
       RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
 
-    semanticLayerContainerBudgetCorrespondenceDefined:
-      true,
-
-    semanticLayerContainersActuallyConstructedAtMount:
-      true,
-
     interactionNodeCount:
       RENDERER_INTERACTION_NODE_COUNT,
 
-    interactionNodeBudgetCorrespondenceDefined:
-      true,
-
-    interactionBoundaryActuallyConstructedAtMount:
-      true,
-
-    admittedPrimitiveMembershipConsumed:
-      true,
-
     admittedPrimitiveIdentityPreserved:
       true,
-
-    admittedGeometryTopologyConsumed:
-      true,
-
-    admittedVerticesConsumedWithoutAlteration:
-      true,
-
-    admittedIndicesConsumedWithoutAlteration:
-      true,
-
-    presentationAssignmentsCorrelatedByPrimitiveId:
-      true,
-
-    frameCameraConsumed:
-      true,
-
-    frameViewportConsumed:
-      true,
-
-    frameVisibilityConsumed:
-      true,
-
-    frameRevisionsConsumed:
-      true,
-
-    firstFrameLawDefined:
-      true,
-
-    replacementFrameLawDefined:
-      true,
-
-    duplicateFrameLawDefined:
-      true,
-
-    staleFrameLawDefined:
-      true,
-
-    revisionRegressionLawDefined:
-      true,
-
-    failedReplacementPreservesCurrentFrame:
-      true,
-
-    constructLifecycleDefined:
-      true,
-
-    mountLifecycleDefined:
-      true,
-
-    frameApplyLifecycleDefined:
-      true,
-
-    resizeReprojectionDefined:
-      true,
-
-    destroyLifecycleDefined:
-      true,
-
-    completeReleaseDefined:
-      true,
-
-    DOMCSSMaterializationDefined:
-      true,
-
-    pointTopologyDefined:
-      true,
-
-    lineTopologyDefined:
-      true,
-
-    triangleTopologyDefined:
-      true,
-
-    nodeBudgetEvaluationDefined:
-      true,
-
-    independentRendererCameraSetterRemoved:
-      true,
-
-    independentRendererVisibleLayerSetterRemoved:
-      true,
-
-    proceduralEnvironmentGeometryRemoved:
-      true,
-
-    sourceGeometryReconstructed:
-      false,
 
     admittedCoordinatesAltered:
       false,
@@ -6371,7 +7347,13 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
     admittedIndicesAltered:
       false,
 
+    sourceGeometryReconstructed:
+      false,
+
     constructionReceiptResourceTerminologySeparated:
+      true,
+
+    applyBeforeConstructRejected:
       true,
 
     moduleSyntaxVerified:
@@ -6384,6 +7366,21 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
       false,
 
     lawfulHandoffControlledExecutionVerified:
+      false,
+
+    publicProjectionControlledExecutionVerified:
+      false,
+
+    unresolvedVisibilityRoleRejectionVerified:
+      false,
+
+    emptyScenePolicyVerified:
+      false,
+
+    nearFarLineClippingVerified:
+      false,
+
+    nearFarTriangleClippingVerified:
       false,
 
     firstFrameMaterializationVerified:
@@ -6399,6 +7396,9 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
       false,
 
     revisionRegressionRejectionVerified:
+      false,
+
+    failedReplacementPreservationVerified:
       false,
 
     browserModuleGraphVerified:
@@ -6419,20 +7419,13 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
     productionValidationClaimed:
       false,
 
-    deferableFindingsPreserved:
-      deepFreeze([
-        'NONCANONICAL_GEOMETRY_FALLBACKS_REMAIN',
-        'ZERO_PROJECTED_DESCRIPTOR_POLICY_REQUIRES_CHARACTERIZATION',
-        'FULL_FRUSTUM_CLIPPING_NOT_IMPLEMENTED'
-      ]),
-
     claimCeilings:
       H_EARTH_3D_RENDERER_CLAIM_CEILINGS
   });
 
 
 /* ==========================================================================
- * 29 · COMPLETE CONTRACT
+ * 44 · COMPLETE CONTRACT
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_CONTRACT =
@@ -6457,20 +7450,6 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
 
     status:
       H_EARTH_3D_RENDERER_STATUS,
-
-    corridor:
-      deepFreeze([
-        'COMPOSITOR_RENDERER_HANDOFF',
-        'ADMITTED_GEOMETRY_FRAME_VALIDATION',
-        'FRAME_OCCURRENCE_CORRESPONDENCE',
-        'ADMITTED_PRIMITIVE_PROJECTION',
-        'PRESENTATION_ASSIGNMENT_CORRELATION',
-        'FIFTEEN_SEMANTIC_LAYER_CONTAINERS',
-        'ONE_INTERACTION_BOUNDARY_NODE',
-        'DOM_CSS_RESOURCE_CONSTRUCTION',
-        'MOUNT_APPLY_REPROJECT_DESTROY',
-        'RENDERER_RECEIPTS'
-      ]),
 
     directDependencies:
       deepFreeze({
@@ -6510,10 +7489,61 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
           'admittedGeometryFrame'
       }),
 
+    publicProjectionLaw:
+      deepFreeze({
+        publicFunction:
+          'projectHEarth3DAdmittedWorldPoint',
+
+        publicInputs:
+          Object.freeze([
+            'point',
+            'admittedGeometryFrame'
+          ]),
+
+        arbitraryProjectionContextAccepted:
+          false,
+
+        projectionContextDerivation:
+          'INTERNAL_FROM_ADMITTED_FRAME'
+      }),
+
+    visibilityLaw:
+      deepFreeze({
+        source:
+          'FRAME_VISIBILITY_SNAPSHOT',
+
+        unresolvedRole:
+          'REJECT_FRAME_PROJECTION_PLAN',
+
+        unresolvedRoleDefaultsVisible:
+          false,
+
+        unresolvedRoleDefaultsHidden:
+          false
+      }),
+
+    viewportLaw:
+      deepFreeze({
+        compositorViewport:
+          'FRAME_VIEWPORT_SNAPSHOT',
+
+        compositorViewportRevision:
+          'FRAME_REVISIONS_VIEWPORT',
+
+        rendererMaterializationExtent:
+          'PHYSICAL_DOM_PROJECTION_DIMENSIONS',
+
+        resizeEffect:
+          'ADVANCE_RENDERER_MATERIALIZATION_EXTENT_REVISION_ONLY',
+
+        resizeMutatesCompositorViewport:
+          false
+      }),
+
     cameraBasisLaw:
       deepFreeze({
         publishedInput:
-          deepFreeze([
+          Object.freeze([
             'position',
             'target',
             'up',
@@ -6529,30 +7559,66 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
           'NORMALIZE_CROSS_PUBLISHED_UP_FORWARD',
 
         correctedUp:
-          'NORMALIZE_CROSS_FORWARD_RIGHT',
+          'NORMALIZE_CROSS_FORWARD_RIGHT'
+      }),
 
-        unpublishedForwardRequired:
+    geometryConsumptionLaw:
+      deepFreeze({
+        topology:
+          'geometry.topologyMode',
+
+        vertices:
+          'geometry.vertices_VECTOR3_RECORDS',
+
+        indices:
+          'geometry.indices_EXPLICIT',
+
+        fallbackTopologyFields:
           false,
 
-        unpublishedRightRequired:
+        flatNumericVertices:
+          false,
+
+        generatedIndices:
+          false,
+
+        sourcePrimitiveIdentityPreserved:
+          true,
+
+        geometryReconstruction:
           false
       }),
 
-    outputAuthorizationLaw:
+    clippingLaw:
       deepFreeze({
-        requiredOutputModel:
-          DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL,
+        lineNearFarClipping:
+          true,
 
-        permittedOutputModel:
-          PERMITTED_OUTPUT_MODEL,
+        triangleNearFarClipping:
+          true,
 
-        permittedOutputModels:
-          PERMITTED_OUTPUT_MODELS,
+        horizontalVerticalFrustumClipping:
+          false,
 
-        authorized:
-          DOM_CSS3D_OUTPUT_AUTHORIZED,
+        initialCorridor:
+          'BOUNDED_NEAR_FAR_DEPTH_CLIPPING'
+      }),
 
-        nonexistentBooleanAuthorizationFieldsConsumed:
+    emptySceneLaw:
+      deepFreeze({
+        zeroProjectedDescriptors:
+          'LAWFUL_NONVISIBLE_RENDERER_OCCURRENCE',
+
+        nodeBudgetOverflowClaim:
+          false,
+
+        DOMContainersCreated:
+          true,
+
+        interactionBoundaryCreated:
+          true,
+
+        visibleOutputClaim:
           false
       }),
 
@@ -6561,23 +7627,17 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
         semanticLayerContainers:
           RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
 
-        semanticLayerContainersActuallyConstructed:
-          true,
-
         environmentPrimitives:
-          'ACTUAL_PROJECTED_DESCRIPTOR_COUNT',
+          'ACTUAL_NONZERO_PROJECTED_DESCRIPTOR_COUNT',
 
         interactionNodes:
           RENDERER_INTERACTION_NODE_COUNT,
 
-        interactionBoundaryActuallyConstructed:
-          true,
-
         diagnosticOwnedNodes:
           0,
 
-        authority:
-          H_EARTH_3D_CAPACITY_CONTRACT_ID
+        zeroProjectedDescriptorHandling:
+          'NOT_SUBMITTED_AS_ENVIRONMENT_PRIMITIVE_BUDGET'
       }),
 
     frameApplicationLaw:
@@ -6589,7 +7649,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
           'ACCEPT_AS_NO_OP',
 
         sameOccurrenceAndRevisionDifferentIdentity:
-          'REJECT_AS_STALE_OR_REUSED_OCCURRENCE',
+          'REJECT',
 
         lowerFrameRevision:
           'REJECT_AS_REVISION_REGRESSION',
@@ -6605,48 +7665,6 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
 
         applyBeforeConstruction:
           'REJECT'
-      }),
-
-    materializationLaw:
-      deepFreeze({
-        primitiveIdentity:
-          'PRESERVE_PRIMITIVE_ID',
-
-        geometrySource:
-          'ADMITTED_PRIMITIVE_GEOMETRY_ONLY',
-
-        topologySource:
-          'ADMITTED_PRIMITIVE_GEOMETRY_TOPOLOGY_MODE',
-
-        vertexSource:
-          'ADMITTED_PRIMITIVE_GEOMETRY_VERTICES',
-
-        indexSource:
-          'ADMITTED_PRIMITIVE_GEOMETRY_INDICES',
-
-        presentationSource:
-          'FRAME_PRESENTATION_ASSIGNMENTS_BY_PRIMITIVE_ID',
-
-        visibilitySource:
-          'FRAME_VISIBILITY_SNAPSHOT',
-
-        cameraSource:
-          'FRAME_NORMALIZED_RESOLVED_CAMERA_POSE',
-
-        viewportSource:
-          'FRAME_VIEWPORT_SNAPSHOT',
-
-        revisionSource:
-          'FRAME_REVISIONS',
-
-        geometryReconstruction:
-          false,
-
-        coordinateAlteration:
-          false,
-
-        indexAlteration:
-          false
       }),
 
     publicLifecycle:
@@ -6688,7 +7706,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
 
 
 /* ==========================================================================
- * 30 · PUBLIC GETTERS
+ * 45 · PUBLIC GETTERS
  * ========================================================================== */
 
 export function getHEarth3DRendererContract() {
@@ -6713,7 +7731,7 @@ export function getHEarth3DRendererClaimCeilings() {
 
 
 /* ==========================================================================
- * 31 · COMPATIBILITY ALIASES
+ * 46 · COMPATIBILITY ALIASES
  * ========================================================================== */
 
 export function mountHEarthCandidateRenderer(
@@ -6730,7 +7748,7 @@ export function destroyHEarthCandidateRenderer() {
 
 
 /* ==========================================================================
- * 32 · AGGREGATE EXPORT
+ * 47 · AGGREGATE EXPORT
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_AGGREGATE =

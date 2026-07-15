@@ -7,24 +7,16 @@
  * Renews:
  * H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034M_PUBLIC_STAGE_SCREEN_ON_SOURCE_PREVIEW_v1
  *
- * Companion route shell:
- * /showroom/globe/h-earth/index.html
- *
- * Companion stylesheet:
- * /showroom/globe/h-earth/index.css
- *
- * Diagnostic route:
- * /showroom/globe/h-earth/diagnostic/
- *
- * Frozen route corridor:
+ * Canonical route corridor:
  *
  * ROUTE MOUNT RESOLUTION
  * → TEMPORARY DESCRIPTOR-ONLY SOURCE PREVIEW
  * → PACKET 002 INPUT VALIDATION
- * → EXACT COMPOSITOR MODULE IMPORT
- * → EXACT RENDERER MODULE IMPORT
+ * → EXACT ./compositor.js IMPORT
+ * → EXACT COMPOSITOR CONTRACT VERIFICATION
+ * → EXACT ./renderer.js IMPORT
+ * → EXACT RENDERER CONTRACT VERIFICATION
  * → COMPOSITOR RENDERER HANDOFF REQUEST
- * → ADMITTED FRAME HANDOFF ACCEPTANCE
  * → RENDERER CONSTRUCTION
  * → RENDERER MOUNT
  * → EXPLICIT SOURCE-PREVIEW TAKEOVER
@@ -32,34 +24,38 @@
  *
  * Failure corridor:
  *
- * IMPORT / HANDOFF / CONSTRUCTION / MOUNT FAILURE
- * → RENDERER RELEASE WHEN AVAILABLE
- * → SOURCE PREVIEW RESTORATION
- * → PUBLIC PARTIAL / FALLBACK STATUS
+ * PRIMARY FAILURE OUTCOME PRESERVED
+ * → RENDERER CLEANUP RECORDED SEPARATELY
+ * → SOURCE PREVIEW RETAINED OR RESTORED
+ * → PUBLIC FALLBACK STATUS
  *
- * Route destruction:
+ * Destruction corridor:
  *
- * ABORT ROUTE-OWNED LISTENERS
- * → INVALIDATE ASYNC INITIALIZATION OCCURRENCE
+ * INVALIDATE ASYNC INITIALIZATION
+ * → ABORT ROUTE-OWNED LISTENERS
  * → RELEASE RENDERER
  * → REMOVE ROUTE-OWNED PREVIEW DOM
- * → CLEAR ROUTE STATE
+ * → RESET ROUTE PRESENTATION DATASETS
+ * → CLEAR ACTIVE OCCURRENCE EVIDENCE
  *
- * Canonical route input:
- *
- * initializeHEarthRoute({
- *   packet002Transfer,
- *   packet002TransferOccurrenceId,
- *   compositorFrameOccurrenceId,
- *   presentationMode
- * })
- *
- * The route does not construct Packet 002.
- * The route does not construct an admitted geometry frame.
- * The route does not reconstruct geometry.
- * The route does not own camera, viewport, visibility, or compositor revisions.
- * The route does not claim renderer pass, visual pass, validation, or production.
+ * The route does not:
+ * - construct Packet 002;
+ * - construct an admitted geometry frame;
+ * - reconstruct geometry;
+ * - own camera state;
+ * - own compositor viewport state;
+ * - own visibility state;
+ * - own compositor revisions;
+ * - claim renderer pass;
+ * - claim visual pass;
+ * - claim validation;
+ * - claim production.
  */
+
+
+/* ==========================================================================
+ * 01 · CONTRACT IDENTITY
+ * ========================================================================== */
 
 export const H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID =
   'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1';
@@ -91,9 +87,15 @@ export const H_EARTH_3D_RENDERER_MODULE_PATH =
 export const H_EARTH_3D_LAYER_4_BRIDGE_DEFAULT_MODULE_PATH =
   '../../../h-earth-3d/runtime/tests/h-earth.headless-serialization-bridge.js';
 
+export const H_EARTH_3D_EXPECTED_COMPOSITOR_CONTRACT_ID =
+  'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1';
+
+export const H_EARTH_3D_EXPECTED_RENDERER_CONTRACT_ID =
+  'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1';
+
 
 /* ==========================================================================
- * 01 · STATUS ENUMERATIONS
+ * 02 · STATUS ENUMERATIONS
  * ========================================================================== */
 
 export const H_EARTH_3D_PUBLIC_STAGE_STATUS =
@@ -164,6 +166,9 @@ export const H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS =
     IMPORT_FAILED:
       'RENDERER_IMPORT_FAILED',
 
+    API_REJECTED:
+      'EXACT_COMPOSITOR_OR_RENDERER_API_REJECTED',
+
     HANDOFF_PENDING:
       'COMPOSITOR_HANDOFF_PENDING',
 
@@ -185,8 +190,8 @@ export const H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS =
     MOUNTED:
       'RENDERER_MOUNTED',
 
-    RELEASED:
-      'RENDERER_RELEASED',
+    SKIPPED:
+      'RENDERER_BOOTSTRAP_SKIPPED',
 
     STALE_COMPLETION:
       'RENDERER_BOOTSTRAP_STALE_COMPLETION'
@@ -212,1659 +217,11 @@ export const H_EARTH_3D_LAYER_4_STATUS =
 
 
 /* ==========================================================================
- * 02 · EXECUTION CEILING AND BOUNDARY
- * ========================================================================== */
-
-export const H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING =
-  Object.freeze({
-    moduleInitializationObservedMayBecomeTrue:
-      true,
-
-    compositorHandoffRequestedMayBecomeTrue:
-      true,
-
-    rendererConstructionAttemptedMayBecomeTrue:
-      true,
-
-    rendererMountAttemptedMayBecomeTrue:
-      true,
-
-    sourcePreviewMounted:
-      'descriptor-only-public-stage-fallback',
-
-    sourcePreviewRuntimeExecution:
-      false,
-
-    packet002Construction:
-      false,
-
-    admittedFrameConstruction:
-      false,
-
-    geometryConstruction:
-      false,
-
-    cameraAuthority:
-      false,
-
-    compositorViewportAuthority:
-      false,
-
-    visibilityAuthority:
-      false,
-
-    compositorRevisionAuthority:
-      false,
-
-    runFunctionExecuted:
-      false,
-
-    step012H1RunExecuted:
-      false,
-
-    step012IVectorExecuted:
-      false,
-
-    step012IRunnerExecuted:
-      false,
-
-    target002RuntimeExecuted:
-      false,
-
-    target003ReplayExecuted:
-      false,
-
-    runtimeExecuted:
-      false,
-
-    replayExecuted:
-      false,
-
-    vectorRunnerExecuted:
-      false,
-
-    canonicalDigestGenerated:
-      false,
-
-    replayComparison:
-      false,
-
-    rendererPassClaim:
-      false,
-
-    visualPassClaim:
-      false,
-
-    validationClaim:
-      false,
-
-    productionClaim:
-      false,
-
-    deploymentClaim:
-      false,
-
-    matrixCollapse:
-      false
-  });
-
-export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS =
-  Object.freeze({
-    publicRouteOnly:
-      true,
-
-    publicEnvironmentHost:
-      true,
-
-    visibleStageAuthorized:
-      true,
-
-    temporarySourcePreviewAuthorized:
-      true,
-
-    compositorHandoffConsumptionAuthorized:
-      true,
-
-    rendererConstructionAuthorized:
-      true,
-
-    rendererMountAuthorized:
-      true,
-
-    rendererReleaseAuthorized:
-      true,
-
-    selectedSurfaceDisplayAuthorized:
-      true,
-
-    groundConditionReadDisplayAuthorized:
-      true,
-
-    layer4StatusProjectionAuthorized:
-      true,
-
-    publicStageReceiptDefinitionAuthorized:
-      true,
-
-    diagnosticRouteHandoffAuthorized:
-      true,
-
-    sourcePreviewDescriptorOnly:
-      true,
-
-    sourcePreviewRuntimeExecution:
-      false,
-
-    sourcePreviewSameNodePreservationClaim:
-      false,
-
-    rendererTakeoverMayReplacePreviewDOM:
-      true,
-
-    routeConstructsPacket002:
-      false,
-
-    routeConstructsAdmittedFrame:
-      false,
-
-    routeConstructsGeometry:
-      false,
-
-    routeOwnsCameraState:
-      false,
-
-    routeOwnsCompositorViewportState:
-      false,
-
-    routeOwnsVisibilityState:
-      false,
-
-    routeOwnsCompositorRevisions:
-      false,
-
-    genericRendererAPIDiscovery:
-      false,
-
-    exactRendererAPIConsumption:
-      true,
-
-    exactCompositorAPIConsumption:
-      true,
-
-    rendererReleasedOnDestroy:
-      true,
-
-    overlappingInitializationGuarded:
-      true,
-
-    staleAsyncCompletionGuarded:
-      true,
-
-    repeatedListenerBindingGuarded:
-      true,
-
-    diagnosticWallEmbedded:
-      false,
-
-    reportWallEmbedded:
-      false,
-
-    rawEvidenceWallEmbedded:
-      false,
-
-    receiptWallEmbedded:
-      false,
-
-    advancedCopySurfaceEmbedded:
-      false,
-
-    shellOwnedSceneObjects:
-      false,
-
-    fakeRuntimeGeometry:
-      false,
-
-    webglActivation:
-      false,
-
-    canvasActivation:
-      false,
-
-    svgActivation:
-      false,
-
-    iframeActivation:
-      false,
-
-    step012H1RunExecution:
-      false,
-
-    step012IVectorExecution:
-      false,
-
-    step012IRunnerExecution:
-      false,
-
-    target002RuntimeExecution:
-      false,
-
-    target003ReplayExecution:
-      false,
-
-    canonicalDigestGeneration:
-      false,
-
-    replayComparison:
-      false,
-
-    runtimeActivation:
-      false,
-
-    routeActivationProof:
-      false,
-
-    rendererPassClaim:
-      false,
-
-    visualPassClaim:
-      false,
-
-    validationClaim:
-      false,
-
-    productionClaim:
-      false,
-
-    deploymentClaim:
-      false,
-
-    traversal:
-      false,
-
-    survivalSimulation:
-      false,
-
-    swimming:
-      false,
-
-    fluidSimulation:
-      false,
-
-    manorInteriorAccess:
-      false,
-
-    distantTraversal:
-      false,
-
-    runtimeLatticeActivation:
-      false,
-
-    active16x16RuntimeLatticeClaim:
-      false,
-
-    active256AddressRuntimeClaim:
-      false,
-
-    mirrorManorRouteCanonNaming:
-      false,
-
-    matrixCollapse:
-      false
-  });
-
-
-/* ==========================================================================
- * 03 · LAYER 4 STATIC CUSTODY
- * ========================================================================== */
-
-export const H_EARTH_3D_LAYER_4_CONTRACTS =
-  Object.freeze({
-    step012JContractId:
-      'H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FILE_BIRTH_STEP_012J_v1',
-
-    step012H1ContractId:
-      'H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_1_HISTORICAL_FIXTURE_ALIGNMENT_v1',
-
-    step012IContractId:
-      'H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_FILE_BIRTH_STEP_012I_v1',
-
-    step012ICanonicalizationId:
-      'H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_STEP_012I_UTF16_UTF8_SHA256_v1',
-
-    target002ContractId:
-      'H_EARTH_DETERMINISTIC_RUNTIME_FILE_RENEWAL_STEP_012G_TARGET_002_RUNTIME_KERNEL_DEPENDENCY_REVIEW_v1',
-
-    target003ContractId:
-      'H_EARTH_CANONICAL_REPLAY_FILE_RENEWAL_STEP_012G_TARGET_003_RUNTIME_KERNEL_DEPENDENCY_REVIEW_v1',
-
-    step012IRunnerContractId:
-      'H_EARTH_SERIALIZATION_VECTOR_RUNNER_FILE_BIRTH_STEP_012I_RUNNER_v1'
-  });
-
-export const H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY =
-  Object.freeze({
-    custodyClass:
-      'BACKED_STATIC_SUPPORT_METADATA_FOR_PUBLIC_STAGE_PROJECTION',
-
-    step012JBackupComplete:
-      true,
-
-    step012JArchiveTitle:
-      'h-earth-headless-serialization-bridge-step-012j-backup',
-
-    step012JDriveDocumentId:
-      '1zt8rsROGF8roudC3re1KOwmU5KSws6pQIap7kd0gQpw',
-
-    step012H1ArchiveTitle:
-      'h-earth-headless-replay-step-012h-1-backup',
-
-    step012H1DriveDocumentId:
-      '1DfSsDzKRYQNJn9S43hmA8gMeebY_7WeQ0ygoIl6Qt2Y',
-
-    step012IArchiveTitle:
-      'h-earth-canonical-state-serialization-law-step-012i-backup',
-
-    step012IDriveDocumentId:
-      '1K8bszh6SMeutLpCeyCjK6D9r8m6zsIEP3R6soBip6GA',
-
-    step012IRunnerArchiveTitle:
-      'h-earth-serialization-vector-runner-step-012i-backup',
-
-    step012IRunnerDriveDocumentId:
-      '1EcXxqb2M_MwdiHFVDX95klU4Dh6X1Be8Q5TFNDyCIUE',
-
-    target002ArchiveTitle:
-      'h-earth-deterministic-runtime-step-012g-target-002-backup',
-
-    target002DriveDocumentId:
-      '1AYVrqdmnBEdM5k4pop8wJNXMThXxdLZd7TNkhgkq2Z0',
-
-    target003ArchiveTitle:
-      'h-earth-canonical-replay-step-012g-target-003-backup',
-
-    target003DriveDocumentId:
-      '1qbNHRW9L3l7FjfJW04x30J9qNO9dNvWTR8b6Vh0C3vU',
-
-    archiveCustodyStatus:
-      'BACKED_OCCURRENCE_RECORDED_BY_CONSTRUCTION_BASIS',
-
-    publicStageReverifiesDriveArchive:
-      false,
-
-    publicStageClaimsNetworkBackup:
-      false
-  });
-
-
-/* ==========================================================================
- * 04 · SOURCE-SPINE STATIC CUSTODY
- * ========================================================================== */
-
-export const H_EARTH_3D_SOURCE_SPINE_CONTRACTS =
-  Object.freeze({
-    step034IBoundaryContractId:
-      'H_EARTH_MATRIX_BOUNDARIES_FILE_RENEWAL_STEP_034I_PUBLIC_STAGE_AUTHORITY_AMENDMENT_v1',
-
-    step034JObjectsContractId:
-      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
-
-    step034KZonesContractId:
-      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
-
-    step034LLandscapeLatticeContractId:
-      'H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP_FILE_RENEWAL_STEP_034L_LANDSCAPE_LATTICE_ZONE_AND_RENDER_TARGET_ALIGNMENT_v1'
-  });
-
-export const H_EARTH_3D_SOURCE_SPINE_ARCHIVE_CUSTODY =
-  Object.freeze({
-    step034IArchiveTitle:
-      'h-earth-matrix-boundaries-step-034i-public-stage-authority-amendment-backup',
-
-    step034IDriveDocumentId:
-      '1wLPI7frZHb8Xtq3Syrcnjc6xx3Rkn1LHfHLm12LQjQM',
-
-    step034JArchiveTitle:
-      'h-earth-ground-cell-001-objects-step-034j-public-stage-readability-amendment-backup',
-
-    step034JDriveDocumentId:
-      '1PLWtLG-BluKzgUO89SOwNTJk32DCQ1lfDAJWKDc_WO8',
-
-    step034KArchiveTitle:
-      'h-earth-ground-cell-001-zones-step-034k-public-stage-render-target-zone-alignment-backup',
-
-    step034KDriveDocumentId:
-      '1XV4IDS04Qop95QEw9o2w1KwJnO80JOZOjdn0gNZeNuI',
-
-    step034LArchiveTitle:
-      'h-earth-256-lattice-landscape-step-034l-zone-and-render-target-alignment-backup',
-
-    step034LDriveDocumentId:
-      '10HUxO6UsqD0CoSLIB4v6bgJpwLehVFH5bLY-n0jsQnU',
-
-    sourceSpineBackupStatus:
-      'BACKED_OCCURRENCES_RECORDED_BY_CONSTRUCTION_BASIS',
-
-    publicStageReverifiesDriveArchive:
-      false,
-
-    publicStageClaimsNetworkBackup:
-      false,
-
-    assistantRepositoryInstallationVerified:
-      false
-  });
-
-
-/* ==========================================================================
- * 05 · PUBLIC MOUNT IDENTITIES
- * ========================================================================== */
-
-export const H_EARTH_3D_PUBLIC_MOUNT_IDS =
-  Object.freeze({
-    routeRoot:
-      'h-earth-3d-route-root',
-
-    status:
-      'h-earth-3d-status',
-
-    fallback:
-      'h-earth-3d-fallback',
-
-    rendererMount:
-      'h-earth-3d-renderer-mount',
-
-    actionInspectGround:
-      'h-earth-3d-action-inspect-ground',
-
-    selectedTargetCard:
-      'h-earth-3d-selected-target-card',
-
-    selectedTargetLabel:
-      'h-earth-3d-selected-target-label',
-
-    selectedTargetObjectId:
-      'h-earth-3d-selected-target-object-id',
-
-    selectedTargetClassification:
-      'h-earth-3d-selected-target-classification',
-
-    publicReadoutTitle:
-      'h-earth-3d-public-readout-title',
-
-    publicReadoutLine:
-      'h-earth-3d-public-readout-line',
-
-    publicReadout:
-      'h-earth-3d-public-readout',
-
-    targetList:
-      'h-earth-3d-target-list',
-
-    layer4StatusCard:
-      'h-earth-3d-layer-4-status-card',
-
-    layer4Status:
-      'h-earth-3d-layer-4-status',
-
-    layer4Summary:
-      'h-earth-3d-layer-4-summary',
-
-    layer4ProjectionPayload:
-      'h-earth-3d-layer-4-projection-payload',
-
-    step012JContractId:
-      'h-earth-3d-step-012j-contract-id',
-
-    step012H1ContractId:
-      'h-earth-3d-step-012h-1-contract-id',
-
-    step012IContractId:
-      'h-earth-3d-step-012i-contract-id',
-
-    step012ICanonicalizationId:
-      'h-earth-3d-step-012i-canonicalization-id',
-
-    inspectionPanel:
-      'h-earth-3d-inspection-panel',
-
-    debug:
-      'h-earth-3d-debug',
-
-    publicStageReceipt:
-      'h-earth-3d-public-stage-receipt',
-
-    copyStatus:
-      'h-earth-3d-copy-status',
-
-    diagnosticLink:
-      'h-earth-3d-diagnostic-link'
-  });
-
-
-/* ==========================================================================
- * 06 · SOURCE-PREVIEW DESCRIPTORS
- * ========================================================================== */
-
-export const H_EARTH_3D_PUBLIC_SOURCE_PREVIEW_BANDS =
-  Object.freeze([
-    Object.freeze({
-      bandId:
-        'R16_HORIZON_ATMOSPHERE_COMPRESSION',
-
-      label:
-        'R16 · Horizon / atmosphere compression',
-
-      rowRange:
-        'R16',
-
-      zoneId:
-        'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
-
-      depthClass:
-        'horizon',
-
-      cssTop:
-        '4%',
-
-      cssHeight:
-        '18%',
-
-      summary:
-        'Distant atmosphere and horizon compression above the first public shoreline cell.'
-    }),
-
-    Object.freeze({
-      bandId:
-        'R14_R15_SPLIT_ELEVATED_MANOR_AND_OFFSHORE_ISLETS',
-
-      label:
-        'R14–R15 · Elevated manor context / offshore islets',
-
-      rowRange:
-        'R14-R15',
-
-      zoneId:
-        'ZONE_004_MANOR_CONTEXT_ZONE + ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
-
-      depthClass:
-        'context',
-
-      cssTop:
-        '19%',
-
-      cssHeight:
-        '18%',
-
-      summary:
-        'Split region: offshore rock stacks and islets on one side, elevated Mirror Manor context on the other.'
-    }),
-
-    Object.freeze({
-      bandId:
-        'R12_R13_WATER_PLANE_AIR_HAZE_RELATION',
-
-      label:
-        'R12–R13 · Water plane / air-haze relation',
-
-      rowRange:
-        'R12-R13',
-
-      zoneId:
-        'ZONE_003_WATER_SURFACE_ZONE',
-
-      depthClass:
-        'water',
-
-      cssTop:
-        '35%',
-
-      cssHeight:
-        '16%',
-
-      summary:
-        'Open water plane and atmospheric-water relation before the nearshore band.'
-    }),
-
-    Object.freeze({
-      bandId:
-        'R10_R11_NEARSHORE_WAVE_DEPTH_TRANSITION',
-
-      label:
-        'R10–R11 · Nearshore wave / depth transition',
-
-      rowRange:
-        'R10-R11',
-
-      zoneId:
-        'ZONE_003_WATER_SURFACE_ZONE',
-
-      depthClass:
-        'water',
-
-      cssTop:
-        '48%',
-
-      cssHeight:
-        '11%',
-
-      summary:
-        'Nearshore wave band and water-depth transition approaching shoreline contact.'
-    }),
-
-    Object.freeze({
-      bandId:
-        'R08_R09_TIDE_POOLS_FOAM_SHORELINE_CONTACT',
-
-      label:
-        'R08–R09 · Tide pools / foam / shoreline contact',
-
-      rowRange:
-        'R08-R09',
-
-      zoneId:
-        'ZONE_002_SHORELINE_CONTACT_ZONE',
-
-      depthClass:
-        'shoreline',
-
-      cssTop:
-        '57%',
-
-      cssHeight:
-        '12%',
-
-      summary:
-        'Foam line, tide pools, reflective puddles, and shoreline-contact field.'
-    }),
-
-    Object.freeze({
-      bandId:
-        'R06_R07_DRY_SAND_TRANSITION',
-
-      label:
-        'R06–R07 · Dry sand transition',
-
-      rowRange:
-        'R06-R07',
-
-      zoneId:
-        'ZONE_002_SHORELINE_CONTACT_ZONE',
-
-      depthClass:
-        'shoreline',
-
-      cssTop:
-        '67%',
-
-      cssHeight:
-        '13%',
-
-      summary:
-        'Dry-wet transition band between beach foreground and shoreline contact.'
-    }),
-
-    Object.freeze({
-      bandId:
-        'R01_R05_FOREGROUND_WET_SAND_STONES_ROCKS',
-
-      label:
-        'R01–R05 · Foreground wet sand / stones / jagged rocks',
-
-      rowRange:
-        'R01-R05',
-
-      zoneId:
-        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
-
-      depthClass:
-        'foreground',
-
-      cssTop:
-        '78%',
-
-      cssHeight:
-        '22%',
-
-      summary:
-        'Foreground inspection surface: wet sand, stones, rocks, and first Inspect Ground field.'
-    })
-  ]);
-
-export const H_EARTH_3D_PUBLIC_TARGETS =
-  Object.freeze([
-    Object.freeze({
-      objectId:
-        'OBJ_002_FOREGROUND_WET_SAND',
-
-      label:
-        'Foreground Wet Sand',
-
-      classification:
-        'PRIMARY_PUBLIC_INSPECTION_OBJECT',
-
-      material:
-        'wet-sand',
-
-      materialClass:
-        'h-earth-material-wet-sand',
-
-      layerClass:
-        'h-earth-layer-foreground-wet-sand',
-
-      landscapeClass:
-        'h-earth-landscape-ground-wet-sand',
-
-      primitiveClass:
-        'h-earth-primitive-contoured-terrain-band',
-
-      zoneId:
-        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
-
-      rowBand:
-        'R01-R05',
-
-      previewRole:
-        'foreground inspection surface',
-
-      xPercent:
-        50,
-
-      yPercent:
-        87,
-
-      widthCss:
-        '112%',
-
-      heightCss:
-        '26%',
-
-      action:
-        'Inspect Ground',
-
-      readout:
-        'Ground Condition Read',
-
-      receipt:
-        'H_EARTH_GROUND_INSPECTION_RECEIPT',
-
-      publicLine:
-        'Foreground wet sand is the first readable surface. The temporary preview is descriptor-only and is replaced when the lawful renderer mounts.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_003_DRY_SAND_TRANSITION',
-
-      label:
-        'Dry Sand Transition',
-
-      classification:
-        'SECONDARY_SURFACE_CONTEXT',
-
-      material:
-        'dry-sand',
-
-      materialClass:
-        'h-earth-material-dry-sand',
-
-      layerClass:
-        'h-earth-layer-dry-sand-transition',
-
-      landscapeClass:
-        'h-earth-landscape-ground-dry-sand',
-
-      primitiveClass:
-        'h-earth-primitive-terrain-band',
-
-      zoneId:
-        'ZONE_002_SHORELINE_CONTACT_ZONE',
-
-      rowBand:
-        'R06-R07',
-
-      previewRole:
-        'dry-wet transition',
-
-      xPercent:
-        50,
-
-      yPercent:
-        73,
-
-      widthCss:
-        '106%',
-
-      heightCss:
-        '16%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Surface Context Read',
-
-      receipt:
-        'H_EARTH_SURFACE_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'Dry sand transition is public-stage context. It does not create traversal, survival simulation, or route activation.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
-
-      label:
-        'Tide Pools and Reflective Puddles',
-
-      classification:
-        'SUPPORTING_PUBLIC_READABLE_OBJECT',
-
-      material:
-        'tide-pool',
-
-      materialClass:
-        'h-earth-material-tide-pool',
-
-      layerClass:
-        'h-earth-layer-tide-pools-stones-rocks-detail',
-
-      landscapeClass:
-        'h-earth-landscape-surface-detail',
-
-      primitiveClass:
-        'h-earth-primitive-scatter-cluster',
-
-      zoneId:
-        'ZONE_002_SHORELINE_CONTACT_ZONE',
-
-      rowBand:
-        'R08-R09',
-
-      previewRole:
-        'low shoreline detail',
-
-      xPercent:
-        38,
-
-      yPercent:
-        63,
-
-      widthCss:
-        '15%',
-
-      heightCss:
-        '5%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Tide Pool Context Read',
-
-      receipt:
-        'H_EARTH_TIDE_POOL_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'Tide pools are readable shoreline detail. They do not activate swimming, fluid simulation, or survival simulation.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_005_SHORELINE_FOAM_LINE',
-
-      label:
-        'Shoreline Foam Line',
-
-      classification:
-        'SUPPORTING_PUBLIC_READABLE_OBJECT',
-
-      material:
-        'foam',
-
-      materialClass:
-        'h-earth-material-foam',
-
-      layerClass:
-        'h-earth-layer-shoreline-foam-line',
-
-      landscapeClass:
-        'h-earth-landscape-shoreline-band',
-
-      primitiveClass:
-        'h-earth-primitive-irregular-shoreline-band',
-
-      zoneId:
-        'ZONE_002_SHORELINE_CONTACT_ZONE',
-
-      rowBand:
-        'R08-R09',
-
-      previewRole:
-        'shoreline surf boundary',
-
-      xPercent:
-        50,
-
-      yPercent:
-        57,
-
-      widthCss:
-        '96%',
-
-      heightCss:
-        '3%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Shoreline Context Read',
-
-      receipt:
-        'H_EARTH_SHORELINE_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'The shoreline foam line marks the public surf boundary. It does not activate swimming, fluid simulation, or traversal.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_006_NEARSHORE_WAVE_BAND',
-
-      label:
-        'Nearshore Wave Band',
-
-      classification:
-        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
-
-      material:
-        'nearshore-wave',
-
-      materialClass:
-        'h-earth-material-nearshore-wave',
-
-      layerClass:
-        'h-earth-layer-nearshore-wave-band',
-
-      landscapeClass:
-        'h-earth-landscape-nearshore-wave',
-
-      primitiveClass:
-        'h-earth-primitive-water-depth-band',
-
-      zoneId:
-        'ZONE_003_WATER_SURFACE_ZONE',
-
-      rowBand:
-        'R10-R11',
-
-      previewRole:
-        'nearshore wave band',
-
-      xPercent:
-        50,
-
-      yPercent:
-        50,
-
-      widthCss:
-        '104%',
-
-      heightCss:
-        '6%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Nearshore Context Read',
-
-      receipt:
-        'H_EARTH_NEARSHORE_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'Nearshore wave band is context-only in the public stage. It does not activate swimming, fluid simulation, or traversal.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_007_WATER_SURFACE_PLANE',
-
-      label:
-        'Water Surface Plane',
-
-      classification:
-        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
-
-      material:
-        'water',
-
-      materialClass:
-        'h-earth-material-water',
-
-      layerClass:
-        'h-earth-layer-water-surface-plane',
-
-      landscapeClass:
-        'h-earth-landscape-water-plane',
-
-      primitiveClass:
-        'h-earth-primitive-water-plane',
-
-      zoneId:
-        'ZONE_003_WATER_SURFACE_ZONE',
-
-      rowBand:
-        'R12-R13',
-
-      previewRole:
-        'ocean body',
-
-      xPercent:
-        50,
-
-      yPercent:
-        40,
-
-      widthCss:
-        '112%',
-
-      heightCss:
-        '22%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Water Plane Context Read',
-
-      receipt:
-        'H_EARTH_WATER_PLANE_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'Water surface plane is public-stage ocean context. It does not activate swimming, fluid simulation, or survival simulation.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_008_AIR_HAZE_LIGHT_LAYER',
-
-      label:
-        'Air Haze Light Layer',
-
-      classification:
-        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
-
-      material:
-        'air-haze',
-
-      materialClass:
-        'h-earth-material-air-haze',
-
-      layerClass:
-        'h-earth-layer-air-haze-light',
-
-      landscapeClass:
-        'h-earth-landscape-air-haze-light',
-
-      primitiveClass:
-        'h-earth-primitive-atmospheric-layer',
-
-      zoneId:
-        'ZONE_003_WATER_SURFACE_ZONE',
-
-      rowBand:
-        'R12-R16',
-
-      previewRole:
-        'atmosphere and distance light',
-
-      xPercent:
-        50,
-
-      yPercent:
-        24,
-
-      widthCss:
-        '114%',
-
-      heightCss:
-        '32%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Atmospheric Context Read',
-
-      receipt:
-        'H_EARTH_ATMOSPHERIC_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'Air haze and light are atmospheric context. They do not create weather simulation, traversal, or validation proof.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_009_MANOR_EXTERIOR_CONTEXT',
-
-      label:
-        'Mirror Manor Exterior Context',
-
-      classification:
-        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
-
-      material:
-        'manor-context',
-
-      materialClass:
-        'h-earth-material-manor-context',
-
-      layerClass:
-        'h-earth-layer-manor-exterior-context',
-
-      landscapeClass:
-        'h-earth-landscape-manor-context',
-
-      primitiveClass:
-        'h-earth-primitive-layered-silhouette',
-
-      zoneId:
-        'ZONE_004_MANOR_CONTEXT_ZONE',
-
-      rowBand:
-        'R14-R15',
-
-      previewRole:
-        'elevated hill or cliff context',
-
-      xPercent:
-        71,
-
-      yPercent:
-        29,
-
-      widthCss:
-        '13%',
-
-      heightCss:
-        '13%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Distant Context Read',
-
-      receipt:
-        'H_EARTH_MANOR_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'Mirror Manor is visible as elevated exterior context. It does not grant manor interior access or distant traversal.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_010_SMALL_BEACH_STONES',
-
-      label:
-        'Small Beach Stones',
-
-      classification:
-        'SUPPORTING_PUBLIC_READABLE_OBJECT',
-
-      material:
-        'stone',
-
-      materialClass:
-        'h-earth-material-stone',
-
-      layerClass:
-        'h-earth-layer-tide-pools-stones-rocks-detail',
-
-      landscapeClass:
-        'h-earth-landscape-ground-scatter-cluster',
-
-      primitiveClass:
-        'h-earth-primitive-scatter-cluster',
-
-      zoneId:
-        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
-
-      rowBand:
-        'R01-R05',
-
-      previewRole:
-        'foreground beach texture',
-
-      xPercent:
-        57,
-
-      yPercent:
-        82,
-
-      widthCss:
-        '4%',
-
-      heightCss:
-        '3%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Stone Context Read',
-
-      receipt:
-        'H_EARTH_STONE_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'Small beach stones support the foreground inspection surface. They do not create collision, traversal, or gameplay authority.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_011_FOREGROUND_JAGGED_ROCKS',
-
-      label:
-        'Foreground Jagged Rocks',
-
-      classification:
-        'SUPPORTING_PUBLIC_READABLE_OBJECT',
-
-      material:
-        'jagged-rock',
-
-      materialClass:
-        'h-earth-material-jagged-rock',
-
-      layerClass:
-        'h-earth-layer-tide-pools-stones-rocks-detail',
-
-      landscapeClass:
-        'h-earth-landscape-foreground-rocks',
-
-      primitiveClass:
-        'h-earth-primitive-rock-cluster',
-
-      zoneId:
-        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
-
-      rowBand:
-        'R01-R05',
-
-      previewRole:
-        'foreground rocky edge',
-
-      xPercent:
-        22,
-
-      yPercent:
-        84,
-
-      widthCss:
-        '10%',
-
-      heightCss:
-        '9%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Foreground Rock Context Read',
-
-      receipt:
-        'H_EARTH_ROCK_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'Foreground jagged rocks support the visible inspection field. They do not create traversal, collision, or gameplay authority.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS',
-
-      label:
-        'Distance Rock Stacks and Islets',
-
-      classification:
-        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
-
-      material:
-        'distant-rock',
-
-      materialClass:
-        'h-earth-material-distant-rock',
-
-      layerClass:
-        'h-earth-layer-distant-world-context',
-
-      landscapeClass:
-        'h-earth-landscape-distant-world-context',
-
-      primitiveClass:
-        'h-earth-primitive-distant-cluster',
-
-      zoneId:
-        'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
-
-      rowBand:
-        'R14-R15',
-
-      previewRole:
-        'offshore distant forms',
-
-      xPercent:
-        28,
-
-      yPercent:
-        31,
-
-      widthCss:
-        '17%',
-
-      heightCss:
-        '8%',
-
-      action:
-        'Inspect Context',
-
-      readout:
-        'Distant Islet Context Read',
-
-      receipt:
-        'H_EARTH_DISTANT_ISLET_CONTEXT_RECEIPT_CANDIDATE',
-
-      publicLine:
-        'Distant rock stacks and islets remain context-only. They do not grant distant traversal or route-canon authority.'
-    }),
-
-    Object.freeze({
-      objectId:
-        'OBJ_001_GROUND_SPAWN_ANCHOR',
-
-      label:
-        'Ground Spawn Anchor',
-
-      classification:
-        'STRUCTURAL_NOT_PUBLIC_READABLE',
-
-      material:
-        'inspection-anchor',
-
-      materialClass:
-        'h-earth-material-inspection-anchor',
-
-      layerClass:
-        'h-earth-layer-inspection-anchor-overlay',
-
-      landscapeClass:
-        'h-earth-landscape-primary-inspection-anchor',
-
-      primitiveClass:
-        'h-earth-primitive-inspection-anchor',
-
-      zoneId:
-        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
-
-      rowBand:
-        'R01-R05',
-
-      previewRole:
-        'structural anchor only',
-
-      xPercent:
-        50,
-
-      yPercent:
-        84,
-
-      widthCss:
-        '2.4rem',
-
-      heightCss:
-        '2.4rem',
-
-      action:
-        'Inspect Ground',
-
-      readout:
-        'Ground Condition Read',
-
-      receipt:
-        'H_EARTH_GROUND_INSPECTION_RECEIPT',
-
-      publicLine:
-        'Ground spawn anchor is structural only. It is displayed as an anchor marker, not as player or avatar authority.'
-    })
-  ]);
-
-
-/* ==========================================================================
- * 07 · SOURCE-PREVIEW MODEL
- * ========================================================================== */
-
-export const H_EARTH_3D_PUBLIC_SOURCE_PREVIEW_MODEL =
-  Object.freeze({
-    previewId:
-      'H_EARTH_3D_PUBLIC_STAGE_TEMPORARY_SOURCE_PREVIEW_STEP_034P',
-
-    file:
-      H_EARTH_3D_PUBLIC_ROUTE_FILE,
-
-    contractId:
-      H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
-
-    renewedFrom:
-      H_EARTH_3D_INDEX_RENEWED_FROM_CONTRACT_ID,
-
-    previewClass:
-      'DESCRIPTOR_ONLY_TEMPORARY_ROUTE_FALLBACK',
-
-    matrix:
-      'H-Earth',
-
-    matrixRole:
-      'Ground-View Matrix',
-
-    activeCell:
-      'H_EARTH_GROUND_CELL_001',
-
-    sceneIdentity:
-      'earth-water-air-survival-shoreline-manor',
-
-    displayPurpose:
-      'Provide a temporary descriptor-only public-stage fallback before lawful renderer takeover or after renderer failure.',
-
-    sourceSpineContracts:
-      H_EARTH_3D_SOURCE_SPINE_CONTRACTS,
-
-    sourceSpineArchiveCustody:
-      H_EARTH_3D_SOURCE_SPINE_ARCHIVE_CUSTODY,
-
-    bands:
-      H_EARTH_3D_PUBLIC_SOURCE_PREVIEW_BANDS,
-
-    objects:
-      H_EARTH_3D_PUBLIC_TARGETS,
-
-    descriptorOnly:
-      true,
-
-    temporaryFallbackOnly:
-      true,
-
-    rendererDependencyRequiredForPreview:
-      false,
-
-    rendererMayTakeOverSameMount:
-      true,
-
-    previewDOMPreservedAfterRendererTakeover:
-      false,
-
-    previewMayBeRestoredAfterRendererFailure:
-      true,
-
-    runtimeExecution:
-      false,
-
-    runtimeLatticeActivation:
-      false,
-
-    active16x16RuntimeClaim:
-      false,
-
-    active256AddressRuntimeClaim:
-      false,
-
-    traversalClaim:
-      false,
-
-    survivalSimulationClaim:
-      false,
-
-    swimmingClaim:
-      false,
-
-    fluidSimulationClaim:
-      false,
-
-    manorInteriorAccessClaim:
-      false,
-
-    distantTraversalClaim:
-      false,
-
-    rendererPassClaim:
-      false,
-
-    visualPassClaim:
-      false,
-
-    validationClaim:
-      false,
-
-    productionClaim:
-      false,
-
-    matrixCollapse:
-      false,
-
-    boundary:
-      H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
-  });
-
-
-/* ==========================================================================
- * 08 · INTERNAL STATE
- * ========================================================================== */
-
-const MODULE_STATE = {
-  initialized:
-    false,
-
-  destroyed:
-    false,
-
-  status:
-    H_EARTH_3D_PUBLIC_STAGE_STATUS.NOT_STARTED,
-
-  initializationSequence:
-    0,
-
-  activeInitializationToken:
-    null,
-
-  activeInitializationKey:
-    null,
-
-  completionPromise:
-    null,
-
-  mountPoints:
-    null,
-
-  listenerAbortController:
-    null,
-
-  selectedTargetId:
-    'OBJ_002_FOREGROUND_WET_SAND',
-
-  generatedAt:
-    null,
-
-  sourcePreviewStatus:
-    H_EARTH_3D_SOURCE_PREVIEW_STATUS.NOT_STARTED,
-
-  sourcePreviewReceipt:
-    null,
-
-  compositorModule:
-    null,
-
-  compositorImportReceipt:
-    null,
-
-  compositorHandoff:
-    null,
-
-  compositorHandoffReceipt:
-    null,
-
-  rendererModule:
-    null,
-
-  rendererImportReceipt:
-    null,
-
-  rendererConstructReceipt:
-    null,
-
-  rendererMountReceipt:
-    null,
-
-  rendererReleaseReceipt:
-    null,
-
-  rendererBootstrapStatus:
-    H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS.NOT_STARTED,
-
-  layer4ImportReceipt:
-    null,
-
-  layer4StatusProjection:
-    null,
-
-  layer4PublicStageReceipt:
-    null,
-
-  routeBootstrapReceipt:
-    null,
-
-  routeBootstrapResult:
-    null,
-
-  asyncInitializationStarted:
-    false,
-
-  asyncInitializationComplete:
-    false
-};
-
-
-/* ==========================================================================
- * 09 · GENERIC HELPERS
+ * 03 · GENERIC HELPERS
  * ========================================================================== */
 
 function nowIso() {
   return new Date().toISOString();
-}
-
-function freeze(value) {
-  return Object.freeze(value);
 }
 
 function isPlainRecord(value) {
@@ -1872,8 +229,7 @@ function isPlainRecord(value) {
     value !== null &&
     typeof value === 'object' &&
     Array.isArray(value) === false &&
-    Object.getPrototypeOf(value) ===
-      Object.prototype
+    Object.getPrototypeOf(value) === Object.prototype
   );
 }
 
@@ -1885,24 +241,59 @@ function isNonEmptyExactString(value) {
   );
 }
 
-function createInitializationToken(sequence) {
-  return freeze({
-    sequence,
-    token:
-      `H_EARTH_3D_ROUTE_INITIALIZATION_${sequence}_${Date.now()}_${Math.random()
-        .toString(36)
-        .slice(2)}`
-  });
+function deepFreeze(
+  value,
+  seen = new WeakSet()
+) {
+  if (
+    value === null ||
+    typeof value !== 'object'
+  ) {
+    return value;
+  }
+
+  if (seen.has(value)) {
+    return value;
+  }
+
+  seen.add(value);
+
+  for (const key of Reflect.ownKeys(value)) {
+    const descriptor =
+      Object.getOwnPropertyDescriptor(
+        value,
+        key
+      );
+
+    if (
+      descriptor &&
+      Object.prototype.hasOwnProperty.call(
+        descriptor,
+        'value'
+      )
+    ) {
+      deepFreeze(
+        descriptor.value,
+        seen
+      );
+    }
+  }
+
+  if (!Object.isFrozen(value)) {
+    Object.freeze(value);
+  }
+
+  return value;
 }
 
-function isActiveInitializationToken(token) {
-  return (
-    token !== null &&
-    MODULE_STATE.activeInitializationToken ===
-      token &&
-    MODULE_STATE.destroyed ===
-      false
-  );
+/**
+ * Freezes only the initialization-key record.
+ *
+ * The key may contain a browser-owned Document reference. The Document is
+ * compared by identity and must never be recursively frozen or traversed.
+ */
+function freezeInitializationKey(key) {
+  return Object.freeze(key);
 }
 
 function getDocumentFromOptions(options = {}) {
@@ -1952,17 +343,15 @@ function safeSerialize(
 
     if (
       type === 'string' ||
-      type === 'number' ||
       type === 'boolean'
     ) {
-      if (
-        type === 'number' &&
-        !Number.isFinite(input)
-      ) {
-        return String(input);
-      }
-
       return input;
+    }
+
+    if (type === 'number') {
+      return Number.isFinite(input)
+        ? input
+        : String(input);
     }
 
     if (type === 'bigint') {
@@ -2024,10 +413,7 @@ function safeSerialize(
 
       const output = {};
 
-      for (
-        const key
-        of Object.keys(input)
-      ) {
+      for (const key of Object.keys(input)) {
         if (
           key === 'document' ||
           key === 'ownerDocument' ||
@@ -2170,8 +556,1692 @@ function normalizePreviewToken(
   );
 }
 
-function createInitializationKey(options) {
-  return freeze({
+
+/* ==========================================================================
+ * 04 · EXECUTION CEILING AND BOUNDARY FLAGS
+ * ========================================================================== */
+
+export const H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING =
+  deepFreeze({
+    moduleInitializationObservedMayBecomeTrue:
+      true,
+
+    compositorHandoffRequestedMayBecomeTrue:
+      true,
+
+    rendererConstructionAttemptedMayBecomeTrue:
+      true,
+
+    rendererMountAttemptedMayBecomeTrue:
+      true,
+
+    sourcePreviewMounted:
+      'descriptor-only-public-stage-fallback',
+
+    sourcePreviewRuntimeExecution:
+      false,
+
+    packet002Construction:
+      false,
+
+    admittedFrameConstruction:
+      false,
+
+    geometryConstruction:
+      false,
+
+    cameraAuthority:
+      false,
+
+    compositorViewportAuthority:
+      false,
+
+    visibilityAuthority:
+      false,
+
+    compositorRevisionAuthority:
+      false,
+
+    runFunctionExecuted:
+      false,
+
+    step012H1RunExecuted:
+      false,
+
+    step012IVectorExecuted:
+      false,
+
+    step012IRunnerExecuted:
+      false,
+
+    target002RuntimeExecuted:
+      false,
+
+    target003ReplayExecuted:
+      false,
+
+    runtimeExecuted:
+      false,
+
+    replayExecuted:
+      false,
+
+    vectorRunnerExecuted:
+      false,
+
+    canonicalDigestGenerated:
+      false,
+
+    replayComparison:
+      false,
+
+    rendererPassClaim:
+      false,
+
+    visualPassClaim:
+      false,
+
+    validationClaim:
+      false,
+
+    productionClaim:
+      false,
+
+    deploymentClaim:
+      false,
+
+    matrixCollapse:
+      false
+  });
+
+export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS =
+  deepFreeze({
+    publicRouteOnly:
+      true,
+
+    publicEnvironmentHost:
+      true,
+
+    visibleStageAuthorized:
+      true,
+
+    temporarySourcePreviewAuthorized:
+      true,
+
+    compositorHandoffConsumptionAuthorized:
+      true,
+
+    rendererConstructionAuthorized:
+      true,
+
+    rendererMountAuthorized:
+      true,
+
+    rendererReleaseAuthorized:
+      true,
+
+    selectedSurfaceDisplayAuthorized:
+      true,
+
+    groundConditionReadDisplayAuthorized:
+      true,
+
+    layer4StatusProjectionAuthorized:
+      true,
+
+    publicStageReceiptDefinitionAuthorized:
+      true,
+
+    diagnosticRouteHandoffAuthorized:
+      true,
+
+    sourcePreviewDescriptorOnly:
+      true,
+
+    sourcePreviewRuntimeExecution:
+      false,
+
+    sourcePreviewSameNodePreservationClaim:
+      false,
+
+    rendererTakeoverMayReplacePreviewDOM:
+      true,
+
+    routeConstructsPacket002:
+      false,
+
+    routeConstructsAdmittedFrame:
+      false,
+
+    routeConstructsGeometry:
+      false,
+
+    routeOwnsCameraState:
+      false,
+
+    routeOwnsCompositorViewportState:
+      false,
+
+    routeOwnsVisibilityState:
+      false,
+
+    routeOwnsCompositorRevisions:
+      false,
+
+    productionModulePathOverrides:
+      false,
+
+    genericRendererAPIDiscovery:
+      false,
+
+    exactRendererAPIConsumption:
+      true,
+
+    exactRendererContractRequired:
+      true,
+
+    exactCompositorAPIConsumption:
+      true,
+
+    exactCompositorContractRequired:
+      true,
+
+    rendererReleasedOnDestroy:
+      true,
+
+    cleanupPreservesPrimaryFailureStatus:
+      true,
+
+    overlappingInitializationGuarded:
+      true,
+
+    staleAsyncCompletionGuarded:
+      true,
+
+    repeatedListenerBindingGuarded:
+      true,
+
+    completeInitializationIdentity:
+      true,
+
+    occurrenceEvidenceIsolation:
+      true,
+
+    diagnosticWallEmbedded:
+      false,
+
+    reportWallEmbedded:
+      false,
+
+    rawEvidenceWallEmbedded:
+      false,
+
+    receiptWallEmbedded:
+      false,
+
+    advancedCopySurfaceEmbedded:
+      false,
+
+    shellOwnedSceneObjects:
+      false,
+
+    fakeRuntimeGeometry:
+      false,
+
+    webglActivation:
+      false,
+
+    canvasActivation:
+      false,
+
+    svgActivation:
+      false,
+
+    iframeActivation:
+      false,
+
+    step012H1RunExecution:
+      false,
+
+    step012IVectorExecution:
+      false,
+
+    step012IRunnerExecution:
+      false,
+
+    target002RuntimeExecution:
+      false,
+
+    target003ReplayExecution:
+      false,
+
+    canonicalDigestGeneration:
+      false,
+
+    replayComparison:
+      false,
+
+    runtimeActivation:
+      false,
+
+    routeActivationProof:
+      false,
+
+    rendererPassClaim:
+      false,
+
+    visualPassClaim:
+      false,
+
+    validationClaim:
+      false,
+
+    productionClaim:
+      false,
+
+    deploymentClaim:
+      false,
+
+    traversal:
+      false,
+
+    survivalSimulation:
+      false,
+
+    swimming:
+      false,
+
+    fluidSimulation:
+      false,
+
+    manorInteriorAccess:
+      false,
+
+    distantTraversal:
+      false,
+
+    runtimeLatticeActivation:
+      false,
+
+    active16x16RuntimeLatticeClaim:
+      false,
+
+    active256AddressRuntimeClaim:
+      false,
+
+    mirrorManorRouteCanonNaming:
+      false,
+
+    matrixCollapse:
+      false
+  });
+
+
+/* ==========================================================================
+ * 05 · STATIC CUSTODY METADATA
+ * ========================================================================== */
+
+export const H_EARTH_3D_LAYER_4_CONTRACTS =
+  deepFreeze({
+    step012JContractId:
+      'H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FILE_BIRTH_STEP_012J_v1',
+
+    step012H1ContractId:
+      'H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_1_HISTORICAL_FIXTURE_ALIGNMENT_v1',
+
+    step012IContractId:
+      'H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_FILE_BIRTH_STEP_012I_v1',
+
+    step012ICanonicalizationId:
+      'H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_STEP_012I_UTF16_UTF8_SHA256_v1',
+
+    target002ContractId:
+      'H_EARTH_DETERMINISTIC_RUNTIME_FILE_RENEWAL_STEP_012G_TARGET_002_RUNTIME_KERNEL_DEPENDENCY_REVIEW_v1',
+
+    target003ContractId:
+      'H_EARTH_CANONICAL_REPLAY_FILE_RENEWAL_STEP_012G_TARGET_003_RUNTIME_KERNEL_DEPENDENCY_REVIEW_v1',
+
+    step012IRunnerContractId:
+      'H_EARTH_SERIALIZATION_VECTOR_RUNNER_FILE_BIRTH_STEP_012I_RUNNER_v1'
+  });
+
+export const H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY =
+  deepFreeze({
+    custodyClass:
+      'BACKED_STATIC_SUPPORT_METADATA_FOR_PUBLIC_STAGE_PROJECTION',
+
+    step012JBackupComplete:
+      true,
+
+    step012JArchiveTitle:
+      'h-earth-headless-serialization-bridge-step-012j-backup',
+
+    step012JDriveDocumentId:
+      '1zt8rsROGF8roudC3re1KOwmU5KSws6pQIap7kd0gQpw',
+
+    step012H1ArchiveTitle:
+      'h-earth-headless-replay-step-012h-1-backup',
+
+    step012H1DriveDocumentId:
+      '1DfSsDzKRYQNJn9S43hmA8gMeebY_7WeQ0ygoIl6Qt2Y',
+
+    step012IArchiveTitle:
+      'h-earth-canonical-state-serialization-law-step-012i-backup',
+
+    step012IDriveDocumentId:
+      '1K8bszh6SMeutLpCeyCjK6D9r8m6zsIEP3R6soBip6GA',
+
+    step012IRunnerArchiveTitle:
+      'h-earth-serialization-vector-runner-step-012i-backup',
+
+    step012IRunnerDriveDocumentId:
+      '1EcXxqb2M_MwdiHFVDX95klU4Dh6X1Be8Q5TFNDyCIUE',
+
+    target002ArchiveTitle:
+      'h-earth-deterministic-runtime-step-012g-target-002-backup',
+
+    target002DriveDocumentId:
+      '1AYVrqdmnBEdM5k4pop8wJNXMThXxdLZd7TNkhgkq2Z0',
+
+    target003ArchiveTitle:
+      'h-earth-canonical-replay-step-012g-target-003-backup',
+
+    target003DriveDocumentId:
+      '1qbNHRW9L3l7FjfJW04x30J9qNO9dNvWTR8b6Vh0C3vU',
+
+    archiveCustodyStatus:
+      'BACKED_OCCURRENCE_RECORDED_BY_CONSTRUCTION_BASIS',
+
+    publicStageReverifiesDriveArchive:
+      false,
+
+    publicStageClaimsNetworkBackup:
+      false
+  });
+
+export const H_EARTH_3D_SOURCE_SPINE_CONTRACTS =
+  deepFreeze({
+    step034IBoundaryContractId:
+      'H_EARTH_MATRIX_BOUNDARIES_FILE_RENEWAL_STEP_034I_PUBLIC_STAGE_AUTHORITY_AMENDMENT_v1',
+
+    step034JObjectsContractId:
+      'H_EARTH_GROUND_CELL_001_OBJECTS_FILE_RENEWAL_STEP_034J_PUBLIC_STAGE_READABILITY_AMENDMENT_v1',
+
+    step034KZonesContractId:
+      'H_EARTH_GROUND_CELL_001_ZONES_FILE_RENEWAL_STEP_034K_PUBLIC_STAGE_RENDER_TARGET_ZONE_ALIGNMENT_v1',
+
+    step034LLandscapeLatticeContractId:
+      'H_EARTH_256_LATTICE_LANDSCAPE_DIMENSION_MAP_FILE_RENEWAL_STEP_034L_LANDSCAPE_LATTICE_ZONE_AND_RENDER_TARGET_ALIGNMENT_v1'
+  });
+
+export const H_EARTH_3D_SOURCE_SPINE_ARCHIVE_CUSTODY =
+  deepFreeze({
+    step034IArchiveTitle:
+      'h-earth-matrix-boundaries-step-034i-public-stage-authority-amendment-backup',
+
+    step034IDriveDocumentId:
+      '1wLPI7frZHb8Xtq3Syrcnjc6xx3Rkn1LHfHLm12LQjQM',
+
+    step034JArchiveTitle:
+      'h-earth-ground-cell-001-objects-step-034j-public-stage-readability-amendment-backup',
+
+    step034JDriveDocumentId:
+      '1PLWtLG-BluKzgUO89SOwNTJk32DCQ1lfDAJWKDc_WO8',
+
+    step034KArchiveTitle:
+      'h-earth-ground-cell-001-zones-step-034k-public-stage-render-target-zone-alignment-backup',
+
+    step034KDriveDocumentId:
+      '1XV4IDS04Qop95QEw9o2w1KwJnO80JOZOjdn0gNZeNuI',
+
+    step034LArchiveTitle:
+      'h-earth-256-lattice-landscape-step-034l-zone-and-render-target-alignment-backup',
+
+    step034LDriveDocumentId:
+      '10HUxO6UsqD0CoSLIB4v6bgJpwLehVFH5bLY-n0jsQnU',
+
+    sourceSpineBackupStatus:
+      'BACKED_OCCURRENCES_RECORDED_BY_CONSTRUCTION_BASIS',
+
+    publicStageReverifiesDriveArchive:
+      false,
+
+    publicStageClaimsNetworkBackup:
+      false,
+
+    assistantRepositoryInstallationVerified:
+      false
+  });
+
+
+/* ==========================================================================
+ * 06 · PUBLIC MOUNT IDENTITIES
+ * ========================================================================== */
+
+export const H_EARTH_3D_PUBLIC_MOUNT_IDS =
+  deepFreeze({
+    routeRoot:
+      'h-earth-3d-route-root',
+
+    status:
+      'h-earth-3d-status',
+
+    fallback:
+      'h-earth-3d-fallback',
+
+    rendererMount:
+      'h-earth-3d-renderer-mount',
+
+    actionInspectGround:
+      'h-earth-3d-action-inspect-ground',
+
+    selectedTargetCard:
+      'h-earth-3d-selected-target-card',
+
+    selectedTargetLabel:
+      'h-earth-3d-selected-target-label',
+
+    selectedTargetObjectId:
+      'h-earth-3d-selected-target-object-id',
+
+    selectedTargetClassification:
+      'h-earth-3d-selected-target-classification',
+
+    publicReadoutTitle:
+      'h-earth-3d-public-readout-title',
+
+    publicReadoutLine:
+      'h-earth-3d-public-readout-line',
+
+    publicReadout:
+      'h-earth-3d-public-readout',
+
+    targetList:
+      'h-earth-3d-target-list',
+
+    layer4StatusCard:
+      'h-earth-3d-layer-4-status-card',
+
+    layer4Status:
+      'h-earth-3d-layer-4-status',
+
+    layer4Summary:
+      'h-earth-3d-layer-4-summary',
+
+    layer4ProjectionPayload:
+      'h-earth-3d-layer-4-projection-payload',
+
+    step012JContractId:
+      'h-earth-3d-step-012j-contract-id',
+
+    step012H1ContractId:
+      'h-earth-3d-step-012h-1-contract-id',
+
+    step012IContractId:
+      'h-earth-3d-step-012i-contract-id',
+
+    step012ICanonicalizationId:
+      'h-earth-3d-step-012i-canonicalization-id',
+
+    inspectionPanel:
+      'h-earth-3d-inspection-panel',
+
+    debug:
+      'h-earth-3d-debug',
+
+    publicStageReceipt:
+      'h-earth-3d-public-stage-receipt',
+
+    copyStatus:
+      'h-earth-3d-copy-status',
+
+    diagnosticLink:
+      'h-earth-3d-diagnostic-link'
+  });
+
+
+/* ==========================================================================
+ * 07 · SOURCE-PREVIEW DESCRIPTORS
+ * ========================================================================== */
+
+export const H_EARTH_3D_PUBLIC_SOURCE_PREVIEW_BANDS =
+  deepFreeze([
+    {
+      bandId:
+        'R16_HORIZON_ATMOSPHERE_COMPRESSION',
+
+      label:
+        'R16 · Horizon / atmosphere compression',
+
+      rowRange:
+        'R16',
+
+      zoneId:
+        'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
+
+      depthClass:
+        'horizon',
+
+      cssTop:
+        '4%',
+
+      cssHeight:
+        '18%',
+
+      summary:
+        'Distant atmosphere and horizon compression above the first public shoreline cell.'
+    },
+
+    {
+      bandId:
+        'R14_R15_SPLIT_ELEVATED_MANOR_AND_OFFSHORE_ISLETS',
+
+      label:
+        'R14–R15 · Elevated manor context / offshore islets',
+
+      rowRange:
+        'R14-R15',
+
+      zoneId:
+        'ZONE_004_MANOR_CONTEXT_ZONE + ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
+
+      depthClass:
+        'context',
+
+      cssTop:
+        '19%',
+
+      cssHeight:
+        '18%',
+
+      summary:
+        'Split region: offshore rock stacks and islets on one side, elevated Mirror Manor context on the other.'
+    },
+
+    {
+      bandId:
+        'R12_R13_WATER_PLANE_AIR_HAZE_RELATION',
+
+      label:
+        'R12–R13 · Water plane / air-haze relation',
+
+      rowRange:
+        'R12-R13',
+
+      zoneId:
+        'ZONE_003_WATER_SURFACE_ZONE',
+
+      depthClass:
+        'water',
+
+      cssTop:
+        '35%',
+
+      cssHeight:
+        '16%',
+
+      summary:
+        'Open water plane and atmospheric-water relation before the nearshore band.'
+    },
+
+    {
+      bandId:
+        'R10_R11_NEARSHORE_WAVE_DEPTH_TRANSITION',
+
+      label:
+        'R10–R11 · Nearshore wave / depth transition',
+
+      rowRange:
+        'R10-R11',
+
+      zoneId:
+        'ZONE_003_WATER_SURFACE_ZONE',
+
+      depthClass:
+        'water',
+
+      cssTop:
+        '48%',
+
+      cssHeight:
+        '11%',
+
+      summary:
+        'Nearshore wave band and water-depth transition approaching shoreline contact.'
+    },
+
+    {
+      bandId:
+        'R08_R09_TIDE_POOLS_FOAM_SHORELINE_CONTACT',
+
+      label:
+        'R08–R09 · Tide pools / foam / shoreline contact',
+
+      rowRange:
+        'R08-R09',
+
+      zoneId:
+        'ZONE_002_SHORELINE_CONTACT_ZONE',
+
+      depthClass:
+        'shoreline',
+
+      cssTop:
+        '57%',
+
+      cssHeight:
+        '12%',
+
+      summary:
+        'Foam line, tide pools, reflective puddles, and shoreline-contact field.'
+    },
+
+    {
+      bandId:
+        'R06_R07_DRY_SAND_TRANSITION',
+
+      label:
+        'R06–R07 · Dry sand transition',
+
+      rowRange:
+        'R06-R07',
+
+      zoneId:
+        'ZONE_002_SHORELINE_CONTACT_ZONE',
+
+      depthClass:
+        'shoreline',
+
+      cssTop:
+        '67%',
+
+      cssHeight:
+        '13%',
+
+      summary:
+        'Dry-wet transition band between beach foreground and shoreline contact.'
+    },
+
+    {
+      bandId:
+        'R01_R05_FOREGROUND_WET_SAND_STONES_ROCKS',
+
+      label:
+        'R01–R05 · Foreground wet sand / stones / jagged rocks',
+
+      rowRange:
+        'R01-R05',
+
+      zoneId:
+        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+      depthClass:
+        'foreground',
+
+      cssTop:
+        '78%',
+
+      cssHeight:
+        '22%',
+
+      summary:
+        'Foreground inspection surface: wet sand, stones, rocks, and first Inspect Ground field.'
+    }
+  ]);
+
+export const H_EARTH_3D_PUBLIC_TARGETS =
+  deepFreeze([
+    {
+      objectId:
+        'OBJ_002_FOREGROUND_WET_SAND',
+
+      label:
+        'Foreground Wet Sand',
+
+      classification:
+        'PRIMARY_PUBLIC_INSPECTION_OBJECT',
+
+      material:
+        'wet-sand',
+
+      materialClass:
+        'h-earth-material-wet-sand',
+
+      layerClass:
+        'h-earth-layer-foreground-wet-sand',
+
+      landscapeClass:
+        'h-earth-landscape-ground-wet-sand',
+
+      primitiveClass:
+        'h-earth-primitive-contoured-terrain-band',
+
+      zoneId:
+        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+      rowBand:
+        'R01-R05',
+
+      previewRole:
+        'foreground inspection surface',
+
+      xPercent:
+        50,
+
+      yPercent:
+        87,
+
+      widthCss:
+        '112%',
+
+      heightCss:
+        '26%',
+
+      action:
+        'Inspect Ground',
+
+      readout:
+        'Ground Condition Read',
+
+      receipt:
+        'H_EARTH_GROUND_INSPECTION_RECEIPT',
+
+      publicLine:
+        'Foreground wet sand is the first readable surface. The temporary preview is descriptor-only and is replaced when the lawful renderer mounts.'
+    },
+
+    {
+      objectId:
+        'OBJ_003_DRY_SAND_TRANSITION',
+
+      label:
+        'Dry Sand Transition',
+
+      classification:
+        'SECONDARY_SURFACE_CONTEXT',
+
+      material:
+        'dry-sand',
+
+      materialClass:
+        'h-earth-material-dry-sand',
+
+      layerClass:
+        'h-earth-layer-dry-sand-transition',
+
+      landscapeClass:
+        'h-earth-landscape-ground-dry-sand',
+
+      primitiveClass:
+        'h-earth-primitive-terrain-band',
+
+      zoneId:
+        'ZONE_002_SHORELINE_CONTACT_ZONE',
+
+      rowBand:
+        'R06-R07',
+
+      previewRole:
+        'dry-wet transition',
+
+      xPercent:
+        50,
+
+      yPercent:
+        73,
+
+      widthCss:
+        '106%',
+
+      heightCss:
+        '16%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Surface Context Read',
+
+      receipt:
+        'H_EARTH_SURFACE_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'Dry sand transition is public-stage context. It does not create traversal, survival simulation, or route activation.'
+    },
+
+    {
+      objectId:
+        'OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES',
+
+      label:
+        'Tide Pools and Reflective Puddles',
+
+      classification:
+        'SUPPORTING_PUBLIC_READABLE_OBJECT',
+
+      material:
+        'tide-pool',
+
+      materialClass:
+        'h-earth-material-tide-pool',
+
+      layerClass:
+        'h-earth-layer-tide-pools-stones-rocks-detail',
+
+      landscapeClass:
+        'h-earth-landscape-surface-detail',
+
+      primitiveClass:
+        'h-earth-primitive-scatter-cluster',
+
+      zoneId:
+        'ZONE_002_SHORELINE_CONTACT_ZONE',
+
+      rowBand:
+        'R08-R09',
+
+      previewRole:
+        'low shoreline detail',
+
+      xPercent:
+        38,
+
+      yPercent:
+        63,
+
+      widthCss:
+        '15%',
+
+      heightCss:
+        '5%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Tide Pool Context Read',
+
+      receipt:
+        'H_EARTH_TIDE_POOL_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'Tide pools are readable shoreline detail. They do not activate swimming, fluid simulation, or survival simulation.'
+    },
+
+    {
+      objectId:
+        'OBJ_005_SHORELINE_FOAM_LINE',
+
+      label:
+        'Shoreline Foam Line',
+
+      classification:
+        'SUPPORTING_PUBLIC_READABLE_OBJECT',
+
+      material:
+        'foam',
+
+      materialClass:
+        'h-earth-material-foam',
+
+      layerClass:
+        'h-earth-layer-shoreline-foam-line',
+
+      landscapeClass:
+        'h-earth-landscape-shoreline-band',
+
+      primitiveClass:
+        'h-earth-primitive-irregular-shoreline-band',
+
+      zoneId:
+        'ZONE_002_SHORELINE_CONTACT_ZONE',
+
+      rowBand:
+        'R08-R09',
+
+      previewRole:
+        'shoreline surf boundary',
+
+      xPercent:
+        50,
+
+      yPercent:
+        57,
+
+      widthCss:
+        '96%',
+
+      heightCss:
+        '3%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Shoreline Context Read',
+
+      receipt:
+        'H_EARTH_SHORELINE_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'The shoreline foam line marks the public surf boundary. It does not activate swimming, fluid simulation, or traversal.'
+    },
+
+    {
+      objectId:
+        'OBJ_006_NEARSHORE_WAVE_BAND',
+
+      label:
+        'Nearshore Wave Band',
+
+      classification:
+        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
+
+      material:
+        'nearshore-wave',
+
+      materialClass:
+        'h-earth-material-nearshore-wave',
+
+      layerClass:
+        'h-earth-layer-nearshore-wave-band',
+
+      landscapeClass:
+        'h-earth-landscape-nearshore-wave',
+
+      primitiveClass:
+        'h-earth-primitive-water-depth-band',
+
+      zoneId:
+        'ZONE_003_WATER_SURFACE_ZONE',
+
+      rowBand:
+        'R10-R11',
+
+      previewRole:
+        'nearshore wave band',
+
+      xPercent:
+        50,
+
+      yPercent:
+        50,
+
+      widthCss:
+        '104%',
+
+      heightCss:
+        '6%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Nearshore Context Read',
+
+      receipt:
+        'H_EARTH_NEARSHORE_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'Nearshore wave band is context-only in the public stage. It does not activate swimming, fluid simulation, or traversal.'
+    },
+
+    {
+      objectId:
+        'OBJ_007_WATER_SURFACE_PLANE',
+
+      label:
+        'Water Surface Plane',
+
+      classification:
+        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
+
+      material:
+        'water',
+
+      materialClass:
+        'h-earth-material-water',
+
+      layerClass:
+        'h-earth-layer-water-surface-plane',
+
+      landscapeClass:
+        'h-earth-landscape-water-plane',
+
+      primitiveClass:
+        'h-earth-primitive-water-plane',
+
+      zoneId:
+        'ZONE_003_WATER_SURFACE_ZONE',
+
+      rowBand:
+        'R12-R13',
+
+      previewRole:
+        'ocean body',
+
+      xPercent:
+        50,
+
+      yPercent:
+        40,
+
+      widthCss:
+        '112%',
+
+      heightCss:
+        '22%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Water Plane Context Read',
+
+      receipt:
+        'H_EARTH_WATER_PLANE_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'Water surface plane is public-stage ocean context. It does not activate swimming, fluid simulation, or survival simulation.'
+    },
+
+    {
+      objectId:
+        'OBJ_008_AIR_HAZE_LIGHT_LAYER',
+
+      label:
+        'Air Haze Light Layer',
+
+      classification:
+        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
+
+      material:
+        'air-haze',
+
+      materialClass:
+        'h-earth-material-air-haze',
+
+      layerClass:
+        'h-earth-layer-air-haze-light',
+
+      landscapeClass:
+        'h-earth-landscape-air-haze-light',
+
+      primitiveClass:
+        'h-earth-primitive-atmospheric-layer',
+
+      zoneId:
+        'ZONE_003_WATER_SURFACE_ZONE',
+
+      rowBand:
+        'R12-R16',
+
+      previewRole:
+        'atmosphere and distance light',
+
+      xPercent:
+        50,
+
+      yPercent:
+        24,
+
+      widthCss:
+        '114%',
+
+      heightCss:
+        '32%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Atmospheric Context Read',
+
+      receipt:
+        'H_EARTH_ATMOSPHERIC_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'Air haze and light are atmospheric context. They do not create weather simulation, traversal, or validation proof.'
+    },
+
+    {
+      objectId:
+        'OBJ_009_MANOR_EXTERIOR_CONTEXT',
+
+      label:
+        'Mirror Manor Exterior Context',
+
+      classification:
+        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
+
+      material:
+        'manor-context',
+
+      materialClass:
+        'h-earth-material-manor-context',
+
+      layerClass:
+        'h-earth-layer-manor-exterior-context',
+
+      landscapeClass:
+        'h-earth-landscape-manor-context',
+
+      primitiveClass:
+        'h-earth-primitive-layered-silhouette',
+
+      zoneId:
+        'ZONE_004_MANOR_CONTEXT_ZONE',
+
+      rowBand:
+        'R14-R15',
+
+      previewRole:
+        'elevated hill or cliff context',
+
+      xPercent:
+        71,
+
+      yPercent:
+        29,
+
+      widthCss:
+        '13%',
+
+      heightCss:
+        '13%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Distant Context Read',
+
+      receipt:
+        'H_EARTH_MANOR_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'Mirror Manor is visible as elevated exterior context. It does not grant manor interior access or distant traversal.'
+    },
+
+    {
+      objectId:
+        'OBJ_010_SMALL_BEACH_STONES',
+
+      label:
+        'Small Beach Stones',
+
+      classification:
+        'SUPPORTING_PUBLIC_READABLE_OBJECT',
+
+      material:
+        'stone',
+
+      materialClass:
+        'h-earth-material-stone',
+
+      layerClass:
+        'h-earth-layer-tide-pools-stones-rocks-detail',
+
+      landscapeClass:
+        'h-earth-landscape-ground-scatter-cluster',
+
+      primitiveClass:
+        'h-earth-primitive-scatter-cluster',
+
+      zoneId:
+        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+      rowBand:
+        'R01-R05',
+
+      previewRole:
+        'foreground beach texture',
+
+      xPercent:
+        57,
+
+      yPercent:
+        82,
+
+      widthCss:
+        '4%',
+
+      heightCss:
+        '3%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Stone Context Read',
+
+      receipt:
+        'H_EARTH_STONE_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'Small beach stones support the foreground inspection surface. They do not create collision, traversal, or gameplay authority.'
+    },
+
+    {
+      objectId:
+        'OBJ_011_FOREGROUND_JAGGED_ROCKS',
+
+      label:
+        'Foreground Jagged Rocks',
+
+      classification:
+        'SUPPORTING_PUBLIC_READABLE_OBJECT',
+
+      material:
+        'jagged-rock',
+
+      materialClass:
+        'h-earth-material-jagged-rock',
+
+      layerClass:
+        'h-earth-layer-tide-pools-stones-rocks-detail',
+
+      landscapeClass:
+        'h-earth-landscape-foreground-rocks',
+
+      primitiveClass:
+        'h-earth-primitive-rock-cluster',
+
+      zoneId:
+        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+      rowBand:
+        'R01-R05',
+
+      previewRole:
+        'foreground rocky edge',
+
+      xPercent:
+        22,
+
+      yPercent:
+        84,
+
+      widthCss:
+        '10%',
+
+      heightCss:
+        '9%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Foreground Rock Context Read',
+
+      receipt:
+        'H_EARTH_ROCK_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'Foreground jagged rocks support the visible inspection field. They do not create traversal, collision, or gameplay authority.'
+    },
+
+    {
+      objectId:
+        'OBJ_012_DISTANCE_ROCK_STACKS_AND_ISLETS',
+
+      label:
+        'Distance Rock Stacks and Islets',
+
+      classification:
+        'CONTEXT_ONLY_PUBLIC_VISIBLE_OBJECT',
+
+      material:
+        'distant-rock',
+
+      materialClass:
+        'h-earth-material-distant-rock',
+
+      layerClass:
+        'h-earth-layer-distant-world-context',
+
+      landscapeClass:
+        'h-earth-landscape-distant-world-context',
+
+      primitiveClass:
+        'h-earth-primitive-distant-cluster',
+
+      zoneId:
+        'ZONE_005_DISTANT_WORLD_CONTEXT_ZONE',
+
+      rowBand:
+        'R14-R15',
+
+      previewRole:
+        'offshore distant forms',
+
+      xPercent:
+        28,
+
+      yPercent:
+        31,
+
+      widthCss:
+        '17%',
+
+      heightCss:
+        '8%',
+
+      action:
+        'Inspect Context',
+
+      readout:
+        'Distant Islet Context Read',
+
+      receipt:
+        'H_EARTH_DISTANT_ISLET_CONTEXT_RECEIPT_CANDIDATE',
+
+      publicLine:
+        'Distant rock stacks and islets remain context-only. They do not grant distant traversal or route-canon authority.'
+    },
+
+    {
+      objectId:
+        'OBJ_001_GROUND_SPAWN_ANCHOR',
+
+      label:
+        'Ground Spawn Anchor',
+
+      classification:
+        'STRUCTURAL_NOT_PUBLIC_READABLE',
+
+      material:
+        'inspection-anchor',
+
+      materialClass:
+        'h-earth-material-inspection-anchor',
+
+      layerClass:
+        'h-earth-layer-inspection-anchor-overlay',
+
+      landscapeClass:
+        'h-earth-landscape-primary-inspection-anchor',
+
+      primitiveClass:
+        'h-earth-primitive-inspection-anchor',
+
+      zoneId:
+        'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+
+      rowBand:
+        'R01-R05',
+
+      previewRole:
+        'structural anchor only',
+
+      xPercent:
+        50,
+
+      yPercent:
+        84,
+
+      widthCss:
+        '2.4rem',
+
+      heightCss:
+        '2.4rem',
+
+      action:
+        'Inspect Ground',
+
+      readout:
+        'Ground Condition Read',
+
+      receipt:
+        'H_EARTH_GROUND_INSPECTION_RECEIPT',
+
+      publicLine:
+        'Ground spawn anchor is structural only. It is displayed as an anchor marker, not as player or avatar authority.'
+    }
+  ]);
+
+
+/* ==========================================================================
+ * 08 · SOURCE-PREVIEW MODEL
+ * ========================================================================== */
+
+export const H_EARTH_3D_PUBLIC_SOURCE_PREVIEW_MODEL =
+  deepFreeze({
+    previewId:
+      'H_EARTH_3D_PUBLIC_STAGE_TEMPORARY_SOURCE_PREVIEW_STEP_034P',
+
+    file:
+      H_EARTH_3D_PUBLIC_ROUTE_FILE,
+
+    contractId:
+      H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+
+    renewedFrom:
+      H_EARTH_3D_INDEX_RENEWED_FROM_CONTRACT_ID,
+
+    previewClass:
+      'DESCRIPTOR_ONLY_TEMPORARY_ROUTE_FALLBACK',
+
+    matrix:
+      'H-Earth',
+
+    matrixRole:
+      'Ground-View Matrix',
+
+    activeCell:
+      'H_EARTH_GROUND_CELL_001',
+
+    sceneIdentity:
+      'earth-water-air-survival-shoreline-manor',
+
+    displayPurpose:
+      'Provide a temporary descriptor-only public-stage fallback before lawful renderer takeover or after renderer failure.',
+
+    sourceSpineContracts:
+      H_EARTH_3D_SOURCE_SPINE_CONTRACTS,
+
+    sourceSpineArchiveCustody:
+      H_EARTH_3D_SOURCE_SPINE_ARCHIVE_CUSTODY,
+
+    bands:
+      H_EARTH_3D_PUBLIC_SOURCE_PREVIEW_BANDS,
+
+    objects:
+      H_EARTH_3D_PUBLIC_TARGETS,
+
+    descriptorOnly:
+      true,
+
+    temporaryFallbackOnly:
+      true,
+
+    rendererDependencyRequiredForPreview:
+      false,
+
+    rendererMayTakeOverSameMount:
+      true,
+
+    previewDOMPreservedAfterRendererTakeover:
+      false,
+
+    previewMayBeRestoredAfterRendererFailure:
+      true,
+
+    runtimeExecution:
+      false,
+
+    runtimeLatticeActivation:
+      false,
+
+    active16x16RuntimeClaim:
+      false,
+
+    active256AddressRuntimeClaim:
+      false,
+
+    traversalClaim:
+      false,
+
+    survivalSimulationClaim:
+      false,
+
+    swimmingClaim:
+      false,
+
+    fluidSimulationClaim:
+      false,
+
+    manorInteriorAccessClaim:
+      false,
+
+    distantTraversalClaim:
+      false,
+
+    rendererPassClaim:
+      false,
+
+    visualPassClaim:
+      false,
+
+    validationClaim:
+      false,
+
+    productionClaim:
+      false,
+
+    matrixCollapse:
+      false,
+
+    boundary:
+      H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+
+
+/* ==========================================================================
+ * 09 · INTERNAL STATE
+ * ========================================================================== */
+
+const MODULE_STATE = {
+  initialized:
+    false,
+
+  destroyed:
+    false,
+
+  status:
+    H_EARTH_3D_PUBLIC_STAGE_STATUS.NOT_STARTED,
+
+  initializationSequence:
+    0,
+
+  activeInitializationToken:
+    null,
+
+  activeInitializationKey:
+    null,
+
+  completionPromise:
+    null,
+
+  mountPoints:
+    null,
+
+  listenerAbortController:
+    null,
+
+  selectedTargetId:
+    'OBJ_002_FOREGROUND_WET_SAND',
+
+  generatedAt:
+    null,
+
+  sourcePreviewStatus:
+    H_EARTH_3D_SOURCE_PREVIEW_STATUS.NOT_STARTED,
+
+  sourcePreviewReceipt:
+    null,
+
+  compositorModule:
+    null,
+
+  compositorImportReceipt:
+    null,
+
+  compositorHandoff:
+    null,
+
+  compositorHandoffReceipt:
+    null,
+
+  rendererModule:
+    null,
+
+  rendererImportReceipt:
+    null,
+
+  rendererConstructReceipt:
+    null,
+
+  rendererMountReceipt:
+    null,
+
+  rendererReleaseReceipt:
+    null,
+
+  rendererBootstrapStatus:
+    H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS.NOT_STARTED,
+
+  layer4ImportReceipt:
+    null,
+
+  layer4StatusProjection:
+    null,
+
+  layer4PublicStageReceipt:
+    null,
+
+  routeBootstrapReceipt:
+    null,
+
+  routeBootstrapResult:
+    null,
+
+  asyncInitializationStarted:
+    false,
+
+  asyncInitializationComplete:
+    false
+};
+
+
+/* ==========================================================================
+ * 10 · INITIALIZATION IDENTITY AND OCCURRENCE RESET
+ * ========================================================================== */
+
+function createInitializationToken(sequence) {
+  return deepFreeze({
+    sequence,
+
+    token:
+      `H_EARTH_3D_ROUTE_INITIALIZATION_${sequence}_${Date.now()}_${Math.random()
+        .toString(36)
+        .slice(2)}`
+  });
+}
+
+function isActiveInitializationToken(token) {
+  return (
+    token !== null &&
+    MODULE_STATE.activeInitializationToken === token &&
+    MODULE_STATE.destroyed === false
+  );
+}
+
+function createInitializationKey(
+  options,
+  rootDocument
+) {
+  return freezeInitializationKey({
     packet002Transfer:
       options.packet002Transfer ??
       null,
@@ -2188,13 +2258,20 @@ function createInitializationKey(options) {
       options.presentationMode ??
       null,
 
-    compositorModulePath:
-      options.compositorModulePath ??
-      H_EARTH_3D_COMPOSITOR_MODULE_PATH,
+    skipRendererBootstrap:
+      options.skipRendererBootstrap ===
+      true,
 
-    rendererModulePath:
-      options.rendererModulePath ??
-      H_EARTH_3D_RENDERER_MODULE_PATH
+    skipLayer4DescriptorImport:
+      options.skipLayer4DescriptorImport ===
+      true,
+
+    layer4BridgeModulePath:
+      options.layer4BridgeModulePath ??
+      H_EARTH_3D_LAYER_4_BRIDGE_DEFAULT_MODULE_PATH,
+
+    document:
+      rootDocument
   });
 }
 
@@ -2205,24 +2282,161 @@ function initializationKeysMatch(
   return (
     left !== null &&
     right !== null &&
+
     left.packet002Transfer ===
       right.packet002Transfer &&
+
     left.packet002TransferOccurrenceId ===
       right.packet002TransferOccurrenceId &&
+
     left.compositorFrameOccurrenceId ===
       right.compositorFrameOccurrenceId &&
+
     left.presentationMode ===
       right.presentationMode &&
-    left.compositorModulePath ===
-      right.compositorModulePath &&
-    left.rendererModulePath ===
-      right.rendererModulePath
+
+    left.skipRendererBootstrap ===
+      right.skipRendererBootstrap &&
+
+    left.skipLayer4DescriptorImport ===
+      right.skipLayer4DescriptorImport &&
+
+    left.layer4BridgeModulePath ===
+      right.layer4BridgeModulePath &&
+
+    left.document ===
+      right.document
   );
+}
+
+function resetCurrentOccurrenceEvidence() {
+  MODULE_STATE.sourcePreviewStatus =
+    H_EARTH_3D_SOURCE_PREVIEW_STATUS.NOT_STARTED;
+
+  MODULE_STATE.sourcePreviewReceipt =
+    null;
+
+  MODULE_STATE.compositorModule =
+    null;
+
+  MODULE_STATE.compositorImportReceipt =
+    null;
+
+  MODULE_STATE.compositorHandoff =
+    null;
+
+  MODULE_STATE.compositorHandoffReceipt =
+    null;
+
+  MODULE_STATE.rendererModule =
+    null;
+
+  MODULE_STATE.rendererImportReceipt =
+    null;
+
+  MODULE_STATE.rendererConstructReceipt =
+    null;
+
+  MODULE_STATE.rendererMountReceipt =
+    null;
+
+  MODULE_STATE.rendererReleaseReceipt =
+    null;
+
+  MODULE_STATE.rendererBootstrapStatus =
+    H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS.NOT_STARTED;
+
+  MODULE_STATE.layer4ImportReceipt =
+    null;
+
+  MODULE_STATE.layer4StatusProjection =
+    null;
+
+  MODULE_STATE.layer4PublicStageReceipt =
+    null;
+
+  MODULE_STATE.routeBootstrapReceipt =
+    null;
+
+  MODULE_STATE.routeBootstrapResult =
+    null;
+
+  MODULE_STATE.completionPromise =
+    null;
+
+  MODULE_STATE.asyncInitializationStarted =
+    false;
+
+  MODULE_STATE.asyncInitializationComplete =
+    false;
+}
+
+function resetRoutePresentationState(
+  mountPoints
+) {
+  const routeRoot =
+    mountPoints?.routeRoot;
+
+  if (!routeRoot) {
+    return false;
+  }
+
+  routeRoot.classList.remove(
+    'h-earth-3d-boot-ready',
+    'h-earth-3d-boot-fallback',
+    'h-earth-3d-boot-error'
+  );
+
+  const booleanDatasetKeys = [
+    'hEarthModuleInitializationObserved',
+    'hEarthSourcePreviewMounted',
+    'hEarthSourcePreviewTakenOver',
+    'hEarthRendererConstructed',
+    'hEarthRendererMounted',
+    'hEarthRunFunctionExecuted',
+    'hEarthReplayExecuted',
+    'hEarthVectorRunnerExecuted',
+    'hEarthRuntimeExecuted',
+    'hEarthCanonicalDigestGenerated',
+    'hEarthReplayComparison',
+    'hEarthValidationClaim',
+    'hEarthProductionClaim',
+    'hEarthRendererPassClaim',
+    'hEarthVisualPassClaim',
+    'hEarthMatrixCollapse'
+  ];
+
+  for (const key of booleanDatasetKeys) {
+    routeRoot.dataset[key] =
+      'false';
+  }
+
+  return true;
+}
+
+function clearPublishedActiveGlobals() {
+  const keys = [
+    'H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT',
+    'H_EARTH_3D_ROUTE_BOOTSTRAP_COMPLETION',
+    'H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT',
+    'H_EARTH_3D_LAYER_4_STATUS_PROJECTION',
+    'H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT',
+    'H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE'
+  ];
+
+  for (const key of keys) {
+    try {
+      delete globalThis[key];
+    } catch (_error) {
+      globalThis[key] =
+        undefined;
+    }
+  }
 }
 
 
 /* ==========================================================================
- * 10 · MOUNT RESOLUTION
+ * 11 · MOUNT RESOLUTION
  * ========================================================================== */
 
 function resolveMountPoints(
@@ -2282,7 +2496,7 @@ function resolveMountPoints(
     );
   }
 
-  return freeze({
+  return Object.freeze({
     documentAvailable:
       Boolean(
         rootDocument &&
@@ -2432,15 +2646,15 @@ function resolveMountPoints(
       0,
 
     missingRequiredIds:
-      freeze(
-        missingRequiredIds
-      )
+      Object.freeze([
+        ...missingRequiredIds
+      ])
   });
 }
 
 
 /* ==========================================================================
- * 11 · TARGET READOUT
+ * 12 · TARGET READOUT
  * ========================================================================== */
 
 function getTarget(targetId) {
@@ -2460,7 +2674,7 @@ function buildGroundConditionReadPayload(
       MODULE_STATE.selectedTargetId
     )
 ) {
-  return freeze({
+  return deepFreeze({
     receiptType:
       'H_EARTH_3D_PUBLIC_GROUND_CONDITION_READ_PAYLOAD',
 
@@ -2620,7 +2834,7 @@ function renderSelectedTarget(
 
 
 /* ==========================================================================
- * 12 · ROUTE-OWNED EVENT LISTENERS
+ * 13 · ROUTE-OWNED EVENT LISTENERS
  * ========================================================================== */
 
 function getListenerOptions() {
@@ -2670,7 +2884,8 @@ function renderTargetList(
       .targetList
       .ownerDocument;
 
-  mountPoints.targetList
+  mountPoints
+    .targetList
     .replaceChildren();
 
   const listenerOptions =
@@ -2768,7 +2983,7 @@ function renderTargetList(
 
 
 /* ==========================================================================
- * 13 · SOURCE-PREVIEW DOM
+ * 14 · SOURCE-PREVIEW DOM
  * ========================================================================== */
 
 function clearSourcePreviewOwnedNodes(
@@ -2779,7 +2994,7 @@ function clearSourcePreviewOwnedNodes(
     typeof rendererMount.querySelectorAll !==
       'function'
   ) {
-    return freeze({
+    return deepFreeze({
       cleared:
         false,
 
@@ -2802,7 +3017,7 @@ function clearSourcePreviewOwnedNodes(
     node.remove();
   }
 
-  return freeze({
+  return deepFreeze({
     cleared:
       true,
 
@@ -2907,12 +3122,8 @@ function createPreviewObject(
         ? 'h-earth-context-supporting-inspection h-earth-target-inspectable h-earth-target-selectable'
         : 'h-earth-context-only h-earth-target-context-only'
   ]
-    .filter(
-      Boolean
-    )
-    .join(
-      ' '
-    );
+    .filter(Boolean)
+    .join(' ');
 
   objectNode.dataset.hEarthSourcePreviewOwned =
     'true';
@@ -2992,9 +3203,7 @@ function createPreviewObject(
         target.objectId
       );
 
-      if (
-        mountPoints?.targetList
-      ) {
+      if (mountPoints?.targetList) {
         for (
           const node
           of mountPoints
@@ -3227,8 +3436,7 @@ function markPreviewSelectedObject(
     const selected =
       node.getAttribute(
         'data-h-earth-object-id'
-      ) ===
-      objectId;
+      ) === objectId;
 
     node.setAttribute(
       'aria-current',
@@ -3277,7 +3485,7 @@ function renderPublicSourcePreview(
         .FAILED;
 
     MODULE_STATE.sourcePreviewReceipt =
-      freeze({
+      deepFreeze({
         receiptType:
           'H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT',
 
@@ -3433,7 +3641,7 @@ function renderPublicSourcePreview(
           .MOUNTED;
 
   MODULE_STATE.sourcePreviewReceipt =
-    freeze({
+    deepFreeze({
       receiptType:
         'H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT',
 
@@ -3557,7 +3765,7 @@ function markSourcePreviewTakenOver() {
       .TAKEN_OVER;
 
   MODULE_STATE.sourcePreviewReceipt =
-    freeze({
+    deepFreeze({
       receiptType:
         'H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_TAKEOVER_RECEIPT',
 
@@ -3607,7 +3815,7 @@ function markSourcePreviewTakenOver() {
 
 
 /* ==========================================================================
- * 14 · LAYER 4 PROJECTION
+ * 15 · LAYER 4 PROJECTION
  * ========================================================================== */
 
 function buildStaticLayer4Projection(
@@ -3615,7 +3823,7 @@ function buildStaticLayer4Projection(
     H_EARTH_3D_LAYER_4_STATUS
       .STATIC_METADATA_PROJECTED
 ) {
-  return freeze({
+  return deepFreeze({
     receiptType:
       'H_EARTH_3D_PUBLIC_STAGE_LAYER_4_STATUS_PROJECTION',
 
@@ -3685,7 +3893,7 @@ function buildStaticLayer4Projection(
       H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING,
 
     displayPolicy:
-      freeze({
+      {
         narrowPlainDataProjectionOnly:
           true,
 
@@ -3700,7 +3908,7 @@ function buildStaticLayer4Projection(
 
         successfulRenderingLabeledAsValidation:
           false
-      }),
+      },
 
     boundary:
       H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
@@ -3740,7 +3948,7 @@ function normalizeImportedBridgeProjection(
   const expected =
     H_EARTH_3D_LAYER_4_CONTRACTS;
 
-  return freeze({
+  return deepFreeze({
     ...buildStaticLayer4Projection(
       H_EARTH_3D_LAYER_4_STATUS
         .DESCRIPTOR_IMPORT_OBSERVED
@@ -3801,7 +4009,7 @@ async function readLayer4BridgeDescriptor(
     true
   ) {
     const importReceipt =
-      freeze({
+      deepFreeze({
         receiptType:
           'H_EARTH_3D_PUBLIC_STAGE_STEP_012J_IMPORT_RECEIPT',
 
@@ -3834,6 +4042,12 @@ async function readLayer4BridgeDescriptor(
           H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING
       });
 
+    const projection =
+      buildStaticLayer4Projection(
+        H_EARTH_3D_LAYER_4_STATUS
+          .DESCRIPTOR_IMPORT_SKIPPED_STATIC_METADATA_RETAINED
+      );
+
     if (
       isActiveInitializationToken(
         token
@@ -3843,14 +4057,10 @@ async function readLayer4BridgeDescriptor(
         importReceipt;
 
       MODULE_STATE.layer4StatusProjection =
-        buildStaticLayer4Projection(
-          H_EARTH_3D_LAYER_4_STATUS
-            .DESCRIPTOR_IMPORT_SKIPPED_STATIC_METADATA_RETAINED
-        );
+        projection;
     }
 
-    return MODULE_STATE
-      .layer4StatusProjection;
+    return projection;
   }
 
   const modulePath =
@@ -3864,7 +4074,7 @@ async function readLayer4BridgeDescriptor(
       );
 
     const importReceipt =
-      freeze({
+      deepFreeze({
         receiptType:
           'H_EARTH_3D_PUBLIC_STAGE_STEP_012J_IMPORT_RECEIPT',
 
@@ -3890,11 +4100,9 @@ async function readLayer4BridgeDescriptor(
           modulePath,
 
         moduleExportKeys:
-          freeze(
-            Object.keys(
-              bridgeModule ??
-              {}
-            )
+          Object.keys(
+            bridgeModule ??
+            {}
           ),
 
         executionClaims:
@@ -3922,7 +4130,7 @@ async function readLayer4BridgeDescriptor(
     return projection;
   } catch (error) {
     const importReceipt =
-      freeze({
+      deepFreeze({
         receiptType:
           'H_EARTH_3D_PUBLIC_STAGE_STEP_012J_IMPORT_RECEIPT',
 
@@ -3965,7 +4173,7 @@ async function readLayer4BridgeDescriptor(
       });
 
     const projection =
-      freeze({
+      deepFreeze({
         ...buildStaticLayer4Projection(
           H_EARTH_3D_LAYER_4_STATUS
             .DESCRIPTOR_IMPORT_FAILED_STATIC_METADATA_RETAINED
@@ -4058,7 +4266,7 @@ function renderLayer4Projection(
 
 
 /* ==========================================================================
- * 15 · PACKET 002 ROUTE INPUT VALIDATION
+ * 16 · RENDERER BOOTSTRAP INPUT
  * ========================================================================== */
 
 function evaluateRendererBootstrapInput(
@@ -4070,7 +4278,7 @@ function evaluateRendererBootstrapInput(
     options.skipRendererBootstrap ===
     true
   ) {
-    return freeze({
+    return deepFreeze({
       eligible:
         false,
 
@@ -4078,12 +4286,13 @@ function evaluateRendererBootstrapInput(
         true,
 
       status:
-        'RENDERER_BOOTSTRAP_SKIPPED',
+        H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
+          .SKIPPED,
 
       issues:
-        freeze([
+        [
           'skipRendererBootstrap option was true.'
-        ])
+        ]
     });
   }
 
@@ -4127,7 +4336,7 @@ function evaluateRendererBootstrapInput(
     );
   }
 
-  return freeze({
+  return deepFreeze({
     eligible:
       issues.length ===
       0,
@@ -4139,18 +4348,16 @@ function evaluateRendererBootstrapInput(
       issues.length ===
       0
         ? 'RENDERER_BOOTSTRAP_INPUT_ELIGIBLE'
-        : 'RENDERER_BOOTSTRAP_INPUT_NOT_ELIGIBLE',
+        : H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
+            .INPUT_REJECTED,
 
-    issues:
-      freeze(
-        issues
-      )
+    issues
   });
 }
 
 
 /* ==========================================================================
- * 16 · EXACT COMPOSITOR AND RENDERER API RESOLUTION
+ * 17 · EXACT MODULE AUTHORITY
  * ========================================================================== */
 
 function evaluateCompositorModule(
@@ -4165,25 +4372,33 @@ function evaluateCompositorModule(
       ?.H_EARTH_3D_COMPOSITOR_CONTRACT_ID ??
     null;
 
-  return freeze({
-    eligible:
-      typeof handoffFunction ===
-        'function' &&
-      isNonEmptyExactString(
-        contractId
-      ),
+  const contractMatchesExpected =
+    contractId ===
+    H_EARTH_3D_EXPECTED_COMPOSITOR_CONTRACT_ID;
 
-    contractId,
+  return deepFreeze({
+    eligible:
+      contractMatchesExpected &&
+      typeof handoffFunction ===
+        'function',
+
+    expectedContractId:
+      H_EARTH_3D_EXPECTED_COMPOSITOR_CONTRACT_ID,
+
+    actualContractId:
+      contractId,
+
+    contractMatchesExpected,
+
+    exactHandoffExportPresent:
+      typeof handoffFunction ===
+      'function',
 
     handoffFunction:
       typeof handoffFunction ===
       'function'
         ? handoffFunction
-        : null,
-
-    exactHandoffExportPresent:
-      typeof handoffFunction ===
-      'function'
+        : null
   });
 }
 
@@ -4215,11 +4430,13 @@ function evaluateRendererModule(
       ?.H_EARTH_3D_RENDERER_CONTRACT_ID ??
     null;
 
-  return freeze({
+  const contractMatchesExpected =
+    contractId ===
+    H_EARTH_3D_EXPECTED_RENDERER_CONTRACT_ID;
+
+  return deepFreeze({
     eligible:
-      isNonEmptyExactString(
-        contractId
-      ) &&
+      contractMatchesExpected &&
       typeof constructFunction ===
         'function' &&
       typeof mountFunction ===
@@ -4227,7 +4444,25 @@ function evaluateRendererModule(
       typeof releaseFunction ===
         'function',
 
-    contractId,
+    expectedContractId:
+      H_EARTH_3D_EXPECTED_RENDERER_CONTRACT_ID,
+
+    actualContractId:
+      contractId,
+
+    contractMatchesExpected,
+
+    exactConstructExportPresent:
+      typeof constructFunction ===
+      'function',
+
+    exactMountExportPresent:
+      typeof mountFunction ===
+      'function',
+
+    exactReleaseExportPresent:
+      typeof releaseFunction ===
+      'function',
 
     constructFunction:
       typeof constructFunction ===
@@ -4257,28 +4492,25 @@ function evaluateRendererModule(
       typeof stateGetter ===
       'function'
         ? stateGetter
-        : null,
-
-    exactConstructExportPresent:
-      typeof constructFunction ===
-      'function',
-
-    exactMountExportPresent:
-      typeof mountFunction ===
-      'function',
-
-    exactReleaseExportPresent:
-      typeof releaseFunction ===
-      'function'
+        : null
   });
 }
 
 
 /* ==========================================================================
- * 17 · RENDERER RELEASE
+ * 18 · RENDERER CLEANUP
  * ========================================================================== */
 
-function releaseRendererSafely() {
+/**
+ * Cleanup outcome is recorded separately.
+ *
+ * This function must not modify rendererBootstrapStatus. The caller's primary
+ * import, API, handoff, construction, mount, or stale-completion outcome remains
+ * authoritative.
+ */
+function releaseRendererSafely({
+  cleanupReason = null
+} = {}) {
   const releaseFunction =
     MODULE_STATE.rendererModule
       ?.releaseHEarth3DRenderer;
@@ -4288,9 +4520,14 @@ function releaseRendererSafely() {
     'function'
   ) {
     MODULE_STATE.rendererReleaseReceipt =
-      freeze({
+      deepFreeze({
         receiptType:
           'H_EARTH_3D_ROUTE_RENDERER_RELEASE_RECEIPT',
+
+        cleanupReason,
+
+        releaseAttempted:
+          false,
 
         released:
           false,
@@ -4307,14 +4544,15 @@ function releaseRendererSafely() {
     const rawReceipt =
       releaseFunction();
 
-    MODULE_STATE.rendererBootstrapStatus =
-      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-        .RELEASED;
-
     MODULE_STATE.rendererReleaseReceipt =
-      freeze({
+      deepFreeze({
         receiptType:
           'H_EARTH_3D_ROUTE_RENDERER_RELEASE_RECEIPT',
+
+        cleanupReason,
+
+        releaseAttempted:
+          true,
 
         released:
           rawReceipt
@@ -4343,9 +4581,14 @@ function releaseRendererSafely() {
       .rendererReleaseReceipt;
   } catch (error) {
     MODULE_STATE.rendererReleaseReceipt =
-      freeze({
+      deepFreeze({
         receiptType:
           'H_EARTH_3D_ROUTE_RENDERER_RELEASE_RECEIPT',
+
+        cleanupReason,
+
+        releaseAttempted:
+          true,
 
         released:
           false,
@@ -4371,7 +4614,7 @@ function releaseRendererSafely() {
 
 
 /* ==========================================================================
- * 18 · STRICT RENDERER BOOTSTRAP
+ * 19 · STRICT RENDERER BOOTSTRAP
  * ========================================================================== */
 
 async function bootstrapRenderer(
@@ -4385,11 +4628,14 @@ async function bootstrapRenderer(
     );
 
   if (inputEvaluation.skipped) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-        .NOT_STARTED;
+        .SKIPPED;
 
-    return freeze({
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4403,7 +4649,7 @@ async function bootstrapRenderer(
         true,
 
       status:
-        'RENDERER_BOOTSTRAP_SKIPPED',
+        primaryStatus,
 
       inputEvaluation,
 
@@ -4427,11 +4673,14 @@ async function bootstrapRenderer(
   }
 
   if (!inputEvaluation.eligible) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .INPUT_REJECTED;
 
-    return freeze({
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4445,7 +4694,7 @@ async function bootstrapRenderer(
         false,
 
       status:
-        MODULE_STATE.rendererBootstrapStatus,
+        primaryStatus,
 
       inputEvaluation,
 
@@ -4472,14 +4721,6 @@ async function bootstrapRenderer(
     H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
       .IMPORT_PENDING;
 
-  const compositorModulePath =
-    options.compositorModulePath ??
-    H_EARTH_3D_COMPOSITOR_MODULE_PATH;
-
-  const rendererModulePath =
-    options.rendererModulePath ??
-    H_EARTH_3D_RENDERER_MODULE_PATH;
-
   let compositorModule;
   let rendererModule;
 
@@ -4489,20 +4730,23 @@ async function bootstrapRenderer(
       rendererModule
     ] = await Promise.all([
       import(
-        compositorModulePath
+        H_EARTH_3D_COMPOSITOR_MODULE_PATH
       ),
 
       import(
-        rendererModulePath
+        H_EARTH_3D_RENDERER_MODULE_PATH
       )
     ]);
   } catch (error) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .IMPORT_FAILED;
 
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
+
     const receipt =
-      freeze({
+      deepFreeze({
         receiptType:
           'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4513,11 +4757,16 @@ async function bootstrapRenderer(
           false,
 
         status:
-          MODULE_STATE.rendererBootstrapStatus,
+          primaryStatus,
 
-        compositorModulePath,
+        compositorModulePath:
+          H_EARTH_3D_COMPOSITOR_MODULE_PATH,
 
-        rendererModulePath,
+        rendererModulePath:
+          H_EARTH_3D_RENDERER_MODULE_PATH,
+
+        productionModulePathOverridesAccepted:
+          false,
 
         errorName:
           error instanceof Error
@@ -4567,7 +4816,14 @@ async function bootstrapRenderer(
       token
     )
   ) {
-    return freeze({
+    const primaryStatus =
+      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
+        .STALE_COMPLETION;
+
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4581,8 +4837,7 @@ async function bootstrapRenderer(
         true,
 
       status:
-        H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-          .STALE_COMPLETION
+        primaryStatus
     });
   }
 
@@ -4603,7 +4858,7 @@ async function bootstrapRenderer(
     rendererModule;
 
   MODULE_STATE.compositorImportReceipt =
-    freeze({
+    deepFreeze({
       receiptType:
         'H_EARTH_3D_COMPOSITOR_IMPORT_RECEIPT',
 
@@ -4611,13 +4866,14 @@ async function bootstrapRenderer(
         true,
 
       modulePath:
-        compositorModulePath,
+        H_EARTH_3D_COMPOSITOR_MODULE_PATH,
+
+      productionModulePathOverrideUsed:
+        false,
 
       moduleKeys:
-        freeze(
-          Object.keys(
-            compositorModule
-          )
+        Object.keys(
+          compositorModule
         ),
 
       evaluation:
@@ -4625,7 +4881,7 @@ async function bootstrapRenderer(
     });
 
   MODULE_STATE.rendererImportReceipt =
-    freeze({
+    deepFreeze({
       receiptType:
         'H_EARTH_3D_RENDERER_IMPORT_RECEIPT',
 
@@ -4633,13 +4889,14 @@ async function bootstrapRenderer(
         true,
 
       modulePath:
-        rendererModulePath,
+        H_EARTH_3D_RENDERER_MODULE_PATH,
+
+      productionModulePathOverrideUsed:
+        false,
 
       moduleKeys:
-        freeze(
-          Object.keys(
-            rendererModule
-          )
+        Object.keys(
+          rendererModule
         ),
 
       evaluation:
@@ -4650,13 +4907,20 @@ async function bootstrapRenderer(
     !compositorEvaluation.eligible ||
     !rendererEvaluation.eligible
   ) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-        .IMPORT_FAILED;
+        .API_REJECTED;
 
-    releaseRendererSafely();
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
 
-    return freeze({
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4667,7 +4931,7 @@ async function bootstrapRenderer(
         false,
 
       status:
-        'EXACT_COMPOSITOR_OR_RENDERER_API_UNAVAILABLE',
+        primaryStatus,
 
       compositorEvaluation,
 
@@ -4678,8 +4942,7 @@ async function bootstrapRenderer(
           mountPoints.rendererMount
         ),
 
-      rendererReleaseReceipt:
-        MODULE_STATE.rendererReleaseReceipt,
+      rendererReleaseReceipt,
 
       rendererPassClaim:
         false,
@@ -4718,13 +4981,20 @@ async function bootstrapRenderer(
             options.presentationMode
         });
   } catch (error) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .HANDOFF_REJECTED;
 
-    releaseRendererSafely();
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
 
-    return freeze({
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4735,6 +5005,9 @@ async function bootstrapRenderer(
         false,
 
       status:
+        primaryStatus,
+
+      failureVariant:
         'COMPOSITOR_HANDOFF_REQUEST_THREW',
 
       errorName:
@@ -4752,8 +5025,7 @@ async function bootstrapRenderer(
           mountPoints.rendererMount
         ),
 
-      rendererReleaseReceipt:
-        MODULE_STATE.rendererReleaseReceipt,
+      rendererReleaseReceipt,
 
       rendererPassClaim:
         false,
@@ -4774,9 +5046,20 @@ async function bootstrapRenderer(
       token
     )
   ) {
-    releaseRendererSafely();
+    const primaryStatus =
+      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
+        .STALE_COMPLETION;
 
-    return freeze({
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
+
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4790,46 +5073,79 @@ async function bootstrapRenderer(
         true,
 
       status:
-        H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-          .STALE_COMPLETION
+        primaryStatus,
+
+      rendererReleaseReceipt
     });
   }
 
   MODULE_STATE.compositorHandoff =
     compositorHandoff;
 
+  const okSignalObserved =
+    compositorHandoff
+      ?.ok ===
+    true;
+
+  const compositorContractIdMatchesExpected =
+    compositorHandoff
+      ?.contractId ===
+    H_EARTH_3D_EXPECTED_COMPOSITOR_CONTRACT_ID;
+
+  const admittedGeometryFrameContractIdPresent =
+    isNonEmptyExactString(
+      compositorHandoff
+        ?.admittedGeometryFrameContractId
+    );
+
+  const admittedGeometryFramePresent =
+    isPlainRecord(
+      compositorHandoff
+        ?.admittedGeometryFrame
+    );
+
   MODULE_STATE.compositorHandoffReceipt =
-    freeze({
+    deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_COMPOSITOR_HANDOFF_RECEIPT',
 
       requested:
         true,
 
-      accepted:
-        compositorHandoff
-          ?.ok ===
-        true,
+      okSignalObserved,
 
-      compositorContractId:
-        compositorEvaluation
-          .contractId,
+      handoffPresentedForRendererValidation:
+        (
+          okSignalObserved &&
+          compositorContractIdMatchesExpected &&
+          admittedGeometryFrameContractIdPresent &&
+          admittedGeometryFramePresent
+        ),
 
-      handoffContractId:
+      routeClaimsHandoffFullyValidated:
+        false,
+
+      expectedCompositorContractId:
+        H_EARTH_3D_EXPECTED_COMPOSITOR_CONTRACT_ID,
+
+      observedCompositorContractId:
         compositorHandoff
           ?.contractId ??
         null,
+
+      compositorContractIdMatchesExpected,
 
       admittedGeometryFrameContractId:
         compositorHandoff
           ?.admittedGeometryFrameContractId ??
         null,
 
-      admittedGeometryFramePresent:
-        isPlainRecord(
-          compositorHandoff
-            ?.admittedGeometryFrame
-        ),
+      admittedGeometryFrameContractIdPresent,
+
+      admittedGeometryFramePresent,
+
+      rendererRemainsFinalBoundaryValidator:
+        true,
 
       rawHandoff:
         safeSerialize(
@@ -4845,17 +5161,25 @@ async function bootstrapRenderer(
     });
 
   if (
-    compositorHandoff
-      ?.ok !==
-    true
+    !okSignalObserved ||
+    !compositorContractIdMatchesExpected ||
+    !admittedGeometryFrameContractIdPresent ||
+    !admittedGeometryFramePresent
   ) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .HANDOFF_REJECTED;
 
-    releaseRendererSafely();
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
 
-    return freeze({
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4866,7 +5190,7 @@ async function bootstrapRenderer(
         false,
 
       status:
-        MODULE_STATE.rendererBootstrapStatus,
+        primaryStatus,
 
       compositorHandoffReceipt:
         MODULE_STATE
@@ -4877,8 +5201,7 @@ async function bootstrapRenderer(
           mountPoints.rendererMount
         ),
 
-      rendererReleaseReceipt:
-        MODULE_STATE.rendererReleaseReceipt,
+      rendererReleaseReceipt,
 
       rendererPassClaim:
         false,
@@ -4907,13 +5230,20 @@ async function bootstrapRenderer(
           compositorHandoff
         );
   } catch (error) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .CONSTRUCTION_REJECTED;
 
-    releaseRendererSafely();
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
 
-    return freeze({
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4924,6 +5254,9 @@ async function bootstrapRenderer(
         false,
 
       status:
+        primaryStatus,
+
+      failureVariant:
         'RENDERER_CONSTRUCTION_THREW',
 
       errorName:
@@ -4945,8 +5278,7 @@ async function bootstrapRenderer(
           mountPoints.rendererMount
         ),
 
-      rendererReleaseReceipt:
-        MODULE_STATE.rendererReleaseReceipt,
+      rendererReleaseReceipt,
 
       rendererPassClaim:
         false,
@@ -4970,13 +5302,20 @@ async function bootstrapRenderer(
       ?.constructed !==
     true
   ) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .CONSTRUCTION_REJECTED;
 
-    releaseRendererSafely();
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
 
-    return freeze({
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -4987,7 +5326,7 @@ async function bootstrapRenderer(
         false,
 
       status:
-        MODULE_STATE.rendererBootstrapStatus,
+        primaryStatus,
 
       compositorHandoffReceipt:
         MODULE_STATE
@@ -5010,8 +5349,7 @@ async function bootstrapRenderer(
           mountPoints.rendererMount
         ),
 
-      rendererReleaseReceipt:
-        MODULE_STATE.rendererReleaseReceipt,
+      rendererReleaseReceipt,
 
       rendererPassClaim:
         false,
@@ -5032,9 +5370,20 @@ async function bootstrapRenderer(
       token
     )
   ) {
-    releaseRendererSafely();
+    const primaryStatus =
+      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
+        .STALE_COMPLETION;
 
-    return freeze({
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
+
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -5048,8 +5397,9 @@ async function bootstrapRenderer(
         true,
 
       status:
-        H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-          .STALE_COMPLETION
+        primaryStatus,
+
+      rendererReleaseReceipt
     });
   }
 
@@ -5067,11 +5417,18 @@ async function bootstrapRenderer(
             mountPoints.rendererMount
         });
   } catch (error) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .MOUNT_REJECTED;
 
-    releaseRendererSafely();
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
+
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
 
     if (
       !sourcePreviewExists(
@@ -5087,7 +5444,7 @@ async function bootstrapRenderer(
       );
     }
 
-    return freeze({
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -5098,6 +5455,9 @@ async function bootstrapRenderer(
         false,
 
       status:
+        primaryStatus,
+
+      failureVariant:
         'RENDERER_MOUNT_THREW',
 
       errorName:
@@ -5127,8 +5487,7 @@ async function bootstrapRenderer(
           mountPoints.rendererMount
         ),
 
-      rendererReleaseReceipt:
-        MODULE_STATE.rendererReleaseReceipt,
+      rendererReleaseReceipt,
 
       rendererPassClaim:
         false,
@@ -5152,11 +5511,18 @@ async function bootstrapRenderer(
       ?.mounted !==
     true
   ) {
-    MODULE_STATE.rendererBootstrapStatus =
+    const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .MOUNT_REJECTED;
 
-    releaseRendererSafely();
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
+
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
 
     if (
       !sourcePreviewExists(
@@ -5172,7 +5538,7 @@ async function bootstrapRenderer(
       );
     }
 
-    return freeze({
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -5183,7 +5549,7 @@ async function bootstrapRenderer(
         false,
 
       status:
-        MODULE_STATE.rendererBootstrapStatus,
+        primaryStatus,
 
       rendererConstructReceipt:
         safeSerialize(
@@ -5214,8 +5580,7 @@ async function bootstrapRenderer(
           mountPoints.rendererMount
         ),
 
-      rendererReleaseReceipt:
-        MODULE_STATE.rendererReleaseReceipt,
+      rendererReleaseReceipt,
 
       rendererPassClaim:
         false,
@@ -5236,9 +5601,20 @@ async function bootstrapRenderer(
       token
     )
   ) {
-    releaseRendererSafely();
+    const primaryStatus =
+      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
+        .STALE_COMPLETION;
 
-    return freeze({
+    MODULE_STATE.rendererBootstrapStatus =
+      primaryStatus;
+
+    const rendererReleaseReceipt =
+      releaseRendererSafely({
+        cleanupReason:
+          primaryStatus
+      });
+
+    return deepFreeze({
       receiptType:
         'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -5252,8 +5628,9 @@ async function bootstrapRenderer(
         true,
 
       status:
-        H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-          .STALE_COMPLETION
+        primaryStatus,
+
+      rendererReleaseReceipt
     });
   }
 
@@ -5263,7 +5640,7 @@ async function bootstrapRenderer(
 
   markSourcePreviewTakenOver();
 
-  return freeze({
+  return deepFreeze({
     receiptType:
       'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
@@ -5274,19 +5651,25 @@ async function bootstrapRenderer(
       true,
 
     status:
-      MODULE_STATE.rendererBootstrapStatus,
+      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
+        .MOUNTED,
 
-    compositorModulePath,
+    compositorModulePath:
+      H_EARTH_3D_COMPOSITOR_MODULE_PATH,
 
-    rendererModulePath,
+    rendererModulePath:
+      H_EARTH_3D_RENDERER_MODULE_PATH,
+
+    productionModulePathOverridesAccepted:
+      false,
 
     compositorContractId:
       compositorEvaluation
-        .contractId,
+        .actualContractId,
 
     rendererContractId:
       rendererEvaluation
-        .contractId,
+        .actualContractId,
 
     compositorHandoffReceipt:
       MODULE_STATE
@@ -5325,6 +5708,12 @@ async function bootstrapRenderer(
     previewMetadataPreserved:
       true,
 
+    exactCompositorContractRequired:
+      true,
+
+    exactRendererContractRequired:
+      true,
+
     exactRendererConstructAPIUsed:
       true,
 
@@ -5356,7 +5745,7 @@ async function bootstrapRenderer(
 
 
 /* ==========================================================================
- * 19 · ROUTE DATASETS
+ * 20 · ROUTE DATASETS
  * ========================================================================== */
 
 function updateRouteRootExecutionDataset(
@@ -5466,7 +5855,7 @@ function updateRouteRootExecutionDataset(
 
 
 /* ==========================================================================
- * 20 · RECEIPTS
+ * 21 · RECEIPTS
  * ========================================================================== */
 
 function buildLayer4PublicStageReceipt() {
@@ -5477,7 +5866,7 @@ function buildLayer4PublicStageReceipt() {
         .DESCRIPTOR_IMPORT_PENDING
     );
 
-  return freeze({
+  return deepFreeze({
     receiptType:
       'H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT',
 
@@ -5529,7 +5918,7 @@ function buildLayer4PublicStageReceipt() {
 }
 
 function buildRouteBootstrapStatus() {
-  return freeze({
+  return deepFreeze({
     receiptType:
       'H_EARTH_3D_PUBLIC_ROUTE_BOOTSTRAP_STATUS',
 
@@ -5601,12 +5990,16 @@ function buildRouteBootstrapStatus() {
         .rendererImportReceipt,
 
     rendererConstructReceipt:
-      MODULE_STATE
-        .rendererConstructReceipt,
+      safeSerialize(
+        MODULE_STATE
+          .rendererConstructReceipt
+      ),
 
     rendererMountReceipt:
-      MODULE_STATE
-        .rendererMountReceipt,
+      safeSerialize(
+        MODULE_STATE
+          .rendererMountReceipt
+      ),
 
     rendererReleaseReceipt:
       MODULE_STATE
@@ -5629,7 +6022,7 @@ function buildRouteBootstrapStatus() {
 }
 
 function buildRouteBootstrapReceipt() {
-  return freeze({
+  return deepFreeze({
     receiptType:
       'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT',
 
@@ -5684,12 +6077,16 @@ function buildRouteBootstrapReceipt() {
         .rendererImportReceipt,
 
     rendererConstructReceipt:
-      MODULE_STATE
-        .rendererConstructReceipt,
+      safeSerialize(
+        MODULE_STATE
+          .rendererConstructReceipt
+      ),
 
     rendererMountReceipt:
-      MODULE_STATE
-        .rendererMountReceipt,
+      safeSerialize(
+        MODULE_STATE
+          .rendererMountReceipt
+      ),
 
     rendererReleaseReceipt:
       MODULE_STATE
@@ -5760,7 +6157,7 @@ function rebuildAndRenderPublicReceipts(
     .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
     buildRouteBootstrapStatus();
 
-  return freeze({
+  return deepFreeze({
     layer4PublicStageReceipt:
       MODULE_STATE
         .layer4PublicStageReceipt,
@@ -5773,7 +6170,7 @@ function rebuildAndRenderPublicReceipts(
 
 
 /* ==========================================================================
- * 21 · COPY AND ACTION CONTROLS
+ * 22 · COPY AND ACTION CONTROLS
  * ========================================================================== */
 
 function bindActionControls(
@@ -5783,7 +6180,7 @@ function bindActionControls(
     !mountPoints
       ?.actionInspectGround
   ) {
-    return freeze({
+    return deepFreeze({
       inspectGroundBound:
         false
     });
@@ -5822,7 +6219,7 @@ function bindActionControls(
       getListenerOptions()
     );
 
-  return freeze({
+  return deepFreeze({
     inspectGroundBound:
       true
   });
@@ -5836,7 +6233,7 @@ function bindCopyControls(
     typeof rootDocument.querySelectorAll !==
       'function'
   ) {
-    return freeze({
+    return deepFreeze({
       copyButtonsBound:
         0
     });
@@ -5944,7 +6341,7 @@ function bindCopyControls(
     );
   }
 
-  return freeze({
+  return deepFreeze({
     copyButtonsBound:
       buttons.length
   });
@@ -5952,7 +6349,7 @@ function bindCopyControls(
 
 
 /* ==========================================================================
- * 22 · INITIAL STATIC ROUTE
+ * 23 · INITIAL STATIC ROUTE
  * ========================================================================== */
 
 function renderInitialStaticRoute(
@@ -6011,7 +6408,7 @@ function renderInitialStaticRoute(
 
 
 /* ==========================================================================
- * 23 · ASYNC INITIALIZATION
+ * 24 · ASYNC INITIALIZATION
  * ========================================================================== */
 
 async function completeAsyncPublicStageInitialization(
@@ -6049,7 +6446,7 @@ async function completeAsyncPublicStageInitialization(
       token
     )
   ) {
-    return freeze({
+    return deepFreeze({
       completed:
         false,
 
@@ -6086,7 +6483,7 @@ async function completeAsyncPublicStageInitialization(
 
     writeText(
       mountPoints.fallbackNode,
-      'The lawful compositor handoff was accepted and the admitted-frame renderer mounted. Renderer and visual pass remain unclaimed pending controlled audit.'
+      'The lawful compositor handoff was presented to the renderer, and the admitted-frame renderer mounted. Renderer and visual pass remain unclaimed pending controlled audit.'
     );
   } else if (
     sourcePreviewExists(
@@ -6157,7 +6554,7 @@ async function completeAsyncPublicStageInitialization(
   );
 
   const completionReceipt =
-    freeze({
+    deepFreeze({
       initialized:
         MODULE_STATE.initialized,
 
@@ -6194,15 +6591,32 @@ async function completeAsyncPublicStageInitialization(
 
 
 /* ==========================================================================
- * 24 · INITIALIZE ROUTE
+ * 25 · INITIALIZE ROUTE
  * ========================================================================== */
 
 export function initializeHEarthRoute(
   options = {}
 ) {
+  /*
+   * Required ordering:
+   *
+   * 1. Resolve rootDocument.
+   * 2. Build proposed initialization key.
+   * 3. Check exact duplicate.
+   * 4. Reject different active initialization.
+   * 5. Reset current-occurrence evidence.
+   * 6. Begin the new occurrence.
+   */
+
+  const rootDocument =
+    getDocumentFromOptions(
+      options
+    );
+
   const proposedKey =
     createInitializationKey(
-      options
+      options,
+      rootDocument
     );
 
   if (
@@ -6213,7 +6627,7 @@ export function initializeHEarthRoute(
       proposedKey
     )
   ) {
-    return freeze({
+    return deepFreeze({
       initialized:
         true,
 
@@ -6244,7 +6658,7 @@ export function initializeHEarthRoute(
   }
 
   if (MODULE_STATE.initialized) {
-    return freeze({
+    return deepFreeze({
       initialized:
         false,
 
@@ -6261,6 +6675,9 @@ export function initializeHEarthRoute(
         MODULE_STATE
           .initializationSequence,
 
+      differingBehavioralInputDetected:
+        true,
+
       routeBootstrapReceipt:
         MODULE_STATE
           .routeBootstrapReceipt,
@@ -6270,15 +6687,18 @@ export function initializeHEarthRoute(
     });
   }
 
-  const rootDocument =
-    getDocumentFromOptions(
-      options
-    );
-
   const mountPoints =
     resolveMountPoints(
       rootDocument
     );
+
+  resetCurrentOccurrenceEvidence();
+
+  clearPublishedActiveGlobals();
+
+  resetRoutePresentationState(
+    mountPoints
+  );
 
   MODULE_STATE.initializationSequence +=
     1;
@@ -6308,16 +6728,6 @@ export function initializeHEarthRoute(
   MODULE_STATE.destroyed =
     false;
 
-  MODULE_STATE.asyncInitializationStarted =
-    false;
-
-  MODULE_STATE.asyncInitializationComplete =
-    false;
-
-  MODULE_STATE.rendererBootstrapStatus =
-    H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
-      .NOT_STARTED;
-
   resetListenerController();
 
   bindCopyControls(
@@ -6335,8 +6745,11 @@ export function initializeHEarthRoute(
     MODULE_STATE.activeInitializationToken =
       null;
 
+    MODULE_STATE.activeInitializationKey =
+      null;
+
     const failureReceipt =
-      freeze({
+      deepFreeze({
         receiptType:
           'H_EARTH_3D_PUBLIC_STAGE_ADAPTER_MOUNT_FAILURE',
 
@@ -6379,14 +6792,17 @@ export function initializeHEarthRoute(
       .H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
       failureReceipt;
 
-    return freeze({
+    return deepFreeze({
       initialized:
         false,
 
       status:
         MODULE_STATE.status,
 
-      mountPoints,
+      mountPoints:
+        safeSerialize(
+          mountPoints
+        ),
 
       failureReceipt,
 
@@ -6431,7 +6847,7 @@ export function initializeHEarthRoute(
             token
           )
         ) {
-          return freeze({
+          return deepFreeze({
             completed:
               false,
 
@@ -6447,7 +6863,11 @@ export function initializeHEarthRoute(
           H_EARTH_3D_PUBLIC_STAGE_STATUS
             .ERROR;
 
-        releaseRendererSafely();
+        const rendererReleaseReceipt =
+          releaseRendererSafely({
+            cleanupReason:
+              'PUBLIC_STAGE_ASYNC_FAILURE'
+          });
 
         if (
           !sourcePreviewExists(
@@ -6464,7 +6884,7 @@ export function initializeHEarthRoute(
         }
 
         const failureReceipt =
-          freeze({
+          deepFreeze({
             receiptType:
               'H_EARTH_3D_PUBLIC_STAGE_ADAPTER_ASYNC_FAILURE',
 
@@ -6495,9 +6915,7 @@ export function initializeHEarthRoute(
                 mountPoints.rendererMount
               ),
 
-            rendererReleaseReceipt:
-              MODULE_STATE
-                .rendererReleaseReceipt,
+            rendererReleaseReceipt,
 
             boundary:
               H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
@@ -6530,6 +6948,10 @@ export function initializeHEarthRoute(
           .H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
           failureReceipt;
 
+        globalThis
+          .H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE =
+          failureReceipt;
+
         return failureReceipt;
       }
     );
@@ -6538,7 +6960,7 @@ export function initializeHEarthRoute(
     buildRouteBootstrapReceipt();
 
   const immediateResult =
-    freeze({
+    deepFreeze({
       initialized:
         true,
 
@@ -6554,8 +6976,6 @@ export function initializeHEarthRoute(
       initializationSequence:
         token.sequence,
 
-      mountPoints,
-
       routeBootstrapReceipt:
         MODULE_STATE
           .routeBootstrapReceipt,
@@ -6569,16 +6989,15 @@ export function initializeHEarthRoute(
           .layer4StatusProjection,
 
       asyncCompletion:
-        'PENDING_COMPOSITOR_RENDERER_AND_LAYER_4_IMPORTS',
-
-      completion:
-        MODULE_STATE
-          .completionPromise,
+        'PENDING_EXACT_COMPOSITOR_RENDERER_AND_LAYER_4_IMPORTS',
 
       packet002ConstructedByRoute:
         false,
 
       admittedFrameConstructedByRoute:
+        false,
+
+      productionModulePathOverridesAccepted:
         false,
 
       rendererPassClaim:
@@ -6617,12 +7036,17 @@ export function initializeHEarthRoute(
     MODULE_STATE
       .sourcePreviewReceipt;
 
+  globalThis
+    .H_EARTH_3D_LAYER_4_STATUS_PROJECTION =
+    MODULE_STATE
+      .layer4StatusProjection;
+
   return immediateResult;
 }
 
 
 /* ==========================================================================
- * 25 · PUBLIC GETTERS
+ * 26 · PUBLIC GETTERS
  * ========================================================================== */
 
 export function getRouteBootstrapStatus() {
@@ -6677,7 +7101,7 @@ export function getPublicStageSourcePreviewReceipt() {
   return (
     MODULE_STATE
       .sourcePreviewReceipt ??
-    freeze({
+    deepFreeze({
       receiptType:
         'H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT',
 
@@ -6733,7 +7157,7 @@ export function getPublicGroundConditionReadPayload() {
 }
 
 export function getRendererBootstrapReceipt() {
-  return freeze({
+  return deepFreeze({
     compositorImportReceipt:
       MODULE_STATE
         .compositorImportReceipt,
@@ -6747,12 +7171,16 @@ export function getRendererBootstrapReceipt() {
         .rendererImportReceipt,
 
     rendererConstructReceipt:
-      MODULE_STATE
-        .rendererConstructReceipt,
+      safeSerialize(
+        MODULE_STATE
+          .rendererConstructReceipt
+      ),
 
     rendererMountReceipt:
-      MODULE_STATE
-        .rendererMountReceipt,
+      safeSerialize(
+        MODULE_STATE
+          .rendererMountReceipt
+      ),
 
     rendererReleaseReceipt:
       MODULE_STATE
@@ -6766,12 +7194,15 @@ export function getRendererBootstrapReceipt() {
 
 
 /* ==========================================================================
- * 26 · DESTROY ROUTE
+ * 27 · DESTROY ROUTE
  * ========================================================================== */
 
 export function destroyHEarthRoute() {
   const previousReceipt =
     buildRouteBootstrapReceipt();
+
+  const mountPoints =
+    MODULE_STATE.mountPoints;
 
   MODULE_STATE.status =
     H_EARTH_3D_PUBLIC_STAGE_STATUS
@@ -6796,17 +7227,17 @@ export function destroyHEarthRoute() {
     null;
 
   const rendererReleaseReceipt =
-    releaseRendererSafely();
-
-  const mountPoints =
-    MODULE_STATE.mountPoints;
+    releaseRendererSafely({
+      cleanupReason:
+        'ROUTE_DESTROY'
+    });
 
   const previewClearReceipt =
     mountPoints?.rendererMount
       ? clearSourcePreviewOwnedNodes(
           mountPoints.rendererMount
         )
-      : freeze({
+      : deepFreeze({
           cleared:
             false,
 
@@ -6816,6 +7247,20 @@ export function destroyHEarthRoute() {
           failureCode:
             'RENDERER_MOUNT_UNAVAILABLE'
         });
+
+  resetRoutePresentationState(
+    mountPoints
+  );
+
+  writeText(
+    mountPoints?.statusNode,
+    'PUBLIC_STAGE_DESTROYED'
+  );
+
+  writeText(
+    mountPoints?.fallbackNode,
+    ''
+  );
 
   MODULE_STATE.initialized =
     false;
@@ -6828,35 +7273,17 @@ export function destroyHEarthRoute() {
     H_EARTH_3D_SOURCE_PREVIEW_STATUS
       .REMOVED;
 
-  MODULE_STATE.mountPoints =
-    null;
-
   MODULE_STATE.activeInitializationKey =
     null;
 
-  MODULE_STATE.completionPromise =
+  MODULE_STATE.activeInitializationToken =
     null;
 
-  MODULE_STATE.routeBootstrapResult =
+  MODULE_STATE.mountPoints =
     null;
 
-  MODULE_STATE.compositorModule =
-    null;
-
-  MODULE_STATE.compositorHandoff =
-    null;
-
-  MODULE_STATE.rendererModule =
-    null;
-
-  MODULE_STATE.asyncInitializationStarted =
-    false;
-
-  MODULE_STATE.asyncInitializationComplete =
-    false;
-
-  const receipt =
-    freeze({
+  const destroyReceipt =
+    deepFreeze({
       receiptType:
         'H_EARTH_3D_PUBLIC_STAGE_ADAPTER_DESTROY_RECEIPT',
 
@@ -6869,7 +7296,8 @@ export function destroyHEarthRoute() {
       generatedAt:
         nowIso(),
 
-      previousReceipt,
+      previousOccurrenceReceipt:
+        previousReceipt,
 
       rendererReleaseReceipt,
 
@@ -6882,6 +7310,11 @@ export function destroyHEarthRoute() {
       asyncInitializationInvalidated:
         true,
 
+      rendererReleaseAttempted:
+        rendererReleaseReceipt
+          ?.releaseAttempted ===
+        true,
+
       rendererReleased:
         rendererReleaseReceipt
           ?.released ===
@@ -6890,6 +7323,15 @@ export function destroyHEarthRoute() {
       sourcePreviewOwnedNodesCleared:
         previewClearReceipt
           .cleared ===
+        true,
+
+      routeClassesReset:
+        true,
+
+      routeExecutionDatasetsReset:
+        true,
+
+      activeOccurrenceEvidenceCleared:
         true,
 
       packet002Mutated:
@@ -6920,23 +7362,72 @@ export function destroyHEarthRoute() {
         H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
 
+  resetCurrentOccurrenceEvidence();
+
+  MODULE_STATE.status =
+    H_EARTH_3D_PUBLIC_STAGE_STATUS
+      .DESTROYED;
+
+  MODULE_STATE.destroyed =
+    true;
+
+  clearPublishedActiveGlobals();
+
   MODULE_STATE.routeBootstrapReceipt =
-    receipt;
+    destroyReceipt;
 
   globalThis
     .H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
-    receipt;
+    destroyReceipt;
 
-  return receipt;
+  globalThis
+    .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
+    deepFreeze({
+      receiptType:
+        'H_EARTH_3D_PUBLIC_ROUTE_BOOTSTRAP_STATUS',
+
+      file:
+        H_EARTH_3D_PUBLIC_ROUTE_FILE,
+
+      contractId:
+        H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+
+      generatedAt:
+        nowIso(),
+
+      initialized:
+        false,
+
+      destroyed:
+        true,
+
+      status:
+        H_EARTH_3D_PUBLIC_STAGE_STATUS
+          .DESTROYED,
+
+      rendererConstructed:
+        false,
+
+      rendererMounted:
+        false,
+
+      sourcePreviewMounted:
+        false,
+
+      activeOccurrenceEvidenceCleared:
+        true
+    });
+
+  return destroyReceipt;
 }
 
 
 /* ==========================================================================
- * 27 · STATIC RECEIPT
+ * 28 · STATIC RECEIPT
  * ========================================================================== */
 
 export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
-  freeze({
+  deepFreeze({
     receiptType:
       'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT_STATIC_DESCRIPTOR',
 
@@ -6956,12 +7447,24 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
       H_EARTH_3D_ROUTE_STYLE_CONTRACT_ID,
 
     canonicalRouteInput:
-      freeze([
+      [
         'packet002Transfer',
         'packet002TransferOccurrenceId',
         'compositorFrameOccurrenceId',
         'presentationMode'
-      ]),
+      ],
+
+    completeInitializationIdentity:
+      [
+        'packet002Transfer',
+        'packet002TransferOccurrenceId',
+        'compositorFrameOccurrenceId',
+        'presentationMode',
+        'skipRendererBootstrap',
+        'skipLayer4DescriptorImport',
+        'layer4BridgeModulePath',
+        'documentIdentity'
+      ],
 
     packet002ConstructedByRoute:
       false,
@@ -6971,6 +7474,24 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
 
     rendererModulePath:
       H_EARTH_3D_RENDERER_MODULE_PATH,
+
+    compositorModulePathOverrideAccepted:
+      false,
+
+    rendererModulePathOverrideAccepted:
+      false,
+
+    expectedCompositorContractId:
+      H_EARTH_3D_EXPECTED_COMPOSITOR_CONTRACT_ID,
+
+    expectedRendererContractId:
+      H_EARTH_3D_EXPECTED_RENDERER_CONTRACT_ID,
+
+    exactCompositorContractRequired:
+      true,
+
+    exactRendererContractRequired:
+      true,
 
     exactCompositorHandoffExport:
       'getHEarth3DCompositorRendererHandoff',
@@ -6989,6 +7510,24 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
 
     genericRendererAPIDiscoveryRemoved:
       true,
+
+    primaryFailureStatusPreservedAcrossCleanup:
+      true,
+
+    rendererReleaseRecordedSeparately:
+      true,
+
+    compositorHandoffTerminology:
+      'OK_SIGNAL_OBSERVED_AND_PRESENTED_FOR_RENDERER_VALIDATION',
+
+    routeClaimsHandoffFullyValidated:
+      false,
+
+    nestedRouteOwnedReceiptsDeepFrozen:
+      true,
+
+    hostDocumentRecursivelyFrozen:
+      false,
 
     sourcePreviewDefined:
       true,
@@ -7011,6 +7550,9 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
     duplicateInitializationNoOpDefined:
       true,
 
+    everyBehaviorChangingInputInInitializationIdentity:
+      true,
+
     differentReinitializationRequiresDestroy:
       true,
 
@@ -7018,6 +7560,18 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
       true,
 
     routeOwnedListenerAbortDefined:
+      true,
+
+    activeOccurrenceEvidenceClearedOnDestroy:
+      true,
+
+    routeDatasetsResetOnDestroy:
+      true,
+
+    routeClassesResetOnDestroy:
+      true,
+
+    activeGlobalsClearedOnDestroy:
       true,
 
     moduleSyntaxVerified:
@@ -7050,6 +7604,15 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
     fallbackRestorationVerified:
       false,
 
+    duplicateInitializationVerified:
+      false,
+
+    differentInitializationRejectionVerified:
+      false,
+
+    destroyReinitializeEvidenceIsolationVerified:
+      false,
+
     rendererReleaseVerified:
       false,
 
@@ -7074,11 +7637,11 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
 
 
 /* ==========================================================================
- * 28 · COMPLETE CONTRACT
+ * 29 · COMPLETE CONTRACT
  * ========================================================================== */
 
 export const H_EARTH_3D_INDEX_CONTRACT =
-  freeze({
+  deepFreeze({
     contractId:
       H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
 
@@ -7098,7 +7661,7 @@ export const H_EARTH_3D_INDEX_CONTRACT =
       'COMPOSITOR_TO_RENDERER_PUBLIC_ROUTE_ORCHESTRATOR_WITH_TEMPORARY_DESCRIPTOR_FALLBACK',
 
     canonicalInput:
-      freeze({
+      {
         packet002Transfer:
           'AUTHORIZED_UPSTREAM_PACKET_002_TRANSFER',
 
@@ -7110,36 +7673,60 @@ export const H_EARTH_3D_INDEX_CONTRACT =
 
         presentationMode:
           'EXACT_COMPOSITOR_PRESENTATION_MODE'
-      }),
+      },
 
-    compositorLaw:
-      freeze({
-        modulePath:
+    dependencyAuthority:
+      {
+        compositorModulePath:
           H_EARTH_3D_COMPOSITOR_MODULE_PATH,
 
+        rendererModulePath:
+          H_EARTH_3D_RENDERER_MODULE_PATH,
+
+        compositorModulePathOverrideAccepted:
+          false,
+
+        rendererModulePathOverrideAccepted:
+          false,
+
+        compositorContractId:
+          H_EARTH_3D_EXPECTED_COMPOSITOR_CONTRACT_ID,
+
+        rendererContractId:
+          H_EARTH_3D_EXPECTED_RENDERER_CONTRACT_ID,
+
+        exactContractIdentityRequired:
+          true
+      },
+
+    compositorLaw:
+      {
         handoffFunction:
           'getHEarth3DCompositorRendererHandoff',
 
         handoffInput:
-          freeze([
+          [
             'packet002Transfer',
             'packet002TransferOccurrenceId',
             'compositorFrameOccurrenceId',
             'presentationMode'
-          ]),
+          ],
 
         routeConstructsPacket002:
           false,
 
         routeConstructsAdmittedFrame:
-          false
-      }),
+          false,
+
+        routeHandoffCheck:
+          'OK_SIGNAL_AND_MINIMUM_CORRESPONDENCE_BEFORE_RENDERER_VALIDATION',
+
+        rendererRemainsFinalBoundaryValidator:
+          true
+      },
 
     rendererLaw:
-      freeze({
-        modulePath:
-          H_EARTH_3D_RENDERER_MODULE_PATH,
-
+      {
         constructFunction:
           'constructHEarth3DRenderer',
 
@@ -7150,20 +7737,23 @@ export const H_EARTH_3D_INDEX_CONTRACT =
           'releaseHEarth3DRenderer',
 
         mountInput:
-          freeze({
+          {
             mountElement:
               'RESOLVED_RENDERER_MOUNT_NODE'
-          }),
+          },
 
         constructionRequiredBeforeMount:
           true,
 
         genericAPIDiscovery:
+          false,
+
+        cleanupMayOverwritePrimaryFailureOutcome:
           false
-      }),
+      },
 
     previewLaw:
-      freeze({
+      {
         preview:
           'TEMPORARY_DESCRIPTOR_ONLY_FALLBACK',
 
@@ -7181,15 +7771,33 @@ export const H_EARTH_3D_INDEX_CONTRACT =
 
         previewRestoredAfterRendererFailure:
           true
-      }),
+      },
 
     initializationLaw:
-      freeze({
+      {
         firstInitialization:
           'START',
 
         exactDuplicateInitialization:
           'RETURN_EXISTING_STATE_WITHOUT_REBINDING',
+
+        exactDuplicateIdentityFields:
+          [
+            'packet002Transfer',
+            'packet002TransferOccurrenceId',
+            'compositorFrameOccurrenceId',
+            'presentationMode',
+            'skipRendererBootstrap',
+            'skipLayer4DescriptorImport',
+            'layer4BridgeModulePath',
+            'documentIdentity'
+          ],
+
+        hostDocumentComparison:
+          'REFERENCE_IDENTITY',
+
+        hostDocumentRecursivelyFrozen:
+          false,
 
         differentInitializationWhileActive:
           'REJECT_UNTIL_DESTROY',
@@ -7201,11 +7809,11 @@ export const H_EARTH_3D_INDEX_CONTRACT =
           'IGNORE_AND_RELEASE_RENDERER_WHEN_NECESSARY',
 
         reinitializationAfterDestroy:
-          'AUTHORIZED'
-      }),
+          'AUTHORIZED_AFTER_ACTIVE_EVIDENCE_RESET'
+      },
 
     destructionLaw:
-      freeze({
+      {
         abortRouteOwnedListeners:
           true,
 
@@ -7218,9 +7826,36 @@ export const H_EARTH_3D_INDEX_CONTRACT =
         clearRouteOwnedPreviewDOM:
           true,
 
-        clearRouteState:
+        resetRouteClasses:
+          true,
+
+        resetRouteDatasets:
+          true,
+
+        clearActiveGlobalEvidence:
+          true,
+
+        preserveHistoricalOccurrence:
+          'INSIDE_DESTROY_RECEIPT_ONLY',
+
+        clearActiveOccurrenceEvidence:
           true
-      }),
+      },
+
+    receiptLaw:
+      {
+        routeOwnedNestedDataDeepFrozen:
+          true,
+
+        externallyOwnedDOMObjectsDeepFrozen:
+          false,
+
+        primaryFailureOutcomePreserved:
+          true,
+
+        cleanupOutcomeRecordedSeparately:
+          true
+      },
 
     executionCeiling:
       H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING,
@@ -7234,11 +7869,11 @@ export const H_EARTH_3D_INDEX_CONTRACT =
 
 
 /* ==========================================================================
- * 29 · AGGREGATE EXPORT
+ * 30 · AGGREGATE EXPORT
  * ========================================================================== */
 
 export const H_EARTH_3D_INDEX =
-  freeze({
+  deepFreeze({
     id:
       'H_EARTH_3D_INDEX',
 
@@ -7263,6 +7898,12 @@ export const H_EARTH_3D_INDEX =
     routeStyleContractId:
       H_EARTH_3D_ROUTE_STYLE_CONTRACT_ID,
 
+    expectedCompositorContractId:
+      H_EARTH_3D_EXPECTED_COMPOSITOR_CONTRACT_ID,
+
+    expectedRendererContractId:
+      H_EARTH_3D_EXPECTED_RENDERER_CONTRACT_ID,
+
     contract:
       H_EARTH_3D_INDEX_CONTRACT,
 
@@ -7277,6 +7918,9 @@ export const H_EARTH_3D_INDEX =
 
     sourcePreviewDescriptorOnly:
       true,
+
+    productionModulePathOverridesAccepted:
+      false,
 
     layer4Contracts:
       H_EARTH_3D_LAYER_4_CONTRACTS,

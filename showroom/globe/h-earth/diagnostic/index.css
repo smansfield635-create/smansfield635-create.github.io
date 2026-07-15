@@ -1,65 +1,115 @@
 /*
   /showroom/globe/h-earth/diagnostic/index.css
   COMPLETE RENEWED FILE
-  H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_RENEWAL_STEP_034G_LAYER_4_CUSTODY_AND_PUBLIC_STAGE_RECEIPT_INSPECTION_v1
+
+  H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_RENEWAL_STEP_034T_STEP_034S_LIVE_ROUTE_EVIDENCE_AND_REPORT_SURFACE_SUPPORT_v1
 
   Renews:
-  H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_BIRTH_STEP_033G_LIVE_PUBLIC_RENDERER_SYNC_PANEL_v1
+  H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_RENEWAL_STEP_034G_LAYER_4_CUSTODY_AND_PUBLIC_STAGE_RECEIPT_INSPECTION_v1
 
   Companion diagnostic shell:
   /showroom/globe/h-earth/diagnostic/index.html
-  H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034F_LAYER_4_CUSTODY_AND_PUBLIC_STAGE_RECEIPT_INSPECTION_v1
+  H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034S_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_DIAGNOSTIC_ENTRY_v1
 
   Companion diagnostic bootstrap:
   /showroom/globe/h-earth/diagnostic/index.js
-  H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_RENEWAL_STEP_034H_LAYER_4_CUSTODY_PUBLIC_STAGE_RECEIPT_AND_BOUNDARY_REPORTING_v1
+  H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_RENEWAL_STEP_034U_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_BOUNDARY_REPORTING_v1
 
-  Public route:
-  /showroom/globe/h-earth/
-  H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034C_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_PROJECTION_v1
-  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034D_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_SUPPORT_v1
-  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034E_PUBLIC_STAGE_ADAPTER_LAYER_4_STATUS_PROJECTION_v1
+  Public route shell:
+  /showroom/globe/h-earth/index.html
+  H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034Q_STEP_034P_BOOTSTRAP_ENTRY_AND_DIAGNOSTIC_READINESS_v1
+
+  Public route stylesheet:
+  /showroom/globe/h-earth/index.css
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034R_STEP_034Q_PUBLIC_ENVIRONMENT_AND_RENDERER_SURFACE_SUPPORT_v1
+
+  Backed public bootstrap:
+  /showroom/globe/h-earth/index.js
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1
+
+  Backed compositor:
+  /showroom/globe/h-earth/compositor.js
+  H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1
+
+  Backed renderer:
+  /showroom/globe/h-earth/renderer.js
+  H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1
 
   Purpose:
-  Dedicated H-Earth diagnostic route stylesheet for Layer 4 custody-chain
-  inspection, Step 012J descriptor evidence, public-stage receipt inspection,
-  public route bootstrap inspection, renderer mount receipt inspection,
-  Ground Condition Read payload inspection, boundary and mismatch reporting,
-  archive custody metadata, aggregate diagnostic evidence, copy toolbar, and
-  diagnostic report cards.
+
+  Style the dedicated H-Earth diagnostic route as a human-readable
+  observational surface for:
+
+  - exact diagnostic entry and initialization evidence;
+  - same-origin evidence-source resolution;
+  - Step 034P public-route state;
+  - route bootstrap receipt and completion inspection;
+  - source-preview receipt inspection;
+  - compositor import and handoff inspection;
+  - renderer import, construction, mount, release, and state inspection;
+  - Layer 4 custody;
+  - Step 012J read-only descriptor evidence;
+  - relationship-member inspection;
+  - module-initialization versus execution reporting;
+  - public-stage status and receipt inspection;
+  - Ground Condition Read inspection;
+  - active-global inspection;
+  - boundary and claim-ceiling reporting;
+  - mismatch and missing-evidence reporting;
+  - archive custody metadata;
+  - contract correspondence;
+  - raw observed evidence;
+  - aggregate diagnostic evidence;
+  - diagnostic-owned rerun and copy controls.
 
   Jurisdiction split:
-  PUBLIC ROUTE = environment host and visible stage.
-  DIAGNOSTIC ROUTE = custody, reports, receipts, raw descriptor evidence,
-  public-stage receipt inspection, and boundary/mismatch reporting.
+
+  PUBLIC ROUTE =
+  environment host, renderer mount, selected surface, compact public status,
+  Ground Condition Read, public-stage projection, and visible baseline.
+
+  DIAGNOSTIC ROUTE =
+  read-only route, compositor, renderer, custody, receipt, global, contract,
+  boundary, mismatch, raw-evidence, and aggregate-report inspection.
+
+  Styling authority:
+
+  This stylesheet may style diagnostic shell elements and diagnostic report
+  states. It must not style the diagnostic route as a public environment stage
+  and must not create or imply scene geometry, renderer output, execution,
+  validation, visual pass, production readiness, or deployment readiness.
 
   Boundary:
-  Diagnostic/report CSS only.
-  No public environment host styling.
-  No public renderer stage styling.
-  No scene-stage takeover.
-  No shell-owned scene-object styling.
-  No fake beach / false scene geometry styling.
-  No WebGL.
-  No canvas.
-  No SVG.
-  No iframe.
-  No Step 012H.1 run execution.
-  No Step 012I vector execution.
-  No Step 012I runner execution.
-  No Target 002 runtime execution.
-  No Target 003 replay execution.
-  No canonical digest generation.
-  No replay comparison.
-  No final-renderer claim.
-  No renderer-pass claim.
-  No visual-pass claim.
-  No validation claim.
-  No production claim.
-  No traversal.
-  No survival simulation.
-  No runtime lattice activation.
-  No matrix collapse.
+
+  DIAGNOSTIC_REPORT_CSS_ONLY = true
+  PUBLIC_ENVIRONMENT_HOST_STYLING = false
+  PUBLIC_RENDERER_STAGE_STYLING = false
+  PUBLIC_ROUTE_MUTATION = false
+  PACKET_002_CONSTRUCTION = false
+  ADMITTED_FRAME_CONSTRUCTION = false
+  COMPOSITOR_CONSTRUCTION = false
+  RENDERER_CONSTRUCTION = false
+  RENDERER_MOUNT = false
+  RENDERER_RELEASE = false
+  SCENE_GEOMETRY_CONSTRUCTION = false
+  WEBGL_ACTIVATION = false
+  CANVAS_ACTIVATION = false
+  SVG_ACTIVATION = false
+  IFRAME_ACTIVATION = false
+  STEP_012H_1_RUN_EXECUTION = false
+  STEP_012I_VECTOR_EXECUTION = false
+  STEP_012I_RUNNER_EXECUTION = false
+  TARGET_002_RUNTIME_EXECUTION = false
+  TARGET_003_REPLAY_EXECUTION = false
+  CANONICAL_DIGEST_GENERATION = false
+  REPLAY_COMPARISON = false
+  RENDERER_PASS_CLAIM = false
+  VISUAL_PASS_CLAIM = false
+  VALIDATION_CLAIM = false
+  PRODUCTION_CLAIM = false
+  DEPLOYMENT_CLAIM = false
+  RUNTIME_LATTICE_ACTIVATION = false
+  MATRIX_COLLAPSE = false
 */
 
 :root {
@@ -68,13 +118,15 @@
   --h-earth-diagnostic-bg: #03060c;
   --h-earth-diagnostic-bg-2: #071018;
   --h-earth-diagnostic-bg-3: #0b151d;
+  --h-earth-diagnostic-bg-deep: #010308;
 
   --h-earth-diagnostic-panel: rgba(8, 15, 23, 0.84);
   --h-earth-diagnostic-panel-strong: rgba(5, 10, 16, 0.96);
   --h-earth-diagnostic-panel-soft: rgba(255, 255, 255, 0.046);
+  --h-earth-diagnostic-panel-raised: rgba(12, 22, 31, 0.9);
 
   --h-earth-diagnostic-border: rgba(224, 242, 247, 0.16);
-  --h-earth-diagnostic-border-strong: rgba(224, 242, 247, 0.30);
+  --h-earth-diagnostic-border-strong: rgba(224, 242, 247, 0.3);
   --h-earth-diagnostic-border-soft: rgba(224, 242, 247, 0.09);
 
   --h-earth-diagnostic-text: #eef8fb;
@@ -91,6 +143,11 @@
   --h-earth-diagnostic-ok: #b9f3ce;
   --h-earth-diagnostic-info: #a9d7ff;
 
+  --h-earth-diagnostic-entry: #a5ddce;
+  --h-earth-diagnostic-evidence: #b9e8ff;
+  --h-earth-diagnostic-route: #9fd8ff;
+  --h-earth-diagnostic-compositor: #d0b8ff;
+  --h-earth-diagnostic-renderer: #8de3d0;
   --h-earth-diagnostic-layer-4: #c9bbff;
   --h-earth-diagnostic-layer-4-strong: #eee8ff;
   --h-earth-diagnostic-step-012j: #d9ccff;
@@ -98,13 +155,17 @@
   --h-earth-diagnostic-boundary: #ffd98d;
   --h-earth-diagnostic-mismatch: #ffb184;
   --h-earth-diagnostic-archive: #d5e8c1;
+  --h-earth-diagnostic-contract: #e1d5b7;
+  --h-earth-diagnostic-raw: #ffcaad;
 
+  --h-earth-diagnostic-radius-xl: 34px;
   --h-earth-diagnostic-radius-lg: 28px;
   --h-earth-diagnostic-radius-md: 18px;
   --h-earth-diagnostic-radius-sm: 12px;
 
   --h-earth-diagnostic-shadow: 0 24px 90px rgba(0, 0, 0, 0.48);
   --h-earth-diagnostic-shadow-soft: 0 16px 54px rgba(0, 0, 0, 0.34);
+  --h-earth-diagnostic-shadow-card: 0 12px 34px rgba(0, 0, 0, 0.24);
 
   --h-earth-diagnostic-mono:
     "SFMono-Regular",
@@ -114,19 +175,39 @@
     monospace;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
   min-width: 320px;
   min-height: 100%;
-  background:
-    radial-gradient(circle at 14% -10%, rgba(165, 221, 206, 0.15), transparent 34rem),
-    radial-gradient(circle at 88% 6%, rgba(201, 187, 255, 0.12), transparent 30rem),
-    radial-gradient(circle at 72% 44%, rgba(242, 212, 156, 0.07), transparent 32rem),
-    linear-gradient(180deg, var(--h-earth-diagnostic-bg), var(--h-earth-diagnostic-bg-2) 52%, #010308);
+  overflow-x: hidden;
   color: var(--h-earth-diagnostic-text);
+  background:
+    radial-gradient(
+      circle at 14% -10%,
+      rgba(165, 221, 206, 0.15),
+      transparent 34rem
+    ),
+    radial-gradient(
+      circle at 88% 6%,
+      rgba(201, 187, 255, 0.12),
+      transparent 30rem
+    ),
+    radial-gradient(
+      circle at 72% 44%,
+      rgba(242, 212, 156, 0.07),
+      transparent 32rem
+    ),
+    linear-gradient(
+      180deg,
+      var(--h-earth-diagnostic-bg),
+      var(--h-earth-diagnostic-bg-2) 52%,
+      var(--h-earth-diagnostic-bg-deep)
+    );
 }
 
 body {
@@ -143,6 +224,7 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+  line-height: 1.5;
   background: transparent;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
@@ -154,12 +236,26 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.10;
+  opacity: 0.1;
   background:
-    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.8px),
-    radial-gradient(circle at 74% 28%, rgba(255, 255, 255, 0.10) 0 1px, transparent 1.8px);
+    radial-gradient(
+      circle at 18% 18%,
+      rgba(255, 255, 255, 0.12) 0 1px,
+      transparent 1.8px
+    ),
+    radial-gradient(
+      circle at 74% 28%,
+      rgba(255, 255, 255, 0.1) 0 1px,
+      transparent 1.8px
+    );
   background-size: 240px 280px, 320px 300px;
-  mask-image: linear-gradient(180deg, black, rgba(0, 0, 0, 0.44) 64%, transparent);
+  mask-image:
+    linear-gradient(
+      180deg,
+      black,
+      rgba(0, 0, 0, 0.44) 64%,
+      transparent
+    );
 }
 
 a {
@@ -167,12 +263,18 @@ a {
 }
 
 button,
-summary {
+summary,
+pre {
   font: inherit;
 }
 
 button {
   cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
 }
 
 pre {
@@ -198,11 +300,26 @@ pre {
   position: relative;
   z-index: 1;
   min-height: 100vh;
-  padding: max(24px, env(safe-area-inset-top)) 24px max(36px, env(safe-area-inset-bottom));
+  padding:
+    max(24px, env(safe-area-inset-top))
+    24px
+    max(36px, env(safe-area-inset-bottom));
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.024), transparent 260px),
-    radial-gradient(circle at 8% 28%, rgba(165, 221, 206, 0.10), transparent 32rem),
-    radial-gradient(circle at 92% 38%, rgba(201, 187, 255, 0.09), transparent 34rem);
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.024),
+      transparent 260px
+    ),
+    radial-gradient(
+      circle at 8% 28%,
+      rgba(165, 221, 206, 0.1),
+      transparent 32rem
+    ),
+    radial-gradient(
+      circle at 92% 38%,
+      rgba(201, 187, 255, 0.09),
+      transparent 34rem
+    );
 }
 
 .h-earth-3d-diagnostic-route-root[data-h-earth-diagnostic-route-only="true"] {
@@ -213,9 +330,18 @@ pre {
   --h-earth-layer-4-custody-inspection-bound: 1;
 }
 
+.h-earth-3d-diagnostic-route-root[data-h-earth-route-bootstrap-receipt-inspection="true"],
+.h-earth-3d-diagnostic-route-root[data-h-earth-compositor-receipt-inspection="true"],
+.h-earth-3d-diagnostic-route-root[data-h-earth-renderer-receipt-inspection="true"],
+.h-earth-3d-diagnostic-route-root[data-h-earth-source-preview-receipt-inspection="true"] {
+  --h-earth-live-route-inspection-bound: 1;
+}
+
 .h-earth-3d-diagnostic-route-root[data-h-earth-public-environment-host="false"],
 .h-earth-3d-diagnostic-route-root[data-h-earth-public-scene-renderer-mount="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-public-scene-stage="false"] {
+.h-earth-3d-diagnostic-route-root[data-h-earth-public-scene-stage="false"],
+.h-earth-3d-diagnostic-route-root[data-h-earth-public-route-initialized-by-diagnostic="false"],
+.h-earth-3d-diagnostic-route-root[data-h-earth-renderer-mounted-by-diagnostic="false"] {
   --h-earth-public-environment-host-denied-here: 1;
 }
 
@@ -230,10 +356,10 @@ pre {
 }
 
 .h-earth-3d-diagnostic-shell {
-  width: min(1500px, 100%);
-  margin: 0 auto;
   display: grid;
   gap: 22px;
+  width: min(1500px, 100%);
+  margin: 0 auto;
 }
 
 /* Header */
@@ -268,12 +394,22 @@ pre {
   border: 1px solid rgba(221, 255, 245, 0.24);
   border-radius: 16px;
   background:
-    radial-gradient(circle at 38% 28%, rgba(221, 255, 245, 0.28), transparent 36%),
-    linear-gradient(145deg, rgba(17, 45, 47, 0.9), rgba(4, 7, 10, 0.98));
+    radial-gradient(
+      circle at 38% 28%,
+      rgba(221, 255, 245, 0.28),
+      transparent 36%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(17, 45, 47, 0.9),
+      rgba(4, 7, 10, 0.98)
+    );
   color: var(--h-earth-diagnostic-accent-strong);
   font-weight: 850;
   letter-spacing: 0.08em;
-  box-shadow: inset 0 0 24px rgba(165, 221, 206, 0.14);
+  box-shadow:
+    inset 0 0 24px rgba(165, 221, 206, 0.14),
+    0 10px 26px rgba(0, 0, 0, 0.26);
 }
 
 .h-earth-3d-diagnostic-brand-copy {
@@ -339,7 +475,9 @@ pre {
 
 .h-earth-3d-diagnostic-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+  grid-template-columns:
+    minmax(0, 1.45fr)
+    minmax(280px, 0.55fr);
   gap: 18px;
 }
 
@@ -359,8 +497,16 @@ pre {
 .h-earth-3d-diagnostic-hero-copy {
   padding: clamp(20px, 4vw, 38px);
   background:
-    linear-gradient(135deg, rgba(165, 221, 206, 0.08), transparent 58%),
-    radial-gradient(circle at 88% 12%, rgba(201, 187, 255, 0.10), transparent 26rem),
+    linear-gradient(
+      135deg,
+      rgba(165, 221, 206, 0.08),
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(201, 187, 255, 0.1),
+      transparent 26rem
+    ),
     rgba(255, 255, 255, 0.035);
 }
 
@@ -382,12 +528,16 @@ pre {
 }
 
 .h-earth-3d-diagnostic-status-card {
-  padding: 18px;
   display: grid;
   align-content: space-between;
   gap: 18px;
+  padding: 18px;
   background:
-    radial-gradient(circle at 80% 10%, rgba(185, 243, 206, 0.12), transparent 36%),
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(185, 243, 206, 0.12),
+      transparent 36%
+    ),
     var(--h-earth-diagnostic-panel);
 }
 
@@ -443,6 +593,14 @@ pre {
   text-align: right;
 }
 
+.h-earth-3d-copy-status[data-h-earth-copy-state="success"] {
+  color: var(--h-earth-diagnostic-ok);
+}
+
+.h-earth-3d-copy-status[data-h-earth-copy-state="failure"] {
+  color: var(--h-earth-diagnostic-error);
+}
+
 .h-earth-3d-copy-actions {
   display: flex;
   flex-wrap: wrap;
@@ -456,7 +614,7 @@ pre {
 }
 
 #h-earth-3d-run-diagnostics {
-  border-color: rgba(221, 255, 245, 0.30);
+  border-color: rgba(221, 255, 245, 0.3);
 }
 
 #h-earth-3d-copy-custody {
@@ -467,13 +625,17 @@ pre {
   border-color: rgba(159, 216, 255, 0.34);
 }
 
+#h-earth-3d-copy-renderer {
+  border-color: rgba(141, 227, 208, 0.36);
+}
+
 #h-earth-3d-copy-boundary {
   border-color: rgba(255, 217, 141, 0.34);
 }
 
 #h-earth-3d-copy-raw,
 #h-earth-3d-copy-all {
-  border-color: rgba(255, 177, 132, 0.30);
+  border-color: rgba(255, 177, 132, 0.3);
 }
 
 /* Report cards */
@@ -489,7 +651,7 @@ pre {
 .h-earth-3d-report-layer-status {
   width: 100%;
   min-height: 74px;
-  max-height: 190px;
+  max-height: 220px;
   overflow: auto;
   padding: 12px;
   border: 1px solid var(--h-earth-diagnostic-border-soft);
@@ -503,7 +665,7 @@ pre {
 
 .h-earth-3d-report-cards {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin-top: 14px;
 }
@@ -514,8 +676,13 @@ pre {
   border: 1px solid var(--h-earth-diagnostic-border-soft);
   border-radius: var(--h-earth-diagnostic-radius-md);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.025)
+    ),
     rgba(0, 0, 0, 0.14);
+  box-shadow: var(--h-earth-diagnostic-shadow-card);
 }
 
 .h-earth-3d-report-card h2 {
@@ -550,11 +717,16 @@ pre {
 .h-earth-3d-report-card[data-h-earth-report-severity="OK"] {
   border-color: rgba(185, 243, 206, 0.26);
   background:
-    radial-gradient(circle at 88% 12%, rgba(185, 243, 206, 0.12), transparent 30%),
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(185, 243, 206, 0.12),
+      transparent 30%
+    ),
     rgba(255, 255, 255, 0.035);
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="OK"] .h-earth-3d-report-status {
+.h-earth-3d-report-card[data-h-earth-report-severity="OK"]
+  .h-earth-3d-report-status {
   color: var(--h-earth-diagnostic-ok);
   border-color: rgba(185, 243, 206, 0.26);
   background: rgba(185, 243, 206, 0.075);
@@ -564,7 +736,8 @@ pre {
   border-color: rgba(169, 215, 255, 0.24);
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="INFO"] .h-earth-3d-report-status {
+.h-earth-3d-report-card[data-h-earth-report-severity="INFO"]
+  .h-earth-3d-report-status {
   color: var(--h-earth-diagnostic-info);
   border-color: rgba(169, 215, 255, 0.25);
   background: rgba(169, 215, 255, 0.065);
@@ -575,8 +748,10 @@ pre {
   border-color: rgba(255, 217, 141, 0.26);
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="HELD"] .h-earth-3d-report-status,
-.h-earth-3d-report-card[data-h-earth-report-severity="PENDING"] .h-earth-3d-report-status {
+.h-earth-3d-report-card[data-h-earth-report-severity="HELD"]
+  .h-earth-3d-report-status,
+.h-earth-3d-report-card[data-h-earth-report-severity="PENDING"]
+  .h-earth-3d-report-status {
   color: var(--h-earth-diagnostic-held);
   border-color: rgba(255, 217, 141, 0.28);
   background: rgba(255, 217, 141, 0.07);
@@ -586,7 +761,8 @@ pre {
   border-color: rgba(255, 177, 132, 0.24);
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="WARN"] .h-earth-3d-report-status {
+.h-earth-3d-report-card[data-h-earth-report-severity="WARN"]
+  .h-earth-3d-report-status {
   color: var(--h-earth-diagnostic-warn);
   border-color: rgba(255, 177, 132, 0.26);
   background: rgba(255, 177, 132, 0.065);
@@ -596,18 +772,27 @@ pre {
   border-color: rgba(255, 155, 155, 0.32);
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="ERROR"] .h-earth-3d-report-status {
+.h-earth-3d-report-card[data-h-earth-report-severity="ERROR"]
+  .h-earth-3d-report-status {
   color: var(--h-earth-diagnostic-error);
   border-color: rgba(255, 155, 155, 0.34);
   background: rgba(255, 155, 155, 0.075);
 }
 
-.h-earth-3d-report-card[data-h-earth-report-id="layer-4-custody"] {
-  border-color: rgba(201, 187, 255, 0.30);
+.h-earth-3d-report-card[data-h-earth-report-id="public-route"] {
+  border-color: rgba(159, 216, 255, 0.28);
 }
 
-.h-earth-3d-report-card[data-h-earth-report-id="public-stage-receipt"] {
-  border-color: rgba(159, 216, 255, 0.28);
+.h-earth-3d-report-card[data-h-earth-report-id="compositor"] {
+  border-color: rgba(208, 184, 255, 0.28);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-id="renderer"] {
+  border-color: rgba(141, 227, 208, 0.28);
+}
+
+.h-earth-3d-report-card[data-h-earth-report-id="layer-4-custody"] {
+  border-color: rgba(201, 187, 255, 0.3);
 }
 
 .h-earth-3d-report-card[data-h-earth-report-id="boundary"] {
@@ -630,7 +815,11 @@ pre {
   gap: 12px;
   padding: 16px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.02)
+    ),
     var(--h-earth-diagnostic-panel);
 }
 
@@ -643,6 +832,10 @@ pre {
   border-bottom: 1px solid var(--h-earth-diagnostic-border-soft);
 }
 
+.h-earth-3d-panel-copy-button {
+  flex: 0 0 auto;
+}
+
 .h-earth-3d-diagnostic-output {
   width: 100%;
   min-height: 310px;
@@ -653,7 +846,11 @@ pre {
   border-radius: var(--h-earth-diagnostic-radius-sm);
   color: rgba(238, 248, 251, 0.86);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 90px),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.018),
+      transparent 90px
+    ),
     rgba(0, 0, 0, 0.24);
   font-family: var(--h-earth-diagnostic-mono);
   font-size: 0.76rem;
@@ -665,60 +862,220 @@ pre {
   min-height: 460px;
 }
 
-/* Specialized diagnostic panels */
+/* Diagnostic entry and evidence-source panels */
+
+[data-h-earth-panel-role="diagnostic-entry"] {
+  border-color: rgba(165, 221, 206, 0.3);
+  background:
+    radial-gradient(
+      circle at 92% 8%,
+      rgba(165, 221, 206, 0.14),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(165, 221, 206, 0.065),
+      transparent 58%
+    ),
+    var(--h-earth-diagnostic-panel);
+}
+
+[data-h-earth-panel-role="diagnostic-entry"] h2 {
+  color: var(--h-earth-diagnostic-accent-strong);
+}
+
+[data-h-earth-panel-role="evidence-source"] {
+  border-color: rgba(185, 232, 255, 0.26);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(185, 232, 255, 0.13),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(185, 232, 255, 0.055),
+      transparent 58%
+    ),
+    var(--h-earth-diagnostic-panel);
+}
+
+[data-h-earth-panel-role="evidence-source"] h2 {
+  color: #e0f4ff;
+}
+
+/* Public route panels */
+
+[data-h-earth-panel-role="public-route-status"],
+[data-h-earth-panel-role="route-bootstrap-receipt"],
+[data-h-earth-panel-role="route-bootstrap-completion"],
+[data-h-earth-panel-role="source-preview"],
+.h-earth-3d-public-stage-panel,
+[data-h-earth-panel-role="public-stage-receipt"],
+[data-h-earth-panel-role="public-ground-readout"] {
+  border-color: rgba(159, 216, 255, 0.26);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(159, 216, 255, 0.13),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(159, 216, 255, 0.05),
+      transparent 58%
+    ),
+    var(--h-earth-diagnostic-panel);
+}
+
+[data-h-earth-panel-role="public-route-status"] h2,
+[data-h-earth-panel-role="route-bootstrap-receipt"] h2,
+[data-h-earth-panel-role="route-bootstrap-completion"] h2,
+[data-h-earth-panel-role="source-preview"] h2,
+.h-earth-3d-public-stage-panel h2,
+[data-h-earth-panel-role="public-stage-receipt"] h2,
+[data-h-earth-panel-role="public-ground-readout"] h2 {
+  color: #dff3ff;
+}
+
+/* Compositor panels */
+
+.h-earth-3d-compositor-panel,
+[data-h-earth-panel-role="compositor-import"],
+[data-h-earth-panel-role="compositor-handoff"] {
+  border-color: rgba(208, 184, 255, 0.28);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(208, 184, 255, 0.16),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(208, 184, 255, 0.065),
+      transparent 58%
+    ),
+    var(--h-earth-diagnostic-panel);
+}
+
+.h-earth-3d-compositor-panel h2,
+[data-h-earth-panel-role="compositor-import"] h2,
+[data-h-earth-panel-role="compositor-handoff"] h2 {
+  color: #eadfff;
+}
+
+/* Renderer panels */
+
+.h-earth-3d-renderer-panel,
+[data-h-earth-panel-role="renderer-import"],
+[data-h-earth-panel-role="renderer-construction"],
+[data-h-earth-panel-role="renderer-mount"],
+[data-h-earth-panel-role="renderer-release"],
+[data-h-earth-panel-role="renderer-state"] {
+  border-color: rgba(141, 227, 208, 0.28);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(141, 227, 208, 0.15),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(141, 227, 208, 0.06),
+      transparent 58%
+    ),
+    var(--h-earth-diagnostic-panel);
+}
+
+.h-earth-3d-renderer-panel h2,
+[data-h-earth-panel-role="renderer-import"] h2,
+[data-h-earth-panel-role="renderer-construction"] h2,
+[data-h-earth-panel-role="renderer-mount"] h2,
+[data-h-earth-panel-role="renderer-release"] h2,
+[data-h-earth-panel-role="renderer-state"] h2 {
+  color: #d9fff5;
+}
+
+/* Layer 4 panels */
 
 .h-earth-3d-layer-4-custody-panel,
 .h-earth-3d-step-012j-panel,
-.h-earth-3d-public-stage-panel,
+[data-h-earth-panel-role="relationship-members"],
+[data-h-earth-panel-role="module-initialization"] {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(201, 187, 255, 0.3);
+  background:
+    radial-gradient(
+      circle at 92% 8%,
+      rgba(201, 187, 255, 0.18),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(201, 187, 255, 0.085),
+      transparent 58%
+    ),
+    var(--h-earth-diagnostic-panel);
+}
+
+.h-earth-3d-layer-4-custody-panel .h-earth-3d-diagnostic-kicker,
+.h-earth-3d-step-012j-panel .h-earth-3d-diagnostic-kicker,
+[data-h-earth-panel-role="relationship-members"] .h-earth-3d-diagnostic-kicker,
+[data-h-earth-panel-role="module-initialization"] .h-earth-3d-diagnostic-kicker {
+  color: rgba(238, 232, 255, 0.78);
+}
+
+.h-earth-3d-layer-4-custody-panel h2,
+.h-earth-3d-step-012j-panel h2,
+[data-h-earth-panel-role="relationship-members"] h2,
+[data-h-earth-panel-role="module-initialization"] h2 {
+  color: var(--h-earth-diagnostic-layer-4-strong);
+}
+
+/* Active globals */
+
+[data-h-earth-panel-role="active-globals"] {
+  border-color: rgba(165, 221, 206, 0.24);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(165, 221, 206, 0.11),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(165, 221, 206, 0.045),
+      transparent 58%
+    ),
+    var(--h-earth-diagnostic-panel);
+}
+
+[data-h-earth-panel-role="active-globals"] h2 {
+  color: var(--h-earth-diagnostic-accent-strong);
+}
+
+/* Boundary and mismatch panels */
+
 .h-earth-3d-boundary-panel,
 .h-earth-3d-mismatch-panel {
   position: relative;
   overflow: hidden;
 }
 
-.h-earth-3d-layer-4-custody-panel {
-  border-color: rgba(201, 187, 255, 0.30);
-  background:
-    radial-gradient(circle at 92% 8%, rgba(201, 187, 255, 0.18), transparent 34%),
-    linear-gradient(135deg, rgba(201, 187, 255, 0.085), transparent 58%),
-    var(--h-earth-diagnostic-panel);
-}
-
-.h-earth-3d-layer-4-custody-panel .h-earth-3d-diagnostic-kicker,
-.h-earth-3d-step-012j-panel .h-earth-3d-diagnostic-kicker {
-  color: rgba(238, 232, 255, 0.78);
-}
-
-.h-earth-3d-layer-4-custody-panel h2,
-.h-earth-3d-step-012j-panel h2 {
-  color: var(--h-earth-diagnostic-layer-4-strong);
-}
-
-.h-earth-3d-step-012j-panel {
-  border-color: rgba(217, 204, 255, 0.28);
-  background:
-    radial-gradient(circle at 90% 10%, rgba(217, 204, 255, 0.15), transparent 32%),
-    linear-gradient(135deg, rgba(217, 204, 255, 0.065), transparent 58%),
-    var(--h-earth-diagnostic-panel);
-}
-
-.h-earth-3d-public-stage-panel {
-  border-color: rgba(159, 216, 255, 0.28);
-  background:
-    radial-gradient(circle at 88% 10%, rgba(159, 216, 255, 0.14), transparent 32%),
-    linear-gradient(135deg, rgba(159, 216, 255, 0.060), transparent 58%),
-    var(--h-earth-diagnostic-panel);
-}
-
-.h-earth-3d-public-stage-panel h2 {
-  color: #dff3ff;
-}
-
 .h-earth-3d-boundary-panel {
   border-color: rgba(255, 217, 141, 0.28);
   background:
-    radial-gradient(circle at 90% 10%, rgba(255, 217, 141, 0.12), transparent 32%),
-    linear-gradient(135deg, rgba(255, 217, 141, 0.055), transparent 58%),
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(255, 217, 141, 0.12),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 217, 141, 0.055),
+      transparent 58%
+    ),
     var(--h-earth-diagnostic-panel);
 }
 
@@ -729,8 +1086,16 @@ pre {
 .h-earth-3d-mismatch-panel {
   border-color: rgba(255, 177, 132, 0.28);
   background:
-    radial-gradient(circle at 90% 10%, rgba(255, 177, 132, 0.13), transparent 32%),
-    linear-gradient(135deg, rgba(255, 177, 132, 0.055), transparent 58%),
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(255, 177, 132, 0.13),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 177, 132, 0.055),
+      transparent 58%
+    ),
     var(--h-earth-diagnostic-panel);
 }
 
@@ -738,12 +1103,134 @@ pre {
   color: #ffd3bd;
 }
 
+/* Archive and contract panels */
+
 [data-h-earth-panel-role="archive-custody"] {
   border-color: rgba(213, 232, 193, 0.24);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(213, 232, 193, 0.11),
+      transparent 32%
+    ),
+    var(--h-earth-diagnostic-panel);
 }
 
 [data-h-earth-panel-role="archive-custody"] h2 {
   color: var(--h-earth-diagnostic-archive);
+}
+
+[data-h-earth-panel-role="public-index-contract"],
+[data-h-earth-panel-role="compositor-contract"],
+[data-h-earth-panel-role="renderer-contract"],
+[data-h-earth-panel-role="diagnostic-contract"] {
+  border-color: rgba(225, 213, 183, 0.22);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(225, 213, 183, 0.1),
+      transparent 32%
+    ),
+    var(--h-earth-diagnostic-panel);
+}
+
+[data-h-earth-panel-role="public-index-contract"] h2,
+[data-h-earth-panel-role="compositor-contract"] h2,
+[data-h-earth-panel-role="renderer-contract"] h2,
+[data-h-earth-panel-role="diagnostic-contract"] h2 {
+  color: #f4ead2;
+}
+
+/* Raw and aggregate panels */
+
+[data-h-earth-panel-role="raw-evidence"] {
+  border-color: rgba(255, 202, 173, 0.24);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(255, 202, 173, 0.12),
+      transparent 34%
+    ),
+    var(--h-earth-diagnostic-panel);
+}
+
+[data-h-earth-panel-role="raw-evidence"] h2 {
+  color: #ffe0ce;
+}
+
+[data-h-earth-panel-role="all-diagnostics"] {
+  border-color: rgba(221, 255, 245, 0.26);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(165, 221, 206, 0.12),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(201, 187, 255, 0.09),
+      transparent 34%
+    ),
+    var(--h-earth-diagnostic-panel-strong);
+}
+
+/* Output coloring */
+
+#h-earth-3d-diagnostic-entry-payload,
+#h-earth-3d-evidence-source-payload,
+#h-earth-3d-active-globals-payload {
+  border-color: rgba(165, 221, 206, 0.2);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(165, 221, 206, 0.038),
+      transparent 110px
+    ),
+    rgba(0, 0, 0, 0.25);
+}
+
+#h-earth-3d-public-route-status-payload,
+#h-earth-3d-route-bootstrap-receipt,
+#h-earth-3d-route-bootstrap-completion-payload,
+#h-earth-3d-source-preview-receipt-payload,
+#h-earth-3d-public-stage-status-payload,
+#h-earth-3d-public-stage-receipt-payload,
+#h-earth-3d-public-ground-readout-payload {
+  border-color: rgba(159, 216, 255, 0.2);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(159, 216, 255, 0.038),
+      transparent 110px
+    ),
+    rgba(0, 0, 0, 0.25);
+}
+
+#h-earth-3d-compositor-import-payload,
+#h-earth-3d-compositor-handoff-payload {
+  border-color: rgba(208, 184, 255, 0.22);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(208, 184, 255, 0.044),
+      transparent 110px
+    ),
+    rgba(0, 0, 0, 0.26);
+}
+
+#h-earth-3d-renderer-import-payload,
+#h-earth-3d-renderer-construction-receipt,
+#h-earth-3d-renderer-mount-receipt,
+#h-earth-3d-renderer-release-receipt,
+#h-earth-3d-renderer-state-payload {
+  border-color: rgba(141, 227, 208, 0.22);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(141, 227, 208, 0.04),
+      transparent 110px
+    ),
+    rgba(0, 0, 0, 0.26);
 }
 
 #h-earth-3d-layer-4-custody-payload,
@@ -752,48 +1239,79 @@ pre {
 #h-earth-3d-module-initialization-payload {
   border-color: rgba(201, 187, 255, 0.22);
   background:
-    linear-gradient(180deg, rgba(201, 187, 255, 0.046), transparent 110px),
+    linear-gradient(
+      180deg,
+      rgba(201, 187, 255, 0.046),
+      transparent 110px
+    ),
     rgba(0, 0, 0, 0.26);
 }
 
-#h-earth-3d-public-stage-status-payload,
-#h-earth-3d-public-stage-receipt-payload,
-#h-earth-3d-route-bootstrap-receipt,
-#h-earth-3d-renderer-mount-receipt,
-#h-earth-3d-public-ground-readout-payload {
-  border-color: rgba(159, 216, 255, 0.20);
-  background:
-    linear-gradient(180deg, rgba(159, 216, 255, 0.038), transparent 110px),
-    rgba(0, 0, 0, 0.25);
-}
-
-#h-earth-3d-boundary-flags,
-#h-earth-3d-boundary-mismatch-payload {
+#h-earth-3d-boundary-flags {
   border-color: rgba(255, 217, 141, 0.22);
   background:
-    linear-gradient(180deg, rgba(255, 217, 141, 0.040), transparent 110px),
+    linear-gradient(
+      180deg,
+      rgba(255, 217, 141, 0.04),
+      transparent 110px
+    ),
     rgba(0, 0, 0, 0.25);
 }
 
 #h-earth-3d-boundary-mismatch-payload {
   border-color: rgba(255, 177, 132, 0.24);
   background:
-    linear-gradient(180deg, rgba(255, 177, 132, 0.040), transparent 110px),
+    linear-gradient(
+      180deg,
+      rgba(255, 177, 132, 0.04),
+      transparent 110px
+    ),
     rgba(0, 0, 0, 0.25);
 }
 
 #h-earth-3d-archive-custody-payload {
-  border-color: rgba(213, 232, 193, 0.20);
+  border-color: rgba(213, 232, 193, 0.2);
   background:
-    linear-gradient(180deg, rgba(213, 232, 193, 0.038), transparent 110px),
+    linear-gradient(
+      180deg,
+      rgba(213, 232, 193, 0.038),
+      transparent 110px
+    ),
     rgba(0, 0, 0, 0.25);
 }
 
-#h-earth-3d-all-diagnostics-payload {
-  max-height: 760px;
+#h-earth-3d-index-contract,
+#h-earth-3d-compositor-contract,
+#h-earth-3d-renderer-contract,
+#h-earth-3d-diagnostic-contract {
+  border-color: rgba(225, 213, 183, 0.18);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(225, 213, 183, 0.034),
+      transparent 110px
+    ),
+    rgba(0, 0, 0, 0.25);
 }
 
-/* Status hooks */
+#h-earth-3d-raw-evidence-payload {
+  max-height: 760px;
+  border-color: rgba(255, 202, 173, 0.22);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 202, 173, 0.038),
+      transparent 110px
+    ),
+    rgba(0, 0, 0, 0.26);
+}
+
+#h-earth-3d-all-diagnostics-payload {
+  max-height: 840px;
+  border-color: rgba(221, 255, 245, 0.2);
+}
+
+/* Route status hooks */
 
 .h-earth-3d-diagnostic-ready .h-earth-3d-diagnostic-status {
   color: var(--h-earth-diagnostic-ok);
@@ -814,27 +1332,47 @@ pre {
   background: rgba(255, 155, 155, 0.075);
 }
 
-/* Payload status markers */
+/* Panel status hooks */
 
+[data-h-earth-panel-role="public-route-status"]
+  [data-h-earth-public-route-status="ROUTE_RECEIPT_OBSERVED"],
+[data-h-earth-panel-role="public-route-status"][data-h-earth-public-route-status="ROUTE_RECEIPT_OBSERVED"] {
+  border-color: rgba(185, 243, 206, 0.32);
+}
+
+[data-h-earth-panel-role="compositor-handoff"][data-h-earth-compositor-status="COMPOSITOR_HANDOFF_OBSERVED"] {
+  border-color: rgba(185, 243, 206, 0.32);
+}
+
+[data-h-earth-panel-role="renderer-mount"][data-h-earth-renderer-status="RENDERER_MOUNT_RECEIPT_OBSERVED"] {
+  border-color: rgba(185, 243, 206, 0.32);
+}
+
+[data-h-earth-panel-role="layer-4-custody"][data-h-earth-custody-status="BACKED_STATIC_SUPPORT_CHAIN_REPORTED"],
 [data-h-earth-panel-role="layer-4-custody"][data-h-earth-custody-status="BACKED_STATIC_SUPPORT"] {
   border-color: rgba(185, 243, 206, 0.34);
 }
 
-[data-h-earth-panel-role="step-012j-descriptor"][data-h-earth-step-012j-status="DESCRIPTOR_IMPORT_OBSERVED"] {
-  border-color: rgba(201, 187, 255, 0.42);
+[data-h-earth-panel-role="mismatch-report"][data-h-earth-mismatch-status="NO_MISMATCH_FOUND"] {
+  border-color: rgba(185, 243, 206, 0.3);
 }
 
-[data-h-earth-panel-role="public-stage-status"][data-h-earth-public-stage-status="PUBLIC_STAGE_READY"] {
+[data-h-earth-panel-role="mismatch-report"][data-h-earth-mismatch-status="EVIDENCE_INCOMPLETE"] {
+  border-color: rgba(255, 217, 141, 0.36);
+}
+
+[data-h-earth-panel-role="mismatch-report"][data-h-earth-mismatch-status="MISMATCH_FOUND"] {
+  border-color: rgba(255, 177, 132, 0.4);
+}
+
+.h-earth-3d-diagnostic-route-root[data-h-earth-live-public-route-evidence-observed="true"]
+  [data-h-earth-panel-role="evidence-source"] {
   border-color: rgba(185, 243, 206, 0.32);
 }
 
-[data-h-earth-panel-role="boundary-flags"][data-h-earth-boundary-status="BOUNDARY_HELD"],
-[data-h-earth-panel-role="mismatch-report"][data-h-earth-mismatch-status="MISMATCH_FOUND"] {
-  border-color: rgba(255, 177, 132, 0.36);
-}
-
-[data-h-earth-panel-role="mismatch-report"][data-h-earth-mismatch-status="NO_MISMATCH_FOUND"] {
-  border-color: rgba(185, 243, 206, 0.30);
+.h-earth-3d-diagnostic-route-root[data-h-earth-live-public-route-evidence-observed="false"]
+  [data-h-earth-panel-role="evidence-source"] {
+  border-color: rgba(255, 217, 141, 0.3);
 }
 
 /* Boundary footer */
@@ -843,7 +1381,11 @@ pre {
   padding: 16px 18px;
   border-color: rgba(255, 217, 141, 0.22);
   background:
-    radial-gradient(circle at 92% 10%, rgba(255, 217, 141, 0.08), transparent 30%),
+    radial-gradient(
+      circle at 92% 10%,
+      rgba(255, 217, 141, 0.08),
+      transparent 30%
+    ),
     rgba(255, 217, 141, 0.045);
 }
 
@@ -853,7 +1395,7 @@ pre {
   line-height: 1.6;
 }
 
-/* Compatibility aliases retained for earlier diagnostic report wall naming */
+/* Compatibility aliases */
 
 .h-earth-3d-report-layer,
 .h-earth-3d-report-wall,
@@ -890,6 +1432,14 @@ pre {
 
 /* Scrollbars */
 
+.h-earth-3d-diagnostic-output,
+.h-earth-3d-report-layer-status {
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgba(221, 255, 245, 0.22)
+    rgba(255, 255, 255, 0.035);
+}
+
 .h-earth-3d-diagnostic-output::-webkit-scrollbar,
 .h-earth-3d-report-layer-status::-webkit-scrollbar {
   width: 10px;
@@ -921,22 +1471,28 @@ pre {
   background: rgba(201, 187, 255, 0.25);
 }
 
-#h-earth-3d-layer-4-custody-payload::-webkit-scrollbar-thumb:hover,
-#h-earth-3d-step-012j-descriptor-payload::-webkit-scrollbar-thumb:hover,
-#h-earth-3d-relationship-members-payload::-webkit-scrollbar-thumb:hover,
-#h-earth-3d-module-initialization-payload::-webkit-scrollbar-thumb:hover {
-  background: rgba(201, 187, 255, 0.42);
+#h-earth-3d-compositor-import-payload::-webkit-scrollbar-thumb,
+#h-earth-3d-compositor-handoff-payload::-webkit-scrollbar-thumb {
+  background: rgba(208, 184, 255, 0.28);
 }
 
-/* Explicit non-stage guard:
-   The diagnostic page must not create a public scene stage or renderer mount.
-   These selectors are defensive only if stale markup is accidentally present. */
+#h-earth-3d-renderer-import-payload::-webkit-scrollbar-thumb,
+#h-earth-3d-renderer-construction-receipt::-webkit-scrollbar-thumb,
+#h-earth-3d-renderer-mount-receipt::-webkit-scrollbar-thumb,
+#h-earth-3d-renderer-release-receipt::-webkit-scrollbar-thumb,
+#h-earth-3d-renderer-state-payload::-webkit-scrollbar-thumb {
+  background: rgba(141, 227, 208, 0.26);
+}
+
+/* Explicit non-stage guard */
 
 .h-earth-3d-diagnostic-route-root .h-earth-3d-world-stage,
 .h-earth-3d-diagnostic-route-root .h-earth-3d-stage,
 .h-earth-3d-diagnostic-route-root #h-earth-3d-renderer-mount,
 .h-earth-3d-diagnostic-route-root .h-earth-3d-renderer-mount {
+  min-height: 120px;
   border: 2px dashed rgba(255, 155, 155, 0.48);
+  background: rgba(255, 155, 155, 0.035);
 }
 
 .h-earth-3d-diagnostic-route-root .h-earth-3d-world-stage::before,
@@ -950,19 +1506,6 @@ pre {
   background: rgba(255, 155, 155, 0.08);
   font-family: var(--h-earth-diagnostic-mono);
   font-size: 0.76rem;
-}
-
-/* Reduced motion */
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.001ms !important;
-  }
 }
 
 /* Responsive */
@@ -1009,8 +1552,8 @@ pre {
   }
 
   .h-earth-3d-report-layer-status {
-    max-width: none;
     width: 100%;
+    max-width: none;
   }
 
   .h-earth-3d-report-cards {
@@ -1018,13 +1561,20 @@ pre {
   }
 
   .h-earth-3d-diagnostic-output {
-    max-height: 520px;
+    max-height: 560px;
+  }
+
+  .h-earth-3d-panel-copy-button {
+    width: 100%;
   }
 }
 
 @media (max-width: 640px) {
   .h-earth-3d-diagnostic-route-root {
-    padding: 10px;
+    padding:
+      max(10px, env(safe-area-inset-top))
+      10px
+      max(24px, env(safe-area-inset-bottom));
   }
 
   .h-earth-3d-diagnostic-shell {
@@ -1060,6 +1610,10 @@ pre {
     grid-template-columns: 1fr;
   }
 
+  .h-earth-3d-copy-button {
+    width: 100%;
+  }
+
   .h-earth-3d-diagnostic-grid {
     grid-template-columns: 1fr;
   }
@@ -1071,13 +1625,66 @@ pre {
     padding: 14px;
   }
 
-  .h-earth-3d-diagnostic-output {
+  .h-earth-3d-diagnostic-output,
+  .h-earth-3d-panel-primary .h-earth-3d-diagnostic-output {
     min-height: 260px;
-    max-height: 420px;
+    max-height: 460px;
     font-size: 0.71rem;
   }
 
   .h-earth-3d-report-card {
     min-height: 132px;
+  }
+
+  .h-earth-3d-report-layer-status {
+    max-height: 280px;
+  }
+}
+
+@media (max-width: 420px) {
+  .h-earth-3d-diagnostic-route-root {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .h-earth-3d-diagnostic-header {
+    padding: 11px;
+  }
+
+  .h-earth-3d-diagnostic-brand-copy span {
+    font-size: 0.62rem;
+  }
+
+  .h-earth-3d-diagnostic-brand-copy strong {
+    font-size: 1rem;
+  }
+
+  .h-earth-3d-diagnostic-hero-copy,
+  .h-earth-3d-diagnostic-status-card,
+  .h-earth-3d-copy-toolbar,
+  .h-earth-3d-operational-reports,
+  .h-earth-3d-diagnostic-panel,
+  .h-earth-3d-diagnostic-boundary {
+    padding: 12px;
+  }
+
+  .h-earth-3d-diagnostic-output,
+  .h-earth-3d-panel-primary .h-earth-3d-diagnostic-output {
+    min-height: 240px;
+    font-size: 0.67rem;
+    line-height: 1.46;
+  }
+}
+
+/* Reduced-motion safety */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }

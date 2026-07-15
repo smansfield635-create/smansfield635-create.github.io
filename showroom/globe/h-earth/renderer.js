@@ -11,6 +11,8 @@
  * → FRAME OCCURRENCE CORRESPONDENCE
  * → ADMITTED PRIMITIVE PROJECTION
  * → PRESENTATION ASSIGNMENT CORRELATION
+ * → FIFTEEN SEMANTIC LAYER CONTAINERS
+ * → ONE RENDERER INTERACTION-BOUNDARY NODE
  * → DOM/CSS RESOURCE CONSTRUCTION
  * → MOUNT / APPLY FRAME / REPROJECT / DESTROY
  * → RENDERER RECEIPTS
@@ -29,6 +31,8 @@
  * - projection of already-admitted vertices;
  * - projected point, line, and triangle construction;
  * - presentation-assignment consumption;
+ * - fifteen renderer-owned semantic layer containers;
+ * - one renderer interaction-boundary node without controller behavior;
  * - renderer-owned DOM/CSS resources;
  * - renderer mount, frame replacement, reprojection, and destroy lifecycle;
  * - renderer operational receipts.
@@ -89,16 +93,13 @@ export const H_EARTH_3D_RENDERER_ROLE =
   'ADMITTED_GEOMETRY_FRAME_PROJECTION_AND_DOM_CSS_MATERIALIZATION_CONSUMER';
 
 export const H_EARTH_3D_RENDERER_STATUS =
-  'FROZEN_CANON_RENEWAL_CANDIDATE';
+  'FROZEN_CANON_TARGETED_CORRECTION_CANDIDATE';
 
 const RENEWS_RENDERER_CONTRACT_ID =
   'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_1_ENVIRONMENT_GEOMETRY_MATERIALIZATION_v1';
 
 const EMPTY_FROZEN_ARRAY =
   Object.freeze([]);
-
-const EMPTY_FROZEN_RECORD =
-  Object.freeze({});
 
 const FRAME_APPLICATION_STATUS =
   Object.freeze({
@@ -148,6 +149,35 @@ const TOPOLOGY_MODE =
       'TRIANGLE_FAN'
   });
 
+const DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL =
+  'DOM_CSS3D_PROJECTED_ENVIRONMENT';
+
+const RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT =
+  15;
+
+const RENDERER_INTERACTION_NODE_COUNT =
+  1;
+
+const RENDERER_SEMANTIC_LAYER_CONTAINER_IDS =
+  Object.freeze(
+    Array.from(
+      {
+        length:
+          RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT
+      },
+      (
+        _unused,
+        index
+      ) =>
+        `H_EARTH_3D_RENDERER_SEMANTIC_LAYER_${String(
+          index + 1
+        ).padStart(
+          2,
+          '0'
+        )}`
+    )
+  );
+
 
 /* ==========================================================================
  * 02 · GENERIC HELPERS
@@ -158,7 +188,8 @@ function isPlainRecord(value) {
     value !== null &&
     typeof value === 'object' &&
     Array.isArray(value) === false &&
-    Object.getPrototypeOf(value) === Object.prototype
+    Object.getPrototypeOf(value) ===
+      Object.prototype
   );
 }
 
@@ -271,20 +302,6 @@ function cloneKnownPlain(value) {
 function cloneAndFreeze(value) {
   return deepFreeze(
     cloneKnownPlain(
-      value
-    )
-  );
-}
-
-function clamp(
-  value,
-  minimum,
-  maximum
-) {
-  return Math.min(
-    maximum,
-    Math.max(
-      minimum,
       value
     )
   );
@@ -504,6 +521,30 @@ const PERMITTED_OUTPUT_MODEL =
     ?.permittedOutputModel ??
   null;
 
+const PERMITTED_OUTPUT_MODELS =
+  Array.isArray(
+    H_EARTH_3D_RENDER_STAGE_LIMITS
+      ?.permittedOutputModels
+  )
+    ? Object.freeze([
+        ...H_EARTH_3D_RENDER_STAGE_LIMITS
+          .permittedOutputModels
+      ])
+    : PERMITTED_OUTPUT_MODEL === null
+      ? EMPTY_FROZEN_ARRAY
+      : Object.freeze([
+          PERMITTED_OUTPUT_MODEL
+        ]);
+
+const DOM_CSS3D_OUTPUT_AUTHORIZED =
+  (
+    PERMITTED_OUTPUT_MODEL ===
+      DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL ||
+    PERMITTED_OUTPUT_MODELS.includes(
+      DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL
+    )
+  );
+
 
 /* ==========================================================================
  * 04 · BOUNDARY FLAGS
@@ -528,6 +569,15 @@ export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
 
     ownsDOMCSSMaterialization:
       true,
+
+    ownsSemanticLayerContainers:
+      true,
+
+    ownsInteractionBoundaryNode:
+      true,
+
+    ownsControllerBehavior:
+      false,
 
     ownsRendererResourceLifecycle:
       true,
@@ -566,9 +616,6 @@ export const H_EARTH_3D_RENDERER_BOUNDARY_FLAGS =
       false,
 
     ownsRouteBootstrap:
-      false,
-
-    ownsControllerBehavior:
       false,
 
     ownsDiagnosticJudgment:
@@ -716,14 +763,44 @@ export const H_EARTH_3D_RENDERER_STAGE_MODEL =
     permittedOutputModel:
       PERMITTED_OUTPUT_MODEL,
 
+    permittedOutputModels:
+      PERMITTED_OUTPUT_MODELS,
+
+    requiredOutputModel:
+      DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL,
+
+    outputModelAuthorized:
+      DOM_CSS3D_OUTPUT_AUTHORIZED,
+
     rendererMountId:
       RENDERER_MOUNT_ID,
+
+    semanticLayerContainerCount:
+      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+    semanticLayerContainerIds:
+      RENDERER_SEMANTIC_LAYER_CONTAINER_IDS,
+
+    interactionNodeCount:
+      RENDERER_INTERACTION_NODE_COUNT,
+
+    semanticLayerContainerModel:
+      'FIFTEEN_RENDERER_OWNED_DOM_SEMANTIC_LAYER_CONTAINERS',
+
+    interactionNodeModel:
+      'ONE_RENDERER_INTERACTION_BOUNDARY_NODE_WITHOUT_CONTROLLER_BEHAVIOR',
 
     stageClass:
       'h-earth-3d-render-stage',
 
     sceneClass:
       'h-earth-3d-render-scene',
+
+    semanticLayerClass:
+      'h-earth-3d-render-semantic-layer',
+
+    interactionBoundaryClass:
+      'h-earth-3d-render-interaction-boundary',
 
     primitiveClass:
       'h-earth-3d-render-primitive',
@@ -738,16 +815,13 @@ export const H_EARTH_3D_RENDERER_STAGE_MODEL =
       'h-earth-3d-render-triangle',
 
     DOMAuthorized:
-      H_EARTH_3D_RENDER_STAGE_LIMITS
-        ?.domAuthorized === true,
+      DOM_CSS3D_OUTPUT_AUTHORIZED,
 
     CSSAuthorized:
-      H_EARTH_3D_RENDER_STAGE_LIMITS
-        ?.cssAuthorized === true,
+      DOM_CSS3D_OUTPUT_AUTHORIZED,
 
     CSSClipPathAuthorized:
-      H_EARTH_3D_RENDER_STAGE_LIMITS
-        ?.cssClipPathAuthorized === true,
+      DOM_CSS3D_OUTPUT_AUTHORIZED,
 
     webGLAuthorized:
       false,
@@ -781,6 +855,12 @@ const rendererState = {
     null,
 
   sceneElement:
+    null,
+
+  semanticLayerElements:
+    new Map(),
+
+  interactionBoundaryElement:
     null,
 
   primitiveElements:
@@ -924,7 +1004,8 @@ function evaluateCompositorHandoff(
             H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
 
           actual:
-            handoff.admittedGeometryFrameContractId ??
+            handoff
+              .admittedGeometryFrameContractId ??
             null
         }
       )
@@ -964,7 +1045,8 @@ function evaluateCompositorHandoff(
             'admittedGeometryFrame.rendererConsumerEligibility',
 
           actual:
-            frame?.rendererConsumerEligibility ??
+            frame
+              ?.rendererConsumerEligibility ??
             null
         }
       )
@@ -1248,8 +1330,6 @@ function createCameraBasisFromFrame(
     !isVector3(pose.position) ||
     !isVector3(pose.target) ||
     !isVector3(pose.up) ||
-    !isVector3(pose.forward) ||
-    !isVector3(pose.right) ||
     !isPositiveFiniteNumber(
       pose.verticalFovDegrees
     ) ||
@@ -1258,24 +1338,40 @@ function createCameraBasisFromFrame(
     ) ||
     !isPositiveFiniteNumber(
       pose.farPlane
-    )
+    ) ||
+    pose.farPlane <=
+      pose.nearPlane
   ) {
     return null;
   }
 
+  const publishedUp =
+    normalizeVector(
+      pose.up
+    );
+
   const forward =
     normalizeVector(
-      pose.forward
+      subtractVector(
+        pose.target,
+        pose.position
+      )
     );
 
   const right =
     normalizeVector(
-      pose.right
+      crossVector(
+        publishedUp,
+        forward
+      )
     );
 
-  const up =
+  const correctedUp =
     normalizeVector(
-      pose.up
+      crossVector(
+        forward,
+        right
+      )
     );
 
   if (
@@ -1283,7 +1379,7 @@ function createCameraBasisFromFrame(
       Number.EPSILON ||
     getVectorLength(right) <=
       Number.EPSILON ||
-    getVectorLength(up) <=
+    getVectorLength(correctedUp) <=
       Number.EPSILON
   ) {
     return null;
@@ -1298,6 +1394,14 @@ function createCameraBasisFromFrame(
       2
     );
 
+  if (
+    !isPositiveFiniteNumber(
+      focalLength
+    )
+  ) {
+    return null;
+  }
+
   return deepFreeze({
     position:
       cloneAndFreeze(
@@ -1309,14 +1413,25 @@ function createCameraBasisFromFrame(
         pose.target
       ),
 
+    publishedUp:
+      deepFreeze(
+        publishedUp
+      ),
+
     forward:
-      deepFreeze(forward),
+      deepFreeze(
+        forward
+      ),
 
     right:
-      deepFreeze(right),
+      deepFreeze(
+        right
+      ),
 
     up:
-      deepFreeze(up),
+      deepFreeze(
+        correctedUp
+      ),
 
     verticalFovDegrees:
       pose.verticalFovDegrees,
@@ -1330,7 +1445,10 @@ function createCameraBasisFromFrame(
     focalLength,
 
     cameraRevision:
-      frame.revisions.camera
+      frame.revisions.camera,
+
+    basisDerivation:
+      'FORWARD_FROM_TARGET_MINUS_POSITION_RIGHT_FROM_CROSS_PUBLISHED_UP_FORWARD_CORRECTED_UP_FROM_CROSS_FORWARD_RIGHT'
   });
 }
 
@@ -1355,35 +1473,52 @@ function createProjectionContextFromFrame(
     return null;
   }
 
-  const viewport =
-    viewportOverride === null
-      ? frameViewport
-      : deepFreeze({
-          widthPx:
-            viewportOverride.widthPx,
+  let viewport =
+    frameViewport;
 
-          heightPx:
-            viewportOverride.heightPx,
+  if (viewportOverride !== null) {
+    if (
+      !isPlainRecord(
+        viewportOverride
+      ) ||
+      !isPositiveFiniteNumber(
+        viewportOverride.widthPx
+      ) ||
+      !isPositiveFiniteNumber(
+        viewportOverride.heightPx
+      )
+    ) {
+      return null;
+    }
 
-          pixelRatio:
-            frameViewport.pixelRatio,
+    viewport =
+      deepFreeze({
+        widthPx:
+          viewportOverride.widthPx,
 
-          aspectRatio:
-            viewportOverride.widthPx /
-            viewportOverride.heightPx,
+        heightPx:
+          viewportOverride.heightPx,
 
-          orientation:
-            viewportOverride.widthPx ===
-              viewportOverride.heightPx
-              ? 'SQUARE'
-              : viewportOverride.widthPx >
-                  viewportOverride.heightPx
-                ? 'LANDSCAPE'
-                : 'PORTRAIT',
+        pixelRatio:
+          frameViewport.pixelRatio,
 
-          capacityStatus:
-            frameViewport.capacityStatus
-        });
+        aspectRatio:
+          viewportOverride.widthPx /
+          viewportOverride.heightPx,
+
+        orientation:
+          viewportOverride.widthPx ===
+            viewportOverride.heightPx
+            ? 'SQUARE'
+            : viewportOverride.widthPx >
+                viewportOverride.heightPx
+              ? 'LANDSCAPE'
+              : 'PORTRAIT',
+
+        capacityStatus:
+          frameViewport.capacityStatus
+      });
+  }
 
   return deepFreeze({
     viewport,
@@ -2109,13 +2244,17 @@ function createLineListDescriptors({
       createProjectedLineDescriptor({
         primitiveId,
         assignment,
+
         sourceVertexIndices:
           sourceIndices,
+
         projectedPoints
       });
 
     if (descriptor) {
-      descriptors.push(descriptor);
+      descriptors.push(
+        descriptor
+      );
     }
   }
 
@@ -2154,13 +2293,17 @@ function createLineStripDescriptors({
       createProjectedLineDescriptor({
         primitiveId,
         assignment,
+
         sourceVertexIndices:
           sourceIndices,
+
         projectedPoints
       });
 
     if (descriptor) {
-      descriptors.push(descriptor);
+      descriptors.push(
+        descriptor
+      );
     }
   }
 
@@ -2200,13 +2343,17 @@ function createTriangleListDescriptors({
       createProjectedTriangleDescriptor({
         primitiveId,
         assignment,
+
         sourceVertexIndices:
           sourceIndices,
+
         projectedPoints
       });
 
     if (descriptor) {
-      descriptors.push(descriptor);
+      descriptors.push(
+        descriptor
+      );
     }
   }
 
@@ -2253,13 +2400,17 @@ function createTriangleStripDescriptors({
       createProjectedTriangleDescriptor({
         primitiveId,
         assignment,
+
         sourceVertexIndices:
           sourceIndices,
+
         projectedPoints
       });
 
     if (descriptor) {
-      descriptors.push(descriptor);
+      descriptors.push(
+        descriptor
+      );
     }
   }
 
@@ -2306,13 +2457,17 @@ function createTriangleFanDescriptors({
       createProjectedTriangleDescriptor({
         primitiveId,
         assignment,
+
         sourceVertexIndices:
           sourceIndices,
+
         projectedPoints
       });
 
     if (descriptor) {
-      descriptors.push(descriptor);
+      descriptors.push(
+        descriptor
+      );
     }
   }
 
@@ -2479,7 +2634,158 @@ function projectAdmittedPrimitive({
 
 
 /* ==========================================================================
- * 14 · FRAME PROJECTION PLAN
+ * 14 · SEMANTIC LAYER PLAN
+ * ========================================================================== */
+
+function createSemanticLayerPlan(
+  projectedDescriptors
+) {
+  const renderLayerIds = [];
+  const seenRenderLayerIds =
+    new Set();
+
+  for (
+    const descriptor
+    of projectedDescriptors
+  ) {
+    const renderLayer =
+      descriptor
+        ?.assignment
+        ?.renderLayer;
+
+    if (
+      !isNonEmptyExactString(
+        renderLayer
+      )
+    ) {
+      return deepFreeze({
+        eligible:
+          false,
+
+        assignments:
+          EMPTY_FROZEN_ARRAY,
+
+        issues:
+          freezeIssues([
+            createRendererIssue(
+              'PRESENTATION_RENDER_LAYER_INVALID',
+              'Every projected descriptor requires an exact presentation renderLayer.'
+            )
+          ])
+      });
+    }
+
+    if (
+      !seenRenderLayerIds.has(
+        renderLayer
+      )
+    ) {
+      seenRenderLayerIds.add(
+        renderLayer
+      );
+
+      renderLayerIds.push(
+        renderLayer
+      );
+    }
+  }
+
+  if (
+    renderLayerIds.length >
+    RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT
+  ) {
+    return deepFreeze({
+      eligible:
+        false,
+
+      assignments:
+        EMPTY_FROZEN_ARRAY,
+
+      issues:
+        freezeIssues([
+          createRendererIssue(
+            'SEMANTIC_RENDER_LAYER_CAPACITY_EXCEEDED',
+            'The frame requires more semantic render layers than the renderer stage model admits.',
+            {
+              expected:
+                RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+              actual:
+                renderLayerIds.length
+            }
+          )
+        ])
+    });
+  }
+
+  const assignments =
+    RENDERER_SEMANTIC_LAYER_CONTAINER_IDS.map(
+      (
+        containerId,
+        index
+      ) =>
+        deepFreeze({
+          containerId,
+
+          semanticIndex:
+            index,
+
+          renderLayer:
+            renderLayerIds[index] ??
+            null
+        })
+    );
+
+  return deepFreeze({
+    eligible:
+      true,
+
+    activeRenderLayerCount:
+      renderLayerIds.length,
+
+    containerCount:
+      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+    renderLayerIds:
+      Object.freeze([
+        ...renderLayerIds
+      ]),
+
+    assignments:
+      Object.freeze(
+        assignments
+      ),
+
+    issues:
+      EMPTY_FROZEN_ARRAY
+  });
+}
+
+function resolveDescriptorSemanticContainerId(
+  descriptor,
+  semanticLayerPlan
+) {
+  const renderLayer =
+    descriptor.assignment.renderLayer;
+
+  const assignment =
+    semanticLayerPlan
+      .assignments
+      .find(
+        (candidate) =>
+          candidate.renderLayer ===
+          renderLayer
+      );
+
+  return (
+    assignment?.containerId ??
+    null
+  );
+}
+
+
+/* ==========================================================================
+ * 15 · FRAME PROJECTION PLAN
  * ========================================================================== */
 
 function createFrameProjectionPlan(
@@ -2511,6 +2817,9 @@ function createFrameProjectionPlan(
       projectedDescriptors:
         EMPTY_FROZEN_ARRAY,
 
+      semanticLayerPlan:
+        null,
+
       issues:
         freezeIssues([
           createRendererIssue(
@@ -2541,6 +2850,9 @@ function createFrameProjectionPlan(
 
       projectedDescriptors:
         EMPTY_FROZEN_ARRAY,
+
+      semanticLayerPlan:
+        null,
 
       issues:
         freezeIssues([
@@ -2650,7 +2962,7 @@ function createFrameProjectionPlan(
 
   if (
     frame.admittedPrimitiveIds.length !==
-    primitivePlans.length ||
+      primitivePlans.length ||
     !arraysEqual(
       frame.admittedPrimitiveIds,
       primitivePlans.map(
@@ -2664,6 +2976,17 @@ function createFrameProjectionPlan(
         'RENDERER_PRIMITIVE_MEMBERSHIP_CORRESPONDENCE_FAILED',
         'The renderer projection plan must preserve admitted primitive membership and order exactly.'
       )
+    );
+  }
+
+  const semanticLayerPlan =
+    createSemanticLayerPlan(
+      projectedDescriptors
+    );
+
+  if (!semanticLayerPlan.eligible) {
+    issues.push(
+      ...semanticLayerPlan.issues
     );
   }
 
@@ -2688,6 +3011,8 @@ function createFrameProjectionPlan(
         projectedDescriptors
       ),
 
+    semanticLayerPlan,
+
     issues:
       freezeIssues(issues)
   });
@@ -2695,7 +3020,7 @@ function createFrameProjectionPlan(
 
 
 /* ==========================================================================
- * 15 · DOM RESOURCE CONSTRUCTION
+ * 16 · DOM RESOURCE CONSTRUCTION
  * ========================================================================== */
 
 function createStageElement() {
@@ -2716,6 +3041,16 @@ function createStageElement() {
 
   element.dataset.admittedFrameContractId =
     H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID;
+
+  element.dataset.semanticLayerContainerCount =
+    String(
+      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT
+    );
+
+  element.dataset.interactionNodeCount =
+    String(
+      RENDERER_INTERACTION_NODE_COUNT
+    );
 
   setStyles(
     element,
@@ -2779,6 +3114,105 @@ function createSceneElement() {
 
       transformOrigin:
         '50% 50%'
+    }
+  );
+
+  return element;
+}
+
+function createSemanticLayerElement(
+  assignment
+) {
+  const element =
+    document.createElement(
+      'div'
+    );
+
+  element.className =
+    H_EARTH_3D_RENDERER_STAGE_MODEL
+      .semanticLayerClass;
+
+  element.dataset.semanticLayerContainerId =
+    assignment.containerId;
+
+  element.dataset.semanticLayerIndex =
+    String(
+      assignment.semanticIndex
+    );
+
+  if (
+    assignment.renderLayer !==
+    null
+  ) {
+    element.dataset.renderLayer =
+      assignment.renderLayer;
+  }
+
+  setStyles(
+    element,
+    {
+      position:
+        'absolute',
+
+      inset:
+        '0',
+
+      overflow:
+        'visible',
+
+      pointerEvents:
+        'none',
+
+      zIndex:
+        assignment.semanticIndex
+    }
+  );
+
+  return element;
+}
+
+function createInteractionBoundaryElement() {
+  const element =
+    document.createElement(
+      'div'
+    );
+
+  element.className =
+    H_EARTH_3D_RENDERER_STAGE_MODEL
+      .interactionBoundaryClass;
+
+  element.dataset.rendererInteractionBoundary =
+    'true';
+
+  element.dataset.controllerBehaviorOwned =
+    'false';
+
+  element.tabIndex =
+    -1;
+
+  element.setAttribute(
+    'aria-hidden',
+    'true'
+  );
+
+  setStyles(
+    element,
+    {
+      position:
+        'absolute',
+
+      inset:
+        '0',
+
+      pointerEvents:
+        'none',
+
+      background:
+        'transparent',
+
+      zIndex:
+        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT +
+        1
     }
   );
 
@@ -3204,10 +3638,34 @@ function createDescriptorElement(
 function buildSceneFragment(
   projectionPlan
 ) {
-  const fragment =
+  const rootFragment =
     document.createDocumentFragment();
 
-  const elements = [];
+  const semanticLayerElements =
+    new Map();
+
+  for (
+    const assignment
+    of projectionPlan
+      .semanticLayerPlan
+      .assignments
+  ) {
+    const layerElement =
+      createSemanticLayerElement(
+        assignment
+      );
+
+    semanticLayerElements.set(
+      assignment.containerId,
+      layerElement
+    );
+
+    rootFragment.appendChild(
+      layerElement
+    );
+  }
+
+  const primitiveElements = [];
 
   projectionPlan
     .projectedDescriptors
@@ -3222,53 +3680,81 @@ function buildSceneFragment(
             descriptorIndex
           );
 
-        if (element) {
-          fragment.appendChild(
-            element
+        if (!element) {
+          return;
+        }
+
+        const containerId =
+          resolveDescriptorSemanticContainerId(
+            descriptor,
+            projectionPlan
+              .semanticLayerPlan
           );
 
-          elements.push(
-            element
+        const layerElement =
+          semanticLayerElements.get(
+            containerId
           );
+
+        if (!layerElement) {
+          return;
         }
+
+        layerElement.appendChild(
+          element
+        );
+
+        primitiveElements.push(
+          element
+        );
       }
     );
 
+  const interactionBoundaryElement =
+    createInteractionBoundaryElement();
+
+  rootFragment.appendChild(
+    interactionBoundaryElement
+  );
+
   return {
-    fragment,
-    elements
+    fragment:
+      rootFragment,
+
+    semanticLayerElements,
+
+    interactionBoundaryElement,
+
+    primitiveElements
   };
 }
 
 
 /* ==========================================================================
- * 16 · NODE BUDGET
+ * 17 · NODE BUDGET
  * ========================================================================== */
 
 function evaluateRendererNodeBudget(
   projectedDescriptorCount
 ) {
-  const evaluation =
-    evaluateHEarth3DNodeBudget({
-      semanticLayerContainers:
-        1,
+  return evaluateHEarth3DNodeBudget({
+    semanticLayerContainers:
+      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
 
-      environmentPrimitives:
-        projectedDescriptorCount,
+    environmentPrimitives:
+      projectedDescriptorCount,
 
-      interactionNodes:
-        0,
+    interactionNodes:
+      RENDERER_INTERACTION_NODE_COUNT,
 
-      diagnosticOwnedNodes:
-        0
-    });
-
-  return evaluation;
+    diagnosticOwnedNodes:
+      0
+  });
 }
 
 
 /* ==========================================================================
- * 17 · RESOURCE CONSTRUCTION
+ * 18 · RESOURCE CONSTRUCTION
  * ========================================================================== */
 
 export function constructHEarth3DRenderer(
@@ -3291,6 +3777,18 @@ export function constructHEarth3DRenderer(
         constructed:
           false,
 
+        rendererStateConstructed:
+          false,
+
+        projectionPlanConstructed:
+          false,
+
+        rendererDOMResourcesCreated:
+          false,
+
+        rendererMounted:
+          false,
+
         status:
           'RENDERER_CONSTRUCTION_REJECTED',
 
@@ -3304,9 +3802,6 @@ export function constructHEarth3DRenderer(
             ?.revisions
             ?.frame ??
           null,
-
-        rendererResourceCreated:
-          false,
 
         issues:
           handoffEvaluation.issues,
@@ -3347,6 +3842,18 @@ export function constructHEarth3DRenderer(
         constructed:
           false,
 
+        rendererStateConstructed:
+          false,
+
+        projectionPlanConstructed:
+          false,
+
+        rendererDOMResourcesCreated:
+          false,
+
+        rendererMounted:
+          false,
+
         status:
           'RENDERER_FRAME_APPLICATION_REJECTED',
 
@@ -3358,9 +3865,6 @@ export function constructHEarth3DRenderer(
 
         compositorFrameRevision:
           frame.revisions.frame,
-
-        rendererResourceCreated:
-          false,
 
         issues:
           applicationEvaluation.issues,
@@ -3393,6 +3897,18 @@ export function constructHEarth3DRenderer(
         constructed:
           true,
 
+        rendererStateConstructed:
+          true,
+
+        projectionPlanConstructed:
+          true,
+
+        rendererDOMResourcesCreated:
+          rendererState.mounted,
+
+        rendererMounted:
+          rendererState.mounted,
+
         status:
           'RENDERER_ALREADY_CONSTRUCTED_FOR_FRAME',
 
@@ -3404,9 +3920,6 @@ export function constructHEarth3DRenderer(
 
         compositorFrameRevision:
           frame.revisions.frame,
-
-        rendererResourceCreated:
-          true,
 
         duplicateFrame:
           true,
@@ -3444,6 +3957,18 @@ export function constructHEarth3DRenderer(
         constructed:
           false,
 
+        rendererStateConstructed:
+          false,
+
+        projectionPlanConstructed:
+          false,
+
+        rendererDOMResourcesCreated:
+          false,
+
+        rendererMounted:
+          false,
+
         status:
           'RENDERER_PROJECTION_PLAN_REJECTED',
 
@@ -3455,9 +3980,6 @@ export function constructHEarth3DRenderer(
 
         compositorFrameRevision:
           frame.revisions.frame,
-
-        rendererResourceCreated:
-          false,
 
         issues:
           projectionPlan.issues,
@@ -3500,6 +4022,18 @@ export function constructHEarth3DRenderer(
         constructed:
           false,
 
+        rendererStateConstructed:
+          false,
+
+        projectionPlanConstructed:
+          true,
+
+        rendererDOMResourcesCreated:
+          false,
+
+        rendererMounted:
+          false,
+
         status:
           'RENDERER_NODE_BUDGET_REJECTED',
 
@@ -3512,8 +4046,16 @@ export function constructHEarth3DRenderer(
         compositorFrameRevision:
           frame.revisions.frame,
 
-        rendererResourceCreated:
-          false,
+        semanticLayerContainerCount:
+          RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+        interactionNodeCount:
+          RENDERER_INTERACTION_NODE_COUNT,
+
+        projectedEnvironmentPrimitiveCount:
+          projectionPlan
+            .projectedDescriptors
+            .length,
 
         nodeBudgetEvaluation,
 
@@ -3521,7 +4063,7 @@ export function constructHEarth3DRenderer(
           freezeIssues([
             createRendererIssue(
               'RENDERER_NODE_BUDGET_NOT_ELIGIBLE',
-              'The projected admitted frame exceeds the renderer node budget.'
+              'The renderer stage plan does not satisfy the backed node-budget authority.'
             )
           ]),
 
@@ -3582,8 +4124,20 @@ export function constructHEarth3DRenderer(
       constructed:
         true,
 
+      rendererStateConstructed:
+        true,
+
+      projectionPlanConstructed:
+        true,
+
+      rendererDOMResourcesCreated:
+        false,
+
+      rendererMounted:
+        false,
+
       status:
-        'RENDERER_RESOURCES_CONSTRUCTED',
+        'RENDERER_STATE_AND_PROJECTION_PLAN_CONSTRUCTED',
 
       frameApplicationStatus:
         applicationEvaluation.status,
@@ -3614,6 +4168,12 @@ export function constructHEarth3DRenderer(
           .projectedDescriptors
           .length,
 
+      semanticLayerContainerCount:
+        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+      interactionNodeCount:
+        RENDERER_INTERACTION_NODE_COUNT,
+
       presentationAssignmentCount:
         frame.presentationAssignments.length,
 
@@ -3628,9 +4188,6 @@ export function constructHEarth3DRenderer(
 
       admittedIndicesAltered:
         false,
-
-      rendererResourceCreated:
-        true,
 
       nodeBudgetEvaluation,
 
@@ -3660,7 +4217,7 @@ export function constructHEarth3DRenderer(
 
 
 /* ==========================================================================
- * 18 · FRAME MATERIALIZATION
+ * 19 · FRAME MATERIALIZATION
  * ========================================================================== */
 
 function materializeCurrentFrame(
@@ -3730,22 +4287,30 @@ function materializeCurrentFrame(
       status:
         'RENDERER_NODE_BUDGET_REJECTED',
 
+      semanticLayerContainerCount:
+        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+      interactionNodeCount:
+        RENDERER_INTERACTION_NODE_COUNT,
+
+      projectedEnvironmentPrimitiveCount:
+        projectionPlan
+          .projectedDescriptors
+          .length,
+
       nodeBudgetEvaluation,
 
       issues:
         freezeIssues([
           createRendererIssue(
             'RENDERER_NODE_BUDGET_NOT_ELIGIBLE',
-            'The projected admitted frame exceeds the renderer node budget.'
+            'The renderer stage plan does not satisfy the backed node-budget authority.'
           )
         ])
     });
   }
 
-  const {
-    fragment,
-    elements
-  } =
+  const sceneResources =
     buildSceneFragment(
       projectionPlan
     );
@@ -3753,11 +4318,20 @@ function materializeCurrentFrame(
   rendererState
     .sceneElement
     .replaceChildren(
-      fragment
+      sceneResources.fragment
     );
 
+  rendererState.semanticLayerElements =
+    sceneResources
+      .semanticLayerElements;
+
+  rendererState.interactionBoundaryElement =
+    sceneResources
+      .interactionBoundaryElement;
+
   rendererState.primitiveElements =
-    elements;
+    sceneResources
+      .primitiveElements;
 
   rendererState.currentProjectionContext =
     projectionPlan.projectionContext;
@@ -3795,15 +4369,32 @@ function materializeCurrentFrame(
       rendererState
         .currentVisibilityRevision,
 
+    semanticLayerContainerCount:
+      rendererState
+        .semanticLayerElements
+        .size,
+
+    interactionNodeCount:
+      rendererState
+        .interactionBoundaryElement ===
+      null
+        ? 0
+        : 1,
+
     projectedPrimitiveFragmentCount:
-      elements.length,
+      rendererState
+        .primitiveElements
+        .length,
 
     projectionPlan,
 
     nodeBudgetEvaluation,
 
-    rendererResourceCreated:
+    rendererDOMResourcesCreated:
       true,
+
+    rendererMounted:
+      rendererState.mounted,
 
     sourcePrimitiveIdentityPreserved:
       true,
@@ -3824,7 +4415,7 @@ function materializeCurrentFrame(
 
 
 /* ==========================================================================
- * 19 · MOUNT
+ * 20 · MOUNT
  * ========================================================================== */
 
 export function mountHEarth3DRenderer({
@@ -3845,6 +4436,9 @@ export function mountHEarth3DRenderer({
           H_EARTH_3D_RENDERER_CONTRACT_ID,
 
         mounted:
+          false,
+
+        rendererDOMResourcesCreated:
           false,
 
         status:
@@ -3884,6 +4478,9 @@ export function mountHEarth3DRenderer({
           H_EARTH_3D_RENDERER_CONTRACT_ID,
 
         mounted:
+          false,
+
+        rendererDOMResourcesCreated:
           false,
 
         status:
@@ -3943,6 +4540,9 @@ export function mountHEarth3DRenderer({
         mounted:
           false,
 
+        rendererDOMResourcesCreated:
+          false,
+
         status:
           'RENDERER_MOUNT_ELEMENT_NOT_FOUND',
 
@@ -3999,25 +4599,37 @@ export function mountHEarth3DRenderer({
     resolvedMountElement
       .getBoundingClientRect();
 
-  const widthPx =
+  const measuredWidth =
     Math.max(
       rect.width,
-      resolvedMountElement.clientWidth,
-      rendererState
-        .currentFrame
-        .viewportSnapshot
-        .widthPx
+      resolvedMountElement.clientWidth
     );
 
-  const heightPx =
+  const measuredHeight =
     Math.max(
       rect.height,
-      resolvedMountElement.clientHeight,
-      rendererState
-        .currentFrame
-        .viewportSnapshot
-        .heightPx
+      resolvedMountElement.clientHeight
     );
+
+  const widthPx =
+    isPositiveFiniteNumber(
+      measuredWidth
+    )
+      ? measuredWidth
+      : rendererState
+          .currentFrame
+          .viewportSnapshot
+          .widthPx;
+
+  const heightPx =
+    isPositiveFiniteNumber(
+      measuredHeight
+    )
+      ? measuredHeight
+      : rendererState
+          .currentFrame
+          .viewportSnapshot
+          .heightPx;
 
   const materialization =
     materializeCurrentFrame({
@@ -4037,6 +4649,15 @@ export function mountHEarth3DRenderer({
     rendererState.sceneElement =
       null;
 
+    rendererState.semanticLayerElements =
+      new Map();
+
+    rendererState.interactionBoundaryElement =
+      null;
+
+    rendererState.primitiveElements =
+      [];
+
     rendererState.mounted =
       false;
 
@@ -4049,6 +4670,9 @@ export function mountHEarth3DRenderer({
           H_EARTH_3D_RENDERER_CONTRACT_ID,
 
         mounted:
+          false,
+
+        rendererDOMResourcesCreated:
           false,
 
         status:
@@ -4089,6 +4713,9 @@ export function mountHEarth3DRenderer({
       mounted:
         true,
 
+      rendererDOMResourcesCreated:
+        true,
+
       status:
         'RENDERER_MOUNTED_WITH_ADMITTED_FRAME',
 
@@ -4115,6 +4742,18 @@ export function mountHEarth3DRenderer({
       visibilityRevision:
         rendererState
           .currentVisibilityRevision,
+
+      semanticLayerContainerCount:
+        rendererState
+          .semanticLayerElements
+          .size,
+
+      interactionNodeCount:
+        rendererState
+          .interactionBoundaryElement ===
+        null
+          ? 0
+          : 1,
 
       materialization,
 
@@ -4157,7 +4796,7 @@ export function mountHEarth3DRenderer({
 
 
 /* ==========================================================================
- * 20 · APPLY OR REPLACE FRAME
+ * 21 · APPLY OR REPLACE FRAME
  * ========================================================================== */
 
 export function applyHEarth3DRendererHandoff(
@@ -4192,6 +4831,49 @@ export function applyHEarth3DRendererHandoff(
 
         issues:
           handoffEvaluation.issues,
+
+        rendererPassClaim:
+          false,
+
+        visualPassClaim:
+          false
+      });
+
+    rendererState.lastApplyReceipt =
+      receipt;
+
+    return receipt;
+  }
+
+  if (!rendererState.constructed) {
+    const receipt =
+      deepFreeze({
+        receiptType:
+          'H_EARTH_3D_RENDERER_FRAME_APPLY_RECEIPT',
+
+        contractId:
+          H_EARTH_3D_RENDERER_CONTRACT_ID,
+
+        applied:
+          false,
+
+        status:
+          'RENDERER_CONSTRUCTION_REQUIRED_BEFORE_FRAME_APPLICATION',
+
+        frameApplicationStatus:
+          FRAME_APPLICATION_STATUS
+            .INVALID_FRAME,
+
+        currentFramePreserved:
+          true,
+
+        issues:
+          freezeIssues([
+            createRendererIssue(
+              'RENDERER_CONSTRUCTION_REQUIRED',
+              'Frame application is available only after the canonical construct transition.'
+            )
+          ]),
 
         rendererPassClaim:
           false,
@@ -4311,31 +4993,42 @@ export function applyHEarth3DRendererHandoff(
     return receipt;
   }
 
+  const viewportOverride =
+    (
+      rendererState.mounted &&
+      rendererState.mountElement
+    )
+      ? (() => {
+          const widthPx =
+            rendererState
+              .mountElement
+              .clientWidth;
+
+          const heightPx =
+            rendererState
+              .mountElement
+              .clientHeight;
+
+          return (
+            isPositiveFiniteNumber(
+              widthPx
+            ) &&
+            isPositiveFiniteNumber(
+              heightPx
+            )
+          )
+            ? {
+                widthPx,
+                heightPx
+              }
+            : null;
+        })()
+      : null;
+
   const projectionPlan =
     createFrameProjectionPlan(
       frame,
-      rendererState.mounted &&
-      rendererState.mountElement
-        ? {
-            widthPx:
-              Math.max(
-                rendererState
-                  .mountElement
-                  .clientWidth,
-                frame.viewportSnapshot
-                  .widthPx
-              ),
-
-            heightPx:
-              Math.max(
-                rendererState
-                  .mountElement
-                  .clientHeight,
-                frame.viewportSnapshot
-                  .heightPx
-              )
-          }
-        : null
+      viewportOverride
     );
 
   if (!projectionPlan.eligible) {
@@ -4421,13 +5114,24 @@ export function applyHEarth3DRendererHandoff(
         compositorFrameRevision:
           frame.revisions.frame,
 
+        semanticLayerContainerCount:
+          RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+        interactionNodeCount:
+          RENDERER_INTERACTION_NODE_COUNT,
+
+        projectedEnvironmentPrimitiveCount:
+          projectionPlan
+            .projectedDescriptors
+            .length,
+
         nodeBudgetEvaluation,
 
         issues:
           freezeIssues([
             createRendererIssue(
               'RENDERER_NODE_BUDGET_NOT_ELIGIBLE',
-              'The replacement frame exceeds the renderer node budget.'
+              'The replacement frame does not satisfy the backed node-budget authority.'
             )
           ]),
 
@@ -4444,18 +5148,15 @@ export function applyHEarth3DRendererHandoff(
     return receipt;
   }
 
-  let replacementElements =
-    null;
-
-  if (
-    rendererState.mounted &&
-    rendererState.sceneElement
-  ) {
-    replacementElements =
-      buildSceneFragment(
-        projectionPlan
-      );
-  }
+  const replacementResources =
+    (
+      rendererState.mounted &&
+      rendererState.sceneElement
+    )
+      ? buildSceneFragment(
+          projectionPlan
+        )
+      : null;
 
   rendererState.currentHandoff =
     handoff;
@@ -4482,17 +5183,26 @@ export function applyHEarth3DRendererHandoff(
     projectionPlan.projectionContext;
 
   if (
-    replacementElements &&
+    replacementResources &&
     rendererState.sceneElement
   ) {
     rendererState
       .sceneElement
       .replaceChildren(
-        replacementElements.fragment
+        replacementResources.fragment
       );
 
+    rendererState.semanticLayerElements =
+      replacementResources
+        .semanticLayerElements;
+
+    rendererState.interactionBoundaryElement =
+      replacementResources
+        .interactionBoundaryElement;
+
     rendererState.primitiveElements =
-      replacementElements.elements;
+      replacementResources
+        .primitiveElements;
   }
 
   rendererState.applySequence +=
@@ -4545,6 +5255,12 @@ export function applyHEarth3DRendererHandoff(
       visibilityRevision:
         frame.revisions.visibility,
 
+      semanticLayerContainerCount:
+        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+      interactionNodeCount:
+        RENDERER_INTERACTION_NODE_COUNT,
+
       projectedPrimitiveFragmentCount:
         projectionPlan
           .projectedDescriptors
@@ -4563,7 +5279,11 @@ export function applyHEarth3DRendererHandoff(
         false,
 
       mountedDOMUpdated:
-        replacementElements !==
+        replacementResources !==
+        null,
+
+      rendererDOMResourcesCreated:
+        replacementResources !==
         null,
 
       nodeBudgetEvaluation,
@@ -4592,7 +5312,7 @@ export function applyHEarth3DRendererHandoff(
 
 
 /* ==========================================================================
- * 21 · RESIZE / REPROJECT
+ * 22 · RESIZE / REPROJECT
  * ========================================================================== */
 
 export function resizeHEarth3DRenderer({
@@ -4787,6 +5507,18 @@ export function resizeHEarth3DRenderer({
       heightPx:
         resolvedHeight,
 
+      semanticLayerContainerCount:
+        rendererState
+          .semanticLayerElements
+          .size,
+
+      interactionNodeCount:
+        rendererState
+          .interactionBoundaryElement ===
+        null
+          ? 0
+          : 1,
+
       materialization,
 
       issues:
@@ -4807,7 +5539,7 @@ export function resizeHEarth3DRenderer({
 
 
 /* ==========================================================================
- * 22 · DESTROY
+ * 23 · DESTROY
  * ========================================================================== */
 
 export function destroyHEarth3DRenderer() {
@@ -4818,6 +5550,18 @@ export function destroyHEarth3DRenderer() {
     rendererState
       .primitiveElements
       .length;
+
+  const removedSemanticLayerContainerCount =
+    rendererState
+      .semanticLayerElements
+      .size;
+
+  const removedInteractionNodeCount =
+    rendererState
+      .interactionBoundaryElement ===
+    null
+      ? 0
+      : 1;
 
   if (
     rendererState.mountElement &&
@@ -4842,6 +5586,12 @@ export function destroyHEarth3DRenderer() {
     null;
 
   rendererState.sceneElement =
+    null;
+
+  rendererState.semanticLayerElements =
+    new Map();
+
+  rendererState.interactionBoundaryElement =
     null;
 
   rendererState.primitiveElements =
@@ -4869,7 +5619,17 @@ export function destroyHEarth3DRenderer() {
           ? 'RENDERER_DOM_RESOURCES_DESTROYED'
           : 'RENDERER_WAS_NOT_MOUNTED',
 
+      removedSemanticLayerContainerCount,
+
+      removedInteractionNodeCount,
+
       removedPrimitiveCount,
+
+      rendererDOMResourcesCreated:
+        false,
+
+      rendererMounted:
+        false,
 
       frameStatePreserved:
         rendererState.currentFrame !==
@@ -4905,7 +5665,7 @@ export function destroyHEarth3DRenderer() {
 
 
 /* ==========================================================================
- * 23 · COMPLETE RELEASE
+ * 24 · COMPLETE RELEASE
  * ========================================================================== */
 
 export function releaseHEarth3DRenderer() {
@@ -4960,6 +5720,12 @@ export function releaseHEarth3DRenderer() {
     rendererConstructionPreserved:
       false,
 
+    rendererDOMResourcesCreated:
+      false,
+
+    rendererMounted:
+      false,
+
     issues:
       EMPTY_FROZEN_ARRAY,
 
@@ -4973,7 +5739,7 @@ export function releaseHEarth3DRenderer() {
 
 
 /* ==========================================================================
- * 24 · STATE AND OPERATIONAL RECEIPTS
+ * 25 · STATE AND OPERATIONAL RECEIPTS
  * ========================================================================== */
 
 export function getHEarth3DRendererState() {
@@ -4983,6 +5749,16 @@ export function getHEarth3DRendererState() {
 
     mounted:
       rendererState.mounted,
+
+    rendererStateConstructed:
+      rendererState.constructed,
+
+    rendererDOMResourcesCreated:
+      rendererState.mounted &&
+      rendererState.stageElement !==
+        null &&
+      rendererState.sceneElement !==
+        null,
 
     mountId:
       rendererState
@@ -5016,6 +5792,18 @@ export function getHEarth3DRendererState() {
         ?.admittedPrimitives
         ?.length ??
       0,
+
+    semanticLayerContainerCount:
+      rendererState
+        .semanticLayerElements
+        .size,
+
+    interactionNodeCount:
+      rendererState
+        .interactionBoundaryElement ===
+      null
+        ? 0
+        : 1,
 
     projectedPrimitiveFragmentCount:
       rendererState
@@ -5090,7 +5878,7 @@ export function getHEarth3DRendererOperationalReceipts() {
 
 
 /* ==========================================================================
- * 25 · STATIC COHERENCE
+ * 26 · STATIC COHERENCE
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
@@ -5135,27 +5923,83 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
     }
 
     if (
-      H_EARTH_3D_RENDERER_STAGE_MODEL
-        .DOMAuthorized !==
+      DOM_CSS3D_OUTPUT_AUTHORIZED !==
       true
     ) {
       issues.push(
         createRendererIssue(
-          'DOM_OUTPUT_NOT_AUTHORIZED',
-          'The current capacity surface does not authorize DOM output.'
+          'DOM_CSS3D_OUTPUT_MODEL_NOT_AUTHORIZED',
+          'The backed capacity surface does not authorize DOM_CSS3D_PROJECTED_ENVIRONMENT.',
+          {
+            expected:
+              DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL,
+
+            actual:
+              deepFreeze({
+                permittedOutputModel:
+                  PERMITTED_OUTPUT_MODEL,
+
+                permittedOutputModels:
+                  PERMITTED_OUTPUT_MODELS
+              })
+          }
         )
       );
     }
 
     if (
-      H_EARTH_3D_RENDERER_STAGE_MODEL
-        .CSSAuthorized !==
-      true
+      !Number.isSafeInteger(
+        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT
+      ) ||
+      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT !==
+        15
     ) {
       issues.push(
         createRendererIssue(
-          'CSS_OUTPUT_NOT_AUTHORIZED',
-          'The current capacity surface does not authorize CSS output.'
+          'RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT_INVALID',
+          'The renderer semantic-layer-container model must contain exactly fifteen containers.',
+          {
+            expected:
+              15,
+
+            actual:
+              RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT
+          }
+        )
+      );
+    }
+
+    if (
+      RENDERER_SEMANTIC_LAYER_CONTAINER_IDS
+        .length !==
+      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT
+    ) {
+      issues.push(
+        createRendererIssue(
+          'RENDERER_SEMANTIC_LAYER_CONTAINER_ID_COUNT_INVALID',
+          'The renderer semantic-layer-container identifier set is incomplete.'
+        )
+      );
+    }
+
+    if (
+      !Number.isSafeInteger(
+        RENDERER_INTERACTION_NODE_COUNT
+      ) ||
+      RENDERER_INTERACTION_NODE_COUNT !==
+        1
+    ) {
+      issues.push(
+        createRendererIssue(
+          'RENDERER_INTERACTION_NODE_COUNT_INVALID',
+          'The renderer interaction-boundary model must contain exactly one node.',
+          {
+            expected:
+              1,
+
+            actual:
+              RENDERER_INTERACTION_NODE_COUNT
+          }
         )
       );
     }
@@ -5193,6 +6037,45 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
         true,
 
       admittedFrameValidatorImportedDirectly:
+        true,
+
+      cameraBasisDerivedFromPublishedPoseFields:
+        true,
+
+      unpublishedForwardFieldRequired:
+        false,
+
+      unpublishedRightFieldRequired:
+        false,
+
+      permittedOutputModel:
+        PERMITTED_OUTPUT_MODEL,
+
+      permittedOutputModels:
+        PERMITTED_OUTPUT_MODELS,
+
+      DOMCSS3DOutputAuthorizationDerivedFromExactModel:
+        true,
+
+      DOMCSS3DOutputAuthorized:
+        DOM_CSS3D_OUTPUT_AUTHORIZED,
+
+      semanticLayerContainerCount:
+        RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+      semanticLayerContainerBudgetCorrespondenceDefined:
+        true,
+
+      semanticLayerContainersActuallyConstructedAtMount:
+        true,
+
+      interactionNodeCount:
+        RENDERER_INTERACTION_NODE_COUNT,
+
+      interactionNodeBudgetCorrespondenceDefined:
+        true,
+
+      interactionBoundaryActuallyConstructedAtMount:
         true,
 
       admittedVerticesConsumed:
@@ -5256,7 +6139,7 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
 
 
 /* ==========================================================================
- * 26 · CLAIM CEILINGS
+ * 27 · CLAIM CEILINGS
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_CLAIM_CEILINGS =
@@ -5336,7 +6219,7 @@ export const H_EARTH_3D_RENDERER_CLAIM_CEILINGS =
 
 
 /* ==========================================================================
- * 27 · STATIC RECEIPT
+ * 28 · STATIC RECEIPT
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_RECEIPT =
@@ -5363,6 +6246,30 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
       false,
 
     directAdmittedFrameValidatorImported:
+      true,
+
+    cameraBasisDerivedFromPublishedPoseFields:
+      true,
+
+    permittedOutputAuthorizationDerivedFromExactModel:
+      true,
+
+    semanticLayerContainerCount:
+      RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+    semanticLayerContainerBudgetCorrespondenceDefined:
+      true,
+
+    semanticLayerContainersActuallyConstructedAtMount:
+      true,
+
+    interactionNodeCount:
+      RENDERER_INTERACTION_NODE_COUNT,
+
+    interactionNodeBudgetCorrespondenceDefined:
+      true,
+
+    interactionBoundaryActuallyConstructedAtMount:
       true,
 
     admittedPrimitiveMembershipConsumed:
@@ -5464,6 +6371,9 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
     admittedIndicesAltered:
       false,
 
+    constructionReceiptResourceTerminologySeparated:
+      true,
+
     moduleSyntaxVerified:
       false,
 
@@ -5509,13 +6419,20 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
     productionValidationClaimed:
       false,
 
+    deferableFindingsPreserved:
+      deepFreeze([
+        'NONCANONICAL_GEOMETRY_FALLBACKS_REMAIN',
+        'ZERO_PROJECTED_DESCRIPTOR_POLICY_REQUIRES_CHARACTERIZATION',
+        'FULL_FRUSTUM_CLIPPING_NOT_IMPLEMENTED'
+      ]),
+
     claimCeilings:
       H_EARTH_3D_RENDERER_CLAIM_CEILINGS
   });
 
 
 /* ==========================================================================
- * 28 · COMPLETE CONTRACT
+ * 29 · COMPLETE CONTRACT
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_CONTRACT =
@@ -5548,6 +6465,8 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
         'FRAME_OCCURRENCE_CORRESPONDENCE',
         'ADMITTED_PRIMITIVE_PROJECTION',
         'PRESENTATION_ASSIGNMENT_CORRELATION',
+        'FIFTEEN_SEMANTIC_LAYER_CONTAINERS',
+        'ONE_INTERACTION_BOUNDARY_NODE',
         'DOM_CSS_RESOURCE_CONSTRUCTION',
         'MOUNT_APPLY_REPROJECT_DESTROY',
         'RENDERER_RECEIPTS'
@@ -5591,6 +6510,76 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
           'admittedGeometryFrame'
       }),
 
+    cameraBasisLaw:
+      deepFreeze({
+        publishedInput:
+          deepFreeze([
+            'position',
+            'target',
+            'up',
+            'verticalFovDegrees',
+            'nearPlane',
+            'farPlane'
+          ]),
+
+        forward:
+          'NORMALIZE_TARGET_MINUS_POSITION',
+
+        right:
+          'NORMALIZE_CROSS_PUBLISHED_UP_FORWARD',
+
+        correctedUp:
+          'NORMALIZE_CROSS_FORWARD_RIGHT',
+
+        unpublishedForwardRequired:
+          false,
+
+        unpublishedRightRequired:
+          false
+      }),
+
+    outputAuthorizationLaw:
+      deepFreeze({
+        requiredOutputModel:
+          DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL,
+
+        permittedOutputModel:
+          PERMITTED_OUTPUT_MODEL,
+
+        permittedOutputModels:
+          PERMITTED_OUTPUT_MODELS,
+
+        authorized:
+          DOM_CSS3D_OUTPUT_AUTHORIZED,
+
+        nonexistentBooleanAuthorizationFieldsConsumed:
+          false
+      }),
+
+    nodeBudgetModel:
+      deepFreeze({
+        semanticLayerContainers:
+          RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT,
+
+        semanticLayerContainersActuallyConstructed:
+          true,
+
+        environmentPrimitives:
+          'ACTUAL_PROJECTED_DESCRIPTOR_COUNT',
+
+        interactionNodes:
+          RENDERER_INTERACTION_NODE_COUNT,
+
+        interactionBoundaryActuallyConstructed:
+          true,
+
+        diagnosticOwnedNodes:
+          0,
+
+        authority:
+          H_EARTH_3D_CAPACITY_CONTRACT_ID
+      }),
+
     frameApplicationLaw:
       deepFreeze({
         firstFrame:
@@ -5612,7 +6601,10 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
           'ACCEPT_AS_REPLACEMENT',
 
         failedReplacement:
-          'PRESERVE_CURRENT_FRAME_AND_CURRENT_DOM'
+          'PRESERVE_CURRENT_FRAME_AND_CURRENT_DOM',
+
+        applyBeforeConstruction:
+          'REJECT'
       }),
 
     materializationLaw:
@@ -5696,7 +6688,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
 
 
 /* ==========================================================================
- * 29 · PUBLIC GETTERS
+ * 30 · PUBLIC GETTERS
  * ========================================================================== */
 
 export function getHEarth3DRendererContract() {
@@ -5721,7 +6713,7 @@ export function getHEarth3DRendererClaimCeilings() {
 
 
 /* ==========================================================================
- * 30 · COMPATIBILITY ALIASES
+ * 31 · COMPATIBILITY ALIASES
  * ========================================================================== */
 
 export function mountHEarthCandidateRenderer(
@@ -5738,7 +6730,7 @@ export function destroyHEarthCandidateRenderer() {
 
 
 /* ==========================================================================
- * 31 · AGGREGATE EXPORT
+ * 32 · AGGREGATE EXPORT
  * ========================================================================== */
 
 export const H_EARTH_3D_RENDERER_AGGREGATE =

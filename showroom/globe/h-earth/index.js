@@ -20,7 +20,7 @@
  * → RENDERER CONSTRUCTION
  * → RENDERER MOUNT
  * → EXPLICIT SOURCE-PREVIEW TAKEOVER
- * → PUBLIC RECEIPTS
+ * → SYNCHRONIZED PUBLIC RECEIPTS AND ACTIVE GLOBALS
  *
  * Stale-occurrence law:
  *
@@ -34,6 +34,11 @@
  * - release the current renderer;
  * - restore or replace current DOM;
  * - publish active global evidence.
+ *
+ * Active-global law:
+ *
+ * ALL NORMAL AND EXCEPTIONAL ROUTE CORRIDORS MUST PUBLISH OR CLEAR THE COMPLETE
+ * ACTIVE-GLOBAL SET AS ONE CURRENT-OCCURRENCE EVIDENCE SURFACE.
  *
  * Destruction owns invalidation and renderer cleanup.
  */
@@ -755,6 +760,21 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS =
       true,
 
     mountReceiptCommittedOnlyAfterActiveTokenCheck:
+      true,
+
+    activeGlobalSynchronization:
+      true,
+
+    exceptionalPathActiveGlobalSynchronization:
+      true,
+
+    mountFailureRouteStatusSynchronization:
+      true,
+
+    asyncFailureLayer4ReceiptSynchronization:
+      true,
+
+    asyncFailureRouteStatusSynchronization:
       true,
 
     repeatedListenerBindingGuarded:
@@ -2417,6 +2437,8 @@ function clearPublishedActiveGlobals() {
   const keys = [
     'H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT',
     'H_EARTH_3D_ROUTE_BOOTSTRAP_COMPLETION',
+    'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT',
+    'H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS',
     'H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT',
     'H_EARTH_3D_LAYER_4_STATUS_PROJECTION',
     'H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT',
@@ -4500,11 +4522,6 @@ function evaluateRendererModule(
  * 18 · RENDERER CLEANUP
  * ========================================================================== */
 
-/**
- * Cleanup records a separate receipt.
- *
- * It must never overwrite the primary renderer-bootstrap outcome.
- */
 function releaseRendererSafely({
   cleanupReason = null
 } = {}) {
@@ -6145,6 +6162,49 @@ function buildRouteBootstrapReceipt() {
   });
 }
 
+function publishCurrentActiveGlobals() {
+  globalThis
+    .H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT =
+    MODULE_STATE
+      .sourcePreviewReceipt;
+
+  globalThis
+    .H_EARTH_3D_LAYER_4_STATUS_PROJECTION =
+    MODULE_STATE
+      .layer4StatusProjection;
+
+  globalThis
+    .H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT =
+    MODULE_STATE
+      .layer4PublicStageReceipt;
+
+  globalThis
+    .H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
+    MODULE_STATE
+      .routeBootstrapReceipt;
+
+  globalThis
+    .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
+    buildRouteBootstrapStatus();
+
+  return deepFreeze({
+    sourcePreviewReceiptPublished:
+      true,
+
+    layer4StatusProjectionPublished:
+      true,
+
+    layer4PublicStageReceiptPublished:
+      true,
+
+    routeBootstrapReceiptPublished:
+      true,
+
+    routeBootstrapStatusPublished:
+      true
+  });
+}
+
 function rebuildAndRenderPublicReceipts(
   mountPoints =
     MODULE_STATE.mountPoints
@@ -6181,28 +6241,27 @@ function rebuildAndRenderPublicReceipts(
     }
   );
 
-  globalThis
-    .H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT =
-    MODULE_STATE
-      .layer4PublicStageReceipt;
-
-  globalThis
-    .H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
-    MODULE_STATE
-      .routeBootstrapReceipt;
-
-  globalThis
-    .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
-    buildRouteBootstrapStatus();
+  const publicationReceipt =
+    publishCurrentActiveGlobals();
 
   return deepFreeze({
+    sourcePreviewReceipt:
+      MODULE_STATE
+        .sourcePreviewReceipt,
+
+    layer4StatusProjection:
+      MODULE_STATE
+        .layer4StatusProjection,
+
     layer4PublicStageReceipt:
       MODULE_STATE
         .layer4PublicStageReceipt,
 
     routeBootstrapReceipt:
       MODULE_STATE
-        .routeBootstrapReceipt
+        .routeBootstrapReceipt,
+
+    publicationReceipt
   });
 }
 
@@ -6851,6 +6910,10 @@ export function initializeHEarthRoute(
       .H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
       failureReceipt;
 
+    globalThis
+      .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
+      buildRouteBootstrapStatus();
+
     return deepFreeze({
       initialized:
         false,
@@ -6954,6 +7017,9 @@ export function initializeHEarthRoute(
           );
         }
 
+        MODULE_STATE.layer4PublicStageReceipt =
+          buildLayer4PublicStageReceipt();
+
         const failureReceipt =
           deepFreeze({
             receiptType:
@@ -6988,6 +7054,10 @@ export function initializeHEarthRoute(
 
             rendererReleaseReceipt,
 
+            layer4PublicStageReceipt:
+              MODULE_STATE
+                .layer4PublicStageReceipt,
+
             boundary:
               H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
           });
@@ -7015,9 +7085,32 @@ export function initializeHEarthRoute(
           failureReceipt
         );
 
+        updateRouteRootExecutionDataset(
+          mountPoints
+        );
+
+        globalThis
+          .H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT =
+          MODULE_STATE
+            .sourcePreviewReceipt;
+
+        globalThis
+          .H_EARTH_3D_LAYER_4_STATUS_PROJECTION =
+          MODULE_STATE
+            .layer4StatusProjection;
+
+        globalThis
+          .H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT =
+          MODULE_STATE
+            .layer4PublicStageReceipt;
+
         globalThis
           .H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
           failureReceipt;
+
+        globalThis
+          .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
+          buildRouteBootstrapStatus();
 
         globalThis
           .H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE =
@@ -7097,20 +7190,7 @@ export function initializeHEarthRoute(
     .H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT =
     immediateResult;
 
-  globalThis
-    .H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
-    MODULE_STATE
-      .routeBootstrapReceipt;
-
-  globalThis
-    .H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT =
-    MODULE_STATE
-      .sourcePreviewReceipt;
-
-  globalThis
-    .H_EARTH_3D_LAYER_4_STATUS_PROJECTION =
-    MODULE_STATE
-      .layer4StatusProjection;
+  publishCurrentActiveGlobals();
 
   return immediateResult;
 }
@@ -7648,6 +7728,36 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
     mountReceiptCommittedOnlyAfterActiveTokenCheck:
       true,
 
+    activeGlobalsSynchronizedDuringReceiptRebuild:
+      true,
+
+    sourcePreviewActiveGlobalSynchronized:
+      true,
+
+    layer4ProjectionActiveGlobalSynchronized:
+      true,
+
+    routeReceiptActiveGlobalSynchronized:
+      true,
+
+    routeStatusActiveGlobalSynchronized:
+      true,
+
+    mountFailureRouteStatusGlobalSynchronized:
+      true,
+
+    asyncFailureLayer4PublicStageReceiptRebuilt:
+      true,
+
+    asyncFailureLayer4PublicStageReceiptGlobalSynchronized:
+      true,
+
+    asyncFailureRouteStatusGlobalSynchronized:
+      true,
+
+    allActiveGlobalsClearedBeforeNewOccurrence:
+      true,
+
     routeOwnedListenerAbortDefined:
       true,
 
@@ -7703,6 +7813,12 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
       false,
 
     staleOccurrenceIsolationVerified:
+      false,
+
+    activeGlobalSynchronizationVerified:
+      false,
+
+    exceptionalPathActiveGlobalSynchronizationVerified:
       false,
 
     rendererReleaseVerified:
@@ -7910,6 +8026,60 @@ export const H_EARTH_3D_INDEX_CONTRACT =
           'AUTHORIZED_AFTER_ACTIVE_EVIDENCE_RESET'
       },
 
+    publicationLaw:
+      {
+        synchronizedPublicationFunction:
+          'publishCurrentActiveGlobals',
+
+        normalReceiptRebuildFunction:
+          'rebuildAndRenderPublicReceipts',
+
+        sourcePreviewReceiptGlobal:
+          'H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT',
+
+        layer4StatusProjectionGlobal:
+          'H_EARTH_3D_LAYER_4_STATUS_PROJECTION',
+
+        layer4PublicStageReceiptGlobal:
+          'H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT',
+
+        routeBootstrapReceiptGlobal:
+          'H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT',
+
+        routeBootstrapStatusGlobal:
+          'H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS',
+
+        routeBootstrapResultGlobal:
+          'H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT',
+
+        routeBootstrapCompletionGlobal:
+          'H_EARTH_3D_ROUTE_BOOTSTRAP_COMPLETION',
+
+        asyncFailureGlobal:
+          'H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE',
+
+        allActiveGlobalsPublishedFromCurrentModuleState:
+          true,
+
+        mountResolutionFailurePublishesRouteStatus:
+          true,
+
+        asynchronousFailureRebuildsLayer4PublicStageReceipt:
+          true,
+
+        asynchronousFailurePublishesLayer4PublicStageReceipt:
+          true,
+
+        asynchronousFailurePublishesRouteStatus:
+          true,
+
+        preInitializationClearIncludesRouteReceipt:
+          true,
+
+        preInitializationClearIncludesRouteStatus:
+          true
+      },
+
     destructionLaw:
       {
         abortRouteOwnedListeners:
@@ -7955,6 +8125,12 @@ export const H_EARTH_3D_INDEX_CONTRACT =
           true,
 
         staleReceiptObservationalOnly:
+          true,
+
+        activeGlobalEvidenceSynchronized:
+          true,
+
+        exceptionalPathEvidenceSynchronized:
           true
       },
 
@@ -8022,6 +8198,12 @@ export const H_EARTH_3D_INDEX =
 
     productionModulePathOverridesAccepted:
       false,
+
+    activeGlobalSynchronization:
+      true,
+
+    exceptionalPathActiveGlobalSynchronization:
+      true,
 
     layer4Contracts:
       H_EARTH_3D_LAYER_4_CONTRACTS,

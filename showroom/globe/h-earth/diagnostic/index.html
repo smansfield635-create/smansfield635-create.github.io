@@ -1,2309 +1,1768 @@
+<!--
+  /showroom/globe/h-earth/diagnostic/index.html
+  COMPLETE FULL-FILE REPLACEMENT
+
+  Existing shell authority preserved:
+  H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034S_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_DIAGNOSTIC_ENTRY_v1
+
+  Presentation renewal directive:
+  H_EARTH_DIAGNOSTIC_REPORT_SYSTEM_ACTIVE_FAILURE_DECISION_RENEWAL_DIRECTIVE_v1
+
+  Purpose:
+  - preserve all 31 constitutional diagnostic report mounts;
+  - present one Active Failure Decision surface first;
+  - present one human-facing FD_05 Watchdog Status surface;
+  - promote the four active FD_05 supporting reports;
+  - relegate all remaining reports to the preserved diagnostic corpus;
+  - preserve existing report identities, copy controls, and evidence mounts.
+
+  This file does not:
+  - modify compositor.js;
+  - modify renderer.js;
+  - modify the deployed ES-module graph;
+  - initialize the public H-Earth route;
+  - authorize source correction;
+  - authorize production, renderer, visual, or deployment claims.
+-->
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  data-h-earth-route="/showroom/globe/h-earth/diagnostic/"
+  data-h-earth-diagnostic-shell="true"
+  data-h-earth-diagnostic-report-system="THREE_TIER_ACTIVE_FAILURE_DECISION"
+  data-h-earth-diagnostic-corpus-preserved="true"
+  data-h-earth-source-correction-authorized="false"
+  data-h-earth-production-claim="false"
+>
 <head>
-  <!--
-    /showroom/globe/h-earth/diagnostic/index.html
-    COMPLETE RENEWED FILE
-
-    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034S_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_DIAGNOSTIC_ENTRY_v1
-
-    Renews:
-    H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034F_LAYER_4_CUSTODY_AND_PUBLIC_STAGE_RECEIPT_INSPECTION_v1
-
-    Companion diagnostic stylesheet:
-    /showroom/globe/h-earth/diagnostic/index.css
-    H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_RENEWAL_STEP_034T_STEP_034S_LIVE_ROUTE_EVIDENCE_AND_REPORT_SURFACE_SUPPORT_v1
-
-    Companion diagnostic bootstrap:
-    /showroom/globe/h-earth/diagnostic/index.js
-    H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_RENEWAL_STEP_034U_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_BOUNDARY_REPORTING_v1
-
-    Public route shell:
-    /showroom/globe/h-earth/index.html
-    H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034Q_STEP_034P_BOOTSTRAP_ENTRY_AND_DIAGNOSTIC_READINESS_v1
-
-    Public route stylesheet:
-    /showroom/globe/h-earth/index.css
-    H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034R_STEP_034Q_PUBLIC_ENVIRONMENT_AND_RENDERER_SURFACE_SUPPORT_v1
-
-    Backed public route bootstrap:
-    /showroom/globe/h-earth/index.js
-    H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1
-
-    Diagnostic corridor:
-
-    EXACT DIAGNOSTIC HTML ENTRY
-      ->
-    EXACT STEP 034U MODULE IMPORT
-      ->
-    EXACT STEP 034U CONTRACT VERIFICATION
-      ->
-    initializeHEarthDiagnosticRoute(...)
-      ->
-    DIAGNOSTIC-OWNED LIVE EVIDENCE COLLECTION
-      ->
-    PUBLIC ROUTE / INDEX / COMPOSITOR / RENDERER RECEIPT INSPECTION
-      ->
-    BOUNDARY AND MISMATCH REPORTING
-      ->
-    HUMAN-VISIBLE DIAGNOSTIC SURFACE
-
-    Diagnostic evidence sources may include:
-
-    - diagnostic-window public-route globals, when the diagnostic route is
-      opened in the same active browser context;
-    - an authorized opener or parent public-route window, when same-origin
-      access is available;
-    - imported public index static contracts and getters;
-    - Step 012J read-only descriptor import;
-    - current diagnostic-local receipts;
-    - absence evidence, represented as absent or unavailable rather than pass.
-
-    Diagnostic route law:
-
-    This route is observational.
-
-    It may:
-    - inspect current public-route receipts;
-    - inspect current renderer lifecycle receipts;
-    - inspect current compositor handoff receipts;
-    - inspect source-preview status;
-    - inspect Layer 4 projection and custody metadata;
-    - import static public contracts;
-    - compare expected and observed contract identities;
-    - report missing evidence;
-    - report boundary mismatches;
-    - copy diagnostic payloads;
-    - rerun diagnostic observation.
-
-    It must not:
-    - initialize the public environment route;
-    - construct Packet 002;
-    - construct admitted geometry;
-    - construct compositor state;
-    - construct renderer state;
-    - mount or release the renderer;
-    - mutate public route state;
-    - replace public route globals;
-    - fabricate evidence;
-    - convert missing evidence into a pass;
-    - execute Step 012H.1 run functions;
-    - execute Step 012I canonicalizers or vectors;
-    - execute Target 002 runtime;
-    - execute Target 003 replay;
-    - generate canonical digests;
-    - compare replay outputs;
-    - claim renderer pass;
-    - claim visual pass;
-    - claim validation;
-    - claim production readiness;
-    - claim deployment readiness;
-    - collapse the matrix.
-
-    Authority division:
-
-    HTML OWNS:
-    - semantic diagnostic shell;
-    - stable diagnostic panel IDs;
-    - exact Step 034U module import;
-    - exact Step 034U contract verification;
-    - one pre-diagnostic import-failure surface;
-    - no normal diagnostic report generation.
-
-    DIAGNOSTIC INDEX.JS OWNS:
-    - diagnostic initialization;
-    - diagnostic rerun control;
-    - all copy controls;
-    - public-route evidence-source resolution;
-    - same-origin opener and parent inspection;
-    - static contract imports;
-    - live receipt observation;
-    - custody reports;
-    - route reports;
-    - renderer reports;
-    - boundary reports;
-    - mismatch reports;
-    - aggregate diagnostic receipts;
-    - active diagnostic globals;
-    - diagnostic listener lifecycle;
-    - diagnostic destruction.
-
-    Boundary:
-
-    Diagnostic/report shell only.
-    No public environment host.
-    No public renderer mount.
-    No public scene stage.
-    No shell-owned scene objects.
-    No fake scene geometry.
-    No Packet 002 construction.
-    No admitted-frame construction.
-    No compositor construction.
-    No renderer construction.
-    No renderer mount.
-    No renderer release.
-    No public route initialization.
-    No public route mutation.
-    No public CSS mutation.
-    No source mutation.
-    No duplicate diagnostic listeners.
-    No duplicate diagnostic active-global publication.
-    No Step 012H.1 run execution.
-    No Step 012I vector execution.
-    No Step 012I runner execution.
-    No Target 002 runtime execution.
-    No Target 003 replay execution.
-    No canonical digest generation.
-    No replay comparison.
-    No WebGL activation.
-    No canvas activation.
-    No SVG activation.
-    No iframe activation.
-    No final-renderer claim.
-    No renderer-pass claim.
-    No visual-pass claim.
-    No validation claim.
-    No production claim.
-    No deployment claim.
-    No traversal.
-    No survival simulation.
-    No swimming.
-    No fluid simulation.
-    No manor interior access.
-    No distant traversal.
-    No runtime lattice activation.
-    No active 16x16 lattice runtime claim.
-    No active 256-address runtime claim.
-    No Mirror Manor route-canon naming.
-    No matrix collapse.
-  -->
-
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
-
-  <meta
-    name="color-scheme"
-    content="dark"
-  />
-
-  <title>H-Earth · Diagnostic Route</title>
+    content="width=device-width, initial-scale=1"
+  >
 
   <meta
     name="description"
-    content="Dedicated H-Earth diagnostic route for live Step 034P route evidence, compositor and renderer receipts, Layer 4 custody, public-stage inspection, boundary analysis, and mismatch reporting."
-  />
+    content="H-Earth occurrence-specific diagnostic evidence and active failure decision route."
+  >
 
   <meta
-    name="h-earth-diagnostic-route-shell-contract"
+    name="h-earth-diagnostic-html-contract"
     content="H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034S_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_DIAGNOSTIC_ENTRY_v1"
-  />
+  >
 
   <meta
-    name="h-earth-diagnostic-route-shell-renewed-from"
-    content="H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034F_LAYER_4_CUSTODY_AND_PUBLIC_STAGE_RECEIPT_INSPECTION_v1"
-  />
+    name="h-earth-diagnostic-report-renewal-directive"
+    content="H_EARTH_DIAGNOSTIC_REPORT_SYSTEM_ACTIVE_FAILURE_DECISION_RENEWAL_DIRECTIVE_v1"
+  >
 
   <meta
-    name="h-earth-diagnostic-style-target"
-    content="H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_RENEWAL_STEP_034T_STEP_034S_LIVE_ROUTE_EVIDENCE_AND_REPORT_SURFACE_SUPPORT_v1"
-  />
+    name="h-earth-active-failure-domain"
+    content="FD_05_DEPLOYED_ES_MODULE_IMPORT_GRAPH"
+  >
 
   <meta
-    name="h-earth-diagnostic-bootstrap-target"
-    content="H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_RENEWAL_STEP_034U_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_BOUNDARY_REPORTING_v1"
-  />
+    name="h-earth-source-correction-authorized"
+    content="false"
+  >
 
   <meta
-    name="h-earth-diagnostic-bootstrap-module"
-    content="/showroom/globe/h-earth/diagnostic/index.js"
-  />
+    name="h-earth-production-claim-authority"
+    content="NONE"
+  >
 
-  <meta
-    name="h-earth-public-route-shell-contract"
-    content="H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034Q_STEP_034P_BOOTSTRAP_ENTRY_AND_DIAGNOSTIC_READINESS_v1"
-  />
-
-  <meta
-    name="h-earth-public-route-style-contract"
-    content="H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034R_STEP_034Q_PUBLIC_ENVIRONMENT_AND_RENDERER_SURFACE_SUPPORT_v1"
-  />
-
-  <meta
-    name="h-earth-public-bootstrap-contract"
-    content="H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1"
-  />
-
-  <meta
-    name="h-earth-compositor-contract"
-    content="H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1"
-  />
-
-  <meta
-    name="h-earth-renderer-contract"
-    content="H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1"
-  />
-
-  <meta
-    name="h-earth-layer-4-bridge-contract"
-    content="H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_FILE_BIRTH_STEP_012J_v1"
-  />
-
-  <meta
-    name="h-earth-step-012h-1-contract"
-    content="H_EARTH_HEADLESS_REPLAY_CONTRACT_FILE_RENEWAL_STEP_012H_1_HISTORICAL_FIXTURE_ALIGNMENT_v1"
-  />
-
-  <meta
-    name="h-earth-step-012i-contract"
-    content="H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_FILE_BIRTH_STEP_012I_v1"
-  />
-
-  <meta
-    name="h-earth-step-012i-canonicalization"
-    content="H_EARTH_CANONICAL_STATE_SERIALIZATION_LAW_STEP_012I_UTF16_UTF8_SHA256_v1"
-  />
-
-  <meta
-    name="h-earth-public-route"
-    content="/showroom/globe/h-earth/"
-  />
-
-  <meta
-    name="h-earth-boundary"
-    content="diagnostic-report-shell-only; exact-step-034u-import; exact-step-034u-contract-verification; step-034p-live-route-evidence-inspection; compositor-receipt-inspection; renderer-receipt-inspection; layer-4-custody-inspection; public-stage-receipt-inspection; boundary-mismatch-reporting; diagnostic-owned-copy-surfaces; diagnostic-owned-listeners; no-public-environment-host; no-public-renderer-mount; no-public-route-initialization; no-packet-002-construction; no-admitted-frame-construction; no-compositor-construction; no-renderer-construction; no-renderer-mount; no-renderer-release; no-public-route-mutation; no-step-012h-run; no-step-012i-vector-execution; no-step-012i-runner-execution; no-target-002-runtime-execution; no-target-003-replay-execution; no-canonical-digest-generation; no-replay-comparison; no-webgl; no-canvas; no-svg; no-iframe; no-renderer-pass-claim; no-visual-pass-claim; no-validation-claim; no-production-claim; no-deployment-claim; no-runtime-lattice-activation; no-matrix-collapse"
-  />
+  <title>H-Earth Active Failure Decision</title>
 
   <link
     rel="stylesheet"
-    href="./index.css?v=034t"
-  />
+    href="./index.css"
+  >
 </head>
 
 <body>
   <main
     id="h-earth-3d-diagnostic-route-root"
-    class="h-earth-3d-diagnostic-route-root"
-    data-h-earth-page-mode="diagnostic-report-route"
-    data-h-earth-diagnostic-shell-contract="H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034S_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_DIAGNOSTIC_ENTRY_v1"
-    data-h-earth-diagnostic-bootstrap-contract="H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_RENEWAL_STEP_034U_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_BOUNDARY_REPORTING_v1"
-    data-h-earth-public-bootstrap-contract="H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1"
-    data-h-earth-diagnostic-route-only="true"
-    data-h-earth-layer-4-custody-inspection="true"
-    data-h-earth-step-012j-descriptor-evidence="true"
-    data-h-earth-public-stage-receipt-inspection="true"
-    data-h-earth-route-bootstrap-receipt-inspection="true"
-    data-h-earth-compositor-receipt-inspection="true"
-    data-h-earth-renderer-receipt-inspection="true"
-    data-h-earth-source-preview-receipt-inspection="true"
-    data-h-earth-boundary-mismatch-reporting="true"
-    data-h-earth-guarded-bootstrap="true"
-    data-h-earth-panel-copy-controls="true"
-    data-h-earth-diagnostic-module-imported="false"
-    data-h-earth-diagnostic-contract-verified="false"
+    class="h-earth-3d-diagnostic-route"
+    data-h-earth-panel-role="diagnostic-route-root"
     data-h-earth-diagnostic-initialization-started="false"
     data-h-earth-diagnostic-initialization-complete="false"
-    data-h-earth-diagnostic-evidence-source="unresolved"
-    data-h-earth-live-public-route-evidence-observed="unknown"
-    data-h-earth-public-environment-host="false"
-    data-h-earth-public-scene-renderer-mount="false"
-    data-h-earth-public-scene-stage="false"
-    data-h-earth-public-route-initialized-by-diagnostic="false"
-    data-h-earth-public-route-mutation="false"
-    data-h-earth-public-css-mutation="false"
-    data-h-earth-source-mutation="false"
-    data-h-earth-scene-geometry-created="false"
-    data-h-earth-shell-owned-scene-objects="false"
-    data-h-earth-fake-scene-geometry="false"
-    data-h-earth-html-owned-diagnostic-listeners="false"
-    data-h-earth-html-owned-copy-listeners="false"
-    data-h-earth-html-owned-diagnostic-global-publication="false"
-    data-h-earth-packet-002-constructed-by-diagnostic="false"
-    data-h-earth-admitted-frame-constructed-by-diagnostic="false"
-    data-h-earth-compositor-constructed-by-diagnostic="false"
-    data-h-earth-renderer-constructed-by-diagnostic="false"
-    data-h-earth-renderer-mounted-by-diagnostic="false"
-    data-h-earth-renderer-released-by-diagnostic="false"
-    data-h-earth-step-012h-1-run-executed="false"
-    data-h-earth-step-012i-vector-executed="false"
-    data-h-earth-step-012i-runner-executed="false"
-    data-h-earth-target-002-runtime-executed="false"
-    data-h-earth-target-003-replay-executed="false"
-    data-h-earth-canonical-digest-generated="false"
-    data-h-earth-replay-comparison="false"
-    data-h-earth-renderer-pass-claim="false"
-    data-h-earth-validation-claim="false"
+    data-h-earth-diagnostic-status="DIAGNOSTIC_NOT_STARTED"
+    data-h-earth-active-failure-domain="FD_05_DEPLOYED_ES_MODULE_IMPORT_GRAPH"
+    data-h-earth-source-correction-authorized="false"
     data-h-earth-production-claim="false"
-    data-h-earth-deployment-claim="false"
-    data-h-earth-visual-pass-claim="false"
-    data-h-earth-matrix="H-Earth"
-    data-h-earth-matrix-role="Ground-View Matrix"
-    data-h-earth-active-cell="H_EARTH_GROUND_CELL_001"
-    data-h-earth-scene-identity="earth-water-air-survival-shoreline-manor"
-    data-h-earth-matrix-collapse="false"
   >
     <div class="h-earth-3d-diagnostic-shell">
-      <header class="h-earth-3d-diagnostic-header">
-        <a
-          id="h-earth-3d-public-route-link"
-          class="h-earth-3d-diagnostic-brand"
-          href="/showroom/globe/h-earth/"
-          aria-label="Return to public H-Earth route"
-        >
-          <span
-            class="h-earth-3d-diagnostic-brand-mark"
-            aria-hidden="true"
-          >
-            H
-          </span>
+      <header
+        class="h-earth-3d-diagnostic-header"
+        data-h-earth-interface-tier="CONTROL"
+      >
+        <div class="h-earth-3d-diagnostic-header-copy">
+          <p class="h-earth-3d-diagnostic-kicker">
+            H-Earth Diagnostic Route
+          </p>
 
-          <span class="h-earth-3d-diagnostic-brand-copy">
-            <span>H-Earth</span>
-            <strong>Diagnostic Route</strong>
-          </span>
-        </a>
+          <h1>Active Failure Decision</h1>
+
+          <p class="h-earth-3d-diagnostic-introduction">
+            One active failure domain, one current occurrence, one controlling
+            decision, and one exact next operation.
+          </p>
+        </div>
 
         <nav
-          class="h-earth-3d-diagnostic-nav"
-          aria-label="H-Earth diagnostic navigation"
+          class="h-earth-3d-diagnostic-navigation"
+          aria-label="H-Earth diagnostic route controls"
         >
-          <a href="/showroom/globe/h-earth/">
-            Public Route
+          <a
+            id="h-earth-3d-public-route-link"
+            class="h-earth-3d-route-link"
+            href="/showroom/globe/h-earth/"
+          >
+            Return to H-Earth
           </a>
 
-          <a href="/showroom/globe/">
-            Selector
-          </a>
-
-          <a href="/showroom/globe/hearth/">
-            Hearth
-          </a>
-
-          <a href="/showroom/globe/audralia/">
-            Audralia
-          </a>
+          <button
+            id="h-earth-3d-run-diagnostics"
+            class="h-earth-3d-control-button h-earth-3d-run-button"
+            type="button"
+          >
+            Run Current Diagnostic
+          </button>
         </nav>
       </header>
 
       <section
-        class="h-earth-3d-diagnostic-hero"
-        aria-label="Diagnostic route summary"
+        class="h-earth-3d-diagnostic-status-bar"
+        aria-labelledby="h-earth-3d-diagnostic-status-heading"
+        data-h-earth-panel-role="diagnostic-status"
       >
-        <div class="h-earth-3d-diagnostic-hero-copy">
-          <p class="h-earth-3d-diagnostic-kicker">
-            Live Evidence Route
+        <div class="h-earth-3d-status-primary">
+          <p
+            id="h-earth-3d-diagnostic-status-heading"
+            class="h-earth-3d-status-label"
+          >
+            Diagnostic integration status
           </p>
 
-          <h1>
-            Inspect the complete H-Earth route corridor.
-          </h1>
-
-          <p>
-            This route observes the backed Step 034P public bootstrap,
-            compositor handoff, admitted-frame renderer lifecycle, source
-            preview, Layer 4 custody, current receipts, active globals,
-            execution ceilings, and boundary mismatches. Missing evidence is
-            reported as unavailable or unresolved, never converted into a pass.
-          </p>
-        </div>
-
-        <aside class="h-earth-3d-diagnostic-status-card">
-          <p class="h-earth-3d-diagnostic-kicker">
-            Diagnostic Status
-          </p>
-
-          <div
+          <output
             id="h-earth-3d-diagnostic-status"
-            class="h-earth-3d-diagnostic-status"
-            role="status"
+            class="h-earth-3d-status-value"
             aria-live="polite"
           >
-            HTML_ENTRY_READY
-          </div>
+            DIAGNOSTIC_NOT_STARTED
+          </output>
+        </div>
 
-          <p
-            id="h-earth-3d-diagnostic-status-note"
-            class="h-earth-3d-diagnostic-status-note"
-          >
-            Waiting for the exact Step 034U diagnostic bootstrap to assume
-            evidence, report, listener, and copy-control ownership.
-          </p>
-        </aside>
+        <p
+          id="h-earth-3d-diagnostic-status-note"
+          class="h-earth-3d-status-note"
+          aria-live="polite"
+        >
+          The diagnostic route has not yet completed its current occurrence.
+        </p>
+
+        <p
+          id="h-earth-3d-copy-status"
+          class="h-earth-3d-copy-status"
+          aria-live="polite"
+          data-h-earth-copy-state="idle"
+        >
+          Diagnostic copy controls are available after evidence publication.
+        </p>
       </section>
 
+      <!-- ===============================================================
+           TIER 1 — OPERATOR DECISION
+           =============================================================== -->
+
       <section
-        class="h-earth-3d-copy-toolbar"
-        aria-label="Diagnostic execution and copy controls"
+        id="h-earth-3d-tier-1-operator-decision"
+        class="h-earth-3d-report-tier h-earth-3d-tier-1"
+        aria-labelledby="h-earth-3d-tier-1-heading"
+        data-h-earth-interface-tier="1"
+        data-h-earth-report-role="PRIMARY"
+        data-h-earth-active-failure-domain="FD_05_DEPLOYED_ES_MODULE_IMPORT_GRAPH"
       >
-        <div class="h-earth-3d-copy-toolbar-header">
+        <header class="h-earth-3d-tier-heading">
           <div>
             <p class="h-earth-3d-diagnostic-kicker">
-              Diagnostic Controls
+              Tier 1 · Primary Operator Projection
             </p>
 
-            <h2>
-              Refresh and export current evidence
+            <h2 id="h-earth-3d-tier-1-heading">
+              Active Failure Decision
             </h2>
+
+            <p>
+              This surface must identify what failed, what is known, what
+              remains missing, whether correction is authorized, and the one
+              exact operation authorized next.
+            </p>
           </div>
 
-          <p
-            id="h-earth-3d-copy-status"
-            class="h-earth-3d-copy-status"
-            role="status"
+          <button
+            class="h-earth-3d-copy-button"
+            type="button"
+            data-h-earth-copy-panel="h-earth-3d-active-failure-decision-payload"
+            data-h-earth-copy-label="Active Failure Decision"
+          >
+            Copy Active Decision
+          </button>
+        </header>
+
+        <article
+          id="h-earth-3d-active-failure-decision"
+          class="h-earth-3d-diagnostic-panel h-earth-3d-panel-primary h-earth-3d-active-failure-decision"
+          data-h-earth-panel-role="active-failure-decision"
+          data-h-earth-report-role="PRIMARY"
+          data-h-earth-current-occurrence-relevance="CONTROLLING"
+          data-h-earth-copy-available="true"
+          data-h-earth-archive-available="true"
+        >
+          <div class="h-earth-3d-decision-summary">
+            <dl class="h-earth-3d-decision-fields">
+              <div class="h-earth-3d-decision-field">
+                <dt>Active failure domain</dt>
+                <dd id="h-earth-3d-active-failure-domain">
+                  FD_05_DEPLOYED_ES_MODULE_IMPORT_GRAPH
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Current occurrence</dt>
+                <dd id="h-earth-3d-active-occurrence-id">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Diagnostic integration status</dt>
+                <dd id="h-earth-3d-active-integration-status">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Decision finalized</dt>
+                <dd id="h-earth-3d-active-decision-finalized">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Primary report</dt>
+                <dd id="h-earth-3d-active-primary-report">
+                  IMPORT AND CONTRACT
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Supporting reports</dt>
+                <dd id="h-earth-3d-active-supporting-reports">
+                  SOURCE RESOLUTION · INITIALIZATION VS EXECUTION ·
+                  BOUNDARY MISMATCH REPORT
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Primary receipt</dt>
+                <dd id="h-earth-3d-active-primary-receipt-id">
+                  H_EARTH_3D_MODULE_IMPORT_DIAGNOSTIC_RECEIPT
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Primary receipt status</dt>
+                <dd id="h-earth-3d-active-primary-receipt-status">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Primary receipt execution status</dt>
+                <dd id="h-earth-3d-active-primary-execution-status">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Failed branch</dt>
+                <dd id="h-earth-3d-active-failed-branch">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Importing source URL</dt>
+                <dd id="h-earth-3d-active-importing-source-url">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Import specifier</dt>
+                <dd id="h-earth-3d-active-import-specifier">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Exact requested URL</dt>
+                <dd id="h-earth-3d-active-requested-url">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Resolved dependency URL</dt>
+                <dd id="h-earth-3d-active-resolved-url">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Final returned URL</dt>
+                <dd id="h-earth-3d-active-final-returned-url">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>HTTP status</dt>
+                <dd id="h-earth-3d-active-http-status">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Content type</dt>
+                <dd id="h-earth-3d-active-content-type">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Response classification</dt>
+                <dd id="h-earth-3d-active-response-classification">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Bounded response prefix</dt>
+                <dd id="h-earth-3d-active-response-prefix">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Direct parser, linker, or resource-load error</dt>
+                <dd id="h-earth-3d-active-direct-error">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Evidence still missing</dt>
+                <dd id="h-earth-3d-active-evidence-missing">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Source correction authority</dt>
+                <dd id="h-earth-3d-active-source-correction-authority">
+                  WITHHELD UNTIL EXACT FAILED TRANSITIVE OCCURRENCE IS
+                  DIRECTLY IDENTIFIED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Upstream reopen authority</dt>
+                <dd id="h-earth-3d-active-upstream-reopen-authority">
+                  NOT AUTHORIZED
+                </dd>
+              </div>
+
+              <div class="h-earth-3d-decision-field">
+                <dt>Controlling operation source</dt>
+                <dd id="h-earth-3d-active-operation-source">
+                  NOT YET DIRECTLY OBSERVED
+                </dd>
+              </div>
+            </dl>
+
+            <section
+              class="h-earth-3d-next-operation"
+              aria-labelledby="h-earth-3d-next-operation-heading"
+            >
+              <h3 id="h-earth-3d-next-operation-heading">
+                One Exact Next Operation
+              </h3>
+
+              <p id="h-earth-3d-active-next-operation">
+                NOT YET DIRECTLY OBSERVED
+              </p>
+            </section>
+
+            <p class="h-earth-3d-full-archive-reference">
+              Full evidence archive:
+              <a href="#h-earth-3d-all-diagnostics-panel">
+                All Diagnostic Evidence
+              </a>
+            </p>
+          </div>
+
+          <pre
+            id="h-earth-3d-active-failure-decision-payload"
+            class="h-earth-3d-diagnostic-output"
+            aria-label="Active Failure Decision payload"
+          >{
+  "status": "NOT YET DIRECTLY OBSERVED",
+  "activeFailureDomain": "FD_05_DEPLOYED_ES_MODULE_IMPORT_GRAPH",
+  "sourceCorrectionAuthorized": false,
+  "productionClaim": false
+}</pre>
+        </article>
+
+        <div
+          id="h-earth-3d-diagnostic-grid"
+          class="h-earth-3d-diagnostic-grid"
+          data-h-earth-grid-role="active-decision-grid"
+        >
+          <div
+            id="h-earth-3d-fd-05-decision-host"
+            class="h-earth-3d-panel-primary"
+            data-h-earth-diagnostic-track-host="FD_05"
+            data-h-earth-panel-role="fd-05-decision-host"
+            data-h-earth-report-role="PRIMARY"
             aria-live="polite"
-          >
-            Controls will be owned by the Step 034U diagnostic bootstrap.
-          </p>
+          ></div>
         </div>
+      </section>
 
-        <div class="h-earth-3d-copy-actions">
+      <!-- ===============================================================
+           WATCHDOG PROJECTION
+           =============================================================== -->
+
+      <section
+        id="h-earth-3d-fd-05-watchdog-section"
+        class="h-earth-3d-report-tier h-earth-3d-watchdog-tier"
+        aria-labelledby="h-earth-3d-fd-05-watchdog-heading"
+        data-h-earth-interface-tier="WATCHDOG"
+        data-h-earth-report-role="SUPPORTING"
+      >
+        <header class="h-earth-3d-tier-heading">
+          <div>
+            <p class="h-earth-3d-diagnostic-kicker">
+              Current Occurrence Supporting Evidence
+            </p>
+
+            <h2 id="h-earth-3d-fd-05-watchdog-heading">
+              FD_05 Watchdog Status
+            </h2>
+
+            <p>
+              Human-facing projection of
+              H_EARTH_FD_05_INSTRUMENT_WATCHDOG_RECEIPT.
+            </p>
+          </div>
+
           <button
-            id="h-earth-3d-run-diagnostics"
             class="h-earth-3d-copy-button"
             type="button"
-            data-h-earth-diagnostic-action="run"
+            data-h-earth-copy-panel="h-earth-3d-fd-05-watchdog-status-payload"
+            data-h-earth-copy-label="FD_05 Watchdog Status"
           >
-            Run Diagnostics
+            Copy Watchdog Status
           </button>
+        </header>
+
+        <article
+          class="h-earth-3d-diagnostic-panel h-earth-3d-panel-supporting"
+          data-h-earth-panel-role="fd-05-watchdog-status"
+          data-h-earth-report-role="SUPPORTING"
+        >
+          <dl class="h-earth-3d-watchdog-fields">
+            <div>
+              <dt>Current occurrence</dt>
+              <dd id="h-earth-3d-watchdog-occurrence-id">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Watchdog phase</dt>
+              <dd id="h-earth-3d-watchdog-phase">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Timed out</dt>
+              <dd id="h-earth-3d-watchdog-timed-out">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Decision finalized</dt>
+              <dd id="h-earth-3d-watchdog-decision-finalized">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Awaiting final receipt</dt>
+              <dd id="h-earth-3d-watchdog-awaiting-final-receipt">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Current-occurrence receipt observed</dt>
+              <dd id="h-earth-3d-watchdog-current-receipt-observed">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Module import resolved</dt>
+              <dd id="h-earth-3d-watchdog-module-import-resolved">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Module import rejected</dt>
+              <dd id="h-earth-3d-watchdog-module-import-rejected">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Current instrument start</dt>
+              <dd id="h-earth-3d-watchdog-instrument-started-at">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Current receipt publication</dt>
+              <dd id="h-earth-3d-watchdog-receipt-published-at">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Current receipt rendering</dt>
+              <dd id="h-earth-3d-watchdog-receipt-rendered-at">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Primary receipt execution status</dt>
+              <dd id="h-earth-3d-watchdog-primary-execution-status">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Instrument classification</dt>
+              <dd id="h-earth-3d-watchdog-instrument-classification">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+
+            <div>
+              <dt>Watchdog-authorized operation</dt>
+              <dd id="h-earth-3d-watchdog-next-operation">
+                NOT YET DIRECTLY OBSERVED
+              </dd>
+            </div>
+          </dl>
+
+          <pre
+            id="h-earth-3d-fd-05-watchdog-status-payload"
+            class="h-earth-3d-diagnostic-output"
+            aria-label="FD_05 Watchdog Status payload"
+          >{
+  "receiptId": "H_EARTH_FD_05_INSTRUMENT_WATCHDOG_RECEIPT",
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+        </article>
+      </section>
+
+      <!-- ===============================================================
+           TIER 2 — ACTIVE SUPPORTING REPORTS
+           =============================================================== -->
+
+      <section
+        id="h-earth-3d-tier-2-active-supporting"
+        class="h-earth-3d-report-tier h-earth-3d-tier-2"
+        aria-labelledby="h-earth-3d-tier-2-heading"
+        data-h-earth-interface-tier="2"
+        data-h-earth-report-role="SUPPORTING"
+      >
+        <header class="h-earth-3d-tier-heading">
+          <div>
+            <p class="h-earth-3d-diagnostic-kicker">
+              Tier 2
+            </p>
+
+            <h2 id="h-earth-3d-tier-2-heading">
+              Active Supporting Reports
+            </h2>
+
+            <p>
+              Only reports directly supporting
+              FD_05_DEPLOYED_ES_MODULE_IMPORT_GRAPH are promoted here.
+            </p>
+          </div>
 
           <button
-            id="h-earth-3d-copy-custody"
-            class="h-earth-3d-copy-button"
-            type="button"
-            data-h-earth-diagnostic-copy-group="custody"
-          >
-            Copy Custody Report
-          </button>
-
-          <button
-            id="h-earth-3d-copy-public-stage"
-            class="h-earth-3d-copy-button"
-            type="button"
-            data-h-earth-diagnostic-copy-group="public-stage"
-          >
-            Copy Public-Stage Report
-          </button>
-
-          <button
-            id="h-earth-3d-copy-renderer"
-            class="h-earth-3d-copy-button"
-            type="button"
-            data-h-earth-diagnostic-copy-group="renderer"
-          >
-            Copy Renderer Report
-          </button>
-
-          <button
-            id="h-earth-3d-copy-boundary"
             class="h-earth-3d-copy-button"
             type="button"
             data-h-earth-diagnostic-copy-group="boundary"
           >
-            Copy Boundary Report
+            Copy Active Supporting Evidence
           </button>
+        </header>
 
-          <button
-            id="h-earth-3d-copy-raw"
-            class="h-earth-3d-copy-button"
-            type="button"
-            data-h-earth-diagnostic-copy-group="raw"
+        <div
+          class="h-earth-3d-operational-reports"
+          data-h-earth-report-scope="ACTIVE_SUPPORTING_EVIDENCE"
+        >
+          <article
+            id="h-earth-3d-import-and-contract-panel"
+            class="h-earth-3d-diagnostic-panel h-earth-3d-panel-supporting"
+            data-h-earth-panel-role="import-and-contract"
+            data-h-earth-report-role="SUPPORTING"
+            data-h-earth-evidence-authority="PRIMARY_FD_05_RECEIPT"
           >
-            Copy Raw Evidence
-          </button>
+            <header class="h-earth-3d-panel-heading-row">
+              <div>
+                <p class="h-earth-3d-diagnostic-kicker">
+                  Active Supporting Evidence
+                </p>
+
+                <h3>Import and Contract</h3>
+
+                <p>
+                  Root import result, failed branch, successful branches,
+                  contract correspondence, direct import error, primary
+                  receipt, and failure-domain advancement.
+                </p>
+              </div>
+
+              <button
+                class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                type="button"
+                data-h-earth-copy-panel="h-earth-3d-compositor-import-payload"
+                data-h-earth-copy-label="Import and Contract"
+              >
+                Copy This Report
+              </button>
+            </header>
+
+            <pre
+              id="h-earth-3d-compositor-import-payload"
+              class="h-earth-3d-diagnostic-output"
+            >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+          </article>
+
+          <article
+            id="h-earth-3d-source-resolution-panel"
+            class="h-earth-3d-diagnostic-panel h-earth-3d-panel-supporting"
+            data-h-earth-panel-role="source-resolution"
+            data-h-earth-report-role="SUPPORTING"
+            data-h-earth-evidence-authority="FD_05_SOURCE_RESOLUTION"
+          >
+            <header class="h-earth-3d-panel-heading-row">
+              <div>
+                <p class="h-earth-3d-diagnostic-kicker">
+                  Active Supporting Evidence
+                </p>
+
+                <h3>Source Resolution</h3>
+
+                <p>
+                  Importing source, import specifier, requested URL, resolved
+                  URL, final returned URL, status, content type, response
+                  classification, and bounded response prefix.
+                </p>
+              </div>
+
+              <button
+                class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                type="button"
+                data-h-earth-copy-panel="h-earth-3d-evidence-source-payload"
+                data-h-earth-copy-label="Source Resolution"
+              >
+                Copy This Report
+              </button>
+            </header>
+
+            <pre
+              id="h-earth-3d-evidence-source-payload"
+              class="h-earth-3d-diagnostic-output"
+            >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+          </article>
+
+          <article
+            id="h-earth-3d-initialization-vs-execution-panel"
+            class="h-earth-3d-diagnostic-panel h-earth-3d-panel-supporting"
+            data-h-earth-panel-role="initialization-vs-execution"
+            data-h-earth-report-role="SUPPORTING"
+            data-h-earth-evidence-authority="CURRENT_OCCURRENCE_WATCHDOG"
+          >
+            <header class="h-earth-3d-panel-heading-row">
+              <div>
+                <p class="h-earth-3d-diagnostic-kicker">
+                  Active Supporting Evidence
+                </p>
+
+                <h3>Initialization vs Execution</h3>
+
+                <p>
+                  Module inclusion, initialization, current-occurrence
+                  instrument execution, receipt publication, rendering,
+                  completion, failure, and historical-global separation.
+                </p>
+              </div>
+
+              <button
+                class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                type="button"
+                data-h-earth-copy-panel="h-earth-3d-module-initialization-payload"
+                data-h-earth-copy-label="Initialization vs Execution"
+              >
+                Copy This Report
+              </button>
+            </header>
+
+            <pre
+              id="h-earth-3d-module-initialization-payload"
+              class="h-earth-3d-diagnostic-output"
+            >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+          </article>
+
+          <article
+            id="h-earth-3d-boundary-mismatch-panel"
+            class="h-earth-3d-diagnostic-panel h-earth-3d-panel-supporting h-earth-3d-mismatch-panel"
+            data-h-earth-panel-role="boundary-mismatch"
+            data-h-earth-report-role="SUPPORTING"
+            data-h-earth-evidence-authority="BOUNDARY_AND_CLAIM_CEILING"
+          >
+            <header class="h-earth-3d-panel-heading-row">
+              <div>
+                <p class="h-earth-3d-diagnostic-kicker">
+                  Active Supporting Evidence
+                </p>
+
+                <h3>Boundary Mismatch Report</h3>
+
+                <p>
+                  Claim-ceiling violations, missing evidence, contract
+                  mismatches, forbidden execution, source-correction
+                  withholding, and upstream-reopen restrictions.
+                </p>
+              </div>
+
+              <button
+                class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                type="button"
+                data-h-earth-copy-panel="h-earth-3d-boundary-mismatch-payload"
+                data-h-earth-copy-label="Boundary Mismatch Report"
+              >
+                Copy This Report
+              </button>
+            </header>
+
+            <pre
+              id="h-earth-3d-boundary-mismatch-payload"
+              class="h-earth-3d-diagnostic-output"
+            >{
+  "status": "NOT YET DIRECTLY OBSERVED",
+  "sourceCorrectionAuthorized": false,
+  "productionClaim": false
+}</pre>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===============================================================
+           REPORT ROLE REGISTRY
+           =============================================================== -->
+
+      <section
+        id="h-earth-3d-report-role-registry-section"
+        class="h-earth-3d-report-tier h-earth-3d-role-registry"
+        aria-labelledby="h-earth-3d-report-role-registry-heading"
+        data-h-earth-interface-tier="REGISTRY"
+      >
+        <header class="h-earth-3d-tier-heading">
+          <div>
+            <p class="h-earth-3d-diagnostic-kicker">
+              Current Occurrence Registry
+            </p>
+
+            <h2 id="h-earth-3d-report-role-registry-heading">
+              Report Role Registry
+            </h2>
+
+            <p>
+              Every preserved report receives one current human-interface role.
+            </p>
+          </div>
+        </header>
+
+        <div class="h-earth-3d-role-registry-table-wrapper">
+          <table class="h-earth-3d-role-registry-table">
+            <thead>
+              <tr>
+                <th scope="col">Displayed report</th>
+                <th scope="col">Role</th>
+                <th scope="col">Tier</th>
+                <th scope="col">Current relevance</th>
+                <th scope="col">Evidence authority</th>
+                <th scope="col">Copy</th>
+                <th scope="col">Archive</th>
+              </tr>
+            </thead>
+
+            <tbody id="h-earth-3d-report-role-registry">
+              <tr>
+                <th scope="row">Active Failure Decision</th>
+                <td>PRIMARY</td>
+                <td>1</td>
+                <td>CONTROLLING</td>
+                <td>CURRENT OCCURRENCE DECISION</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <th scope="row">Import and Contract</th>
+                <td>SUPPORTING</td>
+                <td>2</td>
+                <td>ACTIVE</td>
+                <td>PRIMARY FD_05 RECEIPT</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <th scope="row">Source Resolution</th>
+                <td>SUPPORTING</td>
+                <td>2</td>
+                <td>ACTIVE</td>
+                <td>DEPLOYED RESPONSE EVIDENCE</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <th scope="row">Initialization vs Execution</th>
+                <td>SUPPORTING</td>
+                <td>2</td>
+                <td>ACTIVE</td>
+                <td>CURRENT WATCHDOG OCCURRENCE</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <th scope="row">Boundary Mismatch Report</th>
+                <td>SUPPORTING</td>
+                <td>2</td>
+                <td>ACTIVE</td>
+                <td>BOUNDARY AND CLAIM CEILING</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <th scope="row">Remaining constitutional reports</th>
+                <td>HISTORICAL / CUSTODY</td>
+                <td>3</td>
+                <td>PRESERVED</td>
+                <td>ESTABLISHED REPORT AUTHORITY</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===============================================================
+           TIER 3 — PRESERVED DIAGNOSTIC CORPUS
+           All remaining constitutional report mounts remain intact.
+           =============================================================== -->
+
+      <section
+        id="h-earth-3d-tier-3-preserved-corpus"
+        class="h-earth-3d-report-tier h-earth-3d-tier-3"
+        aria-labelledby="h-earth-3d-tier-3-heading"
+        data-h-earth-interface-tier="3"
+        data-h-earth-report-scope="PRESERVED_DIAGNOSTIC_CORPUS"
+      >
+        <header class="h-earth-3d-tier-heading">
+          <div>
+            <p class="h-earth-3d-diagnostic-kicker">
+              Tier 3
+            </p>
+
+            <h2 id="h-earth-3d-tier-3-heading">
+              Preserved Diagnostic Corpus
+            </h2>
+
+            <p>
+              Historical, custody, contract, route, compositor, renderer, raw,
+              and aggregate evidence remains intact and independently copyable.
+            </p>
+          </div>
 
           <button
-            id="h-earth-3d-copy-all"
             class="h-earth-3d-copy-button"
             type="button"
             data-h-earth-diagnostic-copy-group="all"
           >
-            Copy All Diagnostics
+            Copy All Diagnostic Evidence
           </button>
-        </div>
+        </header>
+
+        <details
+          class="h-earth-3d-corpus-group"
+          data-h-earth-corpus-role="ROUTE_SUPPORT"
+        >
+          <summary>Route Support</summary>
+
+          <div class="h-earth-3d-corpus-grid">
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="report-layer-status"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Report Layer Status</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-report-layer-status"
+                  data-h-earth-copy-label="Report Layer Status"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-report-layer-status"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "DIAGNOSTIC_NOT_STARTED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="report-cards"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Diagnostic Report Cards</h3>
+              </header>
+
+              <div
+                id="h-earth-3d-report-cards"
+                class="h-earth-3d-report-cards"
+              ></div>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="diagnostic-entry"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Diagnostic Entry</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-diagnostic-entry-payload"
+                  data-h-earth-copy-label="Diagnostic Entry"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-diagnostic-entry-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="public-route-status"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Public Route Status</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-public-route-status-payload"
+                  data-h-earth-copy-label="Public Route Status"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-public-route-status-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="route-bootstrap-receipt"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Route Bootstrap Receipt</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-route-bootstrap-receipt"
+                  data-h-earth-copy-label="Route Bootstrap Receipt"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-route-bootstrap-receipt"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="route-bootstrap-completion"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Route Bootstrap Completion</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-route-bootstrap-completion-payload"
+                  data-h-earth-copy-label="Route Bootstrap Completion"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-route-bootstrap-completion-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="source-preview-receipt"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Source Preview Receipt</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-source-preview-receipt-payload"
+                  data-h-earth-copy-label="Source Preview Receipt"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-source-preview-receipt-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="public-stage-status"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Public Stage Status</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-public-stage-status-payload"
+                  data-h-earth-copy-label="Public Stage Status"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-public-stage-status-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="public-stage-receipt"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Public Stage Receipt</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-public-stage-receipt-payload"
+                  data-h-earth-copy-label="Public Stage Receipt"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-public-stage-receipt-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="public-ground-readout"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Public Ground Readout</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-public-ground-readout-payload"
+                  data-h-earth-copy-label="Public Ground Readout"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-public-ground-readout-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+          </div>
+        </details>
+
+        <details
+          class="h-earth-3d-corpus-group"
+          data-h-earth-corpus-role="COMPOSITOR_SUPPORT"
+        >
+          <summary>Compositor Support</summary>
+
+          <div class="h-earth-3d-corpus-grid">
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="compositor-handoff"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Compositor Handoff</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-compositor-handoff-payload"
+                  data-h-earth-copy-label="Compositor Handoff"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-compositor-handoff-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+          </div>
+        </details>
+
+        <details
+          class="h-earth-3d-corpus-group"
+          data-h-earth-corpus-role="RENDERER_SUPPORT"
+        >
+          <summary>Renderer Support</summary>
+
+          <div class="h-earth-3d-corpus-grid">
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="renderer-import"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Renderer Import</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-renderer-import-payload"
+                  data-h-earth-copy-label="Renderer Import"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-renderer-import-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="renderer-construction-receipt"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Renderer Construction Receipt</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-renderer-construction-receipt"
+                  data-h-earth-copy-label="Renderer Construction Receipt"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-renderer-construction-receipt"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="renderer-mount-receipt"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Renderer Mount Receipt</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-renderer-mount-receipt"
+                  data-h-earth-copy-label="Renderer Mount Receipt"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-renderer-mount-receipt"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="renderer-release-receipt"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Renderer Release Receipt</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-renderer-release-receipt"
+                  data-h-earth-copy-label="Renderer Release Receipt"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-renderer-release-receipt"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="renderer-state"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Renderer State</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-renderer-state-payload"
+                  data-h-earth-copy-label="Renderer State"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-renderer-state-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+          </div>
+        </details>
+
+        <details
+          class="h-earth-3d-corpus-group"
+          data-h-earth-corpus-role="CUSTODY"
+        >
+          <summary>Custody and Archive</summary>
+
+          <div class="h-earth-3d-corpus-grid">
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="layer-4-custody"
+              data-h-earth-report-role="CUSTODY"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Layer 4 Custody</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-layer-4-custody-payload"
+                  data-h-earth-copy-label="Layer 4 Custody"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-layer-4-custody-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="step-012j-descriptor"
+              data-h-earth-report-role="CUSTODY"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Step 012J Descriptor</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-step-012j-descriptor-payload"
+                  data-h-earth-copy-label="Step 012J Descriptor"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-step-012j-descriptor-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="relationship-members"
+              data-h-earth-report-role="CUSTODY"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Relationship Members</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-relationship-members-payload"
+                  data-h-earth-copy-label="Relationship Members"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-relationship-members-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="archive-custody"
+              data-h-earth-report-role="CUSTODY"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Archive Custody</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-archive-custody-payload"
+                  data-h-earth-copy-label="Archive Custody"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-archive-custody-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+          </div>
+        </details>
+
+        <details
+          class="h-earth-3d-corpus-group"
+          data-h-earth-corpus-role="CONTRACT"
+        >
+          <summary>Contract Reports</summary>
+
+          <div class="h-earth-3d-corpus-grid">
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="index-contract"
+              data-h-earth-report-role="CUSTODY"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Public Index Contract</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-index-contract"
+                  data-h-earth-copy-label="Public Index Contract"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-index-contract"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="compositor-contract"
+              data-h-earth-report-role="CUSTODY"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Compositor Contract</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-compositor-contract"
+                  data-h-earth-copy-label="Compositor Contract"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-compositor-contract"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="renderer-contract"
+              data-h-earth-report-role="CUSTODY"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Renderer Contract</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-renderer-contract"
+                  data-h-earth-copy-label="Renderer Contract"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-renderer-contract"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="diagnostic-contract"
+              data-h-earth-report-role="CUSTODY"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Diagnostic Contract</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-diagnostic-contract"
+                  data-h-earth-copy-label="Diagnostic Contract"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-diagnostic-contract"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+            </article>
+          </div>
+        </details>
+
+        <details
+          class="h-earth-3d-corpus-group"
+          data-h-earth-corpus-role="HISTORICAL"
+        >
+          <summary>Historical and Active Global Evidence</summary>
+
+          <div class="h-earth-3d-corpus-grid">
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="active-globals"
+              data-h-earth-report-role="HISTORICAL"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Active Globals</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-active-globals-payload"
+                  data-h-earth-copy-label="Active Globals"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-active-globals-payload"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "status": "NOT YET DIRECTLY OBSERVED",
+  "historicalOrCurrentOccurrenceUnclassified": true
+}</pre>
+            </article>
+
+            <article
+              class="h-earth-3d-diagnostic-panel"
+              data-h-earth-panel-role="boundary-flags"
+              data-h-earth-report-role="CUSTODY"
+            >
+              <header class="h-earth-3d-panel-heading-row">
+                <h3>Boundary Flags</h3>
+
+                <button
+                  class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                  type="button"
+                  data-h-earth-copy-panel="h-earth-3d-boundary-flags"
+                  data-h-earth-copy-label="Boundary Flags"
+                >
+                  Copy
+                </button>
+              </header>
+
+              <pre
+                id="h-earth-3d-boundary-flags"
+                class="h-earth-3d-diagnostic-output"
+              >{
+  "sourceCorrectionAuthorized": false,
+  "productionClaim": false
+}</pre>
+            </article>
+          </div>
+        </details>
+
+        <details
+          class="h-earth-3d-corpus-group"
+          data-h-earth-corpus-role="RAW_EVIDENCE"
+        >
+          <summary>Raw Evidence</summary>
+
+          <article
+            class="h-earth-3d-diagnostic-panel"
+            data-h-earth-panel-role="raw-evidence"
+            data-h-earth-report-role="HISTORICAL"
+          >
+            <header class="h-earth-3d-panel-heading-row">
+              <div>
+                <h3>Raw Diagnostic Evidence</h3>
+
+                <p>
+                  Current, historical, and unclassified evidence retained
+                  without promotion to controlling operator truth.
+                </p>
+              </div>
+
+              <button
+                class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                type="button"
+                data-h-earth-copy-panel="h-earth-3d-raw-evidence-payload"
+                data-h-earth-copy-label="Raw Diagnostic Evidence"
+              >
+                Copy
+              </button>
+            </header>
+
+            <pre
+              id="h-earth-3d-raw-evidence-payload"
+              class="h-earth-3d-diagnostic-output"
+            >{
+  "status": "NOT YET DIRECTLY OBSERVED"
+}</pre>
+          </article>
+        </details>
+
+        <details
+          id="h-earth-3d-all-diagnostics-panel"
+          class="h-earth-3d-corpus-group"
+          data-h-earth-corpus-role="AGGREGATE_ARCHIVE"
+        >
+          <summary>Aggregate Archive</summary>
+
+          <article
+            class="h-earth-3d-diagnostic-panel"
+            data-h-earth-panel-role="all-diagnostics"
+            data-h-earth-report-role="HISTORICAL"
+          >
+            <header class="h-earth-3d-panel-heading-row">
+              <div>
+                <h3>All Diagnostic Evidence</h3>
+
+                <p>
+                  Preserved aggregate evidence archive. This report does not
+                  replace the Active Failure Decision surface.
+                </p>
+              </div>
+
+              <button
+                class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
+                type="button"
+                data-h-earth-copy-panel="h-earth-3d-all-diagnostics-payload"
+                data-h-earth-copy-label="All Diagnostic Evidence"
+              >
+                Copy
+              </button>
+            </header>
+
+            <pre
+              id="h-earth-3d-all-diagnostics-payload"
+              class="h-earth-3d-diagnostic-output"
+            >{
+  "status": "NOT YET DIRECTLY OBSERVED",
+  "role": "PRESERVED_AGGREGATE_ARCHIVE"
+}</pre>
+          </article>
+        </details>
       </section>
 
-      <section
-        class="h-earth-3d-operational-reports"
-        aria-label="Diagnostic report cards"
-      >
-        <div class="h-earth-3d-operational-reports-header">
-          <div>
-            <p class="h-earth-3d-diagnostic-kicker">
-              Report Layer
-            </p>
-
-            <h2>
-              Route, renderer, custody, and boundary summary
-            </h2>
-          </div>
-
-          <button
-            class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-            type="button"
-            data-h-earth-copy-panel="h-earth-3d-report-layer-status"
-            data-h-earth-copy-label="Report Layer Status"
-          >
-            Copy Report Layer
-          </button>
-        </div>
-
-        <pre
-          id="h-earth-3d-report-layer-status"
-          class="h-earth-3d-report-layer-status"
-          aria-label="Diagnostic report-layer status"
-        >Step 034U diagnostic report layer pending.</pre>
-
-        <div
-          id="h-earth-3d-report-cards"
-          class="h-earth-3d-report-cards"
-          data-h-earth-report-cards="true"
-        >
-          <article
-            class="h-earth-3d-report-card"
-            data-h-earth-report-id="diagnostic-bootstrap"
-            data-h-earth-report-severity="PENDING"
-          >
-            <h2>Diagnostic Bootstrap</h2>
-
-            <p class="h-earth-3d-report-status">
-              DIAGNOSTIC_NOT_STARTED
-            </p>
-
-            <p class="h-earth-3d-report-summary">
-              Exact Step 034U import, contract verification, initialization,
-              and listener ownership are pending.
-            </p>
-          </article>
-
-          <article
-            class="h-earth-3d-report-card"
-            data-h-earth-report-id="public-route"
-            data-h-earth-report-severity="PENDING"
-          >
-            <h2>Public Route</h2>
-
-            <p class="h-earth-3d-report-status">
-              PUBLIC_ROUTE_EVIDENCE_PENDING
-            </p>
-
-            <p class="h-earth-3d-report-summary">
-              Step 034P route state, active globals, source preview, and route
-              receipts have not yet been inspected.
-            </p>
-          </article>
-
-          <article
-            class="h-earth-3d-report-card"
-            data-h-earth-report-id="compositor"
-            data-h-earth-report-severity="PENDING"
-          >
-            <h2>Compositor</h2>
-
-            <p class="h-earth-3d-report-status">
-              COMPOSITOR_EVIDENCE_PENDING
-            </p>
-
-            <p class="h-earth-3d-report-summary">
-              Compositor contract, import receipt, handoff evidence, and
-              admitted-frame correspondence are pending inspection.
-            </p>
-          </article>
-
-          <article
-            class="h-earth-3d-report-card"
-            data-h-earth-report-id="renderer"
-            data-h-earth-report-severity="PENDING"
-          >
-            <h2>Renderer</h2>
-
-            <p class="h-earth-3d-report-status">
-              RENDERER_EVIDENCE_PENDING
-            </p>
-
-            <p class="h-earth-3d-report-summary">
-              Renderer import, construction, mount, release, and state evidence
-              are pending inspection.
-            </p>
-          </article>
-
-          <article
-            class="h-earth-3d-report-card"
-            data-h-earth-report-id="layer-4-custody"
-            data-h-earth-report-severity="PENDING"
-          >
-            <h2>Layer 4 Custody</h2>
-
-            <p class="h-earth-3d-report-status">
-              CUSTODY_PENDING
-            </p>
-
-            <p class="h-earth-3d-report-summary">
-              Step 012J, Step 012H.1, Step 012I, Target 002, Target 003, and
-              archive custody evidence are pending inspection.
-            </p>
-          </article>
-
-          <article
-            class="h-earth-3d-report-card"
-            data-h-earth-report-id="boundary"
-            data-h-earth-report-severity="PENDING"
-          >
-            <h2>Boundary</h2>
-
-            <p class="h-earth-3d-report-status">
-              BOUNDARY_PENDING
-            </p>
-
-            <p class="h-earth-3d-report-summary">
-              Claim ceilings, forbidden execution flags, identity mismatches,
-              and missing evidence are pending inspection.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section
-        class="h-earth-3d-diagnostic-grid"
-        aria-label="Diagnostic payload grid"
-      >
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-panel-primary"
-          data-h-earth-panel-role="diagnostic-entry"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Diagnostic
-              </p>
-
-              <h2>Entry and Initialization</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-diagnostic-entry-payload"
-              data-h-earth-copy-label="Diagnostic Entry"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-diagnostic-entry-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Diagnostic entry payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="evidence-source"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Evidence
-              </p>
-
-              <h2>Source Resolution</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-evidence-source-payload"
-              data-h-earth-copy-label="Evidence Source Resolution"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-evidence-source-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Evidence source resolution pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-public-stage-panel"
-          data-h-earth-panel-role="public-route-status"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Public Route
-              </p>
-
-              <h2>Step 034P Status</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-public-route-status-payload"
-              data-h-earth-copy-label="Public Route Status"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-public-route-status-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Public route status payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="route-bootstrap-receipt"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Public Route
-              </p>
-
-              <h2>Bootstrap Receipt</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-route-bootstrap-receipt"
-              data-h-earth-copy-label="Route Bootstrap Receipt"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-route-bootstrap-receipt"
-            class="h-earth-3d-diagnostic-output"
-          >Route bootstrap receipt pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="route-bootstrap-completion"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Public Route
-              </p>
-
-              <h2>Bootstrap Completion</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-route-bootstrap-completion-payload"
-              data-h-earth-copy-label="Route Bootstrap Completion"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-route-bootstrap-completion-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Route bootstrap completion payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="source-preview"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Public Route
-              </p>
-
-              <h2>Source Preview</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-source-preview-receipt-payload"
-              data-h-earth-copy-label="Source Preview Receipt"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-source-preview-receipt-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Source preview receipt pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-compositor-panel"
-          data-h-earth-panel-role="compositor-import"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Compositor
-              </p>
-
-              <h2>Import and Contract</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-compositor-import-payload"
-              data-h-earth-copy-label="Compositor Import"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-compositor-import-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Compositor import payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-compositor-panel"
-          data-h-earth-panel-role="compositor-handoff"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Compositor
-              </p>
-
-              <h2>Renderer Handoff</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-compositor-handoff-payload"
-              data-h-earth-copy-label="Compositor Handoff"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-compositor-handoff-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Compositor handoff payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-renderer-panel"
-          data-h-earth-panel-role="renderer-import"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Renderer
-              </p>
-
-              <h2>Import and Contract</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-renderer-import-payload"
-              data-h-earth-copy-label="Renderer Import"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-renderer-import-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Renderer import payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-renderer-panel"
-          data-h-earth-panel-role="renderer-construction"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Renderer
-              </p>
-
-              <h2>Construction Receipt</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-renderer-construction-receipt"
-              data-h-earth-copy-label="Renderer Construction Receipt"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-renderer-construction-receipt"
-            class="h-earth-3d-diagnostic-output"
-          >Renderer construction receipt pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-renderer-panel"
-          data-h-earth-panel-role="renderer-mount"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Renderer
-              </p>
-
-              <h2>Mount Receipt</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-renderer-mount-receipt"
-              data-h-earth-copy-label="Renderer Mount Receipt"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-renderer-mount-receipt"
-            class="h-earth-3d-diagnostic-output"
-          >Renderer mount receipt pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-renderer-panel"
-          data-h-earth-panel-role="renderer-release"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Renderer
-              </p>
-
-              <h2>Release Receipt</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-renderer-release-receipt"
-              data-h-earth-copy-label="Renderer Release Receipt"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-renderer-release-receipt"
-            class="h-earth-3d-diagnostic-output"
-          >Renderer release receipt pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-renderer-panel"
-          data-h-earth-panel-role="renderer-state"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Renderer
-              </p>
-
-              <h2>Current State</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-renderer-state-payload"
-              data-h-earth-copy-label="Renderer State"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-renderer-state-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Renderer state payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-layer-4-custody-panel"
-          data-h-earth-panel-role="layer-4-custody"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Layer 4
-              </p>
-
-              <h2>Custody Chain</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-layer-4-custody-payload"
-              data-h-earth-copy-label="Layer 4 Custody"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-layer-4-custody-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Layer 4 custody payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-step-012j-panel"
-          data-h-earth-panel-role="step-012j-descriptor"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Step 012J
-              </p>
-
-              <h2>Read-Only Descriptor</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-step-012j-descriptor-payload"
-              data-h-earth-copy-label="Step 012J Descriptor"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-step-012j-descriptor-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Step 012J descriptor payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="relationship-members"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Layer 4
-              </p>
-
-              <h2>Relationship Members</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-relationship-members-payload"
-              data-h-earth-copy-label="Relationship Members"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-relationship-members-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Relationship members payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="module-initialization"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Execution Boundary
-              </p>
-
-              <h2>Initialization vs Execution</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-module-initialization-payload"
-              data-h-earth-copy-label="Module Initialization Boundary"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-module-initialization-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Module initialization boundary payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-public-stage-panel"
-          data-h-earth-panel-role="public-stage-status"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Public Stage
-              </p>
-
-              <h2>Status Projection</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-public-stage-status-payload"
-              data-h-earth-copy-label="Public Stage Status"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-public-stage-status-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Public-stage status payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="public-stage-receipt"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Public Stage
-              </p>
-
-              <h2>Receipt Inspection</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-public-stage-receipt-payload"
-              data-h-earth-copy-label="Public Stage Receipt"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-public-stage-receipt-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Public-stage receipt payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="public-ground-readout"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Public Readout
-              </p>
-
-              <h2>Ground Condition Read</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-public-ground-readout-payload"
-              data-h-earth-copy-label="Ground Condition Read"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-public-ground-readout-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Ground Condition Read payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="active-globals"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Public Route
-              </p>
-
-              <h2>Active Globals</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-active-globals-payload"
-              data-h-earth-copy-label="Active Globals"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-active-globals-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Active-global payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-boundary-panel"
-          data-h-earth-panel-role="boundary-flags"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Boundary
-              </p>
-
-              <h2>Flags and Claim Ceiling</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-boundary-flags"
-              data-h-earth-copy-label="Boundary Flags"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-boundary-flags"
-            class="h-earth-3d-diagnostic-output"
-          >Boundary flags pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-mismatch-panel"
-          data-h-earth-panel-role="mismatch-report"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Boundary
-              </p>
-
-              <h2>Mismatch Report</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-boundary-mismatch-payload"
-              data-h-earth-copy-label="Boundary Mismatch"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-boundary-mismatch-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Boundary mismatch payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="archive-custody"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Archive
-              </p>
-
-              <h2>Drive Custody Metadata</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-archive-custody-payload"
-              data-h-earth-copy-label="Archive Custody"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-archive-custody-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Archive custody payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="public-index-contract"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Contract
-              </p>
-
-              <h2>Public Index</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-index-contract"
-              data-h-earth-copy-label="Public Index Contract"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-index-contract"
-            class="h-earth-3d-diagnostic-output"
-          >Public index contract payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="compositor-contract"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Contract
-              </p>
-
-              <h2>Compositor</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-compositor-contract"
-              data-h-earth-copy-label="Compositor Contract"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-compositor-contract"
-            class="h-earth-3d-diagnostic-output"
-          >Compositor contract payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="renderer-contract"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Contract
-              </p>
-
-              <h2>Renderer</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-renderer-contract"
-              data-h-earth-copy-label="Renderer Contract"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-renderer-contract"
-            class="h-earth-3d-diagnostic-output"
-          >Renderer contract payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="diagnostic-contract"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Contract
-              </p>
-
-              <h2>Diagnostic Route</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-diagnostic-contract"
-              data-h-earth-copy-label="Diagnostic Contract"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-diagnostic-contract"
-            class="h-earth-3d-diagnostic-output"
-          >Diagnostic contract payload pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel"
-          data-h-earth-panel-role="raw-evidence"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Evidence
-              </p>
-
-              <h2>Raw Observed Surface</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-raw-evidence-payload"
-              data-h-earth-copy-label="Raw Evidence"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-raw-evidence-payload"
-            class="h-earth-3d-diagnostic-output"
-          >Raw observed evidence pending.</pre>
-        </article>
-
-        <article
-          class="h-earth-3d-diagnostic-panel h-earth-3d-panel-primary"
-          data-h-earth-panel-role="all-diagnostics"
-        >
-          <div class="h-earth-3d-panel-heading-row">
-            <div>
-              <p class="h-earth-3d-diagnostic-kicker">
-                Aggregate
-              </p>
-
-              <h2>All Diagnostic Evidence</h2>
-            </div>
-
-            <button
-              class="h-earth-3d-copy-button h-earth-3d-panel-copy-button"
-              type="button"
-              data-h-earth-copy-panel="h-earth-3d-all-diagnostics-payload"
-              data-h-earth-copy-label="All Diagnostics"
-            >
-              Copy This Report
-            </button>
-          </div>
-
-          <pre
-            id="h-earth-3d-all-diagnostics-payload"
-            class="h-earth-3d-diagnostic-output"
-          >All diagnostic evidence pending.</pre>
-        </article>
-      </section>
-
-      <section
-        class="h-earth-3d-diagnostic-boundary"
-        aria-label="Diagnostic route boundary"
-      >
+      <footer class="h-earth-3d-diagnostic-footer">
         <p>
-          Diagnostic route only. This page observes H-Earth route, compositor,
-          renderer, custody, descriptor, public-stage, active-global, and
-          boundary evidence. It does not initialize the public route, construct
-          Packet 002, construct admitted geometry, construct compositor or
-          renderer state, mount or release the renderer, create scene geometry,
-          activate WebGL, canvas, SVG, or iframe output, execute Step 012H.1,
-          execute Step 012I vectors, execute Target 002 runtime, execute Target
-          003 replay, generate canonical digests, compare replay, claim renderer
-          pass, claim visual pass, claim validation, claim production, claim
-          deployment, activate lattice runtime, or collapse matrices.
+          The 31-report constitutional corpus is preserved. Current operator
+          truth is controlled by the Active Failure Decision surface.
         </p>
-      </section>
+
+        <p>
+          Source correction, upstream reopen, production readiness, renderer
+          pass, visual pass, and deployment success remain unauthorized unless
+          separately established by direct evidence and controlling authority.
+        </p>
+      </footer>
     </div>
   </main>
 
-  <script type="module">
-    const DIAGNOSTIC_HTML_CONTRACT_ID =
-      'H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034S_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_DIAGNOSTIC_ENTRY_v1';
-
-    const EXPECTED_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID =
-      'H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_RENEWAL_STEP_034U_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_BOUNDARY_REPORTING_v1';
-
-    const DIAGNOSTIC_MODULE_PATH =
-      './index.js?v=034u';
-
-    const HTML_ENTRY_RECEIPT_GLOBAL =
-      'H_EARTH_3D_DIAGNOSTIC_HTML_ENTRY_RECEIPT';
-
-    const HTML_ENTRY_FAILURE_GLOBAL =
-      'H_EARTH_3D_DIAGNOSTIC_HTML_ENTRY_FAILURE';
-
-    const routeRoot =
-      document.getElementById(
-        'h-earth-3d-diagnostic-route-root'
-      );
-
-    const statusNode =
-      document.getElementById(
-        'h-earth-3d-diagnostic-status'
-      );
-
-    const statusNoteNode =
-      document.getElementById(
-        'h-earth-3d-diagnostic-status-note'
-      );
-
-    const reportLayerNode =
-      document.getElementById(
-        'h-earth-3d-report-layer-status'
-      );
-
-    const copyStatusNode =
-      document.getElementById(
-        'h-earth-3d-copy-status'
-      );
-
-    const diagnosticEntryNode =
-      document.getElementById(
-        'h-earth-3d-diagnostic-entry-payload'
-      );
-
-    const diagnosticContractNode =
-      document.getElementById(
-        'h-earth-3d-diagnostic-contract'
-      );
-
-    const allDiagnosticsNode =
-      document.getElementById(
-        'h-earth-3d-all-diagnostics-payload'
-      );
-
-    function nowIso() {
-      return new Date().toISOString();
-    }
-
-    function writeText(node, value) {
-      if (!node) {
-        return false;
-      }
-
-      node.textContent =
-        String(
-          value ??
-          ''
-        );
-
-      return true;
-    }
-
-    function writeJson(node, value) {
-      if (!node) {
-        return false;
-      }
-
-      try {
-        node.textContent =
-          JSON.stringify(
-            value,
-            null,
-            2
-          );
-      } catch (_error) {
-        node.textContent =
-          JSON.stringify(
-            {
-              receiptType:
-                'H_EARTH_3D_DIAGNOSTIC_HTML_SERIALIZATION_FALLBACK',
-
-              status:
-                'HTML_ENTRY_PAYLOAD_SERIALIZATION_FAILED'
-            },
-            null,
-            2
-          );
-      }
-
-      return true;
-    }
-
-    function writeDataset(
-      key,
-      value
-    ) {
-      if (!routeRoot?.dataset) {
-        return false;
-      }
-
-      routeRoot.dataset[key] =
-        String(value);
-
-      return true;
-    }
-
-    function setDiagnosticRouteClass(
-      className
-    ) {
-      if (!routeRoot) {
-        return false;
-      }
-
-      routeRoot.classList.remove(
-        'h-earth-3d-diagnostic-ready',
-        'h-earth-3d-diagnostic-partial',
-        'h-earth-3d-diagnostic-fallback',
-        'h-earth-3d-diagnostic-error'
-      );
-
-      if (className) {
-        routeRoot.classList.add(
-          className
-        );
-      }
-
-      return true;
-    }
-
-    function resolveCandidatePublicRouteWindow() {
-      const candidates = [];
-
-      try {
-        if (
-          globalThis.opener &&
-          globalThis.opener !== globalThis
-        ) {
-          candidates.push({
-            source:
-              'window.opener',
-
-            window:
-              globalThis.opener
-          });
-        }
-      } catch (_error) {
-        // Same-origin accessibility is evaluated by diagnostic index.js.
-      }
-
-      try {
-        if (
-          globalThis.parent &&
-          globalThis.parent !== globalThis
-        ) {
-          candidates.push({
-            source:
-              'window.parent',
-
-            window:
-              globalThis.parent
-          });
-        }
-      } catch (_error) {
-        // Same-origin accessibility is evaluated by diagnostic index.js.
-      }
-
-      candidates.push({
-        source:
-          'diagnostic-window',
-
-        window:
-          globalThis
-      });
-
-      return Object.freeze(candidates);
-    }
-
-    function buildHtmlEntryFailure(
-      error,
-      phase
-    ) {
-      return Object.freeze({
-        receiptType:
-          'H_EARTH_3D_DIAGNOSTIC_HTML_ENTRY_FAILURE',
-
-        file:
-          '/showroom/globe/h-earth/diagnostic/index.html',
-
-        contractId:
-          DIAGNOSTIC_HTML_CONTRACT_ID,
-
-        generatedAt:
-          nowIso(),
-
-        phase,
-
-        status:
-          'DIAGNOSTIC_HTML_ENTRY_FAILURE',
-
-        modulePath:
-          DIAGNOSTIC_MODULE_PATH,
-
-        expectedDiagnosticBootstrapContractId:
-          EXPECTED_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-
-        errorName:
-          error instanceof Error
-            ? error.name
-            : 'UnknownError',
-
-        errorMessage:
-          error instanceof Error
-            ? error.message
-            : String(error),
-
-        diagnosticOwnershipEstablished:
-          false,
-
-        htmlFailurePublicationOnly:
-          true,
-
-        diagnosticListenersBoundByHtml:
-          false,
-
-        diagnosticCopyListenersBoundByHtml:
-          false,
-
-        publicRouteInitializedByDiagnostic:
-          false,
-
-        packet002ConstructedByDiagnostic:
-          false,
-
-        admittedFrameConstructedByDiagnostic:
-          false,
-
-        compositorConstructedByDiagnostic:
-          false,
-
-        rendererConstructedByDiagnostic:
-          false,
-
-        rendererMountedByDiagnostic:
-          false,
-
-        rendererReleasedByDiagnostic:
-          false,
-
-        publicRouteMutation:
-          false,
-
-        sourceMutation:
-          false,
-
-        runFunctionExecuted:
-          false,
-
-        replayExecuted:
-          false,
-
-        vectorRunnerExecuted:
-          false,
-
-        runtimeExecuted:
-          false,
-
-        canonicalDigestGenerated:
-          false,
-
-        replayComparison:
-          false,
-
-        rendererPassClaim:
-          false,
-
-        visualPassClaim:
-          false,
-
-        validationClaim:
-          false,
-
-        productionClaim:
-          false,
-
-        deploymentClaim:
-          false,
-
-        matrixCollapse:
-          false
-      });
-    }
-
-    function publishHtmlEntryFailure(
-      failureReceipt
-    ) {
-      writeText(
-        statusNode,
-        failureReceipt.status
-      );
-
-      writeText(
-        statusNoteNode,
-        `The diagnostic bootstrap did not assume ownership: ${failureReceipt.errorMessage}`
-      );
-
-      writeText(
-        copyStatusNode,
-        'Diagnostic controls are unavailable because Step 034U did not assume listener ownership.'
-      );
-
-      writeJson(
-        reportLayerNode,
-        failureReceipt
-      );
-
-      writeJson(
-        diagnosticEntryNode,
-        failureReceipt
-      );
-
-      writeJson(
-        diagnosticContractNode,
-        {
-          diagnosticHtmlContractId:
-            DIAGNOSTIC_HTML_CONTRACT_ID,
-
-          expectedDiagnosticBootstrapContractId:
-            EXPECTED_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-
-          observedDiagnosticBootstrapContractId:
-            null,
-
-          status:
-            failureReceipt.status
-        }
-      );
-
-      writeJson(
-        allDiagnosticsNode,
-        failureReceipt
-      );
-
-      setDiagnosticRouteClass(
-        'h-earth-3d-diagnostic-error'
-      );
-
-      writeDataset(
-        'hEarthDiagnosticModuleImported',
-        'false'
-      );
-
-      writeDataset(
-        'hEarthDiagnosticContractVerified',
-        'false'
-      );
-
-      writeDataset(
-        'hEarthDiagnosticInitializationStarted',
-        'false'
-      );
-
-      writeDataset(
-        'hEarthDiagnosticInitializationComplete',
-        'false'
-      );
-
-      globalThis[
-        HTML_ENTRY_FAILURE_GLOBAL
-      ] = failureReceipt;
-    }
-
-    async function bootHEarthDiagnosticEntry() {
-      writeText(
-        statusNode,
-        'HTML_ENTRY_IMPORTING_STEP_034U'
-      );
-
-      writeText(
-        statusNoteNode,
-        'Importing the exact Step 034U H-Earth diagnostic bootstrap.'
-      );
-
-      writeText(
-        copyStatusNode,
-        'Waiting for Step 034U diagnostic listener ownership.'
-      );
-
-      writeJson(
-        reportLayerNode,
-        {
-          receiptType:
-            'H_EARTH_3D_DIAGNOSTIC_HTML_ENTRY_LOADING',
-
-          file:
-            '/showroom/globe/h-earth/diagnostic/index.html',
-
-          contractId:
-            DIAGNOSTIC_HTML_CONTRACT_ID,
-
-          generatedAt:
-            nowIso(),
-
-          status:
-            'STEP_034U_DYNAMIC_IMPORT_PENDING',
-
-          modulePath:
-            DIAGNOSTIC_MODULE_PATH
-        }
-      );
-
-      let diagnosticModule;
-
-      try {
-        diagnosticModule =
-          await import(
-            DIAGNOSTIC_MODULE_PATH
-          );
-      } catch (error) {
-        publishHtmlEntryFailure(
-          buildHtmlEntryFailure(
-            error,
-            'STEP_034U_DYNAMIC_IMPORT'
-          )
-        );
-
-        console.error(
-          '[H-Earth diagnostic HTML import failure]',
-          error
-        );
-
-        return;
-      }
-
-      writeDataset(
-        'hEarthDiagnosticModuleImported',
-        'true'
-      );
-
-      const observedContractId =
-        diagnosticModule
-          ?.H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID ??
-        null;
-
-      if (
-        observedContractId !==
-        EXPECTED_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID
-      ) {
-        const error =
-          new Error(
-            `Imported H-Earth diagnostic contract mismatch. Expected ${EXPECTED_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID}; observed ${String(observedContractId)}.`
-          );
-
-        publishHtmlEntryFailure(
-          buildHtmlEntryFailure(
-            error,
-            'STEP_034U_CONTRACT_VERIFICATION'
-          )
-        );
-
-        console.error(
-          '[H-Earth diagnostic HTML contract mismatch]',
-          error
-        );
-
-        return;
-      }
-
-      if (
-        typeof diagnosticModule
-          .initializeHEarthDiagnosticRoute !==
-        'function'
-      ) {
-        const error =
-          new Error(
-            'The exact Step 034U module was imported, but initializeHEarthDiagnosticRoute is unavailable.'
-          );
-
-        publishHtmlEntryFailure(
-          buildHtmlEntryFailure(
-            error,
-            'STEP_034U_API_VERIFICATION'
-          )
-        );
-
-        console.error(
-          '[H-Earth diagnostic HTML API mismatch]',
-          error
-        );
-
-        return;
-      }
-
-      writeDataset(
-        'hEarthDiagnosticContractVerified',
-        'true'
-      );
-
-      writeText(
-        statusNode,
-        'STEP_034U_DIAGNOSTIC_INITIALIZATION_STARTING'
-      );
-
-      writeText(
-        statusNoteNode,
-        'Step 034U is assuming diagnostic evidence, report, listener, and copy-control ownership.'
-      );
-
-      writeDataset(
-        'hEarthDiagnosticInitializationStarted',
-        'true'
-      );
-
-      const candidatePublicRouteWindows =
-        resolveCandidatePublicRouteWindow();
-
-      let immediateResult;
-
-      try {
-        immediateResult =
-          diagnosticModule
-            .initializeHEarthDiagnosticRoute({
-              document,
-
-              diagnosticWindow:
-                globalThis,
-
-              candidatePublicRouteWindows,
-
-              publicRoutePath:
-                '/showroom/globe/h-earth/',
-
-              expectedPublicIndexContractId:
-                'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1',
-
-              expectedCompositorContractId:
-                'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1',
-
-              expectedRendererContractId:
-                'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1'
-            });
-      } catch (error) {
-        publishHtmlEntryFailure(
-          buildHtmlEntryFailure(
-            error,
-            'STEP_034U_INITIALIZATION_CALL'
-          )
-        );
-
-        console.error(
-          '[H-Earth diagnostic HTML initialization failure]',
-          error
-        );
-
-        return;
-      }
-
-      /*
-       * Diagnostic ownership now belongs to index.js.
-       *
-       * The HTML shell does not:
-       * - bind Run Diagnostics;
-       * - bind copy controls;
-       * - collect public-route evidence;
-       * - rebuild diagnostic reports;
-       * - republish diagnostic active globals;
-       * - reinterpret the synchronous result as completion.
-       */
-
-      const completion =
-        typeof diagnosticModule
-          .getHEarthDiagnosticCompletion ===
-          'function'
-          ? diagnosticModule
-              .getHEarthDiagnosticCompletion()
-          : typeof diagnosticModule
-              .getDiagnosticCompletion ===
-              'function'
-            ? diagnosticModule
-                .getDiagnosticCompletion()
-            : null;
-
-      if (
-        completion &&
-        typeof completion.then ===
-          'function'
-      ) {
-        try {
-          await completion;
-        } catch (error) {
-          /*
-           * Step 034U owns post-initialization exceptional reporting.
-           * This observer does not replace diagnostic failure receipts.
-           */
-          console.error(
-            '[H-Earth Step 034U completion rejected]',
-            error
-          );
-        }
-      }
-
-      writeDataset(
-        'hEarthDiagnosticInitializationComplete',
-        'true'
-      );
-
-      const htmlEntryReceipt =
-        Object.freeze({
-          receiptType:
-            'H_EARTH_3D_DIAGNOSTIC_HTML_ENTRY_RECEIPT',
-
-          file:
-            '/showroom/globe/h-earth/diagnostic/index.html',
-
-          contractId:
-            DIAGNOSTIC_HTML_CONTRACT_ID,
-
-          generatedAt:
-            nowIso(),
-
-          importedModulePath:
-            DIAGNOSTIC_MODULE_PATH,
-
-          expectedDiagnosticBootstrapContractId:
-            EXPECTED_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-
-          observedDiagnosticBootstrapContractId:
-            observedContractId,
-
-          diagnosticModuleImported:
-            true,
-
-          diagnosticContractVerified:
-            true,
-
-          diagnosticInitializationStarted:
-            true,
-
-          immediateInitializationReturned:
-            immediateResult !==
-            undefined,
-
-          completionPromiseObserved:
-            Boolean(
-              completion &&
-              typeof completion.then ===
-                'function'
-            ),
-
-          candidatePublicRouteWindowCount:
-            candidatePublicRouteWindows.length,
-
-          htmlOwnsDiagnosticLifecycle:
-            false,
-
-          htmlOwnsRunControl:
-            false,
-
-          htmlOwnsCopyListeners:
-            false,
-
-          htmlOwnsPanelRendering:
-            false,
-
-          htmlRepublishesDiagnosticActiveGlobals:
-            false,
-
-          publicRouteInitializedByHtml:
-            false,
-
-          publicRouteInitializedByDiagnostic:
-            false,
-
-          packet002ConstructedByDiagnostic:
-            false,
-
-          admittedFrameConstructedByDiagnostic:
-            false,
-
-          compositorConstructedByDiagnostic:
-            false,
-
-          rendererConstructedByDiagnostic:
-            false,
-
-          rendererMountedByDiagnostic:
-            false,
-
-          rendererReleasedByDiagnostic:
-            false,
-
-          publicRouteMutation:
-            false,
-
-          rendererPassClaim:
-            false,
-
-          visualPassClaim:
-            false,
-
-          validationClaim:
-            false,
-
-          productionClaim:
-            false,
-
-          deploymentClaim:
-            false,
-
-          matrixCollapse:
-            false
-        });
-
-      globalThis[
-        HTML_ENTRY_RECEIPT_GLOBAL
-      ] = htmlEntryReceipt;
-    }
-
-    if (
-      document.readyState ===
-      'loading'
-    ) {
-      document.addEventListener(
-        'DOMContentLoaded',
-        bootHEarthDiagnosticEntry,
-        {
-          once:
-            true
-        }
-      );
-    } else {
-      bootHEarthDiagnosticEntry();
-    }
-  </script>
+  <script
+    type="module"
+    src="./index.js"
+  ></script>
 </body>
 </html>

@@ -2,25 +2,41 @@
  * /showroom/globe/h-earth/index.js
  * COMPLETE RENEWED FILE
  *
- * H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1
+ * H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034Q_BRANCH_SPECIFIC_DEPLOYED_MODULE_RESPONSE_DIAGNOSTICS_v1
  *
  * Renews:
- * H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034M_PUBLIC_STAGE_SCREEN_ON_SOURCE_PREVIEW_v1
+ * H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1
  *
  * Canonical route corridor:
  *
  * ROUTE MOUNT RESOLUTION
  * → TEMPORARY DESCRIPTOR-ONLY SOURCE PREVIEW
  * → PACKET 002 INPUT VALIDATION
- * → EXACT ./compositor.js IMPORT
+ * → BRANCH-SPECIFIC DEPLOYED MODULE RESPONSE PROBES
+ * → INDEPENDENT EXACT ./compositor.js IMPORT
+ * → INDEPENDENT EXACT ./renderer.js IMPORT
  * → EXACT COMPOSITOR CONTRACT VERIFICATION
- * → EXACT ./renderer.js IMPORT
  * → EXACT RENDERER CONTRACT VERIFICATION
  * → COMPOSITOR RENDERER HANDOFF REQUEST
  * → RENDERER CONSTRUCTION
  * → RENDERER MOUNT
  * → EXPLICIT SOURCE-PREVIEW TAKEOVER
  * → SYNCHRONIZED PUBLIC RECEIPTS AND ACTIVE GLOBALS
+ *
+ * Module-diagnostic law:
+ *
+ * COMPOSITOR AND RENDERER IMPORTS ARE OBSERVED INDEPENDENTLY.
+ *
+ * A compositor-branch failure must not be assigned to the renderer branch.
+ * A renderer-branch failure must not be assigned to the compositor branch.
+ *
+ * Canonical module paths are resolved against import.meta.url.
+ * Diagnostic fetch probes record bounded response evidence only.
+ * Response prefixes are limited to 240 plain-text characters.
+ * A root-branch rejection does not prove that the root file itself is defective.
+ * An exact transitive leaf is not claimed without direct evidence.
+ * Diagnostic probes grant no runtime, renderer-pass, visual-pass,
+ * validation, deployment, or production authority.
  *
  * Stale-occurrence law:
  *
@@ -29,7 +45,7 @@
  * A stale occurrence must not:
  * - mutate shared route state;
  * - mutate rendererBootstrapStatus;
- * - publish import, handoff, construction, or mount evidence;
+ * - publish diagnostic, import, handoff, construction, or mount evidence;
  * - replace active module references;
  * - release the current renderer;
  * - restore or replace current DOM;
@@ -49,10 +65,10 @@
  * ========================================================================== */
 
 export const H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID =
-  'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1';
+  'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034Q_BRANCH_SPECIFIC_DEPLOYED_MODULE_RESPONSE_DIAGNOSTICS_v1';
 
 export const H_EARTH_3D_INDEX_RENEWED_FROM_CONTRACT_ID =
-  'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034M_PUBLIC_STAGE_SCREEN_ON_SOURCE_PREVIEW_v1';
+  'H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034P_COMPOSITOR_RENDERER_ROUTE_ORCHESTRATION_v1';
 
 export const H_EARTH_3D_ROUTE_SHELL_CONTRACT_ID =
   'H_EARTH_3D_ROUTE_SHELL_FILE_RENEWAL_STEP_034C_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_PROJECTION_v1';
@@ -83,6 +99,9 @@ export const H_EARTH_3D_EXPECTED_COMPOSITOR_CONTRACT_ID =
 
 export const H_EARTH_3D_EXPECTED_RENDERER_CONTRACT_ID =
   'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1';
+
+export const H_EARTH_3D_MODULE_RESPONSE_PREFIX_LIMIT =
+  240;
 
 
 /* ==========================================================================
@@ -206,6 +225,36 @@ export const H_EARTH_3D_LAYER_4_STATUS =
       'LAYER_4_DESCRIPTOR_IMPORT_SKIPPED_STATIC_METADATA_RETAINED'
   });
 
+export const H_EARTH_3D_DEPLOYED_RESPONSE_CLASSIFICATION =
+  Object.freeze({
+    JAVASCRIPT_LIKE_RESPONSE:
+      'JAVASCRIPT_LIKE_RESPONSE',
+
+    JSON_LIKE_RESPONSE:
+      'JSON_LIKE_RESPONSE',
+
+    HTML_LIKE_RESPONSE:
+      'HTML_LIKE_RESPONSE',
+
+    EMPTY_RESPONSE:
+      'EMPTY_RESPONSE',
+
+    HTTP_ERROR_RESPONSE:
+      'HTTP_ERROR_RESPONSE',
+
+    REDIRECTED_RESPONSE:
+      'REDIRECTED_RESPONSE',
+
+    UNRECOGNIZED_TEXT_RESPONSE:
+      'UNRECOGNIZED_TEXT_RESPONSE',
+
+    FETCH_UNAVAILABLE:
+      'FETCH_UNAVAILABLE',
+
+    FETCH_FAILED:
+      'FETCH_FAILED'
+  });
+
 
 /* ==========================================================================
  * 03 · GENERIC HELPERS
@@ -220,7 +269,8 @@ function isPlainRecord(value) {
     value !== null &&
     typeof value === 'object' &&
     Array.isArray(value) === false &&
-    Object.getPrototypeOf(value) === Object.prototype
+    Object.getPrototypeOf(value) ===
+      Object.prototype
   );
 }
 
@@ -545,6 +595,56 @@ function normalizePreviewToken(
   );
 }
 
+function normalizeResponsePrefix(value) {
+  return String(
+    value ??
+    ''
+  )
+    .replace(
+      /\u0000/g,
+      ''
+    )
+    .slice(
+      0,
+      H_EARTH_3D_MODULE_RESPONSE_PREFIX_LIMIT
+    );
+}
+
+function getErrorEvidence(error) {
+  const stack =
+    error instanceof Error &&
+    typeof error.stack === 'string'
+      ? error.stack
+      : null;
+
+  return {
+    errorName:
+      error instanceof Error
+        ? error.name
+        : 'UnknownError',
+
+    errorMessage:
+      error instanceof Error
+        ? error.message
+        : String(error),
+
+    errorStack:
+      stack
+        ? stack.slice(
+            0,
+            1600
+          )
+        : null
+  };
+}
+
+function resolveModuleUrl(modulePath) {
+  return new URL(
+    modulePath,
+    import.meta.url
+  ).href;
+}
+
 
 /* ==========================================================================
  * 04 · EXECUTION CEILING AND BOUNDARY FLAGS
@@ -562,6 +662,12 @@ export const H_EARTH_3D_PUBLIC_STAGE_EXECUTION_CEILING =
       true,
 
     rendererMountAttemptedMayBecomeTrue:
+      true,
+
+    moduleResponseFetchProbesMayBecomeTrue:
+      true,
+
+    branchSpecificModuleImportDiagnosticsMayBecomeTrue:
       true,
 
     sourcePreviewMounted:
@@ -667,6 +773,21 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS =
       true,
 
     rendererReleaseAuthorized:
+      true,
+
+    branchSpecificModuleImportDiagnosticsAuthorized:
+      true,
+
+    deployedResponseFetchProbeAuthorized:
+      true,
+
+    criticalDependencyFetchMatrixAuthorized:
+      true,
+
+    diagnosticResponsePrefixBounded:
+      true,
+
+    exactTransitiveFailureClaimRequiresDirectEvidence:
       true,
 
     selectedSurfaceDisplayAuthorized:
@@ -1034,7 +1155,23 @@ export const H_EARTH_3D_SOURCE_SPINE_ARCHIVE_CUSTODY =
 
 
 /* ==========================================================================
- * 06 · PUBLIC MOUNT IDENTITIES
+ * 06 · CRITICAL MODULE DIAGNOSTIC PATHS
+ * ========================================================================== */
+
+export const H_EARTH_3D_CRITICAL_MODULE_DIAGNOSTIC_PATHS =
+  deepFreeze([
+    './compositor.js',
+    './renderer.js',
+    './admitted-geometry-frame.js',
+    './capacity.js',
+    './render/geometry-preview.js',
+    './render/geometry-kernel.js',
+    '../../../h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js'
+  ]);
+
+
+/* ==========================================================================
+ * 07 · PUBLIC MOUNT IDENTITIES
  * ========================================================================== */
 
 export const H_EARTH_3D_PUBLIC_MOUNT_IDS =
@@ -1120,7 +1257,7 @@ export const H_EARTH_3D_PUBLIC_MOUNT_IDS =
 
 
 /* ==========================================================================
- * 07 · SOURCE-PREVIEW DESCRIPTORS
+ * 08 · SOURCE-PREVIEW DESCRIPTORS
  * ========================================================================== */
 
 export const H_EARTH_3D_PUBLIC_SOURCE_PREVIEW_BANDS =
@@ -2021,13 +2158,13 @@ export const H_EARTH_3D_PUBLIC_TARGETS =
 
 
 /* ==========================================================================
- * 08 · SOURCE-PREVIEW MODEL
+ * 09 · SOURCE-PREVIEW MODEL
  * ========================================================================== */
 
 export const H_EARTH_3D_PUBLIC_SOURCE_PREVIEW_MODEL =
   deepFreeze({
     previewId:
-      'H_EARTH_3D_PUBLIC_STAGE_TEMPORARY_SOURCE_PREVIEW_STEP_034P',
+      'H_EARTH_3D_PUBLIC_STAGE_TEMPORARY_SOURCE_PREVIEW_STEP_034Q',
 
     file:
       H_EARTH_3D_PUBLIC_ROUTE_FILE,
@@ -2137,7 +2274,7 @@ export const H_EARTH_3D_PUBLIC_SOURCE_PREVIEW_MODEL =
 
 
 /* ==========================================================================
- * 09 · INTERNAL STATE
+ * 10 · INTERNAL STATE
  * ========================================================================== */
 
 const MODULE_STATE = {
@@ -2186,6 +2323,9 @@ const MODULE_STATE = {
   compositorImportReceipt:
     null,
 
+  compositorResponseProbeReceipt:
+    null,
+
   compositorHandoff:
     null,
 
@@ -2198,6 +2338,9 @@ const MODULE_STATE = {
   rendererImportReceipt:
     null,
 
+  rendererResponseProbeReceipt:
+    null,
+
   rendererConstructReceipt:
     null,
 
@@ -2205,6 +2348,12 @@ const MODULE_STATE = {
     null,
 
   rendererReleaseReceipt:
+    null,
+
+  criticalModuleDiagnosticReceipts:
+    null,
+
+  moduleImportDiagnosticReceipt:
     null,
 
   rendererBootstrapStatus:
@@ -2234,7 +2383,7 @@ const MODULE_STATE = {
 
 
 /* ==========================================================================
- * 10 · INITIALIZATION IDENTITY AND OCCURRENCE RESET
+ * 11 · INITIALIZATION IDENTITY AND OCCURRENCE RESET
  * ========================================================================== */
 
 function createInitializationToken(sequence) {
@@ -2341,6 +2490,9 @@ function resetCurrentOccurrenceEvidence() {
   MODULE_STATE.compositorImportReceipt =
     null;
 
+  MODULE_STATE.compositorResponseProbeReceipt =
+    null;
+
   MODULE_STATE.compositorHandoff =
     null;
 
@@ -2353,6 +2505,9 @@ function resetCurrentOccurrenceEvidence() {
   MODULE_STATE.rendererImportReceipt =
     null;
 
+  MODULE_STATE.rendererResponseProbeReceipt =
+    null;
+
   MODULE_STATE.rendererConstructReceipt =
     null;
 
@@ -2360,6 +2515,12 @@ function resetCurrentOccurrenceEvidence() {
     null;
 
   MODULE_STATE.rendererReleaseReceipt =
+    null;
+
+  MODULE_STATE.criticalModuleDiagnosticReceipts =
+    null;
+
+  MODULE_STATE.moduleImportDiagnosticReceipt =
     null;
 
   MODULE_STATE.rendererBootstrapStatus =
@@ -2430,6 +2591,18 @@ function resetRoutePresentationState(
       'false';
   }
 
+  delete routeRoot.dataset
+    .hEarthFailedModuleBranches;
+
+  delete routeRoot.dataset
+    .hEarthCompositorImportSucceeded;
+
+  delete routeRoot.dataset
+    .hEarthRendererImportSucceeded;
+
+  delete routeRoot.dataset
+    .hEarthExactFailedTransitiveUrlObserved;
+
   return true;
 }
 
@@ -2442,7 +2615,8 @@ function clearPublishedActiveGlobals() {
     'H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT',
     'H_EARTH_3D_LAYER_4_STATUS_PROJECTION',
     'H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT',
-    'H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE'
+    'H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE',
+    'H_EARTH_3D_MODULE_IMPORT_DIAGNOSTIC_RECEIPT'
   ];
 
   for (const key of keys) {
@@ -2457,7 +2631,1092 @@ function clearPublishedActiveGlobals() {
 
 
 /* ==========================================================================
- * 11 · MOUNT RESOLUTION
+ * 12 · DEPLOYED MODULE RESPONSE DIAGNOSTICS
+ * ========================================================================== */
+
+function classifyDeployedModuleResponse({
+  fetchAvailable,
+  fetchSucceeded,
+  httpStatus,
+  responseOk,
+  redirected,
+  contentType,
+  responsePrefix
+}) {
+  const classifications =
+    H_EARTH_3D_DEPLOYED_RESPONSE_CLASSIFICATION;
+
+  if (fetchAvailable !== true) {
+    return classifications
+      .FETCH_UNAVAILABLE;
+  }
+
+  if (fetchSucceeded !== true) {
+    return classifications
+      .FETCH_FAILED;
+  }
+
+  const normalizedType =
+    String(
+      contentType ??
+      ''
+    )
+      .toLowerCase();
+
+  const trimmedPrefix =
+    String(
+      responsePrefix ??
+      ''
+    )
+      .trimStart();
+
+  const firstSignificantCharacter =
+    trimmedPrefix.charAt(0);
+
+  if (
+    Number.isFinite(httpStatus) &&
+    (
+      httpStatus < 200 ||
+      httpStatus >= 400 ||
+      responseOk === false
+    )
+  ) {
+    return classifications
+      .HTTP_ERROR_RESPONSE;
+  }
+
+  if (redirected === true) {
+    return classifications
+      .REDIRECTED_RESPONSE;
+  }
+
+  if (trimmedPrefix.length === 0) {
+    return classifications
+      .EMPTY_RESPONSE;
+  }
+
+  if (
+    normalizedType.includes(
+      'text/html'
+    ) ||
+    normalizedType.includes(
+      'application/xhtml'
+    ) ||
+    firstSignificantCharacter === '<' ||
+    /^<!doctype\s+html/i.test(
+      trimmedPrefix
+    ) ||
+    /^<html[\s>]/i.test(
+      trimmedPrefix
+    )
+  ) {
+    return classifications
+      .HTML_LIKE_RESPONSE;
+  }
+
+  if (
+    normalizedType.includes(
+      'application/json'
+    ) ||
+    normalizedType.includes(
+      '+json'
+    ) ||
+    firstSignificantCharacter === '{' ||
+    firstSignificantCharacter === '['
+  ) {
+    return classifications
+      .JSON_LIKE_RESPONSE;
+  }
+
+  const javascriptMime =
+    normalizedType.includes(
+      'javascript'
+    ) ||
+    normalizedType.includes(
+      'ecmascript'
+    ) ||
+    normalizedType.includes(
+      'module'
+    );
+
+  const javascriptPrefix =
+    /^(?:\/\*|\/\/|import\s|export\s|const\s|let\s|var\s|function\s|class\s|async\s+function\s|async\s*\(|\(\s*async\s*\(|['"]use strict['"])/.test(
+      trimmedPrefix
+    );
+
+  if (
+    javascriptMime ||
+    javascriptPrefix
+  ) {
+    return classifications
+      .JAVASCRIPT_LIKE_RESPONSE;
+  }
+
+  return classifications
+    .UNRECOGNIZED_TEXT_RESPONSE;
+}
+
+export async function probeDeployedModuleResponse(
+  modulePath,
+  options = {}
+) {
+  const requestedPath =
+    String(
+      modulePath ??
+      ''
+    );
+
+  let resolvedUrl = null;
+
+  try {
+    resolvedUrl =
+      resolveModuleUrl(
+        requestedPath
+      );
+  } catch (error) {
+    const errorEvidence =
+      getErrorEvidence(error);
+
+    return deepFreeze({
+      receiptType:
+        'H_EARTH_3D_DEPLOYED_MODULE_RESPONSE_PROBE_RECEIPT',
+
+      file:
+        H_EARTH_3D_PUBLIC_ROUTE_FILE,
+
+      contractId:
+        H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+
+      requestedPath,
+
+      resolvedUrl:
+        null,
+
+      finalResponseUrl:
+        null,
+
+      fetchAvailable:
+        typeof globalThis.fetch ===
+        'function',
+
+      fetchAttempted:
+        false,
+
+      fetchSucceeded:
+        false,
+
+      httpStatus:
+        null,
+
+      responseOk:
+        false,
+
+      redirected:
+        false,
+
+      contentType:
+        null,
+
+      responsePrefix:
+        '',
+
+      responsePrefixLimit:
+        H_EARTH_3D_MODULE_RESPONSE_PREFIX_LIMIT,
+
+      responseClassification:
+        H_EARTH_3D_DEPLOYED_RESPONSE_CLASSIFICATION
+          .FETCH_FAILED,
+
+      ...errorEvidence,
+
+      generatedAt:
+        nowIso(),
+
+      rendererPassClaim:
+        false,
+
+      visualPassClaim:
+        false,
+
+      validationClaim:
+        false,
+
+      productionClaim:
+        false,
+
+      matrixCollapse:
+        false
+    });
+  }
+
+  const fetchAvailable =
+    typeof globalThis.fetch ===
+    'function';
+
+  if (!fetchAvailable) {
+    return deepFreeze({
+      receiptType:
+        'H_EARTH_3D_DEPLOYED_MODULE_RESPONSE_PROBE_RECEIPT',
+
+      file:
+        H_EARTH_3D_PUBLIC_ROUTE_FILE,
+
+      contractId:
+        H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+
+      requestedPath,
+
+      resolvedUrl,
+
+      finalResponseUrl:
+        null,
+
+      fetchAvailable:
+        false,
+
+      fetchAttempted:
+        false,
+
+      fetchSucceeded:
+        false,
+
+      httpStatus:
+        null,
+
+      responseOk:
+        false,
+
+      redirected:
+        false,
+
+      contentType:
+        null,
+
+      responsePrefix:
+        '',
+
+      responsePrefixLimit:
+        H_EARTH_3D_MODULE_RESPONSE_PREFIX_LIMIT,
+
+      responseClassification:
+        H_EARTH_3D_DEPLOYED_RESPONSE_CLASSIFICATION
+          .FETCH_UNAVAILABLE,
+
+      errorName:
+        null,
+
+      errorMessage:
+        null,
+
+      errorStack:
+        null,
+
+      generatedAt:
+        nowIso(),
+
+      rendererPassClaim:
+        false,
+
+      visualPassClaim:
+        false,
+
+      validationClaim:
+        false,
+
+      productionClaim:
+        false,
+
+      matrixCollapse:
+        false
+    });
+  }
+
+  try {
+    const response =
+      await globalThis.fetch(
+        resolvedUrl,
+        {
+          cache:
+            'no-store',
+
+          credentials:
+            'same-origin',
+
+          redirect:
+            'follow',
+
+          signal:
+            options.signal
+        }
+      );
+
+    const responseText =
+      await response.text();
+
+    const responsePrefix =
+      normalizeResponsePrefix(
+        responseText
+      );
+
+    const contentType =
+      response.headers.get(
+        'content-type'
+      );
+
+    const classificationInput = {
+      fetchAvailable:
+        true,
+
+      fetchSucceeded:
+        true,
+
+      httpStatus:
+        response.status,
+
+      responseOk:
+        response.ok,
+
+      redirected:
+        response.redirected,
+
+      contentType,
+
+      responsePrefix
+    };
+
+    return deepFreeze({
+      receiptType:
+        'H_EARTH_3D_DEPLOYED_MODULE_RESPONSE_PROBE_RECEIPT',
+
+      file:
+        H_EARTH_3D_PUBLIC_ROUTE_FILE,
+
+      contractId:
+        H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+
+      requestedPath,
+
+      resolvedUrl,
+
+      finalResponseUrl:
+        response.url ||
+        resolvedUrl,
+
+      fetchAvailable:
+        true,
+
+      fetchAttempted:
+        true,
+
+      fetchSucceeded:
+        true,
+
+      httpStatus:
+        response.status,
+
+      responseOk:
+        response.ok,
+
+      redirected:
+        response.redirected,
+
+      contentType,
+
+      responsePrefix,
+
+      responsePrefixLimit:
+        H_EARTH_3D_MODULE_RESPONSE_PREFIX_LIMIT,
+
+      firstSignificantCharacter:
+        responsePrefix
+          .trimStart()
+          .charAt(0) ||
+        null,
+
+      responseClassification:
+        classifyDeployedModuleResponse(
+          classificationInput
+        ),
+
+      errorName:
+        null,
+
+      errorMessage:
+        null,
+
+      errorStack:
+        null,
+
+      generatedAt:
+        nowIso(),
+
+      completeResponseBodyStored:
+        false,
+
+      credentialsExposed:
+        false,
+
+      authorizationHeadersExposed:
+        false,
+
+      cookiesExposed:
+        false,
+
+      browserStorageInspected:
+        false,
+
+      rendererPassClaim:
+        false,
+
+      visualPassClaim:
+        false,
+
+      validationClaim:
+        false,
+
+      productionClaim:
+        false,
+
+      matrixCollapse:
+        false
+    });
+  } catch (error) {
+    const errorEvidence =
+      getErrorEvidence(error);
+
+    return deepFreeze({
+      receiptType:
+        'H_EARTH_3D_DEPLOYED_MODULE_RESPONSE_PROBE_RECEIPT',
+
+      file:
+        H_EARTH_3D_PUBLIC_ROUTE_FILE,
+
+      contractId:
+        H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+
+      requestedPath,
+
+      resolvedUrl,
+
+      finalResponseUrl:
+        null,
+
+      fetchAvailable:
+        true,
+
+      fetchAttempted:
+        true,
+
+      fetchSucceeded:
+        false,
+
+      httpStatus:
+        null,
+
+      responseOk:
+        false,
+
+      redirected:
+        false,
+
+      contentType:
+        null,
+
+      responsePrefix:
+        '',
+
+      responsePrefixLimit:
+        H_EARTH_3D_MODULE_RESPONSE_PREFIX_LIMIT,
+
+      responseClassification:
+        H_EARTH_3D_DEPLOYED_RESPONSE_CLASSIFICATION
+          .FETCH_FAILED,
+
+      ...errorEvidence,
+
+      generatedAt:
+        nowIso(),
+
+      completeResponseBodyStored:
+        false,
+
+      credentialsExposed:
+        false,
+
+      authorizationHeadersExposed:
+        false,
+
+      cookiesExposed:
+        false,
+
+      browserStorageInspected:
+        false,
+
+      rendererPassClaim:
+        false,
+
+      visualPassClaim:
+        false,
+
+      validationClaim:
+        false,
+
+      productionClaim:
+        false,
+
+      matrixCollapse:
+        false
+    });
+  }
+}
+
+function observeExactTransitiveUrl(
+  errorStack,
+  rootResolvedUrl
+) {
+  if (
+    !isNonEmptyExactString(
+      errorStack
+    )
+  ) {
+    return deepFreeze({
+      exactFailedTransitiveUrlObserved:
+        false,
+
+      exactFailedTransitiveUrl:
+        null
+    });
+  }
+
+  const urlMatches =
+    errorStack.match(
+      /https?:\/\/[^\s)]+/g
+    ) ??
+    [];
+
+  const cleanedMatches =
+    urlMatches
+      .map(
+        (value) =>
+          value.replace(
+            /[),;]+$/,
+            ''
+          )
+      )
+      .filter(
+        (value) =>
+          isNonEmptyExactString(
+            value
+          )
+      );
+
+  const exactFailedTransitiveUrl =
+    cleanedMatches.find(
+      (value) =>
+        value !==
+        rootResolvedUrl
+    ) ??
+    null;
+
+  return deepFreeze({
+    exactFailedTransitiveUrlObserved:
+      exactFailedTransitiveUrl !==
+      null,
+
+    exactFailedTransitiveUrl
+  });
+}
+
+async function importDeployedModuleBranch(
+  modulePath,
+  branchId
+) {
+  const requestedPath =
+    String(
+      modulePath
+    );
+
+  const resolvedUrl =
+    resolveModuleUrl(
+      requestedPath
+    );
+
+  const responseProbeReceipt =
+    await probeDeployedModuleResponse(
+      requestedPath
+    );
+
+  try {
+    const module =
+      await import(
+        resolvedUrl
+      );
+
+    const diagnosticReceipt =
+      deepFreeze({
+        receiptType:
+          'H_EARTH_3D_DEPLOYED_MODULE_BRANCH_IMPORT_RECEIPT',
+
+        file:
+          H_EARTH_3D_PUBLIC_ROUTE_FILE,
+
+        contractId:
+          H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+
+        branchId,
+
+        requestedPath,
+
+        resolvedUrl,
+
+        finalResponseUrl:
+          responseProbeReceipt
+            .finalResponseUrl,
+
+        fetchAttempted:
+          responseProbeReceipt
+            .fetchAttempted,
+
+        fetchSucceeded:
+          responseProbeReceipt
+            .fetchSucceeded,
+
+        httpStatus:
+          responseProbeReceipt
+            .httpStatus,
+
+        responseOk:
+          responseProbeReceipt
+            .responseOk,
+
+        redirected:
+          responseProbeReceipt
+            .redirected,
+
+        contentType:
+          responseProbeReceipt
+            .contentType,
+
+        responsePrefix:
+          responseProbeReceipt
+            .responsePrefix,
+
+        responseClassification:
+          responseProbeReceipt
+            .responseClassification,
+
+        importAttempted:
+          true,
+
+        importStatus:
+          'FULFILLED',
+
+        importSucceeded:
+          true,
+
+        fulfilled:
+          true,
+
+        errorName:
+          null,
+
+        errorMessage:
+          null,
+
+        errorStack:
+          null,
+
+        moduleExportKeys:
+          Object.keys(
+            module ??
+            {}
+          ),
+
+        failedRootBranch:
+          null,
+
+        rootBranchFailureIdentified:
+          false,
+
+        exactFailedTransitiveUrlObserved:
+          false,
+
+        exactFailedTransitiveUrl:
+          null,
+
+        generatedAt:
+          nowIso(),
+
+        rendererPassClaim:
+          false,
+
+        visualPassClaim:
+          false,
+
+        validationClaim:
+          false,
+
+        productionClaim:
+          false,
+
+        matrixCollapse:
+          false
+      });
+
+    return {
+      branchId,
+
+      modulePath:
+        requestedPath,
+
+      resolvedUrl,
+
+      fulfilled:
+        true,
+
+      module,
+
+      responseProbeReceipt,
+
+      diagnosticReceipt
+    };
+  } catch (error) {
+    const errorEvidence =
+      getErrorEvidence(error);
+
+    const transitiveEvidence =
+      observeExactTransitiveUrl(
+        errorEvidence.errorStack,
+        resolvedUrl
+      );
+
+    const diagnosticReceipt =
+      deepFreeze({
+        receiptType:
+          'H_EARTH_3D_DEPLOYED_MODULE_BRANCH_IMPORT_RECEIPT',
+
+        file:
+          H_EARTH_3D_PUBLIC_ROUTE_FILE,
+
+        contractId:
+          H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+
+        branchId,
+
+        requestedPath,
+
+        resolvedUrl,
+
+        finalResponseUrl:
+          responseProbeReceipt
+            .finalResponseUrl,
+
+        fetchAttempted:
+          responseProbeReceipt
+            .fetchAttempted,
+
+        fetchSucceeded:
+          responseProbeReceipt
+            .fetchSucceeded,
+
+        httpStatus:
+          responseProbeReceipt
+            .httpStatus,
+
+        responseOk:
+          responseProbeReceipt
+            .responseOk,
+
+        redirected:
+          responseProbeReceipt
+            .redirected,
+
+        contentType:
+          responseProbeReceipt
+            .contentType,
+
+        responsePrefix:
+          responseProbeReceipt
+            .responsePrefix,
+
+        responseClassification:
+          responseProbeReceipt
+            .responseClassification,
+
+        importAttempted:
+          true,
+
+        importStatus:
+          'REJECTED',
+
+        importSucceeded:
+          false,
+
+        fulfilled:
+          false,
+
+        ...errorEvidence,
+
+        moduleExportKeys:
+          deepFreeze([]),
+
+        failedRootBranch:
+          branchId,
+
+        rootBranchFailureIdentified:
+          true,
+
+        exactFailedTransitiveUrlObserved:
+          transitiveEvidence
+            .exactFailedTransitiveUrlObserved,
+
+        exactFailedTransitiveUrl:
+          transitiveEvidence
+            .exactFailedTransitiveUrl,
+
+        generatedAt:
+          nowIso(),
+
+        rendererPassClaim:
+          false,
+
+        visualPassClaim:
+          false,
+
+        validationClaim:
+          false,
+
+        productionClaim:
+          false,
+
+        matrixCollapse:
+          false
+      });
+
+    return {
+      branchId,
+
+      modulePath:
+        requestedPath,
+
+      resolvedUrl,
+
+      fulfilled:
+        false,
+
+      module:
+        null,
+
+      responseProbeReceipt,
+
+      diagnosticReceipt
+    };
+  }
+}
+
+async function buildCriticalModuleDiagnosticReceipts() {
+  const receipts =
+    await Promise.all(
+      H_EARTH_3D_CRITICAL_MODULE_DIAGNOSTIC_PATHS
+        .map(
+          (modulePath) =>
+            probeDeployedModuleResponse(
+              modulePath
+            )
+        )
+    );
+
+  return deepFreeze([
+    ...receipts
+  ]);
+}
+
+function buildModuleImportDiagnosticReceipt({
+  compositorImportReceipt =
+    MODULE_STATE
+      .compositorImportReceipt,
+
+  rendererImportReceipt =
+    MODULE_STATE
+      .rendererImportReceipt,
+
+  criticalModuleDiagnosticReceipts =
+    MODULE_STATE
+      .criticalModuleDiagnosticReceipts
+} = {}) {
+  const failedBranches = [];
+
+  if (
+    compositorImportReceipt
+      ?.importSucceeded ===
+    false
+  ) {
+    failedBranches.push(
+      'COMPOSITOR'
+    );
+  }
+
+  if (
+    rendererImportReceipt
+      ?.importSucceeded ===
+    false
+  ) {
+    failedBranches.push(
+      'RENDERER'
+    );
+  }
+
+  const transitiveCandidates = [
+    compositorImportReceipt,
+    rendererImportReceipt
+  ]
+    .filter(Boolean)
+    .filter(
+      (receipt) =>
+        receipt
+          .exactFailedTransitiveUrlObserved ===
+        true &&
+        isNonEmptyExactString(
+          receipt
+            .exactFailedTransitiveUrl
+        )
+    );
+
+  const exactFailedTransitiveUrl =
+    transitiveCandidates.length ===
+    1
+      ? transitiveCandidates[0]
+          .exactFailedTransitiveUrl
+      : null;
+
+  const exactFailedTransitiveUrlObserved =
+    exactFailedTransitiveUrl !==
+    null;
+
+  const rootBranchFailureIdentified =
+    failedBranches.length >
+    0;
+
+  return deepFreeze({
+    receiptType:
+      'H_EARTH_3D_MODULE_IMPORT_DIAGNOSTIC_RECEIPT',
+
+    file:
+      H_EARTH_3D_PUBLIC_ROUTE_FILE,
+
+    contractId:
+      H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID,
+
+    generatedAt:
+      nowIso(),
+
+    compositorImportReceipt,
+
+    rendererImportReceipt,
+
+    criticalModuleDiagnosticReceipts:
+      criticalModuleDiagnosticReceipts ??
+      deepFreeze([]),
+
+    compositorImportSucceeded:
+      compositorImportReceipt
+        ?.importSucceeded ===
+      true,
+
+    rendererImportSucceeded:
+      rendererImportReceipt
+        ?.importSucceeded ===
+      true,
+
+    failedBranches:
+      deepFreeze([
+        ...failedBranches
+      ]),
+
+    failedRootBranch:
+      failedBranches.length ===
+      1
+        ? failedBranches[0]
+        : failedBranches.length >
+            1
+          ? 'MULTIPLE'
+          : null,
+
+    rootBranchFailureIdentified,
+
+    exactFailedTransitiveUrlObserved,
+
+    exactFailedTransitiveUrl,
+
+    resolvedModuleUrls:
+      deepFreeze({
+        compositor:
+          compositorImportReceipt
+            ?.resolvedUrl ??
+          null,
+
+        renderer:
+          rendererImportReceipt
+            ?.resolvedUrl ??
+          null
+      }),
+
+    aggregateImportDisposition:
+      failedBranches.length ===
+      0 &&
+      compositorImportReceipt
+        ?.importSucceeded ===
+      true &&
+      rendererImportReceipt
+        ?.importSucceeded ===
+      true
+        ? 'BOTH_ROOT_IMPORTS_FULFILLED'
+        : failedBranches.length ===
+            1
+          ? `${failedBranches[0]}_ROOT_IMPORT_REJECTED`
+          : failedBranches.length >
+              1
+            ? 'BOTH_ROOT_IMPORTS_REJECTED'
+            : 'IMPORT_DIAGNOSTIC_INCOMPLETE',
+
+    rootBranchFailureDoesNotProveRootSourceDefect:
+      true,
+
+    transitiveLeafIdentityInferred:
+      false,
+
+    exactTransitiveFailureClaimRequiresDirectEvidence:
+      true,
+
+    productionExecutionFailClosed:
+      true,
+
+    diagnosticProbesGrantRuntimeAuthority:
+      false,
+
+    rendererPassClaim:
+      false,
+
+    visualPassClaim:
+      false,
+
+    validationClaim:
+      false,
+
+    productionClaim:
+      false,
+
+    matrixCollapse:
+      false,
+
+    boundary:
+      H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
+  });
+}
+
+
+/* ==========================================================================
+ * 13 · MOUNT RESOLUTION
  * ========================================================================== */
 
 function resolveMountPoints(
@@ -2675,7 +3934,7 @@ function resolveMountPoints(
 
 
 /* ==========================================================================
- * 12 · TARGET READOUT
+ * 14 · TARGET READOUT
  * ========================================================================== */
 
 function getTarget(targetId) {
@@ -2855,7 +4114,7 @@ function renderSelectedTarget(
 
 
 /* ==========================================================================
- * 13 · ROUTE-OWNED EVENT LISTENERS
+ * 15 · ROUTE-OWNED EVENT LISTENERS
  * ========================================================================== */
 
 function getListenerOptions() {
@@ -3004,7 +4263,7 @@ function renderTargetList(
 
 
 /* ==========================================================================
- * 14 · SOURCE-PREVIEW DOM
+ * 16 · SOURCE-PREVIEW DOM
  * ========================================================================== */
 
 function clearSourcePreviewOwnedNodes(
@@ -3836,7 +5095,7 @@ function markSourcePreviewTakenOver() {
 
 
 /* ==========================================================================
- * 15 · LAYER 4 PROJECTION
+ * 17 · LAYER 4 PROJECTION
  * ========================================================================== */
 
 function buildStaticLayer4Projection(
@@ -4287,7 +5546,7 @@ function renderLayer4Projection(
 
 
 /* ==========================================================================
- * 16 · RENDERER BOOTSTRAP INPUT
+ * 18 · RENDERER BOOTSTRAP INPUT
  * ========================================================================== */
 
 function evaluateRendererBootstrapInput(
@@ -4378,7 +5637,7 @@ function evaluateRendererBootstrapInput(
 
 
 /* ==========================================================================
- * 17 · EXACT MODULE AUTHORITY
+ * 19 · EXACT MODULE AUTHORITY
  * ========================================================================== */
 
 function evaluateCompositorModule(
@@ -4519,7 +5778,7 @@ function evaluateRendererModule(
 
 
 /* ==========================================================================
- * 18 · RENDERER CLEANUP
+ * 20 · RENDERER CLEANUP
  * ========================================================================== */
 
 function releaseRendererSafely({
@@ -4628,7 +5887,7 @@ function releaseRendererSafely({
 
 
 /* ==========================================================================
- * 19 · STRICT RENDERER BOOTSTRAP
+ * 21 · STRICT RENDERER BOOTSTRAP
  * ========================================================================== */
 
 function createStaleRendererBootstrapReceipt({
@@ -4659,6 +5918,9 @@ function createStaleRendererBootstrapReceipt({
       false,
 
     rendererBootstrapStatusMutated:
+      false,
+
+    activeDiagnosticEvidenceMutated:
       false,
 
     activeImportEvidenceMutated:
@@ -4749,6 +6011,9 @@ async function bootstrapRenderer(
 
       inputEvaluation,
 
+      moduleImportDiagnosticReceipt:
+        null,
+
       sourcePreviewRetained:
         sourcePreviewExists(
           mountPoints.rendererMount
@@ -4794,6 +6059,9 @@ async function bootstrapRenderer(
 
       inputEvaluation,
 
+      moduleImportDiagnosticReceipt:
+        null,
+
       sourcePreviewRetained:
         sourcePreviewExists(
           mountPoints.rendererMount
@@ -4817,34 +6085,85 @@ async function bootstrapRenderer(
     H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
       .IMPORT_PENDING;
 
-  let compositorModule;
-  let rendererModule;
-
-  try {
-    [
-      compositorModule,
-      rendererModule
-    ] = await Promise.all([
-      import(
-        H_EARTH_3D_COMPOSITOR_MODULE_PATH
+  const [
+    compositorImportResult,
+    rendererImportResult,
+    criticalModuleDiagnosticReceipts
+  ] =
+    await Promise.all([
+      importDeployedModuleBranch(
+        H_EARTH_3D_COMPOSITOR_MODULE_PATH,
+        'COMPOSITOR'
       ),
 
-      import(
-        H_EARTH_3D_RENDERER_MODULE_PATH
-      )
-    ]);
-  } catch (error) {
-    if (
-      !isActiveInitializationToken(
-        token
-      )
-    ) {
-      return createStaleRendererBootstrapReceipt({
-        phase:
-          'IMPORT_REJECTION'
-      });
-    }
+      importDeployedModuleBranch(
+        H_EARTH_3D_RENDERER_MODULE_PATH,
+        'RENDERER'
+      ),
 
+      buildCriticalModuleDiagnosticReceipts()
+    ]);
+
+  if (
+    !isActiveInitializationToken(
+      token
+    )
+  ) {
+    return createStaleRendererBootstrapReceipt({
+      phase:
+        'BRANCH_IMPORT_AND_PROBE_RESOLUTION'
+    });
+  }
+
+  const compositorImportReceipt =
+    compositorImportResult
+      .diagnosticReceipt;
+
+  const rendererImportReceipt =
+    rendererImportResult
+      .diagnosticReceipt;
+
+  const moduleImportDiagnosticReceipt =
+    buildModuleImportDiagnosticReceipt({
+      compositorImportReceipt,
+      rendererImportReceipt,
+      criticalModuleDiagnosticReceipts
+    });
+
+  MODULE_STATE.compositorResponseProbeReceipt =
+    compositorImportResult
+      .responseProbeReceipt;
+
+  MODULE_STATE.rendererResponseProbeReceipt =
+    rendererImportResult
+      .responseProbeReceipt;
+
+  MODULE_STATE.compositorImportReceipt =
+    compositorImportReceipt;
+
+  MODULE_STATE.rendererImportReceipt =
+    rendererImportReceipt;
+
+  MODULE_STATE.criticalModuleDiagnosticReceipts =
+    criticalModuleDiagnosticReceipts;
+
+  MODULE_STATE.moduleImportDiagnosticReceipt =
+    moduleImportDiagnosticReceipt;
+
+  const compositorImportSucceeded =
+    compositorImportResult
+      .fulfilled ===
+    true;
+
+  const rendererImportSucceeded =
+    rendererImportResult
+      .fulfilled ===
+    true;
+
+  if (
+    !compositorImportSucceeded ||
+    !rendererImportSucceeded
+  ) {
     const primaryStatus =
       H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
         .IMPORT_FAILED;
@@ -4852,65 +6171,134 @@ async function bootstrapRenderer(
     MODULE_STATE.rendererBootstrapStatus =
       primaryStatus;
 
-    const receipt =
-      deepFreeze({
-        receiptType:
-          'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
+    updateRouteRootExecutionDataset(
+      mountPoints
+    );
 
-        completed:
-          true,
+    const failedBranches =
+      moduleImportDiagnosticReceipt
+        .failedBranches;
 
-        mounted:
-          false,
+    const visibleFailedBranch =
+      failedBranches.length >
+      0
+        ? failedBranches.join(
+            ', '
+          )
+        : 'UNRESOLVED';
 
-        status:
-          primaryStatus,
+    const failedReceipt =
+      failedBranches.length ===
+      1 &&
+      failedBranches[0] ===
+      'COMPOSITOR'
+        ? compositorImportReceipt
+        : failedBranches.length ===
+              1 &&
+            failedBranches[0] ===
+              'RENDERER'
+          ? rendererImportReceipt
+          : null;
 
-        compositorModulePath:
-          H_EARTH_3D_COMPOSITOR_MODULE_PATH,
+    writeText(
+      mountPoints.statusNode,
+      'PUBLIC_STAGE_MODULE_IMPORT_FAILED'
+    );
 
-        rendererModulePath:
-          H_EARTH_3D_RENDERER_MODULE_PATH,
+    writeText(
+      mountPoints.fallbackNode,
+      [
+        `Failed branch: ${visibleFailedBranch}.`,
+        `Requested path: ${failedReceipt?.requestedPath ?? 'multiple or unresolved'}.`,
+        `Resolved URL: ${failedReceipt?.resolvedUrl ?? 'multiple or unresolved'}.`,
+        `HTTP status: ${failedReceipt?.httpStatus ?? 'unavailable'}.`,
+        `Content-Type: ${failedReceipt?.contentType ?? 'unavailable'}.`,
+        `Response classification: ${failedReceipt?.responseClassification ?? 'multiple or unresolved'}.`,
+        `Response prefix: ${failedReceipt?.responsePrefix || '[empty]'}.`,
+        `Error: ${failedReceipt?.errorName ?? 'UnknownError'}: ${failedReceipt?.errorMessage ?? 'No single branch error available'}.`
+      ].join(
+        ' '
+      )
+    );
 
-        productionModulePathOverridesAccepted:
-          false,
+    return deepFreeze({
+      receiptType:
+        'H_EARTH_3D_ROUTE_RENDERER_BOOTSTRAP_RECEIPT',
 
-        errorName:
-          error instanceof Error
-            ? error.name
-            : 'UnknownError',
+      completed:
+        true,
 
-        errorMessage:
-          error instanceof Error
-            ? error.message
-            : String(error),
+      mounted:
+        false,
 
-        sourcePreviewRetained:
-          sourcePreviewExists(
-            mountPoints.rendererMount
-          ),
+      status:
+        primaryStatus,
 
-        rendererPassClaim:
-          false,
+      compositorModulePath:
+        H_EARTH_3D_COMPOSITOR_MODULE_PATH,
 
-        visualPassClaim:
-          false,
+      rendererModulePath:
+        H_EARTH_3D_RENDERER_MODULE_PATH,
 
-        validationClaim:
-          false,
+      resolvedModuleUrls:
+        moduleImportDiagnosticReceipt
+          .resolvedModuleUrls,
 
-        productionClaim:
-          false
-      });
+      productionModulePathOverridesAccepted:
+        false,
 
-    MODULE_STATE.compositorImportReceipt =
-      receipt;
+      compositorImportSucceeded,
 
-    MODULE_STATE.rendererImportReceipt =
-      receipt;
+      rendererImportSucceeded,
 
-    return receipt;
+      compositorImportReceipt,
+
+      rendererImportReceipt,
+
+      failedBranches,
+
+      rootBranchFailureIdentified:
+        moduleImportDiagnosticReceipt
+          .rootBranchFailureIdentified,
+
+      exactFailedTransitiveUrlObserved:
+        moduleImportDiagnosticReceipt
+          .exactFailedTransitiveUrlObserved,
+
+      exactFailedTransitiveUrl:
+        moduleImportDiagnosticReceipt
+          .exactFailedTransitiveUrl,
+
+      criticalModuleDiagnosticReceipts,
+
+      moduleImportDiagnosticReceipt,
+
+      sourcePreviewRetained:
+        sourcePreviewExists(
+          mountPoints.rendererMount
+        ),
+
+      rendererPassClaim:
+        false,
+
+      visualPassClaim:
+        false,
+
+      validationClaim:
+        false,
+
+      productionClaim:
+        false
+    });
   }
+
+  const compositorModule =
+    compositorImportResult
+      .module;
+
+  const rendererModule =
+    rendererImportResult
+      .module;
 
   if (
     !isActiveInitializationToken(
@@ -4941,48 +6329,33 @@ async function bootstrapRenderer(
 
   MODULE_STATE.compositorImportReceipt =
     deepFreeze({
-      receiptType:
-        'H_EARTH_3D_COMPOSITOR_IMPORT_RECEIPT',
-
-      importSucceeded:
-        true,
-
-      modulePath:
-        H_EARTH_3D_COMPOSITOR_MODULE_PATH,
-
-      productionModulePathOverrideUsed:
-        false,
-
-      moduleKeys:
-        Object.keys(
-          compositorModule
-        ),
+      ...compositorImportReceipt,
 
       evaluation:
         compositorEvaluation
-    });
+  });
 
   MODULE_STATE.rendererImportReceipt =
     deepFreeze({
-      receiptType:
-        'H_EARTH_3D_RENDERER_IMPORT_RECEIPT',
-
-      importSucceeded:
-        true,
-
-      modulePath:
-        H_EARTH_3D_RENDERER_MODULE_PATH,
-
-      productionModulePathOverrideUsed:
-        false,
-
-      moduleKeys:
-        Object.keys(
-          rendererModule
-        ),
+      ...rendererImportReceipt,
 
       evaluation:
         rendererEvaluation
+    });
+
+  MODULE_STATE.moduleImportDiagnosticReceipt =
+    buildModuleImportDiagnosticReceipt({
+      compositorImportReceipt:
+        MODULE_STATE
+          .compositorImportReceipt,
+
+      rendererImportReceipt:
+        MODULE_STATE
+          .rendererImportReceipt,
+
+      criticalModuleDiagnosticReceipts:
+        MODULE_STATE
+          .criticalModuleDiagnosticReceipts
     });
 
   if (
@@ -5018,6 +6391,18 @@ async function bootstrapRenderer(
       compositorEvaluation,
 
       rendererEvaluation,
+
+      compositorImportReceipt:
+        MODULE_STATE
+          .compositorImportReceipt,
+
+      rendererImportReceipt:
+        MODULE_STATE
+          .rendererImportReceipt,
+
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
 
       sourcePreviewRetained:
         sourcePreviewExists(
@@ -5112,6 +6497,10 @@ async function bootstrapRenderer(
         error instanceof Error
           ? error.message
           : String(error),
+
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
 
       sourcePreviewRetained:
         sourcePreviewExists(
@@ -5272,6 +6661,10 @@ async function bootstrapRenderer(
       status:
         primaryStatus,
 
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
+
       compositorHandoffReceipt:
         localCompositorHandoffReceipt,
 
@@ -5359,6 +6752,10 @@ async function bootstrapRenderer(
           ? error.message
           : String(error),
 
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
+
       compositorHandoffReceipt:
         localCompositorHandoffReceipt,
 
@@ -5427,6 +6824,10 @@ async function bootstrapRenderer(
 
       status:
         primaryStatus,
+
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
 
       compositorHandoffReceipt:
         localCompositorHandoffReceipt,
@@ -5542,6 +6943,10 @@ async function bootstrapRenderer(
           ? error.message
           : String(error),
 
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
+
       rendererConstructReceipt:
         safeSerialize(
           constructReceipt,
@@ -5634,6 +7039,10 @@ async function bootstrapRenderer(
       status:
         primaryStatus,
 
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
+
       rendererConstructReceipt:
         safeSerialize(
           constructReceipt,
@@ -5716,6 +7125,12 @@ async function bootstrapRenderer(
     rendererModulePath:
       H_EARTH_3D_RENDERER_MODULE_PATH,
 
+    resolvedModuleUrls:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt
+        ?.resolvedModuleUrls ??
+      null,
+
     productionModulePathOverridesAccepted:
       false,
 
@@ -5726,6 +7141,18 @@ async function bootstrapRenderer(
     rendererContractId:
       rendererEvaluation
         .actualContractId,
+
+    compositorImportReceipt:
+      MODULE_STATE
+        .compositorImportReceipt,
+
+    rendererImportReceipt:
+      MODULE_STATE
+        .rendererImportReceipt,
+
+    moduleImportDiagnosticReceipt:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt,
 
     compositorHandoffReceipt:
       localCompositorHandoffReceipt,
@@ -5800,7 +7227,7 @@ async function bootstrapRenderer(
 
 
 /* ==========================================================================
- * 20 · ROUTE DATASETS
+ * 22 · ROUTE DATASETS
  * ========================================================================== */
 
 function updateRouteRootExecutionDataset(
@@ -5862,6 +7289,41 @@ function updateRouteRootExecutionDataset(
       : 'false';
 
   routeRoot.dataset
+    .hEarthCompositorImportSucceeded =
+    MODULE_STATE
+      .compositorImportReceipt
+      ?.importSucceeded ===
+    true
+      ? 'true'
+      : 'false';
+
+  routeRoot.dataset
+    .hEarthRendererImportSucceeded =
+    MODULE_STATE
+      .rendererImportReceipt
+      ?.importSucceeded ===
+    true
+      ? 'true'
+      : 'false';
+
+  routeRoot.dataset
+    .hEarthFailedModuleBranches =
+    MODULE_STATE
+      .moduleImportDiagnosticReceipt
+      ?.failedBranches
+      ?.join(',') ??
+    '';
+
+  routeRoot.dataset
+    .hEarthExactFailedTransitiveUrlObserved =
+    MODULE_STATE
+      .moduleImportDiagnosticReceipt
+      ?.exactFailedTransitiveUrlObserved ===
+    true
+      ? 'true'
+      : 'false';
+
+  routeRoot.dataset
     .hEarthRunFunctionExecuted =
     'false';
 
@@ -5910,7 +7372,7 @@ function updateRouteRootExecutionDataset(
 
 
 /* ==========================================================================
- * 21 · RECEIPTS
+ * 23 · RECEIPTS
  * ========================================================================== */
 
 function buildLayer4PublicStageReceipt() {
@@ -6028,6 +7490,10 @@ function buildRouteBootstrapStatus() {
     sourcePreviewReceipt:
       MODULE_STATE.sourcePreviewReceipt,
 
+    compositorResponseProbeReceipt:
+      MODULE_STATE
+        .compositorResponseProbeReceipt,
+
     compositorImportReceipt:
       MODULE_STATE
         .compositorImportReceipt,
@@ -6040,9 +7506,21 @@ function buildRouteBootstrapStatus() {
       MODULE_STATE
         .rendererBootstrapStatus,
 
+    rendererResponseProbeReceipt:
+      MODULE_STATE
+        .rendererResponseProbeReceipt,
+
     rendererImportReceipt:
       MODULE_STATE
         .rendererImportReceipt,
+
+    criticalModuleDiagnosticReceipts:
+      MODULE_STATE
+        .criticalModuleDiagnosticReceipts,
+
+    moduleImportDiagnosticReceipt:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt,
 
     rendererConstructReceipt:
       safeSerialize(
@@ -6119,6 +7597,10 @@ function buildRouteBootstrapReceipt() {
     sourcePreviewReceipt:
       MODULE_STATE.sourcePreviewReceipt,
 
+    compositorResponseProbeReceipt:
+      MODULE_STATE
+        .compositorResponseProbeReceipt,
+
     compositorImportReceipt:
       MODULE_STATE
         .compositorImportReceipt,
@@ -6127,9 +7609,21 @@ function buildRouteBootstrapReceipt() {
       MODULE_STATE
         .compositorHandoffReceipt,
 
+    rendererResponseProbeReceipt:
+      MODULE_STATE
+        .rendererResponseProbeReceipt,
+
     rendererImportReceipt:
       MODULE_STATE
         .rendererImportReceipt,
+
+    criticalModuleDiagnosticReceipts:
+      MODULE_STATE
+        .criticalModuleDiagnosticReceipts,
+
+    moduleImportDiagnosticReceipt:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt,
 
     rendererConstructReceipt:
       safeSerialize(
@@ -6187,6 +7681,11 @@ function publishCurrentActiveGlobals() {
     .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
     buildRouteBootstrapStatus();
 
+  globalThis
+    .H_EARTH_3D_MODULE_IMPORT_DIAGNOSTIC_RECEIPT =
+    MODULE_STATE
+      .moduleImportDiagnosticReceipt;
+
   return deepFreeze({
     sourcePreviewReceiptPublished:
       true,
@@ -6201,6 +7700,9 @@ function publishCurrentActiveGlobals() {
       true,
 
     routeBootstrapStatusPublished:
+      true,
+
+    moduleImportDiagnosticReceiptPublished:
       true
   });
 }
@@ -6234,10 +7736,10 @@ function rebuildAndRenderPublicReceipts(
       .routeBootstrapReceipt,
     {
       maxDepth:
-        9,
+        12,
 
       maxArrayLength:
-        180
+        240
     }
   );
 
@@ -6261,13 +7763,17 @@ function rebuildAndRenderPublicReceipts(
       MODULE_STATE
         .routeBootstrapReceipt,
 
+    moduleImportDiagnosticReceipt:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt,
+
     publicationReceipt
   });
 }
 
 
 /* ==========================================================================
- * 22 · COPY AND ACTION CONTROLS
+ * 24 · COPY AND ACTION CONTROLS
  * ========================================================================== */
 
 function bindActionControls(
@@ -6446,7 +7952,7 @@ function bindCopyControls(
 
 
 /* ==========================================================================
- * 23 · INITIAL STATIC ROUTE
+ * 25 · INITIAL STATIC ROUTE
  * ========================================================================== */
 
 function renderInitialStaticRoute(
@@ -6489,7 +7995,7 @@ function renderInitialStaticRoute(
 
   writeText(
     mountPoints.fallbackNode,
-    'H-Earth descriptor preview is visible while the route requests the lawful compositor handoff and renderer lifecycle.'
+    'H-Earth descriptor preview is visible while the route independently probes and imports the lawful compositor and renderer branches.'
   );
 
   MODULE_STATE.status =
@@ -6505,7 +8011,7 @@ function renderInitialStaticRoute(
 
 
 /* ==========================================================================
- * 24 · ASYNC INITIALIZATION
+ * 26 · ASYNC INITIALIZATION
  * ========================================================================== */
 
 async function completeAsyncPublicStageInitialization(
@@ -6628,15 +8134,27 @@ async function completeAsyncPublicStageInitialization(
       'h-earth-3d-boot-fallback'
     );
 
-    writeText(
-      mountPoints.statusNode,
-      'PUBLIC_STAGE_SOURCE_PREVIEW_FALLBACK'
-    );
+    if (
+      rendererBootstrapReceipt
+        ?.status ===
+      H_EARTH_3D_RENDERER_BOOTSTRAP_STATUS
+        .IMPORT_FAILED
+    ) {
+      writeText(
+        mountPoints.statusNode,
+        'PUBLIC_STAGE_MODULE_IMPORT_DIAGNOSTIC_FALLBACK'
+      );
+    } else {
+      writeText(
+        mountPoints.statusNode,
+        'PUBLIC_STAGE_SOURCE_PREVIEW_FALLBACK'
+      );
 
-    writeText(
-      mountPoints.fallbackNode,
-      'The renderer corridor did not complete. The descriptor-only source preview remains or was restored as the public fallback.'
-    );
+      writeText(
+        mountPoints.fallbackNode,
+        'The renderer corridor did not complete. The descriptor-only source preview remains or was restored as the public fallback.'
+      );
+    }
   } else {
     renderPublicSourcePreview(
       mountPoints,
@@ -6703,6 +8221,10 @@ async function completeAsyncPublicStageInitialization(
 
       rendererBootstrapReceipt,
 
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
+
       routeBootstrapReceipt:
         MODULE_STATE
           .routeBootstrapReceipt,
@@ -6720,7 +8242,7 @@ async function completeAsyncPublicStageInitialization(
 
 
 /* ==========================================================================
- * 25 · INITIALIZE ROUTE
+ * 27 · INITIALIZE ROUTE
  * ========================================================================== */
 
 export function initializeHEarthRoute(
@@ -6770,6 +8292,10 @@ export function initializeHEarthRoute(
         MODULE_STATE
           .routeBootstrapReceipt,
 
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
+
       boundary:
         H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
     });
@@ -6799,6 +8325,10 @@ export function initializeHEarthRoute(
       routeBootstrapReceipt:
         MODULE_STATE
           .routeBootstrapReceipt,
+
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
 
       boundary:
         H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
@@ -6886,6 +8416,9 @@ export function initializeHEarthRoute(
         missingRequiredIds:
           mountPoints.missingRequiredIds,
 
+        moduleImportDiagnosticReceipt:
+          null,
+
         boundary:
           H_EARTH_3D_ROUTE_BOOTSTRAP_BOUNDARY_FLAGS
       });
@@ -6913,6 +8446,10 @@ export function initializeHEarthRoute(
     globalThis
       .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
       buildRouteBootstrapStatus();
+
+    globalThis
+      .H_EARTH_3D_MODULE_IMPORT_DIAGNOSTIC_RECEIPT =
+      null;
 
     return deepFreeze({
       initialized:
@@ -7054,6 +8591,10 @@ export function initializeHEarthRoute(
 
             rendererReleaseReceipt,
 
+            moduleImportDiagnosticReceipt:
+              MODULE_STATE
+                .moduleImportDiagnosticReceipt,
+
             layer4PublicStageReceipt:
               MODULE_STATE
                 .layer4PublicStageReceipt,
@@ -7082,7 +8623,14 @@ export function initializeHEarthRoute(
 
         writeJson(
           mountPoints.debug,
-          failureReceipt
+          failureReceipt,
+          {
+            maxDepth:
+              12,
+
+            maxArrayLength:
+              240
+          }
         );
 
         updateRouteRootExecutionDataset(
@@ -7111,6 +8659,11 @@ export function initializeHEarthRoute(
         globalThis
           .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS =
           buildRouteBootstrapStatus();
+
+        globalThis
+          .H_EARTH_3D_MODULE_IMPORT_DIAGNOSTIC_RECEIPT =
+          MODULE_STATE
+            .moduleImportDiagnosticReceipt;
 
         globalThis
           .H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE =
@@ -7152,8 +8705,12 @@ export function initializeHEarthRoute(
         MODULE_STATE
           .layer4StatusProjection,
 
+      moduleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
+
       asyncCompletion:
-        'PENDING_EXACT_COMPOSITOR_RENDERER_AND_LAYER_4_IMPORTS',
+        'PENDING_BRANCH_SPECIFIC_COMPOSITOR_RENDERER_DIAGNOSTICS_AND_LAYER_4_IMPORT',
 
       packet002ConstructedByRoute:
         false,
@@ -7197,7 +8754,7 @@ export function initializeHEarthRoute(
 
 
 /* ==========================================================================
- * 26 · PUBLIC GETTERS
+ * 28 · PUBLIC GETTERS
  * ========================================================================== */
 
 export function getRouteBootstrapStatus() {
@@ -7309,6 +8866,10 @@ export function getPublicGroundConditionReadPayload() {
 
 export function getRendererBootstrapReceipt() {
   return deepFreeze({
+    compositorResponseProbeReceipt:
+      MODULE_STATE
+        .compositorResponseProbeReceipt,
+
     compositorImportReceipt:
       MODULE_STATE
         .compositorImportReceipt,
@@ -7317,9 +8878,45 @@ export function getRendererBootstrapReceipt() {
       MODULE_STATE
         .compositorHandoffReceipt,
 
+    rendererResponseProbeReceipt:
+      MODULE_STATE
+        .rendererResponseProbeReceipt,
+
     rendererImportReceipt:
       MODULE_STATE
         .rendererImportReceipt,
+
+    criticalModuleDiagnosticReceipts:
+      MODULE_STATE
+        .criticalModuleDiagnosticReceipts,
+
+    moduleImportDiagnosticReceipt:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt,
+
+    failedBranches:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt
+        ?.failedBranches ??
+      deepFreeze([]),
+
+    rootBranchFailureIdentified:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt
+        ?.rootBranchFailureIdentified ===
+      true,
+
+    exactFailedTransitiveUrlObserved:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt
+        ?.exactFailedTransitiveUrlObserved ===
+      true,
+
+    exactFailedTransitiveUrl:
+      MODULE_STATE
+        .moduleImportDiagnosticReceipt
+        ?.exactFailedTransitiveUrl ??
+      null,
 
     rendererConstructReceipt:
       safeSerialize(
@@ -7343,9 +8940,22 @@ export function getRendererBootstrapReceipt() {
   });
 }
 
+export function getModuleImportDiagnosticReceipt() {
+  if (
+    !MODULE_STATE
+      .moduleImportDiagnosticReceipt
+  ) {
+    MODULE_STATE.moduleImportDiagnosticReceipt =
+      buildModuleImportDiagnosticReceipt();
+  }
+
+  return MODULE_STATE
+    .moduleImportDiagnosticReceipt;
+}
+
 
 /* ==========================================================================
- * 27 · DESTROY ROUTE
+ * 29 · DESTROY ROUTE
  * ========================================================================== */
 
 export function destroyHEarthRoute() {
@@ -7450,6 +9060,10 @@ export function destroyHEarthRoute() {
       previousOccurrenceReceipt:
         previousReceipt,
 
+      previousModuleImportDiagnosticReceipt:
+        MODULE_STATE
+          .moduleImportDiagnosticReceipt,
+
       rendererReleaseReceipt,
 
       sourcePreviewClearReceipt:
@@ -7483,6 +9097,9 @@ export function destroyHEarthRoute() {
         true,
 
       activeOccurrenceEvidenceCleared:
+        true,
+
+      moduleImportDiagnosticGlobalCleared:
         true,
 
       packet002Mutated:
@@ -7565,6 +9182,9 @@ export function destroyHEarthRoute() {
       sourcePreviewMounted:
         false,
 
+      moduleImportDiagnosticReceipt:
+        null,
+
       activeOccurrenceEvidenceCleared:
         true
     });
@@ -7574,7 +9194,7 @@ export function destroyHEarthRoute() {
 
 
 /* ==========================================================================
- * 28 · STATIC RECEIPT
+ * 30 · STATIC RECEIPT
  * ========================================================================== */
 
 export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
@@ -7626,6 +9246,9 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
     rendererModulePath:
       H_EARTH_3D_RENDERER_MODULE_PATH,
 
+    criticalModuleDiagnosticPaths:
+      H_EARTH_3D_CRITICAL_MODULE_DIAGNOSTIC_PATHS,
+
     compositorModulePathOverrideAccepted:
       false,
 
@@ -7660,6 +9283,45 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
       'mountElement',
 
     genericRendererAPIDiscoveryRemoved:
+      true,
+
+    branchSpecificModuleImportDiagnosticsDefined:
+      true,
+
+    compositorAndRendererImportFailuresSeparated:
+      true,
+
+    resolvedModuleUrlRecordingDefined:
+      true,
+
+    deployedResponseFetchProbeDefined:
+      true,
+
+    httpStatusRecordingDefined:
+      true,
+
+    contentTypeRecordingDefined:
+      true,
+
+    responsePrefixRecordingDefined:
+      true,
+
+    responsePrefixLimit:
+      H_EARTH_3D_MODULE_RESPONSE_PREFIX_LIMIT,
+
+    responseClassificationDefined:
+      true,
+
+    criticalDependencyProbeMatrixDefined:
+      true,
+
+    criticalDependencyProbeMatrixFetchOnly:
+      true,
+
+    diagnosticVisibleWithoutDeveloperTools:
+      true,
+
+    exactTransitiveFailureClaimRequiresDirectEvidence:
       true,
 
     primaryFailureStatusPreservedAcrossCleanup:
@@ -7743,6 +9405,9 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
     routeStatusActiveGlobalSynchronized:
       true,
 
+    moduleImportDiagnosticActiveGlobalSynchronized:
+      true,
+
     mountFailureRouteStatusGlobalSynchronized:
       true,
 
@@ -7753,6 +9418,9 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
       true,
 
     asyncFailureRouteStatusGlobalSynchronized:
+      true,
+
+    asyncFailureModuleImportDiagnosticGlobalSynchronized:
       true,
 
     allActiveGlobalsClearedBeforeNewOccurrence:
@@ -7772,6 +9440,18 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
 
     activeGlobalsClearedOnDestroy:
       true,
+
+    branchSpecificModuleImportDiagnosticsVerified:
+      false,
+
+    deployedResponseProbeVerified:
+      false,
+
+    criticalDependencyProbeMatrixVerified:
+      false,
+
+    exactFailedModuleUrlIdentified:
+      false,
 
     moduleSyntaxVerified:
       false,
@@ -7824,6 +9504,12 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
     rendererReleaseVerified:
       false,
 
+    repositoryExecutionVerified:
+      false,
+
+    routeBrowserExecutionVerified:
+      false,
+
     validationClaim:
       false,
 
@@ -7845,7 +9531,7 @@ export const H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT =
 
 
 /* ==========================================================================
- * 29 · COMPLETE CONTRACT
+ * 31 · COMPLETE CONTRACT
  * ========================================================================== */
 
 export const H_EARTH_3D_INDEX_CONTRACT =
@@ -7866,7 +9552,7 @@ export const H_EARTH_3D_INDEX_CONTRACT =
       H_EARTH_3D_DIAGNOSTIC_ROUTE,
 
     role:
-      'COMPOSITOR_TO_RENDERER_PUBLIC_ROUTE_ORCHESTRATOR_WITH_TEMPORARY_DESCRIPTOR_FALLBACK',
+      'COMPOSITOR_TO_RENDERER_PUBLIC_ROUTE_ORCHESTRATOR_WITH_BRANCH_SPECIFIC_DEPLOYED_MODULE_RESPONSE_DIAGNOSTICS_AND_TEMPORARY_DESCRIPTOR_FALLBACK',
 
     canonicalInput:
       {
@@ -7891,6 +9577,9 @@ export const H_EARTH_3D_INDEX_CONTRACT =
         rendererModulePath:
           H_EARTH_3D_RENDERER_MODULE_PATH,
 
+        criticalModuleDiagnosticPaths:
+          H_EARTH_3D_CRITICAL_MODULE_DIAGNOSTIC_PATHS,
+
         compositorModulePathOverrideAccepted:
           false,
 
@@ -7905,6 +9594,63 @@ export const H_EARTH_3D_INDEX_CONTRACT =
 
         exactContractIdentityRequired:
           true
+      },
+
+    moduleDiagnosticLaw:
+      {
+        compositorAndRendererImportsIndependentlyObserved:
+          true,
+
+        oneBranchFailureAssignedToOtherBranch:
+          false,
+
+        resolvedUrlsRecorded:
+          true,
+
+        deployedResponsesClassified:
+          true,
+
+        responsePrefixesBounded:
+          true,
+
+        responsePrefixLimit:
+          H_EARTH_3D_MODULE_RESPONSE_PREFIX_LIMIT,
+
+        criticalDependencyMatrixUsesFetchOnly:
+          true,
+
+        productionDynamicImportsUseCanonicalResolvedUrls:
+          true,
+
+        productionImportCacheBusting:
+          false,
+
+        rootBranchFailureProvesBranchFailureOnly:
+          true,
+
+        transitiveLeafIdentityInferred:
+          false,
+
+        exactTransitiveLeafRequiresDirectEvidence:
+          true,
+
+        productionExecutionFailClosed:
+          true,
+
+        diagnosticProbeGrantsRuntimeAuthority:
+          false,
+
+        diagnosticProbeGrantsValidationAuthority:
+          false,
+
+        diagnosticProbeGrantsRendererPassAuthority:
+          false,
+
+        diagnosticProbeGrantsVisualPassAuthority:
+          false,
+
+        diagnosticProbeGrantsProductionAuthority:
+          false
       },
 
     compositorLaw:
@@ -8014,7 +9760,10 @@ export const H_EARTH_3D_INDEX_CONTRACT =
           'TOKEN_GUARDED',
 
         staleAsyncCompletion:
-          'RETURN_LOCAL_OBSERVATIONAL_RECEIPT_ONLY_WITHOUT_SHARED_STATE_CLEANUP_GLOBAL_OR_DOM_MUTATION',
+          'RETURN_LOCAL_OBSERVATIONAL_RECEIPT_ONLY_WITHOUT_SHARED_STATE_DIAGNOSTIC_CLEANUP_GLOBAL_OR_DOM_MUTATION',
+
+        diagnosticReceiptCommitLaw:
+          'COMMIT_ONLY_AFTER_ACTIVE_TOKEN_RECONFIRMATION',
 
         constructReceiptCommitLaw:
           'COMMIT_ONLY_AFTER_ACTIVE_TOKEN_RECONFIRMATION',
@@ -8055,6 +9804,9 @@ export const H_EARTH_3D_INDEX_CONTRACT =
         routeBootstrapCompletionGlobal:
           'H_EARTH_3D_ROUTE_BOOTSTRAP_COMPLETION',
 
+        moduleImportDiagnosticReceiptGlobal:
+          'H_EARTH_3D_MODULE_IMPORT_DIAGNOSTIC_RECEIPT',
+
         asyncFailureGlobal:
           'H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE',
 
@@ -8073,10 +9825,16 @@ export const H_EARTH_3D_INDEX_CONTRACT =
         asynchronousFailurePublishesRouteStatus:
           true,
 
+        asynchronousFailurePublishesModuleImportDiagnosticReceipt:
+          true,
+
         preInitializationClearIncludesRouteReceipt:
           true,
 
         preInitializationClearIncludesRouteStatus:
+          true,
+
+        preInitializationClearIncludesModuleImportDiagnosticReceipt:
           true
       },
 
@@ -8103,6 +9861,9 @@ export const H_EARTH_3D_INDEX_CONTRACT =
         clearActiveGlobalEvidence:
           true,
 
+        clearModuleImportDiagnosticGlobal:
+          true,
+
         preserveHistoricalOccurrence:
           'INSIDE_DESTROY_RECEIPT_ONLY',
 
@@ -8117,6 +9878,12 @@ export const H_EARTH_3D_INDEX_CONTRACT =
 
         externallyOwnedDOMObjectsDeepFrozen:
           false,
+
+        publicModuleReceiptsPlainDataOnly:
+          true,
+
+        importedModuleObjectsExcludedFromPublicReceipts:
+          true,
 
         primaryFailureOutcomePreserved:
           true,
@@ -8146,7 +9913,7 @@ export const H_EARTH_3D_INDEX_CONTRACT =
 
 
 /* ==========================================================================
- * 30 · AGGREGATE EXPORT
+ * 32 · AGGREGATE EXPORT
  * ========================================================================== */
 
 export const H_EARTH_3D_INDEX =
@@ -8189,6 +9956,12 @@ export const H_EARTH_3D_INDEX =
 
     compositorRendererOrchestrator:
       true,
+
+    branchSpecificModuleImportDiagnostics:
+      true,
+
+    criticalModuleDiagnosticPaths:
+      H_EARTH_3D_CRITICAL_MODULE_DIAGNOSTIC_PATHS,
 
     temporarySourcePreviewDefined:
       true,
@@ -8254,6 +10027,8 @@ export const H_EARTH_3D_INDEX =
     getPublicGroundConditionReadPayload,
 
     getRendererBootstrapReceipt,
+
+    getModuleImportDiagnosticReceipt,
 
     receipt:
       H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT

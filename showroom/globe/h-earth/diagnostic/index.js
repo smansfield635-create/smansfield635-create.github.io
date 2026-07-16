@@ -99,32 +99,19 @@ export const H_EARTH_3D_LAYER_4_CONTRACTS = Object.freeze({
 export const H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY = Object.freeze({
   custodyClass: 'BACKED_STATIC_SUPPORT_METADATA_FOR_DIAGNOSTIC_REPORTING',
   step012JBackupComplete: true,
-  step012JArchiveTitle:
-    'h-earth-headless-serialization-bridge-step-012j-backup',
-  step012JDriveDocumentId:
-    '1zt8rsROGF8roudC3re1KOwmU5KSws6pQIap7kd0gQpw',
-  step012H1ArchiveTitle:
-    'h-earth-headless-replay-step-012h-1-backup',
-  step012H1DriveDocumentId:
-    '1DfSsDzKRYQNJn9S43hmA8gMeebY_7WeQ0ygoIl6Qt2Y',
-  step012IArchiveTitle:
-    'h-earth-canonical-state-serialization-law-step-012i-backup',
-  step012IDriveDocumentId:
-    '1K8bszh6SMeutLpCeyCjK6D9r8m6zsIEP3R6soBip6GA',
-  step012IRunnerArchiveTitle:
-    'h-earth-serialization-vector-runner-step-012i-backup',
-  step012IRunnerDriveDocumentId:
-    '1EcXxqb2M_MwdiHFVDX95klU4Dh6X1Be8Q5TFNDyCIUE',
-  target002ArchiveTitle:
-    'h-earth-deterministic-runtime-step-012g-target-002-backup',
-  target002DriveDocumentId:
-    '1AYVrqdmnBEdM5k4pop8wJNXMThXxdLZd7TNkhgkq2Z0',
-  target003ArchiveTitle:
-    'h-earth-canonical-replay-step-012g-target-003-backup',
-  target003DriveDocumentId:
-    '1qbNHRW9L3l7FjfJW04x30J9qNO9dNvWTR8b6Vh0C3vU',
-  archiveCustodyStatus:
-    'BACKED_OCCURRENCE_RECORDED_BY_CONSTRUCTION_BASIS',
+  step012JArchiveTitle: 'h-earth-headless-serialization-bridge-step-012j-backup',
+  step012JDriveDocumentId: '1zt8rsROGF8roudC3re1KOwmU5KSws6pQIap7kd0gQpw',
+  step012H1ArchiveTitle: 'h-earth-headless-replay-step-012h-1-backup',
+  step012H1DriveDocumentId: '1DfSsDzKRYQNJn9S43hmA8gMeebY_7WeQ0ygoIl6Qt2Y',
+  step012IArchiveTitle: 'h-earth-canonical-state-serialization-law-step-012i-backup',
+  step012IDriveDocumentId: '1K8bszh6SMeutLpCeyCjK6D9r8m6zsIEP3R6soBip6GA',
+  step012IRunnerArchiveTitle: 'h-earth-serialization-vector-runner-step-012i-backup',
+  step012IRunnerDriveDocumentId: '1EcXxqb2M_MwdiHFVDX95klU4Dh6X1Be8Q5TFNDyCIUE',
+  target002ArchiveTitle: 'h-earth-deterministic-runtime-step-012g-target-002-backup',
+  target002DriveDocumentId: '1AYVrqdmnBEdM5k4pop8wJNXMThXxdLZd7TNkhgkq2Z0',
+  target003ArchiveTitle: 'h-earth-canonical-replay-step-012g-target-003-backup',
+  target003DriveDocumentId: '1qbNHRW9L3l7FjfJW04x30J9qNO9dNvWTR8b6Vh0C3vU',
+  archiveCustodyStatus: 'BACKED_OCCURRENCE_RECORDED_BY_CONSTRUCTION_BASIS',
   diagnosticRouteReverifiesDriveArchive: false,
   diagnosticRouteClaimsNetworkBackup: false
 });
@@ -219,27 +206,22 @@ export const H_EARTH_3D_DIAGNOSTIC_PANEL_IDS = Object.freeze({
   evidenceSource: 'h-earth-3d-evidence-source-payload',
   publicRouteStatus: 'h-earth-3d-public-route-status-payload',
   routeBootstrapReceipt: 'h-earth-3d-route-bootstrap-receipt',
-  routeBootstrapCompletion:
-    'h-earth-3d-route-bootstrap-completion-payload',
-  sourcePreviewReceipt:
-    'h-earth-3d-source-preview-receipt-payload',
+  routeBootstrapCompletion: 'h-earth-3d-route-bootstrap-completion-payload',
+  sourcePreviewReceipt: 'h-earth-3d-source-preview-receipt-payload',
   compositorImport: 'h-earth-3d-compositor-import-payload',
   compositorHandoff: 'h-earth-3d-compositor-handoff-payload',
   rendererImport: 'h-earth-3d-renderer-import-payload',
-  rendererConstructionReceipt:
-    'h-earth-3d-renderer-construction-receipt',
+  rendererConstructionReceipt: 'h-earth-3d-renderer-construction-receipt',
   rendererMountReceipt: 'h-earth-3d-renderer-mount-receipt',
   rendererReleaseReceipt: 'h-earth-3d-renderer-release-receipt',
   rendererState: 'h-earth-3d-renderer-state-payload',
   layer4Custody: 'h-earth-3d-layer-4-custody-payload',
   step012JDescriptor: 'h-earth-3d-step-012j-descriptor-payload',
   relationshipMembers: 'h-earth-3d-relationship-members-payload',
-  moduleInitialization:
-    'h-earth-3d-module-initialization-payload',
+  moduleInitialization: 'h-earth-3d-module-initialization-payload',
   publicStageStatus: 'h-earth-3d-public-stage-status-payload',
   publicStageReceipt: 'h-earth-3d-public-stage-receipt-payload',
-  publicGroundReadout:
-    'h-earth-3d-public-ground-readout-payload',
+  publicGroundReadout: 'h-earth-3d-public-ground-readout-payload',
   activeGlobals: 'h-earth-3d-active-globals-payload',
   boundaryFlags: 'h-earth-3d-boundary-flags',
   boundaryMismatch: 'h-earth-3d-boundary-mismatch-payload',
@@ -259,20 +241,11 @@ const FD05_MARKERS = Object.freeze({
   receiptRenderedAt: 'H_EARTH_FD_05_RECEIPT_RENDERED_AT'
 });
 
-const FD05_RECEIPT_EVENT =
-  'h-earth:fd-05-module-import-diagnostic-receipt';
-
-const FD05_WATCHDOG_EVENT =
-  'h-earth:fd-05-instrument-watchdog-receipt';
-
-const FD05_PRIMARY_MOUNT_ID =
-  'h-earth-fd-05-module-import-track';
-
-const FD05_CLASSIFICATION_ROW_ID =
-  'h-earth-fd-05-host-classification-row';
-
-const FD05_PRIMARY_STATUS_ROW_ID =
-  'h-earth-fd-05-host-primary-status-row';
+const FD05_RECEIPT_EVENT = 'h-earth:fd-05-module-import-diagnostic-receipt';
+const FD05_WATCHDOG_EVENT = 'h-earth:fd-05-instrument-watchdog-receipt';
+const FD05_PRIMARY_MOUNT_ID = 'h-earth-fd-05-module-import-track';
+const FD05_CLASSIFICATION_ROW_ID = 'h-earth-fd-05-host-classification-row';
+const FD05_PRIMARY_STATUS_ROW_ID = 'h-earth-fd-05-host-primary-status-row';
 
 const ACTIVE_DIAGNOSTIC_GLOBAL_KEYS = Object.freeze([
   'H_EARTH_3D_DIAGNOSTIC',
@@ -324,12 +297,8 @@ const COPY_GROUPS = Object.freeze({
     H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.boundaryFlags,
     H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.boundaryMismatch
   ]),
-  raw: Object.freeze([
-    H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.rawEvidence
-  ]),
-  all: Object.freeze([
-    H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.allDiagnostics
-  ])
+  raw: Object.freeze([H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.rawEvidence]),
+  all: Object.freeze([H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.allDiagnostics])
 });
 
 const DIAGNOSTIC_STATE = {
@@ -402,13 +371,7 @@ function freezeArray(value) {
 }
 
 function isObjectLike(value) {
-  return (
-    value !== null &&
-    (
-      typeof value === 'object' ||
-      typeof value === 'function'
-    )
-  );
+  return value !== null && (typeof value === 'object' || typeof value === 'function');
 }
 
 function getOwnKeys(value) {
@@ -440,10 +403,7 @@ function getDiagnosticWindow(options = {}) {
 }
 
 function getById(rootDocument, id) {
-  if (
-    !rootDocument ||
-    typeof rootDocument.getElementById !== 'function'
-  ) {
+  if (!rootDocument || typeof rootDocument.getElementById !== 'function') {
     return null;
   }
 
@@ -479,15 +439,10 @@ function safePlainData(value, options = {}) {
     if (type === 'string' || type === 'boolean') return input;
 
     if (type === 'number') {
-      return Number.isFinite(input)
-        ? input
-        : String(input);
+      return Number.isFinite(input) ? input : String(input);
     }
 
-    if (type === 'bigint' || type === 'symbol') {
-      return String(input);
-    }
-
+    if (type === 'bigint' || type === 'symbol') return String(input);
     if (type === 'undefined') return null;
 
     if (type === 'function') {
@@ -495,16 +450,11 @@ function safePlainData(value, options = {}) {
     }
 
     if (depth > maxDepth) return '[MaxDepthExceeded]';
-
     if (type !== 'object') return String(input);
-
     if (seen.has(input)) return '[Circular]';
 
     try {
-      if (
-        typeof Node !== 'undefined' &&
-        input instanceof Node
-      ) {
+      if (typeof Node !== 'undefined' && input instanceof Node) {
         return `[DOMNode ${input.nodeName || 'unknown'}]`;
       }
     } catch {
@@ -519,9 +469,7 @@ function safePlainData(value, options = {}) {
         .map((entry) => visit(entry, depth + 1));
 
       if (input.length > maxArrayLength) {
-        output.push(
-          `[ArrayTruncated ${input.length - maxArrayLength}]`
-        );
+        output.push(`[ArrayTruncated ${input.length - maxArrayLength}]`);
       }
 
       return output;
@@ -551,14 +499,8 @@ function safePlainData(value, options = {}) {
       } catch (error) {
         output[key] = {
           readFailed: true,
-          errorName:
-            error instanceof Error
-              ? error.name
-              : 'UnknownError',
-          errorMessage:
-            error instanceof Error
-              ? error.message
-              : String(error)
+          errorName: error instanceof Error ? error.name : 'UnknownError',
+          errorMessage: error instanceof Error ? error.message : String(error)
         };
       }
     });
@@ -570,11 +512,7 @@ function safePlainData(value, options = {}) {
 }
 
 function toJson(value, options = {}) {
-  return JSON.stringify(
-    safePlainData(value, options),
-    null,
-    2
-  );
+  return JSON.stringify(safePlainData(value, options), null, 2);
 }
 
 function writeText(node, value) {
@@ -593,10 +531,8 @@ function writeJson(node, value, options = {}) {
   } catch {
     node.textContent = JSON.stringify(
       {
-        receiptType:
-          'H_EARTH_3D_DIAGNOSTIC_SERIALIZATION_FALLBACK',
-        status:
-          'DIAGNOSTIC_PAYLOAD_SERIALIZATION_FAILED'
+        receiptType: 'H_EARTH_3D_DIAGNOSTIC_SERIALIZATION_FALLBACK',
+        status: 'DIAGNOSTIC_PAYLOAD_SERIALIZATION_FAILED'
       },
       null,
       2
@@ -624,8 +560,7 @@ function setRouteClass(routeRoot, className) {
 }
 
 function writeRouteDataset(key, value) {
-  const routeRoot =
-    DIAGNOSTIC_STATE.mountPoints?.routeRoot;
+  const routeRoot = DIAGNOSTIC_STATE.mountPoints?.routeRoot;
 
   if (!routeRoot?.dataset) return false;
 
@@ -652,26 +587,14 @@ function ensureFd05DecisionHost(rootDocument) {
     H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.fd05DecisionHost
   );
 
-  const grid =
-    rootDocument.querySelector(
-      '.h-earth-3d-diagnostic-grid'
-    );
-
+  const grid = rootDocument.querySelector('.h-earth-3d-diagnostic-grid');
   const operationalReports =
-    rootDocument.querySelector(
-      '.h-earth-3d-operational-reports'
-    );
-
-  const shell =
-    rootDocument.querySelector(
-      '.h-earth-3d-diagnostic-shell'
-    );
+    rootDocument.querySelector('.h-earth-3d-operational-reports');
+  const shell = rootDocument.querySelector('.h-earth-3d-diagnostic-shell');
 
   if (!host) {
     host = rootDocument.createElement('div');
-
-    host.id =
-      H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.fd05DecisionHost;
+    host.id = H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.fd05DecisionHost;
 
     host.setAttribute(
       'data-h-earth-diagnostic-track-host',
@@ -683,25 +606,16 @@ function ensureFd05DecisionHost(rootDocument) {
       'fd-05-decision-host'
     );
 
-    host.setAttribute(
-      'aria-live',
-      'polite'
-    );
+    host.setAttribute('aria-live', 'polite');
   }
 
   if (grid) {
     host.className = 'h-earth-3d-panel-primary';
 
-    if (
-      host.parentNode !== grid ||
-      grid.firstElementChild !== host
-    ) {
+    if (host.parentNode !== grid || grid.firstElementChild !== host) {
       grid.prepend(host);
     }
-  } else if (
-    !host.parentNode &&
-    operationalReports?.parentNode
-  ) {
+  } else if (!host.parentNode && operationalReports?.parentNode) {
     operationalReports.parentNode.insertBefore(
       host,
       operationalReports.nextSibling
@@ -720,17 +634,12 @@ function resolveMountPoints(rootDocument) {
 
   const mountPoints = {};
 
-  Object.entries(
-    H_EARTH_3D_DIAGNOSTIC_PANEL_IDS
-  ).forEach(([key, id]) => {
-    mountPoints[key] =
-      getById(rootDocument, id);
+  Object.entries(H_EARTH_3D_DIAGNOSTIC_PANEL_IDS).forEach(([key, id]) => {
+    mountPoints[key] = getById(rootDocument, id);
   });
 
   mountPoints.diagnosticGrid =
-    rootDocument?.querySelector(
-      '.h-earth-3d-diagnostic-grid'
-    ) || null;
+    rootDocument?.querySelector('.h-earth-3d-diagnostic-grid') || null;
 
   const requiredIds = Object.freeze([
     H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.routeRoot,
@@ -753,16 +662,12 @@ function resolveMountPoints(rootDocument) {
   ]);
 
   const missingRequiredIds =
-    requiredIds.filter(
-      (id) => !getById(rootDocument, id)
-    );
+    requiredIds.filter((id) => !getById(rootDocument, id));
 
   return freeze({
     ...mountPoints,
-    requiredFound:
-      missingRequiredIds.length === 0,
-    missingRequiredIds:
-      freezeArray(missingRequiredIds)
+    requiredFound: missingRequiredIds.length === 0,
+    missingRequiredIds: freezeArray(missingRequiredIds)
   });
 }
 
@@ -794,9 +699,7 @@ function removeManualListeners() {
 
 function releaseListenerOwnership() {
   try {
-    DIAGNOSTIC_STATE
-      .listenerAbortController
-      ?.abort();
+    DIAGNOSTIC_STATE.listenerAbortController?.abort();
   } catch {
     // Manual fallback follows.
   }
@@ -807,9 +710,7 @@ function releaseListenerOwnership() {
 }
 
 function releaseFd05WatchdogObservation() {
-  if (
-    DIAGNOSTIC_STATE.fd05WatchdogTimeoutId !== null
-  ) {
+  if (DIAGNOSTIC_STATE.fd05WatchdogTimeoutId !== null) {
     globalThis.clearTimeout(
       DIAGNOSTIC_STATE.fd05WatchdogTimeoutId
     );
@@ -818,19 +719,17 @@ function releaseFd05WatchdogObservation() {
   }
 
   if (
-    typeof DIAGNOSTIC_STATE
-      .fd05WatchdogListenerRemover === 'function'
+    typeof DIAGNOSTIC_STATE.fd05WatchdogListenerRemover ===
+    'function'
   ) {
     try {
-      DIAGNOSTIC_STATE
-        .fd05WatchdogListenerRemover();
+      DIAGNOSTIC_STATE.fd05WatchdogListenerRemover();
     } catch {
       // Watchdog listener cleanup remains best effort.
     }
   }
 
-  DIAGNOSTIC_STATE.fd05WatchdogListenerRemover =
-    null;
+  DIAGNOSTIC_STATE.fd05WatchdogListenerRemover = null;
 }
 
 function resetReportState({
@@ -881,35 +780,23 @@ function resetReportState({
   DIAGNOSTIC_STATE.failureReceipt = null;
 }
 
-function normalizeCandidateWindowEntries(
-  options = {}
-) {
+function normalizeCandidateWindowEntries(options = {}) {
   const candidates = [];
 
-  if (
-    Array.isArray(
-      options.candidatePublicRouteWindows
-    )
-  ) {
-    options.candidatePublicRouteWindows
-      .forEach((candidate, index) => {
-        if (
-          candidate &&
-          isObjectLike(candidate.window)
-        ) {
-          candidates.push({
-            source:
-              candidate.source ||
-              `candidate-${index}`,
-            window: candidate.window
-          });
-        } else if (isObjectLike(candidate)) {
-          candidates.push({
-            source: `candidate-${index}`,
-            window: candidate
-          });
-        }
-      });
+  if (Array.isArray(options.candidatePublicRouteWindows)) {
+    options.candidatePublicRouteWindows.forEach((candidate, index) => {
+      if (candidate && isObjectLike(candidate.window)) {
+        candidates.push({
+          source: candidate.source || `candidate-${index}`,
+          window: candidate.window
+        });
+      } else if (isObjectLike(candidate)) {
+        candidates.push({
+          source: `candidate-${index}`,
+          window: candidate
+        });
+      }
+    });
   }
 
   if (isObjectLike(options.publicRouteWindow)) {
@@ -950,18 +837,15 @@ function normalizeCandidateWindowEntries(
 
 function inspectCandidateWindow(candidate) {
   try {
-    const candidateWindow =
-      candidate.window;
+    const candidateWindow = candidate.window;
 
     const locationHref =
-      typeof candidateWindow?.location?.href ===
-      'string'
+      typeof candidateWindow?.location?.href === 'string'
         ? candidateWindow.location.href
         : null;
 
     const locationPathname =
-      typeof candidateWindow?.location?.pathname ===
-      'string'
+      typeof candidateWindow?.location?.pathname === 'string'
         ? candidateWindow.location.pathname
         : null;
 
@@ -992,14 +876,10 @@ function inspectCandidateWindow(candidate) {
       locationHref,
       locationPathname,
       publicRoutePathObserved:
-        locationPathname ===
-        H_EARTH_3D_PUBLIC_ROUTE,
-      publicRouteEvidenceCount:
-        observedKeys.length,
-      publicRouteEvidencePresent:
-        observedKeys.length > 0,
-      observedKeys:
-        freezeArray(observedKeys),
+        locationPathname === H_EARTH_3D_PUBLIC_ROUTE,
+      publicRouteEvidenceCount: observedKeys.length,
+      publicRouteEvidencePresent: observedKeys.length > 0,
+      observedKeys: freezeArray(observedKeys),
       window: candidateWindow
     });
   } catch (error) {
@@ -1009,14 +889,8 @@ function inspectCandidateWindow(candidate) {
       publicRoutePathObserved: false,
       publicRouteEvidenceCount: 0,
       publicRouteEvidencePresent: false,
-      errorName:
-        error instanceof Error
-          ? error.name
-          : 'UnknownError',
-      errorMessage:
-        error instanceof Error
-          ? error.message
-          : String(error),
+      errorName: error instanceof Error ? error.name : 'UnknownError',
+      errorMessage: error instanceof Error ? error.message : String(error),
       window: null
     });
   }
@@ -1054,36 +928,25 @@ function resolveEvidenceSource(options = {}) {
   const report = freeze({
     receiptType:
       'H_EARTH_3D_DIAGNOSTIC_EVIDENCE_SOURCE_REPORT',
-    file:
-      H_EARTH_3D_DIAGNOSTIC_FILE,
+    file: H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
-    candidateCount:
-      candidates.length,
+    generatedAt: nowIso(),
+    candidateCount: candidates.length,
     accessibleCandidateCount:
-      inspections.filter(
-        (entry) => entry.accessible
-      ).length,
+      inspections.filter((entry) => entry.accessible).length,
     selectedSource:
-      selectedInspection?.source ||
-      'NONE',
+      selectedInspection?.source || 'NONE',
     selectedLocationHref:
-      selectedInspection?.locationHref ||
-      null,
+      selectedInspection?.locationHref || null,
     selectedLocationPathname:
-      selectedInspection?.locationPathname ||
-      null,
+      selectedInspection?.locationPathname || null,
     selectedPublicRoutePathObserved:
-      selectedInspection
-        ?.publicRoutePathObserved === true,
+      selectedInspection?.publicRoutePathObserved === true,
     livePublicRouteEvidenceObserved:
-      selectedInspection
-        ?.publicRouteEvidencePresent === true,
+      selectedInspection?.publicRouteEvidencePresent === true,
     selectedEvidenceCount:
-      selectedInspection
-        ?.publicRouteEvidenceCount || 0,
+      selectedInspection?.publicRouteEvidenceCount || 0,
     candidateInspections:
       freezeArray(
         inspections.map(
@@ -1092,16 +955,13 @@ function resolveEvidenceSource(options = {}) {
       ),
     fallbackPolicy:
       'USE_STATIC_MODULE_IMPORTS_AND_EXPLICIT_ABSENCE_REPORTING_WHEN_LIVE_WINDOW_EVIDENCE_IS_UNAVAILABLE',
-    publicRouteInitializedByDiagnostic:
-      false,
-    publicRouteMutation:
-      false,
+    publicRouteInitializedByDiagnostic: false,
+    publicRouteMutation: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
 
-  DIAGNOSTIC_STATE.evidenceSourceReport =
-    report;
+  DIAGNOSTIC_STATE.evidenceSourceReport = report;
 
   writeRouteDataset(
     'hEarthDiagnosticEvidenceSource',
@@ -1110,9 +970,7 @@ function resolveEvidenceSource(options = {}) {
 
   writeRouteDataset(
     'hEarthLivePublicRouteEvidenceObserved',
-    String(
-      report.livePublicRouteEvidenceObserved
-    )
+    String(report.livePublicRouteEvidenceObserved)
   );
 
   return freeze({
@@ -1138,31 +996,21 @@ async function importObservedModule({
           H_EARTH_3D_DIAGNOSTIC_FILE,
         contractId:
           H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-        generatedAt:
-          nowIso(),
+        generatedAt: nowIso(),
         modulePath,
-        importAttempted:
-          false,
-        importSkipped:
-          true,
-        importSucceeded:
-          false,
-        moduleInitializationObserved:
-          false,
+        importAttempted: false,
+        importSkipped: true,
+        importSucceeded: false,
+        moduleInitializationObserved: false,
         expectedContractId,
-        importedContractId:
-          null,
-        importedContractMatchesExpected:
-          false,
+        importedContractId: null,
+        importedContractMatchesExpected: false,
         reason:
           skipReason ||
           'Import skipped by diagnostic option.',
-        publicRouteInitializedByImport:
-          false,
-        publicEnvironmentHostedByImport:
-          false,
-        rendererMountedByImport:
-          false,
+        publicRouteInitializedByImport: false,
+        publicEnvironmentHostedByImport: false,
+        rendererMountedByImport: false,
         boundary:
           H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
       }),
@@ -1190,17 +1038,12 @@ async function importObservedModule({
           H_EARTH_3D_DIAGNOSTIC_FILE,
         contractId:
           H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-        generatedAt:
-          nowIso(),
+        generatedAt: nowIso(),
         modulePath,
-        importAttempted:
-          true,
-        importSkipped:
-          false,
-        importSucceeded:
-          true,
-        moduleInitializationObserved:
-          true,
+        importAttempted: true,
+        importSkipped: false,
+        importSucceeded: true,
+        moduleInitializationObserved: true,
         moduleExportKeys:
           freezeArray(
             getOwnKeys(importedModule)
@@ -1208,14 +1051,10 @@ async function importObservedModule({
         expectedContractId,
         importedContractId,
         importedContractMatchesExpected:
-          importedContractId ===
-          expectedContractId,
-        publicRouteInitializedByImport:
-          false,
-        publicEnvironmentHostedByImport:
-          false,
-        rendererMountedByImport:
-          false,
+          importedContractId === expectedContractId,
+        publicRouteInitializedByImport: false,
+        publicEnvironmentHostedByImport: false,
+        rendererMountedByImport: false,
         boundary:
           H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
       }),
@@ -1229,22 +1068,15 @@ async function importObservedModule({
           H_EARTH_3D_DIAGNOSTIC_FILE,
         contractId:
           H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-        generatedAt:
-          nowIso(),
+        generatedAt: nowIso(),
         modulePath,
-        importAttempted:
-          true,
-        importSkipped:
-          false,
-        importSucceeded:
-          false,
-        moduleInitializationObserved:
-          false,
+        importAttempted: true,
+        importSkipped: false,
+        importSucceeded: false,
+        moduleInitializationObserved: false,
         expectedContractId,
-        importedContractId:
-          null,
-        importedContractMatchesExpected:
-          false,
+        importedContractId: null,
+        importedContractMatchesExpected: false,
         errorName:
           error instanceof Error
             ? error.name
@@ -1260,12 +1092,9 @@ async function importObservedModule({
               : null,
             2400
           ),
-        publicRouteInitializedByImport:
-          false,
-        publicEnvironmentHostedByImport:
-          false,
-        rendererMountedByImport:
-          false,
+        publicRouteInitializedByImport: false,
+        publicEnvironmentHostedByImport: false,
+        rendererMountedByImport: false,
         boundary:
           H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
       }),
@@ -1274,9 +1103,7 @@ async function importObservedModule({
   }
 }
 
-async function importDiagnosticDependencies(
-  options = {}
-) {
+async function importDiagnosticDependencies(options = {}) {
   const [
     publicIndexImport,
     compositorImport,
@@ -1294,11 +1121,8 @@ async function importDiagnosticDependencies(
         H_EARTH_3D_PUBLIC_INDEX_BOOTSTRAP_CONTRACT_ID,
       contractReader:
         (module) =>
-          module
-            ?.H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID ||
-          module
-            ?.default
-            ?.contractId ||
+          module?.H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID ||
+          module?.default?.contractId ||
           null,
       skipImport:
         options.skipPublicIndexImport === true,
@@ -1316,13 +1140,9 @@ async function importDiagnosticDependencies(
         H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
       contractReader:
         (module) =>
-          module
-            ?.H_EARTH_3D_COMPOSITOR_CONTRACT_ID ||
-          module
-            ?.H_EARTH_3D_COMPOSITOR_FILE_CONTRACT_ID ||
-          module
-            ?.default
-            ?.contractId ||
+          module?.H_EARTH_3D_COMPOSITOR_CONTRACT_ID ||
+          module?.H_EARTH_3D_COMPOSITOR_FILE_CONTRACT_ID ||
+          module?.default?.contractId ||
           null,
       skipImport:
         options.skipCompositorImport === true,
@@ -1340,13 +1160,9 @@ async function importDiagnosticDependencies(
         H_EARTH_3D_RENDERER_CONTRACT_ID,
       contractReader:
         (module) =>
-          module
-            ?.H_EARTH_3D_RENDERER_CONTRACT_ID ||
-          module
-            ?.H_EARTH_3D_RENDERER_FILE_CONTRACT_ID ||
-          module
-            ?.default
-            ?.contractId ||
+          module?.H_EARTH_3D_RENDERER_CONTRACT_ID ||
+          module?.H_EARTH_3D_RENDERER_FILE_CONTRACT_ID ||
+          module?.default?.contractId ||
           null,
       skipImport:
         options.skipRendererImport === true,
@@ -1360,15 +1176,11 @@ async function importDiagnosticDependencies(
         options.step012JModulePath ||
         H_EARTH_3D_STEP_012J_MODULE_PATH,
       expectedContractId:
-        H_EARTH_3D_LAYER_4_CONTRACTS
-          .step012JContractId,
+        H_EARTH_3D_LAYER_4_CONTRACTS.step012JContractId,
       contractReader:
         (module) =>
-          module
-            ?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_CONTRACT_ID ||
-          module
-            ?.default
-            ?.contractId ||
+          module?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_CONTRACT_ID ||
+          module?.default?.contractId ||
           null,
       skipImport:
         options.skipStep012JImport === true,
@@ -1453,9 +1265,7 @@ function snapshotFd05State(
     );
 
   const currentOccurrenceInstrumentStartedObserved =
-    Boolean(
-      observedMarkers.instrumentStartedAt
-    ) &&
+    Boolean(observedMarkers.instrumentStartedAt) &&
     (
       !baselineEvidence.instrumentStartedAt ||
       observedMarkers.instrumentStartedAt !==
@@ -1463,9 +1273,7 @@ function snapshotFd05State(
     );
 
   const currentOccurrenceReceiptPublishedObserved =
-    Boolean(
-      observedMarkers.receiptPublishedAt
-    ) &&
+    Boolean(observedMarkers.receiptPublishedAt) &&
     (
       !baselineEvidence.receiptPublishedAt ||
       observedMarkers.receiptPublishedAt !==
@@ -1473,9 +1281,7 @@ function snapshotFd05State(
     );
 
   const currentOccurrenceReceiptRenderedObserved =
-    Boolean(
-      observedMarkers.receiptRenderedAt
-    ) &&
+    Boolean(observedMarkers.receiptRenderedAt) &&
     (
       !baselineEvidence.receiptRenderedAt ||
       observedMarkers.receiptRenderedAt !==
@@ -1526,9 +1332,7 @@ function snapshotFd05State(
   });
 }
 
-export function classifyHEarthFd05InstrumentState(
-  state
-) {
+export function classifyHEarthFd05InstrumentState(state) {
   if (
     state.moduleImportResolved === true &&
     Boolean(state.moduleLoadedAt) &&
@@ -1558,17 +1362,13 @@ export function classifyHEarthFd05InstrumentState(
     ) &&
     !state.instrumentStartedAt
   ) {
-    return (
-      'C_INCLUDED_BUT_NOT_REACHED_OR_NOT_INITIALIZED'
-    );
+    return 'C_INCLUDED_BUT_NOT_REACHED_OR_NOT_INITIALIZED';
   }
 
   return 'D_NOT_INCLUDED_OR_COULD_NOT_LOAD';
 }
 
-function nextFd05WatchdogOperation(
-  classification
-) {
+function nextFd05WatchdogOperation(classification) {
   switch (classification) {
     case 'A_INSTALLED_EXECUTING_AND_PUBLISHING':
       return freeze({
@@ -1633,8 +1433,7 @@ function buildFd05WatchdogReceipt({
   return freeze({
     receiptId:
       H_EARTH_3D_FD_05_WATCHDOG_RECEIPT_ID,
-    receiptSchemaVersion:
-      1,
+    receiptSchemaVersion: 1,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
     file:
@@ -1682,16 +1481,13 @@ function buildFd05WatchdogReceipt({
     primaryReceiptRunId:
       state.primaryReceiptRunId,
     primaryReceiptExecutionStatus:
-      state.primaryReceipt
-        ?.executionStatus || null,
+      state.primaryReceipt?.executionStatus || null,
     currentOccurrenceReceiptObserved:
       state.currentOccurrenceReceiptObserved,
     instrumentClassification,
     nextAuthorizedOperation,
-    sourceCorrectionAuthorized:
-      false,
-    constitutionalSourceReopenAuthorized:
-      false
+    sourceCorrectionAuthorized: false,
+    constitutionalSourceReopenAuthorized: false
   });
 }
 
@@ -1726,8 +1522,7 @@ function runFd05Watchdog(
 ) {
   releaseFd05WatchdogObservation();
 
-  const watchdogStartedAt =
-    nowIso();
+  const watchdogStartedAt = nowIso();
 
   const baselineReceipt =
     readFd05PrimaryReceipt();
@@ -1736,17 +1531,11 @@ function runFd05Watchdog(
     runId:
       baselineReceipt?.runId || null,
     instrumentStartedAt:
-      readFd05Marker(
-        'instrumentStartedAt'
-      ),
+      readFd05Marker('instrumentStartedAt'),
     receiptPublishedAt:
-      readFd05Marker(
-        'receiptPublishedAt'
-      ),
+      readFd05Marker('receiptPublishedAt'),
     receiptRenderedAt:
-      readFd05Marker(
-        'receiptRenderedAt'
-      )
+      readFd05Marker('receiptRenderedAt')
   });
 
   DIAGNOSTIC_STATE.fd05PriorRunReceipt =
@@ -1846,9 +1635,7 @@ function runFd05Watchdog(
     instrumentClassificationOverride = null
   ) {
     if (finalDecisionPublished) {
-      return (
-        DIAGNOSTIC_STATE.fd05WatchdogReceipt
-      );
+      return DIAGNOSTIC_STATE.fd05WatchdogReceipt;
     }
 
     finalDecisionPublished = true;
@@ -1866,14 +1653,11 @@ function runFd05Watchdog(
       buildFd05WatchdogReceipt({
         occurrenceId,
         watchdogStartedAt,
-        watchdogCompletedAt:
-          nowIso(),
+        watchdogCompletedAt: nowIso(),
         state,
         watchdogPhase,
-        decisionFinalized:
-          true,
-        awaitingFinalReceipt:
-          false,
+        decisionFinalized: true,
+        awaitingFinalReceipt: false,
         instrumentClassificationOverride
       });
 
@@ -1891,22 +1675,17 @@ function runFd05Watchdog(
     return receipt;
   }
 
-  function publishInterimRunningDecision(
-    state
-  ) {
+  function publishInterimRunningDecision(state) {
     const receipt =
       buildFd05WatchdogReceipt({
         occurrenceId,
         watchdogStartedAt,
-        watchdogCompletedAt:
-          nowIso(),
+        watchdogCompletedAt: nowIso(),
         state,
         watchdogPhase:
           'INTERIM_TIMEOUT_RUNNING',
-        decisionFinalized:
-          false,
-        awaitingFinalReceipt:
-          true,
+        decisionFinalized: false,
+        awaitingFinalReceipt: true,
         instrumentClassificationOverride:
           'A_INSTALLED_EXECUTING_AND_PUBLISHING'
       });
@@ -2009,11 +1788,8 @@ function runFd05Watchdog(
         module;
 
       const observedContractId =
-        module
-          ?.H_EARTH_FD_05_MODULE_IMPORT_TRACK_CONTRACT_ID ||
-        module
-          ?.default
-          ?.contractId ||
+        module?.H_EARTH_FD_05_MODULE_IMPORT_TRACK_CONTRACT_ID ||
+        module?.default?.contractId ||
         null;
 
       DIAGNOSTIC_STATE.fd05ModuleImportReceipt =
@@ -2024,17 +1800,14 @@ function runFd05Watchdog(
             H_EARTH_3D_DIAGNOSTIC_FILE,
           contractId:
             H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-          generatedAt:
-            nowIso(),
+          generatedAt: nowIso(),
           initializationOccurrenceId:
             occurrenceId,
           modulePath:
             options.fd05ModulePath ||
             H_EARTH_3D_FD_05_MODULE_PATH,
-          importAttempted:
-            true,
-          importSucceeded:
-            true,
+          importAttempted: true,
+          importSucceeded: true,
           expectedContractId:
             H_EARTH_3D_FD_05_MODULE_CONTRACT_ID,
           importedContractId:
@@ -2046,30 +1819,25 @@ function runFd05Watchdog(
             freezeArray(
               getOwnKeys(module)
             ),
-          sourceCorrectionAuthorized:
-            false
+          sourceCorrectionAuthorized: false
         });
 
       if (
         cachedModule &&
-        typeof module
-          ?.runHEarthFd05ModuleImportTrack ===
+        typeof module?.runHEarthFd05ModuleImportTrack ===
         'function'
       ) {
-        Promise
-          .resolve(
-            module
-              .runHEarthFd05ModuleImportTrack()
-          )
-          .then(
-            () =>
-              queueMicrotask(
-                inspectCurrentReceiptForFinalization
-              ),
-            () => {
-              // The module primary receipt owns direct execution failure evidence.
-            }
-          );
+        Promise.resolve(
+          module.runHEarthFd05ModuleImportTrack()
+        ).then(
+          () =>
+            queueMicrotask(
+              inspectCurrentReceiptForFinalization
+            ),
+          () => {
+            // The module primary receipt owns direct execution failure evidence.
+          }
+        );
       } else {
         queueMicrotask(
           inspectCurrentReceiptForFinalization
@@ -2097,23 +1865,18 @@ function runFd05Watchdog(
             H_EARTH_3D_DIAGNOSTIC_FILE,
           contractId:
             H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-          generatedAt:
-            nowIso(),
+          generatedAt: nowIso(),
           initializationOccurrenceId:
             occurrenceId,
           modulePath:
             options.fd05ModulePath ||
             H_EARTH_3D_FD_05_MODULE_PATH,
-          importAttempted:
-            true,
-          importSucceeded:
-            false,
+          importAttempted: true,
+          importSucceeded: false,
           expectedContractId:
             H_EARTH_3D_FD_05_MODULE_CONTRACT_ID,
-          importedContractId:
-            null,
-          importedContractMatchesExpected:
-            false,
+          importedContractId: null,
+          importedContractMatchesExpected: false,
           errorName:
             importState.moduleImportErrorName,
           errorMessage:
@@ -2125,8 +1888,7 @@ function runFd05Watchdog(
                 : null,
               2400
             ),
-          sourceCorrectionAuthorized:
-            false
+          sourceCorrectionAuthorized: false
         });
 
       finalizeCurrentDecision(
@@ -2138,8 +1900,8 @@ function runFd05Watchdog(
   DIAGNOSTIC_STATE.fd05WatchdogTimeoutId =
     globalThis.setTimeout(
       () => {
-        DIAGNOSTIC_STATE
-          .fd05WatchdogTimeoutId = null;
+        DIAGNOSTIC_STATE.fd05WatchdogTimeoutId =
+          null;
 
         if (
           finalDecisionPublished ||
@@ -2156,13 +1918,10 @@ function runFd05Watchdog(
 
         if (
           state.currentOccurrenceReceiptObserved &&
-          state.primaryReceipt
-            ?.executionStatus === 'RUNNING'
+          state.primaryReceipt?.executionStatus ===
+            'RUNNING'
         ) {
-          publishInterimRunningDecision(
-            state
-          );
-
+          publishInterimRunningDecision(state);
           return;
         }
 
@@ -2208,8 +1967,7 @@ function buildFd05DecisionReport() {
     DIAGNOSTIC_STATE.fd05WatchdogReceipt;
 
   const currentOccurrenceReceiptConfirmed =
-    watchdog
-      ?.currentOccurrenceReceiptObserved === true;
+    watchdog?.currentOccurrenceReceiptObserved === true;
 
   const primary =
     currentOccurrenceReceiptConfirmed
@@ -2230,9 +1988,13 @@ function buildFd05DecisionReport() {
         ? 'PRESENT_RUNNING'
         : primary.executionStatus === 'FAILED'
           ? 'PRESENT_INSTRUMENT_FAILED'
-          : primary.primaryReceiptVisible === true
-            ? 'PRESENT_RENDERED'
-            : 'PRESENT_NOT_RENDERED';
+          : primary.executionStatus === 'COMPLETE'
+            ? (
+                primary.primaryReceiptVisible === true
+                  ? 'PRESENT_COMPLETE_RENDERED'
+                  : 'PRESENT_COMPLETE_NOT_RENDERED'
+              )
+            : 'PRESENT_NONFINAL_OR_UNKNOWN';
 
   const evidenceStillMissing =
     new Set(
@@ -2272,6 +2034,15 @@ function buildFd05DecisionReport() {
     );
   }
 
+  if (
+    primary &&
+    primary.executionStatus !== 'COMPLETE'
+  ) {
+    evidenceStillMissing.add(
+      'CURRENT_FD_05_EXECUTION_NOT_COMPLETE'
+    );
+  }
+
   return freeze({
     receiptType:
       H_EARTH_3D_FD_05_DECISION_REPORT_ID,
@@ -2279,11 +2050,9 @@ function buildFd05DecisionReport() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     initializationOccurrenceId:
-      DIAGNOSTIC_STATE
-        .initializationOccurrenceId,
+      DIAGNOSTIC_STATE.initializationOccurrenceId,
     activeFailureDomain:
       H_EARTH_3D_FD_05_FAILURE_DOMAIN,
     instrumentClassification:
@@ -2365,16 +2134,11 @@ function buildFd05DecisionReport() {
     errorCause:
       primary?.errorCause || null,
     exactFailedTransitiveUrlObserved:
-      primary
-        ?.exactFailedTransitiveUrlObserved ===
-      true,
+      primary?.exactFailedTransitiveUrlObserved === true,
     exactFailedTransitiveUrl:
-      primary?.exactFailedTransitiveUrl ||
-      null,
+      primary?.exactFailedTransitiveUrl || null,
     exactFailedTransitiveUrlEvidenceType:
-      primary
-        ?.exactFailedTransitiveUrlEvidenceType ||
-      null,
+      primary?.exactFailedTransitiveUrlEvidenceType || null,
     candidateTransitiveUrls:
       freezeArray(
         primary?.candidateTransitiveUrls ||
@@ -2389,16 +2153,14 @@ function buildFd05DecisionReport() {
         primary,
         watchdog
       ),
-    sourceCorrectionAuthorized:
-      false,
+    sourceCorrectionAuthorized: false,
     sourceCorrectionStatus:
       primary?.sourceCorrectionStatus ||
       'WITHHELD_PENDING_DIRECT_FAILURE_TARGET_IDENTIFICATION',
     historicalPriorRunReceiptPresent:
       Boolean(historicalPriorRunReceipt),
     historicalPriorRunReceiptRunId:
-      historicalPriorRunReceipt?.runId ||
-      null,
+      historicalPriorRunReceipt?.runId || null,
     historicalPriorRunReceipt:
       safePlainData(
         historicalPriorRunReceipt,
@@ -2409,11 +2171,9 @@ function buildFd05DecisionReport() {
       ),
     reportsClosedForCurrentOccurrence:
       'ALL_NONPRIMARY_AND_NONSUPPORTING_REPORTS_RETAINED_AS_HISTORICAL_OR_SUPPORTING',
-    manualReportCyclingRequired:
-      false,
+    manualReportCyclingRequired: false,
     moduleImportReceipt:
-      DIAGNOSTIC_STATE
-        .fd05ModuleImportReceipt,
+      DIAGNOSTIC_STATE.fd05ModuleImportReceipt,
     watchdogReceipt:
       watchdog,
     primaryReceipt:
@@ -2485,8 +2245,7 @@ function augmentFd05PrimarySurface() {
       list.prepend(term);
     }
 
-    term.textContent =
-      label;
+    term.textContent = label;
 
     detail.textContent =
       String(
@@ -2507,8 +2266,7 @@ function augmentFd05PrimarySurface() {
     decision.instrumentClassification
   );
 
-  mount.dataset
-    .hEarthFd05InstrumentClassification =
+  mount.dataset.hEarthFd05InstrumentClassification =
     decision.instrumentClassification;
 
   return true;
@@ -2519,9 +2277,7 @@ function renderFd05Fallback() {
     DIAGNOSTIC_STATE.rootDocument;
 
   const host =
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.fd05DecisionHost;
+    DIAGNOSTIC_STATE.mountPoints?.fd05DecisionHost;
 
   const decision =
     DIAGNOSTIC_STATE.fd05DecisionReport;
@@ -2543,8 +2299,7 @@ function renderFd05Fallback() {
   let fallback =
     getById(
       documentObject,
-      H_EARTH_3D_DIAGNOSTIC_PANEL_IDS
-        .fd05FallbackPanel
+      H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.fd05FallbackPanel
     );
 
   if (primaryMount) {
@@ -2555,12 +2310,10 @@ function renderFd05Fallback() {
 
   if (!fallback) {
     fallback =
-      documentObject
-        .createElement('article');
+      documentObject.createElement('article');
 
     fallback.id =
-      H_EARTH_3D_DIAGNOSTIC_PANEL_IDS
-        .fd05FallbackPanel;
+      H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.fd05FallbackPanel;
 
     fallback.className =
       'h-earth-3d-diagnostic-panel h-earth-3d-panel-primary h-earth-3d-mismatch-panel';
@@ -2576,19 +2329,16 @@ function renderFd05Fallback() {
   fallback.replaceChildren();
 
   const heading =
-    documentObject
-      .createElement('div');
+    documentObject.createElement('div');
 
   heading.className =
     'h-earth-3d-panel-heading-row';
 
   const headingCopy =
-    documentObject
-      .createElement('div');
+    documentObject.createElement('div');
 
   const kicker =
-    documentObject
-      .createElement('p');
+    documentObject.createElement('p');
 
   kicker.className =
     'h-earth-3d-diagnostic-kicker';
@@ -2597,8 +2347,7 @@ function renderFd05Fallback() {
     'FD_05 Primary Lane';
 
   const title =
-    documentObject
-      .createElement('h2');
+    documentObject.createElement('h2');
 
   title.textContent =
     'Deployed ES Module Import Decision';
@@ -2609,14 +2358,12 @@ function renderFd05Fallback() {
   );
 
   const copyButton =
-    documentObject
-      .createElement('button');
+    documentObject.createElement('button');
 
   copyButton.className =
     'h-earth-3d-copy-button h-earth-3d-panel-copy-button';
 
-  copyButton.type =
-    'button';
+  copyButton.type = 'button';
 
   copyButton.textContent =
     'Copy This Report';
@@ -2643,8 +2390,7 @@ function renderFd05Fallback() {
   );
 
   const output =
-    documentObject
-      .createElement('pre');
+    documentObject.createElement('pre');
 
   output.className =
     'h-earth-3d-diagnostic-output';
@@ -2855,8 +2601,7 @@ function buildDiagnosticEntryReport() {
     generatedAt:
       nowIso(),
     initializationOccurrenceId:
-      DIAGNOSTIC_STATE
-        .initializationOccurrenceId,
+      DIAGNOSTIC_STATE.initializationOccurrenceId,
     initialized:
       DIAGNOSTIC_STATE.initialized,
     status:
@@ -2866,24 +2611,16 @@ function buildDiagnosticEntryReport() {
     styleContractId:
       H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_CONTRACT_ID,
     mountPointsResolved:
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.requiredFound === true,
+      DIAGNOSTIC_STATE.mountPoints?.requiredFound === true,
     missingRequiredIds:
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.missingRequiredIds ||
+      DIAGNOSTIC_STATE.mountPoints?.missingRequiredIds ||
       freezeArray([]),
     listenerOwnership:
       'DIAGNOSTIC_INDEX_OWNED',
-    fd05OperationalLaneIncluded:
-      true,
-    diagnosticRouteOnly:
-      true,
-    publicRouteInitializedByDiagnostic:
-      false,
-    publicRouteMutation:
-      false,
+    fd05OperationalLaneIncluded: true,
+    diagnosticRouteOnly: true,
+    publicRouteInitializedByDiagnostic: false,
+    publicRouteMutation: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -2902,78 +2639,48 @@ function buildPublicRouteReport(
 
   const routeReceipt =
     selectFirstPresent(
-      globals
-        .observed
-        .H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT,
-      getters
-        .routeBootstrapReceipt
-        .value
+      globals.observed.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT,
+      getters.routeBootstrapReceipt.value
     );
 
   const routeStatus =
     selectFirstPresent(
-      globals
-        .observed
-        .H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS,
-      getters
-        .routeBootstrapStatus
-        .value
+      globals.observed.H_EARTH_3D_ROUTE_BOOTSTRAP_STATUS,
+      getters.routeBootstrapStatus.value
     );
 
   const routeResult =
-    globals
-      .observed
-      .H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT;
+    globals.observed.H_EARTH_3D_ROUTE_BOOTSTRAP_RESULT;
 
   const routeCompletion =
     selectFirstPresent(
-      globals
-        .observed
-        .H_EARTH_3D_ROUTE_BOOTSTRAP_COMPLETION,
-      getters
-        .routeBootstrapCompletion
-        .value
+      globals.observed.H_EARTH_3D_ROUTE_BOOTSTRAP_COMPLETION,
+      getters.routeBootstrapCompletion.value
     );
 
   const sourcePreviewReceipt =
     selectFirstPresent(
-      globals
-        .observed
-        .H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT,
-      getters
-        .publicStageSourcePreviewReceipt
-        .value
+      globals.observed.H_EARTH_3D_PUBLIC_STAGE_SOURCE_PREVIEW_RECEIPT,
+      getters.publicStageSourcePreviewReceipt.value
     );
 
   const layer4Projection =
     selectFirstPresent(
-      globals
-        .observed
-        .H_EARTH_3D_LAYER_4_STATUS_PROJECTION,
-      getters
-        .layer4StatusProjection
-        .value
+      globals.observed.H_EARTH_3D_LAYER_4_STATUS_PROJECTION,
+      getters.layer4StatusProjection.value
     );
 
   const layer4Receipt =
     selectFirstPresent(
-      globals
-        .observed
-        .H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT,
-      getters
-        .layer4PublicStageReceipt
-        .value
+      globals.observed.H_EARTH_3D_LAYER_4_PUBLIC_STAGE_RECEIPT,
+      getters.layer4PublicStageReceipt.value
     );
 
   const groundReadout =
-    getters
-      .publicGroundConditionRead
-      .value;
+    getters.publicGroundConditionRead.value;
 
   const asyncFailure =
-    globals
-      .observed
-      .H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE;
+    globals.observed.H_EARTH_3D_PUBLIC_STAGE_ASYNC_FAILURE;
 
   return freeze({
     receiptType:
@@ -2982,17 +2689,13 @@ function buildPublicRouteReport(
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     expectedPublicIndexContractId:
       H_EARTH_3D_PUBLIC_INDEX_BOOTSTRAP_CONTRACT_ID,
     publicIndexImportReceipt:
-      DIAGNOSTIC_STATE
-        .publicIndexImportReceipt,
-    liveGlobalEvidence:
-      globals,
-    moduleGetterEvidence:
-      getters,
+      DIAGNOSTIC_STATE.publicIndexImportReceipt,
+    liveGlobalEvidence: globals,
+    moduleGetterEvidence: getters,
     routeReceiptFound:
       Boolean(routeReceipt),
     routeStatusFound:
@@ -3029,12 +2732,9 @@ function buildPublicRouteReport(
       safePlainData(groundReadout),
     asyncFailure:
       safePlainData(asyncFailure),
-    publicRouteInitializedByDiagnostic:
-      false,
-    publicEnvironmentHostedByDiagnostic:
-      false,
-    rendererMountedByDiagnostic:
-      false,
+    publicRouteInitializedByDiagnostic: false,
+    publicEnvironmentHostedByDiagnostic: false,
+    rendererMountedByDiagnostic: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -3073,47 +2773,31 @@ function buildCompositorReport(
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     expectedCompositorContractId:
       H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
     staticImportReceipt:
-      DIAGNOSTIC_STATE
-        .compositorImportReceipt,
+      DIAGNOSTIC_STATE.compositorImportReceipt,
     routeCompositorImportReceiptFound:
-      Boolean(
-        routeCompositorImportReceipt
-      ),
+      Boolean(routeCompositorImportReceipt),
     compositorHandoffFound:
       Boolean(compositorHandoff),
     operationalReceiptsFound:
-      Boolean(
-        getters
-          .operationalReceipts
-          .value
-      ),
+      Boolean(getters.operationalReceipts.value),
     routeCompositorImportReceipt:
-      safePlainData(
-        routeCompositorImportReceipt
-      ),
+      safePlainData(routeCompositorImportReceipt),
     compositorHandoff:
-      safePlainData(
-        compositorHandoff
-      ),
+      safePlainData(compositorHandoff),
     moduleGetterEvidence:
       getters,
     fd05PrimaryBranchEvidence:
-      DIAGNOSTIC_STATE
-        .fd05DecisionReport
+      DIAGNOSTIC_STATE.fd05DecisionReport
         ?.importFailedBranches
         ?.includes('COMPOSITOR_ROOT')
-        ? DIAGNOSTIC_STATE
-            .fd05DecisionReport
+        ? DIAGNOSTIC_STATE.fd05DecisionReport
         : null,
-    compositorConstructedByDiagnostic:
-      false,
-    compositorMutatedByDiagnostic:
-      false,
+    compositorConstructedByDiagnostic: false,
+    compositorMutatedByDiagnostic: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -3136,24 +2820,21 @@ function buildRendererReport(
     null;
 
   const rendererConstructionReceipt =
-    routeReceipt
-      ?.rendererConstructionReceipt ||
+    routeReceipt?.rendererConstructionReceipt ||
     routeReceipt
       ?.rendererBootstrapReceipt
       ?.rendererConstructionReceipt ||
     null;
 
   const rendererMountReceipt =
-    routeReceipt
-      ?.rendererMountReceipt ||
+    routeReceipt?.rendererMountReceipt ||
     routeReceipt
       ?.rendererBootstrapReceipt
       ?.rendererMountReceipt ||
     null;
 
   const rendererReleaseReceipt =
-    routeReceipt
-      ?.rendererReleaseReceipt ||
+    routeReceipt?.rendererReleaseReceipt ||
     routeReceipt
       ?.rendererBootstrapReceipt
       ?.rendererReleaseReceipt ||
@@ -3166,77 +2847,44 @@ function buildRendererReport(
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     expectedRendererContractId:
       H_EARTH_3D_RENDERER_CONTRACT_ID,
     staticImportReceipt:
-      DIAGNOSTIC_STATE
-        .rendererImportReceipt,
+      DIAGNOSTIC_STATE.rendererImportReceipt,
     routeRendererImportReceiptFound:
-      Boolean(
-        routeRendererImportReceipt
-      ),
+      Boolean(routeRendererImportReceipt),
     rendererConstructionReceiptFound:
-      Boolean(
-        rendererConstructionReceipt
-      ),
+      Boolean(rendererConstructionReceipt),
     rendererMountReceiptFound:
-      Boolean(
-        rendererMountReceipt
-      ),
+      Boolean(rendererMountReceipt),
     rendererReleaseReceiptFound:
-      Boolean(
-        rendererReleaseReceipt
-      ),
+      Boolean(rendererReleaseReceipt),
     rendererStateFound:
-      Boolean(
-        getters
-          .rendererState
-          .value
-      ),
+      Boolean(getters.rendererState.value),
     routeRendererImportReceipt:
-      safePlainData(
-        routeRendererImportReceipt
-      ),
+      safePlainData(routeRendererImportReceipt),
     rendererConstructionReceipt:
-      safePlainData(
-        rendererConstructionReceipt
-      ),
+      safePlainData(rendererConstructionReceipt),
     rendererMountReceipt:
-      safePlainData(
-        rendererMountReceipt
-      ),
+      safePlainData(rendererMountReceipt),
     rendererReleaseReceipt:
-      safePlainData(
-        rendererReleaseReceipt
-      ),
+      safePlainData(rendererReleaseReceipt),
     rendererState:
-      safePlainData(
-        getters
-          .rendererState
-          .value
-      ),
+      safePlainData(getters.rendererState.value),
     moduleGetterEvidence:
       getters,
     fd05PrimaryBranchEvidence:
-      DIAGNOSTIC_STATE
-        .fd05DecisionReport
+      DIAGNOSTIC_STATE.fd05DecisionReport
         ?.importFailedBranches
         ?.includes('RENDERER_ROOT')
-        ? DIAGNOSTIC_STATE
-            .fd05DecisionReport
+        ? DIAGNOSTIC_STATE.fd05DecisionReport
         : null,
-    rendererConstructedByDiagnostic:
-      false,
-    rendererMountedByDiagnostic:
-      false,
-    rendererReleasedByDiagnostic:
-      false,
-    rendererPassClaim:
-      false,
-    visualPassClaim:
-      false,
+    rendererConstructedByDiagnostic: false,
+    rendererMountedByDiagnostic: false,
+    rendererReleasedByDiagnostic: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -3247,26 +2895,22 @@ function buildStep012JDescriptorReport() {
     DIAGNOSTIC_STATE.step012JModule;
 
   const descriptor =
-    module
-      ?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE ||
+    module?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE ||
     module?.default ||
     null;
 
   const authority =
-    module
-      ?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AUTHORITY ||
+    module?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_AUTHORITY ||
     descriptor?.authority ||
     null;
 
   const targetClassification =
-    module
-      ?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_TARGET_CLASSIFICATION ||
+    module?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_TARGET_CLASSIFICATION ||
     descriptor?.targetClassification ||
     null;
 
   const importedContractId =
-    module
-      ?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_CONTRACT_ID ||
+    module?.H_EARTH_HEADLESS_SERIALIZATION_BRIDGE_CONTRACT_ID ||
     descriptor?.contractId ||
     authority?.contractId ||
     null;
@@ -3278,45 +2922,31 @@ function buildStep012JDescriptorReport() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     importReceipt:
-      DIAGNOSTIC_STATE
-        .step012JImportReceipt,
+      DIAGNOSTIC_STATE.step012JImportReceipt,
     expectedStep012JContractId:
-      H_EARTH_3D_LAYER_4_CONTRACTS
-        .step012JContractId,
+      H_EARTH_3D_LAYER_4_CONTRACTS.step012JContractId,
     importedStep012JContractId:
       importedContractId,
     importedStep012JContractMatchesExpected:
       importedContractId ===
-      H_EARTH_3D_LAYER_4_CONTRACTS
-        .step012JContractId,
+      H_EARTH_3D_LAYER_4_CONTRACTS.step012JContractId,
     descriptorKeys:
-      freezeArray(
-        getOwnKeys(descriptor)
-      ),
+      freezeArray(getOwnKeys(descriptor)),
     authority:
       safePlainData(authority),
     targetClassification:
-      safePlainData(
-        targetClassification
-      ),
+      safePlainData(targetClassification),
     descriptorDisplayPolicy:
       freeze({
         readOnly: true,
-        narrowPlainDataProjection:
-          true,
-        callableFunctionsInvoked:
-          false,
-        runnerExecuted:
-          false,
-        replayExecuted:
-          false,
-        canonicalDigestGenerated:
-          false,
-        validationClaim:
-          false
+        narrowPlainDataProjection: true,
+        callableFunctionsInvoked: false,
+        runnerExecuted: false,
+        replayExecuted: false,
+        canonicalDigestGenerated: false,
+        validationClaim: false
       }),
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
@@ -3331,8 +2961,7 @@ function buildRelationshipMembersReport() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     controllingRelationship:
       'STEP_012H_1_HEADLESS_REPLAY_FIXTURE_SIDE -> STEP_012J_READ_ONLY_RELATIONSHIP_DESCRIPTOR -> PUBLIC_STAGE_STATUS_PROJECTION',
     members:
@@ -3342,11 +2971,9 @@ function buildRelationshipMembersReport() {
             role:
               'READ_ONLY_RELATIONSHIP_DESCRIPTOR',
             contractId:
-              H_EARTH_3D_LAYER_4_CONTRACTS
-                .step012JContractId,
+              H_EARTH_3D_LAYER_4_CONTRACTS.step012JContractId,
             imported:
-              DIAGNOSTIC_STATE
-                .step012JImportReceipt
+              DIAGNOSTIC_STATE.step012JImportReceipt
                 ?.importSucceeded === true
           }),
         step012H1:
@@ -3354,47 +2981,36 @@ function buildRelationshipMembersReport() {
             role:
               'HEADLESS_REPLAY_FIXTURE_SIDE',
             contractId:
-              H_EARTH_3D_LAYER_4_CONTRACTS
-                .step012H1ContractId,
-            runExecuted:
-              false
+              H_EARTH_3D_LAYER_4_CONTRACTS.step012H1ContractId,
+            runExecuted: false
           }),
         step012I:
           freeze({
             role:
               'CANONICAL_SERIALIZATION_LAW_MEMBER',
             contractId:
-              H_EARTH_3D_LAYER_4_CONTRACTS
-                .step012IContractId,
+              H_EARTH_3D_LAYER_4_CONTRACTS.step012IContractId,
             canonicalizationId:
-              H_EARTH_3D_LAYER_4_CONTRACTS
-                .step012ICanonicalizationId,
-            vectorExecuted:
-              false,
-            runnerExecuted:
-              false,
-            digestGenerated:
-              false
+              H_EARTH_3D_LAYER_4_CONTRACTS.step012ICanonicalizationId,
+            vectorExecuted: false,
+            runnerExecuted: false,
+            digestGenerated: false
           }),
         target002:
           freeze({
             role:
               'DETERMINISTIC_RUNTIME_SUPPORT_SURFACE',
             contractId:
-              H_EARTH_3D_LAYER_4_CONTRACTS
-                .target002ContractId,
-            runtimeExecuted:
-              false
+              H_EARTH_3D_LAYER_4_CONTRACTS.target002ContractId,
+            runtimeExecuted: false
           }),
         target003:
           freeze({
             role:
               'CANONICAL_REPLAY_SUPPORT_SURFACE',
             contractId:
-              H_EARTH_3D_LAYER_4_CONTRACTS
-                .target003ContractId,
-            replayExecuted:
-              false
+              H_EARTH_3D_LAYER_4_CONTRACTS.target003ContractId,
+            replayExecuted: false
           })
       }),
     boundary:
@@ -3410,43 +3026,28 @@ function buildLayer4CustodyReport() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     status:
       'BACKED_STATIC_SUPPORT_CHAIN_REPORTED',
     archiveCustody:
       H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY,
     step012JImportReceipt:
-      DIAGNOSTIC_STATE
-        .step012JImportReceipt,
-    diagnosticRouteReverifiesDriveArchive:
-      false,
-    diagnosticRouteClaimsNetworkBackup:
-      false,
+      DIAGNOSTIC_STATE.step012JImportReceipt,
+    diagnosticRouteReverifiesDriveArchive: false,
+    diagnosticRouteClaimsNetworkBackup: false,
     executionCeiling:
       freeze({
-        step012H1RunExecution:
-          false,
-        step012IVectorExecution:
-          false,
-        step012IRunnerExecution:
-          false,
-        target002RuntimeExecution:
-          false,
-        target003ReplayExecution:
-          false,
-        canonicalDigestGeneration:
-          false,
-        replayComparison:
-          false,
-        validationClaim:
-          false,
-        productionClaim:
-          false,
-        visualPassClaim:
-          false,
-        matrixCollapse:
-          false
+        step012H1RunExecution: false,
+        step012IVectorExecution: false,
+        step012IRunnerExecution: false,
+        target002RuntimeExecution: false,
+        target003ReplayExecution: false,
+        canonicalDigestGeneration: false,
+        replayComparison: false,
+        validationClaim: false,
+        productionClaim: false,
+        visualPassClaim: false,
+        matrixCollapse: false
       }),
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
@@ -3454,6 +3055,39 @@ function buildLayer4CustodyReport() {
 }
 
 function buildModuleInitializationReport() {
+  const fd05Watchdog =
+    DIAGNOSTIC_STATE.fd05WatchdogReceipt;
+
+  const currentFd05Markers = freeze({
+    moduleLoadedAt:
+      fd05Watchdog?.moduleLoadedAt || null,
+    instrumentStartedAt:
+      fd05Watchdog?.instrumentStartedAt || null,
+    receiptPublishedAt:
+      fd05Watchdog?.receiptPublishedAt || null,
+    receiptRenderedAt:
+      fd05Watchdog?.receiptRenderedAt || null
+  });
+
+  const observedModuleGlobals = freeze({
+    moduleLoadedAt:
+      readFd05Marker('moduleLoadedAt'),
+    instrumentStartedAt:
+      readFd05Marker('instrumentStartedAt'),
+    receiptPublishedAt:
+      readFd05Marker('receiptPublishedAt'),
+    receiptRenderedAt:
+      readFd05Marker('receiptRenderedAt'),
+    historicalOrCurrentOccurrenceUnclassified: true,
+    controllingCurrentOccurrenceEvidence: false
+  });
+
+  const fd05InstrumentExecuted =
+    Boolean(
+      fd05Watchdog?.currentOccurrenceReceiptObserved === true &&
+      fd05Watchdog?.instrumentStartedAt
+    );
+
   return freeze({
     receiptType:
       'H_EARTH_3D_DIAGNOSTIC_MODULE_INITIALIZATION_VS_EXECUTION_REPORT',
@@ -3461,80 +3095,41 @@ function buildModuleInitializationReport() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     imports:
       freeze({
         publicIndex:
-          DIAGNOSTIC_STATE
-            .publicIndexImportReceipt,
+          DIAGNOSTIC_STATE.publicIndexImportReceipt,
         compositor:
-          DIAGNOSTIC_STATE
-            .compositorImportReceipt,
+          DIAGNOSTIC_STATE.compositorImportReceipt,
         renderer:
-          DIAGNOSTIC_STATE
-            .rendererImportReceipt,
+          DIAGNOSTIC_STATE.rendererImportReceipt,
         step012J:
-          DIAGNOSTIC_STATE
-            .step012JImportReceipt,
+          DIAGNOSTIC_STATE.step012JImportReceipt,
         fd05OperationalLane:
-          DIAGNOSTIC_STATE
-            .fd05ModuleImportReceipt
+          DIAGNOSTIC_STATE.fd05ModuleImportReceipt
       }),
-    fd05Markers:
-      freeze({
-        moduleLoadedAt:
-          readFd05Marker(
-            'moduleLoadedAt'
-          ),
-        instrumentStartedAt:
-          readFd05Marker(
-            'instrumentStartedAt'
-          ),
-        receiptPublishedAt:
-          readFd05Marker(
-            'receiptPublishedAt'
-          ),
-        receiptRenderedAt:
-          readFd05Marker(
-            'receiptRenderedAt'
-          )
-      }),
+    fd05CurrentOccurrenceMarkers:
+      currentFd05Markers,
+    observedModuleGlobals,
     executionFlags:
       freeze({
-        publicRouteInitializeInvoked:
-          false,
-        compositorConstructed:
-          false,
-        rendererConstructed:
-          false,
-        rendererMounted:
-          false,
-        rendererReleased:
-          false,
-        fd05InstrumentExecuted:
-          Boolean(
-            readFd05Marker(
-              'instrumentStartedAt'
-            )
-          ),
-        step012H1RunExecuted:
-          false,
-        step012IVectorExecuted:
-          false,
-        step012IRunnerExecuted:
-          false,
-        target002RuntimeExecuted:
-          false,
-        target003ReplayExecuted:
-          false,
-        canonicalDigestGenerated:
-          false,
-        replayComparison:
-          false
+        publicRouteInitializeInvoked: false,
+        compositorConstructed: false,
+        rendererConstructed: false,
+        rendererMounted: false,
+        rendererReleased: false,
+        fd05InstrumentExecuted,
+        step012H1RunExecuted: false,
+        step012IVectorExecuted: false,
+        step012IRunnerExecuted: false,
+        target002RuntimeExecuted: false,
+        target003ReplayExecuted: false,
+        canonicalDigestGenerated: false,
+        replayComparison: false
       }),
     rule:
-      'Successful module import establishes module initialization only. FD_05 instrument execution establishes only bounded diagnostic-overlay evidence and does not authorize public-route, compositor, renderer, runtime, replay, validation, production, deployment, or visual claims.',
+      'Successful module import establishes module initialization only. Current-occurrence FD_05 execution facts are projected only from the occurrence-gated watchdog receipt. Unrestricted module globals remain observational and may belong to a prior occurrence. FD_05 instrument execution does not authorize public-route, compositor, renderer, runtime, replay, validation, production, deployment, or visual claims.',
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -3548,6 +3143,41 @@ function buildActiveGlobalsReport(
       publicRouteWindow
     );
 
+  const fd05Watchdog =
+    DIAGNOSTIC_STATE.fd05WatchdogReceipt;
+
+  const currentFd05Markers = freeze({
+    moduleLoadedAt:
+      fd05Watchdog?.moduleLoadedAt || null,
+    instrumentStartedAt:
+      fd05Watchdog?.instrumentStartedAt || null,
+    receiptPublishedAt:
+      fd05Watchdog?.receiptPublishedAt || null,
+    receiptRenderedAt:
+      fd05Watchdog?.receiptRenderedAt || null
+  });
+
+  const currentFd05InstrumentExecuted =
+    Boolean(
+      fd05Watchdog?.currentOccurrenceReceiptObserved === true &&
+      fd05Watchdog?.instrumentStartedAt
+    );
+
+  const observedModuleGlobals = freeze({
+    primaryReceiptPresent:
+      Boolean(readFd05PrimaryReceipt()),
+    moduleLoadedAt:
+      readFd05Marker('moduleLoadedAt'),
+    instrumentStartedAt:
+      readFd05Marker('instrumentStartedAt'),
+    receiptPublishedAt:
+      readFd05Marker('receiptPublishedAt'),
+    receiptRenderedAt:
+      readFd05Marker('receiptRenderedAt'),
+    historicalOrCurrentOccurrenceUnclassified: true,
+    controllingCurrentOccurrenceEvidence: false
+  });
+
   return freeze({
     receiptType:
       'H_EARTH_3D_DIAGNOSTIC_ACTIVE_GLOBALS_REPORT',
@@ -3555,11 +3185,9 @@ function buildActiveGlobalsReport(
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     evidenceSource:
-      DIAGNOSTIC_STATE
-        .evidenceSourceReport
+      DIAGNOSTIC_STATE.evidenceSourceReport
         ?.selectedSource ||
       'NONE',
     observedCount:
@@ -3572,41 +3200,31 @@ function buildActiveGlobalsReport(
       ),
     diagnosticOverlayGlobals:
       freeze({
-        primaryReceiptPresent:
-          Boolean(
-            readFd05PrimaryReceipt()
-          ),
-        watchdogReceiptPresent:
-          Boolean(
-            DIAGNOSTIC_STATE
-              .fd05WatchdogReceipt
-          ),
-        decisionReportPresent:
-          Boolean(
-            DIAGNOSTIC_STATE
-              .fd05DecisionReport
-          ),
-        moduleLoadedAt:
-          readFd05Marker(
-            'moduleLoadedAt'
-          ),
-        instrumentStartedAt:
-          readFd05Marker(
-            'instrumentStartedAt'
-          ),
-        receiptPublishedAt:
-          readFd05Marker(
-            'receiptPublishedAt'
-          ),
-        receiptRenderedAt:
-          readFd05Marker(
-            'receiptRenderedAt'
-          )
+        currentOccurrence:
+          freeze({
+            primaryReceiptPresent:
+              fd05Watchdog
+                ?.currentOccurrenceReceiptObserved === true,
+            primaryReceiptExecutionStatus:
+              fd05Watchdog
+                ?.primaryReceiptExecutionStatus || null,
+            watchdogReceiptPresent:
+              Boolean(
+                DIAGNOSTIC_STATE.fd05WatchdogReceipt
+              ),
+            decisionReportPresent:
+              Boolean(
+                DIAGNOSTIC_STATE.fd05DecisionReport
+              ),
+            fd05InstrumentExecuted:
+              currentFd05InstrumentExecuted,
+            markers:
+              currentFd05Markers
+          }),
+        observedModuleGlobals
       }),
-    diagnosticRoutePublishedPublicGlobals:
-      false,
-    publicRouteMutation:
-      false,
+    diagnosticRoutePublishedPublicGlobals: false,
+    publicRouteMutation: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -3620,14 +3238,11 @@ function buildArchiveCustodyReport() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     archiveCustody:
       H_EARTH_3D_LAYER_4_ARCHIVE_CUSTODY,
-    diagnosticRouteReverifiesDriveArchive:
-      false,
-    diagnosticRouteClaimsNetworkBackup:
-      false,
+    diagnosticRouteReverifiesDriveArchive: false,
+    diagnosticRouteClaimsNetworkBackup: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -3635,37 +3250,29 @@ function buildArchiveCustodyReport() {
 
 function buildContractReports() {
   const importedPublicIndexContractId =
-    DIAGNOSTIC_STATE
-      .publicIndexModule
+    DIAGNOSTIC_STATE.publicIndexModule
       ?.H_EARTH_3D_INDEX_BOOTSTRAP_CONTRACT_ID ||
-    DIAGNOSTIC_STATE
-      .publicIndexModule
+    DIAGNOSTIC_STATE.publicIndexModule
       ?.default
       ?.contractId ||
     null;
 
   const importedCompositorContractId =
-    DIAGNOSTIC_STATE
-      .compositorModule
+    DIAGNOSTIC_STATE.compositorModule
       ?.H_EARTH_3D_COMPOSITOR_CONTRACT_ID ||
-    DIAGNOSTIC_STATE
-      .compositorModule
+    DIAGNOSTIC_STATE.compositorModule
       ?.H_EARTH_3D_COMPOSITOR_FILE_CONTRACT_ID ||
-    DIAGNOSTIC_STATE
-      .compositorModule
+    DIAGNOSTIC_STATE.compositorModule
       ?.default
       ?.contractId ||
     null;
 
   const importedRendererContractId =
-    DIAGNOSTIC_STATE
-      .rendererModule
+    DIAGNOSTIC_STATE.rendererModule
       ?.H_EARTH_3D_RENDERER_CONTRACT_ID ||
-    DIAGNOSTIC_STATE
-      .rendererModule
+    DIAGNOSTIC_STATE.rendererModule
       ?.H_EARTH_3D_RENDERER_FILE_CONTRACT_ID ||
-    DIAGNOSTIC_STATE
-      .rendererModule
+    DIAGNOSTIC_STATE.rendererModule
       ?.default
       ?.contractId ||
     null;
@@ -3674,8 +3281,7 @@ function buildContractReports() {
     freeze({
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_PUBLIC_INDEX_CONTRACT_REPORT',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       expectedContractId:
         H_EARTH_3D_PUBLIC_INDEX_BOOTSTRAP_CONTRACT_ID,
       importedContractId:
@@ -3688,16 +3294,14 @@ function buildContractReports() {
       styleContractId:
         H_EARTH_3D_PUBLIC_ROUTE_STYLE_CONTRACT_ID,
       importReceipt:
-        DIAGNOSTIC_STATE
-          .publicIndexImportReceipt
+        DIAGNOSTIC_STATE.publicIndexImportReceipt
     });
 
   DIAGNOSTIC_STATE.compositorContractReport =
     freeze({
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_COMPOSITOR_CONTRACT_REPORT',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       expectedContractId:
         H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
       importedContractId:
@@ -3706,16 +3310,14 @@ function buildContractReports() {
         importedCompositorContractId ===
         H_EARTH_3D_COMPOSITOR_CONTRACT_ID,
       importReceipt:
-        DIAGNOSTIC_STATE
-          .compositorImportReceipt
+        DIAGNOSTIC_STATE.compositorImportReceipt
     });
 
   DIAGNOSTIC_STATE.rendererContractReport =
     freeze({
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_RENDERER_CONTRACT_REPORT',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       expectedContractId:
         H_EARTH_3D_RENDERER_CONTRACT_ID,
       importedContractId:
@@ -3724,16 +3326,14 @@ function buildContractReports() {
         importedRendererContractId ===
         H_EARTH_3D_RENDERER_CONTRACT_ID,
       importReceipt:
-        DIAGNOSTIC_STATE
-          .rendererImportReceipt
+        DIAGNOSTIC_STATE.rendererImportReceipt
     });
 
   DIAGNOSTIC_STATE.diagnosticContractReport =
     freeze({
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_CONTRACT_REPORT',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       bootstrapContractId:
         H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
       shellContractId:
@@ -3747,8 +3347,7 @@ function buildContractReports() {
       fd05ModuleContractId:
         H_EARTH_3D_FD_05_MODULE_CONTRACT_ID,
       fd05ModuleImportReceipt:
-        DIAGNOSTIC_STATE
-          .fd05ModuleImportReceipt,
+        DIAGNOSTIC_STATE.fd05ModuleImportReceipt,
       boundary:
         H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
     });
@@ -3766,35 +3365,22 @@ function buildPublicStageInspectionReports() {
         H_EARTH_3D_DIAGNOSTIC_FILE,
       contractId:
         H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       publicStageEvidencePresent:
         Boolean(
-          routeReport
-            ?.layer4ProjectionFound ||
-          routeReport
-            ?.layer4ReceiptFound ||
-          routeReport
-            ?.sourcePreviewReceiptFound
+          routeReport?.layer4ProjectionFound ||
+          routeReport?.layer4ReceiptFound ||
+          routeReport?.sourcePreviewReceiptFound
         ),
       layer4Projection:
-        routeReport
-          ?.layer4Projection ||
-        null,
+        routeReport?.layer4Projection || null,
       layer4Receipt:
-        routeReport
-          ?.layer4Receipt ||
-        null,
+        routeReport?.layer4Receipt || null,
       sourcePreviewReceipt:
-        routeReport
-          ?.sourcePreviewReceipt ||
-        null,
-      publicEnvironmentHostedByDiagnostic:
-        false,
-      rendererMountedByDiagnostic:
-        false,
-      publicRouteInitializedByDiagnostic:
-        false,
+        routeReport?.sourcePreviewReceipt || null,
+      publicEnvironmentHostedByDiagnostic: false,
+      rendererMountedByDiagnostic: false,
+      publicRouteInitializedByDiagnostic: false,
       boundary:
         H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
     });
@@ -3803,15 +3389,11 @@ function buildPublicStageInspectionReports() {
     freeze({
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_PUBLIC_STAGE_RECEIPT_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       receiptFound:
-        routeReport
-          ?.layer4ReceiptFound === true,
+        routeReport?.layer4ReceiptFound === true,
       receipt:
-        routeReport
-          ?.layer4Receipt ||
-        null,
+        routeReport?.layer4Receipt || null,
       boundary:
         H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
     });
@@ -3820,21 +3402,14 @@ function buildPublicStageInspectionReports() {
     freeze({
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_PUBLIC_GROUND_READOUT_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       readoutFound:
-        routeReport
-          ?.groundReadoutFound === true,
+        routeReport?.groundReadoutFound === true,
       readout:
-        routeReport
-          ?.groundReadout ||
-        null,
-      runtimeActionExecutionClaim:
-        false,
-      validationClaim:
-        false,
-      visualPassClaim:
-        false
+        routeReport?.groundReadout || null,
+      runtimeActionExecutionClaim: false,
+      validationClaim: false,
+      visualPassClaim: false
     });
 }
 
@@ -3845,28 +3420,23 @@ function buildBoundaryMismatchReport() {
   const imports = [
     [
       'PUBLIC_INDEX_CONTRACT_MISMATCH',
-      DIAGNOSTIC_STATE
-        .publicIndexImportReceipt
+      DIAGNOSTIC_STATE.publicIndexImportReceipt
     ],
     [
       'COMPOSITOR_CONTRACT_MISMATCH',
-      DIAGNOSTIC_STATE
-        .compositorImportReceipt
+      DIAGNOSTIC_STATE.compositorImportReceipt
     ],
     [
       'RENDERER_CONTRACT_MISMATCH',
-      DIAGNOSTIC_STATE
-        .rendererImportReceipt
+      DIAGNOSTIC_STATE.rendererImportReceipt
     ],
     [
       'STEP_012J_CONTRACT_MISMATCH',
-      DIAGNOSTIC_STATE
-        .step012JImportReceipt
+      DIAGNOSTIC_STATE.step012JImportReceipt
     ],
     [
       'FD_05_MODULE_CONTRACT_MISMATCH',
-      DIAGNOSTIC_STATE
-        .fd05ModuleImportReceipt
+      DIAGNOSTIC_STATE.fd05ModuleImportReceipt
     ]
   ];
 
@@ -3874,9 +3444,7 @@ function buildBoundaryMismatchReport() {
     ([code, receipt]) => {
       if (
         receipt?.importSucceeded === true &&
-        receipt
-          ?.importedContractMatchesExpected !==
-        true
+        receipt?.importedContractMatchesExpected !== true
       ) {
         mismatches.push({
           code,
@@ -3903,8 +3471,7 @@ function buildBoundaryMismatchReport() {
   );
 
   if (
-    DIAGNOSTIC_STATE
-      .publicRouteReport
+    DIAGNOSTIC_STATE.publicRouteReport
       ?.routeReceiptFound !== true
   ) {
     missingEvidence.push({
@@ -3914,8 +3481,7 @@ function buildBoundaryMismatchReport() {
   }
 
   if (
-    DIAGNOSTIC_STATE
-      .compositorReport
+    DIAGNOSTIC_STATE.compositorReport
       ?.compositorHandoffFound !== true
   ) {
     missingEvidence.push({
@@ -3925,10 +3491,8 @@ function buildBoundaryMismatchReport() {
   }
 
   if (
-    DIAGNOSTIC_STATE
-      .rendererReport
-      ?.rendererConstructionReceiptFound !==
-    true
+    DIAGNOSTIC_STATE.rendererReport
+      ?.rendererConstructionReceiptFound !== true
   ) {
     missingEvidence.push({
       code:
@@ -3937,8 +3501,7 @@ function buildBoundaryMismatchReport() {
   }
 
   if (
-    DIAGNOSTIC_STATE
-      .rendererReport
+    DIAGNOSTIC_STATE.rendererReport
       ?.rendererMountReceiptFound !== true
   ) {
     missingEvidence.push({
@@ -3948,8 +3511,7 @@ function buildBoundaryMismatchReport() {
   }
 
   if (
-    DIAGNOSTIC_STATE
-      .fd05DecisionReport
+    DIAGNOSTIC_STATE.fd05DecisionReport
       ?.instrumentClassification !==
     'A_INSTALLED_EXECUTING_AND_PUBLISHING'
   ) {
@@ -3957,9 +3519,23 @@ function buildBoundaryMismatchReport() {
       code:
         'FD_05_INSTRUMENT_NOT_IN_FULL_A_STATE',
       classification:
-        DIAGNOSTIC_STATE
-          .fd05DecisionReport
+        DIAGNOSTIC_STATE.fd05DecisionReport
           ?.instrumentClassification ||
+        null
+    });
+  }
+
+  if (
+    DIAGNOSTIC_STATE.fd05DecisionReport
+      ?.primaryReceiptExecutionStatus !==
+    'COMPLETE'
+  ) {
+    missingEvidence.push({
+      code:
+        'FD_05_PRIMARY_RECEIPT_NOT_COMPLETE',
+      primaryReceiptExecutionStatus:
+        DIAGNOSTIC_STATE.fd05DecisionReport
+          ?.primaryReceiptExecutionStatus ||
         null
     });
   }
@@ -3984,17 +3560,13 @@ function buildBoundaryMismatchReport() {
 
   forbiddenFlags.forEach((key) => {
     if (
-      H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS[
-        key
-      ] === true
+      H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS[key] === true
     ) {
       mismatches.push({
         code:
           `FORBIDDEN_DIAGNOSTIC_FLAG_TRUE:${key}`,
-        expected:
-          false,
-        actual:
-          true
+        expected: false,
+        actual: true
       });
     }
   });
@@ -4013,8 +3585,7 @@ function buildBoundaryMismatchReport() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     status,
     mismatchCount:
       mismatches.length,
@@ -4026,28 +3597,19 @@ function buildBoundaryMismatchReport() {
       freezeArray(missingEvidence),
     expectedBoundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS,
-    rendererPassClaim:
-      false,
-    visualPassClaim:
-      false,
-    validationClaim:
-      false,
-    productionClaim:
-      false,
-    deploymentClaim:
-      false,
-    sourceCorrectionAuthorized:
-      false,
-    matrixCollapse:
-      false
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    deploymentClaim: false,
+    sourceCorrectionAuthorized: false,
+    matrixCollapse: false
   });
 }
 
 function deriveDiagnosticStatus() {
   if (
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.requiredFound !== true
+    DIAGNOSTIC_STATE.mountPoints?.requiredFound !== true
   ) {
     return 'DIAGNOSTIC_MOUNT_FAILURE';
   }
@@ -4057,29 +3619,32 @@ function deriveDiagnosticStatus() {
 
   if (
     fd05?.decisionFinalized !== true ||
-    fd05?.awaitingFinalReceipt === true ||
-    fd05?.primaryReceiptExecutionStatus ===
-      'RUNNING'
+    fd05?.awaitingFinalReceipt === true
   ) {
     return 'DIAGNOSTIC_PARTIAL';
   }
 
   if (
-    fd05?.instrumentClassification ===
-    'D_NOT_INCLUDED_OR_COULD_NOT_LOAD'
+    fd05?.primaryReceiptExecutionStatus !==
+    'COMPLETE'
+  ) {
+    return 'DIAGNOSTIC_PARTIAL';
+  }
+
+  if (
+    fd05?.instrumentClassification !==
+    'A_INSTALLED_EXECUTING_AND_PUBLISHING'
   ) {
     return 'DIAGNOSTIC_PARTIAL';
   }
 
   const mismatchStatus =
-    DIAGNOSTIC_STATE
-      .boundaryMismatchReport
+    DIAGNOSTIC_STATE.boundaryMismatchReport
       ?.status;
 
   return (
     mismatchStatus === 'MISMATCH_FOUND' ||
-    mismatchStatus ===
-      'EVIDENCE_INCOMPLETE'
+    mismatchStatus === 'EVIDENCE_INCOMPLETE'
   )
     ? 'DIAGNOSTIC_PARTIAL'
     : 'DIAGNOSTIC_READY';
@@ -4097,106 +3662,78 @@ function buildDiagnosticReceipt() {
       H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_CONTRACT_ID,
     styleContractId:
       H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     initializationOccurrenceId:
-      DIAGNOSTIC_STATE
-        .initializationOccurrenceId,
+      DIAGNOSTIC_STATE.initializationOccurrenceId,
     status:
       DIAGNOSTIC_STATE.status,
     initialized:
       DIAGNOSTIC_STATE.initialized,
     livePublicRouteEvidenceObserved:
-      DIAGNOSTIC_STATE
-        .evidenceSourceReport
-        ?.livePublicRouteEvidenceObserved ===
-      true,
+      DIAGNOSTIC_STATE.evidenceSourceReport
+        ?.livePublicRouteEvidenceObserved === true,
     selectedEvidenceSource:
-      DIAGNOSTIC_STATE
-        .evidenceSourceReport
+      DIAGNOSTIC_STATE.evidenceSourceReport
         ?.selectedSource ||
       'NONE',
     publicIndexContractMatches:
-      DIAGNOSTIC_STATE
-        .indexContractReport
+      DIAGNOSTIC_STATE.indexContractReport
         ?.matches === true,
     compositorContractMatches:
-      DIAGNOSTIC_STATE
-        .compositorContractReport
+      DIAGNOSTIC_STATE.compositorContractReport
         ?.matches === true,
     rendererContractMatches:
-      DIAGNOSTIC_STATE
-        .rendererContractReport
+      DIAGNOSTIC_STATE.rendererContractReport
         ?.matches === true,
     routeBootstrapReceiptObserved:
-      DIAGNOSTIC_STATE
-        .publicRouteReport
+      DIAGNOSTIC_STATE.publicRouteReport
         ?.routeReceiptFound === true,
     compositorHandoffObserved:
-      DIAGNOSTIC_STATE
-        .compositorReport
+      DIAGNOSTIC_STATE.compositorReport
         ?.compositorHandoffFound === true,
     rendererConstructionReceiptObserved:
-      DIAGNOSTIC_STATE
-        .rendererReport
-        ?.rendererConstructionReceiptFound ===
-      true,
+      DIAGNOSTIC_STATE.rendererReport
+        ?.rendererConstructionReceiptFound === true,
     rendererMountReceiptObserved:
-      DIAGNOSTIC_STATE
-        .rendererReport
+      DIAGNOSTIC_STATE.rendererReport
         ?.rendererMountReceiptFound === true,
     fd05InstrumentClassification:
-      DIAGNOSTIC_STATE
-        .fd05DecisionReport
+      DIAGNOSTIC_STATE.fd05DecisionReport
         ?.instrumentClassification ||
       'D_NOT_INCLUDED_OR_COULD_NOT_LOAD',
     fd05PrimaryReceiptPresent:
-      DIAGNOSTIC_STATE
-        .fd05DecisionReport
+      DIAGNOSTIC_STATE.fd05DecisionReport
         ?.primaryReceiptPresent === true,
     fd05PrimaryReceiptStatus:
-      DIAGNOSTIC_STATE
-        .fd05DecisionReport
+      DIAGNOSTIC_STATE.fd05DecisionReport
         ?.primaryReceiptStatus ||
       'ABSENT',
+    fd05PrimaryReceiptExecutionStatus:
+      DIAGNOSTIC_STATE.fd05DecisionReport
+        ?.primaryReceiptExecutionStatus ||
+      null,
     fd05OneNextAuthorizedOperation:
-      DIAGNOSTIC_STATE
-        .fd05DecisionReport
+      DIAGNOSTIC_STATE.fd05DecisionReport
         ?.nextAuthorizedOperation ||
       null,
     boundaryMismatchStatus:
-      DIAGNOSTIC_STATE
-        .boundaryMismatchReport
+      DIAGNOSTIC_STATE.boundaryMismatchReport
         ?.status ||
       'UNAVAILABLE',
-    publicRouteInitializedByDiagnostic:
-      false,
-    packet002ConstructedByDiagnostic:
-      false,
-    admittedFrameConstructedByDiagnostic:
-      false,
-    compositorConstructedByDiagnostic:
-      false,
-    rendererConstructedByDiagnostic:
-      false,
-    rendererMountedByDiagnostic:
-      false,
-    rendererReleasedByDiagnostic:
-      false,
-    sourceCorrectionAuthorized:
-      false,
-    rendererPassClaim:
-      false,
-    visualPassClaim:
-      false,
-    validationClaim:
-      false,
-    productionClaim:
-      false,
-    deploymentClaim:
-      false,
-    matrixCollapse:
-      false,
+    publicRouteInitializedByDiagnostic: false,
+    packet002ConstructedByDiagnostic: false,
+    admittedFrameConstructedByDiagnostic: false,
+    compositorConstructedByDiagnostic: false,
+    rendererConstructedByDiagnostic: false,
+    rendererMountedByDiagnostic: false,
+    rendererReleasedByDiagnostic: false,
+    sourceCorrectionAuthorized: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    deploymentClaim: false,
+    matrixCollapse: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -4210,55 +3747,44 @@ function buildRawEvidenceReport() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     initializationOccurrenceId:
-      DIAGNOSTIC_STATE
-        .initializationOccurrenceId,
+      DIAGNOSTIC_STATE.initializationOccurrenceId,
     evidenceSourceReport:
-      DIAGNOSTIC_STATE
-        .evidenceSourceReport,
+      DIAGNOSTIC_STATE.evidenceSourceReport,
     importReceipts:
       freeze({
         publicIndex:
-          DIAGNOSTIC_STATE
-            .publicIndexImportReceipt,
+          DIAGNOSTIC_STATE.publicIndexImportReceipt,
         compositor:
-          DIAGNOSTIC_STATE
-            .compositorImportReceipt,
+          DIAGNOSTIC_STATE.compositorImportReceipt,
         renderer:
-          DIAGNOSTIC_STATE
-            .rendererImportReceipt,
+          DIAGNOSTIC_STATE.rendererImportReceipt,
         step012J:
-          DIAGNOSTIC_STATE
-            .step012JImportReceipt,
+          DIAGNOSTIC_STATE.step012JImportReceipt,
         fd05OperationalLane:
-          DIAGNOSTIC_STATE
-            .fd05ModuleImportReceipt
+          DIAGNOSTIC_STATE.fd05ModuleImportReceipt
       }),
     fd05WatchdogReceipt:
-      DIAGNOSTIC_STATE
-        .fd05WatchdogReceipt,
+      DIAGNOSTIC_STATE.fd05WatchdogReceipt,
     fd05PrimaryReceipt:
       safePlainData(
-        DIAGNOSTIC_STATE
-          .fd05PrimaryReceipt
+        DIAGNOSTIC_STATE.fd05PrimaryReceipt
+      ),
+    fd05HistoricalPriorRunReceipt:
+      safePlainData(
+        DIAGNOSTIC_STATE.fd05PriorRunReceipt
       ),
     fd05DecisionReport:
-      DIAGNOSTIC_STATE
-        .fd05DecisionReport,
+      DIAGNOSTIC_STATE.fd05DecisionReport,
     publicRouteReport:
-      DIAGNOSTIC_STATE
-        .publicRouteReport,
+      DIAGNOSTIC_STATE.publicRouteReport,
     compositorReport:
-      DIAGNOSTIC_STATE
-        .compositorReport,
+      DIAGNOSTIC_STATE.compositorReport,
     rendererReport:
-      DIAGNOSTIC_STATE
-        .rendererReport,
+      DIAGNOSTIC_STATE.rendererReport,
     activeGlobalsReport:
-      DIAGNOSTIC_STATE
-        .activeGlobalsReport,
+      DIAGNOSTIC_STATE.activeGlobalsReport,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -4272,11 +3798,9 @@ function buildAggregateDiagnosticPayload() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     initializationOccurrenceId:
-      DIAGNOSTIC_STATE
-        .initializationOccurrenceId,
+      DIAGNOSTIC_STATE.initializationOccurrenceId,
     status:
       DIAGNOSTIC_STATE.status,
     activeFailureDomain:
@@ -4284,75 +3808,52 @@ function buildAggregateDiagnosticPayload() {
     primaryInvestigativeAuthority:
       H_EARTH_3D_FD_05_PRIMARY_RECEIPT_ID,
     diagnosticReceipt:
-      DIAGNOSTIC_STATE
-        .diagnosticReceipt,
+      DIAGNOSTIC_STATE.diagnosticReceipt,
     reports:
       freeze({
         fd05Decision:
-          DIAGNOSTIC_STATE
-            .fd05DecisionReport,
+          DIAGNOSTIC_STATE.fd05DecisionReport,
         fd05Watchdog:
-          DIAGNOSTIC_STATE
-            .fd05WatchdogReceipt,
+          DIAGNOSTIC_STATE.fd05WatchdogReceipt,
         diagnosticEntry:
-          DIAGNOSTIC_STATE
-            .diagnosticEntryReport,
+          DIAGNOSTIC_STATE.diagnosticEntryReport,
         evidenceSource:
-          DIAGNOSTIC_STATE
-            .evidenceSourceReport,
+          DIAGNOSTIC_STATE.evidenceSourceReport,
         publicRoute:
-          DIAGNOSTIC_STATE
-            .publicRouteReport,
+          DIAGNOSTIC_STATE.publicRouteReport,
         compositor:
-          DIAGNOSTIC_STATE
-            .compositorReport,
+          DIAGNOSTIC_STATE.compositorReport,
         renderer:
-          DIAGNOSTIC_STATE
-            .rendererReport,
+          DIAGNOSTIC_STATE.rendererReport,
         layer4Custody:
-          DIAGNOSTIC_STATE
-            .layer4CustodyReport,
+          DIAGNOSTIC_STATE.layer4CustodyReport,
         step012JDescriptor:
-          DIAGNOSTIC_STATE
-            .step012JDescriptorReport,
+          DIAGNOSTIC_STATE.step012JDescriptorReport,
         relationshipMembers:
-          DIAGNOSTIC_STATE
-            .relationshipMembersReport,
+          DIAGNOSTIC_STATE.relationshipMembersReport,
         moduleInitialization:
-          DIAGNOSTIC_STATE
-            .moduleInitializationReport,
+          DIAGNOSTIC_STATE.moduleInitializationReport,
         publicStage:
-          DIAGNOSTIC_STATE
-            .publicStageInspectionReport,
+          DIAGNOSTIC_STATE.publicStageInspectionReport,
         activeGlobals:
-          DIAGNOSTIC_STATE
-            .activeGlobalsReport,
+          DIAGNOSTIC_STATE.activeGlobalsReport,
         boundaryMismatch:
-          DIAGNOSTIC_STATE
-            .boundaryMismatchReport,
+          DIAGNOSTIC_STATE.boundaryMismatchReport,
         archiveCustody:
-          DIAGNOSTIC_STATE
-            .archiveCustodyReport,
+          DIAGNOSTIC_STATE.archiveCustodyReport,
         indexContract:
-          DIAGNOSTIC_STATE
-            .indexContractReport,
+          DIAGNOSTIC_STATE.indexContractReport,
         compositorContract:
-          DIAGNOSTIC_STATE
-            .compositorContractReport,
+          DIAGNOSTIC_STATE.compositorContractReport,
         rendererContract:
-          DIAGNOSTIC_STATE
-            .rendererContractReport,
+          DIAGNOSTIC_STATE.rendererContractReport,
         diagnosticContract:
-          DIAGNOSTIC_STATE
-            .diagnosticContractReport,
+          DIAGNOSTIC_STATE.diagnosticContractReport,
         rawEvidence:
-          DIAGNOSTIC_STATE
-            .rawEvidenceReport
+          DIAGNOSTIC_STATE.rawEvidenceReport
       }),
-    manualReportCyclingRequiredForFd05:
-      false,
-    sourceCorrectionAuthorized:
-      false,
+    manualReportCyclingRequiredForFd05: false,
+    sourceCorrectionAuthorized: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -4374,14 +3875,12 @@ function buildAllReports(
 
   DIAGNOSTIC_STATE.compositorReport =
     buildCompositorReport(
-      DIAGNOSTIC_STATE
-        .publicRouteReport
+      DIAGNOSTIC_STATE.publicRouteReport
     );
 
   DIAGNOSTIC_STATE.rendererReport =
     buildRendererReport(
-      DIAGNOSTIC_STATE
-        .publicRouteReport
+      DIAGNOSTIC_STATE.publicRouteReport
     );
 
   DIAGNOSTIC_STATE.layer4CustodyReport =
@@ -4423,26 +3922,19 @@ function buildAllReports(
   DIAGNOSTIC_STATE.aggregateDiagnosticPayload =
     buildAggregateDiagnosticPayload();
 
-  return (
-    DIAGNOSTIC_STATE
-      .aggregateDiagnosticPayload
-  );
+  return DIAGNOSTIC_STATE.aggregateDiagnosticPayload;
 }
 
 function refreshReportsAfterFd05FinalReceipt(
   occurrenceId
 ) {
-  if (
-    !assertCurrentOccurrence(occurrenceId)
-  ) {
+  if (!assertCurrentOccurrence(occurrenceId)) {
     return false;
   }
 
   const publicRouteWindow =
-    DIAGNOSTIC_STATE
-      .publicRouteEvidenceWindow ||
-    DIAGNOSTIC_STATE
-      .diagnosticWindow ||
+    DIAGNOSTIC_STATE.publicRouteEvidenceWindow ||
+    DIAGNOSTIC_STATE.diagnosticWindow ||
     globalThis;
 
   buildAllReports(
@@ -4453,9 +3945,7 @@ function refreshReportsAfterFd05FinalReceipt(
   setPanelStatusAttributes();
 
   setRouteClass(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.routeRoot,
+    DIAGNOSTIC_STATE.mountPoints?.routeRoot,
     DIAGNOSTIC_STATE.status ===
       'DIAGNOSTIC_READY'
       ? 'h-earth-3d-diagnostic-ready'
@@ -4463,28 +3953,21 @@ function refreshReportsAfterFd05FinalReceipt(
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.status,
+    DIAGNOSTIC_STATE.mountPoints?.status,
     DIAGNOSTIC_STATE.status
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.statusNote,
+    DIAGNOSTIC_STATE.mountPoints?.statusNote,
     'The current FD_05 receipt reached a final COMPLETE or FAILED state. The controlling decision and aggregate reports were rebuilt for the same diagnostic occurrence.'
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.copyStatus,
+    DIAGNOSTIC_STATE.mountPoints?.copyStatus,
     'The final FD_05 receipt has been incorporated. Diagnostic reports and copy controls are current.'
   );
 
-  DIAGNOSTIC_STATE.updatedAt =
-    nowIso();
+  DIAGNOSTIC_STATE.updatedAt = nowIso();
 
   publishActiveDiagnosticGlobals();
 
@@ -4497,9 +3980,7 @@ function writePanel(
   options = {}
 ) {
   return writeJson(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.[panelKey],
+    DIAGNOSTIC_STATE.mountPoints?.[panelKey],
     value,
     options
   );
@@ -4507,9 +3988,7 @@ function writePanel(
 
 function renderReportCards() {
   const container =
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.reportCards;
+    DIAGNOSTIC_STATE.mountPoints?.reportCards;
 
   if (!container?.ownerDocument) {
     return false;
@@ -4521,34 +4000,51 @@ function renderReportCards() {
   const fd05 =
     DIAGNOSTIC_STATE.fd05DecisionReport;
 
+  const fd05Ok =
+    fd05?.instrumentClassification ===
+      'A_INSTALLED_EXECUTING_AND_PUBLISHING' &&
+    fd05?.decisionFinalized === true &&
+    fd05?.awaitingFinalReceipt === false &&
+    fd05?.primaryReceiptExecutionStatus ===
+      'COMPLETE';
+
+  const fd05Failed =
+    fd05?.primaryReceiptExecutionStatus ===
+      'FAILED';
+
   const reports = [
     {
-      id:
-        'fd-05-primary-lane',
-      title:
-        'FD_05 Primary Lane',
+      id: 'fd-05-primary-lane',
+      title: 'FD_05 Primary Lane',
       status:
         fd05?.instrumentClassification ||
         'D_NOT_INCLUDED_OR_COULD_NOT_LOAD',
       severity:
-        fd05?.instrumentClassification ===
-          'A_INSTALLED_EXECUTING_AND_PUBLISHING' &&
-        fd05?.decisionFinalized === true &&
-        fd05?.awaitingFinalReceipt === false &&
-        fd05?.primaryReceiptExecutionStatus !==
-          'RUNNING'
+        fd05Ok
           ? 'OK'
-          : 'HELD',
+          : fd05Failed
+            ? 'ERROR'
+            : 'HELD',
       summary:
-        fd05?.primaryReceiptPresent === true
+        fd05Ok
           ? (
               `Primary receipt ${fd05.primaryReceiptStatus}. ` +
               `Next: ${fd05.nextAuthorizedOperation.operationId}.`
             )
-          : (
-              'The primary FD_05 receipt is absent; ' +
-              'the bounded host watchdog controls the next operation.'
-            )
+          : fd05Failed
+            ? (
+                `The current FD_05 instrument receipt failed. ` +
+                `Next: ${fd05?.nextAuthorizedOperation?.operationId || 'INSPECT_FD_05_FAILURE'}.`
+              )
+            : fd05?.primaryReceiptPresent === true
+              ? (
+                  `Primary receipt ${fd05.primaryReceiptStatus}. ` +
+                  `The FD_05 lane remains held until execution status is COMPLETE.`
+                )
+              : (
+                  'The current-occurrence FD_05 primary receipt is absent; ' +
+                  'the bounded host watchdog controls the next operation.'
+                )
     },
     {
       id:
@@ -4574,14 +4070,12 @@ function renderReportCards() {
       title:
         'Public Route',
       status:
-        DIAGNOSTIC_STATE
-          .publicRouteReport
+        DIAGNOSTIC_STATE.publicRouteReport
           ?.routeReceiptFound === true
           ? 'ROUTE_RECEIPT_OBSERVED'
           : 'ROUTE_RECEIPT_NOT_OBSERVED',
       severity:
-        DIAGNOSTIC_STATE
-          .publicRouteReport
+        DIAGNOSTIC_STATE.publicRouteReport
           ?.routeReceiptFound === true
           ? 'OK'
           : 'HELD',
@@ -4594,14 +4088,12 @@ function renderReportCards() {
       title:
         'Compositor',
       status:
-        DIAGNOSTIC_STATE
-          .compositorReport
+        DIAGNOSTIC_STATE.compositorReport
           ?.compositorHandoffFound === true
           ? 'COMPOSITOR_HANDOFF_OBSERVED'
           : 'COMPOSITOR_HANDOFF_NOT_OBSERVED',
       severity:
-        DIAGNOSTIC_STATE
-          .compositorReport
+        DIAGNOSTIC_STATE.compositorReport
           ?.compositorHandoffFound === true
           ? 'OK'
           : 'HELD',
@@ -4614,17 +4106,13 @@ function renderReportCards() {
       title:
         'Renderer',
       status:
-        DIAGNOSTIC_STATE
-          .rendererReport
-          ?.rendererMountReceiptFound ===
-        true
+        DIAGNOSTIC_STATE.rendererReport
+          ?.rendererMountReceiptFound === true
           ? 'RENDERER_MOUNT_RECEIPT_OBSERVED'
           : 'RENDERER_MOUNT_RECEIPT_NOT_OBSERVED',
       severity:
-        DIAGNOSTIC_STATE
-          .rendererReport
-          ?.rendererMountReceiptFound ===
-        true
+        DIAGNOSTIC_STATE.rendererReport
+          ?.rendererMountReceiptFound === true
           ? 'OK'
           : 'HELD',
       summary:
@@ -4636,8 +4124,7 @@ function renderReportCards() {
       title:
         'Layer 4 Custody',
       status:
-        DIAGNOSTIC_STATE
-          .layer4CustodyReport
+        DIAGNOSTIC_STATE.layer4CustodyReport
           ?.status ||
         'CUSTODY_UNAVAILABLE',
       severity:
@@ -4651,18 +4138,15 @@ function renderReportCards() {
       title:
         'Boundary',
       status:
-        DIAGNOSTIC_STATE
-          .boundaryMismatchReport
+        DIAGNOSTIC_STATE.boundaryMismatchReport
           ?.status ||
         'BOUNDARY_UNAVAILABLE',
       severity:
-        DIAGNOSTIC_STATE
-          .boundaryMismatchReport
+        DIAGNOSTIC_STATE.boundaryMismatchReport
           ?.status ===
         'NO_MISMATCH_FOUND'
           ? 'OK'
-          : DIAGNOSTIC_STATE
-                .boundaryMismatchReport
+          : DIAGNOSTIC_STATE.boundaryMismatchReport
                 ?.status ===
               'EVIDENCE_INCOMPLETE'
             ? 'HELD'
@@ -4676,8 +4160,7 @@ function renderReportCards() {
 
   reports.forEach((report) => {
     const article =
-      rootDocument
-        .createElement('article');
+      rootDocument.createElement('article');
 
     article.className =
       'h-earth-3d-report-card';
@@ -4689,15 +4172,13 @@ function renderReportCards() {
       report.severity;
 
     const title =
-      rootDocument
-        .createElement('h2');
+      rootDocument.createElement('h2');
 
     title.textContent =
       report.title;
 
     const status =
-      rootDocument
-        .createElement('p');
+      rootDocument.createElement('p');
 
     status.className =
       'h-earth-3d-report-status';
@@ -4706,8 +4187,7 @@ function renderReportCards() {
       report.status;
 
     const summary =
-      rootDocument
-        .createElement('p');
+      rootDocument.createElement('p');
 
     summary.className =
       'h-earth-3d-report-summary';
@@ -4741,18 +4221,15 @@ function renderReports() {
 
   writePanel(
     'diagnosticEntry',
-    DIAGNOSTIC_STATE
-      .diagnosticEntryReport
+    DIAGNOSTIC_STATE.diagnosticEntryReport
   );
 
   writePanel(
     'evidenceSource',
     {
-      ...DIAGNOSTIC_STATE
-        .evidenceSourceReport,
+      ...DIAGNOSTIC_STATE.evidenceSourceReport,
       fd05PrimaryDecision:
-        DIAGNOSTIC_STATE
-          .fd05DecisionReport
+        DIAGNOSTIC_STATE.fd05DecisionReport
     }
   );
 
@@ -4766,15 +4243,11 @@ function renderReports() {
     {
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_ROUTE_BOOTSTRAP_RECEIPT_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       receiptFound:
-        publicRouteReport
-          ?.routeReceiptFound === true,
+        publicRouteReport?.routeReceiptFound === true,
       receipt:
-        publicRouteReport
-          ?.routeReceipt ||
-        null
+        publicRouteReport?.routeReceipt || null
     }
   );
 
@@ -4783,15 +4256,11 @@ function renderReports() {
     {
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_ROUTE_BOOTSTRAP_COMPLETION_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       completionFound:
-        publicRouteReport
-          ?.routeCompletionFound === true,
+        publicRouteReport?.routeCompletionFound === true,
       completion:
-        publicRouteReport
-          ?.routeCompletion ||
-        null
+        publicRouteReport?.routeCompletion || null
     }
   );
 
@@ -4800,16 +4269,11 @@ function renderReports() {
     {
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_SOURCE_PREVIEW_RECEIPT_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       receiptFound:
-        publicRouteReport
-          ?.sourcePreviewReceiptFound ===
-        true,
+        publicRouteReport?.sourcePreviewReceiptFound === true,
       receipt:
-        publicRouteReport
-          ?.sourcePreviewReceipt ||
-        null
+        publicRouteReport?.sourcePreviewReceipt || null
     }
   );
 
@@ -4817,15 +4281,11 @@ function renderReports() {
     'compositorImport',
     {
       staticImportReceipt:
-        DIAGNOSTIC_STATE
-          .compositorImportReceipt,
+        DIAGNOSTIC_STATE.compositorImportReceipt,
       routeImportReceipt:
-        compositorReport
-          ?.routeCompositorImportReceipt ||
-        null,
+        compositorReport?.routeCompositorImportReceipt || null,
       fd05PrimaryDecision:
-        DIAGNOSTIC_STATE
-          .fd05DecisionReport
+        DIAGNOSTIC_STATE.fd05DecisionReport
     }
   );
 
@@ -4834,19 +4294,13 @@ function renderReports() {
     {
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_COMPOSITOR_HANDOFF_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       handoffFound:
-        compositorReport
-          ?.compositorHandoffFound === true,
+        compositorReport?.compositorHandoffFound === true,
       handoff:
-        compositorReport
-          ?.compositorHandoff ||
-        null,
+        compositorReport?.compositorHandoff || null,
       moduleGetterEvidence:
-        compositorReport
-          ?.moduleGetterEvidence ||
-        null
+        compositorReport?.moduleGetterEvidence || null
     }
   );
 
@@ -4854,15 +4308,11 @@ function renderReports() {
     'rendererImport',
     {
       staticImportReceipt:
-        DIAGNOSTIC_STATE
-          .rendererImportReceipt,
+        DIAGNOSTIC_STATE.rendererImportReceipt,
       routeImportReceipt:
-        rendererReport
-          ?.routeRendererImportReceipt ||
-        null,
+        rendererReport?.routeRendererImportReceipt || null,
       fd05PrimaryDecision:
-        DIAGNOSTIC_STATE
-          .fd05DecisionReport
+        DIAGNOSTIC_STATE.fd05DecisionReport
     }
   );
 
@@ -4871,16 +4321,11 @@ function renderReports() {
     {
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_RENDERER_CONSTRUCTION_RECEIPT_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       receiptFound:
-        rendererReport
-          ?.rendererConstructionReceiptFound ===
-        true,
+        rendererReport?.rendererConstructionReceiptFound === true,
       receipt:
-        rendererReport
-          ?.rendererConstructionReceipt ||
-        null
+        rendererReport?.rendererConstructionReceipt || null
     }
   );
 
@@ -4889,16 +4334,11 @@ function renderReports() {
     {
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_RENDERER_MOUNT_RECEIPT_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       receiptFound:
-        rendererReport
-          ?.rendererMountReceiptFound ===
-        true,
+        rendererReport?.rendererMountReceiptFound === true,
       receipt:
-        rendererReport
-          ?.rendererMountReceipt ||
-        null
+        rendererReport?.rendererMountReceipt || null
     }
   );
 
@@ -4907,16 +4347,11 @@ function renderReports() {
     {
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_RENDERER_RELEASE_RECEIPT_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       receiptFound:
-        rendererReport
-          ?.rendererReleaseReceiptFound ===
-        true,
+        rendererReport?.rendererReleaseReceiptFound === true,
       receipt:
-        rendererReport
-          ?.rendererReleaseReceipt ||
-        null
+        rendererReport?.rendererReleaseReceipt || null
     }
   );
 
@@ -4925,68 +4360,54 @@ function renderReports() {
     {
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_RENDERER_STATE_INSPECTION',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       stateFound:
-        rendererReport
-          ?.rendererStateFound === true,
+        rendererReport?.rendererStateFound === true,
       state:
-        rendererReport
-          ?.rendererState ||
-        null,
+        rendererReport?.rendererState || null,
       moduleGetterEvidence:
-        rendererReport
-          ?.moduleGetterEvidence ||
-        null
+        rendererReport?.moduleGetterEvidence || null
     }
   );
 
   writePanel(
     'layer4Custody',
-    DIAGNOSTIC_STATE
-      .layer4CustodyReport
+    DIAGNOSTIC_STATE.layer4CustodyReport
   );
 
   writePanel(
     'step012JDescriptor',
-    DIAGNOSTIC_STATE
-      .step012JDescriptorReport
+    DIAGNOSTIC_STATE.step012JDescriptorReport
   );
 
   writePanel(
     'relationshipMembers',
-    DIAGNOSTIC_STATE
-      .relationshipMembersReport
+    DIAGNOSTIC_STATE.relationshipMembersReport
   );
 
   writePanel(
     'moduleInitialization',
-    DIAGNOSTIC_STATE
-      .moduleInitializationReport
+    DIAGNOSTIC_STATE.moduleInitializationReport
   );
 
   writePanel(
     'publicStageStatus',
-    DIAGNOSTIC_STATE
-      .publicStageInspectionReport
+    DIAGNOSTIC_STATE.publicStageInspectionReport
   );
 
   writePanel(
     'publicStageReceipt',
-    DIAGNOSTIC_STATE
-      .publicStageReceiptInspection
+    DIAGNOSTIC_STATE.publicStageReceiptInspection
   );
 
   writePanel(
     'publicGroundReadout',
-    DIAGNOSTIC_STATE
-      .publicGroundReadoutInspection
+    DIAGNOSTIC_STATE.publicGroundReadoutInspection
   );
 
   writePanel(
     'activeGlobals',
-    DIAGNOSTIC_STATE
-      .activeGlobalsReport
+    DIAGNOSTIC_STATE.activeGlobalsReport
   );
 
   writePanel(
@@ -4996,44 +4417,37 @@ function renderReports() {
 
   writePanel(
     'boundaryMismatch',
-    DIAGNOSTIC_STATE
-      .boundaryMismatchReport
+    DIAGNOSTIC_STATE.boundaryMismatchReport
   );
 
   writePanel(
     'archiveCustody',
-    DIAGNOSTIC_STATE
-      .archiveCustodyReport
+    DIAGNOSTIC_STATE.archiveCustodyReport
   );
 
   writePanel(
     'indexContract',
-    DIAGNOSTIC_STATE
-      .indexContractReport
+    DIAGNOSTIC_STATE.indexContractReport
   );
 
   writePanel(
     'compositorContract',
-    DIAGNOSTIC_STATE
-      .compositorContractReport
+    DIAGNOSTIC_STATE.compositorContractReport
   );
 
   writePanel(
     'rendererContract',
-    DIAGNOSTIC_STATE
-      .rendererContractReport
+    DIAGNOSTIC_STATE.rendererContractReport
   );
 
   writePanel(
     'diagnosticContract',
-    DIAGNOSTIC_STATE
-      .diagnosticContractReport
+    DIAGNOSTIC_STATE.diagnosticContractReport
   );
 
   writePanel(
     'rawEvidence',
-    DIAGNOSTIC_STATE
-      .rawEvidenceReport,
+    DIAGNOSTIC_STATE.rawEvidenceReport,
     {
       maxDepth: 11,
       maxArrayLength: 320
@@ -5042,8 +4456,7 @@ function renderReports() {
 
   writePanel(
     'allDiagnostics',
-    DIAGNOSTIC_STATE
-      .aggregateDiagnosticPayload,
+    DIAGNOSTIC_STATE.aggregateDiagnosticPayload,
     {
       maxDepth: 12,
       maxArrayLength: 420
@@ -5053,23 +4466,23 @@ function renderReports() {
   writePanel(
     'reportLayerStatus',
     {
-      ...DIAGNOSTIC_STATE
-        .diagnosticReceipt,
+      ...DIAGNOSTIC_STATE.diagnosticReceipt,
       activeFailureDomain:
         H_EARTH_3D_FD_05_FAILURE_DOMAIN,
       fd05InstrumentClassification:
-        DIAGNOSTIC_STATE
-          .fd05DecisionReport
+        DIAGNOSTIC_STATE.fd05DecisionReport
           ?.instrumentClassification ||
         null,
       fd05PrimaryReceiptStatus:
-        DIAGNOSTIC_STATE
-          .fd05DecisionReport
+        DIAGNOSTIC_STATE.fd05DecisionReport
           ?.primaryReceiptStatus ||
         null,
+      fd05PrimaryReceiptExecutionStatus:
+        DIAGNOSTIC_STATE.fd05DecisionReport
+          ?.primaryReceiptExecutionStatus ||
+        null,
       fd05NextAuthorizedOperation:
-        DIAGNOSTIC_STATE
-          .fd05DecisionReport
+        DIAGNOSTIC_STATE.fd05DecisionReport
           ?.nextAuthorizedOperation ||
         null
     }
@@ -5083,55 +4496,40 @@ function renderReports() {
 function setPanelStatusAttributes() {
   const mappings = [
     [
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.publicRouteStatus,
+      DIAGNOSTIC_STATE.mountPoints?.publicRouteStatus,
       'hEarthPublicRouteStatus',
-      DIAGNOSTIC_STATE
-        .publicRouteReport
+      DIAGNOSTIC_STATE.publicRouteReport
         ?.routeReceiptFound === true
         ? 'ROUTE_RECEIPT_OBSERVED'
         : 'ROUTE_RECEIPT_NOT_OBSERVED'
     ],
     [
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.compositorHandoff,
+      DIAGNOSTIC_STATE.mountPoints?.compositorHandoff,
       'hEarthCompositorStatus',
-      DIAGNOSTIC_STATE
-        .compositorReport
+      DIAGNOSTIC_STATE.compositorReport
         ?.compositorHandoffFound === true
         ? 'COMPOSITOR_HANDOFF_OBSERVED'
         : 'COMPOSITOR_HANDOFF_NOT_OBSERVED'
     ],
     [
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.rendererMountReceipt,
+      DIAGNOSTIC_STATE.mountPoints?.rendererMountReceipt,
       'hEarthRendererStatus',
-      DIAGNOSTIC_STATE
-        .rendererReport
+      DIAGNOSTIC_STATE.rendererReport
         ?.rendererMountReceiptFound === true
         ? 'RENDERER_MOUNT_RECEIPT_OBSERVED'
         : 'RENDERER_MOUNT_RECEIPT_NOT_OBSERVED'
     ],
     [
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.layer4Custody,
+      DIAGNOSTIC_STATE.mountPoints?.layer4Custody,
       'hEarthCustodyStatus',
-      DIAGNOSTIC_STATE
-        .layer4CustodyReport
+      DIAGNOSTIC_STATE.layer4CustodyReport
         ?.status ||
       'CUSTODY_UNAVAILABLE'
     ],
     [
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.boundaryMismatch,
+      DIAGNOSTIC_STATE.mountPoints?.boundaryMismatch,
       'hEarthMismatchStatus',
-      DIAGNOSTIC_STATE
-        .boundaryMismatchReport
+      DIAGNOSTIC_STATE.boundaryMismatchReport
         ?.status ||
       'BOUNDARY_UNAVAILABLE'
     ]
@@ -5153,8 +4551,7 @@ function setPanelStatusAttributes() {
 
   writeRouteDataset(
     'hEarthFd05InstrumentClassification',
-    DIAGNOSTIC_STATE
-      .fd05DecisionReport
+    DIAGNOSTIC_STATE.fd05DecisionReport
       ?.instrumentClassification ||
     'D_NOT_INCLUDED_OR_COULD_NOT_LOAD'
   );
@@ -5162,10 +4559,16 @@ function setPanelStatusAttributes() {
   writeRouteDataset(
     'hEarthFd05PrimaryReceiptPresent',
     String(
-      DIAGNOSTIC_STATE
-        .fd05DecisionReport
+      DIAGNOSTIC_STATE.fd05DecisionReport
         ?.primaryReceiptPresent === true
     )
+  );
+
+  writeRouteDataset(
+    'hEarthFd05PrimaryReceiptExecutionStatus',
+    DIAGNOSTIC_STATE.fd05DecisionReport
+      ?.primaryReceiptExecutionStatus ||
+    'ABSENT'
   );
 
   return true;
@@ -5179,63 +4582,49 @@ function publishActiveDiagnosticGlobals() {
     DIAGNOSTIC_STATE.diagnosticReceipt;
 
   globalThis.H_EARTH_3D_DIAGNOSTIC_ENTRY_REPORT =
-    DIAGNOSTIC_STATE
-      .diagnosticEntryReport;
+    DIAGNOSTIC_STATE.diagnosticEntryReport;
 
   globalThis.H_EARTH_3D_DIAGNOSTIC_EVIDENCE_SOURCE_REPORT =
-    DIAGNOSTIC_STATE
-      .evidenceSourceReport;
+    DIAGNOSTIC_STATE.evidenceSourceReport;
 
   globalThis.H_EARTH_3D_PUBLIC_ROUTE_DIAGNOSTIC_REPORT =
-    DIAGNOSTIC_STATE
-      .publicRouteReport;
+    DIAGNOSTIC_STATE.publicRouteReport;
 
   globalThis.H_EARTH_3D_COMPOSITOR_DIAGNOSTIC_REPORT =
-    DIAGNOSTIC_STATE
-      .compositorReport;
+    DIAGNOSTIC_STATE.compositorReport;
 
   globalThis.H_EARTH_3D_RENDERER_DIAGNOSTIC_REPORT =
-    DIAGNOSTIC_STATE
-      .rendererReport;
+    DIAGNOSTIC_STATE.rendererReport;
 
   globalThis.H_EARTH_3D_LAYER_4_CUSTODY_REPORT =
-    DIAGNOSTIC_STATE
-      .layer4CustodyReport;
+    DIAGNOSTIC_STATE.layer4CustodyReport;
 
   globalThis.H_EARTH_3D_PUBLIC_STAGE_INSPECTION_REPORT =
-    DIAGNOSTIC_STATE
-      .publicStageInspectionReport;
+    DIAGNOSTIC_STATE.publicStageInspectionReport;
 
   globalThis.H_EARTH_3D_BOUNDARY_MISMATCH_REPORT =
-    DIAGNOSTIC_STATE
-      .boundaryMismatchReport;
+    DIAGNOSTIC_STATE.boundaryMismatchReport;
 
   globalThis.H_EARTH_3D_DIAGNOSTIC_RAW_EVIDENCE =
-    DIAGNOSTIC_STATE
-      .rawEvidenceReport;
+    DIAGNOSTIC_STATE.rawEvidenceReport;
 
   globalThis.H_EARTH_3D_DIAGNOSTIC_AGGREGATE_PAYLOAD =
-    DIAGNOSTIC_STATE
-      .aggregateDiagnosticPayload;
+    DIAGNOSTIC_STATE.aggregateDiagnosticPayload;
 
   globalThis[
     H_EARTH_3D_FD_05_WATCHDOG_RECEIPT_ID
   ] =
-    DIAGNOSTIC_STATE
-      .fd05WatchdogReceipt;
+    DIAGNOSTIC_STATE.fd05WatchdogReceipt;
 
   globalThis[
     H_EARTH_3D_FD_05_DECISION_REPORT_ID
   ] =
-    DIAGNOSTIC_STATE
-      .fd05DecisionReport;
+    DIAGNOSTIC_STATE.fd05DecisionReport;
 
   try {
-    delete globalThis
-      .H_EARTH_3D_DIAGNOSTIC_FAILURE;
+    delete globalThis.H_EARTH_3D_DIAGNOSTIC_FAILURE;
   } catch {
-    globalThis
-      .H_EARTH_3D_DIAGNOSTIC_FAILURE =
+    globalThis.H_EARTH_3D_DIAGNOSTIC_FAILURE =
       undefined;
   }
 }
@@ -5261,11 +4650,9 @@ function buildFailureReceipt(
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     initializationOccurrenceId:
-      DIAGNOSTIC_STATE
-        .initializationOccurrenceId,
+      DIAGNOSTIC_STATE.initializationOccurrenceId,
     phase,
     status:
       'DIAGNOSTIC_ERROR',
@@ -5284,34 +4671,20 @@ function buildFailureReceipt(
           : null,
         2400
       ),
-    publicRouteInitializedByDiagnostic:
-      false,
-    packet002ConstructedByDiagnostic:
-      false,
-    admittedFrameConstructedByDiagnostic:
-      false,
-    compositorConstructedByDiagnostic:
-      false,
-    rendererConstructedByDiagnostic:
-      false,
-    rendererMountedByDiagnostic:
-      false,
-    rendererReleasedByDiagnostic:
-      false,
-    sourceCorrectionAuthorized:
-      false,
-    rendererPassClaim:
-      false,
-    visualPassClaim:
-      false,
-    validationClaim:
-      false,
-    productionClaim:
-      false,
-    deploymentClaim:
-      false,
-    matrixCollapse:
-      false,
+    publicRouteInitializedByDiagnostic: false,
+    packet002ConstructedByDiagnostic: false,
+    admittedFrameConstructedByDiagnostic: false,
+    compositorConstructedByDiagnostic: false,
+    rendererConstructedByDiagnostic: false,
+    rendererMountedByDiagnostic: false,
+    rendererReleasedByDiagnostic: false,
+    sourceCorrectionAuthorized: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    deploymentClaim: false,
+    matrixCollapse: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -5328,51 +4701,37 @@ function renderFailure(failureReceipt) {
     failureReceipt;
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.status,
+    DIAGNOSTIC_STATE.mountPoints?.status,
     'DIAGNOSTIC_ERROR'
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.statusNote,
+    DIAGNOSTIC_STATE.mountPoints?.statusNote,
     `Diagnostic execution failed: ${failureReceipt.errorMessage}`
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.copyStatus,
+    DIAGNOSTIC_STATE.mountPoints?.copyStatus,
     'Diagnostic execution failed. Failure receipt is available in the report layer.'
   );
 
   writeJson(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.reportLayerStatus,
+    DIAGNOSTIC_STATE.mountPoints?.reportLayerStatus,
     failureReceipt
   );
 
   writeJson(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.diagnosticEntry,
+    DIAGNOSTIC_STATE.mountPoints?.diagnosticEntry,
     failureReceipt
   );
 
   writeJson(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.allDiagnostics,
+    DIAGNOSTIC_STATE.mountPoints?.allDiagnostics,
     failureReceipt
   );
 
   setRouteClass(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.routeRoot,
+    DIAGNOSTIC_STATE.mountPoints?.routeRoot,
     'h-earth-3d-diagnostic-error'
   );
 
@@ -5393,15 +4752,13 @@ function addOwnedListener(
 ) {
   if (
     !target ||
-    typeof target.addEventListener !==
-    'function'
+    typeof target.addEventListener !== 'function'
   ) {
     return false;
   }
 
   const controller =
-    DIAGNOSTIC_STATE
-      .listenerAbortController;
+    DIAGNOSTIC_STATE.listenerAbortController;
 
   if (controller?.signal) {
     try {
@@ -5425,14 +4782,14 @@ function addOwnedListener(
     listener
   );
 
-  DIAGNOSTIC_STATE
-    .manualListenerRemovers
-    .push(() => {
+  DIAGNOSTIC_STATE.manualListenerRemovers.push(
+    () => {
       target.removeEventListener(
         type,
         listener
       );
-    });
+    }
+  );
 
   return true;
 }
@@ -5443,10 +4800,7 @@ async function copyText(text) {
       ?.clipboard
       ?.writeText
   ) {
-    await globalThis
-      .navigator
-      .clipboard
-      .writeText(text);
+    await globalThis.navigator.clipboard.writeText(text);
 
     return true;
   }
@@ -5456,18 +4810,15 @@ async function copyText(text) {
 
   if (
     !rootDocument?.body ||
-    typeof rootDocument.createElement !==
-    'function'
+    typeof rootDocument.createElement !== 'function'
   ) {
     return false;
   }
 
   const textarea =
-    rootDocument
-      .createElement('textarea');
+    rootDocument.createElement('textarea');
 
-  textarea.value =
-    text;
+  textarea.value = text;
 
   textarea.setAttribute(
     'readonly',
@@ -5525,9 +4876,7 @@ async function copyDiagnosticPayload(
   label
 ) {
   const copyStatus =
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.copyStatus;
+    DIAGNOSTIC_STATE.mountPoints?.copyStatus;
 
   if (!text.trim()) {
     writeText(
@@ -5550,8 +4899,7 @@ async function copyDiagnosticPayload(
     );
 
     if (copyStatus?.dataset) {
-      copyStatus.dataset
-        .hEarthCopyState =
+      copyStatus.dataset.hEarthCopyState =
         copied
           ? 'success'
           : 'failure';
@@ -5569,8 +4917,7 @@ async function copyDiagnosticPayload(
     );
 
     if (copyStatus?.dataset) {
-      copyStatus.dataset
-        .hEarthCopyState =
+      copyStatus.dataset.hEarthCopyState =
         'failure';
     }
 
@@ -5582,9 +4929,7 @@ function bindCopyControls() {
   const rootDocument =
     DIAGNOSTIC_STATE.rootDocument;
 
-  if (
-    !rootDocument?.querySelectorAll
-  ) {
+  if (!rootDocument?.querySelectorAll) {
     return freeze({
       panelCopyButtonsBound: 0,
       groupedCopyButtonsBound: 0
@@ -5671,9 +5016,7 @@ function bindCopyControls() {
 
 function bindRunControl() {
   const runButton =
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.runDiagnostics;
+    DIAGNOSTIC_STATE.mountPoints?.runDiagnostics;
 
   if (!runButton) return false;
 
@@ -5693,11 +5036,9 @@ function bindDiagnosticControls() {
   releaseListenerOwnership();
 
   if (
-    typeof AbortController !==
-    'undefined'
+    typeof AbortController !== 'undefined'
   ) {
-    DIAGNOSTIC_STATE
-      .listenerAbortController =
+    DIAGNOSTIC_STATE.listenerAbortController =
       new AbortController();
   }
 
@@ -5717,8 +5058,7 @@ function assertCurrentOccurrence(
   occurrenceId
 ) {
   return (
-    DIAGNOSTIC_STATE
-      .initializationOccurrenceId ===
+    DIAGNOSTIC_STATE.initializationOccurrenceId ===
     occurrenceId
   );
 }
@@ -5744,9 +5084,7 @@ async function executeDiagnosticOccurrence(
     }
 
     const dependencyPromise =
-      importDiagnosticDependencies(
-        options
-      );
+      importDiagnosticDependencies(options);
 
     const fd05Promise =
       runFd05Watchdog(
@@ -5775,17 +5113,14 @@ async function executeDiagnosticOccurrence(
     }
 
     DIAGNOSTIC_STATE.fd05PrimaryReceipt =
-      DIAGNOSTIC_STATE
-        .fd05WatchdogReceipt
-        ?.currentOccurrenceReceiptObserved ===
-      true
+      DIAGNOSTIC_STATE.fd05WatchdogReceipt
+        ?.currentOccurrenceReceiptObserved === true
         ? readFd05PrimaryReceipt()
         : null;
 
     const publicRouteWindow =
       evidenceResolution.selectedWindow ||
-      DIAGNOSTIC_STATE
-        .diagnosticWindow ||
+      DIAGNOSTIC_STATE.diagnosticWindow ||
       globalThis;
 
     DIAGNOSTIC_STATE.publicRouteEvidenceWindow =
@@ -5811,9 +5146,7 @@ async function executeDiagnosticOccurrence(
     setPanelStatusAttributes();
 
     setRouteClass(
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.routeRoot,
+      DIAGNOSTIC_STATE.mountPoints?.routeRoot,
       DIAGNOSTIC_STATE.status ===
         'DIAGNOSTIC_READY'
         ? 'h-earth-3d-diagnostic-ready'
@@ -5821,33 +5154,24 @@ async function executeDiagnosticOccurrence(
     );
 
     writeText(
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.status,
+      DIAGNOSTIC_STATE.mountPoints?.status,
       DIAGNOSTIC_STATE.status
     );
 
     writeText(
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.statusNote,
+      DIAGNOSTIC_STATE.mountPoints?.statusNote,
       DIAGNOSTIC_STATE.status ===
         'DIAGNOSTIC_READY'
         ? (
-            'The FD_05 primary lane and current route, ' +
-            'compositor, renderer, custody, and boundary ' +
-            'evidence have been assembled without source mutation.'
+            'The FD_05 primary lane reached a finalized COMPLETE receipt and the current route, compositor, renderer, custody, and boundary evidence have been assembled without source mutation.'
           )
         : (
-            'Diagnostic reporting completed with FD_05, ' +
-            'missing-evidence, or mismatch findings retained as held evidence.'
+            'Diagnostic reporting completed with the FD_05 lane, missing evidence, incomplete execution, failure evidence, or boundary findings retained as held evidence.'
           )
     );
 
     writeText(
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.copyStatus,
+      DIAGNOSTIC_STATE.mountPoints?.copyStatus,
       'Diagnostic reports are current. Run and copy controls are active.'
     );
 
@@ -5867,21 +5191,17 @@ async function executeDiagnosticOccurrence(
     publishActiveDiagnosticGlobals();
 
     return freeze({
-      initialized:
-        true,
+      initialized: true,
       status:
         DIAGNOSTIC_STATE.status,
       initializationOccurrenceId:
         occurrenceId,
       diagnosticReceipt:
-        DIAGNOSTIC_STATE
-          .diagnosticReceipt,
+        DIAGNOSTIC_STATE.diagnosticReceipt,
       fd05DecisionReport:
-        DIAGNOSTIC_STATE
-          .fd05DecisionReport,
+        DIAGNOSTIC_STATE.fd05DecisionReport,
       aggregateDiagnosticPayload:
-        DIAGNOSTIC_STATE
-          .aggregateDiagnosticPayload,
+        DIAGNOSTIC_STATE.aggregateDiagnosticPayload,
       boundary:
         H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
     });
@@ -5914,9 +5234,7 @@ export function runHEarthDiagnostics(
   options = {}
 ) {
   if (
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.requiredFound !== true
+    DIAGNOSTIC_STATE.mountPoints?.requiredFound !== true
   ) {
     const failureReceipt =
       freeze({
@@ -5926,13 +5244,11 @@ export function runHEarthDiagnostics(
           H_EARTH_3D_DIAGNOSTIC_FILE,
         contractId:
           H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-        generatedAt:
-          nowIso(),
+        generatedAt: nowIso(),
         status:
           'DIAGNOSTIC_MOUNT_FAILURE',
         missingRequiredIds:
-          DIAGNOSTIC_STATE
-            .mountPoints
+          DIAGNOSTIC_STATE.mountPoints
             ?.missingRequiredIds ||
           freezeArray([]),
         boundary:
@@ -5958,8 +5274,7 @@ export function runHEarthDiagnostics(
     'DIAGNOSTIC_INITIALIZING';
 
   resetReportState({
-    preserveFd05Module:
-      true
+    preserveFd05Module: true
   });
 
   ensureFd05DecisionHost(
@@ -5972,32 +5287,23 @@ export function runHEarthDiagnostics(
     );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.status,
+    DIAGNOSTIC_STATE.mountPoints?.status,
     'DIAGNOSTIC_INITIALIZING'
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.statusNote,
-    options.reason ===
-      'MANUAL_RERUN'
+    DIAGNOSTIC_STATE.mountPoints?.statusNote,
+    options.reason === 'MANUAL_RERUN'
       ? (
-          'Refreshing the FD_05 primary lane and current route, ' +
-          'compositor, renderer, custody, and boundary evidence.'
+          'Refreshing the FD_05 primary lane and current route, compositor, renderer, custody, and boundary evidence.'
         )
       : (
-          'Collecting the FD_05 primary lane and current route, ' +
-          'compositor, renderer, custody, and boundary evidence.'
+          'Collecting the FD_05 primary lane and current route, compositor, renderer, custody, and boundary evidence.'
         )
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.copyStatus,
+    DIAGNOSTIC_STATE.mountPoints?.copyStatus,
     'Diagnostic evidence collection is in progress.'
   );
 
@@ -6018,8 +5324,7 @@ export function runHEarthDiagnostics(
   DIAGNOSTIC_STATE.completionPromise =
     completionPromise;
 
-  globalThis
-    .H_EARTH_3D_DIAGNOSTIC_COMPLETION_PROMISE =
+  globalThis.H_EARTH_3D_DIAGNOSTIC_COMPLETION_PROMISE =
     completionPromise;
 
   return completionPromise;
@@ -6039,8 +5344,7 @@ export function initializeHEarthDiagnosticRoute(
   clearActiveDiagnosticGlobals();
 
   resetReportState({
-    preserveFd05Module:
-      true
+    preserveFd05Module: true
   });
 
   DIAGNOSTIC_STATE.rootDocument =
@@ -6070,9 +5374,7 @@ export function initializeHEarthDiagnosticRoute(
     );
 
   DIAGNOSTIC_STATE.initialized =
-    DIAGNOSTIC_STATE
-      .mountPoints
-      .requiredFound;
+    DIAGNOSTIC_STATE.mountPoints.requiredFound;
 
   writeRouteDataset(
     'hEarthDiagnosticInitializationStarted',
@@ -6080,13 +5382,9 @@ export function initializeHEarthDiagnosticRoute(
   );
 
   if (
-    DIAGNOSTIC_STATE
-      .mountPoints
-      .publicRouteLink
+    DIAGNOSTIC_STATE.mountPoints.publicRouteLink
   ) {
-    DIAGNOSTIC_STATE
-      .mountPoints
-      .publicRouteLink
+    DIAGNOSTIC_STATE.mountPoints.publicRouteLink
       .setAttribute(
         'href',
         H_EARTH_3D_PUBLIC_ROUTE
@@ -6094,9 +5392,7 @@ export function initializeHEarthDiagnosticRoute(
   }
 
   if (
-    !DIAGNOSTIC_STATE
-      .mountPoints
-      .requiredFound
+    !DIAGNOSTIC_STATE.mountPoints.requiredFound
   ) {
     DIAGNOSTIC_STATE.status =
       'DIAGNOSTIC_MOUNT_FAILURE';
@@ -6109,16 +5405,12 @@ export function initializeHEarthDiagnosticRoute(
           H_EARTH_3D_DIAGNOSTIC_FILE,
         contractId:
           H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-        generatedAt:
-          nowIso(),
+        generatedAt: nowIso(),
         status:
           'DIAGNOSTIC_MOUNT_FAILURE',
         missingRequiredIds:
-          DIAGNOSTIC_STATE
-            .mountPoints
-            .missingRequiredIds,
-        initialized:
-          false,
+          DIAGNOSTIC_STATE.mountPoints.missingRequiredIds,
+        initialized: false,
         boundary:
           H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
       });
@@ -6126,14 +5418,11 @@ export function initializeHEarthDiagnosticRoute(
     renderFailure(failureReceipt);
 
     return freeze({
-      initialized:
-        false,
+      initialized: false,
       status:
         'DIAGNOSTIC_MOUNT_FAILURE',
       missingRequiredIds:
-        DIAGNOSTIC_STATE
-          .mountPoints
-          .missingRequiredIds,
+        DIAGNOSTIC_STATE.mountPoints.missingRequiredIds,
       diagnosticReceipt:
         failureReceipt,
       boundary:
@@ -6148,30 +5437,22 @@ export function initializeHEarthDiagnosticRoute(
     'DIAGNOSTIC_INITIALIZING';
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      .status,
+    DIAGNOSTIC_STATE.mountPoints.status,
     'DIAGNOSTIC_INITIALIZING'
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      .statusNote,
+    DIAGNOSTIC_STATE.mountPoints.statusNote,
     'Step 034U owns diagnostic evidence, reports, controls, publication, completion, teardown, and the bounded FD_05 operational lane.'
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      .copyStatus,
+    DIAGNOSTIC_STATE.mountPoints.copyStatus,
     'Diagnostic controls are bound. Initial evidence collection is starting.'
   );
 
   writeJson(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      .reportLayerStatus,
+    DIAGNOSTIC_STATE.mountPoints.reportLayerStatus,
     {
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_INITIALIZATION_RECEIPT',
@@ -6179,23 +5460,18 @@ export function initializeHEarthDiagnosticRoute(
         H_EARTH_3D_DIAGNOSTIC_FILE,
       contractId:
         H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       status:
         'DIAGNOSTIC_INITIALIZING',
       listenerReceipt,
-      fd05OperationalLaneIncluded:
-        true,
+      fd05OperationalLaneIncluded: true,
       fd05ModulePath:
         H_EARTH_3D_FD_05_MODULE_PATH,
       fd05WatchdogIntervalMs:
         H_EARTH_3D_FD_05_WATCHDOG_INTERVAL_MS,
-      publicRouteInitializedByDiagnostic:
-        false,
-      rendererMountedByDiagnostic:
-        false,
-      sourceCorrectionAuthorized:
-        false,
+      publicRouteInitializedByDiagnostic: false,
+      rendererMountedByDiagnostic: false,
+      sourceCorrectionAuthorized: false,
       boundary:
         H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
     }
@@ -6208,37 +5484,25 @@ export function initializeHEarthDiagnosticRoute(
     });
 
   return freeze({
-    initialized:
-      true,
+    initialized: true,
     status:
       'DIAGNOSTIC_INITIALIZING',
     generatedAt:
       DIAGNOSTIC_STATE.generatedAt,
     initializationOccurrenceId:
-      DIAGNOSTIC_STATE
-        .initializationOccurrenceId,
+      DIAGNOSTIC_STATE.initializationOccurrenceId,
     completionPromise,
     listenerReceipt,
-    fd05OperationalLaneIncluded:
-      true,
-    diagnosticRouteOnly:
-      true,
-    publicRouteInitializedByDiagnostic:
-      false,
-    packet002ConstructedByDiagnostic:
-      false,
-    admittedFrameConstructedByDiagnostic:
-      false,
-    compositorConstructedByDiagnostic:
-      false,
-    rendererConstructedByDiagnostic:
-      false,
-    rendererMountedByDiagnostic:
-      false,
-    rendererReleasedByDiagnostic:
-      false,
-    sourceCorrectionAuthorized:
-      false,
+    fd05OperationalLaneIncluded: true,
+    diagnosticRouteOnly: true,
+    publicRouteInitializedByDiagnostic: false,
+    packet002ConstructedByDiagnostic: false,
+    admittedFrameConstructedByDiagnostic: false,
+    compositorConstructedByDiagnostic: false,
+    rendererConstructedByDiagnostic: false,
+    rendererMountedByDiagnostic: false,
+    rendererReleasedByDiagnostic: false,
+    sourceCorrectionAuthorized: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -6246,53 +5510,37 @@ export function initializeHEarthDiagnosticRoute(
 
 export function destroyHEarthDiagnosticRoute() {
   const priorOccurrenceId =
-    DIAGNOSTIC_STATE
-      .initializationOccurrenceId;
+    DIAGNOSTIC_STATE.initializationOccurrenceId;
 
   releaseListenerOwnership();
   releaseFd05WatchdogObservation();
   clearActiveDiagnosticGlobals();
 
-  DIAGNOSTIC_STATE.initialized =
-    false;
-
+  DIAGNOSTIC_STATE.initialized = false;
   DIAGNOSTIC_STATE.status =
     'DIAGNOSTIC_DESTROYED';
-
   DIAGNOSTIC_STATE.initializationOccurrenceId =
     null;
-
-  DIAGNOSTIC_STATE.completionPromise =
-    null;
-
-  DIAGNOSTIC_STATE.fd05CompletionPromise =
-    null;
+  DIAGNOSTIC_STATE.completionPromise = null;
+  DIAGNOSTIC_STATE.fd05CompletionPromise = null;
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.status,
+    DIAGNOSTIC_STATE.mountPoints?.status,
     'DIAGNOSTIC_DESTROYED'
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.statusNote,
+    DIAGNOSTIC_STATE.mountPoints?.statusNote,
     'Diagnostic listeners, host-owned FD_05 projections, active diagnostic globals, and current occurrence ownership have been released.'
   );
 
   writeText(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.copyStatus,
+    DIAGNOSTIC_STATE.mountPoints?.copyStatus,
     'Diagnostic controls are no longer active.'
   );
 
   setRouteClass(
-    DIAGNOSTIC_STATE
-      .mountPoints
-      ?.routeRoot,
+    DIAGNOSTIC_STATE.mountPoints?.routeRoot,
     ''
   );
 
@@ -6313,23 +5561,16 @@ export function destroyHEarthDiagnosticRoute() {
       H_EARTH_3D_DIAGNOSTIC_FILE,
     contractId:
       H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_CONTRACT_ID,
-    generatedAt:
-      nowIso(),
+    generatedAt: nowIso(),
     priorOccurrenceId,
     status:
       'DIAGNOSTIC_DESTROYED',
-    listenersReleased:
-      true,
-    activeDiagnosticGlobalsCleared:
-      true,
-    fd05ModuleMarkersPreserved:
-      true,
-    publicRouteMutation:
-      false,
-    rendererMutation:
-      false,
-    sourceCorrectionAuthorized:
-      false,
+    listenersReleased: true,
+    activeDiagnosticGlobalsCleared: true,
+    fd05ModuleMarkersPreserved: true,
+    publicRouteMutation: false,
+    rendererMutation: false,
+    sourceCorrectionAuthorized: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });
@@ -6338,8 +5579,7 @@ export function destroyHEarthDiagnosticRoute() {
 export function getHEarthDiagnosticCompletion() {
   return (
     DIAGNOSTIC_STATE.completionPromise ||
-    globalThis
-      .H_EARTH_3D_DIAGNOSTIC_COMPLETION_PROMISE ||
+    globalThis.H_EARTH_3D_DIAGNOSTIC_COMPLETION_PROMISE ||
     null
   );
 }
@@ -6364,13 +5604,11 @@ export function getLayer4CustodyReport() {
 
 export function getPublicStageInspectionReport() {
   return (
-    DIAGNOSTIC_STATE
-      .publicStageInspectionReport ||
+    DIAGNOSTIC_STATE.publicStageInspectionReport ||
     freeze({
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_PUBLIC_STAGE_INSPECTION_UNAVAILABLE',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       status:
         'DIAGNOSTIC_NOT_YET_EXECUTED',
       boundary:
@@ -6381,13 +5619,11 @@ export function getPublicStageInspectionReport() {
 
 export function getBoundaryMismatchReport() {
   return (
-    DIAGNOSTIC_STATE
-      .boundaryMismatchReport ||
+    DIAGNOSTIC_STATE.boundaryMismatchReport ||
     freeze({
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_BOUNDARY_REPORT_UNAVAILABLE',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       status:
         'DIAGNOSTIC_NOT_YET_EXECUTED',
       boundary:
@@ -6398,40 +5634,35 @@ export function getBoundaryMismatchReport() {
 
 export function getStep012JDescriptorReport() {
   return (
-    DIAGNOSTIC_STATE
-      .step012JDescriptorReport ||
+    DIAGNOSTIC_STATE.step012JDescriptorReport ||
     buildStep012JDescriptorReport()
   );
 }
 
 export function getRelationshipMembersReport() {
   return (
-    DIAGNOSTIC_STATE
-      .relationshipMembersReport ||
+    DIAGNOSTIC_STATE.relationshipMembersReport ||
     buildRelationshipMembersReport()
   );
 }
 
 export function getModuleInitializationReport() {
   return (
-    DIAGNOSTIC_STATE
-      .moduleInitializationReport ||
+    DIAGNOSTIC_STATE.moduleInitializationReport ||
     buildModuleInitializationReport()
   );
 }
 
 export function getFd05DecisionReport() {
   return (
-    DIAGNOSTIC_STATE
-      .fd05DecisionReport ||
+    DIAGNOSTIC_STATE.fd05DecisionReport ||
     buildFd05DecisionReport()
   );
 }
 
 export function getFd05WatchdogReceipt() {
   return (
-    DIAGNOSTIC_STATE
-      .fd05WatchdogReceipt ||
+    DIAGNOSTIC_STATE.fd05WatchdogReceipt ||
     readGlobalReceipt(
       globalThis,
       H_EARTH_3D_FD_05_WATCHDOG_RECEIPT_ID
@@ -6441,13 +5672,11 @@ export function getFd05WatchdogReceipt() {
 
 export function getAggregateDiagnosticPayload() {
   return (
-    DIAGNOSTIC_STATE
-      .aggregateDiagnosticPayload ||
+    DIAGNOSTIC_STATE.aggregateDiagnosticPayload ||
     freeze({
       receiptType:
         'H_EARTH_3D_DIAGNOSTIC_AGGREGATE_PAYLOAD_UNAVAILABLE',
-      generatedAt:
-        nowIso(),
+      generatedAt: nowIso(),
       status:
         'DIAGNOSTIC_NOT_YET_EXECUTED',
       boundary:
@@ -6461,8 +5690,7 @@ export function getHEarthDiagnosticState() {
     initialized:
       DIAGNOSTIC_STATE.initialized,
     initializationOccurrenceId:
-      DIAGNOSTIC_STATE
-        .initializationOccurrenceId,
+      DIAGNOSTIC_STATE.initializationOccurrenceId,
     generatedAt:
       DIAGNOSTIC_STATE.generatedAt,
     updatedAt:
@@ -6470,100 +5698,92 @@ export function getHEarthDiagnosticState() {
     status:
       DIAGNOSTIC_STATE.status,
     mountPointsResolved:
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.requiredFound === true,
+      DIAGNOSTIC_STATE.mountPoints?.requiredFound === true,
     missingRequiredIds:
-      DIAGNOSTIC_STATE
-        .mountPoints
-        ?.missingRequiredIds ||
+      DIAGNOSTIC_STATE.mountPoints?.missingRequiredIds ||
       freezeArray([]),
     completionPromisePresent:
       Boolean(
-        DIAGNOSTIC_STATE
-          .completionPromise
+        DIAGNOSTIC_STATE.completionPromise
       ),
     fd05:
       freeze({
         moduleLoaded:
           Boolean(
-            DIAGNOSTIC_STATE
-              .fd05Module
+            DIAGNOSTIC_STATE.fd05Module
           ),
         moduleImportReceiptPresent:
           Boolean(
-            DIAGNOSTIC_STATE
-              .fd05ModuleImportReceipt
+            DIAGNOSTIC_STATE.fd05ModuleImportReceipt
           ),
         watchdogReceiptPresent:
           Boolean(
-            DIAGNOSTIC_STATE
-              .fd05WatchdogReceipt
+            DIAGNOSTIC_STATE.fd05WatchdogReceipt
           ),
+        currentOccurrenceReceiptObserved:
+          DIAGNOSTIC_STATE.fd05WatchdogReceipt
+            ?.currentOccurrenceReceiptObserved === true,
         primaryReceiptPresent:
           Boolean(
-            DIAGNOSTIC_STATE
-              .fd05PrimaryReceipt
+            DIAGNOSTIC_STATE.fd05PrimaryReceipt
           ),
+        primaryReceiptExecutionStatus:
+          DIAGNOSTIC_STATE.fd05DecisionReport
+            ?.primaryReceiptExecutionStatus ||
+          null,
         decisionReportPresent:
           Boolean(
-            DIAGNOSTIC_STATE
-              .fd05DecisionReport
+            DIAGNOSTIC_STATE.fd05DecisionReport
           ),
         instrumentClassification:
-          DIAGNOSTIC_STATE
-            .fd05DecisionReport
+          DIAGNOSTIC_STATE.fd05DecisionReport
             ?.instrumentClassification ||
           null,
-        sourceCorrectionAuthorized:
-          false
+        decisionFinalized:
+          DIAGNOSTIC_STATE.fd05DecisionReport
+            ?.decisionFinalized === true,
+        awaitingFinalReceipt:
+          DIAGNOSTIC_STATE.fd05DecisionReport
+            ?.awaitingFinalReceipt === true,
+        sourceCorrectionAuthorized: false
       }),
     reportsAvailable:
       freeze({
         diagnosticEntry:
           Boolean(
-            DIAGNOSTIC_STATE
-              .diagnosticEntryReport
+            DIAGNOSTIC_STATE.diagnosticEntryReport
           ),
         evidenceSource:
           Boolean(
-            DIAGNOSTIC_STATE
-              .evidenceSourceReport
+            DIAGNOSTIC_STATE.evidenceSourceReport
           ),
         publicRoute:
           Boolean(
-            DIAGNOSTIC_STATE
-              .publicRouteReport
+            DIAGNOSTIC_STATE.publicRouteReport
           ),
         compositor:
           Boolean(
-            DIAGNOSTIC_STATE
-              .compositorReport
+            DIAGNOSTIC_STATE.compositorReport
           ),
         renderer:
           Boolean(
-            DIAGNOSTIC_STATE
-              .rendererReport
+            DIAGNOSTIC_STATE.rendererReport
           ),
         layer4Custody:
           Boolean(
-            DIAGNOSTIC_STATE
-              .layer4CustodyReport
+            DIAGNOSTIC_STATE.layer4CustodyReport
           ),
         boundaryMismatch:
           Boolean(
-            DIAGNOSTIC_STATE
-              .boundaryMismatchReport
+            DIAGNOSTIC_STATE.boundaryMismatchReport
           ),
         fd05Decision:
           Boolean(
-            DIAGNOSTIC_STATE
-              .fd05DecisionReport
+            DIAGNOSTIC_STATE.fd05DecisionReport
           ),
         aggregate:
           Boolean(
-            DIAGNOSTIC_STATE
-              .aggregateDiagnosticPayload
+            DIAGNOSTIC_STATE.aggregateDiagnosticPayload
           )
       }),
     boundary:
@@ -6595,44 +5815,25 @@ export const H_EARTH_3D_DIAGNOSTIC_STATIC_RECEIPT =
       H_EARTH_3D_FD_05_FAILURE_DOMAIN,
     fd05WatchdogIntervalMs:
       H_EARTH_3D_FD_05_WATCHDOG_INTERVAL_MS,
-    diagnosticRouteOnly:
-      true,
-    liveRouteEvidenceInspection:
-      true,
-    compositorInspection:
-      true,
-    rendererInspection:
-      true,
-    layer4CustodyInspection:
-      true,
-    boundaryMismatchReporting:
-      true,
-    fd05OperationalLaneInspection:
-      true,
-    publicRouteInitialization:
-      false,
-    compositorConstruction:
-      false,
-    rendererConstruction:
-      false,
-    rendererMount:
-      false,
-    rendererRelease:
-      false,
-    sourceCorrectionAuthorized:
-      false,
-    rendererPassClaim:
-      false,
-    visualPassClaim:
-      false,
-    validationClaim:
-      false,
-    productionClaim:
-      false,
-    deploymentClaim:
-      false,
-    matrixCollapse:
-      false,
+    diagnosticRouteOnly: true,
+    liveRouteEvidenceInspection: true,
+    compositorInspection: true,
+    rendererInspection: true,
+    layer4CustodyInspection: true,
+    boundaryMismatchReporting: true,
+    fd05OperationalLaneInspection: true,
+    publicRouteInitialization: false,
+    compositorConstruction: false,
+    rendererConstruction: false,
+    rendererMount: false,
+    rendererRelease: false,
+    sourceCorrectionAuthorized: false,
+    rendererPassClaim: false,
+    visualPassClaim: false,
+    validationClaim: false,
+    productionClaim: false,
+    deploymentClaim: false,
+    matrixCollapse: false,
     boundary:
       H_EARTH_3D_DIAGNOSTIC_BOUNDARY_FLAGS
   });

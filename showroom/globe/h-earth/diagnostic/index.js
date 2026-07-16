@@ -327,8 +327,12 @@ const DIAGNOSTIC_STATE = {
   fd05ModuleImportReceipt: null,
   fd05WatchdogReceipt: null,
   fd05PrimaryReceipt: null,
+  fd05PriorRunReceipt: null,
   fd05DecisionReport: null,
   fd05CompletionPromise: null,
+  fd05WatchdogListenerRemover: null,
+  fd05WatchdogTimeoutId: null,
+  publicRouteEvidenceWindow: null,
   evidenceSourceReport: null,
   diagnosticEntryReport: null,
   publicRouteReport: null,
@@ -537,26 +541,33 @@ function createOccurrenceId() {
 
 function ensureFd05DecisionHost(rootDocument) {
   if (!rootDocument) return null;
-  let host = getById(rootDocument, H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.fd05DecisionHost);
-  if (host) return host;
 
-  host = rootDocument.createElement('div');
-  host.id = H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.fd05DecisionHost;
-  host.setAttribute('data-h-earth-diagnostic-track-host', 'FD_05');
-  host.setAttribute('data-h-earth-panel-role', 'fd-05-decision-host');
-  host.setAttribute('aria-live', 'polite');
-
+  let host = getById(
+    rootDocument,
+    H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.fd05DecisionHost
+  );
   const grid = rootDocument.querySelector('.h-earth-3d-diagnostic-grid');
   const operationalReports = rootDocument.querySelector('.h-earth-3d-operational-reports');
   const shell = rootDocument.querySelector('.h-earth-3d-diagnostic-shell');
 
-  if (grid?.parentNode) {
-    grid.parentNode.insertBefore(host, grid);
-  } else if (operationalReports?.parentNode) {
+  if (!host) {
+    host = rootDocument.createElement('div');
+    host.id = H_EARTH_3D_DIAGNOSTIC_PANEL_IDS.fd05DecisionHost;
+    host.setAttribute('data-h-earth-diagnostic-track-host', 'FD_05');
+    host.setAttribute('data-h-earth-panel-role', 'fd-05-decision-host');
+    host.setAttribute('aria-live', 'polite');
+  }
+
+  if (grid) {
+    host.className = 'h-earth-3d-panel-primary';
+    if (host.parentNode !== grid || grid.firstElementChild !== host) {
+      grid.prepend(host);
+    }
+  } else if (!host.parentNode && operationalReports?.parentNode) {
     operationalReports.parentNode.insertBefore(host, operationalReports.nextSibling);
-  } else if (shell) {
+  } else if (!host.parentNode && shell) {
     shell.append(host);
-  } else {
+  } else if (!host.parentNode) {
     rootDocument.body?.append(host);
   }
 
@@ -633,6 +644,23 @@ function releaseListenerOwnership() {
   removeManualListeners();
 }
 
+function releaseFd05WatchdogObservation() {
+  if (DIAGNOSTIC_STATE.fd05WatchdogTimeoutId !== null) {
+    globalThis.clearTimeout(DIAGNOSTIC_STATE.fd05WatchdogTimeoutId);
+    DIAGNOSTIC_STATE.fd05WatchdogTimeoutId = null;
+  }
+
+  if (typeof DIAGNOSTIC_STATE.fd05WatchdogListenerRemover === 'function') {
+    try {
+      DIAGNOSTIC_STATE.fd05WatchdogListenerRemover();
+    } catch {
+      // Watchdog listener cleanup remains best effort.
+    }
+  }
+
+  DIAGNOSTIC_STATE.fd05WatchdogListenerRemover = null;
+}
+
 function resetReportState({ preserveFd05Module = true } = {}) {
   DIAGNOSTIC_STATE.publicIndexModule = null;
   DIAGNOSTIC_STATE.compositorModule = null;
@@ -646,8 +674,10 @@ function resetReportState({ preserveFd05Module = true } = {}) {
   DIAGNOSTIC_STATE.fd05ModuleImportReceipt = null;
   DIAGNOSTIC_STATE.fd05WatchdogReceipt = null;
   DIAGNOSTIC_STATE.fd05PrimaryReceipt = null;
+  DIAGNOSTIC_STATE.fd05PriorRunReceipt = null;
   DIAGNOSTIC_STATE.fd05DecisionReport = null;
   DIAGNOSTIC_STATE.fd05CompletionPromise = null;
+  DIAGNOSTIC_STATE.publicRouteEvidenceWindow = null;
   DIAGNOSTIC_STATE.evidenceSourceReport = null;
   DIAGNOSTIC_STATE.diagnosticEntryReport = null;
   DIAGNOSTIC_STATE.publicRouteReport = null;
@@ -952,24 +982,70 @@ function readFd05PrimaryReceipt() {
   return readGlobalReceipt(globalThis, H_EARTH_3D_FD_05_PRIMARY_RECEIPT_ID);
 }
 
-function snapshotFd05State(importState, baselineRunId = null) {
+function snapshotFd05State(importState, baselineEvidence = {}) {
   const primaryReceipt = readFd05PrimaryReceipt();
   const currentRunId = primaryReceipt?.runId || null;
+  const observedMarkers = freeze({
+    moduleLoadedAt: readFd05Marker('moduleLoadedAt'),
+    instrumentStartedAt: readFd05Marker('instrumentStartedAt'),
+    receiptPublishedAt: readFd05Marker('receiptPublishedAt'),
+    receiptRenderedAt: readFd05Marker('receiptRenderedAt')
+  });
+  const currentOccurrenceReceiptObserved =
+    Boolean(primaryReceipt) &&
+    (!baselineEvidence.runId || currentRunId !== baselineEvidence.runId);
+  const currentOccurrenceInstrumentStartedObserved =
+    Boolean(observedMarkers.instrumentStartedAt) &&
+    (
+      !baselineEvidence.instrumentStartedAt ||
+      observedMarkers.instrumentStartedAt !== baselineEvidence.instrumentStartedAt
+    );
+  const currentOccurrenceReceiptPublishedObserved =
+    Boolean(observedMarkers.receiptPublishedAt) &&
+    (
+      !baselineEvidence.receiptPublishedAt ||
+      observedMarkers.receiptPublishedAt !== baselineEvidence.receiptPublishedAt
+    );
+  const currentOccurrenceReceiptRenderedObserved =
+    Boolean(observedMarkers.receiptRenderedAt) &&
+    (
+      !baselineEvidence.receiptRenderedAt ||
+      observedMarkers.receiptRenderedAt !== baselineEvidence.receiptRenderedAt
+    );
+
   return freeze({
     moduleImportAttempted: importState.moduleImportAttempted === true,
     moduleImportResolved: importState.moduleImportResolved === true,
     moduleImportRejected: importState.moduleImportRejected === true,
     moduleImportErrorName: importState.moduleImportErrorName || null,
     moduleImportErrorMessage: importState.moduleImportErrorMessage || null,
-    moduleLoadedAt: readFd05Marker('moduleLoadedAt'),
-    instrumentStartedAt: readFd05Marker('instrumentStartedAt'),
-    receiptPublishedAt: readFd05Marker('receiptPublishedAt'),
-    receiptRenderedAt: readFd05Marker('receiptRenderedAt'),
-    primaryReceiptPresent: Boolean(primaryReceipt),
-    primaryReceiptRunId: currentRunId,
-    currentOccurrenceReceiptObserved:
-      Boolean(primaryReceipt) && (!baselineRunId || currentRunId !== baselineRunId),
-    primaryReceipt
+    moduleLoadedAt: observedMarkers.moduleLoadedAt,
+    instrumentStartedAt:
+      currentOccurrenceInstrumentStartedObserved
+        ? observedMarkers.instrumentStartedAt
+        : null,
+    receiptPublishedAt:
+      currentOccurrenceReceiptPublishedObserved
+        ? observedMarkers.receiptPublishedAt
+        : null,
+    receiptRenderedAt:
+      currentOccurrenceReceiptRenderedObserved
+        ? observedMarkers.receiptRenderedAt
+        : null,
+    observedGlobalMarkers: observedMarkers,
+    primaryReceiptPresent: currentOccurrenceReceiptObserved,
+    primaryReceiptRunId:
+      currentOccurrenceReceiptObserved
+        ? currentRunId
+        : null,
+    currentOccurrenceReceiptObserved,
+    currentOccurrenceInstrumentStartedObserved,
+    currentOccurrenceReceiptPublishedObserved,
+    currentOccurrenceReceiptRenderedObserved,
+    primaryReceipt:
+      currentOccurrenceReceiptObserved
+        ? primaryReceipt
+        : null
   });
 }
 
@@ -1036,9 +1112,23 @@ function buildFd05WatchdogReceipt({
   occurrenceId,
   watchdogStartedAt,
   watchdogCompletedAt,
-  state
+  state,
+  watchdogPhase = 'FINAL',
+  decisionFinalized = true,
+  awaitingFinalReceipt = false,
+  instrumentClassificationOverride = null
 }) {
-  const instrumentClassification = classifyHEarthFd05InstrumentState(state);
+  const instrumentClassification =
+    instrumentClassificationOverride ||
+    classifyHEarthFd05InstrumentState(state);
+  const nextAuthorizedOperation = awaitingFinalReceipt
+    ? freeze({
+        operationId: 'AWAIT_CURRENT_FD_05_FINAL_RECEIPT',
+        instruction:
+          'The current FD_05 receipt is RUNNING. Preserve final-receipt observation and rebuild the decision when the current receipt becomes COMPLETE or FAILED.'
+      })
+    : nextFd05WatchdogOperation(instrumentClassification);
+
   return freeze({
     receiptId: H_EARTH_3D_FD_05_WATCHDOG_RECEIPT_ID,
     receiptSchemaVersion: 1,
@@ -1050,6 +1140,12 @@ function buildFd05WatchdogReceipt({
     watchdogIntervalMs: H_EARTH_3D_FD_05_WATCHDOG_INTERVAL_MS,
     watchdogStartedAt,
     watchdogCompletedAt,
+    watchdogPhase,
+    watchdogTimedOut:
+      watchdogPhase === 'INTERIM_TIMEOUT_RUNNING' ||
+      watchdogPhase === 'FINAL_TIMEOUT',
+    decisionFinalized,
+    awaitingFinalReceipt,
     moduleImportAttempted: state.moduleImportAttempted,
     moduleImportResolved: state.moduleImportResolved,
     moduleImportRejected: state.moduleImportRejected,
@@ -1059,11 +1155,14 @@ function buildFd05WatchdogReceipt({
     instrumentStartedAt: state.instrumentStartedAt,
     receiptPublishedAt: state.receiptPublishedAt,
     receiptRenderedAt: state.receiptRenderedAt,
+    observedGlobalMarkers: state.observedGlobalMarkers || null,
     primaryReceiptPresent: state.primaryReceiptPresent,
     primaryReceiptRunId: state.primaryReceiptRunId,
+    primaryReceiptExecutionStatus:
+      state.primaryReceipt?.executionStatus || null,
     currentOccurrenceReceiptObserved: state.currentOccurrenceReceiptObserved,
     instrumentClassification,
-    nextAuthorizedOperation: nextFd05WatchdogOperation(instrumentClassification),
+    nextAuthorizedOperation,
     sourceCorrectionAuthorized: false,
     constitutionalSourceReopenAuthorized: false
   });
@@ -1088,9 +1187,18 @@ function importFd05Module(modulePath) {
 }
 
 function runFd05Watchdog(occurrenceId, options = {}) {
+  releaseFd05WatchdogObservation();
+
   const watchdogStartedAt = nowIso();
   const baselineReceipt = readFd05PrimaryReceipt();
-  const baselineRunId = baselineReceipt?.runId || null;
+  const baselineEvidence = freeze({
+    runId: baselineReceipt?.runId || null,
+    instrumentStartedAt: readFd05Marker('instrumentStartedAt'),
+    receiptPublishedAt: readFd05Marker('receiptPublishedAt'),
+    receiptRenderedAt: readFd05Marker('receiptRenderedAt')
+  });
+  DIAGNOSTIC_STATE.fd05PriorRunReceipt = baselineReceipt || null;
+
   const importState = {
     moduleImportAttempted: true,
     moduleImportResolved: false,
@@ -1099,66 +1207,134 @@ function runFd05Watchdog(occurrenceId, options = {}) {
     moduleImportErrorMessage: null
   };
 
-  let completed = false;
-  let timeoutId = null;
-  let eventListener = null;
-  let resolveCompletion;
-  const completionPromise = new Promise((resolve) => {
-    resolveCompletion = resolve;
+  let finalDecisionPublished = false;
+  let boundedClassificationResolved = false;
+  let resolveBoundedClassification;
+  const boundedClassificationPromise = new Promise((resolve) => {
+    resolveBoundedClassification = resolve;
   });
 
-  function removeListener() {
-    if (eventListener) {
-      try {
-        globalThis.removeEventListener(FD05_RECEIPT_EVENT, eventListener);
-      } catch {
-        // Best effort.
-      }
-      eventListener = null;
+  function clearWatchdogTimeout() {
+    if (DIAGNOSTIC_STATE.fd05WatchdogTimeoutId !== null) {
+      globalThis.clearTimeout(DIAGNOSTIC_STATE.fd05WatchdogTimeoutId);
+      DIAGNOSTIC_STATE.fd05WatchdogTimeoutId = null;
     }
   }
 
-  function complete() {
-    if (completed) return DIAGNOSTIC_STATE.fd05WatchdogReceipt;
-    completed = true;
-    if (timeoutId !== null) globalThis.clearTimeout(timeoutId);
-    removeListener();
+  function removeFinalReceiptListener() {
+    if (typeof DIAGNOSTIC_STATE.fd05WatchdogListenerRemover === 'function') {
+      try {
+        DIAGNOSTIC_STATE.fd05WatchdogListenerRemover();
+      } catch {
+        // Listener cleanup remains best effort.
+      }
+    }
+    DIAGNOSTIC_STATE.fd05WatchdogListenerRemover = null;
+  }
 
-    const state = snapshotFd05State(importState, baselineRunId);
+  function resolveBoundedOnce(receipt) {
+    if (boundedClassificationResolved) return;
+    boundedClassificationResolved = true;
+    resolveBoundedClassification(receipt);
+  }
+
+  function publishCurrentWatchdogState(receipt, state) {
+    if (!assertCurrentOccurrence(occurrenceId)) return false;
+
+    DIAGNOSTIC_STATE.fd05WatchdogReceipt = receipt;
+    DIAGNOSTIC_STATE.fd05PrimaryReceipt =
+      state.currentOccurrenceReceiptObserved
+        ? state.primaryReceipt
+        : null;
+    publishFd05WatchdogReceipt(receipt);
+    return true;
+  }
+
+  function refreshAfterLateFinalReceipt() {
+    if (
+      assertCurrentOccurrence(occurrenceId) &&
+      DIAGNOSTIC_STATE.aggregateDiagnosticPayload
+    ) {
+      refreshReportsAfterFd05FinalReceipt(occurrenceId);
+    }
+  }
+
+  function finalizeCurrentDecision(
+    watchdogPhase = 'FINAL_RECEIPT_OBSERVED',
+    instrumentClassificationOverride = null
+  ) {
+    if (finalDecisionPublished) return DIAGNOSTIC_STATE.fd05WatchdogReceipt;
+    finalDecisionPublished = true;
+    clearWatchdogTimeout();
+    removeFinalReceiptListener();
+
+    const state = snapshotFd05State(importState, baselineEvidence);
     const receipt = buildFd05WatchdogReceipt({
       occurrenceId,
       watchdogStartedAt,
       watchdogCompletedAt: nowIso(),
-      state
+      state,
+      watchdogPhase,
+      decisionFinalized: true,
+      awaitingFinalReceipt: false,
+      instrumentClassificationOverride
     });
 
-    if (assertCurrentOccurrence(occurrenceId)) {
-      DIAGNOSTIC_STATE.fd05WatchdogReceipt = receipt;
-      DIAGNOSTIC_STATE.fd05PrimaryReceipt = state.primaryReceipt;
-      publishFd05WatchdogReceipt(receipt);
-    }
-
-    resolveCompletion(receipt);
+    publishCurrentWatchdogState(receipt, state);
+    resolveBoundedOnce(receipt);
+    queueMicrotask(refreshAfterLateFinalReceipt);
     return receipt;
   }
 
-  function maybeCompleteA() {
-    const state = snapshotFd05State(importState, baselineRunId);
-    if (
-      classifyHEarthFd05InstrumentState(state) ===
-        'A_INSTALLED_EXECUTING_AND_PUBLISHING' &&
-      state.currentOccurrenceReceiptObserved &&
-      state.primaryReceipt?.executionStatus !== 'RUNNING'
-    ) {
-      complete();
-    }
+  function publishInterimRunningDecision(state) {
+    const receipt = buildFd05WatchdogReceipt({
+      occurrenceId,
+      watchdogStartedAt,
+      watchdogCompletedAt: nowIso(),
+      state,
+      watchdogPhase: 'INTERIM_TIMEOUT_RUNNING',
+      decisionFinalized: false,
+      awaitingFinalReceipt: true,
+      instrumentClassificationOverride:
+        'A_INSTALLED_EXECUTING_AND_PUBLISHING'
+    });
+
+    publishCurrentWatchdogState(receipt, state);
+    resolveBoundedOnce(receipt);
+    return receipt;
   }
 
-  eventListener = () => maybeCompleteA();
+  function inspectCurrentReceiptForFinalization() {
+    if (finalDecisionPublished || !assertCurrentOccurrence(occurrenceId)) return;
+    const state = snapshotFd05State(importState, baselineEvidence);
+    if (!state.currentOccurrenceReceiptObserved) return;
+    if (state.primaryReceipt?.executionStatus === 'RUNNING') return;
+
+    const allPublicationMarkersObserved = Boolean(
+      state.instrumentStartedAt &&
+      state.receiptPublishedAt &&
+      state.receiptRenderedAt
+    );
+
+    finalizeCurrentDecision(
+      'FINAL_RECEIPT_OBSERVED',
+      allPublicationMarkersObserved
+        ? 'A_INSTALLED_EXECUTING_AND_PUBLISHING'
+        : null
+    );
+  }
+
+  const receiptEventListener = () => {
+    queueMicrotask(inspectCurrentReceiptForFinalization);
+  };
+
   try {
-    globalThis.addEventListener(FD05_RECEIPT_EVENT, eventListener);
+    globalThis.addEventListener(FD05_RECEIPT_EVENT, receiptEventListener);
+    DIAGNOSTIC_STATE.fd05WatchdogListenerRemover = () => {
+      globalThis.removeEventListener(FD05_RECEIPT_EVENT, receiptEventListener);
+    };
   } catch {
-    eventListener = null;
+    DIAGNOSTIC_STATE.fd05WatchdogListenerRemover = null;
   }
 
   const cachedModule = DIAGNOSTIC_STATE.fd05Module;
@@ -1195,13 +1371,13 @@ function runFd05Watchdog(occurrenceId, options = {}) {
 
       if (cachedModule && typeof module?.runHEarthFd05ModuleImportTrack === 'function') {
         Promise.resolve(module.runHEarthFd05ModuleImportTrack()).then(
-          () => maybeCompleteA(),
+          () => queueMicrotask(inspectCurrentReceiptForFinalization),
           () => {
             // The module primary receipt owns direct execution failure evidence.
           }
         );
       } else {
-        queueMicrotask(maybeCompleteA);
+        queueMicrotask(inspectCurrentReceiptForFinalization);
       }
     },
     (error) => {
@@ -1227,16 +1403,34 @@ function runFd05Watchdog(occurrenceId, options = {}) {
         errorStack: bounded(error instanceof Error ? error.stack : null, 2400),
         sourceCorrectionAuthorized: false
       });
-      complete();
+      finalizeCurrentDecision('MODULE_IMPORT_REJECTED');
     }
   );
 
-  timeoutId = globalThis.setTimeout(complete, H_EARTH_3D_FD_05_WATCHDOG_INTERVAL_MS);
-  return completionPromise;
+  DIAGNOSTIC_STATE.fd05WatchdogTimeoutId = globalThis.setTimeout(() => {
+    DIAGNOSTIC_STATE.fd05WatchdogTimeoutId = null;
+    if (finalDecisionPublished || !assertCurrentOccurrence(occurrenceId)) return;
+
+    const state = snapshotFd05State(importState, baselineEvidence);
+    if (
+      state.currentOccurrenceReceiptObserved &&
+      state.primaryReceipt?.executionStatus === 'RUNNING'
+    ) {
+      publishInterimRunningDecision(state);
+      return;
+    }
+
+    finalizeCurrentDecision('FINAL_TIMEOUT');
+  }, H_EARTH_3D_FD_05_WATCHDOG_INTERVAL_MS);
+
+  return boundedClassificationPromise;
 }
 
 function normalizeFd05NextOperation(primaryReceipt, watchdogReceipt) {
-  const operation = primaryReceipt?.nextAuthorizedOperation || watchdogReceipt?.nextAuthorizedOperation;
+  const operation =
+    watchdogReceipt?.awaitingFinalReceipt === true
+      ? watchdogReceipt.nextAuthorizedOperation
+      : primaryReceipt?.nextAuthorizedOperation || watchdogReceipt?.nextAuthorizedOperation;
   if (operation?.operationId && operation?.instruction) return safePlainData(operation);
   return {
     operationId: 'INSPECT_FD_05_DIAGNOSTIC_OVERLAY_OCCURRENCE',
@@ -1247,11 +1441,16 @@ function normalizeFd05NextOperation(primaryReceipt, watchdogReceipt) {
 
 function buildFd05DecisionReport() {
   const watchdog = DIAGNOSTIC_STATE.fd05WatchdogReceipt;
-  const primary = DIAGNOSTIC_STATE.fd05PrimaryReceipt || readFd05PrimaryReceipt();
+  const currentOccurrenceReceiptConfirmed =
+    watchdog?.currentOccurrenceReceiptObserved === true;
+  const primary = currentOccurrenceReceiptConfirmed
+    ? DIAGNOSTIC_STATE.fd05PrimaryReceipt
+    : null;
+  const historicalPriorRunReceipt = DIAGNOSTIC_STATE.fd05PriorRunReceipt;
   const classification =
     watchdog?.instrumentClassification || 'D_NOT_INCLUDED_OR_COULD_NOT_LOAD';
   const primaryStatus = !primary
-    ? 'ABSENT'
+    ? 'ABSENT_FOR_CURRENT_OCCURRENCE'
     : primary.executionStatus === 'RUNNING'
       ? 'PRESENT_RUNNING'
       : primary.executionStatus === 'FAILED'
@@ -1263,12 +1462,15 @@ function buildFd05DecisionReport() {
   const evidenceStillMissing = new Set(
     Array.isArray(primary?.evidenceStillMissing) ? primary.evidenceStillMissing : []
   );
-  if (!primary) evidenceStillMissing.add('PRIMARY_FD_05_RECEIPT_ABSENT');
+  if (!primary) evidenceStillMissing.add('CURRENT_OCCURRENCE_PRIMARY_FD_05_RECEIPT_ABSENT');
   if (classification !== 'A_INSTALLED_EXECUTING_AND_PUBLISHING') {
     evidenceStillMissing.add('FD_05_INSTRUMENT_NOT_IN_FULL_A_STATE');
   }
-  if (watchdog?.currentOccurrenceReceiptObserved === false) {
+  if (!currentOccurrenceReceiptConfirmed) {
     evidenceStillMissing.add('CURRENT_DIAGNOSTIC_OCCURRENCE_RECEIPT_NOT_CONFIRMED');
+  }
+  if (watchdog?.awaitingFinalReceipt === true) {
+    evidenceStillMissing.add('CURRENT_FD_05_FINAL_RECEIPT_PENDING');
   }
 
   return freeze({
@@ -1279,6 +1481,9 @@ function buildFd05DecisionReport() {
     initializationOccurrenceId: DIAGNOSTIC_STATE.initializationOccurrenceId,
     activeFailureDomain: H_EARTH_3D_FD_05_FAILURE_DOMAIN,
     instrumentClassification: classification,
+    decisionFinalized: watchdog?.decisionFinalized === true,
+    awaitingFinalReceipt: watchdog?.awaitingFinalReceipt === true,
+    currentOccurrenceReceiptConfirmed,
     primaryReceiptStatus: primaryStatus,
     primaryReceiptId: H_EARTH_3D_FD_05_PRIMARY_RECEIPT_ID,
     primaryReceiptPresent: Boolean(primary),
@@ -1319,6 +1524,12 @@ function buildFd05DecisionReport() {
     sourceCorrectionAuthorized: false,
     sourceCorrectionStatus:
       primary?.sourceCorrectionStatus || 'WITHHELD_PENDING_DIRECT_FAILURE_TARGET_IDENTIFICATION',
+    historicalPriorRunReceiptPresent: Boolean(historicalPriorRunReceipt),
+    historicalPriorRunReceiptRunId: historicalPriorRunReceipt?.runId || null,
+    historicalPriorRunReceipt: safePlainData(historicalPriorRunReceipt, {
+      maxDepth: 7,
+      maxArrayLength: 120
+    }),
     reportsClosedForCurrentOccurrence:
       'ALL_NONPRIMARY_AND_NONSUPPORTING_REPORTS_RETAINED_AS_HISTORICAL_OR_SUPPORTING',
     manualReportCyclingRequired: false,
@@ -2215,6 +2426,37 @@ function buildAllReports(publicRouteWindow) {
   return DIAGNOSTIC_STATE.aggregateDiagnosticPayload;
 }
 
+function refreshReportsAfterFd05FinalReceipt(occurrenceId) {
+  if (!assertCurrentOccurrence(occurrenceId)) return false;
+
+  const publicRouteWindow =
+    DIAGNOSTIC_STATE.publicRouteEvidenceWindow ||
+    DIAGNOSTIC_STATE.diagnosticWindow ||
+    globalThis;
+
+  buildAllReports(publicRouteWindow);
+  renderReports();
+  setPanelStatusAttributes();
+  setRouteClass(
+    DIAGNOSTIC_STATE.mountPoints?.routeRoot,
+    DIAGNOSTIC_STATE.status === 'DIAGNOSTIC_READY'
+      ? 'h-earth-3d-diagnostic-ready'
+      : 'h-earth-3d-diagnostic-partial'
+  );
+  writeText(DIAGNOSTIC_STATE.mountPoints?.status, DIAGNOSTIC_STATE.status);
+  writeText(
+    DIAGNOSTIC_STATE.mountPoints?.statusNote,
+    'The current FD_05 receipt reached a final COMPLETE or FAILED state. The controlling decision and aggregate reports were rebuilt for the same diagnostic occurrence.'
+  );
+  writeText(
+    DIAGNOSTIC_STATE.mountPoints?.copyStatus,
+    'The final FD_05 receipt has been incorporated. Diagnostic reports and copy controls are current.'
+  );
+  DIAGNOSTIC_STATE.updatedAt = nowIso();
+  publishActiveDiagnosticGlobals();
+  return true;
+}
+
 function writePanel(panelKey, value, options = {}) {
   return writeJson(DIAGNOSTIC_STATE.mountPoints?.[panelKey], value, options);
 }
@@ -2725,6 +2967,7 @@ async function executeDiagnosticOccurrence(occurrenceId, options = {}) {
     DIAGNOSTIC_STATE.fd05PrimaryReceipt = readFd05PrimaryReceipt();
     const publicRouteWindow =
       evidenceResolution.selectedWindow || DIAGNOSTIC_STATE.diagnosticWindow || globalThis;
+    DIAGNOSTIC_STATE.publicRouteEvidenceWindow = publicRouteWindow;
     buildAllReports(publicRouteWindow);
 
     if (!assertCurrentOccurrence(occurrenceId)) {
@@ -2797,6 +3040,8 @@ export function runHEarthDiagnostics(options = {}) {
     return Promise.resolve(failureReceipt);
   }
 
+  releaseFd05WatchdogObservation();
+
   const occurrenceId = createOccurrenceId();
   DIAGNOSTIC_STATE.initializationOccurrenceId = occurrenceId;
   DIAGNOSTIC_STATE.status = 'DIAGNOSTIC_INITIALIZING';
@@ -2830,6 +3075,7 @@ export function initializeHEarthDiagnosticRoute(options = {}) {
   const rootDocument = getDocument(options);
   const diagnosticWindow = getDiagnosticWindow(options);
   releaseListenerOwnership();
+  releaseFd05WatchdogObservation();
   clearActiveDiagnosticGlobals();
   resetReportState({ preserveFd05Module: true });
   DIAGNOSTIC_STATE.rootDocument = rootDocument;
@@ -2919,6 +3165,7 @@ export function initializeHEarthDiagnosticRoute(options = {}) {
 export function destroyHEarthDiagnosticRoute() {
   const priorOccurrenceId = DIAGNOSTIC_STATE.initializationOccurrenceId;
   releaseListenerOwnership();
+  releaseFd05WatchdogObservation();
   clearActiveDiagnosticGlobals();
   DIAGNOSTIC_STATE.initialized = false;
   DIAGNOSTIC_STATE.status = 'DIAGNOSTIC_DESTROYED';

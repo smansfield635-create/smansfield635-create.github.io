@@ -1,6 +1,6 @@
 /**
  * /showroom/globe/h-earth/diagnostic/h-earth.fd-05-module-import-track.js
- * COMPLETE NEW OPERATIONAL DIAGNOSTIC-OVERLAY MODULE
+ * COMPLETE CORRECTED OPERATIONAL DIAGNOSTIC-OVERLAY MODULE
  *
  * CONTRACT:
  * H_EARTH_DIAGNOSTIC_FD_05_MODULE_IMPORT_TRACK_FILE_BIRTH_v1
@@ -8,22 +8,9 @@
  * FAILURE DOMAIN:
  * FD_05_DEPLOYED_ES_MODULE_IMPORT_GRAPH
  *
- * ROLE:
- * First operational failure-domain lane of the redesigned H-Earth diagnostic track.
- *
- * OWNS:
- * - independent compositor-root and renderer-root probes;
- * - deployed-response capture and classification;
- * - bounded import-error and response evidence;
- * - conservative exact transitive-URL detection;
- * - H_EARTH_3D_MODULE_IMPORT_DIAGNOSTIC_RECEIPT publication;
- * - one operator-facing decision and one next authorized operation.
- *
- * DOES NOT OWN:
- * - modification or reopening of the 43 constitutional source authorities;
- * - compositor, renderer, geometry, runtime, route, or engine correction;
- * - redesign or deletion of the historical 31-report corpus;
- * - production, visual-pass, or incident-resolution claims.
+ * This file is a bounded diagnostic instrument. It does not modify or reopen
+ * compositor, renderer, geometry, runtime, route, engine, or any of the
+ * 43 constitutional source authorities.
  */
 
 export const H_EARTH_FD_05_MODULE_IMPORT_TRACK_CONTRACT_ID =
@@ -34,6 +21,9 @@ export const H_EARTH_FD_05_MODULE_IMPORT_TRACK_SOURCE_FILE =
 
 export const H_EARTH_FD_05_ACTIVE_FAILURE_DOMAIN =
   'FD_05_DEPLOYED_ES_MODULE_IMPORT_GRAPH';
+
+export const H_EARTH_FD_06_NEXT_FAILURE_DOMAIN =
+  'FD_06_API_AND_CONTRACT_CORRESPONDENCE';
 
 export const H_EARTH_FD_05_PRIMARY_RECEIPT_ID =
   'H_EARTH_3D_MODULE_IMPORT_DIAGNOSTIC_RECEIPT';
@@ -46,36 +36,50 @@ export const H_EARTH_FD_05_SUPPORTING_REPORTS = Object.freeze([
   'ALL_DIAGNOSTIC_EVIDENCE_PRESENTATION_SURFACE'
 ]);
 
+export const H_EARTH_FD_05_PAYLOAD_CLASSIFICATION = Object.freeze({
+  JAVASCRIPT_LIKE_RESPONSE: 'JAVASCRIPT_LIKE_RESPONSE',
+  JSON_LIKE_RESPONSE: 'JSON_LIKE_RESPONSE',
+  HTML_LIKE_RESPONSE: 'HTML_LIKE_RESPONSE',
+  EMPTY_RESPONSE: 'EMPTY_RESPONSE',
+  HTTP_ERROR_RESPONSE: 'HTTP_ERROR_RESPONSE',
+  UNRECOGNIZED_TEXT_RESPONSE: 'UNRECOGNIZED_TEXT_RESPONSE',
+  RESPONSE_BODY_UNAVAILABLE: 'RESPONSE_BODY_UNAVAILABLE',
+  FETCH_UNAVAILABLE: 'FETCH_UNAVAILABLE',
+  FETCH_FAILED: 'FETCH_FAILED'
+});
+
+export const H_EARTH_FD_05_TRANSPORT_DISPOSITION = Object.freeze({
+  DIRECT_RESPONSE: 'DIRECT_RESPONSE',
+  REDIRECTED_RESPONSE: 'REDIRECTED_RESPONSE',
+  HTTP_ERROR_RESPONSE: 'HTTP_ERROR_RESPONSE',
+  FETCH_FAILED: 'FETCH_FAILED',
+  FETCH_UNAVAILABLE: 'FETCH_UNAVAILABLE'
+});
+
 const GLOBAL_RECEIPT_KEY = H_EARTH_FD_05_PRIMARY_RECEIPT_ID;
 const GLOBAL_TRACK_KEY = 'H_EARTH_FD_05_MODULE_IMPORT_TRACK';
-const RECEIPT_EVENT =
-  'h-earth:fd-05-module-import-diagnostic-receipt';
+const RECEIPT_EVENT = 'h-earth:fd-05-module-import-diagnostic-receipt';
 const MOUNT_ID = 'h-earth-fd-05-module-import-track';
 const STYLE_ID = `${MOUNT_ID}-style`;
 const RESPONSE_PREFIX_LIMIT = 512;
 const STACK_LIMIT = 2400;
+const MESSAGE_LIMIT = 1200;
 const URL_LIMIT = 12;
 
-const CLASSIFICATION = Object.freeze({
-  JAVASCRIPT_LIKE: 'JAVASCRIPT_LIKE',
-  HTML_LIKE: 'HTML_LIKE',
-  JSON_LIKE: 'JSON_LIKE',
-  HTTP_ERROR: 'HTTP_ERROR',
-  EMPTY: 'EMPTY',
-  REDIRECTED: 'REDIRECTED',
-  UNRECOGNIZED: 'UNRECOGNIZED',
-  RESPONSE_UNAVAILABLE: 'RESPONSE_UNAVAILABLE'
+const MARKERS = Object.freeze({
+  MODULE_LOADED_AT: 'H_EARTH_FD_05_MODULE_LOADED_AT',
+  INSTRUMENT_STARTED_AT: 'H_EARTH_FD_05_INSTRUMENT_STARTED_AT',
+  RECEIPT_PUBLISHED_AT: 'H_EARTH_FD_05_RECEIPT_PUBLISHED_AT',
+  RECEIPT_RENDERED_AT: 'H_EARTH_FD_05_RECEIPT_RENDERED_AT'
 });
 
-const BRANCHES = Object.freeze([
+const DEFAULT_BRANCHES = Object.freeze([
   Object.freeze({
     branchId: 'COMPOSITOR_ROOT',
     label: 'Compositor root',
     requestedPath: '../compositor.js',
-    expectedSourcePath:
-      '/showroom/globe/h-earth/compositor.js',
-    expectedContractExport:
-      'H_EARTH_3D_COMPOSITOR_CONTRACT_ID',
+    expectedSourcePath: '/showroom/globe/h-earth/compositor.js',
+    expectedContractExport: 'H_EARTH_3D_COMPOSITOR_CONTRACT_ID',
     expectedContractId:
       'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1'
   }),
@@ -83,27 +87,19 @@ const BRANCHES = Object.freeze([
     branchId: 'RENDERER_ROOT',
     label: 'Renderer root',
     requestedPath: '../renderer.js',
-    expectedSourcePath:
-      '/showroom/globe/h-earth/renderer.js',
-    expectedContractExport:
-      'H_EARTH_3D_RENDERER_CONTRACT_ID',
+    expectedSourcePath: '/showroom/globe/h-earth/renderer.js',
+    expectedContractExport: 'H_EARTH_3D_RENDERER_CONTRACT_ID',
     expectedContractId:
       'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1'
   })
 ]);
 
-let runSequence = 0;
-let activeRun = null;
-
 function nowIso() {
   return new Date().toISOString();
 }
 
-function isText(value) {
-  return (
-    typeof value === 'string' &&
-    value.trim().length > 0
-  );
+function isNonEmptyString(value) {
+  return typeof value === 'string' && value.trim().length > 0;
 }
 
 function bounded(value, limit) {
@@ -112,10 +108,7 @@ function bounded(value, limit) {
   }
 
   const text = String(value);
-
-  return text.length <= limit
-    ? text
-    : `${text.slice(0, limit)}…`;
+  return text.length <= limit ? text : `${text.slice(0, limit)}…`;
 }
 
 function deepFreeze(value, seen = new WeakSet()) {
@@ -130,17 +123,21 @@ function deepFreeze(value, seen = new WeakSet()) {
 
   seen.add(value);
 
-  for (const nested of Object.values(value)) {
-    deepFreeze(nested, seen);
+  for (const key of Reflect.ownKeys(value)) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+
+    if (
+      descriptor &&
+      Object.prototype.hasOwnProperty.call(descriptor, 'value')
+    ) {
+      deepFreeze(descriptor.value, seen);
+    }
   }
 
   return Object.freeze(value);
 }
 
-function resolveUrl(
-  value,
-  base = document.baseURI
-) {
+function resolveUrl(value, base) {
   try {
     return new URL(value, base).href;
   } catch {
@@ -167,7 +164,7 @@ function equivalentUrl(left, right) {
 }
 
 function normalizedPrefix(value) {
-  return isText(value)
+  return isNonEmptyString(value)
     ? value
         .replace(/\u0000/g, '')
         .replace(/\r\n/g, '\n')
@@ -176,28 +173,18 @@ function normalizedPrefix(value) {
 }
 
 function isHtmlLike(prefix, contentType) {
-  const type =
-    String(contentType || '').toLowerCase();
-
-  const text =
-    String(prefix || '')
-      .trimStart()
-      .toLowerCase();
+  const type = String(contentType || '').toLowerCase();
+  const text = String(prefix || '').trimStart().toLowerCase();
 
   return (
     type.includes('text/html') ||
-    /^(?:<!doctype html|<html|<head|<body|<title|<script)/.test(
-      text
-    )
+    /^(?:<!doctype html|<html|<head|<body|<title|<script)/.test(text)
   );
 }
 
 function isJsonLike(prefix, contentType) {
-  const type =
-    String(contentType || '').toLowerCase();
-
-  const text =
-    String(prefix || '').trim();
+  const type = String(contentType || '').toLowerCase();
+  const text = String(prefix || '').trim();
 
   if (
     type.includes('application/json') ||
@@ -217,21 +204,13 @@ function isJsonLike(prefix, contentType) {
     JSON.parse(text);
     return true;
   } catch {
-    return /^(?:\{\s*["}]|\[\s*(?:[\{\["0-9tfn-]|\]))/.test(
-      text
-    );
+    return /^(?:\{\s*["}]|\[\s*(?:[\{\["0-9tfn-]|\]))/.test(text);
   }
 }
 
-function isJavaScriptLike(
-  prefix,
-  contentType
-) {
-  const type =
-    String(contentType || '').toLowerCase();
-
-  const text =
-    String(prefix || '').trimStart();
+function isJavaScriptLike(prefix, contentType) {
+  const type = String(contentType || '').toLowerCase();
+  const text = String(prefix || '').trimStart();
 
   return (
     type.includes('javascript') ||
@@ -242,15 +221,23 @@ function isJavaScriptLike(
   );
 }
 
-function classifyResponse({
+export function classifyHEarthFd05Payload({
+  fetchAvailable,
+  fetchSucceeded,
   responseOk,
   httpStatus,
-  redirected,
-  finalResponseUrl,
-  resolvedUrl,
-  contentType,
-  responsePrefix
+  bodyReadSucceeded,
+  responsePrefix,
+  contentType
 }) {
+  if (fetchAvailable === false) {
+    return H_EARTH_FD_05_PAYLOAD_CLASSIFICATION.FETCH_UNAVAILABLE;
+  }
+
+  if (fetchSucceeded === false) {
+    return H_EARTH_FD_05_PAYLOAD_CLASSIFICATION.FETCH_FAILED;
+  }
+
   if (
     responseOk === false ||
     (
@@ -261,7 +248,75 @@ function classifyResponse({
       )
     )
   ) {
-    return CLASSIFICATION.HTTP_ERROR;
+    return H_EARTH_FD_05_PAYLOAD_CLASSIFICATION.HTTP_ERROR_RESPONSE;
+  }
+
+  if (bodyReadSucceeded === false) {
+    return H_EARTH_FD_05_PAYLOAD_CLASSIFICATION.RESPONSE_BODY_UNAVAILABLE;
+  }
+
+  if (String(responsePrefix || '').length === 0) {
+    return H_EARTH_FD_05_PAYLOAD_CLASSIFICATION.EMPTY_RESPONSE;
+  }
+
+  if (
+    isHtmlLike(
+      responsePrefix,
+      contentType
+    )
+  ) {
+    return H_EARTH_FD_05_PAYLOAD_CLASSIFICATION.HTML_LIKE_RESPONSE;
+  }
+
+  if (
+    isJsonLike(
+      responsePrefix,
+      contentType
+    )
+  ) {
+    return H_EARTH_FD_05_PAYLOAD_CLASSIFICATION.JSON_LIKE_RESPONSE;
+  }
+
+  if (
+    isJavaScriptLike(
+      responsePrefix,
+      contentType
+    )
+  ) {
+    return H_EARTH_FD_05_PAYLOAD_CLASSIFICATION.JAVASCRIPT_LIKE_RESPONSE;
+  }
+
+  return H_EARTH_FD_05_PAYLOAD_CLASSIFICATION.UNRECOGNIZED_TEXT_RESPONSE;
+}
+
+export function classifyHEarthFd05Transport({
+  fetchAvailable,
+  fetchSucceeded,
+  responseOk,
+  httpStatus,
+  redirected,
+  finalResponseUrl,
+  resolvedUrl
+}) {
+  if (fetchAvailable === false) {
+    return H_EARTH_FD_05_TRANSPORT_DISPOSITION.FETCH_UNAVAILABLE;
+  }
+
+  if (fetchSucceeded === false) {
+    return H_EARTH_FD_05_TRANSPORT_DISPOSITION.FETCH_FAILED;
+  }
+
+  if (
+    responseOk === false ||
+    (
+      Number.isInteger(httpStatus) &&
+      (
+        httpStatus < 200 ||
+        httpStatus >= 400
+      )
+    )
+  ) {
+    return H_EARTH_FD_05_TRANSPORT_DISPOSITION.HTTP_ERROR_RESPONSE;
   }
 
   if (
@@ -275,212 +330,72 @@ function classifyResponse({
       )
     )
   ) {
-    return CLASSIFICATION.REDIRECTED;
+    return H_EARTH_FD_05_TRANSPORT_DISPOSITION.REDIRECTED_RESPONSE;
   }
 
-  if (!isText(responsePrefix)) {
-    return CLASSIFICATION.EMPTY;
-  }
-
-  if (
-    isHtmlLike(
-      responsePrefix,
-      contentType
-    )
-  ) {
-    return CLASSIFICATION.HTML_LIKE;
-  }
-
-  if (
-    isJsonLike(
-      responsePrefix,
-      contentType
-    )
-  ) {
-    return CLASSIFICATION.JSON_LIKE;
-  }
-
-  if (
-    isJavaScriptLike(
-      responsePrefix,
-      contentType
-    )
-  ) {
-    return CLASSIFICATION.JAVASCRIPT_LIKE;
-  }
-
-  return CLASSIFICATION.UNRECOGNIZED;
+  return H_EARTH_FD_05_TRANSPORT_DISPOSITION.DIRECT_RESPONSE;
 }
 
-async function probeResponse(
-  requestedPath,
-  resolvedUrl
-) {
-  const probeStartedAt = nowIso();
-
-  try {
-    const response = await fetch(
-      resolvedUrl,
-      {
-        method: 'GET',
-        cache: 'no-store',
-        credentials: 'same-origin',
-        redirect: 'follow',
-        headers: {
-          Accept:
-            'text/javascript, application/javascript, application/ecmascript, text/ecmascript, application/json, text/plain, */*;q=0.1'
-        }
-      }
-    );
-
-    let responsePrefix = '';
-    let responseReadErrorName = null;
-    let responseReadErrorMessage = null;
-
-    try {
-      responsePrefix =
-        normalizedPrefix(
-          await response.text()
-        );
-    } catch (error) {
-      responseReadErrorName =
-        bounded(
-          error?.name,
-          160
-        );
-
-      responseReadErrorMessage =
-        bounded(
-          error?.message,
-          800
-        );
-    }
-
-    const finalResponseUrl =
-      response.url || resolvedUrl;
-
-    const contentType =
-      response.headers.get(
-        'content-type'
-      );
-
-    const redirected =
-      response.redirected === true ||
-      !equivalentUrl(
-        finalResponseUrl,
-        resolvedUrl
-      );
-
-    const base = {
-      probeStartedAt,
-      probeCompletedAt: nowIso(),
-      requestedPath,
-      resolvedUrl,
-      finalResponseUrl,
-      httpStatus: response.status,
-      httpStatusText:
-        response.statusText || '',
-      responseOk: response.ok,
-      contentType,
-      redirected,
-      responsePrefix,
-      responsePrefixLength:
-        responsePrefix.length,
-      responseReadErrorName,
-      responseReadErrorMessage,
-      fetchErrorName: null,
-      fetchErrorMessage: null
-    };
-
-    return deepFreeze({
-      ...base,
-      responseClassification:
-        classifyResponse(base)
-    });
-  } catch (error) {
-    return deepFreeze({
-      probeStartedAt,
-      probeCompletedAt: nowIso(),
-      requestedPath,
-      resolvedUrl,
-      finalResponseUrl: null,
-      httpStatus: null,
-      httpStatusText: null,
-      responseOk: false,
-      contentType: null,
-      redirected: false,
-      responseClassification:
-        CLASSIFICATION.RESPONSE_UNAVAILABLE,
-      responsePrefix: '',
-      responsePrefixLength: 0,
-      responseReadErrorName: null,
-      responseReadErrorMessage: null,
-      fetchErrorName:
-        bounded(
-          error?.name,
-          160
-        ),
-      fetchErrorMessage:
-        bounded(
-          error?.message,
-          800
-        )
-    });
-  }
-}
-
-function captureError(error) {
+function captureError(error, evidenceType) {
   return deepFreeze({
+    errorEvidenceType: evidenceType,
     errorName:
       bounded(
         error?.name,
         160
       ),
-
     errorMessage:
       bounded(
-        error?.message,
-        1200
+        error?.message ?? error,
+        MESSAGE_LIMIT
       ),
-
     errorStack:
       bounded(
         error?.stack,
         STACK_LIMIT
       ),
-
     errorFileName:
       bounded(
         error?.fileName,
         1200
       ),
-
     errorLineNumber:
       Number.isInteger(
         error?.lineNumber
       )
         ? error.lineNumber
         : null,
-
     errorColumnNumber:
       Number.isInteger(
         error?.columnNumber
       )
         ? error.columnNumber
         : null,
-
     errorCause:
       bounded(
-        error?.cause?.message ||
-          error?.cause?.name ||
+        error?.cause?.message ??
+          error?.cause?.name ??
           error?.cause,
         800
       )
   });
 }
 
+function noErrorEvidence() {
+  return deepFreeze({
+    errorEvidenceType: null,
+    errorName: null,
+    errorMessage: null,
+    errorStack: null,
+    errorFileName: null,
+    errorLineNumber: null,
+    errorColumnNumber: null,
+    errorCause: null
+  });
+}
+
 function extractUrls(text, baseUrl) {
-  if (!isText(text)) {
+  if (!isNonEmptyString(text)) {
     return [];
   }
 
@@ -526,10 +441,11 @@ function extractUrls(text, baseUrl) {
   return output;
 }
 
-function findTransitiveUrls(
+function uniqueCandidateUrls(
   errorEvidence,
   rootUrl,
-  finalResponseUrl
+  finalResponseUrl,
+  moduleUrl
 ) {
   const texts = [
     errorEvidence.errorMessage,
@@ -538,8 +454,8 @@ function findTransitiveUrls(
     errorEvidence.errorCause
   ];
 
-  const urls = [];
   const seen = new Set();
+  const output = [];
 
   for (const text of texts) {
     for (
@@ -560,814 +476,1307 @@ function findTransitiveUrls(
         ) ||
         equivalentUrl(
           candidate,
-          import.meta.url
+          moduleUrl
         ) ||
-        !/\.m?js(?:$|\?)/i.test(
-          candidate
-        ) ||
-        seen.has(candidate)
+        seen.has(candidate) ||
+        !/\.m?js(?:$|\?)/i.test(candidate)
       ) {
         continue;
       }
 
       seen.add(candidate);
-      urls.push(candidate);
+      output.push(candidate);
 
-      if (
-        urls.length >=
-        URL_LIMIT
-      ) {
-        return Object.freeze(
-          urls
-        );
+      if (output.length >= URL_LIMIT) {
+        return Object.freeze(output);
       }
     }
   }
 
-  return Object.freeze(urls);
+  return Object.freeze(output);
+}
+
+function directUrlFromPattern(message, baseUrl) {
+  if (!isNonEmptyString(message)) {
+    return null;
+  }
+
+  const patterns = [
+    {
+      evidenceType:
+        'DIRECT_DYNAMIC_IMPORT_REJECTION',
+      regex:
+        /(?:failed to fetch dynamically imported module|error loading dynamically imported module|importing a module script failed)\s*:?\s*(https?:\/\/[^\s'"<>]+)/i
+    },
+    {
+      evidenceType:
+        'DIRECT_MODULE_NOT_FOUND_REJECTION',
+      regex:
+        /cannot find module\s+['"]([^'"]+)['"]\s+imported from/i
+    },
+    {
+      evidenceType:
+        'DIRECT_MODULE_SPECIFIER_RESOLUTION_REJECTION',
+      regex:
+        /(?:failed to resolve module specifier|unable to resolve module specifier|cannot resolve module)\s+['"]([^'"]+)['"]/i
+    },
+    {
+      evidenceType:
+        'DIRECT_MODULE_RESOURCE_LOAD_REJECTION',
+      regex:
+        /(?:module resource|module script|script module)\s+(?:at\s+)?['"]?(https?:\/\/[^\s'"<>]+\.m?js(?:\?[^\s'"<>]*)?)/i
+    }
+  ];
+
+  for (const pattern of patterns) {
+    const match =
+      message.match(pattern.regex);
+
+    if (!match) {
+      continue;
+    }
+
+    const exactUrl =
+      resolveUrl(
+        match[1],
+        baseUrl
+      );
+
+    if (exactUrl) {
+      return deepFreeze({
+        exactFailedTransitiveUrlObserved:
+          true,
+        exactFailedTransitiveUrl:
+          exactUrl,
+        exactFailedTransitiveUrlEvidenceType:
+          pattern.evidenceType
+      });
+    }
+  }
+
+  return null;
+}
+
+export function classifyHEarthFd05TransitiveEvidence({
+  errorEvidence,
+  rootUrl,
+  finalResponseUrl,
+  moduleUrl
+}) {
+  const directMessageEvidence =
+    directUrlFromPattern(
+      errorEvidence?.errorMessage,
+      rootUrl
+    );
+
+  if (directMessageEvidence) {
+    const candidateTransitiveUrls =
+      uniqueCandidateUrls(
+        errorEvidence,
+        rootUrl,
+        finalResponseUrl,
+        moduleUrl
+      ).filter(
+        (candidate) =>
+          !equivalentUrl(
+            candidate,
+            directMessageEvidence
+              .exactFailedTransitiveUrl
+          )
+      );
+
+    return deepFreeze({
+      candidateTransitiveUrls:
+        Object.freeze(
+          candidateTransitiveUrls
+        ),
+      ...directMessageEvidence
+    });
+  }
+
+  const errorName =
+    String(
+      errorEvidence?.errorName ||
+      ''
+    );
+
+  const directFileName =
+    resolveUrl(
+      errorEvidence?.errorFileName,
+      rootUrl
+    );
+
+  if (
+    directFileName &&
+    /syntaxerror/i.test(errorName) &&
+    !equivalentUrl(
+      directFileName,
+      rootUrl
+    ) &&
+    !equivalentUrl(
+      directFileName,
+      finalResponseUrl
+    ) &&
+    /\.m?js(?:$|\?)/i.test(
+      directFileName
+    )
+  ) {
+    const candidateTransitiveUrls =
+      uniqueCandidateUrls(
+        errorEvidence,
+        rootUrl,
+        finalResponseUrl,
+        moduleUrl
+      ).filter(
+        (candidate) =>
+          !equivalentUrl(
+            candidate,
+            directFileName
+          )
+      );
+
+    return deepFreeze({
+      candidateTransitiveUrls:
+        Object.freeze(
+          candidateTransitiveUrls
+        ),
+      exactFailedTransitiveUrlObserved:
+        true,
+      exactFailedTransitiveUrl:
+        directFileName,
+      exactFailedTransitiveUrlEvidenceType:
+        'DIRECT_PARSER_ERROR_FILENAME'
+    });
+  }
+
+  return deepFreeze({
+    candidateTransitiveUrls:
+      uniqueCandidateUrls(
+        errorEvidence,
+        rootUrl,
+        finalResponseUrl,
+        moduleUrl
+      ),
+    exactFailedTransitiveUrlObserved:
+      false,
+    exactFailedTransitiveUrl:
+      null,
+    exactFailedTransitiveUrlEvidenceType:
+      null
+  });
+}
+
+async function probeResponse(
+  branch,
+  resolvedUrl,
+  dependencies
+) {
+  const probeStartedAt =
+    dependencies.now();
+
+  const fetchImpl =
+    dependencies.fetchImpl;
+
+  if (typeof fetchImpl !== 'function') {
+    const evidence =
+      captureError(
+        new Error(
+          'The Fetch API is unavailable in this occurrence.'
+        ),
+        'DIRECT_FETCH_ERROR'
+      );
+
+    return deepFreeze({
+      probeStartedAt,
+      probeCompletedAt:
+        dependencies.now(),
+      requestedPath:
+        branch.requestedPath,
+      resolvedUrl,
+      finalResponseUrl: null,
+      httpStatus: null,
+      httpStatusText: null,
+      responseOk: false,
+      contentType: null,
+      redirected: false,
+      responsePrefix: '',
+      responsePrefixLength: 0,
+      bodyReadSucceeded: false,
+      fetchAvailable: false,
+      fetchSucceeded: false,
+      transportDisposition:
+        H_EARTH_FD_05_TRANSPORT_DISPOSITION
+          .FETCH_UNAVAILABLE,
+      payloadClassification:
+        H_EARTH_FD_05_PAYLOAD_CLASSIFICATION
+          .FETCH_UNAVAILABLE,
+      responseClassification:
+        H_EARTH_FD_05_PAYLOAD_CLASSIFICATION
+          .FETCH_UNAVAILABLE,
+      fetchError:
+        evidence,
+      responseReadError:
+        null
+    });
+  }
+
+  try {
+    const response =
+      await fetchImpl(
+        resolvedUrl,
+        {
+          method: 'GET',
+          cache: 'no-store',
+          credentials: 'same-origin',
+          redirect: 'follow',
+          headers: {
+            Accept:
+              'text/javascript, application/javascript, application/ecmascript, text/ecmascript, application/json, text/plain, */*;q=0.1'
+          }
+        }
+      );
+
+    let responsePrefix = '';
+    let bodyReadSucceeded = true;
+    let responseReadError = null;
+
+    try {
+      responsePrefix =
+        normalizedPrefix(
+          await response.text()
+        );
+    } catch (error) {
+      bodyReadSucceeded = false;
+      responseReadError =
+        captureError(
+          error,
+          'RESPONSE_BODY_READ_ERROR'
+        );
+    }
+
+    const finalResponseUrl =
+      response.url ||
+      resolvedUrl;
+
+    const contentType =
+      response.headers
+        ?.get?.('content-type') ??
+      null;
+
+    const redirected =
+      response.redirected === true ||
+      !equivalentUrl(
+        finalResponseUrl,
+        resolvedUrl
+      );
+
+    const base = {
+      fetchAvailable: true,
+      fetchSucceeded: true,
+      responseOk:
+        response.ok,
+      httpStatus:
+        response.status,
+      redirected,
+      finalResponseUrl,
+      resolvedUrl,
+      bodyReadSucceeded,
+      responsePrefix,
+      contentType
+    };
+
+    const transportDisposition =
+      classifyHEarthFd05Transport(
+        base
+      );
+
+    const payloadClassification =
+      classifyHEarthFd05Payload(
+        base
+      );
+
+    return deepFreeze({
+      probeStartedAt,
+      probeCompletedAt:
+        dependencies.now(),
+      requestedPath:
+        branch.requestedPath,
+      resolvedUrl,
+      finalResponseUrl,
+      httpStatus:
+        response.status,
+      httpStatusText:
+        response.statusText ||
+        '',
+      responseOk:
+        response.ok,
+      contentType,
+      redirected,
+      responsePrefix,
+      responsePrefixLength:
+        responsePrefix.length,
+      bodyReadSucceeded,
+      fetchAvailable: true,
+      fetchSucceeded: true,
+      transportDisposition,
+      payloadClassification,
+      responseClassification:
+        payloadClassification,
+      fetchError: null,
+      responseReadError
+    });
+  } catch (error) {
+    const fetchError =
+      captureError(
+        error,
+        'DIRECT_FETCH_ERROR'
+      );
+
+    return deepFreeze({
+      probeStartedAt,
+      probeCompletedAt:
+        dependencies.now(),
+      requestedPath:
+        branch.requestedPath,
+      resolvedUrl,
+      finalResponseUrl: null,
+      httpStatus: null,
+      httpStatusText: null,
+      responseOk: false,
+      contentType: null,
+      redirected: false,
+      responsePrefix: '',
+      responsePrefixLength: 0,
+      bodyReadSucceeded: false,
+      fetchAvailable: true,
+      fetchSucceeded: false,
+      transportDisposition:
+        H_EARTH_FD_05_TRANSPORT_DISPOSITION
+          .FETCH_FAILED,
+      payloadClassification:
+        H_EARTH_FD_05_PAYLOAD_CLASSIFICATION
+          .FETCH_FAILED,
+      responseClassification:
+        H_EARTH_FD_05_PAYLOAD_CLASSIFICATION
+          .FETCH_FAILED,
+      fetchError,
+      responseReadError:
+        null
+    });
+  }
 }
 
 async function probeImport(
   branch,
-  resolvedUrl
+  resolvedUrl,
+  responseProbe,
+  dependencies
 ) {
-  const importStartedAt = nowIso();
+  const importStartedAt =
+    dependencies.now();
 
   try {
     const moduleNamespace =
-      await import(resolvedUrl);
+      await dependencies.importImpl(
+        resolvedUrl
+      );
 
     const actualContractId =
       moduleNamespace?.[
         branch.expectedContractExport
-      ] ?? null;
+      ] ??
+      null;
+
+    const contractExportPresent =
+      actualContractId !== null;
+
+    const contractIdMatched =
+      actualContractId ===
+      branch.expectedContractId;
 
     return deepFreeze({
       importStartedAt,
-      importCompletedAt: nowIso(),
+      importCompletedAt:
+        dependencies.now(),
       importAttempted: true,
       importSucceeded: true,
-
+      expectedContractExport:
+        branch.expectedContractExport,
+      expectedContractId:
+        branch.expectedContractId,
+      actualContractId,
+      contractExportPresent,
+      contractIdMatched,
+      branchClassification:
+        contractIdMatched
+          ? 'BRANCH_SUCCESS'
+          : 'FD_06_CONTRACT_MISMATCH',
       exportedSymbolNames:
         Object.freeze(
           Object.keys(
-            moduleNamespace
+            moduleNamespace ||
+            {}
           ).sort()
         ),
-
-      expectedContractExport:
-        branch.expectedContractExport,
-
-      expectedContractId:
-        branch.expectedContractId,
-
-      actualContractId,
-
-      contractExportPresent:
-        actualContractId !== null,
-
-      contractIdMatched:
-        actualContractId ===
-        branch.expectedContractId,
-
-      errorName: null,
-      errorMessage: null,
-      errorStack: null,
-      errorFileName: null,
-      errorLineNumber: null,
-      errorColumnNumber: null,
-      errorCause: null,
-
+      importError: null,
+      candidateTransitiveUrls:
+        Object.freeze([]),
       exactFailedTransitiveUrlObserved:
         false,
-
       exactFailedTransitiveUrl:
         null,
-
-      exactFailedTransitiveUrls:
-        Object.freeze([])
+      exactFailedTransitiveUrlEvidenceType:
+        null
     });
   } catch (error) {
+    const importError =
+      captureError(
+        error,
+        'DIRECT_IMPORT_ERROR'
+      );
+
+    const transitiveEvidence =
+      classifyHEarthFd05TransitiveEvidence({
+        errorEvidence:
+          importError,
+        rootUrl:
+          resolvedUrl,
+        finalResponseUrl:
+          responseProbe
+            ?.finalResponseUrl ??
+          null,
+        moduleUrl:
+          dependencies.moduleUrl
+      });
+
     return deepFreeze({
       importStartedAt,
-      importCompletedAt: nowIso(),
+      importCompletedAt:
+        dependencies.now(),
       importAttempted: true,
       importSucceeded: false,
-
-      exportedSymbolNames:
-        Object.freeze([]),
-
       expectedContractExport:
         branch.expectedContractExport,
-
       expectedContractId:
         branch.expectedContractId,
-
       actualContractId: null,
-      contractExportPresent: false,
-      contractIdMatched: false,
-
-      ...captureError(error),
-
-      exactFailedTransitiveUrlObserved:
+      contractExportPresent:
         false,
-
-      exactFailedTransitiveUrl:
-        null,
-
-      exactFailedTransitiveUrls:
-        Object.freeze([])
+      contractIdMatched:
+        false,
+      branchClassification:
+        H_EARTH_FD_05_ACTIVE_FAILURE_DOMAIN,
+      exportedSymbolNames:
+        Object.freeze([]),
+      importError,
+      ...transitiveEvidence
     });
   }
 }
 
-async function inspectBranch(branch) {
-  const branchStartedAt = nowIso();
+async function inspectBranch(
+  branch,
+  dependencies
+) {
+  const branchStartedAt =
+    dependencies.now();
 
   const resolvedUrl =
     resolveUrl(
       branch.requestedPath,
-      import.meta.url
+      dependencies.moduleUrl
     );
 
   if (!resolvedUrl) {
+    const resolutionError =
+      captureError(
+        new Error(
+          `Unable to resolve configured module path: ${branch.requestedPath}`
+        ),
+        'URL_RESOLUTION_ERROR'
+      );
+
     return deepFreeze({
       ...branch,
       branchStartedAt,
-      branchCompletedAt: nowIso(),
+      branchCompletedAt:
+        dependencies.now(),
       resolvedUrl: null,
       responseProbe: null,
-
-      importProbe: {
-        importAttempted: false,
-        importSucceeded: false,
-        contractIdMatched: false,
-
-        errorName:
-          'URL_RESOLUTION_FAILED',
-
-        errorMessage:
-          'The configured root-module URL could not be resolved.',
-
-        errorStack: null,
-
-        exactFailedTransitiveUrlObserved:
-          false,
-
-        exactFailedTransitiveUrl:
-          null,
-
-        exactFailedTransitiveUrls:
-          Object.freeze([])
-      },
-
-      exactTransitiveResponseProbe:
-        null,
-
-      branchSucceeded: false,
-
-      branchFailureStage:
-        'URL_RESOLUTION'
+      importProbe:
+        deepFreeze({
+          importAttempted:
+            false,
+          importSucceeded:
+            false,
+          contractIdMatched:
+            false,
+          branchClassification:
+            H_EARTH_FD_05_ACTIVE_FAILURE_DOMAIN,
+          importError:
+            null,
+          resolutionError,
+          candidateTransitiveUrls:
+            Object.freeze([]),
+          exactFailedTransitiveUrlObserved:
+            false,
+          exactFailedTransitiveUrl:
+            null,
+          exactFailedTransitiveUrlEvidenceType:
+            null
+        })
     });
   }
 
-  const [
-    responseProbe,
-    firstImportProbe
-  ] = await Promise.all([
-    probeResponse(
-      branch.requestedPath,
-      resolvedUrl
-    ),
-    probeImport(
+  const responseProbe =
+    await probeResponse(
       branch,
-      resolvedUrl
-    )
-  ]);
+      resolvedUrl,
+      dependencies
+    );
 
-  let importProbe =
-    firstImportProbe;
+  const importProbe =
+    await probeImport(
+      branch,
+      resolvedUrl,
+      responseProbe,
+      dependencies
+    );
 
-  if (!importProbe.importSucceeded) {
-    const urls =
-      findTransitiveUrls(
-        importProbe,
-        resolvedUrl,
-        responseProbe.finalResponseUrl
-      );
-
-    importProbe =
-      deepFreeze({
-        ...importProbe,
-
-        exactFailedTransitiveUrlObserved:
-          urls.length > 0,
-
-        exactFailedTransitiveUrl:
-          urls[0] ?? null,
-
-        exactFailedTransitiveUrls:
-          urls
-      });
-  }
-
-  const exactTransitiveResponseProbe =
-    importProbe.exactFailedTransitiveUrl
-      ? await probeResponse(
-          importProbe
-            .exactFailedTransitiveUrl,
-          importProbe
-            .exactFailedTransitiveUrl
-        )
-      : null;
-
-  const branchSucceeded =
-    responseProbe.responseOk === true &&
-    importProbe.importSucceeded === true &&
-    importProbe.contractIdMatched === true;
-
-  let branchFailureStage = null;
+  let exactTransitiveResponseProbe =
+    null;
 
   if (
-    responseProbe.responseOk !== true
+    importProbe
+      .exactFailedTransitiveUrlObserved
   ) {
-    branchFailureStage =
-      'DEPLOYED_RESPONSE';
-  } else if (
-    !importProbe.importSucceeded
-  ) {
-    branchFailureStage =
-      importProbe
-        .exactFailedTransitiveUrl
-        ? 'TRANSITIVE_MODULE_IMPORT'
-        : 'ROOT_OR_UNIDENTIFIED_TRANSITIVE_MODULE_IMPORT';
-  } else if (
-    !importProbe.contractIdMatched
-  ) {
-    branchFailureStage =
-      'ROOT_MODULE_CONTRACT_CORRESPONDENCE';
+    exactTransitiveResponseProbe =
+      await probeResponse(
+        {
+          ...branch,
+          requestedPath:
+            importProbe
+              .exactFailedTransitiveUrl
+        },
+        importProbe
+          .exactFailedTransitiveUrl,
+        dependencies
+      );
   }
 
   return deepFreeze({
     ...branch,
     branchStartedAt,
-    branchCompletedAt: nowIso(),
+    branchCompletedAt:
+      dependencies.now(),
     resolvedUrl,
     responseProbe,
     importProbe,
-    exactTransitiveResponseProbe,
-    branchSucceeded,
-    branchFailureStage
+    exactTransitiveResponseProbe
   });
 }
 
-function primaryFailedBranch(failed) {
-  if (failed.length === 0) {
-    return null;
+function selectStrongestErrorEvidence({
+  fatalError,
+  branchResults
+}) {
+  if (fatalError) {
+    return captureError(
+      fatalError,
+      'FATAL_INSTRUMENT_ERROR'
+    );
   }
 
-  if (failed.length === 1) {
-    return failed[0];
+  for (const branch of branchResults) {
+    if (
+      branch.importProbe
+        ?.importError
+    ) {
+      return branch
+        .importProbe
+        .importError;
+    }
   }
 
-  return (
-    failed.find(
-      (branch) =>
+  for (const branch of branchResults) {
+    if (
+      branch.responseProbe
+        ?.fetchError
+    ) {
+      return branch
+        .responseProbe
+        .fetchError;
+    }
+  }
+
+  for (const branch of branchResults) {
+    if (
+      branch.responseProbe
+        ?.responseReadError
+    ) {
+      return branch
+        .responseProbe
+        .responseReadError;
+    }
+  }
+
+  for (const branch of branchResults) {
+    if (
+      branch.importProbe
+        ?.resolutionError
+    ) {
+      return branch
+        .importProbe
+        .resolutionError;
+    }
+  }
+
+  return noErrorEvidence();
+}
+
+function collectBranchSets(
+  branchResults
+) {
+  const importFailedBranches = [];
+  const contractMismatchBranches = [];
+  const successfulBranches = [];
+
+  for (const branch of branchResults) {
+    if (
+      branch.importProbe
+        ?.importSucceeded ===
+      false
+    ) {
+      importFailedBranches.push(
+        branch.branchId
+      );
+    } else if (
+      branch.importProbe
+        ?.contractIdMatched ===
+      false
+    ) {
+      contractMismatchBranches.push(
+        branch.branchId
+      );
+    } else if (
+      branch.importProbe
+        ?.importSucceeded ===
+        true &&
+      branch.importProbe
+        ?.contractIdMatched ===
+        true
+    ) {
+      successfulBranches.push(
+        branch.branchId
+      );
+    }
+  }
+
+  return deepFreeze({
+    importFailedBranches:
+      Object.freeze(
+        importFailedBranches
+      ),
+    contractMismatchBranches:
+      Object.freeze(
+        contractMismatchBranches
+      ),
+    successfulBranches:
+      Object.freeze(
+        successfulBranches
+      ),
+    failedBranches:
+      Object.freeze([
+        ...importFailedBranches
+      ]),
+    nextFailureDomain:
+      importFailedBranches.length > 0
+        ? H_EARTH_FD_05_ACTIVE_FAILURE_DOMAIN
+        : contractMismatchBranches.length > 0
+          ? H_EARTH_FD_06_NEXT_FAILURE_DOMAIN
+          : null
+  });
+}
+
+function choosePrimaryBranch(
+  branchResults,
+  branchSets
+) {
+  const preferredIds = [
+    ...branchSets
+      .importFailedBranches,
+    ...branchSets
+      .contractMismatchBranches,
+    ...branchSets
+      .successfulBranches
+  ];
+
+  for (const branchId of preferredIds) {
+    const branch =
+      branchResults.find(
+        (candidate) =>
+          candidate.branchId ===
+          branchId
+      );
+
+    if (
+      branch
+        ?.importProbe
+        ?.exactFailedTransitiveUrlObserved
+    ) {
+      return branch;
+    }
+  }
+
+  for (const branchId of preferredIds) {
+    const branch =
+      branchResults.find(
+        (candidate) =>
+          candidate.branchId ===
+          branchId
+      );
+
+    if (
+      branch?.responseProbe &&
+      (
         branch
-          .importProbe
-          .exactFailedTransitiveUrlObserved
-    ) ||
-    failed[0]
-  );
-}
-
-function branchIdentificationStatus(
-  failed
-) {
-  if (failed.length === 0) {
-    return (
-      'NO_ROOT_BRANCH_FAILURE_REPRODUCED'
-    );
-  }
-
-  if (failed.length === 1) {
-    return (
-      'ONE_FAILED_ROOT_BRANCH_IDENTIFIED'
-    );
+          .responseProbe
+          .transportDisposition !==
+          H_EARTH_FD_05_TRANSPORT_DISPOSITION
+            .DIRECT_RESPONSE ||
+        branch
+          .responseProbe
+          .payloadClassification !==
+          H_EARTH_FD_05_PAYLOAD_CLASSIFICATION
+            .JAVASCRIPT_LIKE_RESPONSE
+      )
+    ) {
+      return branch;
+    }
   }
 
   return (
-    'MULTIPLE_FAILED_ROOT_BRANCHES_IDENTIFIED'
+    branchResults.find(
+      (branch) =>
+        branch.branchId ===
+        preferredIds[0]
+    ) ??
+    branchResults[0] ??
+    null
   );
 }
 
-function nextOperation(
-  failed,
-  primary
-) {
-  if (failed.length === 0) {
-    return deepFreeze({
-      operationId:
-        'CAPTURE_CURRENT_OCCURRENCE_AFTER_ONE_NORMAL_PAGE_RELOAD',
-
-      targetOccurrence:
-        null,
-
-      instruction:
-        'Reload the normal H-Earth diagnostic page once and preserve the newly published receipt beside the current token-error occurrence; do not reopen source unless the failure reproduces with a directly identified target.'
-    });
+function branchIdentificationStatus({
+  fatalError,
+  branchSets
+}) {
+  if (fatalError) {
+    return 'INSTRUMENT_EXECUTION_FAILED';
   }
-
-  if (failed.length > 1) {
-    return deepFreeze({
-      operationId:
-        'INSPECT_SHARED_DEPLOYMENT_BEHAVIOR_FOR_BOTH_ROOT_URLS',
-
-      targetOccurrence:
-        Object.freeze(
-          failed.map(
-            (branch) =>
-              branch.resolvedUrl
-          )
-        ),
-
-      instruction:
-        'Inspect the shared deployment mapping, fallback, redirect, or response behavior affecting both root URLs before reopening compositor or renderer source.'
-    });
-  }
-
-  const transitiveUrl =
-    primary
-      .importProbe
-      .exactFailedTransitiveUrl;
-
-  if (transitiveUrl) {
-    return deepFreeze({
-      operationId:
-        'INSPECT_EXACT_FAILED_TRANSITIVE_DEPLOYED_OCCURRENCE',
-
-      targetOccurrence:
-        transitiveUrl,
-
-      observedClassification:
-        primary
-          .exactTransitiveResponseProbe
-          ?.responseClassification ??
-        null,
-
-      instruction:
-        'Inspect the exact failed transitive deployed occurrence and its returned response; source correction remains withheld until that occurrence is matched to its controlling source authority.'
-    });
-  }
-
-  const classification =
-    primary
-      .responseProbe
-      .responseClassification;
 
   if (
-    classification !==
-    CLASSIFICATION.JAVASCRIPT_LIKE
+    branchSets
+      .importFailedBranches
+      .length === 0
+  ) {
+    return branchSets
+      .contractMismatchBranches
+      .length > 0
+      ? 'NO_FD_05_IMPORT_FAILURE_CONTRACT_MISMATCH_ROUTED_TO_FD_06'
+      : 'NO_ROOT_BRANCH_IMPORT_FAILURE_REPRODUCED';
+  }
+
+  return branchSets
+    .importFailedBranches
+    .length === 1
+    ? 'ONE_FAILED_IMPORT_ROOT_BRANCH_IDENTIFIED'
+    : 'MULTIPLE_FAILED_IMPORT_ROOT_BRANCHES_IDENTIFIED';
+}
+
+function collectCandidateUrls(
+  branchResults
+) {
+  const output = [];
+  const seen = new Set();
+
+  for (const branch of branchResults) {
+    for (
+      const url of
+      branch.importProbe
+        ?.candidateTransitiveUrls ??
+      []
+    ) {
+      if (!seen.has(url)) {
+        seen.add(url);
+        output.push(url);
+      }
+    }
+  }
+
+  return Object.freeze(
+    output.slice(
+      0,
+      URL_LIMIT
+    )
+  );
+}
+
+function chooseExactTransitiveEvidence(
+  branchResults
+) {
+  const branch =
+    branchResults.find(
+      (candidate) =>
+        candidate
+          .importProbe
+          ?.exactFailedTransitiveUrlObserved ===
+        true
+    );
+
+  return deepFreeze({
+    exactFailedTransitiveUrlObserved:
+      Boolean(branch),
+    exactFailedTransitiveUrl:
+      branch
+        ?.importProbe
+        ?.exactFailedTransitiveUrl ??
+      null,
+    exactFailedTransitiveUrlEvidenceType:
+      branch
+        ?.importProbe
+        ?.exactFailedTransitiveUrlEvidenceType ??
+      null
+  });
+}
+
+function buildNextOperation({
+  fatalError,
+  branchSets,
+  primaryBranch,
+  exactEvidence
+}) {
+  if (fatalError) {
+    return deepFreeze({
+      operationId:
+        'INSPECT_FD_05_DIAGNOSTIC_OVERLAY_OCCURRENCE',
+      targetOccurrence:
+        H_EARTH_FD_05_MODULE_IMPORT_TRACK_SOURCE_FILE,
+      instruction:
+        'Inspect the FD_05 diagnostic-overlay occurrence and its fatal instrument evidence. Do not reopen compositor, renderer, geometry, runtime, route, or engine source.'
+    });
+  }
+
+  if (
+    branchSets
+      .importFailedBranches
+      .length > 0
+  ) {
+    if (
+      exactEvidence
+        .exactFailedTransitiveUrlObserved
+    ) {
+      return deepFreeze({
+        operationId:
+          'INSPECT_EXACT_FAILED_TRANSITIVE_DEPLOYED_OCCURRENCE',
+        targetOccurrence:
+          exactEvidence
+            .exactFailedTransitiveUrl,
+        instruction:
+          'Inspect the exact failed transitive deployed occurrence and match it to its controlling source authority before authorizing source correction.'
+      });
+    }
+
+    const responseProbe =
+      primaryBranch
+        ?.responseProbe;
+
+    const abnormalPayload =
+      responseProbe
+        ?.payloadClassification !==
+      H_EARTH_FD_05_PAYLOAD_CLASSIFICATION
+        .JAVASCRIPT_LIKE_RESPONSE;
+
+    if (abnormalPayload) {
+      return deepFreeze({
+        operationId:
+          'INSPECT_FAILED_ROOT_DEPLOYED_RESPONSE',
+        targetOccurrence:
+          responseProbe
+            ?.finalResponseUrl ??
+          primaryBranch
+            ?.resolvedUrl ??
+          null,
+        instruction:
+          'Inspect the failed root deployed response, route mapping, redirect, and returned payload. Source correction remains withheld.'
+      });
+    }
+
+    return deepFreeze({
+      operationId:
+        'INSPECT_ROOT_IMPORT_REJECTION_EVIDENCE',
+      targetOccurrence:
+        primaryBranch
+          ?.resolvedUrl ??
+        null,
+      instruction:
+        'Inspect the failed root import rejection for parser, linker, resource-load, or directly identified transitive evidence. Do not treat stack-only candidate URLs as correction targets.'
+    });
+  }
+
+  const primaryResponse =
+    primaryBranch
+      ?.responseProbe ??
+    null;
+
+  const primaryResponseAbnormal =
+    primaryResponse &&
+    (
+      primaryResponse
+        .transportDisposition !==
+        H_EARTH_FD_05_TRANSPORT_DISPOSITION
+          .DIRECT_RESPONSE ||
+      primaryResponse
+        .payloadClassification !==
+        H_EARTH_FD_05_PAYLOAD_CLASSIFICATION
+          .JAVASCRIPT_LIKE_RESPONSE
+    );
+
+  if (
+    branchSets
+      .importFailedBranches
+      .length === 0 &&
+    branchSets
+      .contractMismatchBranches
+      .length === 0 &&
+    primaryResponseAbnormal
   ) {
     return deepFreeze({
       operationId:
-        'INSPECT_EXACT_FAILED_ROOT_DEPLOYED_RESPONSE',
-
+        'INSPECT_FD_05_DEPLOYED_RESPONSE_PROBE_EVIDENCE',
       targetOccurrence:
-        primary
-          .responseProbe
-          .finalResponseUrl ||
-        primary.resolvedUrl,
-
-      observedClassification:
-        classification,
-
+        primaryResponse
+          .finalResponseUrl ??
+        primaryBranch
+          ?.resolvedUrl ??
+        null,
       instruction:
-        'Inspect the exact failed root deployed response and its route mapping; do not modify compositor or renderer source merely because its root import rejected.'
+        'Inspect the deployed root response evidence because the module import succeeded while the bounded response probe remained abnormal or unavailable. Source correction remains withheld.'
+    });
+  }
+
+  if (
+    branchSets
+      .contractMismatchBranches
+      .length > 0
+  ) {
+    return deepFreeze({
+      operationId:
+        'ROUTE_TO_FD_06_API_AND_CONTRACT_CORRESPONDENCE',
+      targetOccurrence:
+        primaryBranch
+          ?.resolvedUrl ??
+        null,
+      instruction:
+        'Close FD_05 for the successfully imported branch and route the contract mismatch to FD_06_API_AND_CONTRACT_CORRESPONDENCE.'
     });
   }
 
   return deepFreeze({
     operationId:
-      'INSPECT_ROOT_MODULE_PARSE_LINK_OR_EXPORT_CORRESPONDENCE',
-
+      'PRESERVE_RECEIPT_AND_CLOSE_FD_05_FOR_CURRENT_OCCURRENCE',
     targetOccurrence:
-      primary.resolvedUrl,
-
-    observedClassification:
-      classification,
-
+      null,
     instruction:
-      'Inspect the exact failed root module occurrence for parse, link, export, or unobserved transitive failure evidence; source correction remains withheld until the responsible occurrence is directly identified.'
+      'Preserve the receipt as evidence that both root imports and contract identities succeeded for this occurrence.'
   });
 }
 
-function missingEvidence(
-  failed,
-  primary
-) {
+function buildEvidenceStillMissing({
+  fatalError,
+  branchSets,
+  exactEvidence
+}) {
   const missing = [];
 
-  if (failed.length === 0) {
+  if (fatalError) {
     missing.push(
-      'CURRENT_TOKEN_ERROR_NOT_REPRODUCED_BY_THIS_OCCURRENCE'
-    );
-  }
-
-  if (failed.length > 1) {
-    missing.push(
-      'SINGLE_FAILED_ROOT_BRANCH_NOT_ISOLATED'
+      'ROOT_BRANCH_PROBES_NOT_COMPLETED_DUE_TO_INSTRUMENT_FAILURE'
     );
   }
 
   if (
-    primary &&
-    !primary
-      .importProbe
-      .exactFailedTransitiveUrlObserved
+    branchSets
+      .importFailedBranches
+      .length > 1
   ) {
     missing.push(
-      'EXACT_FAILED_TRANSITIVE_URL_NOT_OBSERVED'
+      'SINGLE_FAILED_IMPORT_ROOT_BRANCH_NOT_ISOLATED'
     );
   }
 
   if (
-    primary
-      ?.responseProbe
-      .responseClassification ===
-    CLASSIFICATION.RESPONSE_UNAVAILABLE
+    branchSets
+      .importFailedBranches
+      .length > 0 &&
+    exactEvidence
+      .exactFailedTransitiveUrlObserved ===
+    false
   ) {
     missing.push(
-      'DEPLOYED_RESPONSE_BODY_AND_HEADERS_UNAVAILABLE'
+      'EXACT_FAILED_TRANSITIVE_URL_NOT_DIRECTLY_OBSERVED'
     );
   }
 
   return Object.freeze(missing);
 }
 
-function buildReceipt({
+function buildBaseReceipt({
   runId,
   runStartedAt,
   runCompletedAt,
-  branchResults,
   executionStatus,
-  fatalError = null
+  branchResults,
+  fatalError,
+  publicationState
 }) {
-  const failed =
-    branchResults.filter(
-      (branch) =>
-        !branch.branchSucceeded
+  const branchSets =
+    collectBranchSets(
+      branchResults
     );
 
-  const primary =
-    primaryFailedBranch(failed);
+  const primaryBranch =
+    choosePrimaryBranch(
+      branchResults,
+      branchSets
+    );
 
-  const response =
-    primary?.responseProbe ??
+  const exactEvidence =
+    chooseExactTransitiveEvidence(
+      branchResults
+    );
+
+  const candidateTransitiveUrls =
+    collectCandidateUrls(
+      branchResults
+    );
+
+  const selectedError =
+    selectStrongestErrorEvidence({
+      fatalError,
+      branchResults
+    });
+
+  const strongestError =
+    selectedError
+      .errorEvidenceType !==
+    null
+      ? selectedError
+      : publicationState
+          .publicationErrorName ||
+        publicationState
+          .publicationErrorMessage ||
+        publicationState
+          .publicationErrorStack
+        ? deepFreeze({
+            errorEvidenceType:
+              'INSTRUMENT_PUBLICATION_OR_RENDER_ERROR',
+            errorName:
+              publicationState
+                .publicationErrorName,
+            errorMessage:
+              publicationState
+                .publicationErrorMessage,
+            errorStack:
+              publicationState
+                .publicationErrorStack,
+            errorFileName:
+              null,
+            errorLineNumber:
+              null,
+            errorColumnNumber:
+              null,
+            errorCause:
+              null
+          })
+        : selectedError;
+
+  const primaryResponse =
+    primaryBranch
+      ?.responseProbe ??
     null;
 
-  const importEvidence =
-    primary?.importProbe ??
-    null;
-
-  const exactTransitiveUrl =
-    importEvidence
-      ?.exactFailedTransitiveUrl ??
+  const primaryImport =
+    primaryBranch
+      ?.importProbe ??
     null;
 
   return deepFreeze({
     receiptId:
       H_EARTH_FD_05_PRIMARY_RECEIPT_ID,
-
     receiptSchemaVersion:
-      1,
-
+      2,
     contractId:
       H_EARTH_FD_05_MODULE_IMPORT_TRACK_CONTRACT_ID,
-
     sourceFile:
       H_EARTH_FD_05_MODULE_IMPORT_TRACK_SOURCE_FILE,
-
     activeFailureDomain:
       H_EARTH_FD_05_ACTIVE_FAILURE_DOMAIN,
-
     primaryReport:
       H_EARTH_FD_05_PRIMARY_REPORT,
-
     supportingReports:
       H_EARTH_FD_05_SUPPORTING_REPORTS,
-
     reportsClosedForCurrentOccurrence:
       'ALL_NONPRIMARY_AND_NONSUPPORTING_REPORTS',
-
     historicalReportCorpusPreserved:
       true,
-
     manualReportCyclingRequired:
       false,
-
     runId,
     runStartedAt,
     runCompletedAt,
     executionStatus,
-
-    instrumentPresence:
-      'INSTALLED_AND_REACHED',
-
-    step034QInstrumentPresence:
-      'A_INSTALLED_EXECUTING_AND_PUBLISHING',
-
-    instrumentExecutionStatus:
-      executionStatus,
-
-    instrumentPublicationStatus:
-      'PUBLISHED',
-
-    primaryReceiptVisible:
-      true,
-
     branchIdentificationStatus:
-      branchIdentificationStatus(
-        failed
-      ),
-
-    failedBranchIdentified:
-      failed.length === 1,
-
-    deployedResponseIdentified:
-      response
-        ?.responseClassification !=
-      null,
-
-    exactTransitiveUrlIdentified:
-      exactTransitiveUrl !== null,
-
+      branchIdentificationStatus({
+        fatalError,
+        branchSets
+      }),
+    importFailedBranches:
+      branchSets
+        .importFailedBranches,
+    contractMismatchBranches:
+      branchSets
+        .contractMismatchBranches,
+    successfulBranches:
+      branchSets
+        .successfulBranches,
     failedBranches:
-      Object.freeze(
-        failed.map(
-          (branch) =>
-            branch.branchId
-        )
-      ),
-
+      branchSets
+        .failedBranches,
+    nextFailureDomain:
+      branchSets
+        .nextFailureDomain,
     failedRequestedPath:
-      primary?.requestedPath ??
+      primaryBranch
+        ?.requestedPath ??
       null,
-
     resolvedUrl:
-      primary?.resolvedUrl ??
+      primaryBranch
+        ?.resolvedUrl ??
       null,
-
     finalResponseUrl:
-      response
+      primaryResponse
         ?.finalResponseUrl ??
       null,
-
     httpStatus:
-      response?.httpStatus ??
+      primaryResponse
+        ?.httpStatus ??
       null,
-
     contentType:
-      response?.contentType ??
+      primaryResponse
+        ?.contentType ??
       null,
-
     redirected:
-      response?.redirected ??
+      primaryResponse
+        ?.redirected ??
       null,
-
+    transportDisposition:
+      primaryResponse
+        ?.transportDisposition ??
+      null,
+    payloadClassification:
+      primaryResponse
+        ?.payloadClassification ??
+      null,
     responseClassification:
-      response
-        ?.responseClassification ??
+      primaryResponse
+        ?.payloadClassification ??
       null,
-
     responsePrefix:
-      response
+      primaryResponse
         ?.responsePrefix ??
       null,
-
-    errorName:
-      importEvidence?.errorName ??
-      null,
-
-    errorMessage:
-      importEvidence
-        ?.errorMessage ??
-      null,
-
-    errorStack:
-      importEvidence?.errorStack ??
-      null,
-
-    exactFailedTransitiveUrlObserved:
-      exactTransitiveUrl !== null,
-
-    exactFailedTransitiveUrl:
-      exactTransitiveUrl,
-
+    candidateTransitiveUrls,
+    ...exactEvidence,
+    ...strongestError,
     branchResults:
       Object.freeze([
         ...branchResults
       ]),
-
     evidenceStillMissing:
-      missingEvidence(
-        failed,
-        primary
-      ),
-
+      buildEvidenceStillMissing({
+        fatalError,
+        branchSets,
+        exactEvidence
+      }),
     nextAuthorizedOperation:
-      nextOperation(
-        failed,
-        primary
-      ),
-
+      buildNextOperation({
+        fatalError,
+        branchSets,
+        primaryBranch,
+        exactEvidence
+      }),
     sourceCorrectionAuthorized:
       false,
-
     sourceCorrectionStatus:
-      exactTransitiveUrl
+      exactEvidence
+        .exactFailedTransitiveUrlObserved
         ? 'WITHHELD_PENDING_CONTROLLING_SOURCE_CORRESPONDENCE'
         : 'WITHHELD_PENDING_DIRECT_FAILURE_TARGET_IDENTIFICATION',
-
     constitutionalSourceReopenAuthorized:
       false,
-
     constitutionalSourceModificationPerformed:
       false,
-
-    fatalError
-  });
-}
-
-function runningReceipt(
-  runId,
-  runStartedAt
-) {
-  return deepFreeze({
-    receiptId:
-      H_EARTH_FD_05_PRIMARY_RECEIPT_ID,
-
-    receiptSchemaVersion:
-      1,
-
-    contractId:
-      H_EARTH_FD_05_MODULE_IMPORT_TRACK_CONTRACT_ID,
-
-    sourceFile:
-      H_EARTH_FD_05_MODULE_IMPORT_TRACK_SOURCE_FILE,
-
-    activeFailureDomain:
-      H_EARTH_FD_05_ACTIVE_FAILURE_DOMAIN,
-
-    primaryReport:
-      H_EARTH_FD_05_PRIMARY_REPORT,
-
-    supportingReports:
-      H_EARTH_FD_05_SUPPORTING_REPORTS,
-
-    reportsClosedForCurrentOccurrence:
-      'ALL_NONPRIMARY_AND_NONSUPPORTING_REPORTS',
-
-    historicalReportCorpusPreserved:
-      true,
-
-    manualReportCyclingRequired:
-      false,
-
-    runId,
-    runStartedAt,
-    runCompletedAt:
-      null,
-
-    executionStatus:
-      'RUNNING',
-
-    instrumentPresence:
-      'INSTALLED_AND_REACHED',
-
-    step034QInstrumentPresence:
-      'A_INSTALLED_EXECUTING_AND_PUBLISHING',
-
-    instrumentExecutionStatus:
-      'RUNNING',
-
-    instrumentPublicationStatus:
-      'PUBLISHED',
-
+    receiptPublishedToGlobal:
+      publicationState
+        .receiptPublishedToGlobal,
+    receiptEventDispatched:
+      publicationState
+        .receiptEventDispatched,
+    receiptRenderedOnPage:
+      publicationState
+        .receiptRenderedOnPage,
     primaryReceiptVisible:
-      true,
-
-    branchIdentificationStatus:
-      'BRANCH_PROBES_RUNNING',
-
-    failedBranchIdentified:
-      false,
-
-    deployedResponseIdentified:
-      false,
-
-    exactTransitiveUrlIdentified:
-      false,
-
-    failedBranches:
-      Object.freeze([]),
-
-    failedRequestedPath:
-      null,
-
-    resolvedUrl:
-      null,
-
-    finalResponseUrl:
-      null,
-
-    httpStatus:
-      null,
-
-    contentType:
-      null,
-
-    redirected:
-      null,
-
-    responseClassification:
-      null,
-
-    responsePrefix:
-      null,
-
-    errorName:
-      null,
-
-    errorMessage:
-      null,
-
-    errorStack:
-      null,
-
-    exactFailedTransitiveUrlObserved:
-      false,
-
-    exactFailedTransitiveUrl:
-      null,
-
-    branchResults:
-      Object.freeze([]),
-
-    evidenceStillMissing:
-      Object.freeze([
-        'BRANCH_PROBES_NOT_COMPLETE'
-      ]),
-
-    nextAuthorizedOperation:
-      deepFreeze({
-        operationId:
-          'WAIT_FOR_CURRENT_INSTRUMENT_RUN',
-
-        targetOccurrence:
-          null,
-
-        instruction:
-          'Allow the current bounded compositor and renderer probes to complete.'
-      }),
-
-    sourceCorrectionAuthorized:
-      false,
-
-    sourceCorrectionStatus:
-      'WITHHELD_PENDING_DIRECT_FAILURE_TARGET_IDENTIFICATION',
-
-    constitutionalSourceReopenAuthorized:
-      false,
-
-    constitutionalSourceModificationPerformed:
-      false,
-
-    fatalError:
-      null
+      publicationState
+        .receiptRenderedOnPage,
+    publicationErrorName:
+      publicationState
+        .publicationErrorName,
+    publicationErrorMessage:
+      publicationState
+        .publicationErrorMessage,
+    publicationErrorStack:
+      publicationState
+        .publicationErrorStack,
+    fatalInstrumentError:
+      fatalError === null
+        ? null
+        : captureError(
+            fatalError,
+            'FATAL_INSTRUMENT_ERROR'
+          ),
+    moduleLoadedAt:
+      publicationState
+        .moduleLoadedAt,
+    instrumentStartedAt:
+      publicationState
+        .instrumentStartedAt,
+    receiptPublishedAt:
+      publicationState
+        .receiptPublishedAt,
+    receiptRenderedAt:
+      publicationState
+        .receiptRenderedAt,
+    primaryImportEvidence:
+      primaryImport
   });
 }
 
-function publish(receipt) {
-  globalThis[
-    GLOBAL_RECEIPT_KEY
-  ] = receipt;
-
-  globalThis.dispatchEvent(
-    new CustomEvent(
-      RECEIPT_EVENT,
-      {
-        detail: receipt
-      }
-    )
-  );
-
-  return receipt;
-}
-
-function ensureStyle() {
+function ensureStyle(
+  documentObject
+) {
   if (
-    document.getElementById(
+    !documentObject ||
+    documentObject.getElementById(
       STYLE_ID
     )
   ) {
@@ -1375,7 +1784,7 @@ function ensureStyle() {
   }
 
   const style =
-    document.createElement(
+    documentObject.createElement(
       'style'
     );
 
@@ -1387,7 +1796,7 @@ function ensureStyle() {
     #${MOUNT_ID} header{padding:1rem 1.1rem;border-bottom:1px solid rgba(255,255,255,.14)}
     #${MOUNT_ID} h2{margin:0;font-size:1.05rem;letter-spacing:.02em}
     #${MOUNT_ID} p{margin:.35rem 0 0;color:#b8c4d0}
-    #${MOUNT_ID} dl{display:grid;grid-template-columns:minmax(180px,.7fr) minmax(0,1.8fr);margin:0}
+    #${MOUNT_ID} dl{display:grid;grid-template-columns:minmax(210px,.75fr) minmax(0,1.8fr);margin:0}
     #${MOUNT_ID} dt,#${MOUNT_ID} dd{margin:0;padding:.65rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);overflow-wrap:anywhere;white-space:pre-wrap}
     #${MOUNT_ID} dt{color:#aebdca;font-weight:650}
     #${MOUNT_ID} dd{color:#f4f7fa}
@@ -1397,12 +1806,20 @@ function ensureStyle() {
     @media(max-width:720px){#${MOUNT_ID} dl{grid-template-columns:1fr}#${MOUNT_ID} dt{padding-bottom:.15rem;border-bottom:0}#${MOUNT_ID} dd{padding-top:.15rem}}
   `;
 
-  document.head.append(style);
+  documentObject.head?.append(style);
 }
 
-function ensureMount() {
+function ensureMount(
+  documentObject
+) {
+  if (!documentObject) {
+    throw new Error(
+      'Normal-page document is unavailable.'
+    );
+  }
+
   let mount =
-    document.getElementById(
+    documentObject.getElementById(
       MOUNT_ID
     );
 
@@ -1410,10 +1827,12 @@ function ensureMount() {
     return mount;
   }
 
-  ensureStyle();
+  ensureStyle(
+    documentObject
+  );
 
   mount =
-    document.createElement(
+    documentObject.createElement(
       'section'
     );
 
@@ -1430,13 +1849,19 @@ function ensureMount() {
   );
 
   const host =
-    document.querySelector(
+    documentObject.querySelector(
       '[data-h-earth-diagnostic-track-host]'
     ) ||
-    document.querySelector(
+    documentObject.querySelector(
       'main'
     ) ||
-    document.body;
+    documentObject.body;
+
+  if (!host) {
+    throw new Error(
+      'No normal-page mount host is available.'
+    );
+  }
 
   host.append(mount);
 
@@ -1444,17 +1869,18 @@ function ensureMount() {
 }
 
 function appendRow(
+  documentObject,
   list,
   label,
   value
 ) {
   const term =
-    document.createElement(
+    documentObject.createElement(
       'dt'
     );
 
   const detail =
-    document.createElement(
+    documentObject.createElement(
       'dd'
     );
 
@@ -1474,24 +1900,30 @@ function appendRow(
   );
 }
 
-function render(receipt) {
+function renderReceipt(
+  receipt,
+  documentObject,
+  rerun
+) {
   const mount =
-    ensureMount();
+    ensureMount(
+      documentObject
+    );
 
   mount.replaceChildren();
 
   const header =
-    document.createElement(
+    documentObject.createElement(
       'header'
     );
 
   const title =
-    document.createElement(
+    documentObject.createElement(
       'h2'
     );
 
   const subtitle =
-    document.createElement(
+    documentObject.createElement(
       'p'
     );
 
@@ -1507,157 +1939,138 @@ function render(receipt) {
   );
 
   const list =
-    document.createElement(
+    documentObject.createElement(
       'dl'
     );
 
-  appendRow(
-    list,
-    'Active failure domain',
-    receipt.activeFailureDomain
-  );
-
-  appendRow(
-    list,
-    'Primary evidence',
-    receipt.receiptId
-  );
-
-  appendRow(
-    list,
-    'Failed root branch',
-    receipt.failedBranches.length
-      ? receipt.failedBranches.join(
-          ', '
-        )
-      : 'NO ROOT BRANCH FAILURE REPRODUCED'
-  );
-
-  appendRow(
-    list,
-    'Requested deployed URL',
-    receipt.resolvedUrl
-  );
-
-  appendRow(
-    list,
-    'Returned response classification',
-    receipt.responseClassification
-  );
-
-  appendRow(
-    list,
-    'HTTP status',
-    receipt.httpStatus
-  );
-
-  appendRow(
-    list,
-    'Content type',
-    receipt.contentType
-  );
-
-  appendRow(
-    list,
-    'Redirected',
-    receipt.redirected
-  );
-
-  appendRow(
-    list,
-    'Response prefix',
-    receipt.responsePrefix
-  );
-
-  appendRow(
-    list,
-    'Import error',
-    receipt.errorName ||
-    receipt.errorMessage
-      ? `${
-          receipt.errorName ||
-          'ERROR'
-        }: ${
-          receipt.errorMessage ||
-          ''
-        }`
-      : null
-  );
-
-  appendRow(
-    list,
-    'Exact failed transitive URL',
-    receipt.exactFailedTransitiveUrl
-  );
-
-  const transitiveClassification =
-    receipt.branchResults.find(
-      (branch) =>
-        branch
-          .importProbe
-          ?.exactFailedTransitiveUrl ===
-        receipt
-          .exactFailedTransitiveUrl
-    )
-      ?.exactTransitiveResponseProbe
-      ?.responseClassification;
-
-  appendRow(
-    list,
-    'Exact transitive response classification',
-    transitiveClassification
-  );
-
-  appendRow(
-    list,
-    'Evidence still missing',
-    receipt
-      .evidenceStillMissing
-      .length
-      ? receipt
-          .evidenceStillMissing
-          .join(', ')
-      : 'NONE'
-  );
-
-  appendRow(
-    list,
-    'Reports closed for this occurrence',
-    receipt
-      .reportsClosedForCurrentOccurrence
-  );
-
-  appendRow(
-    list,
-    'One next authorized operation',
-    `${
+  const rows = [
+    [
+      'Active failure domain',
+      receipt.activeFailureDomain
+    ],
+    [
+      'Instrument execution status',
+      receipt.executionStatus
+    ],
+    [
+      'Primary receipt status',
+      receipt.receiptPublishedToGlobal
+        ? 'PUBLISHED'
+        : 'NOT PUBLISHED'
+    ],
+    [
+      'Failed import root branch',
       receipt
-        .nextAuthorizedOperation
-        .operationId
-    }\n${
+        .importFailedBranches
+        .join(', ') ||
+      'NONE'
+    ],
+    [
+      'Requested path',
+      receipt.failedRequestedPath
+    ],
+    [
+      'Resolved URL',
+      receipt.resolvedUrl
+    ],
+    [
+      'Final response URL',
+      receipt.finalResponseUrl
+    ],
+    [
+      'HTTP status',
+      receipt.httpStatus
+    ],
+    [
+      'Content type',
+      receipt.contentType
+    ],
+    [
+      'Transport disposition',
+      receipt.transportDisposition
+    ],
+    [
+      'Payload classification',
+      receipt.payloadClassification
+    ],
+    [
+      'Bounded response prefix',
+      receipt.responsePrefix
+    ],
+    [
+      'Error evidence type',
+      receipt.errorEvidenceType
+    ],
+    [
+      'Error name',
+      receipt.errorName
+    ],
+    [
+      'Error message',
+      receipt.errorMessage
+    ],
+    [
+      'Exact failed transitive URL',
+      receipt.exactFailedTransitiveUrl
+    ],
+    [
+      'Exact transitive evidence type',
       receipt
-        .nextAuthorizedOperation
-        .instruction
-    }`
-  );
+        .exactFailedTransitiveUrlEvidenceType
+    ],
+    [
+      'Candidate transitive URLs',
+      receipt
+        .candidateTransitiveUrls
+        .join('\n') ||
+      'NONE'
+    ],
+    [
+      'Next failure domain',
+      receipt.nextFailureDomain
+    ],
+    [
+      'Evidence still missing',
+      receipt
+        .evidenceStillMissing
+        .join(', ') ||
+      'NONE'
+    ],
+    [
+      'One next authorized operation',
+      `${receipt.nextAuthorizedOperation.operationId}\n${receipt.nextAuthorizedOperation.instruction}`
+    ],
+    [
+      'Source correction',
+      receipt
+        .sourceCorrectionAuthorized
+        ? 'AUTHORIZED'
+        : receipt
+            .sourceCorrectionStatus
+    ]
+  ];
 
-  appendRow(
-    list,
-    'Source correction',
-    receipt
-      .sourceCorrectionAuthorized
-      ? 'AUTHORIZED'
-      : receipt
-          .sourceCorrectionStatus
-  );
+  for (
+    const [
+      label,
+      value
+    ] of rows
+  ) {
+    appendRow(
+      documentObject,
+      list,
+      label,
+      value
+    );
+  }
 
   const footer =
-    document.createElement(
+    documentObject.createElement(
       'footer'
     );
 
   const button =
-    document.createElement(
+    documentObject.createElement(
       'button'
     );
 
@@ -1672,7 +2085,7 @@ function render(receipt) {
       button.disabled = true;
 
       try {
-        await runHEarthFd05ModuleImportTrack();
+        await rerun();
       } finally {
         button.disabled = false;
       }
@@ -1686,147 +2099,622 @@ function render(receipt) {
     list,
     footer
   );
+
+  if (
+    !documentObject.getElementById(
+      MOUNT_ID
+    )
+  ) {
+    throw new Error(
+      'FD_05 receipt mount was not retained in the document.'
+    );
+  }
+
+  return true;
 }
 
-export async function runHEarthFd05ModuleImportTrack() {
-  if (activeRun) {
+function defaultImportImpl(
+  url
+) {
+  return import(url);
+}
+
+function createDefaultDependencies(
+  overrides = {}
+) {
+  const globalObject =
+    overrides.globalObject ??
+    globalThis;
+
+  const documentObject =
+    overrides.documentObject ??
+    globalObject.document ??
+    null;
+
+  return {
+    globalObject,
+    documentObject,
+    fetchImpl:
+      Object.prototype.hasOwnProperty.call(
+        overrides,
+        'fetchImpl'
+      )
+        ? overrides.fetchImpl
+        : globalObject.fetch
+            ?.bind(
+              globalObject
+            ),
+    importImpl:
+      overrides.importImpl ??
+      defaultImportImpl,
+    now:
+      overrides.now ??
+      nowIso,
+    moduleUrl:
+      overrides.moduleUrl ??
+      import.meta.url,
+    branches:
+      overrides.branches ??
+      DEFAULT_BRANCHES,
+    renderImpl:
+      overrides.renderImpl ??
+      (
+        (
+          receipt,
+          rerun
+        ) =>
+          renderReceipt(
+            receipt,
+            documentObject,
+            rerun
+          )
+      ),
+    dispatchEventImpl:
+      overrides.dispatchEventImpl ??
+      (
+        (event) =>
+          globalObject
+            .dispatchEvent
+            ?.(event)
+      ),
+    createEventImpl:
+      overrides.createEventImpl ??
+      (
+        (detail) =>
+          new CustomEvent(
+            RECEIPT_EVENT,
+            {
+              detail
+            }
+          )
+      ),
+    instrumentPreflightImpl:
+      overrides.instrumentPreflightImpl ??
+      (
+        () =>
+          true
+      )
+  };
+}
+
+export function createHEarthFd05InstrumentRuntime(
+  overrides = {}
+) {
+  const dependencies =
+    createDefaultDependencies(
+      overrides
+    );
+
+  let runSequence = 0;
+  let activeRun = null;
+
+  const publicationState = {
+    receiptPublishedToGlobal:
+      false,
+    receiptEventDispatched:
+      false,
+    receiptRenderedOnPage:
+      false,
+    publicationErrorName:
+      null,
+    publicationErrorMessage:
+      null,
+    publicationErrorStack:
+      null,
+    moduleLoadedAt:
+      dependencies
+        .globalObject[
+          MARKERS.MODULE_LOADED_AT
+        ] ??
+      dependencies.now(),
+    instrumentStartedAt:
+      dependencies
+        .globalObject[
+          MARKERS.INSTRUMENT_STARTED_AT
+        ] ??
+      null,
+    receiptPublishedAt:
+      dependencies
+        .globalObject[
+          MARKERS.RECEIPT_PUBLISHED_AT
+        ] ??
+      null,
+    receiptRenderedAt:
+      dependencies
+        .globalObject[
+          MARKERS.RECEIPT_RENDERED_AT
+        ] ??
+      null
+  };
+
+  function snapshotPublicationState() {
+    return {
+      ...publicationState
+    };
+  }
+
+  function assignGlobalReceipt(
+    receipt
+  ) {
+    dependencies
+      .globalObject[
+        GLOBAL_RECEIPT_KEY
+      ] =
+      receipt;
+
+    publicationState
+      .receiptPublishedToGlobal =
+      true;
+
+    publicationState
+      .receiptPublishedAt =
+      dependencies.now();
+
+    dependencies
+      .globalObject[
+        MARKERS.RECEIPT_PUBLISHED_AT
+      ] =
+      publicationState
+        .receiptPublishedAt;
+  }
+
+  function dispatchReceipt(
+    receipt
+  ) {
+    try {
+      const event =
+        dependencies
+          .createEventImpl(
+            receipt
+          );
+
+      dependencies
+        .dispatchEventImpl(
+          event
+        );
+
+      publicationState
+        .receiptEventDispatched =
+        true;
+    } catch (error) {
+      publicationState
+        .publicationErrorName =
+        bounded(
+          error?.name,
+          160
+        );
+
+      publicationState
+        .publicationErrorMessage =
+        bounded(
+          error?.message ??
+          error,
+          MESSAGE_LIMIT
+        );
+
+      publicationState
+        .publicationErrorStack =
+        bounded(
+          error?.stack,
+          STACK_LIMIT
+        );
+    }
+  }
+
+  function renderPublishedReceipt(
+    receipt,
+    rerun
+  ) {
+    try {
+      dependencies.renderImpl(
+        receipt,
+        rerun
+      );
+
+      const mounted =
+        dependencies
+          .documentObject
+          ?.getElementById?.(
+            MOUNT_ID
+          ) ??
+        (
+          overrides.renderImpl
+            ? true
+            : false
+        );
+
+      if (!mounted) {
+        throw new Error(
+          'FD_05 receipt render completed without a retained mount.'
+        );
+      }
+
+      publicationState
+        .receiptRenderedOnPage =
+        true;
+
+      publicationState
+        .receiptRenderedAt =
+        dependencies.now();
+
+      dependencies
+        .globalObject[
+          MARKERS.RECEIPT_RENDERED_AT
+        ] =
+        publicationState
+          .receiptRenderedAt;
+    } catch (error) {
+      publicationState
+        .receiptRenderedOnPage =
+        false;
+
+      publicationState
+        .publicationErrorName =
+        bounded(
+          error?.name,
+          160
+        );
+
+      publicationState
+        .publicationErrorMessage =
+        bounded(
+          error?.message ??
+          error,
+          MESSAGE_LIMIT
+        );
+
+      publicationState
+        .publicationErrorStack =
+        bounded(
+          error?.stack,
+          STACK_LIMIT
+        );
+    }
+  }
+
+  function publishAndRender(
+    receiptFactory,
+    rerun
+  ) {
+    let receipt =
+      receiptFactory(
+        snapshotPublicationState()
+      );
+
+    try {
+      assignGlobalReceipt(
+        receipt
+      );
+    } catch (error) {
+      publicationState
+        .publicationErrorName =
+        bounded(
+          error?.name,
+          160
+        );
+
+      publicationState
+        .publicationErrorMessage =
+        bounded(
+          error?.message ??
+          error,
+          MESSAGE_LIMIT
+        );
+
+      publicationState
+        .publicationErrorStack =
+        bounded(
+          error?.stack,
+          STACK_LIMIT
+        );
+
+      return receiptFactory(
+        snapshotPublicationState()
+      );
+    }
+
+    receipt =
+      receiptFactory(
+        snapshotPublicationState()
+      );
+
+    dependencies
+      .globalObject[
+        GLOBAL_RECEIPT_KEY
+      ] =
+      receipt;
+
+    renderPublishedReceipt(
+      receipt,
+      rerun
+    );
+
+    receipt =
+      receiptFactory(
+        snapshotPublicationState()
+      );
+
+    dependencies
+      .globalObject[
+        GLOBAL_RECEIPT_KEY
+      ] =
+      receipt;
+
+    dispatchReceipt(
+      receipt
+    );
+
+    receipt =
+      receiptFactory(
+        snapshotPublicationState()
+      );
+
+    dependencies
+      .globalObject[
+        GLOBAL_RECEIPT_KEY
+      ] =
+      receipt;
+
+    if (
+      publicationState
+        .receiptRenderedOnPage
+    ) {
+      try {
+        dependencies.renderImpl(
+          receipt,
+          rerun
+        );
+      } catch {
+        // The first successful retained render controls visibility truth.
+      }
+    }
+
+    return receipt;
+  }
+
+  async function run() {
+    if (activeRun) {
+      return activeRun;
+    }
+
+    activeRun =
+      (
+        async () => {
+          runSequence += 1;
+
+          const runStartedAt =
+            dependencies.now();
+
+          const runId =
+            `H_EARTH_FD_05_RUN_${String(
+              runSequence
+            ).padStart(
+              4,
+              '0'
+            )}_${Date.now()}`;
+
+          if (
+            !dependencies
+              .globalObject[
+                MARKERS.INSTRUMENT_STARTED_AT
+              ]
+          ) {
+            dependencies
+              .globalObject[
+                MARKERS.INSTRUMENT_STARTED_AT
+              ] =
+              runStartedAt;
+          }
+
+          publicationState
+            .instrumentStartedAt =
+            dependencies
+              .globalObject[
+                MARKERS.INSTRUMENT_STARTED_AT
+              ];
+
+          const pendingFactory =
+            (state) =>
+              buildBaseReceipt({
+                runId,
+                runStartedAt,
+                runCompletedAt:
+                  null,
+                executionStatus:
+                  'RUNNING',
+                branchResults:
+                  [],
+                fatalError:
+                  null,
+                publicationState:
+                  state
+              });
+
+          publishAndRender(
+            pendingFactory,
+            run
+          );
+
+          let branchResults = [];
+          let fatalError = null;
+          let executionStatus =
+            'COMPLETE';
+
+          try {
+            await dependencies
+              .instrumentPreflightImpl();
+
+            branchResults =
+              await Promise.all(
+                dependencies
+                  .branches
+                  .map(
+                    (branch) =>
+                      inspectBranch(
+                        branch,
+                        dependencies
+                      )
+                  )
+              );
+          } catch (error) {
+            fatalError =
+              error;
+
+            executionStatus =
+              'FAILED';
+          }
+
+          const completedAt =
+            dependencies.now();
+
+          const completedFactory =
+            (state) =>
+              buildBaseReceipt({
+                runId,
+                runStartedAt,
+                runCompletedAt:
+                  completedAt,
+                executionStatus,
+                branchResults,
+                fatalError,
+                publicationState:
+                  state
+              });
+
+          return publishAndRender(
+            completedFactory,
+            run
+          );
+        }
+      )()
+        .finally(
+          () => {
+            activeRun =
+              null;
+          }
+        );
+
     return activeRun;
   }
 
-  activeRun = (
-    async () => {
-      runSequence += 1;
-
-      const runId =
-        `H_EARTH_FD_05_RUN_${
-          String(
-            runSequence
-          ).padStart(
-            4,
-            '0'
-          )
-        }_${
-          Date.now()
-        }`;
-
-      const runStartedAt =
-        nowIso();
-
-      const pending =
-        runningReceipt(
-          runId,
-          runStartedAt
-        );
-
-      publish(pending);
-      render(pending);
-
-      try {
-        const branchResults =
-          await Promise.all(
-            BRANCHES.map(
-              inspectBranch
-            )
-          );
-
-        const receipt =
-          buildReceipt({
-            runId,
-            runStartedAt,
-            runCompletedAt:
-              nowIso(),
-            branchResults,
-            executionStatus:
-              'COMPLETE'
-          });
-
-        publish(receipt);
-        render(receipt);
-
-        return receipt;
-      } catch (error) {
-        const receipt =
-          buildReceipt({
-            runId,
-            runStartedAt,
-            runCompletedAt:
-              nowIso(),
-            branchResults: [],
-            executionStatus:
-              'FAILED',
-            fatalError:
-              captureError(error)
-          });
-
-        publish(receipt);
-        render(receipt);
-
-        return receipt;
-      } finally {
-        activeRun = null;
-      }
+  return deepFreeze({
+    contractId:
+      H_EARTH_FD_05_MODULE_IMPORT_TRACK_CONTRACT_ID,
+    sourceFile:
+      H_EARTH_FD_05_MODULE_IMPORT_TRACK_SOURCE_FILE,
+    failureDomain:
+      H_EARTH_FD_05_ACTIVE_FAILURE_DOMAIN,
+    primaryReceiptId:
+      H_EARTH_FD_05_PRIMARY_RECEIPT_ID,
+    branches:
+      dependencies.branches,
+    run,
+    getReceipt() {
+      return (
+        dependencies
+          .globalObject[
+            GLOBAL_RECEIPT_KEY
+          ] ??
+        null
+      );
     }
-  )();
-
-  return activeRun;
+  });
 }
 
-export function getHEarthFd05ModuleImportDiagnosticReceipt() {
-  return (
-    globalThis[
-      GLOBAL_RECEIPT_KEY
-    ] ??
-    null
-  );
+const moduleLoadedAt =
+  nowIso();
+
+if (
+  !globalThis[
+    MARKERS.MODULE_LOADED_AT
+  ]
+) {
+  globalThis[
+    MARKERS.MODULE_LOADED_AT
+  ] =
+    moduleLoadedAt;
 }
 
 export const H_EARTH_FD_05_MODULE_IMPORT_TRACK =
-  deepFreeze({
-    contractId:
-      H_EARTH_FD_05_MODULE_IMPORT_TRACK_CONTRACT_ID,
-
-    sourceFile:
-      H_EARTH_FD_05_MODULE_IMPORT_TRACK_SOURCE_FILE,
-
-    failureDomain:
-      H_EARTH_FD_05_ACTIVE_FAILURE_DOMAIN,
-
-    primaryReceiptId:
-      H_EARTH_FD_05_PRIMARY_RECEIPT_ID,
-
-    branches:
-      BRANCHES,
-
-    responseClassification:
-      CLASSIFICATION,
-
-    runHEarthFd05ModuleImportTrack,
-
-    getHEarthFd05ModuleImportDiagnosticReceipt
-  });
+  createHEarthFd05InstrumentRuntime();
 
 globalThis[
   GLOBAL_TRACK_KEY
 ] =
   H_EARTH_FD_05_MODULE_IMPORT_TRACK;
 
-function start() {
+export function runHEarthFd05ModuleImportTrack() {
+  return H_EARTH_FD_05_MODULE_IMPORT_TRACK
+    .run();
+}
+
+export function getHEarthFd05ModuleImportDiagnosticReceipt() {
+  return H_EARTH_FD_05_MODULE_IMPORT_TRACK
+    .getReceipt();
+}
+
+export const H_EARTH_FD_05_TEST_API =
+  deepFreeze({
+    classifyPayload:
+      classifyHEarthFd05Payload,
+    classifyTransport:
+      classifyHEarthFd05Transport,
+    classifyTransitiveEvidence:
+      classifyHEarthFd05TransitiveEvidence,
+    createRuntime:
+      createHEarthFd05InstrumentRuntime,
+    branches:
+      DEFAULT_BRANCHES,
+    markers:
+      MARKERS
+  });
+
+function startInstrument() {
   void runHEarthFd05ModuleImportTrack();
 }
 
 if (
-  document.readyState ===
-  'loading'
+  globalThis.document &&
+  globalThis
+    .H_EARTH_FD_05_DISABLE_AUTO_START_FOR_TESTS !==
+  true
 ) {
-  document.addEventListener(
-    'DOMContentLoaded',
-    start,
-    {
-      once: true
-    }
-  );
-} else {
-  start();
+  if (
+    globalThis.document
+      .readyState ===
+    'loading'
+  ) {
+    globalThis.document
+      .addEventListener(
+        'DOMContentLoaded',
+        startInstrument,
+        {
+          once: true
+        }
+      );
+  } else {
+    startInstrument();
+  }
 }
 
 export default

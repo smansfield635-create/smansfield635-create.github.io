@@ -1,207 +1,10 @@
 /*
-  /showroom/globe/h-earth/diagnostic/index.css
-  COMPLETE RENEWED FILE
-
-  H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_RENEWAL_STEP_034T_STEP_034S_LIVE_ROUTE_EVIDENCE_AND_REPORT_SURFACE_SUPPORT_v1
-
-  Report-system presentation renewal:
-  H_EARTH_DIAGNOSTIC_REPORT_SYSTEM_ACTIVE_FAILURE_DECISION_RENEWAL_DIRECTIVE_v1
-
-  Renews:
-  H_EARTH_3D_DIAGNOSTIC_ROUTE_STYLE_FILE_RENEWAL_STEP_034G_LAYER_4_CUSTODY_AND_PUBLIC_STAGE_RECEIPT_INSPECTION_v1
-
-  Companion diagnostic shell:
-  /showroom/globe/h-earth/diagnostic/index.html
-  H_EARTH_3D_DIAGNOSTIC_ROUTE_SHELL_FILE_RENEWAL_STEP_034S_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_DIAGNOSTIC_ENTRY_v1
-
-  Companion diagnostic bootstrap:
-  /showroom/globe/h-earth/diagnostic/index.js
-  H_EARTH_3D_DIAGNOSTIC_BOOTSTRAP_FILE_RENEWAL_STEP_034U_STEP_034P_LIVE_ROUTE_EVIDENCE_AND_BOUNDARY_REPORTING_v1
-
-  Purpose:
-
-  Style the dedicated H-Earth diagnostic route as a three-tier,
-  occurrence-specific operator interface while preserving the complete
-  constitutional diagnostic report corpus.
-
-  Presentation order:
-
-  TIER 1 =
-  ACTIVE FAILURE DECISION
-
-  WATCHDOG SUPPORT =
-  FD_05 WATCHDOG STATUS
-
-  TIER 2 =
-  ACTIVE SUPPORTING REPORTS
-
-  TIER 3 =
-  PRESERVED DIAGNOSTIC CORPUS
-
-  This stylesheet preserves:
-
-  - all established diagnostic report mounts;
-  - existing report identities;
-  - current copy controls;
-  - current raw and aggregate evidence surfaces;
-  - current custody and contract surfaces;
-  - current boundary and mismatch surfaces;
-  - current report-card surfaces;
-  - current route and renderer inspection surfaces;
-  - current diagnostic status hooks;
-  - compatibility with the prior diagnostic shell classes.
-
-  Styling authority:
-
-  This stylesheet may style diagnostic shell elements and diagnostic report
-  states. It must not style the diagnostic route as a public environment stage
-  and must not create or imply scene geometry, renderer output, execution,
-  validation, visual pass, production readiness, or deployment readiness.
-
-  Boundary:
-
-  DIAGNOSTIC_REPORT_CSS_ONLY = true
-  REPORT_CORPUS_PRESERVED = true
-  ACTIVE_FAILURE_DECISION_PRESENTATION = true
-  PUBLIC_ENVIRONMENT_HOST_STYLING = false
-  PUBLIC_RENDERER_STAGE_STYLING = false
-  PUBLIC_ROUTE_MUTATION = false
-  PACKET_002_CONSTRUCTION = false
-  ADMITTED_FRAME_CONSTRUCTION = false
-  COMPOSITOR_CONSTRUCTION = false
-  RENDERER_CONSTRUCTION = false
-  RENDERER_MOUNT = false
-  RENDERER_RELEASE = false
-  SCENE_GEOMETRY_CONSTRUCTION = false
-  WEBGL_ACTIVATION = false
-  CANVAS_ACTIVATION = false
-  SVG_ACTIVATION = false
-  IFRAME_ACTIVATION = false
-  STEP_012H_1_RUN_EXECUTION = false
-  STEP_012I_VECTOR_EXECUTION = false
-  STEP_012I_RUNNER_EXECUTION = false
-  TARGET_002_RUNTIME_EXECUTION = false
-  TARGET_003_REPLAY_EXECUTION = false
-  CANONICAL_DIGEST_GENERATION = false
-  REPLAY_COMPARISON = false
-  RENDERER_PASS_CLAIM = false
-  VISUAL_PASS_CLAIM = false
-  VALIDATION_CLAIM = false
-  PRODUCTION_CLAIM = false
-  DEPLOYMENT_CLAIM = false
-  RUNTIME_LATTICE_ACTIVATION = false
-  MATRIX_COLLAPSE = false
-*/
+ * /showroom/globe/h-earth/diagnostic/index.css
+ * H_EARTH_FD05_DEPLOYED_RESPONSE_DIAGNOSTIC_INTERFACE_RENEWAL_v1
+ */
 
 :root {
   color-scheme: dark;
-
-  --h-earth-diagnostic-bg: #03060c;
-  --h-earth-diagnostic-bg-2: #071018;
-  --h-earth-diagnostic-bg-3: #0b151d;
-  --h-earth-diagnostic-bg-deep: #010308;
-
-  --h-earth-diagnostic-panel: rgba(8, 15, 23, 0.84);
-  --h-earth-diagnostic-panel-strong: rgba(5, 10, 16, 0.96);
-  --h-earth-diagnostic-panel-soft: rgba(255, 255, 255, 0.046);
-  --h-earth-diagnostic-panel-raised: rgba(12, 22, 31, 0.9);
-
-  --h-earth-diagnostic-border: rgba(224, 242, 247, 0.16);
-  --h-earth-diagnostic-border-strong: rgba(224, 242, 247, 0.3);
-  --h-earth-diagnostic-border-soft: rgba(224, 242, 247, 0.09);
-
-  --h-earth-diagnostic-text: #eef8fb;
-  --h-earth-diagnostic-muted: rgba(238, 248, 251, 0.72);
-  --h-earth-diagnostic-soft: rgba(238, 248, 251, 0.54);
-  --h-earth-diagnostic-faint: rgba(238, 248, 251, 0.36);
-
-  --h-earth-diagnostic-accent: #a5ddce;
-  --h-earth-diagnostic-accent-strong: #ddfff5;
-  --h-earth-diagnostic-warm: #f2d49c;
-  --h-earth-diagnostic-held: #ffd98d;
-  --h-earth-diagnostic-warn: #ffb184;
-  --h-earth-diagnostic-error: #ff9b9b;
-  --h-earth-diagnostic-ok: #b9f3ce;
-  --h-earth-diagnostic-info: #a9d7ff;
-
-  --h-earth-diagnostic-entry: #a5ddce;
-  --h-earth-diagnostic-evidence: #b9e8ff;
-  --h-earth-diagnostic-route-color: #9fd8ff;
-  --h-earth-diagnostic-compositor: #d0b8ff;
-  --h-earth-diagnostic-renderer: #8de3d0;
-  --h-earth-diagnostic-layer-4: #c9bbff;
-  --h-earth-diagnostic-layer-4-strong: #eee8ff;
-  --h-earth-diagnostic-step-012j: #d9ccff;
-  --h-earth-diagnostic-public-stage: #9fd8ff;
-  --h-earth-diagnostic-boundary: #ffd98d;
-  --h-earth-diagnostic-mismatch: #ffb184;
-  --h-earth-diagnostic-archive: #d5e8c1;
-  --h-earth-diagnostic-contract: #e1d5b7;
-  --h-earth-diagnostic-raw: #ffcaad;
-
-  --h-earth-tier-1: #ddfff5;
-  --h-earth-tier-2: #b9e8ff;
-  --h-earth-tier-3: #c9bbff;
-  --h-earth-watchdog: #ffd98d;
-
-  --h-earth-diagnostic-radius-xl: 34px;
-  --h-earth-diagnostic-radius-lg: 28px;
-  --h-earth-diagnostic-radius-md: 18px;
-  --h-earth-diagnostic-radius-sm: 12px;
-
-  --h-earth-diagnostic-shadow: 0 24px 90px rgba(0, 0, 0, 0.48);
-  --h-earth-diagnostic-shadow-soft: 0 16px 54px rgba(0, 0, 0, 0.34);
-  --h-earth-diagnostic-shadow-card: 0 12px 34px rgba(0, 0, 0, 0.24);
-
-  --h-earth-diagnostic-mono:
-    "SFMono-Regular",
-    Consolas,
-    "Liberation Mono",
-    Menlo,
-    monospace;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  min-width: 320px;
-  min-height: 100%;
-  overflow-x: hidden;
-  color: var(--h-earth-diagnostic-text);
-  background:
-    radial-gradient(
-      circle at 14% -10%,
-      rgba(165, 221, 206, 0.15),
-      transparent 34rem
-    ),
-    radial-gradient(
-      circle at 88% 6%,
-      rgba(201, 187, 255, 0.12),
-      transparent 30rem
-    ),
-    radial-gradient(
-      circle at 72% 44%,
-      rgba(242, 212, 156, 0.07),
-      transparent 32rem
-    ),
-    linear-gradient(
-      180deg,
-      var(--h-earth-diagnostic-bg),
-      var(--h-earth-diagnostic-bg-2) 52%,
-      var(--h-earth-diagnostic-bg-deep)
-    );
-}
-
-body {
-  min-width: 320px;
-  min-height: 100vh;
-  margin: 0;
-  overflow-x: hidden;
-  color: var(--h-earth-diagnostic-text);
   font-family:
     Inter,
     ui-sans-serif,
@@ -210,2204 +13,455 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  line-height: 1.5;
-  background: transparent;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: geometricPrecision;
+  background: #071018;
+  color: #edf6ff;
+  font-synthesis: none;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.1;
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: #071018;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
   background:
-    radial-gradient(
-      circle at 18% 18%,
-      rgba(255, 255, 255, 0.12) 0 1px,
-      transparent 1.8px
-    ),
-    radial-gradient(
-      circle at 74% 28%,
-      rgba(255, 255, 255, 0.1) 0 1px,
-      transparent 1.8px
-    );
-  background-size: 240px 280px, 320px 300px;
-  mask-image:
     linear-gradient(
       180deg,
-      black,
-      rgba(0, 0, 0, 0.44) 64%,
-      transparent
+      #071018 0%,
+      #08131c 45%,
+      #050c12 100%
     );
-}
-
-a {
-  color: inherit;
+  color: #edf6ff;
 }
 
 button,
-summary,
-pre,
-table {
+input,
+textarea,
+select {
   font: inherit;
 }
 
-button,
-summary {
+button {
+  min-height: 48px;
+  border: 1px solid #70d7ff;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  background: #0c2a3b;
+  color: #f7fcff;
+  font-weight: 750;
+  letter-spacing: 0.02em;
   cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #123d55;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:focus-visible,
+summary:focus-visible,
+.table-scroll:focus-visible,
+pre:focus-visible {
+  outline: 3px solid #ffd66b;
+  outline-offset: 3px;
 }
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.52;
+  opacity: 0.45;
+}
+
+.page-shell {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+  padding: clamp(1rem, 2vw, 2rem);
+}
+
+.page-header,
+.control-panel,
+.metrics-panel,
+.summary-panel,
+.results-panel,
+.authority-panel {
+  margin-block: 1rem;
+  border: 1px solid #28495b;
+  border-radius: 12px;
+  background: #0b1822;
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.22);
+}
+
+.page-header,
+.control-panel,
+.metrics-panel,
+.summary-panel,
+.results-panel {
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.4rem;
+  color: #70d7ff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+h1,
+h2,
+p {
+  max-width: 90ch;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.65rem, 4vw, 3rem);
+  line-height: 1.08;
+}
+
+h2 {
+  margin: 0 0 0.85rem;
+  font-size: 1.05rem;
+}
+
+.purpose,
+.boundary {
+  margin: 0.75rem 0 0;
+  line-height: 1.55;
+}
+
+.purpose {
+  color: #d6e8f2;
+}
+
+.boundary {
+  color: #ffdca0;
+}
+
+.control-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+#run-capture {
+  border-color: #70d7ff;
+  background: #0d354a;
+}
+
+#copy-summary,
+#save-package {
+  border-color: #7595a7;
+  background: #12232d;
+}
+
+#run-capture:hover:not(:disabled) {
+  background: #124a65;
+}
+
+#copy-summary:hover:not(:disabled),
+#save-package:hover:not(:disabled) {
+  background: #1a3442;
+}
+
+.operator-status {
+  min-height: 2.9rem;
+  margin-top: 0.9rem;
+  border-left: 4px solid #70d7ff;
+  padding: 0.75rem 0.9rem;
+  background: #07131c;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.operator-status[data-tone="success"] {
+  border-left-color: #66e09a;
+}
+
+.operator-status[data-tone="finding"] {
+  border-left-color: #ffd66b;
+}
+
+.operator-status[data-tone="error"] {
+  border-left-color: #ff7878;
+}
+
+.operator-status[data-tone="running"] {
+  border-left-color: #70d7ff;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 0;
+}
+
+.metrics-grid > div {
+  min-width: 0;
+  border: 1px solid #1f3e50;
+  border-radius: 8px;
+  padding: 0.75rem;
+  background: #07131c;
+}
+
+.metrics-grid dt {
+  color: #a9c2d1;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.metrics-grid dd {
+  margin: 0.35rem 0 0;
+  overflow-wrap: anywhere;
+  font-size: 1.12rem;
+  font-weight: 800;
 }
 
 pre {
+  max-height: 26rem;
   margin: 0;
+  overflow: auto;
+  border: 1px solid #1f3e50;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #050d13;
+  color: #e7f5ff;
+  font:
+    0.88rem/1.5
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
   white-space: pre-wrap;
-  word-break: break-word;
   overflow-wrap: anywhere;
 }
 
-dl,
-dd,
-dt {
-  margin: 0;
+.section-heading-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+#occurrence-label {
+  color: #a9c2d1;
+  font:
+    0.78rem
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+  overflow-wrap: anywhere;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid #1f3e50;
+  border-radius: 8px;
+  background: #07131c;
 }
 
 table {
+  width: 100%;
+  min-width: 1120px;
   border-collapse: collapse;
+  background: #07131c;
 }
 
-:focus-visible {
-  outline: 2px solid rgba(221, 255, 245, 0.72);
-  outline-offset: 3px;
-}
-
-::selection {
-  color: #04100e;
-  background: rgba(221, 255, 245, 0.84);
-}
-
-/* --------------------------------------------------------------------------
-   Route shell
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-diagnostic-route,
-.h-earth-3d-diagnostic-route-root {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  padding:
-    max(24px, env(safe-area-inset-top))
-    24px
-    max(36px, env(safe-area-inset-bottom));
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.024),
-      transparent 260px
-    ),
-    radial-gradient(
-      circle at 8% 28%,
-      rgba(165, 221, 206, 0.1),
-      transparent 32rem
-    ),
-    radial-gradient(
-      circle at 92% 38%,
-      rgba(201, 187, 255, 0.09),
-      transparent 34rem
-    );
-}
-
-.h-earth-3d-diagnostic-route[data-h-earth-diagnostic-route-only="true"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-diagnostic-route-only="true"] {
-  --h-earth-diagnostic-route-bound: 1;
-}
-
-.h-earth-3d-diagnostic-route[data-h-earth-layer-4-custody-inspection="true"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-layer-4-custody-inspection="true"] {
-  --h-earth-layer-4-custody-inspection-bound: 1;
-}
-
-.h-earth-3d-diagnostic-route[data-h-earth-route-bootstrap-receipt-inspection="true"],
-.h-earth-3d-diagnostic-route[data-h-earth-compositor-receipt-inspection="true"],
-.h-earth-3d-diagnostic-route[data-h-earth-renderer-receipt-inspection="true"],
-.h-earth-3d-diagnostic-route[data-h-earth-source-preview-receipt-inspection="true"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-route-bootstrap-receipt-inspection="true"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-compositor-receipt-inspection="true"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-renderer-receipt-inspection="true"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-source-preview-receipt-inspection="true"] {
-  --h-earth-live-route-inspection-bound: 1;
-}
-
-.h-earth-3d-diagnostic-route[data-h-earth-public-environment-host="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-public-scene-renderer-mount="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-public-scene-stage="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-public-route-initialized-by-diagnostic="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-renderer-mounted-by-diagnostic="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-public-environment-host="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-public-scene-renderer-mount="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-public-scene-stage="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-public-route-initialized-by-diagnostic="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-renderer-mounted-by-diagnostic="false"] {
-  --h-earth-public-environment-host-denied-here: 1;
-}
-
-.h-earth-3d-diagnostic-route[data-h-earth-step-012h-1-run-executed="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-step-012i-vector-executed="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-step-012i-runner-executed="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-target-002-runtime-executed="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-target-003-replay-executed="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-canonical-digest-generated="false"],
-.h-earth-3d-diagnostic-route[data-h-earth-replay-comparison="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-step-012h-1-run-executed="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-step-012i-vector-executed="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-step-012i-runner-executed="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-target-002-runtime-executed="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-target-003-replay-executed="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-canonical-digest-generated="false"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-replay-comparison="false"] {
-  --h-earth-diagnostic-execution-denied: 1;
-}
-
-.h-earth-3d-diagnostic-shell {
-  display: grid;
-  gap: 22px;
-  width: min(1500px, 100%);
-  margin: 0 auto;
-}
-
-/* --------------------------------------------------------------------------
-   Header and route controls
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-diagnostic-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 22px;
-  padding: clamp(18px, 3vw, 30px);
-  border: 1px solid var(--h-earth-diagnostic-border);
-  border-radius: var(--h-earth-diagnostic-radius-lg);
-  background:
-    radial-gradient(
-      circle at 88% 10%,
-      rgba(165, 221, 206, 0.1),
-      transparent 30rem
-    ),
-    rgba(5, 9, 13, 0.8);
-  box-shadow: var(--h-earth-diagnostic-shadow-soft);
-  backdrop-filter: blur(18px);
-}
-
-.h-earth-3d-diagnostic-header-copy {
-  display: grid;
-  gap: 8px;
-  max-width: 980px;
-}
-
-.h-earth-3d-diagnostic-header-copy h1 {
-  margin: 0;
-  font-size: clamp(2rem, 5.5vw, 4.8rem);
-  line-height: 0.96;
-  letter-spacing: -0.065em;
-  text-wrap: balance;
-}
-
-.h-earth-3d-diagnostic-introduction {
-  max-width: 900px;
-  margin: 4px 0 0;
-  color: var(--h-earth-diagnostic-muted);
-  font-size: clamp(0.98rem, 1.35vw, 1.14rem);
-  line-height: 1.65;
-}
-
-.h-earth-3d-diagnostic-kicker,
-.h-earth-3d-panel-title {
-  margin: 0;
-  color: var(--h-earth-diagnostic-soft);
-  font-size: 0.72rem;
-  font-weight: 760;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.h-earth-3d-diagnostic-navigation,
-.h-earth-3d-diagnostic-nav {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 10px;
-  flex: 0 0 auto;
-}
-
-.h-earth-3d-route-link,
-.h-earth-3d-control-button,
-.h-earth-3d-diagnostic-nav a,
-.h-earth-3d-copy-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  padding: 10px 14px;
-  border: 1px solid rgba(221, 255, 245, 0.18);
-  border-radius: 999px;
-  color: var(--h-earth-diagnostic-text);
-  background: rgba(255, 255, 255, 0.055);
-  text-decoration: none;
-  transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease,
-    box-shadow 160ms ease;
-}
-
-.h-earth-3d-route-link,
-.h-earth-3d-control-button,
-.h-earth-3d-diagnostic-nav a {
-  font-size: 0.84rem;
-  font-weight: 700;
-}
-
-.h-earth-3d-route-link:hover,
-.h-earth-3d-route-link:focus-visible,
-.h-earth-3d-control-button:hover,
-.h-earth-3d-control-button:focus-visible,
-.h-earth-3d-diagnostic-nav a:hover,
-.h-earth-3d-diagnostic-nav a:focus-visible,
-.h-earth-3d-copy-button:hover,
-.h-earth-3d-copy-button:focus-visible {
-  border-color: rgba(221, 255, 245, 0.44);
-  background: rgba(221, 255, 245, 0.11);
-  color: var(--h-earth-diagnostic-accent-strong);
-  transform: translateY(-1px);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
-  outline: none;
-}
-
-#h-earth-3d-run-diagnostics {
-  border-color: rgba(221, 255, 245, 0.34);
-  color: #03100d;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(221, 255, 245, 0.96),
-      rgba(165, 221, 206, 0.84)
-    );
-}
-
-#h-earth-3d-run-diagnostics:hover,
-#h-earth-3d-run-diagnostics:focus-visible {
-  color: #020908;
-  border-color: rgba(255, 255, 255, 0.78);
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff,
-      #c9f7e9
-    );
-}
-
-/* --------------------------------------------------------------------------
-   Diagnostic status bar
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-diagnostic-status-bar {
-  display: grid;
-  grid-template-columns:
-    minmax(220px, 0.38fr)
-    minmax(0, 1fr)
-    minmax(220px, 0.58fr);
-  align-items: center;
-  gap: 16px;
-  padding: 16px 18px;
-  border: 1px solid var(--h-earth-diagnostic-border);
-  border-radius: var(--h-earth-diagnostic-radius-lg);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(165, 221, 206, 0.055),
-      transparent 46%
-    ),
-    var(--h-earth-diagnostic-panel);
-  box-shadow: var(--h-earth-diagnostic-shadow-soft);
-  backdrop-filter: blur(16px);
-}
-
-.h-earth-3d-status-primary {
-  display: grid;
-  gap: 7px;
-}
-
-.h-earth-3d-status-label {
-  margin: 0;
-  color: var(--h-earth-diagnostic-soft);
-  font-size: 0.72rem;
-  font-weight: 760;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-}
-
-.h-earth-3d-status-value,
-.h-earth-3d-diagnostic-status {
-  display: block;
-  width: 100%;
-  padding: 11px 12px;
-  border: 1px solid rgba(185, 243, 206, 0.24);
-  border-radius: var(--h-earth-diagnostic-radius-sm);
-  color: var(--h-earth-diagnostic-ok);
-  background: rgba(185, 243, 206, 0.065);
-  font-family: var(--h-earth-diagnostic-mono);
-  font-size: 0.82rem;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-}
-
-.h-earth-3d-diagnostic-status-note {
-  margin: 0;
-  color: var(--h-earth-diagnostic-muted);
-  line-height: 1.55;
-}
-
-.h-earth-3d-copy-status {
-  margin: 0;
-  color: var(--h-earth-diagnostic-muted);
-  font-family: var(--h-earth-diagnostic-mono);
-  font-size: 0.76rem;
-  line-height: 1.45;
-  text-align: right;
-}
-
-.h-earth-3d-copy-status[data-h-earth-copy-state="success"] {
-  color: var(--h-earth-diagnostic-ok);
-}
-
-.h-earth-3d-copy-status[data-h-earth-copy-state="failure"] {
-  color: var(--h-earth-diagnostic-error);
-}
-
-/* --------------------------------------------------------------------------
-   Tier containers
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-report-tier {
-  display: grid;
-  gap: 16px;
-  padding: clamp(16px, 2.5vw, 24px);
-  border: 1px solid var(--h-earth-diagnostic-border);
-  border-radius: var(--h-earth-diagnostic-radius-xl);
-  background: var(--h-earth-diagnostic-panel);
-  box-shadow: var(--h-earth-diagnostic-shadow-soft);
-  backdrop-filter: blur(16px);
-}
-
-.h-earth-3d-tier-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--h-earth-diagnostic-border-soft);
-}
-
-.h-earth-3d-tier-heading > div {
-  display: grid;
-  gap: 5px;
-  max-width: 1000px;
-}
-
-.h-earth-3d-tier-heading h2 {
-  margin: 0;
-  font-size: clamp(1.55rem, 3vw, 2.6rem);
-  line-height: 1.05;
-  letter-spacing: -0.05em;
-  text-wrap: balance;
-}
-
-.h-earth-3d-tier-heading p:not(.h-earth-3d-diagnostic-kicker) {
-  margin: 4px 0 0;
-  color: var(--h-earth-diagnostic-muted);
-  line-height: 1.6;
-}
-
-.h-earth-3d-tier-1 {
-  border-color: rgba(221, 255, 245, 0.3);
-  background:
-    radial-gradient(
-      circle at 88% 4%,
-      rgba(165, 221, 206, 0.15),
-      transparent 34rem
-    ),
-    linear-gradient(
-      135deg,
-      rgba(165, 221, 206, 0.065),
-      transparent 48%
-    ),
-    var(--h-earth-diagnostic-panel-strong);
-}
-
-.h-earth-3d-tier-1 .h-earth-3d-tier-heading h2 {
-  color: var(--h-earth-tier-1);
-}
-
-.h-earth-3d-watchdog-tier {
-  border-color: rgba(255, 217, 141, 0.28);
-  background:
-    radial-gradient(
-      circle at 90% 8%,
-      rgba(255, 217, 141, 0.12),
-      transparent 32rem
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255, 217, 141, 0.05),
-      transparent 50%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-.h-earth-3d-watchdog-tier .h-earth-3d-tier-heading h2 {
-  color: #ffedc4;
-}
-
-.h-earth-3d-tier-2 {
-  border-color: rgba(185, 232, 255, 0.25);
-  background:
-    radial-gradient(
-      circle at 88% 4%,
-      rgba(185, 232, 255, 0.11),
-      transparent 34rem
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-.h-earth-3d-tier-2 .h-earth-3d-tier-heading h2 {
-  color: #dff5ff;
-}
-
-.h-earth-3d-tier-3 {
-  border-color: rgba(201, 187, 255, 0.22);
-  background:
-    radial-gradient(
-      circle at 90% 4%,
-      rgba(201, 187, 255, 0.09),
-      transparent 36rem
-    ),
-    rgba(5, 10, 16, 0.82);
-}
-
-.h-earth-3d-tier-3 .h-earth-3d-tier-heading h2 {
-  color: var(--h-earth-diagnostic-layer-4-strong);
-}
-
-/* --------------------------------------------------------------------------
-   Tier 1 active failure decision
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-active-failure-decision {
-  min-height: 0;
-  grid-template-rows: none;
-  gap: 16px;
-  border-color: rgba(221, 255, 245, 0.34);
-  background:
-    radial-gradient(
-      circle at 92% 8%,
-      rgba(221, 255, 245, 0.12),
-      transparent 34%
-    ),
-    linear-gradient(
-      145deg,
-      rgba(165, 221, 206, 0.08),
-      transparent 54%
-    ),
-    rgba(4, 9, 14, 0.96);
-}
-
-.h-earth-3d-decision-summary {
-  display: grid;
-  gap: 18px;
-}
-
-.h-earth-3d-decision-fields {
-  display: grid;
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.h-earth-3d-decision-field {
-  display: grid;
-  align-content: start;
-  gap: 7px;
-  min-width: 0;
-  padding: 13px;
-  border: 1px solid var(--h-earth-diagnostic-border-soft);
-  border-radius: var(--h-earth-diagnostic-radius-md);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.045),
-      rgba(255, 255, 255, 0.018)
-    ),
-    rgba(0, 0, 0, 0.14);
-}
-
-.h-earth-3d-decision-field dt {
-  color: var(--h-earth-diagnostic-soft);
-  font-size: 0.68rem;
-  font-weight: 760;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.h-earth-3d-decision-field dd {
-  min-width: 0;
-  color: var(--h-earth-diagnostic-text);
-  font-family: var(--h-earth-diagnostic-mono);
-  font-size: 0.76rem;
-  line-height: 1.48;
-  overflow-wrap: anywhere;
-}
-
-.h-earth-3d-decision-field:has(
-  #h-earth-3d-active-source-correction-authority
-) {
-  border-color: rgba(255, 217, 141, 0.28);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 217, 141, 0.065),
-      rgba(255, 217, 141, 0.02)
-    ),
-    rgba(0, 0, 0, 0.16);
-}
-
-.h-earth-3d-decision-field:has(
-  #h-earth-3d-active-direct-error
-) {
-  border-color: rgba(255, 155, 155, 0.22);
-}
-
-.h-earth-3d-next-operation {
-  display: grid;
-  gap: 10px;
-  padding: clamp(16px, 2.5vw, 24px);
-  border: 1px solid rgba(221, 255, 245, 0.32);
-  border-radius: var(--h-earth-diagnostic-radius-lg);
-  background:
-    radial-gradient(
-      circle at 92% 4%,
-      rgba(221, 255, 245, 0.12),
-      transparent 34%
-    ),
-    rgba(165, 221, 206, 0.06);
-}
-
-.h-earth-3d-next-operation h3 {
-  margin: 0;
-  color: var(--h-earth-diagnostic-accent-strong);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.h-earth-3d-next-operation p {
-  margin: 0;
-  color: var(--h-earth-diagnostic-text);
-  font-family: var(--h-earth-diagnostic-mono);
-  font-size: clamp(0.82rem, 1.3vw, 0.96rem);
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
-
-.h-earth-3d-full-archive-reference {
-  margin: 0;
-  color: var(--h-earth-diagnostic-muted);
-  font-size: 0.86rem;
-}
-
-.h-earth-3d-full-archive-reference a {
-  color: var(--h-earth-diagnostic-accent-strong);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-}
-
-#h-earth-3d-active-failure-decision-payload {
-  min-height: 180px;
-  max-height: 620px;
-  border-color: rgba(221, 255, 245, 0.24);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(221, 255, 245, 0.045),
-      transparent 120px
-    ),
-    rgba(0, 0, 0, 0.3);
-}
-
-/* --------------------------------------------------------------------------
-   FD_05 host and watchdog projection
-   -------------------------------------------------------------------------- */
-
-#h-earth-3d-fd-05-decision-host {
-  min-width: 0;
-}
-
-#h-earth-3d-fd-05-decision-host:empty {
-  display: none;
-}
-
-.h-earth-3d-watchdog-fields {
-  display: grid;
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.h-earth-3d-watchdog-fields > div {
-  display: grid;
-  align-content: start;
-  gap: 7px;
-  min-width: 0;
-  padding: 12px;
-  border: 1px solid rgba(255, 217, 141, 0.16);
-  border-radius: var(--h-earth-diagnostic-radius-md);
-  background: rgba(255, 217, 141, 0.035);
-}
-
-.h-earth-3d-watchdog-fields dt {
-  color: rgba(255, 239, 204, 0.65);
-  font-size: 0.66rem;
-  font-weight: 760;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-.h-earth-3d-watchdog-fields dd {
-  color: rgba(255, 247, 230, 0.94);
-  font-family: var(--h-earth-diagnostic-mono);
-  font-size: 0.73rem;
-  line-height: 1.48;
-  overflow-wrap: anywhere;
-}
-
-#h-earth-3d-fd-05-watchdog-status-payload {
-  min-height: 210px;
-  max-height: 560px;
-  border-color: rgba(255, 217, 141, 0.22);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 217, 141, 0.04),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.25);
-}
-
-/* --------------------------------------------------------------------------
-   Operational reports and supporting panels
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-operational-reports {
-  display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-}
-
-.h-earth-3d-operational-reports-header,
-.h-earth-3d-panel-heading-row,
-.h-earth-3d-copy-toolbar-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.h-earth-3d-panel-heading-row {
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--h-earth-diagnostic-border-soft);
-}
-
-.h-earth-3d-panel-heading-row > div {
-  display: grid;
-  gap: 5px;
-  min-width: 0;
-}
-
-.h-earth-3d-panel-heading-row h2,
-.h-earth-3d-panel-heading-row h3,
-.h-earth-3d-operational-reports-header h2,
-.h-earth-3d-copy-toolbar-header h2 {
-  margin: 0;
-  font-size: clamp(1.08rem, 2vw, 1.5rem);
-  line-height: 1.14;
-  letter-spacing: -0.035em;
-}
-
-.h-earth-3d-panel-heading-row p {
-  margin: 3px 0 0;
-  color: var(--h-earth-diagnostic-muted);
-  font-size: 0.86rem;
-  line-height: 1.55;
-}
-
-.h-earth-3d-panel-copy-button {
-  flex: 0 0 auto;
-}
-
-.h-earth-3d-panel-supporting {
-  min-height: 0;
-}
-
-[data-h-earth-panel-role="import-and-contract"] {
-  border-color: rgba(208, 184, 255, 0.28);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(208, 184, 255, 0.14),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(208, 184, 255, 0.055),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-[data-h-earth-panel-role="source-resolution"] {
-  border-color: rgba(185, 232, 255, 0.28);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(185, 232, 255, 0.13),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(185, 232, 255, 0.05),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-[data-h-earth-panel-role="initialization-vs-execution"] {
-  border-color: rgba(201, 187, 255, 0.3);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(201, 187, 255, 0.15),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(201, 187, 255, 0.055),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-[data-h-earth-panel-role="boundary-mismatch"] {
-  border-color: rgba(255, 177, 132, 0.3);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(255, 177, 132, 0.14),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255, 177, 132, 0.055),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-/* --------------------------------------------------------------------------
-   Report role registry
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-role-registry {
-  border-color: rgba(169, 215, 255, 0.2);
-  background:
-    radial-gradient(
-      circle at 92% 6%,
-      rgba(169, 215, 255, 0.08),
-      transparent 30rem
-    ),
-    rgba(5, 10, 16, 0.84);
-}
-
-.h-earth-3d-role-registry-table-wrapper {
-  overflow-x: auto;
-  border: 1px solid var(--h-earth-diagnostic-border-soft);
-  border-radius: var(--h-earth-diagnostic-radius-md);
-  background: rgba(0, 0, 0, 0.18);
-}
-
-.h-earth-3d-role-registry-table {
-  width: 100%;
-  min-width: 920px;
-  color: var(--h-earth-diagnostic-muted);
-  font-size: 0.76rem;
-}
-
-.h-earth-3d-role-registry-table th,
-.h-earth-3d-role-registry-table td {
-  padding: 12px 13px;
-  border-bottom: 1px solid var(--h-earth-diagnostic-border-soft);
+th,
+td {
+  border-bottom: 1px solid #1c3747;
+  padding: 0.7rem;
   text-align: left;
   vertical-align: top;
 }
 
-.h-earth-3d-role-registry-table thead th {
-  color: var(--h-earth-diagnostic-accent-strong);
-  background: rgba(165, 221, 206, 0.055);
-  font-size: 0.67rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #102536;
+  color: #dff5ff;
+  font-size: 0.78rem;
 }
 
-.h-earth-3d-role-registry-table tbody th {
-  color: var(--h-earth-diagnostic-text);
-  font-weight: 700;
+td {
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 
-.h-earth-3d-role-registry-table tbody tr:last-child th,
-.h-earth-3d-role-registry-table tbody tr:last-child td {
+tbody tr:last-child td {
   border-bottom: 0;
 }
 
-.h-earth-3d-role-registry-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.026);
+tbody tr:hover td {
+  background: #0a1d29;
 }
 
-/* --------------------------------------------------------------------------
-   Preserved corpus disclosures
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-corpus-group {
-  overflow: hidden;
-  border: 1px solid var(--h-earth-diagnostic-border-soft);
-  border-radius: var(--h-earth-diagnostic-radius-lg);
-  background: rgba(0, 0, 0, 0.16);
-}
-
-.h-earth-3d-corpus-group + .h-earth-3d-corpus-group {
-  margin-top: 2px;
-}
-
-.h-earth-3d-corpus-group summary {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-height: 56px;
-  padding: 15px 54px 15px 18px;
-  color: var(--h-earth-diagnostic-text);
-  background:
-    linear-gradient(
-      90deg,
-      rgba(201, 187, 255, 0.07),
-      transparent 60%
-    ),
-    rgba(255, 255, 255, 0.025);
-  font-size: 0.92rem;
-  font-weight: 760;
-  letter-spacing: -0.015em;
-  list-style: none;
-  user-select: none;
-}
-
-.h-earth-3d-corpus-group summary::-webkit-details-marker {
-  display: none;
-}
-
-.h-earth-3d-corpus-group summary::after {
-  content: "+";
-  position: absolute;
-  top: 50%;
-  right: 18px;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--h-earth-diagnostic-border-soft);
-  border-radius: 999px;
-  color: var(--h-earth-diagnostic-soft);
-  background: rgba(255, 255, 255, 0.035);
-  transform: translateY(-50%);
-  transition:
-    transform 160ms ease,
-    color 160ms ease,
-    border-color 160ms ease;
-}
-
-.h-earth-3d-corpus-group[open] summary::after {
-  content: "−";
-  color: var(--h-earth-diagnostic-accent-strong);
-  border-color: rgba(221, 255, 245, 0.24);
-}
-
-.h-earth-3d-corpus-group summary:hover,
-.h-earth-3d-corpus-group summary:focus-visible {
-  color: var(--h-earth-diagnostic-accent-strong);
-  background:
-    linear-gradient(
-      90deg,
-      rgba(201, 187, 255, 0.11),
-      transparent 65%
-    ),
-    rgba(255, 255, 255, 0.04);
-  outline: none;
-}
-
-.h-earth-3d-corpus-group[open] summary {
-  border-bottom: 1px solid var(--h-earth-diagnostic-border-soft);
-}
-
-.h-earth-3d-corpus-grid {
-  display: grid;
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  padding: 14px;
-}
-
-.h-earth-3d-corpus-group[data-h-earth-corpus-role="RAW_EVIDENCE"]
-  .h-earth-3d-corpus-grid,
-.h-earth-3d-corpus-group[data-h-earth-corpus-role="AGGREGATE_ARCHIVE"]
-  .h-earth-3d-corpus-grid {
-  grid-template-columns: 1fr;
-}
-
-/* --------------------------------------------------------------------------
-   Report cards
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-report-layer-status {
-  width: 100%;
-  min-height: 74px;
-  max-height: 220px;
-  overflow: auto;
-  padding: 12px;
-  border: 1px solid var(--h-earth-diagnostic-border-soft);
-  border-radius: var(--h-earth-diagnostic-radius-sm);
-  color: var(--h-earth-diagnostic-muted);
-  background: rgba(0, 0, 0, 0.2);
-  font-family: var(--h-earth-diagnostic-mono);
-  font-size: 0.76rem;
-  line-height: 1.45;
-}
-
-.h-earth-3d-report-cards {
-  display: grid;
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 4px;
-}
-
-.h-earth-3d-report-card {
-  min-height: 158px;
-  padding: 14px;
-  border: 1px solid var(--h-earth-diagnostic-border-soft);
-  border-radius: var(--h-earth-diagnostic-radius-md);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.055),
-      rgba(255, 255, 255, 0.025)
-    ),
-    rgba(0, 0, 0, 0.14);
-  box-shadow: var(--h-earth-diagnostic-shadow-card);
-}
-
-.h-earth-3d-report-card h2 {
-  margin: 0;
-  font-size: 1rem;
-  letter-spacing: -0.03em;
-}
-
-.h-earth-3d-report-status {
-  display: inline-flex;
-  width: fit-content;
-  max-width: 100%;
-  margin: 12px 0 0;
-  padding: 5px 8px;
-  border: 1px solid var(--h-earth-diagnostic-border-soft);
-  border-radius: 999px;
-  color: var(--h-earth-diagnostic-accent-strong);
-  background: rgba(221, 255, 245, 0.07);
-  font-family: var(--h-earth-diagnostic-mono);
-  font-size: 0.68rem;
-  line-height: 1.25;
+td.path-cell {
+  width: 34%;
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
   overflow-wrap: anywhere;
 }
 
-.h-earth-3d-report-summary {
-  margin: 12px 0 0;
-  color: var(--h-earth-diagnostic-muted);
-  font-size: 0.84rem;
-  line-height: 1.5;
+.status-token {
+  display: inline-block;
+  border: 1px solid #486575;
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="OK"] {
-  border-color: rgba(185, 243, 206, 0.26);
-  background:
-    radial-gradient(
-      circle at 88% 12%,
-      rgba(185, 243, 206, 0.12),
-      transparent 30%
-    ),
-    rgba(255, 255, 255, 0.035);
+.status-token.pass {
+  border-color: #4fba7b;
+  color: #8df0b4;
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="OK"]
-  .h-earth-3d-report-status {
-  color: var(--h-earth-diagnostic-ok);
-  border-color: rgba(185, 243, 206, 0.26);
-  background: rgba(185, 243, 206, 0.075);
+.status-token.finding {
+  border-color: #d6a83e;
+  color: #ffe09a;
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="INFO"] {
-  border-color: rgba(169, 215, 255, 0.24);
+.status-token.unresolved,
+.status-token.running {
+  border-color: #5e9fbe;
+  color: #a9e6ff;
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="INFO"]
-  .h-earth-3d-report-status {
-  color: var(--h-earth-diagnostic-info);
-  border-color: rgba(169, 215, 255, 0.25);
-  background: rgba(169, 215, 255, 0.065);
+.status-token.error {
+  border-color: #d45d5d;
+  color: #ffaaaa;
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="HELD"],
-.h-earth-3d-report-card[data-h-earth-report-severity="PENDING"] {
-  border-color: rgba(255, 217, 141, 0.26);
+.status-token.pending {
+  border-color: #667985;
+  color: #c0d0d9;
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="HELD"]
-  .h-earth-3d-report-status,
-.h-earth-3d-report-card[data-h-earth-report-severity="PENDING"]
-  .h-earth-3d-report-status {
-  color: var(--h-earth-diagnostic-held);
-  border-color: rgba(255, 217, 141, 0.28);
-  background: rgba(255, 217, 141, 0.07);
+.authority-panel {
+  padding: 0;
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="WARN"] {
-  border-color: rgba(255, 177, 132, 0.24);
+.authority-panel summary {
+  cursor: pointer;
+  padding: 1rem 1.25rem;
+  font-weight: 750;
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="WARN"]
-  .h-earth-3d-report-status {
-  color: var(--h-earth-diagnostic-warn);
-  border-color: rgba(255, 177, 132, 0.26);
-  background: rgba(255, 177, 132, 0.065);
+.authority-panel[open] summary {
+  border-bottom: 1px solid #28495b;
 }
 
-.h-earth-3d-report-card[data-h-earth-report-severity="ERROR"] {
-  border-color: rgba(255, 155, 155, 0.32);
-}
-
-.h-earth-3d-report-card[data-h-earth-report-severity="ERROR"]
-  .h-earth-3d-report-status {
-  color: var(--h-earth-diagnostic-error);
-  border-color: rgba(255, 155, 155, 0.34);
-  background: rgba(255, 155, 155, 0.075);
-}
-
-.h-earth-3d-report-card[data-h-earth-report-id="public-route"] {
-  border-color: rgba(159, 216, 255, 0.28);
-}
-
-.h-earth-3d-report-card[data-h-earth-report-id="compositor"] {
-  border-color: rgba(208, 184, 255, 0.28);
-}
-
-.h-earth-3d-report-card[data-h-earth-report-id="renderer"] {
-  border-color: rgba(141, 227, 208, 0.28);
-}
-
-.h-earth-3d-report-card[data-h-earth-report-id="layer-4-custody"] {
-  border-color: rgba(201, 187, 255, 0.3);
-}
-
-.h-earth-3d-report-card[data-h-earth-report-id="boundary"] {
-  border-color: rgba(255, 217, 141, 0.28);
-}
-
-/* --------------------------------------------------------------------------
-   Diagnostic payload grids and panels
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-diagnostic-grid {
-  display: grid;
-  grid-template-columns:
-    repeat(12, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.h-earth-3d-diagnostic-panel {
-  grid-column: span 6;
-  min-width: 0;
-  min-height: 420px;
-  display: grid;
-  grid-template-rows:
-    auto minmax(0, 1fr);
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid var(--h-earth-diagnostic-border);
-  border-radius: var(--h-earth-diagnostic-radius-lg);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.045),
-      rgba(255, 255, 255, 0.02)
-    ),
-    var(--h-earth-diagnostic-panel);
-  box-shadow: var(--h-earth-diagnostic-shadow-card);
-  backdrop-filter: blur(16px);
-}
-
-.h-earth-3d-panel-primary {
-  grid-column: span 12;
-}
-
-.h-earth-3d-diagnostic-output {
-  width: 100%;
-  min-height: 310px;
-  max-height: 640px;
-  overflow: auto;
-  padding: 14px;
-  border: 1px solid var(--h-earth-diagnostic-border-soft);
-  border-radius: var(--h-earth-diagnostic-radius-sm);
-  color: rgba(238, 248, 251, 0.86);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.018),
-      transparent 90px
-    ),
-    rgba(0, 0, 0, 0.24);
-  font-family: var(--h-earth-diagnostic-mono);
-  font-size: 0.76rem;
-  line-height: 1.52;
-  tab-size: 2;
-}
-
-.h-earth-3d-panel-primary .h-earth-3d-diagnostic-output {
-  min-height: 420px;
-}
-
-/* --------------------------------------------------------------------------
-   Diagnostic entry and evidence-source panels
-   -------------------------------------------------------------------------- */
-
-[data-h-earth-panel-role="diagnostic-entry"] {
-  border-color: rgba(165, 221, 206, 0.3);
-  background:
-    radial-gradient(
-      circle at 92% 8%,
-      rgba(165, 221, 206, 0.14),
-      transparent 34%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(165, 221, 206, 0.065),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-[data-h-earth-panel-role="diagnostic-entry"] h2,
-[data-h-earth-panel-role="diagnostic-entry"] h3 {
-  color: var(--h-earth-diagnostic-accent-strong);
-}
-
-[data-h-earth-panel-role="evidence-source"],
-[data-h-earth-panel-role="source-resolution"] {
-  border-color: rgba(185, 232, 255, 0.26);
-}
-
-[data-h-earth-panel-role="evidence-source"] h2,
-[data-h-earth-panel-role="evidence-source"] h3,
-[data-h-earth-panel-role="source-resolution"] h2,
-[data-h-earth-panel-role="source-resolution"] h3 {
-  color: #e0f4ff;
-}
-
-/* --------------------------------------------------------------------------
-   Public route panels
-   -------------------------------------------------------------------------- */
-
-[data-h-earth-panel-role="public-route-status"],
-[data-h-earth-panel-role="route-bootstrap-receipt"],
-[data-h-earth-panel-role="route-bootstrap-completion"],
-[data-h-earth-panel-role="source-preview"],
-[data-h-earth-panel-role="source-preview-receipt"],
-.h-earth-3d-public-stage-panel,
-[data-h-earth-panel-role="public-stage-status"],
-[data-h-earth-panel-role="public-stage-receipt"],
-[data-h-earth-panel-role="public-ground-readout"] {
-  border-color: rgba(159, 216, 255, 0.26);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(159, 216, 255, 0.13),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(159, 216, 255, 0.05),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-[data-h-earth-panel-role="public-route-status"] h2,
-[data-h-earth-panel-role="public-route-status"] h3,
-[data-h-earth-panel-role="route-bootstrap-receipt"] h2,
-[data-h-earth-panel-role="route-bootstrap-receipt"] h3,
-[data-h-earth-panel-role="route-bootstrap-completion"] h2,
-[data-h-earth-panel-role="route-bootstrap-completion"] h3,
-[data-h-earth-panel-role="source-preview"] h2,
-[data-h-earth-panel-role="source-preview"] h3,
-[data-h-earth-panel-role="source-preview-receipt"] h2,
-[data-h-earth-panel-role="source-preview-receipt"] h3,
-.h-earth-3d-public-stage-panel h2,
-.h-earth-3d-public-stage-panel h3,
-[data-h-earth-panel-role="public-stage-status"] h2,
-[data-h-earth-panel-role="public-stage-status"] h3,
-[data-h-earth-panel-role="public-stage-receipt"] h2,
-[data-h-earth-panel-role="public-stage-receipt"] h3,
-[data-h-earth-panel-role="public-ground-readout"] h2,
-[data-h-earth-panel-role="public-ground-readout"] h3 {
-  color: #dff3ff;
-}
-
-/* --------------------------------------------------------------------------
-   Compositor panels
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-compositor-panel,
-[data-h-earth-panel-role="compositor-import"],
-[data-h-earth-panel-role="import-and-contract"],
-[data-h-earth-panel-role="compositor-handoff"] {
-  border-color: rgba(208, 184, 255, 0.28);
-}
-
-.h-earth-3d-compositor-panel h2,
-.h-earth-3d-compositor-panel h3,
-[data-h-earth-panel-role="compositor-import"] h2,
-[data-h-earth-panel-role="compositor-import"] h3,
-[data-h-earth-panel-role="import-and-contract"] h2,
-[data-h-earth-panel-role="import-and-contract"] h3,
-[data-h-earth-panel-role="compositor-handoff"] h2,
-[data-h-earth-panel-role="compositor-handoff"] h3 {
-  color: #eadfff;
-}
-
-/* --------------------------------------------------------------------------
-   Renderer panels
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-renderer-panel,
-[data-h-earth-panel-role="renderer-import"],
-[data-h-earth-panel-role="renderer-construction"],
-[data-h-earth-panel-role="renderer-construction-receipt"],
-[data-h-earth-panel-role="renderer-mount"],
-[data-h-earth-panel-role="renderer-mount-receipt"],
-[data-h-earth-panel-role="renderer-release"],
-[data-h-earth-panel-role="renderer-release-receipt"],
-[data-h-earth-panel-role="renderer-state"] {
-  border-color: rgba(141, 227, 208, 0.28);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(141, 227, 208, 0.15),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(141, 227, 208, 0.06),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-.h-earth-3d-renderer-panel h2,
-.h-earth-3d-renderer-panel h3,
-[data-h-earth-panel-role="renderer-import"] h2,
-[data-h-earth-panel-role="renderer-import"] h3,
-[data-h-earth-panel-role="renderer-construction"] h2,
-[data-h-earth-panel-role="renderer-construction"] h3,
-[data-h-earth-panel-role="renderer-construction-receipt"] h2,
-[data-h-earth-panel-role="renderer-construction-receipt"] h3,
-[data-h-earth-panel-role="renderer-mount"] h2,
-[data-h-earth-panel-role="renderer-mount"] h3,
-[data-h-earth-panel-role="renderer-mount-receipt"] h2,
-[data-h-earth-panel-role="renderer-mount-receipt"] h3,
-[data-h-earth-panel-role="renderer-release"] h2,
-[data-h-earth-panel-role="renderer-release"] h3,
-[data-h-earth-panel-role="renderer-release-receipt"] h2,
-[data-h-earth-panel-role="renderer-release-receipt"] h3,
-[data-h-earth-panel-role="renderer-state"] h2,
-[data-h-earth-panel-role="renderer-state"] h3 {
-  color: #d9fff5;
-}
-
-/* --------------------------------------------------------------------------
-   Layer 4 and initialization panels
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-layer-4-custody-panel,
-.h-earth-3d-step-012j-panel,
-[data-h-earth-panel-role="layer-4-custody"],
-[data-h-earth-panel-role="step-012j-descriptor"],
-[data-h-earth-panel-role="relationship-members"],
-[data-h-earth-panel-role="module-initialization"],
-[data-h-earth-panel-role="initialization-vs-execution"] {
-  position: relative;
-  overflow: hidden;
-  border-color: rgba(201, 187, 255, 0.3);
-  background:
-    radial-gradient(
-      circle at 92% 8%,
-      rgba(201, 187, 255, 0.18),
-      transparent 34%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(201, 187, 255, 0.085),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-.h-earth-3d-layer-4-custody-panel .h-earth-3d-diagnostic-kicker,
-.h-earth-3d-step-012j-panel .h-earth-3d-diagnostic-kicker,
-[data-h-earth-panel-role="relationship-members"] .h-earth-3d-diagnostic-kicker,
-[data-h-earth-panel-role="module-initialization"] .h-earth-3d-diagnostic-kicker,
-[data-h-earth-panel-role="initialization-vs-execution"]
-  .h-earth-3d-diagnostic-kicker {
-  color: rgba(238, 232, 255, 0.78);
-}
-
-.h-earth-3d-layer-4-custody-panel h2,
-.h-earth-3d-layer-4-custody-panel h3,
-.h-earth-3d-step-012j-panel h2,
-.h-earth-3d-step-012j-panel h3,
-[data-h-earth-panel-role="layer-4-custody"] h2,
-[data-h-earth-panel-role="layer-4-custody"] h3,
-[data-h-earth-panel-role="step-012j-descriptor"] h2,
-[data-h-earth-panel-role="step-012j-descriptor"] h3,
-[data-h-earth-panel-role="relationship-members"] h2,
-[data-h-earth-panel-role="relationship-members"] h3,
-[data-h-earth-panel-role="module-initialization"] h2,
-[data-h-earth-panel-role="module-initialization"] h3,
-[data-h-earth-panel-role="initialization-vs-execution"] h2,
-[data-h-earth-panel-role="initialization-vs-execution"] h3 {
-  color: var(--h-earth-diagnostic-layer-4-strong);
-}
-
-/* --------------------------------------------------------------------------
-   Active globals
-   -------------------------------------------------------------------------- */
-
-[data-h-earth-panel-role="active-globals"] {
-  border-color: rgba(165, 221, 206, 0.24);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(165, 221, 206, 0.11),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(165, 221, 206, 0.045),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-[data-h-earth-panel-role="active-globals"] h2,
-[data-h-earth-panel-role="active-globals"] h3 {
-  color: var(--h-earth-diagnostic-accent-strong);
-}
-
-/* --------------------------------------------------------------------------
-   Boundary and mismatch panels
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-boundary-panel,
-.h-earth-3d-mismatch-panel,
-[data-h-earth-panel-role="boundary-mismatch"] {
-  position: relative;
-  overflow: hidden;
-}
-
-.h-earth-3d-boundary-panel,
-[data-h-earth-panel-role="boundary-flags"] {
-  border-color: rgba(255, 217, 141, 0.28);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(255, 217, 141, 0.12),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255, 217, 141, 0.055),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-.h-earth-3d-boundary-panel h2,
-.h-earth-3d-boundary-panel h3,
-[data-h-earth-panel-role="boundary-flags"] h2,
-[data-h-earth-panel-role="boundary-flags"] h3 {
-  color: #ffedc4;
-}
-
-.h-earth-3d-mismatch-panel,
-[data-h-earth-panel-role="boundary-mismatch"] {
-  border-color: rgba(255, 177, 132, 0.28);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(255, 177, 132, 0.13),
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255, 177, 132, 0.055),
-      transparent 58%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-.h-earth-3d-mismatch-panel h2,
-.h-earth-3d-mismatch-panel h3,
-[data-h-earth-panel-role="boundary-mismatch"] h2,
-[data-h-earth-panel-role="boundary-mismatch"] h3 {
-  color: #ffd3bd;
-}
-
-/* --------------------------------------------------------------------------
-   Archive and contract panels
-   -------------------------------------------------------------------------- */
-
-[data-h-earth-panel-role="archive-custody"] {
-  border-color: rgba(213, 232, 193, 0.24);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(213, 232, 193, 0.11),
-      transparent 32%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-[data-h-earth-panel-role="archive-custody"] h2,
-[data-h-earth-panel-role="archive-custody"] h3 {
-  color: var(--h-earth-diagnostic-archive);
-}
-
-[data-h-earth-panel-role="public-index-contract"],
-[data-h-earth-panel-role="index-contract"],
-[data-h-earth-panel-role="compositor-contract"],
-[data-h-earth-panel-role="renderer-contract"],
-[data-h-earth-panel-role="diagnostic-contract"] {
-  border-color: rgba(225, 213, 183, 0.22);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(225, 213, 183, 0.1),
-      transparent 32%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-[data-h-earth-panel-role="public-index-contract"] h2,
-[data-h-earth-panel-role="public-index-contract"] h3,
-[data-h-earth-panel-role="index-contract"] h2,
-[data-h-earth-panel-role="index-contract"] h3,
-[data-h-earth-panel-role="compositor-contract"] h2,
-[data-h-earth-panel-role="compositor-contract"] h3,
-[data-h-earth-panel-role="renderer-contract"] h2,
-[data-h-earth-panel-role="renderer-contract"] h3,
-[data-h-earth-panel-role="diagnostic-contract"] h2,
-[data-h-earth-panel-role="diagnostic-contract"] h3 {
-  color: #f4ead2;
-}
-
-/* --------------------------------------------------------------------------
-   Raw and aggregate panels
-   -------------------------------------------------------------------------- */
-
-[data-h-earth-panel-role="raw-evidence"] {
-  border-color: rgba(255, 202, 173, 0.24);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(255, 202, 173, 0.12),
-      transparent 34%
-    ),
-    var(--h-earth-diagnostic-panel);
-}
-
-[data-h-earth-panel-role="raw-evidence"] h2,
-[data-h-earth-panel-role="raw-evidence"] h3 {
-  color: #ffe0ce;
-}
-
-[data-h-earth-panel-role="all-diagnostics"] {
-  border-color: rgba(221, 255, 245, 0.26);
-  background:
-    radial-gradient(
-      circle at 90% 10%,
-      rgba(165, 221, 206, 0.12),
-      transparent 34%
-    ),
-    radial-gradient(
-      circle at 10% 90%,
-      rgba(201, 187, 255, 0.09),
-      transparent 34%
-    ),
-    var(--h-earth-diagnostic-panel-strong);
-}
-
-/* --------------------------------------------------------------------------
-   Output coloring
-   -------------------------------------------------------------------------- */
-
-#h-earth-3d-diagnostic-entry-payload,
-#h-earth-3d-evidence-source-payload,
-#h-earth-3d-active-globals-payload {
-  border-color: rgba(165, 221, 206, 0.2);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(165, 221, 206, 0.038),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.25);
-}
-
-#h-earth-3d-public-route-status-payload,
-#h-earth-3d-route-bootstrap-receipt,
-#h-earth-3d-route-bootstrap-completion-payload,
-#h-earth-3d-source-preview-receipt-payload,
-#h-earth-3d-public-stage-status-payload,
-#h-earth-3d-public-stage-receipt-payload,
-#h-earth-3d-public-ground-readout-payload {
-  border-color: rgba(159, 216, 255, 0.2);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(159, 216, 255, 0.038),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.25);
-}
-
-#h-earth-3d-compositor-import-payload,
-#h-earth-3d-compositor-handoff-payload {
-  border-color: rgba(208, 184, 255, 0.22);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(208, 184, 255, 0.044),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.26);
-}
-
-#h-earth-3d-renderer-import-payload,
-#h-earth-3d-renderer-construction-receipt,
-#h-earth-3d-renderer-mount-receipt,
-#h-earth-3d-renderer-release-receipt,
-#h-earth-3d-renderer-state-payload {
-  border-color: rgba(141, 227, 208, 0.22);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(141, 227, 208, 0.04),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.26);
-}
-
-#h-earth-3d-layer-4-custody-payload,
-#h-earth-3d-step-012j-descriptor-payload,
-#h-earth-3d-relationship-members-payload,
-#h-earth-3d-module-initialization-payload {
-  border-color: rgba(201, 187, 255, 0.22);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(201, 187, 255, 0.046),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.26);
-}
-
-#h-earth-3d-boundary-flags {
-  border-color: rgba(255, 217, 141, 0.22);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 217, 141, 0.04),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.25);
-}
-
-#h-earth-3d-boundary-mismatch-payload {
-  border-color: rgba(255, 177, 132, 0.24);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 177, 132, 0.04),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.25);
-}
-
-#h-earth-3d-archive-custody-payload {
-  border-color: rgba(213, 232, 193, 0.2);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(213, 232, 193, 0.038),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.25);
-}
-
-#h-earth-3d-index-contract,
-#h-earth-3d-compositor-contract,
-#h-earth-3d-renderer-contract,
-#h-earth-3d-diagnostic-contract {
-  border-color: rgba(225, 213, 183, 0.18);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(225, 213, 183, 0.034),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.25);
-}
-
-#h-earth-3d-raw-evidence-payload {
-  max-height: 760px;
-  border-color: rgba(255, 202, 173, 0.22);
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 202, 173, 0.038),
-      transparent 110px
-    ),
-    rgba(0, 0, 0, 0.26);
-}
-
-#h-earth-3d-all-diagnostics-payload {
-  max-height: 840px;
-  border-color: rgba(221, 255, 245, 0.2);
-}
-
-/* --------------------------------------------------------------------------
-   Route status hooks
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-diagnostic-ready .h-earth-3d-status-value,
-.h-earth-3d-diagnostic-ready .h-earth-3d-diagnostic-status {
-  color: var(--h-earth-diagnostic-ok);
-  border-color: rgba(185, 243, 206, 0.28);
-  background: rgba(185, 243, 206, 0.075);
-}
-
-.h-earth-3d-diagnostic-partial .h-earth-3d-status-value,
-.h-earth-3d-diagnostic-partial .h-earth-3d-diagnostic-status {
-  color: var(--h-earth-diagnostic-held);
-  border-color: rgba(255, 217, 141, 0.28);
-  background: rgba(255, 217, 141, 0.07);
-}
-
-.h-earth-3d-diagnostic-fallback .h-earth-3d-status-value,
-.h-earth-3d-diagnostic-fallback .h-earth-3d-diagnostic-status,
-.h-earth-3d-diagnostic-error .h-earth-3d-status-value,
-.h-earth-3d-diagnostic-error .h-earth-3d-diagnostic-status {
-  color: var(--h-earth-diagnostic-error);
-  border-color: rgba(255, 155, 155, 0.32);
-  background: rgba(255, 155, 155, 0.075);
-}
-
-/* --------------------------------------------------------------------------
-   Panel status hooks
-   -------------------------------------------------------------------------- */
-
-[data-h-earth-panel-role="public-route-status"]
-  [data-h-earth-public-route-status="ROUTE_RECEIPT_OBSERVED"],
-[data-h-earth-panel-role="public-route-status"]
-  [data-h-earth-panel-role="public-route-status"]
-  [data-h-earth-public-route-status="ROUTE_RECEIPT_OBSERVED"],
-[data-h-earth-panel-role="public-route-status"][data-h-earth-public-route-status="ROUTE_RECEIPT_OBSERVED"] {
-  border-color: rgba(185, 243, 206, 0.32);
-}
-
-[data-h-earth-panel-role="compositor-handoff"][data-h-earth-compositor-status="COMPOSITOR_HANDOFF_OBSERVED"] {
-  border-color: rgba(185, 243, 206, 0.32);
-}
-
-[data-h-earth-panel-role="renderer-mount"][data-h-earth-renderer-status="RENDERER_MOUNT_RECEIPT_OBSERVED"],
-[data-h-earth-panel-role="renderer-mount-receipt"][data-h-earth-renderer-status="RENDERER_MOUNT_RECEIPT_OBSERVED"] {
-  border-color: rgba(185, 243, 206, 0.32);
-}
-
-[data-h-earth-panel-role="layer-4-custody"][data-h-earth-custody-status="BACKED_STATIC_SUPPORT_CHAIN_REPORTED"],
-[data-h-earth-panel-role="layer-4-custody"][data-h-earth-custody-status="BACKED_STATIC_SUPPORT"] {
-  border-color: rgba(185, 243, 206, 0.34);
-}
-
-[data-h-earth-panel-role="mismatch-report"][data-h-earth-mismatch-status="NO_MISMATCH_FOUND"],
-[data-h-earth-panel-role="boundary-mismatch"][data-h-earth-mismatch-status="NO_MISMATCH_FOUND"] {
-  border-color: rgba(185, 243, 206, 0.3);
-}
-
-[data-h-earth-panel-role="mismatch-report"][data-h-earth-mismatch-status="EVIDENCE_INCOMPLETE"],
-[data-h-earth-panel-role="boundary-mismatch"][data-h-earth-mismatch-status="EVIDENCE_INCOMPLETE"] {
-  border-color: rgba(255, 217, 141, 0.36);
-}
-
-[data-h-earth-panel-role="mismatch-report"][data-h-earth-mismatch-status="MISMATCH_FOUND"],
-[data-h-earth-panel-role="boundary-mismatch"][data-h-earth-mismatch-status="MISMATCH_FOUND"] {
-  border-color: rgba(255, 177, 132, 0.4);
-}
-
-.h-earth-3d-diagnostic-route[data-h-earth-live-public-route-evidence-observed="true"]
-  [data-h-earth-panel-role="evidence-source"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-live-public-route-evidence-observed="true"]
-  [data-h-earth-panel-role="evidence-source"] {
-  border-color: rgba(185, 243, 206, 0.32);
-}
-
-.h-earth-3d-diagnostic-route[data-h-earth-live-public-route-evidence-observed="false"]
-  [data-h-earth-panel-role="evidence-source"],
-.h-earth-3d-diagnostic-route-root[data-h-earth-live-public-route-evidence-observed="false"]
-  [data-h-earth-panel-role="evidence-source"] {
-  border-color: rgba(255, 217, 141, 0.3);
-}
-
-/* --------------------------------------------------------------------------
-   Footer and boundary language
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-diagnostic-footer,
-.h-earth-3d-diagnostic-boundary {
-  display: grid;
-  gap: 8px;
-  padding: 16px 18px;
-  border: 1px solid rgba(255, 217, 141, 0.22);
-  border-radius: var(--h-earth-diagnostic-radius-lg);
-  background:
-    radial-gradient(
-      circle at 92% 10%,
-      rgba(255, 217, 141, 0.08),
-      transparent 30%
-    ),
-    rgba(255, 217, 141, 0.045);
-  box-shadow: var(--h-earth-diagnostic-shadow-soft);
-}
-
-.h-earth-3d-diagnostic-footer p,
-.h-earth-3d-diagnostic-boundary p {
+.authority-panel p {
   margin: 0;
-  color: rgba(255, 239, 204, 0.86);
-  line-height: 1.6;
+  padding: 0 1.25rem 1rem;
+  color: #b9ceda;
+  line-height: 1.55;
 }
 
-/* --------------------------------------------------------------------------
-   Compatibility aliases
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-report-layer,
-.h-earth-3d-report-wall,
-.h-earth-3d-receipt-wall,
-.h-earth-3d-boundary-panel,
-.h-earth-3d-evidence-panel,
-.h-earth-3d-payload-panel,
-.h-earth-3d-claim-boundary {
-  --h-earth-diagnostic-report-surface: 1;
+.authority-panel p:first-of-type {
+  padding-top: 1rem;
 }
 
-.h-earth-3d-operational-report-stack,
-.h-earth-3d-spatial-summary,
-.h-earth-3d-live-public-renderer-sync,
-.h-earth-3d-composed-frame,
-.h-earth-3d-compositor-receipt,
-.h-earth-3d-renderer-placement,
-.h-earth-3d-environment-placement,
-.h-earth-3d-route-bootstrap,
-.h-earth-3d-renderer-mount,
-.h-earth-3d-index-contract,
-.h-earth-3d-diagnostic-contract {
-  --h-earth-diagnostic-payload-surface: 1;
-}
-
-.h-earth-3d-layer-4-custody,
-.h-earth-3d-step-012j-descriptor,
-.h-earth-3d-public-stage-receipt,
-.h-earth-3d-boundary-mismatch,
-.h-earth-3d-module-initialization,
-.h-earth-3d-archive-custody {
-  --h-earth-diagnostic-current-payload-surface: 1;
-}
-
-/* --------------------------------------------------------------------------
-   Scrollbars
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-diagnostic-output,
-.h-earth-3d-report-layer-status,
-.h-earth-3d-role-registry-table-wrapper {
-  scrollbar-width: thin;
-  scrollbar-color:
-    rgba(221, 255, 245, 0.22)
-    rgba(255, 255, 255, 0.035);
-}
-
-.h-earth-3d-diagnostic-output::-webkit-scrollbar,
-.h-earth-3d-report-layer-status::-webkit-scrollbar,
-.h-earth-3d-role-registry-table-wrapper::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-.h-earth-3d-diagnostic-output::-webkit-scrollbar-track,
-.h-earth-3d-report-layer-status::-webkit-scrollbar-track,
-.h-earth-3d-role-registry-table-wrapper::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.035);
-  border-radius: 999px;
-}
-
-.h-earth-3d-diagnostic-output::-webkit-scrollbar-thumb,
-.h-earth-3d-report-layer-status::-webkit-scrollbar-thumb,
-.h-earth-3d-role-registry-table-wrapper::-webkit-scrollbar-thumb {
-  border: 2px solid rgba(255, 255, 255, 0.035);
-  border-radius: 999px;
-  background: rgba(221, 255, 245, 0.22);
-}
-
-.h-earth-3d-diagnostic-output::-webkit-scrollbar-thumb:hover,
-.h-earth-3d-report-layer-status::-webkit-scrollbar-thumb:hover,
-.h-earth-3d-role-registry-table-wrapper::-webkit-scrollbar-thumb:hover {
-  background: rgba(221, 255, 245, 0.34);
-}
-
-#h-earth-3d-layer-4-custody-payload::-webkit-scrollbar-thumb,
-#h-earth-3d-step-012j-descriptor-payload::-webkit-scrollbar-thumb,
-#h-earth-3d-relationship-members-payload::-webkit-scrollbar-thumb,
-#h-earth-3d-module-initialization-payload::-webkit-scrollbar-thumb {
-  background: rgba(201, 187, 255, 0.25);
-}
-
-#h-earth-3d-compositor-import-payload::-webkit-scrollbar-thumb,
-#h-earth-3d-compositor-handoff-payload::-webkit-scrollbar-thumb {
-  background: rgba(208, 184, 255, 0.28);
-}
-
-#h-earth-3d-renderer-import-payload::-webkit-scrollbar-thumb,
-#h-earth-3d-renderer-construction-receipt::-webkit-scrollbar-thumb,
-#h-earth-3d-renderer-mount-receipt::-webkit-scrollbar-thumb,
-#h-earth-3d-renderer-release-receipt::-webkit-scrollbar-thumb,
-#h-earth-3d-renderer-state-payload::-webkit-scrollbar-thumb {
-  background: rgba(141, 227, 208, 0.26);
-}
-
-/* --------------------------------------------------------------------------
-   Explicit non-stage guard
-   -------------------------------------------------------------------------- */
-
-.h-earth-3d-diagnostic-route .h-earth-3d-world-stage,
-.h-earth-3d-diagnostic-route .h-earth-3d-stage,
-.h-earth-3d-diagnostic-route #h-earth-3d-renderer-mount,
-.h-earth-3d-diagnostic-route .h-earth-3d-renderer-mount,
-.h-earth-3d-diagnostic-route-root .h-earth-3d-world-stage,
-.h-earth-3d-diagnostic-route-root .h-earth-3d-stage,
-.h-earth-3d-diagnostic-route-root #h-earth-3d-renderer-mount,
-.h-earth-3d-diagnostic-route-root .h-earth-3d-renderer-mount {
-  min-height: 120px;
-  border: 2px dashed rgba(255, 155, 155, 0.48);
-  background: rgba(255, 155, 155, 0.035);
-}
-
-.h-earth-3d-diagnostic-route .h-earth-3d-world-stage::before,
-.h-earth-3d-diagnostic-route .h-earth-3d-stage::before,
-.h-earth-3d-diagnostic-route #h-earth-3d-renderer-mount::before,
-.h-earth-3d-diagnostic-route .h-earth-3d-renderer-mount::before,
-.h-earth-3d-diagnostic-route-root .h-earth-3d-world-stage::before,
-.h-earth-3d-diagnostic-route-root .h-earth-3d-stage::before,
-.h-earth-3d-diagnostic-route-root #h-earth-3d-renderer-mount::before,
-.h-earth-3d-diagnostic-route-root .h-earth-3d-renderer-mount::before {
-  content: "Diagnostic route must not host the public environment stage.";
+noscript {
   display: block;
-  padding: 12px;
-  color: var(--h-earth-diagnostic-error);
-  background: rgba(255, 155, 155, 0.08);
-  font-family: var(--h-earth-diagnostic-mono);
-  font-size: 0.76rem;
+  margin-top: 1rem;
+  border: 1px solid #ff7878;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #2a1114;
+  color: #ffd8d8;
 }
 
-/* --------------------------------------------------------------------------
-   Responsive
-   -------------------------------------------------------------------------- */
-
-@media (max-width: 1260px) {
-  .h-earth-3d-decision-fields {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-  }
-
-  .h-earth-3d-watchdog-fields {
-    grid-template-columns:
-      repeat(3, minmax(0, 1fr));
+@media (max-width: 1100px) {
+  .metrics-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 1180px) {
-  .h-earth-3d-report-cards {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+@media (max-width: 900px) {
+  .control-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .h-earth-3d-diagnostic-panel,
-  .h-earth-3d-panel-primary {
-    grid-column: span 12;
-  }
-}
-
-@media (max-width: 980px) {
-  .h-earth-3d-diagnostic-status-bar {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .h-earth-3d-copy-status {
+  .control-row button:first-child {
     grid-column: 1 / -1;
-    text-align: left;
   }
 
-  .h-earth-3d-operational-reports,
-  .h-earth-3d-corpus-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .h-earth-3d-watchdog-fields {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+  .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 920px) {
-  .h-earth-3d-diagnostic-route,
-  .h-earth-3d-diagnostic-route-root {
-    padding: 16px;
+@media (max-width: 560px) {
+  .page-shell {
+    padding: 0.7rem;
   }
 
-  .h-earth-3d-diagnostic-header {
-    align-items: flex-start;
-    flex-direction: column;
+  .page-header,
+  .control-panel,
+  .metrics-panel,
+  .summary-panel,
+  .results-panel {
+    padding: 0.9rem;
   }
 
-  .h-earth-3d-diagnostic-navigation,
-  .h-earth-3d-diagnostic-nav {
-    justify-content: flex-start;
-  }
-
-  .h-earth-3d-tier-heading,
-  .h-earth-3d-copy-toolbar-header,
-  .h-earth-3d-operational-reports-header,
-  .h-earth-3d-panel-heading-row {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .h-earth-3d-copy-status {
-    max-width: none;
-    text-align: left;
-  }
-
-  .h-earth-3d-report-layer-status {
-    width: 100%;
-    max-width: none;
-  }
-
-  .h-earth-3d-report-cards {
+  .control-row,
+  .metrics-grid {
     grid-template-columns: 1fr;
   }
 
-  .h-earth-3d-diagnostic-output {
-    max-height: 560px;
-  }
-
-  .h-earth-3d-panel-copy-button {
-    width: 100%;
-  }
-}
-
-@media (max-width: 720px) {
-  .h-earth-3d-diagnostic-status-bar {
-    grid-template-columns: 1fr;
-  }
-
-  .h-earth-3d-copy-status {
+  .control-row button:first-child {
     grid-column: auto;
   }
 
-  .h-earth-3d-decision-fields,
-  .h-earth-3d-watchdog-fields {
-    grid-template-columns: 1fr;
+  .section-heading-row {
+    display: block;
   }
 
-  .h-earth-3d-tier-heading .h-earth-3d-copy-button {
-    width: 100%;
-  }
-}
-
-@media (max-width: 640px) {
-  .h-earth-3d-diagnostic-route,
-  .h-earth-3d-diagnostic-route-root {
-    padding:
-      max(10px, env(safe-area-inset-top))
-      10px
-      max(24px, env(safe-area-inset-bottom));
+  #occurrence-label {
+    display: block;
+    margin-bottom: 0.8rem;
   }
 
-  .h-earth-3d-diagnostic-shell {
-    gap: 14px;
-  }
-
-  .h-earth-3d-diagnostic-header,
-  .h-earth-3d-diagnostic-status-bar,
-  .h-earth-3d-report-tier,
-  .h-earth-3d-diagnostic-panel,
-  .h-earth-3d-diagnostic-footer,
-  .h-earth-3d-diagnostic-boundary {
-    border-radius: 20px;
-  }
-
-  .h-earth-3d-diagnostic-header-copy h1 {
-    font-size: clamp(2rem, 12vw, 3.85rem);
-  }
-
-  .h-earth-3d-diagnostic-navigation {
-    display: grid;
-    grid-template-columns: 1fr;
+  button {
     width: 100%;
   }
 
-  .h-earth-3d-route-link,
-  .h-earth-3d-control-button,
-  .h-earth-3d-copy-button {
-    width: 100%;
-  }
-
-  .h-earth-3d-diagnostic-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .h-earth-3d-diagnostic-panel,
-  .h-earth-3d-panel-primary {
-    grid-column: auto;
-    min-height: 360px;
-    padding: 14px;
-  }
-
-  .h-earth-3d-active-failure-decision,
-  .h-earth-3d-panel-supporting {
-    min-height: 0;
-  }
-
-  .h-earth-3d-diagnostic-output,
-  .h-earth-3d-panel-primary .h-earth-3d-diagnostic-output {
-    min-height: 260px;
-    max-height: 460px;
-    font-size: 0.71rem;
-  }
-
-  #h-earth-3d-active-failure-decision-payload,
-  #h-earth-3d-fd-05-watchdog-status-payload {
-    min-height: 190px;
-  }
-
-  .h-earth-3d-report-card {
-    min-height: 132px;
-  }
-
-  .h-earth-3d-report-layer-status {
-    max-height: 280px;
-  }
-
-  .h-earth-3d-corpus-group summary {
-    padding-left: 14px;
+  pre {
+    max-height: 20rem;
+    font-size: 0.8rem;
   }
 }
-
-@media (max-width: 420px) {
-  .h-earth-3d-diagnostic-route,
-  .h-earth-3d-diagnostic-route-root {
-    padding-left: 7px;
-    padding-right: 7px;
-  }
-
-  .h-earth-3d-diagnostic-header,
-  .h-earth-3d-diagnostic-status-bar,
-  .h-earth-3d-report-tier,
-  .h-earth-3d-diagnostic-panel,
-  .h-earth-3d-diagnostic-footer,
-  .h-earth-3d-diagnostic-boundary {
-    padding: 12px;
-  }
-
-  .h-earth-3d-diagnostic-output,
-  .h-earth-3d-panel-primary .h-earth-3d-diagnostic-output {
-    min-height: 240px;
-    font-size: 0.67rem;
-    line-height: 1.46;
-  }
-
-  .h-earth-3d-decision-field,
-  .h-earth-3d-watchdog-fields > div {
-    padding: 10px;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Reduced-motion safety
-   -------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
-    transition-duration: 0.001ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -97,7 +97,7 @@ function authorityFinding(rows) {
     row.driveDigestComparison?.unevaluableReason === 'BODY_CUSTODY_UNRESOLVED' ||
     row.repositoryDigestComparison?.unevaluableReason === 'BODY_CUSTODY_UNRESOLVED'
   );
-  if (unresolved.length) return makeFinding('UNRESOLVED','AUTHORITY_CONTINUITY_UNRESOLVED','BROWSER_EVIDENCE_PACKAGE',null,unresolved.map(r=>r.captureOrder),[
+  if (unresolved.length) return makeFinding('UNRESOLVED','AUTHORITY_CONTINUITY_UNRESOLVED','BROWSER_EVIDENCE_PACKAGE',unresolved.length===1?unresolved[0]:null,unresolved.map(r=>r.captureOrder),[
     'rows[*].bodyCustodyDisposition'
   ]);
 
@@ -123,7 +123,7 @@ function publicationFinding(rows) {
   ]);
 
   const unresolved = rows.filter((row) => row.bodyCustodyDisposition === 'UNRESOLVED_FAILURE');
-  if (unresolved.length) return makeFinding('UNRESOLVED','PUBLICATION_CORRESPONDENCE_UNRESOLVED','BROWSER_TRANSPORT',null,unresolved.map(r=>r.captureOrder),[
+  if (unresolved.length) return makeFinding('UNRESOLVED','PUBLICATION_CORRESPONDENCE_UNRESOLVED','BROWSER_TRANSPORT',unresolved.length===1?unresolved[0]:null,unresolved.map(r=>r.captureOrder),[
     'rows[*].bodyCustodyError'
   ]);
 
@@ -139,7 +139,7 @@ function executionFinding(rows) {
   ]);
 
   const unresolved = rows.filter((row) => row.nativeImportExecutionDisposition !== 'ATTEMPTED' || row.nativeDynamicImportResult === null);
-  if (unresolved.length) return makeFinding('UNRESOLVED','BROWSER_NATIVE_IMPORT_OBSERVATION_UNRESOLVED','BROWSER_NATIVE_IMPORT_OBSERVATION',null,unresolved.map(r=>r.captureOrder),[
+  if (unresolved.length) return makeFinding('UNRESOLVED','BROWSER_NATIVE_IMPORT_OBSERVATION_UNRESOLVED','BROWSER_NATIVE_IMPORT_OBSERVATION',unresolved.length===1?unresolved[0]:null,unresolved.map(r=>r.captureOrder),[
     'rows[*].nativeImportExecutionDisposition'
   ]);
 
@@ -237,8 +237,9 @@ export async function buildHEarthFd05BrowserPackage({
   const publicationCorrespondenceFinding = publicationFinding(captureResult.rows);
   const browserExecutionFinding = executionFinding(rows);
   const preDigestIssues = validateRows(rows);
-  const preDigestValid = preDigestIssues.length===0;
-  const validationCandidate = preDigestValid ? null : makeFinding('FINDING','EVIDENCE_PACKAGE_INVALID_OR_INCOMPLETE','BROWSER_PACKAGE_VALIDATION',null,rows.map(r=>r.captureOrder),preDigestIssues);
+  const preDigestValid = preDigestIssues.length===0 && unresolved.length===0;
+  const validationIssues = [...preDigestIssues,...(unresolved.length?['UNRESOLVED_REQUIRED_EVIDENCE_PRESENT']:[])];
+  const validationCandidate = preDigestValid ? null : makeFinding('FINDING','EVIDENCE_PACKAGE_INVALID_OR_INCOMPLETE','BROWSER_PACKAGE_VALIDATION',null,rows.map(r=>r.captureOrder),validationIssues);
   const firstMaterialFinding = selectFirst(validationCandidate,[authorityContinuityFinding,publicationCorrespondenceFinding,browserExecutionFinding]);
   const handoff = preDigestValid ? 'ENGINEERING_HANDOFF_AUTHORIZED' : 'NO_VALID_ENGINEERING_DISPOSITION';
   const claimCeiling = {

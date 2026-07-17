@@ -3,166 +3,104 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark light">
+  <meta name="color-scheme" content="dark">
   <meta http-equiv="Cache-Control" content="no-store">
-  <title>H-Earth FD_05 Deployed Response Capture</title>
+  <title>H-Earth FD_05 Browser Evidence Capture</title>
   <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-  <main class="page-shell" aria-labelledby="page-title">
-    <header class="page-header">
-      <p class="eyebrow">H-EARTH · FD_05</p>
+  <main
+    id="h-earth-fd05-diagnostic"
+    class="diagnostic"
+    data-run-state="BOOTING"
+    aria-labelledby="page-title"
+  >
+    <header class="hero">
+      <p class="eyebrow">H-EARTH · FD_05 · STEP 034O.6</p>
       <h1 id="page-title">Deployed Response Evidence Capture</h1>
-      <p class="purpose">
-        Captures the complete browser-exposed response body and the separate native module-loader result for the frozen nineteen-module Step 034O.6 closure.
+      <p class="lede">
+        Captures nineteen governed deployed responses, then performs one ordered
+        browser-native module-import observation pass.
       </p>
       <p class="boundary">
-        This page gathers evidence only. It does not identify source culpability or authorize engine-source correction.
+        Evidence only. Source modification authority remains withheld.
+        Production claim authority is none.
       </p>
     </header>
 
-    <section class="control-panel" aria-labelledby="controls-title">
-      <h2 id="controls-title">Operator controls</h2>
-
-      <div class="control-row">
-        <button id="run-capture" type="button">
-          RUN DEPLOYED RESPONSE CAPTURE
-        </button>
-
-        <button id="copy-summary" type="button" disabled>
-          COPY SUMMARY
-        </button>
-
-        <button id="save-package" type="button" disabled>
-          SAVE EVIDENCE PACKAGE
-        </button>
+    <section class="control-panel" aria-labelledby="control-title">
+      <div>
+        <h2 id="control-title">Operator control</h2>
+        <p id="h-earth-fd05-status" class="status" aria-live="polite">
+          Initializing the accepted manifest projection.
+        </p>
       </div>
-
-      <div
-        id="operator-status"
-        class="operator-status"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        READY — no capture has been run.
+      <div class="controls">
+        <button id="h-earth-fd05-start" type="button" disabled>
+          Start governed capture
+        </button>
+        <button id="h-earth-fd05-copy-summary" type="button" disabled>
+          Copy summary
+        </button>
+        <button id="h-earth-fd05-copy-package" type="button" disabled>
+          Copy package
+        </button>
+        <button id="h-earth-fd05-save-package" type="button" disabled>
+          Save package
+        </button>
       </div>
     </section>
 
-    <section class="metrics-panel" aria-labelledby="metrics-title">
-      <h2 id="metrics-title">Capture state</h2>
-
-      <dl class="metrics-grid">
+    <section class="panel" aria-labelledby="rows-title">
+      <div class="section-heading">
         <div>
-          <dt>State</dt>
-          <dd id="metric-state">READY</dd>
+          <p class="section-kicker">Manifest-driven schedule</p>
+          <h2 id="rows-title">Nineteen governed rows</h2>
         </div>
-
-        <div>
-          <dt>Scheduled</dt>
-          <dd id="metric-scheduled">19</dd>
-        </div>
-
-        <div>
-          <dt>Terminal</dt>
-          <dd id="metric-terminal">0</dd>
-        </div>
-
-        <div>
-          <dt>Transport fulfilled</dt>
-          <dd id="metric-transport-fulfilled">0</dd>
-        </div>
-
-        <div>
-          <dt>Transport rejected</dt>
-          <dd id="metric-transport-rejected">0</dd>
-        </div>
-
-        <div>
-          <dt>Redirect findings</dt>
-          <dd id="metric-redirects">0</dd>
-        </div>
-
-        <div>
-          <dt>Non-JavaScript</dt>
-          <dd id="metric-non-js">0</dd>
-        </div>
-
-        <div>
-          <dt>Contract mismatches</dt>
-          <dd id="metric-contract-mismatch">0</dd>
-        </div>
-
-        <div>
-          <dt>Drive digest mismatches</dt>
-          <dd id="metric-drive-mismatch">0</dd>
-        </div>
-
-        <div>
-          <dt>Native import rejected</dt>
-          <dd id="metric-native-rejected">0</dd>
-        </div>
-      </dl>
-    </section>
-
-    <section class="summary-panel" aria-labelledby="summary-title">
-      <h2 id="summary-title">Generated summary</h2>
-
-      <pre id="summary-output" tabindex="0">No evidence package has been generated.</pre>
-    </section>
-
-    <section class="results-panel" aria-labelledby="results-title">
-      <div class="section-heading-row">
-        <h2 id="results-title">Nineteen-module capture ledger</h2>
-        <span id="occurrence-label">No occurrence</span>
+        <p>Transport completes for every row before any native import begins.</p>
       </div>
 
-      <div
-        class="table-scroll"
-        tabindex="0"
-        aria-label="Module capture results"
-      >
+      <div class="table-scroll">
         <table>
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">Repository path</th>
+              <th scope="col">Occurrence</th>
+              <th scope="col">Lifecycle</th>
               <th scope="col">Transport</th>
-              <th scope="col">HTTP</th>
-              <th scope="col">Bytes</th>
-              <th scope="col">Digest</th>
-              <th scope="col">Contract</th>
+              <th scope="col">Correspondence</th>
               <th scope="col">Native import</th>
-              <th scope="col">Terminal state</th>
             </tr>
           </thead>
-
-          <tbody id="capture-rows"></tbody>
+          <tbody id="h-earth-fd05-rows"></tbody>
         </table>
       </div>
     </section>
 
-    <details class="authority-panel">
-      <summary>Evidence boundary</summary>
+    <section class="panel" aria-labelledby="findings-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Independent browser axes</p>
+          <h2 id="findings-title">Findings</h2>
+        </div>
+      </div>
+      <div id="h-earth-fd05-summary" class="finding-grid">
+        <p>No finalized browser package.</p>
+      </div>
+    </section>
 
-      <p>
-        The instrument may establish the body bytes returned to this page,
-        final response URL, redirect boolean, exposed response metadata,
-        SHA-256, contract candidates, service-worker controller presence,
-        and native module-loader fulfillment or rejection.
-      </p>
+    <section class="split-panels">
+      <article class="panel" aria-labelledby="unresolved-title">
+        <h2 id="unresolved-title">Unresolved fields</h2>
+        <div id="h-earth-fd05-unresolved">
+          <p>No finalized browser package.</p>
+        </div>
+      </article>
 
-      <p>
-        It may not establish raw wire bytes, a complete redirect chain,
-        guaranteed origin bypass, a fresh native network retrieval, an exact
-        failed transitive leaf from a root rejection, or repository
-        culpability.
-      </p>
-    </details>
-
-    <noscript>
-      This diagnostic requires JavaScript to perform the evidence capture.
-    </noscript>
+      <article class="panel" aria-labelledby="receipt-title">
+        <h2 id="receipt-title">Completion receipt</h2>
+        <pre id="h-earth-fd05-receipt">No finalized browser package.</pre>
+      </article>
+    </section>
   </main>
 
   <script type="module" src="./index.js"></script>

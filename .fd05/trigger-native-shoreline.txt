@@ -1,1 +1,1 @@
-Trigger the bounded minimum native shoreline workflow.
+Trigger the diagnostic-safe minimum native shoreline workflow rerun.

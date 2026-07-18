@@ -43,12 +43,37 @@ jobs:
               raise SystemExit(f'missing transformed HTML tokens: {missing}')
           PY
       - name: Run source and backward-compatibility gates
+        id: source_gate
+        continue-on-error: true
         run: |
-          node --experimental-default-type=module .fd05/test-native-shoreline.mjs
-          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
-          git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > .fd05-test-index-viewport.mjs
-          node --experimental-default-type=module .fd05-test-index-viewport.mjs
-          rm .fd05-test-index-viewport.mjs
+          mkdir -p .fd05/native-shoreline-output
+          set +e
+          node --experimental-default-type=module .fd05/test-native-shoreline.mjs > .fd05/native-shoreline-output/source-gate.log 2>&1
+          SOURCE_STATUS=$?
+          if [ "$SOURCE_STATUS" -eq 0 ]; then
+            git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+            git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > .fd05-test-index-viewport.mjs
+            node --experimental-default-type=module .fd05-test-index-viewport.mjs >> .fd05/native-shoreline-output/source-gate.log 2>&1
+            SOURCE_STATUS=$?
+            rm -f .fd05-test-index-viewport.mjs
+          fi
+          cat .fd05/native-shoreline-output/source-gate.log
+          echo "$SOURCE_STATUS" > .fd05/native-shoreline-output/source-gate-exit-code.txt
+          exit "$SOURCE_STATUS"
+      - name: Upload source diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fd05-native-shoreline-source-diagnostic
+          path: |
+            .fd05/native-shoreline-output/source-gate.log
+            .fd05/native-shoreline-output/source-gate-exit-code.txt
+            .fd05/native-shoreline-output/source-validation.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Enforce source gate
+        if: steps.source_gate.outcome != 'success'
+        run: exit 1
       - name: Install Chromium
         run: |
           npm install --no-save playwright@1.55.0
@@ -85,11 +110,13 @@ jobs:
           git add showroom/globe/h-earth/index.html
           git commit -m "Materialize minimum native shoreline context" || true
           git push origin HEAD:agent/fd05-native-shoreline-work-001
-      - uses: actions/upload-artifact@v4
+      - name: Upload complete validation
+        uses: actions/upload-artifact@v4
         with:
           name: fd05-native-shoreline-workflow
           path: |
             .fd05/native-shoreline-output/*.json
             .fd05/native-shoreline-output/*.png
+            .fd05/native-shoreline-output/*.log
           if-no-files-found: error
           retention-days: 14

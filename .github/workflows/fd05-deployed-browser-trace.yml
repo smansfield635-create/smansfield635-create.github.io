@@ -1,0 +1,41 @@
+name: FD05 deployed browser correspondence prework trace
+
+on:
+  pull_request:
+    branches:
+      - agent/fd05-deployed-browser-trace-001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  trace-public-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-deployed-browser-trace-001
+          fetch-depth: 0
+      - name: Install browser tracer
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Run read-only public-browser trace
+        run: node .fd05/deployed-browser-trace.mjs
+      - name: Commit generated trace record on isolated branch
+        run: |
+          git config user.name "OpenAI Engineering Agent"
+          git config user.email "engineering-agent@users.noreply.github.com"
+          git add .fd05/generated-deployed-browser-trace.json
+          git commit -m "Record deployed browser correspondence trace"
+          git push origin HEAD:agent/fd05-deployed-browser-trace-001
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fd05-deployed-browser-trace
+          path: |
+            .fd05/generated-deployed-browser-trace.json
+            .fd05/deployed-browser-*.png
+          if-no-files-found: error
+          retention-days: 7

@@ -5,112 +5,147 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <title>H-Earth FD_05 Browser Evidence Capture</title>
-  <link rel="stylesheet" href="./index.css?v=fd05-browser-evidence-20260717c">
+  <title>H-Earth FD_05 Diagnostic Authority</title>
+  <link rel="stylesheet" href="./index.css?v=fd05-nine-cycle-20260718a">
 </head>
 <body>
-  <main
-    id="h-earth-fd05-diagnostic"
-    class="diagnostic"
-    data-run-state="BOOTING"
-    aria-labelledby="page-title"
-  >
+  <main id="h-earth-fd05-diagnostic" class="diagnostic" data-run-state="BOOTING" data-cycle-state="READY">
     <header class="hero">
       <p class="eyebrow">H-EARTH · FD_05 · STEP 034O.6</p>
-      <h1 id="page-title">Deployed Response Evidence Capture</h1>
-      <p class="lede">
-        Captures nineteen governed deployed responses, then performs one ordered
-        browser-native module-import observation pass.
-      </p>
-      <p class="boundary">
-        Evidence only. Source modification authority remains withheld.
-        Production claim authority is none.
-      </p>
+      <h1>Diagnostic Authority</h1>
+      <p class="lede">Browser evidence capture and exact-nine diagnosis are separate operator actions with separate immutable outputs.</p>
+      <div class="authority-strip">
+        <span>Source correction: WITHHELD</span>
+        <span>Production claim: NONE</span>
+        <span>Manifest rows: 19</span>
+      </div>
     </header>
 
-    <section class="control-panel" aria-labelledby="control-title">
-      <div>
-        <h2 id="control-title">Operator control</h2>
-        <p id="h-earth-fd05-status" class="status" aria-live="polite">
-          Initializing the accepted manifest projection.
-        </p>
-      </div>
-      <div class="controls">
-        <button id="h-earth-fd05-start" type="button" disabled>
-          Start governed capture
-        </button>
-        <button id="h-earth-fd05-copy-summary" type="button" disabled>
-          Copy summary
-        </button>
-        <button id="h-earth-fd05-copy-findings" type="button" disabled>
-          Copy findings
-        </button>
-        <button id="h-earth-fd05-copy-receipt" type="button" disabled>
-          Copy receipt
-        </button>
-        <button id="h-earth-fd05-copy-digest" type="button" disabled>
-          Copy package digest
-        </button>
-        <button id="h-earth-fd05-save-package" type="button" disabled>
-          Save full package
-        </button>
-      </div>
-    </section>
+    <nav class="layer-nav" aria-label="Diagnostic layers">
+      <a href="#browser-layer">1 · Browser evidence</a>
+      <a href="#cycle-layer">2 · Diagnosis cycle</a>
+    </nav>
 
-    <section class="panel" aria-labelledby="rows-title">
-      <div class="section-heading">
+    <section id="browser-layer" class="layer">
+      <div class="layer__heading">
         <div>
-          <p class="section-kicker">Manifest-driven schedule</p>
-          <h2 id="rows-title">Nineteen governed rows</h2>
+          <p class="section-kicker">Layer one</p>
+          <h2>Browser Evidence Capture</h2>
         </div>
-        <p>Transport completes for every row before any native import begins.</p>
+        <p>All nineteen transports finish before one ordered native-import observation pass begins.</p>
       </div>
 
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Occurrence</th>
-              <th scope="col">Lifecycle</th>
-              <th scope="col">Transport</th>
-              <th scope="col">Correspondence</th>
-              <th scope="col">Native import</th>
-            </tr>
-          </thead>
-          <tbody id="h-earth-fd05-rows"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="findings-title">
-      <div class="section-heading">
+      <section class="operator-card" aria-labelledby="capture-controls-title">
         <div>
-          <p class="section-kicker">Independent browser axes</p>
-          <h2 id="findings-title">Findings</h2>
+          <h3 id="capture-controls-title">Capture control</h3>
+          <p id="h-earth-fd05-capture-status" class="live-status" aria-live="polite">Initializing manifest projection.</p>
         </div>
-      </div>
-      <div id="h-earth-fd05-summary" class="finding-grid">
-        <p>No finalized browser package.</p>
-      </div>
+        <div class="button-grid">
+          <button id="h-earth-fd05-start" type="button" disabled>Start governed capture</button>
+          <button id="h-earth-fd05-copy-summary" type="button" disabled>Copy summary</button>
+          <button id="h-earth-fd05-copy-findings" type="button" disabled>Copy findings</button>
+          <button id="h-earth-fd05-copy-receipt" type="button" disabled>Copy receipt</button>
+          <button id="h-earth-fd05-copy-digest" type="button" disabled>Copy package digest</button>
+          <button id="h-earth-fd05-save-package" type="button" disabled>Save full package</button>
+        </div>
+      </section>
+
+      <div id="h-earth-fd05-capture-metrics" class="metric-grid" aria-label="Capture totals"></div>
+
+      <section class="panel">
+        <div class="panel__heading">
+          <div>
+            <p class="section-kicker">Manifest schedule</p>
+            <h3>Nineteen governed occurrences</h3>
+          </div>
+          <p>Compact cards show the operative facts. Full paths and row evidence stay inside details.</p>
+        </div>
+        <div id="h-earth-fd05-rows" class="row-grid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel__heading">
+          <div>
+            <p class="section-kicker">Browser adjudication</p>
+            <h3>Independent findings</h3>
+          </div>
+        </div>
+        <div id="h-earth-fd05-summary" class="finding-grid"><p class="empty-state">No finalized browser package.</p></div>
+      </section>
+
+      <section class="two-column">
+        <article class="panel">
+          <h3>Unresolved browser fields</h3>
+          <div id="h-earth-fd05-unresolved"><p class="empty-state">No finalized browser package.</p></div>
+        </article>
+        <article class="panel">
+          <h3>Completion receipt projection</h3>
+          <pre id="h-earth-fd05-receipt" class="compact-json">No finalized browser package.</pre>
+        </article>
+      </section>
     </section>
 
-    <section class="split-panels">
-      <article class="panel" aria-labelledby="unresolved-title">
-        <h2 id="unresolved-title">Unresolved fields</h2>
-        <div id="h-earth-fd05-unresolved">
-          <p>No finalized browser package.</p>
+    <section id="cycle-layer" class="layer layer--cycle">
+      <div class="layer__heading">
+        <div>
+          <p class="section-kicker">Layer two</p>
+          <h2>Diagnosis and Correction Cycle</h2>
         </div>
-      </article>
+        <p>Read-only exact-nine adjudication. It never fetches modules, edits evidence, writes repositories, or grants correction authority.</p>
+      </div>
 
-      <article class="panel" aria-labelledby="receipt-title">
-        <h2 id="receipt-title">Completion receipt projection</h2>
-        <pre id="h-earth-fd05-receipt">No finalized browser package.</pre>
-      </article>
+      <section class="operator-card operator-card--cycle" aria-labelledby="cycle-controls-title">
+        <div>
+          <h3 id="cycle-controls-title">Nine-cycle control</h3>
+          <p id="h-earth-fd05-cycle-status" class="live-status" aria-live="polite">Load a finalized browser package or complete a capture.</p>
+        </div>
+        <div class="button-grid button-grid--cycle">
+          <button id="h-earth-fd05-cycle-run" type="button" disabled>Run exact-nine cycle</button>
+          <button id="h-earth-fd05-cycle-copy-summary" type="button" disabled>Copy cycle summary</button>
+          <button id="h-earth-fd05-cycle-save-packet" type="button" disabled>Save cycle packet</button>
+          <button id="h-earth-fd05-cycle-save-terminal" type="button" disabled>Save terminal receipt</button>
+        </div>
+      </section>
+
+      <details class="panel input-vault" open>
+        <summary>Cycle input custody</summary>
+        <p class="supporting-copy">Browser package is required. Later artifacts are optional inputs that convert controlled holds into later classifications.</p>
+        <div class="file-grid">
+          <label><span>Browser package</span><input id="h-earth-fd05-load-browser-package" type="file" accept="application/json,.json"></label>
+          <label><span>Engineering disposition</span><input id="h-earth-fd05-load-engineering-receipt" type="file" accept="application/json,.json"></label>
+          <label><span>Repository occurrence</span><input id="h-earth-fd05-load-repository-evidence" type="file" accept="application/json,.json"></label>
+          <label><span>Selected Drive occurrence</span><input id="h-earth-fd05-load-drive-evidence" type="file" accept="application/json,.json"></label>
+          <label><span>Correction authority receipt</span><input id="h-earth-fd05-load-correction-authority" type="file" accept="application/json,.json"></label>
+          <label><span>Replacement plan</span><input id="h-earth-fd05-load-replacement-plan" type="file" accept="application/json,.json"></label>
+          <label><span>Replacement execution</span><input id="h-earth-fd05-load-replacement-execution" type="file" accept="application/json,.json"></label>
+          <label><span>Post-correction validation</span><input id="h-earth-fd05-load-post-correction-validation" type="file" accept="application/json,.json"></label>
+        </div>
+        <div id="h-earth-fd05-cycle-inputs" class="custody-grid"></div>
+      </details>
+
+      <section class="panel">
+        <div class="panel__heading">
+          <div>
+            <p class="section-kicker">F1 → F89</p>
+            <h3>Exact-nine station rail</h3>
+          </div>
+          <p>A correctly completed HELD station preserves structural validity; it does not falsely imply advancement.</p>
+        </div>
+        <div id="h-earth-fd05-cycle-rail" class="station-rail"></div>
+      </section>
+
+      <section class="two-column">
+        <article class="panel">
+          <h3>Terminal synthesis</h3>
+          <div id="h-earth-fd05-cycle-terminal" class="terminal-grid"><p class="empty-state">No terminal synthesis yet.</p></div>
+        </article>
+        <article class="panel">
+          <h3>F89 terminal receipt</h3>
+          <pre id="h-earth-fd05-cycle-receipt" class="compact-json">No finalized cycle packet.</pre>
+        </article>
+      </section>
     </section>
   </main>
-
-  <script type="module" src="./index.js?v=fd05-browser-evidence-20260717c"></script>
+  <script type="module" src="./index.js?v=fd05-nine-cycle-20260718a"></script>
 </body>
 </html>

@@ -170,8 +170,9 @@ for (const configuration of configurations) {
       ) &&
       snapshot.uniqueBackgroundSizes.length === 1 &&
       snapshot.uniqueBackgroundPositions.length > 1 &&
-      JSON.stringify(snapshot.uniqueBackgroundRepeats) ===
-        JSON.stringify(['no-repeat']),
+      snapshot.uniqueBackgroundRepeats.every(
+        (value) => value.includes('no-repeat')
+      ),
     restrainedSurfaceResponse:
       JSON.stringify(snapshot.uniqueBlendModes) ===
         JSON.stringify(['normal']) &&

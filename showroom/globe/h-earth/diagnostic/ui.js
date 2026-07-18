@@ -1,8 +1,7 @@
 /**
- * /showroom/globe/h-earth/diagnostic/ui.js
- * Presentation and bounded access controls for the FD_05 browser package.
+ * FD_05 presentation layer.
+ * Browser capture and diagnosis-cycle controls remain explicitly separate.
  */
-
 import {
   buildCompleteRowProjection,
   buildCompletionReceiptProjection,
@@ -10,104 +9,75 @@ import {
   buildOperatorSummary,
   buildPackageDigestProjection,
   buildRowSummaryProjection
-} from './browser-package.js?v=fd05-access-20260717c';
+} from './browser-package.js?v=fd05-nine-cycle-20260718a';
+import {
+  buildHEarthFd05CycleSummary,
+  buildHEarthFd05TerminalReceiptProjection
+} from './cycle-conductor.js?v=fd05-nine-cycle-20260718a';
 
 const IDS = Object.freeze({
   root: 'h-earth-fd05-diagnostic',
-  status: 'h-earth-fd05-status',
-  start: 'h-earth-fd05-start',
+  captureStatus: 'h-earth-fd05-capture-status',
+  startCapture: 'h-earth-fd05-start',
   copySummary: 'h-earth-fd05-copy-summary',
   copyFindings: 'h-earth-fd05-copy-findings',
   copyReceipt: 'h-earth-fd05-copy-receipt',
   copyDigest: 'h-earth-fd05-copy-digest',
   savePackage: 'h-earth-fd05-save-package',
+  captureMetrics: 'h-earth-fd05-capture-metrics',
   rows: 'h-earth-fd05-rows',
-  summary: 'h-earth-fd05-summary',
+  findings: 'h-earth-fd05-summary',
+  unresolved: 'h-earth-fd05-unresolved',
   receipt: 'h-earth-fd05-receipt',
-  unresolved: 'h-earth-fd05-unresolved'
+  cycleStatus: 'h-earth-fd05-cycle-status',
+  cycleRun: 'h-earth-fd05-cycle-run',
+  cycleCopySummary: 'h-earth-fd05-cycle-copy-summary',
+  cycleSavePacket: 'h-earth-fd05-cycle-save-packet',
+  cycleSaveTerminal: 'h-earth-fd05-cycle-save-terminal',
+  cycleInputs: 'h-earth-fd05-cycle-inputs',
+  cycleRail: 'h-earth-fd05-cycle-rail',
+  cycleTerminal: 'h-earth-fd05-cycle-terminal',
+  cycleReceipt: 'h-earth-fd05-cycle-receipt'
 });
 
-function element(documentObject, tag, options = {}) {
+const INPUT_BINDINGS = Object.freeze([
+  ['h-earth-fd05-load-browser-package', 'browserPackage'],
+  ['h-earth-fd05-load-engineering-receipt', 'engineeringReceipt'],
+  ['h-earth-fd05-load-repository-evidence', 'repositoryOccurrenceEvidence'],
+  ['h-earth-fd05-load-drive-evidence', 'selectedDriveOccurrenceEvidence'],
+  ['h-earth-fd05-load-correction-authority', 'correctionAuthorityReceipt'],
+  ['h-earth-fd05-load-replacement-plan', 'replacementPlanEvidence'],
+  ['h-earth-fd05-load-replacement-execution', 'replacementExecutionReceipt'],
+  ['h-earth-fd05-load-post-correction-validation', 'postCorrectionValidationReceipt']
+]);
+
+const create = (documentObject, tag, className, text) => {
   const node = documentObject.createElement(tag);
-
-  if (options.className) {
-    node.className = options.className;
-  }
-
-  if (options.text !== undefined) {
-    node.textContent = String(options.text);
-  }
-
-  for (const [name, value] of Object.entries(options.attributes || {})) {
-    node.setAttribute(name, String(value));
-  }
-
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = String(text);
   return node;
-}
+};
 
-function display(value) {
-  if (value === null || value === undefined || value === '') {
-    return '—';
-  }
+const display = (value) =>
+  value === null || value === undefined || value === '' ? '—' : String(value);
 
-  if (typeof value === 'boolean') {
-    return value ? 'yes' : 'no';
-  }
+const basename = (path) => String(path || 'unknown').split('/').pop();
+const safeName = (value) => String(value || 'artifact').replace(/[^A-Za-z0-9._-]+/g, '_');
+const packetSuffix = (packetId) => safeName(String(packetId).replace(/^H_EARTH_FD05_[A-Z_]+_/, ''));
 
-  return String(value);
-}
-
-function resultClass(value) {
+function tone(value) {
   const text = String(value || '').toUpperCase();
-
-  if (
-    text.includes('UNRESOLVED') ||
-    text.includes('UNEVALUABLE') ||
-    text.includes('NOT_REACHED')
-  ) {
-    return 'result result--unresolved';
-  }
-
-  if (
-    text.includes('FINDING') ||
-    text.includes('REJECTED') ||
-    text.includes('MISMATCH') ||
-    text.includes('FAILED')
-  ) {
-    return 'result result--finding';
-  }
-
-  if (
-    text.includes('PASS') ||
-    text.includes('FULFILLED') ||
-    text === 'MATCH' ||
-    text === 'COMPLETE'
-  ) {
-    return 'result result--pass';
-  }
-
-  return 'result';
+  if (text.includes('PASS') || text.includes('MATCH') || text.includes('FULFILLED') || text.includes('COMPLETE') || text.includes('READY')) return 'status-chip status-chip--pass';
+  if (text.includes('HELD') || text.includes('UNEVALUABLE') || text.includes('UNRESOLVED') || text.includes('MISSING')) return 'status-chip status-chip--held';
+  if (text.includes('FAIL') || text.includes('REJECT') || text.includes('MISMATCH') || text.includes('CONFLICT') || text.includes('INVALID')) return 'status-chip status-chip--finding';
+  return 'status-chip';
 }
 
-function safeFilename(value) {
-  return String(value)
-    .replace(/[^A-Za-z0-9._-]+/g, '_')
-    .replace(/^_+|_+$/g, '')
-    .slice(0, 180);
-}
-
-function rowSlug(repositoryPath) {
-  const basename = String(repositoryPath).split('/').pop() || 'ROW';
-  return safeFilename(basename.replace(/\.[^.]+$/g, '').toUpperCase());
-}
-
-function packageSuffix(packageObject) {
-  return safeFilename(
-    packageObject.packetId.replace(
-      /^H_EARTH_FD05_BROWSER_EVIDENCE_PACKAGE_/,
-      ''
-    )
-  );
+function button(documentObject, label, handler) {
+  const node = create(documentObject, 'button', 'action-button', label);
+  node.type = 'button';
+  node.addEventListener('click', handler);
+  return node;
 }
 
 async function copyText(text, globalObject, documentObject) {
@@ -115,553 +85,309 @@ async function copyText(text, globalObject, documentObject) {
     await globalObject.navigator.clipboard.writeText(text);
     return;
   }
-
-  const textarea = element(documentObject, 'textarea');
-  textarea.value = text;
-  textarea.className = 'clipboard-fallback';
-  documentObject.body.append(textarea);
-  textarea.select();
-
-  const success = documentObject.execCommand?.('copy') === true;
-  textarea.remove();
-
-  if (!success) {
-    throw new Error('CLIPBOARD_COPY_FAILED');
-  }
+  const field = create(documentObject, 'textarea', 'clipboard-fallback');
+  field.value = text;
+  documentObject.body.append(field);
+  field.select();
+  const copied = documentObject.execCommand?.('copy') === true;
+  field.remove();
+  if (!copied) throw new Error('CLIPBOARD_COPY_FAILED');
 }
 
 function saveJson(value, filename, globalObject, documentObject) {
-  const blob = new Blob([JSON.stringify(value, null, 2)], {
-    type: 'application/json;charset=utf-8'
-  });
+  const blob = new Blob([JSON.stringify(value, null, 2)], { type: 'application/json;charset=utf-8' });
   const url = globalObject.URL.createObjectURL(blob);
-  const anchor = element(documentObject, 'a', {
-    attributes: {
-      href: url,
-      download: filename
-    }
-  });
-
+  const anchor = create(documentObject, 'a');
+  anchor.href = url;
+  anchor.download = filename;
   anchor.hidden = true;
   documentObject.body.append(anchor);
   anchor.click();
   anchor.remove();
-
-  globalObject.setTimeout(() => {
-    globalObject.URL.revokeObjectURL(url);
-  }, 0);
+  globalObject.setTimeout(() => globalObject.URL.revokeObjectURL(url), 0);
 }
 
-function renderFinding(documentObject, label, value) {
-  const card = element(documentObject, 'article', {
-    className: 'finding-card'
-  });
-
-  card.append(
-    element(documentObject, 'h3', { text: label }),
-    element(documentObject, 'p', {
-      className: resultClass(value?.status),
-      text: `${display(value?.status)} · ${display(value?.code)}`
-    }),
-    element(documentObject, 'p', {
-      text:
-        value?.captureOrder === null || value?.captureOrder === undefined
-          ? `${value?.affectedCaptureOrders?.length || 0} affected row(s)`
-          : `row ${value.captureOrder} · ${value.repositoryPath}`
-    })
-  );
-
-  return card;
-}
-
-function renderCount(documentObject, label, value) {
-  const item = element(documentObject, 'div', {
-    className: 'count-item'
-  });
+function metric(documentObject, label, value, valueTone = '') {
+  const item = create(documentObject, 'div', 'metric');
   item.append(
-    element(documentObject, 'dt', { text: label }),
-    element(documentObject, 'dd', { text: value })
+    create(documentObject, 'span', 'metric__label', label),
+    create(documentObject, 'strong', valueTone, display(value))
   );
   return item;
 }
 
-function renderRowDetail(
-  documentObject,
-  row,
-  packageObject,
-  copyProjection,
-  saveProjection
-) {
-  const detailRow = element(documentObject, 'tr', {
-    className: 'row-detail-row',
-    attributes: {
-      'data-detail-for': row.captureOrder
-    }
-  });
-  const cell = element(documentObject, 'td', {
-    attributes: { colspan: 5 }
-  });
-  const details = element(documentObject, 'details', {
-    className: 'row-detail'
-  });
-  const summary = element(documentObject, 'summary', {
-    text: `View row ${String(row.captureOrder).padStart(2, '0')} evidence access`
-  });
-  const grid = element(documentObject, 'dl', {
-    className: 'row-detail-grid'
-  });
-  const values = [
-    ['Requested URL', row.requestedDeployedUrl],
-    ['Final URL', row.finalResponseUrl],
-    ['SHA-256', row.deployedSha256],
-    ['Body encoding', row.capturedBodyEncoding],
-    ['Base64 characters', row.capturedBodyBase64?.length ?? 0],
-    ['State transitions', row.stateHistory?.length ?? 0],
-    ['Native import error', row.nativeImportError?.message ?? null]
-  ];
-
-  for (const [label, value] of values) {
-    grid.append(
-      element(documentObject, 'dt', { text: label }),
-      element(documentObject, 'dd', { text: display(value) })
-    );
+function renderCaptureMetrics(documentObject, rows, packageObject) {
+  if (packageObject) {
+    const c = packageObject.aggregateCounts;
+    return [
+      metric(documentObject, 'Transport', `${c.transportFulfilledCount}/19`),
+      metric(documentObject, 'Contracts', `${c.contractMatchCount}/19`),
+      metric(documentObject, 'Repository', `${c.repositoryDigestMatchCount} match · ${c.repositoryDigestUnevaluableCount} open`),
+      metric(documentObject, 'Drive', `${c.driveDigestMismatchCount} mismatch`),
+      metric(documentObject, 'Imports', `${c.nativeImportFulfilledCount} pass · ${c.nativeImportRejectedCount} reject`),
+      metric(documentObject, 'Package', 'FINAL', 'status-chip status-chip--pass')
+    ];
   }
-
-  const actions = element(documentObject, 'div', {
-    className: 'row-detail-actions'
-  });
-  const copySummary = element(documentObject, 'button', {
-    text: 'Copy row summary',
-    attributes: { type: 'button' }
-  });
-  const saveComplete = element(documentObject, 'button', {
-    text: 'Save complete row evidence',
-    attributes: { type: 'button' }
-  });
-
-  copySummary.disabled = packageObject === null;
-  saveComplete.disabled = packageObject === null;
-
-  copySummary.addEventListener('click', () => {
-    if (packageObject) {
-      void copyProjection(
-        buildRowSummaryProjection(packageObject, row.captureOrder),
-        `Row ${row.captureOrder} summary copied.`
-      );
-    }
-  });
-
-  saveComplete.addEventListener('click', () => {
-    if (packageObject) {
-      const projection = buildCompleteRowProjection(
-        packageObject,
-        row.captureOrder
-      );
-      const filename = [
-        'H_EARTH_FD05_ROW',
-        String(row.captureOrder).padStart(2, '0'),
-        rowSlug(row.repositoryPath),
-        'EVIDENCE',
-        packageSuffix(packageObject)
-      ].join('_') + '.json';
-      saveProjection(projection, filename, `Row ${row.captureOrder} saved.`);
-    }
-  });
-
-  actions.append(copySummary, saveComplete);
-  details.append(summary, grid, actions);
-  cell.append(details);
-  detailRow.append(cell);
-  return detailRow;
+  const fulfilled = rows.filter((row) => row.transportResult === 'FULFILLED').length;
+  const imported = rows.filter((row) => row.nativeImportExecutionDisposition === 'ATTEMPTED').length;
+  return [
+    metric(documentObject, 'Rows scheduled', rows.length),
+    metric(documentObject, 'Transport complete', fulfilled),
+    metric(documentObject, 'Imports attempted', imported),
+    metric(documentObject, 'Package', 'NOT FINAL')
+  ];
 }
 
-function renderScheduledRows(
-  documentObject,
-  rows,
-  packageObject,
-  copyProjection,
-  saveProjection
-) {
-  const nodes = [];
+function renderRowCard(documentObject, row, packageObject, copyProjection, saveProjection) {
+  const card = create(documentObject, 'article', 'row-card');
+  card.dataset.captureOrder = row.captureOrder;
+  card.dataset.state = row.currentState || row.terminalState || 'SCHEDULED';
 
-  for (const row of rows) {
-    const tableRow = element(documentObject, 'tr', {
-      attributes: {
-        'data-capture-order': row.captureOrder,
-        'data-state': row.currentState
-      }
-    });
-    const identity = element(documentObject, 'td');
-    identity.append(
-      element(documentObject, 'strong', {
-        text: String(row.captureOrder).padStart(2, '0')
-      }),
-      element(documentObject, 'code', {
-        text: row.repositoryPath
-      })
-    );
-    const state = element(documentObject, 'td');
-    state.append(
-      element(documentObject, 'span', {
-        className: resultClass(row.currentState),
-        text: row.currentState
-      })
-    );
-    const transport = element(documentObject, 'td');
-    transport.append(
-      element(documentObject, 'div', {
-        text: `result: ${display(row.transportResult)}`
-      }),
-      element(documentObject, 'div', {
-        text: `status: ${display(row.httpStatus)}`
-      }),
-      element(documentObject, 'div', {
-        text: `type: ${display(row.responseType)}`
-      }),
-      element(documentObject, 'div', {
-        text: `bytes: ${display(row.responseByteLength)}`
-      })
-    );
-    const correspondence = element(documentObject, 'td');
-    correspondence.append(
-      element(documentObject, 'div', {
-        text: `contract: ${display(row.contractCorrespondenceDisposition)}`
-      }),
-      element(documentObject, 'div', {
-        text: `drive: ${display(row.driveDigestComparison?.result)}`
-      }),
-      element(documentObject, 'div', {
-        text: `repository: ${display(row.repositoryDigestComparison?.result)}`
-      })
-    );
-    const nativeImport = element(documentObject, 'td');
-    nativeImport.append(
-      element(documentObject, 'div', {
-        text: `policy: ${display(row.nativeImportPolicy)}`
-      }),
-      element(documentObject, 'div', {
-        text: `execution: ${display(row.nativeImportExecutionDisposition)}`
-      }),
-      element(documentObject, 'div', {
-        text: `result: ${display(row.nativeDynamicImportResult)}`
-      })
-    );
+  const heading = create(documentObject, 'div', 'row-card__heading');
+  const identity = create(documentObject, 'div', 'row-card__identity');
+  identity.append(
+    create(documentObject, 'span', 'row-card__order', String(row.captureOrder).padStart(2, '0')),
+    create(documentObject, 'div', '', '')
+  );
+  identity.lastChild.append(
+    create(documentObject, 'strong', 'row-card__name', basename(row.repositoryPath)),
+    create(documentObject, 'code', 'row-card__path', row.repositoryPath)
+  );
+  heading.append(identity, create(documentObject, 'span', tone(row.terminalState || row.currentState), row.terminalState || row.currentState || 'SCHEDULED'));
 
-    tableRow.append(identity, state, transport, correspondence, nativeImport);
-    nodes.push(
-      tableRow,
-      renderRowDetail(
-        documentObject,
-        row,
-        packageObject,
-        copyProjection,
-        saveProjection
-      )
-    );
-  }
+  const facts = create(documentObject, 'div', 'row-card__facts');
+  facts.append(
+    metric(documentObject, 'HTTP', row.httpStatus),
+    metric(documentObject, 'Bytes', row.responseByteLength),
+    metric(documentObject, 'Contract', row.contractCorrespondenceDisposition, tone(row.contractCorrespondenceDisposition)),
+    metric(documentObject, 'Repository', row.repositoryDigestComparison?.result, tone(row.repositoryDigestComparison?.result)),
+    metric(documentObject, 'Drive', row.driveDigestComparison?.result, tone(row.driveDigestComparison?.result)),
+    metric(documentObject, 'Native import', row.nativeDynamicImportResult, tone(row.nativeDynamicImportResult))
+  );
 
-  return nodes;
+  const details = create(documentObject, 'details', 'row-card__details');
+  const summary = create(documentObject, 'summary', '', 'Evidence details and row access');
+  const grid = create(documentObject, 'dl', 'data-grid');
+  const pairs = [
+    ['Requested URL', row.requestedDeployedUrl],
+    ['Final URL', row.finalResponseUrl],
+    ['Deployed SHA-256', row.deployedSha256],
+    ['Content type', row.contentType],
+    ['Response type', row.responseType],
+    ['State transitions', row.stateHistory?.length],
+    ['Import error', row.nativeImportError?.message]
+  ];
+  for (const [label, value] of pairs) grid.append(create(documentObject, 'dt', '', label), create(documentObject, 'dd', '', display(value)));
+  const actions = create(documentObject, 'div', 'inline-actions');
+  const copyRow = button(documentObject, 'Copy row summary', () => {
+    if (packageObject) void copyProjection(buildRowSummaryProjection(packageObject, row.captureOrder), `Row ${row.captureOrder} summary copied.`);
+  });
+  const saveRow = button(documentObject, 'Save complete row', () => {
+    if (packageObject) saveProjection(buildCompleteRowProjection(packageObject, row.captureOrder), `H_EARTH_FD05_ROW_${String(row.captureOrder).padStart(2, '0')}_${safeName(basename(row.repositoryPath))}_${packetSuffix(packageObject.packetId)}.json`, `Row ${row.captureOrder} saved.`);
+  });
+  copyRow.disabled = !packageObject;
+  saveRow.disabled = !packageObject;
+  actions.append(copyRow, saveRow);
+  details.append(summary, grid, actions);
+  card.append(heading, facts, details);
+  return card;
+}
+
+function renderFinding(documentObject, label, finding) {
+  const card = create(documentObject, 'article', 'finding-card');
+  card.append(
+    create(documentObject, 'span', 'finding-card__label', label),
+    create(documentObject, 'strong', tone(finding?.status), `${display(finding?.status)} · ${display(finding?.code)}`),
+    create(documentObject, 'p', '', finding?.repositoryPath ? `Row ${finding.captureOrder} · ${basename(finding.repositoryPath)}` : `${finding?.affectedCaptureOrders?.length || 0} affected row(s)`)
+  );
+  return card;
+}
+
+function renderInputCustody(documentObject, snapshot) {
+  return Object.entries(snapshot || {}).map(([key, value]) => {
+    const item = create(documentObject, 'div', 'custody-item');
+    item.append(
+      create(documentObject, 'span', 'custody-item__name', key),
+      create(documentObject, 'span', tone(value.presence), value.presence),
+      create(documentObject, 'small', '', value.artifactId || 'No artifact admitted')
+    );
+    return item;
+  });
+}
+
+function renderCycleRail(documentObject, stationRegistry, cyclePacket) {
+  const byPosition = new Map((cyclePacket?.receipts || []).map((receipt) => [receipt.position, receipt]));
+  return stationRegistry.map((station) => {
+    const receipt = byPosition.get(station.position);
+    const card = create(documentObject, 'article', 'station-card');
+    card.dataset.status = receipt?.status || 'NOT_RUN';
+    card.append(
+      create(documentObject, 'span', 'station-card__fibonacci', station.fibonacci),
+      create(documentObject, 'strong', 'station-card__name', station.stationId.replaceAll('_', ' ')),
+      create(documentObject, 'span', tone(receipt?.status || 'NOT RUN'), receipt?.status || 'NOT RUN'),
+      create(documentObject, 'small', '', receipt?.result || 'Awaiting explicit cycle run')
+    );
+    return card;
+  });
 }
 
 export function createHEarthFd05Ui({
   documentObject = globalThis.document,
   globalObject = globalThis,
-  onStart
+  onStartCapture,
+  onCycleInput,
+  onClearCycleInput,
+  onRunCycle,
+  stationRegistry = []
 } = {}) {
-  if (!documentObject) {
-    return Object.freeze({
-      initialize() {},
-      render() {},
-      destroy() {}
-    });
-  }
+  if (!documentObject) return Object.freeze({ initialize() {}, renderCapture() {}, renderCycle() {}, destroy() {} });
+
+  const nodes = Object.fromEntries(Object.entries(IDS).map(([key, id]) => [key, documentObject.getElementById(id)]));
+  if (Object.values(nodes).some((node) => !node)) throw new Error('FD05_DIAGNOSTIC_HTML_CONTRACT_INCOMPLETE');
 
   const cleanup = [];
   let currentPackage = null;
+  let currentCyclePacket = null;
+  let currentInputSnapshot = null;
 
-  const root = documentObject.getElementById(IDS.root);
-  const status = documentObject.getElementById(IDS.status);
-  const start = documentObject.getElementById(IDS.start);
-  const copySummary = documentObject.getElementById(IDS.copySummary);
-  const copyFindings = documentObject.getElementById(IDS.copyFindings);
-  const copyReceipt = documentObject.getElementById(IDS.copyReceipt);
-  const copyDigest = documentObject.getElementById(IDS.copyDigest);
-  const savePackage = documentObject.getElementById(IDS.savePackage);
-  const rowsBody = documentObject.getElementById(IDS.rows);
-  const summary = documentObject.getElementById(IDS.summary);
-  const receipt = documentObject.getElementById(IDS.receipt);
-  const unresolved = documentObject.getElementById(IDS.unresolved);
-
-  if (
-    !root ||
-    !status ||
-    !start ||
-    !copySummary ||
-    !copyFindings ||
-    !copyReceipt ||
-    !copyDigest ||
-    !savePackage ||
-    !rowsBody ||
-    !summary ||
-    !receipt ||
-    !unresolved
-  ) {
-    throw new Error('FD05_DIAGNOSTIC_HTML_CONTRACT_INCOMPLETE');
-  }
-
-  const announce = (message, failed = false) => {
-    status.textContent = message;
-    root.dataset.accessState = failed ? 'FAILED' : 'COMPLETE';
+  const listen = (target, event, handler) => {
+    target.addEventListener(event, handler);
+    cleanup.push(() => target.removeEventListener(event, handler));
   };
-
-  const copyProjection = async (projection, successMessage) => {
+  const announceCapture = (message, failed = false) => {
+    nodes.captureStatus.textContent = message;
+    nodes.root.dataset.captureAccess = failed ? 'FAILED' : 'OK';
+  };
+  const announceCycle = (message, failed = false) => {
+    nodes.cycleStatus.textContent = message;
+    nodes.root.dataset.cycleAccess = failed ? 'FAILED' : 'OK';
+  };
+  const copyProjection = async (projection, message, cycle = false) => {
     try {
-      await copyText(
-        typeof projection === 'string'
-          ? projection
-          : JSON.stringify(projection, null, 2),
-        globalObject,
-        documentObject
-      );
-      announce(successMessage);
+      await copyText(typeof projection === 'string' ? projection : JSON.stringify(projection, null, 2), globalObject, documentObject);
+      (cycle ? announceCycle : announceCapture)(message);
     } catch (error) {
-      announce(`Copy failed: ${error.message || String(error)}`, true);
+      (cycle ? announceCycle : announceCapture)(`Copy failed: ${error.message || String(error)}`, true);
     }
   };
-
-  const saveProjection = (projection, filename, successMessage) => {
+  const saveProjection = (projection, filename, message, cycle = false) => {
     try {
       saveJson(projection, filename, globalObject, documentObject);
-      announce(successMessage);
+      (cycle ? announceCycle : announceCapture)(message);
     } catch (error) {
-      announce(`Save failed: ${error.message || String(error)}`, true);
+      (cycle ? announceCycle : announceCapture)(`Save failed: ${error.message || String(error)}`, true);
     }
   };
 
-  const listen = (target, eventName, handler) => {
-    target.addEventListener(eventName, handler);
-    cleanup.push(() => target.removeEventListener(eventName, handler));
+  listen(nodes.startCapture, 'click', () => Promise.resolve(onStartCapture?.()).catch((error) => announceCapture(`Capture aborted: ${error.message || String(error)}`, true)));
+  listen(nodes.cycleRun, 'click', () => Promise.resolve(onRunCycle?.()).catch((error) => announceCycle(`Cycle aborted: ${error.message || String(error)}`, true)));
+
+  listen(nodes.copySummary, 'click', () => currentPackage && void copyProjection(buildOperatorSummary(currentPackage).summaryText, 'Operator summary copied.'));
+  listen(nodes.copyFindings, 'click', () => currentPackage && void copyProjection(buildFindingsReportProjection(currentPackage), 'Findings copied.'));
+  listen(nodes.copyReceipt, 'click', () => currentPackage && void copyProjection(buildCompletionReceiptProjection(currentPackage), 'Receipt copied.'));
+  listen(nodes.copyDigest, 'click', () => currentPackage && void copyProjection(buildPackageDigestProjection(currentPackage), 'Package digest copied.'));
+  listen(nodes.savePackage, 'click', () => currentPackage && saveProjection(currentPackage, `H_EARTH_FD05_BROWSER_EVIDENCE_PACKAGE_${packetSuffix(currentPackage.packetId)}.json`, 'Full package saved.'));
+  listen(nodes.cycleCopySummary, 'click', () => currentCyclePacket && void copyProjection(buildHEarthFd05CycleSummary(currentCyclePacket), 'Cycle summary copied.', true));
+  listen(nodes.cycleSavePacket, 'click', () => currentCyclePacket && saveProjection(currentCyclePacket, `H_EARTH_FD05_DIAGNOSIS_CYCLE_${packetSuffix(currentCyclePacket.cycleId)}.json`, 'Cycle packet saved.', true));
+  listen(nodes.cycleSaveTerminal, 'click', () => currentCyclePacket && saveProjection(buildHEarthFd05TerminalReceiptProjection(currentCyclePacket), `H_EARTH_FD05_TERMINAL_RECEIPT_${packetSuffix(currentCyclePacket.cycleId)}.json`, 'Terminal receipt saved.', true));
+
+  for (const [id, key] of INPUT_BINDINGS) {
+    const input = documentObject.getElementById(id);
+    if (!input) throw new Error(`FD05_CYCLE_INPUT_MISSING:${id}`);
+    listen(input, 'change', async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      try {
+        const value = JSON.parse(await file.text());
+        await onCycleInput?.(key, value, { fileName: file.name, size: file.size, lastModified: file.lastModified });
+        announceCycle(`${key} admitted from ${file.name}.`);
+      } catch (error) {
+        announceCycle(`${key} rejected: ${error.message || String(error)}`, true);
+        input.value = '';
+      }
+    });
+  }
+
+  const initialize = ({ rows, manifestValidation, cycleInputSnapshot }) => {
+    nodes.root.dataset.runState = manifestValidation.valid ? 'READY' : 'MANIFEST_INVALID';
+    nodes.startCapture.disabled = !manifestValidation.valid;
+    announceCapture(manifestValidation.valid ? 'Ready. Nineteen governed rows are scheduled; capture has not started.' : `Manifest invalid: ${manifestValidation.issues.join(', ')}`, !manifestValidation.valid);
+    nodes.captureMetrics.replaceChildren(...renderCaptureMetrics(documentObject, rows, null));
+    nodes.rows.replaceChildren(...rows.map((row) => renderRowCard(documentObject, row, null, copyProjection, saveProjection)));
+    renderCycle({ phase: 'READY', inputSnapshot: cycleInputSnapshot, cyclePacket: null });
   };
 
-  listen(start, 'click', () => {
-    if (typeof onStart === 'function') {
-      Promise.resolve(onStart()).catch((error) => {
-        announce(`Run aborted: ${error.message || String(error)}`, true);
-      });
-    }
-  });
-
-  listen(copySummary, 'click', () => {
-    if (currentPackage) {
-      const projection = buildOperatorSummary(currentPackage);
-      const text = [
-        `packet: ${projection.packetId}`,
-        `package digest: ${projection.packageDigest.value}`,
-        `manifest: ${projection.manifestId}`,
-        `manifest digest: ${projection.manifestDigest}`,
-        projection.summaryText
-      ].join('\n');
-      void copyProjection(text, 'Operator summary copied.');
-    }
-  });
-
-  listen(copyFindings, 'click', () => {
-    if (currentPackage) {
-      void copyProjection(
-        buildFindingsReportProjection(currentPackage),
-        'Findings report copied.'
-      );
-    }
-  });
-
-  listen(copyReceipt, 'click', () => {
-    if (currentPackage) {
-      void copyProjection(
-        buildCompletionReceiptProjection(currentPackage),
-        'Completion receipt copied.'
-      );
-    }
-  });
-
-  listen(copyDigest, 'click', () => {
-    if (currentPackage) {
-      void copyProjection(
-        buildPackageDigestProjection(currentPackage),
-        'Package digest copied.'
-      );
-    }
-  });
-
-  listen(savePackage, 'click', () => {
-    if (currentPackage) {
-      saveProjection(
-        currentPackage,
-        `H_EARTH_FD05_BROWSER_EVIDENCE_PACKAGE_${packageSuffix(currentPackage)}.json`,
-        'Full canonical package saved.'
-      );
-    }
-  });
-
-  const setAccessDisabled = (disabled) => {
-    copySummary.disabled = disabled;
-    copyFindings.disabled = disabled;
-    copyReceipt.disabled = disabled;
-    copyDigest.disabled = disabled;
-    savePackage.disabled = disabled;
+  const setPackageControls = (enabled) => {
+    for (const node of [nodes.copySummary, nodes.copyFindings, nodes.copyReceipt, nodes.copyDigest, nodes.savePackage]) node.disabled = !enabled;
   };
 
-  const initialize = (rows, manifestValidation) => {
-    root.dataset.runState = manifestValidation.valid
-      ? 'READY'
-      : 'MANIFEST_INVALID';
-    status.textContent = manifestValidation.valid
-      ? 'Ready. Nineteen governed rows are scheduled. Capture has not started.'
-      : `Manifest validation failed: ${manifestValidation.issues.join(', ')}`;
-    start.disabled = !manifestValidation.valid;
-    setAccessDisabled(true);
-    rowsBody.replaceChildren(
-      ...renderScheduledRows(
-        documentObject,
-        rows,
-        null,
-        copyProjection,
-        saveProjection
-      )
+  const renderCapture = ({ phase, rows, packageObject = null, error = null }) => {
+    nodes.root.dataset.runState = error ? 'ABORTED' : phase;
+    const messages = {
+      READY: 'Ready. Capture has not started.',
+      TRANSPORT: 'Transport capture is running across all nineteen rows.',
+      NATIVE_IMPORT: 'Transport barrier passed. Ordered native-import observation is running.',
+      FINALIZING: 'All rows are terminal. The immutable browser package is being finalized.',
+      COMPLETE: 'Capture complete. The immutable package and bounded projections are available.'
+    };
+    announceCapture(error ? `Capture aborted: ${error.message || String(error)}` : messages[phase] || phase, Boolean(error));
+    nodes.startCapture.disabled = phase !== 'READY';
+    if (packageObject) currentPackage = packageObject;
+    setPackageControls(Boolean(currentPackage));
+    nodes.captureMetrics.replaceChildren(...renderCaptureMetrics(documentObject, rows, currentPackage));
+    nodes.rows.replaceChildren(...rows.map((row) => renderRowCard(documentObject, row, currentPackage, copyProjection, saveProjection)));
+    if (!currentPackage) return;
+    nodes.findings.replaceChildren(
+      renderFinding(documentObject, 'Authority continuity', currentPackage.authorityContinuityFinding),
+      renderFinding(documentObject, 'Publication correspondence', currentPackage.publicationCorrespondenceFinding),
+      renderFinding(documentObject, 'Browser execution', currentPackage.browserExecutionFinding),
+      renderFinding(documentObject, 'First material finding', currentPackage.firstMaterialFinding)
     );
+    nodes.unresolved.replaceChildren(
+      currentPackage.unresolvedFields.length
+        ? create(documentObject, 'pre', 'compact-json', JSON.stringify(currentPackage.unresolvedFields, null, 2))
+        : create(documentObject, 'p', 'empty-state', 'No unresolved required browser fields.')
+    );
+    nodes.receipt.textContent = JSON.stringify(buildCompletionReceiptProjection(currentPackage), null, 2);
   };
 
-  const render = ({
-    phase,
-    rows,
-    packageObject = null,
-    error = null
-  }) => {
-    root.dataset.runState = error ? 'ABORTED' : phase;
+  function renderCycle({ phase, inputSnapshot, cyclePacket = null, error = null }) {
+    currentInputSnapshot = inputSnapshot || currentInputSnapshot || {};
+    if (cyclePacket) currentCyclePacket = cyclePacket;
+    nodes.root.dataset.cycleState = error ? 'ABORTED' : phase;
+    nodes.cycleInputs.replaceChildren(...renderInputCustody(documentObject, currentInputSnapshot));
+    nodes.cycleRail.replaceChildren(...renderCycleRail(documentObject, stationRegistry, currentCyclePacket));
+    const browserPresent = currentInputSnapshot?.browserPackage?.presence === 'PRESENT';
+    nodes.cycleRun.disabled = phase === 'RUNNING' || !browserPresent;
+    for (const node of [nodes.cycleCopySummary, nodes.cycleSavePacket, nodes.cycleSaveTerminal]) node.disabled = !currentCyclePacket;
+    if (error) announceCycle(`Cycle aborted: ${error.message || String(error)}`, true);
+    else if (phase === 'RUNNING') announceCycle('Nine-cycle adjudication is running from F1 through F89.');
+    else if (currentCyclePacket) announceCycle(`Cycle complete: ${currentCyclePacket.terminalClassification}. Exact-nine validation: ${currentCyclePacket.exactNineReceiptSetValidated ? 'PASS' : 'FAIL'}.`);
+    else announceCycle(browserPresent ? 'Browser package admitted. The diagnosis cycle may be run; missing later artifacts will produce controlled holds.' : 'Load a finalized browser package or complete a capture before running the diagnosis cycle.');
 
-    if (error) {
-      status.textContent = `Run aborted: ${error.message || String(error)}`;
-    } else {
-      const phaseText = {
-        READY: 'Ready. Capture has not started.',
-        TRANSPORT: 'Transport capture is running across all nineteen rows.',
-        NATIVE_IMPORT:
-          'Transport barrier passed. Ordered native-import observation is running.',
-        FINALIZING:
-          'All rows are terminal. The immutable browser package is being finalized.',
-        COMPLETE:
-          'Capture complete. The evidence package and bounded projections are available.'
-      };
-      status.textContent = phaseText[phase] || phase;
-    }
-
-    start.disabled = phase !== 'READY';
-
-    if (packageObject) {
-      currentPackage = packageObject;
-      setAccessDisabled(false);
-    }
-
-    rowsBody.replaceChildren(
-      ...renderScheduledRows(
-        documentObject,
-        rows,
-        currentPackage,
-        copyProjection,
-        saveProjection
-      )
-    );
-
-    if (!packageObject) {
+    if (!currentCyclePacket) {
+      nodes.cycleTerminal.replaceChildren(create(documentObject, 'p', 'empty-state', 'No terminal synthesis yet.'));
+      nodes.cycleReceipt.textContent = 'No finalized cycle packet.';
       return;
     }
-
-    const findingsProjection = buildFindingsReportProjection(packageObject);
-    const receiptProjection = buildCompletionReceiptProjection(packageObject);
-    const counts = findingsProjection.evaluatedCounts;
-    const countGrid = element(documentObject, 'dl', {
-      className: 'count-grid'
-    });
-
-    countGrid.append(
-      renderCount(
-        documentObject,
-        'Repository evaluated',
-        counts.repositoryComparisonsEvaluated
-      ),
-      renderCount(
-        documentObject,
-        'Repository matching',
-        counts.repositoryComparisonsMatching
-      ),
-      renderCount(
-        documentObject,
-        'Repository mismatching',
-        counts.repositoryComparisonsMismatching
-      ),
-      renderCount(
-        documentObject,
-        'Repository unevaluable',
-        counts.repositoryComparisonsUnevaluable
-      )
+    nodes.cycleTerminal.replaceChildren(
+      metric(documentObject, 'Exact nine', currentCyclePacket.exactNineReceiptSetValidated ? 'VALID' : 'INVALID', tone(currentCyclePacket.exactNineReceiptSetValidated ? 'PASS' : 'FAIL')),
+      metric(documentObject, 'Advancement', currentCyclePacket.advancementEligible ? 'ELIGIBLE' : 'HELD', tone(currentCyclePacket.advancementEligible ? 'PASS' : 'HELD')),
+      metric(documentObject, 'Terminal classification', currentCyclePacket.terminalClassification, tone(currentCyclePacket.terminalClassification)),
+      metric(documentObject, 'Source correction', currentCyclePacket.sourceCorrectionAuthority, tone(currentCyclePacket.sourceCorrectionAuthority))
     );
-
-    summary.replaceChildren(
-      renderFinding(
-        documentObject,
-        'Authority continuity',
-        packageObject.authorityContinuityFinding
-      ),
-      renderFinding(
-        documentObject,
-        'Publication correspondence',
-        packageObject.publicationCorrespondenceFinding
-      ),
-      renderFinding(
-        documentObject,
-        'Browser execution',
-        packageObject.browserExecutionFinding
-      ),
-      renderFinding(
-        documentObject,
-        'First material finding',
-        packageObject.firstMaterialFinding
-      ),
-      countGrid
-    );
-
-    receipt.textContent = JSON.stringify(receiptProjection, null, 2);
-    unresolved.replaceChildren();
-
-    if (packageObject.unresolvedFields.length === 0) {
-      unresolved.append(
-        element(documentObject, 'p', {
-          text: 'No unresolved required fields.'
-        })
-      );
-    } else {
-      const list = element(documentObject, 'ul');
-      for (const item of packageObject.unresolvedFields) {
-        list.append(
-          element(documentObject, 'li', {
-            text: `${item.field}: ${item.reason}`
-          })
-        );
-      }
-      unresolved.append(list);
-    }
-  };
+    nodes.cycleReceipt.textContent = JSON.stringify(buildHEarthFd05TerminalReceiptProjection(currentCyclePacket), null, 2);
+  }
 
   return Object.freeze({
     initialize,
-    render,
-    getCurrentPackage() {
-      return currentPackage;
-    },
+    renderCapture,
+    renderCycle,
     destroy() {
-      while (cleanup.length > 0) {
-        cleanup.pop()();
-      }
+      while (cleanup.length) cleanup.pop()();
       currentPackage = null;
+      currentCyclePacket = null;
+      currentInputSnapshot = null;
     }
   });
 }

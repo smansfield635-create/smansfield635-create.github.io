@@ -30,7 +30,7 @@ jobs:
           echo "CANDIDATE_BYTES=$(wc -c < showroom/globe/h-earth/index.js | tr -d ' ')"
           echo "CANDIDATE_SHA256=$(sha256sum showroom/globe/h-earth/index.js | awk '{print $1}')"
           echo "CANDIDATE_GIT_BLOB=$(git hash-object showroom/globe/h-earth/index.js)"
-          test "$(git hash-object showroom/globe/h-earth/index.js)" = "127d4b747306840d445898437a73f9a89b152063"
+          test "$(git hash-object showroom/globe/h-earth/index.js)" = "a74364ad75dca8b8fab069026d181b5e64bdd007"
           node --check showroom/globe/h-earth/index.js
           cp /tmp/test-index-viewport.mjs .fd05-test-index-viewport.mjs
           node --experimental-default-type=module .fd05-test-index-viewport.mjs

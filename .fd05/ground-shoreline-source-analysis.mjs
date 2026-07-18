@@ -27,7 +27,7 @@ const modules = Object.fromEntries(
 const preview = modules.preview.previewHEarthWetSandGeometry({
   sourceObjectId: 'OBJ_002_FOREGROUND_WET_SAND',
   requestedPurpose: 'WET_SAND_GEOMETRY_PREVIEW',
-  requestId: 'FD05_GROUND_SHORELINE_PREWORK_SOURCE_ANALYSIS_001'
+  requestId: 'FD05_GROUND_SHORELINE_PREWORK_SOURCE_ANALYSIS_002'
 });
 
 function walk(value, visitor, path = '$', depth = 0, seen = new WeakSet()) {
@@ -35,26 +35,29 @@ function walk(value, visitor, path = '$', depth = 0, seen = new WeakSet()) {
   if (seen.has(value)) return;
   seen.add(value);
   visitor(value, path);
-  if (Array.isArray(value)) {
-    value.forEach((v, i) => walk(v, visitor, `${path}[${i}]`, depth + 1, seen));
-  } else {
-    Object.entries(value).forEach(([k, v]) => walk(v, visitor, `${path}.${k}`, depth + 1, seen));
-  }
+  if (Array.isArray(value)) value.forEach((v, i) => walk(v, visitor, `${path}[${i}]`, depth + 1, seen));
+  else Object.entries(value).forEach(([k, v]) => walk(v, visitor, `${path}.${k}`, depth + 1, seen));
 }
 
 const geometryArrays = [];
 walk(preview.primitives, (value, path) => {
   if (!Array.isArray(value) || value.length < 3) return;
   const vectors = value.every((v) => v && typeof v === 'object' && Number.isFinite(v.x) && Number.isFinite(v.y) && Number.isFinite(v.z));
-  const flat = value.every(Number.isFinite) && value.length % 3 === 0 && /(position|vertex|vertices)/i.test(path);
+  const flat = value.every(Number.isFinite) && value.length % 3 === 0 && /(position|vertex|vertices)/i.test(path) && !/(normal|indices)/i.test(path);
   const indices = value.every(Number.isSafeInteger) && value.length % 3 === 0 && /(index|indices)/i.test(path);
   if (vectors) geometryArrays.push({ path, kind: 'VECTOR3_ARRAY', count: value.length, points: value.map(({x,y,z}) => ({x,y,z})) });
   if (flat) geometryArrays.push({ path, kind: 'FLAT_XYZ_ARRAY', count: value.length / 3, points: Array.from({length:value.length/3}, (_,i)=>({x:value[i*3],y:value[i*3+1],z:value[i*3+2]})) });
   if (indices) geometryArrays.push({ path, kind: 'INDEX_ARRAY', count: value.length, indices: [...value] });
 });
 
-const positionCandidates = geometryArrays.filter((a) => a.points).sort((a,b)=>b.count-a.count);
-const indexCandidates = geometryArrays.filter((a) => a.indices).sort((a,b)=>b.count-a.count);
+const positionCandidates = geometryArrays.filter((a) => a.points && !/(normal)/i.test(a.path)).sort((a,b)=>{
+  const score=(item)=>/\.geometry\.vertices$/.test(item.path)?1000000:item.count;
+  return score(b)-score(a);
+});
+const indexCandidates = geometryArrays.filter((a) => a.indices).sort((a,b)=>{
+  const score=(item)=>/\.geometry\.indices$/.test(item.path)?1000000:item.count;
+  return score(b)-score(a);
+});
 const positions = positionCandidates[0]?.points ?? [];
 const indices = indexCandidates[0]?.indices ?? [];
 
@@ -93,18 +96,18 @@ function compact(value, depth=0) {
   return Object.fromEntries(Object.entries(value).slice(0,24).map(([k,v])=>[k,compact(v,depth+1)]));
 }
 
-const tokens = ['OBJ_002_FOREGROUND_WET_SAND','OBJ_003_DRY_SAND_TRANSITION','OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES','shore','foam','water','nearshore','wet sand','dry sand','tide'];
+const tokens = ['OBJ_002_FOREGROUND_WET_SAND','OBJ_003_DRY_SAND_TRANSITION','OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES','OBJ_005_SHORELINE_FOAM_LINE','OBJ_006_NEARSHORE_WAVE_BAND','OBJ_007_WATER_SURFACE_PLANE','shore','foam','water','nearshore','wet sand','dry sand','tide'];
 const adjacency=[];
 for(const id of ['objects','zones','lattice','environment','ground']){
   walk(modules[id], (value,path)=>{
     let text=''; try{text=JSON.stringify(value);}catch{}
     const matches=tokens.filter(t=>text.toLowerCase().includes(t.toLowerCase()));
-    if(matches.length && adjacency.length<120) adjacency.push({module:id,path,matches,record:compact(value)});
+    if(matches.length && adjacency.length<140) adjacency.push({module:id,path,matches,record:compact(value)});
   });
 }
 
 const report = {
-  reportId:'H_EARTH_FD05_GROUND_FORM_SOURCE_ANALYSIS_001',generatedAt:new Date().toISOString(),status:'PASS',repositoryModified:false,
+  reportId:'H_EARTH_FD05_GROUND_FORM_SOURCE_ANALYSIS_002',generatedAt:new Date().toISOString(),status:'PASS',repositoryModified:false,
   moduleExports:Object.fromEntries(Object.entries(modules).map(([id,m])=>[id,Object.keys(m).sort()])),
   previewSummary:{ok:preview.ok,sourceObjectId:preview.sourceObjectId,sourceZoneIds:preview.sourceZoneIds,latticeRegionIds:preview.latticeRegionIds,primitiveCount:preview.primitives?.length??null,keys:Object.keys(preview)},
   geometryCandidateArrays:geometryArrays.map(({points,indices,...rest})=>rest),
@@ -112,5 +115,5 @@ const report = {
   geometryStatistics:stats(positions,indices),
   adjacencyMatches:adjacency
 };
-await writeFile(`${outDir}/source-analysis.json`,JSON.stringify(report,null,2)+'\n','utf8');
-console.log(JSON.stringify({reportId:report.reportId,previewSummary:report.previewSummary,geometryStatistics:report.geometryStatistics,adjacencyMatchCount:adjacency.length,moduleExports:report.moduleExports},null,2));
+await writeFile(`${outDir}/source-analysis-corrected.json`,JSON.stringify(report,null,2)+'\n','utf8');
+console.log(JSON.stringify({reportId:report.reportId,previewSummary:report.previewSummary,selectedPositionPath:report.selectedPositionPath,selectedIndexPath:report.selectedIndexPath,geometryStatistics:report.geometryStatistics,adjacencyMatchCount:adjacency.length},null,2));

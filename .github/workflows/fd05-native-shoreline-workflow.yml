@@ -18,13 +18,55 @@ jobs:
         with:
           ref: agent/fd05-native-shoreline-work-001
           fetch-depth: 0
+
       - name: Verify immutable base and apply bounded transformation
+        id: transform
+        continue-on-error: true
         run: |
-          test "$(git rev-parse cbde5b50470a528954f634baf8045674c2079cf0^{commit})" = "cbde5b50470a528954f634baf8045674c2079cf0"
-          python3 .fd05/apply-native-shoreline.py
-          python3 .fd05/repair-native-shoreline-packet-transform.py
-          python3 .fd05/repair-native-shoreline-frame-transform.py
-          python3 .fd05/repair-native-shoreline-compositor-transform.py
+          mkdir -p .fd05/native-shoreline-output
+          set +e
+          STATUS=0
+          {
+            echo "BASE_HEAD=$(git rev-parse HEAD)"
+            test "$(git rev-parse cbde5b50470a528954f634baf8045674c2079cf0^{commit})" = "cbde5b50470a528954f634baf8045674c2079cf0" || STATUS=$?
+            for SCRIPT in \
+              .fd05/apply-native-shoreline.py \
+              .fd05/repair-native-shoreline-packet-transform.py \
+              .fd05/repair-native-shoreline-frame-transform.py \
+              .fd05/repair-native-shoreline-compositor-transform.py
+            do
+              if [ "$STATUS" -ne 0 ]; then
+                echo "SKIPPED_AFTER_FAILURE=$SCRIPT"
+                continue
+              fi
+              echo "BEGIN_SCRIPT=$SCRIPT"
+              python3 "$SCRIPT"
+              SCRIPT_STATUS=$?
+              echo "END_SCRIPT=$SCRIPT STATUS=$SCRIPT_STATUS"
+              if [ "$SCRIPT_STATUS" -ne 0 ]; then
+                STATUS=$SCRIPT_STATUS
+              fi
+            done
+          } > .fd05/native-shoreline-output/transform-gate.log 2>&1
+          cat .fd05/native-shoreline-output/transform-gate.log
+          echo "$STATUS" > .fd05/native-shoreline-output/transform-gate-exit-code.txt
+          exit "$STATUS"
+
+      - name: Upload transformation diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fd05-native-shoreline-transform-diagnostic
+          path: |
+            .fd05/native-shoreline-output/transform-gate.log
+            .fd05/native-shoreline-output/transform-gate-exit-code.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce transformation gate
+        if: steps.transform.outcome != 'success'
+        run: exit 1
+
       - name: Verify syntax and exact source scope
         run: |
           node --check showroom/globe/h-earth/render/geometry-water.js
@@ -46,6 +88,7 @@ jobs:
           if missing:
               raise SystemExit(f'missing transformed HTML tokens: {missing}')
           PY
+
       - name: Run source and backward-compatibility gates
         id: source_gate
         continue-on-error: true
@@ -64,6 +107,7 @@ jobs:
           cat .fd05/native-shoreline-output/source-gate.log
           echo "$SOURCE_STATUS" > .fd05/native-shoreline-output/source-gate-exit-code.txt
           exit "$SOURCE_STATUS"
+
       - name: Upload source diagnostic
         if: always()
         uses: actions/upload-artifact@v4
@@ -75,13 +119,16 @@ jobs:
             .fd05/native-shoreline-output/source-validation.json
           if-no-files-found: warn
           retention-days: 14
+
       - name: Enforce source gate
         if: steps.source_gate.outcome != 'success'
         run: exit 1
+
       - name: Install Chromium
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+
       - name: Run real-browser mobile and desktop gates
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/fd05-http.log 2>&1 &
@@ -89,6 +136,7 @@ jobs:
           trap 'kill $SERVER_PID || true' EXIT
           sleep 2
           H_EARTH_TEST_BASE_URL='http://127.0.0.1:8765/showroom/globe/h-earth/' node .fd05/test-native-shoreline-browser.mjs
+
       - name: Record source identities and commit transformed files
         run: |
           rm -rf node_modules package-lock.json
@@ -116,6 +164,7 @@ jobs:
           git add showroom/globe/h-earth/index.html
           git commit -m "Materialize minimum native shoreline context" || true
           git push origin HEAD:agent/fd05-native-shoreline-work-001
+
       - name: Upload complete validation
         uses: actions/upload-artifact@v4
         with:

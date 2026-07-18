@@ -1,0 +1,2088 @@
+{
+  "reportId": "H_EARTH_FD05_GROUND_SHORELINE_RUNTIME_DIAGNOSTICS_001",
+  "generatedAt": "2026-07-18T19:47:47.976Z",
+  "status": "PASS",
+  "repositoryModified": false,
+  "results": [
+    {
+      "configuration": "mobile",
+      "variant": "BASELINE",
+      "elapsedMs": 2068,
+      "cameraDiagnostic": null,
+      "domDiagnostic": null,
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 361,
+          "height": 360,
+          "triangleCount": 80,
+          "primitiveCount": 80,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 361,
+          "height": 360
+        },
+        "projectedDistribution": {
+          "minimumTop": 1137.453125,
+          "maximumBottom": 1355.609375,
+          "meanTriangleHeight": 26.0796875,
+          "maximumTriangleHeight": 127.90625
+        },
+        "diagnosticOverlayCount": 0
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/mobile-baseline.png",
+        "byteLength": 70831,
+        "sha256": "c708c7f2d72aee0610cbaac9157da0ec61b517cb5be6551f288e07cb3c7e74ff"
+      }
+    },
+    {
+      "configuration": "mobile",
+      "variant": "CAMERA_ONLY",
+      "elapsedMs": 3477,
+      "cameraDiagnostic": {
+        "available": true,
+        "accepted": true,
+        "before": {
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 12,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "viewport": {
+            "widthPx": 361,
+            "heightPx": 360,
+            "pixelRatio": 2,
+            "aspectRatio": 1.0027777777777778,
+            "orientation": "SQUARE",
+            "capacityStatus": "WITHIN_CAPACITY"
+          },
+          "visibility": {
+            "PRIMARY_ADMITTED_WET_SAND_SURFACE": true,
+            "ROUTE_OVERLAY": false
+          },
+          "inertia": {
+            "active": false,
+            "mode": "IDLE",
+            "yawVelocity": 0,
+            "pitchVelocity": 0,
+            "panHorizontalVelocity": 0,
+            "panVerticalVelocity": 0,
+            "panDepthVelocity": 0,
+            "zoomVelocity": 0,
+            "damping": 0.88,
+            "frameCount": 0,
+            "maximumFrames": 90,
+            "minimumVelocity": 0.018
+          },
+          "revisions": {
+            "camera": 0,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 1
+          },
+          "intentSequence": 0,
+          "lastAcceptedIntent": null,
+          "lastRejectedIntent": null
+        },
+        "candidate": {
+          "yawDegrees": 38,
+          "pitchDegrees": 0,
+          "zoomScale": 1,
+          "target": {
+            "x": 0,
+            "y": 1.2,
+            "z": 7.5
+          },
+          "verticalFovDegrees": 52,
+          "nearPlane": 0.25,
+          "farPlane": 48
+        },
+        "changes": {
+          "pitchDegrees": {
+            "from": 12,
+            "to": 0
+          }
+        },
+        "cameraReceipt": {
+          "receiptType": "H_EARTH_3D_COMPOSITOR_CAMERA_RECEIPT",
+          "contractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+          "accepted": true,
+          "materiallyChanged": true,
+          "status": "CAMERA_STATE_UPDATED",
+          "authorityStatus": "ELIGIBLE",
+          "authorityEvaluation": {
+            "eligible": true,
+            "status": "CAMERA_CAPACITY_ELIGIBLE",
+            "checks": [
+              {
+                "id": "CAMERA_YAWDEGREES_FINITE",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCHDEGREES_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOMSCALE_FINITE",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_VERTICALFOVDEGREES_FINITE",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_NEARPLANE_FINITE",
+                "passed": true,
+                "details": 0.25
+              },
+              {
+                "id": "CAMERA_FARPLANE_FINITE",
+                "passed": true,
+                "details": 48
+              },
+              {
+                "id": "CAMERA_TARGET_X_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_TARGET_Y_FINITE",
+                "passed": true,
+                "details": 1.2
+              },
+              {
+                "id": "CAMERA_TARGET_Z_FINITE",
+                "passed": true,
+                "details": 7.5
+              },
+              {
+                "id": "CAMERA_YAW_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCH_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOM_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_TARGET_WITHIN_CAPACITY",
+                "passed": true,
+                "details": {
+                  "x": 0,
+                  "y": 1.2,
+                  "z": 7.5
+                }
+              },
+              {
+                "id": "CAMERA_FOV_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_PLANES_ELIGIBLE",
+                "passed": true,
+                "details": {
+                  "nearPlane": 0.25,
+                  "farPlane": 48
+                }
+              }
+            ],
+            "issues": [],
+            "normalizedCameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "adjustmentRequired": false
+          },
+          "authorityEligible": true,
+          "capacityEvaluation": {
+            "eligible": true,
+            "status": "CAMERA_CAPACITY_ELIGIBLE",
+            "checks": [
+              {
+                "id": "CAMERA_YAWDEGREES_FINITE",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCHDEGREES_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOMSCALE_FINITE",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_VERTICALFOVDEGREES_FINITE",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_NEARPLANE_FINITE",
+                "passed": true,
+                "details": 0.25
+              },
+              {
+                "id": "CAMERA_FARPLANE_FINITE",
+                "passed": true,
+                "details": 48
+              },
+              {
+                "id": "CAMERA_TARGET_X_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_TARGET_Y_FINITE",
+                "passed": true,
+                "details": 1.2
+              },
+              {
+                "id": "CAMERA_TARGET_Z_FINITE",
+                "passed": true,
+                "details": 7.5
+              },
+              {
+                "id": "CAMERA_YAW_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCH_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOM_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_TARGET_WITHIN_CAPACITY",
+                "passed": true,
+                "details": {
+                  "x": 0,
+                  "y": 1.2,
+                  "z": 7.5
+                }
+              },
+              {
+                "id": "CAMERA_FOV_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_PLANES_ELIGIBLE",
+                "passed": true,
+                "details": {
+                  "nearPlane": 0.25,
+                  "farPlane": 48
+                }
+              }
+            ],
+            "issues": [],
+            "normalizedCameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "adjustmentRequired": false
+          },
+          "capacityEligible": true,
+          "issues": [],
+          "updated": true,
+          "authorityProjection": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "evaluation": {
+            "eligible": true,
+            "status": "AUTHORITY_NORMALIZED_CAMERA_ACCEPTED",
+            "cameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "derived": {
+              "distance": 19.947180251855148,
+              "position": {
+                "x": 12.280710422443974,
+                "y": 1.2,
+                "z": 23.2185925425935
+              }
+            },
+            "issues": []
+          },
+          "transaction": {
+            "materiallyChanged": true,
+            "cameraChanged": true,
+            "viewportChanged": false,
+            "visibilityChanged": false,
+            "inertiaChanged": false,
+            "revisions": {
+              "camera": 1,
+              "viewport": 1,
+              "visibility": 0,
+              "inertia": 0,
+              "frame": 2
+            }
+          },
+          "revisions": {
+            "camera": 1,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 2
+          },
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          }
+        },
+        "completionStatus": "PUBLIC_STAGE_READY",
+        "after": {
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "viewport": {
+            "widthPx": 361,
+            "heightPx": 360,
+            "pixelRatio": 2,
+            "aspectRatio": 1.0027777777777778,
+            "orientation": "SQUARE",
+            "capacityStatus": "WITHIN_CAPACITY"
+          },
+          "visibility": {
+            "PRIMARY_ADMITTED_WET_SAND_SURFACE": true,
+            "ROUTE_OVERLAY": false
+          },
+          "inertia": {
+            "active": false,
+            "mode": "IDLE",
+            "yawVelocity": 0,
+            "pitchVelocity": 0,
+            "panHorizontalVelocity": 0,
+            "panVerticalVelocity": 0,
+            "panDepthVelocity": 0,
+            "zoomVelocity": 0,
+            "damping": 0.88,
+            "frameCount": 0,
+            "maximumFrames": 90,
+            "minimumVelocity": 0.018
+          },
+          "revisions": {
+            "camera": 1,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 2
+          },
+          "intentSequence": 0,
+          "lastAcceptedIntent": null,
+          "lastRejectedIntent": null
+        }
+      },
+      "domDiagnostic": null,
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 361,
+          "height": 360,
+          "triangleCount": 78,
+          "primitiveCount": 78,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 361,
+          "height": 360
+        },
+        "projectedDistribution": {
+          "minimumTop": 1183.140625,
+          "maximumBottom": 1355.625,
+          "meanTriangleHeight": 10.482371794871796,
+          "maximumTriangleHeight": 137.75
+        },
+        "diagnosticOverlayCount": 0
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/mobile-camera_only.png",
+        "byteLength": 53597,
+        "sha256": "a7fe2cc1e2a05220d4f5aa37a42493b97fc2d073ef2d92ebe98576f426676077"
+      }
+    },
+    {
+      "configuration": "mobile",
+      "variant": "RELIEF_SCREEN_SPACE",
+      "elapsedMs": 2486,
+      "cameraDiagnostic": null,
+      "domDiagnostic": {
+        "applied": [
+          "SCREEN_SPACE_RELIEF_SCALE_Y_1_65"
+        ],
+        "stageRect": {
+          "width": 361,
+          "height": 360
+        }
+      },
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 361,
+          "height": 360,
+          "triangleCount": 80,
+          "primitiveCount": 80,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 361,
+          "height": 360
+        },
+        "projectedDistribution": {
+          "minimumTop": 1061.161376953125,
+          "maximumBottom": 1421.119140625,
+          "meanTriangleHeight": 43.03147888183594,
+          "maximumTriangleHeight": 211.0452880859375
+        },
+        "diagnosticOverlayCount": 0
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/mobile-relief_screen_space.png",
+        "byteLength": 96909,
+        "sha256": "4c56a57b87546cdb2f1662f535912d33a43e154e5dd9445e73182944ddb52500"
+      }
+    },
+    {
+      "configuration": "mobile",
+      "variant": "COMPOSITION_CONTEXT",
+      "elapsedMs": 2499,
+      "cameraDiagnostic": null,
+      "domDiagnostic": {
+        "applied": [
+          "DIAGNOSTIC_NEARSHORE_WATER_AND_FOAM_CONTEXT"
+        ],
+        "stageRect": {
+          "width": 361,
+          "height": 360
+        }
+      },
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 361,
+          "height": 360,
+          "triangleCount": 80,
+          "primitiveCount": 80,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 361,
+          "height": 360
+        },
+        "projectedDistribution": {
+          "minimumTop": 1137.453125,
+          "maximumBottom": 1355.609375,
+          "meanTriangleHeight": 26.0796875,
+          "maximumTriangleHeight": 127.90625
+        },
+        "diagnosticOverlayCount": 1
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/mobile-composition_context.png",
+        "byteLength": 71208,
+        "sha256": "4732acea86efe80d8b94781859dc11f6b128c1911b20f8b0760e97f490af5e6d"
+      }
+    },
+    {
+      "configuration": "mobile",
+      "variant": "COMBINED",
+      "elapsedMs": 4076,
+      "cameraDiagnostic": {
+        "available": true,
+        "accepted": true,
+        "before": {
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 12,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "viewport": {
+            "widthPx": 361,
+            "heightPx": 360,
+            "pixelRatio": 2,
+            "aspectRatio": 1.0027777777777778,
+            "orientation": "SQUARE",
+            "capacityStatus": "WITHIN_CAPACITY"
+          },
+          "visibility": {
+            "PRIMARY_ADMITTED_WET_SAND_SURFACE": true,
+            "ROUTE_OVERLAY": false
+          },
+          "inertia": {
+            "active": false,
+            "mode": "IDLE",
+            "yawVelocity": 0,
+            "pitchVelocity": 0,
+            "panHorizontalVelocity": 0,
+            "panVerticalVelocity": 0,
+            "panDepthVelocity": 0,
+            "zoomVelocity": 0,
+            "damping": 0.88,
+            "frameCount": 0,
+            "maximumFrames": 90,
+            "minimumVelocity": 0.018
+          },
+          "revisions": {
+            "camera": 0,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 1
+          },
+          "intentSequence": 0,
+          "lastAcceptedIntent": null,
+          "lastRejectedIntent": null
+        },
+        "candidate": {
+          "yawDegrees": 38,
+          "pitchDegrees": 0,
+          "zoomScale": 1,
+          "target": {
+            "x": 0,
+            "y": 1.2,
+            "z": 7.5
+          },
+          "verticalFovDegrees": 52,
+          "nearPlane": 0.25,
+          "farPlane": 48
+        },
+        "changes": {
+          "pitchDegrees": {
+            "from": 12,
+            "to": 0
+          }
+        },
+        "cameraReceipt": {
+          "receiptType": "H_EARTH_3D_COMPOSITOR_CAMERA_RECEIPT",
+          "contractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+          "accepted": true,
+          "materiallyChanged": true,
+          "status": "CAMERA_STATE_UPDATED",
+          "authorityStatus": "ELIGIBLE",
+          "authorityEvaluation": {
+            "eligible": true,
+            "status": "CAMERA_CAPACITY_ELIGIBLE",
+            "checks": [
+              {
+                "id": "CAMERA_YAWDEGREES_FINITE",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCHDEGREES_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOMSCALE_FINITE",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_VERTICALFOVDEGREES_FINITE",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_NEARPLANE_FINITE",
+                "passed": true,
+                "details": 0.25
+              },
+              {
+                "id": "CAMERA_FARPLANE_FINITE",
+                "passed": true,
+                "details": 48
+              },
+              {
+                "id": "CAMERA_TARGET_X_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_TARGET_Y_FINITE",
+                "passed": true,
+                "details": 1.2
+              },
+              {
+                "id": "CAMERA_TARGET_Z_FINITE",
+                "passed": true,
+                "details": 7.5
+              },
+              {
+                "id": "CAMERA_YAW_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCH_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOM_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_TARGET_WITHIN_CAPACITY",
+                "passed": true,
+                "details": {
+                  "x": 0,
+                  "y": 1.2,
+                  "z": 7.5
+                }
+              },
+              {
+                "id": "CAMERA_FOV_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_PLANES_ELIGIBLE",
+                "passed": true,
+                "details": {
+                  "nearPlane": 0.25,
+                  "farPlane": 48
+                }
+              }
+            ],
+            "issues": [],
+            "normalizedCameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "adjustmentRequired": false
+          },
+          "authorityEligible": true,
+          "capacityEvaluation": {
+            "eligible": true,
+            "status": "CAMERA_CAPACITY_ELIGIBLE",
+            "checks": [
+              {
+                "id": "CAMERA_YAWDEGREES_FINITE",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCHDEGREES_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOMSCALE_FINITE",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_VERTICALFOVDEGREES_FINITE",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_NEARPLANE_FINITE",
+                "passed": true,
+                "details": 0.25
+              },
+              {
+                "id": "CAMERA_FARPLANE_FINITE",
+                "passed": true,
+                "details": 48
+              },
+              {
+                "id": "CAMERA_TARGET_X_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_TARGET_Y_FINITE",
+                "passed": true,
+                "details": 1.2
+              },
+              {
+                "id": "CAMERA_TARGET_Z_FINITE",
+                "passed": true,
+                "details": 7.5
+              },
+              {
+                "id": "CAMERA_YAW_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCH_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOM_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_TARGET_WITHIN_CAPACITY",
+                "passed": true,
+                "details": {
+                  "x": 0,
+                  "y": 1.2,
+                  "z": 7.5
+                }
+              },
+              {
+                "id": "CAMERA_FOV_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_PLANES_ELIGIBLE",
+                "passed": true,
+                "details": {
+                  "nearPlane": 0.25,
+                  "farPlane": 48
+                }
+              }
+            ],
+            "issues": [],
+            "normalizedCameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "adjustmentRequired": false
+          },
+          "capacityEligible": true,
+          "issues": [],
+          "updated": true,
+          "authorityProjection": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "evaluation": {
+            "eligible": true,
+            "status": "AUTHORITY_NORMALIZED_CAMERA_ACCEPTED",
+            "cameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "derived": {
+              "distance": 19.947180251855148,
+              "position": {
+                "x": 12.280710422443974,
+                "y": 1.2,
+                "z": 23.2185925425935
+              }
+            },
+            "issues": []
+          },
+          "transaction": {
+            "materiallyChanged": true,
+            "cameraChanged": true,
+            "viewportChanged": false,
+            "visibilityChanged": false,
+            "inertiaChanged": false,
+            "revisions": {
+              "camera": 1,
+              "viewport": 1,
+              "visibility": 0,
+              "inertia": 0,
+              "frame": 2
+            }
+          },
+          "revisions": {
+            "camera": 1,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 2
+          },
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          }
+        },
+        "completionStatus": "PUBLIC_STAGE_READY",
+        "after": {
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "viewport": {
+            "widthPx": 361,
+            "heightPx": 360,
+            "pixelRatio": 2,
+            "aspectRatio": 1.0027777777777778,
+            "orientation": "SQUARE",
+            "capacityStatus": "WITHIN_CAPACITY"
+          },
+          "visibility": {
+            "PRIMARY_ADMITTED_WET_SAND_SURFACE": true,
+            "ROUTE_OVERLAY": false
+          },
+          "inertia": {
+            "active": false,
+            "mode": "IDLE",
+            "yawVelocity": 0,
+            "pitchVelocity": 0,
+            "panHorizontalVelocity": 0,
+            "panVerticalVelocity": 0,
+            "panDepthVelocity": 0,
+            "zoomVelocity": 0,
+            "damping": 0.88,
+            "frameCount": 0,
+            "maximumFrames": 90,
+            "minimumVelocity": 0.018
+          },
+          "revisions": {
+            "camera": 1,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 2
+          },
+          "intentSequence": 0,
+          "lastAcceptedIntent": null,
+          "lastRejectedIntent": null
+        }
+      },
+      "domDiagnostic": {
+        "applied": [
+          "SCREEN_SPACE_RELIEF_SCALE_Y_1_65",
+          "DIAGNOSTIC_NEARSHORE_WATER_AND_FOAM_CONTEXT"
+        ],
+        "stageRect": {
+          "width": 361,
+          "height": 360
+        }
+      },
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 361,
+          "height": 360,
+          "triangleCount": 78,
+          "primitiveCount": 78,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 361,
+          "height": 360
+        },
+        "projectedDistribution": {
+          "minimumTop": 1136.5457763671875,
+          "maximumBottom": 1421.14501953125,
+          "meanTriangleHeight": 17.295923477564102,
+          "maximumTriangleHeight": 227.28759765625
+        },
+        "diagnosticOverlayCount": 1
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/mobile-combined.png",
+        "byteLength": 66794,
+        "sha256": "42dbf195ceeff2cefc00e8677a0ba2b4b9923137c3ab0802a57c29a08e1729f4"
+      }
+    },
+    {
+      "configuration": "desktop",
+      "variant": "BASELINE",
+      "elapsedMs": 2560,
+      "cameraDiagnostic": null,
+      "domDiagnostic": null,
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 1364,
+          "height": 620,
+          "triangleCount": 154,
+          "primitiveCount": 154,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 1364,
+          "height": 620
+        },
+        "projectedDistribution": {
+          "minimumTop": 1020.140625,
+          "maximumBottom": 1396.078125,
+          "meanTriangleHeight": 41.13108766233766,
+          "maximumTriangleHeight": 220.296875
+        },
+        "diagnosticOverlayCount": 0
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/desktop-baseline.png",
+        "byteLength": 109555,
+        "sha256": "bd4332014cbba6fa94bb497d23467c400c59d94354f7902b2a295ea296040387"
+      }
+    },
+    {
+      "configuration": "desktop",
+      "variant": "CAMERA_ONLY",
+      "elapsedMs": 4189,
+      "cameraDiagnostic": {
+        "available": true,
+        "accepted": true,
+        "before": {
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 12,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "viewport": {
+            "widthPx": 1364,
+            "heightPx": 620,
+            "pixelRatio": 1,
+            "aspectRatio": 2.2,
+            "orientation": "LANDSCAPE",
+            "capacityStatus": "WITHIN_CAPACITY"
+          },
+          "visibility": {
+            "PRIMARY_ADMITTED_WET_SAND_SURFACE": true,
+            "ROUTE_OVERLAY": false
+          },
+          "inertia": {
+            "active": false,
+            "mode": "IDLE",
+            "yawVelocity": 0,
+            "pitchVelocity": 0,
+            "panHorizontalVelocity": 0,
+            "panVerticalVelocity": 0,
+            "panDepthVelocity": 0,
+            "zoomVelocity": 0,
+            "damping": 0.88,
+            "frameCount": 0,
+            "maximumFrames": 90,
+            "minimumVelocity": 0.018
+          },
+          "revisions": {
+            "camera": 0,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 1
+          },
+          "intentSequence": 0,
+          "lastAcceptedIntent": null,
+          "lastRejectedIntent": null
+        },
+        "candidate": {
+          "yawDegrees": 38,
+          "pitchDegrees": 0,
+          "zoomScale": 1,
+          "target": {
+            "x": 0,
+            "y": 1.2,
+            "z": 7.5
+          },
+          "verticalFovDegrees": 52,
+          "nearPlane": 0.25,
+          "farPlane": 48
+        },
+        "changes": {
+          "pitchDegrees": {
+            "from": 12,
+            "to": 0
+          }
+        },
+        "cameraReceipt": {
+          "receiptType": "H_EARTH_3D_COMPOSITOR_CAMERA_RECEIPT",
+          "contractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+          "accepted": true,
+          "materiallyChanged": true,
+          "status": "CAMERA_STATE_UPDATED",
+          "authorityStatus": "ELIGIBLE",
+          "authorityEvaluation": {
+            "eligible": true,
+            "status": "CAMERA_CAPACITY_ELIGIBLE",
+            "checks": [
+              {
+                "id": "CAMERA_YAWDEGREES_FINITE",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCHDEGREES_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOMSCALE_FINITE",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_VERTICALFOVDEGREES_FINITE",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_NEARPLANE_FINITE",
+                "passed": true,
+                "details": 0.25
+              },
+              {
+                "id": "CAMERA_FARPLANE_FINITE",
+                "passed": true,
+                "details": 48
+              },
+              {
+                "id": "CAMERA_TARGET_X_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_TARGET_Y_FINITE",
+                "passed": true,
+                "details": 1.2
+              },
+              {
+                "id": "CAMERA_TARGET_Z_FINITE",
+                "passed": true,
+                "details": 7.5
+              },
+              {
+                "id": "CAMERA_YAW_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCH_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOM_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_TARGET_WITHIN_CAPACITY",
+                "passed": true,
+                "details": {
+                  "x": 0,
+                  "y": 1.2,
+                  "z": 7.5
+                }
+              },
+              {
+                "id": "CAMERA_FOV_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_PLANES_ELIGIBLE",
+                "passed": true,
+                "details": {
+                  "nearPlane": 0.25,
+                  "farPlane": 48
+                }
+              }
+            ],
+            "issues": [],
+            "normalizedCameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "adjustmentRequired": false
+          },
+          "authorityEligible": true,
+          "capacityEvaluation": {
+            "eligible": true,
+            "status": "CAMERA_CAPACITY_ELIGIBLE",
+            "checks": [
+              {
+                "id": "CAMERA_YAWDEGREES_FINITE",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCHDEGREES_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOMSCALE_FINITE",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_VERTICALFOVDEGREES_FINITE",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_NEARPLANE_FINITE",
+                "passed": true,
+                "details": 0.25
+              },
+              {
+                "id": "CAMERA_FARPLANE_FINITE",
+                "passed": true,
+                "details": 48
+              },
+              {
+                "id": "CAMERA_TARGET_X_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_TARGET_Y_FINITE",
+                "passed": true,
+                "details": 1.2
+              },
+              {
+                "id": "CAMERA_TARGET_Z_FINITE",
+                "passed": true,
+                "details": 7.5
+              },
+              {
+                "id": "CAMERA_YAW_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCH_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOM_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_TARGET_WITHIN_CAPACITY",
+                "passed": true,
+                "details": {
+                  "x": 0,
+                  "y": 1.2,
+                  "z": 7.5
+                }
+              },
+              {
+                "id": "CAMERA_FOV_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_PLANES_ELIGIBLE",
+                "passed": true,
+                "details": {
+                  "nearPlane": 0.25,
+                  "farPlane": 48
+                }
+              }
+            ],
+            "issues": [],
+            "normalizedCameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "adjustmentRequired": false
+          },
+          "capacityEligible": true,
+          "issues": [],
+          "updated": true,
+          "authorityProjection": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "evaluation": {
+            "eligible": true,
+            "status": "AUTHORITY_NORMALIZED_CAMERA_ACCEPTED",
+            "cameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "derived": {
+              "distance": 19.947180251855148,
+              "position": {
+                "x": 12.280710422443974,
+                "y": 1.2,
+                "z": 23.2185925425935
+              }
+            },
+            "issues": []
+          },
+          "transaction": {
+            "materiallyChanged": true,
+            "cameraChanged": true,
+            "viewportChanged": false,
+            "visibilityChanged": false,
+            "inertiaChanged": false,
+            "revisions": {
+              "camera": 1,
+              "viewport": 1,
+              "visibility": 0,
+              "inertia": 0,
+              "frame": 2
+            }
+          },
+          "revisions": {
+            "camera": 1,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 2
+          },
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          }
+        },
+        "completionStatus": "PUBLIC_STAGE_READY",
+        "after": {
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "viewport": {
+            "widthPx": 1364,
+            "heightPx": 620,
+            "pixelRatio": 1,
+            "aspectRatio": 2.2,
+            "orientation": "LANDSCAPE",
+            "capacityStatus": "WITHIN_CAPACITY"
+          },
+          "visibility": {
+            "PRIMARY_ADMITTED_WET_SAND_SURFACE": true,
+            "ROUTE_OVERLAY": false
+          },
+          "inertia": {
+            "active": false,
+            "mode": "IDLE",
+            "yawVelocity": 0,
+            "pitchVelocity": 0,
+            "panHorizontalVelocity": 0,
+            "panVerticalVelocity": 0,
+            "panDepthVelocity": 0,
+            "zoomVelocity": 0,
+            "damping": 0.88,
+            "frameCount": 0,
+            "maximumFrames": 90,
+            "minimumVelocity": 0.018
+          },
+          "revisions": {
+            "camera": 1,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 2
+          },
+          "intentSequence": 0,
+          "lastAcceptedIntent": null,
+          "lastRejectedIntent": null
+        }
+      },
+      "domDiagnostic": null,
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 1364,
+          "height": 620,
+          "triangleCount": 150,
+          "primitiveCount": 150,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 1364,
+          "height": 620
+        },
+        "projectedDistribution": {
+          "minimumTop": 1098.84375,
+          "maximumBottom": 1396.078125,
+          "meanTriangleHeight": 15.768645833333334,
+          "maximumTriangleHeight": 237.21875
+        },
+        "diagnosticOverlayCount": 0
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/desktop-camera_only.png",
+        "byteLength": 72457,
+        "sha256": "97d93b1e1e5a39148bc18b8875741bf83947e4af366a5a0a4c18410f09943c6d"
+      }
+    },
+    {
+      "configuration": "desktop",
+      "variant": "RELIEF_SCREEN_SPACE",
+      "elapsedMs": 2745,
+      "cameraDiagnostic": null,
+      "domDiagnostic": {
+        "applied": [
+          "SCREEN_SPACE_RELIEF_SCALE_Y_1_65"
+        ],
+        "stageRect": {
+          "width": 1364,
+          "height": 620
+        }
+      },
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 1364,
+          "height": 620,
+          "triangleCount": 154,
+          "primitiveCount": 154,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 1364,
+          "height": 620
+        },
+        "projectedDistribution": {
+          "minimumTop": 888.611083984375,
+          "maximumBottom": 1508.907958984375,
+          "meanTriangleHeight": 67.86630130123783,
+          "maximumTriangleHeight": 363.4898681640625
+        },
+        "diagnosticOverlayCount": 0
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/desktop-relief_screen_space.png",
+        "byteLength": 173582,
+        "sha256": "823d9d75e7b15608826119c70265687cf72b6ac487514be5c236befc59bcfef7"
+      }
+    },
+    {
+      "configuration": "desktop",
+      "variant": "COMPOSITION_CONTEXT",
+      "elapsedMs": 2662,
+      "cameraDiagnostic": null,
+      "domDiagnostic": {
+        "applied": [
+          "DIAGNOSTIC_NEARSHORE_WATER_AND_FOAM_CONTEXT"
+        ],
+        "stageRect": {
+          "width": 1364,
+          "height": 620
+        }
+      },
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 1364,
+          "height": 620,
+          "triangleCount": 154,
+          "primitiveCount": 154,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 1364,
+          "height": 620
+        },
+        "projectedDistribution": {
+          "minimumTop": 1020.140625,
+          "maximumBottom": 1396.078125,
+          "meanTriangleHeight": 41.13108766233766,
+          "maximumTriangleHeight": 220.296875
+        },
+        "diagnosticOverlayCount": 1
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/desktop-composition_context.png",
+        "byteLength": 110613,
+        "sha256": "d9249b528f9faa1c1c9e6717527681c2c899fd4937f6ee957a358b5a9ce61e78"
+      }
+    },
+    {
+      "configuration": "desktop",
+      "variant": "COMBINED",
+      "elapsedMs": 4391,
+      "cameraDiagnostic": {
+        "available": true,
+        "accepted": true,
+        "before": {
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 12,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "viewport": {
+            "widthPx": 1364,
+            "heightPx": 620,
+            "pixelRatio": 1,
+            "aspectRatio": 2.2,
+            "orientation": "LANDSCAPE",
+            "capacityStatus": "WITHIN_CAPACITY"
+          },
+          "visibility": {
+            "PRIMARY_ADMITTED_WET_SAND_SURFACE": true,
+            "ROUTE_OVERLAY": false
+          },
+          "inertia": {
+            "active": false,
+            "mode": "IDLE",
+            "yawVelocity": 0,
+            "pitchVelocity": 0,
+            "panHorizontalVelocity": 0,
+            "panVerticalVelocity": 0,
+            "panDepthVelocity": 0,
+            "zoomVelocity": 0,
+            "damping": 0.88,
+            "frameCount": 0,
+            "maximumFrames": 90,
+            "minimumVelocity": 0.018
+          },
+          "revisions": {
+            "camera": 0,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 1
+          },
+          "intentSequence": 0,
+          "lastAcceptedIntent": null,
+          "lastRejectedIntent": null
+        },
+        "candidate": {
+          "yawDegrees": 38,
+          "pitchDegrees": 0,
+          "zoomScale": 1,
+          "target": {
+            "x": 0,
+            "y": 1.2,
+            "z": 7.5
+          },
+          "verticalFovDegrees": 52,
+          "nearPlane": 0.25,
+          "farPlane": 48
+        },
+        "changes": {
+          "pitchDegrees": {
+            "from": 12,
+            "to": 0
+          }
+        },
+        "cameraReceipt": {
+          "receiptType": "H_EARTH_3D_COMPOSITOR_CAMERA_RECEIPT",
+          "contractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+          "accepted": true,
+          "materiallyChanged": true,
+          "status": "CAMERA_STATE_UPDATED",
+          "authorityStatus": "ELIGIBLE",
+          "authorityEvaluation": {
+            "eligible": true,
+            "status": "CAMERA_CAPACITY_ELIGIBLE",
+            "checks": [
+              {
+                "id": "CAMERA_YAWDEGREES_FINITE",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCHDEGREES_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOMSCALE_FINITE",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_VERTICALFOVDEGREES_FINITE",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_NEARPLANE_FINITE",
+                "passed": true,
+                "details": 0.25
+              },
+              {
+                "id": "CAMERA_FARPLANE_FINITE",
+                "passed": true,
+                "details": 48
+              },
+              {
+                "id": "CAMERA_TARGET_X_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_TARGET_Y_FINITE",
+                "passed": true,
+                "details": 1.2
+              },
+              {
+                "id": "CAMERA_TARGET_Z_FINITE",
+                "passed": true,
+                "details": 7.5
+              },
+              {
+                "id": "CAMERA_YAW_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCH_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOM_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_TARGET_WITHIN_CAPACITY",
+                "passed": true,
+                "details": {
+                  "x": 0,
+                  "y": 1.2,
+                  "z": 7.5
+                }
+              },
+              {
+                "id": "CAMERA_FOV_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_PLANES_ELIGIBLE",
+                "passed": true,
+                "details": {
+                  "nearPlane": 0.25,
+                  "farPlane": 48
+                }
+              }
+            ],
+            "issues": [],
+            "normalizedCameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "adjustmentRequired": false
+          },
+          "authorityEligible": true,
+          "capacityEvaluation": {
+            "eligible": true,
+            "status": "CAMERA_CAPACITY_ELIGIBLE",
+            "checks": [
+              {
+                "id": "CAMERA_YAWDEGREES_FINITE",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCHDEGREES_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOMSCALE_FINITE",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_VERTICALFOVDEGREES_FINITE",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_NEARPLANE_FINITE",
+                "passed": true,
+                "details": 0.25
+              },
+              {
+                "id": "CAMERA_FARPLANE_FINITE",
+                "passed": true,
+                "details": 48
+              },
+              {
+                "id": "CAMERA_TARGET_X_FINITE",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_TARGET_Y_FINITE",
+                "passed": true,
+                "details": 1.2
+              },
+              {
+                "id": "CAMERA_TARGET_Z_FINITE",
+                "passed": true,
+                "details": 7.5
+              },
+              {
+                "id": "CAMERA_YAW_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 38
+              },
+              {
+                "id": "CAMERA_PITCH_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 0
+              },
+              {
+                "id": "CAMERA_ZOOM_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 1
+              },
+              {
+                "id": "CAMERA_TARGET_WITHIN_CAPACITY",
+                "passed": true,
+                "details": {
+                  "x": 0,
+                  "y": 1.2,
+                  "z": 7.5
+                }
+              },
+              {
+                "id": "CAMERA_FOV_WITHIN_CAPACITY",
+                "passed": true,
+                "details": 52
+              },
+              {
+                "id": "CAMERA_PLANES_ELIGIBLE",
+                "passed": true,
+                "details": {
+                  "nearPlane": 0.25,
+                  "farPlane": 48
+                }
+              }
+            ],
+            "issues": [],
+            "normalizedCameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "adjustmentRequired": false
+          },
+          "capacityEligible": true,
+          "issues": [],
+          "updated": true,
+          "authorityProjection": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "evaluation": {
+            "eligible": true,
+            "status": "AUTHORITY_NORMALIZED_CAMERA_ACCEPTED",
+            "cameraState": {
+              "yawDegrees": 38,
+              "pitchDegrees": 0,
+              "zoomScale": 1,
+              "target": {
+                "x": 0,
+                "y": 1.2,
+                "z": 7.5
+              },
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 48
+            },
+            "derived": {
+              "distance": 19.947180251855148,
+              "position": {
+                "x": 12.280710422443974,
+                "y": 1.2,
+                "z": 23.2185925425935
+              }
+            },
+            "issues": []
+          },
+          "transaction": {
+            "materiallyChanged": true,
+            "cameraChanged": true,
+            "viewportChanged": false,
+            "visibilityChanged": false,
+            "inertiaChanged": false,
+            "revisions": {
+              "camera": 1,
+              "viewport": 1,
+              "visibility": 0,
+              "inertia": 0,
+              "frame": 2
+            }
+          },
+          "revisions": {
+            "camera": 1,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 2
+          },
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          }
+        },
+        "completionStatus": "PUBLIC_STAGE_READY",
+        "after": {
+          "camera": {
+            "yawDegrees": 38,
+            "pitchDegrees": 0,
+            "zoomScale": 1,
+            "target": {
+              "x": 0,
+              "y": 1.2,
+              "z": 7.5
+            },
+            "verticalFovDegrees": 52,
+            "nearPlane": 0.25,
+            "farPlane": 48
+          },
+          "viewport": {
+            "widthPx": 1364,
+            "heightPx": 620,
+            "pixelRatio": 1,
+            "aspectRatio": 2.2,
+            "orientation": "LANDSCAPE",
+            "capacityStatus": "WITHIN_CAPACITY"
+          },
+          "visibility": {
+            "PRIMARY_ADMITTED_WET_SAND_SURFACE": true,
+            "ROUTE_OVERLAY": false
+          },
+          "inertia": {
+            "active": false,
+            "mode": "IDLE",
+            "yawVelocity": 0,
+            "pitchVelocity": 0,
+            "panHorizontalVelocity": 0,
+            "panVerticalVelocity": 0,
+            "panDepthVelocity": 0,
+            "zoomVelocity": 0,
+            "damping": 0.88,
+            "frameCount": 0,
+            "maximumFrames": 90,
+            "minimumVelocity": 0.018
+          },
+          "revisions": {
+            "camera": 1,
+            "viewport": 1,
+            "visibility": 0,
+            "inertia": 0,
+            "frame": 2
+          },
+          "intentSequence": 0,
+          "lastAcceptedIntent": null,
+          "lastRejectedIntent": null
+        }
+      },
+      "domDiagnostic": {
+        "applied": [
+          "SCREEN_SPACE_RELIEF_SCALE_Y_1_65",
+          "DIAGNOSTIC_NEARSHORE_WATER_AND_FOAM_CONTEXT"
+        ],
+        "stageRect": {
+          "width": 1364,
+          "height": 620
+        }
+      },
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "mount": {
+          "width": 1364,
+          "height": 620,
+          "triangleCount": 150,
+          "primitiveCount": 150,
+          "semanticLayerCount": 15,
+          "sourcePreviewCount": 0
+        },
+        "stageRect": {
+          "width": 1364,
+          "height": 620
+        },
+        "projectedDistribution": {
+          "minimumTop": 1018.47119140625,
+          "maximumBottom": 1508.907958984375,
+          "meanTriangleHeight": 26.01826171875,
+          "maximumTriangleHeight": 391.410888671875
+        },
+        "diagnosticOverlayCount": 1
+      },
+      "pageErrors": [],
+      "requestFailures": [],
+      "screenshot": {
+        "path": ".fd05/ground-shoreline-prework-output/desktop-combined.png",
+        "byteLength": 109192,
+        "sha256": "a83f7ca41caf9b55313f9732428300ee8bb9c08b3c1863465cc983abfdba04d4"
+      }
+    }
+  ],
+  "aggregate": {
+    "captureCount": 10,
+    "pageErrors": 0,
+    "requestFailures": 0,
+    "allMounted": true
+  }
+}

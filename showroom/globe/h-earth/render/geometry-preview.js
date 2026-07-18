@@ -767,7 +767,10 @@ function buildHeightFieldDescriptor(wetSandProfile) {
   const phaseZ =
     phaseContext.phaseZ;
 
-  const evaluator = (localX, localZ) => {
+  const evaluator = ({
+    x: localX,
+    z: localZ
+  } = {}) => {
     const normalizedX =
       normalizeAxisCoordinate(
         localX,

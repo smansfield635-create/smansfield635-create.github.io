@@ -71,3 +71,5 @@ jobs:
           git commit -m "Stage Gate 4B six replacement blobs" \
             -m "No tests executed. Helper-only staging for clean six-path commit construction."
           git push origin HEAD:agent/h-earth-gate4b-helper
+
+# Trigger registered helper staging workflow.

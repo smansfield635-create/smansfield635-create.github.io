@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -258,3 +259,28 @@ await rm('node_modules', {
   recursive: true,
   force: true
 });
+
+for (const packagePath of ['package.json', 'package-lock.json']) {
+  try {
+    execFileSync(
+      'git',
+      ['restore', '--worktree', '--', packagePath],
+      { stdio: 'ignore' }
+    );
+  } catch {
+    // The repository may not track one or both package metadata files.
+  }
+}
+
+execFileSync(
+  'git',
+  [
+    'clean',
+    '-fdx',
+    '-e',
+    '.fd05/renderer-wet-sand-output/',
+    '-e',
+    '.fd05-test-renderer-wet-sand.mjs'
+  ],
+  { stdio: 'inherit' }
+);

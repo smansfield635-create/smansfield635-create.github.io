@@ -14,6 +14,7 @@
  * → CANONICAL ADMITTED GEOMETRY CONSUMPTION
  * → VISIBILITY CORRESPONDENCE
  * → SCALE-AWARE NEAR/FAR CLIPPING
+ * → HORIZONTAL/VERTICAL VIEWPORT-FRUSTUM CLIPPING
  * → PRESENTATION CORRELATION
  * → FIFTEEN SEMANTIC LAYER CONTAINERS
  * → ONE INTERACTION-BOUNDARY NODE
@@ -47,6 +48,7 @@
  * - renderer materialization-extent management;
  * - canonical admitted point, line, and triangle consumption;
  * - scale-aware near/far depth clipping;
+ * - horizontal and vertical viewport-frustum clipping;
  * - presentation-assignment and visibility correspondence;
  * - fifteen semantic DOM containers;
  * - one non-controller interaction-boundary node;
@@ -172,6 +174,24 @@ const TOPOLOGY_MODE =
     TRIANGLE_FAN:
       'TRIANGLE_FAN'
   });
+
+const VIEWPORT_FRUSTUM_PLANE =
+  Object.freeze({
+    LEFT:
+      'LEFT',
+
+    RIGHT:
+      'RIGHT',
+
+    BOTTOM:
+      'BOTTOM',
+
+    TOP:
+      'TOP'
+  });
+
+const VIEWPORT_FRUSTUM_TOLERANCE =
+  1e-10;
 
 const RENDERER_SEMANTIC_LAYER_CONTAINER_IDS =
   Object.freeze(
@@ -1788,6 +1808,50 @@ function projectCameraPointToScreen(
     ) /
     cameraPoint.z;
 
+  if (
+    ndcX <
+      -1 -
+      VIEWPORT_FRUSTUM_TOLERANCE ||
+    ndcX >
+      1 +
+      VIEWPORT_FRUSTUM_TOLERANCE ||
+    ndcY <
+      -1 -
+      VIEWPORT_FRUSTUM_TOLERANCE ||
+    ndcY >
+      1 +
+      VIEWPORT_FRUSTUM_TOLERANCE
+  ) {
+    return deepFreeze({
+      visible:
+        false,
+
+      cameraDepth:
+        cameraPoint.z,
+
+      reason:
+        'OUTSIDE_HORIZONTAL_VERTICAL_FRUSTUM'
+    });
+  }
+
+  const boundedNdcX =
+    Math.max(
+      -1,
+      Math.min(
+        1,
+        ndcX
+      )
+    );
+
+  const boundedNdcY =
+    Math.max(
+      -1,
+      Math.min(
+        1,
+        ndcY
+      )
+    );
+
   return deepFreeze({
     visible:
       true,
@@ -1800,17 +1864,17 @@ function projectCameraPointToScreen(
     ndc:
       deepFreeze({
         x:
-          ndcX,
+          boundedNdcX,
 
         y:
-          ndcY
+          boundedNdcY
       }),
 
     screen:
       deepFreeze({
         x:
           (
-            ndcX +
+            boundedNdcX +
             1
           ) *
           0.5 *
@@ -1819,7 +1883,7 @@ function projectCameraPointToScreen(
         y:
           (
             1 -
-            ndcY
+            boundedNdcY
           ) *
           0.5 *
           materializationExtent.heightPx
@@ -2981,6 +3045,447 @@ function clipCameraPolygonAgainstDepthRange(
 }
 
 
+function resolveViewportFrustumPlaneDistance(
+  cameraPoint,
+  plane,
+  projectionContext
+) {
+  const horizontalExtent =
+    (
+      cameraPoint.z *
+      projectionContext
+        .materializationExtent
+        .aspectRatio
+    ) /
+    projectionContext
+      .cameraBasis
+      .focalLength;
+
+  const verticalExtent =
+    cameraPoint.z /
+    projectionContext
+      .cameraBasis
+      .focalLength;
+
+  switch (plane) {
+    case VIEWPORT_FRUSTUM_PLANE.LEFT:
+      return (
+        cameraPoint.x +
+        horizontalExtent
+      );
+
+    case VIEWPORT_FRUSTUM_PLANE.RIGHT:
+      return (
+        horizontalExtent -
+        cameraPoint.x
+      );
+
+    case VIEWPORT_FRUSTUM_PLANE.BOTTOM:
+      return (
+        cameraPoint.y +
+        verticalExtent
+      );
+
+    case VIEWPORT_FRUSTUM_PLANE.TOP:
+      return (
+        verticalExtent -
+        cameraPoint.y
+      );
+
+    default:
+      return Number.NaN;
+  }
+}
+
+function isInsideViewportFrustumPlane(
+  cameraPoint,
+  plane,
+  projectionContext
+) {
+  const distance =
+    resolveViewportFrustumPlaneDistance(
+      cameraPoint,
+      plane,
+      projectionContext
+    );
+
+  return (
+    isFiniteNumber(distance) &&
+    distance >=
+      -VIEWPORT_FRUSTUM_TOLERANCE
+  );
+}
+
+function interpolateCameraPointAtFrustumPlane(
+  start,
+  end,
+  plane,
+  projectionContext
+) {
+  const startDistance =
+    resolveViewportFrustumPlaneDistance(
+      start,
+      plane,
+      projectionContext
+    );
+
+  const endDistance =
+    resolveViewportFrustumPlaneDistance(
+      end,
+      plane,
+      projectionContext
+    );
+
+  const denominator =
+    startDistance -
+    endDistance;
+
+  if (
+    !isFiniteNumber(startDistance) ||
+    !isFiniteNumber(endDistance) ||
+    Math.abs(denominator) <=
+      Number.EPSILON
+  ) {
+    return cloneKnownPlain(
+      start
+    );
+  }
+
+  const amount =
+    Math.max(
+      0,
+      Math.min(
+        1,
+        startDistance /
+          denominator
+      )
+    );
+
+  return interpolateVector(
+    start,
+    end,
+    amount
+  );
+}
+
+function clipCameraLineAgainstViewportFrustum(
+  start,
+  end,
+  projectionContext
+) {
+  let tMinimum =
+    0;
+
+  let tMaximum =
+    1;
+
+  let clipped =
+    false;
+
+  for (
+    const plane
+    of Object.values(
+      VIEWPORT_FRUSTUM_PLANE
+    )
+  ) {
+    const startDistance =
+      resolveViewportFrustumPlaneDistance(
+        start,
+        plane,
+        projectionContext
+      );
+
+    const endDistance =
+      resolveViewportFrustumPlaneDistance(
+        end,
+        plane,
+        projectionContext
+      );
+
+    if (
+      !isFiniteNumber(startDistance) ||
+      !isFiniteNumber(endDistance)
+    ) {
+      return null;
+    }
+
+    const startInside =
+      startDistance >=
+        -VIEWPORT_FRUSTUM_TOLERANCE;
+
+    const endInside =
+      endDistance >=
+        -VIEWPORT_FRUSTUM_TOLERANCE;
+
+    if (
+      !startInside &&
+      !endInside
+    ) {
+      return null;
+    }
+
+    if (
+      startInside ===
+      endInside
+    ) {
+      continue;
+    }
+
+    const denominator =
+      startDistance -
+      endDistance;
+
+    if (
+      Math.abs(denominator) <=
+      Number.EPSILON
+    ) {
+      return null;
+    }
+
+    const amount =
+      Math.max(
+        0,
+        Math.min(
+          1,
+          startDistance /
+            denominator
+        )
+      );
+
+    if (!startInside) {
+      tMinimum =
+        Math.max(
+          tMinimum,
+          amount
+        );
+    } else {
+      tMaximum =
+        Math.min(
+          tMaximum,
+          amount
+        );
+    }
+
+    clipped =
+      true;
+
+    if (
+      tMinimum >
+      tMaximum
+    ) {
+      return null;
+    }
+  }
+
+  const clippedStart =
+    tMinimum === 0
+      ? cloneKnownPlain(
+          start
+        )
+      : interpolateVector(
+          start,
+          end,
+          tMinimum
+        );
+
+  const clippedEnd =
+    tMaximum === 1
+      ? cloneKnownPlain(
+          end
+        )
+      : interpolateVector(
+          start,
+          end,
+          tMaximum
+        );
+
+  if (
+    !Object.values(
+      VIEWPORT_FRUSTUM_PLANE
+    ).every(
+      (plane) =>
+        isInsideViewportFrustumPlane(
+          clippedStart,
+          plane,
+          projectionContext
+        ) &&
+        isInsideViewportFrustumPlane(
+          clippedEnd,
+          plane,
+          projectionContext
+        )
+    )
+  ) {
+    return null;
+  }
+
+  return deepFreeze({
+    start:
+      deepFreeze(
+        clippedStart
+      ),
+
+    end:
+      deepFreeze(
+        clippedEnd
+      ),
+
+    clipped
+  });
+}
+
+function clipCameraPolygonAgainstViewportPlane(
+  points,
+  plane,
+  projectionContext
+) {
+  if (points.length === 0) {
+    return [];
+  }
+
+  const output = [];
+
+  let previous =
+    points[
+      points.length - 1
+    ];
+
+  let previousInside =
+    isInsideViewportFrustumPlane(
+      previous,
+      plane,
+      projectionContext
+    );
+
+  for (const current of points) {
+    const currentInside =
+      isInsideViewportFrustumPlane(
+        current,
+        plane,
+        projectionContext
+      );
+
+    if (
+      currentInside &&
+      previousInside
+    ) {
+      output.push(
+        current
+      );
+    } else if (
+      currentInside &&
+      !previousInside
+    ) {
+      output.push(
+        interpolateCameraPointAtFrustumPlane(
+          previous,
+          current,
+          plane,
+          projectionContext
+        )
+      );
+
+      output.push(
+        current
+      );
+    } else if (
+      !currentInside &&
+      previousInside
+    ) {
+      output.push(
+        interpolateCameraPointAtFrustumPlane(
+          previous,
+          current,
+          plane,
+          projectionContext
+        )
+      );
+    }
+
+    previous =
+      current;
+
+    previousInside =
+      currentInside;
+  }
+
+  return output;
+}
+
+function clipCameraPolygonAgainstViewportFrustum(
+  cameraPoints,
+  projectionContext
+) {
+  const fullyInside =
+    cameraPoints.every(
+      (cameraPoint) =>
+        Object.values(
+          VIEWPORT_FRUSTUM_PLANE
+        ).every(
+          (plane) =>
+            isInsideViewportFrustumPlane(
+              cameraPoint,
+              plane,
+              projectionContext
+            )
+        )
+    );
+
+  if (fullyInside) {
+    return deepFreeze({
+      points:
+        Object.freeze([
+          ...cameraPoints
+        ]),
+
+      clipped:
+        false
+    });
+  }
+
+  let clippedPoints = [
+    ...cameraPoints
+  ];
+
+  for (
+    const plane
+    of Object.values(
+      VIEWPORT_FRUSTUM_PLANE
+    )
+  ) {
+    clippedPoints =
+      clipCameraPolygonAgainstViewportPlane(
+        clippedPoints,
+        plane,
+        projectionContext
+      );
+
+    if (
+      clippedPoints.length === 0
+    ) {
+      break;
+    }
+  }
+
+  return deepFreeze({
+    points:
+      Object.freeze(
+        clippedPoints.map(
+          (cameraPoint) =>
+            deepFreeze(
+              cloneKnownPlain(
+                cameraPoint
+              )
+            )
+        )
+      ),
+
+    clipped:
+      true
+  });
+}
+
+
 /* ==========================================================================
  * 20 · PROJECTED DESCRIPTORS
  * ========================================================================== */
@@ -3013,6 +3518,9 @@ function createProjectedPointDescriptor({
       ]),
 
     depthClipped:
+      false,
+
+    viewportClipped:
       false
   });
 }
@@ -3022,7 +3530,8 @@ function createProjectedLineDescriptor({
   assignment,
   sourceVertexIndices,
   projectedPoints,
-  depthClipped
+  depthClipped,
+  viewportClipped
 }) {
   return deepFreeze({
     type:
@@ -3049,7 +3558,9 @@ function createProjectedLineDescriptor({
         ...projectedPoints
       ]),
 
-    depthClipped
+    depthClipped,
+
+    viewportClipped
   });
 }
 
@@ -3058,7 +3569,8 @@ function createProjectedTriangleDescriptor({
   assignment,
   sourceVertexIndices,
   projectedPoints,
-  depthClipped
+  depthClipped,
+  viewportClipped
 }) {
   return deepFreeze({
     type:
@@ -3090,7 +3602,9 @@ function createProjectedTriangleDescriptor({
         ...projectedPoints
       ]),
 
-    depthClipped
+    depthClipped,
+
+    viewportClipped
   });
 }
 
@@ -3177,15 +3691,26 @@ function createLineDescriptorFromIndices({
     return null;
   }
 
+  const viewportClippedLine =
+    clipCameraLineAgainstViewportFrustum(
+      clippedLine.start,
+      clippedLine.end,
+      projectionContext
+    );
+
+  if (!viewportClippedLine) {
+    return null;
+  }
+
   const projectedStart =
     projectCameraPointToScreen(
-      clippedLine.start,
+      viewportClippedLine.start,
       projectionContext
     );
 
   const projectedEnd =
     projectCameraPointToScreen(
-      clippedLine.end,
+      viewportClippedLine.end,
       projectionContext
     );
 
@@ -3210,7 +3735,10 @@ function createLineDescriptorFromIndices({
       ],
 
     depthClipped:
-      clippedLine.clipped
+      clippedLine.clipped,
+
+    viewportClipped:
+      viewportClippedLine.clipped
   });
 }
 
@@ -3322,8 +3850,14 @@ function createClippedTriangleDescriptors({
         .farPlane
     );
 
+  const viewportClippingResult =
+    clipCameraPolygonAgainstViewportFrustum(
+      clippingResult.points,
+      projectionContext
+    );
+
   const clippedPolygon =
-    clippingResult.points;
+    viewportClippingResult.points;
 
   if (
     clippedPolygon.length < 3
@@ -3374,7 +3908,10 @@ function createClippedTriangleDescriptors({
           projectedPoints,
 
           depthClipped:
-            clippingResult.clipped
+            clippingResult.clipped,
+
+          viewportClipped:
+            viewportClippingResult.clipped
         })
       );
     }
@@ -4565,6 +5102,11 @@ function createPointElement(
       descriptor.depthClipped
     );
 
+  element.dataset.viewportClipped =
+    String(
+      descriptor.viewportClipped
+    );
+
   setStyles(
     element,
     {
@@ -4668,6 +5210,11 @@ function createLineElement(
   element.dataset.depthClipped =
     String(
       descriptor.depthClipped
+    );
+
+  element.dataset.viewportClipped =
+    String(
+      descriptor.viewportClipped
     );
 
   setStyles(
@@ -4838,6 +5385,11 @@ function createTriangleElement(
   element.dataset.depthClipped =
     String(
       descriptor.depthClipped
+    );
+
+  element.dataset.viewportClipped =
+    String(
+      descriptor.viewportClipped
     );
 
   setStyles(
@@ -7902,7 +8454,7 @@ export const H_EARTH_3D_RENDERER_STATIC_COHERENCE =
         true,
 
       horizontalVerticalFrustumClippingDefined:
-        false,
+        true,
 
       exactDuplicateApplyImmediateNoOp:
         true,
@@ -8147,7 +8699,7 @@ export const H_EARTH_3D_RENDERER_RECEIPT =
       true,
 
     screenRectangleClippingDefined:
-      false,
+      true,
 
     materializationExtentRevisionPolicy:
       'COMMIT_AFTER_SUCCESSFUL_MATERIALIZATION_ONLY',
@@ -8460,7 +9012,7 @@ export const H_EARTH_3D_RENDERER_CONTRACT =
           'REJECT',
 
         horizontalVerticalFrustumClipping:
-          false
+          'CAMERA_SPACE_CLIP_TO_MATERIALIZATION_VIEWPORT_FRUSTUM'
       }),
 
     emptySceneLaw:

@@ -153,7 +153,7 @@ h3 {
 
 .control-panel {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 0.75fr) minmax(24rem, 1.25fr);
   gap: 1rem;
   align-items: center;
   margin-top: 1rem;
@@ -167,10 +167,14 @@ h3 {
 }
 
 .controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.55rem;
+}
+
+.controls button:first-child,
+.controls button:last-child {
+  grid-column: span 3;
 }
 
 .panel {
@@ -223,10 +227,6 @@ th {
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-tbody tr:last-child td {
-  border-bottom: 0;
 }
 
 td:first-child {
@@ -282,6 +282,45 @@ td div {
   color: var(--unresolved);
 }
 
+.row-detail-row td {
+  padding: 0;
+  background: rgba(7, 18, 28, 0.78);
+}
+
+.row-detail {
+  padding: 0.7rem 1rem 1rem;
+}
+
+.row-detail summary {
+  color: var(--accent);
+  font-weight: 720;
+  cursor: pointer;
+}
+
+.row-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr);
+  gap: 0.45rem 1rem;
+  margin: 1rem 0;
+}
+
+.row-detail-grid dt {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.row-detail-grid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #d7e7f2;
+}
+
+.row-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
 .finding-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -299,6 +338,33 @@ td div {
 .finding-card p {
   margin: 0.75rem 0 0;
   color: var(--muted);
+}
+
+.count-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+}
+
+.count-item {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 0.8rem;
+  background: rgba(5, 15, 23, 0.72);
+}
+
+.count-item dt {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.count-item dd {
+  margin: 0.35rem 0 0;
+  color: #f2f9fd;
+  font-size: 1.35rem;
+  font-weight: 760;
 }
 
 .split-panels {
@@ -335,18 +401,15 @@ pre {
   top: 0;
 }
 
-.diagnostic[data-run-state="ABORTED"] .status {
+.diagnostic[data-run-state="ABORTED"] .status,
+.diagnostic[data-access-state="FAILED"] .status {
   color: var(--danger);
 }
 
-@media (max-width: 62rem) {
+@media (max-width: 70rem) {
   .control-panel,
   .split-panels {
     grid-template-columns: 1fr;
-  }
-
-  .controls {
-    justify-content: flex-start;
   }
 
   .finding-grid {
@@ -354,7 +417,7 @@ pre {
   }
 }
 
-@media (max-width: 42rem) {
+@media (max-width: 48rem) {
   .diagnostic {
     width: min(100% - 1rem, 96rem);
     padding-top: 0.5rem;
@@ -367,11 +430,11 @@ pre {
   }
 
   .controls {
-    display: grid;
     grid-template-columns: 1fr 1fr;
   }
 
-  .controls button:first-child {
+  .controls button:first-child,
+  .controls button:last-child {
     grid-column: 1 / -1;
   }
 
@@ -384,7 +447,12 @@ pre {
     text-align: left;
   }
 
-  .finding-grid {
+  .finding-grid,
+  .count-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .row-detail-grid {
     grid-template-columns: 1fr;
   }
 }

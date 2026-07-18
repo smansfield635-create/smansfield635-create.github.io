@@ -1,24 +1,22 @@
 name: H-Earth East one-shot repair
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/h-earth-east-template-literal-repair
+      - main
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  repair:
-    if: github.event.head_commit.message == 'Stage one-shot East correction workflow'
+  build-verified-candidate:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out correction branch
+      - name: Check out exact PR head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-          persist-credentials: true
 
       - name: Verify pinned bytes and apply exact repair
         shell: bash
@@ -26,6 +24,7 @@ jobs:
           python3 - <<'PY'
           from hashlib import sha1, sha256
           from pathlib import Path
+          import json
 
           path = Path('showroom/globe/h-earth/render/geometry-kernel.east.js')
           source = path.read_bytes()
@@ -33,9 +32,16 @@ jobs:
           def git_blob_sha(data: bytes) -> str:
               return sha1(f'blob {len(data)}\0'.encode('ascii') + data).hexdigest()
 
-          assert len(source) == 128722, len(source)
-          assert sha256(source).hexdigest() == '5ce77ab2e477ff1585e2e5835c6c95cac32219e28e44b589f43d15a10afe8e2c'
-          assert git_blob_sha(source) == 'b9872c89291f9ec6d404fd7203d7de57826670cf'
+          source_identity = {
+              'byteLength': len(source),
+              'sha256': sha256(source).hexdigest(),
+              'gitBlobSha1': git_blob_sha(source),
+          }
+          assert source_identity == {
+              'byteLength': 128722,
+              'sha256': '5ce77ab2e477ff1585e2e5835c6c95cac32219e28e44b589f43d15a10afe8e2c',
+              'gitBlobSha1': 'b9872c89291f9ec6d404fd7203d7de57826670cf',
+          }, source_identity
 
           replacements = (
               (b'? ${first}:${second}', b'? `${first}:${second}`'),
@@ -44,24 +50,42 @@ jobs:
           )
 
           candidate = source
+          replacement_counts = []
           for old, new in replacements:
-              assert candidate.count(old) == 1, (old, candidate.count(old))
+              count = candidate.count(old)
+              assert count == 1, (old, count)
               candidate = candidate.replace(old, new, 1)
+              replacement_counts.append(count)
 
-          assert len(candidate) == 128728, len(candidate)
-          assert sha256(candidate).hexdigest() == '4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba'
-          assert git_blob_sha(candidate) == '261e73cc2c561dbf8d4f2f8210e51dad361cec91'
+          candidate_identity = {
+              'byteLength': len(candidate),
+              'sha256': sha256(candidate).hexdigest(),
+              'gitBlobSha1': git_blob_sha(candidate),
+          }
+          assert candidate_identity == {
+              'byteLength': 128728,
+              'sha256': '4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba',
+              'gitBlobSha1': '261e73cc2c561dbf8d4f2f8210e51dad361cec91',
+          }, candidate_identity
 
           for old, new in replacements:
               assert old not in candidate
               assert candidate.count(new) == 1
 
           path.write_bytes(candidate)
-          print('PINNED_SOURCE_VERIFIED')
-          print('EXACT_THREE_REPLACEMENTS_APPLIED')
-          print('CANDIDATE_BYTE_LENGTH=128728')
-          print('CANDIDATE_SHA256=4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba')
-          print('CANDIDATE_GIT_BLOB_SHA1=261e73cc2c561dbf8d4f2f8210e51dad361cec91')
+          report = {
+              'result': 'EXACT_EAST_CANDIDATE_CONSTRUCTED',
+              'sourceIdentity': source_identity,
+              'candidateIdentity': candidate_identity,
+              'replacementCount': sum(replacement_counts),
+              'changedRepositoryPath': '/showroom/globe/h-earth/render/geometry-kernel.east.js',
+              'sourceCorrectionAuthority': 'DIRECT_ORIGIN_AUTHORITY_BOUNDED_TO_ESTABLISHED_DEFECT',
+              'productionClaimAuthority': 'NONE',
+          }
+          Path('east-repair-verification.json').write_text(
+              json.dumps(report, indent=2) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(report, indent=2))
           PY
 
       - name: Run East syntax check
@@ -78,12 +102,10 @@ jobs:
           import { fileURLToPath, pathToFileURL } from 'node:url';
 
           const root = process.cwd();
-          const manifestUrl = pathToFileURL(
+          const manifestModule = await import(pathToFileURL(
             path.join(root, 'showroom/globe/h-earth/diagnostic/manifest-projection.js')
-          ).href;
-          const manifestModule = await import(manifestUrl);
+          ).href);
           const manifest = manifestModule.H_EARTH_FD05_MANIFEST_PROJECTION;
-
           if (!manifest || !Array.isArray(manifest.rows) || manifest.rows.length !== 19) {
             throw new Error('EXACT_NINETEEN_MANIFEST_ROWS_REQUIRED');
           }
@@ -92,13 +114,11 @@ jobs:
           async function loadModule(absolutePath) {
             const normalized = path.normalize(absolutePath);
             if (cache.has(normalized)) return cache.get(normalized);
-
             const source = await readFile(normalized, 'utf8');
             const module = new vm.SourceTextModule(source, {
               identifier: pathToFileURL(normalized).href
             });
             cache.set(normalized, module);
-
             await module.link(async (specifier, referencingModule) => {
               let resolved;
               if (specifier.startsWith('/')) {
@@ -115,33 +135,27 @@ jobs:
 
           const fulfilled = [];
           for (const row of manifest.rows) {
-            const repositoryPath = row.repositoryPath;
-            if (typeof repositoryPath !== 'string' || !repositoryPath.startsWith('/')) {
-              throw new Error(`INVALID_REPOSITORY_PATH:${String(repositoryPath)}`);
-            }
-            const module = await loadModule(path.join(root, repositoryPath.slice(1)));
+            const module = await loadModule(path.join(root, row.repositoryPath.slice(1)));
             if (module.status !== 'linked') {
-              throw new Error(`MODULE_NOT_LINKED:${repositoryPath}:${module.status}`);
+              throw new Error(`MODULE_NOT_LINKED:${row.repositoryPath}:${module.status}`);
             }
             fulfilled.push(row.captureOrder);
           }
-
           console.log(`FULFILLED_${fulfilled.length}_OF_19`);
-          console.log(`CAPTURE_ORDERS=${fulfilled.join(',')}`);
           NODE
 
-      - name: Enforce one-file diff
+      - name: Enforce exact one-file source delta
         shell: bash
         run: |
           git diff --check
           test "$(git diff --name-only)" = "showroom/globe/h-earth/render/geometry-kernel.east.js"
-          test "$(git status --short | wc -l)" -eq 1
 
-      - name: Commit exact East correction
-        shell: bash
-        run: |
-          git config user.name 'OpenAI Agent'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add showroom/globe/h-earth/render/geometry-kernel.east.js
-          git commit -m 'Correct East template literals'
-          git push origin HEAD:${{ github.ref_name }}
+      - name: Upload verified candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-east-verified-candidate
+          path: |
+            showroom/globe/h-earth/render/geometry-kernel.east.js
+            east-repair-verification.json
+          if-no-files-found: error
+          retention-days: 1

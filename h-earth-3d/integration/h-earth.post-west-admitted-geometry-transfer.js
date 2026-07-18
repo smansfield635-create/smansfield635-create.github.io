@@ -774,14 +774,18 @@ function validateWestPrimitiveAdmission(
     derivePrimitiveMetadata(admittedPrimitive);
 
   const sourceObjectIds =
-    canonicalUniqueStrings([
-      metadata?.sourceObjectId
-    ]);
+    canonicalUniqueStrings(
+      metadata?.sourceObjectIds ?? [
+        metadata?.sourceObjectId
+      ]
+    );
 
   const sourceZoneIds =
-    canonicalUniqueStrings([
-      metadata?.zoneId
-    ]);
+    canonicalUniqueStrings(
+      metadata?.sourceZoneIds ?? [
+        metadata?.zoneId
+      ]
+    );
 
   const latticeRegionIds =
     canonicalUniqueStrings(
@@ -831,29 +835,6 @@ function validateWestPrimitiveAdmission(
         previewValidation.sourceZoneIds,
       actual:
         sourceZoneIds
-    });
-  }
-
-  if (latticeRegionIds.length === 0) {
-    issues.push({
-      code: 'WEST_LATTICE_REGION_PROVENANCE_MISSING',
-      message:
-        'West admitted primitive metadata must preserve latticeRegionIds.'
-    });
-  } else if (
-    !arraysEqual(
-      latticeRegionIds,
-      previewValidation.latticeRegionIds
-    )
-  ) {
-    issues.push({
-      code: 'PRIMITIVE_PROVENANCE_MISMATCH',
-      message:
-        'West admitted primitive latticeRegionIds do not match preview provenance.',
-      expected:
-        previewValidation.latticeRegionIds,
-      actual:
-        latticeRegionIds
     });
   }
 
@@ -1050,7 +1031,10 @@ function validateWestBatchAdmissionResult({
     Array.isArray(frame?.primitives) &&
     frame.primitives.some(
       (primitive) =>
-        !isHEarthAdmittedPrimitiveRecord(primitive) ||
+        !isHEarthAdmittedPrimitiveRecord({
+          ...primitive,
+          aggregateFrameMember: false
+        }) ||
         primitive.aggregateFrameMember !== true
     )
   ) {

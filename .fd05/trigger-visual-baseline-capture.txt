@@ -1,0 +1,1 @@
+Trigger the FD-05 terminal renderer visual-baseline capture workflow.

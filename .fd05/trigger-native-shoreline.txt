@@ -1,1 +1,1 @@
-Trigger the corrected Packet 002 minimum native shoreline workflow.
+Trigger the explicit compositor-mode native shoreline workflow.

@@ -31,8 +31,8 @@
 
     Candidate executable browser corridor:
 
-    /showroom/globe/h-earth/render/geometry-preview.js
-      previewHEarthWetSandGeometry(...)
+    /showroom/globe/h-earth/render/shoreline-preview.js
+      previewHEarthMinimumShorelineGeometry(...)
         ->
     /showroom/globe/h-earth/render/geometry-kernel.js
       admitHEarthPrimitiveBatch(...)
@@ -192,7 +192,7 @@
 
   <meta
     name="h-earth-preview-contract"
-    content="H_EARTH_3D_GEOMETRY_PREVIEW_FILE_RENEWAL_STEP_034O_6_PREVIEW_PACKET_001_WET_SAND_PROVIDER_TRANSLATION_v1"
+    content="H_EARTH_3D_SHORELINE_PREVIEW_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1"
   />
 
   <meta
@@ -781,7 +781,7 @@
       'H_EARTH_3D_ROUTE_ENTRY_FILE_RENEWAL_STEP_034V_PACKET_001_TO_PACKET_002_TO_STEP_034P_BROWSER_EXECUTION_v1';
 
     const EXPECTED_PREVIEW_CONTRACT_ID =
-      'H_EARTH_3D_GEOMETRY_PREVIEW_FILE_RENEWAL_STEP_034O_6_PREVIEW_PACKET_001_WET_SAND_PROVIDER_TRANSLATION_v1';
+      'H_EARTH_3D_SHORELINE_PREVIEW_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1';
 
     const EXPECTED_KERNEL_CONTRACT_ID =
       'H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_FILE_BIRTH_STEP_034O_4F_STABLE_DIRECTIONAL_KERNEL_EXPORT_SURFACE_v1';
@@ -805,7 +805,7 @@
       'H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034D_PUBLIC_ENVIRONMENT_HOST_AND_LAYER_4_STATUS_SUPPORT_v1';
 
     const PREVIEW_MODULE_PATH =
-      './render/geometry-preview.js?v=034o6';
+      './render/shoreline-preview.js?v=fd05-shoreline-001';
 
     const KERNEL_MODULE_PATH =
       './render/geometry-kernel.js?v=034o4f';
@@ -823,7 +823,7 @@
       'OBJ_002_FOREGROUND_WET_SAND';
 
     const REQUESTED_PURPOSE =
-      'WET_SAND_GEOMETRY_PREVIEW';
+      'MINIMUM_NATIVE_SHORELINE_GEOMETRY_PREVIEW';
 
     const FAILURE_GLOBAL =
       'H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE';
@@ -1428,7 +1428,7 @@
         token,
 
         requestId:
-          `H_EARTH_WET_SAND_ROUTE_REQUEST:${token}`,
+          `H_EARTH_MINIMUM_NATIVE_SHORELINE_ROUTE_REQUEST:${token}`,
 
         aggregateFrameId:
           `H_EARTH_WEST_AGGREGATE_FRAME:${token}`,
@@ -1584,7 +1584,7 @@
       ) {
         const error =
           new Error(
-            'The wet-sand preview result is not eligible for West batch admission.'
+            'The minimum native shoreline preview result is not eligible for West batch admission.'
           );
 
         error.name =
@@ -2857,7 +2857,7 @@
               modules.previewModule,
 
             exportName:
-              'previewHEarthWetSandGeometry',
+              'previewHEarthMinimumShorelineGeometry',
 
             phase:
               'PREVIEW_API_VERIFICATION',
@@ -3064,8 +3064,8 @@
 
                     sourceObjectIds:
                       Object.freeze([
-                        previewResult
-                          .sourceObjectId
+                        ...previewResult
+                          .sourceObjectIds
                       ]),
 
                     sourceZoneIds:
@@ -3180,11 +3180,11 @@
       const presentationMode =
         modules
           .admittedFrameModule
-          .H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE;
+          .H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE;
 
       if (
         presentationMode !==
-        'FIRST_ADMITTED_WET_SAND_PROOF'
+        'MINIMUM_NATIVE_SHORELINE_PROOF'
       ) {
         const error =
           new Error(

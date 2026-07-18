@@ -44,6 +44,7 @@ import {
 import {
   H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
   H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,
+  H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE,
   composeHEarth3DAdmittedGeometryFrame,
   isHEarth3DAdmittedGeometryFrame,
   getHEarth3DAdmittedGeometryFrameContract,
@@ -83,6 +84,12 @@ const ADMITTED_VISIBILITY_LAYER_IDS =
   Object.freeze([
     PRIMARY_PRESENTATION_VISIBILITY_KEY,
     ROUTE_OVERLAY_VISIBILITY_KEY
+  ]);
+
+const ADMITTED_PRESENTATION_MODES =
+  Object.freeze([
+    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,
+    H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE
   ]);
 
 const CAMERA_STATE_CAPACITY_CHECK_ID =
@@ -7236,19 +7243,20 @@ function evaluateFrameCompositionInput(
   }
 
   if (
-    presentationMode !==
-    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE
+    !ADMITTED_PRESENTATION_MODES.includes(
+      presentationMode
+    )
   ) {
     issues.push(
       createCompositorIssue(
         'COMPOSITOR_PRESENTATION_MODE_INVALID',
-        'The current compositor admits only FIRST_ADMITTED_WET_SAND_PROOF.',
+        'The compositor presentation mode is not one of the explicit admitted proof modes.',
         {
           field:
             'presentationMode',
 
           expected:
-            H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,
+            ADMITTED_PRESENTATION_MODES,
 
           actual:
             presentationMode ??

@@ -70,6 +70,15 @@ const SOURCE_FILE =
 const EXPECTED_PREVIEW_CONTRACT_ID =
   'H_EARTH_3D_GEOMETRY_PREVIEW_FILE_RENEWAL_STEP_034O_6_PREVIEW_PACKET_001_WET_SAND_PROVIDER_TRANSLATION_v1';
 
+const EXPECTED_SHORELINE_PREVIEW_CONTRACT_ID =
+  'H_EARTH_3D_SHORELINE_PREVIEW_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1';
+
+const ACCEPTED_PREVIEW_CONTRACT_IDS =
+  Object.freeze([
+    EXPECTED_PREVIEW_CONTRACT_ID,
+    EXPECTED_SHORELINE_PREVIEW_CONTRACT_ID
+  ]);
+
 const SUCCESS_STATUS =
   'WEST_ADMISSION_COMPLETE_INDEX_NOT_YET_DEFINED';
 
@@ -116,6 +125,21 @@ function arraysEqual(left, right) {
     Array.isArray(right) &&
     left.length === right.length &&
     left.every((value, index) => value === right[index])
+  );
+}
+
+function isNonEmptyCanonicalSubset(candidate, aggregate) {
+  return (
+    Array.isArray(candidate) &&
+    candidate.length > 0 &&
+    arraysEqual(
+      candidate,
+      canonicalUniqueStrings(candidate)
+    ) &&
+    Array.isArray(aggregate) &&
+    candidate.every(
+      (value) => aggregate.includes(value)
+    )
   );
 }
 
@@ -571,15 +595,16 @@ function validatePreviewResult(previewResult) {
   }
 
   if (
-    previewResult.contractId !==
-    EXPECTED_PREVIEW_CONTRACT_ID
+    !ACCEPTED_PREVIEW_CONTRACT_IDS.includes(
+      previewResult.contractId
+    )
   ) {
     issues.push({
       code: 'PREVIEW_RESULT_CONTRACT_ID_MISMATCH',
       message:
-        'previewResult contractId does not match the controlling preview occurrence.',
+        'previewResult contractId does not match an admitted preview occurrence.',
       expected:
-        EXPECTED_PREVIEW_CONTRACT_ID,
+        ACCEPTED_PREVIEW_CONTRACT_IDS,
       actual:
         previewResult.contractId ?? null
     });
@@ -796,10 +821,10 @@ function validateWestPrimitiveAdmission(
     issues.push({
       code: 'WEST_SOURCE_OBJECT_PROVENANCE_MISSING',
       message:
-        'West admitted primitive metadata must preserve sourceObjectId.'
+        'West admitted primitive metadata must preserve one or more sourceObjectIds.'
     });
   } else if (
-    !arraysEqual(
+    !isNonEmptyCanonicalSubset(
       sourceObjectIds,
       previewValidation.sourceObjectIds
     )
@@ -807,7 +832,7 @@ function validateWestPrimitiveAdmission(
     issues.push({
       code: 'PRIMITIVE_PROVENANCE_MISMATCH',
       message:
-        'West admitted primitive sourceObjectId does not match preview provenance.',
+        'West admitted primitive sourceObjectIds must be a non-empty canonical subset of aggregate preview provenance.',
       expected:
         previewValidation.sourceObjectIds,
       actual:
@@ -819,10 +844,10 @@ function validateWestPrimitiveAdmission(
     issues.push({
       code: 'WEST_SOURCE_ZONE_PROVENANCE_MISSING',
       message:
-        'West admitted primitive metadata must preserve zoneId.'
+        'West admitted primitive metadata must preserve one or more sourceZoneIds.'
     });
   } else if (
-    !arraysEqual(
+    !isNonEmptyCanonicalSubset(
       sourceZoneIds,
       previewValidation.sourceZoneIds
     )
@@ -830,11 +855,29 @@ function validateWestPrimitiveAdmission(
     issues.push({
       code: 'PRIMITIVE_PROVENANCE_MISMATCH',
       message:
-        'West admitted primitive zoneId does not match preview provenance.',
+        'West admitted primitive sourceZoneIds must be a non-empty canonical subset of aggregate preview provenance.',
       expected:
         previewValidation.sourceZoneIds,
       actual:
         sourceZoneIds
+    });
+  }
+
+  if (
+    latticeRegionIds.length > 0 &&
+    !isNonEmptyCanonicalSubset(
+      latticeRegionIds,
+      previewValidation.latticeRegionIds
+    )
+  ) {
+    issues.push({
+      code: 'PRIMITIVE_PROVENANCE_MISMATCH',
+      message:
+        'West admitted primitive latticeRegionIds must be a canonical subset of aggregate preview provenance.',
+      expected:
+        previewValidation.latticeRegionIds,
+      actual:
+        latticeRegionIds
     });
   }
 

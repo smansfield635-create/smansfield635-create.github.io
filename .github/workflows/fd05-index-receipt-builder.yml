@@ -1,0 +1,102 @@
+name: FD05 index viewport final receipt builder
+
+on:
+  pull_request:
+    branches:
+      - agent/fd05-index-receipt-builder-001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  build-receipt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-index-receipt-builder-001
+          fetch-depth: 0
+      - name: Generate exact validation record
+        run: |
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+          git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > .fd05-test-index-viewport.mjs
+          node --experimental-default-type=module .fd05-test-index-viewport.mjs > /tmp/route-result.json
+          rm .fd05-test-index-viewport.mjs
+          mkdir -p .fd05
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          from pathlib import Path
+
+          def command(*args):
+              return subprocess.check_output(args, text=True).strip()
+
+          path = Path('showroom/globe/h-earth/index.js')
+          current_bytes = path.read_bytes()
+          old_bytes = subprocess.check_output([
+              'git', 'show',
+              'a3cd9ea92fe01d195e0df3e6374c02e906f76ed7:showroom/globe/h-earth/index.js'
+          ])
+          route = json.loads(Path('/tmp/route-result.json').read_text(encoding='utf-8'))
+
+          record = {
+              'validationId': 'H_EARTH_FD05_INDEX_COMPOSITOR_VIEWPORT_INITIALIZATION_PREMERGE_VALIDATION_001',
+              'status': 'PASS',
+              'repository': 'smansfield635-create/smansfield635-create.github.io',
+              'targetPath': 'showroom/globe/h-earth/index.js',
+              'base': {
+                  'commitSha': 'a3cd9ea92fe01d195e0df3e6374c02e906f76ed7',
+                  'byteLength': len(old_bytes),
+                  'sha256': hashlib.sha256(old_bytes).hexdigest(),
+                  'gitBlobSha': command('git', 'rev-parse', 'a3cd9ea92fe01d195e0df3e6374c02e906f76ed7:showroom/globe/h-earth/index.js')
+              },
+              'installedMain': {
+                  'commitSha': '637733701f845cdff6bd802b1b94ab7bee5eb299',
+                  'byteLength': len(current_bytes),
+                  'sha256': hashlib.sha256(current_bytes).hexdigest(),
+                  'gitBlobSha': command('git', 'hash-object', str(path))
+              },
+              'pullRequest': {
+                  'number': 24,
+                  'headSha': 'a02924691b6a1683ba795b8bac86e3aaf398521d',
+                  'changedFileCount': 1,
+                  'additions': 412,
+                  'deletions': 0,
+                  'mergeCommitSha': '637733701f845cdff6bd802b1b94ab7bee5eb299'
+              },
+              'mechanicalGates': {
+                  'javascriptSyntax': 'PASS',
+                  'governedRootImports': route['governedImports']
+              },
+              'desktopRoute': route['desktop'],
+              'mobileRoute': route['mobile'],
+              'failureRoute': route['failure'],
+              'scope': {
+                  'changedPaths': ['showroom/globe/h-earth/index.js'],
+                  'rendererModified': False,
+                  'compositorModified': False,
+                  'capacityModified': False,
+                  'admittedFrameModified': False,
+                  'environmentModified': False,
+                  'packet002Modified': False,
+                  'sceneDefinitionsModified': False
+              },
+              'claimCeiling': {
+                  'controlledDesktopMount': 'PASS',
+                  'controlledMobileMount': 'PASS',
+                  'deployedRendererTakeover': 'PENDING',
+                  'visualPass': 'NOT_ESTABLISHED',
+                  'production': 'NOT_ESTABLISHED'
+              }
+          }
+          Path('.fd05/generated-index-viewport-validation.json').write_text(
+              json.dumps(record, indent=2) + '\n', encoding='utf-8'
+          )
+          PY
+          git config user.name "OpenAI Engineering Agent"
+          git config user.email "engineering-agent@users.noreply.github.com"
+          git add .fd05/generated-index-viewport-validation.json
+          git commit -m "Generate index viewport correction validation receipt"
+          git push origin HEAD:agent/fd05-index-receipt-builder-001

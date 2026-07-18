@@ -67,9 +67,9 @@ const packetSuffix = (packetId) => safeName(String(packetId).replace(/^H_EARTH_F
 
 function tone(value) {
   const text = String(value || '').toUpperCase();
-  if (text.includes('PASS') || text.includes('MATCH') || text.includes('FULFILLED') || text.includes('COMPLETE') || text.includes('READY')) return 'status-chip status-chip--pass';
-  if (text.includes('HELD') || text.includes('UNEVALUABLE') || text.includes('UNRESOLVED') || text.includes('MISSING')) return 'status-chip status-chip--held';
   if (text.includes('FAIL') || text.includes('REJECT') || text.includes('MISMATCH') || text.includes('CONFLICT') || text.includes('INVALID')) return 'status-chip status-chip--finding';
+  if (text.includes('HELD') || text.includes('UNEVALUABLE') || text.includes('UNRESOLVED') || text.includes('MISSING') || text.includes('NOT_READY')) return 'status-chip status-chip--held';
+  if (text.includes('PASS') || text === 'MATCH' || text.includes('FULFILLED') || text.includes('COMPLETE') || text.includes('READY')) return 'status-chip status-chip--pass';
   return 'status-chip';
 }
 

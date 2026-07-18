@@ -1,1 +1,1 @@
-Trigger the repaired canonical minimum native shoreline workflow after renderer API harness correction.
+Trigger the repaired canonical minimum native shoreline workflow after renderer membership correspondence repair.

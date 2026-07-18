@@ -1,0 +1,1 @@
+Trigger the exact deployed wet-sand visual baseline capture.

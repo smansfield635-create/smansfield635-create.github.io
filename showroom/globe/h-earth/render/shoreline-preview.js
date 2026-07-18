@@ -17,7 +17,8 @@
  */
 
 import {
-  H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
+  H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID as
+    H_EARTH_3D_WET_SAND_GEOMETRY_PREVIEW_CONTRACT_ID,
   previewHEarthWetSandGeometry
 } from './geometry-preview.js';
 
@@ -40,6 +41,9 @@ import {
 
 export const H_EARTH_3D_SHORELINE_PREVIEW_CONTRACT_ID =
   'H_EARTH_3D_SHORELINE_PREVIEW_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1';
+
+export const H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID =
+  H_EARTH_3D_SHORELINE_PREVIEW_CONTRACT_ID;
 
 export const H_EARTH_3D_SHORELINE_PREVIEW_SOURCE_FILE =
   '/showroom/globe/h-earth/render/shoreline-preview.js';
@@ -321,7 +325,7 @@ export function previewHEarthMinimumShorelineGeometry({
         status:
           'H_EARTH_MINIMUM_NATIVE_SHORELINE_AGGREGATION_ACCEPTED',
         wetSandPreviewContractId:
-          H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
+          H_EARTH_3D_WET_SAND_GEOMETRY_PREVIEW_CONTRACT_ID,
         foamProviderContractId:
           H_EARTH_3D_GEOMETRY_FOAM_PROVIDER_CONTRACT_ID,
         waterProviderContractId:
@@ -422,6 +426,7 @@ export function getHEarthMinimumShorelinePreviewContract() {
 
 export default Object.freeze({
   H_EARTH_3D_SHORELINE_PREVIEW_CONTRACT_ID,
+  H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
   H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_OBJECT_IDS,
   H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_ZONE_IDS,
   H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_LATTICE_REGION_IDS,

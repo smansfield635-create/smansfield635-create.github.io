@@ -1,1 +1,1 @@
-Run the complete shoreline API inspection v2.
+Run the complete shoreline API and authority inspection v3.

@@ -1,0 +1,147 @@
+name: H-Earth East one-shot repair
+
+on:
+  push:
+    branches:
+      - agent/h-earth-east-template-literal-repair
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.event.head_commit.message == 'Stage one-shot East correction workflow'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Verify pinned bytes and apply exact repair
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from hashlib import sha1, sha256
+          from pathlib import Path
+
+          path = Path('showroom/globe/h-earth/render/geometry-kernel.east.js')
+          source = path.read_bytes()
+
+          def git_blob_sha(data: bytes) -> str:
+              return sha1(f'blob {len(data)}\0'.encode('ascii') + data).hexdigest()
+
+          assert len(source) == 128722, len(source)
+          assert sha256(source).hexdigest() == '5ce77ab2e477ff1585e2e5835c6c95cac32219e28e44b589f43d15a10afe8e2c'
+          assert git_blob_sha(source) == 'b9872c89291f9ec6d404fd7203d7de57826670cf'
+
+          replacements = (
+              (b'? ${first}:${second}', b'? `${first}:${second}`'),
+              (b': ${second}:${first};', b': `${second}:${first}`;'),
+              (b'return ${first}:${second};', b'return `${first}:${second}`;'),
+          )
+
+          candidate = source
+          for old, new in replacements:
+              assert candidate.count(old) == 1, (old, candidate.count(old))
+              candidate = candidate.replace(old, new, 1)
+
+          assert len(candidate) == 128728, len(candidate)
+          assert sha256(candidate).hexdigest() == '4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba'
+          assert git_blob_sha(candidate) == '261e73cc2c561dbf8d4f2f8210e51dad361cec91'
+
+          for old, new in replacements:
+              assert old not in candidate
+              assert candidate.count(new) == 1
+
+          path.write_bytes(candidate)
+          print('PINNED_SOURCE_VERIFIED')
+          print('EXACT_THREE_REPLACEMENTS_APPLIED')
+          print('CANDIDATE_BYTE_LENGTH=128728')
+          print('CANDIDATE_SHA256=4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba')
+          print('CANDIDATE_GIT_BLOB_SHA1=261e73cc2c561dbf8d4f2f8210e51dad361cec91')
+          PY
+
+      - name: Run East syntax check
+        shell: bash
+        run: node --check showroom/globe/h-earth/render/geometry-kernel.east.js
+
+      - name: Parse and link all nineteen governed roots
+        shell: bash
+        run: |
+          node --experimental-vm-modules --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          import path from 'node:path';
+          import vm from 'node:vm';
+          import { fileURLToPath, pathToFileURL } from 'node:url';
+
+          const root = process.cwd();
+          const manifestUrl = pathToFileURL(
+            path.join(root, 'showroom/globe/h-earth/diagnostic/manifest-projection.js')
+          ).href;
+          const manifestModule = await import(manifestUrl);
+          const manifest = manifestModule.H_EARTH_FD05_MANIFEST_PROJECTION;
+
+          if (!manifest || !Array.isArray(manifest.rows) || manifest.rows.length !== 19) {
+            throw new Error('EXACT_NINETEEN_MANIFEST_ROWS_REQUIRED');
+          }
+
+          const cache = new Map();
+          async function loadModule(absolutePath) {
+            const normalized = path.normalize(absolutePath);
+            if (cache.has(normalized)) return cache.get(normalized);
+
+            const source = await readFile(normalized, 'utf8');
+            const module = new vm.SourceTextModule(source, {
+              identifier: pathToFileURL(normalized).href
+            });
+            cache.set(normalized, module);
+
+            await module.link(async (specifier, referencingModule) => {
+              let resolved;
+              if (specifier.startsWith('/')) {
+                resolved = path.join(root, specifier.slice(1));
+              } else if (specifier.startsWith('.')) {
+                resolved = fileURLToPath(new URL(specifier, referencingModule.identifier));
+              } else {
+                throw new Error(`UNSUPPORTED_BARE_IMPORT:${specifier}`);
+              }
+              return loadModule(resolved);
+            });
+            return module;
+          }
+
+          const fulfilled = [];
+          for (const row of manifest.rows) {
+            const repositoryPath = row.repositoryPath;
+            if (typeof repositoryPath !== 'string' || !repositoryPath.startsWith('/')) {
+              throw new Error(`INVALID_REPOSITORY_PATH:${String(repositoryPath)}`);
+            }
+            const module = await loadModule(path.join(root, repositoryPath.slice(1)));
+            if (module.status !== 'linked') {
+              throw new Error(`MODULE_NOT_LINKED:${repositoryPath}:${module.status}`);
+            }
+            fulfilled.push(row.captureOrder);
+          }
+
+          console.log(`FULFILLED_${fulfilled.length}_OF_19`);
+          console.log(`CAPTURE_ORDERS=${fulfilled.join(',')}`);
+          NODE
+
+      - name: Enforce one-file diff
+        shell: bash
+        run: |
+          git diff --check
+          test "$(git diff --name-only)" = "showroom/globe/h-earth/render/geometry-kernel.east.js"
+          test "$(git status --short | wc -l)" -eq 1
+
+      - name: Commit exact East correction
+        shell: bash
+        run: |
+          git config user.name 'OpenAI Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/render/geometry-kernel.east.js
+          git commit -m 'Correct East template literals'
+          git push origin HEAD:${{ github.ref_name }}

@@ -1,0 +1,1 @@
+Run the isolated shoreline multi-primitive contract check.

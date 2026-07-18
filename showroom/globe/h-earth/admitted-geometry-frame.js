@@ -119,6 +119,9 @@ export const H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_STATUS =
 export const H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE =
   'FIRST_ADMITTED_WET_SAND_PROOF';
 
+export const H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE =
+  'MINIMUM_NATIVE_SHORELINE_PROOF';
+
 const EXPECTED_PACKET_002_STATUS =
   'WEST_ADMISSION_COMPLETE_INDEX_NOT_YET_DEFINED';
 
@@ -164,9 +167,31 @@ const EXPECTED_LATTICE_REGION_IDS =
     EXPECTED_PRIMARY_LATTICE_REGION_ID
   ]);
 
+const EXPECTED_SHORELINE_SOURCE_OBJECT_IDS =
+  Object.freeze([
+    'OBJ_002_FOREGROUND_WET_SAND',
+    'OBJ_005_SHORELINE_FOAM_LINE',
+    'OBJ_007_WATER_SURFACE_PLANE'
+  ]);
+
+const EXPECTED_SHORELINE_SOURCE_ZONE_IDS =
+  Object.freeze([
+    'ZONE_001_FOREGROUND_INSPECTION_ZONE',
+    'ZONE_002_SHORELINE_CONTACT_ZONE',
+    'ZONE_003_WATER_SURFACE_ZONE'
+  ]);
+
+const EXPECTED_SHORELINE_LATTICE_REGION_IDS =
+  Object.freeze([
+    'FOREGROUND_INSPECTION_GROUND',
+    'SHORELINE_CONTACT',
+    'WATER_SURFACE_PLANE'
+  ]);
+
 const ALLOWED_PRESENTATION_MODES =
   Object.freeze([
-    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE
+    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,
+    H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE
   ]);
 
 const REQUIRED_PUBLIC_INPUT_KEYS =
@@ -380,6 +405,17 @@ function arraysEqual(left, right) {
     left.every(
       (value, index) =>
         value === right[index]
+    )
+  );
+}
+
+function isNonEmptyCanonicalSubset(candidate, aggregate) {
+  return (
+    isCanonicalStringArray(candidate) &&
+    candidate.length > 0 &&
+    Array.isArray(aggregate) &&
+    candidate.every(
+      (value) => aggregate.includes(value)
     )
   );
 }
@@ -1541,30 +1577,48 @@ function getAggregateFrameAdmittedStatus() {
   );
 }
 
-function validateExactFirstProofProvenance({
+function validateProofProvenance({
+  presentationMode,
   sourceObjectIds,
   sourceZoneIds,
   latticeRegionIds
 }) {
   const issues = [];
 
+  const shorelineMode =
+    presentationMode ===
+      H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE;
+
+  const expectedSourceObjectIds =
+    shorelineMode
+      ? EXPECTED_SHORELINE_SOURCE_OBJECT_IDS
+      : EXPECTED_SOURCE_OBJECT_IDS;
+
+  const expectedSourceZoneIds =
+    shorelineMode
+      ? EXPECTED_SHORELINE_SOURCE_ZONE_IDS
+      : EXPECTED_SOURCE_ZONE_IDS;
+
+  const expectedLatticeRegionIds =
+    shorelineMode
+      ? EXPECTED_SHORELINE_LATTICE_REGION_IDS
+      : EXPECTED_LATTICE_REGION_IDS;
+
   if (
     !isCanonicalExactStringArray(
       sourceObjectIds,
-      EXPECTED_SOURCE_OBJECT_IDS
+      expectedSourceObjectIds
     )
   ) {
     issues.push(
       createBridgeIssue(
-        'FIRST_PROOF_SOURCE_OBJECT_MEMBERSHIP_INVALID',
-        'FIRST_ADMITTED_WET_SAND_PROOF requires one canonical source-object identity with no duplicates or additional members.',
+        'PROOF_SOURCE_OBJECT_MEMBERSHIP_INVALID',
+        'The selected proof mode requires exact canonical source-object membership.',
         {
           field:
             'sourceObjectIds',
-
           expected:
-            EXPECTED_SOURCE_OBJECT_IDS,
-
+            expectedSourceObjectIds,
           actual:
             Array.isArray(sourceObjectIds)
               ? sourceObjectIds
@@ -1577,20 +1631,18 @@ function validateExactFirstProofProvenance({
   if (
     !isCanonicalExactStringArray(
       sourceZoneIds,
-      EXPECTED_SOURCE_ZONE_IDS
+      expectedSourceZoneIds
     )
   ) {
     issues.push(
       createBridgeIssue(
-        'FIRST_PROOF_SOURCE_ZONE_MEMBERSHIP_INVALID',
-        'FIRST_ADMITTED_WET_SAND_PROOF requires one canonical source-zone identity with no duplicates or additional members.',
+        'PROOF_SOURCE_ZONE_MEMBERSHIP_INVALID',
+        'The selected proof mode requires exact canonical source-zone membership.',
         {
           field:
             'sourceZoneIds',
-
           expected:
-            EXPECTED_SOURCE_ZONE_IDS,
-
+            expectedSourceZoneIds,
           actual:
             Array.isArray(sourceZoneIds)
               ? sourceZoneIds
@@ -1603,20 +1655,18 @@ function validateExactFirstProofProvenance({
   if (
     !isCanonicalExactStringArray(
       latticeRegionIds,
-      EXPECTED_LATTICE_REGION_IDS
+      expectedLatticeRegionIds
     )
   ) {
     issues.push(
       createBridgeIssue(
-        'FIRST_PROOF_LATTICE_REGION_MEMBERSHIP_INVALID',
-        'FIRST_ADMITTED_WET_SAND_PROOF requires one canonical lattice-region identity with no duplicates or additional members.',
+        'PROOF_LATTICE_REGION_MEMBERSHIP_INVALID',
+        'The selected proof mode requires exact canonical lattice-region membership.',
         {
           field:
             'latticeRegionIds',
-
           expected:
-            EXPECTED_LATTICE_REGION_IDS,
-
+            expectedLatticeRegionIds,
           actual:
             Array.isArray(latticeRegionIds)
               ? latticeRegionIds
@@ -1629,7 +1679,6 @@ function validateExactFirstProofProvenance({
   return Object.freeze({
     ok:
       issues.length === 0,
-
     issues:
       freezeIssues(issues)
   });
@@ -1647,7 +1696,6 @@ function validatePrimitiveSourceProvenance({
   if (!Array.isArray(primitives)) {
     return Object.freeze({
       ok: false,
-
       issues: freezeIssues([
         createBridgeIssue(
           'PRIMITIVE_PROVENANCE_INPUT_INVALID',
@@ -1685,8 +1733,13 @@ function validatePrimitiveSourceProvenance({
           ]
         );
 
+      const primitiveLatticeRegionIds =
+        canonicalUniqueStrings(
+          metadata?.latticeRegionIds
+        );
+
       if (
-        !arraysEqual(
+        !isNonEmptyCanonicalSubset(
           primitiveSourceObjectIds,
           sourceObjectIds
         )
@@ -1694,14 +1747,12 @@ function validatePrimitiveSourceProvenance({
         issues.push(
           createBridgeIssue(
             'PRIMITIVE_SOURCE_OBJECT_PROVENANCE_MISMATCH',
-            'Primitive source-object provenance must correspond exactly to frame provenance.',
+            'Primitive source-object provenance must be a non-empty canonical subset of frame provenance.',
             {
               field:
                 `${fieldPrefix}[${index}].metadata.sourceObjectIds`,
-
               expected:
                 sourceObjectIds,
-
               actual:
                 primitiveSourceObjectIds
             }
@@ -1710,7 +1761,7 @@ function validatePrimitiveSourceProvenance({
       }
 
       if (
-        !arraysEqual(
+        !isNonEmptyCanonicalSubset(
           primitiveSourceZoneIds,
           sourceZoneIds
         )
@@ -1718,16 +1769,37 @@ function validatePrimitiveSourceProvenance({
         issues.push(
           createBridgeIssue(
             'PRIMITIVE_SOURCE_ZONE_PROVENANCE_MISMATCH',
-            'Primitive source-zone provenance must correspond exactly to frame provenance.',
+            'Primitive source-zone provenance must be a non-empty canonical subset of frame provenance.',
             {
               field:
                 `${fieldPrefix}[${index}].metadata.sourceZoneIds`,
-
               expected:
                 sourceZoneIds,
-
               actual:
                 primitiveSourceZoneIds
+            }
+          )
+        );
+      }
+
+      if (
+        primitiveLatticeRegionIds.length > 0 &&
+        !isNonEmptyCanonicalSubset(
+          primitiveLatticeRegionIds,
+          latticeRegionIds
+        )
+      ) {
+        issues.push(
+          createBridgeIssue(
+            'PRIMITIVE_LATTICE_REGION_PROVENANCE_MISMATCH',
+            'Primitive lattice-region provenance, when present, must be a canonical subset of frame provenance.',
+            {
+              field:
+                `${fieldPrefix}[${index}].metadata.latticeRegionIds`,
+              expected:
+                latticeRegionIds,
+              actual:
+                primitiveLatticeRegionIds
             }
           )
         );
@@ -1738,12 +1810,10 @@ function validatePrimitiveSourceProvenance({
   return Object.freeze({
     ok:
       issues.length === 0,
-
     issues:
       freezeIssues(issues)
   });
 }
-
 
 /* ==========================================================================
  * 05 · BOUNDARY DECLARATION
@@ -2146,7 +2216,8 @@ function validatePacket002Transfer(
     H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE
   ) {
     const firstProofProvenance =
-      validateExactFirstProofProvenance({
+      validateProofProvenance({
+      presentationMode,
         sourceObjectIds:
           rawSourceObjectIds,
 
@@ -2570,18 +2641,21 @@ function validatePacket002Transfer(
     )
   ) {
     if (
-      !isCanonicalStringArray(
+      canonicalUniqueStrings(
         aggregateFrame.primitiveIds
-      ) ||
+      ).length !==
+        aggregateFrame.primitiveIds.length ||
       !arraysEqual(
-        aggregateFrame.primitiveIds,
+        canonicalUniqueStrings(
+          aggregateFrame.primitiveIds
+        ),
         standaloneMembership.primitiveIds
       )
     ) {
       issues.push(
         createBridgeIssue(
           'AGGREGATE_FRAME_PRIMITIVE_ID_LIST_MISMATCH',
-          'Aggregate-frame primitiveIds must be canonical, duplicate-free, and match admitted primitive membership exactly.',
+          'Aggregate-frame primitiveIds must be duplicate-free and match canonical admitted primitive membership regardless of lawful West insertion order.',
           {
             field:
               'packet002Transfer.aggregateFrameAdmissionRecord.primitiveIds',
@@ -2652,8 +2726,9 @@ function validatePacket002Transfer(
   }
 
   if (
-    presentationMode ===
-      H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE &&
+    ALLOWED_PRESENTATION_MODES.includes(
+      presentationMode
+    ) &&
     (
       bounds?.empty !== false ||
       aggregateBounds?.empty !== false
@@ -3475,6 +3550,39 @@ function buildWetSandPresentationAssignments({
 }) {
   const issues = [];
 
+  const presentationBySourceObjectId =
+    Object.freeze({
+      OBJ_002_FOREGROUND_WET_SAND:
+        Object.freeze({
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_WET_SAND',
+          materialIntent:
+            'WET_SAND'
+        }),
+
+      OBJ_005_SHORELINE_FOAM_LINE:
+        Object.freeze({
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_FOAM',
+          materialIntent:
+            'FOAM_CONTACT'
+        }),
+
+      OBJ_007_WATER_SURFACE_PLANE:
+        Object.freeze({
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_OPEN_WATER',
+          materialIntent:
+            'OPEN_WATER'
+        })
+    });
+
   const assignments =
     admittedPrimitives.map(
       (primitive) => {
@@ -3500,6 +3608,28 @@ function buildWetSandPresentationAssignments({
             ? primitiveSourceObjectIds[0]
             : null;
 
+        const presentation =
+          sourceObjectId
+            ? presentationBySourceObjectId[
+                sourceObjectId
+              ] ?? null
+            : null;
+
+        if (!presentation) {
+          issues.push(
+            createBridgeIssue(
+              'PRESENTATION_SOURCE_OBJECT_UNSUPPORTED',
+              'No admitted-frame presentation mapping exists for this exact source object.',
+              {
+                field:
+                  primitiveId,
+                actual:
+                  sourceObjectId
+              }
+            )
+          );
+        }
+
         return deepFreeze({
           primitiveId,
           sourceObjectId,
@@ -3508,12 +3638,15 @@ function buildWetSandPresentationAssignments({
             'PRIMARY_ADMITTED_WET_SAND_SURFACE',
 
           renderLayer:
+            presentation?.renderLayer ??
             'GROUND',
 
           materialReference:
+            presentation?.materialReference ??
             'H_EARTH_MATERIAL_WET_SAND',
 
           materialIntent:
+            presentation?.materialIntent ??
             'WET_SAND',
 
           materialReferenceAuthority:
@@ -3567,7 +3700,6 @@ function buildWetSandPresentationAssignments({
         {
           expected:
             admittedPrimitives.length,
-
           actual:
             assignments.length
         }
@@ -3600,7 +3732,6 @@ function buildWetSandPresentationAssignments({
         {
           expected:
             admittedPrimitiveMembership.primitiveIds,
-
           actual:
             assignmentMembership.primitiveIds
         }
@@ -3629,7 +3760,6 @@ function buildWetSandPresentationAssignments({
         {
           expected:
             sourceObjectIds,
-
           actual:
             assignmentSourceObjectIds
         }
@@ -3656,12 +3786,10 @@ function buildWetSandPresentationAssignments({
             {
               field:
                 `presentationAssignments[${index}]`,
-
               details:
                 Object.freeze({
                   unknownKeys:
                     keyEvaluation.unknownKeys,
-
                   missingKeys:
                     keyEvaluation.missingKeys
                 })
@@ -3675,15 +3803,12 @@ function buildWetSandPresentationAssignments({
   return Object.freeze({
     ok:
       issues.length === 0,
-
     issues:
       freezeIssues(issues),
-
     assignments:
       deepFreeze(assignments)
   });
 }
-
 
 /* ==========================================================================
  * 10 · PUBLIC INPUT EVALUATION
@@ -3777,19 +3902,20 @@ export function evaluateHEarth3DAdmittedGeometryFrameInput(
     );
 
   if (
-    presentationMode !==
-    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE
+    !ALLOWED_PRESENTATION_MODES.includes(
+      presentationMode
+    )
   ) {
     issues.push(
       createBridgeIssue(
         'PRESENTATION_MODE_NOT_ADMITTED',
-        'The initial bridge admits only FIRST_ADMITTED_WET_SAND_PROOF.',
+        'The presentation mode is not one of the explicit admitted proof modes.',
         {
           field:
             'presentationMode',
 
           expected:
-            H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,
+            ALLOWED_PRESENTATION_MODES,
 
           actual:
             presentationMode
@@ -3879,8 +4005,9 @@ export function evaluateHEarth3DAdmittedGeometryFrameInput(
 
   const presentationEvaluation =
     packet002Validation.ok &&
-    presentationMode ===
-      H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE
+    ALLOWED_PRESENTATION_MODES.includes(
+      presentationMode
+    )
       ? buildWetSandPresentationAssignments({
           admittedPrimitives:
             packet002Validation.admittedPrimitives,
@@ -4433,6 +4560,39 @@ function validatePresentationAssignmentsForFrame({
     );
   }
 
+  const expectedPresentationBySourceObjectId =
+    Object.freeze({
+      OBJ_002_FOREGROUND_WET_SAND:
+        Object.freeze({
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_WET_SAND',
+          materialIntent:
+            'WET_SAND'
+        }),
+
+      OBJ_005_SHORELINE_FOAM_LINE:
+        Object.freeze({
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_FOAM',
+          materialIntent:
+            'FOAM_CONTACT'
+        }),
+
+      OBJ_007_WATER_SURFACE_PLANE:
+        Object.freeze({
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_OPEN_WATER',
+          materialIntent:
+            'OPEN_WATER'
+        })
+    });
+
   value.presentationAssignments.forEach(
     (
       assignment,
@@ -4505,15 +4665,21 @@ function validatePresentationAssignmentsForFrame({
         );
       }
 
+      const expectedPresentation =
+        expectedPresentationBySourceObjectId[
+          assignment.sourceObjectId
+        ] ?? null;
+
       if (
+        expectedPresentation === null ||
         assignment.presentationRole !==
           'PRIMARY_ADMITTED_WET_SAND_SURFACE' ||
         assignment.renderLayer !==
-          'GROUND' ||
+          expectedPresentation.renderLayer ||
         assignment.materialReference !==
-          'H_EARTH_MATERIAL_WET_SAND' ||
+          expectedPresentation.materialReference ||
         assignment.materialIntent !==
-          'WET_SAND' ||
+          expectedPresentation.materialIntent ||
         assignment.materialReferenceAuthority !==
           PRESENTATION_MATERIAL_REFERENCE_AUTHORITY ||
         assignment.materialCreated !==
@@ -4856,19 +5022,22 @@ function validateConstructedFrame(
     value.latticeRegionIds;
 
   if (
-    value.presentationMode !==
-    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE
+    !ALLOWED_PRESENTATION_MODES.includes(
+      value.presentationMode
+    )
   ) {
     issues.push(
       createBridgeIssue(
         'FRAME_PRESENTATION_MODE_INVALID',
-        'The initial frame contract admits only FIRST_ADMITTED_WET_SAND_PROOF.'
+        'The constructed frame presentation mode is not one of the explicit admitted proof modes.'
       )
     );
   }
 
   const firstProofProvenance =
-    validateExactFirstProofProvenance({
+    validateProofProvenance({
+      presentationMode:
+        value.presentationMode,
       sourceObjectIds:
         rawFrameSourceObjectIds,
 
@@ -5068,18 +5237,21 @@ function validateConstructedFrame(
     )
   ) {
     if (
-      !isCanonicalStringArray(
+      canonicalUniqueStrings(
         aggregateFrame.primitiveIds
-      ) ||
+      ).length !==
+        aggregateFrame.primitiveIds.length ||
       !arraysEqual(
-        aggregateFrame.primitiveIds,
+        canonicalUniqueStrings(
+          aggregateFrame.primitiveIds
+        ),
         value.admittedPrimitiveIds
       )
     ) {
       issues.push(
         createBridgeIssue(
           'FRAME_AGGREGATE_PRIMITIVE_ID_LIST_INVALID',
-          'Aggregate-frame primitiveIds must be canonical, duplicate-free, and match admittedPrimitiveIds exactly.',
+          'Aggregate-frame primitiveIds must be duplicate-free and match canonical admittedPrimitiveIds regardless of lawful West insertion order.',
           {
             expected:
               value.admittedPrimitiveIds,
@@ -5145,8 +5317,9 @@ function validateConstructedFrame(
         );
 
   if (
-    value.presentationMode ===
-      H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE &&
+    ALLOWED_PRESENTATION_MODES.includes(
+      value.presentationMode
+    ) &&
     (
       value.bounds?.empty !== false ||
       aggregateFrame?.bounds?.empty !== false

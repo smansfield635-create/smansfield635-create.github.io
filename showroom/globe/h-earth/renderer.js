@@ -4652,21 +4652,34 @@ function createFrameProjectionPlan(
     );
   }
 
+  const projectedPrimitiveIds =
+    primitivePlans.map(
+      (plan) =>
+        plan.primitiveId
+    );
+
+  const canonicalFramePrimitiveIds =
+    Object.freeze([
+      ...frame.admittedPrimitiveIds
+    ].sort());
+
+  const canonicalProjectedPrimitiveIds =
+    Object.freeze([
+      ...projectedPrimitiveIds
+    ].sort());
+
   if (
     frame.admittedPrimitiveIds.length !==
       primitivePlans.length ||
     !arraysEqual(
-      frame.admittedPrimitiveIds,
-      primitivePlans.map(
-        (plan) =>
-          plan.primitiveId
-      )
+      canonicalFramePrimitiveIds,
+      canonicalProjectedPrimitiveIds
     )
   ) {
     issues.push(
       createRendererIssue(
         'RENDERER_PRIMITIVE_MEMBERSHIP_CORRESPONDENCE_FAILED',
-        'The renderer projection plan must preserve admitted primitive membership and order exactly.'
+        'The renderer projection plan must preserve admitted primitive membership exactly regardless of lawful West insertion order.'
       )
     );
   }

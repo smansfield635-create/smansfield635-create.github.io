@@ -377,7 +377,7 @@ function resolveRendererMountViewport(
       ?.getBoundingClientRect ===
     'function'
       ? mountElement
-.getBoundingClientRect()
+          .getBoundingClientRect()
       : null;
 
   const rectangleWidth =
@@ -398,7 +398,7 @@ function resolveRendererMountViewport(
     )
       ? rectangleWidth
       : isPositiveFiniteNumber(
-clientWidth
+          clientWidth
         )
         ? clientWidth
         : null;
@@ -409,7 +409,7 @@ clientWidth
     )
       ? rectangleHeight
       : isPositiveFiniteNumber(
-clientHeight
+          clientHeight
         )
         ? clientHeight
         : null;
@@ -457,33 +457,37 @@ clientHeight
     measurement:
       deepFreeze({
         rectangleWidth:
-Number.isFinite(
-  rectangleWidth
-)
-  ? rectangleWidth
-  : null,
+          Number.isFinite(
+            rectangleWidth
+          )
+            ? rectangleWidth
+            : null,
 
         rectangleHeight:
-Number.isFinite(
-  rectangleHeight
-)
-  ? rectangleHeight
-  : null,
+          Number.isFinite(
+            rectangleHeight
+          )
+            ? rectangleHeight
+            : null,
 
         clientWidth:
-Number.isFinite(clientWidth)
-  ? clientWidth
-  : null,
+          Number.isFinite(
+            clientWidth
+          )
+            ? clientWidth
+            : null,
 
         clientHeight:
-Number.isFinite(clientHeight)
-  ? clientHeight
-  : null,
+          Number.isFinite(
+            clientHeight
+          )
+            ? clientHeight
+            : null,
 
         pixelRatioFallbackUsed:
-!isPositiveFiniteNumber(
-  observedPixelRatio
-)
+          !isPositiveFiniteNumber(
+            observedPixelRatio
+          )
       }),
 
     issues:
@@ -6612,60 +6616,60 @@ async function bootstrapRenderer(
     try {
       compositorViewportReceipt =
         compositorEvaluation
-.viewportFunction({
-  widthPx:
-    compositorViewportResolution
-      .widthPx,
+          .viewportFunction({
+            widthPx:
+              compositorViewportResolution
+                .widthPx,
 
-  heightPx:
-    compositorViewportResolution
-      .heightPx,
+            heightPx:
+              compositorViewportResolution
+                .heightPx,
 
-  pixelRatio:
-    compositorViewportResolution
-      .pixelRatio
-});
+            pixelRatio:
+              compositorViewportResolution
+                .pixelRatio
+          });
     } catch (error) {
       compositorViewportReceipt =
         deepFreeze({
-receiptType:
-  'H_EARTH_3D_ROUTE_COMPOSITOR_VIEWPORT_INITIALIZATION_RECEIPT',
+          receiptType:
+            'H_EARTH_3D_ROUTE_COMPOSITOR_VIEWPORT_INITIALIZATION_RECEIPT',
 
-accepted:
-  false,
+          accepted:
+            false,
 
-status:
-  'COMPOSITOR_VIEWPORT_INITIALIZATION_THREW',
+          status:
+            'COMPOSITOR_VIEWPORT_INITIALIZATION_THREW',
 
-resolution:
-  compositorViewportResolution,
+          resolution:
+            compositorViewportResolution,
 
-...getErrorEvidence(error),
+          ...getErrorEvidence(error),
 
-issues:
-  Object.freeze([
-    'The exact compositor viewport setter threw during route initialization.'
-  ])
+          issues:
+            Object.freeze([
+              'The exact compositor viewport setter threw during route initialization.'
+            ])
         });
     }
   } else {
     compositorViewportReceipt =
       deepFreeze({
         receiptType:
-'H_EARTH_3D_ROUTE_COMPOSITOR_VIEWPORT_INITIALIZATION_RECEIPT',
+          'H_EARTH_3D_ROUTE_COMPOSITOR_VIEWPORT_INITIALIZATION_RECEIPT',
 
         accepted:
-false,
+          false,
 
         status:
-'COMPOSITOR_VIEWPORT_MEASUREMENT_REJECTED',
+          'COMPOSITOR_VIEWPORT_MEASUREMENT_REJECTED',
 
         resolution:
-compositorViewportResolution,
+          compositorViewportResolution,
 
         issues:
-compositorViewportResolution
-  .issues
+          compositorViewportResolution
+            .issues
       });
   }
 
@@ -6720,7 +6724,7 @@ compositorViewportResolution
     const rendererReleaseReceipt =
       releaseRendererSafely({
         cleanupReason:
-primaryStatus
+          primaryStatus
       });
 
     return deepFreeze({
@@ -6738,7 +6742,7 @@ primaryStatus
 
       failureVariant:
         compositorViewportReceipt
-?.status ??
+          ?.status ??
         'COMPOSITOR_VIEWPORT_INITIALIZATION_REJECTED',
 
       compositorEvaluation,
@@ -6747,23 +6751,23 @@ primaryStatus
 
       compositorViewportReceipt:
         safeSerialize(
-compositorViewportReceipt,
-{
-  maxDepth:
-    7,
+          compositorViewportReceipt,
+          {
+            maxDepth:
+              7,
 
-  maxArrayLength:
-    100
-}
+            maxArrayLength:
+              100
+          }
         ),
 
       moduleImportDiagnosticReceipt:
         MODULE_STATE
-.moduleImportDiagnosticReceipt,
+          .moduleImportDiagnosticReceipt,
 
       sourcePreviewRetained:
         sourcePreviewExists(
-mountPoints.rendererMount
+          mountPoints.rendererMount
         ),
 
       rendererReleaseReceipt,
@@ -7518,11 +7522,11 @@ mountPoints.rendererMount
       safeSerialize(
         compositorViewportReceipt,
         {
-maxDepth:
-  7,
+          maxDepth:
+            7,
 
-maxArrayLength:
-  100
+          maxArrayLength:
+            100
         }
       ),
 
@@ -7877,7 +7881,7 @@ function buildRouteBootstrapStatus() {
     compositorViewportReceipt:
       safeSerialize(
         MODULE_STATE
-.compositorViewportReceipt
+          .compositorViewportReceipt
       ),
 
     compositorHandoffReceipt:
@@ -7994,7 +7998,7 @@ function buildRouteBootstrapReceipt() {
     compositorViewportReceipt:
       safeSerialize(
         MODULE_STATE
-.compositorViewportReceipt
+          .compositorViewportReceipt
       ),
 
     compositorHandoffReceipt:
@@ -9273,7 +9277,7 @@ export function getRendererBootstrapReceipt() {
     compositorViewportReceipt:
       safeSerialize(
         MODULE_STATE
-.compositorViewportReceipt
+          .compositorViewportReceipt
       ),
 
     compositorHandoffReceipt:

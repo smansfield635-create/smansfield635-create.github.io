@@ -1,10 +1,9 @@
 name: FD05 clean renderer wet-sand candidate builder
 
 on:
-  pull_request:
+  push:
     branches:
-      - agent/fd05-renderer-wet-sand-builder-001
-    types: [opened, synchronize, reopened]
+      - agent/fd05-renderer-wet-sand-builder-trigger-002
 
 permissions:
   contents: write

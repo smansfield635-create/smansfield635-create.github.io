@@ -33,7 +33,8 @@ jobs:
               .fd05/apply-native-shoreline.py \
               .fd05/repair-native-shoreline-packet-transform.py \
               .fd05/repair-native-shoreline-frame-transform.py \
-              .fd05/repair-native-shoreline-compositor-transform.py
+              .fd05/repair-native-shoreline-compositor-transform.py \
+              .fd05/repair-native-shoreline-renderer-transform.py
             do
               if [ "$STATUS" -ne 0 ]; then
                 echo "SKIPPED_AFTER_FAILURE=$SCRIPT"
@@ -75,6 +76,7 @@ jobs:
           node --check h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
           node --check showroom/globe/h-earth/admitted-geometry-frame.js
           node --check showroom/globe/h-earth/compositor.js
+          node --check showroom/globe/h-earth/renderer.js
           python3 - <<'PY'
           from pathlib import Path
           html = Path('showroom/globe/h-earth/index.html').read_text(encoding='utf-8')
@@ -149,6 +151,7 @@ jobs:
             h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js \
             showroom/globe/h-earth/admitted-geometry-frame.js \
             showroom/globe/h-earth/compositor.js \
+            showroom/globe/h-earth/renderer.js \
             showroom/globe/h-earth/index.html
           do
             echo "$FILE bytes=$(wc -c < "$FILE" | tr -d ' ') sha256=$(sha256sum "$FILE" | awk '{print $1}') blob=$(git hash-object "$FILE")"
@@ -161,6 +164,7 @@ jobs:
           git add h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
           git add showroom/globe/h-earth/admitted-geometry-frame.js
           git add showroom/globe/h-earth/compositor.js
+          git add showroom/globe/h-earth/renderer.js
           git add showroom/globe/h-earth/index.html
           git commit -m "Materialize minimum native shoreline context" || true
           git push origin HEAD:agent/fd05-native-shoreline-work-001

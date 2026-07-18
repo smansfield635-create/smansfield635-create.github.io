@@ -1,1 +1,1 @@
-Trigger the diagnostic-safe minimum native shoreline workflow rerun.
+Trigger the corrected Packet 002 minimum native shoreline workflow.

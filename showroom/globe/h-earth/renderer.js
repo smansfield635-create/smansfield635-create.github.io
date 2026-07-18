@@ -19,6 +19,7 @@
  * → FIFTEEN SEMANTIC LAYER CONTAINERS
  * → ONE INTERACTION-BOUNDARY NODE
  * → DOM/CSS MATERIALIZATION
+ * → STAGE-ALIGNED WET-SAND MATERIAL PRESENTATION
  * → MOUNT / APPLY / REPROJECT / DESTROY
  * → RENDERER RECEIPTS
  *
@@ -53,6 +54,7 @@
  * - fifteen semantic DOM containers;
  * - one non-controller interaction-boundary node;
  * - DOM/CSS materialization;
+ * - exact wet-sand material-presentation mapping;
  * - mount, replacement, reprojection, destroy, and release lifecycle;
  * - renderer operational receipts.
  *
@@ -110,7 +112,7 @@ export const H_EARTH_3D_RENDERER_ROLE =
   'FRAME_AUTHENTICATED_ADMITTED_GEOMETRY_PROJECTION_AND_DOM_CSS_MATERIALIZATION_CONSUMER';
 
 export const H_EARTH_3D_RENDERER_STATUS =
-  'FROZEN_CANON_DUPLICATE_CLIPPING_AND_LIFECYCLE_CORRECTION_CANDIDATE';
+  'FROZEN_CANON_DUPLICATE_CLIPPING_LIFECYCLE_AND_WET_SAND_PRESENTATION_CORRECTION_CANDIDATE';
 
 const RENEWS_RENDERER_CONTRACT_ID =
   'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_1_ENVIRONMENT_GEOMETRY_MATERIALIZATION_v1';
@@ -2463,7 +2465,7 @@ function buildPresentationAssignmentMap(
   return map;
 }
 
-function getMaterialPresentation(
+function getBaseMaterialPresentation(
   assignment
 ) {
   return (
@@ -5027,9 +5029,123 @@ function createInteractionBoundaryElement() {
   return element;
 }
 
+const H_EARTH_3D_WET_SAND_BALANCED_PRESENTATION =
+  deepFreeze({
+    background:
+      'linear-gradient(180deg, rgba(205, 226, 223, 0.34) 0%, rgba(156, 181, 180, 0.12) 22%, rgba(121, 112, 91, 0.08) 45%, rgba(55, 67, 64, 0.30) 100%), linear-gradient(180deg, #917c5d 0%, #6f644e 48%, #444b45 100%)',
+
+    boxShadow:
+      'rgba(225, 242, 238, 0.16) 0 1px 0 inset, rgba(15, 23, 22, 0.08) 0 1px 2px',
+
+    filter:
+      'saturate(1.10) brightness(1.08) contrast(0.94)',
+
+    mixBlendMode:
+      'normal',
+
+    opacity:
+      '0.99'
+  });
+
+function isWetSandPresentationAssignment(
+  assignment
+) {
+  return (
+    assignment?.materialReference ===
+      'H_EARTH_MATERIAL_WET_SAND' &&
+    assignment?.materialIntent ===
+      'WET_SAND'
+  );
+}
+
+function getMaterialPresentation(
+  assignment
+) {
+  const basePresentation =
+    getBaseMaterialPresentation(
+      assignment
+    );
+
+  if (
+    !isWetSandPresentationAssignment(
+      assignment
+    )
+  ) {
+    return basePresentation;
+  }
+
+  return deepFreeze({
+    ...basePresentation,
+    ...H_EARTH_3D_WET_SAND_BALANCED_PRESENTATION
+  });
+}
+
+function applyStageAlignedWetSandPresentation(
+  element,
+  assignment,
+  materializationExtent
+) {
+  if (
+    !isWetSandPresentationAssignment(
+      assignment
+    ) ||
+    !isPlainRecord(
+      materializationExtent
+    ) ||
+    !isPositiveFiniteNumber(
+      materializationExtent.widthPx
+    ) ||
+    !isPositiveFiniteNumber(
+      materializationExtent.heightPx
+    )
+  ) {
+    return element;
+  }
+
+  const parsedLeftPx =
+    Number.parseFloat(
+      element.style.left
+    );
+
+  const parsedTopPx =
+    Number.parseFloat(
+      element.style.top
+    );
+
+  const leftPx =
+    Number.isFinite(parsedLeftPx)
+      ? parsedLeftPx
+      : 0;
+
+  const topPx =
+    Number.isFinite(parsedTopPx)
+      ? parsedTopPx
+      : 0;
+
+  setStyles(
+    element,
+    {
+      backgroundSize:
+        `${materializationExtent.widthPx}px ${materializationExtent.heightPx}px`,
+
+      backgroundPosition:
+        `${-leftPx}px ${-topPx}px`,
+
+      backgroundRepeat:
+        'no-repeat'
+    }
+  );
+
+  element.dataset.wetSandPresentationModel =
+    'BALANCED_STAGE_ALIGNED_v1';
+
+  return element;
+}
+
 function applyPresentation(
   element,
-  assignment
+  assignment,
+  materializationExtent = null
 ) {
   const presentation =
     getMaterialPresentation(
@@ -5039,6 +5155,12 @@ function applyPresentation(
   setStyles(
     element,
     presentation
+  );
+
+  applyStageAlignedWetSandPresentation(
+    element,
+    assignment,
+    materializationExtent
   );
 
   element.dataset.materialReference =
@@ -5072,7 +5194,8 @@ function resolveDepthZIndex(
 
 function createPointElement(
   descriptor,
-  descriptorIndex
+  descriptorIndex,
+  materializationExtent
 ) {
   const point =
     descriptor.projectedPoints[0];
@@ -5149,13 +5272,15 @@ function createPointElement(
 
   return applyPresentation(
     element,
-    descriptor.assignment
+    descriptor.assignment,
+    materializationExtent
   );
 }
 
 function createLineElement(
   descriptor,
-  descriptorIndex
+  descriptorIndex,
+  materializationExtent
 ) {
   const start =
     descriptor.projectedPoints[0]
@@ -5266,13 +5391,15 @@ function createLineElement(
 
   return applyPresentation(
     element,
-    descriptor.assignment
+    descriptor.assignment,
+    materializationExtent
   );
 }
 
 function createTriangleElement(
   descriptor,
-  descriptorIndex
+  descriptorIndex,
+  materializationExtent
 ) {
   const points =
     descriptor.projectedPoints.map(
@@ -5441,31 +5568,36 @@ function createTriangleElement(
 
   return applyPresentation(
     element,
-    descriptor.assignment
+    descriptor.assignment,
+    materializationExtent
   );
 }
 
 function createDescriptorElement(
   descriptor,
-  descriptorIndex
+  descriptorIndex,
+  materializationExtent
 ) {
   switch (descriptor.type) {
     case 'POINT':
       return createPointElement(
         descriptor,
-        descriptorIndex
+        descriptorIndex,
+        materializationExtent
       );
 
     case 'LINE':
       return createLineElement(
         descriptor,
-        descriptorIndex
+        descriptorIndex,
+        materializationExtent
       );
 
     case 'TRIANGLE':
       return createTriangleElement(
         descriptor,
-        descriptorIndex
+        descriptorIndex,
+        materializationExtent
       );
 
     default:
@@ -5515,7 +5647,10 @@ function buildSceneFragment(
         const element =
           createDescriptorElement(
             descriptor,
-            descriptorIndex
+            descriptorIndex,
+            projectionPlan
+              .projectionContext
+              .materializationExtent
           );
 
         if (!element) {

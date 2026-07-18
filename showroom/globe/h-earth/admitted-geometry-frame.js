@@ -1671,90 +1671,63 @@ function validatePrimitiveSourceProvenance({
           primitive
         );
 
-      const sourceObjectId =
-        normalizeString(
-          metadata?.sourceObjectId
+      const primitiveSourceObjectIds =
+        canonicalUniqueStrings(
+          metadata?.sourceObjectIds ?? [
+            metadata?.sourceObjectId
+          ]
         );
 
-      const sourceZoneId =
-        normalizeString(
-          metadata?.zoneId
+      const primitiveSourceZoneIds =
+        canonicalUniqueStrings(
+          metadata?.sourceZoneIds ?? [
+            metadata?.zoneId
+          ]
         );
-
-      const rawLatticeRegionIds =
-        metadata?.latticeRegionIds;
 
       if (
-        !isCanonicalExactStringArray(
-          rawLatticeRegionIds,
-          latticeRegionIds
-        )
-      ) {
-        issues.push(
-          createBridgeIssue(
-            'PRIMITIVE_LATTICE_PROVENANCE_MISMATCH',
-            'Primitive latticeRegionIds must be canonical and correspond exactly to frame provenance.',
-            {
-              field:
-                `${fieldPrefix}[${index}].metadata.latticeRegionIds`,
-
-              expected:
-                latticeRegionIds,
-
-              actual:
-                Array.isArray(
-                  rawLatticeRegionIds
-                )
-                  ? rawLatticeRegionIds
-                  : null
-            }
-          )
-        );
-      }
-
-      if (
-        !sourceObjectId ||
-        !sourceObjectIds.includes(
-          sourceObjectId
+        !arraysEqual(
+          primitiveSourceObjectIds,
+          sourceObjectIds
         )
       ) {
         issues.push(
           createBridgeIssue(
             'PRIMITIVE_SOURCE_OBJECT_PROVENANCE_MISMATCH',
-            'Primitive sourceObjectId must correspond to frame provenance.',
+            'Primitive source-object provenance must correspond exactly to frame provenance.',
             {
               field:
-                `${fieldPrefix}[${index}].metadata.sourceObjectId`,
+                `${fieldPrefix}[${index}].metadata.sourceObjectIds`,
 
               expected:
                 sourceObjectIds,
 
               actual:
-                sourceObjectId
+                primitiveSourceObjectIds
             }
           )
         );
       }
 
       if (
-        !sourceZoneId ||
-        !sourceZoneIds.includes(
-          sourceZoneId
+        !arraysEqual(
+          primitiveSourceZoneIds,
+          sourceZoneIds
         )
       ) {
         issues.push(
           createBridgeIssue(
             'PRIMITIVE_SOURCE_ZONE_PROVENANCE_MISMATCH',
-            'Primitive zoneId must correspond to frame provenance.',
+            'Primitive source-zone provenance must correspond exactly to frame provenance.',
             {
               field:
-                `${fieldPrefix}[${index}].metadata.zoneId`,
+                `${fieldPrefix}[${index}].metadata.sourceZoneIds`,
 
               expected:
                 sourceZoneIds,
 
               actual:
-                sourceZoneId
+                primitiveSourceZoneIds
             }
           )
         );
@@ -2504,9 +2477,10 @@ function validatePacket002Transfer(
         index
       ) => {
         if (
-          !isHEarthAdmittedPrimitiveRecord(
-            primitive
-          )
+          !isHEarthAdmittedPrimitiveRecord({
+            ...primitive,
+            aggregateFrameMember: false
+          })
         ) {
           issues.push(
             createBridgeIssue(
@@ -3514,10 +3488,17 @@ function buildWetSandPresentationAssignments({
             primitive
           );
 
-        const sourceObjectId =
-          normalizeString(
-            metadata?.sourceObjectId
+        const primitiveSourceObjectIds =
+          canonicalUniqueStrings(
+            metadata?.sourceObjectIds ?? [
+              metadata?.sourceObjectId
+            ]
           );
+
+        const sourceObjectId =
+          primitiveSourceObjectIds.length === 1
+            ? primitiveSourceObjectIds[0]
+            : null;
 
         return deepFreeze({
           primitiveId,
@@ -5059,9 +5040,10 @@ function validateConstructedFrame(
         index
       ) => {
         if (
-          !isHEarthAdmittedPrimitiveRecord(
-            primitive
-          ) ||
+          !isHEarthAdmittedPrimitiveRecord({
+            ...primitive,
+            aggregateFrameMember: false
+          }) ||
           primitive.aggregateFrameMember !==
             true
         ) {

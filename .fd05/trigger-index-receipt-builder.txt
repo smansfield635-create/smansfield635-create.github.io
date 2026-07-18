@@ -1,0 +1,1 @@
+Trigger exact index viewport correction validation receipt generation.

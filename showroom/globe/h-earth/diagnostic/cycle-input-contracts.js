@@ -28,6 +28,8 @@ export const H_EARTH_FD05_PINNED_REPOSITORY_COMMIT =
   '41f1fc2a99f3161966d6ad2228a6e2d12a8890d6';
 export const H_EARTH_FD05_EAST_REPOSITORY_PATH =
   '/showroom/globe/h-earth/render/geometry-kernel.east.js';
+export const H_EARTH_FD05_PINNED_EAST_GIT_BLOB_SHA =
+  'b9872c89291f9ec6d404fd7203d7de57826670cf';
 
 const HEX_SHA256 = /^[a-f0-9]{64}$/;
 const HEX_SHA1 = /^[a-f0-9]{40}$/;
@@ -524,7 +526,8 @@ export async function verifyHEarthFd05RepositoryOccurrenceReceipt({
   browserPackage,
   cryptoObject = globalThis.crypto,
   TextEncoderImpl = globalThis.TextEncoder,
-  atobImpl = globalThis.atob
+  atobImpl = globalThis.atob,
+  expectedGitBlobSha = H_EARTH_FD05_PINNED_EAST_GIT_BLOB_SHA
 } = {}) {
   const issues = [];
   if (!exactKeys(receipt, REPOSITORY_RECEIPT_KEYS)) {
@@ -584,6 +587,9 @@ export async function verifyHEarthFd05RepositoryOccurrenceReceipt({
   }
   if (!HEX_SHA1.test(receipt?.gitBlobSha ?? '') || computedBlobSha !== receipt?.gitBlobSha) {
     issues.push('REPOSITORY_RECEIPT_GIT_BLOB_SHA_INVALID');
+  }
+  if (receipt?.gitBlobSha !== expectedGitBlobSha) {
+    issues.push('REPOSITORY_RECEIPT_PINNED_GIT_BLOB_SHA_INVALID');
   }
 
   const eastRow = packageEastRow(browserPackage);

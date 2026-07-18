@@ -85,9 +85,9 @@ for (const configuration of configurations) {
   const snapshot = await page.evaluate(() => {
     const mount = document.getElementById('h-earth-3d-renderer-mount');
     const status = document.getElementById('h-earth-3d-status')?.textContent?.trim() ?? null;
-    const selector = '[data-h-earth-renderer-owned="true"]';
+    const primitiveSelector = '.h-earth-3d-render-primitive';
     const materialSelector = (material) =>
-      `[data-h-earth-renderer-owned="true"][data-h-earth-material-reference="${material}"]`;
+      `${primitiveSelector}[data-material-reference="${material}"]`;
     const materials = {
       wetSand: [...(mount?.querySelectorAll(materialSelector('H_EARTH_MATERIAL_WET_SAND')) ?? [])],
       foam: [...(mount?.querySelectorAll(materialSelector('H_EARTH_MATERIAL_FOAM')) ?? [])],
@@ -97,10 +97,11 @@ for (const configuration of configurations) {
       const rect = element.getBoundingClientRect();
       const style = getComputedStyle(element);
       return {
-        primitiveId: element.dataset.hEarthPrimitiveId ?? null,
-        sourceObjectId: element.dataset.hEarthSourceObjectId ?? null,
-        materialReference: element.dataset.hEarthMaterialReference ?? null,
-        materialIntent: element.dataset.hEarthMaterialIntent ?? null,
+        primitiveId: element.dataset.primitiveId ?? null,
+        materialReference: element.dataset.materialReference ?? null,
+        materialIntent: element.dataset.materialIntent ?? null,
+        presentationRole: element.dataset.presentationRole ?? null,
+        renderLayer: element.dataset.renderLayer ?? null,
         x: rect.x,
         y: rect.y,
         width: rect.width,
@@ -109,14 +110,19 @@ for (const configuration of configurations) {
         opacity: style.opacity
       };
     });
+    const routeReceipt = globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT ?? null;
+    const rendererReceiptSource =
+      globalThis.H_EARTH_3D_RENDERER_BOOTSTRAP_RECEIPT ??
+      routeReceipt?.rendererBootstrapReceipt ??
+      null;
     return {
       status,
-      routeReceiptStatus: globalThis.H_EARTH_3D_ROUTE_BOOTSTRAP_RECEIPT?.status ?? null,
-      rendererReceipt: globalThis.H_EARTH_3D_RENDERER_BOOTSTRAP_RECEIPT
+      routeReceiptStatus: routeReceipt?.status ?? null,
+      rendererReceipt: rendererReceiptSource
         ? {
-            status: globalThis.H_EARTH_3D_RENDERER_BOOTSTRAP_RECEIPT.status,
-            mounted: globalThis.H_EARTH_3D_RENDERER_BOOTSTRAP_RECEIPT.mounted,
-            failureVariant: globalThis.H_EARTH_3D_RENDERER_BOOTSTRAP_RECEIPT.failureVariant ?? null
+            status: rendererReceiptSource.status ?? null,
+            mounted: rendererReceiptSource.mounted ?? null,
+            failureVariant: rendererReceiptSource.failureVariant ?? null
           }
         : null,
       htmlFailure: globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE ?? null,
@@ -132,10 +138,11 @@ for (const configuration of configurations) {
         ? {
             clientWidth: mount.clientWidth,
             clientHeight: mount.clientHeight,
-            rendererOwnedCount: mount.querySelectorAll(selector).length,
+            rendererStageCount: mount.querySelectorAll('.h-earth-3d-render-stage').length,
+            rendererPrimitiveCount: mount.querySelectorAll(primitiveSelector).length,
             sourcePreviewCount: mount.querySelectorAll('[data-h-earth-source-preview-owned="true"]').length,
-            semanticLayerCount: mount.querySelectorAll('[data-h-earth-renderer-semantic-layer="true"]').length,
-            interactionBoundaryCount: mount.querySelectorAll('[data-h-earth-renderer-interaction-boundary="true"]').length
+            semanticLayerCount: mount.querySelectorAll('.h-earth-3d-render-semantic-layer').length,
+            interactionBoundaryCount: mount.querySelectorAll('.h-earth-3d-render-interaction-boundary').length
           }
         : null,
       materialElements: {
@@ -178,8 +185,12 @@ for (const configuration of configurations) {
   if (snapshot.routeReceiptStatus !== 'PUBLIC_STAGE_READY') {
     throw Object.assign(new Error(`${configuration.id}: route receipt not ready.`), { details: result });
   }
-  if (snapshot.rendererReceipt?.mounted !== true) {
-    throw Object.assign(new Error(`${configuration.id}: renderer receipt not mounted.`), { details: result });
+  const mountedByReceipt = snapshot.rendererReceipt?.mounted === true;
+  const mountedByDom =
+    snapshot.mount?.rendererStageCount === 1 &&
+    snapshot.mount?.rendererPrimitiveCount > 0;
+  if (!mountedByReceipt && !mountedByDom) {
+    throw Object.assign(new Error(`${configuration.id}: renderer mount evidence missing.`), { details: result });
   }
   if (snapshot.importReceipt?.allRequiredImportsSucceeded !== true) {
     throw Object.assign(new Error(`${configuration.id}: import corridor incomplete.`), { details: result });

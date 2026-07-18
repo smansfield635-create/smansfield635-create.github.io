@@ -1,0 +1,268 @@
+name: FD05 admitted-frame bounded correction
+
+on:
+  push:
+    branches:
+      - agent/fd05-admitted-frame-west-correspondence-001
+    paths:
+      - .github/workflows/fd05-admitted-frame-correction.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-correction:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-admitted-frame-west-correspondence-001
+          fetch-depth: 0
+
+      - name: Apply exact bounded substitutions
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+
+          path = Path('showroom/globe/h-earth/admitted-geometry-frame.js')
+          text = path.read_text(encoding='utf-8')
+
+          replacements = [
+              (
+                  """      const sourceObjectId =
+        normalizeString(
+          metadata?.sourceObjectId
+        );
+
+      const sourceZoneId =
+        normalizeString(
+          metadata?.zoneId
+        );
+
+      const rawLatticeRegionIds =
+        metadata?.latticeRegionIds;
+
+      if (
+        !isCanonicalExactStringArray(
+          rawLatticeRegionIds,
+          latticeRegionIds
+        )
+      ) {
+        issues.push(
+          createBridgeIssue(
+            'PRIMITIVE_LATTICE_PROVENANCE_MISMATCH',
+            'Primitive latticeRegionIds must be canonical and correspond exactly to frame provenance.',
+            {
+              field:
+                `${fieldPrefix}[${index}].metadata.latticeRegionIds`,
+
+              expected:
+                latticeRegionIds,
+
+              actual:
+                Array.isArray(
+                  rawLatticeRegionIds
+                )
+                  ? rawLatticeRegionIds
+                  : null
+            }
+          )
+        );
+      }
+
+      if (
+        !sourceObjectId ||
+        !sourceObjectIds.includes(
+          sourceObjectId
+        )
+      ) {
+        issues.push(
+          createBridgeIssue(
+            'PRIMITIVE_SOURCE_OBJECT_PROVENANCE_MISMATCH',
+            'Primitive sourceObjectId must correspond to frame provenance.',
+            {
+              field:
+                `${fieldPrefix}[${index}].metadata.sourceObjectId`,
+
+              expected:
+                sourceObjectIds,
+
+              actual:
+                sourceObjectId
+            }
+          )
+        );
+      }
+
+      if (
+        !sourceZoneId ||
+        !sourceZoneIds.includes(
+          sourceZoneId
+        )
+      ) {
+        issues.push(
+          createBridgeIssue(
+            'PRIMITIVE_SOURCE_ZONE_PROVENANCE_MISMATCH',
+            'Primitive zoneId must correspond to frame provenance.',
+            {
+              field:
+                `${fieldPrefix}[${index}].metadata.zoneId`,
+
+              expected:
+                sourceZoneIds,
+
+              actual:
+                sourceZoneId
+            }
+          )
+        );
+      }
+""",
+                  """      const primitiveSourceObjectIds =
+        canonicalUniqueStrings(
+          metadata?.sourceObjectIds ?? [
+            metadata?.sourceObjectId
+          ]
+        );
+
+      const primitiveSourceZoneIds =
+        canonicalUniqueStrings(
+          metadata?.sourceZoneIds ?? [
+            metadata?.zoneId
+          ]
+        );
+
+      if (
+        !arraysEqual(
+          primitiveSourceObjectIds,
+          sourceObjectIds
+        )
+      ) {
+        issues.push(
+          createBridgeIssue(
+            'PRIMITIVE_SOURCE_OBJECT_PROVENANCE_MISMATCH',
+            'Primitive source-object provenance must correspond exactly to frame provenance.',
+            {
+              field:
+                `${fieldPrefix}[${index}].metadata.sourceObjectIds`,
+
+              expected:
+                sourceObjectIds,
+
+              actual:
+                primitiveSourceObjectIds
+            }
+          )
+        );
+      }
+
+      if (
+        !arraysEqual(
+          primitiveSourceZoneIds,
+          sourceZoneIds
+        )
+      ) {
+        issues.push(
+          createBridgeIssue(
+            'PRIMITIVE_SOURCE_ZONE_PROVENANCE_MISMATCH',
+            'Primitive source-zone provenance must correspond exactly to frame provenance.',
+            {
+              field:
+                `${fieldPrefix}[${index}].metadata.sourceZoneIds`,
+
+              expected:
+                sourceZoneIds,
+
+              actual:
+                primitiveSourceZoneIds
+            }
+          )
+        );
+      }
+""",
+                  'primitive provenance block',
+              ),
+              (
+                  """          !isHEarthAdmittedPrimitiveRecord(
+            primitive
+          )
+""",
+                  """          !isHEarthAdmittedPrimitiveRecord({
+            ...primitive,
+            aggregateFrameMember: false
+          })
+""",
+                  'aggregate validation normalization',
+              ),
+              (
+                  """        const sourceObjectId =
+          normalizeString(
+            metadata?.sourceObjectId
+          );
+""",
+                  """        const primitiveSourceObjectIds =
+          canonicalUniqueStrings(
+            metadata?.sourceObjectIds ?? [
+              metadata?.sourceObjectId
+            ]
+          );
+
+        const sourceObjectId =
+          primitiveSourceObjectIds.length === 1
+            ? primitiveSourceObjectIds[0]
+            : null;
+""",
+                  'presentation source identity',
+              ),
+              (
+                  """          !isHEarthAdmittedPrimitiveRecord(
+            primitive
+          ) ||
+          primitive.aggregateFrameMember !==
+            true
+""",
+                  """          !isHEarthAdmittedPrimitiveRecord({
+            ...primitive,
+            aggregateFrameMember: false
+          }) ||
+          primitive.aggregateFrameMember !==
+            true
+""",
+                  'public frame validation normalization',
+              ),
+          ]
+
+          for old, new, label in replacements:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected exactly one old block, found {count}')
+              text = text.replace(old, new, 1)
+
+          raw = text.encode('utf-8')
+          expected_length = 130893
+          expected_sha256 = '9c5758b662e1dc7ae0480b1eb171bc083ebefdb7a6872936b188a6f73ae9cacb'
+          actual_sha256 = hashlib.sha256(raw).hexdigest()
+
+          if len(raw) != expected_length:
+              raise SystemExit(f'byte length mismatch: {len(raw)} != {expected_length}')
+          if actual_sha256 != expected_sha256:
+              raise SystemExit(f'SHA-256 mismatch: {actual_sha256} != {expected_sha256}')
+
+          path.write_bytes(raw)
+          print(f'candidate verified: {len(raw)} bytes, {actual_sha256}')
+          PY
+
+      - name: Verify JavaScript syntax
+        run: node --check showroom/globe/h-earth/admitted-geometry-frame.js
+
+      - name: Commit exact source replacement
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add showroom/globe/h-earth/admitted-geometry-frame.js
+          git diff --cached --check
+          git commit -m "Correct admitted-frame West correspondence"
+          git push origin HEAD:agent/fd05-admitted-frame-west-correspondence-001

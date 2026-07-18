@@ -1,0 +1,1 @@
+Final event marker for the isolated candidate builder.

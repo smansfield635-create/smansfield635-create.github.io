@@ -1,0 +1,1 @@
+Trigger the corrected FD-05 wet-sand source-geometry measurement.

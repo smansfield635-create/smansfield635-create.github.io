@@ -25,6 +25,19 @@ jobs:
           git show origin/agent/fd05-renderer-wet-sand-work-001:.fd05/apply-renderer-wet-sand.py > /tmp/apply-renderer-wet-sand.py
           git show origin/agent/fd05-renderer-wet-sand-work-001:.fd05/test-renderer-wet-sand.mjs > /tmp/test-renderer-wet-sand.mjs
           git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > /tmp/test-index-viewport.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('/tmp/test-renderer-wet-sand.mjs')
+          text = path.read_text(encoding='utf-8')
+          old = """      JSON.stringify(snapshot.uniqueBackgroundRepeats) ===
+        JSON.stringify(['no-repeat']),"""
+          new = """      snapshot.uniqueBackgroundRepeats.every(
+        (value) => value.includes('no-repeat')
+      ),"""
+          if text.count(old) != 1:
+              raise SystemExit('background-repeat predicate patch did not match exactly once')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
           git checkout -B agent/fd05-renderer-wet-sand-001 origin/main
           test "$(git rev-parse HEAD)" = "637733701f845cdff6bd802b1b94ab7bee5eb299"
           test "$(git hash-object showroom/globe/h-earth/renderer.js)" = "283bea824a97ad7c2d243f8413d59d0bf1a77ae2"

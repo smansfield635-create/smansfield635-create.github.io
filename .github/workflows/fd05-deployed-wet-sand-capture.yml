@@ -1,0 +1,43 @@
+name: FD05 deployed wet-sand visual baseline capture
+
+on:
+  pull_request:
+    branches:
+      - agent/fd05-wet-sand-deployed-capture-001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  capture-deployed-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-wet-sand-deployed-capture-001
+          fetch-depth: 0
+
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Capture exact deployed wet-sand baseline
+        run: node .fd05/deployed-wet-sand-capture.mjs
+
+      - name: Commit read-only deployment receipt on isolated branch
+        run: |
+          git config user.name "OpenAI Engineering Agent"
+          git config user.email "engineering-agent@users.noreply.github.com"
+          git add .fd05/deployed-wet-sand-output/deployed-capture-report.json
+          git commit -m "Record deployed wet-sand baseline capture"
+          git push origin HEAD:agent/fd05-wet-sand-deployed-capture-001
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fd05-deployed-wet-sand-baseline
+          path: .fd05/deployed-wet-sand-output/
+          if-no-files-found: error
+          retention-days: 14

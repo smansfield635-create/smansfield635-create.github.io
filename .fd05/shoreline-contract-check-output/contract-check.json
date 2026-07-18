@@ -1,0 +1,4193 @@
+{
+  "reportId": "H_EARTH_FD05_SHORELINE_MULTI_PRIMITIVE_CONTRACT_CHECK_001",
+  "generatedAt": "2026-07-18T20:10:58.093Z",
+  "status": "COMPLETE",
+  "repositoryModified": false,
+  "moduleExports": {
+    "kernel": [
+      "H_EARTH_3D_GEOMETRY_COORDINATE_FRAME",
+      "H_EARTH_3D_GEOMETRY_EAST_ENUMS",
+      "H_EARTH_3D_GEOMETRY_FINAL_REFREEZE_RECEIPT_ID",
+      "H_EARTH_3D_GEOMETRY_KERNEL_EAST_CONTRACT",
+      "H_EARTH_3D_GEOMETRY_KERNEL_EAST_CONTRACT_ID",
+      "H_EARTH_3D_GEOMETRY_KERNEL_EAST_SCHEMA_VERSION",
+      "H_EARTH_3D_GEOMETRY_KERNEL_NORTH_CONTRACT",
+      "H_EARTH_3D_GEOMETRY_KERNEL_NORTH_CONTRACT_ID",
+      "H_EARTH_3D_GEOMETRY_KERNEL_NORTH_SCHEMA_VERSION",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_CONTRACT",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_CONTRACT_ID",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_DIRECTIONAL_DEPENDENCY",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_OWNERSHIP",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_PRE_BACKING_GATE",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_PUBLIC_API_CANDIDATE",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_RECEIPT",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_REQUIRED_FIXTURES",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_SCHEMA_VERSION",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_SOURCE_FILE",
+      "H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_SYMBOL_CATEGORIES",
+      "H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT",
+      "H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT_ID",
+      "H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_SCHEMA_VERSION",
+      "H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT",
+      "H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID",
+      "H_EARTH_3D_GEOMETRY_KERNEL_WEST_SCHEMA_VERSION",
+      "H_EARTH_3D_GEOMETRY_MATHEMATICS_ACCEPTANCE_RECEIPT_ID",
+      "H_EARTH_3D_GEOMETRY_MATHEMATICS_PACKET_ID",
+      "H_EARTH_3D_GEOMETRY_NORTH_ENUMS",
+      "H_EARTH_3D_GEOMETRY_OWNERSHIP_CONTRACT_ID",
+      "H_EARTH_3D_GEOMETRY_OWNERSHIP_LOCK_RECEIPT_ID",
+      "H_EARTH_3D_GEOMETRY_PUBLIC_FACADE_STEP_ID",
+      "H_EARTH_3D_GEOMETRY_SOUTH_ENUMS",
+      "H_EARTH_3D_GEOMETRY_TOLERANCE_PROFILE",
+      "H_EARTH_3D_GEOMETRY_WEST_ENUMS",
+      "admitHEarthPrimitiveBatch",
+      "admitHEarthPrimitiveRecord",
+      "approximatelyEqualHEarthNumber",
+      "approximatelyEqualHEarthVector3",
+      "calculateHEarthFaceNormals",
+      "calculateHEarthVertexNormals",
+      "constructHEarthBillboard",
+      "constructHEarthConvexExtrusionMesh",
+      "constructHEarthEllipsoidMesh",
+      "constructHEarthGableRoofMesh",
+      "constructHEarthHeightFieldMesh",
+      "constructHEarthLineSegment",
+      "constructHEarthParametricSurfaceMesh",
+      "constructHEarthPoint",
+      "constructHEarthPointSet",
+      "constructHEarthPolyline",
+      "constructHEarthPrismMesh",
+      "constructHEarthRadialShellMesh",
+      "constructHEarthShedRoofMesh",
+      "constructHEarthSuperellipsoidMesh",
+      "constructHEarthTriangle",
+      "constructHEarthTriangleMesh",
+      "constructHEarthXZRibbonMesh",
+      "createHEarthAdmittedGeometryRecord",
+      "createHEarthAdmittedPrimitiveRecord",
+      "createHEarthAggregateFrameAdmissionRecord",
+      "createHEarthGeometryIssue",
+      "createHEarthIdentityMatrix4",
+      "createHEarthNeutralGeometryRecord",
+      "createHEarthNeutralPrimitiveRecord",
+      "createHEarthVector3",
+      "default",
+      "deriveHEarthGeometryToleranceContext",
+      "evaluateHEarthEllipsoidPoint",
+      "evaluateHEarthGridSampleIntegrity",
+      "evaluateHEarthIndexedMesh",
+      "evaluateHEarthPrimitiveAdmission",
+      "evaluateHEarthPrimitiveBatchAdmission",
+      "evaluateHEarthSuperellipsoidPoint",
+      "evaluateHEarthTriangleNormal",
+      "getHEarthGeometryKernelEastContract",
+      "getHEarthGeometryKernelEastReceipt",
+      "getHEarthGeometryKernelEastStaticReview",
+      "getHEarthGeometryKernelFacadeDirectionalReadout",
+      "getHEarthGeometryKernelNorthContract",
+      "getHEarthGeometryKernelNorthReceipt",
+      "getHEarthGeometryKernelNorthStaticReview",
+      "getHEarthGeometryKernelPublicFacadeContract",
+      "getHEarthGeometryKernelPublicFacadeReceipt",
+      "getHEarthGeometryKernelPublicFacadeStaticReview",
+      "getHEarthGeometryKernelSouthContract",
+      "getHEarthGeometryKernelSouthReceipt",
+      "getHEarthGeometryKernelSouthStaticReview",
+      "getHEarthGeometryKernelWestContract",
+      "getHEarthGeometryKernelWestReceipt",
+      "getHEarthGeometryKernelWestStaticReview",
+      "hasHEarthBlockingIssues",
+      "isHEarthAABB3D",
+      "isHEarthAdmittedGeometryRecord",
+      "isHEarthAdmittedPrimitiveRecord",
+      "isHEarthAggregateFrameAdmissionRecord",
+      "isHEarthFiniteNumber",
+      "isHEarthGeometryToleranceContext",
+      "isHEarthMatrix4",
+      "isHEarthNeutralGeometryRecord",
+      "isHEarthNeutralPrimitiveRecord",
+      "isHEarthNonEmptyString",
+      "isHEarthNonNegativeSafeInteger",
+      "isHEarthPositiveFiniteNumber",
+      "isHEarthPositiveSafeInteger",
+      "isHEarthVector3",
+      "mergeHEarthGeometryBounds",
+      "sampleHEarthHeightField",
+      "sampleHEarthParametricSurface",
+      "sortHEarthGeometryIssues",
+      "triangulateHEarthConvexPolygon"
+    ],
+    "packet002": [
+      "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_AGGREGATE",
+      "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_BOUNDARIES",
+      "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT",
+      "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID",
+      "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_RECEIPT",
+      "buildHEarthPostWestAdmittedGeometryTransfer",
+      "default",
+      "evaluateHEarthPostWestAdmittedGeometryTransferInput",
+      "getHEarthPostWestAdmittedGeometryTransferReceipt"
+    ],
+    "admittedFrame": [
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_AGGREGATE",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_BOUNDARY_FLAGS",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CLAIM_CEILINGS",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_RECEIPT",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_ROLE",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_SCHEMA_VERSION",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_SOURCE_FILE",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_STATUS",
+      "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_TYPE",
+      "H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE",
+      "composeHEarth3DAdmittedGeometryFrame",
+      "default",
+      "evaluateHEarth3DAdmittedGeometryFrameInput",
+      "getHEarth3DAdmittedGeometryFrameBoundaryFlags",
+      "getHEarth3DAdmittedGeometryFrameClaimCeilings",
+      "getHEarth3DAdmittedGeometryFrameContract",
+      "getHEarth3DAdmittedGeometryFrameReceipt",
+      "isHEarth3DAdmittedGeometryFrame"
+    ]
+  },
+  "wetPreview": {
+    "ok": true,
+    "status": "H_EARTH_WET_SAND_PREVIEW_PROVIDER_CONSTRUCTION_COMPLETE",
+    "contractId": "H_EARTH_3D_GEOMETRY_PREVIEW_FILE_RENEWAL_STEP_034O_6_PREVIEW_PACKET_001_WET_SAND_PROVIDER_TRANSLATION_v1",
+    "requestId": "FD05_SHORELINE_CONTRACT_CHECK_001",
+    "providerRequestId": "H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+    "resolutionReceiptId": "H_EARTH_SOURCE_OBJECT_GEOMETRY_RESOLUTION_RECEIPT:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+    "sourceObjectId": "OBJ_002_FOREGROUND_WET_SAND",
+    "sourceZoneIds": [
+      "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+    ],
+    "latticeRegionIds": [
+      "FOREGROUND_INSPECTION_GROUND"
+    ],
+    "profileId": "H_EARTH_WET_SAND_NUMERIC_CONSTRUCTION_PROFILE_v1",
+    "translationReceipt": {
+      "receiptId": "H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:PREVIEW_TRANSLATION_RECEIPT",
+      "status": "H_EARTH_WET_SAND_PREVIEW_PROVIDER_TRANSLATION_ACCEPTED",
+      "packet001ContractId": "H_EARTH_SOURCE_OBJECT_GEOMETRY_RESOLUTION_FILE_BIRTH_PACKET_001_WET_SAND_IDENTITY_CORRIDOR_v1",
+      "environmentContractId": "H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_GROUND_CELL_SUBSTRATE_v2",
+      "environmentProfileId": "H_EARTH_WET_SAND_NUMERIC_CONSTRUCTION_PROFILE_v1",
+      "sourceObjectId": "OBJ_002_FOREGROUND_WET_SAND",
+      "sourceZoneIds": [
+        "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+      ],
+      "latticeRegionIds": [
+        "FOREGROUND_INSPECTION_GROUND"
+      ],
+      "latticeRows": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "latticeColumns": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "providerImplementationFile": "/showroom/globe/h-earth/render/geometry-ground.js",
+      "providerImplementationContractId": "H_EARTH_3D_GEOMETRY_GROUND_PROVIDER_FILE_BIRTH_STEP_034O_5G_PROVIDER_LOCAL_GROUND_CONSTRUCTION_ADAPTER_v1",
+      "topLevelProviderInputKeys": [
+        "descriptor",
+        "providerId",
+        "providerRole",
+        "sourceObjectIds",
+        "sourceZoneIds"
+      ],
+      "exactTopLevelShapeVerified": true,
+      "localHeightFieldTranslationDefined": true,
+      "localHeightFieldConstructionVerified": true,
+      "worldTranslationApplicationPerformed": false,
+      "worldPositionedPreviewClaimed": false,
+      "admitted": false,
+      "WestAdmissionPerformed": false,
+      "geometryIndexMutated": false
+    },
+    "providerInputReceipt": {
+      "receiptId": "H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:PROVIDER_INPUT_RECEIPT",
+      "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+      "providerRole": "GROUND",
+      "sourceZoneIds": [
+        "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+      ],
+      "sourceObjectIds": [
+        "OBJ_002_FOREGROUND_WET_SAND"
+      ],
+      "descriptorPrimitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+      "descriptorStrategy": "HEIGHT_FIELD",
+      "descriptorSemanticRole": "PRIMARY_INSPECTION_WET_SAND_GROUND_SURFACE",
+      "materialHint": {
+        "materialKey": "wetSand",
+        "materialIntentId": "H_EARTH_WET_SAND_DOMAIN"
+      },
+      "toleranceContextIncluded": false,
+      "admitted": false
+    },
+    "providerResult": {
+      "recordType": "H_EARTH_GROUND_PROVIDER_RESULT",
+      "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+      "providerRole": "GROUND",
+      "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+      "constructionStatus": "VALID",
+      "valid": true,
+      "ineligible": false,
+      "fatal": false,
+      "sourceZoneIds": [
+        "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+      ],
+      "sourceObjectIds": [
+        "OBJ_002_FOREGROUND_WET_SAND"
+      ],
+      "primitives": [
+        {
+          "recordType": "H_EARTH_PROJECTION_NEUTRAL_PRIMITIVE_RECORD",
+          "primitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "primitiveType": "HEIGHT_FIELD_MESH",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "geometry": {
+            "recordType": "H_EARTH_PROJECTION_NEUTRAL_GEOMETRY_RECORD",
+            "geometryId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "topologyMode": "TRIANGLES",
+            "vertices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "indices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "normals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "faceNormals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "bounds": {
+              "type": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "minimum": "[DEPTH_LIMIT]",
+              "maximum": "[DEPTH_LIMIT]",
+              "center": "[DEPTH_LIMIT]",
+              "size": "[DEPTH_LIMIT]",
+              "halfExtent": "[DEPTH_LIMIT]",
+              "diagonalLength": "[DEPTH_LIMIT]",
+              "empty": "[DEPTH_LIMIT]",
+              "finite": "[DEPTH_LIMIT]"
+            },
+            "transform": {
+              "type": "[DEPTH_LIMIT]",
+              "logicalStorage": "[DEPTH_LIMIT]",
+              "vectorConvention": "[DEPTH_LIMIT]",
+              "entries": "[DEPTH_LIMIT]"
+            },
+            "attributes": null,
+            "source": {
+              "sourceType": "[DEPTH_LIMIT]",
+              "descriptorId": "[DEPTH_LIMIT]"
+            },
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "topologyAnalysis": "[DEPTH_LIMIT]",
+              "surfaceClosure": "[DEPTH_LIMIT]",
+              "openNeutralMeshConstructionValid": "[DEPTH_LIMIT]",
+              "closedOutwardConstructionValid": "[DEPTH_LIMIT]"
+            },
+            "admitted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "providerOutput": false,
+            "rendererMaterialized": false
+          },
+          "semanticRole": "PRIMARY_INSPECTION_WET_SAND_GROUND_SURFACE",
+          "materialHint": {
+            "materialKey": "wetSand",
+            "materialIntentId": "H_EARTH_WET_SAND_DOMAIN"
+          },
+          "visibilityHint": null,
+          "interactionHint": null,
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "openNeutralMesh": true,
+            "closedOutward": false,
+            "constructionValid": true
+          },
+          "issues": [],
+          "constructionStatus": "CONSTRUCTED",
+          "admitted": false,
+          "admissionAuthority": "WEST_ONLY",
+          "providerOutput": false,
+          "aggregateFrameMember": false,
+          "rendererMaterialized": false
+        }
+      ],
+      "bounds": {
+        "type": "AABB_3D",
+        "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+        "minimum": {
+          "x": -96,
+          "y": -0.15583173566703412,
+          "z": -80
+        },
+        "maximum": {
+          "x": 96,
+          "y": 0.49153504854060215,
+          "z": 80
+        },
+        "center": {
+          "x": 0,
+          "y": 0.167851656436784,
+          "z": 0
+        },
+        "size": {
+          "x": 192,
+          "y": 0.6473667842076363,
+          "z": 160
+        },
+        "halfExtent": {
+          "x": 96,
+          "y": 0.32368339210381813,
+          "z": 80
+        },
+        "diagonalLength": 249.92882803660984,
+        "empty": false,
+        "finite": true
+      },
+      "account": {
+        "requestedPrimitiveCount": 1,
+        "constructedPrimitiveCount": 1,
+        "validPrimitiveCount": 1,
+        "heldPrimitiveCount": 0,
+        "neutralPrimitiveCount": 1,
+        "admittedPrimitiveCount": 0,
+        "issueCount": 0,
+        "blockingIssueCount": 0,
+        "fatalIssueCount": 0,
+        "errorIssueCount": 0,
+        "warningIssueCount": 0,
+        "infoIssueCount": 0,
+        "boundsPresent": true,
+        "emptyBounds": false,
+        "strategy": "HEIGHT_FIELD"
+      },
+      "issues": [],
+      "receipts": [
+        {
+          "recordType": "H_EARTH_GROUND_PROVIDER_RECEIPT",
+          "receiptId": "H_EARTH_GROUND_GEOMETRY_PROVIDER:H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:provider-receipt",
+          "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+          "providerRole": "GROUND",
+          "primitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "primitiveType": "HEIGHT_FIELD_MESH",
+          "valid": true,
+          "openNeutralMesh": true,
+          "sourceZoneIds": [
+            "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+          ],
+          "sourceObjectIds": [
+            "OBJ_002_FOREGROUND_WET_SAND"
+          ],
+          "issueCounts": {
+            "fatalCount": 0,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "blockingCount": 0,
+            "totalCount": 0
+          },
+          "strategy": "HEIGHT_FIELD"
+        }
+      ],
+      "authority": {
+        "providerLocalConstructionAdapter": true,
+        "providerAuthority": "PROVIDER_LOCAL_CONSTRUCTION_ADAPTER_ONLY",
+        "neutralPrimitiveOnly": true,
+        "admittedPrimitiveAuthority": false,
+        "aggregateFrameAuthority": false,
+        "geometryIndexAuthority": false,
+        "compositorIntegrationAuthority": false,
+        "rendererIntegrationAuthority": false,
+        "visualApproval": false,
+        "productionAuthority": false,
+        "publicReleaseAuthority": false
+      }
+    },
+    "primitives": [
+      {
+        "recordType": "H_EARTH_PROJECTION_NEUTRAL_PRIMITIVE_RECORD",
+        "primitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+        "primitiveType": "HEIGHT_FIELD_MESH",
+        "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+        "projectionNeutral": true,
+        "geometry": {
+          "recordType": "H_EARTH_PROJECTION_NEUTRAL_GEOMETRY_RECORD",
+          "geometryId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "topologyMode": "TRIANGLES",
+          "vertices": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "indices": [
+            0,
+            26,
+            1,
+            0,
+            25,
+            26,
+            1,
+            27,
+            2,
+            1,
+            26,
+            27
+          ],
+          "normals": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "faceNormals": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "bounds": {
+            "type": "AABB_3D",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "minimum": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "maximum": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "center": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "size": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "halfExtent": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "diagonalLength": 249.92882803660984,
+            "empty": false,
+            "finite": true
+          },
+          "transform": {
+            "type": "MATRIX4",
+            "logicalStorage": "ROW_MAJOR",
+            "vectorConvention": "COLUMN_VECTOR",
+            "entries": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ]
+          },
+          "attributes": null,
+          "source": {
+            "sourceType": "HEIGHT_FIELD_DESCRIPTOR",
+            "descriptorId": "H_EARTH_WET_SAND_NUMERIC_CONSTRUCTION_PROFILE_v1:HEIGHT_FIELD_DESCRIPTOR"
+          },
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            },
+            "surfaceClosure": "OPEN",
+            "openNeutralMeshConstructionValid": true,
+            "closedOutwardConstructionValid": false
+          },
+          "admitted": false,
+          "admissionAuthority": "WEST_ONLY",
+          "providerOutput": false,
+          "rendererMaterialized": false
+        },
+        "semanticRole": "PRIMARY_INSPECTION_WET_SAND_GROUND_SURFACE",
+        "materialHint": {
+          "materialKey": "wetSand",
+          "materialIntentId": "H_EARTH_WET_SAND_DOMAIN"
+        },
+        "visibilityHint": null,
+        "interactionHint": null,
+        "metadata": {
+          "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+          "providerRole": "GROUND",
+          "sourceZoneIds": [
+            "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+          ],
+          "sourceObjectIds": [
+            "OBJ_002_FOREGROUND_WET_SAND"
+          ],
+          "groundStrategy": "HEIGHT_FIELD",
+          "providerLocalConstructionOnly": true,
+          "admitted": false,
+          "aggregateFrameAuthority": false,
+          "rowCount": 21,
+          "columnCount": 25,
+          "wrapRows": false,
+          "wrapColumns": false,
+          "windingLaw": "[a,c,b] [a,d,c]",
+          "orientationLaw": "S_V_CROSS_S_U",
+          "rejectedSamplesCompacted": false,
+          "admissionAuthority": "WEST_ONLY",
+          "expectedClosure": "OPEN_ALLOWED",
+          "openNeutralMesh": true,
+          "closedOutward": false,
+          "constructionValid": true
+        },
+        "issues": [],
+        "constructionStatus": "CONSTRUCTED",
+        "admitted": false,
+        "admissionAuthority": "WEST_ONLY",
+        "providerOutput": false,
+        "aggregateFrameMember": false,
+        "rendererMaterialized": false
+      }
+    ],
+    "bounds": {
+      "type": "AABB_3D",
+      "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+      "minimum": {
+        "x": -96,
+        "y": -0.15583173566703412,
+        "z": -80
+      },
+      "maximum": {
+        "x": 96,
+        "y": 0.49153504854060215,
+        "z": 80
+      },
+      "center": {
+        "x": 0,
+        "y": 0.167851656436784,
+        "z": 0
+      },
+      "size": {
+        "x": 192,
+        "y": 0.6473667842076363,
+        "z": 160
+      },
+      "halfExtent": {
+        "x": 96,
+        "y": 0.32368339210381813,
+        "z": 80
+      },
+      "diagonalLength": 249.92882803660984,
+      "empty": false,
+      "finite": true
+    },
+    "admitted": false,
+    "WestAdmissionPerformed": false,
+    "geometryIndexMutated": false,
+    "compositorNodeCreated": false,
+    "renderInstanceCreated": false,
+    "worldTranslationApplied": false,
+    "localHeightFieldConstructionVerified": true,
+    "issues": []
+  },
+  "wetPrimitiveKeys": [
+    "recordType",
+    "primitiveId",
+    "primitiveType",
+    "coordinateFrame",
+    "projectionNeutral",
+    "geometry",
+    "semanticRole",
+    "materialHint",
+    "visibilityHint",
+    "interactionHint",
+    "metadata",
+    "issues",
+    "constructionStatus",
+    "admitted",
+    "admissionAuthority",
+    "providerOutput",
+    "aggregateFrameMember",
+    "rendererMaterialized"
+  ],
+  "wetPrimitiveMetadata": {
+    "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+    "providerRole": "GROUND",
+    "sourceZoneIds": [
+      "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+    ],
+    "sourceObjectIds": [
+      "OBJ_002_FOREGROUND_WET_SAND"
+    ],
+    "groundStrategy": "HEIGHT_FIELD",
+    "providerLocalConstructionOnly": true,
+    "admitted": false,
+    "aggregateFrameAuthority": false,
+    "rowCount": 21,
+    "columnCount": 25,
+    "wrapRows": false,
+    "wrapColumns": false,
+    "windingLaw": "[a,c,b] [a,d,c]",
+    "orientationLaw": "S_V_CROSS_S_U",
+    "rejectedSamplesCompacted": false,
+    "admissionAuthority": "WEST_ONLY",
+    "expectedClosure": "OPEN_ALLOWED",
+    "openNeutralMesh": true,
+    "closedOutward": false,
+    "constructionValid": true
+  },
+  "westResult": {
+    "valid": true,
+    "frame": {
+      "recordType": "H_EARTH_WEST_ADMITTED_AGGREGATE_FRAME_RECORD",
+      "frameId": "FD05_SHORELINE_CONTRACT_CHECK_FRAME_001",
+      "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+      "status": "ADMITTED",
+      "primitiveCount": 3,
+      "primitiveIds": [
+        "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+        "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+        "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+      ],
+      "primitives": [
+        {
+          "recordType": "H_EARTH_WEST_ADMITTED_PRIMITIVE_RECORD",
+          "admissionId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+          "primitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "primitiveType": "HEIGHT_FIELD_MESH",
+          "sourceNeutralPrimitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "geometry": {
+            "recordType": "H_EARTH_WEST_ADMITTED_GEOMETRY_RECORD",
+            "admissionId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+            "geometryId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralGeometryId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralPrimitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "topologyMode": "TRIANGLES",
+            "vertices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "indices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "normals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "faceNormals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "bounds": {
+              "type": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "minimum": "[DEPTH_LIMIT]",
+              "maximum": "[DEPTH_LIMIT]",
+              "center": "[DEPTH_LIMIT]",
+              "size": "[DEPTH_LIMIT]",
+              "halfExtent": "[DEPTH_LIMIT]",
+              "diagonalLength": "[DEPTH_LIMIT]",
+              "empty": "[DEPTH_LIMIT]",
+              "finite": "[DEPTH_LIMIT]"
+            },
+            "transform": {
+              "type": "[DEPTH_LIMIT]",
+              "logicalStorage": "[DEPTH_LIMIT]",
+              "vectorConvention": "[DEPTH_LIMIT]",
+              "entries": "[DEPTH_LIMIT]"
+            },
+            "attributes": null,
+            "source": {
+              "sourceType": "[DEPTH_LIMIT]",
+              "descriptorId": "[DEPTH_LIMIT]"
+            },
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "topologyAnalysis": "[DEPTH_LIMIT]",
+              "surfaceClosure": "[DEPTH_LIMIT]",
+              "openNeutralMeshConstructionValid": "[DEPTH_LIMIT]",
+              "closedOutwardConstructionValid": "[DEPTH_LIMIT]",
+              "primitiveId": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "admitted": true,
+            "admissionAuthority": "WEST",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "geometryIndexExported": false,
+            "compositorIntegrated": false,
+            "rendererMaterialized": false
+          },
+          "semanticRole": "PRIMARY_INSPECTION_WET_SAND_GROUND_SURFACE",
+          "materialHint": {
+            "materialKey": "wetSand",
+            "materialIntentId": "H_EARTH_WET_SAND_DOMAIN"
+          },
+          "visibilityHint": null,
+          "interactionHint": null,
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "openNeutralMesh": true,
+            "closedOutward": false,
+            "constructionValid": true,
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": [],
+          "admitted": true,
+          "admissionAuthority": "WEST",
+          "providerOutput": false,
+          "aggregateFrameMember": true,
+          "geometryIndexExported": false,
+          "compositorIntegrated": false,
+          "rendererMaterialized": false
+        },
+        {
+          "recordType": "H_EARTH_WEST_ADMITTED_PRIMITIVE_RECORD",
+          "admissionId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+          "primitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "primitiveType": "HEIGHT_FIELD_MESH",
+          "sourceNeutralPrimitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "geometry": {
+            "recordType": "H_EARTH_WEST_ADMITTED_GEOMETRY_RECORD",
+            "admissionId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+            "geometryId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralGeometryId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralPrimitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "topologyMode": "TRIANGLES",
+            "vertices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "indices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "normals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "faceNormals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "bounds": {
+              "type": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "minimum": "[DEPTH_LIMIT]",
+              "maximum": "[DEPTH_LIMIT]",
+              "center": "[DEPTH_LIMIT]",
+              "size": "[DEPTH_LIMIT]",
+              "halfExtent": "[DEPTH_LIMIT]",
+              "diagonalLength": "[DEPTH_LIMIT]",
+              "empty": "[DEPTH_LIMIT]",
+              "finite": "[DEPTH_LIMIT]"
+            },
+            "transform": {
+              "type": "[DEPTH_LIMIT]",
+              "logicalStorage": "[DEPTH_LIMIT]",
+              "vectorConvention": "[DEPTH_LIMIT]",
+              "entries": "[DEPTH_LIMIT]"
+            },
+            "attributes": null,
+            "source": {
+              "sourceType": "[DEPTH_LIMIT]",
+              "descriptorId": "[DEPTH_LIMIT]"
+            },
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "topologyAnalysis": "[DEPTH_LIMIT]",
+              "surfaceClosure": "[DEPTH_LIMIT]",
+              "openNeutralMeshConstructionValid": "[DEPTH_LIMIT]",
+              "closedOutwardConstructionValid": "[DEPTH_LIMIT]",
+              "primitiveId": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "admitted": true,
+            "admissionAuthority": "WEST",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "geometryIndexExported": false,
+            "compositorIntegrated": false,
+            "rendererMaterialized": false
+          },
+          "semanticRole": "PRIMARY_INSPECTION_FOAM_CONTACT_GROUND_SURFACE",
+          "materialHint": {
+            "materialKey": "wetSand",
+            "materialIntentId": "H_EARTH_FOAM_CONTACT_DOMAIN"
+          },
+          "visibilityHint": null,
+          "interactionHint": null,
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "openNeutralMesh": true,
+            "closedOutward": false,
+            "constructionValid": true,
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": [],
+          "admitted": true,
+          "admissionAuthority": "WEST",
+          "providerOutput": false,
+          "aggregateFrameMember": true,
+          "geometryIndexExported": false,
+          "compositorIntegrated": false,
+          "rendererMaterialized": false
+        },
+        {
+          "recordType": "H_EARTH_WEST_ADMITTED_PRIMITIVE_RECORD",
+          "admissionId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+          "primitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "primitiveType": "HEIGHT_FIELD_MESH",
+          "sourceNeutralPrimitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "geometry": {
+            "recordType": "H_EARTH_WEST_ADMITTED_GEOMETRY_RECORD",
+            "admissionId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+            "geometryId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralGeometryId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralPrimitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "topologyMode": "TRIANGLES",
+            "vertices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "indices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "normals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "faceNormals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "bounds": {
+              "type": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "minimum": "[DEPTH_LIMIT]",
+              "maximum": "[DEPTH_LIMIT]",
+              "center": "[DEPTH_LIMIT]",
+              "size": "[DEPTH_LIMIT]",
+              "halfExtent": "[DEPTH_LIMIT]",
+              "diagonalLength": "[DEPTH_LIMIT]",
+              "empty": "[DEPTH_LIMIT]",
+              "finite": "[DEPTH_LIMIT]"
+            },
+            "transform": {
+              "type": "[DEPTH_LIMIT]",
+              "logicalStorage": "[DEPTH_LIMIT]",
+              "vectorConvention": "[DEPTH_LIMIT]",
+              "entries": "[DEPTH_LIMIT]"
+            },
+            "attributes": null,
+            "source": {
+              "sourceType": "[DEPTH_LIMIT]",
+              "descriptorId": "[DEPTH_LIMIT]"
+            },
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "topologyAnalysis": "[DEPTH_LIMIT]",
+              "surfaceClosure": "[DEPTH_LIMIT]",
+              "openNeutralMeshConstructionValid": "[DEPTH_LIMIT]",
+              "closedOutwardConstructionValid": "[DEPTH_LIMIT]",
+              "primitiveId": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "admitted": true,
+            "admissionAuthority": "WEST",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "geometryIndexExported": false,
+            "compositorIntegrated": false,
+            "rendererMaterialized": false
+          },
+          "semanticRole": "PRIMARY_INSPECTION_OPEN_WATER_GROUND_SURFACE",
+          "materialHint": {
+            "materialKey": "wetSand",
+            "materialIntentId": "H_EARTH_OPEN_WATER_DOMAIN"
+          },
+          "visibilityHint": null,
+          "interactionHint": null,
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "openNeutralMesh": true,
+            "closedOutward": false,
+            "constructionValid": true,
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": [],
+          "admitted": true,
+          "admissionAuthority": "WEST",
+          "providerOutput": false,
+          "aggregateFrameMember": true,
+          "geometryIndexExported": false,
+          "compositorIntegrated": false,
+          "rendererMaterialized": false
+        }
+      ],
+      "bounds": {
+        "type": "AABB_3D",
+        "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+        "minimum": {
+          "x": -96,
+          "y": -0.15583173566703412,
+          "z": -80
+        },
+        "maximum": {
+          "x": 96,
+          "y": 0.49153504854060215,
+          "z": 80
+        },
+        "center": {
+          "x": 0,
+          "y": 0.167851656436784,
+          "z": 0
+        },
+        "size": {
+          "x": 192,
+          "y": 0.6473667842076363,
+          "z": 160
+        },
+        "halfExtent": {
+          "x": 96,
+          "y": 0.32368339210381813,
+          "z": 80
+        },
+        "diagonalLength": 249.92882803660984,
+        "empty": false,
+        "finite": true
+      },
+      "sourceMemberBounds": {
+        "type": "AABB_3D",
+        "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+        "minimum": {
+          "x": -96,
+          "y": -0.15583173566703412,
+          "z": -80
+        },
+        "maximum": {
+          "x": 96,
+          "y": 0.49153504854060215,
+          "z": 80
+        },
+        "center": {
+          "x": 0,
+          "y": 0.167851656436784,
+          "z": 0
+        },
+        "size": {
+          "x": 192,
+          "y": 0.6473667842076363,
+          "z": 160
+        },
+        "halfExtent": {
+          "x": 96,
+          "y": 0.32368339210381813,
+          "z": 80
+        },
+        "diagonalLength": 249.92882803660984,
+        "empty": false,
+        "finite": true
+      },
+      "metadata": {
+        "primitiveCount": 3,
+        "frameCandidateClass": "AGGREGATE_FRAME",
+        "requestId": "FD05_SHORELINE_CONTRACT_CHECK_001",
+        "providerRequestId": "H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+        "resolutionReceiptId": "H_EARTH_SOURCE_OBJECT_GEOMETRY_RESOLUTION_RECEIPT:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+        "sourceObjectIds": [
+          "OBJ_002_FOREGROUND_WET_SAND",
+          "OBJ_005_SHORELINE_FOAM_LINE",
+          "OBJ_007_WATER_SURFACE_PLANE"
+        ],
+        "sourceZoneIds": [
+          "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+          "ZONE_002_SHORELINE_CONTACT_ZONE",
+          "ZONE_003_WATER_SURFACE_ZONE"
+        ],
+        "latticeRegionIds": [
+          "FOREGROUND_INSPECTION_GROUND"
+        ]
+      },
+      "issues": [],
+      "admitted": true,
+      "admissionAuthority": "WEST",
+      "providerOutput": false,
+      "geometryIndexExported": false,
+      "compositorIntegrated": false,
+      "rendererMaterialized": false,
+      "visualApproval": false,
+      "productionAuthority": false,
+      "publicReleaseAuthority": false
+    },
+    "primitiveAdmissions": [
+      {
+        "valid": true,
+        "admissionId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+        "primitive": {
+          "recordType": "H_EARTH_WEST_ADMITTED_PRIMITIVE_RECORD",
+          "admissionId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+          "primitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "primitiveType": "HEIGHT_FIELD_MESH",
+          "sourceNeutralPrimitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "geometry": {
+            "recordType": "H_EARTH_WEST_ADMITTED_GEOMETRY_RECORD",
+            "admissionId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+            "geometryId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralGeometryId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralPrimitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "topologyMode": "TRIANGLES",
+            "vertices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "indices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "normals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "faceNormals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "bounds": {
+              "type": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "minimum": "[DEPTH_LIMIT]",
+              "maximum": "[DEPTH_LIMIT]",
+              "center": "[DEPTH_LIMIT]",
+              "size": "[DEPTH_LIMIT]",
+              "halfExtent": "[DEPTH_LIMIT]",
+              "diagonalLength": "[DEPTH_LIMIT]",
+              "empty": "[DEPTH_LIMIT]",
+              "finite": "[DEPTH_LIMIT]"
+            },
+            "transform": {
+              "type": "[DEPTH_LIMIT]",
+              "logicalStorage": "[DEPTH_LIMIT]",
+              "vectorConvention": "[DEPTH_LIMIT]",
+              "entries": "[DEPTH_LIMIT]"
+            },
+            "attributes": null,
+            "source": {
+              "sourceType": "[DEPTH_LIMIT]",
+              "descriptorId": "[DEPTH_LIMIT]"
+            },
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "topologyAnalysis": "[DEPTH_LIMIT]",
+              "surfaceClosure": "[DEPTH_LIMIT]",
+              "openNeutralMeshConstructionValid": "[DEPTH_LIMIT]",
+              "closedOutwardConstructionValid": "[DEPTH_LIMIT]",
+              "primitiveId": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "admitted": true,
+            "admissionAuthority": "WEST",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "geometryIndexExported": false,
+            "compositorIntegrated": false,
+            "rendererMaterialized": false
+          },
+          "semanticRole": "PRIMARY_INSPECTION_WET_SAND_GROUND_SURFACE",
+          "materialHint": {
+            "materialKey": "wetSand",
+            "materialIntentId": "H_EARTH_WET_SAND_DOMAIN"
+          },
+          "visibilityHint": null,
+          "interactionHint": null,
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "openNeutralMesh": true,
+            "closedOutward": false,
+            "constructionValid": true,
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": [],
+          "admitted": true,
+          "admissionAuthority": "WEST",
+          "providerOutput": false,
+          "aggregateFrameMember": false,
+          "geometryIndexExported": false,
+          "compositorIntegrated": false,
+          "rendererMaterialized": false
+        },
+        "geometry": {
+          "recordType": "H_EARTH_WEST_ADMITTED_GEOMETRY_RECORD",
+          "admissionId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+          "geometryId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+          "sourceNeutralGeometryId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+          "sourceNeutralPrimitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "topologyMode": "TRIANGLES",
+          "vertices": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "indices": [
+            0,
+            26,
+            1,
+            0,
+            25,
+            26,
+            1,
+            27,
+            2,
+            1,
+            26,
+            27
+          ],
+          "normals": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "faceNormals": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "bounds": {
+            "type": "AABB_3D",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "minimum": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "maximum": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "center": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "size": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "halfExtent": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "diagonalLength": 249.92882803660984,
+            "empty": false,
+            "finite": true
+          },
+          "transform": {
+            "type": "MATRIX4",
+            "logicalStorage": "ROW_MAJOR",
+            "vectorConvention": "COLUMN_VECTOR",
+            "entries": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ]
+          },
+          "attributes": null,
+          "source": {
+            "sourceType": "HEIGHT_FIELD_DESCRIPTOR",
+            "descriptorId": "H_EARTH_WET_SAND_NUMERIC_CONSTRUCTION_PROFILE_v1:HEIGHT_FIELD_DESCRIPTOR"
+          },
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            },
+            "surfaceClosure": "OPEN",
+            "openNeutralMeshConstructionValid": true,
+            "closedOutwardConstructionValid": false,
+            "primitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+          },
+          "issues": [],
+          "admitted": true,
+          "admissionAuthority": "WEST",
+          "providerOutput": false,
+          "aggregateFrameMember": false,
+          "geometryIndexExported": false,
+          "compositorIntegrated": false,
+          "rendererMaterialized": false
+        },
+        "evaluation": {
+          "valid": true,
+          "primitiveRecord": {
+            "recordType": "H_EARTH_PROJECTION_NEUTRAL_PRIMITIVE_RECORD",
+            "primitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "primitiveType": "HEIGHT_FIELD_MESH",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "geometry": {
+              "recordType": "[DEPTH_LIMIT]",
+              "geometryId": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "projectionNeutral": "[DEPTH_LIMIT]",
+              "topologyMode": "[DEPTH_LIMIT]",
+              "vertices": "[DEPTH_LIMIT]",
+              "indices": "[DEPTH_LIMIT]",
+              "normals": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "transform": "[DEPTH_LIMIT]",
+              "attributes": "[DEPTH_LIMIT]",
+              "source": "[DEPTH_LIMIT]",
+              "metadata": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "providerOutput": "[DEPTH_LIMIT]",
+              "rendererMaterialized": "[DEPTH_LIMIT]"
+            },
+            "semanticRole": "PRIMARY_INSPECTION_WET_SAND_GROUND_SURFACE",
+            "materialHint": {
+              "materialKey": "[DEPTH_LIMIT]",
+              "materialIntentId": "[DEPTH_LIMIT]"
+            },
+            "visibilityHint": null,
+            "interactionHint": null,
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "openNeutralMesh": "[DEPTH_LIMIT]",
+              "closedOutward": "[DEPTH_LIMIT]",
+              "constructionValid": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "constructionStatus": "CONSTRUCTED",
+            "admitted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "rendererMaterialized": false
+          },
+          "disposition": "ADMIT",
+          "admitted": false,
+          "admissionAuthority": "WEST_ONLY",
+          "metadata": {
+            "frameId": "FD05_SHORELINE_CONTRACT_CHECK_FRAME_001",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": []
+        },
+        "issues": []
+      },
+      {
+        "valid": true,
+        "admissionId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+        "primitive": {
+          "recordType": "H_EARTH_WEST_ADMITTED_PRIMITIVE_RECORD",
+          "admissionId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+          "primitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "primitiveType": "HEIGHT_FIELD_MESH",
+          "sourceNeutralPrimitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "geometry": {
+            "recordType": "H_EARTH_WEST_ADMITTED_GEOMETRY_RECORD",
+            "admissionId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+            "geometryId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralGeometryId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralPrimitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "topologyMode": "TRIANGLES",
+            "vertices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "indices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "normals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "faceNormals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "bounds": {
+              "type": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "minimum": "[DEPTH_LIMIT]",
+              "maximum": "[DEPTH_LIMIT]",
+              "center": "[DEPTH_LIMIT]",
+              "size": "[DEPTH_LIMIT]",
+              "halfExtent": "[DEPTH_LIMIT]",
+              "diagonalLength": "[DEPTH_LIMIT]",
+              "empty": "[DEPTH_LIMIT]",
+              "finite": "[DEPTH_LIMIT]"
+            },
+            "transform": {
+              "type": "[DEPTH_LIMIT]",
+              "logicalStorage": "[DEPTH_LIMIT]",
+              "vectorConvention": "[DEPTH_LIMIT]",
+              "entries": "[DEPTH_LIMIT]"
+            },
+            "attributes": null,
+            "source": {
+              "sourceType": "[DEPTH_LIMIT]",
+              "descriptorId": "[DEPTH_LIMIT]"
+            },
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "topologyAnalysis": "[DEPTH_LIMIT]",
+              "surfaceClosure": "[DEPTH_LIMIT]",
+              "openNeutralMeshConstructionValid": "[DEPTH_LIMIT]",
+              "closedOutwardConstructionValid": "[DEPTH_LIMIT]",
+              "primitiveId": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "admitted": true,
+            "admissionAuthority": "WEST",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "geometryIndexExported": false,
+            "compositorIntegrated": false,
+            "rendererMaterialized": false
+          },
+          "semanticRole": "PRIMARY_INSPECTION_FOAM_CONTACT_GROUND_SURFACE",
+          "materialHint": {
+            "materialKey": "wetSand",
+            "materialIntentId": "H_EARTH_FOAM_CONTACT_DOMAIN"
+          },
+          "visibilityHint": null,
+          "interactionHint": null,
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "openNeutralMesh": true,
+            "closedOutward": false,
+            "constructionValid": true,
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": [],
+          "admitted": true,
+          "admissionAuthority": "WEST",
+          "providerOutput": false,
+          "aggregateFrameMember": false,
+          "geometryIndexExported": false,
+          "compositorIntegrated": false,
+          "rendererMaterialized": false
+        },
+        "geometry": {
+          "recordType": "H_EARTH_WEST_ADMITTED_GEOMETRY_RECORD",
+          "admissionId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+          "geometryId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+          "sourceNeutralGeometryId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+          "sourceNeutralPrimitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "topologyMode": "TRIANGLES",
+          "vertices": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "indices": [
+            0,
+            26,
+            1,
+            0,
+            25,
+            26,
+            1,
+            27,
+            2,
+            1,
+            26,
+            27
+          ],
+          "normals": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "faceNormals": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "bounds": {
+            "type": "AABB_3D",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "minimum": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "maximum": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "center": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "size": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "halfExtent": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "diagonalLength": 249.92882803660984,
+            "empty": false,
+            "finite": true
+          },
+          "transform": {
+            "type": "MATRIX4",
+            "logicalStorage": "ROW_MAJOR",
+            "vectorConvention": "COLUMN_VECTOR",
+            "entries": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ]
+          },
+          "attributes": null,
+          "source": {
+            "sourceType": "HEIGHT_FIELD_DESCRIPTOR",
+            "descriptorId": "H_EARTH_FOAM_CONTACT_NUMERIC_CONSTRUCTION_PROFILE_v1:HEIGHT_FIELD_DESCRIPTOR"
+          },
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            },
+            "surfaceClosure": "OPEN",
+            "openNeutralMeshConstructionValid": true,
+            "closedOutwardConstructionValid": false,
+            "primitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+          },
+          "issues": [],
+          "admitted": true,
+          "admissionAuthority": "WEST",
+          "providerOutput": false,
+          "aggregateFrameMember": false,
+          "geometryIndexExported": false,
+          "compositorIntegrated": false,
+          "rendererMaterialized": false
+        },
+        "evaluation": {
+          "valid": true,
+          "primitiveRecord": {
+            "recordType": "H_EARTH_PROJECTION_NEUTRAL_PRIMITIVE_RECORD",
+            "primitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "primitiveType": "HEIGHT_FIELD_MESH",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "geometry": {
+              "recordType": "[DEPTH_LIMIT]",
+              "geometryId": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "projectionNeutral": "[DEPTH_LIMIT]",
+              "topologyMode": "[DEPTH_LIMIT]",
+              "vertices": "[DEPTH_LIMIT]",
+              "indices": "[DEPTH_LIMIT]",
+              "normals": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "transform": "[DEPTH_LIMIT]",
+              "attributes": "[DEPTH_LIMIT]",
+              "source": "[DEPTH_LIMIT]",
+              "metadata": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "providerOutput": "[DEPTH_LIMIT]",
+              "rendererMaterialized": "[DEPTH_LIMIT]"
+            },
+            "semanticRole": "PRIMARY_INSPECTION_FOAM_CONTACT_GROUND_SURFACE",
+            "materialHint": {
+              "materialKey": "[DEPTH_LIMIT]",
+              "materialIntentId": "[DEPTH_LIMIT]"
+            },
+            "visibilityHint": null,
+            "interactionHint": null,
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "openNeutralMesh": "[DEPTH_LIMIT]",
+              "closedOutward": "[DEPTH_LIMIT]",
+              "constructionValid": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "constructionStatus": "CONSTRUCTED",
+            "admitted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "rendererMaterialized": false
+          },
+          "disposition": "ADMIT",
+          "admitted": false,
+          "admissionAuthority": "WEST_ONLY",
+          "metadata": {
+            "frameId": "FD05_SHORELINE_CONTRACT_CHECK_FRAME_001",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": []
+        },
+        "issues": []
+      },
+      {
+        "valid": true,
+        "admissionId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+        "primitive": {
+          "recordType": "H_EARTH_WEST_ADMITTED_PRIMITIVE_RECORD",
+          "admissionId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+          "primitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "primitiveType": "HEIGHT_FIELD_MESH",
+          "sourceNeutralPrimitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "geometry": {
+            "recordType": "H_EARTH_WEST_ADMITTED_GEOMETRY_RECORD",
+            "admissionId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+            "geometryId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralGeometryId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+            "sourceNeutralPrimitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "topologyMode": "TRIANGLES",
+            "vertices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "indices": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "normals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "faceNormals": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ],
+            "bounds": {
+              "type": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "minimum": "[DEPTH_LIMIT]",
+              "maximum": "[DEPTH_LIMIT]",
+              "center": "[DEPTH_LIMIT]",
+              "size": "[DEPTH_LIMIT]",
+              "halfExtent": "[DEPTH_LIMIT]",
+              "diagonalLength": "[DEPTH_LIMIT]",
+              "empty": "[DEPTH_LIMIT]",
+              "finite": "[DEPTH_LIMIT]"
+            },
+            "transform": {
+              "type": "[DEPTH_LIMIT]",
+              "logicalStorage": "[DEPTH_LIMIT]",
+              "vectorConvention": "[DEPTH_LIMIT]",
+              "entries": "[DEPTH_LIMIT]"
+            },
+            "attributes": null,
+            "source": {
+              "sourceType": "[DEPTH_LIMIT]",
+              "descriptorId": "[DEPTH_LIMIT]"
+            },
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "topologyAnalysis": "[DEPTH_LIMIT]",
+              "surfaceClosure": "[DEPTH_LIMIT]",
+              "openNeutralMeshConstructionValid": "[DEPTH_LIMIT]",
+              "closedOutwardConstructionValid": "[DEPTH_LIMIT]",
+              "primitiveId": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "admitted": true,
+            "admissionAuthority": "WEST",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "geometryIndexExported": false,
+            "compositorIntegrated": false,
+            "rendererMaterialized": false
+          },
+          "semanticRole": "PRIMARY_INSPECTION_OPEN_WATER_GROUND_SURFACE",
+          "materialHint": {
+            "materialKey": "wetSand",
+            "materialIntentId": "H_EARTH_OPEN_WATER_DOMAIN"
+          },
+          "visibilityHint": null,
+          "interactionHint": null,
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "openNeutralMesh": true,
+            "closedOutward": false,
+            "constructionValid": true,
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": [],
+          "admitted": true,
+          "admissionAuthority": "WEST",
+          "providerOutput": false,
+          "aggregateFrameMember": false,
+          "geometryIndexExported": false,
+          "compositorIntegrated": false,
+          "rendererMaterialized": false
+        },
+        "geometry": {
+          "recordType": "H_EARTH_WEST_ADMITTED_GEOMETRY_RECORD",
+          "admissionId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:west-admission",
+          "geometryId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+          "sourceNeutralGeometryId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001:geometry",
+          "sourceNeutralPrimitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+          "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+          "projectionNeutral": true,
+          "topologyMode": "TRIANGLES",
+          "vertices": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "indices": [
+            0,
+            26,
+            1,
+            0,
+            25,
+            26,
+            1,
+            27,
+            2,
+            1,
+            26,
+            27
+          ],
+          "normals": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "faceNormals": [
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            }
+          ],
+          "bounds": {
+            "type": "AABB_3D",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "minimum": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "maximum": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "center": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "size": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "halfExtent": {
+              "x": "[DEPTH_LIMIT]",
+              "y": "[DEPTH_LIMIT]",
+              "z": "[DEPTH_LIMIT]"
+            },
+            "diagonalLength": 249.92882803660984,
+            "empty": false,
+            "finite": true
+          },
+          "transform": {
+            "type": "MATRIX4",
+            "logicalStorage": "ROW_MAJOR",
+            "vectorConvention": "COLUMN_VECTOR",
+            "entries": [
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]",
+              "[DEPTH_LIMIT]"
+            ]
+          },
+          "attributes": null,
+          "source": {
+            "sourceType": "HEIGHT_FIELD_DESCRIPTOR",
+            "descriptorId": "H_EARTH_OPEN_WATER_NUMERIC_CONSTRUCTION_PROFILE_v1:HEIGHT_FIELD_DESCRIPTOR"
+          },
+          "metadata": {
+            "providerId": "H_EARTH_GROUND_GEOMETRY_PROVIDER",
+            "providerRole": "GROUND",
+            "sourceZoneIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "sourceObjectIds": [
+              "[DEPTH_LIMIT]"
+            ],
+            "groundStrategy": "HEIGHT_FIELD",
+            "providerLocalConstructionOnly": true,
+            "admitted": false,
+            "aggregateFrameAuthority": false,
+            "rowCount": 21,
+            "columnCount": 25,
+            "wrapRows": false,
+            "wrapColumns": false,
+            "windingLaw": "[a,c,b] [a,d,c]",
+            "orientationLaw": "S_V_CROSS_S_U",
+            "rejectedSamplesCompacted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            },
+            "surfaceClosure": "OPEN",
+            "openNeutralMeshConstructionValid": true,
+            "closedOutwardConstructionValid": false,
+            "primitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+          },
+          "issues": [],
+          "admitted": true,
+          "admissionAuthority": "WEST",
+          "providerOutput": false,
+          "aggregateFrameMember": false,
+          "geometryIndexExported": false,
+          "compositorIntegrated": false,
+          "rendererMaterialized": false
+        },
+        "evaluation": {
+          "valid": true,
+          "primitiveRecord": {
+            "recordType": "H_EARTH_PROJECTION_NEUTRAL_PRIMITIVE_RECORD",
+            "primitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "primitiveType": "HEIGHT_FIELD_MESH",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "geometry": {
+              "recordType": "[DEPTH_LIMIT]",
+              "geometryId": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "projectionNeutral": "[DEPTH_LIMIT]",
+              "topologyMode": "[DEPTH_LIMIT]",
+              "vertices": "[DEPTH_LIMIT]",
+              "indices": "[DEPTH_LIMIT]",
+              "normals": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "transform": "[DEPTH_LIMIT]",
+              "attributes": "[DEPTH_LIMIT]",
+              "source": "[DEPTH_LIMIT]",
+              "metadata": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "providerOutput": "[DEPTH_LIMIT]",
+              "rendererMaterialized": "[DEPTH_LIMIT]"
+            },
+            "semanticRole": "PRIMARY_INSPECTION_OPEN_WATER_GROUND_SURFACE",
+            "materialHint": {
+              "materialKey": "[DEPTH_LIMIT]",
+              "materialIntentId": "[DEPTH_LIMIT]"
+            },
+            "visibilityHint": null,
+            "interactionHint": null,
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "openNeutralMesh": "[DEPTH_LIMIT]",
+              "closedOutward": "[DEPTH_LIMIT]",
+              "constructionValid": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "constructionStatus": "CONSTRUCTED",
+            "admitted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "rendererMaterialized": false
+          },
+          "disposition": "ADMIT",
+          "admitted": false,
+          "admissionAuthority": "WEST_ONLY",
+          "metadata": {
+            "frameId": "FD05_SHORELINE_CONTRACT_CHECK_FRAME_001",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": []
+        },
+        "issues": []
+      }
+    ],
+    "evaluation": {
+      "valid": true,
+      "frameId": "FD05_SHORELINE_CONTRACT_CHECK_FRAME_001",
+      "evaluations": [
+        {
+          "valid": true,
+          "primitiveRecord": {
+            "recordType": "H_EARTH_PROJECTION_NEUTRAL_PRIMITIVE_RECORD",
+            "primitiveId": "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "primitiveType": "HEIGHT_FIELD_MESH",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "geometry": {
+              "recordType": "[DEPTH_LIMIT]",
+              "geometryId": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "projectionNeutral": "[DEPTH_LIMIT]",
+              "topologyMode": "[DEPTH_LIMIT]",
+              "vertices": "[DEPTH_LIMIT]",
+              "indices": "[DEPTH_LIMIT]",
+              "normals": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "transform": "[DEPTH_LIMIT]",
+              "attributes": "[DEPTH_LIMIT]",
+              "source": "[DEPTH_LIMIT]",
+              "metadata": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "providerOutput": "[DEPTH_LIMIT]",
+              "rendererMaterialized": "[DEPTH_LIMIT]"
+            },
+            "semanticRole": "PRIMARY_INSPECTION_WET_SAND_GROUND_SURFACE",
+            "materialHint": {
+              "materialKey": "[DEPTH_LIMIT]",
+              "materialIntentId": "[DEPTH_LIMIT]"
+            },
+            "visibilityHint": null,
+            "interactionHint": null,
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "openNeutralMesh": "[DEPTH_LIMIT]",
+              "closedOutward": "[DEPTH_LIMIT]",
+              "constructionValid": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "constructionStatus": "CONSTRUCTED",
+            "admitted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "rendererMaterialized": false
+          },
+          "disposition": "ADMIT",
+          "admitted": false,
+          "admissionAuthority": "WEST_ONLY",
+          "metadata": {
+            "frameId": "FD05_SHORELINE_CONTRACT_CHECK_FRAME_001",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": []
+        },
+        {
+          "valid": true,
+          "primitiveRecord": {
+            "recordType": "H_EARTH_PROJECTION_NEUTRAL_PRIMITIVE_RECORD",
+            "primitiveId": "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "primitiveType": "HEIGHT_FIELD_MESH",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "geometry": {
+              "recordType": "[DEPTH_LIMIT]",
+              "geometryId": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "projectionNeutral": "[DEPTH_LIMIT]",
+              "topologyMode": "[DEPTH_LIMIT]",
+              "vertices": "[DEPTH_LIMIT]",
+              "indices": "[DEPTH_LIMIT]",
+              "normals": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "transform": "[DEPTH_LIMIT]",
+              "attributes": "[DEPTH_LIMIT]",
+              "source": "[DEPTH_LIMIT]",
+              "metadata": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "providerOutput": "[DEPTH_LIMIT]",
+              "rendererMaterialized": "[DEPTH_LIMIT]"
+            },
+            "semanticRole": "PRIMARY_INSPECTION_FOAM_CONTACT_GROUND_SURFACE",
+            "materialHint": {
+              "materialKey": "[DEPTH_LIMIT]",
+              "materialIntentId": "[DEPTH_LIMIT]"
+            },
+            "visibilityHint": null,
+            "interactionHint": null,
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "openNeutralMesh": "[DEPTH_LIMIT]",
+              "closedOutward": "[DEPTH_LIMIT]",
+              "constructionValid": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "constructionStatus": "CONSTRUCTED",
+            "admitted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "rendererMaterialized": false
+          },
+          "disposition": "ADMIT",
+          "admitted": false,
+          "admissionAuthority": "WEST_ONLY",
+          "metadata": {
+            "frameId": "FD05_SHORELINE_CONTRACT_CHECK_FRAME_001",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": []
+        },
+        {
+          "valid": true,
+          "primitiveRecord": {
+            "recordType": "H_EARTH_PROJECTION_NEUTRAL_PRIMITIVE_RECORD",
+            "primitiveId": "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+            "primitiveType": "HEIGHT_FIELD_MESH",
+            "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+            "projectionNeutral": true,
+            "geometry": {
+              "recordType": "[DEPTH_LIMIT]",
+              "geometryId": "[DEPTH_LIMIT]",
+              "coordinateFrame": "[DEPTH_LIMIT]",
+              "projectionNeutral": "[DEPTH_LIMIT]",
+              "topologyMode": "[DEPTH_LIMIT]",
+              "vertices": "[DEPTH_LIMIT]",
+              "indices": "[DEPTH_LIMIT]",
+              "normals": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "transform": "[DEPTH_LIMIT]",
+              "attributes": "[DEPTH_LIMIT]",
+              "source": "[DEPTH_LIMIT]",
+              "metadata": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "providerOutput": "[DEPTH_LIMIT]",
+              "rendererMaterialized": "[DEPTH_LIMIT]"
+            },
+            "semanticRole": "PRIMARY_INSPECTION_OPEN_WATER_GROUND_SURFACE",
+            "materialHint": {
+              "materialKey": "[DEPTH_LIMIT]",
+              "materialIntentId": "[DEPTH_LIMIT]"
+            },
+            "visibilityHint": null,
+            "interactionHint": null,
+            "metadata": {
+              "providerId": "[DEPTH_LIMIT]",
+              "providerRole": "[DEPTH_LIMIT]",
+              "sourceZoneIds": "[DEPTH_LIMIT]",
+              "sourceObjectIds": "[DEPTH_LIMIT]",
+              "groundStrategy": "[DEPTH_LIMIT]",
+              "providerLocalConstructionOnly": "[DEPTH_LIMIT]",
+              "admitted": "[DEPTH_LIMIT]",
+              "aggregateFrameAuthority": "[DEPTH_LIMIT]",
+              "rowCount": "[DEPTH_LIMIT]",
+              "columnCount": "[DEPTH_LIMIT]",
+              "wrapRows": "[DEPTH_LIMIT]",
+              "wrapColumns": "[DEPTH_LIMIT]",
+              "windingLaw": "[DEPTH_LIMIT]",
+              "orientationLaw": "[DEPTH_LIMIT]",
+              "rejectedSamplesCompacted": "[DEPTH_LIMIT]",
+              "admissionAuthority": "[DEPTH_LIMIT]",
+              "expectedClosure": "[DEPTH_LIMIT]",
+              "openNeutralMesh": "[DEPTH_LIMIT]",
+              "closedOutward": "[DEPTH_LIMIT]",
+              "constructionValid": "[DEPTH_LIMIT]"
+            },
+            "issues": [],
+            "constructionStatus": "CONSTRUCTED",
+            "admitted": false,
+            "admissionAuthority": "WEST_ONLY",
+            "providerOutput": false,
+            "aggregateFrameMember": false,
+            "rendererMaterialized": false
+          },
+          "disposition": "ADMIT",
+          "admitted": false,
+          "admissionAuthority": "WEST_ONLY",
+          "metadata": {
+            "frameId": "FD05_SHORELINE_CONTRACT_CHECK_FRAME_001",
+            "expectedClosure": "OPEN_ALLOWED",
+            "topologyAnalysis": {
+              "valid": "[DEPTH_LIMIT]",
+              "classification": "[DEPTH_LIMIT]",
+              "structurallyClosed": "[DEPTH_LIMIT]",
+              "closed": "[DEPTH_LIMIT]",
+              "outwardClosed": "[DEPTH_LIMIT]",
+              "bounds": "[DEPTH_LIMIT]",
+              "topology": "[DEPTH_LIMIT]",
+              "shellAnalysis": "[DEPTH_LIMIT]",
+              "faceNormals": "[DEPTH_LIMIT]",
+              "vertexNormals": "[DEPTH_LIMIT]",
+              "closureRequirements": "[DEPTH_LIMIT]",
+              "issues": "[DEPTH_LIMIT]"
+            }
+          },
+          "issues": []
+        }
+      ],
+      "bounds": {
+        "type": "AABB_3D",
+        "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+        "minimum": {
+          "x": -96,
+          "y": -0.15583173566703412,
+          "z": -80
+        },
+        "maximum": {
+          "x": 96,
+          "y": 0.49153504854060215,
+          "z": 80
+        },
+        "center": {
+          "x": 0,
+          "y": 0.167851656436784,
+          "z": 0
+        },
+        "size": {
+          "x": 192,
+          "y": 0.6473667842076363,
+          "z": 160
+        },
+        "halfExtent": {
+          "x": 96,
+          "y": 0.32368339210381813,
+          "z": 80
+        },
+        "diagonalLength": 249.92882803660984,
+        "empty": false,
+        "finite": true
+      },
+      "admittedCandidateCount": 3,
+      "issues": [],
+      "metadata": {
+        "requestId": "FD05_SHORELINE_CONTRACT_CHECK_001",
+        "providerRequestId": "H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+        "resolutionReceiptId": "H_EARTH_SOURCE_OBJECT_GEOMETRY_RESOLUTION_RECEIPT:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+        "sourceObjectIds": [
+          "OBJ_002_FOREGROUND_WET_SAND",
+          "OBJ_005_SHORELINE_FOAM_LINE",
+          "OBJ_007_WATER_SURFACE_PLANE"
+        ],
+        "sourceZoneIds": [
+          "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+          "ZONE_002_SHORELINE_CONTACT_ZONE",
+          "ZONE_003_WATER_SURFACE_ZONE"
+        ],
+        "latticeRegionIds": [
+          "FOREGROUND_INSPECTION_GROUND"
+        ]
+      },
+      "disposition": "ADMIT"
+    },
+    "issues": []
+  },
+  "westError": null,
+  "variantResults": [
+    {
+      "id": "PLURAL_WITH_LEGACY_SINGULAR_WET",
+      "previewKeys": [
+        "ok",
+        "status",
+        "contractId",
+        "requestId",
+        "providerRequestId",
+        "resolutionReceiptId",
+        "sourceObjectId",
+        "sourceZoneIds",
+        "latticeRegionIds",
+        "profileId",
+        "translationReceipt",
+        "providerInputReceipt",
+        "providerResult",
+        "primitives",
+        "bounds",
+        "admitted",
+        "WestAdmissionPerformed",
+        "geometryIndexMutated",
+        "compositorNodeCreated",
+        "renderInstanceCreated",
+        "worldTranslationApplied",
+        "localHeightFieldConstructionVerified",
+        "issues",
+        "sourceObjectIds"
+      ],
+      "packet": {
+        "ok": false,
+        "status": "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_REJECTED",
+        "contractId": "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_FILE_BIRTH_PACKET_002_PROVISIONAL_HANDOFF_v1",
+        "issues": [
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive sourceObjectId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "OBJ_002_FOREGROUND_WET_SAND",
+              "OBJ_005_SHORELINE_FOAM_LINE",
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "actual": [
+              "OBJ_002_FOREGROUND_WET_SAND"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive zoneId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+              "ZONE_002_SHORELINE_CONTACT_ZONE",
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "actual": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive sourceObjectId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "OBJ_002_FOREGROUND_WET_SAND",
+              "OBJ_005_SHORELINE_FOAM_LINE",
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "actual": [
+              "OBJ_005_SHORELINE_FOAM_LINE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive zoneId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+              "ZONE_002_SHORELINE_CONTACT_ZONE",
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "actual": [
+              "ZONE_002_SHORELINE_CONTACT_ZONE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive sourceObjectId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "OBJ_002_FOREGROUND_WET_SAND",
+              "OBJ_005_SHORELINE_FOAM_LINE",
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "actual": [
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive zoneId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+              "ZONE_002_SHORELINE_CONTACT_ZONE",
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "actual": [
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_MEMBERSHIP_MISSING",
+            "message": "West admitted primitives must each expose one unique lawful primitiveId.",
+            "field": null,
+            "expected": null,
+            "actual": null,
+            "details": {
+              "missingIdentityCount": 0,
+              "duplicateIdentities": []
+            }
+          },
+          {
+            "code": "AGGREGATE_FRAME_PRIMITIVE_MEMBERSHIP_MISMATCH",
+            "message": "West aggregate-frame primitive membership does not match the standalone primitive-admission membership.",
+            "field": null,
+            "expected": [],
+            "actual": [
+              "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_ADMISSION_COUNT_MISMATCH",
+            "message": "West aggregate-frame primitiveIds do not match admitted primitive membership.",
+            "field": null,
+            "expected": [],
+            "actual": [
+              "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+            ],
+            "details": null
+          }
+        ]
+      },
+      "packetError": null,
+      "frame": null,
+      "frameError": null
+    },
+    {
+      "id": "PLURAL_WITH_SYNTHETIC_AGGREGATE_SINGULAR",
+      "previewKeys": [
+        "ok",
+        "status",
+        "contractId",
+        "requestId",
+        "providerRequestId",
+        "resolutionReceiptId",
+        "sourceObjectId",
+        "sourceZoneIds",
+        "latticeRegionIds",
+        "profileId",
+        "translationReceipt",
+        "providerInputReceipt",
+        "providerResult",
+        "primitives",
+        "bounds",
+        "admitted",
+        "WestAdmissionPerformed",
+        "geometryIndexMutated",
+        "compositorNodeCreated",
+        "renderInstanceCreated",
+        "worldTranslationApplied",
+        "localHeightFieldConstructionVerified",
+        "issues",
+        "sourceObjectIds"
+      ],
+      "packet": {
+        "ok": false,
+        "status": "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_REJECTED",
+        "contractId": "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_FILE_BIRTH_PACKET_002_PROVISIONAL_HANDOFF_v1",
+        "issues": [
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive sourceObjectId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "OBJ_002_FOREGROUND_WET_SAND",
+              "OBJ_005_SHORELINE_FOAM_LINE",
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "actual": [
+              "OBJ_002_FOREGROUND_WET_SAND"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive zoneId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+              "ZONE_002_SHORELINE_CONTACT_ZONE",
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "actual": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive sourceObjectId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "OBJ_002_FOREGROUND_WET_SAND",
+              "OBJ_005_SHORELINE_FOAM_LINE",
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "actual": [
+              "OBJ_005_SHORELINE_FOAM_LINE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive zoneId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+              "ZONE_002_SHORELINE_CONTACT_ZONE",
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "actual": [
+              "ZONE_002_SHORELINE_CONTACT_ZONE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive sourceObjectId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "OBJ_002_FOREGROUND_WET_SAND",
+              "OBJ_005_SHORELINE_FOAM_LINE",
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "actual": [
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive zoneId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+              "ZONE_002_SHORELINE_CONTACT_ZONE",
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "actual": [
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_MEMBERSHIP_MISSING",
+            "message": "West admitted primitives must each expose one unique lawful primitiveId.",
+            "field": null,
+            "expected": null,
+            "actual": null,
+            "details": {
+              "missingIdentityCount": 0,
+              "duplicateIdentities": []
+            }
+          },
+          {
+            "code": "AGGREGATE_FRAME_PRIMITIVE_MEMBERSHIP_MISMATCH",
+            "message": "West aggregate-frame primitive membership does not match the standalone primitive-admission membership.",
+            "field": null,
+            "expected": [],
+            "actual": [
+              "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_ADMISSION_COUNT_MISMATCH",
+            "message": "West aggregate-frame primitiveIds do not match admitted primitive membership.",
+            "field": null,
+            "expected": [],
+            "actual": [
+              "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+            ],
+            "details": null
+          }
+        ]
+      },
+      "packetError": null,
+      "frame": null,
+      "frameError": null
+    },
+    {
+      "id": "PLURAL_WITHOUT_SINGULAR",
+      "previewKeys": [
+        "ok",
+        "status",
+        "contractId",
+        "requestId",
+        "providerRequestId",
+        "resolutionReceiptId",
+        "sourceZoneIds",
+        "latticeRegionIds",
+        "profileId",
+        "translationReceipt",
+        "providerInputReceipt",
+        "providerResult",
+        "primitives",
+        "bounds",
+        "admitted",
+        "WestAdmissionPerformed",
+        "geometryIndexMutated",
+        "compositorNodeCreated",
+        "renderInstanceCreated",
+        "worldTranslationApplied",
+        "localHeightFieldConstructionVerified",
+        "issues",
+        "sourceObjectIds"
+      ],
+      "packet": {
+        "ok": false,
+        "status": "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_REJECTED",
+        "contractId": "H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_FILE_BIRTH_PACKET_002_PROVISIONAL_HANDOFF_v1",
+        "issues": [
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive sourceObjectId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "OBJ_002_FOREGROUND_WET_SAND",
+              "OBJ_005_SHORELINE_FOAM_LINE",
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "actual": [
+              "OBJ_002_FOREGROUND_WET_SAND"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive zoneId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+              "ZONE_002_SHORELINE_CONTACT_ZONE",
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "actual": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive sourceObjectId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "OBJ_002_FOREGROUND_WET_SAND",
+              "OBJ_005_SHORELINE_FOAM_LINE",
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "actual": [
+              "OBJ_005_SHORELINE_FOAM_LINE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive zoneId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+              "ZONE_002_SHORELINE_CONTACT_ZONE",
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "actual": [
+              "ZONE_002_SHORELINE_CONTACT_ZONE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive sourceObjectId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "OBJ_002_FOREGROUND_WET_SAND",
+              "OBJ_005_SHORELINE_FOAM_LINE",
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "actual": [
+              "OBJ_007_WATER_SURFACE_PLANE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_PROVENANCE_MISMATCH",
+            "message": "West admitted primitive zoneId does not match preview provenance.",
+            "field": null,
+            "expected": [
+              "ZONE_001_FOREGROUND_INSPECTION_ZONE",
+              "ZONE_002_SHORELINE_CONTACT_ZONE",
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "actual": [
+              "ZONE_003_WATER_SURFACE_ZONE"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_MEMBERSHIP_MISSING",
+            "message": "West admitted primitives must each expose one unique lawful primitiveId.",
+            "field": null,
+            "expected": null,
+            "actual": null,
+            "details": {
+              "missingIdentityCount": 0,
+              "duplicateIdentities": []
+            }
+          },
+          {
+            "code": "AGGREGATE_FRAME_PRIMITIVE_MEMBERSHIP_MISMATCH",
+            "message": "West aggregate-frame primitive membership does not match the standalone primitive-admission membership.",
+            "field": null,
+            "expected": [],
+            "actual": [
+              "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+            ],
+            "details": null
+          },
+          {
+            "code": "PRIMITIVE_ADMISSION_COUNT_MISMATCH",
+            "message": "West aggregate-frame primitiveIds do not match admitted primitive membership.",
+            "field": null,
+            "expected": [],
+            "actual": [
+              "H_EARTH_FOAM_CONTACT_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_005_SHORELINE_FOAM_LINE:FOAM_CONTACT_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_OPEN_WATER_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_007_WATER_SURFACE_PLANE:OPEN_WATER_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001",
+              "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:FD05_SHORELINE_CONTRACT_CHECK_001"
+            ],
+            "details": null
+          }
+        ]
+      },
+      "packetError": null,
+      "frame": null,
+      "frameError": null
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+name: FD05 visual baseline capture
+
+on:
+  pull_request:
+    branches:
+      - agent/fd05-visual-baseline-capture-001
+    types: [opened, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  capture-visual-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-visual-baseline-capture-001
+          fetch-depth: 0
+      - name: Install capture dependencies
+        run: |
+          npm install --no-save playwright@1.55.0 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture mobile and desktop terminal renderer stages
+        run: node .fd05/capture-visual-baseline.mjs
+      - name: Commit mechanical capture report to isolated branch
+        run: |
+          git config user.name "OpenAI Engineering Agent"
+          git config user.email "engineering-agent@users.noreply.github.com"
+          git add .fd05/visual-baseline-output/visual-baseline-capture-report.json
+          git commit -m "Record FD-05 visual baseline capture report"
+          git push origin HEAD:agent/fd05-visual-baseline-capture-001
+      - name: Upload visual baseline evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: fd05-visual-baseline-evidence
+          path: .fd05/visual-baseline-output/
+          if-no-files-found: error
+          retention-days: 14

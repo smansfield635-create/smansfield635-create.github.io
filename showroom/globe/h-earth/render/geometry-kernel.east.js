@@ -6140,15 +6140,15 @@ first,
 second
 ) {
 return first < second
-? ${first}:${second}
-: ${second}:${first};
+? `${first}:${second}`
+: `${second}:${first}`;
 }
 
 function createDirectedEdgeKey(
 first,
 second
 ) {
-return ${first}:${second};
+return `${first}:${second}`;
 }
 
 function parseUndirectedEdgeKey(

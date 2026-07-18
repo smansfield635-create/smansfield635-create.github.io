@@ -19,13 +19,19 @@ import {
 } from './capture-runtime.js';
 
 import {
+  buildCompleteRowProjection,
+  buildCompletionReceiptProjection,
+  buildFindingsReportProjection,
   buildHEarthFd05BrowserPackage,
+  buildOperatorSummary,
+  buildPackageDigestProjection,
+  buildRowSummaryProjection,
   validateHEarthFd05Package
-} from './browser-package.js';
+} from './browser-package.js?v=fd05-access-20260717c';
 
 import {
   createHEarthFd05Ui
-} from './ui.js';
+} from './ui.js?v=fd05-access-20260717c';
 
 export const H_EARTH_FD05_DIAGNOSTIC_IMPLEMENTATION_CONTRACT_ID =
   'H_EARTH_FD05_NINETEEN_ROW_BROWSER_EVIDENCE_INSTRUMENT_v1';
@@ -213,6 +219,12 @@ export const H_EARTH_FD05_INSPECTION_API =
       validateHEarthFd05ManifestProjection,
     validatePackage:
       validateHEarthFd05Package,
+    buildOperatorSummary,
+    buildCompletionReceiptProjection,
+    buildFindingsReportProjection,
+    buildPackageDigestProjection,
+    buildRowSummaryProjection,
+    buildCompleteRowProjection,
     lifecycleStates:
       H_EARTH_FD05_ROW_LIFECYCLE_STATES,
     getRows() {

@@ -1,4 +1,4 @@
-name: FD05 clean native shoreline review branch
+name: FD05 deployed native shoreline capture
 
 on:
   pull_request:
@@ -7,109 +7,139 @@ on:
     types: [opened, synchronize, reopened]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build-clean-review-branch:
+  capture-deployed-shoreline:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: agent/fd05-native-shoreline-work-001
+          ref: main
           fetch-depth: 0
 
-      - name: Preserve validated harnesses and construct clean candidate
+      - name: Verify merged occurrence and preserve browser harness
         run: |
           git fetch origin '+refs/heads/*:refs/remotes/origin/*'
-          test "$(git rev-parse origin/main)" = "cbde5b50470a528954f634baf8045674c2079cf0"
-          git show origin/agent/fd05-native-shoreline-work-001:.fd05/test-native-shoreline.mjs > /tmp/test-native-shoreline.mjs
-          git show origin/agent/fd05-native-shoreline-work-001:.fd05/test-native-shoreline-browser.mjs > /tmp/test-native-shoreline-browser.mjs
-          git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > /tmp/test-index-viewport.mjs
-          git checkout -B agent/fd05-native-shoreline-001 origin/main
-          git checkout origin/agent/fd05-native-shoreline-work-001 -- \
-            showroom/globe/h-earth/render/geometry-water.js \
-            showroom/globe/h-earth/render/geometry-foam.js \
-            showroom/globe/h-earth/render/shoreline-preview.js \
-            h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js \
-            showroom/globe/h-earth/admitted-geometry-frame.js \
-            showroom/globe/h-earth/compositor.js \
-            showroom/globe/h-earth/renderer.js \
-            showroom/globe/h-earth/index.html
-          EXPECTED="$(printf '%s\n' \
-            h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js \
-            showroom/globe/h-earth/admitted-geometry-frame.js \
-            showroom/globe/h-earth/compositor.js \
-            showroom/globe/h-earth/index.html \
-            showroom/globe/h-earth/render/geometry-foam.js \
-            showroom/globe/h-earth/render/geometry-water.js \
-            showroom/globe/h-earth/render/shoreline-preview.js \
-            showroom/globe/h-earth/renderer.js | sort)"
-          ACTUAL="$(git diff --cached --name-only | sort)"
-          test "$ACTUAL" = "$EXPECTED"
+          test "$(git rev-parse HEAD)" = "2764c3726c1b6591877d9257a125a70a2536d90d"
+          git show origin/agent/fd05-native-shoreline-work-001:.fd05/test-native-shoreline-browser.mjs > .fd05-test-native-shoreline-browser.mjs
+          mkdir -p .fd05/deployed-shoreline .fd05/native-shoreline-output
 
-      - name: Verify syntax and source corridor
+      - name: Wait for exact public byte correspondence
         run: |
-          node --check showroom/globe/h-earth/render/geometry-water.js
-          node --check showroom/globe/h-earth/render/geometry-foam.js
-          node --check showroom/globe/h-earth/render/shoreline-preview.js
-          node --check h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
-          node --check showroom/globe/h-earth/admitted-geometry-frame.js
-          node --check showroom/globe/h-earth/compositor.js
-          node --check showroom/globe/h-earth/renderer.js
-          mkdir -p .fd05/native-shoreline-output
-          cp /tmp/test-native-shoreline.mjs .fd05-test-native-shoreline.mjs
-          cp /tmp/test-index-viewport.mjs .fd05-test-index-viewport.mjs
-          node --experimental-default-type=module .fd05-test-native-shoreline.mjs
-          node --experimental-default-type=module .fd05-test-index-viewport.mjs
+          FILES=(
+            'h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js'
+            'showroom/globe/h-earth/admitted-geometry-frame.js'
+            'showroom/globe/h-earth/compositor.js'
+            'showroom/globe/h-earth/index.html'
+            'showroom/globe/h-earth/render/geometry-foam.js'
+            'showroom/globe/h-earth/render/geometry-water.js'
+            'showroom/globe/h-earth/render/shoreline-preview.js'
+            'showroom/globe/h-earth/renderer.js'
+          )
+          URLS=(
+            'https://diamondgatebridge.com/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js'
+            'https://diamondgatebridge.com/showroom/globe/h-earth/admitted-geometry-frame.js'
+            'https://diamondgatebridge.com/showroom/globe/h-earth/compositor.js'
+            'https://diamondgatebridge.com/showroom/globe/h-earth/'
+            'https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-foam.js'
+            'https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-water.js'
+            'https://diamondgatebridge.com/showroom/globe/h-earth/render/shoreline-preview.js'
+            'https://diamondgatebridge.com/showroom/globe/h-earth/renderer.js'
+          )
+          : > .fd05/deployed-shoreline/correspondence.tsv
+          MATCHED=0
+          for ATTEMPT in $(seq 1 30)
+          do
+            ALL=1
+            : > .fd05/deployed-shoreline/correspondence-current.tsv
+            for INDEX in $(seq 0 7)
+            do
+              FILE="${FILES[$INDEX]}"
+              URL="${URLS[$INDEX]}"
+              PUBLIC="/tmp/fd05-public-$INDEX"
+              CACHE_TOKEN="${GITHUB_RUN_ID}-${ATTEMPT}-${INDEX}"
+              if curl --fail --silent --show-error --location \
+                --retry 2 \
+                -H 'Cache-Control: no-cache' \
+                -H 'Pragma: no-cache' \
+                "${URL}?fd05Deploy=${CACHE_TOKEN}" \
+                --output "$PUBLIC"
+              then
+                LOCAL_SHA="$(sha256sum "$FILE" | awk '{print $1}')"
+                PUBLIC_SHA="$(sha256sum "$PUBLIC" | awk '{print $1}')"
+                LOCAL_BYTES="$(wc -c < "$FILE" | tr -d ' ')"
+                PUBLIC_BYTES="$(wc -c < "$PUBLIC" | tr -d ' ')"
+                EXACT=false
+                if [ "$LOCAL_SHA" = "$PUBLIC_SHA" ] && [ "$LOCAL_BYTES" = "$PUBLIC_BYTES" ]; then
+                  EXACT=true
+                else
+                  ALL=0
+                fi
+                printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+                  "$FILE" "$LOCAL_BYTES" "$PUBLIC_BYTES" "$LOCAL_SHA" "$PUBLIC_SHA" "$EXACT" \
+                  >> .fd05/deployed-shoreline/correspondence-current.tsv
+              else
+                ALL=0
+                printf '%s\t0\t0\tFETCH_FAILED\tFETCH_FAILED\tfalse\n' "$FILE" \
+                  >> .fd05/deployed-shoreline/correspondence-current.tsv
+              fi
+            done
+            cp .fd05/deployed-shoreline/correspondence-current.tsv \
+              .fd05/deployed-shoreline/correspondence.tsv
+            if [ "$ALL" -eq 1 ]; then
+              MATCHED=1
+              echo "$ATTEMPT" > .fd05/deployed-shoreline/correspondence-attempt.txt
+              break
+            fi
+            sleep 20
+          done
+          test "$MATCHED" -eq 1
+          python3 - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+          rows = []
+          with Path('.fd05/deployed-shoreline/correspondence.tsv').open() as handle:
+              for row in csv.reader(handle, delimiter='\t'):
+                  rows.append({
+                      'path': row[0],
+                      'localByteLength': int(row[1]),
+                      'publicByteLength': int(row[2]),
+                      'localSha256': row[3],
+                      'publicSha256': row[4],
+                      'exactMatch': row[5] == 'true',
+                  })
+          report = {
+              'reportId': 'H_EARTH_FD05_DEPLOYED_NATIVE_SHORELINE_CORRESPONDENCE_001',
+              'repositoryCommit': '2764c3726c1b6591877d9257a125a70a2536d90d',
+              'attempt': int(Path('.fd05/deployed-shoreline/correspondence-attempt.txt').read_text().strip()),
+              'allExact': all(row['exactMatch'] for row in rows),
+              'resources': rows,
+          }
+          Path('.fd05/deployed-shoreline/correspondence.json').write_text(
+              json.dumps(report, indent=2) + '\n', encoding='utf-8'
+          )
+          PY
 
       - name: Install Chromium
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
-      - name: Run mobile and desktop route gates
+      - name: Capture custom-domain mobile and desktop shoreline
         run: |
-          cp /tmp/test-native-shoreline-browser.mjs .fd05-test-native-shoreline-browser.mjs
-          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/fd05-http.log 2>&1 &
-          SERVER_PID=$!
-          trap 'kill $SERVER_PID || true' EXIT
-          sleep 2
-          H_EARTH_TEST_BASE_URL='http://127.0.0.1:8765/showroom/globe/h-earth/' node .fd05-test-native-shoreline-browser.mjs
+          H_EARTH_TEST_BASE_URL='https://diamondgatebridge.com/showroom/globe/h-earth/' \
+            node .fd05-test-native-shoreline-browser.mjs
 
-      - name: Upload clean candidate validation
+      - name: Upload deployed shoreline evidence
         uses: actions/upload-artifact@v4
         with:
-          name: fd05-clean-native-shoreline-validation
+          name: fd05-deployed-native-shoreline-evidence
           path: |
-            .fd05/native-shoreline-output/*.json
+            .fd05/deployed-shoreline/correspondence.json
+            .fd05/native-shoreline-output/browser-validation.json
             .fd05/native-shoreline-output/*.png
           if-no-files-found: error
           retention-days: 14
-
-      - name: Publish one-commit eight-file review branch
-        run: |
-          rm -rf node_modules package-lock.json .fd05
-          rm -f .fd05-test-native-shoreline.mjs .fd05-test-native-shoreline-browser.mjs .fd05-test-index-viewport.mjs
-          git checkout -- package.json 2>/dev/null || true
-          EXPECTED="$(printf '%s\n' \
-            h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js \
-            showroom/globe/h-earth/admitted-geometry-frame.js \
-            showroom/globe/h-earth/compositor.js \
-            showroom/globe/h-earth/index.html \
-            showroom/globe/h-earth/render/geometry-foam.js \
-            showroom/globe/h-earth/render/geometry-water.js \
-            showroom/globe/h-earth/render/shoreline-preview.js \
-            showroom/globe/h-earth/renderer.js | sort)"
-          ACTUAL="$(git diff --cached --name-only | sort)"
-          test "$ACTUAL" = "$EXPECTED"
-          test -z "$(git status --short | awk '$1 == "??" {print $2}')"
-          echo "BASE_COMMIT=$(git rev-parse HEAD)"
-          for FILE in $EXPECTED
-          do
-            echo "$FILE bytes=$(wc -c < "$FILE" | tr -d ' ') sha256=$(sha256sum "$FILE" | awk '{print $1}') blob=$(git hash-object "$FILE")"
-          done
-          git config user.name "OpenAI Engineering Agent"
-          git config user.email "engineering-agent@users.noreply.github.com"
-          git commit -m "Materialize minimum native shoreline context"
-          git push --force origin HEAD:agent/fd05-native-shoreline-001

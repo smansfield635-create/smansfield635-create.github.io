@@ -1,0 +1,1 @@
+Trigger exact deployed native shoreline correspondence and capture.

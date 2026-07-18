@@ -353,7 +353,7 @@ export function createHEarthFd05Ui({
 
   function renderCycle({ phase, inputSnapshot, cyclePacket = null, error = null }) {
     currentInputSnapshot = inputSnapshot || currentInputSnapshot || {};
-    if (cyclePacket) currentCyclePacket = cyclePacket;
+    currentCyclePacket = cyclePacket;
     nodes.root.dataset.cycleState = error ? 'ABORTED' : phase;
     nodes.cycleInputs.replaceChildren(...renderInputCustody(documentObject, currentInputSnapshot));
     nodes.cycleRail.replaceChildren(...renderCycleRail(documentObject, stationRegistry, currentCyclePacket));

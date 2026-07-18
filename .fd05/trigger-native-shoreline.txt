@@ -1,1 +1,1 @@
-Trigger the explicit compositor-mode native shoreline workflow.
+Trigger the canonical admitted-frame native shoreline workflow.

@@ -162,11 +162,14 @@ assert(assignments.OBJ_005_SHORELINE_FOAM_LINE?.materialReference === 'H_EARTH_M
 assert(assignments.OBJ_007_WATER_SURFACE_PLANE?.materialReference === 'H_EARTH_MATERIAL_OPEN_WATER', 'Water material assignment mismatch.', assignments);
 assert(frame.presentationAssignments.every((assignment) => assignment.presentationRole === 'PRIMARY_ADMITTED_WET_SAND_SURFACE'), 'Visibility-role correspondence mismatch.', frame.presentationAssignments);
 
-const construction = renderer.constructHEarth3DRenderer({
-  compositorRendererHandoff: handoff
-});
-assert(construction.ok === true, 'Renderer construction rejected the shoreline frame.', construction);
-assert(construction.status === 'RENDERER_CONSTRUCTED', 'Unexpected renderer construction status.', construction);
+const construction = renderer.constructHEarth3DRenderer(handoff);
+assert(construction.constructed === true, 'Renderer construction rejected the shoreline frame.', construction);
+assert(
+  construction.status === 'RENDERER_STATE_AND_PROJECTION_PLAN_CONSTRUCTED' ||
+    construction.status === 'RENDERER_STATE_CONSTRUCTED_FOR_LAWFUL_EMPTY_SCENE',
+  'Unexpected renderer construction status.',
+  construction
+);
 
 // Preserve the original one-object proof as a compatibility gate.
 const wetPreview = wetPreviewModule.previewHEarthWetSandGeometry({

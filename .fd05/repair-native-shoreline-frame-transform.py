@@ -3,17 +3,17 @@ from pathlib import Path
 path = Path('showroom/globe/h-earth/admitted-geometry-frame.js')
 text = path.read_text(encoding='utf-8')
 
-# The main shoreline transformation already broadens the positive
-# presentation-mode acceptance surface. These replacements are retained as
-# optional compatibility repairs because older admitted-frame occurrences used
-# different indentation and wording.
 old_condition = """    presentationMode !==
-       H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE"""
+    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE"""
 new_condition = """    !ALLOWED_PRESENTATION_MODES.includes(
       presentationMode
     )"""
 if old_condition in text:
     text = text.replace(old_condition, new_condition, 1)
+elif new_condition not in text:
+    raise SystemExit(
+        'admitted-frame public input presentation-mode condition is neither old nor repaired'
+    )
 
 old_message = (
     "'The initial bridge admits only "
@@ -25,13 +25,21 @@ new_message = (
 )
 if old_message in text:
     text = text.replace(old_message, new_message, 1)
+elif new_message not in text:
+    raise SystemExit(
+        'admitted-frame public input presentation-mode message is neither old nor repaired'
+    )
 
 old_expected = """          expected:
-             H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,"""
+            H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,"""
 new_expected = """          expected:
-             ALLOWED_PRESENTATION_MODES,"""
+            ALLOWED_PRESENTATION_MODES,"""
 if old_expected in text:
     text = text.replace(old_expected, new_expected, 1)
+elif new_expected not in text:
+    raise SystemExit(
+        'admitted-frame public input presentation-mode expected field is neither old nor repaired'
+    )
 
 old_canonical_check = """      !isCanonicalStringArray(
         aggregateFrame.primitiveIds
@@ -70,4 +78,4 @@ if old_membership_message in text:
     text = text.replace(old_membership_message, new_membership_message, 1)
 
 path.write_text(text, encoding='utf-8')
-print('Admitted-frame shoreline membership checks repaired')
+print('Admitted-frame shoreline mode and membership checks repaired')

@@ -68,3 +68,5 @@ jobs:
           git commit -m "Apply shared shoreline boundary replacements" \
             -m "Gate 4B only: replace the six authorized existing production paths. Tests remain deferred to Gate 4C."
           git push origin HEAD:agent/h-earth-native-shoreline-contact-repair
+
+# Trigger commit after workflow registration.

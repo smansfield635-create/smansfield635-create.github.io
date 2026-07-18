@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 
 const outputDirectory = '.fd05/renderer-wet-sand-output';
@@ -253,3 +253,8 @@ console.log(JSON.stringify({
   status: report.status,
   aggregate: report.aggregate
 }, null, 2));
+
+await rm('node_modules', {
+  recursive: true,
+  force: true
+});

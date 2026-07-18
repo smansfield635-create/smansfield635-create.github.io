@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - agent/fd05-deployed-browser-trace-001
-    types: [opened, synchronize, reopened]
+    types: [opened, reopened]
 
 permissions:
   contents: write

@@ -1,4 +1,4 @@
-name: FD05 minimum native shoreline workflow
+name: FD05 clean native shoreline review branch
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  construct-and-validate:
+  build-clean-review-branch:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -19,160 +19,15 @@ jobs:
           ref: agent/fd05-native-shoreline-work-001
           fetch-depth: 0
 
-      - name: Verify immutable base and apply bounded transformation
-        id: transform
-        continue-on-error: true
+      - name: Preserve validated harnesses and construct clean candidate
         run: |
-          mkdir -p .fd05/native-shoreline-output
-          set +e
-          STATUS=0
-          {
-            echo "BASE_HEAD=$(git rev-parse HEAD)"
-            test "$(git rev-parse cbde5b50470a528954f634baf8045674c2079cf0^{commit})" = "cbde5b50470a528954f634baf8045674c2079cf0" || STATUS=$?
-            for SCRIPT in \
-              .fd05/apply-native-shoreline.py \
-              .fd05/repair-native-shoreline-preview-transform.py \
-              .fd05/repair-native-shoreline-html-transform.py \
-              .fd05/repair-native-shoreline-packet-transform.py \
-              .fd05/repair-native-shoreline-frame-transform.py \
-              .fd05/repair-native-shoreline-compositor-transform.py \
-              .fd05/repair-native-shoreline-renderer-transform.py
-            do
-              if [ "$STATUS" -ne 0 ]; then
-                echo "SKIPPED_AFTER_FAILURE=$SCRIPT"
-                continue
-              fi
-              echo "BEGIN_SCRIPT=$SCRIPT"
-              python3 "$SCRIPT"
-              SCRIPT_STATUS=$?
-              echo "END_SCRIPT=$SCRIPT STATUS=$SCRIPT_STATUS"
-              if [ "$SCRIPT_STATUS" -ne 0 ]; then
-                STATUS=$SCRIPT_STATUS
-              fi
-            done
-          } > .fd05/native-shoreline-output/transform-gate.log 2>&1
-          cat .fd05/native-shoreline-output/transform-gate.log
-          echo "$STATUS" > .fd05/native-shoreline-output/transform-gate-exit-code.txt
-          exit "$STATUS"
-
-      - name: Upload transformation diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: fd05-native-shoreline-transform-diagnostic
-          path: |
-            .fd05/native-shoreline-output/transform-gate.log
-            .fd05/native-shoreline-output/transform-gate-exit-code.txt
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Enforce transformation gate
-        if: steps.transform.outcome != 'success'
-        run: exit 1
-
-      - name: Verify syntax and exact source scope
-        run: |
-          node --check showroom/globe/h-earth/render/geometry-water.js
-          node --check showroom/globe/h-earth/render/geometry-foam.js
-          node --check showroom/globe/h-earth/render/shoreline-preview.js
-          node --check h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
-          node --check showroom/globe/h-earth/admitted-geometry-frame.js
-          node --check showroom/globe/h-earth/compositor.js
-          node --check showroom/globe/h-earth/renderer.js
-          python3 - <<'PY'
-          from pathlib import Path
-          html = Path('showroom/globe/h-earth/index.html').read_text(encoding='utf-8')
-          required = [
-              './render/shoreline-preview.js?v=fd05-shoreline-001',
-              'previewHEarthMinimumShorelineGeometry',
-              'H_EARTH_3D_SHORELINE_PREVIEW_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1',
-              'H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE',
-              '...previewResult\n                          .sourceObjectIds'
-          ]
-          missing = [token for token in required if token not in html]
-          if missing:
-              raise SystemExit(f'missing transformed HTML tokens: {missing}')
-          PY
-
-      - name: Run source and backward-compatibility gates
-        id: source_gate
-        continue-on-error: true
-        run: |
-          mkdir -p .fd05/native-shoreline-output
-          set +e
-          node --experimental-default-type=module .fd05/test-native-shoreline.mjs > .fd05/native-shoreline-output/source-gate.log 2>&1
-          SOURCE_STATUS=$?
-          if [ "$SOURCE_STATUS" -eq 0 ]; then
-            git fetch origin '+refs/heads/*:refs/remotes/origin/*'
-            git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > .fd05-test-index-viewport.mjs
-            node --experimental-default-type=module .fd05-test-index-viewport.mjs >> .fd05/native-shoreline-output/source-gate.log 2>&1
-            SOURCE_STATUS=$?
-            rm -f .fd05-test-index-viewport.mjs
-          fi
-          cat .fd05/native-shoreline-output/source-gate.log
-          echo "$SOURCE_STATUS" > .fd05/native-shoreline-output/source-gate-exit-code.txt
-          exit "$SOURCE_STATUS"
-
-      - name: Upload source diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: fd05-native-shoreline-source-diagnostic
-          path: |
-            .fd05/native-shoreline-output/source-gate.log
-            .fd05/native-shoreline-output/source-gate-exit-code.txt
-            .fd05/native-shoreline-output/source-validation.json
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Enforce source gate
-        if: steps.source_gate.outcome != 'success'
-        run: exit 1
-
-      - name: Install Chromium
-        run: |
-          npm install --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
-
-      - name: Run real-browser mobile and desktop gates
-        id: browser_gate
-        continue-on-error: true
-        run: |
-          mkdir -p .fd05/native-shoreline-output
-          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/fd05-http.log 2>&1 &
-          SERVER_PID=$!
-          trap 'kill $SERVER_PID || true' EXIT
-          sleep 2
-          set +e
-          H_EARTH_TEST_BASE_URL='http://127.0.0.1:8765/showroom/globe/h-earth/' node .fd05/test-native-shoreline-browser.mjs > .fd05/native-shoreline-output/browser-gate.log 2>&1
-          BROWSER_STATUS=$?
-          cat .fd05/native-shoreline-output/browser-gate.log
-          echo "$BROWSER_STATUS" > .fd05/native-shoreline-output/browser-gate-exit-code.txt
-          exit "$BROWSER_STATUS"
-
-      - name: Upload browser diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: fd05-native-shoreline-browser-diagnostic
-          path: |
-            .fd05/native-shoreline-output/browser-gate.log
-            .fd05/native-shoreline-output/browser-gate-exit-code.txt
-            .fd05/native-shoreline-output/browser-validation.json
-            .fd05/native-shoreline-output/*.png
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Enforce browser gate
-        if: steps.browser_gate.outcome != 'success'
-        run: exit 1
-
-      - name: Record source identities and commit transformed files
-        run: |
-          rm -rf node_modules package-lock.json
-          git checkout -- package.json 2>/dev/null || true
-          echo "BASE_COMMIT=cbde5b50470a528954f634baf8045674c2079cf0"
-          for FILE in \
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+          test "$(git rev-parse origin/main)" = "cbde5b50470a528954f634baf8045674c2079cf0"
+          git show origin/agent/fd05-native-shoreline-work-001:.fd05/test-native-shoreline.mjs > /tmp/test-native-shoreline.mjs
+          git show origin/agent/fd05-native-shoreline-work-001:.fd05/test-native-shoreline-browser.mjs > /tmp/test-native-shoreline-browser.mjs
+          git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > /tmp/test-index-viewport.mjs
+          git checkout -B agent/fd05-native-shoreline-001 origin/main
+          git checkout origin/agent/fd05-native-shoreline-work-001 -- \
             showroom/globe/h-earth/render/geometry-water.js \
             showroom/globe/h-earth/render/geometry-foam.js \
             showroom/globe/h-earth/render/shoreline-preview.js \
@@ -181,29 +36,80 @@ jobs:
             showroom/globe/h-earth/compositor.js \
             showroom/globe/h-earth/renderer.js \
             showroom/globe/h-earth/index.html
+          EXPECTED="$(printf '%s\n' \
+            h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js \
+            showroom/globe/h-earth/admitted-geometry-frame.js \
+            showroom/globe/h-earth/compositor.js \
+            showroom/globe/h-earth/index.html \
+            showroom/globe/h-earth/render/geometry-foam.js \
+            showroom/globe/h-earth/render/geometry-water.js \
+            showroom/globe/h-earth/render/shoreline-preview.js \
+            showroom/globe/h-earth/renderer.js | sort)"
+          ACTUAL="$(git diff --cached --name-only | sort)"
+          test "$ACTUAL" = "$EXPECTED"
+
+      - name: Verify syntax and source corridor
+        run: |
+          node --check showroom/globe/h-earth/render/geometry-water.js
+          node --check showroom/globe/h-earth/render/geometry-foam.js
+          node --check showroom/globe/h-earth/render/shoreline-preview.js
+          node --check h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
+          node --check showroom/globe/h-earth/admitted-geometry-frame.js
+          node --check showroom/globe/h-earth/compositor.js
+          node --check showroom/globe/h-earth/renderer.js
+          mkdir -p .fd05/native-shoreline-output
+          cp /tmp/test-native-shoreline.mjs .fd05-test-native-shoreline.mjs
+          cp /tmp/test-index-viewport.mjs .fd05-test-index-viewport.mjs
+          node --experimental-default-type=module .fd05-test-native-shoreline.mjs
+          node --experimental-default-type=module .fd05-test-index-viewport.mjs
+
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Run mobile and desktop route gates
+        run: |
+          cp /tmp/test-native-shoreline-browser.mjs .fd05-test-native-shoreline-browser.mjs
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/fd05-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 2
+          H_EARTH_TEST_BASE_URL='http://127.0.0.1:8765/showroom/globe/h-earth/' node .fd05-test-native-shoreline-browser.mjs
+
+      - name: Upload clean candidate validation
+        uses: actions/upload-artifact@v4
+        with:
+          name: fd05-clean-native-shoreline-validation
+          path: |
+            .fd05/native-shoreline-output/*.json
+            .fd05/native-shoreline-output/*.png
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish one-commit eight-file review branch
+        run: |
+          rm -rf node_modules package-lock.json .fd05
+          rm -f .fd05-test-native-shoreline.mjs .fd05-test-native-shoreline-browser.mjs .fd05-test-index-viewport.mjs
+          git checkout -- package.json 2>/dev/null || true
+          EXPECTED="$(printf '%s\n' \
+            h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js \
+            showroom/globe/h-earth/admitted-geometry-frame.js \
+            showroom/globe/h-earth/compositor.js \
+            showroom/globe/h-earth/index.html \
+            showroom/globe/h-earth/render/geometry-foam.js \
+            showroom/globe/h-earth/render/geometry-water.js \
+            showroom/globe/h-earth/render/shoreline-preview.js \
+            showroom/globe/h-earth/renderer.js | sort)"
+          ACTUAL="$(git diff --cached --name-only | sort)"
+          test "$ACTUAL" = "$EXPECTED"
+          test -z "$(git status --short | awk '$1 == "??" {print $2}')"
+          echo "BASE_COMMIT=$(git rev-parse HEAD)"
+          for FILE in $EXPECTED
           do
             echo "$FILE bytes=$(wc -c < "$FILE" | tr -d ' ') sha256=$(sha256sum "$FILE" | awk '{print $1}') blob=$(git hash-object "$FILE")"
           done
           git config user.name "OpenAI Engineering Agent"
           git config user.email "engineering-agent@users.noreply.github.com"
-          git add showroom/globe/h-earth/render/geometry-water.js
-          git add showroom/globe/h-earth/render/geometry-foam.js
-          git add showroom/globe/h-earth/render/shoreline-preview.js
-          git add h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
-          git add showroom/globe/h-earth/admitted-geometry-frame.js
-          git add showroom/globe/h-earth/compositor.js
-          git add showroom/globe/h-earth/renderer.js
-          git add showroom/globe/h-earth/index.html
-          git commit -m "Materialize minimum native shoreline context" || true
-          git push origin HEAD:agent/fd05-native-shoreline-work-001
-
-      - name: Upload complete validation
-        uses: actions/upload-artifact@v4
-        with:
-          name: fd05-native-shoreline-workflow
-          path: |
-            .fd05/native-shoreline-output/*.json
-            .fd05/native-shoreline-output/*.png
-            .fd05/native-shoreline-output/*.log
-          if-no-files-found: error
-          retention-days: 14
+          git commit -m "Materialize minimum native shoreline context"
+          git push --force origin HEAD:agent/fd05-native-shoreline-001

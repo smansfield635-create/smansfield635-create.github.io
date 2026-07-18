@@ -27,7 +27,7 @@ const modules = Object.fromEntries(
 const preview = modules.preview.previewHEarthWetSandGeometry({
   sourceObjectId: 'OBJ_002_FOREGROUND_WET_SAND',
   requestedPurpose: 'WET_SAND_GEOMETRY_PREVIEW',
-  requestId: 'FD05_GROUND_SHORELINE_PREWORK_SOURCE_ANALYSIS_002'
+  requestId: 'FD05_GROUND_SHORELINE_PREWORK_SOURCE_ANALYSIS_003'
 });
 
 function walk(value, visitor, path = '$', depth = 0, seen = new WeakSet()) {
@@ -90,13 +90,34 @@ function stats(points, triangleIndices) {
 }
 
 function compact(value, depth=0) {
-  if (depth>4) return '[DEPTH_LIMIT]';
-  if (value===null || typeof value!=='object') return typeof value==='string' && value.length>180 ? value.slice(0,180)+'…' : value;
-  if (Array.isArray(value)) return value.slice(0,14).map(v=>compact(v,depth+1));
-  return Object.fromEntries(Object.entries(value).slice(0,24).map(([k,v])=>[k,compact(v,depth+1)]));
+  if (depth>6) return '[DEPTH_LIMIT]';
+  if (value===null || typeof value!=='object') return typeof value==='string' && value.length>240 ? value.slice(0,240)+'…' : value;
+  if (Array.isArray(value)) return value.slice(0,24).map(v=>compact(v,depth+1));
+  return Object.fromEntries(Object.entries(value).slice(0,36).map(([k,v])=>[k,compact(v,depth+1)]));
 }
 
-const tokens = ['OBJ_002_FOREGROUND_WET_SAND','OBJ_003_DRY_SAND_TRANSITION','OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES','OBJ_005_SHORELINE_FOAM_LINE','OBJ_006_NEARSHORE_WAVE_BAND','OBJ_007_WATER_SURFACE_PLANE','shore','foam','water','nearshore','wet sand','dry sand','tide'];
+const objectIds=['OBJ_002_FOREGROUND_WET_SAND','OBJ_003_DRY_SAND_TRANSITION','OBJ_004_TIDE_POOLS_AND_REFLECTIVE_PUDDLES','OBJ_005_SHORELINE_FOAM_LINE','OBJ_006_NEARSHORE_WAVE_BAND','OBJ_007_WATER_SURFACE_PLANE'];
+const zoneIds=['ZONE_001_FOREGROUND_INSPECTION_ZONE','ZONE_002_SHORELINE_CONTACT_ZONE','ZONE_003_NEARSHORE_OCEAN_ZONE'];
+const safeCall=(fn,...args)=>{try{return typeof fn==='function'?fn(...args):null;}catch(error){return {errorName:error?.name,errorMessage:error?.message};}};
+const targetedAvailability={
+  environment:{
+    shorelineModel:compact(modules.environment.H_EARTH_3D_SHORELINE_MODEL),
+    tidePoolDescriptors:compact(modules.environment.H_EARTH_3D_TIDE_POOL_DESCRIPTORS),
+    waterSubstrate:compact(modules.environment.H_EARTH_3D_WATER_SUBSTRATE),
+    environmentPrimitivePlan:compact(modules.environment.H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN),
+    wetSandNumericProfile:compact(modules.environment.H_EARTH_3D_WET_SAND_NUMERIC_CONSTRUCTION_PROFILE),
+    environmentHandoff:compact(modules.environment.H_EARTH_3D_ENVIRONMENT_HANDOFF)
+  },
+  objects:Object.fromEntries(objectIds.map(id=>[id,compact(safeCall(modules.objects.getHEarthGroundCell001ObjectDescriptor,id))])),
+  zones:Object.fromEntries(zoneIds.map(id=>[id,{descriptor:compact(safeCall(modules.zones.getHEarthGroundCell001ZoneDescriptor,id)),adjacency:compact(safeCall(modules.zones.getHEarthGroundCell001ZoneAdjacency,id)),expectedObjects:compact(safeCall(modules.zones.getHEarthGroundCell001ExpectedObjectsForZone,id)),secondaryRelationships:compact(safeCall(modules.zones.getHEarthGroundCell001SecondaryRelationshipsForZone,id)),latticeSummary:compact(safeCall(modules.lattice.getHEarthLandscapeZoneSummary,id))}])),
+  implementationAvailability:{
+    previewFunctions:Object.keys(modules.preview).filter(k=>typeof modules.preview[k]==='function').sort(),
+    groundProviderFunctions:Object.keys(modules.ground).filter(k=>typeof modules.ground[k]==='function').sort(),
+    environmentFunctions:Object.keys(modules.environment).filter(k=>typeof modules.environment[k]==='function').sort()
+  }
+};
+
+const tokens = [...objectIds,'shore','foam','water','nearshore','wet sand','dry sand','tide'];
 const adjacency=[];
 for(const id of ['objects','zones','lattice','environment','ground']){
   walk(modules[id], (value,path)=>{
@@ -107,13 +128,13 @@ for(const id of ['objects','zones','lattice','environment','ground']){
 }
 
 const report = {
-  reportId:'H_EARTH_FD05_GROUND_FORM_SOURCE_ANALYSIS_002',generatedAt:new Date().toISOString(),status:'PASS',repositoryModified:false,
+  reportId:'H_EARTH_FD05_GROUND_FORM_SOURCE_ANALYSIS_003',generatedAt:new Date().toISOString(),status:'PASS',repositoryModified:false,
   moduleExports:Object.fromEntries(Object.entries(modules).map(([id,m])=>[id,Object.keys(m).sort()])),
   previewSummary:{ok:preview.ok,sourceObjectId:preview.sourceObjectId,sourceZoneIds:preview.sourceZoneIds,latticeRegionIds:preview.latticeRegionIds,primitiveCount:preview.primitives?.length??null,keys:Object.keys(preview)},
   geometryCandidateArrays:geometryArrays.map(({points,indices,...rest})=>rest),
   selectedPositionPath:positionCandidates[0]?.path??null,selectedIndexPath:indexCandidates[0]?.path??null,
-  geometryStatistics:stats(positions,indices),
-  adjacencyMatches:adjacency
+  geometryStatistics:stats(positions,indices),targetedAvailability,adjacencyMatches:adjacency
 };
+await writeFile(`${outDir}/source-analysis-targeted.json`,JSON.stringify(report,null,2)+'\n','utf8');
 await writeFile(`${outDir}/source-analysis-corrected.json`,JSON.stringify(report,null,2)+'\n','utf8');
-console.log(JSON.stringify({reportId:report.reportId,previewSummary:report.previewSummary,selectedPositionPath:report.selectedPositionPath,selectedIndexPath:report.selectedIndexPath,geometryStatistics:report.geometryStatistics,adjacencyMatchCount:adjacency.length},null,2));
+console.log(JSON.stringify({reportId:report.reportId,previewSummary:report.previewSummary,selectedPositionPath:report.selectedPositionPath,selectedIndexPath:report.selectedIndexPath,geometryStatistics:report.geometryStatistics,targetedAvailability:report.targetedAvailability,adjacencyMatchCount:adjacency.length},null,2));

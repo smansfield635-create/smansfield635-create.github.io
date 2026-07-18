@@ -1,1 +1,1 @@
-Trigger the read-only deployed-browser correspondence prework trace.
+Trigger compact summarization of the completed deployed-browser correspondence trace.

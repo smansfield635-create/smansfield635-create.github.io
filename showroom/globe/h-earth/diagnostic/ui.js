@@ -61,15 +61,6 @@ function resultClass(value) {
   const text = String(value || '').toUpperCase();
 
   if (
-    text.includes('PASS') ||
-    text.includes('FULFILLED') ||
-    text.includes('MATCH') ||
-    text === 'COMPLETE'
-  ) {
-    return 'result result--pass';
-  }
-
-  if (
     text.includes('UNRESOLVED') ||
     text.includes('UNEVALUABLE') ||
     text.includes('NOT_REACHED')
@@ -84,6 +75,15 @@ function resultClass(value) {
     text.includes('FAILED')
   ) {
     return 'result result--finding';
+  }
+
+  if (
+    text.includes('PASS') ||
+    text.includes('FULFILLED') ||
+    text === 'MATCH' ||
+    text === 'COMPLETE'
+  ) {
+    return 'result result--pass';
   }
 
   return 'result';
@@ -102,7 +102,12 @@ function rowSlug(repositoryPath) {
 }
 
 function packageSuffix(packageObject) {
-  return safeFilename(packageObject.packetId);
+  return safeFilename(
+    packageObject.packetId.replace(
+      /^H_EARTH_FD05_BROWSER_EVIDENCE_PACKAGE_/,
+      ''
+    )
+  );
 }
 
 async function copyText(text, globalObject, documentObject) {
@@ -449,7 +454,14 @@ export function createHEarthFd05Ui({
   listen(copySummary, 'click', () => {
     if (currentPackage) {
       const projection = buildOperatorSummary(currentPackage);
-      void copyProjection(projection.summaryText, 'Operator summary copied.');
+      const text = [
+        `packet: ${projection.packetId}`,
+        `package digest: ${projection.packageDigest.value}`,
+        `manifest: ${projection.manifestId}`,
+        `manifest digest: ${projection.manifestDigest}`,
+        projection.summaryText
+      ].join('\n');
+      void copyProjection(text, 'Operator summary copied.');
     }
   });
 

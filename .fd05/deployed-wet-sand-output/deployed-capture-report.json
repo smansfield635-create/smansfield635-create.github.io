@@ -1,0 +1,407 @@
+{
+  "reportId": "H_EARTH_FD05_DEPLOYED_WET_SAND_VISUAL_BASELINE_CAPTURE_001",
+  "generatedAt": "2026-07-18T19:12:25.261Z",
+  "status": "DIAGNOSTIC_CAPTURE_COMPLETE",
+  "repositoryCommit": "cbde5b50470a528954f634baf8045674c2079cf0",
+  "repositoryModified": false,
+  "correspondence": {
+    "matched": true,
+    "installedRenderer": {
+      "byteLength": 170922,
+      "sha256": "a505847d51ac1c4a22b081b1da8367776073a1931dc642b24c864fc10f9300ee",
+      "gitBlobSha": "1902bc1242101b70b8938285bb8cd39e584d698c"
+    },
+    "attempts": [
+      {
+        "at": "2026-07-18T19:12:16.550Z",
+        "requestedUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/renderer.js?fd05WetSandDeployment=1784401936254",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/renderer.js?fd05WetSandDeployment=1784401936254",
+        "status": 200,
+        "byteLength": 170922,
+        "sha256": "a505847d51ac1c4a22b081b1da8367776073a1931dc642b24c864fc10f9300ee",
+        "exactInstalledMatch": true,
+        "cacheControl": "max-age=14400",
+        "age": "0",
+        "etag": "W/\"6a5bcee4-29baa\"",
+        "lastModified": "Sat, 18 Jul 2026 19:07:16 GMT"
+      }
+    ]
+  },
+  "captures": [
+    {
+      "configuration": "mobile",
+      "requestedUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?fd05WetSandCapture=1784401936720-mobile",
+      "elapsedMs": 4860,
+      "navigation": {
+        "status": 200,
+        "ok": true,
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?fd05WetSandCapture=1784401936720-mobile"
+      },
+      "terminalReached": true,
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "fallbackText": "The lawful compositor handoff was presented to the renderer, and the admitted-frame renderer mounted. Renderer and visual pass remain unclaimed pending controlled audit.",
+        "routeReceiptStatus": "PUBLIC_STAGE_READY",
+        "rendererBootstrapReceipt": null,
+        "mount": {
+          "clientWidth": 361,
+          "clientHeight": 360,
+          "childElementCount": 1,
+          "sourcePreviewCount": 0,
+          "semanticLayerCount": 15,
+          "interactionBoundaryCount": 1,
+          "primitiveCount": 80,
+          "wetSandTriangleCount": 80
+        },
+        "stage": {
+          "rendererContractId": "H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1",
+          "compositorContractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+          "admittedFrameContractId": "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_FILE_BIRTH_STEP_034O_7_PACKET_002_TO_COMPOSITOR_RENDER_FRAME_ADAPTER_v1",
+          "rect": {
+            "width": 361,
+            "height": 360
+          }
+        },
+        "uniquePrimitiveIds": [
+          "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:H_EARTH_WET_SAND_ROUTE_REQUEST:1784401937008:c47453e7-5b40-47ba-85ba-120e9aa2a54c"
+        ],
+        "uniqueMaterialReferences": [
+          "H_EARTH_MATERIAL_WET_SAND"
+        ],
+        "uniqueMaterialIntents": [
+          "WET_SAND"
+        ],
+        "uniquePresentationRoles": [
+          "PRIMARY_ADMITTED_WET_SAND_SURFACE"
+        ],
+        "uniqueRenderLayers": [
+          "GROUND"
+        ],
+        "uniquePresentationModels": [
+          "BALANCED_STAGE_ALIGNED_v1"
+        ],
+        "uniqueBackgroundImages": [
+          "linear-gradient(rgba(205, 226, 223, 0.34) 0%, rgba(156, 181, 180, 0.12) 22%, rgba(121, 112, 91, 0.08) 45%, rgba(55, 67, 64, 0.3) 100%), linear-gradient(rgb(145, 124, 93) 0%, rgb(111, 100, 78) 48%, rgb(68, 75, 69) 100%)"
+        ],
+        "uniqueBackgroundSizes": [
+          "361px 360px, 361px 360px"
+        ],
+        "uniqueBackgroundPositions": [
+          "-9.77px -143.67px, -9.77px -143.67px",
+          "-19.6px -143.74px, -19.6px -143.74px",
+          "0px -143.6px, 0px -143.6px",
+          "-165.86px -143.52px, -165.86px -143.52px",
+          "-166.18px -143.52px, -166.18px -143.52px",
+          "-87.85px -143.73px, -87.85px -143.73px",
+          "-122.43px -143.53px, -122.43px -143.53px",
+          "-110.65px -143.58px, -110.65px -143.58px",
+          "-41.15px -143.84px, -41.15px -143.84px",
+          "-19.6px -143.84px, -19.6px -143.84px",
+          "-78.61px -143.85px, -78.61px -143.85px",
+          "-41.15px -143.85px, -41.15px -143.85px",
+          "0px -147.17px, 0px -147.17px",
+          "0px -151.32px, 0px -151.32px",
+          "-243.79px -142.65px, -243.79px -142.65px",
+          "-253.92px -142.53px, -253.92px -142.53px",
+          "-166.77px -143.07px, -166.77px -143.07px",
+          "-210.09px -142.77px, -210.09px -142.77px",
+          "-207.58px -143.07px, -207.58px -143.07px",
+          "-148.16px -143.58px, -148.16px -143.58px",
+          "-41.15px -148.64px, -41.15px -148.64px",
+          "-70.93px -148.64px, -70.93px -148.64px",
+          "0px -154.52px, 0px -154.52px",
+          "0px -164.27px, 0px -164.27px",
+          "-321.73px -141.89px, -321.73px -141.89px",
+          "-341.58px -141.83px, -341.58px -141.83px",
+          "-341.58px -141.89px, -341.58px -141.89px",
+          "-266.94px -142.19px, -266.94px -142.19px",
+          "-254.74px -142.53px, -254.74px -142.53px",
+          "-297.75px -142.05px, -297.75px -142.05px",
+          "-297.75px -142.19px, -297.75px -142.19px",
+          "-207.58px -143.99px, -207.58px -143.99px",
+          "-254.74px -143.99px, -254.74px -143.99px",
+          "-148.16px -149.5px, -148.16px -149.5px",
+          "-200.72px -149.5px, -200.72px -149.5px",
+          "-70.93px -156.13px, -70.93px -156.13px",
+          "-114.86px -156.13px, -114.86px -156.13px",
+          "0px -178.2px, 0px -178.2px",
+          "-348.66px -142.7px, -348.66px -142.7px",
+          "-348.66px -144.53px, -348.66px -144.53px",
+          "-311.08px -144.53px, -311.08px -144.53px",
+          "-263.35px -150.16px, -263.35px -150.16px",
+          "-311.08px -150.16px, -311.08px -150.16px",
+          "-200.72px -157.21px, -200.72px -157.21px",
+          "-263.35px -157.21px, -263.35px -157.21px",
+          "-114.86px -166.23px, -114.86px -166.23px",
+          "-186.24px -166.23px, -186.24px -166.23px",
+          "0px -193.78px, 0px -193.78px",
+          "-32.55px -178.2px, -32.55px -178.2px",
+          "0px -203.95px, 0px -203.95px",
+          "-342.57px -164.09px, -342.57px -164.09px",
+          "-342.57px -167.96px, -342.57px -167.96px",
+          "-279.71px -167.96px, -279.71px -167.96px",
+          "-186.24px -181.07px, -186.24px -181.07px",
+          "-279.71px -181.07px, -279.71px -181.07px",
+          "-32.55px -200.43px, -32.55px -200.43px",
+          "-135.46px -200.43px, -135.46px -200.43px",
+          "0px -232.08px, 0px -232.08px",
+          "0px -320.83px, 0px -320.83px",
+          "-322.61px -226.82px, -322.61px -226.82px",
+          "-322.61px -242.73px, -322.61px -242.73px",
+          "-180.8px -242.73px, -180.8px -242.73px",
+          "-135.46px -242.73px, -135.46px -242.73px",
+          "-41.89px -320.83px, -41.89px -320.83px",
+          "-119.12px -320.83px, -119.12px -320.83px"
+        ],
+        "uniqueBackgroundRepeats": [
+          "no-repeat, no-repeat"
+        ],
+        "uniqueFilters": [
+          "saturate(1.1) brightness(1.08) contrast(0.94)"
+        ],
+        "uniqueBlendModes": [
+          "normal"
+        ],
+        "uniqueOpacities": [
+          "0.99"
+        ]
+      },
+      "exception": null,
+      "pageErrors": [],
+      "requestFailures": [],
+      "consoleErrors": [],
+      "screenshots": {
+        "worldStage": {
+          "path": ".fd05/deployed-wet-sand-output/mobile-deployed-worldStage.png",
+          "byteLength": 119129,
+          "sha256": "8d5a7eff59fc04ebb7747ce411ec57adb997202b2c124118b84d86f384e1c993"
+        },
+        "rendererMount": {
+          "path": ".fd05/deployed-wet-sand-output/mobile-deployed-rendererMount.png",
+          "byteLength": 112030,
+          "sha256": "7f8ab45dc77b54f679b5a9cec0636689fdb4270ea8934f50f6f2fbab82a8abb2"
+        }
+      }
+    },
+    {
+      "configuration": "desktop",
+      "requestedUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?fd05WetSandCapture=1784401941606-desktop",
+      "elapsedMs": 3634,
+      "navigation": {
+        "status": 200,
+        "ok": true,
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?fd05WetSandCapture=1784401941606-desktop"
+      },
+      "terminalReached": true,
+      "snapshot": {
+        "status": "PUBLIC_STAGE_RENDERER_MOUNTED",
+        "fallbackText": "The lawful compositor handoff was presented to the renderer, and the admitted-frame renderer mounted. Renderer and visual pass remain unclaimed pending controlled audit.",
+        "routeReceiptStatus": "PUBLIC_STAGE_READY",
+        "rendererBootstrapReceipt": null,
+        "mount": {
+          "clientWidth": 1364,
+          "clientHeight": 620,
+          "childElementCount": 1,
+          "sourcePreviewCount": 0,
+          "semanticLayerCount": 15,
+          "interactionBoundaryCount": 1,
+          "primitiveCount": 154,
+          "wetSandTriangleCount": 154
+        },
+        "stage": {
+          "rendererContractId": "H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1",
+          "compositorContractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+          "admittedFrameContractId": "H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_FILE_BIRTH_STEP_034O_7_PACKET_002_TO_COMPOSITOR_RENDER_FRAME_ADAPTER_v1",
+          "rect": {
+            "width": 1364,
+            "height": 620
+          }
+        },
+        "uniquePrimitiveIds": [
+          "H_EARTH_WET_SAND_PREVIEW_PRIMITIVE:H_EARTH_PROVIDER_REQUEST:H_EARTH_GROUND_GEOMETRY_PROVIDER:OBJ_002_FOREGROUND_WET_SAND:WET_SAND_GEOMETRY_PREVIEW:H_EARTH_WET_SAND_ROUTE_REQUEST:1784401941704:aece7024-f15b-4350-8224-686c3d44fd98"
+        ],
+        "uniqueMaterialReferences": [
+          "H_EARTH_MATERIAL_WET_SAND"
+        ],
+        "uniqueMaterialIntents": [
+          "WET_SAND"
+        ],
+        "uniquePresentationRoles": [
+          "PRIMARY_ADMITTED_WET_SAND_SURFACE"
+        ],
+        "uniqueRenderLayers": [
+          "GROUND"
+        ],
+        "uniquePresentationModels": [
+          "BALANCED_STAGE_ALIGNED_v1"
+        ],
+        "uniqueBackgroundImages": [
+          "linear-gradient(rgba(205, 226, 223, 0.34) 0%, rgba(156, 181, 180, 0.12) 22%, rgba(121, 112, 91, 0.08) 45%, rgba(55, 67, 64, 0.3) 100%), linear-gradient(rgb(145, 124, 93) 0%, rgb(111, 100, 78) 48%, rgb(68, 75, 69) 100%)"
+        ],
+        "uniqueBackgroundSizes": [
+          "1364px 620px, 1364px 620px"
+        ],
+        "uniqueBackgroundPositions": [
+          "-117.91px -246.16px, -117.91px -246.16px",
+          "0px -246.09px, 0px -246.09px",
+          "0px -246.18px, 0px -246.18px",
+          "0px -247.46px, 0px -247.46px",
+          "-253.4px -246.66px, -253.4px -246.66px",
+          "-257.2px -246.75px, -257.2px -246.75px",
+          "-109.42px -246.21px, -109.42px -246.21px",
+          "-204.68px -246.29px, -204.68px -246.29px",
+          "-109.42px -246.29px, -109.42px -246.29px",
+          "0px -258.37px, 0px -258.37px",
+          "-387.96px -247.43px, -387.96px -247.43px",
+          "-404.9px -247.55px, -404.9px -247.55px",
+          "-270.13px -247.01px, -270.13px -247.01px",
+          "-257.2px -247.01px, -257.2px -247.01px",
+          "-355.59px -247.19px, -355.59px -247.19px",
+          "-270.13px -247.19px, -270.13px -247.19px",
+          "-97.91px -250.25px, -97.91px -250.25px",
+          "0px -271.49px, 0px -271.49px",
+          "-656.78px -247.18px, -656.78px -247.18px",
+          "-657.34px -247.17px, -657.34px -247.17px",
+          "-522.44px -247.53px, -522.44px -247.53px",
+          "-581.99px -247.19px, -581.99px -247.19px",
+          "-561.71px -247.27px, -561.71px -247.27px",
+          "-442.01px -247.73px, -442.01px -247.73px",
+          "-404.9px -247.73px, -404.9px -247.73px",
+          "-506.52px -247.74px, -506.52px -247.74px",
+          "-442.01px -247.74px, -442.01px -247.74px",
+          "-270.13px -253.45px, -270.13px -253.45px",
+          "-287.76px -253.45px, -287.76px -253.45px",
+          "-81.4px -262.29px, -81.4px -262.29px",
+          "0px -273.05px, 0px -273.05px",
+          "0px -286.6px, 0px -286.6px",
+          "-791px -245.68px, -791px -245.68px",
+          "-808.44px -245.47px, -808.44px -245.47px",
+          "-658.35px -246.4px, -658.35px -246.4px",
+          "-732.95px -245.88px, -732.95px -245.88px",
+          "-728.64px -246.4px, -728.64px -246.4px",
+          "-626.31px -247.27px, -626.31px -247.27px",
+          "-442.01px -255.99px, -442.01px -255.99px",
+          "-493.3px -255.99px, -493.3px -255.99px",
+          "-287.76px -266.12px, -287.76px -266.12px",
+          "-313.27px -266.12px, -313.27px -266.12px",
+          "-55.8px -278.3px, -55.8px -278.3px",
+          "0px -293.88px, 0px -293.88px",
+          "0px -307.38px, 0px -307.38px",
+          "-925.23px -244.37px, -925.23px -244.37px",
+          "-959.41px -244.22px, -959.41px -244.22px",
+          "-830.86px -244.89px, -830.86px -244.89px",
+          "-809.86px -245.47px, -809.86px -245.47px",
+          "-883.93px -244.64px, -883.93px -244.64px",
+          "-883.93px -244.89px, -883.93px -244.89px",
+          "-728.64px -247.98px, -728.64px -247.98px",
+          "-809.86px -247.98px, -809.86px -247.98px",
+          "-626.31px -257.47px, -626.31px -257.47px",
+          "-716.83px -257.47px, -716.83px -257.47px",
+          "-493.3px -268.9px, -493.3px -268.9px",
+          "-568.96px -268.9px, -568.96px -268.9px",
+          "-313.27px -282.92px, -313.27px -282.92px",
+          "-353.61px -282.92px, -353.61px -282.92px",
+          "-10.75px -300.94px, -10.75px -300.94px",
+          "0px -325.91px, 0px -325.91px",
+          "0px -337.45px, 0px -337.45px",
+          "-1059.57px -244.09px, -1059.57px -244.09px",
+          "-1110.35px -244.09px, -1110.35px -244.09px",
+          "-1003.26px -244.06px, -1003.26px -244.06px",
+          "-971.61px -244.22px, -971.61px -244.22px",
+          "-1034.89px -244.06px, -1034.89px -244.06px",
+          "-906.89px -248.91px, -906.89px -248.91px",
+          "-971.61px -248.91px, -971.61px -248.91px",
+          "-824.69px -258.6px, -824.69px -258.6px",
+          "-906.89px -258.6px, -906.89px -258.6px",
+          "-716.83px -270.76px, -716.83px -270.76px",
+          "-824.69px -270.76px, -824.69px -270.76px",
+          "-568.96px -286.29px, -568.96px -286.29px",
+          "-691.89px -286.29px, -691.89px -286.29px",
+          "-353.61px -306.9px, -353.61px -306.9px",
+          "-427.2px -306.9px, -427.2px -306.9px",
+          "0px -336.11px, 0px -336.11px",
+          "0px -399.69px, 0px -399.69px",
+          "0px -381.88px, 0px -381.88px",
+          "-1328.59px -245.07px, -1328.59px -245.07px",
+          "-1336.73px -245.12px, -1336.73px -245.12px",
+          "-1194.05px -244.4px, -1194.05px -244.4px",
+          "-1261.27px -244.72px, -1261.27px -244.72px",
+          "-1175.29px -244.32px, -1175.29px -244.32px",
+          "-1143.28px -244.32px, -1143.28px -244.32px",
+          "-1185.81px -244.34px, -1185.81px -244.34px",
+          "-1097.54px -250.98px, -1097.54px -250.98px",
+          "-1143.28px -250.98px, -1143.28px -250.98px",
+          "-1038.93px -260.59px, -1038.93px -260.59px",
+          "-1097.54px -260.59px, -1097.54px -260.59px",
+          "-961.12px -272.93px, -961.12px -272.93px",
+          "-1038.93px -272.93px, -1038.93px -272.93px",
+          "-852.87px -289.26px, -852.87px -289.26px",
+          "-961.12px -289.26px, -961.12px -289.26px",
+          "-691.89px -311.84px, -691.89px -311.84px",
+          "-852.87px -311.84px, -852.87px -311.84px",
+          "-427.2px -345.18px, -427.2px -345.18px",
+          "-604.44px -345.18px, -604.44px -345.18px",
+          "-95.07px -399.69px, -95.07px -399.69px",
+          "-95.07px -552.53px, -95.07px -552.53px",
+          "-1347.14px -245.14px, -1347.14px -245.14px",
+          "-1344.79px -245.14px, -1344.79px -245.14px",
+          "-1344.79px -246.15px, -1344.79px -246.15px",
+          "-1325.66px -246.15px, -1325.66px -246.15px",
+          "-1325.66px -254.21px, -1325.66px -254.21px",
+          "-1301.68px -254.21px, -1301.68px -254.21px",
+          "-1301.68px -264.09px, -1301.68px -264.09px",
+          "-1270.71px -264.09px, -1270.71px -264.09px",
+          "-1270.71px -276.68px, -1270.71px -276.68px",
+          "-1229.1px -276.68px, -1229.1px -276.68px",
+          "-1229.1px -293.53px, -1229.1px -293.53px",
+          "-1170.19px -293.53px, -1170.19px -293.53px",
+          "-1170.19px -317.49px, -1170.19px -317.49px",
+          "-1080.36px -317.49px, -1080.36px -317.49px",
+          "-1080.36px -354.36px, -1080.36px -354.36px",
+          "-926.74px -354.36px, -926.74px -354.36px",
+          "-682.51px -418.03px, -682.51px -418.03px",
+          "-604.44px -418.03px, -604.44px -418.03px",
+          "-926.74px -418.03px, -926.74px -418.03px",
+          "-443.28px -552.53px, -443.28px -552.53px",
+          "-576.29px -552.53px, -576.29px -552.53px"
+        ],
+        "uniqueBackgroundRepeats": [
+          "no-repeat, no-repeat"
+        ],
+        "uniqueFilters": [
+          "saturate(1.1) brightness(1.08) contrast(0.94)"
+        ],
+        "uniqueBlendModes": [
+          "normal"
+        ],
+        "uniqueOpacities": [
+          "0.99"
+        ]
+      },
+      "exception": null,
+      "pageErrors": [],
+      "requestFailures": [],
+      "consoleErrors": [],
+      "screenshots": {
+        "worldStage": {
+          "path": ".fd05/deployed-wet-sand-output/desktop-deployed-worldStage.png",
+          "byteLength": 109555,
+          "sha256": "bd4332014cbba6fa94bb497d23467c400c59d94354f7902b2a295ea296040387"
+        },
+        "rendererMount": {
+          "path": ".fd05/deployed-wet-sand-output/desktop-deployed-rendererMount.png",
+          "byteLength": 105837,
+          "sha256": "d4517d57f6ede58b40a7fde9bf0aa535e177fb1c92563a72583bd7d41020b098"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "correspondenceMatched": true,
+    "captureCount": 2,
+    "terminalCount": 2,
+    "totalPageErrors": 0,
+    "totalRequestFailures": 0,
+    "totalConsoleErrors": 0
+  }
+}

@@ -1,0 +1,43 @@
+name: FD05 clean index viewport review branch
+
+on:
+  pull_request:
+    branches:
+      - agent/fd05-index-clean-builder-001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  build-clean-review-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-index-clean-builder-001
+          fetch-depth: 0
+      - name: Preserve validated harness and build clean branch
+        run: |
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+          git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > /tmp/test-index-viewport.mjs
+          git checkout -B agent/fd05-index-compositor-viewport-001 origin/main
+          git checkout origin/agent/fd05-index-compositor-viewport-work-001 -- showroom/globe/h-earth/index.js
+          echo "BASE_COMMIT=$(git rev-parse origin/main)"
+          echo "BASE_BYTES=$(git show origin/main:showroom/globe/h-earth/index.js | wc -c | tr -d ' ')"
+          echo "BASE_SHA256=$(git show origin/main:showroom/globe/h-earth/index.js | sha256sum | awk '{print $1}')"
+          echo "BASE_GIT_BLOB=$(git rev-parse origin/main:showroom/globe/h-earth/index.js)"
+          echo "CANDIDATE_BYTES=$(wc -c < showroom/globe/h-earth/index.js | tr -d ' ')"
+          echo "CANDIDATE_SHA256=$(sha256sum showroom/globe/h-earth/index.js | awk '{print $1}')"
+          echo "CANDIDATE_GIT_BLOB=$(git hash-object showroom/globe/h-earth/index.js)"
+          test "$(git hash-object showroom/globe/h-earth/index.js)" = "127d4b747306840d445898437a73f9a89b152063"
+          node --check showroom/globe/h-earth/index.js
+          cp /tmp/test-index-viewport.mjs .fd05-test-index-viewport.mjs
+          node --experimental-default-type=module .fd05-test-index-viewport.mjs
+          rm .fd05-test-index-viewport.mjs
+          test "$(git status --short | awk '{print $2}')" = "showroom/globe/h-earth/index.js"
+          git config user.name "OpenAI Engineering Agent"
+          git config user.email "engineering-agent@users.noreply.github.com"
+          git add showroom/globe/h-earth/index.js
+          git commit -m "Initialize compositor viewport before renderer handoff"
+          git push --force-with-lease origin HEAD:agent/fd05-index-compositor-viewport-001

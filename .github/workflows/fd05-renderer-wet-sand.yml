@@ -1,0 +1,106 @@
+name: FD05 renderer wet-sand material correction
+
+on:
+  pull_request:
+    branches:
+      - agent/fd05-renderer-wet-sand-work-001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-renderer-wet-sand-work-001
+          fetch-depth: 0
+
+      - name: Verify fixed base and apply transformation
+        run: |
+          test "$(git rev-parse HEAD~2)" = "637733701f845cdff6bd802b1b94ab7bee5eb299"
+          test "$(git hash-object showroom/globe/h-earth/renderer.js)" = "283bea824a97ad7c2d243f8413d59d0bf1a77ae2"
+          echo "BASE_BYTES=$(wc -c < showroom/globe/h-earth/renderer.js | tr -d ' ')"
+          echo "BASE_SHA256=$(sha256sum showroom/globe/h-earth/renderer.js | awk '{print $1}')"
+          echo "BASE_GIT_BLOB=$(git hash-object showroom/globe/h-earth/renderer.js)"
+          python3 .fd05/apply-renderer-wet-sand.py
+          echo "CANDIDATE_BYTES=$(wc -c < showroom/globe/h-earth/renderer.js | tr -d ' ')"
+          echo "CANDIDATE_SHA256=$(sha256sum showroom/globe/h-earth/renderer.js | awk '{print $1}')"
+          echo "CANDIDATE_GIT_BLOB=$(git hash-object showroom/globe/h-earth/renderer.js)"
+
+      - name: Run syntax and governed-root import gates
+        run: |
+          node --check showroom/globe/h-earth/renderer.js
+          node --experimental-default-type=module - <<'NODE'
+          const { pathToFileURL } = await import('node:url');
+          const { resolve } = await import('node:path');
+          const roots = [
+            'showroom/globe/h-earth/render/geometry-preview.js',
+            'h-earth-3d/integration/h-earth.source-object-geometry-resolution.js',
+            'showroom/globe/h-earth/environment.js',
+            'showroom/globe/h-earth/render/geometry-ground.js',
+            'h-earth-3d/objects/ground-cell-001.objects.js',
+            'h-earth-3d/zones/ground-cell-001.zones.js',
+            'h-earth-3d/zones/ground-cell-001.landscape-lattice.js',
+            'showroom/globe/h-earth/capacity.js',
+            'showroom/globe/h-earth/render/geometry-kernel.js',
+            'h-earth-3d/cells/ground-cell-001.js',
+            'h-earth-3d/h-earth.matrix.js',
+            'showroom/globe/h-earth/render/geometry-kernel.north.js',
+            'showroom/globe/h-earth/render/geometry-kernel.east.js',
+            'showroom/globe/h-earth/render/geometry-kernel.south.js',
+            'showroom/globe/h-earth/render/geometry-kernel.west.js',
+            'h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js',
+            'showroom/globe/h-earth/admitted-geometry-frame.js',
+            'showroom/globe/h-earth/compositor.js',
+            'showroom/globe/h-earth/renderer.js'
+          ];
+          const results = [];
+          for (const root of roots) {
+            try {
+              await import(pathToFileURL(resolve(root)).href);
+              results.push({ root, status: 'FULFILLED' });
+            } catch (error) {
+              results.push({ root, status: 'REJECTED', name: error?.name, message: error?.message });
+            }
+          }
+          console.log(JSON.stringify(results, null, 2));
+          if (results.some((result) => result.status !== 'FULFILLED')) process.exit(1);
+          NODE
+
+      - name: Run controlled route and failure-path regression
+        run: |
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+          git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > /tmp/test-index-viewport.mjs
+          cp /tmp/test-index-viewport.mjs .fd05-test-index-viewport.mjs
+          node --experimental-default-type=module .fd05-test-index-viewport.mjs
+          rm .fd05-test-index-viewport.mjs
+
+      - name: Install Chromium and run installed-presentation browser gates
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/fd05-http.log 2>&1 &
+          echo $! >/tmp/fd05-http.pid
+          sleep 2
+          node .fd05/test-renderer-wet-sand.mjs
+          kill "$(cat /tmp/fd05-http.pid)" || true
+
+      - name: Commit exact one-file candidate
+        run: |
+          test "$(git status --short | awk '$2 !~ /^\.fd05\/renderer-wet-sand-output\// {print $2}' | sort -u)" = "showroom/globe/h-earth/renderer.js"
+          git config user.name "OpenAI Engineering Agent"
+          git config user.email "engineering-agent@users.noreply.github.com"
+          git add showroom/globe/h-earth/renderer.js
+          git commit -m "Refine core wet-sand material presentation"
+          git push origin HEAD:agent/fd05-renderer-wet-sand-work-001
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fd05-renderer-wet-sand-premerge
+          path: .fd05/renderer-wet-sand-output/
+          if-no-files-found: error
+          retention-days: 14

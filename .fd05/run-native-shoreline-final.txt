@@ -1,1 +1,1 @@
-Trigger the repaired canonical minimum native shoreline workflow after renderer membership correspondence repair.
+Trigger the repaired canonical minimum native shoreline workflow with browser diagnostic capture.

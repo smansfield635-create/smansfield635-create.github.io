@@ -77,8 +77,6 @@ new_membership_message = (
 if old_membership_message in text:
     text = text.replace(old_membership_message, new_membership_message, 1)
 
-# Postconstruction validator: admit the same explicit modes and correlate
-# provenance validation to the frame-owned presentationMode field.
 constructed_marker = 'function validateConstructedFrame('
 constructed_start = text.find(constructed_marker)
 if constructed_start < 0:
@@ -132,6 +130,26 @@ if old_constructed_call in constructed:
 elif new_constructed_call not in constructed:
     raise SystemExit(
         'constructed-frame proof provenance call is neither old nor repaired'
+    )
+
+# The main transformation broadens positive mode checks by replacing the
+# presentationMode token. Inside frame-owned checks that token is qualified by
+# value.; repair the mechanically retained qualifier.
+old_qualified_positive = """    value.ALLOWED_PRESENTATION_MODES.includes(
+      presentationMode
+    ) &&"""
+new_qualified_positive = """    ALLOWED_PRESENTATION_MODES.includes(
+      value.presentationMode
+    ) &&"""
+if old_qualified_positive in constructed:
+    constructed = constructed.replace(
+        old_qualified_positive,
+        new_qualified_positive,
+        1,
+    )
+elif new_qualified_positive not in constructed:
+    raise SystemExit(
+        'constructed-frame positive presentation-mode predicate is neither old nor repaired'
     )
 
 text = text[:constructed_start] + constructed

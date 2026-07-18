@@ -1,0 +1,32 @@
+name: FD05 corrected ground source recheck
+
+on:
+  pull_request:
+    branches:
+      - agent/fd05-ground-shoreline-prework-001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  recheck-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-ground-shoreline-prework-001
+          fetch-depth: 0
+      - run: node --experimental-default-type=module .fd05/ground-shoreline-source-analysis.mjs
+      - run: |
+          git config user.name "OpenAI Engineering Agent"
+          git config user.email "engineering-agent@users.noreply.github.com"
+          git add .fd05/ground-shoreline-prework-output/source-analysis-corrected.json
+          git commit -m "Record corrected wet-sand geometry statistics"
+          git push origin HEAD:agent/fd05-ground-shoreline-prework-001
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fd05-ground-source-recheck
+          path: .fd05/ground-shoreline-prework-output/source-analysis-corrected.json
+          if-no-files-found: error
+          retention-days: 14

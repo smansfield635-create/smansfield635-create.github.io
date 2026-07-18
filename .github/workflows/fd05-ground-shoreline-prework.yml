@@ -1,0 +1,51 @@
+name: FD05 ground-form and shoreline prework
+
+on:
+  pull_request:
+    branches:
+      - agent/fd05-ground-shoreline-prework-001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  inspect-and-diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-ground-shoreline-prework-001
+          fetch-depth: 0
+      - name: Verify immutable source base
+        run: |
+          test "$(git rev-parse cbde5b50470a528954f634baf8045674c2079cf0)" = "cbde5b50470a528954f634baf8045674c2079cf0"
+          test "$(git hash-object showroom/globe/h-earth/renderer.js)" = "1902bc1242101b70b8938285bb8cd39e584d698c"
+      - name: Run source geometry and adjacency analysis
+        run: node --experimental-default-type=module .fd05/ground-shoreline-source-analysis.mjs
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Run runtime-only camera relief and composition diagnostics
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/fd05-ground-http.log 2>&1 &
+          echo $! >/tmp/fd05-ground-http.pid
+          sleep 2
+          node .fd05/ground-shoreline-runtime-diagnostics.mjs
+          kill "$(cat /tmp/fd05-ground-http.pid)" || true
+          rm -rf node_modules
+      - name: Commit read-only evidence on isolated branch
+        run: |
+          git config user.name "OpenAI Engineering Agent"
+          git config user.email "engineering-agent@users.noreply.github.com"
+          git add .fd05/ground-shoreline-prework-output/
+          git commit -m "Record ground-form and shoreline prework evidence"
+          git push origin HEAD:agent/fd05-ground-shoreline-prework-001
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fd05-ground-shoreline-prework
+          path: .fd05/ground-shoreline-prework-output/
+          if-no-files-found: error
+          retention-days: 14

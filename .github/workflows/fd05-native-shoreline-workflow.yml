@@ -32,6 +32,7 @@ jobs:
             for SCRIPT in \
               .fd05/apply-native-shoreline.py \
               .fd05/repair-native-shoreline-preview-transform.py \
+              .fd05/repair-native-shoreline-html-transform.py \
               .fd05/repair-native-shoreline-packet-transform.py \
               .fd05/repair-native-shoreline-frame-transform.py \
               .fd05/repair-native-shoreline-compositor-transform.py \
@@ -85,7 +86,8 @@ jobs:
               './render/shoreline-preview.js?v=fd05-shoreline-001',
               'previewHEarthMinimumShorelineGeometry',
               'H_EARTH_3D_SHORELINE_PREVIEW_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1',
-              'H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE'
+              'H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE',
+              '...previewResult\n                          .sourceObjectIds'
           ]
           missing = [token for token in required if token not in html]
           if missing:

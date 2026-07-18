@@ -1,1 +1,1 @@
-Trigger clean one-file index viewport review branch construction after formatting revalidation.
+Trigger clean one-file index viewport review branch construction using formatted candidate identity.

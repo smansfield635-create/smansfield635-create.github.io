@@ -31,6 +31,7 @@ jobs:
             test "$(git rev-parse cbde5b50470a528954f634baf8045674c2079cf0^{commit})" = "cbde5b50470a528954f634baf8045674c2079cf0" || STATUS=$?
             for SCRIPT in \
               .fd05/apply-native-shoreline.py \
+              .fd05/repair-native-shoreline-preview-transform.py \
               .fd05/repair-native-shoreline-packet-transform.py \
               .fd05/repair-native-shoreline-frame-transform.py \
               .fd05/repair-native-shoreline-compositor-transform.py \

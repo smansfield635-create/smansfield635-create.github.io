@@ -69,4 +69,4 @@ jobs:
             -m "Gate 4B only: replace the six authorized existing production paths. Tests remain deferred to Gate 4C."
           git push origin HEAD:agent/h-earth-native-shoreline-contact-repair
 
-# Trigger commit after workflow registration.
+# Trigger commit after workflow registration, sequence 2.

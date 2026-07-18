@@ -132,12 +132,37 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Run real-browser mobile and desktop gates
+        id: browser_gate
+        continue-on-error: true
         run: |
+          mkdir -p .fd05/native-shoreline-output
           python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/fd05-http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID || true' EXIT
           sleep 2
-          H_EARTH_TEST_BASE_URL='http://127.0.0.1:8765/showroom/globe/h-earth/' node .fd05/test-native-shoreline-browser.mjs
+          set +e
+          H_EARTH_TEST_BASE_URL='http://127.0.0.1:8765/showroom/globe/h-earth/' node .fd05/test-native-shoreline-browser.mjs > .fd05/native-shoreline-output/browser-gate.log 2>&1
+          BROWSER_STATUS=$?
+          cat .fd05/native-shoreline-output/browser-gate.log
+          echo "$BROWSER_STATUS" > .fd05/native-shoreline-output/browser-gate-exit-code.txt
+          exit "$BROWSER_STATUS"
+
+      - name: Upload browser diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fd05-native-shoreline-browser-diagnostic
+          path: |
+            .fd05/native-shoreline-output/browser-gate.log
+            .fd05/native-shoreline-output/browser-gate-exit-code.txt
+            .fd05/native-shoreline-output/browser-validation.json
+            .fd05/native-shoreline-output/*.png
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Enforce browser gate
+        if: steps.browser_gate.outcome != 'success'
+        run: exit 1
 
       - name: Record source identities and commit transformed files
         run: |

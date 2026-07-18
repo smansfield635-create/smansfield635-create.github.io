@@ -1,1 +1,1 @@
-Trigger the repaired canonical minimum native shoreline workflow.
+Trigger the repaired canonical minimum native shoreline workflow after frame postcondition repair.

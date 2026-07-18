@@ -1,8 +1,9 @@
-name: Create Earth Cloud Asset
+name: H-Earth Gate 4B apply six replacements
 
 on:
-  workflow_dispatch:
   push:
+    branches:
+      - agent/h-earth-gate4b-helper
     paths:
       - ".github/workflows/create_earth_cloud_asset.yml"
 
@@ -10,50 +11,62 @@ permissions:
   contents: write
 
 jobs:
-  create-earth-cloud-asset:
+  apply-six-replacements:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-gate4b-helper
+          fetch-depth: 0
 
-      - name: Create Earth asset folder
+      - name: Recover the accepted six-file replacement constructor
+        shell: bash
         run: |
-          mkdir -p assets/earth
+          set -euo pipefail
+          curl -fsSL \
+            https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/b1fc49f962e2f727cd9dd69c7a9add6cf3828f58/.github/workflows/fd05-shoreline-gate4.yml \
+            -o /tmp/gate4-source.yml
+          python3 - <<'PY'
+          import base64
+          import gzip
+          import pathlib
+          import re
 
-      - name: Install ImageMagick
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick file
+          source = pathlib.Path('/tmp/gate4-source.yml').read_text(encoding='utf-8')
+          match = re.search(
+              r"printf '%s' '([^']+)' \| base64 -d \| gzip -d > /tmp/gate4-patch.py",
+              source,
+          )
+          if match is None:
+              raise SystemExit('accepted Gate 4 replacement payload not found')
+          payload = gzip.decompress(base64.b64decode(match.group(1)))
+          pathlib.Path('/tmp/gate4-patch.py').write_bytes(payload)
+          PY
 
-      - name: Create earth_clouds_2048.jpg
+      - name: Apply only the six authorized complete-file replacements
+        shell: bash
         run: |
-          convert -size 2048x1024 xc:'#05070b' \
-            -fill '#f2f2f2' -draw "ellipse 420,310 330,52 0,360" \
-            -fill '#d8d8d8' -draw "ellipse 870,480 460,64 0,360" \
-            -fill '#eeeeee' -draw "ellipse 1350,680 520,72 0,360" \
-            -fill '#cfcfcf' -draw "ellipse 1670,260 360,46 0,360" \
-            -fill '#dddddd' -draw "ellipse 600,760 480,58 0,360" \
-            -fill '#c8c8c8' -draw "ellipse 1560,430 460,50 0,360" \
-            -blur 0x9 \
-            -quality 92 \
-            assets/earth/earth_clouds_2048.jpg
+          set -euo pipefail
+          git fetch origin agent/h-earth-native-shoreline-contact-repair
+          git checkout -B agent/h-earth-native-shoreline-contact-repair origin/agent/h-earth-native-shoreline-contact-repair
+          test "$(git rev-parse HEAD)" = "2764c3726c1b6591877d9257a125a70a2536d90d"
 
-      - name: Verify earth_clouds_2048.jpg
-        run: |
-          test -s assets/earth/earth_clouds_2048.jpg
-          file assets/earth/earth_clouds_2048.jpg
+          python3 /tmp/gate4-patch.py
 
-      - name: Commit earth_clouds_2048.jpg
-        run: |
+          actual="$(git diff --name-only | sort | tr '\n' ' ')"
+          expected="showroom/globe/h-earth/environment.js showroom/globe/h-earth/render/geometry-foam.js showroom/globe/h-earth/render/geometry-ground.js showroom/globe/h-earth/render/geometry-preview.js showroom/globe/h-earth/render/geometry-water.js showroom/globe/h-earth/render/shoreline-preview.js "
+          test "$actual" = "$expected"
+          test -z "$(git diff --diff-filter=AD --name-only)"
+
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add assets/earth/earth_clouds_2048.jpg
-
-          if git diff --cached --quiet; then
-            echo "earth_clouds_2048.jpg already exists."
-          else
-            git commit -m "Create Earth cloud asset"
-            git push
-          fi
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            showroom/globe/h-earth/environment.js \
+            showroom/globe/h-earth/render/geometry-preview.js \
+            showroom/globe/h-earth/render/geometry-ground.js \
+            showroom/globe/h-earth/render/geometry-foam.js \
+            showroom/globe/h-earth/render/geometry-water.js \
+            showroom/globe/h-earth/render/shoreline-preview.js
+          git commit -m "Apply shared shoreline boundary replacements" \
+            -m "Gate 4B only: replace the six authorized existing production paths. Tests remain deferred to Gate 4C."
+          git push origin HEAD:agent/h-earth-native-shoreline-contact-repair

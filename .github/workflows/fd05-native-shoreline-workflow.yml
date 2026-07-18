@@ -22,6 +22,7 @@ jobs:
         run: |
           test "$(git rev-parse cbde5b50470a528954f634baf8045674c2079cf0^{commit})" = "cbde5b50470a528954f634baf8045674c2079cf0"
           python3 .fd05/apply-native-shoreline.py
+          python3 .fd05/repair-native-shoreline-packet-transform.py
       - name: Verify syntax and exact source scope
         run: |
           node --check showroom/globe/h-earth/render/geometry-water.js

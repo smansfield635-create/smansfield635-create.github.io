@@ -1,0 +1,95 @@
+name: FD05 minimum native shoreline workflow
+
+on:
+  pull_request:
+    branches:
+      - agent/fd05-native-shoreline-work-001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  construct-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fd05-native-shoreline-work-001
+          fetch-depth: 0
+      - name: Verify immutable base and apply bounded transformation
+        run: |
+          test "$(git rev-parse cbde5b50470a528954f634baf8045674c2079cf0^{commit})" = "cbde5b50470a528954f634baf8045674c2079cf0"
+          python3 .fd05/apply-native-shoreline.py
+      - name: Verify syntax and exact source scope
+        run: |
+          node --check showroom/globe/h-earth/render/geometry-water.js
+          node --check showroom/globe/h-earth/render/geometry-foam.js
+          node --check showroom/globe/h-earth/render/shoreline-preview.js
+          node --check h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
+          node --check showroom/globe/h-earth/admitted-geometry-frame.js
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('showroom/globe/h-earth/index.html').read_text(encoding='utf-8')
+          required = [
+              './render/shoreline-preview.js?v=fd05-shoreline-001',
+              'previewHEarthMinimumShorelineGeometry',
+              'H_EARTH_3D_SHORELINE_PREVIEW_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1',
+              'H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE'
+          ]
+          missing = [token for token in required if token not in html]
+          if missing:
+              raise SystemExit(f'missing transformed HTML tokens: {missing}')
+          PY
+      - name: Run source and backward-compatibility gates
+        run: |
+          node --experimental-default-type=module .fd05/test-native-shoreline.mjs
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+          git show origin/agent/fd05-index-compositor-viewport-work-001:.fd05/test-index-viewport.mjs > .fd05-test-index-viewport.mjs
+          node --experimental-default-type=module .fd05-test-index-viewport.mjs
+          rm .fd05-test-index-viewport.mjs
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Run real-browser mobile and desktop gates
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/fd05-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 2
+          H_EARTH_TEST_BASE_URL='http://127.0.0.1:8765/showroom/globe/h-earth/' node .fd05/test-native-shoreline-browser.mjs
+      - name: Record source identities and commit transformed files
+        run: |
+          rm -rf node_modules package-lock.json
+          git checkout -- package.json 2>/dev/null || true
+          echo "BASE_COMMIT=cbde5b50470a528954f634baf8045674c2079cf0"
+          for FILE in \
+            showroom/globe/h-earth/render/geometry-water.js \
+            showroom/globe/h-earth/render/geometry-foam.js \
+            showroom/globe/h-earth/render/shoreline-preview.js \
+            h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js \
+            showroom/globe/h-earth/admitted-geometry-frame.js \
+            showroom/globe/h-earth/index.html
+          do
+            echo "$FILE bytes=$(wc -c < "$FILE" | tr -d ' ') sha256=$(sha256sum "$FILE" | awk '{print $1}') blob=$(git hash-object "$FILE")"
+          done
+          git config user.name "OpenAI Engineering Agent"
+          git config user.email "engineering-agent@users.noreply.github.com"
+          git add showroom/globe/h-earth/render/geometry-water.js
+          git add showroom/globe/h-earth/render/geometry-foam.js
+          git add showroom/globe/h-earth/render/shoreline-preview.js
+          git add h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
+          git add showroom/globe/h-earth/admitted-geometry-frame.js
+          git add showroom/globe/h-earth/index.html
+          git commit -m "Materialize minimum native shoreline context" || true
+          git push origin HEAD:agent/fd05-native-shoreline-work-001
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fd05-native-shoreline-workflow
+          path: |
+            .fd05/native-shoreline-output/*.json
+            .fd05/native-shoreline-output/*.png
+          if-no-files-found: error
+          retention-days: 14

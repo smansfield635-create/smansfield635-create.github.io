@@ -1,1 +1,1 @@
-Trigger the FD-05 terminal renderer visual-baseline capture workflow.
+Trigger the FD-05 rendered wet-sand material ownership inspection.

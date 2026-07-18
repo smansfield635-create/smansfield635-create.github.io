@@ -1,1 +1,1 @@
-Trigger the corrected clean one-file renderer wet-sand candidate build and synchronize the final validation event.
+Execute the installed branch-local renderer wet-sand candidate workflow now.

@@ -1,0 +1,575 @@
+{
+  "validationId": "H_EARTH_FD05_INDEX_COMPOSITOR_VIEWPORT_INITIALIZATION_PREMERGE_VALIDATION_001",
+  "status": "PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "targetPath": "showroom/globe/h-earth/index.js",
+  "base": {
+    "commitSha": "a3cd9ea92fe01d195e0df3e6374c02e906f76ed7",
+    "byteLength": 190594,
+    "sha256": "9ffa96c08b49cd1285c6908cbb6cfba927c77e3b1b3dbc0008485de00868a023",
+    "gitBlobSha": "4f4486a4e06eb3761caeb71932b67dd70ad8344e"
+  },
+  "installedMain": {
+    "commitSha": "637733701f845cdff6bd802b1b94ab7bee5eb299",
+    "byteLength": 198940,
+    "sha256": "c7991edad72de7b95d2b7d04c4c64901252da16146deada1e3a6d68c0d11afba",
+    "gitBlobSha": "a74364ad75dca8b8fab069026d181b5e64bdd007"
+  },
+  "pullRequest": {
+    "number": 24,
+    "headSha": "a02924691b6a1683ba795b8bac86e3aaf398521d",
+    "changedFileCount": 1,
+    "additions": 412,
+    "deletions": 0,
+    "mergeCommitSha": "637733701f845cdff6bd802b1b94ab7bee5eb299"
+  },
+  "mechanicalGates": {
+    "javascriptSyntax": "PASS",
+    "governedRootImports": {
+      "total": 19,
+      "fulfilled": 19,
+      "rejected": 0
+    }
+  },
+  "desktopRoute": {
+    "label": "DESKTOP",
+    "immediateStatus": "PUBLIC_STAGE_PREVIEW_READY",
+    "completionStatus": "PUBLIC_STAGE_READY",
+    "rendererStatus": "RENDERER_MOUNTED",
+    "mounted": true,
+    "viewportResolution": {
+      "receiptType": "H_EARTH_3D_ROUTE_RENDERER_MOUNT_VIEWPORT_RESOLUTION",
+      "eligible": true,
+      "status": "RENDERER_MOUNT_VIEWPORT_RESOLVED",
+      "widthPx": 640,
+      "heightPx": 480,
+      "pixelRatio": 1,
+      "measurement": {
+        "rectangleWidth": 640,
+        "rectangleHeight": 480,
+        "clientWidth": 640,
+        "clientHeight": 480,
+        "pixelRatioFallbackUsed": false
+      },
+      "issues": []
+    },
+    "viewportReceipt": {
+      "receiptType": "H_EARTH_3D_COMPOSITOR_VIEWPORT_RECEIPT",
+      "contractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+      "accepted": true,
+      "materiallyChanged": true,
+      "status": "VIEWPORT_STATE_UPDATED",
+      "authorityStatus": "ELIGIBLE",
+      "authorityEvaluation": {
+        "eligible": true,
+        "status": "VIEWPORT_CAPACITY_ELIGIBLE_MINIMUM_ONLY",
+        "checks": [
+          {
+            "id": "VIEWPORT_WIDTH_POSITIVE_FINITE",
+            "passed": true,
+            "details": 640
+          },
+          {
+            "id": "VIEWPORT_HEIGHT_POSITIVE_FINITE",
+            "passed": true,
+            "details": 480
+          },
+          {
+            "id": "VIEWPORT_PIXEL_RATIO_POSITIVE_FINITE",
+            "passed": true,
+            "details": 1
+          },
+          {
+            "id": "VIEWPORT_DIMENSIONS_WITHIN_CAPACITY",
+            "passed": true,
+            "details": {
+              "widthPx": 640,
+              "heightPx": 480
+            }
+          },
+          {
+            "id": "VIEWPORT_ASPECT_RATIO_WITHIN_CAPACITY",
+            "passed": true,
+            "details": 1.3333333333333333
+          },
+          {
+            "id": "VIEWPORT_PIXEL_RATIO_WITHIN_CAPACITY",
+            "passed": true,
+            "details": 1
+          }
+        ],
+        "issues": [],
+        "normalizedViewport": {
+          "widthPx": 640,
+          "heightPx": 480,
+          "aspectRatio": 1.3333333333333333,
+          "pixelRatio": 1,
+          "suppliedPixelRatio": 1,
+          "orientation": "LANDSCAPE",
+          "preferredMinimumMet": false,
+          "designViewportMatch": false,
+          "capacityStatus": "WITHIN_CAPACITY"
+        }
+      },
+      "authorityEligible": true,
+      "capacityEvaluation": "[Circular]",
+      "capacityEligible": true,
+      "issues": [],
+      "updated": true,
+      "authorityProjection": {
+        "widthPx": 640,
+        "heightPx": 480,
+        "pixelRatio": 1
+      },
+      "evaluation": {
+        "eligible": true,
+        "status": "VIEWPORT_AUTHORITY_NORMALIZATION_ACCEPTED",
+        "viewport": {
+          "widthPx": 640,
+          "heightPx": 480,
+          "pixelRatio": 1,
+          "aspectRatio": 1.3333333333333333,
+          "orientation": "LANDSCAPE",
+          "capacityStatus": "WITHIN_CAPACITY"
+        },
+        "issues": []
+      },
+      "transaction": {
+        "materiallyChanged": true,
+        "cameraChanged": false,
+        "viewportChanged": true,
+        "visibilityChanged": false,
+        "inertiaChanged": false,
+        "revisions": {
+          "camera": 0,
+          "viewport": 1,
+          "visibility": 0,
+          "inertia": 0,
+          "frame": 1
+        }
+      },
+      "revisions": "[Circular]",
+      "viewport": {
+        "widthPx": 640,
+        "heightPx": 480,
+        "pixelRatio": 1,
+        "aspectRatio": 1.3333333333333333,
+        "orientation": "LANDSCAPE",
+        "capacityStatus": "WITHIN_CAPACITY"
+      }
+    },
+    "getterViewportReceipt": {
+      "receiptType": "H_EARTH_3D_COMPOSITOR_VIEWPORT_RECEIPT",
+      "contractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+      "accepted": true,
+      "materiallyChanged": true,
+      "status": "VIEWPORT_STATE_UPDATED",
+      "authorityStatus": "ELIGIBLE",
+      "authorityEvaluation": {
+        "eligible": true,
+        "status": "VIEWPORT_CAPACITY_ELIGIBLE_MINIMUM_ONLY",
+        "checks": [
+          {
+            "id": "VIEWPORT_WIDTH_POSITIVE_FINITE",
+            "passed": true,
+            "details": 640
+          },
+          {
+            "id": "VIEWPORT_HEIGHT_POSITIVE_FINITE",
+            "passed": true,
+            "details": 480
+          },
+          {
+            "id": "VIEWPORT_PIXEL_RATIO_POSITIVE_FINITE",
+            "passed": true,
+            "details": 1
+          },
+          {
+            "id": "VIEWPORT_DIMENSIONS_WITHIN_CAPACITY",
+            "passed": true,
+            "details": {
+              "widthPx": 640,
+              "heightPx": 480
+            }
+          },
+          {
+            "id": "VIEWPORT_ASPECT_RATIO_WITHIN_CAPACITY",
+            "passed": true,
+            "details": 1.3333333333333333
+          },
+          {
+            "id": "VIEWPORT_PIXEL_RATIO_WITHIN_CAPACITY",
+            "passed": true,
+            "details": 1
+          }
+        ],
+        "issues": [],
+        "normalizedViewport": {
+          "widthPx": 640,
+          "heightPx": 480,
+          "aspectRatio": 1.3333333333333333,
+          "pixelRatio": 1,
+          "suppliedPixelRatio": 1,
+          "orientation": "LANDSCAPE",
+          "preferredMinimumMet": false,
+          "designViewportMatch": false,
+          "capacityStatus": "WITHIN_CAPACITY"
+        }
+      },
+      "authorityEligible": true,
+      "capacityEvaluation": "[Circular]",
+      "capacityEligible": true,
+      "issues": [],
+      "updated": true,
+      "authorityProjection": {
+        "widthPx": 640,
+        "heightPx": 480,
+        "pixelRatio": 1
+      },
+      "evaluation": {
+        "eligible": true,
+        "status": "VIEWPORT_AUTHORITY_NORMALIZATION_ACCEPTED",
+        "viewport": {
+          "widthPx": 640,
+          "heightPx": 480,
+          "pixelRatio": 1,
+          "aspectRatio": 1.3333333333333333,
+          "orientation": "LANDSCAPE",
+          "capacityStatus": "WITHIN_CAPACITY"
+        },
+        "issues": []
+      },
+      "transaction": {
+        "materiallyChanged": true,
+        "cameraChanged": false,
+        "viewportChanged": true,
+        "visibilityChanged": false,
+        "inertiaChanged": false,
+        "revisions": {
+          "camera": 0,
+          "viewport": 1,
+          "visibility": 0,
+          "inertia": 0,
+          "frame": 1
+        }
+      },
+      "revisions": "[Circular]",
+      "viewport": {
+        "widthPx": 640,
+        "heightPx": 480,
+        "pixelRatio": 1,
+        "aspectRatio": 1.3333333333333333,
+        "orientation": "LANDSCAPE",
+        "capacityStatus": "WITHIN_CAPACITY"
+      }
+    },
+    "sourcePreviewStatus": "SOURCE_PREVIEW_TAKEN_OVER_BY_RENDERER",
+    "mountChildren": 1,
+    "previewExists": false
+  },
+  "mobileRoute": {
+    "label": "MOBILE",
+    "immediateStatus": "PUBLIC_STAGE_PREVIEW_READY",
+    "completionStatus": "PUBLIC_STAGE_READY",
+    "rendererStatus": "RENDERER_MOUNTED",
+    "mounted": true,
+    "viewportResolution": {
+      "receiptType": "H_EARTH_3D_ROUTE_RENDERER_MOUNT_VIEWPORT_RESOLUTION",
+      "eligible": true,
+      "status": "RENDERER_MOUNT_VIEWPORT_RESOLVED",
+      "widthPx": 332,
+      "heightPx": 337,
+      "pixelRatio": 2.75,
+      "measurement": {
+        "rectangleWidth": 332,
+        "rectangleHeight": 337,
+        "clientWidth": 332,
+        "clientHeight": 337,
+        "pixelRatioFallbackUsed": false
+      },
+      "issues": []
+    },
+    "viewportReceipt": {
+      "receiptType": "H_EARTH_3D_COMPOSITOR_VIEWPORT_RECEIPT",
+      "contractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+      "accepted": true,
+      "materiallyChanged": true,
+      "status": "VIEWPORT_STATE_UPDATED",
+      "authorityStatus": "ELIGIBLE",
+      "authorityEvaluation": {
+        "eligible": true,
+        "status": "VIEWPORT_CAPACITY_ELIGIBLE_MINIMUM_ONLY",
+        "checks": [
+          {
+            "id": "VIEWPORT_WIDTH_POSITIVE_FINITE",
+            "passed": true,
+            "details": 332
+          },
+          {
+            "id": "VIEWPORT_HEIGHT_POSITIVE_FINITE",
+            "passed": true,
+            "details": 337
+          },
+          {
+            "id": "VIEWPORT_PIXEL_RATIO_POSITIVE_FINITE",
+            "passed": true,
+            "details": 2.75
+          },
+          {
+            "id": "VIEWPORT_DIMENSIONS_WITHIN_CAPACITY",
+            "passed": true,
+            "details": {
+              "widthPx": 332,
+              "heightPx": 337
+            }
+          },
+          {
+            "id": "VIEWPORT_ASPECT_RATIO_WITHIN_CAPACITY",
+            "passed": true,
+            "details": 0.9851632047477745
+          },
+          {
+            "id": "VIEWPORT_PIXEL_RATIO_WITHIN_CAPACITY",
+            "passed": true,
+            "details": 2.75
+          }
+        ],
+        "issues": [],
+        "normalizedViewport": {
+          "widthPx": 332,
+          "heightPx": 337,
+          "aspectRatio": 0.9851632047477745,
+          "pixelRatio": 2.75,
+          "suppliedPixelRatio": 2.75,
+          "orientation": "SQUARE",
+          "preferredMinimumMet": false,
+          "designViewportMatch": false,
+          "capacityStatus": "WITHIN_CAPACITY"
+        }
+      },
+      "authorityEligible": true,
+      "capacityEvaluation": "[Circular]",
+      "capacityEligible": true,
+      "issues": [],
+      "updated": true,
+      "authorityProjection": {
+        "widthPx": 332,
+        "heightPx": 337,
+        "pixelRatio": 2.75
+      },
+      "evaluation": {
+        "eligible": true,
+        "status": "VIEWPORT_AUTHORITY_NORMALIZATION_ACCEPTED",
+        "viewport": {
+          "widthPx": 332,
+          "heightPx": 337,
+          "pixelRatio": 2.75,
+          "aspectRatio": 0.9851632047477745,
+          "orientation": "SQUARE",
+          "capacityStatus": "WITHIN_CAPACITY"
+        },
+        "issues": []
+      },
+      "transaction": {
+        "materiallyChanged": true,
+        "cameraChanged": false,
+        "viewportChanged": true,
+        "visibilityChanged": false,
+        "inertiaChanged": false,
+        "revisions": {
+          "camera": 0,
+          "viewport": 2,
+          "visibility": 0,
+          "inertia": 0,
+          "frame": 2
+        }
+      },
+      "revisions": "[Circular]",
+      "viewport": {
+        "widthPx": 332,
+        "heightPx": 337,
+        "pixelRatio": 2.75,
+        "aspectRatio": 0.9851632047477745,
+        "orientation": "SQUARE",
+        "capacityStatus": "WITHIN_CAPACITY"
+      }
+    },
+    "getterViewportReceipt": {
+      "receiptType": "H_EARTH_3D_COMPOSITOR_VIEWPORT_RECEIPT",
+      "contractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+      "accepted": true,
+      "materiallyChanged": true,
+      "status": "VIEWPORT_STATE_UPDATED",
+      "authorityStatus": "ELIGIBLE",
+      "authorityEvaluation": {
+        "eligible": true,
+        "status": "VIEWPORT_CAPACITY_ELIGIBLE_MINIMUM_ONLY",
+        "checks": [
+          {
+            "id": "VIEWPORT_WIDTH_POSITIVE_FINITE",
+            "passed": true,
+            "details": 332
+          },
+          {
+            "id": "VIEWPORT_HEIGHT_POSITIVE_FINITE",
+            "passed": true,
+            "details": 337
+          },
+          {
+            "id": "VIEWPORT_PIXEL_RATIO_POSITIVE_FINITE",
+            "passed": true,
+            "details": 2.75
+          },
+          {
+            "id": "VIEWPORT_DIMENSIONS_WITHIN_CAPACITY",
+            "passed": true,
+            "details": {
+              "widthPx": 332,
+              "heightPx": 337
+            }
+          },
+          {
+            "id": "VIEWPORT_ASPECT_RATIO_WITHIN_CAPACITY",
+            "passed": true,
+            "details": 0.9851632047477745
+          },
+          {
+            "id": "VIEWPORT_PIXEL_RATIO_WITHIN_CAPACITY",
+            "passed": true,
+            "details": 2.75
+          }
+        ],
+        "issues": [],
+        "normalizedViewport": {
+          "widthPx": 332,
+          "heightPx": 337,
+          "aspectRatio": 0.9851632047477745,
+          "pixelRatio": 2.75,
+          "suppliedPixelRatio": 2.75,
+          "orientation": "SQUARE",
+          "preferredMinimumMet": false,
+          "designViewportMatch": false,
+          "capacityStatus": "WITHIN_CAPACITY"
+        }
+      },
+      "authorityEligible": true,
+      "capacityEvaluation": "[Circular]",
+      "capacityEligible": true,
+      "issues": [],
+      "updated": true,
+      "authorityProjection": {
+        "widthPx": 332,
+        "heightPx": 337,
+        "pixelRatio": 2.75
+      },
+      "evaluation": {
+        "eligible": true,
+        "status": "VIEWPORT_AUTHORITY_NORMALIZATION_ACCEPTED",
+        "viewport": {
+          "widthPx": 332,
+          "heightPx": 337,
+          "pixelRatio": 2.75,
+          "aspectRatio": 0.9851632047477745,
+          "orientation": "SQUARE",
+          "capacityStatus": "WITHIN_CAPACITY"
+        },
+        "issues": []
+      },
+      "transaction": {
+        "materiallyChanged": true,
+        "cameraChanged": false,
+        "viewportChanged": true,
+        "visibilityChanged": false,
+        "inertiaChanged": false,
+        "revisions": {
+          "camera": 0,
+          "viewport": 2,
+          "visibility": 0,
+          "inertia": 0,
+          "frame": 2
+        }
+      },
+      "revisions": "[Circular]",
+      "viewport": {
+        "widthPx": 332,
+        "heightPx": 337,
+        "pixelRatio": 2.75,
+        "aspectRatio": 0.9851632047477745,
+        "orientation": "SQUARE",
+        "capacityStatus": "WITHIN_CAPACITY"
+      }
+    },
+    "sourcePreviewStatus": "SOURCE_PREVIEW_TAKEN_OVER_BY_RENDERER",
+    "mountChildren": 1,
+    "previewExists": false
+  },
+  "failureRoute": {
+    "completionStatus": "PUBLIC_STAGE_FALLBACK",
+    "rendererStatus": "COMPOSITOR_VIEWPORT_INITIALIZATION_REJECTED",
+    "mounted": false,
+    "failureVariant": "COMPOSITOR_VIEWPORT_MEASUREMENT_REJECTED",
+    "viewportResolution": {
+      "receiptType": "H_EARTH_3D_ROUTE_RENDERER_MOUNT_VIEWPORT_RESOLUTION",
+      "eligible": false,
+      "status": "RENDERER_MOUNT_VIEWPORT_UNRESOLVED",
+      "widthPx": null,
+      "heightPx": 337,
+      "pixelRatio": 2.75,
+      "measurement": {
+        "rectangleWidth": 0,
+        "rectangleHeight": 337,
+        "clientWidth": 0,
+        "clientHeight": 337,
+        "pixelRatioFallbackUsed": false
+      },
+      "issues": [
+        "Renderer mount width must resolve to a positive finite number."
+      ]
+    },
+    "viewportReceipt": {
+      "receiptType": "H_EARTH_3D_ROUTE_COMPOSITOR_VIEWPORT_INITIALIZATION_RECEIPT",
+      "accepted": false,
+      "status": "COMPOSITOR_VIEWPORT_MEASUREMENT_REJECTED",
+      "resolution": {
+        "receiptType": "H_EARTH_3D_ROUTE_RENDERER_MOUNT_VIEWPORT_RESOLUTION",
+        "eligible": false,
+        "status": "RENDERER_MOUNT_VIEWPORT_UNRESOLVED",
+        "widthPx": null,
+        "heightPx": 337,
+        "pixelRatio": 2.75,
+        "measurement": {
+          "rectangleWidth": 0,
+          "rectangleHeight": 337,
+          "clientWidth": 0,
+          "clientHeight": 337,
+          "pixelRatioFallbackUsed": false
+        },
+        "issues": [
+          "Renderer mount width must resolve to a positive finite number."
+        ]
+      },
+      "issues": "[Circular]"
+    },
+    "sourcePreviewStatus": "SOURCE_PREVIEW_MOUNTED",
+    "previewExists": true
+  },
+  "scope": {
+    "changedPaths": [
+      "showroom/globe/h-earth/index.js"
+    ],
+    "rendererModified": false,
+    "compositorModified": false,
+    "capacityModified": false,
+    "admittedFrameModified": false,
+    "environmentModified": false,
+    "packet002Modified": false,
+    "sceneDefinitionsModified": false
+  },
+  "claimCeiling": {
+    "controlledDesktopMount": "PASS",
+    "controlledMobileMount": "PASS",
+    "deployedRendererTakeover": "PENDING",
+    "visualPass": "NOT_ESTABLISHED",
+    "production": "NOT_ESTABLISHED"
+  }
+}

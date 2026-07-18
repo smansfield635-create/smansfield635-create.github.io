@@ -77,5 +77,63 @@ new_membership_message = (
 if old_membership_message in text:
     text = text.replace(old_membership_message, new_membership_message, 1)
 
+# Postconstruction validator: admit the same explicit modes and correlate
+# provenance validation to the frame-owned presentationMode field.
+constructed_marker = 'function validateConstructedFrame('
+constructed_start = text.find(constructed_marker)
+if constructed_start < 0:
+    raise SystemExit('validateConstructedFrame marker missing')
+constructed = text[constructed_start:]
+
+old_constructed_condition = """    value.presentationMode !==
+    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE"""
+new_constructed_condition = """    !ALLOWED_PRESENTATION_MODES.includes(
+      value.presentationMode
+    )"""
+if old_constructed_condition in constructed:
+    constructed = constructed.replace(
+        old_constructed_condition,
+        new_constructed_condition,
+        1,
+    )
+elif new_constructed_condition not in constructed:
+    raise SystemExit(
+        'constructed-frame presentation-mode condition is neither old nor repaired'
+    )
+
+old_constructed_message = (
+    "'The initial frame contract admits only "
+    "FIRST_ADMITTED_WET_SAND_PROOF.'"
+)
+new_constructed_message = (
+    "'The constructed frame presentation mode is not one of the explicit "
+    "admitted proof modes.'"
+)
+if old_constructed_message in constructed:
+    constructed = constructed.replace(
+        old_constructed_message,
+        new_constructed_message,
+        1,
+    )
+
+old_constructed_call = """    validateProofProvenance({
+      presentationMode,
+      sourceObjectIds:"""
+new_constructed_call = """    validateProofProvenance({
+      presentationMode:
+        value.presentationMode,
+      sourceObjectIds:"""
+if old_constructed_call in constructed:
+    constructed = constructed.replace(
+        old_constructed_call,
+        new_constructed_call,
+        1,
+    )
+elif new_constructed_call not in constructed:
+    raise SystemExit(
+        'constructed-frame proof provenance call is neither old nor repaired'
+    )
+
+text = text[:constructed_start] + constructed
 path.write_text(text, encoding='utf-8')
-print('Admitted-frame shoreline mode and membership checks repaired')
+print('Admitted-frame shoreline input and postcondition checks repaired')

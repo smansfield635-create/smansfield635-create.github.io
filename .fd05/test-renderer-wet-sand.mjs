@@ -5,6 +5,8 @@ import { mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 
 const outputDirectory = '.fd05/renderer-wet-sand-output';
+const rendererPath = 'showroom/globe/h-earth/renderer.js';
+const candidateBranch = 'agent/fd05-renderer-wet-sand-001';
 await mkdir(outputDirectory, { recursive: true });
 
 const configurations = [
@@ -284,3 +286,37 @@ execFileSync(
   ],
   { stdio: 'inherit' }
 );
+
+const changedTrackedPaths = execFileSync(
+  'git',
+  ['diff', '--name-only'],
+  { encoding: 'utf8' }
+).trim();
+
+if (changedTrackedPaths !== rendererPath) {
+  throw new Error(
+    `Unexpected tracked candidate scope: ${changedTrackedPaths}`
+  );
+}
+
+execFileSync(
+  'git',
+  ['config', 'user.name', 'OpenAI Engineering Agent']
+);
+execFileSync(
+  'git',
+  ['config', 'user.email', 'engineering-agent@users.noreply.github.com']
+);
+execFileSync('git', ['add', rendererPath]);
+execFileSync(
+  'git',
+  ['commit', '-m', 'Refine core wet-sand material presentation'],
+  { stdio: 'inherit' }
+);
+execFileSync(
+  'git',
+  ['push', '--force', 'origin', `HEAD:${candidateBranch}`],
+  { stdio: 'inherit' }
+);
+
+execFileSync('git', ['reset', '--soft', 'HEAD~1']);

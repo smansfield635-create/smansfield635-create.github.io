@@ -1,13 +1,11 @@
 /**
  * /showroom/globe/h-earth/render/geometry-foam.js
- * COMPLETE FILE
+ * COMPLETE REPLACEMENT CANDIDATE
  *
- * H_EARTH_3D_GEOMETRY_FOAM_PROVIDER_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1
- *
- * Role:
- * Construct one projection-neutral native shoreline foam-contact ribbon for
- * OBJ_005_SHORELINE_FOAM_LINE. This file does not own water simulation,
- * admission, frame assembly, renderer materialization, or visual approval.
+ * Preserves the native foam-contact provider role and existing object,
+ * zone, region, and material identities. The contact ribbon now derives from
+ * the exact environment-owned shoreline occurrence rather than an independent
+ * sinusoidal centerline.
  */
 
 import {
@@ -18,65 +16,17 @@ import {
   isHEarthNeutralPrimitiveRecord
 } from './geometry-kernel.js';
 
+import {
+  H_EARTH_3D_SHARED_SHORELINE_BOUNDARY,
+  H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+  evaluateHEarth3DSharedShorelineBoundary
+} from '../environment.js';
+
 export const H_EARTH_3D_GEOMETRY_FOAM_PROVIDER_CONTRACT_ID =
   'H_EARTH_3D_GEOMETRY_FOAM_PROVIDER_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1';
 
 export const H_EARTH_3D_GEOMETRY_FOAM_PROVIDER_SOURCE_FILE =
   '/showroom/globe/h-earth/render/geometry-foam.js';
-
-export const H_EARTH_3D_FOAM_CONTACT_NUMERIC_CONSTRUCTION_PROFILE =
-  deepFreeze({
-    profileId:
-      'H_EARTH_FOAM_CONTACT_NUMERIC_CONSTRUCTION_PROFILE_v1',
-
-    sourceObjectId:
-      'OBJ_005_SHORELINE_FOAM_LINE',
-
-    sourceZoneIds:
-      Object.freeze([
-        'ZONE_002_SHORELINE_CONTACT_ZONE'
-      ]),
-
-    latticeRegionIds:
-      Object.freeze([
-        'SHORELINE_CONTACT'
-      ]),
-
-    providerId:
-      'H_EARTH_FOAM_GEOMETRY_PROVIDER',
-
-    providerRole:
-      'SHORELINE_CONTACT',
-
-    primitiveType:
-      'TRIANGLE_MESH',
-
-    worldProfile:
-      deepFreeze({
-        minimumX: -96,
-        maximumX: 96,
-        centerZ: -18,
-        halfWidth: 2.2,
-        meanderAmplitude: 2.6,
-        elevationY: 0.79,
-        segmentCount: 18
-      }),
-
-    semanticRole:
-      'SHORELINE_FOAM_CONTACT_SURFACE',
-
-    materialReference:
-      'H_EARTH_MATERIAL_FOAM',
-
-    materialIntent:
-      'FOAM_CONTACT',
-
-    fluidSimulation:
-      false,
-
-    nativeGeometryRequired:
-      true
-  });
 
 function deepFreeze(
   value,
@@ -84,24 +34,18 @@ function deepFreeze(
 ) {
   if (
     value === null ||
-    typeof value !== 'object'
+    typeof value !== 'object' ||
+    Object.isFrozen(value)
   ) {
     return value;
   }
-
   if (seen.has(value)) {
     return value;
   }
-
   seen.add(value);
-
   for (const nestedValue of Object.values(value)) {
-    deepFreeze(
-      nestedValue,
-      seen
-    );
+    deepFreeze(nestedValue, seen);
   }
-
   return Object.freeze(value);
 }
 
@@ -113,8 +57,65 @@ function isNonEmptyExactString(value) {
   );
 }
 
+function finite(value) {
+  return typeof value === 'number' &&
+    Number.isFinite(value);
+}
+
+export const H_EARTH_3D_FOAM_CONTACT_NUMERIC_CONSTRUCTION_PROFILE =
+  deepFreeze({
+    profileId:
+      'H_EARTH_FOAM_CONTACT_NUMERIC_CONSTRUCTION_PROFILE_v1',
+    sourceObjectId:
+      'OBJ_005_SHORELINE_FOAM_LINE',
+    sourceZoneIds:
+      deepFreeze([
+        'ZONE_002_SHORELINE_CONTACT_ZONE'
+      ]),
+    latticeRegionIds:
+      deepFreeze([
+        'SHORELINE_CONTACT'
+      ]),
+    providerId:
+      'H_EARTH_FOAM_GEOMETRY_PROVIDER',
+    providerRole:
+      'SHORELINE_CONTACT',
+    primitiveType:
+      'TRIANGLE_MESH',
+    shorelineBoundaryContractId:
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+    ribbonPolicy: deepFreeze({
+      contactEdge:
+        'EXACT_SHARED_SHORELINE_SAMPLES',
+      waterwardWidth:
+        3.2,
+      elevationY:
+        H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
+          .elevationPolicy.foamElevation,
+      orientation:
+        'WEST_TO_EAST',
+      waterSide:
+        'POSITIVE_Z',
+      independentCenterline:
+        false,
+      deterministicWidthVariation:
+        false
+    }),
+    semanticRole:
+      'SHORELINE_FOAM_CONTACT_SURFACE',
+    materialReference:
+      'H_EARTH_MATERIAL_FOAM',
+    materialIntent:
+      'FOAM_CONTACT',
+    fluidSimulation:
+      false,
+    nativeGeometryRequired:
+      true
+  });
+
 function makeRejectedResult({
   requestId,
+  shorelineBoundary = null,
   issues
 }) {
   const profile =
@@ -132,7 +133,7 @@ function makeRejectedResult({
     sourceObjectId:
       profile.sourceObjectId,
     sourceObjectIds:
-      Object.freeze([
+      deepFreeze([
         profile.sourceObjectId
       ]),
     sourceZoneIds:
@@ -141,8 +142,15 @@ function makeRejectedResult({
       profile.latticeRegionIds,
     profileId:
       profile.profileId,
+    shorelineBoundary:
+      shorelineBoundary ?? null,
+    shorelineBoundaryId:
+      shorelineBoundary?.boundaryId ?? null,
+    shorelineBoundaryContractId:
+      shorelineBoundary?.boundaryContractId ??
+      null,
     primitives:
-      Object.freeze([]),
+      deepFreeze([]),
     bounds: null,
     admitted: false,
     WestAdmissionPerformed: false,
@@ -151,127 +159,182 @@ function makeRejectedResult({
     renderInstanceCreated: false,
     fluidSimulation: false,
     issues:
-      Object.freeze([
-        ...issues
-      ])
+      deepFreeze([...issues])
   });
 }
 
-function buildFoamRibbonVertices(profile) {
-  const {
-    minimumX,
-    maximumX,
-    centerZ,
-    halfWidth,
-    meanderAmplitude,
-    elevationY,
-    segmentCount
-  } = profile.worldProfile;
+function normalizedWaterwardNormal(
+  samples,
+  index
+) {
+  const previous =
+    samples[Math.max(0, index - 1)];
+  const next =
+    samples[
+      Math.min(
+        samples.length - 1,
+        index + 1
+      )
+    ];
 
+  const tangentX =
+    next.x - previous.x;
+  const tangentZ =
+    next.z - previous.z;
+  const length =
+    Math.hypot(
+      tangentX,
+      tangentZ
+    );
+
+  if (!finite(length) || length <= 0) {
+    return deepFreeze({
+      x: 0,
+      z: 1
+    });
+  }
+
+  let normalX =
+    -tangentZ / length;
+  let normalZ =
+    tangentX / length;
+
+  if (normalZ < 0) {
+    normalX *= -1;
+    normalZ *= -1;
+  }
+
+  return deepFreeze({
+    x: normalX,
+    z: normalZ
+  });
+}
+
+function buildFoamRibbonVertices({
+  shorelineBoundary,
+  profile
+}) {
+  const width =
+    profile.ribbonPolicy.waterwardWidth;
+  const elevationY =
+    profile.ribbonPolicy.elevationY;
   const vertices = [];
 
-  for (
-    let segmentIndex = 0;
-    segmentIndex <= segmentCount;
-    segmentIndex += 1
-  ) {
-    const progress =
-      segmentIndex /
-      segmentCount;
+  shorelineBoundary.samples.forEach(
+    (sample, index) => {
+      const normal =
+        normalizedWaterwardNormal(
+          shorelineBoundary.samples,
+          index
+        );
 
-    const x =
-      minimumX +
-      (
-        maximumX -
-        minimumX
-      ) *
-      progress;
-
-    const centerOffset =
-      Math.sin(
-        progress *
-        Math.PI *
-        3
-      ) *
-      meanderAmplitude +
-      Math.sin(
-        progress *
-        Math.PI *
-        7
-      ) *
-      meanderAmplitude *
-      0.24;
-
-    vertices.push(
-      createHEarthVector3(
-        x,
-        elevationY,
-        centerZ +
-          centerOffset -
-          halfWidth
-      ),
-      createHEarthVector3(
-        x,
-        elevationY,
-        centerZ +
-          centerOffset +
-          halfWidth
-      )
-    );
-  }
+      vertices.push(
+        createHEarthVector3(
+          sample.x,
+          elevationY,
+          sample.z
+        ),
+        createHEarthVector3(
+          sample.x +
+            normal.x * width,
+          elevationY,
+          sample.z +
+            normal.z * width
+        )
+      );
+    }
+  );
 
   return vertices;
 }
 
-function buildFoamRibbonIndices(segmentCount) {
+function buildFoamRibbonIndices(
+  sampleCount
+) {
   const indices = [];
 
   for (
-    let segmentIndex = 0;
-    segmentIndex < segmentCount;
-    segmentIndex += 1
+    let sampleIndex = 0;
+    sampleIndex < sampleCount - 1;
+    sampleIndex += 1
   ) {
-    const firstInner =
-      segmentIndex *
-      2;
-
-    const firstOuter =
-      firstInner +
-      1;
-
-    const secondInner =
-      firstInner +
-      2;
-
-    const secondOuter =
-      firstInner +
-      3;
+    const firstContact =
+      sampleIndex * 2;
+    const firstWaterward =
+      firstContact + 1;
+    const secondContact =
+      firstContact + 2;
+    const secondWaterward =
+      firstContact + 3;
 
     indices.push(
-      firstInner,
-      secondOuter,
-      firstOuter,
-      firstInner,
-      secondInner,
-      secondOuter
+      firstContact,
+      secondWaterward,
+      firstWaterward,
+      firstContact,
+      secondContact,
+      secondWaterward
     );
   }
 
   return indices;
 }
 
+function boundaryCorrespondenceValid(
+  shorelineBoundary
+) {
+  const evaluation =
+    evaluateHEarth3DSharedShorelineBoundary(
+      shorelineBoundary
+    );
+
+  return (
+    evaluation.eligible === true &&
+    shorelineBoundary ===
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY &&
+    shorelineBoundary.boundaryContractId ===
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID &&
+    shorelineBoundary.orientation ===
+      'WEST_TO_EAST' &&
+    shorelineBoundary.waterSide ===
+      'POSITIVE_Z'
+  );
+}
+
 export function constructHEarthFoamContactGeometry({
-  requestId
+  requestId,
+  shorelineBoundary =
+    H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
 } = {}) {
   if (!isNonEmptyExactString(requestId)) {
     return makeRejectedResult({
       requestId: null,
+      shorelineBoundary,
       issues: [
         deepFreeze({
           code:
             'FOAM_CONTACT_REQUEST_ID_INVALID',
           message:
             'Foam-contact construction requires one exact non-empty requestId.'
+        })
+      ]
+    });
+  }
+
+  if (
+    !boundaryCorrespondenceValid(
+      shorelineBoundary
+    )
+  ) {
+    return makeRejectedResult({
+      requestId,
+      shorelineBoundary,
+      issues: [
+        deepFreeze({
+          code:
+            'FOAM_SHARED_SHORELINE_BOUNDARY_INVALID',
+          message:
+            'Foam construction requires the exact environment-owned shoreline occurrence.'
         })
       ]
     });
@@ -290,14 +353,21 @@ export function constructHEarthFoamContactGeometry({
     `H_EARTH_FOAM_CONTACT_NATIVE_PRIMITIVE:${providerRequestId}`;
 
   const vertices =
-    buildFoamRibbonVertices(
+    buildFoamRibbonVertices({
+      shorelineBoundary,
       profile
-    );
+    });
 
   const indices =
     buildFoamRibbonIndices(
-      profile.worldProfile
-        .segmentCount
+      shorelineBoundary.sampleCount
+    );
+
+  const shorelineSampleIds =
+    deepFreeze(
+      shorelineBoundary.samples.map(
+        (sample) => sample.sampleId
+      )
     );
 
   const construction =
@@ -307,24 +377,20 @@ export function constructHEarthFoamContactGeometry({
         `${primitiveId}:geometry`,
       primitiveType:
         H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-          .primitiveType
-          .TRIANGLE_MESH,
+          .primitiveType.TRIANGLE_MESH,
       vertices,
       indices,
       normalMode:
         H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-          .normalMode
-          .FACE_AND_VERTEX,
+          .normalMode.FACE_AND_VERTEX,
       expectedClosure:
         H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-          .expectedClosure
-          .OPEN_ALLOWED,
+          .expectedClosure.OPEN_ALLOWED,
       semanticRole:
         profile.semanticRole,
       materialHint:
         deepFreeze({
-          materialKey:
-            'foam',
+          materialKey: 'foam',
           materialIntentId:
             'H_EARTH_FOAM_CONTACT_DOMAIN',
           materialReference:
@@ -335,11 +401,15 @@ export function constructHEarthFoamContactGeometry({
       source:
         deepFreeze({
           sourceType:
-            'H_EARTH_NATIVE_FOAM_CONTACT_PROFILE',
+            'H_EARTH_SHARED_SHORELINE_DERIVED_FOAM_CONTACT',
           profileId:
             profile.profileId,
           contractId:
-            H_EARTH_3D_GEOMETRY_FOAM_PROVIDER_CONTRACT_ID
+            H_EARTH_3D_GEOMETRY_FOAM_PROVIDER_CONTRACT_ID,
+          shorelineBoundaryId:
+            shorelineBoundary.boundaryId,
+          shorelineBoundaryContractId:
+            shorelineBoundary.boundaryContractId
         }),
       metadata:
         deepFreeze({
@@ -348,7 +418,7 @@ export function constructHEarthFoamContactGeometry({
           providerRole:
             profile.providerRole,
           sourceObjectIds:
-            Object.freeze([
+            deepFreeze([
               profile.sourceObjectId
             ]),
           sourceZoneIds:
@@ -357,6 +427,23 @@ export function constructHEarthFoamContactGeometry({
             profile.latticeRegionIds,
           profileId:
             profile.profileId,
+          shorelineBoundaryId:
+            shorelineBoundary.boundaryId,
+          shorelineBoundaryContractId:
+            shorelineBoundary.boundaryContractId,
+          shorelineOrientation:
+            shorelineBoundary.orientation,
+          shorelineEndpointIds:
+            shorelineBoundary.endpointIds,
+          shorelineSampleIds,
+          shorelineSampleCount:
+            shorelineBoundary.sampleCount,
+          sharedBoundaryOccurrenceConsumed:
+            true,
+          contactEdgeUsesExactBoundarySamples:
+            true,
+          independentCenterlineGenerated:
+            false,
           nativeFoamContact:
             true,
           fluidSimulation:
@@ -378,6 +465,7 @@ export function constructHEarthFoamContactGeometry({
   ) {
     return makeRejectedResult({
       requestId,
+      shorelineBoundary,
       issues:
         Array.isArray(construction?.issues)
           ? construction.issues
@@ -406,7 +494,7 @@ export function constructHEarthFoamContactGeometry({
     sourceObjectId:
       profile.sourceObjectId,
     sourceObjectIds:
-      Object.freeze([
+      deepFreeze([
         profile.sourceObjectId
       ]),
     sourceZoneIds:
@@ -415,18 +503,27 @@ export function constructHEarthFoamContactGeometry({
       profile.latticeRegionIds,
     profileId:
       profile.profileId,
+    shorelineBoundary,
+    shorelineBoundaryId:
+      shorelineBoundary.boundaryId,
+    shorelineBoundaryContractId:
+      shorelineBoundary.boundaryContractId,
+    shorelineOrientation:
+      shorelineBoundary.orientation,
+    shorelineEndpointIds:
+      shorelineBoundary.endpointIds,
+    shorelineSampleIds,
     primitive:
       construction.primitiveRecord,
     primitives:
-      Object.freeze([
+      deepFreeze([
         construction.primitiveRecord
       ]),
     bounds:
       construction.geometry.bounds,
     constructionReceipt:
       deepFreeze({
-        nativeGeometry:
-          true,
+        nativeGeometry: true,
         primitiveId,
         sourceObjectId:
           profile.sourceObjectId,
@@ -436,6 +533,12 @@ export function constructHEarthFoamContactGeometry({
           profile.latticeRegionIds,
         materialReference:
           profile.materialReference,
+        shorelineBoundaryId:
+          shorelineBoundary.boundaryId,
+        exactSharedBoundaryOccurrence:
+          true,
+        independentCenterlineGenerated:
+          false,
         fluidSimulation:
           false
       }),
@@ -446,7 +549,7 @@ export function constructHEarthFoamContactGeometry({
     renderInstanceCreated: false,
     fluidSimulation: false,
     issues:
-      Object.freeze([])
+      deepFreeze([])
   });
 }
 
@@ -458,16 +561,14 @@ export function getHEarthFoamContactGeometryContract() {
       H_EARTH_3D_GEOMETRY_FOAM_PROVIDER_SOURCE_FILE,
     profile:
       H_EARTH_3D_FOAM_CONTACT_NUMERIC_CONSTRUCTION_PROFILE,
-    nativeGeometry:
-      true,
+    sharedBoundaryContractId:
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+    nativeGeometry: true,
     admissionAuthority:
       'WEST_ONLY',
-    fluidSimulation:
-      false,
-    visualPassClaim:
-      false,
-    productionClaim:
-      false
+    fluidSimulation: false,
+    visualPassClaim: false,
+    productionClaim: false
   });
 }
 

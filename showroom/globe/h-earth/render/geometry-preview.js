@@ -1,58 +1,10 @@
 /**
  * /showroom/globe/h-earth/render/geometry-preview.js
- * COMPLETE RENEWED FILE CANDIDATE
+ * COMPLETE REPLACEMENT CANDIDATE
  *
- * H_EARTH_3D_GEOMETRY_PREVIEW_FILE_RENEWAL_STEP_034O_6_PREVIEW_PACKET_001_WET_SAND_PROVIDER_TRANSLATION_v1
- *
- * Renews:
- * H_EARTH_3D_GEOMETRY_PREVIEW_FILE_BIRTH_STEP_034O_PREVIEW_PROVIDER_INSPECTION_v1
- *
- * Layer:
- * H-Earth Layer 4 · Showroom Execution Corridor
- *
- * Role:
- * PACKET_001_WET_SAND_PROVIDER_TRANSLATION_AND_PREVIEW_CONSTRUCTION
- *
- * Purpose:
- * Consume one lawful Packet 001 wet-sand semantic source-resolution result and
- * one lawful environment-owned wet-sand numeric construction profile, then
- * translate those two controlling seam occurrences into the exact callable
- * shape required by the existing ground provider and invoke that provider
- * exactly once for preview-only construction.
- *
- * This file owns:
- * - preview translation input validation
- * - Packet 001 / environment correspondence checks
- * - provisional lattice-policy correspondence checks
- * - deterministic height-law translation into provider-facing descriptor form
- * - exact provider-call payload construction
- * - preview-only provider invocation
- * - exact provider-result validation plus preview-specific containment checks
- * - bounded preview result construction
- * - preview translation receipt
- *
- * This file does not own:
- * - Packet 001 semantic source resolution authority
- * - environment numeric-profile authority
- * - provider selection authority
- * - provider implementation authority
- * - West admission
- * - admitted-geometry identity
- * - geometry-index mutation
- * - correspondence registration
- * - compositor node creation
- * - render-instance creation
- * - renderer activation
- * - runtime execution
- * - action execution
- * - readout construction
- * - receipt issuance
- * - persistence
- * - validation
- * - production
- * - deployment
- * - visual-pass approval
- * - matrix collapse
+ * Preserves the Packet 001 wet-sand translation role while passing the exact
+ * environment-owned shoreline occurrence and executable world translation to
+ * the existing ground provider.
  */
 
 import {
@@ -63,7 +15,10 @@ import {
 import {
   H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
   H_EARTH_3D_WET_SAND_NUMERIC_CONSTRUCTION_PROFILE,
-  evaluateHEarth3DWetSandNumericConstructionProfile
+  H_EARTH_3D_SHARED_SHORELINE_BOUNDARY,
+  H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+  evaluateHEarth3DWetSandNumericConstructionProfile,
+  evaluateHEarth3DSharedShorelineBoundary
 } from '../environment.js';
 
 import {
@@ -102,11 +57,7 @@ const EXPECTED_ZONE_ID =
 const EXPECTED_REGION_ID =
   'FOREGROUND_INSPECTION_GROUND';
 
-const EXPECTED_PROVIDER_ROLE =
-  'GROUND';
-
-const DEFAULT_SOURCE_OBJECT_ID =
-  EXPECTED_SOURCE_OBJECT_ID;
+const EXPECTED_PROVIDER_ROLE = 'GROUND';
 
 const DEFAULT_REQUEST_PURPOSE =
   'WET_SAND_GEOMETRY_PREVIEW';
@@ -116,7 +67,7 @@ const DEFAULT_REQUEST_ID =
 
 const EMPTY_FROZEN_ARRAY = Object.freeze([]);
 
-function deepFreeze(value) {
+function deepFreeze(value, seen = new WeakSet()) {
   if (
     value === null ||
     typeof value !== 'object' ||
@@ -124,43 +75,39 @@ function deepFreeze(value) {
   ) {
     return value;
   }
-
-  for (const nestedValue of Object.values(value)) {
-    deepFreeze(nestedValue);
+  if (seen.has(value)) {
+    return value;
   }
-
+  seen.add(value);
+  for (const nestedValue of Object.values(value)) {
+    deepFreeze(nestedValue, seen);
+  }
   return Object.freeze(value);
 }
 
 function isPlainRecord(value) {
+  if (
+    value === null ||
+    typeof value !== 'object' ||
+    Array.isArray(value)
+  ) {
+    return false;
+  }
+  const prototype = Object.getPrototypeOf(value);
   return (
-    value !== null &&
-    typeof value === 'object' &&
-    Array.isArray(value) === false &&
-    Object.getPrototypeOf(value) === Object.prototype
+    prototype === Object.prototype ||
+    prototype === null
   );
 }
 
 function isFiniteNumber(value) {
-  return typeof value === 'number' && Number.isFinite(value);
+  return typeof value === 'number' &&
+    Number.isFinite(value);
 }
 
 function isNonEmptyString(value) {
-  return typeof value === 'string' && value.trim().length > 0;
-}
-
-function normalizeRequiredString(value) {
-  return isNonEmptyString(value)
-    ? value.trim()
-    : null;
-}
-
-function normalizeOptionalString(value) {
-  if (value === undefined || value === null) {
-    return null;
-  }
-
-  return normalizeRequiredString(value);
+  return typeof value === 'string' &&
+    value.trim().length > 0;
 }
 
 function arraysEqual(left, right) {
@@ -168,7 +115,9 @@ function arraysEqual(left, right) {
     Array.isArray(left) &&
     Array.isArray(right) &&
     left.length === right.length &&
-    left.every((value, index) => value === right[index])
+    left.every(
+      (value, index) => value === right[index]
+    )
   );
 }
 
@@ -180,51 +129,71 @@ function clamp(value, minimum, maximum) {
 }
 
 function freezeIssues(issues) {
-  return Object.freeze(
-    issues.map((issue) =>
-      Object.freeze({
-        code: issue.code,
-        message: issue.message,
-        field: issue.field ?? null,
-        expected: issue.expected ?? null,
-        actual: issue.actual ?? null,
-        details: issue.details ?? null
-      })
-    )
+  return deepFreeze(
+    issues.map((issue) => ({
+      code: issue.code,
+      message: issue.message,
+      field: issue.field ?? null,
+      expected: issue.expected ?? null,
+      actual: issue.actual ?? null,
+      details: issue.details ?? null
+    }))
   );
+}
+
+function normalizeInput(input) {
+  return deepFreeze({
+    sourceObjectId:
+      isNonEmptyString(input?.sourceObjectId)
+        ? input.sourceObjectId.trim()
+        : EXPECTED_SOURCE_OBJECT_ID,
+    requestedPurpose:
+      isNonEmptyString(input?.requestedPurpose)
+        ? input.requestedPurpose.trim()
+        : DEFAULT_REQUEST_PURPOSE,
+    requestId:
+      isNonEmptyString(input?.requestId)
+        ? input.requestId.trim()
+        : DEFAULT_REQUEST_ID,
+    shorelineBoundary:
+      input?.shorelineBoundary ??
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
+  });
 }
 
 function buildRejectedResult({
   sourceObjectId = null,
   requestId = null,
   requestedPurpose = null,
+  shorelineBoundary = null,
   issues = []
 }) {
-  return Object.freeze({
+  return deepFreeze({
     ok: false,
     status:
       'H_EARTH_WET_SAND_PREVIEW_TRANSLATION_REJECTED',
-
     contractId:
       H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
-
     requestId,
     providerRequestId: null,
     resolutionReceiptId: null,
-
+    requestedPurpose,
     sourceObjectId,
+    sourceObjectIds: EMPTY_FROZEN_ARRAY,
     sourceZoneIds: EMPTY_FROZEN_ARRAY,
     latticeRegionIds: EMPTY_FROZEN_ARRAY,
-
     profileId: null,
-
+    shorelineBoundary:
+      shorelineBoundary ?? null,
+    shorelineBoundaryId:
+      shorelineBoundary?.boundaryId ?? null,
+    shorelineBoundaryContractId:
+      shorelineBoundary?.boundaryContractId ?? null,
     translationReceipt: null,
     providerInputReceipt: null,
     providerResult: null,
-
     primitives: EMPTY_FROZEN_ARRAY,
     bounds: null,
-
     admitted: false,
     WestAdmissionPerformed: false,
     geometryIndexMutated: false,
@@ -232,694 +201,179 @@ function buildRejectedResult({
     renderInstanceCreated: false,
     worldTranslationApplied: false,
     localHeightFieldConstructionVerified: false,
-
     issues: freezeIssues(issues)
-  });
-}
-
-function buildNormalizedConvenienceInput(input) {
-  return Object.freeze({
-    sourceObjectId:
-      normalizeRequiredString(input?.sourceObjectId) ??
-      DEFAULT_SOURCE_OBJECT_ID,
-
-    requestedPurpose:
-      normalizeRequiredString(input?.requestedPurpose) ??
-      DEFAULT_REQUEST_PURPOSE,
-
-    requestId:
-      normalizeOptionalString(input?.requestId) ??
-      DEFAULT_REQUEST_ID
   });
 }
 
 function hashStringToUnitFloat(value) {
   let hash = 2166136261;
-
   for (let index = 0; index < value.length; index += 1) {
     hash ^= value.charCodeAt(index);
     hash = Math.imul(hash, 16777619);
   }
-
   return (hash >>> 0) / 4294967295;
-}
-
-function hashStringToRadians(value) {
-  return hashStringToUnitFloat(value) * Math.PI * 2;
 }
 
 function buildPhaseContext(phaseSeed) {
   const basePhase =
-    hashStringToRadians(phaseSeed);
-
+    hashStringToUnitFloat(phaseSeed) *
+    Math.PI *
+    2;
   return deepFreeze({
     phaseSeed,
     basePhase,
-    phaseX:
-      basePhase,
-    phaseZ:
-      basePhase / 2
+    phaseX: basePhase,
+    phaseZ: basePhase / 2
   });
 }
 
-function buildPreviewPrimitiveId(packet001Result) {
+function normalizeAxisCoordinate(
+  value,
+  minimum,
+  maximum
+) {
+  const span = maximum - minimum;
+  return isFiniteNumber(span) && span > 0
+    ? (value - minimum) / span
+    : 0;
+}
+
+function buildHeightFieldDescriptor(
+  wetSandProfile
+) {
+  const xAxis =
+    wetSandProfile.samplingPolicy.xAxis;
+  const zAxis =
+    wetSandProfile.samplingPolicy.zAxis;
+  const elevation =
+    wetSandProfile.elevationIntent;
+  const law =
+    wetSandProfile.heightLaw;
+  const phase =
+    buildPhaseContext(
+      law.microRelief.phaseSeed
+    );
+
+  return deepFreeze({
+    descriptorId:
+      `${wetSandProfile.profileId}:HEIGHT_FIELD_DESCRIPTOR`,
+    descriptorType:
+      'HEIGHT_FIELD',
+    coordinateSpace:
+      wetSandProfile.coordinatePolicy
+        .descriptorCoordinateSpace,
+    xDomain: deepFreeze({
+      minimum: xAxis.minimum,
+      maximum: xAxis.maximum,
+      topology: 'OPEN'
+    }),
+    zDomain: deepFreeze({
+      minimum: zAxis.minimum,
+      maximum: zAxis.maximum,
+      topology: 'OPEN'
+    }),
+    evaluator(localX, localZ) {
+      const normalizedX =
+        normalizeAxisCoordinate(
+          localX,
+          xAxis.minimum,
+          xAxis.maximum
+        );
+      const normalizedZ =
+        normalizeAxisCoordinate(
+          localZ,
+          zAxis.minimum,
+          zAxis.maximum
+        );
+
+      const gradient =
+        law.gradient.coefficient *
+        normalizedZ;
+
+      const microRelief =
+        law.microRelief.amplitude *
+        Math.sin(
+          normalizedX *
+          Math.PI *
+          law.microRelief.frequencyX +
+          phase.phaseX
+        ) *
+        Math.sin(
+          normalizedZ *
+          Math.PI *
+          law.microRelief.frequencyZ +
+          phase.phaseZ
+        );
+
+      return clamp(
+        elevation.baseElevation +
+          gradient +
+          microRelief,
+        elevation.minimumHeightClamp,
+        elevation.maximumHeightClamp
+      );
+    },
+    metadata: deepFreeze({
+      profileId:
+        wetSandProfile.profileId,
+      lawId:
+        law.lawId,
+      phaseSeed:
+        law.microRelief.phaseSeed,
+      sampledElevationValuesCreatedHere:
+        true
+    })
+  });
+}
+
+function buildPreviewPrimitiveId(
+  packet001Result
+) {
   return [
     'H_EARTH_WET_SAND_PREVIEW_PRIMITIVE',
     packet001Result.providerRequestId
   ].join(':');
 }
 
-function normalizeAxisCoordinate(value, minimum, maximum) {
-  const span =
-    maximum - minimum;
-
-  if (!isFiniteNumber(span) || span <= 0) {
-    return 0;
-  }
-
-  return (value - minimum) / span;
-}
-
-export function checkHEarthWetSandPreviewTranslationInput(input) {
-  const issues = [];
-
-  if (!isPlainRecord(input)) {
-    return Object.freeze({
-      ok: false,
-      status:
-        'H_EARTH_WET_SAND_PREVIEW_TRANSLATION_INPUT_REJECTED',
-
-      normalizedInput:
-        buildNormalizedConvenienceInput({}),
-
-      issues: freezeIssues([
-        {
-          code: 'PREVIEW_TRANSLATION_INPUT_NOT_RECORD',
-          message:
-            'Preview translation input must be a strict plain-record object.'
-        }
-      ])
-    });
-  }
-
-  const allowedInputKeys = Object.freeze([
-    'sourceObjectId',
-    'requestedPurpose',
-    'requestId'
-  ]);
-
-  const allowedInputKeySet =
-    new Set(allowedInputKeys);
-
-  for (const key of Object.keys(input)) {
-    if (!allowedInputKeySet.has(key)) {
-      issues.push({
-        code: 'UNKNOWN_PREVIEW_INPUT_KEY_REJECTED',
-        message:
-          'Preview translation accepts only declared input keys.',
-        field: key
-      });
-    }
-  }
-
-  const normalizedInput =
-    buildNormalizedConvenienceInput(input);
-
-  if (!normalizedInput.sourceObjectId) {
-    issues.push({
-      code: 'SOURCE_OBJECT_ID_MISSING',
-      message:
-        'sourceObjectId is required.',
-      field: 'sourceObjectId'
-    });
-  }
-
-  if (!normalizedInput.requestedPurpose) {
-    issues.push({
-      code: 'REQUEST_PURPOSE_MISSING',
-      message:
-        'requestedPurpose is required.',
-      field: 'requestedPurpose'
-    });
-  }
-
-  if (!normalizedInput.requestId) {
-    issues.push({
-      code: 'REQUEST_ID_MISSING',
-      message:
-        'requestId is required.',
-      field: 'requestId'
-    });
-  }
-
-  return Object.freeze({
-    ok: issues.length === 0,
-
-    status:
-      issues.length === 0
-        ? 'H_EARTH_WET_SAND_PREVIEW_TRANSLATION_INPUT_ACCEPTED'
-        : 'H_EARTH_WET_SAND_PREVIEW_TRANSLATION_INPUT_REJECTED',
-
-    normalizedInput,
-    issues: freezeIssues(issues)
-  });
-}
-
-export function evaluateHEarthWetSandPreviewCorrespondence({
-  packet001Result,
-  wetSandProfile
-}) {
-  const issues = [];
-
-  if (!isPlainRecord(packet001Result)) {
-    issues.push({
-      code: 'PACKET_001_RESULT_NOT_RECORD',
-      message:
-        'packet001Result must be a plain-record object.',
-      field: 'packet001Result'
-    });
-  }
-
-  if (!isPlainRecord(wetSandProfile)) {
-    issues.push({
-      code: 'WET_SAND_PROFILE_NOT_RECORD',
-      message:
-        'wetSandProfile must be a plain-record object.',
-      field: 'wetSandProfile'
-    });
-  }
-
-  if (issues.length > 0) {
-    return Object.freeze({
-      ok: false,
-      status:
-        'H_EARTH_WET_SAND_PREVIEW_CORRESPONDENCE_REJECTED',
-      issues: freezeIssues(issues)
-    });
-  }
-
-  const profileEvaluation =
-    evaluateHEarth3DWetSandNumericConstructionProfile(
-      wetSandProfile
-    );
-
-  const regionIds =
-    Array.isArray(
-      packet001Result?.latticeSelection?.regionIds
-    )
-      ? packet001Result.latticeSelection.regionIds
-      : null;
-
-  const packetRows =
-    Array.isArray(
-      packet001Result?.latticeSelection?.rows
-    )
-      ? packet001Result.latticeSelection.rows
-      : null;
-
-  const packetColumns =
-    Array.isArray(
-      packet001Result?.latticeSelection?.preferredColumns
-    )
-      ? packet001Result.latticeSelection.preferredColumns
-      : null;
-
-  const packetProviderImplementationFile =
-    packet001Result?.providerSelection?.providerImplementationFile ??
-    null;
-
-  const packetProviderImplementationContractId =
-    packet001Result?.providerSelection?.providerImplementationContractId ??
-    null;
-
-  const profileProviderImplementationFile =
-    wetSandProfile?.semanticDependencies?.providerImplementationFile ??
-    null;
-
-  const profileProviderImplementationContractId =
-    wetSandProfile?.semanticDependencies?.providerImplementationContractId ??
-    null;
-
-  const packetZoneId =
-    packet001Result?.sourceResolution?.zoneId ?? null;
-
-  if (packet001Result.ok !== true) {
-    issues.push({
-      code: 'PACKET_001_RESULT_NOT_OK',
-      message:
-        'Packet 001 result must be lawful before preview translation.',
-      details: packet001Result?.status ?? null
-    });
-  }
-
-  if (
-    packet001Result.contractId !==
-    EXPECTED_PACKET_001_CONTRACT_ID
-  ) {
-    issues.push({
-      code: 'PACKET_001_CONTRACT_ID_MISMATCH',
-      message:
-        'Packet 001 contract ID does not match the expected controlling occurrence.',
-      expected:
-        EXPECTED_PACKET_001_CONTRACT_ID,
-      actual:
-        packet001Result.contractId ?? null
-    });
-  }
-
-  if (
-    profileEvaluation.eligible !== true
-  ) {
-    issues.push({
-      code: 'WET_SAND_PROFILE_NOT_ELIGIBLE',
-      message:
-        'Environment wet-sand numeric construction profile must be eligible.',
-      details: profileEvaluation
-    });
-  }
-
-  if (
-    wetSandProfile.profileId !==
-    EXPECTED_ENVIRONMENT_PROFILE_ID
-  ) {
-    issues.push({
-      code: 'WET_SAND_PROFILE_ID_MISMATCH',
-      message:
-        'The supplied wet-sand profile is not the controlling environment occurrence.',
-      expected:
-        EXPECTED_ENVIRONMENT_PROFILE_ID,
-      actual:
-        wetSandProfile.profileId ?? null
-    });
-  }
-
-  if (
-    packet001Result.sourceObjectId !==
-      wetSandProfile.sourceObjectId ||
-    packet001Result.sourceObjectId !==
-      EXPECTED_SOURCE_OBJECT_ID
-  ) {
-    issues.push({
-      code: 'SOURCE_OBJECT_ID_MISMATCH',
-      message:
-        'Packet 001 source object must match both the expected source object and the environment wet-sand profile.',
-      expected:
-        EXPECTED_SOURCE_OBJECT_ID,
-      actual:
-        packet001Result.sourceObjectId ?? null
-    });
-  }
-
-  if (
-    packetZoneId !==
-      wetSandProfile.primaryZoneId ||
-    packetZoneId !==
-      EXPECTED_ZONE_ID
-  ) {
-    issues.push({
-      code: 'ZONE_ID_MISMATCH',
-      message:
-        'Packet 001 zone identity must match both the expected zone and the environment wet-sand profile.',
-      expected:
-        EXPECTED_ZONE_ID,
-      actual:
-        packetZoneId
-    });
-  }
-
-  if (
-    wetSandProfile.regionId !==
-    EXPECTED_REGION_ID
-  ) {
-    issues.push({
-      code: 'PROFILE_REGION_ID_MISMATCH',
-      message:
-        'Environment wet-sand profile regionId must match the expected region.',
-      expected:
-        EXPECTED_REGION_ID,
-      actual:
-        wetSandProfile.regionId ?? null
-    });
-  }
-
-  if (
-    !regionIds ||
-    !regionIds.includes(
-      wetSandProfile.regionId
-    )
-  ) {
-    issues.push({
-      code: 'REGION_ID_NOT_CONTAINED',
-      message:
-        'Packet 001 lattice region IDs do not contain the environment wet-sand region.',
-      expected:
-        wetSandProfile.regionId,
-      actual:
-        regionIds
-    });
-  }
-
-  if (
-    !arraysEqual(
-      packetRows,
-      wetSandProfile.latticeDerivation?.rowIndices
-    )
-  ) {
-    issues.push({
-      code: 'ROW_INDICES_MISMATCH',
-      message:
-        'Packet 001 rows do not match the environment wet-sand profile row indices.',
-      expected:
-        wetSandProfile.latticeDerivation?.rowIndices ?? null,
-      actual:
-        packetRows
-    });
-  }
-
-  if (
-    !arraysEqual(
-      packetColumns,
-      wetSandProfile.latticeDerivation?.columnIndices
-    )
-  ) {
-    issues.push({
-      code: 'COLUMN_INDICES_MISMATCH',
-      message:
-        'Packet 001 preferred columns do not match the environment wet-sand profile column indices.',
-      expected:
-        wetSandProfile.latticeDerivation?.columnIndices ?? null,
-      actual:
-        packetColumns
-    });
-  }
-
-  if (
-    packet001Result?.providerInput?.surfaceFamily !==
-    'wetSand'
-  ) {
-    issues.push({
-      code: 'SURFACE_FAMILY_MISMATCH',
-      message:
-        'Packet 001 surfaceFamily must be wetSand.',
-      expected: 'wetSand',
-      actual:
-        packet001Result?.providerInput?.surfaceFamily ?? null
-    });
-  }
-
-  if (
-    packet001Result?.providerInput?.primitiveIntent !==
-    'contouredTerrainBand'
-  ) {
-    issues.push({
-      code: 'PRIMITIVE_INTENT_MISMATCH',
-      message:
-        'Packet 001 primitiveIntent must be contouredTerrainBand.',
-      expected:
-        'contouredTerrainBand',
-      actual:
-        packet001Result?.providerInput?.primitiveIntent ?? null
-    });
-  }
-
-  if (
-    wetSandProfile?.constructionStrategy !==
-    'HEIGHT_FIELD'
-  ) {
-    issues.push({
-      code: 'CONSTRUCTION_STRATEGY_MISMATCH',
-      message:
-        'Environment wet-sand constructionStrategy must be HEIGHT_FIELD.',
-      expected: 'HEIGHT_FIELD',
-      actual:
-        wetSandProfile?.constructionStrategy ?? null
-    });
-  }
-
-  if (
-    packet001Result?.providerId !==
-    wetSandProfile?.semanticDependencies?.providerId
-  ) {
-    issues.push({
-      code: 'PROVIDER_ID_MISMATCH',
-      message:
-        'Packet 001 providerId does not match the environment semantic dependency providerId.',
-      expected:
-        wetSandProfile?.semanticDependencies?.providerId ?? null,
-      actual:
-        packet001Result?.providerId ?? null
-    });
-  }
-
-  if (
-    packetProviderImplementationFile !==
-      EXPECTED_PROVIDER_IMPLEMENTATION_FILE ||
-    profileProviderImplementationFile !==
-      EXPECTED_PROVIDER_IMPLEMENTATION_FILE
-  ) {
-    issues.push({
-      code: 'PROVIDER_IMPLEMENTATION_FILE_MISMATCH',
-      message:
-        'Packet 001 and environment profile must both target the controlling provider implementation file.',
-      expected:
-        EXPECTED_PROVIDER_IMPLEMENTATION_FILE,
-      actual:
-        deepFreeze({
-          packet001:
-            packetProviderImplementationFile,
-          environment:
-            profileProviderImplementationFile
-        })
-    });
-  }
-
-  if (
-    packetProviderImplementationContractId !==
-      EXPECTED_PROVIDER_IMPLEMENTATION_CONTRACT_ID ||
-    profileProviderImplementationContractId !==
-      EXPECTED_PROVIDER_IMPLEMENTATION_CONTRACT_ID
-  ) {
-    issues.push({
-      code: 'PROVIDER_IMPLEMENTATION_CONTRACT_ID_MISMATCH',
-      message:
-        'Packet 001 and environment profile must both target the controlling provider implementation contract.',
-      expected:
-        EXPECTED_PROVIDER_IMPLEMENTATION_CONTRACT_ID,
-      actual:
-        deepFreeze({
-          packet001:
-            packetProviderImplementationContractId,
-          environment:
-            profileProviderImplementationContractId
-        })
-    });
-  }
-
-  return Object.freeze({
-    ok: issues.length === 0,
-
-    status:
-      issues.length === 0
-        ? 'H_EARTH_WET_SAND_PREVIEW_CORRESPONDENCE_ACCEPTED'
-        : 'H_EARTH_WET_SAND_PREVIEW_CORRESPONDENCE_REJECTED',
-
-    issues: freezeIssues(issues)
-  });
-}
-
-function buildHeightFieldDescriptor(wetSandProfile) {
-  const xAxis =
-    wetSandProfile.samplingPolicy.xAxis;
-
-  const zAxis =
-    wetSandProfile.samplingPolicy.zAxis;
-
-  const phaseContext =
-    buildPhaseContext(
-      wetSandProfile.heightLaw.microRelief.phaseSeed
-    );
-
-  const xMinimum =
-    xAxis.minimum;
-  const xMaximum =
-    xAxis.maximum;
-  const zMinimum =
-    zAxis.minimum;
-  const zMaximum =
-    zAxis.maximum;
-
-  const baseElevation =
-    wetSandProfile.elevationIntent.baseElevation;
-  const minimumHeightClamp =
-    wetSandProfile.elevationIntent.minimumHeightClamp;
-  const maximumHeightClamp =
-    wetSandProfile.elevationIntent.maximumHeightClamp;
-  const gradientCoefficient =
-    wetSandProfile.heightLaw.gradient.coefficient;
-  const microAmplitude =
-    wetSandProfile.heightLaw.microRelief.amplitude;
-  const frequencyX =
-    wetSandProfile.heightLaw.microRelief.frequencyX;
-  const frequencyZ =
-    wetSandProfile.heightLaw.microRelief.frequencyZ;
-  const phaseX =
-    phaseContext.phaseX;
-  const phaseZ =
-    phaseContext.phaseZ;
-
-  const evaluator = ({
-    x: localX,
-    z: localZ
-  } = {}) => {
-    const normalizedX =
-      normalizeAxisCoordinate(
-        localX,
-        xMinimum,
-        xMaximum
-      );
-
-    const normalizedZ =
-      normalizeAxisCoordinate(
-        localZ,
-        zMinimum,
-        zMaximum
-      );
-
-    const gradientContribution =
-      normalizedZ * gradientCoefficient;
-
-    const microReliefContribution =
-      microAmplitude *
-      Math.sin(
-        (normalizedX * Math.PI * 2 * frequencyX) +
-          phaseX
-      ) *
-      Math.sin(
-        (normalizedZ * Math.PI * 2 * frequencyZ) +
-          phaseZ
-      );
-
-    const unclampedHeight =
-      baseElevation +
-      gradientContribution +
-      microReliefContribution;
-
-    return clamp(
-      unclampedHeight,
-      minimumHeightClamp,
-      maximumHeightClamp
-    );
-  };
-
-  return deepFreeze({
-    descriptorId:
-      `${wetSandProfile.profileId}:HEIGHT_FIELD_DESCRIPTOR`,
-
-    descriptorType:
-      'HEIGHT_FIELD',
-
-    evaluator,
-
-    metadata: deepFreeze({
-      descriptorRole:
-        'TRANSLATED_PREVIEW_HEIGHT_FIELD_DESCRIPTOR',
-      normalizedInputSpace:
-        wetSandProfile.heightLaw.inputSpace,
-      coordinateSpace:
-        wetSandProfile.coordinatePolicy.descriptorCoordinateSpace,
-
-      baseElevation,
-      minimumHeightClamp,
-      maximumHeightClamp,
-
-      shorelineGradient: deepFreeze({
-        axis:
-          wetSandProfile.heightLaw.shorelineAxis,
-        direction:
-          wetSandProfile.heightLaw.shorelineDirection,
-        function:
-          wetSandProfile.heightLaw.gradient.function,
-        coefficient:
-          gradientCoefficient,
-        normalizedCoordinateLaw:
-          'normalizedZ = (localZ - zMinimum) / (zMaximum - zMinimum)',
-        evaluationLaw:
-          'gradientContribution = normalizedZ * coefficient'
-      }),
-
-      microRelief: deepFreeze({
-        function:
-          wetSandProfile.heightLaw.microRelief.function,
-        amplitude:
-          microAmplitude,
-        frequencyX,
-        frequencyZ,
-        phaseSeed:
-          wetSandProfile.heightLaw.microRelief.phaseSeed,
-        numericPhaseContext:
-          phaseContext,
-        evaluationLaw:
-          'microReliefContribution = amplitude * sin((normalizedX * PI * 2 * frequencyX) + phaseX) * sin((normalizedZ * PI * 2 * frequencyZ) + phaseZ)'
-      }),
-
-      evaluationOrder:
-        deepFreeze([
-          ...wetSandProfile.heightLaw.evaluationOrder
-        ]),
-
-      clampLaw:
-        'height = min(max(height, minimumHeightClamp), maximumHeightClamp)',
-
-      localHeightFieldTranslationDefined: true,
-      localHeightFieldConstructionVerified: false,
-      worldTranslationApplied: false
-    }),
-
-    xDomain: deepFreeze({
-      minimum:
-        xMinimum,
-      maximum:
-        xMaximum,
-      topology:
-        'OPEN'
-    }),
-
-    zDomain: deepFreeze({
-      minimum:
-        zMinimum,
-      maximum:
-        zMaximum,
-      topology:
-        'OPEN'
-    })
-  });
-}
-
 function buildProviderDescriptor({
   packet001Result,
-  wetSandProfile
+  wetSandProfile,
+  shorelineBoundary
 }) {
-  const primitiveId =
-    buildPreviewPrimitiveId(
-      packet001Result
-    );
+  const worldTranslation =
+    wetSandProfile.transformIntent
+      .worldTranslation;
 
   return deepFreeze({
     enabled: true,
-    strategy: 'HEIGHT_FIELD',
-
-    primitiveId,
-
+    strategy:
+      H_EARTH_3D_GEOMETRY_GROUND_PROVIDER_ENUMS
+        .groundStrategy.HEIGHT_FIELD,
+    primitiveId:
+      buildPreviewPrimitiveId(
+        packet001Result
+      ),
     semanticRole:
       'PRIMARY_INSPECTION_WET_SAND_GROUND_SURFACE',
-
     materialHint: deepFreeze({
       materialKey:
-        packet001Result.materialIntent.materialKey,
+        packet001Result.materialIntent
+          .materialKey,
       materialIntentId:
         wetSandProfile.materialIntentId
     }),
-
+    source: deepFreeze({
+      sourceType:
+        'H_EARTH_PACKET_001_PLUS_ENVIRONMENT_WET_SAND_PROFILE',
+      packet001ContractId:
+        packet001Result.contractId,
+      environmentContractId:
+        H_EARTH_3D_ENVIRONMENT_CONTRACT_ID,
+      environmentProfileId:
+        wetSandProfile.profileId,
+      shorelineBoundaryId:
+        shorelineBoundary.boundaryId
+    }),
     metadata: deepFreeze({
       requestId:
         packet001Result.requestId,
@@ -930,75 +384,355 @@ function buildProviderDescriptor({
       sourceObjectId:
         packet001Result.sourceObjectId,
       zoneId:
-        packet001Result.sourceResolution.zoneId,
+        packet001Result.sourceResolution
+          .zoneId,
       latticeRegionIds:
-        deepFreeze([
-          ...packet001Result.latticeSelection.regionIds
-        ]),
+        packet001Result.latticeSelection
+          .regionIds,
       latticeRows:
-        deepFreeze([
-          ...packet001Result.latticeSelection.rows
-        ]),
+        packet001Result.latticeSelection
+          .rows,
       latticeColumns:
-        deepFreeze([
-          ...packet001Result.latticeSelection.preferredColumns
-        ]),
+        packet001Result.latticeSelection
+          .preferredColumns,
       sourceRole:
-        packet001Result.providerInput.sourceRole,
+        packet001Result.providerInput
+          .sourceRole,
       inspectionRelevance:
-        packet001Result.providerInput.inspectionRelevance,
+        packet001Result.providerInput
+          .inspectionRelevance,
       surfaceFamily:
-        packet001Result.providerInput.surfaceFamily,
+        packet001Result.providerInput
+          .surfaceFamily,
       primitiveIntent:
-        packet001Result.providerInput.primitiveIntent,
+        packet001Result.providerInput
+          .primitiveIntent,
       depthBand:
-        packet001Result.providerInput.depthBand,
+        packet001Result.providerInput
+          .depthBand,
       renderPriorityHint:
-        packet001Result.providerInput.renderPriorityHint,
+        packet001Result.providerInput
+          .renderPriorityHint,
       packet001ContractId:
         packet001Result.contractId,
       environmentContractId:
         EXPECTED_ENVIRONMENT_CONTRACT_ID,
       environmentProfileId:
         wetSandProfile.profileId,
-
-      worldTranslationDeferred: true,
+      shorelineBoundaryId:
+        shorelineBoundary.boundaryId,
+      shorelineBoundaryContractId:
+        shorelineBoundary.boundaryContractId,
+      shorelineOrientation:
+        shorelineBoundary.orientation,
+      shorelineEndpointIds:
+        shorelineBoundary.endpointIds,
+      worldTranslationDeferred: false,
       worldTranslationIntent:
-        wetSandProfile.transformIntent.worldTranslation,
-      localHeightFieldTranslationDefined: true,
-      localHeightFieldConstructionVerified: false,
+        worldTranslation,
+      worldTranslationApplied: true,
+      localHeightFieldTranslationDefined:
+        true,
+      localHeightFieldConstructionVerified:
+        false,
       worldPositionedPreviewClaimed: false
     }),
-
     flatPlane: null,
-
     heightField: deepFreeze({
       descriptor:
         buildHeightFieldDescriptor(
           wetSandProfile
         ),
       xSampleCount:
-        wetSandProfile.samplingPolicy.xSampleCount,
+        wetSandProfile.samplingPolicy
+          .xSampleCount,
       zSampleCount:
-        wetSandProfile.samplingPolicy.zSampleCount
+        wetSandProfile.samplingPolicy
+          .zSampleCount,
+      shorelineBoundary,
+      worldTranslation
     }),
-
     explicitTriangleMesh: null
+  });
+}
+
+export function checkHEarthWetSandPreviewTranslationInput(
+  input
+) {
+  const issues = [];
+  if (!isPlainRecord(input)) {
+    return deepFreeze({
+      ok: false,
+      status:
+        'H_EARTH_WET_SAND_PREVIEW_TRANSLATION_INPUT_REJECTED',
+      normalizedInput:
+        normalizeInput({}),
+      issues: freezeIssues([
+        {
+          code:
+            'PREVIEW_TRANSLATION_INPUT_NOT_RECORD',
+          message:
+            'Preview translation input must be a plain record.'
+        }
+      ])
+    });
+  }
+
+  const allowedKeys = new Set([
+    'sourceObjectId',
+    'requestedPurpose',
+    'requestId',
+    'shorelineBoundary'
+  ]);
+
+  for (const key of Object.keys(input)) {
+    if (!allowedKeys.has(key)) {
+      issues.push({
+        code:
+          'UNKNOWN_PREVIEW_INPUT_KEY_REJECTED',
+        message:
+          'Preview translation accepts only declared input keys.',
+        field: key
+      });
+    }
+  }
+
+  const normalizedInput =
+    normalizeInput(input);
+
+  if (
+    normalizedInput.sourceObjectId !==
+    EXPECTED_SOURCE_OBJECT_ID
+  ) {
+    issues.push({
+      code:
+        'SOURCE_OBJECT_ID_MISMATCH',
+      message:
+        'Wet-sand preview requires the exact wet-sand source object.',
+      expected:
+        EXPECTED_SOURCE_OBJECT_ID,
+      actual:
+        normalizedInput.sourceObjectId
+    });
+  }
+
+  if (
+    !isNonEmptyString(
+      normalizedInput.requestId
+    )
+  ) {
+    issues.push({
+      code:
+        'REQUEST_ID_MISSING',
+      message:
+        'requestId is required.'
+    });
+  }
+
+  const boundaryEvaluation =
+    evaluateHEarth3DSharedShorelineBoundary(
+      normalizedInput.shorelineBoundary
+    );
+
+  if (
+    boundaryEvaluation.eligible !== true
+  ) {
+    issues.push({
+      code:
+        'SHARED_SHORELINE_BOUNDARY_INVALID',
+      message:
+        'Wet-sand preview requires one lawful environment-owned shoreline boundary.',
+      details:
+        boundaryEvaluation
+    });
+  }
+
+  return deepFreeze({
+    ok: issues.length === 0,
+    status:
+      issues.length === 0
+        ? 'H_EARTH_WET_SAND_PREVIEW_TRANSLATION_INPUT_ACCEPTED'
+        : 'H_EARTH_WET_SAND_PREVIEW_TRANSLATION_INPUT_REJECTED',
+    normalizedInput,
+    issues:
+      freezeIssues(issues)
+  });
+}
+
+export function evaluateHEarthWetSandPreviewCorrespondence({
+  packet001Result,
+  wetSandProfile,
+  shorelineBoundary =
+    H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
+}) {
+  const issues = [];
+
+  const profileEvaluation =
+    evaluateHEarth3DWetSandNumericConstructionProfile(
+      wetSandProfile
+    );
+
+  const boundaryEvaluation =
+    evaluateHEarth3DSharedShorelineBoundary(
+      shorelineBoundary
+    );
+
+  if (
+    packet001Result?.contractId !==
+    EXPECTED_PACKET_001_CONTRACT_ID
+  ) {
+    issues.push({
+      code:
+        'PACKET_001_CONTRACT_ID_MISMATCH',
+      message:
+        'Packet 001 contract identity does not match.',
+      expected:
+        EXPECTED_PACKET_001_CONTRACT_ID,
+      actual:
+        packet001Result?.contractId ?? null
+    });
+  }
+
+  if (
+    packet001Result?.sourceObjectId !==
+    EXPECTED_SOURCE_OBJECT_ID
+  ) {
+    issues.push({
+      code:
+        'PACKET_001_SOURCE_OBJECT_MISMATCH',
+      message:
+        'Packet 001 does not resolve the wet-sand source object.'
+    });
+  }
+
+  if (
+    packet001Result?.sourceResolution
+      ?.zoneId !== EXPECTED_ZONE_ID
+  ) {
+    issues.push({
+      code:
+        'PACKET_001_ZONE_MISMATCH',
+      message:
+        'Packet 001 wet-sand zone identity does not match.'
+    });
+  }
+
+  if (
+    !Array.isArray(
+      packet001Result?.latticeSelection
+        ?.regionIds
+    ) ||
+    !packet001Result.latticeSelection
+      .regionIds.includes(
+        EXPECTED_REGION_ID
+      )
+  ) {
+    issues.push({
+      code:
+        'PACKET_001_REGION_MISMATCH',
+      message:
+        'Packet 001 wet-sand region identity does not match.'
+    });
+  }
+
+  if (
+    packet001Result?.providerSelection
+      ?.providerImplementationFile !==
+      EXPECTED_PROVIDER_IMPLEMENTATION_FILE ||
+    packet001Result?.providerSelection
+      ?.providerImplementationContractId !==
+      EXPECTED_PROVIDER_IMPLEMENTATION_CONTRACT_ID
+  ) {
+    issues.push({
+      code:
+        'GROUND_PROVIDER_SELECTION_MISMATCH',
+      message:
+        'Packet 001 provider selection does not match the existing ground provider.'
+    });
+  }
+
+  if (
+    profileEvaluation.eligible !== true
+  ) {
+    issues.push({
+      code:
+        'WET_SAND_PROFILE_INVALID',
+      message:
+        'The environment wet-sand profile is not eligible.',
+      details:
+        profileEvaluation
+    });
+  }
+
+  if (
+    wetSandProfile?.profileId !==
+    EXPECTED_ENVIRONMENT_PROFILE_ID
+  ) {
+    issues.push({
+      code:
+        'WET_SAND_PROFILE_ID_MISMATCH',
+      message:
+        'The environment wet-sand profile identity does not match.'
+    });
+  }
+
+  if (
+    boundaryEvaluation.eligible !== true ||
+    shorelineBoundary !==
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
+  ) {
+    issues.push({
+      code:
+        'SHARED_BOUNDARY_OCCURRENCE_MISMATCH',
+      message:
+        'Wet-sand construction must consume the exact environment-owned shoreline occurrence.'
+    });
+  }
+
+  if (
+    shorelineBoundary?.sampleCount !==
+    wetSandProfile?.samplingPolicy
+      ?.xSampleCount
+  ) {
+    issues.push({
+      code:
+        'BOUNDARY_X_SAMPLE_COUNT_MISMATCH',
+      message:
+        'The shoreline sample count must equal the wet-sand X sample count.',
+      expected:
+        wetSandProfile?.samplingPolicy
+          ?.xSampleCount ?? null,
+      actual:
+        shorelineBoundary?.sampleCount ??
+        null
+    });
+  }
+
+  return deepFreeze({
+    ok: issues.length === 0,
+    status:
+      issues.length === 0
+        ? 'H_EARTH_WET_SAND_PREVIEW_CORRESPONDENCE_ACCEPTED'
+        : 'H_EARTH_WET_SAND_PREVIEW_CORRESPONDENCE_REJECTED',
+    issues: freezeIssues(issues)
   });
 }
 
 export function translateHEarthWetSandPreviewProviderInput({
   packet001Result,
-  wetSandProfile
+  wetSandProfile,
+  shorelineBoundary =
+    H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
 }) {
   const correspondence =
     evaluateHEarthWetSandPreviewCorrespondence({
       packet001Result,
-      wetSandProfile
+      wetSandProfile,
+      shorelineBoundary
     });
 
   if (!correspondence.ok) {
-    return Object.freeze({
+    return deepFreeze({
       ok: false,
       status:
         'H_EARTH_WET_SAND_PREVIEW_PROVIDER_TRANSLATION_REJECTED',
@@ -1014,100 +748,91 @@ export function translateHEarthWetSandPreviewProviderInput({
     deepFreeze({
       providerId:
         packet001Result.providerId,
-
       providerRole:
         EXPECTED_PROVIDER_ROLE,
-
       sourceZoneIds:
-        Object.freeze([
-          packet001Result.sourceResolution.zoneId
+        deepFreeze([
+          packet001Result.sourceResolution
+            .zoneId
         ]),
-
       sourceObjectIds:
-        Object.freeze([
+        deepFreeze([
           packet001Result.sourceObjectId
         ]),
-
       descriptor:
         buildProviderDescriptor({
           packet001Result,
-          wetSandProfile
+          wetSandProfile,
+          shorelineBoundary
         })
     });
-
-  const providerInputTopLevelKeys =
-    Object.keys(providerInput).sort();
-
-  const expectedTopLevelKeys = Object.freeze([
-    'descriptor',
-    'providerId',
-    'providerRole',
-    'sourceObjectIds',
-    'sourceZoneIds'
-  ]);
 
   const translationReceipt =
     deepFreeze({
       receiptId:
         `${packet001Result.providerRequestId}:PREVIEW_TRANSLATION_RECEIPT`,
-
       status:
         'H_EARTH_WET_SAND_PREVIEW_PROVIDER_TRANSLATION_ACCEPTED',
-
       packet001ContractId:
         packet001Result.contractId,
-
       environmentContractId:
         EXPECTED_ENVIRONMENT_CONTRACT_ID,
-
       environmentProfileId:
         wetSandProfile.profileId,
-
       sourceObjectId:
         packet001Result.sourceObjectId,
-
       sourceZoneIds:
-        Object.freeze([
-          packet001Result.sourceResolution.zoneId
-        ]),
-
+        providerInput.sourceZoneIds,
       latticeRegionIds:
-        Object.freeze([
-          ...packet001Result.latticeSelection.regionIds
-        ]),
-
+        packet001Result.latticeSelection
+          .regionIds,
       latticeRows:
-        Object.freeze([
-          ...packet001Result.latticeSelection.rows
-        ]),
-
+        packet001Result.latticeSelection
+          .rows,
       latticeColumns:
-        Object.freeze([
-          ...packet001Result.latticeSelection.preferredColumns
-        ]),
-
+        packet001Result.latticeSelection
+          .preferredColumns,
       providerImplementationFile:
-        packet001Result.providerSelection.providerImplementationFile,
-
+        packet001Result.providerSelection
+          .providerImplementationFile,
       providerImplementationContractId:
-        packet001Result.providerSelection.providerImplementationContractId,
-
+        packet001Result.providerSelection
+          .providerImplementationContractId,
       topLevelProviderInputKeys:
-        Object.freeze([
-          ...providerInputTopLevelKeys
-        ]),
-
+        deepFreeze(
+          Object.keys(providerInput).sort()
+        ),
       exactTopLevelShapeVerified:
         arraysEqual(
-          providerInputTopLevelKeys,
-          [...expectedTopLevelKeys]
+          Object.keys(providerInput).sort(),
+          [
+            'descriptor',
+            'providerId',
+            'providerRole',
+            'sourceObjectIds',
+            'sourceZoneIds'
+          ]
         ),
-
-      localHeightFieldTranslationDefined: true,
-      localHeightFieldConstructionVerified: false,
-      worldTranslationApplicationPerformed: false,
-      worldPositionedPreviewClaimed: false,
-
+      shorelineBoundaryId:
+        shorelineBoundary.boundaryId,
+      shorelineBoundaryContractId:
+        shorelineBoundary.boundaryContractId,
+      shorelineOrientation:
+        shorelineBoundary.orientation,
+      shorelineEndpointIds:
+        shorelineBoundary.endpointIds,
+      shorelineSampleCount:
+        shorelineBoundary.sampleCount,
+      exactSharedBoundaryOccurrence:
+        true,
+      localHeightFieldTranslationDefined:
+        true,
+      localHeightFieldConstructionVerified:
+        false,
+      worldTranslationApplicationPerformed:
+        true,
+      worldPositionedPreviewClaimed:
+        false,
       admitted: false,
       WestAdmissionPerformed: false,
       geometryIndexMutated: false
@@ -1117,45 +842,41 @@ export function translateHEarthWetSandPreviewProviderInput({
     deepFreeze({
       receiptId:
         `${packet001Result.providerRequestId}:PROVIDER_INPUT_RECEIPT`,
-
       providerId:
         providerInput.providerId,
-
       providerRole:
         providerInput.providerRole,
-
       sourceZoneIds:
         providerInput.sourceZoneIds,
-
       sourceObjectIds:
         providerInput.sourceObjectIds,
-
       descriptorPrimitiveId:
-        providerInput.descriptor.primitiveId,
-
+        providerInput.descriptor
+          .primitiveId,
       descriptorStrategy:
         providerInput.descriptor.strategy,
-
       descriptorSemanticRole:
-        providerInput.descriptor.semanticRole,
-
+        providerInput.descriptor
+          .semanticRole,
       materialHint:
-        providerInput.descriptor.materialHint,
-
+        providerInput.descriptor
+          .materialHint,
+      shorelineBoundaryId:
+        shorelineBoundary.boundaryId,
+      worldTranslation:
+        wetSandProfile.transformIntent
+          .worldTranslation,
       toleranceContextIncluded: false,
       admitted: false
     });
 
-  return Object.freeze({
+  return deepFreeze({
     ok: true,
-
     status:
       'H_EARTH_WET_SAND_PREVIEW_PROVIDER_TRANSLATION_ACCEPTED',
-
     translationReceipt,
     providerInputReceipt,
     providerInput,
-
     issues:
       EMPTY_FROZEN_ARRAY
   });
@@ -1163,223 +884,124 @@ export function translateHEarthWetSandPreviewProviderInput({
 
 function validateGroundProviderPreviewResult({
   providerInput,
-  providerResult
+  providerResult,
+  shorelineBoundary
 }) {
   const issues = [];
 
-  const providerResultLawful =
-    isHEarthGroundProviderResult(providerResult) &&
-    providerResult.valid === true &&
-    providerResult.ineligible === false &&
-    providerResult.fatal === false &&
-    providerResult.constructionStatus ===
+  if (
+    !isHEarthGroundProviderResult(
+      providerResult
+    ) ||
+    providerResult.valid !== true ||
+    providerResult.ineligible !== false ||
+    providerResult.fatal !== false ||
+    providerResult.constructionStatus !==
       H_EARTH_3D_GEOMETRY_GROUND_PROVIDER_ENUMS
-        .constructionStatus
-        .VALID;
-
-  if (providerResultLawful !== true) {
-    issues.push({
-      code: 'GROUND_PROVIDER_RESULT_NOT_LAWFUL',
-      message:
-        'Ground provider result does not satisfy the exact provider result law.',
-      details:
-        providerResult
-    });
-
-    return Object.freeze({
-      ok: false,
-      issues: freezeIssues(issues),
-      primitives: EMPTY_FROZEN_ARRAY,
-      bounds: null
-    });
-  }
-
-  const resultSourceObjectIds =
-    Array.isArray(providerResult.sourceObjectIds)
-      ? providerResult.sourceObjectIds
-      : null;
-
-  const resultSourceZoneIds =
-    Array.isArray(providerResult.sourceZoneIds)
-      ? providerResult.sourceZoneIds
-      : null;
-
-  const resultPrimitives =
-    Array.isArray(providerResult.primitives)
-      ? providerResult.primitives
-      : null;
-
-  const resultBounds =
-    isPlainRecord(providerResult.bounds)
-      ? providerResult.bounds
-      : null;
-
-  if (
-    providerResult.providerId !==
-    providerInput.providerId
+        .constructionStatus.VALID
   ) {
     issues.push({
-      code: 'GROUND_PROVIDER_RESULT_PROVIDER_ID_MISMATCH',
+      code:
+        'GROUND_PROVIDER_RESULT_NOT_LAWFUL',
       message:
-        'Ground provider result providerId does not match the input providerId.',
-      expected:
-        providerInput.providerId,
-      actual:
-        providerResult.providerId ?? null
-    });
-  }
-
-  if (
-    providerResult.providerRole !==
-    providerInput.providerRole
-  ) {
-    issues.push({
-      code: 'GROUND_PROVIDER_RESULT_PROVIDER_ROLE_MISMATCH',
-      message:
-        'Ground provider result providerRole does not match the input providerRole.',
-      expected:
-        providerInput.providerRole,
-      actual:
-        providerResult.providerRole ?? null
+        'Ground provider result does not satisfy the provider-result law.'
     });
   }
 
   if (
     !arraysEqual(
-      resultSourceObjectIds,
+      providerResult?.sourceObjectIds,
       providerInput.sourceObjectIds
     )
   ) {
     issues.push({
-      code: 'GROUND_PROVIDER_RESULT_SOURCE_OBJECT_IDS_MISMATCH',
+      code:
+        'GROUND_PROVIDER_RESULT_SOURCE_OBJECT_IDS_MISMATCH',
       message:
-        'Ground provider result sourceObjectIds do not preserve input provenance.',
-      expected:
-        providerInput.sourceObjectIds,
-      actual:
-        resultSourceObjectIds
+        'Ground provider result does not preserve source-object provenance.'
     });
   }
 
   if (
     !arraysEqual(
-      resultSourceZoneIds,
+      providerResult?.sourceZoneIds,
       providerInput.sourceZoneIds
     )
   ) {
     issues.push({
-      code: 'GROUND_PROVIDER_RESULT_SOURCE_ZONE_IDS_MISMATCH',
+      code:
+        'GROUND_PROVIDER_RESULT_SOURCE_ZONE_IDS_MISMATCH',
       message:
-        'Ground provider result sourceZoneIds do not preserve input provenance.',
-      expected:
-        providerInput.sourceZoneIds,
-      actual:
-        resultSourceZoneIds
+        'Ground provider result does not preserve source-zone provenance.'
     });
   }
+
+  const primitives =
+    Array.isArray(providerResult?.primitives)
+      ? providerResult.primitives
+      : EMPTY_FROZEN_ARRAY;
+
+  const primitive =
+    primitives[0];
 
   if (
-    !resultPrimitives ||
-    resultPrimitives.length === 0
+    primitives.length !== 1 ||
+    primitive?.metadata
+      ?.shorelineBoundaryId !==
+      shorelineBoundary.boundaryId ||
+    primitive?.metadata
+      ?.shorelineBoundaryContractId !==
+      shorelineBoundary.boundaryContractId ||
+    primitive?.metadata
+      ?.worldTranslationApplied !==
+      true
   ) {
     issues.push({
-      code: 'GROUND_PROVIDER_RESULT_PRIMITIVES_MISSING',
+      code:
+        'GROUND_PROVIDER_SHARED_BOUNDARY_CORRESPONDENCE_MISSING',
       message:
-        'Ground provider result must expose one or more preview primitives.'
+        'Wet-sand primitive must preserve the exact shoreline identity and applied world translation.'
     });
   }
 
-  if (!resultBounds) {
-    issues.push({
-      code: 'GROUND_PROVIDER_RESULT_BOUNDS_MISSING',
-      message:
-        'Ground provider result must expose preview bounds.'
-    });
-  }
-
-  const admittedPrimitiveCount =
-    Number.isSafeInteger(
-      providerResult?.account?.admittedPrimitiveCount
-    )
-      ? providerResult.account.admittedPrimitiveCount
-      : null;
-
-  if (
-    admittedPrimitiveCount !== 0
-  ) {
-    issues.push({
-      code: 'GROUND_PROVIDER_RESULT_ADMITTED_PRIMITIVE_COUNT_FORBIDDEN',
-      message:
-        'Ground provider preview result may not report admitted primitives.',
-      expected: 0,
-      actual:
-        admittedPrimitiveCount
-    });
-  }
-
-  if (
-    providerResult.geometryIndexEntryId !== undefined &&
-    providerResult.geometryIndexEntryId !== null
-  ) {
-    issues.push({
-      code: 'GROUND_PROVIDER_RESULT_GEOMETRY_INDEX_ID_FORBIDDEN',
-      message:
-        'Ground provider preview result may not create a geometry-index identity.'
-    });
-  }
-
-  if (
-    providerResult.compositorNodeId !== undefined &&
-    providerResult.compositorNodeId !== null
-  ) {
-    issues.push({
-      code: 'GROUND_PROVIDER_RESULT_COMPOSITOR_NODE_ID_FORBIDDEN',
-      message:
-        'Ground provider preview result may not create a compositor-node identity.'
-    });
-  }
-
-  if (
-    providerResult.renderInstanceId !== undefined &&
-    providerResult.renderInstanceId !== null
-  ) {
-    issues.push({
-      code: 'GROUND_PROVIDER_RESULT_RENDER_INSTANCE_ID_FORBIDDEN',
-      message:
-        'Ground provider preview result may not create a render-instance identity.'
-    });
-  }
-
-  return Object.freeze({
+  return deepFreeze({
     ok: issues.length === 0,
     issues: freezeIssues(issues),
     primitives:
-      resultPrimitives
-        ? deepFreeze([...resultPrimitives])
+      issues.length === 0
+        ? deepFreeze([...primitives])
         : EMPTY_FROZEN_ARRAY,
     bounds:
-      resultBounds
+      issues.length === 0
+        ? providerResult.bounds
+        : null
   });
 }
 
 export function constructHEarthWetSandPreview({
   packet001Result,
-  wetSandProfile
+  wetSandProfile,
+  shorelineBoundary =
+    H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
 }) {
   const translation =
     translateHEarthWetSandPreviewProviderInput({
       packet001Result,
-      wetSandProfile
+      wetSandProfile,
+      shorelineBoundary
     });
 
   if (!translation.ok) {
     return buildRejectedResult({
       sourceObjectId:
-        packet001Result?.sourceObjectId ?? null,
+        packet001Result?.sourceObjectId ??
+        null,
       requestId:
         packet001Result?.requestId ?? null,
       requestedPurpose:
-        packet001Result?.requestedPurpose ?? null,
+        packet001Result?.requestedPurpose ??
+        null,
+      shorelineBoundary,
       issues:
         translation.issues
     });
@@ -1390,14 +1012,15 @@ export function constructHEarthWetSandPreview({
       translation.providerInput
     );
 
-  const providerValidation =
+  const validation =
     validateGroundProviderPreviewResult({
       providerInput:
         translation.providerInput,
-      providerResult
+      providerResult,
+      shorelineBoundary
     });
 
-  if (!providerValidation.ok) {
+  if (!validation.ok) {
     return buildRejectedResult({
       sourceObjectId:
         packet001Result.sourceObjectId,
@@ -1405,87 +1028,95 @@ export function constructHEarthWetSandPreview({
         packet001Result.requestId,
       requestedPurpose:
         packet001Result.requestedPurpose,
+      shorelineBoundary,
       issues:
-        providerValidation.issues
+        validation.issues
     });
   }
 
-  return Object.freeze({
+  return deepFreeze({
     ok: true,
-
     status:
-      'H_EARTH_WET_SAND_PREVIEW_PROVIDER_CONSTRUCTION_COMPLETE',
-
+      'H_EARTH_WET_SAND_PREVIEW_CONSTRUCTION_COMPLETE',
     contractId:
       H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
-
     requestId:
       packet001Result.requestId,
-
     providerRequestId:
       packet001Result.providerRequestId,
-
     resolutionReceiptId:
       packet001Result.resolutionReceiptId,
-
     sourceObjectId:
       packet001Result.sourceObjectId,
-
+    sourceObjectIds:
+      translation.providerInput
+        .sourceObjectIds,
     sourceZoneIds:
-      Object.freeze([
-        packet001Result.sourceResolution.zoneId
-      ]),
-
+      translation.providerInput
+        .sourceZoneIds,
     latticeRegionIds:
-      Object.freeze([
-        ...packet001Result.latticeSelection.regionIds
-      ]),
-
+      packet001Result.latticeSelection
+        .regionIds,
     profileId:
       wetSandProfile.profileId,
-
+    shorelineBoundary,
+    shorelineBoundaryId:
+      shorelineBoundary.boundaryId,
+    shorelineBoundaryContractId:
+      shorelineBoundary.boundaryContractId,
+    shorelineOrientation:
+      shorelineBoundary.orientation,
+    shorelineEndpointIds:
+      shorelineBoundary.endpointIds,
+    shorelineSampleIds:
+      deepFreeze(
+        shorelineBoundary.samples.map(
+          (sample) => sample.sampleId
+        )
+      ),
     translationReceipt:
-      Object.freeze({
-        ...translation.translationReceipt,
-        localHeightFieldConstructionVerified: true
-      }),
-
+      translation.translationReceipt,
     providerInputReceipt:
       translation.providerInputReceipt,
-
     providerResult,
-
     primitives:
-      providerValidation.primitives,
-
+      validation.primitives,
     bounds:
-      providerValidation.bounds,
-
+      validation.bounds,
     admitted: false,
     WestAdmissionPerformed: false,
     geometryIndexMutated: false,
     compositorNodeCreated: false,
     renderInstanceCreated: false,
-    worldTranslationApplied: false,
-    localHeightFieldConstructionVerified: true,
-
+    worldTranslationApplied: true,
+    localHeightFieldConstructionVerified:
+      true,
     issues:
       EMPTY_FROZEN_ARRAY
   });
 }
 
-export function previewHEarthWetSandGeometry(input) {
+export function previewHEarthWetSandGeometry(
+  input
+) {
   const inputCheck =
-    checkHEarthWetSandPreviewTranslationInput(input);
+    checkHEarthWetSandPreviewTranslationInput(
+      input
+    );
 
   if (!inputCheck.ok) {
     return buildRejectedResult({
       sourceObjectId:
-        inputCheck.normalizedInput.sourceObjectId,
+        inputCheck.normalizedInput
+          .sourceObjectId,
       requestId:
         inputCheck.normalizedInput.requestId,
       requestedPurpose:
-        inputCheck.normalizedInput.requestedPurpose,
+        inputCheck.normalizedInput
+          .requestedPurpose,
+      shorelineBoundary:
+        inputCheck.normalizedInput
+          .shorelineBoundary,
       issues:
         inputCheck.issues
     });
@@ -1494,17 +1125,23 @@ export function previewHEarthWetSandGeometry(input) {
   const packet001Result =
     resolveHEarthSourceObjectGeometryRequest({
       sourceObjectId:
-        inputCheck.normalizedInput.sourceObjectId,
+        inputCheck.normalizedInput
+          .sourceObjectId,
       requestedPurpose:
-        inputCheck.normalizedInput.requestedPurpose,
+        inputCheck.normalizedInput
+          .requestedPurpose,
       requestId:
-        inputCheck.normalizedInput.requestId
+        inputCheck.normalizedInput
+          .requestId
     });
 
   return constructHEarthWetSandPreview({
     packet001Result,
     wetSandProfile:
-      H_EARTH_3D_WET_SAND_NUMERIC_CONSTRUCTION_PROFILE
+      H_EARTH_3D_WET_SAND_NUMERIC_CONSTRUCTION_PROFILE,
+    shorelineBoundary:
+      inputCheck.normalizedInput
+        .shorelineBoundary
   });
 }
 
@@ -1512,9 +1149,9 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_BOUNDARIES =
   deepFreeze({
     previewTranslationAuthorityOnly: true,
     previewProviderInvocationOnly: true,
-
     ownsPacket001SemanticResolution: false,
     ownsEnvironmentNumericProfile: false,
+    ownsSharedBoundarySource: false,
     ownsProviderSelectionAuthority: false,
     ownsProviderImplementationAuthority: false,
     ownsWestAdmissionAuthority: false,
@@ -1522,7 +1159,6 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_BOUNDARIES =
     ownsCompositorAuthority: false,
     ownsRendererAuthority: false,
     ownsRuntimeAuthority: false,
-
     performsProviderInvocation: true,
     performsWestAdmission: false,
     mutatesGeometryIndex: false,
@@ -1530,7 +1166,6 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_BOUNDARIES =
     createsRenderInstance: false,
     activatesRenderer: false,
     activatesRuntime: false,
-
     validationClaim: false,
     productionClaim: false,
     deploymentClaim: false,
@@ -1542,34 +1177,30 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT =
   deepFreeze({
     contractId:
       H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
-
     file:
       SOURCE_FILE,
-
     role:
       'PACKET_001_WET_SAND_PROVIDER_TRANSLATION_AND_PREVIEW_CONSTRUCTION',
-
     packet001DependencyContractId:
       EXPECTED_PACKET_001_CONTRACT_ID,
-
     environmentDependencyContractId:
       EXPECTED_ENVIRONMENT_CONTRACT_ID,
-
     environmentProfileId:
       EXPECTED_ENVIRONMENT_PROFILE_ID,
-
+    sharedBoundaryContractId:
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
     providerImplementationFile:
       EXPECTED_PROVIDER_IMPLEMENTATION_FILE,
-
     providerImplementationContractId:
       EXPECTED_PROVIDER_IMPLEMENTATION_CONTRACT_ID,
-
-    directSeamTranslationCallableDefined: true,
-    conveniencePreviewCallableDefined: true,
-    exactTopLevelProviderShapeRequired: true,
+    directSeamTranslationCallableDefined:
+      true,
+    conveniencePreviewCallableDefined:
+      true,
+    exactTopLevelProviderShapeRequired:
+      true,
     exactProviderInvocationCountPolicy:
       'ONE_INVOCATION_PER_SUCCESSFUL_PREVIEW_CONSTRUCTION',
-
     boundary:
       H_EARTH_3D_GEOMETRY_PREVIEW_BOUNDARIES
   });
@@ -1578,36 +1209,48 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_RECEIPT =
   deepFreeze({
     receiptId:
       'H_EARTH_3D_GEOMETRY_PREVIEW_TRANSLATION_RECEIPT_v1',
-
     contractId:
       H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
-
     sourceFile:
       SOURCE_FILE,
-
-    packet001DependencyRecorded: true,
-    environmentDependencyRecorded: true,
-    providerDependencyRecorded: true,
-
-    directSeamTranslationCallableDefined: true,
-    conveniencePreviewCallableDefined: true,
-
-    provisionalLatticePolicyChecksDefined: true,
-    deterministicHeightLawTranslationDefined: true,
-    exactTopLevelProviderInputShapeDefined: true,
-    exactProviderResultValidationDefined: true,
-    previewOnlyContainmentDefined: true,
-
-    localHeightFieldTranslationDefined: true,
-    localHeightFieldConstructionVerified: false,
-    worldTranslationApplicationPerformed: false,
-    worldPositionedPreviewClaimed: false,
-
-    moduleSyntaxVerified: false,
-    importResolutionVerified: false,
-    moduleInitializationVerified: false,
-    isolatedBehaviorVerified: false,
-
+    packet001DependencyRecorded:
+      true,
+    environmentDependencyRecorded:
+      true,
+    providerDependencyRecorded:
+      true,
+    sharedBoundaryDependencyRecorded:
+      true,
+    directSeamTranslationCallableDefined:
+      true,
+    conveniencePreviewCallableDefined:
+      true,
+    provisionalLatticePolicyChecksDefined:
+      true,
+    deterministicHeightLawTranslationDefined:
+      true,
+    exactTopLevelProviderInputShapeDefined:
+      true,
+    exactProviderResultValidationDefined:
+      true,
+    previewOnlyContainmentDefined:
+      true,
+    localHeightFieldTranslationDefined:
+      true,
+    localHeightFieldConstructionVerified:
+      false,
+    worldTranslationApplicationPerformed:
+      true,
+    worldPositionedPreviewClaimed:
+      false,
+    moduleSyntaxVerified:
+      false,
+    importResolutionVerified:
+      false,
+    moduleInitializationVerified:
+      false,
+    isolatedBehaviorVerified:
+      false,
     boundary:
       H_EARTH_3D_GEOMETRY_PREVIEW_BOUNDARIES
   });
@@ -1620,16 +1263,12 @@ export const H_EARTH_3D_GEOMETRY_PREVIEW_AGGREGATE =
   deepFreeze({
     contractId:
       H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID,
-
     contract:
       H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT,
-
     boundaries:
       H_EARTH_3D_GEOMETRY_PREVIEW_BOUNDARIES,
-
     receipt:
       H_EARTH_3D_GEOMETRY_PREVIEW_RECEIPT,
-
     checkHEarthWetSandPreviewTranslationInput,
     evaluateHEarthWetSandPreviewCorrespondence,
     translateHEarthWetSandPreviewProviderInput,

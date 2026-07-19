@@ -1,14 +1,11 @@
 /**
  * /showroom/globe/h-earth/render/geometry-water.js
- * COMPLETE FILE
+ * COMPLETE REPLACEMENT CANDIDATE
  *
- * H_EARTH_3D_GEOMETRY_WATER_PROVIDER_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1
- *
- * Role:
- * Construct one projection-neutral native water-surface occurrence for
- * OBJ_007_WATER_SURFACE_PLANE from the existing object, zone, lattice, and
- * material identities. This file does not own admission, frame assembly,
- * compositor state, renderer materialization, fluid simulation, or visual pass.
+ * Preserves the native water-surface provider role and existing object,
+ * zone, region, and material identities. The landward water edge now uses
+ * the exact environment-owned shoreline occurrence rather than an independent
+ * straight rectangular edge.
  */
 
 import {
@@ -19,63 +16,17 @@ import {
   isHEarthNeutralPrimitiveRecord
 } from './geometry-kernel.js';
 
+import {
+  H_EARTH_3D_SHARED_SHORELINE_BOUNDARY,
+  H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+  evaluateHEarth3DSharedShorelineBoundary
+} from '../environment.js';
+
 export const H_EARTH_3D_GEOMETRY_WATER_PROVIDER_CONTRACT_ID =
   'H_EARTH_3D_GEOMETRY_WATER_PROVIDER_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1';
 
 export const H_EARTH_3D_GEOMETRY_WATER_PROVIDER_SOURCE_FILE =
   '/showroom/globe/h-earth/render/geometry-water.js';
-
-export const H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE =
-  deepFreeze({
-    profileId:
-      'H_EARTH_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE_v1',
-
-    sourceObjectId:
-      'OBJ_007_WATER_SURFACE_PLANE',
-
-    sourceZoneIds:
-      Object.freeze([
-        'ZONE_003_WATER_SURFACE_ZONE'
-      ]),
-
-    latticeRegionIds:
-      Object.freeze([
-        'WATER_SURFACE_PLANE'
-      ]),
-
-    providerId:
-      'H_EARTH_WATER_GEOMETRY_PROVIDER',
-
-    providerRole:
-      'WATER_SURFACE',
-
-    primitiveType:
-      'TRIANGLE_MESH',
-
-    worldBounds:
-      deepFreeze({
-        minimumX: -96,
-        maximumX: 96,
-        minimumZ: -80,
-        maximumZ: -18,
-        elevationY: 0.68
-      }),
-
-    semanticRole:
-      'OPEN_WATER_SURFACE_CONTEXT',
-
-    materialReference:
-      'H_EARTH_MATERIAL_OPEN_WATER',
-
-    materialIntent:
-      'OPEN_WATER',
-
-    fluidSimulation:
-      false,
-
-    nativeGeometryRequired:
-      true
-  });
 
 function deepFreeze(
   value,
@@ -83,24 +34,18 @@ function deepFreeze(
 ) {
   if (
     value === null ||
-    typeof value !== 'object'
+    typeof value !== 'object' ||
+    Object.isFrozen(value)
   ) {
     return value;
   }
-
   if (seen.has(value)) {
     return value;
   }
-
   seen.add(value);
-
   for (const nestedValue of Object.values(value)) {
-    deepFreeze(
-      nestedValue,
-      seen
-    );
+    deepFreeze(nestedValue, seen);
   }
-
   return Object.freeze(value);
 }
 
@@ -112,10 +57,77 @@ function isNonEmptyExactString(value) {
   );
 }
 
+export const H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE =
+  deepFreeze({
+    profileId:
+      'H_EARTH_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE_v1',
+    sourceObjectId:
+      'OBJ_007_WATER_SURFACE_PLANE',
+    sourceZoneIds:
+      deepFreeze([
+        'ZONE_003_WATER_SURFACE_ZONE'
+      ]),
+    latticeRegionIds:
+      deepFreeze([
+        'WATER_SURFACE_PLANE'
+      ]),
+    providerId:
+      'H_EARTH_WATER_GEOMETRY_PROVIDER',
+    providerRole:
+      'WATER_SURFACE',
+    primitiveType:
+      'TRIANGLE_MESH',
+    shorelineBoundaryContractId:
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+    worldBounds:
+      deepFreeze({
+        minimumX: -96,
+        maximumX: 96,
+        minimumZ:
+          Math.min(
+            ...H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
+              .samples.map(
+                (sample) => sample.z
+              )
+          ),
+        maximumZ: -18,
+        elevationY:
+          H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
+            .elevationPolicy.waterElevation
+      }),
+    constructionPolicy:
+      deepFreeze({
+        landwardEdge:
+          'EXACT_SHARED_SHORELINE_SAMPLES',
+        waterwardEdge:
+          'SAME_X_AT_DECLARED_MAXIMUM_Z',
+        orientation:
+          'WEST_TO_EAST',
+        waterSide:
+          'POSITIVE_Z',
+        independentLandwardEdge:
+          false
+      }),
+    semanticRole:
+      'OPEN_WATER_SURFACE_CONTEXT',
+    materialReference:
+      'H_EARTH_MATERIAL_OPEN_WATER',
+    materialIntent:
+      'OPEN_WATER',
+    fluidSimulation:
+      false,
+    nativeGeometryRequired:
+      true
+  });
+
 function makeRejectedResult({
   requestId,
+  shorelineBoundary = null,
   issues
 }) {
+  const profile =
+    H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE;
+
   return deepFreeze({
     ok: false,
     status:
@@ -126,24 +138,26 @@ function makeRejectedResult({
     providerRequestId: null,
     resolutionReceiptId: null,
     sourceObjectId:
-      H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE
-        .sourceObjectId,
+      profile.sourceObjectId,
     sourceObjectIds:
-      Object.freeze([
-        H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE
-          .sourceObjectId
+      deepFreeze([
+        profile.sourceObjectId
       ]),
     sourceZoneIds:
-      H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE
-        .sourceZoneIds,
+      profile.sourceZoneIds,
     latticeRegionIds:
-      H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE
-        .latticeRegionIds,
+      profile.latticeRegionIds,
     profileId:
-      H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE
-        .profileId,
+      profile.profileId,
+    shorelineBoundary:
+      shorelineBoundary ?? null,
+    shorelineBoundaryId:
+      shorelineBoundary?.boundaryId ?? null,
+    shorelineBoundaryContractId:
+      shorelineBoundary?.boundaryContractId ??
+      null,
     primitives:
-      Object.freeze([]),
+      deepFreeze([]),
     bounds: null,
     admitted: false,
     WestAdmissionPerformed: false,
@@ -152,18 +166,97 @@ function makeRejectedResult({
     renderInstanceCreated: false,
     fluidSimulation: false,
     issues:
-      Object.freeze([
-        ...issues
-      ])
+      deepFreeze([...issues])
   });
 }
 
+function boundaryCorrespondenceValid(
+  shorelineBoundary
+) {
+  const evaluation =
+    evaluateHEarth3DSharedShorelineBoundary(
+      shorelineBoundary
+    );
+
+  return (
+    evaluation.eligible === true &&
+    shorelineBoundary ===
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY &&
+    shorelineBoundary.boundaryContractId ===
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID &&
+    shorelineBoundary.orientation ===
+      'WEST_TO_EAST' &&
+    shorelineBoundary.waterSide ===
+      'POSITIVE_Z'
+  );
+}
+
+function buildWaterVertices({
+  shorelineBoundary,
+  elevationY,
+  maximumZ
+}) {
+  const vertices = [];
+
+  shorelineBoundary.samples.forEach(
+    (sample) => {
+      vertices.push(
+        createHEarthVector3(
+          sample.x,
+          elevationY,
+          sample.z
+        ),
+        createHEarthVector3(
+          sample.x,
+          elevationY,
+          maximumZ
+        )
+      );
+    }
+  );
+
+  return vertices;
+}
+
+function buildWaterIndices(sampleCount) {
+  const indices = [];
+
+  for (
+    let sampleIndex = 0;
+    sampleIndex < sampleCount - 1;
+    sampleIndex += 1
+  ) {
+    const firstContact =
+      sampleIndex * 2;
+    const firstWaterward =
+      firstContact + 1;
+    const secondContact =
+      firstContact + 2;
+    const secondWaterward =
+      firstContact + 3;
+
+    indices.push(
+      firstContact,
+      secondWaterward,
+      firstWaterward,
+      firstContact,
+      secondContact,
+      secondWaterward
+    );
+  }
+
+  return indices;
+}
+
 export function constructHEarthWaterSurfaceGeometry({
-  requestId
+  requestId,
+  shorelineBoundary =
+    H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
 } = {}) {
   if (!isNonEmptyExactString(requestId)) {
     return makeRejectedResult({
       requestId: null,
+      shorelineBoundary,
       issues: [
         deepFreeze({
           code:
@@ -175,8 +268,48 @@ export function constructHEarthWaterSurfaceGeometry({
     });
   }
 
+  if (
+    !boundaryCorrespondenceValid(
+      shorelineBoundary
+    )
+  ) {
+    return makeRejectedResult({
+      requestId,
+      shorelineBoundary,
+      issues: [
+        deepFreeze({
+          code:
+            'WATER_SHARED_SHORELINE_BOUNDARY_INVALID',
+          message:
+            'Water construction requires the exact environment-owned shoreline occurrence.'
+        })
+      ]
+    });
+  }
+
   const profile =
     H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE;
+
+  if (
+    shorelineBoundary.samples.some(
+      (sample) =>
+        sample.z >=
+        profile.worldBounds.maximumZ
+    )
+  ) {
+    return makeRejectedResult({
+      requestId,
+      shorelineBoundary,
+      issues: [
+        deepFreeze({
+          code:
+            'WATERWARD_EXTENT_NOT_BEYOND_SHORELINE',
+          message:
+            'The declared waterward extent must remain on the positive-Z side of every shoreline sample.'
+        })
+      ]
+    });
+  }
 
   const providerRequestId =
     `H_EARTH_PROVIDER_REQUEST:${profile.providerId}:${profile.sourceObjectId}:OPEN_WATER_GEOMETRY:${requestId}`;
@@ -187,36 +320,26 @@ export function constructHEarthWaterSurfaceGeometry({
   const primitiveId =
     `H_EARTH_OPEN_WATER_NATIVE_PRIMITIVE:${providerRequestId}`;
 
-  const {
-    minimumX,
-    maximumX,
-    minimumZ,
-    maximumZ,
-    elevationY
-  } = profile.worldBounds;
+  const vertices =
+    buildWaterVertices({
+      shorelineBoundary,
+      elevationY:
+        profile.worldBounds.elevationY,
+      maximumZ:
+        profile.worldBounds.maximumZ
+    });
 
-  const vertices = [
-    createHEarthVector3(
-      minimumX,
-      elevationY,
-      minimumZ
-    ),
-    createHEarthVector3(
-      maximumX,
-      elevationY,
-      minimumZ
-    ),
-    createHEarthVector3(
-      maximumX,
-      elevationY,
-      maximumZ
-    ),
-    createHEarthVector3(
-      minimumX,
-      elevationY,
-      maximumZ
-    )
-  ];
+  const indices =
+    buildWaterIndices(
+      shorelineBoundary.sampleCount
+    );
+
+  const shorelineSampleIds =
+    deepFreeze(
+      shorelineBoundary.samples.map(
+        (sample) => sample.sampleId
+      )
+    );
 
   const construction =
     constructHEarthTriangleMesh({
@@ -225,21 +348,15 @@ export function constructHEarthWaterSurfaceGeometry({
         `${primitiveId}:geometry`,
       primitiveType:
         H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-          .primitiveType
-          .TRIANGLE_MESH,
+          .primitiveType.TRIANGLE_MESH,
       vertices,
-      indices: [
-        0, 2, 1,
-        0, 3, 2
-      ],
+      indices,
       normalMode:
         H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-          .normalMode
-          .FACE_AND_VERTEX,
+          .normalMode.FACE_AND_VERTEX,
       expectedClosure:
         H_EARTH_3D_GEOMETRY_SOUTH_ENUMS
-          .expectedClosure
-          .OPEN_ALLOWED,
+          .expectedClosure.OPEN_ALLOWED,
       semanticRole:
         profile.semanticRole,
       materialHint:
@@ -256,11 +373,15 @@ export function constructHEarthWaterSurfaceGeometry({
       source:
         deepFreeze({
           sourceType:
-            'H_EARTH_NATIVE_WATER_SURFACE_PROFILE',
+            'H_EARTH_SHARED_SHORELINE_DERIVED_WATER_SURFACE',
           profileId:
             profile.profileId,
           contractId:
-            H_EARTH_3D_GEOMETRY_WATER_PROVIDER_CONTRACT_ID
+            H_EARTH_3D_GEOMETRY_WATER_PROVIDER_CONTRACT_ID,
+          shorelineBoundaryId:
+            shorelineBoundary.boundaryId,
+          shorelineBoundaryContractId:
+            shorelineBoundary.boundaryContractId
         }),
       metadata:
         deepFreeze({
@@ -269,7 +390,7 @@ export function constructHEarthWaterSurfaceGeometry({
           providerRole:
             profile.providerRole,
           sourceObjectIds:
-            Object.freeze([
+            deepFreeze([
               profile.sourceObjectId
             ]),
           sourceZoneIds:
@@ -278,6 +399,23 @@ export function constructHEarthWaterSurfaceGeometry({
             profile.latticeRegionIds,
           profileId:
             profile.profileId,
+          shorelineBoundaryId:
+            shorelineBoundary.boundaryId,
+          shorelineBoundaryContractId:
+            shorelineBoundary.boundaryContractId,
+          shorelineOrientation:
+            shorelineBoundary.orientation,
+          shorelineEndpointIds:
+            shorelineBoundary.endpointIds,
+          shorelineSampleIds,
+          shorelineSampleCount:
+            shorelineBoundary.sampleCount,
+          sharedBoundaryOccurrenceConsumed:
+            true,
+          landwardEdgeUsesExactBoundarySamples:
+            true,
+          independentLandwardEdgeGenerated:
+            false,
           nativeWaterSurface:
             true,
           fluidSimulation:
@@ -299,6 +437,7 @@ export function constructHEarthWaterSurfaceGeometry({
   ) {
     return makeRejectedResult({
       requestId,
+      shorelineBoundary,
       issues:
         Array.isArray(construction?.issues)
           ? construction.issues
@@ -327,7 +466,7 @@ export function constructHEarthWaterSurfaceGeometry({
     sourceObjectId:
       profile.sourceObjectId,
     sourceObjectIds:
-      Object.freeze([
+      deepFreeze([
         profile.sourceObjectId
       ]),
     sourceZoneIds:
@@ -336,18 +475,27 @@ export function constructHEarthWaterSurfaceGeometry({
       profile.latticeRegionIds,
     profileId:
       profile.profileId,
+    shorelineBoundary,
+    shorelineBoundaryId:
+      shorelineBoundary.boundaryId,
+    shorelineBoundaryContractId:
+      shorelineBoundary.boundaryContractId,
+    shorelineOrientation:
+      shorelineBoundary.orientation,
+    shorelineEndpointIds:
+      shorelineBoundary.endpointIds,
+    shorelineSampleIds,
     primitive:
       construction.primitiveRecord,
     primitives:
-      Object.freeze([
+      deepFreeze([
         construction.primitiveRecord
       ]),
     bounds:
       construction.geometry.bounds,
     constructionReceipt:
       deepFreeze({
-        nativeGeometry:
-          true,
+        nativeGeometry: true,
         primitiveId,
         sourceObjectId:
           profile.sourceObjectId,
@@ -357,6 +505,12 @@ export function constructHEarthWaterSurfaceGeometry({
           profile.latticeRegionIds,
         materialReference:
           profile.materialReference,
+        shorelineBoundaryId:
+          shorelineBoundary.boundaryId,
+        exactSharedBoundaryOccurrence:
+          true,
+        independentLandwardEdgeGenerated:
+          false,
         fluidSimulation:
           false
       }),
@@ -367,7 +521,7 @@ export function constructHEarthWaterSurfaceGeometry({
     renderInstanceCreated: false,
     fluidSimulation: false,
     issues:
-      Object.freeze([])
+      deepFreeze([])
   });
 }
 
@@ -379,16 +533,14 @@ export function getHEarthWaterSurfaceGeometryContract() {
       H_EARTH_3D_GEOMETRY_WATER_PROVIDER_SOURCE_FILE,
     profile:
       H_EARTH_3D_WATER_SURFACE_NUMERIC_CONSTRUCTION_PROFILE,
-    nativeGeometry:
-      true,
+    sharedBoundaryContractId:
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+    nativeGeometry: true,
     admissionAuthority:
       'WEST_ONLY',
-    fluidSimulation:
-      false,
-    visualPassClaim:
-      false,
-    productionClaim:
-      false
+    fluidSimulation: false,
+    visualPassClaim: false,
+    productionClaim: false
   });
 }
 

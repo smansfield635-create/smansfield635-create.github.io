@@ -1,20 +1,18 @@
 /**
  * /showroom/globe/h-earth/render/shoreline-preview.js
- * COMPLETE FILE
+ * COMPLETE REPLACEMENT CANDIDATE
  *
- * H_EARTH_3D_SHORELINE_PREVIEW_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1
- *
- * Corridor:
- * existing wet-sand preview
- * + native foam-contact geometry
- * + native water-surface geometry
- * -> one projection-neutral three-primitive preview aggregate
- * -> West admission
- * -> Packet 002
- *
- * This file owns aggregation only. It does not own source-object, zone,
- * lattice, material, admission, compositor, renderer, or visual authority.
+ * Preserves aggregation-only authority. This file obtains the one immutable
+ * environment-owned shoreline occurrence, passes that exact occurrence to
+ * wet sand, foam, and water, then rejects aggregation unless all three
+ * preserve the same boundary identity, orientation, endpoints, and samples.
  */
+
+import {
+  H_EARTH_3D_SHARED_SHORELINE_BOUNDARY,
+  H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+  evaluateHEarth3DSharedShorelineBoundary
+} from '../environment.js';
 
 import {
   H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID as
@@ -75,24 +73,18 @@ function deepFreeze(
 ) {
   if (
     value === null ||
-    typeof value !== 'object'
+    typeof value !== 'object' ||
+    Object.isFrozen(value)
   ) {
     return value;
   }
-
   if (seen.has(value)) {
     return value;
   }
-
   seen.add(value);
-
   for (const nestedValue of Object.values(value)) {
-    deepFreeze(
-      nestedValue,
-      seen
-    );
+    deepFreeze(nestedValue, seen);
   }
-
   return Object.freeze(value);
 }
 
@@ -104,8 +96,73 @@ function isNonEmptyExactString(value) {
   );
 }
 
+function arraysEqual(left, right) {
+  return (
+    Array.isArray(left) &&
+    Array.isArray(right) &&
+    left.length === right.length &&
+    left.every(
+      (value, index) => value === right[index]
+    )
+  );
+}
+
+function expectedSampleIds(
+  shorelineBoundary
+) {
+  return shorelineBoundary.samples.map(
+    (sample) => sample.sampleId
+  );
+}
+
+function componentBoundaryCorresponds({
+  component,
+  shorelineBoundary
+}) {
+  const expectedIds =
+    expectedSampleIds(
+      shorelineBoundary
+    );
+
+  return (
+    component?.shorelineBoundary ===
+      shorelineBoundary &&
+    component?.shorelineBoundaryId ===
+      shorelineBoundary.boundaryId &&
+    component?.shorelineBoundaryContractId ===
+      shorelineBoundary.boundaryContractId &&
+    component?.shorelineOrientation ===
+      shorelineBoundary.orientation &&
+    component?.shorelineEndpointIds ===
+      shorelineBoundary.endpointIds &&
+    arraysEqual(
+      component?.shorelineSampleIds,
+      expectedIds
+    ) &&
+    component?.primitives?.[0]
+      ?.metadata
+      ?.shorelineBoundaryId ===
+      shorelineBoundary.boundaryId &&
+    component?.primitives?.[0]
+      ?.metadata
+      ?.shorelineBoundaryContractId ===
+      shorelineBoundary.boundaryContractId &&
+    component?.primitives?.[0]
+      ?.metadata
+      ?.shorelineOrientation ===
+      shorelineBoundary.orientation &&
+    arraysEqual(
+      component?.primitives?.[0]
+        ?.metadata
+        ?.shorelineSampleIds,
+      expectedIds
+    )
+  );
+}
+
 function makeRejectedResult({
   requestId,
+  shorelineBoundary,
   componentResults,
   issues
 }) {
@@ -131,6 +188,13 @@ function makeRejectedResult({
       H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_LATTICE_REGION_IDS,
     profileId:
       'H_EARTH_MINIMUM_NATIVE_SHORELINE_AGGREGATE_PROFILE_v1',
+    shorelineBoundary:
+      shorelineBoundary ?? null,
+    shorelineBoundaryId:
+      shorelineBoundary?.boundaryId ?? null,
+    shorelineBoundaryContractId:
+      shorelineBoundary?.boundaryContractId ??
+      null,
     componentResults:
       deepFreeze(componentResults),
     primitives:
@@ -144,9 +208,7 @@ function makeRejectedResult({
     worldTranslationApplied: false,
     fluidSimulation: false,
     issues:
-      Object.freeze([
-        ...issues
-      ])
+      deepFreeze([...issues])
   });
 }
 
@@ -155,24 +217,35 @@ export function previewHEarthMinimumShorelineGeometry({
     'OBJ_002_FOREGROUND_WET_SAND',
   requestedPurpose =
     'MINIMUM_NATIVE_SHORELINE_GEOMETRY_PREVIEW',
-  requestId
+  requestId,
+  shorelineBoundary =
+    H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
 } = {}) {
+  const boundaryEvaluation =
+    evaluateHEarth3DSharedShorelineBoundary(
+      shorelineBoundary
+    );
+
   if (
     sourceObjectId !==
       'OBJ_002_FOREGROUND_WET_SAND' ||
     requestedPurpose !==
       'MINIMUM_NATIVE_SHORELINE_GEOMETRY_PREVIEW' ||
-    !isNonEmptyExactString(requestId)
+    !isNonEmptyExactString(requestId) ||
+    boundaryEvaluation.eligible !== true ||
+    shorelineBoundary !==
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY
   ) {
     return makeRejectedResult({
       requestId,
+      shorelineBoundary,
       componentResults: {},
       issues: [
         deepFreeze({
           code:
             'MINIMUM_SHORELINE_PREVIEW_INPUT_INVALID',
           message:
-            'The minimum shoreline preview requires the exact wet-sand anchor, purpose, and requestId.'
+            'The minimum shoreline preview requires the exact wet-sand anchor, purpose, requestId, and environment-owned shoreline occurrence.'
         })
       ]
     });
@@ -185,19 +258,22 @@ export function previewHEarthMinimumShorelineGeometry({
       requestedPurpose:
         'WET_SAND_GEOMETRY_PREVIEW',
       requestId:
-        `${requestId}:WET_SAND`
+        `${requestId}:WET_SAND`,
+      shorelineBoundary
     });
 
   const foamResult =
     constructHEarthFoamContactGeometry({
       requestId:
-        `${requestId}:FOAM_CONTACT`
+        `${requestId}:FOAM_CONTACT`,
+      shorelineBoundary
     });
 
   const waterResult =
     constructHEarthWaterSurfaceGeometry({
       requestId:
-        `${requestId}:WATER_SURFACE`
+        `${requestId}:WATER_SURFACE`,
+      shorelineBoundary
     });
 
   const componentResults =
@@ -216,16 +292,21 @@ export function previewHEarthMinimumShorelineGeometry({
     waterResult
   ];
 
+  const componentNames = [
+    'wetSand',
+    'foamContact',
+    'waterSurface'
+  ];
+
   const issues = [];
 
   components.forEach(
-    (
-      component,
-      index
-    ) => {
+    (component, index) => {
       if (
         component?.ok !== true ||
-        !Array.isArray(component.primitives) ||
+        !Array.isArray(
+          component.primitives
+        ) ||
         component.primitives.length !== 1 ||
         !isHEarthNeutralPrimitiveRecord(
           component.primitives[0]
@@ -240,10 +321,33 @@ export function previewHEarthMinimumShorelineGeometry({
               'MINIMUM_SHORELINE_COMPONENT_INVALID',
             message:
               'Every minimum shoreline component must provide one lawful neutral primitive and bounds.',
-            componentIndex:
-              index,
+            component:
+              componentNames[index],
             componentStatus:
-              component?.status ??
+              component?.status ?? null
+          })
+        );
+        return;
+      }
+
+      if (
+        !componentBoundaryCorresponds({
+          component,
+          shorelineBoundary
+        })
+      ) {
+        issues.push(
+          deepFreeze({
+            code:
+              'MINIMUM_SHORELINE_SHARED_BOUNDARY_MISMATCH',
+            message:
+              'Every component must preserve the same shoreline occurrence, identity, orientation, endpoints, and ordered samples.',
+            component:
+              componentNames[index],
+            expectedBoundaryId:
+              shorelineBoundary.boundaryId,
+            actualBoundaryId:
+              component?.shorelineBoundaryId ??
               null
           })
         );
@@ -251,9 +355,24 @@ export function previewHEarthMinimumShorelineGeometry({
     }
   );
 
+  if (
+    wetSandResult?.worldTranslationApplied !==
+    true
+  ) {
+    issues.push(
+      deepFreeze({
+        code:
+          'MINIMUM_SHORELINE_WET_SAND_WORLD_TRANSLATION_NOT_APPLIED',
+        message:
+          'Wet-sand construction must report that its intended world translation was applied.'
+      })
+    );
+  }
+
   if (issues.length > 0) {
     return makeRejectedResult({
       requestId,
+      shorelineBoundary,
       componentResults,
       issues
     });
@@ -281,6 +400,7 @@ export function previewHEarthMinimumShorelineGeometry({
   ) {
     return makeRejectedResult({
       requestId,
+      shorelineBoundary,
       componentResults,
       issues: [
         deepFreeze({
@@ -299,6 +419,13 @@ export function previewHEarthMinimumShorelineGeometry({
   const resolutionReceiptId =
     `H_EARTH_MINIMUM_NATIVE_SHORELINE_RESOLUTION_RECEIPT:${providerRequestId}`;
 
+  const shorelineSampleIds =
+    deepFreeze(
+      expectedSampleIds(
+        shorelineBoundary
+      )
+    );
+
   return deepFreeze({
     ok: true,
     status:
@@ -308,8 +435,7 @@ export function previewHEarthMinimumShorelineGeometry({
     requestId,
     providerRequestId,
     resolutionReceiptId,
-    sourceObjectId:
-      sourceObjectId,
+    sourceObjectId,
     sourceObjectIds:
       H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_OBJECT_IDS,
     sourceZoneIds:
@@ -318,6 +444,16 @@ export function previewHEarthMinimumShorelineGeometry({
       H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_LATTICE_REGION_IDS,
     profileId:
       'H_EARTH_MINIMUM_NATIVE_SHORELINE_AGGREGATE_PROFILE_v1',
+    shorelineBoundary,
+    shorelineBoundaryId:
+      shorelineBoundary.boundaryId,
+    shorelineBoundaryContractId:
+      shorelineBoundary.boundaryContractId,
+    shorelineOrientation:
+      shorelineBoundary.orientation,
+    shorelineEndpointIds:
+      shorelineBoundary.endpointIds,
+    shorelineSampleIds,
     translationReceipt:
       deepFreeze({
         receiptId:
@@ -332,6 +468,17 @@ export function previewHEarthMinimumShorelineGeometry({
           H_EARTH_3D_GEOMETRY_WATER_PROVIDER_CONTRACT_ID,
         kernelFacadeContractId:
           H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_CONTRACT_ID,
+        sharedBoundaryContractId:
+          H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+        shorelineBoundaryId:
+          shorelineBoundary.boundaryId,
+        shorelineOrientation:
+          shorelineBoundary.orientation,
+        shorelineEndpointIds:
+          shorelineBoundary.endpointIds,
+        shorelineSampleIds,
+        exactSharedBoundaryOccurrenceVerified:
+          true,
         sourceObjectIds:
           H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_OBJECT_IDS,
         sourceZoneIds:
@@ -343,6 +490,8 @@ export function previewHEarthMinimumShorelineGeometry({
         nativeFoamGeometry:
           true,
         nativeWaterGeometry:
+          true,
+        wetSandWorldTranslationApplied:
           true,
         fluidSimulation:
           false,
@@ -368,6 +517,10 @@ export function previewHEarthMinimumShorelineGeometry({
           H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_ZONE_IDS,
         latticeRegionIds:
           H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_LATTICE_REGION_IDS,
+        shorelineBoundaryId:
+          shorelineBoundary.boundaryId,
+        sharedBoundaryCorrespondenceVerified:
+          true,
         primitives,
         bounds,
         admitted:
@@ -382,7 +535,7 @@ export function previewHEarthMinimumShorelineGeometry({
     geometryIndexMutated: false,
     compositorNodeCreated: false,
     renderInstanceCreated: false,
-    worldTranslationApplied: false,
+    worldTranslationApplied: true,
     localHeightFieldConstructionVerified:
       wetSandResult
         .localHeightFieldConstructionVerified ===
@@ -390,6 +543,8 @@ export function previewHEarthMinimumShorelineGeometry({
     nativeFoamGeometryConstructed:
       true,
     nativeWaterGeometryConstructed:
+      true,
+    sharedBoundaryCorrespondenceVerified:
       true,
     fluidSimulation: false,
     issues:
@@ -409,18 +564,18 @@ export function getHEarthMinimumShorelinePreviewContract() {
       H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_ZONE_IDS,
     latticeRegionIds:
       H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_LATTICE_REGION_IDS,
-    primitiveCount:
-      3,
-    nativeGeometry:
+    sharedBoundaryContractId:
+      H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+    aggregationAuthorityOnly:
       true,
-    admitted:
+    sharedBoundarySourceAuthority:
       false,
-    fluidSimulation:
-      false,
-    visualPassClaim:
-      false,
-    productionClaim:
-      false
+    primitiveCount: 3,
+    nativeGeometry: true,
+    admitted: false,
+    fluidSimulation: false,
+    visualPassClaim: false,
+    productionClaim: false
   });
 }
 

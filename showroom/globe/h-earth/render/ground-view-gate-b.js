@@ -42,6 +42,11 @@ export const H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS = Object.freeze({
   diagnosticRibbon: 'H_EARTH_GROUND_VIEW_DIAGNOSTIC_SHORELINE_RIBBON'
 });
 
+export const H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION = Object.freeze({
+  classification: 'PHYSICAL_LINEAR_TRIANGLES_APPROXIMATE_NONLINEAR_ANALYTICAL_IMAGE_SUBPATCHES',
+  physicalTrianglesEqualExactNonlinearAnalyticalSurface: false
+});
+
 const EMPTY_FROZEN_ARRAY = Object.freeze([]);
 const TERRAIN_REGION_IDS = Object.freeze([
   'BEACH',
@@ -284,6 +289,8 @@ function createTerrainTopology() {
       faceKeyLaw: 'CELL_KEY_PLUS_FACE_ORDINAL',
       diagonalLaw: 'LOWER_LEFT_TO_UPPER_RIGHT',
       windingLaw: 'POSITIVE_WORLD_Y',
+      analyticalPhysicalDistinction: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.classification,
+      physicalTrianglesEqualExactNonlinearAnalyticalSurface: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.physicalTrianglesEqualExactNonlinearAnalyticalSurface,
       sharedEdgeOwnershipLaw: 'LOWEST_LEXICOGRAPHIC_INCIDENT_FACE_ID',
       vertexTable,
       edgeTable,
@@ -308,7 +315,9 @@ function createTerrainTopology() {
       triangleCount: indices.length / 3,
       singlePhysicalTopology: true,
       terrainRegionIds: TERRAIN_REGION_IDS,
-      deterministic: true
+      deterministic: true,
+      analyticalPhysicalDistinction: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.classification,
+      physicalTrianglesEqualExactNonlinearAnalyticalSurface: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.physicalTrianglesEqualExactNonlinearAnalyticalSurface
     })
   });
 }
@@ -479,7 +488,9 @@ function createWaterTopology() {
       strictOpenWaterOrdering: true,
       noReturnToGamma28ForPositiveR: true,
       diagonalLaw: 'LOWER_LEFT_TO_UPPER_RIGHT',
-      windingLaw: 'POSITIVE_WORLD_Y'
+      windingLaw: 'POSITIVE_WORLD_Y',
+      analyticalPhysicalDistinction: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.classification,
+      physicalTrianglesEqualExactNonlinearAnalyticalSurface: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.physicalTrianglesEqualExactNonlinearAnalyticalSurface
     })
   });
 
@@ -519,7 +530,9 @@ function createWaterTopology() {
       duplicateSeamIdentityCount: 0,
       consumerLocalSeamResourceCount: 0,
       singlePhysicalTopology: true,
-      deterministic: true
+      deterministic: true,
+      analyticalPhysicalDistinction: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.classification,
+      physicalTrianglesEqualExactNonlinearAnalyticalSurface: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.physicalTrianglesEqualExactNonlinearAnalyticalSurface
     })
   });
 }
@@ -672,6 +685,8 @@ export function constructHEarthGroundViewGateBGeometry() {
     vertexBudget: configuration.vertexBudget,
     vertexBudgetPassed: physicalCounts.vertexCount <= configuration.vertexBudget,
     deterministicConstructionIdentity,
+    analyticalPhysicalDistinction: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.classification,
+    physicalTrianglesEqualExactNonlinearAnalyticalSurface: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION.physicalTrianglesEqualExactNonlinearAnalyticalSurface,
     geometryBuffersConstructed: true,
     admissionIntegrated: false,
     routeIntegrated: false,
@@ -721,6 +736,7 @@ export const H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT = deepFreeze({
   neutralPrimitiveCount: 3,
   constructionEntryPoint: 'constructHEarthGroundViewGateBGeometry',
   determinismEntryPoint: 'evaluateHEarthGroundViewGateBDeterminism',
+  analyticalPhysicalDistinction: H_EARTH_GROUND_VIEW_ANALYTICAL_PHYSICAL_DISTINCTION,
   admissionAuthority: false,
   frameAuthority: false,
   compositorAuthority: false,

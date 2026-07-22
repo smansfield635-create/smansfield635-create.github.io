@@ -142,6 +142,93 @@
     CANCELLED: "CANCELLED"
   });
 
+  /*
+   * Additive transactional intent layer.
+   *
+   * This layer does not replace structural navigation state,
+   * orientation phases, quaternion custody, route authority,
+   * semantic projection, or Home Compass behavior.
+   */
+  const TRANSACTION_PHASES = Object.freeze({
+    ORIENTATION: "ORIENTATION",
+    ALLOCATION: "ALLOCATION",
+    SELECTION: "SELECTION",
+    PREVIEW: "PREVIEW",
+    CONFIRMATION: "CONFIRMATION",
+    SETTLEMENT: "SETTLEMENT",
+    ROUTE_COMMIT: "ROUTE_COMMIT",
+    CANCELLED: "CANCELLED"
+  });
+
+  const TRANSACTION_PHASE_TRANSITIONS = Object.freeze({
+    [TRANSACTION_PHASES.ORIENTATION]: Object.freeze([
+      TRANSACTION_PHASES.ORIENTATION,
+      TRANSACTION_PHASES.ALLOCATION,
+      TRANSACTION_PHASES.SELECTION,
+      TRANSACTION_PHASES.CANCELLED
+    ]),
+    [TRANSACTION_PHASES.ALLOCATION]: Object.freeze([
+      TRANSACTION_PHASES.ALLOCATION,
+      TRANSACTION_PHASES.SELECTION,
+      TRANSACTION_PHASES.CANCELLED
+    ]),
+    [TRANSACTION_PHASES.SELECTION]: Object.freeze([
+      TRANSACTION_PHASES.SELECTION,
+      TRANSACTION_PHASES.PREVIEW,
+      TRANSACTION_PHASES.CANCELLED
+    ]),
+    [TRANSACTION_PHASES.PREVIEW]: Object.freeze([
+      TRANSACTION_PHASES.PREVIEW,
+      TRANSACTION_PHASES.CONFIRMATION,
+      TRANSACTION_PHASES.CANCELLED
+    ]),
+    [TRANSACTION_PHASES.CONFIRMATION]: Object.freeze([
+      TRANSACTION_PHASES.CONFIRMATION,
+      TRANSACTION_PHASES.SETTLEMENT,
+      TRANSACTION_PHASES.CANCELLED
+    ]),
+    [TRANSACTION_PHASES.SETTLEMENT]: Object.freeze([
+      TRANSACTION_PHASES.SETTLEMENT,
+      TRANSACTION_PHASES.ROUTE_COMMIT,
+      TRANSACTION_PHASES.CANCELLED
+    ]),
+    [TRANSACTION_PHASES.ROUTE_COMMIT]: Object.freeze([
+      TRANSACTION_PHASES.ROUTE_COMMIT
+    ]),
+    [TRANSACTION_PHASES.CANCELLED]: Object.freeze([
+      TRANSACTION_PHASES.CANCELLED,
+      TRANSACTION_PHASES.ORIENTATION
+    ])
+  });
+
+  const TRANSACTION_PHASE_SET = new Set(
+    Object.values(TRANSACTION_PHASES)
+  );
+
+  const TRANSACTION_REVISION_EVENTS = Object.freeze({
+    NEW_TRANSACTION: "NEW_TRANSACTION",
+    TARGET_REPLACEMENT: "TARGET_REPLACEMENT",
+    PREVIEW_OPENED: "PREVIEW_OPENED",
+    CONFIRMATION_ACCEPTED: "CONFIRMATION_ACCEPTED",
+    SETTLEMENT_ADMITTED: "SETTLEMENT_ADMITTED",
+    CANCELLED: "CANCELLED",
+    ROUTE_COMMIT: "ROUTE_COMMIT",
+    ALLOCATION_UPDATE: "ALLOCATION_UPDATE",
+    DUPLICATE_REQUEST: "DUPLICATE_REQUEST",
+    RECEIPT_PUBLICATION: "RECEIPT_PUBLICATION",
+    VISUAL_FRAME_UPDATE: "VISUAL_FRAME_UPDATE"
+  });
+
+  const TRANSACTION_REVISION_ADVANCING_EVENTS = new Set([
+    TRANSACTION_REVISION_EVENTS.NEW_TRANSACTION,
+    TRANSACTION_REVISION_EVENTS.TARGET_REPLACEMENT,
+    TRANSACTION_REVISION_EVENTS.PREVIEW_OPENED,
+    TRANSACTION_REVISION_EVENTS.CONFIRMATION_ACCEPTED,
+    TRANSACTION_REVISION_EVENTS.SETTLEMENT_ADMITTED,
+    TRANSACTION_REVISION_EVENTS.CANCELLED,
+    TRANSACTION_REVISION_EVENTS.ROUTE_COMMIT
+  ]);
+
   const DEPTH_LAYERS = Object.freeze({
     FRONT: "front",
     REAR: "rear",
@@ -482,6 +569,14 @@
     compassControl: null,
 
     current: STATES.CONSTELLATION,
+
+    transactionPhase:
+      TRANSACTION_PHASES.ORIENTATION,
+
+    transactionRevision: 0,
+    transactionTargetType: "",
+    transactionTargetId: "",
+    transactionLastReceipt: null,
 
     orbitFocus: "north",
     orbitPreviewFocus: "north",
@@ -1739,6 +1834,265 @@
     );
   }
 
+  function normalizeTransactionPhase(value) {
+    const phase = String(value || "")
+      .trim()
+      .toUpperCase();
+
+    return TRANSACTION_PHASE_SET.has(phase)
+      ? phase
+      : "";
+  }
+
+  function normalizeTransactionRevision(value) {
+    return (
+      Number.isFinite(value) &&
+      Number.isInteger(value) &&
+      value >= 0
+    )
+      ? value
+      : null;
+  }
+
+  function transactionRevisionEventAdvances(value) {
+    return TRANSACTION_REVISION_ADVANCING_EVENTS.has(
+      String(value || "")
+        .trim()
+        .toUpperCase()
+    );
+  }
+
+  function canTransitionTransactionPhase(
+    fromPhase,
+    toPhase
+  ) {
+    const from = normalizeTransactionPhase(fromPhase);
+    const to = normalizeTransactionPhase(toPhase);
+
+    return Boolean(
+      from &&
+      to &&
+      TRANSACTION_PHASE_TRANSITIONS[from] &&
+      TRANSACTION_PHASE_TRANSITIONS[from].includes(to)
+    );
+  }
+
+  function transactionTargetPermitted(
+    requestedPhase,
+    targetType
+  ) {
+    const phase = normalizeTransactionPhase(
+      requestedPhase
+    );
+
+    const normalizedTargetType = String(
+      targetType || ""
+    )
+      .trim()
+      .toLowerCase();
+
+    if (
+      normalizedTargetType !==
+      DESTINATION_TYPES.HOME_COMPASS
+    ) {
+      return true;
+    }
+
+    return ![
+      TRANSACTION_PHASES.ALLOCATION,
+      TRANSACTION_PHASES.SELECTION,
+      TRANSACTION_PHASES.PREVIEW,
+      TRANSACTION_PHASES.CONFIRMATION,
+      TRANSACTION_PHASES.SETTLEMENT,
+      TRANSACTION_PHASES.ROUTE_COMMIT
+    ].includes(phase);
+  }
+
+  function createTransactionReceipt({
+    previousPhase,
+    requestedPhase,
+    resultingPhase,
+    transactionRevision,
+    targetType = "",
+    targetId = "",
+    accepted = false,
+    rejectionReason = "",
+    revisionAdvanced = false,
+    revisionEvent = "",
+    routeCommitAuthorized = false,
+    timestamp = Date.now()
+  } = {}) {
+    const normalizedRevision =
+      normalizeTransactionRevision(
+        transactionRevision
+      );
+
+    invariant(
+      normalizedRevision !== null,
+      "ARCHCOIN_TRANSACTION_RECEIPT_REVISION_INVALID"
+    );
+
+    return Object.freeze({
+      receiptSchema:
+        "ARCHCOIN_TRANSACTION_PHASE_TRANSITION_RECEIPT_v1",
+      moduleId: MODULE.id,
+      moduleVersion: MODULE.version,
+      previousPhase:
+        normalizeTransactionPhase(previousPhase),
+      requestedPhase:
+        normalizeTransactionPhase(requestedPhase),
+      resultingPhase:
+        normalizeTransactionPhase(resultingPhase),
+      structuralState: state.current,
+      transactionRevision:
+        normalizedRevision,
+      targetType: String(targetType || ""),
+      targetId: String(targetId || ""),
+      accepted: Boolean(accepted),
+      rejectionReason:
+        String(rejectionReason || ""),
+      revisionAdvanced:
+        Boolean(revisionAdvanced),
+      revisionEvent:
+        String(revisionEvent || ""),
+      routeCommitAuthorized:
+        Boolean(routeCommitAuthorized),
+      homeCompassStateUnaffected: true,
+      timestamp:
+        Number.isFinite(timestamp)
+          ? timestamp
+          : Date.now()
+    });
+  }
+
+  function evaluateTransactionPhaseTransition({
+    currentPhase = state.transactionPhase,
+    requestedPhase,
+    transactionRevision = state.transactionRevision,
+    revisionEvent = "",
+    targetType = "",
+    targetId = ""
+  } = {}) {
+    const current =
+      normalizeTransactionPhase(currentPhase);
+    const requested =
+      normalizeTransactionPhase(requestedPhase);
+    const revision =
+      normalizeTransactionRevision(
+        transactionRevision
+      );
+
+    let rejectionReason = "";
+
+    if (!current) {
+      rejectionReason =
+        "ARCHCOIN_TRANSACTION_CURRENT_PHASE_INVALID";
+    } else if (!requested) {
+      rejectionReason =
+        "ARCHCOIN_TRANSACTION_REQUESTED_PHASE_INVALID";
+    } else if (revision === null) {
+      rejectionReason =
+        "ARCHCOIN_TRANSACTION_REVISION_INVALID";
+    } else if (
+      revision !== state.transactionRevision
+    ) {
+      rejectionReason =
+        "ARCHCOIN_TRANSACTION_REVISION_STALE";
+    } else if (
+      !transactionTargetPermitted(
+        requested,
+        targetType
+      )
+    ) {
+      rejectionReason =
+        "ARCHCOIN_HOME_COMPASS_TRANSACTION_PARTICIPATION_FORBIDDEN";
+    } else if (
+      !canTransitionTransactionPhase(
+        current,
+        requested
+      )
+    ) {
+      rejectionReason =
+        "ARCHCOIN_TRANSACTION_PHASE_TRANSITION_ILLEGAL";
+    }
+
+    if (rejectionReason) {
+      return createTransactionReceipt({
+        previousPhase: current,
+        requestedPhase: requested,
+        resultingPhase: current,
+        transactionRevision:
+          state.transactionRevision,
+        targetType,
+        targetId,
+        accepted: false,
+        rejectionReason,
+        revisionAdvanced: false,
+        revisionEvent,
+        routeCommitAuthorized: false
+      });
+    }
+
+    const selfTransition =
+      current === requested;
+
+    const revisionAdvanced =
+      !selfTransition &&
+      transactionRevisionEventAdvances(
+        revisionEvent
+      );
+
+    const nextRevision =
+      revisionAdvanced
+        ? state.transactionRevision + 1
+        : state.transactionRevision;
+
+    return createTransactionReceipt({
+      previousPhase: current,
+      requestedPhase: requested,
+      resultingPhase: requested,
+      transactionRevision: nextRevision,
+      targetType,
+      targetId,
+      accepted: true,
+      rejectionReason: "",
+      revisionAdvanced,
+      revisionEvent,
+      routeCommitAuthorized:
+        requested ===
+        TRANSACTION_PHASES.ROUTE_COMMIT
+    });
+  }
+
+  function requestTransactionPhaseTransition(
+    payload
+  ) {
+    const receipt =
+      evaluateTransactionPhaseTransition(
+        payload
+      );
+
+    state.transactionLastReceipt = receipt;
+
+    if (!receipt.accepted) {
+      return receipt;
+    }
+
+    state.transactionPhase =
+      receipt.resultingPhase;
+
+    state.transactionRevision =
+      receipt.transactionRevision;
+
+    state.transactionTargetType =
+      receipt.targetType;
+
+    state.transactionTargetId =
+      receipt.targetId;
+
+    return receipt;
+  }
+
   function createFrameState() {
     const cluster =
       activeCluster();
@@ -1758,6 +2112,21 @@
 
       state: state.current,
       navigationState: state.current,
+
+      transactionPhase:
+        state.transactionPhase,
+
+      transactionRevision:
+        state.transactionRevision,
+
+      transactionTargetType:
+        state.transactionTargetType,
+
+      transactionTargetId:
+        state.transactionTargetId,
+
+      transactionLastReceipt:
+        state.transactionLastReceipt,
 
       presentationMode:
         presentation.mode,
@@ -2157,6 +2526,18 @@
 
     state.root.dataset.archcoinNavigationState =
       frame.navigationState;
+
+    state.root.dataset.archcoinTransactionPhase =
+      frame.transactionPhase;
+
+    state.root.dataset.archcoinTransactionRevision =
+      String(frame.transactionRevision);
+
+    state.root.dataset.archcoinTransactionTargetType =
+      frame.transactionTargetType;
+
+    state.root.dataset.archcoinTransactionTargetId =
+      frame.transactionTargetId;
 
     state.root.dataset.archcoinPresentationMode =
       frame.presentationMode;
@@ -5276,6 +5657,117 @@
     });
   }
 
+  function validateTransactionPhaseContract() {
+    const phases = Object.values(
+      TRANSACTION_PHASES
+    );
+
+    invariant(
+      phases.length === 8,
+      "ARCHCOIN_TRANSACTION_PHASE_COUNT_INVALID"
+    );
+
+    invariant(
+      new Set(phases).size === 8,
+      "ARCHCOIN_TRANSACTION_PHASE_DUPLICATE"
+    );
+
+    const requiredPath = [
+      TRANSACTION_PHASES.ORIENTATION,
+      TRANSACTION_PHASES.ALLOCATION,
+      TRANSACTION_PHASES.SELECTION,
+      TRANSACTION_PHASES.PREVIEW,
+      TRANSACTION_PHASES.CONFIRMATION,
+      TRANSACTION_PHASES.SETTLEMENT,
+      TRANSACTION_PHASES.ROUTE_COMMIT
+    ];
+
+    for (
+      let index = 0;
+      index < requiredPath.length - 1;
+      index += 1
+    ) {
+      invariant(
+        canTransitionTransactionPhase(
+          requiredPath[index],
+          requiredPath[index + 1]
+        ),
+        "ARCHCOIN_TRANSACTION_REQUIRED_TRANSITION_MISSING"
+      );
+    }
+
+    for (
+      const phase of [
+        TRANSACTION_PHASES.ORIENTATION,
+        TRANSACTION_PHASES.ALLOCATION,
+        TRANSACTION_PHASES.SELECTION,
+        TRANSACTION_PHASES.PREVIEW,
+        TRANSACTION_PHASES.CANCELLED
+      ]
+    ) {
+      invariant(
+        !canTransitionTransactionPhase(
+          phase,
+          TRANSACTION_PHASES.ROUTE_COMMIT
+        ),
+        "ARCHCOIN_TRANSACTION_DIRECT_ROUTE_COMMIT_FORBIDDEN"
+      );
+    }
+
+    for (
+      const phase of [
+        TRANSACTION_PHASES.ALLOCATION,
+        TRANSACTION_PHASES.SELECTION,
+        TRANSACTION_PHASES.PREVIEW,
+        TRANSACTION_PHASES.CONFIRMATION,
+        TRANSACTION_PHASES.SETTLEMENT,
+        TRANSACTION_PHASES.ROUTE_COMMIT
+      ]
+    ) {
+      invariant(
+        transactionTargetPermitted(
+          phase,
+          DESTINATION_TYPES.HOME_COMPASS
+        ) === false,
+        "ARCHCOIN_HOME_COMPASS_TRANSACTION_EXCLUSION_INVALID"
+      );
+    }
+
+    invariant(
+      normalizeTransactionRevision(0) === 0,
+      "ARCHCOIN_TRANSACTION_REVISION_ZERO_REJECTED"
+    );
+
+    for (
+      const invalidRevision of [
+        -1,
+        1.2,
+        "4",
+        "bad",
+        Number.NaN,
+        Number.POSITIVE_INFINITY
+      ]
+    ) {
+      invariant(
+        normalizeTransactionRevision(
+          invalidRevision
+        ) === null,
+        "ARCHCOIN_TRANSACTION_INVALID_REVISION_ACCEPTED"
+      );
+    }
+
+    return Object.freeze({
+      pass: true,
+      phaseCount: phases.length,
+      phases: Object.freeze(phases.slice()),
+      directRouteCommitForbidden: true,
+      homeCompassExecutableExclusion: true,
+      strictRevisionValidation: true,
+      selfTransitionRevisionAdvancement: false,
+      runtimeBehaviorActivated: false
+    });
+  }
+
   function runControllerSelfTest({
     includeDom = false
   } = {}) {
@@ -5285,6 +5777,9 @@
 
       transitions:
         validateTransitionTable(),
+
+      transactionPhases:
+        validateTransactionPhaseContract(),
 
       presentation:
         validatePresentationContract(),
@@ -5461,6 +5956,12 @@
         orientationPhases:
           ORIENTATION_PHASES,
 
+        transactionPhases:
+          TRANSACTION_PHASES,
+
+        transactionRevisionEvents:
+          TRANSACTION_REVISION_EVENTS,
+
         depthLayers:
           DEPTH_LAYERS,
 
@@ -5478,6 +5979,20 @@
 
         getFrameState:
           createFrameState,
+
+        getTransactionState:
+          () => Object.freeze({
+            phase:
+              state.transactionPhase,
+            revision:
+              state.transactionRevision,
+            targetType:
+              state.transactionTargetType,
+            targetId:
+              state.transactionTargetId,
+            lastReceipt:
+              state.transactionLastReceipt
+          }),
 
         getPresentationMode:
           () =>
@@ -5557,6 +6072,9 @@
         requestReturnToMainCompass,
 
         updateSemanticProjection,
+
+        evaluateTransactionPhaseTransition,
+        requestTransactionPhaseTransition,
 
         runSelfTest:
           runControllerSelfTest

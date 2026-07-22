@@ -1,0 +1,128 @@
+name: ARCHCOIN transaction port once
+
+on:
+  push:
+    branches:
+      - agent/archcoin-transactional-preservation-001
+    paths:
+      - .github/workflows/archcoin-transaction-port-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-verified-port:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preservation branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/archcoin-transactional-preservation-001
+          fetch-depth: 0
+
+      - name: Verify exact source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object products/archcoin/index.controller.js)" = "fbe137abe15780d61e5fab37f7b381b076c70d51"
+          test -f products/archcoin/index.controller.transaction-port.patch
+          test -f products/archcoin/index.transaction-checkpoint.js
+
+      - name: Apply controller patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git apply --check products/archcoin/index.controller.transaction-port.patch
+          git apply products/archcoin/index.controller.transaction-port.patch
+
+      - name: Validate syntax and preservation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check products/archcoin/index.controller.js
+          git diff --check
+
+          git show c9b2327288ee35b51112639931831189879ebd85:products/archcoin/index.controller.js > /tmp/base-controller.js
+
+          node <<'NODE'
+          const fs = require('fs');
+          const base = fs.readFileSync('/tmp/base-controller.js', 'utf8');
+          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
+
+          const required = [
+            'AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1',
+            'beginOrbitGesture',
+            'requestOrbitPreview',
+            'requestOrbitCommit',
+            'requestOrbitCancel',
+            'beginClusterGesture',
+            'requestClusterPreview',
+            'requestClusterCommit',
+            'requestClusterCancel',
+            'updateSemanticProjection',
+            'requestReturnToMainCompass',
+            'route: "/index.html"'
+          ];
+
+          for (const token of required) {
+            if (!base.includes(token) || !next.includes(token)) {
+              throw new Error(`Required preserved token missing: ${token}`);
+            }
+          }
+
+          const routePattern = /route:\s*"([^"]+)"/g;
+          const routes = text => [...text.matchAll(routePattern)].map(match => match[1]);
+          const baseRoutes = routes(base);
+          const nextRoutes = routes(next);
+
+          if (JSON.stringify(baseRoutes) !== JSON.stringify(nextRoutes)) {
+            throw new Error('Canonical route inventory changed');
+          }
+
+          const requiredAdditions = [
+            'const TRANSACTION_PHASES',
+            'transactionRevision',
+            'evaluateTransactionPhaseTransition',
+            'ARCHCOIN_HOME_COMPASS_TRANSACTION_PARTICIPATION_FORBIDDEN',
+            'requestTransactionPhaseTransition'
+          ];
+
+          for (const token of requiredAdditions) {
+            if (!next.includes(token)) {
+              throw new Error(`Transactional addition missing: ${token}`);
+            }
+          }
+          NODE
+
+          stats="$(git diff --numstat -- products/archcoin/index.controller.js)"
+          additions="$(printf '%s' "$stats" | awk '{print $1}')"
+          deletions="$(printf '%s' "$stats" | awk '{print $2}')"
+          test -n "$additions"
+          test "$deletions" = "0"
+
+      - name: Remove staging artifacts and workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm products/archcoin/index.transaction-checkpoint.js
+          rm products/archcoin/index.controller.transaction-port.patch
+          rm .github/workflows/archcoin-transaction-port-once.yml
+
+      - name: Verify final branch delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          changed="$(git diff --name-only c9b2327288ee35b51112639931831189879ebd85)"
+          test "$changed" = "products/archcoin/index.controller.js"
+          node --check products/archcoin/index.controller.js
+          git diff --check
+
+      - name: Commit preserved controller checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add preserved ARCHCOIN transactional controller checkpoint"
+          git push origin HEAD:agent/archcoin-transactional-preservation-001

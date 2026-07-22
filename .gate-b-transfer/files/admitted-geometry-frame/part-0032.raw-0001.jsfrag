@@ -1,0 +1,41 @@
+tiveId ||
+        assignment.sourceObjectId !== null ||
+        assignment.presentationRole !== role ||
+        assignment.renderLayer !== presentation?.renderLayer ||
+        assignment.materialReference !== presentation?.materialReference ||
+        assignment.materialIntent !== presentation?.materialIntent ||
+        assignment.materialReferenceAuthority !==
+          PRESENTATION_MATERIAL_REFERENCE_AUTHORITY ||
+        assignment.materialCreated !== false ||
+        assignment.materialSourceAuthorityAltered !== false ||
+        assignment.visibleEligible !== visibility?.[role] ||
+        assignment.interactionTargetId !== null ||
+        assignment.geometryIdentityPreserved !== true ||
+        assignment.sourceGeometryReconstructed !== false ||
+        assignment.admissionRecordAltered !== false ||
+        assignment.rendererResourceCreated !== false
+      ) {
+        issues.push(
+          createBridgeIssue(
+            'GATE_B_FRAME_PRESENTATION_ASSIGNMENT_CONTRACT_INVALID',
+            'A Gate B frame presentation assignment violates its exact role, visibility, material-intent, or nonauthority contract.',
+            {
+              field:
+                `presentationAssignments[${index}]`
+            }
+          )
+        );
+      }
+    }
+  );
+
+  const actualVisibilityKeys =
+    isPlainRecord(value.visibilitySnapshot)
+      ? Object.keys(value.visibilitySnapshot).sort()
+      : [];
+
+  const expectedVisibilityKeys =
+    Object.keys(visibility ?? {}).sort();
+
+  if (
+  

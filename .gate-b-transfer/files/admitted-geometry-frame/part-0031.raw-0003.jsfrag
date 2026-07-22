@@ -1,0 +1,58 @@
+alidateGateBPresentationAssignmentsForFrame(value) {
+  const issues = [];
+
+  const roles =
+    getGateBPresentationRoles(
+      value.presentationMode
+    );
+
+  const visibility =
+    getGateBFrameVisibility(
+      value.presentationMode
+    );
+
+  const presentationByPrimitiveId =
+    getGateBPresentationByPrimitiveId(
+      value.presentationMode
+    );
+
+  if (
+    !Array.isArray(value.presentationAssignments) ||
+    value.presentationAssignments.length !== 3 ||
+    !Object.isFrozen(value.presentationAssignments) ||
+    roles.length !== 3 ||
+    !isPlainRecord(visibility) ||
+    !isPlainRecord(presentationByPrimitiveId)
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_PRESENTATION_ASSIGNMENTS_INVALID',
+        'Gate B frames require one deeply frozen assignment for each exact producer-ordered primitive.'
+      )
+    );
+  }
+
+  GATE_B_PRIMITIVE_ORDER.forEach(
+    (primitiveId, index) => {
+      const assignment =
+        Array.isArray(value.presentationAssignments)
+          ? value.presentationAssignments[index]
+          : null;
+
+      const role = roles[index];
+      const presentation =
+        presentationByPrimitiveId?.[
+          primitiveId
+        ];
+
+      const keyEvaluation =
+        evaluateExactKeySurface(
+          assignment,
+          REQUIRED_PRESENTATION_ASSIGNMENT_KEYS
+        );
+
+      if (
+        !isPlainRecord(assignment) ||
+        !Object.isFrozen(assignment) ||
+        !keyEvaluation.ok ||
+        assignment.primitiveId !== primi

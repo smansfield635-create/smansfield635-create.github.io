@@ -1,0 +1,25 @@
+ctly one boolean entry for every exact presentation role.'
+      )
+    );
+  }
+
+  return Object.freeze({
+    ok:
+      issues.length === 0,
+    issues:
+      freezeIssues(issues)
+  });
+}
+
+function validateGateBConstructedFrame(
+  value
+) {
+  const issues = [];
+
+  if (!isPlainRecord(value)) {
+    return Object.freeze({
+      ok: false,
+      issues: freezeIssues([
+        createBridgeIssue(
+          'GATE_B_FRAME_NOT_PLAIN_RECORD',
+          'The Gate B admitted-geometry frame must be a strict pl

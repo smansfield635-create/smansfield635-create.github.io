@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  diagnose-port:
+  apply-verified-port:
     if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/archcoin-transactional-preservation-001'
     runs-on: ubuntu-latest
     steps:
@@ -23,16 +23,20 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git hash-object products/archcoin/index.controller.js)" = "fbe137abe15780d61e5fab37f7b381b076c70d51"
+          test -f products/archcoin/index.controller.transaction-port.patch
+          test -f products/archcoin/index.transaction-checkpoint.js
 
       - name: Apply guarded patch
         run: |
           set -euo pipefail
           python3 <<'PY'
           from pathlib import Path
+
           target = Path('products/archcoin/index.controller.js')
           patch = Path('products/archcoin/index.controller.transaction-port.patch')
           source = target.read_text(encoding='utf-8')
           lines = patch.read_text(encoding='utf-8').splitlines()
+
           hunks = []
           current = None
           for line in lines:
@@ -44,8 +48,8 @@ jobs:
                   current.append(line)
           if current is not None:
               hunks.append(current)
-          cursor = 0
-          for index, hunk in enumerate(hunks, 1):
+
+          def blocks(hunk):
               old_lines, new_lines = [], []
               for line in hunk:
                   if line.startswith(' '):
@@ -57,39 +61,135 @@ jobs:
                   elif line == '':
                       old_lines.append(''); new_lines.append('')
                   else:
-                      raise SystemExit(f'INVALID_PATCH_LINE:{index}:{line!r}')
-              old = '\n'.join(old_lines)
-              new = '\n'.join(new_lines)
-              location = source.find(old, cursor)
-              if location < 0:
-                  location = source.find(old)
-              if location < 0:
-                  raise SystemExit(f'PATCH_CONTEXT_NOT_FOUND:{index}')
+                      raise SystemExit(f'INVALID_PATCH_LINE:{line!r}')
+              return '\n'.join(old_lines), '\n'.join(new_lines)
+
+          parsed = [blocks(hunk) for hunk in hunks]
+          cursor = 0
+
+          for index, (old, new) in enumerate(parsed):
+              if not old:
+                  raise SystemExit(f'EMPTY_PATCH_CONTEXT:{index + 1}')
+
+              upper = len(source)
+              for next_old, _ in parsed[index + 1:]:
+                  if not next_old:
+                      continue
+                  candidate = source.find(next_old, cursor)
+                  if candidate >= 0:
+                      upper = candidate
+                      break
+
+              locations = []
+              position = source.find(old, cursor, upper)
+              while position >= 0:
+                  locations.append(position)
+                  position = source.find(old, position + 1, upper)
+
+              if not locations:
+                  position = source.find(old, cursor)
+                  if position < 0:
+                      raise SystemExit(f'PATCH_CONTEXT_NOT_FOUND:{index + 1}')
+                  locations = [position]
+
+              location = locations[-1]
               source = source[:location] + new + source[location + len(old):]
               cursor = location + len(new)
+
           target.write_text(source, encoding='utf-8')
+          print(f'Applied {len(parsed)} bounded additive hunks')
           PY
 
-      - name: Capture syntax diagnostic
-        id: syntax
-        continue-on-error: true
+      - name: Validate JavaScript syntax
+        run: node --check products/archcoin/index.controller.js
+
+      - name: Validate diff whitespace
+        run: git diff --check
+
+      - name: Validate preserved APIs and contracts
         run: |
-          set +e
-          node --check products/archcoin/index.controller.js > archcoin-controller-syntax.log 2>&1
-          status=$?
-          cat archcoin-controller-syntax.log
-          exit $status
+          set -euo pipefail
+          git show c9b2327288ee35b51112639931831189879ebd85:products/archcoin/index.controller.js > /tmp/base-controller.js
+          node <<'NODE'
+          const fs = require('fs');
+          const base = fs.readFileSync('/tmp/base-controller.js', 'utf8');
+          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
+          const required = [
+            'AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1',
+            'beginOrbitGesture', 'requestOrbitPreview', 'requestOrbitCommit',
+            'requestOrbitCancel', 'beginClusterGesture', 'requestClusterPreview',
+            'requestClusterCommit', 'requestClusterCancel',
+            'updateSemanticProjection', 'requestReturnToMainCompass',
+            'route: "/index.html"'
+          ];
+          for (const token of required) {
+            if (!base.includes(token) || !next.includes(token)) {
+              throw new Error(`Required preserved token missing: ${token}`);
+            }
+          }
+          NODE
 
-      - name: Upload reconstructed controller diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: archcoin-reconstructed-controller-diagnostic
-          path: |
-            products/archcoin/index.controller.js
-            archcoin-controller-syntax.log
-          if-no-files-found: error
+      - name: Validate route parity
+        run: |
+          set -euo pipefail
+          git show c9b2327288ee35b51112639931831189879ebd85:products/archcoin/index.controller.js > /tmp/base-controller.js
+          node <<'NODE'
+          const fs = require('fs');
+          const base = fs.readFileSync('/tmp/base-controller.js', 'utf8');
+          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
+          const pattern = /route:\s*"([^"]+)"/g;
+          const routes = text => [...text.matchAll(pattern)].map(match => match[1]);
+          if (JSON.stringify(routes(base)) !== JSON.stringify(routes(next))) {
+            throw new Error('Canonical route inventory changed');
+          }
+          NODE
 
-      - name: Fail on syntax error
-        if: steps.syntax.outcome == 'failure'
-        run: exit 1
+      - name: Validate required transactional additions
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
+          const required = [
+            'const TRANSACTION_PHASES', 'transactionRevision',
+            'evaluateTransactionPhaseTransition',
+            'ARCHCOIN_HOME_COMPASS_TRANSACTION_PARTICIPATION_FORBIDDEN',
+            'requestTransactionPhaseTransition'
+          ];
+          for (const token of required) {
+            if (!next.includes(token)) throw new Error(`Transactional addition missing: ${token}`);
+          }
+          NODE
+
+      - name: Validate additions-only controller diff
+        run: |
+          set -euo pipefail
+          stats="$(git diff --numstat -- products/archcoin/index.controller.js)"
+          echo "$stats"
+          additions="$(printf '%s' "$stats" | awk '{print $1}')"
+          deletions="$(printf '%s' "$stats" | awk '{print $2}')"
+          test -n "$additions"
+          test "$deletions" = "0"
+
+      - name: Remove staging artifacts and workflow
+        run: |
+          set -euo pipefail
+          rm products/archcoin/index.transaction-checkpoint.js
+          rm products/archcoin/index.controller.transaction-port.patch
+          rm .github/workflows/archcoin-transaction-port-once.yml
+
+      - name: Verify final branch delta
+        run: |
+          set -euo pipefail
+          changed="$(git diff --name-only c9b2327288ee35b51112639931831189879ebd85)"
+          test "$changed" = "products/archcoin/index.controller.js"
+          node --check products/archcoin/index.controller.js
+          git diff --check
+
+      - name: Commit preserved controller checkpoint
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add preserved ARCHCOIN transactional controller checkpoint"
+          git push origin HEAD:agent/archcoin-transactional-preservation-001

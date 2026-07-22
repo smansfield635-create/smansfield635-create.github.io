@@ -1,12 +1,11 @@
-name: H-Earth Gate B Extract Unit 41
+name: H-Earth Gate B Extract Unit 42
 
 on:
   push:
     branches:
       - agent/h-earth-gate-b-transfer-staging-001
     paths:
-      - .gate-b-transfer/source/compositor-c56854c.js
-      - .gate-b-transfer/extract-unit-41.request
+      - .gate-b-transfer/extract-unit-42.request
 
 permissions:
   contents: write
@@ -16,41 +15,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Extract exact unit 41
+      - name: Extract exact unit 42
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import hashlib, pathlib, subprocess
           source = pathlib.Path('.gate-b-transfer/source/compositor-c56854c.js').read_bytes()
-          expected_sha256 = '5b9932a5f88e9087183a10de29f7e6c173f6e8c5b666c5a668114398e2e8b972'
-          expected_git_blob = 'cc76ecee40428c8a256be0e637f56448c73f9ab7'
+          offset = 13500
           expected_length = 4500
-          matches = []
-          for offset in range(len(source) - expected_length + 1):
-              candidate = source[offset:offset + expected_length]
-              if hashlib.sha256(candidate).hexdigest() == expected_sha256:
-                  matches.append((offset, candidate))
-          assert len(matches) == 1, f'expected one match, found {len(matches)}'
-          offset, candidate = matches[0]
-          out = pathlib.Path('.gate-b-transfer/files/compositor/part-0041.repository-extracted.raw')
+          expected_sha256 = '822981fc57a2129f2f0a470052e1102bbee5cb7f63e04e4972d95053d8956a13'
+          expected_git_blob = 'c382cc6c97325564971f7b6283305564c531693e'
+          candidate = source[offset:offset + expected_length]
+          assert len(candidate) == expected_length
+          assert hashlib.sha256(candidate).hexdigest() == expected_sha256
+          out = pathlib.Path('.gate-b-transfer/files/compositor/part-0042.repository-extracted.raw')
           out.parent.mkdir(parents=True, exist_ok=True)
           out.write_bytes(candidate)
           git_blob = subprocess.check_output(['git','hash-object',str(out)], text=True).strip()
           assert git_blob == expected_git_blob
-          receipt = pathlib.Path('.gate-b-transfer/unit-41.repository-extraction.receipt')
+          receipt = pathlib.Path('.gate-b-transfer/unit-42.repository-extraction.receipt')
           receipt.write_text('\n'.join([
-              'UNIT=41',
+              'UNIT=42',
+              'STATUS=PASS',
               f'SOURCE_BYTE_OFFSET={offset}',
               f'BYTE_COUNT={len(candidate)}',
               f'SHA256={expected_sha256}',
               f'GIT_BLOB_SHA={git_blob}',
+              'CONTIGUOUS_COMPLETION_FRONTIER=42_OF_101',
+              'NEXT_UNRESOLVED_UNIT=43',
               'IDENTITY_RESULT=PASS',
               '',
           ]))
           PY
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add .gate-b-transfer/files/compositor/part-0041.repository-extracted.raw .gate-b-transfer/unit-41.repository-extraction.receipt
-          git commit -m 'Extract exact H-Earth Gate B unit 41'
+          git add .gate-b-transfer/files/compositor/part-0042.repository-extracted.raw .gate-b-transfer/unit-42.repository-extraction.receipt
+          git commit -m 'Extract exact H-Earth Gate B unit 42'
           git push origin HEAD:agent/h-earth-gate-b-transfer-staging-001

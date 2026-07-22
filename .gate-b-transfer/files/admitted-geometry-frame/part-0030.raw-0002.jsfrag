@@ -1,0 +1,68 @@
+s:
+                cameraCorrespondenceKeyEvaluation.missingKeys
+            })
+        }
+      )
+    );
+  }
+
+  if (
+    !isPlainRecord(cameraCorrespondence) ||
+    cameraCorrespondence.sourceCameraRevision !==
+      value.revisions?.camera
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_CAMERA_REVISION_CORRESPONDENCE_INVALID',
+        'Resolved camera-pose source revision must equal revisions.camera.'
+      )
+    );
+  }
+
+  if (
+    value.resolvedCameraPoseOriginBinding !==
+    CAMERA_CORRESPONDENCE_OWNERSHIP
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_CAMERA_ORIGIN_BINDING_INVALID',
+        'Resolved-camera-pose origin binding declaration is invalid.',
+        {
+          expected:
+            CAMERA_CORRESPONDENCE_OWNERSHIP,
+
+          actual:
+            value.resolvedCameraPoseOriginBinding ??
+            null
+        }
+      )
+    );
+  }
+
+  if (
+    value.resolvedCameraPoseProducerAuthenticated !==
+    false
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_CAMERA_PRODUCER_AUTHENTICATION_CLAIM_INVALID',
+        'The bridge must not claim producer authentication for the resolved camera pose.',
+        {
+          expected:
+            false,
+
+          actual:
+            value
+              .resolvedCameraPoseProducerAuthenticated ??
+            null
+        }
+      )
+    );
+  }
+
+  const cameraCapacityEvaluation =
+    isPlainRecord(
+      cameraCorrespondence?.resolvedCameraPose
+    )
+      ? evaluateHEarth3DCameraPose(
+    

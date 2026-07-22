@@ -1,0 +1,43 @@
+MPOSITOR_CONTRACT_ID,
+
+
+    accepted:
+      accepted === true,
+
+
+    materiallyChanged:
+      materiallyChanged === true,
+
+
+    status,
+
+
+    authorityStatus,
+
+
+    authorityEvaluation:
+      publicAuthorityEvaluation,
+
+
+    authorityEligible,
+
+
+    capacityEvaluation:
+      publicAuthorityEvaluation,
+
+
+    capacityEligible:
+      authorityEligible,
+
+
+    issues:
+      freezeIssues(
+        issues
+      ),
+
+
+    ...(
+      isPlainRecord(operationFields)
+        ? operationFields
+        : {}
+   

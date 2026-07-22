@@ -1,0 +1,33 @@
+.sort();
+
+
+  return deepFreeze({
+    ok:
+      unknownKeys.length === 0 &&
+      missingKeys.length === 0 &&
+      symbolKeys.length === 0 &&
+      nonEnumerableKeys.length === 0 &&
+      accessorKeys.length === 0,
+
+
+    unknownKeys:
+      Object.freeze(unknownKeys),
+
+
+    missingKeys:
+      Object.freeze(missingKeys),
+
+
+    symbolKeysPresent:
+      symbolKeys.length > 0,
+
+
+    nonEnumerableKeys:
+      Object.freeze(
+        nonEnumerableKeys
+      ),
+
+
+    accessorKeys:
+      Object.freeze(
+   

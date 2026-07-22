@@ -1,0 +1,60 @@
+rraysEqual(
+      aggregatePrimitiveOrder,
+      GATE_B_PRIMITIVE_ORDER
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_AGGREGATE_INVALID',
+        'Gate B aggregate-frame identity, West state, or producer-ordered membership is invalid.'
+      )
+    );
+  }
+
+  if (Array.isArray(aggregatePrimitives)) {
+    aggregatePrimitives.forEach(
+      (primitive, index) => {
+        if (
+          !isHEarthAdmittedPrimitiveRecord({
+            ...primitive,
+            aggregateFrameMember: false
+          }) ||
+          primitive?.aggregateFrameMember !== true
+        ) {
+          issues.push(
+            createBridgeIssue(
+              'GATE_B_FRAME_AGGREGATE_PRIMITIVE_INVALID',
+              'Every Gate B aggregate-frame member must preserve lawful West structure and aggregateFrameMember === true.',
+              {
+                field:
+                  `aggregateFrameAdmissionRecord.primitives[${index}]`
+              }
+            )
+          );
+        }
+      }
+    );
+  }
+
+  const toleranceContext =
+    value.toleranceContext;
+
+  const frameBoundsValid =
+    toleranceContext === null
+      ? isHEarthAABB3D(value.bounds)
+      : isHEarthAABB3D(
+          value.bounds,
+          toleranceContext
+        );
+
+  const aggregateBoundsValid =
+    toleranceContext === null
+      ? isHEarthAABB3D(aggregateFrame?.bounds)
+      : isHEarthAABB3D(
+          aggregateFrame?.bounds,
+          toleranceContext
+        );
+
+  if (
+    toleranceContext !== null &&
+   

@@ -1,19 +1,139 @@
 <!doctype html>
-<html lang="en" data-route="/frontier/energy/battery-coherence-study/" data-page="battery-coherence-heldout-study" data-domain-specific-support="strong-heldout-signal" data-universal-law-validation-claimed="false">
+<html lang="en" data-route="/frontier/energy/battery-coherence-study/" data-page="battery-coherence-heldout-study" data-contract="BATTERY_COHERENCE_HELDOUT_NATIVE_WORKFLOW_HTML_TNT_v1" data-domain-specific-support="strong-heldout-signal" data-universal-law-validation-claimed="false" data-active-lens="platform">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Battery Held-Out Study · Diamond Gate Bridge</title>
-  <meta name="description" content="Cell-disjoint held-out battery degradation results for the B/P/E/I/V coherence representation, including positive, negative, and unresolved findings.">
-  <style>:root{color-scheme:dark;--bg:#02050d;--ink:#fff4d8;--muted:#c6d3e8;--gold:#f3c86f;--line:#243753;--good:#9be7c4;--warn:#ffd48a}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#132844,#02050d 45%);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif}.shell{width:min(1100px,calc(100% - 28px));margin:auto;padding:28px 0 60px}nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}a{color:inherit}nav a{padding:.65rem .9rem;border:1px solid var(--line);border-radius:999px;text-decoration:none;background:#ffffff0b}.hero,.card{border:1px solid var(--line);border-radius:24px;background:#ffffff08;padding:clamp(20px,4vw,38px);margin-bottom:18px}h1{font-size:clamp(2.5rem,8vw,5.6rem);line-height:.92;margin:.2rem 0 1rem}h2{color:var(--gold)}.kicker{color:var(--gold);font-weight:900;letter-spacing:.14em;text-transform:uppercase}.lead{font-size:1.2rem;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.metric{border:1px solid var(--line);border-radius:18px;padding:16px;background:#02050d88}.metric b{display:block;font-size:1.65rem}.status{border-left:4px solid var(--good)}.warning{border-left:4px solid var(--warn)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}code{color:var(--gold)}@media(max-width:760px){.grid{grid-template-columns:1fr}table{font-size:.9rem}}</style>
+  <meta name="description" content="Cell-disjoint held-out battery degradation results with Platform, Engineering, and Evidence lenses, progressive disclosure, negative findings, and bounded claim limits.">
+  <link rel="canonical" href="https://diamondgatebridge.com/frontier/energy/battery-coherence-study/">
+  <link rel="stylesheet" href="/frontier/energy/battery-coherence-study/index.css?v=BATTERY_COHERENCE_HELDOUT_NATIVE_WORKFLOW_CSS_TNT_v1">
   <script defer src="/assets/evidence/battery-coherence-heldout-study-v1.js"></script>
+  <script defer src="/frontier/energy/battery-coherence-study/index.js?v=BATTERY_COHERENCE_HELDOUT_NATIVE_WORKFLOW_JS_TNT_v1"></script>
 </head>
-<body><main class="shell">
-<nav><a href="/laws/battery-heldout-study/">Laws summary</a><a href="/laws/scientific-law/battery-heldout-study/">Scientific interpretation</a><a href="/laws/categories/reality/battery-heldout-study/">Reality evidence</a><a href="/frontier/">Frontier</a></nav>
-<section class="hero"><p class="kicker">Applied empirical track · Battery degradation</p><h1>Strong held-out signal. Universal proof withheld.</h1><p class="lead">The frozen B/P/E/I/V representation was evaluated across 1,653 cell-disjoint held-out cycles from three unseen batteries: CS2_34, CS2_36, and CS2_38. The target was crossing below 80% retained capacity within the next 20 cycles.</p></section>
-<section class="card"><h2>Primary results</h2><div class="grid"><div class="metric"><span>Axis logistic AUROC</span><b>0.9394</b></div><div class="metric"><span>Burden AUROC</span><b>0.9704</b></div><div class="metric"><span>Raw physical baseline</span><b>0.7850</b></div><div class="metric"><span>H* AUROC</span><b>0.7712</b></div><div class="metric"><span>Weakest-axis risk AUROC</span><b>0.6743</b></div><div class="metric"><span>Raw + H* AUROC</span><b>0.7770</b></div></div></section>
-<section class="card status"><h2>Supported finding</h2><p>The B/P/E/I/V representation contained strong transferable information about near-term physical degradation in batteries excluded from development. This is a nontrivial domain-specific held-out result.</p></section>
-<section class="card warning"><h2>Interpretation boundary</h2><p>Burden was the strongest individual predictor. If burden largely represents cumulative cycle exposure or throughput, part of the performance may reflect conventional battery aging. Cycle number, cumulative throughput, current capacity, and recent degradation slope must be controlled before a distinct coherence mechanism can be claimed.</p></section>
-<section class="card"><h2>Component findings</h2><table><thead><tr><th>Component</th><th>Result</th><th>Standing</th></tr></thead><tbody><tr><td>Axis representation</td><td>AUROC 0.9394</td><td>Strong domain-specific predictive support</td></tr><tr><td>H*</td><td>Standalone 0.7712; incremental delta −0.0080</td><td>Real standalone signal; no incremental superiority</td></tr><tr><td>Weakest-axis risk</td><td>AUROC 0.6743</td><td>Above chance; preliminary support only</td></tr><tr><td>Hard MQ threshold</td><td>TP 0; sensitivity 0%; balanced accuracy 0.4994</td><td>Not supported in this realization</td></tr></tbody></table></section>
-<section class="card"><h2>Required next tests</h2><p>Cycle-number control; cumulative-throughput control; current-capacity control; degradation-slope control; burden ablation; raw-plus-axes incremental comparison; cell-family and chemistry transfer; external dataset replication; threshold recalibration without test leakage; and preregistered replication.</p></section>
-<section class="card"><h2>Claim ceiling</h2><p><code>DOMAIN_SPECIFIC_HELD_OUT_EMPIRICAL_SUPPORT = YES</code><br><code>NOVEL_COHERENCE_MECHANISM_ESTABLISHED = NO</code><br><code>WEAKEST_AXIS_LAW_ESTABLISHED = NO</code><br><code>UNIVERSAL_COHERENCE_LAW_VALIDATED = NO</code></p></section>
-</main></body></html>
+<body>
+  <a class="skip" href="#main">Skip to battery study</a>
+  <div class="shell">
+    <header class="topbar" aria-label="Battery study header">
+      <a class="brand" href="/frontier/">
+        <span class="brand-mark" aria-hidden="true"><span>BT</span></span>
+        <span class="brand-copy"><span>Frontier · Energy evidence</span><strong>Battery Held-Out Study</strong></span>
+      </a>
+      <nav class="nav" aria-label="Battery study routes">
+        <a href="/laws/battery-heldout-study/">Laws summary</a>
+        <a href="/laws/scientific-law/battery-heldout-study/">Scientific Law</a>
+        <a href="/laws/categories/reality/battery-heldout-study/">Reality evidence</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="kicker">Applied empirical track · Battery degradation</p>
+        <h1 id="page-title">Strong held-out signal. Universal proof withheld.</h1>
+        <p class="lead">The frozen B/P/E/I/V representation was evaluated across 1,653 cell-disjoint held-out cycles from three unseen batteries—CS2_34, CS2_36, and CS2_38—to predict crossing below 80% retained capacity within the next 20 cycles.</p>
+      </section>
+
+      <div class="lens-bar" role="tablist" aria-label="Battery study language lens">
+        <button class="lens-button" type="button" role="tab" data-lens-button="platform" aria-selected="true">Platform</button>
+        <button class="lens-button" type="button" role="tab" data-lens-button="engineering" aria-selected="false" tabindex="-1">Engineering</button>
+        <button class="lens-button" type="button" role="tab" data-lens-button="evidence" aria-selected="false" tabindex="-1">Evidence</button>
+      </div>
+
+      <section class="panel" aria-labelledby="summary-title">
+        <div class="section-head"><h2 id="summary-title">What this page is for</h2><p>One result, three readable layers.</p></div>
+        <div class="lens-copy" data-lens-copy="platform" data-active="true"><p>The battery study asks whether the Diamond Gate Bridge axis representation can warn that a battery is approaching a serious capacity threshold—even when the battery was not used to develop the model.</p></div>
+        <div class="lens-copy" data-lens-copy="engineering" data-active="false"><p>The evaluation is cell-disjoint: development and test cells do not overlap. The target is a binary event defined as crossing below 80% retained capacity within a 20-cycle horizon. AUROC is used to compare ranking performance across representations and baselines.</p></div>
+        <div class="lens-copy" data-lens-copy="evidence" data-active="false"><p>Frozen test record: 1,653 held-out cycles; cells CS2_34, CS2_36, CS2_38; target horizon 20 cycles; threshold 80% retained capacity. This page preserves both positive and negative outcomes.</p></div>
+      </section>
+
+      <section class="panel" aria-labelledby="metrics-title">
+        <div class="section-head"><h2 id="metrics-title">Primary results</h2><p>All reported values are visible without opening a disclosure.</p></div>
+        <div class="metrics">
+          <div class="metric"><span>Axis logistic AUROC</span><b>0.9394</b></div>
+          <div class="metric"><span>Burden AUROC</span><b>0.9704</b></div>
+          <div class="metric"><span>Raw physical baseline</span><b>0.7850</b></div>
+          <div class="metric"><span>H* AUROC</span><b>0.7712</b></div>
+          <div class="metric"><span>Weakest-axis risk AUROC</span><b>0.6743</b></div>
+          <div class="metric"><span>Raw + H* AUROC</span><b>0.7770</b></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="details-title">
+        <div class="section-head"><h2 id="details-title">Study chambers</h2><p>Open only the level you need.</p></div>
+        <div class="disclosures">
+          <details class="disclosure" data-disclosure open>
+            <summary>Study design</summary>
+            <div class="disclosure-body">
+              <div class="lens-copy" data-lens-copy="platform" data-active="true"><p>The test excluded all three evaluation batteries from development, then asked whether the model could recognize near-term degradation on those unseen batteries.</p></div>
+              <div class="lens-copy" data-lens-copy="engineering" data-active="false"><p>Evaluation design: cell-disjoint holdout. Target: retained capacity crossing below 80% within 20 cycles. Evaluation population: 1,653 cycles from CS2_34, CS2_36, and CS2_38.</p></div>
+              <div class="lens-copy" data-lens-copy="evidence" data-active="false"><p>UNSEEN_BATTERIES = CS2_34; CS2_36; CS2_38<br>HELD_OUT_EVALUATION_CYCLES = 1653<br>TARGET = BELOW_80_PERCENT_WITHIN_NEXT_20_CYCLES</p></div>
+            </div>
+          </details>
+
+          <details class="disclosure" data-disclosure>
+            <summary>Baseline and component comparison</summary>
+            <div class="disclosure-body result-list">
+              <div class="result-row"><strong>Axis representation</strong><span>AUROC 0.9394</span><span>Strong domain-specific predictive support.</span></div>
+              <div class="result-row"><strong>Burden</strong><span>AUROC 0.9704</span><span>Strongest component and principal confound concern.</span></div>
+              <div class="result-row"><strong>Raw physical baseline</strong><span>AUROC 0.7850</span><span>Materially below the combined axis model in this test.</span></div>
+              <div class="result-row"><strong>H*</strong><span>0.7712 standalone; −0.0080 delta</span><span>Standalone signal, no incremental superiority.</span></div>
+              <div class="result-row"><strong>Weakest-axis risk</strong><span>AUROC 0.6743</span><span>Above chance, preliminary only.</span></div>
+              <div class="result-row"><strong>Hard MQ threshold</strong><span>0% sensitivity; 0.4994 balanced accuracy</span><span>Not supported in this realization.</span></div>
+            </div>
+          </details>
+
+          <details class="disclosure" data-disclosure>
+            <summary>Confound analysis</summary>
+            <div class="disclosure-body">
+              <div class="lens-copy" data-lens-copy="platform" data-active="true"><p>The strongest open question is whether “burden” is discovering a distinct structural signal or mostly restating how old and heavily used the battery already is.</p></div>
+              <div class="lens-copy" data-lens-copy="engineering" data-active="false"><p>Burden AUROC 0.9704 may encode cycle number, cumulative throughput, present capacity, or recent degradation slope. Independent predictive value requires controls and ablations against those variables.</p></div>
+              <div class="lens-copy" data-lens-copy="evidence" data-active="false"><p>UNRESOLVED_CONTROLS = cycle_number; cumulative_throughput; current_capacity; degradation_slope; burden_ablation; raw_plus_axes_incremental_test</p></div>
+            </div>
+          </details>
+
+          <details class="disclosure" data-disclosure>
+            <summary>Required next tests</summary>
+            <div class="disclosure-body"><p>Cycle-number control; cumulative-throughput control; current-capacity control; degradation-slope control; burden ablation; raw-plus-axes incremental comparison; cell-family and chemistry transfer; external dataset replication; threshold recalibration without test leakage; and preregistered replication.</p></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="claim-title">
+        <div class="section-head"><h2 id="claim-title">Claim ceiling</h2><p>Status rows replace overflow-prone code blocks.</p></div>
+        <div class="status-grid">
+          <div class="status-row yes"><b>Domain-specific held-out empirical support</b><span class="status-value">YES</span></div>
+          <div class="status-row open"><b>Mechanistic specificity independent of conventional aging</b><span class="status-value">UNRESOLVED</span></div>
+          <div class="status-row no"><b>H* incremental superiority</b><span class="status-value">NO</span></div>
+          <div class="status-row no"><b>Hard MQ threshold supported</b><span class="status-value">NO</span></div>
+          <div class="status-row no"><b>Weakest-axis law established</b><span class="status-value">NO</span></div>
+          <div class="status-row no"><b>Universal coherence law validated</b><span class="status-value">NO</span></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="routes-title">
+        <div class="section-head"><h2 id="routes-title">Continue through the evidence system</h2><p>Each page carries a different level of interpretation.</p></div>
+        <div class="actions">
+          <a class="button primary" href="/laws/battery-heldout-study/">Laws evidence summary</a>
+          <a class="button" href="/laws/scientific-law/battery-heldout-study/">Scientific interpretation</a>
+          <a class="button" href="/laws/categories/reality/battery-heldout-study/">Evidence, measure, and limits</a>
+          <a class="button" href="/frontier/">Return to Frontier</a>
+        </div>
+      </section>
+
+      <details class="panel disclosure" data-disclosure>
+        <summary>Route and contract receipt</summary>
+        <div class="disclosure-body receipt">BATTERY_COHERENCE_HELDOUT_NATIVE_WORKFLOW_HTML_TNT_v1
+route=/frontier/energy/battery-coherence-study/
+html=/frontier/energy/battery-coherence-study/index.html
+css=/frontier/energy/battery-coherence-study/index.css
+js=/frontier/energy/battery-coherence-study/index.js
+global_lenses=platform,engineering,evidence
+progressive_disclosure=true
+mobile_stacked_results=true
+reduced_motion_supported=true
+universal_law_validation_claimed=false
+visual_pass_claimed=false</div>
+      </details>
+    </main>
+  </div>
+</body>
+</html>

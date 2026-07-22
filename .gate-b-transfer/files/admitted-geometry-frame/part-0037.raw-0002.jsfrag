@@ -1,0 +1,80 @@
+_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+    sourceFile:
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_SOURCE_FILE,
+
+    packet002ValidationDefined:
+      true,
+
+    distinctGateBPacket002ValidationDefined:
+      true,
+
+    legacyPacket002PreservationDefined:
+      true,
+
+    packet002DeepFreezeRequirementDefined:
+      true,
+
+    packet002InputMutationProtectionDefined:
+      true,
+
+    packet002EmptyIssueRequirementDefined:
+      true,
+
+    westPrimitiveValidationDefined:
+      true,
+
+    aggregateFrameValidationDefined:
+      true,
+
+    aggregatePrimitiveIdDuplicateRejectionDefined:
+      true,
+
+    primitiveMembershipCorrespondenceDefined:
+      true,
+
+    canonicalDuplicateFreeProvenanceDefined:
+      true,
+
+    exactFirstProofProvenanceDefined:
+      true,
+
+    semanticBoundsCorrespondenceDefined:
+      true,
+
+    firstProofNonemptyBoundsDefined:
+      true,
+
+    oneTimeCompositorStateSnapshotDefined:
+      true,
+
+    exactCompositorStateKeyEqualityDefined:
+      true,
+
+    independentCompositorRevisionRecordingDefined:
+      true,
+
+    cameraRevisionCorrelationDefined:
+      true,
+
+    exactCameraCorrespondenceKeyEqualityDefined:
+      true,
+
+    resolvedCameraPoseCapacityValidationDefined:
+      true,
+
+    resolvedCameraBasisValidationDefined:
+      true,
+
+    viewportCapacityValidationDefined:
+      true,
+
+    presentationLocalMaterialReferenceDefined:
+      true,
+
+    gateBPublicAndDiagnosticModesDefined:
+      true,
+
+    gateBExactFiveKeyExtensionDefined:
+      true,
+

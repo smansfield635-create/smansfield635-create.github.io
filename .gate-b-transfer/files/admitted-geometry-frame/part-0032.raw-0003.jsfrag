@@ -1,0 +1,47 @@
+e.ok !== true ||
+    value.status !==
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_STATUS ||
+    value.frameType !==
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_TYPE ||
+    value.contractId !==
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID ||
+    value.schemaVersion !==
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_SCHEMA_VERSION ||
+    value.sourceFile !==
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_SOURCE_FILE ||
+    value.role !==
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_ROLE
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_IDENTITY_INVALID',
+        'Gate B frame identity, schema, source, role, or status is invalid.'
+      )
+    );
+  }
+
+  if (!isGateBPresentationMode(value.presentationMode)) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_PRESENTATION_MODE_INVALID',
+        'Gate B presentationMode must be public Audralia ground view or Gate B diagnostic proof.'
+      )
+    );
+  }
+
+  if (
+    value.packet002ContractId !==
+      H_EARTH_POST_WEST_GATE_B_OCCURRENCE_TRANSFER_CONTRACT_ID ||
+    !isNonEmptyString(value.packet002Status) ||
+    value.packet002Provisional !== true ||
+    value.packet002DownstreamContractFrozen !== false ||
+    value.packet002FinalDownstreamShapeClaimed !== false ||
+    value.westContractId !==
+      H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID ||
+    value.capacityContractId !==
+      H_EARTH_3D_CAPACITY_CONTRACT_ID
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_PACKET_002_STATE_INVALID',
+     

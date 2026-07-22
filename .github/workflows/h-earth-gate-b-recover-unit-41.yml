@@ -18,6 +18,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Fetch all repository refs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' '+refs/pull/*/head:refs/remotes/pull/*/head'
+
       - name: Recover exact unit 41 from repository history
         shell: bash
         run: |
@@ -31,32 +37,48 @@ jobs:
           expected_git_blob = 'cc76ecee40428c8a256be0e637f56448c73f9ab7'
           expected_length = 4500
           source_path = 'showroom/globe/h-earth/compositor.js'
-          source_refs = [
-              'c9b2327288ee35b51112639931831189879ebd85',
-              'edf2bb09c4880aaf6b7ad419c285da35278ccf46',
-              '82a23eed980741b249e0b787ffcee5d36270a7cb',
-          ]
+
+          refs = subprocess.check_output(
+              ['git', 'for-each-ref', '--format=%(objectname)', 'refs/remotes/origin', 'refs/remotes/pull'],
+              text=True,
+          ).splitlines()
+          commits = []
+          seen = set()
+          for ref in refs:
+              result = subprocess.run(
+                  ['git', 'rev-list', ref],
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.DEVNULL,
+                  text=True,
+              )
+              if result.returncode != 0:
+                  continue
+              for commit in result.stdout.splitlines():
+                  if commit not in seen:
+                      seen.add(commit)
+                      commits.append(commit)
 
           matches = []
-          for ref in source_refs:
+          inspected = 0
+          for commit in commits:
               result = subprocess.run(
-                  ['git', 'show', f'{ref}:{source_path}'],
+                  ['git', 'show', f'{commit}:{source_path}'],
                   stdout=subprocess.PIPE,
                   stderr=subprocess.DEVNULL,
               )
               if result.returncode != 0:
                   continue
+              inspected += 1
               raw = result.stdout
               for offset in range(0, len(raw) - expected_length + 1):
                   candidate = raw[offset:offset + expected_length]
                   if hashlib.sha256(candidate).hexdigest() == expected_sha256:
-                      matches.append((ref, offset, candidate))
+                      matches.append((commit, offset, candidate))
+                      break
 
-          assert matches, 'Exact unit-41 byte range was not found in inspected repository history.'
-          unique = {(ref, offset) for ref, offset, _ in matches}
-          assert len(unique) >= 1
+          assert matches, f'Exact unit-41 byte range not found after inspecting {inspected} compositor occurrences.'
+          commit, offset, recovered = matches[0]
 
-          ref, offset, recovered = matches[0]
           out = pathlib.Path('.gate-b-transfer/files/compositor/part-0003.repository-recovered.raw')
           out.parent.mkdir(parents=True, exist_ok=True)
           out.write_bytes(recovered)
@@ -72,9 +94,10 @@ jobs:
           receipt.write_text(
               '\n'.join([
                   'UNIT=41',
-                  f'SOURCE_REF={ref}',
+                  f'SOURCE_COMMIT={commit}',
                   f'SOURCE_PATH={source_path}',
                   f'SOURCE_BYTE_OFFSET={offset}',
+                  f'COMPOSITOR_OCCURRENCES_INSPECTED={inspected}',
                   f'BYTE_COUNT={len(recovered)}',
                   f'SHA256={expected_sha256}',
                   f'GIT_BLOB_SHA={git_blob}',

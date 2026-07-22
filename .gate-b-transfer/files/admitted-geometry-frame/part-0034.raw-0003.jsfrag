@@ -1,0 +1,63 @@
+ositorFrameRevision !==
+      value.revisions?.frame
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_REVISIONS_INVALID',
+        'Gate B frame revisions or compositor-frame revision correspondence is invalid.'
+      )
+    );
+  }
+
+  const cameraCorrespondence =
+    value.resolvedCameraPoseCorrespondence;
+
+  if (
+    !evaluateExactKeySurface(
+      cameraCorrespondence,
+      REQUIRED_CAMERA_CORRESPONDENCE_KEYS
+    ).ok ||
+    cameraCorrespondence?.sourceCameraRevision !==
+      value.revisions?.camera
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_CAMERA_CORRESPONDENCE_INVALID',
+        'Gate B resolved-camera correspondence keys or source revision are invalid.'
+      )
+    );
+  }
+
+  const cameraCapacityEvaluation =
+    isPlainRecord(
+      cameraCorrespondence?.resolvedCameraPose
+    )
+      ? evaluateHEarth3DCameraPose(
+          cameraCorrespondence.resolvedCameraPose
+        )
+      : null;
+
+  const renormalizedPose =
+    normalizeResolvedCameraPose(
+      cameraCorrespondence?.resolvedCameraPose
+    );
+
+  const basisValidation =
+    validateNormalizedCameraBasis(
+      renormalizedPose
+    );
+
+  issues.push(
+    ...basisValidation.issues
+  );
+
+  if (
+    !isPlainRecord(cameraCapacityEvaluation) ||
+    cameraCapacityEvaluation.eligible !== true ||
+    !normalizedCameraPosesEqual(
+      renormalizedPose,
+      value.normalizedResolvedCameraPose,
+      0
+    ) ||
+    value.rendererCameraPoseField !==
+      RENDERER_CAMERA_POSE_FIE

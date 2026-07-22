@@ -1,0 +1,81 @@
+eturn false;
+  }
+}
+
+
+/* ==========================================================================
+ * 13 · CLAIM CEILINGS
+ * ========================================================================== */
+
+export const H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CLAIM_CEILINGS =
+  deepFreeze({
+    packet002ProducerOccurrenceAuthenticated:
+      false,
+
+    resolvedCameraPoseProducerAuthenticated:
+      false,
+
+    cameraRevisionCorrelationClaim:
+      true,
+
+    cryptographicIntegrityAuthenticated:
+      false,
+
+    geometryConstructionClaim:
+      false,
+
+    westAdmissionClaim:
+      false,
+
+    geometryIndexClaim:
+      false,
+
+    compositorMutationClaim:
+      false,
+
+    compositorRevisionAdvancementClaim:
+      false,
+
+    rendererMaterializationClaim:
+      false,
+
+    backendMaterialCreationClaim:
+      false,
+
+    renderInstanceClaim:
+      false,
+
+    runtimeActivationClaim:
+      false,
+
+    actionExecutionClaim:
+      false,
+
+    validationClaim:
+      false,
+
+    productionClaim:
+      false,
+
+    deploymentClaim:
+      false,
+
+    visualPassClaim:
+      false,
+
+    matrixCollapse:
+      false
+  });
+
+
+/* ==========================================================================
+ * 14 · STATIC CONTRACT AND RECEIPT
+ * ========================================================================== */
+
+export const H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT =
+  deepFreeze({
+    contractId:
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+
+    schemaVersion:
+      H_EARTH_3D

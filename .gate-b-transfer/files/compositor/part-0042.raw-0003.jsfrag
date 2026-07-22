@@ -1,0 +1,26 @@
+ 'UNSUPPORTED_PUBLIC_INPUT_VALUE_REJECTED',
+          'The public input contains an unsupported value type.',
+          {
+            field:
+              path,
+
+
+            actual:
+              typeof value
+          }
+        )
+    };
+  }
+
+
+  if (seen.has(value)) {
+    return {
+      ok: false,
+
+
+      issue:
+        createCompositorIssue(
+          'REPEATED_REFERENCE_OR_CYCLE_REJECTED',
+          'Repeated references and cyclic structures are not admitted.',
+          {
+            field:

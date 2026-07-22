@@ -36,8 +36,79 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git apply --check products/archcoin/index.controller.transaction-port.patch
-          git apply products/archcoin/index.controller.transaction-port.patch
+          python3 <<'PY'
+          from pathlib import Path
+
+          target_path = Path('products/archcoin/index.controller.js')
+          patch_path = Path('products/archcoin/index.controller.transaction-port.patch')
+
+          source = target_path.read_text(encoding='utf-8')
+          lines = patch_path.read_text(encoding='utf-8').splitlines()
+
+          if not lines or lines[0] != '*** Begin Patch':
+              raise SystemExit('ARCHCOIN_PATCH_BEGIN_MARKER_INVALID')
+          if lines[-1] != '*** End Patch':
+              raise SystemExit('ARCHCOIN_PATCH_END_MARKER_INVALID')
+          if '*** Update File: products/archcoin/index.controller.js' not in lines:
+              raise SystemExit('ARCHCOIN_PATCH_TARGET_INVALID')
+
+          hunks = []
+          current = None
+          for line in lines:
+              if line == '@@':
+                  if current is not None:
+                      hunks.append(current)
+                  current = []
+                  continue
+              if current is not None:
+                  if line.startswith('*** '):
+                      continue
+                  current.append(line)
+          if current is not None:
+              hunks.append(current)
+
+          cursor = 0
+          applied = 0
+          for index, hunk in enumerate(hunks, start=1):
+              old_lines = []
+              new_lines = []
+              for line in hunk:
+                  if line.startswith(' '):
+                      old_lines.append(line[1:])
+                      new_lines.append(line[1:])
+                  elif line.startswith('+'):
+                      new_lines.append(line[1:])
+                  elif line.startswith('-'):
+                      old_lines.append(line[1:])
+                  elif line == '':
+                      old_lines.append('')
+                      new_lines.append('')
+                  else:
+                      raise SystemExit(f'ARCHCOIN_PATCH_LINE_INVALID:{index}:{line!r}')
+
+              old = '\n'.join(old_lines)
+              new = '\n'.join(new_lines)
+              if not old:
+                  raise SystemExit(f'ARCHCOIN_PATCH_EMPTY_CONTEXT:{index}')
+
+              location = source.find(old, cursor)
+              if location < 0:
+                  location = source.find(old)
+              if location < 0:
+                  raise SystemExit(f'ARCHCOIN_PATCH_CONTEXT_NOT_FOUND:{index}')
+              if source.find(old, location + 1) >= 0 and location < cursor:
+                  raise SystemExit(f'ARCHCOIN_PATCH_CONTEXT_AMBIGUOUS:{index}')
+
+              source = source[:location] + new + source[location + len(old):]
+              cursor = location + len(new)
+              applied += 1
+
+          if applied != len(hunks) or applied == 0:
+              raise SystemExit('ARCHCOIN_PATCH_HUNK_COUNT_INVALID')
+
+          target_path.write_text(source, encoding='utf-8')
+          print(f'Applied {applied} guarded additive hunks')
+          PY
 
       - name: Validate syntax and preservation
         shell: bash

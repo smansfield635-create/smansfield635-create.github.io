@@ -1,0 +1,30 @@
+======================================================= */
+
+
+function strictSnapshot(
+  value,
+  path = 'root',
+  seen = new WeakSet()
+) {
+  if (
+    value === null ||
+    typeof value === 'string' ||
+    typeof value === 'boolean'
+  ) {
+    return {
+      ok: true,
+      value
+    };
+  }
+
+
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) {
+      return {
+        ok: false,
+
+
+        issue:
+          createCompositorIssue(
+            'NON_FINITE_NUMBER_REJECTED',
+            

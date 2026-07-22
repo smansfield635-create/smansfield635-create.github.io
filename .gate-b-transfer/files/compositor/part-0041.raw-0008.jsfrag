@@ -1,0 +1,31 @@
+tative capacity evaluator rejected the operation.',
+    {
+      field
+    }
+  );
+}
+
+
+function createPublicMutationReceipt({
+  receiptType,
+  accepted,
+  materiallyChanged,
+  status,
+  authorityStatus,
+  authorityEvaluation = null,
+  authorityEligible = null,
+  issues = EMPTY_FROZEN_ARRAY,
+  operationFields = null
+}) {
+  const publicAuthorityEvaluation =
+    discloseAuthorityEvaluation(
+      authorityEvaluation
+    );
+
+
+  return deepFreeze({
+    receiptType,
+
+
+    contractId:
+      H_EARTH_3D_CO

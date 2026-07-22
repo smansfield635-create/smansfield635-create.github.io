@@ -1,0 +1,60 @@
+_ADMITTED_GEOMETRY_FRAME_SCHEMA_VERSION,
+
+    file:
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_SOURCE_FILE,
+
+    layer:
+      'H_EARTH_LAYER_4_SHOWROOM_EXECUTION_CORRIDOR',
+
+    role:
+      H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_ROLE,
+
+    status:
+      'RENEWED_GATE_B_AND_LEGACY_BRIDGE_IMPLEMENTATION_CANDIDATE',
+
+    directDependencies:
+      deepFreeze({
+        packet002:
+          '../../../h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js',
+
+        gateBPacket002:
+          '../../../h-earth-3d/integration/h-earth.post-west-gate-b-occurrence-transfer.js',
+
+        geometryKernel:
+          './render/geometry-kernel.js',
+
+        capacity:
+          './capacity.js'
+      }),
+
+    expectedPacket002ContractId:
+      H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID,
+
+    expectedGateBPacket002ContractId:
+      H_EARTH_POST_WEST_GATE_B_OCCURRENCE_TRANSFER_CONTRACT_ID,
+
+    expectedPacket002Status:
+      EXPECTED_PACKET_002_STATUS,
+
+    consumedWestContractId:
+      H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID,
+
+    consumedCapacityContractId:
+      H_EARTH_3D_CAPACITY_CONTRACT_ID,
+
+    allowedPresentationModes:
+      ALLOWED_PRESENTATION_MODES,
+
+    requiredPublicInputKeys:
+      REQUIRED_PUBLIC_INPUT_KEYS,
+
+    requiredCompositorStateKeys:
+      REQUIRED_COMPOSITOR_STATE_KEYS,
+
+    requiredCameraCorrespondenceKeys:
+      REQUIRED_CAMERA_CORRESPONDENCE_KEYS,
+
+    requiredConstructedFrameKeys:
+      REQUIRED_CONSTRUCTED_FRAME_KEYS,
+
+    requiredGateBCons

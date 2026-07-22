@@ -1,0 +1,126 @@
+name: Battery result parent links
+
+on:
+  push:
+    branches:
+      - agent/battery-empirical-results-integration-002
+
+permissions:
+  contents: write
+
+jobs:
+  patch-parent-pages:
+    if: ${{ !contains(github.event.head_commit.message, '[battery-links-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/battery-empirical-results-integration-002
+          fetch-depth: 0
+
+      - name: Insert battery result navigation paths
+        shell: python
+        run: |
+          from pathlib import Path
+
+          branch = "agent/battery-empirical-results-integration-002"
+
+          laws_path = Path("laws/index.html")
+          laws = laws_path.read_text(encoding="utf-8")
+          laws_marker = 'data-laws-capability-id="battery-heldout-study"'
+          if laws_marker not in laws:
+              nav_start = laws.index('<nav\n        class="laws-value-deck"')
+              nav_end = laws.index('</nav>', nav_start)
+              card = '''
+        <a
+          class="laws-value-card"
+          href="/laws/battery-heldout-study/"
+          data-laws-capability-id="battery-heldout-study"
+        >
+          <span class="laws-value-card__eyebrow">
+            Held-out empirical result
+          </span>
+          <span class="laws-value-card__label">
+            Battery degradation study
+          </span>
+          <span class="laws-value-card__purpose">
+            Inspect 1,653 cell-disjoint evaluation cycles on three unseen batteries, including the strong axis result, burden confound, H* comparison, failed MQ threshold, and current claim ceiling.
+          </span>
+          <span class="laws-value-card__action">
+            Open battery result
+          </span>
+        </a>
+      '''
+              laws = laws[:nav_end] + card + laws[nav_end:]
+              laws_path.write_text(laws, encoding="utf-8")
+
+          scientific_path = Path("laws/scientific-law/index.html")
+          scientific = scientific_path.read_text(encoding="utf-8")
+          scientific_marker = 'id="battery-heldout-study"'
+          if scientific_marker not in scientific:
+              insert_at = scientific.index('</main>')
+              section = '''
+      <section
+        id="battery-heldout-study"
+        class="panel section"
+        data-battery-heldout-result-path
+        style="margin-top:1rem"
+        aria-labelledby="battery-heldout-study-title"
+      >
+        <p class="kicker">Current held-out result</p>
+        <h2 id="battery-heldout-study-title">Battery degradation study</h2>
+        <p>
+          A frozen cell-disjoint evaluation produced 1,653 cycles from three unseen batteries. The combined B/P/E/I/V axis model reached AUROC 0.9394, while the raw physical baseline reached 0.7850.
+        </p>
+        <p>
+          This is strong domain-specific predictive support, not universal-law validation. Burden dominance remains unresolved, H* did not add incremental value, and the hard MQ threshold was not supported.
+        </p>
+        <div class="actions">
+          <a class="button button-primary" href="/laws/scientific-law/battery-heldout-study/">Inspect scientific interpretation</a>
+          <a class="button" href="/frontier/energy/battery-coherence-study/">Open technical result</a>
+        </div>
+      </section>
+    '''
+              scientific = scientific[:insert_at] + section + scientific[insert_at:]
+              scientific_path.write_text(scientific, encoding="utf-8")
+
+          reality_path = Path("laws/categories/reality/index.html")
+          reality = reality_path.read_text(encoding="utf-8")
+          reality_marker = 'id="battery-heldout-study"'
+          if reality_marker not in reality:
+              insert_at = reality.index('</main>')
+              section = '''
+      <section
+        id="battery-heldout-study"
+        data-battery-heldout-result-path
+        style="margin:1.5rem auto;padding:1.25rem;max-width:1100px;border:1px solid rgba(255,255,255,.16);border-radius:1.25rem;background:rgba(255,255,255,.045)"
+        aria-labelledby="battery-heldout-reality-title"
+      >
+        <p style="margin:0 0 .5rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.72">Evidence · Measure · Limits</p>
+        <h2 id="battery-heldout-reality-title" style="margin:.25rem 0 1rem">Battery held-out result</h2>
+        <p>
+          The battery track supplies a strong test on unseen cells: axis AUROC 0.9394 across 1,653 held-out cycles. Its evidentiary value is bounded by burden dominance, absent conventional degradation controls, no H* incremental gain, and failure of the hard MQ threshold.
+        </p>
+        <p>
+          <a href="/laws/categories/reality/battery-heldout-study/">Open the Reality evidence record</a>
+          · <a href="/frontier/energy/battery-coherence-study/">Open the full technical result</a>
+        </p>
+      </section>
+    '''
+              reality = reality[:insert_at] + section + reality[insert_at:]
+              reality_path.write_text(reality, encoding="utf-8")
+
+          workflow = Path(".github/workflows/battery-result-parent-links.yml")
+          if workflow.exists():
+              workflow.unlink()
+
+      - name: Commit parent page links
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.html laws/scientific-law/index.html laws/categories/reality/index.html .github/workflows/battery-result-parent-links.yml
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Link parent pages to battery results [battery-links-applied]"
+          git push origin HEAD:agent/battery-empirical-results-integration-002

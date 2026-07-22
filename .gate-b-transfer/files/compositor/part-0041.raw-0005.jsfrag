@@ -50,4 +50,18 @@ function findExactCapacityCheck(
   capacityEvaluation,
   requiredId
 ) {
-  if 
+  if (
+    !isPlainRecord(capacityEvaluation) ||
+    !Array.isArray(
+      capacityEvaluation.checks
+    )
+  ) {
+    return null;
+  }
+
+
+  return (
+    capacityEvaluation.checks.find(
+      (check) =>
+        isPlainRecord(check) &&
+        check.id === re

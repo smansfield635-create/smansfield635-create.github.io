@@ -1,1 +1,44 @@
-<!doctype html><html lang="en" data-route="/laws/battery-heldout-study/" data-page="laws-battery-heldout-summary" data-universal-law-validation-claimed="false"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Battery Evidence Summary · Laws · Diamond Gate Bridge</title><style>body{margin:0;background:#02050d;color:#fff4d8;font:16px/1.6 system-ui,sans-serif}.shell{width:min(960px,calc(100% - 28px));margin:auto;padding:32px 0 60px}.card{border:1px solid #263850;border-radius:24px;background:#ffffff08;padding:clamp(20px,4vw,36px);margin:18px 0}h1{font-size:clamp(2.7rem,8vw,5.5rem);line-height:.95;margin:.2rem 0 1rem}h2{color:#f3c86f}.k{color:#f3c86f;font-weight:900;letter-spacing:.14em;text-transform:uppercase}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.m{border:1px solid #263850;border-radius:16px;padding:14px}.m b{display:block;font-size:1.5rem}a{color:#fff4d8}@media(max-width:700px){.metrics{grid-template-columns:1fr}}</style></head><body><main class="shell"><p><a href="/laws/">← Laws</a></p><section class="card"><p class="k">Applied evidence · Battery domain</p><h1>First strong cell-disjoint held-out signal.</h1><p>Across 1,653 held-out evaluation cycles from unseen batteries CS2_34, CS2_36, and CS2_38, the B/P/E/I/V axis model reached AUROC 0.9394 for predicting an 80% retained-capacity crossing within the next 20 cycles.</p></section><section class="card"><h2>Result snapshot</h2><div class="metrics"><div class="m">Axis logistic<b>0.9394</b></div><div class="m">Burden<b>0.9704</b></div><div class="m">Raw baseline<b>0.7850</b></div><div class="m">H*<b>0.7712</b></div><div class="m">Weakest-axis risk<b>0.6743</b></div><div class="m">MQ balanced accuracy<b>0.4994</b></div></div></section><section class="card"><h2>Correct standing</h2><p><strong>Strong domain-specific held-out empirical support:</strong> yes. <strong>Novel coherence mechanism established:</strong> no. <strong>Universal coherence law validated:</strong> no.</p><p>Burden dominance must be tested against cycle number, cumulative throughput, current capacity, and degradation slope. H* showed standalone discrimination but no incremental advantage. The hard MQ threshold was not supported.</p></section><section class="card"><h2>Continue</h2><p><a href="/frontier/energy/battery-coherence-study/">Full technical result</a> · <a href="/laws/scientific-law/battery-heldout-study/">Scientific interpretation</a> · <a href="/laws/categories/reality/battery-heldout-study/">Evidence, measure, and limits</a></p></section></main></body></html>
+<!doctype html>
+<html lang="en" data-route="/laws/battery-heldout-study/" data-page="laws-battery-heldout-summary" data-contract="LAWS_BATTERY_HELDOUT_NATIVE_WORKFLOW_HTML_TNT_v1" data-universal-law-validation-claimed="false" data-active-lens="platform">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Battery Evidence Summary · Laws · Diamond Gate Bridge</title>
+  <meta name="description" content="Laws-level summary of the battery held-out result through Platform, Engineering, and Evidence lenses with bounded claims and progressive disclosure.">
+  <link rel="canonical" href="https://diamondgatebridge.com/laws/battery-heldout-study/">
+  <link rel="stylesheet" href="/laws/battery-heldout-study/index.css?v=LAWS_BATTERY_HELDOUT_NATIVE_WORKFLOW_CSS_TNT_v1">
+  <script defer src="/laws/battery-heldout-study/index.js?v=LAWS_BATTERY_HELDOUT_NATIVE_WORKFLOW_JS_TNT_v1"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to battery evidence summary</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/laws/"><span class="brand-mark" aria-hidden="true"><span>LW</span></span><span class="brand-copy"><span>Applied evidence branch</span><strong>Laws · Battery Study</strong></span></a>
+      <nav class="nav" aria-label="Battery evidence routes"><a href="/frontier/energy/battery-coherence-study/">Technical result</a><a href="/laws/scientific-law/battery-heldout-study/">Scientific Law</a><a href="/laws/categories/reality/battery-heldout-study/">Reality evidence</a></nav>
+    </header>
+    <main id="main">
+      <section class="hero"><p class="kicker">Applied evidence · Battery domain</p><h1>First strong cell-disjoint held-out signal.</h1><p class="lead">Across 1,653 evaluation cycles from unseen batteries CS2_34, CS2_36, and CS2_38, the B/P/E/I/V axis model reached AUROC 0.9394 for predicting an 80% retained-capacity crossing within the next 20 cycles.</p></section>
+      <div class="lens-bar" role="tablist" aria-label="Battery evidence lens"><button class="lens-button" type="button" role="tab" data-lens-button="platform" aria-selected="true">Platform</button><button class="lens-button" type="button" role="tab" data-lens-button="engineering" aria-selected="false" tabindex="-1">Engineering</button><button class="lens-button" type="button" role="tab" data-lens-button="evidence" aria-selected="false" tabindex="-1">Evidence</button></div>
+      <section data-lens-panel="platform">
+        <details class="chamber" open><summary>What was found?</summary><div class="chamber-body"><p>The framework carried substantial information about approaching battery degradation into batteries excluded from development. That makes the result nontrivial and worth continued testing.</p><div class="metric-grid"><div class="metric">Axis logistic AUROC<b>0.9394</b></div><div class="metric">Raw physical baseline<b>0.7850</b></div><div class="metric">Burden AUROC<b>0.9704</b></div></div></div></details>
+        <details class="chamber"><summary>Why does it matter?</summary><div class="chamber-body"><p>The representation transferred to unseen batteries rather than merely fitting the development cells. The strongest conventional explanation remains unresolved, so the result is promising rather than final.</p></div></details>
+      </section>
+      <section data-lens-panel="engineering" hidden>
+        <details class="chamber" open><summary>Model comparison</summary><div class="chamber-body"><div class="metric-grid"><div class="metric">H* AUROC<b>0.7712</b></div><div class="metric">Weakest-axis risk<b>0.6743</b></div><div class="metric">Raw + H*<b>0.7770</b></div><div class="metric">H* incremental delta<b>−0.0080</b></div><div class="metric">MQ balanced accuracy<b>0.4994</b></div><div class="metric">MQ sensitivity<b>0%</b></div></div></div></details>
+        <details class="chamber"><summary>Required controls</summary><div class="chamber-body"><p>Cycle number, cumulative throughput, current capacity, recent degradation slope, burden ablation, raw-plus-axes comparison, chemistry transfer, external replication, threshold recalibration without leakage, and preregistered replication.</p></div></details>
+      </section>
+      <section data-lens-panel="evidence" hidden>
+        <details class="chamber" open><summary>Claim ceiling</summary><div class="chamber-body status-grid"><div class="status-row yes"><strong>Domain-specific held-out empirical support</strong><b>YES</b></div><div class="status-row open"><strong>Distinct coherence mechanism established</strong><b>UNRESOLVED</b></div><div class="status-row no"><strong>H* incremental superiority</strong><b>NO</b></div><div class="status-row no"><strong>Hard MQ threshold supported</strong><b>NO</b></div><div class="status-row no"><strong>Weakest-axis law established</strong><b>NO</b></div><div class="status-row no"><strong>Universal coherence law validated</strong><b>NO</b></div></div></details>
+        <details class="chamber"><summary>Frozen evaluation record</summary><div class="chamber-body"><p>Cell-disjoint held-out design; 1,653 evaluation cycles; unseen batteries CS2_34, CS2_36, and CS2_38; target crossing below 80% retained capacity within 20 cycles.</p></div></details>
+      </section>
+      <section class="chamber"><div class="chamber-body"><h2>Continue through the evidence architecture</h2><div class="route-grid"><a class="route-card" href="/frontier/energy/battery-coherence-study/"><b>Technical record</b>Full methods, metrics, limits, and next tests.</a><a class="route-card" href="/laws/scientific-law/battery-heldout-study/"><b>Scientific Law</b>Claim-testing ladder and inference boundary.</a><a class="route-card" href="/laws/categories/reality/battery-heldout-study/"><b>Reality</b>Theory, evidence, measure, and limits.</a></div></div></section>
+      <details class="chamber"><summary>Route receipt</summary><pre class="chamber-body receipt">LAWS_BATTERY_HELDOUT_NATIVE_WORKFLOW_HTML_TNT_v1
+route=/laws/battery-heldout-study/
+platform_engineering_evidence_lens=true
+progressive_disclosure=true
+universal_validation_claimed=false
+visual_pass_claimed=false</pre></details>
+    </main>
+  </div>
+</body>
+</html>

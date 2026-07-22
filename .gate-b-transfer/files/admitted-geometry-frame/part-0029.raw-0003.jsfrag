@@ -1,0 +1,73 @@
+adata?.sourceZoneIds,
+      sourceZoneIds
+    ) ||
+    !arraysEqual(
+      frameMetadata?.latticeRegionIds,
+      latticeRegionIds
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_AGGREGATE_SOURCE_PROVENANCE_INVALID',
+        'Aggregate-frame source provenance must match frame provenance.'
+      )
+    );
+  }
+
+  const standaloneProvenance =
+    validatePrimitiveSourceProvenance({
+      primitives:
+        Array.isArray(value.admittedPrimitives)
+          ? value.admittedPrimitives
+          : [],
+
+      sourceObjectIds,
+      sourceZoneIds,
+      latticeRegionIds,
+
+      fieldPrefix:
+        'admittedPrimitives'
+    });
+
+  issues.push(
+    ...standaloneProvenance.issues
+  );
+
+  const aggregateProvenance =
+    validatePrimitiveSourceProvenance({
+      primitives:
+        Array.isArray(aggregateFrame?.primitives)
+          ? aggregateFrame.primitives
+          : [],
+
+      sourceObjectIds,
+      sourceZoneIds,
+      latticeRegionIds,
+
+      fieldPrefix:
+        'aggregateFrameAdmissionRecord.primitives'
+    });
+
+  issues.push(
+    ...aggregateProvenance.issues
+  );
+
+  if (
+    !isPlainRecord(value.revisions) ||
+    !REQUIRED_REVISION_KEYS.every(
+      (key) =>
+        isNonNegativeSafeInteger(
+          value.revisions[key]
+        )
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_REVISIONS_INVALID',
+        'Frame revisions must contain safe nonnegative component revisions.'
+      )
+    );
+  }
+
+  if (isPlainRecord(value.revisions)) {
+   

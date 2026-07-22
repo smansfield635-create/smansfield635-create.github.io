@@ -1,0 +1,75 @@
+ed',
+    'sourceProvenanceAltered',
+    'actionLegalityEstablished',
+    'runtimeActivated',
+    'cryptographicIntegrityAuthenticated'
+  ];
+
+  for (const field of requiredFalseFlags) {
+    if (value[field] !== false) {
+      issues.push(
+        createBridgeIssue(
+          'FRAME_NON_AUTHORITY_FLAG_INVALID',
+          `${field} must equal false.`,
+          {
+            field,
+
+            expected:
+              false,
+
+            actual:
+              value[field] ??
+              null
+          }
+        )
+      );
+    }
+  }
+
+  if (
+    value.rendererConsumerEligibility !==
+      true ||
+    value.structuralCorrespondenceValidated !==
+      true ||
+    value.outputDeeplyFrozen !==
+      true
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_ELIGIBILITY_OR_CORRESPONDENCE_FLAG_INVALID',
+        'Renderer eligibility and structural correspondence flags are invalid.'
+      )
+    );
+  }
+
+  if (
+    !Array.isArray(value.issues) ||
+    value.issues.length !== 0
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_ISSUES_NOT_EMPTY',
+        'A successfully constructed frame must expose an empty issues array.'
+      )
+    );
+  }
+
+  if (!isDeeplyFrozen(value)) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_NOT_DEEPLY_FROZEN',
+        'The complete frame and all defining nested records must be deeply frozen.'
+      )
+    );
+  }
+
+  return Object.freeze({
+    ok:
+      issues.length === 0,
+
+    issues:
+      freezeIssues(issues)
+  });
+}
+
+function v

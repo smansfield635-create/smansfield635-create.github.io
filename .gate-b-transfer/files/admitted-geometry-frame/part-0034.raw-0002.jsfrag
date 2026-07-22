@@ -1,0 +1,68 @@
+ !isHEarthGeometryToleranceContext(
+      toleranceContext
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_TOLERANCE_CONTEXT_INVALID',
+        'Gate B frame toleranceContext is invalid.'
+      )
+    );
+  }
+
+  if (
+    !frameBoundsValid ||
+    !aggregateBoundsValid ||
+    value.bounds?.empty !== false ||
+    aggregateFrame?.bounds?.empty !== false ||
+    !areAABB3DRecordsEquivalent(
+      value.bounds,
+      aggregateFrame?.bounds,
+      toleranceContext,
+      0
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_BOUNDS_INVALID',
+        'Gate B frame and aggregate-frame bounds must be lawful, nonempty, and exactly correspondent.'
+      )
+    );
+  }
+
+  for (
+    const field
+    of [
+      'cameraStateSnapshot',
+      'viewportSnapshot',
+      'visibilitySnapshot',
+      'inertiaSnapshot',
+      'revisions',
+      'resolvedCameraPoseCorrespondence',
+      'normalizedResolvedCameraPose'
+    ]
+  ) {
+    if (!isPlainRecord(value[field])) {
+      issues.push(
+        createBridgeIssue(
+          'GATE_B_FRAME_REQUIRED_SNAPSHOT_INVALID',
+          `${field} must be a strict plain-record snapshot.`,
+          { field }
+        )
+      );
+    }
+  }
+
+  if (
+    !isPlainRecord(value.revisions) ||
+    !evaluateExactKeySurface(
+      value.revisions,
+      REQUIRED_REVISION_KEYS
+    ).ok ||
+    !REQUIRED_REVISION_KEYS.every(
+      (key) =>
+        isNonNegativeSafeInteger(
+          value.revisions[key]
+        )
+    ) ||
+    value.comp

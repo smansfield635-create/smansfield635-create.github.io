@@ -1,0 +1,59 @@
+ const revisionKeyEvaluation =
+      evaluateExactKeySurface(
+        value.revisions,
+        REQUIRED_REVISION_KEYS
+      );
+
+    if (!revisionKeyEvaluation.ok) {
+      issues.push(
+        createBridgeIssue(
+          'FRAME_REVISION_KEY_SURFACE_INVALID',
+          'Frame revisions must contain exactly the declared fields.',
+          {
+            details:
+              Object.freeze({
+                unknownKeys:
+                  revisionKeyEvaluation.unknownKeys,
+
+                missingKeys:
+                  revisionKeyEvaluation.missingKeys
+              })
+          }
+        )
+      );
+    }
+  }
+
+  if (
+    value.compositorFrameRevision !==
+    value.revisions?.frame
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_REVISION_CORRESPONDENCE_INVALID',
+        'compositorFrameRevision must equal revisions.frame.'
+      )
+    );
+  }
+
+  const cameraCorrespondence =
+    value.resolvedCameraPoseCorrespondence;
+
+  const cameraCorrespondenceKeyEvaluation =
+    evaluateExactKeySurface(
+      cameraCorrespondence,
+      REQUIRED_CAMERA_CORRESPONDENCE_KEYS
+    );
+
+  if (!cameraCorrespondenceKeyEvaluation.ok) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_CAMERA_CORRESPONDENCE_KEY_SURFACE_INVALID',
+        'resolvedCameraPoseCorrespondence must contain exactly the declared fields.',
+        {
+          details:
+            Object.freeze({
+              unknownKeys:
+                cameraCorrespondenceKeyEvaluation.unknownKeys,
+
+              missingKey

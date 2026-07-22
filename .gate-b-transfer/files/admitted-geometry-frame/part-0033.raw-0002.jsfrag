@@ -1,0 +1,55 @@
+ 'aggregateFrameId'
+    ]
+  ) {
+    if (!isNonEmptyString(value[field])) {
+      issues.push(
+        createBridgeIssue(
+          'GATE_B_FRAME_REQUIRED_IDENTITY_MISSING',
+          `${field} must be a non-empty string.`,
+          { field }
+        )
+      );
+    }
+  }
+
+  if (
+    value.packet002TransferOccurrenceIdOwnership !==
+      PACKET_002_OCCURRENCE_ID_OWNERSHIP ||
+    value.packet002OccurrenceIdentityAuthenticatedByProducer !== false ||
+    value.compositorFrameOccurrenceIdentityOwnership !==
+      COMPOSITOR_FRAME_OCCURRENCE_OWNERSHIP ||
+    value.resolvedCameraPoseOriginBinding !==
+      CAMERA_CORRESPONDENCE_OWNERSHIP ||
+    value.resolvedCameraPoseProducerAuthenticated !== false
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_OCCURRENCE_OR_CAMERA_OWNERSHIP_INVALID',
+        'Gate B frame occurrence-correlation or resolved-camera ownership declarations are invalid.'
+      )
+    );
+  }
+
+  if (
+    !arraysEqual(
+      value.admittedPrimitiveIds,
+      GATE_B_PRIMITIVE_ORDER
+    ) ||
+    !Object.isFrozen(value.admittedPrimitiveIds)
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_PRIMITIVE_IDS_INVALID',
+        'Gate B admittedPrimitiveIds must preserve exact producer order.'
+      )
+    );
+  }
+
+  const admittedPrimitiveOrder =
+    Array.isArray(value.admittedPrimitives)
+      ? value.admittedPrimitives.map(extractPrimitiveId)
+      : EMPTY_FROZEN_ARRAY;
+
+  if (
+    !Array.isArray(value.admittedPrimitives) ||
+    value.admi

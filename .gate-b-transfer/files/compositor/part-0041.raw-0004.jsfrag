@@ -1,0 +1,33 @@
+ableKeys = [];
+  const accessorKeys = [];
+
+
+  for (const key of stringKeys) {
+    const descriptor =
+      Object.getOwnPropertyDescriptor(
+        value,
+        key
+      );
+
+
+    if (!descriptor) {
+      continue;
+    }
+
+
+    if (descriptor.enumerable !== true) {
+      nonEnumerableKeys.push(key);
+    }
+
+
+    if (
+      typeof descriptor.get === 'function' ||
+      typeof descriptor.set === 'function'
+    ) {
+      accessorKeys.push(key);
+    }
+  }
+
+
+  nonEnumerableKeys.sort();
+  accessorKeys

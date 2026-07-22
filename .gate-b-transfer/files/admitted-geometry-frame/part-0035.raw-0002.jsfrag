@@ -1,0 +1,70 @@
+CoordinatesAltered',
+    'admittedIndicesAltered',
+    'admittedBoundsAltered',
+    'admittedPrimitiveIdentityAltered',
+    'sourceProvenanceAltered',
+    'actionLegalityEstablished',
+    'runtimeActivated',
+    'cryptographicIntegrityAuthenticated'
+  ];
+
+  for (const field of requiredFalseFlags) {
+    if (value[field] !== false) {
+      issues.push(
+        createBridgeIssue(
+          'GATE_B_FRAME_NONAUTHORITY_FLAG_INVALID',
+          `${field} must equal false.`,
+          { field }
+        )
+      );
+    }
+  }
+
+  if (
+    value.rendererConsumerEligibility !== true ||
+    value.structuralCorrespondenceValidated !== true ||
+    value.outputDeeplyFrozen !== true ||
+    !Array.isArray(value.issues) ||
+    value.issues.length !== 0 ||
+    !isDeeplyFrozen(value)
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_COMPLETION_STATE_INVALID',
+        'Gate B renderer eligibility, structural correspondence, empty issues, or deep-freeze postcondition is invalid.'
+      )
+    );
+  }
+
+  return Object.freeze({
+    ok:
+      issues.length === 0,
+    issues:
+      freezeIssues(issues)
+  });
+}
+
+function validateConstructedFrame(
+  value
+) {
+  return isGateBPresentationMode(
+    value?.presentationMode
+  )
+    ? validateGateBConstructedFrame(
+        value
+      )
+    : validateLegacyConstructedFrame(
+        value
+      );
+}
+
+
+export function isHEarth3DAdmittedGeometryFrame(
+  value
+) {
+  try {
+    return validateConstructedFrame(
+      value
+    ).ok;
+  } catch {
+    r

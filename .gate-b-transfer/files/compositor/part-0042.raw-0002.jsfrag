@@ -1,0 +1,34 @@
+'Non-finite numbers are not admitted in compositor public inputs.',
+            {
+              field:
+                path,
+
+
+              actual:
+                value
+            }
+          )
+      };
+    }
+
+
+    return {
+      ok: true,
+      value
+    };
+  }
+
+
+  if (
+    typeof value === 'undefined' ||
+    typeof value === 'function' ||
+    typeof value === 'symbol' ||
+    typeof value === 'bigint'
+  ) {
+    return {
+      ok: false,
+
+
+      issue:
+        createCompositorIssue(
+         

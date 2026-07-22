@@ -2,55 +2,37 @@ name: ARCHCOIN transaction port once
 
 on:
   pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - reopened
-      - synchronize
+    branches: [main]
+    types: [opened, reopened, synchronize]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  apply-verified-port:
+  diagnose-port:
     if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/archcoin-transactional-preservation-001'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout preservation branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: agent/archcoin-transactional-preservation-001
           fetch-depth: 0
 
       - name: Verify exact source identities
-        shell: bash
         run: |
           set -euo pipefail
           test "$(git hash-object products/archcoin/index.controller.js)" = "fbe137abe15780d61e5fab37f7b381b076c70d51"
-          test -f products/archcoin/index.controller.transaction-port.patch
-          test -f products/archcoin/index.transaction-checkpoint.js
 
-      - name: Apply controller patch
-        shell: bash
+      - name: Apply guarded patch
         run: |
           set -euo pipefail
           python3 <<'PY'
           from pathlib import Path
-
-          target_path = Path('products/archcoin/index.controller.js')
-          patch_path = Path('products/archcoin/index.controller.transaction-port.patch')
-          source = target_path.read_text(encoding='utf-8')
-          lines = patch_path.read_text(encoding='utf-8').splitlines()
-
-          if not lines or lines[0] != '*** Begin Patch':
-              raise SystemExit('ARCHCOIN_PATCH_BEGIN_MARKER_INVALID')
-          if lines[-1] != '*** End Patch':
-              raise SystemExit('ARCHCOIN_PATCH_END_MARKER_INVALID')
-          if '*** Update File: products/archcoin/index.controller.js' not in lines:
-              raise SystemExit('ARCHCOIN_PATCH_TARGET_INVALID')
-
+          target = Path('products/archcoin/index.controller.js')
+          patch = Path('products/archcoin/index.controller.transaction-port.patch')
+          source = target.read_text(encoding='utf-8')
+          lines = patch.read_text(encoding='utf-8').splitlines()
           hunks = []
           current = None
           for line in lines:
@@ -58,157 +40,54 @@ jobs:
                   if current is not None:
                       hunks.append(current)
                   current = []
-                  continue
-              if current is not None:
-                  if line.startswith('*** '):
-                      continue
+              elif current is not None and not line.startswith('*** '):
                   current.append(line)
           if current is not None:
               hunks.append(current)
-
           cursor = 0
-          for index, hunk in enumerate(hunks, start=1):
-              old_lines = []
-              new_lines = []
+          for index, hunk in enumerate(hunks, 1):
+              old_lines, new_lines = [], []
               for line in hunk:
                   if line.startswith(' '):
-                      old_lines.append(line[1:])
-                      new_lines.append(line[1:])
+                      old_lines.append(line[1:]); new_lines.append(line[1:])
                   elif line.startswith('+'):
                       new_lines.append(line[1:])
                   elif line.startswith('-'):
                       old_lines.append(line[1:])
                   elif line == '':
-                      old_lines.append('')
-                      new_lines.append('')
+                      old_lines.append(''); new_lines.append('')
                   else:
-                      raise SystemExit(f'ARCHCOIN_PATCH_LINE_INVALID:{index}:{line!r}')
-
+                      raise SystemExit(f'INVALID_PATCH_LINE:{index}:{line!r}')
               old = '\n'.join(old_lines)
               new = '\n'.join(new_lines)
-              if not old:
-                  raise SystemExit(f'ARCHCOIN_PATCH_EMPTY_CONTEXT:{index}')
-
               location = source.find(old, cursor)
               if location < 0:
                   location = source.find(old)
               if location < 0:
-                  raise SystemExit(f'ARCHCOIN_PATCH_CONTEXT_NOT_FOUND:{index}')
-
+                  raise SystemExit(f'PATCH_CONTEXT_NOT_FOUND:{index}')
               source = source[:location] + new + source[location + len(old):]
               cursor = location + len(new)
-
-          target_path.write_text(source, encoding='utf-8')
-          print(f'Applied {len(hunks)} guarded additive hunks')
+          target.write_text(source, encoding='utf-8')
           PY
 
-      - name: Validate JavaScript syntax
-        run: node --check products/archcoin/index.controller.js
-
-      - name: Validate diff whitespace
-        run: git diff --check
-
-      - name: Validate preserved APIs and contracts
-        shell: bash
+      - name: Capture syntax diagnostic
+        id: syntax
+        continue-on-error: true
         run: |
-          set -euo pipefail
-          git show c9b2327288ee35b51112639931831189879ebd85:products/archcoin/index.controller.js > /tmp/base-controller.js
-          node <<'NODE'
-          const fs = require('fs');
-          const base = fs.readFileSync('/tmp/base-controller.js', 'utf8');
-          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
-          const required = [
-            'AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1',
-            'beginOrbitGesture',
-            'requestOrbitPreview',
-            'requestOrbitCommit',
-            'requestOrbitCancel',
-            'beginClusterGesture',
-            'requestClusterPreview',
-            'requestClusterCommit',
-            'requestClusterCancel',
-            'updateSemanticProjection',
-            'requestReturnToMainCompass',
-            'route: "/index.html"'
-          ];
-          for (const token of required) {
-            if (!base.includes(token) || !next.includes(token)) {
-              throw new Error(`Required preserved token missing: ${token}`);
-            }
-          }
-          NODE
+          set +e
+          node --check products/archcoin/index.controller.js > archcoin-controller-syntax.log 2>&1
+          status=$?
+          cat archcoin-controller-syntax.log
+          exit $status
 
-      - name: Validate route parity
-        shell: bash
-        run: |
-          set -euo pipefail
-          git show c9b2327288ee35b51112639931831189879ebd85:products/archcoin/index.controller.js > /tmp/base-controller.js
-          node <<'NODE'
-          const fs = require('fs');
-          const base = fs.readFileSync('/tmp/base-controller.js', 'utf8');
-          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
-          const routePattern = /route:\s*"([^"]+)"/g;
-          const routes = text => [...text.matchAll(routePattern)].map(match => match[1]);
-          if (JSON.stringify(routes(base)) !== JSON.stringify(routes(next))) {
-            throw new Error('Canonical route inventory changed');
-          }
-          NODE
+      - name: Upload syntax diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: archcoin-controller-syntax-diagnostic
+          path: archcoin-controller-syntax.log
+          if-no-files-found: error
 
-      - name: Validate required transactional additions
-        shell: bash
-        run: |
-          set -euo pipefail
-          node <<'NODE'
-          const fs = require('fs');
-          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
-          const required = [
-            'const TRANSACTION_PHASES',
-            'transactionRevision',
-            'evaluateTransactionPhaseTransition',
-            'ARCHCOIN_HOME_COMPASS_TRANSACTION_PARTICIPATION_FORBIDDEN',
-            'requestTransactionPhaseTransition'
-          ];
-          for (const token of required) {
-            if (!next.includes(token)) {
-              throw new Error(`Transactional addition missing: ${token}`);
-            }
-          }
-          NODE
-
-      - name: Validate additions-only controller diff
-        shell: bash
-        run: |
-          set -euo pipefail
-          git diff --numstat -- products/archcoin/index.controller.js
-          stats="$(git diff --numstat -- products/archcoin/index.controller.js)"
-          additions="$(printf '%s' "$stats" | awk '{print $1}')"
-          deletions="$(printf '%s' "$stats" | awk '{print $2}')"
-          test -n "$additions"
-          test "$deletions" = "0"
-
-      - name: Remove staging artifacts and workflow
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm products/archcoin/index.transaction-checkpoint.js
-          rm products/archcoin/index.controller.transaction-port.patch
-          rm .github/workflows/archcoin-transaction-port-once.yml
-
-      - name: Verify final branch delta
-        shell: bash
-        run: |
-          set -euo pipefail
-          changed="$(git diff --name-only c9b2327288ee35b51112639931831189879ebd85)"
-          test "$changed" = "products/archcoin/index.controller.js"
-          node --check products/archcoin/index.controller.js
-          git diff --check
-
-      - name: Commit preserved controller checkpoint
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Add preserved ARCHCOIN transactional controller checkpoint"
-          git push origin HEAD:agent/archcoin-transactional-preservation-001
+      - name: Fail on syntax error
+        if: steps.syntax.outcome == 'failure'
+        run: exit 1

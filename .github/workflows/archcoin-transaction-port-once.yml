@@ -1,17 +1,21 @@
 name: ARCHCOIN transaction port once
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/archcoin-transactional-preservation-001
-    paths:
-      - .github/workflows/archcoin-transaction-port-once.yml
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   apply-verified-port:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/archcoin-transactional-preservation-001'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout preservation branch

@@ -1,0 +1,37 @@
+      nonEnumerableKeys:
+        EMPTY_FROZEN_ARRAY,
+
+
+      accessorKeys:
+        EMPTY_FROZEN_ARRAY
+    });
+  }
+
+
+  const ownKeys =
+    Reflect.ownKeys(value);
+
+
+  const stringKeys =
+    ownKeys.filter(
+      (key) =>
+        typeof key === 'string'
+    );
+
+
+  const symbolKeys =
+    ownKeys.filter(
+      (key) =>
+        typeof key === 'symbol'
+    );
+
+
+  const requiredKeySet =
+    new Set(requiredKeys);
+
+
+  const unknownKeys =
+    stringKeys
+      .filter(
+        (key) =>
+          !required

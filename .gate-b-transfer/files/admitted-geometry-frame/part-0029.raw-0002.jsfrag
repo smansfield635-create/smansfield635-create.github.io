@@ -1,0 +1,71 @@
+ );
+  }
+
+  if (
+    !frameBoundsValid ||
+    !aggregateBoundsValid ||
+    !areAABB3DRecordsEquivalent(
+      value.bounds,
+      aggregateFrame?.bounds,
+      toleranceContext,
+      0
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_BOUNDS_CORRESPONDENCE_INVALID',
+        'Frame bounds must correspond exactly to aggregate-frame bounds.'
+      )
+    );
+  }
+
+  const frameMetadata =
+    extractFrameMetadata(
+      aggregateFrame
+    );
+
+  if (
+    !isCanonicalStringArray(
+      frameMetadata?.sourceObjectIds
+    ) ||
+    !isCanonicalStringArray(
+      frameMetadata?.sourceZoneIds
+    ) ||
+    !isCanonicalStringArray(
+      frameMetadata?.latticeRegionIds
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_AGGREGATE_PROVENANCE_ARRAY_NOT_CANONICAL',
+        'Aggregate-frame provenance arrays must be canonical and duplicate-free.'
+      )
+    );
+  }
+
+  if (
+    normalizeString(
+      frameMetadata?.requestId
+    ) !== value.requestId ||
+    normalizeString(
+      frameMetadata?.providerRequestId
+    ) !== value.providerRequestId ||
+    normalizeString(
+      frameMetadata?.resolutionReceiptId
+    ) !== value.resolutionReceiptId
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_AGGREGATE_REQUEST_PROVENANCE_INVALID',
+        'Aggregate-frame request provenance must match frame provenance.'
+      )
+    );
+  }
+
+  if (
+    !arraysEqual(
+      frameMetadata?.sourceObjectIds,
+      sourceObjectIds
+    ) ||
+    !arraysEqual(
+      frameMet

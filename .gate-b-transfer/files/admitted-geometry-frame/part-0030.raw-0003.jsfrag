@@ -1,0 +1,75 @@
+      cameraCorrespondence.resolvedCameraPose
+        )
+      : null;
+
+  if (
+    !isPlainRecord(
+      cameraCapacityEvaluation
+    ) ||
+    cameraCapacityEvaluation.eligible !==
+      true
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_CAMERA_POSE_NOT_ELIGIBLE',
+        'Frame resolved camera pose is not capacity-eligible.'
+      )
+    );
+  }
+
+  const renormalizedPose =
+    normalizeResolvedCameraPose(
+      cameraCorrespondence?.resolvedCameraPose
+    );
+
+  const basisValidation =
+    validateNormalizedCameraBasis(
+      renormalizedPose
+    );
+
+  issues.push(
+    ...basisValidation.issues
+  );
+
+  if (
+    !normalizedCameraPosesEqual(
+      renormalizedPose,
+      value.normalizedResolvedCameraPose,
+      0
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_NORMALIZED_CAMERA_POSE_MISMATCH',
+        'normalizedResolvedCameraPose must correspond to resolvedCameraPoseCorrespondence.resolvedCameraPose.'
+      )
+    );
+  }
+
+  if (
+    value.rendererCameraPoseField !==
+    RENDERER_CAMERA_POSE_FIELD
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_RENDERER_CAMERA_POSE_FIELD_INVALID',
+        'Renderer camera-pose field declaration is invalid.'
+      )
+    );
+  }
+
+  const viewportEvaluation =
+    evaluateHEarth3DViewportCapacity(
+      value.viewportSnapshot
+    );
+
+  if (
+    !isPlainRecord(
+      viewportEvaluation
+    ) ||
+    viewportEvaluation.eligible !==
+      true
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAM

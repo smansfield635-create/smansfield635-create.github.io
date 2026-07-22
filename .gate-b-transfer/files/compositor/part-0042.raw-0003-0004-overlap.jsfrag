@@ -1,0 +1,17 @@
+      'Repeated references and cyclic structures are not admitted.',
+          {
+            field:
+              path
+          }
+        )
+    };
+  }
+
+
+  if (Array.isArray(value)) {
+    const ownKeys =
+      Reflect.ownKeys(value);
+
+
+    for (const key of ownKeys) {
+      if (typeof key !== 'strin

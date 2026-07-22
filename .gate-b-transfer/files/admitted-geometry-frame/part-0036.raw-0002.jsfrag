@@ -1,0 +1,49 @@
+tructedFrameKeys:
+      REQUIRED_GATE_B_CONSTRUCTED_FRAME_KEYS,
+
+    gateBAddedFrameKeys:
+      GATE_B_REQUIRED_ADDED_FRAME_KEYS,
+
+    gateBFiveKeySemantics:
+      deepFreeze({
+        packet002Family:
+          'EXACT_PACKET_OWNED_PACKET_FAMILY_NO_NORMALIZATION_GATE_B_ONLY',
+
+        provenanceMode:
+          'EXACT_PACKET_OWNED_GATE_B_PER_PRIMITIVE_PROVENANCE_MODE_LEGACY_FRAMES_EXCLUDED',
+
+        primitiveProvenanceApplicability:
+          'EXACT_PACKET_OWNED_REFERENCE_IDENTITY_CARDINALITY_3_NO_CLONE_RECONSTRUCTION_SYNTHESIS_OR_MUTATION',
+
+        presentationPolicyId:
+          'INTERNALLY_SELECTED_FROM_EXACT_GATE_B_PRESENTATION_MODE_MAPPING_NOT_CALLER_OR_PACKET_SUPPLIED',
+
+        diagnosticEvidenceMemberIds:
+          'EXACT_PACKET_OWNED_PRIMITIVE_ORDER_REFERENCE_NO_RECONSTRUCTION'
+      }),
+
+    gateBPublicPresentationRoles:
+      H_EARTH_3D_GATE_B_PUBLIC_PRESENTATION_ROLES,
+
+    gateBDiagnosticPresentationRoles:
+      H_EARTH_3D_GATE_B_DIAGNOSTIC_PRESENTATION_ROLES,
+
+    gateBPublicFrameVisibility:
+      GATE_B_PUBLIC_FRAME_VISIBILITY,
+
+    gateBDiagnosticFrameVisibility:
+      GATE_B_DIAGNOSTIC_FRAME_VISIBILITY,
+
+    requiredPresentationAssignmentKeys:
+      REQUIRED_PRESENTATION_ASSIGNMENT_KEYS,
+
+    packet002TransferOccurrenceIdOwnership:
+      PACKET_002_OCCURRENCE_ID_OWNERSHIP,
+
+    packet002OccurrenceIdentityAuthenticatedByProducer:
+      false,
+
+    packet002SnapshotRequirement:
+      'INPUT_PACKET_002_TRANSFER_MUST_ALREADY_BE_DEEPLY_FROZEN',
+
+    packet002Muta

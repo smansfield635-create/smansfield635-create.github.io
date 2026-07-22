@@ -1,16 +1,19 @@
 name: Battery result parent links
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/battery-empirical-results-integration-002
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
 
 permissions:
   contents: write
 
 jobs:
   patch-parent-pages:
-    if: ${{ !contains(github.event.head_commit.message, '[battery-links-applied]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,8 +25,6 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-
-          branch = "agent/battery-empirical-results-integration-002"
 
           laws_path = Path("laws/index.html")
           laws = laws_path.read_text(encoding="utf-8")
@@ -37,18 +38,12 @@ jobs:
           href="/laws/battery-heldout-study/"
           data-laws-capability-id="battery-heldout-study"
         >
-          <span class="laws-value-card__eyebrow">
-            Held-out empirical result
-          </span>
-          <span class="laws-value-card__label">
-            Battery degradation study
-          </span>
+          <span class="laws-value-card__eyebrow">Held-out empirical result</span>
+          <span class="laws-value-card__label">Battery degradation study</span>
           <span class="laws-value-card__purpose">
             Inspect 1,653 cell-disjoint evaluation cycles on three unseen batteries, including the strong axis result, burden confound, H* comparison, failed MQ threshold, and current claim ceiling.
           </span>
-          <span class="laws-value-card__action">
-            Open battery result
-          </span>
+          <span class="laws-value-card__action">Open battery result</span>
         </a>
       '''
               laws = laws[:nav_end] + card + laws[nav_end:]

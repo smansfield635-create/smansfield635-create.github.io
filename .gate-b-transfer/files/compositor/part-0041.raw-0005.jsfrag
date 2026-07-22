@@ -30,4 +30,24 @@
 
     accessorKeys:
       Object.freeze(
-   
+        accessorKeys
+      )
+  });
+}
+
+
+function isExactCapacityEligible(
+  evaluation
+) {
+  return (
+    isPlainRecord(evaluation) &&
+    evaluation.eligible === true
+  );
+}
+
+
+function findExactCapacityCheck(
+  capacityEvaluation,
+  requiredId
+) {
+  if 

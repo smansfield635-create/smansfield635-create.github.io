@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  diagnose-port:
+  apply-verified-port:
     if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/archcoin-transactional-preservation-001'
     runs-on: ubuntu-latest
     steps:
@@ -23,6 +23,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git hash-object products/archcoin/index.controller.js)" = "fbe137abe15780d61e5fab37f7b381b076c70d51"
+          test -f products/archcoin/index.controller.transaction-port.patch
+          test -f products/archcoin/index.transaction-checkpoint.js
 
       - name: Apply guarded patch
         run: |
@@ -68,26 +70,99 @@ jobs:
               source = source[:location] + new + source[location + len(old):]
               cursor = location + len(new)
           target.write_text(source, encoding='utf-8')
+          print(f'Applied {len(hunks)} guarded additive hunks')
           PY
 
-      - name: Capture syntax diagnostic
-        id: syntax
-        continue-on-error: true
+      - name: Validate JavaScript syntax
+        run: node --check products/archcoin/index.controller.js
+
+      - name: Validate diff whitespace
+        run: git diff --check
+
+      - name: Validate preserved APIs and contracts
         run: |
-          set +e
-          node --check products/archcoin/index.controller.js > archcoin-controller-syntax.log 2>&1
-          status=$?
-          cat archcoin-controller-syntax.log
-          exit $status
+          set -euo pipefail
+          git show c9b2327288ee35b51112639931831189879ebd85:products/archcoin/index.controller.js > /tmp/base-controller.js
+          node <<'NODE'
+          const fs = require('fs');
+          const base = fs.readFileSync('/tmp/base-controller.js', 'utf8');
+          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
+          const required = [
+            'AUDRALIA_ARCHCOIN_COMPLETE_QUATERNION_MOTION_CONTRACT_v1',
+            'beginOrbitGesture', 'requestOrbitPreview', 'requestOrbitCommit',
+            'requestOrbitCancel', 'beginClusterGesture', 'requestClusterPreview',
+            'requestClusterCommit', 'requestClusterCancel',
+            'updateSemanticProjection', 'requestReturnToMainCompass',
+            'route: "/index.html"'
+          ];
+          for (const token of required) {
+            if (!base.includes(token) || !next.includes(token)) {
+              throw new Error(`Required preserved token missing: ${token}`);
+            }
+          }
+          NODE
 
-      - name: Upload syntax diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: archcoin-controller-syntax-diagnostic
-          path: archcoin-controller-syntax.log
-          if-no-files-found: error
+      - name: Validate route parity
+        run: |
+          set -euo pipefail
+          git show c9b2327288ee35b51112639931831189879ebd85:products/archcoin/index.controller.js > /tmp/base-controller.js
+          node <<'NODE'
+          const fs = require('fs');
+          const base = fs.readFileSync('/tmp/base-controller.js', 'utf8');
+          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
+          const pattern = /route:\s*"([^"]+)"/g;
+          const routes = text => [...text.matchAll(pattern)].map(match => match[1]);
+          if (JSON.stringify(routes(base)) !== JSON.stringify(routes(next))) {
+            throw new Error('Canonical route inventory changed');
+          }
+          NODE
 
-      - name: Fail on syntax error
-        if: steps.syntax.outcome == 'failure'
-        run: exit 1
+      - name: Validate required transactional additions
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const next = fs.readFileSync('products/archcoin/index.controller.js', 'utf8');
+          const required = [
+            'const TRANSACTION_PHASES', 'transactionRevision',
+            'evaluateTransactionPhaseTransition',
+            'ARCHCOIN_HOME_COMPASS_TRANSACTION_PARTICIPATION_FORBIDDEN',
+            'requestTransactionPhaseTransition'
+          ];
+          for (const token of required) {
+            if (!next.includes(token)) throw new Error(`Transactional addition missing: ${token}`);
+          }
+          NODE
+
+      - name: Validate additions-only controller diff
+        run: |
+          set -euo pipefail
+          stats="$(git diff --numstat -- products/archcoin/index.controller.js)"
+          echo "$stats"
+          additions="$(printf '%s' "$stats" | awk '{print $1}')"
+          deletions="$(printf '%s' "$stats" | awk '{print $2}')"
+          test -n "$additions"
+          test "$deletions" = "0"
+
+      - name: Remove staging artifacts and workflow
+        run: |
+          set -euo pipefail
+          rm products/archcoin/index.transaction-checkpoint.js
+          rm products/archcoin/index.controller.transaction-port.patch
+          rm .github/workflows/archcoin-transaction-port-once.yml
+
+      - name: Verify final branch delta
+        run: |
+          set -euo pipefail
+          changed="$(git diff --name-only c9b2327288ee35b51112639931831189879ebd85)"
+          test "$changed" = "products/archcoin/index.controller.js"
+          node --check products/archcoin/index.controller.js
+          git diff --check
+
+      - name: Commit preserved controller checkpoint
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add preserved ARCHCOIN transactional controller checkpoint"
+          git push origin HEAD:agent/archcoin-transactional-preservation-001

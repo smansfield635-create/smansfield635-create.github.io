@@ -1,0 +1,38 @@
+  ok:
+      unknownKeys.length === 0 &&
+      missingKeys.length === 0,
+
+
+    unknownKeys:
+      Object.freeze(unknownKeys),
+
+
+    missingKeys:
+      Object.freeze(missingKeys)
+  });
+}
+
+
+function evaluateCompleteOwnKeySurface(
+  value,
+  requiredKeys
+) {
+  if (!isPlainRecord(value)) {
+    return deepFreeze({
+      ok: false,
+
+
+      unknownKeys:
+        EMPTY_FROZEN_ARRAY,
+
+
+      missingKeys:
+        Object.freeze([
+          ...requiredKeys
+        ]),
+
+
+      symbolKeysPresent:
+        false,
+
+

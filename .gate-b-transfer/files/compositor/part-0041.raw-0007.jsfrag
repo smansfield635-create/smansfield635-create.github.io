@@ -1,0 +1,37 @@
+quiredId
+    ) ??
+    null
+  );
+}
+
+
+function getExactCapacityDomainEvaluation(
+  capacityEvaluation,
+  requiredId
+) {
+  const check =
+    findExactCapacityCheck(
+      capacityEvaluation,
+      requiredId
+    );
+
+
+  if (
+    !check ||
+    check.passed !== true ||
+    !isPlainRecord(check.details)
+  ) {
+    return null;
+  }
+
+
+  return check.details;
+}
+
+
+function createCapacityRejectionIssue(
+  field = 'intent'
+) {
+  return createCompositorIssue(
+    'CAPACITY_AUTHORITY_REJECTED',
+    'The authori

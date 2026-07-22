@@ -1,0 +1,61 @@
+   'Gate B frame Packet 002 identity, provisional state, or dependency identity is invalid.'
+      )
+    );
+  }
+
+  if (
+    value.packet002Family !==
+      GATE_B_PACKET_002_FAMILY ||
+    value.provenanceMode !==
+      H_EARTH_3D_GATE_B_PER_PRIMITIVE_PROVENANCE_MODE ||
+    value.presentationPolicyId !==
+      getGateBPresentationPolicyId(
+        value.presentationMode
+      ) ||
+    !arraysEqual(
+      value.diagnosticEvidenceMemberIds,
+      GATE_B_PRIMITIVE_ORDER
+    ) ||
+    !Object.isFrozen(
+      value.diagnosticEvidenceMemberIds
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_FIVE_KEY_SEMANTICS_INVALID',
+        'Gate B frame family, provenance, presentation policy, or evidence membership is invalid.'
+      )
+    );
+  }
+
+  const provenanceValidation =
+    validateGateBPrimitiveProvenanceApplicability(
+      value.primitiveProvenanceApplicability
+    );
+
+  issues.push(
+    ...provenanceValidation.issues
+  );
+
+  if (
+    value.sourceObjectIds !== null ||
+    value.sourceZoneIds !== null ||
+    value.latticeRegionIds !== null
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_FLAT_PROVENANCE_PRESENT',
+        'Gate B frames must not synthesize legacy flat source-object, source-zone, or lattice-region provenance arrays.'
+      )
+    );
+  }
+
+  for (
+    const field
+    of [
+      'compositorFrameOccurrenceId',
+      'packet002TransferOccurrenceId',
+      'requestId',
+      'providerRequestId',
+      'resolutionReceiptId',
+     

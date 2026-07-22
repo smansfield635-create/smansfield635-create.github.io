@@ -1,0 +1,80 @@
+    gateBFiveKeySemanticClosureDefined:
+      true,
+
+    gateBPacket002FamilyValidationDefined:
+      true,
+
+    gateBPerPrimitiveProvenanceValidationDefined:
+      true,
+
+    gateBPresentationPolicySelectionDefined:
+      true,
+
+    gateBDiagnosticEvidenceMembershipDefined:
+      true,
+
+    legacyFrameShapePreservationDefined:
+      true,
+
+    gateBRoleKeyedVisibilityDefined:
+      true,
+
+    presentationAssignmentCardinalityDefined:
+      true,
+
+    exactPresentationAssignmentKeyEqualityDefined:
+      true,
+
+    completePresentationAssignmentValueValidationDefined:
+      true,
+
+    exactConstructedFrameKeyEqualityDefined:
+      true,
+
+    compositorSnapshotFieldPresenceValidationDefined:
+      true,
+
+    immutableRendererConsumerFrameDefined:
+      true,
+
+    completePublicFrameValidatorDefined:
+      true,
+
+    totalBooleanPublicFrameValidatorDefined:
+      true,
+
+    constructionPostconditionValidationDefined:
+      true,
+
+    repeatedReferenceRejectionDocumented:
+      true,
+
+    packet002ProducerOccurrenceAuthenticationDefined:
+      false,
+
+    resolvedCameraPoseProducerAuthenticationDefined:
+      false,
+
+    cryptographicIntegrityAuthenticationDefined:
+      false,
+
+    moduleSyntaxVerified:
+      false,
+
+    importResolutionVerified:
+      false,
+
+    moduleInitializationVerified:
+      false,
+
+    isolatedBehaviorVerified:
+      false,
+
+    controlledAuditVerified:
+      false,
+
+    compositorIntegrationVerified:
+      false,
+
+    rendererConsumptionVerified:
+     

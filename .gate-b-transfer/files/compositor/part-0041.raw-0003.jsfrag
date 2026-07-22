@@ -43,4 +43,7 @@
     requiredKeys
       .filter(
         (key) =>
-          !Object.prototype.hasOwnProp
+          !Object.prototype.hasOwnProperty.call(
+            value,
+            key
+    

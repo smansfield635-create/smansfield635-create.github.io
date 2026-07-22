@@ -1,0 +1,63 @@
+LD
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_CAMERA_POSE_INVALID',
+        'Gate B resolved camera pose is not capacity-eligible or exactly normalized.'
+      )
+    );
+  }
+
+  const viewportEvaluation =
+    evaluateHEarth3DViewportCapacity(
+      value.viewportSnapshot
+    );
+
+  if (
+    !isPlainRecord(viewportEvaluation) ||
+    viewportEvaluation.eligible !== true
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_VIEWPORT_INVALID',
+        'Gate B frame viewport is not capacity-eligible.'
+      )
+    );
+  }
+
+  const presentationValidation =
+    validateGateBPresentationAssignmentsForFrame(
+      value
+    );
+
+  issues.push(
+    ...presentationValidation.issues
+  );
+
+  if (
+    value.geometryIndexEntryId !== null ||
+    value.compositorNodeId !== null ||
+    value.renderInstanceId !== null
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_PREMATURE_IDENTITY_PRESENT',
+        'Gate B frame must not contain premature index, compositor-node, or renderer-instance identity.'
+      )
+    );
+  }
+
+  const requiredFalseFlags = [
+    'geometryConstructionAuthority',
+    'westAdmissionAuthority',
+    'geometryIndexAuthority',
+    'compositorMutationAuthority',
+    'compositorRevisionAdvanced',
+    'compositorNodeIdentityCreated',
+    'rendererAuthority',
+    'rendererResourceCreated',
+    'renderInstanceCreated',
+    'materialCreated',
+    'materialSourceAuthorityAltered',
+    'sourceGeometryReconstructed',
+    'admitted

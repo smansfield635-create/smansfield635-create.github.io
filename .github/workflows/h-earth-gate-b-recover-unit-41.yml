@@ -1,0 +1,92 @@
+name: H-Earth Gate B Recover Unit 41
+
+on:
+  push:
+    branches:
+      - agent/h-earth-gate-b-transfer-staging-001
+    paths:
+      - .gate-b-transfer/recover-unit-41.request
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Recover exact unit 41 from repository history
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import pathlib
+          import subprocess
+
+          expected_sha256 = '5b9932a5f88e9087183a10de29f7e6c173f6e8c5b666c5a668114398e2e8b972'
+          expected_git_blob = 'cc76ecee40428c8a256be0e637f56448c73f9ab7'
+          expected_length = 4500
+          source_path = 'showroom/globe/h-earth/compositor.js'
+          source_refs = [
+              'c9b2327288ee35b51112639931831189879ebd85',
+              'edf2bb09c4880aaf6b7ad419c285da35278ccf46',
+              '82a23eed980741b249e0b787ffcee5d36270a7cb',
+          ]
+
+          matches = []
+          for ref in source_refs:
+              result = subprocess.run(
+                  ['git', 'show', f'{ref}:{source_path}'],
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.DEVNULL,
+              )
+              if result.returncode != 0:
+                  continue
+              raw = result.stdout
+              for offset in range(0, len(raw) - expected_length + 1):
+                  candidate = raw[offset:offset + expected_length]
+                  if hashlib.sha256(candidate).hexdigest() == expected_sha256:
+                      matches.append((ref, offset, candidate))
+
+          assert matches, 'Exact unit-41 byte range was not found in inspected repository history.'
+          unique = {(ref, offset) for ref, offset, _ in matches}
+          assert len(unique) >= 1
+
+          ref, offset, recovered = matches[0]
+          out = pathlib.Path('.gate-b-transfer/files/compositor/part-0003.repository-recovered.raw')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_bytes(recovered)
+
+          git_blob = subprocess.check_output(
+              ['git', 'hash-object', str(out)], text=True
+          ).strip()
+          assert len(recovered) == expected_length
+          assert hashlib.sha256(recovered).hexdigest() == expected_sha256
+          assert git_blob == expected_git_blob
+
+          receipt = pathlib.Path('.gate-b-transfer/unit-41.repository-recovery.receipt')
+          receipt.write_text(
+              '\n'.join([
+                  'UNIT=41',
+                  f'SOURCE_REF={ref}',
+                  f'SOURCE_PATH={source_path}',
+                  f'SOURCE_BYTE_OFFSET={offset}',
+                  f'BYTE_COUNT={len(recovered)}',
+                  f'SHA256={expected_sha256}',
+                  f'GIT_BLOB_SHA={git_blob}',
+                  'IDENTITY_RESULT=PASS',
+                  '',
+              ])
+          )
+          PY
+
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .gate-b-transfer/files/compositor/part-0003.repository-recovered.raw \
+                  .gate-b-transfer/unit-41.repository-recovery.receipt
+          git commit -m 'Recover exact H-Earth Gate B transfer unit 41 from repository history'
+          git push origin HEAD:agent/h-earth-gate-b-transfer-staging-001

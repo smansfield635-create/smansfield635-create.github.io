@@ -1,0 +1,64 @@
+name: H-Earth Gate B Materialize
+
+on:
+  push:
+    branches:
+      - agent/h-earth-gate-b-transfer-staging-001
+    paths:
+      - .gate-b-transfer/READY
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reconstruct, verify, and create clean candidate commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "agent/h-earth-gate-b-transfer-staging-001"
+          python3 - <<'PY'
+          import base64, hashlib, json, os, pathlib, subprocess, tempfile
+          repo=pathlib.Path.cwd()
+          m=json.loads((repo/'.gate-b-transfer/transfer-manifest.json').read_text())
+          m['files']=[dict(zip(m['fileFieldNames'],f)) for f in m['files']]
+          for f in m['files']:
+              f['chunks']=[dict(zip(m['chunkFieldNames'],c)) for c in f['chunks']]
+          parent=m['acceptedParentCommit']; candidate=m['candidateBranch']
+          subprocess.run(['git','cat-file','-e',parent+'^{commit}'],check=True)
+          tmp=pathlib.Path(tempfile.mkdtemp(prefix='gate-b-materialize-'))
+          work=tmp/'work'; rebuilt=tmp/'rebuilt'; rebuilt.mkdir()
+          subprocess.run(['git','worktree','add','--detach',str(work),parent],check=True)
+          changed=[]; receipt=[]
+          for f in m['files']:
+              payload=''.join((repo/c['path']).read_text() for c in f['chunks'])
+              raw=base64.b64decode(payload,validate=True)
+              out=rebuilt/pathlib.Path(f['targetRepositoryPath']).name
+              out.write_bytes(raw)
+              gitsha=subprocess.check_output(['git','hash-object',str(out)],text=True).strip()
+              sha256=hashlib.sha256(raw).hexdigest()
+              assert len(raw)==f['byteCount']
+              assert sha256==f['sha256']
+              assert gitsha==f['expectedGitBlobSha']==f['localGitBlobSha']
+              assert raw.endswith(b'\n')==f['finalNewline']
+              target=work/f['targetRepositoryPath']; target.parent.mkdir(parents=True,exist_ok=True); target.write_bytes(raw)
+              changed.append(f['targetRepositoryPath'])
+              receipt.append({'path':f['targetRepositoryPath'],'gitBlobSha':gitsha,'sha256':sha256,'byteCount':len(raw)})
+          subprocess.run(['git','-C',str(work),'add','--']+changed,check=True)
+          actual=subprocess.check_output(['git','-C',str(work),'diff','--cached','--name-only'],text=True).splitlines()
+          assert sorted(actual)==sorted(changed) and len(actual)==7
+          subprocess.run(['git','-C',str(work),'config','user.name','github-actions[bot]'],check=True)
+          subprocess.run(['git','-C',str(work),'config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+          subprocess.run(['git','-C',str(work),'commit','-m','Install governed H-Earth Gate B candidate package'],check=True)
+          commit=subprocess.check_output(['git','-C',str(work),'rev-parse','HEAD'],text=True).strip()
+          parent_actual=subprocess.check_output(['git','-C',str(work),'rev-parse','HEAD^'],text=True).strip(); assert parent_actual==parent
+          remote_head=subprocess.run(['git','ls-remote','--heads','origin',candidate],capture_output=True,text=True,check=True).stdout.strip().split()
+          if remote_head: assert remote_head[0]==parent
+          subprocess.run(['git','-C',str(work),'push','origin',f'{commit}:refs/heads/{candidate}'],check=True)
+          print(json.dumps({'status':'PASS','candidateCommitSha':commit,'parentCommitSha':parent,'changedPaths':actual,'files':receipt},sort_keys=True))
+          PY

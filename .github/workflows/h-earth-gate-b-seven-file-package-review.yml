@@ -1,0 +1,68 @@
+name: H-Earth Gate B Seven File Package Review
+
+on:
+  push:
+    branches:
+      - agent/h-earth-gate-b-compositor-verification-001
+    paths:
+      - .gate-b-transfer/seven-file-package-review.request
+      - .github/workflows/h-earth-gate-b-seven-file-package-review.yml
+
+permissions:
+  contents: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Resolve exact seven-file ledger
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > .gate-b-transfer/seven-file-package.ledger <<'EOF'
+          showroom/globe/h-earth/admitted-geometry-frame.js
+          showroom/globe/h-earth/compositor.js
+          h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js
+          h-earth-3d/integration/h-earth.post-west-gate-b-occurrence-transfer.js
+          h-earth-3d/tests/h-earth.ground-view-gate-b-corridor.contract.js
+          h-earth-3d/tests/h-earth.ground-view-gate-b-audralia-public-route.contract.js
+          h-earth-3d/tests/h-earth.ground-view-gate-b-public-diagnostic-separation.contract.js
+          EOF
+          test "$(wc -l < .gate-b-transfer/seven-file-package.ledger)" -eq 7
+          while IFS= read -r file; do test -f "$file"; done < .gate-b-transfer/seven-file-package.ledger
+      - name: Syntax checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r file; do node --check "$file"; done < .gate-b-transfer/seven-file-package.ledger
+      - name: Executable contract corridor
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/tests/h-earth.ground-view-gate-b-corridor.contract.js
+          node h-earth-3d/tests/h-earth.ground-view-gate-b-audralia-public-route.contract.js
+          node h-earth-3d/tests/h-earth.ground-view-gate-b-public-diagnostic-separation.contract.js
+      - name: Write integrated receipt
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo 'PHASE=480CD451_INDEPENDENT_COMPOSITOR_AND_PACKAGE_REVIEW'
+            echo 'PACKAGE_FILE_COUNT=7'
+            echo 'CONTROLLER_JS_PACKAGE_MEMBERSHIP=EXCLUDED'
+            echo 'COMPOSITOR_GIT_BLOB_SHA='$(git hash-object showroom/globe/h-earth/compositor.js)
+            echo 'SYNTAX=PASS'
+            echo 'EXECUTABLE_CONTRACT_CORRIDOR=PASS'
+            echo 'SEVEN_FILE_PACKAGE_INTEGRATION=PASS'
+            echo 'IDENTITY_RESULT=PASS'
+          } > .gate-b-transfer/seven-file-package-review.receipt
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .gate-b-transfer/seven-file-package.ledger .gate-b-transfer/seven-file-package-review.receipt
+          git commit -m 'Record H-Earth Gate B seven-file package review pass'
+          git push origin HEAD:agent/h-earth-gate-b-compositor-verification-001

@@ -1,0 +1,63 @@
+E_VIEWPORT_NOT_ELIGIBLE',
+        'Frame viewport is not capacity-eligible.'
+      )
+    );
+  }
+
+  const presentationValidation =
+    validatePresentationAssignmentsForFrame({
+      value,
+      sourceObjectIds
+    });
+
+  issues.push(
+    ...presentationValidation.issues
+  );
+
+  if (
+    value.geometryIndexEntryId !==
+      null ||
+    value.compositorNodeId !==
+      null ||
+    value.renderInstanceId !==
+      null
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_PREMATURE_IDENTITY_PRESENT',
+        'Frame must not contain premature index, compositor-node, or renderer-instance identity.'
+      )
+    );
+  }
+
+  if (
+    value.materialCreated !==
+      false ||
+    value.materialSourceAuthorityAltered !==
+      false
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_MATERIAL_AUTHORITY_FLAGS_INVALID',
+        'The frame must not claim backend material creation or altered material-source authority.'
+      )
+    );
+  }
+
+  const requiredFalseFlags = [
+    'geometryConstructionAuthority',
+    'westAdmissionAuthority',
+    'geometryIndexAuthority',
+    'compositorMutationAuthority',
+    'compositorRevisionAdvanced',
+    'compositorNodeIdentityCreated',
+    'rendererAuthority',
+    'rendererResourceCreated',
+    'renderInstanceCreated',
+    'materialCreated',
+    'materialSourceAuthorityAltered',
+    'sourceGeometryReconstructed',
+    'admittedCoordinatesAltered',
+    'admittedIndicesAltered',
+    'admittedBoundsAltered',
+    'admittedPrimitiveIdentityAlter

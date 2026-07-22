@@ -46,4 +46,9 @@
           !Object.prototype.hasOwnProperty.call(
             value,
             key
-    
+          )
+      )
+      .sort();
+
+
+  const nonEnumer

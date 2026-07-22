@@ -1,0 +1,68 @@
+sHEarthGeometryToleranceContext(
+      toleranceContext
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_TOLERANCE_CONTEXT_INVALID',
+        'Frame toleranceContext is invalid.'
+      )
+    );
+  }
+
+  const frameBoundsValid =
+    toleranceContext === null
+      ? isHEarthAABB3D(
+          value.bounds
+        )
+      : isHEarthAABB3D(
+          value.bounds,
+          toleranceContext
+        );
+
+  const aggregateBoundsValid =
+    toleranceContext === null
+      ? isHEarthAABB3D(
+          aggregateFrame?.bounds
+        )
+      : isHEarthAABB3D(
+          aggregateFrame?.bounds,
+          toleranceContext
+        );
+
+  if (
+    ALLOWED_PRESENTATION_MODES.includes(
+      value.presentationMode
+    ) &&
+    (
+      value.bounds?.empty !== false ||
+      aggregateFrame?.bounds?.empty !== false
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'FRAME_FIRST_PROOF_EMPTY_BOUNDS_REJECTED',
+        'FIRST_ADMITTED_WET_SAND_PROOF requires nonempty frame and aggregate-frame bounds.',
+        {
+          expected:
+            Object.freeze({
+              frameBoundsEmpty:
+                false,
+
+              aggregateFrameBoundsEmpty:
+                false
+            }),
+
+          actual:
+            Object.freeze({
+              frameBoundsEmpty:
+                value.bounds?.empty ??
+                null,
+
+              aggregateFrameBoundsEmpty:
+                aggregateFrame?.bounds?.empty ??
+                null
+            })
+        }
+      )
+   

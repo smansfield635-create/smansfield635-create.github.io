@@ -1,0 +1,53 @@
+ttedPrimitives.length !== 3 ||
+    !arraysEqual(
+      admittedPrimitiveOrder,
+      GATE_B_PRIMITIVE_ORDER
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_STANDALONE_MEMBERSHIP_INVALID',
+        'Gate B standalone primitive membership must preserve exact producer order and cardinality.'
+      )
+    );
+  }
+
+  if (Array.isArray(value.admittedPrimitives)) {
+    value.admittedPrimitives.forEach(
+      (primitive, index) => {
+        if (
+          !isHEarthAdmittedPrimitiveRecord(primitive) ||
+          primitive?.aggregateFrameMember !== false
+        ) {
+          issues.push(
+            createBridgeIssue(
+              'GATE_B_FRAME_STANDALONE_PRIMITIVE_INVALID',
+              'Every Gate B standalone frame primitive must remain a lawful West record with aggregateFrameMember === false.',
+              {
+                field:
+                  `admittedPrimitives[${index}]`
+              }
+            )
+          );
+        }
+      }
+    );
+  }
+
+  const aggregateFrame =
+    value.aggregateFrameAdmissionRecord;
+
+  const aggregatePrimitives =
+    aggregateFrame?.primitives;
+
+  const aggregatePrimitiveOrder =
+    Array.isArray(aggregatePrimitives)
+      ? aggregatePrimitives.map(extractPrimitiveId)
+      : EMPTY_FROZEN_ARRAY;
+
+  if (
+    !isHEarthAggregateFrameAdmissionRecord(aggregateFrame) ||
+    aggregateFrame?.frameId !== value.aggregateFrameId ||
+    aggregateFrame?.admitted !== true ||
+    aggregateFrame?.admissionAuthority !== 'WEST' ||
+    !a

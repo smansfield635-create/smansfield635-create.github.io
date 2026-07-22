@@ -1,0 +1,27 @@
+ain-record object.'
+        )
+      ])
+    });
+  }
+
+  const frameKeyEvaluation =
+    evaluateExactKeySurface(
+      value,
+      REQUIRED_GATE_B_CONSTRUCTED_FRAME_KEYS
+    );
+
+  if (!frameKeyEvaluation.ok) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_KEY_SURFACE_INVALID',
+        'A Gate B frame must preserve the legacy frame surface plus exactly five Gate-B-only keys.',
+        {
+          details:
+            frameKeyEvaluation
+        }
+      )
+    );
+  }
+
+  if (
+    valu

@@ -1,0 +1,16 @@
+  !isPlainRecord(value.visibilitySnapshot) ||
+    !Object.isFrozen(value.visibilitySnapshot) ||
+    !arraysEqual(
+      actualVisibilityKeys,
+      expectedVisibilityKeys
+    ) ||
+    !expectedVisibilityKeys.every(
+      (key) =>
+        typeof value.visibilitySnapshot[key] === 'boolean' &&
+        value.visibilitySnapshot[key] === visibility[key]
+    )
+  ) {
+    issues.push(
+      createBridgeIssue(
+        'GATE_B_FRAME_VISIBILITY_MAP_INVALID',
+        'Gate B frame visibility must contain exa

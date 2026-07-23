@@ -1,4 +1,4 @@
-name: H-Earth Gate B Clean Candidate Transplant
+name: H-Earth Gate B Clean Candidate Final Audit
 
 on:
   pull_request:
@@ -6,57 +6,111 @@ on:
     types: [opened, reopened, synchronize]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  transplant:
+  audit:
     if: github.head_ref == 'agent/h-earth-gate-b-seven-file-trigger-001'
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
           ref: agent/h-earth-gate-b-clean-candidate-001
           fetch-depth: 0
-      - name: Fetch source and current main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fetch current main
+        run: git fetch origin main:refs/remotes/origin/main
+      - name: Install Chromium
         run: |
-          git fetch origin main:refs/remotes/origin/main
-          git fetch origin agent/h-earth-gate-b-seven-file-verification-001:refs/remotes/origin/gate-b-verified
-      - name: Verify clean parent
-        run: |
-          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
-      - name: Transplant eight verified production files
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Execute clean candidate audit
+        shell: bash
         run: |
           set -euo pipefail
-          paths=(
-            showroom/globe/h-earth/environment.js
-            showroom/globe/h-earth/render/ground-view-gate-b.js
-            showroom/globe/h-earth/render/tests/ground-view-gate-b.contract.js
-            showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js
-            showroom/globe/h-earth/gate-b-route-input.js
-            showroom/globe/h-earth/admitted-geometry-frame.js
-            showroom/globe/h-earth/compositor.js
-            showroom/globe/h-earth/index.html
-          )
-          git checkout refs/remotes/origin/gate-b-verified -- "${paths[@]}"
-          mapfile -t changed < <(git diff --name-only --cached | sort)
-          mapfile -t expected < <(printf '%s\n' "${paths[@]}" | sort)
-          test "${#changed[@]}" -eq 8
-          diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${changed[@]}")
-          declare -A expected_sha=(
-            [showroom/globe/h-earth/environment.js]=7fbdf7c14cdc51d09fac4dc3af76a10727850fbf
-            [showroom/globe/h-earth/render/ground-view-gate-b.js]=2a5b79a58ce411ed820df7ec2166f2e7b6e54b5b
-            [showroom/globe/h-earth/render/tests/ground-view-gate-b.contract.js]=978ca951e03ea93975153ebba0c874f84848290a
-            [showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js]=074c541a3264091e88bd6ca2e9f38b2c19329c7e
-            [showroom/globe/h-earth/gate-b-route-input.js]=bea0a7f2171d85499f0ec54d8a4db95898c95ca4
-            [showroom/globe/h-earth/admitted-geometry-frame.js]=cf0a60b73f901feb84ebb24f9f96066c4443a957
-            [showroom/globe/h-earth/compositor.js]=e522787a28d0f1c1f340b689de74b2e77dc6dc7f
-            [showroom/globe/h-earth/index.html]=b6c9ef3a9b34538548bab7d2a4a41e57387df13c
-          )
-          for path in "${paths[@]}"; do
-            actual=$(git hash-object "$path")
-            test "$actual" = "${expected_sha[$path]}"
-          done
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git commit -m "Install verified H-Earth Gate B production package"
-          git push origin HEAD:agent/h-earth-gate-b-clean-candidate-001
+          mkdir -p gate-b-final-audit
+          node --input-type=module <<'EOF'
+          import fs from 'node:fs';
+          import cp from 'node:child_process';
+          import { chromium } from 'playwright';
+          const run = command => cp.execSync(command,{encoding:'utf8'}).trim();
+          const rows=[]; const add=(id,pass,evidence)=>rows.push({id,pass:Boolean(pass),evidence});
+          const expected=[
+            'showroom/globe/h-earth/environment.js',
+            'showroom/globe/h-earth/render/ground-view-gate-b.js',
+            'showroom/globe/h-earth/render/tests/ground-view-gate-b.contract.js',
+            'showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js',
+            'showroom/globe/h-earth/gate-b-route-input.js',
+            'showroom/globe/h-earth/admitted-geometry-frame.js',
+            'showroom/globe/h-earth/compositor.js',
+            'showroom/globe/h-earth/index.html'
+          ].sort();
+          const changed=run('git diff --name-only origin/main...HEAD').split('\n').filter(Boolean).sort();
+          const counts=run('git rev-list --left-right --count origin/main...HEAD').split(/\s+/).map(Number);
+          add('CANDIDATE_NOT_BEHIND_MAIN',counts[0]===0,{behind:counts[0],ahead:counts[1]});
+          add('EXACT_EIGHT_PATH_SCOPE',JSON.stringify(changed)===JSON.stringify(expected),{changed,expected});
+          const expectedShas={
+            'showroom/globe/h-earth/environment.js':'7fbdf7c14cdc51d09fac4dc3af76a10727850fbf',
+            'showroom/globe/h-earth/render/ground-view-gate-b.js':'2a5b79a58ce411ed820df7ec2166f2e7b6e54b5b',
+            'showroom/globe/h-earth/render/tests/ground-view-gate-b.contract.js':'978ca951e03ea93975153ebba0c874f84848290a',
+            'showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js':'074c541a3264091e88bd6ca2e9f38b2c19329c7e',
+            'showroom/globe/h-earth/gate-b-route-input.js':'bea0a7f2171d85499f0ec54d8a4db95898c95ca4',
+            'showroom/globe/h-earth/admitted-geometry-frame.js':'cf0a60b73f901feb84ebb24f9f96066c4443a957',
+            'showroom/globe/h-earth/compositor.js':'e522787a28d0f1c1f340b689de74b2e77dc6dc7f',
+            'showroom/globe/h-earth/index.html':'b6c9ef3a9b34538548bab7d2a4a41e57387df13c'
+          };
+          const actualShas=Object.fromEntries(expected.map(path=>[path,run(`git hash-object ${JSON.stringify(path)}`)]));
+          add('EXACT_VERIFIED_BLOB_IDENTITIES',expected.every(path=>actualShas[path]===expectedShas[path]),{actualShas,expectedShas});
+          const syntaxFiles=expected.filter(path=>path.endsWith('.js')).concat([
+            'showroom/globe/h-earth/index.js',
+            'showroom/globe/h-earth/renderer.js',
+            'h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js'
+          ]);
+          const syntax=syntaxFiles.map(file=>{try{run(`node --check ${JSON.stringify(file)}`);return{file,pass:true};}catch(error){return{file,pass:false,error:String(error.stderr||error.message)}}});
+          add('ALL_JAVASCRIPT_SYNTAX',syntax.every(x=>x.pass),{syntax});
+          const contract=await import('./showroom/globe/h-earth/render/tests/ground-view-gate-b.contract.js');
+          const gateB=await import('./showroom/globe/h-earth/render/ground-view-gate-b.js');
+          const route=await import('./showroom/globe/h-earth/gate-b-route-input.js');
+          const frame=await import('./showroom/globe/h-earth/admitted-geometry-frame.js');
+          const compositor=await import('./showroom/globe/h-earth/compositor.js');
+          const contractResult=contract.runHEarthGroundViewGateBContractTests?.() ?? contract.runGroundViewGateBContractTests?.();
+          add('GATE_B_CONTRACT_SUITE',Boolean(contractResult)&&(contractResult.ok===true||contractResult.pass===true||contractResult.blockingFindings?.length===0),{contractResult});
+          const a=gateB.constructHEarthGroundViewGateBGeometry();
+          const b=gateB.constructHEarthGroundViewGateBGeometry();
+          add('GATE_B_CONSTRUCTION_AND_DETERMINISM',Array.isArray(a?.primitives)&&a.primitives.length===3&&JSON.stringify(a)===JSON.stringify(b),{primitiveCount:a?.primitives?.length,status:a?.status});
+          const input=route.buildHEarthGateBRouteInput({occurrenceToken:'CLEAN_CANDIDATE_FINAL_AUDIT'});
+          add('PACKET_002_ROUTE_INPUT',input?.valid===true&&input?.packet002Transfer?.ok===true,{valid:input?.valid,packet002Ok:input?.packet002Transfer?.ok,issues:input?.issues??[]});
+          compositor.setHEarth3DCompositorViewport(Object.freeze({widthPx:1440,heightPx:1000,pixelRatio:1}));
+          const admitted=compositor.composeHEarth3DCompositorAdmittedFrame({packet002Transfer:input.packet002Transfer,packet002TransferOccurrenceId:input.packet002TransferOccurrenceId,compositorFrameOccurrenceId:input.compositorFrameOccurrenceId,presentationMode:frame.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE});
+          add('ADMITTED_FRAME_COMPOSITOR',frame.isHEarth3DAdmittedGeometryFrame(admitted)===true&&admitted.presentationMode==='GROUND_VIEW_GATE_B_PROOF',{status:admitted?.status,mode:admitted?.presentationMode,issues:admitted?.issues??[]});
+          const html=fs.readFileSync('showroom/globe/h-earth/index.html','utf8');
+          add('HTML_GATE_B_ROUTE_ONLY',html.includes('./gate-b-route-input.js?v=gate-b-route-input-001')&&html.includes('buildHEarthGateBRouteInput')&&!html.includes('previewHEarthMinimumShorelineGeometry'),{});
+          const server=cp.spawn('python3',['-m','http.server','4173','--bind','127.0.0.1'],{stdio:'ignore'});
+          await new Promise(r=>setTimeout(r,1500));
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1440,height:1000}});
+          const pageErrors=[]; const failed=[];
+          page.on('pageerror',e=>pageErrors.push(e.message));
+          page.on('requestfailed',r=>failed.push({url:r.url(),failure:r.failure()?.errorText??null}));
+          const response=await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/',{waitUntil:'networkidle',timeout:60000});
+          await page.waitForFunction(()=>document.getElementById('h-earth-3d-route-root')?.dataset?.hEarthHtmlEntryTaskComplete==='true',null,{timeout:60000});
+          await page.screenshot({path:'gate-b-final-audit/H_EARTH_GATE_B_CLEAN_CANDIDATE_FINAL_AUDIT_v1.png',fullPage:true});
+          const evidence=await page.evaluate(()=>{const root=document.getElementById('h-earth-3d-route-root');const mount=document.getElementById('h-earth-3d-renderer-mount');const rect=mount?.getBoundingClientRect?.();return{dataset:root?{...root.dataset}:null,entryReceipt:globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_RECEIPT??null,failureReceipt:globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE??null,mountObserved:Boolean(mount),mountChildCount:mount?.childElementCount??0,mountWidth:rect?.width??0,mountHeight:rect?.height??0};});
+          await browser.close(); server.kill();
+          add('BROWSER_RENDERER_VISIBLE_OUTPUT',response?.ok()===true&&evidence.failureReceipt===null&&evidence.entryReceipt?.presentationMode==='GROUND_VIEW_GATE_B_PROOF'&&evidence.mountObserved&&evidence.mountChildCount>0&&evidence.mountWidth>0&&evidence.mountHeight>0&&pageErrors.length===0&&failed.filter(x=>/\.(js|css)(\?|$)/.test(x.url)).length===0,{evidence,pageErrors,failed});
+          const blocking=rows.filter(row=>!row.pass);
+          const receipt={receiptId:'H_EARTH_GATE_B_CLEAN_CANDIDATE_FINAL_AUDIT_RECEIPT_v1',candidateHead:run('git rev-parse HEAD'),mainHead:run('git rev-parse origin/main'),rows,blockingFindings:blocking,passed:blocking.length===0,mergeReadiness:blocking.length===0?'PASS':'FAIL',mainChanged:false};
+          fs.writeFileSync('gate-b-final-audit/H_EARTH_GATE_B_CLEAN_CANDIDATE_FINAL_AUDIT_RECEIPT_v1.json',JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
+          if(!receipt.passed) process.exit(1);
+          EOF
+      - name: Upload final audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-clean-candidate-final-audit-v1
+          path: gate-b-final-audit
+          if-no-files-found: error

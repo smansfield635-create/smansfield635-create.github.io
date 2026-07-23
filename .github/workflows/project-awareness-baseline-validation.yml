@@ -1,0 +1,36 @@
+name: Project Awareness Baseline Validation
+
+on:
+  pull_request:
+    paths:
+      - "research/project-awareness/**"
+      - ".github/workflows/project-awareness-baseline-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-project-awareness-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Execute deterministic awareness fixtures
+        run: |
+          node --experimental-default-type=module \
+            research/project-awareness/awareness-validation.fixtures.js \
+            > /tmp/project-awareness-baseline-validation-receipt.json
+
+      - name: Preserve validation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-awareness-baseline-validation-receipt
+          path: /tmp/project-awareness-baseline-validation-receipt.json
+          if-no-files-found: error
+          retention-days: 90

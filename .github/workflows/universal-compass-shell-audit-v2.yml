@@ -1,0 +1,46 @@
+name: Universal Compass Shell Audit v2
+
+on:
+  pull_request:
+    branches:
+      - agent/universal-compass-shell-audit-base-001
+
+permissions:
+  contents: read
+
+jobs:
+  audit-universal-compass-shell-v2:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out audit merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Verify static route boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 > /tmp/universal-compass-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" || true' EXIT
+          sleep 1
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8765/prototypes/universal-compass/index.html)" = "200"
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8765/prototypes/universal-compass/index.js)" = "404"
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8765/prototypes/universal-compass/compass.contracts.js)" = "404"
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8765/prototypes/universal-compass/compass.math.js)" = "404"
+
+      - name: Execute seven-file shell audit v2
+        run: node .audit/universal-compass-shell-audit-v2.mjs
+
+      - name: Preserve audit receipt v2
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-shell-audit-receipt-v2
+          path: .audit-output/universal-compass-shell-audit-receipt.json
+          if-no-files-found: error
+          retention-days: 7

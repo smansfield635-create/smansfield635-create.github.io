@@ -1,0 +1,205 @@
+name: ARCHCOIN Stage 1 Fixed Cluster Orbit
+
+on:
+  push:
+    branches:
+      - agent/archcoin-stage-1-fixed-cluster-orbit-001
+
+permissions:
+  contents: write
+
+jobs:
+  construct-and-validate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: agent/archcoin-stage-1-fixed-cluster-orbit-001
+
+      - name: Verify baseline and construct complete replacement body
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "c56854c6787e39e6373162be011daddaa7370882"
+          test "$(git hash-object products/archcoin/index.interactions.js)" = "c425ece001586db09aeb7353bfde2ab8177db7c3"
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('products/archcoin/index.interactions.js')
+          source = path.read_text(encoding='utf-8')
+
+          anchor = '''  function applyWorldSpaceDelta(currentQuaternion, deltaQuaternion) {
+            return quaternionMultiply(deltaQuaternion, currentQuaternion);
+          }
+          '''
+
+          replacement = '''  /*
+           * Stage 1 fixed shared cluster orbital track.
+           *
+           * Cluster motion is constrained to the existing world-vertical Y axis.
+           * Signed horizontal pointer travel advances or reverses one shared track;
+           * vertical pointer travel cannot tilt the cluster off that track.
+           */
+          function quaternionFromClusterTrackIncrement(
+            dx,
+            radiansPerPixel,
+            maximumAngle
+          ) {
+            const signedDistance = finiteNumber(dx);
+            if (Math.abs(signedDistance) <= 1e-8) {
+              return Array.from(QUATERNION.identity);
+            }
+            const signedAngle = Math.sign(signedDistance) * clamp(
+              Math.abs(signedDistance) * radiansPerPixel,
+              0,
+              maximumAngle
+            );
+            return quaternionFromAxisAngle(0, 1, 0, signedAngle);
+          }
+
+          function applyWorldSpaceDelta(currentQuaternion, deltaQuaternion) {
+            return quaternionMultiply(deltaQuaternion, currentQuaternion);
+          }
+          '''
+
+          if source.count(anchor) != 1:
+            raise SystemExit('STAGE_1_INSERTION_ANCHOR_COUNT_INVALID')
+          source = source.replace(anchor, replacement, 1)
+
+          old_movement = '''    const movementDelta = quaternionFromScreenIncrement(
+                filtered.dx,
+                filtered.dy,
+                currentMotionSensitivity(),
+                MOTION.maximumIncrementalAngle
+              );
+          '''
+
+          new_movement = '''    const movementDelta = state.transactionKind === "cluster"
+                ? quaternionFromClusterTrackIncrement(
+                    filtered.dx,
+                    currentMotionSensitivity(),
+                    MOTION.maximumIncrementalAngle
+                  )
+                : quaternionFromScreenIncrement(
+                    filtered.dx,
+                    filtered.dy,
+                    currentMotionSensitivity(),
+                    MOTION.maximumIncrementalAngle
+                  );
+          '''
+
+          if source.count(old_movement) != 1:
+            raise SystemExit('STAGE_1_MOVEMENT_ANCHOR_COUNT_INVALID')
+          source = source.replace(old_movement, new_movement, 1)
+
+          old_correction = '''        const correctionDelta = quaternionFromScreenIncrement(
+                    correction.dx,
+                    correction.dy,
+                    MOTION.grabbedCorrectionRadiansPerPixel * reducedMotionMultiplier(),
+                    MOTION.maximumGrabCorrectionAngle
+                  );
+          '''
+
+          new_correction = '''        const correctionDelta = state.transactionKind === "cluster"
+                    ? quaternionFromClusterTrackIncrement(
+                        correction.dx,
+                        MOTION.grabbedCorrectionRadiansPerPixel * reducedMotionMultiplier(),
+                        MOTION.maximumGrabCorrectionAngle
+                      )
+                    : quaternionFromScreenIncrement(
+                        correction.dx,
+                        correction.dy,
+                        MOTION.grabbedCorrectionRadiansPerPixel * reducedMotionMultiplier(),
+                        MOTION.maximumGrabCorrectionAngle
+                      );
+          '''
+
+          if source.count(old_correction) != 1:
+            raise SystemExit('STAGE_1_CORRECTION_ANCHOR_COUNT_INVALID')
+          source = source.replace(old_correction, new_correction, 1)
+
+          path.write_text(source, encoding='utf-8')
+          PY
+
+      - name: Validate syntax, stable axis, and exact scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check products/archcoin/index.interactions.js
+          git diff --check
+
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path('products/archcoin/index.interactions.js').read_text(encoding='utf-8')
+          required = [
+              'function quaternionFromClusterTrackIncrement(',
+              'return quaternionFromAxisAngle(0, 1, 0, signedAngle);',
+              'state.transactionKind === "cluster"',
+          ]
+          for token in required:
+              if token not in source:
+                  raise SystemExit(f'STAGE_1_REQUIRED_TOKEN_MISSING:{token}')
+          forbidden_cluster_axis = 'quaternionFromClusterTrackIncrement(\n        filtered.dy'
+          if forbidden_cluster_axis in source:
+              raise SystemExit('STAGE_1_VERTICAL_CLUSTER_TRACK_INPUT_DETECTED')
+          PY
+
+          node <<'JS'
+          const clamp = (value, minimum, maximum) =>
+            Math.min(maximum, Math.max(minimum, value));
+          const finiteNumber = (value, fallback = 0) => {
+            const number = Number(value);
+            return Number.isFinite(number) ? number : fallback;
+          };
+          const normalize = value => {
+            const length = Math.hypot(...value);
+            return value.map(component => component / length);
+          };
+          const axisAngle = (x, y, z, angle) => {
+            const axisLength = Math.hypot(x, y, z);
+            if (!axisLength || !angle) return [0, 0, 0, 1];
+            const half = angle * 0.5;
+            const scale = Math.sin(half) / axisLength;
+            return normalize([x * scale, y * scale, z * scale, Math.cos(half)]);
+          };
+          const clusterTrack = (dx, radiansPerPixel, maximumAngle) => {
+            const signedDistance = finiteNumber(dx);
+            if (Math.abs(signedDistance) <= 1e-8) return [0, 0, 0, 1];
+            const signedAngle = Math.sign(signedDistance) * clamp(
+              Math.abs(signedDistance) * radiansPerPixel,
+              0,
+              maximumAngle
+            );
+            return axisAngle(0, 1, 0, signedAngle);
+          };
+          const right = clusterTrack(30, 0.0062, 0.18);
+          const left = clusterTrack(-30, 0.0062, 0.18);
+          const verticalOnly = clusterTrack(0, 0.0062, 0.18);
+          if (Math.abs(right[0]) > 1e-12 || Math.abs(right[2]) > 1e-12 || right[1] <= 0) {
+            throw new Error('STAGE_1_RIGHT_AXIS_INVALID');
+          }
+          if (Math.abs(left[0]) > 1e-12 || Math.abs(left[2]) > 1e-12 || left[1] >= 0) {
+            throw new Error('STAGE_1_LEFT_AXIS_INVALID');
+          }
+          if (verticalOnly.some((value, index) => Math.abs(value - [0, 0, 0, 1][index]) > 1e-12)) {
+            throw new Error('STAGE_1_VERTICAL_DRIFT_NOT_ZERO');
+          }
+          JS
+
+          changed="$(git diff --name-only)"
+          test "$changed" = "products/archcoin/index.interactions.js"
+          test -z "$(git diff --name-only -- products/archcoin/index.html products/archcoin/index.css products/archcoin/index.crystals.js products/archcoin/index.compositor.js)"
+
+      - name: Commit complete validated replacement body
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- products/archcoin/index.interactions.js
+          git commit -m "Fix ARCHCOIN shared cluster orbital track"
+          git push origin HEAD:agent/archcoin-stage-1-fixed-cluster-orbit-001

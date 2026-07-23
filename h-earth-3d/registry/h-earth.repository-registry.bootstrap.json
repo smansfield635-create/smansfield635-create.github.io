@@ -42,6 +42,23 @@
     "targetFourStillRequired": true,
     "githubToolInstructionPath": "/h-earth-3d/registry/h-earth.repository-registry.github-instruction.md"
   },
+  "validatorContract": {
+    "contractId": "H_EARTH_REPOSITORY_REGISTRY_PACKAGE_AWARE_VALIDATOR_CONTRACT_v1",
+    "contractVersion": 1,
+    "targetSubtarget": "4A",
+    "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.validator-contract.json",
+    "gitBlobSha": "a6733c868cfee1abce172c0ac901fecf3dd209b2",
+    "auditPath": "/tools/h-earth-repository-registry-target-4a-contract-audit.mjs",
+    "receiptPath": "/h-earth-3d/registry/h-earth.repository-registry.target-4a-receipt.json",
+    "auditResult": "PASS",
+    "passedChecks": 33,
+    "validatorEngineInstalled": false,
+    "fixturesInstalled": false,
+    "workflowEnforcementInstalled": false,
+    "target4AComplete": true,
+    "nextAuthorizedSubtarget": "4B-1"
+  },
   "diagnosticProjection": {
     "path": "/showroom/globe/h-earth/diagnostic/repository-registry-projection.js",
     "routeActivationCreated": false,
@@ -58,6 +75,8 @@
     "mutationAuthorityCreated": false,
     "mergeAuthorityCreated": false,
     "githubToolInstructionCreated": true,
+    "validatorContractCreated": true,
+    "validatorEngineInstalled": false,
     "workflowEnforcementCreated": false,
     "validatorEnforcementCreated": false,
     "runtimeActivationCreated": false,

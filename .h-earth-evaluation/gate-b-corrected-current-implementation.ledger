@@ -1,0 +1,8 @@
+showroom/globe/h-earth/environment.js
+showroom/globe/h-earth/render/ground-view-gate-b.js
+h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js
+showroom/globe/h-earth/render/geometry-kernel.js
+h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
+showroom/globe/h-earth/compositor.js
+showroom/globe/h-earth/admitted-geometry-frame.js
+showroom/globe/h-earth/index.html

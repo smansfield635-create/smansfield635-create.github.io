@@ -75,7 +75,7 @@ if (registry) {
 
   const clone = structuredClone(registry);
   const embedded = clone.serialization?.contentDigest;
-  if (clone.serialization) clone.serialization.contentDigest = '';
+  if (clone.serialization) delete clone.serialization.contentDigest;
   const canonicalize = (value) => {
     if (Array.isArray(value)) return `[${value.map(canonicalize).join(',')}]`;
     if (value && typeof value === 'object') return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalize(value[key])}`).join(',')}}`;

@@ -1,0 +1,32 @@
+export const ARCHCOIN_CROSS_COMPASS_CAPABILITY_MATRIX = Object.freeze({
+  schema: "ARCHCOIN_CROSS_COMPASS_CAPABILITY_MATRIX_v1",
+  status: "PENDING_ALL_FOUR_EXTRACTIONS",
+  comparisonRule: "COMPARE_BY_CAPABILITY_NOT_PAGE_IDENTITY",
+  sourceFamilies: Object.freeze([
+    "MAIN_COMPASS_SOURCE_FAMILY",
+    "LAW_COMPASS_SOURCE_FAMILY",
+    "SHOWROOM_COMPASS_SOURCE_FAMILY",
+    "ARCHCOIN_SOURCE_FAMILY"
+  ]),
+  dimensions: Object.freeze([
+    "WORLD_AND_GEOMETRY_AUTHORITY",
+    "CONTROLLER_STATE_AND_NAVIGATION",
+    "POINTER_AND_GESTURE_INTERPRETATION",
+    "ORIENTATION_CUSTODY",
+    "SELECTION_AND_SETTLEMENT",
+    "INTERRUPTION_RECOVERY",
+    "CAMERA_AND_PROJECTION",
+    "VISUAL_SEMANTIC_ALIGNMENT",
+    "READABILITY_AND_PUBLIC_STAGE_SCALE",
+    "PASSAGE_AND_RETURN_CUSTODY",
+    "ACCESSIBILITY_AND_REDUCED_MOTION"
+  ]),
+  rows: Object.freeze([]),
+  completeness: Object.freeze({
+    main: true,
+    law: false,
+    showroom: false,
+    archcoin: false
+  }),
+  admissionAuthority: "WITHHELD"
+});

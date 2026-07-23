@@ -1,7 +1,7 @@
 /*
  * ARCHCOIN Compass Calibration Workspace
- * Stage 1A / Stage 1B mathematical definition and proof checkpoint.
- * Research authority only. No live mutation, browser acceptance, or production authority.
+ * Stage 1A / Stage 1B mathematical definition, proof, compatibility, and admission checkpoint.
+ * Research authority only. No live mutation, browser acceptance, merge, deployment, or production authority.
  */
 
 import {
@@ -32,9 +32,17 @@ import {
   ARCHCOIN_STAGE_1_DIRECT_GRAB_COMPATIBILITY_AUDIT
 } from "./stage-1-direct-grab-compatibility-audit.js";
 
+import {
+  ARCHCOIN_STAGE_1_CAMERA_RIGHT_DIRECT_GRAB_FIXTURE_RECEIPT
+} from "./stage-1-camera-right-direct-grab.fixture-receipt.js";
+
+import {
+  ARCHCOIN_STAGE_1A_MATHEMATICAL_ADMISSION_REVIEW
+} from "./stage-1a-mathematical-admission-review.js";
+
 export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze({
-  schema: "ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT_v3",
-  status: "EXACT_RESEARCH_CANDIDATE_AND_SOURCE_COMPATIBILITY_PROVEN_ADMISSION_PENDING",
+  schema: "ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT_v4",
+  status: "STAGE_1A_MATHEMATICS_ADMITTED_FOR_CANDIDATE_CONSTRUCTION_ONLY",
   branch: "agent/archcoin-compass-calibration-workspace-001",
   evidenceBase: "eceac4d5297b2f087c1cf718e29d79c119c29db1",
 
@@ -48,11 +56,6 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
     exactPrimaryAnchorRelation: ARCHCOIN_STAGE_1B_CLUSTER_ORBIT_MATH_CONTRACT.primaryAnchorPolicy,
     cumulativeClusterRoll: "PROHIBITED",
     independentMemberDrift: "PROHIBITED"
-  }),
-
-  definitionBasis: Object.freeze({
-    stage1A: "Preserve current ARCHCOIN horizontal sign and sensitivity while replacing the free screen-plane axis with explicit world-Y yaw and camera-right pitch, fixed composition order, bounded cumulative pitch, and no roll.",
-    stage1B: "Preserve the restored baseline four deterministic seat vectors, seat index identity, ellipsoidal radii, normalized primary anchor, and one shared cluster quaternion. Do not invent a planar ring or new radii during this stage."
   }),
 
   exactCandidateDecisions: Object.freeze([
@@ -74,13 +77,15 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
   ]),
 
   fixtureState: Object.freeze({
-    contract: ARCHCOIN_STAGE_1_MATH_FIXTURE_CONTRACT.schema,
-    receipt: ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT.schema,
-    fixturesCreated: true,
-    deterministicRunnerCreated: true,
-    executionReceiptRecorded: true,
-    executionStatus: ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT.status,
-    declaredCheckCount: ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT.resultCount,
+    baseContract: ARCHCOIN_STAGE_1_MATH_FIXTURE_CONTRACT.schema,
+    baseReceipt: ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT.schema,
+    baseExecutionStatus: ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT.status,
+    baseCheckCount: ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT.resultCount,
+    compatibilityReceipt: ARCHCOIN_STAGE_1_CAMERA_RIGHT_DIRECT_GRAB_FIXTURE_RECEIPT.schema,
+    compatibilityExecutionStatus: ARCHCOIN_STAGE_1_CAMERA_RIGHT_DIRECT_GRAB_FIXTURE_RECEIPT.status,
+    compatibilityCheckCount: ARCHCOIN_STAGE_1_CAMERA_RIGHT_DIRECT_GRAB_FIXTURE_RECEIPT.summary.testCount,
+    totalDeterministicChecks: 21,
+    totalFailures: 0,
     browserVisualAcceptancePerformed: false,
     physicalDeviceAcceptancePerformed: false
   }),
@@ -109,31 +114,31 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
     proposalSchemaChangeRequired: false
   }),
 
+  admissionState: Object.freeze({
+    review: ARCHCOIN_STAGE_1A_MATHEMATICAL_ADMISSION_REVIEW.schema,
+    status: ARCHCOIN_STAGE_1A_MATHEMATICAL_ADMISSION_REVIEW.status,
+    mathematicalCandidateAdmitted: true,
+    admissionScope: "COMPLETE_CANDIDATE_SOURCE_CONSTRUCTION_ONLY",
+    candidateSourceConstructionAuthorized: true,
+    targetSource: "/products/archcoin/index.interactions.js",
+    targetBaselineBlob: "c425ece001586db09aeb7353bfde2ab8177db7c3",
+    liveProductMutationAuthorized: false,
+    branchMergeAuthorized: false,
+    deploymentAuthorized: false,
+    productionAuthorized: false
+  }),
+
   stage1ACandidateScope: Object.freeze({
     required: Object.freeze(["/products/archcoin/index.interactions.js"]),
     conditional: Object.freeze(["/products/archcoin/index.controller.js"]),
     controllerCondition: "Only if axis/frame identity or stale-revision enforcement becomes part of the accepted payload contract.",
     compositorDisposition: "VERIFY_ONLY_NO_SCHEMA_OR_SOURCE_MUTATION_REQUIRED",
-    interactionDependency: "READ_ONLY_DGB_ARCHCOIN_COMPOSITOR_GET_CAMERA_WITH_WORLD_X_FALLBACK"
+    crystalsDisposition: "VERIFY_ONLY_NO_MUTATION_REQUIRED",
+    interactionDependency: "READ_ONLY_DGB_ARCHCOIN_COMPOSITOR_GET_CAMERA_WITH_WORLD_X_FALLBACK",
+    proposalPayload: Object.freeze(["quaternion", "primaryId"])
   }),
 
-  stage1BCandidateScope: Object.freeze({
-    currentOwner: "/products/archcoin/index.crystals.js",
-    defaultCandidateScope: Object.freeze([]),
-    crystalsDisposition: "VERIFY_ONLY_NO_STAGE_1B_MUTATION_REQUIRED",
-    noMutationProofEstablished: true,
-    proofBasis: Object.freeze([
-      "four-room-per-wing source invariant",
-      "stable room index 0 through 3 binding",
-      "one sphereVector created from roomIndex and roomCount",
-      "one local cluster quaternion read before active-room iteration",
-      "shared effective quaternion path for every room",
-      "canonical primary inference excludes presentation-only float and mesh rotation",
-      "deterministic registry insertion order resolves exact score ties"
-    ])
-  }),
-
-  supersededUnresolvedFields: Object.freeze([
+  supersededBlockers: Object.freeze([
     "EXACT_FIXED_AXIS_BASIS_NOT_DEFINED",
     "EXACT_PITCH_POLICY_NOT_DEFINED",
     "EXACT_CLUSTER_SEAT_RELATION_NOT_DEFINED",
@@ -144,13 +149,14 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
     "SOURCE_LEVEL_ROOM_INDEX_BINDING_PROOF_NOT_RECORDED",
     "CRYSTALS_NO_MUTATION_PROOF_ABSENT",
     "CAMERA_RIGHT_DEPENDENCY_COMPATIBILITY_NOT_PROVEN",
-    "DIRECT_GRAB_CORRECTION_COMPATIBILITY_NOT_PROVEN"
+    "DIRECT_GRAB_CORRECTION_COMPATIBILITY_NOT_PROVEN",
+    "CAMERA_RIGHT_AND_DIRECT_GRAB_BEHAVIORAL_FIXTURES_NOT_EXECUTED",
+    "MATHEMATICAL_CANDIDATE_NOT_ADMITTED"
   ]),
 
   remainingBlockers: Object.freeze([
-    "MATHEMATICAL_CANDIDATE_NOT_ADMITTED",
     "FIXED_AXIS_INTERACTION_SOURCE_CHANGE_NOT_CONSTRUCTED",
-    "CAMERA_RIGHT_AND_DIRECT_GRAB_BEHAVIORAL_FIXTURES_NOT_EXECUTED",
+    "CANDIDATE_SOURCE_STATIC_AND_BEHAVIORAL_AUDIT_NOT_PERFORMED",
     "LIVE_MOUSE_TOUCH_PEN_DIRECTION_ACCEPTANCE_NOT_PERFORMED",
     "LIVE_VISUAL_AND_PHYSICAL_DEVICE_ACCEPTANCE_NOT_PERFORMED",
     "LIVE_MUTATION_AUTHORITY_WITHHELD"
@@ -158,12 +164,14 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
 
   classification: Object.freeze({
     exactMathematicalDefinitionComplete: true,
-    mathematicalFixtureExecutionPass: true,
+    baseMathematicalFixtureExecutionPass: true,
     sourceLevelRoomBindingProofComplete: true,
     crystalsNoMutationProofComplete: true,
     cameraRightDependencyCompatibilityComplete: true,
     directGrabCompatibilityComplete: true,
-    mathematicalAdmissionComplete: false,
+    cameraRightAndDirectGrabBehavioralFixturesPass: true,
+    mathematicalAdmissionComplete: true,
+    candidateSourceConstructionAuthorized: true,
     stage1ImplementationReady: false,
     liveArchcoinMutationAuthorized: false,
     referenceModelAuthority: false,

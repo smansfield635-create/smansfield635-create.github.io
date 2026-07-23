@@ -1,9 +1,9 @@
 /* ARCHCOIN cross-compass calibration source registry. Research authority only. */
 
 export const ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY = Object.freeze({
-  schema: "ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY_v2",
+  schema: "ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY_v3",
   repositoryBase: "eceac4d5297b2f087c1cf718e29d79c119c29db1",
-  status: "MAIN_COMPLETE_REMAINING_SOURCE_FAMILIES_PENDING",
+  status: "MAIN_AND_LAW_COMPLETE_SHOWROOM_AND_ARCHCOIN_PENDING",
   liveProductMutationAuthorized: false,
   rcoinIdentityVerified: false,
   rcoinTreatment: "TREAT_AS_ARCHCOIN_UNLESS_DISTINCT_ROUTE_OR_SOURCE_IS_ESTABLISHED",
@@ -24,11 +24,21 @@ export const ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY = Object.freeze({
       sourceId: "LAW_COMPASS_SOURCE_FAMILY",
       label: "Law Compass",
       roots: Object.freeze(["/laws/"]),
+      sourcePaths: Object.freeze([
+        "/laws/index.controller.js",
+        "/laws/index.interactions.js",
+        "/laws/index.crystals.js",
+        "/laws/index.compositor.js",
+        "/laws/index.js",
+        "/laws/index.html",
+        "/laws/index.css"
+      ]),
       extractionArtifact: "/research/archcoin-compass-calibration/law-compass-extraction.js",
-      extractionStatus: "PENDING_FILE_LEVEL_EXTRACTION",
+      extractionStatus: "FILE_LEVEL_EXTRACTION_COMPLETE",
       targetCapabilities: Object.freeze([
         "FLUID_MOTION", "INTERACTION_SENSITIVITY", "INTERPOLATION",
-        "HIT_CORRIDORS", "RESPONSIBILITY_SEPARATION"
+        "HIT_CORRIDORS", "RESPONSIBILITY_SEPARATION",
+        "LIGHTWEIGHT_AMBIENT_RUNTIME"
       ]),
       admissionAuthority: "WITHHELD"
     }),

@@ -1,0 +1,49 @@
+name: Universal Compass Variable Cardinality Validation
+
+on:
+  pull_request:
+    branches:
+      - agent/universal-compass-variable-cardinality-correction-001
+
+permissions:
+  contents: read
+
+jobs:
+  validate-variable-cardinality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Execute variable-cardinality fixtures
+        run: |
+          mkdir -p validation-output
+          node research/project-awareness/universal-compass-variable-cardinality.fixtures.js \
+            > validation-output/universal-compass-variable-cardinality-validation-receipt.json
+          node -e '
+            const fs = require("fs");
+            const receipt = JSON.parse(fs.readFileSync(
+              "validation-output/universal-compass-variable-cardinality-validation-receipt.json",
+              "utf8"
+            ));
+            if (receipt.status !== "PASS") process.exit(1);
+            if (receipt.assertionCount < 16) process.exit(1);
+            if (receipt.claims.fixedFourMemberRestrictionWithdrawn !== true) process.exit(1);
+            if (receipt.claims.fixedSixtyFourObservationRestrictionWithdrawn !== true) process.exit(1);
+            if (receipt.claims.variableClusterCardinalityEnabled !== true) process.exit(1);
+            if (receipt.claims.membershipCensusComplete !== false) process.exit(1);
+            if (receipt.claims.planetMutationReady !== false) process.exit(1);
+            if (receipt.claims.productAuthority !== false) process.exit(1);
+          '
+
+      - name: Preserve validation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-variable-cardinality-validation-receipt
+          path: validation-output/universal-compass-variable-cardinality-validation-receipt.json
+          if-no-files-found: error

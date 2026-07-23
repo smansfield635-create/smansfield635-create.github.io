@@ -1,0 +1,51 @@
+name: Universal Compass Capability Map Validation
+
+on:
+  pull_request:
+    branches:
+      - agent/universal-compass-capability-map-validation-001
+
+permissions:
+  contents: read
+
+jobs:
+  validate-capability-map:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Execute capability map validation
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from "node:fs";
+          const module = await import(
+            "./research/project-awareness/universal-compass-four-source-capability-map.js"
+          );
+          const receipt =
+            module.runUniversalCompassFourSourceCapabilityMapValidation();
+          console.log(JSON.stringify(receipt, null, 2));
+          if (receipt.status !== "PASS") {
+            throw new Error(
+              "UNIVERSAL_COMPASS_CAPABILITY_MAP_VALIDATION_FAILED"
+            );
+          }
+          writeFileSync(
+            "universal-compass-four-source-capability-map-validation-receipt.json",
+            `${JSON.stringify(receipt, null, 2)}\n`,
+            "utf8"
+          );
+          NODE
+
+      - name: Preserve validation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-four-source-capability-map-validation-receipt
+          path: universal-compass-four-source-capability-map-validation-receipt.json
+          if-no-files-found: error

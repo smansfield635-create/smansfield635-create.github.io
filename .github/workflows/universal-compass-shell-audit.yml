@@ -51,3 +51,12 @@ jobs:
 
       - name: Execute seven-file shell audit
         run: node .audit/universal-compass-shell-audit.mjs
+
+      - name: Preserve audit receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-shell-audit-receipt
+          path: .audit-output/universal-compass-shell-audit-receipt.json
+          if-no-files-found: error
+          retention-days: 7

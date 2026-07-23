@@ -1,4 +1,4 @@
-name: H-Earth Gate B Frame Composition Probe
+name: H-Earth Gate B Route Renewal and Probe
 
 on:
   pull_request:
@@ -7,85 +7,205 @@ on:
     types: [opened, reopened, synchronize]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  probe:
+  renew-and-probe:
     if: github.head_ref == 'agent/h-earth-gate-b-seven-file-trigger-001'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-gate-b-seven-file-verification-001
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Execute Gate B admitted-frame composition
+      - name: Apply bounded Gate B route renewal
         shell: bash
         run: |
           set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('showroom/globe/h-earth/index.html')
+          s = path.read_text(encoding='utf-8')
+
+          pairs = [
+            ('H_EARTH_3D_ROUTE_ENTRY_FILE_RENEWAL_STEP_034W_STEP_034Q_BRANCH_SPECIFIC_PREBOOTSTRAP_IMPORT_DIAGNOSTICS_v1', 'H_EARTH_GROUND_VIEW_GATE_B_ROUTE_ENTRY_RENEWAL_CANDIDATE_v1'),
+            ('H_EARTH_3D_SHORELINE_PREVIEW_FILE_BIRTH_FD05_MINIMUM_NATIVE_SHORELINE_CONTEXT_v1', 'H_EARTH_GATE_B_ROUTE_INPUT_BRIDGE_CANDIDATE_v1'),
+            ('./render/shoreline-preview.js?v=fd05-shoreline-001', './gate-b-route-input.js?v=gate-b-route-input-001'),
+            ("'H_EARTH_3D_GEOMETRY_PREVIEW_CONTRACT_ID'", "'H_EARTH_GATE_B_ROUTE_INPUT_CONTRACT_ID'"),
+            ("'previewHEarthMinimumShorelineGeometry'", "'buildHEarthGateBRouteInput'"),
+            ('H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE', 'H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE'),
+            ("'MINIMUM_NATIVE_SHORELINE_PROOF'", "'GROUND_VIEW_GATE_B_PROOF'"),
+            ('`H_EARTH_MINIMUM_NATIVE_SHORELINE_ROUTE_REQUEST:${token}`', '`H_EARTH_GROUND_VIEW_GATE_B_ROUTE_REQUEST:${token}`'),
+            ('/showroom/globe/h-earth/render/shoreline-preview.js', '/showroom/globe/h-earth/gate-b-route-input.js'),
+            ('previewHEarthMinimumShorelineGeometry(...)', 'buildHEarthGateBRouteInput(...)'),
+          ]
+          for old, new in pairs:
+            if old not in s:
+              raise RuntimeError(f'missing route renewal anchor: {old}')
+            s = s.replace(old, new)
+
+          old_decl = '''      let previewFunction;
+      let westBatchFunction;
+      let packet002Function;
+      let initializeRoute;'''
+          new_decl = '''      let routeInputFunction;
+      let westBatchFunction;
+      let packet002Function;
+      let initializeRoute;'''
+          if old_decl not in s:
+            raise RuntimeError('missing API declaration anchor')
+          s = s.replace(old_decl, new_decl, 1)
+          s = s.replace('        previewFunction =', '        routeInputFunction =', 1)
+
+          start = s.index('      let previewResult;')
+          end = s.index('      const presentationMode =', start)
+          block = '''      let routeInput;
+      let previewResult;
+      let westBatchAdmissionResult;
+      let packet002Transfer;
+
+      try {
+        writeText(statusNode, 'GROUND_VIEW_GATE_B_ROUTE_INPUT_EXECUTING');
+        writeText(fallbackNode, 'Constructing the governed Gate B geometry, West admission, and Packet 002 route input.');
+
+        routeInput = routeInputFunction({
+          occurrenceToken: routeOccurrence.token,
+          requestId: routeOccurrence.requestId,
+          frameId: routeOccurrence.aggregateFrameId,
+          packet002TransferOccurrenceId: routeOccurrence.packet002TransferOccurrenceId,
+          compositorFrameOccurrenceId: routeOccurrence.compositorFrameOccurrenceId
+        });
+
+        if (
+          !isPlainRecord(routeInput) ||
+          routeInput.valid !== true ||
+          !isPlainRecord(routeInput.packet002Transfer) ||
+          routeInput.packet002Transfer.ok !== true
+        ) {
+          const error = new Error('Gate B route-input bridge did not produce a lawful Packet 002 transfer.');
+          error.name = 'HEarthGateBRouteInputRejectedError';
+          error.details = routeInput;
+          throw error;
+        }
+
+        packet002Transfer = assertPacket002Transfer(routeInput.packet002Transfer);
+        previewResult = Object.freeze({
+          status: 'GROUND_VIEW_GATE_B_ROUTE_INPUT_READY',
+          primitives: packet002Transfer.admittedPrimitives,
+          requestId: packet002Transfer.requestId,
+          providerRequestId: packet002Transfer.providerRequestId,
+          resolutionReceiptId: packet002Transfer.resolutionReceiptId,
+          sourceObjectIds: packet002Transfer.sourceObjectIds,
+          sourceZoneIds: packet002Transfer.sourceZoneIds,
+          latticeRegionIds: packet002Transfer.latticeRegionIds
+        });
+        westBatchAdmissionResult = Object.freeze({
+          valid: true,
+          primitiveAdmissions: Object.freeze(
+            packet002Transfer.admittedPrimitives.map(
+              (primitive) => Object.freeze({ primitive })
+            )
+          ),
+          frame: packet002Transfer.aggregateFrameAdmissionRecord
+        });
+
+        setDataset('hEarthPreviewExecuted', 'true');
+        setDataset('hEarthPreviewResultEligible', 'true');
+        setDataset('hEarthWestAdmissionExecuted', 'true');
+        setDataset('hEarthWestAdmissionEligible', 'true');
+        setDataset('hEarthPacket002Constructed', 'true');
+        setDataset('hEarthPacket002Eligible', 'true');
+      } catch (error) {
+        publishFailure(buildFailureReceipt({
+          error,
+          phase: 'GROUND_VIEW_GATE_B_ROUTE_INPUT_CONSTRUCTION',
+          routeOccurrence,
+          failedBranch: 'PREVIEW',
+          requestedPath: PREVIEW_MODULE_PATH,
+          resolvedUrl: modules.branchResults.PREVIEW.resolvedUrl,
+          evidence: { routeInput: error?.details ?? routeInput ?? null },
+          importDiagnosticReceipt: modules.importDiagnosticReceipt
+        }));
+        return;
+      }
+
+'''
+          s = s[:start] + block + s[end:]
+          path.write_text(s, encoding='utf-8')
+          PY
+
+          grep -q "./gate-b-route-input.js?v=gate-b-route-input-001" showroom/globe/h-earth/index.html
+          grep -q "buildHEarthGateBRouteInput" showroom/globe/h-earth/index.html
+          grep -q "H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE" showroom/globe/h-earth/index.html
+          grep -q "GROUND_VIEW_GATE_B_PROOF" showroom/globe/h-earth/index.html
+          ! grep -q "previewHEarthMinimumShorelineGeometry" showroom/globe/h-earth/index.html
+          git diff --check
+      - name: Commit isolated route renewal
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- showroom/globe/h-earth/index.html; then
+            echo 'No route change produced.'
+            exit 1
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/index.html
+          git commit -m 'Route H-Earth entry through Ground View Gate B'
+          git fetch origin agent/h-earth-gate-b-seven-file-verification-001
+          git rebase origin/agent/h-earth-gate-b-seven-file-verification-001
+          git push origin HEAD:agent/h-earth-gate-b-seven-file-verification-001
+      - name: Execute Gate B route matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check showroom/globe/h-earth/gate-b-route-input.js
+          node --check showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js
           node --check showroom/globe/h-earth/admitted-geometry-frame.js
           node --check showroom/globe/h-earth/compositor.js
           node --input-type=module <<'EOF'
           import fs from 'node:fs';
-          const routeInputModule = await import('./showroom/globe/h-earth/gate-b-route-input.js');
-          const frameModule = await import('./showroom/globe/h-earth/admitted-geometry-frame.js');
+          const html = fs.readFileSync('showroom/globe/h-earth/index.html', 'utf8');
+          const route = await import('./showroom/globe/h-earth/gate-b-route-input.js');
+          const frame = await import('./showroom/globe/h-earth/admitted-geometry-frame.js');
           const compositor = await import('./showroom/globe/h-earth/compositor.js');
-
-          const viewportReceipt = compositor.setHEarth3DCompositorViewport(
-            Object.freeze({ widthPx: 1280, heightPx: 720, pixelRatio: 1 })
-          );
-
-          const routeInput = routeInputModule.buildHEarthGateBRouteInput({
-            occurrenceToken: 'FRAME_PROBE_001'
+          compositor.setHEarth3DCompositorViewport(Object.freeze({widthPx:1280,heightPx:720,pixelRatio:1}));
+          const input = route.buildHEarthGateBRouteInput({occurrenceToken:'HTML_ROUTE_PROBE_001'});
+          const composition = compositor.composeHEarth3DCompositorAdmittedFrame({
+            packet002Transfer: input.packet002Transfer,
+            packet002TransferOccurrenceId: input.packet002TransferOccurrenceId,
+            compositorFrameOccurrenceId: input.compositorFrameOccurrenceId,
+            presentationMode: frame.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE
           });
-
-          const admittedFrame = compositor.composeHEarth3DCompositorAdmittedFrame({
-            packet002Transfer: routeInput.packet002Transfer,
-            packet002TransferOccurrenceId: routeInput.packet002TransferOccurrenceId,
-            compositorFrameOccurrenceId: routeInput.compositorFrameOccurrenceId,
-            presentationMode: frameModule.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE
-          });
-
-          const admittedFrameValid =
-            frameModule.isHEarth3DAdmittedGeometryFrame(admittedFrame);
-
           const receipt = {
-            admittedFrameBlobContractId: frameModule.H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
-            gateBPresentationMode: frameModule.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE,
-            viewportReceipt,
-            compositorState: compositor.getHEarth3DCompositorState(),
-            routeInputValid: routeInput.valid,
-            packet002Ok: routeInput.packet002Transfer.ok,
-            admittedFrameObserved: admittedFrame !== null,
-            admittedFrameValid,
-            admittedFrameStatus: admittedFrame?.status ?? null,
-            admittedFrameIssues: admittedFrame?.issues ?? [],
-            presentationModeObserved: admittedFrame?.presentationMode ?? null,
-            sourceObjectIds: admittedFrame?.sourceObjectIds ?? null,
-            presentationAssignments: admittedFrame?.presentationAssignments ?? null,
-            rendererImported: false,
-            rendererMounted: false,
-            visibleOutputConfirmed: false
+            routeInputValid: input.valid,
+            packet002Ok: input.packet002Transfer.ok,
+            compositionOk: composition.ok,
+            admittedFrameValid: composition.frame ? frame.isHEarth3DAdmittedGeometryFrame(composition.frame) : false,
+            htmlGateBModuleReference: html.includes('./gate-b-route-input.js?v=gate-b-route-input-001'),
+            htmlGateBFunctionReference: html.includes('buildHEarthGateBRouteInput'),
+            htmlGateBPresentationMode: html.includes('H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE') && html.includes('GROUND_VIEW_GATE_B_PROOF'),
+            legacyShorelineInvocationAbsent: !html.includes('previewHEarthMinimumShorelineGeometry'),
+            rendererImported: composition.rendererImported,
+            rendererMounted: composition.rendererMounted,
+            visibleOutputConfirmed: composition.visibleOutputConfirmed
           };
-
-          fs.writeFileSync(
-            'H_EARTH_GATE_B_FRAME_COMPOSITION_PROBE_v1.json',
-            JSON.stringify(receipt, null, 2)
-          );
-          console.log(JSON.stringify(receipt, null, 2));
-
-          if (
-            receipt.routeInputValid !== true ||
-            receipt.packet002Ok !== true ||
-            receipt.admittedFrameValid !== true ||
-            receipt.presentationModeObserved !== 'GROUND_VIEW_GATE_B_PROOF'
-          ) {
-            process.exit(1);
-          }
+          receipt.overallPass = Object.entries(receipt)
+            .filter(([key]) => !['rendererImported','rendererMounted','visibleOutputConfirmed'].includes(key))
+            .every(([,value]) => value === true);
+          fs.writeFileSync('H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v1.json', JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
+          if (!receipt.overallPass) process.exit(1);
           EOF
-      - name: Upload frame-composition receipt
+      - name: Upload route-renewal receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gate-b-frame-composition-probe-v1
-          path: H_EARTH_GATE_B_FRAME_COMPOSITION_PROBE_v1.json
+          name: h-earth-gate-b-html-route-renewal-v1
+          path: H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v1.json
           if-no-files-found: error

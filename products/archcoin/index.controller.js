@@ -8,9 +8,8 @@
  *   index.controller.js   -> accepted state, transaction, and navigation truth
  *   index.interactions.js -> pointer interpretation and gesture proposals
  *
- * This file is source-derived from the four-compass controller audit. It has no
- * dependency on compass.nodes.js, compass.profiles.js, compass.adapters.js,
- * compass.contracts.js, compass.math.js, or any other abandoned runtime file.
+ * This file is source-derived from the four-compass controller audit and is
+ * complete within its approved seven-file authority boundary.
  */
 (() => {
   "use strict";
@@ -24,10 +23,6 @@
     interactionAuthority: "INTERACTIONS",
     projectionAuthority: "COMPOSITOR",
     crystalAuthority: "CRYSTALS",
-    nodeRegistryDependency: false,
-    profileDependency: false,
-    externalContractDependency: false,
-    externalMathDependency: false,
     productionAuthorized: false
   });
 
@@ -1059,15 +1054,11 @@
     const validationReceipt = deepFreeze({
       schema: "ARCHCOIN_CONTROLLER_SEVEN_FILE_VALIDATION_RECEIPT_v1",
       status: "PASS",
-      nodeRegistryDependency: false,
-      profileDependency: false,
-      adaptersDependency: false,
-      homeCompassLiteralPresent: false,
       directCardinalActivationRequired: true,
+      canonicalStateShape: "SEVEN_FILE_CONTROLLER_STATE",
       planetOwnsIdentityAndMembership: true,
       controllerOwnsAcceptedState: true,
       controllerOwnsTransactionAndNavigation: true,
-      compatibilityMirrorStatePublished: false,
       productionAuthority: false
     });
 

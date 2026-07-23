@@ -2,9 +2,9 @@
   "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_INTEGRATED_EXECUTION_RECEIPT_v1",
   "targetNumber": 4,
   "targetSubtarget": "4F-7",
-  "result": "FAIL",
+  "result": "PASS",
   "branch": "agent/h-earth-repository-registry-installation-001",
-  "executedCommit": "12044cc3d1a4cae30093917fc8a9d761d295ebcb",
+  "executedCommit": "42481a04663f820b490e3796c96223111b747b25",
   "executionEnvironment": "BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT",
   "audit": {
     "auditId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_INTEGRATED_AUDIT_v1",
@@ -43,7 +43,7 @@
       "target4ESystemicPass": true,
       "target4EUnprompted": true,
       "target4EDeterministic": true,
-      "rootAgentEntrypointPresent": false,
+      "rootAgentEntrypointPresent": true,
       "scopedAgentEntrypointsPreserved": true,
       "permanentWorkflowPresent": true,
       "permanentWorkflowReadOnly": true,
@@ -64,10 +64,8 @@
       "executionEnvironmentBounded": true
     },
     "totalChecks": 53,
-    "passedChecks": 52,
-    "failedChecks": [
-      "rootAgentEntrypointPresent"
-    ]
+    "passedChecks": 53,
+    "failedChecks": []
   },
   "regressions": {
     "target2": {
@@ -214,7 +212,7 @@
     "temporaryTriggerResidueAbsent": true
   },
   "boundaries": {
-    "candidatePackageCompleteAfterFinalization": false,
+    "candidatePackageCompleteAfterFinalization": true,
     "userAcceptanceEstablished": false,
     "mergeAuthorityCreated": false,
     "canonicalizationAuthorityCreated": false,
@@ -223,8 +221,8 @@
     "portabilityClaimCreated": false
   },
   "stoppingCondition": {
-    "finalIntegratedAuditPass": false,
+    "finalIntegratedAuditPass": true,
     "advanceBeyondTarget4F7": false,
-    "nextAuthorizedSubtarget": "STOP_AND_REPORT"
+    "nextAuthorizedSubtarget": "4F-8"
   }
 }

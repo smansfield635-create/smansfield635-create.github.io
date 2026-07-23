@@ -13,14 +13,15 @@ jobs:
     if: github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001'
     runs-on: ubuntu-latest
     env:
-      EXPECTED_SHA256: 7a30779d77385f4b81ed333c6b729cc23b3450f4491ae7c38749ae2f584c3fbf
-      EXPECTED_BYTE_COUNT: 53209
+      EXPECTED_SOURCE_SHA256: 7a30779d77385f4b81ed333c6b729cc23b3450f4491ae7c38749ae2f584c3fbf
+      EXPECTED_SOURCE_BYTE_COUNT: 53209
       EXPECTED_BASE64_COUNT: 70948
+      EXPECTED_PRECORRECTION_BASE64_SHA256: aed81d2e7f668c11c3de13463a3a4c08e29495b7dc83d426dbf974d4e6892672
+      EXPECTED_CORRECTED_BASE64_SHA256: a8d7a03fb987c79d0e105600e90e4fa3455244341257f825a5fe16ba6c8a85bb
       TARGET_PATH: showroom/globe/h-earth/environment.js
       TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
       CANDIDATE_PATH: /tmp/h-earth-gate-b-environment.js
       BASE64_PATH: /tmp/h-earth-gate-b-environment.b64
-      DIAGNOSTICS_PATH: /tmp/h-earth-gate-b-comment-transport-diagnostics.txt
     steps:
       - name: Check out isolated Phase A branch
         uses: actions/checkout@v4
@@ -28,74 +29,60 @@ jobs:
           ref: agent/h-earth-gate-b-phase-a-successor-001
           fetch-depth: 0
 
-      - name: Reconstruct candidate and record transport diagnostics
+      - name: Reconstruct and verify fixed transport payload
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          set -u
+          set -euo pipefail
           : > "$BASE64_PATH"
-          : > "$DIAGNOSTICS_PATH"
 
           fetch_payload() {
-            local ordinal="$1"
-            local comment_id="$2"
-            local expected_header="$3"
-            local body header payload
+            local comment_id="$1"
+            local expected_header="$2"
+            local body header
             body="$(curl --fail --silent --show-error --location \
               -H "Authorization: Bearer ${GH_TOKEN}" \
               -H "Accept: application/vnd.github+json" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/comments/${comment_id}" \
-              | jq -r '.body')" || return 10
+              | jq -r '.body')"
             header="$(printf '%s\n' "$body" | head -n 1)"
-            payload="$(printf '%s\n' "$body" | tail -n +2 | tr -d '\r\n')"
-            printf 'part_%s_comment_id=%s\n' "$ordinal" "$comment_id" >> "$DIAGNOSTICS_PATH"
-            printf 'part_%s_header=%s\n' "$ordinal" "$header" >> "$DIAGNOSTICS_PATH"
-            printf 'part_%s_expected_header=%s\n' "$ordinal" "$expected_header" >> "$DIAGNOSTICS_PATH"
-            printf 'part_%s_header_match=%s\n' "$ordinal" "$([ "$header" = "$expected_header" ] && echo true || echo false)" >> "$DIAGNOSTICS_PATH"
-            printf 'part_%s_body_count=%s\n' "$ordinal" "$(printf '%s' "$body" | wc -c | tr -d ' ')" >> "$DIAGNOSTICS_PATH"
-            printf 'part_%s_payload_count=%s\n' "$ordinal" "$(printf '%s' "$payload" | wc -c | tr -d ' ')" >> "$DIAGNOSTICS_PATH"
-            printf '%s' "$payload" >> "$BASE64_PATH"
+            test "$header" = "$expected_header"
+            printf '%s\n' "$body" | tail -n +2 | tr -d '\r\n' >> "$BASE64_PATH"
           }
 
-          fetch_payload 1 5054865088 H_EARTH_GATE_B_ENVIRONMENT_B64_PART_0001_OF_0006
-          fetch_payload 2 5054902794 H_EARTH_GATE_B_ENVIRONMENT_B64_PART_0002_OF_0004
-          fetch_payload 3 5054935104 H_EARTH_GATE_B_ENVIRONMENT_B64_PART_0003_OF_0004
-          fetch_payload 4 5054960445 H_EARTH_GATE_B_ENVIRONMENT_B64_PART_0004_OF_0004
+          fetch_payload 5054865088 H_EARTH_GATE_B_ENVIRONMENT_B64_PART_0001_OF_0006
+          fetch_payload 5054902794 H_EARTH_GATE_B_ENVIRONMENT_B64_PART_0002_OF_0004
+          fetch_payload 5054935104 H_EARTH_GATE_B_ENVIRONMENT_B64_PART_0003_OF_0004
+          fetch_payload 5054960445 H_EARTH_GATE_B_ENVIRONMENT_B64_PART_0004_OF_0004
 
-          printf 'base64_count=%s\n' "$(wc -c < "$BASE64_PATH" | tr -d ' ')" >> "$DIAGNOSTICS_PATH"
-          printf 'expected_base64_count=%s\n' "$EXPECTED_BASE64_COUNT" >> "$DIAGNOSTICS_PATH"
-          printf 'base64_sha256=%s\n' "$(sha256sum "$BASE64_PATH" | awk '{print $1}')" >> "$DIAGNOSTICS_PATH"
+          test "$(wc -c < "$BASE64_PATH" | tr -d ' ')" = "$EXPECTED_BASE64_COUNT"
+          test "$(sha256sum "$BASE64_PATH" | awk '{print $1}')" = "$EXPECTED_PRECORRECTION_BASE64_SHA256"
 
-          set +e
-          base64 --decode "$BASE64_PATH" > "$CANDIDATE_PATH" 2>> "$DIAGNOSTICS_PATH"
-          decode_status=$?
-          set -e
-          printf 'decode_status=%s\n' "$decode_status" >> "$DIAGNOSTICS_PATH"
-          if [ -f "$CANDIDATE_PATH" ]; then
-            printf 'decoded_byte_count=%s\n' "$(wc -c < "$CANDIDATE_PATH" | tr -d ' ')" >> "$DIAGNOSTICS_PATH"
-            printf 'decoded_sha256=%s\n' "$(sha256sum "$CANDIDATE_PATH" | awk '{print $1}')" >> "$DIAGNOSTICS_PATH"
-          fi
-
-      - name: Upload comment transport diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-gate-b-comment-transport-diagnostics
-          path: |
-            /tmp/h-earth-gate-b-comment-transport-diagnostics.txt
-            /tmp/h-earth-gate-b-environment.b64
-          if-no-files-found: error
-          retention-days: 1
-
-      - name: Verify reconstructed candidate
+      - name: Apply single verified transport-character correction
         shell: bash
         run: |
           set -euo pipefail
-          test "$(wc -c < "$BASE64_PATH" | tr -d ' ')" = "$EXPECTED_BASE64_COUNT"
-          test "$(wc -c < "$CANDIDATE_PATH" | tr -d ' ')" = "$EXPECTED_BYTE_COUNT"
-          test "$(sha256sum "$CANDIDATE_PATH" | awk '{print $1}')" = "$EXPECTED_SHA256"
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('/tmp/h-earth-gate-b-environment.b64')
+          payload = path.read_text(encoding='ascii')
+          assert len(payload) == 70948
+          assert payload[51296] == 'Z'
+          corrected = payload[:51296] + 'R' + payload[51297:]
+          assert corrected[51296] == 'R'
+          path.write_text(corrected, encoding='ascii')
+          PY
+          test "$(sha256sum "$BASE64_PATH" | awk '{print $1}')" = "$EXPECTED_CORRECTED_BASE64_SHA256"
+
+      - name: Decode and verify exact environment candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 --decode "$BASE64_PATH" > "$CANDIDATE_PATH"
+          test "$(wc -c < "$CANDIDATE_PATH" | tr -d ' ')" = "$EXPECTED_SOURCE_BYTE_COUNT"
+          test "$(sha256sum "$CANDIDATE_PATH" | awk '{print $1}')" = "$EXPECTED_SOURCE_SHA256"
 
       - name: Install, verify, commit, and push exact environment bytes
         shell: bash
@@ -103,8 +90,8 @@ jobs:
           set -euo pipefail
           mkdir -p "$(dirname "$TARGET_PATH")"
           cp "$CANDIDATE_PATH" "$TARGET_PATH"
-          test "$(wc -c < "$TARGET_PATH" | tr -d ' ')" = "$EXPECTED_BYTE_COUNT"
-          test "$(sha256sum "$TARGET_PATH" | awk '{print $1}')" = "$EXPECTED_SHA256"
+          test "$(wc -c < "$TARGET_PATH" | tr -d ' ')" = "$EXPECTED_SOURCE_BYTE_COUNT"
+          test "$(sha256sum "$TARGET_PATH" | awk '{print $1}')" = "$EXPECTED_SOURCE_SHA256"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

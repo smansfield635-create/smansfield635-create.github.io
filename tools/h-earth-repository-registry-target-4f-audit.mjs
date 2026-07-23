@@ -40,10 +40,17 @@ const target2 = execJson('tools/h-earth-repository-registry-audit.mjs');
 const target3 = execJson('tools/h-earth-repository-registry-target-3-audit.mjs');
 const target4A = execJson('tools/h-earth-repository-registry-target-4a-contract-audit.mjs');
 const target4B = execJson('tools/h-earth-repository-registry-target-4b-audit.mjs');
-const target4E = execJson('tools/h-earth-repository-registry-target-4e-audit.mjs', {
-  TARGET_BRANCH: process.env.TARGET_BRANCH ?? 'agent/h-earth-repository-registry-installation-001',
-  TARGET_COMMIT: process.env.TARGET_COMMIT ?? process.env.GITHUB_SHA ?? 'LOCAL_UNSPECIFIED'
-});
+const protectedTarget4EReceiptPath = 'h-earth-3d/registry/h-earth.repository-registry.target-4e-receipt.json';
+const protectedTarget4EReceiptText = readText(protectedTarget4EReceiptPath);
+let target4E;
+try {
+  target4E = execJson('tools/h-earth-repository-registry-target-4e-audit.mjs', {
+    TARGET_BRANCH: process.env.TARGET_BRANCH ?? 'agent/h-earth-repository-registry-installation-001',
+    TARGET_COMMIT: process.env.TARGET_COMMIT ?? process.env.GITHUB_SHA ?? 'LOCAL_UNSPECIFIED'
+  });
+} finally {
+  fs.writeFileSync(path.join(root, protectedTarget4EReceiptPath), protectedTarget4EReceiptText, 'utf8');
+}
 
 const registeredA = runAutomaticHEarthPreflight({
   paths: ['/showroom/globe/h-earth/render/geometry-kernel.north.js'],

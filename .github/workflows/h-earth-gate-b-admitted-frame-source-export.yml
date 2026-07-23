@@ -1,0 +1,28 @@
+name: H-Earth Gate B Admitted Frame Source Export
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-gate-b-seven-file-verification-001
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    if: github.head_ref == 'agent/h-earth-gate-b-seven-file-trigger-001'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export exact admitted-frame source
+        run: |
+          cp showroom/globe/h-earth/admitted-geometry-frame.js H_EARTH_ADMITTED_GEOMETRY_FRAME_SOURCE.js
+          grep -n "H_EARTH_3D_.*PROOF_MODE\|EXPECTED_.*SOURCE_\|presentationMode\|presentationRole\|materialReference" showroom/globe/h-earth/admitted-geometry-frame.js > H_EARTH_ADMITTED_GEOMETRY_FRAME_PATCH_INDEX.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-admitted-frame-source
+          path: |
+            H_EARTH_ADMITTED_GEOMETRY_FRAME_SOURCE.js
+            H_EARTH_ADMITTED_GEOMETRY_FRAME_PATCH_INDEX.txt
+          if-no-files-found: error

@@ -1,0 +1,88 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4C_COMPLETION_RECEIPT_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4C-14",
+  "result": "PASS",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "completionCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT",
+  "executionReceipt": {
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4c-receipt.json",
+    "gitBlobSha": "08b0efa9470f5695a9707abdc3f319007a95b1cb",
+    "executionEnvironment": "BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT",
+    "executedCommit": "719d20ae464e1f7d969dd789824fb6902321acff"
+  },
+  "bootstrap": {
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+    "gitBlobSha": "e948f8a2ff26eff5aa84b0e293b6379ed3f118c4",
+    "fixtureSuiteRegistered": true,
+    "nextAuthorizedSubtarget": "4D-1"
+  },
+  "staticAudit": {
+    "result": "PASS",
+    "totalChecks": 37,
+    "passedChecks": 37,
+    "failedChecks": 0
+  },
+  "fixtureExecution": {
+    "result": "PASS",
+    "executedFixtureCount": 33,
+    "passedFixtureCount": 33,
+    "failedFixtureCount": 0,
+    "individualReceiptCount": 33,
+    "fixtureClassCounts": {
+      "POSITIVE": 6,
+      "NEGATIVE": 13,
+      "DRIFT": 6,
+      "ADVERSARIAL": 8
+    },
+    "dispositionCounts": {
+      "PASS": 5,
+      "REVIEW_REQUIRED": 2,
+      "BLOCK": 16,
+      "STOP": 10
+    },
+    "failureCodeCoverageCount": 21,
+    "deterministicReceiptBehavior": true
+  },
+  "protectedIdentities": {
+    "target2RegistryGitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
+    "target3InstructionGitBlob": "de421803f21808ce27b2ffff349af8756c4d9929",
+    "target4AContractGitBlob": "a6733c868cfee1abce172c0ac901fecf3dd209b2",
+    "target4BEngineGitBlob": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759"
+  },
+  "finalVerification": {
+    "target4CRegisteredInBootstrap": true,
+    "temporaryWorkflowAbsentFromTargetBranch": true,
+    "temporaryExecutionPrNumber": 65,
+    "temporaryExecutionPrClosed": true,
+    "temporaryExecutionPrMerged": false,
+    "temporaryExecutionBranchNeutralizedToMain": true,
+    "temporaryExecutionBranchDeleted": false,
+    "mainChanged": false,
+    "candidatePrNumber": 61,
+    "candidatePrOpen": true,
+    "candidatePrDraft": true,
+    "candidatePrMerged": false
+  },
+  "boundaries": {
+    "fixtureSuiteComplete": true,
+    "fixtureSuiteInstalled": true,
+    "fixtureSuiteExecuted": true,
+    "portabilityReferencePackageInstalled": false,
+    "systemicComprehensionAuditExecuted": false,
+    "workflowEnforcementInstalled": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "runtimeActivationCreated": false,
+    "rendererActivationCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionClaimCreated": false,
+    "mainChanged": false
+  },
+  "stoppingCondition": {
+    "target4CComplete": true,
+    "advanceBeyondTarget4C": false,
+    "nextAuthorizedSubtarget": "4D-1"
+  }
+}

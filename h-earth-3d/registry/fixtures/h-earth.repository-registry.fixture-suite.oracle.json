@@ -1,0 +1,51 @@
+{
+  "oracleId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4C_EXPECTED_OUTCOME_ORACLE_v1",
+  "oracleVersion": 1,
+  "targetNumber": 4,
+  "targetSubtarget": "4C-9",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "expectationsDerivedFromActualResults": false,
+  "entries": [
+    {"fixtureId":"A01_REGISTRY_CONTRADICTING_INSTRUCTION","expectedDisposition":"BLOCK","requiredFailureCodes":["INSTRUCTION_CONTRADICTS_REGISTRY"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"A02_MISSING_CONTROLLING_INSTRUCTION","expectedDisposition":"STOP","requiredFailureCodes":["INSTRUCTION_IDENTITY_MISMATCH"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"A03_ARRAY_POSITION_USED_AS_OPERATIONAL_ORDER","expectedDisposition":"BLOCK","requiredFailureCodes":["ORDER_INFERRED_FROM_ARRAY_POSITION"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"A04_DIRECTORY_POSITION_USED_AS_AUTHORITY","expectedDisposition":"BLOCK","requiredFailureCodes":["ORDER_INFERRED_FROM_ARRAY_POSITION"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"A05_EXPLICIT_STOPPING_BOUNDARY_BYPASS","expectedDisposition":"BLOCK","requiredFailureCodes":["STOPPING_BOUNDARY_BYPASSED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"A06_MUTATION_BEYOND_REGISTERED_AUTHORITY","expectedDisposition":"BLOCK","requiredFailureCodes":["MUTATION_AUTHORITY_NOT_ESTABLISHED","MUTATION_SCOPE_EXCEEDS_AUTHORITY"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"A07_UNRECOGNIZED_INPUT_FIELD_INJECTION","expectedDisposition":"STOP","requiredFailureCodes":["OPERATION_SCOPE_UNRESOLVED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"A08_DUPLICATE_SCOPE_ASSERTION_INJECTION","expectedDisposition":"STOP","requiredFailureCodes":["OPERATION_SCOPE_UNRESOLVED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+
+    {"fixtureId":"D01_UNKNOWN_REPOSITORY_PATH","expectedDisposition":"STOP","requiredFailureCodes":["REQUESTED_PATH_UNRESOLVED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"D02_KNOWN_PATH_WRONG_COMMIT","expectedDisposition":"BLOCK","requiredFailureCodes":["OCCURRENCE_IDENTITY_DRIFT"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"D03_KNOWN_PATH_WRONG_GIT_BLOB","expectedDisposition":"BLOCK","requiredFailureCodes":["OCCURRENCE_IDENTITY_DRIFT"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"D04_REQUIRED_EXACT_OCCURRENCE_MISSING","expectedDisposition":"STOP","requiredFailureCodes":["EXACT_OCCURRENCE_UNRESOLVED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"D05_MUTATION_WITHOUT_EXACT_OCCURRENCE","expectedDisposition":"STOP","requiredFailureCodes":["EXACT_OCCURRENCE_UNRESOLVED","MUTATION_AUTHORITY_NOT_ESTABLISHED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"D06_UNKNOWN_EVIDENCE_REFERENCE","expectedDisposition":"STOP","requiredFailureCodes":["REQUIRED_EVIDENCE_UNRESOLVED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+
+    {"fixtureId":"N01_INCOMPLETE_AFFECTED_NODE_SET","expectedDisposition":"BLOCK","requiredFailureCodes":["DECLARED_AFFECTED_NODE_SET_INCOMPLETE"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N02_INCOMPLETE_AFFECTED_RELATION_SET","expectedDisposition":"BLOCK","requiredFailureCodes":["DECLARED_AFFECTED_NODE_SET_INCOMPLETE"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N03_MISSING_DECLARED_COMPOSITE_UNIT","expectedDisposition":"BLOCK","requiredFailureCodes":["REQUIRED_COMPOSITE_MEMBER_MISSING"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N04_UNKNOWN_DECLARED_NODE","expectedDisposition":"STOP","requiredFailureCodes":["OPERATION_SCOPE_UNRESOLVED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N05_UNKNOWN_DECLARED_RELATION","expectedDisposition":"STOP","requiredFailureCodes":["OPERATION_SCOPE_UNRESOLVED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N06_EMPTY_OPERATION_SCOPE","expectedDisposition":"STOP","requiredFailureCodes":["OPERATION_SCOPE_UNRESOLVED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N07_CARDINAL_ROLE_COLLAPSE","expectedDisposition":"BLOCK","requiredFailureCodes":["CARDINAL_ROLE_COLLAPSE"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N08_GATE_B_CANDIDATE_ROLE_PROMOTION","expectedDisposition":"BLOCK","requiredFailureCodes":["CANDIDATE_CARDINAL_ROLE_PROMOTED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N09_ADAPTER_PROMOTED_TO_ADMISSION_AUTHORITY","expectedDisposition":"BLOCK","requiredFailureCodes":["ORCHESTRATION_PROMOTED_TO_ADMISSION_AUTHORITY"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N10_FACADE_PROMOTED_TO_MEMBER_AUTHORITY","expectedDisposition":"BLOCK","requiredFailureCodes":["FACADE_PROMOTED_TO_MEMBER_AUTHORITY"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N11_GENERIC_AUTHORITY_TRANSFER","expectedDisposition":"BLOCK","requiredFailureCodes":["AUTHORITY_COLLAPSE_OR_TRANSFER"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N12_CANDIDATE_PROMOTED_TO_CANONICAL","expectedDisposition":"BLOCK","requiredFailureCodes":["CANDIDATE_PROMOTED_TO_CANONICAL"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"N13_UNRESOLVED_LIFECYCLE_TRANSITION","expectedDisposition":"REVIEW_REQUIRED","requiredFailureCodes":["LIFECYCLE_TRANSITION_UNRESOLVED"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+
+    {"fixtureId":"P01_COMPLETE_READ_ONLY_KERNEL_INSPECTION","expectedDisposition":"PASS","requiredFailureCodes":[],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"P02_COMPLETE_GATE_B_PACKAGE_DERIVATION","expectedDisposition":"PASS","requiredFailureCodes":[],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"P03_EXACT_READ_ONLY_OCCURRENCE_RESOLUTION","expectedDisposition":"PASS","requiredFailureCodes":[],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"P04_COMPLETE_CARDINAL_KERNEL_PROJECTION","expectedDisposition":"PASS","requiredFailureCodes":[],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"P05_DETERMINISTIC_REPEAT_EXECUTION","expectedDisposition":"PASS","requiredFailureCodes":[],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false},
+    {"fixtureId":"P06_NONCRITICAL_EVIDENCE_LIMITATION","expectedDisposition":"REVIEW_REQUIRED","requiredFailureCodes":["OPTIONAL_EVIDENCE_LIMITATION"],"prohibitedFailureCodes":[],"expectedTraceLength":14,"expectedMutationMayProceed":false}
+  ],
+  "stoppingCondition": {
+    "expectedOutcomeOracleLocked": true,
+    "advanceBeyondTarget4C9": false,
+    "nextAuthorizedSubtarget": "4C-10"
+  }
+}

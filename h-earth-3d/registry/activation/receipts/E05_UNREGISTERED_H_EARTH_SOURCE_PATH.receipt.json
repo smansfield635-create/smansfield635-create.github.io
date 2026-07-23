@@ -1,0 +1,265 @@
+{
+  "scenarioReceiptId": "E05_UNREGISTERED_H_EARTH_SOURCE_PATH_SYSTEMIC_COMPREHENSION_RECEIPT_v1",
+  "scenarioId": "E05_UNREGISTERED_H_EARTH_SOURCE_PATH",
+  "taskText": "Add a new shoreline module to the H-Earth renderer.",
+  "paths": [
+    "/showroom/globe/h-earth/render/new-shoreline-module.js"
+  ],
+  "mutationIntent": true,
+  "expectedActivationStatus": "ACTIVATED",
+  "actualActivationStatus": "ACTIVATED",
+  "expectedDisposition": "STOP",
+  "actualDisposition": "STOP",
+  "expectedContinuation": "RESOLVE_SCOPE_OR_IDENTITY_BEFORE_CONTINUING",
+  "actualContinuation": "RESOLVE_SCOPE_OR_IDENTITY_BEFORE_CONTINUING",
+  "affectedNodeCount": 0,
+  "traceLength": 14,
+  "checks": {
+    "taskContainsNoExplicitActivationInstruction": true,
+    "activationStatusExact": true,
+    "dispositionExact": true,
+    "continuationExact": true,
+    "affectedNodeMinimumMet": true,
+    "traceLengthExact": true,
+    "deterministicReceipt": true,
+    "dependenciesVerified": true,
+    "mutationNeverAuthorized": true,
+    "mutationIntentPreserved": true,
+    "receiptIdentityStable": true
+  },
+  "failedChecks": [],
+  "result": "PASS",
+  "automaticPreflightReceipt": {
+    "receiptId": "H_EARTH_AUTOMATIC_PREFLIGHT_A0488E9B0AD9C4CD314D_v1",
+    "activationId": "H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_ACTIVATION_v1",
+    "activationStatus": "ACTIVATED",
+    "dependenciesVerified": true,
+    "taskText": "Add a new shoreline module to the H-Earth renderer.",
+    "mutationIntentDetected": true,
+    "pathClassification": {
+      "normalizedPaths": [
+        "/showroom/globe/h-earth/render/new-shoreline-module.js"
+      ],
+      "classifications": [
+        {
+          "repositoryPath": "/showroom/globe/h-earth/render/new-shoreline-module.js",
+          "classification": "UNREGISTERED_H_EARTH_SCOPED_PATH",
+          "registered": false,
+          "insideScopeRoot": true,
+          "resolvedNodeIds": []
+        }
+      ],
+      "hEarthPaths": [
+        "/showroom/globe/h-earth/render/new-shoreline-module.js"
+      ],
+      "outsidePaths": []
+    },
+    "operationInput": {
+      "operationId": "AUTO_PREFLIGHT_27D89B54A2BDBDD7036B",
+      "operationClass": "READ_ONLY_INSPECTION",
+      "requestedAction": "AUTOMATIC_H_EARTH_PREFLIGHT",
+      "requestedMutation": false,
+      "requestedPaths": [
+        "/showroom/globe/h-earth/render/new-shoreline-module.js"
+      ],
+      "declaredAffectedNodeIds": [],
+      "declaredAffectedRelationIds": [],
+      "declaredCompositeUnitIds": [],
+      "assertedOccurrences": [],
+      "assertedAuthority": [],
+      "assertedLifecycleTransitions": [],
+      "assertedCardinalRoles": [],
+      "instructionSources": [
+        "H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1"
+      ],
+      "evidenceReferences": [],
+      "requestedDispositionContext": {
+        "allowReviewRequired": true,
+        "requireExactOccurrenceForReadOnly": false,
+        "separateAuthorityAvailable": false
+      }
+    },
+    "scopePreview": {
+      "valid": true,
+      "dependenciesVerified": true,
+      "affectedNodeIds": [],
+      "affectedRelationIds": [],
+      "affectedCompositeUnitIds": [],
+      "occurrence": {
+        "resolutionId": "H_EARTH_REPOSITORY_REGISTRY_OPERATION_OCCURRENCE_RESOLUTION_v1",
+        "pathResults": [
+          {
+            "path": "/showroom/globe/h-earth/render/new-shoreline-module.js",
+            "resolved": false,
+            "nodeIds": [],
+            "occurrences": []
+          }
+        ],
+        "assertedOccurrenceResults": [],
+        "resolvedPaths": [],
+        "resolvedOccurrences": [],
+        "failureCodes": [
+          "REQUESTED_PATH_UNRESOLVED"
+        ],
+        "stoppingCondition": {
+          "pathAndOccurrenceResolutionComplete": true,
+          "advanceBeyondTarget4B4": false,
+          "nextAuthorizedSubtarget": "4B-5"
+        }
+      },
+      "scope": {
+        "scopeResolutionId": "H_EARTH_REPOSITORY_REGISTRY_AFFECTED_SCOPE_CLOSURE_v1",
+        "seedNodeIds": [],
+        "affectedNodeIds": [],
+        "affectedRelationIds": [],
+        "nodes": [],
+        "relations": [],
+        "compositeUnits": [],
+        "failureCodes": [
+          "OPERATION_SCOPE_UNRESOLVED"
+        ],
+        "stoppingCondition": {
+          "affectedNodeAndRelationClosureComplete": true,
+          "advanceBeyondTarget4B5": false,
+          "nextAuthorizedSubtarget": "4B-6"
+        }
+      },
+      "composite": {
+        "expansionId": "H_EARTH_REPOSITORY_REGISTRY_COMPOSITE_MEMBERSHIP_EXPANSION_v1",
+        "affectedNodeIds": [],
+        "affectedRelationIds": [],
+        "nodes": [],
+        "relations": [],
+        "compositeUnits": [],
+        "compositeProjection": [],
+        "failureCodes": [],
+        "stoppingCondition": {
+          "compositeMembershipExpansionComplete": true,
+          "advanceBeyondTarget4B6": false,
+          "nextAuthorizedSubtarget": "4B-7"
+        }
+      }
+    },
+    "validatorReceipt": {
+      "receiptId": "AUTO_PREFLIGHT_27D89B54A2BDBDD7036B_VALIDATION_RECEIPT_v1",
+      "contractIdentity": {
+        "contractId": "H_EARTH_REPOSITORY_REGISTRY_PACKAGE_AWARE_VALIDATOR_CONTRACT_v1",
+        "contractVersion": 1
+      },
+      "registryIdentity": {
+        "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+        "registryVersion": "1.0.0-candidate.1",
+        "schemaId": "H_EARTH_REPOSITORY_REGISTRY_SCHEMA_v1",
+        "schemaVersion": 1,
+        "candidateGitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911"
+      },
+      "operationIdentity": {
+        "operationId": "AUTO_PREFLIGHT_27D89B54A2BDBDD7036B",
+        "operationClass": "READ_ONLY_INSPECTION",
+        "requestedAction": "AUTOMATIC_H_EARTH_PREFLIGHT",
+        "requestedMutation": false
+      },
+      "resolvedPaths": [],
+      "resolvedOccurrences": [],
+      "affectedNodes": [],
+      "affectedRelations": [],
+      "affectedCompositeUnits": [],
+      "cardinalParticipation": [],
+      "authorityProjection": [],
+      "evidenceProjection": [],
+      "lifecycleProjection": [],
+      "unresolvedFields": [],
+      "permittedMutations": [],
+      "prohibitedMutations": [],
+      "requiredValidations": [],
+      "stoppingBoundaries": [],
+      "failureCodes": [
+        "OPERATION_SCOPE_UNRESOLVED",
+        "REQUESTED_PATH_UNRESOLVED"
+      ],
+      "derivationTrace": [
+        {
+          "sequence": 1,
+          "step": "VALIDATE_INPUT_SHAPE",
+          "result": "PASS"
+        },
+        {
+          "sequence": 2,
+          "step": "VERIFY_REGISTRY_IDENTITY",
+          "result": "PASS"
+        },
+        {
+          "sequence": 3,
+          "step": "RESOLVE_PATHS_AND_OCCURRENCES",
+          "result": "PATHS=1;FAILURES=1"
+        },
+        {
+          "sequence": 4,
+          "step": "RESOLVE_AFFECTED_NODES",
+          "result": "NODES=0;FAILURES=1"
+        },
+        {
+          "sequence": 5,
+          "step": "EXPAND_RELATIONS_AND_COMPOSITES",
+          "result": "RELATIONS=0;COMPOSITES=0"
+        },
+        {
+          "sequence": 6,
+          "step": "PROJECT_CARDINAL_STRUCTURE",
+          "result": "CARDINAL_RECORDS=0;FAILURES=0"
+        },
+        {
+          "sequence": 7,
+          "step": "PROJECT_AUTHORITY_AND_EVIDENCE",
+          "result": "AUTHORITY=0;EVIDENCE=0"
+        },
+        {
+          "sequence": 8,
+          "step": "PROJECT_LIFECYCLE",
+          "result": "LIFECYCLE=0;UNRESOLVED=0"
+        },
+        {
+          "sequence": 9,
+          "step": "COMPARE_DECLARED_AND_DERIVED_SCOPE",
+          "result": "EXACT_MATCH"
+        },
+        {
+          "sequence": 10,
+          "step": "EVALUATE_MUTATION_LIMITS",
+          "result": "PROHIBITED=0;FAILURES=0"
+        },
+        {
+          "sequence": 11,
+          "step": "EVALUATE_STOPPING_BOUNDARIES",
+          "result": "STOPPING_BOUNDARIES=0"
+        },
+        {
+          "sequence": 12,
+          "step": "CLASSIFY_FAILURES",
+          "result": "FAILURES=2"
+        },
+        {
+          "sequence": 13,
+          "step": "CALCULATE_FINAL_DISPOSITION",
+          "result": "STOP"
+        },
+        {
+          "sequence": 14,
+          "step": "EMIT_DETERMINISTIC_RECEIPT",
+          "result": "RECEIPT_EMITTED"
+        }
+      ],
+      "finalDisposition": "STOP"
+    },
+    "finalDisposition": "STOP",
+    "mutationMayProceed": false,
+    "continuation": "RESOLVE_SCOPE_OR_IDENTITY_BEFORE_CONTINUING",
+    "boundaries": {
+      "readOnlyPreflight": true,
+      "sourceAuthorityCreated": false,
+      "mutationAuthorityCreated": false,
+      "mergeAuthorityCreated": false,
+      "canonicalizationAuthorityCreated": false
+    }
+  }
+}

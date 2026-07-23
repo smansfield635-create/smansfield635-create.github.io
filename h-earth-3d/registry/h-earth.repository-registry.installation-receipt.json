@@ -1,0 +1,104 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_INSTALLATION_RECEIPT_v1",
+  "installationClass": "STABLE_CANDIDATE_READ_ONLY_REGISTRY_INSTALLATION",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "sourcePushCommit": "b4c63afc3fbf871f6862b8c4189089bb6134ded6",
+  "installationCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT",
+  "candidate": {
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+    "byteCount": 140320,
+    "sha256": "5c71aba5ff60f7d8838fa4571ec18e72eafe04f01130ad146de4376279735dfe",
+    "gitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
+    "status": "COMPLETE_CANDIDATE_NOT_CANONICAL",
+    "accepted": false,
+    "canonical": false
+  },
+  "discoveryAndConsumption": {
+    "bootstrapPath": "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+    "consumerFacadePath": "/h-earth-3d/registry/h-earth.repository-registry.js",
+    "diagnosticProjectionPath": "/showroom/globe/h-earth/diagnostic/repository-registry-projection.js",
+    "auditToolPath": "/tools/h-earth-repository-registry-audit.mjs",
+    "deterministicDiscoveryEstablished": true,
+    "readOnlyQuerySurfaceEstablished": true,
+    "architectureLayersExposed": [
+      "IDENTITY_AND_CUSTODY",
+      "AUTHORITY",
+      "EVIDENCE",
+      "CARDINAL_PARTICIPATION",
+      "TOPOLOGY_AND_CONTINUITY",
+      "LIFECYCLE",
+      "MUTATION_AND_STOPPING",
+      "UNRESOLVED_FIELDS"
+    ]
+  },
+  "executionAudit": {
+    "receiptId": "H_EARTH_REPOSITORY_REGISTRY_INSTALLATION_AND_INTEGRATION_AUDIT_v1",
+    "result": "PASS",
+    "checks": {
+      "candidateByteCount": true,
+      "candidateSha256": true,
+      "candidateGitBlob": true,
+      "bootstrapCandidatePath": true,
+      "bootstrapFacadePath": true,
+      "bootstrapNotAccepted": true,
+      "bootstrapNotCanonical": true,
+      "discoveryIdentity": true,
+      "registryCandidateStatus": true,
+      "registryNotAccepted": true,
+      "registryNodeCount": true,
+      "registryRelationCount": true,
+      "registryEvidenceCount": true,
+      "structuralAuditPass": true,
+      "pathResolutionPass": true,
+      "occurrenceResolutionPass": true,
+      "adapterOrchestrationOnly": true,
+      "kernelMembershipIncludesFiveRelations": true,
+      "packetClosureIncludesPacket002": true,
+      "lifecycleResolutionPass": true,
+      "adapterSnapshotHasMultipleLayers": true,
+      "readOnlyOperationPermitted": true,
+      "mutationOperationStopped": true,
+      "unresolvedFieldsReported": true,
+      "outputsFrozen": true
+    },
+    "totalChecks": 25,
+    "passedChecks": 25,
+    "failedChecks": [],
+    "candidate": {
+      "byteCount": 140320,
+      "sha256": "5c71aba5ff60f7d8838fa4571ec18e72eafe04f01130ad146de4376279735dfe",
+      "gitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911"
+    },
+    "registry": {
+      "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+      "registryVersion": "1.0.0-candidate.1",
+      "schemaId": "H_EARTH_REPOSITORY_REGISTRY_SCHEMA_v1",
+      "schemaVersion": 1,
+      "status": "COMPLETE_CANDIDATE",
+      "accepted": false,
+      "nodeCount": 15,
+      "relationCount": 32,
+      "evidenceCount": 14
+    },
+    "boundaries": {
+      "sourceAuthorityCreated": false,
+      "mutationAuthorityCreated": false,
+      "mergeAuthorityCreated": false,
+      "workflowEnforcementCreated": false,
+      "runtimeActivationCreated": false,
+      "productionClaimCreated": false
+    }
+  },
+  "boundaries": {
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "workflowEnforcementInstalled": false,
+    "routeActivationCreated": false,
+    "runtimeActivationCreated": false,
+    "rendererActivationCreated": false,
+    "productionClaimCreated": false,
+    "mainChanged": false,
+    "userAcceptanceStillRequired": true
+  }
+}

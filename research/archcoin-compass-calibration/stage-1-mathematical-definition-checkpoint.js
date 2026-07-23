@@ -1,7 +1,7 @@
 /*
  * ARCHCOIN Compass Calibration Workspace
- * Stage 1A / Stage 1B mathematical definition checkpoint.
- * This resolves research definitions only; it does not authorize live mutation.
+ * Stage 1A / Stage 1B mathematical definition and proof checkpoint.
+ * Research authority only. No live mutation, browser acceptance, or production authority.
  */
 
 import {
@@ -16,9 +16,17 @@ import {
   ARCHCOIN_STAGE_1_MATH_FIXTURE_CONTRACT
 } from "./stage-1-math-fixtures.js";
 
+import {
+  ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT
+} from "./stage-1-math-fixture-execution.receipt.js";
+
+import {
+  ARCHCOIN_STAGE_1_SOURCE_BINDING_PROOF
+} from "./stage-1-source-binding-proof.js";
+
 export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze({
-  schema: "ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT_v1",
-  status: "EXACT_RESEARCH_CANDIDATE_DEFINED_EXECUTION_AND_ADMISSION_PENDING",
+  schema: "ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT_v2",
+  status: "EXACT_RESEARCH_CANDIDATE_DEFINED_FIXTURES_AND_SOURCE_BINDING_PROVEN_ADMISSION_PENDING",
   branch: "agent/archcoin-compass-calibration-workspace-001",
   evidenceBase: "eceac4d5297b2f087c1cf718e29d79c119c29db1",
 
@@ -55,11 +63,24 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
 
   fixtureState: Object.freeze({
     contract: ARCHCOIN_STAGE_1_MATH_FIXTURE_CONTRACT.schema,
+    receipt: ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT.schema,
     fixturesCreated: true,
     deterministicRunnerCreated: true,
-    executionReceiptRecorded: false,
+    executionReceiptRecorded: true,
+    executionStatus: ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT.status,
+    declaredCheckCount: ARCHCOIN_STAGE_1_MATH_FIXTURE_EXECUTION_RECEIPT.resultCount,
     browserVisualAcceptancePerformed: false,
     physicalDeviceAcceptancePerformed: false
+  }),
+
+  sourceProofState: Object.freeze({
+    proof: ARCHCOIN_STAGE_1_SOURCE_BINDING_PROOF.schema,
+    status: ARCHCOIN_STAGE_1_SOURCE_BINDING_PROOF.status,
+    roomIndexBindingProven: true,
+    sharedQuaternionConsumptionProven: true,
+    noMemberSpecificCanonicalDriftProven: true,
+    deterministicPrimaryOrderProven: true,
+    sourceBlob: "570c8b64f803b46c3ff2eb22d650596d832467af"
   }),
 
   stage1ACandidateScope: Object.freeze({
@@ -70,15 +91,18 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
 
   stage1BCandidateScope: Object.freeze({
     currentOwner: "/products/archcoin/index.crystals.js",
-    defaultCandidateScope: Object.freeze(["/products/archcoin/index.crystals.js"]),
-    noMutationOutcomePermittedOnlyAfter: Object.freeze([
-      "source-level room-index binding proof",
-      "shared-quaternion proof",
-      "fixture execution pass",
-      "no member-specific canonical offset proof",
-      "finite projection proof"
-    ]),
-    noMutationProofEstablished: false
+    defaultCandidateScope: Object.freeze([]),
+    crystalsDisposition: "VERIFY_ONLY_NO_STAGE_1B_MUTATION_REQUIRED",
+    noMutationProofEstablished: true,
+    proofBasis: Object.freeze([
+      "four-room-per-wing source invariant",
+      "stable room index 0 through 3 binding",
+      "one sphereVector created from roomIndex and roomCount",
+      "one local cluster quaternion read before active-room iteration",
+      "shared effective quaternion path for every room",
+      "canonical primary inference excludes presentation-only float and mesh rotation",
+      "deterministic registry insertion order resolves exact score ties"
+    ])
   }),
 
   supersededUnresolvedFields: Object.freeze([
@@ -87,21 +111,27 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
     "EXACT_CLUSTER_SEAT_RELATION_NOT_DEFINED",
     "EXACT_RADIUS_POLICY_NOT_DEFINED",
     "EXACT_PRIMARY_ANCHOR_RELATION_NOT_DEFINED",
-    "STAGE_1A_AND_1B_TEST_FIXTURES_NOT_CREATED"
+    "STAGE_1A_AND_1B_TEST_FIXTURES_NOT_CREATED",
+    "FIXTURE_EXECUTION_RECEIPT_NOT_RECORDED",
+    "SOURCE_LEVEL_ROOM_INDEX_BINDING_PROOF_NOT_RECORDED",
+    "CRYSTALS_NO_MUTATION_PROOF_ABSENT"
   ]),
 
   remainingBlockers: Object.freeze([
     "MATHEMATICAL_CANDIDATE_NOT_ADMITTED",
-    "FIXTURE_EXECUTION_RECEIPT_NOT_RECORDED",
-    "SOURCE_LEVEL_ROOM_INDEX_BINDING_PROOF_NOT_RECORDED",
-    "CRYSTALS_NO_MUTATION_PROOF_ABSENT",
     "CAMERA_RIGHT_DEPENDENCY_COMPATIBILITY_NOT_PROVEN",
+    "DIRECT_GRAB_CORRECTION_COMPATIBILITY_NOT_PROVEN",
+    "FIXED_AXIS_INTERACTION_SOURCE_CHANGE_NOT_CONSTRUCTED",
+    "LIVE_MOUSE_TOUCH_PEN_DIRECTION_ACCEPTANCE_NOT_PERFORMED",
     "LIVE_VISUAL_AND_PHYSICAL_DEVICE_ACCEPTANCE_NOT_PERFORMED",
     "LIVE_MUTATION_AUTHORITY_WITHHELD"
   ]),
 
   classification: Object.freeze({
     exactMathematicalDefinitionComplete: true,
+    mathematicalFixtureExecutionPass: true,
+    sourceLevelRoomBindingProofComplete: true,
+    crystalsNoMutationProofComplete: true,
     mathematicalAdmissionComplete: false,
     stage1ImplementationReady: false,
     liveArchcoinMutationAuthorized: false,

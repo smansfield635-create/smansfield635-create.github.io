@@ -15,7 +15,7 @@ export const ARCHCOIN_COMPASS_EXTRACTION_STATES = Object.freeze({
 
 export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
   schema: "ARCHCOIN_COMPASS_EXTRACTION_LEDGER_v1",
-  status: "INITIAL_CANDIDATE_LEDGER",
+  status: "MAIN_COMPASS_FIRST_EXTRACTION_RECORDED",
   chamber: "ARCHCOIN",
   referenceModelAuthority: "NOT_YET_ESTABLISHED",
   entries: Object.freeze([
@@ -23,13 +23,90 @@ export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
       capabilityId: "COMPASS_PHYSICS_AND_NAVIGATION_CORE",
       sourceFamily: "MAIN_COMPASS_SOURCE_FAMILY",
       candidateValue: "Preserve the strongest verified motion, navigation, cluster-capacity, and passage-custody mechanisms.",
-      state: "IDENTIFIED",
-      evidencePaths: Object.freeze([]),
+      state: "SOURCE_VERIFIED",
+      evidenceCommit: "eceac4d5297b2f087c1cf718e29d79c119c29db1",
+      evidencePaths: Object.freeze([
+        "/assets/compass/compass.controller.js",
+        "/assets/compass/compass.crystals.js",
+        "/index.html"
+      ]),
+      sourceBlobIdentities: Object.freeze({
+        controller: "259e0d16b55c3986fec57db37fc057861483344a",
+        crystals: "3d6427cbdb961576468d4aab05c0e4987549cea3"
+      }),
+      extractedCapabilities: Object.freeze([
+        Object.freeze({
+          id: "SEPARATE_CONSTELLATION_AND_CLUSTER_ORIENTATION_CUSTODY",
+          evidence: "Controller preserves one constellation quaternion and one independent quaternion per active cardinal cluster.",
+          boundary: "Orientation commitment remains controller-owned; rendering remains crystal-owned."
+        }),
+        Object.freeze({
+          id: "PREVIEW_COMMIT_CANCEL_ORIENTATION_PHASES",
+          evidence: "IDLE, PREVIEW, SETTLING, COMMITTED, and CANCELLED phases distinguish manipulation from canonical commitment.",
+          boundary: "A drag release does not itself authorize navigation or room selection."
+        }),
+        Object.freeze({
+          id: "SHARED_SPHERICAL_TRANSFORM",
+          evidence: "Cardinal and room nodes are projected from right-handed Euclidean XYZ vectors through unit-quaternion orientation.",
+          boundary: "Relative node membership is transformed as one constellation or one cluster rather than independent screen drift."
+        }),
+        Object.freeze({
+          id: "PRIMARY_ANCHOR_SETTLEMENT",
+          evidence: "Controlled drag release settles the nearest cardinal or room to a defined primary anchor.",
+          boundary: "Settlement selects visual focus; route commitment remains a separate controller decision."
+        }),
+        Object.freeze({
+          id: "DRAG_FLICK_CLASSIFICATION",
+          evidence: "Cluster return is separated from ordinary drag using duration, distance, average velocity, release velocity, directional ratio, path efficiency, and pause-before-release.",
+          boundary: "Ordinary systematic pulls cannot be interpreted as constellation-return flicks."
+        }),
+        Object.freeze({
+          id: "DEPTH_AWARE_SEMANTIC_SELECTION",
+          evidence: "Rendered position, depth, scale, prominence, label opacity, semantic stacking, and hit priority derive from rotated three-dimensional vectors.",
+          boundary: "Controller does not calculate rendered hit targets."
+        }),
+        Object.freeze({
+          id: "POINTER_AND_RENDERER_INTERRUPTION_RECOVERY",
+          evidence: "Crystal runtime accounts for pointer cancellation, lost capture, blur, visibility interruption, page hiding, partial initialization rollback, reduced motion, and WebGL context loss.",
+          boundary: "Recovery preserves controller state and avoids accidental semantic clicks after motion."
+        }),
+        Object.freeze({
+          id: "NAVIGATION_SEPARATION",
+          evidence: "Crystal renderer owns gesture interpretation and projection while the controller owns state commitment, panel descent, return-to-orbit, Mirrorland restoration, and route navigation.",
+          boundary: "Crystal renderer explicitly does not own navigation."
+        })
+      ]),
+      parameterEvidence: Object.freeze({
+        constellationRadii: Object.freeze({
+          horizontal: 1.50,
+          vertical: 1.34,
+          depth: 1.16
+        }),
+        clusterRadii: Object.freeze({
+          horizontal: 1.36,
+          vertical: 1.18,
+          depth: 1.04
+        }),
+        gesture: Object.freeze({
+          dragDeadZonePx: 6,
+          maximumTapDistancePx: 12,
+          minimumDragDistancePx: 8,
+          sampleWindowMs: 140,
+          flickMaximumDurationMs: 260,
+          flickMinimumDistancePx: 52,
+          flickMinimumAverageVelocityPxPerMs: 0.55,
+          flickMinimumReleaseVelocityPxPerMs: 0.72,
+          flickMinimumDirectionalRatio: 1.28,
+          flickMaximumPauseBeforeReleaseMs: 90,
+          flickMaximumPathEfficiencyLoss: 0.22
+        })
+      }),
       conflicts: Object.freeze([]),
       admissionBlockedBy: Object.freeze([
-        "FILE_LEVEL_BEHAVIOR_EXTRACTION",
         "DEPENDENCY_MAP",
-        "CROSS_COMPASS_COMPATIBILITY_TEST"
+        "ARCHCOIN_BASELINE_COMPATIBILITY_TEST",
+        "FIXED_AXIS_CALIBRATION_ANALYSIS",
+        "LIVE_BEHAVIOR_ACCEPTANCE"
       ])
     }),
     Object.freeze({

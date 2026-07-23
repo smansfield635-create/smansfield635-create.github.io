@@ -1056,7 +1056,7 @@ export const H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN =
     coordinateFrame:
       WORLD_FRAME,
     outputModel:
-      'DOM_CSS3D',
+      'DOM_CSS3D_PROJECTED_ENVIRONMENT',
     estimatedEnvironmentPrimitiveCount:
       26,
     semanticLayerContainerEstimate:

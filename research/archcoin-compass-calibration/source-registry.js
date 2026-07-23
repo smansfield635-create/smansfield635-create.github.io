@@ -1,9 +1,9 @@
 /* ARCHCOIN cross-compass calibration source registry. Research authority only. */
 
 export const ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY = Object.freeze({
-  schema: "ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY_v3",
+  schema: "ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY_v4",
   repositoryBase: "eceac4d5297b2f087c1cf718e29d79c119c29db1",
-  status: "MAIN_AND_LAW_COMPLETE_SHOWROOM_AND_ARCHCOIN_PENDING",
+  status: "MAIN_LAW_AND_SHOWROOM_COMPLETE_ARCHCOIN_PENDING",
   liveProductMutationAuthorized: false,
   rcoinIdentityVerified: false,
   rcoinTreatment: "TREAT_AS_ARCHCOIN_UNLESS_DISTINCT_ROUTE_OR_SOURCE_IS_ESTABLISHED",
@@ -45,15 +45,34 @@ export const ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY = Object.freeze({
     Object.freeze({
       sourceId: "SHOWROOM_COMPASS_SOURCE_FAMILY",
       label: "Showroom Compass",
-      roots: Object.freeze([
-        "/showroom/", "/assets/compass/compass.mirrorland-window.js",
-        "/assets/shared/mirrorland-window.geometry.js"
+      roots: Object.freeze(["/showroom/"]),
+      sourcePaths: Object.freeze([
+        "/showroom/index.controller.js",
+        "/showroom/index.compositor.js",
+        "/showroom/index.planet.js",
+        "/showroom/index.crystals.js",
+        "/showroom/index.interaction.gestures.js",
+        "/showroom/index.interactions.js",
+        "/showroom/index.cosmos.js",
+        "/showroom/index.object-stage.js",
+        "/showroom/index.window.definition.js",
+        "/showroom/index.window.controller.js",
+        "/showroom/index.window.js",
+        "/showroom/index.diamond.geometry.js",
+        "/showroom/index.diamond.js",
+        "/showroom/index.ui.js",
+        "/showroom/index.html",
+        "/showroom/index.css"
       ]),
+      sharedGeometryDependency: "/assets/audralia/audralia.planet.js",
+      sharedGeometryGlobal: "DGBAudraliaPlanetGeometry",
       extractionArtifact: "/research/archcoin-compass-calibration/showroom-compass-extraction.js",
-      extractionStatus: "PENDING_FILE_LEVEL_EXTRACTION",
+      extractionStatus: "FILE_LEVEL_AND_OWNERSHIP_EXTRACTION_COMPLETE",
       targetCapabilities: Object.freeze([
         "PUBLIC_STAGE_SCALE", "CAMERA_BEHAVIOR", "SCENE_INTEGRATION",
-        "READABILITY", "PRESENTATION_BEHAVIOR"
+        "READABILITY", "PRESENTATION_BEHAVIOR",
+        "SEMANTIC_FALLBACK", "INDEPENDENT_CENTER_WORLD",
+        "AUXILIARY_STAGE_AUTHORITY_SEPARATION"
       ]),
       admissionAuthority: "WITHHELD"
     }),

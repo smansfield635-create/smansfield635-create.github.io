@@ -1,0 +1,177 @@
+name: H-Earth Gate B Packet 002 One-Shot Bridge
+
+on:
+  push:
+    branches:
+      - agent/h-earth-gate-b-phase-a-successor-001
+    paths:
+      - .github/workflows/h-earth-gate-b-packet-002-one-shot.yml
+
+permissions:
+  contents: write
+  issues: read
+
+concurrency:
+  group: h-earth-gate-b-packet-002-one-shot
+  cancel-in-progress: false
+
+jobs:
+  install-audit-retire:
+    if: github.ref == 'refs/heads/agent/h-earth-gate-b-phase-a-successor-001'
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
+      TARGET_PATH: h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
+      WORKFLOW_PATH: .github/workflows/h-earth-gate-b-packet-002-one-shot.yml
+      EXPECTED_BASE_BLOB: 2bcb67ebf84f36248475921c85e75236a1115102
+      EXPECTED_SOURCE_BYTES: '63774'
+      EXPECTED_SOURCE_SHA256: 936b9853b48526d2e4234eaf5830b2d622830c6a11a1a48a233e7d44508175fe
+      EXPECTED_SOURCE_BLOB: c31412854dbce91bc6b378f345976fff5431e671
+      SOURCE_COMMENT_IDS: 5059696536,5059713725,5059717709
+      MATRIX_COMMENT_ID: '5060174689'
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Check out exact implementation branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-gate-b-phase-a-successor-001
+          fetch-depth: 2
+
+      - name: Verify bounded bridge entry state
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "$TARGET_BRANCH"
+          test "$(git hash-object "$TARGET_PATH")" = "$EXPECTED_BASE_BLOB"
+          mapfile -t trigger_paths < <(git diff-tree --no-commit-id --name-only -r HEAD | sort)
+          test "${#trigger_paths[@]}" -eq 1
+          test "${trigger_paths[0]}" = "$WORKFLOW_PATH"
+          mkdir -p "$RUNNER_TEMP/h-earth-packet-002-bridge"
+
+      - name: Reconstruct exact Packet 002 and matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64
+          import gzip
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import urllib.request
+
+          def comment_body(comment_id):
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues/comments/{comment_id}",
+                  headers={
+                      'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28'
+                  }
+              )
+              with urllib.request.urlopen(request) as response:
+                  return json.load(response)['body']
+
+          source_ids = [int(value) for value in os.environ['SOURCE_COMMENT_IDS'].split(',')]
+          source_lengths = [7000, 7000, 216]
+          source_hashes = [
+              '534ccfe9aab7ec3f4fb6b2fdf203f17aed9c1bad04022f3f26090c59c5188afe',
+              'a840bc93b692d0f8d5c283a24a829ea89386466550b11ca229064107f661b5f3',
+              '9125a8d9b9a2e98edb06e1ff31115986b0f43426e2eaf3c12a2a618cf715efa7'
+          ]
+          source_parts = []
+
+          for index, comment_id in enumerate(source_ids, 1):
+              body = comment_body(comment_id)
+              prefix = f'H_EARTH_SHARED_PACKET_002_SUCCESSOR_V3_GZIP_PART_{index:02d}_OF_03\n'
+              assert body.startswith(prefix)
+              payload = body[len(prefix):].strip()
+              assert len(payload) == source_lengths[index - 1]
+              assert hashlib.sha256(payload.encode()).hexdigest() == source_hashes[index - 1]
+              source_parts.append(payload)
+
+          source_b64 = ''.join(source_parts)
+          assert len(source_b64) == 14216
+          assert hashlib.sha256(source_b64.encode()).hexdigest() == '583c133c48e1513e3f9cff72f3aca593adc0581f0e788785a30e6a243d7d845b'
+          source_gzip = base64.b64decode(source_b64, validate=True)
+          assert len(source_gzip) == 10662
+          assert hashlib.sha256(source_gzip).hexdigest() == 'ba8247ffb83d22d10e5427db06137b1c8c83d3f74ea721548a206f9e0c147002'
+          source = gzip.decompress(source_gzip)
+          assert len(source) == int(os.environ['EXPECTED_SOURCE_BYTES'])
+          assert hashlib.sha256(source).hexdigest() == os.environ['EXPECTED_SOURCE_SHA256']
+          pathlib.Path(os.environ['TARGET_PATH']).write_bytes(source)
+
+          matrix_body = comment_body(int(os.environ['MATRIX_COMMENT_ID']))
+          matrix_prefix = 'H_EARTH_PACKET_002_CORRECTION_MATRIX_GZIP_B64\n'
+          assert matrix_body.startswith(matrix_prefix)
+          matrix_b64 = matrix_body[len(matrix_prefix):].strip()
+          assert len(matrix_b64) == 2968
+          assert hashlib.sha256(matrix_b64.encode()).hexdigest() == 'e5ddb29787151784702b742e6b786cce568a93daaa027f3b05f156a35052e55d'
+          matrix = gzip.decompress(base64.b64decode(matrix_b64, validate=True))
+          assert len(matrix) == 7363
+          assert hashlib.sha256(matrix).hexdigest() == 'b6935c68b431fc0e5a903ad12837b7ebfb2c8894f95f8b2c4944a429397835f4'
+          pathlib.Path('.h-earth-packet-002-matrix.mjs').write_bytes(matrix)
+          PY
+          test "$(git hash-object "$TARGET_PATH")" = "$EXPECTED_SOURCE_BLOB"
+
+      - name: Execute exact 48-check requirement matrix
+        shell: bash
+        env:
+          MATRIX_OUTPUT: ${{ runner.temp }}/h-earth-packet-002-bridge/matrix.json
+        run: |
+          set -euo pipefail
+          node ./.h-earth-packet-002-matrix.mjs
+          rm ./.h-earth-packet-002-matrix.mjs
+          python - <<'PY'
+          import json
+          import os
+          import pathlib
+
+          matrix = json.loads(pathlib.Path(os.environ['MATRIX_OUTPUT']).read_text())
+          assert matrix['totalChecks'] == 48
+          assert matrix['passedChecks'] == 48
+          assert matrix['failed'] == []
+          assert matrix['overallResult'] == 'PASS'
+          assert matrix['mixed']['transferMode'] is None
+          assert matrix['mixed']['previewValidation'] is None
+          assert matrix['mixed']['westBatchValidation'] is None
+          assert matrix['mixed']['gateBAdapterValidation'] is None
+          PY
+
+      - name: Verify scope, commit Packet 002, and retire bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object "$TARGET_PATH")" = "$EXPECTED_SOURCE_BLOB"
+          rm "$WORKFLOW_PATH"
+          mapfile -t changed_paths < <(git status --short | awk '{print $2}' | sort)
+          test "${#changed_paths[@]}" -eq 2
+          test "${changed_paths[0]}" = "$WORKFLOW_PATH"
+          test "${changed_paths[1]}" = "$TARGET_PATH"
+
+          cat > "$RUNNER_TEMP/h-earth-packet-002-bridge/receipt.json" <<JSON
+          {
+            "result": "PASS",
+            "checks": "48_OF_48",
+            "sourceBytes": 63774,
+            "sourceSha256": "936b9853b48526d2e4234eaf5830b2d622830c6a11a1a48a233e7d44508175fe",
+            "sourceBlob": "c31412854dbce91bc6b378f345976fff5431e671",
+            "bridgeRetiredInSameCommit": true
+          }
+          JSON
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$TARGET_PATH" "$WORKFLOW_PATH"
+          git commit -m 'Renew shared Packet 002 and retire one-shot bridge'
+          git push origin "HEAD:$TARGET_BRANCH"
+
+      - name: Upload bounded bridge receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-packet-002-one-shot-bridge-receipt
+          path: ${{ runner.temp }}/h-earth-packet-002-bridge/
+          retention-days: 1

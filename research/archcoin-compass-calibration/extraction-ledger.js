@@ -13,6 +13,10 @@ import {
   ARCHCOIN_LAW_COMPASS_EXTRACTION
 } from "./law-compass-extraction.js";
 
+import {
+  ARCHCOIN_SHOWROOM_COMPASS_EXTRACTION
+} from "./showroom-compass-extraction.js";
+
 export const ARCHCOIN_COMPASS_EXTRACTION_STATES = Object.freeze({
   IDENTIFIED: "IDENTIFIED",
   SOURCE_VERIFIED: "SOURCE_VERIFIED",
@@ -23,8 +27,8 @@ export const ARCHCOIN_COMPASS_EXTRACTION_STATES = Object.freeze({
 });
 
 export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
-  schema: "ARCHCOIN_COMPASS_EXTRACTION_LEDGER_v2",
-  status: "MAIN_AND_LAW_FILE_LEVEL_EXTRACTIONS_COMPLETE",
+  schema: "ARCHCOIN_COMPASS_EXTRACTION_LEDGER_v3",
+  status: "MAIN_LAW_AND_SHOWROOM_FILE_LEVEL_EXTRACTIONS_COMPLETE",
   chamber: "ARCHCOIN",
   referenceModelAuthority: "NOT_YET_ESTABLISHED",
   admittedStandardCount: 0,
@@ -33,7 +37,7 @@ export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
   sourceFamilyStatus: Object.freeze({
     MAIN_COMPASS_SOURCE_FAMILY: "FILE_LEVEL_EXTRACTION_COMPLETE",
     LAW_COMPASS_SOURCE_FAMILY: "FILE_LEVEL_EXTRACTION_COMPLETE",
-    SHOWROOM_COMPASS_SOURCE_FAMILY: "PENDING_FILE_LEVEL_EXTRACTION",
+    SHOWROOM_COMPASS_SOURCE_FAMILY: "FILE_LEVEL_AND_OWNERSHIP_EXTRACTION_COMPLETE",
     ARCHCOIN_SOURCE_FAMILY: "PENDING_COMPLETE_BASELINE_EXTRACTION"
   }),
 
@@ -84,19 +88,26 @@ export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
     }),
 
     Object.freeze({
-      capabilityId: "COMPASS_PUBLIC_STAGE_SCALE_AND_READABILITY",
+      capabilityId: "COMPASS_PUBLIC_STAGE_SCALE_SCENE_AND_READABILITY",
       sourceFamily: "SHOWROOM_COMPASS_SOURCE_FAMILY",
-      state: ARCHCOIN_COMPASS_EXTRACTION_STATES.IDENTIFIED,
+      state: ARCHCOIN_COMPASS_EXTRACTION_STATES.EXTRACTED,
       extractionArtifact:
         "/research/archcoin-compass-calibration/showroom-compass-extraction.js",
-      targetCapabilities: Object.freeze([
-        "PUBLIC_STAGE_SCALE",
-        "CAMERA_BEHAVIOR",
-        "SCENE_INTEGRATION",
-        "READABILITY",
-        "PRESENTATION_BEHAVIOR"
-      ]),
-      admissionState: "NOT_EVALUATED"
+      extractionSchema: ARCHCOIN_SHOWROOM_COMPASS_EXTRACTION.schema,
+      extractionStatus: ARCHCOIN_SHOWROOM_COMPASS_EXTRACTION.status,
+      evidenceBase: ARCHCOIN_SHOWROOM_COMPASS_EXTRACTION.evidenceBase,
+      evidencePaths: Object.freeze(
+        Object.values(ARCHCOIN_SHOWROOM_COMPASS_EXTRACTION.sourceFiles)
+          .map(source => source.path)
+      ),
+      extractedCapabilityIds: Object.freeze(
+        ARCHCOIN_SHOWROOM_COMPASS_EXTRACTION.extractedCapabilities.map(
+          capability => capability.capabilityId
+        )
+      ),
+      admissionState: "EXTRACTED_NOT_ADMITTED",
+      admissionBlockedBy:
+        ARCHCOIN_SHOWROOM_COMPASS_EXTRACTION.admissionBlockedBy
     }),
 
     Object.freeze({
@@ -118,7 +129,7 @@ export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
     })
   ]),
 
-  nextRequiredStage: "SHOWROOM_COMPASS_FILE_LEVEL_EXTRACTION",
+  nextRequiredStage: "ARCHCOIN_COMPLETE_BASELINE_EXTRACTION",
 
   universalAdmissionGate: Object.freeze({
     allFourSourceFamiliesExtracted: false,

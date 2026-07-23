@@ -1,9 +1,10 @@
 {
   "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4B_ENGINE_EXECUTION_RECEIPT_v1",
   "targetNumber": 4,
-  "targetSubtarget": "4B-13",
+  "targetSubtarget": "4B-14",
   "result": "PASS",
   "branch": "agent/h-earth-repository-registry-installation-001",
+  "completionCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT",
   "executedCommit": "89acce9d6106e29562ff79d51102d41466fba785",
   "executionEnvironment": "BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT",
   "audit": {
@@ -85,14 +86,38 @@
     "h-earth-3d/registry/h-earth.repository-registry.validator-engine.compare.js": "3aa352830871dbcd887cc2356989bfc04ad2b078",
     "h-earth-3d/registry/h-earth.repository-registry.validator-engine.boundaries.js": "ec8a6a2b890e05f612df436a47b4f23daffeb8d6",
     "h-earth-3d/registry/h-earth.repository-registry.validator-engine.decision.js": "c42be6bf5dc831bebdd82c91fec5afd667accbf8",
-    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.js": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759"
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.js": "b2d7e0290a2032bef36205e1e1e5b0d3e72ca759",
+    "tools/h-earth-repository-registry-target-4b-audit.mjs": "bf4898021f8dd69dead8c53423f03aabb5d30475",
+    "h-earth-3d/registry/h-earth.repository-registry.bootstrap.json": "00cc5830dd8a5e87d63522535c4d24793aa70400"
   },
   "protectedIdentities": {
     "target2RegistryGitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
     "target3InstructionGitBlob": "de421803f21808ce27b2ffff349af8756c4d9929",
     "target4AContractGitBlob": "a6733c868cfee1abce172c0ac901fecf3dd209b2"
   },
+  "finalVerification": {
+    "bootstrapRegistered": true,
+    "validatorEngineRegistered": true,
+    "validatorEngineExecutedAgainstActualBranch": true,
+    "engineAuditPass": true,
+    "target2RegistryUnchanged": true,
+    "target3InstructionUnchanged": true,
+    "target4AContractUnchanged": true,
+    "temporaryWorkflowAbsentFromTargetBranch": true,
+    "temporaryExecutionPrNumber": 62,
+    "temporaryExecutionPrClosed": true,
+    "temporaryExecutionPrMerged": false,
+    "temporaryExecutionBranchNeutralizedToMain": true,
+    "temporaryExecutionBranchDeleted": false,
+    "mainChanged": false,
+    "candidatePrNumber": 61,
+    "candidatePrOpen": true,
+    "candidatePrDraft": true,
+    "candidatePrMerged": false
+  },
   "boundaries": {
+    "validatorEngineComplete": true,
+    "validatorEngineInstalled": true,
     "validatorEngineExecuted": true,
     "fixturesInstalled": false,
     "portabilityReferencePackageInstalled": false,
@@ -102,5 +127,10 @@
     "mergeAuthorityCreated": false,
     "canonicalizationAuthorityCreated": false,
     "mainChanged": false
+  },
+  "stoppingCondition": {
+    "target4BComplete": true,
+    "advanceBeyondTarget4B": false,
+    "nextAuthorizedSubtarget": "4C-1"
   }
 }

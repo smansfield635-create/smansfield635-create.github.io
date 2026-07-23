@@ -1,9 +1,9 @@
 /* ARCHCOIN cross-compass calibration source registry. Research authority only. */
 
 export const ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY = Object.freeze({
-  schema: "ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY_v4",
+  schema: "ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY_v5",
   repositoryBase: "eceac4d5297b2f087c1cf718e29d79c119c29db1",
-  status: "MAIN_LAW_AND_SHOWROOM_COMPLETE_ARCHCOIN_PENDING",
+  status: "ALL_FOUR_SOURCE_FAMILIES_FILE_LEVEL_EXTRACTED",
   liveProductMutationAuthorized: false,
   rcoinIdentityVerified: false,
   rcoinTreatment: "TREAT_AS_ARCHCOIN_UNLESS_DISTINCT_ROUTE_OR_SOURCE_IS_ESTABLISHED",
@@ -80,14 +80,27 @@ export const ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY = Object.freeze({
       sourceId: "ARCHCOIN_SOURCE_FAMILY",
       label: "ARCHCOIN Compass",
       roots: Object.freeze(["/products/archcoin/"]),
+      sourcePaths: Object.freeze([
+        "/products/archcoin/index.planet.js",
+        "/products/archcoin/index.crystals.js",
+        "/products/archcoin/index.compositor.js",
+        "/products/archcoin/index.controller.js",
+        "/products/archcoin/index.interactions.js",
+        "/products/archcoin/index.html",
+        "/products/archcoin/index.css"
+      ]),
       extractionArtifact: "/research/archcoin-compass-calibration/archcoin-compass-extraction.js",
-      extractionStatus: "PENDING_COMPLETE_BASELINE_EXTRACTION",
+      extractionStatus: "COMPLETE_RESTORED_BASELINE_EXTRACTION",
+      planetFileStatusAtEvidenceBase: "ABSENT",
+      implementedArchitectureAtEvidenceBase: "SIX_FILE_PRODUCT_PLUS_SHARED_UPSTREAM_COMPASS",
       targetCapabilities: Object.freeze([
         "LITERAL_CARDINAL_SEMANTICS", "CURRENT_CLUSTER_BEHAVIOR",
         "CENTER_AUTHORITY", "LABELS", "FIXED_AXIS_DEFICIENCIES",
-        "SELECTION_PROBLEMS", "PRESERVED_SUCCESSFUL_BEHAVIOR"
+        "SELECTION_PROBLEMS", "PRESERVED_SUCCESSFUL_BEHAVIOR",
+        "TRANSACTION_PHASE_SEPARATION", "TARGET_CUSTODY_HYSTERESIS"
       ]),
       admissionAuthority: "WITHHELD"
     })
-  ])
+  ]),
+  nextRequiredStage: "CROSS_COMPASS_COMPATIBILITY_AND_CONFLICT_MATRIX"
 });

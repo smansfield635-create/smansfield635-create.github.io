@@ -117,8 +117,17 @@ export function deepFreeze(value, seen = new WeakSet()) {
     return value;
   }
 
+  if (typeof value === "function") {
+    return Object.freeze(value);
+  }
+
   seen.add(value);
-  Reflect.ownKeys(value).forEach(key => deepFreeze(value[key], seen));
+  Reflect.ownKeys(value).forEach(key => {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (descriptor && Object.prototype.hasOwnProperty.call(descriptor, "value")) {
+      deepFreeze(descriptor.value, seen);
+    }
+  });
   return Object.freeze(value);
 }
 

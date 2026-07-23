@@ -122,6 +122,9 @@ export const H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE =
 export const H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE =
   'MINIMUM_NATIVE_SHORELINE_PROOF';
 
+export const H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE =
+  'GROUND_VIEW_GATE_B_PROOF';
+
 const EXPECTED_PACKET_002_STATUS =
   'WEST_ADMISSION_COMPLETE_INDEX_NOT_YET_DEFINED';
 
@@ -188,10 +191,28 @@ const EXPECTED_SHORELINE_LATTICE_REGION_IDS =
     'WATER_SURFACE_PLANE'
   ]);
 
+const EXPECTED_GATE_B_SOURCE_OBJECT_IDS =
+  Object.freeze([
+    'H_EARTH_GROUND_VIEW_CONTINUOUS_NEARSHORE_AND_OPEN_WATER_TOPOLOGY',
+    'H_EARTH_GROUND_VIEW_CONTINUOUS_TERRAIN_TOPOLOGY',
+    'H_EARTH_GROUND_VIEW_DIAGNOSTIC_SHORELINE_RIBBON'
+  ]);
+
+const EXPECTED_GATE_B_SOURCE_ZONE_IDS =
+  Object.freeze([
+    'H_EARTH_GROUND_VIEW_GATE_B'
+  ]);
+
+const EXPECTED_GATE_B_LATTICE_REGION_IDS =
+  Object.freeze([
+    'H_EARTH_GROUND_VIEW_GATE_B_BOUNDED_DOMAIN'
+  ]);
+
 const ALLOWED_PRESENTATION_MODES =
   Object.freeze([
     H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE,
-    H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE
+    H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE,
+    H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE
   ]);
 
 const REQUIRED_PUBLIC_INPUT_KEYS =
@@ -1589,20 +1610,30 @@ function validateProofProvenance({
     presentationMode ===
       H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_PROOF_MODE;
 
+  const gateBMode =
+    presentationMode ===
+      H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE;
+
   const expectedSourceObjectIds =
-    shorelineMode
-      ? EXPECTED_SHORELINE_SOURCE_OBJECT_IDS
-      : EXPECTED_SOURCE_OBJECT_IDS;
+    gateBMode
+      ? EXPECTED_GATE_B_SOURCE_OBJECT_IDS
+      : shorelineMode
+        ? EXPECTED_SHORELINE_SOURCE_OBJECT_IDS
+        : EXPECTED_SOURCE_OBJECT_IDS;
 
   const expectedSourceZoneIds =
-    shorelineMode
-      ? EXPECTED_SHORELINE_SOURCE_ZONE_IDS
-      : EXPECTED_SOURCE_ZONE_IDS;
+    gateBMode
+      ? EXPECTED_GATE_B_SOURCE_ZONE_IDS
+      : shorelineMode
+        ? EXPECTED_SHORELINE_SOURCE_ZONE_IDS
+        : EXPECTED_SOURCE_ZONE_IDS;
 
   const expectedLatticeRegionIds =
-    shorelineMode
-      ? EXPECTED_SHORELINE_LATTICE_REGION_IDS
-      : EXPECTED_LATTICE_REGION_IDS;
+    gateBMode
+      ? EXPECTED_GATE_B_LATTICE_REGION_IDS
+      : shorelineMode
+        ? EXPECTED_SHORELINE_LATTICE_REGION_IDS
+        : EXPECTED_LATTICE_REGION_IDS;
 
   if (
     !isCanonicalExactStringArray(
@@ -2212,8 +2243,9 @@ function validatePacket002Transfer(
     packet002Transfer.latticeRegionIds;
 
   if (
-    presentationMode ===
-    H_EARTH_3D_FIRST_ADMITTED_WET_SAND_PROOF_MODE
+    ALLOWED_PRESENTATION_MODES.includes(
+      presentationMode
+    )
   ) {
     const firstProofProvenance =
       validateProofProvenance({
@@ -3554,6 +3586,8 @@ function buildWetSandPresentationAssignments({
     Object.freeze({
       OBJ_002_FOREGROUND_WET_SAND:
         Object.freeze({
+          presentationRole:
+            'PRIMARY_ADMITTED_WET_SAND_SURFACE',
           renderLayer:
             'GROUND',
           materialReference:
@@ -3564,6 +3598,8 @@ function buildWetSandPresentationAssignments({
 
       OBJ_005_SHORELINE_FOAM_LINE:
         Object.freeze({
+          presentationRole:
+            'PRIMARY_ADMITTED_WET_SAND_SURFACE',
           renderLayer:
             'GROUND',
           materialReference:
@@ -3574,12 +3610,50 @@ function buildWetSandPresentationAssignments({
 
       OBJ_007_WATER_SURFACE_PLANE:
         Object.freeze({
+          presentationRole:
+            'PRIMARY_ADMITTED_WET_SAND_SURFACE',
           renderLayer:
             'GROUND',
           materialReference:
             'H_EARTH_MATERIAL_OPEN_WATER',
           materialIntent:
             'OPEN_WATER'
+        }),
+
+      H_EARTH_GROUND_VIEW_CONTINUOUS_TERRAIN_TOPOLOGY:
+        Object.freeze({
+          presentationRole:
+            'PRIMARY_GATE_B_TERRAIN_SURFACE',
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_GATE_B_TERRAIN',
+          materialIntent:
+            'GATE_B_TERRAIN'
+        }),
+
+      H_EARTH_GROUND_VIEW_CONTINUOUS_NEARSHORE_AND_OPEN_WATER_TOPOLOGY:
+        Object.freeze({
+          presentationRole:
+            'PRIMARY_GATE_B_WATER_SURFACE',
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_OPEN_WATER',
+          materialIntent:
+            'OPEN_WATER'
+        }),
+
+      H_EARTH_GROUND_VIEW_DIAGNOSTIC_SHORELINE_RIBBON:
+        Object.freeze({
+          presentationRole:
+            'GATE_B_DIAGNOSTIC_SHORELINE_RIBBON',
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_GATE_B_DIAGNOSTIC_RIBBON',
+          materialIntent:
+            'DIAGNOSTIC_SHORELINE_RIBBON'
         })
     });
 
@@ -3635,6 +3709,7 @@ function buildWetSandPresentationAssignments({
           sourceObjectId,
 
           presentationRole:
+            presentation?.presentationRole ??
             'PRIMARY_ADMITTED_WET_SAND_SURFACE',
 
           renderLayer:
@@ -4564,6 +4639,8 @@ function validatePresentationAssignmentsForFrame({
     Object.freeze({
       OBJ_002_FOREGROUND_WET_SAND:
         Object.freeze({
+          presentationRole:
+            'PRIMARY_ADMITTED_WET_SAND_SURFACE',
           renderLayer:
             'GROUND',
           materialReference:
@@ -4574,6 +4651,8 @@ function validatePresentationAssignmentsForFrame({
 
       OBJ_005_SHORELINE_FOAM_LINE:
         Object.freeze({
+          presentationRole:
+            'PRIMARY_ADMITTED_WET_SAND_SURFACE',
           renderLayer:
             'GROUND',
           materialReference:
@@ -4584,12 +4663,50 @@ function validatePresentationAssignmentsForFrame({
 
       OBJ_007_WATER_SURFACE_PLANE:
         Object.freeze({
+          presentationRole:
+            'PRIMARY_ADMITTED_WET_SAND_SURFACE',
           renderLayer:
             'GROUND',
           materialReference:
             'H_EARTH_MATERIAL_OPEN_WATER',
           materialIntent:
             'OPEN_WATER'
+        }),
+
+      H_EARTH_GROUND_VIEW_CONTINUOUS_TERRAIN_TOPOLOGY:
+        Object.freeze({
+          presentationRole:
+            'PRIMARY_GATE_B_TERRAIN_SURFACE',
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_GATE_B_TERRAIN',
+          materialIntent:
+            'GATE_B_TERRAIN'
+        }),
+
+      H_EARTH_GROUND_VIEW_CONTINUOUS_NEARSHORE_AND_OPEN_WATER_TOPOLOGY:
+        Object.freeze({
+          presentationRole:
+            'PRIMARY_GATE_B_WATER_SURFACE',
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_OPEN_WATER',
+          materialIntent:
+            'OPEN_WATER'
+        }),
+
+      H_EARTH_GROUND_VIEW_DIAGNOSTIC_SHORELINE_RIBBON:
+        Object.freeze({
+          presentationRole:
+            'GATE_B_DIAGNOSTIC_SHORELINE_RIBBON',
+          renderLayer:
+            'GROUND',
+          materialReference:
+            'H_EARTH_MATERIAL_GATE_B_DIAGNOSTIC_RIBBON',
+          materialIntent:
+            'DIAGNOSTIC_SHORELINE_RIBBON'
         })
     });
 
@@ -4673,7 +4790,7 @@ function validatePresentationAssignmentsForFrame({
       if (
         expectedPresentation === null ||
         assignment.presentationRole !==
-          'PRIMARY_ADMITTED_WET_SAND_SURFACE' ||
+          expectedPresentation.presentationRole ||
         assignment.renderLayer !==
           expectedPresentation.renderLayer ||
         assignment.materialReference !==
@@ -6030,7 +6147,7 @@ export const H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT =
       'SOURCE_OBJECT_ZONE_AND_LATTICE_ARRAYS_MUST_BE_CANONICAL_DUPLICATE_FREE_AND_EXACT',
 
     firstProofProvenanceLaw:
-      'EXACTLY_ONE_WET_SAND_SOURCE_OBJECT_ONE_INSPECTION_ZONE_AND_ONE_LATTICE_REGION',
+      'PRESENTATION_MODE_SELECTS_ONE_EXACT_CANONICAL_PROVENANCE_SET_INCLUDING_GATE_B',
 
     presentationAssignmentLaw:
       'PRESENTATION_LOCAL_METADATA_ONLY_NO_GEOMETRY_ADMISSION_OR_BACKEND_MATERIAL_MUTATION',

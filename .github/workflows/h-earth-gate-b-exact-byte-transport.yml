@@ -1,17 +1,18 @@
-name: H-Earth Gate B Exact Adapter Observation
+name: H-Earth Gate B Adapter Null-Tolerance Successor Install
 on:
   pull_request:
 permissions:
-  contents: read
+  contents: write
   issues: read
 jobs:
-  observe-exact-adapter:
+  install-adapter-successor:
     if: github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001'
     runs-on: ubuntu-latest
     env:
+      TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
       ADAPTER_PATH: h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js
-      EXPECTED_ADAPTER_SHA256: e37670990e4bfb937b8a48ddeeeadc4f31b53c740f3596afc60e0c0b345c574b
-      EXPECTED_ADAPTER_BLOB: c274907528c49cbc1f7d070cf88a8783b3055e08
+      EXPECTED_DRIVE_ADAPTER_SHA256: e37670990e4bfb937b8a48ddeeeadc4f31b53c740f3596afc60e0c0b345c574b
+      EXPECTED_DRIVE_ADAPTER_BLOB: c274907528c49cbc1f7d070cf88a8783b3055e08
       EXPECTED_BASE64_SHA256: 26fd22267d33830fef7ee4e12c73287ebcc5a936c72a7e79fc72c44c6506a78c
       COMMENT_IDS: 5059352298,5059368052,5059387501,5059405378,5059416475
       GH_TOKEN: ${{ github.token }}
@@ -20,12 +21,12 @@ jobs:
         with:
           ref: agent/h-earth-gate-b-phase-a-successor-001
           fetch-depth: 0
-      - name: Reconstruct exact adapter
+      - name: Reconstruct exact preserved adapter
         shell: bash
         run: |
           set -euo pipefail
           test ! -e "$ADAPTER_PATH"
-          mkdir -p "$(dirname "$ADAPTER_PATH")" "$RUNNER_TEMP/adapter-observation"
+          mkdir -p "$(dirname "$ADAPTER_PATH")" "$RUNNER_TEMP/adapter-successor-receipt"
           python - <<'PY'
           import base64, hashlib, json, os, pathlib, urllib.request
           ids=[int(v) for v in os.environ['COMMENT_IDS'].split(',')]
@@ -46,16 +47,59 @@ jobs:
           assert hashlib.sha256(encoded.encode()).hexdigest()==os.environ['EXPECTED_BASE64_SHA256']
           decoded=base64.b64decode(encoded,validate=True)
           assert len(decoded)==23506
-          assert hashlib.sha256(decoded).hexdigest()==os.environ['EXPECTED_ADAPTER_SHA256']
+          assert hashlib.sha256(decoded).hexdigest()==os.environ['EXPECTED_DRIVE_ADAPTER_SHA256']
           pathlib.Path(os.environ['ADAPTER_PATH']).write_bytes(decoded)
+          pathlib.Path(os.environ['RUNNER_TEMP'],'adapter-successor-receipt','preserved-adapter.js').write_bytes(decoded)
           PY
-          test "$(git hash-object "$ADAPTER_PATH")" = "$EXPECTED_ADAPTER_BLOB"
-      - name: Record exact live adapter result
+          test "$(git hash-object "$ADAPTER_PATH")" = "$EXPECTED_DRIVE_ADAPTER_BLOB"
+      - name: Prove exact current West null-versus-omitted boundary
         shell: bash
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
-          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import { constructHEarthGroundViewGateBGeometry } from './showroom/globe/h-earth/render/ground-view-gate-b.js';
+          import { admitHEarthPrimitiveBatch } from './showroom/globe/h-earth/render/geometry-kernel.js';
+          const provider=constructHEarthGroundViewGateBGeometry();
+          const frameId='H_EARTH_WEST_AGGREGATE_FRAME:H_EARTH_GATE_B_DIAGNOSTIC_ROUTE_TOKEN:123e4567-e89b-42d3-a456-426614174000';
+          const withNull=admitHEarthPrimitiveBatch(provider.primitives,{frameId,toleranceContext:null,metadata:{probe:'NULL'}});
+          const omitted=admitHEarthPrimitiveBatch(provider.primitives,{frameId,metadata:{probe:'OMITTED'}});
+          assert.equal(withNull.valid,false);
+          assert.equal(withNull.frame,null);
+          assert.equal(omitted.valid,true);
+          assert.equal(omitted.primitiveAdmissions.length,3);
+          assert.equal(omitted.frame.frameId,frameId);
+          NODE
+      - name: Apply bounded null-to-omitted adapter correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js')
+          text=path.read_text(encoding='utf-8')
+          old='toleranceContext: input.toleranceContext,'
+          new='toleranceContext: input.toleranceContext ?? undefined,'
+          if text.count(old)!=1:
+              raise SystemExit(f'Expected exactly one West tolerance forwarding site, found {text.count(old)}.')
+          path.write_text(text.replace(old,new,1),encoding='utf-8',newline='')
+          PY
+          python - <<'PY'
+          from pathlib import Path
+          import difflib
+          before=Path(Path(__import__('os').environ['RUNNER_TEMP'])/'adapter-successor-receipt'/'preserved-adapter.js').read_text()
+          after=Path('h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js').read_text()
+          changes=[line for line in difflib.ndiff(before.splitlines(),after.splitlines()) if line.startswith(('- ','+ '))]
+          expected=['-         toleranceContext: input.toleranceContext,','+         toleranceContext: input.toleranceContext ?? undefined,']
+          if changes!=expected:
+              raise SystemExit(f'Unexpected adapter successor diff: {changes!r}')
+          PY
+      - name: Execute full corrected adapter corridor
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
           import { constructHEarthGroundViewGateBGeometry } from './showroom/globe/h-earth/render/ground-view-gate-b.js';
           import * as adapter from './h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js';
           const deepFreeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||s.has(v))return v;s.add(v);for(const n of Object.values(v))deepFreeze(n,s);return Object.freeze(v);};
@@ -63,51 +107,45 @@ jobs:
           const executionIdentity=deepFreeze({executionClass:'GATE_B_DIAGNOSTIC_CHILD_ROUTE_ENTRY',routeToken,adapterOccurrenceId:`H_EARTH_GATE_B_ADAPTER_OCCURRENCE:${routeToken}`,aggregateFrameId:`H_EARTH_WEST_AGGREGATE_FRAME:${routeToken}`,packet002TransferOccurrenceId:`H_EARTH_GATE_B_PACKET_002_TRANSFER_OCCURRENCE:${routeToken}`,compositorFrameOccurrenceId:`H_EARTH_COMPOSITOR_FRAME_OCCURRENCE:${routeToken}`});
           const provider=constructHEarthGroundViewGateBGeometry();
           const input={gateBConstructionResult:provider,executionIdentity,provenanceApplicability:adapter.H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,toleranceContext:null};
-          let inputEvaluation=null, occurrence=null, thrown=null, validator=null;
-          try {
-            inputEvaluation=adapter.evaluateHEarthGroundViewGateBWestAdmissionAdapterInput(input);
-            occurrence=adapter.executeHEarthGroundViewGateBWestAdmissionAdapter(input);
-            validator=adapter.isHEarthGroundViewGateBWestAdmissionAdapterOccurrence(occurrence);
-          } catch(error) {
-            thrown={name:error?.name??'Error',message:error?.message??String(error),stack:error?.stack??null};
-          }
-          const projectPrimitive=(p)=>p?{primitiveId:p.primitiveId,aggregateFrameMember:p.aggregateFrameMember,keys:Object.keys(p).sort(),frozen:Object.isFrozen(p)}:null;
-          const projection={
-            adapterExports:Object.keys(adapter).sort(),
-            provider:{valid:provider.valid,status:provider.constructionStatus,primitiveCount:provider.primitives.length,frozen:Object.isFrozen(provider)},
-            inputEvaluation:inputEvaluation?{ok:inputEvaluation.ok,status:inputEvaluation.status,issues:inputEvaluation.issues,keys:Object.keys(inputEvaluation).sort()}:null,
-            occurrence:occurrence?{
-              ok:occurrence.ok,status:occurrence.status,keys:Object.keys(occurrence).sort(),issues:occurrence.issues,validator,
-              westInvoked:occurrence.westBatchAdmissionInvoked??null,
-              westInvocationCount:occurrence.westBatchAdmissionInvocationCount??null,
-              admittedPrimitiveCount:occurrence.admittedPrimitives?.length??null,
-              admittedPrimitives:occurrence.admittedPrimitives?.map(projectPrimitive)??null,
-              aggregateFrameKeys:occurrence.aggregateFrameAdmissionRecord?Object.keys(occurrence.aggregateFrameAdmissionRecord).sort():null,
-              aggregatePrimitiveCount:occurrence.aggregateFrameAdmissionRecord?.primitives?.length??null,
-              aggregatePrimitives:occurrence.aggregateFrameAdmissionRecord?.primitives?.map((p)=>({keys:Object.keys(p).sort(),primitiveId:p.primitiveId,standalonePrimitiveReferenceId:p.standalonePrimitiveReference?.primitiveId??null,aggregateFrameMember:p.aggregateFrameMember,frozen:Object.isFrozen(p)}))??null,
-              aggregateFrameId:occurrence.aggregateFrameAdmissionRecord?.frameId??null,
-              boundsIdentity:occurrence.bounds===occurrence.aggregateFrameAdmissionRecord?.bounds,
-              provenanceIdentity:occurrence.provenanceApplicability===adapter.H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,
-              provenanceSynthesized:occurrence.provenanceSynthesized??null,
-              exactWestReferencesPreserved:occurrence.exactWestReferencesPreserved??null,
-              geometryIdentityPreserved:occurrence.geometryIdentityPreserved??null,
-              outputDeeplyFrozen:occurrence.outputDeeplyFrozen??null,
-              frozen:Object.isFrozen(occurrence)
-            }:null,
-            boundaries:adapter.H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_BOUNDARIES,
-            claimCeilings:adapter.H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_CLAIM_CEILINGS,
-            thrown
-          };
-          fs.writeFileSync(process.env.RUNNER_TEMP+'/adapter-observation/observation.json',JSON.stringify(projection,null,2));
+          assert.equal(adapter.evaluateHEarthGroundViewGateBWestAdmissionAdapterInput(input).ok,true);
+          const occurrence=adapter.executeHEarthGroundViewGateBWestAdmissionAdapter(input);
+          assert.equal(occurrence.ok,true);
+          assert.equal(adapter.isHEarthGroundViewGateBWestAdmissionAdapterOccurrence(occurrence),true);
+          assert.equal(occurrence.westBatchAdmissionInvocationCount,1);
+          assert.equal(occurrence.admittedPrimitives.length,3);
+          assert.equal(occurrence.aggregateFrameAdmissionRecord.primitives.length,3);
+          assert.equal(occurrence.aggregateFrameAdmissionRecord.frameId,executionIdentity.aggregateFrameId);
+          assert.equal(occurrence.provenanceApplicability,adapter.H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY);
+          assert.equal(occurrence.provenanceSynthesized,false);
+          assert.equal(occurrence.exactWestReferencesPreserved,true);
+          assert.equal(occurrence.geometryIdentityPreserved,true);
+          assert.equal(occurrence.outputDeeplyFrozen,true);
+          assert.equal(adapter.H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_BOUNDARIES.invokesPublicWestBatchAdmissionExactlyOnce,true);
+          assert.equal(adapter.H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_BOUNDARIES.reconstructsProvenance,false);
+          assert.equal(adapter.H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_BOUNDARIES.createsCompositorIdentity,false);
+          assert.equal(adapter.H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_BOUNDARIES.createsRendererIdentity,false);
+          assert.equal(adapter.H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_CLAIM_CEILINGS.productionClaim,false);
           NODE
-      - uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-gate-b-exact-adapter-observation
-          path: ${{ runner.temp }}/adapter-observation/observation.json
-          retention-days: 1
-      - name: Prove no governed source commit
+      - name: Commit bounded adapter successor only
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git status --short | wc -l)" -eq 1
-          test "$(git status --short | awk '{print $2}')" = "$ADAPTER_PATH"
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = "$ADAPTER_PATH"
+          SUCCESSOR_SHA256="$(sha256sum "$ADAPTER_PATH" | awk '{print $1}')"
+          SUCCESSOR_BLOB="$(git hash-object "$ADAPTER_PATH")"
+          printf 'source_drive_sha256=%s\nsource_drive_blob=%s\ncorrection=null_tolerance_to_omitted_west_argument\nsuccessor_sha256=%s\nsuccessor_blob=%s\nvalidation=PASS\n' \
+            "$EXPECTED_DRIVE_ADAPTER_SHA256" "$EXPECTED_DRIVE_ADAPTER_BLOB" "$SUCCESSOR_SHA256" "$SUCCESSOR_BLOB" \
+            > "$RUNNER_TEMP/adapter-successor-receipt/receipt.txt"
+          rm "$RUNNER_TEMP/adapter-successor-receipt/preserved-adapter.js"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$ADAPTER_PATH"
+          git commit -m 'Install Gate B West-admission adapter successor'
+          git push origin "HEAD:$TARGET_BRANCH"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-adapter-successor-install-receipt
+          path: ${{ runner.temp }}/adapter-successor-receipt/receipt.txt
+          retention-days: 1

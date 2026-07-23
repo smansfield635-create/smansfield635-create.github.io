@@ -18,8 +18,22 @@ export const CONTROLLER_STATE_MODEL_FIXTURE_RECEIPT = Object.freeze({
   executionEnvironment:
     "Node.js v22.16.0",
   executionMode:
-    "EXACT_LOCAL_GIT_BLOB_SOURCE_EXECUTION",
-  sourceFetchBackVerified: false,
+    "EXACT_TARGET_AND_FIXTURE_GIT_BLOB_EXECUTION_WITH_CONTRACT_SURFACE_MIRROR",
+  sourceFetchBackVerified: true,
+  verifiedBlobs: Object.freeze({
+    controller:
+      "7eae298304d53c711adc1714fbc44dcd94f6b065",
+    fixture:
+      "9641fdc1fd83d1c2ce8ad551dfffb489e3e0beff",
+    sourceCrossing:
+      "a301fed7d906154d9b8fca5b967a781d8f623741",
+    interactionsCompatibilitySource:
+      "cf06c107a23115a809826b949e306e5c810e60f0",
+    mathCompatibilitySource:
+      "0f1aca8d8bcd9f7a471cadec8bb569109ec8c557"
+  }),
+  dependencyExecutionBoundary:
+    "CONTRACT_IMPORT_SURFACE_MIRRORED_FROM_COMMITTED_CONTRACT_SOURCE",
   summary: Object.freeze({
     controllerFixtureCount: 32,
     controllerFixturePassed: 32,

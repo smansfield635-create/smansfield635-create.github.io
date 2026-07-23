@@ -1,0 +1,152 @@
+name: H-Earth Repository Registry Bounded Installation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-repository-registry-installation-001
+    paths:
+      - .transport/h-earth-repository-registry-installation/registry-integration-files.tar.xz.b64
+      - .github/workflows/h-earth-repository-registry-installation.yml
+
+permissions:
+  contents: write
+
+jobs:
+  install-audit-clean:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: agent/h-earth-repository-registry-installation-001
+      PAYLOAD_PATH: .transport/h-earth-repository-registry-installation/registry-integration-files.tar.xz.b64
+      WORKFLOW_PATH: .github/workflows/h-earth-repository-registry-installation.yml
+      CANDIDATE_PATH: h-earth-3d/registry/h-earth.repository-registry.candidate.js
+      EXPECTED_PAYLOAD_CHARS: '11308'
+      EXPECTED_PAYLOAD_SHA256: 4434299ea690076d4d0770422d71f8f973286668e869fc53eaa3abac7809d57d
+      EXPECTED_ARCHIVE_SHA256: 954c5a7035572716a3df45fbdfd15425c3f355a4be2114ccf10e26709a0fa9ec
+      EXPECTED_CANDIDATE_BYTES: '140320'
+      EXPECTED_CANDIDATE_SHA256: 5c71aba5ff60f7d8838fa4571ec18e72eafe04f01130ad146de4376279735dfe
+      EXPECTED_CANDIDATE_BLOB: 10ab7b203e03fde419e526d0cce2c0af42860911
+
+    steps:
+      - name: Check out installation branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-repository-registry-installation-001
+          fetch-depth: 0
+
+      - name: Verify and extract bounded integration package
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/registry-integration-files.tar.xz"
+          payload_chars="$(wc -c < "$PAYLOAD_PATH" | tr -d ' ')"
+          payload_sha256="$(sha256sum "$PAYLOAD_PATH" | awk '{print $1}')"
+          test "$payload_chars" = "$EXPECTED_PAYLOAD_CHARS"
+          test "$payload_sha256" = "$EXPECTED_PAYLOAD_SHA256"
+          base64 --decode "$PAYLOAD_PATH" > "$archive"
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$EXPECTED_ARCHIVE_SHA256"
+          tar --extract --xz --file "$archive" --directory .
+
+      - name: Verify exact candidate identity and execute integration audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(wc -c < "$CANDIDATE_PATH" | tr -d ' ')" = "$EXPECTED_CANDIDATE_BYTES"
+          test "$(sha256sum "$CANDIDATE_PATH" | awk '{print $1}')" = "$EXPECTED_CANDIDATE_SHA256"
+          test "$(git hash-object "$CANDIDATE_PATH")" = "$EXPECTED_CANDIDATE_BLOB"
+          node --experimental-default-type=module tools/h-earth-repository-registry-audit.mjs \
+            > "$RUNNER_TEMP/h-earth-repository-registry-audit.json"
+
+      - name: Create durable installation receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const audit = JSON.parse(
+            fs.readFileSync(process.env.RUNNER_TEMP + '/h-earth-repository-registry-audit.json', 'utf8')
+          );
+          const receipt = {
+            receiptId: 'H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_INSTALLATION_RECEIPT_v1',
+            installationClass: 'STABLE_CANDIDATE_READ_ONLY_REGISTRY_INSTALLATION',
+            branch: process.env.TARGET_BRANCH,
+            sourcePushCommit: process.env.GITHUB_SHA,
+            installationCommitIdentity: 'THE_COMMIT_CONTAINING_THIS_RECEIPT',
+            candidate: {
+              path: '/h-earth-3d/registry/h-earth.repository-registry.candidate.js',
+              byteCount: audit.candidate.byteCount,
+              sha256: audit.candidate.sha256,
+              gitBlob: audit.candidate.gitBlob,
+              status: 'COMPLETE_CANDIDATE_NOT_CANONICAL',
+              accepted: false,
+              canonical: false
+            },
+            discoveryAndConsumption: {
+              bootstrapPath: '/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json',
+              consumerFacadePath: '/h-earth-3d/registry/h-earth.repository-registry.js',
+              diagnosticProjectionPath: '/showroom/globe/h-earth/diagnostic/repository-registry-projection.js',
+              auditToolPath: '/tools/h-earth-repository-registry-audit.mjs',
+              deterministicDiscoveryEstablished: true,
+              readOnlyQuerySurfaceEstablished: true,
+              architectureLayersExposed: [
+                'IDENTITY_AND_CUSTODY',
+                'AUTHORITY',
+                'EVIDENCE',
+                'CARDINAL_PARTICIPATION',
+                'TOPOLOGY_AND_CONTINUITY',
+                'LIFECYCLE',
+                'MUTATION_AND_STOPPING',
+                'UNRESOLVED_FIELDS'
+              ]
+            },
+            executionAudit: audit,
+            boundaries: {
+              sourceAuthorityCreated: false,
+              mutationAuthorityCreated: false,
+              mergeAuthorityCreated: false,
+              workflowEnforcementInstalled: false,
+              routeActivationCreated: false,
+              runtimeActivationCreated: false,
+              rendererActivationCreated: false,
+              productionClaimCreated: false,
+              mainChanged: false,
+              userAcceptanceStillRequired: true
+            }
+          };
+          fs.writeFileSync(
+            'h-earth-3d/registry/h-earth.repository-registry.installation-receipt.json',
+            JSON.stringify(receipt, null, 2) + '\n'
+          );
+          NODE
+
+      - name: Remove temporary transport and commit installed registry integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm "$PAYLOAD_PATH" "$WORKFLOW_PATH"
+          git add \
+            h-earth-3d/registry/h-earth.repository-registry.js \
+            h-earth-3d/registry/h-earth.repository-registry.bootstrap.json \
+            h-earth-3d/registry/h-earth.repository-registry.installation-receipt.json \
+            showroom/globe/h-earth/diagnostic/repository-registry-projection.js \
+            tools/h-earth-repository-registry-audit.mjs
+
+          mapfile -t changed < <(git diff --cached --name-only | sort)
+          expected=(
+            .github/workflows/h-earth-repository-registry-installation.yml
+            .transport/h-earth-repository-registry-installation/registry-integration-files.tar.xz.b64
+            h-earth-3d/registry/h-earth.repository-registry.bootstrap.json
+            h-earth-3d/registry/h-earth.repository-registry.installation-receipt.json
+            h-earth-3d/registry/h-earth.repository-registry.js
+            showroom/globe/h-earth/diagnostic/repository-registry-projection.js
+            tools/h-earth-repository-registry-audit.mjs
+          )
+          test "${#changed[@]}" -eq "${#expected[@]}"
+          for index in "${!expected[@]}"; do
+            test "${changed[$index]}" = "${expected[$index]}"
+          done
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Integrate H-Earth repository registry read-only tooling'
+          git push origin "HEAD:$TARGET_BRANCH"

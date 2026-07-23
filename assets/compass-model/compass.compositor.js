@@ -1,5 +1,11 @@
 import { DEPTH_LAYER, assertContract } from "./compass.contracts.js";
-import { dot3, normalize3, subtract3 } from "./compass.math.js";
+import {
+  dot3,
+  normalize3,
+  normalizeQuaternion,
+  rotateVectorByQuaternion,
+  subtract3
+} from "./compass.math.js";
 
 export function createCompositor({ profile, adapters, nodes }) {
   let camera = Object.freeze({ ...profile.compositor.camera });
@@ -44,13 +50,20 @@ export function createCompositor({ profile, adapters, nodes }) {
 
   function inferPrimary(quaternion, presentation) {
     const candidates = nodes.forPresentation(presentation);
+    const orientation = normalizeQuaternion(quaternion);
     const forward = normalize3(subtract3(camera.target, camera.eye));
+
     return candidates
-      .slice()
+      .map(candidate => Object.freeze({
+        candidate,
+        rotatedUnitVector: normalize3(
+          rotateVectorByQuaternion(candidate.baseVector, orientation)
+        )
+      }))
       .sort((a, b) =>
-        dot3(b.baseVector, forward) - dot3(a.baseVector, forward) ||
-        a.index - b.index
-      )[0]?.id || "";
+        dot3(b.rotatedUnitVector, forward) - dot3(a.rotatedUnitVector, forward) ||
+        a.candidate.index - b.candidate.index
+      )[0]?.candidate.id || "";
   }
 
   return Object.freeze({

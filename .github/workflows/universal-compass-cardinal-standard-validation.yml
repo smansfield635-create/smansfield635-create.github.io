@@ -1,0 +1,36 @@
+name: Universal Compass Cardinal Standard Validation
+
+on:
+  pull_request:
+    branches:
+      - agent/universal-compass-cardinal-standard-installation-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-cardinal-standard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Execute cardinal standard fixtures
+        run: |
+          mkdir -p .universal-compass-cardinal-standard-receipt
+          node research/project-awareness/universal-compass-cardinal-standard.fixtures.js \
+            > .universal-compass-cardinal-standard-receipt/receipt.json
+          cat .universal-compass-cardinal-standard-receipt/receipt.json
+
+      - name: Preserve validation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-cardinal-standard-validation-receipt
+          path: .universal-compass-cardinal-standard-receipt/receipt.json
+          if-no-files-found: error

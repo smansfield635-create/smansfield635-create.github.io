@@ -11,8 +11,18 @@ export function validateUniversalCompass({
   adapters
 }) {
   const findings = [];
-  const check = (id, pass, details = "") => {
-    findings.push(Object.freeze({ id, pass: Boolean(pass), details }));
+
+  const record = (id, status, details = "") => {
+    findings.push(Object.freeze({
+      id,
+      status,
+      pass: status === "PASS",
+      details
+    }));
+  };
+
+  const check = (id, condition, details = "") => {
+    record(id, condition ? "PASS" : "FAIL", details);
   };
 
   check(
@@ -48,7 +58,8 @@ export function validateUniversalCompass({
   check(
     "TRANSACTION_DETERMINISM",
     typeof controller.cancel === "function" &&
-      typeof controller.commit === "function"
+      typeof controller.commit === "function" &&
+      typeof controller.setPresentation === "function"
   );
   check(
     "POINTER_AND_DEVICE_BEHAVIOR",
@@ -59,15 +70,34 @@ export function validateUniversalCompass({
   const covered = new Set(findings.map(finding => finding.id));
   REQUIRED_INVARIANTS.forEach(id => {
     if (!covered.has(id)) {
-      check(id, true, "DEFERRED_TO_INTEGRATED_COMPLEX_AUDIT");
+      record(
+        id,
+        "PENDING",
+        "REQUIRES_INTEGRATED_MULTIFACETED_AUDIT"
+      );
     }
   });
 
+  const failedCount = findings.filter(
+    finding => finding.status === "FAIL"
+  ).length;
+  const pendingCount = findings.filter(
+    finding => finding.status === "PENDING"
+  ).length;
+
   return Object.freeze({
-    schema: "UNIVERSAL_COMPASS_VALIDATION_RECEIPT_v1",
-    status: findings.every(finding => finding.pass)
-      ? "PASS_CANDIDATE_ONLY"
-      : "FAIL",
+    schema: "UNIVERSAL_COMPASS_VALIDATION_RECEIPT_v2",
+    status:
+      failedCount > 0
+        ? "FAIL"
+        : pendingCount > 0
+          ? "PENDING_INTEGRATED_AUDIT"
+          : "PASS_CANDIDATE_ONLY",
+    summary: Object.freeze({
+      passCount: findings.filter(finding => finding.status === "PASS").length,
+      failCount: failedCount,
+      pendingCount
+    }),
     findings: Object.freeze(findings),
     productionAuthority: false,
     referenceModelAuthority: false

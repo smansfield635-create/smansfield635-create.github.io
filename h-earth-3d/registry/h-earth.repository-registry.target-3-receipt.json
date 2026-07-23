@@ -59,7 +59,7 @@
       "detailedInstructionSha256": "dd6f9fe0a5fa4d519495174ed9058cfc1939d6ebc0dd81794cd8f9b5c255d1ea",
       "githubInstructionSha256": "3e70b7008f45c1bc44157d2fb3e22514e9890ef9eb201d12597ed28b4841c5be",
       "hEarthAgentsSha256": "12d48ca2a997fbfc89f4a690484d4fb2b407928518b8bd8003ea7b12de8c58c4",
-      "showroomAgentsSha256": "f87bebbab548c6f7094655bc5748191e09f8c1159e2e85b4720fb2ffd287e786"
+      "showroomAgentsSha256": "1b4c7fa4d20bc95d5d862863188ef4e6ce1de3d969f39508d35d70e718ad4bbd"
     },
     "boundaries": {
       "registryAccepted": false,

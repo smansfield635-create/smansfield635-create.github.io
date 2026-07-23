@@ -1,22 +1,19 @@
-name: H-Earth Shared Packet 002 Successor Install
+name: H-Earth Shared Packet 002 Legacy Observation
 on:
   pull_request:
 permissions:
-  contents: write
+  contents: read
   issues: read
 jobs:
-  install-shared-packet-002-successor:
+  observe-shared-packet-002-legacy:
     if: github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001'
     runs-on: ubuntu-latest
     env:
-      TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
       TARGET_PATH: h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
       EXPECTED_BASE_BLOB: 2bcb67ebf84f36248475921c85e75236a1115102
       EXPECTED_SUCCESSOR_BYTES: 63412
       EXPECTED_SUCCESSOR_SHA256: 58e1f0100019a64d870837b69882f59d0fd5c6a522cc5abebb56e97a7179de0a
       EXPECTED_SUCCESSOR_BLOB: b6c92988fee6997344b5df89cd5645d7d5b2d1a2
-      EXPECTED_GZIP_BASE64_LENGTH: 14180
-      EXPECTED_GZIP_BASE64_SHA256: 0c33813b84de9e7a18aec8401ad953162b4e5b0595bb2da0634953530084a6bb
       COMMENT_IDS: 5059696536,5059713725,5059717709
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -24,228 +21,79 @@ jobs:
         with:
           ref: agent/h-earth-gate-b-phase-a-successor-001
           fetch-depth: 0
-
-      - name: Verify exact base and reconstruct successor
+      - name: Reconstruct exact successor
         shell: bash
         run: |
           set -euo pipefail
           test "$(git hash-object "$TARGET_PATH")" = "$EXPECTED_BASE_BLOB"
           cp "$TARGET_PATH" h-earth-3d/integration/__h-earth.post-west-admitted-geometry-transfer.baseline.js
-          mkdir -p "$RUNNER_TEMP/shared-packet-002-receipt"
+          mkdir -p "$RUNNER_TEMP/shared-packet-002-observation"
           python - <<'PY'
-          import base64, gzip, hashlib, json, os, pathlib, urllib.request
+          import base64,gzip,hashlib,json,os,pathlib,urllib.request
           ids=[int(v) for v in os.environ['COMMENT_IDS'].split(',')]
           lengths=[7000,7000,180]
           hashes=['38d0c10cd020c991082655487f27185b2efb56a726562640a07440d8501e51d7','f3037a6fad7128f5e0a5ac6034aaf33ce9920625e7e256bb013ea70dc01603b2','a85b34c42ab9535c1a01530dcafa04734323f8daed056b231f2839a80f8177ea']
           pieces=[]
           for index,comment_id in enumerate(ids,1):
-              req=urllib.request.Request(
-                  f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues/comments/{comment_id}",
-                  headers={
-                      'Authorization':f"Bearer {os.environ['GH_TOKEN']}",
-                      'Accept':'application/vnd.github+json',
-                      'X-GitHub-Api-Version':'2022-11-28'
-                  }
-              )
-              with urllib.request.urlopen(req) as response:
-                  body=json.load(response)['body']
+              req=urllib.request.Request(f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues/comments/{comment_id}",headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
+              with urllib.request.urlopen(req) as response: body=json.load(response)['body']
               prefix=f'H_EARTH_SHARED_PACKET_002_SUCCESSOR_GZIP_PART_{index:02d}_OF_03\n'
-              if not body.startswith(prefix):
-                  raise SystemExit(f'Packet 002 payload header mismatch for comment {comment_id}.')
+              assert body.startswith(prefix)
               payload=body[len(prefix):].strip()
-              observed=hashlib.sha256(payload.encode()).hexdigest()
-              if len(payload)!=lengths[index-1] or observed!=hashes[index-1]:
-                  raise SystemExit(f'Packet 002 payload part {index} mismatch: length={len(payload)} sha256={observed}')
+              assert len(payload)==lengths[index-1]
+              assert hashlib.sha256(payload.encode()).hexdigest()==hashes[index-1]
               pieces.append(payload)
-          encoded=''.join(pieces)
-          if len(encoded)!=int(os.environ['EXPECTED_GZIP_BASE64_LENGTH']):
-              raise SystemExit(f'Packet 002 gzip base64 length mismatch: {len(encoded)}')
-          encoded_hash=hashlib.sha256(encoded.encode()).hexdigest()
-          if encoded_hash!=os.environ['EXPECTED_GZIP_BASE64_SHA256']:
-              raise SystemExit(f'Packet 002 gzip base64 digest mismatch: {encoded_hash}')
-          raw=gzip.decompress(base64.b64decode(encoded,validate=True))
-          raw_hash=hashlib.sha256(raw).hexdigest()
-          if len(raw)!=int(os.environ['EXPECTED_SUCCESSOR_BYTES']) or raw_hash!=os.environ['EXPECTED_SUCCESSOR_SHA256']:
-              raise SystemExit(f'Packet 002 successor mismatch: length={len(raw)} sha256={raw_hash}')
+          raw=gzip.decompress(base64.b64decode(''.join(pieces),validate=True))
+          assert len(raw)==int(os.environ['EXPECTED_SUCCESSOR_BYTES'])
+          assert hashlib.sha256(raw).hexdigest()==os.environ['EXPECTED_SUCCESSOR_SHA256']
           pathlib.Path(os.environ['TARGET_PATH']).write_bytes(raw)
           PY
           test "$(git hash-object "$TARGET_PATH")" = "$EXPECTED_SUCCESSOR_BLOB"
-          node --check "$TARGET_PATH"
-
-      - name: Prove legacy mode is byte-semantic additive only
+      - name: Record exact legacy baseline and successor behavior
         shell: bash
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
-          import assert from 'node:assert/strict';
-          import { previewHEarthMinimumShorelineGeometry } from './showroom/globe/h-earth/render/shoreline-preview.js';
-          import { admitHEarthPrimitiveBatch } from './showroom/globe/h-earth/render/geometry-kernel.js';
-          import * as baseline from './h-earth-3d/integration/__h-earth.post-west-admitted-geometry-transfer.baseline.js';
-          import * as successor from './h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js';
-
-          const requestId='H_EARTH_PACKET_002_LEGACY_REGRESSION_REQUEST';
-          const previewResult=previewHEarthMinimumShorelineGeometry({
-            sourceObjectId:'OBJ_002_FOREGROUND_WET_SAND',
-            requestedPurpose:'MINIMUM_NATIVE_SHORELINE_PROOF',
-            requestId
-          });
-          assert.equal(previewResult.ok,true);
-          const westBatchAdmissionResult=admitHEarthPrimitiveBatch(previewResult.primitives,{
-            frameId:'H_EARTH_PACKET_002_LEGACY_REGRESSION_FRAME',
-            metadata:Object.freeze({
-              requestId:previewResult.requestId,
-              providerRequestId:previewResult.providerRequestId,
-              resolutionReceiptId:previewResult.resolutionReceiptId,
-              sourceObjectIds:Object.freeze([...previewResult.sourceObjectIds]),
-              sourceZoneIds:previewResult.sourceZoneIds,
-              latticeRegionIds:previewResult.latticeRegionIds
-            })
-          });
-          assert.equal(westBatchAdmissionResult.valid,true);
-          const input={previewResult,westBatchAdmissionResult};
-          const baselineEvaluation=baseline.evaluateHEarthPostWestAdmittedGeometryTransferInput(input);
-          const successorEvaluation=successor.evaluateHEarthPostWestAdmittedGeometryTransferInput(input);
-          assert.equal(baselineEvaluation.ok,true);
-          assert.equal(successorEvaluation.ok,true);
-          assert.equal(successorEvaluation.transferMode,successor.H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES.LEGACY_PREVIEW_WEST_BATCH);
-          const baselineOutput=baseline.buildHEarthPostWestAdmittedGeometryTransfer(input);
-          const successorOutput=successor.buildHEarthPostWestAdmittedGeometryTransfer(input);
-          assert.equal(baselineOutput.ok,true);
-          assert.equal(successorOutput.ok,true);
-          assert.equal(successorOutput.transferMode,successor.H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES.LEGACY_PREVIEW_WEST_BATCH);
-          const normalizedSuccessor=structuredClone(successorOutput);
-          delete normalizedSuccessor.transferMode;
-          assert.deepEqual(normalizedSuccessor,structuredClone(baselineOutput));
-          assert.equal(successorOutput.contractId,baselineOutput.contractId);
-          assert.equal(successorOutput.status,baselineOutput.status);
-          assert.deepEqual(Object.keys(input).sort(),['previewResult','westBatchAdmissionResult']);
-
-          const unknownLegacyFailure=successor.evaluateHEarthPostWestAdmittedGeometryTransferInput({...input,unknownField:true});
-          assert.equal(unknownLegacyFailure.ok,false);
-          assert.equal(unknownLegacyFailure.issues.some((issue)=>issue.code==='UNKNOWN_TRANSFER_INPUT_KEY_REJECTED'),true);
+          import fs from 'node:fs';
+          const observation={stage:'START',preview:null,west:null,baseline:null,successor:null,comparison:null,thrown:null};
+          try {
+            const previewModule=await import('./showroom/globe/h-earth/render/shoreline-preview.js');
+            const kernel=await import('./showroom/globe/h-earth/render/geometry-kernel.js');
+            const baseline=await import('./h-earth-3d/integration/__h-earth.post-west-admitted-geometry-transfer.baseline.js');
+            const successor=await import('./h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js');
+            observation.stage='IMPORTED';
+            const requestId='H_EARTH_PACKET_002_LEGACY_REGRESSION_REQUEST';
+            const previewResult=previewModule.previewHEarthMinimumShorelineGeometry({sourceObjectId:'OBJ_002_FOREGROUND_WET_SAND',requestedPurpose:'MINIMUM_NATIVE_SHORELINE_PROOF',requestId});
+            observation.preview={ok:previewResult?.ok,status:previewResult?.status,contractId:previewResult?.contractId,requestId:previewResult?.requestId,providerRequestId:previewResult?.providerRequestId,resolutionReceiptId:previewResult?.resolutionReceiptId,primitiveCount:previewResult?.primitives?.length,sourceObjectIds:previewResult?.sourceObjectIds,sourceZoneIds:previewResult?.sourceZoneIds,latticeRegionIds:previewResult?.latticeRegionIds,keys:previewResult?Object.keys(previewResult).sort():null};
+            observation.stage='PREVIEW';
+            const westBatchAdmissionResult=kernel.admitHEarthPrimitiveBatch(previewResult.primitives,{frameId:'H_EARTH_PACKET_002_LEGACY_REGRESSION_FRAME',metadata:Object.freeze({requestId:previewResult.requestId,providerRequestId:previewResult.providerRequestId,resolutionReceiptId:previewResult.resolutionReceiptId,sourceObjectIds:Object.freeze([...previewResult.sourceObjectIds]),sourceZoneIds:previewResult.sourceZoneIds,latticeRegionIds:previewResult.latticeRegionIds})});
+            observation.west={valid:westBatchAdmissionResult?.valid,status:westBatchAdmissionResult?.status,primitiveAdmissionCount:westBatchAdmissionResult?.primitiveAdmissions?.length,frameId:westBatchAdmissionResult?.frame?.frameId,framePrimitiveCount:westBatchAdmissionResult?.frame?.primitives?.length,issues:westBatchAdmissionResult?.issues,keys:westBatchAdmissionResult?Object.keys(westBatchAdmissionResult).sort():null};
+            observation.stage='WEST';
+            const input={previewResult,westBatchAdmissionResult};
+            const baselineEvaluation=baseline.evaluateHEarthPostWestAdmittedGeometryTransferInput(input);
+            const baselineOutput=baseline.buildHEarthPostWestAdmittedGeometryTransfer(input);
+            observation.baseline={evaluationOk:baselineEvaluation.ok,evaluationStatus:baselineEvaluation.status,evaluationIssues:baselineEvaluation.issues,evaluationKeys:Object.keys(baselineEvaluation).sort(),outputOk:baselineOutput.ok,outputStatus:baselineOutput.status,outputIssues:baselineOutput.issues,outputKeys:Object.keys(baselineOutput).sort()};
+            observation.stage='BASELINE';
+            const successorEvaluation=successor.evaluateHEarthPostWestAdmittedGeometryTransferInput(input);
+            const successorOutput=successor.buildHEarthPostWestAdmittedGeometryTransfer(input);
+            observation.successor={evaluationOk:successorEvaluation.ok,evaluationStatus:successorEvaluation.status,transferMode:successorEvaluation.transferMode,evaluationIssues:successorEvaluation.issues,evaluationKeys:Object.keys(successorEvaluation).sort(),outputOk:successorOutput.ok,outputStatus:successorOutput.status,outputTransferMode:successorOutput.transferMode,outputIssues:successorOutput.issues,outputKeys:Object.keys(successorOutput).sort()};
+            observation.stage='SUCCESSOR';
+            let normalizedEqual=false;
+            if(baselineOutput.ok===true&&successorOutput.ok===true){const normalized=structuredClone(successorOutput);delete normalized.transferMode;normalizedEqual=JSON.stringify(normalized)===JSON.stringify(structuredClone(baselineOutput));}
+            observation.comparison={normalizedOutputEqual:normalizedEqual,contractIdEqual:baselineOutput.contractId===successorOutput.contractId,statusEqual:baselineOutput.status===successorOutput.status};
+            observation.stage='COMPLETE';
+          }catch(error){observation.thrown={name:error?.name??'Error',message:error?.message??String(error),stack:error?.stack??null};}
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/shared-packet-002-observation/legacy-observation.json',JSON.stringify(observation,null,2));
           NODE
-
-      - name: Prove Gate B mode and shared-authority boundaries
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import assert from 'node:assert/strict';
-          import { constructHEarthGroundViewGateBGeometry } from './showroom/globe/h-earth/render/ground-view-gate-b.js';
-          import * as adapter from './h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js';
-          import * as transfer from './h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js';
-
-          const deepFreeze=(value,seen=new WeakSet())=>{
-            if(value===null||typeof value!=='object'||seen.has(value)) return value;
-            seen.add(value);
-            for(const nested of Object.values(value)) deepFreeze(nested,seen);
-            return Object.freeze(value);
-          };
-          const routeToken='H_EARTH_GATE_B_DIAGNOSTIC_ROUTE_TOKEN:123e4567-e89b-42d3-a456-426614174000';
-          const executionIdentity=deepFreeze({
-            executionClass:'GATE_B_DIAGNOSTIC_CHILD_ROUTE_ENTRY',
-            routeToken,
-            adapterOccurrenceId:`H_EARTH_GATE_B_ADAPTER_OCCURRENCE:${routeToken}`,
-            aggregateFrameId:`H_EARTH_WEST_AGGREGATE_FRAME:${routeToken}`,
-            packet002TransferOccurrenceId:`H_EARTH_GATE_B_PACKET_002_TRANSFER_OCCURRENCE:${routeToken}`,
-            compositorFrameOccurrenceId:`H_EARTH_COMPOSITOR_FRAME_OCCURRENCE:${routeToken}`
-          });
-          const gateBConstructionResult=constructHEarthGroundViewGateBGeometry();
-          const gateBAdapterOccurrence=adapter.executeHEarthGroundViewGateBWestAdmissionAdapter({
-            gateBConstructionResult,
-            executionIdentity,
-            provenanceApplicability:adapter.H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,
-            toleranceContext:null
-          });
-          assert.equal(gateBAdapterOccurrence.ok,true);
-          const input={gateBAdapterOccurrence,toleranceContext:null};
-          const evaluation=transfer.evaluateHEarthPostWestAdmittedGeometryTransferInput(input);
-          assert.equal(evaluation.ok,true);
-          assert.equal(evaluation.transferMode,transfer.H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES.GATE_B_ADAPTER_OCCURRENCE);
-          assert.equal(evaluation.previewValidation,null);
-          assert.equal(evaluation.westBatchValidation,null);
-          assert.equal(evaluation.gateBAdapterValidation.ok,true);
-          const result=transfer.buildHEarthPostWestAdmittedGeometryTransfer(input);
-          assert.equal(result.ok,true);
-          assert.equal(result.transferMode,transfer.H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES.GATE_B_ADAPTER_OCCURRENCE);
-          assert.equal(result.contractId,transfer.H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID);
-          assert.equal(result.admittedPrimitives.length,3);
-          assert.equal(result.aggregateFrameAdmissionRecord.primitives.length,3);
-          assert.deepEqual(result.primitiveOrder,[
-            adapter.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.terrain,
-            adapter.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.water,
-            adapter.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.diagnosticRibbon
-          ]);
-          assert.deepEqual(result.sourceObjectIds,['OBJ_006_NEARSHORE_WAVE_BAND','OBJ_007_WATER_SURFACE_PLANE']);
-          assert.deepEqual(result.sourceZoneIds,['ZONE_003_WATER_SURFACE_ZONE']);
-          assert.deepEqual(result.latticeRegionIds,[]);
-          assert.equal(result.provenanceMode,'GATE_B_PER_PRIMITIVE_APPLICABILITY');
-          assert.equal(result.provenanceCompleteness,'EXPLICIT_SEMANTIC_CORRESPONDENCE_ONLY_NO_SYNTHESIS');
-          assert.equal(result.primitiveProvenanceApplicability.length,3);
-          assert.notEqual(result.primitiveProvenanceApplicability,adapter.H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY);
-          assert.notEqual(result.admittedPrimitives,gateBAdapterOccurrence.admittedPrimitives);
-          assert.notEqual(result.aggregateFrameAdmissionRecord,gateBAdapterOccurrence.aggregateFrameAdmissionRecord);
-          assert.notEqual(result.bounds,gateBAdapterOccurrence.bounds);
-          assert.notEqual(result.bounds,result.aggregateFrameAdmissionRecord.bounds);
-          assert.equal(result.standaloneToAggregateMemberCorrespondence.length,3);
-          assert.equal(result.standaloneToAggregateMemberCorrespondence.every((entry)=>entry.separateSnapshotAllocation===true&&entry.geometryStructurallyCorrespondent===true&&entry.admittedIdentityStructurallyCorrespondent===true),true);
-          assert.equal(Object.isFrozen(result),true);
-          assert.equal(Object.isFrozen(result.admittedPrimitives),true);
-          assert.equal(Object.isFrozen(result.aggregateFrameAdmissionRecord),true);
-          assert.equal(Object.isFrozen(result.primitiveProvenanceApplicability),true);
-          assert.equal(result.structuralCorrespondenceValidated,true);
-          assert.equal(result.outputDeeplyFrozen,true);
-          assert.equal(result.geometryIndexAuthority,false);
-          assert.equal(result.geometryIndexEntryId,null);
-          assert.equal(result.compositorAuthority,false);
-          assert.equal(result.compositorNodeId,null);
-          assert.equal(result.rendererAuthority,false);
-          assert.equal(result.renderInstanceCreated,false);
-          assert.equal(result.renderInstanceId,null);
-          assert.equal(result.provisional,true);
-          assert.equal(result.downstreamContractFrozen,false);
-          assert.equal(result.finalDownstreamShapeClaimed,false);
-          assert.equal(result.issues.length,0);
-
-          const mixed=transfer.evaluateHEarthPostWestAdmittedGeometryTransferInput({
-            gateBAdapterOccurrence,
-            previewResult:{},
-            westBatchAdmissionResult:{},
-            toleranceContext:null
-          });
-          assert.equal(mixed.ok,false);
-          assert.equal(mixed.transferMode,null);
-          assert.equal(mixed.issues.some((issue)=>issue.code==='MIXED_TRANSFER_MODES_REJECTED'),true);
-
-          const invalidBeforeSnapshot=transfer.buildHEarthPostWestAdmittedGeometryTransfer({
-            gateBAdapterOccurrence:Object.freeze({invalid:true}),
-            toleranceContext:null
-          });
-          assert.equal(invalidBeforeSnapshot.ok,false);
-          assert.equal(invalidBeforeSnapshot.issues.some((issue)=>issue.code==='GATE_B_ADAPTER_OCCURRENCE_INVALID'),true);
-          assert.equal(invalidBeforeSnapshot.issues.some((issue)=>String(issue.code).includes('SNAPSHOT')),false);
-          NODE
-          test ! -e h-earth-3d/integration/h-earth.post-west-gate-b-occurrence-transfer.js
-
-      - name: Commit only the shared Packet 002 authority
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-shared-packet-002-legacy-observation
+          path: ${{ runner.temp }}/shared-packet-002-observation/legacy-observation.json
+          retention-days: 1
+      - name: Prove no governed source commit
         shell: bash
         run: |
           set -euo pipefail
           rm h-earth-3d/integration/__h-earth.post-west-admitted-geometry-transfer.baseline.js
-          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
-          test "${#changed[@]}" -eq 1
-          test "${changed[0]}" = "$TARGET_PATH"
-          printf 'path=%s\nbase_blob=%s\nsuccessor_bytes=%s\nsuccessor_sha256=%s\nsuccessor_blob=%s\nlegacy_regression=PASS\ngate_b_mode=PASS\nmixed_mode_rejection=PASS\nvalidation_before_snapshot=PASS\nseparate_snapshots=PASS\nnon_authority_values=PASS\nduplicate_transfer_absent=PASS\n' \
-            "$TARGET_PATH" "$EXPECTED_BASE_BLOB" "$(wc -c < "$TARGET_PATH" | tr -d ' ')" "$(sha256sum "$TARGET_PATH" | awk '{print $1}')" "$(git hash-object "$TARGET_PATH")" \
-            > "$RUNNER_TEMP/shared-packet-002-receipt/receipt.txt"
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$TARGET_PATH"
-          git commit -m 'Renew shared Packet 002 for Gate B adapter mode'
-          git push origin "HEAD:$TARGET_BRANCH"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-shared-packet-002-successor-install-receipt
-          path: ${{ runner.temp }}/shared-packet-002-receipt/receipt.txt
-          retention-days: 1
+          test "$(git status --short | wc -l)" -eq 1
+          test "$(git status --short | awk '{print $2}')" = "$TARGET_PATH"

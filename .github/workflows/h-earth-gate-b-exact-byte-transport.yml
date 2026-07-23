@@ -10,6 +10,13 @@ jobs:
   transport-environment:
     if: github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001'
     runs-on: ubuntu-latest
+    env:
+      DRIVE_FILE_ID: 1MSV3zlP0hh_pC99ICovS39cHPSoLdk7G
+      EXPECTED_SHA256: 7a30779d77385f4b81ed333c6b729cc23b3450f4491ae7c38749ae2f584c3fbf
+      TARGET_PATH: showroom/globe/h-earth/environment.js
+      TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
+      CANDIDATE_PATH: /tmp/h-earth-gate-b-environment.js
+      DIAGNOSTICS_PATH: /tmp/h-earth-gate-b-environment-diagnostics.txt
     steps:
       - name: Check out isolated Phase A branch
         uses: actions/checkout@v4
@@ -17,38 +24,53 @@ jobs:
           ref: agent/h-earth-gate-b-phase-a-successor-001
           fetch-depth: 0
 
-      - name: Download, verify, and install validated environment successor
-        env:
-          DRIVE_FILE_ID: 1MSV3zlP0hh_pC99ICovS39cHPSoLdk7G
-          EXPECTED_SHA256: 7a30779d77385f4b81ed333c6b729cc23b3450f4491ae7c38749ae2f584c3fbf
-          TARGET_PATH: showroom/globe/h-earth/environment.js
-          TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
+      - name: Download candidate and record observed identity
         shell: bash
         run: |
           set -euo pipefail
-          temporary_file="$(mktemp)"
-          trap 'rm -f "$temporary_file"' EXIT
-
           curl --fail --location --retry 3 --retry-delay 2 \
             "https://drive.usercontent.google.com/download?id=${DRIVE_FILE_ID}&export=download&confirm=t" \
-            --output "$temporary_file"
+            --output "$CANDIDATE_PATH"
+          {
+            printf 'observed_byte_count='
+            wc -c < "$CANDIDATE_PATH"
+            printf 'observed_sha256='
+            sha256sum "$CANDIDATE_PATH" | awk '{print $1}'
+            printf 'expected_sha256=%s\n' "$EXPECTED_SHA256"
+            file "$CANDIDATE_PATH"
+          } > "$DIAGNOSTICS_PATH"
 
-          observed_sha256="$(sha256sum "$temporary_file" | awk '{print $1}')"
+      - name: Upload transfer diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-environment-transfer-diagnostics
+          path: |
+            /tmp/h-earth-gate-b-environment-diagnostics.txt
+            /tmp/h-earth-gate-b-environment.js
+          if-no-files-found: warn
+          retention-days: 1
+
+      - name: Verify candidate SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          observed_sha256="$(sha256sum "$CANDIDATE_PATH" | awk '{print $1}')"
           test "$observed_sha256" = "$EXPECTED_SHA256"
 
+      - name: Install and push exact environment bytes
+        shell: bash
+        run: |
+          set -euo pipefail
           mkdir -p "$(dirname "$TARGET_PATH")"
-          cp "$temporary_file" "$TARGET_PATH"
-
+          cp "$CANDIDATE_PATH" "$TARGET_PATH"
           installed_sha256="$(sha256sum "$TARGET_PATH" | awk '{print $1}')"
           test "$installed_sha256" = "$EXPECTED_SHA256"
-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- "$TARGET_PATH"
-
           if git diff --cached --quiet; then
             exit 0
           fi
-
           git commit -m "Install validated Gate B environment successor"
           git push origin "HEAD:${TARGET_BRANCH}"

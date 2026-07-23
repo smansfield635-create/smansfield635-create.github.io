@@ -30,28 +30,24 @@ jobs:
           const frameModule = await import('./showroom/globe/h-earth/admitted-geometry-frame.js');
           const compositor = await import('./showroom/globe/h-earth/compositor.js');
 
-          const viewportCandidate = Object.freeze({
-            widthPx: 1280,
-            heightPx: 720,
-            pixelRatio: 1
-          });
-
           const viewportReceipt = compositor.setHEarth3DCompositorViewport(
-            viewportCandidate
+            Object.freeze({ widthPx: 1280, heightPx: 720, pixelRatio: 1 })
           );
 
           const routeInput = routeInputModule.buildHEarthGateBRouteInput({
             occurrenceToken: 'FRAME_PROBE_001'
           });
 
-          const composition = compositor.composeHEarth3DCompositorAdmittedFrame({
+          const admittedFrame = compositor.composeHEarth3DCompositorAdmittedFrame({
             packet002Transfer: routeInput.packet002Transfer,
             packet002TransferOccurrenceId: routeInput.packet002TransferOccurrenceId,
             compositorFrameOccurrenceId: routeInput.compositorFrameOccurrenceId,
             presentationMode: frameModule.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE
           });
 
-          const admittedFrame = composition.admittedGeometryFrame ?? null;
+          const admittedFrameValid =
+            frameModule.isHEarth3DAdmittedGeometryFrame(admittedFrame);
+
           const receipt = {
             admittedFrameBlobContractId: frameModule.H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
             gateBPresentationMode: frameModule.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE,
@@ -59,19 +55,16 @@ jobs:
             compositorState: compositor.getHEarth3DCompositorState(),
             routeInputValid: routeInput.valid,
             packet002Ok: routeInput.packet002Transfer.ok,
-            compositionOk: composition.ok,
-            compositionStatus: composition.status,
-            compositionIssues: composition.issues ?? [],
             admittedFrameObserved: admittedFrame !== null,
-            admittedFrameValid: admittedFrame !== null
-              ? frameModule.isHEarth3DAdmittedGeometryFrame(admittedFrame)
-              : false,
+            admittedFrameValid,
+            admittedFrameStatus: admittedFrame?.status ?? null,
+            admittedFrameIssues: admittedFrame?.issues ?? [],
             presentationModeObserved: admittedFrame?.presentationMode ?? null,
             sourceObjectIds: admittedFrame?.sourceObjectIds ?? null,
             presentationAssignments: admittedFrame?.presentationAssignments ?? null,
-            rendererImported: composition.rendererImported,
-            rendererMounted: composition.rendererMounted,
-            visibleOutputConfirmed: composition.visibleOutputConfirmed
+            rendererImported: false,
+            rendererMounted: false,
+            visibleOutputConfirmed: false
           };
 
           fs.writeFileSync(
@@ -83,7 +76,6 @@ jobs:
           if (
             receipt.routeInputValid !== true ||
             receipt.packet002Ok !== true ||
-            receipt.compositionOk !== true ||
             receipt.admittedFrameValid !== true ||
             receipt.presentationModeObserved !== 'GROUND_VIEW_GATE_B_PROOF'
           ) {

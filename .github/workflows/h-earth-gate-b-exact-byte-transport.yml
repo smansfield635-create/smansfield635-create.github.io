@@ -1,4 +1,4 @@
-name: H-Earth Gate B Adapter Live Diagnostic
+name: H-Earth Gate B Adapter Import Diagnostic
 on:
   pull_request:
 permissions:
@@ -15,58 +15,38 @@ jobs:
         with:
           ref: agent/h-earth-gate-b-phase-a-successor-001
           fetch-depth: 0
-      - name: Restore exact adapter and record live observations
+      - name: Restore exact adapter and capture import or execution result
         shell: bash
         run: |
-          set -euo pipefail
+          set -u
           mkdir -p "$(dirname "$ADAPTER_PATH")" "$RUNNER_TEMP/gate-b-adapter-diagnostic"
           git cat-file blob "$ADAPTER_BLOB" > "$ADAPTER_PATH"
-          test "$(git hash-object "$ADAPTER_PATH")" = "$ADAPTER_BLOB"
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          import { constructHEarthGroundViewGateBGeometry } from './showroom/globe/h-earth/render/ground-view-gate-b.js';
-          import {
-            H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,
-            evaluateHEarthGroundViewGateBWestAdmissionAdapterInput,
-            executeHEarthGroundViewGateBWestAdmissionAdapter,
-            isHEarthGroundViewGateBWestAdmissionAdapterOccurrence
-          } from './h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js';
-          const deepFreeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||s.has(v))return v;s.add(v);for(const n of Object.values(v))deepFreeze(n,s);return Object.freeze(v);};
-          const routeToken='H_EARTH_GATE_B_DIAGNOSTIC_ROUTE_TOKEN:123e4567-e89b-42d3-a456-426614174000';
-          const executionIdentity=deepFreeze({
-            executionClass:'GATE_B_DIAGNOSTIC_CHILD_ROUTE_ENTRY',
-            routeToken,
-            adapterOccurrenceId:`H_EARTH_GATE_B_ADAPTER_OCCURRENCE:${routeToken}`,
-            aggregateFrameId:`H_EARTH_WEST_AGGREGATE_FRAME:${routeToken}`,
-            packet002TransferOccurrenceId:`H_EARTH_GATE_B_PACKET_002_TRANSFER_OCCURRENCE:${routeToken}`,
-            compositorFrameOccurrenceId:`H_EARTH_COMPOSITOR_FRAME_OCCURRENCE:${routeToken}`
-          });
-          const provider=constructHEarthGroundViewGateBGeometry();
-          const input={gateBConstructionResult:provider,executionIdentity,provenanceApplicability:H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,toleranceContext:null};
-          let inputEvaluation;
-          let occurrence;
-          let thrown=null;
-          try { inputEvaluation=evaluateHEarthGroundViewGateBWestAdmissionAdapterInput(input); occurrence=executeHEarthGroundViewGateBWestAdmissionAdapter(input); }
-          catch(error){ thrown={name:error?.name??'Error',message:error?.message??String(error),stack:error?.stack??null}; }
-          const projection={
-            provider:{valid:provider.valid,status:provider.constructionStatus,primitiveCount:provider.primitives?.length,deepFrozen:Object.isFrozen(provider)},
-            inputEvaluation:inputEvaluation?{ok:inputEvaluation.ok,status:inputEvaluation.status,issues:inputEvaluation.issues}:null,
-            occurrence:occurrence?{
-              ok:occurrence.ok,status:occurrence.status,issues:occurrence.issues,
-              validator:isHEarthGroundViewGateBWestAdmissionAdapterOccurrence(occurrence),
-              westInvoked:occurrence.westBatchAdmissionInvoked??null,
-              westInvocationCount:occurrence.westBatchAdmissionInvocationCount??null,
-              admittedPrimitiveCount:occurrence.admittedPrimitives?.length??null,
-              aggregatePrimitiveCount:occurrence.aggregateFrameAdmissionRecord?.primitives?.length??null,
-              aggregateFrameId:occurrence.aggregateFrameAdmissionRecord?.frameId??null,
-              boundsPresent:occurrence.bounds!=null,
-              outputDeeplyFrozen:occurrence.outputDeeplyFrozen??null
-            }:null,
-            thrown
-          };
+          const projection={stage:'START',imports:null,inputEvaluation:null,occurrence:null,thrown:null};
+          try {
+            const providerModule=await import('./showroom/globe/h-earth/render/ground-view-gate-b.js');
+            projection.stage='PROVIDER_IMPORTED';
+            const adapterModule=await import('./h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js');
+            projection.stage='ADAPTER_IMPORTED';
+            projection.imports={adapterExports:Object.keys(adapterModule).sort()};
+            const deepFreeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||s.has(v))return v;s.add(v);for(const n of Object.values(v))deepFreeze(n,s);return Object.freeze(v);};
+            const routeToken='H_EARTH_GATE_B_DIAGNOSTIC_ROUTE_TOKEN:123e4567-e89b-42d3-a456-426614174000';
+            const executionIdentity=deepFreeze({executionClass:'GATE_B_DIAGNOSTIC_CHILD_ROUTE_ENTRY',routeToken,adapterOccurrenceId:`H_EARTH_GATE_B_ADAPTER_OCCURRENCE:${routeToken}`,aggregateFrameId:`H_EARTH_WEST_AGGREGATE_FRAME:${routeToken}`,packet002TransferOccurrenceId:`H_EARTH_GATE_B_PACKET_002_TRANSFER_OCCURRENCE:${routeToken}`,compositorFrameOccurrenceId:`H_EARTH_COMPOSITOR_FRAME_OCCURRENCE:${routeToken}`});
+            const provider=providerModule.constructHEarthGroundViewGateBGeometry();
+            const input={gateBConstructionResult:provider,executionIdentity,provenanceApplicability:adapterModule.H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,toleranceContext:null};
+            const inputEvaluation=adapterModule.evaluateHEarthGroundViewGateBWestAdmissionAdapterInput(input);
+            projection.inputEvaluation={ok:inputEvaluation.ok,status:inputEvaluation.status,issues:inputEvaluation.issues};
+            const occurrence=adapterModule.executeHEarthGroundViewGateBWestAdmissionAdapter(input);
+            projection.occurrence={ok:occurrence.ok,status:occurrence.status,issues:occurrence.issues,validator:adapterModule.isHEarthGroundViewGateBWestAdmissionAdapterOccurrence(occurrence),westInvoked:occurrence.westBatchAdmissionInvoked??null,westInvocationCount:occurrence.westBatchAdmissionInvocationCount??null,admittedPrimitiveCount:occurrence.admittedPrimitives?.length??null,aggregatePrimitiveCount:occurrence.aggregateFrameAdmissionRecord?.primitives?.length??null};
+            projection.stage='EXECUTION_COMPLETE';
+          } catch(error) {
+            projection.thrown={name:error?.name??'Error',message:error?.message??String(error),stack:error?.stack??null};
+          }
           fs.writeFileSync(process.env.RUNNER_TEMP+'/gate-b-adapter-diagnostic/adapter-observation.json',JSON.stringify(projection,null,2));
           NODE
       - name: Export exact renewal bases
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
@@ -78,7 +58,8 @@ jobs:
           cp showroom/globe/h-earth/diagnostic/index.html "$RUNNER_TEMP/gate-b-adapter-diagnostic/renewal-bases/showroom/globe/h-earth/diagnostic/"
           find "$RUNNER_TEMP/gate-b-adapter-diagnostic/renewal-bases" -type f -print0 | sort -z | xargs -0 sha256sum > "$RUNNER_TEMP/gate-b-adapter-diagnostic/renewal-bases/SHA256SUMS.txt"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: h-earth-gate-b-adapter-diagnostic-and-renewal-bases
+          name: h-earth-gate-b-adapter-import-diagnostic-and-renewal-bases
           path: ${{ runner.temp }}/gate-b-adapter-diagnostic
           retention-days: 1

@@ -55,8 +55,13 @@ export const CONTROLLER_SOURCE_DERIVED_IMPLEMENTATION_AUDIT =
       interactionCompatibilityCount: 2,
       interactionCompatibilityPassed: 2,
       interactionCompatibilityFailed: 0,
-      exactLocalGitBlobExecution: true,
-      committedSourceFetchBackVerified: false
+      exactControllerGitBlobExecution: true,
+      exactFixtureGitBlobExecution: true,
+      exactInteractionModuleCompatibilitySource: true,
+      exactMathCompatibilitySource: true,
+      contractImportSurfaceMirrorUsed: true,
+      fullRepositoryCheckoutExecution: false,
+      committedSourceFetchBackVerified: true
     }),
     authorityAudit: Object.freeze({
       canonicalPrimaryOwner: "WORLD",

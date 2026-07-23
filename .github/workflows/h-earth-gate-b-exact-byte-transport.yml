@@ -1,13 +1,17 @@
 name: H-Earth Gate B Exact Byte Transport
 
-on: push
+on:
+  push:
+  pull_request:
 
 permissions:
   contents: write
 
 jobs:
   transport-environment:
-    if: github.ref == 'refs/heads/agent/h-earth-gate-b-phase-a-successor-001'
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/agent/h-earth-gate-b-phase-a-successor-001') ||
+      (github.event_name == 'pull_request' && github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001')
     runs-on: ubuntu-latest
     steps:
       - name: Check out isolated Phase A branch

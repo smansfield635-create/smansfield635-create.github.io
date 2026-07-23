@@ -1,0 +1,78 @@
+{
+  "schema": "DGB_UNIVERSAL_COMPASS_AWARENESS_CONTROL_PLANE_VALIDATION_RECEIPT_v1",
+  "receiptId": "UNIVERSAL_COMPASS_AWARENESS_CONTROL_PLANE_VALIDATION_v1",
+  "status": "PASS",
+  "assertionCount": 18,
+  "passed": 18,
+  "failed": 0,
+  "controlArtifactId": "UNIVERSAL_COMPASS_AWARENESS_CONTROL_PLANE_v1",
+  "controlDigest": "fnv1a64:c854ae50962f00c2",
+  "baseMapArtifactId": "UNIVERSAL_COMPASS_FOUR_SOURCE_CAPABILITY_MAP_PASS_1_v1",
+  "baseMapDigest": "fnv1a64:86271e01ab0faf9d",
+  "sourceBranch": "agent/archcoin-compass-calibration-workspace-001",
+  "sourceHead": "3dd5d4428f50bf373b4646792b8157e2394ffcdc",
+  "mergeBranch": "agent/project-awareness-control-plane-merge-001",
+  "targetBranch": "main",
+  "findings": [
+    { "id": "BASE_MAP_VALID", "pass": true, "status": "PASS", "details": null },
+    { "id": "READ_ONLY_NO_AUTHORITY", "pass": true, "status": "PASS", "details": null },
+    { "id": "FOUR_ACTIVE_FILES", "pass": true, "status": "PASS", "details": null },
+    { "id": "HISTORY_EXCLUDED_FROM_ACTIVE_SET", "pass": true, "status": "PASS", "details": null },
+    { "id": "AWARENESS_ONLY_MERGE", "pass": true, "status": "PASS", "details": null },
+    { "id": "EXACT_SEVEN_RUNTIME_FILES", "pass": true, "status": "PASS", "details": null },
+    { "id": "NO_EIGHTH_FILE_OR_AWARENESS_IMPORT", "pass": true, "status": "PASS", "details": null },
+    { "id": "FOUR_FAMILIES", "pass": true, "status": "PASS", "details": null },
+    { "id": "SIXTEEN_CARDINAL_OCCURRENCES", "pass": true, "status": "PASS", "details": null },
+    { "id": "VARIABLE_CARDINALITY", "pass": true, "status": "PASS", "details": null },
+    { "id": "CENSUS_EXPLICIT_UNRESOLVED", "pass": true, "status": "PASS", "details": null },
+    { "id": "NO_PADDING_OR_TRUNCATION", "pass": true, "status": "PASS", "details": null },
+    { "id": "PLANET_BLOCKED_UNTIL_CENSUS", "pass": true, "status": "PASS", "details": null },
+    { "id": "AWARENESS_MERGE_READY", "pass": true, "status": "PASS", "details": null },
+    { "id": "SIMULTANEOUS_READ_ONLY_USE", "pass": true, "status": "PASS", "details": null },
+    { "id": "QUERY_SURFACE", "pass": true, "status": "PASS", "details": null },
+    {
+      "id": "DIGEST_MATCH",
+      "pass": true,
+      "status": "PASS",
+      "details": {
+        "recorded": "fnv1a64:c854ae50962f00c2",
+        "recomputed": "fnv1a64:c854ae50962f00c2"
+      }
+    },
+    {
+      "id": "CURRENT_STATE_COHERENT",
+      "pass": true,
+      "status": "PASS",
+      "details": {
+        "activeFileCount": 4,
+        "runtimeFileCount": 7,
+        "sourceFamilyCount": 4,
+        "cardinalOccurrenceCount": 16,
+        "unresolvedCensusCount": 16,
+        "awarenessMergeReady": true,
+        "planetMutationReady": false
+      }
+    }
+  ],
+  "claims": {
+    "awarenessArchitectureReviewed": true,
+    "activeAwarenessFileCount": 4,
+    "awarenessOnlyMergeBoundary": true,
+    "sevenRuntimeFilesPreserved": true,
+    "awarenessRuntimeImports": 0,
+    "variableClusterCardinality": true,
+    "membershipCensusComplete": false,
+    "awarenessMergeReady": true,
+    "planetMutationReady": false,
+    "runtimePass": false,
+    "productAuthority": false,
+    "mutationAuthority": false
+  },
+  "workflowExecution": {
+    "runId": 30051174458,
+    "jobId": 89353367022,
+    "headCommit": "234f79d3bef48ac88ba88049ace270668cbca36c",
+    "artifactId": 8581056993,
+    "artifactDigest": "sha256:818c08f67b6e4256d9ca7a221c7d068a0d153e808a28e371531797df724cd4e3"
+  }
+}

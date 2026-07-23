@@ -1,0 +1,52 @@
+{
+  "bootstrapId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_BOOTSTRAP_v1",
+  "bootstrapVersion": 1,
+  "project": "H_EARTH",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "scopeId": "H_EARTH_REPOSITORY_ARCHITECTURE",
+  "status": "INSTALLED_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "controlsRepositoryScope": false,
+  "toolUseMode": "EXPLICIT_OPT_IN_READ_ONLY",
+  "candidate": {
+    "artifactId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_SCHEMA_AND_INSTANCE_v1",
+    "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+    "registryVersion": "1.0.0-candidate.1",
+    "schemaId": "H_EARTH_REPOSITORY_REGISTRY_SCHEMA_v1",
+    "schemaVersion": 1,
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+    "byteCount": 140320,
+    "contentSha256": "5c71aba5ff60f7d8838fa4571ec18e72eafe04f01130ad146de4376279735dfe",
+    "gitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911"
+  },
+  "consumerFacade": {
+    "facadeId": "H_EARTH_REPOSITORY_REGISTRY_READ_ONLY_CONSUMER_FACADE_v1",
+    "path": "/h-earth-3d/registry/h-earth.repository-registry.js",
+    "mode": "READ_ONLY_DISCOVERY_QUERY_GRAPH_AND_OPERATION_SCOPE_PROJECTION"
+  },
+  "diagnosticProjection": {
+    "path": "/showroom/globe/h-earth/diagnostic/repository-registry-projection.js",
+    "routeActivationCreated": false,
+    "explicitImportRequired": true
+  },
+  "audit": {
+    "path": "/tools/h-earth-repository-registry-audit.mjs",
+    "command": "node --experimental-default-type=module tools/h-earth-repository-registry-audit.mjs",
+    "networkDependencyRequired": false
+  },
+  "boundaries": {
+    "sourceAuthorityCreated": false,
+    "sourceAuthorityTransferred": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "workflowEnforcementCreated": false,
+    "validatorEnforcementCreated": false,
+    "runtimeActivationCreated": false,
+    "rendererActivationCreated": false,
+    "routeActivationCreated": false,
+    "productionClaimCreated": false,
+    "toolInferenceIsEvidence": false,
+    "unresolvedFieldsMayBeInvented": false
+  }
+}

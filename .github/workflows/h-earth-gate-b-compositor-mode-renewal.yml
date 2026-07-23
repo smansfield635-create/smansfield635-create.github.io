@@ -27,7 +27,11 @@ jobs:
           node --check showroom/globe/h-earth/compositor.js
           git diff --check
       - name: Commit isolated renewal
+        id: publish
+        shell: bash
         run: |
+          set +e
+          exec > >(tee H_EARTH_GATE_B_COMPOSITOR_RENEWAL_PUBLISH.log) 2>&1
           if git diff --quiet -- showroom/globe/h-earth/compositor.js; then
             echo 'No compositor change produced.'
             exit 1
@@ -36,6 +40,20 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add showroom/globe/h-earth/compositor.js
           git commit -m 'Admit Gate B presentation mode in compositor'
+          commit_status=$?
+          if [ "$commit_status" -ne 0 ]; then exit "$commit_status"; fi
           git fetch origin agent/h-earth-gate-b-seven-file-verification-001
+          fetch_status=$?
+          if [ "$fetch_status" -ne 0 ]; then exit "$fetch_status"; fi
           git rebase origin/agent/h-earth-gate-b-seven-file-verification-001
+          rebase_status=$?
+          if [ "$rebase_status" -ne 0 ]; then exit "$rebase_status"; fi
           git push origin HEAD:agent/h-earth-gate-b-seven-file-verification-001
+          exit $?
+      - name: Upload publication diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-compositor-renewal-publish-log
+          path: H_EARTH_GATE_B_COMPOSITOR_RENEWAL_PUBLISH.log
+          if-no-files-found: warn

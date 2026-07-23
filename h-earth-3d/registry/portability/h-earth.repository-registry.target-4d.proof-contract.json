@@ -1,0 +1,64 @@
+{
+  "contractId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4D_PORTABILITY_PROOF_CONTRACT_v1",
+  "contractVersion": 1,
+  "targetNumber": 4,
+  "targetSubtarget": "4D-2",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "requiredProofDimensions": [
+    "SAME_INPUT_CONTRACT",
+    "SAME_RECEIPT_CONTRACT",
+    "SAME_DISPOSITION_LAW",
+    "SAME_FAILURE_TAXONOMY",
+    "SAME_DECISION_ORDER",
+    "SAME_EXECUTABLE_VALIDATION_PATH",
+    "DIFFERENT_PACKAGE_IDENTITY",
+    "DIFFERENT_PATH_NAMESPACE",
+    "DIFFERENT_NODE_NAMES",
+    "DIFFERENT_AUTHORITY_TERMINOLOGY",
+    "NO_H_EARTH_CARDINAL_DEPENDENCY",
+    "NO_GATE_B_DEPENDENCY",
+    "NO_H_EARTH_PATH_DEPENDENCY"
+  ],
+  "invalidProofPatterns": [
+    "SECOND_PACKAGE_WITH_SECOND_SPECIALIZED_VALIDATOR",
+    "REFERENCE_EXPECTATIONS_DERIVED_FROM_ACTUAL_RESULTS",
+    "SILENT_TARGET_4B_ENGINE_REWRITE",
+    "H_EARTH_REGRESSION_NOT_EXECUTED",
+    "PACKAGE_PROVIDER_IDENTITY_NOT_EXPOSED",
+    "GENERAL_PLATFORM_CLAIM_FROM_ONE_REFERENCE_FIXTURE"
+  ],
+  "requiredExecutionResults": {
+    "referencePackagePortability": ["PASS", "FAIL"],
+    "sharedEnginePath": ["PROVEN", "NOT_PROVEN"],
+    "hEarthRegression": ["PASS", "FAIL"],
+    "referenceFixtureExecution": ["PASS", "FAIL"]
+  },
+  "maximumPermittedSuccessfulClaims": {
+    "nonHEarthReferencePackageExecution": "PROVEN",
+    "packageProviderAbstraction": "PROVEN",
+    "sameContractAcrossTwoPackages": "PROVEN",
+    "sameDecisionLawAcrossTwoPackages": "PROVEN",
+    "referencePackagePortability": "PROVEN_AT_FIXTURE_LEVEL",
+    "hEarthRegressionPreservation": "PROVEN"
+  },
+  "claimsRemainingWithheldAfterSuccessfulTarget4D": {
+    "crossRepositoryPortability": "NOT_ESTABLISHED",
+    "thirdPartyRepositoryValidity": "NOT_ESTABLISHED",
+    "generalPlatformValidity": "NOT_ESTABLISHED",
+    "permanentWorkflowEnforcement": "NOT_INSTALLED",
+    "measurableEngineeringImprovement": "NOT_ESTABLISHED"
+  },
+  "gateLaw": {
+    "existingPackageInjectionSeamAvailable": "PROCEED_WITHOUT_CHANGING_TARGET_4B_ENGINE_IDENTITY",
+    "engineHardwiredToHEarth": "STOP_TARGET_4D_AND_REQUIRE_SEPARATELY_IDENTIFIED_TARGET_4B_PORTABILITY_REFACTOR",
+    "silentRefactorInsideTarget4DPermitted": false,
+    "target4BAnd4CRegressionRequiredAfterRefactor": true
+  },
+  "stoppingCondition": {
+    "portabilityProofContractComplete": true,
+    "advanceBeyondTarget4D2": false,
+    "nextAuthorizedSubtarget": "4D-3"
+  }
+}

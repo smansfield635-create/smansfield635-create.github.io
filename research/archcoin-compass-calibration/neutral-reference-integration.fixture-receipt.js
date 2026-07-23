@@ -11,7 +11,7 @@ export const NEUTRAL_REFERENCE_INTEGRATION_FIXTURE_RECEIPT = Object.freeze({
   referencePath:
     "/research/archcoin-compass-calibration/neutral-reference-compass/",
   committedFixtureSourcePresent: true,
-  sourceFetchBackVerified: false,
+  sourceFetchBackVerified: true,
   repositoryNativeFixtureExecution: false,
   browserExecution: false,
   physicalDeviceExecution: false,

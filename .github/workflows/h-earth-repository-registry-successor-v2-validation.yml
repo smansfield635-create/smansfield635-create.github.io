@@ -1,0 +1,48 @@
+name: H-Earth Registry Successor v2 Validation
+
+on:
+  pull_request:
+    paths:
+      - 'h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js'
+      - 'h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json'
+      - 'tools/h-earth-repository-registry-successor-v2-audit.mjs'
+      - '.github/workflows/h-earth-repository-registry-successor-v2-validation.yml'
+  push:
+    branches:
+      - 'agent/h-earth-gate-b-post-guardrail-evaluation-001'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate deterministic successor candidate
+        run: node tools/h-earth-repository-registry-successor-v2-audit.mjs
+      - name: Run Target 2 registry regression
+        run: node tools/h-earth-repository-registry-audit.mjs
+      - name: Run Target 3 instruction regression
+        run: node tools/h-earth-repository-registry-target-3-audit.mjs
+      - name: Run Target 4A contract regression
+        run: node tools/h-earth-repository-registry-target-4a-contract-audit.mjs
+      - name: Run Target 4B engine regression
+        run: node tools/h-earth-repository-registry-target-4b-audit.mjs
+      - name: Run Target 4C static regression
+        run: node tools/h-earth-repository-registry-target-4c-static-audit.mjs
+      - name: Run Target 4C fixture regression
+        run: node tools/h-earth-repository-registry-target-4c-audit.mjs
+      - name: Run Target 4E static regression
+        run: node tools/h-earth-repository-registry-target-4e-static-audit.mjs
+      - name: Run Target 4E systemic regression
+        run: node tools/h-earth-repository-registry-target-4e-audit.mjs
+      - name: Upload validation receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-registry-successor-v2-validation-receipt
+          path: artifacts/h-earth.repository-registry.successor-v2-validation-receipt.json

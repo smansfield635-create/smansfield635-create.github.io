@@ -4,8 +4,8 @@
   "project": "H_EARTH",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "scopeId": "H_EARTH_REPOSITORY_ARCHITECTURE",
-  "status": "COMPLETE_VERIFIED_CANDIDATE_NOT_ACCEPTED",
-  "accepted": false,
+  "status": "COMPLETE_VERIFIED_ACCEPTED_NONCANONICAL",
+  "accepted": true,
   "canonical": false,
   "controlsRepositoryScope": false,
   "toolUseMode": "AUTOMATIC_H_EARTH_SCOPED_READ_ONLY_FOR_COMPATIBLE_REPOSITORY_ENTRYPOINTS",
@@ -225,7 +225,7 @@
   "finalization": {
     "finalizationId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_STATUS_AND_CUSTODY_CLOSURE_v1",
     "targetSubtarget": "4F",
-    "status": "COMPLETE_VERIFIED_CANDIDATE_NOT_ACCEPTED",
+    "status": "COMPLETE_VERIFIED_ACCEPTED_NONCANONICAL",
     "identityBoundaryPath": "/h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.identity-boundary.json",
     "identityBoundaryGitBlobSha": "6e142ea3cd3ccdcccddcad4f89963b57ac6f20e0",
     "targetLedgerPath": "/h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.target-ledger.json",
@@ -257,11 +257,11 @@
     "temporary4FWorkflowAbsent": true,
     "target4FComplete": true,
     "candidatePackageComplete": true,
-    "userAcceptanceEstablished": false,
+    "userAcceptanceEstablished": true,
     "mergeAuthorityEstablished": false,
     "mainActivationEstablished": false,
     "mainChanged": false,
-    "nextAuthorizedSubtarget": "USER_ACCEPTANCE_BOUNDARY"
+    "nextAuthorizedSubtarget": "MERGE_AUTHORIZATION_BOUNDARY"
   },
   "diagnosticProjection": {
     "path": "/showroom/globe/h-earth/diagnostic/repository-registry-projection.js",
@@ -279,7 +279,7 @@
     "mutationAuthorityCreated": false,
     "mergeAuthorityCreated": false,
     "canonicalizationAuthorityCreated": false,
-    "userAcceptanceCreated": false,
+    "userAcceptanceCreated": true,
     "githubToolInstructionCreated": true,
     "validatorContractCreated": true,
     "validatorEngineInstalled": true,
@@ -312,10 +312,27 @@
   "stoppingCondition": {
     "target4FComplete": true,
     "candidatePackageComplete": true,
-    "userAcceptanceEstablished": false,
+    "userAcceptanceEstablished": true,
     "mergeAuthorityEstablished": false,
     "mainActivationEstablished": false,
     "advanceBeyondTarget4F": false,
-    "nextAuthorizedSubtarget": "USER_ACCEPTANCE_BOUNDARY"
+    "nextAuthorizedSubtarget": "MERGE_AUTHORIZATION_BOUNDARY"
+  },
+  "userAcceptance": {
+    "acceptanceId": "H_EARTH_REPOSITORY_REGISTRY_USER_ACCEPTANCE_DECLARATION_v1",
+    "status": "ACCEPTED_NONCANONICAL",
+    "accepted": true,
+    "canonical": false,
+    "acceptanceStatement": "I accept.",
+    "acceptanceScope": "COMPLETE_VERIFIED_H_EARTH_REPOSITORY_REGISTRY_AND_GOVERNED_PREFLIGHT_PACKAGE",
+    "acceptedPackageHead": "3808b79e2743128ab25e6200a5c636d72451262f",
+    "declarationPath": "/h-earth-3d/registry/finalization/h-earth.repository-registry.user-acceptance-declaration.json",
+    "declarationGitBlobSha": "b49e328d6a7a18b267800db234cab12f2a7dd61b",
+    "completionReceiptPath": "/h-earth-3d/registry/h-earth.repository-registry.target-4f-completion-receipt.json",
+    "completionReceiptGitBlobSha": "22a997a1082ecc4b7c9c9b35d1675516c68e4efc",
+    "componentArtifactIdentitiesChanged": false,
+    "mergeAuthorityEstablished": false,
+    "mainActivationEstablished": false,
+    "nextAuthorizedSubtarget": "MERGE_AUTHORIZATION_BOUNDARY"
   }
 }

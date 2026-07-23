@@ -1,0 +1,91 @@
+{
+  "schema": "DGB_UNIVERSAL_COMPASS_CARDINAL_STANDARD_FIXTURE_RECEIPT_v1",
+  "receiptId": "UNIVERSAL_COMPASS_FOUR_SOURCE_CARDINAL_STANDARD_FIXTURES_v1",
+  "status": "PASS",
+  "assertionCount": 15,
+  "assertions": [
+    {
+      "id": "BASE_MAP_V1_REMAINS_VALID",
+      "pass": true
+    },
+    {
+      "id": "CARDINAL_STANDARD_VALID",
+      "pass": true
+    },
+    {
+      "id": "CAPABILITY_MAP_V2_VALID",
+      "pass": true
+    },
+    {
+      "id": "AWARENESS_SNAPSHOT_V2_VALID",
+      "pass": true
+    },
+    {
+      "id": "MATRIX_IS_FOUR_BY_FOUR",
+      "pass": true
+    },
+    {
+      "id": "EACH_FAMILY_EXPOSES_ALL_CARDINALS",
+      "pass": true
+    },
+    {
+      "id": "EACH_CARDINAL_EXPOSES_ALL_FAMILIES",
+      "pass": true
+    },
+    {
+      "id": "CHILD_OBSERVATION_SPACE_IS_SIXTY_FOUR",
+      "pass": true
+    },
+    {
+      "id": "UNIVERSAL_RUNTIME_REMAINS_FOUR_FOUR_SIXTEEN",
+      "pass": true
+    },
+    {
+      "id": "CARDINAL_POSITION_IS_STRUCTURAL",
+      "pass": true
+    },
+    {
+      "id": "CARDINAL_CONTENT_REMAINS_FAMILY_LOCAL",
+      "pass": true
+    },
+    {
+      "id": "NO_ONE_FAMILY_ONE_CARDINAL_ASSIGNMENT",
+      "pass": true
+    },
+    {
+      "id": "CAPABILITY_AXIS_RETAINED",
+      "pass": true
+    },
+    {
+      "id": "PASS_2_REQUIRES_CARDINAL_COMPARISON",
+      "pass": true
+    },
+    {
+      "id": "NO_RUNTIME_IMPORT_OR_AUTHORITY",
+      "pass": true
+    }
+  ],
+  "cardinalStandardDigest": "fnv1a64:f9ea4f08bc037b96",
+  "capabilityMapV2Digest": "fnv1a64:f946907ed3bbafc5",
+  "awarenessSnapshotV2Digest": "fnv1a64:d649486bb8a2f9d7",
+  "workflowExecution": {
+    "runId": 30048818873,
+    "jobId": 89346116200,
+    "headCommit": "fb56f1a501f9bec0b34ecc8cae24d03c38f0a8df",
+    "artifactId": 8580188005,
+    "artifactDigest": "sha256:448615f025d0e059785ec2d7f28d2bf6acda6be335ce7436985463f3b120ed74"
+  },
+  "claims": {
+    "familyCardinalCapabilityStandardPass": true,
+    "cardinalOccurrenceCount": 16,
+    "childSeatObservationCount": 64,
+    "universalRuntimeCardinalCount": 4,
+    "universalRuntimeClusterCount": 4,
+    "universalRuntimeChildCount": 16,
+    "semanticEquivalenceAcrossFamilies": false,
+    "prototypeModified": false,
+    "runtimePass": false,
+    "productAuthority": false,
+    "mutationAuthority": false
+  }
+}

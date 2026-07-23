@@ -1,0 +1,69 @@
+name: H-Earth Repository Registry Target 4B Bounded Audit
+
+on:
+  push:
+    branches:
+      - agent/h-earth-repository-registry-installation-001
+    paths:
+      - .github/workflows/h-earth-repository-registry-target-4b.yml
+
+permissions:
+  contents: write
+
+jobs:
+  execute-engine-audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: agent/h-earth-repository-registry-installation-001
+      WORKFLOW_PATH: .github/workflows/h-earth-repository-registry-target-4b.yml
+      RECEIPT_PATH: h-earth-3d/registry/h-earth.repository-registry.target-4b-receipt.json
+
+    steps:
+      - name: Check out actual target branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-repository-registry-installation-001
+          fetch-depth: 0
+
+      - name: Execute package-aware validator engine self-audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-target-4b-audit.mjs \
+            > "$RECEIPT_PATH"
+
+      - name: Verify bounded receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync(process.env.RECEIPT_PATH, 'utf8'));
+          if (receipt.result !== 'PASS') throw new Error('TARGET_4B_AUDIT_NOT_PASS');
+          if (receipt.executionEnvironment !== 'BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT') {
+            throw new Error('TARGET_4B_WRONG_EXECUTION_ENVIRONMENT');
+          }
+          if (receipt.audit.failedChecks.length !== 0) throw new Error('TARGET_4B_FAILED_CHECKS_PRESENT');
+          if (receipt.protectedIdentities.target2RegistryGitBlob !== '10ab7b203e03fde419e526d0cce2c0af42860911') {
+            throw new Error('TARGET_2_REGISTRY_IDENTITY_DRIFT');
+          }
+          if (receipt.protectedIdentities.target3InstructionGitBlob !== 'de421803f21808ce27b2ffff349af8756c4d9929') {
+            throw new Error('TARGET_3_INSTRUCTION_IDENTITY_DRIFT');
+          }
+          if (receipt.protectedIdentities.target4AContractGitBlob !== 'a6733c868cfee1abce172c0ac901fecf3dd209b2') {
+            throw new Error('TARGET_4A_CONTRACT_IDENTITY_DRIFT');
+          }
+          NODE
+
+      - name: Commit receipt and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm "$WORKFLOW_PATH"
+          git add "$RECEIPT_PATH"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Target 4B-13: record bounded branch engine audit'
+          git push origin "HEAD:$TARGET_BRANCH"

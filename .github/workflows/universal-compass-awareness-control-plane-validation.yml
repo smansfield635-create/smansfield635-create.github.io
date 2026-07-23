@@ -1,0 +1,47 @@
+name: Universal Compass Awareness Control Plane Validation
+
+on:
+  pull_request:
+    branches:
+      - agent/project-awareness-control-plane-merge-001
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  validate-awareness-control-plane:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Execute consolidated awareness control
+        run: |
+          mkdir -p validation-output
+          node research/project-awareness/universal-compass-awareness.control.js \
+            > validation-output/universal-compass-awareness-control-plane-validation-receipt.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const path = 'validation-output/universal-compass-awareness-control-plane-validation-receipt.json';
+          const receipt = JSON.parse(fs.readFileSync(path, 'utf8'));
+          if (receipt.status !== 'PASS' || receipt.failed !== 0 || receipt.passed !== receipt.assertionCount) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          NODE
+
+      - name: Preserve validation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-awareness-control-plane-validation-receipt
+          path: validation-output/universal-compass-awareness-control-plane-validation-receipt.json
+          if-no-files-found: error

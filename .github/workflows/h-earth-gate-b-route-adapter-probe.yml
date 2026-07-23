@@ -20,45 +20,41 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Execute bounded Gate B Packet 002 adapter
+      - name: Execute Gate B route input bridge
         shell: bash
         run: |
           set -euo pipefail
           node --check showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js
+          node --check showroom/globe/h-earth/gate-b-route-input.js
           node --input-type=module <<'EOF'
           import fs from 'node:fs';
-          const adapter = await import('./showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js');
-          const result = adapter.buildHEarthGroundViewGateBPacket002Transfer({
-            occurrenceToken: 'PROBE_001',
-            requestId: 'H_EARTH_GATE_B_ROUTE_REQUEST:PROBE_001',
-            frameId: 'H_EARTH_GATE_B_ROUTE_FRAME:PROBE_001'
+          const routeInput = await import('./showroom/globe/h-earth/gate-b-route-input.js');
+          const result = routeInput.buildHEarthGateBRouteInput({
+            occurrenceToken: 'ROUTE_INPUT_PROBE_001'
           });
           const receipt = {
-            adapterContractId: adapter.H_EARTH_GROUND_VIEW_GATE_B_PACKET_002_ADAPTER_CONTRACT_ID,
-            adapterValid: result.valid,
-            constructionValid: result.construction.valid,
-            primitiveCount: result.construction.primitives.length,
-            westValid: result.westBatchAdmissionResult.valid,
-            westAdmissionCount: result.westBatchAdmissionResult.primitiveAdmissions.length,
+            routeInputContractId: routeInput.H_EARTH_GATE_B_ROUTE_INPUT_CONTRACT_ID,
+            valid: result.valid,
             packet002Ok: result.packet002Transfer.ok,
             packet002Status: result.packet002Transfer.status,
             packet002IssueCount: result.packet002Transfer.issues?.length ?? null,
-            packet002Issues: result.packet002Transfer.issues ?? [],
-            sourceObjectIds: result.provenance.sourceObjectIds,
-            sourceZoneIds: result.provenance.sourceZoneIds,
-            latticeRegionIds: result.provenance.latticeRegionIds,
+            packet002TransferOccurrenceId: result.packet002TransferOccurrenceId,
+            compositorFrameOccurrenceId: result.compositorFrameOccurrenceId,
+            provenance: result.provenance,
+            admittedFrameCompatibility: result.admittedFrameCompatibility,
             routeIntegrated: result.routeIntegrated,
+            rendererMaterialized: result.rendererMaterialized,
             validationClaim: result.validationClaim,
             productionClaim: result.productionClaim
           };
-          fs.writeFileSync('H_EARTH_GATE_B_ROUTE_ADAPTER_PROBE_v2.json', JSON.stringify(receipt,null,2));
+          fs.writeFileSync('H_EARTH_GATE_B_ROUTE_INPUT_PROBE_v1.json', JSON.stringify(receipt,null,2));
           console.log(JSON.stringify(receipt,null,2));
-          if (receipt.adapterValid !== true || receipt.packet002Ok !== true || receipt.packet002IssueCount !== 0) process.exit(1);
+          if (receipt.valid !== true || receipt.packet002Ok !== true || receipt.packet002IssueCount !== 0) process.exit(1);
           EOF
-      - name: Upload probe receipt
+      - name: Upload route input receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gate-b-route-adapter-probe-v2
-          path: H_EARTH_GATE_B_ROUTE_ADAPTER_PROBE_v2.json
+          name: h-earth-gate-b-route-input-probe-v1
+          path: H_EARTH_GATE_B_ROUTE_INPUT_PROBE_v1.json
           if-no-files-found: error

@@ -1,7 +1,7 @@
 /*
  * Deterministic validation fixtures for the Project Awareness package.
- * Passing these fixtures validates only the read-only awareness model.
- * It does not validate or authorize the Universal Compass runtime.
+ * A passing receipt validates only the awareness model. It does not validate
+ * or authorize the Universal Compass prototype, runtime, or product.
  */
 
 import {
@@ -34,10 +34,9 @@ import {
   createProjectAwarenessSnapshot
 } from "./dependency-graph.snapshot.js";
 
-const VALIDATION_ARTIFACT =
+const VALIDATION_PATH =
   "/research/project-awareness/awareness-validation.fixtures.js";
-const VALIDATION_RECEIPT_ID =
-  "DGB_PROJECT_AWARENESS_BASELINE_VALIDATION_RECEIPT_v1";
+const RECEIPT_ID = "DGB_PROJECT_AWARENESS_BASELINE_VALIDATION_RECEIPT_v1";
 
 function assert(condition, code, detail = null) {
   if (!condition) {
@@ -48,45 +47,51 @@ function assert(condition, code, detail = null) {
   }
 }
 
-function validationFact(value, evidencePosture = "DERIVED", derivedFrom = null) {
+function receiptFact(value, evidencePosture = "DERIVED", derivedFrom = null) {
   return createRepositoryFact(value, {
     evidencePosture,
-    sourcePath: VALIDATION_ARTIFACT,
-    declaredBy: VALIDATION_RECEIPT_ID,
+    sourcePath: VALIDATION_PATH,
+    declaredBy: RECEIPT_ID,
     derivedFrom
   });
 }
 
-export const VERIFIED_REPOSITORY_EVIDENCE = deepFreeze([
-  {
-    path: "/prototypes/universal-compass/index.planet.js",
-    blobSha: "0d462361776288b88584a7272c8e42ea6b14f1fa"
-  },
-  {
-    path: "/prototypes/universal-compass/index.crystals.js",
-    blobSha: "0bdf6bd08732d72935192dc211014cf7ec84dc15"
-  },
-  {
-    path: "/prototypes/universal-compass/index.compositor.js",
-    blobSha: "2e496e4b2d2278e70a7b44bc6b6e714c86d343e8"
-  },
-  {
-    path: "/prototypes/universal-compass/index.controller.js",
-    blobSha: "7eae298304d53c711adc1714fbc44dcd94f6b065"
-  },
-  {
-    path: "/prototypes/universal-compass/index.interactions.js",
-    blobSha: "cf06c107a23115a809826b949e306e5c810e60f0"
-  },
-  {
-    path: "/prototypes/universal-compass/index.html",
-    blobSha: "cd1abe75ba93e5733514ad378f52223ec53805b2"
-  },
-  {
-    path: "/prototypes/universal-compass/index.css",
-    blobSha: "9265c26fd406ccc2c729c2c992c8d03ad6c1a4fa"
-  }
-]);
+export const VERIFIED_REPOSITORY_EVIDENCE = deepFreeze({
+  repositoryIdentity:
+    "smansfield635-create/smansfield635-create.github.io",
+  branchIdentity: "agent/archcoin-compass-calibration-workspace-001",
+  inspectedCommit: "febf7ac9ca0bd69c791b70d3f914bbfff5403c1d",
+  records: [
+    [
+      "/prototypes/universal-compass/index.planet.js",
+      "0d462361776288b88584a7272c8e42ea6b14f1fa"
+    ],
+    [
+      "/prototypes/universal-compass/index.crystals.js",
+      "0bdf6bd08732d72935192dc211014cf7ec84dc15"
+    ],
+    [
+      "/prototypes/universal-compass/index.compositor.js",
+      "2e496e4b2d2278e70a7b44bc6b6e714c86d343e8"
+    ],
+    [
+      "/prototypes/universal-compass/index.controller.js",
+      "7eae298304d53c711adc1714fbc44dcd94f6b065"
+    ],
+    [
+      "/prototypes/universal-compass/index.interactions.js",
+      "cf06c107a23115a809826b949e306e5c810e60f0"
+    ],
+    [
+      "/prototypes/universal-compass/index.html",
+      "cd1abe75ba93e5733514ad378f52223ec53805b2"
+    ],
+    [
+      "/prototypes/universal-compass/index.css",
+      "9265c26fd406ccc2c729c2c992c8d03ad6c1a4fa"
+    ]
+  ]
+});
 
 function collectFacts(value, facts = [], seen = new WeakSet()) {
   if (!value || typeof value !== "object" || seen.has(value)) {
@@ -94,12 +99,12 @@ function collectFacts(value, facts = [], seen = new WeakSet()) {
   }
 
   seen.add(value);
-
   const keys = Object.keys(value);
-  if (
+  const isFact =
     keys.length === PROJECT_AWARENESS_CONTRACT.factKeys.length &&
-    PROJECT_AWARENESS_CONTRACT.factKeys.every(key => keys.includes(key))
-  ) {
+    PROJECT_AWARENESS_CONTRACT.factKeys.every(key => keys.includes(key));
+
+  if (isFact) {
     facts.push(value);
     return facts;
   }
@@ -119,19 +124,23 @@ function validateDeterministicSnapshot() {
     first.inspectedCommit.value === PROJECT_AWARENESS_BASELINE.inspectedCommit,
     "PROJECT_AWARENESS_SNAPSHOT_COMMIT_DRIFT"
   );
-  return true;
 }
 
-function validateRepositoryEvidence(repositoryEvidence) {
+function validateRepositoryGrounding(evidence) {
   assert(
-    Array.isArray(repositoryEvidence),
-    "PROJECT_AWARENESS_REPOSITORY_EVIDENCE_ARRAY_REQUIRED"
+    evidence.repositoryIdentity === PROJECT_AWARENESS_BASELINE.repositoryIdentity,
+    "PROJECT_AWARENESS_REPOSITORY_IDENTITY_MISMATCH"
+  );
+  assert(
+    evidence.branchIdentity === PROJECT_AWARENESS_BASELINE.branchIdentity,
+    "PROJECT_AWARENESS_BRANCH_IDENTITY_MISMATCH"
+  );
+  assert(
+    evidence.inspectedCommit === PROJECT_AWARENESS_BASELINE.inspectedCommit,
+    "PROJECT_AWARENESS_INSPECTED_COMMIT_MISMATCH"
   );
 
-  const evidenceByPath = new Map(
-    repositoryEvidence.map(record => [record.path, record.blobSha])
-  );
-
+  const evidenceByPath = new Map(evidence.records);
   UNIVERSAL_COMPASS_SHELL_RECORDS.forEach(record => {
     const path = record.path.value;
     assert(
@@ -142,55 +151,48 @@ function validateRepositoryEvidence(repositoryEvidence) {
     assert(
       evidenceByPath.get(path) === record.blobSha.value,
       "PROJECT_AWARENESS_BLOB_IDENTITY_MISMATCH",
-      {
-        path,
-        expected: record.blobSha.value,
-        actual: evidenceByPath.get(path)
-      }
+      path
     );
     assert(
-      record.sourceBytesVerified.value === true,
-      "PROJECT_AWARENESS_SOURCE_BYTES_NOT_VERIFIED",
+      record.sourceBytesVerified.value === true &&
+        record.copyIdentityVerified.value === true,
+      "PROJECT_AWARENESS_SOURCE_COPY_NOT_VERIFIED",
       path
     );
   });
-
-  return true;
 }
 
-function validateDependencyEndpoints() {
-  const nodeIds = new Set(
-    DEPENDENCY_GRAPH_NODES.map(node => node.artifactId.value)
-  );
+function validateDependencyGraph() {
+  const endpointIds = new Set([
+    UNIVERSAL_COMPASS_PACKAGE_IDENTITY.artifactId.value,
+    ...DEPENDENCY_GRAPH_NODES.map(node => node.artifactId.value)
+  ]);
 
   DEPENDENCY_RELATIONS.forEach(edge => {
     assert(
-      nodeIds.has(edge.fromArtifactId.value),
+      endpointIds.has(edge.fromArtifactId.value),
       "PROJECT_AWARENESS_DEPENDENCY_FROM_ENDPOINT_UNRESOLVED",
-      edge
+      edge.fromArtifactId.value
     );
     assert(
-      nodeIds.has(edge.toArtifactId.value),
+      endpointIds.has(edge.toArtifactId.value),
       "PROJECT_AWARENESS_DEPENDENCY_TO_ENDPOINT_UNRESOLVED",
-      edge
+      edge.toArtifactId.value
     );
     assert(
-      PROJECT_AWARENESS_CONTRACT.relationTypes.includes(
-        edge.relation.value
-      ),
+      PROJECT_AWARENESS_CONTRACT.relationTypes.includes(edge.relation.value),
       "PROJECT_AWARENESS_DEPENDENCY_RELATION_INVALID",
       edge.relation.value
     );
     assert(
-      edge.evidencePosture.value !== "VERIFIED_EXECUTABLE",
-      "PROJECT_AWARENESS_EXECUTABLE_POSTURE_LEAK"
+      ["DECLARED", "UNRESOLVED"].includes(edge.evidencePosture.value),
+      "PROJECT_AWARENESS_EXECUTABLE_RELATION_POSTURE_LEAK",
+      edge.evidencePosture.value
     );
   });
-
-  return true;
 }
 
-function validateAuthorityProvenance() {
+function validateFactProvenance() {
   const facts = collectFacts({
     sourceRegistry: REPOSITORY_SOURCE_REGISTRY,
     authorityLedger: AUTHORITY_AND_STATUS_LEDGER,
@@ -198,108 +200,84 @@ function validateAuthorityProvenance() {
   });
 
   assert(facts.length > 0, "PROJECT_AWARENESS_FACTS_NOT_FOUND");
-
   facts.forEach(fact => {
     assertAwarenessFact(fact);
     assert(
-      fact.repositoryIdentity ===
-        PROJECT_AWARENESS_BASELINE.repositoryIdentity,
-      "PROJECT_AWARENESS_FACT_REPOSITORY_IDENTITY_MISSING",
-      fact
+      fact.repositoryIdentity === PROJECT_AWARENESS_BASELINE.repositoryIdentity,
+      "PROJECT_AWARENESS_FACT_REPOSITORY_PROVENANCE_MISSING"
     );
     assert(
       fact.inspectedCommit === PROJECT_AWARENESS_BASELINE.inspectedCommit,
-      "PROJECT_AWARENESS_FACT_INSPECTED_COMMIT_MISSING",
-      fact
+      "PROJECT_AWARENESS_FACT_COMMIT_PROVENANCE_MISSING"
     );
     assert(
       fact.branchIdentity === PROJECT_AWARENESS_BASELINE.branchIdentity,
-      "PROJECT_AWARENESS_FACT_BRANCH_IDENTITY_MISSING",
-      fact
+      "PROJECT_AWARENESS_FACT_BRANCH_PROVENANCE_MISSING"
     );
     assert(
       typeof fact.declaredBy === "string" && fact.declaredBy.length > 0,
-      "PROJECT_AWARENESS_FACT_DECLARATION_MISSING",
-      fact
+      "PROJECT_AWARENESS_FACT_DECLARER_MISSING"
     );
   });
-
-  return true;
 }
 
-function validateLifecycleVocabulary() {
+function validateAuthorityAndLifecycleVocabulary() {
   ARTIFACT_AUTHORITY_RECORDS.forEach(record => {
-    assert(
-      PROJECT_AWARENESS_CONTRACT.lifecycleStatuses.includes(
-        record.lifecycleStatus.value
-      ),
-      "PROJECT_AWARENESS_LIFECYCLE_STATUS_INVALID",
-      record.lifecycleStatus.value
-    );
     assert(
       PROJECT_AWARENESS_CONTRACT.authorityClassifications.includes(
         record.authorityClassification.value
       ),
-      "PROJECT_AWARENESS_AUTHORITY_CLASSIFICATION_INVALID",
-      record.authorityClassification.value
+      "PROJECT_AWARENESS_AUTHORITY_CLASSIFICATION_INVALID"
+    );
+    assert(
+      PROJECT_AWARENESS_CONTRACT.lifecycleStatuses.includes(
+        record.lifecycleStatus.value
+      ),
+      "PROJECT_AWARENESS_LIFECYCLE_STATUS_INVALID"
+    );
+    assert(
+      record.awarenessRecordCreatesAuthority.value === false,
+      "PROJECT_AWARENESS_RECORD_CREATES_AUTHORITY"
     );
   });
-
-  return true;
 }
 
-function validateSupersessionRelations(snapshot) {
+function validateSupersessionEdges(snapshot) {
   snapshot.supersessionRelations.forEach(edge => {
     assert(
       edge && edge.fromArtifactId && edge.toArtifactId,
-      "PROJECT_AWARENESS_SUPERSESSION_ENDPOINT_MISSING",
-      edge
+      "PROJECT_AWARENESS_SUPERSESSION_ENDPOINT_MISSING"
     );
   });
-  return true;
 }
 
 function validateUnresolvedQuestions() {
   assert(
     UNRESOLVED_QUESTIONS.length === 12,
-    "PROJECT_AWARENESS_UNRESOLVED_SET_INCOMPLETE",
-    UNRESOLVED_QUESTIONS.length
+    "PROJECT_AWARENESS_UNRESOLVED_SET_INCOMPLETE"
   );
 
   UNRESOLVED_QUESTIONS.forEach(record => {
     assert(
       record.status.value === "UNRESOLVED" &&
         record.evidencePosture.value === "UNRESOLVED",
-      "PROJECT_AWARENESS_UNRESOLVED_QUESTION_SILENTLY_RESOLVED",
-      record.questionId.value
+      "PROJECT_AWARENESS_UNRESOLVED_QUESTION_SILENTLY_RESOLVED"
     );
     assert(
-      Array.isArray(record.blocks.value) && record.blocks.value.length > 0,
-      "PROJECT_AWARENESS_UNRESOLVED_BLOCKS_MISSING",
-      record.questionId.value
+      record.blocks.value.length > 0,
+      "PROJECT_AWARENESS_UNRESOLVED_BLOCKS_MISSING"
     );
     assert(
       record.prohibitedResolutionMethods.value.includes("ASSUMPTION") &&
         record.prohibitedResolutionMethods.value.includes(
           "UNSOURCED_RECONSTRUCTION"
         ),
-      "PROJECT_AWARENESS_UNRESOLVED_PROHIBITIONS_MISSING",
-      record.questionId.value
+      "PROJECT_AWARENESS_UNRESOLVED_PROHIBITION_MISSING"
     );
   });
-
-  return true;
 }
 
-function validateNoAuthorityLeak() {
-  ARTIFACT_AUTHORITY_RECORDS.forEach(record => {
-    assert(
-      record.awarenessRecordCreatesAuthority.value === false,
-      "PROJECT_AWARENESS_RECORD_CREATES_AUTHORITY",
-      record.artifactId.value
-    );
-  });
-
+function validateAuthorityBoundary() {
   const awarenessPackage = ARTIFACT_AUTHORITY_RECORDS.find(
     record => record.artifactId.value === "DGB_PROJECT_AWARENESS_PACKAGE"
   );
@@ -311,20 +289,16 @@ function validateNoAuthorityLeak() {
       awarenessPackage.productionAuthorized.value === false,
     "PROJECT_AWARENESS_PACKAGE_AUTHORITY_LEAK"
   );
-
   assert(
     UNIVERSAL_COMPASS_PACKAGE_IDENTITY.executable.value === false &&
       UNIVERSAL_COMPASS_PACKAGE_IDENTITY.accepted.value === false &&
       UNIVERSAL_COMPASS_PACKAGE_IDENTITY.productionAuthorized.value === false,
     "PROJECT_AWARENESS_PROTOTYPE_STATUS_UPGRADE"
   );
-
-  return true;
 }
 
 function validateOperationBoundary() {
   assertReadOnlyAwarenessBoundary();
-
   const mutationTerms = [
     "WRITE",
     "UPDATE",
@@ -358,104 +332,95 @@ function validateOperationBoundary() {
       operation
     );
   });
-
-  return true;
 }
 
 function validateBoundedQueries(snapshot) {
-  const queryInterface = createBoundedProjectQueryInterface(snapshot);
-
+  const interfaceRecord = createBoundedProjectQueryInterface(snapshot);
   BOUNDED_PROJECT_QUERY_IDS.forEach(queryId => {
-    const answer = queryInterface.query(queryId);
     assert(
-      answer.status === "ANSWERED",
+      interfaceRecord.query(queryId).status === "ANSWERED",
       "PROJECT_AWARENESS_BOUNDED_QUERY_FAILED",
       queryId
     );
   });
-
   assert(
-    queryInterface.query("MUTATE_REPOSITORY").status ===
+    interfaceRecord.query("MUTATE_REPOSITORY").status ===
       "REJECTED_OUT_OF_BOUNDS",
     "PROJECT_AWARENESS_QUERY_BOUNDARY_BYPASSED"
   );
   assert(
-    queryInterface.query("PACKAGE_EXECUTABLE").value === false,
+    interfaceRecord.query("PACKAGE_EXECUTABLE").value === false,
     "PROJECT_AWARENESS_QUERY_EXECUTABILITY_UPGRADE"
   );
   assert(
-    queryInterface.query("WORLD_TRUTH_OWNER").value ===
+    interfaceRecord.query("WORLD_TRUTH_OWNER").value ===
       "UNIVERSAL_COMPASS_PLANET",
     "PROJECT_AWARENESS_WORLD_AUTHORITY_QUERY_INVALID"
   );
   assert(
-    queryInterface.query("PROJECTION_OWNER").value ===
+    interfaceRecord.query("PROJECTION_OWNER").value ===
       "UNIVERSAL_COMPASS_COMPOSITOR",
     "PROJECT_AWARENESS_PROJECTION_AUTHORITY_QUERY_INVALID"
   );
-
-  return true;
 }
 
 export function runAwarenessValidation({
   repositoryEvidence = VERIFIED_REPOSITORY_EVIDENCE
 } = {}) {
+  const baselineSnapshot = createProjectAwarenessSnapshot();
   const checks = [
     ["DETERMINISTIC_SNAPSHOT", validateDeterministicSnapshot],
     ["REPOSITORY_PATH_AND_BLOB_GROUNDING", () =>
-      validateRepositoryEvidence(repositoryEvidence)],
-    ["DEPENDENCY_ENDPOINT_RESOLUTION", validateDependencyEndpoints],
-    ["AUTHORITY_PROVENANCE", validateAuthorityProvenance],
-    ["CANONICAL_LIFECYCLE_VOCABULARY", validateLifecycleVocabulary],
+      validateRepositoryGrounding(repositoryEvidence)],
+    ["DEPENDENCY_ENDPOINT_RESOLUTION", validateDependencyGraph],
+    ["AUTHORITY_PROVENANCE", validateFactProvenance],
+    [
+      "CANONICAL_AUTHORITY_AND_LIFECYCLE_VOCABULARY",
+      validateAuthorityAndLifecycleVocabulary
+    ],
+    ["SUPERSESSION_ENDPOINT_COMPLETENESS", () =>
+      validateSupersessionEdges(baselineSnapshot)],
     ["UNRESOLVED_QUESTIONS_EXPLICIT", validateUnresolvedQuestions],
-    ["NO_AWARENESS_AUTHORITY_LEAK", validateNoAuthorityLeak],
-    ["READ_ONLY_OPERATION_BOUNDARY", validateOperationBoundary]
+    ["NO_AWARENESS_AUTHORITY_LEAK", validateAuthorityBoundary],
+    ["READ_ONLY_OPERATION_BOUNDARY", validateOperationBoundary],
+    ["BOUNDED_QUERY_INTERFACE", () =>
+      validateBoundedQueries(baselineSnapshot)]
   ];
-
-  const baselineSnapshot = createProjectAwarenessSnapshot();
-  checks.push([
-    "SUPERSESSION_ENDPOINT_COMPLETENESS",
-    () => validateSupersessionRelations(baselineSnapshot)
-  ]);
-  checks.push([
-    "BOUNDED_QUERY_INTERFACE",
-    () => validateBoundedQueries(baselineSnapshot)
-  ]);
 
   const results = checks.map(([checkId, execute]) => {
     execute();
     return deepFreeze({
-      checkId: validationFact(checkId),
-      passed: validationFact(true, "DERIVED", checkId)
+      checkId: receiptFact(checkId),
+      passed: receiptFact(true, "DERIVED", checkId)
     });
   });
 
   return deepFreeze({
     schema: "DGB_PROJECT_AWARENESS_VALIDATION_RECEIPT_v1",
     awarenessAuthorityClassification: "VALIDATION_EVIDENCE",
-    receiptId: validationFact(VALIDATION_RECEIPT_ID),
-    repositoryIdentity: validationFact(
+    receiptId: receiptFact(RECEIPT_ID),
+    repositoryIdentity: receiptFact(
       PROJECT_AWARENESS_BASELINE.repositoryIdentity,
       "VERIFIED",
       "GITHUB_REPOSITORY_METADATA"
     ),
-    inspectedCommit: validationFact(
+    inspectedCommit: receiptFact(
       PROJECT_AWARENESS_BASELINE.inspectedCommit,
       "VERIFIED",
       "GITHUB_COMMIT_OBJECT"
     ),
-    branchIdentity: validationFact(
+    branchIdentity: receiptFact(
       PROJECT_AWARENESS_BASELINE.branchIdentity,
       "VERIFIED",
       "GITHUB_COMPARE_COMMITS_IDENTICAL"
     ),
-    projectAwarenessContractPass: validationFact(true, "DERIVED", results),
-    projectAwarenessRegistryPass: validationFact(true, "DERIVED", results),
-    projectAwarenessSnapshotPass: validationFact(true, "DERIVED", results),
-    prototypePass: validationFact(false, "DECLARED", "OUT_OF_SCOPE"),
-    runtimePass: validationFact(false, "DECLARED", "OUT_OF_SCOPE"),
-    productAuthority: validationFact(false, "DECLARED", "PROHIBITED"),
-    status: validationFact("PASS", "DERIVED", results),
+    projectAwarenessContractPass: receiptFact(true, "DERIVED", results),
+    projectAwarenessRegistryPass: receiptFact(true, "DERIVED", results),
+    projectAwarenessSnapshotPass: receiptFact(true, "DERIVED", results),
+    prototypePass: receiptFact(false, "DECLARED", "OUT_OF_SCOPE"),
+    runtimePass: receiptFact(false, "DECLARED", "OUT_OF_SCOPE"),
+    productAuthority: receiptFact(false, "DECLARED", "PROHIBITED"),
+    status: receiptFact("PASS", "DERIVED", results),
     checks: results
   });
 }

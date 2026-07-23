@@ -20,48 +20,45 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Probe Gate B to West to Packet 002
+      - name: Execute bounded Gate B Packet 002 adapter
         shell: bash
         run: |
           set -euo pipefail
+          node --check showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js
           node --input-type=module <<'EOF'
           import fs from 'node:fs';
-          const gate = await import('./showroom/globe/h-earth/render/ground-view-gate-b.js');
-          const kernel = await import('./showroom/globe/h-earth/render/geometry-kernel.js');
-          const packet = await import('./h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js');
-          const construction = gate.constructHEarthGroundViewGateBGeometry();
-          const sourceObjectIds = construction.primitives.map(p => p.primitiveId).sort();
-          const sourceZoneIds = ['H_EARTH_GROUND_VIEW_GATE_B'];
-          const latticeRegionIds = ['H_EARTH_GROUND_VIEW_GATE_B_BOUNDED_DOMAIN'];
-          const previewResult = Object.freeze({
-            ok: true,
-            status: construction.constructionStatus,
-            contractId: gate.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT_ID,
-            admitted: false,
-            WestAdmissionPerformed: false,
-            requestId: 'GATE_B_ROUTE_PROBE_REQUEST',
-            providerRequestId: construction.receipt.receiptId,
-            resolutionReceiptId: construction.receipt.deterministicConstructionIdentity,
-            sourceObjectIds,
-            sourceZoneIds,
-            latticeRegionIds,
-            primitives: construction.primitives
+          const adapter = await import('./showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js');
+          const result = adapter.buildHEarthGroundViewGateBPacket002Transfer({
+            occurrenceToken: 'PROBE_001',
+            requestId: 'H_EARTH_GATE_B_ROUTE_REQUEST:PROBE_001',
+            frameId: 'H_EARTH_GATE_B_ROUTE_FRAME:PROBE_001'
           });
-          const west = kernel.admitHEarthPrimitiveBatch(construction.primitives, {
-            frameId: 'GATE_B_ROUTE_PROBE_FRAME',
-            metadata: Object.freeze({requestId: previewResult.requestId, providerRequestId: previewResult.providerRequestId, resolutionReceiptId: previewResult.resolutionReceiptId, sourceObjectIds, sourceZoneIds, latticeRegionIds})
-          });
-          let packetResult;
-          try { packetResult = packet.buildHEarthPostWestAdmittedGeometryTransfer({previewResult, westBatchAdmissionResult: west}); }
-          catch (error) { packetResult = {threw:true,name:error?.name,message:error?.message,details:error?.details??null}; }
-          const receipt = {construction:{valid:construction.valid,primitiveCount:construction.primitives.length}, west, packetResult};
-          fs.writeFileSync('H_EARTH_GATE_B_ROUTE_ADAPTER_PROBE_v1.json', JSON.stringify(receipt,null,2));
+          const receipt = {
+            adapterContractId: adapter.H_EARTH_GROUND_VIEW_GATE_B_PACKET_002_ADAPTER_CONTRACT_ID,
+            adapterValid: result.valid,
+            constructionValid: result.construction.valid,
+            primitiveCount: result.construction.primitives.length,
+            westValid: result.westBatchAdmissionResult.valid,
+            westAdmissionCount: result.westBatchAdmissionResult.primitiveAdmissions.length,
+            packet002Ok: result.packet002Transfer.ok,
+            packet002Status: result.packet002Transfer.status,
+            packet002IssueCount: result.packet002Transfer.issues?.length ?? null,
+            packet002Issues: result.packet002Transfer.issues ?? [],
+            sourceObjectIds: result.provenance.sourceObjectIds,
+            sourceZoneIds: result.provenance.sourceZoneIds,
+            latticeRegionIds: result.provenance.latticeRegionIds,
+            routeIntegrated: result.routeIntegrated,
+            validationClaim: result.validationClaim,
+            productionClaim: result.productionClaim
+          };
+          fs.writeFileSync('H_EARTH_GATE_B_ROUTE_ADAPTER_PROBE_v2.json', JSON.stringify(receipt,null,2));
           console.log(JSON.stringify(receipt,null,2));
+          if (receipt.adapterValid !== true || receipt.packet002Ok !== true || receipt.packet002IssueCount !== 0) process.exit(1);
           EOF
       - name: Upload probe receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gate-b-route-adapter-probe
-          path: H_EARTH_GATE_B_ROUTE_ADAPTER_PROBE_v1.json
+          name: h-earth-gate-b-route-adapter-probe-v2
+          path: H_EARTH_GATE_B_ROUTE_ADAPTER_PROBE_v2.json
           if-no-files-found: error

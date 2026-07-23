@@ -1,3 +1,4 @@
+// Deterministic successor generation; correction trigger 2026-07-23.
 import {createHash} from'node:crypto';import{writeFile}from'node:fs/promises';import{H_EARTH_REPOSITORY_REGISTRY_SCHEMA as S,H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_INSTANCE as B}from'../h-earth-3d/registry/h-earth.repository-registry.candidate.js';import A from'../h-earth-3d/registry/candidates/h-earth.repository-registry.compositor-and-route-entry-amendment.candidate.js';
 const c=structuredClone(B),s=structuredClone(S),out='h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js',idp='h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json';
 const node=x=>{const n=c.nodes.find(v=>v.nodeId===x);if(!n)throw Error(x);return n};const add=(a,x)=>{if(!a.includes(x))a.push(x)};const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;

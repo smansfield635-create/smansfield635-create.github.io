@@ -45,7 +45,8 @@ function enrichNeutralPrimitives(primitives, provenance) {
     ...primitive,
     metadata: {
       ...(primitive.metadata ?? {}),
-      sourceObjectIds: provenance.sourceObjectIds,
+      sourceObjectId: primitive.primitiveId,
+      sourceObjectIds: Object.freeze([primitive.primitiveId]),
       sourceZoneIds: provenance.sourceZoneIds,
       latticeRegionIds: provenance.latticeRegionIds,
       requestId: provenance.requestId,

@@ -25,6 +25,23 @@
     "path": "/h-earth-3d/registry/h-earth.repository-registry.js",
     "mode": "READ_ONLY_DISCOVERY_QUERY_GRAPH_AND_OPERATION_SCOPE_PROJECTION"
   },
+  "toolInstruction": {
+    "instructionId": "H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1",
+    "instructionVersion": 1,
+    "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+    "contractPath": "/h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json",
+    "detailedInstructionPath": "/h-earth-3d/registry/H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1.md",
+    "agentInstructionPaths": [
+      "/h-earth-3d/AGENTS.md",
+      "/showroom/globe/h-earth/AGENTS.md"
+    ],
+    "auditPath": "/tools/h-earth-repository-registry-target-3-audit.mjs",
+    "receiptPath": "/h-earth-3d/registry/h-earth.repository-registry.target-3-receipt.json",
+    "validatorInstalled": false,
+    "workflowEnforcementInstalled": false,
+    "targetFourStillRequired": true,
+    "githubToolInstructionPath": "/h-earth-3d/registry/h-earth.repository-registry.github-instruction.md"
+  },
   "diagnosticProjection": {
     "path": "/showroom/globe/h-earth/diagnostic/repository-registry-projection.js",
     "routeActivationCreated": false,
@@ -40,6 +57,7 @@
     "sourceAuthorityTransferred": false,
     "mutationAuthorityCreated": false,
     "mergeAuthorityCreated": false,
+    "githubToolInstructionCreated": true,
     "workflowEnforcementCreated": false,
     "validatorEnforcementCreated": false,
     "runtimeActivationCreated": false,

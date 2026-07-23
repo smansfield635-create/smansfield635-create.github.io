@@ -126,7 +126,7 @@ const checks = {
   target4ESystemicPass: target4E.systemicExecution.passedScenarioCount === auditContract.requiredRegressions.target4ESystemicScenarioExecution && target4E.systemicExecution.failedScenarioCount === 0,
   target4EUnprompted: target4E.systemicExecution.allTasksUnprompted === true,
   target4EDeterministic: target4E.systemicExecution.allReceiptsDeterministic === true,
-  rootAgentEntrypointPresent: rootAgents.includes('Automatic H-Earth preflight') && rootAgents.includes('h-earth-repository-registry-auto-preflight.mjs'),
+  rootAgentEntrypointPresent: rootAgents.includes('automatically execute the H-Earth registry preflight') && rootAgents.includes('The user does not need to request registry or validator use') && rootAgents.includes('h-earth-repository-registry-auto-preflight.mjs'),
   scopedAgentEntrypointsPreserved: hEarthAgents.includes('load `registry/h-earth.repository-registry.bootstrap.json` first') && showroomAgents.includes('Gate B West adapter is orchestration only'),
   permanentWorkflowPresent: exists('.github/workflows/h-earth-repository-registry-preflight.yml'),
   permanentWorkflowReadOnly: permanentWorkflow.includes('contents: read'),

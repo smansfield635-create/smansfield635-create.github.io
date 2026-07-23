@@ -6,6 +6,22 @@ import {
 } from "./compass.contracts.js";
 import { normalizeQuaternion } from "./compass.math.js";
 
+const PRESENTATION_TRANSITIONS = Object.freeze({
+  [PRESENTATION.CONSTELLATION]: Object.freeze([
+    PRESENTATION.CONSTELLATION,
+    PRESENTATION.CLUSTER,
+    PRESENTATION.HELD
+  ]),
+  [PRESENTATION.CLUSTER]: Object.freeze([
+    PRESENTATION.CLUSTER,
+    PRESENTATION.CONSTELLATION,
+    PRESENTATION.HELD
+  ]),
+  [PRESENTATION.HELD]: Object.freeze([
+    PRESENTATION.HELD
+  ])
+});
+
 export function createCompassController({ profile, adapters, nodes }) {
   let state = Object.freeze({
     presentation: PRESENTATION.CONSTELLATION,
@@ -65,6 +81,48 @@ export function createCompassController({ profile, adapters, nodes }) {
     }, `gesture-cancel:${reason}`);
   }
 
+  function setPresentation(nextPresentation, options = {}) {
+    const next = String(nextPresentation || "").trim();
+    const allowed = PRESENTATION_TRANSITIONS[state.presentation] || [];
+
+    assertContract(
+      Object.values(PRESENTATION).includes(next),
+      "COMPASS_PRESENTATION_UNKNOWN",
+      next
+    );
+    assertContract(
+      allowed.includes(next),
+      "COMPASS_PRESENTATION_TRANSITION_PROHIBITED",
+      Object.freeze({ from: state.presentation, to: next })
+    );
+    assertContract(
+      !state.held || next === PRESENTATION.HELD,
+      "COMPASS_HELD_PRESENTATION_LOCK"
+    );
+
+    const orientation = Object.freeze(
+      normalizeQuaternion(options.orientation || [0, 0, 0, 1])
+    );
+
+    return replace({
+      presentation: next,
+      orientation,
+      originOrientation: orientation,
+      primaryId: "",
+      selectedId: options.preserveSelection === true ? state.selectedId : "",
+      orientationPhase: ORIENTATION_PHASE.COMMITTED,
+      transactionPhase: TRANSACTION_PHASE.ORIENTATION
+    }, `presentation:${state.presentation}->${next}`);
+  }
+
+  function openCluster(options = {}) {
+    return setPresentation(PRESENTATION.CLUSTER, options);
+  }
+
+  function returnToConstellation(options = {}) {
+    return setPresentation(PRESENTATION.CONSTELLATION, options);
+  }
+
   function select(id) {
     assertContract(nodes.has(id), "COMPASS_SELECTION_UNKNOWN", id);
     return replace({ selectedId: id, transactionPhase: TRANSACTION_PHASE.SELECTION }, `select:${id}`);
@@ -83,6 +141,9 @@ export function createCompassController({ profile, adapters, nodes }) {
     preview,
     commit,
     cancel,
+    setPresentation,
+    openCluster,
+    returnToConstellation,
     select,
     navigate,
     hold: reason => replace({ held: true }, `hold:${reason}`),

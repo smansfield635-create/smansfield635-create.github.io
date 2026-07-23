@@ -1,111 +1,61 @@
-name: H-Earth Gate B Provider Restore and Validation
+name: H-Earth Gate B Exact Capacity Revalidation
 
 on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  restore-and-observe-provider:
+  observe-exact-capacity-alignment:
     if: github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001'
     runs-on: ubuntu-latest
     env:
-      TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
-      PROVIDER_BLOB: 2a5b79a58ce411ed820df7ec2166f2e7b6e54b5b
-      PROVIDER_PATH: showroom/globe/h-earth/render/ground-view-gate-b.js
-      OBSERVATION_PATH: /tmp/h-earth-gate-b-provider-validation-observation.json
+      OBSERVATION_PATH: /tmp/h-earth-gate-b-exact-capacity-observation.json
     steps:
-      - name: Check out isolated Phase A branch and full Git object graph
+      - name: Check out isolated Phase A branch
         uses: actions/checkout@v4
         with:
           ref: agent/h-earth-gate-b-phase-a-successor-001
           fetch-depth: 0
 
-      - name: Restore exact historical provider blob
-        shell: bash
-        run: |
-          set -euo pipefail
-          git cat-file -e "${PROVIDER_BLOB}^{blob}"
-          mkdir -p "$(dirname "$PROVIDER_PATH")"
-          git cat-file blob "$PROVIDER_BLOB" > "$PROVIDER_PATH"
-          test "$(git hash-object "$PROVIDER_PATH")" = "$PROVIDER_BLOB"
-
-      - name: Record exact environment, provider, and kernel observations
+      - name: Record exact environment-capacity subchecks
         shell: bash
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
           import { writeFileSync } from 'node:fs';
-
           const environment = await import('./showroom/globe/h-earth/environment.js');
-          const provider = await import('./showroom/globe/h-earth/render/ground-view-gate-b.js');
-          const kernel = await import('./showroom/globe/h-earth/render/geometry-kernel.js');
-
-          let construction = null;
-          let constructionError = null;
-          try {
-            construction = provider.constructHEarthGroundViewGateBGeometry();
-          } catch (error) {
-            constructionError = {
-              name: error?.name ?? null,
-              message: error?.message ?? String(error),
-              stack: error?.stack ?? null
-            };
-          }
-
-          let determinism = null;
-          let determinismError = null;
-          try {
-            determinism = provider.evaluateHEarthGroundViewGateBDeterminism();
-          } catch (error) {
-            determinismError = {
-              name: error?.name ?? null,
-              message: error?.message ?? String(error),
-              stack: error?.stack ?? null
-            };
-          }
+          const capacity = await import('./showroom/globe/h-earth/capacity.js');
 
           const observation = {
-            sourceIdentities: {
-              environmentBlobExpected:
-                'aa60accc453e66f84a11d27f25d946c2b33c1d83',
-              providerBlobObserved:
-                process.env.PROVIDER_BLOB,
-              environmentAuthorityId:
-                environment.H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_ID ?? null,
-              providerContractId:
-                provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT_ID ?? null,
-              kernelContractId:
-                kernel.H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_CONTRACT_ID ?? null
-            },
-            environment: {
-              preflight:
-                environment.H_EARTH_3D_ENVIRONMENT_PREFLIGHT ?? null,
-              sharedBoundaryEvaluation:
-                environment.evaluateHEarth3DSharedShorelineBoundary?.() ?? null,
-              wetSandProfileEvaluation:
-                environment.evaluateHEarth3DWetSandNumericConstructionProfile?.() ?? null,
-              claimCeilings:
-                environment.H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS ?? null,
-              gateBAuthority:
-                environment.H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY ?? null
-            },
-            providerContract:
-              provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT ?? null,
-            construction: construction === null ? null : {
-              valid: construction.valid ?? null,
-              constructionStatus: construction.constructionStatus ?? null,
-              primitiveIds:
-                construction.primitives?.map((primitive) => primitive.primitiveId) ?? null,
-              primitiveTypes:
-                construction.primitives?.map((primitive) => primitive.primitiveType) ?? null,
-              receipt: construction.receipt ?? null,
-              issues: construction.issues ?? null
-            },
-            constructionError,
-            determinism,
-            determinismError
+            environmentBlob: 'aa60accc453e66f84a11d27f25d946c2b33c1d83',
+            capacityContractId:
+              capacity.H_EARTH_3D_CAPACITY_CONTRACT_ID ?? null,
+            environmentPreflight:
+              environment.H_EARTH_3D_ENVIRONMENT_PREFLIGHT ?? null,
+            primitivePlan:
+              environment.H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN ?? null,
+            primitivePlanEvaluation:
+              environment.evaluateHEarth3DEnvironmentPrimitivePlan?.() ?? null,
+            frameCapacityAlignment:
+              environment.H_EARTH_3D_ENVIRONMENT_FRAME_CAPACITY_ALIGNMENT ?? null,
+            frameCapacityAlignmentEvaluation:
+              environment.evaluateHEarth3DEnvironmentCapacityAlignment?.() ?? null,
+            handoffEvaluation:
+              environment.evaluateHEarth3DEnvironmentHandoff?.() ?? null,
+            wetSandEvaluation:
+              environment.evaluateHEarth3DWetSandNumericConstructionProfile?.() ?? null,
+            sharedBoundaryEvaluation:
+              environment.evaluateHEarth3DSharedShorelineBoundary?.() ?? null,
+            renderStageLimits:
+              capacity.H_EARTH_3D_RENDER_STAGE_LIMITS ?? null,
+            renderFrameCapacity:
+              capacity.H_EARTH_3D_RENDER_FRAME_CAPACITY ?? null,
+            compositorFrameEligibility:
+              capacity.H_EARTH_3D_COMPOSITOR_FRAME_ELIGIBILITY ?? null,
+            rendererFrameConsumptionEligibility:
+              capacity.H_EARTH_3D_RENDERER_FRAME_CONSUMPTION_ELIGIBILITY ?? null
           };
 
           writeFileSync(
@@ -114,24 +64,32 @@ jobs:
             'utf8'
           );
           console.log(JSON.stringify({
-            constructionSucceeded: construction !== null,
-            constructionError,
-            determinismSucceeded: determinism !== null,
-            determinismError
+            environmentPreflightEligible:
+              observation.environmentPreflight?.eligible ?? null,
+            primitivePlanEligible:
+              observation.primitivePlanEvaluation?.eligible ?? null,
+            capacityAlignmentEligible:
+              observation.frameCapacityAlignmentEvaluation?.eligible ?? null,
+            handoffEligible:
+              observation.handoffEvaluation?.eligible ?? null,
+            alignmentBooleans:
+              Object.fromEntries(
+                Object.entries(observation.frameCapacityAlignment ?? {})
+                  .filter(([, value]) => typeof value === 'boolean')
+              )
           }, null, 2));
           NODE
 
-      - name: Upload correlated validation observation
-        if: always()
+      - name: Upload exact capacity revalidation observation
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gate-b-provider-validation-observation
-          path: /tmp/h-earth-gate-b-provider-validation-observation.json
+          name: h-earth-gate-b-exact-capacity-observation
+          path: /tmp/h-earth-gate-b-exact-capacity-observation.json
           if-no-files-found: error
           retention-days: 1
 
-      - name: Stop before provider commit pending observation review
+      - name: Stop without source mutation
         shell: bash
         run: |
-          echo 'Observation captured; provider commit intentionally withheld.'
+          echo 'Exact capacity observation captured; source mutation withheld.'
           exit 1

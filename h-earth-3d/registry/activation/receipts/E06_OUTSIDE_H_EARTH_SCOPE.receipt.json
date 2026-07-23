@@ -1,0 +1,69 @@
+{
+  "scenarioReceiptId": "E06_OUTSIDE_H_EARTH_SCOPE_SYSTEMIC_COMPREHENSION_RECEIPT_v1",
+  "scenarioId": "E06_OUTSIDE_H_EARTH_SCOPE",
+  "taskText": "Review the repository readme.",
+  "paths": [
+    "/README.md"
+  ],
+  "mutationIntent": false,
+  "expectedActivationStatus": "NOT_APPLICABLE",
+  "actualActivationStatus": "NOT_APPLICABLE",
+  "expectedDisposition": "NOT_APPLICABLE",
+  "actualDisposition": "NOT_APPLICABLE",
+  "expectedContinuation": "H_EARTH_PREFLIGHT_NOT_APPLICABLE",
+  "actualContinuation": "H_EARTH_PREFLIGHT_NOT_APPLICABLE",
+  "affectedNodeCount": 0,
+  "traceLength": 0,
+  "checks": {
+    "taskContainsNoExplicitActivationInstruction": true,
+    "activationStatusExact": true,
+    "dispositionExact": true,
+    "continuationExact": true,
+    "affectedNodeMinimumMet": true,
+    "traceLengthExact": true,
+    "deterministicReceipt": true,
+    "dependenciesVerified": true,
+    "mutationNeverAuthorized": true,
+    "mutationIntentPreserved": true,
+    "receiptIdentityStable": true
+  },
+  "failedChecks": [],
+  "result": "PASS",
+  "automaticPreflightReceipt": {
+    "receiptId": "H_EARTH_AUTOMATIC_PREFLIGHT_4FFA6CE40971B9C6FC7B_v1",
+    "activationId": "H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_ACTIVATION_v1",
+    "activationStatus": "NOT_APPLICABLE",
+    "dependenciesVerified": true,
+    "taskText": "Review the repository readme.",
+    "mutationIntentDetected": false,
+    "pathClassification": {
+      "normalizedPaths": [
+        "/README.md"
+      ],
+      "classifications": [
+        {
+          "repositoryPath": "/README.md",
+          "classification": "OUTSIDE_H_EARTH_SCOPE",
+          "registered": false,
+          "insideScopeRoot": false,
+          "resolvedNodeIds": []
+        }
+      ],
+      "hEarthPaths": [],
+      "outsidePaths": [
+        "/README.md"
+      ]
+    },
+    "operationInput": null,
+    "validatorReceipt": null,
+    "finalDisposition": "NOT_APPLICABLE",
+    "mutationMayProceed": false,
+    "continuation": "H_EARTH_PREFLIGHT_NOT_APPLICABLE",
+    "boundaries": {
+      "sourceAuthorityCreated": false,
+      "mutationAuthorityCreated": false,
+      "mergeAuthorityCreated": false,
+      "canonicalizationAuthorityCreated": false
+    }
+  }
+}

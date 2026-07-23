@@ -1,16 +1,23 @@
-name: H-Earth Shared Packet 002 Gate B Requirement Matrix
+name: H-Earth Shared Packet 002 Bounded Fail-Fast Correction
 on:
   pull_request:
 permissions:
-  contents: read
+  contents: write
   issues: read
 jobs:
-  observe-gate-b-requirement-matrix:
+  correct-audit-and-install:
     if: github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001'
     runs-on: ubuntu-latest
     env:
+      TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
       TARGET_PATH: h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js
       EXPECTED_BASE_BLOB: 2bcb67ebf84f36248475921c85e75236a1115102
+      AUDITED_CANDIDATE_BYTES: 63412
+      AUDITED_CANDIDATE_SHA256: 58e1f0100019a64d870837b69882f59d0fd5c6a522cc5abebb56e97a7179de0a
+      AUDITED_CANDIDATE_BLOB: b6c92988fee6997344b5df89cd5645d7d5b2d1a2
+      CORRECTED_CANDIDATE_BYTES: 63774
+      CORRECTED_CANDIDATE_SHA256: 936b9853b48526d2e4234eaf5830b2d622830c6a11a1a48a233e7d44508175fe
+      CORRECTED_CANDIDATE_BLOB: c31412854dbce91bc6b378f345976fff5431e671
       COMMENT_IDS: 5059696536,5059713725,5059717709
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -18,112 +25,260 @@ jobs:
         with:
           ref: agent/h-earth-gate-b-phase-a-successor-001
           fetch-depth: 0
-      - name: Reconstruct exact successor
+
+      - name: Reconstruct exact audited 47-of-48 candidate
         shell: bash
         run: |
           set -euo pipefail
           test "$(git hash-object "$TARGET_PATH")" = "$EXPECTED_BASE_BLOB"
-          mkdir -p "$RUNNER_TEMP/packet-002-matrix"
+          mkdir -p "$RUNNER_TEMP/packet-002-correction"
           python - <<'PY'
-          import base64,gzip,hashlib,json,os,pathlib,urllib.request
-          ids=[int(v) for v in os.environ['COMMENT_IDS'].split(',')]
-          lengths=[7000,7000,180]
-          hashes=['38d0c10cd020c991082655487f27185b2efb56a726562640a07440d8501e51d7','f3037a6fad7128f5e0a5ac6034aaf33ce9920625e7e256bb013ea70dc01603b2','a85b34c42ab9535c1a01530dcafa04734323f8daed056b231f2839a80f8177ea']
-          pieces=[]
-          for index,comment_id in enumerate(ids,1):
-              request=urllib.request.Request(f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues/comments/{comment_id}",headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
-              with urllib.request.urlopen(request) as response: body=json.load(response)['body']
-              prefix=f'H_EARTH_SHARED_PACKET_002_SUCCESSOR_GZIP_PART_{index:02d}_OF_03\n'
+          import base64, gzip, hashlib, json, os, pathlib, urllib.request
+          ids = [int(value) for value in os.environ['COMMENT_IDS'].split(',')]
+          lengths = [7000, 7000, 180]
+          hashes = [
+              '38d0c10cd020c991082655487f27185b2efb56a726562640a07440d8501e51d7',
+              'f3037a6fad7128f5e0a5ac6034aaf33ce9920625e7e256bb013ea70dc01603b2',
+              'a85b34c42ab9535c1a01530dcafa04734323f8daed056b231f2839a80f8177ea'
+          ]
+          pieces = []
+          for index, comment_id in enumerate(ids, 1):
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}/issues/comments/{comment_id}",
+                  headers={
+                      'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28'
+                  }
+              )
+              with urllib.request.urlopen(request) as response:
+                  body = json.load(response)['body']
+              prefix = f'H_EARTH_SHARED_PACKET_002_SUCCESSOR_GZIP_PART_{index:02d}_OF_03\n'
               assert body.startswith(prefix)
-              payload=body[len(prefix):].strip()
-              assert len(payload)==lengths[index-1]
-              assert hashlib.sha256(payload.encode()).hexdigest()==hashes[index-1]
+              payload = body[len(prefix):].strip()
+              assert len(payload) == lengths[index - 1]
+              assert hashlib.sha256(payload.encode()).hexdigest() == hashes[index - 1]
               pieces.append(payload)
-          raw=gzip.decompress(base64.b64decode(''.join(pieces),validate=True))
-          assert len(raw)==63412
-          assert hashlib.sha256(raw).hexdigest()=='58e1f0100019a64d870837b69882f59d0fd5c6a522cc5abebb56e97a7179de0a'
+          raw = gzip.decompress(base64.b64decode(''.join(pieces), validate=True))
+          assert len(raw) == int(os.environ['AUDITED_CANDIDATE_BYTES'])
+          assert hashlib.sha256(raw).hexdigest() == os.environ['AUDITED_CANDIDATE_SHA256']
           pathlib.Path(os.environ['TARGET_PATH']).write_bytes(raw)
           PY
-          test "$(git hash-object "$TARGET_PATH")" = b6c92988fee6997344b5df89cd5645d7d5b2d1a2
-      - name: Evaluate complete requirement matrix
+          test "$(git hash-object "$TARGET_PATH")" = "$AUDITED_CANDIDATE_BLOB"
+
+      - name: Apply only the bounded mixed-mode fail-fast correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          path = Path(os.environ['TARGET_PATH'])
+          text = path.read_text(encoding='utf-8')
+          old = """  issues.push(...toleranceValidation.issues);
+
+  if (
+    modeEvaluation.transferMode ===
+"""
+          new = """  issues.push(...toleranceValidation.issues);
+
+  if (!modeEvaluation.ok) {
+    return Object.freeze({
+      ok: false,
+
+      status:
+        'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_INPUT_REJECTED',
+
+      transferMode: null,
+
+      toleranceValidation,
+      previewValidation: null,
+      westBatchValidation: null,
+      gateBAdapterValidation: null,
+
+      issues: freezeIssues(issues)
+    });
+  }
+
+  if (
+    modeEvaluation.transferMode ===
+"""
+          if text.count(old) != 1:
+              raise SystemExit(f'Expected one bounded insertion point, found {text.count(old)}.')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8', newline='')
+          PY
+          test "$(wc -c < "$TARGET_PATH" | tr -d ' ')" = "$CORRECTED_CANDIDATE_BYTES"
+          test "$(sha256sum "$TARGET_PATH" | awk '{print $1}')" = "$CORRECTED_CANDIDATE_SHA256"
+          test "$(git hash-object "$TARGET_PATH")" = "$CORRECTED_CANDIDATE_BLOB"
+
+      - name: Execute the identical 48-check requirement matrix
         shell: bash
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
           import fs from 'node:fs';
           import { existsSync } from 'node:fs';
           import { constructHEarthGroundViewGateBGeometry } from './showroom/globe/h-earth/render/ground-view-gate-b.js';
           import * as adapter from './h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js';
           import * as transfer from './h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js';
-          const deepFreeze=(value,seen=new WeakSet())=>{if(value===null||typeof value!=='object'||seen.has(value))return value;seen.add(value);for(const nested of Object.values(value))deepFreeze(nested,seen);return Object.freeze(value);};
-          const routeToken='H_EARTH_GATE_B_DIAGNOSTIC_ROUTE_TOKEN:123e4567-e89b-42d3-a456-426614174000';
-          const executionIdentity=deepFreeze({executionClass:'GATE_B_DIAGNOSTIC_CHILD_ROUTE_ENTRY',routeToken,adapterOccurrenceId:`H_EARTH_GATE_B_ADAPTER_OCCURRENCE:${routeToken}`,aggregateFrameId:`H_EARTH_WEST_AGGREGATE_FRAME:${routeToken}`,packet002TransferOccurrenceId:`H_EARTH_GATE_B_PACKET_002_TRANSFER_OCCURRENCE:${routeToken}`,compositorFrameOccurrenceId:`H_EARTH_COMPOSITOR_FRAME_OCCURRENCE:${routeToken}`});
-          const occurrence=adapter.executeHEarthGroundViewGateBWestAdmissionAdapter({gateBConstructionResult:constructHEarthGroundViewGateBGeometry(),executionIdentity,provenanceApplicability:adapter.H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,toleranceContext:null});
-          const evaluation=transfer.evaluateHEarthPostWestAdmittedGeometryTransferInput({gateBAdapterOccurrence:occurrence,toleranceContext:null});
-          const result=transfer.buildHEarthPostWestAdmittedGeometryTransfer({gateBAdapterOccurrence:occurrence,toleranceContext:null});
-          const mixed=transfer.evaluateHEarthPostWestAdmittedGeometryTransferInput({gateBAdapterOccurrence:occurrence,previewResult:{},westBatchAdmissionResult:{},toleranceContext:null});
-          const invalid=transfer.buildHEarthPostWestAdmittedGeometryTransfer({gateBAdapterOccurrence:Object.freeze({invalid:true}),toleranceContext:null});
-          const checks={
-            adapter_ok:occurrence.ok===true,
-            evaluation_ok:evaluation.ok===true,
-            evaluation_mode:evaluation.transferMode===transfer.H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES.GATE_B_ADAPTER_OCCURRENCE,
-            preview_validation_absent:evaluation.previewValidation===null,
-            west_validation_absent:evaluation.westBatchValidation===null,
-            adapter_validation_ok:evaluation.gateBAdapterValidation?.ok===true,
-            builder_ok:result.ok===true,
-            builder_mode:result.transferMode===transfer.H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES.GATE_B_ADAPTER_OCCURRENCE,
-            admitted_count:result.admittedPrimitives?.length===3,
-            aggregate_count:result.aggregateFrameAdmissionRecord?.primitives?.length===3,
-            primitive_order:JSON.stringify(result.primitiveOrder)===JSON.stringify([adapter.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.terrain,adapter.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.water,adapter.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.diagnosticRibbon]),
-            source_objects:JSON.stringify(result.sourceObjectIds)===JSON.stringify(['OBJ_006_NEARSHORE_WAVE_BAND','OBJ_007_WATER_SURFACE_PLANE']),
-            source_zones:JSON.stringify(result.sourceZoneIds)===JSON.stringify(['ZONE_003_WATER_SURFACE_ZONE']),
-            lattice_regions_empty:Array.isArray(result.latticeRegionIds)&&result.latticeRegionIds.length===0,
-            provenance_mode:result.provenanceMode==='GATE_B_PER_PRIMITIVE_APPLICABILITY',
-            provenance_completeness:result.provenanceCompleteness==='EXPLICIT_SEMANTIC_CORRESPONDENCE_ONLY_NO_SYNTHESIS',
-            provenance_count:result.primitiveProvenanceApplicability?.length===3,
-            provenance_snapshot_separate:result.primitiveProvenanceApplicability!==occurrence.provenanceApplicability,
-            standalone_snapshot_separate:result.admittedPrimitives!==occurrence.admittedPrimitives,
-            frame_snapshot_separate:result.aggregateFrameAdmissionRecord!==occurrence.aggregateFrameAdmissionRecord,
-            bounds_snapshot_separate_from_adapter:result.bounds!==occurrence.bounds,
-            bounds_snapshot_separate_from_frame:result.bounds!==result.aggregateFrameAdmissionRecord?.bounds,
-            correspondence_count:result.standaloneToAggregateMemberCorrespondence?.length===3,
-            correspondence_all:result.standaloneToAggregateMemberCorrespondence?.every((entry)=>entry.separateSnapshotAllocation===true&&entry.geometryStructurallyCorrespondent===true&&entry.admittedIdentityStructurallyCorrespondent===true)===true,
-            result_frozen:Object.isFrozen(result),
-            admitted_frozen:Object.isFrozen(result.admittedPrimitives),
-            frame_frozen:Object.isFrozen(result.aggregateFrameAdmissionRecord),
-            provenance_frozen:Object.isFrozen(result.primitiveProvenanceApplicability),
-            structural_validated:result.structuralCorrespondenceValidated===true,
-            output_deeply_frozen:result.outputDeeplyFrozen===true,
-            geometry_index_false:result.geometryIndexAuthority===false,
-            geometry_index_id_null:result.geometryIndexEntryId===null,
-            compositor_false:result.compositorAuthority===false,
-            compositor_id_null:result.compositorNodeId===null,
-            renderer_false:result.rendererAuthority===false,
-            render_instance_false:result.renderInstanceCreated===false,
-            render_instance_id_null:result.renderInstanceId===null,
-            provisional_true:result.provisional===true,
-            downstream_frozen_false:result.downstreamContractFrozen===false,
-            final_shape_false:result.finalDownstreamShapeClaimed===false,
-            issues_empty:Array.isArray(result.issues)&&result.issues.length===0,
-            mixed_rejected:mixed.ok===false,
-            mixed_mode_null:mixed.transferMode===null,
-            mixed_issue:mixed.issues?.some((issue)=>issue.code==='MIXED_TRANSFER_MODES_REJECTED')===true,
-            invalid_rejected:invalid.ok===false,
-            invalid_issue:invalid.issues?.some((issue)=>issue.code==='GATE_B_ADAPTER_OCCURRENCE_INVALID')===true,
-            invalid_no_snapshot_issue:invalid.issues?.some((issue)=>String(issue.code).includes('SNAPSHOT'))===false,
-            duplicate_transfer_absent:existsSync('h-earth-3d/integration/h-earth.post-west-gate-b-occurrence-transfer.js')===false
+
+          const deepFreeze = (value, seen = new WeakSet()) => {
+            if (value === null || typeof value !== 'object' || seen.has(value)) return value;
+            seen.add(value);
+            for (const nested of Object.values(value)) deepFreeze(nested, seen);
+            return Object.freeze(value);
           };
-          const failed=Object.entries(checks).filter(([,value])=>value!==true).map(([key])=>key);
-          fs.writeFileSync(process.env.RUNNER_TEMP+'/packet-002-matrix/matrix.json',JSON.stringify({checks,failed,mixed:{status:mixed.status,issues:mixed.issues},invalid:{status:invalid.status,issues:invalid.issues}},null,2));
+
+          const routeToken = 'H_EARTH_GATE_B_DIAGNOSTIC_ROUTE_TOKEN:123e4567-e89b-42d3-a456-426614174000';
+          const executionIdentity = deepFreeze({
+            executionClass: 'GATE_B_DIAGNOSTIC_CHILD_ROUTE_ENTRY',
+            routeToken,
+            adapterOccurrenceId: `H_EARTH_GATE_B_ADAPTER_OCCURRENCE:${routeToken}`,
+            aggregateFrameId: `H_EARTH_WEST_AGGREGATE_FRAME:${routeToken}`,
+            packet002TransferOccurrenceId: `H_EARTH_GATE_B_PACKET_002_TRANSFER_OCCURRENCE:${routeToken}`,
+            compositorFrameOccurrenceId: `H_EARTH_COMPOSITOR_FRAME_OCCURRENCE:${routeToken}`
+          });
+
+          const occurrence = adapter.executeHEarthGroundViewGateBWestAdmissionAdapter({
+            gateBConstructionResult: constructHEarthGroundViewGateBGeometry(),
+            executionIdentity,
+            provenanceApplicability: adapter.H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,
+            toleranceContext: null
+          });
+          const evaluation = transfer.evaluateHEarthPostWestAdmittedGeometryTransferInput({
+            gateBAdapterOccurrence: occurrence,
+            toleranceContext: null
+          });
+          const result = transfer.buildHEarthPostWestAdmittedGeometryTransfer({
+            gateBAdapterOccurrence: occurrence,
+            toleranceContext: null
+          });
+          const mixed = transfer.evaluateHEarthPostWestAdmittedGeometryTransferInput({
+            gateBAdapterOccurrence: occurrence,
+            previewResult: {},
+            westBatchAdmissionResult: {},
+            toleranceContext: null
+          });
+          const invalid = transfer.buildHEarthPostWestAdmittedGeometryTransfer({
+            gateBAdapterOccurrence: Object.freeze({ invalid: true }),
+            toleranceContext: null
+          });
+
+          const checks = {
+            adapter_ok: occurrence.ok === true,
+            evaluation_ok: evaluation.ok === true,
+            evaluation_mode: evaluation.transferMode === transfer.H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES.GATE_B_ADAPTER_OCCURRENCE,
+            preview_validation_absent: evaluation.previewValidation === null,
+            west_validation_absent: evaluation.westBatchValidation === null,
+            adapter_validation_ok: evaluation.gateBAdapterValidation?.ok === true,
+            builder_ok: result.ok === true,
+            builder_mode: result.transferMode === transfer.H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES.GATE_B_ADAPTER_OCCURRENCE,
+            admitted_count: result.admittedPrimitives?.length === 3,
+            aggregate_count: result.aggregateFrameAdmissionRecord?.primitives?.length === 3,
+            primitive_order: JSON.stringify(result.primitiveOrder) === JSON.stringify([
+              adapter.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.terrain,
+              adapter.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.water,
+              adapter.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.diagnosticRibbon
+            ]),
+            source_objects: JSON.stringify(result.sourceObjectIds) === JSON.stringify(['OBJ_006_NEARSHORE_WAVE_BAND', 'OBJ_007_WATER_SURFACE_PLANE']),
+            source_zones: JSON.stringify(result.sourceZoneIds) === JSON.stringify(['ZONE_003_WATER_SURFACE_ZONE']),
+            lattice_regions_empty: Array.isArray(result.latticeRegionIds) && result.latticeRegionIds.length === 0,
+            provenance_mode: result.provenanceMode === 'GATE_B_PER_PRIMITIVE_APPLICABILITY',
+            provenance_completeness: result.provenanceCompleteness === 'EXPLICIT_SEMANTIC_CORRESPONDENCE_ONLY_NO_SYNTHESIS',
+            provenance_count: result.primitiveProvenanceApplicability?.length === 3,
+            provenance_snapshot_separate: result.primitiveProvenanceApplicability !== occurrence.provenanceApplicability,
+            standalone_snapshot_separate: result.admittedPrimitives !== occurrence.admittedPrimitives,
+            frame_snapshot_separate: result.aggregateFrameAdmissionRecord !== occurrence.aggregateFrameAdmissionRecord,
+            bounds_snapshot_separate_from_adapter: result.bounds !== occurrence.bounds,
+            bounds_snapshot_separate_from_frame: result.bounds !== result.aggregateFrameAdmissionRecord?.bounds,
+            correspondence_count: result.standaloneToAggregateMemberCorrespondence?.length === 3,
+            correspondence_all: result.standaloneToAggregateMemberCorrespondence?.every((entry) =>
+              entry.separateSnapshotAllocation === true &&
+              entry.geometryStructurallyCorrespondent === true &&
+              entry.admittedIdentityStructurallyCorrespondent === true
+            ) === true,
+            result_frozen: Object.isFrozen(result),
+            admitted_frozen: Object.isFrozen(result.admittedPrimitives),
+            frame_frozen: Object.isFrozen(result.aggregateFrameAdmissionRecord),
+            provenance_frozen: Object.isFrozen(result.primitiveProvenanceApplicability),
+            structural_validated: result.structuralCorrespondenceValidated === true,
+            output_deeply_frozen: result.outputDeeplyFrozen === true,
+            geometry_index_false: result.geometryIndexAuthority === false,
+            geometry_index_id_null: result.geometryIndexEntryId === null,
+            compositor_false: result.compositorAuthority === false,
+            compositor_id_null: result.compositorNodeId === null,
+            renderer_false: result.rendererAuthority === false,
+            render_instance_false: result.renderInstanceCreated === false,
+            render_instance_id_null: result.renderInstanceId === null,
+            provisional_true: result.provisional === true,
+            downstream_frozen_false: result.downstreamContractFrozen === false,
+            final_shape_false: result.finalDownstreamShapeClaimed === false,
+            issues_empty: Array.isArray(result.issues) && result.issues.length === 0,
+            mixed_rejected: mixed.ok === false,
+            mixed_mode_null: mixed.transferMode === null,
+            mixed_issue: mixed.issues?.some((issue) => issue.code === 'MIXED_TRANSFER_MODES_REJECTED') === true,
+            invalid_rejected: invalid.ok === false,
+            invalid_issue: invalid.issues?.some((issue) => issue.code === 'GATE_B_ADAPTER_OCCURRENCE_INVALID') === true,
+            invalid_no_snapshot_issue: invalid.issues?.some((issue) => String(issue.code).includes('SNAPSHOT')) === false,
+            duplicate_transfer_absent: existsSync('h-earth-3d/integration/h-earth.post-west-gate-b-occurrence-transfer.js') === false
+          };
+
+          const failed = Object.entries(checks)
+            .filter(([, value]) => value !== true)
+            .map(([key]) => key);
+
+          const audit = {
+            checks,
+            failed,
+            totalChecks: Object.keys(checks).length,
+            passedChecks: Object.keys(checks).length - failed.length,
+            overallResult: failed.length === 0 ? 'PASS' : 'FAIL',
+            mixed: {
+              status: mixed.status,
+              transferMode: mixed.transferMode,
+              previewValidation: mixed.previewValidation,
+              westBatchValidation: mixed.westBatchValidation,
+              gateBAdapterValidation: mixed.gateBAdapterValidation,
+              issues: mixed.issues
+            },
+            invalid: { status: invalid.status, issues: invalid.issues }
+          };
+
+          fs.writeFileSync(
+            process.env.RUNNER_TEMP + '/packet-002-correction/matrix.json',
+            JSON.stringify(audit, null, 2)
+          );
+
+          assert.equal(Object.keys(checks).length, 48);
+          assert.deepEqual(failed, []);
+          assert.equal(mixed.transferMode, null);
+          assert.equal(mixed.previewValidation, null);
+          assert.equal(mixed.westBatchValidation, null);
+          assert.equal(mixed.gateBAdapterValidation, null);
+          assert.equal(mixed.issues.length, 1);
+          assert.equal(mixed.issues[0].code, 'MIXED_TRANSFER_MODES_REJECTED');
           NODE
-      - uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-shared-packet-002-gate-b-requirement-matrix
-          path: ${{ runner.temp }}/packet-002-matrix/matrix.json
-          retention-days: 1
-      - name: Prove no governed source commit
+
+      - name: Commit only the corrected shared Packet 002 authority
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git status --short | wc -l)" -eq 1
-          test "$(git status --short | awk '{print $2}')" = "$TARGET_PATH"
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = "$TARGET_PATH"
+          printf 'result=PASS\nchecks=48_OF_48\nsource_bytes=%s\nsource_sha256=%s\nsource_blob=%s\ncorrection=mixed_mode_fail_fast_and_explicit_null_discriminator\n' \
+            "$CORRECTED_CANDIDATE_BYTES" "$CORRECTED_CANDIDATE_SHA256" "$CORRECTED_CANDIDATE_BLOB" \
+            > "$RUNNER_TEMP/packet-002-correction/receipt.txt"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$TARGET_PATH"
+          git commit -m 'Renew shared Packet 002 with Gate B fail-fast mode'
+          git push origin "HEAD:$TARGET_BRANCH"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-shared-packet-002-bounded-correction-audit
+          path: ${{ runner.temp }}/packet-002-correction/
+          retention-days: 1

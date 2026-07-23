@@ -1,0 +1,99 @@
+name: H-Earth Gate B Frame Composition Probe
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-gate-b-seven-file-verification-001
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    if: github.head_ref == 'agent/h-earth-gate-b-seven-file-trigger-001'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute Gate B admitted-frame composition
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check showroom/globe/h-earth/admitted-geometry-frame.js
+          node --check showroom/globe/h-earth/compositor.js
+          node --input-type=module <<'EOF'
+          import fs from 'node:fs';
+          const routeInputModule = await import('./showroom/globe/h-earth/gate-b-route-input.js');
+          const frameModule = await import('./showroom/globe/h-earth/admitted-geometry-frame.js');
+          const compositor = await import('./showroom/globe/h-earth/compositor.js');
+
+          const viewportCandidate = Object.freeze({
+            widthPx: 1280,
+            heightPx: 720,
+            pixelRatio: 1
+          });
+
+          const viewportReceipt = compositor.setHEarth3DCompositorViewport(
+            viewportCandidate
+          );
+
+          const routeInput = routeInputModule.buildHEarthGroundViewGateBRouteInput({
+            occurrenceToken: 'FRAME_PROBE_001'
+          });
+
+          const composition = compositor.composeHEarth3DCompositorAdmittedFrame({
+            packet002Transfer: routeInput.packet002Transfer,
+            packet002TransferOccurrenceId: routeInput.packet002TransferOccurrenceId,
+            compositorFrameOccurrenceId: routeInput.compositorFrameOccurrenceId,
+            presentationMode: frameModule.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE
+          });
+
+          const admittedFrame = composition.admittedGeometryFrame ?? null;
+          const receipt = {
+            admittedFrameBlobContractId: frameModule.H_EARTH_3D_ADMITTED_GEOMETRY_FRAME_CONTRACT_ID,
+            gateBPresentationMode: frameModule.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE,
+            viewportReceipt,
+            compositorState: compositor.getHEarth3DCompositorState(),
+            routeInputValid: routeInput.valid,
+            packet002Ok: routeInput.packet002Transfer.ok,
+            compositionOk: composition.ok,
+            compositionStatus: composition.status,
+            compositionIssues: composition.issues ?? [],
+            admittedFrameObserved: admittedFrame !== null,
+            admittedFrameValid: admittedFrame !== null
+              ? frameModule.isHEarth3DAdmittedGeometryFrame(admittedFrame)
+              : false,
+            presentationModeObserved: admittedFrame?.presentationMode ?? null,
+            sourceObjectIds: admittedFrame?.sourceObjectIds ?? null,
+            presentationAssignments: admittedFrame?.presentationAssignments ?? null,
+            rendererImported: composition.rendererImported,
+            rendererMounted: composition.rendererMounted,
+            visibleOutputConfirmed: composition.visibleOutputConfirmed
+          };
+
+          fs.writeFileSync(
+            'H_EARTH_GATE_B_FRAME_COMPOSITION_PROBE_v1.json',
+            JSON.stringify(receipt, null, 2)
+          );
+          console.log(JSON.stringify(receipt, null, 2));
+
+          if (
+            receipt.routeInputValid !== true ||
+            receipt.packet002Ok !== true ||
+            receipt.compositionOk !== true ||
+            receipt.admittedFrameValid !== true ||
+            receipt.presentationModeObserved !== 'GROUND_VIEW_GATE_B_PROOF'
+          ) {
+            process.exit(1);
+          }
+          EOF
+      - name: Upload frame-composition receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-frame-composition-probe-v1
+          path: H_EARTH_GATE_B_FRAME_COMPOSITION_PROBE_v1.json
+          if-no-files-found: error

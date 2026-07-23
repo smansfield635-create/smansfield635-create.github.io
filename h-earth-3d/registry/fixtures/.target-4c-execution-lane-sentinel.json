@@ -1,9 +1,0 @@
-{
-  "sentinelId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4C_EXECUTION_LANE_SENTINEL_v1",
-  "temporary": true,
-  "mergeAuthority": false,
-  "canonicalizationAuthority": false,
-  "productionAuthority": false,
-  "purpose": "ENSURE_TEMPORARY_EXECUTION_PR_HAS_A_DISTINCT_HEAD_COMMIT",
-  "cleanupRequired": true
-}

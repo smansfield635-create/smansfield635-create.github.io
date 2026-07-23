@@ -1,12 +1,23 @@
-import { PRESENTATION, POINTER_KIND } from "../../../assets/compass-model/compass.contracts.js";
-import { cameraBasis, dot3, normalize3, subtract3 } from "../../../assets/compass-model/compass.math.js";
+import {
+  PRESENTATION,
+  POINTER_KIND,
+  deepFreeze
+} from "../../../assets/compass-model/compass.contracts.js";
+import {
+  cameraBasis,
+  dot3,
+  subtract3
+} from "../../../assets/compass-model/compass.math.js";
 import { createNodeRegistry } from "../../../assets/compass-model/compass.nodes.js";
 import { createWorldAuthority } from "../../../assets/compass-model/compass.world.js";
 import { createCompassController } from "../../../assets/compass-model/compass.controller.js";
 import { createInteractionAuthority } from "../../../assets/compass-model/compass.interactions.js";
 import { createCompositor } from "../../../assets/compass-model/compass.compositor.js";
 import { NEUTRAL_REFERENCE_PROFILE } from "../../../assets/compass-model/compass.profiles.js";
-import { createAdapters } from "../../../assets/compass-model/compass.adapters.js";
+import {
+  NAVIGATION_EFFECT,
+  createAdapters
+} from "../../../assets/compass-model/compass.adapters.js";
 
 const root = document.querySelector("[data-reference-root]");
 const field = document.querySelector("[data-reference-field]");
@@ -14,6 +25,10 @@ const visualLayer = document.querySelector("[data-reference-visual]");
 const semanticLayer = document.querySelector("[data-reference-semantic]");
 const statusOutput = document.querySelector("[data-reference-status]");
 const receiptOutput = document.querySelector("[data-reference-receipt]");
+const constellationButton = document.querySelector("[data-reference-constellation]");
+const clusterButton = document.querySelector("[data-reference-cluster]");
+const holdButton = document.querySelector("[data-reference-hold]");
+const reducedMotionButton = document.querySelector("[data-reference-reduced-motion]");
 
 const outputs = Object.freeze({
   selection: document.querySelector("[data-reference-selection]"),
@@ -46,7 +61,10 @@ const definitions = [
     routeKey: `neutral-route-${index + 1}`,
     presentation: PRESENTATION.CONSTELLATION,
     baseVector,
-    semantic: { label: `Coordinate ${index + 1}`, description: `Synthetic cardinal coordinate ${index + 1}.` }
+    semantic: {
+      label: `Coordinate ${index + 1}`,
+      description: `Synthetic cardinal coordinate ${index + 1}.`
+    }
   })),
   ...CLUSTER_VECTORS.map((baseVector, index) => ({
     id: `neutral-member-${index + 1}`,
@@ -55,35 +73,51 @@ const definitions = [
     routeKey: `neutral-member-route-${index + 1}`,
     presentation: PRESENTATION.CLUSTER,
     baseVector,
-    semantic: { label: `Member ${index + 1}`, description: `Synthetic cluster member ${index + 1}.` }
+    semantic: {
+      label: `Member ${index + 1}`,
+      description: `Synthetic cluster member ${index + 1}.`
+    }
   }))
 ];
 
 const nodes = createNodeRegistry(definitions);
-let controller;
-let world;
-let compositor;
-let interactions;
 let latestWorld = null;
 let latestProjection = null;
 let navigationReceipt = null;
-let clusterValidation = null;
+let lastInteractionReceipt = null;
+let publicCorridorReceipt = null;
 
-function projectWorldPoint(worldPosition, camera) {
-  const basis = cameraBasis(camera);
-  const relative = subtract3(worldPosition, camera.eye);
+function projectWorldPoint(input) {
+  const basis = cameraBasis(input.camera);
+  const relative = subtract3(input.worldPosition, input.camera.eye);
   const viewDepth = dot3(relative, basis.forward);
-  const safeDepth = Math.max(0.35, viewDepth);
+  const safeDepth = Math.max(input.camera.near, viewDepth);
   const rect = field.getBoundingClientRect();
-  const focal = Math.min(rect.width, rect.height) * 0.72;
-  const x = rect.width * 0.5 + dot3(relative, basis.right) * focal / safeDepth;
-  const y = rect.height * 0.5 - dot3(relative, basis.up) * focal / safeDepth;
-  return Object.freeze({
-    x,
-    y,
-    viewDepth,
+  const focal = Math.max(1, Math.min(rect.width, rect.height) * 0.72);
+  const screenX = rect.width * 0.5 +
+    dot3(relative, basis.right) * focal / safeDepth;
+  const screenY = rect.height * 0.5 -
+    dot3(relative, basis.up) * focal / safeDepth;
+  const normalizedDepth = Math.min(
+    1,
+    Math.max(
+      0,
+      (viewDepth - input.camera.near) /
+        (input.camera.far - input.camera.near)
+    )
+  );
+
+  return deepFreeze({
+    nodeId: input.nodeId,
+    worldRevision: input.worldRevision,
+    screenX,
+    screenY,
     radiusPx: Math.max(24, Math.min(54, focal * 0.16 / safeDepth)),
-    visible: viewDepth > camera.near && viewDepth < camera.far
+    viewDepth,
+    normalizedDepth,
+    visible:
+      viewDepth >= input.camera.near &&
+      viewDepth <= input.camera.far
   });
 }
 
@@ -91,73 +125,101 @@ function renderFrame(snapshot) {
   visualLayer.replaceChildren();
   semanticLayer.replaceChildren();
 
-  snapshot.records.forEach(record => {
-    const visual = document.createElement("span");
-    visual.className = "reference-node-visual";
-    visual.dataset.depth = record.depthLayer;
-    visual.style.left = `${record.x}px`;
-    visual.style.top = `${record.y}px`;
-    visual.style.setProperty("--node-size", `${Math.max(34, record.radiusPx * 1.15)}px`);
-    visualLayer.append(visual);
+  snapshot.records.forEach(composite => {
+    const { world, visual, projection } = composite;
+    if (!projection.visible || !visual.visible) return;
+
+    const visualElement = document.createElement("span");
+    visualElement.className = "reference-node-visual";
+    visualElement.dataset.depth = projection.depthLayer;
+    visualElement.style.left = `${projection.screenX}px`;
+    visualElement.style.top = `${projection.screenY}px`;
+    visualElement.style.opacity = String(visual.opacity);
+    visualElement.style.setProperty(
+      "--node-size",
+      `${Math.max(34, projection.radiusPx * 1.15 * visual.scale)}px`
+    );
+    visualLayer.append(visualElement);
 
     const control = document.createElement("button");
     control.type = "button";
     control.className = "reference-node-control";
-    control.dataset.nodeId = record.id;
-    control.style.left = `${record.x}px`;
-    control.style.top = `${record.y}px`;
-    control.textContent = record.semantic.label;
-    control.setAttribute("aria-label", `${record.semantic.label}. ${record.semantic.description}`);
-    control.setAttribute("aria-pressed", String(controller.getState().selectedId === record.id));
+    control.dataset.nodeId = composite.id;
+    control.style.left = `${projection.screenX}px`;
+    control.style.top = `${projection.screenY}px`;
+    control.textContent = world.semantic.label;
+    control.setAttribute(
+      "aria-label",
+      `${world.semantic.label}. ${world.semantic.description}`
+    );
+    control.setAttribute(
+      "aria-pressed",
+      String(controller.getState().selectedId === composite.id)
+    );
     control.addEventListener("click", () => {
-      controller.select(record.id);
-      navigationReceipt = controller.navigate(record.routeKey);
+      controller.select(composite.id);
+      navigationReceipt = controller.navigate(world.routeKey);
       refresh("semantic-select");
     });
     semanticLayer.append(control);
   });
 
-  return Object.freeze({ renderedRecordCount: snapshot.records.length });
+  return deepFreeze({ renderedRecordCount: snapshot.records.length });
 }
 
-const routes = Object.freeze(Object.fromEntries(
+const routes = deepFreeze(Object.fromEntries(
   definitions.map(definition => [definition.routeKey, `#${definition.id}`])
 ));
 
 const adapters = createAdapters({
   routes,
+  navigationEffect: NAVIGATION_EFFECT.LOCAL_RECEIPT,
   navigate(route) {
-    return Object.freeze({ accepted: true, mode: "LOCAL_FRAGMENT_RECEIPT_ONLY", route });
+    return deepFreeze({
+      accepted: true,
+      mode: "LOCAL_FRAGMENT_RECEIPT_ONLY",
+      route
+    });
   },
   projectWorldPoint,
   renderFrame,
   semanticPublisher(snapshot) {
-    return Object.freeze({ published: true, recordCount: snapshot.records.length });
+    return deepFreeze({
+      published: true,
+      recordCount: snapshot.records.length,
+      worldRevision: snapshot.worldRevision
+    });
   }
 });
 
-world = createWorldAuthority({ profile: NEUTRAL_REFERENCE_PROFILE, nodes });
-compositor = createCompositor({ profile: NEUTRAL_REFERENCE_PROFILE, adapters, nodes });
-controller = createCompassController({ profile: NEUTRAL_REFERENCE_PROFILE, adapters, nodes });
-interactions = createInteractionAuthority({ profile: NEUTRAL_REFERENCE_PROFILE, controller, compositor });
-
-function validateClusterRecords() {
-  const snapshot = world.evaluate({
-    presentation: PRESENTATION.CLUSTER,
-    orientation: [0, 0, 0, 1]
-  });
-  const uniqueIds = new Set(snapshot.records.map(record => record.id));
-  clusterValidation = Object.freeze({
-    recordCount: snapshot.records.length,
-    uniqueIdCount: uniqueIds.size,
-    finiteWorldPositions: snapshot.records.every(record => record.worldPosition.every(Number.isFinite)),
-    publicControllerTransitionAvailable: typeof controller.setPresentation === "function"
-  });
-}
+const world = createWorldAuthority({
+  profile: NEUTRAL_REFERENCE_PROFILE,
+  nodes
+});
+const compositor = createCompositor({
+  profile: NEUTRAL_REFERENCE_PROFILE,
+  adapters
+});
+const controller = createCompassController({
+  profile: NEUTRAL_REFERENCE_PROFILE,
+  adapters,
+  nodes,
+  world
+});
+const interactions = createInteractionAuthority({
+  profile: NEUTRAL_REFERENCE_PROFILE,
+  controller,
+  compositor,
+  world,
+  reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+});
 
 function refresh(action = "refresh") {
   const state = controller.getState();
-  latestWorld = world.evaluate({ presentation: state.presentation, orientation: state.orientation });
+  latestWorld = world.evaluate({
+    presentation: state.presentation,
+    orientation: state.orientation
+  });
   latestProjection = compositor.project(latestWorld);
   compositor.render(latestProjection);
   adapters.publishSemantic(latestProjection);
@@ -166,25 +228,86 @@ function refresh(action = "refresh") {
   outputs.presentation.textContent = state.presentation;
   outputs.primary.textContent = latestWorld.primaryId || "None";
   outputs.worldRevision.textContent = String(latestWorld.worldRevision);
-  outputs.projectionRevision.textContent = String(latestProjection.projectionRevision);
+  outputs.projectionRevision.textContent = String(
+    latestProjection.projectionRevision
+  );
   outputs.controllerRevision.textContent = String(state.revision);
   statusOutput.textContent = state.held ? "HELD" : state.orientationPhase;
 
-  const receipt = Object.freeze({
+  constellationButton.disabled =
+    state.held || state.presentation === PRESENTATION.CONSTELLATION;
+  clusterButton.disabled =
+    state.held || state.presentation === PRESENTATION.CLUSTER;
+  holdButton.textContent = state.held ? "Leave held state" : "Enter held state";
+  holdButton.setAttribute("aria-pressed", String(state.held));
+  reducedMotionButton.textContent = interactions.getReducedMotion()
+    ? "Reduced motion: on"
+    : "Reduced motion: off";
+  reducedMotionButton.setAttribute(
+    "aria-pressed",
+    String(interactions.getReducedMotion())
+  );
+
+  const receipt = deepFreeze({
     action,
     modelStatus: "CANDIDATE_NOT_ADMITTED",
+    presentation: state.presentation,
+    held: state.held,
     controllerPrimaryId: state.primaryId,
     worldPrimaryId: latestWorld.primaryId,
-    primaryAgreement: !state.primaryId || state.primaryId === latestWorld.primaryId,
+    primaryAgreement:
+      !state.primaryId || state.primaryId === latestWorld.primaryId,
     selectedId: state.selectedId,
     navigationReceipt,
-    clusterValidation,
+    lastInteractionReceipt,
+    publicCorridorReceipt,
     adapterReceipt: adapters.receipt(),
     optionalCapabilities: NEUTRAL_REFERENCE_PROFILE.optionalCapabilities,
     productionAuthority: false
   });
+
   receiptOutput.textContent = JSON.stringify(receipt);
   root.dataset.referenceStatus = "ready";
+}
+
+function transitionPresentation(presentation) {
+  if (presentation === PRESENTATION.CLUSTER) {
+    controller.openCluster();
+  } else {
+    controller.returnToConstellation();
+  }
+}
+
+function executePublicCorridor() {
+  const initial = controller.getState();
+  controller.openCluster();
+  const clusterState = controller.getState();
+  const clusterSnapshot = world.evaluate({
+    presentation: clusterState.presentation,
+    orientation: clusterState.orientation
+  });
+  controller.returnToConstellation();
+  const restored = controller.getState();
+  const constellationSnapshot = world.evaluate({
+    presentation: restored.presentation,
+    orientation: restored.orientation
+  });
+
+  publicCorridorReceipt = deepFreeze({
+    schema: "NEUTRAL_REFERENCE_PUBLIC_CORRIDOR_RECEIPT_v1",
+    initialPresentation: initial.presentation,
+    clusterPresentation: clusterState.presentation,
+    clusterRecordCount: clusterSnapshot.records.length,
+    restoredPresentation: restored.presentation,
+    constellationRecordCount: constellationSnapshot.records.length,
+    privateMutationUsed: false,
+    pass:
+      initial.presentation === PRESENTATION.CONSTELLATION &&
+      clusterState.presentation === PRESENTATION.CLUSTER &&
+      clusterSnapshot.records.length === 4 &&
+      restored.presentation === PRESENTATION.CONSTELLATION &&
+      constellationSnapshot.records.length === 4
+  });
 }
 
 controller.subscribe(() => refresh("controller-publication"));
@@ -198,27 +321,73 @@ function pointerKind(event) {
 field.addEventListener("pointerdown", event => {
   if (event.button !== 0) return;
   field.setPointerCapture(event.pointerId);
-  interactions.begin({ id: event.pointerId, kind: pointerKind(event), x: event.clientX, y: event.clientY });
+  lastInteractionReceipt = interactions.begin({
+    id: event.pointerId,
+    kind: pointerKind(event),
+    x: event.clientX,
+    y: event.clientY,
+    timestamp: event.timeStamp,
+    targetId: event.target.closest("[data-node-id]")?.dataset.nodeId || ""
+  });
+  refresh("pointer-begin");
 });
 
 field.addEventListener("pointermove", event => {
   if (!interactions.getActive()) return;
-  interactions.move({ id: event.pointerId, x: event.clientX, y: event.clientY });
+  lastInteractionReceipt = interactions.move({
+    id: event.pointerId,
+    x: event.clientX,
+    y: event.clientY,
+    timestamp: event.timeStamp
+  });
+  refresh("pointer-move");
 });
 
 function endPointer(event, cancel = false) {
   if (!interactions.getActive()) return;
-  interactions.end({ id: event.pointerId }, { cancel });
-  if (field.hasPointerCapture(event.pointerId)) field.releasePointerCapture(event.pointerId);
+  lastInteractionReceipt = interactions.end(
+    {
+      id: event.pointerId,
+      timestamp: event.timeStamp
+    },
+    { cancel }
+  );
+  if (field.hasPointerCapture(event.pointerId)) {
+    field.releasePointerCapture(event.pointerId);
+  }
+  refresh(cancel ? "pointer-cancel" : "pointer-end");
 }
 
 field.addEventListener("pointerup", event => endPointer(event, false));
 field.addEventListener("pointercancel", event => endPointer(event, true));
-window.addEventListener("blur", () => interactions.interrupt("window-blur"));
+window.addEventListener("blur", () => {
+  lastInteractionReceipt = interactions.interrupt("window-blur");
+  refresh("window-blur");
+});
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) interactions.interrupt("document-hidden");
+  if (!document.hidden) return;
+  lastInteractionReceipt = interactions.interrupt("document-hidden");
+  refresh("document-hidden");
 });
 window.addEventListener("resize", () => refresh("resize"));
 
-validateClusterRecords();
+constellationButton.addEventListener("click", () => {
+  transitionPresentation(PRESENTATION.CONSTELLATION);
+});
+clusterButton.addEventListener("click", () => {
+  transitionPresentation(PRESENTATION.CLUSTER);
+});
+holdButton.addEventListener("click", () => {
+  if (controller.getState().held) {
+    controller.leaveHeld();
+  } else {
+    controller.enterHeld("neutral-reference-control");
+  }
+});
+reducedMotionButton.addEventListener("click", () => {
+  interactions.setReducedMotion(!interactions.getReducedMotion());
+  refresh("reduced-motion-toggle");
+});
+
+executePublicCorridor();
 refresh("initialize");

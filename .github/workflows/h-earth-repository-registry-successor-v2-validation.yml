@@ -1,13 +1,7 @@
-# Corrected successor validation trigger 2026-07-23.
 name: H-Earth Registry Successor v2 Validation
 
 on:
   pull_request:
-    paths:
-      - 'h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js'
-      - 'h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json'
-      - 'tools/h-earth-repository-registry-successor-v2-audit.mjs'
-      - '.github/workflows/h-earth-repository-registry-successor-v2-validation.yml'
   push:
     branches:
       - 'agent/h-earth-gate-b-post-guardrail-evaluation-001'
@@ -23,27 +17,34 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validate deterministic successor candidate
-        run: node tools/h-earth-repository-registry-successor-v2-audit.mjs
-      - name: Run Target 2 registry regression
-        run: node tools/h-earth-repository-registry-audit.mjs
-      - name: Run Target 3 instruction regression
-        run: node tools/h-earth-repository-registry-target-3-audit.mjs
-      - name: Run Target 4A contract regression
-        run: node tools/h-earth-repository-registry-target-4a-contract-audit.mjs
-      - name: Run Target 4B engine regression
-        run: node tools/h-earth-repository-registry-target-4b-audit.mjs
-      - name: Run Target 4C static regression
-        run: node tools/h-earth-repository-registry-target-4c-static-audit.mjs
-      - name: Run Target 4C fixture regression
-        run: node tools/h-earth-repository-registry-target-4c-audit.mjs
-      - name: Run Target 4E static regression
-        run: node tools/h-earth-repository-registry-target-4e-static-audit.mjs
-      - name: Run Target 4E systemic regression
-        run: node tools/h-earth-repository-registry-target-4e-audit.mjs
-      - name: Upload validation receipt
+      - name: Execute successor validation and full regression corridor
+        run: |
+          mkdir -p artifacts/successor-v2-regression
+          set +e
+          commands=(
+            "node tools/h-earth-repository-registry-successor-v2-audit.mjs"
+            "node tools/h-earth-repository-registry-audit.mjs"
+            "node tools/h-earth-repository-registry-target-3-audit.mjs"
+            "node tools/h-earth-repository-registry-target-4a-contract-audit.mjs"
+            "node tools/h-earth-repository-registry-target-4b-audit.mjs"
+            "node tools/h-earth-repository-registry-target-4c-static-audit.mjs"
+            "node tools/h-earth-repository-registry-target-4c-audit.mjs"
+            "node tools/h-earth-repository-registry-target-4e-static-audit.mjs"
+            "node tools/h-earth-repository-registry-target-4e-audit.mjs"
+          )
+          names=(successor target2 target3 target4a target4b target4c-static target4c-fixtures target4e-static target4e-systemic)
+          overall=0
+          : > artifacts/successor-v2-regression/summary.txt
+          for i in "${!commands[@]}"; do
+            bash -lc "${commands[$i]}" > "artifacts/successor-v2-regression/${names[$i]}.log" 2>&1
+            code=$?
+            echo "${names[$i]}=$code" | tee -a artifacts/successor-v2-regression/summary.txt
+            if [ "$code" -ne 0 ]; then overall=1; fi
+          done
+          exit "$overall"
+      - name: Upload validation diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-registry-successor-v2-validation-receipt
-          path: artifacts/h-earth.repository-registry.successor-v2-validation-receipt.json
+          name: h-earth-registry-successor-v2-full-validation
+          path: artifacts/

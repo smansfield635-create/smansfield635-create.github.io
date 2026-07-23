@@ -1,9 +1,13 @@
 name: H-Earth Gate B Seven-File Verification
 
 on:
-  push:
+  pull_request:
     branches:
       - agent/h-earth-gate-b-seven-file-verification-001
+    types:
+      - opened
+      - reopened
+      - synchronize
   workflow_dispatch:
 
 permissions:
@@ -11,9 +15,10 @@ permissions:
 
 jobs:
   verify:
+    if: github.event_name == 'workflow_dispatch' || github.base_ref == 'agent/h-earth-gate-b-seven-file-verification-001'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout exact verification branch
+      - name: Checkout exact trigger head
         uses: actions/checkout@v4
         with:
           fetch-depth: 0

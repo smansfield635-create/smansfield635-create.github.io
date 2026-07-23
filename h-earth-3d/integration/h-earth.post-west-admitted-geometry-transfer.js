@@ -9,9 +9,9 @@
  * PROVISIONAL_POST_WEST_ADMITTED_GEOMETRY_TRANSFER
  *
  * Purpose:
- * Preserve one lawful post-West admitted-geometry occurrence as a provisional,
- * fail-closed transfer envelope without inventing geometry-index, compositor,
- * or renderer authority.
+ * Preserve one lawful legacy or Gate B post-West admitted-geometry occurrence
+ * as a provisional, fail-closed shared transfer envelope without inventing
+ * geometry-index, compositor, or renderer authority.
  *
  * Corridor:
  * Packet 001 source resolution
@@ -20,7 +20,10 @@
  * -> South neutral geometry construction
  * -> West primitive admission
  * -> West aggregate-frame admission
- * -> Packet 002 provisional admitted-geometry transfer
+ * -> shared Packet 002 provisional admitted-geometry transfer
+ *
+ * Additive Gate B corridor:
+ * Gate B provider -> Gate B West-admission adapter -> shared Packet 002
  *
  * This file owns:
  * - post-West transfer input validation
@@ -61,8 +64,25 @@ import {
   isHEarthGeometryToleranceContext
 } from '../../showroom/globe/h-earth/render/geometry-kernel.js';
 
+import {
+  H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_CONTRACT_ID,
+  H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS,
+  H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,
+  isHEarthGroundViewGateBWestAdmissionAdapterOccurrence
+} from './h-earth.ground-view-gate-b-west-admission-adapter.js';
+
 export const H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID =
   'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_FILE_BIRTH_PACKET_002_PROVISIONAL_HANDOFF_v1';
+
+export const H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_SCHEMA_VERSION = 2;
+
+export const H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES =
+  Object.freeze({
+    LEGACY_PREVIEW_WEST_BATCH:
+      'LEGACY_PREVIEW_WEST_BATCH',
+    GATE_B_ADAPTER_OCCURRENCE:
+      'GATE_B_ADAPTER_OCCURRENCE'
+  });
 
 const SOURCE_FILE =
   '/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js';
@@ -90,6 +110,25 @@ const CONSUMED_WEST_ENUM_VALUES = Object.freeze({
       .aggregateFrameStatus
       .ADMITTED
 });
+
+const GATE_B_PRIMITIVE_ORDER = Object.freeze([
+  H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.terrain,
+  H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.water,
+  H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.diagnosticRibbon
+]);
+
+const GATE_B_PROVENANCE_MODE =
+  'GATE_B_PER_PRIMITIVE_APPLICABILITY';
+
+const GATE_B_PROVENANCE_COMPLETENESS =
+  'EXPLICIT_SEMANTIC_CORRESPONDENCE_ONLY_NO_SYNTHESIS';
+
+const ALL_TRANSFER_INPUT_KEYS = Object.freeze([
+  'previewResult',
+  'westBatchAdmissionResult',
+  'gateBAdapterOccurrence',
+  'toleranceContext'
+]);
 
 function isPlainRecord(value) {
   return (
@@ -125,6 +164,72 @@ function arraysEqual(left, right) {
     Array.isArray(right) &&
     left.length === right.length &&
     left.every((value, index) => value === right[index])
+  );
+}
+
+function hasOwn(value, key) {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function exactOrderedArray(value, expected) {
+  return (
+    Array.isArray(value) &&
+    Array.isArray(expected) &&
+    value.length === expected.length &&
+    value.every((entry, index) => entry === expected[index])
+  );
+}
+
+function isDeeplyFrozen(value, seen = new WeakSet()) {
+  if (value === null || typeof value !== 'object') {
+    return true;
+  }
+
+  if (seen.has(value)) {
+    return true;
+  }
+
+  if (!Object.isFrozen(value)) {
+    return false;
+  }
+
+  seen.add(value);
+
+  return Reflect.ownKeys(value).every((key) =>
+    isDeeplyFrozen(value[key], seen)
+  );
+}
+
+function structurallyEqual(left, right, seen = new WeakMap()) {
+  if (Object.is(left, right)) {
+    return true;
+  }
+
+  if (
+    left === null ||
+    right === null ||
+    typeof left !== 'object' ||
+    typeof right !== 'object' ||
+    Array.isArray(left) !== Array.isArray(right)
+  ) {
+    return false;
+  }
+
+  if (seen.get(left) === right) {
+    return true;
+  }
+
+  seen.set(left, right);
+
+  const leftKeys = Reflect.ownKeys(left);
+  const rightKeys = Reflect.ownKeys(right);
+
+  return (
+    leftKeys.length === rightKeys.length &&
+    leftKeys.every((key, index) =>
+      key === rightKeys[index] &&
+      structurallyEqual(left[key], right[key], seen)
+    )
   );
 }
 
@@ -1342,6 +1447,365 @@ function validateWestBatchAdmissionResult({
   });
 }
 
+function detectTransferMode(input) {
+  const hasGateB =
+    hasOwn(input, 'gateBAdapterOccurrence');
+
+  const hasLegacy =
+    hasOwn(input, 'previewResult') ||
+    hasOwn(input, 'westBatchAdmissionResult');
+
+  if (hasGateB && hasLegacy) {
+    return Object.freeze({
+      ok: false,
+      transferMode: null,
+      issues: freezeIssues([
+        {
+          code: 'MIXED_TRANSFER_MODES_REJECTED',
+          message:
+            'Packet 002 rejects mixed legacy and Gate B input surfaces.'
+        }
+      ])
+    });
+  }
+
+  return Object.freeze({
+    ok: true,
+    transferMode:
+      hasGateB
+        ? H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES
+            .GATE_B_ADAPTER_OCCURRENCE
+        : H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES
+            .LEGACY_PREVIEW_WEST_BATCH,
+    issues: EMPTY_FROZEN_ARRAY
+  });
+}
+
+function deriveGateBExplicitSourceObjectIds(
+  provenanceApplicability
+) {
+  return canonicalUniqueStrings(
+    provenanceApplicability.flatMap((record) =>
+      Array.isArray(record?.semanticObjectCorrespondenceIds)
+        ? record.semanticObjectCorrespondenceIds
+        : []
+    )
+  );
+}
+
+function deriveGateBExplicitSourceZoneIds(
+  provenanceApplicability
+) {
+  return canonicalUniqueStrings(
+    provenanceApplicability.flatMap((record) =>
+      Array.isArray(record?.semanticZoneCorrespondenceIds)
+        ? record.semanticZoneCorrespondenceIds
+        : []
+    )
+  );
+}
+
+function validateGateBAdapterOccurrence({
+  gateBAdapterOccurrence,
+  toleranceContext
+}) {
+  const issues = [];
+  const adapter = gateBAdapterOccurrence;
+
+  if (
+    !isHEarthGroundViewGateBWestAdmissionAdapterOccurrence(
+      adapter
+    )
+  ) {
+    issues.push({
+      code: 'GATE_B_ADAPTER_OCCURRENCE_INVALID',
+      message:
+        'gateBAdapterOccurrence must satisfy the public Gate B adapter validator.',
+      field: 'gateBAdapterOccurrence'
+    });
+
+    return Object.freeze({
+      ok: false,
+      issues: freezeIssues(issues),
+      adapter: null,
+      admittedPrimitives: EMPTY_FROZEN_ARRAY,
+      frame: null,
+      frameId: null,
+      bounds: null,
+      primitiveOrder: GATE_B_PRIMITIVE_ORDER,
+      provenanceApplicability:
+        H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,
+      sourceObjectIds: EMPTY_FROZEN_ARRAY,
+      sourceZoneIds: EMPTY_FROZEN_ARRAY,
+      latticeRegionIds: EMPTY_FROZEN_ARRAY
+    });
+  }
+
+  if (
+    adapter.contractId !==
+    H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_CONTRACT_ID
+  ) {
+    issues.push({
+      code: 'GATE_B_ADAPTER_CONTRACT_MISMATCH',
+      message:
+        'Gate B adapter occurrence contract identity is invalid.',
+      expected:
+        H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_CONTRACT_ID,
+      actual:
+        adapter.contractId ?? null
+    });
+  }
+
+  if (
+    adapter.westContractId !==
+    H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID
+  ) {
+    issues.push({
+      code: 'GATE_B_ADAPTER_WEST_CONTRACT_MISMATCH',
+      message:
+        'Gate B adapter occurrence does not consume the controlling shared West contract.',
+      expected:
+        H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID,
+      actual:
+        adapter.westContractId ?? null
+    });
+  }
+
+  const admittedPrimitives =
+    Array.isArray(adapter.admittedPrimitives)
+      ? adapter.admittedPrimitives
+      : EMPTY_FROZEN_ARRAY;
+
+  const frame =
+    adapter.aggregateFrameAdmissionRecord ?? null;
+
+  const aggregatePrimitives =
+    Array.isArray(frame?.primitives)
+      ? frame.primitives
+      : EMPTY_FROZEN_ARRAY;
+
+  const standaloneIds =
+    admittedPrimitives.map(extractPrimitiveIdentity);
+
+  const aggregateIds =
+    aggregatePrimitives.map(extractPrimitiveIdentity);
+
+  if (
+    !exactOrderedArray(
+      adapter.primitiveOrder,
+      GATE_B_PRIMITIVE_ORDER
+    ) ||
+    !exactOrderedArray(
+      standaloneIds,
+      GATE_B_PRIMITIVE_ORDER
+    ) ||
+    !exactOrderedArray(
+      aggregateIds,
+      GATE_B_PRIMITIVE_ORDER
+    )
+  ) {
+    issues.push({
+      code: 'GATE_B_PRIMITIVE_ORDER_INVALID',
+      message:
+        'Gate B adapter occurrence must preserve exact terrain-water-ribbon primitive order.'
+    });
+  }
+
+  if (
+    admittedPrimitives.length !== 3 ||
+    admittedPrimitives.some((primitive) =>
+      !isHEarthAdmittedPrimitiveRecord(primitive) ||
+      primitive.aggregateFrameMember !== false
+    )
+  ) {
+    issues.push({
+      code: 'GATE_B_STANDALONE_WEST_RECORDS_INVALID',
+      message:
+        'Gate B standalone West records must be three lawful non-frame-member admitted primitives.'
+    });
+  }
+
+  if (
+    aggregatePrimitives.length !== 3 ||
+    aggregatePrimitives.some((primitive) =>
+      !isHEarthAdmittedPrimitiveRecord({
+        ...primitive,
+        aggregateFrameMember: false
+      }) ||
+      primitive.aggregateFrameMember !== true
+    )
+  ) {
+    issues.push({
+      code: 'GATE_B_AGGREGATE_MEMBER_RECORDS_INVALID',
+      message:
+        'Gate B aggregate-frame members must be three lawful admitted member records.'
+    });
+  }
+
+  if (!isHEarthAggregateFrameAdmissionRecord(frame)) {
+    issues.push({
+      code: 'GATE_B_AGGREGATE_FRAME_INVALID',
+      message:
+        'Gate B adapter occurrence must preserve one lawful West aggregate frame.'
+    });
+  }
+
+  const frameId =
+    isNonEmptyString(frame?.frameId)
+      ? frame.frameId.trim()
+      : null;
+
+  if (
+    !frameId ||
+    frameId !== adapter.aggregateFrameId
+  ) {
+    issues.push({
+      code: 'GATE_B_AGGREGATE_FRAME_IDENTITY_MISMATCH',
+      message:
+        'Gate B adapter aggregateFrameId must match the exact West frame identity.',
+      expected:
+        adapter.aggregateFrameId ?? null,
+      actual:
+        frameId
+    });
+  }
+
+  const bounds = frame?.bounds ?? null;
+
+  if (
+    !isHEarthAABB3D(
+      bounds,
+      toleranceContext ?? undefined
+    ) ||
+    bounds?.empty !== false
+  ) {
+    issues.push({
+      code: 'GATE_B_BOUNDS_INVALID',
+      message:
+        'Gate B aggregate-frame bounds must be a lawful nonempty public AABB.'
+    });
+  }
+
+  if (
+    adapter.toleranceContext !== toleranceContext &&
+    !structurallyEqual(
+      adapter.toleranceContext,
+      toleranceContext
+    )
+  ) {
+    issues.push({
+      code: 'GATE_B_TOLERANCE_CORRESPONDENCE_INVALID',
+      message:
+        'Packet 002 toleranceContext must correspond exactly to the completed adapter occurrence.'
+    });
+  }
+
+  if (
+    adapter.provenanceApplicability !==
+      H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY ||
+    !isDeeplyFrozen(adapter.provenanceApplicability) ||
+    !exactOrderedArray(
+      adapter.provenanceApplicability.map(
+        (record) => record?.primitiveId
+      ),
+      GATE_B_PRIMITIVE_ORDER
+    ) ||
+    adapter.provenanceApplicability.some(
+      (record) => record?.synthesisProhibited !== true
+    )
+  ) {
+    issues.push({
+      code: 'GATE_B_PROVENANCE_APPLICABILITY_INVALID',
+      message:
+        'Gate B provenance must be the exact ordered no-synthesis applicability ledger.'
+    });
+  }
+
+  for (
+    let index = 0;
+    index < Math.min(
+      admittedPrimitives.length,
+      aggregatePrimitives.length,
+      GATE_B_PRIMITIVE_ORDER.length
+    );
+    index += 1
+  ) {
+    const standalone = admittedPrimitives[index];
+    const aggregateMember = aggregatePrimitives[index];
+
+    if (
+      standalone.primitiveId !== aggregateMember.primitiveId ||
+      standalone.admissionId !== aggregateMember.admissionId ||
+      !structurallyEqual(
+        standalone.geometry,
+        aggregateMember.geometry
+      )
+    ) {
+      issues.push({
+        code: 'GATE_B_STANDALONE_AGGREGATE_CORRESPONDENCE_INVALID',
+        message:
+          'Gate B standalone and aggregate-member West records are not structurally correspondent.',
+        details: GATE_B_PRIMITIVE_ORDER[index]
+      });
+    }
+  }
+
+  if (
+    adapter.westBatchAdmissionInvocationCount !== 1 ||
+    adapter.provenanceSynthesized !== false ||
+    adapter.exactWestReferencesPreserved !== true ||
+    adapter.geometryIdentityPreserved !== true ||
+    adapter.outputDeeplyFrozen !== true
+  ) {
+    issues.push({
+      code: 'GATE_B_ADAPTER_BOUNDARY_FLAGS_INVALID',
+      message:
+        'Gate B adapter boundary and preservation flags are invalid.'
+    });
+  }
+
+  for (const field of [
+    'geometryIndexEntryId',
+    'compositorNodeId',
+    'renderInstanceId'
+  ]) {
+    if (
+      adapter[field] !== undefined &&
+      adapter[field] !== null
+    ) {
+      issues.push({
+        code: 'GATE_B_PREMATURE_DOWNSTREAM_IDENTITY',
+        message:
+          'Gate B adapter occurrence must not introduce downstream identity.',
+        field
+      });
+    }
+  }
+
+  return Object.freeze({
+    ok: issues.length === 0,
+    issues: freezeIssues(issues),
+    adapter,
+    admittedPrimitives,
+    frame,
+    frameId,
+    bounds,
+    primitiveOrder: GATE_B_PRIMITIVE_ORDER,
+    provenanceApplicability:
+      H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,
+    sourceObjectIds:
+      deriveGateBExplicitSourceObjectIds(
+        H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY
+      ),
+    sourceZoneIds:
+      deriveGateBExplicitSourceZoneIds(
+        H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY
+      ),
+    latticeRegionIds:
+      EMPTY_FROZEN_ARRAY
+  });
+}
+
 export function evaluateHEarthPostWestAdmittedGeometryTransferInput(
   input
 ) {
@@ -1352,6 +1816,7 @@ export function evaluateHEarthPostWestAdmittedGeometryTransferInput(
       ok: false,
       status:
         'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_INPUT_REJECTED',
+      transferMode: null,
       issues: freezeIssues([
         {
           code: 'TRANSFER_INPUT_NOT_PLAIN_RECORD',
@@ -1362,14 +1827,8 @@ export function evaluateHEarthPostWestAdmittedGeometryTransferInput(
     });
   }
 
-  const allowedKeys = Object.freeze([
-    'previewResult',
-    'westBatchAdmissionResult',
-    'toleranceContext'
-  ]);
-
   const allowedKeySet =
-    new Set(allowedKeys);
+    new Set(ALL_TRANSFER_INPUT_KEYS);
 
   for (const key of Object.keys(input)) {
     if (!allowedKeySet.has(key)) {
@@ -1382,12 +1841,70 @@ export function evaluateHEarthPostWestAdmittedGeometryTransferInput(
     }
   }
 
+  const modeEvaluation =
+    detectTransferMode(input);
+
+  issues.push(...modeEvaluation.issues);
+
   const toleranceValidation =
     validateToleranceContext(
       input.toleranceContext
     );
 
   issues.push(...toleranceValidation.issues);
+
+  if (!modeEvaluation.ok) {
+    return Object.freeze({
+      ok: false,
+
+      status:
+        'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_INPUT_REJECTED',
+
+      transferMode: null,
+
+      toleranceValidation,
+      previewValidation: null,
+      westBatchValidation: null,
+      gateBAdapterValidation: null,
+
+      issues: freezeIssues(issues)
+    });
+  }
+
+  if (
+    modeEvaluation.transferMode ===
+    H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES
+      .GATE_B_ADAPTER_OCCURRENCE
+  ) {
+    const gateBAdapterValidation =
+      validateGateBAdapterOccurrence({
+        gateBAdapterOccurrence:
+          input.gateBAdapterOccurrence,
+        toleranceContext:
+          toleranceValidation.normalizedValue
+      });
+
+    issues.push(...gateBAdapterValidation.issues);
+
+    return Object.freeze({
+      ok: issues.length === 0,
+
+      status:
+        issues.length === 0
+          ? 'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_INPUT_ACCEPTED'
+          : 'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_INPUT_REJECTED',
+
+      transferMode:
+        modeEvaluation.transferMode,
+
+      toleranceValidation,
+      previewValidation: null,
+      westBatchValidation: null,
+      gateBAdapterValidation,
+
+      issues: freezeIssues(issues)
+    });
+  }
 
   const previewValidation =
     validatePreviewResult(
@@ -1415,11 +1932,263 @@ export function evaluateHEarthPostWestAdmittedGeometryTransferInput(
         ? 'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_INPUT_ACCEPTED'
         : 'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_INPUT_REJECTED',
 
+    transferMode:
+      H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES
+        .LEGACY_PREVIEW_WEST_BATCH,
+
     toleranceValidation,
     previewValidation,
     westBatchValidation,
+    gateBAdapterValidation: null,
 
     issues: freezeIssues(issues)
+  });
+}
+
+function buildGateBTransferFromEvaluation(
+  inputEvaluation
+) {
+  const {
+    toleranceValidation,
+    gateBAdapterValidation
+  } = inputEvaluation;
+
+  const adapter =
+    gateBAdapterValidation.adapter;
+
+  const admittedPrimitivesSnapshot =
+    snapshotForTransfer(
+      gateBAdapterValidation.admittedPrimitives,
+      'admittedPrimitives'
+    );
+
+  const frameSnapshot =
+    snapshotForTransfer(
+      gateBAdapterValidation.frame,
+      'aggregateFrameAdmissionRecord'
+    );
+
+  const boundsSnapshot =
+    snapshotForTransfer(
+      gateBAdapterValidation.bounds,
+      'bounds'
+    );
+
+  const primitiveOrderSnapshot =
+    snapshotForTransfer(
+      gateBAdapterValidation.primitiveOrder,
+      'primitiveOrder'
+    );
+
+  const provenanceSnapshot =
+    snapshotForTransfer(
+      gateBAdapterValidation.provenanceApplicability,
+      'primitiveProvenanceApplicability'
+    );
+
+  const toleranceSnapshot =
+    toleranceValidation.normalizedValue === null
+      ? {
+          ok: true,
+          value: null
+        }
+      : snapshotForTransfer(
+          toleranceValidation.normalizedValue,
+          'toleranceContext'
+        );
+
+  for (const candidate of [
+    admittedPrimitivesSnapshot,
+    frameSnapshot,
+    boundsSnapshot,
+    primitiveOrderSnapshot,
+    provenanceSnapshot,
+    toleranceSnapshot
+  ]) {
+    if (!candidate.ok) {
+      return Object.freeze({
+        ok: false,
+        status:
+          'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_REJECTED',
+        contractId:
+          H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID,
+        issues: freezeIssues([
+          candidate.error
+        ])
+      });
+    }
+  }
+
+  const admittedPrimitives =
+    admittedPrimitivesSnapshot.value;
+
+  const aggregateFrameAdmissionRecord =
+    frameSnapshot.value;
+
+  const aggregatePrimitives =
+    aggregateFrameAdmissionRecord.primitives;
+
+  const correspondence =
+    deepFreeze(
+      primitiveOrderSnapshot.value.map(
+        (primitiveId, index) => ({
+          primitiveId,
+          standaloneOrdinal: index,
+          aggregateOrdinal: index,
+          standaloneAggregateMember:
+            admittedPrimitives[index]
+              .aggregateFrameMember,
+          aggregateFrameMember:
+            aggregatePrimitives[index]
+              .aggregateFrameMember,
+          separateSnapshotAllocation:
+            admittedPrimitives[index] !==
+            aggregatePrimitives[index],
+          geometryStructurallyCorrespondent:
+            structurallyEqual(
+              admittedPrimitives[index].geometry,
+              aggregatePrimitives[index].geometry
+            ),
+          admittedIdentityStructurallyCorrespondent:
+            admittedPrimitives[index].admissionId ===
+            aggregatePrimitives[index].admissionId
+        })
+      )
+    );
+
+  if (
+    admittedPrimitives === aggregatePrimitives ||
+    boundsSnapshot.value ===
+      aggregateFrameAdmissionRecord.bounds ||
+    provenanceSnapshot.value ===
+      gateBAdapterValidation.provenanceApplicability ||
+    correspondence.some((entry) =>
+      entry.standaloneAggregateMember !== false ||
+      entry.aggregateFrameMember !== true ||
+      entry.separateSnapshotAllocation !== true ||
+      entry.geometryStructurallyCorrespondent !== true ||
+      entry.admittedIdentityStructurallyCorrespondent !== true
+    )
+  ) {
+    return Object.freeze({
+      ok: false,
+      status:
+        'H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_REJECTED',
+      contractId:
+        H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID,
+      issues: freezeIssues([
+        {
+          code: 'GATE_B_SNAPSHOT_CORRESPONDENCE_INVALID',
+          message:
+            'Gate B Packet 002 snapshots are not separately allocated and structurally correspondent.'
+        }
+      ])
+    });
+  }
+
+  return deepFreeze({
+    ok: true,
+
+    status:
+      SUCCESS_STATUS,
+
+    contractId:
+      H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID,
+
+    transferMode:
+      H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES
+        .GATE_B_ADAPTER_OCCURRENCE,
+
+    westContractId:
+      H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID,
+
+    requestId:
+      adapter.routeToken,
+
+    providerRequestId:
+      adapter.gateBConstructionOccurrenceId,
+
+    resolutionReceiptId:
+      adapter.deterministicConstructionIdentity,
+
+    sourceObjectIds:
+      gateBAdapterValidation.sourceObjectIds,
+
+    sourceZoneIds:
+      gateBAdapterValidation.sourceZoneIds,
+
+    latticeRegionIds:
+      gateBAdapterValidation.latticeRegionIds,
+
+    gateBAdapterContractId:
+      adapter.contractId,
+
+    gateBAdapterOccurrenceId:
+      adapter.adapterOccurrenceId,
+
+    gateBProviderContractId:
+      adapter.gateBProviderContractId,
+
+    gateBConstructionOccurrenceId:
+      adapter.gateBConstructionOccurrenceId,
+
+    deterministicConstructionIdentity:
+      adapter.deterministicConstructionIdentity,
+
+    analyticalPhysicalDistinction:
+      adapter.analyticalPhysicalDistinction,
+
+    physicalTrianglesEqualExactNonlinearAnalyticalSurface:
+      adapter
+        .physicalTrianglesEqualExactNonlinearAnalyticalSurface,
+
+    primitiveOrder:
+      primitiveOrderSnapshot.value,
+
+    provenanceMode:
+      GATE_B_PROVENANCE_MODE,
+
+    provenanceCompleteness:
+      GATE_B_PROVENANCE_COMPLETENESS,
+
+    primitiveProvenanceApplicability:
+      provenanceSnapshot.value,
+
+    admittedPrimitives,
+
+    aggregateFrameAdmissionRecord,
+
+    standaloneToAggregateMemberCorrespondence:
+      correspondence,
+
+    bounds:
+      boundsSnapshot.value,
+
+    frameId:
+      gateBAdapterValidation.frameId,
+
+    toleranceContext:
+      toleranceSnapshot.value,
+
+    structuralCorrespondenceValidated: true,
+    outputDeeplyFrozen: true,
+
+    geometryIndexAuthority: false,
+    geometryIndexEntryId: null,
+
+    compositorAuthority: false,
+    compositorNodeId: null,
+
+    rendererAuthority: false,
+    renderInstanceCreated: false,
+    renderInstanceId: null,
+
+    provisional: true,
+    downstreamContractFrozen: false,
+    finalDownstreamShapeClaimed: false,
+
+    issues:
+      EMPTY_FROZEN_ARRAY
   });
 }
 
@@ -1441,6 +2210,16 @@ export function buildHEarthPostWestAdmittedGeometryTransfer(
       issues:
         inputEvaluation.issues
     });
+  }
+
+  if (
+    inputEvaluation.transferMode ===
+    H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES
+      .GATE_B_ADAPTER_OCCURRENCE
+  ) {
+    return buildGateBTransferFromEvaluation(
+      inputEvaluation
+    );
   }
 
   const {
@@ -1539,6 +2318,10 @@ export function buildHEarthPostWestAdmittedGeometryTransfer(
     contractId:
       H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID,
 
+    transferMode:
+      H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES
+        .LEGACY_PREVIEW_WEST_BATCH,
+
     westContractId:
       H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID,
 
@@ -1601,10 +2384,17 @@ export function getHEarthPostWestAdmittedGeometryTransferReceipt() {
 export const H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_BOUNDARIES =
   deepFreeze({
     validatesCompletedUpstreamOccurrences: true,
+    supportsMutuallyExclusiveLegacyAndGateBModes: true,
+    rejectsMixedTransferModes: true,
+    validatesGateBWestRecordsBeforeSnapshot: true,
     preservesWestAdmissionResults: true,
     preservesUpstreamProvenance: true,
     constructsImmutableTransferEnvelope: true,
     snapshotsOwnedDataBeforeFreeze: true,
+    createsSeparateGateBStandaloneAndAggregateSnapshots: true,
+    preservesGateBPrimitiveOrder: true,
+    preservesGateBProvenanceApplicability: true,
+    synthesizesGateBProvenance: false,
 
     admitsPrimitives: false,
     admitsAggregateFrames: false,
@@ -1635,6 +2425,12 @@ export const H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT =
     contractId:
       H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID,
 
+    schemaVersion:
+      H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_SCHEMA_VERSION,
+
+    transferModes:
+      H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES,
+
     file:
       SOURCE_FILE,
 
@@ -1649,6 +2445,15 @@ export const H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT =
 
     expectedPreviewContractId:
       EXPECTED_PREVIEW_CONTRACT_ID,
+
+    gateBAdapterContractId:
+      H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_CONTRACT_ID,
+
+    gateBPrimitiveOrder:
+      GATE_B_PRIMITIVE_ORDER,
+
+    gateBProvenanceMode:
+      GATE_B_PROVENANCE_MODE,
 
     consumedWestContractId:
       H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID,
@@ -1682,12 +2487,18 @@ export const H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_RECEIPT =
       SOURCE_FILE,
 
     inputEvaluationDefined: true,
+    explicitTransferModeDiscriminatorDefined: true,
+    mixedModeRejectionDefined: true,
     immutableTransferEnvelopeDefined: true,
     previewValidationDefined: true,
+    gateBAdapterValidationDefined: true,
     westBatchValidationDefined: true,
     primitiveMembershipCorrespondenceDefined: true,
     provenanceCorrespondenceDefined: true,
     boundedSnapshotConstructionDefined: true,
+    separateGateBSnapshotAllocationDefined: true,
+    gateBPrimitiveOrderPreservationDefined: true,
+    gateBProvenanceApplicabilityDefined: true,
     downstreamNonClaimsDefined: true,
 
     geometryIndexAuthority: false,
@@ -1709,6 +2520,12 @@ export const H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_AGGREGATE =
   deepFreeze({
     contractId:
       H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT_ID,
+
+    schemaVersion:
+      H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_SCHEMA_VERSION,
+
+    transferModes:
+      H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_MODES,
 
     contract:
       H_EARTH_POST_WEST_ADMITTED_GEOMETRY_TRANSFER_CONTRACT,

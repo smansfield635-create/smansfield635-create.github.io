@@ -1,0 +1,68 @@
+{
+  "artifactId": "H_EARTH_GATE_B_COMPACT_ARTIFACT_REGISTRY_v1",
+  "status": "COMPLETE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "repositoryBaseCommit": "eceac4d5297b2f087c1cf718e29d79c119c29db1",
+  "driveCanonicalCustodyRetained": true,
+  "completeDocumentReplicationInGitHub": false,
+  "records": [
+    {
+      "artifactId": "H_EARTH_GROUND_VIEW_GATE_B_ADAPTER_AND_PACKET_002_OCCURRENCE_ENVELOPE_CANONICAL_PRE_SOURCE_CONTRACT_v1",
+      "driveFileId": "1b7C-Mz5AySWoHFZPVTIJHfZ1W0DINlNyNSu9TlD6Qj4",
+      "driveAddress": "https://docs.google.com/document/d/1b7C-Mz5AySWoHFZPVTIJHfZ1W0DINlNyNSu9TlD6Qj4",
+      "artifactClass": "CANONICAL_ANALYTICAL_AND_ENGINEERING_PRE_SOURCE_CONTRACT",
+      "sourceSha256": "087d02970a15ca50668d583ba84956dfa3c779e72baec58d19afae999d80428f",
+      "controllingCommit": "43ea853e4ac4cd278ae8d61c40fb2ae7db466e02",
+      "implementationAuthority": "NOT_GRANTED"
+    },
+    {
+      "artifactId": "H_EARTH_GROUND_VIEW_GATE_B_PHASE_A_PACKAGE_CONTRACT_AND_CONSTRUCTION_AUTHORITY_FIXED_PRIMARY_OCCURRENCE_v1",
+      "driveFileId": "1jZzp-3OhDWlponpU6rRSodbYj-a_tqfuDzUJNQrLw-A",
+      "driveAddress": "https://docs.google.com/document/d/1jZzp-3OhDWlponpU6rRSodbYj-a_tqfuDzUJNQrLw-A",
+      "artifactClass": "FIXED_ACCEPTED_PRIMARY_PHASE_A_PACKAGE_CONTRACT_OCCURRENCE",
+      "sourceSha256": "42769d7ce95efb52d8722993a635b349a73b37f06ee1e195f64dc39b804b7e92",
+      "controllingCommit": "43ea853e4ac4cd278ae8d61c40fb2ae7db466e02",
+      "implementationAuthority": "NOT_GRANTED"
+    },
+    {
+      "artifactId": "H_EARTH_GROUND_VIEW_GATE_B_ACTIVE_ARTIFACT_UTILIZATION_AND_MANIFEST_FIRST_DEVELOPMENT_LAW_v2",
+      "driveFileId": "1_09StfoG_cgzo0nUTIH7Nd9QMffF6UjBlUF9EH2cjzo",
+      "driveAddress": "https://docs.google.com/document/d/1_09StfoG_cgzo0nUTIH7Nd9QMffF6UjBlUF9EH2cjzo",
+      "artifactClass": "BINDING_DEVELOPMENTAL_METHOD_LAW",
+      "sourceSha256": "ab222051a8a26587aceaa1c14302387fa9e922a0071e18d44bc31cbfe2aa98ad",
+      "controllingCommit": "NOT_APPLICABLE_ARTIFACT_METHOD_LAW",
+      "implementationAuthority": "NOT_GRANTED"
+    },
+    {
+      "artifactId": "H_EARTH_GATE_B_FIXED_18_PATH_PACKAGE_MANIFEST_v1",
+      "driveFileId": "1hOIndD_1KiyeGSvPa0PauF7fWoADYKqJ",
+      "sourceSha256": "2191d248679ea1f7717b39a8eb1b12a7bcaa20bc75c0ff856fc3a20dc36dd5aa",
+      "implementationAuthority": "NOT_GRANTED"
+    },
+    {
+      "artifactId": "H_EARTH_GATE_B_SOURCE_DIGEST_LEDGER_v1",
+      "driveFileId": "1uTkr2AMekrvVe-_US48A6nE3YlwrOCFw",
+      "sourceSha256": "6a363de6117bc5e9960d0fc4068172f9b9ecbbab8296c35eded4382f3e272b57",
+      "implementationAuthority": "NOT_GRANTED"
+    },
+    {
+      "artifactId": "H_EARTH_GATE_B_ROOM_INDEPENDENT_RESUME_INDEX_v1",
+      "driveFileId": "1qZZd2DtLydHaGEHYIkmDl_Qu2tfA8a0-",
+      "sourceSha256": "7374bbe506613b5b2ab0cc259515d39aa8f925dbcc2fd1b69aee0d401c7078b3",
+      "implementationAuthority": "NOT_GRANTED"
+    },
+    {
+      "artifactId": "H_EARTH_GATE_B_ROOM_INDEPENDENT_PACKAGE_STATE_v1",
+      "driveFileId": "1xyEBIqeufP5I5m3hwthG7Xr1GF0pIsim",
+      "artifactClass": "ROOM_INDEPENDENT_CANONICAL_WORKSPACE",
+      "implementationAuthority": "NOT_GRANTED"
+    },
+    {
+      "artifactId": "H_EARTH_GATE_B_GOVERNED_CUSTODY_MIRROR_ARCHIVE_v1",
+      "driveFileId": "1HW0tDAjw897NKeQ3aQ05ihsRroETQ2bN",
+      "sourceSha256": "45f0ad3be4c9cbe8e715f36564abc84b3994121b43c3334a411f0ecce730474c",
+      "artifactClass": "PRESERVED_EXACT_EXPORT_PACKAGE",
+      "implementationAuthority": "NOT_GRANTED"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 /*
- * Immutable dependency graph, awareness snapshot builder, and bounded query
- * interface. The graph records typed relations only; it does not execute or
- * mutate the artifacts it describes.
+ * Immutable dependency graph, awareness snapshot builder, comparison surface,
+ * and bounded query interface. This module reads awareness records only. It
+ * does not inspect, execute, or mutate governed project artifacts.
  */
 
 import {
@@ -47,33 +47,39 @@ function relationFact(
   });
 }
 
-function artifactNode(artifactId, kind, sourcePath, evidencePosture = "DECLARED") {
+function unresolvedReasonForNode(evidencePosture, kind) {
+  if (evidencePosture !== "UNRESOLVED") {
+    return null;
+  }
+
+  return kind === "PATH"
+    ? "The final redistributed path is unresolved."
+    : "The exact support artifact has not yet been recovered into the seven-file package.";
+}
+
+function artifactNode(
+  artifactId,
+  kind,
+  sourcePath,
+  evidencePosture = "DECLARED"
+) {
   return deepFreeze({
     recordSchema: "DGB_PROJECT_AWARENESS_DEPENDENCY_NODE_v1",
     awarenessAuthorityClassification: "DERIVED_AWARENESS_RECORD",
     artifactId: relationFact(artifactId, {
       evidencePosture,
       supportingPath: sourcePath,
-      unresolvedReason:
-        evidencePosture === "UNRESOLVED"
-          ? "The exact support artifact has not yet been recovered into the seven-file package."
-          : null
+      unresolvedReason: unresolvedReasonForNode(evidencePosture, "ARTIFACT")
     }),
     kind: relationFact(kind, {
       evidencePosture,
       supportingPath: sourcePath,
-      unresolvedReason:
-        evidencePosture === "UNRESOLVED"
-          ? "The exact support artifact has not yet been recovered into the seven-file package."
-          : null
+      unresolvedReason: unresolvedReasonForNode(evidencePosture, "ARTIFACT")
     }),
     sourcePath: relationFact(sourcePath, {
       evidencePosture,
       supportingPath: sourcePath,
-      unresolvedReason:
-        evidencePosture === "UNRESOLVED"
-          ? "The final redistributed path is unresolved."
-          : null
+      unresolvedReason: unresolvedReasonForNode(evidencePosture, "PATH")
     })
   });
 }
@@ -168,37 +174,39 @@ function createEdge({
   evidencePosture = "DECLARED",
   unresolvedReason = null
 }) {
+  const derivedFrom = [fromArtifactId, relation, toArtifactId];
+
   return deepFreeze({
     recordSchema: "DGB_PROJECT_AWARENESS_DEPENDENCY_EDGE_v1",
     awarenessAuthorityClassification: "DERIVED_AWARENESS_RECORD",
     fromArtifactId: relationFact(fromArtifactId, {
       evidencePosture,
       supportingPath,
-      derivedFrom: [fromArtifactId, relation, toArtifactId],
+      derivedFrom,
       unresolvedReason
     }),
     relation: relationFact(relation, {
       evidencePosture,
       supportingPath,
-      derivedFrom: [fromArtifactId, relation, toArtifactId],
+      derivedFrom,
       unresolvedReason
     }),
     toArtifactId: relationFact(toArtifactId, {
       evidencePosture,
       supportingPath,
-      derivedFrom: [fromArtifactId, relation, toArtifactId],
+      derivedFrom,
       unresolvedReason
     }),
     evidencePosture: relationFact(evidencePosture, {
       evidencePosture,
       supportingPath,
-      derivedFrom: [fromArtifactId, relation, toArtifactId],
+      derivedFrom,
       unresolvedReason
     }),
     supportingPath: relationFact(supportingPath, {
       evidencePosture,
       supportingPath,
-      derivedFrom: [fromArtifactId, relation, toArtifactId],
+      derivedFrom,
       unresolvedReason
     })
   });
@@ -380,9 +388,24 @@ export const DEPENDENCY_GRAPH = deepFreeze({
   edges: DEPENDENCY_RELATIONS
 });
 
+function awarenessVocabularyFacts(values) {
+  return deepFreeze(
+    values.map(value =>
+      createRepositoryFact(value, {
+        evidencePosture: "DECLARED",
+        sourcePath:
+          "/research/project-awareness/project-awareness.contract.js",
+        declaredBy: PROJECT_AWARENESS_CONTRACT.id
+      })
+    )
+  );
+}
+
 export function createProjectAwarenessSnapshot({
   validationReceipts = [],
-  supersessionRelations = []
+  supersessionRelations = [],
+  sourceRecords = REPOSITORY_SOURCE_REGISTRY.sourceRecords,
+  packageIdentity = UNIVERSAL_COMPASS_PACKAGE_IDENTITY
 } = {}) {
   return deepFreeze({
     schema: "DGB_PROJECT_AWARENESS_SNAPSHOT_v1",
@@ -390,11 +413,11 @@ export function createProjectAwarenessSnapshot({
     repositoryIdentity: REPOSITORY_INSPECTION_ANCHOR.repositoryIdentity,
     inspectedCommit: REPOSITORY_INSPECTION_ANCHOR.inspectedCommit,
     branchIdentity: REPOSITORY_INSPECTION_ANCHOR.branchIdentity,
-    sourcePaths: deepFreeze(
-      UNIVERSAL_COMPASS_SHELL_RECORDS.map(record => record.path)
-    ),
+    packageIdentity,
+    sourceRecords: deepFreeze([...sourceRecords]),
+    sourcePaths: deepFreeze(sourceRecords.map(record => record.path)),
     artifactIdentities: deepFreeze([
-      UNIVERSAL_COMPASS_PACKAGE_IDENTITY.artifactId,
+      packageIdentity.artifactId,
       ...DEPENDENCY_GRAPH_NODES.map(node => node.artifactId)
     ]),
     authorityClassification: deepFreeze(
@@ -406,38 +429,17 @@ export function createProjectAwarenessSnapshot({
     lifecycleStatus: deepFreeze(
       ARTIFACT_AUTHORITY_RECORDS.map(record => record.lifecycleStatus)
     ),
-    supersessionRelations: deepFreeze(supersessionRelations),
-    evidencePosture: deepFreeze(
-      PROJECT_AWARENESS_CONTRACT.evidencePostures.map(value =>
-        createRepositoryFact(value, {
-          evidencePosture: "DECLARED",
-          sourcePath:
-            "/research/project-awareness/project-awareness.contract.js",
-          declaredBy: PROJECT_AWARENESS_CONTRACT.id
-        })
-      )
+    supersessionRelations: deepFreeze([...supersessionRelations]),
+    evidencePosture: awarenessVocabularyFacts(
+      PROJECT_AWARENESS_CONTRACT.evidencePostures
     ),
-    validationReceipts: deepFreeze(validationReceipts),
+    validationReceipts: deepFreeze([...validationReceipts]),
     unresolvedQuestions: UNRESOLVED_QUESTIONS,
-    permittedOperations: deepFreeze(
-      PERMITTED_AWARENESS_OPERATIONS.map(value =>
-        createRepositoryFact(value, {
-          evidencePosture: "DECLARED",
-          sourcePath:
-            "/research/project-awareness/project-awareness.contract.js",
-          declaredBy: PROJECT_AWARENESS_CONTRACT.id
-        })
-      )
+    permittedOperations: awarenessVocabularyFacts(
+      PERMITTED_AWARENESS_OPERATIONS
     ),
-    prohibitedOperations: deepFreeze(
-      PROHIBITED_AWARENESS_OPERATIONS.map(value =>
-        createRepositoryFact(value, {
-          evidencePosture: "DECLARED",
-          sourcePath:
-            "/research/project-awareness/project-awareness.contract.js",
-          declaredBy: PROJECT_AWARENESS_CONTRACT.id
-        })
-      )
+    prohibitedOperations: awarenessVocabularyFacts(
+      PROHIBITED_AWARENESS_OPERATIONS
     )
   });
 }
@@ -480,23 +482,23 @@ export function createBoundedProjectQueryInterface(
 
     const answers = {
       UNIVERSAL_COMPASS_FILES: () =>
-        UNIVERSAL_COMPASS_SHELL_RECORDS.map(record => ({
+        admittedSnapshot.sourceRecords.map(record => ({
           artifactId: record.artifactId.value,
           path: record.path.value
         })),
       COPIED_SOURCE_BY_TARGET: () =>
-        UNIVERSAL_COMPASS_SHELL_RECORDS.map(record => ({
+        admittedSnapshot.sourceRecords.map(record => ({
           targetPath: record.path.value,
           copiedFrom: record.copiedFrom.value
         })),
       CURRENT_BLOBS: () =>
-        UNIVERSAL_COMPASS_SHELL_RECORDS.map(record => ({
+        admittedSnapshot.sourceRecords.map(record => ({
           path: record.path.value,
           blobSha: record.blobSha.value
         })),
       INSPECTED_COMMIT: () => admittedSnapshot.inspectedCommit.value,
       PACKAGE_EXECUTABLE: () =>
-        UNIVERSAL_COMPASS_PACKAGE_IDENTITY.executable.value,
+        admittedSnapshot.packageIdentity.executable.value,
       UNRESOLVED_DEPENDENCIES: () =>
         admittedSnapshot.dependencyRelations
           .filter(edge => edge.evidencePosture.value === "UNRESOLVED")
@@ -538,18 +540,15 @@ export function createBoundedProjectQueryInterface(
   });
 }
 
-function keySet(values) {
-  return new Set(values);
-}
-
 function difference(left, right) {
-  const rightSet = keySet(right);
+  const rightSet = new Set(right);
   return left.filter(value => !rightSet.has(value));
 }
 
 function changedPairs(previousPairs, currentPairs) {
   const previous = new Map(previousPairs.map(pair => [pair.key, pair.value]));
   const current = new Map(currentPairs.map(pair => [pair.key, pair.value]));
+
   return [...new Set([...previous.keys(), ...current.keys()])]
     .filter(key => previous.get(key) !== current.get(key))
     .map(key => ({
@@ -559,36 +558,43 @@ function changedPairs(previousPairs, currentPairs) {
     }));
 }
 
+function sourceRecordPairs(snapshot) {
+  return snapshot.sourceRecords.map(record => ({
+    key: record.path.value,
+    value: record.blobSha.value
+  }));
+}
+
+function relationKeys(snapshot) {
+  return snapshot.dependencyRelations.map(edge =>
+    stableSerialize([
+      edge.fromArtifactId.value,
+      edge.relation.value,
+      edge.toArtifactId.value,
+      edge.evidencePosture.value
+    ])
+  );
+}
+
+function indexedFactPairs(facts) {
+  return facts.map((fact, index) => ({
+    key: String(index),
+    value: fact.value
+  }));
+}
+
+function receiptPairs(receipts) {
+  return receipts.map((receipt, index) => ({
+    key: String(index),
+    value: stableSerialize(receipt)
+  }));
+}
+
 export function compareAwarenessSnapshots(previousSnapshot, currentSnapshot) {
   const previousArtifacts = factsToValues(previousSnapshot.artifactIdentities);
   const currentArtifacts = factsToValues(currentSnapshot.artifactIdentities);
-
-  const previousBlobs = REPOSITORY_SOURCE_REGISTRY.sourceRecords.map(record => ({
-    key: record.path.value,
-    value: record.blobSha.value
-  }));
-  const currentBlobs = REPOSITORY_SOURCE_REGISTRY.sourceRecords.map(record => ({
-    key: record.path.value,
-    value: record.blobSha.value
-  }));
-
-  const previousRelations = previousSnapshot.dependencyRelations.map(edge =>
-    stableSerialize([
-      edge.fromArtifactId.value,
-      edge.relation.value,
-      edge.toArtifactId.value,
-      edge.evidencePosture.value
-    ])
-  );
-  const currentRelations = currentSnapshot.dependencyRelations.map(edge =>
-    stableSerialize([
-      edge.fromArtifactId.value,
-      edge.relation.value,
-      edge.toArtifactId.value,
-      edge.evidencePosture.value
-    ])
-  );
-
+  const previousRelations = relationKeys(previousSnapshot);
+  const currentRelations = relationKeys(currentSnapshot);
   const previousQuestions = previousSnapshot.unresolvedQuestions.map(
     record => record.questionId.value
   );
@@ -600,33 +606,26 @@ export function compareAwarenessSnapshots(previousSnapshot, currentSnapshot) {
     schema: "DGB_PROJECT_AWARENESS_SNAPSHOT_COMPARISON_v1",
     addedArtifacts: difference(currentArtifacts, previousArtifacts),
     removedArtifacts: difference(previousArtifacts, currentArtifacts),
-    changedBlobs: changedPairs(previousBlobs, currentBlobs),
+    changedBlobs: changedPairs(
+      sourceRecordPairs(previousSnapshot),
+      sourceRecordPairs(currentSnapshot)
+    ),
     changedBranches:
       previousSnapshot.branchIdentity.value === currentSnapshot.branchIdentity.value
         ? []
-        : [{
-            previous: previousSnapshot.branchIdentity.value,
-            current: currentSnapshot.branchIdentity.value
-          }],
+        : [
+            {
+              previous: previousSnapshot.branchIdentity.value,
+              current: currentSnapshot.branchIdentity.value
+            }
+          ],
     changedAuthorityDeclarations: changedPairs(
-      previousSnapshot.authorityClassification.map((fact, index) => ({
-        key: String(index),
-        value: fact.value
-      })),
-      currentSnapshot.authorityClassification.map((fact, index) => ({
-        key: String(index),
-        value: fact.value
-      }))
+      indexedFactPairs(previousSnapshot.authorityClassification),
+      indexedFactPairs(currentSnapshot.authorityClassification)
     ),
     changedLifecycleStates: changedPairs(
-      previousSnapshot.lifecycleStatus.map((fact, index) => ({
-        key: String(index),
-        value: fact.value
-      })),
-      currentSnapshot.lifecycleStatus.map((fact, index) => ({
-        key: String(index),
-        value: fact.value
-      }))
+      indexedFactPairs(previousSnapshot.lifecycleStatus),
+      indexedFactPairs(currentSnapshot.lifecycleStatus)
     ),
     newSupersessionRelations: difference(
       currentSnapshot.supersessionRelations.map(stableSerialize),
@@ -639,14 +638,8 @@ export function compareAwarenessSnapshots(previousSnapshot, currentSnapshot) {
       removed: difference(previousRelations, currentRelations)
     },
     receiptChanges: changedPairs(
-      previousSnapshot.validationReceipts.map((receipt, index) => ({
-        key: String(index),
-        value: stableSerialize(receipt)
-      })),
-      currentSnapshot.validationReceipts.map((receipt, index) => ({
-        key: String(index),
-        value: stableSerialize(receipt)
-      }))
+      receiptPairs(previousSnapshot.validationReceipts),
+      receiptPairs(currentSnapshot.validationReceipts)
     ),
     automaticClassificationPerformed: false
   });

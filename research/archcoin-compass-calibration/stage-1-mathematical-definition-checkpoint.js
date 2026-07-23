@@ -24,9 +24,17 @@ import {
   ARCHCOIN_STAGE_1_SOURCE_BINDING_PROOF
 } from "./stage-1-source-binding-proof.js";
 
+import {
+  ARCHCOIN_STAGE_1_CAMERA_RIGHT_DEPENDENCY_AUDIT
+} from "./stage-1-camera-right-dependency-audit.js";
+
+import {
+  ARCHCOIN_STAGE_1_DIRECT_GRAB_COMPATIBILITY_AUDIT
+} from "./stage-1-direct-grab-compatibility-audit.js";
+
 export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze({
-  schema: "ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT_v2",
-  status: "EXACT_RESEARCH_CANDIDATE_DEFINED_FIXTURES_AND_SOURCE_BINDING_PROVEN_ADMISSION_PENDING",
+  schema: "ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT_v3",
+  status: "EXACT_RESEARCH_CANDIDATE_AND_SOURCE_COMPATIBILITY_PROVEN_ADMISSION_PENDING",
   branch: "agent/archcoin-compass-calibration-workspace-001",
   evidenceBase: "eceac4d5297b2f087c1cf718e29d79c119c29db1",
 
@@ -50,7 +58,11 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
   exactCandidateDecisions: Object.freeze([
     "POSITIVE_SCREEN_DX_MAPS_TO_POSITIVE_WORLD_Y_YAW",
     "POSITIVE_SCREEN_DY_MAPS_TO_POSITIVE_CAMERA_RIGHT_PITCH",
+    "CAMERA_RIGHT_DERIVES_FROM_CROSS_CAMERA_FORWARD_WORLD_UP_PROJECTED_TO_WORLD_XZ",
+    "CAMERA_RIGHT_FALLBACK_IS_POSITIVE_WORLD_X",
     "PITCH_DELTA_LEFT_MULTIPLIES_YAW_DELTA_LEFT_MULTIPLIES_CURRENT_ORIENTATION",
+    "DIRECT_GRAB_CORRECTION_USES_THE_SAME_FIXED_BASIS_AS_ORDINARY_CLUSTER_MOTION",
+    "FINAL_PITCH_CLAMP_OCCURS_AFTER_MOVEMENT_AND_GRAB_CORRECTION_COMPOSITION",
     "CUMULATIVE_PITCH_LIMIT_IS_PI_TIMES_0_32",
     "ROLL_AXIS_IS_NOT_AVAILABLE",
     "FOUR_BASE_SEATS_USE_EXISTING_LONGITUDE_AND_LATITUDE_FORMULAS",
@@ -83,10 +95,26 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
     sourceBlob: "570c8b64f803b46c3ff2eb22d650596d832467af"
   }),
 
+  compatibilityAuditState: Object.freeze({
+    cameraRightAudit: ARCHCOIN_STAGE_1_CAMERA_RIGHT_DEPENDENCY_AUDIT.schema,
+    cameraRightStatus: ARCHCOIN_STAGE_1_CAMERA_RIGHT_DEPENDENCY_AUDIT.status,
+    cameraRightDependencyAvailable: true,
+    compositorSchemaChangeRequired: false,
+    compositorMutationRequired: false,
+    directGrabAudit: ARCHCOIN_STAGE_1_DIRECT_GRAB_COMPATIBILITY_AUDIT.schema,
+    directGrabStatus: ARCHCOIN_STAGE_1_DIRECT_GRAB_COMPATIBILITY_AUDIT.status,
+    directGrabCompatible: true,
+    directGrabSingleFixedBasisBuilderRequired: true,
+    finalPitchClampAfterCorrectionRequired: true,
+    proposalSchemaChangeRequired: false
+  }),
+
   stage1ACandidateScope: Object.freeze({
     required: Object.freeze(["/products/archcoin/index.interactions.js"]),
     conditional: Object.freeze(["/products/archcoin/index.controller.js"]),
-    controllerCondition: "Only if axis/frame identity or stale-revision enforcement becomes part of the accepted payload contract."
+    controllerCondition: "Only if axis/frame identity or stale-revision enforcement becomes part of the accepted payload contract.",
+    compositorDisposition: "VERIFY_ONLY_NO_SCHEMA_OR_SOURCE_MUTATION_REQUIRED",
+    interactionDependency: "READ_ONLY_DGB_ARCHCOIN_COMPOSITOR_GET_CAMERA_WITH_WORLD_X_FALLBACK"
   }),
 
   stage1BCandidateScope: Object.freeze({
@@ -114,14 +142,15 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
     "STAGE_1A_AND_1B_TEST_FIXTURES_NOT_CREATED",
     "FIXTURE_EXECUTION_RECEIPT_NOT_RECORDED",
     "SOURCE_LEVEL_ROOM_INDEX_BINDING_PROOF_NOT_RECORDED",
-    "CRYSTALS_NO_MUTATION_PROOF_ABSENT"
+    "CRYSTALS_NO_MUTATION_PROOF_ABSENT",
+    "CAMERA_RIGHT_DEPENDENCY_COMPATIBILITY_NOT_PROVEN",
+    "DIRECT_GRAB_CORRECTION_COMPATIBILITY_NOT_PROVEN"
   ]),
 
   remainingBlockers: Object.freeze([
     "MATHEMATICAL_CANDIDATE_NOT_ADMITTED",
-    "CAMERA_RIGHT_DEPENDENCY_COMPATIBILITY_NOT_PROVEN",
-    "DIRECT_GRAB_CORRECTION_COMPATIBILITY_NOT_PROVEN",
     "FIXED_AXIS_INTERACTION_SOURCE_CHANGE_NOT_CONSTRUCTED",
+    "CAMERA_RIGHT_AND_DIRECT_GRAB_BEHAVIORAL_FIXTURES_NOT_EXECUTED",
     "LIVE_MOUSE_TOUCH_PEN_DIRECTION_ACCEPTANCE_NOT_PERFORMED",
     "LIVE_VISUAL_AND_PHYSICAL_DEVICE_ACCEPTANCE_NOT_PERFORMED",
     "LIVE_MUTATION_AUTHORITY_WITHHELD"
@@ -132,6 +161,8 @@ export const ARCHCOIN_STAGE_1_MATHEMATICAL_DEFINITION_CHECKPOINT = Object.freeze
     mathematicalFixtureExecutionPass: true,
     sourceLevelRoomBindingProofComplete: true,
     crystalsNoMutationProofComplete: true,
+    cameraRightDependencyCompatibilityComplete: true,
+    directGrabCompatibilityComplete: true,
     mathematicalAdmissionComplete: false,
     stage1ImplementationReady: false,
     liveArchcoinMutationAuthorized: false,

@@ -1,0 +1,67 @@
+name: H-Earth Gate B Route Adapter Probe
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-gate-b-seven-file-verification-001
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    if: github.head_ref == 'agent/h-earth-gate-b-seven-file-trigger-001'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Probe Gate B to West to Packet 002
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'EOF'
+          import fs from 'node:fs';
+          const gate = await import('./showroom/globe/h-earth/render/ground-view-gate-b.js');
+          const kernel = await import('./showroom/globe/h-earth/render/geometry-kernel.js');
+          const packet = await import('./h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js');
+          const construction = gate.constructHEarthGroundViewGateBGeometry();
+          const sourceObjectIds = construction.primitives.map(p => p.primitiveId).sort();
+          const sourceZoneIds = ['H_EARTH_GROUND_VIEW_GATE_B'];
+          const latticeRegionIds = ['H_EARTH_GROUND_VIEW_GATE_B_BOUNDED_DOMAIN'];
+          const previewResult = Object.freeze({
+            ok: true,
+            status: construction.constructionStatus,
+            contractId: gate.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT_ID,
+            admitted: false,
+            WestAdmissionPerformed: false,
+            requestId: 'GATE_B_ROUTE_PROBE_REQUEST',
+            providerRequestId: construction.receipt.receiptId,
+            resolutionReceiptId: construction.receipt.deterministicConstructionIdentity,
+            sourceObjectIds,
+            sourceZoneIds,
+            latticeRegionIds,
+            primitives: construction.primitives
+          });
+          const west = kernel.admitHEarthPrimitiveBatch(construction.primitives, {
+            frameId: 'GATE_B_ROUTE_PROBE_FRAME',
+            metadata: Object.freeze({requestId: previewResult.requestId, providerRequestId: previewResult.providerRequestId, resolutionReceiptId: previewResult.resolutionReceiptId, sourceObjectIds, sourceZoneIds, latticeRegionIds})
+          });
+          let packetResult;
+          try { packetResult = packet.buildHEarthPostWestAdmittedGeometryTransfer({previewResult, westBatchAdmissionResult: west}); }
+          catch (error) { packetResult = {threw:true,name:error?.name,message:error?.message,details:error?.details??null}; }
+          const receipt = {construction:{valid:construction.valid,primitiveCount:construction.primitives.length}, west, packetResult};
+          fs.writeFileSync('H_EARTH_GATE_B_ROUTE_ADAPTER_PROBE_v1.json', JSON.stringify(receipt,null,2));
+          console.log(JSON.stringify(receipt,null,2));
+          EOF
+      - name: Upload probe receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-route-adapter-probe
+          path: H_EARTH_GATE_B_ROUTE_ADAPTER_PROBE_v1.json
+          if-no-files-found: error

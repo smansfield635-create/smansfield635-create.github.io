@@ -10,7 +10,7 @@ const digest = (value) => crypto.createHash('sha256').update(value, 'utf8').dige
 
 const contractPath = 'h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json';
 const detailedPath = 'h-earth-3d/registry/H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1.md';
-const githubPath = '.github/instructions/h-earth-repository-registry.instructions.md';
+const githubPath = 'h-earth-3d/registry/h-earth.repository-registry.github-instruction.md';
 const hEarthAgentsPath = 'h-earth-3d/AGENTS.md';
 const showroomAgentsPath = 'showroom/globe/h-earth/AGENTS.md';
 const bootstrapPath = 'h-earth-3d/registry/h-earth.repository-registry.bootstrap.json';
@@ -50,8 +50,8 @@ const checks = {
   readOnlyOnly: contract.operationDecision.readOnlyDiscoveryAndAnalysisPermitted === true && contract.operationDecision.mutationAuthorizedByInstruction === false && contract.operationDecision.mergeAuthorizedByInstruction === false,
   targetFourPreserved: contract.boundaries.targetFourStillRequired === true && contract.boundaries.validatorInstalled === false && contract.boundaries.workflowEnforcementInstalled === false,
   detailedInstructionComplete: detailed.includes('Mandatory preflight') && detailed.includes('Gate B West adapter remains orchestration only') && detailed.includes('Target 4 remains required'),
-  githubFrontmatterValid: githubInstruction.startsWith('---\napplyTo: "h-earth-3d/**,showroom/globe/h-earth/**,tools/h-earth-repository-registry-*.mjs"\n---'),
-  githubInstructionBounded: Buffer.byteLength(githubInstruction, 'utf8') < 4000 && githubInstruction.includes('Do not infer order, authority, mutation, merge, canonical, or production status'),
+  githubInstructionSurfacePresent: githubInstruction.startsWith('# H-Earth GitHub instruction surface') && githubInstruction.includes('GitHub-connected tools'),
+  githubInstructionBounded: Buffer.byteLength(githubInstruction, 'utf8') < 4000 && githubInstruction.includes('grants no mutation, merge, canonicalization, workflow, runtime, renderer, deployment, or production authority'),
   scopedAgentEntrypoints: hEarthAgents.includes('load `registry/h-earth.repository-registry.bootstrap.json` first') && showroomAgents.includes('Gate B West adapter is orchestration only'),
   bootstrapRegistersTarget3: bootstrap.toolInstruction?.instructionId === contract.instructionId && bootstrap.toolInstruction?.contractPath === '/h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json',
   bootstrapRemainsCandidate: bootstrap.accepted === false && bootstrap.canonical === false && bootstrap.controlsRepositoryScope === false,

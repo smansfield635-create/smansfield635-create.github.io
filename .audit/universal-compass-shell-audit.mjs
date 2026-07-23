@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const shellRoot = path.join(repositoryRoot, "prototypes/universal-compass");
+const outputRoot = path.join(repositoryRoot, ".audit-output");
 
 const expectedShell = Object.freeze({
   "index.planet.js": "0d462361776288b88584a7272c8e42ea6b14f1fa",
@@ -61,7 +62,7 @@ function dynamicImportResult(fileName) {
     fileName,
     status: result.status,
     loaded: result.status === 0,
-    output: text.split("\n").slice(0, 8).join("\n")
+    output: text.split("\n").slice(0, 10).join("\n")
   });
 }
 
@@ -113,18 +114,21 @@ const authorityExports = Object.freeze({
   interactions: /export function createInteractionAuthority\s*\(/.test(allSources["index.interactions.js"])
 });
 
+const crystalsSource = allSources["index.crystals.js"];
+const crystalsPublicApiSource = crystalsSource.slice(
+  crystalsSource.lastIndexOf("return Object.freeze({")
+);
+
 const interfaceFindings = Object.freeze({
   planetRequiresNodesForPresentation:
     /typeof nodes\.forPresentation === ["']function["']/.test(allSources["index.planet.js"]),
   controllerRequiresNodesGetAndHas:
     /typeof nodes\.get === ["']function["']/.test(allSources["index.controller.js"]) &&
     /typeof nodes\.has === ["']function["']/.test(allSources["index.controller.js"]),
-  crystalsPublishesForPresentation:
-    /\bforPresentation\s*[:(]/.test(allSources["index.crystals.js"]),
-  crystalsPublishesHas:
-    /\bhas\s*[:(]/.test(allSources["index.crystals.js"]),
-  crystalsConsumesWorldSnapshot:
-    /consumeWorldSnapshot|worldSnapshot/.test(allSources["index.crystals.js"]),
+  crystalsPublicApiHasGetNode: /\bgetNode\b/.test(crystalsPublicApiSource),
+  crystalsPublicApiHasForPresentation: /\bforPresentation\b/.test(crystalsPublicApiSource),
+  crystalsPublicApiHasHas: /\bhas\b/.test(crystalsPublicApiSource),
+  crystalsConsumesWorldSnapshot: /consumeWorldSnapshot|worldSnapshot/.test(crystalsSource),
   compositorConsumesValidatedWorldSnapshot:
     /validateWorldSnapshot\(worldSnapshot\)/.test(allSources["index.compositor.js"]),
   interactionsSubmitWorldEvaluatedProposal:
@@ -148,21 +152,22 @@ const allAuthorityExportsPresent = Object.values(authorityExports).every(Boolean
 const interfaceClosureBlocked =
   interfaceFindings.planetRequiresNodesForPresentation &&
   interfaceFindings.controllerRequiresNodesGetAndHas &&
-  !interfaceFindings.crystalsPublishesForPresentation &&
-  !interfaceFindings.crystalsPublishesHas &&
+  interfaceFindings.crystalsPublicApiHasGetNode &&
+  !interfaceFindings.crystalsPublicApiHasForPresentation &&
+  !interfaceFindings.crystalsPublicApiHasHas &&
   !interfaceFindings.crystalsConsumesWorldSnapshot;
+
+const auditPass =
+  allBlobsMatch &&
+  exactMissingSet &&
+  allAuthorityExportsPresent &&
+  moduleFailuresAreMissingSupport &&
+  interfaceClosureBlocked &&
+  crossProjectIntrusion.length === 0;
 
 const receipt = Object.freeze({
   schema: "UNIVERSAL_COMPASS_SEVEN_FILE_SHELL_AUDIT_RECEIPT_v1",
-  auditStatus:
-    allBlobsMatch &&
-    exactMissingSet &&
-    allAuthorityExportsPresent &&
-    moduleFailuresAreMissingSupport &&
-    interfaceClosureBlocked &&
-    crossProjectIntrusion.length === 0
-      ? "PASS_FINDINGS_GROUNDED"
-      : "FAIL_AUDIT_INCONSISTENT",
+  auditStatus: auditPass ? "PASS_FINDINGS_GROUNDED" : "FAIL_AUDIT_INCONSISTENT",
   prototypeStatus: "NOT_EXECUTABLE",
   executionBoundary: "MODULE_RESOLUTION",
   shellFileCount: Object.keys(expectedShell).length,
@@ -187,8 +192,19 @@ const receipt = Object.freeze({
     "UNIVERSAL_COMPASS_RUNTIME_DEPENDENCY_AND_INTERFACE_CLOSURE_CANDIDATE_v1"
 });
 
-console.log(JSON.stringify(receipt, null, 2));
+fs.mkdirSync(outputRoot, { recursive: true });
+fs.writeFileSync(
+  path.join(outputRoot, "universal-compass-shell-audit-receipt.json"),
+  `${JSON.stringify(receipt, null, 2)}\n`,
+  "utf8"
+);
 
-if (receipt.auditStatus !== "PASS_FINDINGS_GROUNDED") {
-  process.exitCode = 1;
-}
+console.log(`AUDIT_STATUS=${receipt.auditStatus}`);
+console.log(`PROTOTYPE_STATUS=${receipt.prototypeStatus}`);
+console.log(`EXECUTION_BOUNDARY=${receipt.executionBoundary}`);
+console.log(`MISSING_DEPENDENCIES=${receipt.missingDependencies.join(",")}`);
+console.log(`INTERFACE_CLOSURE_BLOCKED=${receipt.interfaceClosureBlocked}`);
+console.log(`CROSS_PROJECT_INTRUSION_COUNT=${receipt.crossProjectIntrusion.length}`);
+console.log(`RECOMMENDED_NEXT_TARGET=${receipt.recommendedNextTarget}`);
+
+if (!auditPass) process.exitCode = 1;

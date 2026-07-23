@@ -75,7 +75,7 @@
       "status": "OPTIONAL_DEFERRED_GENERALIZATION_LANE",
       "path": "/h-earth-3d/registry/h-earth.repository-registry.target-4d-blocker-receipt.json",
       "gitBlobSha": "49e24b382a192b486f1d5cc5f4ed91f3378748ca",
-      "deferralPath": "/h-earth-3d/registry/portability/h-earth.repository-registry.target-4d.deferral.json",
+      "deferralPath": "/h-earth-3d/registry/portability/h-earth.repository-registry.target-4d.deferral-and-critical-path-reclassification.json",
       "deferralGitBlobSha": "0b4a842c275368b50d96aecfb510c516641ebfe0",
       "executionResult": "VALID_NONPORTABILITY_FINDING_NONBLOCKING_FOR_H_EARTH",
       "accepted": false,

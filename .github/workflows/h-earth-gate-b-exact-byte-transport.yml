@@ -80,19 +80,28 @@ jobs:
           text=path.read_text(encoding='utf-8')
           old='toleranceContext: input.toleranceContext,'
           new='toleranceContext: input.toleranceContext ?? undefined,'
-          if text.count(old)!=1:
-              raise SystemExit(f'Expected exactly one West tolerance forwarding site, found {text.count(old)}.')
-          path.write_text(text.replace(old,new,1),encoding='utf-8',newline='')
+          if text.count(old)!=2:
+              raise SystemExit(f'Expected the West forwarding field plus preserved output field, found {text.count(old)}.')
+          corrected=text.replace(old,new,1)
+          if corrected.count(old)!=1 or corrected.count(new)!=1:
+              raise SystemExit('The correction did not isolate exactly the first West forwarding site.')
+          path.write_text(corrected,encoding='utf-8',newline='')
           PY
           python - <<'PY'
           from pathlib import Path
-          import difflib
-          before=Path(Path(__import__('os').environ['RUNNER_TEMP'])/'adapter-successor-receipt'/'preserved-adapter.js').read_text()
-          after=Path('h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js').read_text()
-          changes=[line for line in difflib.ndiff(before.splitlines(),after.splitlines()) if line.startswith(('- ','+ '))]
-          expected=['-         toleranceContext: input.toleranceContext,','+         toleranceContext: input.toleranceContext ?? undefined,']
-          if changes!=expected:
-              raise SystemExit(f'Unexpected adapter successor diff: {changes!r}')
+          import os
+          before=Path(os.environ['RUNNER_TEMP'],'adapter-successor-receipt','preserved-adapter.js').read_text().splitlines()
+          after=Path('h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js').read_text().splitlines()
+          if len(before)!=len(after):
+              raise SystemExit('Adapter line count changed unexpectedly.')
+          differences=[(index,left,right) for index,(left,right) in enumerate(zip(before,after),1) if left!=right]
+          if len(differences)!=1:
+              raise SystemExit(f'Expected one changed line, found {differences!r}')
+          line_number,left,right=differences[0]
+          if left.strip()!='toleranceContext: input.toleranceContext,' or right.strip()!='toleranceContext: input.toleranceContext ?? undefined,':
+              raise SystemExit(f'Unexpected changed line {line_number}: {left!r} -> {right!r}')
+          if left[:len(left)-len(left.lstrip())] != right[:len(right)-len(right.lstrip())]:
+              raise SystemExit('Adapter indentation changed unexpectedly.')
           PY
       - name: Execute full corrected adapter corridor
         shell: bash

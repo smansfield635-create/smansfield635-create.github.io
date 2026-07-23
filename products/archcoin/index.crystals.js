@@ -9,9 +9,8 @@
  *
  * This file preserves the source-derived topology, bounds, anchors, hit-shape,
  * hashing, and validation mechanisms from the universal geometry candidate.
- * It removes identity registries, seat generation, world-position generation,
- * profile-owned membership, renderer ownership, and every import from the
- * abandoned eleven-file runtime.
+ * Planet supplies identity, membership, seats, and world transforms. Crystals
+ * supplies only topology and immutable visual records for those world facts.
  */
 (() => {
   "use strict";
@@ -31,8 +30,6 @@
     ownsWorldTransforms: false,
     ownsCameraOrProjection: false,
     ownsRendererLifecycle: false,
-    externalContractDependency: false,
-    externalMathDependency: false,
     productionAuthorized: false
   });
 

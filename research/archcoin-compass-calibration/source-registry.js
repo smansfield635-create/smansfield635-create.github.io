@@ -1,97 +1,64 @@
-/*
- * ARCHCOIN Compass Calibration Workspace
- * Source registry only.
- * No production or automatic inheritance authority.
- */
+/* ARCHCOIN cross-compass calibration source registry. Research authority only. */
 
 export const ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY = Object.freeze({
-  schema: "ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY_v1",
-  status: "MAIN_COMPASS_FILE_LEVEL_EXTRACTION_COMPLETE",
+  schema: "ARCHCOIN_COMPASS_CALIBRATION_SOURCE_REGISTRY_v2",
   repositoryBase: "eceac4d5297b2f087c1cf718e29d79c119c29db1",
+  status: "MAIN_COMPLETE_REMAINING_SOURCE_FAMILIES_PENDING",
   liveProductMutationAuthorized: false,
+  rcoinIdentityVerified: false,
+  rcoinTreatment: "TREAT_AS_ARCHCOIN_UNLESS_DISTINCT_ROUTE_OR_SOURCE_IS_ESTABLISHED",
   sources: Object.freeze([
     Object.freeze({
       sourceId: "MAIN_COMPASS_SOURCE_FAMILY",
       label: "Main Compass",
-      paths: Object.freeze([
-        "/assets/compass/compass.controller.js",
-        "/assets/compass/compass.crystals.js",
-        "/assets/compass/compass.cosmos.js",
-        "/assets/compass/compass.css",
-        "/index.html"
-      ]),
-      inspectedBlobs: Object.freeze({
-        controller: "259e0d16b55c3986fec57db37fc057861483344a",
-        crystals: "3d6427cbdb961576468d4aab05c0e4987549cea3"
-      }),
+      roots: Object.freeze(["/assets/compass/", "/index.html"]),
       extractionArtifact: "/research/archcoin-compass-calibration/main-compass-extraction.js",
-      inspectionStatus: "CONTROLLER_AND_CRYSTAL_MOTION_FILE_LEVEL_INSPECTION_COMPLETE",
-      candidateStrengthsFromEvidence: Object.freeze([
-        "separate-constellation-and-cluster-orientation-custody",
-        "preview-commit-cancel-transaction-boundary",
-        "rigid-spherical-physics",
-        "world-space-primary-anchor-settlement",
-        "multi-signal-drag-flick-classification",
-        "depth-aware-visual-and-semantic-projection",
-        "interruption-safe-pointer-and-renderer-lifecycle",
-        "navigation-separation-and-passage-custody"
+      extractionStatus: "FILE_LEVEL_EXTRACTION_COMPLETE",
+      targetCapabilities: Object.freeze([
+        "PHYSICS", "NAVIGATION", "SELECTION", "SETTLEMENT",
+        "INTERRUPTION_RECOVERY", "PASSAGE_CUSTODY"
       ]),
-      extractionAuthority: "CALIBRATION_EXTRACTION_ONLY",
       admissionAuthority: "WITHHELD"
     }),
     Object.freeze({
       sourceId: "LAW_COMPASS_SOURCE_FAMILY",
       label: "Law Compass",
-      paths: Object.freeze([
-        "/laws/index.controller.js",
-        "/laws/index.crystals.js",
-        "/laws/index.compositor.js",
-        "/laws/index.interactions.js",
-        "/laws/index.html",
-        "/laws/index.css"
+      roots: Object.freeze(["/laws/"]),
+      extractionArtifact: "/research/archcoin-compass-calibration/law-compass-extraction.js",
+      extractionStatus: "PENDING_FILE_LEVEL_EXTRACTION",
+      targetCapabilities: Object.freeze([
+        "FLUID_MOTION", "INTERACTION_SENSITIVITY", "INTERPOLATION",
+        "HIT_CORRIDORS", "RESPONSIBILITY_SEPARATION"
       ]),
-      inspectionStatus: "PARTIALLY_INSPECTED",
-      candidateStrengthsFromPriorInspection: Object.freeze([
-        "speed",
-        "fluidity",
-        "ambient-constellation-motion"
-      ]),
-      extractionAuthority: "WITHHELD_PENDING_FILE_LEVEL_EVIDENCE"
+      admissionAuthority: "WITHHELD"
     }),
     Object.freeze({
-      sourceId: "MIRRORLAND_COMPASS_SOURCE_FAMILY",
-      label: "Mirrorland-related Compass surfaces",
-      paths: Object.freeze([
-        "/assets/compass/compass.mirrorland-window.js",
+      sourceId: "SHOWROOM_COMPASS_SOURCE_FAMILY",
+      label: "Showroom Compass",
+      roots: Object.freeze([
+        "/showroom/", "/assets/compass/compass.mirrorland-window.js",
         "/assets/shared/mirrorland-window.geometry.js"
       ]),
-      inspectionStatus: "PARTIALLY_INSPECTED",
-      candidateStrengthsFromPriorInspection: Object.freeze([
-        "narrative-scale",
-        "readability",
-        "visual-presence"
+      extractionArtifact: "/research/archcoin-compass-calibration/showroom-compass-extraction.js",
+      extractionStatus: "PENDING_FILE_LEVEL_EXTRACTION",
+      targetCapabilities: Object.freeze([
+        "PUBLIC_STAGE_SCALE", "CAMERA_BEHAVIOR", "SCENE_INTEGRATION",
+        "READABILITY", "PRESENTATION_BEHAVIOR"
       ]),
-      extractionAuthority: "WITHHELD_PENDING_FILE_LEVEL_EVIDENCE"
+      admissionAuthority: "WITHHELD"
     }),
     Object.freeze({
       sourceId: "ARCHCOIN_SOURCE_FAMILY",
-      label: "ARCHCOIN",
-      paths: Object.freeze([
-        "/products/archcoin/index.planet.js",
-        "/products/archcoin/index.crystals.js",
-        "/products/archcoin/index.compositor.js",
-        "/products/archcoin/index.controller.js",
-        "/products/archcoin/index.interactions.js",
-        "/products/archcoin/index.html",
-        "/products/archcoin/index.css"
+      label: "ARCHCOIN Compass",
+      roots: Object.freeze(["/products/archcoin/"]),
+      extractionArtifact: "/research/archcoin-compass-calibration/archcoin-compass-extraction.js",
+      extractionStatus: "PENDING_COMPLETE_BASELINE_EXTRACTION",
+      targetCapabilities: Object.freeze([
+        "LITERAL_CARDINAL_SEMANTICS", "CURRENT_CLUSTER_BEHAVIOR",
+        "CENTER_AUTHORITY", "LABELS", "FIXED_AXIS_DEFICIENCIES",
+        "SELECTION_PROBLEMS", "PRESERVED_SUCCESSFUL_BEHAVIOR"
       ]),
-      inspectionStatus: "ACTIVE_CALIBRATION_CHAMBER",
-      candidateStrengthsFromPriorInspection: Object.freeze([
-        "literal-cardinal-navigation",
-        "seven-file-authority-separation",
-        "planet-world-authority-candidate"
-      ]),
-      extractionAuthority: "CALIBRATION_ONLY"
+      admissionAuthority: "WITHHELD"
     })
   ])
 });

@@ -1,17 +1,13 @@
 name: H-Earth Gate B Exact Byte Transport
 
-on:
-  push:
-    branches:
-      - agent/h-earth-gate-b-phase-a-successor-001
-    paths:
-      - .github/workflows/h-earth-gate-b-exact-byte-transport.yml
+on: push
 
 permissions:
   contents: write
 
 jobs:
   transport-environment:
+    if: github.ref == 'refs/heads/agent/h-earth-gate-b-phase-a-successor-001'
     runs-on: ubuntu-latest
     steps:
       - name: Check out isolated Phase A branch

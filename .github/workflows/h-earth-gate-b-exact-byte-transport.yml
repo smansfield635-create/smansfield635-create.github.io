@@ -7,13 +7,14 @@ permissions:
   contents: write
 
 jobs:
-  restore-and-validate-provider:
+  restore-and-observe-provider:
     if: github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001'
     runs-on: ubuntu-latest
     env:
       TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
       PROVIDER_BLOB: 2a5b79a58ce411ed820df7ec2166f2e7b6e54b5b
       PROVIDER_PATH: showroom/globe/h-earth/render/ground-view-gate-b.js
+      OBSERVATION_PATH: /tmp/h-earth-gate-b-provider-validation-observation.json
     steps:
       - name: Check out isolated Phase A branch and full Git object graph
         uses: actions/checkout@v4
@@ -30,125 +31,107 @@ jobs:
           git cat-file blob "$PROVIDER_BLOB" > "$PROVIDER_PATH"
           test "$(git hash-object "$PROVIDER_PATH")" = "$PROVIDER_BLOB"
 
-      - name: Validate environment, provider, and public kernel corridor
+      - name: Record exact environment, provider, and kernel observations
         shell: bash
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
-          import assert from 'node:assert/strict';
+          import { writeFileSync } from 'node:fs';
 
           const environment = await import('./showroom/globe/h-earth/environment.js');
           const provider = await import('./showroom/globe/h-earth/render/ground-view-gate-b.js');
           const kernel = await import('./showroom/globe/h-earth/render/geometry-kernel.js');
 
-          assert.equal(
-            environment.H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_ID,
-            'H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_v1'
-          );
-          assert.equal(environment.H_EARTH_3D_ENVIRONMENT_PREFLIGHT.eligible, true);
-          assert.equal(
-            environment.evaluateHEarth3DSharedShorelineBoundary().eligible,
-            true
-          );
-          assert.equal(
-            environment.evaluateHEarth3DWetSandNumericConstructionProfile().eligible,
-            true
-          );
+          let construction = null;
+          let constructionError = null;
+          try {
+            construction = provider.constructHEarthGroundViewGateBGeometry();
+          } catch (error) {
+            constructionError = {
+              name: error?.name ?? null,
+              message: error?.message ?? String(error),
+              stack: error?.stack ?? null
+            };
+          }
 
-          assert.equal(
-            provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT_ID,
-            'H_EARTH_GROUND_VIEW_GATE_B_BOUNDED_TERRAIN_WATER_GEOMETRY_PROVIDER_v1'
-          );
-          assert.equal(
-            provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT.environmentAuthorityId,
-            environment.H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_ID
-          );
-          assert.equal(
-            provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT.admissionAuthority,
-            false
-          );
-          assert.equal(
-            provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT.frameAuthority,
-            false
-          );
-          assert.equal(
-            provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT.compositorAuthority,
-            false
-          );
-          assert.equal(
-            provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT.rendererAuthority,
-            false
-          );
-          assert.equal(
-            provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT.routeAuthority,
-            false
-          );
+          let determinism = null;
+          let determinismError = null;
+          try {
+            determinism = provider.evaluateHEarthGroundViewGateBDeterminism();
+          } catch (error) {
+            determinismError = {
+              name: error?.name ?? null,
+              message: error?.message ?? String(error),
+              stack: error?.stack ?? null
+            };
+          }
 
-          const construction = provider.constructHEarthGroundViewGateBGeometry();
-          assert.equal(construction.valid, true);
-          assert.equal(
-            construction.constructionStatus,
-            'CONSTRUCTED_NEUTRAL_PRIMITIVES_NOT_ADMITTED'
-          );
-          assert.deepEqual(
-            construction.primitives.map((primitive) => primitive.primitiveId),
-            [
-              provider.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.terrain,
-              provider.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.water,
-              provider.H_EARTH_GROUND_VIEW_GATE_B_PRIMITIVE_IDS.diagnosticRibbon
-            ]
-          );
-          assert.equal(construction.receipt.neutralPrimitiveCount, 3);
-          assert.equal(construction.receipt.physicalVertexCount, 2334);
-          assert.equal(construction.receipt.physicalTriangleCount, 4368);
-          assert.equal(construction.receipt.canonicalSeamUniqueVertexCount, 25);
-          assert.equal(construction.receipt.canonicalSeamUniqueEdgeCount, 24);
-          assert.equal(construction.receipt.duplicateSeamIdentityCount, 0);
-          assert.equal(construction.receipt.consumerLocalSeamResourceCount, 0);
-          assert.equal(construction.receipt.vertexBudgetPassed, true);
-          assert.equal(construction.receipt.admissionIntegrated, false);
-          assert.equal(construction.receipt.routeIntegrated, false);
-          assert.equal(construction.receipt.rendererMaterialized, false);
-          assert.equal(construction.receipt.runtimeClaim, false);
-          assert.equal(construction.receipt.visualClaim, false);
-          assert.equal(construction.receipt.mathematicsReopened, false);
-          assert.equal(construction.receipt.configurationChanged, false);
-          assert.equal(
-            construction.receipt.configurationIdentity.geometryKernelContractId,
-            kernel.H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_CONTRACT_ID
-          );
+          const observation = {
+            sourceIdentities: {
+              environmentBlobExpected:
+                'aa60accc453e66f84a11d27f25d946c2b33c1d83',
+              providerBlobObserved:
+                process.env.PROVIDER_BLOB,
+              environmentAuthorityId:
+                environment.H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_ID ?? null,
+              providerContractId:
+                provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT_ID ?? null,
+              kernelContractId:
+                kernel.H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_CONTRACT_ID ?? null
+            },
+            environment: {
+              preflight:
+                environment.H_EARTH_3D_ENVIRONMENT_PREFLIGHT ?? null,
+              sharedBoundaryEvaluation:
+                environment.evaluateHEarth3DSharedShorelineBoundary?.() ?? null,
+              wetSandProfileEvaluation:
+                environment.evaluateHEarth3DWetSandNumericConstructionProfile?.() ?? null,
+              claimCeilings:
+                environment.H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS ?? null,
+              gateBAuthority:
+                environment.H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY ?? null
+            },
+            providerContract:
+              provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT ?? null,
+            construction: construction === null ? null : {
+              valid: construction.valid ?? null,
+              constructionStatus: construction.constructionStatus ?? null,
+              primitiveIds:
+                construction.primitives?.map((primitive) => primitive.primitiveId) ?? null,
+              primitiveTypes:
+                construction.primitives?.map((primitive) => primitive.primitiveType) ?? null,
+              receipt: construction.receipt ?? null,
+              issues: construction.issues ?? null
+            },
+            constructionError,
+            determinism,
+            determinismError
+          };
 
-          const determinism = provider.evaluateHEarthGroundViewGateBDeterminism();
-          assert.equal(determinism.passed, true);
-          assert.equal(determinism.processingOrderDependency, false);
-
+          writeFileSync(
+            process.env.OBSERVATION_PATH,
+            JSON.stringify(observation, null, 2) + '\n',
+            'utf8'
+          );
           console.log(JSON.stringify({
-            environmentAuthorityId:
-              environment.H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_ID,
-            providerContractId:
-              provider.H_EARTH_GROUND_VIEW_GATE_B_GEOMETRY_CONTRACT_ID,
-            geometryKernelContractId:
-              kernel.H_EARTH_3D_GEOMETRY_KERNEL_PUBLIC_FACADE_CONTRACT_ID,
-            primitiveIds:
-              construction.primitives.map((primitive) => primitive.primitiveId),
-            physicalVertexCount: construction.receipt.physicalVertexCount,
-            physicalTriangleCount: construction.receipt.physicalTriangleCount,
-            deterministicConstructionIdentity:
-              construction.receipt.deterministicConstructionIdentity,
-            determinismPassed: determinism.passed
+            constructionSucceeded: construction !== null,
+            constructionError,
+            determinismSucceeded: determinism !== null,
+            determinismError
           }, null, 2));
           NODE
 
-      - name: Commit exact provider only after validation passes
+      - name: Upload correlated validation observation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-provider-validation-observation
+          path: /tmp/h-earth-gate-b-provider-validation-observation.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Stop before provider commit pending observation review
         shell: bash
         run: |
-          set -euo pipefail
-          test "$(git hash-object "$PROVIDER_PATH")" = "$PROVIDER_BLOB"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- "$PROVIDER_PATH"
-          if git diff --cached --quiet; then
-            exit 0
-          fi
-          git commit -m "Restore exact Gate B geometry provider"
-          git push origin "HEAD:${TARGET_BRANCH}"
+          echo 'Observation captured; provider commit intentionally withheld.'
+          exit 1

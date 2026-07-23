@@ -1,0 +1,103 @@
+name: H-Earth Gate B Adapter Install and Renewal Base Export
+on:
+  pull_request:
+permissions:
+  contents: write
+jobs:
+  install-adapter:
+    if: github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001'
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: agent/h-earth-gate-b-phase-a-successor-001
+      ADAPTER_PATH: h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js
+      ADAPTER_BLOB: c274907528c49cbc1f7d070cf88a8783b3055e08
+      ENVIRONMENT_BLOB: ef61bc716e1bad26f487aed71bddaee64981f2d7
+      PROVIDER_BLOB: 2a5b79a58ce411ed820df7ec2166f2e7b6e54b5b
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-gate-b-phase-a-successor-001
+          fetch-depth: 0
+      - name: Restore and validate exact adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object showroom/globe/h-earth/environment.js)" = "$ENVIRONMENT_BLOB"
+          test "$(git hash-object showroom/globe/h-earth/render/ground-view-gate-b.js)" = "$PROVIDER_BLOB"
+          test ! -e "$ADAPTER_PATH"
+          git cat-file -e "$ADAPTER_BLOB^{blob}"
+          mkdir -p "$(dirname "$ADAPTER_PATH")"
+          git cat-file blob "$ADAPTER_BLOB" > "$ADAPTER_PATH"
+          test "$(git hash-object "$ADAPTER_PATH")" = "$ADAPTER_BLOB"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { constructHEarthGroundViewGateBGeometry } from './showroom/globe/h-earth/render/ground-view-gate-b.js';
+          import {
+            H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,
+            evaluateHEarthGroundViewGateBWestAdmissionAdapterInput,
+            executeHEarthGroundViewGateBWestAdmissionAdapter,
+            isHEarthGroundViewGateBWestAdmissionAdapterOccurrence,
+            H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_BOUNDARIES,
+            H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_CLAIM_CEILINGS
+          } from './h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js';
+
+          const deepFreeze = (value, seen = new WeakSet()) => {
+            if (value === null || typeof value !== 'object' || seen.has(value)) return value;
+            seen.add(value);
+            for (const nested of Object.values(value)) deepFreeze(nested, seen);
+            return Object.freeze(value);
+          };
+          const routeToken = 'H_EARTH_GATE_B_DIAGNOSTIC_ROUTE_TOKEN:123e4567-e89b-42d3-a456-426614174000';
+          const executionIdentity = deepFreeze({
+            executionClass: 'GATE_B_DIAGNOSTIC_CHILD_ROUTE_ENTRY',
+            routeToken,
+            adapterOccurrenceId: `H_EARTH_GATE_B_ADAPTER_OCCURRENCE:${routeToken}`,
+            aggregateFrameId: `H_EARTH_WEST_AGGREGATE_FRAME:${routeToken}`,
+            packet002TransferOccurrenceId: `H_EARTH_GATE_B_PACKET_002_TRANSFER_OCCURRENCE:${routeToken}`,
+            compositorFrameOccurrenceId: `H_EARTH_COMPOSITOR_FRAME_OCCURRENCE:${routeToken}`
+          });
+          const input = {
+            gateBConstructionResult: constructHEarthGroundViewGateBGeometry(),
+            executionIdentity,
+            provenanceApplicability: H_EARTH_GROUND_VIEW_GATE_B_PROVENANCE_APPLICABILITY,
+            toleranceContext: null
+          };
+          assert.equal(evaluateHEarthGroundViewGateBWestAdmissionAdapterInput(input).ok, true);
+          const occurrence = executeHEarthGroundViewGateBWestAdmissionAdapter(input);
+          assert.equal(occurrence.ok, true);
+          assert.equal(isHEarthGroundViewGateBWestAdmissionAdapterOccurrence(occurrence), true);
+          assert.equal(occurrence.westBatchAdmissionInvocationCount, 1);
+          assert.equal(occurrence.admittedPrimitives.length, 3);
+          assert.equal(occurrence.aggregateFrameAdmissionRecord.primitives.length, 3);
+          assert.equal(occurrence.provenanceSynthesized, false);
+          assert.equal(occurrence.exactWestReferencesPreserved, true);
+          assert.equal(occurrence.geometryIdentityPreserved, true);
+          assert.equal(H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_BOUNDARIES.invokesPublicWestBatchAdmissionExactlyOnce, true);
+          assert.equal(H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_BOUNDARIES.createsCompositorIdentity, false);
+          assert.equal(H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_BOUNDARIES.createsRendererIdentity, false);
+          assert.equal(H_EARTH_GROUND_VIEW_GATE_B_WEST_ADMISSION_ADAPTER_CLAIM_CEILINGS.productionClaim, false);
+          NODE
+          mapfile -t changed < <(git status --short | awk '{print $2}' | sort)
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = "$ADAPTER_PATH"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$ADAPTER_PATH"
+          git commit -m 'Install exact Gate B West-admission adapter'
+          git push origin "HEAD:$TARGET_BRANCH"
+      - name: Prepare exact renewal bases
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gate-b-renewal-bases/h-earth-3d/integration"
+          mkdir -p "$RUNNER_TEMP/gate-b-renewal-bases/showroom/globe/h-earth/diagnostic"
+          cp h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js "$RUNNER_TEMP/gate-b-renewal-bases/h-earth-3d/integration/"
+          cp showroom/globe/h-earth/admitted-geometry-frame.js "$RUNNER_TEMP/gate-b-renewal-bases/showroom/globe/h-earth/"
+          cp showroom/globe/h-earth/compositor.js "$RUNNER_TEMP/gate-b-renewal-bases/showroom/globe/h-earth/"
+          cp showroom/globe/h-earth/diagnostic/index.html "$RUNNER_TEMP/gate-b-renewal-bases/showroom/globe/h-earth/diagnostic/"
+          find "$RUNNER_TEMP/gate-b-renewal-bases" -type f -print0 | sort -z | xargs -0 sha256sum > "$RUNNER_TEMP/gate-b-renewal-bases/SHA256SUMS.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-current-renewal-bases
+          path: ${{ runner.temp }}/gate-b-renewal-bases
+          retention-days: 1

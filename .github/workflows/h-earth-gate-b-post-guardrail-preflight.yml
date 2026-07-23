@@ -7,6 +7,12 @@ on:
     paths:
       - .h-earth-evaluation/gate-b-preflight.request
       - .github/workflows/h-earth-gate-b-post-guardrail-preflight.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .h-earth-evaluation/gate-b-preflight.request
+      - .github/workflows/h-earth-gate-b-post-guardrail-preflight.yml
 
 permissions:
   contents: write

@@ -207,6 +207,17 @@ export const H_EARTH_3D_SHARED_SHORELINE_BOUNDARY =
     immutable: true
   });
 
+
+export const H_EARTH_GROUND_VIEW_LEGACY_SHORELINE_PREVIEW_AUTHORITY = deepFreeze({
+  authorityId: 'H_EARTH_GROUND_VIEW_LEGACY_SHORELINE_PREVIEW_AUTHORITY_v1',
+  mode: 'LEGACY_SHORELINE_PREVIEW',
+  preservedBoundaryContractId: H_EARTH_3D_SHARED_SHORELINE_BOUNDARY_CONTRACT_ID,
+  preservedBoundary: H_EARTH_3D_SHARED_SHORELINE_BOUNDARY,
+  replacementAuthority: false,
+  mutationPermitted: false,
+  defaultRouteSelectionChanged: false
+});
+
 export function getHEarth3DSharedShorelineBoundary() {
   return H_EARTH_3D_SHARED_SHORELINE_BOUNDARY;
 }
@@ -1252,6 +1263,476 @@ export const H_EARTH_3D_ENVIRONMENT_RECEIPT =
     productionClaim: false
   });
 
+
+export const H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_ID =
+  'H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_v1';
+
+export const H_EARTH_GROUND_VIEW_SAFE_REACH = 30;
+export const H_EARTH_GROUND_VIEW_SHARED_SEAM_DISTANCE = 28;
+
+export const H_EARTH_GROUND_VIEW_LOCAL_TO_WORLD_TRANSLATION =
+  deepFreeze({ x: 0, y: 0, z: -18 });
+
+export const H_EARTH_GROUND_VIEW_PHASE_1_CONFIGURATION =
+  deepFreeze({
+    occurrenceId:
+      'H_EARTH_GROUND_VIEW_GATE_B_BOUNDED_TERRAIN_WATER_CONSTRUCTION_OCCURRENCE_001_v1',
+    classification:
+      'DEVELOPMENTAL_CONFIGURATION_VALUE_SET',
+    finiteOpenWaterBoundR: 12,
+    seamPartitionCount:
+      deepFreeze({ nodes: 25, intervals: 24 }),
+    nearshoreDPartition:
+      deepFreeze([0, 4, 8, 12, 16, 20, 24, 28]),
+    openWaterRPartition:
+      deepFreeze([0, 4, 8, 12]),
+    terrainRootGridOrigin:
+      deepFreeze({ x: -96, y: 0, z: -114 }),
+    terrainRootCellSize: 32,
+    terrainRootRows: 5,
+    terrainRootColumns: 6,
+    maximumRefinementLevel: 3,
+    primitiveBudget: 3,
+    logicalVertexEstimate: 2334,
+    physicalVertexCount: 'NOT_YET_MEASURED',
+    vertexBudget: 4096,
+    vertexBudgetCheck: 'PROVISIONAL_PASS',
+    diagnosticRibbonWidth: 1,
+    diagnosticRibbonOffset: 0.08,
+    representativeCentralControlPointFrustumCheck: 'PASS',
+    completeEmittedGeometryFrustumContainment: 'NOT_ESTABLISHED',
+    fullDomainSingleFrameVisibility: 'NOT_CLAIMED',
+    outerTerrainClippingFirstControlledVisualOccurrence: 'PERMITTED',
+    actualClippingValidation: 'DEFERRED_TO_PHASE_10_BROWSER_EXECUTION',
+    cameraArchitectureChanged: false,
+    fixedValuesChangedInPhase2: false
+  });
+
+export const H_EARTH_GROUND_VIEW_DOMAIN_LAW =
+  deepFreeze({
+    s: deepFreeze({ minimum: 0, maximum: 1, inclusive: true }),
+    constructedNearshoreD:
+      deepFreeze({ minimum: 0, maximum: 28, inclusive: true }),
+    certifiedSafeD:
+      deepFreeze({ minimum: 0, maximum: 30, inclusive: true }),
+    certificationOnlyReserveD:
+      deepFreeze({ minimumExclusive: 28, maximumInclusive: 30 }),
+    finiteOpenWaterR:
+      deepFreeze({ minimum: 0, maximum: 12, inclusive: true }),
+    certificationReserveGeometryEmissionAuthorized: false,
+    geometryBufferConstructionOwnedHere: false
+  });
+
+function requireUnitParameter(name, value) {
+  if (!isFiniteNumber(value) || value < 0 || value > 1) {
+    throw new RangeError(
+      `${name} must be finite and satisfy 0 <= ${name} <= 1.`
+    );
+  }
+}
+
+function requireFiniteDomainParameter(name, value, minimum, maximum) {
+  if (
+    !isFiniteNumber(value) ||
+    value < minimum ||
+    value > maximum
+  ) {
+    throw new RangeError(
+      `${name} must be finite and satisfy ${minimum} <= ${name} <= ${maximum}.`
+    );
+  }
+}
+
+function evaluateGroundViewShorelineLocal(s) {
+  const envelope = Math.sin(Math.PI * s) ** 2;
+  const x = 160 * (s - 0.5);
+  const z =
+    4 +
+    10 * envelope +
+    3 * Math.sin(2 * Math.PI * s + 9 / 20) * envelope +
+    (8 / 5) * Math.sin(6 * Math.PI * s - 7 / 20) * envelope ** 2;
+  const envelopeDerivative = Math.PI * Math.sin(2 * Math.PI * s);
+  const phase2 = 2 * Math.PI * s + 9 / 20;
+  const phase6 = 6 * Math.PI * s - 7 / 20;
+  const zDerivative =
+    10 * envelopeDerivative +
+    3 * (
+      2 * Math.PI * Math.cos(phase2) * envelope +
+      Math.sin(phase2) * envelopeDerivative
+    ) +
+    (8 / 5) * (
+      6 * Math.PI * Math.cos(phase6) * envelope ** 2 +
+      Math.sin(phase6) * 2 * envelope * envelopeDerivative
+    );
+  return { x, z, zDerivative };
+}
+
+function packageGroundViewPoint({
+  s,
+  d = null,
+  r = null,
+  localX,
+  localZ,
+  classification,
+  geometryEmissionAuthorized
+}) {
+  return deepFreeze({
+    authorityId: H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_ID,
+    coordinateFrame: WORLD_FRAME,
+    s,
+    d,
+    r,
+    local: deepFreeze({ x: localX, y: 0, z: localZ }),
+    world: deepFreeze({
+      x: localX + H_EARTH_GROUND_VIEW_LOCAL_TO_WORLD_TRANSLATION.x,
+      y: H_EARTH_GROUND_VIEW_LOCAL_TO_WORLD_TRANSLATION.y,
+      z: localZ + H_EARTH_GROUND_VIEW_LOCAL_TO_WORLD_TRANSLATION.z
+    }),
+    classification,
+    geometryEmissionAuthorized,
+    geometryConstructed: false
+  });
+}
+
+export function evaluateHEarthGroundViewF(s, d) {
+  requireUnitParameter('s', s);
+  requireFiniteDomainParameter(
+    'd',
+    d,
+    0,
+    H_EARTH_GROUND_VIEW_SAFE_REACH
+  );
+  const shoreline = evaluateGroundViewShorelineLocal(s);
+  const speed = Math.hypot(160, shoreline.zDerivative);
+  const normalX = -shoreline.zDerivative / speed;
+  const normalZ = 160 / speed;
+  const certificationOnly =
+    d > H_EARTH_GROUND_VIEW_SHARED_SEAM_DISTANCE;
+  return packageGroundViewPoint({
+    s,
+    d,
+    localX: shoreline.x + d * normalX,
+    localZ: shoreline.z + d * normalZ,
+    classification:
+      certificationOnly
+        ? 'CERTIFICATION_ONLY_RESERVE_ANALYTICAL_POINT'
+        : 'CONSTRUCTED_NEARSHORE_ANALYTICAL_POINT',
+    geometryEmissionAuthorized: !certificationOnly
+  });
+}
+
+export function evaluateHEarthGroundViewGamma28(s) {
+  requireUnitParameter('s', s);
+  const point = evaluateHEarthGroundViewF(
+    s,
+    H_EARTH_GROUND_VIEW_SHARED_SEAM_DISTANCE
+  );
+  return deepFreeze({
+    ...point,
+    classification: 'CANONICAL_GAMMA_28_ANALYTICAL_POINT',
+    canonicalSeam: true,
+    geometryEmissionAuthorized: true
+  });
+}
+
+export function evaluateHEarthGroundViewOpenWater(s, r) {
+  requireUnitParameter('s', s);
+  requireFiniteDomainParameter(
+    'r',
+    r,
+    0,
+    H_EARTH_GROUND_VIEW_PHASE_1_CONFIGURATION.finiteOpenWaterBoundR
+  );
+  const seam = evaluateHEarthGroundViewGamma28(s);
+  return packageGroundViewPoint({
+    s,
+    r,
+    localX: seam.local.x,
+    localZ: seam.local.z + r,
+    classification:
+      r === 0
+        ? 'CANONICAL_GAMMA_28_ANALYTICAL_POINT'
+        : 'FINITE_OPEN_WATER_ANALYTICAL_POINT',
+    geometryEmissionAuthorized: true
+  });
+}
+
+const GAMMA_28_PARAMETER_TABLE =
+  deepFreeze(
+    Array.from({ length: 25 }, (_, ordinal) =>
+      deepFreeze({
+        ordinal,
+        parameterKey:
+          `H_EARTH_GROUND_VIEW_GAMMA_28_S_${String(ordinal).padStart(2, '0')}_OF_24`,
+        s: ordinal / 24
+      })
+    )
+  );
+
+const GAMMA_28_VERTEX_TABLE =
+  deepFreeze(
+    GAMMA_28_PARAMETER_TABLE.map((parameterRecord) =>
+      deepFreeze({
+        vertexId:
+          `H_EARTH_GROUND_VIEW_GAMMA_28_VERTEX_${String(parameterRecord.ordinal).padStart(2, '0')}`,
+        ordinal: parameterRecord.ordinal,
+        parameterKey: parameterRecord.parameterKey,
+        s: parameterRecord.s,
+        position: evaluateHEarthGroundViewGamma28(parameterRecord.s),
+        ownerId: 'H_EARTH_GROUND_VIEW_SHARED_SEAM_AUTHORITY_GAMMA_28',
+        stableIdentity: true
+      })
+    )
+  );
+
+const GAMMA_28_EDGE_TABLE =
+  deepFreeze(
+    Array.from({ length: 24 }, (_, ordinal) =>
+      deepFreeze({
+        edgeId:
+          `H_EARTH_GROUND_VIEW_GAMMA_28_EDGE_${String(ordinal).padStart(2, '0')}`,
+        ordinal,
+        startVertexId: GAMMA_28_VERTEX_TABLE[ordinal].vertexId,
+        endVertexId: GAMMA_28_VERTEX_TABLE[ordinal + 1].vertexId,
+        startParameterKey: GAMMA_28_PARAMETER_TABLE[ordinal].parameterKey,
+        endParameterKey: GAMMA_28_PARAMETER_TABLE[ordinal + 1].parameterKey,
+        orientation: 'WEST_TO_EAST',
+        ownerId: 'H_EARTH_GROUND_VIEW_SHARED_SEAM_AUTHORITY_GAMMA_28',
+        stableIdentity: true
+      })
+    )
+  );
+
+export const H_EARTH_GROUND_VIEW_GAMMA_28_AUTHORITY =
+  deepFreeze({
+    seamId: 'H_EARTH_GROUND_VIEW_GAMMA_28',
+    ownerId: 'H_EARTH_GROUND_VIEW_SHARED_SEAM_AUTHORITY_GAMMA_28',
+    ownershipClassification: 'SINGLE_OWNER',
+    writerClassification: 'SINGLE_WRITER',
+    activePartitionId:
+      'H_EARTH_GROUND_VIEW_GAMMA_28_PARTITION_25_NODES_24_INTERVALS_v1',
+    parameterLaw: 's_i=i/24_FOR_i=0_THROUGH_24',
+    orientation: 'WEST_TO_EAST',
+    parameterTable: GAMMA_28_PARAMETER_TABLE,
+    vertexTable: GAMMA_28_VERTEX_TABLE,
+    edgeTable: GAMMA_28_EDGE_TABLE,
+    endpointRecords: deepFreeze({
+      west: GAMMA_28_VERTEX_TABLE[0],
+      east: GAMMA_28_VERTEX_TABLE[GAMMA_28_VERTEX_TABLE.length - 1]
+    }),
+    vertexCount: GAMMA_28_VERTEX_TABLE.length,
+    edgeCount: GAMMA_28_EDGE_TABLE.length,
+    refinementLaw: deepFreeze({
+      authority: 'H_EARTH_GROUND_VIEW_SHARED_SEAM_AUTHORITY_GAMMA_28',
+      insertionRequiresFullConsumerPropagation: true,
+      splitParentEdgesRetire: true,
+      childEdgesReceiveNewStableIds: true,
+      unsplitStableIdsPreserved: true,
+      activePartitionTransitionAtomic: true
+    }),
+    retirementLaw: deepFreeze({
+      retiredPartitionMayRemainActive: false,
+      retiredEdgeMayRemainActiveWithChildren: false,
+      identityReuseAfterRetirementPermitted: false
+    }),
+    consumerLaw: deepFreeze({
+      consumerLocalReconstructionPermitted: false,
+      coordinateCoincidenceMaySubstituteForIdentity: false,
+      canonicalVertexAndEdgeReferencesRequired: true,
+      ownershipTransferByFaceIncidencePermitted: false
+    })
+  });
+
+function smoothCompactField(distanceSquared) {
+  if (distanceSquared >= 1) return 0;
+  const t = 1 - distanceSquared;
+  return t * t * (3 - 2 * t);
+}
+
+function ellipticalField(x, z, centerX, centerZ, radiusX, radiusZ) {
+  const nx = (x - centerX) / radiusX;
+  const nz = (z - centerZ) / radiusZ;
+  return smoothCompactField(nx * nx + nz * nz);
+}
+
+function requireWorldXZ(x, z) {
+  if (!isFiniteNumber(x) || !isFiniteNumber(z)) {
+    throw new TypeError(
+      'Terrain field coordinates x and z must be finite numbers.'
+    );
+  }
+}
+
+export function evaluateHEarthGroundViewBeachField(x, z) {
+  requireWorldXZ(x, z);
+  const waterwardProgress =
+    Math.max(0, Math.min(1, (z + 114) / 160));
+  const elevation = 1.6 - 1.35 * waterwardProgress;
+  return deepFreeze({
+    fieldId: 'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_BEACH',
+    contributionY: elevation,
+    weight: 1,
+    truthClass: 'TERRAIN_INTRINSIC_TRUTH'
+  });
+}
+
+export function evaluateHEarthGroundViewBluffField(x, z) {
+  requireWorldXZ(x, z);
+  const weight = ellipticalField(x, z, 32, -82, 64, 28);
+  return deepFreeze({
+    fieldId: 'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_BLUFF',
+    contributionY: 10 * weight,
+    weight,
+    truthClass: 'TERRAIN_INTRINSIC_TRUTH'
+  });
+}
+
+function evaluateTidePoolField(
+  fieldId,
+  x,
+  z,
+  centerX,
+  centerZ,
+  radiusX,
+  radiusZ,
+  depth
+) {
+  requireWorldXZ(x, z);
+  const weight =
+    ellipticalField(x, z, centerX, centerZ, radiusX, radiusZ);
+  return deepFreeze({
+    fieldId,
+    contributionY: -depth * weight,
+    weight,
+    truthClass: 'TERRAIN_INTRINSIC_TRUTH'
+  });
+}
+
+export function evaluateHEarthGroundViewTidePool001Field(x, z) {
+  return evaluateTidePoolField(
+    'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_TIDE_POOL_001',
+    x,
+    z,
+    -48,
+    -34,
+    15,
+    11,
+    0.5
+  );
+}
+
+export function evaluateHEarthGroundViewTidePool002Field(x, z) {
+  return evaluateTidePoolField(
+    'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_TIDE_POOL_002',
+    x,
+    z,
+    0,
+    -28,
+    17,
+    12,
+    0.6
+  );
+}
+
+export function evaluateHEarthGroundViewTidePool003Field(x, z) {
+  return evaluateTidePoolField(
+    'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_TIDE_POOL_003',
+    x,
+    z,
+    44,
+    -24,
+    14,
+    10,
+    0.45
+  );
+}
+
+export function evaluateHEarthGroundViewTerrain(x, z) {
+  requireWorldXZ(x, z);
+  const beach = evaluateHEarthGroundViewBeachField(x, z);
+  const bluff = evaluateHEarthGroundViewBluffField(x, z);
+  const tidePool001 = evaluateHEarthGroundViewTidePool001Field(x, z);
+  const tidePool002 = evaluateHEarthGroundViewTidePool002Field(x, z);
+  const tidePool003 = evaluateHEarthGroundViewTidePool003Field(x, z);
+  const elevationY =
+    beach.contributionY +
+    bluff.contributionY +
+    tidePool001.contributionY +
+    tidePool002.contributionY +
+    tidePool003.contributionY;
+  return deepFreeze({
+    evaluatorId: 'H_EARTH_GROUND_VIEW_COMBINED_TERRAIN_EVALUATOR_v1',
+    coordinateFrame: WORLD_FRAME,
+    x,
+    z,
+    elevationY,
+    fields: deepFreeze({
+      beach,
+      bluff,
+      tidePool001,
+      tidePool002,
+      tidePool003
+    }),
+    truthClass: 'TERRAIN_INTRINSIC_TRUTH',
+    materialAttachment: null,
+    objectAttachment: null,
+    rendererPresentation: null,
+    geometryConstructed: false
+  });
+}
+
+export const H_EARTH_GROUND_VIEW_TERRAIN_TRUTH_ATTACHMENT_SEPARATION =
+  deepFreeze({
+    terrainIntrinsicTruth: deepFreeze({
+      authorityId: 'H_EARTH_GROUND_VIEW_TERRAIN_INTRINSIC_TRUTH_v1',
+      evaluatorIds: deepFreeze([
+        'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_BEACH',
+        'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_BLUFF',
+        'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_TIDE_POOL_001',
+        'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_TIDE_POOL_002',
+        'H_EARTH_GROUND_VIEW_TERRAIN_FIELD_TIDE_POOL_003',
+        'H_EARTH_GROUND_VIEW_COMBINED_TERRAIN_EVALUATOR_v1'
+      ]),
+      ownsTerrainTruth: true
+    }),
+    materialAttachment:
+      deepFreeze({ ownedHere: false, requiredForTerrainTruth: false }),
+    objectAttachment:
+      deepFreeze({ ownedHere: false, requiredForTerrainTruth: false }),
+    rendererPresentation:
+      deepFreeze({ ownedHere: false, requiredForTerrainTruth: false }),
+    geometryBuffers:
+      deepFreeze({ constructedHere: false, authorizedHere: false })
+  });
+
+export const H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY =
+  deepFreeze({
+    authorityId: H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY_ID,
+    phase1Configuration: H_EARTH_GROUND_VIEW_PHASE_1_CONFIGURATION,
+    domainLaw: H_EARTH_GROUND_VIEW_DOMAIN_LAW,
+    canonicalSeamAuthority: H_EARTH_GROUND_VIEW_GAMMA_28_AUTHORITY,
+    legacyPreviewAuthority:
+      H_EARTH_GROUND_VIEW_LEGACY_SHORELINE_PREVIEW_AUTHORITY,
+    terrainTruthAttachmentSeparation:
+      H_EARTH_GROUND_VIEW_TERRAIN_TRUTH_ATTACHMENT_SEPARATION,
+    evaluatorSurfaceNames: deepFreeze([
+      'evaluateHEarthGroundViewF',
+      'evaluateHEarthGroundViewGamma28',
+      'evaluateHEarthGroundViewOpenWater',
+      'evaluateHEarthGroundViewBeachField',
+      'evaluateHEarthGroundViewBluffField',
+      'evaluateHEarthGroundViewTidePool001Field',
+      'evaluateHEarthGroundViewTidePool002Field',
+      'evaluateHEarthGroundViewTidePool003Field',
+      'evaluateHEarthGroundViewTerrain'
+    ]),
+    sourceMutationScope: 'ENVIRONMENT_AUTHORITY_ONLY',
+    geometryBuffersConstructed: false,
+    runtimeClaim: false,
+    visualClaim: false,
+    mathematicsReopened: false
+  });
+
 export const H_EARTH_3D_ENVIRONMENT_CONTRACT =
   deepFreeze({
     contractId:
@@ -1293,7 +1774,9 @@ export const H_EARTH_3D_ENVIRONMENT_CONTRACT =
     boundaryFlags:
       H_EARTH_3D_ENVIRONMENT_BOUNDARY_FLAGS,
     claimCeilings:
-      H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS
+      H_EARTH_3D_ENVIRONMENT_CLAIM_CEILINGS,
+    gateBGroundViewAuthority:
+      H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY
   });
 
 export const H_EARTH_3D_ENVIRONMENT =
@@ -1305,7 +1788,9 @@ export const H_EARTH_3D_ENVIRONMENT =
     resolvedZones:
       H_EARTH_3D_RESOLVED_ENVIRONMENT_ZONES,
     receipt:
-      H_EARTH_3D_ENVIRONMENT_RECEIPT
+      H_EARTH_3D_ENVIRONMENT_RECEIPT,
+    gateBGroundViewAuthority:
+      H_EARTH_GROUND_VIEW_GATE_B_ENVIRONMENT_AUTHORITY
   });
 
 export function getHEarth3DEnvironmentContract() {

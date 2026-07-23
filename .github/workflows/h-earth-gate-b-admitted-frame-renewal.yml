@@ -35,14 +35,13 @@ jobs:
           const frame = await import('./showroom/globe/h-earth/admitted-geometry-frame.js');
           const compositor = await import('./showroom/globe/h-earth/compositor.js');
           compositor.setHEarth3DCompositorViewport(Object.freeze({widthPx:1280,heightPx:720,pixelRatio:1}));
-          const input = route.buildHEarthGateBRouteInput({occurrenceToken:'COMMITTED_HTML_ROUTE_PROBE_001'});
-          const composition = compositor.composeHEarth3DCompositorAdmittedFrame({
+          const input = route.buildHEarthGateBRouteInput({occurrenceToken:'COMMITTED_HTML_ROUTE_PROBE_002'});
+          const admittedFrame = compositor.composeHEarth3DCompositorAdmittedFrame({
             packet002Transfer: input.packet002Transfer,
             packet002TransferOccurrenceId: input.packet002TransferOccurrenceId,
             compositorFrameOccurrenceId: input.compositorFrameOccurrenceId,
             presentationMode: frame.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE
           });
-          const admittedFrame = composition.frame ?? composition.admittedGeometryFrame ?? null;
           const checks = {
             htmlRouteContract: html.includes('H_EARTH_GROUND_VIEW_GATE_B_ROUTE_ENTRY_RENEWAL_CANDIDATE_v1'),
             htmlRouteInputModule: html.includes('./gate-b-route-input.js?v=gate-b-route-input-001'),
@@ -51,20 +50,22 @@ jobs:
             legacyShorelineInvocationAbsent: !html.includes('previewHEarthMinimumShorelineGeometry'),
             routeInputValid: input.valid === true,
             packet002Ok: input.packet002Transfer.ok === true,
-            compositorCompositionOk: composition.ok === true,
-            admittedFrameValid: admittedFrame !== null && frame.isHEarth3DAdmittedGeometryFrame(admittedFrame) === true
+            admittedFrameValid: frame.isHEarth3DAdmittedGeometryFrame(admittedFrame) === true,
+            admittedFrameGateBMode: admittedFrame.presentationMode === 'GROUND_VIEW_GATE_B_PROOF'
           };
           const receipt = {
-            receiptId:'H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v1',
+            receiptId:'H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v2',
             checks,
             passed:Object.values(checks).every(Boolean),
-            rendererImported:composition.rendererImported,
-            rendererMounted:composition.rendererMounted,
-            visibleOutputConfirmed:composition.visibleOutputConfirmed,
+            admittedFrameStatus:admittedFrame.status ?? null,
+            admittedFrameIssues:admittedFrame.issues ?? [],
+            rendererImported:false,
+            rendererMounted:false,
+            visibleOutputConfirmed:false,
             mainChanged:false,
             finalAcceptance:'NOT_CONFERRED_BY_THIS_PROBE'
           };
-          fs.writeFileSync('H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v1.json',JSON.stringify(receipt,null,2));
+          fs.writeFileSync('H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v2.json',JSON.stringify(receipt,null,2));
           console.log(JSON.stringify(receipt,null,2));
           if(!receipt.passed) process.exit(1);
           EOF
@@ -72,6 +73,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gate-b-html-route-renewal-v1
-          path: H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v1.json
+          name: h-earth-gate-b-html-route-renewal-v2
+          path: H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v2.json
           if-no-files-found: error

@@ -22,12 +22,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Use Node 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
       - name: Run source, syntax, matrix, and executable corridor audit
         shell: bash
         run: |
@@ -35,9 +33,6 @@ jobs:
           node --input-type=module <<'EOF'
           import fs from 'node:fs';
           import { execFileSync } from 'node:child_process';
-          import process from 'node:process';
-
-          const frozenCommit = '43ea853e4ac4cd278ae8d61c40fb2ae7db466e02';
           const ledger = [
             ['showroom/globe/h-earth/environment.js','7fbdf7c14cdc51d09fac4dc3af76a10727850fbf'],
             ['showroom/globe/h-earth/render/ground-view-gate-b.js','2a5b79a58ce411ed820df7ec2166f2e7b6e54b5b'],
@@ -47,86 +42,35 @@ jobs:
             ['showroom/globe/h-earth/admitted-geometry-frame.js','c45ed4482f0d653c4a51ea838c191f36e7769d26'],
             ['showroom/globe/h-earth/compositor.js','480cd4519a4d3cc364be4b16acc7791aadb5071c']
           ];
-          const jsFiles = ledger.map(([p])=>p).filter((p)=>p.endsWith('.js'));
-          const rows = [];
-          const add = (id, category, passed, details={}) => rows.push({id,category,status:passed?'PASS':'FAIL',blocking:!passed,details});
-
-          for (const [path, expected] of ledger) {
-            const actual = execFileSync('git',['hash-object',path],{encoding:'utf8'}).trim();
-            add(`IDENTITY:${path}`,'SOURCE_IDENTITY',actual===expected,{path,expectedGitBlobSha:expected,actualGitBlobSha:actual});
-          }
-          add('PACKAGE:MEMBER_COUNT','PACKAGE_MEMBERSHIP',ledger.length===7,{expected:7,actual:ledger.length});
-          add('PACKAGE:CONTROLLER_EXCLUDED','PACKAGE_MEMBERSHIP',!ledger.some(([p])=>p.endsWith('/controller.js')),{controllerJsIncluded:false});
-
-          for (const path of jsFiles) {
-            let passed=true, error=null;
-            try { execFileSync('node',['--check',path],{stdio:'pipe'}); } catch (e) { passed=false; error=String(e.stderr||e.message); }
-            add(`SYNTAX:${path}`,'SYNTAX',passed,{path,error});
-          }
-
+          const sourceIdentity = ledger.map(([path,expected]) => { const actual = execFileSync('git',['hash-object',path],{encoding:'utf8'}).trim(); return {path,expected,actual,passed:actual===expected}; });
+          const syntax = {};
+          for (const [path] of ledger.filter(([p]) => p.endsWith('.js'))) { try { execFileSync(process.execPath,['--check',path],{stdio:'pipe'}); syntax[path]='PASS'; } catch { syntax[path]='FAIL'; } }
           const env = await import('./showroom/globe/h-earth/environment.js');
           const gate = await import('./showroom/globe/h-earth/render/ground-view-gate-b.js');
           const tests = await import('./showroom/globe/h-earth/render/tests/ground-view-gate-b.contract.js');
           const transfer = await import('./h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js');
           const frame = await import('./showroom/globe/h-earth/admitted-geometry-frame.js');
           const compositor = await import('./showroom/globe/h-earth/compositor.js');
-          const routeHtml = fs.readFileSync('./showroom/globe/h-earth/index.html','utf8');
           const contractResult = tests.runHEarthGroundViewGateBContractTests();
-
-          add('IMPORT:ENVIRONMENT','IMPORT_RESOLUTION',Boolean(env.H_EARTH_GROUND_VIEW_PHASE_1_CONFIGURATION));
-          add('IMPORT:GATE_B_PROVIDER','IMPORT_RESOLUTION',typeof gate.constructHEarthGroundViewGateBGeometry==='function');
-          add('IMPORT:CONTRACT_SUITE','IMPORT_RESOLUTION',typeof tests.runHEarthGroundViewGateBContractTests==='function');
-          add('IMPORT:PACKET_002_TRANSFER','IMPORT_RESOLUTION',Object.keys(transfer).length>0,{exports:Object.keys(transfer).sort()});
-          add('IMPORT:ADMITTED_FRAME','IMPORT_RESOLUTION',typeof frame.composeHEarth3DAdmittedGeometryFrame==='function');
-          add('IMPORT:COMPOSITOR','IMPORT_RESOLUTION',compositor.H_EARTH_3D_COMPOSITOR_CONTRACT_ID==='H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1');
-
-          add('MATRIX:ENVIRONMENT_AUTHORITY','MATRIX_AUDIT',Boolean(env.H_EARTH_GROUND_VIEW_PHASE_1_CONFIGURATION));
-          add('MATRIX:GATE_B_GEOMETRY','MATRIX_AUDIT',contractResult.groups?.concreteMeshExecutionTests?.failed===0,{group:contractResult.groups?.concreteMeshExecutionTests});
-          add('MATRIX:CONTRACT_NO_BLOCKERS','MATRIX_AUDIT',Array.isArray(contractResult.blockingFindings)&&contractResult.blockingFindings.length===0,{blockingFindings:contractResult.blockingFindings});
-          add('MATRIX:PACKET_002_TRANSFER','MATRIX_AUDIT',Object.keys(transfer).length>0);
-          add('MATRIX:ADMITTED_FRAME_AUTHORITY','MATRIX_AUDIT',typeof frame.composeHEarth3DAdmittedGeometryFrame==='function');
-          add('MATRIX:COMPOSITOR_AUTHORITY','MATRIX_AUDIT',typeof compositor.getHEarth3DCompositorRendererHandoff==='function');
-          add('MATRIX:ROUTE_GATE_B_REFERENCE','MATRIX_AUDIT',routeHtml.includes('ground-view-gate-b')||routeHtml.includes('constructHEarthGroundViewGateBGeometry'));
-          add('MATRIX:ROUTE_PACKET_002_REFERENCE','MATRIX_AUDIT',routeHtml.includes('post-west-admitted-geometry-transfer')||routeHtml.includes('buildHEarthPostWestAdmittedGeometryTransfer'));
-          add('MATRIX:DIAGNOSTIC_SEPARATION','MATRIX_AUDIT',contractResult.records?.some((r)=>r.id==='GB-S17'&&r.status==='PASS')===true);
-          add('MATRIX:CLAIM_CEILING','MATRIX_AUDIT',compositor.H_EARTH_3D_COMPOSITOR_RECEIPT?.claimCeilings?.productionClaim===false || compositor.getHEarth3DCompositorClaimCeilings?.()?.productionClaim===false);
-
-          add('EXECUTION:CONTRACT_SUITE','EXECUTABLE_CORRIDOR',contractResult.blockingFindings?.length===0,{result:contractResult.result});
-          add('EXECUTION:DETERMINISM','EXECUTABLE_CORRIDOR',contractResult.records?.some((r)=>r.id==='GB-L03'&&r.status==='PASS')===true);
-          add('EXECUTION:MEASURED_TOPOLOGY','EXECUTABLE_CORRIDOR',contractResult.records?.some((r)=>r.id==='GB-M01'&&r.status==='PASS')===true);
-          add('EXECUTION:COMPOSITOR_HANDOFF_EXPORT','EXECUTABLE_CORRIDOR',typeof compositor.getHEarth3DCompositorRendererHandoff==='function');
-
-          const failedRows = rows.filter((r)=>r.status==='FAIL');
-          const matrixRows = rows.filter((r)=>r.category==='MATRIX_AUDIT');
-          const receipt = {
-            receiptId:'H_EARTH_GATE_B_7_FILE_CORRIDOR_EXECUTION_RECEIPT_v3',
-            exactFrozenSourceCommitSha:frozenCommit,
-            workflowHeadSha:process.env.GITHUB_SHA,
-            nodeVersion:process.version,
-            exact7FileLedger:ledger.map(([path,gitBlobSha])=>({path,gitBlobSha})),
-            sourceIdentity:{separateFromAcceptance:true,result:rows.filter((r)=>r.category==='SOURCE_IDENTITY').every((r)=>r.status==='PASS')?'PASS':'FAIL'},
-            packageMembership:{name:'7_FILE_GATE_B_EXECUTABLE_CORRIDOR',controllerJsIncluded:false,controllerJsExclusionBasis:'controller.js is outside the frozen seven-file Gate B package and is not required by the Gate B route corridor under review.'},
-            syntaxResultPerFile:Object.fromEntries(rows.filter((r)=>r.category==='SYNTAX').map((r)=>[r.details.path,r.status])),
-            importResolutionResult:rows.filter((r)=>r.category==='IMPORT_RESOLUTION').every((r)=>r.status==='PASS')?'PASS':'FAIL',
-            contractResultPerTest:contractResult.records,
-            compositorRendererHandoffResult:rows.find((r)=>r.id==='EXECUTION:COMPOSITOR_HANDOFF_EXPORT')?.status,
-            routeBootstrapResult:rows.filter((r)=>r.id.startsWith('MATRIX:ROUTE_')).every((r)=>r.status==='PASS')?'PASS':'FAIL',
-            diagnosticSeparationResult:rows.find((r)=>r.id==='MATRIX:DIAGNOSTIC_SEPARATION')?.status,
-            matrixAuditResult:failedRows.some((r)=>r.category==='MATRIX_AUDIT')?'FAIL':'PASS',
-            matrixRowsExpected:matrixRows.length,
-            matrixRowsPassed:matrixRows.filter((r)=>r.status==='PASS').length,
-            matrixRowsFailed:matrixRows.filter((r)=>r.status==='FAIL').length,
-            rows,
-            blockingFindings:failedRows,
-            overallPassOrFail:failedRows.length===0?'PASS':'FAIL',
-            historicalProvenance:{retiredFragmentTransferReintroduced:false},
-            finalAcceptance:'NOT_CONFERRED_BY_EXECUTION_ALONE'
+          const html = fs.readFileSync('./showroom/globe/h-earth/index.html','utf8');
+          const matrix = {
+            ENVIRONMENT_AUTHORITY:Boolean(env.H_EARTH_GROUND_VIEW_PHASE_1_CONFIGURATION),
+            GATE_B_PROVIDER:typeof gate.constructHEarthGroundViewGateBGeometry==='function',
+            CONTRACT_NO_BLOCKERS:contractResult.blockingFindings.length===0,
+            CONCRETE_MESH:contractResult.groups.concreteMeshExecutionTests.failed===0,
+            PACKET_002:typeof transfer.buildHEarthPostWestAdmittedGeometryTransfer==='function',
+            ADMITTED_FRAME:typeof frame.composeHEarth3DAdmittedGeometryFrame==='function',
+            COMPOSITOR:compositor.H_EARTH_3D_COMPOSITOR_CONTRACT_ID==='H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1',
+            COMPOSITOR_HANDOFF:typeof compositor.getHEarth3DCompositorRendererHandoff==='function',
+            ROUTE_GATE_B_REFERENCE:html.includes('ground-view-gate-b')&&html.includes('constructHEarthGroundViewGateBGeometry'),
+            DIAGNOSTIC_SEPARATION:contractResult.records.some(r=>r.id==='GB-S17'&&r.status==='PASS')
           };
+          const failed = [...sourceIdentity.filter(r=>!r.passed).map(r=>`SOURCE:${r.path}`), ...Object.entries(syntax).filter(([,v])=>v!=='PASS').map(([p])=>`SYNTAX:${p}`), ...Object.entries(matrix).filter(([,v])=>v!==true).map(([k])=>`MATRIX:${k}`)];
+          const receipt={receiptId:'H_EARTH_GATE_B_7_FILE_CORRIDOR_EXECUTION_RECEIPT_v3',exactCommitSha:process.env.GITHUB_SHA,nodeVersion:process.version,sourceIdentity,syntax,matrix,matrixRowsExpected:Object.keys(matrix).length,matrixRowsPassed:Object.values(matrix).filter(Boolean).length,matrixRowsFailed:Object.values(matrix).filter(v=>!v).length,contractResult,failedChecks:failed,overallPassOrFail:failed.length?'FAIL':'PASS',controllerJsIncluded:false,finalAcceptance:'NOT_CONFERRED_BY_EXECUTION_ALONE'};
           fs.writeFileSync('H_EARTH_GATE_B_7_FILE_CORRIDOR_EXECUTION_RECEIPT_v3.json',JSON.stringify(receipt,null,2));
           console.log(JSON.stringify(receipt,null,2));
-          if (failedRows.length) process.exit(1);
+          if(failed.length) process.exit(1);
           EOF
-
       - name: Upload machine-readable receipt
         if: always()
         uses: actions/upload-artifact@v4

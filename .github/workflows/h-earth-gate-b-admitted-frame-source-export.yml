@@ -15,14 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Export exact admitted-frame source
+      - name: Export exact admitted-frame and compositor sources
         run: |
           cp showroom/globe/h-earth/admitted-geometry-frame.js H_EARTH_ADMITTED_GEOMETRY_FRAME_SOURCE.js
+          cp showroom/globe/h-earth/compositor.js H_EARTH_COMPOSITOR_SOURCE.js
           grep -n "H_EARTH_3D_.*PROOF_MODE\|EXPECTED_.*SOURCE_\|presentationMode\|presentationRole\|materialReference" showroom/globe/h-earth/admitted-geometry-frame.js > H_EARTH_ADMITTED_GEOMETRY_FRAME_PATCH_INDEX.txt
+          grep -n "H_EARTH_3D_.*PROOF_MODE\|ADMITTED_PRESENTATION_MODES\|presentationMode" showroom/globe/h-earth/compositor.js > H_EARTH_COMPOSITOR_PATCH_INDEX.txt
       - uses: actions/upload-artifact@v4
         with:
           name: h-earth-gate-b-admitted-frame-source
           path: |
             H_EARTH_ADMITTED_GEOMETRY_FRAME_SOURCE.js
             H_EARTH_ADMITTED_GEOMETRY_FRAME_PATCH_INDEX.txt
+            H_EARTH_COMPOSITOR_SOURCE.js
+            H_EARTH_COMPOSITOR_PATCH_INDEX.txt
           if-no-files-found: error

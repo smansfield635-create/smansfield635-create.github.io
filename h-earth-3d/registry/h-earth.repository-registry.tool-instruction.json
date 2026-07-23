@@ -78,7 +78,12 @@
     "HIGHER_AUTHORITY_CONFLICT_OR_UNRESOLVED_CRITICAL_FIELD"
   ],
   "cardinalStructure": {
-    "explicitKernelSequence": ["NORTH", "EAST", "SOUTH", "WEST"],
+    "explicitKernelSequence": [
+      "NORTH",
+      "EAST",
+      "SOUTH",
+      "WEST"
+    ],
     "publicFacadeOwnsMemberAuthority": false,
     "compositeOwnsMemberAuthority": false,
     "gateBCardinalStatus": "OBSERVED_CANDIDATE_NONCANONICAL",
@@ -100,13 +105,13 @@
   },
   "instructionSurfaces": {
     "detailedInstructionPath": "/h-earth-3d/registry/H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1.md",
-    "pathSpecificGitHubInstructionPath": "/.github/instructions/h-earth-repository-registry.instructions.md",
     "agentInstructionPaths": [
       "/h-earth-3d/AGENTS.md",
       "/showroom/globe/h-earth/AGENTS.md"
     ],
     "auditPath": "/tools/h-earth-repository-registry-target-3-audit.mjs",
-    "receiptPath": "/h-earth-3d/registry/h-earth.repository-registry.target-3-receipt.json"
+    "receiptPath": "/h-earth-3d/registry/h-earth.repository-registry.target-3-receipt.json",
+    "githubToolInstructionPath": "/h-earth-3d/registry/h-earth.repository-registry.github-instruction.md"
   },
   "boundaries": {
     "registryAccepted": false,

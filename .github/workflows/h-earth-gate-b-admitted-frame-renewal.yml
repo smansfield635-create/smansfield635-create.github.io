@@ -1,4 +1,4 @@
-name: H-Earth Gate B Admitted Frame Renewal
+name: H-Earth Gate B Browser Renderer Audit
 
 on:
   pull_request:
@@ -10,9 +10,10 @@ permissions:
   contents: read
 
 jobs:
-  renew:
+  browser-audit:
     if: github.head_ref == 'agent/h-earth-gate-b-seven-file-trigger-001'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,59 +21,128 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Execute committed Gate B route matrix
+      - name: Install browser runtime
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve isolated branch
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-server.log 2>&1 &
+          echo $! > /tmp/h-earth-server.pid
+          for attempt in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-server.log
+          exit 1
+      - name: Execute browser-visible Gate B route audit
         shell: bash
         run: |
           set -euo pipefail
-          node --check showroom/globe/h-earth/gate-b-route-input.js
-          node --check showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js
-          node --check showroom/globe/h-earth/admitted-geometry-frame.js
-          node --check showroom/globe/h-earth/compositor.js
           node --input-type=module <<'EOF'
           import fs from 'node:fs';
-          const html = fs.readFileSync('showroom/globe/h-earth/index.html','utf8');
-          const route = await import('./showroom/globe/h-earth/gate-b-route-input.js');
-          const frame = await import('./showroom/globe/h-earth/admitted-geometry-frame.js');
-          const compositor = await import('./showroom/globe/h-earth/compositor.js');
-          compositor.setHEarth3DCompositorViewport(Object.freeze({widthPx:1280,heightPx:720,pixelRatio:1}));
-          const input = route.buildHEarthGateBRouteInput({occurrenceToken:'COMMITTED_HTML_ROUTE_PROBE_002'});
-          const admittedFrame = compositor.composeHEarth3DCompositorAdmittedFrame({
-            packet002Transfer: input.packet002Transfer,
-            packet002TransferOccurrenceId: input.packet002TransferOccurrenceId,
-            compositorFrameOccurrenceId: input.compositorFrameOccurrenceId,
-            presentationMode: frame.H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE
+          import { chromium } from 'playwright';
+
+          const browser = await chromium.launch({ headless: true });
+          const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
+          const consoleMessages = [];
+          const pageErrors = [];
+          const failedRequests = [];
+
+          page.on('console', message => consoleMessages.push({ type: message.type(), text: message.text() }));
+          page.on('pageerror', error => pageErrors.push({ name: error.name, message: error.message, stack: error.stack ?? null }));
+          page.on('requestfailed', request => failedRequests.push({ url: request.url(), failure: request.failure()?.errorText ?? null }));
+
+          const response = await page.goto(
+            'http://127.0.0.1:4173/showroom/globe/h-earth/',
+            { waitUntil: 'networkidle', timeout: 60000 }
+          );
+
+          await page.waitForFunction(() => {
+            const root = document.getElementById('h-earth-3d-route-root');
+            return root?.dataset?.hEarthHtmlEntryTaskComplete === 'true';
+          }, null, { timeout: 60000 });
+
+          await page.screenshot({ path: 'H_EARTH_GATE_B_BROWSER_RENDERER_AUDIT_v1.png', fullPage: true });
+
+          const evidence = await page.evaluate(() => {
+            const root = document.getElementById('h-earth-3d-route-root');
+            const mount = document.getElementById('h-earth-3d-renderer-mount');
+            const entryReceipt = globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_RECEIPT ?? null;
+            const failureReceipt = globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE ?? null;
+            const rendererReceipt = globalThis.H_EARTH_3D_PUBLIC_RENDERER_BOOTSTRAP_RECEIPT ?? null;
+            const routeReceipt = globalThis.H_EARTH_3D_PUBLIC_ROUTE_BOOTSTRAP_RECEIPT ?? null;
+            const mountRect = mount?.getBoundingClientRect?.() ?? null;
+            const visibleDescendants = mount
+              ? [...mount.querySelectorAll('*')].filter(node => {
+                  const rect = node.getBoundingClientRect();
+                  const style = getComputedStyle(node);
+                  return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity || 1) > 0;
+                }).length
+              : 0;
+
+            return {
+              title: document.title,
+              rootDataset: root ? { ...root.dataset } : null,
+              rootClasses: root ? [...root.classList] : [],
+              statusText: document.getElementById('h-earth-3d-status')?.textContent?.trim() ?? null,
+              fallbackText: document.getElementById('h-earth-3d-fallback')?.textContent?.trim() ?? null,
+              mountObserved: Boolean(mount),
+              mountChildCount: mount?.childElementCount ?? 0,
+              mountRect: mountRect ? { width: mountRect.width, height: mountRect.height } : null,
+              visibleDescendantCount: visibleDescendants,
+              canvasCount: mount?.querySelectorAll('canvas').length ?? 0,
+              svgCount: mount?.querySelectorAll('svg').length ?? 0,
+              entryReceipt,
+              failureReceipt,
+              rendererReceipt,
+              routeReceipt
+            };
           });
+
           const checks = {
-            htmlRouteContract: html.includes('H_EARTH_GROUND_VIEW_GATE_B_ROUTE_ENTRY_RENEWAL_CANDIDATE_v1'),
-            htmlRouteInputModule: html.includes('./gate-b-route-input.js?v=gate-b-route-input-001'),
-            htmlRouteInputFunction: html.includes('buildHEarthGateBRouteInput'),
-            htmlGateBPresentationMode: html.includes('H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE') && html.includes('GROUND_VIEW_GATE_B_PROOF'),
-            legacyShorelineInvocationAbsent: !html.includes('previewHEarthMinimumShorelineGeometry'),
-            routeInputValid: input.valid === true,
-            packet002Ok: input.packet002Transfer.ok === true,
-            admittedFrameValid: frame.isHEarth3DAdmittedGeometryFrame(admittedFrame) === true,
-            admittedFrameGateBMode: admittedFrame.presentationMode === 'GROUND_VIEW_GATE_B_PROOF'
+            httpOk: response?.ok() === true,
+            htmlEntryComplete: evidence.rootDataset?.hEarthHtmlEntryTaskComplete === 'true',
+            noHtmlEntryFailure: evidence.failureReceipt === null,
+            entryReceiptObserved: evidence.entryReceipt !== null,
+            gateBPresentationMode: evidence.entryReceipt?.presentationMode === 'GROUND_VIEW_GATE_B_PROOF',
+            rendererBootstrapRequested: evidence.rootDataset?.hEarthRendererBootstrapRequested === 'true',
+            rendererMountObserved: evidence.mountObserved === true,
+            rendererMountHasArea: (evidence.mountRect?.width ?? 0) > 0 && (evidence.mountRect?.height ?? 0) > 0,
+            rendererMaterializedChildren: evidence.mountChildCount > 0,
+            browserVisibleOutput: evidence.visibleDescendantCount > 0,
+            noPageErrors: pageErrors.length === 0,
+            noFailedModuleRequests: failedRequests.filter(item => /\.(?:js|css)(?:\?|$)/.test(item.url)).length === 0
           };
+
           const receipt = {
-            receiptId:'H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v2',
+            receiptId: 'H_EARTH_GATE_B_BROWSER_RENDERER_AUDIT_RECEIPT_v1',
+            auditedUrl: page.url(),
             checks,
-            passed:Object.values(checks).every(Boolean),
-            admittedFrameStatus:admittedFrame.status ?? null,
-            admittedFrameIssues:admittedFrame.issues ?? [],
-            rendererImported:false,
-            rendererMounted:false,
-            visibleOutputConfirmed:false,
-            mainChanged:false,
-            finalAcceptance:'NOT_CONFERRED_BY_THIS_PROBE'
+            passed: Object.values(checks).every(Boolean),
+            evidence,
+            consoleMessages,
+            pageErrors,
+            failedRequests,
+            screenshot: 'H_EARTH_GATE_B_BROWSER_RENDERER_AUDIT_v1.png',
+            mainChanged: false,
+            finalAcceptance: 'NOT_CONFERRED_BY_THIS_AUDIT'
           };
-          fs.writeFileSync('H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v2.json',JSON.stringify(receipt,null,2));
-          console.log(JSON.stringify(receipt,null,2));
-          if(!receipt.passed) process.exit(1);
+
+          fs.writeFileSync(
+            'H_EARTH_GATE_B_BROWSER_RENDERER_AUDIT_RECEIPT_v1.json',
+            JSON.stringify(receipt, null, 2)
+          );
+          console.log(JSON.stringify(receipt, null, 2));
+          await browser.close();
+          if (!receipt.passed) process.exit(1);
           EOF
-      - name: Upload committed route receipt
+      - name: Upload browser audit evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gate-b-html-route-renewal-v2
-          path: H_EARTH_GATE_B_HTML_ROUTE_RENEWAL_RECEIPT_v2.json
+          name: h-earth-gate-b-browser-renderer-audit-v1
+          path: |
+            H_EARTH_GATE_B_BROWSER_RENDERER_AUDIT_RECEIPT_v1.json
+            H_EARTH_GATE_B_BROWSER_RENDERER_AUDIT_v1.png
           if-no-files-found: error

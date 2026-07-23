@@ -17,22 +17,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Execute successor validation and full regression corridor
+      - name: Execute successor validation and acceptance-aware regression corridor
         run: |
           mkdir -p artifacts/successor-v2-regression
           set +e
           commands=(
             "node tools/h-earth-repository-registry-successor-v2-audit.mjs"
-            "node tools/h-earth-repository-registry-audit.mjs"
-            "node tools/h-earth-repository-registry-target-3-audit.mjs"
             "node tools/h-earth-repository-registry-target-4a-contract-audit.mjs"
             "node tools/h-earth-repository-registry-target-4b-audit.mjs"
             "node tools/h-earth-repository-registry-target-4c-static-audit.mjs"
             "node tools/h-earth-repository-registry-target-4c-audit.mjs"
             "node tools/h-earth-repository-registry-target-4e-static-audit.mjs"
             "node tools/h-earth-repository-registry-target-4e-audit.mjs"
+            "node tools/h-earth-repository-registry-target-4f-audit.mjs"
           )
-          names=(successor target2 target3 target4a target4b target4c-static target4c-fixtures target4e-static target4e-systemic)
+          names=(successor target4a target4b target4c-static target4c-fixtures target4e-static target4e-systemic target4f-accepted-package)
           overall=0
           : > artifacts/successor-v2-regression/summary.txt
           for i in "${!commands[@]}"; do

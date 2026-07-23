@@ -15,16 +15,17 @@ export const ARCHCOIN_COMPASS_EXTRACTION_STATES = Object.freeze({
 
 export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
   schema: "ARCHCOIN_COMPASS_EXTRACTION_LEDGER_v1",
-  status: "MAIN_COMPASS_FIRST_EXTRACTION_RECORDED",
+  status: "MAIN_COMPASS_FILE_LEVEL_EXTRACTION_COMPLETE",
   chamber: "ARCHCOIN",
   referenceModelAuthority: "NOT_YET_ESTABLISHED",
   entries: Object.freeze([
     Object.freeze({
       capabilityId: "COMPASS_PHYSICS_AND_NAVIGATION_CORE",
       sourceFamily: "MAIN_COMPASS_SOURCE_FAMILY",
-      candidateValue: "Preserve the strongest verified motion, navigation, cluster-capacity, and passage-custody mechanisms.",
-      state: "SOURCE_VERIFIED",
+      candidateValue: "Preserve the strongest verified motion, navigation, cluster-capacity, interruption-recovery, and passage-custody mechanisms.",
+      state: "EXTRACTED",
       evidenceCommit: "eceac4d5297b2f087c1cf718e29d79c119c29db1",
+      extractionArtifact: "/research/archcoin-compass-calibration/main-compass-extraction.js",
       evidencePaths: Object.freeze([
         "/assets/compass/compass.controller.js",
         "/assets/compass/compass.crystals.js",
@@ -37,43 +38,43 @@ export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
       extractedCapabilities: Object.freeze([
         Object.freeze({
           id: "SEPARATE_CONSTELLATION_AND_CLUSTER_ORIENTATION_CUSTODY",
-          evidence: "Controller preserves one constellation quaternion and one independent quaternion per active cardinal cluster.",
-          boundary: "Orientation commitment remains controller-owned; rendering remains crystal-owned."
+          evidence: "Controller preserves one constellation quaternion and one independent quaternion, committed quaternion, gesture origin, phase, and revision per cardinal cluster.",
+          boundary: "Orientation preview and commitment remain controller-owned; world and render evaluation remain outside the controller."
         }),
         Object.freeze({
           id: "PREVIEW_COMMIT_CANCEL_ORIENTATION_PHASES",
-          evidence: "IDLE, PREVIEW, SETTLING, COMMITTED, and CANCELLED phases distinguish manipulation from canonical commitment.",
-          boundary: "A drag release does not itself authorize navigation or room selection."
+          evidence: "IDLE, PREVIEW, SETTLING, COMMITTED, and CANCELLED distinguish manipulation from canonical commitment.",
+          boundary: "A drag release does not itself authorize cluster opening, room selection, panel descent, or route navigation."
         }),
         Object.freeze({
           id: "SHARED_SPHERICAL_TRANSFORM",
-          evidence: "Cardinal and room nodes are projected from right-handed Euclidean XYZ vectors through unit-quaternion orientation.",
-          boundary: "Relative node membership is transformed as one constellation or one cluster rather than independent screen drift."
+          evidence: "Cardinal and room nodes are evaluated from right-handed Euclidean XYZ vectors through unit-quaternion orientation as one constellation or active cluster.",
+          boundary: "The mechanism is extracted independently of Main-specific cardinal labels, routes, materials, and page identity."
         }),
         Object.freeze({
           id: "PRIMARY_ANCHOR_SETTLEMENT",
-          evidence: "Controlled drag release settles the nearest cardinal or room to a defined primary anchor.",
-          boundary: "Settlement selects visual focus; route commitment remains a separate controller decision."
+          evidence: "Controlled drag release settles a cardinal or room target toward a defined world-space primary anchor.",
+          boundary: "Settlement commits visual focus only; semantic selection and route commitment remain separate controller passages."
         }),
         Object.freeze({
           id: "DRAG_FLICK_CLASSIFICATION",
           evidence: "Cluster return is separated from ordinary drag using duration, distance, average velocity, release velocity, directional ratio, path efficiency, and pause-before-release.",
-          boundary: "Ordinary systematic pulls cannot be interpreted as constellation-return flicks."
+          boundary: "Ordinary systematic pulls cannot be interpreted as constellation-return flicks merely because the pointer was released."
         }),
         Object.freeze({
           id: "DEPTH_AWARE_SEMANTIC_SELECTION",
-          evidence: "Rendered position, depth, scale, prominence, label opacity, semantic stacking, and hit priority derive from rotated three-dimensional vectors.",
-          boundary: "Controller does not calculate rendered hit targets."
+          evidence: "Rendered position, depth, scale, prominence, halo, label opacity, semantic stacking, and hit priority derive from rotated three-dimensional vectors.",
+          boundary: "The reusable rule is shared visual and semantic projection, not automatic inheritance of Main's combined renderer architecture."
         }),
         Object.freeze({
           id: "POINTER_AND_RENDERER_INTERRUPTION_RECOVERY",
-          evidence: "Crystal runtime accounts for pointer cancellation, lost capture, blur, visibility interruption, page hiding, partial initialization rollback, reduced motion, and WebGL context loss.",
-          boundary: "Recovery preserves controller state and avoids accidental semantic clicks after motion."
+          evidence: "Runtime accounts for pointer cancellation, lost capture, blur, visibility interruption, page hiding, partial initialization rollback, reduced motion, and WebGL context loss.",
+          boundary: "Recovery must restore or cancel the active transaction deterministically and suppress accidental semantic activation."
         }),
         Object.freeze({
           id: "NAVIGATION_SEPARATION",
-          evidence: "Crystal renderer owns gesture interpretation and projection while the controller owns state commitment, panel descent, return-to-orbit, Mirrorland restoration, and route navigation.",
-          boundary: "Crystal renderer explicitly does not own navigation."
+          evidence: "The controller separately governs visual-focus commitment, cardinal selection, room selection, panel descent, return-to-orbit, constellation restoration, Mirrorland restoration, and route navigation.",
+          boundary: "Renderer settlement and hit detection do not independently authorize navigation."
         })
       ]),
       parameterEvidence: Object.freeze({
@@ -82,16 +83,23 @@ export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
           vertical: 1.34,
           depth: 1.16
         }),
+        constellationPrimaryAnchor: Object.freeze([0, 0.78, 0.625]),
         clusterRadii: Object.freeze({
           horizontal: 1.36,
           vertical: 1.18,
           depth: 1.04
         }),
+        clusterPrimaryAnchor: Object.freeze([0, 0.70, 0.714]),
+        clusterLatitudeAmplitude: 0.48,
+        clusterLatitudeFrequency: 1.73,
         gesture: Object.freeze({
           dragDeadZonePx: 6,
           maximumTapDistancePx: 12,
           minimumDragDistancePx: 8,
+          radiansPerViewport: "Math.PI * 1.12",
+          settleSpeed: 7.4,
           sampleWindowMs: 140,
+          maximumSamples: 18,
           flickMaximumDurationMs: 260,
           flickMinimumDistancePx: 52,
           flickMinimumAverageVelocityPxPerMs: 0.55,
@@ -101,12 +109,19 @@ export const ARCHCOIN_COMPASS_EXTRACTION_LEDGER = Object.freeze({
           flickMaximumPathEfficiencyLoss: 0.22
         })
       }),
-      conflicts: Object.freeze([]),
+      conflicts: Object.freeze([
+        "Main Compass combines world geometry, camera projection, hit testing, gesture interpretation, and WebGL rendering in one crystal source; the extracted capabilities do not automatically admit that ownership arrangement.",
+        "Main-specific semantic identities, routes, panel copy, and Mirrorland page behavior are excluded from the reusable core.",
+        "Source constants remain calibration evidence rather than admitted universal values."
+      ]),
       admissionBlockedBy: Object.freeze([
-        "DEPENDENCY_MAP",
+        "LAW_COMPASS_FILE_LEVEL_EXTRACTION",
+        "MIRRORLAND_FILE_LEVEL_EXTRACTION",
+        "CROSS_COMPASS_DEPENDENCY_MAP",
         "ARCHCOIN_BASELINE_COMPATIBILITY_TEST",
         "FIXED_AXIS_CALIBRATION_ANALYSIS",
-        "LIVE_BEHAVIOR_ACCEPTANCE"
+        "BEHAVIORAL_TEST_CORRIDOR",
+        "LIVE_VISUAL_AND_ACCESSIBILITY_ACCEPTANCE"
       ])
     }),
     Object.freeze({

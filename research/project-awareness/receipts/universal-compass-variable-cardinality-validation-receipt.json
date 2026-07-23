@@ -1,0 +1,47 @@
+{
+  "schema": "DGB_UNIVERSAL_COMPASS_VARIABLE_CARDINALITY_CORRECTION_FIXTURE_RECEIPT_v1",
+  "receiptId": "UNIVERSAL_COMPASS_VARIABLE_CARDINALITY_CORRECTION_FIXTURES_v1",
+  "status": "PASS",
+  "assertionCount": 16,
+  "assertions": [
+    { "id": "PRIOR_CARDINAL_STANDARD_REMAINS_REPRODUCIBLE", "pass": true },
+    { "id": "PRIOR_CAPABILITY_MAP_V2_REMAINS_REPRODUCIBLE", "pass": true },
+    { "id": "PRIOR_AWARENESS_SNAPSHOT_V2_REMAINS_REPRODUCIBLE", "pass": true },
+    { "id": "VARIABLE_CARDINALITY_STANDARD_VALID", "pass": true },
+    { "id": "CAPABILITY_MAP_V3_VALID", "pass": true },
+    { "id": "AWARENESS_SNAPSHOT_V3_VALID", "pass": true },
+    { "id": "FOUR_FAMILIES_AND_FOUR_CARDINALS_PRESERVED", "pass": true },
+    { "id": "FIXED_FOUR_MEMBER_RESTRICTION_REMOVED", "pass": true },
+    { "id": "SIXTY_FOUR_OBSERVATION_RESTRICTION_REMOVED", "pass": true },
+    { "id": "PARTICIPANT_ROLES_REMAIN_DISTINCT", "pass": true },
+    { "id": "NO_PADDING_OR_TRUNCATION", "pass": true },
+    { "id": "SOURCE_MEMBERSHIP_CENSUS_GATE_IS_EXPLICIT", "pass": true },
+    { "id": "PLANET_MUTATION_REMAINS_BLOCKED", "pass": true },
+    { "id": "OPTIONAL_FOUR_BY_FOUR_BY_SIXTEEN_PROFILE_NOT_UNIVERSAL", "pass": true },
+    { "id": "SUCCESSOR_CHAIN_IS_EXPLICIT", "pass": true },
+    { "id": "NO_RUNTIME_OR_PRODUCT_AUTHORITY", "pass": true }
+  ],
+  "variableCardinalityStandardDigest": "fnv1a64:ec4fdc35b1298465",
+  "capabilityMapV3Digest": "fnv1a64:a34277243b7763c0",
+  "awarenessSnapshotV3Digest": "fnv1a64:1817c0585d76c4db",
+  "workflowExecution": {
+    "runId": 30050077197,
+    "jobId": 89350070146,
+    "headCommit": "15f47c714205d160e5fabb31349e23982866a166",
+    "artifactId": 8580654791,
+    "artifactDigest": "sha256:f11c73ec3d0375af4ff85b711bc16727240850a8675b013f3973b3b890d58737"
+  },
+  "claims": {
+    "fourFamilyCardinalAxisPreserved": true,
+    "cardinalOccurrenceCount": 16,
+    "fixedFourMemberRestrictionWithdrawn": true,
+    "fixedSixtyFourObservationRestrictionWithdrawn": true,
+    "variableClusterCardinalityEnabled": true,
+    "membershipCensusComplete": false,
+    "planetMutationReady": false,
+    "prototypeModified": false,
+    "runtimePass": false,
+    "productAuthority": false,
+    "mutationAuthority": false
+  }
+}

@@ -21,19 +21,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Apply bounded admitted-frame renewal
+      - name: Apply bounded Gate B index route renewal
         run: |
-          python .github/scripts/renew-h-earth-gate-b-admitted-frame.py
-          node --check showroom/globe/h-earth/admitted-geometry-frame.js
+          python .github/scripts/renew-h-earth-gate-b-index-html.py
+          grep -q "./gate-b-route-input.js?v=gate-b-route-input-001" showroom/globe/h-earth/index.html
+          grep -q "buildHEarthGateBRouteInput" showroom/globe/h-earth/index.html
+          grep -q "H_EARTH_3D_GROUND_VIEW_GATE_B_PROOF_MODE" showroom/globe/h-earth/index.html
+          ! grep -q "previewHEarthMinimumShorelineGeometry" showroom/globe/h-earth/index.html
           git diff --check
-      - name: Commit isolated renewal
+      - name: Commit isolated route renewal
         run: |
-          if git diff --quiet -- showroom/globe/h-earth/admitted-geometry-frame.js; then
-            echo 'No admitted-frame change produced.'
+          if git diff --quiet -- showroom/globe/h-earth/index.html; then
+            echo 'No index route change produced.'
             exit 1
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add showroom/globe/h-earth/admitted-geometry-frame.js
-          git commit -m 'Renew admitted frame for Gate B proof mode'
+          git add showroom/globe/h-earth/index.html
+          git commit -m 'Route H-Earth entry through Ground View Gate B'
+          git fetch origin agent/h-earth-gate-b-seven-file-verification-001
+          git rebase origin/agent/h-earth-gate-b-seven-file-verification-001
           git push origin HEAD:agent/h-earth-gate-b-seven-file-verification-001

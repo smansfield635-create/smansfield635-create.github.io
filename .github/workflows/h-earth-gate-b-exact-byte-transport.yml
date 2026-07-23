@@ -1,0 +1,213 @@
+name: H-Earth Gate B Environment Compatibility Proof
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-environment-compatibility:
+    if: github.head_ref == 'agent/h-earth-gate-b-phase-a-successor-001'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out isolated Phase A branch and full Git object graph
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-gate-b-phase-a-successor-001
+          fetch-depth: 0
+
+      - name: Restore exact historical provider blob without committing
+        shell: bash
+        run: |
+          set -euo pipefail
+          provider_path='showroom/globe/h-earth/render/ground-view-gate-b.js'
+          provider_blob='2a5b79a58ce411ed820df7ec2166f2e7b6e54b5b'
+          git cat-file -e "${provider_blob}^{blob}"
+          mkdir -p "$(dirname "$provider_path")"
+          git cat-file blob "$provider_blob" > "$provider_path"
+          test "$(git hash-object "$provider_path")" = "$provider_blob"
+
+      - name: Execute one-token corrected candidate and compare complete exported state
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import path from 'node:path';
+          import { pathToFileURL } from 'node:url';
+
+          const environmentPath = path.resolve('showroom/globe/h-earth/environment.js');
+          const capacityPath = path.resolve('showroom/globe/h-earth/capacity.js');
+          const providerPath = path.resolve('showroom/globe/h-earth/render/ground-view-gate-b.js');
+          const rendererPath = path.resolve('showroom/globe/h-earth/renderer.js');
+          const receiptPath = '/tmp/h-earth-gate-b-environment-compatibility-proof.json';
+          const originalSource = fs.readFileSync(environmentPath, 'utf8');
+          const exactPattern = /outputModel:\s*'DOM_CSS3D'/g;
+          const matches = [...originalSource.matchAll(exactPattern)];
+          if (matches.length !== 1) {
+            throw new Error(`Expected exactly one environment outputModel declaration; observed ${matches.length}.`);
+          }
+
+          const baseline = await import(`${pathToFileURL(environmentPath).href}?baseline=${Date.now()}`);
+          const capacity = await import(`${pathToFileURL(capacityPath).href}?capacity=${Date.now()}`);
+          const rendererSource = fs.readFileSync(rendererPath, 'utf8');
+
+          const correctedSource = originalSource.replace(
+            exactPattern,
+            "outputModel:\n      'DOM_CSS3D_PROJECTED_ENVIRONMENT'"
+          );
+          fs.writeFileSync(environmentPath, correctedSource, 'utf8');
+          const corrected = await import(`${pathToFileURL(environmentPath).href}?corrected=${Date.now()}`);
+
+          function cloneSerializable(value) {
+            return JSON.parse(JSON.stringify(value));
+          }
+
+          function normalizeExpectedDifferences(value) {
+            if (Array.isArray(value)) {
+              return value.map(normalizeExpectedDifferences);
+            }
+            if (value === null || typeof value !== 'object') {
+              return value;
+            }
+            const output = {};
+            for (const key of Object.keys(value).sort()) {
+              const nested = value[key];
+              if (key === 'outputModel') {
+                output[key] = '__OUTPUT_MODEL__';
+              } else if (key === 'outputModelPermitted') {
+                output[key] = '__OUTPUT_MODEL_PERMITTED__';
+              } else if (key === 'preflightEligible') {
+                output[key] = '__PREFLIGHT_ELIGIBLE__';
+              } else if (
+                key === 'eligible' &&
+                value.status === 'FRAME_BASED_ENVIRONMENT_PREFLIGHT_ELIGIBLE'
+              ) {
+                output[key] = '__PREFLIGHT_ELIGIBLE__';
+              } else {
+                output[key] = normalizeExpectedDifferences(nested);
+              }
+            }
+            return output;
+          }
+
+          function moduleDataProjection(moduleNamespace) {
+            const output = {};
+            for (const key of Object.keys(moduleNamespace).sort()) {
+              const value = moduleNamespace[key];
+              if (typeof value !== 'function') {
+                output[key] = cloneSerializable(value);
+              }
+            }
+            return normalizeExpectedDifferences(output);
+          }
+
+          function stableJson(value) {
+            return JSON.stringify(value);
+          }
+
+          function sha256Text(value) {
+            return crypto.createHash('sha256').update(value, 'utf8').digest('hex');
+          }
+
+          const baselineProjection = stableJson(moduleDataProjection(baseline));
+          const correctedProjection = stableJson(moduleDataProjection(corrected));
+          const normalizedExportStateEqual = baselineProjection === correctedProjection;
+
+          const baselineCapacity = baseline.evaluateHEarth3DEnvironmentCapacityAlignment();
+          const correctedCapacity = corrected.evaluateHEarth3DEnvironmentCapacityAlignment();
+          const correctedOutputModel = corrected.H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN.outputModel;
+          const permittedOutputModel = capacity.H_EARTH_3D_RENDER_STAGE_LIMITS.permittedOutputModel;
+
+          if (baseline.H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN.outputModel !== 'DOM_CSS3D') {
+            throw new Error('Baseline environment output model changed unexpectedly.');
+          }
+          if (baselineCapacity.eligible !== false) {
+            throw new Error('Baseline exact capacity mismatch was not reproduced.');
+          }
+          if (correctedOutputModel !== permittedOutputModel) {
+            throw new Error('Corrected environment output model does not equal the exact capacity model.');
+          }
+          if (corrected.H_EARTH_3D_ENVIRONMENT_FRAME_CAPACITY_ALIGNMENT.outputModelPermitted !== true) {
+            throw new Error('Corrected output-model permission remains false.');
+          }
+          if (correctedCapacity.eligible !== true) {
+            throw new Error('Corrected exact capacity alignment remains ineligible.');
+          }
+          if (corrected.H_EARTH_3D_ENVIRONMENT_PREFLIGHT.eligible !== true) {
+            throw new Error('Corrected aggregate environment preflight remains false.');
+          }
+          if (corrected.H_EARTH_3D_ENVIRONMENT_RECEIPT.preflightEligible !== true) {
+            throw new Error('Corrected environment receipt remains ineligible.');
+          }
+          if (normalizedExportStateEqual !== true) {
+            throw new Error('Unexpected non-metadata environment export differences were observed.');
+          }
+          if (!rendererSource.includes("const DOM_CSS3D_PROJECTED_ENVIRONMENT_OUTPUT_MODEL =\n  'DOM_CSS3D_PROJECTED_ENVIRONMENT';")) {
+            throw new Error('Renderer output-model contract does not match capacity.');
+          }
+
+          const provider = await import(`${pathToFileURL(providerPath).href}?provider=${Date.now()}`);
+          const construction = provider.constructHEarthGroundViewGateBGeometry();
+          const determinism = provider.evaluateHEarthGroundViewGateBDeterminism();
+
+          const providerChecks = {
+            valid: construction.valid === true,
+            neutralPrimitiveCount: construction.receipt.neutralPrimitiveCount === 3,
+            physicalVertexCount: construction.receipt.physicalVertexCount === 2334,
+            physicalTriangleCount: construction.receipt.physicalTriangleCount === 4368,
+            canonicalSeamUniqueVertexCount: construction.receipt.canonicalSeamUniqueVertexCount === 25,
+            canonicalSeamUniqueEdgeCount: construction.receipt.canonicalSeamUniqueEdgeCount === 24,
+            duplicateSeamIdentityCount: construction.receipt.duplicateSeamIdentityCount === 0,
+            consumerLocalSeamResourceCount: construction.receipt.consumerLocalSeamResourceCount === 0,
+            vertexBudgetPassed: construction.receipt.vertexBudgetPassed === true,
+            determinismPassed: determinism.passed === true
+          };
+          if (!Object.values(providerChecks).every(Boolean)) {
+            throw new Error(`Provider validation failed: ${JSON.stringify(providerChecks)}`);
+          }
+
+          const receipt = {
+            result: 'PASS',
+            repositoryBasis: 'eceac4d5297b2f087c1cf718e29d79c119c29db1',
+            branch: 'agent/h-earth-gate-b-phase-a-successor-001',
+            environmentBlobBeforeCorrection: 'aa60accc453e66f84a11d27f25d946c2b33c1d83',
+            correctionType: 'ONE_DECLARATIVE_OUTPUT_MODEL_TOKEN',
+            baselineOutputModel: baseline.H_EARTH_3D_ENVIRONMENT_PRIMITIVE_PLAN.outputModel,
+            correctedOutputModel,
+            permittedOutputModel,
+            baselineCapacityEligible: baselineCapacity.eligible,
+            correctedCapacityEligible: correctedCapacity.eligible,
+            correctedPreflightEligible: corrected.H_EARTH_3D_ENVIRONMENT_PREFLIGHT.eligible,
+            correctedReceiptEligible: corrected.H_EARTH_3D_ENVIRONMENT_RECEIPT.preflightEligible,
+            normalizedNonFunctionExportStateEqual: normalizedExportStateEqual,
+            normalizedBaselineProjectionSha256: sha256Text(baselineProjection),
+            normalizedCorrectedProjectionSha256: sha256Text(correctedProjection),
+            rendererOutputModelMatchesCapacity: true,
+            primitivePlanRepositoryConsumerCount: 1,
+            providerBlob: '2a5b79a58ce411ed820df7ec2166f2e7b6e54b5b',
+            providerChecks,
+            sourceMutationCommitted: false,
+            providerCommitted: false,
+            mergeAuthority: 'WITHHELD'
+          };
+          fs.writeFileSync(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
+          NODE
+
+      - name: Restore working tree and prove no governed source mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git restore --worktree -- showroom/globe/h-earth/environment.js
+          rm -f showroom/globe/h-earth/render/ground-view-gate-b.js
+          test -z "$(git status --porcelain --untracked-files=all)"
+
+      - name: Upload compatibility proof receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gate-b-environment-compatibility-proof
+          path: /tmp/h-earth-gate-b-environment-compatibility-proof.json
+          if-no-files-found: error
+          retention-days: 1

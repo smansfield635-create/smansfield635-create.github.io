@@ -1,0 +1,64 @@
+name: H-Earth Target 4F Bounded Final Closure Audit
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  execute-target-4f:
+    if: github.head_ref == 'agent/h-earth-repository-registry-target-4f-execution-001'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out actual installation branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-repository-registry-installation-001
+          fetch-depth: 0
+
+      - name: Execute final integrated Target 4F audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET_COMMIT="$(git rev-parse HEAD)"
+          TARGET_BRANCH='agent/h-earth-repository-registry-installation-001' \
+          TARGET_COMMIT="$TARGET_COMMIT" \
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-target-4f-audit.mjs \
+            > /tmp/target-4f-audit.json
+
+          node -e "
+            const fs = require('fs');
+            const value = JSON.parse(fs.readFileSync('/tmp/target-4f-audit.json', 'utf8'));
+            if (value.result !== 'PASS') process.exit(1);
+            if (value.audit.failedChecks.length !== 0) process.exit(1);
+            if (value.regressions.target2.passedChecks !== 25) process.exit(1);
+            if (value.regressions.target3.passedChecks !== 24) process.exit(1);
+            if (value.regressions.target4A.passedChecks !== 33) process.exit(1);
+            if (value.regressions.target4B.passedChecks !== 34) process.exit(1);
+            if (value.regressions.target4C.staticPassedChecks !== 37) process.exit(1);
+            if (value.regressions.target4C.passedFixtureCount !== 33) process.exit(1);
+            if (value.regressions.target4E.staticPassedChecks !== 47) process.exit(1);
+            if (value.regressions.target4E.passedScenarioCount !== 8) process.exit(1);
+            if (value.activationIntegrity.registeredDisposition !== 'PASS') process.exit(1);
+            if (value.activationIntegrity.unregisteredDisposition !== 'STOP') process.exit(1);
+            if (value.activationIntegrity.outsideDisposition !== 'NOT_APPLICABLE') process.exit(1);
+            if (value.activationIntegrity.mutationMayProceed !== false) process.exit(1);
+            if (value.boundaries.userAcceptanceEstablished !== false) process.exit(1);
+            if (value.boundaries.mergeAuthorityCreated !== false) process.exit(1);
+          "
+
+      - name: Commit final execution receipt and remove one-use workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/h-earth-repository-registry-target-4f-bounded-audit.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            h-earth-3d/registry/h-earth.repository-registry.target-4f-receipt.json \
+            .github/workflows/h-earth-repository-registry-target-4f-bounded-audit.yml
+          git commit -m 'Record Target 4F final integrated execution receipt'
+          git push origin HEAD:agent/h-earth-repository-registry-installation-001

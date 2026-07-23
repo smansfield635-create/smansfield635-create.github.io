@@ -3,7 +3,7 @@ export const identity=Object.freeze({
   "registryVersion": "1.0.0-candidate.2",
   "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED_NOT_CANONICAL_NOT_ACTIVE",
   "integratedAmendmentId": "H_EARTH_REPOSITORY_REGISTRY_COMPOSITOR_AND_ROUTE_ENTRY_AMENDMENT_CANDIDATE_v1",
-  "contentDigest": "b65e0ad19ae22cc72cc74dc0493f6e24fc180d53a861ced76045be5089646381",
+  "contentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8",
   "acceptedBootstrapChanged": false,
   "activeRegistryChanged": false,
   "canonical": false
@@ -1040,7 +1040,7 @@ export const candidateRegistryInstance=Object.freeze({
     "digestExcludes": [
       "serialization.contentDigest"
     ],
-    "contentDigest": "b65e0ad19ae22cc72cc74dc0493f6e24fc180d53a861ced76045be5089646381"
+    "contentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8"
   },
   "sourceBasis": [
     {
@@ -2891,9 +2891,7 @@ export const candidateRegistryInstance=Object.freeze({
       "upstreamBoundaries": [
         "REL_ADMITTED_FRAME_CONTINUES_TO_SHOWROOM_COMPOSITOR"
       ],
-      "downstreamBoundaries": [
-        "REL_SHOWROOM_COMPOSITOR_CONTINUES_TO_RENDERER"
-      ],
+      "downstreamBoundaries": [],
       "cardinalRole": "NONE",
       "cardinalStatus": "NONE",
       "cardinalCompleteness": "NOT_APPLICABLE",

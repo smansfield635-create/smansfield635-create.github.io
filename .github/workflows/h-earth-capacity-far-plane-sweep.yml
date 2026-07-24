@@ -1,0 +1,282 @@
+name: H-Earth Capacity Far-Plane Sweep
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-002
+
+permissions:
+  contents: read
+
+jobs:
+  sweep-far-plane:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout validation branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact correction source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git show 8934505b4f233904561b8c62975c1aadde8905d4:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
+          test "$(git diff --name-only 9a69ccab862420f0141013653625705fd92e9f12 8934505b4f233904561b8c62975c1aadde8905d4)" = "showroom/globe/h-earth/capacity.js"
+
+      - name: Materialize exact far-plane variants
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/h-earth-correction 8934505b4f233904561b8c62975c1aadde8905d4
+          for far in 200 208 216 224 232 240 248 256 272 288 320 384 512; do
+            cp -a /tmp/h-earth-correction "/tmp/h-earth-far-${far}"
+            python3 - "$far" "/tmp/h-earth-far-${far}/showroom/globe/h-earth/capacity.js" <<'PY'
+          import pathlib
+          import sys
+
+          far = int(sys.argv[1])
+          path = pathlib.Path(sys.argv[2])
+          source = path.read_text()
+          before = """    verticalFovDegrees: 52,\n    nearPlane: 0.25,\n    farPlane: 512,"""
+          after = f"""    verticalFovDegrees: 52,\n    nearPlane: 0.25,\n    farPlane: {far},"""
+          if source.count(before) != 1:
+              raise SystemExit(f"Expected exactly one initial camera block, found {source.count(before)}")
+          path.write_text(source.replace(before, after, 1))
+          PY
+          done
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start variant route servers
+        shell: bash
+        run: |
+          set -euo pipefail
+          index=0
+          for far in 200 208 216 224 232 240 248 256 272 288 320 384 512; do
+            port=$((4300 + index))
+            (cd "/tmp/h-earth-far-${far}" && python3 -m http.server "$port" --bind 127.0.0.1 > "/tmp/h-earth-far-${far}.log" 2>&1) &
+            echo $! > "/tmp/h-earth-far-${far}.pid"
+            index=$((index + 1))
+          done
+          index=0
+          for far in 200 208 216 224 232 240 248 256 272 288 320 384 512; do
+            port=$((4300 + index))
+            for attempt in $(seq 1 30); do
+              if curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null; then
+                break
+              fi
+              sleep 1
+            done
+            curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null
+            index=$((index + 1))
+          done
+
+      - name: Execute desktop and mobile far-plane sweep
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p sweep-artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+
+          const farPlanes = [200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 320, 384, 512];
+          const viewports = [
+            { id: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
+            { id: 'mobile', width: 390, height: 844, deviceScaleFactor: 3 }
+          ];
+
+          const browser = await chromium.launch({ headless: true });
+          const results = [];
+
+          for (let farIndex = 0; farIndex < farPlanes.length; farIndex += 1) {
+            const farPlane = farPlanes[farIndex];
+            const port = 4300 + farIndex;
+
+            for (const viewport of viewports) {
+              const context = await browser.newContext({
+                viewport: { width: viewport.width, height: viewport.height },
+                deviceScaleFactor: viewport.deviceScaleFactor
+              });
+              const page = await context.newPage();
+              const pageErrors = [];
+              const consoleErrors = [];
+              page.on('pageerror', (error) => pageErrors.push(error instanceof Error ? error.message : String(error)));
+              page.on('console', (message) => {
+                if (message.type() === 'error') consoleErrors.push(message.text());
+              });
+
+              const startedAt = Date.now();
+              const response = await page.goto(
+                `http://127.0.0.1:${port}/showroom/globe/h-earth/`,
+                { waitUntil: 'domcontentloaded', timeout: 30000 }
+              );
+              await page.waitForTimeout(7000);
+
+              const evidence = await page.evaluate(async () => {
+                const debugText = document.getElementById('h-earth-3d-debug')?.textContent ?? '';
+                let debug = null;
+                try {
+                  debug = JSON.parse(debugText);
+                } catch {}
+
+                const routeReceipt = debug?.routeReceipt ?? null;
+                const construct = routeReceipt?.rendererConstructReceipt ?? null;
+                const nodeBudget = construct?.nodeBudgetEvaluation ?? null;
+                const handoff = routeReceipt?.compositorHandoffReceipt?.rawHandoff ?? null;
+                const pose = handoff?.admittedGeometryFrame?.resolvedCameraPoseCorrespondence?.resolvedCameraPose ?? null;
+                const mount = document.getElementById('h-earth-3d-renderer-mount');
+                const mountRect = mount?.getBoundingClientRect() ?? null;
+                const candidates = mount
+                  ? Array.from(mount.querySelectorAll('*')).map((element) => {
+                      const rect = element.getBoundingClientRect();
+                      const style = getComputedStyle(element);
+                      return {
+                        rect: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height },
+                        display: style.display,
+                        visibility: style.visibility,
+                        opacity: Number(style.opacity),
+                        transform: style.transform,
+                        className: typeof element.className === 'string' ? element.className : '',
+                        data: { ...element.dataset }
+                      };
+                    }).filter((entry) =>
+                      entry.rect.width > 0 &&
+                      entry.rect.height > 0 &&
+                      entry.display !== 'none' &&
+                      entry.visibility !== 'hidden' &&
+                      entry.opacity > 0
+                    )
+                  : [];
+
+                const projected = candidates.filter((entry) =>
+                  entry.transform !== 'none' ||
+                  /project|primitive|surface|sand|water|foam|renderer/i.test(
+                    `${entry.className} ${Object.entries(entry.data).map(([key, value]) => `${key}=${value}`).join(' ')}`
+                  )
+                );
+                const measured = projected.length > 0 ? projected : candidates;
+                const intersectionRects = mountRect
+                  ? measured.map((entry) => ({
+                      left: Math.max(entry.rect.left, mountRect.left),
+                      top: Math.max(entry.rect.top, mountRect.top),
+                      right: Math.min(entry.rect.right, mountRect.right),
+                      bottom: Math.min(entry.rect.bottom, mountRect.bottom)
+                    })).filter((rect) => rect.right > rect.left && rect.bottom > rect.top)
+                  : [];
+
+                const union = intersectionRects.reduce((accumulator, rect) => ({
+                  left: Math.min(accumulator.left, rect.left),
+                  top: Math.min(accumulator.top, rect.top),
+                  right: Math.max(accumulator.right, rect.right),
+                  bottom: Math.max(accumulator.bottom, rect.bottom)
+                }), {
+                  left: Number.POSITIVE_INFINITY,
+                  top: Number.POSITIVE_INFINITY,
+                  right: Number.NEGATIVE_INFINITY,
+                  bottom: Number.NEGATIVE_INFINITY
+                });
+
+                const unionWidth = Number.isFinite(union.left) ? Math.max(0, union.right - union.left) : 0;
+                const unionHeight = Number.isFinite(union.top) ? Math.max(0, union.bottom - union.top) : 0;
+                const mountWidth = mountRect?.width ?? 0;
+                const mountHeight = mountRect?.height ?? 0;
+
+                return {
+                  documentStatus: document.getElementById('h-earth-3d-status')?.textContent ?? null,
+                  routeStatus: routeReceipt?.status ?? null,
+                  rendererBootstrapStatus: routeReceipt?.routeStatus?.rendererBootstrapStatus ?? null,
+                  viewportAccepted: routeReceipt?.compositorViewportReceipt?.accepted ?? null,
+                  handoffOk: handoff?.ok ?? null,
+                  resolvedPose: pose ? {
+                    eligible: pose.eligible,
+                    status: pose.status,
+                    position: pose.position,
+                    verticalFovDegrees: pose.verticalFovDegrees,
+                    nearPlane: pose.nearPlane,
+                    farPlane: pose.farPlane
+                  } : null,
+                  rendererConstruct: construct ? {
+                    status: construct.status,
+                    constructed: construct.constructed,
+                    environmentPrimitives: nodeBudget?.environmentPrimitives ?? null,
+                    totalRendererOwnedNodes: nodeBudget?.authorityEvaluation?.accounting?.totalRendererOwnedNodes ?? null,
+                    budgetEligible: nodeBudget?.eligible ?? null,
+                    budgetStatus: nodeBudget?.status ?? null
+                  } : null,
+                  rendererMountReceiptPresent: routeReceipt?.rendererMountReceipt != null,
+                  dom: {
+                    mountPresent: Boolean(mount),
+                    mountChildCount: mount?.children.length ?? 0,
+                    visibleDescendantCount: candidates.length,
+                    projectedCandidateCount: projected.length,
+                    intersectingCandidateCount: intersectionRects.length,
+                    unionWidth,
+                    unionHeight,
+                    widthRatio: mountWidth > 0 ? unionWidth / mountWidth : 0,
+                    heightRatio: mountHeight > 0 ? unionHeight / mountHeight : 0,
+                    areaRatio: mountWidth > 0 && mountHeight > 0 ? (unionWidth * unionHeight) / (mountWidth * mountHeight) : 0
+                  }
+                };
+              });
+
+              const elapsedMs = Date.now() - startedAt;
+              if (evidence.rendererMountReceiptPresent) {
+                await page.screenshot({
+                  path: `sweep-artifacts/far-${farPlane}-${viewport.id}.png`,
+                  fullPage: true
+                });
+              }
+
+              results.push({
+                farPlane,
+                viewport,
+                navigation: { ok: response?.ok() ?? false, status: response?.status() ?? null },
+                elapsedMs,
+                pageErrors,
+                consoleErrors,
+                evidence
+              });
+              await context.close();
+            }
+          }
+
+          await browser.close();
+
+          const summary = {
+            exactCorrectionCommit: '8934505b4f233904561b8c62975c1aadde8905d4',
+            sourceCapacityBlob: '2de4476648ae6eb5ae53e87d73b4f965b5c71494',
+            invariantCameraPosition: { x: 0, y: 24, z: 64 },
+            invariantCameraTarget: { x: 0, y: 0.5, z: -128 },
+            invariantVerticalFovDegrees: 52,
+            invariantNearPlane: 0.25,
+            testedFarPlanes: farPlanes,
+            results
+          };
+
+          fs.writeFileSync('sweep-artifacts/far-plane-sweep.json', JSON.stringify(summary, null, 2));
+          console.log(JSON.stringify(summary, null, 2));
+          NODE
+
+      - name: Upload far-plane sweep evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-far-plane-sweep
+          path: |
+            sweep-artifacts/
+            /tmp/h-earth-far-*.log
+          if-no-files-found: error

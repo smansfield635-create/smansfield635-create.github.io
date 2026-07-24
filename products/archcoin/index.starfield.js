@@ -1,20 +1,21 @@
 /* /products/archcoin/index.starfield.js
-   ARCHCOIN Compass-derived starfield with static base and burst-only sparkle overlay.
+   ARCHCOIN Fibonacci-derived starfield with static base and burst-only sparkle overlay.
 
-   Preserves:
-   - randomized non-grid placement;
-   - clustered density with a protected central void;
-   - circular star primitives;
-   - depth-weighted size, brightness, and color;
-   - independent sparkle phases;
-   - reduced-motion and visibility suspension.
+   Geometry:
+   - golden-angle phyllotaxis with square-root radial growth;
+   - bounded radial, angular, and alternating zigzag perturbation;
+   - elliptical warp to avoid circular-diagram appearance;
+   - protected Earth/crystal exclusion zone;
+   - irregular void masks;
+   - deterministic 12.5 percent rogue population;
+   - deterministic field identity across redraws.
 
    Performance boundary:
    - static base canvas is rendered only on initialization, resize, or quality change;
    - sparkle animation uses a separate transparent overlay;
    - sparkle bursts run at 8 FPS and stop between bursts;
    - no continuous requestAnimationFrame loop;
-   - no navigation, geometry, controller, compositor, or interaction authority.
+   - no navigation, world-geometry, controller, compositor, or interaction authority.
 */
 (() => {
   "use strict";
@@ -26,6 +27,8 @@
   const BASE_ATTRIBUTE = "data-archcoin-starfield-canvas";
   const BASE_VALUE = "base";
   const OVERLAY_VALUE = "sparkle";
+  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const FIELD_SEED = 0x4a524348;
 
   if (globalThis[GLOBAL_KEY]?.initialized) return;
 
@@ -37,19 +40,35 @@
     compactWidth: 560,
     mobilePixelRatioCap: 1,
     desktopPixelRatioCap: 1.25,
-    minimumStars: 48,
-    maximumStars: 92,
-    starAreaDivisor: 6800,
+    minimumStars: 52,
+    maximumStars: 108,
+    starAreaDivisor: 6100,
+    rogueRatio: 0.125,
+    candidateMultiplier: 8,
+    horizontalWarp: 1.13,
+    verticalWarp: 0.84,
+    radialJitter: 0.022,
+    angularJitter: 0.075,
+    zigzagPerturbation: 0.018,
+    centerVoidRadiusX: 0.225,
+    centerVoidRadiusY: 0.205,
     minimumSparkles: 4,
-    maximumSparkles: 7,
-    firstBurstDelayMinimumMs: 2600,
-    firstBurstDelayMaximumMs: 4200,
-    burstDelayMinimumMs: 1200,
-    burstDelayMaximumMs: 2600,
+    maximumSparkles: 8,
+    firstBurstDelayMinimumMs: 2800,
+    firstBurstDelayMaximumMs: 4600,
+    burstDelayMinimumMs: 1500,
+    burstDelayMaximumMs: 3200,
     burstDurationMinimumMs: 620,
     burstDurationMaximumMs: 980,
     sparkleFrameIntervalMs: 125
   });
+
+  const VOID_MASKS = Object.freeze([
+    Object.freeze({ x: 0.24, y: 0.28, rx: 0.16, ry: 0.095, rotation: -0.46, feather: 0.22 }),
+    Object.freeze({ x: 0.76, y: 0.25, rx: 0.12, ry: 0.17, rotation: 0.31, feather: 0.20 }),
+    Object.freeze({ x: 0.72, y: 0.73, rx: 0.18, ry: 0.105, rotation: -0.19, feather: 0.24 }),
+    Object.freeze({ x: 0.27, y: 0.77, rx: 0.105, ry: 0.15, rotation: 0.52, feather: 0.20 })
+  ]);
 
   const COLORS = Object.freeze([
     "255, 248, 224",
@@ -78,8 +97,9 @@
     quality: 1,
     stars: [],
     sparkles: [],
-    clusters: [],
     activeSparkles: [],
+    rogueCount: 0,
+    phyllotaxisCount: 0,
     burstTimer: 0,
     frameTimer: 0,
     baseDrawCount: 0,
@@ -89,7 +109,8 @@
     motionObserver: null,
     motionQuery: null,
     onVisibility: null,
-    onMotion: null
+    onMotion: null,
+    onResize: null
   };
 
   const api = Object.freeze({
@@ -108,25 +129,46 @@
     return Math.min(maximum, Math.max(minimum, value));
   }
 
-  function random(minimum, maximum) {
-    return minimum + Math.random() * (maximum - minimum);
+  function hash32(value) {
+    let x = value >>> 0;
+    x ^= x >>> 16;
+    x = Math.imul(x, 0x7feb352d);
+    x ^= x >>> 15;
+    x = Math.imul(x, 0x846ca68b);
+    x ^= x >>> 16;
+    return x >>> 0;
   }
 
-  function randomChoice(values) {
-    return values[Math.floor(Math.random() * values.length)];
+  function createRandom(seed) {
+    let value = seed >>> 0;
+    return () => {
+      value += 0x6d2b79f5;
+      let result = value;
+      result = Math.imul(result ^ (result >>> 15), result | 1);
+      result ^= result + Math.imul(result ^ (result >>> 7), result | 61);
+      return ((result ^ (result >>> 14)) >>> 0) / 4294967296;
+    };
   }
 
-  function gaussian() {
-    const u = Math.max(Number.EPSILON, Math.random());
-    const v = Math.max(Number.EPSILON, Math.random());
-    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  function randomBetween(random, minimum, maximum) {
+    return minimum + random() * (maximum - minimum);
+  }
+
+  function shuffled(values, random) {
+    const result = [...values];
+    for (let index = result.length - 1; index > 0; index -= 1) {
+      const target = Math.floor(random() * (index + 1));
+      [result[index], result[target]] = [result[target], result[index]];
+    }
+    return result;
   }
 
   function buildReceipt(extra = {}) {
     return {
       module: "DGB_ARCHCOIN_STARFIELD",
-      sourceModel: "/assets/compass/compass.cosmos.js",
+      sourceModel: "ARCHCOIN_FIBONACCI_PHYLLOTAXIS_FIELD_v1",
       renderingModel: "static-base-burst-overlay",
+      geometryModel: "golden-angle-square-root-jitter-elliptical-void-masked",
       initialized: state.initialized,
       destroyed: state.destroyed,
       failed: state.failed,
@@ -134,6 +176,10 @@
       sceneVisible: state.sceneVisible,
       reducedMotion: state.reducedMotion,
       starCount: state.stars.length,
+      phyllotaxisCount: state.phyllotaxisCount,
+      rogueCount: state.rogueCount,
+      rogueRatio: CONFIG.rogueRatio,
+      voidMaskCount: VOID_MASKS.length,
       sparkleCount: state.sparkles.length,
       activeSparkleCount: state.activeSparkles.length,
       quality: state.quality,
@@ -141,10 +187,11 @@
       sparkleFrameIntervalMs: CONFIG.sparkleFrameIntervalMs,
       continuousAnimation: false,
       requestAnimationFrameUsed: false,
+      deterministicFieldSeed: FIELD_SEED,
       baseDrawCount: state.baseDrawCount,
       sparkleFrameCount: state.sparkleFrameCount,
       ownsNavigation: false,
-      ownsGeometry: false,
+      ownsWorldGeometry: false,
       ownsProjection: false,
       ownsInteraction: false,
       ...extra
@@ -229,84 +276,120 @@
     state.overlayContext = overlayContext;
   }
 
-  function createClusterField() {
-    const zones = [
-      { x: [0.04, 0.29], y: [0.05, 0.36], sx: [0.06, 0.15], sy: [0.07, 0.17] },
-      { x: [0.68, 0.96], y: [0.04, 0.39], sx: [0.06, 0.16], sy: [0.07, 0.18] },
-      { x: [0.03, 0.35], y: [0.62, 0.97], sx: [0.07, 0.17], sy: [0.07, 0.17] },
-      { x: [0.65, 0.97], y: [0.60, 0.97], sx: [0.07, 0.17], sy: [0.07, 0.17] }
-    ];
-
-    state.clusters = zones.map(zone => ({
-      x: random(zone.x[0], zone.x[1]),
-      y: random(zone.y[0], zone.y[1]),
-      spreadX: random(zone.sx[0], zone.sx[1]),
-      spreadY: random(zone.sy[0], zone.sy[1])
-    }));
-  }
-
   function inCentralVoid(x, y) {
-    const dx = (x - 0.5) / 0.23;
-    const dy = (y - 0.5) / 0.21;
+    const dx = (x - 0.5) / CONFIG.centerVoidRadiusX;
+    const dy = (y - 0.5) / CONFIG.centerVoidRadiusY;
     return dx * dx + dy * dy < 1;
   }
 
-  function choosePosition() {
-    for (let attempt = 0; attempt < 28; attempt += 1) {
-      let x;
-      let y;
-
-      if (Math.random() < 0.74) {
-        const cluster = randomChoice(state.clusters);
-        x = cluster.x + gaussian() * cluster.spreadX;
-        y = cluster.y + gaussian() * cluster.spreadY;
-      } else {
-        x = Math.random();
-        y = Math.random();
-      }
-
-      x = clamp(x, 0.014, 0.986);
-      y = clamp(y, 0.014, 0.986);
-
-      if (inCentralVoid(x, y) && Math.random() < 0.90) continue;
-      return { x, y };
-    }
-
-    return { x: Math.random(), y: Math.random() };
+  function maskDistance(x, y, mask) {
+    const cosine = Math.cos(mask.rotation);
+    const sine = Math.sin(mask.rotation);
+    const dx = x - mask.x;
+    const dy = y - mask.y;
+    const rotatedX = dx * cosine + dy * sine;
+    const rotatedY = -dx * sine + dy * cosine;
+    return Math.sqrt(
+      (rotatedX * rotatedX) / (mask.rx * mask.rx) +
+      (rotatedY * rotatedY) / (mask.ry * mask.ry)
+    );
   }
 
-  function createStar() {
-    const position = choosePosition();
-    const depth = Math.pow(Math.random(), 1.55);
-    const colorRoll = Math.random();
-    const color = colorRoll < 0.79
+  function rejectedByVoidMask(x, y, random, rogue = false) {
+    for (const mask of VOID_MASKS) {
+      const distance = maskDistance(x, y, mask);
+      if (distance >= 1 + mask.feather) continue;
+      if (distance <= 1) {
+        if (!rogue || random() < 0.84) return true;
+        continue;
+      }
+      const edgeStrength = 1 - (distance - 1) / mask.feather;
+      const rejection = edgeStrength * (rogue ? 0.48 : 0.82);
+      if (random() < rejection) return true;
+    }
+    return false;
+  }
+
+  function insideFieldBounds(x, y) {
+    return x >= 0.014 && x <= 0.986 && y >= 0.014 && y <= 0.986;
+  }
+
+  function chooseColor(random) {
+    const roll = random();
+    return roll < 0.79
       ? COLORS[0]
-      : colorRoll < 0.91
+      : roll < 0.91
         ? COLORS[1]
-        : colorRoll < 0.975
+        : roll < 0.975
           ? COLORS[2]
           : COLORS[3];
+  }
 
+  function createStarRecord(position, random, rogue) {
+    const depth = Math.pow(random(), 1.55);
     return {
       x: position.x * state.width,
       y: position.y * state.height,
-      radius: random(0.50, 1.58) * (0.62 + depth * 0.78),
-      alpha: random(0.27, 0.82) * (0.68 + depth * 0.42),
-      color,
-      depth
+      radius: randomBetween(random, 0.50, 1.58) * (0.62 + depth * 0.78),
+      alpha: randomBetween(random, 0.27, 0.82) * (0.68 + depth * 0.42),
+      color: chooseColor(random),
+      depth,
+      rogue
     };
   }
 
-  function createSparkles(count) {
+  function createPhyllotaxisStars(count, random) {
+    const stars = [];
+    const maximumCandidates = Math.max(count * CONFIG.candidateMultiplier, count + 32);
+
+    for (let candidate = 0; candidate < maximumCandidates && stars.length < count; candidate += 1) {
+      const normalized = (candidate + 1.5) / maximumCandidates;
+      const baseRadius = Math.sqrt(normalized) * 0.515;
+      const angleJitter = randomBetween(random, -CONFIG.angularJitter, CONFIG.angularJitter);
+      const radialJitter = randomBetween(random, -CONFIG.radialJitter, CONFIG.radialJitter);
+      const alternating = candidate % 2 === 0 ? 1 : -1;
+      const angle =
+        candidate * GOLDEN_ANGLE +
+        angleJitter +
+        alternating * CONFIG.zigzagPerturbation;
+      const radius = Math.max(0, baseRadius + radialJitter);
+      const x = 0.5 + Math.cos(angle) * radius * CONFIG.horizontalWarp;
+      const y = 0.5 + Math.sin(angle) * radius * CONFIG.verticalWarp;
+
+      if (!insideFieldBounds(x, y)) continue;
+      if (inCentralVoid(x, y)) continue;
+      if (rejectedByVoidMask(x, y, random, false)) continue;
+
+      stars.push(createStarRecord({ x, y }, random, false));
+    }
+
+    return stars;
+  }
+
+  function createRogueStars(count, random) {
+    const stars = [];
+    const maximumAttempts = Math.max(80, count * 30);
+
+    for (let attempt = 0; attempt < maximumAttempts && stars.length < count; attempt += 1) {
+      const x = randomBetween(random, 0.018, 0.982);
+      const y = randomBetween(random, 0.018, 0.982);
+      if (inCentralVoid(x, y)) continue;
+      if (rejectedByVoidMask(x, y, random, true)) continue;
+      stars.push(createStarRecord({ x, y }, random, true));
+    }
+
+    return stars;
+  }
+
+  function createSparkles(count, random) {
     const candidates = state.stars
       .map((star, index) => ({ star, index }))
-      .filter(({ star }) => star.depth > 0.42 && star.alpha > 0.36)
-      .sort(() => Math.random() - 0.5);
+      .filter(({ star }) => star.depth > 0.42 && star.alpha > 0.36);
 
-    return candidates.slice(0, count).map(({ index, star }) => ({
+    return shuffled(candidates, random).slice(0, count).map(({ index, star }) => ({
       starIndex: index,
-      radius: clamp(star.radius * random(1.15, 1.55), 1.25, 2.45),
-      alpha: random(0.58, 0.94),
+      radius: clamp(star.radius * randomBetween(random, 1.15, 1.55), 1.25, 2.45),
+      alpha: randomBetween(random, 0.58, 0.94),
       color: star.color
     }));
   }
@@ -316,26 +399,42 @@
 
     const area = state.width * state.height;
     const mobileFactor = state.width <= CONFIG.compactWidth
-      ? 0.68
+      ? 0.70
       : state.width <= CONFIG.mobileWidth
-        ? 0.82
+        ? 0.84
         : 1;
     const density = state.quality * mobileFactor;
-
     const starCount = clamp(
       Math.floor((area / CONFIG.starAreaDivisor) * density),
       CONFIG.minimumStars,
       CONFIG.maximumStars
     );
+    const rogueCount = clamp(
+      Math.round(starCount * CONFIG.rogueRatio),
+      6,
+      Math.max(6, starCount - 12)
+    );
+    const phyllotaxisCount = starCount - rogueCount;
     const sparkleCount = clamp(
       Math.floor(CONFIG.maximumSparkles * density),
       CONFIG.minimumSparkles,
       CONFIG.maximumSparkles
     );
+    const dimensionSeed = hash32(
+      FIELD_SEED ^
+      Math.round(state.width * 8) ^
+      (Math.round(state.height * 8) << 1) ^
+      Math.round(state.quality * 1000)
+    );
+    const random = createRandom(dimensionSeed);
+    const phyllotaxisStars = createPhyllotaxisStars(phyllotaxisCount, random);
+    const missing = Math.max(0, phyllotaxisCount - phyllotaxisStars.length);
+    const rogueStars = createRogueStars(rogueCount + missing, random);
 
-    createClusterField();
-    state.stars = Array.from({ length: starCount }, createStar);
-    state.sparkles = createSparkles(sparkleCount);
+    state.stars = [...phyllotaxisStars, ...rogueStars];
+    state.phyllotaxisCount = phyllotaxisStars.length;
+    state.rogueCount = rogueStars.length;
+    state.sparkles = createSparkles(sparkleCount, random);
     state.activeSparkles.length = 0;
   }
 
@@ -443,9 +542,10 @@
       return false;
     }
 
+    const random = createRandom(hash32(FIELD_SEED ^ Date.now()));
     const delay = initial
-      ? random(CONFIG.firstBurstDelayMinimumMs, CONFIG.firstBurstDelayMaximumMs)
-      : random(CONFIG.burstDelayMinimumMs, CONFIG.burstDelayMaximumMs);
+      ? randomBetween(random, CONFIG.firstBurstDelayMinimumMs, CONFIG.firstBurstDelayMaximumMs)
+      : randomBetween(random, CONFIG.burstDelayMinimumMs, CONFIG.burstDelayMaximumMs);
 
     state.burstTimer = globalThis.setTimeout(() => {
       state.burstTimer = 0;
@@ -459,14 +559,16 @@
   function beginBurst() {
     if (!canRun() || !state.sparkles.length) return false;
 
-    const available = [...state.sparkles].sort(() => Math.random() - 0.5);
-    const count = Math.random() < 0.24 ? 2 : 1;
+    const random = createRandom(hash32(FIELD_SEED ^ Math.round(performance.now())));
+    const available = shuffled(state.sparkles, random);
+    const count = random() < 0.24 ? 2 : 1;
     const now = performance.now();
 
     state.activeSparkles = available.slice(0, count).map(sparkle => ({
       ...sparkle,
       start: now,
-      duration: random(
+      duration: randomBetween(
+        random,
         CONFIG.burstDurationMinimumMs,
         CONFIG.burstDurationMaximumMs
       )
@@ -584,7 +686,8 @@
       state.resizeObserver = new ResizeObserver(resize);
       state.resizeObserver.observe(state.mount);
     } else {
-      globalThis.addEventListener("resize", resize, { passive: true });
+      state.onResize = resize;
+      globalThis.addEventListener("resize", state.onResize, { passive: true });
     }
 
     if ("IntersectionObserver" in globalThis) {
@@ -614,6 +717,9 @@
     state.motionObserver?.disconnect();
     if (state.onVisibility) {
       document.removeEventListener("visibilitychange", state.onVisibility);
+    }
+    if (state.onResize) {
+      globalThis.removeEventListener("resize", state.onResize);
     }
     state.motionQuery?.removeEventListener?.("change", state.onMotion);
     state.baseCanvas?.remove();

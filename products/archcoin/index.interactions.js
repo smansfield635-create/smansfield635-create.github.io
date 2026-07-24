@@ -260,8 +260,8 @@
   if (!runtime.cosmosReady) {
     runtime.cosmosReady = afterFirstPaint(
       () => loadScript(COSMOS_URL, COSMOS_SCRIPT_ATTRIBUTE),
-      2200,
-      1800
+      3600,
+      3200
     ).catch(reportCosmosFailure);
   }
 

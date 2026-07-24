@@ -1,0 +1,104 @@
+name: H-Earth Capacity Refined Branch Installation
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-002
+
+permissions:
+  contents: write
+
+jobs:
+  install-refined-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      EXPECTED_MAIN: b5ae3ff2ec3b7ebd03dc0d25484892aab7927d30
+      TARGET_BRANCH: agent/h-earth-capacity-camera-envelope-current-main-003
+      TARGET_PATH: showroom/globe/h-earth/capacity.js
+      CANDIDATE_BLOB: db604fa0eef6600642b024d4e9147b1f35530715
+
+    steps:
+      - name: Verify immutable installation anchors
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_main="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')"
+          remote_target="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${TARGET_BRANCH}" --jq '.object.sha')"
+          test "$remote_main" = "$EXPECTED_MAIN"
+          test "$remote_target" = "$EXPECTED_MAIN"
+          current_blob="$(gh api "repos/${GITHUB_REPOSITORY}/contents/${TARGET_PATH}?ref=${TARGET_BRANCH}" --jq '.sha')"
+          test "$current_blob" = "55169c7dc038b02dae7dccd5a79972c0018bc6e8"
+          published_blob="$(gh api "repos/${GITHUB_REPOSITORY}/git/blobs/${CANDIDATE_BLOB}" --jq '.sha')"
+          test "$published_blob" = "$CANDIDATE_BLOB"
+
+      - name: Create one-tree one-commit installation
+        id: install
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_tree="$(gh api "repos/${GITHUB_REPOSITORY}/git/commits/${EXPECTED_MAIN}" --jq '.tree.sha')"
+
+          tree_payload="$(jq -n \
+            --arg base_tree "$base_tree" \
+            --arg path "$TARGET_PATH" \
+            --arg sha "$CANDIDATE_BLOB" \
+            '{base_tree:$base_tree,tree:[{path:$path,mode:"100644",type:"blob",sha:$sha}]}')"
+
+          tree_sha="$(printf '%s' "$tree_payload" | gh api --method POST "repos/${GITHUB_REPOSITORY}/git/trees" --input - --jq '.sha')"
+
+          commit_payload="$(jq -n \
+            --arg message 'Install refined H-Earth capacity camera envelope' \
+            --arg tree "$tree_sha" \
+            --arg parent "$EXPECTED_MAIN" \
+            '{message:$message,tree:$tree,parents:[$parent]}')"
+
+          commit_sha="$(printf '%s' "$commit_payload" | gh api --method POST "repos/${GITHUB_REPOSITORY}/git/commits" --input - --jq '.sha')"
+
+          ref_payload="$(jq -n --arg sha "$commit_sha" '{sha:$sha,force:false}')"
+          printf '%s' "$ref_payload" | gh api --method PATCH "repos/${GITHUB_REPOSITORY}/git/refs/heads/${TARGET_BRANCH}" --input - >/dev/null
+
+          echo "tree_sha=$tree_sha" >> "$GITHUB_OUTPUT"
+          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch back exact installed state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          commit_sha="${{ steps.install.outputs.commit_sha }}"
+          remote_target="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${TARGET_BRANCH}" --jq '.object.sha')"
+          test "$remote_target" = "$commit_sha"
+          fetched_blob="$(gh api "repos/${GITHUB_REPOSITORY}/contents/${TARGET_PATH}?ref=${TARGET_BRANCH}" --jq '.sha')"
+          test "$fetched_blob" = "$CANDIDATE_BLOB"
+
+          comparison="$(gh api "repos/${GITHUB_REPOSITORY}/compare/${EXPECTED_MAIN}...${commit_sha}")"
+          test "$(printf '%s' "$comparison" | jq -r '.ahead_by')" = "1"
+          test "$(printf '%s' "$comparison" | jq -r '.behind_by')" = "0"
+          test "$(printf '%s' "$comparison" | jq -r '.files | length')" = "1"
+          test "$(printf '%s' "$comparison" | jq -r '.files[0].filename')" = "$TARGET_PATH"
+
+          mkdir -p installation-artifacts
+          jq -n \
+            --arg repository "$GITHUB_REPOSITORY" \
+            --arg baseCommit "$EXPECTED_MAIN" \
+            --arg branch "$TARGET_BRANCH" \
+            --arg commit "$commit_sha" \
+            --arg path "$TARGET_PATH" \
+            --arg blob "$fetched_blob" \
+            '{repository:$repository,baseCommit:$baseCommit,branch:$branch,commit:$commit,path:$path,blob:$blob,aheadBy:1,behindBy:0,changedPathCount:1,mergeAuthority:"WITHHELD"}' \
+            > installation-artifacts/receipt.json
+          cat installation-artifacts/receipt.json
+
+      - name: Upload installation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-refined-branch-installation
+          path: installation-artifacts/receipt.json
+          if-no-files-found: error

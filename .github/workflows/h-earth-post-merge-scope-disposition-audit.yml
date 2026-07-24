@@ -17,6 +17,9 @@ on:
       - tools/h-earth-repository-registry-compositor-route-amendment-audit.mjs
       - tools/h-earth-repository-registry-successor-v2-audit.mjs
       - tools/h-earth-repository-registry-target-4f-audit.mjs
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:

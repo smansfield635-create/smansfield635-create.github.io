@@ -1,0 +1,13 @@
+{
+  "triggerId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_STEP_1_BOUNDED_AUDIT_TRIGGER_v1",
+  "step": 1,
+  "checkpoint": "1F_STATIC_AND_EXECUTED_AUDIT",
+  "branch": "agent/h-earth-lifecycle-control-plane-step-1-001",
+  "purpose": "Trigger the installed read-only Step 1 audit workflow after all candidate contract, schema, state-machine, fixture, and audit artifacts are present.",
+  "mutationScope": "TRIGGER_RECORD_ONLY",
+  "successorActivationAuthorized": false,
+  "bootstrapMutationAuthorized": false,
+  "mainMutationAuthorized": false,
+  "canonicalizationAuthorized": false,
+  "nextAction": "EXECUTE_AND_FETCH_BACK_STEP_1_AUDIT_RECEIPT"
+}

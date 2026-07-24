@@ -37,12 +37,11 @@ const REPOSITORY =
   'smansfield635-create/smansfield635-create.github.io';
 
 const BRANCH =
-  'agent/h-earth-camera-envelope-animation-standard-001';
+  'agent/h-earth-capacity-single-module-restoration-001';
 
 export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_PATHS =
   Object.freeze([
     '/showroom/globe/h-earth/capacity.js',
-    '/showroom/globe/h-earth/capacity.base.js',
     '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.camera-and-living-presentation-scope-reconciliation.js'
   ]);
 
@@ -88,10 +87,12 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_EVIDENCE =
     sourceIdOrPath:
       '/showroom/globe/h-earth/capacity.js',
     sourceOccurrenceOrRevision:
-      'CAMERA_AUDIT_RUN=30128052946;AUDIT_ARTIFACT=8610004588;CHECKS=39_OF_39',
+      'SINGLE_MODULE_BUILD_RUN=30130634686;AUDIT_ARTIFACT=8610935978;CHECKS=18_OF_18;SHA256=7b70fcb379fa37d97b07b2d337884c655cfa9657b12db8a7d9d6459291aafb96',
     assertionScope: Object.freeze([
-      'EXACT_CAMERA_CAPACITY_PATH_RESOLUTION',
-      'PRESERVED_BASE_IMPLEMENTATION_PATH_RESOLUTION',
+      'EXACT_CANONICAL_CAPACITY_PATH_RESOLUTION',
+      'AUXILIARY_CAPACITY_PATH_ABSENCE',
+      'NINETEEN_MODULE_BROWSER_GRAPH_PRESERVATION',
+      'WATERWARD_CAMERA_CORRESPONDENCE',
       'READ_ONLY_PREFLIGHT_SCOPE'
     ]),
     verifiedOn:
@@ -116,7 +117,7 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_NODE =
     displayName:
       'H-Earth Camera Envelope and Living Presentation Capacity Package',
     description:
-      'Bounded camera-envelope correction, exact prior capacity implementation preservation, and nonexecuting living-presentation capacity standard.',
+      'Single canonical capacity-module restoration, bounded waterward camera correspondence, and nonexecuting living-presentation capacity standard within the governed nineteen-module browser graph.',
     repositoryPaths: [
       ...H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_PATHS
     ],
@@ -133,12 +134,13 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_NODE =
       'READ_ONLY_SCOPE_RECONCILIATION_FOR_CAMERA_AND_PRESENTATION_CAPACITY_PACKAGE',
     authoritySource: Object.freeze([
       'EXPLICIT_USER_INSTRUCTION',
-      'EXECUTED_39_CHECK_CAMERA_AND_GEOMETRY_PRESERVATION_AUDIT'
+      'EXECUTED_18_CHECK_SINGLE_MODULE_BUILD_AND_IMPORT_AUDIT'
     ]),
     authorityScope: Object.freeze([
       'EXACT_PATH_RESOLUTION',
+      'SINGLE_CANONICAL_CAPACITY_MODULE',
+      'NINETEEN_MODULE_BROWSER_GRAPH_PRESERVATION',
       'CAMERA_CAPACITY_CORRESPONDENCE',
-      'PRESERVED_BASE_IMPLEMENTATION_CORRESPONDENCE',
       'READ_ONLY_PREFLIGHT_SCOPE'
     ]),
     authorityLimitations: Object.freeze([
@@ -173,6 +175,8 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_NODE =
     ]),
     requiredValidations: Object.freeze([
       'EXACT_PATH_RESOLUTION',
+      'AUXILIARY_CAPACITY_PATH_ABSENCE',
+      'NINETEEN_MODULE_BROWSER_GRAPH_EXECUTION',
       'CAMERA_ENVELOPE_EXECUTION_AUDIT',
       'GEOMETRY_SOURCE_CUSTODY',
       'MINIMUM_SHORELINE_EXECUTION_AUDIT',
@@ -184,10 +188,10 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_NODE =
       'STOP_BEFORE_PHYSICAL_SIMULATION'
     ]),
     currentIdentityReferences: Object.freeze([
-      'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v1',
-      'H_EARTH_MINIMUM_SHORELINE_LIVING_PRESENTATION_CAPACITY_v1',
-      '1828db052b743f758ec58c992e612c49d95b3c80',
-      '887e0c469ec90e4571f5b41bc91ba8dab409aa2d'
+      'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v2_SINGLE_MODULE',
+      'H_EARTH_MINIMUM_SHORELINE_LIVING_PRESENTATION_CAPACITY_v2_SINGLE_MODULE',
+      '7b70fcb379fa37d97b07b2d337884c655cfa9657b12db8a7d9d6459291aafb96',
+      'GOVERNED_BROWSER_MODULE_COUNT_19'
     ]),
     lifecycleStatus:
       'CANDIDATE',

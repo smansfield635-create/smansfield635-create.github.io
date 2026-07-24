@@ -1,52 +1,47 @@
-name: H-Earth Capacity Single-Module Restoration Finalizer
+name: H-Earth Post-Merge 42-File Scope Disposition Audit
 
 on:
+  push:
+    branches:
+      - agent/h-earth-post-merge-scope-disposition-001
+    paths:
+      - h-earth-3d/control-plane/post-merge-disposition/**
+      - tools/h-earth-post-merge-scope-disposition-audit.mjs
+      - .github/workflows/h-earth-post-merge-scope-disposition-audit.yml
+      - h-earth-3d/control-plane/step-1/**
+      - h-earth-3d/registry/candidates/**
+      - h-earth-3d/registry/accepted-amendments/**
+      - h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+      - tools/h-earth-lifecycle-control-plane-step-1-audit.mjs
+      - tools/h-earth-registry-successor-build.mjs
+      - tools/h-earth-repository-registry-compositor-route-amendment-audit.mjs
+      - tools/h-earth-repository-registry-successor-v2-audit.mjs
+      - tools/h-earth-repository-registry-target-4f-audit.mjs
   pull_request:
     branches:
       - main
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build-audit-and-finalize-capacity-restoration:
+  audit-retained-state:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Incorporate current main without discarding candidate work
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin main
-          git merge --no-edit origin/main
-      - name: Build and execute single-module restoration
-        run: node --experimental-default-type=module tools/h-earth-capacity-single-module-restoration-build.mjs
-      - name: Reconcile repository registry path coverage
-        run: node --experimental-default-type=module tools/h-earth-capacity-single-module-restoration-finalize.mjs
-      - name: Upload generated capacity and execution receipt
+      - name: Execute retained-state audit
+        run: node --experimental-default-type=module tools/h-earth-post-merge-scope-disposition-audit.mjs
+      - name: Upload disposition audit receipt
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-capacity-single-module-restoration-final
-          path: artifacts/h-earth-capacity-single-module-restoration/**
+          name: h-earth-post-merge-scope-disposition-audit
+          path: artifacts/h-earth-post-merge-scope-disposition-audit-receipt.json
           if-no-files-found: error
           retention-days: 90
-      - name: Remove temporary construction surfaces and restore workflow
-        run: |
-          git show origin/main:.github/workflows/h-earth-post-merge-scope-disposition-audit.yml > .github/workflows/h-earth-post-merge-scope-disposition-audit.yml
-          rm -f tools/h-earth-capacity-single-module-restoration-build.mjs
-          rm -f tools/h-earth-capacity-single-module-restoration-finalize.mjs
-          rm -rf artifacts/h-earth-capacity-single-module-restoration
-      - name: Commit audited final candidate to the correction branch
-        env:
-          HEAD_BRANCH: ${{ github.head_ref }}
-        run: |
-          git add -A
-          git commit -m "Restore H-Earth capacity to the governed single-module graph"
-          git push origin "HEAD:${HEAD_BRANCH}"

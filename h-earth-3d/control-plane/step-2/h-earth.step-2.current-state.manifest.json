@@ -44,7 +44,7 @@
     },
     "postMergeOverlay": {
       "path": "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.post-merge-disposition-scope-reconciliation.js",
-      "gitBlobSha": "201c0579b61882e3df04a1191467a2305a00b176"
+      "gitBlobSha": "f2d854b28d39878d514567c6cdea4ac8ab26c18f"
     }
   },
   "candidateSuccessorEvidence": {
@@ -59,6 +59,13 @@
     "instanceContentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8",
     "sourceStatus": "COMPLETE_CANDIDATE_NOT_ACCEPTED_NOT_CANONICAL_NOT_ACTIVE"
   },
+  "mergeReadinessB": {
+    "legacyAuditPath": "/tools/h-earth-post-merge-scope-disposition-audit.mjs",
+    "legacyAuditGitBlobSha": "d04280a3f2f38ed59260b3092c3b83f14d311e2b",
+    "stabilizationMergeCommit": "08cf54db77dc48e23de8874953561bc2964551ba",
+    "continuityRule": "OBSERVED_MAIN_MUST_DESCEND_FROM_STABILIZATION_MERGE",
+    "obsoleteMainEqualityAssertionRetired": true
+  },
   "currentStateConclusion": {
     "activeBootstrapIdentified": true,
     "activeRegistrySourceIdentified": true,
@@ -72,5 +79,5 @@
     "bootstrapReplaced": false,
     "step3ExecutorCreated": false
   },
-  "manifestDigest": "9b8ba05d342f8f4b2b540e6b491cbf2f50de2f2be219bbc8a2122f20cc91cc06"
+  "manifestDigest": "d83aaef84ce9c90ef9ae38c37b1d0dc5c19e7ec3956f628a7a5f647edfcfb81d"
 }

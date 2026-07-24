@@ -1,0 +1,236 @@
+name: H-Earth Capacity Camera Envelope Baseline Comparison
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-002
+
+permissions:
+  contents: read
+
+jobs:
+  compare-exact-base-and-correction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout validation repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git show 9a69ccab862420f0141013653625705fd92e9f12:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "55169c7dc038b02dae7dccd5a79972c0018bc6e8"
+          test "$(git show 8934505b4f233904561b8c62975c1aadde8905d4:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
+          test "$(git diff --name-only 9a69ccab862420f0141013653625705fd92e9f12 8934505b4f233904561b8c62975c1aadde8905d4)" = "showroom/globe/h-earth/capacity.js"
+
+      - name: Materialize exact worktrees
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/h-earth-base 9a69ccab862420f0141013653625705fd92e9f12
+          git worktree add --detach /tmp/h-earth-correction 8934505b4f233904561b8c62975c1aadde8905d4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start exact route servers
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd /tmp/h-earth-base && python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-base-server.log 2>&1) &
+          (cd /tmp/h-earth-correction && python3 -m http.server 4174 --bind 127.0.0.1 > /tmp/h-earth-correction-server.log 2>&1) &
+          for port in 4173 4174; do
+            for attempt in $(seq 1 30); do
+              if curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null; then
+                break
+              fi
+              sleep 1
+            done
+            curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null
+          done
+
+      - name: Execute exact baseline comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p comparison-artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+
+          const builds = [
+            {
+              id: 'base',
+              commit: '9a69ccab862420f0141013653625705fd92e9f12',
+              capacityBlob: '55169c7dc038b02dae7dccd5a79972c0018bc6e8',
+              origin: 'http://127.0.0.1:4173'
+            },
+            {
+              id: 'correction',
+              commit: '8934505b4f233904561b8c62975c1aadde8905d4',
+              capacityBlob: '2de4476648ae6eb5ae53e87d73b4f965b5c71494',
+              origin: 'http://127.0.0.1:4174'
+            }
+          ];
+
+          const viewports = [
+            { id: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
+            { id: 'mobile', width: 390, height: 844, deviceScaleFactor: 3 }
+          ];
+
+          const browser = await chromium.launch({ headless: true });
+          const results = [];
+
+          for (const build of builds) {
+            for (const viewport of viewports) {
+              const context = await browser.newContext({
+                viewport: { width: viewport.width, height: viewport.height },
+                deviceScaleFactor: viewport.deviceScaleFactor
+              });
+              const page = await context.newPage();
+              const pageErrors = [];
+              const consoleErrors = [];
+              page.on('pageerror', (error) => pageErrors.push(error instanceof Error ? error.message : String(error)));
+              page.on('console', (message) => {
+                if (message.type() === 'error') consoleErrors.push(message.text());
+              });
+
+              const url = `${build.origin}/showroom/globe/h-earth/`;
+              const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+              await page.waitForTimeout(10000);
+
+              const evidence = await page.evaluate(async () => {
+                const debugText = document.getElementById('h-earth-3d-debug')?.textContent ?? '';
+                let debug = null;
+                let debugParseError = null;
+                try {
+                  debug = JSON.parse(debugText);
+                } catch (error) {
+                  debugParseError = error instanceof Error ? error.message : String(error);
+                }
+
+                const capacity = await import('./capacity.js?comparison-direct');
+                const routeReceipt = debug?.routeReceipt ?? null;
+                const construct = routeReceipt?.rendererConstructReceipt ?? null;
+                const nodeBudget = construct?.nodeBudgetEvaluation ?? null;
+                const handoff = routeReceipt?.compositorHandoffReceipt?.rawHandoff ?? null;
+                const viewportReceipt = routeReceipt?.compositorViewportReceipt ?? null;
+                const pose = handoff?.admittedGeometryFrame?.resolvedCameraPoseCorrespondence?.resolvedCameraPose ?? null;
+
+                return {
+                  documentStatus: document.getElementById('h-earth-3d-status')?.textContent ?? null,
+                  fallbackText: document.getElementById('h-earth-3d-fallback')?.textContent ?? null,
+                  debugParseError,
+                  route: {
+                    status: routeReceipt?.status ?? null,
+                    initialized: routeReceipt?.initialized ?? null,
+                    rendererBootstrapStatus: routeReceipt?.routeStatus?.rendererBootstrapStatus ?? null
+                  },
+                  capacity: {
+                    contractId: capacity.H_EARTH_3D_CAPACITY_CONTRACT_ID,
+                    preflightEligible: capacity.getHEarth3DCapacityPreflight()?.eligible ?? null,
+                    camera: capacity.H_EARTH_3D_CAMERA_CAPACITY
+                  },
+                  viewportReceipt: viewportReceipt ? {
+                    accepted: viewportReceipt.accepted,
+                    status: viewportReceipt.status,
+                    capacityStatus: viewportReceipt.viewport?.capacityStatus ?? viewportReceipt.evaluation?.viewport?.capacityStatus ?? null
+                  } : null,
+                  handoff: handoff ? {
+                    ok: handoff.ok,
+                    status: handoff.status,
+                    admittedFrameOk: handoff.admittedGeometryFrame?.ok ?? null,
+                    admittedFrameStatus: handoff.admittedGeometryFrame?.status ?? null
+                  } : null,
+                  resolvedCameraPose: pose ? {
+                    eligible: pose.eligible,
+                    status: pose.status,
+                    position: pose.position,
+                    target: pose.target,
+                    verticalFovDegrees: pose.verticalFovDegrees,
+                    nearPlane: pose.nearPlane,
+                    farPlane: pose.farPlane
+                  } : null,
+                  rendererConstruct: construct ? {
+                    status: construct.status,
+                    constructed: construct.constructed,
+                    issues: construct.issues,
+                    nodeBudget: nodeBudget ? {
+                      eligible: nodeBudget.eligible,
+                      status: nodeBudget.status,
+                      semanticLayerContainers: nodeBudget.semanticLayerContainers,
+                      environmentPrimitives: nodeBudget.environmentPrimitives,
+                      interactionNodes: nodeBudget.interactionNodes,
+                      accounting: nodeBudget.authorityEvaluation?.accounting ?? null,
+                      budget: nodeBudget.authorityEvaluation?.budget ?? null,
+                      issues: nodeBudget.authorityEvaluation?.issues ?? null
+                    } : null
+                  } : null,
+                  rendererMountReceiptPresent: routeReceipt?.rendererMountReceipt != null,
+                  rendererReleaseStatus: routeReceipt?.rendererReleaseReceipt?.status ?? null,
+                  globals: {
+                    htmlEntryFailurePresent: globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE != null,
+                    htmlEntryReceiptPresent: globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_RECEIPT != null
+                  }
+                };
+              });
+
+              await page.screenshot({
+                path: `comparison-artifacts/${build.id}-${viewport.id}.png`,
+                fullPage: true
+              });
+
+              results.push({
+                build,
+                viewport,
+                navigation: {
+                  ok: response?.ok() ?? false,
+                  status: response?.status() ?? null
+                },
+                pageErrors,
+                consoleErrors,
+                evidence
+              });
+              await context.close();
+            }
+          }
+
+          await browser.close();
+
+          const comparison = {
+            baseCommit: builds[0].commit,
+            correctionCommit: builds[1].commit,
+            exactChangedPath: 'showroom/globe/h-earth/capacity.js',
+            results
+          };
+
+          fs.writeFileSync(
+            'comparison-artifacts/comparison.json',
+            JSON.stringify(comparison, null, 2)
+          );
+          console.log(JSON.stringify(comparison, null, 2));
+          NODE
+
+      - name: Upload comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-camera-envelope-baseline-comparison
+          path: |
+            comparison-artifacts/
+            /tmp/h-earth-base-server.log
+            /tmp/h-earth-correction-server.log
+          if-no-files-found: error

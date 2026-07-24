@@ -1,0 +1,218 @@
+name: H-Earth Capacity Post-Merge Deployed Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify-deployed-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact merge commit
+        uses: actions/checkout@v4
+        with:
+          ref: 61e9507bb6116fb017f43967da5c71a4b6ac2ad3
+          fetch-depth: 0
+
+      - name: Verify merged repository identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "61e9507bb6116fb017f43967da5c71a4b6ac2ad3"
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "887e0c469ec90e4571f5b41bc91ba8dab409aa2d"
+          grep -q '    farPlane: 194,' showroom/globe/h-earth/capacity.js
+
+      - name: Wait for exact deployed capacity bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          deployed_url='https://smansfield635-create.github.io/showroom/globe/h-earth/capacity.js'
+          for attempt in $(seq 1 60); do
+            curl --fail --silent --show-error --location \
+              -H 'Cache-Control: no-cache' \
+              "${deployed_url}?postmerge=${GITHUB_RUN_ID}-${attempt}" \
+              -o deployed-capacity.js || true
+            if test -s deployed-capacity.js; then
+              deployed_blob="$(git hash-object deployed-capacity.js)"
+              if test "$deployed_blob" = "887e0c469ec90e4571f5b41bc91ba8dab409aa2d"; then
+                printf 'deployed_blob=%s\n' "$deployed_blob" > deployed-identity.txt
+                exit 0
+              fi
+            fi
+            sleep 5
+          done
+          echo 'Exact merged capacity bytes were not observed on the deployed route.' >&2
+          if test -s deployed-capacity.js; then
+            git hash-object deployed-capacity.js >&2
+            grep -n 'farPlane:' deployed-capacity.js | head -5 >&2 || true
+          fi
+          exit 1
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright-core@1.54.1
+          command -v google-chrome
+
+      - name: Execute deployed desktop and mobile route
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p deployed-artifacts
+          mv deployed-identity.txt deployed-artifacts/deployed-identity.txt
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright-core';
+
+          const routeUrl = 'https://smansfield635-create.github.io/showroom/globe/h-earth/';
+          const cases = [
+            { id: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
+            { id: 'mobile', width: 390, height: 844, deviceScaleFactor: 3 }
+          ];
+
+          function assert(condition, message) {
+            if (!condition) throw new Error(message);
+          }
+
+          const browser = await chromium.launch({
+            headless: true,
+            executablePath: '/usr/bin/google-chrome',
+            args: ['--no-sandbox', '--disable-dev-shm-usage']
+          });
+          const results = [];
+
+          for (const testCase of cases) {
+            const context = await browser.newContext({
+              viewport: { width: testCase.width, height: testCase.height },
+              deviceScaleFactor: testCase.deviceScaleFactor
+            });
+            const page = await context.newPage();
+            const pageErrors = [];
+            const consoleErrors = [];
+            page.on('pageerror', (error) => pageErrors.push(error instanceof Error ? error.message : String(error)));
+            page.on('console', (message) => {
+              if (message.type() === 'error' && !/favicon|404/i.test(message.text())) {
+                consoleErrors.push(message.text());
+              }
+            });
+
+            const response = await page.goto(
+              `${routeUrl}?postmerge=${process.env.GITHUB_RUN_ID}-${testCase.id}`,
+              { waitUntil: 'domcontentloaded', timeout: 30000 }
+            );
+            assert(response?.ok() === true, `${testCase.id}: deployed navigation failed`);
+
+            await page.waitForFunction(() => {
+              const status = document.getElementById('h-earth-3d-status')?.textContent ?? '';
+              return status === 'PUBLIC_STAGE_RENDERER_MOUNTED' || status.includes('FAILURE');
+            }, null, { timeout: 30000 });
+
+            const evidence = await page.evaluate(async ({ runId }) => {
+              const debugText = document.getElementById('h-earth-3d-debug')?.textContent ?? '';
+              const debug = JSON.parse(debugText);
+              const capacity = await import(`./capacity.js?postmerge-direct=${runId}-${Date.now()}`);
+              const routeReceipt = debug?.routeReceipt ?? null;
+              const construct = routeReceipt?.rendererConstructReceipt ?? null;
+              const nodeBudget = construct?.nodeBudgetEvaluation ?? null;
+              const handoff = routeReceipt?.compositorHandoffReceipt?.rawHandoff ?? null;
+              const mount = document.getElementById('h-earth-3d-renderer-mount');
+              const mountRect = mount?.getBoundingClientRect() ?? null;
+              const visible = mount
+                ? Array.from(mount.querySelectorAll('*')).filter((element) => {
+                    const rect = element.getBoundingClientRect();
+                    const style = getComputedStyle(element);
+                    return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) > 0;
+                  })
+                : [];
+              const union = visible.reduce((acc, element) => {
+                const rect = element.getBoundingClientRect();
+                return {
+                  left: Math.min(acc.left, rect.left),
+                  top: Math.min(acc.top, rect.top),
+                  right: Math.max(acc.right, rect.right),
+                  bottom: Math.max(acc.bottom, rect.bottom)
+                };
+              }, {
+                left: Number.POSITIVE_INFINITY,
+                top: Number.POSITIVE_INFINITY,
+                right: Number.NEGATIVE_INFINITY,
+                bottom: Number.NEGATIVE_INFINITY
+              });
+              const unionWidth = Number.isFinite(union.left) ? Math.max(0, union.right - union.left) : 0;
+              const unionHeight = Number.isFinite(union.top) ? Math.max(0, union.bottom - union.top) : 0;
+              const mountWidth = mountRect?.width ?? 0;
+              const mountHeight = mountRect?.height ?? 0;
+
+              return {
+                documentStatus: document.getElementById('h-earth-3d-status')?.textContent ?? null,
+                routeStatus: routeReceipt?.status ?? null,
+                rendererBootstrapStatus: routeReceipt?.routeStatus?.rendererBootstrapStatus ?? null,
+                capacityPreflightEligible: capacity.getHEarth3DCapacityPreflight()?.eligible ?? null,
+                camera: capacity.H_EARTH_3D_CAMERA_CAPACITY?.initialProjectionCandidate ?? null,
+                handoffStatus: handoff?.status ?? null,
+                constructed: construct?.constructed ?? null,
+                constructStatus: construct?.status ?? null,
+                environmentPrimitives: nodeBudget?.environmentPrimitives ?? null,
+                totalRendererOwnedNodes: nodeBudget?.authorityEvaluation?.accounting?.totalRendererOwnedNodes ?? null,
+                nodeBudgetEligible: nodeBudget?.eligible ?? null,
+                rendererMountReceiptPresent: routeReceipt?.rendererMountReceipt != null,
+                visibleDescendantCount: visible.length,
+                widthRatio: mountWidth > 0 ? unionWidth / mountWidth : 0,
+                heightRatio: mountHeight > 0 ? unionHeight / mountHeight : 0,
+                areaRatio: mountWidth > 0 && mountHeight > 0 ? unionWidth * unionHeight / (mountWidth * mountHeight) : 0
+              };
+            }, { runId: process.env.GITHUB_RUN_ID });
+
+            assert(evidence.capacityPreflightEligible === true, `${testCase.id}: deployed capacity preflight failed`);
+            assert(evidence.camera?.position?.y === 24 && evidence.camera?.position?.z === 64, `${testCase.id}: deployed position mismatch`);
+            assert(evidence.camera?.target?.z === -128, `${testCase.id}: deployed target mismatch`);
+            assert(evidence.camera?.farPlane === 194, `${testCase.id}: deployed far plane mismatch`);
+            assert(evidence.handoffStatus === 'COMPOSITOR_RENDERER_HANDOFF_READY', `${testCase.id}: deployed handoff not ready`);
+            assert(evidence.constructed === true, `${testCase.id}: deployed renderer construction failed`);
+            assert(evidence.nodeBudgetEligible === true, `${testCase.id}: deployed node budget rejected`);
+            assert(evidence.environmentPrimitives <= 384, `${testCase.id}: deployed primitive budget exceeded`);
+            assert(evidence.totalRendererOwnedNodes <= 448, `${testCase.id}: deployed total-node budget exceeded`);
+            assert(evidence.rendererMountReceiptPresent === true, `${testCase.id}: deployed renderer not mounted`);
+            assert(evidence.documentStatus === 'PUBLIC_STAGE_RENDERER_MOUNTED', `${testCase.id}: deployed public stage not mounted`);
+            assert(evidence.routeStatus === 'PUBLIC_STAGE_READY', `${testCase.id}: deployed route not ready`);
+            assert(evidence.visibleDescendantCount > 0, `${testCase.id}: deployed output not visible`);
+            assert(evidence.widthRatio > 0.5 && evidence.heightRatio > 0.1 && evidence.areaRatio > 0.05, `${testCase.id}: deployed output remained sliver-sized`);
+            assert(pageErrors.length === 0, `${testCase.id}: page errors: ${pageErrors.join(' | ')}`);
+            assert(consoleErrors.length === 0, `${testCase.id}: console errors: ${consoleErrors.join(' | ')}`);
+
+            await page.screenshot({ path: `deployed-artifacts/${testCase.id}.png`, fullPage: true });
+            results.push({ id: testCase.id, evidence, pageErrors, consoleErrors });
+            await context.close();
+          }
+
+          await browser.close();
+          fs.writeFileSync(
+            'deployed-artifacts/results.json',
+            JSON.stringify({
+              mergeCommit: '61e9507bb6116fb017f43967da5c71a4b6ac2ad3',
+              deployedCapacityBlob: '887e0c469ec90e4571f5b41bc91ba8dab409aa2d',
+              results
+            }, null, 2)
+          );
+          console.log(JSON.stringify(results, null, 2));
+          NODE
+
+      - name: Upload deployed verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-post-merge-deployed-validation
+          path: deployed-artifacts/
+          if-no-files-found: warn

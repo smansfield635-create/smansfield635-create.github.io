@@ -3,49 +3,38 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ARCHCOIN Calibration Lab · Round 1</title>
+  <title>ARCHCOIN Calibration Lab · Round 2</title>
 </head>
 <body>
-  <p>Preparing isolated ARCHCOIN calibration lab · Round 1…</p>
+  <p>Preparing isolated ARCHCOIN calibration lab · Round 2…</p>
   <script>
     (async () => {
       "use strict";
-      const BUILD = "ARCHCOIN_CALIBRATION_ROUND1_v1";
+      const BUILD = "ARCHCOIN_CALIBRATION_ROUND2_v1";
       const target = `./archcoin.lab.html?build=${encodeURIComponent(BUILD)}`;
-      const workerUrl = `./archcoin.lab.sw.js?build=${encodeURIComponent(BUILD)}`;
-
       if (!("serviceWorker" in navigator)) {
         document.body.textContent = "Service worker support is required for the isolated calibration lab.";
         return;
       }
-
       try {
-        const prior = await navigator.serviceWorker.getRegistration("./");
-        const priorUrl = prior && prior.active ? String(prior.active.scriptURL || "") : "";
-
-        if (prior && !priorUrl.includes(BUILD)) {
-          await prior.unregister();
-          const restart = new URL(location.href);
-          restart.searchParams.set("sw-reset", BUILD);
-          location.replace(restart.href);
-          return;
-        }
-
-        await navigator.serviceWorker.register(workerUrl, { scope: "./" });
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(
+          registrations
+            .filter(registration => registration.scope.includes("/prototypes/universal-compass/"))
+            .map(registration => registration.unregister())
+        );
+        await navigator.serviceWorker.register(
+          `./archcoin.lab.sw.js?build=${encodeURIComponent(BUILD)}`,
+          { scope: "./" }
+        );
         await navigator.serviceWorker.ready;
-
-        const controllerUrl = navigator.serviceWorker.controller
-          ? String(navigator.serviceWorker.controller.scriptURL || "")
-          : "";
-
-        if (!controllerUrl.includes(BUILD)) {
+        if (!navigator.serviceWorker.controller) {
           location.reload();
           return;
         }
-
         location.replace(target);
       } catch (error) {
-        document.body.textContent = `ARCHCOIN lab calibration failed: ${error && error.message ? error.message : String(error)}`;
+        document.body.textContent = `ARCHCOIN lab Round 2 failed: ${error && error.message ? error.message : String(error)}`;
       }
     })();
   </script>

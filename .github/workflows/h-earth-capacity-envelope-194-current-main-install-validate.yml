@@ -25,8 +25,8 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin main agent/h-earth-capacity-camera-envelope-current-main-004
-          test "$(git rev-parse origin/main)" = "959dbc6741b45c859875d68db86ce32a0297d5d5"
-          test "$(git rev-parse origin/agent/h-earth-capacity-camera-envelope-current-main-004)" = "959dbc6741b45c859875d68db86ce32a0297d5d5"
+          test "$(git rev-parse origin/main)" = "2bcaafb8c69d15ae1886a5a2e3c69c8681cb7877"
+          test "$(git rev-parse origin/agent/h-earth-capacity-camera-envelope-current-main-004)" = "2bcaafb8c69d15ae1886a5a2e3c69c8681cb7877"
           test "$(git show origin/main:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "55169c7dc038b02dae7dccd5a79972c0018bc6e8"
           test "$(git show 8934505b4f233904561b8c62975c1aadde8905d4:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
 
@@ -216,7 +216,7 @@ jobs:
           fs.writeFileSync(
             'validation-artifacts/results.json',
             JSON.stringify({
-              baseCommit: '959dbc6741b45c859875d68db86ce32a0297d5d5',
+              baseCommit: '2bcaafb8c69d15ae1886a5a2e3c69c8681cb7877',
               candidateCommit: process.env.CANDIDATE_COMMIT,
               candidateBlob: process.env.CANDIDATE_BLOB,
               acceptedFarPlane: 194,
@@ -233,7 +233,7 @@ jobs:
           git fetch origin agent/h-earth-capacity-camera-envelope-current-main-004
           test "$(git rev-parse origin/agent/h-earth-capacity-camera-envelope-current-main-004)" = "$CANDIDATE_COMMIT"
           test "$(git show origin/agent/h-earth-capacity-camera-envelope-current-main-004:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "$CANDIDATE_BLOB"
-          test "$(git diff --name-only 959dbc6741b45c859875d68db86ce32a0297d5d5 "$CANDIDATE_COMMIT")" = "showroom/globe/h-earth/capacity.js"
+          test "$(git diff --name-only 2bcaafb8c69d15ae1886a5a2e3c69c8681cb7877 "$CANDIDATE_COMMIT")" = "showroom/globe/h-earth/capacity.js"
           printf 'candidate_commit=%s\ncandidate_blob=%s\n' "$CANDIDATE_COMMIT" "$CANDIDATE_BLOB" > validation-artifacts/identity.txt
 
       - name: Upload exact validation evidence

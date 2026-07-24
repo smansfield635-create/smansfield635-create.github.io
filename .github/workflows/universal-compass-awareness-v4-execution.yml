@@ -1,0 +1,75 @@
+name: Universal Compass Awareness v4 Execution
+
+on:
+  push:
+    branches:
+      - agent/universal-compass-awareness-v4-execution-001
+
+permissions:
+  contents: read
+
+jobs:
+  validate-awareness-v4:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact execution branch
+        uses: actions/checkout@v4
+
+      - name: Execute v4 map and snapshot validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import {
+            FOUR_SOURCE_CAPABILITY_MAP_V4_VALIDATION_RECEIPT,
+            UNIVERSAL_COMPASS_FOUR_SOURCE_CAPABILITY_MAP_V4
+          } from './research/project-awareness/universal-compass-four-source-capability-map.v4.js';
+          import {
+            UNIVERSAL_COMPASS_PROJECT_AWARENESS_SNAPSHOT_V4,
+            UNIVERSAL_COMPASS_PROJECT_AWARENESS_SNAPSHOT_V4_VALIDATION_RECEIPT
+          } from './research/project-awareness/universal-compass-awareness-snapshot.v4.js';
+
+          const result = {
+            schema: 'DGB_UNIVERSAL_COMPASS_AWARENESS_V4_EXECUTION_RECEIPT_v1',
+            map: {
+              artifactId: UNIVERSAL_COMPASS_FOUR_SOURCE_CAPABILITY_MAP_V4.artifactId,
+              digest: UNIVERSAL_COMPASS_FOUR_SOURCE_CAPABILITY_MAP_V4.deterministicDigest,
+              status: FOUR_SOURCE_CAPABILITY_MAP_V4_VALIDATION_RECEIPT.status,
+              summary: FOUR_SOURCE_CAPABILITY_MAP_V4_VALIDATION_RECEIPT.summary
+            },
+            snapshot: {
+              artifactId: UNIVERSAL_COMPASS_PROJECT_AWARENESS_SNAPSHOT_V4.artifactId,
+              digest: UNIVERSAL_COMPASS_PROJECT_AWARENESS_SNAPSHOT_V4.deterministicDigest,
+              status: UNIVERSAL_COMPASS_PROJECT_AWARENESS_SNAPSHOT_V4_VALIDATION_RECEIPT.status,
+              summary: UNIVERSAL_COMPASS_PROJECT_AWARENESS_SNAPSHOT_V4_VALIDATION_RECEIPT.summary
+            },
+            authority: {
+              productAuthority: false,
+              runtimeAuthority: false,
+              mutationAuthority: false
+            }
+          };
+
+          if (result.map.status !== 'PASS') {
+            throw new Error('CAPABILITY_MAP_V4_VALIDATION_NOT_PASS');
+          }
+          if (result.snapshot.status !== 'PASS') {
+            throw new Error('AWARENESS_SNAPSHOT_V4_VALIDATION_NOT_PASS');
+          }
+
+          await import('node:fs').then(({ writeFileSync }) =>
+            writeFileSync(
+              'universal-compass-awareness-v4-execution-receipt.json',
+              `${JSON.stringify(result, null, 2)}\n`,
+              'utf8'
+            )
+          );
+          console.log(JSON.stringify(result, null, 2));
+          NODE
+
+      - name: Upload execution receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-awareness-v4-execution-receipt
+          path: universal-compass-awareness-v4-execution-receipt.json
+          if-no-files-found: error

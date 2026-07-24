@@ -9,3 +9,13 @@ html::before {
   content: none !important;
   display: none !important;
 }
+
+[data-archcoin-scene-field].is-archcoin-dragging,
+[data-archcoin-scene-field].is-archcoin-settling {
+  cursor: grabbing;
+}
+
+[data-archcoin-scene-field].is-archcoin-dragging .archcoin-coin,
+[data-archcoin-scene-field].is-archcoin-dragging [data-archcoin-room] {
+  transition: none !important;
+}

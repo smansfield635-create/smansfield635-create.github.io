@@ -44,7 +44,7 @@
     },
     "postMergeOverlay": {
       "path": "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.post-merge-disposition-scope-reconciliation.js",
-      "gitBlobSha": "f7dbe4e9b4fd5feef677fdc8c42a65ab4bb322de"
+      "gitBlobSha": "201c0579b61882e3df04a1191467a2305a00b176"
     }
   },
   "candidateSuccessorEvidence": {
@@ -72,5 +72,5 @@
     "bootstrapReplaced": false,
     "step3ExecutorCreated": false
   },
-  "manifestDigest": "effeae7d9506bb0fd439f91ebffaa5dd396984768e129e8d7389df74579121da"
+  "manifestDigest": "9b8ba05d342f8f4b2b540e6b491cbf2f50de2f2be219bbc8a2122f20cc91cc06"
 }

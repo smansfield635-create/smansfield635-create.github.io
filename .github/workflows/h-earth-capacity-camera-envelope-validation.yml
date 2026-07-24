@@ -1,0 +1,456 @@
+name: H-Earth Capacity Camera Envelope Validation
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-002
+
+permissions:
+  contents: read
+
+jobs:
+  validate-capacity-camera-envelope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout exact correction commit
+        uses: actions/checkout@v4
+        with:
+          ref: 8934505b4f233904561b8c62975c1aadde8905d4
+          fetch-depth: 0
+
+      - name: Verify anchored source identity and one-path scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "8934505b4f233904561b8c62975c1aadde8905d4"
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
+          changed="$(git diff --name-only 9a69ccab862420f0141013653625705fd92e9f12 8934505b4f233904561b8c62975c1aadde8905d4)"
+          test "$changed" = "showroom/globe/h-earth/capacity.js"
+
+      - name: Verify JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check showroom/globe/h-earth/capacity.js
+          node --check showroom/globe/h-earth/compositor.js
+          node --check showroom/globe/h-earth/renderer.js
+          node --check showroom/globe/h-earth/index.js
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser validation dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start exact-commit route server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-server.log 2>&1 &
+          echo $! > /tmp/h-earth-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-server.log
+          exit 1
+
+      - name: Execute capacity, compositor, renderer, route, and projection gauges
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p validation-artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+
+          const routeUrl = 'http://127.0.0.1:4173/showroom/globe/h-earth/';
+          const cases = [
+            { id: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
+            { id: 'mobile', width: 390, height: 844, deviceScaleFactor: 3 }
+          ];
+
+          function assert(condition, message) {
+            if (!condition) {
+              throw new Error(message);
+            }
+          }
+
+          const browser = await chromium.launch({ headless: true });
+          const results = [];
+
+          for (const testCase of cases) {
+            const context = await browser.newContext({
+              viewport: { width: testCase.width, height: testCase.height },
+              deviceScaleFactor: testCase.deviceScaleFactor
+            });
+            const page = await context.newPage();
+            const consoleErrors = [];
+            const pageErrors = [];
+
+            page.on('console', (message) => {
+              if (message.type() === 'error') {
+                consoleErrors.push(message.text());
+              }
+            });
+            page.on('pageerror', (error) => {
+              pageErrors.push(error instanceof Error ? error.message : String(error));
+            });
+
+            const response = await page.goto(routeUrl, {
+              waitUntil: 'domcontentloaded',
+              timeout: 30000
+            });
+            assert(response && response.ok(), `${testCase.id}: route response was not successful`);
+
+            await page.waitForFunction(async () => {
+              try {
+                const route = await import('/showroom/globe/h-earth/index.js');
+                const receipt = typeof route.getRendererBootstrapReceipt === 'function'
+                  ? route.getRendererBootstrapReceipt()
+                  : null;
+                return receipt?.completed === true || receipt?.mounted === true;
+              } catch {
+                return false;
+              }
+            }, null, { timeout: 30000 });
+
+            const evidence = await page.evaluate(async ({ width, height, deviceScaleFactor }) => {
+              const capacity = await import('/showroom/globe/h-earth/capacity.js');
+              const compositor = await import('/showroom/globe/h-earth/compositor.js');
+              const renderer = await import('/showroom/globe/h-earth/renderer.js');
+              const route = await import('/showroom/globe/h-earth/index.js');
+
+              const safe = (value, depth = 0, seen = new WeakSet()) => {
+                if (value === null || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                  return value;
+                }
+                if (value === undefined) return null;
+                if (typeof value === 'function') return `[Function ${value.name || 'anonymous'}]`;
+                if (typeof value !== 'object') return String(value);
+                if (depth > 8) return '[DepthLimit]';
+                if (seen.has(value)) return '[Circular]';
+                seen.add(value);
+                if (Array.isArray(value)) {
+                  return value.slice(0, 200).map((item) => safe(item, depth + 1, seen));
+                }
+                const output = {};
+                for (const key of Object.keys(value).slice(0, 300)) {
+                  try {
+                    output[key] = safe(value[key], depth + 1, seen);
+                  } catch (error) {
+                    output[key] = `[Unserializable: ${error instanceof Error ? error.message : String(error)}]`;
+                  }
+                }
+                return output;
+              };
+
+              const preflight = capacity.getHEarth3DCapacityPreflight();
+              const camera = capacity.H_EARTH_3D_CAMERA_CAPACITY;
+              const worldBounds = capacity.H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS;
+
+              let viewportReceipt = null;
+              try {
+                viewportReceipt = compositor.setHEarth3DCompositorViewport({
+                  widthPx: width,
+                  heightPx: height,
+                  pixelRatio: deviceScaleFactor
+                });
+              } catch (error) {
+                viewportReceipt = {
+                  accepted: false,
+                  status: 'VIEWPORT_SETTER_THREW',
+                  error: error instanceof Error ? error.message : String(error)
+                };
+              }
+
+              let handoffReceipt = null;
+              try {
+                handoffReceipt = compositor.getHEarth3DCompositorRendererHandoff();
+              } catch (error) {
+                handoffReceipt = {
+                  ok: false,
+                  status: 'HANDOFF_GETTER_THREW',
+                  error: error instanceof Error ? error.message : String(error)
+                };
+              }
+
+              const routeReceipt = typeof route.getRendererBootstrapReceipt === 'function'
+                ? route.getRendererBootstrapReceipt()
+                : null;
+
+              const mountId = capacity.H_EARTH_3D_PUBLIC_STAGE_IDS.rendererMountId;
+              const mount = document.getElementById(mountId);
+              const mountRect = mount?.getBoundingClientRect() ?? null;
+              const descendants = mount ? Array.from(mount.querySelectorAll('*')) : [];
+              const visibleDescendants = descendants
+                .map((element) => {
+                  const rect = element.getBoundingClientRect();
+                  const style = getComputedStyle(element);
+                  const attributes = Array.from(element.attributes).map((attribute) => ({
+                    name: attribute.name,
+                    value: attribute.value
+                  }));
+                  return {
+                    tagName: element.tagName,
+                    rect: {
+                      x: rect.x,
+                      y: rect.y,
+                      width: rect.width,
+                      height: rect.height
+                    },
+                    display: style.display,
+                    visibility: style.visibility,
+                    opacity: Number(style.opacity),
+                    transform: style.transform,
+                    attributes
+                  };
+                })
+                .filter((entry) =>
+                  entry.rect.width > 0 &&
+                  entry.rect.height > 0 &&
+                  entry.display !== 'none' &&
+                  entry.visibility !== 'hidden' &&
+                  entry.opacity > 0
+                );
+
+              const shorelineCandidates = visibleDescendants.filter((entry) => {
+                const text = entry.attributes
+                  .map((attribute) => `${attribute.name}=${attribute.value}`)
+                  .join(' ');
+                return /shore|sand|water|foam|wet|OBJ_002|OBJ_004|OBJ_007|primitive|projected/i.test(text) ||
+                  (entry.transform && entry.transform !== 'none');
+              });
+              const gaugeNodes = shorelineCandidates.length > 0
+                ? shorelineCandidates
+                : visibleDescendants;
+
+              const union = gaugeNodes.reduce((accumulator, entry) => {
+                const left = entry.rect.x;
+                const top = entry.rect.y;
+                const right = entry.rect.x + entry.rect.width;
+                const bottom = entry.rect.y + entry.rect.height;
+                return {
+                  left: Math.min(accumulator.left, left),
+                  top: Math.min(accumulator.top, top),
+                  right: Math.max(accumulator.right, right),
+                  bottom: Math.max(accumulator.bottom, bottom)
+                };
+              }, {
+                left: Number.POSITIVE_INFINITY,
+                top: Number.POSITIVE_INFINITY,
+                right: Number.NEGATIVE_INFINITY,
+                bottom: Number.NEGATIVE_INFINITY
+              });
+
+              const unionWidth = Number.isFinite(union.left) ? Math.max(0, union.right - union.left) : 0;
+              const unionHeight = Number.isFinite(union.top) ? Math.max(0, union.bottom - union.top) : 0;
+              const mountWidth = mountRect?.width ?? 0;
+              const mountHeight = mountRect?.height ?? 0;
+              const widthRatio = mountWidth > 0 ? unionWidth / mountWidth : 0;
+              const heightRatio = mountHeight > 0 ? unionHeight / mountHeight : 0;
+              const areaRatio = mountWidth > 0 && mountHeight > 0
+                ? (unionWidth * unionHeight) / (mountWidth * mountHeight)
+                : 0;
+
+              function projectGrid(cameraCandidate) {
+                const position = cameraCandidate.position;
+                const target = cameraCandidate.target;
+                const up = cameraCandidate.up;
+                const forwardRaw = {
+                  x: target.x - position.x,
+                  y: target.y - position.y,
+                  z: target.z - position.z
+                };
+                const forwardLength = Math.hypot(forwardRaw.x, forwardRaw.y, forwardRaw.z);
+                const forward = {
+                  x: forwardRaw.x / forwardLength,
+                  y: forwardRaw.y / forwardLength,
+                  z: forwardRaw.z / forwardLength
+                };
+                const rightRaw = {
+                  x: forward.y * up.z - forward.z * up.y,
+                  y: forward.z * up.x - forward.x * up.z,
+                  z: forward.x * up.y - forward.y * up.x
+                };
+                const rightLength = Math.hypot(rightRaw.x, rightRaw.y, rightRaw.z);
+                const right = {
+                  x: rightRaw.x / rightLength,
+                  y: rightRaw.y / rightLength,
+                  z: rightRaw.z / rightLength
+                };
+                const resolvedUp = {
+                  x: right.y * forward.z - right.z * forward.y,
+                  y: right.z * forward.x - right.x * forward.z,
+                  z: right.x * forward.y - right.y * forward.x
+                };
+                const tangent = Math.tan(cameraCandidate.verticalFovDegrees * Math.PI / 360);
+                const aspect = width / height;
+                let depthEligible = 0;
+                let visible = 0;
+                const samplesPerAxis = 65;
+                const samplePlaneZ = camera.initialProjectionCandidate.target.z;
+                for (let xIndex = 0; xIndex < samplesPerAxis; xIndex += 1) {
+                  const x = worldBounds.x.minimum +
+                    (worldBounds.x.maximum - worldBounds.x.minimum) *
+                    xIndex / (samplesPerAxis - 1);
+                  for (let yIndex = 0; yIndex < samplesPerAxis; yIndex += 1) {
+                    const y = worldBounds.y.minimum +
+                      (worldBounds.y.maximum - worldBounds.y.minimum) *
+                      yIndex / (samplesPerAxis - 1);
+                    const delta = {
+                      x: x - position.x,
+                      y: y - position.y,
+                      z: samplePlaneZ - position.z
+                    };
+                    const depth = delta.x * forward.x + delta.y * forward.y + delta.z * forward.z;
+                    if (depth < cameraCandidate.nearPlane || depth > cameraCandidate.farPlane) {
+                      continue;
+                    }
+                    depthEligible += 1;
+                    const cameraX = delta.x * right.x + delta.y * right.y + delta.z * right.z;
+                    const cameraY = delta.x * resolvedUp.x + delta.y * resolvedUp.y + delta.z * resolvedUp.z;
+                    const ndcX = cameraX / (depth * tangent * aspect);
+                    const ndcY = cameraY / (depth * tangent);
+                    if (Math.abs(ndcX) <= 1 && Math.abs(ndcY) <= 1) {
+                      visible += 1;
+                    }
+                  }
+                }
+                return {
+                  sampleCount: samplesPerAxis * samplesPerAxis,
+                  samplePlaneZ,
+                  depthEligible,
+                  visible
+                };
+              }
+
+              const correctedGauge = projectGrid(camera.initialProjectionCandidate);
+              const legacyGauge = projectGrid({
+                position: { x: 0, y: 5.4, z: -12 },
+                target: { x: 0, y: 1.2, z: 7.5 },
+                up: { x: 0, y: 1, z: 0 },
+                verticalFovDegrees: 52,
+                nearPlane: 0.25,
+                farPlane: 48
+              });
+
+              return safe({
+                viewport: { width, height, deviceScaleFactor },
+                moduleExports: {
+                  capacity: Object.keys(capacity).sort(),
+                  compositor: Object.keys(compositor).sort(),
+                  renderer: Object.keys(renderer).sort(),
+                  route: Object.keys(route).sort()
+                },
+                preflight,
+                camera,
+                viewportReceipt,
+                handoffReceipt,
+                routeReceipt,
+                domGauge: {
+                  mountId,
+                  mountPresent: Boolean(mount),
+                  mountChildCount: mount?.children.length ?? 0,
+                  descendantCount: descendants.length,
+                  visibleDescendantCount: visibleDescendants.length,
+                  shorelineCandidateCount: shorelineCandidates.length,
+                  gaugeNodeCount: gaugeNodes.length,
+                  unionWidth,
+                  unionHeight,
+                  widthRatio,
+                  heightRatio,
+                  areaRatio,
+                  sliverDetected: widthRatio < 0.05 || heightRatio < 0.05 || areaRatio < 0.0025
+                },
+                projectionGauge: {
+                  historicalSourceLevelBaseline: {
+                    visible: 11,
+                    samples: 4225
+                  },
+                  historicalCorrectedModel: {
+                    visible: 3589,
+                    depthEligible: 4225,
+                    samples: 4225
+                  },
+                  executableCurrentRoutePlaneGauge: correctedGauge,
+                  executableLegacyEnvelopePlaneGauge: legacyGauge,
+                  gaugeSpecification: '65x65 samples over public-stage X/Y bounds on the corrected initial-target Z plane, evaluated through perspective depth and viewport eligibility.'
+                },
+                bodyTextPrefix: document.body.innerText.slice(0, 2000)
+              });
+            }, testCase);
+
+            await page.screenshot({
+              path: `validation-artifacts/${testCase.id}.png`,
+              fullPage: true
+            });
+
+            assert(evidence.preflight?.eligible === true, `${testCase.id}: capacity preflight was not eligible`);
+            assert(evidence.camera?.initialProjectionCandidate?.position?.y === 24, `${testCase.id}: corrected camera Y position missing`);
+            assert(evidence.camera?.initialProjectionCandidate?.position?.z === 64, `${testCase.id}: corrected camera Z position missing`);
+            assert(evidence.camera?.initialProjectionCandidate?.target?.z === -128, `${testCase.id}: corrected camera target missing`);
+            assert(evidence.camera?.initialProjectionCandidate?.farPlane === 512, `${testCase.id}: corrected far plane missing`);
+            assert(evidence.viewportReceipt?.accepted === true, `${testCase.id}: compositor viewport was not accepted`);
+            assert(evidence.routeReceipt?.completed === true, `${testCase.id}: route bootstrap did not complete`);
+            assert(evidence.routeReceipt?.mounted === true, `${testCase.id}: renderer did not mount`);
+            assert(evidence.domGauge?.mountPresent === true, `${testCase.id}: renderer mount was absent`);
+            assert(evidence.domGauge?.visibleDescendantCount > 0, `${testCase.id}: no visible renderer descendants`);
+            assert(evidence.domGauge?.sliverDetected === false, `${testCase.id}: projected output remained sliver-sized`);
+            assert(evidence.projectionGauge?.executableCurrentRoutePlaneGauge?.depthEligible === 4225, `${testCase.id}: corrected grid was not fully depth eligible`);
+            assert(evidence.projectionGauge?.executableCurrentRoutePlaneGauge?.visible > 0, `${testCase.id}: corrected grid had no viewport-visible samples`);
+            assert(evidence.projectionGauge?.executableLegacyEnvelopePlaneGauge?.depthEligible < evidence.projectionGauge?.executableCurrentRoutePlaneGauge?.depthEligible, `${testCase.id}: corrected envelope did not improve depth eligibility`);
+            assert(pageErrors.length === 0, `${testCase.id}: page errors: ${pageErrors.join(' | ')}`);
+
+            results.push({
+              id: testCase.id,
+              consoleErrors,
+              pageErrors,
+              evidence
+            });
+            await context.close();
+          }
+
+          await browser.close();
+          fs.writeFileSync(
+            'validation-artifacts/results.json',
+            JSON.stringify({
+              correctionCommit: '8934505b4f233904561b8c62975c1aadde8905d4',
+              capacityBlob: '2de4476648ae6eb5ae53e87d73b4f965b5c71494',
+              cases: results
+            }, null, 2)
+          );
+          console.log(JSON.stringify(results.map((result) => ({
+            id: result.id,
+            routeCompleted: result.evidence.routeReceipt?.completed,
+            rendererMounted: result.evidence.routeReceipt?.mounted,
+            visibleDescendants: result.evidence.domGauge?.visibleDescendantCount,
+            shorelineCandidates: result.evidence.domGauge?.shorelineCandidateCount,
+            areaRatio: result.evidence.domGauge?.areaRatio,
+            sliverDetected: result.evidence.domGauge?.sliverDetected,
+            correctedGauge: result.evidence.projectionGauge?.executableCurrentRoutePlaneGauge,
+            legacyGauge: result.evidence.projectionGauge?.executableLegacyEnvelopePlaneGauge,
+            pageErrors: result.pageErrors,
+            consoleErrors: result.consoleErrors
+          })), null, 2));
+          NODE
+
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-camera-envelope-validation
+          path: |
+            validation-artifacts/
+            /tmp/h-earth-server.log
+          if-no-files-found: warn

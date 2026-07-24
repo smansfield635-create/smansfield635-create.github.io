@@ -30,166 +30,163 @@ jobs:
 
           crystal_text = crystals.read_text(encoding="utf-8")
 
-          old_quality = '''    categoryScale:
-              0.72,
-
-            focusedCategoryScale:
-              0.94,
-
-            lawScale:
-              0.68,
-
-            primaryLawScale:
-              0.84,
-
-            selectedLawScale:
-              0.91,'''
-
-          new_quality = '''    categoryScale:
-              0.96,
-
-            focusedCategoryScale:
-              1.30,
-
-            lawScale:
-              0.88,
-
-            primaryLawScale:
-              1.12,
-
-            selectedLawScale:
-              1.18,'''
-
-          if crystal_text.count(old_quality) != 1:
-              raise SystemExit(
-                  f"Expected one Laws quality block; found {crystal_text.count(old_quality)}."
+          def replace_scalar(source, property_name, value):
+              pattern = re.compile(
+                  rf'({re.escape(property_name)}:\s*\n\s+)([0-9.]+)'
               )
-          crystal_text = crystal_text.replace(old_quality, new_quality)
+              output, count = pattern.subn(
+                  lambda match: match.group(1) + value,
+                  source,
+                  count=1,
+              )
+              if count != 1:
+                  raise SystemExit(
+                      f"Expected one scalar {property_name}; found {count}."
+                  )
+              return output
 
-          material_start = crystal_text.index("  const MATERIALS = Object.freeze({")
-          material_end = crystal_text.index("\n\n  const RECEIPT =", material_start)
+          for property_name, value in (
+              ("categoryScale", "0.96"),
+              ("focusedCategoryScale", "1.30"),
+              ("lawScale", "0.88"),
+              ("primaryLawScale", "1.12"),
+              ("selectedLawScale", "1.18"),
+          ):
+              crystal_text = replace_scalar(
+                  crystal_text,
+                  property_name,
+                  value,
+              )
+
+          material_start = crystal_text.index(
+              "  const MATERIALS = Object.freeze({"
+          )
+          material_end = crystal_text.index(
+              "\n\n  const RECEIPT =",
+              material_start,
+          )
 
           new_materials = '''  const MATERIALS = Object.freeze({
-            CATEGORY_IDLE:
-              Object.freeze({
-                specular:
-                  1.18,
+    CATEGORY_IDLE:
+      Object.freeze({
+        specular:
+          1.18,
 
-                rim:
-                  1.02,
+        rim:
+          1.02,
 
-                emissive:
-                  0.17,
+        emissive:
+          0.17,
 
-                alpha:
-                  0.90,
+        alpha:
+          0.90,
 
-                sparkle:
-                  0.26,
+        sparkle:
+          0.26,
 
-                halo:
-                  0.82,
+        halo:
+          0.82,
 
-                contrast:
-                  1.16
-              }),
+        contrast:
+          1.16
+      }),
 
-            CATEGORY_FOCUSED:
-              Object.freeze({
-                specular:
-                  1.50,
+    CATEGORY_FOCUSED:
+      Object.freeze({
+        specular:
+          1.50,
 
-                rim:
-                  1.30,
+        rim:
+          1.30,
 
-                emissive:
-                  0.24,
+        emissive:
+          0.24,
 
-                alpha:
-                  0.96,
+        alpha:
+          0.96,
 
-                sparkle:
-                  0.36,
+        sparkle:
+          0.36,
 
-                halo:
-                  1.18,
+        halo:
+          1.18,
 
-                contrast:
-                  1.24
-              }),
+        contrast:
+          1.24
+      }),
 
-            LAW_IDLE:
-              Object.freeze({
-                specular:
-                  1.04,
+    LAW_IDLE:
+      Object.freeze({
+        specular:
+          1.04,
 
-                rim:
-                  0.90,
+        rim:
+          0.90,
 
-                emissive:
-                  0.15,
+        emissive:
+          0.15,
 
-                alpha:
-                  0.88,
+        alpha:
+          0.88,
 
-                sparkle:
-                  0.22,
+        sparkle:
+          0.22,
 
-                halo:
-                  0.64,
+        halo:
+          0.64,
 
-                contrast:
-                  1.10
-              }),
+        contrast:
+          1.10
+      }),
 
-            LAW_PRIMARY:
-              Object.freeze({
-                specular:
-                  1.24,
+    LAW_PRIMARY:
+      Object.freeze({
+        specular:
+          1.24,
 
-                rim:
-                  1.08,
+        rim:
+          1.08,
 
-                emissive:
-                  0.21,
+        emissive:
+          0.21,
 
-                alpha:
-                  0.94,
+        alpha:
+          0.94,
 
-                sparkle:
-                  0.30,
+        sparkle:
+          0.30,
 
-                halo:
-                  0.86,
+        halo:
+          0.86,
 
-                contrast:
-                  1.17
-              }),
+        contrast:
+          1.17
+      }),
 
-            LAW_SELECTED:
-              Object.freeze({
-                specular:
-                  1.34,
+    LAW_SELECTED:
+      Object.freeze({
+        specular:
+          1.34,
 
-                rim:
-                  1.14,
+        rim:
+          1.14,
 
-                emissive:
-                  0.24,
+        emissive:
+          0.24,
 
-                alpha:
-                  0.95,
+        alpha:
+          0.95,
 
-                sparkle:
-                  0.34,
+        sparkle:
+          0.34,
 
-                halo:
-                  0.96,
+        halo:
+          0.96,
 
-                contrast:
-                  1.20
-              })
-          });'''
+        contrast:
+          1.20
+      })
+  });'''
 
           crystal_text = (
               crystal_text[:material_start]
@@ -261,13 +258,15 @@ jobs:
           html_text = html.read_text(encoding="utf-8")
 
           html_text, open_count = re.subn(
-              r'(<details\\b[^>]*?)\\s+open(\\s*>)',
-              r'\\1\\2',
+              r'(<details\b[^>]*?)\s+open(\s*>)',
+              r'\1\2',
               html_text,
               flags=re.IGNORECASE | re.DOTALL,
           )
           if open_count < 1:
-              raise SystemExit("Expected at least one default-open Laws details element.")
+              raise SystemExit(
+                  "Expected at least one default-open Laws details element."
+              )
 
           replacements = {
               "/laws/index.css?v=LAWS_COMPASS_WORLD_PASS_PLANET_AND_SHOWROOM_COSMOS_READY_CSS_TNT_v2_3_0":
@@ -286,17 +285,29 @@ jobs:
                   )
               html_text = html_text.replace(old, new)
 
+          old_baseline = (
+              'data-laws-css-visual-baseline="pending-compass-format-alignment"'
+          )
+          new_baseline = (
+              'data-laws-css-visual-baseline="compass-family-orbital-contrast-and-collapsed-disclosures"'
+          )
+          if html_text.count(old_baseline) != 1:
+              raise SystemExit("Laws visual-baseline target missing.")
           html_text = html_text.replace(
-              'data-laws-css-visual-baseline="pending-compass-format-alignment"',
-              'data-laws-css-visual-baseline="compass-family-orbital-contrast-and-collapsed-disclosures"',
+              old_baseline,
+              new_baseline,
               1,
           )
 
           html.write_text(html_text, encoding="utf-8")
 
-          Path(".github/workflows/bounded-laws-contrast-disclosures.yml").unlink()
+          Path(
+              ".github/workflows/bounded-laws-contrast-disclosures.yml"
+          ).unlink()
 
-          print(f"Removed default-open state from {open_count} Laws disclosures.")
+          print(
+              f"Removed default-open state from {open_count} Laws disclosures."
+          )
           PY
 
           node --check laws/index.crystals.js

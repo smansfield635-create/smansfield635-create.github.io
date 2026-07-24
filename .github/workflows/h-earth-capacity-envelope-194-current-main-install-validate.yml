@@ -1,0 +1,247 @@
+name: H-Earth Capacity Envelope 194 Current-Main Install Validate
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-install-validation-001
+
+permissions:
+  contents: write
+
+jobs:
+  install-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Verify exact anchors
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main agent/h-earth-capacity-camera-envelope-current-main-004
+          test "$(git rev-parse origin/main)" = "959dbc6741b45c859875d68db86ce32a0297d5d5"
+          test "$(git rev-parse origin/agent/h-earth-capacity-camera-envelope-current-main-004)" = "959dbc6741b45c859875d68db86ce32a0297d5d5"
+          test "$(git show origin/main:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "55169c7dc038b02dae7dccd5a79972c0018bc6e8"
+          test "$(git show 8934505b4f233904561b8c62975c1aadde8905d4:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
+
+      - name: Install refined one-file candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -B agent/h-earth-capacity-camera-envelope-current-main-004 origin/agent/h-earth-capacity-camera-envelope-current-main-004
+          git show 8934505b4f233904561b8c62975c1aadde8905d4:showroom/globe/h-earth/capacity.js > showroom/globe/h-earth/capacity.js
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('showroom/globe/h-earth/capacity.js')
+          text = path.read_text()
+          needle = '    farPlane: 512,'
+          if text.count(needle) != 1:
+              raise SystemExit(f'Expected exactly one corrected far-plane literal, found {text.count(needle)}')
+          path.write_text(text.replace(needle, '    farPlane: 194,', 1))
+          PY
+          test "$(git diff --name-only origin/main)" = "showroom/globe/h-earth/capacity.js"
+          node --check showroom/globe/h-earth/capacity.js
+          candidate_blob="$(git hash-object showroom/globe/h-earth/capacity.js)"
+          echo "CANDIDATE_BLOB=$candidate_blob" >> "$GITHUB_ENV"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add showroom/globe/h-earth/capacity.js
+          git commit -m "Refine H-Earth camera envelope to far plane 194"
+          candidate_commit="$(git rev-parse HEAD)"
+          echo "CANDIDATE_COMMIT=$candidate_commit" >> "$GITHUB_ENV"
+          git push origin HEAD:agent/h-earth-capacity-camera-envelope-current-main-004
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright-core@1.54.1
+          command -v google-chrome
+          google-chrome --version
+
+      - name: Start exact candidate route server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-envelope-194-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-envelope-194-server.log
+          exit 1
+
+      - name: Execute desktop and mobile route validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p validation-artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright-core';
+
+          const cases = [
+            { id: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
+            { id: 'mobile', width: 390, height: 844, deviceScaleFactor: 3 }
+          ];
+
+          function assert(condition, message) {
+            if (!condition) throw new Error(message);
+          }
+
+          const browser = await chromium.launch({
+            headless: true,
+            executablePath: '/usr/bin/google-chrome',
+            args: ['--no-sandbox', '--disable-dev-shm-usage']
+          });
+
+          const results = [];
+          for (const testCase of cases) {
+            const context = await browser.newContext({
+              viewport: { width: testCase.width, height: testCase.height },
+              deviceScaleFactor: testCase.deviceScaleFactor
+            });
+            const page = await context.newPage();
+            const pageErrors = [];
+            const consoleErrors = [];
+            page.on('pageerror', (error) => pageErrors.push(error instanceof Error ? error.message : String(error)));
+            page.on('console', (message) => {
+              if (message.type() === 'error' && !/favicon|404/i.test(message.text())) {
+                consoleErrors.push(message.text());
+              }
+            });
+
+            const response = await page.goto(
+              'http://127.0.0.1:4173/showroom/globe/h-earth/',
+              { waitUntil: 'domcontentloaded', timeout: 30000 }
+            );
+            assert(response?.ok() === true, `${testCase.id}: route navigation failed`);
+            await page.waitForTimeout(10000);
+
+            const evidence = await page.evaluate(async () => {
+              const debugText = document.getElementById('h-earth-3d-debug')?.textContent ?? '';
+              const debug = JSON.parse(debugText);
+              const capacity = await import('./capacity.js?envelope-194-final');
+              const routeReceipt = debug?.routeReceipt ?? null;
+              const construct = routeReceipt?.rendererConstructReceipt ?? null;
+              const nodeBudget = construct?.nodeBudgetEvaluation ?? null;
+              const handoff = routeReceipt?.compositorHandoffReceipt?.rawHandoff ?? null;
+              const mount = document.getElementById('h-earth-3d-renderer-mount');
+              const mountRect = mount?.getBoundingClientRect() ?? null;
+              const visible = mount
+                ? Array.from(mount.querySelectorAll('*')).filter((element) => {
+                    const rect = element.getBoundingClientRect();
+                    const style = getComputedStyle(element);
+                    return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) > 0;
+                  })
+                : [];
+              const union = visible.reduce((acc, element) => {
+                const rect = element.getBoundingClientRect();
+                return {
+                  left: Math.min(acc.left, rect.left),
+                  top: Math.min(acc.top, rect.top),
+                  right: Math.max(acc.right, rect.right),
+                  bottom: Math.max(acc.bottom, rect.bottom)
+                };
+              }, {
+                left: Number.POSITIVE_INFINITY,
+                top: Number.POSITIVE_INFINITY,
+                right: Number.NEGATIVE_INFINITY,
+                bottom: Number.NEGATIVE_INFINITY
+              });
+              const unionWidth = Number.isFinite(union.left) ? Math.max(0, union.right - union.left) : 0;
+              const unionHeight = Number.isFinite(union.top) ? Math.max(0, union.bottom - union.top) : 0;
+              const mountWidth = mountRect?.width ?? 0;
+              const mountHeight = mountRect?.height ?? 0;
+
+              return {
+                documentStatus: document.getElementById('h-earth-3d-status')?.textContent ?? null,
+                routeStatus: routeReceipt?.status ?? null,
+                rendererBootstrapStatus: routeReceipt?.routeStatus?.rendererBootstrapStatus ?? null,
+                capacityPreflightEligible: capacity.getHEarth3DCapacityPreflight()?.eligible ?? null,
+                camera: capacity.H_EARTH_3D_CAMERA_CAPACITY?.initialProjectionCandidate ?? null,
+                handoffStatus: handoff?.status ?? null,
+                constructStatus: construct?.status ?? null,
+                constructed: construct?.constructed ?? null,
+                environmentPrimitives: nodeBudget?.environmentPrimitives ?? null,
+                totalRendererOwnedNodes: nodeBudget?.authorityEvaluation?.accounting?.totalRendererOwnedNodes ?? null,
+                nodeBudgetEligible: nodeBudget?.eligible ?? null,
+                rendererMountReceiptPresent: routeReceipt?.rendererMountReceipt != null,
+                visibleDescendantCount: visible.length,
+                widthRatio: mountWidth > 0 ? unionWidth / mountWidth : 0,
+                heightRatio: mountHeight > 0 ? unionHeight / mountHeight : 0,
+                areaRatio: mountWidth > 0 && mountHeight > 0 ? (unionWidth * unionHeight) / (mountWidth * mountHeight) : 0
+              };
+            });
+
+            assert(evidence.capacityPreflightEligible === true, `${testCase.id}: capacity preflight failed`);
+            assert(evidence.camera?.position?.y === 24 && evidence.camera?.position?.z === 64, `${testCase.id}: corrected position missing`);
+            assert(evidence.camera?.target?.z === -128, `${testCase.id}: corrected target missing`);
+            assert(evidence.camera?.farPlane === 194, `${testCase.id}: far plane 194 missing`);
+            assert(evidence.handoffStatus === 'COMPOSITOR_RENDERER_HANDOFF_READY', `${testCase.id}: compositor handoff not ready`);
+            assert(evidence.constructed === true, `${testCase.id}: renderer construction failed`);
+            assert(evidence.nodeBudgetEligible === true, `${testCase.id}: renderer budget rejected`);
+            assert(evidence.environmentPrimitives <= 384, `${testCase.id}: primitive maximum exceeded`);
+            assert(evidence.totalRendererOwnedNodes <= 448, `${testCase.id}: total node maximum exceeded`);
+            assert(evidence.rendererMountReceiptPresent === true, `${testCase.id}: renderer did not mount`);
+            assert(evidence.documentStatus === 'PUBLIC_STAGE_RENDERER_MOUNTED', `${testCase.id}: public route not mounted`);
+            assert(evidence.routeStatus === 'PUBLIC_STAGE_READY', `${testCase.id}: route not ready`);
+            assert(evidence.visibleDescendantCount > 0, `${testCase.id}: no visible renderer output`);
+            assert(evidence.widthRatio > 0.5 && evidence.heightRatio > 0.1 && evidence.areaRatio > 0.05, `${testCase.id}: output remained sliver-sized`);
+            assert(pageErrors.length === 0, `${testCase.id}: page errors: ${pageErrors.join(' | ')}`);
+            assert(consoleErrors.length === 0, `${testCase.id}: console errors: ${consoleErrors.join(' | ')}`);
+
+            await page.screenshot({
+              path: `validation-artifacts/${testCase.id}.png`,
+              fullPage: true
+            });
+            results.push({ id: testCase.id, evidence, pageErrors, consoleErrors });
+            await context.close();
+          }
+
+          await browser.close();
+          fs.writeFileSync(
+            'validation-artifacts/results.json',
+            JSON.stringify({
+              baseCommit: '959dbc6741b45c859875d68db86ce32a0297d5d5',
+              candidateCommit: process.env.CANDIDATE_COMMIT,
+              candidateBlob: process.env.CANDIDATE_BLOB,
+              acceptedFarPlane: 194,
+              results
+            }, null, 2)
+          );
+          console.log(JSON.stringify(results, null, 2));
+          NODE
+
+      - name: Fetch back exact remote identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-capacity-camera-envelope-current-main-004
+          test "$(git rev-parse origin/agent/h-earth-capacity-camera-envelope-current-main-004)" = "$CANDIDATE_COMMIT"
+          test "$(git show origin/agent/h-earth-capacity-camera-envelope-current-main-004:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "$CANDIDATE_BLOB"
+          test "$(git diff --name-only 959dbc6741b45c859875d68db86ce32a0297d5d5 "$CANDIDATE_COMMIT")" = "showroom/globe/h-earth/capacity.js"
+          printf 'candidate_commit=%s\ncandidate_blob=%s\n' "$CANDIDATE_COMMIT" "$CANDIDATE_BLOB" > validation-artifacts/identity.txt
+
+      - name: Upload exact validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-envelope-194-current-main-validation
+          path: |
+            validation-artifacts/
+            /tmp/h-earth-envelope-194-server.log
+          if-no-files-found: warn

@@ -1,0 +1,57 @@
+{
+  "receiptId": "H_EARTH_GATE_B_STEP_3A_CURRENT_PATH_RECONCILIATION_v1",
+  "baseMain": "465596de77ef0a28a7f779e06851130f4768e445",
+  "mode": "READ_ONLY_PATH_RECONCILIATION",
+  "registryMutationPerformed": false,
+  "implementationMutationPerformed": false,
+  "mainChanged": false,
+  "requestedUnresolvedPathCount": 5,
+  "results": [
+    {
+      "path": "/showroom/globe/h-earth/compositor.js",
+      "mainExistence": "PRESENT",
+      "mainGitBlob": "480cd4519a4d3cc364be4b16acc7791aadb5071c",
+      "classification": "CURRENT_REQUIRED_OCCURRENCE_REGISTRY_REPRESENTATION_MISSING",
+      "basis": "Current main file declares the admitted-frame-to-renderer compositor corridor and is referenced by the current route entry."
+    },
+    {
+      "path": "/showroom/globe/h-earth/index.html",
+      "mainExistence": "PRESENT",
+      "mainGitBlob": "c14600319946c45fca9b6d37e74033eb44680b05",
+      "classification": "CURRENT_REQUIRED_OCCURRENCE_REGISTRY_REPRESENTATION_MISSING",
+      "basis": "Current main file is the public route entry and explicitly invokes the current Packet 001 to Packet 002 to compositor and renderer corridor."
+    },
+    {
+      "path": "/showroom/globe/h-earth/gate-b-route-input.js",
+      "mainExistence": "ABSENT",
+      "classification": "ROLLED_BACK_HISTORICAL_PACKAGE_PATH_DO_NOT_REGISTER_AS_CURRENT",
+      "basis": "The path belonged to the eight-path Gate B package merged by PR 55 and removed by the PR 56 rollback."
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/ground-view-gate-b-packet-002-adapter.js",
+      "mainExistence": "ABSENT",
+      "classification": "ROLLED_BACK_HISTORICAL_PACKAGE_PATH_DO_NOT_REGISTER_AS_CURRENT",
+      "basis": "The path belonged to the eight-path Gate B package merged by PR 55 and removed by the PR 56 rollback; current route-entry text instead references the h-earth-3d integration Packet 002 corridor."
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/tests/ground-view-gate-b.contract.js",
+      "mainExistence": "ABSENT",
+      "classification": "ROLLED_BACK_HISTORICAL_PACKAGE_PATH_DO_NOT_REGISTER_AS_CURRENT",
+      "basis": "The path belonged to the eight-path Gate B package merged by PR 55 and removed by the PR 56 rollback."
+    }
+  ],
+  "summary": {
+    "registerAsCurrentAfterSeparateRegistryAuthority": 2,
+    "doNotRegisterAsCurrent": 3,
+    "blindFivePathRegistrationAuthorized": false,
+    "oldEightPathImplementationLedgerCurrent": false,
+    "nextRequiredGate": "BUILD_CORRECTED_CURRENT_PACKAGE_LEDGER_AND_SEPARATELY_AUTHORIZE_REGISTRY_OCCURRENCE_ADDITIONS_FOR_COMPOSITOR_AND_INDEX_HTML"
+  },
+  "authority": {
+    "sourceAuthorityCreated": false,
+    "registryMutationAuthorityCreated": false,
+    "implementationMutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false
+  }
+}

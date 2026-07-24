@@ -1,0 +1,65 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_STEP_1_ACCEPTANCE_CUSTODY_RECEIPT_v1",
+  "programId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_v1",
+  "step": 1,
+  "result": "PASS",
+  "status": "COMPLETE_VERIFIED_ACCEPTED_NOT_ACTIVE_REPOSITORY_ADMISSION_WITHHELD",
+  "artifactId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_SUCCESSOR_ACTIVATION_TRANSITION_CONTRACT_CANDIDATE_v1",
+  "acceptance": {
+    "declarationPath": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.user-acceptance-declaration.json",
+    "declarationGitBlobSha": "af7acc0e8c57faaf2f95cbc9c35f9c6fcc24169e",
+    "statement": "I accept step one.",
+    "accepted": true,
+    "scope": "COMPLETED_STEP_1_CANDIDATE_ONLY",
+    "acceptedCandidateHead": "8e85871c5a4000e0290c2b3cfc1365e625d5d034",
+    "acceptanceRecordingCommit": "73df413b40f0397d2771d08321be2848cab2232c"
+  },
+  "verifiedCandidate": {
+    "completionReceiptPath": "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.completion-receipt.json",
+    "completionReceiptGitBlobSha": "0b682b5445b3fa5c2eb7f8019294964608551596",
+    "auditRunId": 30058227660,
+    "auditJobId": 89374317168,
+    "auditResult": "PASS",
+    "auditPassedChecks": 82,
+    "auditFailedChecks": 0,
+    "fixturePassedCount": 19,
+    "fixtureFailedCount": 0,
+    "auditArtifactId": 8583556169,
+    "auditArtifactDigest": "sha256:d2e2eb3b0ce0cc2ec3a1a636d8f908398e75710ce6bb4d93f86bfa010db954d0"
+  },
+  "repositoryState": {
+    "branch": "agent/h-earth-lifecycle-control-plane-step-1-001",
+    "pullRequestNumber": 79,
+    "pullRequestRemainsDraft": true,
+    "pullRequestMerged": false,
+    "mainCommit": "465596de77ef0a28a7f779e06851130f4768e445",
+    "mainChanged": false
+  },
+  "boundaries": {
+    "step1CandidateAccepted": true,
+    "successorRegistryAccepted": false,
+    "successorActivated": false,
+    "mergeAuthorityEstablished": false,
+    "repositoryAdmissionEstablished": false,
+    "registryScopeReconciliationAuthorized": false,
+    "bootstrapChanged": false,
+    "activeRegistryChanged": false,
+    "canonicalizationAuthorityEstablished": false,
+    "actualActorBindingsEstablished": false,
+    "transitionExecutionAuthorityEstablished": false,
+    "step2Authorized": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "runtimeAuthorityCreated": false,
+    "rendererAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionAuthorityCreated": false
+  },
+  "stoppingCondition": {
+    "userAcceptanceEstablished": true,
+    "step1Complete": true,
+    "advanceBeyondStep1": false,
+    "nextAuthorizedBoundary": "SEPARATE_REPOSITORY_ADMISSION_OR_STEP_2_AUTHORIZATION_REQUIRED"
+  },
+  "recordingCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT"
+}

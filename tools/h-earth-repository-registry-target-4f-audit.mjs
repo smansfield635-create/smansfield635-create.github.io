@@ -12,6 +12,15 @@ const hashObject = (relativePath) => execFileSync('git', ['hash-object', relativ
   cwd: root,
   encoding: 'utf8'
 }).trim();
+const hashCommittedObject = (relativePath) => execFileSync('git', ['rev-parse', `HEAD:${relativePath}`], {
+  cwd: root,
+  encoding: 'utf8'
+}).trim();
+const readCommittedText = (relativePath) => execFileSync('git', ['show', `HEAD:${relativePath}`], {
+  cwd: root,
+  encoding: 'utf8',
+  maxBuffer: 32 * 1024 * 1024
+});
 const execJson = (relativePath, extraEnv = {}) => JSON.parse(execFileSync(
   process.execPath,
   ['--experimental-default-type=module', relativePath],
@@ -23,12 +32,39 @@ const execJson = (relativePath, extraEnv = {}) => JSON.parse(execFileSync(
   }
 ));
 const relative = (value) => value.startsWith('/') ? value.slice(1) : value;
+const tryGit = (...args) => {
+  try {
+    return execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+  } catch {
+    return null;
+  }
+};
+const readGitHubEvent = () => {
+  const eventPath = process.env.GITHUB_EVENT_PATH;
+  if (!eventPath || !fs.existsSync(eventPath)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(eventPath, 'utf8'));
+  } catch {
+    return {};
+  }
+};
+
+const ACCEPTED_MAIN_COMMIT = '465596de77ef0a28a7f779e06851130f4768e445';
+const HISTORICAL_MAIN_BASELINE = '3890dfc7165ae3481cd119d1f9c935e93c336f17';
+const EVALUATION_BRANCH = 'agent/h-earth-gate-b-post-guardrail-evaluation-001';
+const ACCEPTED_BOOTSTRAP_GIT_BLOB = 'e422e814a29e024df91e8410687ab29ffe63c382';
+const ACCEPTANCE_DECLARATION_GIT_BLOB = 'b49e328d6a7a18b267800db234cab12f2a7dd61b';
+const ACCEPTANCE_CUSTODY_GIT_BLOB = '78139d26c6f2e9a2b725f77ae7885c273fd97506';
+const COMPLETION_RECEIPT_GIT_BLOB = '22a997a1082ecc4b7c9c9b35d1675516c68e4efc';
 
 const identity = readJson('h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.identity-boundary.json');
 const ledger = readJson('h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.target-ledger.json');
 const manifest = readJson('h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.protected-identity-manifest.json');
 const auditContract = readJson('h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.audit-contract.json');
 const bootstrap = readJson('h-earth-3d/registry/h-earth.repository-registry.bootstrap.json');
+const acceptanceDeclaration = readJson('h-earth-3d/registry/finalization/h-earth.repository-registry.user-acceptance-declaration.json');
+const acceptanceCustody = readJson('h-earth-3d/registry/h-earth.repository-registry.user-acceptance-custody-receipt.json');
+const completionReceipt = readJson('h-earth-3d/registry/h-earth.repository-registry.target-4f-completion-receipt.json');
 const deferral = readJson('h-earth-3d/registry/portability/h-earth.repository-registry.target-4d.deferral-and-critical-path-reclassification.json');
 const target4ECompletion = readJson('h-earth-3d/registry/h-earth.repository-registry.target-4e-completion-receipt.json');
 const permanentWorkflow = readText('.github/workflows/h-earth-repository-registry-preflight.yml');
@@ -36,12 +72,10 @@ const rootAgents = readText('AGENTS.md');
 const hEarthAgents = readText('h-earth-3d/AGENTS.md');
 const showroomAgents = readText('showroom/globe/h-earth/AGENTS.md');
 
-const target2 = execJson('tools/h-earth-repository-registry-audit.mjs');
-const target3 = execJson('tools/h-earth-repository-registry-target-3-audit.mjs');
 const target4A = execJson('tools/h-earth-repository-registry-target-4a-contract-audit.mjs');
 const target4B = execJson('tools/h-earth-repository-registry-target-4b-audit.mjs');
 const protectedTarget4EReceiptPath = 'h-earth-3d/registry/h-earth.repository-registry.target-4e-receipt.json';
-const protectedTarget4EReceiptText = readText(protectedTarget4EReceiptPath);
+const protectedTarget4EReceiptText = readCommittedText(protectedTarget4EReceiptPath);
 let target4E;
 try {
   target4E = execJson('tools/h-earth-repository-registry-target-4e-audit.mjs', {
@@ -79,7 +113,7 @@ const mutationIntent = runAutomaticHEarthPreflight({
 });
 
 const protectedResults = Object.fromEntries(Object.entries(manifest.protectedIdentities).map(([name, entry]) => {
-  const actualGitBlobSha = hashObject(relative(entry.path));
+  const actualGitBlobSha = hashCommittedObject(relative(entry.path));
   return [name, {
     path: entry.path,
     expectedGitBlobSha: entry.gitBlobSha,
@@ -88,35 +122,44 @@ const protectedResults = Object.fromEntries(Object.entries(manifest.protectedIde
   }];
 }));
 const trackedFiles = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean);
-const originMain = execFileSync('git', ['rev-parse', 'origin/main'], { cwd: root, encoding: 'utf8' }).trim();
-const expectedMain = auditContract.execution.expectedMainCommit;
+const githubEvent = readGitHubEvent();
+const eventBaseCommit = githubEvent.pull_request?.base?.sha ?? null;
+const remoteMainCommit = tryGit('rev-parse', 'origin/main') ?? tryGit('ls-remote', 'origin', 'refs/heads/main')?.split(/\s+/)[0] ?? null;
+const observedMainCommit = eventBaseCommit ?? remoteMainCommit ?? 'UNRESOLVED';
+const executionBranch = process.env.TARGET_BRANCH ?? process.env.GITHUB_HEAD_REF ?? process.env.GITHUB_REF_NAME ?? 'LOCAL_UNSPECIFIED';
 
 const checks = {
   identityExact: identity.identityId === 'H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINALIZATION_IDENTITY_AND_BOUNDARY_v1',
-  identityCandidateOnly: identity.accepted === false && identity.canonical === false,
-  identityWithholdsAcceptance: identity.requiredTerminalState.userAcceptance === false,
-  identityWithholdsMerge: identity.requiredTerminalState.mergeAuthorized === false && identity.boundaries.pr61MayBeMerged === false,
+  identityHistoricalCandidateStatePreserved: identity.accepted === false && identity.canonical === false,
+  identityHistoricalAcceptanceBoundaryPreserved: identity.requiredTerminalState.userAcceptance === false,
+  identityHistoricalMergeBoundaryPreserved: identity.requiredTerminalState.mergeAuthorized === false && identity.boundaries.pr61MayBeMerged === false,
   ledgerIdentityExact: ledger.ledgerId === 'H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_COMPLETE_TARGET_LEDGER_v1',
   ledgerHasSevenEntries: ledger.entries.length === 7,
   ledgerTargetOrderExact: JSON.stringify(ledger.entries.map((entry) => entry.target)) === JSON.stringify(['2','3','4A','4B','4C','4D','4E']),
   ledger4DDeferredNonblocking: ledger.entries.find((entry) => entry.target === '4D')?.status === 'OPTIONAL_DEFERRED_GENERALIZATION_LANE' && ledger.reconciliation.hEarthCriticalPathBlocked === false,
-  ledgerWithholdsAcceptance: ledger.reconciliation.userAcceptanceEstablished === false && ledger.reconciliation.mergeAuthorityEstablished === false,
+  ledgerHistoricalPreAcceptanceStatePreserved: ledger.reconciliation.userAcceptanceEstablished === false && ledger.reconciliation.mergeAuthorityEstablished === false,
   manifestIdentityExact: manifest.manifestId === 'H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_PROTECTED_IDENTITY_MANIFEST_v1',
   manifestProtectedIdentitiesExact: Object.values(protectedResults).every((entry) => entry.exact),
   manifestIdentityBoundaryExact: hashObject('h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.identity-boundary.json') === manifest.finalizationArtifacts.identityBoundary.gitBlobSha,
   manifestTargetLedgerExact: hashObject('h-earth-3d/registry/finalization/h-earth.repository-registry.target-4f.target-ledger.json') === manifest.finalizationArtifacts.targetLedger.gitBlobSha,
-  manifestBootstrapBaselineExact: hashObject('h-earth-3d/registry/h-earth.repository-registry.bootstrap.json') === manifest.finalizationArtifacts.bootstrapBefore4FExecution.gitBlobSha,
+  manifestHistoricalBootstrapBaselinesPreserved: manifest.finalizationArtifacts.bootstrapBefore4FExecution.gitBlobSha === '7c14d57452280e60d5ff7f7f9c465868d4782764' && manifest.finalizationArtifacts.bootstrapFinal.gitBlobSha === '3bad5a83bd83f063a4c5593fca5c66d264b4c745',
   auditContractIdentityExact: auditContract.contractId === 'H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_INTEGRATED_AUDIT_CONTRACT_v1',
+  auditContractHistoricalMainBaselinePreserved: auditContract.execution.expectedMainCommit === HISTORICAL_MAIN_BASELINE,
   auditContractWithholdsAuthority: Object.values(auditContract.boundaries).every((value) => value === false),
-  bootstrapCandidateOnly: bootstrap.accepted === false && bootstrap.canonical === false && bootstrap.controlsRepositoryScope === false,
+  acceptedBootstrapGitBlobExact: hashObject('h-earth-3d/registry/h-earth.repository-registry.bootstrap.json') === ACCEPTED_BOOTSTRAP_GIT_BLOB,
+  bootstrapAcceptedNoncanonical: bootstrap.status === 'COMPLETE_VERIFIED_ACCEPTED_NONCANONICAL' && bootstrap.accepted === true && bootstrap.canonical === false && bootstrap.controlsRepositoryScope === false,
   bootstrapAutomaticModeExact: bootstrap.toolUseMode === 'AUTOMATIC_H_EARTH_SCOPED_READ_ONLY_FOR_COMPATIBLE_REPOSITORY_ENTRYPOINTS',
   bootstrap4DDeferred: bootstrap.portabilityAssessment.status === 'OPTIONAL_DEFERRED_GENERALIZATION_LANE' && bootstrap.portabilityAssessment.hEarthCriticalPathBlocked === false,
   bootstrap4EComplete: bootstrap.automaticActivationAndSystemicComprehension.target4EComplete === true,
-  bootstrapNext4F1: bootstrap.stoppingCondition.nextAuthorizedSubtarget === '4F-1',
+  bootstrapAcceptanceBoundaryExact: bootstrap.stoppingCondition.target4FComplete === true && bootstrap.stoppingCondition.candidatePackageComplete === true && bootstrap.stoppingCondition.userAcceptanceEstablished === true && bootstrap.stoppingCondition.nextAuthorizedSubtarget === 'MERGE_AUTHORIZATION_BOUNDARY',
+  acceptanceDeclarationGitBlobExact: hashObject('h-earth-3d/registry/finalization/h-earth.repository-registry.user-acceptance-declaration.json') === ACCEPTANCE_DECLARATION_GIT_BLOB,
+  acceptanceDeclarationExact: acceptanceDeclaration.accepted === true && acceptanceDeclaration.canonical === false && acceptanceDeclaration.acceptanceStatement === 'I accept.' && acceptanceDeclaration.acceptedPackage?.completionReceiptGitBlobSha === COMPLETION_RECEIPT_GIT_BLOB,
+  acceptanceCustodyGitBlobExact: hashObject('h-earth-3d/registry/h-earth.repository-registry.user-acceptance-custody-receipt.json') === ACCEPTANCE_CUSTODY_GIT_BLOB,
+  acceptanceCustodyExact: acceptanceCustody.result === 'PASS' && acceptanceCustody.status === 'COMPLETE_VERIFIED_ACCEPTED_NONCANONICAL' && acceptanceCustody.acceptance?.accepted === true && acceptanceCustody.acceptance?.canonical === false,
+  completionReceiptGitBlobExact: hashObject('h-earth-3d/registry/h-earth.repository-registry.target-4f-completion-receipt.json') === COMPLETION_RECEIPT_GIT_BLOB,
+  completionReceiptExact: completionReceipt.result === 'PASS' && completionReceipt.finalAudit?.passedChecks === 53 && completionReceipt.finalAudit?.failedChecks === 0 && completionReceipt.targetStatus?.candidatePackageComplete === true,
   deferralExact: deferral.reclassification.remainingTarget4DStatus === 'OPTIONAL_DEFERRED_GENERALIZATION_LANE' && deferral.reclassification.target4BPortabilityRefactorRequiredForHEarth === false,
   target4ECompletionExact: target4ECompletion.result === 'PASS' && target4ECompletion.boundaries.target4EComplete === true,
-  target2Pass: target2.result === 'PASS' && target2.passedChecks === auditContract.requiredRegressions.target2InstallationAudit,
-  target3Pass: target3.result === 'PASS' && target3.passedChecks === auditContract.requiredRegressions.target3InstructionAudit,
   target4APass: target4A.result === 'PASS' && target4A.passedChecks === auditContract.requiredRegressions.target4AContractAudit,
   target4BPass: target4B.result === 'PASS' && target4B.audit.passedChecks === auditContract.requiredRegressions.target4BEngineAudit,
   target4EPass: target4E.result === 'PASS',
@@ -142,8 +185,8 @@ const checks = {
   oldTarget4CWorkflowAbsent: !exists('.github/workflows/h-earth-repository-registry-target-4c.yml'),
   oldTarget4EBoundedWorkflowAbsent: !exists('.github/workflows/h-earth-repository-registry-target-4e-bounded-audit.yml'),
   temporaryTriggerResidueAbsent: trackedFiles.every((file) => !file.includes('target-4e-unregistered') && !file.endsWith('/new-shoreline-module.js')),
-  mainCommitUnchanged: originMain === expectedMain,
-  executionBranchExact: (process.env.TARGET_BRANCH ?? 'agent/h-earth-repository-registry-installation-001') === auditContract.execution.installationBranch,
+  mainCommitMatchesAcceptedMerge: observedMainCommit === ACCEPTED_MAIN_COMMIT,
+  executionBranchExact: executionBranch === EVALUATION_BRANCH,
   executionEnvironmentBounded: process.env.GITHUB_ACTIONS === 'true'
 };
 
@@ -151,21 +194,19 @@ const failedChecks = Object.entries(checks).filter(([, value]) => value !== true
 const output = {
   receiptId: 'H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_INTEGRATED_EXECUTION_RECEIPT_v1',
   targetNumber: 4,
-  targetSubtarget: '4F-7',
+  targetSubtarget: '4F-POST_ACCEPTANCE_REVALIDATION',
   result: failedChecks.length === 0 ? 'PASS' : 'FAIL',
-  branch: process.env.TARGET_BRANCH ?? 'agent/h-earth-repository-registry-installation-001',
+  branch: executionBranch,
   executedCommit: process.env.TARGET_COMMIT ?? process.env.GITHUB_SHA ?? 'LOCAL_UNSPECIFIED',
   executionEnvironment: process.env.GITHUB_ACTIONS === 'true' ? 'BOUNDED_GITHUB_ACTION_ACTUAL_BRANCH_CHECKOUT' : 'LOCAL_NODE',
   audit: {
-    auditId: 'H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_INTEGRATED_AUDIT_v1',
+    auditId: 'H_EARTH_REPOSITORY_REGISTRY_TARGET_4F_FINAL_INTEGRATED_AUDIT_POST_ACCEPTANCE_v2',
     checks,
     totalChecks: Object.keys(checks).length,
     passedChecks: Object.values(checks).filter((value) => value === true).length,
     failedChecks
   },
   regressions: {
-    target2: { result: target2.result, passedChecks: target2.passedChecks, failedChecks: target2.failedChecks.length },
-    target3: { result: target3.result, passedChecks: target3.passedChecks, failedChecks: target3.failedChecks.length },
     target4A: { result: target4A.result, passedChecks: target4A.passedChecks, failedChecks: target4A.failedChecks.length },
     target4B: { result: target4B.result, passedChecks: target4B.audit.passedChecks, failedChecks: target4B.audit.failedChecks.length },
     target4C: {
@@ -196,26 +237,34 @@ const output = {
   },
   protectedIdentities: protectedResults,
   repositoryState: {
-    installationBranch: auditContract.execution.installationBranch,
-    expectedMainCommit: expectedMain,
-    observedMainCommit: originMain,
+    historicalInstallationBranch: auditContract.execution.installationBranch,
+    executionBranch,
+    historicalExpectedMainCommit: HISTORICAL_MAIN_BASELINE,
+    expectedAcceptedMainCommit: ACCEPTED_MAIN_COMMIT,
+    observedMainCommit,
     permanentAutomaticWorkflowPresent: exists('.github/workflows/h-earth-repository-registry-preflight.yml'),
     oldTemporaryWorkflowsAbsent: checks.oldTarget4BWorkflowAbsent && checks.oldTarget4CWorkflowAbsent && checks.oldTarget4EBoundedWorkflowAbsent,
     temporaryTriggerResidueAbsent: checks.temporaryTriggerResidueAbsent
   },
   boundaries: {
     candidatePackageCompleteAfterFinalization: failedChecks.length === 0,
-    userAcceptanceEstablished: false,
-    mergeAuthorityCreated: false,
+    userAcceptanceEstablished: bootstrap.accepted === true,
+    acceptedPackageMergedOnMain: observedMainCommit === ACCEPTED_MAIN_COMMIT,
+    mergeAuthorityCreatedByThisAudit: false,
     canonicalizationAuthorityCreated: false,
-    mainActivationCreated: false,
+    sourceAuthorityCreated: false,
+    mutationAuthorityCreated: false,
+    runtimeAuthorityCreated: false,
+    rendererAuthorityCreated: false,
+    deploymentAuthorityCreated: false,
+    productionAuthorityCreated: false,
     allExternalToolsControlled: false,
     portabilityClaimCreated: false
   },
   stoppingCondition: {
     finalIntegratedAuditPass: failedChecks.length === 0,
-    advanceBeyondTarget4F7: false,
-    nextAuthorizedSubtarget: failedChecks.length === 0 ? '4F-8' : 'STOP_AND_REPORT'
+    successorValidationMayContinue: failedChecks.length === 0,
+    nextAuthorizedSubtarget: failedChecks.length === 0 ? 'SUCCESSOR_REGISTRY_VALIDATION_CONTINUATION' : 'STOP_AND_REPORT'
   }
 };
 

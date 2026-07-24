@@ -1,10 +1,10 @@
 /* /prototypes/universal-compass/archcoin.lab.sw.js
-   Prototype-scoped ARCHCOIN calibration router · Round 2.
+   Prototype-scoped ARCHCOIN calibration router · Round 3.
    Production ARCHCOIN files are never modified or served from these files.
 */
 "use strict";
 
-const BUILD = "ARCHCOIN_CALIBRATION_ROUND2_v1";
+const BUILD = "ARCHCOIN_CALIBRATION_ROUND3_v1";
 const LOCAL_ROOT = "/prototypes/universal-compass/";
 const ROUTES = Object.freeze({
   "/assets/compass/upstream-compass.css": `${LOCAL_ROOT}archcoin.upstream-compass.css?build=${BUILD}`,
@@ -14,7 +14,7 @@ const ROUTES = Object.freeze({
   "/products/archcoin/index.controller.js": `${LOCAL_ROOT}archcoin.index.controller.js?build=${BUILD}`,
   "/products/archcoin/index.compositor.js": `${LOCAL_ROOT}archcoin.index.compositor.js?build=${BUILD}`,
   "/products/archcoin/index.crystals.js": `${LOCAL_ROOT}archcoin.index.crystals.js?build=${BUILD}`,
-  "/products/archcoin/index.interactions.js": `${LOCAL_ROOT}archcoin.interactions.round2.js?build=${BUILD}`
+  "/products/archcoin/index.interactions.js": `${LOCAL_ROOT}archcoin.interactions.round3.js?build=${BUILD}`
 });
 
 self.addEventListener("install", event => {
@@ -29,12 +29,14 @@ self.addEventListener("fetch", event => {
   const requestUrl = new URL(event.request.url);
   const localPath = ROUTES[requestUrl.pathname];
   if (!localPath) return;
-  event.respondWith(fetch(new Request(new URL(localPath, self.location.origin), {
-    method: "GET",
-    headers: event.request.headers,
-    mode: "same-origin",
-    credentials: "same-origin",
-    cache: "no-store",
-    redirect: "follow"
-  })));
+  event.respondWith(
+    fetch(new Request(new URL(localPath, self.location.origin), {
+      method: "GET",
+      headers: event.request.headers,
+      mode: "same-origin",
+      credentials: "same-origin",
+      cache: "no-store",
+      redirect: "follow"
+    }))
+  );
 });

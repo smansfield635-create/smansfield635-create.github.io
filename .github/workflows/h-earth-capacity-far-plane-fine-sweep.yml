@@ -1,0 +1,194 @@
+name: H-Earth Capacity Far-Plane Fine Sweep
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-002
+
+permissions:
+  contents: read
+
+jobs:
+  fine-sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout validation repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact corrected source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git show 8934505b4f233904561b8c62975c1aadde8905d4:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
+
+      - name: Materialize corrected-pose variants
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/h-earth-fine-source 8934505b4f233904561b8c62975c1aadde8905d4
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil
+
+          source = Path('/tmp/h-earth-fine-source')
+          values = list(range(194, 208))
+          before = """    verticalFovDegrees: 52,\n    nearPlane: 0.25,\n    farPlane: 512,"""
+          for value in values:
+              target = Path(f'/tmp/h-earth-fine-{value}')
+              shutil.copytree(source, target)
+              path = target / 'showroom/globe/h-earth/capacity.js'
+              text = path.read_text()
+              if text.count(before) != 1:
+                  raise SystemExit(f'Expected one corrected camera block, found {text.count(before)}')
+              after = f"""    verticalFovDegrees: 52,\n    nearPlane: 0.25,\n    farPlane: {value},"""
+              path.write_text(text.replace(before, after, 1))
+          PY
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright core
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright-core@1.54.1
+          command -v google-chrome
+
+      - name: Start fine-sweep servers
+        shell: bash
+        run: |
+          set -euo pipefail
+          port=4500
+          for value in $(seq 194 207); do
+            (cd "/tmp/h-earth-fine-${value}" && python3 -m http.server "$port" --bind 127.0.0.1 > "/tmp/h-earth-fine-${value}.log" 2>&1) &
+            port=$((port + 1))
+          done
+          port=4500
+          for value in $(seq 194 207); do
+            for attempt in $(seq 1 30); do
+              if curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null; then
+                break
+              fi
+              sleep 1
+            done
+            curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null
+            port=$((port + 1))
+          done
+
+      - name: Execute corrected-pose fine sweep
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p fine-sweep-artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright-core';
+
+          const farPlanes = Array.from({ length: 14 }, (_, index) => 194 + index);
+          const viewports = [
+            { id: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
+            { id: 'mobile', width: 390, height: 844, deviceScaleFactor: 3 }
+          ];
+          const browser = await chromium.launch({
+            headless: true,
+            executablePath: '/usr/bin/google-chrome',
+            args: ['--no-sandbox', '--disable-dev-shm-usage']
+          });
+          const results = [];
+
+          for (let index = 0; index < farPlanes.length; index += 1) {
+            const farPlane = farPlanes[index];
+            const origin = `http://127.0.0.1:${4500 + index}`;
+            for (const viewport of viewports) {
+              const context = await browser.newContext({
+                viewport: { width: viewport.width, height: viewport.height },
+                deviceScaleFactor: viewport.deviceScaleFactor
+              });
+              const page = await context.newPage();
+              const pageErrors = [];
+              const consoleErrors = [];
+              page.on('pageerror', (error) => pageErrors.push(error instanceof Error ? error.message : String(error)));
+              page.on('console', (message) => {
+                if (message.type() === 'error') consoleErrors.push(message.text());
+              });
+              const response = await page.goto(
+                `${origin}/showroom/globe/h-earth/`,
+                { waitUntil: 'domcontentloaded', timeout: 30000 }
+              );
+              await page.waitForTimeout(3500);
+
+              const evidence = await page.evaluate(() => {
+                const debugText = document.getElementById('h-earth-3d-debug')?.textContent ?? '';
+                let debug = null;
+                try { debug = JSON.parse(debugText); } catch {}
+                const routeReceipt = debug?.routeReceipt ?? null;
+                const construct = routeReceipt?.rendererConstructReceipt ?? null;
+                const nodeBudget = construct?.nodeBudgetEvaluation ?? null;
+                const mount = document.getElementById('h-earth-3d-renderer-mount');
+                return {
+                  documentStatus: document.getElementById('h-earth-3d-status')?.textContent ?? null,
+                  routeStatus: routeReceipt?.status ?? null,
+                  rendererBootstrapStatus: routeReceipt?.routeStatus?.rendererBootstrapStatus ?? null,
+                  rendererConstructStatus: construct?.status ?? null,
+                  constructed: construct?.constructed ?? null,
+                  environmentPrimitives: nodeBudget?.environmentPrimitives ?? null,
+                  totalRendererOwnedNodes: nodeBudget?.authorityEvaluation?.accounting?.totalRendererOwnedNodes ?? null,
+                  budgetEligible: nodeBudget?.eligible ?? null,
+                  mounted: routeReceipt?.rendererMountReceipt != null,
+                  mountChildCount: mount?.children.length ?? 0
+                };
+              });
+
+              if (viewport.id === 'desktop' && evidence.mounted) {
+                await page.screenshot({
+                  path: `fine-sweep-artifacts/far-${farPlane}-desktop.png`,
+                  fullPage: true
+                });
+              }
+              results.push({
+                farPlane,
+                viewport,
+                navigation: { ok: response?.ok() ?? false, status: response?.status() ?? null },
+                pageErrors,
+                consoleErrors,
+                evidence
+              });
+              await context.close();
+            }
+          }
+
+          await browser.close();
+          const packageEvidence = {
+            sourceCommit: '8934505b4f233904561b8c62975c1aadde8905d4',
+            sourceBlob: '2de4476648ae6eb5ae53e87d73b4f965b5c71494',
+            cameraPosition: { x: 0, y: 24, z: 64 },
+            cameraTarget: { x: 0, y: 0.5, z: -128 },
+            targetDistance: 193.43280487032183,
+            farPlanes,
+            results
+          };
+          fs.writeFileSync('fine-sweep-artifacts/fine-sweep.json', JSON.stringify(packageEvidence, null, 2));
+          console.log(JSON.stringify(results.map((result) => ({
+            farPlane: result.farPlane,
+            viewport: result.viewport.id,
+            primitives: result.evidence.environmentPrimitives,
+            totalNodes: result.evidence.totalRendererOwnedNodes,
+            budgetEligible: result.evidence.budgetEligible,
+            mounted: result.evidence.mounted,
+            errors: [...result.pageErrors, ...result.consoleErrors]
+          })), null, 2));
+          NODE
+
+      - name: Upload fine-sweep evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-far-plane-fine-sweep
+          path: fine-sweep-artifacts/
+          if-no-files-found: error

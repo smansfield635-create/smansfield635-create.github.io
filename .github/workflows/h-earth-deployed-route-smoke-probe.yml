@@ -9,6 +9,7 @@ on:
       - ".github/workflows/h-earth-renderer-corridor-integration.yml"
       - "tools/h-earth-deployed-route-smoke-probe.mjs"
       - "tools/h-earth-renderer-corridor-common.mjs"
+      - "tools/h-earth-renderer-corridor-capacity-law.mjs"
       - "h-earth-3d/integration/**"
       - "h-earth-3d/cells/**"
       - "h-earth-3d/objects/**"

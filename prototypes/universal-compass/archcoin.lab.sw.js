@@ -1,10 +1,10 @@
 /* /prototypes/universal-compass/archcoin.lab.sw.js
-   Prototype-scoped ARCHCOIN isolation router.
+   Prototype-scoped ARCHCOIN calibration router.
    The production ARCHCOIN chamber is never modified or served from these files.
 */
 "use strict";
 
-const BUILD = "ARCHCOIN_ISOLATION_v1";
+const BUILD = "ARCHCOIN_CALIBRATION_ROUND1_v1";
 const LOCAL_ROOT = "/prototypes/universal-compass/";
 const ROUTES = Object.freeze({
   "/assets/compass/upstream-compass.css": `${LOCAL_ROOT}archcoin.upstream-compass.css?build=${BUILD}`,
@@ -14,7 +14,7 @@ const ROUTES = Object.freeze({
   "/products/archcoin/index.controller.js": `${LOCAL_ROOT}archcoin.index.controller.js?build=${BUILD}`,
   "/products/archcoin/index.compositor.js": `${LOCAL_ROOT}archcoin.index.compositor.js?build=${BUILD}`,
   "/products/archcoin/index.crystals.js": `${LOCAL_ROOT}archcoin.index.crystals.js?build=${BUILD}`,
-  "/products/archcoin/index.interactions.js": `${LOCAL_ROOT}archcoin.index.interactions.js?build=${BUILD}`
+  "/products/archcoin/index.interactions.js": `${LOCAL_ROOT}archcoin.interactions.round1.js?build=${BUILD}`
 });
 
 self.addEventListener("install", event => {

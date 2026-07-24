@@ -48,7 +48,7 @@ check('ledgerPathCountExact', ledger.summary?.pathCount === 42 && ledger.rows?.l
 check('ledgerDeltaCountsExact', ledger.summary?.added === 40 && ledger.summary?.modified === 2 && ledger.summary?.deleted === 0);
 check('tableIdentityExact', table.tableId === 'H_EARTH_PR79_POST_MERGE_42_FILE_SCOPE_DISPOSITION_TABLE_v1');
 check('tableRowCountExact', table.rows?.length === 42);
-check('tableDispositionCountsExact', JSON.stringify(table.dispositionCounts) === JSON.stringify({ ISOLATE: 18, RETAIN: 17, RECLASSIFY: 6, REVERT: 1 }));
+check('tableDispositionCountsExact', JSON.stringify(table.dispositionCounts) === JSON.stringify({ ISOLATE: 18, RETAIN: 17, RECLASSIFY: 6, REVERT: 1, SUPERSEDE: 0 }));
 check('tableNoUnresolvedRows', table.exitState?.unresolvedDispositionCount === 0 && table.exitState?.all42RowsClassified === true);
 check('planExact', plan.expectedRetainedDeltaPathCount === 24 && plan.expectedRemovedDeltaPathCount === 18 && plan.expectedRestoredLegacyPathCount === 1);
 check('correctiveReceiptComplete', correctiveReceipt.exitState?.allCorrectiveActionsComplete === true && correctiveReceipt.isolatedPathCount === 18);

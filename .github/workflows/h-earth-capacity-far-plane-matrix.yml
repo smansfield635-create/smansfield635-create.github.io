@@ -1,0 +1,266 @@
+name: H-Earth Capacity Far-Plane Matrix
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-002
+
+permissions:
+  contents: read
+
+jobs:
+  execute-far-plane-matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout validation repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact base source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git show 9a69ccab862420f0141013653625705fd92e9f12:showroom/globe/h-earth/capacity.js | git hash-object --stdin)" = "55169c7dc038b02dae7dccd5a79972c0018bc6e8"
+
+      - name: Materialize far-plane variants
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/h-earth-far-base 9a69ccab862420f0141013653625705fd92e9f12
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil
+
+          source = Path('/tmp/h-earth-far-base')
+          values = [48, 64, 80, 96, 112, 128, 160, 192, 256, 384, 512]
+          for value in values:
+              target = Path(f'/tmp/h-earth-far-{value}')
+              shutil.copytree(source, target)
+              path = target / 'showroom/globe/h-earth/capacity.js'
+              text = path.read_text()
+              needle = '    farPlane: 48,'
+              if text.count(needle) != 1:
+                  raise SystemExit(f'Expected one initial far-plane literal, found {text.count(needle)}')
+              path.write_text(text.replace(needle, f'    farPlane: {value},', 1))
+          PY
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start variant servers
+        shell: bash
+        run: |
+          set -euo pipefail
+          values=(48 64 80 96 112 128 160 192 256 384 512)
+          port=4200
+          for value in "${values[@]}"; do
+            (cd "/tmp/h-earth-far-${value}" && python3 -m http.server "$port" --bind 127.0.0.1 > "/tmp/h-earth-far-${value}.log" 2>&1) &
+            port=$((port + 1))
+          done
+          port=4200
+          for value in "${values[@]}"; do
+            for attempt in $(seq 1 30); do
+              if curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null; then
+                break
+              fi
+              sleep 1
+            done
+            curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null
+            port=$((port + 1))
+          done
+
+      - name: Execute browser matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p far-plane-artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+
+          const farPlanes = [48, 64, 80, 96, 112, 128, 160, 192, 256, 384, 512];
+          const viewports = [
+            { id: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
+            { id: 'mobile', width: 390, height: 844, deviceScaleFactor: 3 }
+          ];
+
+          const browser = await chromium.launch({ headless: true });
+          const results = [];
+
+          for (let index = 0; index < farPlanes.length; index += 1) {
+            const farPlane = farPlanes[index];
+            const origin = `http://127.0.0.1:${4200 + index}`;
+
+            for (const viewport of viewports) {
+              const context = await browser.newContext({
+                viewport: { width: viewport.width, height: viewport.height },
+                deviceScaleFactor: viewport.deviceScaleFactor
+              });
+              const page = await context.newPage();
+              const pageErrors = [];
+              const consoleErrors = [];
+              page.on('pageerror', (error) => pageErrors.push(error instanceof Error ? error.message : String(error)));
+              page.on('console', (message) => {
+                if (message.type() === 'error') consoleErrors.push(message.text());
+              });
+
+              const response = await page.goto(
+                `${origin}/showroom/globe/h-earth/`,
+                { waitUntil: 'domcontentloaded', timeout: 30000 }
+              );
+              await page.waitForTimeout(6000);
+
+              const evidence = await page.evaluate(async () => {
+                const debugText = document.getElementById('h-earth-3d-debug')?.textContent ?? '';
+                let debug = null;
+                let debugParseError = null;
+                try {
+                  debug = JSON.parse(debugText);
+                } catch (error) {
+                  debugParseError = error instanceof Error ? error.message : String(error);
+                }
+
+                const capacity = await import('./capacity.js?far-plane-matrix-direct');
+                const routeReceipt = debug?.routeReceipt ?? null;
+                const construct = routeReceipt?.rendererConstructReceipt ?? null;
+                const nodeBudget = construct?.nodeBudgetEvaluation ?? null;
+                const pose = routeReceipt
+                  ?.compositorHandoffReceipt
+                  ?.rawHandoff
+                  ?.admittedGeometryFrame
+                  ?.resolvedCameraPoseCorrespondence
+                  ?.resolvedCameraPose ?? null;
+                const mount = document.getElementById('h-earth-3d-renderer-mount');
+                const mountRect = mount?.getBoundingClientRect() ?? null;
+                const visibleChildren = mount
+                  ? Array.from(mount.querySelectorAll('*')).filter((element) => {
+                      const rect = element.getBoundingClientRect();
+                      const style = getComputedStyle(element);
+                      return rect.width > 0 && rect.height > 0 && style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) > 0;
+                    })
+                  : [];
+                const union = visibleChildren.reduce((acc, element) => {
+                  const rect = element.getBoundingClientRect();
+                  return {
+                    left: Math.min(acc.left, rect.left),
+                    top: Math.min(acc.top, rect.top),
+                    right: Math.max(acc.right, rect.right),
+                    bottom: Math.max(acc.bottom, rect.bottom)
+                  };
+                }, {
+                  left: Number.POSITIVE_INFINITY,
+                  top: Number.POSITIVE_INFINITY,
+                  right: Number.NEGATIVE_INFINITY,
+                  bottom: Number.NEGATIVE_INFINITY
+                });
+                const unionWidth = Number.isFinite(union.left) ? Math.max(0, union.right - union.left) : 0;
+                const unionHeight = Number.isFinite(union.top) ? Math.max(0, union.bottom - union.top) : 0;
+                const mountWidth = mountRect?.width ?? 0;
+                const mountHeight = mountRect?.height ?? 0;
+
+                return {
+                  documentStatus: document.getElementById('h-earth-3d-status')?.textContent ?? null,
+                  fallbackText: document.getElementById('h-earth-3d-fallback')?.textContent ?? null,
+                  debugParseError,
+                  route: {
+                    status: routeReceipt?.status ?? null,
+                    initialized: routeReceipt?.initialized ?? null,
+                    rendererBootstrapStatus: routeReceipt?.routeStatus?.rendererBootstrapStatus ?? null
+                  },
+                  camera: capacity.H_EARTH_3D_CAMERA_CAPACITY?.initialProjectionCandidate ?? null,
+                  resolvedPose: pose ? {
+                    eligible: pose.eligible,
+                    status: pose.status,
+                    position: pose.position,
+                    verticalFovDegrees: pose.verticalFovDegrees,
+                    nearPlane: pose.nearPlane,
+                    farPlane: pose.farPlane
+                  } : null,
+                  compositorHandoffStatus: routeReceipt?.compositorHandoffReceipt?.rawHandoff?.status ?? null,
+                  rendererConstruct: construct ? {
+                    status: construct.status,
+                    constructed: construct.constructed,
+                    environmentPrimitives: nodeBudget?.environmentPrimitives ?? null,
+                    totalRendererOwnedNodes: nodeBudget?.authorityEvaluation?.accounting?.totalRendererOwnedNodes ?? null,
+                    nodeBudgetEligible: nodeBudget?.eligible ?? null,
+                    issues: nodeBudget?.authorityEvaluation?.issues ?? []
+                  } : null,
+                  rendererMountReceiptPresent: routeReceipt?.rendererMountReceipt != null,
+                  dom: {
+                    mountPresent: Boolean(mount),
+                    mountChildCount: mount?.children.length ?? 0,
+                    visibleDescendantCount: visibleChildren.length,
+                    unionWidth,
+                    unionHeight,
+                    mountWidth,
+                    mountHeight,
+                    widthRatio: mountWidth > 0 ? unionWidth / mountWidth : 0,
+                    heightRatio: mountHeight > 0 ? unionHeight / mountHeight : 0,
+                    areaRatio: mountWidth > 0 && mountHeight > 0 ? unionWidth * unionHeight / (mountWidth * mountHeight) : 0
+                  }
+                };
+              });
+
+              if (viewport.id === 'desktop') {
+                await page.screenshot({
+                  path: `far-plane-artifacts/far-${farPlane}-desktop.png`,
+                  fullPage: true
+                });
+              }
+
+              results.push({
+                farPlane,
+                viewport,
+                navigation: { ok: response?.ok() ?? false, status: response?.status() ?? null },
+                pageErrors,
+                consoleErrors,
+                evidence
+              });
+              await context.close();
+            }
+          }
+
+          await browser.close();
+          fs.writeFileSync(
+            'far-plane-artifacts/matrix.json',
+            JSON.stringify({
+              exactBaseCommit: '9a69ccab862420f0141013653625705fd92e9f12',
+              mutation: 'INITIAL_FAR_PLANE_ONLY',
+              farPlanes,
+              results
+            }, null, 2)
+          );
+          console.log(JSON.stringify(results.map((result) => ({
+            farPlane: result.farPlane,
+            viewport: result.viewport.id,
+            status: result.evidence.documentStatus,
+            bootstrap: result.evidence.route.rendererBootstrapStatus,
+            primitives: result.evidence.rendererConstruct?.environmentPrimitives,
+            totalNodes: result.evidence.rendererConstruct?.totalRendererOwnedNodes,
+            budgetEligible: result.evidence.rendererConstruct?.nodeBudgetEligible,
+            mounted: result.evidence.rendererMountReceiptPresent,
+            areaRatio: result.evidence.dom.areaRatio,
+            pageErrors: result.pageErrors,
+            consoleErrors: result.consoleErrors
+          })), null, 2));
+          NODE
+
+      - name: Upload far-plane evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-far-plane-matrix
+          path: far-plane-artifacts/
+          if-no-files-found: error

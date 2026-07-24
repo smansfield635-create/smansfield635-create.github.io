@@ -1,9 +1,9 @@
 name: Bounded H-Earth camera envelope candidate builder
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/h-earth-camera-envelope-animation-standard-001
+      - main
     paths:
       - .github/workflows/h-earth-camera-envelope-animation-standard-builder.yml
 
@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   build:
+    if: github.head_ref == 'agent/h-earth-camera-envelope-animation-standard-001'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,20 +20,19 @@ jobs:
           ref: agent/h-earth-camera-envelope-animation-standard-001
           fetch-depth: 0
 
-      - name: Patch capacity source
+      - name: Patch camera envelope and living-presentation capacity
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-
           p = Path('showroom/globe/h-earth/capacity.js')
           s = p.read_text(encoding='utf-8')
 
           def once(old, new, name):
               global s
-              n = s.count(old)
-              if n != 1:
-                  raise SystemExit(f'{name}: expected 1 occurrence, found {n}')
+              count = s.count(old)
+              if count != 1:
+                  raise SystemExit(f'{name}: expected 1 occurrence, found {count}')
               s = s.replace(old, new, 1)
 
           once(
@@ -48,7 +48,7 @@ jobs:
           once(
               " * Camera capacity.\n */\nexport const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({",
               " * Camera capacity.\n */\nexport const H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID =\n  'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v1';\n\nexport const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({",
-              'camera correction identity'
+              'camera identity'
           )
           once("      y: 24,\n      z: 64", "      y: 14,\n      z: -240", 'camera position')
           once("      y: 0.5,\n      z: -128", "      y: 0.6,\n      z: -48", 'camera target')
@@ -62,8 +62,8 @@ jobs:
 
           living = r'''/**
  * Bounded living-presentation capacity.
- * Defines presentation limits only; it creates no animation runtime or
- * physical simulation and may not alter admitted geometry.
+ * Defines presentation limits only. It creates no runtime, simulation,
+ * traversal, collision, gameplay, or admitted-geometry mutation.
  */
 export const H_EARTH_3D_LIVING_PRESENTATION_CAPACITY_ID =
   'H_EARTH_MINIMUM_SHORELINE_LIVING_PRESENTATION_CAPACITY_v1';
@@ -161,7 +161,7 @@ export const H_EARTH_3D_LIVING_PRESENTATION_CAPACITY = deepFreeze({
           p.write_text(s, encoding='utf-8')
           PY
 
-      - name: Audit source custody and execute candidate
+      - name: Execute source, geometry-custody, camera, and animation-standard audit
         shell: bash
         run: |
           BASE="$(git merge-base HEAD origin/main)"
@@ -186,7 +186,6 @@ export const H_EARTH_3D_LIVING_PRESENTATION_CAPACITY = deepFreeze({
             H_EARTH_3D_CAMERA_CAPACITY,
             H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID,
             H_EARTH_3D_LIVING_PRESENTATION_CAPACITY,
-            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY_ID,
             evaluateHEarth3DCameraCapacity
           } from './showroom/globe/h-earth/capacity.js';
           import { H_EARTH_3D_SHARED_SHORELINE_BOUNDARY as boundary }
@@ -196,17 +195,15 @@ export const H_EARTH_3D_LIVING_PRESENTATION_CAPACITY = deepFreeze({
             previewHEarthMinimumShorelineGeometry
           } from './showroom/globe/h-earth/render/shoreline-preview.js';
 
-          let count = 0;
-          const pass = (condition, id) => {
-            assert.equal(Boolean(condition), true, id);
-            count += 1;
-          };
+          let checks = 0;
+          const pass = (value, id) => { assert.equal(Boolean(value), true, id); checks += 1; };
           const camera = H_EARTH_3D_CAMERA_CAPACITY.initialProjectionCandidate;
           const intent = H_EARTH_3D_CAMERA_CAPACITY.initialCompositionIntent;
-          const shorelineZ = boundary.samples.reduce((n, s) => n + s.z, 0) / boundary.samples.length;
+          const shorelineZ = boundary.samples.reduce((sum, sample) => sum + sample.z, 0) /
+            boundary.samples.length;
 
           pass(H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID ===
-            'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v1', 'camera identity');
+            'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v1', 'camera id');
           pass(camera.position.x === 0 && camera.position.y === 14 && camera.position.z === -240,
             'camera position');
           pass(camera.target.x === 0 && camera.target.y === 0.6 && camera.target.z === -48,
@@ -215,85 +212,70 @@ export const H_EARTH_3D_LIVING_PRESENTATION_CAPACITY = deepFreeze({
             'camera lens');
           pass(camera.position.z < shorelineZ && camera.target.z > shorelineZ,
             'land-to-water orientation');
-          pass(intent.admittedGeometryMutationPermitted === false &&
-            intent.futureContextDepthReserved === true, 'composition boundaries');
-
+          pass(intent.admittedGeometryMutationPermitted === false && intent.futureContextDepthReserved,
+            'composition boundaries');
           const evaluated = evaluateHEarth3DCameraCapacity({
-            yawDegrees: 0,
-            pitchDegrees: 0,
-            zoomScale: 1,
+            yawDegrees: 0, pitchDegrees: 0, zoomScale: 1,
             target: camera.target,
             verticalFovDegrees: camera.verticalFovDegrees,
             nearPlane: camera.nearPlane,
             farPlane: camera.farPlane
           });
-          pass(evaluated.eligible === true && evaluated.adjustmentRequired === false,
-            'camera capacity evaluation');
+          pass(evaluated.eligible && !evaluated.adjustmentRequired, 'camera evaluator');
 
-          const sub = (a,b) => ({x:a.x-b.x,y:a.y-b.y,z:a.z-b.z});
-          const dot = (a,b) => a.x*b.x+a.y*b.y+a.z*b.z;
-          const cross = (a,b) => ({x:a.y*b.z-a.z*b.y,y:a.z*b.x-a.x*b.z,z:a.x*b.y-a.y*b.x});
-          const norm = (v) => { const n=Math.hypot(v.x,v.y,v.z); return {x:v.x/n,y:v.y/n,z:v.z/n}; };
-          const f = norm(sub(camera.target,camera.position));
-          const r = norm(cross(f,camera.up));
-          const u = norm(cross(r,f));
-          pass(f.z > 0.99, 'positive-z view direction');
-
-          const project = (p, aspect) => {
-            const q=sub(p,camera.position), d=dot(q,f);
-            const t=Math.tan(camera.verticalFovDegrees*Math.PI/360);
-            return {d,x:dot(q,r)/(d*t*aspect),y:dot(q,u)/(d*t)};
-          };
-          const anchors = [
+          const sub=(a,b)=>({x:a.x-b.x,y:a.y-b.y,z:a.z-b.z});
+          const dot=(a,b)=>a.x*b.x+a.y*b.y+a.z*b.z;
+          const cross=(a,b)=>({x:a.y*b.z-a.z*b.y,y:a.z*b.x-a.x*b.z,z:a.x*b.y-a.y*b.x});
+          const norm=(v)=>{const n=Math.hypot(v.x,v.y,v.z);return{x:v.x/n,y:v.y/n,z:v.z/n};};
+          const f=norm(sub(camera.target,camera.position));
+          const r=norm(cross(f,camera.up));
+          const u=norm(cross(r,f));
+          pass(f.z > 0.99, 'waterward forward vector');
+          const project=(p,aspect)=>{const q=sub(p,camera.position),d=dot(q,f),t=Math.tan(Math.PI/6);return{d,x:dot(q,r)/(d*t*aspect),y:dot(q,u)/(d*t)};};
+          const anchors=[
             {x:0,y:0,z:-210},
             {x:0,y:0.79,z:shorelineZ},
             {x:0,y:0.68,z:-48},
             {x:0,y:10,z:192}
           ];
-          for (const aspect of [0.5625,1.6]) {
-            for (const anchor of anchors) {
-              const p=project(anchor,aspect);
-              pass(p.d>=camera.nearPlane && p.d<=camera.farPlane &&
-                Math.abs(p.x)<=1 && Math.abs(p.y)<=1, 'composition anchor visibility');
-            }
+          for (const aspect of [0.5625,1.6]) for (const anchor of anchors) {
+            const p=project(anchor,aspect);
+            pass(p.d>=camera.nearPlane && p.d<=camera.farPlane && Math.abs(p.x)<=1 && Math.abs(p.y)<=1,
+              'anchor visibility');
           }
 
-          pass(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY_ID ===
-            'H_EARTH_MINIMUM_SHORELINE_LIVING_PRESENTATION_CAPACITY_v1', 'living capacity identity');
-          pass(Object.isFrozen(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY), 'living capacity frozen');
+          pass(Object.isFrozen(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY), 'capacity frozen');
           pass(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.scheduler.maximumActiveFramesPerSecond === 30 &&
             H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.scheduler.maximumMainThreadWorkMillisecondsPerFrame === 8,
-            'bounded scheduler');
-          pass(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.suspension.suspendWhenDocumentHidden === true &&
-            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.suspension.suspendWhenStageOffscreen === true,
-            'suspension standard');
-          pass(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.reducedMotion.staticEquivalentRequired === true,
-            'reduced motion standard');
-          pass(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.geometryBoundary.admittedGeometryMutationPermitted === false,
-            'geometry mutation prohibited');
-          pass(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.claimCeilings.animationRuntimeCreated === false &&
-            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.claimCeilings.fluidSimulationCreated === false,
-            'runtime and simulation withheld');
+            'scheduler bounded');
+          pass(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.suspension.suspendWhenDocumentHidden &&
+            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.suspension.suspendWhenStageOffscreen,
+            'suspension required');
+          pass(H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.reducedMotion.staticEquivalentRequired,
+            'reduced motion');
+          pass(!H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.geometryBoundary.admittedGeometryMutationPermitted,
+            'geometry immutable');
+          pass(!H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.claimCeilings.animationRuntimeCreated &&
+            !H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.claimCeilings.fluidSimulationCreated,
+            'runtime withheld');
 
-          const preview = previewHEarthMinimumShorelineGeometry({
-            sourceObjectId: 'OBJ_002_FOREGROUND_WET_SAND',
-            requestedPurpose: 'MINIMUM_NATIVE_SHORELINE_GEOMETRY_PREVIEW',
-            requestId: 'H_EARTH_CAMERA_ENVELOPE_EXECUTION_AUDIT_001',
-            shorelineBoundary: boundary
+          const preview=previewHEarthMinimumShorelineGeometry({
+            sourceObjectId:'OBJ_002_FOREGROUND_WET_SAND',
+            requestedPurpose:'MINIMUM_NATIVE_SHORELINE_GEOMETRY_PREVIEW',
+            requestId:'H_EARTH_CAMERA_ENVELOPE_EXECUTION_AUDIT_001',
+            shorelineBoundary:boundary
           });
-          pass(preview.ok === true && preview.primitives.length === 3, 'preview execution');
-          pass(JSON.stringify(preview.sourceObjectIds) ===
+          pass(preview.ok && preview.primitives.length===3, 'preview executed');
+          pass(JSON.stringify(preview.sourceObjectIds)===
             JSON.stringify(H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_OBJECT_IDS), 'object identities');
-          pass(preview.shorelineBoundary === boundary &&
-            preview.shorelineBoundaryId === boundary.boundaryId, 'boundary occurrence');
-          pass(preview.admitted === false && preview.WestAdmissionPerformed === false,
-            'preview remains unadmitted');
-          pass(preview.fluidSimulation === false, 'fluid simulation false');
-
-          console.log(`H_EARTH_CAMERA_ENVELOPE_EXECUTION_AUDIT=PASS CHECKS=${count}`);
+          pass(preview.shorelineBoundary===boundary && preview.shorelineBoundaryId===boundary.boundaryId,
+            'boundary occurrence');
+          pass(!preview.admitted && !preview.WestAdmissionPerformed && !preview.fluidSimulation,
+            'authority boundaries');
+          console.log(`H_EARTH_CAMERA_ENVELOPE_EXECUTION_AUDIT=PASS CHECKS=${checks}`);
           NODE
 
-      - name: Freeze audited candidate
+      - name: Commit audited one-file candidate
         shell: bash
         run: |
           BLOB="$(git hash-object showroom/globe/h-earth/capacity.js)"

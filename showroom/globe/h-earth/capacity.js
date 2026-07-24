@@ -2,13 +2,16 @@
  * /showroom/globe/h-earth/capacity.js
  * COMPLETE RENEWED FILE
  *
- * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1
+ * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3
  *
  * Layer:
  * H-Earth Layer 4 · Showroom Execution Corridor
  *
  * Renews:
- * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_PRECHECK_EXECUTION_CORRIDOR_v1
+ * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1
+ *
+ * Candidate supersedes:
+ * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2
  *
  * Purpose:
  * Define the complete bounded execution-capacity constitution for the
@@ -70,7 +73,7 @@
  */
 
 export const H_EARTH_3D_CAPACITY_CONTRACT_ID =
-  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1';
+  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3';
 
 export const H_EARTH_3D_CAPACITY_SCHEMA_VERSION = 2;
 
@@ -541,14 +544,14 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
   initialProjectionCandidate: deepFreeze({
     position: deepFreeze({
       x: 0,
-      y: 5.4,
-      z: -12
+      y: 24,
+      z: 64
     }),
 
     target: deepFreeze({
       x: 0,
-      y: 1.2,
-      z: 7.5
+      y: 0.5,
+      z: -128
     }),
 
     up: deepFreeze({
@@ -559,7 +562,7 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
 
     verticalFovDegrees: 52,
     nearPlane: 0.25,
-    farPlane: 48,
+    farPlane: 194,
 
     cameraStateAuthority:
       'COMPOSITOR',
@@ -570,24 +573,24 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
 
   futureControllerCapacity: deepFreeze({
     positionBounds: deepFreeze({
-      xMin: -18,
-      xMax: 18,
+      xMin: -256,
+      xMax: 256,
 
-      yMin: -2,
-      yMax: 24,
+      yMin: -80,
+      yMax: 120,
 
-      zMin: -24,
-      zMax: 30
+      zMin: -256,
+      zMax: 256
     }),
 
     targetBounds: deepFreeze({
-      xMin: -10,
-      xMax: 10,
+      xMin: -96,
+      xMax: 96,
 
       yMin: -1,
       yMax: 8,
 
-      zMin: -2,
+      zMin: -256,
       zMax: 24
     }),
 
@@ -4050,7 +4053,7 @@ export const H_EARTH_3D_CAPACITY_RECEIPT = deepFreeze({
     H_EARTH_3D_CAPACITY_CONTRACT_ID,
 
   renewsContractId:
-    'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_PRECHECK_EXECUTION_CORRIDOR_v1',
+    'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1',
 
   file:
     '/showroom/globe/h-earth/capacity.js',
@@ -4121,7 +4124,7 @@ export const H_EARTH_3D_CAPACITY_RECEIPT = deepFreeze({
   visualOutputInspected: false,
 
   nextRequired:
-    'BACK_UP_RENEWED_CAPACITY_THEN_RECRAFT_COMPOSITOR_AGAINST_EXACT_FRAME_BASED_CAPACITY_SHAPE',
+    'EXECUTE_CURRENT_MAIN_COMPOSITOR_RENDERER_BROWSER_AND_INTERACTION_AUDIT_BEFORE_MERGE_APPROVAL',
 
   ...H_EARTH_3D_CAPACITY_CLAIM_CEILINGS
 });
@@ -4137,7 +4140,7 @@ export const H_EARTH_3D_CAPACITY_CONTRACT = deepFreeze({
     H_EARTH_3D_CAPACITY_SCHEMA_VERSION,
 
   renewsContractId:
-    'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_PRECHECK_EXECUTION_CORRIDOR_v1',
+    'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1',
 
   file:
     '/showroom/globe/h-earth/capacity.js',

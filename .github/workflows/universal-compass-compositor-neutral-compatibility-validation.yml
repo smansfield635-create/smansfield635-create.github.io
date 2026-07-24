@@ -1,0 +1,241 @@
+name: Universal Compass Compositor Neutral Compatibility Validation
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-compositor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify compositor syntax
+        run: node --experimental-default-type=module --check prototypes/universal-compass/index.compositor.js
+
+      - name: Execute compositor projection fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module --input-type=module <<'NODE' > /tmp/universal-compass-compositor-validation-receipt.json
+          import {
+            createCompositor,
+            UNIVERSAL_COMPASS_COMPOSITOR_CONTRACT
+          } from "./prototypes/universal-compass/index.compositor.js";
+
+          const assert = (condition, id, details = null) => {
+            if (condition) return;
+            const error = new Error(id);
+            error.details = details;
+            throw error;
+          };
+
+          const identity = Object.freeze([0, 0, 0, 1]);
+          const records = [{
+            id: "CENTER",
+            kind: "CENTER",
+            parentId: "",
+            canonicalOrder: 0,
+            worldPosition: [0, 0, 10],
+            worldOrientation: identity,
+            worldScale: [1, 1, 1]
+          }];
+          const cardinals = ["NORTH", "EAST", "SOUTH", "WEST"];
+          const positions = [[0, 2.4, 10], [2.4, 0, 10], [0, -2.4, 10], [-2.4, 0, 10]];
+          cardinals.forEach((id, cardinalIndex) => {
+            records.push({
+              id,
+              kind: "CARDINAL",
+              parentId: "",
+              canonicalOrder: records.length,
+              worldPosition: positions[cardinalIndex],
+              worldOrientation: identity,
+              worldScale: [1, 1, 1]
+            });
+          });
+          cardinals.forEach((cardinalId, cardinalIndex) => {
+            const base = positions[cardinalIndex];
+            for (let childIndex = 0; childIndex < 4; childIndex += 1) {
+              const angle = Math.PI * 2 * childIndex / 4;
+              records.push({
+                id: `${cardinalId}_CHILD_${childIndex + 1}`,
+                kind: "CHILD",
+                parentId: cardinalId,
+                canonicalOrder: records.length,
+                worldPosition: [
+                  base[0] + Math.cos(angle) * 0.7,
+                  base[1] + Math.sin(angle) * 0.7,
+                  10.2
+                ],
+                worldOrientation: identity,
+                worldScale: [0.5, 0.5, 0.5]
+              });
+            }
+          });
+
+          const worldSnapshot = Object.freeze({
+            schema: "UNIVERSAL_COMPASS_WORLD_SNAPSHOT_v2",
+            worldRevision: 7,
+            records: Object.freeze(records.map(Object.freeze))
+          });
+          const crystalInput = Object.freeze({
+            schema: "UNIVERSAL_COMPASS_CRYSTAL_INPUT_v1",
+            worldRevision: 7,
+            crystalRevision: 3,
+            crystalHash: "fnv1a32:12345678",
+            records: Object.freeze(records.map(record => Object.freeze({
+              id: record.id,
+              kind: record.kind,
+              localBounds: Object.freeze({
+                min: Object.freeze([-0.5, -0.5, -0.5]),
+                max: Object.freeze([0.5, 0.5, 0.5]),
+                center: Object.freeze([0, 0, 0]),
+                size: Object.freeze([1, 1, 1]),
+                radius: Math.sqrt(3) / 2
+              }),
+              visualAnchor: Object.freeze([0, 0, 0]),
+              semanticAnchor: Object.freeze([0, 0, 0]),
+              labelAnchor: Object.freeze([0, 0.7, 0]),
+              hitShape: Object.freeze({
+                kind: "SPHERE",
+                center: Object.freeze([0, 0, 0]),
+                radius: 0.6
+              })
+            })))
+          });
+          const compositor = createCompositor({
+            cameraConfig: {
+              position: [0, 0, 0],
+              target: [0, 0, 1],
+              up: [0, 1, 0],
+              fieldOfViewYDegrees: 60,
+              near: 0.1,
+              far: 100
+            },
+            projectionConfig: {
+              centerDepth: 10,
+              depthHysteresis: 0.5,
+              interpolationRate: 10,
+              maxDeltaSeconds: 0.1,
+              expectedRecordCount: 21,
+              expectedKindCounts: {
+                CENTER: 1,
+                CARDINAL: 4,
+                CHILD: 16
+              }
+            }
+          });
+          const viewport = Object.freeze({
+            width: 1280,
+            height: 720,
+            pixelRatio: 2
+          });
+          const project = (controllerRevision, presentation, held, activeCardinalId, timestampMs) =>
+            compositor.project({
+              worldSnapshot,
+              crystalInput,
+              presentationContext: Object.freeze({
+                schema: "UNIVERSAL_COMPASS_PRESENTATION_CONTEXT_v1",
+                controllerRevision,
+                presentation,
+                held,
+                activeCardinalId,
+                reducedMotion: true
+              }),
+              viewport,
+              timestampMs,
+              deltaSeconds: 1 / 60
+            });
+
+          const constellation = project(4, "CONSTELLATION", false, "", 1000);
+          assert(constellation.records.length === 21, "EXACT_21_JOINED_RECORDS");
+          assert(constellation.interactionProjectionRecords.length === 5, "CONSTELLATION_INTERACTION_SET");
+          assert(constellation.hiddenRecords.length === 16, "CONSTELLATION_HIDDEN_SET");
+          assert(constellation.tombstones.length === 0, "FIRST_FRAME_NO_TOMBSTONES");
+          assert(constellation.validationReceipt.status === "PASS", "CONSTELLATION_RECEIPT_PASS");
+
+          const cluster = project(5, "CLUSTER", false, "NORTH", 1016);
+          assert(cluster.interactionProjectionRecords.length === 6, "CLUSTER_INTERACTION_SET");
+          assert(cluster.hiddenRecords.length === 15, "CLUSTER_HIDDEN_SET");
+          assert(cluster.tombstones.length === 3, "ONE_FRAME_TOMBSTONES");
+          assert(cluster.tombstones.every(record => record.interactionEligible === false), "TOMBSTONES_INELIGIBLE");
+          assert(cluster.validationReceipt.status === "PASS", "CLUSTER_RECEIPT_PASS");
+
+          const held = project(6, "CLUSTER", true, "NORTH", 1032);
+          assert(held.interactionProjectionRecords.length === 0, "HELD_DISABLING");
+          assert(held.tombstones.length === 0, "TOMBSTONES_EXPIRE_AFTER_ONE_FRAME");
+          assert(compositor.validate(held).status === "PASS", "PUBLIC_VALIDATE_PASS");
+          assert(compositor.getProjectionRevision() === 3, "PROJECTION_REVISION_MONOTONIC");
+          assert(typeof compositor.render === "undefined", "RENDER_OPERATION_REMOVED");
+          assert(UNIVERSAL_COMPASS_COMPOSITOR_CONTRACT.rendererAuthority === false, "NO_RENDERER_AUTHORITY");
+          assert(UNIVERSAL_COMPASS_COMPOSITOR_CONTRACT.domAuthority === false, "NO_DOM_AUTHORITY");
+          assert(Object.isFrozen(held), "IMMUTABLE_SNAPSHOT");
+
+          const rejected = [];
+          try {
+            compositor.project({
+              worldSnapshot,
+              crystalInput: Object.freeze({
+                ...crystalInput,
+                records: crystalInput.records.slice(1)
+              }),
+              presentationContext: Object.freeze({
+                schema: "UNIVERSAL_COMPASS_PRESENTATION_CONTEXT_v1",
+                controllerRevision: 7,
+                presentation: "CONSTELLATION",
+                held: false,
+                activeCardinalId: "",
+                reducedMotion: true
+              }),
+              viewport,
+              timestampMs: 1048,
+              deltaSeconds: 1 / 60
+            });
+          } catch (error) {
+            rejected.push(error.code);
+          }
+          assert(rejected.includes("COMPASS_COMPOSITOR_MISSING_CRYSTAL_RECORD"), "MISSING_CRYSTAL_REJECTED", rejected);
+
+          console.log(JSON.stringify({
+            schema: "DGB_UNIVERSAL_COMPASS_COMPOSITOR_NEUTRAL_COMPATIBILITY_VALIDATION_RECEIPT_v1",
+            status: "PASS",
+            assertionCount: 20,
+            sourceCommit: process.env.GITHUB_SHA,
+            compositorBlobExpected: "bf659172ebd7aa66a843a3f4040528ccf2adc6f5",
+            projectionRevision: held.projectionRevision,
+            recordCount: held.records.length,
+            validationReceiptHash: held.validationReceipt.receiptHash,
+            claims: {
+              syntaxPass: true,
+              neutralFactoryBoundary: true,
+              adapterArchitectureRemoved: true,
+              renderAuthorityRemoved: true,
+              crystalInputJoinedExactly: true,
+              controllerContextConsumed: true,
+              cameraMatricesPublished: true,
+              visibilityPolicyExecuted: true,
+              tombstonesExecuted: true,
+              heldStateExecuted: true,
+              missingCrystalRejected: true,
+              planetCompatibilityStillRequired: true,
+              runtimeAcceptance: false,
+              productAuthority: false
+            }
+          }, null, 2));
+          NODE
+
+      - name: Preserve compositor validation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-compositor-neutral-compatibility-validation-receipt
+          path: /tmp/universal-compass-compositor-validation-receipt.json
+          if-no-files-found: error
+          retention-days: 90

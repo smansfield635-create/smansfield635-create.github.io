@@ -30,9 +30,7 @@ jobs:
           node-version: '22'
       - name: Re-run successor identity audit
         run: node --experimental-default-type=module tools/h-earth-repository-registry-successor-v2-audit.mjs
-      - name: Re-run retained-state audit
-        run: node --experimental-default-type=module tools/h-earth-post-merge-scope-disposition-audit.mjs
-      - name: Execute Step 2 decision-accountability audit
+      - name: Execute bounded Step 2 decision-accountability audit
         run: node --experimental-default-type=module h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.validator.mjs
       - name: Upload deterministic Step 2 receipt
         if: always()

@@ -1,10 +1,10 @@
 /**
- * H_EARTH_REPOSITORY_REGISTRY_POST_MERGE_DISPOSITION_SCOPE_RECONCILIATION_v2
+ * H_EARTH_REPOSITORY_REGISTRY_POST_MERGE_DISPOSITION_SCOPE_RECONCILIATION_v3
  *
  * Composed bounded read-only overlay for:
- * 1. the closed post-merge 42-file scope-disposition package; and
- * 2. the exact Step 2 decision-accountability package required for merge
- *    readiness preflight resolution.
+ * 1. the closed post-merge 42-file scope-disposition package;
+ * 2. the exact Step 2 decision-accountability package; and
+ * 3. the Merge Readiness B retained-state continuity-audit renewal.
  *
  * This overlay creates no bootstrap replacement, canonicalization execution,
  * successor activation, transition execution, deployment, or production authority.
@@ -19,8 +19,9 @@ function deepFreeze(value, seen = new WeakSet()) {
 }
 
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
-
 const DISPOSITION_BRANCH = 'agent/h-earth-post-merge-scope-disposition-001';
+const STEP_2_BRANCH = 'agent/h-earth-step-2-decision-accountability-001';
+
 const DISPOSITION_PATHS = Object.freeze([
   '/h-earth-3d/control-plane/post-merge-disposition/h-earth.pr79-42-file-delta.ledger.json',
   '/h-earth-3d/control-plane/post-merge-disposition/h-earth.pr79-42-file-scope-disposition.table.json',
@@ -32,7 +33,6 @@ const DISPOSITION_PATHS = Object.freeze([
   '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
 ]);
 
-const STEP_2_BRANCH = 'agent/h-earth-step-2-decision-accountability-001';
 const STEP_2_PATHS = Object.freeze([
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.current-state.manifest.json',
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.successor-target.manifest.json',
@@ -41,6 +41,10 @@ const STEP_2_PATHS = Object.freeze([
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.fixtures.json',
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.validator.mjs',
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.audit-receipt.json'
+]);
+
+const MERGE_READINESS_B_PATHS = Object.freeze([
+  '/tools/h-earth-post-merge-scope-disposition-audit.mjs'
 ]);
 
 function buildOccurrences(paths, refName) {
@@ -61,6 +65,7 @@ function buildOccurrences(paths, refName) {
 
 const dispositionOccurrences = buildOccurrences(DISPOSITION_PATHS, DISPOSITION_BRANCH);
 const step2Occurrences = buildOccurrences(STEP_2_PATHS, STEP_2_BRANCH);
+const mergeReadinessBOccurrences = buildOccurrences(MERGE_READINESS_B_PATHS, STEP_2_BRANCH);
 
 export const H_EARTH_POST_MERGE_DISPOSITION_SCOPE_EVIDENCE = deepFreeze({
   evidenceId: 'EVIDENCE_POST_MERGE_42_FILE_SCOPE_DISPOSITION_PACKAGE',
@@ -102,6 +107,29 @@ export const H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_EVIDENCE = deepFreeze({
     'NO_SUCCESSOR_ACTIVATION',
     'NO_TRANSITION_EXECUTION',
     'NO_DEPLOYMENT_OR_PRODUCTION_AUTHORITY'
+  ]
+});
+
+export const H_EARTH_MERGE_READINESS_B_SCOPE_EVIDENCE = deepFreeze({
+  evidenceId: 'EVIDENCE_H_EARTH_MERGE_READINESS_B_AUDIT_CONTINUITY_RENEWAL',
+  evidenceClass: 'EXISTING_BOUNDARY_RELATION_OBSERVED',
+  sourceKind: 'USER_SUPPLIED_VERIFICATION',
+  sourceIdOrPath: '/tools/h-earth-post-merge-scope-disposition-audit.mjs',
+  sourceOccurrenceOrRevision:
+    'USER_INSTRUCTION=COMPLETE_MERGE_READINESS_B;OBSOLETE_MAIN_EQUALITY_ASSERTION=RETIRED',
+  assertionScope: [
+    'RETAINED_STATE_CONTINUITY_AUDIT_PATH_RESOLUTION',
+    'MAIN_DESCENDS_FROM_STABILIZATION_MERGE'
+  ],
+  verifiedOn: '2026-07-24',
+  evidenceLimitations: [
+    'AUDIT_CONTINUITY_RENEWAL_ONLY',
+    'NO_REPOSITORY_MUTATION_AUTHORITY',
+    'NO_STEP_3_EXECUTOR',
+    'NO_BOOTSTRAP_REPLACEMENT',
+    'NO_CANONICALIZATION_EXECUTION',
+    'NO_SUCCESSOR_ACTIVATION',
+    'NO_TRANSITION_EXECUTION'
   ]
 });
 
@@ -177,8 +205,7 @@ export const H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_NODE = deepFreeze({
   evidenceClass: 'EXISTING_BOUNDARY_RELATION_OBSERVED',
   evidenceReferences: [H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_EVIDENCE.evidenceId],
   authorityClass: 'DECISION_AUTHORITY',
-  authorityPosture:
-    'ONE_TIME_TRANSITION_DECISION_ONLY_NO_EXECUTION',
+  authorityPosture: 'ONE_TIME_TRANSITION_DECISION_ONLY_NO_EXECUTION',
   authoritySource: [
     'EXPLICIT_USER_INSTRUCTION',
     'H_EARTH_STEP_2_TRANSITION_DECISION_2026_07_24_001'
@@ -247,13 +274,81 @@ export const H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_NODE = deepFreeze({
   unresolvedFields: []
 });
 
+export const H_EARTH_MERGE_READINESS_B_SCOPE_NODE = deepFreeze({
+  nodeId: 'H_EARTH_POST_MERGE_RETAINED_STATE_CONTINUITY_AUDIT_RENEWAL',
+  nodeType: 'BOUNDARY_PACKET',
+  nodeSubtype: 'MERGE_READINESS_AUDIT_CORRESPONDENCE',
+  displayName: 'H-Earth Merge Readiness B Audit Continuity Renewal',
+  description:
+    'Renews the closed stabilization audit from a historical main-equality assertion to a durable stabilization-merge ancestry assertion.',
+  repositoryPaths: [...MERGE_READINESS_B_PATHS],
+  repositoryOccurrences: mergeReadinessBOccurrences,
+  evidenceClass: 'EXISTING_BOUNDARY_RELATION_OBSERVED',
+  evidenceReferences: [H_EARTH_MERGE_READINESS_B_SCOPE_EVIDENCE.evidenceId],
+  authorityClass: 'AUDIT_ONLY',
+  authorityPosture: 'RETAINED_STATE_CONTINUITY_ASSERTION_ONLY',
+  authoritySource: ['EXPLICIT_USER_INSTRUCTION'],
+  authorityScope: [
+    'RETIRE_OBSOLETE_MAIN_EQUALITY_ASSERTION',
+    'VERIFY_MAIN_CONTAINS_STABILIZATION_MERGE',
+    'READ_ONLY_PREFLIGHT_PATH_RESOLUTION'
+  ],
+  authorityLimitations: [
+    'NO_REPOSITORY_MUTATION_AUTHORITY',
+    'NO_STEP_3_EXECUTOR_CREATED',
+    'NO_BOOTSTRAP_REPLACEMENT',
+    'NO_CANONICALIZATION_EXECUTION',
+    'NO_SUCCESSOR_ACTIVATION',
+    'NO_TRANSITION_EXECUTION'
+  ],
+  parentRelations: [],
+  childRelations: [],
+  peerRelations: [],
+  upstreamBoundaries: [],
+  downstreamBoundaries: [],
+  cardinalRole: 'NONE',
+  cardinalStatus: 'NONE',
+  cardinalCompleteness: 'NOT_APPLICABLE',
+  orderingRules: [],
+  dependencyRelations: [],
+  allowedMutationScope: 'AUDIT_ASSERTION_RENEWAL_ONLY',
+  prohibitedMutations: [
+    'BOOTSTRAP_REPLACEMENT',
+    'CANONICALIZATION_EXECUTION',
+    'SUCCESSOR_ACTIVATION',
+    'TRANSITION_EXECUTION'
+  ],
+  requiredValidations: [
+    'AUDIT_PATH_RESOLUTION',
+    'STABILIZATION_MERGE_ANCESTRY',
+    'OBSOLETE_MAIN_EQUALITY_ASSERTION_ABSENT'
+  ],
+  stoppingBoundaries: [
+    'STOP_BEFORE_STEP_3_EXECUTION',
+    'STOP_BEFORE_REPOSITORY_MUTATION'
+  ],
+  currentIdentityReferences: [
+    '08cf54db77dc48e23de8874953561bc2964551ba',
+    'H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_RETAINED_STATE_AUDIT_RECEIPT_v2'
+  ],
+  lifecycleStatus: 'CANDIDATE',
+  unresolvedFields: []
+});
+
 const NODES = Object.freeze([
   H_EARTH_POST_MERGE_DISPOSITION_SCOPE_NODE,
-  H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_NODE
+  H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_NODE,
+  H_EARTH_MERGE_READINESS_B_SCOPE_NODE
 ]);
 const EVIDENCE = Object.freeze([
   H_EARTH_POST_MERGE_DISPOSITION_SCOPE_EVIDENCE,
-  H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_EVIDENCE
+  H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_EVIDENCE,
+  H_EARTH_MERGE_READINESS_B_SCOPE_EVIDENCE
+]);
+const ALL_OCCURRENCES = Object.freeze([
+  ...dispositionOccurrences,
+  ...step2Occurrences,
+  ...mergeReadinessBOccurrences
 ]);
 const pathIndex = new Map([
   ...DISPOSITION_PATHS.map((repositoryPath) => [
@@ -268,6 +363,13 @@ const pathIndex = new Map([
     {
       node: H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_NODE,
       occurrences: step2Occurrences.filter((entry) => entry.path === repositoryPath)
+    }
+  ]),
+  ...MERGE_READINESS_B_PATHS.map((repositoryPath) => [
+    repositoryPath,
+    {
+      node: H_EARTH_MERGE_READINESS_B_SCOPE_NODE,
+      occurrences: mergeReadinessBOccurrences.filter((entry) => entry.path === repositoryPath)
     }
   ])
 ]);
@@ -305,7 +407,7 @@ export function resolveHEarthRepositoryRegistryPath(repositoryPath) {
 }
 
 export function resolveHEarthRepositoryRegistryOccurrence(input = {}) {
-  const localMatches = [...dispositionOccurrences, ...step2Occurrences]
+  const localMatches = ALL_OCCURRENCES
     .filter((entry) => {
       if (input.path != null && entry.path !== input.path) return false;
       if (input.commitSha != null && entry.commitSha !== input.commitSha) return false;

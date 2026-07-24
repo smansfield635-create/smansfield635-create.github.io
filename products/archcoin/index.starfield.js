@@ -1,18 +1,20 @@
 /* /products/archcoin/index.starfield.js
-   ARCHCOIN bounded starfield adapter derived from the proven Compass cosmos.
+   ARCHCOIN Compass-derived starfield with static base and burst-only sparkle overlay.
 
    Preserves:
-   - randomized non-grid star placement;
-   - depth-weighted size, brightness, drift, and twinkle;
+   - randomized non-grid placement;
+   - clustered density with a protected central void;
+   - circular star primitives;
+   - depth-weighted size, brightness, and color;
    - independent sparkle phases;
-   - capped DPR and 30 FPS pacing;
-   - adaptive quality;
    - reduced-motion and visibility suspension.
 
-   Excludes:
-   - meteors;
-   - spacecraft;
-   - navigation, geometry, controller, compositor, and interaction authority.
+   Performance boundary:
+   - static base canvas is rendered only on initialization, resize, or quality change;
+   - sparkle animation uses a separate transparent overlay;
+   - sparkle bursts run at 8 FPS and stop between bursts;
+   - no continuous requestAnimationFrame loop;
+   - no navigation, geometry, controller, compositor, or interaction authority.
 */
 (() => {
   "use strict";
@@ -21,7 +23,9 @@
   const RECEIPT_KEY = "DGB_ARCHCOIN_STARFIELD_RECEIPT";
   const READY_EVENT = "ARCHCOIN_STARFIELD_READY";
   const FAILURE_EVENT = "ARCHCOIN_STARFIELD_FAILURE";
-  const CANVAS_ATTRIBUTE = "data-archcoin-starfield-canvas";
+  const BASE_ATTRIBUTE = "data-archcoin-starfield-canvas";
+  const BASE_VALUE = "base";
+  const OVERLAY_VALUE = "sparkle";
 
   if (globalThis[GLOBAL_KEY]?.initialized) return;
 
@@ -29,24 +33,22 @@
     mountSelector: ".archcoin-field-chrome__stars",
     sceneSelector: "[data-archcoin-scene-field]",
     rootSelector: "[data-archcoin-root]",
-    frameRate: 30,
-    maximumDeltaMs: 80,
-    desktopPixelRatioCap: 1.5,
-    mobilePixelRatioCap: 1.25,
     mobileWidth: 820,
     compactWidth: 560,
-    minimumStars: 54,
-    maximumStars: 128,
-    starAreaDivisor: 5600,
-    minimumSparkles: 5,
-    maximumSparkles: 10,
-    adaptiveCheckIntervalMs: 5000,
-    adaptiveSlowRenderMs: 5.5,
-    adaptiveFastRenderMs: 2.2,
-    adaptiveMinimumQuality: 0.55,
-    adaptiveMaximumQuality: 1,
-    adaptiveStepDown: 0.12,
-    adaptiveStepUp: 0.05
+    mobilePixelRatioCap: 1,
+    desktopPixelRatioCap: 1.25,
+    minimumStars: 48,
+    maximumStars: 92,
+    starAreaDivisor: 6800,
+    minimumSparkles: 4,
+    maximumSparkles: 7,
+    firstBurstDelayMinimumMs: 2600,
+    firstBurstDelayMaximumMs: 4200,
+    burstDelayMinimumMs: 1200,
+    burstDelayMaximumMs: 2600,
+    burstDurationMinimumMs: 620,
+    burstDurationMaximumMs: 980,
+    sparkleFrameIntervalMs: 125
   });
 
   const COLORS = Object.freeze([
@@ -60,15 +62,16 @@
     initialized: false,
     destroyed: false,
     failed: false,
-    running: false,
     documentVisible: !document.hidden,
     sceneVisible: false,
     reducedMotion: false,
     root: null,
     scene: null,
     mount: null,
-    canvas: null,
-    context: null,
+    baseCanvas: null,
+    baseContext: null,
+    overlayCanvas: null,
+    overlayContext: null,
     width: 0,
     height: 0,
     pixelRatio: 1,
@@ -76,22 +79,23 @@
     stars: [],
     sparkles: [],
     clusters: [],
-    frameHandle: 0,
-    lastFrameTime: 0,
-    accumulatedFrameTime: 0,
-    lastAdaptiveCheck: 0,
-    renderCostSamples: [],
-    intersectionObserver: null,
+    activeSparkles: [],
+    burstTimer: 0,
+    frameTimer: 0,
+    baseDrawCount: 0,
+    sparkleFrameCount: 0,
     resizeObserver: null,
-    motionQuery: null,
+    intersectionObserver: null,
     motionObserver: null,
-    listenersBound: false
+    motionQuery: null,
+    onVisibility: null,
+    onMotion: null
   };
 
   const api = Object.freeze({
     initialized: false,
-    start,
-    stop,
+    start: () => scheduleNextBurst(true),
+    stop: stopSparkles,
     destroy,
     resize,
     setQuality,
@@ -122,8 +126,8 @@
     return {
       module: "DGB_ARCHCOIN_STARFIELD",
       sourceModel: "/assets/compass/compass.cosmos.js",
+      renderingModel: "static-base-burst-overlay",
       initialized: state.initialized,
-      running: state.running,
       destroyed: state.destroyed,
       failed: state.failed,
       documentVisible: state.documentVisible,
@@ -131,9 +135,14 @@
       reducedMotion: state.reducedMotion,
       starCount: state.stars.length,
       sparkleCount: state.sparkles.length,
+      activeSparkleCount: state.activeSparkles.length,
       quality: state.quality,
       pixelRatio: state.pixelRatio,
-      frameRateCap: CONFIG.frameRate,
+      sparkleFrameIntervalMs: CONFIG.sparkleFrameIntervalMs,
+      continuousAnimation: false,
+      requestAnimationFrameUsed: false,
+      baseDrawCount: state.baseDrawCount,
+      sparkleFrameCount: state.sparkleFrameCount,
       ownsNavigation: false,
       ownsGeometry: false,
       ownsProjection: false,
@@ -159,7 +168,7 @@
   function fail(error) {
     if (state.failed) return;
     state.failed = true;
-    stop();
+    stopSparkles();
     const message = error instanceof Error ? error.message : String(error);
     publish({ lastAction: "starfield-failure", lastFailure: message });
     globalThis.dispatchEvent(new CustomEvent(FAILURE_EVENT, {
@@ -175,7 +184,14 @@
     return state.reducedMotion;
   }
 
-  function createCanvas() {
+  function configureCanvas(canvas, value) {
+    canvas.setAttribute(BASE_ATTRIBUTE, value);
+    canvas.setAttribute("aria-hidden", "true");
+    canvas.style.pointerEvents = "none";
+    return canvas;
+  }
+
+  function createCanvases() {
     state.mount = document.querySelector(CONFIG.mountSelector);
     state.scene = document.querySelector(CONFIG.sceneSelector);
     state.root = document.querySelector(CONFIG.rootSelector);
@@ -184,32 +200,41 @@
       throw new Error("ARCHCOIN_STARFIELD_MOUNT_NOT_FOUND");
     }
 
-    const existing = state.mount.querySelector(`[${CANVAS_ATTRIBUTE}]`);
-    const canvas = existing || document.createElement("canvas");
-    canvas.setAttribute(CANVAS_ATTRIBUTE, "true");
-    canvas.setAttribute("aria-hidden", "true");
+    const baseSelector = `[${BASE_ATTRIBUTE}="${BASE_VALUE}"]`;
+    const overlaySelector = `[${BASE_ATTRIBUTE}="${OVERLAY_VALUE}"]`;
+    const baseCanvas = state.mount.querySelector(baseSelector) ||
+      configureCanvas(document.createElement("canvas"), BASE_VALUE);
+    const overlayCanvas = state.mount.querySelector(overlaySelector) ||
+      configureCanvas(document.createElement("canvas"), OVERLAY_VALUE);
 
-    if (!existing) state.mount.append(canvas);
+    if (!baseCanvas.isConnected) state.mount.append(baseCanvas);
+    if (!overlayCanvas.isConnected) state.mount.append(overlayCanvas);
 
-    const context = canvas.getContext("2d", {
+    const baseContext = baseCanvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true
+    });
+    const overlayContext = overlayCanvas.getContext("2d", {
       alpha: true,
       desynchronized: true
     });
 
-    if (!context) {
+    if (!baseContext || !overlayContext) {
       throw new Error("ARCHCOIN_STARFIELD_CONTEXT_UNAVAILABLE");
     }
 
-    state.canvas = canvas;
-    state.context = context;
+    state.baseCanvas = baseCanvas;
+    state.baseContext = baseContext;
+    state.overlayCanvas = overlayCanvas;
+    state.overlayContext = overlayContext;
   }
 
   function createClusterField() {
     const zones = [
-      { x: [0.05, 0.28], y: [0.06, 0.34], sx: [0.07, 0.15], sy: [0.08, 0.17] },
-      { x: [0.69, 0.95], y: [0.05, 0.37], sx: [0.07, 0.16], sy: [0.08, 0.18] },
-      { x: [0.03, 0.34], y: [0.63, 0.96], sx: [0.08, 0.17], sy: [0.08, 0.17] },
-      { x: [0.66, 0.96], y: [0.61, 0.96], sx: [0.08, 0.17], sy: [0.08, 0.17] }
+      { x: [0.04, 0.29], y: [0.05, 0.36], sx: [0.06, 0.15], sy: [0.07, 0.17] },
+      { x: [0.68, 0.96], y: [0.04, 0.39], sx: [0.06, 0.16], sy: [0.07, 0.18] },
+      { x: [0.03, 0.35], y: [0.62, 0.97], sx: [0.07, 0.17], sy: [0.07, 0.17] },
+      { x: [0.65, 0.97], y: [0.60, 0.97], sx: [0.07, 0.17], sy: [0.07, 0.17] }
     ];
 
     state.clusters = zones.map(zone => ({
@@ -221,17 +246,17 @@
   }
 
   function inCentralVoid(x, y) {
-    const dx = (x - 0.5) / 0.22;
-    const dy = (y - 0.5) / 0.20;
+    const dx = (x - 0.5) / 0.23;
+    const dy = (y - 0.5) / 0.21;
     return dx * dx + dy * dy < 1;
   }
 
   function choosePosition() {
-    for (let attempt = 0; attempt < 24; attempt += 1) {
+    for (let attempt = 0; attempt < 28; attempt += 1) {
       let x;
       let y;
 
-      if (Math.random() < 0.72) {
+      if (Math.random() < 0.74) {
         const cluster = randomChoice(state.clusters);
         x = cluster.x + gaussian() * cluster.spreadX;
         y = cluster.y + gaussian() * cluster.spreadY;
@@ -240,10 +265,10 @@
         y = Math.random();
       }
 
-      x = clamp(x, 0.015, 0.985);
-      y = clamp(y, 0.015, 0.985);
+      x = clamp(x, 0.014, 0.986);
+      y = clamp(y, 0.014, 0.986);
 
-      if (inCentralVoid(x, y) && Math.random() < 0.88) continue;
+      if (inCentralVoid(x, y) && Math.random() < 0.90) continue;
       return { x, y };
     }
 
@@ -252,9 +277,9 @@
 
   function createStar() {
     const position = choosePosition();
-    const depth = Math.pow(Math.random(), 1.65);
+    const depth = Math.pow(Math.random(), 1.55);
     const colorRoll = Math.random();
-    const color = colorRoll < 0.80
+    const color = colorRoll < 0.79
       ? COLORS[0]
       : colorRoll < 0.91
         ? COLORS[1]
@@ -265,29 +290,23 @@
     return {
       x: position.x * state.width,
       y: position.y * state.height,
-      radius: random(0.42, 1.55) * (0.58 + depth * 0.74),
-      alpha: random(0.19, 0.72) * (0.62 + depth * 0.48),
+      radius: random(0.50, 1.58) * (0.62 + depth * 0.78),
+      alpha: random(0.27, 0.82) * (0.68 + depth * 0.42),
       color,
-      depth,
-      phase: random(0, Math.PI * 2),
-      twinkleRate: random(0.00050, 0.00165),
-      driftX: random(-0.0022, 0.0022) * (0.28 + depth),
-      driftY: random(-0.0016, 0.0016) * (0.28 + depth)
+      depth
     };
   }
 
   function createSparkles(count) {
     const candidates = state.stars
       .map((star, index) => ({ star, index }))
-      .filter(({ star }) => star.depth > 0.46 && star.alpha > 0.34)
+      .filter(({ star }) => star.depth > 0.42 && star.alpha > 0.36)
       .sort(() => Math.random() - 0.5);
 
     return candidates.slice(0, count).map(({ index, star }) => ({
       starIndex: index,
-      radius: clamp(star.radius * random(1.0, 1.45), 1.15, 2.35),
-      alpha: random(0.46, 0.86),
-      phase: random(0, Math.PI * 2),
-      rate: random(0.00085, 0.0022),
+      radius: clamp(star.radius * random(1.15, 1.55), 1.25, 2.45),
+      alpha: random(0.58, 0.94),
       color: star.color
     }));
   }
@@ -297,9 +316,9 @@
 
     const area = state.width * state.height;
     const mobileFactor = state.width <= CONFIG.compactWidth
-      ? 0.64
+      ? 0.68
       : state.width <= CONFIG.mobileWidth
-        ? 0.80
+        ? 0.82
         : 1;
     const density = state.quality * mobileFactor;
 
@@ -317,10 +336,26 @@
     createClusterField();
     state.stars = Array.from({ length: starCount }, createStar);
     state.sparkles = createSparkles(sparkleCount);
+    state.activeSparkles.length = 0;
+  }
+
+  function applyCanvasSize(canvas, context, width, height, pixelRatio) {
+    canvas.width = Math.max(1, Math.round(width * pixelRatio));
+    canvas.height = Math.max(1, Math.round(height * pixelRatio));
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    context.imageSmoothingEnabled = true;
   }
 
   function resize() {
-    if (!state.canvas || !state.context || !state.mount) return;
+    if (
+      !state.baseCanvas ||
+      !state.baseContext ||
+      !state.overlayCanvas ||
+      !state.overlayContext ||
+      !state.mount
+    ) return;
 
     const width = Math.max(1, state.mount.clientWidth || state.scene.clientWidth || 1);
     const height = Math.max(1, state.mount.clientHeight || state.scene.clientHeight || 1);
@@ -338,153 +373,42 @@
     state.width = width;
     state.height = height;
     state.pixelRatio = pixelRatio;
-    state.canvas.width = Math.round(width * pixelRatio);
-    state.canvas.height = Math.round(height * pixelRatio);
-    state.canvas.style.width = `${width}px`;
-    state.canvas.style.height = `${height}px`;
-    state.context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    state.context.imageSmoothingEnabled = true;
+
+    applyCanvasSize(state.baseCanvas, state.baseContext, width, height, pixelRatio);
+    applyCanvasSize(state.overlayCanvas, state.overlayContext, width, height, pixelRatio);
     rebuildParticleField();
-    drawStaticFrame();
+    drawBase();
+    clearOverlay();
     publish({ lastAction: "starfield-resized" });
   }
 
-  function update(delta) {
-    for (const star of state.stars) {
-      star.x += star.driftX * delta;
-      star.y += star.driftY * delta;
+  function drawBase() {
+    const context = state.baseContext;
+    if (!context) return;
 
-      if (star.x < -4) star.x = state.width + 4;
-      else if (star.x > state.width + 4) star.x = -4;
-
-      if (star.y < -4) star.y = state.height + 4;
-      else if (star.y > state.height + 4) star.y = -4;
-    }
-  }
-
-  function drawStars(context, timestamp) {
+    context.clearRect(0, 0, state.width, state.height);
     context.save();
 
     for (const star of state.stars) {
-      const twinkle = state.reducedMotion
-        ? 1
-        : 0.72 + Math.sin(timestamp * star.twinkleRate + star.phase) * 0.28;
-      const alpha = clamp(star.alpha * twinkle, 0.035, 0.96);
-
-      if (star.depth > 0.72) {
-        context.fillStyle = `rgba(${star.color}, ${alpha * 0.13})`;
+      if (star.depth > 0.74) {
+        context.fillStyle = `rgba(${star.color}, ${star.alpha * 0.12})`;
         context.beginPath();
-        context.arc(star.x, star.y, star.radius * 2.8, 0, Math.PI * 2);
+        context.arc(star.x, star.y, star.radius * 2.7, 0, Math.PI * 2);
         context.fill();
       }
 
-      context.fillStyle = `rgba(${star.color}, ${alpha})`;
+      context.fillStyle = `rgba(${star.color}, ${clamp(star.alpha, 0.08, 0.94)})`;
       context.beginPath();
       context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
       context.fill();
     }
 
     context.restore();
+    state.baseDrawCount += 1;
   }
 
-  function drawSparkles(context, timestamp) {
-    if (state.reducedMotion) return;
-
-    context.save();
-    context.lineCap = "round";
-
-    for (const sparkle of state.sparkles) {
-      const star = state.stars[sparkle.starIndex];
-      if (!star) continue;
-
-      const pulse = 0.5 + Math.sin(timestamp * sparkle.rate + sparkle.phase) * 0.5;
-      if (pulse < 0.62) continue;
-
-      const alpha = sparkle.alpha * Math.pow(pulse, 2.4);
-      const reach = sparkle.radius * (2 + pulse * 2.8);
-
-      context.strokeStyle = `rgba(${sparkle.color}, ${alpha})`;
-      context.lineWidth = 0.72;
-      context.beginPath();
-      context.moveTo(star.x - reach, star.y);
-      context.lineTo(star.x + reach, star.y);
-      context.moveTo(star.x, star.y - reach);
-      context.lineTo(star.x, star.y + reach);
-      context.stroke();
-
-      context.fillStyle = `rgba(${sparkle.color}, ${clamp(alpha * 1.16, 0, 1)})`;
-      context.beginPath();
-      context.arc(star.x, star.y, sparkle.radius, 0, Math.PI * 2);
-      context.fill();
-    }
-
-    context.restore();
-  }
-
-  function draw(timestamp) {
-    const context = state.context;
-    if (!context) return;
-
-    context.clearRect(0, 0, state.width, state.height);
-    drawStars(context, timestamp);
-    drawSparkles(context, timestamp);
-  }
-
-  function drawStaticFrame() {
-    draw(performance.now());
-  }
-
-  function frame(timestamp) {
-    if (!state.running || state.destroyed || state.failed) return;
-
-    const delta = clamp(timestamp - state.lastFrameTime, 0, CONFIG.maximumDeltaMs);
-    state.lastFrameTime = timestamp;
-    state.accumulatedFrameTime += delta;
-    const targetFrameDuration = 1000 / CONFIG.frameRate;
-
-    if (state.accumulatedFrameTime >= targetFrameDuration) {
-      const renderStart = performance.now();
-      update(state.accumulatedFrameTime);
-      draw(timestamp);
-      registerRenderCost(performance.now() - renderStart, timestamp);
-      state.accumulatedFrameTime %= targetFrameDuration;
-    }
-
-    state.frameHandle = requestAnimationFrame(frame);
-  }
-
-  function registerRenderCost(renderCost, timestamp) {
-    state.renderCostSamples.push(renderCost);
-    if (state.renderCostSamples.length > 90) state.renderCostSamples.shift();
-    if (timestamp - state.lastAdaptiveCheck < CONFIG.adaptiveCheckIntervalMs) return;
-
-    state.lastAdaptiveCheck = timestamp;
-    if (!state.renderCostSamples.length) return;
-
-    const average = state.renderCostSamples.reduce((sum, value) => sum + value, 0) /
-      state.renderCostSamples.length;
-    state.renderCostSamples.length = 0;
-
-    if (average > CONFIG.adaptiveSlowRenderMs) {
-      setQuality(state.quality - CONFIG.adaptiveStepDown);
-    } else if (average < CONFIG.adaptiveFastRenderMs) {
-      setQuality(state.quality + CONFIG.adaptiveStepUp);
-    }
-  }
-
-  function setQuality(value) {
-    const next = clamp(
-      Number.isFinite(Number(value)) ? Number(value) : CONFIG.adaptiveMinimumQuality,
-      CONFIG.adaptiveMinimumQuality,
-      CONFIG.adaptiveMaximumQuality
-    );
-
-    if (Math.abs(next - state.quality) < 0.02) return false;
-    state.quality = next;
-    rebuildParticleField();
-    drawStaticFrame();
-    publish({ lastAction: "starfield-quality-updated" });
-    return true;
+  function clearOverlay() {
+    state.overlayContext?.clearRect(0, 0, state.width, state.height);
   }
 
   function canRun() {
@@ -495,47 +419,158 @@
       state.documentVisible &&
       state.sceneVisible &&
       !state.reducedMotion &&
-      state.context
+      state.overlayContext
     );
   }
 
-  function start() {
-    if (state.running || !canRun()) return false;
-    state.running = true;
-    state.lastFrameTime = performance.now();
-    state.accumulatedFrameTime = 0;
-    state.frameHandle = requestAnimationFrame(frame);
-    publish({ lastAction: "starfield-started" });
+  function clearTimers() {
+    if (state.burstTimer) clearTimeout(state.burstTimer);
+    if (state.frameTimer) clearTimeout(state.frameTimer);
+    state.burstTimer = 0;
+    state.frameTimer = 0;
+  }
+
+  function stopSparkles() {
+    clearTimers();
+    state.activeSparkles.length = 0;
+    clearOverlay();
+    publish({ lastAction: "starfield-sparkles-stopped" });
     return true;
   }
 
-  function stop() {
-    state.running = false;
-    if (state.frameHandle) cancelAnimationFrame(state.frameHandle);
-    state.frameHandle = 0;
-    publish({ lastAction: "starfield-stopped" });
+  function scheduleNextBurst(initial = false) {
+    if (!canRun() || state.burstTimer || state.frameTimer || state.activeSparkles.length) {
+      return false;
+    }
+
+    const delay = initial
+      ? random(CONFIG.firstBurstDelayMinimumMs, CONFIG.firstBurstDelayMaximumMs)
+      : random(CONFIG.burstDelayMinimumMs, CONFIG.burstDelayMaximumMs);
+
+    state.burstTimer = globalThis.setTimeout(() => {
+      state.burstTimer = 0;
+      beginBurst();
+    }, delay);
+
+    publish({ lastAction: "starfield-sparkle-burst-scheduled" });
+    return true;
+  }
+
+  function beginBurst() {
+    if (!canRun() || !state.sparkles.length) return false;
+
+    const available = [...state.sparkles].sort(() => Math.random() - 0.5);
+    const count = Math.random() < 0.24 ? 2 : 1;
+    const now = performance.now();
+
+    state.activeSparkles = available.slice(0, count).map(sparkle => ({
+      ...sparkle,
+      start: now,
+      duration: random(
+        CONFIG.burstDurationMinimumMs,
+        CONFIG.burstDurationMaximumMs
+      )
+    }));
+
+    drawSparkleFrame(now);
+    scheduleSparkleFrame();
+    publish({ lastAction: "starfield-sparkle-burst-started" });
+    return true;
+  }
+
+  function scheduleSparkleFrame() {
+    if (!canRun() || state.frameTimer || !state.activeSparkles.length) return;
+    state.frameTimer = globalThis.setTimeout(() => {
+      state.frameTimer = 0;
+      runSparkleFrame();
+    }, CONFIG.sparkleFrameIntervalMs);
+  }
+
+  function runSparkleFrame() {
+    if (!canRun()) {
+      stopSparkles();
+      return;
+    }
+
+    const now = performance.now();
+    state.activeSparkles = state.activeSparkles.filter(
+      sparkle => now - sparkle.start < sparkle.duration
+    );
+
+    drawSparkleFrame(now);
+
+    if (state.activeSparkles.length) scheduleSparkleFrame();
+    else {
+      clearOverlay();
+      scheduleNextBurst(false);
+      publish({ lastAction: "starfield-sparkle-burst-completed" });
+    }
+  }
+
+  function drawSparkleFrame(timestamp) {
+    const context = state.overlayContext;
+    if (!context) return;
+
+    context.clearRect(0, 0, state.width, state.height);
+    context.save();
+    context.lineCap = "round";
+
+    for (const sparkle of state.activeSparkles) {
+      const star = state.stars[sparkle.starIndex];
+      if (!star) continue;
+
+      const progress = clamp((timestamp - sparkle.start) / sparkle.duration, 0, 1);
+      const pulse = Math.sin(progress * Math.PI);
+      const alpha = sparkle.alpha * Math.pow(pulse, 2.15);
+      const reach = sparkle.radius * (1.8 + pulse * 3.2);
+
+      context.strokeStyle = `rgba(${sparkle.color}, ${alpha})`;
+      context.lineWidth = 0.74;
+      context.beginPath();
+      context.moveTo(star.x - reach, star.y);
+      context.lineTo(star.x + reach, star.y);
+      context.moveTo(star.x, star.y - reach);
+      context.lineTo(star.x, star.y + reach);
+      context.stroke();
+
+      context.fillStyle = `rgba(${sparkle.color}, ${clamp(alpha * 1.18, 0, 1)})`;
+      context.beginPath();
+      context.arc(star.x, star.y, sparkle.radius * (0.78 + pulse * 0.34), 0, Math.PI * 2);
+      context.fill();
+    }
+
+    context.restore();
+    state.sparkleFrameCount += 1;
+  }
+
+  function setQuality(value) {
+    const next = clamp(Number(value), 0.60, 1);
+    if (!Number.isFinite(next) || Math.abs(next - state.quality) < 0.02) return false;
+    state.quality = next;
+    rebuildParticleField();
+    drawBase();
+    clearOverlay();
+    publish({ lastAction: "starfield-quality-updated" });
+    return true;
   }
 
   function evaluateRunningState() {
     resolveReducedMotion();
-    if (canRun()) start();
-    else {
-      stop();
-      drawStaticFrame();
-    }
+    if (canRun()) scheduleNextBurst(true);
+    else stopSparkles();
   }
 
   function bindEnvironment() {
     state.motionQuery = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)") || null;
 
-    const onVisibility = () => {
+    state.onVisibility = () => {
       state.documentVisible = !document.hidden;
       evaluateRunningState();
     };
-    document.addEventListener("visibilitychange", onVisibility, { passive: true });
+    document.addEventListener("visibilitychange", state.onVisibility, { passive: true });
 
-    const onMotion = () => evaluateRunningState();
-    state.motionQuery?.addEventListener?.("change", onMotion);
+    state.onMotion = () => evaluateRunningState();
+    state.motionQuery?.addEventListener?.("change", state.onMotion);
 
     if (state.root && "MutationObserver" in globalThis) {
       state.motionObserver = new MutationObserver(evaluateRunningState);
@@ -568,17 +603,21 @@
     }
 
     globalThis.addEventListener("pagehide", destroy, { once: true });
-    state.listenersBound = true;
   }
 
   function destroy() {
     if (state.destroyed) return;
     state.destroyed = true;
-    stop();
+    stopSparkles();
     state.intersectionObserver?.disconnect();
     state.resizeObserver?.disconnect();
     state.motionObserver?.disconnect();
-    state.canvas?.remove();
+    if (state.onVisibility) {
+      document.removeEventListener("visibilitychange", state.onVisibility);
+    }
+    state.motionQuery?.removeEventListener?.("change", state.onMotion);
+    state.baseCanvas?.remove();
+    state.overlayCanvas?.remove();
     state.stars.length = 0;
     state.sparkles.length = 0;
     publish({ lastAction: "starfield-destroyed" });
@@ -586,7 +625,7 @@
 
   function initialize() {
     try {
-      createCanvas();
+      createCanvases();
       bindEnvironment();
       resolveReducedMotion();
       resize();

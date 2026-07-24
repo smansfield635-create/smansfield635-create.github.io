@@ -2,8 +2,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-// Composes the accepted Step 1, post-merge, Step 2, and bounded camera/living-presentation path-resolution overlays.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.camera-and-living-presentation-scope-reconciliation.js';
+// Composes accepted Step 1, post-merge, Step 2, camera-capacity, and audit-continuity overlays.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.camera-audit-continuity-scope-reconciliation.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

@@ -1,0 +1,98 @@
+name: H-Earth Capacity Refined Blob Publication
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-002
+
+permissions:
+  contents: write
+
+jobs:
+  publish-refined-blob:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout exact v2 candidate source
+        uses: actions/checkout@v4
+        with:
+          ref: 8934505b4f233904561b8c62975c1aadde8905d4
+          fetch-depth: 0
+
+      - name: Verify v2 source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "8934505b4f233904561b8c62975c1aadde8905d4"
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
+
+      - name: Materialize exact refined candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp showroom/globe/h-earth/capacity.js /tmp/refined-capacity.js
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('/tmp/refined-capacity.js')
+          source = path.read_text()
+          replacements = [
+              (
+                  " * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2\n",
+                  " * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3\n",
+                  'HEADER_IDENTITY'
+              ),
+              (
+                  " * Renews:\n * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1\n *\n * Purpose:",
+                  " * Renews:\n * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1\n *\n * Candidate supersedes:\n * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2\n *\n * Purpose:",
+                  'CANDIDATE_SUPERSESSION_HEADER'
+              ),
+              (
+                  "  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2';",
+                  "  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3';",
+                  'CONTRACT_IDENTITY'
+              ),
+              (
+                  "    verticalFovDegrees: 52,\n    nearPlane: 0.25,\n    farPlane: 512,",
+                  "    verticalFovDegrees: 52,\n    nearPlane: 0.25,\n    farPlane: 194,",
+                  'REFINED_INITIAL_FAR_PLANE'
+              ),
+              (
+                  "    'RE_EXECUTE_COMPOSITOR_AND_RENDERER_GAUGE_AGAINST_RECONCILED_CAMERA_ENVELOPE',",
+                  "    'EXECUTE_CURRENT_MAIN_COMPOSITOR_RENDERER_BROWSER_AND_INTERACTION_AUDIT_BEFORE_MERGE_APPROVAL',",
+                  'NEXT_REQUIRED'
+              )
+          ]
+          for before, after, identity in replacements:
+              observed = source.count(before)
+              if observed != 1:
+                  raise SystemExit(f'{identity}: expected 1, observed {observed}')
+              source = source.replace(before, after, 1)
+          path.write_text(source)
+          PY
+          node --check /tmp/refined-capacity.js
+          test "$(git hash-object /tmp/refined-capacity.js)" = "db604fa0eef6600642b024d4e9147b1f35530715"
+          test "$(sha256sum /tmp/refined-capacity.js | awk '{print $1}')" = "5f143055f144ea6077a111e2bf292635b8c370841bcf233f12227684e94bf10c"
+
+      - name: Publish orphan Git blob
+        id: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          encoded="$(base64 -w0 /tmp/refined-capacity.js)"
+          remote_sha="$(gh api --method POST "repos/${GITHUB_REPOSITORY}/git/blobs" -f content="$encoded" -f encoding='base64' --jq '.sha')"
+          test "$remote_sha" = "db604fa0eef6600642b024d4e9147b1f35530715"
+          echo "remote_sha=$remote_sha" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$remote_sha" > /tmp/refined-capacity-remote-blob.txt
+
+      - name: Upload publication receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-refined-blob-publication
+          path: |
+            /tmp/refined-capacity-remote-blob.txt
+            /tmp/refined-capacity.js
+          if-no-files-found: error

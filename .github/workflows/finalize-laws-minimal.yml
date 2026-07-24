@@ -1,0 +1,34 @@
+name: Finalize Laws bounded correction
+
+on:
+  push:
+    paths:
+      - ".laws-finalize-trigger"
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply Laws transformation
+        run: python .github/scripts/finalize_laws.py
+
+      - name: Validate JavaScript
+        run: |
+          node --check laws/index.crystals.js
+          node --check laws/index.interactions.js
+
+      - name: Commit bounded Laws correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Apply Laws Compass contrast labels and collapsed disclosures"
+          git push origin HEAD:main

@@ -1,0 +1,173 @@
+name: Universal Compass Route Shell Validation
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-route-shell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify route shell boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object prototypes/universal-compass/index.html)" = "b9f39f7c3e52b4e7afd5ce533460aa8d4957c76a"
+          test "$(git hash-object prototypes/universal-compass/index.css)" = "9265c26fd406ccc2c729c2c992c8d03ad6c1a4fa"
+          test "$(git hash-object prototypes/universal-compass/index.js)" = "dfa63689b54044fbbfd3fac0b3ea647874329632"
+          node --experimental-default-type=module --check prototypes/universal-compass/index.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.planet.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.crystals.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.controller.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.compositor.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.interactions.js
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('prototypes/universal-compass/index.html').read_text()
+          css = Path('prototypes/universal-compass/index.css').read_text()
+          js = Path('prototypes/universal-compass/index.js').read_text()
+          assert '<script type="module" src="./index.js"></script>' in html
+          assert '<script type="module">' not in html
+          assert '.reference__visual { pointer-events: none; }' in css
+          assert '.reference__semantic { z-index: 2; }' in css
+          for source in ('index.planet.js','index.crystals.js','index.controller.js','index.compositor.js','index.interactions.js'):
+              assert source in js
+          PY
+
+      - name: Install Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.58.2 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Execute route shell
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/universal-compass-route-shell
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/universal-compass-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+          const receiptPath = '/tmp/universal-compass-route-shell/receipt.json';
+          const errors = [];
+          const assert = (condition, code, details = null) => {
+            if (condition) return;
+            const error = new Error(code);
+            error.details = details;
+            throw error;
+          };
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+            page.on('pageerror', error => errors.push(error.message));
+            page.on('console', message => {
+              if (message.type() === 'error') errors.push(message.text());
+            });
+
+            try {
+              await page.goto('http://127.0.0.1:4173/prototypes/universal-compass/index.html');
+              await page.waitForSelector('html[data-compass-runtime="ready"]');
+              await page.waitForSelector('.reference-node-control[data-node-id="NORTH"]');
+
+              const initial = await page.evaluate(() => ({
+                status: window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus(),
+                visualCount: document.querySelectorAll('.reference-node-visual').length,
+                semanticCount: document.querySelectorAll('.reference-node-control').length,
+                externalModules: [...document.scripts].filter(script => script.type === 'module' && script.src).length,
+                inlineModules: [...document.scripts].filter(script => script.type === 'module' && !script.src).length,
+                projectionFrozen: Object.isFrozen(window.__UNIVERSAL_COMPASS_REFERENCE__.getLastProjection())
+              }));
+
+              assert(initial.status.runtime === 'ready', 'ROUTE_NOT_READY', initial);
+              assert(initial.visualCount === 5, 'INITIAL_VISUAL_COUNT_INVALID', initial);
+              assert(initial.semanticCount === 4, 'INITIAL_SEMANTIC_COUNT_INVALID', initial);
+              assert(initial.externalModules === 1 && initial.inlineModules === 0, 'MODULE_BOUNDARY_INVALID', initial);
+              assert(initial.projectionFrozen, 'PROJECTION_NOT_FROZEN', initial);
+
+              await page.locator('.reference-node-control[data-node-id="NORTH"]').click();
+              await page.waitForFunction(() =>
+                window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().presentation === 'CLUSTER'
+              );
+              await page.waitForSelector('.reference-node-control[data-node-kind="CHILD"]');
+
+              const beforeDrag = await page.evaluate(() =>
+                window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().inputRevision
+              );
+              const field = page.locator('[data-reference-field]');
+              const box = await field.boundingBox();
+              assert(box, 'FIELD_BOUNDS_UNAVAILABLE');
+              await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+              await page.mouse.down();
+              await page.mouse.move(box.x + box.width / 2 + 32, box.y + box.height / 2 + 10, { steps: 4 });
+              await page.mouse.up();
+              await page.waitForFunction(previous =>
+                window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().inputRevision > previous,
+                beforeDrag
+              );
+
+              const finalState = await page.evaluate(() =>
+                window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus()
+              );
+              assert(errors.length === 0, 'BROWSER_ERRORS_PRESENT', errors);
+
+              fs.writeFileSync(receiptPath, JSON.stringify({
+                schema: 'DGB_UNIVERSAL_COMPASS_ROUTE_SHELL_VALIDATION_RECEIPT_v1',
+                status: 'PASS',
+                sourceCommit: process.env.GITHUB_SHA,
+                htmlBlob: 'b9f39f7c3e52b4e7afd5ce533460aa8d4957c76a',
+                cssBlob: '9265c26fd406ccc2c729c2c992c8d03ad6c1a4fa',
+                bootstrapBlob: 'dfa63689b54044fbbfd3fac0b3ea647874329632',
+                initial,
+                finalState,
+                errors,
+                claims: {
+                  htmlStageAndMounts: true,
+                  cssOwnsLayering: true,
+                  bootstrapLoadedExternally: true,
+                  fiveAuthoritiesConstructed: true,
+                  clusterOpened: true,
+                  pointerReachedInteractions: true,
+                  visualAcceptance: false,
+                  productAuthority: false,
+                  productionAuthority: false
+                }
+              }, null, 2));
+            } catch (error) {
+              fs.writeFileSync(receiptPath, JSON.stringify({
+                schema: 'DGB_UNIVERSAL_COMPASS_ROUTE_SHELL_VALIDATION_RECEIPT_v1',
+                status: 'FAIL',
+                error: { message: error.message, details: error.details || null, stack: error.stack },
+                errors
+              }, null, 2));
+              throw error;
+            } finally {
+              await browser.close();
+            }
+          })().catch(error => {
+            console.error(error);
+            process.exitCode = 1;
+          });
+          NODE
+
+      - name: Preserve receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-route-shell-validation-receipt
+          path: /tmp/universal-compass-route-shell/receipt.json
+          if-no-files-found: error
+          retention-days: 90

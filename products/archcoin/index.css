@@ -1,5 +1,6 @@
 /* /products/archcoin/index.css
    ARCHCOIN accepted production presentation.
+   Selective recovery: static non-repeating universe depth without a runtime loop.
 */
 @import url("./index.base.css");
 @import url("./index.presentation.css");
@@ -8,6 +9,100 @@
 html::before {
   content: none !important;
   display: none !important;
+}
+
+/* Remove the inherited tiled star surface. */
+body::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* Preserve atmospheric depth without restoring the old square grid. */
+body::after {
+  opacity: 1;
+  background:
+    radial-gradient(circle at 11% 17%, rgba(73, 135, 149, 0.075), transparent 27%),
+    radial-gradient(circle at 87% 64%, rgba(187, 145, 76, 0.048), transparent 30%),
+    radial-gradient(ellipse at 48% 108%, rgba(35, 74, 88, 0.11), transparent 47%),
+    linear-gradient(180deg, rgba(2, 7, 11, 0.06), rgba(2, 7, 11, 0.34));
+  background-size: auto;
+}
+
+.archcoin-atmosphere__stars {
+  overflow: hidden;
+  opacity: 1;
+  background: none !important;
+  contain: strict;
+}
+
+.archcoin-atmosphere__stars::before,
+.archcoin-atmosphere__stars::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+
+/* Distant field: small, dim, and intentionally irregular. */
+.archcoin-atmosphere__stars::before {
+  opacity: 0.46;
+  background-image:
+    radial-gradient(circle at 4.7% 8.2%, rgba(241, 235, 216, 0.48) 0 0.48px, transparent 1.35px),
+    radial-gradient(circle at 13.4% 31.7%, rgba(154, 217, 225, 0.35) 0 0.52px, transparent 1.42px),
+    radial-gradient(circle at 8.1% 79.3%, rgba(241, 235, 216, 0.39) 0 0.44px, transparent 1.28px),
+    radial-gradient(circle at 22.6% 14.9%, rgba(234, 208, 131, 0.30) 0 0.58px, transparent 1.52px),
+    radial-gradient(circle at 27.9% 57.6%, rgba(241, 235, 216, 0.43) 0 0.50px, transparent 1.40px),
+    radial-gradient(circle at 19.3% 92.1%, rgba(154, 217, 225, 0.29) 0 0.46px, transparent 1.31px),
+    radial-gradient(circle at 36.8% 24.2%, rgba(241, 235, 216, 0.37) 0 0.42px, transparent 1.24px),
+    radial-gradient(circle at 42.1% 72.7%, rgba(170, 155, 224, 0.27) 0 0.54px, transparent 1.46px),
+    radial-gradient(circle at 49.6% 10.6%, rgba(154, 217, 225, 0.34) 0 0.50px, transparent 1.38px),
+    radial-gradient(circle at 53.7% 47.9%, rgba(241, 235, 216, 0.42) 0 0.46px, transparent 1.32px),
+    radial-gradient(circle at 58.9% 88.4%, rgba(234, 208, 131, 0.28) 0 0.56px, transparent 1.48px),
+    radial-gradient(circle at 66.2% 19.8%, rgba(241, 235, 216, 0.39) 0 0.44px, transparent 1.29px),
+    radial-gradient(circle at 71.8% 61.5%, rgba(154, 217, 225, 0.32) 0 0.52px, transparent 1.43px),
+    radial-gradient(circle at 77.4% 37.1%, rgba(241, 235, 216, 0.35) 0 0.48px, transparent 1.35px),
+    radial-gradient(circle at 83.9% 83.2%, rgba(170, 155, 224, 0.25) 0 0.50px, transparent 1.39px),
+    radial-gradient(circle at 91.6% 12.7%, rgba(234, 208, 131, 0.29) 0 0.58px, transparent 1.53px),
+    radial-gradient(circle at 95.1% 52.4%, rgba(241, 235, 216, 0.41) 0 0.44px, transparent 1.29px),
+    radial-gradient(circle at 88.3% 95.6%, rgba(154, 217, 225, 0.30) 0 0.50px, transparent 1.39px);
+}
+
+/* Near field: fewer circular points with broader optical halos. */
+.archcoin-atmosphere__stars::after {
+  opacity: 0.72;
+  background-image:
+    radial-gradient(circle at 9.8% 46.3%, rgba(241, 235, 216, 0.78) 0 0.72px, rgba(241, 235, 216, 0.20) 1.2px, transparent 2.25px),
+    radial-gradient(circle at 24.7% 86.8%, rgba(154, 217, 225, 0.68) 0 0.80px, rgba(154, 217, 225, 0.16) 1.4px, transparent 2.45px),
+    radial-gradient(circle at 33.2% 6.9%, rgba(234, 208, 131, 0.66) 0 0.76px, rgba(234, 208, 131, 0.15) 1.35px, transparent 2.35px),
+    radial-gradient(circle at 46.4% 63.1%, rgba(241, 235, 216, 0.76) 0 0.84px, rgba(241, 235, 216, 0.17) 1.45px, transparent 2.60px),
+    radial-gradient(circle at 61.7% 31.4%, rgba(154, 217, 225, 0.69) 0 0.78px, rgba(154, 217, 225, 0.16) 1.36px, transparent 2.42px),
+    radial-gradient(circle at 73.6% 91.7%, rgba(241, 235, 216, 0.73) 0 0.82px, rgba(241, 235, 216, 0.16) 1.42px, transparent 2.50px),
+    radial-gradient(circle at 84.8% 20.9%, rgba(170, 155, 224, 0.60) 0 0.74px, rgba(170, 155, 224, 0.14) 1.30px, transparent 2.32px),
+    radial-gradient(circle at 93.7% 73.8%, rgba(234, 208, 131, 0.64) 0 0.80px, rgba(234, 208, 131, 0.14) 1.40px, transparent 2.48px);
+}
+
+/* Replace the inherited repeating lattice with broad, non-geometric depth light. */
+.archcoin-atmosphere__grid {
+  opacity: 0.21;
+  background:
+    radial-gradient(ellipse at 51% -16%, rgba(154, 217, 225, 0.10), transparent 51%),
+    radial-gradient(ellipse at 12% 74%, rgba(75, 132, 145, 0.055), transparent 34%),
+    radial-gradient(ellipse at 91% 58%, rgba(193, 150, 79, 0.040), transparent 31%),
+    linear-gradient(180deg, transparent 0%, rgba(2, 9, 14, 0.11) 55%, rgba(2, 7, 11, 0.31) 100%);
+  background-size: auto;
+  mask-image: none;
+}
+
+@media (max-width: 820px) {
+  .archcoin-atmosphere__stars::before {
+    opacity: 0.40;
+  }
+
+  .archcoin-atmosphere__stars::after {
+    opacity: 0.64;
+  }
 }
 
 [data-archcoin-scene-field].is-archcoin-dragging,

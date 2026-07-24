@@ -1,5 +1,6 @@
 /* /products/archcoin/index.interactions.js
    ARCHCOIN accepted interaction and center-world assembly.
+   Performance baseline: semantic-first setup and deferred source realization.
 */
 (() => {
   "use strict";
@@ -7,15 +8,63 @@
   const MOTION_SOURCE_URL = "./index.motion.source.js";
   const PLANET_URL = "./index.planet.js";
   const MOTION_READY_EVENT = "ARCHCOIN_ACCEPTED_MOTION_READY";
+  const MOTION_SCRIPT_ATTRIBUTE = "data-archcoin-accepted-motion-source";
+  const PLANET_SCRIPT_ATTRIBUTE = "data-archcoin-planet-wrapper";
+  const runtime = globalThis.DGB_ARCHCOIN_RUNTIME ||
+    (globalThis.DGB_ARCHCOIN_RUNTIME = {});
+
+  function installAccessibleNames() {
+    const labels = Object.freeze({
+      contract: "Open Contract financial domain",
+      receivable: "Open Receivable financial domain",
+      payable: "Open Payable financial domain",
+      allocation: "Open Allocation financial domain"
+    });
+
+    for (const control of document.querySelectorAll("button[data-archcoin-coin]")) {
+      const coinId = String(control.dataset.coinId || "").trim();
+      const label = labels[coinId];
+      if (!label) continue;
+
+      control.setAttribute("aria-label", label);
+      if (!control.hasAttribute("aria-expanded")) {
+        control.setAttribute("aria-expanded", "false");
+      }
+    }
+
+    const root = document.querySelector("[data-archcoin-root]");
+    if (root) {
+      root.dataset.archcoinAccessibleNamesInstalled = "true";
+    }
+  }
+
+  function afterFirstPaint(task) {
+    return new Promise((resolve, reject) => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const run = () => Promise.resolve()
+            .then(task)
+            .then(resolve, reject);
+
+          if (typeof requestIdleCallback === "function") {
+            requestIdleCallback(run, { timeout: 1600 });
+          } else {
+            setTimeout(run, 0);
+          }
+        });
+      });
+    });
+  }
 
   function loadScript(url, marker) {
     return new Promise((resolve, reject) => {
-      const existing = document.querySelector(`script[data-${marker}]`);
+      const existing = document.querySelector(`script[${marker}]`);
       if (existing) {
         if (existing.dataset.ready === "true") {
           resolve(existing);
         } else {
           existing.addEventListener("load", () => resolve(existing), { once: true });
+          existing.addEventListener("error", reject, { once: true });
         }
         return;
       }
@@ -23,24 +72,65 @@
       const script = document.createElement("script");
       script.src = url;
       script.async = false;
-      script.dataset[marker] = "true";
+      script.setAttribute(marker, "true");
       script.addEventListener("load", () => {
         script.dataset.ready = "true";
         resolve(script);
       }, { once: true });
-      script.addEventListener("error", () => reject(new Error(`ARCHCOIN_SCRIPT_LOAD_FAILED:${url}`)), { once: true });
+      script.addEventListener("error", () => {
+        reject(new Error(`ARCHCOIN_SCRIPT_LOAD_FAILED:${url}`));
+      }, { once: true });
       document.head.append(script);
     });
   }
 
-  function loadSourceSynchronously(url) {
-    const request = new XMLHttpRequest();
-    request.open("GET", url, false);
-    request.send(null);
-    if (request.status < 200 || request.status >= 300) {
-      throw new Error(`ARCHCOIN_MOTION_SOURCE_LOAD_FAILED:${request.status}`);
+  async function fetchSource(url) {
+    const response = await fetch(url, {
+      credentials: "same-origin",
+      cache: "force-cache"
+    });
+
+    if (!response.ok) {
+      throw new Error(`ARCHCOIN_MOTION_SOURCE_LOAD_FAILED:${response.status}`);
     }
-    return request.responseText;
+
+    return response.text();
+  }
+
+  function executeSource(source) {
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector(`script[${MOTION_SCRIPT_ATTRIBUTE}]`);
+      if (existing) {
+        if (existing.dataset.ready === "true") {
+          resolve(existing);
+        } else {
+          existing.addEventListener("load", () => resolve(existing), { once: true });
+          existing.addEventListener("error", reject, { once: true });
+        }
+        return;
+      }
+
+      const blob = new Blob([
+        source,
+        "\n//# sourceURL=/products/archcoin/index.motion.accepted.js"
+      ], { type: "text/javascript" });
+      const blobUrl = URL.createObjectURL(blob);
+      const script = document.createElement("script");
+
+      script.src = blobUrl;
+      script.async = false;
+      script.setAttribute(MOTION_SCRIPT_ATTRIBUTE, "true");
+      script.addEventListener("load", () => {
+        script.dataset.ready = "true";
+        URL.revokeObjectURL(blobUrl);
+        resolve(script);
+      }, { once: true });
+      script.addEventListener("error", event => {
+        URL.revokeObjectURL(blobUrl);
+        reject(event);
+      }, { once: true });
+      document.head.append(script);
+    });
   }
 
   function publish(detail = {}) {
@@ -48,6 +138,9 @@
       module: "DGB_ARCHCOIN_ACCEPTED_PRODUCTION",
       acceptedMirrorInstalled: true,
       productionIdentity: true,
+      loadingMode: "semantic-first-asynchronous",
+      synchronousXhrUsed: false,
+      evalUsed: false,
       ...detail
     });
     globalThis.DGB_ARCHCOIN_ACCEPTED_PRODUCTION = receipt;
@@ -81,11 +174,16 @@
     }
 
     await host.mount(mount);
-    publish({ installed: true, centerWorldMounted: true });
+    publish({
+      installed: true,
+      centerWorldMounted: true,
+      accessibleNamesInstalled: true,
+      environmentalSuspension: true
+    });
   }
 
-  function evaluateAcceptedMotion() {
-    let source = loadSourceSynchronously(MOTION_SOURCE_URL);
+  async function evaluateAcceptedMotion() {
+    let source = await fetchSource(MOTION_SOURCE_URL);
     source = source
       .replaceAll("/* /prototypes/universal-compass/archcoin.interactions.round3.js", "/* /products/archcoin/index.motion.source.js")
       .replaceAll("ARCHCOIN calibration lab · Round 3.", "ARCHCOIN accepted production motion.")
@@ -102,33 +200,51 @@
       .replaceAll("archcoinCalibration", "archcoinProduction")
       .replaceAll("is-calibration-", "is-archcoin-");
 
-    source += "\n//# sourceURL=/products/archcoin/index.motion.accepted.js";
-    (0, eval)(source);
+    await executeSource(source);
   }
 
   async function install() {
-    await loadScript(PLANET_URL, "archcoinPlanetSource");
+    installAccessibleNames();
+
+    if (runtime.crystalsReady) {
+      await runtime.crystalsReady;
+    }
 
     let mounted = false;
     const mountOnce = () => {
       if (mounted) return;
       mounted = true;
-      mountCenterWorld().catch(error => publish({ installed: false, error: error.message }));
+
+      loadScript(PLANET_URL, PLANET_SCRIPT_ATTRIBUTE)
+        .then(() => runtime.planetReady || globalThis.DGB_ARCHCOIN_CENTER_WORLD)
+        .then(() => mountCenterWorld())
+        .catch(error => publish({
+          installed: false,
+          accessibleNamesInstalled: true,
+          error: error instanceof Error ? error.message : String(error)
+        }));
     };
 
     globalThis.addEventListener(MOTION_READY_EVENT, mountOnce, { once: true });
-    evaluateAcceptedMotion();
+    await afterFirstPaint(evaluateAcceptedMotion);
 
     if (globalThis.DGB_ARCHCOIN_ACCEPTED_INTERACTIONS) {
       mountOnce();
     }
+
+    return globalThis.DGB_ARCHCOIN_ACCEPTED_INTERACTIONS;
   }
 
-  const start = () => install().catch(error => publish({ installed: false, error: error instanceof Error ? error.message : String(error) }));
+  installAccessibleNames();
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
-  } else {
-    start();
+  if (!runtime.interactionsReady) {
+    runtime.interactionsReady = install().catch(error => {
+      publish({
+        installed: false,
+        accessibleNamesInstalled: true,
+        error: error instanceof Error ? error.message : String(error)
+      });
+      throw error;
+    });
   }
 })();

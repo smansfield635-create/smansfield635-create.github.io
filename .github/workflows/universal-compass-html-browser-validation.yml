@@ -1,0 +1,275 @@
+name: Universal Compass HTML Browser Validation
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-html-browser-entry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify bounded HTML identity and source boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object prototypes/universal-compass/index.html)" = "61b0a0d83d5e21219914cb5c741bd41e97ca3fe2"
+          ! grep -q 'src="./index.js"' prototypes/universal-compass/index.html
+          test "$(grep -c '<script type="module">' prototypes/universal-compass/index.html)" = "1"
+          for module in planet crystals controller compositor interactions; do
+            grep -q "import(\"./index.${module}.js\")" prototypes/universal-compass/index.html
+            node --experimental-default-type=module --check "prototypes/universal-compass/index.${module}.js"
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('prototypes/universal-compass/index.html').read_text()
+          match = re.search(r'<script type="module">\s*(.*?)\s*</script>', html, re.S)
+          assert match, 'INLINE_MODULE_REQUIRED'
+          Path('/tmp/universal-compass-inline.mjs').write_text(match.group(1))
+          PY
+          node --check /tmp/universal-compass-inline.mjs
+
+      - name: Install Chromium browser harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Execute browser-entry fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory . >/tmp/universal-compass-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
+          node --input-type=module <<'NODE' > /tmp/universal-compass-html-browser-receipt.json
+          import { chromium } from "playwright";
+
+          const findings = [];
+          const assert = (condition, id, details = null) => {
+            findings.push({ id, pass: Boolean(condition), details });
+            if (condition) return;
+            const error = new Error(id);
+            error.details = details;
+            throw error;
+          };
+
+          const browser = await chromium.launch({ headless: true });
+          const page = await browser.newPage({
+            viewport: { width: 1280, height: 900 },
+            deviceScaleFactor: 1
+          });
+          const consoleErrors = [];
+          const pageErrors = [];
+          page.on("console", message => {
+            if (message.type() === "error") consoleErrors.push(message.text());
+          });
+          page.on("pageerror", error => pageErrors.push(error.message));
+
+          await page.goto(
+            "http://127.0.0.1:4173/prototypes/universal-compass/index.html",
+            { waitUntil: "networkidle" }
+          );
+          await page.waitForFunction(() =>
+            document.documentElement.dataset.compassRuntime === "ready"
+          );
+
+          let status = await page.evaluate(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus()
+          );
+          assert(status.runtime === "ready", "BROWSER_RUNTIME_READY", status);
+          assert(status.worldRevision === 1, "WORLD_REVISION_VISIBLE", status);
+          assert(status.projectionRevision > 0, "INITIAL_PROJECTION_EXECUTED", status);
+          assert(status.presentation === "CONSTELLATION", "INITIAL_CONSTELLATION", status);
+          assert(await page.locator(".reference-node-visual").count() === 5, "CONSTELLATION_VISIBLE_RECORDS");
+          assert(await page.locator(".reference-node-control").count() === 4, "CONSTELLATION_SEMANTIC_CONTROLS");
+          assert(consoleErrors.length === 0, "NO_INITIAL_CONSOLE_ERRORS", consoleErrors);
+          assert(pageErrors.length === 0, "NO_INITIAL_PAGE_ERRORS", pageErrors);
+
+          await page.locator('[data-node-id="NORTH"]').focus();
+          await page.keyboard.press("Enter");
+          await page.waitForFunction(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().presentation === "CLUSTER"
+          );
+          status = await page.evaluate(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus()
+          );
+          assert(status.presentation === "CLUSTER", "KEYBOARD_CLUSTER_OPEN", status);
+          assert(await page.locator(".reference-node-visual").count() === 6, "CLUSTER_VISIBLE_RECORDS");
+          assert(await page.locator(".reference-node-control").count() === 4, "CLUSTER_CHILD_CONTROLS");
+
+          await page.locator('[data-node-id="NORTH_CHILD_1"]').focus();
+          await page.keyboard.press("Enter");
+          await page.waitForFunction(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().selectedChildId === "NORTH_CHILD_1"
+          );
+          status = await page.evaluate(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus()
+          );
+          assert(status.selectedChildId === "NORTH_CHILD_1", "KEYBOARD_CHILD_SELECTION", status);
+
+          await page.locator("[data-reference-constellation]").click();
+          await page.waitForFunction(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().presentation === "CONSTELLATION"
+          );
+
+          const field = page.locator("[data-reference-field]");
+          const box = await field.boundingBox();
+          assert(Boolean(box), "FIELD_BOUNDING_BOX_AVAILABLE", box);
+          const startX = box.x + box.width * 0.50;
+          const startY = box.y + box.height * 0.50;
+          await page.mouse.move(startX, startY);
+          await page.mouse.down();
+          await page.mouse.move(startX + 48, startY + 18, { steps: 6 });
+          await page.mouse.up();
+          await page.waitForTimeout(150);
+
+          const dragState = await page.evaluate(() => {
+            const reference = window.__UNIVERSAL_COMPASS_REFERENCE__;
+            return {
+              status: reference.getStatus(),
+              controller: reference.controller.getState(),
+              activePointer: reference.interactions.getActive(),
+              projection: reference.getLastProjection()
+            };
+          });
+          assert(dragState.status.inputRevision >= 3, "POINTER_INPUT_REVISION_ADVANCED", dragState.status);
+          assert(dragState.activePointer === null, "DRAG_POINTER_CLEARED", dragState.activePointer);
+          assert(
+            dragState.controller.constellation.primaryId.length > 0,
+            "DRAG_PRIMARY_COMMITTED",
+            dragState.controller.constellation
+          );
+          assert(
+            dragState.projection.projectionRevision > status.projectionRevision,
+            "DRAG_REPROJECTED",
+            dragState.projection.projectionRevision
+          );
+          assert(
+            Object.isFrozen(dragState.projection),
+            "BROWSER_PROJECTION_IMMUTABLE"
+          );
+
+          const north = page.locator('[data-node-id="NORTH"]');
+          await north.click({ position: { x: 20, y: 20 } });
+          await page.waitForFunction(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().presentation === "CLUSTER"
+          );
+          status = await page.evaluate(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus()
+          );
+          assert(status.presentation === "CLUSTER", "POINTER_TAP_CLUSTER_OPEN", status);
+
+          await page.locator("[data-reference-constellation]").click();
+          await page.waitForFunction(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().presentation === "CONSTELLATION"
+          );
+
+          await page.mouse.move(startX, startY);
+          await page.mouse.down();
+          await page.mouse.move(startX + 36, startY + 12, { steps: 4 });
+          await page.evaluate(() =>
+            document.querySelector("[data-reference-hold]").click()
+          );
+          await page.mouse.up();
+          await page.waitForTimeout(100);
+          const heldState = await page.evaluate(() => {
+            const reference = window.__UNIVERSAL_COMPASS_REFERENCE__;
+            return {
+              status: reference.getStatus(),
+              activePointer: reference.interactions.getActive(),
+              gestureActive: reference.controller.getState().constellation.gestureActive
+            };
+          });
+          assert(heldState.status.held === true, "HELD_STATE_ENTERED", heldState);
+          assert(heldState.activePointer === null, "HELD_TRANSITION_CLEARS_POINTER", heldState);
+          assert(heldState.gestureActive === false, "HELD_TRANSITION_CLEARS_GESTURE", heldState);
+          assert(await page.locator(".reference-node-control").count() === 0, "HELD_REMOVES_INTERACTION_CONTROLS");
+
+          await page.locator("[data-reference-hold]").click();
+          await page.waitForFunction(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().held === false
+          );
+          await page.locator("[data-reference-reduced-motion]").click();
+          const reducedState = await page.evaluate(() => ({
+            status: window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus(),
+            controller: window.__UNIVERSAL_COMPASS_REFERENCE__.controller.getState(),
+            effectiveRate: window.__UNIVERSAL_COMPASS_REFERENCE__.interactions.getProfile().radiansPerPixel
+          }));
+          assert(reducedState.controller.reducedMotion === true, "CONTROLLER_REDUCED_MOTION_TOGGLED", reducedState);
+          assert(reducedState.effectiveRate > 0, "LOCKED_INTERACTION_PROFILE_AVAILABLE", reducedState);
+
+          assert(consoleErrors.length === 0, "NO_FINAL_CONSOLE_ERRORS", consoleErrors);
+          assert(pageErrors.length === 0, "NO_FINAL_PAGE_ERRORS", pageErrors);
+          assert(
+            await page.locator('[data-reference-receipt]').textContent() !== "No local receipt yet.",
+            "LOCAL_RECEIPT_PUBLISHED"
+          );
+          assert(
+            await page.locator('[data-reference-status]').textContent().then(text => text.startsWith("Ready")),
+            "READY_STATUS_PUBLISHED"
+          );
+
+          await page.screenshot({
+            path: "/tmp/universal-compass-html-browser.png",
+            fullPage: true
+          });
+
+          const finalStatus = await page.evaluate(() =>
+            window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus()
+          );
+          await browser.close();
+
+          const failed = findings.filter(finding => !finding.pass);
+          console.log(JSON.stringify({
+            schema: "DGB_UNIVERSAL_COMPASS_HTML_BROWSER_ENTRY_VALIDATION_RECEIPT_v1",
+            status: failed.length === 0 ? "PASS" : "FAIL",
+            findingCount: findings.length,
+            passed: findings.length - failed.length,
+            failed: failed.length,
+            sourceCommit: process.env.GITHUB_SHA,
+            htmlBlobExpected: "61b0a0d83d5e21219914cb5c741bd41e97ca3fe2",
+            finalStatus,
+            findings,
+            consoleErrors,
+            pageErrors,
+            claims: {
+              inlineFiveAuthorityBootstrapExecuted: true,
+              missingIndexJsDependencyRemoved: true,
+              constellationBrowserExecution: true,
+              clusterBrowserExecution: true,
+              keyboardActivationExecuted: true,
+              pointerTapExecuted: true,
+              pointerDragExecuted: true,
+              heldTransitionExecuted: true,
+              reducedMotionControlExecuted: true,
+              browserAcceptance: false,
+              visualAcceptance: false,
+              productAuthority: false,
+              productionAuthority: false
+            }
+          }, null, 2));
+          NODE
+
+      - name: Preserve browser validation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-html-browser-validation-evidence
+          path: |
+            /tmp/universal-compass-html-browser-receipt.json
+            /tmp/universal-compass-html-browser.png
+            /tmp/universal-compass-http.log
+          if-no-files-found: error
+          retention-days: 90

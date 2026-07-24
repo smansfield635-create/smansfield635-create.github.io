@@ -1,0 +1,96 @@
+{
+  "artifactId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_SUCCESSOR_ACTIVATION_TRANSITION_CONTRACT_CANDIDATE_v1",
+  "programId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_v1",
+  "step": 1,
+  "checkpoint": "1A_IDENTITY_AND_BOUNDARY",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED_NOT_ACTIVE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-lifecycle-control-plane-step-1-001",
+  "baseCommit": "ac989785076d1473d6be81b5766e4ce51c3e6827",
+  "acceptedMainCommit": "465596de77ef0a28a7f779e06851130f4768e445",
+  "validatedSuccessor": {
+    "successorId": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_CANDIDATE_v2",
+    "registryVersion": "1.0.0-candidate.2",
+    "candidatePath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js",
+    "candidateGitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+    "identityPath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.identity.json",
+    "identityGitBlobSha": "a5d6ae2f64c7f8ac868aef70aa895bf9979be202",
+    "contentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8",
+    "validated": true,
+    "accepted": false,
+    "active": false,
+    "canonical": false
+  },
+  "scope": {
+    "authorized": [
+      "DEFINE_LIFECYCLE_STATES",
+      "DEFINE_PERMITTED_STATE_TRANSITIONS",
+      "DEFINE_TRANSITION_PRECONDITIONS",
+      "DEFINE_TRANSITION_POSTCONDITIONS",
+      "DEFINE_REQUIRED_ACTOR_CLASSES",
+      "DEFINE_REQUIRED_EVIDENCE_CLASSES",
+      "DEFINE_ATOMIC_ARTIFACT_SET",
+      "DEFINE_FAILURE_DISPOSITIONS",
+      "DEFINE_REPLAY_AND_STOPPING_RULES",
+      "BUILD_READ_ONLY_STATE_MACHINE_EVALUATOR",
+      "BUILD_AND_EXECUTE_STEP_1_FIXTURES_AND_AUDIT"
+    ],
+    "notAuthorized": [
+      "BIND_ACTUAL_ACTOR_IDENTITIES",
+      "ISSUE_TRANSITION_APPROVAL",
+      "CREATE_EXECUTION_AUTHORITY",
+      "MUTATE_BOOTSTRAP",
+      "ACTIVATE_SUCCESSOR",
+      "CHANGE_ACTIVE_REGISTRY_REFERENCE",
+      "MERGE_TO_MAIN",
+      "CANONICALIZE",
+      "PROMOTE_SOURCE",
+      "DEPLOY",
+      "CREATE_PRODUCTION_AUTHORITY",
+      "CREATE_GENERAL_REPOSITORY_MUTATION_AUTHORITY"
+    ]
+  },
+  "lifecycleStateOrder": [
+    "CANDIDATE",
+    "VALIDATED",
+    "ACCEPTED",
+    "ACTIVE",
+    "SUPERSEDED",
+    "RETIRED"
+  ],
+  "firstControlledOperation": {
+    "name": "SUCCESSOR_ACTIVATION",
+    "sequence": [
+      "VALIDATED_TO_ACCEPTED",
+      "ACCEPTED_TO_ACTIVE"
+    ],
+    "definitionOnly": true,
+    "executionAuthorized": false
+  },
+  "separationOfPowers": {
+    "validator": "MAY_EVALUATE_AND_PRODUCE_A_NONAUTHORIZING_DECISION",
+    "approvingAuthority": "MUST_BE_BOUND_SEPARATELY_IN_STEP_2",
+    "executor": "MUST_BE_CREATED_SEPARATELY_IN_STEP_3",
+    "postconditionAuditor": "MUST_BE_CREATED_SEPARATELY_IN_STEP_4"
+  },
+  "boundaries": {
+    "successorAcceptanceEstablished": false,
+    "successorActivationAuthorityEstablished": false,
+    "transitionExecutionAuthorityEstablished": false,
+    "mandatoryEnforcementEstablished": false,
+    "canonicalizationAuthorityEstablished": false,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "runtimeAuthorityCreated": false,
+    "rendererAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productionAuthorityCreated": false,
+    "mainChanged": false
+  },
+  "checkpointResult": "PASS",
+  "stoppingCondition": {
+    "checkpointComplete": true,
+    "nextCheckpoint": "1B_STATE_AND_TRANSITION_SCHEMAS",
+    "advanceBeyondStep1": false
+  }
+}

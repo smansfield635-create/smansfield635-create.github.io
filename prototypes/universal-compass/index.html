@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ARCHCOIN Calibration Lab · Round 3</title>
+  <title>ARCHCOIN Calibration Lab · Round 4</title>
 </head>
 <body>
-  <p>Preparing isolated ARCHCOIN calibration lab · Round 3…</p>
+  <p>Preparing isolated ARCHCOIN calibration lab · Round 4…</p>
   <script>
     (async () => {
       "use strict";
-      const BUILD = "ARCHCOIN_CALIBRATION_ROUND3_v1";
+      const BUILD = "ARCHCOIN_CALIBRATION_ROUND4_v1";
       const target = `./archcoin.lab.html?build=${encodeURIComponent(BUILD)}`;
       if (!("serviceWorker" in navigator)) {
         document.body.textContent = "Service worker support is required for the isolated calibration lab.";
@@ -34,7 +34,7 @@
         }
         location.replace(target);
       } catch (error) {
-        document.body.textContent = `ARCHCOIN lab Round 3 failed: ${error && error.message ? error.message : String(error)}`;
+        document.body.textContent = `ARCHCOIN lab Round 4 failed: ${error && error.message ? error.message : String(error)}`;
       }
     })();
   </script>

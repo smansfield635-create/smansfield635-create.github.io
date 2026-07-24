@@ -1,0 +1,121 @@
+name: H-Earth Capacity Compositor Intent Schema
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-003
+
+permissions:
+  contents: read
+
+jobs:
+  capture-intent-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout exact refined product commit
+        uses: actions/checkout@v4
+        with:
+          ref: 1809d6d6e462b7809f24abda019f5d78135597fe
+          fetch-depth: 0
+
+      - name: Verify exact product identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "1809d6d6e462b7809f24abda019f5d78135597fe"
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "db604fa0eef6600642b024d4e9147b1f35530715"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright-core@1.54.1
+          command -v google-chrome
+
+      - name: Start exact route server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-intent-schema-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          exit 1
+
+      - name: Capture compact intent schema
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p intent-schema-artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright-core';
+
+          const browser = await chromium.launch({
+            headless: true,
+            executablePath: '/usr/bin/google-chrome',
+            args: ['--no-sandbox', '--disable-dev-shm-usage']
+          });
+          const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+          await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/', {
+            waitUntil: 'domcontentloaded',
+            timeout: 30000
+          });
+          await page.waitForFunction(() => {
+            try {
+              const debug = JSON.parse(document.getElementById('h-earth-3d-debug')?.textContent ?? '');
+              return debug?.routeReceipt?.rendererMountReceipt != null;
+            } catch {
+              return false;
+            }
+          }, null, { timeout: 30000 });
+
+          const evidence = await page.evaluate(async () => {
+            const compositor = await import('/showroom/globe/h-earth/compositor.js?intent-schema-compact');
+            const renderer = await import('/showroom/globe/h-earth/renderer.js?intent-schema-compact');
+            const capacity = await import('/showroom/globe/h-earth/capacity.js?intent-schema-compact');
+            const state = compositor.getHEarth3DCompositorState();
+            return {
+              intentTypes: compositor.H_EARTH_3D_COMPOSITOR_INTENT_TYPES,
+              acceptedIntentTypes: capacity.H_EARTH_3D_CONTROLLER_INTENT_CAPACITY?.acceptedIntentTypes ?? null,
+              cameraConstraints: compositor.H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS,
+              currentCameraState: state?.cameraState ?? null,
+              currentRevision: state?.revision ?? null,
+              applyIntentSource: compositor.applyHEarth3DCompositorIntent.toString(),
+              evaluateIntentSource: compositor.evaluateHEarth3DCompositorIntent.toString(),
+              setCameraStateSource: compositor.setHEarth3DCompositorCameraState.toString(),
+              rendererApplyHandoffSource: renderer.applyHEarth3DRendererHandoff.toString()
+            };
+          });
+
+          await browser.close();
+          fs.writeFileSync(
+            'intent-schema-artifacts/schema.json',
+            JSON.stringify(evidence, null, 2)
+          );
+          console.log(JSON.stringify({
+            intentTypes: evidence.intentTypes,
+            acceptedIntentTypes: evidence.acceptedIntentTypes,
+            currentCameraState: evidence.currentCameraState,
+            currentRevision: evidence.currentRevision
+          }, null, 2));
+          NODE
+
+      - name: Upload compact schema evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-compositor-intent-schema
+          path: |
+            intent-schema-artifacts/
+            /tmp/h-earth-intent-schema-server.log
+          if-no-files-found: error

@@ -1,0 +1,533 @@
+name: H-Earth Capacity Refined Step 7 Audit
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-003
+
+permissions:
+  contents: read
+
+jobs:
+  execute-step7-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      BASE_COMMIT: b5ae3ff2ec3b7ebd03dc0d25484892aab7927d30
+      CANDIDATE_COMMIT: 1809d6d6e462b7809f24abda019f5d78135597fe
+      CAPACITY_BLOB: db604fa0eef6600642b024d4e9147b1f35530715
+      TARGET_PATH: showroom/globe/h-earth/capacity.js
+
+    steps:
+      - name: Checkout exact refined product commit
+        uses: actions/checkout@v4
+        with:
+          ref: 1809d6d6e462b7809f24abda019f5d78135597fe
+          fetch-depth: 0
+
+      - name: Verify source, scope, and syntax anchors
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_COMMIT"
+          test "$(git hash-object "$TARGET_PATH")" = "$CAPACITY_BLOB"
+          test "$(git diff --name-only "$BASE_COMMIT" "$CANDIDATE_COMMIT")" = "$TARGET_PATH"
+          test "$(git rev-list --count "$BASE_COMMIT".."$CANDIDATE_COMMIT")" = "1"
+          node --check showroom/globe/h-earth/capacity.js
+          node --check showroom/globe/h-earth/compositor.js
+          node --check showroom/globe/h-earth/renderer.js
+          node --check showroom/globe/h-earth/controller.js
+          node --check showroom/globe/h-earth/index.js
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright-core@1.54.1
+          command -v google-chrome
+          google-chrome --version
+
+      - name: Start exact-commit route server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-step7-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-step7-server.log
+          exit 1
+
+      - name: Execute evidence-first Step 7 browser audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p step7-artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright-core';
+
+          const ROUTE_URL = 'http://127.0.0.1:4173/showroom/globe/h-earth/';
+          const candidateCommit = '1809d6d6e462b7809f24abda019f5d78135597fe';
+          const capacityBlob = 'db604fa0eef6600642b024d4e9147b1f35530715';
+          const cases = [
+            {
+              id: 'desktop',
+              context: {
+                viewport: { width: 1440, height: 900 },
+                deviceScaleFactor: 1,
+                hasTouch: false,
+                isMobile: false
+              },
+              resizedViewport: { width: 1180, height: 760 },
+              expectedInitialPrimitives: 333,
+              expectedInitialTotalNodes: 349,
+              executeCameraInteractions: true
+            },
+            {
+              id: 'mobile',
+              context: {
+                viewport: { width: 390, height: 844 },
+                deviceScaleFactor: 3,
+                hasTouch: true,
+                isMobile: true
+              },
+              resizedViewport: { width: 430, height: 760 },
+              expectedInitialPrimitives: 323,
+              expectedInitialTotalNodes: 339,
+              executeCameraInteractions: false
+            }
+          ];
+
+          const browser = await chromium.launch({
+            headless: true,
+            executablePath: '/usr/bin/google-chrome',
+            args: ['--no-sandbox', '--disable-dev-shm-usage']
+          });
+
+          const packageEvidence = {
+            baseCommit: 'b5ae3ff2ec3b7ebd03dc0d25484892aab7927d30',
+            candidateCommit,
+            capacityBlob,
+            mergeAuthority: 'WITHHELD',
+            cases: [],
+            blockingIssues: []
+          };
+
+          async function capture(page) {
+            return page.evaluate(async () => {
+              const capacity = await import('/showroom/globe/h-earth/capacity.js?step7-evidence-first');
+              const compositor = await import('/showroom/globe/h-earth/compositor.js?step7-evidence-first');
+              const mount = document.getElementById('h-earth-3d-renderer-mount');
+              const routeRoot = document.getElementById('h-earth-3d-route-root');
+              const debugText = document.getElementById('h-earth-3d-debug')?.textContent ?? '';
+
+              let debug = null;
+              let debugParseError = null;
+              try {
+                debug = JSON.parse(debugText);
+              } catch (error) {
+                debugParseError = error instanceof Error ? error.message : String(error);
+              }
+
+              const routeReceipt = debug?.routeReceipt ?? null;
+              const construct = routeReceipt?.rendererConstructReceipt ?? null;
+              const nodeBudget = construct?.nodeBudgetEvaluation ?? null;
+              const mountRect = mount?.getBoundingClientRect() ?? null;
+              const visibleNodes = mount
+                ? Array.from(mount.querySelectorAll('*')).filter((element) => {
+                    const rect = element.getBoundingClientRect();
+                    const style = getComputedStyle(element);
+                    return (
+                      rect.width > 0 &&
+                      rect.height > 0 &&
+                      style.display !== 'none' &&
+                      style.visibility !== 'hidden' &&
+                      Number(style.opacity) > 0
+                    );
+                  })
+                : [];
+
+              const intersections = mountRect
+                ? visibleNodes.map((element) => {
+                    const rect = element.getBoundingClientRect();
+                    return {
+                      left: Math.max(rect.left, mountRect.left),
+                      top: Math.max(rect.top, mountRect.top),
+                      right: Math.min(rect.right, mountRect.right),
+                      bottom: Math.min(rect.bottom, mountRect.bottom)
+                    };
+                  }).filter((rect) => rect.right > rect.left && rect.bottom > rect.top)
+                : [];
+
+              const union = intersections.reduce((acc, rect) => ({
+                left: Math.min(acc.left, rect.left),
+                top: Math.min(acc.top, rect.top),
+                right: Math.max(acc.right, rect.right),
+                bottom: Math.max(acc.bottom, rect.bottom)
+              }), {
+                left: Number.POSITIVE_INFINITY,
+                top: Number.POSITIVE_INFINITY,
+                right: Number.NEGATIVE_INFINITY,
+                bottom: Number.NEGATIVE_INFINITY
+              });
+
+              const unionWidth = Number.isFinite(union.left) ? Math.max(0, union.right - union.left) : 0;
+              const unionHeight = Number.isFinite(union.top) ? Math.max(0, union.bottom - union.top) : 0;
+              const mountWidth = mountRect?.width ?? 0;
+              const mountHeight = mountRect?.height ?? 0;
+
+              const transformFingerprint = visibleNodes.slice(0, 100).map((element) => {
+                const rect = element.getBoundingClientRect();
+                const style = getComputedStyle(element);
+                return [
+                  element.tagName,
+                  typeof element.className === 'string' ? element.className : '',
+                  style.transform,
+                  rect.x.toFixed(3),
+                  rect.y.toFixed(3),
+                  rect.width.toFixed(3),
+                  rect.height.toFixed(3)
+                ].join('|');
+              }).join('\n');
+
+              let compositorFingerprint = null;
+              for (const name of [
+                'getHEarth3DCompositorState',
+                'getHEarth3DCompositorSnapshot',
+                'getHEarth3DCompositorOperationalReceipts',
+                'getHEarth3DCompositorReceipt',
+                'getHEarth3DCompositorRendererHandoff'
+              ]) {
+                if (typeof compositor[name] === 'function') {
+                  try {
+                    compositorFingerprint = JSON.stringify(compositor[name]());
+                  } catch (error) {
+                    compositorFingerprint = `${name}:ERROR:${error instanceof Error ? error.message : String(error)}`;
+                  }
+                  break;
+                }
+              }
+
+              return {
+                capacity: {
+                  contractId: capacity.H_EARTH_3D_CAPACITY_CONTRACT_ID,
+                  preflightEligible: capacity.getHEarth3DCapacityPreflight()?.eligible ?? null,
+                  initialCamera: capacity.H_EARTH_3D_CAMERA_CAPACITY?.initialProjectionCandidate ?? null,
+                  primitiveMaximum: capacity.H_EARTH_3D_NODE_BUDGET?.environmentPrimitives?.absoluteMaximum ?? null,
+                  totalMaximum: capacity.H_EARTH_3D_NODE_BUDGET?.totalRendererOwnedNodes?.absoluteMaximum ?? null
+                },
+                route: {
+                  documentStatus: document.getElementById('h-earth-3d-status')?.textContent ?? null,
+                  status: routeReceipt?.status ?? null,
+                  initialized: routeReceipt?.initialized ?? null,
+                  rendererBootstrapStatus: routeReceipt?.routeStatus?.rendererBootstrapStatus ?? null,
+                  rendererConstructed: construct?.constructed ?? null,
+                  rendererConstructStatus: construct?.status ?? null,
+                  rendererMounted: routeReceipt?.rendererMountReceipt != null,
+                  debugParseError
+                },
+                budget: {
+                  eligible: nodeBudget?.eligible ?? null,
+                  status: nodeBudget?.status ?? null,
+                  semanticLayerContainers: nodeBudget?.semanticLayerContainers ?? null,
+                  environmentPrimitives: nodeBudget?.environmentPrimitives ?? null,
+                  interactionNodes: nodeBudget?.interactionNodes ?? null,
+                  totalRendererOwnedNodes: nodeBudget?.authorityEvaluation?.accounting?.totalRendererOwnedNodes ?? null,
+                  issues: nodeBudget?.authorityEvaluation?.issues ?? []
+                },
+                dom: {
+                  routeRootPresent: Boolean(routeRoot),
+                  mountPresent: Boolean(mount),
+                  mountChildCount: mount?.children.length ?? 0,
+                  visibleNodeCount: visibleNodes.length,
+                  intersectingNodeCount: intersections.length,
+                  mountWidth,
+                  mountHeight,
+                  unionWidth,
+                  unionHeight,
+                  widthRatio: mountWidth > 0 ? unionWidth / mountWidth : 0,
+                  heightRatio: mountHeight > 0 ? unionHeight / mountHeight : 0,
+                  areaRatio: mountWidth > 0 && mountHeight > 0
+                    ? (unionWidth * unionHeight) / (mountWidth * mountHeight)
+                    : 0,
+                  transformFingerprint
+                },
+                compositorFingerprint,
+                routeDataset: routeRoot ? { ...routeRoot.dataset } : null
+              };
+            });
+          }
+
+          function addIssue(caseEvidence, condition, code, details = null) {
+            if (!condition) {
+              caseEvidence.blockingIssues.push({ code, details });
+            }
+          }
+
+          for (const testCase of cases) {
+            const context = await browser.newContext(testCase.context);
+            const page = await context.newPage();
+            const pageErrors = [];
+            const consoleErrors = [];
+            const failedRequests = [];
+            const nonSuccessfulResponses = [];
+
+            page.on('pageerror', (error) => {
+              pageErrors.push(error instanceof Error ? error.message : String(error));
+            });
+            page.on('console', (message) => {
+              if (message.type() === 'error') consoleErrors.push(message.text());
+            });
+            page.on('requestfailed', (request) => {
+              failedRequests.push({ url: request.url(), failure: request.failure() });
+            });
+            page.on('response', (response) => {
+              if (response.status() >= 400) {
+                nonSuccessfulResponses.push({
+                  url: response.url(),
+                  status: response.status()
+                });
+              }
+            });
+
+            let navigation = null;
+            let before = null;
+            let afterOrbit = null;
+            let afterPan = null;
+            let afterWheel = null;
+            let afterKeyboard = null;
+            let afterReset = null;
+            let afterResize = null;
+            let interactionChanged = null;
+            const caseEvidence = {
+              id: testCase.id,
+              blockingIssues: [],
+              pageErrors,
+              consoleErrors,
+              failedRequests,
+              nonSuccessfulResponses
+            };
+
+            try {
+              const response = await page.goto(ROUTE_URL, {
+                waitUntil: 'domcontentloaded',
+                timeout: 30000
+              });
+              navigation = {
+                ok: response?.ok() ?? false,
+                status: response?.status() ?? null,
+                url: response?.url() ?? null
+              };
+
+              await page.waitForFunction(() => {
+                const debugText = document.getElementById('h-earth-3d-debug')?.textContent ?? '';
+                try {
+                  const debug = JSON.parse(debugText);
+                  return debug?.routeReceipt?.rendererMountReceipt != null;
+                } catch {
+                  return false;
+                }
+              }, null, { timeout: 30000 });
+
+              before = await capture(page);
+              await page.screenshot({
+                path: `step7-artifacts/${testCase.id}-initial.png`,
+                fullPage: true
+              });
+
+              if (testCase.executeCameraInteractions) {
+                const mountBox = await page.locator('#h-earth-3d-renderer-mount').boundingBox();
+                if (mountBox) {
+                  const centerX = mountBox.x + mountBox.width * 0.5;
+                  const centerY = mountBox.y + mountBox.height * 0.5;
+
+                  await page.mouse.move(centerX, centerY);
+                  await page.mouse.down({ button: 'left' });
+                  await page.mouse.move(centerX + 80, centerY + 35, { steps: 8 });
+                  await page.mouse.up({ button: 'left' });
+                  await page.waitForTimeout(450);
+                  afterOrbit = await capture(page);
+
+                  await page.mouse.move(centerX, centerY);
+                  await page.mouse.down({ button: 'middle' });
+                  await page.mouse.move(centerX - 45, centerY + 28, { steps: 6 });
+                  await page.mouse.up({ button: 'middle' });
+                  await page.waitForTimeout(450);
+                  afterPan = await capture(page);
+
+                  await page.mouse.move(centerX, centerY);
+                  await page.mouse.wheel(0, -360);
+                  await page.waitForTimeout(450);
+                  afterWheel = await capture(page);
+
+                  await page.keyboard.press('ArrowRight');
+                  await page.waitForTimeout(400);
+                  afterKeyboard = await capture(page);
+
+                  await page.keyboard.press('Home');
+                  await page.waitForTimeout(450);
+                  afterReset = await capture(page);
+
+                  const fingerprints = [
+                    before,
+                    afterOrbit,
+                    afterPan,
+                    afterWheel,
+                    afterKeyboard,
+                    afterReset
+                  ].map((entry) => `${entry?.dom?.transformFingerprint ?? ''}\n${entry?.compositorFingerprint ?? ''}`);
+                  interactionChanged = new Set(fingerprints).size > 1;
+                }
+              } else {
+                await page.touchscreen.tap(
+                  testCase.context.viewport.width * 0.5,
+                  testCase.context.viewport.height * 0.5
+                );
+                await page.waitForTimeout(250);
+              }
+
+              await page.setViewportSize(testCase.resizedViewport);
+              await page.waitForTimeout(900);
+              afterResize = await capture(page);
+
+              await page.screenshot({
+                path: `step7-artifacts/${testCase.id}-after-audit.png`,
+                fullPage: true
+              });
+            } catch (error) {
+              caseEvidence.executionError = error instanceof Error ? error.message : String(error);
+            }
+
+            const benignResponses = nonSuccessfulResponses.filter((entry) =>
+              entry.status === 404 && /\/favicon\.ico(?:$|\?)/.test(entry.url)
+            );
+            const blockingResponses = nonSuccessfulResponses.filter((entry) =>
+              !(entry.status === 404 && /\/favicon\.ico(?:$|\?)/.test(entry.url))
+            );
+            const benignConsoleErrors = consoleErrors.filter((entry) =>
+              /Failed to load resource.*404/i.test(entry) && benignResponses.length > 0
+            );
+            const blockingConsoleErrors = consoleErrors.filter((entry) =>
+              !(/Failed to load resource.*404/i.test(entry) && benignResponses.length > 0)
+            );
+            const blockingFailedRequests = failedRequests.filter((entry) =>
+              !/\/favicon\.ico(?:$|\?)/.test(entry.url)
+            );
+
+            Object.assign(caseEvidence, {
+              navigation,
+              before,
+              afterOrbit,
+              afterPan,
+              afterWheel,
+              afterKeyboard,
+              afterReset,
+              afterResize,
+              interactionChanged,
+              benignResponses,
+              blockingResponses,
+              benignConsoleErrors,
+              blockingConsoleErrors,
+              blockingFailedRequests
+            });
+
+            addIssue(caseEvidence, !caseEvidence.executionError, 'EXECUTION_ERROR', caseEvidence.executionError ?? null);
+            addIssue(caseEvidence, navigation?.ok === true, 'ROUTE_RESPONSE_NOT_OK', navigation);
+            addIssue(caseEvidence, before?.capacity?.preflightEligible === true, 'CAPACITY_PREFLIGHT_REJECTED', before?.capacity ?? null);
+            addIssue(caseEvidence, before?.capacity?.initialCamera?.position?.x === 0, 'CAMERA_POSITION_X_MISMATCH', before?.capacity?.initialCamera ?? null);
+            addIssue(caseEvidence, before?.capacity?.initialCamera?.position?.y === 24, 'CAMERA_POSITION_Y_MISMATCH', before?.capacity?.initialCamera ?? null);
+            addIssue(caseEvidence, before?.capacity?.initialCamera?.position?.z === 64, 'CAMERA_POSITION_Z_MISMATCH', before?.capacity?.initialCamera ?? null);
+            addIssue(caseEvidence, before?.capacity?.initialCamera?.target?.x === 0, 'CAMERA_TARGET_X_MISMATCH', before?.capacity?.initialCamera ?? null);
+            addIssue(caseEvidence, before?.capacity?.initialCamera?.target?.y === 0.5, 'CAMERA_TARGET_Y_MISMATCH', before?.capacity?.initialCamera ?? null);
+            addIssue(caseEvidence, before?.capacity?.initialCamera?.target?.z === -128, 'CAMERA_TARGET_Z_MISMATCH', before?.capacity?.initialCamera ?? null);
+            addIssue(caseEvidence, before?.capacity?.initialCamera?.nearPlane === 0.25, 'NEAR_PLANE_MISMATCH', before?.capacity?.initialCamera ?? null);
+            addIssue(caseEvidence, before?.capacity?.initialCamera?.farPlane === 194, 'FAR_PLANE_MISMATCH', before?.capacity?.initialCamera ?? null);
+            addIssue(caseEvidence, before?.route?.rendererConstructed === true, 'RENDERER_NOT_CONSTRUCTED', before?.route ?? null);
+            addIssue(caseEvidence, before?.route?.rendererMounted === true, 'RENDERER_NOT_MOUNTED', before?.route ?? null);
+            addIssue(caseEvidence, before?.budget?.eligible === true, 'INITIAL_NODE_BUDGET_REJECTED', before?.budget ?? null);
+            addIssue(caseEvidence, before?.budget?.environmentPrimitives === testCase.expectedInitialPrimitives, 'INITIAL_PRIMITIVE_COUNT_MISMATCH', before?.budget ?? null);
+            addIssue(caseEvidence, before?.budget?.totalRendererOwnedNodes === testCase.expectedInitialTotalNodes, 'INITIAL_TOTAL_NODE_COUNT_MISMATCH', before?.budget ?? null);
+            addIssue(caseEvidence, before?.budget?.environmentPrimitives <= before?.capacity?.primitiveMaximum, 'INITIAL_PRIMITIVE_MAXIMUM_EXCEEDED', before?.budget ?? null);
+            addIssue(caseEvidence, before?.budget?.totalRendererOwnedNodes <= before?.capacity?.totalMaximum, 'INITIAL_TOTAL_MAXIMUM_EXCEEDED', before?.budget ?? null);
+            addIssue(caseEvidence, before?.dom?.visibleNodeCount > 0, 'NO_VISIBLE_RENDERER_NODES', before?.dom ?? null);
+            addIssue(caseEvidence, before?.dom?.widthRatio >= 0.05, 'HORIZONTAL_SLIVER_DETECTED', before?.dom ?? null);
+            addIssue(caseEvidence, before?.dom?.heightRatio >= 0.05, 'VERTICAL_SLIVER_DETECTED', before?.dom ?? null);
+            addIssue(caseEvidence, before?.dom?.areaRatio >= 0.005, 'AREA_SLIVER_DETECTED', before?.dom ?? null);
+            if (testCase.executeCameraInteractions) {
+              addIssue(caseEvidence, interactionChanged === true, 'INTERACTIONS_DID_NOT_CHANGE_STATE_OR_PROJECTION', null);
+            }
+            addIssue(caseEvidence, afterResize?.route?.rendererConstructed === true, 'RESIZE_RENDERER_NOT_CONSTRUCTED', afterResize?.route ?? null);
+            addIssue(caseEvidence, afterResize?.route?.rendererMounted === true, 'RESIZE_RENDERER_NOT_MOUNTED', afterResize?.route ?? null);
+            addIssue(caseEvidence, afterResize?.budget?.eligible === true, 'RESIZE_NODE_BUDGET_REJECTED', afterResize?.budget ?? null);
+            addIssue(caseEvidence, afterResize?.budget?.environmentPrimitives <= afterResize?.capacity?.primitiveMaximum, 'RESIZE_PRIMITIVE_MAXIMUM_EXCEEDED', afterResize?.budget ?? null);
+            addIssue(caseEvidence, afterResize?.budget?.totalRendererOwnedNodes <= afterResize?.capacity?.totalMaximum, 'RESIZE_TOTAL_MAXIMUM_EXCEEDED', afterResize?.budget ?? null);
+            addIssue(caseEvidence, pageErrors.length === 0, 'PAGE_ERRORS_PRESENT', pageErrors);
+            addIssue(caseEvidence, blockingConsoleErrors.length === 0, 'BLOCKING_CONSOLE_ERRORS_PRESENT', blockingConsoleErrors);
+            addIssue(caseEvidence, blockingFailedRequests.length === 0, 'BLOCKING_REQUEST_FAILURES_PRESENT', blockingFailedRequests);
+            addIssue(caseEvidence, blockingResponses.length === 0, 'BLOCKING_HTTP_RESPONSES_PRESENT', blockingResponses);
+
+            fs.writeFileSync(
+              `step7-artifacts/${testCase.id}.json`,
+              JSON.stringify(caseEvidence, null, 2)
+            );
+            packageEvidence.cases.push(caseEvidence);
+            packageEvidence.blockingIssues.push(
+              ...caseEvidence.blockingIssues.map((issue) => ({
+                caseId: testCase.id,
+                ...issue
+              }))
+            );
+            await context.close();
+          }
+
+          await browser.close();
+          packageEvidence.step7Result = packageEvidence.blockingIssues.length === 0
+            ? 'PASS_READY_FOR_STEP_8_MERGE_APPROVAL_DECISION'
+            : 'FAIL_BLOCKED_BEFORE_STEP_8';
+          fs.writeFileSync(
+            'step7-artifacts/package.json',
+            JSON.stringify(packageEvidence, null, 2)
+          );
+          console.log(JSON.stringify({
+            step7Result: packageEvidence.step7Result,
+            candidateCommit,
+            capacityBlob,
+            cases: packageEvidence.cases.map((entry) => ({
+              id: entry.id,
+              primitives: entry.before?.budget?.environmentPrimitives ?? null,
+              totalNodes: entry.before?.budget?.totalRendererOwnedNodes ?? null,
+              widthRatio: entry.before?.dom?.widthRatio ?? null,
+              heightRatio: entry.before?.dom?.heightRatio ?? null,
+              areaRatio: entry.before?.dom?.areaRatio ?? null,
+              interactionChanged: entry.interactionChanged,
+              resizedPrimitives: entry.afterResize?.budget?.environmentPrimitives ?? null,
+              resizedTotalNodes: entry.afterResize?.budget?.totalRendererOwnedNodes ?? null,
+              benignResponseCount: entry.benignResponses.length,
+              blockingIssues: entry.blockingIssues
+            }))
+          }, null, 2));
+
+          if (packageEvidence.blockingIssues.length > 0) {
+            throw new Error(`Step 7 blocked: ${JSON.stringify(packageEvidence.blockingIssues)}`);
+          }
+          NODE
+
+      - name: Upload Step 7 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-refined-step7-audit
+          path: |
+            step7-artifacts/
+            /tmp/h-earth-step7-server.log
+          if-no-files-found: error

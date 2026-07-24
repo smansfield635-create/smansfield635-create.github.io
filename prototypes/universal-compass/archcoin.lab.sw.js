@@ -1,10 +1,10 @@
 /* /prototypes/universal-compass/archcoin.lab.sw.js
-   Prototype-scoped ARCHCOIN calibration router · Round 3.
+   Prototype-scoped ARCHCOIN calibration router · Round 4.
    Production ARCHCOIN files are never modified or served from these files.
 */
 "use strict";
 
-const BUILD = "ARCHCOIN_CALIBRATION_ROUND3_v1";
+const BUILD = "ARCHCOIN_CALIBRATION_ROUND4_v1";
 const LOCAL_ROOT = "/prototypes/universal-compass/";
 const ROUTES = Object.freeze({
   "/assets/compass/upstream-compass.css": `${LOCAL_ROOT}archcoin.upstream-compass.css?build=${BUILD}`,
@@ -13,8 +13,8 @@ const ROUTES = Object.freeze({
   "/products/archcoin/index.css": `${LOCAL_ROOT}archcoin.index.css?build=${BUILD}`,
   "/products/archcoin/index.controller.js": `${LOCAL_ROOT}archcoin.index.controller.js?build=${BUILD}`,
   "/products/archcoin/index.compositor.js": `${LOCAL_ROOT}archcoin.index.compositor.js?build=${BUILD}`,
-  "/products/archcoin/index.crystals.js": `${LOCAL_ROOT}archcoin.index.crystals.js?build=${BUILD}`,
-  "/products/archcoin/index.interactions.js": `${LOCAL_ROOT}archcoin.interactions.round3.js?build=${BUILD}`
+  "/products/archcoin/index.crystals.js": `${LOCAL_ROOT}archcoin.crystals.round4.js?build=${BUILD}`,
+  "/products/archcoin/index.interactions.js": `${LOCAL_ROOT}archcoin.interactions.round4.js?build=${BUILD}`
 });
 
 self.addEventListener("install", event => {

@@ -7,34 +7,33 @@ import { createCompositor } from "./index.compositor.js";
 import { createInteractionAuthority } from "./index.interactions.js";
 
 const root = document.documentElement;
-const get = selector => {
+const requireElement = selector => {
   const element = document.querySelector(selector);
   if (!element) throw new Error(`COMPASS_MOUNT_MISSING:${selector}`);
   return element;
 };
 
 const ui = Object.freeze({
-  status: get("[data-reference-status]"),
-  field: get("[data-reference-field]"),
-  visual: get("[data-reference-visual]"),
-  semantic: get("[data-reference-semantic]"),
-  selection: get("[data-reference-selection]"),
-  presentation: get("[data-reference-presentation]"),
-  primary: get("[data-reference-primary]"),
-  worldRevision: get("[data-reference-world-revision]"),
-  projectionRevision: get("[data-reference-projection-revision]"),
-  controllerRevision: get("[data-reference-controller-revision]"),
-  receipt: get("[data-reference-receipt]"),
-  constellation: get("[data-reference-constellation]"),
-  cluster: get("[data-reference-cluster]"),
-  hold: get("[data-reference-hold]"),
-  reducedMotion: get("[data-reference-reduced-motion]")
+  status: requireElement("[data-reference-status]"),
+  field: requireElement("[data-reference-field]"),
+  visual: requireElement("[data-reference-visual]"),
+  semantic: requireElement("[data-reference-semantic]"),
+  selection: requireElement("[data-reference-selection]"),
+  presentation: requireElement("[data-reference-presentation]"),
+  primary: requireElement("[data-reference-primary]"),
+  worldRevision: requireElement("[data-reference-world-revision]"),
+  projectionRevision: requireElement("[data-reference-projection-revision]"),
+  controllerRevision: requireElement("[data-reference-controller-revision]"),
+  receipt: requireElement("[data-reference-receipt]"),
+  constellation: requireElement("[data-reference-constellation]"),
+  cluster: requireElement("[data-reference-cluster]"),
+  hold: requireElement("[data-reference-hold]"),
+  reducedMotion: requireElement("[data-reference-reduced-motion]")
 });
 
 const CENTER = Object.freeze([0, 0, 10]);
 const CAMERA_OFFSET = Object.freeze([0, 0, -10]);
 const CAMERA_UP = Object.freeze([0, 1, 0]);
-const IDENTITY = Object.freeze([0, 0, 0, 1]);
 
 let planet;
 let controller;
@@ -45,20 +44,28 @@ let crystalInput;
 let lastProjection;
 let lastFrameTime = 0;
 let framePending = false;
-let cameraSignature = "";
 let activePointerId = "";
 let receipt = "No local receipt yet.";
 
-function normalizeQuaternion(value = IDENTITY) {
-  const q = Array.from(value, Number);
-  const length = Math.hypot(...q);
-  return q.length === 4 && length > 1e-8
-    ? q.map(component => component / length)
-    : [...IDENTITY];
+function activeOrientation(state = controller.getState()) {
+  const orientation = state.presentation === "CONSTELLATION"
+    ? state.constellation
+    : state.clusters[state.activeCardinalId];
+  if (!orientation) throw new Error("COMPASS_ACTIVE_ORIENTATION_MISSING");
+  return orientation;
 }
 
-function rotate(vector, quaternion) {
-  const [x, y, z, w] = normalizeQuaternion(quaternion);
+function normalizedQuaternion(value) {
+  if (!Array.isArray(value) || value.length !== 4 || value.some(component => !Number.isFinite(component))) {
+    throw new Error("COMPASS_BOOTSTRAP_QUATERNION_INVALID");
+  }
+  const length = Math.hypot(...value);
+  if (!(length > 1e-8)) throw new Error("COMPASS_BOOTSTRAP_QUATERNION_INVALID");
+  return value.map(component => component / length);
+}
+
+function rotateVector(vector, quaternion) {
+  const [x, y, z, w] = normalizedQuaternion(quaternion);
   const [vx, vy, vz] = vector;
   const tx = 2 * (y * vz - z * vy);
   const ty = 2 * (z * vx - x * vz);
@@ -70,31 +77,18 @@ function rotate(vector, quaternion) {
   ];
 }
 
-function activeOrientation(state = controller.getState()) {
-  return state.presentation === "CONSTELLATION"
-    ? state.constellation
-    : state.clusters[state.activeCardinalId];
-}
-
-function cameraFor(state = controller.getState()) {
-  const [x, y, z, w] = normalizeQuaternion(activeOrientation(state)?.quaternion);
+function cameraForState(state = controller.getState()) {
+  const [x, y, z, w] = normalizedQuaternion(activeOrientation(state).quaternion);
   const inverse = [-x, -y, -z, w];
-  const offset = rotate(CAMERA_OFFSET, inverse);
+  const offset = rotateVector(CAMERA_OFFSET, inverse);
   return Object.freeze({
-    position: Object.freeze(CENTER.map((value, index) => value + offset[index])),
+    position: Object.freeze(CENTER.map((component, index) => component + offset[index])),
     target: CENTER,
-    up: Object.freeze(rotate(CAMERA_UP, inverse)),
+    up: Object.freeze(rotateVector(CAMERA_UP, inverse)),
     fieldOfViewYDegrees: 60,
     near: 0.1,
     far: 100
   });
-}
-
-function cameraGap(a, b) {
-  return Math.max(
-    ...a.position.map((value, index) => Math.abs(value - b.position[index])),
-    ...a.up.map((value, index) => Math.abs(value - b.up[index]))
-  );
 }
 
 function setReceipt(value) {
@@ -110,7 +104,7 @@ function selectableRecords(projection, state) {
   );
 }
 
-function mount(projection) {
+function mountProjection(projection) {
   lastProjection = projection;
   const state = controller.getState();
   const visible = projection.records.filter(record => record.visible);
@@ -132,13 +126,12 @@ function mount(projection) {
 
   ui.semantic.replaceChildren(...selectable.map(record => {
     const button = document.createElement("button");
-    const anchor = record.projectedSemanticAnchor || record;
     button.type = "button";
     button.className = "reference-node-control";
     button.dataset.nodeId = record.id;
     button.dataset.nodeKind = record.kind;
-    button.style.left = `${anchor.screenX}px`;
-    button.style.top = `${anchor.screenY}px`;
+    button.style.left = `${record.projectedSemanticAnchor.screenX}px`;
+    button.style.top = `${record.projectedSemanticAnchor.screenY}px`;
     button.textContent = record.id;
     button.disabled = state.held;
     button.setAttribute(
@@ -151,7 +144,7 @@ function mount(projection) {
   const orientation = activeOrientation(state);
   ui.selection.textContent = state.selectedChildId || state.activeCardinalId || "No node selected";
   ui.presentation.textContent = state.presentation;
-  ui.primary.textContent = orientation?.previewPrimaryId || orientation?.primaryId || "Pending";
+  ui.primary.textContent = orientation.previewPrimaryId || orientation.primaryId || "Pending";
   ui.worldRevision.textContent = String(worldSnapshot.worldRevision);
   ui.projectionRevision.textContent = String(projection.projectionRevision);
   ui.controllerRevision.textContent = String(state.revision);
@@ -171,13 +164,7 @@ function mount(projection) {
 
 function projectFrame(timestamp) {
   framePending = false;
-  const state = controller.getState();
-  const targetCamera = cameraFor(state);
-  const signature = JSON.stringify(targetCamera);
-  if (signature !== cameraSignature) {
-    compositor.setCamera(targetCamera);
-    cameraSignature = signature;
-  }
+  compositor.setCamera(cameraForState());
 
   const bounds = ui.field.getBoundingClientRect();
   const deltaSeconds = lastFrameTime
@@ -185,7 +172,7 @@ function projectFrame(timestamp) {
     : 1 / 60;
   lastFrameTime = timestamp;
 
-  const projection = compositor.project({
+  mountProjection(compositor.project({
     worldSnapshot,
     crystalInput,
     presentationContext: controller.getPresentationContext(),
@@ -196,10 +183,7 @@ function projectFrame(timestamp) {
     }),
     timestampMs: Math.max(0, timestamp),
     deltaSeconds
-  });
-
-  mount(projection);
-  if (!state.reducedMotion && cameraGap(projection.camera, targetCamera) > 0.0005) scheduleProjection();
+  }));
 }
 
 function scheduleProjection() {
@@ -208,27 +192,16 @@ function scheduleProjection() {
   requestAnimationFrame(projectFrame);
 }
 
-function acceptTarget({ targetId, kind }) {
-  const state = controller.getState();
-  if (state.held) return;
-  if (kind === "CARDINAL" && state.presentation === "CONSTELLATION") {
-    controller.openCluster(targetId);
-    setReceipt(`OPENED_CLUSTER · ${targetId}`);
-  } else if (
-    kind === "CHILD" &&
-    state.presentation === "CLUSTER" &&
-    planet.isChildOfCardinal(targetId, state.activeCardinalId)
-  ) {
-    controller.selectChild(targetId);
-    setReceipt(`SELECTED_CHILD · ${targetId}`);
-  }
+function forwardTargetProposal({ targetId, kind }) {
+  if (kind === "CARDINAL") controller.openCluster(targetId);
+  else if (kind === "CHILD") controller.selectChild(targetId);
 }
 
 function processInteraction(result) {
   if (!result) return;
   setReceipt(result.mode || result.reason || result.phase || "INTERACTION");
   if (result.mode === "TAP_PROPOSAL" && result.targetProposal) {
-    acceptTarget(result.targetProposal);
+    forwardTargetProposal(result.targetProposal);
   }
   scheduleProjection();
 }
@@ -239,7 +212,7 @@ function interrupt(reason) {
   activePointerId = "";
 }
 
-function point(event) {
+function localPoint(event) {
   const bounds = ui.field.getBoundingClientRect();
   return { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
 }
@@ -257,14 +230,11 @@ function bindUi() {
 
   ui.cluster.addEventListener("click", () => {
     interrupt("cluster-control");
-    const state = controller.getState();
-    const candidate = activeOrientation(state)?.primaryId;
-    controller.openCluster(planet.hasCardinal(candidate) ? candidate : "NORTH");
+    controller.openCluster(activeOrientation().primaryId || "NORTH");
   });
 
   ui.hold.addEventListener("click", () => {
-    const state = controller.getState();
-    if (state.held) controller.leaveHeld();
+    if (controller.getState().held) controller.leaveHeld();
     else {
       interrupt("held-control");
       controller.enterHeld("reference-control");
@@ -272,25 +242,27 @@ function bindUi() {
   });
 
   ui.reducedMotion.addEventListener("click", () => {
-    const state = controller.getState();
-    controller.setReducedMotion(!state.reducedMotion);
+    controller.setReducedMotion(!controller.getState().reducedMotion);
   });
 
   ui.semantic.addEventListener("click", event => {
     if (event.detail !== 0) return;
     const button = event.target.closest(".reference-node-control");
-    if (button) acceptTarget({ targetId: button.dataset.nodeId, kind: button.dataset.nodeKind });
+    if (button) forwardTargetProposal({
+      targetId: button.dataset.nodeId,
+      kind: button.dataset.nodeKind
+    });
   });
 
   ui.field.addEventListener("pointerdown", event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    const local = point(event);
+    const point = localPoint(event);
     const target = event.target.closest(".reference-node-control");
     const result = interactions.begin({
       id: String(event.pointerId),
       kind: pointerKind(event.pointerType),
-      x: local.x,
-      y: local.y,
+      x: point.x,
+      y: point.y,
       timestamp: Math.max(0, event.timeStamp),
       targetId: target?.dataset.nodeId || ""
     });
@@ -303,11 +275,11 @@ function bindUi() {
 
   ui.field.addEventListener("pointermove", event => {
     if (activePointerId !== String(event.pointerId)) return;
-    const local = point(event);
+    const point = localPoint(event);
     processInteraction(interactions.move({
       id: activePointerId,
-      x: local.x,
-      y: local.y,
+      x: point.x,
+      y: point.y,
       timestamp: Math.max(0, event.timeStamp)
     }));
     event.preventDefault();
@@ -315,11 +287,11 @@ function bindUi() {
 
   const endPointer = (event, cancel) => {
     if (activePointerId !== String(event.pointerId)) return;
-    const local = point(event);
+    const point = localPoint(event);
     processInteraction(interactions.end({
       id: activePointerId,
-      x: local.x,
-      y: local.y,
+      x: point.x,
+      y: point.y,
       timestamp: Math.max(0, event.timeStamp),
       cancel
     }));
@@ -351,9 +323,21 @@ function initialize() {
   const visualProfile = Object.freeze({
     id: "DGB_UNIVERSAL_COMPASS_BROWSER_NEUTRAL_VISUAL_PROFILE_v1",
     byKind: Object.freeze({
-      CENTER: Object.freeze({ shapeId: "NEUTRAL_SPHERE", visualScale: Object.freeze([1, 1, 1]), materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"]) }),
-      CARDINAL: Object.freeze({ shapeId: "NEUTRAL_SPHERE", visualScale: Object.freeze([0.8, 0.8, 0.8]), materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"]) }),
-      CHILD: Object.freeze({ shapeId: "NEUTRAL_SPHERE", visualScale: Object.freeze([0.55, 0.55, 0.55]), materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"]) })
+      CENTER: Object.freeze({
+        shapeId: "NEUTRAL_SPHERE",
+        visualScale: Object.freeze([1, 1, 1]),
+        materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"])
+      }),
+      CARDINAL: Object.freeze({
+        shapeId: "NEUTRAL_SPHERE",
+        visualScale: Object.freeze([0.8, 0.8, 0.8]),
+        materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"])
+      }),
+      CHILD: Object.freeze({
+        shapeId: "NEUTRAL_SPHERE",
+        visualScale: Object.freeze([0.55, 0.55, 0.55]),
+        materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"])
+      })
     })
   });
 
@@ -371,11 +355,11 @@ function initialize() {
     reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches
   });
   compositor = createCompositor({
-    cameraConfig: cameraFor(controller.getState()),
+    cameraConfig: cameraForState(controller.getState()),
     projectionConfig: {
       centerDepth: 10,
       depthHysteresis: 0.5,
-      interpolationRate: 12,
+      interpolationRate: 0,
       maxDeltaSeconds: 0.1,
       expectedRecordCount: 21,
       expectedKindCounts: { CENTER: 1, CARDINAL: 4, CHILD: 16 }

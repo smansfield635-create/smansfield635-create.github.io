@@ -12,6 +12,15 @@ const hashObject = (relativePath) => execFileSync('git', ['hash-object', relativ
   cwd: root,
   encoding: 'utf8'
 }).trim();
+const hashCommittedObject = (relativePath) => execFileSync('git', ['rev-parse', `HEAD:${relativePath}`], {
+  cwd: root,
+  encoding: 'utf8'
+}).trim();
+const readCommittedText = (relativePath) => execFileSync('git', ['show', `HEAD:${relativePath}`], {
+  cwd: root,
+  encoding: 'utf8',
+  maxBuffer: 32 * 1024 * 1024
+});
 const execJson = (relativePath, extraEnv = {}) => JSON.parse(execFileSync(
   process.execPath,
   ['--experimental-default-type=module', relativePath],
@@ -66,7 +75,7 @@ const showroomAgents = readText('showroom/globe/h-earth/AGENTS.md');
 const target4A = execJson('tools/h-earth-repository-registry-target-4a-contract-audit.mjs');
 const target4B = execJson('tools/h-earth-repository-registry-target-4b-audit.mjs');
 const protectedTarget4EReceiptPath = 'h-earth-3d/registry/h-earth.repository-registry.target-4e-receipt.json';
-const protectedTarget4EReceiptText = readText(protectedTarget4EReceiptPath);
+const protectedTarget4EReceiptText = readCommittedText(protectedTarget4EReceiptPath);
 let target4E;
 try {
   target4E = execJson('tools/h-earth-repository-registry-target-4e-audit.mjs', {
@@ -104,7 +113,7 @@ const mutationIntent = runAutomaticHEarthPreflight({
 });
 
 const protectedResults = Object.fromEntries(Object.entries(manifest.protectedIdentities).map(([name, entry]) => {
-  const actualGitBlobSha = hashObject(relative(entry.path));
+  const actualGitBlobSha = hashCommittedObject(relative(entry.path));
   return [name, {
     path: entry.path,
     expectedGitBlobSha: entry.gitBlobSha,

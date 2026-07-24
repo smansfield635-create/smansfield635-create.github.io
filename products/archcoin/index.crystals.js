@@ -7,7 +7,7 @@
 
   const SOURCE_URL = "./index.crystals.source.js";
   const SCRIPT_ATTRIBUTE = "data-archcoin-accepted-crystals-source";
-  const ACTIVATION_ROOT_MARGIN = "480px 0px";
+  const ACTIVATION_ROOT_MARGIN = "240px 0px";
   const runtime = globalThis.DGB_ARCHCOIN_RUNTIME ||
     (globalThis.DGB_ARCHCOIN_RUNTIME = {});
 
@@ -37,13 +37,11 @@
       const scene = document.querySelector("[data-archcoin-scene]");
       let settled = false;
       let observer = null;
-      let fallbackTimer = 0;
 
       const activate = reason => {
         if (settled) return;
         settled = true;
         observer?.disconnect();
-        clearTimeout(fallbackTimer);
         scene?.removeEventListener("pointerdown", onPointerDown);
         scene?.removeEventListener("focusin", onFocusIn);
         if (root) {
@@ -82,18 +80,8 @@
         document.documentElement.clientHeight || 0,
         globalThis.innerHeight || 0
       );
-      if (rect.top <= viewportHeight + 480 && rect.bottom >= -480) {
+      if (rect.top <= viewportHeight + 240 && rect.bottom >= -240) {
         activate("initial-near-viewport");
-        return;
-      }
-
-      const armFallback = () => {
-        fallbackTimer = setTimeout(() => activate("post-load-fallback"), 8000);
-      };
-      if (document.readyState === "complete") {
-        armFallback();
-      } else {
-        globalThis.addEventListener("load", armFallback, { once: true });
       }
     });
 

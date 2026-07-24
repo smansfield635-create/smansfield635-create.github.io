@@ -7,7 +7,7 @@ import {
   EXPECTED_PACKET_002_SOURCE_OBJECT_IDS,
   H_EARTH_RENDERER_CORRIDOR_CAPACITY_LAW_CONTRACT_ID,
   evaluateHEarthRendererCorridorBudgets
-} from '../h-earth-3d/integration/h-earth.renderer-corridor-capacity-law.mjs';
+} from './h-earth-renderer-corridor-capacity-law.mjs';
 
 import {
   EXPECTED_ROUTE_STATUS,

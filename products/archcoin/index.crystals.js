@@ -94,24 +94,43 @@
     const motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
     let sceneVisible = true;
     let disposed = false;
+    let staticFrameHandle = 0;
 
     const apply = () => {
       if (disposed) return;
 
-      const shouldRun =
+      const environmentVisible =
         !document.hidden &&
-        sceneVisible &&
+        sceneVisible;
+      const shouldAnimate =
+        environmentVisible &&
         !motionQuery.matches;
 
       if (root) {
         root.dataset.archcoinCrystalsDocumentVisible = document.hidden ? "false" : "true";
         root.dataset.archcoinCrystalsSceneVisible = sceneVisible ? "true" : "false";
         root.dataset.archcoinCrystalsReducedMotion = motionQuery.matches ? "true" : "false";
-        root.dataset.archcoinCrystalsEnvironmentRunning = shouldRun ? "true" : "false";
+        root.dataset.archcoinCrystalsEnvironmentRunning = shouldAnimate ? "true" : "false";
+        root.dataset.archcoinCrystalsPresentationMode = shouldAnimate
+          ? "animated"
+          : environmentVisible
+            ? "static"
+            : "suspended";
       }
 
-      if (shouldRun) {
+      if (staticFrameHandle) {
+        cancelAnimationFrame(staticFrameHandle);
+        staticFrameHandle = 0;
+      }
+
+      if (shouldAnimate) {
         api.start();
+      } else if (environmentVisible) {
+        api.start();
+        staticFrameHandle = requestAnimationFrame(() => {
+          staticFrameHandle = 0;
+          api.stop();
+        });
       } else {
         api.stop();
       }
@@ -120,6 +139,10 @@
     const onVisibilityChange = () => apply();
     const onPageHide = () => {
       disposed = true;
+      if (staticFrameHandle) {
+        cancelAnimationFrame(staticFrameHandle);
+        staticFrameHandle = 0;
+      }
       api.stop();
       observer?.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);

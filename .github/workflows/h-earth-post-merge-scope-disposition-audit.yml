@@ -1,4 +1,4 @@
-name: H-Earth Capacity Single-Module Restoration Builder
+name: H-Earth Capacity Single-Module Restoration Finalizer
 
 on:
   pull_request:
@@ -7,23 +7,46 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  build-and-audit-capacity-restoration:
+  build-audit-and-finalize-capacity-restoration:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Incorporate current main without discarding candidate work
+        run: |
+          git fetch origin main
+          git merge --no-edit origin/main
       - name: Build and execute single-module restoration
         run: node --experimental-default-type=module tools/h-earth-capacity-single-module-restoration-build.mjs
+      - name: Reconcile repository registry path coverage
+        run: node --experimental-default-type=module tools/h-earth-capacity-single-module-restoration-finalize.mjs
       - name: Upload generated capacity and execution receipt
-        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-capacity-single-module-restoration
+          name: h-earth-capacity-single-module-restoration-final
           path: artifacts/h-earth-capacity-single-module-restoration/**
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
+      - name: Remove temporary construction surfaces and restore workflow
+        run: |
+          git show origin/main:.github/workflows/h-earth-post-merge-scope-disposition-audit.yml > .github/workflows/h-earth-post-merge-scope-disposition-audit.yml
+          rm -f tools/h-earth-capacity-single-module-restoration-build.mjs
+          rm -f tools/h-earth-capacity-single-module-restoration-finalize.mjs
+          rm -rf artifacts/h-earth-capacity-single-module-restoration
+      - name: Commit audited final candidate to the correction branch
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Restore H-Earth capacity to the governed single-module graph"
+          git push origin "HEAD:${HEAD_BRANCH}"

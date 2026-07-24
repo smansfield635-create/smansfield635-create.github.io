@@ -1,0 +1,325 @@
+name: Universal Compass Interactions Neutral Compatibility Validation
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-interactions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify bounded source identity and syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object prototypes/universal-compass/index.interactions.js)" = "d2f8138054e276616031027e6eb2c37bc5aa3707"
+          for file in index.planet.js index.crystals.js index.controller.js index.compositor.js index.interactions.js; do
+            node --experimental-default-type=module --check "prototypes/universal-compass/${file}"
+          done
+
+      - name: Execute five-authority input diagnostics
+        shell: bash
+        run: |
+          set -uo pipefail
+          node --experimental-default-type=module --input-type=module <<'NODE' > /tmp/universal-compass-interactions-validation-receipt.json
+          import { createPlanetAuthority } from "./prototypes/universal-compass/index.planet.js";
+          import { buildUvSphereShape, createCrystalAuthority } from "./prototypes/universal-compass/index.crystals.js";
+          import { createCompassController } from "./prototypes/universal-compass/index.controller.js";
+          import { createCompositor } from "./prototypes/universal-compass/index.compositor.js";
+          import {
+            createInteractionAuthority,
+            UNIVERSAL_COMPASS_INTERACTIONS_CONTRACT
+          } from "./prototypes/universal-compass/index.interactions.js";
+
+          const findings = [];
+          const finding = (id, pass, details = null) => {
+            findings.push(Object.freeze({ id, pass: Boolean(pass), status: pass ? "PASS" : "FAIL", details }));
+          };
+          const capture = (id, operation, predicate = value => Boolean(value)) => {
+            try {
+              const value = operation();
+              finding(id, predicate(value), value);
+              return value;
+            } catch (error) {
+              finding(id, false, { code: error.code || error.name, message: error.message });
+              return null;
+            }
+          };
+          const captureErrorCode = (id, operation, expectedCode) => {
+            try {
+              operation();
+              finding(id, false, { expectedCode, actualCode: null });
+            } catch (error) {
+              finding(id, error.code === expectedCode, { expectedCode, actualCode: error.code || error.name });
+            }
+          };
+
+          const planet = createPlanetAuthority();
+          const worldSnapshot = planet.getWorldSnapshot();
+          const materialRegionDefinitions = Object.freeze([
+            Object.freeze({ id: "NEUTRAL_SURFACE", semanticRole: "NEUTRAL_SURFACE" })
+          ]);
+          const shapeDefinitions = Object.freeze([
+            buildUvSphereShape({
+              id: "NEUTRAL_SPHERE",
+              radius: 1,
+              longitudeSegments: 8,
+              latitudeSegments: 6,
+              materialRegionId: "NEUTRAL_SURFACE"
+            })
+          ]);
+          const visualProfile = Object.freeze({
+            id: "DGB_UNIVERSAL_COMPASS_NEUTRAL_INTERACTION_VALIDATION_VISUAL_PROFILE_v1",
+            byKind: Object.freeze({
+              CENTER: Object.freeze({
+                shapeId: "NEUTRAL_SPHERE",
+                visualScale: Object.freeze([1, 1, 1]),
+                materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"])
+              }),
+              CARDINAL: Object.freeze({
+                shapeId: "NEUTRAL_SPHERE",
+                visualScale: Object.freeze([0.8, 0.8, 0.8]),
+                materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"])
+              }),
+              CHILD: Object.freeze({
+                shapeId: "NEUTRAL_SPHERE",
+                visualScale: Object.freeze([0.55, 0.55, 0.55]),
+                materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"])
+              })
+            })
+          });
+          const crystals = createCrystalAuthority({
+            visualProfile,
+            shapeDefinitions,
+            materialRegionDefinitions,
+            crystalRevision: 1
+          });
+          crystals.consumeWorldSnapshot(worldSnapshot);
+          const crystalInput = crystals.getCompositorInput();
+          const controller = createCompassController({ planet, reducedMotion: false });
+          const compositor = createCompositor({
+            cameraConfig: {
+              position: [0, 0, 0],
+              target: [0, 0, 1],
+              up: [0, 1, 0],
+              fieldOfViewYDegrees: 60,
+              near: 0.1,
+              far: 100
+            },
+            projectionConfig: {
+              centerDepth: 10,
+              depthHysteresis: 0.5,
+              interpolationRate: 10,
+              maxDeltaSeconds: 0.1,
+              expectedRecordCount: 21,
+              expectedKindCounts: { CENTER: 1, CARDINAL: 4, CHILD: 16 }
+            }
+          });
+          const viewport = Object.freeze({ width: 1280, height: 720, pixelRatio: 2 });
+          let timestamp = 1000;
+          const project = () => compositor.project({
+            worldSnapshot,
+            crystalInput,
+            presentationContext: controller.getPresentationContext(),
+            viewport,
+            timestampMs: timestamp += 16,
+            deltaSeconds: 1 / 60
+          });
+
+          const constellation = project();
+          const interactions = createInteractionAuthority({ controller, planet, compositor });
+          finding("CONTRACT_AUTHORITY", UNIVERSAL_COMPASS_INTERACTIONS_CONTRACT.authority === "POINTER_INPUT_AND_GESTURE_PROPOSALS");
+          finding("NO_TARGET_ACCEPTANCE_AUTHORITY", UNIVERSAL_COMPASS_INTERACTIONS_CONTRACT.targetAcceptanceAuthority === false);
+          finding("STATIC_VALIDATION_PASS", interactions.validate().status === "PASS", interactions.validate());
+          finding("NO_LOCAL_REDUCED_MOTION_SETTER", typeof interactions.setReducedMotion === "undefined");
+          finding("CONSTELLATION_PROJECTION_READY", constellation.interactionProjectionRecords.length === 5);
+
+          const tapBegin = capture(
+            "CONSTELLATION_TAP_BEGIN",
+            () => interactions.begin({
+              id: "tap-constellation",
+              kind: "MOUSE",
+              x: 640,
+              y: 160,
+              timestamp: 1100,
+              targetId: "NORTH"
+            }),
+            result => result.accepted === true && result.phase === "PENDING"
+          );
+          const tapEnd = capture(
+            "CONSTELLATION_TAP_PROPOSAL",
+            () => interactions.end({
+              id: "tap-constellation",
+              x: 640,
+              y: 160,
+              timestamp: 1150,
+              cancel: false
+            }),
+            result => result.mode === "TAP_PROPOSAL" &&
+              result.targetProposal?.targetId === "NORTH" &&
+              result.targetProposal?.acceptanceAuthority === false
+          );
+          finding("TAP_RESULTS_IMMUTABLE", Object.isFrozen(tapBegin) && Object.isFrozen(tapEnd) && Object.isFrozen(tapEnd?.targetProposal));
+
+          capture("CONSTELLATION_DRAG_BEGIN", () => interactions.begin({
+            id: "drag-constellation",
+            kind: "TOUCH",
+            x: 600,
+            y: 300,
+            timestamp: 1200,
+            targetId: ""
+          }), result => result.accepted === true);
+          const dragMove = capture(
+            "CONSTELLATION_DRAG_PREVIEW",
+            () => interactions.move({
+              id: "drag-constellation",
+              x: 640,
+              y: 305,
+              timestamp: 1220
+            }),
+            result => result.phase === "DRAGGING" &&
+              planet.hasCardinal(result.primaryId) &&
+              result.worldRevision === planet.getWorldRevision()
+          );
+          finding("DRAG_QUATERNION_NORMALIZED", Array.isArray(dragMove?.quaternion) && Math.abs(Math.hypot(...dragMove.quaternion) - 1) <= 1e-7);
+          capture("CONSTELLATION_DRAG_COMMIT", () => interactions.end({
+            id: "drag-constellation",
+            x: 640,
+            y: 305,
+            timestamp: 1240,
+            cancel: false
+          }), result => result.mode === "DRAG_COMMIT");
+
+          controller.openCluster("NORTH");
+          const cluster = project();
+          finding("CLUSTER_PROJECTION_READY", cluster.interactionProjectionRecords.length === 6);
+          capture("CLUSTER_CHILD_TAP_BEGIN", () => interactions.begin({
+            id: "tap-child",
+            kind: "PEN",
+            x: 640,
+            y: 330,
+            timestamp: 1300,
+            targetId: "NORTH_CHILD_1"
+          }), result => result.accepted === true);
+          capture("CLUSTER_CHILD_TAP_PROPOSAL", () => interactions.end({
+            id: "tap-child",
+            x: 640,
+            y: 330,
+            timestamp: 1350,
+            cancel: false
+          }), result => result.mode === "TAP_PROPOSAL" && result.targetProposal?.targetId === "NORTH_CHILD_1");
+
+          capture("HELD_TRANSITION_DRAG_BEGIN", () => interactions.begin({
+            id: "held-drag",
+            kind: "MOUSE",
+            x: 600,
+            y: 300,
+            timestamp: 1400,
+            targetId: ""
+          }), result => result.accepted === true);
+          capture("HELD_TRANSITION_DRAG_PREVIEW", () => interactions.move({
+            id: "held-drag",
+            x: 630,
+            y: 300,
+            timestamp: 1420
+          }), result => result.phase === "DRAGGING" && planet.hasChild(result.primaryId));
+          controller.enterHeld("interaction-held-transition");
+          project();
+          capture(
+            "HELD_CONTINUATION_REJECTS_WITHOUT_DOUBLE_CANCEL",
+            () => interactions.move({
+              id: "held-drag",
+              x: 640,
+              y: 300,
+              timestamp: 1440
+            }),
+            result => result.accepted === false && result.reason === "HELD" && interactions.getActive() === null
+          );
+          controller.leaveHeld();
+          project();
+
+          captureErrorCode(
+            "MALFORMED_MOVE_CONTROLLED_ERROR",
+            () => interactions.move(null),
+            "COMPASS_INTERACTION_MOVE_POINTER_KEYS_INVALID"
+          );
+
+          try {
+            createInteractionAuthority({
+              controller,
+              planet,
+              compositor,
+              clock: () => 0
+            });
+            finding("FACTORY_CONSUMES_ONLY_THREE_AUTHORITIES", false, "EXTERNAL_CLOCK_ACCEPTED");
+          } catch (error) {
+            finding(
+              "FACTORY_CONSUMES_ONLY_THREE_AUTHORITIES",
+              error.code === "COMPASS_INTERACTION_FACTORY_KEYS_INVALID",
+              error.code || error.name
+            );
+          }
+
+          const currentProjection = compositor.getLastProjection();
+          finding(
+            "ACTUAL_PROJECTION_SNAPSHOT_IMMUTABLE",
+            Object.isFrozen(currentProjection) &&
+              Object.isFrozen(currentProjection.cameraBasis) &&
+              Object.isFrozen(currentProjection.interactionProjectionRecords) &&
+              currentProjection.interactionProjectionRecords.every(Object.isFrozen)
+          );
+
+          const heldInteractions = createInteractionAuthority({ controller, planet, compositor });
+          controller.enterHeld("held-begin-check");
+          project();
+          capture(
+            "HELD_BEGIN_REJECTED",
+            () => heldInteractions.begin({
+              id: "held-begin",
+              kind: "MOUSE",
+              x: 0,
+              y: 0,
+              timestamp: 1600,
+              targetId: ""
+            }),
+            result => result.accepted === false && result.reason === "HELD" && heldInteractions.getActive() === null
+          );
+          controller.leaveHeld();
+
+          const failed = findings.filter(item => !item.pass);
+          const receipt = {
+            schema: "DGB_UNIVERSAL_COMPASS_INTERACTIONS_NEUTRAL_COMPATIBILITY_DIAGNOSTIC_RECEIPT_v1",
+            status: failed.length === 0 ? "PASS" : "FAIL",
+            sourceCommit: process.env.GITHUB_SHA,
+            interactionsBlobExpected: "d2f8138054e276616031027e6eb2c37bc5aa3707",
+            summary: {
+              findingCount: findings.length,
+              passed: findings.length - failed.length,
+              failed: failed.length
+            },
+            findings,
+            productAuthority: false,
+            productionAuthority: false
+          };
+          console.log(JSON.stringify(receipt, null, 2));
+          if (failed.length > 0) process.exitCode = 1;
+          NODE
+
+      - name: Preserve interactions diagnostic receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-interactions-neutral-compatibility-diagnostic-receipt
+          path: /tmp/universal-compass-interactions-validation-receipt.json
+          if-no-files-found: error
+          retention-days: 90

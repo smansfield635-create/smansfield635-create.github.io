@@ -1,0 +1,43 @@
+name: Bounded Laws native glow cache key
+
+on:
+  push:
+    paths:
+      - ".github/workflows/bounded-laws-native-glow-cache-key.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply bounded Laws cache-key correction
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path("laws/index.html")
+          old = "/laws/index.interactions.js?v=LAWS_SPATIAL_PRIMARY_SELECTION_GLOW_SETTLEMENT_v1"
+          new = "/laws/index.interactions.js?v=LAWS_SPATIAL_PRIMARY_SELECTION_NATIVE_GLOW_v2"
+
+          text = html.read_text(encoding="utf-8")
+          count = text.count(old)
+          if count != 1:
+              raise SystemExit(f"Expected exactly one Laws interaction cache-key target; found {count}.")
+
+          html.write_text(text.replace(old, new), encoding="utf-8")
+          Path(".github/workflows/bounded-laws-native-glow-cache-key.yml").unlink()
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.html .github/workflows/bounded-laws-native-glow-cache-key.yml
+          git commit -m "Advance Laws native glow cache key"
+          git push origin HEAD:main

@@ -21,7 +21,7 @@
   content: none !important;
 }
 
-.archcoin-round4-laws-globe-canvas {
+.archcoin-round4-globe .archcoin-round4-laws-globe-canvas {
   position: absolute !important;
   inset: -10% !important;
   z-index: 4 !important;

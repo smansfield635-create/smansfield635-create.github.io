@@ -1,0 +1,246 @@
+name: Universal Compass Planet Four-Authority Integration Validation
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-planet-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify bounded source identity and syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object prototypes/universal-compass/index.planet.js)" = "a3913a4b7b029aa167c545f5af40eea5a2782a28"
+          node --experimental-default-type=module --check prototypes/universal-compass/index.planet.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.crystals.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.controller.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.compositor.js
+
+      - name: Execute Planet to Crystals to Controller to Compositor integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module --input-type=module <<'NODE' > /tmp/universal-compass-planet-integration-receipt.json
+          import {
+            createPlanetAuthority,
+            UNIVERSAL_COMPASS_PLANET_CONTRACT
+          } from "./prototypes/universal-compass/index.planet.js";
+          import {
+            buildUvSphereShape,
+            createCrystalAuthority,
+            UNIVERSAL_COMPASS_CRYSTALS_CONTRACT
+          } from "./prototypes/universal-compass/index.crystals.js";
+          import {
+            createCompassController,
+            UNIVERSAL_COMPASS_CONTROLLER_CONTRACT
+          } from "./prototypes/universal-compass/index.controller.js";
+          import {
+            createCompositor,
+            UNIVERSAL_COMPASS_COMPOSITOR_CONTRACT
+          } from "./prototypes/universal-compass/index.compositor.js";
+
+          const assert = (condition, id, details = null) => {
+            if (condition) return;
+            const error = new Error(id);
+            error.details = details;
+            throw error;
+          };
+
+          const planet = createPlanetAuthority();
+          const worldSnapshot = planet.getWorldSnapshot();
+          const worldSnapshotAgain = planet.getWorldSnapshot();
+
+          assert(worldSnapshot === worldSnapshotAgain, "STABLE_WORLD_SNAPSHOT_IDENTITY");
+          assert(worldSnapshot.records.length === 21, "EXACT_21_WORLD_RECORDS");
+          assert(worldSnapshot.identityRegistry.cardinalIds.length === 4, "EXACT_4_CARDINALS");
+          assert(worldSnapshot.identityRegistry.childIds.length === 16, "EXACT_16_CHILDREN");
+          assert(worldSnapshot.membershipRegistry.clusters.length === 4, "EXACT_4_CLUSTERS");
+          assert(worldSnapshot.membershipRegistry.clusters.every(cluster => cluster.childIds.length === 4), "EXACT_4_CHILDREN_PER_CLUSTER");
+          assert(worldSnapshot.validationReceipt.status === "PASS", "PLANET_RECEIPT_PASS");
+          assert(planet.validate().status === "PASS", "PLANET_PUBLIC_VALIDATE_PASS");
+          assert(planet.hasCardinal("NORTH"), "CONTROLLER_CARDINAL_LOOKUP_READY");
+          assert(planet.hasChild("NORTH_CHILD_1"), "CONTROLLER_CHILD_LOOKUP_READY");
+          assert(planet.isChildOfCardinal("NORTH_CHILD_1", "NORTH"), "CONTROLLER_MEMBERSHIP_LOOKUP_READY");
+          assert(worldSnapshot.records.every(record => ![
+            "routeKey", "domain", "destination", "navigation", "product",
+            "semantic", "presentation", "primaryId", "alignmentScore", "depthScore"
+          ].some(key => Object.prototype.hasOwnProperty.call(record, key))), "PROHIBITED_WORLD_FIELDS_ABSENT");
+
+          const materialRegionDefinitions = Object.freeze([
+            Object.freeze({ id: "NEUTRAL_SURFACE", semanticRole: "NEUTRAL_SURFACE" })
+          ]);
+          const shapeDefinitions = Object.freeze([
+            buildUvSphereShape({
+              id: "NEUTRAL_SPHERE",
+              radius: 1,
+              longitudeSegments: 8,
+              latitudeSegments: 6,
+              materialRegionId: "NEUTRAL_SURFACE"
+            })
+          ]);
+          const visualProfile = Object.freeze({
+            id: "DGB_UNIVERSAL_COMPASS_NEUTRAL_INTEGRATION_VISUAL_PROFILE_v1",
+            byKind: Object.freeze({
+              CENTER: Object.freeze({
+                shapeId: "NEUTRAL_SPHERE",
+                visualScale: Object.freeze([1, 1, 1]),
+                materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"])
+              }),
+              CARDINAL: Object.freeze({
+                shapeId: "NEUTRAL_SPHERE",
+                visualScale: Object.freeze([0.8, 0.8, 0.8]),
+                materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"])
+              }),
+              CHILD: Object.freeze({
+                shapeId: "NEUTRAL_SPHERE",
+                visualScale: Object.freeze([0.55, 0.55, 0.55]),
+                materialRegionIds: Object.freeze(["NEUTRAL_SURFACE"])
+              })
+            })
+          });
+          const crystals = createCrystalAuthority({
+            visualProfile,
+            shapeDefinitions,
+            materialRegionDefinitions,
+            crystalRevision: 1
+          });
+          const crystalRecords = crystals.consumeWorldSnapshot(worldSnapshot);
+          const crystalInput = crystals.getCompositorInput();
+
+          assert(crystalRecords.length === 21, "EXACT_21_CRYSTAL_RECORDS");
+          assert(crystalInput.records.length === 21, "EXACT_21_COMPOSITOR_CRYSTAL_INPUTS");
+          assert(crystalInput.worldRevision === worldSnapshot.worldRevision, "PLANET_CRYSTAL_REVISION_ALIGNMENT");
+          assert(crystals.validate().status === "PASS", "CRYSTAL_RECEIPT_PASS");
+          assert(crystalRecords.every(record => ![
+            "parentId", "worldPosition", "worldOrientation", "worldScale"
+          ].some(key => Object.prototype.hasOwnProperty.call(record, key))), "CRYSTALS_DO_NOT_RECONSTRUCT_WORLD_TRUTH");
+
+          const controller = createCompassController({
+            planet,
+            reducedMotion: true
+          });
+          const compositor = createCompositor({
+            cameraConfig: {
+              position: [0, 0, 0],
+              target: [0, 0, 1],
+              up: [0, 1, 0],
+              fieldOfViewYDegrees: 60,
+              near: 0.1,
+              far: 100
+            },
+            projectionConfig: {
+              centerDepth: 10,
+              depthHysteresis: 0.5,
+              interpolationRate: 10,
+              maxDeltaSeconds: 0.1,
+              expectedRecordCount: 21,
+              expectedKindCounts: {
+                CENTER: 1,
+                CARDINAL: 4,
+                CHILD: 16
+              }
+            }
+          });
+          const viewport = Object.freeze({ width: 1280, height: 720, pixelRatio: 2 });
+          const project = timestampMs => compositor.project({
+            worldSnapshot,
+            crystalInput,
+            presentationContext: controller.getPresentationContext(),
+            viewport,
+            timestampMs,
+            deltaSeconds: 1 / 60
+          });
+
+          const constellation = project(1000);
+          assert(constellation.records.length === 21, "CONSTELLATION_EXACT_JOINED_RECORDS");
+          assert(constellation.interactionProjectionRecords.length === 5, "CONSTELLATION_VISIBLE_AUTHORITY_SET");
+          assert(constellation.hiddenRecords.length === 16, "CONSTELLATION_HIDDEN_CHILDREN");
+          assert(constellation.tombstones.length === 0, "CONSTELLATION_INITIAL_TOMBSTONES_EMPTY");
+          assert(constellation.validationReceipt.status === "PASS", "CONSTELLATION_PROJECTION_PASS");
+
+          controller.openCluster("NORTH");
+          const cluster = project(1016);
+          assert(controller.getPresentationContext().presentation === "CLUSTER", "CONTROLLER_CLUSTER_CONTEXT");
+          assert(controller.getPresentationContext().activeCardinalId === "NORTH", "CONTROLLER_ACTIVE_CARDINAL_CONTEXT");
+          assert(cluster.interactionProjectionRecords.length === 6, "CLUSTER_VISIBLE_AUTHORITY_SET");
+          assert(cluster.hiddenRecords.length === 15, "CLUSTER_HIDDEN_NONMEMBERS");
+          assert(cluster.tombstones.length === 3, "CLUSTER_ONE_FRAME_TOMBSTONES");
+          assert(cluster.validationReceipt.status === "PASS", "CLUSTER_PROJECTION_PASS");
+
+          controller.selectChild("NORTH_CHILD_1");
+          assert(controller.getState().selectedChildId === "NORTH_CHILD_1", "CONTROLLER_CHILD_SELECTION_EXECUTED");
+          controller.enterHeld("four-authority-integration-check");
+          const held = project(1032);
+          assert(controller.getPresentationContext().held === true, "CONTROLLER_HELD_CONTEXT");
+          assert(held.interactionProjectionRecords.length === 0, "HELD_CONTEXT_DISABLES_INTERACTION");
+          assert(held.tombstones.length === 0, "TOMBSTONES_EXPIRE_AFTER_ONE_FRAME");
+          assert(compositor.validate(held).status === "PASS", "COMPOSITOR_PUBLIC_VALIDATE_PASS");
+
+          assert(Object.isFrozen(worldSnapshot), "WORLD_SNAPSHOT_IMMUTABLE");
+          assert(Object.isFrozen(crystalInput), "CRYSTAL_INPUT_IMMUTABLE");
+          assert(Object.isFrozen(held), "PROJECTION_SNAPSHOT_IMMUTABLE");
+          assert(UNIVERSAL_COMPASS_PLANET_CONTRACT.routeAuthority === false, "PLANET_NO_ROUTE_AUTHORITY");
+          assert(UNIVERSAL_COMPASS_PLANET_CONTRACT.productAuthority === false, "PLANET_NO_PRODUCT_AUTHORITY");
+          assert(UNIVERSAL_COMPASS_CRYSTALS_CONTRACT.worldTransformAuthority === false, "CRYSTALS_NO_WORLD_TRANSFORM_AUTHORITY");
+          assert(UNIVERSAL_COMPASS_CONTROLLER_CONTRACT.navigationAuthority === false, "CONTROLLER_NO_NAVIGATION_AUTHORITY");
+          assert(UNIVERSAL_COMPASS_COMPOSITOR_CONTRACT.rendererAuthority === false, "COMPOSITOR_NO_RENDERER_AUTHORITY");
+
+          let externalConfigurationRejected = false;
+          try {
+            createPlanetAuthority({ profile: {} });
+          } catch (error) {
+            externalConfigurationRejected = error.code === "COMPASS_PLANET_EXTERNAL_CONFIGURATION_PROHIBITED";
+          }
+          assert(externalConfigurationRejected, "PLANET_EXTERNAL_CONFIGURATION_REJECTED");
+
+          console.log(JSON.stringify({
+            schema: "DGB_UNIVERSAL_COMPASS_PLANET_FOUR_AUTHORITY_INTEGRATION_VALIDATION_RECEIPT_v1",
+            status: "PASS",
+            assertionCount: 43,
+            sourceCommit: process.env.GITHUB_SHA,
+            planetBlobExpected: "a3913a4b7b029aa167c545f5af40eea5a2782a28",
+            worldRevision: worldSnapshot.worldRevision,
+            worldHash: worldSnapshot.worldHash,
+            planetValidationReceiptHash: worldSnapshot.validationReceipt.receiptHash,
+            crystalHash: crystalInput.crystalHash,
+            projectionRevision: held.projectionRevision,
+            recordCount: held.records.length,
+            claims: {
+              planetNeutralReplacementExecuted: true,
+              planetWorldSnapshotExecuted: true,
+              planetToCrystalsExecuted: true,
+              crystalsToCompositorExecuted: true,
+              controllerToCompositorExecuted: true,
+              constellationProjectionExecuted: true,
+              clusterProjectionExecuted: true,
+              heldProjectionExecuted: true,
+              deterministicWorldHashPresent: true,
+              immutableAuthorityChain: true,
+              browserAcceptance: false,
+              visualAcceptance: false,
+              interactionReplacementAcceptance: false,
+              productAuthority: false,
+              productionAuthority: false
+            }
+          }, null, 2));
+          NODE
+
+      - name: Preserve four-authority integration receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-planet-four-authority-integration-validation-receipt
+          path: /tmp/universal-compass-planet-integration-receipt.json
+          if-no-files-found: error
+          retention-days: 90

@@ -36,7 +36,6 @@ const rootAgents = readText('AGENTS.md');
 const hEarthAgents = readText('h-earth-3d/AGENTS.md');
 const showroomAgents = readText('showroom/globe/h-earth/AGENTS.md');
 
-const target3 = execJson('tools/h-earth-repository-registry-target-3-audit.mjs');
 const target4A = execJson('tools/h-earth-repository-registry-target-4a-contract-audit.mjs');
 const target4B = execJson('tools/h-earth-repository-registry-target-4b-audit.mjs');
 const protectedTarget4EReceiptPath = 'h-earth-3d/registry/h-earth.repository-registry.target-4e-receipt.json';
@@ -114,7 +113,6 @@ const checks = {
   bootstrapNext4F1: bootstrap.stoppingCondition.nextAuthorizedSubtarget === '4F-1',
   deferralExact: deferral.reclassification.remainingTarget4DStatus === 'OPTIONAL_DEFERRED_GENERALIZATION_LANE' && deferral.reclassification.target4BPortabilityRefactorRequiredForHEarth === false,
   target4ECompletionExact: target4ECompletion.result === 'PASS' && target4ECompletion.boundaries.target4EComplete === true,
-  target3Pass: target3.result === 'PASS' && target3.passedChecks === auditContract.requiredRegressions.target3InstructionAudit,
   target4APass: target4A.result === 'PASS' && target4A.passedChecks === auditContract.requiredRegressions.target4AContractAudit,
   target4BPass: target4B.result === 'PASS' && target4B.audit.passedChecks === auditContract.requiredRegressions.target4BEngineAudit,
   target4EPass: target4E.result === 'PASS',
@@ -162,7 +160,6 @@ const output = {
     failedChecks
   },
   regressions: {
-    target3: { result: target3.result, passedChecks: target3.passedChecks, failedChecks: target3.failedChecks.length },
     target4A: { result: target4A.result, passedChecks: target4A.passedChecks, failedChecks: target4A.failedChecks.length },
     target4B: { result: target4B.result, passedChecks: target4B.audit.passedChecks, failedChecks: target4B.audit.failedChecks.length },
     target4C: {

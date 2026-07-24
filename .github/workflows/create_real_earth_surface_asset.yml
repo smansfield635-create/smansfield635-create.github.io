@@ -1,59 +1,273 @@
-name: Create Real Earth Surface Asset
+name: H-Earth Capacity Materializer Transport
 
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - ".github/workflows/create_real_earth_surface_asset.yml"
+  pull_request_target:
+    branches:
+      - agent/h-earth-capacity-materializer-transport-001
 
 permissions:
   contents: write
 
+concurrency:
+  group: h-earth-capacity-materializer-transport-001
+  cancel-in-progress: false
+
 jobs:
-  create-real-earth-surface-asset:
+  materialize-capacity-only:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
-      - name: Check out repository
+      - name: Check out exact correction branch
         uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-capacity-camera-envelope-correction-001
+          fetch-depth: 0
 
-      - name: Create Earth asset folder
+      - name: Verify exact clean basis
+        shell: bash
         run: |
-          mkdir -p assets/earth
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "d724d799a79ec6c826f6641669d6952953626343"
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "55169c7dc038b02dae7dccd5a79972c0018bc6e8"
+          test -z "$(git status --short)"
 
-      - name: Install image tools
+      - name: Replace capacity only
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick file curl
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
 
-      - name: Download real NASA Blue Marble Earth surface with clouds
-        run: |
-          curl -L -f \
-            "https://neo.gsfc.nasa.gov/archive/bluemarble/land_ocean_ice_cloud_8192_preview.png" \
-            -o /tmp/earth_surface_real.png
+          path = Path('showroom/globe/h-earth/capacity.js')
+          text = path.read_text(encoding='utf-8')
 
-      - name: Convert real Earth surface to required JPG path
-        run: |
-          convert /tmp/earth_surface_real.png \
-            -resize 2048x1024\! \
-            -quality 94 \
-            assets/earth/earth_surface_2048.jpg
+          old_contract = 'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1'
+          new_contract = 'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2'
+          old_precheck = 'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_PRECHECK_EXECUTION_CORRIDOR_v1'
 
-      - name: Verify real Earth surface JPG
-        run: |
-          test -s assets/earth/earth_surface_2048.jpg
-          file assets/earth/earth_surface_2048.jpg
+          assert text.count(old_contract) == 2
+          assert text.count(old_precheck) == 3
+          text = text.replace(old_contract, new_contract)
+          text = text.replace(old_precheck, old_contract)
 
-      - name: Commit real Earth surface JPG
+          old_projection = """  initialProjectionCandidate: deepFreeze({
+            position: deepFreeze({
+              x: 0,
+              y: 5.4,
+              z: -12
+            }),
+
+            target: deepFreeze({
+              x: 0,
+              y: 1.2,
+              z: 7.5
+            }),
+
+            up: deepFreeze({
+              x: 0,
+              y: 1,
+              z: 0
+            }),
+
+            verticalFovDegrees: 52,
+            nearPlane: 0.25,
+            farPlane: 48,
+"""
+          new_projection = """  initialProjectionCandidate: deepFreeze({
+            position: deepFreeze({
+              x: 0,
+              y: 24,
+              z: 64
+            }),
+
+            target: deepFreeze({
+              x: 0,
+              y: 0.5,
+              z: -128
+            }),
+
+            up: deepFreeze({
+              x: 0,
+              y: 1,
+              z: 0
+            }),
+
+            verticalFovDegrees: 52,
+            nearPlane: 0.25,
+            farPlane: 512,
+"""
+          assert text.count(old_projection) == 1
+          text = text.replace(old_projection, new_projection)
+
+          old_bounds = """    positionBounds: deepFreeze({
+              xMin: -18,
+              xMax: 18,
+
+              yMin: -2,
+              yMax: 24,
+
+              zMin: -24,
+              zMax: 30
+            }),
+
+            targetBounds: deepFreeze({
+              xMin: -10,
+              xMax: 10,
+
+              yMin: -1,
+              yMax: 8,
+
+              zMin: -2,
+              zMax: 24
+            }),
+"""
+          new_bounds = """    positionBounds: deepFreeze({
+              xMin: -256,
+              xMax: 256,
+
+              yMin: -80,
+              yMax: 120,
+
+              zMin: -256,
+              zMax: 256
+            }),
+
+            targetBounds: deepFreeze({
+              xMin: -96,
+              xMax: 96,
+
+              yMin: -1,
+              yMax: 8,
+
+              zMin: -256,
+              zMax: 24
+            }),
+"""
+          assert text.count(old_bounds) == 1
+          text = text.replace(old_bounds, new_bounds)
+
+          old_next = "    'BACK_UP_RENEWED_CAPACITY_THEN_RECRAFT_COMPOSITOR_AGAINST_EXACT_FRAME_BASED_CAPACITY_SHAPE',"
+          new_next = "    'RE_EXECUTE_COMPOSITOR_AND_RENDERER_GAUGE_AGAINST_RECONCILED_CAMERA_ENVELOPE',"
+          assert text.count(old_next) == 1
+          text = text.replace(old_next, new_next)
+
+          assert old_precheck not in text
+          assert text.count(old_contract) == 3
+          assert text.count(new_contract) == 2
+          path.write_text(text, encoding='utf-8')
+          PY
+
+          node --experimental-default-type=module --check showroom/globe/h-earth/capacity.js
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
+          test "$(git status --short | wc -l)" = "1"
+          test "$(git status --short | awk '{print $2}')" = "showroom/globe/h-earth/capacity.js"
+
+      - name: Execute capacity and compositor gauge
+        shell: bash
         run: |
+          set -euo pipefail
+          node --experimental-default-type=module --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {
+            H_EARTH_3D_CAPACITY_CONTRACT_ID,
+            H_EARTH_3D_CAMERA_CAPACITY,
+            H_EARTH_3D_CAPACITY_PREFLIGHT
+          } from './showroom/globe/h-earth/capacity.js';
+          import {
+            H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE,
+            resolveHEarth3DCompositorCameraPose
+          } from './showroom/globe/h-earth/compositor.js';
+
+          const expectedContract =
+            'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2';
+          assert.equal(H_EARTH_3D_CAPACITY_CONTRACT_ID, expectedContract);
+          assert.equal(H_EARTH_3D_CAPACITY_PREFLIGHT.eligible, true);
+
+          const candidate = H_EARTH_3D_CAMERA_CAPACITY.initialProjectionCandidate;
+          const pose = resolveHEarth3DCompositorCameraPose();
+          assert.equal(pose.eligible, true);
+          assert.equal(pose.farPlane, 512);
+          assert.ok(Math.abs(H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE.yawDegrees) < 1e-10);
+          for (const axis of ['x', 'y', 'z']) {
+            assert.ok(Math.abs(pose.position[axis] - candidate.position[axis]) < 1e-9);
+            assert.ok(Math.abs(pose.target[axis] - candidate.target[axis]) < 1e-9);
+          }
+
+          const vector = (x, y, z) => ({ x, y, z });
+          const subtract = (a, b) => vector(a.x - b.x, a.y - b.y, a.z - b.z);
+          const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
+          const cross = (a, b) => vector(
+            a.y * b.z - a.z * b.y,
+            a.z * b.x - a.x * b.z,
+            a.x * b.y - a.y * b.x
+          );
+          const normalize = (v) => {
+            const length = Math.hypot(v.x, v.y, v.z);
+            return vector(v.x / length, v.y / length, v.z / length);
+          };
+
+          function gauge(camera) {
+            const forward = normalize(subtract(camera.target, camera.position));
+            const right = normalize(cross(camera.up, forward));
+            const up = normalize(cross(forward, right));
+            const focalLength = 1 / Math.tan(camera.verticalFovDegrees * Math.PI / 360);
+            const aspectRatio = 353.15557861328125 / 360;
+            const sampleSide = 65;
+            const total = sampleSide * sampleSide;
+            let depthEligible = 0;
+            let visible = 0;
+
+            for (let xi = 0; xi < sampleSide; xi += 1) {
+              const x = -96 + 192 * xi / (sampleSide - 1);
+              for (let zi = 0; zi < sampleSide; zi += 1) {
+                const z = -256 + 238 * zi / (sampleSide - 1);
+                const relative = subtract(vector(x, 0.3288059709118968, z), camera.position);
+                const cameraX = dot(relative, right);
+                const cameraY = dot(relative, up);
+                const cameraZ = dot(relative, forward);
+                if (cameraZ <= camera.nearPlane || cameraZ >= camera.farPlane) continue;
+                depthEligible += 1;
+                const ndcX = cameraX * focalLength / (cameraZ * aspectRatio);
+                const ndcY = cameraY * focalLength / cameraZ;
+                if (Math.abs(ndcX) <= 1 && Math.abs(ndcY) <= 1) visible += 1;
+              }
+            }
+
+            return { total, depthEligible, visible };
+          }
+
+          const baselineGauge = gauge({
+            position: vector(12.012347435020216, 5.347251973209822, 22.875103582450123),
+            target: vector(0, 1.2, 7.5),
+            up: vector(-0.12800321830631378, 0.9781476007338057, -0.1638366481649503),
+            verticalFovDegrees: 52,
+            nearPlane: 0.25,
+            farPlane: 48
+          });
+          const correctedGauge = gauge({
+            position: pose.position,
+            target: pose.target,
+            up: pose.up,
+            verticalFovDegrees: pose.verticalFovDegrees,
+            nearPlane: pose.nearPlane,
+            farPlane: pose.farPlane
+          });
+
+          assert.deepEqual(baselineGauge, { total: 4225, depthEligible: 410, visible: 11 });
+          assert.deepEqual(correctedGauge, { total: 4225, depthEligible: 4225, visible: 3589 });
+          console.log(JSON.stringify({ baselineGauge, correctedGauge }, null, 2));
+          NODE
+
+      - name: Commit exact capacity-only replacement
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git status --short | wc -l)" = "1"
+          test "$(git status --short | awk '{print $2}')" = "showroom/globe/h-earth/capacity.js"
+          git diff --check
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add assets/earth/earth_surface_2048.jpg
-
-          if git diff --cached --quiet; then
-            echo "Real Earth surface asset already current."
-          else
-            git commit -m "Replace Earth surface with real Blue Marble asset"
-            git push
-          fi
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add showroom/globe/h-earth/capacity.js
+          git commit -m "Correct H-Earth capacity camera envelope" -m "Capacity-only replacement. Gauge: baseline visible samples 11/4225; corrected visible samples 3589/4225; corrected depth-eligible samples 4225/4225; modeled visibility gain 326.27x. Compositor and renderer source unchanged. No renderer-pass, visual-pass, validation, deployment, or production claim."
+          git push origin HEAD:agent/h-earth-capacity-camera-envelope-correction-001

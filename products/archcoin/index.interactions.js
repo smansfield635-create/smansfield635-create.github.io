@@ -51,11 +51,13 @@
     });
   }
 
-  function afterFirstPaint(task, timeout = 1400) {
+  function afterFirstPaint(task, timeout = 1400, delay = 0) {
     return new Promise((resolve, reject) => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          runIdle(task, timeout).then(resolve, reject);
+          setTimeout(() => {
+            runIdle(task, timeout).then(resolve, reject);
+          }, delay);
         });
       });
     });
@@ -141,7 +143,7 @@
       acceptedMirrorInstalled: true,
       productionIdentity: true,
       loadingMode: "semantic-first-viewport-gated",
-      cosmosLoadingMode: "post-paint-idle",
+      cosmosLoadingMode: "post-paint-delayed-idle",
       synchronousXhrUsed: false,
       evalUsed: false,
       activationReason: runtime.sceneActivationReason || "unknown",
@@ -258,7 +260,8 @@
   if (!runtime.cosmosReady) {
     runtime.cosmosReady = afterFirstPaint(
       () => loadScript(COSMOS_URL, COSMOS_SCRIPT_ATTRIBUTE),
-      1600
+      2200,
+      1800
     ).catch(reportCosmosFailure);
   }
 

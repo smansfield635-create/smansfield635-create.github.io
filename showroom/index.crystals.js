@@ -1,10 +1,14 @@
 /* /showroom/index.crystals.js
-   Showroom spherical cluster, Compass-family glow, and projected cardinal labels.
+   Showroom spherical cluster, projected cardinal labels, and primary-derived
+   Compass-family prominence.
 */
 (() => {
   "use strict";
 
   const SOURCE_URL = "./index.crystals.source.js";
+  const SELECTION_URL =
+    "./index.selection.js?v=SHOWROOM_PRIMARY_SELECTION_AND_SETTLEMENT_v1";
+
   const LABELS = Object.freeze({
     north: "Story",
     east: "Characters",
@@ -22,11 +26,40 @@
     return request.responseText;
   }
 
+  function loadSelectionSupport() {
+    if (
+      globalThis.SHOWROOM_PRIMARY_SELECTION ||
+      document.querySelector("script[data-showroom-primary-selection]")
+    ) {
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = SELECTION_URL;
+    script.async = false;
+    script.dataset.showroomPrimarySelection = "true";
+    script.addEventListener("error", () => {
+      globalThis.dispatchEvent(
+        new CustomEvent("SHOWROOM_PRIMARY_SELECTION_FAILURE", {
+          detail: Object.freeze({ source: SELECTION_URL })
+        })
+      );
+    }, { once: true });
+    document.head.append(script);
+  }
+
   function replaceRequired(source, before, after, identity) {
     if (!source.includes(before)) {
       throw new Error(`SHOWROOM_CRYSTALS_REQUIRED_PATTERN_MISSING:${identity}`);
     }
     return source.replace(before, after);
+  }
+
+  function replaceRegexRequired(source, pattern, replacement, identity) {
+    if (!pattern.test(source)) {
+      throw new Error(`SHOWROOM_CRYSTALS_REQUIRED_PATTERN_MISSING:${identity}`);
+    }
+    return source.replace(pattern, replacement);
   }
 
   function replaceSection(source, startMarker, endMarker, transform, identity) {
@@ -50,7 +83,9 @@
         for (const [property, value] of Object.entries(values)) {
           const pattern = new RegExp(`(${property}:\\n\\s+)([0-9.]+)`);
           if (!pattern.test(output)) {
-            throw new Error(`SHOWROOM_CRYSTALS_MATERIAL_PROPERTY_MISSING:${family}:${property}`);
+            throw new Error(
+              `SHOWROOM_CRYSTALS_MATERIAL_PROPERTY_MISSING:${family}:${property}`
+            );
           }
           output = output.replace(pattern, `$1${value}`);
         }
@@ -65,8 +100,70 @@
       source,
       "  const ROOM_BASE_POSITIONS = Object.freeze({",
       "\n\n  const PALETTES = Object.freeze({",
-      () => `  const ROOM_BASE_POSITIONS = Object.freeze({\n    1:\n      Object.freeze([\n        0,\n        0.42155918243834756,\n        -0.9713677415028749\n      ]),\n\n    2:\n      Object.freeze([\n        1.3178909481432288,\n        0.29135821915396054,\n        0\n      ]),\n\n    3:\n      Object.freeze([\n        0,\n        -0.5073345276802548,\n        0.9389695242664297\n      ]),\n\n    4:\n      Object.freeze([\n        -1.351990798995593,\n        -0.12787386777498447,\n        0\n      ])\n  });`,
-      "SPHERICAL_ROOM_CLUSTER"
+      () => `  const ROOM_BASE_POSITIONS = Object.freeze({
+    1:
+      Object.freeze([
+        0,
+        0.60,
+        -1.38
+      ]),
+
+    2:
+      Object.freeze([
+        1.87,
+        0.414,
+        0
+      ]),
+
+    3:
+      Object.freeze([
+        0,
+        -0.72,
+        1.33
+      ]),
+
+    4:
+      Object.freeze([
+        -1.92,
+        -0.182,
+        0
+      ])
+  });`,
+      "EXPANDED_SPHERICAL_ROOM_CLUSTER"
+    );
+
+    source = replaceRequired(
+      source,
+      `    const candidates = [
+      frame.cluster
+        ? frame.cluster.activeChildId
+        : "",`,
+      `    const candidates = [
+      frame.cluster
+        ? frame.cluster.previewPrimaryRoom
+        : "",
+
+      frame.cluster
+        ? frame.cluster.primaryRoom
+        : "",
+
+      frame.cluster
+        ? frame.cluster.activeChildId
+        : "",`,
+      "CLUSTER_PREVIEW_PRIMARY"
+    );
+
+    source = replaceRequired(
+      source,
+      `    const candidates = [
+      frame.selectedCardinal,`,
+      `    const candidates = [
+      frame.orbitPreviewFocus,
+
+      frame.orbitFocus,
+
+      frame.selectedCardinal,`,
+      "CONSTELLATION_PREVIEW_PRIMARY"
     );
 
     source = replaceRequired(
@@ -80,32 +177,92 @@
       source,
       "CARDINAL",
       "\n\n    LOCAL:",
-      { emissive: 0.22, rim: 1.26, sparkle: 0.32, halo: 1.08 }
+      { emissive: 0.17, rim: 1.02, sparkle: 0.26, halo: 0.82 }
     );
     source = replaceMaterialValues(
       source,
       "LOCAL",
       "\n\n    PORTAL:",
-      { emissive: 0.15, rim: 0.90, sparkle: 0.22, halo: 0.64 }
+      { emissive: 0.12, rim: 0.82, sparkle: 0.16, halo: 0.44 }
     );
     source = replaceMaterialValues(
       source,
       "PORTAL",
       "\n\n    PRIMARY_PORTAL:",
-      { emissive: 0.21, rim: 1.08, sparkle: 0.30, halo: 0.86 }
+      { emissive: 0.15, rim: 0.94, sparkle: 0.22, halo: 0.60 }
     );
     source = replaceMaterialValues(
       source,
       "PRIMARY_PORTAL",
       "\n  });\n\n  const state =",
-      { emissive: 0.24, rim: 1.14, sparkle: 0.34, halo: 0.96 }
+      { emissive: 0.18, rim: 1.04, sparkle: 0.26, halo: 0.72 }
     );
 
     source = replaceRequired(
       source,
-      `        vec3 haloColor =\n          base * 0.45 +\n          uRimColor *\n          fresnel *\n          0.92;\n\n        float haloAlpha =\n          clamp(\n            (\n              0.025 +\n              fresnel * 0.18\n            ) *\n            uHaloStrength *\n            uOpacity,\n            0.0,\n            0.28\n          );`,
-      `        vec3 haloColor =\n          base * 0.62 +\n          uRimColor *\n          fresnel *\n          1.18;\n\n        float haloAlpha =\n          clamp(\n            (\n              0.04 +\n              fresnel * 0.26\n            ) *\n            uHaloStrength *\n            uOpacity,\n            0.0,\n            0.42\n          );`,
+      `        vec3 haloColor =
+          base * 0.45 +
+          uRimColor *
+          fresnel *
+          0.92;
+
+        float haloAlpha =
+          clamp(
+            (
+              0.025 +
+              fresnel * 0.18
+            ) *
+            uHaloStrength *
+            uOpacity,
+            0.0,
+            0.28
+          );`,
+      `        vec3 haloColor =
+          base * 0.62 +
+          uRimColor *
+          fresnel *
+          1.18;
+
+        float haloAlpha =
+          clamp(
+            (
+              0.04 +
+              fresnel * 0.26
+            ) *
+            uHaloStrength *
+            uOpacity,
+            0.0,
+            0.42
+          );`,
       "COMPASS_FAMILY_HALO_SHADER"
+    );
+
+    source = replaceRegexRequired(
+      source,
+      /material\.emissive \*\s*1\.28,\s*0,\s*0\.55/,
+      `material.emissive *\n              1.72,\n              0,\n              0.76`,
+      "PRIMARY_EMISSIVE_PROMINENCE"
+    );
+
+    source = replaceRegexRequired(
+      source,
+      /material\.rim \*\s*1\.18,\s*0,\s*1\.7/,
+      `material.rim *\n              1.46,\n              0,\n              2.0`,
+      "PRIMARY_RIM_PROMINENCE"
+    );
+
+    source = replaceRegexRequired(
+      source,
+      /material\.sparkle \*\s*1\.24,\s*0,\s*0\.52/,
+      `material.sparkle *\n                    1.68,\n                    0,\n                    0.72`,
+      "PRIMARY_SPARKLE_PROMINENCE"
+    );
+
+    source = replaceRegexRequired(
+      source,
+      /material\.halo \*\s*1\.18,\s*0,\s*1\.4/,
+      `material.halo *\n              1.72,\n              0,\n              1.8`,
+      "PRIMARY_HALO_PROMINENCE"
     );
 
     return source;
@@ -114,12 +271,21 @@
   function installProjectedCardinalLabels() {
     const root = document.querySelector("[data-showroom-root]");
     const field = root && root.querySelector("[data-showroom-orbit-field]");
-    const controller = globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER;
-    if (!root || !field || !controller || typeof controller.getFrameState !== "function") {
+    const controller =
+      globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER;
+
+    if (
+      !root ||
+      !field ||
+      !controller ||
+      typeof controller.getFrameState !== "function"
+    ) {
       return false;
     }
 
-    let layer = field.querySelector("[data-showroom-projected-cardinal-labels]");
+    let layer = field.querySelector(
+      "[data-showroom-projected-cardinal-labels]"
+    );
     if (!layer) {
       layer = document.createElement("div");
       layer.className = "showroom-projected-cardinal-labels";
@@ -190,7 +356,9 @@
 
     const controls = new Map();
     for (const [wing, label] of Object.entries(LABELS)) {
-      let control = layer.querySelector(`[data-showroom-projected-cardinal-label="${wing}"]`);
+      let control = layer.querySelector(
+        `[data-showroom-projected-cardinal-label="${wing}"]`
+      );
       if (!control) {
         control = document.createElement("button");
         control.type = "button";
@@ -200,8 +368,12 @@
         control.setAttribute("aria-label", `Open ${label}`);
         control.addEventListener("click", event => {
           event.preventDefault();
-          const activeController = globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER;
-          if (activeController && typeof activeController.requestCardinalSelection === "function") {
+          const activeController =
+            globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER;
+          if (
+            activeController &&
+            typeof activeController.requestCardinalSelection === "function"
+          ) {
             activeController.requestCardinalSelection(wing);
           }
         });
@@ -212,7 +384,10 @@
 
     function apply(records) {
       const frame = controller.getFrameState();
-      const constellation = frame && frame.presentationMode === "CONSTELLATION" && frame.held !== true;
+      const constellation =
+        frame &&
+        frame.presentationMode === "CONSTELLATION" &&
+        frame.held !== true;
       const fieldRect = field.getBoundingClientRect();
       const centerX = fieldRect.width * 0.5;
       const centerY = fieldRect.height * 0.5;
@@ -244,7 +419,9 @@
         control.style.left = `${x + (dx / length) * outward}px`;
         control.style.top = `${y + (dy / length) * outward}px`;
         control.style.zIndex = String(record.depthLayer === "rear" ? 2 : 7);
-        control.dataset.depthLayer = String(record.depthLayer || "unknown").toLowerCase();
+        control.dataset.depthLayer = String(
+          record.depthLayer || "unknown"
+        ).toLowerCase();
         control.dataset.primary = String(
           wing === String(frame.orbitPreviewFocus || frame.orbitFocus || "")
         );
@@ -272,11 +449,12 @@
 
   function publish(detail = {}) {
     const receipt = Object.freeze({
-      module: "SHOWROOM_SPHERICAL_CLUSTER_PRESENTATION",
+      module: "SHOWROOM_PRIMARY_SELECTION_CLUSTER_PRESENTATION",
       source: SOURCE_URL,
+      selectionSupport: SELECTION_URL,
       labels: LABELS,
-      clusterGeometry: "MAIN_COMPASS_SPHERICAL_DEPTH",
-      glow: "COMPASS_FAMILY_HALO_EMISSIVE_RIM_SPARKLE",
+      clusterGeometry: "EXPANDED_MAIN_COMPASS_SPHERICAL_DEPTH",
+      glow: "PRIMARY_SELECTION_DERIVED",
       ...detail
     });
     globalThis.SHOWROOM_SPHERICAL_CLUSTER_PRESENTATION = receipt;
@@ -284,19 +462,25 @@
   }
 
   try {
+    loadSelectionSupport();
     installProjectedCardinalLabels();
     let source = transformSource(loadSourceSynchronously(SOURCE_URL));
-    source += "\n//# sourceURL=/showroom/index.crystals.spherical.js";
+    source += "\n//# sourceURL=/showroom/index.crystals.primary-selection.js";
     (0, eval)(source);
     publish({ installed: true });
   } catch (error) {
-    publish({ installed: false, error: error instanceof Error ? error.message : String(error) });
-    globalThis.dispatchEvent(new CustomEvent("SHOWROOM_CRYSTALS_FAILURE", {
-      detail: Object.freeze({
-        reason: "spherical-cluster-presentation-installation",
-        error: error instanceof Error ? error.message : String(error)
+    publish({
+      installed: false,
+      error: error instanceof Error ? error.message : String(error)
+    });
+    globalThis.dispatchEvent(
+      new CustomEvent("SHOWROOM_CRYSTALS_FAILURE", {
+        detail: Object.freeze({
+          reason: "primary-selection-cluster-presentation-installation",
+          error: error instanceof Error ? error.message : String(error)
+        })
       })
-    }));
+    );
     throw error;
   }
 })();

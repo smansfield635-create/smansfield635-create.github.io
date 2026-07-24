@@ -39,42 +39,86 @@ const REPOSITORY =
 const BRANCH =
   'agent/h-earth-capacity-single-module-restoration-001';
 
-export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_PATHS =
+export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_ACTIVE_SCOPE_PATHS =
   Object.freeze([
     '/showroom/globe/h-earth/capacity.js',
     '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.camera-and-living-presentation-scope-reconciliation.js'
   ]);
 
-const OCCURRENCES =
-  Object.freeze(
-    H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_PATHS.map(
-      (repositoryPath) =>
-        deepFreeze({
-          repository:
-            REPOSITORY,
-          refType:
-            'BRANCH',
-          refName:
-            BRANCH,
-          commitSha:
-            null,
-          path:
-            repositoryPath,
-          gitBlobSha:
-            null,
-          contentSha256:
-            null,
-          byteCount:
-            null,
-          existenceStatus:
-            'PRESENT',
-          fetchbackStatus:
-            'NOT_PERFORMED',
-          occurrenceClass:
-            'CANDIDATE'
-        })
-    )
+export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_RETIRED_SCOPE_PATHS =
+  Object.freeze([
+    '/showroom/globe/h-earth/capacity.base.js'
+  ]);
+
+export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_PATHS =
+  Object.freeze([
+    ...H_EARTH_CAMERA_AND_LIVING_PRESENTATION_ACTIVE_SCOPE_PATHS,
+    ...H_EARTH_CAMERA_AND_LIVING_PRESENTATION_RETIRED_SCOPE_PATHS
+  ]);
+
+const ACTIVE_OCCURRENCES =
+  H_EARTH_CAMERA_AND_LIVING_PRESENTATION_ACTIVE_SCOPE_PATHS.map(
+    (repositoryPath) =>
+      deepFreeze({
+        repository:
+          REPOSITORY,
+        refType:
+          'BRANCH',
+        refName:
+          BRANCH,
+        commitSha:
+          null,
+        path:
+          repositoryPath,
+        gitBlobSha:
+          null,
+        contentSha256:
+          null,
+        byteCount:
+          null,
+        existenceStatus:
+          'PRESENT',
+        fetchbackStatus:
+          'NOT_PERFORMED',
+        occurrenceClass:
+          'CANDIDATE'
+      })
   );
+
+const RETIRED_OCCURRENCES =
+  H_EARTH_CAMERA_AND_LIVING_PRESENTATION_RETIRED_SCOPE_PATHS.map(
+    (repositoryPath) =>
+      deepFreeze({
+        repository:
+          REPOSITORY,
+        refType:
+          'BRANCH',
+        refName:
+          BRANCH,
+        commitSha:
+          null,
+        path:
+          repositoryPath,
+        gitBlobSha:
+          null,
+        contentSha256:
+          null,
+        byteCount:
+          null,
+        existenceStatus:
+          'ABSENT',
+        fetchbackStatus:
+          'NOT_PERFORMED',
+        occurrenceClass:
+          'RETIRED'
+      })
+  );
+
+const OCCURRENCES =
+  Object.freeze([
+    ...ACTIVE_OCCURRENCES,
+    ...RETIRED_OCCURRENCES
+  ]);
 
 export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_EVIDENCE =
   deepFreeze({
@@ -91,6 +135,7 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_EVIDENCE =
     assertionScope: Object.freeze([
       'EXACT_CANONICAL_CAPACITY_PATH_RESOLUTION',
       'AUXILIARY_CAPACITY_PATH_ABSENCE',
+      'RETIRED_AUXILIARY_PATH_RESOLUTION_WITH_ABSENT_OCCURRENCE',
       'NINETEEN_MODULE_BROWSER_GRAPH_PRESERVATION',
       'WATERWARD_CAMERA_CORRESPONDENCE',
       'READ_ONLY_PREFLIGHT_SCOPE'
@@ -117,7 +162,7 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_NODE =
     displayName:
       'H-Earth Camera Envelope and Living Presentation Capacity Package',
     description:
-      'Single canonical capacity-module restoration, bounded waterward camera correspondence, and nonexecuting living-presentation capacity standard within the governed nineteen-module browser graph.',
+      'Single canonical runtime capacity-module restoration, bounded waterward camera correspondence, and nonexecuting living-presentation capacity standard within the governed nineteen-module browser graph; the removed auxiliary path remains registered only as an absent retired repository-history occurrence.',
     repositoryPaths: [
       ...H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_PATHS
     ],
@@ -139,6 +184,7 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_NODE =
     authorityScope: Object.freeze([
       'EXACT_PATH_RESOLUTION',
       'SINGLE_CANONICAL_CAPACITY_MODULE',
+      'RETIRED_PATH_HISTORY_RESOLUTION',
       'NINETEEN_MODULE_BROWSER_GRAPH_PRESERVATION',
       'CAMERA_CAPACITY_CORRESPONDENCE',
       'READ_ONLY_PREFLIGHT_SCOPE'
@@ -176,6 +222,7 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_NODE =
     requiredValidations: Object.freeze([
       'EXACT_PATH_RESOLUTION',
       'AUXILIARY_CAPACITY_PATH_ABSENCE',
+      'RETIRED_AUXILIARY_PATH_RESOLVES_AS_ABSENT',
       'NINETEEN_MODULE_BROWSER_GRAPH_EXECUTION',
       'CAMERA_ENVELOPE_EXECUTION_AUDIT',
       'GEOMETRY_SOURCE_CUSTODY',
@@ -191,7 +238,8 @@ export const H_EARTH_CAMERA_AND_LIVING_PRESENTATION_SCOPE_NODE =
       'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v2_SINGLE_MODULE',
       'H_EARTH_MINIMUM_SHORELINE_LIVING_PRESENTATION_CAPACITY_v2_SINGLE_MODULE',
       '7b70fcb379fa37d97b07b2d337884c655cfa9657b12db8a7d9d6459291aafb96',
-      'GOVERNED_BROWSER_MODULE_COUNT_19'
+      'GOVERNED_BROWSER_MODULE_COUNT_19',
+      'CAPACITY_BASE_PATH_RETIRED_ABSENT'
     ]),
     lifecycleStatus:
       'CANDIDATE',

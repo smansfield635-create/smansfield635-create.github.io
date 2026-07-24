@@ -2677,3 +2677,55 @@ FALSE
 DEPLOYMENT AUTHORIZATION:
 FALSE
 */
+
+
+/* ============================================================
+   LAWS_COLLAPSED_DISCLOSURE_STANDARD_v1
+   Closed = plus. Open = minus. Independent native details state.
+   ============================================================ */
+
+[data-laws-root] details > summary {
+  position: relative;
+  padding-right: 3.1rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+[data-laws-root] details > summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-laws-root] details > summary::marker {
+  content: "";
+}
+
+[data-laws-root] details > summary::after {
+  content: "+" !important;
+  position: absolute;
+  top: 50%;
+  right: .45rem;
+  display: grid;
+  width: 1.85rem;
+  height: 1.85rem;
+  place-items: center;
+  border: 1px solid rgba(216, 184, 106, .34);
+  border-radius: 999px;
+  color: var(--laws-gold-hot);
+  background: rgba(6, 10, 18, .76);
+  font: 800 1.18rem/1 ui-sans-serif, system-ui, sans-serif;
+  transform: translateY(-50%);
+  box-shadow:
+    0 0 1rem rgba(216, 184, 106, .10),
+    inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+
+[data-laws-root] details[open] > summary::after {
+  content: "−" !important;
+}
+
+[data-laws-root] details > summary:hover::after,
+[data-laws-root] details > summary:focus-visible::after {
+  border-color: rgba(243, 217, 139, .66);
+  color: #fff3be;
+  background: rgba(14, 20, 31, .90);
+}

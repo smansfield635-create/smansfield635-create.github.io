@@ -266,19 +266,19 @@
       6,
 
     categoryScale:
-      0.72,
+      0.96,
 
     focusedCategoryScale:
-      0.94,
+      1.30,
 
     lawScale:
-      0.68,
+      0.88,
 
     primaryLawScale:
-      0.84,
+      1.12,
 
     selectedLawScale:
-      0.91,
+      1.18,
 
     visualSettleSpeed:
       7.4,
@@ -367,121 +367,87 @@
     CATEGORY_IDLE:
       Object.freeze({
         specular:
-          1.12,
-
+          1.18,
         rim:
-          0.98,
-
+          1.02,
         emissive:
-          0.14,
-
+          0.17,
         alpha:
-          0.92,
-
+          0.90,
         sparkle:
-          0.18,
-
+          0.26,
         halo:
-          0.62,
-
+          0.82,
         contrast:
-          1.14
+          1.16
       }),
-
     CATEGORY_FOCUSED:
       Object.freeze({
         specular:
-          1.38,
-
+          1.50,
         rim:
-          1.18,
-
+          1.30,
         emissive:
-          0.19,
-
+          0.24,
         alpha:
           0.96,
-
         sparkle:
-          0.24,
-
+          0.36,
         halo:
-          0.90,
-
+          1.18,
         contrast:
-          1.22
+          1.24
       }),
-
     LAW_IDLE:
       Object.freeze({
         specular:
-          1.02,
-
+          1.04,
         rim:
-          0.88,
-
+          0.90,
         emissive:
-          0.12,
-
+          0.15,
         alpha:
           0.88,
-
         sparkle:
-          0.14,
-
+          0.22,
         halo:
-          0.44,
-
+          0.64,
         contrast:
-          1.08
+          1.10
       }),
-
     LAW_PRIMARY:
       Object.freeze({
         specular:
-          1.18,
-
+          1.24,
         rim:
-          1.02,
-
+          1.08,
         emissive:
-          0.16,
-
+          0.21,
         alpha:
-          0.92,
-
+          0.94,
         sparkle:
-          0.18,
-
+          0.30,
         halo:
-          0.62,
-
+          0.86,
         contrast:
-          1.14
+          1.17
       }),
-
     LAW_SELECTED:
       Object.freeze({
         specular:
-          1.26,
-
+          1.34,
         rim:
-          1.08,
-
+          1.14,
         emissive:
-          0.18,
-
+          0.24,
         alpha:
-          0.94,
-
+          0.95,
         sparkle:
-          0.22,
-
+          0.34,
         halo:
-          0.72,
-
+          0.96,
         contrast:
-          1.18
+          1.20
       })
   });
 

@@ -1,0 +1,68 @@
+{
+  "planId": "H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_CORRECTIVE_ACTION_PLAN_v1",
+  "operation": "POST_MERGE_42_FILE_SCOPE_DISPOSITION",
+  "checkpoint": "DISPOSITION_3_CORRECTIVE_ACTION_PLAN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "stabilizationBranch": "agent/h-earth-post-merge-scope-disposition-001",
+  "archiveBranch": "archive/h-earth-pr79-42-file-delta-20260723",
+  "sourceMergeCommit": "ee7324734bb687e71ebb3ee93ff23e6353feb5fe",
+  "preMergeBaseCommit": "465596de77ef0a28a7f779e06851130f4768e445",
+  "batches": [
+    {
+      "batch": 1,
+      "disposition": "ISOLATE",
+      "pathCount": 9,
+      "class": "UNRELATED_GATE_B_EVALUATION_LANE",
+      "action": "DELETE_FROM_STABILIZATION_BRANCH_ONLY",
+      "archiveCustody": "PRESERVED_AT_SOURCE_MERGE_COMMIT_ON_ARCHIVE_BRANCH"
+    },
+    {
+      "batch": 2,
+      "disposition": "ISOLATE",
+      "pathCount": 9,
+      "class": "TEMPORARY_SUCCESSOR_WORKFLOW_TRIGGER_AND_MAINTENANCE_RESIDUE",
+      "action": "DELETE_FROM_STABILIZATION_BRANCH_ONLY",
+      "archiveCustody": "PRESERVED_AT_SOURCE_MERGE_COMMIT_ON_ARCHIVE_BRANCH"
+    },
+    {
+      "batch": 3,
+      "disposition": "REVERT",
+      "pathCount": 1,
+      "class": "LEGACY_TARGET_4F_AUDIT",
+      "path": "/tools/h-earth-repository-registry-target-4f-audit.mjs",
+      "action": "RESTORE_PRE_MERGE_CONTENT",
+      "expectedPostActionGitBlobSha": "f4269e9f9d299584ed8e1c919f52c304df97234d"
+    },
+    {
+      "batch": 4,
+      "disposition": "RECLASSIFY",
+      "pathCount": 6,
+      "class": "NONACTIVE_SUCCESSOR_REGISTRY_EVIDENCE_LANE",
+      "action": "PRESERVE_CONTENT_AND_BIND_NONACTIVE_NONCANONICAL_CLASSIFICATION"
+    },
+    {
+      "batch": 5,
+      "disposition": "RETAIN",
+      "pathCount": 17,
+      "class": "STEP_1_PACKAGE_ADMISSION_AND_CUSTODY",
+      "action": "PRESERVE_CONTENT_AND_VERIFY_EXACT_IDENTITIES"
+    }
+  ],
+  "expectedRetainedDeltaPathCount": 24,
+  "expectedRemovedDeltaPathCount": 18,
+  "expectedRestoredLegacyPathCount": 1,
+  "newDispositionArtifactsExcludedFromOriginal42Count": true,
+  "boundaries": {
+    "mainChanged": false,
+    "successorAccepted": false,
+    "successorActivated": false,
+    "canonicalizationAuthorityCreated": false,
+    "step2ImplementationAuthorityCreated": false
+  },
+  "exitState": {
+    "correctiveActionsDeterministic": true,
+    "expectedPostActionStateDefined": true,
+    "correctiveMutationPerformed": false,
+    "result": "PASS"
+  }
+}

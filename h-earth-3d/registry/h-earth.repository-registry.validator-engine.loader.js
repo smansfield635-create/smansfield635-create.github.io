@@ -2,7 +2,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import registryFacade from './accepted-amendments/h-earth.repository-registry.step-1-scope-reconciliation.js';
+// Composes ./accepted-amendments/h-earth.repository-registry.step-1-scope-reconciliation.js through the bounded post-merge overlay.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.post-merge-disposition-scope-reconciliation.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

@@ -22,6 +22,8 @@ jobs:
           node-version: '22'
       - name: Incorporate current main without discarding candidate work
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main
           git merge --no-edit origin/main
       - name: Build and execute single-module restoration
@@ -45,8 +47,6 @@ jobs:
         env:
           HEAD_BRANCH: ${{ github.head_ref }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "Restore H-Earth capacity to the governed single-module graph"
           git push origin "HEAD:${HEAD_BRANCH}"

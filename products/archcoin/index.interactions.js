@@ -1,15 +1,18 @@
 /* /products/archcoin/index.interactions.js
    ARCHCOIN accepted interaction and center-world assembly.
    Performance round 2: semantic-first setup with viewport-gated idle realization.
+   Compass-derived starfield is requested independently after primary scene readiness.
 */
 (() => {
   "use strict";
 
   const MOTION_SOURCE_URL = "./index.motion.source.js";
   const PLANET_URL = "./index.planet.js";
+  const STARFIELD_URL = "./index.starfield.js";
   const MOTION_READY_EVENT = "ARCHCOIN_ACCEPTED_MOTION_READY";
   const MOTION_SCRIPT_ATTRIBUTE = "data-archcoin-accepted-motion-source";
   const PLANET_SCRIPT_ATTRIBUTE = "data-archcoin-planet-wrapper";
+  const STARFIELD_SCRIPT_ATTRIBUTE = "data-archcoin-starfield-wrapper";
   const runtime = globalThis.DGB_ARCHCOIN_RUNTIME ||
     (globalThis.DGB_ARCHCOIN_RUNTIME = {});
 
@@ -142,6 +145,28 @@
     return receipt;
   }
 
+  function requestStarfield() {
+    if (runtime.starfieldReady) return runtime.starfieldReady;
+
+    runtime.starfieldReady = runIdle(
+      () => loadScript(STARFIELD_URL, STARFIELD_SCRIPT_ATTRIBUTE),
+      1200
+    ).catch(error => {
+      const message = error instanceof Error ? error.message : String(error);
+      const root = document.querySelector("[data-archcoin-root]");
+      if (root) {
+        root.dataset.archcoinStarfieldStatus = "held";
+        root.dataset.archcoinStarfieldFailure = message;
+      }
+      globalThis.dispatchEvent(new CustomEvent("ARCHCOIN_STARFIELD_WRAPPER_FAILURE", {
+        detail: Object.freeze({ message })
+      }));
+      return null;
+    });
+
+    return runtime.starfieldReady;
+  }
+
   async function mountCenterWorld() {
     const control = document.querySelector("[data-upstream-compass-control]");
     if (!control) throw new Error("ARCHCOIN_CENTER_CONTROL_NOT_FOUND");
@@ -169,7 +194,8 @@
       installed: true,
       centerWorldMounted: true,
       accessibleNamesInstalled: true,
-      environmentalSuspension: true
+      environmentalSuspension: true,
+      starfieldRequested: true
     });
   }
 
@@ -211,6 +237,7 @@
         .catch(error => publish({
           installed: false,
           accessibleNamesInstalled: true,
+          starfieldRequested: true,
           error: error instanceof Error ? error.message : String(error)
         }));
     };
@@ -222,6 +249,7 @@
       mountOnce();
     }
 
+    requestStarfield();
     return globalThis.DGB_ARCHCOIN_ACCEPTED_INTERACTIONS;
   }
 
@@ -232,6 +260,7 @@
       publish({
         installed: false,
         accessibleNamesInstalled: true,
+        starfieldRequested: false,
         error: error instanceof Error ? error.message : String(error)
       });
       throw error;

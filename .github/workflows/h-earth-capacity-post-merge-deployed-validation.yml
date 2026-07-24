@@ -1,9 +1,9 @@
 name: H-Earth Capacity Post-Merge Deployed Validation
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - agent/h-earth-capacity-post-merge-deployed-validation-001
 
 permissions:
   contents: read

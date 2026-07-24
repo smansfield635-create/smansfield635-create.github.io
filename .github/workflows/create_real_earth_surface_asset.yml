@@ -1,7 +1,7 @@
 name: H-Earth Capacity Materializer Transport
 
 on:
-  pull_request_target:
+  push:
     branches:
       - agent/h-earth-capacity-materializer-transport-001
 

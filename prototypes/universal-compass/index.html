@@ -353,9 +353,17 @@
       scheduleProjection();
     }
 
+    function interruptActiveInput(reason) {
+      if (!interactions?.getActive()) return;
+      const result = interactions.interrupt(reason);
+      activePointerId = "";
+      processInteractionResult(result);
+    }
+
     constellationButton.addEventListener("click", () => {
       const state = controller.getState();
       if (state.presentation === "CLUSTER") {
+        interruptActiveInput("constellation-control");
         controller.closeCluster();
         lastSelectionId = "";
         setReceipt("LOCAL_ORCHESTRATION_CLOSED_CLUSTER");
@@ -366,6 +374,7 @@
     clusterButton.addEventListener("click", () => {
       const state = controller.getState();
       if (state.presentation === "CONSTELLATION") {
+        interruptActiveInput("cluster-control");
         const candidate = activeOrientation(state)?.primaryId;
         const cardinalId = planet.hasCardinal(candidate) ? candidate : "NORTH";
         controller.openCluster(cardinalId);
@@ -381,8 +390,8 @@
         controller.leaveHeld();
         setReceipt("CONTROLLER_LEFT_HELD_STATE");
       } else {
+        interruptActiveInput("held-control");
         controller.enterHeld("reference-control");
-        activePointerId = "";
         setReceipt("CONTROLLER_ENTERED_HELD_STATE");
       }
       scheduleProjection();

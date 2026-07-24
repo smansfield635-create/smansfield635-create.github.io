@@ -19,7 +19,7 @@
     "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.state-schema.json": "2f8cb2b31538525e69b6d3e263cea457af9820f6",
     "/h-earth-3d/control-plane/step-1/h-earth.successor-activation.transition-contract.json": "12e7e4359cb14ad8184d21609376bbc37ff6b9a6",
     "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.step-1-scope-reconciliation.js": "cae2438721f4b2853bdb669704f4befd2107deaf",
-    "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js": "aef984ec2525aef5c77a39da60ba8f28e0d3cb41",
+    "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js": "efa6e09512f57936c45764f65cc8219bb4a0374d",
     "/tools/h-earth-lifecycle-control-plane-step-1-audit.mjs": "153b6d0401495bfee9e2aab0e239ae79032dcdba"
   },
   "reclassifiedSuccessorEvidencePaths": {
@@ -29,6 +29,9 @@
     "/tools/h-earth-registry-successor-build.mjs": "28ee7c36b8cff0fbf86dde6c6c52bf4a1bba31b7",
     "/tools/h-earth-repository-registry-compositor-route-amendment-audit.mjs": "4d9c2166b89ae0f6d6d4bdc9912f3887bd5ac7dc",
     "/tools/h-earth-repository-registry-successor-v2-audit.mjs": "42e987c7679c75b604b783d2accccc54306cd27c"
+  },
+  "dispositionScopeArtifacts": {
+    "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.post-merge-disposition-scope-reconciliation.js": "f7dbe4e9b4fd5feef677fdc8c42a65ab4bb322de"
   },
   "revertedLegacyPath": {
     "path": "/tools/h-earth-repository-registry-target-4f-audit.mjs",

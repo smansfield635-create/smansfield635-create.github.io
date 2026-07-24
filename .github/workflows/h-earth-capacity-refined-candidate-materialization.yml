@@ -1,0 +1,137 @@
+name: H-Earth Capacity Refined Candidate Materialization
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-002
+
+permissions:
+  contents: read
+
+jobs:
+  materialize-refined-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout exact v2 candidate source
+        uses: actions/checkout@v4
+        with:
+          ref: 8934505b4f233904561b8c62975c1aadde8905d4
+          fetch-depth: 0
+
+      - name: Verify v2 source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "8934505b4f233904561b8c62975c1aadde8905d4"
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
+
+      - name: Materialize refined v3 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p refined-candidate-artifacts
+          cp showroom/globe/h-earth/capacity.js refined-candidate-artifacts/capacity.js
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('refined-candidate-artifacts/capacity.js')
+          source = path.read_text()
+
+          replacements = [
+              (
+                  " * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2\n",
+                  " * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3\n",
+                  1,
+                  'HEADER_IDENTITY'
+              ),
+              (
+                  " * Renews:\n * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1\n *\n * Purpose:",
+                  " * Renews:\n * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1\n *\n * Candidate supersedes:\n * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2\n *\n * Purpose:",
+                  1,
+                  'CANDIDATE_SUPERSESSION_HEADER'
+              ),
+              (
+                  "  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2';",
+                  "  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3';",
+                  1,
+                  'CONTRACT_IDENTITY'
+              ),
+              (
+                  "    verticalFovDegrees: 52,\n    nearPlane: 0.25,\n    farPlane: 512,",
+                  "    verticalFovDegrees: 52,\n    nearPlane: 0.25,\n    farPlane: 194,",
+                  1,
+                  'REFINED_INITIAL_FAR_PLANE'
+              ),
+              (
+                  "    'RE_EXECUTE_COMPOSITOR_AND_RENDERER_GAUGE_AGAINST_RECONCILED_CAMERA_ENVELOPE',",
+                  "    'EXECUTE_CURRENT_MAIN_COMPOSITOR_RENDERER_BROWSER_AND_INTERACTION_AUDIT_BEFORE_MERGE_APPROVAL',",
+                  1,
+                  'NEXT_REQUIRED'
+              )
+          ]
+
+          for before, after, expected_count, identity in replacements:
+              observed = source.count(before)
+              if observed != expected_count:
+                  raise SystemExit(f'{identity}: expected {expected_count}, observed {observed}')
+              source = source.replace(before, after, expected_count)
+
+          path.write_text(source)
+          PY
+
+      - name: Verify refined source invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check refined-candidate-artifacts/capacity.js
+          test "$(grep -c "position: deepFreeze" refined-candidate-artifacts/capacity.js)" -ge 1
+          grep -F "y: 24" refined-candidate-artifacts/capacity.js >/dev/null
+          grep -F "z: 64" refined-candidate-artifacts/capacity.js >/dev/null
+          grep -F "y: 0.5" refined-candidate-artifacts/capacity.js >/dev/null
+          grep -F "z: -128" refined-candidate-artifacts/capacity.js >/dev/null
+          grep -F "farPlane: 194" refined-candidate-artifacts/capacity.js >/dev/null
+          grep -F "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3" refined-candidate-artifacts/capacity.js >/dev/null
+
+      - name: Record candidate identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          blob_sha="$(git hash-object refined-candidate-artifacts/capacity.js)"
+          sha256="$(sha256sum refined-candidate-artifacts/capacity.js | awk '{print $1}')"
+          byte_length="$(wc -c < refined-candidate-artifacts/capacity.js | tr -d ' ')"
+          cat > refined-candidate-artifacts/manifest.json <<EOF
+          {
+            "artifact": "H_EARTH_CAPACITY_CAMERA_ENVELOPE_REFINED_CANDIDATE_v3",
+            "sourceCommit": "8934505b4f233904561b8c62975c1aadde8905d4",
+            "sourceBlob": "2de4476648ae6eb5ae53e87d73b4f965b5c71494",
+            "targetPath": "showroom/globe/h-earth/capacity.js",
+            "candidateGitBlob": "${blob_sha}",
+            "candidateSha256": "${sha256}",
+            "candidateByteLength": ${byte_length},
+            "initialCamera": {
+              "position": {"x": 0, "y": 24, "z": 64},
+              "target": {"x": 0, "y": 0.5, "z": -128},
+              "verticalFovDegrees": 52,
+              "nearPlane": 0.25,
+              "farPlane": 194
+            },
+            "cameraTargetDistance": 193.43280487032183,
+            "validatedInitialCounts": {
+              "desktopEnvironmentPrimitives": 333,
+              "desktopTotalRendererOwnedNodes": 349,
+              "mobileEnvironmentPrimitives": 323,
+              "mobileTotalRendererOwnedNodes": 339
+            },
+            "mergeAuthority": "WITHHELD"
+          }
+          EOF
+          cat refined-candidate-artifacts/manifest.json
+
+      - name: Upload refined candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-refined-candidate-v3
+          path: refined-candidate-artifacts/
+          if-no-files-found: error

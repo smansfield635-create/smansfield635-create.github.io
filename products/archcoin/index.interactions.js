@@ -1,6 +1,6 @@
 /* /products/archcoin/index.interactions.js
    ARCHCOIN accepted interaction and center-world assembly.
-   Performance baseline: semantic-first setup and deferred source realization.
+   Performance round 2: semantic-first setup with viewport-gated idle realization.
 */
 (() => {
   "use strict";
@@ -25,34 +25,27 @@
       const coinId = String(control.dataset.coinId || "").trim();
       const label = labels[coinId];
       if (!label) continue;
-
       control.setAttribute("aria-label", label);
       if (!control.hasAttribute("aria-expanded")) {
         control.setAttribute("aria-expanded", "false");
       }
     }
 
+    const centerControl = document.querySelector("[data-upstream-compass-control]");
+    centerControl?.setAttribute("aria-label", "Open Main Compass return options");
+
     const root = document.querySelector("[data-archcoin-root]");
-    if (root) {
-      root.dataset.archcoinAccessibleNamesInstalled = "true";
-    }
+    if (root) root.dataset.archcoinAccessibleNamesInstalled = "true";
   }
 
-  function afterFirstPaint(task) {
+  function runIdle(task, timeout = 900) {
     return new Promise((resolve, reject) => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const run = () => Promise.resolve()
-            .then(task)
-            .then(resolve, reject);
-
-          if (typeof requestIdleCallback === "function") {
-            requestIdleCallback(run, { timeout: 1600 });
-          } else {
-            setTimeout(run, 0);
-          }
-        });
-      });
+      const run = () => Promise.resolve().then(task).then(resolve, reject);
+      if (typeof requestIdleCallback === "function") {
+        requestIdleCallback(run, { timeout });
+      } else {
+        setTimeout(run, 0);
+      }
     });
   }
 
@@ -60,9 +53,8 @@
     return new Promise((resolve, reject) => {
       const existing = document.querySelector(`script[${marker}]`);
       if (existing) {
-        if (existing.dataset.ready === "true") {
-          resolve(existing);
-        } else {
+        if (existing.dataset.ready === "true") resolve(existing);
+        else {
           existing.addEventListener("load", () => resolve(existing), { once: true });
           existing.addEventListener("error", reject, { once: true });
         }
@@ -72,6 +64,7 @@
       const script = document.createElement("script");
       script.src = url;
       script.async = false;
+      script.fetchPriority = "low";
       script.setAttribute(marker, "true");
       script.addEventListener("load", () => {
         script.dataset.ready = "true";
@@ -87,13 +80,12 @@
   async function fetchSource(url) {
     const response = await fetch(url, {
       credentials: "same-origin",
-      cache: "force-cache"
+      cache: "force-cache",
+      priority: "low"
     });
-
     if (!response.ok) {
       throw new Error(`ARCHCOIN_MOTION_SOURCE_LOAD_FAILED:${response.status}`);
     }
-
     return response.text();
   }
 
@@ -101,9 +93,8 @@
     return new Promise((resolve, reject) => {
       const existing = document.querySelector(`script[${MOTION_SCRIPT_ATTRIBUTE}]`);
       if (existing) {
-        if (existing.dataset.ready === "true") {
-          resolve(existing);
-        } else {
+        if (existing.dataset.ready === "true") resolve(existing);
+        else {
           existing.addEventListener("load", () => resolve(existing), { once: true });
           existing.addEventListener("error", reject, { once: true });
         }
@@ -116,7 +107,6 @@
       ], { type: "text/javascript" });
       const blobUrl = URL.createObjectURL(blob);
       const script = document.createElement("script");
-
       script.src = blobUrl;
       script.async = false;
       script.setAttribute(MOTION_SCRIPT_ATTRIBUTE, "true");
@@ -138,24 +128,25 @@
       module: "DGB_ARCHCOIN_ACCEPTED_PRODUCTION",
       acceptedMirrorInstalled: true,
       productionIdentity: true,
-      loadingMode: "semantic-first-asynchronous",
+      loadingMode: "semantic-first-viewport-gated",
       synchronousXhrUsed: false,
       evalUsed: false,
+      activationReason: runtime.sceneActivationReason || "unknown",
       ...detail
     });
     globalThis.DGB_ARCHCOIN_ACCEPTED_PRODUCTION = receipt;
-    globalThis.dispatchEvent(new CustomEvent("ARCHCOIN_ACCEPTED_PRODUCTION_READY", { detail: receipt }));
+    globalThis.dispatchEvent(new CustomEvent(
+      "ARCHCOIN_ACCEPTED_PRODUCTION_READY",
+      { detail: receipt }
+    ));
     return receipt;
   }
 
   async function mountCenterWorld() {
     const control = document.querySelector("[data-upstream-compass-control]");
-    if (!control) {
-      throw new Error("ARCHCOIN_CENTER_CONTROL_NOT_FOUND");
-    }
+    if (!control) throw new Error("ARCHCOIN_CENTER_CONTROL_NOT_FOUND");
 
     control.setAttribute("aria-label", "Open Main Compass return options");
-
     const fallback = control.querySelector("[data-upstream-compass-fallback]");
     if (fallback) fallback.hidden = true;
 
@@ -214,10 +205,9 @@
     const mountOnce = () => {
       if (mounted) return;
       mounted = true;
-
-      loadScript(PLANET_URL, PLANET_SCRIPT_ATTRIBUTE)
+      runIdle(() => loadScript(PLANET_URL, PLANET_SCRIPT_ATTRIBUTE), 1200)
         .then(() => runtime.planetReady || globalThis.DGB_ARCHCOIN_CENTER_WORLD)
-        .then(() => mountCenterWorld())
+        .then(() => runIdle(mountCenterWorld, 900))
         .catch(error => publish({
           installed: false,
           accessibleNamesInstalled: true,
@@ -226,7 +216,7 @@
     };
 
     globalThis.addEventListener(MOTION_READY_EVENT, mountOnce, { once: true });
-    await afterFirstPaint(evaluateAcceptedMotion);
+    await runIdle(evaluateAcceptedMotion, 900);
 
     if (globalThis.DGB_ARCHCOIN_ACCEPTED_INTERACTIONS) {
       mountOnce();

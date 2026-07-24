@@ -1,17 +1,15 @@
 /* /products/archcoin/index.interactions.js
-   ARCHCOIN accepted interaction, center-world, and bounded cosmos assembly.
-   Performance final: semantic-first, viewport-gated primary runtime, idle cosmos realization.
+   ARCHCOIN accepted interaction and center-world assembly.
+   Performance round 2: semantic-first setup with viewport-gated idle realization.
 */
 (() => {
   "use strict";
 
   const MOTION_SOURCE_URL = "./index.motion.source.js";
   const PLANET_URL = "./index.planet.js";
-  const COSMOS_URL = "./index.cosmos.js";
   const MOTION_READY_EVENT = "ARCHCOIN_ACCEPTED_MOTION_READY";
   const MOTION_SCRIPT_ATTRIBUTE = "data-archcoin-accepted-motion-source";
   const PLANET_SCRIPT_ATTRIBUTE = "data-archcoin-planet-wrapper";
-  const COSMOS_SCRIPT_ATTRIBUTE = "data-archcoin-cosmos-wrapper";
   const runtime = globalThis.DGB_ARCHCOIN_RUNTIME ||
     (globalThis.DGB_ARCHCOIN_RUNTIME = {});
 
@@ -48,18 +46,6 @@
       } else {
         setTimeout(run, 0);
       }
-    });
-  }
-
-  function afterFirstPaint(task, timeout = 1400, delay = 0) {
-    return new Promise((resolve, reject) => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            runIdle(task, timeout).then(resolve, reject);
-          }, delay);
-        });
-      });
     });
   }
 
@@ -143,7 +129,6 @@
       acceptedMirrorInstalled: true,
       productionIdentity: true,
       loadingMode: "semantic-first-viewport-gated",
-      cosmosLoadingMode: "post-paint-delayed-idle",
       synchronousXhrUsed: false,
       evalUsed: false,
       activationReason: runtime.sceneActivationReason || "unknown",
@@ -155,19 +140,6 @@
       { detail: receipt }
     ));
     return receipt;
-  }
-
-  function reportCosmosFailure(error) {
-    const root = document.querySelector("[data-archcoin-root]");
-    const message = error instanceof Error ? error.message : String(error);
-    if (root) {
-      root.dataset.archcoinCosmosStatus = "held";
-      root.dataset.archcoinCosmosFailure = message;
-    }
-    globalThis.dispatchEvent(new CustomEvent("ARCHCOIN_COSMOS_WRAPPER_FAILURE", {
-      detail: Object.freeze({ message })
-    }));
-    return null;
   }
 
   async function mountCenterWorld() {
@@ -197,8 +169,7 @@
       installed: true,
       centerWorldMounted: true,
       accessibleNamesInstalled: true,
-      environmentalSuspension: true,
-      cosmosRequested: true
+      environmentalSuspension: true
     });
   }
 
@@ -240,7 +211,6 @@
         .catch(error => publish({
           installed: false,
           accessibleNamesInstalled: true,
-          cosmosRequested: true,
           error: error instanceof Error ? error.message : String(error)
         }));
     };
@@ -257,20 +227,11 @@
 
   installAccessibleNames();
 
-  if (!runtime.cosmosReady) {
-    runtime.cosmosReady = afterFirstPaint(
-      () => loadScript(COSMOS_URL, COSMOS_SCRIPT_ATTRIBUTE),
-      3600,
-      3200
-    ).catch(reportCosmosFailure);
-  }
-
   if (!runtime.interactionsReady) {
     runtime.interactionsReady = install().catch(error => {
       publish({
         installed: false,
         accessibleNamesInstalled: true,
-        cosmosRequested: true,
         error: error instanceof Error ? error.message : String(error)
       });
       throw error;

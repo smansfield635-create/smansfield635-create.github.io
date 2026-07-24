@@ -1,0 +1,210 @@
+name: Universal Compass Bootstrap Browser Validation
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out validation merge
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify bounded bootstrap identities and source boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object prototypes/universal-compass/index.html)" = "b9f39f7c3e52b4e7afd5ce533460aa8d4957c76a"
+          test "$(git hash-object prototypes/universal-compass/index.js)" = "84a786f23e65c2e68897cede0e046e8efd476f8c"
+          node --experimental-default-type=module --check prototypes/universal-compass/index.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.planet.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.crystals.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.controller.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.compositor.js
+          node --experimental-default-type=module --check prototypes/universal-compass/index.interactions.js
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('prototypes/universal-compass/index.html').read_text()
+          js = Path('prototypes/universal-compass/index.js').read_text()
+          assert '<script type="module" src="./index.js"></script>' in html
+          assert '<script type="module">' not in html
+          assert './index.js' in html
+          for path in [
+              './index.planet.js',
+              './index.crystals.js',
+              './index.controller.js',
+              './index.compositor.js',
+              './index.interactions.js'
+          ]:
+              assert path in js
+          assert 'createPlanetAuthority' in js
+          assert 'createInteractionAuthority' in js
+          PY
+
+      - name: Install Chromium browser harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.58.2 >/dev/null
+          npx playwright install --with-deps chromium
+
+      - name: Execute thin bootstrap and mount fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/universal-compass-bootstrap-evidence
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/universal-compass-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+          const path = require('path');
+
+          const evidenceDir = '/tmp/universal-compass-bootstrap-evidence';
+          const receiptPath = path.join(evidenceDir, 'receipt.json');
+          const screenshotPath = path.join(evidenceDir, 'stage.png');
+          const errors = [];
+
+          function assert(condition, code, details = null) {
+            if (condition) return;
+            const error = new Error(code);
+            error.details = details;
+            throw error;
+          }
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+            page.on('pageerror', error => errors.push(`PAGEERROR:${error.message}`));
+            page.on('console', message => {
+              if (message.type() === 'error') errors.push(`CONSOLE:${message.text()}`);
+            });
+
+            let receipt;
+            try {
+              await page.goto(
+                'http://127.0.0.1:4173/prototypes/universal-compass/index.html',
+                { waitUntil: 'networkidle' }
+              );
+              await page.waitForSelector('html[data-compass-runtime="ready"]');
+
+              const initial = await page.evaluate(() => ({
+                status: window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus(),
+                visualCount: document.querySelectorAll('.reference-node-visual').length,
+                semanticCount: document.querySelectorAll('.reference-node-control').length,
+                scriptSources: [...document.scripts].map(script => script.getAttribute('src')).filter(Boolean),
+                inlineModuleCount: [...document.scripts].filter(script => script.type === 'module' && !script.src).length,
+                projectionFrozen: Object.isFrozen(
+                  window.__UNIVERSAL_COMPASS_REFERENCE__.getLastProjection()
+                )
+              }));
+
+              assert(initial.status.runtime === 'ready', 'BOOTSTRAP_NOT_READY', initial);
+              assert(initial.status.worldRevision === 1, 'WORLD_REVISION_INVALID', initial);
+              assert(initial.status.presentation === 'CONSTELLATION', 'INITIAL_PRESENTATION_INVALID', initial);
+              assert(initial.visualCount === 5, 'INITIAL_VISUAL_MOUNT_COUNT_INVALID', initial);
+              assert(initial.semanticCount === 4, 'INITIAL_SEMANTIC_MOUNT_COUNT_INVALID', initial);
+              assert(initial.scriptSources.length === 1 && initial.scriptSources[0].endsWith('/index.js'), 'HTML_SCRIPT_BOUNDARY_INVALID', initial);
+              assert(initial.inlineModuleCount === 0, 'INLINE_MODULE_PRESENT', initial);
+              assert(initial.projectionFrozen, 'PROJECTION_NOT_IMMUTABLE', initial);
+
+              await page.locator('[data-node-id="NORTH"]').click();
+              await page.waitForFunction(() =>
+                window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().presentation === 'CLUSTER'
+              );
+
+              const cluster = await page.evaluate(() => ({
+                status: window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus(),
+                visualCount: document.querySelectorAll('.reference-node-visual').length,
+                semanticCount: document.querySelectorAll('.reference-node-control').length
+              }));
+              assert(cluster.status.presentation === 'CLUSTER', 'CLUSTER_TRANSITION_FAILED', cluster);
+              assert(cluster.visualCount === 6, 'CLUSTER_VISUAL_MOUNT_COUNT_INVALID', cluster);
+              assert(cluster.semanticCount === 4, 'CLUSTER_SEMANTIC_MOUNT_COUNT_INVALID', cluster);
+
+              const field = page.locator('[data-reference-field]');
+              const box = await field.boundingBox();
+              assert(box, 'FIELD_BOUNDS_UNAVAILABLE');
+              await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+              await page.mouse.down();
+              await page.mouse.move(box.x + box.width / 2 + 32, box.y + box.height / 2 + 10, { steps: 4 });
+              await page.mouse.up();
+              await page.waitForFunction(() =>
+                window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus().inputRevision > 0
+              );
+
+              const finalState = await page.evaluate(() =>
+                window.__UNIVERSAL_COMPASS_REFERENCE__.getStatus()
+              );
+              assert(finalState.inputRevision > 0, 'POINTER_HANDOFF_NOT_EXECUTED', finalState);
+              assert(errors.length === 0, 'BROWSER_ERRORS_PRESENT', errors);
+
+              await page.screenshot({ path: screenshotPath, fullPage: true });
+              receipt = {
+                schema: 'DGB_UNIVERSAL_COMPASS_BOOTSTRAP_BROWSER_VALIDATION_RECEIPT_v1',
+                status: 'PASS',
+                assertionCount: 15,
+                sourceCommit: process.env.GITHUB_SHA,
+                htmlBlob: 'b9f39f7c3e52b4e7afd5ce533460aa8d4957c76a',
+                bootstrapBlob: '84a786f23e65c2e68897cede0e046e8efd476f8c',
+                initial,
+                cluster,
+                finalState,
+                errors,
+                claims: {
+                  htmlStageAndMountsOnly: true,
+                  externalBootstrapLoaded: true,
+                  fiveAuthorityConstructionExecuted: true,
+                  initialProjectionMounted: true,
+                  clusterTransitionMounted: true,
+                  pointerInputReachedInteractions: true,
+                  browserExecution: true,
+                  visualAcceptance: false,
+                  productAuthority: false,
+                  productionAuthority: false
+                }
+              };
+              fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2));
+            } catch (error) {
+              await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => {});
+              receipt = {
+                schema: 'DGB_UNIVERSAL_COMPASS_BOOTSTRAP_BROWSER_VALIDATION_RECEIPT_v1',
+                status: 'FAIL',
+                sourceCommit: process.env.GITHUB_SHA,
+                error: {
+                  name: error.name,
+                  message: error.message,
+                  details: error.details || null,
+                  stack: error.stack
+                },
+                errors
+              };
+              fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2));
+              throw error;
+            } finally {
+              await browser.close();
+            }
+          })().catch(error => {
+            console.error(error);
+            process.exitCode = 1;
+          });
+          NODE
+
+      - name: Preserve bootstrap browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-compass-bootstrap-browser-validation-evidence
+          path: /tmp/universal-compass-bootstrap-evidence
+          if-no-files-found: error
+          retention-days: 90

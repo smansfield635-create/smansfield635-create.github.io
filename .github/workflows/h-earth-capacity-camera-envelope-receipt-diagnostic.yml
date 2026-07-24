@@ -1,0 +1,273 @@
+name: H-Earth Capacity Camera Envelope Receipt Diagnostic
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-capacity-camera-envelope-current-main-002
+
+permissions:
+  contents: read
+
+jobs:
+  capture-receipts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout exact correction commit
+        uses: actions/checkout@v4
+        with:
+          ref: 8934505b4f233904561b8c62975c1aadde8905d4
+          fetch-depth: 0
+
+      - name: Verify anchored source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "8934505b4f233904561b8c62975c1aadde8905d4"
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "2de4476648ae6eb5ae53e87d73b4f965b5c71494"
+          test "$(git diff --name-only 9a69ccab862420f0141013653625705fd92e9f12 8934505b4f233904561b8c62975c1aadde8905d4)" = "showroom/globe/h-earth/capacity.js"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start exact-commit route server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-receipt-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-receipt-server.log
+          exit 1
+
+      - name: Capture route and module receipts without product assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p receipt-artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+
+          const routeUrl = 'http://127.0.0.1:4173/showroom/globe/h-earth/';
+          const cases = [
+            { id: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
+            { id: 'mobile', width: 390, height: 844, deviceScaleFactor: 3 }
+          ];
+
+          function safe(value, depth = 0, seen = new WeakSet()) {
+            if (value === null || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return value;
+            if (value === undefined) return null;
+            if (typeof value === 'function') return `[Function ${value.name || 'anonymous'}]`;
+            if (typeof value !== 'object') return String(value);
+            if (depth > 12) return '[DepthLimit]';
+            if (seen.has(value)) return '[Circular]';
+            seen.add(value);
+            if (Array.isArray(value)) return value.slice(0, 500).map((item) => safe(item, depth + 1, seen));
+            const output = {};
+            for (const key of Reflect.ownKeys(value).filter((key) => typeof key === 'string').slice(0, 600)) {
+              try {
+                output[key] = safe(value[key], depth + 1, seen);
+              } catch (error) {
+                output[key] = `[Unreadable: ${error instanceof Error ? error.message : String(error)}]`;
+              }
+            }
+            return output;
+          }
+
+          const browser = await chromium.launch({ headless: true });
+          const packageEvidence = {
+            correctionCommit: '8934505b4f233904561b8c62975c1aadde8905d4',
+            capacityBlob: '2de4476648ae6eb5ae53e87d73b4f965b5c71494',
+            cases: []
+          };
+
+          for (const testCase of cases) {
+            const context = await browser.newContext({
+              viewport: { width: testCase.width, height: testCase.height },
+              deviceScaleFactor: testCase.deviceScaleFactor
+            });
+            const page = await context.newPage();
+            const consoleMessages = [];
+            const pageErrors = [];
+            const failedRequests = [];
+
+            page.on('console', (message) => {
+              consoleMessages.push({ type: message.type(), text: message.text() });
+            });
+            page.on('pageerror', (error) => {
+              pageErrors.push(error instanceof Error ? error.message : String(error));
+            });
+            page.on('requestfailed', (request) => {
+              failedRequests.push({ url: request.url(), failure: request.failure() });
+            });
+
+            let navigation = null;
+            try {
+              const response = await page.goto(routeUrl, {
+                waitUntil: 'domcontentloaded',
+                timeout: 30000
+              });
+              navigation = {
+                ok: response?.ok() ?? false,
+                status: response?.status() ?? null,
+                url: response?.url() ?? null
+              };
+            } catch (error) {
+              navigation = {
+                ok: false,
+                error: error instanceof Error ? error.message : String(error)
+              };
+            }
+
+            await page.waitForTimeout(8000);
+
+            let moduleEvidence;
+            try {
+              moduleEvidence = await page.evaluate(async ({ width, height, deviceScaleFactor }) => {
+                const capacity = await import('/showroom/globe/h-earth/capacity.js');
+                const compositor = await import('/showroom/globe/h-earth/compositor.js');
+                const renderer = await import('/showroom/globe/h-earth/renderer.js');
+                const route = await import('/showroom/globe/h-earth/index.js');
+
+                const call = (module, names, ...args) => {
+                  for (const name of names) {
+                    if (typeof module?.[name] === 'function') {
+                      try {
+                        return {
+                          exportName: name,
+                          returned: module[name](...args)
+                        };
+                      } catch (error) {
+                        return {
+                          exportName: name,
+                          threw: true,
+                          error: error instanceof Error ? error.message : String(error)
+                        };
+                      }
+                    }
+                  }
+                  return {
+                    exportName: null,
+                    unavailable: true
+                  };
+                };
+
+                const viewportSetter = call(
+                  compositor,
+                  ['setHEarth3DCompositorViewport'],
+                  { widthPx: width, heightPx: height, pixelRatio: deviceScaleFactor }
+                );
+
+                const mountId = capacity.H_EARTH_3D_PUBLIC_STAGE_IDS?.rendererMountId;
+                const mount = mountId ? document.getElementById(mountId) : null;
+                const routeRootId = capacity.H_EARTH_3D_PUBLIC_STAGE_IDS?.routeRootId;
+                const routeRoot = routeRootId ? document.getElementById(routeRootId) : null;
+
+                return {
+                  viewport: { width, height, deviceScaleFactor },
+                  exports: {
+                    capacity: Object.keys(capacity).sort(),
+                    compositor: Object.keys(compositor).sort(),
+                    renderer: Object.keys(renderer).sort(),
+                    route: Object.keys(route).sort()
+                  },
+                  capacity: {
+                    preflight: call(capacity, ['getHEarth3DCapacityPreflight']),
+                    receipt: call(capacity, ['getHEarth3DCapacityReceipt']),
+                    camera: capacity.H_EARTH_3D_CAMERA_CAPACITY
+                  },
+                  compositor: {
+                    viewportSetter,
+                    state: call(compositor, ['getHEarth3DCompositorState', 'getHEarth3DCompositorSnapshot']),
+                    receipt: call(compositor, ['getHEarth3DCompositorReceipt']),
+                    handoff: call(compositor, ['getHEarth3DCompositorRendererHandoff']),
+                    operationalReceipts: call(compositor, ['getHEarth3DCompositorOperationalReceipts'])
+                  },
+                  renderer: {
+                    receipt: call(renderer, ['getHEarth3DRendererReceipt']),
+                    state: call(renderer, ['getHEarth3DRendererState', 'getHEarth3DRendererSnapshot']),
+                    mountReceipt: call(renderer, ['getHEarth3DRendererMountReceipt']),
+                    operationalReceipts: call(renderer, ['getHEarth3DRendererOperationalReceipts'])
+                  },
+                  route: {
+                    bootstrapReceipt: call(route, ['getRendererBootstrapReceipt', 'getHEarth3DRendererBootstrapReceipt']),
+                    bootstrapStatus: call(route, ['getRendererBootstrapStatus', 'getHEarth3DRendererBootstrapStatus']),
+                    routeReceipt: call(route, ['getHEarth3DRouteReceipt', 'getRouteBootstrapReceipt']),
+                    routeStatus: call(route, ['getHEarth3DRouteStatus', 'getRouteBootstrapStatus'])
+                  },
+                  dom: {
+                    title: document.title,
+                    bodyClassName: document.body.className,
+                    bodyText: document.body.innerText,
+                    routeRootId,
+                    routeRootPresent: Boolean(routeRoot),
+                    routeRootHtml: routeRoot?.outerHTML ?? null,
+                    mountId,
+                    mountPresent: Boolean(mount),
+                    mountChildCount: mount?.children.length ?? 0,
+                    mountHtml: mount?.outerHTML ?? null
+                  }
+                };
+              }, testCase);
+            } catch (error) {
+              moduleEvidence = {
+                evaluationThrew: true,
+                error: error instanceof Error ? error.message : String(error)
+              };
+            }
+
+            await page.screenshot({
+              path: `receipt-artifacts/${testCase.id}.png`,
+              fullPage: true
+            });
+
+            const caseEvidence = safe({
+              id: testCase.id,
+              navigation,
+              consoleMessages,
+              pageErrors,
+              failedRequests,
+              moduleEvidence
+            });
+
+            packageEvidence.cases.push(caseEvidence);
+            fs.writeFileSync(
+              `receipt-artifacts/${testCase.id}.json`,
+              JSON.stringify(caseEvidence, null, 2)
+            );
+
+            await context.close();
+          }
+
+          await browser.close();
+          fs.writeFileSync(
+            'receipt-artifacts/package.json',
+            JSON.stringify(packageEvidence, null, 2)
+          );
+          console.log(JSON.stringify(packageEvidence, null, 2));
+          NODE
+
+      - name: Upload receipt evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-camera-envelope-receipt-diagnostic
+          path: |
+            receipt-artifacts/
+            /tmp/h-earth-receipt-server.log
+          if-no-files-found: error

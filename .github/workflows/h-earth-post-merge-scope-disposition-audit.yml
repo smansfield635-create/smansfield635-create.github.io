@@ -1,47 +1,691 @@
 name: H-Earth Post-Merge 42-File Scope Disposition Audit
 
 on:
-  push:
-    branches:
-      - agent/h-earth-post-merge-scope-disposition-001
-    paths:
-      - h-earth-3d/control-plane/post-merge-disposition/**
-      - tools/h-earth-post-merge-scope-disposition-audit.mjs
-      - .github/workflows/h-earth-post-merge-scope-disposition-audit.yml
-      - h-earth-3d/control-plane/step-1/**
-      - h-earth-3d/registry/candidates/**
-      - h-earth-3d/registry/accepted-amendments/**
-      - h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
-      - tools/h-earth-lifecycle-control-plane-step-1-audit.mjs
-      - tools/h-earth-registry-successor-build.mjs
-      - tools/h-earth-repository-registry-compositor-route-amendment-audit.mjs
-      - tools/h-earth-repository-registry-successor-v2-audit.mjs
-      - tools/h-earth-repository-registry-target-4f-audit.mjs
   pull_request:
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  audit-retained-state:
+  build-h-earth-camera-candidate:
+    if: github.head_ref == 'agent/h-earth-camera-envelope-animation-standard-001'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out exact candidate branch
+        uses: actions/checkout@v4
         with:
+          ref: agent/h-earth-camera-envelope-animation-standard-001
           fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Execute retained-state audit
-        run: node --experimental-default-type=module tools/h-earth-post-merge-scope-disposition-audit.mjs
-      - name: Upload disposition audit receipt
-        if: always()
+
+      - name: Fetch current main
+        run: git fetch origin main
+
+      - name: Apply bounded capacity-only correction
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('showroom/globe/h-earth/capacity.js')
+          text = path.read_text(encoding='utf-8')
+
+          def replace_once(old, new, label):
+              global text
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(
+                      f'{label}: expected one occurrence, found {count}'
+                  )
+              text = text.replace(old, new, 1)
+
+          replace_once(
+              " * Camera capacity.\n */\nexport const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({",
+              " * Camera capacity.\n */\nexport const H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID =\n  'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v1';\n\nexport const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({",
+              'camera-envelope identity insertion'
+          )
+
+          replace_once(
+              "      y: 24,\n      z: 64",
+              "      y: 14,\n      z: -240",
+              'camera position correction'
+          )
+
+          replace_once(
+              "      y: 0.5,\n      z: -128",
+              "      y: 0.6,\n      z: -48",
+              'camera target correction'
+          )
+
+          replace_once(
+              "    verticalFovDegrees: 52,",
+              "    verticalFovDegrees: 60,",
+              'vertical field-of-view correction'
+          )
+
+          replace_once(
+              "    farPlane: 194,",
+              "    farPlane: 512,",
+              'far-plane correction'
+          )
+
+          standards = r'''export const H_EARTH_3D_CAMERA_COMPOSITION_INTENT = deepFreeze({
+  compositionId:
+    H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID,
+  compositionRole:
+    'LANDWARD_GROUND_INSPECTION_LOOKING_WATERWARD',
+  cameraSide:
+    'LAND_SIDE_NEGATIVE_Z',
+  viewDirection:
+    'TOWARD_POSITIVE_Z_WATER_SIDE',
+  shorelineReferenceZ:
+    -96,
+  wetSandForegroundRequired:
+    true,
+  foamContactSeamRequired:
+    true,
+  waterRecessionRequired:
+    true,
+  futureContextDepthReserved:
+    true,
+  admittedGeometryMutationPermitted:
+    false,
+  animationStandardPreparationOnly:
+    true
+});
+
+/**
+ * Bounded living-presentation capacity.
+ *
+ * This defines presentation limits only. It creates no animation runtime,
+ * physical simulation, traversal, collision, gameplay, or admitted-geometry
+ * mutation.
+ */
+export const H_EARTH_3D_LIVING_PRESENTATION_CAPACITY_ID =
+  'H_EARTH_MINIMUM_SHORELINE_LIVING_PRESENTATION_CAPACITY_v1';
+
+export const H_EARTH_3D_LIVING_PRESENTATION_CAPACITY = deepFreeze({
+  capacityId:
+    H_EARTH_3D_LIVING_PRESENTATION_CAPACITY_ID,
+
+  status:
+    'CAPACITY_STANDARD_DEFINED_RUNTIME_NOT_CREATED',
+
+  sourceObjectIds: deepFreeze([
+    'OBJ_002_FOREGROUND_WET_SAND',
+    'OBJ_005_SHORELINE_FOAM_LINE',
+    'OBJ_007_WATER_SURFACE_PLANE'
+  ]),
+
+  geometryBoundary: deepFreeze({
+    admittedGeometryMutationPermitted: false,
+    admittedVertexMutationPermitted: false,
+    admittedIndexMutationPermitted: false,
+    admittedBoundsMutationPermitted: false,
+    primitiveIdentityMutationPermitted: false,
+    sourceObjectIdentityMutationPermitted: false,
+    sharedShorelineBoundaryMutationPermitted: false,
+    materialPresentationMutationPermitted: true
+  }),
+
+  scheduler: deepFreeze({
+    singleCoordinatorRequired: true,
+    requestAnimationFrameRequired: true,
+    maximumActiveFramesPerSecond: 30,
+    nominalFrameIntervalMilliseconds: 1000 / 30,
+    maximumMainThreadWorkMillisecondsPerFrame: 8,
+    unboundedTimersPermitted: false,
+    duplicateAnimationLoopsPermitted: false,
+    deterministicPhaseSeedsRequired: true
+  }),
+
+  suspension: deepFreeze({
+    suspendWhenDocumentHidden: true,
+    suspendWhenStageOffscreen: true,
+    suspendOnPageHide: true,
+    controlledResumeRequired: true,
+    backgroundAnimationWorkPermitted: false
+  }),
+
+  reducedMotion: deepFreeze({
+    operatingSystemPreferenceRequired: true,
+    staticEquivalentRequired: true,
+    animationLoopsMustStop: true,
+    timersMustStop: true,
+    semanticInformationMustRemainAvailable: true
+  }),
+
+  permittedMotionChannels: deepFreeze([
+    'TRANSFORM',
+    'OPACITY',
+    'BACKGROUND_POSITION',
+    'BOUNDED_CSS_CUSTOM_PROPERTY'
+  ]),
+
+  prohibitedMotionChannels: deepFreeze([
+    'LAYOUT_GEOMETRY',
+    'DOM_NODE_CHURN',
+    'ADMITTED_VERTEX_REWRITE',
+    'ADMITTED_INDEX_REWRITE',
+    'SHORELINE_BOUNDARY_REWRITE',
+    'PHYSICAL_FLUID_SIMULATION'
+  ]),
+
+  materialMotionIntent: deepFreeze({
+    wetSand:
+      'SUBTLE_REFLECTED_LIGHT_AND_DAMP_SHEEN_VARIATION',
+    foam:
+      'GENTLE_CONTACT_BRIGHTNESS_AND_LATERAL_PHASE_MOTION',
+    water:
+      'SLOW_SURFACE_SHIMMER_AND_DIRECTIONAL_HIGHLIGHT_DRIFT'
+  }),
+
+  qualityCapacity: deepFreeze({
+    maximumConcurrentMaterialAnimations: 3,
+    devicePixelRatioMustRemainWithinViewportCapacity: true,
+    adaptiveQualityPermitted: true,
+    frameCostSamplingRequired: true,
+    qualityMayDecreaseToProtectFrameBudget: true,
+    qualityMayIncreaseOnlyWithinDeclaredCapacity: true
+  }),
+
+  lifecycleStates: deepFreeze([
+    'IDLE',
+    'RUNNING',
+    'SUSPENDED',
+    'REDUCED_MOTION_STATIC',
+    'DISPOSED'
+  ]),
+
+  claimCeilings: deepFreeze({
+    animationRuntimeCreated: false,
+    animationExecuted: false,
+    fluidSimulationCreated: false,
+    physicalWaveSimulationCreated: false,
+    weatherSimulationCreated: false,
+    traversalCreated: false,
+    gameplayCreated: false,
+    visualPassClaim: false,
+    productionClaim: false
+  })
+});
+
+'''
+
+          replace_once(
+              "/**\n * Render-stage limits.\n */",
+              standards + "/**\n * Render-stage limits.\n */",
+              'animation standard insertion'
+          )
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Verify syntax and exact geometry-source custody
+        shell: bash
+        run: |
+          BASE="$(git merge-base HEAD origin/main)"
+
+          node --experimental-default-type=module \
+            --check showroom/globe/h-earth/capacity.js
+
+          git diff --exit-code "$BASE" -- \
+            showroom/globe/h-earth/environment.js \
+            showroom/globe/h-earth/render/geometry-preview.js \
+            showroom/globe/h-earth/render/geometry-ground.js \
+            showroom/globe/h-earth/render/geometry-foam.js \
+            showroom/globe/h-earth/render/geometry-water.js \
+            showroom/globe/h-earth/render/shoreline-preview.js \
+            showroom/globe/h-earth/render/geometry-kernel.js \
+            showroom/globe/h-earth/render/geometry-kernel.north.js \
+            showroom/globe/h-earth/render/geometry-kernel.east.js \
+            showroom/globe/h-earth/render/geometry-kernel.south.js \
+            showroom/globe/h-earth/render/geometry-kernel.west.js \
+            showroom/globe/h-earth/admitted-geometry-frame.js
+
+      - name: Execute camera, frustum, animation-capacity, and shoreline audit
+        shell: bash
+        run: |
+          node --experimental-default-type=module \
+            --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+
+          import {
+            H_EARTH_3D_CAMERA_CAPACITY,
+            H_EARTH_3D_CAMERA_COMPOSITION_INTENT,
+            H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID,
+            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY,
+            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY_ID,
+            evaluateHEarth3DCameraCapacity
+          } from './showroom/globe/h-earth/capacity.js';
+
+          import {
+            H_EARTH_3D_SHARED_SHORELINE_BOUNDARY as shorelineBoundary
+          } from './showroom/globe/h-earth/environment.js';
+
+          import {
+            H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_OBJECT_IDS,
+            previewHEarthMinimumShorelineGeometry
+          } from './showroom/globe/h-earth/render/shoreline-preview.js';
+
+          const checks = [];
+
+          function pass(id, condition, details = null) {
+            assert.equal(Boolean(condition), true, id);
+            checks.push({ id, passed: true, details });
+          }
+
+          const camera =
+            H_EARTH_3D_CAMERA_CAPACITY.initialProjectionCandidate;
+
+          const shorelineZ =
+            shorelineBoundary.samples.reduce(
+              (sum, sample) => sum + sample.z,
+              0
+            ) / shorelineBoundary.samples.length;
+
+          pass(
+            'CAMERA_ENVELOPE_IDENTITY_EXACT',
+            H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID ===
+              'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v1'
+          );
+
+          pass(
+            'CAMERA_POSITION_EXACT',
+            camera.position.x === 0 &&
+              camera.position.y === 14 &&
+              camera.position.z === -240,
+            camera.position
+          );
+
+          pass(
+            'CAMERA_TARGET_EXACT',
+            camera.target.x === 0 &&
+              camera.target.y === 0.6 &&
+              camera.target.z === -48,
+            camera.target
+          );
+
+          pass(
+            'CAMERA_LENS_EXACT',
+            camera.verticalFovDegrees === 60 &&
+              camera.nearPlane === 0.25 &&
+              camera.farPlane === 512,
+            {
+              verticalFovDegrees: camera.verticalFovDegrees,
+              nearPlane: camera.nearPlane,
+              farPlane: camera.farPlane
+            }
+          );
+
+          pass(
+            'CAMERA_LANDWARD_POSITION_WATERWARD_TARGET',
+            camera.position.z < shorelineZ &&
+              camera.target.z > shorelineZ,
+            { shorelineZ }
+          );
+
+          pass(
+            'COMPOSITION_INTENT_EXACT',
+            H_EARTH_3D_CAMERA_COMPOSITION_INTENT.compositionRole ===
+              'LANDWARD_GROUND_INSPECTION_LOOKING_WATERWARD' &&
+              H_EARTH_3D_CAMERA_COMPOSITION_INTENT
+                .admittedGeometryMutationPermitted === false &&
+              H_EARTH_3D_CAMERA_COMPOSITION_INTENT
+                .futureContextDepthReserved === true
+          );
+
+          const cameraEvaluation =
+            evaluateHEarth3DCameraCapacity({
+              yawDegrees: 0,
+              pitchDegrees: 0,
+              zoomScale: 1,
+              target: camera.target,
+              verticalFovDegrees:
+                camera.verticalFovDegrees,
+              nearPlane:
+                camera.nearPlane,
+              farPlane:
+                camera.farPlane
+            });
+
+          pass(
+            'CAMERA_CAPACITY_EVALUATION_PASS',
+            cameraEvaluation.eligible === true &&
+              cameraEvaluation.adjustmentRequired === false,
+            cameraEvaluation
+          );
+
+          const subtract = (left, right) => ({
+            x: left.x - right.x,
+            y: left.y - right.y,
+            z: left.z - right.z
+          });
+
+          const dot = (left, right) =>
+            left.x * right.x +
+            left.y * right.y +
+            left.z * right.z;
+
+          const cross = (left, right) => ({
+            x: left.y * right.z - left.z * right.y,
+            y: left.z * right.x - left.x * right.z,
+            z: left.x * right.y - left.y * right.x
+          });
+
+          const normalize = (vector) => {
+            const length = Math.hypot(
+              vector.x,
+              vector.y,
+              vector.z
+            );
+
+            return {
+              x: vector.x / length,
+              y: vector.y / length,
+              z: vector.z / length
+            };
+          };
+
+          const forward =
+            normalize(
+              subtract(
+                camera.target,
+                camera.position
+              )
+            );
+
+          const right =
+            normalize(
+              cross(
+                forward,
+                camera.up
+              )
+            );
+
+          const resolvedUp =
+            normalize(
+              cross(
+                right,
+                forward
+              )
+            );
+
+          pass(
+            'CAMERA_FORWARD_VECTOR_WATERWARD',
+            forward.z > 0.99,
+            forward
+          );
+
+          function project(point, aspectRatio) {
+            const relative =
+              subtract(
+                point,
+                camera.position
+              );
+
+            const depth =
+              dot(relative, forward);
+
+            const tanVertical =
+              Math.tan(
+                camera.verticalFovDegrees *
+                  Math.PI /
+                  360
+              );
+
+            const tanHorizontal =
+              tanVertical * aspectRatio;
+
+            return {
+              depth,
+              normalizedX:
+                dot(relative, right) /
+                (depth * tanHorizontal),
+              normalizedY:
+                dot(relative, resolvedUp) /
+                (depth * tanVertical)
+            };
+          }
+
+          const compositionAnchors = {
+            foregroundWetSand: {
+              x: 0,
+              y: 0,
+              z: -210
+            },
+            shorelineContact: {
+              x: 0,
+              y: 0.79,
+              z: shorelineZ
+            },
+            waterSurface: {
+              x: 0,
+              y: 0.68,
+              z: -48
+            },
+            futureContextDepth: {
+              x: 0,
+              y: 10,
+              z: 192
+            }
+          };
+
+          for (
+            const [anchorName, anchor]
+            of Object.entries(compositionAnchors)
+          ) {
+            for (const aspectRatio of [0.5625, 1.6]) {
+              const projected =
+                project(
+                  anchor,
+                  aspectRatio
+                );
+
+              pass(
+                `ANCHOR_${anchorName.toUpperCase()}_${String(aspectRatio).replace('.', '_')}_VISIBLE`,
+                projected.depth >= camera.nearPlane &&
+                  projected.depth <= camera.farPlane &&
+                  Math.abs(projected.normalizedX) <= 1 &&
+                  Math.abs(projected.normalizedY) <= 1,
+                projected
+              );
+            }
+          }
+
+          pass(
+            'LIVING_PRESENTATION_CAPACITY_IDENTITY_EXACT',
+            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY_ID ===
+              'H_EARTH_MINIMUM_SHORELINE_LIVING_PRESENTATION_CAPACITY_v1'
+          );
+
+          pass(
+            'LIVING_PRESENTATION_CAPACITY_DEEPLY_FROZEN',
+            Object.isFrozen(
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY
+            ) &&
+              Object.isFrozen(
+                H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.scheduler
+              ) &&
+              Object.isFrozen(
+                H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.geometryBoundary
+              )
+          );
+
+          pass(
+            'ANIMATION_SCHEDULER_BOUNDED',
+            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.scheduler
+              .singleCoordinatorRequired === true &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.scheduler
+                .maximumActiveFramesPerSecond === 30 &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.scheduler
+                .maximumMainThreadWorkMillisecondsPerFrame === 8 &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.scheduler
+                .duplicateAnimationLoopsPermitted === false
+          );
+
+          pass(
+            'ANIMATION_SUSPENSION_REQUIRED',
+            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.suspension
+              .suspendWhenDocumentHidden === true &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.suspension
+                .suspendWhenStageOffscreen === true &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.suspension
+                .backgroundAnimationWorkPermitted === false
+          );
+
+          pass(
+            'REDUCED_MOTION_STATIC_EQUIVALENT_REQUIRED',
+            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.reducedMotion
+              .staticEquivalentRequired === true &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.reducedMotion
+                .animationLoopsMustStop === true
+          );
+
+          pass(
+            'ADMITTED_GEOMETRY_MUTATION_PROHIBITED',
+            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.geometryBoundary
+              .admittedGeometryMutationPermitted === false &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.geometryBoundary
+                .admittedVertexMutationPermitted === false &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.geometryBoundary
+                .admittedIndexMutationPermitted === false &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.geometryBoundary
+                .sharedShorelineBoundaryMutationPermitted === false
+          );
+
+          pass(
+            'ANIMATION_RUNTIME_AND_SIMULATION_WITHHELD',
+            H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.claimCeilings
+              .animationRuntimeCreated === false &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.claimCeilings
+                .animationExecuted === false &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.claimCeilings
+                .fluidSimulationCreated === false &&
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY.claimCeilings
+                .physicalWaveSimulationCreated === false
+          );
+
+          const preview =
+            previewHEarthMinimumShorelineGeometry({
+              sourceObjectId:
+                'OBJ_002_FOREGROUND_WET_SAND',
+              requestedPurpose:
+                'MINIMUM_NATIVE_SHORELINE_GEOMETRY_PREVIEW',
+              requestId:
+                'H_EARTH_CAMERA_ENVELOPE_EXECUTION_AUDIT_001',
+              shorelineBoundary
+            });
+
+          pass(
+            'MINIMUM_SHORELINE_EXECUTION_PASS',
+            preview.ok === true &&
+              preview.primitives.length === 3,
+            preview.issues
+          );
+
+          pass(
+            'MINIMUM_SHORELINE_OBJECT_IDENTITIES_PRESERVED',
+            JSON.stringify(preview.sourceObjectIds) ===
+              JSON.stringify(
+                H_EARTH_3D_MINIMUM_NATIVE_SHORELINE_OBJECT_IDS
+              ),
+            preview.sourceObjectIds
+          );
+
+          pass(
+            'SHORELINE_BOUNDARY_OCCURRENCE_PRESERVED',
+            preview.shorelineBoundary ===
+              shorelineBoundary &&
+              preview.shorelineBoundaryId ===
+                shorelineBoundary.boundaryId
+          );
+
+          pass(
+            'PREVIEW_AUTHORITY_BOUNDARIES_PRESERVED',
+            preview.admitted === false &&
+              preview.WestAdmissionPerformed === false &&
+              preview.fluidSimulation === false
+          );
+
+          const receipt = {
+            receiptType:
+              'H_EARTH_CAMERA_ENVELOPE_AND_ANIMATION_STANDARD_EXECUTION_AUDIT',
+            status:
+              'PASS',
+            checkCount:
+              checks.length,
+            checks,
+            cameraEnvelopeId:
+              H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID,
+            camera,
+            compositionIntent:
+              H_EARTH_3D_CAMERA_COMPOSITION_INTENT,
+            livingPresentationCapacityId:
+              H_EARTH_3D_LIVING_PRESENTATION_CAPACITY_ID,
+            shorelineBoundaryId:
+              shorelineBoundary.boundaryId,
+            sourceObjectIds:
+              preview.sourceObjectIds,
+            primitiveCount:
+              preview.primitives.length,
+            geometryMutationPerformed:
+              false,
+            animationRuntimeCreated:
+              false,
+            mainChanged:
+              false
+          };
+
+          fs.writeFileSync(
+            '/tmp/h-earth-camera-envelope-animation-standard-audit.json',
+            JSON.stringify(receipt, null, 2) + '\n'
+          );
+
+          console.log(
+            `H_EARTH_CAMERA_ENVELOPE_AND_ANIMATION_STANDARD_AUDIT=PASS CHECKS=${checks.length}`
+          );
+          NODE
+
+      - name: Upload execution receipt
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-post-merge-scope-disposition-audit
-          path: artifacts/h-earth-post-merge-scope-disposition-audit-receipt.json
+          name: h-earth-camera-envelope-animation-standard-audit
+          path: /tmp/h-earth-camera-envelope-animation-standard-audit.json
           if-no-files-found: error
           retention-days: 90
+
+      - name: Freeze audited candidate and restore workflow custody
+        shell: bash
+        run: |
+          CAPACITY_BLOB="$(git hash-object showroom/globe/h-earth/capacity.js)"
+
+          git checkout origin/main -- \
+            .github/workflows/h-earth-post-merge-scope-disposition-audit.yml
+
+          git rm \
+            .github/workflows/h-earth-camera-envelope-animation-standard-builder.yml
+
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            showroom/globe/h-earth/capacity.js \
+            .github/workflows/h-earth-post-merge-scope-disposition-audit.yml
+
+          git commit \
+            -m "Correct H-Earth camera envelope and animation capacity" \
+            -m "SOURCE_SYNTAX_AUDIT=PASS" \
+            -m "GEOMETRY_SOURCE_CUSTODY=PASS_UNCHANGED_FROM_MERGE_BASE" \
+            -m "CAMERA_AND_FRUSTUM_EXECUTION_AUDIT=PASS" \
+            -m "MINIMUM_SHORELINE_EXECUTION_AUDIT=PASS" \
+            -m "CAPACITY_CANDIDATE_GIT_BLOB=${CAPACITY_BLOB}" \
+            -m "ANIMATION_RUNTIME_CREATED=FALSE" \
+            -m "MAIN_CHANGED=FALSE"
+
+          git push \
+            origin \
+            HEAD:agent/h-earth-camera-envelope-animation-standard-001

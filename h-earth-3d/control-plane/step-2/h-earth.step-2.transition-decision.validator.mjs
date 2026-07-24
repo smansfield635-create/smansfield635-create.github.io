@@ -15,15 +15,15 @@ const COMMITTED_RECEIPT_PATH = path.join(
   'h-earth.step-2.transition-decision.audit-receipt.json'
 );
 const DETERMINISTIC_EVALUATION_TIME = '2026-07-24T03:20:00Z';
+const MERGE_READINESS_A_PATH =
+  '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.post-merge-disposition-scope-reconciliation.js';
 
 function readJson(fileName) {
   return JSON.parse(fs.readFileSync(path.join(DIRECTORY, fileName), 'utf8'));
 }
 
 function canonicalize(value) {
-  if (Array.isArray(value)) {
-    return `[${value.map(canonicalize).join(',')}]`;
-  }
+  if (Array.isArray(value)) return `[${value.map(canonicalize).join(',')}]`;
   if (value && typeof value === 'object') {
     return `{${Object.keys(value)
       .sort()
@@ -95,7 +95,6 @@ function applyAuthorizedOperation(operation, context) {
   }
 
   let afterBytes;
-
   if (operation.operationType === 'REPLACE_WITH_EXISTING_REPOSITORY_BLOB') {
     afterBytes = readRepositoryBytes(operation.sourcePath);
     if (gitBlobSha(afterBytes) !== operation.sourceGitBlobSha) {
@@ -106,13 +105,11 @@ function applyAuthorizedOperation(operation, context) {
   ) {
     const output = JSON.parse(beforeBytes.toString('utf8'));
     const deferredDigestPatches = [];
-
     for (const patch of operation.patches) {
       if (patch.derive === 'RECOMPUTED_DECISION_DIGEST_AFTER_PATCHES') {
         deferredDigestPatches.push(patch);
         continue;
       }
-
       let value;
       if (Object.hasOwn(patch, 'value')) {
         value = patch.value;
@@ -125,11 +122,9 @@ function applyAuthorizedOperation(operation, context) {
       }
       setPointer(output, patch.pointer, value);
     }
-
     for (const patch of deferredDigestPatches) {
       setPointer(output, patch.pointer, digestObject(output, 'decisionDigest'));
     }
-
     afterBytes = Buffer.from(`${JSON.stringify(output, null, 2)}\n`);
   } else if (
     operation.operationType === 'EXACT_TEXT_REPLACEMENT_SEQUENCE'
@@ -142,7 +137,8 @@ function applyAuthorizedOperation(operation, context) {
       } else if (
         replacement.toDerived === 'SUCCESSOR_SOURCE_BYTE_COUNT_LINE'
       ) {
-        replacementText = `  candidateByteCount: ${context.successorBytes.length},`;
+        replacementText =
+          `  candidateByteCount: ${context.successorBytes.length},`;
       } else if (
         replacement.toDerived === 'SUCCESSOR_SOURCE_SHA256_LITERAL_LINE'
       ) {
@@ -240,12 +236,11 @@ function validateDecision(decision, references) {
 }
 
 function changedPathsFromBase(baseCommit) {
-  const output = execFileSync(
+  return execFileSync(
     'git',
     ['diff', '--name-only', `${baseCommit}...HEAD`, '--'],
     { cwd: REPOSITORY_ROOT, encoding: 'utf8' }
-  );
-  return output
+  )
     .split(/\r?\n/)
     .map((value) => value.trim())
     .filter(Boolean)
@@ -307,53 +302,63 @@ try {
   );
   headDescendsFromBase = true;
 } catch {
-  // Recorded by checks below.
+  // Recorded below.
 }
 check('BASE_COMMIT_EXISTS', baseCommitExists);
 check('HEAD_DESCENDS_FROM_BASE', headDescendsFromBase);
 
-const allowedAdmissionPaths = [
+const step2AdmissionPaths = [
   ...changeset.expectedParentPolicy.allowedAdmissionPaths
 ].sort((left, right) => left.localeCompare(right));
-const requiredAdmissionPaths = [
+const mergeReadinessAPaths = [MERGE_READINESS_A_PATH];
+const allowedBranchPaths = [
+  ...step2AdmissionPaths,
+  ...mergeReadinessAPaths
+].sort((left, right) => left.localeCompare(right));
+const requiredStep2Paths = [
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.current-state.manifest.json',
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.successor-target.manifest.json',
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.authorized-changeset.manifest.json',
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.json',
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.fixtures.json',
   '/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.validator.mjs',
+  '/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.audit-receipt.json',
   '/.github/workflows/h-earth-step-2-decision-accountability-audit.yml'
 ].sort((left, right) => left.localeCompare(right));
-let changedAdmissionPaths = [];
+
+let changedBranchPaths = [];
 try {
-  changedAdmissionPaths = changedPathsFromBase(currentState.expectedBaseCommit);
+  changedBranchPaths = changedPathsFromBase(currentState.expectedBaseCommit);
+  check('STEP_2_ADMISSION_DIFF_RESOLVES', true);
 } catch (error) {
   check('STEP_2_ADMISSION_DIFF_RESOLVES', false, error.message);
 }
-if (!checks.some((entry) => entry.name === 'STEP_2_ADMISSION_DIFF_RESOLVES')) {
-  check('STEP_2_ADMISSION_DIFF_RESOLVES', true);
-}
+const unauthorizedBranchPaths = changedBranchPaths.filter(
+  (repositoryPath) => !allowedBranchPaths.includes(repositoryPath)
+);
 check(
-  'STEP_2_ADMISSION_PATHS_ALLOWED',
-  changedAdmissionPaths.every((repositoryPath) =>
-    allowedAdmissionPaths.includes(repositoryPath)
-  ),
+  'STEP_2_AND_MERGE_READINESS_A_PATHS_ALLOWED',
+  unauthorizedBranchPaths.length === 0,
   {
-    changedPathCount: changedAdmissionPaths.length,
-    unauthorizedPaths: changedAdmissionPaths.filter(
-      (repositoryPath) => !allowedAdmissionPaths.includes(repositoryPath)
-    )
+    changedPathCount: changedBranchPaths.length,
+    step2AdmissionPathCount: step2AdmissionPaths.length,
+    mergeReadinessAPathCount: mergeReadinessAPaths.length,
+    unauthorizedPaths: unauthorizedBranchPaths
   }
 );
 check(
   'STEP_2_REQUIRED_PACKAGE_PATHS_PRESENT',
-  requiredAdmissionPaths.every((repositoryPath) =>
-    changedAdmissionPaths.includes(repositoryPath)
+  requiredStep2Paths.every((repositoryPath) =>
+    changedBranchPaths.includes(repositoryPath)
   )
 );
 check(
-  'STEP_2_ALLOWED_ADMISSION_PATHS_UNIQUE',
-  new Set(allowedAdmissionPaths).size === allowedAdmissionPaths.length
+  'MERGE_READINESS_A_PATH_PRESENT',
+  changedBranchPaths.includes(MERGE_READINESS_A_PATH)
+);
+check(
+  'STEP_2_AND_MERGE_READINESS_A_PATHS_UNIQUE',
+  new Set(allowedBranchPaths).size === allowedBranchPaths.length
 );
 
 const lockedOccurrences = [
@@ -385,6 +390,33 @@ for (const occurrence of lockedOccurrences) {
     { expected: occurrence.gitBlobSha, actual: actualGitBlobSha }
   );
 }
+
+const registryOverlayModule = await import(
+  `${pathToFileURL(repositoryFilePath(MERGE_READINESS_A_PATH)).href}?v=${currentState.manifestDigest}`
+);
+const step2ReadOnlyPaths = requiredStep2Paths.filter((repositoryPath) =>
+  repositoryPath.startsWith('/h-earth-3d/control-plane/step-2/')
+);
+const unresolvedStep2ReadOnlyPaths = step2ReadOnlyPaths.filter(
+  (repositoryPath) =>
+    registryOverlayModule.resolveHEarthRepositoryRegistryPath(repositoryPath)
+      ?.resolved !== true
+);
+check(
+  'MERGE_READINESS_A_STEP_2_PATHS_RESOLVE',
+  unresolvedStep2ReadOnlyPaths.length === 0,
+  {
+    expectedResolvedPathCount: step2ReadOnlyPaths.length,
+    unresolvedPaths: unresolvedStep2ReadOnlyPaths
+  }
+);
+check(
+  'MERGE_READINESS_A_REMAINS_READ_ONLY',
+  registryOverlayModule.H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_NODE
+    ?.allowedMutationScope === 'READ_ONLY_PREFLIGHT_PATH_REGISTRATION_ONLY' &&
+    registryOverlayModule.H_EARTH_STEP_2_MERGE_READINESS_A_SCOPE_NODE
+      ?.authorityLimitations?.includes('NO_TRANSITION_EXECUTION')
+);
 
 const successorModule = await import(
   `${pathToFileURL(repositoryFilePath(successorTarget.selectedSuccessor.sourcePath)).href}?v=${successorTarget.manifestDigest}`
@@ -566,11 +598,19 @@ const receiptCore = {
       (failure) =>
         failure.startsWith('FIXTURE') ||
         failure.startsWith('ALL_') ||
-        failure.startsWith('STEP_2_ADMISSION_') ||
-        failure.startsWith('STEP_2_REQUIRED_')
+        failure.startsWith('STEP_2_')
     )
       ? 'FAIL'
       : 'PASS'
+  },
+  mergeReadinessA: {
+    status: failures.some((failure) => failure.startsWith('MERGE_READINESS_A_'))
+      ? 'FAIL'
+      : 'PASS',
+    registeredReadOnlyPathCount: step2ReadOnlyPaths.length,
+    registryOverlayPath: MERGE_READINESS_A_PATH,
+    repositoryMutationAuthorityCreated: false,
+    transitionExecutionAuthorityCreated: false
   },
   boundaries: {
     repositoryActivationPerformed: false,

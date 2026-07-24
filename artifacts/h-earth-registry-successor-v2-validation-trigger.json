@@ -1,7 +1,0 @@
-{
-  "triggerId": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_V2_VALIDATION_TRIGGER_v1",
-  "purpose": "TRIGGER_NORMAL_BRANCH_EXECUTION_AFTER_TARGET_2_DEPENDENCY_REMOVAL",
-  "targetBranch": "agent/h-earth-gate-b-post-guardrail-evaluation-001",
-  "mainUnchanged": true,
-  "implementationSourceChanged": false
-}

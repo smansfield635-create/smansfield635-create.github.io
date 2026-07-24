@@ -1,10 +1,10 @@
 /* /prototypes/universal-compass/archcoin.lab.sw.js
-   Prototype-scoped ARCHCOIN calibration router · Round 4.
+   Prototype-scoped ARCHCOIN calibration router · Round 4 Stages 4A/4B.
    Production ARCHCOIN files are never modified or served from these files.
 */
 "use strict";
 
-const BUILD = "ARCHCOIN_CALIBRATION_ROUND4_v1";
+const BUILD = "ARCHCOIN_CALIBRATION_ROUND4_STAGE4AB_v2";
 const LOCAL_ROOT = "/prototypes/universal-compass/";
 const ROUTES = Object.freeze({
   "/assets/compass/upstream-compass.css": `${LOCAL_ROOT}archcoin.upstream-compass.css?build=${BUILD}`,

@@ -1,21 +1,5 @@
 /* /prototypes/universal-compass/archcoin.index.css
-   Visible isolation wrapper for the ARCHCOIN calibration lab.
+   Isolated ARCHCOIN calibration lab visual wrapper.
 */
-@import url("./archcoin.index.source.css?build=ARCHCOIN_ISOLATION_v1");
-
-html::before {
-  content: "ARCHCOIN CALIBRATION LAB · ISOLATED";
-  position: fixed;
-  top: max(8px, env(safe-area-inset-top));
-  right: 8px;
-  z-index: 2147483647;
-  padding: 6px 9px;
-  border: 1px solid rgba(160, 214, 255, 0.72);
-  border-radius: 7px;
-  background: rgba(2, 10, 24, 0.88);
-  color: #dff4ff;
-  font: 700 10px/1.15 system-ui, sans-serif;
-  letter-spacing: 0.08em;
-  box-shadow: 0 0 18px rgba(75, 180, 255, 0.24);
-  pointer-events: none;
-}
+@import url("./archcoin.index.source.css?build=ARCHCOIN_CALIBRATION_ROUND1_v1");
+@import url("./archcoin.index.round1.css?build=ARCHCOIN_CALIBRATION_ROUND1_v1");

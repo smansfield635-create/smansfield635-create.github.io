@@ -1,0 +1,104 @@
+{
+  "decisionId": "H_EARTH_STEP_2_TRANSITION_DECISION_2026_07_24_001",
+  "decisionVersion": 1,
+  "status": "APPROVED_UNCONSUMED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "checkpoint": "STEP_2_4_ONE_TIME_TRANSITION_DECISION",
+  "issuedAt": "2026-07-24T03:20:00Z",
+  "expiresAt": "2026-08-23T03:20:00Z",
+  "actorBindings": {
+    "approver": {
+      "actorType": "GITHUB_USER",
+      "actorId": "smansfield635-create",
+      "githubUserId": 257423260
+    },
+    "decisionIssuer": {
+      "actorType": "GITHUB_USER",
+      "actorId": "smansfield635-create",
+      "githubUserId": 257423260
+    },
+    "authorizedExecutor": {
+      "actorType": "EXECUTOR_CONTRACT",
+      "actorId": "H_EARTH_STEP_3_ATOMIC_TRANSITION_EXECUTOR_v1"
+    },
+    "auditor": {
+      "actorType": "VALIDATOR_CONTRACT",
+      "actorId": "H_EARTH_STEP_2_TRANSITION_DECISION_VALIDATOR_v1"
+    }
+  },
+  "approvalBasis": [
+    "USER_ACCEPTED_SIMPLIFIED_THREE_STAGE_STRATEGY",
+    "USER_AUTHORIZED_CONTINUOUS_STEP_2_CONSTRUCTION",
+    "REPOSITORY_STABILIZATION_COMPLETE_ON_MAIN"
+  ],
+  "successorBinding": {
+    "successorId": "H_EARTH_REPOSITORY_REGISTRY_SUCCESSOR_CANDIDATE_v2",
+    "registryVersion": "1.0.0-candidate.2",
+    "sourcePath": "/h-earth-3d/registry/candidates/h-earth.repository-registry.successor.candidate.js",
+    "sourceGitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+    "instanceContentDigest": "a168f5a814f23f508d1c019867b707b30ec2ea8f1e0ae3125be6594e701f07e8",
+    "acceptedForTransition": true,
+    "activeBeforeExecution": false
+  },
+  "parentBinding": {
+    "policyId": "H_EARTH_STEP_2_ADMITTED_PACKAGE_PARENT_POLICY_v1",
+    "baseCommit": "08cf54db77dc48e23de8874953561bc2964551ba",
+    "currentHeadMustDescendFromBase": true,
+    "compareBaseToCurrentHeadMayContainOnlyStep2AdmissionPaths": true,
+    "allowedAdmissionPaths": [
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.current-state.manifest.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.successor-target.manifest.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.authorized-changeset.manifest.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.fixtures.json",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.validator.mjs",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.audit-receipt.json",
+      "/.github/workflows/h-earth-step-2-decision-accountability-audit.yml"
+    ],
+    "decisionBlobMustMatchAdmittedDecisionBlob": true,
+    "noUnrelatedInterveningChanges": true,
+    "resolvedParentCommitRecordedAtStep3Preflight": true
+  },
+  "changesetBinding": {
+    "manifestId": "H_EARTH_STEP_2_AUTHORIZED_CHANGESET_MANIFEST_v1",
+    "authorizedChangesetDigest": "17ba01a3ca973658fa5e833ee79d65daafccbe26d84303f552686e650979ecab",
+    "authorizedPathCount": 6,
+    "authorizedPaths": [
+      "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+      "/h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "/h-earth-3d/registry/h-earth.repository-registry.js",
+      "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.identity.js",
+      "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js",
+      "/h-earth-3d/control-plane/step-2/h-earth.step-2.transition-decision.json"
+    ]
+  },
+  "canonicalizationDecision": {
+    "mode": "PROMOTE_EXISTING_SUCCESSOR_BYTES_TO_STABLE_REGISTRY_PATH",
+    "sourceBytesMutated": false,
+    "sourceCandidatePreservedAtEvidencePath": true,
+    "stableTargetPath": "/h-earth-3d/registry/h-earth.repository-registry.candidate.js",
+    "stableTargetAfterGitBlobSha": "8cf7a1cce76c4381f9c5f017cc3a132d8ecea308",
+    "acceptanceAndCanonicalityRecordedByBootstrapAndDiscoveryBinding": true,
+    "candidateInstanceAcceptedFieldRewritten": false
+  },
+  "replayProtection": {
+    "decisionNonce": "H_EARTH_STEP_2_20260724_001_08CF54DB_FF9E1CDA_8CF7A1CC",
+    "maximumUseCount": 1,
+    "remainingUseCount": 1,
+    "consumed": false,
+    "replayRejected": true
+  },
+  "revocation": {
+    "revoked": false,
+    "revocationAuthority": "smansfield635-create",
+    "revocationRecordPath": null
+  },
+  "step2Boundary": {
+    "executorCreated": false,
+    "repositoryActivationPerformed": false,
+    "bootstrapReplacementPerformed": false,
+    "canonicalizationExecuted": false,
+    "transitionExecutionAuthorizedOnlyThroughValidStep3Consumption": true
+  },
+  "decisionDigest": "3b4d6b8ef3e52c013938596d7002145d180c1053d8f2064b9945bb89b8e03e32"
+}

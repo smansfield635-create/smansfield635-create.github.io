@@ -26,8 +26,29 @@ const remoteSha = (ref) => {
   const output = execFileSync('git', ['ls-remote', 'origin', ref], { cwd: root, encoding: 'utf8' }).trim();
   return output ? output.split(/\s+/)[0] : null;
 };
+const commitDescendsFrom = (descendantSha, ancestorSha) => {
+  if (!descendantSha || !ancestorSha) return false;
+  try {
+    execFileSync('git', ['cat-file', '-e', `${descendantSha}^{commit}`], {
+      cwd: root,
+      stdio: 'ignore'
+    });
+    execFileSync('git', ['cat-file', '-e', `${ancestorSha}^{commit}`], {
+      cwd: root,
+      stdio: 'ignore'
+    });
+    execFileSync('git', ['merge-base', '--is-ancestor', ancestorSha, descendantSha], {
+      cwd: root,
+      stdio: 'ignore'
+    });
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 const SOURCE_MERGE = 'ee7324734bb687e71ebb3ee93ff23e6353feb5fe';
+const STABILIZATION_MERGE = '08cf54db77dc48e23de8874953561bc2964551ba';
 const ARCHIVE_REF = 'refs/heads/archive/h-earth-pr79-42-file-delta-20260723';
 const MAIN_REF = 'refs/heads/main';
 const STABILIZATION_BRANCH = 'agent/h-earth-post-merge-scope-disposition-001';
@@ -57,10 +78,11 @@ check('reclassificationExact', reclassification.paths?.length === 6 && reclassif
 const dispositionIndex = table.columns.indexOf('DISPOSITION');
 const pathIndex = table.columns.indexOf('PATH');
 const isolatedPaths = table.rows.filter((row) => row[dispositionIndex] === 'ISOLATE').map((row) => row[pathIndex]);
+const observedMainCommit = remoteSha(MAIN_REF);
 check('isolatedPathCountExact', isolatedPaths.length === 18);
 check('allIsolatedPathsAbsent', isolatedPaths.every((repositoryPath) => !exists(repositoryPath)));
 check('archiveBranchPreservesOriginalMerge', remoteSha(ARCHIVE_REF) === SOURCE_MERGE);
-check('mainUnchangedDuringStabilization', remoteSha(MAIN_REF) === SOURCE_MERGE);
+check('mainContainsStabilizationMerge', commitDescendsFrom(observedMainCommit, STABILIZATION_MERGE));
 
 const retainedResults = Object.entries(manifest.retainedStep1Paths).map(([repositoryPath, expected]) => ({
   repositoryPath,
@@ -162,9 +184,9 @@ check('all19FixturesPass', fixtureResults.every((entry) => entry.pass));
 
 const failedChecks = Object.entries(checks).filter(([, value]) => value !== true).map(([name]) => name).sort();
 const receipt = {
-  receiptId: 'H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_RETAINED_STATE_AUDIT_RECEIPT_v1',
+  receiptId: 'H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_RETAINED_STATE_AUDIT_RECEIPT_v2',
   operation: 'POST_MERGE_42_FILE_SCOPE_DISPOSITION',
-  checkpoint: 'DISPOSITION_5_AUDIT_RETAINED_STATE',
+  checkpoint: 'DISPOSITION_5_RETAINED_STATE_CONTINUITY_AUDIT',
   result: failedChecks.length === 0 ? 'PASS' : 'FAIL',
   branch: process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || STABILIZATION_BRANCH,
   executedCommit: process.env.GITHUB_SHA ?? 'LOCAL_UNSPECIFIED',
@@ -193,7 +215,9 @@ const receipt = {
   },
   repositoryState: {
     sourceMergeCommit: SOURCE_MERGE,
-    observedMainCommit: remoteSha(MAIN_REF),
+    stabilizationMergeCommit: STABILIZATION_MERGE,
+    observedMainCommit,
+    mainContainsStabilizationMerge: checks.mainContainsStabilizationMerge,
     archiveBranchCommit: remoteSha(ARCHIVE_REF),
     isolatedPathCount: isolatedPaths.length,
     retainedStep1PathCount: retainedResults.length,
@@ -201,20 +225,21 @@ const receipt = {
     target4FRestoredBlob: committedBlob(manifest.revertedLegacyPath.path)
   },
   boundaries: {
-    mainChangedByDisposition: false,
+    laterMainAdvancementPermitted: true,
+    repositoryMutationAuthorityCreated: false,
+    mainChangedByThisAudit: false,
     successorAccepted: false,
     successorActivated: false,
     bootstrapChanged: false,
     baseRegistryCandidateChanged: false,
     canonicalizationAuthorityEstablished: false,
     actorBindingsEstablished: false,
-    transitionExecutionAuthorityEstablished: false,
-    step2ImplementationAuthorityEstablished: false
+    transitionExecutionAuthorityEstablished: false
   },
   exitState: {
     auditsPass: failedChecks.length === 0,
-    retainedStateIdentityExact: failedChecks.length === 0,
-    closurePackageMayBeIssued: failedChecks.length === 0
+    retainedStateContinuityEstablished: failedChecks.length === 0,
+    obsoleteMainEqualityAssertionRetired: true
   }
 };
 

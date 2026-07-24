@@ -4,7 +4,7 @@
 */
 "use strict";
 
-const BUILD = "ARCHCOIN_CALIBRATION_ROUND4_STAGE4AB_v2";
+const BUILD = "ARCHCOIN_CALIBRATION_ROUND4_STAGE4AB_v3";
 const LOCAL_ROOT = "/prototypes/universal-compass/";
 const ROUTES = Object.freeze({
   "/assets/compass/upstream-compass.css": `${LOCAL_ROOT}archcoin.upstream-compass.css?build=${BUILD}`,

@@ -1,0 +1,115 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_FOUR_COMPASS_RECONCILIATION_AUTHORITY_LOCK_v1",
+  "phase": "PHASE_A_AUTHORITY_CORRECTION",
+  "checkpoint": "R0",
+  "status": "PASS_FOUR_COMPASS_RECONCILIATION_AUTHORITY_LOCKED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "reconciliationBranch": "agent/metaverse-benchmark-four-compass-reconciliation-001",
+  "reconciliationParentCommit": "8d79aa35cf76fba298a5afc800687072d4caa8cb",
+  "authorizedOutputRoot": "verification/benchmark-corpus/four-compass-reconciliation-v1/",
+  "mode": "READ_PRESERVE_RECLASSIFY_SUPERSEDE_RECORD_VERIFY",
+  "controllingTaxonomy": {
+    "compassCorpusCount": 4,
+    "compasses": [
+      {
+        "benchmarkId": "MAIN_COMPASS",
+        "route": "/",
+        "productIdentity": "DIAMOND_GATE_BRIDGE_MAIN_COMPASS",
+        "referencePosture": "POSITIVE_REFERENCE"
+      },
+      {
+        "benchmarkId": "LAWS_COMPASS",
+        "legacyBenchmarkId": "LAWS_CHAMBER_POST_PR128",
+        "route": "/laws/",
+        "productIdentity": "DIAMOND_GATE_BRIDGE_LAWS_COMPASS",
+        "referencePosture": "NEGATIVE_INTERACTION_REGRESSION_REFERENCE"
+      },
+      {
+        "benchmarkId": "SHOWROOM_COMPASS",
+        "legacyBenchmarkId": "SHOWROOM",
+        "route": "/showroom/",
+        "productIdentity": "DIAMOND_GATE_BRIDGE_SHOWROOM_COMPASS",
+        "referencePosture": "POSITIVE_REFERENCE"
+      },
+      {
+        "benchmarkId": "ARCHCOIN_COMPASS",
+        "route": "/products/archcoin/",
+        "productIdentity": "ARCHCOIN_COMPASS",
+        "referencePosture": "POSITIVE_REFERENCE"
+      }
+    ],
+    "auxiliaryControls": [
+      {
+        "controlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+        "legacyInvalidBenchmarkId": "HOMEPAGE_COMPASS",
+        "route": "/home/",
+        "productIdentity": "DIAMOND_GATE_BRIDGE_WEBSITE_HOMEPAGE",
+        "classification": "AUXILIARY_NON_COMPASS_CONTROL",
+        "compassAuthority": false
+      }
+    ]
+  },
+  "identityLocks": {
+    "HOMEPAGE_COMPASS": "INVALID_BENCHMARK_IDENTITY_RETIRED",
+    "WEBSITE_HOME_RECEIVER_CONTROL": "ACTIVE_AUXILIARY_CONTROL_IDENTITY",
+    "ARCHCOIN": "CANONICAL_SPELLING_LOCKED",
+    "ARCOIN": "INVALID_SPELLING",
+    "R_COIN": "INVALID_SPELLING"
+  },
+  "authority": {
+    "productMutation": false,
+    "mainWrite": false,
+    "merge": false,
+    "lawsRepair": false,
+    "browserRecapture": false,
+    "historicalCommitRewrite": false,
+    "historicalArtifactDeletion": false,
+    "reconciliationWritesOnBoundedBranch": true
+  },
+  "historicalPolicy": {
+    "cp0ThroughCp7ArtifactsPreserved": true,
+    "historicalFiveBenchmarkAggregatesRemainHistoricalFacts": true,
+    "historicalFiveBenchmarkAggregatesRemainControlling": false,
+    "rawEvidenceMayBeReusedOnlyThroughExplicitFourCompassProjection": true,
+    "homeEvidenceMayBeReusedOnlyThroughAuxiliaryControlProjection": true
+  },
+  "prohibited": [
+    "TREAT_HOME_AS_COMPASS",
+    "COUNT_HOME_IN_COMPASS_TOTALS",
+    "INCLUDE_HOME_IN_COMPASS_DIGESTS",
+    "DELETE_OR_REWRITE_HISTORICAL_LEDGERS",
+    "RECAPTURE_BEFORE_RECONCILIATION_AUDIT",
+    "BEGIN_LAWS_REPAIR",
+    "MERGE_RECONCILIATION_BRANCH"
+  ],
+  "assertions": {
+    "canonicalCompassCount": 4,
+    "auxiliaryNonCompassControlCount": 1,
+    "allCanonicalCompassRoutesUnique": true,
+    "homeExcludedFromCompassCorpus": true,
+    "homeEvidencePreserved": true,
+    "productMutationAuthority": false,
+    "mainChanged": false,
+    "mergeAuthority": "NONE"
+  },
+  "stoppingBoundary": {
+    "proves": [
+      "FOUR_COMPASS_CORPUS_AUTHORITY",
+      "HOME_AUXILIARY_CONTROL_AUTHORITY",
+      "ARCHCOIN_NAMING_AUTHORITY",
+      "HISTORICAL_PRESERVATION_AND_NONCONTROLLING_BOUNDARY"
+    ],
+    "doesNotProve": [
+      "CORRECTED_ROLE_REGISTRY_COMPLETENESS",
+      "CP0_THROUGH_CP7_FIELD_DISPOSITION_COMPLETENESS",
+      "FOUR_COMPASS_REAGGREGATION",
+      "RECAPTURE_NOT_REQUIRED",
+      "TOOL_MERGE_READINESS"
+    ],
+    "authorizes": [
+      "R1_CORRECTED_BENCHMARK_ROLE_REGISTRY"
+    ]
+  },
+  "nextCheckpoint": "R1_CORRECTED_BENCHMARK_IDENTITY_AND_ROLE_REGISTRY"
+}

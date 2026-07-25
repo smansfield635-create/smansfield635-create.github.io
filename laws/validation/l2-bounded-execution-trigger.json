@@ -1,9 +1,12 @@
 {
-  "artifactId": "L2_LAWS_BOUNDED_EXECUTION_TRIGGER_v1",
-  "status": "PR_SYNCHRONIZE_TRIGGER_CREATED",
+  "artifactId": "L2_LAWS_BOUNDED_EXECUTION_TRIGGER_v2",
+  "status": "WORKFLOW_UPDATE_SYNCHRONIZATION_TRIGGER_CREATED",
   "branch": "agent/laws-projected-clearance-bounded-repair-001",
   "parentMainCommit": "8d8199e147c944bceed021c9a7f5585ec146e7a6",
-  "authorizedPurpose": "Trigger the temporary bounded implementation workflow and the installed Laws smoke/baseline gates.",
+  "authorizedPurpose": "Trigger the updated self-removing bounded implementation workflow and re-run the installed Laws smoke/baseline gates.",
+  "priorPreImplementationSmokeRun": 30166447089,
+  "priorPreImplementationBaselineRun": 30166447110,
+  "priorPreImplementationRunsPassed": true,
   "productMutationClaimed": false,
   "mergeAuthorized": false
 }

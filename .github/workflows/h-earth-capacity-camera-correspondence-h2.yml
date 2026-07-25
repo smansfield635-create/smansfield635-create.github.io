@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/h-earth-capacity-camera-correspondence-h2.yml"
       - "tools/h-earth-capacity-camera-renderer-correspondence-*.mjs"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h2-contract.json"
       - "showroom/globe/h-earth/capacity.js"
       - "showroom/globe/h-earth/compositor.js"
       - "showroom/globe/h-earth/renderer.js"

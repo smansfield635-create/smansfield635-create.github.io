@@ -51,14 +51,19 @@ jobs:
           if (m.evaluateHEarth3DStageSeparatedCapacity({ admittedPrimitiveCount: 385, projectedFragmentCount: 798 }).eligible) throw new Error('ADMITTED_OVERFLOW_NOT_REJECTED');
           if (m.H_EARTH_3D_CAPACITY_PREFLIGHT.eligible !== true) throw new Error('CAPACITY_PREFLIGHT_NOT_ELIGIBLE');
           NODE
-      - name: Commit only capacity.js and remove both transports
+      - name: Commit capacity.js and remove both transports
         shell: bash
         run: |
           set -euo pipefail
           git rm .github/workflows/h-earth-capacity-stage-separated-budget-validation-transport.yml
           git rm .github/workflows/h-earth-capacity-stage-separated-budget-validation-pr-transport.yml
           git add showroom/globe/h-earth/capacity.js
-          test "$(git diff --cached --name-only | sort)" = "showroom/globe/h-earth/capacity.js"
+          ACTUAL="$(git diff --cached --name-only | sort)"
+          EXPECTED="$(printf '%s\n' \
+            '.github/workflows/h-earth-capacity-stage-separated-budget-validation-pr-transport.yml' \
+            '.github/workflows/h-earth-capacity-stage-separated-budget-validation-transport.yml' \
+            'showroom/globe/h-earth/capacity.js' | sort)"
+          test "$ACTUAL" = "$EXPECTED"
           git config user.name "openai-codex[bot]"
           git config user.email "openai-codex[bot]@users.noreply.github.com"
           git commit -m "Validate H-Earth stage-separated capacity correction"

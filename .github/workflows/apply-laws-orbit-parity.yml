@@ -1,9 +1,6 @@
 name: Apply Laws Orbit Parity
 
 on:
-  push:
-    branches:
-      - agent/laws-orbit-main-compass-parity-001
   pull_request:
     branches:
       - main
@@ -19,106 +16,202 @@ jobs:
       - name: Check out correction branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
-      - name: Transplant Main Compass cluster geometry
+      - name: Transplant exact Main Compass cluster geometry
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
 
           path = Path('laws/index.crystals.js')
           source = path.read_text(encoding='utf-8')
 
-          def replace_once(pattern, replacement, label):
+          def replace_exact(old, new, label):
               global source
-              source, count = re.subn(pattern, replacement, source, count=1, flags=re.S)
+              count = source.count(old)
               if count != 1:
-                  raise SystemExit(f'{label}: expected exactly one replacement, found {count}')
+                  raise SystemExit(f'{label}: expected exactly one source block, found {count}')
+              source = source.replace(old, new, 1)
 
-          replace_once(
-              r'(cluster:\s*Object\.freeze\(\{\s*horizontalRadius:\s*)1\.04(\s*,\s*verticalRadius:\s*)0\.90(\s*,\s*depthRadius:\s*)0\.84(\s*,\s*)centerRadius:\s*0\.26\s*,\s*',
-              r'\g<1>1.36\g<2>1.18\g<3>1.04\g<4>',
-              'MAIN_COMPASS_CLUSTER_RADII'
+          replace_exact(
+          '''    cluster:
+                Object.freeze({
+                  horizontalRadius:
+                    1.04,
+
+                  verticalRadius:
+                    0.90,
+
+                  depthRadius:
+                    0.84,
+
+                  centerRadius:
+                    0.26,
+
+                  primaryAnchor:''',
+          '''    cluster:
+                Object.freeze({
+                  horizontalRadius:
+                    1.36,
+
+                  verticalRadius:
+                    1.18,
+
+                  depthRadius:
+                    1.04,
+
+                  primaryAnchor:''',
+          'MAIN_COMPASS_CLUSTER_RADII'
           )
 
-          replace_once(
-              r'  function effectiveClusterQuaternion\(\s*localQuaternion\s*\) \{.*?\n  \}\n\n  function rotatedLawUnitVector\(\s*node,\s*localQuaternion\s*\) \{.*?\n  \}',
-              '''  function rotatedLawUnitVector(
-            node,
-            localQuaternion
-          ) {
-            return normalizeVector(
-              quaternionRotateVector(
-                localQuaternion,
-                node.sphereVector
-              )
-            );
-          }''',
-              'INDEPENDENT_CLUSTER_QUATERNION'
-          )
-
-          replace_once(
-              r'  function sphericalLawPosition\(\s*node,\s*localQuaternion\s*\) \{.*?\n  \}\n\n  function setUniformScale',
-              '''  function sphericalLawPosition(
-            node,
-            localQuaternion
-          ) {
-            const unit =
-              rotatedLawUnitVector(
-                node,
+          replace_exact(
+          '''  function effectiveClusterQuaternion(
+              localQuaternion
+            ) {
+              return quaternionMultiply(
+                state.constellationQuaternion,
                 localQuaternion
               );
+            }
 
-            return {
-              x:
-                unit[0] *
-                SPHERE.cluster
-                  .horizontalRadius,
-
-              y:
-                unit[1] *
-                SPHERE.cluster
-                  .verticalRadius,
-
-              z:
-                unit[2] *
-                SPHERE.cluster
-                  .depthRadius,
-
-              depth:
-                (unit[2] + 1) / 2,
-
-              primary:
-                clamp(
-                  (
-                    dot(
-                      unit,
-                      clusterAnchorVector()
-                    ) +
-                    1
-                  ) /
-                    2,
-                  0,
-                  1
+            function rotatedLawUnitVector(
+              node,
+              localQuaternion
+            ) {
+              return normalizeVector(
+                quaternionRotateVector(
+                  effectiveClusterQuaternion(
+                    localQuaternion
+                  ),
+                  node.sphereVector
                 )
-            };
-          }
-
-          function setUniformScale''',
-              'MAIN_COMPASS_SPHERICAL_POSITION'
+              );
+            }''',
+          '''  function rotatedLawUnitVector(
+              node,
+              localQuaternion
+            ) {
+              return normalizeVector(
+                quaternionRotateVector(
+                  localQuaternion,
+                  node.sphereVector
+                )
+              );
+            }''',
+          'INDEPENDENT_CLUSTER_QUATERNION'
           )
 
-          replace_once(
-              r'y:\s*sphere\.y\s*-\s*0\.06\s*,\s*z:\s*sphere\.z\s*\+\s*0\.14\s*,',
-              '''y:
-                         sphere.y,
+          replace_exact(
+          '''  function sphericalLawPosition(
+              node,
+              localQuaternion
+            ) {
+              const unit =
+                rotatedLawUnitVector(
+                  node,
+                  localQuaternion
+                );
 
-                       z:
-                         sphere.z,''',
-              'REMOVE_MANUAL_YZ_NUDGES'
+              const activeDirectionUnit =
+                rotatedCategoryUnitVector(
+                  node.direction
+                );
+
+              return {
+                x:
+                  activeDirectionUnit[0] *
+                    SPHERE.cluster.centerRadius +
+                  unit[0] *
+                    SPHERE.cluster.horizontalRadius,
+
+                y:
+                  activeDirectionUnit[1] *
+                    SPHERE.cluster.centerRadius +
+                  unit[1] *
+                    SPHERE.cluster.verticalRadius,
+
+                z:
+                  activeDirectionUnit[2] *
+                    SPHERE.cluster.centerRadius +
+                  unit[2] *
+                    SPHERE.cluster.depthRadius,
+
+                depth:
+                  (unit[2] + 1) / 2,
+
+                primary:
+                  clamp(
+                    (
+                      dot(
+                        unit,
+                        clusterAnchorVector()
+                      ) +
+                      1
+                    ) /
+                      2,
+                    0,
+                    1
+                  )
+              };
+            }''',
+          '''  function sphericalLawPosition(
+              node,
+              localQuaternion
+            ) {
+              const unit =
+                rotatedLawUnitVector(
+                  node,
+                  localQuaternion
+                );
+
+              return {
+                x:
+                  unit[0] *
+                    SPHERE.cluster.horizontalRadius,
+
+                y:
+                  unit[1] *
+                    SPHERE.cluster.verticalRadius,
+
+                z:
+                  unit[2] *
+                    SPHERE.cluster.depthRadius,
+
+                depth:
+                  (unit[2] + 1) / 2,
+
+                primary:
+                  clamp(
+                    (
+                      dot(
+                        unit,
+                        clusterAnchorVector()
+                      ) +
+                      1
+                    ) /
+                      2,
+                    0,
+                    1
+                  )
+              };
+            }''',
+          'MAIN_COMPASS_SPHERICAL_POSITION'
+          )
+
+          replace_exact(
+          '''              y:
+                          sphere.y - 0.06,
+
+                        z:
+                          sphere.z + 0.14,''',
+          '''              y:
+                          sphere.y,
+
+                        z:
+                          sphere.z,''',
+          'REMOVE_MANUAL_YZ_NUDGES'
           )
 
           forbidden = (
@@ -131,22 +224,10 @@ jobs:
               if token in source:
                   raise SystemExit(f'FORBIDDEN_ORBIT_DISTORTION_REMAINS:{token}')
 
-          required = (
-              'horizontalRadius:\n          1.36',
-              'verticalRadius:\n          1.18',
-              'depthRadius:\n          1.04',
-              'quaternionRotateVector(\n        localQuaternion,',
-              'sphere.y,',
-              'sphere.z,'
-          )
-          for token in required:
-              if token not in source:
-                  raise SystemExit(f'MAIN_COMPASS_PARITY_TOKEN_MISSING:{token}')
-
           path.write_text(source, encoding='utf-8')
           PY
 
-      - name: Validate JavaScript syntax and parity invariants
+      - name: Validate JavaScript syntax and Euclidean separation
         shell: bash
         run: |
           node --check laws/index.crystals.js
@@ -158,6 +239,7 @@ jobs:
           latitude_frequency = 1.73
           count = 4
           vectors = []
+
           for index in range(count):
               longitude = (math.tau * index) / count - math.pi / 2
               latitude = math.sin((index + 0.5) * latitude_frequency) * latitude_amplitude
@@ -189,8 +271,8 @@ jobs:
               for right in range(left + 1, count)
           )
 
-          assert minimum_center_distance > 1.0, minimum_center_distance
-          assert minimum_pair_distance > 1.25, minimum_pair_distance
+          assert minimum_center_distance > 1.0
+          assert minimum_pair_distance > 1.25
           assert len({tuple(round(value, 9) for value in position) for position in positions}) == 4
 
           print('LAWS_ORBIT_PARITY_HARNESS=PASS')
@@ -198,7 +280,7 @@ jobs:
           print(f'MINIMUM_PAIR_DISTANCE={minimum_pair_distance:.6f}')
           PY
 
-      - name: Commit only the Laws orbital correction
+      - name: Commit one-file Laws orbital correction
         shell: bash
         run: |
           git config user.name "github-actions[bot]"

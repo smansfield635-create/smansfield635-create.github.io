@@ -1,0 +1,40 @@
+{
+  "contractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_STAGE_SEPARATED_CAPACITY_EVALUATOR_H4_v1",
+  "toolId": "H_EARTH_CAPACITY_CAMERA_AND_RENDERER_CORRESPONDENCE_VERIFIER_v1",
+  "checkpoint": "H4",
+  "checkpointTitle": "STAGE_SEPARATED_CAPACITY_EVALUATOR",
+  "parentCheckpointContractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_DETERMINISTIC_CAMERA_FRUSTUM_SWEEP_H3_v1",
+  "parentCheckpointCommit": "5afef7fb528689ceede06d1e185d2f71e837f9b2",
+  "branch": "agent/h-earth-capacity-camera-correspondence-verifier-h4-001",
+  "sourceCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "sourcePosture": "READ_ONLY_STAGE_CAPACITY_EVALUATION",
+  "productionMutationAuthority": "NONE",
+  "authorizedCheckpointPaths": [
+    "tools/h-earth-capacity-camera-renderer-correspondence-h4-contract.json",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h4-evaluator.mjs",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h4-controls.mjs",
+    ".github/workflows/h-earth-capacity-camera-correspondence-h4.yml"
+  ],
+  "stageOrder": [
+    "STAGE_1_CAMERA_AND_FRUSTUM",
+    "STAGE_2_ADMITTED_PRIMITIVES",
+    "STAGE_3_PROJECTED_FRAGMENTS",
+    "STAGE_4_SEMANTIC_CONTAINERS",
+    "STAGE_5_INTERACTION_NODES",
+    "STAGE_6_FINAL_RENDERER_OWNED_DOM"
+  ],
+  "distinctQuantityLaw": "ADMITTED_PRIMITIVE_COUNT != PROJECTED_PLAN_FRAGMENT_COUNT != MOUNTED_PROJECTED_FRAGMENT_NODE_COUNT",
+  "physicalDomAccountingLaw": "FINAL_RENDERER_OWNED_DOM = INFRASTRUCTURE_NODES + SEMANTIC_CONTAINER_NODES + INTERACTION_NODES + MOUNTED_PROJECTED_FRAGMENT_NODES",
+  "unresolvedEvidencePolicy": "UNRESOLVED_REQUIRED_EVIDENCE_BLOCKS_DOWNSTREAM_CAPACITY_CLASSIFICATION_WITHOUT_BECOMING_A_TOOL_FAILURE",
+  "clippingPolicy": "MEASURED_CLIPPING_DOES_NOT_AUTOMATICALLY_FAIL_CAPACITY_WITHOUT_AN_ACCEPTED_VISIBILITY_THRESHOLD",
+  "claims": {
+    "stageSeparatedCapacityEvaluationAuthorized": true,
+    "rendererExecutionAuthorized": false,
+    "browserExecutionAuthorized": false,
+    "productionMutationAuthorized": false,
+    "productionFilesChanged": 0,
+    "productionCorrectionStarted": false,
+    "h5Started": false,
+    "mergePerformed": false
+  }
+}

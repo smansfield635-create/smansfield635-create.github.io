@@ -1,0 +1,106 @@
+{
+  "contractId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_CURRENT_STATE_AND_AUTHORITY_LOCK_D0_v1",
+  "toolId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_v1",
+  "checkpoint": "D0",
+  "checkpointTitle": "CURRENT_STATE_AND_COMPILER_AUTHORITY_LOCK",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "inventorySourceBranch": "agent/metaverse-benchmark-corpus-inventory-001",
+  "inventorySourceCommit": "8d79aa35cf76fba298a5afc800687072d4caa8cb",
+  "compilerBranch": "agent/metaverse-3d-benchmark-disposition-compiler-d0-001",
+  "sourcePosture": "READ_ONLY_EVIDENCE_INTERPRETATION_AUTHORITY_LOCK",
+  "sourceAnchors": [
+    {
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-00/inventory-authority-and-boundary-lock.json",
+      "gitBlob": "08cec57030c165e9d1764143a60290713acacdb2"
+    },
+    {
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/cp7-2-workflow-birth-and-trigger-verification-ledger.json",
+      "gitBlob": "a96056a57aebd10cca0b718e735a5caad6015155"
+    }
+  ],
+  "authorizedCheckpointPaths": [
+    ".github/workflows/metaverse-3d-benchmark-disposition-d0.yml",
+    "tools/metaverse-3d-benchmark-disposition-d0-contract.json",
+    "tools/metaverse-3d-benchmark-disposition-d0-authority-lock.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d0-controls.mjs"
+  ],
+  "authorizedInputRoots": [
+    "verification/benchmark-corpus/inventory-pass-v1/"
+  ],
+  "authorizedOutputRoot": "verification/benchmark-corpus/disposition-compiler-v1/",
+  "governedBenchmarks": [
+    {"benchmarkId": "MAIN_COMPASS", "referenceRole": "POSITIVE_REFERENCE"},
+    {"benchmarkId": "HOMEPAGE_COMPASS", "referenceRole": "POSITIVE_REFERENCE"},
+    {"benchmarkId": "ARCHCOIN_COMPASS", "referenceRole": "POSITIVE_REFERENCE"},
+    {"benchmarkId": "SHOWROOM", "referenceRole": "POSITIVE_REFERENCE"},
+    {"benchmarkId": "LAWS_CHAMBER_POST_PR128", "referenceRole": "NEGATIVE_REFERENCE"}
+  ],
+  "governedDimensions": [
+    "SOURCE_CUSTODY",
+    "AUTHORITY_BOUNDARIES",
+    "RUNTIME_LOAD",
+    "INTERACTION_EXECUTION",
+    "VISUAL_REALIZATION",
+    "SPATIAL_REALIZATION",
+    "RESPONSIVE_BEHAVIOR",
+    "PERFORMANCE",
+    "ACCESSIBILITY",
+    "DEPLOYED_IDENTITY",
+    "USER_ACCEPTANCE"
+  ],
+  "dimensionStates": [
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "UNRESOLVED",
+    "NOT_EXECUTED",
+    "NOT_APPLICABLE",
+    "SUPERSEDED",
+    "WITHHELD"
+  ],
+  "dispositions": [
+    "RETAIN",
+    "RECLASSIFY",
+    "CORRECT",
+    "ISOLATE",
+    "SUPERSEDE",
+    "REVERT",
+    "DEFER_PENDING_EVIDENCE",
+    "ADMISSIBLE_FOR_ACCEPTANCE"
+  ],
+  "separationLaws": [
+    "NATIVE_EVIDENCE_NE_NORMALIZED_EVIDENCE",
+    "EVIDENCE_STATUS_NE_DIMENSION_CLASSIFICATION",
+    "DIMENSION_CLASSIFICATION_NE_DISPOSITION",
+    "DISPOSITION_NE_MUTATION_AUTHORITY",
+    "ADMISSIBLE_FOR_ACCEPTANCE_NE_USER_ACCEPTED"
+  ],
+  "authority": {
+    "compilerOwnsEvidenceInterpretation": true,
+    "compilerOwnsProductAuthority": false,
+    "compilerOwnsAcceptanceAuthority": false,
+    "productMutationAuthority": "NONE",
+    "mainWriteAuthority": "NONE",
+    "mergeAuthority": "NONE",
+    "userAcceptanceAuthority": "NONE"
+  },
+  "prohibitedOperations": [
+    "EDIT_PRODUCT_SOURCE",
+    "EDIT_MAIN",
+    "MERGE",
+    "PROMOTE_CANDIDATE",
+    "GRANT_USER_ACCEPTANCE",
+    "INFER_MISSING_PASS",
+    "NORMALIZE_NEGATIVE_REFERENCE_INTO_POSITIVE_REFERENCE",
+    "START_D1_OR_LATER_FROM_D0"
+  ],
+  "claims": {
+    "evidenceNormalizationPerformed": false,
+    "dimensionClassificationPerformed": false,
+    "dispositionCompilationPerformed": false,
+    "productFilesChanged": 0,
+    "mergePerformed": false
+  },
+  "nextCheckpoint": "D1_NATIVE_EVIDENCE_INTAKE_AND_IDENTITY_VALIDATION"
+}

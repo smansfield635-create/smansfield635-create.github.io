@@ -1,0 +1,276 @@
+name: H-Earth Ground Observer Live Probe
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - ".github/workflows/h-earth-ground-observer-live-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public-ground-observer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact merged source
+        uses: actions/checkout@v4
+        with:
+          ref: d41a48eef3d601c2afca0808cdd05ec58d5fc8b0
+          fetch-depth: 0
+
+      - name: Wait for exact public module bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/h-earth-ground-observer-live
+          base_url="https://diamondgatebridge.com/showroom/globe/h-earth"
+          for attempt in $(seq 1 30); do
+            curl -fsSL -H 'Cache-Control: no-cache' \
+              "${base_url}/capacity.js?ground-observer=d41a48e-${attempt}" \
+              -o /tmp/public-capacity.js
+            curl -fsSL -H 'Cache-Control: no-cache' \
+              "${base_url}/compositor.js?ground-observer=d41a48e-${attempt}" \
+              -o /tmp/public-compositor.js
+            curl -fsSL -H 'Cache-Control: no-cache' \
+              "${base_url}/index.js?ground-observer=d41a48e-${attempt}" \
+              -o /tmp/public-index.js
+            capacity_blob="$(git hash-object /tmp/public-capacity.js)"
+            compositor_blob="$(git hash-object /tmp/public-compositor.js)"
+            index_blob="$(git hash-object /tmp/public-index.js)"
+            printf 'attempt=%s capacity=%s compositor=%s index=%s\n' \
+              "$attempt" "$capacity_blob" "$compositor_blob" "$index_blob" \
+              | tee -a artifacts/h-earth-ground-observer-live/deployment-poll.log
+            if [ \
+              "$capacity_blob" = "89e4622bb9c30b533a1d13d7db887ee53e7a46c8" \
+              ] && [ \
+              "$compositor_blob" = "3764f0d53b0564de7a5e983bd339dda75017bc82" \
+              ] && [ \
+              "$index_blob" = "b26aa16abfebf24bf0d77b62d36f7a11ade1ac5c" \
+              ]; then
+              printf '%s\n' "$attempt" \
+                > artifacts/h-earth-ground-observer-live/deployment-attempt.txt
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+
+      - name: Install browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute public mobile anti-flip and pinch probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import { chromium } from 'playwright';
+
+          function samePosition(left, right, epsilon = 1e-8) {
+            return (
+              Math.abs(left.x - right.x) <= epsilon &&
+              Math.abs(left.y - right.y) <= epsilon &&
+              Math.abs(left.z - right.z) <= epsilon
+            );
+          }
+
+          const browser = await chromium.launch({ headless: true });
+          const context = await browser.newContext({
+            viewport: { width: 390, height: 844 },
+            deviceScaleFactor: 2,
+            isMobile: true,
+            hasTouch: true
+          });
+          const page = await context.newPage();
+
+          try {
+            await page.goto(
+              'https://diamondgatebridge.com/showroom/globe/h-earth/?ground-observer-live=d41a48e',
+              { waitUntil: 'networkidle', timeout: 120000 }
+            );
+            await page.waitForSelector(
+              '#h-earth-3d-renderer-mount .h-earth-3d-render-stage',
+              { state: 'attached', timeout: 120000 }
+            );
+            await page.waitForFunction(() =>
+              globalThis.H_EARTH_3D_TOUCH_CAMERA_CONTROL_RECEIPT?.active === true,
+              null,
+              { timeout: 120000 }
+            );
+
+            const box = await page.locator('#h-earth-3d-renderer-mount').boundingBox();
+            assert.ok(box);
+
+            async function snapshot() {
+              return page.evaluate(async () => {
+                const module = await import('./compositor.js');
+                return {
+                  state: module.getHEarth3DCompositorState(),
+                  pose: module.resolveHEarth3DCompositorCameraPose(),
+                  lastReceipt: globalThis.H_EARTH_3D_TOUCH_CAMERA_LAST_RECEIPT ?? null,
+                  controlReceipt: globalThis.H_EARTH_3D_TOUCH_CAMERA_CONTROL_RECEIPT ?? null,
+                  stagePresent: Boolean(
+                    document.querySelector('#h-earth-3d-renderer-mount .h-earth-3d-render-stage')
+                  )
+                };
+              });
+            }
+
+            async function drag({ pointerId, deltaX, deltaY }) {
+              await page.evaluate(({ x, y, pointerId, deltaX, deltaY }) => {
+                const mount = document.getElementById('h-earth-3d-renderer-mount');
+                const emit = (type, clientX, clientY, buttons) => mount.dispatchEvent(
+                  new PointerEvent(type, {
+                    pointerId,
+                    pointerType: 'touch',
+                    isPrimary: true,
+                    clientX,
+                    clientY,
+                    buttons,
+                    bubbles: true,
+                    cancelable: true
+                  })
+                );
+                emit('pointerdown', x, y, 1);
+                emit('pointermove', x + deltaX, y + deltaY, 1);
+                emit('pointerup', x + deltaX, y + deltaY, 0);
+              }, {
+                x: box.x + box.width * 0.45,
+                y: box.y + box.height * 0.55,
+                pointerId,
+                deltaX,
+                deltaY
+              });
+              await page.waitForTimeout(80);
+            }
+
+            const initial = await snapshot();
+            assert.equal(initial.pose.eligible, true);
+            assert.equal(initial.stagePresent, true);
+            assert.equal(initial.controlReceipt?.active, true);
+            assert.deepEqual(initial.pose.position, { x: 28, y: 10.5, z: -82 });
+            assert.ok(initial.pose.up.y > 0);
+
+            await drag({ pointerId: 101, deltaX: 45, deltaY: -25 });
+            await page.waitForFunction(() =>
+              globalThis.H_EARTH_3D_TOUCH_CAMERA_LAST_RECEIPT?.gestureMode ===
+                'ONE_POINTER_GROUND_OBSERVER_LOOK' &&
+              globalThis.H_EARTH_3D_TOUCH_CAMERA_LAST_RECEIPT?.applied === true,
+              null,
+              { timeout: 30000 }
+            );
+            const afterLook = await snapshot();
+            assert.equal(afterLook.lastReceipt?.accepted, true);
+            assert.equal(afterLook.lastReceipt?.applied, true);
+            assert.equal(afterLook.lastReceipt?.status, 'TOUCH_CAMERA_GESTURE_APPLIED');
+            assert.equal(samePosition(afterLook.pose.position, initial.pose.position), true);
+            assert.ok(afterLook.pose.up.y > 0);
+
+            for (let index = 0; index < 24; index += 1) {
+              await drag({ pointerId: 200 + index, deltaX: 0, deltaY: -180 });
+            }
+            const upperBoundary = await snapshot();
+            assert.equal(samePosition(upperBoundary.pose.position, initial.pose.position), true);
+            assert.ok(upperBoundary.state.camera.pitchDegrees >= -80);
+            assert.ok(upperBoundary.state.camera.pitchDegrees <= 80);
+            assert.ok(upperBoundary.pose.up.y > 0);
+            assert.equal(upperBoundary.stagePresent, true);
+
+            for (let index = 0; index < 48; index += 1) {
+              await drag({ pointerId: 300 + index, deltaX: 0, deltaY: 180 });
+            }
+            const lowerBoundary = await snapshot();
+            assert.equal(samePosition(lowerBoundary.pose.position, initial.pose.position), true);
+            assert.ok(lowerBoundary.state.camera.pitchDegrees >= -80);
+            assert.ok(lowerBoundary.state.camera.pitchDegrees <= 80);
+            assert.ok(lowerBoundary.pose.up.y > 0);
+            assert.equal(lowerBoundary.stagePresent, true);
+
+            const beforePinch = await snapshot();
+            await page.evaluate(({ leftX, rightX, y }) => {
+              const mount = document.getElementById('h-earth-3d-renderer-mount');
+              const emit = (type, pointerId, x, buttons, isPrimary) => mount.dispatchEvent(
+                new PointerEvent(type, {
+                  pointerId,
+                  pointerType: 'touch',
+                  isPrimary,
+                  clientX: x,
+                  clientY: y,
+                  buttons,
+                  bubbles: true,
+                  cancelable: true
+                })
+              );
+              emit('pointerdown', 901, leftX, 1, true);
+              emit('pointerdown', 902, rightX, 1, false);
+              emit('pointermove', 901, leftX + 45, 1, true);
+              emit('pointermove', 902, rightX - 45, 1, false);
+              emit('pointerup', 901, leftX + 45, 0, true);
+              emit('pointerup', 902, rightX - 45, 0, false);
+            }, {
+              leftX: box.x + box.width * 0.2,
+              rightX: box.x + box.width * 0.8,
+              y: box.y + box.height * 0.5
+            });
+            await page.waitForFunction(() =>
+              globalThis.H_EARTH_3D_TOUCH_CAMERA_LAST_RECEIPT?.gestureMode ===
+                'TWO_POINTER_PINCH_FIELD_OF_VIEW' &&
+              globalThis.H_EARTH_3D_TOUCH_CAMERA_LAST_RECEIPT?.applied === true,
+              null,
+              { timeout: 30000 }
+            );
+            await page.waitForTimeout(100);
+            const afterPinch = await snapshot();
+            assert.equal(afterPinch.lastReceipt?.accepted, true);
+            assert.equal(afterPinch.lastReceipt?.applied, true);
+            assert.equal(afterPinch.lastReceipt?.status, 'TOUCH_CAMERA_GESTURE_APPLIED');
+            assert.equal(samePosition(afterPinch.pose.position, initial.pose.position), true);
+            assert.ok(afterPinch.pose.verticalFovDegrees > beforePinch.pose.verticalFovDegrees);
+            assert.ok(afterPinch.pose.up.y > 0);
+            assert.equal(afterPinch.stagePresent, true);
+
+            fs.mkdirSync('artifacts/h-earth-ground-observer-live', { recursive: true });
+            await page.screenshot({
+              path: 'artifacts/h-earth-ground-observer-live/mobile-live.png',
+              fullPage: true
+            });
+            fs.writeFileSync(
+              'artifacts/h-earth-ground-observer-live/live-verification.json',
+              JSON.stringify({
+                result: 'PASS',
+                mergeCommit: 'd41a48eef3d601c2afca0808cdd05ec58d5fc8b0',
+                blobs: {
+                  capacity: '89e4622bb9c30b533a1d13d7db887ee53e7a46c8',
+                  compositor: '3764f0d53b0564de7a5e983bd339dda75017bc82',
+                  index: 'b26aa16abfebf24bf0d77b62d36f7a11ade1ac5c'
+                },
+                initial,
+                afterLook,
+                upperBoundary,
+                lowerBoundary,
+                beforePinch,
+                afterPinch
+              }, null, 2) + '\n'
+            );
+          } finally {
+            await browser.close();
+          }
+          NODE
+
+      - name: Upload live evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-ground-observer-live-${{ github.sha }}
+          path: artifacts/h-earth-ground-observer-live/**
+          if-no-files-found: error
+          retention-days: 30

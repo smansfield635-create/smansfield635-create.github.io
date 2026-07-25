@@ -1,0 +1,193 @@
+name: H-Earth Touch Camera Live Probe
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - ".github/workflows/h-earth-touch-camera-live-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public-touch-camera:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout exact merged source
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-touch-camera-live-probe-001
+          fetch-depth: 0
+
+      - name: Wait for exact public index bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/h-earth-touch-camera-live
+          test "$(git rev-parse HEAD^:showroom/globe/h-earth/index.js)" = \
+            "2a271b4b8f5148fbac8a0ec4a8a5da8f55ba1c79"
+          public_url="https://diamondgatebridge.com/showroom/globe/h-earth/index.js"
+          matched=false
+          for attempt in $(seq 1 20); do
+            curl -fsSL \
+              -H 'Cache-Control: no-cache' \
+              "${public_url}?touch-camera-probe=${attempt}-$(date +%s)" \
+              -o artifacts/h-earth-touch-camera-live/public-index.js
+            observed="$(git hash-object artifacts/h-earth-touch-camera-live/public-index.js)"
+            printf '%s\n' "$observed" \
+              > artifacts/h-earth-touch-camera-live/public-index.git-blob.txt
+            if test "$observed" = "2a271b4b8f5148fbac8a0ec4a8a5da8f55ba1c79"; then
+              matched=true
+              break
+            fi
+            sleep 15
+          done
+          test "$matched" = true
+
+      - name: Install browser runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute public mobile gestures
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const { chromium } = require('playwright');
+
+          async function state(page) {
+            return page.evaluate(async () => {
+              const compositor = await import('./compositor.js');
+              const renderer = await import('./renderer.js');
+              return {
+                camera: compositor.getHEarth3DCompositorState().camera,
+                revisions: compositor.getHEarth3DCompositorState().revisions,
+                renderer: renderer.getHEarth3DRendererState(),
+                routeStatus: document.getElementById('h-earth-3d-status')?.textContent?.trim() ?? null,
+                controls: document.getElementById('h-earth-3d-renderer-mount')?.dataset?.hEarthTouchCameraControls ?? null,
+                controlReceipt: globalThis.H_EARTH_3D_TOUCH_CAMERA_CONTROL_RECEIPT ?? null,
+                gestureReceipt: globalThis.H_EARTH_3D_TOUCH_CAMERA_LAST_RECEIPT ?? null
+              };
+            });
+          }
+
+          async function dispatch(page, events) {
+            await page.evaluate((sequence) => {
+              const target = document.getElementById('h-earth-3d-renderer-mount');
+              const rectangle = target.getBoundingClientRect();
+              for (const item of sequence) {
+                target.dispatchEvent(new PointerEvent(item.type, {
+                  bubbles: true,
+                  cancelable: true,
+                  pointerId: item.pointerId,
+                  pointerType: 'touch',
+                  isPrimary: item.isPrimary,
+                  button: item.type === 'pointerdown' ? 0 : -1,
+                  buttons: item.type === 'pointerup' ? 0 : 1,
+                  clientX: rectangle.left + item.x,
+                  clientY: rectangle.top + item.y
+                }));
+              }
+            }, events);
+          }
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const context = await browser.newContext({
+              viewport: { width: 390, height: 844 },
+              deviceScaleFactor: 2,
+              isMobile: true,
+              hasTouch: true
+            });
+            const page = await context.newPage();
+            await page.goto(
+              `https://diamondgatebridge.com/showroom/globe/h-earth/?touch-camera-live=${Date.now()}`,
+              { waitUntil: 'networkidle', timeout: 120000 }
+            );
+            await page.waitForFunction(() =>
+              document.getElementById('h-earth-3d-status')?.textContent?.includes('PUBLIC_STAGE_RENDERER_MOUNTED') &&
+              document.getElementById('h-earth-3d-renderer-mount')?.dataset?.hEarthTouchCameraControls === 'active'
+            , null, { timeout: 120000 });
+
+            const initial = await state(page);
+
+            await dispatch(page, [
+              { type: 'pointerdown', pointerId: 11, x: 150, y: 240, isPrimary: true },
+              { type: 'pointermove', pointerId: 11, x: 95, y: 265, isPrimary: true },
+              { type: 'pointerup', pointerId: 11, x: 95, y: 265, isPrimary: true }
+            ]);
+            await page.waitForTimeout(650);
+            const afterOrbit = await state(page);
+
+            await dispatch(page, [
+              { type: 'pointerdown', pointerId: 21, x: 95, y: 260, isPrimary: true },
+              { type: 'pointerdown', pointerId: 22, x: 295, y: 260, isPrimary: false },
+              { type: 'pointermove', pointerId: 21, x: 145, y: 260, isPrimary: true },
+              { type: 'pointermove', pointerId: 22, x: 245, y: 260, isPrimary: false },
+              { type: 'pointerup', pointerId: 21, x: 145, y: 260, isPrimary: true },
+              { type: 'pointerup', pointerId: 22, x: 245, y: 260, isPrimary: false }
+            ]);
+            await page.waitForTimeout(750);
+            const afterPinch = await state(page);
+
+            if (
+              afterOrbit.revisions.camera <= initial.revisions.camera ||
+              afterOrbit.renderer.cameraRevision !== afterOrbit.revisions.camera ||
+              afterPinch.camera.zoomScale <= afterOrbit.camera.zoomScale ||
+              afterPinch.renderer.cameraRevision !== afterPinch.revisions.camera ||
+              afterPinch.renderer.compositorFrameRevision !== afterPinch.revisions.frame ||
+              afterPinch.renderer.mounted !== true ||
+              afterPinch.routeStatus !== 'PUBLIC_STAGE_RENDERER_MOUNTED' ||
+              afterPinch.controls !== 'active' ||
+              afterPinch.renderer.semanticLayerContainerCount !== 15 ||
+              afterPinch.renderer.interactionNodeCount !== 1
+            ) {
+              throw new Error(`LIVE_TOUCH_CAMERA_FAILED:${JSON.stringify({ initial, afterOrbit, afterPinch })}`);
+            }
+
+            await page.screenshot({
+              path: 'artifacts/h-earth-touch-camera-live/mobile-live-after-pinch.png',
+              fullPage: true
+            });
+
+            fs.writeFileSync(
+              'artifacts/h-earth-touch-camera-live/live-receipt.json',
+              JSON.stringify({
+                result: 'PASS',
+                sourceCommit: '27256abbbd508ff33b05966104eb26c3e73dfe97',
+                sourceGitBlob: '2a271b4b8f5148fbac8a0ec4a8a5da8f55ba1c79',
+                initial,
+                afterOrbit,
+                afterPinch
+              }, null, 2) + '\n'
+            );
+
+            await context.close();
+            await browser.close();
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload live evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-touch-camera-live-${{ github.sha }}
+          path: artifacts/h-earth-touch-camera-live/**
+          if-no-files-found: warn
+          retention-days: 30

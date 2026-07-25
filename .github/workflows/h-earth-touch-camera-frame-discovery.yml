@@ -1,0 +1,59 @@
+name: H-Earth Touch Camera Frame Discovery
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - ".github/workflows/h-earth-touch-camera-frame-discovery.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-touch-camera-001
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Capture compositor frame construction APIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/h-earth-touch-camera-frame-discovery
+          node --experimental-default-type=module <<'NODE'
+          import fs from 'node:fs';
+          const compositor = await import('./showroom/globe/h-earth/compositor.js');
+          const directory = 'artifacts/h-earth-touch-camera-frame-discovery';
+          const functions = [
+            'composeHEarth3DCompositorAdmittedFrame',
+            'composeHEarth3DRenderFrame',
+            'composeHEarth3DRendererFrame',
+            'getHEarth3DCompositorRenderFrame',
+            'getHEarth3DCompositorRendererHandoff',
+            'applyHEarth3DCompositorIntent'
+          ];
+          for (const name of functions) {
+            const value = compositor[name];
+            fs.writeFileSync(
+              `${directory}/${name}.txt`,
+              typeof value === 'function' ? value.toString() + '\n' : `MISSING:${typeof value}\n`
+            );
+          }
+          fs.writeFileSync(
+            `${directory}/exports.json`,
+            JSON.stringify(Object.keys(compositor).sort(), null, 2) + '\n'
+          );
+          NODE
+          grep -n -C 18 -E "function composeHEarth3DCompositorAdmittedFrame|function composeHEarth3DRenderFrame|function composeHEarth3DRendererFrame|function getHEarth3DCompositorRenderFrame|last.*Frame|compositorFrameRevision|cameraRevision" showroom/globe/h-earth/compositor.js \
+            > artifacts/h-earth-touch-camera-frame-discovery/source-context.txt || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-touch-camera-frame-discovery-${{ github.sha }}
+          path: artifacts/h-earth-touch-camera-frame-discovery/**
+          retention-days: 7

@@ -1320,8 +1320,11 @@ const GROUND_OBSERVER_PITCH_BOUNDS =
 
 const GROUND_OBSERVER_LOOK_DISTANCE =
   Math.max(
-    INITIAL_DISTANCE,
-    1
+    1,
+    Math.min(
+      INITIAL_DISTANCE,
+      16
+    )
   );
 
 

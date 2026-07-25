@@ -2,13 +2,13 @@
  * /showroom/globe/h-earth/capacity.js
  * COMPLETE RENEWED FILE
  *
- * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v4
+ * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5
  *
  * Layer:
  * H-Earth Layer 4 · Showroom Execution Corridor
  *
  * Renews:
- * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3
+ * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v4
  *
  * Purpose:
  * Define the complete bounded execution-capacity constitution for the
@@ -70,9 +70,9 @@
  */
 
 export const H_EARTH_3D_CAPACITY_CONTRACT_ID =
-  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v4';
+  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5';
 
-export const H_EARTH_3D_CAPACITY_SCHEMA_VERSION = 4;
+export const H_EARTH_3D_CAPACITY_SCHEMA_VERSION = 5;
 
 const deepFreeze = (value) => {
   if (
@@ -584,8 +584,8 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
       xMin: -96,
       xMax: 96,
 
-      yMin: -1,
-      yMax: 8,
+      yMin: -32,
+      yMax: 32,
 
       zMin: -256,
       zMax: 24
@@ -603,8 +603,8 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
     }),
 
     pitchDegrees: deepFreeze({
-      minimum: -24,
-      maximum: 12,
+      minimum: -80,
+      maximum: 80,
 
       maximumDeltaPerIntent: 8
     }),
@@ -625,7 +625,7 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
       initial: 1,
 
       interpretation:
-        'INITIAL_CAMERA_DISTANCE_MULTIPLIER'
+        'GROUND_OBSERVER_VERTICAL_FIELD_OF_VIEW_MULTIPLIER'
     }),
 
     panWorldUnits: deepFreeze({
@@ -684,13 +684,13 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
  * These declarations create no animation runtime and mutate no admitted geometry.
  */
 export const H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID =
-  'H_EARTH_LANDWARD_ESTATE_ENTRY_CAMERA_ENVELOPE_v3_SINGLE_MODULE';
+  'H_EARTH_GROUND_OBSERVER_ESTATE_ENTRY_CAMERA_ENVELOPE_v4_SINGLE_MODULE';
 
 export const H_EARTH_3D_CAMERA_COMPOSITION_INTENT = deepFreeze({
   compositionId:
     H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID,
   compositionRole:
-    'SHORELINE_ENTRY_LOOKING_LANDWARD_TOWARD_ESTATE_CONTEXT',
+    'GROUND_OBSERVER_ENTRY_LOOKING_LANDWARD_WITH_BOUNDED_YAW_PITCH_AND_FOV',
   cameraSide:
     'SHORELINE_WATERWARD_EDGE_NEAR_NEGATIVE_Z_LAND',
   viewDirection:

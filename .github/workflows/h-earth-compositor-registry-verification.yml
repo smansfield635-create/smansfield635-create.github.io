@@ -84,7 +84,10 @@ jobs:
         run: |
           set -euo pipefail
           node tools/h-earth-post-merge-scope-disposition-audit.mjs \
-            > artifacts/h-earth-compositor-registry/retained-state-audit.json
+            > artifacts/h-earth-compositor-registry/retained-state-audit.stdout.log
+          cp \
+            artifacts/h-earth-post-merge-scope-disposition-audit-receipt.json \
+            artifacts/h-earth-compositor-registry/retained-state-audit.json
           node <<'NODE'
           const fs = require('node:fs');
           const receipt = JSON.parse(fs.readFileSync(

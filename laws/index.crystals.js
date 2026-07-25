@@ -232,16 +232,13 @@
     cluster:
       Object.freeze({
         horizontalRadius:
-          1.04,
+          1.36,
 
         verticalRadius:
-          0.90,
+          1.18,
 
         depthRadius:
-          0.84,
-
-        centerRadius:
-          0.26,
+          1.04,
 
         primaryAnchor:
           Object.freeze([
@@ -3364,24 +3361,13 @@
     );
   }
 
-  function effectiveClusterQuaternion(
-    localQuaternion
-  ) {
-    return quaternionMultiply(
-      state.constellationQuaternion,
-      localQuaternion
-    );
-  }
-
   function rotatedLawUnitVector(
     node,
     localQuaternion
   ) {
     return normalizeVector(
       quaternionRotateVector(
-        effectiveClusterQuaternion(
-          localQuaternion
-        ),
+        localQuaternion,
         node.sphereVector
       )
     );
@@ -3516,27 +3502,16 @@
         localQuaternion
       );
 
-    const activeDirectionUnit =
-      rotatedCategoryUnitVector(
-        node.direction
-      );
-
     return {
       x:
-        activeDirectionUnit[0] *
-          SPHERE.cluster.centerRadius +
         unit[0] *
           SPHERE.cluster.horizontalRadius,
 
       y:
-        activeDirectionUnit[1] *
-          SPHERE.cluster.centerRadius +
         unit[1] *
           SPHERE.cluster.verticalRadius,
 
       z:
-        activeDirectionUnit[2] *
-          SPHERE.cluster.centerRadius +
         unit[2] *
           SPHERE.cluster.depthRadius,
 
@@ -3777,10 +3752,10 @@
                 sphere.x,
 
               y:
-                sphere.y - 0.06,
+                sphere.y,
 
               z:
-                sphere.z + 0.14,
+                sphere.z,
 
               prominence:
                 clamp(

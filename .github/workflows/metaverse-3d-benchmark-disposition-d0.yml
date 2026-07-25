@@ -50,7 +50,9 @@ jobs:
           node -e "JSON.parse(require('fs').readFileSync('tools/metaverse-3d-benchmark-disposition-d0-contract.json','utf8'))"
 
       - name: Execute D0 authority controls
-        run: node tools/metaverse-3d-benchmark-disposition-d0-controls.mjs > artifacts/metaverse-3d-benchmark-disposition-d0/execution.log
+        run: |
+          mkdir -p artifacts/metaverse-3d-benchmark-disposition-d0
+          node tools/metaverse-3d-benchmark-disposition-d0-controls.mjs > artifacts/metaverse-3d-benchmark-disposition-d0/execution.log
 
       - name: Verify deterministic D0 receipt
         run: |

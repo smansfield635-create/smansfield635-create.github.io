@@ -24,6 +24,17 @@ let block = source.slice(
   functionEnd
 );
 
+fs.mkdirSync(
+  'artifacts/h-earth-touch-camera',
+  { recursive: true }
+);
+
+fs.writeFileSync(
+  'artifacts/h-earth-touch-camera/touch-intent-function.before.js',
+  block,
+  'utf8'
+);
+
 const identityAnchor = [
   '  const initializationKey =',
   '    MODULE_STATE.activeInitializationKey;',
@@ -48,9 +59,7 @@ const identityReplacement = [
 ].join('\n');
 
 if (block.split(identityAnchor).length !== 2) {
-  throw new Error(
-    `TOUCH_CAMERA_IDENTITY_ANCHOR_NOT_EXACT:${block.slice(0, 2200)}`
-  );
+  throw new Error('TOUCH_CAMERA_IDENTITY_ANCHOR_NOT_EXACT');
 }
 
 block = block.replace(
@@ -73,9 +82,12 @@ const handoffReplacement = [
 ].join('\n');
 
 if (block.split(handoffAnchor).length !== 2) {
-  throw new Error(
-    `TOUCH_CAMERA_HANDOFF_ANCHOR_NOT_EXACT:${block.slice(0, 3200)}`
+  fs.writeFileSync(
+    'artifacts/h-earth-touch-camera/touch-intent-function.after-identity.js',
+    block,
+    'utf8'
   );
+  throw new Error('TOUCH_CAMERA_HANDOFF_ANCHOR_NOT_EXACT');
 }
 
 block = block.replace(

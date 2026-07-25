@@ -19,7 +19,6 @@ jobs:
   apply-execute-and-close-transport:
     runs-on: ubuntu-latest
     timeout-minutes: 35
-
     steps:
       - name: Checkout exact camera branch
         uses: actions/checkout@v4
@@ -57,21 +56,14 @@ jobs:
             (candidate) =>
               candidate.repositoryPath === '/showroom/globe/h-earth/capacity.js'
           );
-          const failureCodes = r.validatorReceipt?.failureCodes ?? [];
+          const codes = r.validatorReceipt?.failureCodes ?? [];
           if (
             r.dependenciesVerified !== true ||
             r.finalDisposition !== 'PASS' ||
             entry?.classification !== 'REGISTERED_H_EARTH_PATH' ||
-            failureCodes.length !== 0
+            codes.length !== 0
           ) {
-            throw new Error(
-              `CAPACITY_PREFLIGHT_NOT_PASS:${JSON.stringify({
-                dependenciesVerified: r.dependenciesVerified,
-                finalDisposition: r.finalDisposition,
-                entry,
-                failureCodes
-              })}`
-            );
+            throw new Error(`CAPACITY_PREFLIGHT_NOT_PASS:${JSON.stringify({r, entry, codes})}`);
           }
           NODE
 
@@ -84,37 +76,33 @@ jobs:
           const path = 'showroom/globe/h-earth/capacity.js';
           let source = fs.readFileSync(path, 'utf8');
 
-          function replaceExact(oldText, newText, label) {
-            const first = source.indexOf(oldText);
-            const last = source.lastIndexOf(oldText);
-            if (first < 0 || first !== last) {
-              throw new Error(
-                `${label}_EXPECTED_EXACTLY_ONCE:first=${first}:last=${last}`
-              );
+          function replaceCount(oldText, newText, expectedCount, label) {
+            const count = source.split(oldText).length - 1;
+            if (count !== expectedCount) {
+              throw new Error(`${label}_COUNT:${count}:EXPECTED:${expectedCount}`);
             }
-            source =
-              source.slice(0, first) +
-              newText +
-              source.slice(first + oldText.length);
+            source = source.split(oldText).join(newText);
           }
 
-          replaceExact(
+          replaceCount(
             'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3',
             'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v4',
+            2,
             'CAPACITY_CONTRACT_ID'
           );
-          replaceExact(
+          replaceCount(
             ' * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2',
             ' * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3',
+            1,
             'CAPACITY_RENEWS_HEADER'
           );
-          replaceExact(
+          replaceCount(
             'export const H_EARTH_3D_CAPACITY_SCHEMA_VERSION = 3;',
             'export const H_EARTH_3D_CAPACITY_SCHEMA_VERSION = 4;',
+            1,
             'CAPACITY_SCHEMA_VERSION'
           );
-
-          replaceExact(
+          replaceCount(
             [
               '    position: deepFreeze({',
               '      x: 0,',
@@ -141,19 +129,22 @@ jobs:
               '      z: -214',
               '    }),'
             ].join('\n'),
+            1,
             'INITIAL_CAMERA_POSITION_AND_TARGET'
           );
-          replaceExact(
+          replaceCount(
             '    verticalFovDegrees: 60,',
             '    verticalFovDegrees: 56,',
+            1,
             'INITIAL_CAMERA_FOV'
           );
-          replaceExact(
+          replaceCount(
             "  'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v2_SINGLE_MODULE';",
             "  'H_EARTH_LANDWARD_ESTATE_ENTRY_CAMERA_ENVELOPE_v3_SINGLE_MODULE';",
+            1,
             'CAMERA_ENVELOPE_ID'
           );
-          replaceExact(
+          replaceCount(
             [
               "  compositionRole:",
               "    'LANDWARD_GROUND_INSPECTION_LOOKING_WATERWARD',",
@@ -182,6 +173,7 @@ jobs:
               '  manorContextForwardReserved: true,',
               '  futureContextDepthReserved: true,'
             ].join('\n'),
+            1,
             'CAMERA_COMPOSITION_INTENT'
           );
 
@@ -200,289 +192,172 @@ jobs:
 
           const pose = capacity.H_EARTH_3D_CAMERA_CAPACITY.initialProjectionCandidate;
           const intent = capacity.H_EARTH_3D_CAMERA_COMPOSITION_INTENT;
-          const objects = Object.keys(
-            environment.H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS
-          );
-          const manor =
-            environment.H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS
-              .OBJ_009_MANOR_EXTERIOR_CONTEXT;
+          const ids = Object.keys(environment.H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS);
+          const manor = environment.H_EARTH_3D_RESOLVED_ENVIRONMENT_OBJECTS
+            .OBJ_009_MANOR_EXTERIOR_CONTEXT;
           const forward = {
             x: pose.target.x - pose.position.x,
             y: pose.target.y - pose.position.y,
             z: pose.target.z - pose.position.z
           };
-
           const report = {
             result: 'PASS',
-            capacityContractId:
-              capacity.H_EARTH_3D_CAPACITY_CONTRACT_ID,
-            capacitySchemaVersion:
-              capacity.H_EARTH_3D_CAPACITY_SCHEMA_VERSION,
+            capacityContractId: capacity.H_EARTH_3D_CAPACITY_CONTRACT_ID,
+            capacitySchemaVersion: capacity.H_EARTH_3D_CAPACITY_SCHEMA_VERSION,
             pose,
             intent,
             forward,
-            landwardDirectionEstablished:
-              forward.z < 0,
+            landwardDirectionEstablished: forward.z < 0,
             cameraStartsAtWaterwardShorelineEdge:
               pose.position.z > intent.shorelineReferenceZ,
             targetInsideLandBounds:
               pose.target.z < intent.shorelineReferenceZ &&
-              pose.target.z >=
-                capacity.H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.z.minimum,
-            environmentObjectDescriptorCount:
-              objects.length,
-            environmentObjectIds:
-              objects,
-            manorDescriptorPresent:
-              Boolean(manor),
-            manorDescriptorResolved:
-              manor?.resolved === true,
-            manorGeometryClaim:
-              false,
+              pose.target.z >= capacity.H_EARTH_3D_PUBLIC_STAGE_WORLD_BOUNDS.z.minimum,
+            environmentObjectDescriptorCount: ids.length,
+            environmentObjectIds: ids,
+            manorDescriptorPresent: Boolean(manor),
+            manorDescriptorResolved: manor?.resolved === true,
+            manorGeometryClaim: false,
             executableAdmittedPrimitiveExpectation:
-              capacity.H_EARTH_3D_ADMITTED_PRIMITIVE_BUDGET
-                .productionOccurrenceExpected
+              capacity.H_EARTH_3D_ADMITTED_PRIMITIVE_BUDGET.productionOccurrenceExpected
           };
-
           if (
-            report.landwardDirectionEstablished !== true ||
-            report.cameraStartsAtWaterwardShorelineEdge !== true ||
-            report.targetInsideLandBounds !== true ||
+            !report.landwardDirectionEstablished ||
+            !report.cameraStartsAtWaterwardShorelineEdge ||
+            !report.targetInsideLandBounds ||
             report.environmentObjectDescriptorCount !== 12 ||
-            report.manorDescriptorPresent !== true ||
-            report.manorDescriptorResolved !== true ||
+            !report.manorDescriptorResolved ||
             report.executableAdmittedPrimitiveExpectation !== 3
           ) {
-            throw new Error(
-              `LANDWARD_CAMERA_AUTHORITY_INVALID:${JSON.stringify(report)}`
-            );
+            throw new Error(`LANDWARD_CAMERA_AUTHORITY_INVALID:${JSON.stringify(report)}`);
           }
-
           fs.writeFileSync(
             'artifacts/h-earth-landward-entry-camera/source-authority-report.json',
             JSON.stringify(report, null, 2) + '\n'
           );
           NODE
 
-      - name: Stage verified renderer corridor tools outside commit scope
+      - name: Stage verified renderer tools and browser
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin \
-            agent/h-earth-renderer-corridor-gate-001:refs/remotes/origin/agent/h-earth-renderer-corridor-gate-001
-          git ls-tree -r --name-only \
-            origin/agent/h-earth-renderer-corridor-gate-001 \
-            tools \
+          git fetch origin agent/h-earth-renderer-corridor-gate-001:refs/remotes/origin/agent/h-earth-renderer-corridor-gate-001
+          git ls-tree -r --name-only origin/agent/h-earth-renderer-corridor-gate-001 tools \
             | grep -E '^tools/h-earth-(renderer-corridor|deployed-route)' \
             > /tmp/h-earth-renderer-tool-paths.txt
           while IFS= read -r tool_path; do
             mkdir -p "$(dirname "$tool_path")"
-            git show \
-              "origin/agent/h-earth-renderer-corridor-gate-001:$tool_path" \
-              > "$tool_path"
+            git show "origin/agent/h-earth-renderer-corridor-gate-001:$tool_path" > "$tool_path"
           done < /tmp/h-earth-renderer-tool-paths.txt
-
-      - name: Install pinned browser runtime
-        shell: bash
-        run: |
-          set -euo pipefail
           npm init -y >/dev/null 2>&1
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
-      - name: Execute renderer corridor and validate mounted result
+      - name: Execute five-profile renderer corridor
         shell: bash
         run: |
           set -euo pipefail
           set +e
           node tools/h-earth-renderer-corridor-integration-harness.mjs \
             | tee artifacts/h-earth-landward-entry-camera/renderer-corridor.log
-          corridor_exit=${PIPESTATUS[0]}
+          echo "${PIPESTATUS[0]}" > artifacts/h-earth-landward-entry-camera/renderer-corridor.exit-code.txt
           set -e
-          echo "$corridor_exit" \
-            > artifacts/h-earth-landward-entry-camera/renderer-corridor.exit-code.txt
           node <<'NODE'
           const fs = require('node:fs');
           const path = require('node:path');
-          const directory = 'artifacts/h-earth-renderer-corridor';
-          const files = fs.readdirSync(directory)
-            .filter((name) =>
-              name.endsWith('.receipt.json') &&
-              name !== 'aggregate.receipt.json' &&
-              name !== 'receipt-custody.receipt.json'
-            )
-            .sort();
-
-          if (files.length !== 5) {
-            throw new Error(`EXPECTED_FIVE_PROFILE_RECEIPTS:${files.length}`);
-          }
-
-          const profiles = [];
-          for (const file of files) {
-            const r = JSON.parse(
-              fs.readFileSync(path.join(directory, file), 'utf8')
-            );
+          const dir = 'artifacts/h-earth-renderer-corridor';
+          const files = fs.readdirSync(dir).filter((name) =>
+            name.endsWith('.receipt.json') &&
+            name !== 'aggregate.receipt.json' &&
+            name !== 'receipt-custody.receipt.json'
+          ).sort();
+          if (files.length !== 5) throw new Error(`EXPECTED_FIVE_PROFILE_RECEIPTS:${files.length}`);
+          const profiles = files.map((file) => {
+            const r = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
             const item = {
               file,
               constructed: r.construction?.receipt?.constructed === true,
               mounted: r.mount?.receipt?.mounted === true,
               routeStatus: r.routeState?.status ?? null,
-              fallbackRestored:
-                r.routeState?.fallbackRestored ?? null,
+              fallbackRestored: r.routeState?.fallbackRestored ?? null,
               productionCapacityEligible:
-                r.construction?.receipt
-                  ?.nodeBudgetEvaluation
-                  ?.authorityEvaluation
-                  ?.eligible === true
+                r.construction?.receipt?.nodeBudgetEvaluation
+                  ?.authorityEvaluation?.eligible === true
             };
             if (
-              item.constructed !== true ||
-              item.mounted !== true ||
+              !item.constructed ||
+              !item.mounted ||
               item.routeStatus !== 'PUBLIC_STAGE_RENDERER_MOUNTED' ||
               item.fallbackRestored !== false ||
-              item.productionCapacityEligible !== true
+              !item.productionCapacityEligible
             ) {
-              throw new Error(
-                `LANDWARD_PROFILE_NOT_PASS:${JSON.stringify(item)}`
-              );
+              throw new Error(`LANDWARD_PROFILE_NOT_PASS:${JSON.stringify(item)}`);
             }
-            profiles.push(item);
-          }
-
+            return item;
+          });
           fs.writeFileSync(
             'artifacts/h-earth-landward-entry-camera/profile-summary.json',
             JSON.stringify({ result: 'PASS', profiles }, null, 2) + '\n'
           );
           NODE
 
-      - name: Capture landward route evidence
+      - name: Capture landward route and stage evidence
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 \
-            > /tmp/h-earth-landward-http.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-landward-http.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           node <<'NODE'
           const fs = require('node:fs');
           const { chromium } = require('playwright');
-
           const profiles = [
-            {
-              id: 'mobile',
-              viewport: { width: 390, height: 844 },
-              deviceScaleFactor: 2,
-              isMobile: true,
-              hasTouch: true
-            },
-            {
-              id: 'desktop',
-              viewport: { width: 1440, height: 900 },
-              deviceScaleFactor: 1,
-              isMobile: false,
-              hasTouch: false
-            }
+            { id: 'mobile', viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
+            { id: 'desktop', viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, isMobile: false, hasTouch: false }
           ];
-
           (async () => {
             const browser = await chromium.launch({ headless: true });
             const evidence = [];
             try {
               for (const profile of profiles) {
-                const context = await browser.newContext({
-                  viewport: profile.viewport,
-                  deviceScaleFactor: profile.deviceScaleFactor,
-                  isMobile: profile.isMobile,
-                  hasTouch: profile.hasTouch
-                });
+                const context = await browser.newContext(profile);
                 const page = await context.newPage();
-                await page.goto(
-                  'http://127.0.0.1:4173/showroom/globe/h-earth/',
-                  { waitUntil: 'networkidle', timeout: 120000 }
-                );
+                await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/', {
+                  waitUntil: 'networkidle', timeout: 120000
+                });
                 await page.waitForSelector(
                   '#h-earth-3d-renderer-mount .h-earth-3d-render-stage',
                   { state: 'attached', timeout: 120000 }
                 );
                 await page.waitForTimeout(1200);
-
-                const values = await page.evaluate(() => {
-                  const stage = document.querySelector(
-                    '#h-earth-3d-renderer-mount .h-earth-3d-render-stage'
-                  );
-                  const water = document.querySelectorAll(
-                    '[data-material-reference="H_EARTH_MATERIAL_OPEN_WATER"], ' +
-                    '[data-material-reference="H_EARTH_MATERIAL_NEARSHORE_WATER"]'
-                  );
-                  const wet = document.querySelectorAll(
-                    '[data-material-reference="H_EARTH_MATERIAL_WET_SAND"]'
-                  );
-                  const foam = document.querySelectorAll(
-                    '[data-material-reference="H_EARTH_MATERIAL_FOAM"]'
-                  );
-                  const globals = Object.keys(globalThis)
-                    .filter((key) =>
-                      key.includes('H_EARTH') ||
-                      key.includes('HEarth')
-                    )
-                    .sort();
-                  return {
-                    routeStatus:
-                      document.querySelector('#h-earth-3d-status')
-                        ?.textContent?.trim() ?? null,
-                    stagePresent: Boolean(stage),
-                    primitiveNodeCount:
-                      document.querySelectorAll(
-                        '.h-earth-3d-render-primitive'
-                      ).length,
-                    wetSandNodeCount: wet.length,
-                    waterNodeCount: water.length,
-                    foamNodeCount: foam.length,
-                    publishedGlobalKeys: globals
-                  };
-                });
-
-                if (
-                  values.stagePresent !== true ||
-                  values.primitiveNodeCount <= 0 ||
-                  values.wetSandNodeCount <= 0
-                ) {
-                  throw new Error(
-                    `LANDWARD_ROUTE_EVIDENCE_FAILED:${profile.id}:${JSON.stringify(values)}`
-                  );
+                const values = await page.evaluate(() => ({
+                  routeStatus: document.querySelector('#h-earth-3d-status')?.textContent?.trim() ?? null,
+                  primitiveNodeCount: document.querySelectorAll('.h-earth-3d-render-primitive').length,
+                  wetSandNodeCount: document.querySelectorAll('[data-material-reference="H_EARTH_MATERIAL_WET_SAND"]').length,
+                  waterNodeCount: document.querySelectorAll('[data-material-reference="H_EARTH_MATERIAL_OPEN_WATER"], [data-material-reference="H_EARTH_MATERIAL_NEARSHORE_WATER"]').length,
+                  foamNodeCount: document.querySelectorAll('[data-material-reference="H_EARTH_MATERIAL_FOAM"]').length
+                }));
+                if (values.primitiveNodeCount <= 0 || values.wetSandNodeCount <= 0) {
+                  throw new Error(`LANDWARD_ROUTE_EVIDENCE_FAILED:${profile.id}:${JSON.stringify(values)}`);
                 }
-
-                const fullPagePath =
-                  `artifacts/h-earth-landward-entry-camera/${profile.id}-full.png`;
-                const stagePath =
-                  `artifacts/h-earth-landward-entry-camera/${profile.id}-stage.png`;
-                await page.screenshot({ path: fullPagePath, fullPage: true });
-                await page.locator('#h-earth-3d-renderer-mount')
-                  .screenshot({ path: stagePath });
-                evidence.push({
-                  profile,
-                  values,
-                  fullPagePath,
-                  stagePath
-                });
+                const full = `artifacts/h-earth-landward-entry-camera/${profile.id}-full.png`;
+                const stage = `artifacts/h-earth-landward-entry-camera/${profile.id}-stage.png`;
+                await page.screenshot({ path: full, fullPage: true });
+                await page.locator('#h-earth-3d-renderer-mount').screenshot({ path: stage });
+                evidence.push({ profile, values, full, stage });
                 await context.close();
               }
             } finally {
               await browser.close();
             }
-
             fs.writeFileSync(
               'artifacts/h-earth-landward-entry-camera/visual-evidence.json',
-              JSON.stringify(
-                {
-                  result: 'PASS',
-                  visualAcceptanceClaim: false,
-                  manorGeometryClaim: false,
-                  profiles: evidence
-                },
-                null,
-                2
-              ) + '\n'
+              JSON.stringify({
+                result: 'PASS',
+                visualAcceptanceClaim: false,
+                manorGeometryClaim: false,
+                profiles: evidence
+              }, null, 2) + '\n'
             );
           })().catch((error) => {
             console.error(error);
@@ -494,9 +369,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          while IFS= read -r tool_path; do
-            rm -f "$tool_path"
-          done < /tmp/h-earth-renderer-tool-paths.txt
+          while IFS= read -r tool_path; do rm -f "$tool_path"; done < /tmp/h-earth-renderer-tool-paths.txt
           rm -rf node_modules package.json package-lock.json
           rm -f .github/workflows/h-earth-landward-entry-camera-transport.yml
           git add showroom/globe/h-earth/capacity.js

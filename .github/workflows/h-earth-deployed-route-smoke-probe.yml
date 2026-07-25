@@ -8,6 +8,8 @@ on:
       - ".github/workflows/h-earth-deployed-route-smoke-probe.yml"
       - ".github/workflows/h-earth-renderer-corridor-integration.yml"
       - "tools/h-earth-deployed-route-smoke-probe.mjs"
+      - "tools/h-earth-deployed-route-probe-contract.mjs"
+      - "tools/h-earth-deployed-route-probe-self-test.mjs"
       - "tools/h-earth-renderer-corridor-common.mjs"
       - "tools/h-earth-renderer-corridor-capacity-law.mjs"
       - "tools/h-earth-renderer-corridor-receipt-custody.mjs"
@@ -87,6 +89,9 @@ jobs:
                 const fs = require("node:fs");
                 const r = JSON.parse(fs.readFileSync("artifacts/h-earth-deployed-route-smoke/aggregate.receipt.json", "utf8"));
                 console.log(`- Deployed route pass: ${r.deployedRoutePassEstablished}`);
+                console.log(`- Required profiles: ${r.requiredProfileCount}`);
+                console.log(`- Source identity required: ${r.sourceIdentityRequired}`);
+                console.log(`- Source identity paths: ${r.sourceIdentityPathCount}`);
                 console.log(`- Attempts: ${r.attemptCount}`);
                 console.log(`- Successful attempt: ${r.successfulAttemptNumber ?? "none"}`);
                 console.log(`- Target: ${r.targetUrl}`);

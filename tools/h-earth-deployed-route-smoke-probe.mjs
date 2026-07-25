@@ -1,7 +1,7 @@
 import path from 'node:path';
 import process from 'node:process';
 import { setTimeout as delay } from 'node:timers/promises';
-import { chromium } from 'playwright';
+import { chromium, request } from 'playwright';
 
 import {
   EXPECTED_PACKET_002_SOURCE_OBJECT_IDS,
@@ -21,13 +21,22 @@ import {
 } from './h-earth-renderer-corridor-common.mjs';
 
 import {
+  H_EARTH_DEPLOYED_ROUTE_PROBE_CONTRACT_ID,
+  H_EARTH_DEPLOYED_ROUTE_PROFILES,
+  H_EARTH_DEPLOYED_SOURCE_IDENTITY_PATHS,
+  auditHEarthDeployedSourceIdentity,
+  buildExpectedHEarthDeployedSourceIdentityManifest,
+  createHEarthDeployedAttemptUrl
+} from './h-earth-deployed-route-probe-contract.mjs';
+
+import {
   H_EARTH_RENDERER_CORRIDOR_OBSERVATION_CONTRACT_ID,
   enrichHEarthRouteObservation,
   waitForHEarthTerminalRouteState
 } from './h-earth-renderer-corridor-observation.mjs';
 
 export const H_EARTH_DEPLOYED_ROUTE_SMOKE_PROBE_CONTRACT_ID =
-  'H_EARTH_DEPLOYED_ROUTE_RENDERER_MOUNT_SMOKE_PROBE_v3';
+  'H_EARTH_DEPLOYED_ROUTE_RENDERER_MOUNT_AND_SOURCE_IDENTITY_SMOKE_PROBE_v4';
 
 const TARGET_URL =
   process.env.H_EARTH_DEPLOYED_URL ??
@@ -40,25 +49,11 @@ const RETRY_DELAY_MS = Number.parseInt(
   process.env.H_EARTH_DEPLOYED_RETRY_DELAY_MS ?? '20000',
   10
 );
-const PROFILE = Object.freeze({
-  id: 'DEPLOYED_DESKTOP_LANDSCAPE_DPR_1',
-  viewport: Object.freeze({ width: 1440, height: 900 }),
-  deviceScaleFactor: 1,
-  isMobile: false,
-  hasTouch: false
-});
+const EXPECTED_REPOSITORY_COMMIT = process.env.GITHUB_SHA ?? 'manual';
 
 const REQUIRED_RUNTIME_PATHS = new Set([
   '/showroom/globe/h-earth/',
-  '/showroom/globe/h-earth/index.html',
-  '/showroom/globe/h-earth/index.js',
-  '/showroom/globe/h-earth/compositor.js',
-  '/showroom/globe/h-earth/renderer.js',
-  '/showroom/globe/h-earth/capacity.js',
-  '/showroom/globe/h-earth/admitted-geometry-frame.js',
-  '/showroom/globe/h-earth/render/shoreline-preview.js',
-  '/showroom/globe/h-earth/render/geometry-kernel.js',
-  '/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js'
+  ...H_EARTH_DEPLOYED_SOURCE_IDENTITY_PATHS
 ]);
 
 function isRequiredRuntimeUrl(value) {
@@ -66,16 +61,7 @@ function isRequiredRuntimeUrl(value) {
   return pathname ? REQUIRED_RUNTIME_PATHS.has(pathname) : false;
 }
 
-function createAttemptUrl(attemptNumber) {
-  const target = new URL(TARGET_URL);
-  target.searchParams.set(
-    'hEarthDeployedSmoke',
-    `${process.env.GITHUB_SHA ?? 'manual'}-${attemptNumber}`
-  );
-  return target.href;
-}
-
-async function runAttempt(browser, attemptNumber) {
+async function runProfile(browser, attemptNumber, profile) {
   const requestUrls = [];
   const requestFailures = [];
   const errorResponses = [];
@@ -84,10 +70,10 @@ async function runAttempt(browser, attemptNumber) {
   const responseHeaders = {};
 
   const context = await browser.newContext({
-    viewport: PROFILE.viewport,
-    deviceScaleFactor: PROFILE.deviceScaleFactor,
-    isMobile: PROFILE.isMobile,
-    hasTouch: PROFILE.hasTouch,
+    viewport: profile.viewport,
+    deviceScaleFactor: profile.deviceScaleFactor,
+    isMobile: profile.isMobile,
+    hasTouch: profile.hasTouch,
     storageState: undefined,
     extraHTTPHeaders: {
       'Cache-Control': 'no-cache, no-store, max-age=0',
@@ -97,14 +83,14 @@ async function runAttempt(browser, attemptNumber) {
   await context.clearCookies();
   const page = await context.newPage();
 
-  page.on('request', (request) => requestUrls.push(request.url()));
-  page.on('requestfailed', (request) => {
-    if (!isRequiredRuntimeUrl(request.url())) return;
+  page.on('request', (pageRequest) => requestUrls.push(pageRequest.url()));
+  page.on('requestfailed', (pageRequest) => {
+    if (!isRequiredRuntimeUrl(pageRequest.url())) return;
     requestFailures.push({
-      url: request.url(),
-      method: request.method(),
-      resourceType: request.resourceType(),
-      errorText: request.failure()?.errorText ?? null
+      url: pageRequest.url(),
+      method: pageRequest.method(),
+      resourceType: pageRequest.resourceType(),
+      errorText: pageRequest.failure()?.errorText ?? null
     });
   });
   page.on('response', async (response) => {
@@ -130,10 +116,15 @@ async function runAttempt(browser, attemptNumber) {
     consoleErrors.push({ text: message.text(), location: message.location() });
   });
 
-  const attemptUrl = createAttemptUrl(attemptNumber);
+  const auditedUrl = createHEarthDeployedAttemptUrl({
+    targetUrl: TARGET_URL,
+    expectedRepositoryCommit: EXPECTED_REPOSITORY_COMMIT,
+    attemptNumber,
+    profileId: profile.id
+  });
   let navigationError = null;
   try {
-    await page.goto(attemptUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 });
+    await page.goto(auditedUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 });
     await waitForHEarthTerminalRouteState(page);
   } catch (error) {
     navigationError = {
@@ -170,16 +161,17 @@ async function runAttempt(browser, attemptNumber) {
   });
 
   const receipt = attachDeterministicDigest({
-    receiptType: 'H_EARTH_DEPLOYED_ROUTE_SMOKE_ATTEMPT_RECEIPT',
+    receiptType: 'H_EARTH_DEPLOYED_ROUTE_SMOKE_PROFILE_RECEIPT',
     contractId: H_EARTH_DEPLOYED_ROUTE_SMOKE_PROBE_CONTRACT_ID,
     commonContractId: H_EARTH_RENDERER_CORRIDOR_COMMON_CONTRACT_ID,
     observationContractId: H_EARTH_RENDERER_CORRIDOR_OBSERVATION_CONTRACT_ID,
     capacityLawContractId: H_EARTH_RENDERER_CORRIDOR_CAPACITY_LAW_CONTRACT_ID,
-    expectedRepositoryCommit: process.env.GITHUB_SHA ?? null,
+    deployedProbeContractId: H_EARTH_DEPLOYED_ROUTE_PROBE_CONTRACT_ID,
+    expectedRepositoryCommit: EXPECTED_REPOSITORY_COMMIT,
     attemptNumber,
     targetUrl: TARGET_URL,
-    auditedUrl: attemptUrl,
-    profile: PROFILE,
+    auditedUrl,
+    profile,
     responseHeaders,
     terminalState: observation.terminalState,
     moduleGraph,
@@ -204,7 +196,9 @@ async function runAttempt(browser, attemptNumber) {
     },
     objectIdentity: {
       expected: EXPECTED_PACKET_002_SOURCE_OBJECT_IDS,
-      observed: observation.observedObjectIds
+      observed: observation.observedObjectIds,
+      preMountObserved: observation.preMountObservedObjectIds,
+      preservationState: observation.objectIdentity?.preservationState ?? null
     },
     capacityEvaluation,
     requestFailures,
@@ -212,11 +206,75 @@ async function runAttempt(browser, attemptNumber) {
     pageErrors: effectivePageErrors,
     consoleErrors,
     classification,
-    deployedRoutePassEstablished: classification.passed === true
+    profileRoutePassEstablished: classification.passed === true
   });
 
   await context.close();
   return receipt;
+}
+
+async function runSourceIdentityAudit(attemptNumber, expectedManifest) {
+  const requestContext = await request.newContext({
+    extraHTTPHeaders: {
+      'Cache-Control': 'no-cache, no-store, max-age=0',
+      Pragma: 'no-cache'
+    }
+  });
+  try {
+    return await auditHEarthDeployedSourceIdentity({
+      targetUrl: TARGET_URL,
+      expectedManifest,
+      cacheToken: `${EXPECTED_REPOSITORY_COMMIT}-${attemptNumber}`,
+      async fetchSource({ auditedUrl }) {
+        const response = await requestContext.get(auditedUrl, {
+          failOnStatusCode: false,
+          timeout: 60_000
+        });
+        return {
+          status: response.status(),
+          headers: response.headers(),
+          body: await response.body()
+        };
+      }
+    });
+  } finally {
+    await requestContext.dispose();
+  }
+}
+
+async function runAttempt(browser, attemptNumber, expectedSourceManifest) {
+  const profileReceipts = [];
+  for (const profile of H_EARTH_DEPLOYED_ROUTE_PROFILES) {
+    profileReceipts.push(await runProfile(browser, attemptNumber, profile));
+  }
+  const sourceIdentity = await runSourceIdentityAudit(
+    attemptNumber,
+    expectedSourceManifest
+  );
+  const passedProfiles = profileReceipts.filter(
+    (receipt) => receipt.profileRoutePassEstablished === true
+  );
+  const deployedRoutePassEstablished =
+    passedProfiles.length === H_EARTH_DEPLOYED_ROUTE_PROFILES.length &&
+    sourceIdentity.sourceIdentityEstablished === true;
+
+  return attachDeterministicDigest({
+    receiptType: 'H_EARTH_DEPLOYED_ROUTE_SMOKE_ATTEMPT_RECEIPT',
+    contractId: H_EARTH_DEPLOYED_ROUTE_SMOKE_PROBE_CONTRACT_ID,
+    deployedProbeContractId: H_EARTH_DEPLOYED_ROUTE_PROBE_CONTRACT_ID,
+    expectedRepositoryCommit: EXPECTED_REPOSITORY_COMMIT,
+    attemptNumber,
+    targetUrl: TARGET_URL,
+    profileCount: H_EARTH_DEPLOYED_ROUTE_PROFILES.length,
+    passedProfileCount: passedProfiles.length,
+    failedProfileIds: profileReceipts
+      .filter((receipt) => receipt.profileRoutePassEstablished !== true)
+      .map((receipt) => receipt.profile.id),
+    profileReceipts,
+    sourceIdentity,
+    sourceIdentityRequired: true,
+    deployedRoutePassEstablished
+  });
 }
 
 async function main() {
@@ -228,13 +286,23 @@ async function main() {
   }
 
   const repositoryRoot = repositoryRootFromThisModule(import.meta.url);
-  const outputDirectory = path.join(repositoryRoot, 'artifacts', 'h-earth-deployed-route-smoke');
+  const outputDirectory = path.join(
+    repositoryRoot,
+    'artifacts',
+    'h-earth-deployed-route-smoke'
+  );
+  const expectedSourceManifest =
+    buildExpectedHEarthDeployedSourceIdentityManifest({ repositoryRoot });
   const browser = await chromium.launch({ headless: true });
   const attempts = [];
 
   try {
     for (let attemptNumber = 1; attemptNumber <= MAX_ATTEMPTS; attemptNumber += 1) {
-      const receipt = await runAttempt(browser, attemptNumber);
+      const receipt = await runAttempt(
+        browser,
+        attemptNumber,
+        expectedSourceManifest
+      );
       attempts.push(receipt);
       await writeJson(
         path.join(outputDirectory, `attempt-${attemptNumber}.receipt.json`),
@@ -255,20 +323,33 @@ async function main() {
   const aggregateReceipt = attachDeterministicDigest({
     receiptType: 'H_EARTH_DEPLOYED_ROUTE_SMOKE_AGGREGATE_RECEIPT',
     contractId: H_EARTH_DEPLOYED_ROUTE_SMOKE_PROBE_CONTRACT_ID,
-    expectedRepositoryCommit: process.env.GITHUB_SHA ?? null,
+    deployedProbeContractId: H_EARTH_DEPLOYED_ROUTE_PROBE_CONTRACT_ID,
+    expectedRepositoryCommit: EXPECTED_REPOSITORY_COMMIT,
     targetUrl: TARGET_URL,
-    freshBrowserProfilePerAttempt: true,
+    freshBrowserContextPerProfileAndAttempt: true,
     cacheBypassRequested: true,
+    sourceIdentityRequired: true,
+    requiredProfileCount: H_EARTH_DEPLOYED_ROUTE_PROFILES.length,
+    requiredProfileIds: H_EARTH_DEPLOYED_ROUTE_PROFILES.map(
+      (profile) => profile.id
+    ),
+    sourceIdentityPathCount: expectedSourceManifest.sourceCount,
     attemptCount: attempts.length,
     successfulAttemptNumber: successfulAttempt?.attemptNumber ?? null,
     deployedRoutePassEstablished: successfulAttempt !== null,
     attempts
   });
 
-  await writeJson(path.join(outputDirectory, 'aggregate.receipt.json'), aggregateReceipt);
+  await writeJson(
+    path.join(outputDirectory, 'aggregate.receipt.json'),
+    aggregateReceipt
+  );
   process.stdout.write(`${JSON.stringify({
     status: aggregateReceipt.deployedRoutePassEstablished ? 'PASS' : 'FAIL',
     targetUrl: TARGET_URL,
+    requiredProfileCount: aggregateReceipt.requiredProfileCount,
+    sourceIdentityRequired: aggregateReceipt.sourceIdentityRequired,
+    sourceIdentityPathCount: aggregateReceipt.sourceIdentityPathCount,
     attemptCount: aggregateReceipt.attemptCount,
     successfulAttemptNumber: aggregateReceipt.successfulAttemptNumber,
     receipt: 'artifacts/h-earth-deployed-route-smoke/aggregate.receipt.json'

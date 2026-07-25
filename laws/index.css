@@ -2729,3 +2729,21 @@ FALSE
   color: #fff3be;
   background: rgba(14, 20, 31, .90);
 }
+
+
+/* ============================================================
+   24. EUCLIDEAN CLUSTER ORBIT CORRECTION
+   ============================================================ */
+
+/*
+  The former field ellipse was atmospheric scenery and was not generated
+  from the four law-star positions. It is suppressed while a law cluster
+  is active so no decorative curve is presented as the governing orbit.
+*/
+[data-laws-root][data-laws-presentation-mode="CLUSTER"]
+  .laws-orbit__field::after,
+[data-laws-root][data-laws-presentation-mode="CLUSTER"]
+  [data-laws-scene-field]::after {
+  content: none;
+  display: none;
+}

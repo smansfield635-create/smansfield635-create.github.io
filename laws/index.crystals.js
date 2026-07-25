@@ -231,27 +231,40 @@
 
     cluster:
       Object.freeze({
-        horizontalRadius:
-          1.36,
+        model:
+          "EUCLIDEAN_COMMON_RADIUS_ORBIT",
 
-        verticalRadius:
-          1.18,
+        memberCount:
+          4,
 
-        depthRadius:
-          1.04,
+        commonRadius:
+          1.40,
+
+        phase:
+          -Math.PI / 2,
+
+        localPlane:
+          "XY",
+
+        planeNormal:
+          Object.freeze([
+            0,
+            0,
+            1
+          ]),
+
+        maximumTiltRadians:
+          0.30,
+
+        projectedClearanceMarginPx:
+          8,
 
         primaryAnchor:
           Object.freeze([
             0,
             0.70,
             0.714
-          ]),
-
-        latitudeAmplitude:
-          0.48,
-
-        latitudeFrequency:
-          1.73
+          ])
       })
   });
 
@@ -2593,35 +2606,118 @@
   }
 
   function clusterBaseVector(index, count) {
-    const safeCount =
-      Math.max(1, count);
+    invariant(
+      count === SPHERE.cluster.memberCount,
+      "LAWS_CRYSTALS_CLUSTER_MEMBER_COUNT_INVALID",
+      {
+        expected:
+          SPHERE.cluster.memberCount,
 
-    const longitude =
-      (Math.PI * 2 * index) /
-        safeCount -
-      Math.PI / 2;
+        actual:
+          count
+      }
+    );
 
-    const latitude =
-      Math.sin(
-        (index + 0.5) *
-        SPHERE.cluster
-          .latitudeFrequency
-      ) *
-      SPHERE.cluster
-        .latitudeAmplitude;
+    const angle =
+      SPHERE.cluster.phase +
+      index *
+        Math.PI * 2 /
+        SPHERE.cluster.memberCount;
 
-    const cosineLatitude =
-      Math.cos(latitude);
+    return [
+      Math.cos(angle),
+      Math.sin(angle),
+      0
+    ];
+  }
 
-    return normalizeVector([
-      Math.cos(longitude) *
-        cosineLatitude,
+  function validateClusterOrbitContract() {
+    const vectors =
+      Array.from(
+        {
+          length:
+            SPHERE.cluster.memberCount
+        },
+        (_, index) =>
+          clusterBaseVector(
+            index,
+            SPHERE.cluster.memberCount
+          )
+      );
 
-      Math.sin(latitude),
+    invariant(
+      vectors.length === 4,
+      "LAWS_CRYSTALS_CLUSTER_ORBIT_REQUIRES_FOUR_MEMBERS"
+    );
 
-      Math.sin(longitude) *
-        cosineLatitude
-    ]);
+    vectors.forEach(
+      (vector, index) => {
+        invariant(
+          Math.abs(
+            vectorLength(vector) - 1
+          ) <= 1e-12,
+          "LAWS_CRYSTALS_CLUSTER_UNIT_RADIUS_INVALID:" + index
+        );
+
+        invariant(
+          Math.abs(vector[2]) <= 1e-12,
+          "LAWS_CRYSTALS_CLUSTER_COPLANARITY_INVALID:" + index
+        );
+      }
+    );
+
+    for (let index = 0; index < 4; index += 1) {
+      const adjacent =
+        vectors[(index + 1) % 4];
+      const opposite =
+        vectors[(index + 2) % 4];
+
+      invariant(
+        Math.abs(
+          dot(vectors[index], adjacent)
+        ) <= 1e-12,
+        "LAWS_CRYSTALS_CLUSTER_90_DEGREE_SPACING_INVALID:" + index
+      );
+
+      invariant(
+        Math.abs(
+          dot(vectors[index], opposite) + 1
+        ) <= 1e-12,
+        "LAWS_CRYSTALS_CLUSTER_180_DEGREE_SPACING_INVALID:" + index
+      );
+    }
+
+    RECEIPT.clusterOrbitModel =
+      SPHERE.cluster.model;
+    RECEIPT.clusterOrbitMemberCount =
+      SPHERE.cluster.memberCount;
+    RECEIPT.clusterOrbitCommonRadius =
+      SPHERE.cluster.commonRadius;
+    RECEIPT.clusterOrbitCoplanar =
+      true;
+    RECEIPT.clusterOrbitEqualAngularSpacing =
+      true;
+    RECEIPT.clusterOrbitMaximumTiltRadians =
+      SPHERE.cluster.maximumTiltRadians;
+    RECEIPT.clusterProjectedClearanceMarginPx =
+      SPHERE.cluster.projectedClearanceMarginPx;
+
+    if (state.root) {
+      state.root.dataset.lawsClusterOrbitModel =
+        SPHERE.cluster.model;
+      state.root.dataset.lawsClusterOrbitMemberCount =
+        String(SPHERE.cluster.memberCount);
+      state.root.dataset.lawsClusterOrbitCommonRadius =
+        String(SPHERE.cluster.commonRadius);
+      state.root.dataset.lawsClusterOrbitCoplanar =
+        "true";
+      state.root.dataset.lawsClusterOrbitEqualAngularSpacing =
+        "true";
+      state.root.dataset.lawsClusterOrbitMaximumTiltRadians =
+        String(SPHERE.cluster.maximumTiltRadians);
+    }
+
+    return true;
   }
 
   function makeNode(options) {
@@ -3323,6 +3419,91 @@
     );
   }
 
+  function quaternionFromAxisAngleVector(
+    axis,
+    angle
+  ) {
+    const normalizedAxis =
+      normalizeVector(
+        axis,
+        [1, 0, 0]
+      );
+    const half =
+      angle * 0.5;
+    const sine =
+      Math.sin(half);
+
+    return quaternionNormalize([
+      normalizedAxis[0] * sine,
+      normalizedAxis[1] * sine,
+      normalizedAxis[2] * sine,
+      Math.cos(half)
+    ]);
+  }
+
+  function boundClusterQuaternion(value) {
+    const quaternion =
+      quaternionNormalize(value);
+    const normal =
+      normalizeVector(
+        quaternionRotateVector(
+          quaternion,
+          SPHERE.cluster.planeNormal
+        ),
+        SPHERE.cluster.planeNormal
+      );
+    const tilt =
+      Math.acos(
+        clamp(
+          normal[2],
+          -1,
+          1
+        )
+      );
+
+    if (
+      tilt <=
+      SPHERE.cluster.maximumTiltRadians +
+        1e-12
+    ) {
+      return quaternion;
+    }
+
+    const swingAxis =
+      normalizeVector(
+        [
+          -normal[1],
+          normal[0],
+          0
+        ],
+        [1, 0, 0]
+      );
+    const swing =
+      quaternionFromAxisAngleVector(
+        swingAxis,
+        SPHERE.cluster.maximumTiltRadians
+      );
+    const twistLength =
+      Math.hypot(
+        quaternion[2],
+        quaternion[3]
+      );
+    const twist =
+      twistLength > 1e-12
+        ? quaternionNormalize([
+            0,
+            0,
+            quaternion[2],
+            quaternion[3]
+          ])
+        : [0, 0, 0, 1];
+
+    return quaternionMultiply(
+      swing,
+      twist
+    );
+  }
+
   function clusterQuaternionFromFrame(
     frame,
     direction
@@ -3338,13 +3519,17 @@
       frame.cluster.direction === direction &&
       frame.cluster.orientation
     ) {
-      return orientationQuaternion(
-        frame.cluster.orientation,
-        fallback
+      return boundClusterQuaternion(
+        orientationQuaternion(
+          frame.cluster.orientation,
+          fallback
+        )
       );
     }
 
-    return fallback.slice();
+    return boundClusterQuaternion(
+      fallback
+    );
   }
 
   function rotatedCategoryUnitVector(
@@ -3492,28 +3677,29 @@
     };
   }
 
-  function sphericalLawPosition(
+  function euclideanLawPosition(
     node,
     localQuaternion
   ) {
     const unit =
       rotatedLawUnitVector(
         node,
-        localQuaternion
+        boundClusterQuaternion(
+          localQuaternion
+        )
       );
+    const radius =
+      SPHERE.cluster.commonRadius;
 
     return {
       x:
-        unit[0] *
-          SPHERE.cluster.horizontalRadius,
+        unit[0] * radius,
 
       y:
-        unit[1] *
-          SPHERE.cluster.verticalRadius,
+        unit[1] * radius,
 
       z:
-        unit[2] *
-          SPHERE.cluster.depthRadius,
+        unit[2] * radius,
 
       depth:
         (unit[2] + 1) / 2,
@@ -3707,7 +3893,7 @@
     activeLawNodes(direction).forEach(
       node => {
         const sphere =
-          sphericalLawPosition(
+          euclideanLawPosition(
             node,
             localQuaternion
           );
@@ -3731,18 +3917,11 @@
               : "LAW_IDLE";
 
         const scale =
-          (
-            selected
-              ? QUALITY.selectedLawScale
-              : primary
-                ? QUALITY.primaryLawScale
-                : QUALITY.lawScale
-          ) *
-          (
-            0.68 +
-            sphere.depth *
-              0.36
-          );
+          selected
+            ? QUALITY.selectedLawScale
+            : primary
+              ? QUALITY.primaryLawScale
+              : QUALITY.lawScale;
 
         Object.assign(
           node.target,
@@ -5339,6 +5518,20 @@
         sphere:
           SPHERE,
 
+        clusterOrbit:
+          SPHERE.cluster,
+
+        getClusterOrbitContract:
+          () => Object.freeze({
+            ...SPHERE.cluster,
+            planeNormal:
+              Object.freeze(
+                SPHERE.cluster
+                  .planeNormal
+                  .slice()
+              )
+          }),
+
         nodeTypes:
           NODE_TYPES,
 
@@ -5618,6 +5811,8 @@
 
       state.registry =
         buildRegistry();
+
+      validateClusterOrbitContract();
 
       initializeRenderers();
 

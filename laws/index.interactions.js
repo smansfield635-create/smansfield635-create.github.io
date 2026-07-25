@@ -9,7 +9,7 @@
   "use strict";
 
   const BUILD =
-    "LAWS_COMPASS_FAMILY_CONTRAST_DISCLOSURE_LABELS_v3";
+    "LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4";
   const SOURCE_URL =
     `/laws/index.interactions.source.round4.js?build=${encodeURIComponent(BUILD)}`;
   const SELECTION_URL =
@@ -425,6 +425,9 @@
       nativeCrystalMaterialGlow: true,
       externalHaloOverlay: false,
       releaseSettlement: true,
+      horizontalDragYawSign: "NEGATIVE",
+      clusterMaximumTiltRadians: 0.30,
+      euclideanClusterOrbitRequired: true,
       projectedConstellationLabels:
         Object.freeze({ ...CATEGORY_LABELS }),
       ...detail

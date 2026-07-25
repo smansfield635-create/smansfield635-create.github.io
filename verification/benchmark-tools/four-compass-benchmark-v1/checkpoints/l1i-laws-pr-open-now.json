@@ -1,0 +1,6 @@
+{
+  "artifactId": "L1I_LAWS_PR_OPEN_NOW_v1",
+  "status": "OPEN_DRAFT_PR_NOW",
+  "branch": "agent/laws-projected-clearance-bounded-repair-001",
+  "base": "main"
+}

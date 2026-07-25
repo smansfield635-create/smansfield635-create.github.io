@@ -1,0 +1,10 @@
+{
+  "artifactId": "L1D_LAWS_PR_GATE_READY_v1",
+  "checkpoint": "L1D",
+  "status": "PASS_PR_GATE_READY",
+  "branch": "agent/laws-projected-clearance-bounded-repair-001",
+  "draftRequired": true,
+  "baseBranch": "main",
+  "automaticLawsTriggerExpected": true,
+  "mergeAuthorized": false
+}

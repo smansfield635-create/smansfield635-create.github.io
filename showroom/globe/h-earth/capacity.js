@@ -2,13 +2,13 @@
  * /showroom/globe/h-earth/capacity.js
  * COMPLETE RENEWED FILE
  *
- * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2
+ * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3
  *
  * Layer:
  * H-Earth Layer 4 · Showroom Execution Corridor
  *
  * Renews:
- * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1
+ * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2
  *
  * Purpose:
  * Define the complete bounded execution-capacity constitution for the
@@ -70,9 +70,9 @@
  */
 
 export const H_EARTH_3D_CAPACITY_CONTRACT_ID =
-  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2';
+  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3';
 
-export const H_EARTH_3D_CAPACITY_SCHEMA_VERSION = 2;
+export const H_EARTH_3D_CAPACITY_SCHEMA_VERSION = 3;
 
 const deepFreeze = (value) => {
   if (
@@ -863,20 +863,111 @@ export const H_EARTH_3D_RENDER_STAGE_LIMITS = deepFreeze({
 });
 
 /**
- * Node and primitive budget.
+ * Stage-separated primitive and node budgets.
+ *
+ * These three capacity domains are independent and noninterchangeable:
+ *
+ * admitted source primitives
+ * != post-clipping projected fragments
+ * != final physical renderer-owned DOM nodes.
+ *
+ * The legacy environmentPrimitives and totalRendererOwnedNodes fields remain as
+ * compatibility aliases for existing consumers. They do not collapse the three
+ * governed domains.
+ */
+export const H_EARTH_3D_ADMITTED_PRIMITIVE_BUDGET = deepFreeze({
+  budgetId:
+    'ADMITTED_PRIMITIVE_BUDGET',
+
+  stage:
+    'POST_WEST_ADMITTED_FRAME',
+
+  countingUnit:
+    'ADMITTED_SOURCE_PRIMITIVE',
+
+  productionOccurrenceExpected: 3,
+  minimum: 1,
+  preferredMaximum: 256,
+  absoluteMaximum: 384
+});
+
+export const H_EARTH_3D_PROJECTED_FRAGMENT_BUDGET = deepFreeze({
+  budgetId:
+    'PROJECTED_FRAGMENT_BUDGET',
+
+  stage:
+    'POST_CLIPPING_RENDERER_PROJECTION_PLAN',
+
+  countingUnit:
+    'PROJECTED_OR_CLIPPED_RENDER_FRAGMENT',
+
+  minimum: 0,
+  preferredMaximum: 800,
+  absoluteMaximum: 1024,
+
+  lawfulEmptyScenePermittedByRenderer: true
+});
+
+export const H_EARTH_3D_FINAL_DOM_NODE_BUDGET = deepFreeze({
+  budgetId:
+    'FINAL_DOM_NODE_BUDGET',
+
+  stage:
+    'POST_MATERIALIZATION_RENDERER_MOUNT',
+
+  countingUnit:
+    'PHYSICAL_RENDERER_OWNED_DOM_NODE',
+
+  rendererInfrastructureNodeCount: 2,
+  semanticLayerContainerCount: 15,
+  interactionNodeCount: 1,
+
+  preferredMaximum: 818,
+  absoluteMaximum: 1042,
+
+  accountingPolicy:
+    'RENDERER_INFRASTRUCTURE_PLUS_SEMANTIC_CONTAINERS_PLUS_INTERACTION_NODES_PLUS_MOUNTED_PROJECTED_FRAGMENTS',
+
+  routeShellExcluded: true,
+  detachedNodesExcluded: true,
+  hiddenMountedNodesIncluded: true
+});
+
+export const H_EARTH_3D_STAGE_SEPARATED_BUDGETS = deepFreeze({
+  admittedPrimitiveBudget:
+    H_EARTH_3D_ADMITTED_PRIMITIVE_BUDGET,
+
+  projectedFragmentBudget:
+    H_EARTH_3D_PROJECTED_FRAGMENT_BUDGET,
+
+  finalDomNodeBudget:
+    H_EARTH_3D_FINAL_DOM_NODE_BUDGET,
+
+  invariant:
+    'ADMITTED_PRIMITIVE_BUDGET != PROJECTED_FRAGMENT_BUDGET != FINAL_DOM_NODE_BUDGET'
+});
+
+/**
+ * Node and primitive budget compatibility surface.
  */
 export const H_EARTH_3D_NODE_BUDGET = deepFreeze({
+  admittedPrimitives:
+    H_EARTH_3D_ADMITTED_PRIMITIVE_BUDGET,
+
+  projectedFragments:
+    H_EARTH_3D_PROJECTED_FRAGMENT_BUDGET,
+
+  finalRendererOwnedDom:
+    H_EARTH_3D_FINAL_DOM_NODE_BUDGET,
+
   semanticLayerContainers: deepFreeze({
     minimum: 15,
     preferred: 15,
     maximum: 16
   }),
 
-  environmentPrimitives: deepFreeze({
-    minimum: 1,
-    preferredMaximum: 256,
-    absoluteMaximum: 384
-  }),
+  environmentPrimitives:
+    H_EARTH_3D_PROJECTED_FRAGMENT_BUDGET,
 
   interactionNodes: deepFreeze({
     minimum: 1,
@@ -896,13 +987,28 @@ export const H_EARTH_3D_NODE_BUDGET = deepFreeze({
     absoluteMaximum: 0
   }),
 
-  totalRendererOwnedNodes: deepFreeze({
-    preferredMaximum: 304,
-    absoluteMaximum: 448
+  totalRendererOwnedNodes:
+    H_EARTH_3D_FINAL_DOM_NODE_BUDGET,
+
+  compatibilityPolicy: deepFreeze({
+    environmentPrimitivesFieldRepresents:
+      'PROJECTED_FRAGMENT_COUNT_FOR_LEGACY_RENDERER_CONSUMERS',
+
+    totalRendererOwnedNodesFieldRepresents:
+      'FINAL_RENDERER_OWNED_DOM_CAPACITY_CEILING',
+
+    admittedPrimitiveBudgetMayBeInferredFromEnvironmentPrimitives:
+      false,
+
+    projectedFragmentBudgetMayBeInferredFromAdmittedPrimitiveBudget:
+      false,
+
+    finalDomNodeBudgetMayBeInferredFromProjectedFragmentBudget:
+      false
   }),
 
   countingPolicy:
-    'COUNT_RENDERER_OWNED_LAYER_CONTAINERS_PRIMITIVES_AND_INTERACTION_NODES',
+    'COUNT_LEGACY_RENDERER_OWNED_LAYER_CONTAINERS_PROJECTED_FRAGMENTS_INTERACTION_ROUTE_OVERLAY_AND_DIAGNOSTIC_NODES',
 
   routeShellExcludedFromRendererBudget: true,
   hiddenNodesStillCount: true,
@@ -3030,6 +3136,294 @@ export function evaluateHEarth3DNodeBudget({
 }
 
 /**
+ * Evaluates all three capacity domains without collapsing their counting units.
+ */
+export function evaluateHEarth3DStageSeparatedCapacity({
+  admittedPrimitiveCount = 0,
+  projectedFragmentCount = 0,
+  semanticLayerContainerCount =
+    H_EARTH_3D_FINAL_DOM_NODE_BUDGET
+      .semanticLayerContainerCount,
+  interactionNodeCount =
+    H_EARTH_3D_FINAL_DOM_NODE_BUDGET
+      .interactionNodeCount,
+  rendererInfrastructureNodeCount =
+    H_EARTH_3D_FINAL_DOM_NODE_BUDGET
+      .rendererInfrastructureNodeCount,
+  mountedProjectedFragmentNodeCount =
+    projectedFragmentCount,
+  finalRendererOwnedDomNodeCount = null
+} = {}) {
+  const issues = [];
+  const checks = [];
+
+  const counts = {
+    admittedPrimitiveCount,
+    projectedFragmentCount,
+    semanticLayerContainerCount,
+    interactionNodeCount,
+    rendererInfrastructureNodeCount,
+    mountedProjectedFragmentNodeCount
+  };
+
+  for (
+    const [field, value]
+    of Object.entries(counts)
+  ) {
+    const eligible =
+      Number.isSafeInteger(value) &&
+      value >= 0;
+
+    checks.push(
+      createCapacityCheck(
+        `STAGE_SEPARATED_${field.toUpperCase()}_NON_NEGATIVE_SAFE_INTEGER`,
+        eligible,
+        value
+      )
+    );
+
+    if (!eligible) {
+      issues.push(
+        createCapacityIssue(
+          'STAGE_SEPARATED_CAPACITY_COUNT_INVALID',
+          `Stage-separated capacity field ${field} must be a non-negative safe integer.`,
+          deepFreeze({
+            field,
+            value
+          })
+        )
+      );
+    }
+  }
+
+  if (issues.length > 0) {
+    return deepFreeze({
+      eligible: false,
+      status:
+        'STAGE_SEPARATED_CAPACITY_NOT_ELIGIBLE',
+      counts:
+        deepFreeze(counts),
+      checks:
+        deepFreeze(checks),
+      issues:
+        deepFreeze(issues),
+      budgets:
+        H_EARTH_3D_STAGE_SEPARATED_BUDGETS
+    });
+  }
+
+  const admittedEligible =
+    admittedPrimitiveCount >=
+      H_EARTH_3D_ADMITTED_PRIMITIVE_BUDGET.minimum &&
+    admittedPrimitiveCount <=
+      H_EARTH_3D_ADMITTED_PRIMITIVE_BUDGET.absoluteMaximum;
+
+  const projectedEligible =
+    projectedFragmentCount >=
+      H_EARTH_3D_PROJECTED_FRAGMENT_BUDGET.minimum &&
+    projectedFragmentCount <=
+      H_EARTH_3D_PROJECTED_FRAGMENT_BUDGET.absoluteMaximum;
+
+  const semanticEligible =
+    semanticLayerContainerCount >=
+      H_EARTH_3D_NODE_BUDGET.semanticLayerContainers.minimum &&
+    semanticLayerContainerCount <=
+      H_EARTH_3D_NODE_BUDGET.semanticLayerContainers.maximum;
+
+  const interactionEligible =
+    interactionNodeCount >=
+      H_EARTH_3D_NODE_BUDGET.interactionNodes.minimum &&
+    interactionNodeCount <=
+      H_EARTH_3D_NODE_BUDGET.interactionNodes.absoluteMaximum;
+
+  const infrastructureMatches =
+    rendererInfrastructureNodeCount ===
+      H_EARTH_3D_FINAL_DOM_NODE_BUDGET
+        .rendererInfrastructureNodeCount;
+
+  const mountedProjectedMatchesPlan =
+    mountedProjectedFragmentNodeCount ===
+      projectedFragmentCount;
+
+  const calculatedFinalRendererOwnedDomNodeCount =
+    rendererInfrastructureNodeCount +
+    semanticLayerContainerCount +
+    interactionNodeCount +
+    mountedProjectedFragmentNodeCount;
+
+  const resolvedFinalRendererOwnedDomNodeCount =
+    finalRendererOwnedDomNodeCount === null
+      ? calculatedFinalRendererOwnedDomNodeCount
+      : finalRendererOwnedDomNodeCount;
+
+  const finalAccountingExact =
+    resolvedFinalRendererOwnedDomNodeCount ===
+      calculatedFinalRendererOwnedDomNodeCount;
+
+  const finalDomEligible =
+    resolvedFinalRendererOwnedDomNodeCount <=
+      H_EARTH_3D_FINAL_DOM_NODE_BUDGET.absoluteMaximum;
+
+  checks.push(
+    createCapacityCheck(
+      'ADMITTED_PRIMITIVE_BUDGET_ELIGIBLE',
+      admittedEligible,
+      admittedPrimitiveCount
+    ),
+    createCapacityCheck(
+      'PROJECTED_FRAGMENT_BUDGET_ELIGIBLE',
+      projectedEligible,
+      projectedFragmentCount
+    ),
+    createCapacityCheck(
+      'SEMANTIC_CONTAINER_BUDGET_ELIGIBLE',
+      semanticEligible,
+      semanticLayerContainerCount
+    ),
+    createCapacityCheck(
+      'INTERACTION_NODE_BUDGET_ELIGIBLE',
+      interactionEligible,
+      interactionNodeCount
+    ),
+    createCapacityCheck(
+      'RENDERER_INFRASTRUCTURE_COUNT_EXACT',
+      infrastructureMatches,
+      rendererInfrastructureNodeCount
+    ),
+    createCapacityCheck(
+      'MOUNTED_PROJECTED_FRAGMENT_COUNT_MATCHES_PLAN',
+      mountedProjectedMatchesPlan,
+      mountedProjectedFragmentNodeCount
+    ),
+    createCapacityCheck(
+      'FINAL_RENDERER_OWNED_DOM_ACCOUNTING_EXACT',
+      finalAccountingExact,
+      resolvedFinalRendererOwnedDomNodeCount
+    ),
+    createCapacityCheck(
+      'FINAL_DOM_NODE_BUDGET_ELIGIBLE',
+      finalDomEligible,
+      resolvedFinalRendererOwnedDomNodeCount
+    )
+  );
+
+  if (!admittedEligible) {
+    issues.push(
+      createCapacityIssue(
+        'ADMITTED_PRIMITIVE_BUDGET_EXCEEDED',
+        'The admitted source-primitive count falls outside its independent capacity domain.',
+        admittedPrimitiveCount
+      )
+    );
+  }
+
+  if (!projectedEligible) {
+    issues.push(
+      createCapacityIssue(
+        'PROJECTED_FRAGMENT_BUDGET_EXCEEDED',
+        'The post-clipping projected-fragment count falls outside its independent capacity domain.',
+        projectedFragmentCount
+      )
+    );
+  }
+
+  if (!semanticEligible) {
+    issues.push(
+      createCapacityIssue(
+        'SEMANTIC_LAYER_CONTAINER_BUDGET_EXCEEDED',
+        'Semantic layer-container count falls outside capacity.',
+        semanticLayerContainerCount
+      )
+    );
+  }
+
+  if (!interactionEligible) {
+    issues.push(
+      createCapacityIssue(
+        'INTERACTION_NODE_BUDGET_EXCEEDED',
+        'Interaction node count falls outside capacity.',
+        interactionNodeCount
+      )
+    );
+  }
+
+  if (!infrastructureMatches) {
+    issues.push(
+      createCapacityIssue(
+        'RENDERER_INFRASTRUCTURE_NODE_COUNT_MISMATCH',
+        'Renderer infrastructure-node count does not match the final-DOM accounting contract.',
+        rendererInfrastructureNodeCount
+      )
+    );
+  }
+
+  if (!mountedProjectedMatchesPlan) {
+    issues.push(
+      createCapacityIssue(
+        'PROJECTED_PLAN_AND_MOUNTED_FRAGMENT_COUNT_DIVERGE',
+        'Mounted projected-fragment nodes do not correspond exactly to the eligible projection plan.',
+        deepFreeze({
+          projectedFragmentCount,
+          mountedProjectedFragmentNodeCount
+        })
+      )
+    );
+  }
+
+  if (!finalAccountingExact) {
+    issues.push(
+      createCapacityIssue(
+        'FINAL_DOM_NODE_ACCOUNTING_MISMATCH',
+        'Final physical renderer-owned DOM does not equal infrastructure plus semantic containers plus interaction nodes plus mounted projected fragments.',
+        deepFreeze({
+          expected:
+            calculatedFinalRendererOwnedDomNodeCount,
+          actual:
+            resolvedFinalRendererOwnedDomNodeCount
+        })
+      )
+    );
+  }
+
+  if (!finalDomEligible) {
+    issues.push(
+      createCapacityIssue(
+        'FINAL_DOM_NODE_BUDGET_EXCEEDED',
+        'Final physical renderer-owned DOM node count exceeds its independent capacity domain.',
+        resolvedFinalRendererOwnedDomNodeCount
+      )
+    );
+  }
+
+  const eligible =
+    allChecksPass(checks);
+
+  return deepFreeze({
+    eligible,
+    status:
+      eligible
+        ? 'STAGE_SEPARATED_CAPACITY_ELIGIBLE'
+        : 'STAGE_SEPARATED_CAPACITY_NOT_ELIGIBLE',
+    counts: deepFreeze({
+      ...counts,
+      finalRendererOwnedDomNodeCount:
+        resolvedFinalRendererOwnedDomNodeCount
+    }),
+    accounting: deepFreeze({
+      calculatedFinalRendererOwnedDomNodeCount,
+      formula:
+        H_EARTH_3D_FINAL_DOM_NODE_BUDGET.accountingPolicy
+    }),
+    checks:
+      deepFreeze(checks),
+    issues:
+      deepFreeze(issues),
+    budgets:
+      H_EARTH_3D_STAGE_SEPARATED_BUDGETS
+  });
+}
+
+/**
  * Evaluates compositor-frame capacity.
  */
 export function evaluateHEarth3DCompositorFrameEligibility(
@@ -3907,6 +4301,7 @@ export const H_EARTH_3D_CAPACITY_PROVIDER_CONSUMER_ALIGNMENT =
     environment: deepFreeze({
       primitivePlanCapacityProvided: true,
       nodeBudgetEvaluatorProvided: true,
+      admittedPrimitiveBudgetProvided: true,
       worldBoundsProvided: true
     }),
 
@@ -3928,6 +4323,9 @@ export const H_EARTH_3D_CAPACITY_PROVIDER_CONSUMER_ALIGNMENT =
     renderer: deepFreeze({
       outputModelCapacityProvided: true,
       nodeBudgetProvided: true,
+      projectedFragmentBudgetProvided: true,
+      finalDomNodeBudgetProvided: true,
+      stageSeparatedCapacityEvaluatorProvided: true,
       frameConsumptionCapacityProvided: true,
       frameConsumptionEvaluatorProvided: true,
       mountEligibilityProvided: true
@@ -4136,6 +4534,7 @@ export const H_EARTH_3D_CAPACITY_PREFLIGHT = (() => {
     evaluateHEarth3DInteractionIntent,
     evaluateHEarth3DControllerIntentEligibility,
     evaluateHEarth3DNodeBudget,
+    evaluateHEarth3DStageSeparatedCapacity,
     evaluateHEarth3DCompositorFrameEligibility,
     evaluateHEarth3DRendererFrameConsumption,
     evaluateHEarth3DMountEligibility
@@ -4207,7 +4606,7 @@ export const H_EARTH_3D_CAPACITY_RECEIPT = deepFreeze({
     H_EARTH_3D_CAPACITY_CONTRACT_ID,
 
   renewsContractId:
-    'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1',
+    'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2',
 
   file:
     '/showroom/globe/h-earth/capacity.js',
@@ -4253,6 +4652,10 @@ export const H_EARTH_3D_CAPACITY_RECEIPT = deepFreeze({
 
   renderStageLimitsDefined: true,
   nodeBudgetDefined: true,
+  admittedPrimitiveBudgetDefined: true,
+  projectedFragmentBudgetDefined: true,
+  finalDomNodeBudgetDefined: true,
+  capacityDomainsSeparated: true,
   renderFrameCapacityDefined: true,
   compositorFrameEligibilityDefined: true,
   rendererFrameConsumptionEligibilityDefined: true,
@@ -4264,6 +4667,7 @@ export const H_EARTH_3D_CAPACITY_RECEIPT = deepFreeze({
   interactionIntentEvaluatorDefined: true,
   controllerIntentEvaluatorDefined: true,
   nodeBudgetEvaluatorDefined: true,
+  stageSeparatedCapacityEvaluatorDefined: true,
   compositorFrameEvaluatorDefined: true,
   rendererFrameConsumptionEvaluatorDefined: true,
   mountEligibilityEvaluatorDefined: true,
@@ -4287,7 +4691,7 @@ export const H_EARTH_3D_CAPACITY_RECEIPT = deepFreeze({
   visualOutputInspected: false,
 
   nextRequired:
-    'EXECUTE_NINETEEN_ROW_DEPLOYED_MODULE_AND_RENDERER_CORRIDOR_AUDIT',
+    'EXECUTE_FIVE_PROFILE_RENDERER_CORRIDOR_AND_POST_MERGE_DEPLOYED_ROUTE_VERIFICATION',
 
   ...H_EARTH_3D_CAPACITY_CLAIM_CEILINGS
 });
@@ -4303,7 +4707,7 @@ export const H_EARTH_3D_CAPACITY_CONTRACT = deepFreeze({
     H_EARTH_3D_CAPACITY_SCHEMA_VERSION,
 
   renewsContractId:
-    'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v1',
+    'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2',
 
   file:
     '/showroom/globe/h-earth/capacity.js',
@@ -4343,6 +4747,18 @@ export const H_EARTH_3D_CAPACITY_CONTRACT = deepFreeze({
 
   renderStageLimits:
     H_EARTH_3D_RENDER_STAGE_LIMITS,
+
+  admittedPrimitiveBudget:
+    H_EARTH_3D_ADMITTED_PRIMITIVE_BUDGET,
+
+  projectedFragmentBudget:
+    H_EARTH_3D_PROJECTED_FRAGMENT_BUDGET,
+
+  finalDomNodeBudget:
+    H_EARTH_3D_FINAL_DOM_NODE_BUDGET,
+
+  stageSeparatedBudgets:
+    H_EARTH_3D_STAGE_SEPARATED_BUDGETS,
 
   nodeBudget:
     H_EARTH_3D_NODE_BUDGET,

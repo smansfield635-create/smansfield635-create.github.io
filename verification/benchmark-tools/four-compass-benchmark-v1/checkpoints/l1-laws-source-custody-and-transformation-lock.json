@@ -40,7 +40,9 @@
       "laws/validation/laws.orbit-direct-manipulation.receipt.json"
     ],
     "temporaryExecutionAuthority": ".github/workflows/apply-laws-projected-clearance-repair.yml",
+    "temporaryPushWrapper": ".github/workflows/apply-laws-projected-clearance-push.yml",
     "temporaryExecutionAuthorityMustSelfRemove": true,
+    "pushWrapperPurpose": "Execute the already-locked transformation after the newly introduced PR workflow proved ineligible to run from the pull-request event.",
     "requiredChanges": [
       "Resolve one shared runtime cluster radius from actual compositor bounds and projection facts.",
       "Apply one uniform scale factor to all four law members only when radius expansion alone cannot satisfy the bounded viewport and Compass-clearance envelope.",
@@ -72,6 +74,11 @@
     "installedBaselineWorkflow": "PASS_REQUIRED",
     "artifactInspection": "PASS_REQUIRED",
     "mergeBeforeL5": false
+  },
+  "executionTrigger": {
+    "type": "BRANCH_PUSH_SYNCHRONIZATION",
+    "wrapperCommit": "781a37b3e1aee904dcbc34515d438ff976d3e6c5",
+    "triggerCommitPurpose": "Activate the self-removing push wrapper without changing product scope."
   },
   "nextCheckpoint": "L2_BOUNDED_PRODUCT_IMPLEMENTATION"
 }

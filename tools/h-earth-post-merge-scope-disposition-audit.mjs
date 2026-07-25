@@ -72,10 +72,10 @@ const renewableFailureSetExact =
   );
 
 const currentBoundedOverlay =
-  './accepted-amendments/h-earth.repository-registry.public-route-interaction-scope-reconciliation.js';
+  './accepted-amendments/h-earth.repository-registry.compositor-camera-authority-scope-reconciliation.js';
 
 const priorBoundedOverlay =
-  './accepted-amendments/h-earth.repository-registry.renderer-presentation-scope-reconciliation.js';
+  './accepted-amendments/h-earth.repository-registry.public-route-interaction-scope-reconciliation.js';
 
 const loaderUsesCurrentBoundedChain =
   loaderText.includes(
@@ -113,7 +113,7 @@ const renewalEligible =
 
 if (renewalEligible) {
   receipt.receiptId =
-    'H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_RETAINED_STATE_AUDIT_RECEIPT_v5';
+    'H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_RETAINED_STATE_AUDIT_RECEIPT_v6';
 
   receipt.result =
     'PASS';
@@ -140,7 +140,7 @@ if (renewalEligible) {
 
   receipt.loaderContinuityRenewal = {
     renewalId:
-      'H_EARTH_RETAINED_STATE_LOADER_CONTINUITY_RENEWAL_v3',
+      'H_EARTH_RETAINED_STATE_LOADER_CONTINUITY_RENEWAL_v4',
     priorExpectation:
       'LOADER_MUST_REMAIN_EXACT_STEP_1_BLOB',
     renewedExpectation:

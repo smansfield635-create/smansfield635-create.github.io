@@ -1,0 +1,207 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_FOUR_COMPASS_IDENTITY_AND_ROLE_REGISTRY_v1",
+  "phase": "PHASE_A_AUTHORITY_CORRECTION",
+  "checkpoint": "R1",
+  "status": "PASS_CORRECTED_FOUR_COMPASS_ROLES_LOCKED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "reconciliationBranch": "agent/metaverse-benchmark-four-compass-reconciliation-001",
+  "authorityLock": {
+    "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r0/four-compass-reconciliation-authority-lock.json",
+    "gitBlob": "32fc7f07c5b8e4fdcdb80091c575f3ad57902a9d"
+  },
+  "scope": "CORRECTED_COMPASS_IDENTITIES_REFERENCE_ROLES_AND_AUXILIARY_CONTROL_BOUNDARY_ONLY",
+  "rules": {
+    "compassCount": 4,
+    "compassesAreIdenticalImplementations": false,
+    "referenceBehaviorRequiresIdenticalImplementation": false,
+    "referenceAuthorityIsDimensionScoped": true,
+    "productSpecificDifferencesArePreserved": true,
+    "negativeReferenceIsNotPositiveAcceptanceAuthority": true,
+    "auxiliaryControlIsNotCompassAuthority": true,
+    "roleRegistryGrantsProductMutationAuthority": false,
+    "roleRegistryEstablishesUniversalVisualAcceptance": false,
+    "roleRegistryEstablishesProductionPass": false
+  },
+  "compassBenchmarks": [
+    {
+      "benchmarkId": "MAIN_COMPASS",
+      "displayName": "Main Compass",
+      "route": "/",
+      "productFamily": "UNIVERSAL_COMPASS",
+      "referencePosture": "POSITIVE_ARCHITECTURE_REFERENCE",
+      "referenceDimensions": [
+        "AUTHORITY_SEPARATION",
+        "WORLD_TO_PRESENTATION_CONTINUITY",
+        "CONSTELLATION_AND_CLUSTER_STATE_ARCHITECTURE",
+        "OBJECT_IDENTITY_CONTINUITY",
+        "WORLD_REVISION_CONTINUITY",
+        "IMMUTABLE_AUTHORITY_HANDOFFS",
+        "GOVERNED_NAVIGATION_STATE",
+        "SEMANTIC_CARDINAL_CHILD_AND_RETURN_SEQUENCE"
+      ],
+      "nonReferenceDimensions": [
+        "ARCHCOIN_PRODUCT_SPECIFIC_GESTURE_TUNING",
+        "SHOWROOM_SCENE_ATMOSPHERE",
+        "LAWS_PRODUCT_SEMANTICS",
+        "UNIVERSAL_VISUAL_STYLE"
+      ]
+    },
+    {
+      "benchmarkId": "ARCHCOIN_COMPASS",
+      "displayName": "ARCHCOIN Compass",
+      "route": "/products/archcoin/",
+      "productFamily": "ARCHCOIN",
+      "referencePosture": "POSITIVE_DIRECT_MANIPULATION_REFERENCE",
+      "referenceDimensions": [
+        "MOBILE_DIRECT_MANIPULATION",
+        "TOUCH_RESPONSIVENESS",
+        "STAR_GRAB_AND_DRAG_BEHAVIOR",
+        "SELECTED_OBJECT_HIERARCHY",
+        "ROTATION_FEEL",
+        "RELEASE_BEHAVIOR",
+        "RETURN_TO_ORBIT",
+        "SWIPE_TO_CONSTELLATION",
+        "MOBILE_INTERACTION_USABILITY"
+      ],
+      "nonReferenceDimensions": [
+        "UNIVERSAL_COMPASS_CANONICAL_WORLD_TOPOLOGY",
+        "SHOWROOM_SCENE_ATMOSPHERE",
+        "LAWS_PRODUCT_SEMANTICS",
+        "UNIVERSAL_VISUAL_STYLE"
+      ]
+    },
+    {
+      "benchmarkId": "SHOWROOM_COMPASS",
+      "legacyBenchmarkId": "SHOWROOM",
+      "displayName": "Showroom Compass",
+      "route": "/showroom/",
+      "productFamily": "SHOWROOM",
+      "referencePosture": "POSITIVE_SPATIAL_REALIZATION_REFERENCE",
+      "referenceDimensions": [
+        "SPATIAL_COMPOSITION",
+        "SCENE_DEPTH",
+        "VISUAL_INTEGRATION",
+        "RESPONSIVE_SPATIAL_PRESENTATION",
+        "BROWSER_ROUTE_REALIZATION",
+        "NO_ERROR_SCENE_INITIALIZATION",
+        "SEMANTIC_CARDINAL_CHILD_AND_RETURN_SEQUENCE"
+      ],
+      "nonReferenceDimensions": [
+        "UNIVERSAL_COMPASS_AUTHORITY_TOPOLOGY",
+        "ARCHCOIN_PRODUCT_SPECIFIC_GESTURE_TUNING",
+        "LAWS_PRODUCT_SEMANTICS",
+        "UNIVERSAL_VISUAL_STYLE"
+      ]
+    },
+    {
+      "benchmarkId": "LAWS_COMPASS",
+      "legacyBenchmarkId": "LAWS_CHAMBER_POST_PR128",
+      "displayName": "Laws Compass",
+      "route": "/laws/",
+      "productFamily": "LAWS_CHAMBER",
+      "referencePosture": "NEGATIVE_INTERACTION_REGRESSION_REFERENCE",
+      "referenceDimensions": [
+        "GEOMETRY_PASS_INTERACTION_FAIL_DISCRIMINATION",
+        "CARDINAL_SELECTION_REGRESSION",
+        "CHILD_SELECTION_REGRESSION",
+        "PANEL_DESCENT_REGRESSION",
+        "MOBILE_STAR_ROTATION_REGRESSION",
+        "SWIPE_TO_CONSTELLATION_REGRESSION",
+        "INCOMPLETE_ACCEPTANCE_MODEL_DETECTION",
+        "PROMOTION_GATE_FAILURE"
+      ],
+      "nonReferenceDimensions": [
+        "POSITIVE_GESTURE_STANDARD",
+        "POSITIVE_VISUAL_STANDARD",
+        "POSITIVE_PRODUCTION_STANDARD",
+        "ROOT_CAUSE_ESTABLISHMENT_FROM_SCREENSHOTS",
+        "UNIVERSAL_PRODUCT_BEHAVIOR"
+      ]
+    }
+  ],
+  "auxiliaryControls": [
+    {
+      "controlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+      "legacyInvalidBenchmarkId": "HOMEPAGE_COMPASS",
+      "displayName": "Website Home Receiver Control",
+      "route": "/home/",
+      "productFamily": "WEBSITE_HOME_RECEIVER",
+      "referencePosture": "AUXILIARY_NON_COMPASS_CONTROL",
+      "referenceDimensions": [
+        "PUBLIC_PAGE_RESPONSIVENESS",
+        "PUBLIC_ROUTE_RELIABILITY",
+        "PAGE_AND_NAVIGATION_COORDINATION",
+        "PROFILE_SELECTION",
+        "DISCLOSURE_BEHAVIOR",
+        "TEXT_CONTAINMENT",
+        "HORIZONTAL_OVERFLOW",
+        "FOCUS_AND_KEYBOARD_BEHAVIOR",
+        "TOUCH_EVENT_ROUTING",
+        "HARNESS_SELECTOR_SELECTIVITY",
+        "COMPASS_HARNESS_FALSE_POSITIVE_DETECTION"
+      ],
+      "prohibitedAuthority": [
+        "COMPASS_COUNT",
+        "COMPASS_REFERENCE_TOTALS",
+        "COMPASS_INTERACTION_FINDINGS",
+        "COMPASS_VISUAL_FINDINGS",
+        "FOUR_COMPASS_DIGESTS",
+        "LAWS_COMPASS_COMPARISON",
+        "COMPASS_ACCEPTANCE"
+      ]
+    }
+  ],
+  "legacyIdentityDisposition": {
+    "HOMEPAGE_COMPASS": {
+      "disposition": "RETIRED_INVALID_IDENTITY",
+      "replacement": "WEBSITE_HOME_RECEIVER_CONTROL",
+      "reason": "THE_HOME_ROUTE_NEVER_CONTAINED_A_COMPASS_AND_IS_NOT_A_COMPASS_PRODUCT_OCCURRENCE"
+    },
+    "SHOWROOM": {
+      "disposition": "RECLASSIFY_CANONICAL_ID",
+      "replacement": "SHOWROOM_COMPASS",
+      "historicalAliasPreserved": true
+    },
+    "LAWS_CHAMBER_POST_PR128": {
+      "disposition": "RECLASSIFY_CANONICAL_ID",
+      "replacement": "LAWS_COMPASS",
+      "negativeRegressionPosturePreserved": true,
+      "historicalAliasPreserved": true
+    }
+  },
+  "assertions": {
+    "canonicalCompassCount": 4,
+    "positiveCompassReferenceCount": 3,
+    "negativeCompassReferenceCount": 1,
+    "auxiliaryControlCount": 1,
+    "allCanonicalBenchmarkIdsUnique": true,
+    "allRoutesUnique": true,
+    "allReferenceDimensionsExplicit": true,
+    "allNonReferenceDimensionsExplicit": true,
+    "homeHasCompassAuthority": false,
+    "archcoinSpellingCorrect": true,
+    "productMutationAuthority": false,
+    "mainChanged": false,
+    "mergeAuthority": "NONE"
+  },
+  "stoppingBoundary": {
+    "proves": [
+      "FOUR_COMPASS_IDENTITY_REGISTRY",
+      "DIMENSION_SCOPED_COMPASS_REFERENCE_ROLES",
+      "HOME_AUXILIARY_CONTROL_ROLE",
+      "LEGACY_IDENTITY_RECLASSIFICATION_RULES"
+    ],
+    "doesNotProve": [
+      "CP0_THROUGH_CP7_FIELD_DISPOSITION_COMPLETENESS",
+      "FOUR_COMPASS_SOURCE_RUNTIME_PROJECTION",
+      "FOUR_COMPASS_INTERACTION_REPROJECTION",
+      "FOUR_COMPASS_VISUAL_REPROJECTION",
+      "RECAPTURE_NOT_REQUIRED"
+    ],
+    "authorizes": [
+      "R2_HISTORICAL_AUTHORITY_SUPERSESSION_MAP"
+    ]
+  },
+  "nextCheckpoint": "R2_CP0_THROUGH_CP7_AUTHORITY_SUPERSESSION_MAP"
+}

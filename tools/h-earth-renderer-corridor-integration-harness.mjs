@@ -23,12 +23,12 @@ import {
 
 import {
   H_EARTH_RENDERER_CORRIDOR_OBSERVATION_CONTRACT_ID,
-  LAWFUL_TERMINAL_ROUTE_STATUSES,
-  enrichHEarthRouteObservation
+  enrichHEarthRouteObservation,
+  waitForHEarthTerminalRouteState
 } from './h-earth-renderer-corridor-observation.mjs';
 
 export const H_EARTH_RENDERER_CORRIDOR_INTEGRATION_HARNESS_CONTRACT_ID =
-  'H_EARTH_RENDERER_CORRIDOR_INTEGRATION_HARNESS_v2';
+  'H_EARTH_RENDERER_CORRIDOR_INTEGRATION_HARNESS_v3';
 
 const PROFILES = Object.freeze([
   Object.freeze({ id: 'SMALL_MOBILE_PORTRAIT_DPR_2', viewport: Object.freeze({ width: 360, height: 800 }), deviceScaleFactor: 2, isMobile: true, hasTouch: true }),
@@ -58,23 +58,6 @@ function isRequiredRuntimeUrl(value) {
 function sortRecords(records) {
   return [...records].sort((left, right) =>
     JSON.stringify(left).localeCompare(JSON.stringify(right))
-  );
-}
-
-async function waitForTerminalRouteState(page) {
-  await page.waitForFunction(
-    ({ terminalStatuses }) => {
-      const status = document
-        .getElementById('h-earth-3d-status')
-        ?.textContent
-        ?.trim();
-      return (
-        terminalStatuses.includes(status) ||
-        Boolean(globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE)
-      );
-    },
-    { terminalStatuses: LAWFUL_TERMINAL_ROUTE_STATUSES },
-    { timeout: 90_000 }
   );
 }
 
@@ -129,7 +112,7 @@ async function runProfile(browser, baseUrl, profile, outputDirectory) {
   let navigationError = null;
   try {
     await page.goto(routeUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 });
-    await waitForTerminalRouteState(page);
+    await waitForHEarthTerminalRouteState(page);
   } catch (error) {
     navigationError = {
       name: error?.name ?? 'Error',

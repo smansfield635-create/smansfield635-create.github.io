@@ -22,12 +22,12 @@ import {
 
 import {
   H_EARTH_RENDERER_CORRIDOR_OBSERVATION_CONTRACT_ID,
-  LAWFUL_TERMINAL_ROUTE_STATUSES,
-  enrichHEarthRouteObservation
+  enrichHEarthRouteObservation,
+  waitForHEarthTerminalRouteState
 } from './h-earth-renderer-corridor-observation.mjs';
 
 export const H_EARTH_DEPLOYED_ROUTE_SMOKE_PROBE_CONTRACT_ID =
-  'H_EARTH_DEPLOYED_ROUTE_RENDERER_MOUNT_SMOKE_PROBE_v2';
+  'H_EARTH_DEPLOYED_ROUTE_RENDERER_MOUNT_SMOKE_PROBE_v3';
 
 const TARGET_URL =
   process.env.H_EARTH_DEPLOYED_URL ??
@@ -73,23 +73,6 @@ function createAttemptUrl(attemptNumber) {
     `${process.env.GITHUB_SHA ?? 'manual'}-${attemptNumber}`
   );
   return target.href;
-}
-
-async function waitForTerminalRouteState(page) {
-  await page.waitForFunction(
-    ({ terminalStatuses }) => {
-      const status = document
-        .getElementById('h-earth-3d-status')
-        ?.textContent
-        ?.trim();
-      return (
-        terminalStatuses.includes(status) ||
-        Boolean(globalThis.H_EARTH_3D_PUBLIC_ROUTE_HTML_ENTRY_FAILURE)
-      );
-    },
-    { terminalStatuses: LAWFUL_TERMINAL_ROUTE_STATUSES },
-    { timeout: 90_000 }
-  );
 }
 
 async function runAttempt(browser, attemptNumber) {
@@ -151,7 +134,7 @@ async function runAttempt(browser, attemptNumber) {
   let navigationError = null;
   try {
     await page.goto(attemptUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 });
-    await waitForTerminalRouteState(page);
+    await waitForHEarthTerminalRouteState(page);
   } catch (error) {
     navigationError = {
       name: error?.name ?? 'Error',

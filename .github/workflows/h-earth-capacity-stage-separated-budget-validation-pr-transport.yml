@@ -28,13 +28,13 @@ jobs:
           set -euo pipefail
           test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "0b1c3f6d29735d42141e2feffc5898985e5996af"
           PAYLOAD="$(python - <<'PY'
-          import re
           from pathlib import Path
           text = Path('.github/workflows/h-earth-capacity-stage-separated-budget-validation-transport.yml').read_text()
-          match = re.search(r"printf '%s' '([^']+)' \\| base64", text)
-          if not match:
-              raise SystemExit('TRANSPORT_PAYLOAD_NOT_FOUND')
-          print(match.group(1))
+          line = next(
+              line for line in text.splitlines()
+              if "printf '%s' '" in line and "' | base64 -d" in line
+          )
+          print(line.split("printf '%s' '", 1)[1].split("' | base64 -d", 1)[0])
           PY
           )"
           printf '%s' "$PAYLOAD" | base64 -d | gzip -d > /tmp/apply-capacity-v3.py

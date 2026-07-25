@@ -36,7 +36,7 @@ jobs:
           git merge-base --is-ancestor dedc73841de2b41f5905fd842e9a593116caf300 HEAD
           test "$(git branch --show-current)" = "agent/laws-euclidean-orbit-direct-manipulation-001"
 
-      - name: Correct transformer quoting and validate transformer
+      - name: Correct transformer executor and validate transformer
         shell: bash
         run: |
           set -euo pipefail
@@ -55,6 +55,41 @@ jobs:
               if count != 1:
                   raise SystemExit(f"TRANSFORMER_QUOTING_ANCHOR_INVALID:{before}:{count}")
               source = source.replace(before, after)
+
+          before = '''function replaceRegex(source, pattern, replacement, label) {
+            const matches = source.match(pattern);
+            if (!matches || matches.length !== 1) {
+              throw new Error(
+                `TRANSFORM_REGEX_ANCHOR_INVALID:${label}:${matches ? matches.length : 0}`
+              );
+            }
+            return source.replace(pattern, replacement);
+          }'''
+          after = '''function replaceRegex(source, pattern, replacement, label) {
+            const flags =
+              pattern.flags.includes("g")
+                ? pattern.flags
+                : `${pattern.flags}g`;
+            const matches =
+              Array.from(
+                source.matchAll(
+                  new RegExp(
+                    pattern.source,
+                    flags
+                  )
+                )
+              );
+            if (matches.length !== 1) {
+              throw new Error(
+                `TRANSFORM_REGEX_ANCHOR_INVALID:${label}:${matches.length}`
+              );
+            }
+            return source.replace(pattern, replacement);
+          }'''
+          count = source.count(before)
+          if count != 1:
+              raise SystemExit(f"TRANSFORMER_REGEX_HELPER_ANCHOR_INVALID:{count}")
+          source = source.replace(before, after)
           path.write_text(source, encoding="utf-8")
           PY
           node --check scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs

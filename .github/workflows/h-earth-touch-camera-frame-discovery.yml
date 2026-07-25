@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Capture compositor frame construction APIs
+      - name: Capture compositor frame and initialization APIs
         shell: bash
         run: |
           set -euo pipefail
@@ -50,6 +50,10 @@ jobs:
             JSON.stringify(Object.keys(compositor).sort(), null, 2) + '\n'
           );
           NODE
+          grep -n -C 30 -E "activeInitializationKey|freezeInitializationKey|createInitialization|packet002TransferOccurrenceId|compositorFrameOccurrenceId" showroom/globe/h-earth/index.js \
+            > artifacts/h-earth-touch-camera-frame-discovery/index-initialization-context.txt || true
+          grep -n -C 25 -E "function evaluateFrameCompositionInput|packet002TransferOccurrenceId|compositorFrameOccurrenceId" showroom/globe/h-earth/compositor.js \
+            > artifacts/h-earth-touch-camera-frame-discovery/frame-input-context.txt || true
           grep -n -C 18 -E "function composeHEarth3DCompositorAdmittedFrame|function composeHEarth3DRenderFrame|function composeHEarth3DRendererFrame|function getHEarth3DCompositorRenderFrame|last.*Frame|compositorFrameRevision|cameraRevision" showroom/globe/h-earth/compositor.js \
             > artifacts/h-earth-touch-camera-frame-discovery/source-context.txt || true
       - uses: actions/upload-artifact@v4

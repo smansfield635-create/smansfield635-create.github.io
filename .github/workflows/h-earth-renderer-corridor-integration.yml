@@ -87,6 +87,13 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Verify renderer corridor receipt custody
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/h-earth-renderer-corridor-receipt-custody.mjs integration
+
       - name: Upload renderer corridor receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -95,5 +102,5 @@ jobs:
           path: |
             artifacts/h-earth-renderer-corridor/*.json
             h-earth-renderer-corridor.log
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30

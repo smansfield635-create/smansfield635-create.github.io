@@ -10,6 +10,7 @@ on:
       - "tools/h-earth-deployed-route-smoke-probe.mjs"
       - "tools/h-earth-renderer-corridor-common.mjs"
       - "tools/h-earth-renderer-corridor-capacity-law.mjs"
+      - "tools/h-earth-renderer-corridor-receipt-custody.mjs"
       - "h-earth-3d/integration/**"
       - "h-earth-3d/cells/**"
       - "h-earth-3d/objects/**"
@@ -96,6 +97,13 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Verify deployed-route receipt custody
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/h-earth-renderer-corridor-receipt-custody.mjs deployed
+
       - name: Upload deployed-route receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -104,5 +112,5 @@ jobs:
           path: |
             artifacts/h-earth-deployed-route-smoke/*.json
             h-earth-deployed-route-smoke.log
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30

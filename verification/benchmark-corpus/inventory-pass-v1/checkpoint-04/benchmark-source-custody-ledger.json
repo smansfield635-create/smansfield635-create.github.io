@@ -1,0 +1,133 @@
+{
+  "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_IMMUTABLE_SOURCE_CUSTODY_LEDGER_v1",
+  "checkpoint": "CP4",
+  "status": "PASS_CUSTODY_LOCKED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "inventoryBranch": "agent/metaverse-benchmark-corpus-inventory-001",
+  "activeSourceManifestPath": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-03/benchmark-active-source-path-manifest.json",
+  "canonicalOrdering": "LEXICOGRAPHIC_PATH_ASCENDING_PER_BENCHMARK",
+  "sourceSetDigestAlgorithm": "SHA-256(UTF8(CONCAT(path,NUL,blobSha,LF))) over canonical order",
+  "byteLengthPolicy": {
+    "recorded": false,
+    "reason": "Git blob SHA is the controlling immutable byte identity; connector path reads do not expose an authoritative raw-byte-length field.",
+    "custodyAffected": false
+  },
+  "verification": {
+    "allPathsFetchedAtExactCommit": true,
+    "allPathFetchesReturnedGitBlobSha": true,
+    "representativeDirectBlobFetchSucceeded": true,
+    "representativeDirectBlobSha": "3e64bd9e36dbed25e57adc706c76e689c215910f",
+    "fullBrowserRuntimeFetchNotRun": true,
+    "deployedByteIdentityEstablished": false
+  },
+  "benchmarks": [
+    {
+      "benchmarkId": "MAIN_COMPASS",
+      "sourceCount": 6,
+      "sourceSetDigest": "a53decf01d8d9a5e07496291a73af13d364375f9da3dd607983eb578dc7ff522",
+      "sources": [
+        ["assets/compass/compass.controller.js", "259e0d16b55c3986fec57db37fc057861483344a"],
+        ["assets/compass/compass.cosmos.js", "27c39b34de64c8ee90a7920d4dc78eeec1fe4167"],
+        ["assets/compass/compass.crystals.js", "3d6427cbdb961576468d4aab05c0e4987549cea3"],
+        ["assets/compass/compass.css", "5e00eb9f981c540b85f310294b0c919fbab17f2d"],
+        ["assets/compass/compass.mirrorland-window.js", "b3ef695c21d391301394d587f3d0f51caacb0add"],
+        ["index.html", "3e64bd9e36dbed25e57adc706c76e689c215910f"]
+      ]
+    },
+    {
+      "benchmarkId": "HOMEPAGE_COMPASS",
+      "sourceCount": 1,
+      "sourceSetDigest": "439753071aaa976b9305502434347e79f8dbee328aa660f365bd2b326864596a",
+      "sources": [
+        ["home/index.html", "8755512c10f78b6a4c3bc825eba8a5d62cb9b082"]
+      ]
+    },
+    {
+      "benchmarkId": "ARCHCOIN_COMPASS",
+      "sourceCount": 20,
+      "sourceSetDigest": "58866ba93aedcd07822d4e3ebd5f7c7613d84d0dd51bbb00222ca93f0a05f8b6",
+      "sources": [
+        ["assets/audralia/audralia.planet.js", "4aa2abc623acef47ad8f504e72c8c0907375a7e7"],
+        ["assets/compass/upstream-compass.css", "ea4ac7da5f7a20fe1497c1bbcc46250783c6fe8e"],
+        ["assets/compass/upstream-compass.geometry.js", "fe35d8d844859a6af810684ace53d2c65258522f"],
+        ["assets/compass/upstream-compass.renderer.js", "965376dd8a92686bc7008d1fea4846b5f8300872"],
+        ["laws/index.planet.js", "329d207fd5ad6d89e517f6c0fa992fb1a65b115a"],
+        ["products/archcoin/index.base.css", "cade394b5b1e009430a561e6c86711502f8a72a8"],
+        ["products/archcoin/index.compositor.js", "594eefa10bb7ad0583f7c3284a1e0daf28f34960"],
+        ["products/archcoin/index.controller.js", "8d60a21863012d4a5ec8b6224cee845a2fd7178d"],
+        ["products/archcoin/index.crystals.js", "c258fef581f4d1c378ec4d50b11f1a0ec4db8e62"],
+        ["products/archcoin/index.crystals.source.js", "570c8b64f803b46c3ff2eb22d650596d832467af"],
+        ["products/archcoin/index.css", "864a6e78da49ccd9f67f5c26d00b0cb7fc8e78d8"],
+        ["products/archcoin/index.globe.css", "550a1d40de44b12cb3ec92413ce827431029b00c"],
+        ["products/archcoin/index.html", "fc1c0872fee5d0fc0caae5767cc9fb72e6850d8f"],
+        ["products/archcoin/index.interactions.js", "964f44bbb990bbf37034f09fb66d3e7f543033fa"],
+        ["products/archcoin/index.interactions.source.js", "c425ece001586db09aeb7353bfde2ab8177db7c3"],
+        ["products/archcoin/index.motion.source.js", "1b9113f5de44b03dfc025519f4b41f61c9e8a743"],
+        ["products/archcoin/index.planet.js", "f2a82154f017895863d0ed33dd08fca14b11a7f2"],
+        ["products/archcoin/index.planet.source.js", "133d21ba864a3994b826ac72fb8fb86eca0016e5"],
+        ["products/archcoin/index.presentation.css", "d5feb3bb5b1b763804df13b8a1224fa35a7b1df6"],
+        ["products/archcoin/index.starfield.js", "d1754098a3e47ef182b762245e1449f16a4b4508"]
+      ]
+    },
+    {
+      "benchmarkId": "SHOWROOM",
+      "sourceCount": 23,
+      "sourceSetDigest": "5b56918d122daaa8285bab7f736b6059a37089af08a394cac8cc6cf6976e08f5",
+      "sources": [
+        ["assets/audralia/audralia.planet.js", "4aa2abc623acef47ad8f504e72c8c0907375a7e7"],
+        ["assets/elara/elara.room-entry.js", "b4d72d3be58d2c56088c4465a028316956e78a73"],
+        ["assets/manor-blueprint/manor.blueprint.css", "0d443036cda89053bdd227e5ac15d24e5a025609"],
+        ["assets/manor-blueprint/manor.blueprint.js", "dcabd668ad769c0870641a181db7c85c741e7d3c"],
+        ["assets/manor-blueprint/manor.blueprint.registry.js", "f7e72cb61e02ff3001ae059d0ad73e6d7a75986f"],
+        ["showroom/index.compositor.js", "c148364e1d15f6e90ced475654fd348fd68fcca5"],
+        ["showroom/index.controller.js", "460d9a7beb323f62012683fbe6f27e3c98462705"],
+        ["showroom/index.cosmos.js", "b538c9303bcf3339eb498e45bef0cb5848ff7f09"],
+        ["showroom/index.crystals.js", "462b80afc9e26351ab9c5d78afb19af42f87f8be"],
+        ["showroom/index.crystals.source.js", "8695a62df8ecbf7088aa8377b4dda5e83131e3a3"],
+        ["showroom/index.css", "976c78d2c2808d461d2fe2be1ce6c25332788e9d"],
+        ["showroom/index.diamond.geometry.js", "52568f454ccff4637d1d5ac962d3704052e202f5"],
+        ["showroom/index.diamond.js", "0f4621a1ae4c6e4c774e31f28b97199222d8f5f7"],
+        ["showroom/index.html", "099533a02da909626b129e2a9081319788e224f1"],
+        ["showroom/index.interaction.gestures.js", "bf4e773d4931d550ec34c33ef9614b332c11f8b2"],
+        ["showroom/index.interactions.js", "a6588645bef4071002f49690dcc6cd2a8e91db26"],
+        ["showroom/index.object-stage.js", "c0689bf0de9380eb3e13ba9373eae8dfdc274649"],
+        ["showroom/index.planet.js", "a816b77b4f7d31ceff42fe298d358dbe90997698"],
+        ["showroom/index.selection.js", "fa8a96099847fd00a8fe350dc791f4880362fc72"],
+        ["showroom/index.ui.js", "ca0eb6158d1e2338df2b0cd19ff8b13c7f6fe327"],
+        ["showroom/index.window.controller.js", "9de51f32336febd7b4f7df68b62297a66afaa3e8"],
+        ["showroom/index.window.definition.js", "abb759c14ea11c43482a79df5a40e4d9ab29bb85"],
+        ["showroom/index.window.js", "c8fd268e2e36902bcd9df257f902acc49d8bf8d0"]
+      ]
+    },
+    {
+      "benchmarkId": "LAWS_CHAMBER_POST_PR128",
+      "sourceCount": 11,
+      "sourceSetDigest": "61373bdfb8b7376cf5d67cca5da99a3c2d502ae38a1828ac96726906367d53b5",
+      "sources": [
+        ["assets/audralia/audralia.planet.js", "4aa2abc623acef47ad8f504e72c8c0907375a7e7"],
+        ["laws/index.compositor.js", "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa"],
+        ["laws/index.controller.js", "5711c261d7fac96a3622ef80e98dacca845f7d96"],
+        ["laws/index.cosmos.js", "e607f5f0965153c9766326fdb9039e9eaa01a2ec"],
+        ["laws/index.crystals.js", "cd06f18bf8384efc97fcabeec5a4de94210c87a8"],
+        ["laws/index.css", "9c2ef3e9636e134795102e48ea63553d2f3b9778"],
+        ["laws/index.html", "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260"],
+        ["laws/index.interactions.js", "a6563d2e2e7064136925299a79731147f4a8580b"],
+        ["laws/index.interactions.source.round4.js", "24fc3e216f3526e9c6d30939454a73bdcf13cd7d"],
+        ["laws/index.planet.js", "329d207fd5ad6d89e517f6c0fa992fb1a65b115a"],
+        ["laws/index.selection.js", "456008782e6a4e656e8fc9b04b76f69a6dc68abd"]
+      ]
+    }
+  ],
+  "corpusUniqueSourceSetDigest": "9e975f58d5d3a158560d4523b6fd0b484a40effa42458aca8cd186336691fe51",
+  "summary": {
+    "benchmarkCount": 5,
+    "sourceOccurrences": 61,
+    "uniqueSourcePaths": 58,
+    "conflictingPathBlobIdentities": 0,
+    "unresolvedActivePaths": 0,
+    "productMutationAuthority": false,
+    "mainChanged": false
+  },
+  "nextCheckpoint": "CP5_RUNTIME_LOAD_AND_DEPLOYED_BYTE_CUSTODY"
+}

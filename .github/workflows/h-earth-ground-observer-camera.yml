@@ -108,8 +108,17 @@ jobs:
             > /tmp/h-earth-ground-observer-http.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          set +e
           node .github/scripts/h-earth-ground-observer-camera-test.mjs \
-            2>&1 | tee artifacts/h-earth-ground-observer-camera/test.log
+            > artifacts/h-earth-ground-observer-camera/test.stdout.log \
+            2> artifacts/h-earth-ground-observer-camera/test.stderr.log
+          test_status=$?
+          set -e
+          printf '%s\n' "$test_status" \
+            > artifacts/h-earth-ground-observer-camera/test.exit-code.txt
+          cat artifacts/h-earth-ground-observer-camera/test.stdout.log || true
+          cat artifacts/h-earth-ground-observer-camera/test.stderr.log >&2 || true
+          exit "$test_status"
 
       - name: Remove transport and commit only product changes
         shell: bash

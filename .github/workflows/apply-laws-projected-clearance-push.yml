@@ -1,0 +1,215 @@
+name: Apply Laws Projected Clearance Repair Push
+
+on:
+  push:
+    branches:
+      - agent/laws-projected-clearance-bounded-repair-001
+
+permissions:
+  contents: write
+
+jobs:
+  execute-locked-transformation:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-projected-clearance-bounded-repair-001
+          fetch-depth: 0
+
+      - name: Verify exact source custody
+        shell: bash
+        run: |
+          test "$(git merge-base HEAD origin/main)" = "8d8199e147c944bceed021c9a7f5585ec146e7a6"
+          test "$(git hash-object laws/index.crystals.js)" = "cd06f18bf8384efc97fcabeec5a4de94210c87a8"
+          test "$(git hash-object laws/index.compositor.js)" = "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa"
+          test "$(git hash-object laws/index.html)" = "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260"
+          test "$(git hash-object laws/index.css)" = "9c2ef3e9636e134795102e48ea63553d2f3b9778"
+          test "$(git hash-object laws/index.interactions.js)" = "a6563d2e2e7064136925299a79731147f4a8580b"
+          test "$(git hash-object laws/index.interactions.source.round4.js)" = "24fc3e216f3526e9c6d30939454a73bdcf13cd7d"
+          test "$(git hash-object laws/validation/laws.orbit-direct-manipulation.harness.mjs)" = "9339b8cfce13fb73805f1b4515bb7e9cc303e9d6"
+          test "$(git hash-object laws/validation/laws.orbit-direct-manipulation.receipt.json)" = "9ac18b0e2da3b24331958bf5caa583129d5f1f95"
+
+      - name: Execute locked transformation from L1 authority
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          workflow = Path('.github/workflows/apply-laws-projected-clearance-repair.yml').read_text(encoding='utf-8')
+          marker = "          python - <<'PY'\n"
+          if workflow.count(marker) < 1:
+              raise SystemExit('LOCKED_TRANSFORMATION_BLOCK_NOT_FOUND')
+          block = workflow.split(marker, 1)[1].split("\n          PY\n", 1)[0]
+          lines = []
+          for line in block.splitlines():
+              if line.startswith('          '):
+                  lines.append(line[10:])
+              else:
+                  lines.append(line)
+          source = '\n'.join(lines) + '\n'
+          compile(source, 'locked-laws-transformation.py', 'exec')
+          exec(source, {'__name__': '__main__'})
+          PY
+
+      - name: Execute syntax and deterministic geometry validation
+        shell: bash
+        run: |
+          node --check laws/index.crystals.js
+          node --check laws/index.compositor.js
+          node --check laws/index.interactions.js
+          node --check laws/index.interactions.source.round4.js
+          node laws/validation/laws.orbit-direct-manipulation.harness.mjs
+          node -e "const r=JSON.parse(require('fs').readFileSync('laws/validation/laws.orbit-direct-manipulation.receipt.json'));if(r.status!=='PASS')process.exit(1)"
+
+      - name: Verify protected paths remain unchanged
+        shell: bash
+        run: |
+          test "$(git hash-object laws/index.compositor.js)" = "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa"
+          test "$(git hash-object laws/index.css)" = "9c2ef3e9636e134795102e48ea63553d2f3b9778"
+          test "$(git hash-object laws/index.interactions.js)" = "a6563d2e2e7064136925299a79731147f4a8580b"
+          test "$(git hash-object laws/index.interactions.source.round4.js)" = "24fc3e216f3526e9c6d30939454a73bdcf13cd7d"
+          git diff --exit-code -- laws/index.controller.js laws/index.compositor.js laws/index.planet.js laws/index.interactions.js laws/index.interactions.source.round4.js laws/index.css
+
+      - name: Write L2 and L3 checkpoints and clean temporary authority
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+
+          def git_blob(path):
+              data = Path(path).read_bytes()
+              return hashlib.sha1(f'blob {len(data)}\0'.encode() + data).hexdigest()
+
+          receipt = json.loads(Path('laws/validation/laws.orbit-direct-manipulation.receipt.json').read_text())
+          root = Path('verification/benchmark-tools/four-compass-benchmark-v1/checkpoints')
+          root.mkdir(parents=True, exist_ok=True)
+
+          l2 = {
+              'artifactId': 'L2_LAWS_BOUNDED_PRODUCT_IMPLEMENTATION_v1',
+              'checkpoint': 'L2',
+              'status': 'PASS_BOUNDED_IMPLEMENTATION_COMPLETE',
+              'branch': 'agent/laws-projected-clearance-bounded-repair-001',
+              'parentMainCommit': '8d8199e147c944bceed021c9a7f5585ec146e7a6',
+              'mutatedProductPaths': ['laws/index.crystals.js', 'laws/index.html'],
+              'mutatedEvidencePaths': [
+                  'laws/validation/laws.orbit-direct-manipulation.harness.mjs',
+                  'laws/validation/laws.orbit-direct-manipulation.receipt.json'
+              ],
+              'implementation': {
+                  'runtimeSharedRadius': True,
+                  'runtimeUniformScale': True,
+                  'minimumCommonRadius': 1.4,
+                  'maximumCommonRadius': 1.82,
+                  'minimumUniformScaleFactor': 0.72,
+                  'projectedClearanceMarginPx': 8,
+                  'runtimeBoundsSource': 'DGB_LAWS_COMPOSITOR.getCompassFieldBounds',
+                  'runtimeProjectionSource': 'DGB_LAWS_COMPOSITOR.projectWorldPoint',
+                  'rigidQuaternionPositioning': True,
+                  'perLawFloatingTranslation': False,
+                  'perMemberOffsets': False,
+                  'perMemberRadii': False
+              },
+              'protectedPathMutationCount': 0,
+              'temporaryExecutionAuthorityRemoved': True,
+              'mergeAuthorized': False,
+              'nextCheckpoint': 'L3_STATIC_AND_GEOMETRY_VALIDATION'
+          }
+
+          l3 = {
+              'artifactId': 'L3_LAWS_STATIC_AND_GEOMETRY_VALIDATION_v1',
+              'checkpoint': 'L3',
+              'status': 'PASS_STATIC_AND_GEOMETRY_VALIDATION_COMPLETE',
+              'branch': 'agent/laws-projected-clearance-bounded-repair-001',
+              'sourceBlobs': {
+                  'laws/index.crystals.js': git_blob('laws/index.crystals.js'),
+                  'laws/index.html': git_blob('laws/index.html'),
+                  'laws/validation/laws.orbit-direct-manipulation.harness.mjs': git_blob('laws/validation/laws.orbit-direct-manipulation.harness.mjs'),
+                  'laws/validation/laws.orbit-direct-manipulation.receipt.json': git_blob('laws/validation/laws.orbit-direct-manipulation.receipt.json')
+              },
+              'protectedBlobs': {
+                  'laws/index.compositor.js': git_blob('laws/index.compositor.js'),
+                  'laws/index.css': git_blob('laws/index.css'),
+                  'laws/index.interactions.js': git_blob('laws/index.interactions.js'),
+                  'laws/index.interactions.source.round4.js': git_blob('laws/index.interactions.source.round4.js')
+              },
+              'syntaxChecksPassed': True,
+              'harnessStatus': receipt['status'],
+              'harnessReceiptId': receipt['receiptId'],
+              'assertions': receipt['assertions'],
+              'installedToolExecutionRequired': True,
+              'mergeAuthorized': False,
+              'nextCheckpoint': 'L4_INSTALLED_TOOL_PR_EXECUTION'
+          }
+
+          (root / 'l2-laws-bounded-product-implementation.json').write_text(json.dumps(l2, indent=2) + '\n')
+          (root / 'l3-laws-static-and-geometry-validation.json').write_text(json.dumps(l3, indent=2) + '\n')
+
+          for name in [
+              'l1b-laws-execution-authority.json',
+              'l1c-laws-execution-ready.json',
+              'l1d-laws-pr-gate-ready.json',
+              'l1e-laws-execution-boundary.json',
+              'l1f-laws-pr-open-authority.json',
+              'l1g-laws-pr-opening-sentinel.json',
+              'l1h-laws-pr-opening-final.json',
+              'l1i-laws-pr-open-now.json',
+              'l1j-laws-draft-pr-invocation.json'
+          ]:
+              (root / name).unlink(missing_ok=True)
+
+          Path('laws/validation/l2-bounded-execution-trigger.json').unlink(missing_ok=True)
+          Path('.github/workflows/apply-laws-projected-clearance-repair.yml').unlink(missing_ok=True)
+          Path('.github/workflows/apply-laws-projected-clearance-push.yml').unlink(missing_ok=True)
+          PY
+
+      - name: Commit and push bounded implementation
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          python - <<'PY'
+          import subprocess
+          allowed = {
+              '.github/workflows/apply-laws-projected-clearance-repair.yml',
+              '.github/workflows/apply-laws-projected-clearance-push.yml',
+              'laws/index.crystals.js',
+              'laws/index.html',
+              'laws/validation/laws.orbit-direct-manipulation.harness.mjs',
+              'laws/validation/laws.orbit-direct-manipulation.receipt.json',
+              'laws/validation/l2-bounded-execution-trigger.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l1b-laws-execution-authority.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l1c-laws-execution-ready.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l1d-laws-pr-gate-ready.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l1e-laws-execution-boundary.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l1f-laws-pr-open-authority.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l1g-laws-pr-opening-sentinel.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l1h-laws-pr-opening-final.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l1i-laws-pr-open-now.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l1j-laws-draft-pr-invocation.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l2-laws-bounded-product-implementation.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l3-laws-static-and-geometry-validation.json'
+          }
+          changed = set(subprocess.check_output(['git', 'diff', '--cached', '--name-only']).decode().splitlines())
+          unexpected = sorted(changed - allowed)
+          required = {
+              'laws/index.crystals.js',
+              'laws/index.html',
+              'laws/validation/laws.orbit-direct-manipulation.harness.mjs',
+              'laws/validation/laws.orbit-direct-manipulation.receipt.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l2-laws-bounded-product-implementation.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l3-laws-static-and-geometry-validation.json'
+          }
+          missing = sorted(required - changed)
+          if unexpected or missing:
+              raise SystemExit(f'BOUNDED_STAGED_PATH_SET_FAILED unexpected={unexpected} missing={missing}')
+          print('BOUNDED_STAGED_PATH_SET=PASS')
+          PY
+          git commit -m "Implement Laws runtime projected clearance repair"
+          git push origin HEAD:agent/laws-projected-clearance-bounded-repair-001

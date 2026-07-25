@@ -1,0 +1,9 @@
+{
+  "artifactId": "L2_LAWS_BOUNDED_EXECUTION_TRIGGER_v1",
+  "status": "PR_SYNCHRONIZE_TRIGGER_CREATED",
+  "branch": "agent/laws-projected-clearance-bounded-repair-001",
+  "parentMainCommit": "8d8199e147c944bceed021c9a7f5585ec146e7a6",
+  "authorizedPurpose": "Trigger the temporary bounded implementation workflow and the installed Laws smoke/baseline gates.",
+  "productMutationClaimed": false,
+  "mergeAuthorized": false
+}

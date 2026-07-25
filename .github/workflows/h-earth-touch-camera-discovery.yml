@@ -98,7 +98,12 @@ jobs:
             > /tmp/h-earth-touch-camera-http.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
-          node .github/scripts/h-earth-touch-camera-test.mjs
+          set +e
+          node .github/scripts/h-earth-touch-camera-test.mjs \
+            2>&1 | tee artifacts/h-earth-touch-camera/browser-test.log
+          test_status=${PIPESTATUS[0]}
+          set -e
+          exit "$test_status"
 
       - name: Remove transport and commit only product change
         shell: bash

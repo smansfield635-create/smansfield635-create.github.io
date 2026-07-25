@@ -1,0 +1,51 @@
+{
+  "artifactId": "LAWS_RUNTIME_PROJECTED_CLEARANCE_CORRECTION_REQUEST_v1",
+  "status": "AUTHORIZED_FOR_BOUNDED_EXECUTION",
+  "executionRevision": 3,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-runtime-projected-clearance-001",
+  "mainParent": "1761e778a6fa3b1fed7c01d4a28ee68dbaf332e7",
+  "authorizedProductPaths": [
+    "laws/index.crystals.js",
+    "laws/index.html"
+  ],
+  "authorizedEvidencePaths": [
+    "laws/validation/laws.orbit-direct-manipulation.harness.mjs",
+    "laws/validation/laws.orbit-direct-manipulation.receipt.json",
+    "laws/validation/laws-runtime-projected-clearance.implementation.json"
+  ],
+  "protectedPaths": [
+    "laws/index.controller.js",
+    "laws/index.compositor.js",
+    "laws/index.planet.js",
+    "laws/index.interactions.js",
+    "laws/index.interactions.source.round4.js",
+    "laws/index.css"
+  ],
+  "correction": {
+    "preserveCommonCenter": true,
+    "preserveFourMemberCoplanarOrbit": true,
+    "preserveAdjacentSeparationDegrees": 90,
+    "preserveMaximumTiltRadians": 0.3,
+    "nominalCommonRadius": 1.4,
+    "runtimeSharedRadius": true,
+    "runtimeUniformScale": true,
+    "projectedClearanceMarginPx": 8,
+    "rigidQuaternionPositioning": true,
+    "suppressClusterMemberFloatingTranslation": true,
+    "perMemberOffsets": false,
+    "perMemberRadii": false
+  },
+  "preservation": {
+    "lawContentChanged": false,
+    "routesChanged": false,
+    "labelsChanged": false,
+    "controllerAuthorityChanged": false,
+    "compositorAuthorityChanged": false,
+    "planetAuthorityChanged": false,
+    "interactionDirectionChanged": false,
+    "cssChanged": false,
+    "mainConstellationGeometryChanged": false
+  },
+  "mergeAuthorizedAfterInstalledGatesPass": true
+}

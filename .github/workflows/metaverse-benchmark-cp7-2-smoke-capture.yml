@@ -1,0 +1,97 @@
+name: Metaverse Benchmark CP7-2 Smoke Capture
+
+on:
+  push:
+    branches:
+      - agent/metaverse-benchmark-cp7-visual-spatial-001
+    paths:
+      - .github/workflows/metaverse-benchmark-cp7-2-smoke-capture.yml
+      - verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/cp7-2-smoke-capture.mjs
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/metaverse-benchmark-cp7-2-smoke-capture.yml
+      - verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/cp7-2-smoke-capture.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cp7-2-smoke-capture:
+    name: Create and validate one visual smoke capture
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout CP7-2 execution head
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Execute one-route smoke capture
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/cp7-2-smoke-capture.mjs
+
+      - name: Validate smoke evidence
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const receiptPath = 'cp7-2-smoke-output/cp7-2-smoke-receipt.json';
+          const screenshotPath = 'cp7-2-smoke-output/main-compass-desktop-smoke.png';
+          const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+          const screenshot = fs.statSync(screenshotPath);
+          const failures = [];
+          if (receipt.status !== 'PASS_WORKFLOW_BIRTH_AND_TRIGGER_SMOKE_CAPTURE') failures.push('status');
+          if (!receipt.assertions?.responseIsSuccessful) failures.push('response');
+          if (!receipt.assertions?.compassRootPresent) failures.push('root');
+          if (!receipt.assertions?.screenshotCreated) failures.push('screenshot_assertion');
+          if (!receipt.assertions?.smokeTargetResolved) failures.push('target');
+          if (screenshot.size <= 0) failures.push('screenshot_bytes');
+          if (!/^[a-f0-9]{64}$/.test(receipt.screenshot?.sha256 || '')) failures.push('screenshot_digest');
+          if (failures.length) {
+            throw new Error(`CP7_2_EVIDENCE_VALIDATION_FAILED:${failures.join(',')}`);
+          }
+          console.log(JSON.stringify({
+            status: receipt.status,
+            screenshotBytes: screenshot.size,
+            screenshotSha256: receipt.screenshot.sha256,
+            finalUrl: receipt.finalUrl
+          }));
+          NODE
+
+      - name: Upload CP7-2 smoke evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-benchmark-cp7-2-smoke-capture
+          path: cp7-2-smoke-output/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Write checkpoint summary
+        run: |
+          node <<'NODE' >> "$GITHUB_STEP_SUMMARY"
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('cp7-2-smoke-output/cp7-2-smoke-receipt.json', 'utf8'));
+          console.log('# CP7-2 Workflow Birth and Trigger Verification');
+          console.log('');
+          console.log(`- Status: **${receipt.status}**`);
+          console.log(`- Route: \`${receipt.route}\``);
+          console.log(`- Screenshot bytes: \`${receipt.screenshot.byteLength}\``);
+          console.log(`- Screenshot SHA-256: \`${receipt.screenshot.sha256}\``);
+          console.log(`- Next checkpoint: \`${receipt.nextCheckpoint}\``);
+          NODE

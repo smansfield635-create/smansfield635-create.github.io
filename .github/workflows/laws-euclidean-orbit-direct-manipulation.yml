@@ -33,6 +33,7 @@ jobs:
         with:
           ref: agent/laws-euclidean-orbit-direct-manipulation-001
           fetch-depth: 0
+          show-progress: false
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -45,6 +46,30 @@ jobs:
           set -euo pipefail
           git merge-base --is-ancestor dedc73841de2b41f5905fd842e9a593116caf300 HEAD
           test "$(git branch --show-current)" = "agent/laws-euclidean-orbit-direct-manipulation-001"
+
+      - name: Correct transformer quoting and validate transformer
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs")
+          source = path.read_text(encoding="utf-8")
+          replacements = {
+              "`LAWS_CRYSTALS_CLUSTER_UNIT_RADIUS_INVALID:${index}`": '"LAWS_CRYSTALS_CLUSTER_UNIT_RADIUS_INVALID:" + index',
+              "`LAWS_CRYSTALS_CLUSTER_COPLANARITY_INVALID:${index}`": '"LAWS_CRYSTALS_CLUSTER_COPLANARITY_INVALID:" + index',
+              "`LAWS_CRYSTALS_CLUSTER_90_DEGREE_SPACING_INVALID:${index}`": '"LAWS_CRYSTALS_CLUSTER_90_DEGREE_SPACING_INVALID:" + index',
+              "`LAWS_CRYSTALS_CLUSTER_180_DEGREE_SPACING_INVALID:${index}`": '"LAWS_CRYSTALS_CLUSTER_180_DEGREE_SPACING_INVALID:" + index',
+          }
+          for before, after in replacements.items():
+              count = source.count(before)
+              if count != 1:
+                  raise SystemExit(f"TRANSFORMER_QUOTING_ANCHOR_INVALID:{before}:{count}")
+              source = source.replace(before, after)
+          path.write_text(source, encoding="utf-8")
+          PY
+          node --check scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs
 
       - name: Apply fail-closed source transformation
         run: node scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs
@@ -73,6 +98,7 @@ jobs:
             laws/index.interactions.js
             laws/index.interactions.source.round4.js
             laws/validation/laws.orbit-direct-manipulation.receipt.json
+            scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs
           )
           mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
           diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")

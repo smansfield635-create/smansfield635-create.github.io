@@ -1,0 +1,78 @@
+name: Metaverse 3D Benchmark Disposition D0 Authority Lock
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/metaverse-3d-benchmark-disposition-d0.yml"
+      - "tools/metaverse-3d-benchmark-disposition-d0-*"
+      - "verification/benchmark-corpus/inventory-pass-v1/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: metaverse-3d-benchmark-disposition-d0-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  authority-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      D0_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact D0 occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.D0_HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact head and inventory ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$D0_HEAD_SHA"
+          git merge-base --is-ancestor 8d79aa35cf76fba298a5afc800687072d4caa8cb HEAD
+          test "$(git hash-object verification/benchmark-corpus/inventory-pass-v1/checkpoint-00/inventory-authority-and-boundary-lock.json)" = "08cec57030c165e9d1764143a60290713acacdb2"
+          test "$(git hash-object verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/cp7-2-workflow-birth-and-trigger-verification-ledger.json)" = "a96056a57aebd10cca0b718e735a5caad6015155"
+
+      - name: Validate D0 source syntax
+        run: |
+          node --check tools/metaverse-3d-benchmark-disposition-d0-authority-lock.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d0-controls.mjs
+          node -e "JSON.parse(require('fs').readFileSync('tools/metaverse-3d-benchmark-disposition-d0-contract.json','utf8'))"
+
+      - name: Execute D0 authority controls
+        run: node tools/metaverse-3d-benchmark-disposition-d0-controls.mjs > artifacts/metaverse-3d-benchmark-disposition-d0/execution.log
+
+      - name: Verify deterministic D0 receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile } from 'node:fs/promises';
+          const path = 'artifacts/metaverse-3d-benchmark-disposition-d0/aggregate.receipt.json';
+          const receipt = JSON.parse(await readFile(path, 'utf8'));
+          if (receipt.status !== 'PASS') throw new Error('D0_RECEIPT_NOT_PASS');
+          if (receipt.controlCount !== 10 || receipt.passedControlCount !== 10) throw new Error('D0_CONTROL_COUNT_MISMATCH');
+          if (receipt.claims?.compilerAuthorityLocked !== true) throw new Error('D0_AUTHORITY_NOT_LOCKED');
+          if (receipt.claims?.productFilesChanged !== 0 || receipt.claims?.d1Started !== false || receipt.claims?.mergePerformed !== false) throw new Error('D0_BOUNDARY_VIOLATED');
+          const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])])) : value;
+          const { deterministicReceiptSha256, ...body } = receipt;
+          const calculated = createHash('sha256').update(JSON.stringify(stable(body))).digest('hex');
+          if (calculated !== deterministicReceiptSha256) throw new Error('D0_SERIALIZED_RECEIPT_DIGEST_MISMATCH');
+          NODE
+
+      - name: Upload deterministic D0 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-3d-benchmark-disposition-d0-${{ env.D0_HEAD_SHA }}
+          path: artifacts/metaverse-3d-benchmark-disposition-d0/**
+          if-no-files-found: error
+          retention-days: 30

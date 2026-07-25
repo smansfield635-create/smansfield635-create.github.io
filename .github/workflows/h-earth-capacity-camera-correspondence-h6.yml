@@ -1,0 +1,120 @@
+name: H-Earth Capacity Camera H6 Renderer Correspondence
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/h-earth-capacity-camera-correspondence-h6.yml"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h6-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h5-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h4-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h3-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h2-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-measurement-contract.mjs"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-authority-lock.mjs"
+      - "showroom/globe/h-earth/**"
+      - "h-earth-3d/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-capacity-camera-h6-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  independent-renderer-correspondence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact capacity-verifier occurrence
+        uses: actions/checkout@v4
+
+      - name: Checkout exact renderer-tool source occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: 546f6fc05174347ac797837d0b4844a2164c3cb3
+          path: .h6-renderer-tool-source
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify and stage exact renderer-tool source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C .h6-renderer-tool-source rev-parse HEAD)" = "546f6fc05174347ac797837d0b4844a2164c3cb3"
+          mkdir -p artifacts/h-earth-capacity-camera-h6
+          python - <<'PY'
+          import json, subprocess
+          expected = [
+            ("tools/h-earth-renderer-corridor-capacity-law.mjs", "7d4a3e9534c73bf3dcac0ef12b807a7d7a2e07d2"),
+            ("tools/h-earth-renderer-corridor-common.mjs", "b338e73b148ac4942ff368cf1e17ae170c2f4bfa"),
+            ("tools/h-earth-renderer-corridor-observation.mjs", "196935030416f9e9c11121fbfbec57274f19e287"),
+            ("tools/h-earth-renderer-corridor-integration-harness.mjs", "2215480882cc5dfab653cacb278cb2c1525c7bd3")
+          ]
+          records=[]
+          for path, blob in expected:
+            source=f".h6-renderer-tool-source/{path}"
+            actual=subprocess.check_output(["git","hash-object",source],text=True).strip()
+            if actual != blob: raise SystemExit(f"H6_RENDERER_TOOL_SOURCE_BLOB_MISMATCH:{path}:{actual}")
+            subprocess.check_call(["cp",source,path])
+            records.append({"path":path,"gitBlob":actual})
+          receipt={"sourceCommit":"546f6fc05174347ac797837d0b4844a2164c3cb3","files":records,"copiedIntoRepositoryHistory":False,"workspaceOnly":True}
+          open("artifacts/h-earth-capacity-camera-h6/renderer-tool-source-custody.json","w").write(json.dumps(receipt,indent=2)+"\n")
+          PY
+
+      - name: Validate H6 source syntax
+        run: |
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h6-correspondence.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h6-controls.mjs
+          node --check tools/h-earth-renderer-corridor-integration-harness.mjs
+
+      - name: Install pinned Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute independent renderer corridor
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          node tools/h-earth-renderer-corridor-integration-harness.mjs \
+            > artifacts/h-earth-capacity-camera-h6/renderer-corridor.log 2>&1
+          code=$?
+          set -e
+          echo "$code" > artifacts/h-earth-capacity-camera-h6/renderer-exit-code.txt
+          test -f artifacts/h-earth-renderer-corridor/aggregate.receipt.json
+          if [[ "$code" != "0" && "$code" != "1" ]]; then exit "$code"; fi
+
+      - name: Execute H6 correspondence controls
+        run: |
+          node tools/h-earth-capacity-camera-renderer-correspondence-h6-controls.mjs \
+            > artifacts/h-earth-capacity-camera-h6/h6-control-receipt.json
+
+      - name: Verify H6 terminal receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const receipt=JSON.parse(await readFile('artifacts/h-earth-capacity-camera-h6/h6-control-receipt.json','utf8'));
+          if(receipt.status!=='PASS') throw new Error('H6_CONTROL_RECEIPT_NOT_PASS');
+          if(receipt.controlCount!==8||receipt.passedControlCount!==8) throw new Error('H6_CONTROL_COUNT_MISMATCH');
+          if(receipt.actualCorrespondence?.terminalClassification!=='CAPACITY_AUTHORITY_GAP_RENDERER_NODE_BUDGET_REJECTION_CORRESPONDS') throw new Error('H6_ACTUAL_CORRESPONDENCE_MISMATCH');
+          if(receipt.claims?.circularProof!==false) throw new Error('H6_CIRCULAR_PROOF_BOUNDARY_VIOLATED');
+          if(receipt.claims?.productionFilesChanged!==0) throw new Error('H6_PRODUCTION_MUTATION_BOUNDARY_VIOLATED');
+          NODE
+
+      - name: Upload deterministic H6 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-camera-h6-${{ github.sha }}
+          path: |
+            artifacts/h-earth-capacity-camera-h6/*
+            artifacts/h-earth-renderer-corridor/*.json
+          if-no-files-found: error
+          retention-days: 30

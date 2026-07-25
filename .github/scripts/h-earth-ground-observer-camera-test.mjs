@@ -102,11 +102,15 @@ const verticalPanReceipt = applyHEarth3DCompositorIntent({
   verticalDelta: 25,
   depthDelta: 0
 });
-assert.equal(verticalPanReceipt.accepted, true);
 const afterVerticalPan = currentPose();
 assert.equal(
   afterVerticalPan.pose.position.y,
   initial.pose.position.y
+);
+assertSamePosition(
+  afterVerticalPan.pose.position,
+  afterZoom.pose.position,
+  'VERTICAL_PAN_MOVED_GROUND_OBSERVER'
 );
 
 const sourceAssertions = {
@@ -117,6 +121,8 @@ const sourceAssertions = {
   minimumPitch: minimumPitch.state.camera.pitchDegrees,
   beforeZoomFov: beforeZoom.pose.verticalFovDegrees,
   afterZoomFov: afterZoom.pose.verticalFovDegrees,
+  verticalPanAccepted: verticalPanReceipt.accepted,
+  verticalPanStatus: verticalPanReceipt.status,
   verticalPanObserverHeight: afterVerticalPan.pose.position.y
 };
 

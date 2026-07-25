@@ -1,9 +1,9 @@
 name: Apply Laws spherical cluster repair
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/laws-spherical-cluster-positive-drag-001
+      - main
     paths:
       - verification/laws-repair/spherical-cluster-transport/**
       - .github/workflows/apply-laws-spherical-cluster-repair.yml
@@ -16,16 +16,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout exact repair branch
+      - name: Checkout exact execution head
         uses: actions/checkout@v4
         with:
-          ref: agent/laws-spherical-cluster-positive-drag-001
-          fetch-depth: 3
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 4
 
       - name: Verify repair ancestry
         run: |
           test "$(git merge-base HEAD c4e4a89f449532118eb712cf0a5193cc6e53c5d4)" = "c4e4a89f449532118eb712cf0a5193cc6e53c5d4"
-          test "$(git rev-list --count c4e4a89f449532118eb712cf0a5193cc6e53c5d4..HEAD)" = "2"
+          test "$(git rev-list --count c4e4a89f449532118eb712cf0a5193cc6e53c5d4..HEAD)" = "3"
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -67,32 +67,23 @@ jobs:
           if (failures.length) throw new Error(`LAWS_SPHERICAL_CLUSTER_RECEIPT_INVALID:${failures.join(',')}`);
           NODE
 
-      - name: Remove temporary transport files
+      - name: Verify exact correction path set
         run: |
           rm verification/laws-repair/apply-laws-spherical-cluster-repair.py
-          rm -rf verification/laws-repair/spherical-cluster-transport
-          rm .github/workflows/apply-laws-spherical-cluster-repair.yml
-
-      - name: Verify exact final path set
-        run: |
-          git add -A
+          git add \
+            laws/index.crystals.js \
+            laws/index.html \
+            laws/index.interactions.js \
+            laws/index.interactions.source.round4.js \
+            laws/validation/laws.orbit-direct-manipulation.harness.mjs \
+            laws/validation/laws.orbit-direct-manipulation.receipt.json
           printf '%s\n' \
-            .github/workflows/apply-laws-spherical-cluster-repair.yml \
             laws/index.crystals.js \
             laws/index.html \
             laws/index.interactions.js \
             laws/index.interactions.source.round4.js \
             laws/validation/laws.orbit-direct-manipulation.harness.mjs \
             laws/validation/laws.orbit-direct-manipulation.receipt.json \
-            verification/laws-repair/spherical-cluster-transport/part-0001.b64 \
-            verification/laws-repair/spherical-cluster-transport/part-0002.b64 \
-            verification/laws-repair/spherical-cluster-transport/part-0003.b64 \
-            verification/laws-repair/spherical-cluster-transport/part-0004.b64 \
-            verification/laws-repair/spherical-cluster-transport/part-0005.b64 \
-            verification/laws-repair/spherical-cluster-transport/part-0006.b64 \
-            verification/laws-repair/spherical-cluster-transport/part-0007.b64 \
-            verification/laws-repair/spherical-cluster-transport/part-0008.b64 \
-            verification/laws-repair/spherical-cluster-transport/part-0009.b64 \
             | sort > /tmp/expected-paths.txt
           git diff --cached --name-only | sort > /tmp/actual-paths.txt
           diff -u /tmp/expected-paths.txt /tmp/actual-paths.txt

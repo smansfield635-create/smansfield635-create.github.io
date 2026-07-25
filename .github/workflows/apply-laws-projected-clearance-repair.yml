@@ -1,0 +1,1139 @@
+name: Apply Laws Projected Clearance Repair
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  apply-bounded-repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Verify exact parent and protected source custody
+        shell: bash
+        run: |
+          test "$(git merge-base HEAD origin/main)" = "8d8199e147c944bceed021c9a7f5585ec146e7a6"
+          test "$(git hash-object laws/index.crystals.js)" = "cd06f18bf8384efc97fcabeec5a4de94210c87a8"
+          test "$(git hash-object laws/index.compositor.js)" = "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa"
+          test "$(git hash-object laws/index.html)" = "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260"
+          test "$(git hash-object laws/index.css)" = "9c2ef3e9636e134795102e48ea63553d2f3b9778"
+          test "$(git hash-object laws/index.interactions.js)" = "a6563d2e2e7064136925299a79731147f4a8580b"
+          test "$(git hash-object laws/index.interactions.source.round4.js)" = "24fc3e216f3526e9c6d30939454a73bdcf13cd7d"
+          test "$(git hash-object laws/validation/laws.orbit-direct-manipulation.harness.mjs)" = "9339b8cfce13fb73805f1b4515bb7e9cc303e9d6"
+          test "$(git hash-object laws/validation/laws.orbit-direct-manipulation.receipt.json)" = "9ac18b0e2da3b24331958bf5caa583129d5f1f95"
+
+      - name: Apply fail-closed current-main transformation
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          crystals_path = Path('laws/index.crystals.js')
+          html_path = Path('laws/index.html')
+          harness_path = Path('laws/validation/laws.orbit-direct-manipulation.harness.mjs')
+
+          crystals = crystals_path.read_text(encoding='utf-8')
+          html = html_path.read_text(encoding='utf-8')
+          harness = harness_path.read_text(encoding='utf-8')
+
+          def replace_exact(text, old, new, label, expected=1):
+              count = text.count(old)
+              if count != expected:
+                  raise SystemExit(f'{label}: expected {expected} source occurrence(s), found {count}')
+              return text.replace(old, new, expected)
+
+          crystals = replace_exact(
+              crystals,
+              '''        projectedClearanceMarginPx:
+          8,
+
+        primaryAnchor:''',
+              '''        projectedClearanceMarginPx:
+          8,
+
+        maximumCommonRadius:
+          1.82,
+
+        radiusSearchStep:
+          0.02,
+
+        minimumUniformScaleFactor:
+          0.72,
+
+        uniformScaleSearchStep:
+          0.02,
+
+        viewportClearanceMarginPx:
+          6,
+
+        primaryAnchor:''',
+              'CLUSTER_RUNTIME_ENVELOPE_CONFIGURATION'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''    reducedMotion:
+      false,
+
+    generatedLawProxyCount:''',
+              '''    reducedMotion:
+      false,
+
+    runtimeClusterRadius:
+      SPHERE.cluster.commonRadius,
+
+    runtimeClusterUniformScaleFactor:
+      1,
+
+    runtimeClusterProjectedClearancePassed:
+      false,
+
+    runtimeClusterClearanceResolutionAttempts:
+      0,
+
+    runtimeClusterClearanceWorstResidualPx:
+      null,
+
+    runtimeClusterClearanceSource:
+      "DGB_LAWS_COMPOSITOR.getCompassFieldBounds+projectWorldPoint",
+
+    rigidClusterPositionInterpolation:
+      true,
+
+    clusterMemberFloatingTranslation:
+      false,
+
+    generatedLawProxyCount:''',
+              'RECEIPT_RUNTIME_CLEARANCE_FIELDS'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''    visualPrimaryLaws:
+      new Map(),
+
+    reducedMotion:''',
+              '''    visualPrimaryLaws:
+      new Map(),
+
+    resolvedClusterRadius:
+      SPHERE.cluster.commonRadius,
+
+    resolvedClusterScaleFactor:
+      1,
+
+    clusterProjectedClearancePassed:
+      false,
+
+    clusterClearanceResolutionAttempts:
+      0,
+
+    clusterClearanceWorstResidualPx:
+      null,
+
+    reducedMotion:''',
+              'STATE_RUNTIME_CLEARANCE_FIELDS'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''      "getProjectionMatrix",
+      "projectWorldPoint",''',
+              '''      "getProjectionMatrix",
+      "getCompassFieldBounds",
+      "projectWorldPoint",''',
+              'COMPOSITOR_BOUNDS_METHOD_REQUIRED'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''  function euclideanLawPosition(
+    node,
+    localQuaternion
+  ) {''',
+              '''  function euclideanLawPosition(
+    node,
+    localQuaternion,
+    commonRadius =
+      SPHERE.cluster.commonRadius
+  ) {''',
+              'EUCLIDEAN_POSITION_SHARED_RADIUS_SIGNATURE'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''    const radius =
+      SPHERE.cluster.commonRadius;
+
+    return {''',
+              '''    const radius =
+      clamp(
+        finiteNumber(
+          commonRadius,
+          SPHERE.cluster.commonRadius
+        ),
+        SPHERE.cluster.commonRadius,
+        SPHERE.cluster.maximumCommonRadius
+      );
+
+    return {''',
+              'EUCLIDEAN_POSITION_SHARED_RADIUS_CONSUMPTION'
+          )
+
+          helper_block = '''
+  function clusterCandidateFacts(
+    direction,
+    localQuaternion,
+    commonRadius,
+    uniformScaleFactor
+  ) {
+    const viewport =
+      state.compositorFrame &&
+      state.compositorFrame.viewport
+        ? state.compositorFrame.viewport
+        : null;
+    const laws =
+      activeLawNodes(direction);
+    let bounds =
+      null;
+
+    try {
+      bounds =
+        state.compositor
+          .getCompassFieldBounds();
+    } catch (_) {
+      bounds = null;
+    }
+
+    if (
+      !viewport ||
+      !bounds ||
+      !Number.isFinite(bounds.width) ||
+      !Number.isFinite(bounds.height) ||
+      bounds.width <= 0 ||
+      bounds.height <= 0 ||
+      laws.length !==
+        SPHERE.cluster.memberCount
+    ) {
+      return Object.freeze({
+        pass:
+          false,
+        reason:
+          "RUNTIME_PROJECTION_FACTS_UNAVAILABLE",
+        worstResidualClearancePx:
+          null,
+        projectedRadiusPx:
+          null
+      });
+    }
+
+    const projectedRadius =
+      Math.max(
+        18,
+        48 *
+          QUALITY.selectedLawScale *
+          uniformScaleFactor
+      );
+    const viewportMargin =
+      SPHERE.cluster
+        .viewportClearanceMarginPx;
+    let worstResidualClearancePx =
+      Infinity;
+
+    for (const node of laws) {
+      const position =
+        euclideanLawPosition(
+          node,
+          localQuaternion,
+          commonRadius
+        );
+      const projected =
+        state.compositor
+          .projectWorldPoint(
+            [
+              position.x,
+              position.y,
+              position.z
+            ],
+            {
+              projectedRadius,
+              compassOverlapPadding:
+                SPHERE.cluster
+                  .projectedClearanceMarginPx,
+              rejectionMargin:
+                0.80,
+              nodeId:
+                node.id,
+              nodeType:
+                node.type
+            }
+          );
+
+      if (
+        !projected ||
+        projected.visible === false ||
+        projected.compassOverlap === true
+      ) {
+        return Object.freeze({
+          pass:
+            false,
+          reason:
+            "PROJECTED_COMPASS_CLEARANCE_FAILED",
+          worstResidualClearancePx:
+            Number.isFinite(
+              worstResidualClearancePx
+            )
+              ? worstResidualClearancePx
+              : null,
+          projectedRadiusPx:
+            projectedRadius
+        });
+      }
+
+      const fullCircleInsideViewport =
+        projected.x - projectedRadius >=
+          viewportMargin &&
+        projected.x + projectedRadius <=
+          viewport.cssWidth -
+          viewportMargin &&
+        projected.y - projectedRadius >=
+          viewportMargin &&
+        projected.y + projectedRadius <=
+          viewport.cssHeight -
+          viewportMargin;
+
+      if (!fullCircleInsideViewport) {
+        return Object.freeze({
+          pass:
+            false,
+          reason:
+            "PROJECTED_VIEWPORT_CLEARANCE_FAILED",
+          worstResidualClearancePx:
+            Number.isFinite(
+              worstResidualClearancePx
+            )
+              ? worstResidualClearancePx
+              : null,
+          projectedRadiusPx:
+            projectedRadius
+        });
+      }
+
+      const closestX =
+        clamp(
+          projected.x,
+          bounds.left,
+          bounds.right
+        );
+      const closestY =
+        clamp(
+          projected.y,
+          bounds.top,
+          bounds.bottom
+        );
+      const residual =
+        Math.hypot(
+          projected.x - closestX,
+          projected.y - closestY
+        ) -
+        projectedRadius -
+        SPHERE.cluster
+          .projectedClearanceMarginPx;
+
+      worstResidualClearancePx =
+        Math.min(
+          worstResidualClearancePx,
+          residual
+        );
+    }
+
+    return Object.freeze({
+      pass:
+        true,
+      reason:
+        "PASS",
+      worstResidualClearancePx:
+        Number.isFinite(
+          worstResidualClearancePx
+        )
+          ? worstResidualClearancePx
+          : null,
+      projectedRadiusPx:
+        projectedRadius
+    });
+  }
+
+  function resolveClusterPresentation(
+    direction,
+    localQuaternion
+  ) {
+    let attempts =
+      0;
+    let lastFacts =
+      null;
+
+    for (
+      let scaleFactor = 1;
+      scaleFactor >=
+        SPHERE.cluster
+          .minimumUniformScaleFactor -
+        1e-12;
+      scaleFactor -=
+        SPHERE.cluster
+          .uniformScaleSearchStep
+    ) {
+      const boundedScale =
+        Math.max(
+          SPHERE.cluster
+            .minimumUniformScaleFactor,
+          Number(scaleFactor.toFixed(6))
+        );
+
+      for (
+        let radius =
+          SPHERE.cluster.commonRadius;
+        radius <=
+          SPHERE.cluster.maximumCommonRadius +
+          1e-12;
+        radius +=
+          SPHERE.cluster.radiusSearchStep
+      ) {
+        const boundedRadius =
+          Math.min(
+            SPHERE.cluster
+              .maximumCommonRadius,
+            Number(radius.toFixed(6))
+          );
+        const facts =
+          clusterCandidateFacts(
+            direction,
+            localQuaternion,
+            boundedRadius,
+            boundedScale
+          );
+
+        attempts += 1;
+        lastFacts = facts;
+
+        if (facts.pass) {
+          return Object.freeze({
+            pass:
+              true,
+            radius:
+              boundedRadius,
+            scaleFactor:
+              boundedScale,
+            attempts,
+            reason:
+              facts.reason,
+            worstResidualClearancePx:
+              facts.worstResidualClearancePx,
+            projectedRadiusPx:
+              facts.projectedRadiusPx
+          });
+        }
+      }
+    }
+
+    return Object.freeze({
+      pass:
+        false,
+      radius:
+        SPHERE.cluster
+          .maximumCommonRadius,
+      scaleFactor:
+        SPHERE.cluster
+          .minimumUniformScaleFactor,
+      attempts,
+      reason:
+        lastFacts
+          ? lastFacts.reason
+          : "NO_RUNTIME_CLEARANCE_CANDIDATE",
+      worstResidualClearancePx:
+        lastFacts
+          ? lastFacts
+              .worstResidualClearancePx
+          : null,
+      projectedRadiusPx:
+        lastFacts
+          ? lastFacts.projectedRadiusPx
+          : null
+    });
+  }
+
+  function publishClusterPresentationResolution(
+    resolution
+  ) {
+    state.resolvedClusterRadius =
+      resolution.radius;
+    state.resolvedClusterScaleFactor =
+      resolution.scaleFactor;
+    state.clusterProjectedClearancePassed =
+      resolution.pass;
+    state.clusterClearanceResolutionAttempts =
+      resolution.attempts;
+    state.clusterClearanceWorstResidualPx =
+      resolution.worstResidualClearancePx;
+
+    RECEIPT.runtimeClusterRadius =
+      resolution.radius;
+    RECEIPT.runtimeClusterUniformScaleFactor =
+      resolution.scaleFactor;
+    RECEIPT.runtimeClusterProjectedClearancePassed =
+      resolution.pass;
+    RECEIPT.runtimeClusterClearanceResolutionAttempts =
+      resolution.attempts;
+    RECEIPT.runtimeClusterClearanceWorstResidualPx =
+      resolution.worstResidualClearancePx;
+    RECEIPT.runtimeClusterClearanceReason =
+      resolution.reason;
+    RECEIPT.runtimeClusterProjectedRadiusPx =
+      resolution.projectedRadiusPx;
+
+    if (state.root) {
+      state.root.dataset
+        .lawsClusterRuntimeCommonRadius =
+        String(resolution.radius);
+      state.root.dataset
+        .lawsClusterRuntimeUniformScaleFactor =
+        String(resolution.scaleFactor);
+      state.root.dataset
+        .lawsClusterRuntimeProjectedClearancePassed =
+        String(resolution.pass);
+      state.root.dataset
+        .lawsClusterRuntimeClearanceResolutionAttempts =
+        String(resolution.attempts);
+      state.root.dataset
+        .lawsClusterRuntimeClearanceWorstResidualPx =
+        resolution.worstResidualClearancePx === null
+          ? ""
+          : String(
+              resolution
+                .worstResidualClearancePx
+            );
+      state.root.dataset
+        .lawsClusterRuntimeClearanceSource =
+        "compositor-bounds-and-projection";
+    }
+
+    return resolution;
+  }
+
+'''
+
+          crystals = replace_exact(
+              crystals,
+              '''  function setUniformScale(
+    target,
+    scale
+  ) {''',
+              helper_block + '''  function setUniformScale(
+    target,
+    scale
+  ) {''',
+              'RUNTIME_CLEARANCE_SOLVER_INSERTION'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''    const primaryLaw =
+      nearestPrimaryLaw(
+        direction,
+        localQuaternion
+      );''',
+              '''    const resolution =
+      publishClusterPresentationResolution(
+        resolveClusterPresentation(
+          direction,
+          localQuaternion
+        )
+      );
+    const primaryLaw =
+      nearestPrimaryLaw(
+        direction,
+        localQuaternion
+      );''',
+              'CLUSTER_PRESENTATION_RESOLUTION_EXECUTION'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''          const sphere =
+          euclideanLawPosition(
+            node,
+            localQuaternion
+          );''',
+              '''          const sphere =
+          euclideanLawPosition(
+            node,
+            localQuaternion,
+            resolution.radius
+          );''',
+              'SHARED_RUNTIME_RADIUS_CONSUMPTION'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''        const scale =
+          selected
+            ? QUALITY.selectedLawScale
+            : primary
+              ? QUALITY.primaryLawScale
+              : QUALITY.lawScale;''',
+              '''        const scale =
+          (
+            selected
+              ? QUALITY.selectedLawScale
+              : primary
+                ? QUALITY.primaryLawScale
+                : QUALITY.lawScale
+          ) *
+          resolution.scaleFactor;''',
+              'UNIFORM_CLUSTER_SCALE_CONSUMPTION'
+          )
+
+          old_transform = '''    state.registry.forEach(
+      node => {
+        [
+          "x",
+          "y",
+          "z",
+          "sx",
+          "sy",
+          "sz",
+          "prominence",
+          "halo",
+          "rotationSpeed",
+          "float"
+        ].forEach(
+          key => {
+            node.transform[key] =
+              node.transform[key] +
+              (
+                node.target[key] -
+                node.transform[key]
+              ) *
+                interpolation;
+          }
+        );'''
+          new_transform = '''    state.registry.forEach(
+      node => {
+        const rigidClusterLaw =
+          state.sceneProjection ===
+            SCENE_PROJECTIONS.CLUSTER &&
+          node.type === NODE_TYPES.LAW &&
+          node.visible;
+
+        if (rigidClusterLaw) {
+          node.transform.x =
+            node.target.x;
+          node.transform.y =
+            node.target.y;
+          node.transform.z =
+            node.target.z;
+        }
+
+        (
+          rigidClusterLaw
+            ? [
+                "sx",
+                "sy",
+                "sz",
+                "prominence",
+                "halo",
+                "rotationSpeed",
+                "float"
+              ]
+            : [
+                "x",
+                "y",
+                "z",
+                "sx",
+                "sy",
+                "sz",
+                "prominence",
+                "halo",
+                "rotationSpeed",
+                "float"
+              ]
+        ).forEach(
+          key => {
+            node.transform[key] =
+              node.transform[key] +
+              (
+                node.target[key] -
+                node.transform[key]
+              ) *
+                interpolation;
+          }
+        );'''
+          crystals = replace_exact(
+              crystals,
+              old_transform,
+              new_transform,
+              'RIGID_CLUSTER_POSITION_INTERPOLATION'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''  function nodeFloatY(node) {
+    return state.reducedMotion
+      ? 0
+      : Math.sin(''',
+              '''  function nodeFloatY(node) {
+    if (
+      state.sceneProjection ===
+        SCENE_PROJECTIONS.CLUSTER &&
+      node.type === NODE_TYPES.LAW
+    ) {
+      return 0;
+    }
+
+    return state.reducedMotion
+      ? 0
+      : Math.sin(''',
+              'CLUSTER_MEMBER_FLOATING_TRANSLATION_SUPPRESSED'
+          )
+
+          crystals = replace_exact(
+              crystals,
+              '''                  projectedRadiusForNode(
+                      node
+                    ),
+
+                  nodeId:''',
+              '''                  projectedRadiusForNode(
+                      node
+                    ),
+
+                  compassOverlapPadding:
+                    node.type === NODE_TYPES.LAW
+                      ? SPHERE.cluster
+                          .projectedClearanceMarginPx
+                      : undefined,
+
+                  nodeId:''',
+              'SEMANTIC_PROJECTION_MARGIN_CONSUMPTION'
+          )
+
+          forbidden_crystals = (
+              'perMemberRadius',
+              'memberOffset',
+              'effectiveClusterQuaternion('
+          )
+          for token in forbidden_crystals:
+              if token in crystals:
+                  raise SystemExit(f'FORBIDDEN_CLUSTER_MUTATION_PRESENT:{token}')
+
+          required_crystals = (
+              'resolveClusterPresentation(',
+              'getCompassFieldBounds()',
+              'runtimeClusterProjectedClearancePassed',
+              'const rigidClusterLaw =',
+              'clusterMemberFloatingTranslation:',
+              'compassOverlapPadding:'
+          )
+          for token in required_crystals:
+              if token not in crystals:
+                  raise SystemExit(f'REQUIRED_RUNTIME_CLEARANCE_TOKEN_MISSING:{token}')
+
+          html = replace_exact(
+              html,
+              'LAWS_COMPASS_EUCLIDEAN_COMMON_RADIUS_ORBIT_v3',
+              'LAWS_COMPASS_RUNTIME_PROJECTED_CLEARANCE_ORBIT_v4',
+              'CRYSTALS_CACHE_IDENTITY_UPDATE'
+          )
+          html = replace_exact(
+              html,
+              '''  data-laws-cluster-orbit-common-radius="1.40"
+  data-laws-cluster-orbit-maximum-tilt-radians="0.30"''',
+              '''  data-laws-cluster-orbit-common-radius="1.40"
+  data-laws-cluster-orbit-common-radius-role="minimum-runtime-radius"
+  data-laws-cluster-orbit-maximum-common-radius="1.82"
+  data-laws-cluster-orbit-runtime-radius-source="compositor-bounds-and-projection"
+  data-laws-cluster-orbit-uniform-scale-range="1.00-to-0.72"
+  data-laws-cluster-orbit-projected-clearance-margin-px="8"
+  data-laws-cluster-orbit-rigid-position-interpolation="true"
+  data-laws-cluster-orbit-member-floating-translation="false"
+  data-laws-cluster-orbit-maximum-tilt-radians="0.30"''',
+              'HTML_RUNTIME_CLEARANCE_CONTRACT'
+          )
+
+          harness = replace_exact(
+              harness,
+              '''  crystals: "laws/index.crystals.js",
+  interactions:''',
+              '''  crystals: "laws/index.crystals.js",
+  compositor: "laws/index.compositor.js",
+  interactions:''',
+              'HARNESS_COMPOSITOR_CUSTODY'
+          )
+
+          harness_assertions = '''
+assert(
+  sources.crystals.includes(
+    "resolveClusterPresentation"
+  ),
+  "RUNTIME_SHARED_RADIUS_SOLVER_PRESENT"
+);
+assert(
+  sources.crystals.includes(
+    "getCompassFieldBounds()"
+  ) &&
+  sources.crystals.includes(
+    "projectWorldPoint("
+  ),
+  "RUNTIME_COMPOSITOR_FACTS_CONSUMED"
+);
+assert(
+  sources.crystals.includes(
+    "const rigidClusterLaw ="
+  ) &&
+  sources.crystals.includes(
+    "node.transform.x ="
+  ) &&
+  sources.crystals.includes(
+    "node.target.x;"
+  ),
+  "RIGID_CLUSTER_POSITION_PATH_PRESENT"
+);
+assert(
+  sources.crystals.includes(
+    "state.sceneProjection ===\n        SCENE_PROJECTIONS.CLUSTER"
+  ) &&
+  sources.crystals.includes(
+    "node.type === NODE_TYPES.LAW\n    ) {\n      return 0;"
+  ),
+  "CLUSTER_MEMBER_FLOATING_TRANSLATION_SUPPRESSED"
+);
+assert(
+  sources.crystals.includes(
+    "compassOverlapPadding:"
+  ) &&
+  sources.crystals.includes(
+    ".projectedClearanceMarginPx"
+  ),
+  "PROJECTED_CLEARANCE_MARGIN_CONSUMED"
+);
+assert(
+  sources.html.includes(
+    "LAWS_COMPASS_RUNTIME_PROJECTED_CLEARANCE_ORBIT_v4"
+  ) &&
+  sources.html.includes(
+    "data-laws-cluster-orbit-runtime-radius-source=\"compositor-bounds-and-projection\""
+  ),
+  "HTML_RUNTIME_CLEARANCE_CONTRACT_UPDATED"
+);
+assert(
+  sources.compositor.includes(
+    "function getCompassFieldBounds()"
+  ) &&
+  sources.compositor.includes(
+    "function projectWorldPoint("
+  ),
+  "PROTECTED_COMPOSITOR_PUBLIC_FACTS_PRESENT"
+);
+
+'''
+          harness = replace_exact(
+              harness,
+              '''const memberCount = extractNumber(''',
+              harness_assertions + '''const memberCount = extractNumber(''',
+              'HARNESS_RUNTIME_CLEARANCE_ASSERTIONS'
+          )
+
+          harness = replace_exact(
+              harness,
+              '''const interactionMaximumTilt = extractNumber(''',
+              '''const maximumCommonRadius = extractNumber(
+  clusterBlock,
+  /maximumCommonRadius:\n          ([0-9.]+)/,
+  "MAXIMUM_COMMON_RADIUS_PARSED"
+);
+const radiusSearchStep = extractNumber(
+  clusterBlock,
+  /radiusSearchStep:\n          ([0-9.]+)/,
+  "RADIUS_SEARCH_STEP_PARSED"
+);
+const minimumUniformScaleFactor = extractNumber(
+  clusterBlock,
+  /minimumUniformScaleFactor:\n          ([0-9.]+)/,
+  "MINIMUM_UNIFORM_SCALE_FACTOR_PARSED"
+);
+const uniformScaleSearchStep = extractNumber(
+  clusterBlock,
+  /uniformScaleSearchStep:\n          ([0-9.]+)/,
+  "UNIFORM_SCALE_SEARCH_STEP_PARSED"
+);
+const viewportClearanceMarginPx = extractNumber(
+  clusterBlock,
+  /viewportClearanceMarginPx:\n          ([0-9.]+)/,
+  "VIEWPORT_CLEARANCE_MARGIN_PARSED"
+);
+const interactionMaximumTilt = extractNumber(''',
+              'HARNESS_RUNTIME_ENVELOPE_PARSE'
+          )
+
+          harness = replace_exact(
+              harness,
+              '''approx(
+  clearanceMarginPx,
+  8,
+  0,
+  "PROJECTED_CLEARANCE_MARGIN_LOCKED"
+);''',
+              '''approx(
+  clearanceMarginPx,
+  8,
+  0,
+  "PROJECTED_CLEARANCE_MARGIN_LOCKED"
+);
+approx(
+  maximumCommonRadius,
+  1.82,
+  1e-12,
+  "MAXIMUM_COMMON_RADIUS_LOCKED"
+);
+approx(
+  radiusSearchStep,
+  0.02,
+  1e-12,
+  "RADIUS_SEARCH_STEP_LOCKED"
+);
+approx(
+  minimumUniformScaleFactor,
+  0.72,
+  1e-12,
+  "MINIMUM_UNIFORM_SCALE_FACTOR_LOCKED"
+);
+approx(
+  uniformScaleSearchStep,
+  0.02,
+  1e-12,
+  "UNIFORM_SCALE_SEARCH_STEP_LOCKED"
+);
+approx(
+  viewportClearanceMarginPx,
+  6,
+  1e-12,
+  "VIEWPORT_CLEARANCE_MARGIN_LOCKED"
+);''',
+              'HARNESS_RUNTIME_ENVELOPE_ASSERTIONS'
+          )
+
+          harness = replace_exact(
+              harness,
+              'LAWS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_ACCEPTANCE_RECEIPT_v1',
+              'LAWS_RUNTIME_PROJECTED_CLEARANCE_RIGID_CLUSTER_ACCEPTANCE_RECEIPT_v2',
+              'HARNESS_RECEIPT_ID_UPDATE'
+          )
+          harness = replace_exact(
+              harness,
+              'agent/laws-euclidean-orbit-direct-manipulation-001',
+              'agent/laws-projected-clearance-bounded-repair-001',
+              'HARNESS_BRANCH_ID_UPDATE'
+          )
+          harness = replace_exact(
+              harness,
+              'dedc73841de2b41f5905fd842e9a593116caf300',
+              '8d8199e147c944bceed021c9a7f5585ec146e7a6',
+              'HARNESS_PARENT_ID_UPDATE'
+          )
+
+          harness = replace_exact(
+              harness,
+              '''    commonRadius,
+    localPlane: "XY",''',
+              '''    minimumCommonRadius:
+      commonRadius,
+    maximumCommonRadius,
+    runtimeSharedRadius: true,
+    runtimeUniformScale: true,
+    minimumUniformScaleFactor,
+    radiusSearchStep,
+    uniformScaleSearchStep,
+    viewportClearanceMarginPx,
+    runtimeBoundsSource:
+      "DGB_LAWS_COMPOSITOR.getCompassFieldBounds",
+    runtimeProjectionSource:
+      "DGB_LAWS_COMPOSITOR.projectWorldPoint",
+    localPlane: "XY",''',
+              'HARNESS_RECEIPT_RUNTIME_CONTRACT'
+          )
+
+          harness = replace_exact(
+              harness,
+              '''    memberOffsets: false
+  },
+  projection:''',
+              '''    memberOffsets: false,
+    rigidQuaternionPositioning: true,
+    secondaryPerNodePositionInterpolation: false,
+    clusterMemberFloatingTranslation: false
+  },
+  runtimeClearancePolicy: {
+    measuredEachFrame: true,
+    oneSharedRadiusPerFrame: true,
+    oneUniformScaleFactorPerFrame: true,
+    perMemberOffsets: false,
+    perMemberRadii: false,
+    projectedClearanceMarginConsumed: true,
+    installedBrowserExecutionRequired: true
+  },
+  projection:''',
+              'HARNESS_RECEIPT_RUNTIME_POLICY'
+          )
+
+          crystals_path.write_text(crystals, encoding='utf-8')
+          html_path.write_text(html, encoding='utf-8')
+          harness_path.write_text(harness, encoding='utf-8')
+          PY
+
+      - name: Execute syntax and deterministic geometry validation
+        shell: bash
+        run: |
+          node --check laws/index.crystals.js
+          node --check laws/index.compositor.js
+          node --check laws/index.interactions.js
+          node --check laws/index.interactions.source.round4.js
+          node laws/validation/laws.orbit-direct-manipulation.harness.mjs
+          test "$(node -p "JSON.parse(require('fs').readFileSync('laws/validation/laws.orbit-direct-manipulation.receipt.json','utf8')).status")" = "PASS"
+
+      - name: Verify protected paths remain byte-identical
+        shell: bash
+        run: |
+          test "$(git hash-object laws/index.compositor.js)" = "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa"
+          test "$(git hash-object laws/index.css)" = "9c2ef3e9636e134795102e48ea63553d2f3b9778"
+          test "$(git hash-object laws/index.interactions.js)" = "a6563d2e2e7064136925299a79731147f4a8580b"
+          test "$(git hash-object laws/index.interactions.source.round4.js)" = "24fc3e216f3526e9c6d30939454a73bdcf13cd7d"
+          git diff --exit-code -- laws/index.controller.js laws/index.compositor.js laws/index.planet.js laws/index.interactions.js laws/index.interactions.source.round4.js laws/index.css
+
+      - name: Write L2 and L3 durable checkpoints
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+
+          def git_blob(path):
+              data = Path(path).read_bytes()
+              return hashlib.sha1(f'blob {len(data)}\0'.encode() + data).hexdigest()
+
+          receipt = json.loads(Path('laws/validation/laws.orbit-direct-manipulation.receipt.json').read_text())
+          checkpoint_root = Path('verification/benchmark-tools/four-compass-benchmark-v1/checkpoints')
+          checkpoint_root.mkdir(parents=True, exist_ok=True)
+
+          l2 = {
+              'artifactId': 'L2_LAWS_BOUNDED_PRODUCT_IMPLEMENTATION_v1',
+              'checkpoint': 'L2',
+              'status': 'PASS_BOUNDED_IMPLEMENTATION_COMPLETE',
+              'branch': 'agent/laws-projected-clearance-bounded-repair-001',
+              'parentMainCommit': '8d8199e147c944bceed021c9a7f5585ec146e7a6',
+              'mutatedProductPaths': [
+                  'laws/index.crystals.js',
+                  'laws/index.html'
+              ],
+              'mutatedEvidencePaths': [
+                  'laws/validation/laws.orbit-direct-manipulation.harness.mjs',
+                  'laws/validation/laws.orbit-direct-manipulation.receipt.json'
+              ],
+              'implementation': {
+                  'runtimeSharedRadius': True,
+                  'runtimeUniformScale': True,
+                  'minimumCommonRadius': 1.4,
+                  'maximumCommonRadius': 1.82,
+                  'minimumUniformScaleFactor': 0.72,
+                  'projectedClearanceMarginPx': 8,
+                  'runtimeBoundsSource': 'DGB_LAWS_COMPOSITOR.getCompassFieldBounds',
+                  'runtimeProjectionSource': 'DGB_LAWS_COMPOSITOR.projectWorldPoint',
+                  'rigidQuaternionPositioning': True,
+                  'perLawFloatingTranslation': False
+              },
+              'protectedPathMutationCount': 0,
+              'mergeAuthorized': False,
+              'nextCheckpoint': 'L3_STATIC_AND_GEOMETRY_VALIDATION'
+          }
+
+          l3 = {
+              'artifactId': 'L3_LAWS_STATIC_AND_GEOMETRY_VALIDATION_v1',
+              'checkpoint': 'L3',
+              'status': 'PASS_STATIC_AND_GEOMETRY_VALIDATION_COMPLETE',
+              'branch': 'agent/laws-projected-clearance-bounded-repair-001',
+              'sourceBlobs': {
+                  'laws/index.crystals.js': git_blob('laws/index.crystals.js'),
+                  'laws/index.html': git_blob('laws/index.html'),
+                  'laws/validation/laws.orbit-direct-manipulation.harness.mjs': git_blob('laws/validation/laws.orbit-direct-manipulation.harness.mjs'),
+                  'laws/validation/laws.orbit-direct-manipulation.receipt.json': git_blob('laws/validation/laws.orbit-direct-manipulation.receipt.json')
+              },
+              'protectedBlobs': {
+                  'laws/index.compositor.js': git_blob('laws/index.compositor.js'),
+                  'laws/index.css': git_blob('laws/index.css'),
+                  'laws/index.interactions.js': git_blob('laws/index.interactions.js'),
+                  'laws/index.interactions.source.round4.js': git_blob('laws/index.interactions.source.round4.js')
+              },
+              'syntaxChecksPassed': True,
+              'harnessStatus': receipt['status'],
+              'harnessReceiptId': receipt['receiptId'],
+              'assertions': receipt['assertions'],
+              'installedToolExecutionRequired': True,
+              'mergeAuthorized': False,
+              'nextCheckpoint': 'L4_INSTALLED_TOOL_PR_EXECUTION'
+          }
+
+          (checkpoint_root / 'l2-laws-bounded-product-implementation.json').write_text(json.dumps(l2, indent=2) + '\n')
+          (checkpoint_root / 'l3-laws-static-and-geometry-validation.json').write_text(json.dumps(l3, indent=2) + '\n')
+          PY
+
+      - name: Verify bounded changed path set
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+
+          allowed = {
+              '.github/workflows/apply-laws-projected-clearance-repair.yml',
+              'laws/index.crystals.js',
+              'laws/index.html',
+              'laws/validation/laws.orbit-direct-manipulation.harness.mjs',
+              'laws/validation/laws.orbit-direct-manipulation.receipt.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l2-laws-bounded-product-implementation.json',
+              'verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l3-laws-static-and-geometry-validation.json'
+          }
+          changed = set(subprocess.check_output(['git', 'status', '--short']).decode().splitlines())
+          paths = {line[3:] for line in changed}
+          unexpected = sorted(paths - allowed)
+          required = allowed - {'.github/workflows/apply-laws-projected-clearance-repair.yml'}
+          missing = sorted(required - paths)
+          if unexpected or missing:
+              raise SystemExit(f'BOUNDED_PATH_SET_FAILED unexpected={unexpected} missing={missing}')
+          print('BOUNDED_PATH_SET=PASS')
+          PY
+
+      - name: Commit bounded implementation and remove temporary authority
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/apply-laws-projected-clearance-repair.yml
+          git add \
+            laws/index.crystals.js \
+            laws/index.html \
+            laws/validation/laws.orbit-direct-manipulation.harness.mjs \
+            laws/validation/laws.orbit-direct-manipulation.receipt.json \
+            verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l2-laws-bounded-product-implementation.json \
+            verification/benchmark-tools/four-compass-benchmark-v1/checkpoints/l3-laws-static-and-geometry-validation.json
+          git commit -m "Implement Laws runtime projected clearance repair"
+          git push origin HEAD:${{ github.head_ref }}

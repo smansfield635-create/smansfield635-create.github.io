@@ -1,0 +1,143 @@
+name: Metaverse 3D Benchmark Disposition D5 Compiler Closure
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/metaverse-3d-benchmark-disposition-d5.yml"
+      - "tools/metaverse-3d-benchmark-disposition-d5-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: metaverse-3d-benchmark-disposition-d5-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  D5_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  D4_PARENT_SHA: 874012997a9a41c91d5c50746f29ec063e979755
+  D4_ARTIFACT_ID: "8621910872"
+  D4_ARTIFACT_SIZE: "24864"
+  D4_ARTIFACT_SHA256: 18290e7b2a70b63d47e53d449cdf87a812cd03612b98b26ff867c6d48f67c7a5
+  D4_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d4-input
+  D5_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d5
+
+jobs:
+  compiler-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact D5 occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.D5_HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact D5 head and D4 ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$D5_HEAD_SHA"
+          git merge-base --is-ancestor "$D4_PARENT_SHA" HEAD
+          test "$(git hash-object tools/metaverse-3d-benchmark-disposition-d4-contract.json)" = "2974061e789e968ae0814fec0e7977bf707dbaf2"
+          test "$(git hash-object .github/workflows/metaverse-3d-benchmark-disposition-d4.yml)" = "d4fc654d64c2bf7eda8f92734f9bf78f69a1faca"
+
+      - name: Verify exact six-path D5 scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTUAL="$(git diff --name-only "$D4_PARENT_SHA"..HEAD | sort)"
+          EXPECTED="$(printf '%s\n' \
+            '.github/workflows/metaverse-3d-benchmark-disposition-d5.yml' \
+            'tools/metaverse-3d-benchmark-disposition-d5-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d5-core.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d5-rules.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d5-compile.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d5-controls.mjs' | sort)"
+          test "$ACTUAL" = "$EXPECTED"
+          test "$(git diff --name-only "$D4_PARENT_SHA"..HEAD | wc -l)" -eq 6
+
+      - name: Download and verify exact D4 package
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf "$D4_ARTIFACT_ROOT"
+          mkdir -p "$D4_ARTIFACT_ROOT"
+          curl --fail --location --retry 3 \
+            --header "Authorization: Bearer $GITHUB_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$D4_ARTIFACT_ID/zip" \
+            --output /tmp/d4.zip
+          test "$(stat -c '%s' /tmp/d4.zip)" = "$D4_ARTIFACT_SIZE"
+          echo "$D4_ARTIFACT_SHA256  /tmp/d4.zip" | sha256sum --check --strict
+          unzip -q /tmp/d4.zip -d "$D4_ARTIFACT_ROOT"
+          test -f "$D4_ARTIFACT_ROOT/canonical-fact-weight-manifest.json"
+          test -f "$D4_ARTIFACT_ROOT/relation-weight-manifest.json"
+          test -f "$D4_ARTIFACT_ROOT/dimension-evidence-strength-manifest.json"
+          test -f "$D4_ARTIFACT_ROOT/d4.aggregate.receipt.json"
+
+      - name: Validate D5 source syntax
+        run: |
+          node --check tools/metaverse-3d-benchmark-disposition-d5-core.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d5-rules.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d5-compile.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d5-controls.mjs
+          node -e "JSON.parse(require('fs').readFileSync('tools/metaverse-3d-benchmark-disposition-d5-contract.json','utf8'))"
+
+      - name: Execute bounded D5A through D5D controls
+        run: |
+          rm -rf "$D5_ARTIFACT_ROOT"
+          mkdir -p "$D5_ARTIFACT_ROOT"
+          node tools/metaverse-3d-benchmark-disposition-d5-controls.mjs | tee "$D5_ARTIFACT_ROOT/execution.log"
+
+      - name: Verify deterministic D5 closure
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile } from 'node:fs/promises';
+          const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object'
+            ? Object.fromEntries(Object.keys(value).sort().map(key => [key.normalize('NFC'), stable(value[key])]))
+            : typeof value === 'string' ? value.normalize('NFC') : value;
+          const digest = value => createHash('sha256').update(JSON.stringify(stable(value))).digest('hex');
+          const root = process.env.D5_ARTIFACT_ROOT;
+          const read = async name => JSON.parse(await readFile(`${root}/${name}`, 'utf8'));
+          const fact = await read('fact-disposition-manifest.json');
+          const dimensions = await read('dimension-disposition-manifest.json');
+          const subjectDimensions = await read('subject-dimension-disposition-manifest.json');
+          const subjects = await read('subject-disposition-manifest.json');
+          const deferred = await read('deferred-evidence-ledger.json');
+          const acceptance = await read('acceptance-eligibility-ledger.json');
+          const trace = await read('traceability-index.json');
+          const d5d = await read('d5d-closure-audit.json');
+          const aggregate = await read('d5.aggregate.receipt.json');
+          if (fact.dispositionRecordCount !== 119 || fact.dispositionManifestSha256 !== '23bc1280953f0ec96daeaa48268f6d98c56b1d3d9b5fffab9ea6b1f1371000e9' || digest(fact.records) !== fact.dispositionManifestSha256) throw new Error('D5_FACT_CLOSURE_MISMATCH');
+          if (dimensions.dispositionRecordCount !== 11 || dimensions.dispositionManifestSha256 !== 'd550651541b814d368ccdb0406f16f8aaf1052a98f28a6b2cfb24ebe4462bdf8' || digest(dimensions.records) !== dimensions.dispositionManifestSha256) throw new Error('D5_DIMENSION_CLOSURE_MISMATCH');
+          if (subjectDimensions.dispositionRecordCount !== 88 || subjectDimensions.dispositionManifestSha256 !== '1dc6526ac3d57b8254f68664ce13ba0ae02642c44b72fa7acfe3a1faeb3fdeef' || digest(subjectDimensions.records) !== subjectDimensions.dispositionManifestSha256) throw new Error('D5_SUBJECT_DIMENSION_CLOSURE_MISMATCH');
+          if (subjects.dispositionRecordCount !== 8 || subjects.dispositionManifestSha256 !== 'bf18530ac00fb10049614a7d950cb195abe15cc51607ec771b60993650341798' || digest(subjects.records) !== subjects.dispositionManifestSha256) throw new Error('D5_SUBJECT_CLOSURE_MISMATCH');
+          if (deferred.deferredRecordCount !== 67 || deferred.ledgerSha256 !== '0e044e44f4cb8ad81911228fd8732e674edf152180b8933409d6d65ea54d0aca' || digest(deferred.records) !== deferred.ledgerSha256) throw new Error('D5_DEFERRED_CLOSURE_MISMATCH');
+          if (acceptance.admissibleSubjectCount !== 0 || acceptance.acceptedSubjectCount !== 0 || acceptance.ledgerSha256 !== '6704cc278f811f6819dadd99b39c1325551367993f75cdc70e428c351ea99a25') throw new Error('D5_ACCEPTANCE_CLOSURE_MISMATCH');
+          if (trace.relationTraceRecordCount !== 7 || trace.traceabilityIndexSha256 !== 'aee67b7454d9f524fc8a365d92e306067be5df88842e639c4285fd2fdb6bf9b2') throw new Error('D5_TRACE_CLOSURE_MISMATCH');
+          const { deterministicReceiptSha256: d5dSha, ...d5dBody } = d5d;
+          if (d5d.failedControlCount !== 0 || d5dSha !== 'a61cd49d2056c7271371f0f219e3a2db8771622eea61b9308efe617600016172' || digest(d5dBody) !== d5dSha) throw new Error('D5_AUDIT_CLOSURE_MISMATCH');
+          const { deterministicReceiptSha256: aggregateSha, ...aggregateBody } = aggregate;
+          if (aggregate.status !== 'PASS_CLOSED' || aggregate.compilerConstructionComplete !== true || aggregate.compilerVerified !== true || aggregate.nextRequiredCompilerCheckpoint !== 'NONE' || aggregateSha !== '6a4ba976d117d46053c54e921612fcddfd6679fc8429e7b87f4467361b15c8d6' || digest(aggregateBody) !== aggregateSha) throw new Error('D5_AGGREGATE_CLOSURE_MISMATCH');
+          NODE
+
+      - name: Upload deterministic D5 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-3d-benchmark-disposition-d5-${{ env.D5_HEAD_SHA }}
+          path: ${{ env.D5_ARTIFACT_ROOT }}
+          if-no-files-found: error
+          retention-days: 30

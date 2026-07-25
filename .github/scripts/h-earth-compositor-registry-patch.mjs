@@ -17,10 +17,6 @@ const replacements = [
     'H_EARTH_REPOSITORY_REGISTRY_COMPOSITOR_CAMERA_AUTHORITY_SCOPE_RECONCILIATION_v1'
   ],
   [
-    "import baseFacade from './h-earth.repository-registry.renderer-presentation-scope-reconciliation.js';",
-    "import baseFacade from './h-earth.repository-registry.public-route-interaction-scope-reconciliation.js';"
-  ],
-  [
     'agent/h-earth-public-route-registry-scope-reconciliation-001',
     'agent/h-earth-compositor-registry-scope-reconciliation-001'
   ],
@@ -121,6 +117,11 @@ const replacements = [
 for (const [from, to] of replacements) {
   overlay = overlay.replaceAll(from, to);
 }
+
+overlay = overlay.replace(
+  "import baseFacade from './h-earth.repository-registry.compositor-camera-authority-scope-reconciliation.js';",
+  "import baseFacade from './h-earth.repository-registry.public-route-interaction-scope-reconciliation.js';"
+);
 
 if (!overlay.includes("import baseFacade from './h-earth.repository-registry.public-route-interaction-scope-reconciliation.js';")) {
   throw new Error('COMPOSITOR_OVERLAY_BASE_CHAIN_NOT_ESTABLISHED');

@@ -1,0 +1,60 @@
+name: Metaverse Benchmark CP6 Interaction Discovery
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "verification/benchmark-corpus/inventory-pass-v1/checkpoint-06/interaction-surface-discovery.mjs"
+      - ".github/workflows/metaverse-benchmark-cp6-interaction-discovery.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: metaverse-benchmark-cp6-interaction-discovery-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    name: Discover deployed interaction surfaces
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Execute interaction discovery
+        shell: bash
+        run: |
+          set -o pipefail
+          node verification/benchmark-corpus/inventory-pass-v1/checkpoint-06/interaction-surface-discovery.mjs | tee cp6-interaction-surface-discovery.log
+
+      - name: Upload discovery evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-benchmark-cp6-interaction-discovery
+          path: |
+            cp6-interaction-surface-discovery.json
+            cp6-interaction-surface-discovery.log
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce discovery completeness
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f cp6-interaction-surface-discovery.json
+          test "$(jq '.routes | length' cp6-interaction-surface-discovery.json)" = "5"

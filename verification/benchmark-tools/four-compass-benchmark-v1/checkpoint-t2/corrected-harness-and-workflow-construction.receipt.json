@@ -147,7 +147,56 @@
   },
   "constructionDigest": {
     "algorithm": "SHA-256(JSON.stringify(constructionCore))",
-    "sha256": "395aa813ae9bc76eda95de2d9e94e4079aa2884f6d4ee05aecc29584851b0dd7"
+    "constructionCore": {
+      "parentT1Commit": "c90e2037d4a06814688482e6a7b9514562f8c6c3",
+      "sourceRecords": [
+        {
+          "path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs",
+          "byteLength": 5677,
+          "sha256": "805f44cd7a931e6d78af243cb48f59e5b5170b12401cd2e33bc2b62523aed38e",
+          "gitBlob": "f46128d33cc8498616c9accf56b44d6b6c04f534"
+        },
+        {
+          "path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
+          "byteLength": 23288,
+          "sha256": "556c3b44834b1c8e6eba57b24393d62b90f5897af17a279ffce7d6f6b1e0772d",
+          "gitBlob": "db7da8e983f5f99926d229a4a1795eb7ecc7fe30"
+        },
+        {
+          "path": "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs",
+          "byteLength": 5744,
+          "sha256": "50cfa279323b0c5d2c4d3c04b1a8aed77bc3bd8b2d3ee2a08a316269ab9c83ae",
+          "gitBlob": "b79b429bf251d6bdaf1d3cc52be9f49d741c9e5a"
+        },
+        {
+          "path": ".github/workflows/metaverse-benchmark-four-compass-tool.yml",
+          "byteLength": 4638,
+          "sha256": "0a79a51f7f7efede68a4c5283cb9925c33e1865f6a929d5f46f1fa54365c2632",
+          "gitBlob": "4384e1b2d169053b2b3fba12b5aefba8cc4913c2"
+        },
+        {
+          "path": ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml",
+          "byteLength": 3064,
+          "sha256": "eb0d1263b22f2b7e704db80cde32a68b9106aff7cd0265007093689a6edef3bb",
+          "gitBlob": "926b98839515ed68128fdef1fcaded148d3a1123"
+        }
+      ],
+      "compassIds": [
+        "MAIN_COMPASS",
+        "ARCHCOIN_COMPASS",
+        "SHOWROOM_COMPASS",
+        "LAWS_COMPASS"
+      ],
+      "auxiliaryControlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+      "separateRecords": true,
+      "separateSummaries": true,
+      "separateFindings": true,
+      "separateManifests": true,
+      "separateDigests": true,
+      "browserExecutionPerformed": false,
+      "nextCheckpoint": "T3_TOOL_EXECUTION_AND_EVIDENCE_VALIDATION"
+    },
+    "sha256": "60dea2b6b433bcee731a1be0d1f933a51fa51808d5b9f07ad4b7c579e6a9e6fe"
   },
   "authority": {
     "correctedToolConstruction": true,

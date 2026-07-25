@@ -1,0 +1,43 @@
+{
+  "contractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_POSITIVE_NEGATIVE_FAILURE_TAXONOMY_H5_v1",
+  "toolId": "H_EARTH_CAPACITY_CAMERA_AND_RENDERER_CORRESPONDENCE_VERIFIER_v1",
+  "checkpoint": "H5",
+  "checkpointTitle": "POSITIVE_CONTROLS_NEGATIVE_CONTROLS_AND_FAILURE_TAXONOMY",
+  "parentCheckpointContractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_STAGE_SEPARATED_CAPACITY_EVALUATOR_H4_v1",
+  "parentCheckpointCommit": "21de52b4523e34408db4ffc2822efcda48d537b3",
+  "branch": "agent/h-earth-capacity-camera-correspondence-verifier-h5-001",
+  "sourceCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "sourcePosture": "READ_ONLY_CONTROL_AND_FAILURE_TAXONOMY",
+  "productionMutationAuthority": "NONE",
+  "authorizedCheckpointPaths": [
+    ".github/workflows/h-earth-capacity-camera-correspondence-h5.yml",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h5-contract.json",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h5-taxonomy.mjs",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h5-controls.mjs"
+  ],
+  "failureTaxonomy": [
+    "H5_FAR_PLANE_TOO_SHORT",
+    "H5_NEAR_PLANE_INVALID",
+    "H5_TARGET_OUTSIDE_ALLOWED_BOUND",
+    "H5_CAMERA_POSITION_OUTSIDE_ALLOWED_BOUND",
+    "H5_FOV_OUTSIDE_ALLOWED_RANGE",
+    "H5_PROJECTED_FRAGMENT_BUDGET_EXCEEDED",
+    "H5_FINAL_DOM_NODE_BUDGET_EXCEEDED",
+    "H5_REQUIRED_SOURCE_IDENTITY_MISMATCH",
+    "H5_MISSING_CAPACITY_RECEIPT",
+    "H5_MALFORMED_VIEWPORT_PROFILE"
+  ],
+  "positiveControl": {
+    "requiredTerminalClassification": "H5_POSITIVE_CONTROL_ELIGIBLE",
+    "minimumVisibleOutputRatio": 0.5
+  },
+  "claims": {
+    "rendererExecutionAuthorized": false,
+    "browserExecutionAuthorized": false,
+    "productionMutationAuthorized": false,
+    "productionFilesChanged": 0,
+    "productionCorrectionStarted": false,
+    "h6Started": false,
+    "mergePerformed": false
+  }
+}

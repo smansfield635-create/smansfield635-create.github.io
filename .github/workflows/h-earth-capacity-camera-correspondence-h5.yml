@@ -1,0 +1,74 @@
+name: H-Earth Capacity Camera H5 Failure Taxonomy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/h-earth-capacity-camera-correspondence-h5.yml"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h5-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h4-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h3-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h2-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-measurement-contract.mjs"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-authority-lock.mjs"
+      - "showroom/globe/h-earth/capacity.js"
+      - "showroom/globe/h-earth/compositor.js"
+      - "showroom/globe/h-earth/renderer.js"
+      - "showroom/globe/h-earth/admitted-geometry-frame.js"
+      - "showroom/globe/h-earth/render/shoreline-preview.js"
+      - "showroom/globe/h-earth/render/geometry-*.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-capacity-camera-h5-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  positive-negative-taxonomy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch occurrence
+        uses: actions/checkout@v4
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate H5 source syntax
+        run: |
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h5-taxonomy.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h5-controls.mjs
+
+      - name: Execute H5 positive negative and taxonomy controls
+        run: |
+          mkdir -p artifacts/h-earth-capacity-camera-h5
+          node tools/h-earth-capacity-camera-renderer-correspondence-h5-controls.mjs \
+            > artifacts/h-earth-capacity-camera-h5/h5-control-receipt.json
+
+      - name: Verify H5 terminal receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const receipt = JSON.parse(await readFile('artifacts/h-earth-capacity-camera-h5/h5-control-receipt.json', 'utf8'));
+          if (receipt.status !== 'PASS') throw new Error('H5_CONTROL_RECEIPT_NOT_PASS');
+          if (receipt.controlCount !== 13 || receipt.passedControlCount !== 13) throw new Error('H5_CONTROL_COUNT_MISMATCH');
+          if (receipt.positiveControlCount !== 1 || receipt.negativeControlCount !== 10) throw new Error('H5_CONTROL_CATEGORY_COUNT_MISMATCH');
+          if (receipt.positiveControl?.terminalClassification !== 'H5_POSITIVE_CONTROL_ELIGIBLE') throw new Error('H5_POSITIVE_CONTROL_INVALID');
+          if (receipt.actualProductionResult?.toolExecution !== 'PASS' || receipt.actualProductionResult?.productCapacityResult !== 'BLOCKED' || receipt.actualProductionResult?.toolFailure !== false) throw new Error('H5_PRODUCT_TOOL_DISTINCTION_INVALID');
+          if (receipt.actualProductionResult?.terminalClassification !== 'PROJECTED_FRAGMENT_BUDGET_UNRESOLVED') throw new Error('H5_ACTUAL_PRODUCTION_CLASSIFICATION_INVALID');
+          if (receipt.claims?.negativeControlsFailClosed !== true || receipt.claims?.unexpectedFailureCodes !== 0) throw new Error('H5_NEGATIVE_CONTROL_TAXONOMY_INVALID');
+          if (receipt.claims?.rendererExecutionPerformed !== false || receipt.claims?.browserExecutionPerformed !== false) throw new Error('H5_EXECUTION_BOUNDARY_VIOLATED');
+          if (receipt.claims?.productionFilesChanged !== 0 || receipt.claims?.productionCorrectionStarted !== false) throw new Error('H5_PRODUCTION_MUTATION_BOUNDARY_VIOLATED');
+          NODE
+
+      - name: Upload deterministic H5 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-camera-h5-${{ github.sha }}
+          path: artifacts/h-earth-capacity-camera-h5/h5-control-receipt.json
+          if-no-files-found: error
+          retention-days: 30

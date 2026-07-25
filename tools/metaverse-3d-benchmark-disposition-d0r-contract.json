@@ -1,0 +1,177 @@
+{
+  "contractId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_FOUR_COMPASS_AUTHORITY_RECONCILIATION_D0R_v1",
+  "toolId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_v1",
+  "checkpoint": "D0R",
+  "checkpointTitle": "FOUR_COMPASS_AUTHORITY_RECONCILIATION_AND_AUXILIARY_CONTROL_LOCK",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "reconciliationSourceBranch": "agent/metaverse-benchmark-four-compass-reconciliation-001",
+  "reconciliationAuthorityFloorCommit": "f304e19a2d53a98b510ce437d6fa65aad2a8539d",
+  "compilerBranch": "agent/metaverse-3d-benchmark-disposition-compiler-d0r-001",
+  "sourcePosture": "READ_ONLY_RECONCILED_EVIDENCE_INTERPRETATION_AUTHORITY_LOCK",
+  "supersedes": {
+    "contractId": "METAVERSE_3D_BENCHMARK_TO_DISPOSITION_COMPILER_CURRENT_STATE_AND_AUTHORITY_LOCK_D0_v1",
+    "branch": "agent/metaverse-3d-benchmark-disposition-compiler-d0-001",
+    "headCommit": "2cdaad8d6eebe905e916dd887031f375790c3a50",
+    "draftPullRequest": 138,
+    "scope": "CONTROLLING_AUTHORITY_ONLY",
+    "priorExecutionPreserved": true,
+    "priorAuthorityStatus": "SUPERSEDED_BY_D0R"
+  },
+  "sourceAnchors": [
+    {
+      "checkpoint": "R0",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r0/four-compass-reconciliation-authority-lock.json",
+      "gitBlob": "32fc7f07c5b8e4fdcdb80091c575f3ad57902a9d"
+    },
+    {
+      "checkpoint": "R1",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r1/four-compass-role-registry.json",
+      "gitBlob": "bcd893cb9f1efd441bad6da0aef828fd106ce482"
+    },
+    {
+      "checkpoint": "R2",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r2/cp0-through-cp7-authority-supersession-map.json",
+      "gitBlob": "49ae6af6cfa19b12a698098da79e4336497e4270"
+    },
+    {
+      "checkpoint": "R3",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r3/four-compass-source-and-runtime-corpus.json",
+      "gitBlob": "32ab1590963c72d87cb754b96e23413cfc4a34a5"
+    },
+    {
+      "checkpoint": "R4",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r4/website-home-receiver-control-ledger.json",
+      "gitBlob": "cf404f0e741c0bee1b9833288bb94502b70a718a"
+    }
+  ],
+  "authorizedCheckpointPaths": [
+    ".github/workflows/metaverse-3d-benchmark-disposition-d0r.yml",
+    "tools/metaverse-3d-benchmark-disposition-d0r-contract.json",
+    "tools/metaverse-3d-benchmark-disposition-d0r-authority-lock.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d0r-controls.mjs"
+  ],
+  "authorizedInputRoots": [
+    "verification/benchmark-corpus/four-compass-reconciliation-v1/",
+    "verification/benchmark-corpus/inventory-pass-v1/"
+  ],
+  "authorizedOutputRoot": "verification/benchmark-corpus/disposition-compiler-v1/",
+  "governedCompasses": [
+    {"benchmarkId": "MAIN_COMPASS", "route": "/", "referenceRole": "POSITIVE_ARCHITECTURE_REFERENCE"},
+    {"benchmarkId": "ARCHCOIN_COMPASS", "route": "/products/archcoin/", "referenceRole": "POSITIVE_DIRECT_MANIPULATION_REFERENCE"},
+    {"benchmarkId": "SHOWROOM_COMPASS", "legacyBenchmarkId": "SHOWROOM", "route": "/showroom/", "referenceRole": "POSITIVE_SPATIAL_REALIZATION_REFERENCE"},
+    {"benchmarkId": "LAWS_COMPASS", "legacyBenchmarkId": "LAWS_CHAMBER_POST_PR128", "route": "/laws/", "referenceRole": "NEGATIVE_INTERACTION_REGRESSION_REFERENCE"}
+  ],
+  "auxiliaryControls": [
+    {
+      "controlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+      "legacyInvalidBenchmarkId": "HOMEPAGE_COMPASS",
+      "route": "/home/",
+      "classification": "AUXILIARY_NON_COMPASS_CONTROL",
+      "compassAuthority": false,
+      "includedInCompassCounts": false,
+      "includedInCompassDigests": false,
+      "includedInCompassFindings": false,
+      "includedInCompassAcceptance": false
+    }
+  ],
+  "legacyIdentityDisposition": {
+    "HOMEPAGE_COMPASS": {"disposition": "RETIRED_INVALID_IDENTITY", "replacement": "WEBSITE_HOME_RECEIVER_CONTROL"},
+    "SHOWROOM": {"disposition": "RECLASSIFY_CANONICAL_ID", "replacement": "SHOWROOM_COMPASS"},
+    "LAWS_CHAMBER_POST_PR128": {"disposition": "RECLASSIFY_CANONICAL_ID", "replacement": "LAWS_COMPASS"}
+  },
+  "observedRouteCount": 5,
+  "canonicalCompassCount": 4,
+  "positiveCompassReferenceCount": 3,
+  "negativeCompassReferenceCount": 1,
+  "auxiliaryControlCount": 1,
+  "governedDimensions": [
+    "SOURCE_CUSTODY",
+    "AUTHORITY_BOUNDARIES",
+    "RUNTIME_LOAD",
+    "INTERACTION_EXECUTION",
+    "VISUAL_REALIZATION",
+    "SPATIAL_REALIZATION",
+    "RESPONSIVE_BEHAVIOR",
+    "PERFORMANCE",
+    "ACCESSIBILITY",
+    "DEPLOYED_IDENTITY",
+    "USER_ACCEPTANCE"
+  ],
+  "dimensionStates": [
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "UNRESOLVED",
+    "NOT_EXECUTED",
+    "NOT_APPLICABLE",
+    "SUPERSEDED",
+    "WITHHELD"
+  ],
+  "dispositions": [
+    "RETAIN",
+    "RECLASSIFY",
+    "CORRECT",
+    "ISOLATE",
+    "SUPERSEDE",
+    "REVERT",
+    "DEFER_PENDING_EVIDENCE",
+    "ADMISSIBLE_FOR_ACCEPTANCE"
+  ],
+  "separationLaws": [
+    "NATIVE_EVIDENCE_NE_NORMALIZED_EVIDENCE",
+    "EVIDENCE_STATUS_NE_DIMENSION_CLASSIFICATION",
+    "DIMENSION_CLASSIFICATION_NE_DISPOSITION",
+    "DISPOSITION_NE_MUTATION_AUTHORITY",
+    "ADMISSIBLE_FOR_ACCEPTANCE_NE_USER_ACCEPTED",
+    "COMPASS_CORPUS_NE_AUXILIARY_CONTROLS",
+    "OBSERVED_ROUTES_NE_COMPASS_AUTHORITIES",
+    "HISTORICAL_FIVE_BENCHMARK_AGGREGATE_NE_CONTROLLING_FOUR_COMPASS_CORPUS"
+  ],
+  "historicalPolicy": {
+    "cp0ThroughCp7ArtifactsPreserved": true,
+    "historicalFiveBenchmarkAggregatesRemainHistoricalFacts": true,
+    "historicalFiveBenchmarkAggregatesRemainControlling": false,
+    "historicalArtifactsDeleted": false,
+    "historicalCommitsRewritten": false
+  },
+  "authority": {
+    "compilerOwnsEvidenceInterpretation": true,
+    "compilerOwnsProductAuthority": false,
+    "compilerOwnsAcceptanceAuthority": false,
+    "productMutationAuthority": "NONE",
+    "mainWriteAuthority": "NONE",
+    "mergeAuthority": "NONE",
+    "userAcceptanceAuthority": "NONE"
+  },
+  "prohibitedOperations": [
+    "EDIT_PRODUCT_SOURCE",
+    "EDIT_MAIN",
+    "MERGE",
+    "PROMOTE_CANDIDATE",
+    "GRANT_USER_ACCEPTANCE",
+    "INFER_MISSING_PASS",
+    "TREAT_HOME_AS_COMPASS",
+    "COUNT_HOME_IN_COMPASS_TOTALS",
+    "INCLUDE_HOME_IN_COMPASS_DIGESTS",
+    "INCLUDE_HOME_IN_COMPASS_FINDINGS",
+    "INCLUDE_HOME_IN_COMPASS_ACCEPTANCE",
+    "USE_LEGACY_SHOWROOM_ID_AS_CANONICAL",
+    "USE_LEGACY_LAWS_ID_AS_CANONICAL",
+    "NORMALIZE_LAWS_NEGATIVE_REFERENCE_INTO_POSITIVE_REFERENCE",
+    "DELETE_OR_REWRITE_HISTORICAL_LEDGERS",
+    "START_D1_FROM_SUPERSEDED_D0"
+  ],
+  "claims": {
+    "fourCompassAuthorityReconciled": true,
+    "homeAuxiliaryControlLocked": true,
+    "priorD0ExecutionPreserved": true,
+    "priorD0AuthoritySuperseded": true,
+    "evidenceNormalizationPerformed": false,
+    "dimensionClassificationPerformed": false,
+    "dispositionCompilationPerformed": false,
+    "productFilesChanged": 0,
+    "mergePerformed": false
+  },
+  "nextCheckpoint": "D1_NATIVE_EVIDENCE_INTAKE_AND_IDENTITY_VALIDATION"
+}

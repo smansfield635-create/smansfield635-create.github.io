@@ -20,12 +20,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 4
+          fetch-depth: 6
 
       - name: Verify repair ancestry
         run: |
           test "$(git merge-base HEAD c4e4a89f449532118eb712cf0a5193cc6e53c5d4)" = "c4e4a89f449532118eb712cf0a5193cc6e53c5d4"
-          test "$(git rev-list --count c4e4a89f449532118eb712cf0a5193cc6e53c5d4..HEAD)" = "3"
+          test "$(git rev-list --count c4e4a89f449532118eb712cf0a5193cc6e53c5d4..HEAD)" = "4"
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -40,7 +40,26 @@ jobs:
             > verification/laws-repair/apply-laws-spherical-cluster-repair.py
 
       - name: Apply bounded source transformation
-        run: python verification/laws-repair/apply-laws-spherical-cluster-repair.py
+        run: |
+          if test -f verification/laws-repair/spherical-cluster-error.log; then
+            cat verification/laws-repair/spherical-cluster-error.log
+            exit 1
+          fi
+          set +e
+          python verification/laws-repair/apply-laws-spherical-cluster-repair.py \
+            > verification/laws-repair/spherical-cluster-error.log 2>&1
+          status=$?
+          set -e
+          if test "$status" -ne 0; then
+            cat verification/laws-repair/spherical-cluster-error.log
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add verification/laws-repair/spherical-cluster-error.log
+            git commit -m "Record Laws spherical repair transformation failure"
+            git push origin HEAD:agent/laws-spherical-cluster-positive-drag-001
+            exit "$status"
+          fi
+          rm verification/laws-repair/spherical-cluster-error.log
 
       - name: Validate JavaScript syntax
         run: |

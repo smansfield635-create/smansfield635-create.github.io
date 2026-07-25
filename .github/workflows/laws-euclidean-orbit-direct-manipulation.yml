@@ -1,11 +1,6 @@
 name: Laws Euclidean Orbit Correction
 
 on:
-  push:
-    branches:
-      - agent/laws-euclidean-orbit-direct-manipulation-001
-    paths:
-      - .github/workflows/laws-euclidean-orbit-direct-manipulation.yml
   pull_request:
     branches:
       - main
@@ -23,27 +18,21 @@ concurrency:
 
 jobs:
   transform-validate-and-commit:
-    if: github.head_ref == 'agent/laws-euclidean-orbit-direct-manipulation-001' || github.ref_name == 'agent/laws-euclidean-orbit-direct-manipulation-001'
+    if: github.head_ref == 'agent/laws-euclidean-orbit-direct-manipulation-001'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
-      - name: Checkout bounded branch
-        uses: actions/checkout@v4
-        with:
-          ref: agent/laws-euclidean-orbit-direct-manipulation-001
-          fetch-depth: 0
-          show-progress: false
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Verify exact parent ancestry
+      - name: Quiet exact-branch checkout
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          git init -q
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch -q --no-tags origin refs/heads/agent/laws-euclidean-orbit-direct-manipulation-001
+          git checkout -q -B agent/laws-euclidean-orbit-direct-manipulation-001 FETCH_HEAD
           git merge-base --is-ancestor dedc73841de2b41f5905fd842e9a593116caf300 HEAD
           test "$(git branch --show-current)" = "agent/laws-euclidean-orbit-direct-manipulation-001"
 
@@ -53,7 +42,6 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-
           path = Path("scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs")
           source = path.read_text(encoding="utf-8")
           replacements = {
@@ -72,7 +60,13 @@ jobs:
           node --check scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs
 
       - name: Apply fail-closed source transformation
-        run: node scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs
+        shell: bash
+        run: |
+          set +e
+          node scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs > /tmp/laws-transform.log 2>&1
+          status=$?
+          tail -n 80 /tmp/laws-transform.log
+          exit "$status"
 
       - name: Validate JavaScript syntax
         shell: bash
@@ -84,7 +78,13 @@ jobs:
           node --check laws/validation/laws.orbit-direct-manipulation.harness.mjs
 
       - name: Execute geometry and interaction harness
-        run: node laws/validation/laws.orbit-direct-manipulation.harness.mjs
+        shell: bash
+        run: |
+          set +e
+          node laws/validation/laws.orbit-direct-manipulation.harness.mjs > /tmp/laws-harness.log 2>&1
+          status=$?
+          tail -n 100 /tmp/laws-harness.log
+          exit "$status"
 
       - name: Verify transformed working paths
         shell: bash
@@ -138,4 +138,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "Establish Laws Euclidean orbit and direct manipulation"
-          git push origin HEAD:agent/laws-euclidean-orbit-direct-manipulation-001
+          git push -q origin HEAD:agent/laws-euclidean-orbit-direct-manipulation-001

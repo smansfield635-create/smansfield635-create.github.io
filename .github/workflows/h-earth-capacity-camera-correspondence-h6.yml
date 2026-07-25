@@ -100,6 +100,7 @@ jobs:
       - name: Verify H6 terminal receipt
         run: |
           node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
           import { readFile } from 'node:fs/promises';
           const receipt=JSON.parse(await readFile('artifacts/h-earth-capacity-camera-h6/h6-control-receipt.json','utf8'));
           if(receipt.status!=='PASS') throw new Error('H6_CONTROL_RECEIPT_NOT_PASS');
@@ -107,6 +108,14 @@ jobs:
           if(receipt.actualCorrespondence?.terminalClassification!=='CAPACITY_AUTHORITY_GAP_RENDERER_NODE_BUDGET_REJECTION_CORRESPONDS') throw new Error('H6_ACTUAL_CORRESPONDENCE_MISMATCH');
           if(receipt.claims?.circularProof!==false) throw new Error('H6_CIRCULAR_PROOF_BOUNDARY_VIOLATED');
           if(receipt.claims?.productionFilesChanged!==0) throw new Error('H6_PRODUCTION_MUTATION_BOUNDARY_VIOLATED');
+          const stable=value=>Array.isArray(value)
+            ? value.map(stable)
+            : value&&typeof value==='object'
+              ? Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])]))
+              : value;
+          const {deterministicReceiptSha256,...body}=receipt;
+          const calculated=createHash('sha256').update(JSON.stringify(stable(body))).digest('hex');
+          if(calculated!==deterministicReceiptSha256) throw new Error('H6_SERIALIZED_RECEIPT_DIGEST_MISMATCH');
           NODE
 
       - name: Upload deterministic H6 evidence

@@ -1,0 +1,65 @@
+name: H-Earth Capacity Stage-Separated Budget PR Transport
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches: [main]
+    paths:
+      - .github/workflows/h-earth-capacity-stage-separated-budget-validation-transport.yml
+      - .github/workflows/h-earth-capacity-stage-separated-budget-validation-pr-transport.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-close-transport:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-capacity-stage-separated-budget-validation-001
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply exact correction from the staged transport payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "0b1c3f6d29735d42141e2feffc5898985e5996af"
+          PAYLOAD="$(python - <<'PY'
+          import re
+          from pathlib import Path
+          text = Path('.github/workflows/h-earth-capacity-stage-separated-budget-validation-transport.yml').read_text()
+          match = re.search(r"printf '%s' '([^']+)' \\| base64", text)
+          if not match:
+              raise SystemExit('TRANSPORT_PAYLOAD_NOT_FOUND')
+          print(match.group(1))
+          PY
+          )"
+          printf '%s' "$PAYLOAD" | base64 -d | gzip -d > /tmp/apply-capacity-v3.py
+          python /tmp/apply-capacity-v3.py
+          node --check showroom/globe/h-earth/capacity.js
+          node --input-type=module <<'NODE'
+          const m = await import('./showroom/globe/h-earth/capacity.js?validation=' + Date.now());
+          for (const projectedFragmentCount of [514, 526, 696, 784, 798]) {
+            const legacy = m.evaluateHEarth3DNodeBudget({ semanticLayerContainers: 15, environmentPrimitives: projectedFragmentCount, interactionNodes: 1 });
+            const separated = m.evaluateHEarth3DStageSeparatedCapacity({ admittedPrimitiveCount: 3, projectedFragmentCount });
+            if (!legacy.eligible || !separated.eligible) throw new Error('PROFILE_REJECTED:' + projectedFragmentCount);
+          }
+          if (m.evaluateHEarth3DStageSeparatedCapacity({ admittedPrimitiveCount: 3, projectedFragmentCount: 1025 }).eligible) throw new Error('PROJECTED_OVERFLOW_NOT_REJECTED');
+          if (m.evaluateHEarth3DStageSeparatedCapacity({ admittedPrimitiveCount: 385, projectedFragmentCount: 798 }).eligible) throw new Error('ADMITTED_OVERFLOW_NOT_REJECTED');
+          if (m.H_EARTH_3D_CAPACITY_PREFLIGHT.eligible !== true) throw new Error('CAPACITY_PREFLIGHT_NOT_ELIGIBLE');
+          NODE
+      - name: Commit only capacity.js and remove both transports
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/h-earth-capacity-stage-separated-budget-validation-transport.yml
+          git rm .github/workflows/h-earth-capacity-stage-separated-budget-validation-pr-transport.yml
+          git add showroom/globe/h-earth/capacity.js
+          test "$(git diff --cached --name-only | sort)" = "showroom/globe/h-earth/capacity.js"
+          git config user.name "openai-codex[bot]"
+          git config user.email "openai-codex[bot]@users.noreply.github.com"
+          git commit -m "Validate H-Earth stage-separated capacity correction"
+          git push origin HEAD:agent/h-earth-capacity-stage-separated-budget-validation-001

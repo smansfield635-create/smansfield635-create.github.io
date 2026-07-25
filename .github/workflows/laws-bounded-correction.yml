@@ -1,9 +1,13 @@
 name: Laws Bounded Correction
 
 on:
-  push:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
     branches:
-      - agent/laws-runtime-projected-clearance-001
+      - main
     paths:
       - laws/validation/laws-runtime-projected-clearance.request.json
   workflow_dispatch:
@@ -13,7 +17,13 @@ permissions:
 
 jobs:
   apply-and-validate:
-    if: github.actor != 'github-actions[bot]'
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.actor != 'github-actions[bot]' &&
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        github.event.pull_request.head.ref == 'agent/laws-runtime-projected-clearance-001'
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -43,7 +53,7 @@ jobs:
 
       - name: Execute syntax and deterministic validation
         env:
-          LAWS_REPAIR_PARENT_COMMIT: ${{ github.event.before }}
+          LAWS_REPAIR_PARENT_COMMIT: ${{ github.event.pull_request.base.sha || github.sha }}
         run: |
           node --check laws/index.crystals.js
           node --check laws/index.compositor.js

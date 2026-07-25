@@ -1,0 +1,90 @@
+name: H-Earth Capacity Camera H4 Stage Evaluator
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/h-earth-capacity-camera-correspondence-h4.yml"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h4-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h3-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h2-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-measurement-contract.mjs"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-authority-lock.mjs"
+      - "showroom/globe/h-earth/capacity.js"
+      - "showroom/globe/h-earth/render/shoreline-preview.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-capacity-camera-h4-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stage-separated-capacity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch occurrence
+        uses: actions/checkout@v4
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate H4 source syntax
+        run: |
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h4-evaluator.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h4-controls.mjs
+
+      - name: Execute stage-separated H4 capacity evaluator
+        run: |
+          mkdir -p artifacts/h-earth-capacity-camera-h4
+          node tools/h-earth-capacity-camera-renderer-correspondence-h4-controls.mjs \
+            > artifacts/h-earth-capacity-camera-h4/h4-control-receipt.json
+
+      - name: Verify H4 terminal receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const receipt = JSON.parse(
+            await readFile(
+              'artifacts/h-earth-capacity-camera-h4/h4-control-receipt.json',
+              'utf8'
+            )
+          );
+          if (receipt.status !== 'PASS') throw new Error('H4_CONTROL_RECEIPT_NOT_PASS');
+          if (receipt.controlCount !== 12 || receipt.passedControlCount !== 12) {
+            throw new Error('H4_CONTROL_COUNT_MISMATCH');
+          }
+          if (
+            receipt.actualEvaluation?.terminalClassification !==
+            'PROJECTED_FRAGMENT_BUDGET_UNRESOLVED'
+          ) {
+            throw new Error('H4_ACTUAL_TERMINAL_CLASSIFICATION_INVALID');
+          }
+          if (
+            receipt.actualEvaluation?.earliestNonPassStage !==
+            'STAGE_3_PROJECTED_FRAGMENTS'
+          ) {
+            throw new Error('H4_ACTUAL_EARLIEST_NONPASS_STAGE_INVALID');
+          }
+          if (receipt.claims?.planAndMountCountsDistinct !== true) {
+            throw new Error('H4_PLAN_MOUNT_SEPARATION_NOT_ESTABLISHED');
+          }
+          if (receipt.claims?.physicalDomAccountingVerified !== true) {
+            throw new Error('H4_PHYSICAL_DOM_ACCOUNTING_NOT_VERIFIED');
+          }
+          if (receipt.claims?.productionFilesChanged !== 0) {
+            throw new Error('H4_PRODUCTION_MUTATION_BOUNDARY_VIOLATED');
+          }
+          NODE
+
+      - name: Upload deterministic H4 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-camera-h4-${{ github.sha }}
+          path: artifacts/h-earth-capacity-camera-h4/h4-control-receipt.json
+          if-no-files-found: error
+          retention-days: 30

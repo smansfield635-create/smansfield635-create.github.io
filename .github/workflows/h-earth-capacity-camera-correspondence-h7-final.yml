@@ -1,0 +1,138 @@
+name: H-Earth Capacity Camera H7 Final Tool Acceptance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/h-earth-capacity-camera-correspondence-h7-final.yml"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-*"
+      - "showroom/globe/h-earth/**"
+      - "h-earth-3d/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-capacity-camera-h7-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  final-tool-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      H7_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact final-tool occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Checkout exact renderer-tool occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: 546f6fc05174347ac797837d0b4844a2164c3cb3
+          path: .h7-renderer-tool-source
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify checkpoint ancestry and stage renderer instrument
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$H7_HEAD_SHA"
+          for sha in \
+            a28e41e28dd9bd68013667f2fa046f2f045e34ba \
+            1ca73a30f89c6003416c89bbff8d5fce54520996 \
+            6a958e5fc7971ce80e3561e2c0cd32b8c600793c \
+            5afef7fb528689ceede06d1e185d2f71e837f9b2 \
+            21de52b4523e34408db4ffc2822efcda48d537b3 \
+            15e23bf83b71e81748da404a83bfb34b2d09722d \
+            6688a557d2239d0fb11b06a2a588f905784b5bfc; do
+            git merge-base --is-ancestor "$sha" HEAD
+          done
+          test "$(git -C .h7-renderer-tool-source rev-parse HEAD)" = "546f6fc05174347ac797837d0b4844a2164c3cb3"
+          mkdir -p artifacts/h-earth-capacity-camera-h7 artifacts/h-earth-capacity-camera-h6
+          python - <<'PY'
+          import json, subprocess
+          expected = [
+            ("tools/h-earth-renderer-corridor-capacity-law.mjs", "7d4a3e9534c73bf3dcac0ef12b807a7d7a2e07d2"),
+            ("tools/h-earth-renderer-corridor-common.mjs", "b338e73b148ac4942ff368cf1e17ae170c2f4bfa"),
+            ("tools/h-earth-renderer-corridor-observation.mjs", "196935030416f9e9c11121fbfbec57274f19e287"),
+            ("tools/h-earth-renderer-corridor-integration-harness.mjs", "2215480882cc5dfab653cacb278cb2c1525c7bd3")
+          ]
+          records=[]
+          for path, blob in expected:
+            source=f".h7-renderer-tool-source/{path}"
+            actual=subprocess.check_output(["git","hash-object",source],text=True).strip()
+            if actual != blob: raise SystemExit(f"H7_RENDERER_TOOL_SOURCE_BLOB_MISMATCH:{path}:{actual}")
+            subprocess.check_call(["cp",source,path])
+            records.append({"path":path,"gitBlob":actual})
+          receipt={"sourceCommit":"546f6fc05174347ac797837d0b4844a2164c3cb3","files":records,"copiedIntoRepositoryHistory":False,"workspaceOnly":True}
+          payload=json.dumps(receipt,indent=2)+"\n"
+          open("artifacts/h-earth-capacity-camera-h7/renderer-tool-source-custody.json","w").write(payload)
+          open("artifacts/h-earth-capacity-camera-h6/renderer-tool-source-custody.json","w").write(payload)
+          PY
+
+      - name: Validate final checkpoint source syntax
+        run: |
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h7-finalizer.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h7-controls.mjs
+          node --check tools/h-earth-renderer-corridor-integration-harness.mjs
+
+      - name: Install pinned Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute independent renderer corridor
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          node tools/h-earth-renderer-corridor-integration-harness.mjs > artifacts/h-earth-capacity-camera-h7/renderer-corridor.log 2>&1
+          code=$?
+          set -e
+          echo "$code" > artifacts/h-earth-capacity-camera-h7/renderer-exit-code.txt
+          test -f artifacts/h-earth-renderer-corridor/aggregate.receipt.json
+          if [[ "$code" != "0" && "$code" != "1" ]]; then exit "$code"; fi
+
+      - name: Execute H0 through H7 final acceptance
+        run: |
+          node tools/h-earth-capacity-camera-renderer-correspondence-h7-controls.mjs > artifacts/h-earth-capacity-camera-h7/final-execution.log
+
+      - name: Verify final acceptance receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile } from 'node:fs/promises';
+          const path='artifacts/h-earth-capacity-camera-h7/aggregate.receipt.json';
+          const receipt=JSON.parse(await readFile(path,'utf8'));
+          if(receipt.status!=='PASS') throw new Error('H7_FINAL_RECEIPT_NOT_PASS');
+          if(receipt.acceptance?.capacityVerifierVerified!==true||receipt.acceptance?.inventoryEligible!==true||receipt.acceptance?.toolComplete!==true) throw new Error('H7_TOOL_ACCEPTANCE_NOT_ESTABLISHED');
+          if(receipt.controlCount!==8||receipt.passedControlCount!==8) throw new Error('H7_CONTROL_COUNT_MISMATCH');
+          if(receipt.sourceManifest?.fileCount!==28) throw new Error('H7_SOURCE_FILE_COUNT_MISMATCH');
+          if(receipt.artifactInventory?.artifactCount!==14) throw new Error('H7_ARTIFACT_COUNT_MISMATCH');
+          if(receipt.currentProductState?.currentProductionCapacityPass!==false) throw new Error('H7_PRODUCT_STATE_MISCLASSIFIED');
+          if(receipt.claims?.productionFilesChanged!==0||receipt.claims?.productionCorrectionStarted!==false||receipt.claims?.mergePerformed!==false) throw new Error('H7_STOP_BOUNDARY_VIOLATED');
+          const stable=value=>Array.isArray(value)?value.map(stable):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])])):value;
+          const {deterministicReceiptSha256,...body}=receipt;
+          const calculated=createHash('sha256').update(JSON.stringify(stable(body))).digest('hex');
+          if(calculated!==deterministicReceiptSha256) throw new Error('H7_SERIALIZED_RECEIPT_DIGEST_MISMATCH');
+          NODE
+
+      - name: Upload final deterministic tool package
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-camera-final-tool-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            artifacts/h-earth-capacity-camera-h7/**
+            artifacts/h-earth-renderer-corridor/*.json
+          if-no-files-found: error
+          retention-days: 30

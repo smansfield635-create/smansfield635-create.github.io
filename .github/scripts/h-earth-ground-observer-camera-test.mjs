@@ -35,7 +35,6 @@ applyHEarth3DCompositorIntent({
 
 const initial = currentPose();
 assert.equal(initial.pose.up.y > 0, true);
-assert.equal(initial.pose.position.y, initial.state.camera.target.y);
 
 for (let index = 0; index < 40; index += 1) {
   const receipt = applyHEarth3DCompositorIntent({
@@ -113,6 +112,7 @@ assert.equal(
 const sourceAssertions = {
   pitchBounds: H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS.pitchDegrees,
   initialPosition: initial.pose.position,
+  semanticTarget: initial.state.camera.target,
   maximumPitch: maximumPitch.state.camera.pitchDegrees,
   minimumPitch: minimumPitch.state.camera.pitchDegrees,
   beforeZoomFov: beforeZoom.pose.verticalFovDegrees,

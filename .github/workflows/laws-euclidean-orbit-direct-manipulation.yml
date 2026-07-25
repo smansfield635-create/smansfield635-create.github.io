@@ -1,0 +1,107 @@
+name: Laws Euclidean Orbit Correction
+
+on:
+  push:
+    branches:
+      - agent/laws-euclidean-orbit-direct-manipulation-001
+    paths:
+      - .github/workflows/laws-euclidean-orbit-direct-manipulation.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-euclidean-orbit-direct-manipulation-001
+  cancel-in-progress: false
+
+jobs:
+  transform-validate-and-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout bounded branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-euclidean-orbit-direct-manipulation-001
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify exact parent ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor dedc73841de2b41f5905fd842e9a593116caf300 HEAD
+          test "$(git branch --show-current)" = "agent/laws-euclidean-orbit-direct-manipulation-001"
+
+      - name: Apply fail-closed source transformation
+        run: node scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs
+
+      - name: Validate JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check laws/index.crystals.js
+          node --check laws/index.interactions.source.round4.js
+          node --check laws/index.interactions.js
+          node --check laws/validation/laws.orbit-direct-manipulation.harness.mjs
+
+      - name: Execute geometry and interaction harness
+        run: node laws/validation/laws.orbit-direct-manipulation.harness.mjs
+
+      - name: Verify transformed working paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff --name-only | sort)
+          expected=(
+            laws/index.crystals.js
+            laws/index.css
+            laws/index.html
+            laws/index.interactions.js
+            laws/index.interactions.source.round4.js
+            laws/validation/laws.orbit-direct-manipulation.receipt.json
+          )
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}")
+
+      - name: Remove temporary execution authorities
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs
+          rmdir scripts/laws 2>/dev/null || true
+          rmdir scripts 2>/dev/null || true
+          rm -f .github/workflows/laws-euclidean-orbit-direct-manipulation.yml
+
+      - name: Verify final bounded path set
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=(
+            laws/index.crystals.js
+            laws/index.css
+            laws/index.html
+            laws/index.interactions.js
+            laws/index.interactions.source.round4.js
+            laws/validation/laws.orbit-direct-manipulation.harness.mjs
+            laws/validation/laws.orbit-direct-manipulation.receipt.json
+          )
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          mapfile -t actual < <(git diff --name-only dedc73841de2b41f5905fd842e9a593116caf300 -- . ':!.github/workflows/laws-euclidean-orbit-direct-manipulation.yml' ':!scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs' | sort)
+          diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${actual[@]}")
+          test -z "$(git diff --name-only dedc73841de2b41f5905fd842e9a593116caf300 -- laws/index.controller.js laws/index.compositor.js laws/index.planet.js)"
+
+      - name: Commit bounded correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Establish Laws Euclidean orbit and direct manipulation"
+          git push origin HEAD:agent/laws-euclidean-orbit-direct-manipulation-001

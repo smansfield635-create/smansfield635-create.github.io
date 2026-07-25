@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/laws-orbit-main-compass-parity-001
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -16,6 +19,7 @@ jobs:
       - name: Check out correction branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref || github.ref_name }}
           fetch-depth: 0
 
       - name: Transplant Main Compass cluster geometry

@@ -1,0 +1,6 @@
+{
+  "artifactId": "L1J_LAWS_DRAFT_PR_INVOCATION_v1",
+  "status": "INVOKE_CREATE_PULL_REQUEST",
+  "branch": "agent/laws-projected-clearance-bounded-repair-001",
+  "base": "main"
+}

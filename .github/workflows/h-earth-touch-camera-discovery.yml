@@ -82,6 +82,70 @@ jobs:
           set -euo pipefail
           node .github/scripts/h-earth-touch-camera-transport.mjs apply
 
+      - name: Bind gestures to fresh compositor frame occurrences
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+
+          path = Path('showroom/globe/h-earth/index.js')
+          source = path.read_text(encoding='utf-8')
+
+          old = '''  const initializationKey =
+            MODULE_STATE.activeInitializationKey;
+
+          let handoff;
+          let rendererApplyReceipt;
+
+          try {
+            handoff =
+              createHandoff({
+                packet002Transfer:
+                  initializationKey?.packet002Transfer,
+                packet002TransferOccurrenceId:
+                  initializationKey?.packet002TransferOccurrenceId,
+                presentationMode:
+                  initializationKey?.presentationMode
+              });'''
+
+          new = '''  const initializationKey =
+            MODULE_STATE.activeInitializationKey;
+
+          const compositorStateSnapshot =
+            compositorModule
+              .getHEarth3DCompositorState();
+
+          const touchCompositorFrameOccurrenceId =
+            `${initializationKey.compositorFrameOccurrenceId}` +
+            `:TOUCH_CAMERA_GESTURE:${MODULE_STATE.touchCameraGestureRevision + 1}` +
+            `:CAMERA_REVISION:${compositorStateSnapshot.revisions.camera}`;
+
+          let handoff;
+          let rendererApplyReceipt;
+
+          try {
+            handoff =
+              createHandoff({
+                packet002Transfer:
+                  initializationKey?.packet002Transfer,
+                packet002TransferOccurrenceId:
+                  initializationKey?.packet002TransferOccurrenceId,
+                compositorFrameOccurrenceId:
+                  touchCompositorFrameOccurrenceId,
+                presentationMode:
+                  initializationKey?.presentationMode
+              });'''
+
+          if source.count(old) != 1:
+              raise SystemExit('FRESH_FRAME_PATCH_EXPECTED_EXACTLY_ONCE')
+
+          source = source.replace(old, new)
+          path.write_text(source, encoding='utf-8')
+          PY
+          node --check showroom/globe/h-earth/index.js
+          grep -q "TOUCH_CAMERA_GESTURE.*CAMERA_REVISION" showroom/globe/h-earth/index.js
+
       - name: Install pinned browser runtime
         shell: bash
         run: |

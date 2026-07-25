@@ -1,0 +1,170 @@
+{
+  "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_BENCHMARK_IDENTITY_AND_ROLE_REGISTRY_v1",
+  "checkpoint": "CP1",
+  "status": "PASS_ROLE_LOCKED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "inventoryBranch": "agent/metaverse-benchmark-corpus-inventory-001",
+  "authorityLockPath": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-00/inventory-authority-and-boundary-lock.json",
+  "scope": "BENCHMARK_IDENTITY_REFERENCE_ROLE_AND_NON_REFERENCE_BOUNDARY_ONLY",
+  "rules": {
+    "benchmarksAreIdenticalImplementations": false,
+    "referenceBehaviorRequiresIdenticalImplementation": false,
+    "referenceAuthorityIsDimensionScoped": true,
+    "productSpecificDifferencesArePreserved": true,
+    "roleRegistryGrantsProductMutationAuthority": false,
+    "roleRegistryEstablishesRouteIdentity": false,
+    "roleRegistryEstablishesSourceIdentity": false,
+    "roleRegistryEstablishesRuntimePass": false,
+    "roleRegistryEstablishesVisualAcceptance": false,
+    "roleRegistryEstablishesProductionPass": false
+  },
+  "benchmarks": [
+    {
+      "benchmarkId": "MAIN_COMPASS",
+      "displayName": "Main Compass Page",
+      "productFamily": "UNIVERSAL_COMPASS",
+      "referencePosture": "POSITIVE_REFERENCE",
+      "referenceDimensions": [
+        "AUTHORITY_SEPARATION",
+        "WORLD_TO_PRESENTATION_CONTINUITY",
+        "CONSTELLATION_AND_CLUSTER_STATE_ARCHITECTURE",
+        "OBJECT_IDENTITY_CONTINUITY",
+        "WORLD_REVISION_CONTINUITY",
+        "IMMUTABLE_AUTHORITY_HANDOFFS",
+        "GOVERNED_NAVIGATION_STATE"
+      ],
+      "nonReferenceDimensions": [
+        "HOMEPAGE_PUBLIC_SHELL_INTEGRATION",
+        "ARCHCOIN_PRODUCT_SPECIFIC_GESTURE_TUNING",
+        "SHOWROOM_VISUAL_ATMOSPHERE",
+        "LAWS_PRODUCT_SEMANTICS",
+        "UNIVERSAL_VISUAL_STYLE"
+      ],
+      "publicRoute": null,
+      "repositoryEntryPath": null,
+      "identityResolutionCheckpoint": "CP2_ROUTE_AND_REPOSITORY_OCCURRENCE_IDENTIFICATION",
+      "knownStatus": "ROLE_LOCKED_OCCURRENCE_UNRESOLVED"
+    },
+    {
+      "benchmarkId": "HOMEPAGE_COMPASS",
+      "displayName": "Website Homepage Compass",
+      "productFamily": "WEBSITE_ROOT",
+      "referencePosture": "POSITIVE_REFERENCE",
+      "referenceDimensions": [
+        "PUBLIC_SHELL_INTEGRATION",
+        "FIRST_LOAD_BEHAVIOR",
+        "RESPONSIVE_LAYOUT",
+        "PAGE_AND_NAVIGATION_COORDINATION",
+        "PUBLIC_ROUTE_RELIABILITY",
+        "PUBLIC_FACING_POLISH"
+      ],
+      "nonReferenceDimensions": [
+        "UNIVERSAL_COMPASS_WORLD_AUTHORITY_TOPOLOGY",
+        "ARCHCOIN_PRODUCT_SPECIFIC_GESTURE_TUNING",
+        "SHOWROOM_SCENE_DEPTH",
+        "LAWS_PRODUCT_SEMANTICS",
+        "UNIVERSAL_VISUAL_STYLE"
+      ],
+      "publicRoute": null,
+      "repositoryEntryPath": null,
+      "identityResolutionCheckpoint": "CP2_ROUTE_AND_REPOSITORY_OCCURRENCE_IDENTIFICATION",
+      "knownStatus": "ROLE_LOCKED_OCCURRENCE_UNRESOLVED"
+    },
+    {
+      "benchmarkId": "ARCHCOIN_COMPASS",
+      "displayName": "ARCHCOIN Compass",
+      "productFamily": "ARCHCOIN",
+      "referencePosture": "POSITIVE_REFERENCE",
+      "referenceDimensions": [
+        "MOBILE_DIRECT_MANIPULATION",
+        "TOUCH_RESPONSIVENESS",
+        "STAR_GRAB_AND_DRAG_BEHAVIOR",
+        "SELECTED_OBJECT_HIERARCHY",
+        "ROTATION_FEEL",
+        "RELEASE_BEHAVIOR",
+        "RETURN_TO_ORBIT",
+        "SWIPE_TO_CONSTELLATION",
+        "MOBILE_INTERACTION_USABILITY"
+      ],
+      "nonReferenceDimensions": [
+        "UNIVERSAL_COMPASS_CANONICAL_WORLD_TOPOLOGY",
+        "HOMEPAGE_PUBLIC_SHELL_BEHAVIOR",
+        "SHOWROOM_SCENE_ATMOSPHERE",
+        "LAWS_PRODUCT_SEMANTICS",
+        "UNIVERSAL_VISUAL_STYLE"
+      ],
+      "publicRoute": null,
+      "repositoryEntryPath": null,
+      "identityResolutionCheckpoint": "CP2_ROUTE_AND_REPOSITORY_OCCURRENCE_IDENTIFICATION",
+      "knownStatus": "ROLE_LOCKED_OCCURRENCE_UNRESOLVED"
+    },
+    {
+      "benchmarkId": "SHOWROOM",
+      "displayName": "Showroom",
+      "productFamily": "SHOWROOM",
+      "referencePosture": "POSITIVE_REFERENCE",
+      "referenceDimensions": [
+        "SPATIAL_COMPOSITION",
+        "SCENE_DEPTH",
+        "VISUAL_INTEGRATION",
+        "RESPONSIVE_SPATIAL_PRESENTATION",
+        "BROWSER_ROUTE_REALIZATION",
+        "NO_ERROR_SCENE_INITIALIZATION"
+      ],
+      "nonReferenceDimensions": [
+        "UNIVERSAL_COMPASS_AUTHORITY_TOPOLOGY",
+        "HOMEPAGE_PUBLIC_SHELL_BEHAVIOR",
+        "ARCHCOIN_PRODUCT_SPECIFIC_GESTURE_TUNING",
+        "LAWS_PRODUCT_SEMANTICS",
+        "UNIVERSAL_VISUAL_STYLE"
+      ],
+      "publicRoute": null,
+      "repositoryEntryPath": null,
+      "identityResolutionCheckpoint": "CP2_ROUTE_AND_REPOSITORY_OCCURRENCE_IDENTIFICATION",
+      "knownStatus": "ROLE_LOCKED_OCCURRENCE_UNRESOLVED"
+    },
+    {
+      "benchmarkId": "LAWS_CHAMBER_POST_PR128",
+      "displayName": "Laws Chamber Post-PR128 Regression",
+      "productFamily": "LAWS_CHAMBER",
+      "referencePosture": "NEGATIVE_REFERENCE",
+      "referenceDimensions": [
+        "GEOMETRY_PASS_INTERACTION_FAIL_DISCRIMINATION",
+        "MOBILE_STAR_ROTATION_REGRESSION",
+        "SWIPE_TO_CONSTELLATION_REGRESSION",
+        "INCOMPLETE_ACCEPTANCE_MODEL_DETECTION",
+        "PROMOTION_GATE_FAILURE"
+      ],
+      "nonReferenceDimensions": [
+        "POSITIVE_GESTURE_STANDARD",
+        "POSITIVE_VISUAL_STANDARD",
+        "POSITIVE_PRODUCTION_STANDARD",
+        "ROOT_CAUSE_ESTABLISHMENT_FROM_SCREENSHOTS",
+        "UNIVERSAL_PRODUCT_BEHAVIOR"
+      ],
+      "knownSourceOccurrence": {
+        "mergeCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+        "pullRequest": 128
+      },
+      "publicRoute": null,
+      "repositoryEntryPath": null,
+      "identityResolutionCheckpoint": "CP2_ROUTE_AND_REPOSITORY_OCCURRENCE_IDENTIFICATION",
+      "knownStatus": "NEGATIVE_ROLE_LOCKED_ROUTE_AND_ENTRY_UNRESOLVED"
+    }
+  ],
+  "assertions": {
+    "benchmarkCount": 5,
+    "positiveReferenceCount": 4,
+    "negativeReferenceCount": 1,
+    "allBenchmarkIdsUnique": true,
+    "allReferenceDimensionsExplicit": true,
+    "allNonReferenceDimensionsExplicit": true,
+    "productsTreatedAsIdentical": false,
+    "routesClaimedWithoutInspection": false,
+    "repositoryEntriesClaimedWithoutInspection": false,
+    "productMutationAuthority": false,
+    "mainChanged": false
+  },
+  "nextCheckpoint": "CP2_ROUTE_AND_REPOSITORY_OCCURRENCE_IDENTIFICATION"
+}

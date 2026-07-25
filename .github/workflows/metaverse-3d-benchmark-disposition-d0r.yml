@@ -1,0 +1,88 @@
+name: Metaverse 3D Benchmark Disposition D0R Final Reconciliation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/metaverse-3d-benchmark-disposition-d0r.yml"
+      - "tools/metaverse-3d-benchmark-disposition-d0r-*"
+      - "verification/benchmark-corpus/four-compass-reconciliation-v1/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: metaverse-3d-benchmark-disposition-d0r-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reconciliation-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      D0R_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact D0R occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.D0R_HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact head and R7 reconciliation ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$D0R_HEAD_SHA"
+          git merge-base --is-ancestor a06f5ff8ab5c687d3c849d6944e4bdcc68490af8 HEAD
+          test "$(git hash-object verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r0/four-compass-reconciliation-authority-lock.json)" = "32fc7f07c5b8e4fdcdb80091c575f3ad57902a9d"
+          test "$(git hash-object verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r1/four-compass-role-registry.json)" = "bcd893cb9f1efd441bad6da0aef828fd106ce482"
+          test "$(git hash-object verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r2/cp0-through-cp7-authority-supersession-map.json)" = "49ae6af6cfa19b12a698098da79e4336497e4270"
+          test "$(git hash-object verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r3/four-compass-source-and-runtime-corpus.json)" = "32ab1590963c72d87cb754b96e23413cfc4a34a5"
+          test "$(git hash-object verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r4/website-home-receiver-control-ledger.json)" = "cf404f0e741c0bee1b9833288bb94502b70a718a"
+          test "$(git hash-object verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r5/four-compass-interaction-reprojection.json)" = "7e05c687115ee892b7d5464abffa5f67cb14f78f"
+          test "$(git hash-object verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r6/four-compass-visual-and-spatial-reprojection.json)" = "28bd0d4555e51625904d7c4e19c1fb3465a86d56"
+          test "$(git hash-object verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r7/reconciliation-integrity-audit.json)" = "6c2950d179b058e379ba108219dcd63d8a34a80c"
+
+      - name: Validate D0R source syntax
+        run: |
+          node --check tools/metaverse-3d-benchmark-disposition-d0r-authority-lock.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d0r-controls.mjs
+          node -e "JSON.parse(require('fs').readFileSync('tools/metaverse-3d-benchmark-disposition-d0r-contract.json','utf8'))"
+
+      - name: Execute D0R controls
+        run: |
+          mkdir -p artifacts/metaverse-3d-benchmark-disposition-d0r
+          node tools/metaverse-3d-benchmark-disposition-d0r-controls.mjs > artifacts/metaverse-3d-benchmark-disposition-d0r/execution.log
+
+      - name: Verify deterministic D0R receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile } from 'node:fs/promises';
+          const receipt = JSON.parse(await readFile('artifacts/metaverse-3d-benchmark-disposition-d0r/aggregate.receipt.json', 'utf8'));
+          if (receipt.status !== 'PASS') throw new Error('D0R_RECEIPT_NOT_PASS');
+          if (receipt.controlCount !== 21 || receipt.passedControlCount !== 21) throw new Error('D0R_CONTROL_COUNT_MISMATCH');
+          if (receipt.claims?.fourCompassAuthorityLocked !== true || receipt.claims?.homeAuxiliaryControlLocked !== true || receipt.claims?.r7IntegrityAuditConsumed !== true) throw new Error('D0R_AUTHORITY_NOT_LOCKED');
+          if (receipt.authorityReceipt?.counts?.observedRoutes !== 5 || receipt.authorityReceipt?.counts?.canonicalCompasses !== 4) throw new Error('D0R_ROUTE_COMPASS_DISTINCTION_MISMATCH');
+          if (receipt.authorityReceipt?.sourceAnchorCount !== 8) throw new Error('D0R_SOURCE_ANCHOR_COUNT_MISMATCH');
+          if (receipt.authorityReceipt?.integrityAudit?.recaptureDecision !== 'PASS_NO_RECAPTURE_REQUIRED') throw new Error('D0R_RECAPTURE_DECISION_MISMATCH');
+          if (receipt.claims?.productFilesChanged !== 0 || receipt.claims?.d1Started !== false || receipt.claims?.mergePerformed !== false) throw new Error('D0R_BOUNDARY_VIOLATED');
+          const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])])) : value;
+          const { deterministicReceiptSha256, ...body } = receipt;
+          const calculated = createHash('sha256').update(JSON.stringify(stable(body))).digest('hex');
+          if (calculated !== deterministicReceiptSha256) throw new Error('D0R_SERIALIZED_RECEIPT_DIGEST_MISMATCH');
+          NODE
+
+      - name: Upload deterministic D0R package
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-3d-benchmark-disposition-d0r-${{ env.D0R_HEAD_SHA }}
+          path: artifacts/metaverse-3d-benchmark-disposition-d0r/**
+          if-no-files-found: error
+          retention-days: 30

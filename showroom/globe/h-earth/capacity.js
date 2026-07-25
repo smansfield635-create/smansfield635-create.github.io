@@ -2,13 +2,13 @@
  * /showroom/globe/h-earth/capacity.js
  * COMPLETE RENEWED FILE
  *
- * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3
+ * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v4
  *
  * Layer:
  * H-Earth Layer 4 · Showroom Execution Corridor
  *
  * Renews:
- * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2
+ * H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3
  *
  * Purpose:
  * Define the complete bounded execution-capacity constitution for the
@@ -70,9 +70,9 @@
  */
 
 export const H_EARTH_3D_CAPACITY_CONTRACT_ID =
-  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v3';
+  'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v4';
 
-export const H_EARTH_3D_CAPACITY_SCHEMA_VERSION = 3;
+export const H_EARTH_3D_CAPACITY_SCHEMA_VERSION = 4;
 
 const deepFreeze = (value) => {
   if (
@@ -540,15 +540,15 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
 
   initialProjectionCandidate: deepFreeze({
     position: deepFreeze({
-      x: 0,
-      y: 14,
-      z: -240
+      x: 28,
+      y: 10.5,
+      z: -82
     }),
 
     target: deepFreeze({
-      x: 0,
-      y: 0.6,
-      z: -48
+      x: -34,
+      y: 5.5,
+      z: -214
     }),
 
     up: deepFreeze({
@@ -557,7 +557,7 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
       z: 0
     }),
 
-    verticalFovDegrees: 60,
+    verticalFovDegrees: 56,
     nearPlane: 0.25,
     farPlane: 512,
 
@@ -684,21 +684,23 @@ export const H_EARTH_3D_CAMERA_CAPACITY = deepFreeze({
  * These declarations create no animation runtime and mutate no admitted geometry.
  */
 export const H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID =
-  'H_EARTH_LANDWARD_GROUND_INSPECTION_CAMERA_ENVELOPE_v2_SINGLE_MODULE';
+  'H_EARTH_LANDWARD_ESTATE_ENTRY_CAMERA_ENVELOPE_v3_SINGLE_MODULE';
 
 export const H_EARTH_3D_CAMERA_COMPOSITION_INTENT = deepFreeze({
   compositionId:
     H_EARTH_3D_CAMERA_ENVELOPE_CORRECTION_ID,
   compositionRole:
-    'LANDWARD_GROUND_INSPECTION_LOOKING_WATERWARD',
+    'SHORELINE_ENTRY_LOOKING_LANDWARD_TOWARD_ESTATE_CONTEXT',
   cameraSide:
-    'LAND_SIDE_NEGATIVE_Z',
+    'SHORELINE_WATERWARD_EDGE_NEAR_NEGATIVE_Z_LAND',
   viewDirection:
-    'TOWARD_POSITIVE_Z_WATER_SIDE',
+    'TOWARD_NEGATIVE_Z_LAND_MANOR_AND_OBJECT_CONTEXT',
   shorelineReferenceZ: -96,
   wetSandForegroundRequired: true,
-  foamContactSeamRequired: true,
-  waterRecessionRequired: true,
+  foamContactSeamRequired: false,
+  waterRecessionRequired: false,
+  shorelineBehindOrPeripheralRequired: true,
+  manorContextForwardReserved: true,
   futureContextDepthReserved: true,
   admittedGeometryMutationPermitted: false,
   animationStandardPreparationOnly: true,

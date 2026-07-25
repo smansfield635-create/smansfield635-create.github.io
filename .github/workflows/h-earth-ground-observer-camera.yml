@@ -7,6 +7,7 @@ on:
     paths:
       - ".github/workflows/h-earth-ground-observer-camera.yml"
       - ".github/scripts/h-earth-ground-observer-camera-patch.mjs"
+      - ".github/scripts/h-earth-ground-observer-derived-patch.mjs"
       - ".github/scripts/h-earth-ground-observer-camera-test.mjs"
       - "showroom/globe/h-earth/compositor.js"
       - "showroom/globe/h-earth/index.js"
@@ -86,10 +87,12 @@ jobs:
         run: |
           set -euo pipefail
           node .github/scripts/h-earth-ground-observer-camera-patch.mjs
+          node .github/scripts/h-earth-ground-observer-derived-patch.mjs
           node --check showroom/globe/h-earth/compositor.js
           node --check showroom/globe/h-earth/index.js
           grep -q "GROUND_OBSERVER_FIXED_EYE_HEIGHT_WITH_PINCH_FIELD_OF_VIEW_SCALING" showroom/globe/h-earth/compositor.js
           grep -q "GROUND_OBSERVER_PITCH_BOUNDS" showroom/globe/h-earth/compositor.js
+          grep -q "effectiveVerticalFovDegrees" showroom/globe/h-earth/compositor.js
           grep -q "GROUND_OBSERVER_LOOK_AND_PINCH_FOV_CONTROL_v2" showroom/globe/h-earth/index.js
 
       - name: Install pinned browser runtime
@@ -127,14 +130,16 @@ jobs:
           rm -rf node_modules package.json package-lock.json
           rm -f .github/workflows/h-earth-ground-observer-camera.yml
           rm -f .github/scripts/h-earth-ground-observer-camera-patch.mjs
+          rm -f .github/scripts/h-earth-ground-observer-derived-patch.mjs
           rm -f .github/scripts/h-earth-ground-observer-camera-test.mjs
           git add showroom/globe/h-earth/compositor.js showroom/globe/h-earth/index.js
           git add -u \
             .github/workflows/h-earth-ground-observer-camera.yml \
             .github/scripts/h-earth-ground-observer-camera-patch.mjs \
+            .github/scripts/h-earth-ground-observer-derived-patch.mjs \
             .github/scripts/h-earth-ground-observer-camera-test.mjs
           changed="$(git diff --cached --name-only)"
-          expected=$'.github/scripts/h-earth-ground-observer-camera-patch.mjs\n.github/scripts/h-earth-ground-observer-camera-test.mjs\n.github/workflows/h-earth-ground-observer-camera.yml\nshowroom/globe/h-earth/compositor.js\nshowroom/globe/h-earth/index.js'
+          expected=$'.github/scripts/h-earth-ground-observer-camera-patch.mjs\n.github/scripts/h-earth-ground-observer-camera-test.mjs\n.github/scripts/h-earth-ground-observer-derived-patch.mjs\n.github/workflows/h-earth-ground-observer-camera.yml\nshowroom/globe/h-earth/compositor.js\nshowroom/globe/h-earth/index.js'
           test "$changed" = "$expected"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

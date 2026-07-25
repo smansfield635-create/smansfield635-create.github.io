@@ -8,6 +8,10 @@ const ROUTE = "/";
 const OUTPUT_DIR = "cp7-2-smoke-output";
 const SCREENSHOT_FILE = path.join(OUTPUT_DIR, "main-compass-desktop-smoke.png");
 const RECEIPT_FILE = path.join(OUTPUT_DIR, "cp7-2-smoke-receipt.json");
+const EXECUTION_COMMIT =
+  process.env.EXECUTION_HEAD_SHA ||
+  process.env.GITHUB_SHA ||
+  "";
 const VIEWPORT = Object.freeze({
   width: 1440,
   height: 1100,
@@ -135,7 +139,8 @@ async function main() {
       checkpoint: "CP7-2",
       status: "PASS_WORKFLOW_BIRTH_AND_TRIGGER_SMOKE_CAPTURE",
       repository: process.env.GITHUB_REPOSITORY || "smansfield635-create/smansfield635-create.github.io",
-      executionCommit: process.env.GITHUB_SHA || "",
+      executionCommit: EXECUTION_COMMIT,
+      workflowEvent: process.env.GITHUB_EVENT_NAME || "",
       workflowRunId: process.env.GITHUB_RUN_ID || "",
       workflowRunAttempt: process.env.GITHUB_RUN_ATTEMPT || "",
       generatedAt: new Date().toISOString(),
@@ -158,6 +163,7 @@ async function main() {
       },
       telemetry,
       assertions: {
+        executionCommitIsExactSha: /^[a-f0-9]{40}$/.test(EXECUTION_COMMIT),
         responseIsSuccessful: Boolean(response && response.status() >= 200 && response.status() < 400),
         compassRootPresent: Boolean(rootState),
         screenshotCreated: screenshotBytes.byteLength > 0,
@@ -168,6 +174,7 @@ async function main() {
         proves: [
           "HARNESS_FILE_EXISTS",
           "WORKFLOW_EXECUTION_REACHABLE",
+          "EXACT_EXECUTION_HEAD_IDENTITY",
           "DEPLOYED_BROWSER_NAVIGATION",
           "SINGLE_SCREENSHOT_CAPTURE",
           "SCREENSHOT_BYTE_AND_DIGEST_CUSTODY"
@@ -195,6 +202,7 @@ async function main() {
 
     process.stdout.write(`${JSON.stringify({
       status: receipt.status,
+      executionCommit: receipt.executionCommit,
       screenshot: receipt.screenshot,
       responseStatus: receipt.responseStatus,
       finalUrl: receipt.finalUrl

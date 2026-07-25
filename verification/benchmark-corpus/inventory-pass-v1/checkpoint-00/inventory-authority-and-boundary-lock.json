@@ -1,0 +1,49 @@
+{
+  "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_INVENTORY_AUTHORITY_AND_BOUNDARY_LOCK_v1",
+  "checkpoint": "CP0",
+  "status": "PASS_LOCKED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "defaultBranch": "main",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "inventoryBranch": "agent/metaverse-benchmark-corpus-inventory-001",
+  "authorizedOutputRoot": "verification/benchmark-corpus/inventory-pass-v1/",
+  "recordedAt": "2026-07-24T21:39:22-05:00",
+  "mode": "READ_INSPECT_RECORD_VERIFY",
+  "authority": {
+    "productMutation": false,
+    "mainWrite": false,
+    "merge": false,
+    "repair": false,
+    "inventoryWritesOnBoundedBranch": true
+  },
+  "benchmarks": [
+    ["MAIN_COMPASS", "POSITIVE", "AUTHORITY_AND_STATE_ARCHITECTURE"],
+    ["HOMEPAGE_COMPASS", "POSITIVE", "PUBLIC_SHELL_AND_RESPONSIVE_INTEGRATION"],
+    ["ARCHCOIN_COMPASS", "POSITIVE", "DIRECT_MANIPULATION_AND_MOBILE_GESTURE"],
+    ["SHOWROOM", "POSITIVE", "SPATIAL_PRESENTATION_AND_BROWSER_REALIZATION"],
+    ["LAWS_CHAMBER_POST_PR128", "NEGATIVE", "INTERACTION_REGRESSION_AND_INCOMPLETE_ACCEPTANCE"]
+  ],
+  "allowed": [
+    "READ_SOURCE",
+    "FETCH_IMMUTABLE_GIT_OBJECTS",
+    "INSPECT_ROUTES",
+    "CAPTURE_NON_MUTATING_EVIDENCE",
+    "WRITE_INVENTORY_ARTIFACTS_UNDER_AUTHORIZED_ROOT"
+  ],
+  "prohibited": [
+    "EDIT_PRODUCT_SOURCE",
+    "EDIT_MAIN",
+    "MERGE",
+    "REPAIR_LAWS",
+    "NORMALIZE_BENCHMARKS",
+    "UPGRADE_ACCEPTANCE_CLASSIFICATION"
+  ],
+  "assertions": {
+    "benchmarkCount": 5,
+    "positiveCount": 4,
+    "negativeCount": 1,
+    "mainChanged": false,
+    "inventoryBranchIsolated": true
+  },
+  "nextCheckpoint": "CP1_BENCHMARK_IDENTITY_AND_ROLE_REGISTRY"
+}

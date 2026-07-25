@@ -1,0 +1,129 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_CP7_2_WORKFLOW_BIRTH_AND_TRIGGER_VERIFICATION_LEDGER_v1",
+  "checkpoint": "CP7-2",
+  "status": "PASS_WORKFLOW_BIRTH_AND_TRIGGER_VERIFICATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "inventoryBranch": "agent/metaverse-benchmark-corpus-inventory-001",
+  "inventoryParentCommit": "01e8ea6825dd5f43e2035cc2e4c735e7f8b66d9e",
+  "boundedSequenceControlling": true,
+  "execution": {
+    "branch": "agent/metaverse-benchmark-cp7-visual-spatial-001",
+    "commit": "d4825b09f8186699bbf4025981c12f50e710df9a",
+    "draftPullRequest": 136,
+    "workflowName": "Metaverse Benchmark CP7-2 Smoke Capture",
+    "workflowRunId": "30144885243",
+    "workflowRunAttempt": "1",
+    "workflowConclusion": "success",
+    "jobId": "89644672013",
+    "jobConclusion": "success",
+    "workflowEvent": "pull_request",
+    "artifactId": "8615651357",
+    "artifactName": "metaverse-benchmark-cp7-2-smoke-capture",
+    "artifactArchiveByteLength": 1367565,
+    "artifactArchiveSha256": "6fa39a4c423abb8c486f466efdeab976f4b8dd67cdb2c3e201625cd080f6fe71"
+  },
+  "sourceCustody": {
+    "harness": {
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/cp7-2-smoke-capture.mjs",
+      "gitBlob": "655e99f52ef4f5e6c8628e5e20ef3597697cbf45"
+    },
+    "workflow": {
+      "path": ".github/workflows/metaverse-benchmark-cp7-2-smoke-capture.yml",
+      "gitBlob": "3c55b538addd30c9c56180bffaf2b8a858ea5b40"
+    }
+  },
+  "workflowStepResults": {
+    "checkoutExecutionHead": "success",
+    "verifyExactCheckoutIdentity": "success",
+    "setupNode": "success",
+    "setupChrome": "success",
+    "installPinnedBrowserDriver": "success",
+    "executeSmokeCapture": "success",
+    "validateSmokeEvidence": "success",
+    "uploadSmokeEvidence": "success",
+    "writeCheckpointSummary": "success"
+  },
+  "fetchBackVerification": {
+    "receipt": {
+      "path": "cp7-2-smoke-receipt.json",
+      "byteLength": 9316,
+      "sha256": "f2286598a78e67619f91a852cb3c53fca99bb744df53065ed4904281e8bd9516"
+    },
+    "screenshot": {
+      "path": "main-compass-desktop-smoke.png",
+      "byteLength": 1364389,
+      "sha256": "7f28002571d03c8208a19936f79ad408205f083956281b0fffe9384d5baa276a"
+    },
+    "receiptScreenshotDigestMatchesFetchedBytes": true,
+    "receiptExecutionCommitMatchesWorkflowHead": true
+  },
+  "smokeCapture": {
+    "origin": "https://smansfield635-create.github.io",
+    "route": "/",
+    "responseStatus": 200,
+    "finalUrl": "https://diamondgatebridge.com/",
+    "title": "Diamond Gate Bridge Compass",
+    "browserVersion": "Chrome/150.0.7871.186",
+    "viewport": {
+      "width": 1440,
+      "height": 1100,
+      "deviceScaleFactor": 1,
+      "isMobile": false,
+      "hasTouch": false
+    },
+    "targetSelector": "[data-compass-scene]",
+    "targetResolved": true,
+    "targetRect": {
+      "x": 130,
+      "y": 241.703125,
+      "width": 1180,
+      "height": 616
+    }
+  },
+  "assertions": {
+    "harnessFileExists": true,
+    "workflowFileExists": true,
+    "draftPullRequestExists": true,
+    "workflowRunCreated": true,
+    "checkoutStepPassed": true,
+    "exactExecutionHeadVerified": true,
+    "chromeInstallationPassed": true,
+    "smokeScreenshotCreated": true,
+    "artifactUploaded": true,
+    "artifactFetchedBack": true,
+    "screenshotDigestVerified": true,
+    "productFilesChanged": 0,
+    "lawsRepairStarted": false,
+    "mainChanged": false,
+    "mergeAuthority": "NONE"
+  },
+  "historicalContext": {
+    "earlierMonolithicCp7LedgerPresentAtInventoryParent": true,
+    "earlierMonolithicCp7LedgerUsedAsCp7_2Proof": false,
+    "boundedCp7SequenceRemainsControllingForCurrentContinuation": true
+  },
+  "stoppingBoundary": {
+    "proves": [
+      "HARNESS_FILE_EXISTS",
+      "WORKFLOW_FILE_EXISTS",
+      "DRAFT_PR_EXISTS",
+      "WORKFLOW_RUN_CREATED",
+      "CHECKOUT_STEP_PASS",
+      "EXACT_EXECUTION_HEAD_IDENTITY",
+      "CHROME_INSTALLATION_PASS",
+      "ONE_SMOKE_SCREENSHOT_CREATED",
+      "ARTIFACT_UPLOAD_AND_FETCH_BACK",
+      "SCREENSHOT_BYTE_AND_SHA256_CUSTODY"
+    ],
+    "doesNotProve": [
+      "FULL_CAPTURE_MATRIX_COMPLETENESS",
+      "VISUAL_CORRECTNESS",
+      "SPATIAL_REALIZATION_CORRECTNESS",
+      "MOBILE_REALIZATION",
+      "LAWS_REPAIR_CORRECTNESS"
+    ],
+    "authorizes": []
+  },
+  "nextCheckpoint": "CP7-3_MAIN_COMPASS_VISUAL_CAPTURE"
+}

@@ -1,0 +1,39 @@
+{
+  "contractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_FINAL_AGGREGATE_CUSTODY_AND_TOOL_ACCEPTANCE_H7_v1",
+  "toolId": "H_EARTH_CAPACITY_CAMERA_AND_RENDERER_CORRESPONDENCE_VERIFIER_v1",
+  "checkpoint": "H7",
+  "checkpointTitle": "FINAL_AGGREGATE_CUSTODY_AND_INTEGRATED_TOOL_ACCEPTANCE",
+  "parentCheckpointCommit": "6688a557d2239d0fb11b06a2a588f905784b5bfc",
+  "sourceCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "branch": "agent/h-earth-capacity-camera-correspondence-verifier-h7-final-001",
+  "sourcePosture": "READ_ONLY_FULL_CHAIN_FINAL_ACCEPTANCE",
+  "productionMutationAuthority": "NONE",
+  "checkpointChain": [
+    {"checkpoint":"H0","commit":"a28e41e28dd9bd68013667f2fa046f2f045e34ba"},
+    {"checkpoint":"H1","commit":"1ca73a30f89c6003416c89bbff8d5fce54520996"},
+    {"checkpoint":"H2","commit":"6a958e5fc7971ce80e3561e2c0cd32b8c600793c"},
+    {"checkpoint":"H3","commit":"5afef7fb528689ceede06d1e185d2f71e837f9b2"},
+    {"checkpoint":"H4","commit":"21de52b4523e34408db4ffc2822efcda48d537b3"},
+    {"checkpoint":"H5","commit":"15e23bf83b71e81748da404a83bfb34b2d09722d"},
+    {"checkpoint":"H6","commit":"6688a557d2239d0fb11b06a2a588f905784b5bfc"}
+  ],
+  "rendererToolCommit": "546f6fc05174347ac797837d0b4844a2164c3cb3",
+  "expectedVerifierPathCount": 28,
+  "authorizedCheckpointPaths": [
+    ".github/workflows/h-earth-capacity-camera-correspondence-h7-final.yml",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h7-contract.json",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h7-finalizer.mjs",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h7-controls.mjs"
+  ],
+  "claims": {
+    "h8RetiredIntoH7": true,
+    "fullChainExecutionAuthorized": true,
+    "rendererExecutionAuthorized": true,
+    "browserExecutionAuthorized": true,
+    "deployedRouteExecutionAuthorized": false,
+    "productionMutationAuthorized": false,
+    "productionFilesChanged": 0,
+    "productionCorrectionStarted": false,
+    "mergePerformed": false
+  }
+}

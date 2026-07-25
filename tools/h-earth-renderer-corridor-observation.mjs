@@ -1,5 +1,5 @@
 export const H_EARTH_RENDERER_CORRIDOR_OBSERVATION_CONTRACT_ID =
-  'H_EARTH_RENDERER_CORRIDOR_TERMINAL_AND_MEASUREMENT_OBSERVATION_v2';
+  'H_EARTH_RENDERER_CORRIDOR_TERMINAL_AND_MEASUREMENT_OBSERVATION_v3';
 
 export const LAWFUL_TERMINAL_ROUTE_STATUSES = Object.freeze([
   'PUBLIC_STAGE_RENDERER_MOUNTED',
@@ -13,6 +13,17 @@ export const H_EARTH_RENDERER_CORRIDOR_TERMINAL_SIGNALS = Object.freeze({
   PUBLIC_STAGE_ERROR: 'PUBLIC_STAGE_ERROR',
   HTML_ENTRY_FAILURE: 'HTML_ENTRY_FAILURE',
   NON_TERMINAL: 'NON_TERMINAL'
+});
+
+export const H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES = Object.freeze({
+  EXPLICIT_MEASUREMENT: 'EXPLICIT_MEASUREMENT',
+  EXPLICIT_COUNT: 'EXPLICIT_COUNT',
+  CONSTRUCT_RECEIPT: 'CONSTRUCT_RECEIPT',
+  MOUNT_RECEIPT: 'MOUNT_RECEIPT',
+  LEGACY_CONSTRUCT_RECEIPT_COUNT: 'LEGACY_CONSTRUCT_RECEIPT_COUNT',
+  MOUNTED_DOM_QUERY: 'MOUNTED_DOM_QUERY',
+  ZERO_MOUNTED_DEFAULT: 'ZERO_MOUNTED_DEFAULT',
+  UNRESOLVED: 'UNRESOLVED'
 });
 
 const TERMINAL_SIGNAL_BY_ROUTE_STATUS = Object.freeze({
@@ -52,19 +63,131 @@ function collectSourceObjectIds(value, output, seen = new WeakSet()) {
   }
 }
 
-function resolveProjectedPlanFragmentCount(observation) {
-  const receipt = observation?.constructReceipt;
-  const candidates = [
-    receipt?.projectedPrimitiveFragmentCount,
-    receipt?.projectedPlanFragmentCount,
-    receipt?.projectionPlan?.projectedPrimitiveFragmentCount,
-    receipt?.projectionPlan?.projectedPlanFragmentCount,
-    Array.isArray(receipt?.projectionPlan?.projectedFragments)
-      ? receipt.projectionPlan.projectedFragments.length
-      : null,
-    observation?.counts?.projectedClippedFragments
-  ];
-  return candidates.find(isNonNegativeSafeInteger) ?? 0;
+function firstResolvedCount(candidates) {
+  for (const candidate of candidates) {
+    if (isNonNegativeSafeInteger(candidate.value)) {
+      return Object.freeze({
+        value: candidate.value,
+        source: candidate.source
+      });
+    }
+  }
+
+  return Object.freeze({
+    value: null,
+    source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.UNRESOLVED
+  });
+}
+
+export function resolveHEarthRendererCorridorMeasurements(observation = {}) {
+  const constructReceipt = observation?.constructReceipt;
+  const mountReceipt = observation?.mountReceipt;
+
+  const projectedPlan = firstResolvedCount([
+    {
+      value: observation?.measurements?.projectedPlanFragmentCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.EXPLICIT_MEASUREMENT
+    },
+    {
+      value: observation?.counts?.projectedPlanFragmentCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.EXPLICIT_COUNT
+    },
+    {
+      value: constructReceipt?.projectedPrimitiveFragmentCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.CONSTRUCT_RECEIPT
+    },
+    {
+      value: constructReceipt?.projectedPlanFragmentCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.CONSTRUCT_RECEIPT
+    },
+    {
+      value: constructReceipt?.projectionPlan?.projectedPrimitiveFragmentCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.CONSTRUCT_RECEIPT
+    },
+    {
+      value: constructReceipt?.projectionPlan?.projectedPlanFragmentCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.CONSTRUCT_RECEIPT
+    },
+    {
+      value: Array.isArray(constructReceipt?.projectionPlan?.projectedFragments)
+        ? constructReceipt.projectionPlan.projectedFragments.length
+        : null,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.CONSTRUCT_RECEIPT
+    },
+    {
+      value: mountReceipt?.projectedPrimitiveFragmentCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.MOUNT_RECEIPT
+    },
+    {
+      value: mountReceipt?.projectedPlanFragmentCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.MOUNT_RECEIPT
+    },
+    {
+      value: constructReceipt
+        ? observation?.counts?.projectedClippedFragments
+        : null,
+      source:
+        H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES
+          .LEGACY_CONSTRUCT_RECEIPT_COUNT
+    }
+  ]);
+
+  const mountedProjected = firstResolvedCount([
+    {
+      value: observation?.measurements?.mountedProjectedFragmentNodeCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.EXPLICIT_MEASUREMENT
+    },
+    {
+      value: observation?.counts?.mountedProjectedFragmentNodeCount,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.EXPLICIT_COUNT
+    },
+    {
+      value: observation?.counts?.projectedFragmentDomNodes,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.MOUNTED_DOM_QUERY
+    },
+    {
+      value: 0,
+      source: H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES.ZERO_MOUNTED_DEFAULT
+    }
+  ]);
+
+  const rendererConstructionSucceeded =
+    observation?.rendererConstructionSucceeded === true;
+  const rendererMountSucceeded =
+    observation?.rendererMountSucceeded === true;
+
+  const countsEqual =
+    projectedPlan.value !== null &&
+    projectedPlan.value === mountedProjected.value;
+
+  const relation =
+    projectedPlan.value === null
+      ? 'PROJECTED_PLAN_COUNT_UNRESOLVED'
+      : rendererMountSucceeded
+        ? countsEqual
+          ? 'MOUNTED_COUNT_MATCHES_PROJECTED_PLAN'
+          : 'MOUNTED_COUNT_DIVERGES_FROM_PROJECTED_PLAN'
+        : mountedProjected.value === 0
+          ? 'PREMOUNT_PROJECTED_PLAN_WITH_ZERO_MOUNTED_NODES'
+          : 'PREMOUNT_STATE_HAS_UNEXPECTED_MOUNTED_NODES';
+
+  return Object.freeze({
+    projectedPlanFragmentCount: projectedPlan.value,
+    projectedPlanFragmentCountSource: projectedPlan.source,
+    mountedProjectedFragmentNodeCount: mountedProjected.value,
+    mountedProjectedFragmentNodeCountSource: mountedProjected.source,
+    rendererConstructionSucceeded,
+    rendererMountSucceeded,
+    countsEqual,
+    relation,
+    measurementSeparationEstablished:
+      projectedPlan.value !== null &&
+      (
+        rendererMountSucceeded
+          ? countsEqual
+          : mountedProjected.value === 0
+      )
+  });
 }
 
 export function classifyHEarthTerminalRouteState({
@@ -139,12 +262,8 @@ export function enrichHEarthRouteObservation(observation = {}) {
     collectSourceObjectIds(root, sourceObjectIds);
   }
 
-  const projectedPlanFragmentCount =
-    resolveProjectedPlanFragmentCount(observation);
-  const mountedProjectedFragmentNodeCount =
-    isNonNegativeSafeInteger(observation?.counts?.projectedFragmentDomNodes)
-      ? observation.counts.projectedFragmentDomNodes
-      : 0;
+  const measurements =
+    resolveHEarthRendererCorridorMeasurements(observation);
   const terminalState = classifyHEarthTerminalRouteState({
     routeStatus: observation.routeStatus,
     htmlEntryFailure: observation.htmlEntryFailure
@@ -153,10 +272,13 @@ export function enrichHEarthRouteObservation(observation = {}) {
   return Object.freeze({
     ...observation,
     observedObjectIds: uniqueSorted(sourceObjectIds),
+    measurements,
     counts: Object.freeze({
       ...(observation.counts ?? {}),
-      projectedPlanFragmentCount,
-      mountedProjectedFragmentNodeCount
+      projectedPlanFragmentCount:
+        measurements.projectedPlanFragmentCount,
+      mountedProjectedFragmentNodeCount:
+        measurements.mountedProjectedFragmentNodeCount
     }),
     terminalState
   });

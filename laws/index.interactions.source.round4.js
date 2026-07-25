@@ -4,7 +4,7 @@
 
    Module:
    DGB_LAWS_INTERACTIONS
-   1.0.1-pointer-gesture-interpreter-category-admission-tune
+   1.1.0-euclidean-orbit-direct-manipulation
 
    Required controller:
    DGB_LAWS_CONTROLLER
@@ -42,7 +42,7 @@
       "DGB_LAWS_INTERACTIONS",
 
     version:
-      "1.0.1-pointer-gesture-interpreter-category-admission-tune",
+      "1.1.0-euclidean-orbit-direct-manipulation",
 
     file:
       "/laws/index.interactions.js",
@@ -170,6 +170,9 @@
 
     maximumGrabCorrectionAngle:
       0.12,
+
+    clusterMaximumTiltRadians:
+      0.30,
 
     reducedMotionMultiplier:
       0.72,
@@ -667,7 +670,7 @@
 
     return quaternionFromAxisAngle(
       dy,
-      dx,
+      -dx,
       0,
       angle
     );
@@ -680,6 +683,75 @@
     return quaternionMultiply(
       deltaQuaternion,
       currentQuaternion
+    );
+  }
+
+  function constrainClusterQuaternion(value) {
+    const quaternion =
+      normalizeQuaternion(value);
+    const normalX =
+      2 *
+      (
+        quaternion[0] * quaternion[2] +
+        quaternion[3] * quaternion[1]
+      );
+    const normalY =
+      2 *
+      (
+        quaternion[1] * quaternion[2] -
+        quaternion[3] * quaternion[0]
+      );
+    const normalZ =
+      1 -
+      2 *
+      (
+        quaternion[0] * quaternion[0] +
+        quaternion[1] * quaternion[1]
+      );
+    const tilt =
+      Math.acos(
+        clamp(
+          normalZ,
+          -1,
+          1
+        )
+      );
+
+    if (
+      tilt <=
+      MOTION.clusterMaximumTiltRadians +
+        1e-12
+    ) {
+      return quaternion;
+    }
+
+    const swing =
+      quaternionFromAxisAngle(
+        -normalY,
+        normalX,
+        0,
+        MOTION.clusterMaximumTiltRadians
+      );
+    const twistLength =
+      Math.hypot(
+        quaternion[2],
+        quaternion[3]
+      );
+    const twist =
+      twistLength > 1e-12
+        ? normalizeQuaternion([
+            0,
+            0,
+            quaternion[2],
+            quaternion[3]
+          ])
+        : Array.from(
+            QUATERNION.identity
+          );
+
+    return quaternionMultiply(
+      swing,
+      twist
     );
   }
 
@@ -2324,9 +2396,17 @@
       }
     }
 
-    return normalizeQuaternion(
-      result
-    );
+    const normalized =
+      normalizeQuaternion(
+        result
+      );
+
+    return activePresentationMode() ===
+      PRESENTATION_MODES.CLUSTER
+      ? constrainClusterQuaternion(
+          normalized
+        )
+      : normalized;
   }
 
   function updateIntentFromMovement() {
@@ -4599,7 +4679,7 @@ Artifact:
 
 Module:
  DGB_LAWS_INTERACTIONS
- 1.0.1-pointer-gesture-interpreter-category-admission-tune
+ 1.1.0-euclidean-orbit-direct-manipulation
 
 Required controller:
  DGB_LAWS_CONTROLLER

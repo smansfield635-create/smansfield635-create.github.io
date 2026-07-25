@@ -104,6 +104,12 @@
   data-compass-control-purpose="request-controller-compass-selection"
   data-compass-renderer-navigation-authority="false"
   data-compass-controller-navigation-authority="true"
+
+  data-laws-cluster-orbit-model="euclidean-common-radius-coplanar"
+  data-laws-cluster-orbit-member-count="4"
+  data-laws-cluster-orbit-common-radius="1.40"
+  data-laws-cluster-orbit-maximum-tilt-radians="0.30"
+  data-laws-horizontal-drag-yaw-sign="negative"
 >
 <head>
   <meta charset="utf-8">
@@ -129,7 +135,7 @@
 
   <link
     rel="stylesheet"
-    href="/laws/index.css?v=LAWS_COMPASS_FAMILY_CONTRAST_DISCLOSURES_v3"
+    href="/laws/index.css?v=LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4"
     data-laws-page-css="true"
     data-laws-page-css-contract="LAWS_COMPASS_WORLD_PASS_PLANET_AND_SHOWROOM_COSMOS_READY_CSS_TNT_v2_3_0"
   >
@@ -2352,7 +2358,7 @@ FALSE
     },
     {
       src:
-        "/laws/index.crystals.js?v=LAWS_COMPASS_FAMILY_ORBITAL_CONTRAST_v2",
+        "/laws/index.crystals.js?v=LAWS_COMPASS_EUCLIDEAN_COMMON_RADIUS_ORBIT_v3",
       attributes: {
         "data-laws-child": "crystals",
         "data-laws-staged-group": "orbit"
@@ -2363,7 +2369,7 @@ FALSE
   const interactionScripts = [
     {
       src:
-        "/laws/index.interactions.js?v=LAWS_COMPASS_FAMILY_CONTRAST_DISCLOSURE_LABELS_v3",
+        "/laws/index.interactions.js?v=LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4",
       attributes: {
         "data-laws-child": "interactions",
         "data-laws-staged-group": "interaction"

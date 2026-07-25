@@ -35,7 +35,7 @@
       "projectionAuthority": "RENDERER",
       "positionBounds": {"xMin": -256, "xMax": 256, "yMin": -80, "yMax": 120, "zMin": -256, "zMax": 256},
       "targetBounds": {"xMin": -96, "xMax": 96, "yMin": -1, "yMax": 8, "zMin": -256, "zMax": 24},
-      "yawDegrees": {"minimum": -180, "maximum": 180, "maximumDeltaPerIntent": 8, "initialWaterwardYawDegrees": 180, "compositionArcDegrees": 76},
+      "yawDegrees": {"minimum": -180, "maximum": 180, "maximumDeltaPerIntent": 8, "wrapPermitted": true, "initialWaterwardYawDegrees": 180, "compositionArcDegrees": 76},
       "pitchDegrees": {"minimum": -24, "maximum": 12, "maximumDeltaPerIntent": 8},
       "verticalFovCapacity": {"minimum": 38, "maximum": 68, "maximumDeltaPerIntent": 6},
       "resolvedPoseEligibility": {"orthogonalBasisTolerance": 0.001, "nearPlaneMinimum": 0.01, "farPlaneMaximum": 512, "farPlaneMustExceedNearPlane": true, "cameraRevisionRequired": true}

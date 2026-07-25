@@ -2822,7 +2822,7 @@ function clearPublishedActiveGlobals() {
 
 
 export const H_EARTH_3D_TOUCH_CAMERA_CONTROL_CONTRACT_ID =
-  'H_EARTH_3D_TOUCH_CAMERA_ORBIT_AND_PINCH_DISTANCE_CONTROL_v1';
+  'H_EARTH_3D_TOUCH_CAMERA_GROUND_OBSERVER_LOOK_AND_PINCH_FOV_CONTROL_v2';
 
 const H_EARTH_3D_TOUCH_CAMERA_LIMITS =
   deepFreeze({
@@ -3234,7 +3234,7 @@ function installHEarthTouchCameraControls({
             intentTypes.zoom,
           zoomScaleDelta
         },
-        'TWO_POINTER_PINCH_DISTANCE'
+        'TWO_POINTER_PINCH_FIELD_OF_VIEW'
       );
 
       return;
@@ -3280,7 +3280,7 @@ function installHEarthTouchCameraControls({
         yawDeltaDegrees,
         pitchDeltaDegrees
       },
-      'ONE_POINTER_ORBIT'
+      'ONE_POINTER_GROUND_OBSERVER_LOOK'
     );
   }
 

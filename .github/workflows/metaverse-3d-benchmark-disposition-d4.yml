@@ -1,0 +1,133 @@
+name: Metaverse 3D Benchmark Disposition D4 Evidence Weighting
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/metaverse-3d-benchmark-disposition-d4.yml"
+      - "tools/metaverse-3d-benchmark-disposition-d4-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: metaverse-3d-benchmark-disposition-d4-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence-weighting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      D4_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      D3_PARENT_SHA: f284180bdd6ca13387d61215b80b4bddb0fa035c
+      D3_ARTIFACT_ID: "8621733159"
+      D3_ARTIFACT_SIZE: "31584"
+      D3_ARTIFACT_SHA256: 11a6a3531f709bb5ac921c943c87a159356902f013d59badddf535667101b224
+      D3_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d3-input
+      D4_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d4
+
+    steps:
+      - name: Checkout exact D4 occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.D4_HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact D4 head and D3 ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$D4_HEAD_SHA"
+          git merge-base --is-ancestor "$D3_PARENT_SHA" HEAD
+          test "$(git hash-object tools/metaverse-3d-benchmark-disposition-d3-contract.json)" = "2a65b502007d5b80490bed57641cc8ea6a83ad01"
+
+      - name: Verify exact six-path D4 scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTUAL="$(git diff --name-only "$D3_PARENT_SHA"..HEAD | sort)"
+          EXPECTED="$(printf '%s\n' \
+            '.github/workflows/metaverse-3d-benchmark-disposition-d4.yml' \
+            'tools/metaverse-3d-benchmark-disposition-d4-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d4-core.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d4-rules.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d4-weight.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d4-controls.mjs' | sort)"
+          test "$ACTUAL" = "$EXPECTED"
+          test "$(git diff --name-only "$D3_PARENT_SHA"..HEAD | wc -l)" -eq 6
+
+      - name: Download and verify exact D3 package
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf "$D3_ARTIFACT_ROOT"
+          mkdir -p "$D3_ARTIFACT_ROOT"
+          curl --fail --location --retry 3 \
+            --header "Authorization: Bearer $GITHUB_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$D3_ARTIFACT_ID/zip" \
+            --output /tmp/d3.zip
+          test "$(stat -c '%s' /tmp/d3.zip)" = "$D3_ARTIFACT_SIZE"
+          echo "$D3_ARTIFACT_SHA256  /tmp/d3.zip" | sha256sum --check --strict
+          unzip -q /tmp/d3.zip -d "$D3_ARTIFACT_ROOT"
+          test -f "$D3_ARTIFACT_ROOT/canonical-fact-dimension-classification-manifest.json"
+          test -f "$D3_ARTIFACT_ROOT/relation-dimension-classification-manifest.json"
+          test -f "$D3_ARTIFACT_ROOT/dimension-coverage-manifest.json"
+          test -f "$D3_ARTIFACT_ROOT/d3.aggregate.receipt.json"
+
+      - name: Validate D4 source syntax
+        run: |
+          node --check tools/metaverse-3d-benchmark-disposition-d4-core.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d4-rules.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d4-weight.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d4-controls.mjs
+          node -e "JSON.parse(require('fs').readFileSync('tools/metaverse-3d-benchmark-disposition-d4-contract.json','utf8'))"
+
+      - name: Execute bounded D4A through D4D controls
+        run: |
+          rm -rf "$D4_ARTIFACT_ROOT"
+          mkdir -p "$D4_ARTIFACT_ROOT"
+          node tools/metaverse-3d-benchmark-disposition-d4-controls.mjs | tee "$D4_ARTIFACT_ROOT/execution.log"
+
+      - name: Verify deterministic D4 closure
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile } from 'node:fs/promises';
+          const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object'
+            ? Object.fromEntries(Object.keys(value).sort().map(key => [key.normalize('NFC'), stable(value[key])]))
+            : typeof value === 'string' ? value.normalize('NFC') : value;
+          const digest = value => createHash('sha256').update(JSON.stringify(stable(value))).digest('hex');
+          const root = process.env.D4_ARTIFACT_ROOT;
+          const fact = JSON.parse(await readFile(`${root}/canonical-fact-weight-manifest.json`, 'utf8'));
+          const relation = JSON.parse(await readFile(`${root}/relation-weight-manifest.json`, 'utf8'));
+          const dimension = JSON.parse(await readFile(`${root}/dimension-evidence-strength-manifest.json`, 'utf8'));
+          const audit = JSON.parse(await readFile(`${root}/d4d-combined-weighting-audit.json`, 'utf8'));
+          const aggregate = JSON.parse(await readFile(`${root}/d4.aggregate.receipt.json`, 'utf8'));
+          if (fact.weightRecordCount !== 119 || fact.weightManifestSha256 !== '24c8d4d97db4dd6b0a3feb268cb58a2e560b9d76452ddb2f93acd1afed1a1092' || digest(fact.records) !== fact.weightManifestSha256) throw new Error('D4_FACT_WEIGHT_MISMATCH');
+          if (relation.weightRecordCount !== 7 || relation.relationWeightManifestSha256 !== '17da29918716c7cb39918b8b52157d00cf38b6af8b5561a1f377ef662a4f49e8' || digest(relation.records) !== relation.relationWeightManifestSha256) throw new Error('D4_RELATION_WEIGHT_MISMATCH');
+          if (dimension.governedDimensionCount !== 11 || dimension.dimensionStrengthManifestSha256 !== 'e438e286a7d0760692b81f31ee224094e9fd138c81f3ffb5adbfe62354858df6' || digest(dimension.dimensions) !== dimension.dimensionStrengthManifestSha256) throw new Error('D4_DIMENSION_STRENGTH_MISMATCH');
+          const { deterministicReceiptSha256: auditDigest, ...auditBody } = audit;
+          if (audit.controlCount !== 24 || audit.passedControlCount !== 24 || audit.failedControlCount !== 0 || digest(auditBody) !== auditDigest) throw new Error('D4_AUDIT_MISMATCH');
+          const { deterministicReceiptSha256: aggregateDigest, ...aggregateBody } = aggregate;
+          if (aggregate.status !== 'PASS_CLOSED' || aggregate.weightedFactCount !== 119 || aggregate.weightedRelationCount !== 7 || aggregate.governedDimensionCount !== 11 || aggregate.dimensionStatesChanged !== false || aggregate.winnerSelectionPerformed !== false || aggregate.contradictionResolutionPerformed !== false || aggregate.dispositionCompilationPerformed !== false || aggregate.productFilesChanged !== 0 || aggregate.hEarthFilesChanged !== 0 || aggregate.mainChanged !== false || aggregate.mergePerformed !== false || aggregate.userAcceptanceGranted !== false || digest(aggregateBody) !== aggregateDigest) throw new Error('D4_AGGREGATE_MISMATCH');
+          NODE
+
+      - name: Upload deterministic D4 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-3d-benchmark-disposition-d4-${{ env.D4_HEAD_SHA }}
+          path: ${{ env.D4_ARTIFACT_ROOT }}
+          if-no-files-found: error
+          retention-days: 30

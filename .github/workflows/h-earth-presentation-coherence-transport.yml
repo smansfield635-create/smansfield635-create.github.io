@@ -1,0 +1,602 @@
+name: H-Earth Presentation Coherence Transport
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - ".github/workflows/h-earth-presentation-coherence-transport.yml"
+      - "showroom/globe/h-earth/renderer.js"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-presentation-coherence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apply-validate-and-close-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout exact presentation branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-presentation-coherence-002
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify merged registry and execute installed preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main:refs/remotes/origin/main
+          test "$(git merge-base HEAD origin/main)" = "26e1d2945af837ccbbe0f003c3d148be3d7c41ff"
+          test "$(git rev-parse HEAD:showroom/globe/h-earth/renderer.js)" = "3ff5ea1542b015fe0816dbbf6d42509f3b86b300"
+          mkdir -p artifacts/h-earth-presentation-coherence
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --path /showroom/globe/h-earth/renderer.js \
+            --task "Apply one presentation-only shoreline environment coherence pass; preserve geometry, camera, projection, capacity, compositor, DOM counts, object identity, and interaction." \
+            --mutation-intent \
+            --output artifacts/h-earth-presentation-coherence/preflight.receipt.json \
+            > artifacts/h-earth-presentation-coherence/preflight.stdout.json
+          node <<'NODE'
+          const fs = require('node:fs');
+          const r = JSON.parse(fs.readFileSync(
+            'artifacts/h-earth-presentation-coherence/preflight.receipt.json',
+            'utf8'
+          ));
+          const entry = r.pathClassification?.classifications?.find(
+            (candidate) =>
+              candidate.repositoryPath === '/showroom/globe/h-earth/renderer.js'
+          );
+          const failureCodes = r.validatorReceipt?.failureCodes ?? [];
+          if (
+            r.dependenciesVerified !== true ||
+            r.finalDisposition !== 'PASS' ||
+            entry?.classification !== 'REGISTERED_H_EARTH_PATH' ||
+            entry?.resolvedNodeIds?.includes(
+              'H_EARTH_RENDERER_PRESENTATION_SCOPE_PACKAGE'
+            ) !== true ||
+            failureCodes.length !== 0
+          ) {
+            throw new Error(
+              `RENDERER_PREFLIGHT_NOT_PASS:${JSON.stringify({
+                dependenciesVerified: r.dependenciesVerified,
+                finalDisposition: r.finalDisposition,
+                entry,
+                failureCodes
+              })}`
+            );
+          }
+          NODE
+
+      - name: Apply bounded presentation-only transformation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'showroom/globe/h-earth/renderer.js';
+          let source = fs.readFileSync(path, 'utf8');
+
+          function replaceExact(oldText, newText, label) {
+            const first = source.indexOf(oldText);
+            const last = source.lastIndexOf(oldText);
+            if (first < 0 || first !== last) {
+              throw new Error(
+                `${label}_EXPECTED_EXACTLY_ONCE:first=${first}:last=${last}`
+              );
+            }
+            source =
+              source.slice(0, first) +
+              newText +
+              source.slice(first + oldText.length);
+          }
+
+          replaceExact(
+            "'FROZEN_CANON_DUPLICATE_CLIPPING_LIFECYCLE_AND_WET_SAND_PRESENTATION_CORRECTION_CANDIDATE'",
+            "'FROZEN_CANON_DUPLICATE_CLIPPING_LIFECYCLE_AND_SHORELINE_PRESENTATION_COHERENCE_CANDIDATE'",
+            'RENDERER_STATUS'
+          );
+          replaceExact(
+            "'linear-gradient(180deg, #546f7b 0%, #789095 42%, #52686c 58%, #303d3e 100%)'",
+            "'linear-gradient(180deg, #4f6874 0%, #6f878e 38%, #9ca9a4 53%, #667772 66%, #303b39 100%)'",
+            'STAGE_ATMOSPHERE'
+          );
+          replaceExact(
+            "'linear-gradient(180deg, #656158 0%, #504e48 46%, #383b39 100%)'",
+            "'linear-gradient(180deg, #8e8068 0%, #716750 50%, #454d46 100%)'",
+            'WET_SAND_BASE'
+          );
+          replaceExact(
+            "'inset 0 1px 0 rgba(215,224,216,0.10), 0 2px 5px rgba(17,23,22,0.24)'",
+            "'none'",
+            'WET_SAND_BASE_SHADOW'
+          );
+          replaceExact(
+            "'linear-gradient(180deg, rgba(68,132,148,0.94) 0%, rgba(34,91,111,0.96) 100%)'",
+            "'linear-gradient(180deg, rgba(151,188,190,0.94) 0%, rgba(73,142,154,0.97) 36%, rgba(29,91,113,0.99) 100%)'",
+            'NEARSHORE_WATER'
+          );
+          replaceExact(
+            "'linear-gradient(180deg, #2f7084 0%, #1f5369 55%, #143d53 100%)'",
+            "'linear-gradient(180deg, #4d91a3 0%, #2c7189 44%, #174a67 100%)'",
+            'OPEN_WATER'
+          );
+          replaceExact(
+            "'linear-gradient(180deg, rgba(241,243,232,0.94) 0%, rgba(193,211,207,0.76) 100%)'",
+            "'linear-gradient(180deg, rgba(246,247,237,0.97) 0%, rgba(214,227,220,0.88) 56%, rgba(163,194,191,0.54) 100%)'",
+            'FOAM_CONTACT'
+          );
+          replaceExact(
+            "'linear-gradient(180deg, rgba(205, 226, 223, 0.34) 0%, rgba(156, 181, 180, 0.12) 22%, rgba(121, 112, 91, 0.08) 45%, rgba(55, 67, 64, 0.30) 100%), linear-gradient(180deg, #917c5d 0%, #6f644e 48%, #444b45 100%)'",
+            "'radial-gradient(ellipse at 22% 70%, rgba(197, 174, 129, 0.18) 0%, rgba(197, 174, 129, 0) 43%), radial-gradient(ellipse at 78% 76%, rgba(49, 71, 65, 0.20) 0%, rgba(49, 71, 65, 0) 48%), linear-gradient(180deg, rgba(199, 218, 211, 0.22) 0%, rgba(151, 147, 121, 0.11) 32%, rgba(78, 76, 61, 0.20) 68%, rgba(43, 55, 51, 0.34) 100%), linear-gradient(180deg, #978568 0%, #756a52 50%, #424b45 100%)'",
+            'WET_SAND_COHERENCE_BACKGROUND'
+          );
+          replaceExact(
+            "'rgba(225, 242, 238, 0.16) 0 1px 0 inset, rgba(15, 23, 22, 0.08) 0 1px 2px'",
+            "'none'",
+            'WET_SAND_COHERENCE_SHADOW'
+          );
+          replaceExact(
+            "'saturate(1.10) brightness(1.08) contrast(0.94)'",
+            "'none'",
+            'WET_SAND_COHERENCE_FILTER'
+          );
+          replaceExact(
+            "'0.99'",
+            "'1'",
+            'WET_SAND_COHERENCE_OPACITY'
+          );
+
+          const wetSandClassifier = [
+            'function isWetSandPresentationAssignment(',
+            '  assignment',
+            ') {',
+            '  return (',
+            '    assignment?.materialReference ===',
+            "      'H_EARTH_MATERIAL_WET_SAND' &&",
+            '    assignment?.materialIntent ===',
+            "      'WET_SAND'",
+            '  );',
+            '}'
+          ].join('\n');
+
+          const shorelineClassifier = [
+            wetSandClassifier,
+            '',
+            'const H_EARTH_3D_STAGE_ALIGNED_SHORELINE_MATERIAL_REFERENCES =',
+            '  new Set([',
+            "    'H_EARTH_MATERIAL_WET_SAND',",
+            "    'H_EARTH_MATERIAL_NEARSHORE_WATER',",
+            "    'H_EARTH_MATERIAL_OPEN_WATER',",
+            "    'H_EARTH_MATERIAL_FOAM'",
+            '  ]);',
+            '',
+            'function isStageAlignedShorelinePresentationAssignment(',
+            '  assignment',
+            ') {',
+            '  return H_EARTH_3D_STAGE_ALIGNED_SHORELINE_MATERIAL_REFERENCES',
+            '    .has(',
+            '      assignment?.materialReference',
+            '    );',
+            '}'
+          ].join('\n');
+
+          replaceExact(
+            wetSandClassifier,
+            shorelineClassifier,
+            'SHORELINE_STAGE_ALIGNMENT_CLASSIFIER'
+          );
+          replaceExact(
+            'function applyStageAlignedWetSandPresentation(',
+            'function applyStageAlignedShorelinePresentation(',
+            'STAGE_ALIGNMENT_FUNCTION_NAME'
+          );
+          replaceExact(
+            [
+              '    !isWetSandPresentationAssignment(',
+              '      assignment',
+              '    ) ||'
+            ].join('\n'),
+            [
+              '    !isStageAlignedShorelinePresentationAssignment(',
+              '      assignment',
+              '    ) ||'
+            ].join('\n'),
+            'STAGE_ALIGNMENT_GUARD'
+          );
+          replaceExact(
+            [
+              '  element.dataset.wetSandPresentationModel =',
+              "    'BALANCED_STAGE_ALIGNED_v1';"
+            ].join('\n'),
+            [
+              '  element.dataset.shorelinePresentationModel =',
+              "    'COHERENT_STAGE_ALIGNED_v2';"
+            ].join('\n'),
+            'STAGE_ALIGNMENT_DATASET'
+          );
+          replaceExact(
+            '  applyStageAlignedWetSandPresentation(',
+            '  applyStageAlignedShorelinePresentation(',
+            'STAGE_ALIGNMENT_CALL'
+          );
+
+          fs.writeFileSync(path, source, 'utf8');
+          NODE
+
+      - name: Validate syntax and presentation invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check showroom/globe/h-earth/renderer.js
+          node <<'NODE'
+          const fs = require('node:fs');
+          const cp = require('node:child_process');
+          const path = 'showroom/globe/h-earth/renderer.js';
+          const base = cp.execFileSync(
+            'git',
+            ['show', '26e1d2945af837ccbbe0f003c3d148be3d7c41ff:' + path],
+            { encoding: 'utf8' }
+          );
+          const candidate = fs.readFileSync(path, 'utf8');
+
+          function between(text, start, end) {
+            const a = text.indexOf(start);
+            const b = text.indexOf(end, a + start.length);
+            if (a < 0 || b < 0) {
+              throw new Error(`SECTION_NOT_FOUND:${start}:${end}`);
+            }
+            return text.slice(a, b);
+          }
+
+          const protectedSections = [
+            ['function createCameraBasisFromFrame(', '/* ==========================================================================\n * 13 · PROJECTION CONTEXT'],
+            ['function createProjectionContextFromFrame(', '/* ==========================================================================\n * 14 · CAMERA-SPACE AND SCREEN PROJECTION'],
+            ['function createFrameProjectionPlan(', '/* ==========================================================================\n * 27 · NODE-BUDGET POLICY'],
+            ['function evaluateRendererNodeBudget(', '/* ==========================================================================\n * 28 · DOM RESOURCE CONSTRUCTION'],
+            ['function createTriangleElement(', '/* ==========================================================================\n * 29 · CONSTRUCTION']
+          ];
+
+          for (const [start, end] of protectedSections) {
+            if (between(base, start, end) !== between(candidate, start, end)) {
+              throw new Error(`PROTECTED_SECTION_CHANGED:${start}`);
+            }
+          }
+
+          const contract = /export const H_EARTH_3D_RENDERER_CONTRACT_ID =\s*\n\s*'([^']+)'/.exec(candidate)?.[1];
+          const baseContract = /export const H_EARTH_3D_RENDERER_CONTRACT_ID =\s*\n\s*'([^']+)'/.exec(base)?.[1];
+          if (contract !== baseContract) {
+            throw new Error('RENDERER_CONTRACT_ID_CHANGED');
+          }
+
+          const createdNodes =
+            (candidate.match(/document\.createElement\(/g) ?? []).length;
+          const baseCreatedNodes =
+            (base.match(/document\.createElement\(/g) ?? []).length;
+          if (createdNodes !== baseCreatedNodes) {
+            throw new Error(
+              `DOM_CREATE_COUNT_CHANGED:${baseCreatedNodes}:${createdNodes}`
+            );
+          }
+
+          for (const invariant of [
+            'const RENDERER_SEMANTIC_LAYER_CONTAINER_COUNT =\n  15;',
+            'const RENDERER_INTERACTION_NODE_COUNT =\n  1;',
+            "createsFluidSimulation:\n      false",
+            "altersAdmittedCoordinates:\n      false",
+            "altersAdmittedIndices:\n      false",
+            "ownsCameraState:\n      false",
+            "ownsCompositorViewportState:\n      false",
+            "runtimeActivationClaim:\n      false",
+            "productionClaim:\n      false"
+          ]) {
+            if (!candidate.includes(invariant)) {
+              throw new Error(`PRESERVED_INVARIANT_MISSING:${invariant}`);
+            }
+          }
+
+          for (const required of [
+            'COHERENT_STAGE_ALIGNED_v2',
+            'H_EARTH_3D_STAGE_ALIGNED_SHORELINE_MATERIAL_REFERENCES',
+            "boxShadow:\n      'none'",
+            "filter:\n      'none'"
+          ]) {
+            if (!candidate.includes(required)) {
+              throw new Error(`PRESENTATION_TRANSFORMATION_MISSING:${required}`);
+            }
+          }
+          NODE
+
+      - name: Stage verified renderer corridor tools outside commit scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin \
+            agent/h-earth-renderer-corridor-gate-001:refs/remotes/origin/agent/h-earth-renderer-corridor-gate-001
+          git ls-tree -r --name-only \
+            origin/agent/h-earth-renderer-corridor-gate-001 \
+            tools \
+            | grep -E '^tools/h-earth-(renderer-corridor|deployed-route)' \
+            > /tmp/h-earth-renderer-tool-paths.txt
+          while IFS= read -r tool_path; do
+            mkdir -p "$(dirname "$tool_path")"
+            git show \
+              "origin/agent/h-earth-renderer-corridor-gate-001:$tool_path" \
+              > "$tool_path"
+          done < /tmp/h-earth-renderer-tool-paths.txt
+
+      - name: Install pinned browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute production renderer corridor and validate product result
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          node tools/h-earth-renderer-corridor-integration-harness.mjs \
+            | tee artifacts/h-earth-presentation-coherence/renderer-corridor.log
+          corridor_exit=${PIPESTATUS[0]}
+          set -e
+          echo "$corridor_exit" \
+            > artifacts/h-earth-presentation-coherence/renderer-corridor.exit-code.txt
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const directory = 'artifacts/h-earth-renderer-corridor';
+          const files = fs.readdirSync(directory)
+            .filter((name) =>
+              name.endsWith('.receipt.json') &&
+              name !== 'aggregate.receipt.json' &&
+              name !== 'receipt-custody.receipt.json'
+            )
+            .sort();
+
+          if (files.length !== 5) {
+            throw new Error(`EXPECTED_FIVE_PROFILE_RECEIPTS:${files.length}`);
+          }
+
+          const summary = [];
+          for (const file of files) {
+            const r = JSON.parse(
+              fs.readFileSync(path.join(directory, file), 'utf8')
+            );
+            const item = {
+              profileId: r.profile?.id ?? file,
+              constructed: r.construction?.receipt?.constructed === true,
+              constructionStatus:
+                r.construction?.receipt?.status ?? null,
+              mounted: r.mount?.receipt?.mounted === true,
+              mountStatus: r.mount?.receipt?.status ?? null,
+              routeStatus: r.routeState?.status ?? null,
+              fallbackRestored:
+                r.routeState?.fallbackRestored ?? null,
+              projectedFragmentCount:
+                r.capacityEvaluation?.counts?.projectedFragmentCount ??
+                r.counts?.projectedFragmentCount ??
+                null,
+              finalRendererOwnedDomNodeCount:
+                r.capacityEvaluation?.counts?.finalRendererOwnedDomNodeCount ??
+                r.counts?.finalRendererOwnedDomNodeCount ??
+                null,
+              productionCapacityEligible:
+                r.construction?.receipt
+                  ?.nodeBudgetEvaluation
+                  ?.authorityEvaluation
+                  ?.eligible === true
+            };
+
+            if (
+              item.constructed !== true ||
+              item.mounted !== true ||
+              item.routeStatus !== 'PUBLIC_STAGE_RENDERER_MOUNTED' ||
+              item.fallbackRestored !== false ||
+              item.productionCapacityEligible !== true
+            ) {
+              throw new Error(
+                `PRODUCT_PROFILE_NOT_PASS:${JSON.stringify(item)}`
+              );
+            }
+            summary.push(item);
+          }
+
+          fs.writeFileSync(
+            'artifacts/h-earth-presentation-coherence/product-profile-summary.json',
+            JSON.stringify(
+              {
+                result: 'PASS',
+                profileCount: summary.length,
+                profiles: summary
+              },
+              null,
+              2
+            ) + '\n'
+          );
+          NODE
+
+      - name: Capture rendered presentation and computed-style evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 \
+            > /tmp/h-earth-presentation-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          node <<'NODE'
+          const fs = require('node:fs');
+          const { chromium } = require('playwright');
+
+          const profiles = [
+            {
+              id: 'mobile',
+              viewport: { width: 390, height: 844 },
+              deviceScaleFactor: 2,
+              isMobile: true,
+              hasTouch: true
+            },
+            {
+              id: 'desktop',
+              viewport: { width: 1440, height: 900 },
+              deviceScaleFactor: 1,
+              isMobile: false,
+              hasTouch: false
+            }
+          ];
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const evidence = [];
+            try {
+              for (const profile of profiles) {
+                const context = await browser.newContext({
+                  viewport: profile.viewport,
+                  deviceScaleFactor: profile.deviceScaleFactor,
+                  isMobile: profile.isMobile,
+                  hasTouch: profile.hasTouch
+                });
+                const page = await context.newPage();
+                await page.goto(
+                  'http://127.0.0.1:4173/showroom/globe/h-earth/',
+                  { waitUntil: 'networkidle', timeout: 120000 }
+                );
+                await page.waitForSelector(
+                  '#h-earth-3d-renderer-mount .h-earth-3d-render-stage',
+                  { state: 'attached', timeout: 120000 }
+                );
+                await page.waitForTimeout(1500);
+
+                const values = await page.evaluate(() => {
+                  const stage =
+                    document.querySelector('.h-earth-3d-render-stage');
+                  const wet =
+                    document.querySelector(
+                      '[data-material-reference="H_EARTH_MATERIAL_WET_SAND"]'
+                    );
+                  const water =
+                    document.querySelector(
+                      '[data-material-reference="H_EARTH_MATERIAL_OPEN_WATER"]'
+                    );
+                  const foam =
+                    document.querySelector(
+                      '[data-material-reference="H_EARTH_MATERIAL_FOAM"]'
+                    );
+
+                  const style = (element) =>
+                    element
+                      ? {
+                          backgroundImage:
+                            getComputedStyle(element).backgroundImage,
+                          boxShadow:
+                            getComputedStyle(element).boxShadow,
+                          filter:
+                            getComputedStyle(element).filter,
+                          opacity:
+                            getComputedStyle(element).opacity
+                        }
+                      : null;
+
+                  return {
+                    stagePresent: Boolean(stage),
+                    projectedNodeCount:
+                      document.querySelectorAll(
+                        '.h-earth-3d-render-primitive'
+                      ).length,
+                    shorelineModel:
+                      wet?.dataset.shorelinePresentationModel ?? null,
+                    stage: style(stage),
+                    wetSand: style(wet),
+                    openWater: style(water),
+                    foam: style(foam)
+                  };
+                });
+
+                if (
+                  values.stagePresent !== true ||
+                  values.projectedNodeCount <= 0 ||
+                  values.shorelineModel !== 'COHERENT_STAGE_ALIGNED_v2' ||
+                  values.wetSand?.boxShadow !== 'none' ||
+                  values.wetSand?.filter !== 'none'
+                ) {
+                  throw new Error(
+                    `VISUAL_EVIDENCE_INVARIANT_FAILED:${profile.id}:${JSON.stringify(values)}`
+                  );
+                }
+
+                const screenshotPath =
+                  `artifacts/h-earth-presentation-coherence/${profile.id}.png`;
+                await page.screenshot({
+                  path: screenshotPath,
+                  fullPage: true
+                });
+                evidence.push({
+                  profile,
+                  screenshotPath,
+                  values
+                });
+                await context.close();
+              }
+            } finally {
+              await browser.close();
+            }
+
+            fs.writeFileSync(
+              'artifacts/h-earth-presentation-coherence/visual-evidence.json',
+              JSON.stringify(
+                {
+                  result: 'PASS',
+                  visualAcceptanceClaim: false,
+                  profiles: evidence
+                },
+                null,
+                2
+              ) + '\n'
+            );
+          })().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Remove staged tools and commit only renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r tool_path; do
+            rm -f "$tool_path"
+          done < /tmp/h-earth-renderer-tool-paths.txt
+          rm -rf node_modules package.json package-lock.json
+          rm -f .github/workflows/h-earth-presentation-coherence-transport.yml
+          git add showroom/globe/h-earth/renderer.js
+          git add -u .github/workflows/h-earth-presentation-coherence-transport.yml
+          changed="$(git diff --cached --name-only)"
+          expected=$'.github/workflows/h-earth-presentation-coherence-transport.yml\nshowroom/globe/h-earth/renderer.js'
+          test "$changed" = "$expected"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Refine H-Earth shoreline presentation coherence"
+          git push origin HEAD:agent/h-earth-presentation-coherence-002
+
+      - name: Upload execution and visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-presentation-coherence-${{ github.sha }}
+          path: |
+            artifacts/h-earth-presentation-coherence/**
+            artifacts/h-earth-renderer-corridor/*.json
+          if-no-files-found: warn
+          retention-days: 30

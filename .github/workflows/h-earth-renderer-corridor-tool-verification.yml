@@ -1,0 +1,272 @@
+name: H-Earth Renderer Corridor Tool Verification
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    paths:
+      - ".github/workflows/h-earth-renderer-corridor-tool-verification.yml"
+      - "tools/h-earth-renderer-corridor-*.mjs"
+      - "tools/h-earth-deployed-route-probe-*.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-renderer-corridor-tool-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tool-verification:
+    name: H-Earth Renderer Corridor Tool Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      H_EARTH_TOOL_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact pull-request occurrence
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Execute A1 through A6 verification fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          output="artifacts/h-earth-renderer-corridor-tool-verification/stages"
+          mkdir -p "$output"
+          node tools/h-earth-renderer-corridor-terminal-state-fixture.mjs \
+            > "$output/A1_TERMINAL_STATE_HANDLING.receipt.json"
+          node tools/h-earth-renderer-corridor-measurement-separation-fixture.mjs \
+            > "$output/A2_MEASUREMENT_SEPARATION.receipt.json"
+          node tools/h-earth-renderer-corridor-premount-identity-fixture.mjs \
+            > "$output/A3_PREMOUNT_OBJECT_IDENTITY.receipt.json"
+          node tools/h-earth-renderer-corridor-control-suite.mjs \
+            > "$output/A4_POSITIVE_AND_NEGATIVE_CONTROLS.receipt.json"
+          node tools/h-earth-renderer-corridor-receipt-custody-fixture.mjs \
+            > "$output/A5_RECEIPT_CUSTODY.receipt.json"
+          node tools/h-earth-deployed-route-probe-self-test.mjs \
+            > "$output/A6_DEPLOYED_PROBE_MECHANICS.receipt.json"
+
+      - name: Assemble deterministic Lane A verification receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE' | tee h-earth-renderer-corridor-tool-verification.log
+          const assert = require('node:assert/strict');
+          const crypto = require('node:crypto');
+          const fs = require('node:fs');
+          const path = require('node:path');
+
+          const root = 'artifacts/h-earth-renderer-corridor-tool-verification';
+          const stageRoot = path.join(root, 'stages');
+          const expectedObjectIds = [
+            'OBJ_002_FOREGROUND_WET_SAND',
+            'OBJ_005_SHORELINE_FOAM_LINE',
+            'OBJ_007_WATER_SURFACE_PLANE'
+          ];
+          const read = (name) => JSON.parse(
+            fs.readFileSync(path.join(stageRoot, `${name}.receipt.json`), 'utf8')
+          );
+          const stages = {
+            A1: read('A1_TERMINAL_STATE_HANDLING'),
+            A2: read('A2_MEASUREMENT_SEPARATION'),
+            A3: read('A3_PREMOUNT_OBJECT_IDENTITY'),
+            A4: read('A4_POSITIVE_AND_NEGATIVE_CONTROLS'),
+            A5: read('A5_RECEIPT_CUSTODY'),
+            A6: read('A6_DEPLOYED_PROBE_MECHANICS')
+          };
+
+          assert.equal(stages.A1.status, 'PASS');
+          assert.equal(stages.A1.terminalCaseCount, 4);
+          assert.equal(stages.A1.nonterminalCaseCount, 1);
+          assert.equal(stages.A1.sharedWaitHelperVerified, true);
+          assert.equal(stages.A1.knownTerminalStatesResolveImmediately, true);
+
+          assert.equal(stages.A2.status, 'PASS');
+          assert.equal(stages.A2.fixtureCount, 3);
+          assert.equal(stages.A2.constructionFailure.projectedPlanFragmentCount, 514);
+          assert.equal(stages.A2.constructionFailure.mountedProjectedFragmentNodeCount, 0);
+          assert.equal(
+            stages.A2.constructionFailure.relation,
+            'PREMOUNT_PROJECTED_PLAN_WITH_ZERO_MOUNTED_NODES'
+          );
+          assert.equal(stages.A2.domOnlyPlanCountRemainsUnresolved, true);
+          assert.equal(stages.A2.mountedCountEqualityVerified, true);
+
+          assert.equal(stages.A3.status, 'PASS');
+          assert.deepEqual(stages.A3.expectedObjectIds, expectedObjectIds);
+          assert.equal(stages.A3.constructionFailure.rendererConstructionSucceeded, false);
+          assert.equal(stages.A3.constructionFailure.rendererMountSucceeded, false);
+          assert.deepEqual(
+            stages.A3.constructionFailure.preMountObservedObjectIds,
+            expectedObjectIds
+          );
+          assert.deepEqual(stages.A3.constructionFailure.mountObservedObjectIds, []);
+          assert.equal(
+            stages.A3.constructionFailure.preservationState,
+            'PREMOUNT_IDENTITY_PRESERVED_WITHOUT_MOUNT'
+          );
+          assert.equal(stages.A3.mountOnlyEvidenceRejectedAsPremountProof, true);
+          assert.equal(stages.A3.identityPreservedThroughSuccessfulMount, true);
+
+          assert.equal(stages.A4.status, 'PASS');
+          assert.equal(stages.A4.positiveControlCount, 1);
+          assert.equal(stages.A4.positiveControlPassCount, 1);
+          assert.equal(stages.A4.negativeControlCount, 8);
+          assert.equal(stages.A4.negativeControlFailClosedCount, 8);
+
+          assert.equal(stages.A5.status, 'PASS');
+          assert.equal(stages.A5.integrationPresentPasses, true);
+          assert.equal(stages.A5.integrationMissingFailsClosed, true);
+          assert.equal(stages.A5.deployedPresentPasses, true);
+          assert.equal(stages.A5.deployedMissingFailsClosed, true);
+
+          assert.equal(stages.A6.status, 'PASS');
+          assert.equal(stages.A6.profileCount, 2);
+          assert.equal(stages.A6.portraitProfileVerified, true);
+          assert.equal(stages.A6.landscapeProfileVerified, true);
+          assert.equal(stages.A6.sourceIdentityPathCount, 9);
+          assert.equal(stages.A6.exactIdentityControl, true);
+          assert.equal(stages.A6.digestMismatchControlFailedClosed, true);
+          assert.equal(stages.A6.missingSourceControlFailedClosed, true);
+          assert.equal(stages.A6.liveNetworkExecutionPerformed, false);
+          assert.equal(stages.A6.deployedRoutePassEstablished, false);
+
+          const controlPath =
+            'artifacts/h-earth-renderer-corridor-controls/aggregate.receipt.json';
+          const control = JSON.parse(fs.readFileSync(controlPath, 'utf8'));
+          assert.equal(control.positiveControlPassEstablished, true);
+          assert.equal(control.negativeControlsFailClosed, true);
+          assert.match(control.deterministicReceiptSha256, /^[a-f0-9]{64}$/);
+
+          function stable(value) {
+            if (Array.isArray(value)) return value.map(stable);
+            if (value && typeof value === 'object') {
+              return Object.fromEntries(
+                Object.keys(value).sort().map((key) => [key, stable(value[key])])
+              );
+            }
+            return value;
+          }
+          const body = {
+            receiptType: 'H_EARTH_RENDERER_CORRIDOR_TOOL_VERIFICATION_RECEIPT',
+            contractId:
+              'H_EARTH_RENDERER_CORRIDOR_LANE_A_INTEGRATED_TOOL_VERIFICATION_v1',
+            sourceCommit:
+              process.env.H_EARTH_TOOL_SOURCE_COMMIT ||
+              process.env.GITHUB_SHA ||
+              'LOCAL_UNCOMMITTED_WORKTREE',
+            lane: 'LANE_A_TOOL_FINALIZATION',
+            stageCount: 6,
+            passedStageCount: 6,
+            terminalStateHandlingVerified: true,
+            measurementSeparationVerified: true,
+            premountIdentityVerified: true,
+            positiveControlVerified: true,
+            negativeControlsFailClosed: true,
+            receiptCustodyVerified: true,
+            deployedProbeMechanicsVerified: true,
+            liveDeploymentExecutionPerformed: false,
+            productionRoutePassEstablished: false,
+            productionSourceMutationPerformed: false,
+            capacityJsChanged: false,
+            mergePerformed: false,
+            controlReceipt: {
+              relativePath: controlPath,
+              deterministicReceiptSha256: control.deterministicReceiptSha256
+            },
+            stages,
+            toolVerified: true
+          };
+          const deterministicReceiptSha256 = crypto
+            .createHash('sha256')
+            .update(JSON.stringify(stable(body)))
+            .digest('hex');
+          const receipt = { ...body, deterministicReceiptSha256 };
+          fs.mkdirSync(root, { recursive: true });
+          fs.writeFileSync(
+            path.join(root, 'aggregate.receipt.json'),
+            `${JSON.stringify(receipt, null, 2)}\n`,
+            'utf8'
+          );
+          process.stdout.write(`${JSON.stringify({
+            status: 'PASS',
+            stageCount: receipt.stageCount,
+            passedStageCount: receipt.passedStageCount,
+            toolVerified: receipt.toolVerified,
+            liveDeploymentExecutionPerformed:
+              receipt.liveDeploymentExecutionPerformed,
+            productionRoutePassEstablished:
+              receipt.productionRoutePassEstablished,
+            deterministicReceiptSha256
+          }, null, 2)}\n`);
+          NODE
+
+      - name: Verify tool-verification receipt package
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const paths = [
+            'artifacts/h-earth-renderer-corridor-tool-verification/aggregate.receipt.json',
+            'artifacts/h-earth-renderer-corridor-controls/aggregate.receipt.json'
+          ];
+          for (const path of paths) {
+            if (!fs.existsSync(path) || !fs.statSync(path).isFile()) {
+              throw new Error(`Required receipt missing: ${path}`);
+            }
+            const receipt = JSON.parse(fs.readFileSync(path, 'utf8'));
+            if (!/^[a-f0-9]{64}$/.test(receipt.deterministicReceiptSha256 || '')) {
+              throw new Error(`Receipt digest missing or malformed: ${path}`);
+            }
+          }
+          const aggregate = JSON.parse(
+            fs.readFileSync(
+              'artifacts/h-earth-renderer-corridor-tool-verification/aggregate.receipt.json',
+              'utf8'
+            )
+          );
+          if (aggregate.toolVerified !== true || aggregate.passedStageCount !== 6) {
+            throw new Error('Integrated Lane-A verification did not establish toolVerified=true.');
+          }
+          NODE
+
+      - name: Publish deterministic tool-verification summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "## H-Earth Renderer Corridor Tool Verification"
+            echo
+            echo '```text'
+            if [[ -f h-earth-renderer-corridor-tool-verification.log ]]; then
+              cat h-earth-renderer-corridor-tool-verification.log
+            else
+              echo "Tool-verification log was not created."
+            fi
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload tool-verification receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-renderer-corridor-tool-verification-${{ github.sha }}
+          path: |
+            artifacts/h-earth-renderer-corridor-tool-verification/**/*.json
+            artifacts/h-earth-renderer-corridor-controls/aggregate.receipt.json
+            h-earth-renderer-corridor-tool-verification.log
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,60 @@
+{
+  "contractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_DETERMINISTIC_CAMERA_FRUSTUM_SWEEP_H3_v1",
+  "toolId": "H_EARTH_CAPACITY_CAMERA_AND_RENDERER_CORRESPONDENCE_VERIFIER_v1",
+  "checkpoint": "H3",
+  "checkpointTitle": "DETERMINISTIC_CAMERA_AND_FRUSTUM_SWEEP_ENGINE",
+  "parentCheckpointContractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_READ_ONLY_PRODUCTION_OBSERVATION_AND_SOURCE_CUSTODY_H2_v1",
+  "parentCheckpointCommit": "6a958e5fc7971ce80e3561e2c0cd32b8c600793c",
+  "sourceCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "sourcePosture": "READ_ONLY_MATHEMATICAL_SWEEP",
+  "productionMutationAuthority": "NONE",
+  "authorizedCheckpointPaths": [
+    "tools/h-earth-capacity-camera-renderer-correspondence-h3-contract.json",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h3-engine.mjs",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h3-controls.mjs",
+    ".github/workflows/h-earth-capacity-camera-correspondence-h3.yml"
+  ],
+  "sampleModel": {
+    "modelId": "H_EARTH_MINIMUM_SHORELINE_AGGREGATE_AABB_XZ_REFERENCE_LATTICE_v1",
+    "source": "previewHEarthMinimumShorelineGeometry(...).bounds",
+    "horizontalAxis": "X",
+    "depthAxis": "Z",
+    "elevationPolicy": "AABB_CENTER_Y",
+    "columns": 65,
+    "rows": 65,
+    "totalSamples": 4225
+  },
+  "viewportProfiles": [
+    {"profileId": "DESKTOP_LANDSCAPE", "widthPx": 1440, "heightPx": 900, "devicePixelRatio": 1},
+    {"profileId": "MOBILE_PORTRAIT", "widthPx": 390, "heightPx": 844, "devicePixelRatio": 3},
+    {"profileId": "COMPACT_MOBILE", "widthPx": 320, "heightPx": 568, "devicePixelRatio": 2}
+  ],
+  "rendererMathematicsCorrespondence": {
+    "sourcePath": "showroom/globe/h-earth/renderer.js",
+    "sourceGitBlob": "3ff5ea1542b015fe0816dbbf6d42509f3b86b300",
+    "basisLaw": "FORWARD_TARGET_MINUS_POSITION__RIGHT_CROSS_PUBLISHED_UP_FORWARD__CORRECTED_UP_CROSS_FORWARD_RIGHT",
+    "projectionLaw": "NDC_X_X_FOCAL_OVER_Z_ASPECT__NDC_Y_Y_FOCAL_OVER_Z",
+    "nearFarComparison": "NEAR_EXCLUSIVE_AND_FAR_EXCLUSIVE",
+    "rendererExecutionPerformed": false
+  },
+  "classificationFlags": [
+    "DEPTH_ELIGIBLE",
+    "INSIDE_FRUSTUM",
+    "CLIPPED_NEAR",
+    "CLIPPED_FAR",
+    "CLIPPED_HORIZONTAL",
+    "CLIPPED_VERTICAL",
+    "NONPROJECTABLE"
+  ],
+  "claims": {
+    "cameraFrustumSweepAuthorized": true,
+    "minimumShorelineReferenceLatticeAuthorized": true,
+    "rendererExecutionAuthorized": false,
+    "downstreamCapacityEvaluationAuthorized": false,
+    "productionMutationAuthorized": false,
+    "productionFilesChanged": 0,
+    "productionCorrectionStarted": false,
+    "h4Started": false,
+    "mergePerformed": false
+  }
+}

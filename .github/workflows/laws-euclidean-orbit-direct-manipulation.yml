@@ -6,6 +6,13 @@ on:
       - agent/laws-euclidean-orbit-direct-manipulation-001
     paths:
       - .github/workflows/laws-euclidean-orbit-direct-manipulation.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/laws-euclidean-orbit-direct-manipulation.yml
+      - scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs
+      - laws/validation/laws.orbit-direct-manipulation.harness.mjs
 
 permissions:
   contents: write
@@ -16,6 +23,7 @@ concurrency:
 
 jobs:
   transform-validate-and-commit:
+    if: github.head_ref == 'agent/laws-euclidean-orbit-direct-manipulation-001' || github.ref_name == 'agent/laws-euclidean-orbit-direct-manipulation-001'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 

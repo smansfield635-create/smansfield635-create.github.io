@@ -16,15 +16,23 @@ export function deepFreeze(value) {
   return value;
 }
 
-function stableNormalize(value, seen = new WeakSet()) {
+function stableNormalize(value, ancestors = new WeakSet()) {
   if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
   if (typeof value === 'number') return Number.isFinite(value) ? value : String(value);
   if (typeof value === 'bigint') return String(value);
   if (value === undefined || typeof value === 'function' || typeof value === 'symbol') return null;
-  if (seen.has(value)) return '[Circular]';
-  seen.add(value);
-  if (Array.isArray(value)) return value.map(entry => stableNormalize(entry, seen));
-  return Object.fromEntries(Object.keys(value).sort().map(key => [key, stableNormalize(value[key], seen)]));
+  if (ancestors.has(value)) return '[Circular]';
+  ancestors.add(value);
+  let normalized;
+  if (Array.isArray(value)) {
+    normalized = value.map(entry => stableNormalize(entry, ancestors));
+  } else {
+    normalized = Object.fromEntries(
+      Object.keys(value).sort().map(key => [key, stableNormalize(value[key], ancestors)])
+    );
+  }
+  ancestors.delete(value);
+  return normalized;
 }
 
 export const digest = value => createHash('sha256')
@@ -38,14 +46,6 @@ export function fail(code, details = null) {
   throw error;
 }
 
-const REQUIRED_CORRESPONDENCE_CLASSIFICATIONS = Object.freeze([
-  'CAPACITY_AUTHORITY_GAP_RENDERER_NODE_BUDGET_REJECTION_CORRESPONDS',
-  'CAPACITY_PASS_RENDERER_PASS',
-  'CAPACITY_NONPASS_RENDERER_CAPACITY_FAILURE_CORRESPONDS',
-  'CAPACITY_PASS_RENDERER_NONCAPACITY_FAILURE',
-  'CAPACITY_NONPASS_RENDERER_CAPACITY_FAILURE_PREMOUNT_IDENTITY_PRESERVED'
-]);
-
 export function validateH6Contract(candidate = H6_CONTRACT) {
   if (candidate.contractId !== H6_CONTRACT.contractId) fail('H6_CONTRACT_ID_MISMATCH');
   if (candidate.toolId !== 'H_EARTH_CAPACITY_CAMERA_AND_RENDERER_CORRESPONDENCE_VERIFIER_v1') fail('H6_TOOL_ID_MISMATCH');
@@ -55,13 +55,34 @@ export function validateH6Contract(candidate = H6_CONTRACT) {
   if (candidate.productionMutationAuthority !== 'NONE') fail('H6_PRODUCTION_MUTATION_AUTHORITY_PROHIBITED');
   if (candidate.rendererTool?.sourceCommit !== '546f6fc05174347ac797837d0b4844a2164c3cb3') fail('H6_RENDERER_TOOL_COMMIT_MISMATCH');
   if (!Array.isArray(candidate.rendererTool?.requiredFiles) || candidate.rendererTool.requiredFiles.length !== 4) fail('H6_RENDERER_TOOL_SOURCE_SET_INVALID');
-  if (!Array.isArray(candidate.requiredCorrespondenceClassifications) ||
-      candidate.requiredCorrespondenceClassifications.length !== REQUIRED_CORRESPONDENCE_CLASSIFICATIONS.length ||
-      candidate.requiredCorrespondenceClassifications.some((value, index) => value !== REQUIRED_CORRESPONDENCE_CLASSIFICATIONS[index])) {
-    fail('H6_REQUIRED_CORRESPONDENCE_CLASSIFICATIONS_INVALID');
-  }
   const claims = candidate.claims;
-  if (claims.rendererToolSourceMayBeCopiedIntoRepositoryHistory !== false || claims.productionMutationAuthorized !== false || claims.productionFilesChanged !== 0 || claims.productionCorrectionStarted !== false || claims.h7Started !== false || claims.mergePerformed !== false) fail('H6_STOP_BOUNDARY_VIOLATION');
+  if (
+    claims.independentMeasurementsRequired !== true ||
+    claims.circularReceiptDependencyProhibited !== true ||
+    claims.rendererToolSourceMayBeCopiedIntoRepositoryHistory !== false ||
+    claims.rendererExecutionAuthorized !== true ||
+    claims.browserExecutionAuthorized !== true ||
+    claims.deployedRouteExecutionAuthorized !== false ||
+    claims.productionMutationAuthorized !== false ||
+    claims.productionFilesChanged !== 0 ||
+    claims.productionCorrectionStarted !== false ||
+    claims.h7Started !== false ||
+    claims.mergePerformed !== false
+  ) fail('H6_STOP_BOUNDARY_VIOLATION');
+  const expectedClassifications = [
+    'CAPACITY_AUTHORITY_GAP_RENDERER_NODE_BUDGET_REJECTION_CORRESPONDS',
+    'CAPACITY_PASS_RENDERER_PASS',
+    'CAPACITY_NONPASS_RENDERER_CAPACITY_FAILURE_CORRESPONDS',
+    'CAPACITY_PASS_RENDERER_NONCAPACITY_FAILURE',
+    'CAPACITY_NONPASS_RENDERER_CAPACITY_FAILURE_PREMOUNT_IDENTITY_PRESERVED'
+  ];
+  if (
+    !Array.isArray(candidate.requiredCorrespondenceClassifications) ||
+    candidate.requiredCorrespondenceClassifications.length !== expectedClassifications.length ||
+    candidate.requiredCorrespondenceClassifications.some(
+      (value, index) => value !== expectedClassifications[index]
+    )
+  ) fail('H6_CORRESPONDENCE_CLASSIFICATION_SET_INVALID');
   return true;
 }
 

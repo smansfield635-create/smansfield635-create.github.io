@@ -1,0 +1,50 @@
+name: H-Earth Ground Observer Final Cleanup
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - ".github/workflows/h-earth-ground-observer-final-cleanup.yml"
+      - "artifacts/h-earth-ground-observer-camera/**"
+
+permissions:
+  contents: write
+
+jobs:
+  clean-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-ground-observer-camera-001
+          fetch-depth: 0
+
+      - name: Remove generated evidence and verify final main delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main:refs/remotes/origin/main
+          rm -rf artifacts/h-earth-ground-observer-camera
+          rm -f .github/workflows/h-earth-ground-observer-final-cleanup.yml
+          git add -A
+          node <<'NODE'
+          const cp = require('node:child_process');
+          const observed = cp.execFileSync(
+            'git',
+            ['diff', '--cached', '--name-only', 'origin/main'],
+            { encoding: 'utf8' }
+          ).trim().split('\n').filter(Boolean).sort();
+          const expected = [
+            'showroom/globe/h-earth/capacity.js',
+            'showroom/globe/h-earth/compositor.js',
+            'showroom/globe/h-earth/index.js'
+          ].sort();
+          if (JSON.stringify(observed) !== JSON.stringify(expected)) {
+            throw new Error(`FINAL_MAIN_DELTA_MISMATCH:${JSON.stringify({ observed, expected })}`);
+          }
+          NODE
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Remove ground observer verification transport"
+          git push origin HEAD:agent/h-earth-ground-observer-camera-001

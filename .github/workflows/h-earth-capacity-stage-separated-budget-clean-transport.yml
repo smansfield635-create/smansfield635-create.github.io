@@ -1,0 +1,61 @@
+name: H-Earth Capacity Stage-Separated Budget Clean Transport
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches: [main]
+    paths:
+      - .h-earth-evaluation/h-earth-capacity-v3.patch.transport.b64
+      - .github/workflows/h-earth-capacity-stage-separated-budget-clean-transport.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-close-transport:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-capacity-stage-separated-budget-correction-001
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply exact one-file correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "0b1c3f6d29735d42141e2feffc5898985e5996af"
+          base64 -d .h-earth-evaluation/h-earth-capacity-v3.patch.transport.b64 | gzip -d > /tmp/apply-capacity-v3.py
+          python /tmp/apply-capacity-v3.py
+          node --check showroom/globe/h-earth/capacity.js
+          node --input-type=module <<'NODE'
+          const m = await import('./showroom/globe/h-earth/capacity.js?clean=' + Date.now());
+          for (const projectedFragmentCount of [514, 526, 696, 784, 798]) {
+            const legacy = m.evaluateHEarth3DNodeBudget({ semanticLayerContainers: 15, environmentPrimitives: projectedFragmentCount, interactionNodes: 1 });
+            const separated = m.evaluateHEarth3DStageSeparatedCapacity({ admittedPrimitiveCount: 3, projectedFragmentCount });
+            if (!legacy.eligible || !separated.eligible) throw new Error('PROFILE_REJECTED:' + projectedFragmentCount);
+          }
+          if (m.evaluateHEarth3DStageSeparatedCapacity({ admittedPrimitiveCount: 3, projectedFragmentCount: 1025 }).eligible) throw new Error('PROJECTED_OVERFLOW_NOT_REJECTED');
+          if (m.evaluateHEarth3DStageSeparatedCapacity({ admittedPrimitiveCount: 385, projectedFragmentCount: 798 }).eligible) throw new Error('ADMITTED_OVERFLOW_NOT_REJECTED');
+          if (m.evaluateHEarth3DStageSeparatedCapacity({ admittedPrimitiveCount: 3, projectedFragmentCount: 798, mountedProjectedFragmentNodeCount: 797 }).eligible) throw new Error('MOUNT_MISMATCH_NOT_REJECTED');
+          if (m.H_EARTH_3D_CAPACITY_PREFLIGHT.eligible !== true) throw new Error('CAPACITY_PREFLIGHT_NOT_ELIGIBLE');
+          NODE
+      - name: Commit only capacity.js and remove transports
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .h-earth-evaluation/h-earth-capacity-v3.patch.transport.b64
+          git rm .github/workflows/h-earth-capacity-stage-separated-budget-clean-transport.yml
+          git add showroom/globe/h-earth/capacity.js
+          ACTUAL="$(git diff --cached --name-only | sort)"
+          EXPECTED="$(printf '%s\n' \
+            '.github/workflows/h-earth-capacity-stage-separated-budget-clean-transport.yml' \
+            '.h-earth-evaluation/h-earth-capacity-v3.patch.transport.b64' \
+            'showroom/globe/h-earth/capacity.js' | sort)"
+          test "$ACTUAL" = "$EXPECTED"
+          git config user.name "openai-codex[bot]"
+          git config user.email "openai-codex[bot]@users.noreply.github.com"
+          git commit -m "Correct H-Earth stage-separated renderer capacity"
+          git push origin HEAD:agent/h-earth-capacity-stage-separated-budget-correction-001

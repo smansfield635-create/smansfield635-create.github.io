@@ -1,0 +1,178 @@
+name: Metaverse 3D Benchmark Disposition D2S T3 Evidence Supplement
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/metaverse-3d-benchmark-disposition-d2s-t3.yml"
+      - "tools/metaverse-3d-benchmark-disposition-d2s-t3-*"
+      - "tools/metaverse-3d-benchmark-disposition-d2-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: metaverse-3d-benchmark-disposition-d2s-t3-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  t3-evidence-delta-supplement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      D2S_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      D2_PARENT_SHA: 209eac49c2db4d532bf1110743cba838deb443a4
+      D2_ARTIFACT_ID: "8620779192"
+      D2_ARTIFACT_SIZE: "16661"
+      D2_ARTIFACT_SHA256: 2bda7846aeb559263b0e3207285fef8caa359761afb9bc212ea5c043a29986fe
+      T2_HEAD_SHA: beb8bf02a45d8c178c52b91244ad9e077853b23c
+      T3_RECEIPT_SHA: 3f7b8b9e4a2b4b503d4564d11fa75cf09e152abc
+      SMOKE_ARTIFACT_ID: "8620937660"
+      SMOKE_ARTIFACT_SIZE: "5437691"
+      SMOKE_ARTIFACT_SHA256: dede20e2d7b99cf7205fef65f7b78be8ef8b8ea6da82afbbc581b24f95ffd5a3
+      BASELINE_ARTIFACT_ID: "8620971574"
+      BASELINE_ARTIFACT_SIZE: "82804260"
+      BASELINE_ARTIFACT_SHA256: 558000ae772033c325958224208321d1cfb442893f47db5476b2c5402ac7fdc2
+      D2_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d2-input
+      D2S_INPUT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d2s-input
+      T2_RECEIPT_PATH: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d2s-input/t2.receipt.json
+      T3_RECEIPT_PATH: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d2s-input/t3.receipt.json
+      T3_SMOKE_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d2s-input/smoke
+      T3_BASELINE_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d2s-input/baseline
+      D2S_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/metaverse-3d-benchmark-disposition-d2s-t3
+
+    steps:
+      - name: Checkout exact D2S occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.D2S_HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact D2S head and D2 ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$D2S_HEAD_SHA"
+          git merge-base --is-ancestor "$D2_PARENT_SHA" HEAD
+          test "$(git hash-object tools/metaverse-3d-benchmark-disposition-d2-contract.json)" = "f4460f1108f09ab6cfc6ed98ba94a840b80cd522"
+          test "$(git hash-object tools/metaverse-3d-benchmark-disposition-d2-normalize.mjs)" = "d5fdabc37c3cedfc1c02679bc6389cda2cb06dc4"
+          test "$(git hash-object tools/metaverse-3d-benchmark-disposition-d2-controls.mjs)" = "966c6ed0c21feafffe55b61aa59693d62ebdf6e7"
+          test "$(git hash-object .github/workflows/metaverse-3d-benchmark-disposition-d2.yml)" = "3b20fd57ebb67d05b2f1ae31b31961c18dcc37f8"
+
+      - name: Verify exact six-path supplement scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTUAL="$(git diff --name-only "$D2_PARENT_SHA"..HEAD | sort)"
+          EXPECTED="$(printf '%s\n' \
+            '.github/workflows/metaverse-3d-benchmark-disposition-d2s-t3.yml' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-core.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-facts.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-controls.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d2s-t3-normalize.mjs' | sort)"
+          test "$ACTUAL" = "$EXPECTED"
+          test "$(git diff --name-only "$D2_PARENT_SHA"..HEAD | wc -l)" -eq 6
+
+      - name: Fetch and verify exact T2 and T3 receipt occurrences
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$D2S_INPUT_ROOT"
+          mkdir -p "$D2S_INPUT_ROOT" "$T3_SMOKE_ARTIFACT_ROOT" "$T3_BASELINE_ARTIFACT_ROOT"
+          git fetch --no-tags origin \
+            refs/heads/agent/metaverse-benchmark-four-compass-tool-t2-001:refs/remotes/origin/d2s-t2 \
+            refs/heads/agent/metaverse-benchmark-four-compass-tool-t3-001:refs/remotes/origin/d2s-t3
+          test "$(git rev-parse refs/remotes/origin/d2s-t2)" = "$T2_HEAD_SHA"
+          test "$(git rev-parse refs/remotes/origin/d2s-t3)" = "$T3_RECEIPT_SHA"
+          git show "$T2_HEAD_SHA:verification/benchmark-tools/four-compass-benchmark-v1/checkpoint-t2/corrected-harness-and-workflow-construction.receipt.json" > "$T2_RECEIPT_PATH"
+          git show "$T3_RECEIPT_SHA:verification/benchmark-tools/four-compass-benchmark-v1/checkpoint-t3/tool-execution-and-evidence-validation.receipt.json" > "$T3_RECEIPT_PATH"
+          test "$(git hash-object "$T2_RECEIPT_PATH")" = "42b5c24e0a6a329395185b662a8a165f6bc0d0e0"
+          test "$(git hash-object "$T3_RECEIPT_PATH")" = "73015114b8c47491dc76e8dab60c3c72442a733c"
+
+      - name: Download and verify exact D2 and T3 artifacts
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf "$D2_ARTIFACT_ROOT"
+          mkdir -p "$D2_ARTIFACT_ROOT"
+          download_artifact() {
+            local id="$1" size="$2" sha="$3" zip="$4" root="$5"
+            curl --fail --location --retry 3 \
+              --header "Authorization: Bearer $GITHUB_TOKEN" \
+              --header "Accept: application/vnd.github+json" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$id/zip" \
+              --output "$zip"
+            test "$(stat -c '%s' "$zip")" = "$size"
+            echo "$sha  $zip" | sha256sum --check --strict
+            unzip -q "$zip" -d "$root"
+          }
+          download_artifact "$D2_ARTIFACT_ID" "$D2_ARTIFACT_SIZE" "$D2_ARTIFACT_SHA256" /tmp/d2.zip "$D2_ARTIFACT_ROOT"
+          download_artifact "$SMOKE_ARTIFACT_ID" "$SMOKE_ARTIFACT_SIZE" "$SMOKE_ARTIFACT_SHA256" /tmp/t3-smoke.zip "$T3_SMOKE_ARTIFACT_ROOT"
+          download_artifact "$BASELINE_ARTIFACT_ID" "$BASELINE_ARTIFACT_SIZE" "$BASELINE_ARTIFACT_SHA256" /tmp/t3-baseline.zip "$T3_BASELINE_ARTIFACT_ROOT"
+          test -f "$D2_ARTIFACT_ROOT/canonical-fact-manifest.json"
+          test -f "$D2_ARTIFACT_ROOT/fact-coexistence-index.json"
+          test -f "$T3_SMOKE_ARTIFACT_ROOT/four-compass-benchmark-tool-smoke.json"
+          test -f "$T3_BASELINE_ARTIFACT_ROOT/four-compass-benchmark-tool-baseline.json"
+
+      - name: Validate supplement source syntax
+        run: |
+          node --check tools/metaverse-3d-benchmark-disposition-d2s-t3-core.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d2s-t3-facts.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d2s-t3-normalize.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d2s-t3-controls.mjs
+          node -e "JSON.parse(require('fs').readFileSync('tools/metaverse-3d-benchmark-disposition-d2s-t3-contract.json','utf8'))"
+
+      - name: Execute T3 evidence supplement controls
+        run: |
+          rm -rf "$D2S_ARTIFACT_ROOT"
+          mkdir -p "$D2S_ARTIFACT_ROOT"
+          node tools/metaverse-3d-benchmark-disposition-d2s-t3-controls.mjs > "$D2S_ARTIFACT_ROOT/execution.log"
+
+      - name: Verify deterministic supplement receipts and boundary
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile } from 'node:fs/promises';
+          const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object'
+            ? Object.fromEntries(Object.keys(value).sort().map(key => [key.normalize('NFC'), stable(value[key])]))
+            : typeof value === 'string' ? value.normalize('NFC') : value;
+          const digest = value => createHash('sha256').update(JSON.stringify(stable(value))).digest('hex');
+          const root = process.env.D2S_ARTIFACT_ROOT;
+          const source = JSON.parse(await readFile(`${root}/source-delta-inventory.json`, 'utf8'));
+          const evidence = JSON.parse(await readFile(`${root}/native-evidence-delta-inventory.json`, 'utf8'));
+          const delta = JSON.parse(await readFile(`${root}/canonical-fact-delta-manifest.json`, 'utf8'));
+          const combined = JSON.parse(await readFile(`${root}/combined-canonical-fact-manifest.json`, 'utf8'));
+          const relations = JSON.parse(await readFile(`${root}/combined-fact-coexistence-index.json`, 'utf8'));
+          const supplement = JSON.parse(await readFile(`${root}/supplement.receipt.json`, 'utf8'));
+          const aggregate = JSON.parse(await readFile(`${root}/aggregate.receipt.json`, 'utf8'));
+          if (source.sourceRecordCount !== 7 || source.sourceInventorySha256 !== 'd9d120deb9e91bdfc7b42cecbad1afee191f4c0174bc82ecacdd3be2d2f788fe' || digest(source.records) !== source.sourceInventorySha256) throw new Error('D2S_SOURCE_INVENTORY_MISMATCH');
+          if (evidence.nativeEvidenceRecordCount !== 6 || evidence.nativeEvidenceInventorySha256 !== 'fae33e9a7e02daae7429695c2f0b7e907c8445d24cb9cabed3b5f55e0c379bd7' || digest(evidence.records) !== evidence.nativeEvidenceInventorySha256) throw new Error('D2S_EVIDENCE_INVENTORY_MISMATCH');
+          if (delta.canonicalFactCount !== 72 || delta.factManifestSha256 !== 'bcd4fd1ff5b941052d5ed181d6851168297ae4c0d853e87922a8f9c05ab06770' || digest(delta.records) !== delta.factManifestSha256) throw new Error('D2S_DELTA_FACT_MANIFEST_MISMATCH');
+          if (combined.parentD2CanonicalFactCount !== 47 || combined.deltaCanonicalFactCount !== 72 || combined.combinedCanonicalFactCount !== 119 || combined.combinedFactManifestSha256 !== '7ce22d2cb309bcec5590043d38ebea95c80c3aa8f49474b7b7321c7b56827b20' || digest(combined.records) !== combined.combinedFactManifestSha256) throw new Error('D2S_COMBINED_FACT_MANIFEST_MISMATCH');
+          if (relations.parentD2RelationCount !== 3 || relations.deltaRelationCount !== 4 || relations.combinedRelationCount !== 7 || relations.combinedCoexistenceIndexSha256 !== 'd37d39e950ae9c67c5e2abd99af79d465379270a55481590e822912c5cbd8b52' || digest(relations.relations) !== relations.combinedCoexistenceIndexSha256) throw new Error('D2S_COMBINED_RELATION_INDEX_MISMATCH');
+          const { deterministicReceiptSha256: sDigest, ...sBody } = supplement;
+          if (sDigest !== '940f4705c6bdddc89f67692b6e938410de280a8977f25062d77cccd5369ba7ed' || digest(sBody) !== sDigest) throw new Error('D2S_SUPPLEMENT_RECEIPT_MISMATCH');
+          const { deterministicReceiptSha256: aDigest, ...aBody } = aggregate;
+          if (aggregate.controlCount !== 23 || aggregate.passedControlCount !== 23 || aDigest !== '0c67caecbfe10c44cacd8fc39891a6fb63315fa30b0c3355893ca1071d9ed970' || digest(aBody) !== aDigest) throw new Error('D2S_AGGREGATE_RECEIPT_MISMATCH');
+          const claims = supplement.claims ?? {};
+          if (claims.parentD2FactsPreservedByteExact !== true || claims.parentD2RelationsPreservedByteExact !== true || claims.t3NativeEvidenceDeltaAdmitted !== true || claims.t3CanonicalFactDeltaNormalized !== true || claims.newTopLevelLaneCreated !== false || claims.findingsPromotedToDefects !== false || claims.toolMergeReadinessEstablished !== false || claims.dimensionClassificationPerformed !== false || claims.evidenceWeightingPerformed !== false || claims.dispositionCompilationPerformed !== false || claims.productFilesChanged !== 0 || claims.mainChanged !== false || claims.mergePerformed !== false || claims.userAcceptanceGranted !== false) throw new Error('D2S_STOPPING_BOUNDARY_VIOLATED');
+          NODE
+
+      - name: Upload deterministic D2S package
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-3d-benchmark-disposition-d2s-t3-${{ env.D2S_HEAD_SHA }}
+          path: artifacts/metaverse-3d-benchmark-disposition-d2s-t3/**
+          if-no-files-found: error
+          retention-days: 30

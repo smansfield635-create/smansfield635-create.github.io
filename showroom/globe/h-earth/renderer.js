@@ -112,7 +112,7 @@ export const H_EARTH_3D_RENDERER_ROLE =
   'FRAME_AUTHENTICATED_ADMITTED_GEOMETRY_PROJECTION_AND_DOM_CSS_MATERIALIZATION_CONSUMER';
 
 export const H_EARTH_3D_RENDERER_STATUS =
-  'FROZEN_CANON_DUPLICATE_CLIPPING_LIFECYCLE_AND_WET_SAND_PRESENTATION_CORRECTION_CANDIDATE';
+  'FROZEN_CANON_DUPLICATE_CLIPPING_LIFECYCLE_AND_SHORELINE_PRESENTATION_COHERENCE_CANDIDATE';
 
 const RENEWS_RENDERER_CONTRACT_ID =
   'H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_1_ENVIRONMENT_GEOMETRY_MATERIALIZATION_v1';
@@ -792,10 +792,10 @@ export const H_EARTH_3D_RENDERER_MATERIAL_PRESENTATION =
     H_EARTH_MATERIAL_WET_SAND:
       deepFreeze({
         background:
-          'linear-gradient(180deg, #656158 0%, #504e48 46%, #383b39 100%)',
+          'linear-gradient(180deg, #8e8068 0%, #716750 50%, #454d46 100%)',
 
         boxShadow:
-          'inset 0 1px 0 rgba(215,224,216,0.10), 0 2px 5px rgba(17,23,22,0.24)',
+          'none',
 
         opacity:
           1
@@ -822,7 +822,7 @@ export const H_EARTH_3D_RENDERER_MATERIAL_PRESENTATION =
     H_EARTH_MATERIAL_NEARSHORE_WATER:
       deepFreeze({
         background:
-          'linear-gradient(180deg, rgba(68,132,148,0.94) 0%, rgba(34,91,111,0.96) 100%)',
+          'linear-gradient(180deg, rgba(151,188,190,0.94) 0%, rgba(73,142,154,0.97) 36%, rgba(29,91,113,0.99) 100%)',
 
         opacity:
           0.94
@@ -831,7 +831,7 @@ export const H_EARTH_3D_RENDERER_MATERIAL_PRESENTATION =
     H_EARTH_MATERIAL_OPEN_WATER:
       deepFreeze({
         background:
-          'linear-gradient(180deg, #2f7084 0%, #1f5369 55%, #143d53 100%)',
+          'linear-gradient(180deg, #4d91a3 0%, #2c7189 44%, #174a67 100%)',
 
         opacity:
           0.96
@@ -840,7 +840,7 @@ export const H_EARTH_3D_RENDERER_MATERIAL_PRESENTATION =
     H_EARTH_MATERIAL_FOAM:
       deepFreeze({
         background:
-          'linear-gradient(180deg, rgba(241,243,232,0.94) 0%, rgba(193,211,207,0.76) 100%)',
+          'linear-gradient(180deg, rgba(246,247,237,0.97) 0%, rgba(214,227,220,0.88) 56%, rgba(163,194,191,0.54) 100%)',
 
         opacity:
           0.9
@@ -4900,7 +4900,7 @@ function createStageElement() {
         'layout paint style',
 
       background:
-        'linear-gradient(180deg, #546f7b 0%, #789095 42%, #52686c 58%, #303d3e 100%)',
+        'linear-gradient(180deg, #4f6874 0%, #6f878e 38%, #9ca9a4 53%, #667772 66%, #303b39 100%)',
 
       userSelect:
         'none',
@@ -5045,19 +5045,19 @@ function createInteractionBoundaryElement() {
 const H_EARTH_3D_WET_SAND_BALANCED_PRESENTATION =
   deepFreeze({
     background:
-      'linear-gradient(180deg, rgba(205, 226, 223, 0.34) 0%, rgba(156, 181, 180, 0.12) 22%, rgba(121, 112, 91, 0.08) 45%, rgba(55, 67, 64, 0.30) 100%), linear-gradient(180deg, #917c5d 0%, #6f644e 48%, #444b45 100%)',
+      'radial-gradient(ellipse at 22% 70%, rgba(197, 174, 129, 0.18) 0%, rgba(197, 174, 129, 0) 43%), radial-gradient(ellipse at 78% 76%, rgba(49, 71, 65, 0.20) 0%, rgba(49, 71, 65, 0) 48%), linear-gradient(180deg, rgba(199, 218, 211, 0.22) 0%, rgba(151, 147, 121, 0.11) 32%, rgba(78, 76, 61, 0.20) 68%, rgba(43, 55, 51, 0.34) 100%), linear-gradient(180deg, #978568 0%, #756a52 50%, #424b45 100%)',
 
     boxShadow:
-      'rgba(225, 242, 238, 0.16) 0 1px 0 inset, rgba(15, 23, 22, 0.08) 0 1px 2px',
+      'none',
 
     filter:
-      'saturate(1.10) brightness(1.08) contrast(0.94)',
+      'none',
 
     mixBlendMode:
       'normal',
 
     opacity:
-      '0.99'
+      '1'
   });
 
 function isWetSandPresentationAssignment(
@@ -5069,6 +5069,23 @@ function isWetSandPresentationAssignment(
     assignment?.materialIntent ===
       'WET_SAND'
   );
+}
+
+const H_EARTH_3D_STAGE_ALIGNED_SHORELINE_MATERIAL_REFERENCES =
+  new Set([
+    'H_EARTH_MATERIAL_WET_SAND',
+    'H_EARTH_MATERIAL_NEARSHORE_WATER',
+    'H_EARTH_MATERIAL_OPEN_WATER',
+    'H_EARTH_MATERIAL_FOAM'
+  ]);
+
+function isStageAlignedShorelinePresentationAssignment(
+  assignment
+) {
+  return H_EARTH_3D_STAGE_ALIGNED_SHORELINE_MATERIAL_REFERENCES
+    .has(
+      assignment?.materialReference
+    );
 }
 
 function getMaterialPresentation(
@@ -5093,13 +5110,13 @@ function getMaterialPresentation(
   });
 }
 
-function applyStageAlignedWetSandPresentation(
+function applyStageAlignedShorelinePresentation(
   element,
   assignment,
   materializationExtent
 ) {
   if (
-    !isWetSandPresentationAssignment(
+    !isStageAlignedShorelinePresentationAssignment(
       assignment
     ) ||
     !isPlainRecord(
@@ -5149,8 +5166,8 @@ function applyStageAlignedWetSandPresentation(
     }
   );
 
-  element.dataset.wetSandPresentationModel =
-    'BALANCED_STAGE_ALIGNED_v1';
+  element.dataset.shorelinePresentationModel =
+    'COHERENT_STAGE_ALIGNED_v2';
 
   return element;
 }
@@ -5170,7 +5187,7 @@ function applyPresentation(
     presentation
   );
 
-  applyStageAlignedWetSandPresentation(
+  applyStageAlignedShorelinePresentation(
     element,
     assignment,
     materializationExtent

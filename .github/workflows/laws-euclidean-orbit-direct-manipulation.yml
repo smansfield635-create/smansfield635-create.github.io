@@ -125,7 +125,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mapfile -t changed < <(git diff --name-only | sort)
+          mapfile -t changed < <(
+            {
+              git diff --name-only
+              git ls-files --others --exclude-standard
+            } | sort -u
+          )
           expected=(
             laws/index.crystals.js
             laws/index.css
@@ -161,7 +166,12 @@ jobs:
             laws/validation/laws.orbit-direct-manipulation.receipt.json
           )
           mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
-          mapfile -t actual < <(git diff --name-only dedc73841de2b41f5905fd842e9a593116caf300 -- . ':!.github/workflows/laws-euclidean-orbit-direct-manipulation.yml' ':!scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs' | sort)
+          mapfile -t actual < <(
+            {
+              git diff --name-only dedc73841de2b41f5905fd842e9a593116caf300 -- . ':!.github/workflows/laws-euclidean-orbit-direct-manipulation.yml' ':!scripts/laws/apply-euclidean-orbit-direct-manipulation.mjs'
+              git ls-files --others --exclude-standard
+            } | sort -u
+          )
           diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${actual[@]}")
           test -z "$(git diff --name-only dedc73841de2b41f5905fd842e9a593116caf300 -- laws/index.controller.js laws/index.compositor.js laws/index.planet.js)"
 

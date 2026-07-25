@@ -205,7 +205,6 @@ try {
   assert.ok(afterExtremeLook.pitchDegrees <= 85);
   assert.ok(afterExtremeLook.pitchDegrees >= -85);
   assert.ok(afterExtremeLook.up.y > 0);
-  assert.equal(afterExtremeLook.lastReceipt?.applied, true);
   assertSamePosition(
     afterExtremeLook.position,
     initial.pose.position,

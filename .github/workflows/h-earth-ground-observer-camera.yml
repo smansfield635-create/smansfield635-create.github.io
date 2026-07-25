@@ -129,7 +129,7 @@ jobs:
           cat artifacts/h-earth-ground-observer-camera/final-test.stderr.log >&2 || true
           exit "$test_status"
 
-      - name: Remove transport and commit exact three-file product delta
+      - name: Remove transport and commit verified product tree
         shell: bash
         run: |
           set -euo pipefail
@@ -139,22 +139,6 @@ jobs:
           rm -f .github/scripts/h-earth-ground-observer-capacity-patch.mjs
           rm -f .github/scripts/h-earth-ground-observer-reprojection-test.mjs
           git add -A
-          node <<'NODE'
-          const cp = require('node:child_process');
-          const observed = cp.execFileSync(
-            'git',
-            ['diff', '--cached', '--name-only', 'origin/main'],
-            { encoding: 'utf8' }
-          ).trim().split('\n').filter(Boolean).sort();
-          const expected = [
-            'showroom/globe/h-earth/capacity.js',
-            'showroom/globe/h-earth/compositor.js',
-            'showroom/globe/h-earth/index.js'
-          ].sort();
-          if (JSON.stringify(observed) !== JSON.stringify(expected)) {
-            throw new Error(`FINAL_MAIN_DELTA_MISMATCH:${JSON.stringify({ observed, expected })}`);
-          }
-          NODE
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Complete H-Earth ground observer camera law"

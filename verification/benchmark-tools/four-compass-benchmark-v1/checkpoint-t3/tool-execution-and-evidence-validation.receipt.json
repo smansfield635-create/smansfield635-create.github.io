@@ -1,0 +1,316 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_TOOL_EXECUTION_AND_EVIDENCE_VALIDATION_RECEIPT_v1",
+  "phase": "TOOL_EXECUTION_AND_VALIDATION",
+  "checkpoint": "T3",
+  "status": "PASS_TOOL_EXECUTION_AND_EVIDENCE_VALIDATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "parentT2Commit": "beb8bf02a45d8c178c52b91244ad9e077853b23c",
+  "parentT2ReceiptBlob": "42b5c24e0a6a329395185b662a8a165f6bc0d0e0",
+  "executionBranch": "agent/metaverse-benchmark-four-compass-tool-t2-001",
+  "receiptBranch": "agent/metaverse-benchmark-four-compass-tool-t3-001",
+  "recordedDate": "2026-07-25",
+  "mode": "EXECUTE_VALIDATE_REPRODUCE_AND_LOCK_SEPARATED_TOOL_EVIDENCE",
+  "executionTrigger": {
+    "pullRequest": 142,
+    "stateAtValidation": "OPEN_DRAFT_UNMERGED",
+    "baseBranch": "agent/metaverse-benchmark-four-compass-tool-t1-001",
+    "baseCommit": "c90e2037d4a06814688482e6a7b9514562f8c6c3",
+    "headBranch": "agent/metaverse-benchmark-four-compass-tool-t2-001",
+    "headCommit": "beb8bf02a45d8c178c52b91244ad9e077853b23c",
+    "purpose": "EXECUTION_ONLY_NO_MERGE_AUTHORITY"
+  },
+  "workflowExecutions": {
+    "smoke": {
+      "workflowName": "Metaverse Four-Compass Benchmark Tool Smoke",
+      "runId": 30163665632,
+      "runNumber": 1,
+      "status": "COMPLETED",
+      "conclusion": "SUCCESS",
+      "jobId": 89692959410,
+      "jobName": "Verify separated tool reachability",
+      "allStepsPassed": true,
+      "artifact": {
+        "id": 8620937660,
+        "name": "metaverse-benchmark-four-compass-tool-smoke-evidence",
+        "byteLength": 5437691,
+        "sha256": "dede20e2d7b99cf7205fef65f7b78be8ef8b8ea6da82afbbc581b24f95ffd5a3",
+        "expired": false
+      }
+    },
+    "baseline": {
+      "workflowName": "Metaverse Four-Compass Benchmark Tool",
+      "runId": 30163665625,
+      "runNumber": 1,
+      "status": "COMPLETED",
+      "conclusion": "SUCCESS",
+      "jobId": 89692959531,
+      "jobName": "Execute separated Compass and auxiliary baselines",
+      "allStepsPassed": true,
+      "artifact": {
+        "id": 8620971574,
+        "name": "metaverse-benchmark-four-compass-tool-evidence",
+        "byteLength": 82804260,
+        "sha256": "558000ae772033c325958224208321d1cfb442893f47db5476b2c5402ac7fdc2",
+        "expired": false
+      }
+    }
+  },
+  "smokeEvidence": {
+    "fourCompassLane": {
+      "receipt": "four-compass-benchmark-tool-smoke.json",
+      "receiptByteLength": 7908,
+      "receiptSha256": "34733f90bd0088456a0cccc55aa9e25ffba71b975bdd2dd2eda0b23f625bcad9",
+      "lane": "FOUR_COMPASS_CORPUS",
+      "status": "PASS_TOOL_SMOKE",
+      "laneSmokeDigest": "2b0d02ffedbb1d6e82d61d4fd6ff10cc36d4d262f0a9d2bcc1e4573eaf0e3b05",
+      "authorityCount": 4,
+      "executedCount": 4,
+      "screenshotCount": 4,
+      "authorityIds": [
+        "MAIN_COMPASS",
+        "ARCHCOIN_COMPASS",
+        "SHOWROOM_COMPASS",
+        "LAWS_COMPASS"
+      ]
+    },
+    "homeAuxiliaryLane": {
+      "receipt": "website-home-receiver-control-smoke.json",
+      "receiptByteLength": 2154,
+      "receiptSha256": "19d4dce11cb659edaefbe19e7f9052ca01ffca24edf7ae76ab6db158029910b0",
+      "lane": "AUXILIARY_CONTROL",
+      "status": "PASS_TOOL_SMOKE",
+      "laneSmokeDigest": "f5f4c05649b453119d9d46bb3753d124782521010e77a9a15760fd53b098f51f",
+      "authorityCount": 1,
+      "executedCount": 1,
+      "screenshotCount": 1,
+      "authorityIds": [
+        "WEBSITE_HOME_RECEIVER_CONTROL"
+      ]
+    },
+    "screenshotIdentityVerification": {
+      "expected": 5,
+      "verified": 5,
+      "byteLengthMismatches": 0,
+      "sha256Mismatches": 0,
+      "missing": 0,
+      "extras": 0
+    }
+  },
+  "baselineEvidence": {
+    "fourCompassLane": {
+      "receipt": "four-compass-benchmark-tool-baseline.json",
+      "receiptByteLength": 1238980,
+      "receiptSha256": "3e18d119da1c6d98593721969c44ed8c0a50aa28dac59d12cdc3e170631d93dd",
+      "lane": "FOUR_COMPASS_CORPUS",
+      "status": "PASS_BOUNDED_LANE_BASELINE",
+      "laneBaselineDigest": "ee4446e691bb7ce5302b535f7149e3b2b627f6de7c27fbfa72ee26b715e2e9d3",
+      "laneDigestReproduced": true,
+      "authorityIds": [
+        "MAIN_COMPASS",
+        "ARCHCOIN_COMPASS",
+        "SHOWROOM_COMPASS",
+        "LAWS_COMPASS"
+      ],
+      "scenarioCount": 8,
+      "executedScenarioCount": 8,
+      "captureCount": 48,
+      "harnessFailureCount": 0,
+      "findingCount": 8,
+      "findingTaxonomy": {
+        "INTERACTIVE_ELEMENT_PARTIALLY_CLIPPED": 8
+      },
+      "summaryPartitions": {
+        "MAIN_COMPASS": {
+          "profiles": 2,
+          "captures": 12,
+          "findings": 2
+        },
+        "ARCHCOIN_COMPASS": {
+          "profiles": 2,
+          "captures": 12,
+          "findings": 2
+        },
+        "SHOWROOM_COMPASS": {
+          "profiles": 2,
+          "captures": 12,
+          "findings": 0
+        },
+        "LAWS_COMPASS": {
+          "profiles": 2,
+          "captures": 12,
+          "findings": 4
+        }
+      }
+    },
+    "homeAuxiliaryLane": {
+      "receipt": "website-home-receiver-control-baseline.json",
+      "receiptByteLength": 81284,
+      "receiptSha256": "8b777b034abb280782424ec1d5b59f7d5cb639451bbc629e304d25b06ba6373d",
+      "lane": "AUXILIARY_CONTROL",
+      "status": "PASS_BOUNDED_LANE_BASELINE",
+      "laneBaselineDigest": "ecaf6396c935108a824f00b8bb536ead7ad14b6b4708ba3c8c5b1eb384c541b0",
+      "laneDigestReproduced": true,
+      "authorityIds": [
+        "WEBSITE_HOME_RECEIVER_CONTROL"
+      ],
+      "scenarioCount": 2,
+      "executedScenarioCount": 2,
+      "captureCount": 8,
+      "harnessFailureCount": 0,
+      "findingCount": 22,
+      "findingTaxonomy": {
+        "INTERACTIVE_ELEMENT_PARTIALLY_CLIPPED": 14,
+        "INTERACTIVE_CONTROL_OVERLAP": 8
+      }
+    },
+    "screenshotIdentityVerification": {
+      "expected": 56,
+      "verified": 56,
+      "byteLengthMismatches": 0,
+      "sha256Mismatches": 0,
+      "missing": 0,
+      "extras": 0
+    }
+  },
+  "laneSeparationAudit": {
+    "fourCompassObservedIds": [
+      "MAIN_COMPASS",
+      "ARCHCOIN_COMPASS",
+      "SHOWROOM_COMPASS",
+      "LAWS_COMPASS"
+    ],
+    "homeAuxiliaryObservedIds": [
+      "WEBSITE_HOME_RECEIVER_CONTROL"
+    ],
+    "homeInCompassRecords": 0,
+    "homeInCompassSummaries": 0,
+    "homeInCompassFindings": 0,
+    "homeInCompassManifest": 0,
+    "compassInHomeRecords": 0,
+    "compassInHomeSummaries": 0,
+    "compassInHomeFindings": 0,
+    "compassInHomeManifest": 0,
+    "crossLaneAggregateCreated": false,
+    "retiredActiveIdentitiesObserved": [],
+    "status": "PASS_EXACT_LANE_SEPARATION"
+  },
+  "telemetryObservations": {
+    "fourCompassBaselineConsoleWarnings": 26,
+    "fourCompassBaselineConsoleErrors": 1,
+    "fourCompassBaselinePageErrors": 0,
+    "fourCompassBaselineRequestFailures": 0,
+    "homeAuxiliaryBaselineConsoleWarnings": 0,
+    "homeAuxiliaryBaselineConsoleErrors": 0,
+    "homeAuxiliaryBaselinePageErrors": 0,
+    "homeAuxiliaryBaselineRequestFailures": 0,
+    "nonBlockingObservation": "MAIN_COMPASS_RECORDED_ONE_UNRESOLVED_DEPLOYED_CONSOLE_404_MESSAGE_WITHOUT_REQUEST_FAILURE_OR_PAGE_ERROR",
+    "productDefectClassification": "NOT_ESTABLISHED_AT_T3"
+  },
+  "validationMeaning": {
+    "passMeaning": "TOOL_EXECUTION_EVIDENCE_COMPLETENESS_LANE_SEPARATION_AND_CUSTODY",
+    "zeroFindingsRequired": false,
+    "visualCorrectnessEstablished": false,
+    "productRootCauseEstablished": false,
+    "lawsRepairCorrectnessEstablished": false,
+    "crossBrowserParityEstablished": false
+  },
+  "validationDigest": {
+    "algorithm": "SHA-256(JSON.stringify(validationCore))",
+    "validationCore": {
+      "executionHead": "beb8bf02a45d8c178c52b91244ad9e077853b23c",
+      "pullRequest": 142,
+      "workflowRuns": {
+        "smoke": 30163665632,
+        "baseline": 30163665625
+      },
+      "artifactZipDigests": {
+        "smoke": "dede20e2d7b99cf7205fef65f7b78be8ef8b8ea6da82afbbc581b24f95ffd5a3",
+        "baseline": "558000ae772033c325958224208321d1cfb442893f47db5476b2c5402ac7fdc2"
+      },
+      "laneDigests": {
+        "fourCompassSmoke": "2b0d02ffedbb1d6e82d61d4fd6ff10cc36d4d262f0a9d2bcc1e4573eaf0e3b05",
+        "homeAuxiliarySmoke": "f5f4c05649b453119d9d46bb3753d124782521010e77a9a15760fd53b098f51f",
+        "fourCompassBaseline": "ee4446e691bb7ce5302b535f7149e3b2b627f6de7c27fbfa72ee26b715e2e9d3",
+        "homeAuxiliaryBaseline": "ecaf6396c935108a824f00b8bb536ead7ad14b6b4708ba3c8c5b1eb384c541b0"
+      },
+      "partitions": {
+        "fourCompassBaselineScenarios": 8,
+        "fourCompassBaselineCaptures": 48,
+        "homeAuxiliaryBaselineScenarios": 2,
+        "homeAuxiliaryBaselineCaptures": 8,
+        "smokeCaptures": 5,
+        "totalVerifiedScreenshots": 61
+      },
+      "laneSeparationAccepted": true,
+      "toolExecutionAccepted": true,
+      "installationAuthorized": false,
+      "lawsRepairAuthorized": false,
+      "nextCheckpoint": "T4_CLEAN_TOOL_MERGE_READINESS_AUDIT"
+    },
+    "sha256": "77550e769de04f4399704e768497284249daa154e0fbd079e423b9db05231bed"
+  },
+  "authority": {
+    "toolExecution": true,
+    "toolEvidenceValidation": true,
+    "toolEvidenceAcceptance": true,
+    "toolMergeReadinessAudit": true,
+    "toolInstallation": false,
+    "toolMerge": false,
+    "lawsRepair": false,
+    "productMutation": false,
+    "mainWrite": false
+  },
+  "assertions": {
+    "t2ExecutionHeadExact": true,
+    "bothWorkflowRunsSucceeded": true,
+    "bothWorkflowJobsSucceeded": true,
+    "bothArtifactsPresent": true,
+    "artifactZipDigestsVerified": true,
+    "receiptDigestsVerified": true,
+    "laneDigestsReproduced": true,
+    "allScreenshotIdentitiesVerified": true,
+    "verifiedScreenshotCount": 61,
+    "fourCompassScenarioCountExact": true,
+    "homeAuxiliaryScenarioCountExact": true,
+    "laneSeparationExact": true,
+    "crossLaneAggregateCreated": false,
+    "harnessFailureCount": 0,
+    "productFilesChanged": 0,
+    "lawsRepairStarted": false,
+    "mainChanged": false,
+    "mergeAuthority": "NONE"
+  },
+  "prohibited": [
+    "INSTALL_OR_MERGE_TOOL_AT_T3",
+    "TREAT_FINDINGS_AS_AUTOMATIC_PRODUCT_DEFECTS",
+    "REINTRODUCE_FIVE_MEMBER_AGGREGATION",
+    "BEGIN_LAWS_REPAIR",
+    "CHANGE_PRODUCT_FILES",
+    "CHANGE_MAIN",
+    "GRANT_MERGE_AUTHORITY"
+  ],
+  "stoppingBoundary": {
+    "proves": [
+      "CORRECTED_TOOL_BROWSER_AND_WORKFLOW_EXECUTION_PASS",
+      "FOUR_COMPASS_AND_HOME_AUXILIARY_LANE_SEPARATION_PASS",
+      "EXACT_EVIDENCE_ARTIFACT_CUSTODY",
+      "EXACT_RECEIPT_AND_SCREENSHOT_DIGEST_VERIFICATION",
+      "REPRODUCIBLE_LANE_DIGESTS",
+      "TOOL_EVIDENCE_ACCEPTANCE"
+    ],
+    "doesNotProve": [
+      "TOOL_MERGE_READINESS",
+      "TOOL_INSTALLATION_AUTHORITY",
+      "TOOL_MERGE_AUTHORITY",
+      "UNIVERSAL_VISUAL_CORRECTNESS",
+      "PRODUCT_ROOT_CAUSE",
+      "LAWS_REPAIR_READINESS",
+      "LAWS_REPAIR_CORRECTNESS"
+    ],
+    "authorizes": [
+      "T4_CLEAN_TOOL_MERGE_READINESS_AUDIT"
+    ]
+  },
+  "nextCheckpoint": "T4_CLEAN_TOOL_MERGE_READINESS_AUDIT"
+}

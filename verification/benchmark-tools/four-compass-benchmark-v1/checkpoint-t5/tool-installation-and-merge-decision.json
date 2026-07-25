@@ -1,0 +1,34 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_TOOL_INSTALLATION_AND_MERGE_DECISION_v1",
+  "phase": "TOOL_INSTALLATION_AND_MERGE_DECISION",
+  "checkpoint": "T5",
+  "status": "PENDING_CLEAN_CANDIDATE_EXECUTION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "recordedDate": "2026-07-25",
+  "installationMode": "MAIN_PULL_REQUEST_GATE_FOR_TOOL_AND_LAWS_SCOPE_PLUS_MANUAL_DISPATCH",
+  "cleanCandidateRoot": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "retainedExactBlobCount": 7,
+  "normalizedWorkflowBlobCount": 2,
+  "normalizedWorkflowBlobs": {
+    "baseline": "7eee8b1703c19da397ec38ae806378f95b230fb5",
+    "smoke": "4973252071716f8ff032738379aa293552c2dfd0"
+  },
+  "automaticTriggerScope": [
+    "laws/**",
+    "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs",
+    "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
+    "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs",
+    ".github/workflows/metaverse-benchmark-four-compass-tool.yml",
+    ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml"
+  ],
+  "execution": null,
+  "decision": {
+    "cleanCandidateConstructed": false,
+    "cleanCandidateExecutionAccepted": false,
+    "installationEligible": false,
+    "mergeEligible": false,
+    "mergeExecuted": false,
+    "lawsRepairReady": false
+  },
+  "nextCheckpoint": "T5_CLEAN_CANDIDATE_EXECUTION_AND_FINAL_DECISION"
+}

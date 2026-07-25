@@ -69,7 +69,7 @@ export const H_EARTH_3D_COMPOSITOR_ROLE =
   'ADMITTED_GEOMETRY_CAMERA_VIEWPORT_VISIBILITY_AND_FRAME_SEQUENCE_COMPOSITION_AUTHORITY';
 
 export const H_EARTH_3D_COMPOSITOR_STATUS =
-  'MODEL_A_EXACT_BACKED_AUTHORITY_CONSUMPTION_RENEWAL_CANDIDATE';
+  'MODEL_A_GROUND_OBSERVER_CAMERA_AUTHORITY_RENEWAL_CANDIDATE';
 
 const RENEWS_COMPOSITOR_CONTRACT_ID =
   'H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_3_CAMERA_VIEWPORT_FRAME_COMPOSITION_v1';
@@ -1270,6 +1270,64 @@ const INITIAL_PITCH_DEGREES =
   );
 
 
+const GROUND_OBSERVER_EYE_HEIGHT =
+  clamp(
+    INITIAL_POSITION.y,
+    POSITION_BOUNDS.yMin,
+    POSITION_BOUNDS.yMax
+  );
+
+const GROUND_OBSERVER_INITIAL_ANCHOR =
+  createVector(
+    clamp(
+      INITIAL_POSITION.x,
+      Math.max(
+        TARGET_BOUNDS.xMin,
+        POSITION_BOUNDS.xMin
+      ),
+      Math.min(
+        TARGET_BOUNDS.xMax,
+        POSITION_BOUNDS.xMax
+      )
+    ),
+    GROUND_OBSERVER_EYE_HEIGHT,
+    clamp(
+      INITIAL_POSITION.z,
+      Math.max(
+        TARGET_BOUNDS.zMin,
+        POSITION_BOUNDS.zMin
+      ),
+      Math.min(
+        TARGET_BOUNDS.zMax,
+        POSITION_BOUNDS.zMax
+      )
+    )
+  );
+
+const GROUND_OBSERVER_PITCH_BOUNDS =
+  deepFreeze({
+    minimum:
+      Math.max(
+        PITCH_BOUNDS.minimum,
+        -85
+      ),
+    maximum:
+      Math.min(
+        PITCH_BOUNDS.maximum,
+        85
+      )
+  });
+
+const GROUND_OBSERVER_LOOK_DISTANCE =
+  Math.max(
+    1,
+    Math.min(
+      INITIAL_DISTANCE,
+      16
+    )
+  );
+
+
 /* ==========================================================================
  * 06 · PUBLIC SCHEMAS
  * ========================================================================== */
@@ -1514,10 +1572,10 @@ export const H_EARTH_3D_COMPOSITOR_CAMERA_CONSTRAINTS =
       false,
 
     distanceModel:
-      'INITIAL_DISTANCE_MULTIPLIED_BY_ZOOM_SCALE',
+      'GROUND_OBSERVER_FIXED_EYE_HEIGHT_WITH_PINCH_FIELD_OF_VIEW_SCALING',
 
     positionViolationPolicy:
-      'CONSUME_AUTHORITY_NORMALIZED_CAMERA_THEN_APPLY_COMPOSITOR_POSITION_BOUND_FITTING',
+      'CONSUME_AUTHORITY_NORMALIZED_CAMERA_THEN_CLAMP_GROUND_OBSERVER_ANCHOR_AND_PITCH',
 
     capacityAuthority:
       H_EARTH_3D_CAPACITY_CONTRACT_ID,
@@ -1555,21 +1613,21 @@ export const H_EARTH_3D_COMPOSITOR_INITIAL_CAMERA_STATE =
       deepFreeze({
         x:
           clamp(
-            INITIAL_TARGET.x,
+            GROUND_OBSERVER_INITIAL_ANCHOR.x,
             TARGET_BOUNDS.xMin,
             TARGET_BOUNDS.xMax
           ),
 
         y:
           clamp(
-            INITIAL_TARGET.y,
+            GROUND_OBSERVER_INITIAL_ANCHOR.y,
             TARGET_BOUNDS.yMin,
             TARGET_BOUNDS.yMax
           ),
 
         z:
           clamp(
-            INITIAL_TARGET.z,
+            GROUND_OBSERVER_INITIAL_ANCHOR.z,
             TARGET_BOUNDS.zMin,
             TARGET_BOUNDS.zMax
           )
@@ -2707,20 +2765,68 @@ function clampTarget(target) {
   return createVector(
     clamp(
       target.x,
-      TARGET_BOUNDS.xMin,
-      TARGET_BOUNDS.xMax
+      Math.max(
+        TARGET_BOUNDS.xMin,
+        POSITION_BOUNDS.xMin
+      ),
+      Math.min(
+        TARGET_BOUNDS.xMax,
+        POSITION_BOUNDS.xMax
+      )
     ),
-
-    clamp(
-      target.y,
-      TARGET_BOUNDS.yMin,
-      TARGET_BOUNDS.yMax
-    ),
-
+    GROUND_OBSERVER_EYE_HEIGHT,
     clamp(
       target.z,
-      TARGET_BOUNDS.zMin,
-      TARGET_BOUNDS.zMax
+      Math.max(
+        TARGET_BOUNDS.zMin,
+        POSITION_BOUNDS.zMin
+      ),
+      Math.min(
+        TARGET_BOUNDS.zMax,
+        POSITION_BOUNDS.zMax
+      )
+    )
+  );
+}
+
+function deriveGroundObserverForward({
+  yawDegrees,
+  pitchDegrees
+}) {
+  const yawRadians =
+    toRadians(
+      normalizeAngleDegrees(
+        yawDegrees
+      )
+    );
+
+  const pitchRadians =
+    toRadians(
+      clamp(
+        pitchDegrees,
+        GROUND_OBSERVER_PITCH_BOUNDS.minimum,
+        GROUND_OBSERVER_PITCH_BOUNDS.maximum
+      )
+    );
+
+  const horizontalMagnitude =
+    Math.cos(
+      pitchRadians
+    );
+
+  return normalizeVector(
+    createVector(
+      -Math.sin(
+        yawRadians
+      ) *
+        horizontalMagnitude,
+      -Math.sin(
+        pitchRadians
+      ),
+      -Math.cos(
+        yawRadians
+      ) *
+        horizontalMagnitude
     )
   );
 }
@@ -2731,52 +2837,47 @@ function deriveCameraPosition({
   zoomScale,
   target
 }) {
-  const yawRadians =
-    toRadians(
-      yawDegrees
+  const position =
+    clampTarget(
+      target
     );
 
-  const pitchRadians =
-    toRadians(
+  const forward =
+    deriveGroundObserverForward({
+      yawDegrees,
       pitchDegrees
+    });
+
+  const normalizedZoomScale =
+    clamp(
+      zoomScale,
+      ZOOM_SCALE_BOUNDS.minimum,
+      ZOOM_SCALE_BOUNDS.maximum
     );
 
-  const distance =
-    INITIAL_DISTANCE *
-    zoomScale;
-
-  const horizontalDistance =
-    distance *
-    Math.cos(
-      pitchRadians
-    );
-
-  const offset =
-    createVector(
-      Math.sin(
-        yawRadians
-      ) *
-        horizontalDistance,
-
-      Math.sin(
-        pitchRadians
-      ) *
-        distance,
-
-      Math.cos(
-        yawRadians
-      ) *
-        horizontalDistance
+  const effectiveVerticalFovDegrees =
+    clamp(
+      CAPACITY_INITIAL_PROJECTION
+        .verticalFovDegrees *
+        normalizedZoomScale,
+      FOV_BOUNDS.minimum,
+      FOV_BOUNDS.maximum
     );
 
   return {
-    distance,
-
-    position:
+    distance:
+      GROUND_OBSERVER_LOOK_DISTANCE,
+    position,
+    lookTarget:
       addVector(
-        target,
-        offset
-      )
+        position,
+        scaleVector(
+          forward,
+          GROUND_OBSERVER_LOOK_DISTANCE
+        )
+      ),
+    forward,
+    effectiveVerticalFovDegrees
   };
 }
 
@@ -2804,12 +2905,20 @@ function fitCameraToPositionBounds(
 ) {
   const normalized = {
     ...candidate,
-
+    yawDegrees:
+      normalizeAngleDegrees(
+        candidate.yawDegrees
+      ),
+    pitchDegrees:
+      clamp(
+        candidate.pitchDegrees,
+        GROUND_OBSERVER_PITCH_BOUNDS.minimum,
+        GROUND_OBSERVER_PITCH_BOUNDS.maximum
+      ),
     target:
       clampTarget(
         candidate.target
       ),
-
     zoomScale:
       clamp(
         candidate.zoomScale,
@@ -2818,93 +2927,62 @@ function fitCameraToPositionBounds(
       )
   };
 
-  let derived =
+  const derived =
     deriveCameraPosition(
       normalized
     );
 
   if (
-    isPositionWithinBounds(
+    !isPositionWithinBounds(
       derived.position
     )
   ) {
     return {
-      eligible: true,
-      adjusted: false,
-      cameraState: normalized,
-      derived
-    };
-  }
-
-  let fittedScale =
-    normalized.zoomScale;
-
-  for (
-    let attempt = 0;
-    attempt < 32;
-    attempt += 1
-  ) {
-    fittedScale =
-      fittedScale -
-      (
-        fittedScale -
-        ZOOM_SCALE_BOUNDS.minimum
-      ) *
-      0.25;
-
-    const fittedCandidate = {
-      ...normalized,
-
-      zoomScale:
-        clamp(
-          fittedScale,
-          ZOOM_SCALE_BOUNDS.minimum,
-          ZOOM_SCALE_BOUNDS.maximum
+      eligible: false,
+      issue:
+        createCompositorIssue(
+          'GROUND_OBSERVER_POSITION_OUTSIDE_NAVIGATION_BOUNDS',
+          'The ground observer anchor cannot be resolved inside compositor navigation bounds.',
+          {
+            actual:
+              derived.position,
+            expected:
+              cloneKnownPlain(
+                POSITION_BOUNDS
+              )
+          }
         )
     };
-
-    derived =
-      deriveCameraPosition(
-        fittedCandidate
-      );
-
-    if (
-      isPositionWithinBounds(
-        derived.position
-      )
-    ) {
-      return {
-        eligible: true,
-        adjusted: true,
-
-        adjustment:
-          'ZOOM_SCALE_REDUCED_TO_RESOLVE_POSITION_BOUNDS',
-
-        cameraState:
-          fittedCandidate,
-
-        derived
-      };
-    }
   }
 
+  const adjusted =
+    !Object.is(
+      normalized.yawDegrees,
+      candidate.yawDegrees
+    ) ||
+    !Object.is(
+      normalized.pitchDegrees,
+      candidate.pitchDegrees
+    ) ||
+    !Object.is(
+      normalized.zoomScale,
+      candidate.zoomScale
+    ) ||
+    !vectorsEqual(
+      normalized.target,
+      candidate.target
+    );
+
   return {
-    eligible: false,
-
-    issue:
-      createCompositorIssue(
-        'CAMERA_POSITION_OUTSIDE_NAVIGATION_BOUNDS',
-        'The camera state cannot be resolved inside compositor navigation bounds.',
-        {
-          actual:
-            derived.position,
-
-          expected:
-            cloneKnownPlain(
-              POSITION_BOUNDS
-            )
-        }
-      )
+    eligible: true,
+    adjusted,
+    adjustment:
+      adjusted
+        ? 'GROUND_OBSERVER_ANCHOR_PITCH_OR_ZOOM_CLAMPED'
+        : null,
+    cameraState:
+      normalized,
+    derived
   };
 }
 
@@ -3141,7 +3219,24 @@ function constructCompositorCameraStateFromNormalizedAuthority(
             cloneVector(
               fit.derived.position
             )
-          )
+          ),
+
+        lookTarget:
+          deepFreeze(
+            cloneVector(
+              fit.derived.lookTarget
+            )
+          ),
+
+        forward:
+          deepFreeze(
+            cloneVector(
+              fit.derived.forward
+            )
+          ),
+
+        effectiveVerticalFovDegrees:
+          fit.derived.effectiveVerticalFovDegrees
       }),
 
     issues:
@@ -3349,7 +3444,24 @@ function evaluateCompositorCameraStateSnapshot(
             cloneVector(
               fit.derived.position
             )
-          )
+          ),
+
+        lookTarget:
+          deepFreeze(
+            cloneVector(
+              fit.derived.lookTarget
+            )
+          ),
+
+        forward:
+          deepFreeze(
+            cloneVector(
+              fit.derived.forward
+            )
+          ),
+
+        effectiveVerticalFovDegrees:
+          fit.derived.effectiveVerticalFovDegrees
       }),
 
     issues:
@@ -3449,8 +3561,8 @@ function resolveCompositorCameraPoseSnapshot(
   const target =
     cloneVector(
       evaluation
-        .cameraState
-        .target
+        .derived
+        .lookTarget
     );
 
   const forward =
@@ -3519,8 +3631,8 @@ function resolveCompositorCameraPoseSnapshot(
 
     verticalFovDegrees:
       evaluation
-        .cameraState
-        .verticalFovDegrees,
+        .derived
+        .effectiveVerticalFovDegrees,
 
     nearPlane:
       evaluation

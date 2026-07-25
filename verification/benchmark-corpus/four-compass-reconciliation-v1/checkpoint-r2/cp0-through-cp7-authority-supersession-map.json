@@ -1,0 +1,371 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_CP0_THROUGH_CP7_AUTHORITY_SUPERSESSION_MAP_v1",
+  "phase": "PHASE_A_AUTHORITY_CORRECTION",
+  "checkpoint": "R2",
+  "status": "PASS_HISTORICAL_AUTHORITY_DISPOSITIONS_COMPLETE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "reconciliationBranch": "agent/metaverse-benchmark-four-compass-reconciliation-001",
+  "authorityInputs": [
+    {
+      "checkpoint": "R0",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r0/four-compass-reconciliation-authority-lock.json",
+      "gitBlob": "32fc7f07c5b8e4fdcdb80091c575f3ad57902a9d"
+    },
+    {
+      "checkpoint": "R1",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r1/four-compass-role-registry.json",
+      "gitBlob": "bcd893cb9f1efd441bad6da0aef828fd106ce482"
+    }
+  ],
+  "scope": "AUTHORITY_DISPOSITION_ONLY_NO_EVIDENCE_RECOMPUTATION_NO_BROWSER_RECAPTURE",
+  "dispositionVocabulary": {
+    "RETAIN": "Preserve exact historical evidence and allow later projection under corrected authority.",
+    "RECLASSIFY": "Preserve evidence but replace its governing benchmark identity or corpus role.",
+    "SUPERSEDE": "Preserve as historical fact but withdraw controlling authority in favor of R0 or R1 and later corrected projections.",
+    "ISOLATE": "Move evidence into the auxiliary non-Compass control lane and prohibit Compass aggregate participation.",
+    "UNRESOLVED": "Evidence or authority cannot yet be assigned and must block continuation."
+  },
+  "globalDispositionRules": {
+    "historicalArtifactsDeleted": false,
+    "historicalCommitsRewritten": false,
+    "exactGitIdentitiesRetained": true,
+    "exactWorkflowAndArtifactIdentitiesRetained": true,
+    "fourCompassPerRouteEvidenceEligibleForProjection": true,
+    "homeEvidenceEligibleForAuxiliaryProjection": true,
+    "fiveBenchmarkAggregateAuthority": "SUPERSEDED",
+    "homeCompassAuthority": "RETIRED_INVALID",
+    "showroomLegacyId": "RECLASSIFY_TO_SHOWROOM_COMPASS",
+    "lawsLegacyId": "RECLASSIFY_TO_LAWS_COMPASS",
+    "unresolvedDispositionCount": 0
+  },
+  "historicalArtifacts": [
+    {
+      "checkpoint": "CP0",
+      "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_INVENTORY_AUTHORITY_AND_BOUNDARY_LOCK_v1",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-00/inventory-authority-and-boundary-lock.json",
+      "gitBlob": "08cec57030c165e9d1764143a60290713acacdb2",
+      "artifactDisposition": "SUPERSEDE",
+      "retain": [
+        "REPOSITORY_IDENTITY",
+        "BASELINE_MAIN_COMMIT",
+        "INVENTORY_BRANCH_IDENTITY",
+        "READ_INSPECT_RECORD_VERIFY_MODE",
+        "PRODUCT_MUTATION_PROHIBITION",
+        "MAIN_WRITE_PROHIBITION",
+        "MERGE_PROHIBITION",
+        "REPAIR_PROHIBITION"
+      ],
+      "supersede": [
+        "BENCHMARK_COUNT_5",
+        "POSITIVE_COUNT_4",
+        "FIVE_BENCHMARK_LIST",
+        "HOMEPAGE_COMPASS_BENCHMARK_ENTRY"
+      ],
+      "replacementAuthority": "R0"
+    },
+    {
+      "checkpoint": "CP1",
+      "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_BENCHMARK_IDENTITY_AND_ROLE_REGISTRY_v1",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-01/benchmark-role-registry.json",
+      "gitBlob": "79c55766082a962642678249d6ead51863422fe1",
+      "artifactDisposition": "SUPERSEDE",
+      "retain": [
+        "HISTORICAL_DIMENSION_SCOPED_ROLE_DECLARATIONS_AS_SOURCE_CONTEXT",
+        "PRODUCT_SPECIFIC_DIFFERENCE_BOUNDARY",
+        "NO_PRODUCT_MUTATION_AUTHORITY",
+        "NO_VISUAL_ACCEPTANCE_AUTHORITY",
+        "NO_PRODUCTION_PASS_AUTHORITY"
+      ],
+      "reclassify": [
+        "SHOWROOM_TO_SHOWROOM_COMPASS",
+        "LAWS_CHAMBER_POST_PR128_TO_LAWS_COMPASS"
+      ],
+      "isolate": [
+        "HOMEPAGE_PUBLIC_SHELL_DIMENSIONS_TO_WEBSITE_HOME_RECEIVER_CONTROL"
+      ],
+      "supersede": [
+        "BENCHMARK_COUNT_5",
+        "POSITIVE_REFERENCE_COUNT_4",
+        "HOMEPAGE_COMPASS_IDENTITY",
+        "WEBSITE_HOMEPAGE_AS_COMPASS_REFERENCE"
+      ],
+      "replacementAuthority": "R1"
+    },
+    {
+      "checkpoint": "CP2",
+      "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_ROUTE_AND_REPOSITORY_OCCURRENCE_LEDGER_v1",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-02/benchmark-route-and-occurrence-ledger.json",
+      "gitBlob": "68599e46f6f916c2338334685b2b4a4e128369a9",
+      "artifactDisposition": "RECLASSIFY",
+      "retain": [
+        "ALL_FIVE_EXACT_ROUTE_OBSERVATIONS",
+        "ALL_FIVE_REPOSITORY_ENTRY_PATHS",
+        "ALL_FIVE_ENTRY_BLOB_IDENTITIES",
+        "ALL_FIVE_ENTRY_TITLES",
+        "ALL_FIVE_ROUTE_REACHABILITY_RESULTS",
+        "BASELINE_COMMIT_IDENTITY",
+        "HOME_COMPASS_BEHAVIOR_RETIRED_OBSERVATION",
+        "HOME_ORBIT_MAP_RETIRED_OBSERVATION"
+      ],
+      "reclassify": [
+        "MAIN_COMPASS_OCCURRENCE_RETAINED",
+        "ARCHCOIN_COMPASS_OCCURRENCE_RETAINED",
+        "SHOWROOM_OCCURRENCE_TO_SHOWROOM_COMPASS",
+        "LAWS_CHAMBER_POST_PR128_OCCURRENCE_TO_LAWS_COMPASS"
+      ],
+      "isolate": [
+        "HOME_ROUTE_AND_ENTRY_OCCURRENCE_TO_WEBSITE_HOME_RECEIVER_CONTROL"
+      ],
+      "supersede": [
+        "BENCHMARK_COUNT_5",
+        "HOMEPAGE_COMPASS_STABLE_INVENTORY_KEY",
+        "OCCURRENCE_SET_AS_FIVE_COMPASS_CORPUS"
+      ],
+      "replacementAuthority": "R0_R1_AND_R3"
+    },
+    {
+      "checkpoint": "CP3",
+      "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_COMPLETE_ACTIVE_SOURCE_PATH_MANIFEST_v1",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-03/benchmark-active-source-path-manifest.json",
+      "gitBlob": "cbd43e5e8a38fea28803c4f0156eb9c2082d5096",
+      "artifactDisposition": "RECLASSIFY",
+      "retain": [
+        "FOUR_COMPASS_PER_ROUTE_ACTIVE_PATH_LISTS",
+        "FOUR_COMPASS_LOAD_MODELS",
+        "FOUR_COMPASS_ACTIVE_PATH_COUNTS",
+        "HOME_ACTIVE_PATH_HOME_INDEX_HTML",
+        "ALL_RESOLVED_LOAD_GRAPH_RELATIONS",
+        "ZERO_UNRESOLVED_ACTIVE_PATH_OBSERVATION"
+      ],
+      "reclassify": [
+        "SHOWROOM_ACTIVE_PATH_SET_TO_SHOWROOM_COMPASS",
+        "LAWS_ACTIVE_PATH_SET_TO_LAWS_COMPASS"
+      ],
+      "isolate": [
+        "HOME_ACTIVE_PATH_SET_TO_WEBSITE_HOME_RECEIVER_CONTROL"
+      ],
+      "supersede": [
+        "BENCHMARK_COUNT_5",
+        "BENCHMARK_SOURCE_OCCURRENCES_61_AS_COMPASS_TOTAL",
+        "FIVE_BENCHMARK_ACTIVE_SOURCE_MANIFEST_AUTHORITY"
+      ],
+      "replacementAuthority": "R3"
+    },
+    {
+      "checkpoint": "CP4",
+      "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_IMMUTABLE_SOURCE_CUSTODY_LEDGER_v1",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-04/benchmark-source-custody-ledger.json",
+      "gitBlob": "ff3cd495e24482c73bf7f278fe6216c649d47b40",
+      "artifactDisposition": "RECLASSIFY",
+      "retain": [
+        "ALL_EXACT_PATH_AND_GIT_BLOB_PAIRS",
+        "FOUR_COMPASS_PER_BENCHMARK_SOURCE_SET_DIGEST_INPUTS",
+        "HOME_PATH_AND_BLOB_CUSTODY",
+        "ALL_PATHS_FETCHED_AT_EXACT_COMMIT",
+        "NO_CONFLICTING_PATH_BLOB_IDENTITIES"
+      ],
+      "reclassify": [
+        "SHOWROOM_SOURCE_CUSTODY_TO_SHOWROOM_COMPASS",
+        "LAWS_SOURCE_CUSTODY_TO_LAWS_COMPASS"
+      ],
+      "isolate": [
+        "HOME_SOURCE_CUSTODY_TO_WEBSITE_HOME_RECEIVER_CONTROL"
+      ],
+      "supersede": [
+        "BENCHMARK_COUNT_5",
+        "SOURCE_OCCURRENCE_TOTAL_61_AS_COMPASS_TOTAL",
+        "FIVE_BENCHMARK_CORPUS_SOURCE_SET_DIGEST"
+      ],
+      "replacementAuthority": "R3"
+    },
+    {
+      "checkpoint": "CP5",
+      "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_RUNTIME_LOAD_AND_DEPLOYED_BYTE_CUSTODY_LEDGER_v1",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-05/benchmark-runtime-load-and-deployed-byte-custody-ledger.json",
+      "gitBlob": "a3fae258bae3fb25ad337cb695ec36500c235e58",
+      "artifactDisposition": "RECLASSIFY",
+      "retain": [
+        "AUTHORITATIVE_EXECUTION_RUN_30142823055",
+        "ARTIFACT_8615058451",
+        "ARTIFACT_SHA256_43D9F9C9B6417525AFD89075233D4ED76C41AA04B62D2D2C3645DB0AA46A21FF",
+        "DEPLOYMENT_REDIRECT_SEQUENCE",
+        "FOUR_COMPASS_PER_ROUTE_RESPONSE_RECORDS",
+        "FOUR_COMPASS_PER_ROUTE_SOURCE_OCCURRENCES",
+        "FOUR_COMPASS_PER_ROUTE_RAW_NORMALIZED_AND_QUERY_DIGEST_INPUTS",
+        "HOME_PER_ROUTE_RESPONSE_AND_SOURCE_RECORDS",
+        "ZERO_UNRESOLVED_PATH_BODY_OR_MISMATCH_OBSERVATION",
+        "ZERO_PRODUCT_FILE_CHANGES"
+      ],
+      "reclassify": [
+        "SHOWROOM_RUNTIME_RECORDS_TO_SHOWROOM_COMPASS",
+        "LAWS_RUNTIME_RECORDS_TO_LAWS_COMPASS"
+      ],
+      "isolate": [
+        "HOME_RUNTIME_RECORDS_TO_WEBSITE_HOME_RECEIVER_CONTROL"
+      ],
+      "supersede": [
+        "CAPTURE_TOTAL_15_AS_COMPASS_TOTAL",
+        "RESPONSE_TOTAL_239_AS_COMPASS_TOTAL",
+        "SOURCE_OCCURRENCE_TOTAL_61_AS_COMPASS_TOTAL",
+        "FIVE_BENCHMARK_RAW_UNIQUE_DIGEST",
+        "FIVE_BENCHMARK_NORMALIZED_UNIQUE_DIGEST",
+        "FIVE_BENCHMARK_QUERY_OCCURRENCE_DIGEST"
+      ],
+      "replacementAuthority": "R3"
+    },
+    {
+      "checkpoint": "CP6",
+      "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_INTERACTION_EXECUTION_BASELINE_LEDGER_v2",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-06/interaction-execution-baseline-ledger.json",
+      "gitBlob": "6efd0299eb643812e24a818701c19749060b4a26",
+      "artifactDisposition": "RECLASSIFY",
+      "retain": [
+        "AUTHORITATIVE_RUN_30144320268",
+        "AUTHORITATIVE_ARTIFACT_8615513797",
+        "FOUR_COMPASS_SCENARIO_EXECUTION_RECORDS",
+        "FOUR_COMPASS_CONTROLLER_STATE_OBSERVATIONS",
+        "FOUR_COMPASS_PRODUCT_FINDINGS",
+        "FOUR_COMPASS_CONFIRMED_PASSES",
+        "ZERO_HARNESS_FAILURE_OBSERVATION",
+        "ZERO_PRODUCT_FILE_CHANGES"
+      ],
+      "reclassify": [
+        "SHOWROOM_INTERACTION_RECORDS_TO_SHOWROOM_COMPASS",
+        "LAWS_INTERACTION_RECORDS_TO_LAWS_COMPASS"
+      ],
+      "isolate": [
+        "HOMEPAGE_SUPPLEMENT_RUN_30144482692",
+        "HOME_SCENARIOS",
+        "HOME_CONFIRMED_PASSES",
+        "MOBILE_PROFILE_TOUCH_EVENT_ROUTING_MISMATCH_TO_WEBSITE_HOME_RECEIVER_CONTROL"
+      ],
+      "supersede": [
+        "ALL_FIVE_ROUTES_EXECUTED_ASSERTION_AS_COMPASS_ASSERTION",
+        "SCENARIO_COUNT_21_AS_COMPASS_TOTAL",
+        "PRODUCT_FINDING_COUNT_13_AS_COMPASS_TOTAL",
+        "POSITIVE_REFERENCE_FINDING_COUNT_8_AS_COMPASS_TOTAL",
+        "NEGATIVE_REFERENCE_FINDING_COUNT_5_AS_FIVE_BENCHMARK_AGGREGATE",
+        "FIVE_BENCHMARK_INTERACTION_BASELINE_DIGEST"
+      ],
+      "replacementAuthority": "R5"
+    },
+    {
+      "checkpoint": "CP7",
+      "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_VISUAL_AND_SPATIAL_REALIZATION_BASELINE_LEDGER_v1",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/visual-and-spatial-realization-baseline-ledger.json",
+      "gitBlob": "68b553c2e45d39a2a855ca49ee51f6db6fcddaf6",
+      "artifactDisposition": "RECLASSIFY",
+      "retain": [
+        "AUTHORITATIVE_RUN_30144586655",
+        "AUTHORITATIVE_ARTIFACT_8615592587",
+        "FOUR_COMPASS_DESKTOP_AND_MOBILE_SCREENSHOT_BODIES",
+        "FOUR_COMPASS_48_CAPTURE_RECORDS",
+        "FOUR_COMPASS_PER_ROUTE_SCREENSHOT_DIGESTS_AS_RAW_EVIDENCE",
+        "FOUR_COMPASS_GEOMETRY_RECORDS",
+        "FOUR_COMPASS_8_RECORDED_VISUAL_FINDINGS_AS_RAW_OBSERVATIONS",
+        "ZERO_HARNESS_FAILURE_OBSERVATION",
+        "ZERO_PRODUCT_FILE_CHANGES"
+      ],
+      "reclassify": [
+        "SHOWROOM_CAPTURE_RECORDS_TO_SHOWROOM_COMPASS",
+        "LAWS_CAPTURE_RECORDS_TO_LAWS_COMPASS"
+      ],
+      "isolate": [
+        "HOME_8_CAPTURE_RECORDS",
+        "HOME_PER_ROUTE_SCREENSHOT_DIGEST",
+        "HOME_GEOMETRY_RECORDS",
+        "HOME_22_RECORDED_VISUAL_FINDINGS_TO_WEBSITE_HOME_RECEIVER_CONTROL"
+      ],
+      "supersede": [
+        "ALL_FIVE_ROUTES_CAPTURED_ASSERTION_AS_COMPASS_ASSERTION",
+        "SCENARIO_COUNT_10_AS_COMPASS_TOTAL",
+        "CAPTURE_COUNT_56_AS_COMPASS_TOTAL",
+        "VISUAL_FINDING_COUNT_30_AS_COMPASS_TOTAL",
+        "FIVE_BENCHMARK_SCREENSHOT_MANIFEST_DIGEST",
+        "FIVE_BENCHMARK_VISUAL_BASELINE_DIGEST",
+        "CP8_CONTINUATION_DECISION_DERIVED_FROM_FIVE_BENCHMARK_CORPUS"
+      ],
+      "replacementAuthority": "R6"
+    }
+  ],
+  "supplementaryEvidence": [
+    {
+      "checkpoint": "CP7-2",
+      "artifactId": "METAVERSE_BENCHMARK_CP7_2_WORKFLOW_BIRTH_AND_TRIGGER_VERIFICATION_LEDGER_v1",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/cp7-2-workflow-birth-and-trigger-verification-ledger.json",
+      "gitBlob": "a96056a57aebd10cca0b718e735a5caad6015155",
+      "disposition": "RETAIN",
+      "retainedAuthority": [
+        "BOUNDED_WORKFLOW_BIRTH_EVIDENCE",
+        "EXACT_CHECKOUT_IDENTITY_EVIDENCE",
+        "CHROME_SETUP_EVIDENCE",
+        "ONE_MAIN_COMPASS_SMOKE_SCREENSHOT_CUSTODY",
+        "ARTIFACT_UPLOAD_AND_FETCH_BACK_EVIDENCE"
+      ],
+      "prohibitedAuthority": [
+        "FOUR_COMPASS_CORPUS_COMPLETENESS",
+        "VISUAL_CORRECTNESS",
+        "RECAPTURE_NOT_REQUIRED",
+        "TOOL_MERGE_READINESS"
+      ]
+    }
+  ],
+  "aggregateAuthorityStatus": {
+    "cp0ThroughCp7HistoricalRecordsPreserved": true,
+    "fourCompassPerRouteEvidencePreserved": true,
+    "homeEvidencePreservedAsAuxiliaryControl": true,
+    "fiveBenchmarkCompassAuthorityActive": false,
+    "fiveBenchmarkAggregateCountsControlling": false,
+    "fiveBenchmarkAggregateDigestsControlling": false,
+    "fourCompassAggregateCountsComputed": false,
+    "fourCompassAggregateDigestsComputed": false,
+    "browserRecaptureAuthorized": false,
+    "lawsRepairAuthorized": false,
+    "mergeAuthority": "NONE"
+  },
+  "phaseAClosure": {
+    "R0": "PASS",
+    "R1": "PASS",
+    "R2": "PASS",
+    "phaseAComplete": true,
+    "blockingUnresolvedDispositions": 0,
+    "nextPhase": "PHASE_B_EVIDENCE_RECONSTRUCTION",
+    "nextCheckpoint": "R3_FOUR_COMPASS_SOURCE_AND_RUNTIME_CORPUS_PROJECTION"
+  },
+  "assertions": {
+    "historicalArtifactCountMapped": 8,
+    "supplementaryArtifactCountMapped": 1,
+    "allHistoricalPathsHaveGitBlobCustody": true,
+    "allHistoricalArtifactsPreserved": true,
+    "allHomeEvidenceAssignedToAuxiliaryControl": true,
+    "allFourCompassEvidenceEligibleForProjection": true,
+    "fiveBenchmarkAuthorityWithdrawn": true,
+    "unresolvedDispositionCount": 0,
+    "productFilesChanged": 0,
+    "mainChanged": false,
+    "lawsRepairStarted": false,
+    "mergeAuthority": "NONE"
+  },
+  "stoppingBoundary": {
+    "proves": [
+      "CP0_THROUGH_CP7_AUTHORITY_DISPOSITION_COMPLETENESS",
+      "FIVE_BENCHMARK_AUTHORITY_WITHDRAWAL",
+      "FOUR_COMPASS_EVIDENCE_PRESERVATION",
+      "HOME_AUXILIARY_EVIDENCE_ISOLATION",
+      "PHASE_A_AUTHORITY_CORRECTION_COMPLETION"
+    ],
+    "doesNotProve": [
+      "FOUR_COMPASS_SOURCE_RUNTIME_AGGREGATES",
+      "FOUR_COMPASS_INTERACTION_AGGREGATES",
+      "FOUR_COMPASS_VISUAL_AGGREGATES",
+      "RECAPTURE_NOT_REQUIRED",
+      "TOOL_MERGE_READINESS",
+      "LAWS_REPAIR_READINESS"
+    ],
+    "authorizes": [
+      "R3_FOUR_COMPASS_SOURCE_AND_RUNTIME_CORPUS_PROJECTION"
+    ]
+  },
+  "nextCheckpoint": "R3_FOUR_COMPASS_SOURCE_AND_RUNTIME_CORPUS_PROJECTION"
+}

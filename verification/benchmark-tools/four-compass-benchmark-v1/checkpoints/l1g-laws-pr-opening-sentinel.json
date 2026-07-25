@@ -1,0 +1,6 @@
+{
+  "artifactId": "L1G_LAWS_PR_OPENING_SENTINEL_v1",
+  "status": "READY",
+  "branch": "agent/laws-projected-clearance-bounded-repair-001",
+  "base": "main"
+}

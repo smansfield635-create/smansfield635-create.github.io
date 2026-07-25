@@ -1,0 +1,67 @@
+name: H-Earth Capacity Camera H3 Sweep
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/h-earth-capacity-camera-correspondence-h3.yml"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h3-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-h2-*"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-measurement-contract.mjs"
+      - "tools/h-earth-capacity-camera-renderer-correspondence-authority-lock.mjs"
+      - "showroom/globe/h-earth/capacity.js"
+      - "showroom/globe/h-earth/renderer.js"
+      - "showroom/globe/h-earth/render/shoreline-preview.js"
+      - "showroom/globe/h-earth/render/geometry-*.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-capacity-camera-h3-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deterministic-sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch occurrence
+        uses: actions/checkout@v4
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate H3 source syntax
+        run: |
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h3-engine.mjs
+          node --check tools/h-earth-capacity-camera-renderer-correspondence-h3-controls.mjs
+
+      - name: Execute deterministic H3 sweep
+        run: |
+          mkdir -p artifacts/h-earth-capacity-camera-h3
+          node tools/h-earth-capacity-camera-renderer-correspondence-h3-controls.mjs \
+            > artifacts/h-earth-capacity-camera-h3/h3-control-receipt.json
+
+      - name: Verify H3 terminal receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const receipt=JSON.parse(await readFile('artifacts/h-earth-capacity-camera-h3/h3-control-receipt.json','utf8'));
+          if(receipt.status!=='PASS') throw new Error('H3_CONTROL_RECEIPT_NOT_PASS');
+          if(receipt.controlCount!==10||receipt.passedControlCount!==10) throw new Error('H3_CONTROL_COUNT_MISMATCH');
+          if(receipt.sweep?.profileResults?.length!==3) throw new Error('H3_PROFILE_COUNT_MISMATCH');
+          for(const result of receipt.sweep.profileResults){if(result.counts.totalSamples!==4225)throw new Error('H3_SAMPLE_COUNT_MISMATCH');}
+          if(receipt.claims?.rendererExecutionPerformed!==false) throw new Error('H3_RENDERER_EXECUTION_BOUNDARY_VIOLATED');
+          if(receipt.claims?.productionFilesChanged!==0) throw new Error('H3_PRODUCTION_MUTATION_BOUNDARY_VIOLATED');
+          NODE
+
+      - name: Upload deterministic H3 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-capacity-camera-h3-${{ github.sha }}
+          path: artifacts/h-earth-capacity-camera-h3/h3-control-receipt.json
+          if-no-files-found: error
+          retention-days: 30

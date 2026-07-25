@@ -147,9 +147,26 @@ jobs:
             .github/scripts/h-earth-ground-observer-look-target-patch.mjs \
             .github/scripts/h-earth-ground-observer-capacity-patch.mjs \
             .github/scripts/h-earth-ground-observer-reprojection-test.mjs
-          changed="$(git diff --cached --name-only)"
-          expected=$'.github/scripts/h-earth-ground-observer-capacity-patch.mjs\n.github/scripts/h-earth-ground-observer-look-target-patch.mjs\n.github/scripts/h-earth-ground-observer-reprojection-test.mjs\n.github/workflows/h-earth-ground-observer-camera.yml\nshowroom/globe/h-earth/capacity.js\nshowroom/globe/h-earth/compositor.js\nshowroom/globe/h-earth/index.js'
-          test "$changed" = "$expected"
+          node <<'NODE'
+          const cp = require('node:child_process');
+          const observed = cp.execFileSync(
+            'git',
+            ['diff', '--cached', '--name-only'],
+            { encoding: 'utf8' }
+          ).trim().split('\n').filter(Boolean).sort();
+          const expected = [
+            '.github/scripts/h-earth-ground-observer-capacity-patch.mjs',
+            '.github/scripts/h-earth-ground-observer-look-target-patch.mjs',
+            '.github/scripts/h-earth-ground-observer-reprojection-test.mjs',
+            '.github/workflows/h-earth-ground-observer-camera.yml',
+            'showroom/globe/h-earth/capacity.js',
+            'showroom/globe/h-earth/compositor.js',
+            'showroom/globe/h-earth/index.js'
+          ].sort();
+          if (JSON.stringify(observed) !== JSON.stringify(expected)) {
+            throw new Error(`FINAL_SCOPE_MISMATCH:${JSON.stringify({ observed, expected })}`);
+          }
+          NODE
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Complete H-Earth ground observer camera law"

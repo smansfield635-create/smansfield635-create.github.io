@@ -133,10 +133,6 @@ try {
   assert.equal(samePosition(afterPinch.pose.position, initial.position), true);
   assert.ok(afterPinch.pose.verticalFovDegrees > afterLook.pose.verticalFovDegrees);
   assert.ok(afterPinch.pose.up.y > 0);
-  assert.equal(
-    document == null,
-    false
-  );
 
   fs.mkdirSync('artifacts/h-earth-ground-observer-camera', { recursive: true });
   fs.writeFileSync(

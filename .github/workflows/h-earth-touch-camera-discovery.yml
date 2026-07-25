@@ -7,6 +7,7 @@ on:
     paths:
       - ".github/workflows/h-earth-touch-camera-discovery.yml"
       - ".github/scripts/h-earth-touch-camera-transport.mjs"
+      - ".github/scripts/h-earth-touch-camera-frame-patch.mjs"
       - ".github/scripts/h-earth-touch-camera-test.mjs"
       - "showroom/globe/h-earth/index.js"
 
@@ -86,65 +87,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 <<'PY'
-          from pathlib import Path
-
-          path = Path('showroom/globe/h-earth/index.js')
-          source = path.read_text(encoding='utf-8')
-
-          old = '''  const initializationKey =
-            MODULE_STATE.activeInitializationKey;
-
-          let handoff;
-          let rendererApplyReceipt;
-
-          try {
-            handoff =
-              createHandoff({
-                packet002Transfer:
-                  initializationKey?.packet002Transfer,
-                packet002TransferOccurrenceId:
-                  initializationKey?.packet002TransferOccurrenceId,
-                presentationMode:
-                  initializationKey?.presentationMode
-              });'''.replace('          ', '')
-
-          new = '''  const initializationKey =
-            MODULE_STATE.activeInitializationKey;
-
-          const compositorStateSnapshot =
-            compositorModule
-              .getHEarth3DCompositorState();
-
-          const touchCompositorFrameOccurrenceId =
-            `${initializationKey.compositorFrameOccurrenceId}` +
-            `:TOUCH_CAMERA_GESTURE:${MODULE_STATE.touchCameraGestureRevision + 1}` +
-            `:CAMERA_REVISION:${compositorStateSnapshot.revisions.camera}`;
-
-          let handoff;
-          let rendererApplyReceipt;
-
-          try {
-            handoff =
-              createHandoff({
-                packet002Transfer:
-                  initializationKey?.packet002Transfer,
-                packet002TransferOccurrenceId:
-                  initializationKey?.packet002TransferOccurrenceId,
-                compositorFrameOccurrenceId:
-                  touchCompositorFrameOccurrenceId,
-                presentationMode:
-                  initializationKey?.presentationMode
-              });'''.replace('          ', '')
-
-          if source.count(old) != 1:
-              start = source.find('  const initializationKey =\n    MODULE_STATE.activeInitializationKey;')
-              excerpt = source[start:start + 700] if start >= 0 else 'NOT_FOUND'
-              raise SystemExit('FRESH_FRAME_PATCH_EXPECTED_EXACTLY_ONCE\n' + excerpt)
-
-          source = source.replace(old, new)
-          path.write_text(source, encoding='utf-8')
-          PY
+          node .github/scripts/h-earth-touch-camera-frame-patch.mjs
           node --check showroom/globe/h-earth/index.js
           grep -q "TOUCH_CAMERA_GESTURE.*CAMERA_REVISION" showroom/globe/h-earth/index.js
 
@@ -178,14 +121,16 @@ jobs:
           rm -rf node_modules package.json package-lock.json
           rm -f .github/workflows/h-earth-touch-camera-discovery.yml
           rm -f .github/scripts/h-earth-touch-camera-transport.mjs
+          rm -f .github/scripts/h-earth-touch-camera-frame-patch.mjs
           rm -f .github/scripts/h-earth-touch-camera-test.mjs
           git add showroom/globe/h-earth/index.js
           git add -u \
             .github/workflows/h-earth-touch-camera-discovery.yml \
             .github/scripts/h-earth-touch-camera-transport.mjs \
+            .github/scripts/h-earth-touch-camera-frame-patch.mjs \
             .github/scripts/h-earth-touch-camera-test.mjs
           changed="$(git diff --cached --name-only)"
-          expected=$'.github/scripts/h-earth-touch-camera-test.mjs\n.github/scripts/h-earth-touch-camera-transport.mjs\n.github/workflows/h-earth-touch-camera-discovery.yml\nshowroom/globe/h-earth/index.js'
+          expected=$'.github/scripts/h-earth-touch-camera-frame-patch.mjs\n.github/scripts/h-earth-touch-camera-test.mjs\n.github/scripts/h-earth-touch-camera-transport.mjs\n.github/workflows/h-earth-touch-camera-discovery.yml\nshowroom/globe/h-earth/index.js'
           test "$changed" = "$expected"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

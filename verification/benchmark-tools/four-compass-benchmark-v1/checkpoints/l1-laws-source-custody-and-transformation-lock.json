@@ -1,0 +1,77 @@
+{
+  "artifactId": "L1_LAWS_SOURCE_CUSTODY_AND_TRANSFORMATION_LOCK_v1",
+  "checkpoint": "L1",
+  "status": "PASS_SOURCE_CUSTODY_AND_FAIL_CLOSED_TRANSFORMATION_LOCKED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-projected-clearance-bounded-repair-001",
+  "parentMainCommit": "8d8199e147c944bceed021c9a7f5585ec146e7a6",
+  "parentCheckpointCommit": "1c36b845d34a8aec498783818f7082460eb287f8",
+  "sourceCustody": {
+    "laws/index.crystals.js": "cd06f18bf8384efc97fcabeec5a4de94210c87a8",
+    "laws/index.compositor.js": "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa",
+    "laws/index.html": "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260",
+    "laws/index.css": "9c2ef3e9636e134795102e48ea63553d2f3b9778",
+    "laws/index.controller.js": "PROTECTED_FETCH_BACK_REQUIRED",
+    "laws/index.planet.js": "PROTECTED_FETCH_BACK_REQUIRED",
+    "laws/index.interactions.js": "a6563d2e2e7064136925299a79731147f4a8580b",
+    "laws/index.interactions.source.round4.js": "24fc3e216f3526e9c6d30939454a73bdcf13cd7d",
+    "laws/validation/laws.orbit-direct-manipulation.harness.mjs": "9339b8cfce13fb73805f1b4515bb7e9cc303e9d6",
+    "laws/validation/laws.orbit-direct-manipulation.receipt.json": "9ac18b0e2da3b24331958bf5caa583129d5f1f95"
+  },
+  "l0Clarification": {
+    "supersededField": "benchmarkObservedCompassBoundsPx",
+    "reason": "The benchmark selector rectangle was not authoritative runtime Compass-mount geometry.",
+    "replacementRule": "Measure DGB_LAWS_COMPOSITOR.getCompassFieldBounds() dynamically after beginFrame() and use DGB_LAWS_COMPOSITOR.projectWorldPoint() for each common-radius candidate.",
+    "fixedCompassPixelSizeAssumed": false
+  },
+  "rootCause": {
+    "declaredMarginConsumedByPositionSolver": false,
+    "commonRadiusStaticOnly": true,
+    "secondaryPerNodePositionInterpolationPresent": true,
+    "perLawFloatingOffsetPresent": true,
+    "effect": "Rendered cluster motion can temporarily violate rigid common-radius and projected-clearance invariants even though settled static fixtures pass."
+  },
+  "transformation": {
+    "mode": "FAIL_CLOSED_EXACT_CURRENT_SOURCE_TRANSFORMATION",
+    "primaryMutation": "laws/index.crystals.js",
+    "supportMutations": [
+      "laws/index.html",
+      "laws/validation/laws.orbit-direct-manipulation.harness.mjs",
+      "laws/validation/laws.orbit-direct-manipulation.receipt.json"
+    ],
+    "temporaryExecutionAuthority": ".github/workflows/apply-laws-projected-clearance-repair.yml",
+    "temporaryExecutionAuthorityMustSelfRemove": true,
+    "requiredChanges": [
+      "Resolve one shared runtime cluster radius from actual compositor bounds and projection facts.",
+      "Apply one uniform scale factor to all four law members only when radius expansion alone cannot satisfy the bounded viewport and Compass-clearance envelope.",
+      "Preserve the 1.40 minimum common radius, four-member XY plane, -PI/2 phase, 90-degree spacing, and 0.30-radian tilt bound.",
+      "Remove secondary per-node XYZ interpolation for active law clusters because quaternion interpolation already owns smooth rigid motion.",
+      "Suppress per-law floating translation while a law cluster is active.",
+      "Consume the declared 8-pixel clearance margin in compositor projection checks.",
+      "Publish runtime radius, uniform scale, resolution attempts, and pass state in the crystals receipt and root dataset."
+    ],
+    "forbiddenChanges": [
+      "Per-member offsets",
+      "Per-member radii",
+      "Controller mutation",
+      "Compositor mutation",
+      "Planet mutation",
+      "Interaction-direction mutation",
+      "Law content or route mutation",
+      "Constellation geometry mutation",
+      "CSS redesign",
+      "Four-Compass/Home lane aggregation"
+    ]
+  },
+  "acceptance": {
+    "syntax": "PASS_REQUIRED",
+    "staticHarness": "PASS_REQUIRED",
+    "exactAuthorizedProductPathSet": "PASS_REQUIRED",
+    "protectedBlobIdentity": "PASS_REQUIRED",
+    "installedSmokeWorkflow": "PASS_REQUIRED",
+    "installedBaselineWorkflow": "PASS_REQUIRED",
+    "artifactInspection": "PASS_REQUIRED",
+    "mergeBeforeL5": false
+  },
+  "nextCheckpoint": "L2_BOUNDED_PRODUCT_IMPLEMENTATION"
+}

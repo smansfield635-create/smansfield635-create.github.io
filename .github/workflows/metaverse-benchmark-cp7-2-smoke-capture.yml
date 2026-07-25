@@ -18,6 +18,9 @@ on:
 permissions:
   contents: read
 
+env:
+  EXECUTION_HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
 jobs:
   cp7-2-smoke-capture:
     name: Create and validate one visual smoke capture
@@ -27,6 +30,14 @@ jobs:
     steps:
       - name: Checkout CP7-2 execution head
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_HEAD_SHA }}
+
+      - name: Verify exact checkout identity
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          test "$ACTUAL_HEAD" = "$EXECUTION_HEAD_SHA"
+          echo "Exact execution head: $ACTUAL_HEAD"
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -57,6 +68,8 @@ jobs:
           const screenshot = fs.statSync(screenshotPath);
           const failures = [];
           if (receipt.status !== 'PASS_WORKFLOW_BIRTH_AND_TRIGGER_SMOKE_CAPTURE') failures.push('status');
+          if (receipt.executionCommit !== process.env.EXECUTION_HEAD_SHA) failures.push('execution_head_identity');
+          if (!receipt.assertions?.executionCommitIsExactSha) failures.push('execution_head_shape');
           if (!receipt.assertions?.responseIsSuccessful) failures.push('response');
           if (!receipt.assertions?.compassRootPresent) failures.push('root');
           if (!receipt.assertions?.screenshotCreated) failures.push('screenshot_assertion');
@@ -68,6 +81,7 @@ jobs:
           }
           console.log(JSON.stringify({
             status: receipt.status,
+            executionCommit: receipt.executionCommit,
             screenshotBytes: screenshot.size,
             screenshotSha256: receipt.screenshot.sha256,
             finalUrl: receipt.finalUrl
@@ -90,6 +104,7 @@ jobs:
           console.log('# CP7-2 Workflow Birth and Trigger Verification');
           console.log('');
           console.log(`- Status: **${receipt.status}**`);
+          console.log(`- Execution head: \`${receipt.executionCommit}\``);
           console.log(`- Route: \`${receipt.route}\``);
           console.log(`- Screenshot bytes: \`${receipt.screenshot.byteLength}\``);
           console.log(`- Screenshot SHA-256: \`${receipt.screenshot.sha256}\``);

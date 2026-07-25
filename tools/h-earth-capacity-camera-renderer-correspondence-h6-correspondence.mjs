@@ -38,6 +38,14 @@ export function fail(code, details = null) {
   throw error;
 }
 
+const REQUIRED_CORRESPONDENCE_CLASSIFICATIONS = Object.freeze([
+  'CAPACITY_AUTHORITY_GAP_RENDERER_NODE_BUDGET_REJECTION_CORRESPONDS',
+  'CAPACITY_PASS_RENDERER_PASS',
+  'CAPACITY_NONPASS_RENDERER_CAPACITY_FAILURE_CORRESPONDS',
+  'CAPACITY_PASS_RENDERER_NONCAPACITY_FAILURE',
+  'CAPACITY_NONPASS_RENDERER_CAPACITY_FAILURE_PREMOUNT_IDENTITY_PRESERVED'
+]);
+
 export function validateH6Contract(candidate = H6_CONTRACT) {
   if (candidate.contractId !== H6_CONTRACT.contractId) fail('H6_CONTRACT_ID_MISMATCH');
   if (candidate.toolId !== 'H_EARTH_CAPACITY_CAMERA_AND_RENDERER_CORRESPONDENCE_VERIFIER_v1') fail('H6_TOOL_ID_MISMATCH');
@@ -47,6 +55,11 @@ export function validateH6Contract(candidate = H6_CONTRACT) {
   if (candidate.productionMutationAuthority !== 'NONE') fail('H6_PRODUCTION_MUTATION_AUTHORITY_PROHIBITED');
   if (candidate.rendererTool?.sourceCommit !== '546f6fc05174347ac797837d0b4844a2164c3cb3') fail('H6_RENDERER_TOOL_COMMIT_MISMATCH');
   if (!Array.isArray(candidate.rendererTool?.requiredFiles) || candidate.rendererTool.requiredFiles.length !== 4) fail('H6_RENDERER_TOOL_SOURCE_SET_INVALID');
+  if (!Array.isArray(candidate.requiredCorrespondenceClassifications) ||
+      candidate.requiredCorrespondenceClassifications.length !== REQUIRED_CORRESPONDENCE_CLASSIFICATIONS.length ||
+      candidate.requiredCorrespondenceClassifications.some((value, index) => value !== REQUIRED_CORRESPONDENCE_CLASSIFICATIONS[index])) {
+    fail('H6_REQUIRED_CORRESPONDENCE_CLASSIFICATIONS_INVALID');
+  }
   const claims = candidate.claims;
   if (claims.rendererToolSourceMayBeCopiedIntoRepositoryHistory !== false || claims.productionMutationAuthorized !== false || claims.productionFilesChanged !== 0 || claims.productionCorrectionStarted !== false || claims.h7Started !== false || claims.mergePerformed !== false) fail('H6_STOP_BOUNDARY_VIOLATION');
   return true;

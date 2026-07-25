@@ -3,8 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Composes accepted Step 1, post-merge, Step 2, camera-capacity,
-// audit-continuity, and renderer-presentation overlays.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.renderer-presentation-scope-reconciliation.js';
+// audit-continuity, renderer-presentation, and public-route-interaction overlays.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.public-route-interaction-scope-reconciliation.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

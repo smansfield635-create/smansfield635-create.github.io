@@ -39,7 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin main:refs/remotes/origin/main
-          test "$(git merge-base HEAD origin/main)" = "691346d3f0dbe8e16f46c705a78d26f63c733d1b"
+          test "$(git merge-base HEAD origin/main)" = "0bcf43982f9d27ff30a1c198ca945ca0ac8a8b4b"
           test "$(git rev-parse HEAD:showroom/globe/h-earth/index.js)" = "a74364ad75dca8b8fab069026d181b5e64bdd007"
           mkdir -p artifacts/h-earth-touch-camera
           node --experimental-default-type=module \
@@ -64,6 +64,7 @@ jobs:
             receipt.dependenciesVerified !== true ||
             receipt.finalDisposition !== 'PASS' ||
             entry?.classification !== 'REGISTERED_H_EARTH_PATH' ||
+            entry?.resolvedNodeIds?.includes('H_EARTH_PUBLIC_ROUTE_INTERACTION_SCOPE_PACKAGE') !== true ||
             failureCodes.length !== 0
           ) {
             throw new Error(`INDEX_PREFLIGHT_NOT_PASS:${JSON.stringify({

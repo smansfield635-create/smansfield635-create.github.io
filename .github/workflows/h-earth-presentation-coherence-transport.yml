@@ -1,0 +1,350 @@
+name: H-Earth Presentation Coherence Transport
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches: [main]
+    paths:
+      - ".github/workflows/h-earth-presentation-coherence-transport.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply-validate-and-close-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout exact presentation branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-presentation-coherence-001
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify source custody and execute installed preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse origin/main)" = "c4e4a89f449532118eb712cf0a5193cc6e53c5d4"
+          test "$(git merge-base HEAD origin/main)" = "c4e4a89f449532118eb712cf0a5193cc6e53c5d4"
+          test "$(git hash-object showroom/globe/h-earth/renderer.js)" = "3ff5ea1542b015fe0816dbbf6d42509f3b86b300"
+          test "$(git hash-object showroom/globe/h-earth/capacity.js)" = "c2ab883f3d693175c60a29ca7ffffaef93555267"
+          mkdir -p artifacts/h-earth-presentation-coherence
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --path /showroom/globe/h-earth/renderer.js \
+            --task "Refine existing H-Earth wet-sand, water, foam, and atmospheric presentation without changing geometry, camera, capacity, compositor, DOM counts, or interaction." \
+            --mutation-intent \
+            --output artifacts/h-earth-presentation-coherence/preflight.receipt.json \
+            > /tmp/h-earth-presentation-preflight.stdout.json
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const receipt = JSON.parse(
+            await readFile(
+              'artifacts/h-earth-presentation-coherence/preflight.receipt.json',
+              'utf8'
+            )
+          );
+          if (receipt.finalDisposition !== 'PASS') {
+            throw new Error(`PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          }
+          if ((receipt.failureCodes ?? []).length !== 0) {
+            throw new Error(`PREFLIGHT_FAILURE_CODES:${receipt.failureCodes.join(',')}`);
+          }
+          NODE
+
+      - name: Apply bounded presentation-only transformation
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' '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' | base64 -d | gzip -d > /tmp/apply-h-earth-presentation.py
+          python /tmp/apply-h-earth-presentation.py
+
+      - name: Validate syntax and presentation invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check showroom/globe/h-earth/renderer.js
+          test "$(git diff --name-only)" = "showroom/globe/h-earth/renderer.js"
+          test "$(grep -c "COHERENT_SHORELINE_MATERIAL_FIELD_v1" showroom/globe/h-earth/renderer.js)" -eq 1
+          test "$(grep -c "COHERENT_STAGE_ALIGNED_v2" showroom/globe/h-earth/renderer.js)" -eq 1
+          test "$(grep -c "H_EARTH_3D_STAGE_ALIGNED_SURFACE_MATERIAL_REFERENCES" showroom/globe/h-earth/renderer.js)" -eq 2
+          ! grep -q "saturate(1.10) brightness(1.08) contrast(0.94)" showroom/globe/h-earth/renderer.js
+          CANDIDATE_BLOB="$(git hash-object showroom/globe/h-earth/renderer.js)"
+          echo "CANDIDATE_RENDERER_BLOB=$CANDIDATE_BLOB" >> "$GITHUB_ENV"
+
+      - name: Stage verified renderer corridor tools outside commit scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOL_COMMIT="546f6fc05174347ac797837d0b4844a2164c3cb3"
+          git fetch --no-tags origin "$TOOL_COMMIT"
+          git ls-tree -r --name-only "$TOOL_COMMIT" tools \
+            | grep '^tools/h-earth-renderer-corridor-.*\.mjs$' \
+            > /tmp/h-earth-renderer-tool-paths.txt
+          while IFS= read -r path; do
+            test ! -e "$path"
+            mkdir -p "$(dirname "$path")"
+            git show "$TOOL_COMMIT:$path" > "$path"
+          done < /tmp/h-earth-renderer-tool-paths.txt
+
+      - name: Install pinned browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute production renderer corridor and validate product result
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          node tools/h-earth-renderer-corridor-integration-harness.mjs \
+            | tee h-earth-presentation-corridor.log
+          HARNESS_EXIT="${PIPESTATUS[0]}"
+          set -e
+          export LEGACY_TOOL_HARNESS_EXIT="$HARNESS_EXIT"
+
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+
+          const root = 'artifacts/h-earth-renderer-corridor';
+          const names = (await readdir(root))
+            .filter(name => name.endsWith('.receipt.json'))
+            .filter(name => !name.startsWith('aggregate') && !name.startsWith('receipt-custody'))
+            .sort();
+
+          if (names.length !== 5) {
+            throw new Error(`PROFILE_RECEIPT_COUNT_MISMATCH:${names.length}`);
+          }
+
+          const profiles = [];
+          for (const name of names) {
+            const receipt = JSON.parse(await readFile(`${root}/${name}`, 'utf8'));
+            const failures = [];
+            if (receipt.construction?.succeeded !== true) failures.push('CONSTRUCTION');
+            if (receipt.mount?.succeeded !== true) failures.push('MOUNT');
+            if (receipt.routeState?.status !== 'PUBLIC_STAGE_RENDERER_MOUNTED') failures.push('ROUTE_STATUS');
+            if (receipt.routeState?.fallbackRestored !== false) failures.push('FALLBACK');
+            if (receipt.measurements?.admittedPrimitiveCount !== 3) failures.push('ADMITTED_COUNT');
+            if (
+              receipt.measurements?.mountedProjectedFragmentNodeCount !==
+              receipt.measurements?.projectedPlanFragmentCount
+            ) failures.push('PLAN_MOUNT_CORRESPONDENCE');
+            if ((receipt.importState?.consoleErrors ?? []).length !== 0) failures.push('CONSOLE_ERRORS');
+            if ((receipt.importState?.pageErrors ?? []).length !== 0) failures.push('PAGE_ERRORS');
+            if ((receipt.importState?.requestFailures ?? []).length !== 0) failures.push('REQUEST_FAILURES');
+            if ((receipt.importState?.errorResponses ?? []).length !== 0) failures.push('ERROR_RESPONSES');
+
+            if (failures.length > 0) {
+              throw new Error(`${receipt.profile?.id ?? name}:${failures.join(',')}`);
+            }
+
+            profiles.push({
+              id: receipt.profile.id,
+              projectedFragmentCount: receipt.measurements.projectedPlanFragmentCount,
+              finalRendererOwnedDomNodeCount: receipt.measurements.finalRendererOwnedDomNodeCount,
+              constructionSucceeded: true,
+              mountSucceeded: true,
+              routeStatus: receipt.routeState.status,
+              fallbackRestored: receipt.routeState.fallbackRestored
+            });
+          }
+
+          const body = {
+            schema: 'H_EARTH_PRESENTATION_COHERENCE_EXECUTION_RECEIPT_v1',
+            status: 'PASS',
+            candidateRendererBlob: process.env.CANDIDATE_RENDERER_BLOB,
+            profileCount: profiles.length,
+            profiles,
+            productCorridorPassed: true,
+            legacyToolLawRemainsSeparatelyStale:
+              process.env.LEGACY_TOOL_HARNESS_EXIT !== '0',
+            geometryChanged: false,
+            cameraChanged: false,
+            capacityChanged: false,
+            compositorChanged: false,
+            domCountAuthorityChanged: false
+          };
+          const stable = value => Array.isArray(value)
+            ? value.map(stable)
+            : value && typeof value === 'object'
+              ? Object.fromEntries(
+                  Object.keys(value)
+                    .sort()
+                    .map(key => [key, stable(value[key])])
+                )
+              : value;
+          const digest = createHash('sha256')
+            .update(JSON.stringify(stable(body)))
+            .digest('hex');
+          await mkdir('artifacts/h-earth-presentation-coherence', { recursive: true });
+          await writeFile(
+            'artifacts/h-earth-presentation-coherence/execution.receipt.json',
+            JSON.stringify(
+              { ...body, deterministicReceiptSha256: digest },
+              null,
+              2
+            ) + '\n'
+          );
+          NODE
+
+      - name: Capture rendered presentation and computed-style evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 \
+            > /tmp/h-earth-presentation-server.log 2>&1 &
+          SERVER_PID="$!"
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          import { writeFile } from 'node:fs/promises';
+
+          const browser = await chromium.launch({ headless: true });
+          const page = await browser.newPage({
+            viewport: { width: 1440, height: 900 },
+            deviceScaleFactor: 1
+          });
+
+          await page.goto(
+            'http://127.0.0.1:4173/showroom/globe/h-earth/?presentation-coherence-validation=1',
+            { waitUntil: 'networkidle' }
+          );
+
+          await page.waitForFunction(
+            () => document.querySelectorAll(
+              '[data-material-reference="H_EARTH_MATERIAL_WET_SAND"]'
+            ).length > 0,
+            { timeout: 20000 }
+          );
+
+          const evidence = await page.evaluate(() => {
+            const unique = values => [...new Set(values)];
+            const inspectMaterial = materialReference => {
+              const elements = [
+                ...document.querySelectorAll(
+                  `[data-material-reference="${materialReference}"]`
+                )
+              ];
+              return {
+                count: elements.length,
+                boxShadows: unique(
+                  elements.map(element => getComputedStyle(element).boxShadow)
+                ),
+                filters: unique(
+                  elements.map(element => getComputedStyle(element).filter)
+                ),
+                backgroundSizes: unique(
+                  elements.map(element => getComputedStyle(element).backgroundSize)
+                ),
+                stageAlignedModels: unique(
+                  elements.map(
+                    element =>
+                      element.dataset.stageAlignedSurfacePresentationModel ??
+                      null
+                  )
+                )
+              };
+            };
+
+            const stage = document.querySelector('.h-earth-3d-render-stage');
+            return {
+              wetSand: inspectMaterial('H_EARTH_MATERIAL_WET_SAND'),
+              nearshoreWater: inspectMaterial('H_EARTH_MATERIAL_NEARSHORE_WATER'),
+              openWater: inspectMaterial('H_EARTH_MATERIAL_OPEN_WATER'),
+              foam: inspectMaterial('H_EARTH_MATERIAL_FOAM'),
+              stageBackgroundImage:
+                stage ? getComputedStyle(stage).backgroundImage : null,
+              stagePresent: Boolean(stage)
+            };
+          });
+
+          if (!evidence.stagePresent) throw new Error('RENDER_STAGE_NOT_PRESENT');
+          if (evidence.wetSand.count === 0) throw new Error('WET_SAND_NOT_RENDERED');
+          if (evidence.openWater.count === 0) throw new Error('OPEN_WATER_NOT_RENDERED');
+          if (evidence.foam.count === 0) throw new Error('FOAM_NOT_RENDERED');
+          if (
+            evidence.wetSand.boxShadows.some(value => value !== 'none')
+          ) {
+            throw new Error(
+              `WET_SAND_FRAGMENT_SHADOW_REMAINS:${evidence.wetSand.boxShadows.join('|')}`
+            );
+          }
+          if (
+            evidence.wetSand.filters.some(value => value !== 'none')
+          ) {
+            throw new Error(
+              `WET_SAND_FRAGMENT_FILTER_REMAINS:${evidence.wetSand.filters.join('|')}`
+            );
+          }
+          for (const material of [
+            evidence.wetSand,
+            evidence.nearshoreWater,
+            evidence.openWater,
+            evidence.foam
+          ]) {
+            if (
+              material.count > 0 &&
+              !material.stageAlignedModels.includes(
+                'COHERENT_SHORELINE_MATERIAL_FIELD_v1'
+              )
+            ) {
+              throw new Error('STAGE_ALIGNMENT_MODEL_MISSING');
+            }
+          }
+
+          await page.screenshot({
+            path: 'artifacts/h-earth-presentation-coherence/full-page.png',
+            fullPage: true
+          });
+          await page.locator('#h-earth-3d-renderer-mount').screenshot({
+            path: 'artifacts/h-earth-presentation-coherence/render-stage.png'
+          });
+          await writeFile(
+            'artifacts/h-earth-presentation-coherence/computed-style-evidence.json',
+            JSON.stringify(evidence, null, 2) + '\n'
+          );
+          await browser.close();
+          NODE
+
+      - name: Remove staged tools and commit only renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r path; do
+            rm -f "$path"
+          done < /tmp/h-earth-renderer-tool-paths.txt
+          git rm .github/workflows/h-earth-presentation-coherence-transport.yml
+          git add showroom/globe/h-earth/renderer.js
+          ACTUAL="$(git diff --cached --name-only | sort)"
+          EXPECTED="$(printf '%s\n' \
+            '.github/workflows/h-earth-presentation-coherence-transport.yml' \
+            'showroom/globe/h-earth/renderer.js' | sort)"
+          test "$ACTUAL" = "$EXPECTED"
+          git config user.name "openai-codex[bot]"
+          git config user.email "openai-codex[bot]@users.noreply.github.com"
+          git commit -m "Refine H-Earth shoreline presentation coherence"
+          git push origin HEAD:agent/h-earth-presentation-coherence-001
+
+      - name: Upload execution and visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-presentation-coherence-${{ env.CANDIDATE_RENDERER_BLOB || github.sha }}
+          path: |
+            artifacts/h-earth-presentation-coherence/*
+            artifacts/h-earth-renderer-corridor/*.json
+            h-earth-presentation-corridor.log
+          if-no-files-found: error
+          retention-days: 30

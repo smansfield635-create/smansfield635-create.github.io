@@ -1,0 +1,132 @@
+name: Metaverse 3D Benchmark Disposition D3 Dimension Classification
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/metaverse-3d-benchmark-disposition-d3.yml"
+      - "tools/metaverse-3d-benchmark-disposition-d3-*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: metaverse-3d-benchmark-disposition-d3-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dimension-classification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      D3_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      D2S_PARENT_SHA: f2dbc0e3cf9c5053641425f662eaee036aa3d11d
+      D2S_ARTIFACT_ID: "8621351263"
+      D2S_ARTIFACT_SIZE: "35907"
+      D2S_ARTIFACT_SHA256: 5c5c9bd026845918cc908de643368a8aeeb0cde1e48b9b285aaa0c3c575101c8
+      D3_INPUT_ROOT: ${{ github.workspace }}/artifacts/d2s-input
+      D3_ARTIFACT_ROOT: ${{ github.workspace }}/artifacts/d3-output
+
+    steps:
+      - name: Checkout exact D3 occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.D3_HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact D3 head and D2S ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$D3_HEAD_SHA"
+          git merge-base --is-ancestor "$D2S_PARENT_SHA" HEAD
+
+      - name: Verify exact six-path D3 scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTUAL="$(git diff --name-only "$D2S_PARENT_SHA"..HEAD | sort)"
+          EXPECTED="$(printf '%s\n' \
+            '.github/workflows/metaverse-3d-benchmark-disposition-d3.yml' \
+            'tools/metaverse-3d-benchmark-disposition-d3-contract.json' \
+            'tools/metaverse-3d-benchmark-disposition-d3-core.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d3-rules.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d3-classify.mjs' \
+            'tools/metaverse-3d-benchmark-disposition-d3-controls.mjs' | sort)"
+          test "$ACTUAL" = "$EXPECTED"
+          test "$(git diff --name-only "$D2S_PARENT_SHA"..HEAD | wc -l)" -eq 6
+
+      - name: Download and verify exact D2S package
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf "$D3_INPUT_ROOT" "$D3_ARTIFACT_ROOT"
+          mkdir -p "$D3_INPUT_ROOT" "$D3_ARTIFACT_ROOT"
+          curl --fail --location --retry 3 \
+            --header "Authorization: Bearer $GITHUB_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$D2S_ARTIFACT_ID/zip" \
+            --output /tmp/d2s.zip
+          test "$(stat -c '%s' /tmp/d2s.zip)" = "$D2S_ARTIFACT_SIZE"
+          echo "$D2S_ARTIFACT_SHA256  /tmp/d2s.zip" | sha256sum --check --strict
+          unzip -q /tmp/d2s.zip -d "$D3_INPUT_ROOT"
+          test -f "$D3_INPUT_ROOT/combined-canonical-fact-manifest.json"
+          test -f "$D3_INPUT_ROOT/combined-fact-coexistence-index.json"
+
+      - name: Validate D3 source syntax
+        run: |
+          node --check tools/metaverse-3d-benchmark-disposition-d3-core.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d3-rules.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d3-classify.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d3-controls.mjs
+          node -e "JSON.parse(require('fs').readFileSync('tools/metaverse-3d-benchmark-disposition-d3-contract.json','utf8'))"
+
+      - name: Execute bounded D3A through D3D controls
+        run: node tools/metaverse-3d-benchmark-disposition-d3-controls.mjs "$D3_INPUT_ROOT" "$D3_ARTIFACT_ROOT" > "$D3_ARTIFACT_ROOT/execution.log"
+
+      - name: Verify deterministic D3 closure
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile } from 'node:fs/promises';
+          const root = process.env.D3_ARTIFACT_ROOT;
+          const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object'
+            ? Object.fromEntries(Object.keys(value).sort().map(k => [k.normalize('NFC'), stable(value[k])]))
+            : typeof value === 'string' ? value.normalize('NFC') : value;
+          const digest = value => createHash('sha256').update(JSON.stringify(stable(value))).digest('hex');
+          const read = async name => JSON.parse(await readFile(`${root}/${name}`, 'utf8'));
+          const [a,b,c,d,f,r,s,g] = await Promise.all([
+            read('d3a-schema-and-rule-lock.receipt.json'), read('d3b-parent-classification.json'),
+            read('d3c-delta-classification.json'), read('d3d-combined-classification-audit.json'),
+            read('canonical-fact-dimension-classification-manifest.json'), read('relation-dimension-classification-manifest.json'),
+            read('dimension-coverage-manifest.json'), read('d3.aggregate.receipt.json'),
+          ]);
+          const verifyReceipt = (x, expected, code) => { const { deterministicReceiptSha256, ...body } = x; if (deterministicReceiptSha256 !== expected || digest(body) !== expected) throw new Error(code); };
+          verifyReceipt(a, 'be7f3843a0452a109bf6f8b52239458d0fd4abbd160d119dc39c11014d959b8e', 'D3A_RECEIPT');
+          if (b.classificationCount !== 47 || b.classificationManifestSha256 !== 'efd3ac013c843e0266730bb0b0c89d643f7b5d5dbfbad2518a699833827ef85c' || digest(b.records) !== b.classificationManifestSha256) throw new Error('D3B_MANIFEST');
+          if (c.classificationCount !== 72 || c.classificationManifestSha256 !== '1521f2e5cc364ff2376c7548568b06ffa29bb252f4206c192979f54e14325345' || digest(c.records) !== c.classificationManifestSha256) throw new Error('D3C_MANIFEST');
+          verifyReceipt(d, '7625e414300198a9d14a481cf7fced74e65d93f796b45fc7f36a607ac05b3ede', 'D3D_AUDIT');
+          if (f.classificationCount !== 119 || f.classificationManifestSha256 !== '1b4fe0343dc5b7c24d248855405269b23c8735467d974a693676d49c30a8d8c8' || digest(f.records) !== f.classificationManifestSha256) throw new Error('D3_FACT_MANIFEST');
+          if (r.classificationCount !== 7 || r.classificationManifestSha256 !== '886c1e15ece9bae61760ff1195aab1644f9f3c7252608bcde365f8da63373088' || digest(r.records) !== r.classificationManifestSha256) throw new Error('D3_RELATION_MANIFEST');
+          if (s.governedDimensionCount !== 11 || s.dimensionSummarySha256 !== '39394397b7ce8640e3555a00757d2db57bc9eb677ffc6aa21a6221548cc17474' || digest(s.dimensions) !== s.dimensionSummarySha256) throw new Error('D3_DIMENSION_SUMMARY');
+          verifyReceipt(g, '2747d3935ded466fa744e5f4302de552ccc7dfafcf699e1c034fcb183ab0c9f7', 'D3_AGGREGATE');
+          if (g.status !== 'PASS_CLOSED' || g.classifiedFactCount !== 119 || g.classifiedRelationCount !== 7 || g.evidenceWeightingPerformed !== false || g.winnerSelectionPerformed !== false || g.dispositionCompilationPerformed !== false || g.productFilesChanged !== 0 || g.hEarthFilesChanged !== 0 || g.mainChanged !== false || g.mergePerformed !== false) throw new Error('D3_BOUNDARY');
+          NODE
+
+      - name: Upload deterministic D3 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-3d-benchmark-disposition-d3-${{ env.D3_HEAD_SHA }}
+          path: ${{ env.D3_ARTIFACT_ROOT }}/
+          if-no-files-found: error
+          retention-days: 30

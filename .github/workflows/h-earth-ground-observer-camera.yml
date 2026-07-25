@@ -1,0 +1,142 @@
+name: H-Earth Ground Observer Camera
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - ".github/workflows/h-earth-ground-observer-camera.yml"
+      - ".github/scripts/h-earth-ground-observer-camera-patch.mjs"
+      - ".github/scripts/h-earth-ground-observer-camera-test.mjs"
+      - "showroom/globe/h-earth/compositor.js"
+      - "showroom/globe/h-earth/index.js"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-ground-observer-camera-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apply-test-and-close-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout exact camera branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-ground-observer-camera-001
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify base and execute fail-closed preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main:refs/remotes/origin/main
+          test "$(git merge-base HEAD origin/main)" = "ceba8b05fd288d3cff9ecdb976e7c6f11fd3eccf"
+          test "$(git rev-parse HEAD:showroom/globe/h-earth/compositor.js)" = "480cd4519a4d3cc364be4b16acc7791aadb5071c"
+          test "$(git rev-parse HEAD:showroom/globe/h-earth/index.js)" = "2a271b4b8f5148fbac8a0ec4a8a5da8f55ba1c79"
+          mkdir -p artifacts/h-earth-ground-observer-camera
+          for target in compositor.js index.js; do
+            node --experimental-default-type=module \
+              tools/h-earth-repository-registry-auto-preflight.mjs \
+              --path "/showroom/globe/h-earth/${target}" \
+              --task "Replace target-centered orbit behavior with a ground-anchored observer camera: fixed eye height, yaw around local up, pitch clamped away from inversion, zero roll, ground-parallel translation, and pinch field-of-view zoom." \
+              --mutation-intent \
+              --output "artifacts/h-earth-ground-observer-camera/${target}.preflight.json" \
+              > "artifacts/h-earth-ground-observer-camera/${target}.preflight.stdout.json"
+          done
+          node <<'NODE'
+          const fs = require('node:fs');
+          for (const name of ['compositor.js', 'index.js']) {
+            const receipt = JSON.parse(fs.readFileSync(
+              `artifacts/h-earth-ground-observer-camera/${name}.preflight.json`,
+              'utf8'
+            ));
+            const path = `/showroom/globe/h-earth/${name}`;
+            const entry = receipt.pathClassification?.classifications?.find(
+              (candidate) => candidate.repositoryPath === path
+            );
+            const failureCodes = receipt.validatorReceipt?.failureCodes ?? [];
+            if (
+              receipt.dependenciesVerified !== true ||
+              receipt.finalDisposition !== 'PASS' ||
+              entry?.classification !== 'REGISTERED_H_EARTH_PATH' ||
+              failureCodes.length !== 0
+            ) {
+              throw new Error(`PREFLIGHT_NOT_PASS:${name}:${JSON.stringify({
+                dependenciesVerified: receipt.dependenciesVerified,
+                finalDisposition: receipt.finalDisposition,
+                entry,
+                failureCodes
+              })}`);
+            }
+          }
+          NODE
+
+      - name: Apply ground observer camera law
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/scripts/h-earth-ground-observer-camera-patch.mjs
+          node --check showroom/globe/h-earth/compositor.js
+          node --check showroom/globe/h-earth/index.js
+          grep -q "GROUND_OBSERVER_FIXED_EYE_HEIGHT_WITH_PINCH_FIELD_OF_VIEW_SCALING" showroom/globe/h-earth/compositor.js
+          grep -q "GROUND_OBSERVER_PITCH_BOUNDS" showroom/globe/h-earth/compositor.js
+          grep -q "GROUND_OBSERVER_LOOK_AND_PINCH_FOV_CONTROL_v2" showroom/globe/h-earth/index.js
+
+      - name: Install pinned browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute source and mobile anti-flip tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 \
+            > /tmp/h-earth-ground-observer-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          node .github/scripts/h-earth-ground-observer-camera-test.mjs \
+            2>&1 | tee artifacts/h-earth-ground-observer-camera/test.log
+
+      - name: Remove transport and commit only product changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf node_modules package.json package-lock.json
+          rm -f .github/workflows/h-earth-ground-observer-camera.yml
+          rm -f .github/scripts/h-earth-ground-observer-camera-patch.mjs
+          rm -f .github/scripts/h-earth-ground-observer-camera-test.mjs
+          git add showroom/globe/h-earth/compositor.js showroom/globe/h-earth/index.js
+          git add -u \
+            .github/workflows/h-earth-ground-observer-camera.yml \
+            .github/scripts/h-earth-ground-observer-camera-patch.mjs \
+            .github/scripts/h-earth-ground-observer-camera-test.mjs
+          changed="$(git diff --cached --name-only)"
+          expected=$'.github/scripts/h-earth-ground-observer-camera-patch.mjs\n.github/scripts/h-earth-ground-observer-camera-test.mjs\n.github/workflows/h-earth-ground-observer-camera.yml\nshowroom/globe/h-earth/compositor.js\nshowroom/globe/h-earth/index.js'
+          test "$changed" = "$expected"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Lock H-Earth camera to ground observer navigation"
+          git push origin HEAD:agent/h-earth-ground-observer-camera-001
+
+      - name: Upload camera evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-ground-observer-camera-${{ github.sha }}
+          path: artifacts/h-earth-ground-observer-camera/**
+          if-no-files-found: warn
+          retention-days: 30

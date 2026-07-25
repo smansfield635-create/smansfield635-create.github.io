@@ -144,7 +144,7 @@ async function selectorExists(page, selector) {
 
 async function selectorRect(page, selector) {
   if (!selector) return null;
-  return page.$eval(selector, element => {
+  return page.$eval(selector, (element, selectorValue) => {
     const rect = element.getBoundingClientRect();
     const style = getComputedStyle(element);
     const viewport = { width: innerWidth, height: innerHeight };
@@ -153,7 +153,7 @@ async function selectorRect(page, selector) {
     const area = Math.max(0, rect.width) * Math.max(0, rect.height);
     const visibleArea = intersectionWidth * intersectionHeight;
     return {
-      selector,
+      selector: selectorValue,
       tag: element.tagName.toLowerCase(),
       text: (element.textContent || "").replace(/\s+/g, " ").trim().slice(0, 160),
       rect: {
@@ -179,7 +179,7 @@ async function selectorRect(page, selector) {
       rendered: rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity || 1) > 0.01,
       intersectsViewport: visibleArea > 0
     };
-  }).catch(() => null);
+  }, selector).catch(() => null);
 }
 
 async function rootState(page, config) {

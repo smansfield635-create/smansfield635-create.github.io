@@ -1,0 +1,84 @@
+name: H-Earth Renderer Registry Scope Verification
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - .github/workflows/h-earth-renderer-registry-scope-verification.yml
+      - h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.renderer-presentation-scope-reconciliation.js
+      - h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+
+permissions:
+  contents: read
+
+jobs:
+  verify-renderer-registration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact pull-request occurrence
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify overlay syntax and loader identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.renderer-presentation-scope-reconciliation.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --experimental-default-type=module <<'NODE'
+          import loader from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const dependencies = loader();
+          if (dependencies.identityVerified !== true) {
+            throw new Error('REGISTRY_DEPENDENCY_IDENTITY_NOT_VERIFIED');
+          }
+          const resolution = dependencies.registryFacade.resolveHEarthRepositoryRegistryPath('/showroom/globe/h-earth/renderer.js');
+          if (resolution?.resolved !== true || resolution?.unresolved !== false) {
+            throw new Error('RENDERER_PATH_NOT_RESOLVED');
+          }
+          const nodeIds = (resolution.nodes || []).map((node) => node.nodeId);
+          if (!nodeIds.includes('H_EARTH_RENDERER_PRESENTATION_SCOPE_PACKAGE')) {
+            throw new Error('RENDERER_SCOPE_NODE_NOT_RETURNED');
+          }
+          NODE
+
+      - name: Execute exact fail-closed renderer-path preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/h-earth-renderer-registry
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --path /showroom/globe/h-earth/renderer.js \
+            --task 'Register the active renderer path before bounded environment-presentation refinement.' \
+            --mutation-intent \
+            --output artifacts/h-earth-renderer-registry/renderer-path.preflight.receipt.json \
+            > artifacts/h-earth-renderer-registry/renderer-path.preflight.stdout.json
+          node <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('artifacts/h-earth-renderer-registry/renderer-path.preflight.receipt.json', 'utf8'));
+          const entry = receipt.pathClassification?.classifications?.find(
+            (candidate) => candidate.repositoryPath === '/showroom/globe/h-earth/renderer.js'
+          );
+          if (receipt.dependenciesVerified !== true) throw new Error('DEPENDENCIES_NOT_VERIFIED');
+          if (receipt.activationStatus !== 'ACTIVATED') throw new Error('PREFLIGHT_NOT_ACTIVATED');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          if (entry?.classification !== 'REGISTERED_H_EARTH_PATH' || entry?.registered !== true) {
+            throw new Error('RENDERER_PATH_NOT_REGISTERED');
+          }
+          if (receipt.mutationMayProceed !== false) throw new Error('PREFLIGHT_IMPROPERLY_CREATED_MUTATION_AUTHORITY');
+          if (receipt.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') {
+            throw new Error(`UNEXPECTED_CONTINUATION:${receipt.continuation}`);
+          }
+          NODE
+
+      - name: Upload deterministic registration receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-renderer-registry-scope-${{ github.sha }}
+          path: artifacts/h-earth-renderer-registry/*.json
+          if-no-files-found: error
+          retention-days: 30

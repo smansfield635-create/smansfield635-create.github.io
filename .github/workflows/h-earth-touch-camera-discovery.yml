@@ -107,7 +107,7 @@ jobs:
                   initializationKey?.packet002TransferOccurrenceId,
                 presentationMode:
                   initializationKey?.presentationMode
-              });'''
+              });'''.replace('          ', '')
 
           new = '''  const initializationKey =
             MODULE_STATE.activeInitializationKey;
@@ -135,10 +135,12 @@ jobs:
                   touchCompositorFrameOccurrenceId,
                 presentationMode:
                   initializationKey?.presentationMode
-              });'''
+              });'''.replace('          ', '')
 
           if source.count(old) != 1:
-              raise SystemExit('FRESH_FRAME_PATCH_EXPECTED_EXACTLY_ONCE')
+              start = source.find('  const initializationKey =\n    MODULE_STATE.activeInitializationKey;')
+              excerpt = source[start:start + 700] if start >= 0 else 'NOT_FOUND'
+              raise SystemExit('FRESH_FRAME_PATCH_EXPECTED_EXACTLY_ONCE\n' + excerpt)
 
           source = source.replace(old, new)
           path.write_text(source, encoding='utf-8')

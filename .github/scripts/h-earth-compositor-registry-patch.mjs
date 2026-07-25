@@ -119,6 +119,10 @@ for (const [from, to] of replacements) {
 }
 
 overlay = overlay.replace(
+  "import baseFacade from './h-earth.repository-registry.renderer-presentation-scope-reconciliation.js';",
+  "import baseFacade from './h-earth.repository-registry.public-route-interaction-scope-reconciliation.js';"
+);
+overlay = overlay.replace(
   "import baseFacade from './h-earth.repository-registry.compositor-camera-authority-scope-reconciliation.js';",
   "import baseFacade from './h-earth.repository-registry.public-route-interaction-scope-reconciliation.js';"
 );

@@ -1,0 +1,139 @@
+{
+  "artifactId": "METAVERSE_3D_GOVERNED_BENCHMARK_CORPUS_COMPLETE_ACTIVE_SOURCE_PATH_MANIFEST_v1",
+  "checkpoint": "CP3",
+  "status": "PASS_ACTIVE_PATHS_RESOLVED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "inventoryBranch": "agent/metaverse-benchmark-corpus-inventory-001",
+  "routeLedgerPath": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-02/benchmark-route-and-occurrence-ledger.json",
+  "scope": "ACTIVE_HTML_CSS_JAVASCRIPT_AND_EXECUTABLE_AUTHORITY_DEPENDENCIES",
+  "exclusions": [
+    "NAVIGATIONAL_DESTINATION_PAGES_NOT_LOADED_BY_CURRENT_ROUTE",
+    "HISTORICAL_AND_PROTOTYPE_FILES_NOT_REFERENCED_BY_ACTIVE_LOAD_GRAPH",
+    "VALIDATION_HARNESSES_NOT_LOADED_BY_PRODUCT_ROUTE",
+    "RUNTIME_GENERATED_CANVAS_SVG_STYLE_AND_BLOB_URL_SURFACES",
+    "DEPLOYED_NETWORK_AND_CACHE_IDENTITY_PENDING_CP5"
+  ],
+  "benchmarks": [
+    {
+      "benchmarkId": "MAIN_COMPASS",
+      "loadModel": "DIRECT_DOCUMENT_STYLESHEET_AND_DEFERRED_SCRIPTS",
+      "activePaths": [
+        ["index.html", "ENTRY_HTML", "ENTRY"],
+        ["assets/compass/compass.css", "PAGE_STYLESHEET", "DIRECT_LINK"],
+        ["assets/compass/compass.controller.js", "STATE_NAVIGATION_AND_PRESENTATION_AUTHORITY", "DIRECT_DEFERRED_SCRIPT"],
+        ["assets/compass/compass.crystals.js", "CRYSTAL_RENDERING_GESTURE_AND_PROJECTION_AUTHORITY", "DIRECT_DEFERRED_SCRIPT"],
+        ["assets/compass/compass.mirrorland-window.js", "MIRRORLAND_WINDOW_RENDERER", "DIRECT_DEFERRED_SCRIPT"],
+        ["assets/compass/compass.cosmos.js", "COSMIC_ATMOSPHERE_RENDERER", "DIRECT_DEFERRED_SCRIPT"]
+      ],
+      "activePathCount": 6,
+      "unresolvedActivePaths": 0
+    },
+    {
+      "benchmarkId": "HOMEPAGE_COMPASS",
+      "resolvedProductIdentity": "DIAMOND_GATE_BRIDGE_WEBSITE_HOMEPAGE",
+      "loadModel": "SELF_CONTAINED_ENTRY_WITH_INLINE_CSS_AND_INLINE_JAVASCRIPT",
+      "activePaths": [
+        ["home/index.html", "ENTRY_HTML_INLINE_STYLE_INLINE_BEHAVIOR", "ENTRY"]
+      ],
+      "activePathCount": 1,
+      "unresolvedActivePaths": 0,
+      "clarification": "The homepage explicitly retires Compass behavior and the orbit map. It remains a homepage integration reference, not an active Compass implementation."
+    },
+    {
+      "benchmarkId": "ARCHCOIN_COMPASS",
+      "loadModel": "DIRECT_SHELL_PLUS_CSS_IMPORTS_AND_VIEWPORT_GATED_DYNAMIC_AUTHORITIES",
+      "activePaths": [
+        ["products/archcoin/index.html", "ENTRY_HTML_AND_INLINE_PRESENTATION", "ENTRY"],
+        ["assets/compass/upstream-compass.css", "SHARED_CENTER_COMPASS_STYLESHEET", "DIRECT_LINK"],
+        ["products/archcoin/index.css", "ARCHCOIN_STYLESHEET_AGGREGATOR", "DIRECT_LINK"],
+        ["products/archcoin/index.base.css", "ARCHCOIN_BASE_PRESENTATION", "CSS_IMPORT"],
+        ["products/archcoin/index.presentation.css", "ARCHCOIN_REFINED_PRESENTATION", "CSS_IMPORT"],
+        ["products/archcoin/index.globe.css", "ARCHCOIN_CENTER_WORLD_PRESENTATION", "CSS_IMPORT"],
+        ["products/archcoin/index.controller.js", "STATE_NAVIGATION_AND_ACCEPTANCE_AUTHORITY", "DIRECT_DEFERRED_SCRIPT"],
+        ["assets/compass/upstream-compass.geometry.js", "SHARED_CENTER_COMPASS_GEOMETRY", "DIRECT_DEFERRED_SCRIPT"],
+        ["assets/compass/upstream-compass.renderer.js", "SHARED_CENTER_COMPASS_RENDERER", "DIRECT_DEFERRED_SCRIPT"],
+        ["products/archcoin/index.compositor.js", "CAMERA_AND_PROJECTION_COMPOSITOR", "DIRECT_DEFERRED_SCRIPT"],
+        ["products/archcoin/index.crystals.js", "VIEWPORT_GATED_CRYSTAL_WRAPPER", "DIRECT_DEFERRED_SCRIPT"],
+        ["products/archcoin/index.crystals.source.js", "CRYSTAL_RENDERING_SOURCE", "DYNAMIC_FETCH_AND_BLOB_EXECUTION"],
+        ["products/archcoin/index.interactions.js", "INTERACTION_AND_CENTER_WORLD_ASSEMBLY_WRAPPER", "DIRECT_DEFERRED_SCRIPT"],
+        ["products/archcoin/index.motion.source.js", "ACCEPTED_MOTION_ADAPTER_SOURCE", "DYNAMIC_FETCH_AND_BLOB_EXECUTION"],
+        ["products/archcoin/index.interactions.source.js", "PRESERVED_INTERACTION_SOURCE", "DYNAMIC_SCRIPT_FROM_MOTION_ADAPTER"],
+        ["products/archcoin/index.planet.js", "CENTER_WORLD_LOADER", "IDLE_DYNAMIC_SCRIPT"],
+        ["products/archcoin/index.planet.source.js", "CENTER_WORLD_HOST_SOURCE", "DYNAMIC_SCRIPT"],
+        ["products/archcoin/index.starfield.js", "DETERMINISTIC_STARFIELD", "IDLE_DYNAMIC_SCRIPT"],
+        ["assets/audralia/audralia.planet.js", "CENTER_WORLD_GEOMETRY_AUTHORITY", "DYNAMIC_SCRIPT_FROM_PLANET_SOURCE"],
+        ["laws/index.planet.js", "CENTER_WORLD_DRAW_PARTICIPANT", "DYNAMIC_SCRIPT_FROM_PLANET_SOURCE"]
+      ],
+      "activePathCount": 20,
+      "unresolvedActivePaths": 0
+    },
+    {
+      "benchmarkId": "SHOWROOM",
+      "loadModel": "STARTUP_CONTROLLER_PLUS_STAGED_ORBIT_INTERACTION_DIAMOND_AND_IDLE_GROUPS",
+      "activePaths": [
+        ["showroom/index.html", "ENTRY_HTML_AND_STAGED_LOADER", "ENTRY"],
+        ["assets/manor-blueprint/manor.blueprint.css", "BLUEPRINT_PAGE_STYLESHEET", "DIRECT_LINK"],
+        ["showroom/index.css", "SHOWROOM_PAGE_STYLESHEET", "DIRECT_LINK"],
+        ["showroom/index.controller.js", "STATE_ROUTE_AND_NAVIGATION_AUTHORITY", "DIRECT_STARTUP_SCRIPT"],
+        ["showroom/index.compositor.js", "ORBIT_COMPOSITOR", "STAGED_ORBIT_SCRIPT"],
+        ["assets/audralia/audralia.planet.js", "PLANET_GEOMETRY_AUTHORITY", "STAGED_ORBIT_SCRIPT"],
+        ["showroom/index.planet.js", "CENTER_PLANET_RENDERER", "STAGED_ORBIT_SCRIPT"],
+        ["showroom/index.crystals.js", "CRYSTAL_SELECTION_WRAPPER", "STAGED_ORBIT_SCRIPT"],
+        ["showroom/index.crystals.source.js", "CRYSTAL_RENDERING_SOURCE", "DYNAMIC_SOURCE_FROM_CRYSTAL_WRAPPER"],
+        ["showroom/index.selection.js", "PRIMARY_SELECTION_AND_SETTLEMENT_BRIDGE", "DYNAMIC_SCRIPT_FROM_CRYSTAL_WRAPPER"],
+        ["showroom/index.interaction.gestures.js", "GESTURE_SUPPORT", "STAGED_INTERACTION_SCRIPT"],
+        ["showroom/index.interactions.js", "QUATERNION_INTERACTION_AUTHORITY", "STAGED_INTERACTION_SCRIPT"],
+        ["showroom/index.diamond.geometry.js", "DIAMOND_GEOMETRY_AUTHORITY", "STAGED_DIAMOND_SCRIPT"],
+        ["showroom/index.diamond.js", "DIAMOND_WEBGL_RENDERER", "STAGED_DIAMOND_SCRIPT"],
+        ["showroom/index.window.definition.js", "WINDOW_OBJECT_DEFINITION", "STAGED_DIAMOND_SCRIPT"],
+        ["showroom/index.window.js", "WINDOW_OBJECT_RENDERER", "STAGED_DIAMOND_SCRIPT"],
+        ["showroom/index.object-stage.js", "WINDOW_DIAMOND_STAGE_CASE", "STAGED_DIAMOND_SCRIPT"],
+        ["showroom/index.window.controller.js", "WINDOW_CONTROL_AUTHORITY", "STAGED_DIAMOND_SCRIPT"],
+        ["showroom/index.ui.js", "DIAMOND_UI_CONTROLLER", "STAGED_DIAMOND_SCRIPT"],
+        ["showroom/index.cosmos.js", "COSMOS_RENDERER", "IDLE_SCRIPT_SKIPPED_WHEN_REDUCED_MOTION"],
+        ["assets/manor-blueprint/manor.blueprint.registry.js", "BLUEPRINT_REGISTRY", "IDLE_SCRIPT"],
+        ["assets/manor-blueprint/manor.blueprint.js", "BLUEPRINT_RUNTIME", "IDLE_SCRIPT"],
+        ["assets/elara/elara.room-entry.js", "ELARA_ROOM_ENTRY_RUNTIME", "IDLE_SCRIPT"]
+      ],
+      "activePathCount": 23,
+      "unresolvedActivePaths": 0
+    },
+    {
+      "benchmarkId": "LAWS_CHAMBER_POST_PR128",
+      "loadModel": "STARTUP_CONTROLLER_AND_PLANET_PLUS_STAGED_ORBIT_INTERACTION_AND_IDLE_GROUPS",
+      "activePaths": [
+        ["laws/index.html", "ENTRY_HTML_AND_STAGED_LOADER", "ENTRY"],
+        ["laws/index.css", "PAGE_STYLESHEET", "DIRECT_LINK"],
+        ["laws/index.controller.js", "STATE_ROUTE_NAVIGATION_AND_ACCEPTANCE_AUTHORITY", "DIRECT_STARTUP_SCRIPT"],
+        ["assets/audralia/audralia.planet.js", "CENTER_PLANET_GEOMETRY_AUTHORITY", "DIRECT_STARTUP_SCRIPT"],
+        ["laws/index.planet.js", "CENTER_PLANET_DRAW_PARTICIPANT", "DIRECT_STARTUP_SCRIPT"],
+        ["laws/index.compositor.js", "ORBIT_COMPOSITOR", "STAGED_ORBIT_SCRIPT"],
+        ["laws/index.crystals.js", "CRYSTAL_RENDERER", "STAGED_ORBIT_SCRIPT"],
+        ["laws/index.interactions.js", "INTERACTION_WRAPPER_AND_CENTER_RETURN_SUPPORT", "STAGED_INTERACTION_SCRIPT"],
+        ["laws/index.interactions.source.round4.js", "PRESERVED_POINTER_AND_GESTURE_AUTHORITY", "DYNAMIC_SCRIPT_FROM_INTERACTION_WRAPPER"],
+        ["laws/index.selection.js", "SPATIAL_PRIMARY_SELECTION_AND_SETTLEMENT", "DYNAMIC_SCRIPT_FROM_INTERACTION_WRAPPER"],
+        ["laws/index.cosmos.js", "DECORATIVE_COSMOS_RENDERER", "STAGED_IDLE_SCRIPT"]
+      ],
+      "activePathCount": 11,
+      "unresolvedActivePaths": 0
+    }
+  ],
+  "loadGraphAssertions": {
+    "benchmarkCount": 5,
+    "benchmarkSourceOccurrences": 61,
+    "allDirectEntryReferencesResolved": true,
+    "allCssImportsResolved": true,
+    "allProductRouteDynamicScriptLoadersResolved": true,
+    "allNestedProductSourceLoadersResolved": true,
+    "activeAndHistoricalSourcesSeparated": true,
+    "prototypeCalibrationLabIncluded": false,
+    "navigationalDestinationPagesIncludedAsActiveDependencies": false,
+    "unresolvedActivePaths": 0,
+    "runtimeResourceSuccessEstablished": false,
+    "deployedByteIdentityEstablished": false,
+    "productMutationAuthority": false,
+    "mainChanged": false
+  },
+  "nextCheckpoint": "CP4_IMMUTABLE_SOURCE_CUSTODY"
+}

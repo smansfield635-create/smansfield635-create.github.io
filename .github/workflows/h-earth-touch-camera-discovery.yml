@@ -89,7 +89,8 @@ jobs:
           set -euo pipefail
           node .github/scripts/h-earth-touch-camera-frame-patch.mjs
           node --check showroom/globe/h-earth/index.js
-          grep -q "TOUCH_CAMERA_GESTURE.*CAMERA_REVISION" showroom/globe/h-earth/index.js
+          grep -q "touchCompositorFrameOccurrenceId" showroom/globe/h-earth/index.js
+          grep -q "compositorFrameOccurrenceId:" showroom/globe/h-earth/index.js
 
       - name: Install pinned browser runtime
         shell: bash

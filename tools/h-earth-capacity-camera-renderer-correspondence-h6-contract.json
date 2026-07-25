@@ -9,24 +9,86 @@
   "sourceCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
   "sourcePosture": "READ_ONLY_INDEPENDENT_DUAL_INSTRUMENT_CORRESPONDENCE",
   "productionMutationAuthority": "NONE",
-  "rendererTool": {
-    "toolId": "H_EARTH_RENDERER_CORRIDOR_LANE_A_INTEGRATED_TOOL_VERIFICATION_v1",
-    "pullRequest": 124,
-    "sourceCommit": "546f6fc05174347ac797837d0b4844a2164c3cb3",
-    "requiredFiles": [
-      {"path": "tools/h-earth-renderer-corridor-capacity-law.mjs", "gitBlob": "7d4a3e9534c73bf3dcac0ef12b807a7d7a2e07d2"},
-      {"path": "tools/h-earth-renderer-corridor-common.mjs", "gitBlob": "b338e73b148ac4942ff368cf1e17ae170c2f4bfa"},
-      {"path": "tools/h-earth-renderer-corridor-observation.mjs", "gitBlob": "196935030416f9e9c11121fbfbec57274f19e287"},
-      {"path": "tools/h-earth-renderer-corridor-integration-harness.mjs", "gitBlob": "2215480882cc5dfab653cacb278cb2c1525c7bd3"}
-    ]
-  },
   "authorizedCheckpointPaths": [
     ".github/workflows/h-earth-capacity-camera-correspondence-h6.yml",
     "tools/h-earth-capacity-camera-renderer-correspondence-h6-contract.json",
     "tools/h-earth-capacity-camera-renderer-correspondence-h6-correspondence.mjs",
     "tools/h-earth-capacity-camera-renderer-correspondence-h6-controls.mjs"
   ],
+  "capacityTool": {
+    "toolId": "H_EARTH_CAPACITY_CAMERA_AND_RENDERER_CORRESPONDENCE_VERIFIER_v1",
+    "nativeReceiptContractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_H5_CONTROL_RECEIPT_v1",
+    "executionPath": "tools/h-earth-capacity-camera-renderer-correspondence-h5-controls.mjs"
+  },
+  "rendererTool": {
+    "toolId": "H_EARTH_RENDERER_CORRIDOR_LANE_A_INTEGRATED_TOOL_VERIFICATION_v1",
+    "pullRequest": 124,
+    "branch": "agent/h-earth-renderer-corridor-gate-001",
+    "integrationHarnessContractId": "H_EARTH_RENDERER_CORRIDOR_INTEGRATION_HARNESS_v3",
+    "integrationHarnessPath": "tools/h-earth-renderer-corridor-integration-harness.mjs",
+    "integrationHarnessBlob": "2215480882cc5dfab653cacb278cb2c1525c7bd3",
+    "toolVerificationWorkflowBlob": "c70457cb6a0fcca51faef2c2f7440dc9cf4ca59e",
+    "priorToolVerificationReceiptSha256": "19ff0c7699d3d55ae916eff886b320644113eb09b7019e0d4537334a8c429175",
+    "sourceCommit": "546f6fc05174347ac797837d0b4844a2164c3cb3",
+    "requiredFiles": [
+      {
+        "path": "tools/h-earth-renderer-corridor-capacity-law.mjs",
+        "gitBlob": "7d4a3e9534c73bf3dcac0ef12b807a7d7a2e07d2"
+      },
+      {
+        "path": "tools/h-earth-renderer-corridor-common.mjs",
+        "gitBlob": "b338e73b148ac4942ff368cf1e17ae170c2f4bfa"
+      },
+      {
+        "path": "tools/h-earth-renderer-corridor-observation.mjs",
+        "gitBlob": "196935030416f9e9c11121fbfbec57274f19e287"
+      },
+      {
+        "path": "tools/h-earth-renderer-corridor-integration-harness.mjs",
+        "gitBlob": "2215480882cc5dfab653cacb278cb2c1525c7bd3"
+      },
+      {
+        "path": "tools/h-earth-renderer-corridor-receipt-custody.mjs",
+        "gitBlob": "02f80939f7db693d58997a51ab33a7423b15baa3"
+      }
+    ]
+  },
+  "protectedProductionSources": [
+    {
+      "path": "showroom/globe/h-earth/capacity.js",
+      "gitBlob": "0b1c3f6d29735d42141e2feffc5898985e5996af"
+    },
+    {
+      "path": "showroom/globe/h-earth/compositor.js",
+      "gitBlob": "480cd4519a4d3cc364be4b16acc7791aadb5071c"
+    },
+    {
+      "path": "showroom/globe/h-earth/renderer.js",
+      "gitBlob": "3ff5ea1542b015fe0816dbbf6d42509f3b86b300"
+    },
+    {
+      "path": "showroom/globe/h-earth/admitted-geometry-frame.js",
+      "gitBlob": "c45ed4482f0d653c4a51ea838c191f36e7769d26"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/shoreline-preview.js",
+      "gitBlob": "cf4602e5bb57d207ab19a631ff7a0da860f6d2cd"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "gitBlob": "91eabcc240b54ef01a52d59a237dff629d90a722"
+    }
+  ],
+  "requiredCorrespondenceClassifications": [
+    "CAPACITY_AUTHORITY_BLOCKED_RENDERER_CORRIDOR_PASS",
+    "CAPACITY_PASS_RENDERER_PASS",
+    "CAPACITY_FAIL_RENDERER_FAIL_EXPECTED_STAGE",
+    "CAPACITY_PASS_RENDERER_FAIL_NONCAPACITY",
+    "CAPACITY_FAIL_PREMOUNT_IDENTITIES_PRESERVED"
+  ],
   "claims": {
+    "independentMeasurementsRequired": true,
+    "circularReceiptDependencyProhibited": true,
     "rendererToolSourceMayBeCopiedIntoRepositoryHistory": false,
     "rendererExecutionAuthorized": true,
     "browserExecutionAuthorized": true,

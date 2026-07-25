@@ -1,0 +1,130 @@
+name: H-Earth Touch Camera Transport
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - ".github/workflows/h-earth-touch-camera-discovery.yml"
+      - ".github/scripts/h-earth-touch-camera-transport.mjs"
+      - ".github/scripts/h-earth-touch-camera-test.mjs"
+      - "showroom/globe/h-earth/index.js"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-touch-camera-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apply-execute-and-close-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout exact interaction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-touch-camera-001
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify base and execute fail-closed preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main:refs/remotes/origin/main
+          test "$(git merge-base HEAD origin/main)" = "691346d3f0dbe8e16f46c705a78d26f63c733d1b"
+          test "$(git rev-parse HEAD:showroom/globe/h-earth/index.js)" = "a74364ad75dca8b8fab069026d181b5e64bdd007"
+          mkdir -p artifacts/h-earth-touch-camera
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --path /showroom/globe/h-earth/index.js \
+            --task "Bind one-pointer orbit and two-pointer pinch camera-distance intents to the mounted H-Earth stage while preserving compositor camera ownership, admitted geometry, renderer structure, capacity ceilings, DOM ownership, selection, and traversal boundaries." \
+            --mutation-intent \
+            --output artifacts/h-earth-touch-camera/preflight.receipt.json \
+            > artifacts/h-earth-touch-camera/preflight.stdout.json
+          node <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync(
+            'artifacts/h-earth-touch-camera/preflight.receipt.json',
+            'utf8'
+          ));
+          const entry = receipt.pathClassification?.classifications?.find(
+            (candidate) =>
+              candidate.repositoryPath === '/showroom/globe/h-earth/index.js'
+          );
+          const failureCodes = receipt.validatorReceipt?.failureCodes ?? [];
+          if (
+            receipt.dependenciesVerified !== true ||
+            receipt.finalDisposition !== 'PASS' ||
+            entry?.classification !== 'REGISTERED_H_EARTH_PATH' ||
+            failureCodes.length !== 0
+          ) {
+            throw new Error(`INDEX_PREFLIGHT_NOT_PASS:${JSON.stringify({
+              dependenciesVerified: receipt.dependenciesVerified,
+              finalDisposition: receipt.finalDisposition,
+              entry,
+              failureCodes
+            })}`);
+          }
+          NODE
+
+      - name: Apply and statically validate touch-camera corridor
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/scripts/h-earth-touch-camera-transport.mjs apply
+
+      - name: Install pinned browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute touch orbit and pinch-distance controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 \
+            > /tmp/h-earth-touch-camera-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          node .github/scripts/h-earth-touch-camera-test.mjs
+
+      - name: Remove transport and commit only product change
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf node_modules package.json package-lock.json
+          rm -f .github/workflows/h-earth-touch-camera-discovery.yml
+          rm -f .github/scripts/h-earth-touch-camera-transport.mjs
+          rm -f .github/scripts/h-earth-touch-camera-test.mjs
+          git add showroom/globe/h-earth/index.js
+          git add -u \
+            .github/workflows/h-earth-touch-camera-discovery.yml \
+            .github/scripts/h-earth-touch-camera-transport.mjs \
+            .github/scripts/h-earth-touch-camera-test.mjs
+          changed="$(git diff --cached --name-only)"
+          expected=$'.github/scripts/h-earth-touch-camera-test.mjs\n.github/scripts/h-earth-touch-camera-transport.mjs\n.github/workflows/h-earth-touch-camera-discovery.yml\nshowroom/globe/h-earth/index.js'
+          test "$changed" = "$expected"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Add bounded H-Earth touch camera controls"
+          git push origin HEAD:agent/h-earth-touch-camera-001
+
+      - name: Upload execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-touch-camera-${{ github.sha }}
+          path: artifacts/h-earth-touch-camera/**
+          if-no-files-found: warn
+          retention-days: 30

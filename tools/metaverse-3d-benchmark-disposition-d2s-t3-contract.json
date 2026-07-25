@@ -64,7 +64,12 @@
   },
   "lockedAuthority": {
     "topLevelLaneId": "FOUR_COMPASS_PRODUCTION_BENCHMARK_CORPUS",
-    "canonicalCompassIds": ["MAIN_COMPASS", "ARCHCOIN_COMPASS", "SHOWROOM_COMPASS", "LAWS_COMPASS"],
+    "canonicalCompassIds": [
+      "MAIN_COMPASS",
+      "ARCHCOIN_COMPASS",
+      "SHOWROOM_COMPASS",
+      "LAWS_COMPASS"
+    ],
     "auxiliaryControlId": "WEBSITE_HOME_RECEIVER_CONTROL",
     "newTopLevelLaneCreated": false,
     "crossLaneAggregateAllowed": false,
@@ -73,6 +78,8 @@
   "authorizedCheckpointPaths": [
     ".github/workflows/metaverse-3d-benchmark-disposition-d2s-t3.yml",
     "tools/metaverse-3d-benchmark-disposition-d2s-t3-contract.json",
+    "tools/metaverse-3d-benchmark-disposition-d2s-t3-core.mjs",
+    "tools/metaverse-3d-benchmark-disposition-d2s-t3-facts.mjs",
     "tools/metaverse-3d-benchmark-disposition-d2s-t3-normalize.mjs",
     "tools/metaverse-3d-benchmark-disposition-d2s-t3-controls.mjs"
   ],

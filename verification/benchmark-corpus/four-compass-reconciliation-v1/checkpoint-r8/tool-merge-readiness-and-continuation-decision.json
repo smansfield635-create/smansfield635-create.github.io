@@ -1,0 +1,190 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_FOUR_COMPASS_TOOL_MERGE_READINESS_AND_CONTINUATION_DECISION_v1",
+  "phase": "PHASE_C_VALIDATION_AND_CONTINUATION",
+  "checkpoint": "R8",
+  "status": "PASS_RECONCILIATION_CLOSED_CORRECTED_TOOL_CONSTRUCTION_AUTHORIZED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "reconciliationBranch": "agent/metaverse-benchmark-four-compass-reconciliation-001",
+  "reconciliationParentCommit": "a06f5ff8ab5c687d3c849d6944e4bdcc68490af8",
+  "recordedDate": "2026-07-25",
+  "decisionMode": "CLOSE_RECONCILIATION_WITHHOLD_SUPERSEDED_INSTALLATION_AUTHORIZE_CORRECTED_TOOL_CONSTRUCTION",
+  "checkpointCustody": {
+    "R0": {
+      "commit": "34e36a5b942f884879ac1e08c1513edbdd6fef58",
+      "blob": "32fc7f07c5b8e4fdcdb80091c575f3ad57902a9d"
+    },
+    "R1": {
+      "commit": "819194a0a5487b77049de50feb7826ff30bd674c",
+      "blob": "bcd893cb9f1efd441bad6da0aef828fd106ce482"
+    },
+    "R2": {
+      "commit": "f304e19a2d53a98b510ce437d6fa65aad2a8539d",
+      "blob": "49ae6af6cfa19b12a698098da79e4336497e4270"
+    },
+    "R3": {
+      "commit": "70f3c6a52b63bc461eed35a7a109f8c94ff799ef",
+      "blob": "32ab1590963c72d87cb754b96e23413cfc4a34a5"
+    },
+    "R4": {
+      "commit": "a69995a28055c0f33a3620b90f77fa72359fa2e6",
+      "blob": "cf404f0e741c0bee1b9833288bb94502b70a718a"
+    },
+    "R5": {
+      "commit": "c8355b6de428f4129569d4cfc6d2a0def75ae0f1",
+      "blob": "7e05c687115ee892b7d5464abffa5f67cb14f78f"
+    },
+    "R6": {
+      "commit": "8a779e55aa6bddc43f1a2249d5277ca2312011db",
+      "blob": "28bd0d4555e51625904d7c4e19c1fb3465a86d56"
+    },
+    "R7": {
+      "commit": "a06f5ff8ab5c687d3c849d6944e4bdcc68490af8",
+      "blob": "6c2950d179b058e379ba108219dcd63d8a34a80c"
+    }
+  },
+  "acceptedBaselines": {
+    "fourCompassEvidenceBaseline": "ACCEPTED",
+    "homeAuxiliaryControlBaseline": "ACCEPTED",
+    "recaptureRequired": false,
+    "recaptureDecisionScope": "EXISTING_CP2_THROUGH_CP7_RECONCILIATION_BASELINE_ONLY",
+    "canonicalCompassCount": 4,
+    "canonicalCompassIds": [
+      "MAIN_COMPASS",
+      "ARCHCOIN_COMPASS",
+      "SHOWROOM_COMPASS",
+      "LAWS_COMPASS"
+    ],
+    "auxiliaryControlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+    "homeCompassAuthority": false
+  },
+  "pr136Assessment": {
+    "pullRequest": 136,
+    "state": "CLOSED_UNMERGED_DRAFT",
+    "executionHead": "d4825b09f8186699bbf4025981c12f50e710df9a",
+    "cp7HarnessPath": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-07/visual-and-spatial-realization-baseline.mjs",
+    "cp7HarnessGitBlob": "231799a777d803272ea35262c5f677343087961d",
+    "functionalPrecedentExists": true,
+    "rawEvidenceDisposition": "RETAIN",
+    "reusableImplementationLogicDisposition": "EXTRACTABLE",
+    "unchangedMergeReadiness": "NOT_ADMISSIBLE",
+    "unchangedInstallation": "WITHHELD",
+    "reversionRequired": false,
+    "supersessionReasons": [
+      "HOME_AGGREGATED_AS_FIFTH_CORPUS_MEMBER",
+      "INVALID_HOMEPAGE_COMPASS_EXECUTION_IDENTITY_RETAINED",
+      "FIVE_MEMBER_SUMMARIES_FINDINGS_MANIFESTS_AND_DIGESTS",
+      "SMOKE_HARNESS_POINTS_TO_RETIRED_CP7_3_SEQUENCE",
+      "WORKFLOW_AND_OUTPUT_NAMING_BOUND_TO_SUPERSEDED_CP7_INVENTORY_MODEL"
+    ],
+    "extractableMechanisms": [
+      "BROWSER_EXECUTION",
+      "SCREENSHOT_CAPTURE",
+      "TELEMETRY_COLLECTION",
+      "GEOMETRY_OBSERVATION",
+      "INTERACTION_EXECUTION",
+      "ARTIFACT_CUSTODY",
+      "WORKFLOW_TRIGGER_AND_VALIDATION"
+    ]
+  },
+  "continuationDecision": {
+    "evidenceReady": true,
+    "fourCompassEvidenceBaseline": "ACCEPTED",
+    "homeAuxiliaryControlBaseline": "ACCEPTED",
+    "recaptureRequired": false,
+    "pr136UnchangedMerge": "NOT_ADMISSIBLE",
+    "pr136RawEvidence": "RETAIN",
+    "pr136ReusableImplementationLogic": "EXTRACTABLE",
+    "correctedToolRequiredForLawsRepair": true,
+    "correctedToolExtractionRequired": true,
+    "correctedToolConstructionAuthorized": true,
+    "correctedToolInstallationAuthorized": false,
+    "directLawsRepairWithoutTool": "NOT_AUTHORIZED",
+    "lawsRepairReady": false,
+    "lawsRepairBlockedByToolCompletion": true,
+    "nextCheckpoint": "T1_FOUR_COMPASS_BENCHMARK_TOOL_EXTRACTION_AUTHORITY_LOCK"
+  },
+  "requiredSequence": [
+    "T1_FOUR_COMPASS_BENCHMARK_TOOL_EXTRACTION_AUTHORITY_LOCK",
+    "T2_CORRECTED_HARNESS_AND_WORKFLOW_CONSTRUCTION",
+    "T3_TOOL_EXECUTION_AND_EVIDENCE_VALIDATION",
+    "T4_CLEAN_TOOL_MERGE_READINESS_AUDIT",
+    "T5_TOOL_INSTALLATION_OR_MERGE_DECISION",
+    "L0_LAWS_REPAIR_AUTHORITY_AND_BOUNDED_CORRECTION_PLAN",
+    "L1_PLUS_LAWS_DIAGNOSIS_CORRECTION_AND_POST_MUTATION_VALIDATION"
+  ],
+  "dependencyLock": {
+    "governingDependency": "CORRECTED_TOOL_BEFORE_LAWS_REPAIR",
+    "correctedToolRequiredForLawsRepair": true,
+    "directLawsRepairWithoutTool": "NOT_AUTHORIZED",
+    "lawsRepairPausedUntil": [
+      "CORRECTED_TOOL_EXTRACTED",
+      "CORRECTED_TOOL_INSTALLED",
+      "CORRECTED_TOOL_EXECUTED",
+      "CORRECTED_TOOL_ACCEPTED"
+    ]
+  },
+  "authority": {
+    "correctedToolExtraction": true,
+    "correctedToolConstruction": true,
+    "correctedToolExecution": false,
+    "correctedToolInstallation": false,
+    "toolMerge": false,
+    "lawsRepair": false,
+    "productMutation": false,
+    "mainWrite": false,
+    "merge": false
+  },
+  "prohibited": [
+    "MERGE_PR_136_UNCHANGED",
+    "INSTALL_PR_136_UNCHANGED",
+    "TREAT_HOME_AS_FIFTH_COMPASS",
+    "RETAIN_HOMEPAGE_COMPASS_AS_ACTIVE_EXECUTION_IDENTITY",
+    "PROCEED_DIRECTLY_TO_LAWS_REPAIR",
+    "CONSTRUCT_OR_INSTALL_PRODUCT_REPAIR",
+    "MERGE_RECONCILIATION_BRANCH"
+  ],
+  "decisionDigest": {
+    "algorithm": "SHA-256(JSON.stringify(continuationDecision))",
+    "sha256": "8f9b9b68407b44ccaad23f4bade9eee3a3e4f36493b176ab7090b19003f517f2"
+  },
+  "assertions": {
+    "r0ThroughR7CustodyAccepted": true,
+    "evidenceReady": true,
+    "toolFunctionalPrecedentExists": true,
+    "pr136DirectMergeReady": false,
+    "correctedToolExtractionRequired": true,
+    "correctedToolConstructionAuthorized": true,
+    "correctedToolInstallationAuthorized": false,
+    "lawsRepairReady": false,
+    "lawsRepairBlockedByToolCompletion": true,
+    "productFilesChanged": 0,
+    "mainChanged": false,
+    "mergeAuthority": "NONE"
+  },
+  "stoppingBoundary": {
+    "proves": [
+      "RECONCILIATION_DECISION_CLOSED",
+      "FOUR_COMPASS_AND_HOME_AUXILIARY_BASELINES_ACCEPTED",
+      "NO_RECAPTURE_REQUIRED_FOR_EXISTING_RECONCILIATION_BASELINE",
+      "PR_136_UNCHANGED_INSTALLATION_NOT_ADMISSIBLE",
+      "PR_136_EVIDENCE_AND_IMPLEMENTATION_MECHANISMS_REUSABLE_THROUGH_EXTRACTION",
+      "CORRECTED_TOOL_REQUIRED_BEFORE_LAWS_REPAIR",
+      "CORRECTED_TOOL_EXTRACTION_AND_CONSTRUCTION_AUTHORIZED"
+    ],
+    "doesNotProve": [
+      "CORRECTED_TOOL_CONSTRUCTION_COMPLETE",
+      "CORRECTED_TOOL_EXECUTION_COMPLETE",
+      "CORRECTED_TOOL_VALIDATION_ACCEPTED",
+      "CORRECTED_TOOL_INSTALLATION_READY",
+      "TOOL_MERGE_AUTHORITY",
+      "LAWS_REPAIR_READINESS",
+      "PRODUCT_ROOT_CAUSE",
+      "MERGE_AUTHORITY"
+    ],
+    "authorizes": [
+      "T1_FOUR_COMPASS_BENCHMARK_TOOL_EXTRACTION_AUTHORITY_LOCK"
+    ]
+  },
+  "nextCheckpoint": "T1_FOUR_COMPASS_BENCHMARK_TOOL_EXTRACTION_AUTHORITY_LOCK"
+}

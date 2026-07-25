@@ -1,0 +1,116 @@
+name: Metaverse Benchmark CP5 Runtime Capture
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "verification/benchmark-corpus/inventory-pass-v1/checkpoint-05/runtime-capture.mjs"
+      - ".github/workflows/metaverse-benchmark-cp5-runtime-capture.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: metaverse-benchmark-cp5-runtime-capture-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    name: Capture deployed runtime and byte custody
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Record browser environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          google-chrome-stable --version || google-chrome --version || chromium --version
+          node --version
+
+      - name: Execute CP5 browser capture
+        id: capture
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          node verification/benchmark-corpus/inventory-pass-v1/checkpoint-05/runtime-capture.mjs | tee cp5-runtime-capture.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Anchor execution branch and commit
+        if: always()
+        shell: bash
+        env:
+          EXECUTION_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          if [ -f cp5-runtime-load-and-deployed-byte-custody.json ]; then
+            jq \
+              --arg branch "$EXECUTION_BRANCH" \
+              --arg commit "$EXECUTION_COMMIT" \
+              --arg runId "$WORKFLOW_RUN_ID" \
+              --arg runAttempt "$WORKFLOW_RUN_ATTEMPT" \
+              '.executionBranch=$branch | .executionCommit=$commit | .workflowRunId=$runId | .workflowRunAttempt=$runAttempt' \
+              cp5-runtime-load-and-deployed-byte-custody.json > cp5-runtime-load-and-deployed-byte-custody.anchored.json
+            mv cp5-runtime-load-and-deployed-byte-custody.anchored.json cp5-runtime-load-and-deployed-byte-custody.json
+          fi
+
+      - name: Write checkpoint summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "# CP5 Runtime Load and Deployed Byte Custody"
+            echo
+            echo "Execution branch: \`${{ github.event.pull_request.head.ref || github.ref_name }}\`"
+            echo
+            echo "Execution commit: \`${{ github.event.pull_request.head.sha || github.sha }}\`"
+            echo
+            echo "Capture exit code: \`${{ steps.capture.outputs.exit_code || 'not-returned' }}\`"
+            echo
+            if [ -f cp5-runtime-load-and-deployed-byte-custody.json ]; then
+              echo "Status: \`$(jq -r '.status' cp5-runtime-load-and-deployed-byte-custody.json)\`"
+              echo
+              echo '```json'
+              jq '{status,assertions,findings:{unresolvedExpectedPaths:.findings.unresolvedExpectedPaths,bodyIdentityFailures:.findings.bodyIdentityFailures,deployedRepositoryMismatches:.findings.deployedRepositoryMismatches,unexpectedExecutableLoads:.findings.unexpectedExecutableLoads,expectedRequestFailures:.findings.expectedRequestFailures,pageErrors:.findings.pageErrors}}' cp5-runtime-load-and-deployed-byte-custody.json
+              echo '```'
+            else
+              echo "Status: \`NO_ARTIFACT_PRODUCED\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload CP5 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-benchmark-cp5-runtime-custody
+          path: |
+            cp5-runtime-load-and-deployed-byte-custody.json
+            cp5-runtime-capture.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Enforce checkpoint result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f cp5-runtime-load-and-deployed-byte-custody.json
+          test "$(jq -r '.status' cp5-runtime-load-and-deployed-byte-custody.json)" = "PASS_RUNTIME_LOAD_AND_DEPLOYED_BYTE_CUSTODY"

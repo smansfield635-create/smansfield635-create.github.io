@@ -46,10 +46,6 @@
       {
         "path": "tools/h-earth-renderer-corridor-integration-harness.mjs",
         "gitBlob": "2215480882cc5dfab653cacb278cb2c1525c7bd3"
-      },
-      {
-        "path": "tools/h-earth-renderer-corridor-receipt-custody.mjs",
-        "gitBlob": "02f80939f7db693d58997a51ab33a7423b15baa3"
       }
     ]
   },

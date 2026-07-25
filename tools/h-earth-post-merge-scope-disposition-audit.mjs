@@ -71,9 +71,15 @@ const renewableFailureSetExact =
     [...expectedRenewableFailures].sort()
   );
 
+const currentBoundedOverlay =
+  './accepted-amendments/h-earth.repository-registry.renderer-presentation-scope-reconciliation.js';
+
+const priorBoundedOverlay =
+  './accepted-amendments/h-earth.repository-registry.camera-audit-continuity-scope-reconciliation.js';
+
 const loaderUsesCurrentBoundedChain =
   loaderText.includes(
-    "./accepted-amendments/h-earth.repository-registry.camera-audit-continuity-scope-reconciliation.js"
+    currentBoundedOverlay
   );
 
 const retainedLoaderResult =
@@ -107,7 +113,7 @@ const renewalEligible =
 
 if (renewalEligible) {
   receipt.receiptId =
-    'H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_RETAINED_STATE_AUDIT_RECEIPT_v3';
+    'H_EARTH_PR79_POST_MERGE_SCOPE_DISPOSITION_RETAINED_STATE_AUDIT_RECEIPT_v4';
 
   receipt.result =
     'PASS';
@@ -134,14 +140,20 @@ if (renewalEligible) {
 
   receipt.loaderContinuityRenewal = {
     renewalId:
-      'H_EARTH_RETAINED_STATE_LOADER_CONTINUITY_RENEWAL_v1',
+      'H_EARTH_RETAINED_STATE_LOADER_CONTINUITY_RENEWAL_v2',
     priorExpectation:
       'LOADER_MUST_REMAIN_EXACT_STEP_1_BLOB',
     renewedExpectation:
       'LOADER_MAY_ADVANCE_ONLY_THROUGH_A_BOUNDED_ACCEPTED_AMENDMENT_CHAIN_WHILE_BASE_REGISTRY_AND_BOOTSTRAP_REMAIN_UNCHANGED',
     loaderBlob,
+    priorBoundedOverlay:
+      `/h-earth-3d/registry/${priorBoundedOverlay.replace('./', '')}`,
     boundedOverlay:
-      '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.camera-audit-continuity-scope-reconciliation.js',
+      `/h-earth-3d/registry/${currentBoundedOverlay.replace('./', '')}`,
+    boundedOverlayChain: [
+      `/h-earth-3d/registry/${priorBoundedOverlay.replace('./', '')}`,
+      `/h-earth-3d/registry/${currentBoundedOverlay.replace('./', '')}`
+    ],
     baseRegistryCandidateUnchanged:
       receipt.checks.baseRegistryCandidateUnchanged === true,
     bootstrapUnchanged:

@@ -1,0 +1,52 @@
+name: Metaverse Benchmark CP6 Homepage Supplement
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "verification/benchmark-corpus/inventory-pass-v1/checkpoint-06/homepage-interaction-supplement.mjs"
+      - ".github/workflows/metaverse-benchmark-cp6-homepage-supplement.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  execute:
+    name: Resolve homepage interaction findings
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Execute homepage supplement
+        run: node verification/benchmark-corpus/inventory-pass-v1/checkpoint-06/homepage-interaction-supplement.mjs | tee cp6-homepage-interaction-supplement.log
+      - name: Anchor supplement identity
+        env:
+          EXECUTION_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+        run: |
+          jq --arg branch "$EXECUTION_BRANCH" --arg commit "$EXECUTION_COMMIT" --arg runId "$WORKFLOW_RUN_ID" \
+            '.execution={branch:$branch,commit:$commit,workflowRunId:$runId}' \
+            cp6-homepage-interaction-supplement.json > cp6-homepage-interaction-supplement.anchored.json
+          mv cp6-homepage-interaction-supplement.anchored.json cp6-homepage-interaction-supplement.json
+      - name: Upload supplement
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-benchmark-cp6-homepage-supplement
+          path: |
+            cp6-homepage-interaction-supplement.json
+            cp6-homepage-interaction-supplement.log
+          retention-days: 30
+      - name: Enforce supplement execution
+        run: |
+          test -f cp6-homepage-interaction-supplement.json
+          test "$(jq '.checks | length' cp6-homepage-interaction-supplement.json)" = "2"

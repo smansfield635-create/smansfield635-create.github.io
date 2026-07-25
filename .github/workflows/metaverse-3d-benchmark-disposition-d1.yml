@@ -1,0 +1,143 @@
+name: Metaverse 3D Benchmark Disposition D1 Native Evidence Intake
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - ".github/workflows/metaverse-3d-benchmark-disposition-d1.yml"
+      - "tools/metaverse-3d-benchmark-disposition-d1-*"
+      - "tools/metaverse-3d-benchmark-disposition-d0r-*"
+      - "verification/benchmark-corpus/four-compass-reconciliation-v1/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: metaverse-3d-benchmark-disposition-d1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-evidence-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      D1_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact D1 occurrence
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.D1_HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact head and D0R ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$D1_HEAD_SHA"
+          git merge-base --is-ancestor 5f505fd1caca9f85a5ef9aad9b2f863e291ee5ed HEAD
+          test "$(git hash-object tools/metaverse-3d-benchmark-disposition-d0r-contract.json)" = "5e29b55088f58cbbc54ba4a34c0d481f8e15918b"
+          test "$(git rev-parse a06f5ff8ab5c687d3c849d6944e4bdcc68490af8^{commit})" = "a06f5ff8ab5c687d3c849d6944e4bdcc68490af8"
+
+      - name: Verify and fetch exact external lane heads
+        shell: bash
+        run: |
+          set -euo pipefail
+          RECONCILIATION_HEAD="$(git ls-remote origin refs/heads/agent/metaverse-benchmark-four-compass-reconciliation-001 | awk '{print $1}')"
+          PROTOTYPE_HEAD="$(git ls-remote origin refs/heads/agent/archcoin-compass-calibration-workspace-001 | awk '{print $1}')"
+          AWARENESS_HEAD="$(git ls-remote origin refs/heads/agent/project-awareness-control-plane-merge-001 | awk '{print $1}')"
+          test "$RECONCILIATION_HEAD" = "a06f5ff8ab5c687d3c849d6944e4bdcc68490af8"
+          test "$PROTOTYPE_HEAD" = "775ae01438820abecd8bfc242d186ef1342fe9d6"
+          test "$AWARENESS_HEAD" = "d9e88e6cb1a9feccacc617b5d56d944a77979689"
+          git fetch --no-tags origin \
+            refs/heads/agent/archcoin-compass-calibration-workspace-001:refs/remotes/origin/d1-prototype
+          git fetch --no-tags origin \
+            refs/heads/agent/project-awareness-control-plane-merge-001:refs/remotes/origin/d1-awareness
+          test "$(git rev-parse refs/remotes/origin/d1-prototype)" = "775ae01438820abecd8bfc242d186ef1342fe9d6"
+          test "$(git rev-parse refs/remotes/origin/d1-awareness)" = "d9e88e6cb1a9feccacc617b5d56d944a77979689"
+          git cat-file -e 9b9e2ec306ce8fb9944d4c129b2967dfa3df4957^{commit}
+          git cat-file -e febf7ac9ca0bd69c791b70d3f914bbfff5403c1d^{commit}
+
+      - name: Validate D1 source syntax
+        run: |
+          node --check tools/metaverse-3d-benchmark-disposition-d1-intake.mjs
+          node --check tools/metaverse-3d-benchmark-disposition-d1-controls.mjs
+          node -e "JSON.parse(require('fs').readFileSync('tools/metaverse-3d-benchmark-disposition-d1-contract.json','utf8'))"
+
+      - name: Re-execute D0R authority controls
+        run: |
+          node tools/metaverse-3d-benchmark-disposition-d0r-controls.mjs > /tmp/d0r-reexecution.log
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const receipt = JSON.parse(await readFile('artifacts/metaverse-3d-benchmark-disposition-d0r/aggregate.receipt.json', 'utf8'));
+          if (receipt.status !== 'PASS' || receipt.controlCount !== 21 || receipt.passedControlCount !== 21) {
+            throw new Error('D1_PARENT_D0R_REEXECUTION_FAILED');
+          }
+          NODE
+
+      - name: Execute D1 native evidence controls
+        run: |
+          mkdir -p artifacts/metaverse-3d-benchmark-disposition-d1
+          node tools/metaverse-3d-benchmark-disposition-d1-controls.mjs \
+            > artifacts/metaverse-3d-benchmark-disposition-d1/execution.log
+
+      - name: Verify deterministic D1 receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFile } from 'node:fs/promises';
+          const receipt = JSON.parse(await readFile(
+            'artifacts/metaverse-3d-benchmark-disposition-d1/aggregate.receipt.json',
+            'utf8'
+          ));
+          if (receipt.status !== 'PASS') throw new Error('D1_RECEIPT_NOT_PASS');
+          if (receipt.controlCount !== 21 || receipt.passedControlCount !== 21) {
+            throw new Error('D1_CONTROL_COUNT_MISMATCH');
+          }
+          if (receipt.intakeReceipt?.sourceManifest?.length !== 21 ||
+              receipt.intakeReceipt?.nativeEvidenceInventory?.length !== 7) {
+            throw new Error('D1_INVENTORY_COUNT_MISMATCH');
+          }
+          const claims = receipt.claims ?? {};
+          if (claims.threeLaneIntakeEstablished !== true ||
+              claims.fourCompassCorpusCurrent !== true ||
+              claims.universalCompassPrototypeSeparate !== true ||
+              claims.universalCompassCurrentBrowserPassEstablished !== false ||
+              claims.projectAwarenessV1HistoricalOnly !== true ||
+              claims.crossLaneEvidenceTransferPerformed !== false) {
+            throw new Error('D1_LANE_CLAIMS_MISMATCH');
+          }
+          if (claims.evidenceNormalizationPerformed !== false ||
+              claims.dimensionClassificationPerformed !== false ||
+              claims.dispositionCompilationPerformed !== false ||
+              claims.productFilesChanged !== 0 ||
+              claims.mergePerformed !== false) {
+            throw new Error('D1_BOUNDARY_VIOLATED');
+          }
+          const stable = value => Array.isArray(value)
+            ? value.map(stable)
+            : value && typeof value === 'object'
+              ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])]))
+              : value;
+          const { deterministicReceiptSha256, ...body } = receipt;
+          const calculated = createHash('sha256')
+            .update(JSON.stringify(stable(body)))
+            .digest('hex');
+          if (calculated !== deterministicReceiptSha256) {
+            throw new Error('D1_SERIALIZED_RECEIPT_DIGEST_MISMATCH');
+          }
+          NODE
+
+      - name: Upload deterministic D1 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-3d-benchmark-disposition-d1-${{ env.D1_HEAD_SHA }}
+          path: artifacts/metaverse-3d-benchmark-disposition-d1/**
+          if-no-files-found: error
+          retention-days: 30

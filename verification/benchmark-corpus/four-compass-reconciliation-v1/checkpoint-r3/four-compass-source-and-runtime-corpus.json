@@ -1,0 +1,331 @@
+{
+  "artifactId": "METAVERSE_BENCHMARK_FOUR_COMPASS_SOURCE_AND_RUNTIME_CORPUS_PROJECTION_v1",
+  "phase": "PHASE_B_EVIDENCE_RECONSTRUCTION",
+  "checkpoint": "R3",
+  "status": "PASS_FOUR_COMPASS_SOURCE_AND_RUNTIME_CORPUS_PROJECTED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baselineMainCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "reconciliationBranch": "agent/metaverse-benchmark-four-compass-reconciliation-001",
+  "reconciliationParentCommit": "f304e19a2d53a98b510ce437d6fa65aad2a8539d",
+  "generatedAt": "2026-07-25T00:24:00-05:00",
+  "authorityInputs": [
+    {
+      "checkpoint": "R0",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r0/four-compass-reconciliation-authority-lock.json",
+      "gitBlob": "32fc7f07c5b8e4fdcdb80091c575f3ad57902a9d"
+    },
+    {
+      "checkpoint": "R1",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r1/four-compass-role-registry.json",
+      "gitBlob": "bcd893cb9f1efd441bad6da0aef828fd106ce482"
+    },
+    {
+      "checkpoint": "R2",
+      "path": "verification/benchmark-corpus/four-compass-reconciliation-v1/checkpoint-r2/cp0-through-cp7-authority-supersession-map.json",
+      "gitBlob": "49ae6af6cfa19b12a698098da79e4336497e4270"
+    }
+  ],
+  "historicalInputs": [
+    {
+      "checkpoint": "CP2",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-02/benchmark-route-and-occurrence-ledger.json",
+      "gitBlob": "68599e46f6f916c2338334685b2b4a4e128369a9",
+      "use": "ROUTE_ENTRY_AND_OCCURRENCE_IDENTITY"
+    },
+    {
+      "checkpoint": "CP3",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-03/benchmark-active-source-path-manifest.json",
+      "gitBlob": "cbd43e5e8a38fea28803c4f0156eb9c2082d5096",
+      "use": "ACTIVE_SOURCE_PATH_AND_LOAD_MODEL"
+    },
+    {
+      "checkpoint": "CP4",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-04/benchmark-source-custody-ledger.json",
+      "gitBlob": "ff3cd495e24482c73bf7f278fe6216c649d47b40",
+      "use": "EXPECTED_GIT_BLOB_CUSTODY"
+    },
+    {
+      "checkpoint": "CP5",
+      "path": "verification/benchmark-corpus/inventory-pass-v1/checkpoint-05/benchmark-runtime-load-and-deployed-byte-custody-ledger.json",
+      "gitBlob": "a3fae258bae3fb25ad337cb695ec36500c235e58",
+      "use": "EXECUTION_AND_SUMMARY_CUSTODY"
+    },
+    {
+      "checkpoint": "CP5_RAW_ARTIFACT",
+      "workflowRunId": "30142823055",
+      "executionCommit": "9acbc1cec235a2b9bd52557244fa9e2515c0e054",
+      "artifactId": "8615058451",
+      "artifactZipSha256": "43d9f9c9b6417525afd89075233d4ed76c41aa04b62d2d2c3645db0aa46a21ff",
+      "rawJsonByteLength": 1328151,
+      "rawJsonSha256": "66d0006337516454191cc8f96d8406539681dc299f27156868b3961999e99e28",
+      "use": "PER_ROUTE_RUNTIME_RESPONSE_AND_BODY_IDENTITY_ROWS"
+    }
+  ],
+  "projectionMethod": {
+    "browserRecapturePerformed": false,
+    "sourceEvidenceFilter": "INCLUDE_ONLY_MAIN_COMPASS_ARCHCOIN_COMPASS_SHOWROOM_AND_LAWS_LEGACY_ROWS_THEN_MAP_TO_R1_CANONICAL_IDS",
+    "excludedLegacyBenchmarkId": "HOMEPAGE_COMPASS",
+    "excludedRoute": "/home/",
+    "excludedEvidenceDisposition": "PRESERVED_FOR_R4_WEBSITE_HOME_RECEIVER_CONTROL",
+    "canonicalOrdering": "BENCHMARK_ID_ASCENDING_THEN_PATH_ASCENDING",
+    "perBenchmarkExpectedSourceSetDigest": "SHA-256(UTF8(CONCAT(path,NUL,expectedGitBlobSha1,LF)))",
+    "perBenchmarkDeployedRawSourceSetDigest": "SHA-256(UTF8(CONCAT(path,NUL,deployedRawGitBlobSha1,LF)))",
+    "perBenchmarkQueryIdentityDigest": "SHA-256(UTF8(CONCAT(path,NUL,commaJoinedSortedUniqueQueryIdentities,LF)))",
+    "uniqueExpectedSourceDigest": "SHA-256 over unique path-to-expected-blob rows in path order",
+    "uniqueDeployedRawSourceDigest": "SHA-256 over unique path-to-raw-deployed-blob rows in path order",
+    "canonicalOccurrenceDigests": "SHA-256 over canonicalBenchmarkId,NUL,path,NUL,value,LF rows"
+  },
+  "benchmarks": [
+    {
+      "benchmarkId": "ARCHCOIN_COMPASS",
+      "legacyBenchmarkId": null,
+      "route": "/products/archcoin/",
+      "referencePosture": "POSITIVE_DIRECT_MANIPULATION_REFERENCE",
+      "repositoryEntryPath": "products/archcoin/index.html",
+      "repositoryEntryGitBlobSha1": "fc1c0872fee5d0fc0caae5767cc9fb72e6850d8f",
+      "captureLabels": [
+        "DEFAULT_COLD",
+        "DEFAULT_WARM_RELOAD",
+        "REDUCED_COLD"
+      ],
+      "captureCount": 3,
+      "responseCount": 76,
+      "sourcePathOccurrenceCount": 20,
+      "sourceObservationCount": 64,
+      "capturedBodyObservationCount": 60,
+      "exactBodyMatchObservationCount": 57,
+      "boundedBodyMatchObservationCount": 3,
+      "exactSourcePathCount": 19,
+      "boundedSourcePathCount": 1,
+      "unresolvedExpectedPathCount": 0,
+      "bodyIdentityFailureCount": 0,
+      "unresolvedMismatchCount": 0,
+      "unexpectedExecutableLoadCount": 0,
+      "requestFailureCount": 0,
+      "pageErrorCount": 0,
+      "conditionalLoadDecisions": {
+        "skippedUnderReducedMotion": [],
+        "addedUnderReducedMotion": [],
+        "showroomCosmosDefaultLoaded": null,
+        "showroomCosmosReducedSkipped": null
+      },
+      "digests": {
+        "expectedSourceSetDigest": "58866ba93aedcd07822d4e3ebd5f7c7613d84d0dd51bbb00222ca93f0a05f8b6",
+        "deployedRawSourceSetDigest": "212e083f6cf7c3e8b3158df76f19e9755354e62338b9b35ff22f2e89ad331984",
+        "queryIdentityDigest": "5e97fa554766c0a038cdf1584384ec7d8a7ceae1f57ac85982379e50884a294c"
+      }
+    },
+    {
+      "benchmarkId": "LAWS_COMPASS",
+      "legacyBenchmarkId": "LAWS_CHAMBER_POST_PR128",
+      "route": "/laws/",
+      "referencePosture": "NEGATIVE_INTERACTION_REGRESSION_REFERENCE",
+      "repositoryEntryPath": "laws/index.html",
+      "repositoryEntryGitBlobSha1": "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260",
+      "captureLabels": [
+        "DEFAULT_COLD",
+        "DEFAULT_WARM_RELOAD",
+        "REDUCED_COLD"
+      ],
+      "captureCount": 3,
+      "responseCount": 43,
+      "sourcePathOccurrenceCount": 11,
+      "sourceObservationCount": 37,
+      "capturedBodyObservationCount": 33,
+      "exactBodyMatchObservationCount": 30,
+      "boundedBodyMatchObservationCount": 3,
+      "exactSourcePathCount": 10,
+      "boundedSourcePathCount": 1,
+      "unresolvedExpectedPathCount": 0,
+      "bodyIdentityFailureCount": 0,
+      "unresolvedMismatchCount": 0,
+      "unexpectedExecutableLoadCount": 0,
+      "requestFailureCount": 0,
+      "pageErrorCount": 0,
+      "conditionalLoadDecisions": {
+        "skippedUnderReducedMotion": [],
+        "addedUnderReducedMotion": [],
+        "showroomCosmosDefaultLoaded": null,
+        "showroomCosmosReducedSkipped": null
+      },
+      "digests": {
+        "expectedSourceSetDigest": "61373bdfb8b7376cf5d67cca5da99a3c2d502ae38a1828ac96726906367d53b5",
+        "deployedRawSourceSetDigest": "63c954903618ce15e1e9229d66fc309d15ec559a1708ed35718a6d0de684761a",
+        "queryIdentityDigest": "af63dd85ee157cef68f87f9befcd0b57857591f4bf0c799c641c38b5e965d489"
+      }
+    },
+    {
+      "benchmarkId": "MAIN_COMPASS",
+      "legacyBenchmarkId": null,
+      "route": "/",
+      "referencePosture": "POSITIVE_ARCHITECTURE_REFERENCE",
+      "repositoryEntryPath": "index.html",
+      "repositoryEntryGitBlobSha1": "3e64bd9e36dbed25e57adc706c76e689c215910f",
+      "captureLabels": [
+        "DEFAULT_COLD",
+        "DEFAULT_WARM_RELOAD",
+        "REDUCED_COLD"
+      ],
+      "captureCount": 3,
+      "responseCount": 29,
+      "sourcePathOccurrenceCount": 6,
+      "sourceObservationCount": 22,
+      "capturedBodyObservationCount": 18,
+      "exactBodyMatchObservationCount": 15,
+      "boundedBodyMatchObservationCount": 3,
+      "exactSourcePathCount": 5,
+      "boundedSourcePathCount": 1,
+      "unresolvedExpectedPathCount": 0,
+      "bodyIdentityFailureCount": 0,
+      "unresolvedMismatchCount": 0,
+      "unexpectedExecutableLoadCount": 0,
+      "requestFailureCount": 0,
+      "pageErrorCount": 0,
+      "conditionalLoadDecisions": {
+        "skippedUnderReducedMotion": [
+          "favicon.ico"
+        ],
+        "addedUnderReducedMotion": [],
+        "showroomCosmosDefaultLoaded": null,
+        "showroomCosmosReducedSkipped": null
+      },
+      "digests": {
+        "expectedSourceSetDigest": "a53decf01d8d9a5e07496291a73af13d364375f9da3dd607983eb578dc7ff522",
+        "deployedRawSourceSetDigest": "76daee48f4453ee17b28dd3d7a5a8454446ac968ff75fcc060c1d68e450c6f37",
+        "queryIdentityDigest": "0b4b2a2e934286f867358b15c1f21d9b3481ae3644ff7e0e2349629597f24293"
+      }
+    },
+    {
+      "benchmarkId": "SHOWROOM_COMPASS",
+      "legacyBenchmarkId": "SHOWROOM",
+      "route": "/showroom/",
+      "referencePosture": "POSITIVE_SPATIAL_REALIZATION_REFERENCE",
+      "repositoryEntryPath": "showroom/index.html",
+      "repositoryEntryGitBlobSha1": "099533a02da909626b129e2a9081319788e224f1",
+      "captureLabels": [
+        "DEFAULT_COLD",
+        "DEFAULT_WARM_RELOAD",
+        "REDUCED_COLD"
+      ],
+      "captureCount": 3,
+      "responseCount": 78,
+      "sourcePathOccurrenceCount": 23,
+      "sourceObservationCount": 72,
+      "capturedBodyObservationCount": 68,
+      "exactBodyMatchObservationCount": 65,
+      "boundedBodyMatchObservationCount": 3,
+      "exactSourcePathCount": 22,
+      "boundedSourcePathCount": 1,
+      "unresolvedExpectedPathCount": 0,
+      "bodyIdentityFailureCount": 0,
+      "unresolvedMismatchCount": 0,
+      "unexpectedExecutableLoadCount": 0,
+      "requestFailureCount": 0,
+      "pageErrorCount": 0,
+      "conditionalLoadDecisions": {
+        "skippedUnderReducedMotion": [
+          "showroom/index.cosmos.js"
+        ],
+        "addedUnderReducedMotion": [],
+        "showroomCosmosDefaultLoaded": true,
+        "showroomCosmosReducedSkipped": true
+      },
+      "digests": {
+        "expectedSourceSetDigest": "5b56918d122daaa8285bab7f736b6059a37089af08a394cac8cc6cf6976e08f5",
+        "deployedRawSourceSetDigest": "a45f4040f4871c8f50d93409530c36d657c9256feb933f354b80260a2a5be0ad",
+        "queryIdentityDigest": "da810847b2e3c7b5b6235e1082322fc6f1c24af1d6e81a7f3faeb4b566942b2c"
+      }
+    }
+  ],
+  "aggregate": {
+    "canonicalCompassCount": 4,
+    "positiveReferenceCount": 3,
+    "negativeReferenceCount": 1,
+    "captureCount": 12,
+    "responseCount": 226,
+    "sourcePathOccurrenceCount": 60,
+    "uniqueSourcePathCount": 57,
+    "sourceObservationCount": 195,
+    "capturedBodyObservationCount": 179,
+    "exactBodyMatchObservationCount": 167,
+    "boundedBodyMatchObservationCount": 12,
+    "exactSourcePathOccurrenceCount": 56,
+    "boundedSourcePathOccurrenceCount": 4,
+    "rawMismatchSourcePathOccurrenceCount": 4,
+    "unresolvedExpectedPathCount": 0,
+    "bodyIdentityFailureCount": 0,
+    "unresolvedMismatchCount": 0,
+    "unexpectedExecutableLoadCount": 0,
+    "requestFailureCount": 0,
+    "pageErrorCount": 0,
+    "conflictingExpectedPathBlobIdentityCount": 0,
+    "conflictingRawPathBlobIdentityCount": 0,
+    "digests": {
+      "uniqueExpectedGitBlobDigest": "d0f2045c153bb403a81b55e5425933ed5592040eb822c555237221022947a7a4",
+      "uniqueDeployedRawGitBlobDigest": "c6a0e38002abfa5a3fa3a51b15e152f30cc94e741b7fa69afa09b517e64750af",
+      "legacyFourRouteQueryOccurrenceDigest": "a17d2cc38b41d3f5ee3dd6320fb93d77993f710ca8733a7963844e94348fb9f2",
+      "canonicalFourCompassQueryOccurrenceDigest": "aef2c19d9e5d96a3900a9c2e4d92324f7fedd4a7d0c72ed1e523b2701033e556",
+      "canonicalExpectedSourceOccurrenceDigest": "62d937fc45caa0a3965d698d1eb653e778905c7d6c4f6b11a5c045caee3b8be2",
+      "canonicalDeployedRawSourceOccurrenceDigest": "038aec6c85c5d7e1b7220c67d755e01a9e39f9237a77a976eb3dabaec6af715d",
+      "canonicalPerBenchmarkDigestManifest": "d821e45ecdaad721fed015af01320f4ccd5f2ef67f054169da2d88cfce1b4970"
+    }
+  },
+  "excludedAuxiliaryInputBoundary": {
+    "legacyInvalidBenchmarkId": "HOMEPAGE_COMPASS",
+    "controlId": "WEBSITE_HOME_RECEIVER_CONTROL",
+    "route": "/home/",
+    "captureCount": 3,
+    "responseCount": 13,
+    "sourcePathOccurrenceCount": 1,
+    "sourcePath": "home/index.html",
+    "expectedGitBlobSha1": "8755512c10f78b6a4c3bc825eba8a5d62cb9b082",
+    "deployedRawGitBlobSha1": "999a9ac47d55f725ce98c75d5425e9b58e6f5933",
+    "custodyClassification": "BOUNDED_CLOUDFLARE_HTML_TRANSFORMATION",
+    "includedInCompassCounts": false,
+    "includedInCompassDigests": false,
+    "evidenceDeleted": false,
+    "nextAuthorizedDisposition": "R4_WEBSITE_HOME_RECEIVER_CONTROL_REPOSITIONING"
+  },
+  "assertions": {
+    "allFourCanonicalCompassRoutesProjected": true,
+    "allFourRepositoryEntryIdentitiesPreserved": true,
+    "allSixtySourcePathOccurrencesProjected": true,
+    "allFiftySevenUniqueSourcePathsResolved": true,
+    "allExpectedRuntimeLoadsAccountedFor": true,
+    "allExpectedBodiesCapturedAtLeastOnce": true,
+    "allRawMismatchesBoundedToEntryHtmlEdgeTransformation": true,
+    "allFourEntryHtmlTransformationsResolvedToExactRepositoryIdentity": true,
+    "showroomReducedMotionConditionalDecisionPreserved": true,
+    "homeExcludedFromCompassCounts": true,
+    "homeExcludedFromCompassDigests": true,
+    "homeEvidencePreservedForR4": true,
+    "browserRecapturePerformed": false,
+    "productFilesChanged": 0,
+    "mainChanged": false,
+    "lawsRepairStarted": false,
+    "mergeAuthority": "NONE"
+  },
+  "stoppingBoundary": {
+    "proves": [
+      "FOUR_COMPASS_ROUTE_ENTRY_AND_ACTIVE_SOURCE_CORPUS",
+      "FOUR_COMPASS_EXPECTED_GIT_BLOB_CUSTODY",
+      "FOUR_COMPASS_DEPLOYED_RAW_BODY_IDENTITY_PROJECTION",
+      "FOUR_COMPASS_RUNTIME_RESPONSE_AND_CAPTURE_COUNTS",
+      "FOUR_COMPASS_SOURCE_RUNTIME_DIGEST_RECOMPUTATION",
+      "HOME_EXCLUSION_FROM_COMPASS_SOURCE_RUNTIME_AGGREGATES",
+      "NO_BROWSER_RECAPTURE_REQUIRED_FOR_R3_PROJECTION"
+    ],
+    "doesNotProve": [
+      "HOME_AUXILIARY_CONTROL_LEDGER_COMPLETENESS",
+      "FOUR_COMPASS_INTERACTION_AGGREGATES",
+      "FOUR_COMPASS_VISUAL_AGGREGATES",
+      "GLOBAL_RECAPTURE_NOT_REQUIRED",
+      "TOOL_MERGE_READINESS",
+      "LAWS_REPAIR_READINESS"
+    ],
+    "authorizes": [
+      "R4_WEBSITE_HOME_RECEIVER_CONTROL_REPOSITIONING"
+    ]
+  },
+  "nextCheckpoint": "R4_WEBSITE_HOME_RECEIVER_CONTROL_REPOSITIONING"
+}

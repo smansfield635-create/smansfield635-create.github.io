@@ -1,5 +1,5 @@
 export const H_EARTH_RENDERER_CORRIDOR_OBSERVATION_CONTRACT_ID =
-  'H_EARTH_RENDERER_CORRIDOR_TERMINAL_AND_MEASUREMENT_OBSERVATION_v3';
+  'H_EARTH_RENDERER_CORRIDOR_TERMINAL_MEASUREMENT_AND_PREMOUNT_IDENTITY_OBSERVATION_v4';
 
 export const LAWFUL_TERMINAL_ROUTE_STATUSES = Object.freeze([
   'PUBLIC_STAGE_RENDERER_MOUNTED',
@@ -26,6 +26,27 @@ export const H_EARTH_RENDERER_CORRIDOR_MEASUREMENT_SOURCES = Object.freeze({
   UNRESOLVED: 'UNRESOLVED'
 });
 
+export const H_EARTH_RENDERER_CORRIDOR_IDENTITY_EVIDENCE_ROOTS = Object.freeze({
+  CONSTRUCT_RECEIPT: 'CONSTRUCT_RECEIPT',
+  HTML_ENTRY_RECEIPT: 'HTML_ENTRY_RECEIPT',
+  BOOTSTRAP_RECEIPT: 'BOOTSTRAP_RECEIPT',
+  BOOTSTRAP_COMPLETION: 'BOOTSTRAP_COMPLETION',
+  BOOTSTRAP_STATUS: 'BOOTSTRAP_STATUS',
+  MOUNT_RECEIPT: 'MOUNT_RECEIPT'
+});
+
+export const H_EARTH_RENDERER_CORRIDOR_IDENTITY_PRESERVATION_STATES =
+  Object.freeze({
+    PREMOUNT_IDENTITY_PRESERVED_WITHOUT_MOUNT:
+      'PREMOUNT_IDENTITY_PRESERVED_WITHOUT_MOUNT',
+    PREMOUNT_IDENTITY_PRESERVED_THROUGH_MOUNT:
+      'PREMOUNT_IDENTITY_PRESERVED_THROUGH_MOUNT',
+    MOUNT_ONLY_IDENTITY_OBSERVED:
+      'MOUNT_ONLY_IDENTITY_OBSERVED',
+    IDENTITY_UNRESOLVED:
+      'IDENTITY_UNRESOLVED'
+  });
+
 const TERMINAL_SIGNAL_BY_ROUTE_STATUS = Object.freeze({
   PUBLIC_STAGE_RENDERER_MOUNTED:
     H_EARTH_RENDERER_CORRIDOR_TERMINAL_SIGNALS.RENDERER_MOUNTED,
@@ -34,6 +55,36 @@ const TERMINAL_SIGNAL_BY_ROUTE_STATUS = Object.freeze({
   PUBLIC_STAGE_ERROR:
     H_EARTH_RENDERER_CORRIDOR_TERMINAL_SIGNALS.PUBLIC_STAGE_ERROR
 });
+
+const PREMOUNT_IDENTITY_ROOT_DESCRIPTORS = Object.freeze([
+  Object.freeze({
+    id: H_EARTH_RENDERER_CORRIDOR_IDENTITY_EVIDENCE_ROOTS.CONSTRUCT_RECEIPT,
+    property: 'constructReceipt'
+  }),
+  Object.freeze({
+    id: H_EARTH_RENDERER_CORRIDOR_IDENTITY_EVIDENCE_ROOTS.HTML_ENTRY_RECEIPT,
+    property: 'htmlEntryReceipt'
+  }),
+  Object.freeze({
+    id: H_EARTH_RENDERER_CORRIDOR_IDENTITY_EVIDENCE_ROOTS.BOOTSTRAP_RECEIPT,
+    property: 'bootstrapReceipt'
+  }),
+  Object.freeze({
+    id: H_EARTH_RENDERER_CORRIDOR_IDENTITY_EVIDENCE_ROOTS.BOOTSTRAP_COMPLETION,
+    property: 'bootstrapCompletion'
+  }),
+  Object.freeze({
+    id: H_EARTH_RENDERER_CORRIDOR_IDENTITY_EVIDENCE_ROOTS.BOOTSTRAP_STATUS,
+    property: 'bootstrapStatus'
+  })
+]);
+
+const MOUNT_IDENTITY_ROOT_DESCRIPTORS = Object.freeze([
+  Object.freeze({
+    id: H_EARTH_RENDERER_CORRIDOR_IDENTITY_EVIDENCE_ROOTS.MOUNT_RECEIPT,
+    property: 'mountReceipt'
+  })
+]);
 
 const SOURCE_OBJECT_ID_PATTERN = /OBJ_\d{3}_[A-Z0-9_]+/g;
 
@@ -61,6 +112,30 @@ function collectSourceObjectIds(value, output, seen = new WeakSet()) {
   for (const nested of Object.values(value)) {
     collectSourceObjectIds(nested, output, seen);
   }
+}
+
+function collectIdentityEvidence(observation, descriptors, phase) {
+  const records = [];
+  const aggregateIds = [];
+
+  for (const descriptor of descriptors) {
+    const root = observation?.[descriptor.property] ?? null;
+    const rootIds = [];
+    collectSourceObjectIds(root, rootIds);
+    const sourceObjectIds = Object.freeze(uniqueSorted(rootIds));
+    aggregateIds.push(...sourceObjectIds);
+    records.push(Object.freeze({
+      evidenceRootId: descriptor.id,
+      phase,
+      present: root !== null,
+      sourceObjectIds
+    }));
+  }
+
+  return Object.freeze({
+    records: Object.freeze(records),
+    sourceObjectIds: Object.freeze(uniqueSorted(aggregateIds))
+  });
 }
 
 function firstResolvedCount(candidates) {
@@ -190,6 +265,59 @@ export function resolveHEarthRendererCorridorMeasurements(observation = {}) {
   });
 }
 
+export function resolveHEarthRendererCorridorObjectIdentity(observation = {}) {
+  const preMountEvidence = collectIdentityEvidence(
+    observation,
+    PREMOUNT_IDENTITY_ROOT_DESCRIPTORS,
+    'PRE_MOUNT'
+  );
+  const mountEvidence = collectIdentityEvidence(
+    observation,
+    MOUNT_IDENTITY_ROOT_DESCRIPTORS,
+    'MOUNT'
+  );
+  const observedObjectIds = Object.freeze(uniqueSorted([
+    ...preMountEvidence.sourceObjectIds,
+    ...mountEvidence.sourceObjectIds
+  ]));
+  const identityEstablishedBeforeMount =
+    preMountEvidence.sourceObjectIds.length > 0;
+  const mountEvidenceRequiredForIdentity =
+    !identityEstablishedBeforeMount &&
+    mountEvidence.sourceObjectIds.length > 0;
+  const rendererConstructionSucceeded =
+    observation?.rendererConstructionSucceeded === true;
+  const rendererMountSucceeded =
+    observation?.rendererMountSucceeded === true;
+
+  const preservationState = identityEstablishedBeforeMount
+    ? rendererMountSucceeded
+      ? H_EARTH_RENDERER_CORRIDOR_IDENTITY_PRESERVATION_STATES
+          .PREMOUNT_IDENTITY_PRESERVED_THROUGH_MOUNT
+      : H_EARTH_RENDERER_CORRIDOR_IDENTITY_PRESERVATION_STATES
+          .PREMOUNT_IDENTITY_PRESERVED_WITHOUT_MOUNT
+    : mountEvidenceRequiredForIdentity
+      ? H_EARTH_RENDERER_CORRIDOR_IDENTITY_PRESERVATION_STATES
+          .MOUNT_ONLY_IDENTITY_OBSERVED
+      : H_EARTH_RENDERER_CORRIDOR_IDENTITY_PRESERVATION_STATES
+          .IDENTITY_UNRESOLVED;
+
+  return Object.freeze({
+    evidenceRoots: Object.freeze([
+      ...preMountEvidence.records,
+      ...mountEvidence.records
+    ]),
+    preMountObservedObjectIds: preMountEvidence.sourceObjectIds,
+    mountObservedObjectIds: mountEvidence.sourceObjectIds,
+    observedObjectIds,
+    identityEstablishedBeforeMount,
+    mountEvidenceRequiredForIdentity,
+    rendererConstructionSucceeded,
+    rendererMountSucceeded,
+    preservationState
+  });
+}
+
 export function classifyHEarthTerminalRouteState({
   routeStatus = null,
   htmlEntryFailure = null
@@ -249,21 +377,10 @@ export async function waitForHEarthTerminalRouteState(
 }
 
 export function enrichHEarthRouteObservation(observation = {}) {
-  const identityRoots = [
-    observation.constructReceipt,
-    observation.mountReceipt,
-    observation.htmlEntryReceipt,
-    observation.bootstrapReceipt,
-    observation.bootstrapCompletion,
-    observation.bootstrapStatus
-  ];
-  const sourceObjectIds = [];
-  for (const root of identityRoots) {
-    collectSourceObjectIds(root, sourceObjectIds);
-  }
-
   const measurements =
     resolveHEarthRendererCorridorMeasurements(observation);
+  const objectIdentity =
+    resolveHEarthRendererCorridorObjectIdentity(observation);
   const terminalState = classifyHEarthTerminalRouteState({
     routeStatus: observation.routeStatus,
     htmlEntryFailure: observation.htmlEntryFailure
@@ -271,7 +388,8 @@ export function enrichHEarthRouteObservation(observation = {}) {
 
   return Object.freeze({
     ...observation,
-    observedObjectIds: uniqueSorted(sourceObjectIds),
+    observedObjectIds: objectIdentity.observedObjectIds,
+    objectIdentity,
     measurements,
     counts: Object.freeze({
       ...(observation.counts ?? {}),

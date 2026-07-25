@@ -30,6 +30,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p artifacts/h-earth-compositor-registry
+          exec > >(tee artifacts/h-earth-compositor-registry/source-boundary.log) 2>&1
+          set -x
           git fetch origin main:refs/remotes/origin/main
           test "$(git merge-base HEAD origin/main)" = "27256abbbd508ff33b05966104eb26c3e73dfe97"
           test "$(git rev-parse HEAD:showroom/globe/h-earth/compositor.js)" = "480cd4519a4d3cc364be4b16acc7791aadb5071c"
@@ -44,7 +47,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/h-earth-compositor-registry
           node --experimental-default-type=module \
             tools/h-earth-repository-registry-auto-preflight.mjs \
             --path /showroom/globe/h-earth/compositor.js \

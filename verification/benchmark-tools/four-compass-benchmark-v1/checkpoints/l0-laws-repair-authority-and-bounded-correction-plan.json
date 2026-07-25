@@ -1,0 +1,86 @@
+{
+  "artifactId": "L0_LAWS_REPAIR_AUTHORITY_AND_BOUNDED_CORRECTION_PLAN_v1",
+  "checkpoint": "L0",
+  "status": "PASS_AUTHORITY_AND_BOUNDED_PLAN_LOCKED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-projected-clearance-bounded-repair-001",
+  "parentMainCommit": "8d8199e147c944bceed021c9a7f5585ec146e7a6",
+  "t5ReceiptBlob": "ad76720ed00796ca90f6e180d07ac67ef36caa71",
+  "authority": {
+    "t5Complete": true,
+    "toolInstalledOnMain": true,
+    "lawsMutationAuthorizedAfterVerifiedMerge": true,
+    "productMutationStartedAtL0": false,
+    "mergeAuthorityAtL0": "NONE"
+  },
+  "evidenceBoundary": {
+    "currentCrystalsBlob": "cd06f18bf8384efc97fcabeec5a4de94210c87a8",
+    "currentCompositorBlob": "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa",
+    "currentHtmlBlob": "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260",
+    "currentHarnessBlob": "9339b8cfce13fb73805f1b4515bb7e9cc303e9d6",
+    "currentReceiptBlob": "9ac18b0e2da3b24331958bf5caa583129d5f1f95",
+    "declaredCommonRadius": 1.4,
+    "declaredProjectedClearanceMarginPx": 8,
+    "staticReceiptWorstResidualClearancePx": 8.99413362683267,
+    "staticReceiptProjectedPlanetRadiusPx": 48.71802154423952,
+    "benchmarkObservedCompassBoundsPx": {
+      "desktopWidth": 248,
+      "desktopHeight": 248
+    },
+    "finding": "STATIC_PROJECTION_FIXTURE_DOES_NOT_USE_RUNTIME_DOM_COMPASS_BOUNDS",
+    "runtimeGap": "PROJECTED_CLEARANCE_MARGIN_DECLARED_BUT_NOT_CONSUMED_BY_CLUSTER_POSITION_RESOLUTION"
+  },
+  "correctionContract": {
+    "modelPreserved": "EUCLIDEAN_COMMON_RADIUS_ORBIT",
+    "memberCountPreserved": 4,
+    "commonCenterPreserved": true,
+    "singleSharedRadiusPerFrameRequired": true,
+    "minimumCommonRadius": 1.4,
+    "localPlanePreserved": "XY",
+    "phasePreserved": "-PI_OVER_2",
+    "adjacentSeparationDegreesPreserved": 90,
+    "oppositeSeparationDegreesPreserved": 180,
+    "maximumTiltRadiansPreserved": 0.3,
+    "projectedClearanceMarginPx": 8,
+    "runtimeClearanceSource": "DGB_LAWS_COMPOSITOR.getCompassFieldBounds_and_projectWorldPoint",
+    "perMemberOffsetsForbidden": true,
+    "individualMemberRadiusForbidden": true
+  },
+  "authorizedMutationSet": [
+    "laws/index.crystals.js",
+    "laws/index.html",
+    "laws/validation/laws.orbit-direct-manipulation.harness.mjs",
+    "laws/validation/laws.orbit-direct-manipulation.receipt.json"
+  ],
+  "protectedPaths": [
+    "laws/index.controller.js",
+    "laws/index.compositor.js",
+    "laws/index.planet.js",
+    "laws/index.interactions.js",
+    "laws/index.interactions.source.round4.js",
+    "laws/index.css"
+  ],
+  "preservation": {
+    "lawContentChanged": false,
+    "routesChanged": false,
+    "labelsChanged": false,
+    "mainConstellationGeometryChanged": false,
+    "controllerAuthorityChanged": false,
+    "compositorAuthorityChanged": false,
+    "planetAuthorityChanged": false,
+    "interactionDirectionChanged": false,
+    "returnToOrbitChanged": false,
+    "swipeToConstellationChanged": false,
+    "disclosureBehaviorChanged": false,
+    "fourCompassAndHomeLaneSeparationChanged": false
+  },
+  "checkpoints": [
+    "L0_AUTHORITY_AND_PLAN",
+    "L1_SOURCE_CUSTODY_AND_TRANSFORMATION_LOCK",
+    "L2_BOUNDED_PRODUCT_IMPLEMENTATION",
+    "L3_STATIC_AND_GEOMETRY_VALIDATION",
+    "L4_INSTALLED_TOOL_PR_EXECUTION",
+    "L5_EVIDENCE_ACCEPTANCE_AND_MERGE_DECISION"
+  ],
+  "nextCheckpoint": "L1_SOURCE_CUSTODY_AND_TRANSFORMATION_LOCK"
+}

@@ -57,7 +57,7 @@ jobs:
             git merge-base --is-ancestor "$sha" HEAD
           done
           test "$(git -C .h7-renderer-tool-source rev-parse HEAD)" = "546f6fc05174347ac797837d0b4844a2164c3cb3"
-          mkdir -p artifacts/h-earth-capacity-camera-h7
+          mkdir -p artifacts/h-earth-capacity-camera-h7 artifacts/h-earth-capacity-camera-h6
           python - <<'PY'
           import json, subprocess
           expected = [
@@ -74,7 +74,9 @@ jobs:
             subprocess.check_call(["cp",source,path])
             records.append({"path":path,"gitBlob":actual})
           receipt={"sourceCommit":"546f6fc05174347ac797837d0b4844a2164c3cb3","files":records,"copiedIntoRepositoryHistory":False,"workspaceOnly":True}
-          open("artifacts/h-earth-capacity-camera-h7/renderer-tool-source-custody.json","w").write(json.dumps(receipt,indent=2)+"\n")
+          payload=json.dumps(receipt,indent=2)+"\n"
+          open("artifacts/h-earth-capacity-camera-h7/renderer-tool-source-custody.json","w").write(payload)
+          open("artifacts/h-earth-capacity-camera-h6/renderer-tool-source-custody.json","w").write(payload)
           PY
 
       - name: Validate final checkpoint source syntax

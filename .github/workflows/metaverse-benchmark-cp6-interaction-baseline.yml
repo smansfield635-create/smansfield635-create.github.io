@@ -1,0 +1,111 @@
+name: Metaverse Benchmark CP6 Interaction Baseline
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "verification/benchmark-corpus/inventory-pass-v1/checkpoint-06/interaction-execution-baseline.mjs"
+      - ".github/workflows/metaverse-benchmark-cp6-interaction-baseline.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: metaverse-benchmark-cp6-interaction-baseline-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  execute:
+    name: Execute deployed interaction baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Execute CP6 browser interaction baseline
+        id: execute
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          node verification/benchmark-corpus/inventory-pass-v1/checkpoint-06/interaction-execution-baseline.mjs | tee cp6-interaction-execution-baseline.log
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Anchor execution identity
+        if: always()
+        shell: bash
+        env:
+          EXECUTION_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          if [ -f cp6-interaction-execution-baseline.json ]; then
+            jq \
+              --arg branch "$EXECUTION_BRANCH" \
+              --arg commit "$EXECUTION_COMMIT" \
+              --arg runId "$WORKFLOW_RUN_ID" \
+              --arg runAttempt "$WORKFLOW_RUN_ATTEMPT" \
+              '.execution={branch:$branch,commit:$commit,workflowRunId:$runId,workflowRunAttempt:$runAttempt}' \
+              cp6-interaction-execution-baseline.json > cp6-interaction-execution-baseline.anchored.json
+            mv cp6-interaction-execution-baseline.anchored.json cp6-interaction-execution-baseline.json
+          fi
+
+      - name: Write checkpoint summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "# CP6 Interaction Execution Baseline"
+            echo
+            echo "Execution branch: \`${{ github.event.pull_request.head.ref || github.ref_name }}\`"
+            echo
+            echo "Execution commit: \`${{ github.event.pull_request.head.sha || github.sha }}\`"
+            echo
+            echo "Harness exit code: \`${{ steps.execute.outputs.exit_code || 'not-returned' }}\`"
+            echo
+            if [ -f cp6-interaction-execution-baseline.json ]; then
+              echo "Status: \`$(jq -r '.status' cp6-interaction-execution-baseline.json)\`"
+              echo
+              echo '```json'
+              jq '{status,interactionBaselineDigest,assertions,benchmarkSummaries,productFindings,harnessFailures}' cp6-interaction-execution-baseline.json
+              echo '```'
+            else
+              echo "Status: \`NO_ARTIFACT_PRODUCED\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload CP6 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metaverse-benchmark-cp6-interaction-baseline
+          path: |
+            cp6-interaction-execution-baseline.json
+            cp6-interaction-execution-baseline.log
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce checkpoint result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f cp6-interaction-execution-baseline.json
+          test "$(jq -r '.status' cp6-interaction-execution-baseline.json)" = "PASS_INTERACTION_EXECUTION_BASELINE"
+          test "$(jq -r '.assertions.allFiveRoutesExecuted' cp6-interaction-execution-baseline.json)" = "true"
+          test "$(jq -r '.assertions.harnessFailureCount' cp6-interaction-execution-baseline.json)" = "0"

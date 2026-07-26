@@ -152,6 +152,7 @@ function updateHud(state, frame, plan, raster) {
       frame.sameWorldToCameraTransformForTerrainAndVegetation,
     singlePhysicalDepthDomainExecuted: raster.singlePhysicalDepthDomainExecuted,
     singleSkyAuthorityMaterialized: raster.singleSkyAuthorityMaterialized,
+    sunDiscIntegrationActive: frame.environment.sunDisc.visible === true,
     sunDiscMaterialized: raster.sunDiscMaterialized,
     alphaClosed: raster.alphaClosed,
     publicRouteBranchExecution: true,

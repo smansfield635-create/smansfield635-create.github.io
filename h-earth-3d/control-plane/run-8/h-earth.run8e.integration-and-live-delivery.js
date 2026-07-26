@@ -2,10 +2,10 @@
  * H_EARTH_RUN_8E_INTEGRATION_AND_LIVE_DELIVERY_CONTROL_v1
  *
  * Governs the bounded Run 8E integration occurrence. Engineering integration,
- * branch execution, baseline comparison, ordered Run 8 stack promotion, and
- * deployment reconciliation may be established independently; physical
- * Samsung-device proof and live-browser identity remain separate closure
- * conditions.
+ * branch execution, baseline comparison, ordered Run 8 stack promotion,
+ * deployment reconciliation, and live-browser identity may be established
+ * independently; physical Samsung-device proof remains the final separate
+ * closure condition.
  */
 
 const freeze = (value, seen = new WeakSet()) => {
@@ -26,6 +26,8 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     'agent/h-earth-run8-phase1-main-promotion-reconciliation-001',
   deploymentReconciliationBranch:
     'agent/h-earth-run8-phase2-deployment-reconciliation-001',
+  liveBrowserProofBranch:
+    'agent/h-earth-run8-phase3-live-browser-proof-001',
   predecessorStatus: {
     run8A: 'PASS_CLOSED',
     run8B: 'PASS_CLOSED',
@@ -110,7 +112,38 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     pagesBuildType: 'legacy',
     pagesLatestBuildStatus: 'built',
     deployedFileIdentityCount: 6,
-    allDeployedFilesExact: true
+    allDeployedFilesExact: true,
+    liveBrowserProof: 'PASS',
+    liveBrowserDeploymentHead:
+      '65ed401f5a99679a93b5baad751678bfc49c19c9',
+    liveBrowserCustomRoute:
+      'https://diamondgatebridge.com/showroom/globe/h-earth/',
+    liveBrowserGithubRoute:
+      'https://smansfield635-create.github.io/showroom/globe/h-earth/',
+    durableLiveBrowserReceipt:
+      '/h-earth-3d/validation/h-earth.run8.phase3-live-browser-proof.receipt.json',
+    durableLiveBrowserReceiptGitBlob:
+      '3abb151881b61732a43ed099d8a18ad3e15a97ea',
+    durableLiveBrowserReceiptSha256:
+      '11186bfcd7782f587cfa817984b8bafa0c86fe35e8d23ec227d56b96f531853a',
+    liveBrowserValidationRun: 30221430665,
+    liveBrowserValidationJob: 89844438771,
+    liveBrowserEvidenceArtifact: 8637334761,
+    liveBrowserEvidenceArtifactDigest:
+      'sha256:33111055c9a60342677117a4eb26fbb636120fc977e481f6ad6d5c28913ad0b8',
+    liveBrowserConfigurationCount: 3,
+    desktopLiveBrowserExecution: 'PASS',
+    samsungPortraitLiveBrowserEmulation: 'PASS',
+    samsungLandscapeLiveBrowserEmulation: 'PASS',
+    actualLiveBrowserExecution: true,
+    successorTerrainAndMountainVisible: true,
+    groundedVegetationVisible: true,
+    sharedDepthAndOcclusionLive: true,
+    skyAuthorityVisible: true,
+    sunDiscVisibleInAtLeastOneFrame: true,
+    liveAlphaClosureEstablished: true,
+    liveConsoleAndPageErrorsAbsent: true,
+    physicalSamsungExecution: 'NOT_EXECUTED'
   },
   closureConditions: [
     'PUBLIC_H_EARTH_ROUTE_REPLACEMENT',
@@ -128,7 +161,7 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     preUpdateBaselineComparison: 'PASS',
     run8StackPromotionToMain: 'PASS',
     deployment: 'PASS',
-    liveIdentityAndBrowserProof: 'NOT_EXECUTED',
+    liveIdentityAndBrowserProof: 'PASS',
     run8EPassClosed: false
   },
   preservedBoundaries: {
@@ -161,7 +194,8 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
       candidate?.executedOccurrences?.preUpdateRun7IToRun8EComparison !== 'PASS' ||
       candidate?.executedOccurrences?.run8StackPromotionToMain !== 'PASS' ||
       candidate?.executedOccurrences?.deploymentReconciliation !== 'PASS' ||
-      candidate?.executedOccurrences?.publicHEarthRouteReplacement !== 'PASS') {
+      candidate?.executedOccurrences?.publicHEarthRouteReplacement !== 'PASS' ||
+      candidate?.executedOccurrences?.liveBrowserProof !== 'PASS') {
     issues.push('RUN_8E_EXECUTED_OCCURRENCE_RECONCILIATION_INCOMPLETE');
   }
   if (candidate?.closureState?.preUpdateBaselineComparison !== 'PASS') {
@@ -175,6 +209,12 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
   }
   if (candidate?.closureState?.deployment !== 'PASS') {
     issues.push('RUN_8E_DEPLOYMENT_NOT_RECONCILED');
+  }
+  if (candidate?.closureState?.liveIdentityAndBrowserProof !== 'PASS') {
+    issues.push('RUN_8E_LIVE_BROWSER_PROOF_NOT_RECONCILED');
+  }
+  if (candidate?.closureState?.samsungPhysicalExecution !== 'NOT_EXECUTED') {
+    issues.push('RUN_8E_PHYSICAL_SAMSUNG_STATE_INVALID');
   }
   if (candidate?.closureState?.run8EPassClosed !== false) {
     issues.push('RUN_8E_PREMATURE_PASS_CLOSED_CLAIM');

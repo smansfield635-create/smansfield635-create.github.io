@@ -8,9 +8,10 @@ import { fileURLToPath } from 'node:url';
 // environment Runs 7C–7H, Run 7I public/live evidence, Run 8A dimensional
 // reconciliation, Run 8B successor neutral geometry, Run 8C normal-light-
 // material realization, Run 8D grounded vegetation, Run 8E bounded
-// integration-engineering, Run 8 Phase 1 ordered-main-promotion, and Run 8
-// Phase 2 deployment-reconciliation overlays.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8-phase2-deployment-reconciliation-scope.js';
+// integration-engineering, Run 8 Phase 1 ordered-main-promotion, Run 8
+// Phase 2 deployment reconciliation, and Run 8 Phase 3 live-browser-proof
+// overlays.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8-phase3-live-browser-proof-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

@@ -1,9 +1,10 @@
 /**
  * H_EARTH_RUN_8E_INTEGRATION_AND_LIVE_DELIVERY_CONTROL_v1
  *
- * Governs the bounded Run 8E integration occurrence. Engineering integration
- * may execute on the Run 8E branch; deployment, main promotion, Samsung-device
- * proof, and live-browser identity remain separate closure conditions.
+ * Governs the bounded Run 8E integration occurrence. Engineering integration,
+ * branch execution, baseline comparison, and ordered Run 8 stack promotion may
+ * be reconciled independently; deployment, physical Samsung-device proof, and
+ * live-browser identity remain separate closure conditions.
  */
 
 const freeze = (value, seen = new WeakSet()) => {
@@ -20,6 +21,8 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
   contractId: H_EARTH_RUN_8E_CONTROL_CONTRACT_ID,
   parentRun8DCommit: '26bab1eb804a6e8737f551e1d1aa9d9cbbe4ae5f',
   workspaceBranch: 'agent/h-earth-run8e-public-integration-001',
+  promotionReconciliationBranch:
+    'agent/h-earth-run8-phase1-main-promotion-reconciliation-001',
   predecessorStatus: {
     run8A: 'PASS_CLOSED',
     run8B: 'PASS_CLOSED',
@@ -54,11 +57,16 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     materialPublicRouteChangeEstablished: true,
     routeShellPreserved: true,
     visualQualitySuperiorityClaim: false,
-    durableEngineeringReceipt: '/h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json',
-    durablePublicRouteReceipt: '/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json',
-    durablePublicRouteReceiptGitBlob: '0e2e09a7d7b5d3ee2c1536ade93cb8a42d250ac5',
-    durablePublicRouteReceiptSha256: 'd87f40a1486af091a05b76a59a4963e1c8aeff8fd32d8cd0d64fdd5fb2848a5b',
-    publicRouteReceiptCommit: '57f9e55502a727db5d3985387dcb2beaa0d39e63',
+    durableEngineeringReceipt:
+      '/h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json',
+    durablePublicRouteReceipt:
+      '/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json',
+    durablePublicRouteReceiptGitBlob:
+      '0e2e09a7d7b5d3ee2c1536ade93cb8a42d250ac5',
+    durablePublicRouteReceiptSha256:
+      'd87f40a1486af091a05b76a59a4963e1c8aeff8fd32d8cd0d64fdd5fb2848a5b',
+    publicRouteReceiptCommit:
+      '57f9e55502a727db5d3985387dcb2beaa0d39e63',
     durablePreUpdateComparisonReceipt:
       '/h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json',
     durablePreUpdateComparisonReceiptGitBlob:
@@ -66,7 +74,19 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     durablePreUpdateComparisonReceiptSha256:
       'bbca14cc0c59b5b90fa7d374843c0a9398b58d156708a14bd81bd0555e4207b9',
     preUpdateComparisonReceiptCommit:
-      '89a9b24a2ef81bd00a2d019072fd25d71748c53e'
+      '89a9b24a2ef81bd00a2d019072fd25d71748c53e',
+    run8StackPromotionToMain: 'PASS',
+    durableMainPromotionReceipt:
+      '/h-earth-3d/validation/h-earth.run8.phase1-main-promotion.receipt.json',
+    promotedMainStackHead:
+      'df1e1c7aad32a63fd35186cca0351b49b561579e',
+    orderedPromotionMergeCommits: {
+      run8A: '2e1ce0d1e1c8911c14339eb41643081c9bda9cbc',
+      run8B: 'a10d6160378ac6ec83742f6530461cc433957298',
+      run8C: '82b237284d6390005843174b0dfe23b6b7ac81c0',
+      run8D: '716a4370cf5ef320b12d3731aff577dcd6bb778b',
+      run8E: 'df1e1c7aad32a63fd35186cca0351b49b561579e'
+    }
   },
   closureConditions: [
     'PUBLIC_H_EARTH_ROUTE_REPLACEMENT',
@@ -81,7 +101,7 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     samsungBrowserEmulation: 'PASS',
     samsungPhysicalExecution: 'NOT_EXECUTED',
     preUpdateBaselineComparison: 'PASS',
-    run8StackPromotionToMain: 'NOT_EXECUTED',
+    run8StackPromotionToMain: 'PASS',
     deployment: 'NOT_EXECUTED',
     liveIdentityAndBrowserProof: 'NOT_EXECUTED',
     run8EPassClosed: false
@@ -113,11 +133,15 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
   }
   if (candidate?.executedOccurrences?.engineeringIntegration !== 'PASS' ||
       candidate?.executedOccurrences?.publicRouteBranchBrowserExecution !== 'PASS' ||
-      candidate?.executedOccurrences?.preUpdateRun7IToRun8EComparison !== 'PASS') {
+      candidate?.executedOccurrences?.preUpdateRun7IToRun8EComparison !== 'PASS' ||
+      candidate?.executedOccurrences?.run8StackPromotionToMain !== 'PASS') {
     issues.push('RUN_8E_EXECUTED_OCCURRENCE_RECONCILIATION_INCOMPLETE');
   }
   if (candidate?.closureState?.preUpdateBaselineComparison !== 'PASS') {
     issues.push('RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_NOT_RECONCILED');
+  }
+  if (candidate?.closureState?.run8StackPromotionToMain !== 'PASS') {
+    issues.push('RUN_8_STACK_MAIN_PROMOTION_NOT_RECONCILED');
   }
   if (candidate?.closureState?.run8EPassClosed !== false) {
     issues.push('RUN_8E_PREMATURE_PASS_CLOSED_CLAIM');

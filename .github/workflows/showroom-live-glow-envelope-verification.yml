@@ -1,0 +1,114 @@
+name: Showroom live glow envelope verification
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-showroom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event.pull_request.head.ref == 'agent/showroom-glow-envelope-execution-001'
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Poll public HTML and asset identities
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/showroom-live-round2
+          for attempt in $(seq 1 40); do
+            curl -fsSL -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/showroom/?showroom-live-round2=${attempt}" -o /tmp/showroom-live-round2/index.html || true
+            if grep -q 'SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726M' /tmp/showroom-live-round2/index.html; then
+              break
+            fi
+            if [ "$attempt" -eq 40 ]; then
+              echo 'Public HTML did not publish the expected asset identity.' >&2
+              exit 1
+            fi
+            sleep 15
+          done
+          grep -q 'SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_13_MOBILE_CLUSTER_FIT' /tmp/showroom-live-round2/index.html
+          curl -fsSL -H 'Cache-Control: no-cache' 'https://diamondgatebridge.com/showroom/index.crystals.js?v=SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726M' -o /tmp/showroom-live-round2/index.crystals.js
+          curl -fsSL -H 'Cache-Control: no-cache' 'https://diamondgatebridge.com/showroom/index.compositor.js?v=SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726M' -o /tmp/showroom-live-round2/index.compositor.js
+          grep -q 'SHOWROOM_CANONICAL_CRYSTAL_GLOW_AND_PRESENTATION_v4' /tmp/showroom-live-round2/index.crystals.js
+          grep -q 'haloPassEnabled: true' /tmp/showroom-live-round2/index.crystals.js
+          grep -q 'mobileClusterHorizontalScale: 0.62' /tmp/showroom-live-round2/index.crystals.js
+          grep -q 'mobileWidthThreshold: 520' /tmp/showroom-live-round2/index.compositor.js
+          status=$(curl -sS -o /tmp/showroom-live-round2/retired-source.txt -w '%{http_code}' 'https://diamondgatebridge.com/showroom/index.cosmos.source.js')
+          test "$status" = '404'
+
+      - name: Install live browser runtime
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Execute live constellation and cluster modes
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const fs = require('node:fs');
+          const configs = [
+            { name: 'samsung-portrait', width: 390, height: 844 },
+            { name: 'tablet', width: 800, height: 1100 },
+            { name: 'desktop', width: 1440, height: 1000 }
+          ];
+          const out = '/tmp/showroom-live-round2';
+          const assert = (condition, message) => { if (!condition) throw new Error(message); };
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const evidence = [];
+            for (const cfg of configs) {
+              const page = await browser.newPage({ viewport: cfg, deviceScaleFactor: 1 });
+              const errors = [];
+              page.on('console', message => { if (message.type() === 'error') errors.push(`console:${message.text()}`); });
+              page.on('pageerror', error => errors.push(`page:${error.message}`));
+              await page.goto(`https://diamondgatebridge.com/showroom/?live-round2=${Date.now()}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+              await page.locator('#showroom-orbit').scrollIntoViewIfNeeded();
+              await page.waitForFunction(() => window.SHOWROOM_CRYSTALS?.getState?.().ready === true, null, { timeout: 45000 });
+              await page.waitForTimeout(1200);
+              await page.screenshot({ path: `${out}/${cfg.name}-constellation.png` });
+              const constellation = await page.evaluate(() => ({
+                crystals: window.SHOWROOM_CRYSTALS.getState(),
+                compositor: window.SHOWROOM_COMPOSITOR?.getState?.() || null,
+                contract: document.documentElement.getAttribute('data-contract')
+              }));
+              assert(constellation.crystals.contract === 'SHOWROOM_CANONICAL_CRYSTAL_GLOW_AND_PRESENTATION_v4', `${cfg.name}: wrong crystal contract`);
+              assert(constellation.crystals.presentationMode === 'CONSTELLATION', `${cfg.name}: constellation mode absent`);
+              assert(constellation.crystals.visibleCardinalCount === 4, `${cfg.name}: four cardinals absent`);
+              assert(constellation.crystals.counters.lastRearDrawCalls + constellation.crystals.counters.lastFrontDrawCalls >= 8, `${cfg.name}: constellation halo pass absent`);
+
+              const opened = await page.evaluate(() => window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER.requestCardinalSelection('north'));
+              assert(opened === true, `${cfg.name}: live north cluster opening rejected`);
+              await page.waitForFunction(() => window.SHOWROOM_CRYSTALS?.getState?.().presentationMode === 'CLUSTER', null, { timeout: 15000 });
+              await page.waitForTimeout(1200);
+              await page.screenshot({ path: `${out}/${cfg.name}-cluster.png` });
+              const cluster = await page.evaluate(() => ({ crystals: window.SHOWROOM_CRYSTALS.getState() }));
+              assert(cluster.crystals.visibleRoomCount === 4, `${cfg.name}: four live cluster members absent`);
+              assert(cluster.crystals.counters.lastRearDrawCalls + cluster.crystals.counters.lastFrontDrawCalls >= 8, `${cfg.name}: live cluster halo pass absent`);
+              assert(errors.length === 0, `${cfg.name}: ${errors.join(' | ')}`);
+              evidence.push({ cfg, constellation, cluster, errors });
+              await page.close();
+            }
+            await browser.close();
+            fs.writeFileSync(`${out}/receipt.json`, JSON.stringify({ status: 'PASS', mainHead: '2daee0639b606471c96425ea5ea14f1c4b7880f9', evidence }, null, 2));
+          })().catch(error => {
+            fs.writeFileSync(`${out}/failure.txt`, String(error && error.stack || error));
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload live evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: showroom-live-glow-envelope-evidence
+          path: /tmp/showroom-live-round2
+          if-no-files-found: error
+          retention-days: 90

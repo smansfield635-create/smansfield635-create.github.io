@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   deployments: read
   pages: read
 
@@ -76,6 +76,24 @@ jobs:
               exit 1
             fi
           done
+
+      - name: Persist exact Phase 3 live-browser receipt
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/h-earth-run8-phase3-live-browser-proof-001'
+        run: |
+          set -euo pipefail
+          target='h-earth-3d/validation/h-earth.run8.phase3-live-browser-proof.receipt.json'
+          candidate='/tmp/h-earth-run8-phase3-live-browser-proof/h-earth.run8.phase3-live-browser-proof.receipt.json'
+          if [ -f "$target" ]; then
+            cmp --silent "$candidate" "$target"
+            echo 'Exact durable Phase 3 live-browser receipt already present.'
+            exit 0
+          fi
+          cp "$candidate" "$target"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$target"
+          git commit -m 'Commit Run 8 Phase 3 live-browser receipt'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Upload Phase 3 live-browser evidence
         if: always()

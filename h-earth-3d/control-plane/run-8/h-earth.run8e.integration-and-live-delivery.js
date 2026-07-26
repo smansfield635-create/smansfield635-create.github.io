@@ -49,11 +49,24 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     desktopBrowserExecution: 'PASS',
     samsungPortraitBrowserEmulation: 'PASS',
     samsungLandscapeBrowserEmulation: 'PASS',
+    preUpdateRun7IToRun8EComparison: 'PASS',
+    preUpdateComparisonCount: 6,
+    materialPublicRouteChangeEstablished: true,
+    routeShellPreserved: true,
+    visualQualitySuperiorityClaim: false,
     durableEngineeringReceipt: '/h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json',
     durablePublicRouteReceipt: '/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json',
     durablePublicRouteReceiptGitBlob: '0e2e09a7d7b5d3ee2c1536ade93cb8a42d250ac5',
     durablePublicRouteReceiptSha256: 'd87f40a1486af091a05b76a59a4963e1c8aeff8fd32d8cd0d64fdd5fb2848a5b',
-    publicRouteReceiptCommit: '57f9e55502a727db5d3985387dcb2beaa0d39e63'
+    publicRouteReceiptCommit: '57f9e55502a727db5d3985387dcb2beaa0d39e63',
+    durablePreUpdateComparisonReceipt:
+      '/h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json',
+    durablePreUpdateComparisonReceiptGitBlob:
+      '4b928f3455233044ae1f8ba58b2adaff36557eda',
+    durablePreUpdateComparisonReceiptSha256:
+      'bbca14cc0c59b5b90fa7d374843c0a9398b58d156708a14bd81bd0555e4207b9',
+    preUpdateComparisonReceiptCommit:
+      '89a9b24a2ef81bd00a2d019072fd25d71748c53e'
   },
   closureConditions: [
     'PUBLIC_H_EARTH_ROUTE_REPLACEMENT',
@@ -67,7 +80,7 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     publicHEarthRouteBranchExecution: 'PASS',
     samsungBrowserEmulation: 'PASS',
     samsungPhysicalExecution: 'NOT_EXECUTED',
-    preUpdateBaselineComparison: 'NOT_EXECUTED',
+    preUpdateBaselineComparison: 'PASS',
     run8StackPromotionToMain: 'NOT_EXECUTED',
     deployment: 'NOT_EXECUTED',
     liveIdentityAndBrowserProof: 'NOT_EXECUTED',
@@ -99,8 +112,12 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
     issues.push('RUN_8E_CLOSURE_CONDITIONS_INCOMPLETE');
   }
   if (candidate?.executedOccurrences?.engineeringIntegration !== 'PASS' ||
-      candidate?.executedOccurrences?.publicRouteBranchBrowserExecution !== 'PASS') {
+      candidate?.executedOccurrences?.publicRouteBranchBrowserExecution !== 'PASS' ||
+      candidate?.executedOccurrences?.preUpdateRun7IToRun8EComparison !== 'PASS') {
     issues.push('RUN_8E_EXECUTED_OCCURRENCE_RECONCILIATION_INCOMPLETE');
+  }
+  if (candidate?.closureState?.preUpdateBaselineComparison !== 'PASS') {
+    issues.push('RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_NOT_RECONCILED');
   }
   if (candidate?.closureState?.run8EPassClosed !== false) {
     issues.push('RUN_8E_PREMATURE_PASS_CLOSED_CLAIM');

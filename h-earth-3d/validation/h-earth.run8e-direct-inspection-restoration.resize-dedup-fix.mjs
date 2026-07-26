@@ -3,6 +3,12 @@ import fs from 'node:fs';
 const path = 'showroom/globe/h-earth/functional-landscape/environment-integration.js';
 let source = fs.readFileSync(path, 'utf8');
 
+if (source.includes('let lastRenderedViewportKey = null;') &&
+    source.includes('viewportKey === lastRenderedViewportKey')) {
+  console.log('Unchanged viewport successor render suppression already installed.');
+  process.exit(0);
+}
+
 function replaceOnce(from, to, label) {
   if (!source.includes(from)) {
     if (source.includes(to)) return;
@@ -32,7 +38,7 @@ replaceOnce(
   'RESIZE_DEDUP_CALLBACK'
 );
 
-if (!source.includes('if (viewportKey === lastRenderedViewportKey) return;')) {
+if (!source.includes('viewportKey === lastRenderedViewportKey')) {
   throw new Error('RESIZE_DEDUP_NOT_INSTALLED');
 }
 fs.writeFileSync(path, source);

@@ -13,7 +13,9 @@ const REF_NAME = 'main';
 const PROMOTED_STACK_HEAD = 'df1e1c7aad32a63fd35186cca0351b49b561579e';
 
 export const H_EARTH_RUN_8_PHASE_1_MAIN_PROMOTION_PATHS = Object.freeze([
+  '/.github/workflows/h-earth-run8-phase1-main-promotion-validation.yml',
   '/h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js',
+  '/h-earth-3d/validation/h-earth.run8.phase1-main-promotion.harness.mjs',
   '/h-earth-3d/validation/h-earth.run8.phase1-main-promotion.receipt.json',
   '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8-phase1-main-promotion-scope.js',
   '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
@@ -49,7 +51,8 @@ export const H_EARTH_RUN_8_PHASE_1_MAIN_PROMOTION_EVIDENCE = freeze({
     'RUN_8E_PR_196_ORDERED_MAIN_PROMOTION',
     'ALL_FIVE_CHECKPOINT_HEADS_CONTAINED_IN_MAIN',
     'RUN_8E_HEAD_ANCESTOR_OF_MAIN',
-    'PUBLIC_ROUTE_REINTEGRATION_CONTAINED_IN_MAIN'
+    'PUBLIC_ROUTE_REINTEGRATION_CONTAINED_IN_MAIN',
+    'BRANCH_NATIVE_PHASE_1_VALIDATION'
   ]),
   verifiedOn: '2026-07-26',
   evidenceLimitations: Object.freeze([
@@ -115,7 +118,8 @@ export const H_EARTH_RUN_8_PHASE_1_MAIN_PROMOTION_NODE = freeze({
   requiredValidations: Object.freeze([
     'EXACT_ORDERED_MERGE_SEQUENCE',
     'ALL_FIVE_CHECKPOINT_HEADS_CONTAINED_IN_MAIN',
-    'RUN_8E_HEAD_BEHIND_MAIN_BY_ZERO'
+    'RUN_8E_HEAD_BEHIND_MAIN_BY_ZERO',
+    'RUN_8_PHASE_1_MAIN_PROMOTION_HARNESS_PASS'
   ]),
   stoppingBoundaries: Object.freeze([
     'STOP_IF_ANY_CHECKPOINT_HEAD_IS_MISSING_FROM_MAIN',

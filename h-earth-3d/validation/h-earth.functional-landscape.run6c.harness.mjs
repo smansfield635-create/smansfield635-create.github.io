@@ -54,6 +54,8 @@ console.log(JSON.stringify({
     ok: preview.ok,
     status: preview.status,
     primitiveCount: preview.primitiveCount,
+    semanticAddressCount: preview.semanticAddressCount,
+    proxySummarizedAddressCount: preview.proxySummarizedAddressIds?.length ?? 0,
     issues: preview.issues
   }
 }, null, 2));
@@ -68,6 +70,9 @@ assert.equal(distant.ok, true);
 assert.equal(distant.primitives.length, 1);
 assert.equal(preview.ok, true);
 assert.equal(preview.primitiveCount, 20);
+assert.equal(preview.semanticAddressCount, 256);
+assert.equal(preview.semanticAddressIds.length, 256);
+assert.equal(preview.proxySummarizedAddressIds.length, 64);
 assert.equal(preview.admitted, false);
 assert.equal(preview.WestAdmissionPerformed, false);
 assert.equal(preview.compositorNodeCreated, false);
@@ -82,6 +87,8 @@ const receipt = {
   shorelineBandCount: shoreline.bandCount,
   distantProxyCount: distant.primitives.length,
   primitiveCount: preview.primitiveCount,
+  semanticAddressCount: preview.semanticAddressCount,
+  proxySummarizedAddressCount: preview.proxySummarizedAddressIds.length,
   sharedEdgeValidation: 'PASS',
   admissionPerformed: false,
   issues: []

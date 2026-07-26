@@ -33,11 +33,15 @@ jobs:
           } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6.program.js';
           import {
             evaluateHEarthFunctionalLandscapeRun6FAmendment
-          } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6f.amendment.js';
+          } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape.run-6f.amendment.js';
+          import {
+            evaluateHEarthRun6FVisualCaptureAmendment
+          } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6f-visual-capture.amendment.js';
           const program = evaluateHEarthFunctionalLandscapeRun6Program();
           const amendment = evaluateHEarthFunctionalLandscapeRun6FAmendment();
-          console.log(JSON.stringify({ program, amendment }, null, 2));
-          if (!program.eligible || !amendment.eligible) process.exit(1);
+          const visualCapture = evaluateHEarthRun6FVisualCaptureAmendment();
+          console.log(JSON.stringify({ program, amendment, visualCapture }, null, 2));
+          if (!program.eligible || !amendment.eligible || !visualCapture.eligible) process.exit(1);
           NODE
 
       - name: Run checkpoint 6B
@@ -111,6 +115,19 @@ jobs:
           cat run6f-browser.log
           exit $code
 
+      - name: Capture checkpoint 6F geographic waypoints
+        id: run6f_visual_capture
+        continue-on-error: true
+        env:
+          H_EARTH_RUN6F_URL: http://127.0.0.1:4173/showroom/globe/h-earth/functional-landscape/
+          H_EARTH_RUN6F_VISUAL_DIR: h-earth-run6f-visual-capture
+        run: |
+          set +e
+          node h-earth-3d/validation/h-earth.functional-landscape.run6f.visual-capture.mjs > run6f-visual-capture.log 2>&1
+          code=$?
+          cat run6f-visual-capture.log
+          exit $code
+
       - name: Stop bounded static server
         if: always()
         run: |
@@ -130,6 +147,7 @@ jobs:
             run6e.log
             run6f-node.log
             run6f-browser.log
+            run6f-visual-capture.log
             run6f-server.log
           if-no-files-found: warn
           retention-days: 7
@@ -143,6 +161,15 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Upload checkpoint 6F waypoint capture
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run6f-waypoint-capture
+          path: h-earth-run6f-visual-capture
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Enforce checkpoint 6F browser pass
-        if: steps.run6f_browser.outcome == 'failure'
+        if: steps.run6f_browser.outcome == 'failure' || steps.run6f_visual_capture.outcome == 'failure'
         run: exit 1

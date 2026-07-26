@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate-run8e-public-route:
@@ -264,6 +264,24 @@ jobs:
               fs.readFileSync('/tmp/run8e-public-artifacts/run8e-public-route-receipt.json', 'utf8')
           ) process.exit(1);
           NODE
+
+      - name: Persist exact Run 8E public-route receipt
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/h-earth-run8e-public-integration-001'
+        run: |
+          set -euo pipefail
+          target='h-earth-3d/validation/h-earth.run8e.public-route.receipt.json'
+          candidate='/tmp/run8e-public-artifacts/run8e-public-route-receipt.json'
+          if [ -f "$target" ]; then
+            cmp --silent "$candidate" "$target"
+            echo 'Exact durable Run 8E public-route receipt already present.'
+            exit 0
+          fi
+          cp "$candidate" "$target"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$target"
+          git commit -m 'Commit Run 8E public-route receipt'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Upload Run 8E public-route evidence
         if: always()

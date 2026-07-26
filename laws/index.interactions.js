@@ -8,7 +8,7 @@
 
   const M = Object.freeze({
     id: "DGB_LAWS_INTERACTIONS",
-    version: "1.0.2-direct-authority-center-exclusive",
+    version: "1.0.0-pointer-gesture-interpreter",
     build: "LAWS_COMPASS_CENTER_EXCLUSIVE_SPHERICAL_XYZ_DIRECT_MANIPULATION_v6",
     controllerId: "DGB_LAWS_CONTROLLER",
     controllerVersion: "1.0.0-law-compass-controller-authority",

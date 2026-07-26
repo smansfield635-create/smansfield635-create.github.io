@@ -1,0 +1,46 @@
+{
+  "receiptType": "H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN_7B_RECEIPT",
+  "contractId": "H_EARTH_CANONICAL_SURFACE_STATE_FIELD_RUN_7B_v1",
+  "eligible": true,
+  "status": "RUN_7B_CANONICAL_SURFACE_STATE_FIELD_PASS",
+  "parentCommit": "c51d7a6ae5d913a0712e5a8d5a55c06866842f45",
+  "executedSourcePath": "/h-earth-3d/environment/h-earth.surface-state-field.js",
+  "executedHarnessPath": "/h-earth-3d/validation/h-earth.functional-environment.run7b.harness.mjs",
+  "sourceContractIdentities": {
+    "terrainFieldContractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+    "terrainFormationsContractId": "H_EARTH_TERRAIN_FORMATIONS_RUN_6B_v2_LATTICE_SEMANTIC_ALIGNMENT",
+    "landscapeRealizationPlannerContractId": "H_EARTH_LANDSCAPE_REALIZATION_PLANNER_RUN_6B_v2_SEMANTIC_PHYSICAL_SEPARATION"
+  },
+  "surfaceStateRevision": 1,
+  "fixtureCount": 7,
+  "crossDomainSampleCount": 241,
+  "assertionCount": 1005,
+  "passCount": 1005,
+  "failCount": 0,
+  "surfaceClassesObserved": [
+    "COASTAL_SOIL",
+    "DRY_SAND",
+    "LOWLAND_SOIL",
+    "NEARSHORE_WATER",
+    "OPEN_WATER",
+    "STONE_AND_SPARSE_SOIL",
+    "WET_SAND"
+  ],
+  "forbiddenOutputsObserved": [],
+  "issues": [],
+  "execution": {
+    "runtime": "node v22.16.0",
+    "command": "node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-environment.run7b.harness.mjs",
+    "exactTerrainFieldMaterialized": true,
+    "exactTerrainFormationsMaterialized": true,
+    "plannerFixture": "STRUCTURALLY_EQUIVALENT_16_CHUNK_TEST_DOUBLE_ONLY",
+    "repositoryPlannerImportTarget": "/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+    "repositoryImportExecutionClaim": false,
+    "productPromotionClaim": false,
+    "rendererMutation": false,
+    "publicRouteMutation": false,
+    "liveVerificationClaim": false
+  },
+  "deterministicDigestAlgorithm": "SHA256_STABLE_SERIALIZATION",
+  "deterministicDigest": "e436aeadb1bbc1fc05a0d3a68ccd0478b05012d979875b938947ebb9b51f9217"
+}

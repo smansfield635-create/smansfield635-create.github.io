@@ -110,10 +110,10 @@
     420ms cubic-bezier(0.2, 0.75, 0.25, 1);
 
   --showroom-center-size:
-    clamp(12.25rem, 24vw, 18.75rem);
+    clamp(9.35rem, 18vw, 14.25rem);
 
   --showroom-planet-size:
-    clamp(10.65rem, 21vw, 16.15rem);
+    clamp(8.15rem, 15.8vw, 12.35rem);
 
   --showroom-diamond-open-scale: 0.82;
   --showroom-diamond-open-translate-y: -1.5%;
@@ -1365,8 +1365,8 @@ main {
   background: transparent;
   text-align: center;
   cursor: pointer;
-  pointer-events: auto;
-  touch-action: manipulation;
+  pointer-events: none;
+  touch-action: none;
 }
 
 .showroom-compass-control::before,
@@ -1426,7 +1426,8 @@ main {
 .showroom-compass-control__instruction {
   position: relative;
   z-index: 2;
-  pointer-events: none;
+  pointer-events: auto;
+  touch-action: manipulation;
   text-shadow:
     0 0.12rem 0.45rem rgba(0, 0, 0, 0.88),
     0 0 0.7rem rgba(7, 11, 24, 0.96);
@@ -1437,12 +1438,18 @@ main {
     Georgia,
     "Times New Roman",
     serif;
+  min-width: 64%;
+  padding: 0.42rem 0.78rem 0.12rem;
+  border-radius: 999px 999px 0 0;
   font-size: clamp(0.7rem, 1.15vw, 0.9rem);
   font-weight: 650;
   line-height: 1.02;
 }
 
 .showroom-compass-control__instruction {
+  min-width: 64%;
+  padding: 0.12rem 0.78rem 0.42rem;
+  border-radius: 0 0 999px 999px;
   color: var(--showroom-cream-soft);
   font-size: 0.48rem;
   font-weight: 850;
@@ -4274,3 +4281,81 @@ canvas[data-showroom-window-canvas],
    DEPLOYMENT AUTHORIZATION:
    FALSE
    ================================================================ */
+
+/* ================================================================
+   23. BOUNDED PROJECTED STAR LABELS AND CENTER HIT CORRECTION
+   ================================================================ */
+
+.showroom-projected-label-layer {
+  position: absolute;
+  z-index: 26;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.showroom-projected-label {
+  position: absolute;
+  max-width: 8.5rem;
+  padding: 0.2rem 0.34rem;
+  border-radius: 0.42rem;
+  color: rgba(246, 238, 223, 0.96);
+  background: rgba(3, 7, 18, 0.42);
+  box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.3);
+  font-size: clamp(0.56rem, 1.6vw, 0.76rem);
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
+  text-align: center;
+  text-shadow:
+    0 0.08rem 0.22rem rgba(0, 0, 0, 0.98),
+    0 0 0.6rem rgba(0, 0, 0, 0.98);
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0.92;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.showroom-projected-label[data-showroom-projected-kind="cardinal"] {
+  color: #fff2b2;
+  font-size: clamp(0.62rem, 1.8vw, 0.82rem);
+}
+
+.showroom-projected-label[data-showroom-projected-kind="room"] {
+  max-width: 7.2rem;
+  color: rgba(235, 242, 255, 0.94);
+  font-size: clamp(0.52rem, 1.45vw, 0.7rem);
+  letter-spacing: 0.055em;
+}
+
+.showroom-projected-label[data-showroom-projected-depth="rear"] {
+  opacity: 0.42;
+  filter: saturate(0.72) brightness(0.78);
+}
+
+.showroom-projected-label[data-showroom-projected-primary="true"] {
+  opacity: 1;
+  filter: brightness(1.16);
+  box-shadow:
+    0 0 0.8rem rgba(245, 213, 130, 0.2),
+    0 0 1.35rem rgba(117, 233, 255, 0.12);
+}
+
+@media (max-width: 520px) {
+  .showroom-projected-label {
+    max-width: 6.7rem;
+    padding: 0.17rem 0.28rem;
+    font-size: 0.54rem;
+  }
+
+  .showroom-projected-label[data-showroom-projected-kind="cardinal"] {
+    font-size: 0.62rem;
+  }
+
+  .showroom-projected-label[data-showroom-projected-kind="room"] {
+    max-width: 5.8rem;
+    font-size: 0.49rem;
+  }
+}
+

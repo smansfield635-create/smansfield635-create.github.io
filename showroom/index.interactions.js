@@ -2,6 +2,7 @@
 /* COMPLETE REPLACEMENT */
 /* GROUP_A_INTERACTIONS_CONSUMER_ALIGNMENT_TO_EXISTING_ANCHORS_ONLY */
 /* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED */
+/* SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A */
 
 (() => { 
   "use strict";
@@ -277,6 +278,32 @@
     "west"
   ]);
 
+  const CARDINAL_DISPLAY_LABELS = Object.freeze({
+    north: "N · Story",
+    east: "E · Characters",
+    south: "S · Wonders",
+    west: "W · Mysteries"
+  });
+
+  const ROOM_DISPLAY_LABELS = Object.freeze({
+    "north-1": "Welcome",
+    "north-2": "Mission",
+    "north-3": "Timeline",
+    "north-4": "Invitation",
+    "east-1": "Jeeves",
+    "east-2": "Elara",
+    "east-3": "Auren",
+    "east-4": "Characters",
+    "south-1": "Window",
+    "south-2": "Diamond",
+    "south-3": "Stars",
+    "south-4": "Hearth",
+    "west-1": "Unfinished World",
+    "west-2": "Glass Questions",
+    "west-3": "Closed Paths",
+    "west-4": "Audralia"
+  });
+
   const state = {
     root:
       null,
@@ -349,6 +376,15 @@
 
     orbitFieldStyleCaptured:
       false,
+
+    projectedLabelLayer:
+      null,
+
+    projectedLabels:
+      new Map(),
+
+    projectedLabelFrame:
+      0,
 
     retryTimer:
       0,
@@ -1513,6 +1549,183 @@
     }
   }
 
+
+  function projectedLabelText(kind, identity) {
+    if (kind === SEMANTIC_KINDS.CARDINAL) {
+      return CARDINAL_DISPLAY_LABELS[identity] || "";
+    }
+
+    if (kind === SEMANTIC_KINDS.ROOM) {
+      return ROOM_DISPLAY_LABELS[identity] || "";
+    }
+
+    return "";
+  }
+
+  function ensureProjectedLabelLayer() {
+    if (
+      state.projectedLabelLayer &&
+      state.projectedLabelLayer.isConnected
+    ) {
+      return state.projectedLabelLayer;
+    }
+
+    if (!state.orbitField) {
+      return null;
+    }
+
+    let layer =
+      state.orbitField.querySelector(
+        "[data-showroom-projected-label-layer]"
+      );
+
+    if (!layer) {
+      layer = document.createElement("div");
+      layer.className = "showroom-projected-label-layer";
+      layer.dataset.showroomProjectedLabelLayer = "true";
+      layer.setAttribute("aria-hidden", "true");
+      state.orbitField.appendChild(layer);
+    }
+
+    state.projectedLabelLayer = layer;
+    return layer;
+  }
+
+  function syncProjectedLabels() {
+    state.projectedLabelFrame = 0;
+
+    const layer = ensureProjectedLabelLayer();
+    const controller =
+      state.controller ||
+      resolveController();
+
+    if (
+      !layer ||
+      !controller ||
+      typeof controller.getSemanticProjection !== "function" ||
+      typeof controller.getFrameState !== "function"
+    ) {
+      return false;
+    }
+
+    let records = [];
+    let frame = null;
+
+    try {
+      records = Array.from(
+        controller.getSemanticProjection() || []
+      );
+      frame = controller.getFrameState();
+    } catch {
+      records = [];
+      frame = null;
+    }
+
+    const mode = presentationMode(frame);
+    const activeIdentities = new Set();
+    const rect = state.orbitField.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    for (const record of records) {
+      if (!record || record.visible === false) {
+        continue;
+      }
+
+      const kind = semanticKindFromHit(record);
+      const identity = semanticIdentityFromHit(record, kind);
+      const label = projectedLabelText(kind, identity);
+
+      if (!identity || !label) {
+        continue;
+      }
+
+      if (
+        mode === PRESENTATION_MODES.CONSTELLATION &&
+        kind !== SEMANTIC_KINDS.CARDINAL
+      ) {
+        continue;
+      }
+
+      if (
+        mode === PRESENTATION_MODES.CLUSTER &&
+        kind !== SEMANTIC_KINDS.ROOM
+      ) {
+        continue;
+      }
+
+      if (mode === PRESENTATION_MODES.HELD) {
+        continue;
+      }
+
+      activeIdentities.add(identity);
+
+      let element = state.projectedLabels.get(identity);
+
+      if (!element) {
+        element = document.createElement("span");
+        element.className = "showroom-projected-label";
+        element.dataset.showroomProjectedLabel = identity;
+        layer.appendChild(element);
+        state.projectedLabels.set(identity, element);
+      }
+
+      const x = Number(record.x);
+      const y = Number(record.y);
+      const radius = Math.max(0, Number(record.radiusPx) || 0);
+      const dx = x - centerX;
+      const dy = y - centerY;
+      const magnitude = Math.hypot(dx, dy) || 1;
+      const offset =
+        kind === SEMANTIC_KINDS.CARDINAL
+? Math.min(62, Math.max(34, radius * 0.64 + 12))
+: Math.min(42, Math.max(23, radius * 0.5 + 9));
+      const left = x + (dx / magnitude) * offset;
+      const top = y + (dy / magnitude) * offset;
+      const depth = normalizeLower(record.depthLayer) || "unknown";
+      const primary =
+        kind === SEMANTIC_KINDS.CARDINAL
+? identity === normalizeWing(frame && frame.orbitFocus)
+: identity === normalizeRoomId(
+    frame && frame.cluster
+      ? frame.cluster.primaryRoom
+      : ""
+  );
+
+      element.textContent = label;
+      element.hidden = false;
+      element.style.left = `${left}px`;
+      element.style.top = `${top}px`;
+      element.style.zIndex = depth === "front" ? "28" : "8";
+      element.dataset.showroomProjectedKind = kind;
+      element.dataset.showroomProjectedDepth = depth;
+      element.dataset.showroomProjectedPrimary = primary ? "true" : "false";
+    }
+
+    for (const [identity, element] of state.projectedLabels) {
+      if (!activeIdentities.has(identity)) {
+        element.hidden = true;
+      }
+    }
+
+    return true;
+  }
+
+  function scheduleProjectedLabels() {
+    if (
+      state.projectedLabelFrame ||
+      state.disposed ||
+      state.failed
+    ) {
+      return;
+    }
+
+    state.projectedLabelFrame =
+      window.requestAnimationFrame(
+        syncProjectedLabels
+      );
+  }
+
   function hitsCorrespond(first, second) {
     if (
       !first ||
@@ -2524,13 +2737,32 @@
         directControl
       );
 
+    const projectedHit =
+      authoritativeHitTest(
+        event.clientX,
+        event.clientY
+      );
+
+    const projectedHitKind =
+      semanticKindFromHit(
+        projectedHit
+      );
+
+    const frontProjectionOverridesCompass =
+      directKind === SEMANTIC_KINDS.COMPASS &&
+      projectedHit &&
+      projectedHit.visible !== false &&
+      normalizeLower(projectedHit.depthLayer) === "front" &&
+      (
+        projectedHitKind === SEMANTIC_KINDS.CARDINAL ||
+        projectedHitKind === SEMANTIC_KINDS.ROOM
+      );
+
     const downHit =
-      directKind === SEMANTIC_KINDS.COMPASS
+      directKind === SEMANTIC_KINDS.COMPASS &&
+      !frontProjectionOverridesCompass
         ? null
-        : authoritativeHitTest(
-            event.clientX,
-            event.clientY
-          );
+        : projectedHit;
 
     const hitKind =
       semanticKindFromHit(
@@ -2552,7 +2784,8 @@
       TERRITORIES.FIELD;
 
     if (
-      directKind === SEMANTIC_KINDS.COMPASS
+      directKind === SEMANTIC_KINDS.COMPASS &&
+      !frontProjectionOverridesCompass
     ) {
       territory =
         TERRITORIES.COMPASS;
@@ -4232,6 +4465,8 @@
             attemptRuntimeActivation(
               "controller-frame"
             );
+
+            scheduleProjectedLabels();
           }
         );
 
@@ -4380,6 +4615,8 @@
         attemptRuntimeActivation(
           "compositor-ready"
         );
+
+        scheduleProjectedLabels();
       }
     );
 
@@ -4400,6 +4637,8 @@
         attemptRuntimeActivation(
           "compositor-projection-changed"
         );
+
+        scheduleProjectedLabels();
       }
     );
 
@@ -4472,6 +4711,8 @@
         attemptRuntimeActivation(
           "crystals-ready"
         );
+
+        scheduleProjectedLabels();
       }
     );
 

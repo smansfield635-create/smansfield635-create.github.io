@@ -1,0 +1,38 @@
+{
+  "schema": "SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_DIAGNOSTIC_v1",
+  "pass": false,
+  "viewport": {
+    "width": 360,
+    "height": 800,
+    "mobile": true,
+    "touch": true
+  },
+  "constellation": {
+    "controllerPresent": true,
+    "centerPresent": true,
+    "planetPresent": true,
+    "centerWidth": 190.796875,
+    "planetWidth": 169.1875,
+    "controlPointerEvents": "none",
+    "labelPointerEvents": "auto",
+    "labels": [],
+    "allLabels": [],
+    "projectionCount": 20,
+    "visibleProjectionCount": 4,
+    "rootDatasets": {
+      "controllerStatus": "available",
+      "compositorReady": "true",
+      "crystalsReady": "true",
+      "presentationMode": "constellation",
+      "semanticProjectionRevision": "273"
+    }
+  },
+  "cardinalRequest": true,
+  "cluster": {
+    "labels": [],
+    "rootMode": "cluster",
+    "activeCluster": "north"
+  },
+  "pageErrors": [],
+  "consoleErrors": []
+}

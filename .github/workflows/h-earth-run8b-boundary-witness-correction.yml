@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/h-earth-run8b-successor-neutral-geometry-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8a-dimensional-reconciliation-001
 
 permissions:
   contents: write

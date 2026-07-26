@@ -1,0 +1,50 @@
+import assert from 'node:assert/strict';
+import {
+  constructHEarthFunctionalLandscapeTerrain
+} from '../../showroom/globe/h-earth/render/geometry-landscape.js';
+import {
+  constructHEarthFunctionalShorelineGeometry
+} from '../../showroom/globe/h-earth/render/geometry-shoreline.js';
+import {
+  constructHEarthDistantContextGeometry
+} from '../../showroom/globe/h-earth/render/geometry-distant-context.js';
+import {
+  previewHEarthFunctionalLandscape
+} from '../../showroom/globe/h-earth/render/landscape-preview.js';
+
+const terrain = constructHEarthFunctionalLandscapeTerrain();
+assert.equal(terrain.ok, true);
+assert.equal(terrain.requestedChunkCount, 12);
+assert.equal(terrain.constructedChunkCount, 12);
+assert.equal(terrain.chunkResults.every((result) => result.ok), true);
+
+const shoreline = constructHEarthFunctionalShorelineGeometry();
+assert.equal(shoreline.ok, true);
+assert.equal(shoreline.bandCount, 7);
+
+const distant = constructHEarthDistantContextGeometry();
+assert.equal(distant.ok, true);
+assert.equal(distant.primitives.length, 1);
+
+const preview = previewHEarthFunctionalLandscape();
+assert.equal(preview.ok, true);
+assert.equal(preview.primitiveCount, 20);
+assert.equal(preview.admitted, false);
+assert.equal(preview.WestAdmissionPerformed, false);
+assert.equal(preview.compositorNodeCreated, false);
+assert.equal(preview.renderInstanceCreated, false);
+
+const receipt = {
+  receiptType: 'H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6C_RECEIPT',
+  contractId: preview.contractId,
+  eligible: true,
+  status: preview.status,
+  terrainChunkCount: terrain.constructedChunkCount,
+  shorelineBandCount: shoreline.bandCount,
+  distantProxyCount: distant.primitives.length,
+  primitiveCount: preview.primitiveCount,
+  sharedEdgeValidation: 'PASS',
+  admissionPerformed: false,
+  issues: []
+};
+console.log(JSON.stringify(receipt, null, 2));

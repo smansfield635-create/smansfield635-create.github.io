@@ -65,6 +65,37 @@ jobs:
           H_EARTH_RUN8D_RECEIPT: /tmp/run8d-receipt.json
         run: |
           set -o pipefail
+          node --input-type=module <<'NODE' | tee /tmp/run8d-control-diagnostic.log
+          import { evaluateHEarthRun8DControlContract } from './h-earth-3d/control-plane/run-8/h-earth.run8d.grounded-vegetation.js';
+          import { buildHEarthRun8DVegetationResolution, evaluateHEarthRun8DVegetationResolution } from './h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js';
+          import { constructHEarthRun8DLocalVegetationArchetypes, constructHEarthRun8DGroundedVegetation, evaluateHEarthRun8DGroundedVegetation } from './showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js';
+          const control = evaluateHEarthRun8DControlContract();
+          const resolution = buildHEarthRun8DVegetationResolution();
+          const local = constructHEarthRun8DLocalVegetationArchetypes();
+          const grounded = constructHEarthRun8DGroundedVegetation();
+          console.log(JSON.stringify({
+            control: { eligible: control.eligible, issues: control.issues },
+            resolution: {
+              eligible: resolution.eligible,
+              issues: resolution.issues,
+              evaluation: evaluateHEarthRun8DVegetationResolution(resolution),
+              instanceCount: resolution.instanceCount,
+              archetypeCounts: resolution.archetypeCounts
+            },
+            local: {
+              eligible: local.eligible,
+              issues: local.issues,
+              constructions: Object.fromEntries(Object.entries(local.constructions).map(([id, list]) => [id, list.map((entry) => ({ valid: entry.valid, issues: entry.issues }))]))
+            },
+            grounded: {
+              eligible: grounded.eligible,
+              issues: grounded.issues,
+              evaluation: evaluateHEarthRun8DGroundedVegetation(grounded),
+              instanceCount: grounded.instanceCount,
+              primitiveCount: grounded.primitiveCount
+            }
+          }, null, 2));
+          NODE
           node h-earth-3d/validation/h-earth.run8d.grounded-vegetation.harness.mjs \
             2>&1 | tee /tmp/run8d.log
 
@@ -126,6 +157,7 @@ jobs:
         with:
           name: h-earth-run8d-grounded-vegetation-evidence
           path: |
+            /tmp/run8d-control-diagnostic.log
             /tmp/run8d.log
             /tmp/run8d-receipt.json
           if-no-files-found: error

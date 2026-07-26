@@ -1,0 +1,19 @@
+{
+  "receiptType": "H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6C_RECEIPT",
+  "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_PREVIEW_RUN_6C_v1",
+  "eligible": true,
+  "status": "FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW_COMPLETE",
+  "terrainChunkCount": 12,
+  "shorelineBandCount": 7,
+  "distantProxyCount": 1,
+  "primitiveCount": 20,
+  "sharedEdgeValidation": "PASS",
+  "admissionPerformed": false,
+  "issues": [],
+  "execution": {
+    "runtime": "node --experimental-default-type=module",
+    "geometryKernel": "LOCAL_CONTRACT_EQUIVALENT_TEST_DOUBLE",
+    "repositoryKernelImportTarget": "/showroom/globe/h-earth/render/geometry-kernel.js",
+    "productPromotionClaim": false
+  }
+}

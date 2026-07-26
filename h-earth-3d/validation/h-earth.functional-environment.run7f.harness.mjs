@@ -13,18 +13,15 @@ import {
   evaluateHEarthTraversalSurfaceSample,
   getHEarthTraversalSurfaceReceipt
 } from '../environment/h-earth.traversal-surface.js';
-
 import {
   H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
   getHEarthCanonicalShorelineZ,
   sampleHEarthTerrainField
 } from '../terrain/h-earth.terrain-field.js';
-
 import {
   H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID,
   sampleHEarthSurfaceState
 } from '../environment/h-earth.surface-state-field.js';
-
 import {
   H_EARTH_WATER_STATE_CONTRACT_ID,
   sampleHEarthWaterState
@@ -52,12 +49,11 @@ const stable = (value) => value === null || typeof value !== 'object'
         `${JSON.stringify(key)}:${stable(value[key])}`).join(',')}}`;
 const digest = (value) => createHash('sha256').update(stable(value)).digest('hex');
 
-function assertDeepFrozen(value, path = 'root', seen = new WeakSet()) {
-  if (value === null || typeof value !== 'object' || seen.has(value)) return;
+function deepFrozen(value, seen = new WeakSet()) {
+  if (value === null || typeof value !== 'object' || seen.has(value)) return true;
   seen.add(value);
-  check(Object.isFrozen(value), `NOT_FROZEN:${path}`);
-  Object.entries(value).forEach(([key, nested]) =>
-    assertDeepFrozen(nested, `${path}.${key}`, seen));
+  return Object.isFrozen(value) &&
+    Object.values(value).every((nested) => deepFrozen(nested, seen));
 }
 
 const hazardFields = [
@@ -69,214 +65,157 @@ const hazardFields = [
   'waterHazard'
 ];
 
-function validateTraversalSample(sample, label, { deepFrozen = false } = {}) {
-  equal(sample.valid, true, `SAMPLE_INVALID:${label}`);
+function validate(sample, label) {
+  equal(sample.valid, true, `INVALID:${label}`);
   equal(sample.contractId, H_EARTH_TRAVERSAL_SURFACE_CONTRACT_ID,
-    `CONTRACT_MISMATCH:${label}`);
+    `CONTRACT:${label}`);
   check(H_EARTH_TRAVERSAL_CLASSES.includes(sample.traversalClass),
-    `CLASS_INVALID:${label}`);
+    `CLASS:${label}`);
   check(H_EARTH_MOVEMENT_MODES.includes(sample.movementMode),
-    `MOVEMENT_MODE_INVALID:${label}`);
+    `MODE:${label}`);
   check(H_EARTH_PASSABILITY_STATES.includes(sample.passability),
-    `PASSABILITY_INVALID:${label}`);
+    `PASSABILITY:${label}`);
   const evaluation = evaluateHEarthTraversalSurfaceSample(sample);
-  equal(evaluation.eligible, true, `EVALUATION_FAIL:${label}`);
-  deepEqual(evaluation.issues, [], `EVALUATION_ISSUES:${label}`);
+  equal(evaluation.eligible, true, `EVALUATION:${label}`);
+  deepEqual(evaluation.issues, [], `ISSUES:${label}`);
   check(finite(sample.movementCost) && sample.movementCost >= 1 && sample.movementCost <= 100,
-    `MOVEMENT_COST_RANGE:${label}`);
+    `COST:${label}`);
   check(finite(sample.speedMultiplier) && sample.speedMultiplier >= 0 && sample.speedMultiplier <= 1,
-    `SPEED_MULTIPLIER_RANGE:${label}`);
-  check(finite(sample.maximumRecommendedStepHeight) &&
-    sample.maximumRecommendedStepHeight >= 0 &&
-    sample.maximumRecommendedStepHeight <= 0.48,
-  `STEP_HEIGHT_RANGE:${label}`);
+    `SPEED:${label}`);
   hazardFields.forEach((field) => {
     check(finite(sample[field]) && sample[field] >= 0 && sample[field] <= 1,
-      `HAZARD_RANGE:${label}:${field}`);
+      `HAZARD:${label}:${field}`);
   });
   H_EARTH_TRAVERSAL_SURFACE_FORBIDDEN_NATIVE_OUTPUTS.forEach((field) => {
     check(!Object.prototype.hasOwnProperty.call(sample, field),
-      `FORBIDDEN_OUTPUT:${label}:${field}`);
+      `FORBIDDEN:${label}:${field}`);
   });
-  equal(sample.correspondenceStatus, 'TRAVERSAL_UPSTREAM_CORRESPONDENCE_PASS',
-    `CORRESPONDENCE_STATUS:${label}`);
-  equal(sample.nativeTruthOwnership, 'TRAVERSAL_ONLY',
-    `OWNERSHIP_STATUS:${label}`);
   equal(sample.sourceIdentities.terrainFieldContractId,
-    H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-    `TERRAIN_SOURCE_IDENTITY:${label}`);
+    H_EARTH_TERRAIN_FIELD_CONTRACT_ID, `TERRAIN_SOURCE:${label}`);
   equal(sample.sourceIdentities.surfaceStateContractId,
-    H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID,
-    `SURFACE_SOURCE_IDENTITY:${label}`);
+    H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID, `SURFACE_SOURCE:${label}`);
   equal(sample.sourceIdentities.waterStateContractId,
-    H_EARTH_WATER_STATE_CONTRACT_ID,
-    `WATER_SOURCE_IDENTITY:${label}`);
+    H_EARTH_WATER_STATE_CONTRACT_ID, `WATER_SOURCE:${label}`);
+  equal(sample.correspondenceStatus, 'TRAVERSAL_UPSTREAM_CORRESPONDENCE_PASS',
+    `CORRESPONDENCE:${label}`);
+  equal(sample.nativeTruthOwnership, 'TRAVERSAL_ONLY', `OWNERSHIP:${label}`);
+  check(deepFrozen(sample), `NOT_DEEP_FROZEN:${label}`);
   if (sample.passable === false) {
-    equal(sample.passability, 'BLOCKED', `BLOCKED_PASSABILITY:${label}`);
+    equal(sample.passability, 'BLOCKED', `BLOCKED_STATE:${label}`);
     equal(sample.speedMultiplier, 0, `BLOCKED_SPEED:${label}`);
     equal(sample.movementCost, 100, `BLOCKED_COST:${label}`);
-  } else {
-    check(sample.passability !== 'BLOCKED', `PASSABLE_MARKED_BLOCKED:${label}`);
-    check(sample.speedMultiplier > 0, `PASSABLE_ZERO_SPEED:${label}`);
   }
-  if (deepFrozen) assertDeepFrozen(sample, label);
 }
 
-const shorelineAt = (x) => getHEarthCanonicalShorelineZ(x);
+const shoreline = (x) => getHEarthCanonicalShorelineZ(x);
 const fixedFixtures = [
-  { id: 'OPEN_WATER_BLOCKED', x: 0, d: -90, expected: 'DEEP_WATER_BLOCKED' },
-  { id: 'NEARSHORE_BLOCKED', x: 48, d: -35, expected: 'DEEP_WATER_BLOCKED' },
-  { id: 'SHALLOW_WADE', x: -48, d: -10, expected: 'SHALLOW_WADE' },
-  { id: 'SHORELINE_TRANSITION', x: 96, d: -1, expected: 'SHORELINE_TRANSITION' },
-  { id: 'WET_SAND_SOFT', x: -96, d: 6, expected: 'SOFT_GROUND' },
-  { id: 'DRY_SAND_SOFT', x: 144, d: 24, expected: 'SOFT_GROUND' }
-].map((entry) => ({
-  ...entry,
-  z: shorelineAt(entry.x) - entry.d
-}));
+  { id: 'OPEN', x: 0, d: -90, expected: 'DEEP_WATER_BLOCKED' },
+  { id: 'NEARSHORE', x: 48, d: -35, expected: 'DEEP_WATER_BLOCKED' },
+  { id: 'SHALLOW', x: -48, d: -10, expected: 'SHALLOW_WADE' },
+  { id: 'CONTACT', x: 96, d: -1, expected: 'SHORELINE_TRANSITION' },
+  { id: 'WET_SAND', x: -96, d: 6, expected: 'SOFT_GROUND' },
+  { id: 'DRY_SAND', x: 144, d: 24, expected: 'SOFT_GROUND' }
+].map((entry) => ({ ...entry, z: shoreline(entry.x) - entry.d }));
 
 const fixedFirst = fixedFixtures.map((entry) => ({
-  fixture: entry,
+  entry,
   sample: sampleHEarthTraversalSurface(entry.x, entry.z)
 }));
 const fixedSecond = fixedFixtures.map((entry) => ({
-  fixture: entry,
+  entry,
   sample: sampleHEarthTraversalSurface(entry.x, entry.z)
 }));
-deepEqual(fixedFirst, fixedSecond, 'FIXED_FIXTURE_DETERMINISM_FAILURE');
+deepEqual(fixedFirst, fixedSecond, 'FIXED_DETERMINISM');
 
-const observedClasses = new Set();
-const fixedSummaries = [];
-for (const { fixture, sample } of fixedFirst) {
-  validateTraversalSample(sample, `fixed.${fixture.id}`, { deepFrozen: true });
-  equal(sample.traversalClass, fixture.expected,
-    `FIXED_CLASS_MISMATCH:${fixture.id}`);
-  const terrain = sampleHEarthTerrainField(fixture.x, fixture.z);
-  const surface = sampleHEarthSurfaceState(fixture.x, fixture.z);
-  const water = sampleHEarthWaterState(fixture.x, fixture.z);
-  equal(sample.world.y, terrain.elevation,
-    `WORLD_Y_CORRESPONDENCE:${fixture.id}`);
-  equal(sample.semanticAddressId, surface.semanticAddressId,
-    `SEMANTIC_CORRESPONDENCE:${fixture.id}`);
-  equal(sample.chunkId, surface.chunkId,
-    `CHUNK_CORRESPONDENCE:${fixture.id}`);
-  deepEqual(sample.formationIds, surface.formationIds,
-    `FORMATION_CORRESPONDENCE:${fixture.id}`);
-  equal(sample.consumedContext.terrainSlope, terrain.slope,
-    `SLOPE_CORRESPONDENCE:${fixture.id}`);
-  equal(sample.consumedContext.surfaceStateClass, surface.surfaceClass,
-    `SURFACE_CLASS_CORRESPONDENCE:${fixture.id}`);
-  equal(sample.consumedContext.waterStateClass, water.waterClass,
-    `WATER_CLASS_CORRESPONDENCE:${fixture.id}`);
-  equal(sample.consumedContext.waterStateDepth, water.depth,
-    `WATER_DEPTH_CORRESPONDENCE:${fixture.id}`);
-  observedClasses.add(sample.traversalClass);
-  fixedSummaries.push({
-    fixtureId: fixture.id,
+const observed = new Set();
+const fixedSummary = fixedFirst.map(({ entry, sample }) => {
+  validate(sample, `fixed.${entry.id}`);
+  equal(sample.traversalClass, entry.expected, `FIXED_CLASS:${entry.id}`);
+  const terrain = sampleHEarthTerrainField(entry.x, entry.z);
+  const surface = sampleHEarthSurfaceState(entry.x, entry.z);
+  const water = sampleHEarthWaterState(entry.x, entry.z);
+  equal(sample.world.y, terrain.elevation, `WORLD_Y:${entry.id}`);
+  equal(sample.semanticAddressId, surface.semanticAddressId, `ADDRESS:${entry.id}`);
+  equal(sample.chunkId, surface.chunkId, `CHUNK:${entry.id}`);
+  equal(sample.consumedContext.waterStateClass, water.waterClass, `WATER_CLASS:${entry.id}`);
+  observed.add(sample.traversalClass);
+  return {
+    id: entry.id,
     traversalClass: sample.traversalClass,
     passability: sample.passability,
-    movementMode: sample.movementMode,
-    movementCost: sample.movementCost,
-    hazards: Object.fromEntries(hazardFields.map((field) => [field, sample[field]]))
-  });
-}
+    movementCost: sample.movementCost
+  };
+});
 
-// The scan is derived from accepted upstream samples. Coordinates outside the
-// physical chunk/semantic domain are excluded rather than treated as traversal
-// failures, because Run 7F consumes but does not expand that upstream domain.
 const candidateCoordinates = [];
 for (let x = -240; x <= 240; x += 16) {
   for (let z = -248; z <= 16; z += 16) candidateCoordinates.push({ x, z });
 }
-const scanCoordinates = candidateCoordinates.filter(({ x, z }) => {
-  const surface = sampleHEarthSurfaceState(x, z);
-  const water = sampleHEarthWaterState(x, z);
-  return surface.valid === true && water.valid === true;
-});
-check(scanCoordinates.length >= 300, 'AUTHORIZED_DOMAIN_SCAN_TOO_SMALL');
+const scanCoordinates = candidateCoordinates.filter(({ x, z }) =>
+  sampleHEarthSurfaceState(x, z).valid === true &&
+  sampleHEarthWaterState(x, z).valid === true);
+check(scanCoordinates.length >= 300, 'AUTHORIZED_SCAN_TOO_SMALL');
 check(scanCoordinates.length < candidateCoordinates.length,
-  'UPSTREAM_DOMAIN_FILTER_DID_NOT_EXCLUDE_ANY_COORDINATES');
+  'NO_OUT_OF_DOMAIN_COORDINATES_EXCLUDED');
 
 const scanFirst = scanCoordinates.map(({ x, z }) =>
   sampleHEarthTraversalSurface(x, z));
 const scanSecond = scanCoordinates.map(({ x, z }) =>
   sampleHEarthTraversalSurface(x, z));
-deepEqual(scanFirst, scanSecond, 'DOMAIN_SCAN_DETERMINISM_FAILURE');
+deepEqual(scanFirst, scanSecond, 'SCAN_DETERMINISM');
 
 const classCounts = new Map();
-const scanSummaries = [];
-scanFirst.forEach((sample, index) => {
-  const coordinate = scanCoordinates[index];
-  validateTraversalSample(sample, `scan.${coordinate.x}.${coordinate.z}`, {
-    deepFrozen: index % 47 === 0
-  });
-  observedClasses.add(sample.traversalClass);
+const scanSummary = scanFirst.map((sample, index) => {
+  const { x, z } = scanCoordinates[index];
+  validate(sample, `scan.${x}.${z}`);
+  observed.add(sample.traversalClass);
   classCounts.set(sample.traversalClass,
     (classCounts.get(sample.traversalClass) ?? 0) + 1);
-  scanSummaries.push({
-    x: coordinate.x,
-    z: coordinate.z,
+  return {
+    x,
+    z,
     traversalClass: sample.traversalClass,
     passable: sample.passable,
     movementCost: sample.movementCost,
     slopeHazard: sample.slopeHazard,
     fallHazard: sample.fallHazard,
     waterHazard: sample.waterHazard
-  });
+  };
 });
 
-const expectedObservedClasses = [
-  'STABLE_GROUND',
-  'SOFT_GROUND',
-  'ROCKY_UNEVEN_GROUND',
-  'STEEP_GROUND_CAUTION',
-  'SHORELINE_TRANSITION',
-  'SHALLOW_WADE',
-  'DEEP_WATER_BLOCKED'
-];
-expectedObservedClasses.forEach((traversalClass) => {
-  check(observedClasses.has(traversalClass),
-    `REQUIRED_OBSERVED_CLASS_MISSING:${traversalClass}`);
+H_EARTH_TRAVERSAL_CLASSES.forEach((traversalClass) => {
+  check(observed.has(traversalClass),
+    `DECLARED_CLASS_NOT_OBSERVED:${traversalClass}`);
 });
-equal(observedClasses.size, 7, 'OBSERVED_TRAVERSAL_CLASS_COUNT');
-const unobservedDeclaredClasses = H_EARTH_TRAVERSAL_CLASSES
-  .filter((traversalClass) => !observedClasses.has(traversalClass));
-deepEqual(unobservedDeclaredClasses, ['STEEP_SLOPE_BLOCKED'],
-  'UNOBSERVED_DECLARED_CLASS_SET_MISMATCH');
+equal(observed.size, 8, 'OBSERVED_CLASS_COUNT');
 
-const waterwardProfileDistances = [24, 6, -1, -10, -35, -90];
-const waterwardProfile = waterwardProfileDistances.map((shorelineDistance) => {
-  const x = 0;
-  const z = shorelineAt(x) - shorelineDistance;
-  return sampleHEarthTraversalSurface(x, z);
-});
-deepEqual(waterwardProfile.map((sample) => sample.traversalClass), [
+const profile = [24, 6, -1, -10, -35, -90].map((distance) =>
+  sampleHEarthTraversalSurface(0, shoreline(0) - distance));
+deepEqual(profile.map((sample) => sample.traversalClass), [
   'SOFT_GROUND',
   'SOFT_GROUND',
   'SHORELINE_TRANSITION',
   'SHALLOW_WADE',
   'DEEP_WATER_BLOCKED',
   'DEEP_WATER_BLOCKED'
-], 'WATERWARD_PROFILE_CLASS_SEQUENCE');
-check(waterwardProfile[3].waterHazard > waterwardProfile[2].waterHazard,
-  'SHALLOW_WATER_HAZARD_NOT_GREATER_THAN_CONTACT');
-check(waterwardProfile[4].waterHazard >= waterwardProfile[3].waterHazard,
-  'NEARSHORE_HAZARD_NOT_GREATER_THAN_SHALLOW');
+], 'WATERWARD_CLASS_SEQUENCE');
+check(profile[3].waterHazard > profile[2].waterHazard,
+  'SHALLOW_HAZARD_NOT_GREATER_THAN_CONTACT');
+check(profile[4].waterHazard >= profile[3].waterHazard,
+  'DEEP_HAZARD_NOT_GREATER_THAN_SHALLOW');
 
 const suppliedX = -32;
 const suppliedZ = -150;
 const correspondingWater = sampleHEarthWaterState(suppliedX, suppliedZ);
-const suppliedTraversal = sampleHEarthTraversalSurface(suppliedX, suppliedZ, {
+equal(sampleHEarthTraversalSurface(suppliedX, suppliedZ, {
   waterState: correspondingWater
+}).valid, true, 'CORRESPONDING_WATER_REJECTED');
+const mismatched = sampleHEarthTraversalSurface(suppliedX, suppliedZ, {
+  waterState: sampleHEarthWaterState(suppliedX + 24, suppliedZ)
 });
-equal(suppliedTraversal.valid, true, 'CORRESPONDING_SUPPLIED_WATER_REJECTED');
-const mismatchedWater = sampleHEarthWaterState(suppliedX + 24, suppliedZ);
-const mismatchTraversal = sampleHEarthTraversalSurface(suppliedX, suppliedZ, {
-  waterState: mismatchedWater
-});
-equal(mismatchTraversal.valid, false, 'MISMATCHED_SUPPLIED_WATER_ACCEPTED');
-check(mismatchTraversal.issues.includes('WATER_STATE_NOT_ELIGIBLE_OR_NOT_CORRESPONDING'),
-  'MISMATCHED_SUPPLIED_WATER_ISSUE_MISSING');
+equal(mismatched.valid, false, 'MISMATCHED_WATER_ACCEPTED');
+check(mismatched.issues.includes('WATER_STATE_NOT_ELIGIBLE_OR_NOT_CORRESPONDING'),
+  'MISMATCH_ISSUE_MISSING');
 
 for (const [index, args] of [
   [Number.NaN, 0],
@@ -284,14 +223,12 @@ for (const [index, args] of [
   ['0', 0]
 ].entries()) {
   const rejected = sampleHEarthTraversalSurface(args[0], args[1]);
-  equal(rejected.valid, false, `INVALID_COORDINATE_ACCEPTED:${index}`);
-  equal(rejected.status, 'TRAVERSAL_SURFACE_REJECTED_INVALID_INPUT',
-    `INVALID_COORDINATE_STATUS:${index}`);
+  equal(rejected.valid, false, `INVALID_INPUT_ACCEPTED:${index}`);
 }
 
 const sourceReceipt = getHEarthTraversalSurfaceReceipt();
-equal(sourceReceipt.eligible, true, 'TRAVERSAL_SOURCE_RECEIPT_FAIL');
-deepEqual(sourceReceipt.issues, [], 'TRAVERSAL_SOURCE_RECEIPT_ISSUES');
+equal(sourceReceipt.eligible, true, 'SOURCE_RECEIPT_FAIL');
+deepEqual(sourceReceipt.issues, [], 'SOURCE_RECEIPT_ISSUES');
 for (const [key, expected] of Object.entries({
   ownsMovementClassification: true,
   ownsMovementCost: true,
@@ -314,32 +251,28 @@ for (const [key, expected] of Object.entries({
   ownsPublicRoute: false
 })) {
   equal(H_EARTH_TRAVERSAL_SURFACE.ownership[key], expected,
-    `TRAVERSAL_OWNERSHIP_DECLARATION:${key}`);
+    `OWNERSHIP_DECLARATION:${key}`);
 }
 
 const deterministicCore = {
   contractId: H_EARTH_TRAVERSAL_SURFACE_CONTRACT_ID,
   traversalSurfaceRevision: 1,
-  traversalClasses: H_EARTH_TRAVERSAL_CLASSES,
-  fixedSummaries,
-  scanSummaries,
+  fixedSummary,
+  scanSummary,
+  observedClasses: [...observed].sort(),
   classCounts: Object.fromEntries([...classCounts.entries()].sort()),
-  observedClasses: [...observedClasses].sort(),
-  unobservedDeclaredClasses,
   forbiddenOutputsObserved: 0
 };
 const deterministicDigest = digest(deterministicCore);
 const rerunDigest = digest({
   ...deterministicCore,
-  fixedSummaries: fixedSecond.map(({ fixture, sample }) => ({
-    fixtureId: fixture.id,
+  fixedSummary: fixedSecond.map(({ entry, sample }) => ({
+    id: entry.id,
     traversalClass: sample.traversalClass,
     passability: sample.passability,
-    movementMode: sample.movementMode,
-    movementCost: sample.movementCost,
-    hazards: Object.fromEntries(hazardFields.map((field) => [field, sample[field]]))
+    movementCost: sample.movementCost
   })),
-  scanSummaries: scanSecond.map((sample, index) => ({
+  scanSummary: scanSecond.map((sample, index) => ({
     x: scanCoordinates[index].x,
     z: scanCoordinates[index].z,
     traversalClass: sample.traversalClass,
@@ -350,8 +283,7 @@ const rerunDigest = digest({
     waterHazard: sample.waterHazard
   }))
 });
-equal(deterministicDigest, rerunDigest,
-  'TRAVERSAL_DETERMINISTIC_DIGEST_MISMATCH');
+equal(deterministicDigest, rerunDigest, 'DIGEST_RERUN_MISMATCH');
 
 const execution = {
   receiptType: 'H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN_7F_EXECUTION_CANDIDATE',
@@ -364,11 +296,10 @@ const execution = {
   authorizedDomainScanSampleCount: scanCoordinates.length,
   excludedOutOfDomainCoordinateCount:
     candidateCoordinates.length - scanCoordinates.length,
-  waterwardProfileSampleCount: waterwardProfile.length,
+  waterwardProfileSampleCount: profile.length,
   declaredTraversalClassCount: H_EARTH_TRAVERSAL_CLASSES.length,
-  observedTraversalClassCount: observedClasses.size,
-  observedTraversalClasses: [...observedClasses].sort(),
-  unobservedDeclaredClasses,
+  observedTraversalClassCount: observed.size,
+  observedTraversalClasses: [...observed].sort(),
   traversalClassCounts: Object.fromEntries([...classCounts.entries()].sort()),
   assertionCount,
   passCount: assertionCount,

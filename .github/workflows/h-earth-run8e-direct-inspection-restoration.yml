@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate-run8e-direct-inspection-restoration:
@@ -19,7 +19,6 @@ jobs:
     env:
       H_EARTH_DIRECT_INSPECTION_URL: http://127.0.0.1:4173/showroom/globe/h-earth/
       H_EARTH_DIRECT_INSPECTION_OUTPUT: /tmp/h-earth-run8e-direct-inspection-restoration
-      H_EARTH_DIRECT_INSPECTION_BRANCH: agent/h-earth-run8e-direct-inspection-restoration-001
     steps:
       - name: Check out direct-inspection branch head
         uses: actions/checkout@v4
@@ -137,30 +136,15 @@ jobs:
             raise SystemExit(f'INVALID_DIRECT_INSPECTION_PATH_COUNT:{len(paths)}')
           PY
 
-      - name: Persist exact restoration sources and receipt
-        if: github.event_name != 'workflow_dispatch'
+      - name: Stage exact restoration receipt
         run: |
           set -euo pipefail
-          target='h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json'
-          candidate='/tmp/h-earth-run8e-direct-inspection-restoration/h-earth.run8e-direct-inspection-restoration.receipt.json'
-          cp "$candidate" "$target"
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A \
-            showroom/globe/h-earth/index.html \
-            showroom/globe/h-earth/functional-landscape/environment-integration.js \
-            showroom/globe/h-earth/functional-landscape/direct-manipulation.js \
-            showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js \
-            h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs \
-            "$target"
-          if git diff --cached --quiet; then
-            echo 'Exact direct-inspection restoration already persisted.'
-            exit 0
-          fi
-          git commit -m 'Persist final direct inspection restoration evidence'
-          git push origin "HEAD:${H_EARTH_DIRECT_INSPECTION_BRANCH}"
+          cp \
+            /tmp/h-earth-run8e-direct-inspection-restoration/h-earth.run8e-direct-inspection-restoration.receipt.json \
+            h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json
+          git diff --check
 
-      - name: Upload restoration evidence
+      - name: Upload restoration evidence and exact generated sources
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -176,5 +160,10 @@ jobs:
             /tmp/h-earth-run8e-direct-inspection-restoration.log
             /tmp/h-earth-run8e-direct-inspection-restoration
             /tmp/h-earth-run8e-direct-inspection-paths.txt
+            showroom/globe/h-earth/index.html
+            showroom/globe/h-earth/functional-landscape/environment-integration.js
+            showroom/globe/h-earth/functional-landscape/direct-manipulation.js
+            h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs
+            h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json
           if-no-files-found: error
           retention-days: 90

@@ -1,0 +1,296 @@
+name: H-Earth Run 8E Public Route Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-public-integration-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8d-grounded-vegetation-001
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-run8e-public-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      RUN8E_LOCAL_URL: http://127.0.0.1:4173/showroom/globe/h-earth/
+    steps:
+      - name: Check out Run 8E workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify Run 8E public-route integration source
+        run: |
+          set -euo pipefail
+          grep -q 'H_EARTH_RUN_8E_PUBLIC_ROUTE_SUCCESSOR_ENVIRONMENT_INTEGRATION_v1' \
+            showroom/globe/h-earth/functional-landscape/environment-integration.js
+          grep -q 'constructHEarthRun8ESuccessorEnvironmentFrame' \
+            showroom/globe/h-earth/functional-landscape/environment-integration.js
+          grep -q 'data-run7i-public-route="true"' showroom/globe/h-earth/index.html
+          grep -q 'functional-landscape/environment-integration.js?v=run7i-public-route-001' \
+            showroom/globe/h-earth/index.html
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start bounded workspace server
+        run: |
+          python3 -m http.server 4173 > /tmp/run8e-public-server.log 2>&1 &
+          echo $! > /tmp/run8e-public-server.pid
+          for attempt in $(seq 1 40); do
+            if curl --fail --silent "$RUN8E_LOCAL_URL" > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/run8e-public-server.log
+          exit 1
+
+      - name: Execute desktop and Samsung-emulation route matrix
+        env:
+          H_EARTH_RUN8E_URL: http://127.0.0.1:4173/showroom/globe/h-earth/
+          H_EARTH_RUN8E_OUTPUT: /tmp/run8e-public-artifacts
+        run: |
+          cat > h-earth-run8e-public-browser.mjs <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import { chromium } from 'playwright';
+
+          const url = process.env.H_EARTH_RUN8E_URL;
+          const output = process.env.H_EARTH_RUN8E_OUTPUT;
+          await fs.mkdir(output, { recursive: true });
+          const configurations = [
+            ['desktop-landscape', 1280, 800, false, false],
+            ['samsung-mobile-portrait', 412, 915, true, true],
+            ['samsung-mobile-landscape', 915, 412, true, true]
+          ];
+          const results = [];
+          const browser = await chromium.launch({ headless: true });
+          try {
+            for (const [id, width, height, isMobile, hasTouch] of configurations) {
+              const context = await browser.newContext({
+                viewport: { width, height },
+                isMobile,
+                hasTouch,
+                deviceScaleFactor: 1
+              });
+              const page = await context.newPage();
+              const consoleErrors = [];
+              const pageErrors = [];
+              page.on('console', (message) => {
+                if (message.type() === 'error') consoleErrors.push(message.text());
+              });
+              page.on('pageerror', (error) => pageErrors.push(error.message));
+
+              await page.goto(`${url}?run8e=${Date.now()}-${id}`, {
+                waitUntil: 'domcontentloaded',
+                timeout: 180000
+              });
+              await page.waitForFunction(() =>
+                window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F?.ready === true &&
+                window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true &&
+                document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady === 'true',
+              null, { timeout: 240000 });
+
+              const receipts = [];
+              receipts.push(await page.evaluate(() =>
+                window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt()));
+
+              for (const waypointId of ['LOWLAND', 'RIDGE']) {
+                const before = receipts.at(-1).renderSequence;
+                await page.evaluate((waypoint) =>
+                  window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F.gotoWaypoint(waypoint), waypointId);
+                await page.waitForFunction((sequence) =>
+                  window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt().renderSequence > sequence,
+                before, { timeout: 240000 });
+                receipts.push(await page.evaluate(() =>
+                  window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt()));
+              }
+
+              const final = receipts.at(-1);
+              assert.equal(receipts.every((receipt) => receipt.eligible), true);
+              assert.equal(receipts.every((receipt) => receipt.admittedPrimitiveCount === 35), true);
+              assert.equal(receipts.every((receipt) => receipt.terrainPrimitiveCount === 1), true);
+              assert.equal(receipts.every((receipt) => receipt.shorelinePrimitiveCount === 7), true);
+              assert.equal(receipts.every((receipt) => receipt.vegetationPrimitiveCount === 27), true);
+              assert.equal(receipts.every((receipt) => receipt.cameraReconciledToSuccessorTerrain), true);
+              assert.equal(receipts.every((receipt) => receipt.singlePhysicalDepthDomainExecuted), true);
+              assert.equal(receipts.every((receipt) => receipt.singleSkyAuthorityMaterialized), true);
+              assert.equal(receipts.every((receipt) => receipt.sunDiscIntegrationActive), true);
+              assert.equal(Math.max(...receipts.map((receipt) => receipt.sunPixelCount)) > 0, true);
+              assert.equal(receipts.every((receipt) => receipt.alphaClosed), true);
+              assert.equal(Math.max(...receipts.map((receipt) => receipt.terrainVisiblePixelCount)) > 0, true);
+              assert.equal(Math.max(...receipts.map((receipt) => receipt.vegetationVisiblePixelCount)) > 0, true);
+              assert.equal(Math.max(...receipts.map((receipt) =>
+                receipt.vegetationTerrainDepthInteractionCount)) > 0, true);
+
+              const rootState = await page.evaluate(() => {
+                const root = document.getElementById('h-earth-functional-landscape-route');
+                const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+                const pixels = canvas.getContext('2d').getImageData(
+                  0, 0, canvas.width, canvas.height).data;
+                let opaque = 0;
+                const colors = new Set();
+                const stride = Math.max(4, Math.floor(pixels.length / 12000 / 4) * 4);
+                for (let index = 0; index < pixels.length; index += stride) {
+                  const offset = index - index % 4;
+                  if (pixels[offset + 3] === 255) opaque += 1;
+                  colors.add(`${pixels[offset]},${pixels[offset + 1]},${pixels[offset + 2]}`);
+                }
+                return {
+                  run8eReady: root.dataset.run8eReady,
+                  run8eError: root.dataset.run8eError,
+                  run8ePublicRoute: root.dataset.run8ePublicRoute,
+                  publicRoute: root.dataset.publicRoute,
+                  canvasWidth: canvas.width,
+                  canvasHeight: canvas.height,
+                  opaquePixelSamples: opaque,
+                  sampledColorCount: colors.size,
+                  status: document.getElementById('route-status')?.textContent,
+                  hudSurface: document.getElementById('hud-surface')?.textContent,
+                  hudPopulation: document.getElementById('hud-population')?.textContent
+                };
+              });
+              assert.equal(rootState.run8eReady, 'true');
+              assert.equal(rootState.run8eError, 'false');
+              assert.equal(rootState.run8ePublicRoute, 'true');
+              assert.equal(rootState.publicRoute, 'true');
+              assert.equal(rootState.opaquePixelSamples > 0, true);
+              assert.equal(rootState.sampledColorCount > 24, true);
+              assert.match(rootState.status, /Run 8E successor environment active/);
+              assert.match(rootState.hudSurface, /Successor terrain/);
+              assert.match(rootState.hudPopulation, /24 grounded instances/);
+              assert.deepEqual(consoleErrors, []);
+              assert.deepEqual(pageErrors, []);
+
+              const screenshot = `${id}.png`;
+              await page.screenshot({ path: path.join(output, screenshot), fullPage: true });
+              results.push({
+                configurationId: id,
+                viewport: { width, height },
+                isMobile,
+                hasTouch,
+                receipts,
+                finalReceipt: final,
+                rootState,
+                screenshot,
+                consoleErrors,
+                pageErrors
+              });
+              await context.close();
+            }
+          } finally {
+            await browser.close();
+          }
+
+          const receipt = {
+            receiptType: 'H_EARTH_RUN_8E_PUBLIC_ROUTE_BRANCH_EXECUTION_RECEIPT',
+            eligible: true,
+            status: 'RUN_8E_PUBLIC_ROUTE_BRANCH_EXECUTION_PASS',
+            publicRoute: '/showroom/globe/h-earth/',
+            configurationCount: results.length,
+            desktopBrowserExecution: 'PASS',
+            samsungMobilePortraitEmulation: 'PASS',
+            samsungMobileLandscapeEmulation: 'PASS',
+            actualBrowserExecution: true,
+            publicRouteBranchExecution: true,
+            successorTerrainIntegrated: true,
+            groundedVegetationIntegrated: true,
+            sharedDepthAndOcclusionExecuted: true,
+            singleSkyAndSunIntegrated: true,
+            cameraReconciledToSuccessorTerrain: true,
+            physicalSamsungInstrumentation: false,
+            preUpdateBaselineComparison: false,
+            mainPromotion: false,
+            deployment: false,
+            liveIdentityProof: false,
+            run8EPassClosed: false,
+            results,
+            issues: []
+          };
+          await fs.writeFile(path.join(output, 'run8e-public-route-receipt.json'),
+            `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
+          console.log(JSON.stringify(receipt, null, 2));
+          NODE
+
+          set -o pipefail
+          node h-earth-run8e-public-browser.mjs 2>&1 | tee /tmp/run8e-public-browser.log
+
+      - name: Verify Run 8E public-route receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const candidate = JSON.parse(fs.readFileSync(
+            '/tmp/run8e-public-artifacts/run8e-public-route-receipt.json', 'utf8'));
+          if (
+            candidate.eligible !== true ||
+            candidate.status !== 'RUN_8E_PUBLIC_ROUTE_BRANCH_EXECUTION_PASS' ||
+            candidate.configurationCount !== 3 ||
+            candidate.desktopBrowserExecution !== 'PASS' ||
+            candidate.samsungMobilePortraitEmulation !== 'PASS' ||
+            candidate.samsungMobileLandscapeEmulation !== 'PASS' ||
+            candidate.actualBrowserExecution !== true ||
+            candidate.publicRouteBranchExecution !== true ||
+            candidate.successorTerrainIntegrated !== true ||
+            candidate.groundedVegetationIntegrated !== true ||
+            candidate.sharedDepthAndOcclusionExecuted !== true ||
+            candidate.singleSkyAndSunIntegrated !== true ||
+            candidate.cameraReconciledToSuccessorTerrain !== true ||
+            candidate.physicalSamsungInstrumentation !== false ||
+            candidate.preUpdateBaselineComparison !== false ||
+            candidate.mainPromotion !== false ||
+            candidate.deployment !== false ||
+            candidate.liveIdentityProof !== false ||
+            candidate.run8EPassClosed !== false ||
+            candidate.issues.length !== 0
+          ) process.exit(1);
+          const durable = 'h-earth-3d/validation/h-earth.run8e.public-route.receipt.json';
+          if (
+            fs.existsSync(durable) &&
+            fs.readFileSync(durable, 'utf8') !==
+              fs.readFileSync('/tmp/run8e-public-artifacts/run8e-public-route-receipt.json', 'utf8')
+          ) process.exit(1);
+          NODE
+
+      - name: Persist exact Run 8E public-route receipt
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/h-earth-run8e-public-integration-001'
+        run: |
+          set -euo pipefail
+          target='h-earth-3d/validation/h-earth.run8e.public-route.receipt.json'
+          candidate='/tmp/run8e-public-artifacts/run8e-public-route-receipt.json'
+          if [ -f "$target" ]; then
+            cmp --silent "$candidate" "$target"
+            echo 'Exact durable Run 8E public-route receipt already present.'
+            exit 0
+          fi
+          cp "$candidate" "$target"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$target"
+          git commit -m 'Commit Run 8E public-route receipt'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload Run 8E public-route evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-public-route-evidence
+          path: |
+            /tmp/run8e-public-browser.log
+            /tmp/run8e-public-server.log
+            /tmp/run8e-public-artifacts
+          if-no-files-found: error
+          retention-days: 30

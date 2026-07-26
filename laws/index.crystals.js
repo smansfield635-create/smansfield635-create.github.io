@@ -1,20 +1,22 @@
 /* /laws/index.crystals.js
-   Laws Compass bounded perceptual-continuity loader.
+   Laws Compass bounded living-crystal continuity loader.
 
    This complete replacement preserves the accepted spherical X/Y/Z category
-   and law-cluster positions while removing Laws-only visual variance that
-   caused orientation-dependent fragmentation: geometry-scale amplification,
-   full-mesh halo duplication, autonomous crystal spin, and float drift.
+   and law-cluster positions and the clean single-surface crystal body, while
+   restoring the shared Main Compass / ARCHCOIN autonomous facet rotation.
+   Scale amplification, full-mesh halo duplication, and float drift remain
+   excluded so the prior cavity/ghost regression cannot return through those
+   mechanisms.
 */
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_LAWS_CRYSTALS_PERCEPTUAL_CONTINUITY_v4",
+    id: "DGB_LAWS_CRYSTALS_LIVING_CONTINUITY_v5",
     sourceUrl:
-      "./index.crystals.source.js?v=LAWS_CRYSTALS_SOURCE_PERCEPTUAL_CONTINUITY_20260726F",
+      "./index.crystals.source.js?v=LAWS_CRYSTALS_SOURCE_LIVING_CONTINUITY_20260726G",
     geometryModel: "BOUNDED_SPHERICAL_XYZ_CLUSTER",
-    presentationModel: "INVARIANT_FRONT_FACING_CRYSTAL_PRESENTATION",
+    presentationModel: "SHARED_AUTONOMOUS_FACET_ROTATION_FIXED_GEOMETRY",
     faceVisibilityModel: "DOUBLE_SIDED_OPAQUE_SINGLE_SURFACE_PASS",
     categoryScale: 0.96,
     lawScale: 0.88,
@@ -27,7 +29,7 @@
     cullFaceEnabled: false,
     ordinarySurfaceOpaque: true,
     haloPassEnabled: false,
-    autonomousCrystalRotationEnabled: false,
+    autonomousCrystalRotationEnabled: true,
     crystalFloatEnabled: false,
     depthBasedGeometryScaleEnabled: false,
     primaryGeometryScaleLiftEnabled: false,
@@ -40,7 +42,7 @@
   });
 
   const SCRIPT_ATTRIBUTE =
-    "data-laws-perceptual-continuity-crystals-source";
+    "data-laws-living-continuity-crystals-source";
 
   function fail(code, details = null) {
     const error = new Error(code);
@@ -282,8 +284,8 @@
 
     source = replaceSection(
       source,
-      "  function boundClusterQuaternion(value) {",
-      "\n\n  function clusterQuaternionFromFrame(",
+      "  function boundClusterQuaternion = "true";
+      state.root.dataset.lawsClusterFullXyzFrame(",
 `  function boundClusterQuaternion(value) {
     return quaternionNormalize(value);
   }`,
@@ -338,6 +340,16 @@
     state.visualPrimaryDirection =
       nearestPrimaryDirection();
 
+    DIRECTIONS.forEach );
+
+    source = replaceSection(
+      source,
+      "  function updateConstellationTargets() {",
+      "\n\n  function updateClusterTargets(",
+`  function updateConstellationTargets() {
+    state.visualPrimaryDirection =
+      nearestPrimaryDirection();
+
     DIRECTIONS.forEach(direction => {
       const node = state.registry.get(direction);
       const sphere = sphericalCategoryPosition(direction);
@@ -361,7 +373,10 @@
             z: sphere.z,
             prominence: primary ? 0.90 : 0.78,
             halo: 0,
-            rotationSpeed: 0,
+            rotationSpeed:
+              primary
+                ? 0.15
+                : 0.08 + sphere.depth * 0.05,
             float: 0
           },
           QUALITY.categoryScale
@@ -369,7 +384,7 @@
       );
     });
   }`,
-      "INVARIANT_CONSTELLATION_PRESENTATION"
+      "LIVING_CONSTELLATION_PRESENTATION"
     );
 
     source = replaceSection(
@@ -433,7 +448,10 @@
                   ? 0.86
                   : 0.76,
             halo: 0,
-            rotationSpeed: 0,
+            rotationSpeed:
+              primary || selected
+                ? 0.13
+                : 0.07 + sphere.depth * 0.04,
             float: 0
           },
           QUALITY.lawScale
@@ -441,51 +459,7 @@
       );
     });
   }`,
-      "INVARIANT_CLUSTER_PRESENTATION"
-    );
-
-    source = replaceSection(
-      source,
-      "  function updateTransforms(deltaSeconds) {",
-      "\n\n  function nodeFloatY(node) {",
-`  function updateTransforms(deltaSeconds) {
-    const interpolation =
-      state.reducedMotion
-        ? 1
-        : Math.min(
-            1,
-            deltaSeconds *
-              QUALITY.transformSettleSpeed
-          );
-
-    state.registry.forEach(node => {
-      [
-        "x",
-        "y",
-        "z",
-        "sx",
-        "sy",
-        "sz",
-        "prominence",
-        "halo",
-        "rotationSpeed",
-        "float"
-      ].forEach(key => {
-        node.transform[key] =
-          node.transform[key] +
-          (node.target[key] - node.transform[key]) *
-            interpolation;
-      });
-
-      node.transform.rx = 0;
-      node.transform.ry = 0;
-      node.transform.rz = 0;
-      node.transform.rotationSpeed = 0;
-      node.transform.float = 0;
-      node.transform.halo = 0;
-    });
-  }`,
-      "FRONT_FACING_CRYSTAL_ORIENTATION"
+      "LIVING_CLUSTER_PRESENTATION"
     );
 
     source = replaceSection(
@@ -598,7 +572,6 @@
       "gl.cullFace(gl.BACK);",
       "gl.frontFace(gl.CCW);",
       "drawNode(\n              renderer,\n              node,\n              true",
-      "node.transform.rz +=",
       "sphere.depth *\n             0.42",
       "QUALITY.focusedCategoryScale",
       "QUALITY.primaryLawScale",
@@ -620,12 +593,12 @@
       "LAWS_CRYSTALS_NONCOPLANAR_DISTRIBUTION_INVALID",
       "QUALITY.categoryScale",
       "QUALITY.lawScale",
-      "prominence: primary ? 0.90 : 0.78",
-      "halo: 0",
-      "rotationSpeed: 0",
-      "node.transform.rx = 0;",
-      "node.transform.ry = 0;",
-      "node.transform.rz = 0;",
+      "rotationSpeed:\n              primary",
+      "0.08 + sphere.depth * 0.05",
+      "0.07 + sphere.depth * 0.04",
+      "node.transform.rz +=",
+      "QUALITY.maximumYaw",
+      "QUALITY.maximumPitch",
       "function nodeFloatY(node) {\n    return 0;",
       "gl.disable(gl.CULL_FACE);",
       "float alpha =\n        1.0;"
@@ -657,7 +630,7 @@
     script.dataset.ready = "false";
     script.textContent =
       source +
-      "\n//# sourceURL=/laws/index.crystals.perceptual-continuity.js";
+      "\n//# sourceURL=/laws/index.crystals.living-continuity.js";
     document.head.append(script);
     script.dataset.ready = "true";
 
@@ -668,16 +641,15 @@
       root.dataset.lawsClusterGeometryModel = CONTRACT.geometryModel;
       root.dataset.lawsClusterPresentationModel = CONTRACT.presentationModel;
       root.dataset.lawsCrystalFaceVisibilityModel = CONTRACT.faceVisibilityModel;
-      root.dataset.lawsMainCompassClusterPresentation = "true";
       root.dataset.lawsCrystalBackFaceCulling = "false";
       root.dataset.lawsCrystalOrdinarySurfaceOpaque = "true";
       root.dataset.lawsCrystalHaloPassEnabled = "false";
-      root.dataset.lawsCrystalAutonomousRotationEnabled = "false";
+      root.dataset.lawsCrystalAutonomousRotationEnabled = "true";
       root.dataset.lawsCrystalFloatEnabled = "false";
       root.dataset.lawsCrystalDepthScaleEnabled = "false";
       root.dataset.lawsCrystalPrimaryScaleLiftEnabled = "false";
       root.dataset.lawsCrystalSelectedScaleLiftEnabled = "false";
-      root.dataset.lawsCrystalPerceptualContinuity = "true";
+      root.dataset.lawsCrystalLivingContinuity = "true";
     }
 
     globalThis.DGB_LAWS_CRYSTALS_WRAPPER_RECEIPT = Object.freeze({
@@ -698,7 +670,7 @@
       doubleSidedCrystalDrawing: true,
       ordinarySurfaceOpaque: true,
       haloPassEnabled: false,
-      autonomousCrystalRotationEnabled: false,
+      autonomousCrystalRotationEnabled: true,
       crystalFloatEnabled: false,
       depthBasedGeometryScaleEnabled: false,
       primaryGeometryScaleLiftEnabled: false,

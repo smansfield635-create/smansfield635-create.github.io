@@ -48,6 +48,8 @@ jobs:
             2>&1 | tee /tmp/h-earth-run8e-direct-inspection-pointer-fix.log
           node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.resize-dedup-fix.mjs \
             2>&1 | tee /tmp/h-earth-run8e-direct-inspection-resize-fix.log
+          node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.active-viewport-dedup-fix.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-direct-inspection-active-viewport-fix.log
 
       - name: Install bounded Chromium dependency
         run: |
@@ -88,6 +90,7 @@ jobs:
           from pathlib import Path
           allowed = {
             '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
+            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.active-viewport-dedup-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.idempotency-gate.mjs',
@@ -111,6 +114,7 @@ jobs:
           unexpected = sorted(paths - allowed)
           required_initial = {
             '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
+            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.active-viewport-dedup-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.idempotency-gate.mjs',
@@ -127,7 +131,7 @@ jobs:
             raise SystemExit(f'UNEXPECTED_DIRECT_INSPECTION_PATHS:{unexpected}')
           if missing:
             raise SystemExit(f'MISSING_DIRECT_INSPECTION_PATHS:{missing}')
-          if not 11 <= len(paths) <= 15:
+          if not 12 <= len(paths) <= 16:
             raise SystemExit(f'INVALID_DIRECT_INSPECTION_PATH_COUNT:{len(paths)}')
           PY
 
@@ -165,6 +169,7 @@ jobs:
             /tmp/h-earth-run8e-direct-inspection-harness-fix.log
             /tmp/h-earth-run8e-direct-inspection-pointer-fix.log
             /tmp/h-earth-run8e-direct-inspection-resize-fix.log
+            /tmp/h-earth-run8e-direct-inspection-active-viewport-fix.log
             /tmp/h-earth-run8e-direct-inspection-server.log
             /tmp/h-earth-run8e-direct-inspection-restoration.log
             /tmp/h-earth-run8e-direct-inspection-restoration

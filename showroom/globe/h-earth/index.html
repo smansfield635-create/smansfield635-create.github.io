@@ -4,86 +4,612 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#111916">
-  <meta name="description" content="H-Earth coast-to-inland functional landscape.">
-  <title>H-Earth · Functional Landscape</title>
-  <link rel="stylesheet" href="./functional-landscape/index.css">
+  <meta name="theme-color" content="#061014">
+  <meta
+    name="description"
+    content="H-Earth Ground-View Matrix: a gesture-navigable coast-to-inland functional landscape with direct diagnostics and compass return."
+  >
+  <title>H-Earth · Ground-View Matrix</title>
+
+  <!-- Functional landscape component support loads first. -->
+  <link rel="stylesheet" href="./functional-landscape/index.css?v=gesture-shell-001">
+
+  <!-- The established H-Earth public shell remains the visual authority. -->
+  <link rel="stylesheet" href="./index.css?v=034r">
+
+  <style>
+    .h-earth-live-route {
+      --h-earth-stage-min-height: clamp(560px, 72dvh, 920px);
+    }
+
+    .h-earth-live-route .h-earth-3d-shell {
+      gap: 16px;
+    }
+
+    .h-earth-live-route .h-earth-3d-public-header {
+      position: relative;
+      z-index: 10;
+    }
+
+    .h-earth-live-arrival {
+      grid-template-columns: minmax(0, 1fr) minmax(230px, 0.34fr);
+      gap: 12px;
+    }
+
+    .h-earth-live-arrival .h-earth-3d-arrival-copy {
+      padding: clamp(18px, 3vw, 30px);
+    }
+
+    .h-earth-live-arrival .h-earth-3d-title {
+      max-width: 900px;
+      font-size: clamp(2rem, 5.4vw, 4.8rem);
+      line-height: 0.94;
+    }
+
+    .h-earth-live-arrival .h-earth-3d-lead {
+      max-width: 820px;
+      margin-top: 14px;
+    }
+
+    .h-earth-live-arrival .h-earth-3d-arrival-note {
+      align-content: center;
+      gap: 8px;
+    }
+
+    .h-earth-live-arrival .h-earth-3d-arrival-note p {
+      color: var(--h-earth-muted);
+    }
+
+    .h-earth-live-arrival .h-earth-3d-arrival-note strong {
+      color: var(--h-earth-accent-strong);
+    }
+
+    .h-earth-live-status {
+      margin: 0;
+      color: var(--h-earth-info);
+      font-family: var(--h-earth-mono);
+      font-size: 0.74rem;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .h-earth-live-route .h-earth-3d-world-shell {
+      padding: 10px;
+    }
+
+    .h-earth-live-route .h-earth-3d-world-stage {
+      min-height: var(--h-earth-stage-min-height);
+      border-color: rgba(220, 242, 238, 0.2);
+      touch-action: none;
+    }
+
+    .h-earth-live-route .h-earth-3d-renderer-mount {
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      overscroll-behavior: contain;
+    }
+
+    .h-earth-live-route .h-earth-3d-renderer-mount:active {
+      cursor: grabbing;
+    }
+
+    .h-earth-live-route canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+    }
+
+    .h-earth-live-route .semantic-readout {
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      max-width: none;
+    }
+
+    .h-earth-live-route .semantic-readout span {
+      border-color: rgba(220, 255, 244, 0.25);
+      background: rgba(2, 8, 10, 0.76);
+      color: var(--h-earth-text);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .h-earth-live-gesture-hint {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      z-index: 8;
+      width: max-content;
+      max-width: calc(100% - 28px);
+      translate: -50% 0;
+      padding: 8px 12px;
+      border: 1px solid rgba(220, 255, 244, 0.2);
+      border-radius: 999px;
+      color: rgba(238, 248, 246, 0.82);
+      background: rgba(2, 8, 10, 0.7);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(12px);
+      font-size: 0.72rem;
+      font-weight: 720;
+      line-height: 1.3;
+      text-align: center;
+      pointer-events: none;
+      transition: opacity 180ms ease, translate 180ms ease;
+    }
+
+    .h-earth-live-route[data-gesture-used="true"] .h-earth-live-gesture-hint {
+      opacity: 0;
+      translate: -50% -8px;
+    }
+
+    .h-earth-live-details {
+      margin-top: 10px;
+      border: 1px solid var(--h-earth-border-soft);
+      border-radius: var(--h-earth-radius-md);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .h-earth-live-details summary {
+      padding: 12px 14px;
+      color: var(--h-earth-muted);
+      font-size: 0.8rem;
+      font-weight: 760;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+
+    .h-earth-live-details .telemetry {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      border-top-color: var(--h-earth-border-soft);
+    }
+
+    .h-earth-live-details .telemetry div {
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .h-earth-live-details .telemetry dt {
+      color: var(--h-earth-soft);
+    }
+
+    .h-earth-live-details .telemetry dd {
+      color: var(--h-earth-text);
+    }
+
+    .h-earth-live-route .controls,
+    .h-earth-live-route .movement-grid,
+    .h-earth-live-route .view-controls,
+    .h-earth-live-route .waypoints {
+      display: none !important;
+    }
+
+    @media (max-width: 820px) {
+      .h-earth-live-route {
+        --h-earth-stage-min-height: clamp(500px, 68dvh, 760px);
+      }
+
+      .h-earth-live-route.h-earth-3d-route-root {
+        padding:
+          max(12px, env(safe-area-inset-top))
+          10px
+          max(20px, env(safe-area-inset-bottom));
+      }
+
+      .h-earth-live-route .h-earth-3d-public-header {
+        align-items: center;
+        padding: 10px;
+      }
+
+      .h-earth-live-route .h-earth-3d-brand-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+      }
+
+      .h-earth-live-route .h-earth-3d-public-nav {
+        gap: 6px;
+      }
+
+      .h-earth-live-route .h-earth-3d-public-nav a {
+        padding: 8px 10px;
+        font-size: 0.76rem;
+      }
+
+      .h-earth-live-arrival {
+        grid-template-columns: 1fr;
+      }
+
+      .h-earth-live-arrival .h-earth-3d-arrival-note {
+        padding: 14px 16px;
+      }
+
+      .h-earth-live-details .telemetry {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .h-earth-live-route {
+        --h-earth-stage-min-height: max(520px, 66dvh);
+      }
+
+      .h-earth-live-route .h-earth-3d-public-header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .h-earth-live-route .h-earth-3d-public-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .h-earth-live-route .h-earth-3d-public-nav a {
+        text-align: center;
+      }
+
+      .h-earth-live-arrival .h-earth-3d-arrival-copy {
+        padding: 18px;
+      }
+
+      .h-earth-live-arrival .h-earth-3d-title {
+        font-size: clamp(2rem, 12vw, 3.25rem);
+      }
+
+      .h-earth-live-route .h-earth-3d-world-shell {
+        padding: 6px;
+      }
+
+      .h-earth-live-route .h-earth-3d-world-stage {
+        border-radius: 20px;
+      }
+
+      .h-earth-live-gesture-hint {
+        top: 10px;
+        padding: 7px 10px;
+        font-size: 0.66rem;
+      }
+
+      .h-earth-live-details .telemetry {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 560px) {
+      .h-earth-live-route {
+        --h-earth-stage-min-height: calc(100dvh - 126px);
+      }
+
+      .h-earth-live-arrival {
+        display: none;
+      }
+
+      .h-earth-live-details {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body>
   <main
-    id="h-earth-functional-landscape-route"
-    class="route-shell"
-    data-run6f-ready="false"
-    aria-labelledby="route-title"
+    id="h-earth-3d-route-root"
+    class="h-earth-3d-route-root h-earth-live-route"
+    data-h-earth-route="public-environment-host"
+    data-h-earth-public-route="functional-landscape"
+    data-h-earth-gesture-primary="true"
+    data-h-earth-stage-contains-controls="false"
+    data-h-earth-stage-contains-selected-card="false"
+    data-h-earth-stage-contains-receipts="false"
   >
-    <header class="route-header">
-      <div>
-        <p class="eyebrow">H-Earth</p>
-        <h1 id="route-title">Coast-to-inland functional landscape</h1>
-      </div>
-      <p id="route-status" class="route-status" role="status" aria-live="polite">
-        Constructing governed landscape…
-      </p>
-    </header>
-
-    <section class="viewer-panel" aria-label="Navigable H-Earth landscape">
-      <div
-        id="h-earth-functional-landscape-mount"
-        class="render-mount"
-        tabindex="0"
-        aria-label="Landscape viewport. Use W A S D or the controls below to navigate."
+    <div
+      id="h-earth-functional-landscape-route"
+      class="h-earth-3d-shell"
+      data-run6f-ready="false"
+      data-run6f-error="false"
+      data-public-route="true"
+      data-gesture-used="false"
+    >
+      <header
+        class="h-earth-3d-public-header"
+        aria-label="H-Earth navigation"
       >
-        <canvas
-          id="h-earth-functional-landscape-canvas"
-          width="320"
-          height="180"
-          aria-hidden="true"
-        ></canvas>
-        <div class="reticle" aria-hidden="true"></div>
-        <div class="semantic-readout" aria-live="polite">
-          <span id="hud-waypoint">Coastal entry</span>
-          <span id="hud-address">Address pending</span>
+        <a
+          class="h-earth-3d-brand"
+          href="/index.html"
+          aria-label="Return to Compass"
+        >
+          <span class="h-earth-3d-brand-mark" aria-hidden="true">
+            <span>H</span>
+          </span>
+          <span class="h-earth-3d-brand-copy">
+            <span>Ground-View Matrix</span>
+            <strong>H-Earth</strong>
+          </span>
+        </a>
+
+        <nav
+          class="h-earth-3d-public-nav"
+          aria-label="H-Earth public navigation"
+        >
+          <a
+            id="h-earth-return-to-compass"
+            href="/index.html"
+            data-h-earth-return-to-compass="true"
+          >
+            Return to Compass
+          </a>
+          <a
+            id="h-earth-3d-diagnostic-link"
+            href="/showroom/globe/h-earth/diagnostic/"
+            data-h-earth-diagnostic-route-link="true"
+          >
+            Diagnostics
+          </a>
+        </nav>
+      </header>
+
+      <section
+        class="h-earth-3d-arrival h-earth-live-arrival"
+        aria-labelledby="h-earth-live-title"
+      >
+        <div class="h-earth-3d-arrival-copy">
+          <p class="h-earth-3d-kicker">H-Earth · Navigable Ground View</p>
+          <h1 id="h-earth-live-title" class="h-earth-3d-title">
+            Enter at the coast. Move inland.
+          </h1>
+          <p class="h-earth-3d-lead">
+            The beach is the coastal entry condition. The terrain continues
+            through berm, lowland, hill, ridge, and distant highland context.
+          </p>
         </div>
-      </div>
 
-      <dl class="telemetry" aria-label="Navigation telemetry">
-        <div><dt>Position</dt><dd id="hud-position">—</dd></div>
-        <div><dt>Terrain</dt><dd id="hud-terrain">—</dd></div>
-        <div><dt>Clearance</dt><dd id="hud-clearance">—</dd></div>
-        <div><dt>Chunk</dt><dd id="hud-chunk">—</dd></div>
-        <div><dt>Formation</dt><dd id="hud-formation">—</dd></div>
-        <div><dt>Frame</dt><dd id="hud-frame">—</dd></div>
-      </dl>
-    </section>
+        <aside class="h-earth-3d-arrival-note" aria-label="Navigation guidance">
+          <p>
+            <strong>Direct manipulation:</strong> drag to look, slide two
+            fingers or use the mouse wheel to move, and pinch to zoom.
+          </p>
+          <p id="route-status" class="h-earth-live-status" role="status" aria-live="polite">
+            Constructing governed landscape…
+          </p>
+        </aside>
+      </section>
 
-    <section class="controls" aria-label="Landscape controls">
-      <div class="movement-grid" aria-label="Movement">
-        <button type="button" data-action="TURN_LEFT" aria-label="Turn left">↶</button>
-        <button type="button" data-action="MOVE_FORWARD" aria-label="Move forward">↑</button>
-        <button type="button" data-action="TURN_RIGHT" aria-label="Turn right">↷</button>
-        <button type="button" data-action="STRAFE_LEFT" aria-label="Strafe left">←</button>
-        <button type="button" data-action="MOVE_BACKWARD" aria-label="Move backward">↓</button>
-        <button type="button" data-action="STRAFE_RIGHT" aria-label="Strafe right">→</button>
-      </div>
+      <section class="h-earth-3d-world-shell" aria-label="H-Earth functional landscape">
+        <div
+          class="h-earth-3d-world-stage"
+          data-h-earth-stage-contains-controls="false"
+          data-h-earth-stage-contains-selected-card="false"
+          data-h-earth-stage-contains-receipts="false"
+        >
+          <div
+            id="h-earth-functional-landscape-mount"
+            class="h-earth-3d-renderer-mount render-mount"
+            tabindex="0"
+            aria-label="Navigable H-Earth landscape. Drag to look. Slide two fingers or use the mouse wheel to move. Pinch to zoom."
+            aria-describedby="h-earth-gesture-instructions"
+          >
+            <canvas
+              id="h-earth-functional-landscape-canvas"
+              width="320"
+              height="180"
+              aria-hidden="true"
+            ></canvas>
+            <div class="reticle" aria-hidden="true"></div>
+            <div class="semantic-readout" aria-live="polite">
+              <span id="hud-waypoint">Coastal entry</span>
+              <span id="hud-address">Address pending</span>
+            </div>
+            <div
+              id="h-earth-gesture-instructions"
+              class="h-earth-live-gesture-hint"
+              aria-hidden="true"
+            >
+              Drag to look · Two-finger slide or wheel to move · Pinch to zoom
+            </div>
+          </div>
+        </div>
 
-      <div class="view-controls" aria-label="View controls">
-        <button type="button" data-action="PITCH_UP">Look up</button>
-        <button type="button" data-action="PITCH_DOWN">Look down</button>
-        <button type="button" data-action="ZOOM_IN">Zoom in</button>
-        <button type="button" data-action="ZOOM_OUT">Zoom out</button>
-        <button type="button" data-action="RESET">Reset coast</button>
-      </div>
-    </section>
-
-    <nav class="waypoints" aria-label="Geographic waypoints">
-      <button type="button" data-waypoint="COAST">Coast</button>
-      <button type="button" data-waypoint="BERM">Berm</button>
-      <button type="button" data-waypoint="LOWLAND">Lowland</button>
-      <button type="button" data-waypoint="HILL">Hill</button>
-      <button type="button" data-waypoint="RIDGE">Ridge</button>
-    </nav>
+        <details class="h-earth-live-details">
+          <summary>Environment details</summary>
+          <dl class="telemetry" aria-label="Navigation telemetry">
+            <div><dt>Position</dt><dd id="hud-position">—</dd></div>
+            <div><dt>Terrain</dt><dd id="hud-terrain">—</dd></div>
+            <div><dt>Clearance</dt><dd id="hud-clearance">—</dd></div>
+            <div><dt>Chunk</dt><dd id="hud-chunk">—</dd></div>
+            <div><dt>Formation</dt><dd id="hud-formation">—</dd></div>
+            <div><dt>Frame</dt><dd id="hud-frame">—</dd></div>
+          </dl>
+        </details>
+      </section>
+    </div>
   </main>
 
-  <script type="module" src="./functional-landscape/index.js"></script>
+  <script type="module" src="./functional-landscape/index.js?v=gesture-shell-001"></script>
+
+  <script>
+    (() => {
+      const root = document.getElementById('h-earth-functional-landscape-route');
+      const mount = document.getElementById('h-earth-functional-landscape-mount');
+      if (!root || !mount) return;
+
+      const pointers = new Map();
+      let singleLast = null;
+      let multiLast = null;
+      let pendingLookX = 0;
+      let pendingLookY = 0;
+      let pendingMoveY = 0;
+      let pendingPinch = 0;
+      let dispatchBusy = false;
+      let flushRequested = false;
+
+      const api = () => window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F;
+      const markUsed = () => {
+        root.dataset.gestureUsed = 'true';
+      };
+
+      const distance = (left, right) =>
+        Math.hypot(right.x - left.x, right.y - left.y);
+
+      const centroid = (left, right) => ({
+        x: (left.x + right.x) / 2,
+        y: (left.y + right.y) / 2
+      });
+
+      const queueFlush = () => {
+        if (flushRequested) return;
+        flushRequested = true;
+        requestAnimationFrame(flushGesture);
+      };
+
+      const nextGestureIntent = () => {
+        if (Math.abs(pendingPinch) >= 5) {
+          const delta = pendingPinch;
+          pendingPinch = 0;
+          return {
+            action: delta > 0 ? 'ZOOM_IN' : 'ZOOM_OUT',
+            degrees: Math.min(6, Math.max(1, Math.abs(delta) / 12))
+          };
+        }
+
+        if (Math.abs(pendingMoveY) >= 8) {
+          const delta = pendingMoveY;
+          pendingMoveY = 0;
+          return {
+            action: delta < 0 ? 'MOVE_FORWARD' : 'MOVE_BACKWARD',
+            magnitude: Math.min(10, Math.max(1, Math.abs(delta) / 10))
+          };
+        }
+
+        if (Math.max(Math.abs(pendingLookX), Math.abs(pendingLookY)) >= 3) {
+          const horizontal = Math.abs(pendingLookX) >= Math.abs(pendingLookY);
+          const delta = horizontal ? pendingLookX : pendingLookY;
+          if (horizontal) pendingLookX = 0;
+          else pendingLookY = 0;
+          return {
+            action: horizontal
+              ? (delta > 0 ? 'TURN_RIGHT' : 'TURN_LEFT')
+              : (delta < 0 ? 'PITCH_UP' : 'PITCH_DOWN'),
+            degrees: Math.min(8, Math.max(0.5, Math.abs(delta) / 9))
+          };
+        }
+
+        return null;
+      };
+
+      async function flushGesture() {
+        flushRequested = false;
+        if (dispatchBusy) {
+          queueFlush();
+          return;
+        }
+        const landscape = api();
+        if (!landscape?.ready) return;
+        const intent = nextGestureIntent();
+        if (!intent) return;
+
+        dispatchBusy = true;
+        markUsed();
+        try {
+          await landscape.dispatch(intent);
+        } finally {
+          dispatchBusy = false;
+          if (
+            Math.abs(pendingPinch) >= 5 ||
+            Math.abs(pendingMoveY) >= 8 ||
+            Math.max(Math.abs(pendingLookX), Math.abs(pendingLookY)) >= 3
+          ) {
+            queueFlush();
+          }
+        }
+      }
+
+      const resetPointerBaselines = () => {
+        const active = [...pointers.values()];
+        if (active.length === 1) {
+          singleLast = { ...active[0] };
+          multiLast = null;
+        } else if (active.length >= 2) {
+          const center = centroid(active[0], active[1]);
+          multiLast = {
+            center,
+            distance: distance(active[0], active[1])
+          };
+          singleLast = null;
+        } else {
+          singleLast = null;
+          multiLast = null;
+        }
+      };
+
+      mount.addEventListener('pointerdown', (event) => {
+        pointers.set(event.pointerId, {
+          x: event.clientX,
+          y: event.clientY,
+          pointerType: event.pointerType
+        });
+        resetPointerBaselines();
+      }, true);
+
+      mount.addEventListener('pointermove', (event) => {
+        if (!pointers.has(event.pointerId)) return;
+        event.preventDefault();
+        pointers.set(event.pointerId, {
+          x: event.clientX,
+          y: event.clientY,
+          pointerType: event.pointerType
+        });
+
+        const active = [...pointers.values()];
+        if (active.length === 1 && singleLast) {
+          pendingLookX += active[0].x - singleLast.x;
+          pendingLookY += active[0].y - singleLast.y;
+          singleLast = { ...active[0] };
+          queueFlush();
+          return;
+        }
+
+        if (active.length >= 2) {
+          const center = centroid(active[0], active[1]);
+          const currentDistance = distance(active[0], active[1]);
+          if (multiLast) {
+            pendingMoveY += center.y - multiLast.center.y;
+            pendingPinch += currentDistance - multiLast.distance;
+          }
+          multiLast = { center, distance: currentDistance };
+          queueFlush();
+        }
+      }, { capture: true, passive: false });
+
+      const releasePointer = (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        pointers.delete(event.pointerId);
+        resetPointerBaselines();
+        queueFlush();
+      };
+
+      mount.addEventListener('pointerup', releasePointer, true);
+      mount.addEventListener('pointercancel', releasePointer, true);
+
+      mount.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        const landscape = api();
+        if (!landscape?.ready || dispatchBusy) return;
+        markUsed();
+        dispatchBusy = true;
+        const intent = event.ctrlKey
+          ? {
+              action: event.deltaY < 0 ? 'ZOOM_IN' : 'ZOOM_OUT',
+              degrees: Math.min(6, Math.max(1, Math.abs(event.deltaY) / 80))
+            }
+          : {
+              action: event.deltaY < 0 ? 'MOVE_FORWARD' : 'MOVE_BACKWARD',
+              magnitude: Math.min(10, Math.max(1, Math.abs(event.deltaY) / 70))
+            };
+        landscape.dispatch(intent).finally(() => {
+          dispatchBusy = false;
+        });
+      }, { passive: false });
+    })();
+  </script>
 </body>
 </html>

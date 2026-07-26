@@ -35,6 +35,8 @@ jobs:
           set -euo pipefail
           node h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.constructor.mjs \
             2>&1 | tee /tmp/h-earth-run8e-mobile-navigation-constructor.log
+          node h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.reset-fix.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-mobile-navigation-reset-fix.log
 
       - name: Install bounded Chromium dependency
         run: |
@@ -75,6 +77,7 @@ jobs:
           allowed = {
             '.github/workflows/h-earth-run8e-mobile-navigation-correction.yml',
             'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.constructor.mjs',
+            'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.reset-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.harness.mjs',
             'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.receipt.json',
             'showroom/globe/h-earth/index.html',
@@ -96,7 +99,7 @@ jobs:
             raise SystemExit(f'UNEXPECTED_MOBILE_CORRECTION_PATHS:{unexpected}')
           if missing:
             raise SystemExit(f'MISSING_MOBILE_CORRECTION_PATHS:{missing}')
-          if not 7 <= len(paths) <= 8:
+          if not 8 <= len(paths) <= 9:
             raise SystemExit(f'INVALID_MOBILE_CORRECTION_PATH_COUNT:{len(paths)}')
           PY
 
@@ -129,6 +132,7 @@ jobs:
           name: h-earth-run8e-mobile-navigation-correction-evidence
           path: |
             /tmp/h-earth-run8e-mobile-navigation-constructor.log
+            /tmp/h-earth-run8e-mobile-navigation-reset-fix.log
             /tmp/h-earth-run8e-mobile-navigation-server.log
             /tmp/h-earth-run8e-mobile-navigation-correction.log
             /tmp/h-earth-run8e-mobile-navigation-correction

@@ -285,7 +285,7 @@ for (const previousState of H_EARTH_SPATIAL_LIFECYCLE_STATES) {
 for (const [index, input] of [
   {},
   { subjectId: 'BAD', subjectWorld: { x: 0, y: 0, z: 0 } },
-  { subjectId: 'BAD', subjectWorld: { x: 0, y: 0, z: 0 }, observerWorld },
+  { subjectId: 'BAD', subjectWorld: { x: 0, y: 0, z: 0 }, observerWorld, boundsRadius: -1 },
   { subjectId: 'BAD', subjectWorld: { x: Number.NaN, y: 0, z: 0 }, observerWorld },
   { subjectId: 'BAD', subjectWorld: { x: 0, y: 0, z: 0 }, observerWorld, previousState: 'INVALID' },
   { subjectId: 'BAD', subjectWorld: { x: 0, y: 0, z: 0 }, observerWorld, memoryPressure: 2 }

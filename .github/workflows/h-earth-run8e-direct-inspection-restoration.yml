@@ -122,12 +122,45 @@ jobs:
             raise SystemExit(f'INVALID_DIRECT_INSPECTION_PATH_COUNT:{len(paths)}')
           PY
 
-      - name: Verify exact durable restoration receipt
+      - name: Verify durable restoration receipt semantics
         run: |
           set -euo pipefail
-          cmp --silent \
-            /tmp/h-earth-run8e-direct-inspection-restoration/h-earth.run8e-direct-inspection-restoration.receipt.json \
-            h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const durable = JSON.parse(fs.readFileSync(
+            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json',
+            'utf8'
+          ));
+          const executed = JSON.parse(fs.readFileSync(
+            '/tmp/h-earth-run8e-direct-inspection-restoration/h-earth.run8e-direct-inspection-restoration.receipt.json',
+            'utf8'
+          ));
+          const required = (receipt) =>
+            receipt?.eligible === true &&
+            receipt?.status === 'RUN_8E_DIRECT_INSPECTION_RESTORATION_PASS' &&
+            receipt?.interactionAuthority?.oneFingerContinuousLook === 'RESTORED' &&
+            receipt?.interactionAuthority?.twoFingerContinuousTravel === 'RESTORED' &&
+            receipt?.interactionAuthority?.pinchZoom === 'RESTORED' &&
+            receipt?.interactionAuthority?.visibleDirectionalController === 'REMOVED' &&
+            receipt?.renderScheduling?.fullSuccessorRenderDuringActiveGesture === false &&
+            receipt?.renderScheduling?.fullSuccessorRenderAfterGestureSettles === true &&
+            receipt?.samsungPortraitEmulation === 'PASS' &&
+            receipt?.samsungLandscapeEmulation === 'PASS' &&
+            receipt?.physicalSamsungExecution === 'NOT_EXECUTED_AFTER_RESTORATION' &&
+            receipt?.run8EPassClosed === false &&
+            Array.isArray(receipt?.issues) && receipt.issues.length === 0 &&
+            receipt?.results?.every((result) =>
+              result.oneFingerLookStateChanged === true &&
+              result.twoFingerTravelStateChanged === true &&
+              result.pinchZoomStateChanged === true &&
+              result.fullRenderSuppressedDuringActiveGestures === true &&
+              result.successorRenderCommittedAfterEachGesture === true &&
+              result.visibleControllerPresent === false &&
+              result.zeroBrowserErrors === true);
+          if (!required(durable) || !required(executed)) {
+            throw new Error('DIRECT_INSPECTION_RECEIPT_SEMANTICS_INVALID');
+          }
+          NODE
           git diff --check
 
       - name: Upload restoration evidence

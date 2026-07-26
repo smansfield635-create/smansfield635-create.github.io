@@ -33,8 +33,15 @@ jobs:
       - name: Materialize bounded restoration
         run: |
           set -euo pipefail
-          node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs \
-            2>&1 | tee /tmp/h-earth-run8e-direct-inspection-constructor.log
+          node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.idempotency-gate.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-direct-inspection-idempotency.log
+          if [ ! -f /tmp/h-earth-run8e-direct-inspection-already-restored ]; then
+            node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs \
+              2>&1 | tee /tmp/h-earth-run8e-direct-inspection-constructor.log
+          else
+            echo 'Constructor skipped: exact restoration already present.' | \
+              tee /tmp/h-earth-run8e-direct-inspection-constructor.log
+          fi
           node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs \
             2>&1 | tee /tmp/h-earth-run8e-direct-inspection-harness-fix.log
           node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.pointer-isolation-fix.mjs \
@@ -83,6 +90,7 @@ jobs:
             '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
+            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.idempotency-gate.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.pointer-isolation-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.resize-dedup-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs',
@@ -105,6 +113,7 @@ jobs:
             '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
+            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.idempotency-gate.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.pointer-isolation-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.resize-dedup-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs',
@@ -118,7 +127,7 @@ jobs:
             raise SystemExit(f'UNEXPECTED_DIRECT_INSPECTION_PATHS:{unexpected}')
           if missing:
             raise SystemExit(f'MISSING_DIRECT_INSPECTION_PATHS:{missing}')
-          if not 10 <= len(paths) <= 14:
+          if not 11 <= len(paths) <= 15:
             raise SystemExit(f'INVALID_DIRECT_INSPECTION_PATH_COUNT:{len(paths)}')
           PY
 
@@ -151,6 +160,7 @@ jobs:
         with:
           name: h-earth-run8e-direct-inspection-restoration-evidence
           path: |
+            /tmp/h-earth-run8e-direct-inspection-idempotency.log
             /tmp/h-earth-run8e-direct-inspection-constructor.log
             /tmp/h-earth-run8e-direct-inspection-harness-fix.log
             /tmp/h-earth-run8e-direct-inspection-pointer-fix.log

@@ -1,6 +1,4 @@
 Traceback (most recent call last):
-  File "/home/runner/work/_temp/ff45c01e-4674-4afc-bfee-6ba0732226f8.py", line 39, in <module>
-    exec(compile(code, "canonical-crystal-generator", "exec"), {})
-  File "canonical-crystal-generator", line 214, in <module>
-  File "canonical-crystal-generator", line 16, in section
-SystemExit: laws-mesh-clone: end marker missing
+  File "/home/runner/work/_temp/c82dc8f5-3ef5-4671-818c-65e92f9abcb2.py", line 109, in <module>
+    raise RuntimeError(
+RuntimeError: Could not correct Laws CPU mesh builder block: 0

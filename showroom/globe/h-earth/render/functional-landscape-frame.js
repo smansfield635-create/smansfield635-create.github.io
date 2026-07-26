@@ -1,7 +1,7 @@
 /**
  * /showroom/globe/h-earth/render/functional-landscape-frame.js
  *
- * H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v1
+ * H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v2
  *
  * Constructs one successor renderer frame from the neutral functional
  * landscape, existing West admission, and the bounded successor transfer.
@@ -39,7 +39,7 @@ const finiteVector = (value) => value &&
     typeof value[axis] === 'number' && Number.isFinite(value[axis]));
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v1';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v2_FULL_SEMANTIC_MEMBERSHIP';
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE =
   'FUNCTIONAL_LANDSCAPE_COAST_TO_INLAND_PROOF';
@@ -199,9 +199,12 @@ export function constructHEarthFunctionalLandscapeFrame({
     primitives: admittedPrimitives,
     admittedPrimitives,
     bounds: transfer.bounds,
+    semanticAddressCount: transfer.semanticAddressCount,
     semanticAddressIds: transfer.semanticAddressIds,
+    proxySummarizedAddressIds: transfer.proxySummarizedAddressIds,
     formationIds: transfer.formationIds,
     shorelineBandIds: transfer.shorelineBandIds,
+    semanticIdentityIndependentOfPhysicalGranularity: true,
     camera: freeze({ ...camera }),
     viewport: freeze({ ...viewport }),
     environment: freeze({ ...environment }),

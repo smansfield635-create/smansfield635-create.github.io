@@ -33,7 +33,7 @@ const equal = (actual, expected, message) => {
 
 const camera = Object.freeze({
   position: Object.freeze({ x: 0, y: 18, z: -20 }),
-  target: Object.freeze({ x: 0, y: 2, z: -210 }),
+  target: Object.freeze({ x: 0, y: 28, z: -210 }),
   up: Object.freeze({ x: 0, y: 1, z: 0 }),
   verticalFovDegrees: 58,
   nearPlane: 0.25,

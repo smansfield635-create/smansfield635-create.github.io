@@ -28,12 +28,6 @@ jobs:
           from pathlib import Path
           import re
 
-          def replace_once(text, before, after, identity):
-              count = text.count(before)
-              if count != 1:
-                  raise SystemExit(f"{identity}: expected 1, found {count}")
-              return text.replace(before, after)
-
           laws_path = Path("laws/index.crystals.js")
           laws = laws_path.read_text(encoding="utf-8")
 
@@ -60,21 +54,27 @@ jobs:
 
           showroom_path = Path("showroom/index.crystals.js")
           showroom = showroom_path.read_text(encoding="utf-8")
-          showroom = replace_once(
-              showroom,
-              '''    const mesh =
-              context.meshes.get(
-                node.kind
-              );''',
-              '''    const meshKey =
+          mesh_pattern = re.compile(
+              r"    const mesh =\n"
+              r"      context\.meshes\.get\(\n"
+              r"        node\.kind\n"
+              r"      \);"
+          )
+          mesh_replacement = '''    const meshKey =
               node.kind === NODE_KINDS.CARDINAL
                 ? `cardinal-${node.cardinalId}`
                 : `room-${node.cardinalId}`;
 
             const mesh =
-              context.meshes.get(meshKey);''',
-              "showroom-mesh-key",
+              context.meshes.get(meshKey);'''
+          showroom, count = mesh_pattern.subn(
+              mesh_replacement,
+              showroom,
+              count=1,
           )
+          if count != 1:
+              raise SystemExit(f"showroom-mesh-key: expected 1, found {count}")
+
           showroom_path.write_text(showroom, encoding="utf-8")
           Path("showroom/index.crystals.source.js").write_text(
               showroom,

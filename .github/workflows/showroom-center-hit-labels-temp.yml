@@ -1,0 +1,558 @@
+name: Temporary Showroom Center Hit and Labels Construction
+
+on:
+  push:
+    branches:
+      - agent/showroom-compass-center-hit-labels-001
+
+permissions:
+  contents: write
+
+jobs:
+  construct-and-verify:
+    if: github.event.head_commit.message != 'Apply Showroom center hit and projected labels correction'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out bounded task branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply complete-file bounded correction
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(text, old, new, label):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected exactly one occurrence, found {count}")
+              return text.replace(old, new, 1)
+
+          def require(text, needle, label):
+              if needle not in text:
+                  raise SystemExit(f"{label}: required source not found")
+
+          html_path = Path('showroom/index.html')
+          css_path = Path('showroom/index.css')
+          interactions_path = Path('showroom/index.interactions.js')
+
+          html = html_path.read_text()
+          css = css_path.read_text()
+          interactions = interactions_path.read_text()
+
+          old_contract = 'SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_13_MOBILE_CLUSTER_FIT'
+          new_contract = 'SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_14_CENTER_HIT_PROJECTED_LABELS'
+          if html.count(old_contract) < 2:
+              raise SystemExit('HTML_CONTRACT_BASELINE_NOT_FOUND')
+          html = html.replace(old_contract, new_contract)
+          html = replace_once(
+              html,
+              'data-version="SHOWROOM-MIRRORLAND-IMMERSIVE-MISSION-CONTEXT-17.10"',
+              'data-version="SHOWROOM-MIRRORLAND-IMMERSIVE-MISSION-CONTEXT-17.11"',
+              'HTML_VERSION'
+          )
+          html = replace_once(
+              html,
+              'data-showroom-touch-arbitration-resolution-claimed="false"',
+              'data-showroom-touch-arbitration-resolution-claimed="false"\n  data-showroom-center-hit-model="label-only-compass-hit-surface-with-front-projection-priority"\n  data-showroom-projected-label-model="four-cardinal-and-four-active-room-labels"',
+              'HTML_INTERACTION_METADATA'
+          )
+          html = replace_once(
+              html,
+              '/showroom/index.css?v=SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v14_0_COSMOS_COMPLEMENTARY_STAGE_RENEWAL',
+              '/showroom/index.css?v=SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A',
+              'HTML_CSS_CACHE_IDENTITY'
+          )
+          html = replace_once(
+              html,
+              'data-showroom-page-css-contract="SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v14_0_COSMOS_COMPLEMENTARY_STAGE_RENEWAL"',
+              'data-showroom-page-css-contract="SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A"',
+              'HTML_CSS_CONTRACT'
+          )
+          html = replace_once(
+              html,
+              '/showroom/index.interactions.js?v=SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6',
+              '/showroom/index.interactions.js?v=SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A',
+              'HTML_INTERACTIONS_CACHE_IDENTITY'
+          )
+
+          css = replace_once(
+              css,
+              '  --showroom-center-size:\n    clamp(12.25rem, 24vw, 18.75rem);\n\n  --showroom-planet-size:\n    clamp(10.65rem, 21vw, 16.15rem);',
+              '  --showroom-center-size:\n    clamp(9.35rem, 18vw, 14.25rem);\n\n  --showroom-planet-size:\n    clamp(8.15rem, 15.8vw, 12.35rem);',
+              'CSS_CENTER_AND_PLANET_SIZE'
+          )
+          css = replace_once(
+              css,
+              '  cursor: pointer;\n  pointer-events: auto;\n  touch-action: manipulation;\n}',
+              '  cursor: pointer;\n  pointer-events: none;\n  touch-action: none;\n}',
+              'CSS_CENTER_POINTER_SURFACE'
+          )
+          css = replace_once(
+              css,
+              '  pointer-events: none;\n  text-shadow:\n    0 0.12rem 0.45rem rgba(0, 0, 0, 0.88),',
+              '  pointer-events: auto;\n  touch-action: manipulation;\n  text-shadow:\n    0 0.12rem 0.45rem rgba(0, 0, 0, 0.88),',
+              'CSS_CENTER_LABEL_POINTER_SURFACE'
+          )
+          css = replace_once(
+              css,
+              '  font-size: clamp(0.7rem, 1.15vw, 0.9rem);\n  font-weight: 650;',
+              '  min-width: 64%;\n  padding: 0.42rem 0.78rem 0.12rem;\n  border-radius: 999px 999px 0 0;\n  font-size: clamp(0.7rem, 1.15vw, 0.9rem);\n  font-weight: 650;',
+              'CSS_CENTER_LABEL_HIT_PADDING'
+          )
+          css = replace_once(
+              css,
+              '  color: var(--showroom-cream-soft);\n  font-size: 0.48rem;',
+              '  min-width: 64%;\n  padding: 0.12rem 0.78rem 0.42rem;\n  border-radius: 0 0 999px 999px;\n  color: var(--showroom-cream-soft);\n  font-size: 0.48rem;',
+              'CSS_CENTER_INSTRUCTION_HIT_PADDING'
+          )
+
+          label_css = r'''
+
+/* ================================================================
+   23. BOUNDED PROJECTED STAR LABELS AND CENTER HIT CORRECTION
+   ================================================================ */
+
+.showroom-projected-label-layer {
+  position: absolute;
+  z-index: 26;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.showroom-projected-label {
+  position: absolute;
+  max-width: 8.5rem;
+  padding: 0.2rem 0.34rem;
+  border-radius: 0.42rem;
+  color: rgba(246, 238, 223, 0.96);
+  background: rgba(3, 7, 18, 0.42);
+  box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.3);
+  font-size: clamp(0.56rem, 1.6vw, 0.76rem);
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
+  text-align: center;
+  text-shadow:
+    0 0.08rem 0.22rem rgba(0, 0, 0, 0.98),
+    0 0 0.6rem rgba(0, 0, 0, 0.98);
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0.92;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.showroom-projected-label[data-showroom-projected-kind="cardinal"] {
+  color: #fff2b2;
+  font-size: clamp(0.62rem, 1.8vw, 0.82rem);
+}
+
+.showroom-projected-label[data-showroom-projected-kind="room"] {
+  max-width: 7.2rem;
+  color: rgba(235, 242, 255, 0.94);
+  font-size: clamp(0.52rem, 1.45vw, 0.7rem);
+  letter-spacing: 0.055em;
+}
+
+.showroom-projected-label[data-showroom-projected-depth="rear"] {
+  opacity: 0.42;
+  filter: saturate(0.72) brightness(0.78);
+}
+
+.showroom-projected-label[data-showroom-projected-primary="true"] {
+  opacity: 1;
+  filter: brightness(1.16);
+  box-shadow:
+    0 0 0.8rem rgba(245, 213, 130, 0.2),
+    0 0 1.35rem rgba(117, 233, 255, 0.12);
+}
+
+@media (max-width: 520px) {
+  .showroom-projected-label {
+    max-width: 6.7rem;
+    padding: 0.17rem 0.28rem;
+    font-size: 0.54rem;
+  }
+
+  .showroom-projected-label[data-showroom-projected-kind="cardinal"] {
+    font-size: 0.62rem;
+  }
+
+  .showroom-projected-label[data-showroom-projected-kind="room"] {
+    max-width: 5.8rem;
+    font-size: 0.49rem;
+  }
+}
+'''
+          if 'BOUNDED PROJECTED STAR LABELS AND CENTER HIT CORRECTION' not in css:
+              css = css.rstrip() + label_css + '\n'
+
+          interactions = replace_once(
+              interactions,
+              '/* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED */',
+              '/* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED */\n/* SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A */',
+              'INTERACTIONS_BUILD_MARKER'
+          )
+
+          wings_block = '''  const WINGS = Object.freeze([\n    "north",\n    "east",\n    "south",\n    "west"\n  ]);'''
+          labels_block = wings_block + '''\n\n  const CARDINAL_DISPLAY_LABELS = Object.freeze({\n    north: "N · Story",\n    east: "E · Characters",\n    south: "S · Wonders",\n    west: "W · Mysteries"\n  });\n\n  const ROOM_DISPLAY_LABELS = Object.freeze({\n    "north-1": "Welcome",\n    "north-2": "Mission",\n    "north-3": "Timeline",\n    "north-4": "Invitation",\n    "east-1": "Jeeves",\n    "east-2": "Elara",\n    "east-3": "Auren",\n    "east-4": "Characters",\n    "south-1": "Window",\n    "south-2": "Diamond",\n    "south-3": "Stars",\n    "south-4": "Hearth",\n    "west-1": "Unfinished World",\n    "west-2": "Glass Questions",\n    "west-3": "Closed Paths",\n    "west-4": "Audralia"\n  });'''
+          interactions = replace_once(
+              interactions,
+              wings_block,
+              labels_block,
+              'INTERACTIONS_LABEL_MAPS'
+          )
+
+          interactions = replace_once(
+              interactions,
+              '    orbitFieldStyleCaptured:\n      false,\n\n    retryTimer:',
+              '    orbitFieldStyleCaptured:\n      false,\n\n    projectedLabelLayer:\n      null,\n\n    projectedLabels:\n      new Map(),\n\n    projectedLabelFrame:\n      0,\n\n    retryTimer:',
+              'INTERACTIONS_LABEL_STATE'
+          )
+
+          label_functions = r'''
+  function projectedLabelText(kind, identity) {
+    if (kind === SEMANTIC_KINDS.CARDINAL) {
+      return CARDINAL_DISPLAY_LABELS[identity] || "";
+    }
+
+    if (kind === SEMANTIC_KINDS.ROOM) {
+      return ROOM_DISPLAY_LABELS[identity] || "";
+    }
+
+    return "";
+  }
+
+  function ensureProjectedLabelLayer() {
+    if (
+      state.projectedLabelLayer &&
+      state.projectedLabelLayer.isConnected
+    ) {
+      return state.projectedLabelLayer;
+    }
+
+    if (!state.orbitField) {
+      return null;
+    }
+
+    let layer =
+      state.orbitField.querySelector(
+        "[data-showroom-projected-label-layer]"
+      );
+
+    if (!layer) {
+      layer = document.createElement("div");
+      layer.className = "showroom-projected-label-layer";
+      layer.dataset.showroomProjectedLabelLayer = "true";
+      layer.setAttribute("aria-hidden", "true");
+      state.orbitField.appendChild(layer);
+    }
+
+    state.projectedLabelLayer = layer;
+    return layer;
+  }
+
+  function syncProjectedLabels() {
+    state.projectedLabelFrame = 0;
+
+    const layer = ensureProjectedLabelLayer();
+    const controller =
+      state.controller ||
+      resolveController();
+
+    if (
+      !layer ||
+      !controller ||
+      typeof controller.getSemanticProjection !== "function" ||
+      typeof controller.getFrameState !== "function"
+    ) {
+      return false;
+    }
+
+    let records = [];
+    let frame = null;
+
+    try {
+      records = Array.from(
+        controller.getSemanticProjection() || []
+      );
+      frame = controller.getFrameState();
+    } catch {
+      records = [];
+      frame = null;
+    }
+
+    const mode = presentationMode(frame);
+    const activeIdentities = new Set();
+    const rect = state.orbitField.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    for (const record of records) {
+      if (!record || record.visible === false) {
+        continue;
+      }
+
+      const kind = semanticKindFromHit(record);
+      const identity = semanticIdentityFromHit(record, kind);
+      const label = projectedLabelText(kind, identity);
+
+      if (!identity || !label) {
+        continue;
+      }
+
+      if (
+        mode === PRESENTATION_MODES.CONSTELLATION &&
+        kind !== SEMANTIC_KINDS.CARDINAL
+      ) {
+        continue;
+      }
+
+      if (
+        mode === PRESENTATION_MODES.CLUSTER &&
+        kind !== SEMANTIC_KINDS.ROOM
+      ) {
+        continue;
+      }
+
+      if (mode === PRESENTATION_MODES.HELD) {
+        continue;
+      }
+
+      activeIdentities.add(identity);
+
+      let element = state.projectedLabels.get(identity);
+
+      if (!element) {
+        element = document.createElement("span");
+        element.className = "showroom-projected-label";
+        element.dataset.showroomProjectedLabel = identity;
+        layer.appendChild(element);
+        state.projectedLabels.set(identity, element);
+      }
+
+      const x = Number(record.x);
+      const y = Number(record.y);
+      const radius = Math.max(0, Number(record.radiusPx) || 0);
+      const dx = x - centerX;
+      const dy = y - centerY;
+      const magnitude = Math.hypot(dx, dy) || 1;
+      const offset =
+        kind === SEMANTIC_KINDS.CARDINAL
+          ? Math.min(62, Math.max(34, radius * 0.64 + 12))
+          : Math.min(42, Math.max(23, radius * 0.5 + 9));
+      const left = x + (dx / magnitude) * offset;
+      const top = y + (dy / magnitude) * offset;
+      const depth = normalizeLower(record.depthLayer) || "unknown";
+      const primary =
+        kind === SEMANTIC_KINDS.CARDINAL
+          ? identity === normalizeWing(frame && frame.orbitFocus)
+          : identity === normalizeRoomId(
+              frame && frame.cluster
+                ? frame.cluster.primaryRoom
+                : ""
+            );
+
+      element.textContent = label;
+      element.hidden = false;
+      element.style.left = `${left}px`;
+      element.style.top = `${top}px`;
+      element.style.zIndex = depth === "front" ? "28" : "8";
+      element.dataset.showroomProjectedKind = kind;
+      element.dataset.showroomProjectedDepth = depth;
+      element.dataset.showroomProjectedPrimary = primary ? "true" : "false";
+    }
+
+    for (const [identity, element] of state.projectedLabels) {
+      if (!activeIdentities.has(identity)) {
+        element.hidden = true;
+      }
+    }
+
+    return true;
+  }
+
+  function scheduleProjectedLabels() {
+    if (
+      state.projectedLabelFrame ||
+      state.disposed ||
+      state.failed
+    ) {
+      return;
+    }
+
+    state.projectedLabelFrame =
+      window.requestAnimationFrame(
+        syncProjectedLabels
+      );
+  }
+
+'''
+          interactions = replace_once(
+              interactions,
+              '  function hitsCorrespond(first, second) {',
+              label_functions + '  function hitsCorrespond(first, second) {',
+              'INTERACTIONS_LABEL_FUNCTIONS'
+          )
+
+          old_pointer_block = '''    const downHit =\n      directKind === SEMANTIC_KINDS.COMPASS\n        ? null\n        : authoritativeHitTest(\n            event.clientX,\n            event.clientY\n          );\n\n    const hitKind =\n      semanticKindFromHit(\n        downHit\n      );'''
+          new_pointer_block = '''    const projectedHit =\n      authoritativeHitTest(\n        event.clientX,\n        event.clientY\n      );\n\n    const projectedHitKind =\n      semanticKindFromHit(\n        projectedHit\n      );\n\n    const frontProjectionOverridesCompass =\n      directKind === SEMANTIC_KINDS.COMPASS &&\n      projectedHit &&\n      projectedHit.visible !== false &&\n      normalizeLower(projectedHit.depthLayer) === "front" &&\n      (\n        projectedHitKind === SEMANTIC_KINDS.CARDINAL ||\n        projectedHitKind === SEMANTIC_KINDS.ROOM\n      );\n\n    const downHit =\n      directKind === SEMANTIC_KINDS.COMPASS &&\n      !frontProjectionOverridesCompass\n        ? null\n        : projectedHit;\n\n    const hitKind =\n      semanticKindFromHit(\n        downHit\n      );'''
+          interactions = replace_once(
+              interactions,
+              old_pointer_block,
+              new_pointer_block,
+              'INTERACTIONS_FRONT_PROJECTION_HIT_PRIORITY'
+          )
+
+          interactions = replace_once(
+              interactions,
+              '''    if (\n      directKind === SEMANTIC_KINDS.COMPASS\n    ) {\n      territory =\n        TERRITORIES.COMPASS;''',
+              '''    if (\n      directKind === SEMANTIC_KINDS.COMPASS &&\n      !frontProjectionOverridesCompass\n    ) {\n      territory =\n        TERRITORIES.COMPASS;''',
+              'INTERACTIONS_COMPASS_TERRITORY_PRIORITY'
+          )
+
+          interactions = replace_once(
+              interactions,
+              '''            attemptRuntimeActivation(\n              "controller-frame"\n            );''',
+              '''            attemptRuntimeActivation(\n              "controller-frame"\n            );\n\n            scheduleProjectedLabels();''',
+              'INTERACTIONS_FRAME_LABEL_SYNC'
+          )
+          interactions = replace_once(
+              interactions,
+              '''        attemptRuntimeActivation(\n          "compositor-ready"\n        );''',
+              '''        attemptRuntimeActivation(\n          "compositor-ready"\n        );\n\n        scheduleProjectedLabels();''',
+              'INTERACTIONS_COMPOSITOR_READY_LABEL_SYNC'
+          )
+          interactions = replace_once(
+              interactions,
+              '''        attemptRuntimeActivation(\n          "compositor-projection-changed"\n        );''',
+              '''        attemptRuntimeActivation(\n          "compositor-projection-changed"\n        );\n\n        scheduleProjectedLabels();''',
+              'INTERACTIONS_PROJECTION_LABEL_SYNC'
+          )
+          interactions = replace_once(
+              interactions,
+              '''        attemptRuntimeActivation(\n          "crystals-ready"\n        );''',
+              '''        attemptRuntimeActivation(\n          "crystals-ready"\n        );\n\n        scheduleProjectedLabels();''',
+              'INTERACTIONS_CRYSTALS_READY_LABEL_SYNC'
+          )
+
+          html_path.write_text(html)
+          css_path.write_text(css)
+          interactions_path.write_text(interactions)
+          PY
+
+      - name: Verify syntax and bounded source contracts
+        run: |
+          set -euo pipefail
+          node --check showroom/index.interactions.js
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('showroom/index.html').read_text()
+          css = Path('showroom/index.css').read_text()
+          js = Path('showroom/index.interactions.js').read_text()
+
+          required = {
+              'html_css_cache': '/showroom/index.css?v=SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A' in html,
+              'html_js_cache': '/showroom/index.interactions.js?v=SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A' in html,
+              'center_size': 'clamp(9.35rem, 18vw, 14.25rem)' in css,
+              'planet_size': 'clamp(8.15rem, 15.8vw, 12.35rem)' in css,
+              'center_pointer_none': 'pointer-events: none;\n  touch-action: none;' in css,
+              'projected_label_css': '.showroom-projected-label-layer' in css,
+              'cardinal_labels': all(label in js for label in ['N · Story', 'E · Characters', 'S · Wonders', 'W · Mysteries']),
+              'room_labels': all(label in js for label in ['Unfinished World', 'Glass Questions', 'Closed Paths', 'Audralia']),
+              'front_priority': 'frontProjectionOverridesCompass' in js,
+              'projection_depth_test': 'normalizeLower(projectedHit.depthLayer) === "front"' in js,
+              'gesture_sign_preserved': 'radiansPerViewport:\n      Math.PI * 1.14' in js,
+              'flick_contract_preserved': 'flickMinimumDirectionalRatio:\n      1.20' in js,
+          }
+          failed = [name for name, passed in required.items() if not passed]
+          if failed:
+              raise SystemExit(f'STATIC_CONTRACT_FAILURE:{failed}')
+          print('STATIC_CONTRACTS=PASS')
+          PY
+
+      - name: Install Chromium runtime
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Execute Samsung-width runtime verification
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/showroom-center-hit-server.log 2>&1 &
+          echo $! >/tmp/showroom-center-hit-server.pid
+          for attempt in $(seq 1 40); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 360, height: 800 }, isMobile: true, hasTouch: true });
+            const errors = [];
+            page.on('pageerror', error => errors.push(String(error)));
+            await page.goto('http://127.0.0.1:4173/showroom/', { waitUntil: 'domcontentloaded' });
+            await page.waitForFunction(() => {
+              const controller = window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER;
+              return controller &&
+                document.querySelectorAll('[data-showroom-projected-label]:not([hidden])').length === 4;
+            }, { timeout: 25000 });
+
+            const constellation = await page.evaluate(() => {
+              const center = document.querySelector('[data-showroom-center-layer]');
+              const planet = document.querySelector('.showroom-planet-root');
+              const control = document.querySelector('[data-showroom-compass-control]');
+              const label = document.querySelector('.showroom-compass-control__label');
+              return {
+                centerWidth: center.getBoundingClientRect().width,
+                planetWidth: planet.getBoundingClientRect().width,
+                controlPointerEvents: getComputedStyle(control).pointerEvents,
+                labelPointerEvents: getComputedStyle(label).pointerEvents,
+                labels: Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim()).sort(),
+                projectionCount: window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER.getSemanticProjection().filter(record => record.visible !== false).length
+              };
+            });
+
+            if (constellation.centerWidth > 165) throw new Error(`CENTER_TOO_LARGE:${constellation.centerWidth}`);
+            if (constellation.planetWidth > 145) throw new Error(`PLANET_TOO_LARGE:${constellation.planetWidth}`);
+            if (constellation.controlPointerEvents !== 'none') throw new Error(`CENTER_POINTER_SURFACE_NOT_RETIRED:${constellation.controlPointerEvents}`);
+            if (constellation.labelPointerEvents !== 'auto') throw new Error(`CENTER_LABEL_NOT_INTERACTIVE:${constellation.labelPointerEvents}`);
+            const expectedCardinals = ['E · Characters', 'N · Story', 'S · Wonders', 'W · Mysteries'].sort();
+            if (JSON.stringify(constellation.labels) !== JSON.stringify(expectedCardinals)) throw new Error(`CARDINAL_LABELS_INVALID:${JSON.stringify(constellation.labels)}`);
+
+            await page.evaluate(() => window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER.requestCardinalSelection('north'));
+            await page.waitForFunction(() => {
+              const labels = Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim());
+              return labels.length === 4 && labels.includes('Welcome') && labels.includes('Mission') && labels.includes('Timeline') && labels.includes('Invitation');
+            }, { timeout: 10000 });
+
+            const clusterLabels = await page.evaluate(() => Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim()).sort());
+            if (errors.length) throw new Error(`PAGE_ERRORS:${errors.join('|')}`);
+            console.log(JSON.stringify({ constellation, clusterLabels, errors }, null, 2));
+            await browser.close();
+          })().catch(error => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Commit bounded production files
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '4189828+github-actions[bot]@users.noreply.github.com'
+          git add showroom/index.html showroom/index.css showroom/index.interactions.js
+          if git diff --cached --quiet; then
+            echo 'No bounded source delta remains.'
+            exit 0
+          fi
+          git commit -m 'Apply Showroom center hit and projected labels correction'
+          git push origin HEAD:agent/showroom-compass-center-hit-labels-001

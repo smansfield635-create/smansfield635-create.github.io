@@ -1,0 +1,43 @@
+name: H-Earth Functional Landscape Run 6 Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-functional-landscape-run6-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run checkpoint 6A contract
+        run: |
+          node --experimental-default-type=module --input-type=module <<'NODE'
+          import {
+            evaluateHEarthFunctionalLandscapeRun6Program
+          } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6.program.js';
+          const result = evaluateHEarthFunctionalLandscapeRun6Program();
+          console.log(JSON.stringify(result, null, 2));
+          if (!result.eligible) process.exit(1);
+          NODE
+
+      - name: Run checkpoint 6B
+        run: node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6b.harness.mjs
+
+      - name: Run checkpoint 6C
+        run: node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6c.harness.mjs
+
+      - name: Run checkpoint 6D
+        run: node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6d.harness.mjs

@@ -1,0 +1,137 @@
+name: Laws gesture and Cosmos visibility repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/laws-gesture-cosmos-visibility-repair.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Renew interaction arbitration, scene background, and asset identities
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          interactions_path = Path('laws/index.interactions.js')
+          interactions = interactions_path.read_text()
+
+          replacements = [
+              (
+                  'LAWS_COMPASS_CENTER_EXCLUSIVE_SPHERICAL_XYZ_DIRECT_MANIPULATION_v6',
+                  'LAWS_COMPASS_CENTER_EXCLUSIVE_ROTATION_SAFE_SWIPE_v7'
+              ),
+              (
+                  'fallbackScale:1.18, fallbackMin:42, fallbackMax:148, swipeX:72, swipeY:92,\n    swipeRatio:1.6, swipeMs:560, swipeVelocity:.3, suppressMs:700, settle:8',
+                  'fallbackScale:1.18, fallbackMin:42, fallbackMax:148, swipeX:132, swipeY:46,\n    swipeRatio:3.0, swipeMs:430, swipeVelocity:.48, suppressMs:700, settle:8'
+              ),
+              (
+                  'function swipe(elapsed){if(mode()!==MODE.CLUSTER||S.pointer?.target?.kind===KIND.COMPASS)return {qualified:false};const x=Math.abs(S.pointer.dx),y=Math.abs(S.pointer.dy),ms=Math.max(1,elapsed),ratio=x/Math.max(y,1),velocity=x/ms;return {qualified:x>=G.swipeX&&y<=G.swipeY&&ratio>=G.swipeRatio&&ms<=G.swipeMs&&velocity>=G.swipeVelocity,direction:S.pointer.dx>=0?"LEFT_TO_RIGHT":"RIGHT_TO_LEFT"};}',
+                  'function swipe(elapsed){if(mode()!==MODE.CLUSTER||S.pointer?.target?.kind!==KIND.SPACE)return {qualified:false,reason:"OPEN_SPACE_ORIGIN_REQUIRED"};const x=Math.abs(S.pointer.dx),y=Math.abs(S.pointer.dy),ms=Math.max(1,elapsed),ratio=x/Math.max(y,1),velocity=x/ms,qualified=x>=G.swipeX&&y<=G.swipeY&&ratio>=G.swipeRatio&&ms<=G.swipeMs&&velocity>=G.swipeVelocity;return {qualified,direction:S.pointer.dx>=0?"LEFT_TO_RIGHT":"RIGHT_TO_LEFT",reason:qualified?"DELIBERATE_OPEN_SPACE_HORIZONTAL_SWIPE":"THRESHOLD_NOT_MET"};}'
+              )
+          ]
+          for old, new in replacements:
+              if old not in interactions:
+                  raise SystemExit(f'interaction source invariant missing: {old[:80]}')
+              interactions = interactions.replace(old, new, 1)
+
+          receipt_anchor = 'overlappingCategoryMayOverrideCenter:false,horizontalDragYawSign:"POSITIVE"'
+          receipt_replacement = 'overlappingCategoryMayOverrideCenter:false,clusterSwipeRequiresOpenSpaceOrigin:true,clusterSwipeMinimumHorizontalDistancePx:G.swipeX,clusterSwipeMaximumVerticalDistancePx:G.swipeY,clusterSwipeHorizontalDominanceRatio:G.swipeRatio,horizontalDragYawSign:"POSITIVE"'
+          if interactions.count(receipt_anchor) != 2:
+              raise SystemExit(f'expected two receipt/self-test anchors, found {interactions.count(receipt_anchor)}')
+          interactions = interactions.replace(receipt_anchor, receipt_replacement)
+          interactions_path.write_text(interactions)
+
+          css_path = Path('laws/index.css')
+          css = css_path.read_text()
+
+          scene_pattern = re.compile(
+              r'(\.laws-orbit__field,\n\[data-laws-scene-field\] \{.*?  border-radius: var\(--laws-radius-lg\);\n)'
+              r'  background:.*?(?=  box-shadow:)',
+              re.S
+          )
+          scene_replacement = (
+              r'\1'
+              '  background:\n'
+              '    radial-gradient(ellipse at 50% 8%, rgba(106, 126, 214, 0.14), transparent 46%),\n'
+              '    radial-gradient(ellipse at 8% 76%, rgba(56, 132, 154, 0.12), transparent 40%),\n'
+              '    radial-gradient(ellipse at 92% 78%, rgba(180, 103, 66, 0.09), transparent 38%),\n'
+              '    linear-gradient(180deg, rgba(5, 8, 18, 0.98), rgba(2, 4, 10, 0.995));\n'
+          )
+          css, count = scene_pattern.subn(scene_replacement, css, count=1)
+          if count != 1:
+              raise SystemExit('orbit field background replacement failed')
+
+          pseudo_pattern = re.compile(
+              r'\.laws-orbit__field::before \{.*?\n\}\n\n\.laws-orbit__field::after \{.*?\n\}',
+              re.S
+          )
+          css, count = pseudo_pattern.subn(
+              '.laws-orbit__field::before,\n.laws-orbit__field::after {\n  content: none;\n  display: none;\n}',
+              css,
+              count=1
+          )
+          if count != 1:
+              raise SystemExit('legacy orbit pseudo-field removal failed')
+
+          cosmic_pattern = re.compile(
+              r'\.laws-cosmic-field,\n\[data-laws-cosmic-field\] \{.*?\n\}',
+              re.S
+          )
+          css, count = cosmic_pattern.subn(
+              '.laws-cosmic-field,\n[data-laws-cosmic-field] {\n  position: absolute;\n  z-index: 0;\n  inset: 0;\n  overflow: hidden;\n  pointer-events: none;\n  background: transparent;\n  opacity: 1;\n  isolation: isolate;\n}',
+              css,
+              count=1
+          )
+          if count != 1:
+              raise SystemExit('cosmic field visibility replacement failed')
+          css_path.write_text(css)
+
+          html_path = Path('laws/index.html')
+          html = html_path.read_text()
+          html_replacements = [
+              ('/laws/index.css?v=LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4', '/laws/index.css?v=LAWS_COSMOS_VISIBLE_ROTATION_SAFE_20260726C'),
+              ('/laws/index.interactions.js?v=LAWS_DIRECT_49548d4a6d29c2169812dd61130b161d96351bec_20260726B', '/laws/index.interactions.js?v=LAWS_ROTATION_SAFE_SWIPE_V7_20260726C'),
+              ('/laws/index.cosmos.js?v=LAWS_SCENE_76d71d7cbafe52421c9eb68e3604792cc6755cf3_20260726B', '/laws/index.cosmos.js?v=LAWS_SCENE_VISIBLE_76d71d7cbafe52421c9eb68e3604792cc6755cf3_20260726C'),
+              ('data-laws-cosmos-contract="LAWS_COSMOS_HARDENED_v2_IRREGULAR_STARFIELD_DUAL_SPACECRAFT"', 'data-laws-cosmos-contract="LAWS_COSMOS_ARCHCOIN_SCENE_FIELD_v5"'),
+              ('data-laws-cosmos-model-source="showroom-cosmos-hardened-v2"', 'data-laws-cosmos-model-source="archcoin-fibonacci-phyllotaxis-field-v1"'),
+              ('data-laws-cosmos-dual-spacecraft="true"', 'data-laws-cosmos-dual-spacecraft="false"'),
+              ('data-laws-horizontal-drag-yaw-sign="negative"', 'data-laws-horizontal-drag-yaw-sign="positive"')
+          ]
+          for old, new in html_replacements:
+              if old not in html:
+                  raise SystemExit(f'HTML invariant missing: {old}')
+              html = html.replace(old, new, 1)
+          html_path.write_text(html)
+
+          assert 'target?.kind!==KIND.SPACE' in interactions
+          assert 'swipeX:132' in interactions
+          assert 'clusterSwipeRequiresOpenSpaceOrigin:true' in interactions
+          assert 'laws-orbit__field::before,\n.laws-orbit__field::after' in css
+          assert 'content: none' in css
+          assert 'transparent 0 7rem' not in css
+          assert 'LAWS_COSMOS_VISIBLE_ROTATION_SAFE_20260726C' in html
+          assert 'LAWS_ROTATION_SAFE_SWIPE_V7_20260726C' in html
+          PY
+
+          node --check laws/index.interactions.js
+          git diff --check
+
+          rm .github/workflows/laws-gesture-cosmos-visibility-repair.yml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Fix Laws cluster swipe arbitration and reveal Cosmos"
+          git push origin HEAD:main

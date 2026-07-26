@@ -816,41 +816,10 @@ body > #dgb-laws-cosmos-layer svg {
   border: 1px solid rgba(124, 220, 255, 0.20);
   border-radius: var(--laws-radius-lg);
   background:
-    radial-gradient(circle at 8% 18%, rgba(255, 248, 224, 0.24) 0 1px, transparent 2px),
-    radial-gradient(circle at 19% 34%, rgba(124, 220, 255, 0.18) 0 1px, transparent 2px),
-    radial-gradient(circle at 37% 15%, rgba(255, 248, 224, 0.13) 0 1px, transparent 2px),
-    radial-gradient(circle at 53% 25%, rgba(216, 184, 106, 0.20) 0 1px, transparent 2px),
-    radial-gradient(circle at 71% 12%, rgba(124, 220, 255, 0.22) 0 1.2px, transparent 2.4px),
-    radial-gradient(circle at 88% 26%, rgba(255, 248, 224, 0.14) 0 1px, transparent 2px),
-    radial-gradient(circle at 14% 80%, rgba(124, 220, 255, 0.18) 0 1px, transparent 2px),
-    radial-gradient(circle at 42% 78%, rgba(255, 248, 224, 0.22) 0 1.2px, transparent 2.4px),
-    radial-gradient(circle at 68% 84%, rgba(216, 184, 106, 0.15) 0 1px, transparent 2px),
-    radial-gradient(circle at 91% 72%, rgba(124, 220, 255, 0.16) 0 1px, transparent 2px),
-    radial-gradient(circle at 84% 17%, rgba(48, 63, 112, 0.40), rgba(28, 31, 62, 0.20) 34%, transparent 72px),
-    radial-gradient(circle at 14% 74%, rgba(72, 118, 134, 0.30), rgba(20, 39, 56, 0.18) 38%, transparent 88px),
-    radial-gradient(circle at 76% 78%, rgba(148, 96, 62, 0.18), rgba(56, 34, 25, 0.12) 34%, transparent 82px),
-    radial-gradient(ellipse at 50% 48%, rgba(124, 220, 255, 0.14), transparent 34%),
-    radial-gradient(ellipse at 50% 100%, rgba(216, 184, 106, 0.09), transparent 50%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.28)),
-    rgba(7, 10, 16, 0.82);
-  background-size:
-    310px 260px,
-    430px 350px,
-    520px 420px,
-    390px 310px,
-    560px 420px,
-    640px 460px,
-    470px 390px,
-    610px 450px,
-    530px 410px,
-    690px 500px,
-    auto,
-    auto,
-    auto,
-    auto,
-    auto,
-    auto,
-    auto;
+    radial-gradient(ellipse at 50% 8%, rgba(106, 126, 214, 0.14), transparent 46%),
+    radial-gradient(ellipse at 8% 76%, rgba(56, 132, 154, 0.12), transparent 40%),
+    radial-gradient(ellipse at 92% 78%, rgba(180, 103, 66, 0.09), transparent 38%),
+    linear-gradient(180deg, rgba(5, 8, 18, 0.98), rgba(2, 4, 10, 0.995));
   box-shadow:
     0 26px 86px rgba(0, 0, 0, 0.40),
     0 0 36px rgba(124, 220, 255, 0.065),
@@ -859,62 +828,22 @@ body > #dgb-laws-cosmos-layer svg {
   isolation: isolate;
 }
 
-.laws-orbit__field::before {
-  content: "";
-  position: absolute;
-  inset: 7%;
-  z-index: 0;
-  pointer-events: none;
-  border: 1px solid rgba(216, 184, 106, 0.10);
-  border-radius: var(--laws-radius-full);
-  background:
-    radial-gradient(circle at 10% 20%, rgba(255, 248, 224, 0.30) 0 0.8px, transparent 1.8px),
-    radial-gradient(circle at 22% 46%, rgba(124, 220, 255, 0.20) 0 0.7px, transparent 1.7px),
-    radial-gradient(circle at 41% 17%, rgba(216, 184, 106, 0.18) 0 0.9px, transparent 1.9px),
-    radial-gradient(circle at 65% 28%, rgba(255, 248, 224, 0.24) 0 0.9px, transparent 2px),
-    radial-gradient(circle at 84% 58%, rgba(124, 220, 255, 0.18) 0 0.8px, transparent 1.8px),
-    radial-gradient(circle at 30% 84%, rgba(216, 184, 106, 0.18) 0 0.8px, transparent 1.8px),
-    radial-gradient(circle, transparent 0 43%, rgba(216, 184, 106, 0.05) 44%, transparent 45%),
-    conic-gradient(from 45deg, transparent 0 22%, rgba(124, 220, 255, 0.10) 24%, transparent 26% 48%, rgba(216, 184, 106, 0.07) 50%, transparent 52% 74%, rgba(124, 220, 255, 0.08) 76%, transparent 78%);
-  opacity: 0.68;
-  animation: laws-celestial-twinkle 12s ease-in-out infinite alternate;
-}
-
+.laws-orbit__field::before,
 .laws-orbit__field::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 0;
-  width: min(54%, 480px);
-  height: min(22%, 150px);
-  transform: translate(-50%, -50%) rotate(-13deg);
-  border: 1px solid rgba(124, 220, 255, 0.07);
-  border-radius: 50%;
-  background:
-    radial-gradient(ellipse at 26% 50%, rgba(124, 220, 255, 0.08), transparent 30%),
-    radial-gradient(ellipse at 74% 50%, rgba(216, 184, 106, 0.06), transparent 30%),
-    linear-gradient(90deg, transparent, rgba(124, 220, 255, 0.025), transparent);
-  filter: blur(0.45px);
-  opacity: 0.16;
-  box-shadow:
-    0 0 20px rgba(124, 220, 255, 0.030),
-    inset 0 0 16px rgba(216, 184, 106, 0.022);
-  animation: laws-threshold-breathe 10.5s ease-in-out infinite alternate;
+  content: none;
+  display: none;
 }
 
 .laws-cosmic-field,
 [data-laws-cosmic-field] {
   position: absolute;
-  z-index: 1;
+  z-index: 0;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 50%, transparent 0 7rem, rgba(243, 217, 139, 0.075) 7.1rem 7.2rem, transparent 7.32rem),
-    radial-gradient(circle at 50% 50%, transparent 0 13.5rem, rgba(124, 220, 255, 0.052) 13.6rem 13.72rem, transparent 13.9rem),
-    linear-gradient(90deg, transparent calc(50% - 0.04rem), rgba(243, 217, 139, 0.075) 50%, transparent calc(50% + 0.04rem)),
-    linear-gradient(0deg, transparent calc(50% - 0.04rem), rgba(243, 217, 139, 0.075) 50%, transparent calc(50% + 0.04rem));
-  opacity: 0.56;
+  background: transparent;
+  opacity: 1;
+  isolation: isolate;
 }
 
 

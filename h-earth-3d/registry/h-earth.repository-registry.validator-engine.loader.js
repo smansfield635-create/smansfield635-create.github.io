@@ -4,10 +4,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Composes accepted Step 1, post-merge, Step 2, camera-capacity,
 // audit-continuity, renderer-presentation, public-route-interaction,
-// compositor-camera-authority, functional-landscape Run 6, and functional
-// environment Run 7C, Run 7D, Run 7E, Run 7F, Run 7G, Run 7H, and Run 7I
-// public-route overlays.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.functional-environment-run7i-public-route-scope-reconciliation.js';
+// compositor-camera-authority, functional-landscape Run 6, functional
+// environment Runs 7C–7H, Run 7I public-route integration, and Run 7I
+// deployed-main-route live-evidence overlays.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.functional-environment-run7i-live-scope-reconciliation.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

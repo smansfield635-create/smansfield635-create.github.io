@@ -70,7 +70,7 @@ jobs:
           {
             git diff --name-only origin/main...HEAD
             git diff --name-only
-            git ls-files --others --exclude-standard
+            git ls-files --others --exclude-standard | grep -v '^node_modules/' || true
           } | sed '/^$/d' | sort -u > /tmp/h-earth-run8e-mobile-navigation-paths.txt
           cat /tmp/h-earth-run8e-mobile-navigation-paths.txt
           python3 - <<'PY'

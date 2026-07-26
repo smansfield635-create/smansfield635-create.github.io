@@ -66,9 +66,9 @@
       "successorRenderCommittedAfterEachGesture": true,
       "visibleControllerPresent": false,
       "navigationIntentCount": 6,
-      "completedSuccessorRenderCount": 5,
-      "coalescedRenderRequestCount": 1,
-      "maximumNavigationLatencyMilliseconds": 5.400000000008731,
+      "completedSuccessorRenderCount": 4,
+      "coalescedRenderRequestCount": 0,
+      "maximumNavigationLatencyMilliseconds": 0.5,
       "zeroBrowserErrors": true,
       "screenshot": "samsung-galaxy-portrait-emulation.png"
     },
@@ -84,10 +84,10 @@
       "fullRenderSuppressedDuringActiveGestures": true,
       "successorRenderCommittedAfterEachGesture": true,
       "visibleControllerPresent": false,
-      "navigationIntentCount": 4,
-      "completedSuccessorRenderCount": 5,
-      "coalescedRenderRequestCount": 1,
-      "maximumNavigationLatencyMilliseconds": 0.5999999999912689,
+      "navigationIntentCount": 6,
+      "completedSuccessorRenderCount": 4,
+      "coalescedRenderRequestCount": 0,
+      "maximumNavigationLatencyMilliseconds": 0.6999999999970896,
       "zeroBrowserErrors": true,
       "screenshot": "samsung-galaxy-landscape-emulation.png"
     }

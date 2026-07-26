@@ -1,631 +1,242 @@
 /* /laws/index.interactions.js
-   Laws centered compass-return and universal spatial-selection loader.
-   Preserves the existing Laws interaction authority, aligns the visible center
-   planet control, activates spatial primary selection and release settlement,
-   suppresses the rejected external halo overlay, and projects attached labels
-   for the four main constellation stars.
- */
+   Laws shared Compass-family interaction loader wrapper.
+
+   Preserves the existing complete loader in
+   /laws/index.interactions.loader.source.js and changes only the build/cache
+   identity and receipt fields required by the positive-drag spherical XYZ
+   conformance round.
+*/
 (() => {
   "use strict";
 
-  const BUILD =
-    "LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4";
-  const SOURCE_URL =
-    `/laws/index.interactions.source.round4.js?build=${encodeURIComponent(BUILD)}`;
-  const SELECTION_URL =
-    `/laws/index.selection.js?build=${encodeURIComponent(BUILD)}`;
-
-  const CATEGORY_LABELS = Object.freeze({
-    flow: "Flow",
-    integrity: "Integrity",
-    reality: "Reality",
-    structure: "Structure"
+  const CONTRACT = Object.freeze({
+    id: "DGB_LAWS_INTERACTIONS_SHARED_SPHERICAL_XYZ_WRAPPER_v1",
+    sourceUrl:
+      "./index.interactions.loader.source.js?v=LAWS_INTERACTIONS_LOADER_SOURCE_v1",
+    build:
+      "LAWS_COMPASS_SHARED_SPHERICAL_XYZ_DIRECT_MANIPULATION_v5",
+    horizontalDragYawSign:
+      "POSITIVE",
+    clusterGeometryModel:
+      "BOUNDED_SPHERICAL_XYZ_CLUSTER",
+    clusterFullXyzRotation:
+      true,
+    ownsController:
+      false,
+    ownsCrystals:
+      false,
+    ownsNavigation:
+      false
   });
 
-  function presentationMode(frame) {
-    return String(
-      frame &&
-      (
-        frame.presentationMode ||
-        (frame.presentation && frame.presentation.mode) ||
-        ""
-      )
-    ).toUpperCase();
-  }
+  const SCRIPT_ATTRIBUTE =
+    "data-laws-shared-spherical-xyz-interactions-source";
 
-  function suppressExternalHaloOverlay() {
-    const styleIdentity =
-      "laws-spatial-primary-native-glow-only";
+  function fail(code, details = null) {
+    const error = new Error(code);
+    error.code = code;
+    error.details = details;
 
-    if (
-      !document.querySelector(
-        `style[data-laws-halo-suppression="${styleIdentity}"]`
-      )
-    ) {
-      const style =
-        document.createElement("style");
-
-      style.dataset.lawsHaloSuppression =
-        styleIdentity;
-      style.textContent = `
-        [data-laws-primary-glow-layer],
-        [data-laws-primary-glow] {
-          display: none !important;
-          opacity: 0 !important;
-          visibility: hidden !important;
-        }
-      `;
-
-      document.head.append(style);
-    }
-
-    document
-      .querySelectorAll(
-        "[data-laws-primary-glow-layer]"
-      )
-      .forEach(layer => layer.remove());
-
-    const root =
-      document.querySelector("[data-laws-root]");
-
+    const root = document.querySelector("[data-laws-root]");
     if (root) {
-      root.dataset.lawsExternalHaloOverlay =
-        "false";
-      root.dataset.lawsPrimaryGlowSource =
-        "native-crystal-material";
+      root.dataset.lawsInteractionsWrapperStatus = "held";
+      root.dataset.lawsInteractionsWrapperFailure = code;
     }
 
-    return true;
-  }
-
-  function installProjectedCategoryLabels() {
-    const root =
-      document.querySelector("[data-laws-root]");
-    const field =
-      root && root.querySelector("[data-laws-scene-field]");
-    const controller =
-      globalThis.DGB_LAWS_CONTROLLER;
-
-    if (
-      !root ||
-      !field ||
-      !controller ||
-      typeof controller.getFrameState !== "function"
-    ) {
-      return false;
-    }
-
-    if (
-      root.dataset.lawsProjectedCategoryLabelsBound ===
-      "true"
-    ) {
-      return true;
-    }
-
-    let layer = field.querySelector(
-      "[data-laws-projected-category-labels]"
-    );
-
-    if (!layer) {
-      layer = document.createElement("div");
-      layer.className =
-        "laws-projected-category-labels";
-      layer.dataset.lawsProjectedCategoryLabels =
-        "true";
-      field.append(layer);
-    }
-
-    if (
-      !document.getElementById(
-        "laws-projected-category-label-style"
-      )
-    ) {
-      const style = document.createElement("style");
-      style.id =
-        "laws-projected-category-label-style";
-      style.textContent = `
-        .laws-projected-category-labels {
-          position: absolute;
-          inset: 0;
-          z-index: 22;
-          pointer-events: none;
-        }
-
-        .laws-projected-category-label {
-          position: absolute;
-          display: block;
-          min-width: 4.4rem;
-          padding: .34rem .52rem;
-          border: 0;
-          color: rgba(246, 238, 223, .94);
-          background: transparent;
-          font: 850 clamp(.62rem, 1.35vw, .78rem)/1.05 Inter, ui-sans-serif, system-ui, sans-serif;
-          letter-spacing: .09em;
-          text-align: center;
-          text-transform: uppercase;
-          text-shadow:
-            0 .1rem .18rem rgba(0, 0, 0, .98),
-            0 0 .46rem rgba(0, 0, 0, .98),
-            0 0 .78rem rgba(124, 220, 255, .22);
-          white-space: nowrap;
-          cursor: pointer;
-          pointer-events: auto;
-          transform: translate(-50%, -50%);
-          transform-origin: center;
-          transition:
-            opacity 150ms ease,
-            filter 150ms ease,
-            transform 150ms ease;
-        }
-
-        .laws-projected-category-label[data-direction="flow"] {
-          color: rgba(210, 224, 255, .96);
-        }
-
-        .laws-projected-category-label[data-direction="integrity"] {
-          color: rgba(175, 241, 250, .96);
-        }
-
-        .laws-projected-category-label[data-direction="reality"] {
-          color: rgba(255, 226, 157, .96);
-        }
-
-        .laws-projected-category-label[data-direction="structure"] {
-          color: rgba(255, 187, 145, .96);
-        }
-
-        .laws-projected-category-label[data-depth-layer="rear"] {
-          opacity: .44;
-          filter: saturate(.68) brightness(.68);
-          transform: translate(-50%, -50%) scale(.86);
-        }
-
-        .laws-projected-category-label[data-depth-layer="front"] {
-          opacity: .9;
-        }
-
-        .laws-projected-category-label[data-primary="true"] {
-          opacity: 1;
-          color: #fff3be;
-          filter:
-            brightness(1.16)
-            drop-shadow(0 0 .52rem rgba(245, 213, 130, .38));
-          transform: translate(-50%, -50%) scale(1.08);
-        }
-
-        .laws-projected-category-label:hover,
-        .laws-projected-category-label:focus-visible {
-          color: #fff8dc;
-          filter:
-            brightness(1.18)
-            drop-shadow(0 0 .62rem rgba(124, 220, 255, .38));
-        }
-
-        .laws-projected-category-label:focus-visible {
-          outline: 2px solid rgba(124, 220, 255, .9);
-          outline-offset: .16rem;
-          border-radius: .4rem;
-        }
-      `;
-      document.head.append(style);
-    }
-
-    const controls = new Map();
-
-    for (
-      const [direction, label]
-      of Object.entries(CATEGORY_LABELS)
-    ) {
-      let control = layer.querySelector(
-        `[data-laws-projected-category-label="${direction}"]`
-      );
-
-      if (!control) {
-        control = document.createElement("button");
-        control.type = "button";
-        control.className =
-          "laws-projected-category-label";
-        control.dataset.lawsProjectedCategoryLabel =
-          direction;
-        control.dataset.direction = direction;
-        control.textContent = label;
-        control.setAttribute(
-          "aria-label",
-          `Open ${label}`
-        );
-        control.addEventListener(
-          "click",
-          event => {
-            event.preventDefault();
-
-            const activeController =
-              globalThis.DGB_LAWS_CONTROLLER;
-
-            if (
-              activeController &&
-              typeof activeController
-                .requestCategorySelection ===
-                "function"
-            ) {
-              activeController
-                .requestCategorySelection(direction);
-            }
-          }
-        );
-        layer.append(control);
-      }
-
-      controls.set(direction, control);
-    }
-
-    function apply(records) {
-      let frame = null;
-
-      try {
-        frame = controller.getFrameState();
-      } catch (_) {
-        frame = null;
-      }
-
-      const constellation =
-        frame &&
-        presentationMode(frame) === "CONSTELLATION" &&
-        frame.held !== true;
-      const fieldRect =
-        field.getBoundingClientRect();
-      const centerX =
-        fieldRect.width * 0.5;
-      const centerY =
-        fieldRect.height * 0.5;
-      const byId = new Map();
-
-      for (const record of Array.from(records || [])) {
-        const kind = String(record && record.kind || "")
-          .toLowerCase();
-        const id = String(
-          record &&
-          (
-            record.id ||
-            record.direction ||
-            ""
-          )
-        ).toLowerCase();
-
-        if (
-          id &&
-          (
-            kind === "category" ||
-            kind === "direction" ||
-            !kind
-          )
-        ) {
-          byId.set(id, record);
-        }
-      }
-
-      const primaryId = String(
-        root.dataset.lawsSpatialPrimaryId ||
-        (frame && frame.orbitPreviewFocus) ||
-        (frame && frame.orbitFocus) ||
-        ""
-      ).toLowerCase();
-
-      for (const [direction, control] of controls) {
-        const record = byId.get(direction);
-
-        if (
-          !constellation ||
-          !record ||
-          record.visible === false
-        ) {
-          control.hidden = true;
-          continue;
-        }
-
-        const x = Number(record.x);
-        const y = Number(record.y);
-
-        if (
-          !Number.isFinite(x) ||
-          !Number.isFinite(y)
-        ) {
-          control.hidden = true;
-          continue;
-        }
-
-        const dx = x - centerX;
-        const dy = y - centerY;
-        const length = Math.hypot(dx, dy) || 1;
-        const radius = Math.max(
-          28,
-          Number(
-            record.radiusPx ||
-            record.radius ||
-            record.hitRadius ||
-            record.screenRadius
-          ) || 28
-        );
-        const outward = Math.min(
-          66,
-          Math.max(36, radius * 0.66 + 10)
-        );
-        const depthLayer = String(
-          record.depthLayer || "unknown"
-        ).toLowerCase();
-
-        control.hidden = false;
-        control.style.left =
-          `${x + (dx / length) * outward}px`;
-        control.style.top =
-          `${y + (dy / length) * outward}px`;
-        control.style.zIndex = String(
-          depthLayer === "rear" ? 2 : 9
-        );
-        control.dataset.depthLayer = depthLayer;
-        control.dataset.primary = String(
-          direction === primaryId
-        );
-      }
-    }
-
-    let records =
-      typeof controller.getSemanticProjection ===
-        "function"
-        ? controller.getSemanticProjection()
-        : [];
-
-    apply(records);
-
-    if (
-      typeof controller.subscribeSemanticProjection ===
-      "function"
-    ) {
-      controller.subscribeSemanticProjection(next => {
-        records = Array.from(next || []);
-        apply(records);
+    globalThis.DGB_LAWS_INTERACTIONS_WRAPPER_FAILURE =
+      Object.freeze({
+        contractId: CONTRACT.id,
+        code,
+        details
       });
-    }
 
-    if (
-      typeof controller.subscribeFrameState ===
-      "function"
-    ) {
-      controller.subscribeFrameState(() =>
-        apply(records)
-      );
-    }
-
-    globalThis.addEventListener(
-      "resize",
-      () => apply(records),
-      { passive: true }
-    );
-
-    root.dataset.lawsProjectedCategoryLabelsBound =
-      "true";
-    root.dataset.lawsConstellationLabels =
-      "flow-integrity-reality-structure";
-
-    return true;
-  }
-
-  function publish(detail = {}) {
-    const receipt = Object.freeze({
-      build: BUILD,
-      preservedSource:
-        "/laws/index.interactions.source.round4.js",
-      spatialSelectionSource:
-        "/laws/index.selection.js",
-      visiblePlanetAndHitZoneAligned: true,
-      explicitReturnFlowPreserved: true,
-      immediateNavigationAdded: false,
-      constellationSpatialPrimary: true,
-      clusterSpatialPrimary: true,
-      selectionDrivenGlow: true,
-      nativeCrystalMaterialGlow: true,
-      externalHaloOverlay: false,
-      releaseSettlement: true,
-      horizontalDragYawSign: "NEGATIVE",
-      clusterMaximumTiltRadians: 0.30,
-      euclideanClusterOrbitRequired: true,
-      projectedConstellationLabels:
-        Object.freeze({ ...CATEGORY_LABELS }),
-      ...detail
-    });
-
-    globalThis.DGB_LAWS_INTERACTION_STANDARD_RECEIPT =
-      receipt;
     globalThis.dispatchEvent(
       new CustomEvent(
-        "DGB_LAWS_INTERACTION_STANDARD_READY",
+        "DGB_LAWS_INTERACTIONS_WRAPPER_FAILURE",
         {
-          detail: receipt
+          detail:
+            globalThis.DGB_LAWS_INTERACTIONS_WRAPPER_FAILURE
         }
       )
     );
 
-    return receipt;
+    throw error;
   }
 
-  function bindCenteredReturnControl() {
-    const control = document.querySelector(
-      "[data-laws-root] [data-upstream-compass-control]"
-    );
+  function loadSourceSynchronously(url) {
+    const request = new XMLHttpRequest();
+    request.open("GET", url, false);
+    request.send(null);
 
-    if (
-      !control ||
-      control.dataset.lawsRound4ReturnBound ===
-        "true"
-    ) {
-      return false;
-    }
-
-    control.dataset.lawsRound4ReturnBound =
-      "true";
-    control.dataset.lawsRound4HitZone =
-      "visible-planet-control-bounds";
-
-    control.addEventListener(
-      "click",
-      event => {
-        const controller =
-          globalThis.DGB_LAWS_CONTROLLER;
-
-        if (
-          !controller ||
-          typeof controller
-            .requestCompassSelection !==
-            "function"
-        ) {
-          return;
-        }
-
-        event.preventDefault();
-        event.stopPropagation();
-        controller.requestCompassSelection();
-      },
-      true
-    );
-
-    return true;
-  }
-
-  function finalizeSpatialSupport() {
-    suppressExternalHaloOverlay();
-
-    const labelsInstalled =
-      installProjectedCategoryLabels();
-
-    if (!labelsInstalled) {
-      [80, 240, 600].forEach(delay =>
-        setTimeout(
-          installProjectedCategoryLabels,
-          delay
-        )
+    if (request.status < 200 || request.status >= 300) {
+      fail(
+        `LAWS_INTERACTIONS_SOURCE_LOAD_FAILED:${request.status}`,
+        { url }
       );
     }
 
-    [0, 80, 240].forEach(delay =>
-      setTimeout(
-        suppressExternalHaloOverlay,
-        delay
-      )
-    );
-
-    publish({
-      controlBound:
-        bindCenteredReturnControl(),
-      spatialSelectionLoaded: true,
-      externalHaloSuppressed: true,
-      projectedCategoryLabelsInstalled:
-        labelsInstalled
-    });
+    return request.responseText;
   }
 
-  function loadSpatialSelection() {
-    if (
-      globalThis.DGB_LAWS_SPATIAL_SELECTION ||
-      document.querySelector(
-        "script[data-laws-spatial-selection]"
-      )
-    ) {
-      finalizeSpatialSupport();
-      return false;
+  function replaceRequired(source, before, after, identity) {
+    const count = source.split(before).length - 1;
+
+    if (count !== 1) {
+      fail(
+        `LAWS_INTERACTIONS_REQUIRED_SOURCE_PATTERN_INVALID:${identity}`,
+        {
+          expected: 1,
+          actual: count
+        }
+      );
     }
 
-    const script =
-      document.createElement("script");
-
-    script.src = SELECTION_URL;
-    script.async = false;
-    script.dataset.lawsSpatialSelection =
-      BUILD;
-
-    script.addEventListener(
-      "load",
-      finalizeSpatialSupport,
-      { once: true }
-    );
-
-    script.addEventListener(
-      "error",
-      () => publish({
-        controlBound:
-          bindCenteredReturnControl(),
-        spatialSelectionLoaded: false,
-        externalHaloSuppressed:
-          suppressExternalHaloOverlay(),
-        projectedCategoryLabelsInstalled:
-          installProjectedCategoryLabels(),
-        failure:
-          "LAWS_SPATIAL_SELECTION_LOAD_FAILED"
-      }),
-      { once: true }
-    );
-
-    document.head.append(script);
-    return true;
+    return source.replace(before, after);
   }
 
-  function loadPreservedAuthority() {
-    const script =
-      document.createElement("script");
+  function transformSource(input) {
+    let source = input;
 
-    script.src = SOURCE_URL;
-    script.async = false;
-    script.dataset.lawsInteractionSource =
-      "preserved";
+    source = replaceRequired(
+      source,
+      '"LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4"',
+      '"LAWS_COMPASS_SHARED_SPHERICAL_XYZ_DIRECT_MANIPULATION_v5"',
+      "BUILD_IDENTITY"
+    );
 
-    script.addEventListener(
-      "load",
-      () => {
-        bindCenteredReturnControl();
+    source = replaceRequired(
+      source,
+      'horizontalDragYawSign: "NEGATIVE",',
+      'horizontalDragYawSign: "POSITIVE",',
+      "POSITIVE_HORIZONTAL_DRAG_RECEIPT"
+    );
 
-        [40, 160, 500].forEach(delay =>
-          setTimeout(
-            bindCenteredReturnControl,
-            delay
-          )
+    source = replaceRequired(
+      source,
+      "clusterMaximumTiltRadians: 0.30,",
+      "clusterFullXyzRotation: true,",
+      "FULL_XYZ_ROTATION_RECEIPT"
+    );
+
+    source = replaceRequired(
+      source,
+      "euclideanClusterOrbitRequired: true,",
+      "boundedSphericalXyzClusterRequired: true,",
+      "SPHERICAL_CLUSTER_RECEIPT"
+    );
+
+    const retiredTokens = [
+      '"LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4"',
+      'horizontalDragYawSign: "NEGATIVE"',
+      "clusterMaximumTiltRadians: 0.30",
+      "euclideanClusterOrbitRequired: true"
+    ];
+
+    for (const token of retiredTokens) {
+      if (source.includes(token)) {
+        fail(
+          "LAWS_INTERACTIONS_RETIRED_TOKEN_REMAINS",
+          { token }
         );
+      }
+    }
 
-        loadSpatialSelection();
-      },
-      { once: true }
+    const requiredTokens = [
+      '"LAWS_COMPASS_SHARED_SPHERICAL_XYZ_DIRECT_MANIPULATION_v5"',
+      'horizontalDragYawSign: "POSITIVE"',
+      "clusterFullXyzRotation: true",
+      "boundedSphericalXyzClusterRequired: true"
+    ];
+
+    for (const token of requiredTokens) {
+      if (!source.includes(token)) {
+        fail(
+          "LAWS_INTERACTIONS_REQUIRED_TOKEN_MISSING",
+          { token }
+        );
+      }
+    }
+
+    return source;
+  }
+
+  function install() {
+    if (
+      document.querySelector(
+        `script[${SCRIPT_ATTRIBUTE}]`
+      )
+    ) {
+      return;
+    }
+
+    const source =
+      transformSource(
+        loadSourceSynchronously(
+          CONTRACT.sourceUrl
+        )
+      );
+
+    const script = document.createElement("script");
+    script.setAttribute(
+      SCRIPT_ATTRIBUTE,
+      "true"
     );
-
-    script.addEventListener(
-      "error",
-      () => publish({
-        controlBound: false,
-        spatialSelectionLoaded: false,
-        externalHaloSuppressed:
-          suppressExternalHaloOverlay(),
-        projectedCategoryLabelsInstalled:
-          installProjectedCategoryLabels(),
-        failure:
-          "PRESERVED_INTERACTION_SOURCE_LOAD_FAILED"
-      }),
-      { once: true }
-    );
-
+    script.dataset.ready = "false";
+    script.textContent =
+      source +
+      "\n//# sourceURL=/laws/index.interactions.shared-spherical-xyz.js";
     document.head.append(script);
-  }
+    script.dataset.ready = "true";
 
-  suppressExternalHaloOverlay();
+    const root = document.querySelector("[data-laws-root]");
+    if (root) {
+      root.dataset.lawsInteractionsWrapperStatus =
+        "available";
+      root.dataset.lawsInteractionsWrapperContract =
+        CONTRACT.id;
+      root.dataset.lawsHorizontalDragYawSign =
+        CONTRACT.horizontalDragYawSign;
+      root.dataset.lawsClusterGeometryModel =
+        CONTRACT.clusterGeometryModel;
+      root.dataset.lawsClusterFullXyzRotation =
+        "true";
+    }
 
-  if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-        bindCenteredReturnControl();
-        suppressExternalHaloOverlay();
-      },
-      { once: true }
+    globalThis.DGB_LAWS_INTERACTIONS_WRAPPER_RECEIPT =
+      Object.freeze({
+        contractId:
+          CONTRACT.id,
+        sourceUrl:
+          CONTRACT.sourceUrl,
+        build:
+          CONTRACT.build,
+        horizontalDragYawSign:
+          CONTRACT.horizontalDragYawSign,
+        clusterGeometryModel:
+          CONTRACT.clusterGeometryModel,
+        clusterFullXyzRotation:
+          CONTRACT.clusterFullXyzRotation,
+        sourceTransformed:
+          true,
+        sourceExecuted:
+          Boolean(
+            globalThis.DGB_LAWS_INTERACTION_STANDARD_RECEIPT
+          ),
+        visualPassClaimed:
+          false
+      });
+
+    globalThis.dispatchEvent(
+      new CustomEvent(
+        "DGB_LAWS_INTERACTIONS_WRAPPER_READY",
+        {
+          detail:
+            globalThis
+              .DGB_LAWS_INTERACTIONS_WRAPPER_RECEIPT
+        }
+      )
     );
-  } else {
-    bindCenteredReturnControl();
-    suppressExternalHaloOverlay();
   }
 
-  loadPreservedAuthority();
+  install();
 })();

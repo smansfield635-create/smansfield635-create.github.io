@@ -44,3 +44,6 @@ jobs:
 
       - name: Run checkpoint 6D
         run: node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6d.harness.mjs
+
+      - name: Run checkpoint 6E
+        run: node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6e.harness.mjs

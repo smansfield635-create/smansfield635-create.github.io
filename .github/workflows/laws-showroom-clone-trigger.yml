@@ -64,10 +64,21 @@ jobs:
 
               code = "\n".join(code_lines)
 
-              code = code.replace(
-                  '"\\n\\n  function buildGpuMesh("',
-                  '"\\n\\n  function lawColorForDirection("',
-                  1,
+              # Keep the first marker as the canonical Main extraction boundary;
+              # alter only the second occurrence, which belongs to the Laws
+              # target-source replacement boundary.
+              old_marker = '"\\n\\n  function buildGpuMesh("'
+              first = code.find(old_marker)
+              second = code.find(old_marker, first + len(old_marker))
+              if first < 0 or second < 0:
+                  raise RuntimeError(
+                      f"Expected two buildGpuMesh markers: first={first}, second={second}"
+                  )
+              new_marker = '"\\n\\n  function lawColorForDirection("'
+              code = (
+                  code[:second]
+                  + new_marker
+                  + code[second + len(old_marker):]
               )
 
               corrected_laws_mesh_builder = r"""laws_build_meshes = '''  function createCpuMeshes() {

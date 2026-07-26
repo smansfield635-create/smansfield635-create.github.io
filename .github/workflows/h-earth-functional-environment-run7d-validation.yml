@@ -1,0 +1,71 @@
+name: H-Earth Functional Environment Run 7D Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-functional-environment-run7d-001
+  pull_request:
+    branches:
+      - agent/h-earth-functional-environment-run7c-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run7d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out Run 7D workspace
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute bounded Run 7D harness
+        env:
+          H_EARTH_RUN7D_EXECUTION_CANDIDATE: h-earth-run7d-execution-candidate.json
+        run: |
+          set -o pipefail
+          node --experimental-default-type=module \
+            h-earth-3d/validation/h-earth.functional-environment.run7d.harness.mjs \
+            2>&1 | tee h-earth-run7d.log
+
+      - name: Verify execution candidate exists
+        run: |
+          test -s h-earth-run7d-execution-candidate.json
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const receipt = JSON.parse(
+            readFileSync('h-earth-run7d-execution-candidate.json', 'utf8')
+          );
+          if (
+            receipt.eligible !== true ||
+            receipt.failCount !== 0 ||
+            receipt.deterministicRerunMatch !== true ||
+            receipt.workspaceExecution !== true ||
+            receipt.localConstruction !== false ||
+            receipt.geometryMutation !== false ||
+            receipt.rendererMutation !== false ||
+            receipt.publicRouteMutation !== false ||
+            receipt.productPromotionClaim !== false ||
+            receipt.liveVerificationClaim !== false
+          ) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          NODE
+
+      - name: Upload Run 7D execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run7d-execution-evidence
+          path: |
+            h-earth-run7d.log
+            h-earth-run7d-execution-candidate.json
+          if-no-files-found: error
+          retention-days: 14

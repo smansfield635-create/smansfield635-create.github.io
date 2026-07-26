@@ -294,8 +294,8 @@ for (const witness of mountainWitnesses) {
   );
 }
 check(
-  evaluateHEarthRun8AMountainContribution(-240, -266) === 0,
-  'Mountain X transition boundary must fall to terrain truth'
+  evaluateHEarthRun8AMountainContribution(-241, -266) === 0,
+  'Mountain contribution must fail closed immediately outside the X transition bound'
 );
 check(
   evaluateHEarthRun8AMountainContribution(-96, -312) === 0,

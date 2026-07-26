@@ -27,7 +27,7 @@ jobs:
           ref: agent/showroom-compass-center-hit-labels-001
           fetch-depth: 0
 
-      - name: Extract and execute bounded complete-file constructor
+      - name: Materialize bounded candidate when absent
         run: |
           set -euo pipefail
           if grep -Fq 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A' showroom/index.html; then
@@ -44,6 +44,43 @@ jobs:
           PY
           bash /tmp/showroom-apply.sh
 
+      - name: Apply bounded mobile-scale and label-startup correction
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          css_path = Path('showroom/index.css')
+          js_path = Path('showroom/index.interactions.js')
+          css = css_path.read_text()
+          js = js_path.read_text()
+
+          mobile_old = '''    --showroom-center-size:\n      clamp(10.6rem, 48vw, 14.8rem);\n\n    --showroom-planet-size:\n      clamp(9.4rem, 42vw, 13rem);'''
+          mobile_new = '''    --showroom-center-size:\n      clamp(9.35rem, 42vw, 12rem);\n\n    --showroom-planet-size:\n      clamp(8.15rem, 36vw, 10.8rem);'''
+          tiny_old = '''    --showroom-center-size:\n      clamp(9.5rem, 53vw, 12.75rem);\n\n    --showroom-planet-size:\n      clamp(8.55rem, 47vw, 11.4rem);'''
+          tiny_new = '''    --showroom-center-size:\n      clamp(9.1rem, 42vw, 11.5rem);\n\n    --showroom-planet-size:\n      clamp(7.9rem, 36vw, 10.2rem);'''
+
+          if mobile_old in css:
+              css = css.replace(mobile_old, mobile_new, 1)
+          elif mobile_new not in css:
+              raise SystemExit('MOBILE_SCALE_BASELINE_NOT_FOUND')
+
+          if tiny_old in css:
+              css = css.replace(tiny_old, tiny_new, 1)
+          elif tiny_new not in css:
+              raise SystemExit('TINY_SCALE_BASELINE_NOT_FOUND')
+
+          startup_old = '''      attemptRuntimeActivation(\n        "startup"\n      );'''
+          startup_new = '''      attemptRuntimeActivation(\n        "startup"\n      );\n\n      scheduleProjectedLabels();'''
+          if startup_new not in js:
+              if js.count(startup_old) != 1:
+                  raise SystemExit(f'LABEL_STARTUP_BASELINE_COUNT:{js.count(startup_old)}')
+              js = js.replace(startup_old, startup_new, 1)
+
+          css_path.write_text(css)
+          js_path.write_text(js)
+          PY
+
       - name: Verify JavaScript and bounded identities
         run: |
           set -euo pipefail
@@ -51,7 +88,10 @@ jobs:
           grep -F 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A' showroom/index.html
           grep -F 'clamp(9.35rem, 18vw, 14.25rem)' showroom/index.css
           grep -F 'clamp(8.15rem, 15.8vw, 12.35rem)' showroom/index.css
+          grep -F 'clamp(9.1rem, 42vw, 11.5rem)' showroom/index.css
+          grep -F 'clamp(7.9rem, 36vw, 10.2rem)' showroom/index.css
           grep -F 'frontProjectionOverridesCompass' showroom/index.interactions.js
+          grep -F 'scheduleProjectedLabels();' showroom/index.interactions.js
           grep -F 'N · Story' showroom/index.interactions.js
           grep -F 'Unfinished World' showroom/index.interactions.js
 
@@ -116,9 +156,9 @@ jobs:
                 controlPointerEvents: control ? getComputedStyle(control).pointerEvents : null,
                 labelPointerEvents: label ? getComputedStyle(label).pointerEvents : null,
                 labels: Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim()).sort(),
-                allLabels: Array.from(document.querySelectorAll('[data-showroom-projected-label]')).map(node => ({ text: node.textContent.trim(), hidden: node.hidden })),
                 projectionCount: Array.from(projection || []).length,
                 visibleProjectionCount: Array.from(projection || []).filter(record => record.visible !== false).length,
+                frontProjectionCount: Array.from(projection || []).filter(record => record.visible !== false && record.depthLayer === 'front').length,
                 rootDatasets: root ? {
                   controllerStatus: root.dataset.showroomControllerStatus,
                   compositorReady: root.dataset.showroomCompositorReady,
@@ -160,7 +200,7 @@ jobs:
             );
 
             const receipt = {
-              schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_DIAGNOSTIC_v1',
+              schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_DIAGNOSTIC_v2',
               pass,
               viewport: { width: 360, height: 800, mobile: true, touch: true },
               constellation,
@@ -177,7 +217,7 @@ jobs:
             await browser.close();
           })().catch(error => {
             const receipt = {
-              schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_DIAGNOSTIC_v1',
+              schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_DIAGNOSTIC_v2',
               pass: false,
               fatalError: String(error && (error.stack || error.message || error))
             };
@@ -199,5 +239,5 @@ jobs:
             echo 'No candidate or diagnostic delta remains.'
             exit 0
           fi
-          git commit -m 'Apply Showroom center hit and projected labels correction'
+          git commit -m 'Correct Showroom mobile scale and projected-label startup'
           git push origin HEAD:agent/showroom-compass-center-hit-labels-001

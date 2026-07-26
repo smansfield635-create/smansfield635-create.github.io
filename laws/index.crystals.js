@@ -569,53 +569,22 @@
 
     source = replaceRequired(
       source,
-`  function applyMaterial(
-    renderer,
-    materialName,
-    prominence,
-    haloStrength
-  ) {`,
-`  function applyMaterial(
-    renderer,
-    materialName,
-    prominence,
-    haloStrength,
-    haloPass
-  ) {`,
-      "HALO_AWARE_MATERIAL_SIGNATURE"
-    );
-
-    source = replaceRequired(
-      source,
-`    gl.uniform1f(
-      renderer.uniforms.alpha,
-      material.alpha
-    );`,
-`    gl.uniform1f(
-      renderer.uniforms.alpha,
-      haloPass
-        ? material.alpha
-        : 1
-    );`,
+`      float alpha =
+        clamp(
+          uAlpha *
+          (
+            0.70 +
+            uProminence *
+            0.30 +
+            fresnel *
+            0.08
+          ),
+          0.12,
+          1.0
+        );`,
+`      float alpha =
+        1.0;`,
       "OPAQUE_ORDINARY_SURFACE_ALPHA"
-    );
-
-    source = replaceRequired(
-      source,
-`    applyMaterial(
-      renderer,
-      node.material,
-      node.transform.prominence,
-      node.transform.halo
-    );`,
-`    applyMaterial(
-      renderer,
-      node.material,
-      node.transform.prominence,
-      node.transform.halo,
-      haloPass
-    );`,
-      "HALO_PASS_MATERIAL_CALL"
     );
 
     source = replaceRequired(
@@ -659,8 +628,7 @@
       "sphere.y -\n                0.08",
       "sphere.z +\n                0.18",
       "gl.disable(gl.CULL_FACE);",
-      "haloPass\n        ? material.alpha\n        : 1",
-      "node.transform.halo,\n      haloPass"
+      "float alpha =\n        1.0;"
     ];
 
     for (const token of requiredTokens) {

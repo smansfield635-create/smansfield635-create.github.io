@@ -7,12 +7,15 @@ on:
     paths:
       - .github/workflows/showroom-center-hit-labels-temp.yml
       - .github/workflows/showroom-center-hit-labels-pr-trigger.yml
+      - showroom/index.html
+      - showroom/index.css
+      - showroom/index.interactions.js
 
 permissions:
   contents: write
 
 jobs:
-  construct-verify-and-persist:
+  construct-diagnose-and-persist:
     if: github.event.pull_request.head.ref == 'agent/showroom-compass-center-hit-labels-001'
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -26,6 +29,11 @@ jobs:
 
       - name: Extract and execute bounded complete-file constructor
         run: |
+          set -euo pipefail
+          if grep -Fq 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A' showroom/index.html; then
+            echo 'Bounded production candidate already materialized.'
+            exit 0
+          fi
           python3 - <<'PY'
           from pathlib import Path
           source = Path('.github/workflows/showroom-center-hit-labels-temp.yml').read_text().splitlines()
@@ -52,9 +60,10 @@ jobs:
           npm install --no-save --package-lock=false playwright
           npx playwright install --with-deps chromium
 
-      - name: Extract and execute Samsung-width browser verification
+      - name: Execute Samsung-width browser diagnostics
         run: |
           set -euo pipefail
+          mkdir -p .github/tmp
           python3 -m http.server 4173 >/tmp/showroom-center-hit-server.log 2>&1 &
           for attempt in $(seq 1 40); do
             if curl --fail --silent http://127.0.0.1:4173/showroom/ >/dev/null; then
@@ -62,21 +71,133 @@ jobs:
             fi
             sleep 1
           done
-          python3 - <<'PY'
-          from pathlib import Path
-          source = Path('.github/workflows/showroom-center-hit-labels-temp.yml').read_text().splitlines()
-          start = next(i for i, line in enumerate(source) if line == "          node <<'NODE'")
-          end = next(i for i in range(start + 1, len(source)) if source[i] == '          NODE')
-          script = '\n'.join(line[10:] if line.startswith('          ') else line for line in source[start:end + 1]) + '\n'
-          Path('/tmp/showroom-browser.sh').write_text(script)
-          PY
-          bash /tmp/showroom-browser.sh
+          node <<'NODE'
+          const fs = require('fs');
+          const { chromium } = require('playwright');
 
-      - name: Commit verified bounded production files
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({
+              viewport: { width: 360, height: 800 },
+              isMobile: true,
+              hasTouch: true
+            });
+            const pageErrors = [];
+            const consoleErrors = [];
+            page.on('pageerror', error => pageErrors.push(String(error)));
+            page.on('console', message => {
+              if (message.type() === 'error') consoleErrors.push(message.text());
+            });
+
+            await page.goto('http://127.0.0.1:4173/showroom/', {
+              waitUntil: 'domcontentloaded'
+            });
+            await page.waitForTimeout(8000);
+
+            const constellation = await page.evaluate(() => {
+              const controller = window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER;
+              const center = document.querySelector('[data-showroom-center-layer]');
+              const planet = document.querySelector('.showroom-planet-root');
+              const control = document.querySelector('[data-showroom-compass-control]');
+              const label = document.querySelector('.showroom-compass-control__label');
+              const root = document.querySelector('[data-showroom-root]');
+              let projection = [];
+              try {
+                projection = controller && typeof controller.getSemanticProjection === 'function'
+                  ? controller.getSemanticProjection()
+                  : [];
+              } catch (_) {}
+              return {
+                controllerPresent: Boolean(controller),
+                centerPresent: Boolean(center),
+                planetPresent: Boolean(planet),
+                centerWidth: center ? center.getBoundingClientRect().width : null,
+                planetWidth: planet ? planet.getBoundingClientRect().width : null,
+                controlPointerEvents: control ? getComputedStyle(control).pointerEvents : null,
+                labelPointerEvents: label ? getComputedStyle(label).pointerEvents : null,
+                labels: Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim()).sort(),
+                allLabels: Array.from(document.querySelectorAll('[data-showroom-projected-label]')).map(node => ({ text: node.textContent.trim(), hidden: node.hidden })),
+                projectionCount: Array.from(projection || []).length,
+                visibleProjectionCount: Array.from(projection || []).filter(record => record.visible !== false).length,
+                rootDatasets: root ? {
+                  controllerStatus: root.dataset.showroomControllerStatus,
+                  compositorReady: root.dataset.showroomCompositorReady,
+                  crystalsReady: root.dataset.showroomCrystalsReady,
+                  interactionsStatus: root.dataset.showroomInteractionsStatus,
+                  presentationMode: root.dataset.showroomPresentationMode,
+                  semanticProjectionRevision: root.dataset.showroomSemanticProjectionRevision
+                } : null
+              };
+            });
+
+            let cardinalRequest = false;
+            try {
+              cardinalRequest = await page.evaluate(() => {
+                const controller = window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER;
+                return Boolean(controller && controller.requestCardinalSelection('north'));
+              });
+            } catch (_) {}
+            await page.waitForTimeout(3000);
+
+            const cluster = await page.evaluate(() => ({
+              labels: Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim()).sort(),
+              rootMode: document.querySelector('[data-showroom-root]')?.dataset.showroomPresentationMode || '',
+              activeCluster: document.querySelector('[data-showroom-root]')?.dataset.showroomActiveCluster || ''
+            }));
+
+            const expectedCardinals = ['E · Characters', 'N · Story', 'S · Wonders', 'W · Mysteries'].sort();
+            const expectedCluster = ['Invitation', 'Mission', 'Timeline', 'Welcome'].sort();
+            const pass = Boolean(
+              constellation.controllerPresent &&
+              constellation.centerWidth !== null && constellation.centerWidth <= 165 &&
+              constellation.planetWidth !== null && constellation.planetWidth <= 145 &&
+              constellation.controlPointerEvents === 'none' &&
+              constellation.labelPointerEvents === 'auto' &&
+              JSON.stringify(constellation.labels) === JSON.stringify(expectedCardinals) &&
+              cardinalRequest &&
+              JSON.stringify(cluster.labels) === JSON.stringify(expectedCluster) &&
+              pageErrors.length === 0
+            );
+
+            const receipt = {
+              schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_DIAGNOSTIC_v1',
+              pass,
+              viewport: { width: 360, height: 800, mobile: true, touch: true },
+              constellation,
+              cardinalRequest,
+              cluster,
+              pageErrors,
+              consoleErrors
+            };
+            fs.writeFileSync(
+              '.github/tmp/showroom-center-hit-labels-diagnostic.json',
+              JSON.stringify(receipt, null, 2) + '\n'
+            );
+            console.log(JSON.stringify(receipt, null, 2));
+            await browser.close();
+          })().catch(error => {
+            const receipt = {
+              schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_DIAGNOSTIC_v1',
+              pass: false,
+              fatalError: String(error && (error.stack || error.message || error))
+            };
+            fs.writeFileSync(
+              '.github/tmp/showroom-center-hit-labels-diagnostic.json',
+              JSON.stringify(receipt, null, 2) + '\n'
+            );
+            console.error(receipt.fatalError);
+          });
+          NODE
+
+      - name: Commit bounded candidate and diagnostic
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '4189828+github-actions[bot]@users.noreply.github.com'
-          git add showroom/index.html showroom/index.css showroom/index.interactions.js
+          git add showroom/index.html showroom/index.css showroom/index.interactions.js .github/tmp/showroom-center-hit-labels-diagnostic.json
+          if git diff --cached --quiet; then
+            echo 'No candidate or diagnostic delta remains.'
+            exit 0
+          fi
           git commit -m 'Apply Showroom center hit and projected labels correction'
           git push origin HEAD:agent/showroom-compass-center-hit-labels-001

@@ -7,9 +7,9 @@ import { fileURLToPath } from 'node:url';
 // compositor-camera-authority, functional-landscape Run 6, functional
 // environment Runs 7C–7H, Run 7I public/live evidence, Run 8A dimensional
 // reconciliation, Run 8B successor neutral geometry, Run 8C normal-light-
-// material realization, Run 8D grounded vegetation, and Run 8E bounded
-// integration-engineering overlays.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-integration-engineering-scope.js';
+// material realization, Run 8D grounded vegetation, Run 8E bounded
+// integration-engineering, and Run 8 Phase 1 ordered-main-promotion overlays.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8-phase1-main-promotion-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

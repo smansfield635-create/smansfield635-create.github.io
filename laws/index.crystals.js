@@ -2,20 +2,21 @@
    Laws shared Compass-family spherical XYZ crystal loader.
 
    This bounded replacement preserves the controller-decoupled source in
-   /laws/index.crystals.source.js and applies only the accepted Main Compass
-   cluster presentation contract plus the Laws crystal face-visibility repair
-   before synchronous execution.
+   /laws/index.crystals.source.js, preserves the accepted Main Compass cluster
+   presentation, restores the proven double-sided Compass crystal render state,
+   and makes the ordinary crystal surface opaque while retaining the separate
+   translucent halo pass.
 */
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_LAWS_CRYSTALS_MAIN_COMPASS_PRESENTATION_AND_FACE_REPAIR_v2",
+    id: "DGB_LAWS_CRYSTALS_RENDER_CONTINUITY_AND_OPAQUE_SURFACE_v3",
     sourceUrl:
-      "./index.crystals.source.js?v=LAWS_CRYSTALS_SOURCE_MAIN_PRESENTATION_FACE_REPAIR_20260726D",
+      "./index.crystals.source.js?v=LAWS_CRYSTALS_SOURCE_RENDER_CONTINUITY_20260726E",
     geometryModel: "BOUNDED_SPHERICAL_XYZ_CLUSTER",
     presentationModel: "MAIN_COMPASS_SPHERICAL_CLUSTER_PRESENTATION",
-    faceVisibilityModel: "BACK_FACE_CULLED_OPAQUE_FRONT_SURFACE",
+    faceVisibilityModel: "DOUBLE_SIDED_OPAQUE_ORDINARY_SURFACE_SEPARATE_HALO",
     memberCount: 4,
     horizontalRadius: 1.36,
     verticalRadius: 1.18,
@@ -35,6 +36,9 @@
     selectedLift: 1.08,
     yOffset: -0.08,
     zOffset: 0.18,
+    cullFaceEnabled: false,
+    ordinarySurfaceOpaque: true,
+    haloPassSeparate: true,
     ownsController: false,
     ownsCompositor: false,
     ownsPlanet: false,
@@ -170,27 +174,6 @@
       })
   });`,
       "SPHERICAL_CLUSTER_CONTRACT"
-    );
-
-    source = replaceRequired(
-      source,
-`    lawScale:
-      0.88,
-
-    primaryLawScale:
-      1.12,
-
-    selectedLawScale:
-      1.18,`,
-`    lawScale:
-      0.88,
-
-    primaryLawScale:
-      1.12,
-
-    selectedLawScale:
-      1.18,`,
-      "MAIN_COMPASS_LAW_SCALE_PROFILE"
     );
 
     source = replaceSection(
@@ -586,11 +569,22 @@
 
     source = replaceRequired(
       source,
-      "    gl.disable(gl.CULL_FACE);",
-`    gl.enable(gl.CULL_FACE);
-    gl.cullFace(gl.BACK);
-    gl.frontFace(gl.CCW);`,
-      "BACK_FACE_CULLING"
+`      float alpha =
+        clamp(
+          uAlpha *
+          (
+            0.70 +
+            uProminence *
+            0.30 +
+            fresnel *
+            0.08
+          ),
+          0.12,
+          1.0
+        );`,
+`      float alpha =
+        1.0;`,
+      "OPAQUE_ORDINARY_SURFACE_ALPHA"
     );
 
     source = replaceRequired(
@@ -607,13 +601,15 @@
       "SPHERE.cluster.maximumTiltRadians",
       "function euclideanLawPosition(",
       "validateClusterOrbitContract();",
-      "gl.disable(gl.CULL_FACE);",
+      "gl.enable(gl.CULL_FACE);",
+      "gl.cullFace(gl.BACK);",
+      "gl.frontFace(gl.CCW);",
       "0.68 +\n            sphere.depth *\n              0.36"
     ];
 
     for (const token of retiredTokens) {
       if (source.includes(token)) {
-        fail("LAWS_CRYSTALS_RETIRED_CLUSTER_TOKEN_REMAINS", { token });
+        fail("LAWS_CRYSTALS_RETIRED_RENDER_TOKEN_REMAINS", { token });
       }
     }
 
@@ -631,14 +627,13 @@
       "const selectedLift =\n          selected\n            ? 1.08",
       "sphere.y -\n                0.08",
       "sphere.z +\n                0.18",
-      "gl.enable(gl.CULL_FACE);",
-      "gl.cullFace(gl.BACK);",
-      "gl.frontFace(gl.CCW);"
+      "gl.disable(gl.CULL_FACE);",
+      "float alpha =\n        1.0;"
     ];
 
     for (const token of requiredTokens) {
       if (!source.includes(token)) {
-        fail("LAWS_CRYSTALS_REQUIRED_CLUSTER_TOKEN_MISSING", { token });
+        fail("LAWS_CRYSTALS_REQUIRED_RENDER_TOKEN_MISSING", { token });
       }
     }
 
@@ -662,7 +657,7 @@
     script.dataset.ready = "false";
     script.textContent =
       source +
-      "\n//# sourceURL=/laws/index.crystals.main-compass-presentation.js";
+      "\n//# sourceURL=/laws/index.crystals.render-continuity.js";
     document.head.append(script);
     script.dataset.ready = "true";
 
@@ -674,7 +669,9 @@
       root.dataset.lawsClusterPresentationModel = CONTRACT.presentationModel;
       root.dataset.lawsCrystalFaceVisibilityModel = CONTRACT.faceVisibilityModel;
       root.dataset.lawsMainCompassClusterPresentation = "true";
-      root.dataset.lawsCrystalBackFaceCulling = "true";
+      root.dataset.lawsCrystalBackFaceCulling = "false";
+      root.dataset.lawsCrystalOrdinarySurfaceOpaque = "true";
+      root.dataset.lawsCrystalHaloPassSeparate = "true";
     }
 
     globalThis.DGB_LAWS_CRYSTALS_WRAPPER_RECEIPT = Object.freeze({
@@ -695,7 +692,10 @@
       selectedLift: CONTRACT.selectedLift,
       yOffset: CONTRACT.yOffset,
       zOffset: CONTRACT.zOffset,
-      backFaceCullingEnabled: true,
+      backFaceCullingEnabled: false,
+      doubleSidedCrystalDrawing: true,
+      ordinarySurfaceOpaque: true,
+      haloPassSeparate: true,
       sourceTransformed: true,
       sourceExecuted: Boolean(globalThis.DGB_LAWS_CRYSTALS),
       protectedAuthoritiesChanged: false,

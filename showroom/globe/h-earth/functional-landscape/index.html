@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#111916">
-  <title>H-Earth · Functional Landscape Proof</title>
+  <title>H-Earth · Functional Environment Proof</title>
   <link rel="stylesheet" href="./index.css">
 </head>
 <body>
@@ -13,24 +13,26 @@
     id="h-earth-functional-landscape-route"
     class="route-shell"
     data-run6f-ready="false"
+    data-run7h-ready="false"
+    data-run7h-error="false"
     aria-labelledby="route-title"
   >
     <header class="route-header">
       <div>
-        <p class="eyebrow">H-Earth · Run 6F</p>
-        <h1 id="route-title">Coast-to-inland functional landscape</h1>
+        <p class="eyebrow">H-Earth · Run 7H</p>
+        <h1 id="route-title">Coast-to-inland functional environment</h1>
       </div>
       <p id="route-status" class="route-status" role="status" aria-live="polite">
-        Constructing governed landscape…
+        Constructing governed environment…
       </p>
     </header>
 
-    <section class="viewer-panel" aria-label="Navigable H-Earth landscape">
+    <section class="viewer-panel" aria-label="Navigable H-Earth functional environment">
       <div
         id="h-earth-functional-landscape-mount"
         class="render-mount"
         tabindex="0"
-        aria-label="Landscape viewport. Use W A S D or the controls below to navigate."
+        aria-label="Environment viewport. Use W A S D, touch gestures, or the controls below to navigate."
       >
         <canvas
           id="h-earth-functional-landscape-canvas"
@@ -45,7 +47,7 @@
         </div>
       </div>
 
-      <dl class="telemetry" aria-label="Navigation telemetry">
+      <dl class="telemetry" aria-label="Navigation and environment telemetry">
         <div><dt>Position</dt><dd id="hud-position">—</dd></div>
         <div><dt>Terrain</dt><dd id="hud-terrain">—</dd></div>
         <div><dt>Clearance</dt><dd id="hud-clearance">—</dd></div>
@@ -84,12 +86,15 @@
 
     <footer class="route-footer">
       <p>
-        Isolated successor proof. Packet 001, the minimum shoreline route,
-        current H-Earth public route, and production authority remain unchanged.
+        Run 7H integrates the governed terrain, surface, atmosphere, water,
+        biome, population, traversal, and spatial-lifecycle authorities without
+        replacing their native truth or the established camera, navigation,
+        geometry, compositor, and renderer authorities.
       </p>
     </footer>
   </main>
 
   <script type="module" src="./index.js"></script>
+  <script type="module" src="./environment-integration.js"></script>
 </body>
 </html>

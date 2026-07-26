@@ -1,0 +1,82 @@
+{
+  "receiptType": "H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN_7H_RECEIPT",
+  "contractId": "H_EARTH_FUNCTIONAL_ENVIRONMENT_COMPOSITE_RUN_7H_v1",
+  "eligible": true,
+  "status": "RUN_7H_FUNCTIONAL_ENVIRONMENT_WORKSPACE_PASS",
+  "parentCheckpointCommit": "c8ff8726fae62ff87649e4be3f94a42b9f24659f",
+  "executedWorkspaceCommit": "c538a51a5dacd62bc84d31d4b33fef14f58fc932",
+  "workspaceBranch": "agent/h-earth-functional-environment-run7h-001",
+  "workspacePullRequest": 181,
+  "workflowRunId": 30209187012,
+  "workflowJobId": 89812427278,
+  "workflowArtifactId": 8633960893,
+  "workflowArtifactDigest": "sha256:32f5262cf5c15892424ca2f7c6e93deedb1d20de35bf9c5d20e57637d599437d",
+  "executionRuntime": "v22.23.1",
+  "referencePerformanceTier": "SAMSUNG_GALAXY_PHONE_PRIMARY_PERFORMANCE_TIER",
+  "nodeIntegration": {
+    "waypointCount": 5,
+    "lifecycleStateCount": 4,
+    "assertionCount": 111,
+    "passCount": 111,
+    "failCount": 0,
+    "deterministicRerunMatch": true,
+    "deterministicDigest": "56bc3bbedae2303e9eb263645d11f9f14b2e7073ef92258280104adc4a408a75"
+  },
+  "browserMatrix": {
+    "configurationCount": 3,
+    "desktopLandscape": "PASS",
+    "samsungMobilePortrait": "PASS",
+    "samsungMobileLandscape": "PASS",
+    "touchAndPointerExecution": "PASS",
+    "integratedEnvironmentPresentation": "PASS",
+    "lifecycleTransitionProof": "PASS",
+    "actualBrowserExecution": true
+  },
+  "performanceEvidence": {
+    "desktopIntegrationMilliseconds": 9.8,
+    "samsungPortraitIntegrationMilliseconds": 14.6,
+    "samsungLandscapeIntegrationMilliseconds": 12.5,
+    "maximumObservedIntegrationMilliseconds": 14.6
+  },
+  "visualEvidence": {
+    "desktopSampledColorCount": 133,
+    "samsungPortraitSampledColorCount": 154,
+    "samsungLandscapeSampledColorCount": 144,
+    "desktopUpperBandNonGraySamples": 3648,
+    "samsungPortraitUpperBandNonGraySamples": 3825,
+    "samsungLandscapeUpperBandNonGraySamples": 3641,
+    "desktopLowerBandBlueSamples": 2323,
+    "samsungPortraitLowerBandBlueSamples": 2573,
+    "samsungLandscapeLowerBandBlueSamples": 2307,
+    "desktopScreenshot": "desktop-landscape.png",
+    "samsungPortraitScreenshot": "samsung-mobile-portrait.png",
+    "samsungLandscapeScreenshot": "samsung-mobile-landscape.png"
+  },
+  "lifecycleProof": [
+    { "distance": 32, "state": "ACTIVE_DETAIL", "populationInstanceCount": 15 },
+    { "distance": 120, "state": "ACTIVE_REDUCED", "populationInstanceCount": 8 },
+    { "distance": 260, "state": "SLEEPING", "populationInstanceCount": 0 },
+    { "distance": 420, "state": "UNLOADED", "populationInstanceCount": 0 }
+  ],
+  "authorityBoundaries": {
+    "authorityCollapse": false,
+    "rendererAuthorityReplaced": false,
+    "cameraAuthorityReplaced": false,
+    "navigationAuthorityReplaced": false,
+    "geometryAuthorityCreated": false,
+    "localConstruction": false
+  },
+  "promotionState": {
+    "productPromotionClaim": false,
+    "merged": false,
+    "deployed": false,
+    "livePublicUrlVerified": false
+  },
+  "executionLimitations": [
+    "WORKSPACE_BRANCH_EXECUTION_ONLY",
+    "CHROMIUM_DEVICE_EMULATION_IS_NOT_PHYSICAL_DEVICE_INSTRUMENTATION",
+    "NO_PRODUCTION_MERGE_OR_DEPLOYMENT_YET",
+    "NO_LIVE_PUBLIC_URL_VERIFICATION_YET"
+  ],
+  "issues": []
+}

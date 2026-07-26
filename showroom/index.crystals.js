@@ -1,10 +1,11 @@
 /* /showroom/index.crystals.js
-   Canonical Main Compass crystal corridor cloned for Showroom.
-   Showroom retains its controller, compositor, semantic records,
-   labels, palette identity, routes, Diamond, Window, and Cosmos.
-   Mesh topology, facet-color construction, normals, shaders, halo,
-   GL draw state, scale hierarchy, and spherical presentation are
-   duplicated from /assets/compass/compass.crystals.js.
+   Showroom canonical crystal corridor with viewport-safe spatial integration.
+
+   The accepted Main crystal mesh, facet-color construction, normals, shader,
+   autonomous facet motion, and Showroom semantic identity remain intact.
+   This round corrects only Showroom-owned target spacing, scale hierarchy,
+   surface closure, and the detached full-mesh halo pass. The luminous response
+   remains inside the ordinary crystal shader and the canonical Cosmos field.
 */
 /* TNT FULL-FILE REPLACEMENT */
 /* SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v8 */
@@ -40,12 +41,12 @@
   - outgoing populations do not visually fade after replacement;
   - only the newly accepted population may interpolate into view.
 
-  Visual-sizing renewal:
-  - cardinal crystals are increased by 50 percent;
-  - room crystals are increased by 50 percent;
-  - cardinal positions are moved outward toward the second orbit ring;
-  - room-cluster positions are moved outward proportionally;
-  - original depth coordinates remain unchanged;
+  Spatial-integration renewal:
+  - cardinal and room crystals use bounded viewport-safe scales;
+  - cardinal anchors preserve clear globe and label separation;
+  - room-cluster anchors use a larger Showroom-specific spherical envelope;
+  - the ordinary crystal surface is opaque with depth writes enabled;
+  - the detached additive full-mesh halo draw is retired;
   - compositor hit radii continue to scale with rendered crystal size.
 
   Startup orchestration:
@@ -79,7 +80,7 @@
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_CANONICAL_MAIN_CRYSTAL_CORRIDOR_CLONE_v1";
+    "SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2";
 
   const OWNER =
     "/showroom/index.crystals.js";
@@ -223,21 +224,23 @@
   cardinalHitRadius: 76,
   roomHitRadius: 48,
   visibleOpacityThreshold: 0.025,
-  haloDisableWidth: 0
+  haloPassEnabled: false,
+  cardinalDepthRadius: 1.16,
+  roomDepthRadius: 1.04
 });
 
   const CARDINAL_BASE_POSITIONS = Object.freeze({
-  north: Object.freeze([0, 1.34, 0]),
-  east: Object.freeze([1.50, 0, 0]),
-  south: Object.freeze([0, -1.34, 0]),
-  west: Object.freeze([-1.50, 0, 0])
+  north: Object.freeze([0, 1.58, 0]),
+  east: Object.freeze([1.64, 0, 0]),
+  south: Object.freeze([0, -1.58, 0]),
+  west: Object.freeze([-1.64, 0, 0])
 });
 
 const ROOM_BASE_POSITIONS = Object.freeze({
-  1: Object.freeze([0, 0.42155918243834756, -0.9713677415028749]),
-  2: Object.freeze([1.3178909481432288, 0.29135821915396054, 0]),
-  3: Object.freeze([0, -0.5073345276802548, 0.9389695242664297]),
-  4: Object.freeze([-1.351990798995593, -0.12787386777498447, 0])
+  1: Object.freeze([0, 0.6781044462968384, -0.9340074437527643]),
+  2: Object.freeze([1.5996947133694057, 0.4682798483199145, 0]),
+  3: Object.freeze([0, -0.8163844035631221, 0.902855311794644]),
+  4: Object.freeze([-1.640152968399066, -0.2058989384512462, 0])
 });
 
   const PALETTES = Object.freeze({
@@ -367,46 +370,10 @@ const ROOM_BASE_POSITIONS = Object.freeze({
   });
 
   const MATERIALS = Object.freeze({
-  CARDINAL_IDLE: Object.freeze({
-    scale: 0.96,
-    specular: 1.18,
-    rim: 1.02,
-    emissive: 0.17,
-    alpha: 0.90,
-    sparkle: 0.26,
-    halo: 0.82,
-    contrast: 1.16
-  }),
-  CARDINAL_FOCUSED: Object.freeze({
-    scale: 1.30,
-    specular: 1.50,
-    rim: 1.30,
-    emissive: 0.24,
-    alpha: 0.96,
-    sparkle: 0.36,
-    halo: 1.18,
-    contrast: 1.24
-  }),
-  ROOM_IDLE: Object.freeze({
-    scale: 0.88,
-    specular: 1.04,
-    rim: 0.90,
-    emissive: 0.15,
-    alpha: 0.88,
-    sparkle: 0.22,
-    halo: 0.64,
-    contrast: 1.10
-  }),
-  ROOM_PRIMARY: Object.freeze({
-    scale: 1.12,
-    specular: 1.24,
-    rim: 1.08,
-    emissive: 0.21,
-    alpha: 0.94,
-    sparkle: 0.30,
-    halo: 0.86,
-    contrast: 1.17
-  })
+  CARDINAL_IDLE: Object.freeze({ scale: 0.78, specular: 1.12, rim: 0.94, emissive: 0.18, alpha: 1.00, sparkle: 0.24, halo: 0.30, contrast: 1.14 }),
+  CARDINAL_FOCUSED: Object.freeze({ scale: 0.90, specular: 1.30, rim: 1.08, emissive: 0.23, alpha: 1.00, sparkle: 0.31, halo: 0.40, contrast: 1.20 }),
+  ROOM_IDLE: Object.freeze({ scale: 0.68, specular: 1.02, rim: 0.86, emissive: 0.16, alpha: 1.00, sparkle: 0.20, halo: 0.24, contrast: 1.10 }),
+  ROOM_PRIMARY: Object.freeze({ scale: 0.78, specular: 1.18, rim: 0.98, emissive: 0.20, alpha: 1.00, sparkle: 0.27, halo: 0.32, contrast: 1.16 })
 });
 
   const state = {
@@ -3210,8 +3177,8 @@ function buildCpuMeshes() {
     const material = MATERIALS[node.materialKey];
     const depthRadius =
       node.kind === NODE_KINDS.CARDINAL
-        ? 1.16
-        : 1.04;
+        ? QUALITY.cardinalDepthRadius
+        : QUALITY.roomDepthRadius;
     const depth = clamp(
       (position[2] / depthRadius + 1) / 2,
       0,
@@ -3230,12 +3197,7 @@ function buildCpuMeshes() {
         : node.kind === NODE_KINDS.CARDINAL
           ? (selected ? 0.15 : 0.08 + depth * 0.05)
           : (selected ? 0.13 : 0.07 + depth * 0.04);
-    node.target.float =
-      state.reducedMotion
-        ? 0
-        : selected
-          ? 0.012
-          : 0.004 + depth * 0.005;
+    node.target.float = 0;
     node.settled = !nodeHasInterpolation(node);
   }
 }
@@ -4244,8 +4206,8 @@ function modelMatrix(node, haloPass) {
     MATERIALS.ROOM_IDLE;
   const depthRadius =
     node.kind === NODE_KINDS.CARDINAL
-      ? 1.16
-      : 1.04;
+      ? QUALITY.cardinalDepthRadius
+      : QUALITY.roomDepthRadius;
   const depth = clamp(
     (node.current.z / depthRadius + 1) / 2,
     0,
@@ -4530,12 +4492,7 @@ function modelMatrix(node, haloPass) {
     let drawCalls = 0;
 
     const haloEnabled =
-      finiteNumber(
-        payload.frame.viewport
-          .cssWidth,
-        0
-      ) >
-      QUALITY.haloDisableWidth;
+      QUALITY.haloPassEnabled === true;
 
     if (haloEnabled) {
       gl.depthMask(false);
@@ -5333,11 +5290,11 @@ function modelMatrix(node, haloPass) {
         compassLifecycleMutated:
           false,
 
-        cardinalScaleIncrease:
-          1.5,
+        cardinalMaximumScale:
+          MATERIALS.CARDINAL_FOCUSED.scale,
 
-        roomScaleIncrease:
-          1.5,
+        roomMaximumScale:
+          MATERIALS.ROOM_PRIMARY.scale,
 
         cardinalPositionsMovedOutward:
           true,
@@ -5383,11 +5340,11 @@ function modelMatrix(node, haloPass) {
         rendererCreatedContexts:
           true,
 
-        cardinalScaleIncrease:
-          1.5,
+        cardinalMaximumScale:
+          MATERIALS.CARDINAL_FOCUSED.scale,
 
-        roomScaleIncrease:
-          1.5,
+        roomMaximumScale:
+          MATERIALS.ROOM_PRIMARY.scale,
 
         positionsMovedOutward:
           true,
@@ -5734,11 +5691,11 @@ function modelMatrix(node, haloPass) {
         state.animationRunning,
 
       visualRenewal: {
-        cardinalScaleMultiplier:
-          1.5,
+        cardinalMaximumScale:
+          MATERIALS.CARDINAL_FOCUSED.scale,
 
-        roomScaleMultiplier:
-          1.5,
+        roomMaximumScale:
+          MATERIALS.ROOM_PRIMARY.scale,
 
         cardinalPositionsMovedOutward:
           true,

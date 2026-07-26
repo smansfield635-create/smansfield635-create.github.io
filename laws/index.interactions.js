@@ -2,25 +2,28 @@
    Laws shared Compass-family interaction loader wrapper.
 
    Preserves the existing complete loader in
-   /laws/index.interactions.loader.source.js and changes only the build/cache
-   identity and receipt fields required by the positive-drag spherical XYZ
-   conformance round.
+   /laws/index.interactions.loader.source.js and applies the settled spherical
+   XYZ direct-manipulation contract plus exclusive center-Compass hit ownership.
 */
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_LAWS_INTERACTIONS_SHARED_SPHERICAL_XYZ_WRAPPER_v1",
+    id: "DGB_LAWS_INTERACTIONS_CENTER_COMPASS_CLEARANCE_WRAPPER_v2",
     sourceUrl:
-      "./index.interactions.loader.source.js?v=LAWS_INTERACTIONS_LOADER_SOURCE_v1",
+      "./index.interactions.loader.source.js?v=LAWS_INTERACTIONS_LOADER_SOURCE_v2",
     build:
-      "LAWS_COMPASS_SHARED_SPHERICAL_XYZ_DIRECT_MANIPULATION_v5",
+      "LAWS_COMPASS_CENTER_EXCLUSIVE_SPHERICAL_XYZ_DIRECT_MANIPULATION_v6",
     horizontalDragYawSign:
       "POSITIVE",
     clusterGeometryModel:
       "BOUNDED_SPHERICAL_XYZ_CLUSTER",
     clusterFullXyzRotation:
       true,
+    centerCompassExclusiveHitZone:
+      true,
+    overlappingCategoryMayOverrideCenter:
+      false,
     ownsController:
       false,
     ownsCrystals:
@@ -30,7 +33,7 @@
   });
 
   const SCRIPT_ATTRIBUTE =
-    "data-laws-shared-spherical-xyz-interactions-source";
+    "data-laws-center-exclusive-spherical-xyz-interactions-source";
 
   function fail(code, details = null) {
     const error = new Error(code);
@@ -100,7 +103,7 @@
     source = replaceRequired(
       source,
       '"LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4"',
-      '"LAWS_COMPASS_SHARED_SPHERICAL_XYZ_DIRECT_MANIPULATION_v5"',
+      '"LAWS_COMPASS_CENTER_EXCLUSIVE_SPHERICAL_XYZ_DIRECT_MANIPULATION_v6"',
       "BUILD_IDENTITY"
     );
 
@@ -125,11 +128,36 @@
       "SPHERICAL_CLUSTER_RECEIPT"
     );
 
+    source = replaceRequired(
+      source,
+`    const candidates =
+      [
+        direct,
+        crystal,
+        fallbackCategory,
+        compass
+      ].filter(Boolean);`,
+`    if (compass) {
+      return compass;
+    }
+
+    const candidates =
+      [
+        direct,
+        crystal,
+        fallbackCategory
+      ].filter(Boolean);`,
+      "CENTER_COMPASS_EXCLUSIVE_HIT_PRECEDENCE"
+    );
+
     const retiredTokens = [
       '"LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4"',
       'horizontalDragYawSign: "NEGATIVE"',
       "clusterMaximumTiltRadians: 0.30",
-      "euclideanClusterOrbitRequired: true"
+      "euclideanClusterOrbitRequired: true",
+`        fallbackCategory,
+        compass
+      ].filter(Boolean);`
     ];
 
     for (const token of retiredTokens) {
@@ -142,10 +170,11 @@
     }
 
     const requiredTokens = [
-      '"LAWS_COMPASS_SHARED_SPHERICAL_XYZ_DIRECT_MANIPULATION_v5"',
+      '"LAWS_COMPASS_CENTER_EXCLUSIVE_SPHERICAL_XYZ_DIRECT_MANIPULATION_v6"',
       'horizontalDragYawSign: "POSITIVE"',
       "clusterFullXyzRotation: true",
-      "boundedSphericalXyzClusterRequired: true"
+      "boundedSphericalXyzClusterRequired: true",
+      "if (compass) {\n      return compass;\n    }"
     ];
 
     for (const token of requiredTokens) {
@@ -184,7 +213,7 @@
     script.dataset.ready = "false";
     script.textContent =
       source +
-      "\n//# sourceURL=/laws/index.interactions.shared-spherical-xyz.js";
+      "\n//# sourceURL=/laws/index.interactions.center-exclusive-spherical-xyz.js";
     document.head.append(script);
     script.dataset.ready = "true";
 
@@ -200,6 +229,10 @@
         CONTRACT.clusterGeometryModel;
       root.dataset.lawsClusterFullXyzRotation =
         "true";
+      root.dataset.lawsCenterCompassExclusiveHitZone =
+        "true";
+      root.dataset.lawsOverlappingCategoryMayOverrideCenter =
+        "false";
     }
 
     globalThis.DGB_LAWS_INTERACTIONS_WRAPPER_RECEIPT =
@@ -216,6 +249,10 @@
           CONTRACT.clusterGeometryModel,
         clusterFullXyzRotation:
           CONTRACT.clusterFullXyzRotation,
+        centerCompassExclusiveHitZone:
+          CONTRACT.centerCompassExclusiveHitZone,
+        overlappingCategoryMayOverrideCenter:
+          CONTRACT.overlappingCategoryMayOverrideCenter,
         sourceTransformed:
           true,
         sourceExecuted:

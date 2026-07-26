@@ -1,15 +1,10 @@
 /* /laws/index.cosmos.js
-   LAWS_COSMOS_ARCHCOIN_RENEWED_FIELD_v6
+   Laws scene-contained ARCHCOIN Fibonacci starfield transplant.
 
-   Complete Cosmos renewal for the Laws Chamber.
-
-   Authority boundary:
-   - decorative background only;
-   - no controller, interaction, projection, world-geometry, planet,
-     navigation, or law-content ownership;
-   - preserves the established Laws Cosmos global API, DOM identities,
-     lifecycle events, visibility handling, reduced-motion handling,
-     resize behavior, and runtime receipt surface.
+   Preserves Laws identity and decorative-only authority while adopting the
+   accepted ARCHCOIN static-base and burst-only sparkle field inside the Laws
+   orbit scene. No navigation, world geometry, projection, controller,
+   interaction, planet, or law-content authority is introduced.
 */
 (() => {
   "use strict";
@@ -18,118 +13,105 @@
   const RECEIPT_KEY = "DGB_LAWS_COSMOS_RECEIPT";
   const READY_EVENT = "DGB_LAWS_COSMOS_READY";
   const FAILURE_EVENT = "DGB_LAWS_COSMOS_FAILURE";
-  const DESTROYED_EVENT = "DGB_LAWS_COSMOS_DESTROYED";
+  const STYLE_ID = "laws-archcoin-starfield-runtime-style";
+  const CANVAS_ATTRIBUTE = "data-laws-cosmos-canvas";
+  const BASE_VALUE = "base";
+  const OVERLAY_VALUE = "sparkle";
+  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const FIELD_SEED = 0x4c415753;
 
-  const IDS = Object.freeze({
-    style: "laws-cosmos-runtime-style",
-    layer: "laws-cosmos-layer",
-    base: "laws-cosmos-canvas",
-    sparkle: "laws-cosmos-sparkle-canvas"
-  });
-
-  const CONTRACT = Object.freeze({
-    id: "LAWS_COSMOS_ARCHCOIN_RENEWED_FIELD_v6",
-    sourceModel: "ARCHCOIN_FIBONACCI_PHYLLOTAXIS_FIELD_v2",
-    renderingModel: "static-full-chamber-base-plus-burst-overlay",
-    geometryModel: "golden-angle-depth-field-with-central-void-and-irregular-masks",
-    continuousAnimation: false,
-    requestAnimationFrameUsed: false,
-    spacecraft: false,
-    fullViewportCoverage: true,
-    lawsIdentityPreserved: true
-  });
+  if (globalThis[GLOBAL_KEY]?.initialized) return;
 
   const CONFIG = Object.freeze({
+    mountSelector: "[data-laws-cosmic-field]",
+    sceneSelector: "[data-laws-scene-field]",
+    rootSelector: "[data-laws-root]",
     mobileWidth: 820,
     compactWidth: 560,
-    desktopPixelRatioCap: 1.25,
     mobilePixelRatioCap: 1,
-    minimumStars: 84,
-    maximumStars: 228,
-    mobileMaximumStars: 148,
-    compactMaximumStars: 112,
-    areaPerStar: 6500,
-    rogueRatio: 0.14,
-    candidateMultiplier: 10,
-    horizontalWarp: 1.12,
-    verticalWarp: 0.88,
-    radialJitter: 0.024,
-    angularJitter: 0.078,
-    alternatingJitter: 0.019,
-    centerVoidRadiusX: 0.205,
-    centerVoidRadiusY: 0.185,
+    desktopPixelRatioCap: 1.25,
+    minimumStars: 52,
+    maximumStars: 108,
+    starAreaDivisor: 6100,
+    rogueRatio: 0.125,
+    candidateMultiplier: 8,
+    horizontalWarp: 1.13,
+    verticalWarp: 0.84,
+    radialJitter: 0.022,
+    angularJitter: 0.075,
+    zigzagPerturbation: 0.018,
+    centerVoidRadiusX: 0.225,
+    centerVoidRadiusY: 0.205,
     minimumSparkles: 4,
     maximumSparkles: 8,
-    firstBurstDelayMinimumMs: 2600,
-    firstBurstDelayMaximumMs: 4400,
-    burstDelayMinimumMs: 1700,
-    burstDelayMaximumMs: 3600,
+    firstBurstDelayMinimumMs: 2800,
+    firstBurstDelayMaximumMs: 4600,
+    burstDelayMinimumMs: 1500,
+    burstDelayMaximumMs: 3200,
     burstDurationMinimumMs: 620,
     burstDurationMaximumMs: 980,
-    sparkleFrameIntervalMs: 125,
-    resizeDebounceMs: 120,
-    seed: 0x4c415753
+    sparkleFrameIntervalMs: 125
   });
 
   const VOID_MASKS = Object.freeze([
-    Object.freeze({ x: 0.18, y: 0.24, rx: 0.13, ry: 0.085, rotation: -0.42, feather: 0.24 }),
-    Object.freeze({ x: 0.81, y: 0.22, rx: 0.10, ry: 0.15, rotation: 0.31, feather: 0.22 }),
-    Object.freeze({ x: 0.72, y: 0.76, rx: 0.17, ry: 0.095, rotation: -0.17, feather: 0.25 }),
-    Object.freeze({ x: 0.24, y: 0.79, rx: 0.095, ry: 0.14, rotation: 0.49, feather: 0.21 })
+    Object.freeze({ x: 0.24, y: 0.28, rx: 0.16, ry: 0.095, rotation: -0.46, feather: 0.22 }),
+    Object.freeze({ x: 0.76, y: 0.25, rx: 0.12, ry: 0.17, rotation: 0.31, feather: 0.20 }),
+    Object.freeze({ x: 0.72, y: 0.73, rx: 0.18, ry: 0.105, rotation: -0.19, feather: 0.24 }),
+    Object.freeze({ x: 0.27, y: 0.77, rx: 0.105, ry: 0.15, rotation: 0.52, feather: 0.20 })
   ]);
 
   const COLORS = Object.freeze([
     "255, 248, 224",
-    "174, 226, 242",
-    "243, 217, 139",
-    "183, 163, 236",
-    "255, 183, 139"
+    "154, 217, 225",
+    "234, 208, 131",
+    "170, 155, 224"
   ]);
-
-  if (globalThis[GLOBAL_KEY]?.initialized) return;
 
   const state = {
     initialized: false,
     destroyed: false,
     failed: false,
-    failureReason: "",
     documentVisible: !document.hidden,
-    pageActive: true,
+    sceneVisible: false,
     reducedMotion: false,
-    quality: 1,
+    root: null,
+    scene: null,
+    mount: null,
+    baseCanvas: null,
+    baseContext: null,
+    overlayCanvas: null,
+    overlayContext: null,
     width: 0,
     height: 0,
     pixelRatio: 1,
-    root: null,
-    layer: null,
-    baseCanvas: null,
-    sparkleCanvas: null,
-    baseContext: null,
-    sparkleContext: null,
+    quality: 1,
     stars: [],
     sparkles: [],
     activeSparkles: [],
-    phyllotaxisCount: 0,
     rogueCount: 0,
-    baseDrawCount: 0,
-    sparkleFrameCount: 0,
+    phyllotaxisCount: 0,
     burstTimer: 0,
     frameTimer: 0,
-    resizeTimer: 0,
+    baseDrawCount: 0,
+    sparkleFrameCount: 0,
+    resizeObserver: null,
+    intersectionObserver: null,
+    motionObserver: null,
     motionQuery: null,
-    mutationObserver: null,
-    handlers: Object.create(null)
+    onVisibility: null,
+    onMotion: null,
+    onResize: null
   };
 
-  const api = {
+  const api = Object.freeze({
     initialized: false,
-    start: () => scheduleBurst(true),
+    start: () => scheduleNextBurst(true),
     stop: stopSparkles,
     destroy,
-    resize: reason => resize(reason || "manual"),
+    resize,
     setQuality,
     receipt: () => Object.freeze(buildReceipt())
-  };
+  });
 
   globalThis[GLOBAL_KEY] = api;
 
@@ -158,7 +140,7 @@
     };
   }
 
-  function between(random, minimum, maximum) {
+  function randomBetween(random, minimum, maximum) {
     return minimum + random() * (maximum - minimum);
   }
 
@@ -173,21 +155,22 @@
 
   function buildReceipt(extra = {}) {
     return {
-      contract: CONTRACT.id,
-      sourceModel: CONTRACT.sourceModel,
-      renderingModel: CONTRACT.renderingModel,
-      geometryModel: CONTRACT.geometryModel,
-      lawsIdentityPreserved: CONTRACT.lawsIdentityPreserved,
-      fullViewportCoverage: CONTRACT.fullViewportCoverage,
-      continuousCanvasAnimation: CONTRACT.continuousAnimation,
-      requestAnimationFrameUsed: CONTRACT.requestAnimationFrameUsed,
-      dualSpacecraftPreserved: CONTRACT.spacecraft,
+      contract: "LAWS_COSMOS_ARCHCOIN_SCENE_FIELD_v5",
+      module: GLOBAL_KEY,
+      sourceModel: "ARCHCOIN_FIBONACCI_PHYLLOTAXIS_FIELD_v1",
+      renderingModel: "static-base-burst-overlay",
+      geometryModel: "golden-angle-square-root-jitter-elliptical-void-masked",
+      lawsIdentityPreserved: true,
+      sceneContained: true,
+      fullViewportLayer: false,
+      dualSpacecraftPreserved: false,
+      continuousAnimation: false,
+      requestAnimationFrameUsed: false,
       initialized: state.initialized,
       destroyed: state.destroyed,
       failed: state.failed,
-      failureReason: state.failureReason,
       documentVisible: state.documentVisible,
-      pageActive: state.pageActive,
+      sceneVisible: state.sceneVisible,
       reducedMotion: state.reducedMotion,
       width: state.width,
       height: state.height,
@@ -198,8 +181,6 @@
       rogueCount: state.rogueCount,
       rogueRatio: CONFIG.rogueRatio,
       voidMaskCount: VOID_MASKS.length,
-      centerVoidRadiusX: CONFIG.centerVoidRadiusX,
-      centerVoidRadiusY: CONFIG.centerVoidRadiusY,
       sparkleCount: state.sparkles.length,
       activeSparkleCount: state.activeSparkles.length,
       sparkleFrameIntervalMs: CONFIG.sparkleFrameIntervalMs,
@@ -220,7 +201,6 @@
   function publish(extra = {}) {
     const receipt = Object.freeze(buildReceipt(extra));
     globalThis[RECEIPT_KEY] = receipt;
-
     if (state.root) {
       state.root.dataset.lawsCosmosStatus = state.failed
         ? "held"
@@ -231,37 +211,40 @@
       state.root.dataset.lawsCosmosModel = receipt.renderingModel;
       state.root.dataset.lawsCosmosContract = receipt.contract;
       state.root.dataset.lawsCosmosSourceModel = receipt.sourceModel;
+      state.root.dataset.lawsCosmosSceneContained = "true";
       state.root.dataset.lawsCosmosReceipt = JSON.stringify(receipt);
     }
-
     return receipt;
   }
 
+  function fail(error) {
+    if (state.failed) return;
+    state.failed = true;
+    stopSparkles();
+    const message = error instanceof Error ? error.message : String(error);
+    publish({ lastAction: "cosmos-failure", lastFailure: message });
+    globalThis.dispatchEvent(new CustomEvent(FAILURE_EVENT, {
+      detail: Object.freeze({ message })
+    }));
+  }
+
   function installStyle() {
-    let style = document.getElementById(IDS.style);
+    let style = document.getElementById(STYLE_ID);
     if (!style) {
       style = document.createElement("style");
-      style.id = IDS.style;
+      style.id = STYLE_ID;
       document.head.append(style);
     }
-
     style.textContent = `
-      body > #${IDS.layer} {
-        position: fixed;
+      [data-laws-cosmic-field] {
+        position: absolute;
         inset: 0;
-        z-index: 1;
         overflow: hidden;
         pointer-events: none;
         contain: strict;
         isolation: isolate;
-        background:
-          radial-gradient(ellipse at 50% -8%, rgba(127,147,255,.14), transparent 46%),
-          radial-gradient(ellipse at 106% 38%, rgba(124,220,255,.10), transparent 42%),
-          radial-gradient(ellipse at 52% 110%, rgba(243,217,139,.085), transparent 46%),
-          radial-gradient(ellipse at -8% 58%, rgba(255,157,99,.07), transparent 42%),
-          linear-gradient(180deg, rgba(2,4,10,.08), rgba(2,4,10,.28));
       }
-      body > #${IDS.layer} canvas {
+      [data-laws-cosmic-field] canvas[${CANVAS_ATTRIBUTE}] {
         position: absolute;
         inset: 0;
         display: block;
@@ -270,48 +253,79 @@
         pointer-events: none;
         mix-blend-mode: screen;
       }
-      #${IDS.base} { z-index: 1; opacity: .92; }
-      #${IDS.sparkle} { z-index: 2; }
+      [${CANVAS_ATTRIBUTE}="${BASE_VALUE}"] {
+        z-index: 1;
+        opacity: .93;
+      }
+      [${CANVAS_ATTRIBUTE}="${OVERLAY_VALUE}"] {
+        z-index: 2;
+      }
       @media (max-width: 820px) {
-        #${IDS.base} { opacity: .84; }
+        [${CANVAS_ATTRIBUTE}="${BASE_VALUE}"] { opacity: .86; }
       }
       @media (max-width: 560px) {
-        #${IDS.base} { opacity: .76; }
+        [${CANVAS_ATTRIBUTE}="${BASE_VALUE}"] { opacity: .78; }
       }
       @media (prefers-reduced-motion: reduce) {
-        #${IDS.sparkle} { display: none !important; }
+        [${CANVAS_ATTRIBUTE}="${OVERLAY_VALUE}"] { display: none !important; }
       }
     `;
   }
 
-  function createCanvas(id) {
-    const canvas = document.createElement("canvas");
-    canvas.id = id;
+  function resolveReducedMotion() {
+    state.reducedMotion = Boolean(
+      state.motionQuery?.matches ||
+      state.root?.dataset?.reducedMotion === "true" ||
+      state.root?.dataset?.lawsReducedMotion === "true"
+    );
+    return state.reducedMotion;
+  }
+
+  function configureCanvas(canvas, value) {
+    canvas.setAttribute(CANVAS_ATTRIBUTE, value);
     canvas.setAttribute("aria-hidden", "true");
+    canvas.style.pointerEvents = "none";
     return canvas;
   }
 
-  function createSurfaces() {
-    state.root = document.querySelector("[data-laws-root]");
-    if (!state.root) throw new Error("LAWS_COSMOS_ROOT_NOT_FOUND");
+  function createCanvases() {
+    state.mount = document.querySelector(CONFIG.mountSelector);
+    state.scene = document.querySelector(CONFIG.sceneSelector);
+    state.root = document.querySelector(CONFIG.rootSelector);
 
-    state.layer = document.getElementById(IDS.layer) || document.createElement("div");
-    state.layer.id = IDS.layer;
-    state.layer.setAttribute("aria-hidden", "true");
-
-    state.baseCanvas = document.getElementById(IDS.base) || createCanvas(IDS.base);
-    state.sparkleCanvas = document.getElementById(IDS.sparkle) || createCanvas(IDS.sparkle);
-
-    if (!state.baseCanvas.isConnected) state.layer.append(state.baseCanvas);
-    if (!state.sparkleCanvas.isConnected) state.layer.append(state.sparkleCanvas);
-    if (!state.layer.isConnected) document.body.prepend(state.layer);
-
-    state.baseContext = state.baseCanvas.getContext("2d", { alpha: true, desynchronized: true });
-    state.sparkleContext = state.sparkleCanvas.getContext("2d", { alpha: true, desynchronized: true });
-
-    if (!state.baseContext || !state.sparkleContext) {
-      throw new Error("LAWS_COSMOS_CONTEXT_UNAVAILABLE");
+    if (!state.mount || !state.scene || !state.root) {
+      throw new Error("LAWS_ARCHCOIN_STARFIELD_SURFACE_NOT_FOUND");
     }
+
+    installStyle();
+
+    const baseSelector = `[${CANVAS_ATTRIBUTE}="${BASE_VALUE}"]`;
+    const overlaySelector = `[${CANVAS_ATTRIBUTE}="${OVERLAY_VALUE}"]`;
+    const baseCanvas = state.mount.querySelector(baseSelector) ||
+      configureCanvas(document.createElement("canvas"), BASE_VALUE);
+    const overlayCanvas = state.mount.querySelector(overlaySelector) ||
+      configureCanvas(document.createElement("canvas"), OVERLAY_VALUE);
+
+    if (!baseCanvas.isConnected) state.mount.append(baseCanvas);
+    if (!overlayCanvas.isConnected) state.mount.append(overlayCanvas);
+
+    const baseContext = baseCanvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true
+    });
+    const overlayContext = overlayCanvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true
+    });
+
+    if (!baseContext || !overlayContext) {
+      throw new Error("LAWS_ARCHCOIN_STARFIELD_CONTEXT_UNAVAILABLE");
+    }
+
+    state.baseCanvas = baseCanvas;
+    state.baseContext = baseContext;
+    state.overlayCanvas = overlayCanvas;
+    state.overlayContext = overlayContext;
   }
 
   function inCentralVoid(x, y) {
@@ -333,126 +347,200 @@
     );
   }
 
-  function rejectedByMask(x, y, random, rogue) {
+  function rejectedByVoidMask(x, y, random, rogue = false) {
     for (const mask of VOID_MASKS) {
       const distance = maskDistance(x, y, mask);
       if (distance >= 1 + mask.feather) continue;
       if (distance <= 1) {
-        if (!rogue || random() < 0.82) return true;
+        if (!rogue || random() < 0.84) return true;
         continue;
       }
       const edgeStrength = 1 - (distance - 1) / mask.feather;
-      if (random() < edgeStrength * (rogue ? 0.42 : 0.78)) return true;
+      const rejection = edgeStrength * (rogue ? 0.48 : 0.82);
+      if (random() < rejection) return true;
     }
     return false;
   }
 
-  function colorFor(random) {
-    const roll = random();
-    if (roll < 0.68) return COLORS[0];
-    if (roll < 0.82) return COLORS[1];
-    if (roll < 0.91) return COLORS[2];
-    if (roll < 0.97) return COLORS[3];
-    return COLORS[4];
+  function insideFieldBounds(x, y) {
+    return x >= 0.014 && x <= 0.986 && y >= 0.014 && y <= 0.986;
   }
 
-  function starRecord(x, y, random, rogue) {
-    const depth = Math.pow(random(), 1.5);
+  function chooseColor(random) {
+    const roll = random();
+    return roll < 0.79
+      ? COLORS[0]
+      : roll < 0.91
+        ? COLORS[1]
+        : roll < 0.975
+          ? COLORS[2]
+          : COLORS[3];
+  }
+
+  function createStarRecord(position, random, rogue) {
+    const depth = Math.pow(random(), 1.55);
     return {
-      x: x * state.width,
-      y: y * state.height,
-      radius: between(random, 0.46, 1.72) * (0.58 + depth * 0.90),
-      alpha: between(random, 0.24, 0.88) * (0.66 + depth * 0.42),
-      color: colorFor(random),
+      x: position.x * state.width,
+      y: position.y * state.height,
+      radius: randomBetween(random, 0.50, 1.58) * (0.62 + depth * 0.78),
+      alpha: randomBetween(random, 0.27, 0.82) * (0.68 + depth * 0.42),
+      color: chooseColor(random),
       depth,
       rogue
     };
   }
 
-  function buildField() {
-    const area = state.width * state.height;
-    const mobileFactor = state.width <= CONFIG.compactWidth
-      ? 0.72
-      : state.width <= CONFIG.mobileWidth
-        ? 0.86
-        : 1;
-    const maximum = state.width <= CONFIG.compactWidth
-      ? CONFIG.compactMaximumStars
-      : state.width <= CONFIG.mobileWidth
-        ? CONFIG.mobileMaximumStars
-        : CONFIG.maximumStars;
-    const targetCount = clamp(
-      Math.floor((area / CONFIG.areaPerStar) * state.quality * mobileFactor),
-      CONFIG.minimumStars,
-      maximum
-    );
-    const rogueTarget = Math.max(8, Math.round(targetCount * CONFIG.rogueRatio));
-    const phyllotaxisTarget = targetCount - rogueTarget;
-    const random = createRandom(hash32(
-      CONFIG.seed ^
-      Math.round(state.width * 7) ^
-      (Math.round(state.height * 7) << 1) ^
-      Math.round(state.quality * 1000)
-    ));
+  function createPhyllotaxisStars(count, random) {
     const stars = [];
-    const candidateCount = phyllotaxisTarget * CONFIG.candidateMultiplier;
-    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    const maximumCandidates = Math.max(count * CONFIG.candidateMultiplier, count + 32);
 
-    for (let index = 0; index < candidateCount && stars.length < phyllotaxisTarget; index += 1) {
-      const normalized = (index + 1.5) / candidateCount;
-      const radius = Math.sqrt(normalized) * 0.72 + between(random, -CONFIG.radialJitter, CONFIG.radialJitter);
+    for (
+      let candidate = 0;
+      candidate < maximumCandidates && stars.length < count;
+      candidate += 1
+    ) {
+      const normalized = (candidate + 1.5) / maximumCandidates;
+      const baseRadius = Math.sqrt(normalized) * 0.70;
+      const radialJitter = randomBetween(random, -CONFIG.radialJitter, CONFIG.radialJitter);
+      const angleJitter = randomBetween(random, -CONFIG.angularJitter, CONFIG.angularJitter);
+      const alternating = candidate % 2 === 0 ? 1 : -1;
       const angle =
-        index * goldenAngle +
-        between(random, -CONFIG.angularJitter, CONFIG.angularJitter) +
-        (index % 2 === 0 ? 1 : -1) * CONFIG.alternatingJitter;
+        candidate * GOLDEN_ANGLE +
+        angleJitter +
+        alternating * CONFIG.zigzagPerturbation;
+      const radius = Math.max(0, baseRadius + radialJitter);
       const x = 0.5 + Math.cos(angle) * radius * CONFIG.horizontalWarp;
       const y = 0.5 + Math.sin(angle) * radius * CONFIG.verticalWarp;
 
-      if (x < 0.012 || x > 0.988 || y < 0.012 || y > 0.988) continue;
+      if (!insideFieldBounds(x, y)) continue;
       if (inCentralVoid(x, y)) continue;
-      if (rejectedByMask(x, y, random, false)) continue;
-      stars.push(starRecord(x, y, random, false));
+      if (rejectedByVoidMask(x, y, random, false)) continue;
+
+      stars.push(createStarRecord({ x, y }, random, false));
     }
 
-    for (let attempt = 0; attempt < rogueTarget * 32 && stars.length < targetCount; attempt += 1) {
-      const x = between(random, 0.012, 0.988);
-      const y = between(random, 0.012, 0.988);
-      if (inCentralVoid(x, y) && random() < 0.74) continue;
-      if (rejectedByMask(x, y, random, true)) continue;
-      stars.push(starRecord(x, y, random, true));
+    return stars;
+  }
+
+  function createRogueStars(count, random) {
+    const stars = [];
+    const maximumAttempts = Math.max(80, count * 30);
+
+    for (
+      let attempt = 0;
+      attempt < maximumAttempts && stars.length < count;
+      attempt += 1
+    ) {
+      const x = randomBetween(random, 0.018, 0.982);
+      const y = randomBetween(random, 0.018, 0.982);
+      if (inCentralVoid(x, y)) continue;
+      if (rejectedByVoidMask(x, y, random, true)) continue;
+      stars.push(createStarRecord({ x, y }, random, true));
     }
 
-    state.stars = stars;
-    state.phyllotaxisCount = stars.filter(star => !star.rogue).length;
-    state.rogueCount = stars.length - state.phyllotaxisCount;
+    return stars;
+  }
 
-    const sparkleTarget = clamp(
-      Math.floor(CONFIG.maximumSparkles * state.quality * mobileFactor),
+  function createSparkles(count, random) {
+    const candidates = state.stars
+      .map((star, index) => ({ star, index }))
+      .filter(({ star }) => star.depth > 0.42 && star.alpha > 0.36);
+
+    return shuffled(candidates, random).slice(0, count).map(({ index, star }) => ({
+      starIndex: index,
+      radius: clamp(star.radius * randomBetween(random, 1.15, 1.55), 1.25, 2.45),
+      alpha: randomBetween(random, 0.58, 0.94),
+      color: star.color
+    }));
+  }
+
+  function rebuildParticleField() {
+    if (!state.width || !state.height) return;
+
+    const area = state.width * state.height;
+    const mobileFactor = state.width <= CONFIG.compactWidth
+      ? 0.70
+      : state.width <= CONFIG.mobileWidth
+        ? 0.84
+        : 1;
+    const density = state.quality * mobileFactor;
+    const starCount = clamp(
+      Math.floor((area / CONFIG.starAreaDivisor) * density),
+      CONFIG.minimumStars,
+      CONFIG.maximumStars
+    );
+    const rogueCount = clamp(
+      Math.round(starCount * CONFIG.rogueRatio),
+      6,
+      Math.max(6, starCount - 12)
+    );
+    const phyllotaxisCount = starCount - rogueCount;
+    const sparkleCount = clamp(
+      Math.floor(CONFIG.maximumSparkles * density),
       CONFIG.minimumSparkles,
       CONFIG.maximumSparkles
     );
-    const eligible = stars
-      .map((star, index) => ({ star, index }))
-      .filter(({ star }) => star.depth > 0.46 && star.alpha > 0.36);
+    const dimensionSeed = hash32(
+      FIELD_SEED ^
+      Math.round(state.width * 8) ^
+      (Math.round(state.height * 8) << 1) ^
+      Math.round(state.quality * 1000)
+    );
+    const random = createRandom(dimensionSeed);
+    const phyllotaxisStars = createPhyllotaxisStars(phyllotaxisCount, random);
+    const missing = Math.max(0, phyllotaxisCount - phyllotaxisStars.length);
+    const rogueStars = createRogueStars(rogueCount + missing, random);
 
-    state.sparkles = shuffled(eligible, random)
-      .slice(0, sparkleTarget)
-      .map(({ star, index }) => ({
-        starIndex: index,
-        radius: clamp(star.radius * between(random, 1.18, 1.60), 1.3, 2.6),
-        alpha: between(random, 0.58, 0.94),
-        color: star.color
-      }));
+    state.stars = [...phyllotaxisStars, ...rogueStars];
+    state.phyllotaxisCount = phyllotaxisStars.length;
+    state.rogueCount = rogueStars.length;
+    state.sparkles = createSparkles(sparkleCount, random);
     state.activeSparkles.length = 0;
   }
 
-  function sizeCanvas(canvas, context) {
-    canvas.width = Math.max(1, Math.round(state.width * state.pixelRatio));
-    canvas.height = Math.max(1, Math.round(state.height * state.pixelRatio));
-    canvas.style.width = `${state.width}px`;
-    canvas.style.height = `${state.height}px`;
-    context.setTransform(state.pixelRatio, 0, 0, state.pixelRatio, 0, 0);
+  function applyCanvasSize(canvas, context, width, height, pixelRatio) {
+    canvas.width = Math.max(1, Math.round(width * pixelRatio));
+    canvas.height = Math.max(1, Math.round(height * pixelRatio));
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
     context.imageSmoothingEnabled = true;
+  }
+
+  function resize() {
+    if (
+      !state.baseCanvas ||
+      !state.baseContext ||
+      !state.overlayCanvas ||
+      !state.overlayContext ||
+      !state.mount ||
+      !state.scene
+    ) return false;
+
+    const width = Math.max(1, state.mount.clientWidth || state.scene.clientWidth || 1);
+    const height = Math.max(1, state.mount.clientHeight || state.scene.clientHeight || 1);
+    const cap = width <= CONFIG.mobileWidth
+      ? CONFIG.mobilePixelRatioCap
+      : CONFIG.desktopPixelRatioCap;
+    const pixelRatio = clamp(globalThis.devicePixelRatio || 1, 1, cap);
+
+    if (
+      width === state.width &&
+      height === state.height &&
+      pixelRatio === state.pixelRatio
+    ) return false;
+
+    state.width = width;
+    state.height = height;
+    state.pixelRatio = pixelRatio;
+
+    applyCanvasSize(state.baseCanvas, state.baseContext, width, height, pixelRatio);
+    applyCanvasSize(state.overlayCanvas, state.overlayContext, width, height, pixelRatio);
+    rebuildParticleField();
+    drawBase();
+    clearOverlay();
+    publish({ lastAction: "cosmos-resized" });
+    return true;
   }
 
   function drawBase() {
@@ -463,26 +551,14 @@
     context.save();
 
     for (const star of state.stars) {
-      if (star.depth > 0.58) {
-        context.fillStyle = `rgba(${star.color}, ${star.alpha * 0.10})`;
+      if (star.depth > 0.74) {
+        context.fillStyle = `rgba(${star.color}, ${star.alpha * 0.12})`;
         context.beginPath();
-        context.arc(star.x, star.y, star.radius * (3.0 + star.depth * 2.1), 0, Math.PI * 2);
+        context.arc(star.x, star.y, star.radius * 2.7, 0, Math.PI * 2);
         context.fill();
       }
 
-      if (star.depth > 0.84) {
-        const reach = star.radius * 2.1;
-        context.strokeStyle = `rgba(${star.color}, ${star.alpha * 0.30})`;
-        context.lineWidth = 0.42;
-        context.beginPath();
-        context.moveTo(star.x - reach, star.y);
-        context.lineTo(star.x + reach, star.y);
-        context.moveTo(star.x, star.y - reach);
-        context.lineTo(star.x, star.y + reach);
-        context.stroke();
-      }
-
-      context.fillStyle = `rgba(${star.color}, ${clamp(star.alpha, 0.06, 0.96)})`;
+      context.fillStyle = `rgba(${star.color}, ${clamp(star.alpha, 0.08, 0.94)})`;
       context.beginPath();
       context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
       context.fill();
@@ -492,8 +568,8 @@
     state.baseDrawCount += 1;
   }
 
-  function clearSparkleCanvas() {
-    state.sparkleContext?.clearRect(0, 0, state.width, state.height);
+  function clearOverlay() {
+    state.overlayContext?.clearRect(0, 0, state.width, state.height);
   }
 
   function canRun() {
@@ -502,9 +578,9 @@
       !state.destroyed &&
       !state.failed &&
       state.documentVisible &&
-      state.pageActive &&
+      state.sceneVisible &&
       !state.reducedMotion &&
-      state.sparkleContext
+      state.overlayContext
     );
   }
 
@@ -518,45 +594,51 @@
   function stopSparkles() {
     clearTimers();
     state.activeSparkles.length = 0;
-    clearSparkleCanvas();
-    if (!state.destroyed) publish({ lastAction: "sparkles-stopped" });
+    clearOverlay();
+    if (!state.destroyed) publish({ lastAction: "cosmos-sparkles-stopped" });
     return true;
   }
 
-  function scheduleBurst(initial = false) {
-    if (!canRun() || state.burstTimer || state.frameTimer || state.activeSparkles.length || !state.sparkles.length) {
+  function scheduleNextBurst(initial = false) {
+    if (!canRun() || state.burstTimer || state.frameTimer || state.activeSparkles.length) {
       return false;
     }
 
-    const random = createRandom(hash32(CONFIG.seed ^ Date.now()));
+    const random = createRandom(hash32(FIELD_SEED ^ Date.now()));
     const delay = initial
-      ? between(random, CONFIG.firstBurstDelayMinimumMs, CONFIG.firstBurstDelayMaximumMs)
-      : between(random, CONFIG.burstDelayMinimumMs, CONFIG.burstDelayMaximumMs);
+      ? randomBetween(random, CONFIG.firstBurstDelayMinimumMs, CONFIG.firstBurstDelayMaximumMs)
+      : randomBetween(random, CONFIG.burstDelayMinimumMs, CONFIG.burstDelayMaximumMs);
 
     state.burstTimer = globalThis.setTimeout(() => {
       state.burstTimer = 0;
       beginBurst();
     }, delay);
 
+    publish({ lastAction: "cosmos-sparkle-burst-scheduled" });
     return true;
   }
 
   function beginBurst() {
-    if (!canRun()) return false;
+    if (!canRun() || !state.sparkles.length) return false;
 
-    const random = createRandom(hash32(CONFIG.seed ^ Math.round(performance.now())));
+    const random = createRandom(hash32(FIELD_SEED ^ Math.round(performance.now())));
     const available = shuffled(state.sparkles, random);
-    const count = random() < 0.22 ? 2 : 1;
+    const count = random() < 0.24 ? 2 : 1;
     const now = performance.now();
 
     state.activeSparkles = available.slice(0, count).map(sparkle => ({
       ...sparkle,
       start: now,
-      duration: between(random, CONFIG.burstDurationMinimumMs, CONFIG.burstDurationMaximumMs)
+      duration: randomBetween(
+        random,
+        CONFIG.burstDurationMinimumMs,
+        CONFIG.burstDurationMaximumMs
+      )
     }));
 
     drawSparkleFrame(now);
     scheduleSparkleFrame();
+    publish({ lastAction: "cosmos-sparkle-burst-started" });
     return true;
   }
 
@@ -578,18 +660,19 @@
     state.activeSparkles = state.activeSparkles.filter(
       sparkle => now - sparkle.start < sparkle.duration
     );
+
     drawSparkleFrame(now);
 
-    if (state.activeSparkles.length) {
-      scheduleSparkleFrame();
-    } else {
-      clearSparkleCanvas();
-      scheduleBurst(false);
+    if (state.activeSparkles.length) scheduleSparkleFrame();
+    else {
+      clearOverlay();
+      scheduleNextBurst(false);
+      publish({ lastAction: "cosmos-sparkle-burst-completed" });
     }
   }
 
   function drawSparkleFrame(timestamp) {
-    const context = state.sparkleContext;
+    const context = state.overlayContext;
     if (!context) return;
 
     context.clearRect(0, 0, state.width, state.height);
@@ -602,11 +685,11 @@
 
       const progress = clamp((timestamp - sparkle.start) / sparkle.duration, 0, 1);
       const pulse = Math.sin(progress * Math.PI);
-      const alpha = sparkle.alpha * Math.pow(pulse, 2.1);
-      const reach = sparkle.radius * (1.8 + pulse * 3.0);
+      const alpha = sparkle.alpha * Math.pow(pulse, 2.15);
+      const reach = sparkle.radius * (1.8 + pulse * 3.2);
 
       context.strokeStyle = `rgba(${sparkle.color}, ${alpha})`;
-      context.lineWidth = 0.72;
+      context.lineWidth = 0.74;
       context.beginPath();
       context.moveTo(star.x - reach, star.y);
       context.lineTo(star.x + reach, star.y);
@@ -614,9 +697,9 @@
       context.lineTo(star.x, star.y + reach);
       context.stroke();
 
-      context.fillStyle = `rgba(${sparkle.color}, ${clamp(alpha * 1.12, 0, 1)})`;
+      context.fillStyle = `rgba(${sparkle.color}, ${clamp(alpha * 1.18, 0, 1)})`;
       context.beginPath();
-      context.arc(star.x, star.y, sparkle.radius * (0.76 + pulse * 0.30), 0, Math.PI * 2);
+      context.arc(star.x, star.y, sparkle.radius * (0.78 + pulse * 0.34), 0, Math.PI * 2);
       context.fill();
     }
 
@@ -624,166 +707,117 @@
     state.sparkleFrameCount += 1;
   }
 
-  function resize(reason = "resize") {
-    if (!state.layer || !state.baseContext || !state.sparkleContext) return false;
-
-    const width = Math.max(1, globalThis.innerWidth || document.documentElement.clientWidth || 1);
-    const height = Math.max(1, globalThis.innerHeight || document.documentElement.clientHeight || 1);
-    const cap = width <= CONFIG.mobileWidth
-      ? CONFIG.mobilePixelRatioCap
-      : CONFIG.desktopPixelRatioCap;
-    const pixelRatio = clamp(globalThis.devicePixelRatio || 1, 1, cap);
-
-    if (
-      width === state.width &&
-      height === state.height &&
-      pixelRatio === state.pixelRatio &&
-      reason !== "initialization" &&
-      reason !== "quality"
-    ) {
-      return false;
-    }
-
-    state.width = width;
-    state.height = height;
-    state.pixelRatio = pixelRatio;
-    sizeCanvas(state.baseCanvas, state.baseContext);
-    sizeCanvas(state.sparkleCanvas, state.sparkleContext);
-    buildField();
-    drawBase();
-    clearSparkleCanvas();
-    publish({ lastAction: `field-${reason}` });
-    return true;
-  }
-
   function setQuality(value) {
-    const next = clamp(Number(value), 0.62, 1);
+    const next = clamp(Number(value), 0.60, 1);
     if (!Number.isFinite(next) || Math.abs(next - state.quality) < 0.02) return false;
     state.quality = next;
-    resize("quality");
+    rebuildParticleField();
+    drawBase();
+    clearOverlay();
+    publish({ lastAction: "cosmos-quality-updated" });
     return true;
   }
 
-  function evaluate(reason) {
-    state.reducedMotion = Boolean(
-      state.motionQuery?.matches ||
-      state.root?.dataset?.reducedMotion === "true" ||
-      state.root?.dataset?.lawsReducedMotion === "true"
-    );
-
-    if (canRun()) scheduleBurst(true);
+  function evaluateRunningState() {
+    resolveReducedMotion();
+    if (canRun()) scheduleNextBurst(true);
     else stopSparkles();
-
-    publish({ lastAction: reason });
-    return canRun();
   }
 
   function bindEnvironment() {
     state.motionQuery = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)") || null;
 
-    state.handlers.visibility = () => {
+    state.onVisibility = () => {
       state.documentVisible = !document.hidden;
-      evaluate("visibility-change");
+      evaluateRunningState();
     };
-    state.handlers.pageHide = () => {
-      state.pageActive = false;
-      stopSparkles();
-    };
-    state.handlers.pageShow = () => {
-      state.pageActive = true;
-      evaluate("page-show");
-    };
-    state.handlers.resize = () => {
-      clearTimeout(state.resizeTimer);
-      state.resizeTimer = globalThis.setTimeout(
-        () => resize("resize"),
-        CONFIG.resizeDebounceMs
-      );
-    };
-    state.handlers.motion = () => evaluate("motion-change");
+    document.addEventListener("visibilitychange", state.onVisibility, { passive: true });
 
-    document.addEventListener("visibilitychange", state.handlers.visibility, { passive: true });
-    globalThis.addEventListener("pagehide", state.handlers.pageHide, { passive: true });
-    globalThis.addEventListener("pageshow", state.handlers.pageShow, { passive: true });
-    globalThis.addEventListener("resize", state.handlers.resize, { passive: true });
-
+    state.onMotion = () => evaluateRunningState();
     if (typeof state.motionQuery?.addEventListener === "function") {
-      state.motionQuery.addEventListener("change", state.handlers.motion);
+      state.motionQuery.addEventListener("change", state.onMotion);
     } else {
-      state.motionQuery?.addListener?.(state.handlers.motion);
+      state.motionQuery?.addListener?.(state.onMotion);
     }
 
-    if ("MutationObserver" in globalThis) {
-      state.mutationObserver = new MutationObserver(() => evaluate("root-motion-change"));
-      state.mutationObserver.observe(state.root, {
+    if (state.root && "MutationObserver" in globalThis) {
+      state.motionObserver = new MutationObserver(evaluateRunningState);
+      state.motionObserver.observe(state.root, {
         attributes: true,
         attributeFilter: ["data-reduced-motion", "data-laws-reduced-motion"]
       });
     }
-  }
 
-  function unbindEnvironment() {
-    document.removeEventListener("visibilitychange", state.handlers.visibility);
-    globalThis.removeEventListener("pagehide", state.handlers.pageHide);
-    globalThis.removeEventListener("pageshow", state.handlers.pageShow);
-    globalThis.removeEventListener("resize", state.handlers.resize);
-
-    if (typeof state.motionQuery?.removeEventListener === "function") {
-      state.motionQuery.removeEventListener("change", state.handlers.motion);
+    if ("ResizeObserver" in globalThis) {
+      state.resizeObserver = new ResizeObserver(resize);
+      state.resizeObserver.observe(state.mount);
     } else {
-      state.motionQuery?.removeListener?.(state.handlers.motion);
+      state.onResize = resize;
+      globalThis.addEventListener("resize", state.onResize, { passive: true });
     }
 
-    state.mutationObserver?.disconnect();
+    if ("IntersectionObserver" in globalThis) {
+      state.intersectionObserver = new IntersectionObserver(entries => {
+        const entry = entries[0];
+        state.sceneVisible = Boolean(entry?.isIntersecting && entry.intersectionRatio > 0);
+        evaluateRunningState();
+      }, {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.01
+      });
+      state.intersectionObserver.observe(state.scene);
+    } else {
+      state.sceneVisible = true;
+    }
+
+    globalThis.addEventListener("pagehide", destroy, { once: true });
   }
 
   function destroy() {
-    if (state.destroyed) return true;
-
-    stopSparkles();
-    clearTimeout(state.resizeTimer);
-    unbindEnvironment();
-    state.layer?.remove();
-    document.getElementById(IDS.style)?.remove();
+    if (state.destroyed) return;
+    state.destroyed = true;
+    clearTimers();
+    state.activeSparkles.length = 0;
+    clearOverlay();
+    state.intersectionObserver?.disconnect();
+    state.resizeObserver?.disconnect();
+    state.motionObserver?.disconnect();
+    if (state.onVisibility) {
+      document.removeEventListener("visibilitychange", state.onVisibility);
+    }
+    if (state.onResize) {
+      globalThis.removeEventListener("resize", state.onResize);
+    }
+    if (typeof state.motionQuery?.removeEventListener === "function") {
+      state.motionQuery.removeEventListener("change", state.onMotion);
+    } else {
+      state.motionQuery?.removeListener?.(state.onMotion);
+    }
+    state.baseCanvas?.remove();
+    state.overlayCanvas?.remove();
     state.stars.length = 0;
     state.sparkles.length = 0;
-    state.destroyed = true;
-    state.initialized = false;
-    api.initialized = false;
-
-    const receipt = publish({ lastAction: "destroyed" });
-    globalThis.dispatchEvent(new CustomEvent(DESTROYED_EVENT, { detail: receipt }));
-    return true;
-  }
-
-  function fail(error) {
-    if (state.failed) return;
-    state.failed = true;
-    state.failureReason = error instanceof Error ? error.message : String(error);
-    stopSparkles();
-    const receipt = publish({ lastAction: "failure" });
-    globalThis.dispatchEvent(new CustomEvent(FAILURE_EVENT, { detail: receipt }));
+    publish({ lastAction: "cosmos-destroyed" });
   }
 
   function initialize() {
     try {
-      installStyle();
-      createSurfaces();
+      createCanvases();
       bindEnvironment();
+      resolveReducedMotion();
+      resize();
       state.initialized = true;
-      api.initialized = true;
-      resize("initialization");
-      evaluate("initialized");
-      const receipt = publish({ lastAction: "ready" });
-      globalThis.dispatchEvent(new CustomEvent(READY_EVENT, { detail: receipt }));
+      globalThis[GLOBAL_KEY] = Object.freeze({ ...api, initialized: true });
+      publish({ lastAction: "cosmos-initialized" });
+      globalThis.dispatchEvent(new CustomEvent(READY_EVENT, {
+        detail: globalThis[RECEIPT_KEY]
+      }));
+      evaluateRunningState();
     } catch (error) {
       fail(error);
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initialize, { once: true });
-  } else {
-    initialize();
-  }
+  initialize();
 })();

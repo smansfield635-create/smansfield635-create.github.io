@@ -1,242 +1,143 @@
 /* /laws/index.interactions.js
-   Laws shared Compass-family interaction loader wrapper.
-
-   Preserves the existing complete loader in
-   /laws/index.interactions.loader.source.js and changes only the build/cache
-   identity and receipt fields required by the positive-drag spherical XYZ
-   conformance round.
+   LAWS_CHECKPOINT_ZERO_DIRECT_INTERACTION_AUTHORITY_v1
+   Direct pointer, hit, motion, settlement, label, receipt, and lifecycle authority.
+   Controller remains the sole state, transition, route, and navigation authority.
 */
 (() => {
   "use strict";
 
-  const CONTRACT = Object.freeze({
-    id: "DGB_LAWS_INTERACTIONS_SHARED_SPHERICAL_XYZ_WRAPPER_v1",
-    sourceUrl:
-      "./index.interactions.loader.source.js?v=LAWS_INTERACTIONS_LOADER_SOURCE_v1",
-    build:
-      "LAWS_COMPASS_SHARED_SPHERICAL_XYZ_DIRECT_MANIPULATION_v5",
-    horizontalDragYawSign:
-      "POSITIVE",
-    clusterGeometryModel:
-      "BOUNDED_SPHERICAL_XYZ_CLUSTER",
-    clusterFullXyzRotation:
-      true,
-    ownsController:
-      false,
-    ownsCrystals:
-      false,
-    ownsNavigation:
-      false
+  const M = Object.freeze({
+    id: "DGB_LAWS_INTERACTIONS",
+    version: "1.0.0-pointer-gesture-interpreter",
+    build: "LAWS_COMPASS_CENTER_EXCLUSIVE_SPHERICAL_XYZ_DIRECT_MANIPULATION_v6",
+    controllerId: "DGB_LAWS_CONTROLLER",
+    controllerVersion: "1.0.0-law-compass-controller-authority",
+    motionId: "DGB_LAWS_COMPLETE_QUATERNION_MOTION_CONTRACT_v1",
+    motionVersion: "1.0.0"
   });
+  const D = Object.freeze(["flow", "integrity", "reality", "structure"]);
+  const LABEL = Object.freeze({ flow: "Flow", integrity: "Integrity", reality: "Reality", structure: "Structure" });
+  const VECTOR = Object.freeze({ flow: [0,1,0], integrity: [1,0,0], reality: [0,-1,0], structure: [-1,0,0] });
+  const ANCHOR = Object.freeze({ constellation: [0,.78,.625], cluster: [0,.70,.714] });
+  const MODE = Object.freeze({ CONSTELLATION: "CONSTELLATION", CLUSTER: "CLUSTER", HELD: "HELD" });
+  const KIND = Object.freeze({ CATEGORY: "category", LAW: "law", COMPASS: "compass", SPACE: "open-space" });
+  const INTENT = Object.freeze({ IDLE:"IDLE", UNKNOWN:"UNKNOWN", TAP:"TAP", ORBIT:"ORBIT_ROTATE", CLUSTER:"CLUSTER_ROTATE", SWIPE:"CLUSTER_HORIZONTAL_SWIPE", COMPASS_CANCELLED:"COMPASS_CANCELLED", CANCELLED:"CANCELLED" });
+  const P = Object.freeze({ FRONT:300, COMPASS:400, REAR:100, OFF:0 });
+  const G = Object.freeze({
+    drag:7, tap:10, tapMs:650, orbit:0.0062, cluster:0.007, correction:0.0028,
+    maxAngle:.24, maxCorrection:.12, reduced:.72, hitMin:32, hitMax:124, hitScale:1.36,
+    fallbackScale:1.18, fallbackMin:42, fallbackMax:148, swipeX:72, swipeY:92,
+    swipeRatio:1.6, swipeMs:560, swipeVelocity:.3, suppressMs:700, settle:8
+  });
+  const REQUIRED = Object.freeze([
+    "getFrameState","getSemanticProjection","getCanonicalLawRecords","getCanonicalLawRoutes",
+    "subscribeFrameState","subscribeSemanticProjection","beginOrbitGesture","requestOrbitPreview",
+    "requestOrbitCommit","requestOrbitCancel","beginClusterGesture","requestClusterPreview",
+    "requestClusterCommit","requestClusterCancel","requestCategorySelection","requestLawSelection",
+    "requestCompassSelection","requestReturnToConstellation"
+  ]);
+  const S = {
+    controller:null, root:null, scene:null, field:null, compass:null, frame:null,
+    projections:Object.freeze([]), laws:Object.freeze([]), controls:new Map(), labels:new Map(),
+    pointer:null, transaction:"", direction:"", opened:false, preview:false, quaternion:null,
+    primary:"", grabbed:null, suppressUntil:0, suppressTarget:null, listeners:[],
+    unsubscribeFrame:null, unsubscribeProjection:null, initialized:false, disposed:false,
+    settlementPending:false, settlementCount:0, lastAction:"pending", lastFailure:"", validation:null
+  };
 
-  const SCRIPT_ATTRIBUTE =
-    "data-laws-shared-spherical-xyz-interactions-source";
+  const finite = (v,f=0) => Number.isFinite(Number(v)) ? Number(v) : f;
+  const clamp = (v,a,b) => Math.min(b,Math.max(a,v));
+  const text = v => String(v == null ? "" : v).trim();
+  const direction = v => { const x=text(v).toLowerCase(); return D.includes(x) ? x : ""; };
+  const dist = (x1,y1,x2,y2) => Math.hypot(x2-x1,y2-y1);
+  const escapeCss = v => globalThis.CSS?.escape ? globalThis.CSS.escape(text(v)) : text(v).replace(/["\\]/g,"\\$&");
+  const normalizeVector = (v,f=[0,0,1]) => { const a=[finite(v?.[0]),finite(v?.[1]),finite(v?.[2])], n=Math.hypot(...a); return n>1e-12?a.map(x=>x/n):f.slice(); };
+  const qn = (v,f=[0,0,0,1]) => { const a=(Array.isArray(v)||ArrayBuffer.isView(v))?Array.from(v):[]; if(a.length!==4)return f.slice(); const q=a.map((x,i)=>finite(x,i===3?1:0)),n=Math.hypot(...q); return n>1e-8?q.map(x=>x/n):f.slice(); };
+  const qRaw = (a,b) => [a[3]*b[0]+a[0]*b[3]+a[1]*b[2]-a[2]*b[1],a[3]*b[1]-a[0]*b[2]+a[1]*b[3]+a[2]*b[0],a[3]*b[2]+a[0]*b[1]-a[1]*b[0]+a[2]*b[3],a[3]*b[3]-a[0]*b[0]-a[1]*b[1]-a[2]*b[2]];
+  const qm = (a,b) => qn(qRaw(qn(a),qn(b)));
+  const qc = v => { const q=qn(v); return [-q[0],-q[1],-q[2],q[3]]; };
+  const rotate = (q,v) => { const r=qRaw(qRaw(qn(q),[finite(v?.[0]),finite(v?.[1]),finite(v?.[2]),0]),qc(q)); return [r[0],r[1],r[2]]; };
+  const dot = (a,b) => a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+  const cross = (a,b) => [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const axisAngle = (a,angle) => { const n=normalizeVector(a),h=angle*.5,s=Math.sin(h); return qn([n[0]*s,n[1]*s,n[2]*s,Math.cos(h)]); };
+  const betweenVectors = (from,to) => { const a=normalizeVector(from),b=normalizeVector(to),c=clamp(dot(a,b),-1,1); if(c>.999999)return [0,0,0,1]; if(c<-.999999){let x=cross([1,0,0],a);if(Math.hypot(...x)<1e-6)x=cross([0,1,0],a);return axisAngle(x,Math.PI);} const x=cross(a,b);return qn([x[0],x[1],x[2],1+c]); };
+  const screenDelta = (dx,dy,sensitivity,max) => { const x=finite(dx)*sensitivity,y=finite(dy)*sensitivity,a=Math.hypot(x,y); return a<1e-10?[0,0,0,1]:axisAngle([y/a,x/a,0],Math.min(a,max)); };
+  const clusterVector = (i,n) => { const count=Math.max(1,n),longitude=Math.PI*2*i/count-Math.PI/2,latitude=Math.sin((i+.5)*1.73)*.48,c=Math.cos(latitude);return normalizeVector([Math.cos(longitude)*c,Math.sin(latitude),Math.sin(longitude)*c]); };
+  const primaryFrom = (records,anchor,q) => { let id="",score=-Infinity; for(const r of records){const s=dot(normalizeVector(rotate(q,r.vector)),normalizeVector(anchor));if(s>score){score=s;id=r.id;}} return id; };
+  const primaryDirection = q => primaryFrom(D.map(id=>({id,vector:VECTOR[id]})),ANCHOR.constellation,qn(q))||"flow";
+  const primaryLaw = (ids,q) => { const a=Array.isArray(ids)?ids.map(text).filter(Boolean):[]; return primaryFrom(a.map((id,i)=>({id,vector:clusterVector(i,a.length)})),ANCHOR.cluster,qn(q)); };
+  const settled = (base,anchor,current) => qm(betweenVectors(rotate(current,base),anchor),current);
 
-  function fail(code, details = null) {
-    const error = new Error(code);
-    error.code = code;
-    error.details = details;
+  const mode = (f=S.frame) => text(f?.presentationMode || f?.presentation?.mode).toUpperCase();
+  const held = (f=S.frame) => Boolean(f?.held)||mode(f)===MODE.HELD;
+  const activeDirection = (f=S.frame) => direction(f?.activeClusterDirection||f?.selectedDirection||f?.cluster?.direction);
+  const orbitQ = (f=S.frame) => qn(f?.orbitOrientation?.quaternion);
+  const clusterQ = (f=S.frame) => qn(f?.cluster?.orientation?.quaternion);
+  const scenePoint = e => { const r=S.field.getBoundingClientRect(); return {x:finite(e.clientX)-r.left,y:finite(e.clientY)-r.top}; };
+  const rectContains = (el,x,y) => { const r=el?.getBoundingClientRect(); return Boolean(r&&r.width>0&&r.height>0&&x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom); };
+  const recordKind = r => text(r?.kind).toLowerCase();
+  const categoryRecord = r => recordKind(r)==="category"||recordKind(r)==="direction";
+  const lawRecord = r => recordKind(r)==="law";
+  const priority = r => !r?.visible?P.OFF:r.depthLayer==="front"?P.FRONT:r.depthLayer==="rear"&&!(r.compassOverlap&&!categoryRecord(r))?P.REAR:P.OFF;
+  const radius = r => clamp((finite(r?.radiusPx)||G.hitMin)*G.hitScale,G.hitMin,G.hitMax);
+  const controlKey = (kind,id) => `${kind}:${id}`;
+  const controlFor = r => S.controls.get(controlKey(recordKind(r),r.id))||S.controls.get(controlKey(KIND.CATEGORY,r.id))||null;
 
-    const root = document.querySelector("[data-laws-root]");
-    if (root) {
-      root.dataset.lawsInteractionsWrapperStatus = "held";
-      root.dataset.lawsInteractionsWrapperFailure = code;
-    }
-
-    globalThis.DGB_LAWS_INTERACTIONS_WRAPPER_FAILURE =
-      Object.freeze({
-        contractId: CONTRACT.id,
-        code,
-        details
-      });
-
-    globalThis.dispatchEvent(
-      new CustomEvent(
-        "DGB_LAWS_INTERACTIONS_WRAPPER_FAILURE",
-        {
-          detail:
-            globalThis.DGB_LAWS_INTERACTIONS_WRAPPER_FAILURE
-        }
-      )
-    );
-
-    throw error;
+  function normalizeProjection(r){if(!r||typeof r!=="object")return null;const id=text(r.id||r.lawId||r.direction),kind=recordKind(r);return id&&kind?Object.freeze({id,kind,x:finite(r.x),y:finite(r.y),radiusPx:Math.max(0,finite(r.radiusPx||r.radius||r.hitRadius||r.screenRadius)),depthLayer:["front","rear"].includes(text(r.depthLayer).toLowerCase())?text(r.depthLayer).toLowerCase():"unknown",compassOverlap:Boolean(r.compassOverlap),visible:r.visible!==false}):null;}
+  function indexControls(){S.controls.clear();for(const el of S.root.querySelectorAll("[data-laws-category], [data-laws-law]")){if(el.matches("[data-laws-law]")){const id=text(el.dataset.lawId);if(id)S.controls.set(controlKey(KIND.LAW,id),el);}else{const id=direction(el.dataset.direction);if(id){S.controls.set(controlKey(KIND.CATEGORY,id),el);S.controls.set(controlKey("direction",id),el);}}}}
+  function installLabels(){
+    if(!document.getElementById("laws-direct-interactions-label-style")){const style=document.createElement("style");style.id="laws-direct-interactions-label-style";style.textContent=`[data-laws-projected-category-labels]{position:absolute;inset:0;z-index:22;pointer-events:none}[data-laws-projected-category-label]{position:absolute;min-width:4.4rem;padding:.34rem .52rem;border:0;background:transparent;color:rgba(246,238,223,.94);font:850 clamp(.62rem,1.35vw,.78rem)/1.05 Inter,system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;text-shadow:0 .1rem .18rem #000,0 0 .55rem #000;white-space:nowrap;cursor:pointer;pointer-events:auto;touch-action:manipulation;transform:translate(-50%,-50%)}[data-laws-projected-category-label][data-depth-layer="rear"]{opacity:.44;filter:saturate(.68) brightness(.68)}[data-laws-projected-category-label][data-primary="true"]{opacity:1;color:#fff3be;filter:brightness(1.16) drop-shadow(0 0 .52rem rgba(245,213,130,.38))}`;document.head.append(style);}
+    let layer=S.field.querySelector("[data-laws-projected-category-labels]");if(!layer){layer=document.createElement("div");layer.dataset.lawsProjectedCategoryLabels="true";S.field.append(layer);}
+    for(const id of D){let el=layer.querySelector(`[data-laws-projected-category-label="${id}"]`);if(!el){el=document.createElement("button");el.type="button";el.dataset.lawsProjectedCategoryLabel=id;el.dataset.direction=id;el.textContent=LABEL[id];el.setAttribute("aria-label",`Open ${LABEL[id]}`);layer.append(el);}S.labels.set(id,el);}
   }
-
-  function loadSourceSynchronously(url) {
-    const request = new XMLHttpRequest();
-    request.open("GET", url, false);
-    request.send(null);
-
-    if (request.status < 200 || request.status >= 300) {
-      fail(
-        `LAWS_INTERACTIONS_SOURCE_LOAD_FAILED:${request.status}`,
-        { url }
-      );
-    }
-
-    return request.responseText;
+  function applyProjection(){
+    if(!S.root||S.disposed)return;const m=mode(),primary=m===MODE.CONSTELLATION?primaryDirection(orbitQ()):m===MODE.CLUSTER?primaryLaw(S.frame?.cluster?.lawIds,clusterQ()):"";
+    S.root.dataset.lawsSpatialPrimaryKind=m===MODE.CLUSTER?"law":m===MODE.CONSTELLATION?"category":"";S.root.dataset.lawsSpatialPrimaryId=primary;S.root.dataset.lawsSpatialPrimarySelection=primary?"active":"inactive";
+    for(const el of S.root.querySelectorAll("[data-laws-spatial-primary='true']"))el.removeAttribute("data-laws-spatial-primary");
+    if(primary){const el=S.root.querySelector(m===MODE.CLUSTER?`[data-laws-law][data-law-id="${escapeCss(primary)}"]`:`[data-laws-category][data-direction="${escapeCss(primary)}"]`);if(el)el.dataset.lawsSpatialPrimary="true";}
+    for(const r of S.projections){const el=controlFor(r);if(!el)continue;const p=priority(r),z=radius(r);Object.assign(el.style,{position:"absolute",left:`${r.x}px`,top:`${r.y}px`,width:`${z*2}px`,height:`${z*2}px`,margin:"0",transform:"translate(-50%, -50%)",pointerEvents:p>P.OFF?"auto":"none"});el.dataset.projectionVisible=String(r.visible);el.dataset.projectionDepthLayer=r.depthLayer;el.dataset.projectionInteractionPriority=String(p);if(p>P.OFF){el.removeAttribute("aria-hidden");if(el.dataset.active==="true")el.removeAttribute("tabindex");}else{el.setAttribute("aria-hidden","true");el.setAttribute("tabindex","-1");}}
+    const rect=S.field.getBoundingClientRect(),cx=rect.width/2,cy=rect.height/2,byId=new Map(S.projections.filter(categoryRecord).map(r=>[r.id,r]));
+    for(const id of D){const el=S.labels.get(id),r=byId.get(id);if(!el)continue;if(m!==MODE.CONSTELLATION||!r?.visible){el.hidden=true;continue;}const dx=r.x-cx,dy=r.y-cy,n=Math.hypot(dx,dy)||1,out=Math.min(66,Math.max(36,(finite(r.radiusPx,28)*.66)+10));el.hidden=false;el.style.left=`${r.x+dx/n*out}px`;el.style.top=`${r.y+dy/n*out}px`;el.style.zIndex=r.depthLayer==="rear"?"2":"9";el.dataset.depthLayer=r.depthLayer;el.dataset.primary=String(id===primary);}
   }
+  function setProjections(records){S.projections=Object.freeze(Array.from(records||[]).map(normalizeProjection).filter(Boolean));applyProjection();}
+  function lawCanonical(id){return S.laws.find(r=>text(r?.lawId||r?.id)===text(id))||null;}
+  function compassHit(e){return S.compass?.dataset.interactionEnabled!=="false"&&rectContains(S.compass,e.clientX,e.clientY)?Object.freeze({kind:KIND.COMPASS,id:"home-compass",priority:P.COMPASS,record:null,element:S.compass}):null;}
+  function crystalHit(point){const m=mode(),dir=activeDirection(),hits=[];for(const r of S.projections){if(!r.visible)continue;const cat=categoryRecord(r),law=lawRecord(r);if(m===MODE.CONSTELLATION&&!cat)continue;if(m===MODE.CLUSTER&&!law)continue;if(law&&dir&&direction(lawCanonical(r.id)?.direction)!==dir)continue;const z=radius(r),d=dist(point.x,point.y,r.x,r.y),p=priority(r);if(d<=z&&p>P.OFF)hits.push({kind:law?KIND.LAW:KIND.CATEGORY,id:r.id,priority:p,distance:d,record:r,element:controlFor(r)});}return hits.sort((a,b)=>b.priority-a.priority||a.distance-b.distance)[0]||null;}
+  function fallbackHit(point){if(mode()!==MODE.CONSTELLATION)return null;let best=null;for(const r of S.projections){if(!r.visible||!categoryRecord(r)||priority(r)<=P.OFF)continue;const z=clamp(radius(r)*G.fallbackScale,G.fallbackMin,G.fallbackMax),d=dist(point.x,point.y,r.x,r.y);if(d<=z&&(!best||d<best.distance))best={kind:KIND.CATEGORY,id:r.id,priority:priority(r),distance:d,record:r,element:controlFor(r)};}return best;}
+  function identity(el){if(el?.matches("[data-laws-projected-category-label]"))return {kind:KIND.CATEGORY,id:direction(el.dataset.direction)};if(el?.matches("[data-laws-law]"))return {kind:KIND.LAW,id:text(el.dataset.lawId)};if(el?.matches("[data-laws-category]"))return {kind:KIND.CATEGORY,id:direction(el.dataset.direction)};if(el?.matches("[data-upstream-compass-control]"))return {kind:KIND.COMPASS,id:"home-compass"};return null;}
+  function semanticHit(e){const el=e.target?.closest?.("[data-laws-projected-category-label], [data-laws-law], [data-laws-category], [data-upstream-compass-control]");if(!el||!S.root.contains(el))return null;const x=identity(el);if(!x?.id)return null;if(x.kind===KIND.COMPASS)return rectContains(S.compass,e.clientX,e.clientY)?{...x,priority:P.COMPASS,record:null,element:el}:null;const r=S.projections.find(v=>x.kind===KIND.LAW?lawRecord(v)&&v.id===x.id:categoryRecord(v)&&v.id===x.id)||null,p=r?priority(r):P.REAR;return p>P.OFF?{...x,priority:p,record:r,element:el}:null;}
+  function target(e){const compass=compassHit(e);if(compass)return compass;const point=scenePoint(e),hits=[semanticHit(e),crystalHit(point),fallbackHit(point)].filter(Boolean).sort((a,b)=>finite(b.priority)-finite(a.priority)||finite(a.distance,Infinity)-finite(b.distance,Infinity));return hits[0]||{kind:KIND.SPACE,id:"",priority:P.OFF,record:null,element:S.field};}
 
-  function replaceRequired(source, before, after, identity) {
-    const count = source.split(before).length - 1;
+  function beginMotion(){if(S.opened||held())return S.opened;if(S.pointer.intent===INTENT.ORBIT&&S.controller.beginOrbitGesture()!==false){S.transaction="orbit";S.quaternion=orbitQ();}else if(S.pointer.intent===INTENT.CLUSTER){const d=activeDirection();if(!d||S.controller.beginClusterGesture(d)===false)return false;S.transaction="cluster";S.direction=d;S.quaternion=clusterQ();}else return false;S.opened=true;return true;}
+  function preview(point){const sensitivity=(S.transaction==="cluster"?G.cluster:G.orbit)*(S.frame?.reducedMotion?G.reduced:1),delta=screenDelta(point.x-S.pointer.lastX,point.y-S.pointer.lastY,sensitivity,G.maxAngle);let q=qm(delta,S.quaternion||[0,0,0,1]);if(S.grabbed){const r=S.projections.find(v=>v.id===S.grabbed.id&&((S.grabbed.kind===KIND.LAW&&lawRecord(v))||(S.grabbed.kind===KIND.CATEGORY&&categoryRecord(v))));if(r){const dx=point.x-S.grabbed.offsetX-r.x,dy=point.y-S.grabbed.offsetY-r.y;if(Math.hypot(dx,dy)>.5)q=qm(screenDelta(dx,dy,G.correction*(S.frame?.reducedMotion?G.reduced:1),G.maxCorrection),q);}}
+    const id=S.transaction==="orbit"?primaryDirection(q):primaryLaw(S.frame?.cluster?.lawIds,q);if(!id)return false;const ok=S.transaction==="orbit"?S.controller.requestOrbitPreview({quaternion:q,primaryId:id}):S.controller.requestClusterPreview(S.direction,{quaternion:q,primaryId:id});if(ok===false)return false;S.preview=true;S.quaternion=q;S.primary=id;S.pointer.lastX=point.x;S.pointer.lastY=point.y;action(`preview:${S.transaction}:${id}`);return true;}
+  function cancel(reason){if(!S.opened)return false;const ok=S.transaction==="orbit"?S.controller.requestOrbitCancel(reason):S.controller.requestClusterCancel(S.direction,reason);return ok!==false;}
+  function commit(){if(!S.opened||!S.preview)return false;return (S.transaction==="orbit"?S.controller.requestOrbitCommit():S.controller.requestClusterCommit(S.direction))!==false;}
+  function activate(t){if(!t||held())return false;if(t.kind===KIND.CATEGORY)return S.controller.requestCategorySelection(t.id)!==false;if(t.kind===KIND.LAW)return S.controller.requestLawSelection(t.id)!==false;if(t.kind===KIND.COMPASS)return S.controller.requestCompassSelection()!==false;return false;}
+  function swipe(elapsed){if(mode()!==MODE.CLUSTER||S.pointer?.target?.kind===KIND.COMPASS)return {qualified:false};const x=Math.abs(S.pointer.dx),y=Math.abs(S.pointer.dy),ms=Math.max(1,elapsed),ratio=x/Math.max(y,1),velocity=x/ms;return {qualified:x>=G.swipeX&&y<=G.swipeY&&ratio>=G.swipeRatio&&ms<=G.swipeMs&&velocity>=G.swipeVelocity,direction:S.pointer.dx>=0?"LEFT_TO_RIGHT":"RIGHT_TO_LEFT"};}
+  function settleMotion(scope,dir,ids,distance){if(S.settlementPending||distance<G.settle)return;S.settlementPending=true;setTimeout(()=>{S.settlementPending=false;const f=S.controller.getFrameState();if(!f||held(f))return;try{let ok=false;if(scope==="constellation"&&mode(f)===MODE.CONSTELLATION){const current=orbitQ(f),id=primaryDirection(current),q=settled(VECTOR[id],ANCHOR.constellation,current);if(S.controller.beginOrbitGesture()!==false&&S.controller.requestOrbitPreview({quaternion:q,primaryId:id})!==false)ok=S.controller.requestOrbitCommit()!==false;if(!ok)S.controller.requestOrbitCancel("laws-direct-settlement-rejected");}else if(scope==="cluster"&&mode(f)===MODE.CLUSTER&&f.cluster){const d=direction(f.cluster.direction),a=Array.isArray(f.cluster.lawIds)?f.cluster.lawIds.map(text).filter(Boolean):ids,current=clusterQ(f),id=primaryLaw(a,current),i=a.indexOf(id),q=i>=0?settled(clusterVector(i,a.length),ANCHOR.cluster,current):null;if(d&&d===dir&&q&&S.controller.beginClusterGesture(d)!==false&&S.controller.requestClusterPreview(d,{quaternion:q,primaryId:id})!==false)ok=S.controller.requestClusterCommit(d)!==false;if(!ok&&d)S.controller.requestClusterCancel(d,"laws-direct-settlement-rejected");}if(ok){S.settlementCount++;S.root.dataset.lawsSpatialSettlement=scope;action(`settled:${scope}`);}}catch(e){failure(e?.code||e?.message||"LAWS_DIRECT_SETTLEMENT_FAILURE");}},0);}
 
-    if (count !== 1) {
-      fail(
-        `LAWS_INTERACTIONS_REQUIRED_SOURCE_PATTERN_INVALID:${identity}`,
-        {
-          expected: 1,
-          actual: count
-        }
-      );
-    }
+  function suppress(t){S.suppressUntil=performance.now()+G.suppressMs;S.suppressTarget=t?.element||null;}
+  function clearPointer(){S.pointer=null;S.transaction="";S.direction="";S.opened=false;S.preview=false;S.quaternion=null;S.primary="";S.grabbed=null;}
+  function down(e){if(S.disposed||!S.initialized||held()||S.pointer||(e.pointerType==="mouse"&&e.button!==0)||!(S.field.contains(e.target)||S.compass.contains(e.target)))return;const point=scenePoint(e),t=target(e);S.pointer={id:e.pointerId,startX:point.x,startY:point.y,lastX:point.x,lastY:point.y,dx:0,dy:0,distance:0,time:performance.now(),intent:INTENT.UNKNOWN,target:t};S.grabbed=t.record?{kind:t.kind,id:t.id,offsetX:point.x-t.record.x,offsetY:point.y-t.record.y}:null;try{S.field.setPointerCapture?.(e.pointerId);}catch(_){}if(t.kind!==KIND.COMPASS)e.preventDefault();action(`pointer-down:${t.kind}:${t.id||"none"}`);}
+  function move(e){if(!S.pointer||S.pointer.id!==e.pointerId)return;const point=scenePoint(e),p=S.pointer;p.dx=point.x-p.startX;p.dy=point.y-p.startY;p.distance=Math.hypot(p.dx,p.dy);if(p.target.kind===KIND.COMPASS){if(p.distance>G.tap)p.intent=INTENT.COMPASS_CANCELLED;return;}if(p.distance<G.drag)return;p.intent=mode()===MODE.CONSTELLATION?INTENT.ORBIT:mode()===MODE.CLUSTER?INTENT.CLUSTER:INTENT.CANCELLED;e.preventDefault();if(p.intent===INTENT.CANCELLED)return;if(!beginMotion()){p.intent=INTENT.CANCELLED;return failure("LAWS_INTERACTION_TRANSACTION_OPEN_FAILED");}if(!preview(point)){cancel("preview-rejected");p.intent=INTENT.CANCELLED;failure("LAWS_INTERACTION_PREVIEW_REJECTED");}}
+  function finish(e,cancelled=false,reason="pointer-up"){if(!S.pointer||S.pointer.id!==e.pointerId)return;const p=S.pointer,elapsed=performance.now()-p.time,scope=S.transaction==="cluster"?"cluster":S.transaction==="orbit"?"constellation":"",dir=S.direction,ids=Array.isArray(S.frame?.cluster?.lawIds)?S.frame.cluster.lawIds.slice():[],distance=p.distance;let handled=false;if(cancelled){if(S.opened)cancel(reason);p.intent=INTENT.CANCELLED;handled=true;}else{const s=swipe(elapsed);if(s.qualified){if(S.opened)cancel("cluster-horizontal-swipe");handled=S.controller.requestReturnToConstellation({source:"cluster-horizontal-swipe",scrollToScene:true})!==false;p.intent=INTENT.SWIPE;suppress(p.target);}else if([INTENT.ORBIT,INTENT.CLUSTER].includes(p.intent)&&S.opened){handled=S.preview?commit():false;if(!S.preview)cancel("no-preview");suppress(p.target);}else if(p.distance<=G.tap&&elapsed<=G.tapMs&&p.target.kind!==KIND.SPACE){p.intent=INTENT.TAP;handled=activate(p.target);suppress(p.target);}else if(S.opened)cancel("gesture-not-committed");}
+    try{if(S.field.hasPointerCapture?.(e.pointerId))S.field.releasePointerCapture(e.pointerId);}catch(_){}action(`pointer-finalized:${p.intent}:${handled?"handled":"unhandled"}`);clearPointer();if(!cancelled&&handled&&scope)settleMotion(scope,dir,ids,distance);}
+  function click(e){if(S.disposed)return;if(performance.now()<=S.suppressUntil){const el=e.target?.closest?.("[data-laws-projected-category-label], [data-laws-law], [data-laws-category], [data-upstream-compass-control]");if(!S.suppressTarget||e.target===S.suppressTarget||el===S.suppressTarget){e.preventDefault();e.stopImmediatePropagation();return;}}if(e.detail!==0)return;const t=semanticHit(e);if(t){e.preventDefault();activate(t);}}
+  function listen(el,type,fn,options){el.addEventListener(type,fn,options);S.listeners.push({el,type,fn,options});}
+  function bind(){Object.assign(S.field.style,{touchAction:"none",userSelect:"none",webkitUserSelect:"none",webkitTouchCallout:"none"});listen(S.root,"pointerdown",down,{passive:false,capture:true});listen(S.field,"pointermove",move,{passive:false});listen(S.field,"pointerup",e=>finish(e),{passive:false});listen(S.field,"pointercancel",e=>finish(e,true,"pointer-cancel"),{passive:false});listen(S.field,"lostpointercapture",e=>{if(S.pointer?.id===e.pointerId){if(S.opened)cancel("lost-pointer-capture");clearPointer();}},false);listen(S.root,"click",click,true);listen(S.root,"dragstart",e=>{if(S.field.contains(e.target))e.preventDefault();},true);}
 
-    return source.replace(before, after);
-  }
-
-  function transformSource(input) {
-    let source = input;
-
-    source = replaceRequired(
-      source,
-      '"LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4"',
-      '"LAWS_COMPASS_SHARED_SPHERICAL_XYZ_DIRECT_MANIPULATION_v5"',
-      "BUILD_IDENTITY"
-    );
-
-    source = replaceRequired(
-      source,
-      'horizontalDragYawSign: "NEGATIVE",',
-      'horizontalDragYawSign: "POSITIVE",',
-      "POSITIVE_HORIZONTAL_DRAG_RECEIPT"
-    );
-
-    source = replaceRequired(
-      source,
-      "clusterMaximumTiltRadians: 0.30,",
-      "clusterFullXyzRotation: true,",
-      "FULL_XYZ_ROTATION_RECEIPT"
-    );
-
-    source = replaceRequired(
-      source,
-      "euclideanClusterOrbitRequired: true,",
-      "boundedSphericalXyzClusterRequired: true,",
-      "SPHERICAL_CLUSTER_RECEIPT"
-    );
-
-    const retiredTokens = [
-      '"LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4"',
-      'horizontalDragYawSign: "NEGATIVE"',
-      "clusterMaximumTiltRadians: 0.30",
-      "euclideanClusterOrbitRequired: true"
-    ];
-
-    for (const token of retiredTokens) {
-      if (source.includes(token)) {
-        fail(
-          "LAWS_INTERACTIONS_RETIRED_TOKEN_REMAINS",
-          { token }
-        );
-      }
-    }
-
-    const requiredTokens = [
-      '"LAWS_COMPASS_SHARED_SPHERICAL_XYZ_DIRECT_MANIPULATION_v5"',
-      'horizontalDragYawSign: "POSITIVE"',
-      "clusterFullXyzRotation: true",
-      "boundedSphericalXyzClusterRequired: true"
-    ];
-
-    for (const token of requiredTokens) {
-      if (!source.includes(token)) {
-        fail(
-          "LAWS_INTERACTIONS_REQUIRED_TOKEN_MISSING",
-          { token }
-        );
-      }
-    }
-
-    return source;
-  }
-
-  function install() {
-    if (
-      document.querySelector(
-        `script[${SCRIPT_ATTRIBUTE}]`
-      )
-    ) {
-      return;
-    }
-
-    const source =
-      transformSource(
-        loadSourceSynchronously(
-          CONTRACT.sourceUrl
-        )
-      );
-
-    const script = document.createElement("script");
-    script.setAttribute(
-      SCRIPT_ATTRIBUTE,
-      "true"
-    );
-    script.dataset.ready = "false";
-    script.textContent =
-      source +
-      "\n//# sourceURL=/laws/index.interactions.shared-spherical-xyz.js";
-    document.head.append(script);
-    script.dataset.ready = "true";
-
-    const root = document.querySelector("[data-laws-root]");
-    if (root) {
-      root.dataset.lawsInteractionsWrapperStatus =
-        "available";
-      root.dataset.lawsInteractionsWrapperContract =
-        CONTRACT.id;
-      root.dataset.lawsHorizontalDragYawSign =
-        CONTRACT.horizontalDragYawSign;
-      root.dataset.lawsClusterGeometryModel =
-        CONTRACT.clusterGeometryModel;
-      root.dataset.lawsClusterFullXyzRotation =
-        "true";
-    }
-
-    globalThis.DGB_LAWS_INTERACTIONS_WRAPPER_RECEIPT =
-      Object.freeze({
-        contractId:
-          CONTRACT.id,
-        sourceUrl:
-          CONTRACT.sourceUrl,
-        build:
-          CONTRACT.build,
-        horizontalDragYawSign:
-          CONTRACT.horizontalDragYawSign,
-        clusterGeometryModel:
-          CONTRACT.clusterGeometryModel,
-        clusterFullXyzRotation:
-          CONTRACT.clusterFullXyzRotation,
-        sourceTransformed:
-          true,
-        sourceExecuted:
-          Boolean(
-            globalThis.DGB_LAWS_INTERACTION_STANDARD_RECEIPT
-          ),
-        visualPassClaimed:
-          false
-      });
-
-    globalThis.dispatchEvent(
-      new CustomEvent(
-        "DGB_LAWS_INTERACTIONS_WRAPPER_READY",
-        {
-          detail:
-            globalThis
-              .DGB_LAWS_INTERACTIONS_WRAPPER_RECEIPT
-        }
-      )
-    );
-  }
-
-  install();
+  function receipt(){return Object.freeze({moduleId:M.id,moduleVersion:M.version,build:M.build,status:S.lastFailure?"failed":S.initialized?"available":"pending",initialized:S.initialized,disposed:S.disposed,directAuthority:true,loaderRelayUsed:false,synchronousXhrUsed:false,runtimeSourceRewriteUsed:false,roundSpecificSourceUsed:false,centerCompassExclusiveHitZone:true,overlappingCategoryMayOverrideCenter:false,horizontalDragYawSign:"POSITIVE",clusterGeometryModel:"BOUNDED_SPHERICAL_XYZ_CLUSTER",clusterFullXyzRotation:true,projectedCategoryLabelsInstalled:S.labels.size===4,externalHaloOverlay:false,releaseSettlement:true,settlementCount:S.settlementCount,projectionCount:S.projections.length,motionOwner:M.id,acceptedStateAuthority:M.controllerId,navigationTransitionAuthority:M.controllerId,ownsControllerState:false,ownsNavigation:false,ownsProjection:false,ownsCrystalRendering:false,ownsPlanet:false,ownsLawContent:false,lastAction:S.lastAction,lastFailure:S.lastFailure,visualPassClaimed:false});}
+  function publish(){const r=receipt();globalThis.DGB_LAWS_INTERACTIONS_RECEIPT=r;globalThis.DGB_LAWS_INTERACTION_STANDARD_RECEIPT=r;if(S.root){S.root.dataset.lawsInteractionsReceipt=JSON.stringify(r);S.root.dataset.lawsInteractionsStatus=r.status;S.root.dataset.lawsInteractionsVersion=M.version;S.root.dataset.lawsInteractionsBuild=M.build;S.root.dataset.lawsInteractionsDirectAuthority="true";S.root.dataset.lawsCenterCompassExclusiveHitZone="true";S.root.dataset.lawsOverlappingCategoryMayOverrideCenter="false";S.root.dataset.lawsHorizontalDragYawSign="POSITIVE";S.root.dataset.lawsClusterGeometryModel="BOUNDED_SPHERICAL_XYZ_CLUSTER";S.root.dataset.lawsClusterFullXyzRotation="true";S.root.dataset.lawsExternalHaloOverlay="false";S.root.dataset.lawsConstellationLabels="flow-integrity-reality-structure";}return r;}
+  function action(v){S.lastAction=text(v);S.lastFailure="";publish();}
+  function failure(v){S.lastFailure=text(v);publish();}
+  function selfTest(){const h=screenDelta(40,0,.006,.24),v=screenDelta(0,-40,.006,.24);if(!(h[1]>0&&Math.abs(h[2])<1e-8&&Math.abs(v[2])<1e-8))throw Error("LAWS_INTERACTIONS_QUATERNION_SELF_TEST_FAILED");return Object.freeze({receiptSchema:"LAWS_DIRECT_INTERACTIONS_CHECKPOINT_ZERO_VALIDATION_RECEIPT_v1",pass:true,moduleId:M.id,moduleVersion:M.version,build:M.build,directAuthority:true,loaderRelayUsed:false,synchronousXhrUsed:false,runtimeSourceRewriteUsed:false,roundSpecificSourceUsed:false,centerCompassExclusiveHitZone:true,overlappingCategoryMayOverrideCenter:false,horizontalDragYawSign:"POSITIVE",clusterGeometryModel:"BOUNDED_SPHERICAL_XYZ_CLUSTER",clusterFullXyzRotation:true,projectedConstellationLabels:true,releaseSettlement:true,releaseSwipeEvaluation:"POINTER_UP",controllerOwnsStateAndNavigation:true,visualPassClaimed:false});}
+  function validate(c){if(!c||c.moduleId!==M.controllerId||c.moduleVersion!==M.controllerVersion||c.motionContractId!==M.motionId||c.motionContractVersion!==M.motionVersion)throw Error("LAWS_INTERACTIONS_CONTROLLER_CONTRACT_MISMATCH");for(const name of REQUIRED)if(typeof c[name]!=="function")throw Error(`LAWS_INTERACTIONS_CONTROLLER_METHOD_MISSING:${name}`);if(c.getCanonicalLawRecords().length!==16||c.getCanonicalLawRoutes().length!==16)throw Error("LAWS_INTERACTIONS_CANONICAL_REGISTRY_INVALID");}
+  function resolve(){S.root=document.querySelector("[data-laws-root]");S.scene=S.root?.querySelector("[data-laws-scene]");S.field=S.root?.querySelector("[data-laws-scene-field]");S.compass=S.root?.querySelector("[data-upstream-compass-control]");if(!S.root||!S.scene||!S.field||!S.compass)throw Error("LAWS_INTERACTIONS_REQUIRED_DOM_MISSING");S.compass.setAttribute("aria-label","Open Main Compass return options");indexControls();installLabels();}
+  function subscribe(){S.frame=S.controller.getFrameState();S.laws=Object.freeze(Array.from(S.controller.getCanonicalLawRecords()||[]));setProjections(S.controller.getSemanticProjection());S.unsubscribeFrame=S.controller.subscribeFrameState(f=>{S.frame=f;Array.isArray(f?.semanticProjection)?setProjections(f.semanticProjection):applyProjection();if(f?.held&&S.pointer){if(S.opened)cancel("controller-held");clearPointer();}});S.unsubscribeProjection=S.controller.subscribeSemanticProjection(setProjections);}
+  function expose(){globalThis.DGB_LAWS_INTERACTIONS=Object.freeze({moduleId:M.id,moduleVersion:M.version,build:M.build,controllerModuleId:M.controllerId,controllerModuleVersion:M.controllerVersion,motionContractId:M.motionId,motionContractVersion:M.motionVersion,intents:INTENT,motionSettings:G,primaryDirectionForQuaternion:primaryDirection,primaryLawForQuaternion:primaryLaw,getReceipt:receipt,getValidationReceipt:()=>S.validation,runSelfTest:selfTest,dispose});}
+  function dispose(){if(S.disposed)return true;if(S.opened)cancel("interactions-disposed");clearPointer();for(const x of S.listeners){try{x.el.removeEventListener(x.type,x.fn,x.options);}catch(_){}}S.listeners.length=0;try{S.unsubscribeFrame?.();}catch(_){}try{S.unsubscribeProjection?.();}catch(_){}Object.assign(S.field?.style||{},{touchAction:"",userSelect:"",webkitUserSelect:"",webkitTouchCallout:""});S.initialized=false;S.disposed=true;action("interactions-disposed");return true;}
+  function initialize(c){if(S.initialized||S.disposed)return;try{validate(c);S.controller=c;resolve();S.validation=selfTest();globalThis.DGB_LAWS_INTERACTIONS_VALIDATION_RECEIPT=S.validation;subscribe();bind();expose();S.initialized=true;action("interactions-initialized");globalThis.dispatchEvent(new CustomEvent("LAWS_INTERACTIONS_READY",{detail:Object.freeze({moduleId:M.id,moduleVersion:M.version,build:M.build,directAuthority:true,centerCompassExclusiveHitZone:true,horizontalDragYawSign:"POSITIVE",clusterGeometryModel:"BOUNDED_SPHERICAL_XYZ_CLUSTER",projectedConstellationLabels:true,releaseSettlement:true,acceptedStateAuthority:M.controllerId,navigationTransitionAuthority:M.controllerId,visualPassClaimed:false})}));}catch(e){failure(e?.code||e?.message||"UNKNOWN_LAWS_INTERACTIONS_INITIALIZATION_FAILURE");globalThis.dispatchEvent(new CustomEvent("LAWS_INTERACTIONS_FAILURE",{detail:Object.freeze({moduleId:M.id,moduleVersion:M.version,build:M.build,reason:S.lastFailure})}));}}
+  function start(){const c=globalThis.DGB_LAWS_CONTROLLER;if(c)initialize(c);else listen(globalThis,"LAWS_CONTROLLER_READY",()=>initialize(globalThis.DGB_LAWS_CONTROLLER),{once:true});}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();

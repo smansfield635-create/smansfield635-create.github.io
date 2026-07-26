@@ -94,7 +94,7 @@ const fixtures = [
   fixture({ id: 'SHALLOW_WATER', x: 48, shorelineDistance: -10, expectedClass: 'SHALLOW_WATER', observerY: 1.2 }),
   fixture({ id: 'NEARSHORE_WATER', x: 96, shorelineDistance: -35, expectedClass: 'NEARSHORE_WATER', observerY: 2.25 }),
   fixture({ id: 'OPEN_WATER', x: 144, shorelineDistance: -90, expectedClass: 'OPEN_WATER', observerY: 3.5 }),
-  fixture({ id: 'OPEN_WATER_SUBMERGED', x: 192, shorelineDistance: -110, expectedClass: 'OPEN_WATER', observerY: -2 })
+  fixture({ id: 'OPEN_WATER_SUBMERGED', x: 144, shorelineDistance: -90, expectedClass: 'OPEN_WATER', observerY: -2 })
 ];
 
 const sampleFixture = (entry) => ({

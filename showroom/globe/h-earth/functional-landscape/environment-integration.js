@@ -67,6 +67,8 @@ let scheduledRenderTimer = null;
 let renderLoopPromise = null;
 let renderNeeded = false;
 let requestedRenderReason = 'INITIAL';
+let lastRenderedViewportKey = null;
+let activeRenderViewportKey = null;
 const scheduledRenderWaiters = [];
 
 function internalExtent() {
@@ -189,6 +191,8 @@ async function performRun8ERender(reason = 'DIRECT_REQUEST') {
     const state = reconcileNavigationState(sourceSnapshot.state);
     const camera = createHEarthFunctionalLandscapeCamera(state);
     const viewport = internalExtent();
+    const viewportKey = `${viewport.width}x${viewport.height}`;
+    activeRenderViewportKey = viewportKey;
 
     await yieldToBrowser();
     renderSequence += 1;
@@ -227,6 +231,7 @@ async function performRun8ERender(reason = 'DIRECT_REQUEST') {
     updateHud(state, frame, plan, raster);
     lastFrame = frame;
     lastRaster = raster;
+    lastRenderedViewportKey = viewportKey;
     completedRenderCount += 1;
     lastRenderDurationMilliseconds = performance.now() - startedAt;
     lastReceipt.renderScheduling = {
@@ -255,6 +260,7 @@ async function performRun8ERender(reason = 'DIRECT_REQUEST') {
     statusNode.textContent = `Run 8E integration failed: ${error.message}`;
     throw error;
   } finally {
+    activeRenderViewportKey = null;
     rendering = false;
     root.dataset.run8eLoading = 'false';
   }
@@ -460,6 +466,10 @@ let resizeTimer = null;
 const resizeObserver = new ResizeObserver(() => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
+    const viewport = internalExtent();
+    const viewportKey = `${viewport.width}x${viewport.height}`;
+    if (viewportKey === lastRenderedViewportKey ||
+        viewportKey === activeRenderViewportKey) return;
     requestRun8ERender({
       delay: 0,
       reason: 'VIEWPORT_RESIZE_SETTLED'

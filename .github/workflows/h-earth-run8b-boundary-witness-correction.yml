@@ -1,4 +1,4 @@
-name: H-Earth Run 8B Boundary Witness Correction
+name: H-Earth Run 8B Correction Cleanup
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  correct-run8b-witness:
+  cleanup-run8b-correction:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,28 +20,11 @@ jobs:
           ref: agent/h-earth-run8b-successor-neutral-geometry-001
           fetch-depth: 0
 
-      - name: Correct fail-closed transition witness
+      - name: Remove temporary correction workflow
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          harness = Path('h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs')
-          text = harness.read_text(encoding='utf-8')
-          old = """check(
-  evaluateHEarthRun8AMountainContribution(-240, -266) === 0,
-  'Mountain X transition boundary must fall to terrain truth'
-);"""
-          new = """check(
-  evaluateHEarthRun8AMountainContribution(-241, -266) === 0,
-  'Mountain contribution must fail closed immediately outside the X transition bound'
-);"""
-          if old not in text:
-            raise SystemExit('RUN8B_X_BOUNDARY_WITNESS_ANCHOR_NOT_FOUND')
-          harness.write_text(text.replace(old, new, 1), encoding='utf-8')
-          Path('.github/workflows/h-earth-run8b-boundary-witness-correction.yml').unlink()
-          PY
+          rm .github/workflows/h-earth-run8b-boundary-witness-correction.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
           git add -u .github/workflows/h-earth-run8b-boundary-witness-correction.yml
-          git commit -m 'Correct Run 8B transition-boundary witness'
+          git commit -m 'Remove temporary Run 8B correction workflow'
           git push origin HEAD:agent/h-earth-run8b-successor-neutral-geometry-001

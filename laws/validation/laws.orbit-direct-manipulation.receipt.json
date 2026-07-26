@@ -1,70 +1,251 @@
 {
-  "receiptId": "LAWS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_ACCEPTANCE_RECEIPT_v1",
+  "receiptId": "LAWS_SHARED_COMPASS_CLUSTER_CONFORMANCE_P2_LOCAL_VALIDATION_RECEIPT_v1",
   "status": "PASS",
-  "branch": "agent/laws-euclidean-orbit-direct-manipulation-001",
-  "parentCommit": "dedc73841de2b41f5905fd842e9a593116caf300",
-  "sourceBlobs": {
-    "laws/index.crystals.js": "cd06f18bf8384efc97fcabeec5a4de94210c87a8",
-    "laws/index.interactions.source.round4.js": "24fc3e216f3526e9c6d30939454a73bdcf13cd7d",
-    "laws/index.interactions.js": "a6563d2e2e7064136925299a79731147f4a8580b",
-    "laws/index.html": "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260",
-    "laws/index.css": "9c2ef3e9636e134795102e48ea63553d2f3b9778"
-  },
-  "contract": {
-    "model": "EUCLIDEAN_COMMON_RADIUS_ORBIT",
-    "memberCount": 4,
-    "commonRadius": 1.4,
-    "localPlane": "XY",
-    "phaseRadians": -1.5707963267948966,
-    "maximumTiltRadians": 0.3,
-    "projectedClearanceMarginPx": 8,
-    "horizontalDragYawSign": "NEGATIVE",
-    "depthBasedLawScale": false,
-    "decorativeClusterEllipseVisible": false
-  },
-  "geometry": {
-    "commonCenter": true,
-    "commonRadius": true,
-    "coplanar": true,
-    "adjacentSeparationDegrees": 90,
-    "oppositeSeparationDegrees": 180,
-    "memberOffsets": false
-  },
-  "projection": {
-    "planetOuterRadius": 0.486,
-    "lawStarOuterRadius": 0.5841,
-    "fixtureCount": 6912,
-    "cameras": [
-      "desktop-1440x900",
-      "mobile-390x844",
-      "compact-mobile-320x568"
-    ],
-    "worstFixture": {
-      "camera": "compact-mobile-320x568",
-      "tilt": 0.3,
-      "tiltAxisIndex": 0,
-      "twistIndex": 0,
-      "memberIndex": 0,
-      "centerDistance": 121.86641455394886,
-      "projectedPlanetRadius": 48.71802154423952,
-      "projectedStarRadius": 56.15425938287667,
-      "requiredMarginPx": 8,
-      "residualClearancePx": 8.99413362683267
+  "classification": "DETERMINISTIC_BOUNDED_RECONSTRUCTION_AFTER_CUSTODY_FAILURE",
+  "branch": "agent/laws-shared-compass-cluster-conformance-001",
+  "controllingSpecification": "LAWS_SHARED_COMPASS_CLUSTER_CONFORMANCE_P1_REFERENCE_EXTRACTION_AND_TRANSPLANT_SPECIFICATION_v1",
+  "sourceDigests": {
+    "laws/index.crystals.js": {
+      "gitBlobSha1": "be5e09173b1304632af7e9a29c1ffc1b7eea6edc",
+      "sha256": "e70d7e2b27980f81a3845e8c8bfd5ed4ccac2411a6a05549ee417a397edeca36",
+      "bytes": 105613
+    },
+    "laws/index.interactions.source.round4.js": {
+      "gitBlobSha1": "6ee820886846cfe102d030389ca18ed4a13a1a23",
+      "sha256": "1bd2912f315dff4cf46589432526b6b44add077a1e0a505151293205e911a8ff",
+      "bytes": 77672
+    },
+    "laws/index.interactions.js": {
+      "gitBlobSha1": "b28e1c5131e02b43811482d73c7fcd9fc406ff38",
+      "sha256": "5a0f2e2babac3291cef95c8066f8c712e7f7d9c38edb21081cd0ced2abf34094",
+      "bytes": 15522
+    },
+    "laws/index.html": {
+      "gitBlobSha1": "e19f5ea73b0301ddd3870024ac0b10ff8385a012",
+      "sha256": "e9e67c4e26080e7ce5b521d86d0b7e362e9b8e3dd3763a9e45aeca82b46b79a7",
+      "bytes": 102543
+    },
+    "laws/index.css": {
+      "gitBlobSha1": "9c2ef3e9636e134795102e48ea63553d2f3b9778",
+      "sha256": "0cc157218ea46638c8722784572b3f61c993fa39047138119cc8ba32bc7c5d0d",
+      "bytes": 72434
+    },
+    "laws/validation/laws.orbit-direct-manipulation.harness.mjs": {
+      "gitBlobSha1": "52068a0ffb52ee7eeb275e1796f2f1b959359620",
+      "sha256": "1d911f085df245f692efcfe2f1e2381e985c81b64f37468411b868092ac069d0",
+      "bytes": 7993
     }
   },
+  "contract": {
+    "coordinateSystem": "RIGHT_HANDED_EUCLIDEAN_XYZ",
+    "clusterClass": "BOUNDED_NONCOPLANAR_SPHERICAL_XYZ_CLUSTER",
+    "memberCount": 4,
+    "horizontalRadius": 1.36,
+    "verticalRadius": 1.18,
+    "depthRadius": 1.04,
+    "latitudeAmplitude": 0.48,
+    "latitudeFrequency": 1.73,
+    "horizontalDragMapping": "dy,dx,0",
+    "horizontalDragYawSign": "POSITIVE_DX",
+    "lawScale": 0.68,
+    "primaryLawScale": 0.84,
+    "selectedLawScale": 0.91,
+    "releaseSettlement": "NEAREST_MEMBER_TO_PRIMARY_ANCHOR",
+    "returnBehavior": "DELIBERATE_HORIZONTAL_RELEASE_SWIPE"
+  },
+  "geometry": {
+    "coplanar": false,
+    "memberVectors": [
+      [
+        5.719146131858121e-17,
+        0.3572535444392776,
+        -0.9340074437527642
+      ],
+      [
+        0.9690374618700212,
+        0.24691374504572933,
+        0
+      ],
+      [
+        5.528394338412481e-17,
+        -0.4299445149832668,
+        0.9028553117946438
+      ],
+      [
+        -0.9941108816144065,
+        -0.10836768455507159,
+        1.2174347091666364e-16
+      ]
+    ],
+    "axisExtents": [
+      0.9941108816144065,
+      0.4299445149832668,
+      0.9340074437527642
+    ],
+    "noncoplanarDeterminant": 0.07657636086296254,
+    "maximumUnitError": 0
+  },
   "preservation": {
-    "mainConstellationGeometryChanged": false,
+    "initialCategoryConstellation": true,
+    "categorySelection": true,
+    "lawsSemanticsAndRoutes": true,
+    "nearestLawSettlement": true,
+    "deliberateReturnGesture": true,
     "controllerChanged": false,
     "compositorChanged": false,
     "planetChanged": false,
-    "routesChanged": false,
-    "labelsChanged": false,
-    "returnToOrbitChanged": false,
-    "swipeToConstellationChanged": false
+    "cosmosChanged": false
   },
   "assertions": {
-    "total": 1379694,
-    "passed": 1379694,
-    "failed": 0
+    "total": 20,
+    "passed": 20,
+    "failed": 0,
+    "records": [
+      {
+        "code": "AUTHORIZED_SOURCE_SET_READABLE",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "RIGHT_HANDED_XYZ_DECLARED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "SHARED_CLUSTER_MODEL_DECLARED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "SHARED_CLUSTER_RADII_LOCKED",
+        "pass": true,
+        "details": {
+          "horizontalRadius": 1.36,
+          "verticalRadius": 1.18,
+          "depthRadius": 1.04
+        }
+      },
+      {
+        "code": "SHARED_CLUSTER_LATITUDE_LOCKED",
+        "pass": true,
+        "details": {
+          "latitudeAmplitude": 0.48,
+          "latitudeFrequency": 1.73
+        }
+      },
+      {
+        "code": "FOUR_MEMBER_CLUSTER_LOCKED",
+        "pass": true,
+        "details": {
+          "memberCount": 4
+        }
+      },
+      {
+        "code": "SPHERICAL_MEMBER_VECTORS_UNIT_LENGTH",
+        "pass": true,
+        "details": {
+          "maximumUnitError": 0
+        }
+      },
+      {
+        "code": "CLUSTER_NONCOPLANAR",
+        "pass": true,
+        "details": {
+          "noncoplanarDeterminant": 0.07657636086296254,
+          "vectors": [
+            [
+              5.719146131858121e-17,
+              0.3572535444392776,
+              -0.9340074437527642
+            ],
+            [
+              0.9690374618700212,
+              0.24691374504572933,
+              0
+            ],
+            [
+              5.528394338412481e-17,
+              -0.4299445149832668,
+              0.9028553117946438
+            ],
+            [
+              -0.9941108816144065,
+              -0.10836768455507159,
+              1.2174347091666364e-16
+            ]
+          ]
+        }
+      },
+      {
+        "code": "CLUSTER_OCCUPIES_XYZ",
+        "pass": true,
+        "details": {
+          "axisExtents": [
+            0.9941108816144065,
+            0.4299445149832668,
+            0.9340074437527642
+          ]
+        }
+      },
+      {
+        "code": "PLANAR_COMMON_RADIUS_MODEL_REMOVED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "POSITIVE_HORIZONTAL_YAW_PRESENT",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "NEGATIVE_HORIZONTAL_YAW_REMOVED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "WORLD_SPACE_QUATERNION_COMPOSITION_PRESERVED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "BOUNDED_NORMALIZED_INCREMENT_PRESERVED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "LAW_SCALE_PROFILE_LOCKED",
+        "pass": true,
+        "details": {
+          "lawScale": 0.68,
+          "primaryLawScale": 0.84,
+          "selectedLawScale": 0.91
+        }
+      },
+      {
+        "code": "DEPTH_SCALE_PRESERVED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "NEAREST_LAW_SETTLEMENT_PRESERVED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "DELIBERATE_CLUSTER_RETURN_PRESERVED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "INITIAL_CONSTELLATION_AND_CATEGORY_SELECTION_PRESERVED",
+        "pass": true,
+        "details": null
+      },
+      {
+        "code": "CACHE_AND_PRESENTATION_CONTRACT_UPDATED",
+        "pass": true,
+        "details": null
+      }
+    ]
   }
 }

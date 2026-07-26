@@ -1,5 +1,5 @@
 {
-  "schema": "SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_DIAGNOSTIC_v1",
+  "schema": "SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_DIAGNOSTIC_v2",
   "pass": false,
   "viewport": {
     "width": 360,
@@ -11,20 +11,20 @@
     "controllerPresent": true,
     "centerPresent": true,
     "planetPresent": true,
-    "centerWidth": 190.796875,
-    "planetWidth": 169.1875,
+    "centerWidth": 151.1875,
+    "planetWidth": 129.59375,
     "controlPointerEvents": "none",
     "labelPointerEvents": "auto",
     "labels": [],
-    "allLabels": [],
     "projectionCount": 20,
     "visibleProjectionCount": 4,
+    "frontProjectionCount": 3,
     "rootDatasets": {
       "controllerStatus": "available",
       "compositorReady": "true",
       "crystalsReady": "true",
       "presentationMode": "constellation",
-      "semanticProjectionRevision": "273"
+      "semanticProjectionRevision": "361"
     }
   },
   "cardinalRequest": true,

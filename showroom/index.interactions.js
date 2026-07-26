@@ -5173,6 +5173,8 @@
       attemptRuntimeActivation(
         "startup"
       );
+
+      scheduleProjectedLabels();
     } catch (error) {
       rollbackInitialization(error);
     }

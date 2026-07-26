@@ -3544,10 +3544,10 @@ canvas[data-showroom-window-canvas],
     --showroom-space-8: 3rem;
 
     --showroom-center-size:
-      clamp(10.6rem, 48vw, 14.8rem);
+      clamp(9.35rem, 42vw, 12rem);
 
     --showroom-planet-size:
-      clamp(9.4rem, 42vw, 13rem);
+      clamp(8.15rem, 36vw, 10.8rem);
 
     --showroom-diamond-open-scale: 0.72;
     --showroom-diamond-open-translate-y: -2.25%;
@@ -3947,10 +3947,10 @@ canvas[data-showroom-window-canvas],
 @media (max-width: 25rem) {
   :root {
     --showroom-center-size:
-      clamp(9.5rem, 53vw, 12.75rem);
+      clamp(9.1rem, 42vw, 11.5rem);
 
     --showroom-planet-size:
-      clamp(8.55rem, 47vw, 11.4rem);
+      clamp(7.9rem, 36vw, 10.2rem);
 
     --showroom-diamond-open-scale: 0.66;
     --showroom-diamond-open-translate-y: -3%;

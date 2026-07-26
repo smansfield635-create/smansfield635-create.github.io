@@ -31,6 +31,7 @@ export const H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6_SCOPE_PATHS=Object.freeze([
   "/h-earth-3d/validation/h-earth.functional-landscape.run6f.harness.mjs",
   "/h-earth-3d/validation/h-earth.functional-landscape.run6f.visual-capture.mjs",
   "/showroom/globe/h-earth/index.html",
+  "/showroom/globe/h-earth/index.css",
   "/showroom/globe/h-earth/functional-landscape/index.css",
   "/showroom/globe/h-earth/functional-landscape/index.html",
   "/showroom/globe/h-earth/functional-landscape/index.js",

@@ -1,0 +1,71 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_MOBILE_NAVIGATION_CORRECTION_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_MOBILE_NAVIGATION_CORRECTION_PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baseMainHead": "cabe801ec64cb3e58a404774e9408a1b58de285b",
+  "branch": "agent/h-earth-run8e-mobile-navigation-correction-001",
+  "verifiedOn": "2026-07-26",
+  "staticChecks": {
+    "cacheKeyUpdated": true,
+    "routeDeclaresControls": true,
+    "navigationOnlyDispatchPresent": true,
+    "navigationOnlyWaypointPresent": true,
+    "navigationOnlyResetPresent": true,
+    "integrationUsesNavigationOnlyDispatch": true,
+    "integrationUsesNavigationOnlyWaypoint": true,
+    "mobileControlsInstalled": true,
+    "legacyDoubleRenderBridgeRemoved": true,
+    "directionalControlsPresent": true,
+    "coastResetPresent": true,
+    "pressAndHoldPresent": true
+  },
+  "configurationCount": 2,
+  "samsungPortraitEmulation": "PASS",
+  "samsungLandscapeEmulation": "PASS",
+  "explicitMovementControlsPresent": true,
+  "coastResetControlPresent": true,
+  "pressAndHoldImplementationPresent": true,
+  "navigationAuthorityPreserved": true,
+  "duplicateLegacyRenderSuppressed": true,
+  "run8RendererPreserved": true,
+  "terrainGeometryMutated": false,
+  "lightingLawMutated": false,
+  "physicalSamsungExecution": "NOT_EXECUTED_AFTER_CORRECTION",
+  "run8EPassClosed": false,
+  "results": [
+    {
+      "configurationId": "samsung-galaxy-portrait-emulation",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "mobileControlsVisible": true,
+      "visibleControlCount": 5,
+      "forwardStepsExecuted": 3,
+      "movementDistanceMinimumEstablished": true,
+      "duplicateRun6RenderSuppressed": true,
+      "run8RenderAdvanced": true,
+      "resetToCoastEstablished": true,
+      "zeroBrowserErrors": true,
+      "screenshot": "samsung-galaxy-portrait-emulation.png"
+    },
+    {
+      "configurationId": "samsung-galaxy-landscape-emulation",
+      "viewport": {
+        "width": 915,
+        "height": 412
+      },
+      "mobileControlsVisible": true,
+      "visibleControlCount": 5,
+      "forwardStepsExecuted": 3,
+      "movementDistanceMinimumEstablished": true,
+      "duplicateRun6RenderSuppressed": true,
+      "run8RenderAdvanced": true,
+      "resetToCoastEstablished": true,
+      "zeroBrowserErrors": true,
+      "screenshot": "samsung-galaxy-landscape-emulation.png"
+    }
+  ],
+  "issues": []
+}

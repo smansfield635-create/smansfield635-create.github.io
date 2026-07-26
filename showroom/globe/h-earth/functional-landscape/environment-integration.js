@@ -18,6 +18,9 @@ import {
   prepareHEarthRun8ERenderPlan,
   rasterizeHEarthRun8ERenderPlan
 } from '../render/run8e-successor-environment.js';
+import {
+  installHEarthRun8EMobileNavigationControls
+} from './mobile-navigation-controls.js';
 
 const root = document.getElementById('h-earth-functional-landscape-route');
 const mount = document.getElementById('h-earth-functional-landscape-mount');
@@ -242,31 +245,49 @@ async function waitForNavigation() {
 
 function installNavigationBridge(api) {
   const original = {
-    dispatch: api.dispatch.bind(api),
-    gotoWaypoint: api.gotoWaypoint.bind(api),
-    runGeographicPath: api.runGeographicPath.bind(api),
-    forceBelowTerrainRecovery: api.forceBelowTerrainRecovery.bind(api)
+    dispatchNavigationOnly: typeof api.dispatchNavigationOnly === 'function'
+      ? api.dispatchNavigationOnly.bind(api)
+      : api.dispatch.bind(api),
+    gotoWaypointNavigationOnly: typeof api.gotoWaypointNavigationOnly === 'function'
+      ? api.gotoWaypointNavigationOnly.bind(api)
+      : api.gotoWaypoint.bind(api),
+    resetNavigationOnly: typeof api.resetNavigationOnly === 'function'
+      ? api.resetNavigationOnly.bind(api)
+      : () => api.dispatch({ action: 'RESET' }),
+    forceBelowTerrainRecoveryNavigationOnly:
+      typeof api.forceBelowTerrainRecoveryNavigationOnly === 'function'
+        ? api.forceBelowTerrainRecoveryNavigationOnly.bind(api)
+        : api.forceBelowTerrainRecovery.bind(api)
   };
-  api.dispatch = async (intent) => {
-    const result = await original.dispatch(intent);
-    await renderRun8E();
-    return result;
+
+  const renderAfterNavigation = async (operation) => {
+    const result = await operation();
+    const run8ERenderReceipt = await renderRun8E();
+    return {
+      ...result,
+      run8ERenderReceipt
+    };
   };
-  api.gotoWaypoint = async (waypointId) => {
-    const result = await original.gotoWaypoint(waypointId);
-    await renderRun8E();
-    return result;
-  };
+
+  api.dispatch = async (intent) => renderAfterNavigation(
+    () => original.dispatchNavigationOnly(intent)
+  );
+  api.gotoWaypoint = async (waypointId) => renderAfterNavigation(
+    () => original.gotoWaypointNavigationOnly(waypointId)
+  );
+  api.reset = async () => renderAfterNavigation(
+    () => original.resetNavigationOnly()
+  );
   api.runGeographicPath = async () => {
-    const result = await original.runGeographicPath();
-    await renderRun8E();
-    return result;
+    const results = [];
+    for (const waypointId of ['COAST', 'BERM', 'LOWLAND', 'HILL', 'RIDGE']) {
+      results.push(await api.gotoWaypoint(waypointId));
+    }
+    return results;
   };
-  api.forceBelowTerrainRecovery = async () => {
-    const result = await original.forceBelowTerrainRecovery();
-    await renderRun8E();
-    return result;
-  };
+  api.forceBelowTerrainRecovery = async () => renderAfterNavigation(
+    () => original.forceBelowTerrainRecoveryNavigationOnly()
+  );
 }
 
 function installPublicApi() {
@@ -325,6 +346,7 @@ originalApi = await waitForNavigation();
 installNavigationBridge(originalApi);
 await renderRun8E();
 installPublicApi();
+installHEarthRun8EMobileNavigationControls({ root, mount });
 
 let resizeTimer = null;
 const resizeObserver = new ResizeObserver(() => {

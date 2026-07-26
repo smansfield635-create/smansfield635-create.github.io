@@ -80,7 +80,7 @@
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_CANONICAL_CRYSTAL_GLOW_AND_PRESENTATION_v3";
+    "SHOWROOM_CANONICAL_CRYSTAL_GLOW_AND_PRESENTATION_v4";
 
   const OWNER =
     "/showroom/index.crystals.js";
@@ -227,7 +227,9 @@
   haloPassEnabled: true,
   haloDisableWidth: 0,
   cardinalDepthRadius: 1.16,
-  roomDepthRadius: 1.04
+  roomDepthRadius: 1.04,
+  mobileClusterWidthThreshold: 520,
+  mobileClusterHorizontalScale: 0.62
 });
 
   const CARDINAL_BASE_POSITIONS = Object.freeze({
@@ -3528,8 +3530,21 @@ function buildCpuMeshes() {
           node.current.float
         : 0;
 
+    const fieldWidth =
+      state.field
+        ? state.field.getBoundingClientRect().width
+        : Number.POSITIVE_INFINITY;
+    const mobileClusterFit =
+      node.kind === NODE_KINDS.ROOM &&
+      displayMode(state.controllerFrame) === DISPLAY_MODES.CLUSTER &&
+      fieldWidth <= QUALITY.mobileClusterWidthThreshold;
+    const horizontalScale =
+      mobileClusterFit
+        ? QUALITY.mobileClusterHorizontalScale
+        : 1;
+
     return [
-      node.current.x,
+      node.current.x * horizontalScale,
       node.current.y +
         floatOffset,
       node.current.z

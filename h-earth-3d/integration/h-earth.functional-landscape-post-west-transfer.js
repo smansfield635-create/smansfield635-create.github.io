@@ -1,12 +1,11 @@
 /**
  * /h-earth-3d/integration/h-earth.functional-landscape-post-west-transfer.js
  *
- * H_EARTH_FUNCTIONAL_LANDSCAPE_POST_WEST_TRANSFER_RUN_6E_v1
+ * H_EARTH_FUNCTIONAL_LANDSCAPE_POST_WEST_TRANSFER_RUN_6E_v2
  *
  * Successor occurrence derived from the existing Packet 002 transfer law.
- * It preserves a lawful functional-landscape West admission without changing
- * Packet 001, the minimum shoreline corridor, geometry-index authority,
- * compositor authority, renderer authority, or production status.
+ * It preserves a lawful functional-landscape West admission and all 256
+ * semantic addresses without changing existing Packet 001 or Packet 002.
  */
 
 import {
@@ -34,7 +33,7 @@ const canonical = (values) => Object.freeze(
 );
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_POST_WEST_TRANSFER_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_POST_WEST_TRANSFER_RUN_6E_v1';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_POST_WEST_TRANSFER_RUN_6E_v2_FULL_SEMANTIC_MEMBERSHIP';
 
 export function buildHEarthFunctionalLandscapePostWestTransfer({
   neutralPreview,
@@ -93,21 +92,31 @@ export function buildHEarthFunctionalLandscapePostWestTransfer({
   if (!isHEarthAABB3D(bounds)) issues.push('ADMITTED_BOUNDS_INVALID');
 
   const semanticAddressIds = canonical(
-    neutralPreview?.primitives?.flatMap((primitive) =>
-      primitive?.metadata?.memberAddressIds ?? [])
+    Array.isArray(neutralPreview?.semanticAddressIds)
+      ? neutralPreview.semanticAddressIds
+      : neutralPreview?.primitives?.flatMap((primitive) =>
+          primitive?.metadata?.memberAddressIds ?? [])
   );
   const formationIds = canonical(
-    neutralPreview?.primitives?.flatMap((primitive) =>
-      primitive?.metadata?.formationIds ??
-      [primitive?.metadata?.formationId].filter(Boolean))
+    Array.isArray(neutralPreview?.formationIds)
+      ? neutralPreview.formationIds
+      : neutralPreview?.primitives?.flatMap((primitive) =>
+          primitive?.metadata?.formationIds ??
+          [primitive?.metadata?.formationId].filter(Boolean))
+  );
+  const proxySummarizedAddressIds = canonical(
+    neutralPreview?.proxySummarizedAddressIds
   );
   const shorelineBandIds = canonical(
     neutralPreview?.primitives?.map((primitive) =>
       primitive?.metadata?.bandId).filter(Boolean)
   );
 
-  if (semanticAddressIds.length === 0) {
-    issues.push('SEMANTIC_ADDRESS_PROVENANCE_MISSING');
+  if (semanticAddressIds.length !== 256) {
+    issues.push(`SEMANTIC_ADDRESS_PROVENANCE_EXPECTED_256_ACTUAL_${semanticAddressIds.length}`);
+  }
+  if (proxySummarizedAddressIds.length !== 64) {
+    issues.push(`PROXY_SUMMARIZED_ADDRESS_EXPECTED_64_ACTUAL_${proxySummarizedAddressIds.length}`);
   }
   if (formationIds.length === 0) {
     issues.push('FORMATION_PROVENANCE_MISSING');
@@ -141,9 +150,12 @@ export function buildHEarthFunctionalLandscapePostWestTransfer({
     admittedPrimitives,
     aggregateFrameAdmissionRecord: westBatchAdmissionResult.frame,
     bounds,
+    semanticAddressCount: semanticAddressIds.length,
     semanticAddressIds,
     formationIds,
     shorelineBandIds,
+    proxySummarizedAddressIds,
+    semanticIdentityIndependentOfPhysicalGranularity: true,
     provisional: true,
     downstreamContractFrozen: true,
     geometryIndexEntryId: null,

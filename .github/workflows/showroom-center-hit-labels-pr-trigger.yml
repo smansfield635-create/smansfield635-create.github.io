@@ -1,0 +1,82 @@
+name: Temporary Showroom Center Hit PR Trigger
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/showroom-center-hit-labels-temp.yml
+      - .github/workflows/showroom-center-hit-labels-pr-trigger.yml
+
+permissions:
+  contents: write
+
+jobs:
+  construct-verify-and-persist:
+    if: github.event.pull_request.head.ref == 'agent/showroom-compass-center-hit-labels-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out task branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/showroom-compass-center-hit-labels-001
+          fetch-depth: 0
+
+      - name: Extract and execute bounded complete-file constructor
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path('.github/workflows/showroom-center-hit-labels-temp.yml').read_text().splitlines()
+          start = next(i for i, line in enumerate(source) if line == "          python3 - <<'PY'")
+          end = next(i for i in range(start + 1, len(source)) if source[i] == '          PY')
+          script = '\n'.join(line[10:] if line.startswith('          ') else line for line in source[start:end + 1]) + '\n'
+          Path('/tmp/showroom-apply.sh').write_text(script)
+          PY
+          bash /tmp/showroom-apply.sh
+
+      - name: Verify JavaScript and bounded identities
+        run: |
+          set -euo pipefail
+          node --check showroom/index.interactions.js
+          grep -F 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A' showroom/index.html
+          grep -F 'clamp(9.35rem, 18vw, 14.25rem)' showroom/index.css
+          grep -F 'clamp(8.15rem, 15.8vw, 12.35rem)' showroom/index.css
+          grep -F 'frontProjectionOverridesCompass' showroom/index.interactions.js
+          grep -F 'N · Story' showroom/index.interactions.js
+          grep -F 'Unfinished World' showroom/index.interactions.js
+
+      - name: Install Chromium runtime
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Extract and execute Samsung-width browser verification
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/showroom-center-hit-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path('.github/workflows/showroom-center-hit-labels-temp.yml').read_text().splitlines()
+          start = next(i for i, line in enumerate(source) if line == "          node <<'NODE'")
+          end = next(i for i in range(start + 1, len(source)) if source[i] == '          NODE')
+          script = '\n'.join(line[10:] if line.startswith('          ') else line for line in source[start:end + 1]) + '\n'
+          Path('/tmp/showroom-browser.sh').write_text(script)
+          PY
+          bash /tmp/showroom-browser.sh
+
+      - name: Commit verified bounded production files
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '4189828+github-actions[bot]@users.noreply.github.com'
+          git add showroom/index.html showroom/index.css showroom/index.interactions.js
+          git commit -m 'Apply Showroom center hit and projected labels correction'
+          git push origin HEAD:agent/showroom-compass-center-hit-labels-001

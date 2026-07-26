@@ -64,9 +64,8 @@ jobs:
 
               code = "\n".join(code_lines)
 
-              # Keep the first marker as the canonical Main extraction boundary;
-              # alter only the second occurrence, which belongs to the Laws
-              # target-source replacement boundary.
+              # Preserve canonical extraction boundary and alter only the Laws
+              # target replacement boundary.
               old_marker = '"\\n\\n  function buildGpuMesh("'
               first = code.find(old_marker)
               second = code.find(old_marker, first + len(old_marker))
@@ -143,6 +142,23 @@ jobs:
                   + "\n\n"
                   + code[builder_end:]
               )
+
+              # The embedded generator first renames mesh.facet to mesh.color.
+              # Its subsequent exact bind replacement must therefore match the
+              # already-renamed buffer field.
+              old_bind = (
+                  '"        mesh.facet,\\n'
+                  '        context.attributes.facet,\\n'
+                  '        1"'
+              )
+              new_bind = (
+                  '"        mesh.color,\\n'
+                  '        context.attributes.facet,\\n'
+                  '        1"'
+              )
+              if old_bind not in code:
+                  raise RuntimeError("Showroom color bind generator literal missing")
+              code = code.replace(old_bind, new_bind, 1)
 
               exec(compile(code, "canonical-crystal-generator", "exec"), {})
           except BaseException:

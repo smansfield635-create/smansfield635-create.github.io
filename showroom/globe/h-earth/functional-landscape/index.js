@@ -418,6 +418,28 @@ window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F = {
   async dispatch(intent) {
     return applyIntent(intent);
   },
+  async dispatchNavigationOnly(intent) {
+    return applyIntent(intent, { render: false });
+  },
+  async gotoWaypointNavigationOnly(waypointId) {
+    return applyIntent({
+      action: 'GOTO_WAYPOINT',
+      waypointId
+    }, { render: false });
+  },
+  async resetNavigationOnly() {
+    return applyIntent({ action: 'RESET' }, { render: false });
+  },
+  async forceBelowTerrainRecoveryNavigationOnly() {
+    return applyIntent({
+      action: 'SET_CAMERA_POSITION',
+      position: {
+        x: navigationState.position.x,
+        y: -999,
+        z: navigationState.position.z
+      }
+    }, { render: false });
+  },
   async gotoWaypoint(waypointId) {
     return applyIntent({
       action: 'GOTO_WAYPOINT',

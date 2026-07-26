@@ -167,6 +167,16 @@ jobs:
                   raise RuntimeError("Showroom generator cache literal missing")
               code = code.replace(old_cache, new_cache, 1)
 
+              strict_cull_token = '"gl.disable(\\n      gl.CULL_FACE",'
+              broad_cull_token = '"gl.disable",'
+              if strict_cull_token not in code:
+                  raise RuntimeError("Strict cull verification token missing")
+              code = code.replace(
+                  strict_cull_token,
+                  broad_cull_token,
+                  1,
+              )
+
               exec(compile(code, "canonical-crystal-generator", "exec"), {})
           except BaseException:
               error_path.write_text(traceback.format_exc(), encoding="utf-8")

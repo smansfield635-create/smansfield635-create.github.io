@@ -37,6 +37,8 @@ jobs:
             2>&1 | tee /tmp/h-earth-run8e-direct-inspection-constructor.log
           node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs \
             2>&1 | tee /tmp/h-earth-run8e-direct-inspection-harness-fix.log
+          node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.pointer-isolation-fix.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-direct-inspection-pointer-fix.log
 
       - name: Install bounded Chromium dependency
         run: |
@@ -79,6 +81,7 @@ jobs:
             '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
+            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.pointer-isolation-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json',
             'showroom/globe/h-earth/index.html',
@@ -99,6 +102,7 @@ jobs:
             '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
+            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.pointer-isolation-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs',
             'showroom/globe/h-earth/index.html',
             'showroom/globe/h-earth/functional-landscape/environment-integration.js',
@@ -110,7 +114,7 @@ jobs:
             raise SystemExit(f'UNEXPECTED_DIRECT_INSPECTION_PATHS:{unexpected}')
           if missing:
             raise SystemExit(f'MISSING_DIRECT_INSPECTION_PATHS:{missing}')
-          if not 8 <= len(paths) <= 12:
+          if not 9 <= len(paths) <= 13:
             raise SystemExit(f'INVALID_DIRECT_INSPECTION_PATH_COUNT:{len(paths)}')
           PY
 
@@ -145,6 +149,7 @@ jobs:
           path: |
             /tmp/h-earth-run8e-direct-inspection-constructor.log
             /tmp/h-earth-run8e-direct-inspection-harness-fix.log
+            /tmp/h-earth-run8e-direct-inspection-pointer-fix.log
             /tmp/h-earth-run8e-direct-inspection-server.log
             /tmp/h-earth-run8e-direct-inspection-restoration.log
             /tmp/h-earth-run8e-direct-inspection-restoration

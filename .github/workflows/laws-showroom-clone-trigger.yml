@@ -65,16 +65,13 @@ jobs:
 
               code = "\n".join(code_lines)
 
-              # Correct the Laws source markers to its actual complete-file
-              # architecture. This changes construction mechanics only; the
-              # cloned canonical mesh bytes remain sourced from Main Compass.
               code = code.replace(
                   '"\\n\\n  function buildGpuMesh("',
                   '"\\n\\n  function lawColorForDirection("',
                   1,
               )
 
-              corrected_laws_mesh_builder = r'''laws_build_meshes = '''  function createCpuMeshes() {
+              corrected_laws_mesh_builder = r"""laws_build_meshes = '''  function createCpuMeshes() {
             const meshes = new Map();
 
             DIRECTIONS.forEach(direction => {
@@ -126,7 +123,7 @@ jobs:
               "\n\n  function createRenderer(",
               laws_build_meshes,
               "laws-build-meshes",
-          )'''
+          )"""
 
               code, count = re.subn(
                   r"laws_build_meshes = '''  function buildMeshes\([\s\S]*?"

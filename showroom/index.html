@@ -4832,6 +4832,7 @@ CompassRuntimeLoad = false</code></pre>
 
     try {
       await loadSerial(orbitScripts);
+      await loadInteractionSystems("orbit-ready");
 
       runWhenIdle(
         mountPlanet,

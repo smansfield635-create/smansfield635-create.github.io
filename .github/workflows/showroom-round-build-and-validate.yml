@@ -1,0 +1,609 @@
+name: Showroom round build and validate
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-validate:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/showroom-startup-spatial-cosmos-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/showroom-startup-spatial-cosmos-001
+          fetch-depth: 0
+          show-progress: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Construct complete bounded candidate
+        shell: python
+        run: |
+          from pathlib import Path
+
+          def replace_once(text, before, after, identity):
+              count = text.count(before)
+              if count != 1:
+                  raise SystemExit(f'{identity}: expected one match, found {count}')
+              return text.replace(before, after)
+
+          crystal_path = Path('showroom/index.crystals.js')
+          crystal_source_path = Path('showroom/index.crystals.source.js')
+          html_path = Path('showroom/index.html')
+          cosmos_path = Path('showroom/index.cosmos.js')
+          retired_cosmos_source = Path('showroom/index.cosmos.source.js')
+
+          crystals = crystal_path.read_text(encoding='utf-8')
+          already_built = 'SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2' in crystals
+
+          if not already_built:
+              laws_cosmos = Path('laws/index.cosmos.js').read_text(encoding='utf-8')
+              cosmos = laws_cosmos.replace(
+                  '''/* /laws/index.cosmos.js
+             Laws scene-contained ARCHCOIN Fibonacci starfield transplant.
+
+             Preserves Laws identity and decorative-only authority while adopting the
+             accepted ARCHCOIN static-base and burst-only sparkle field inside the Laws
+             orbit scene. No navigation, world geometry, projection, controller,
+             interaction, planet, or law-content authority is introduced.
+          */''',
+                  '''/* /showroom/index.cosmos.js
+             Showroom scene-contained ARCHCOIN Fibonacci starfield clone.
+
+             Preserves Showroom identity and decorative-only authority while duplicating
+             the accepted Laws/ARCHCOIN static-base and burst-only sparkle corridor inside
+             the Showroom orbit scene. This file is the one canonical Showroom Cosmos
+             authority: no wrapper, secondary source fetch, full-viewport wash, navigation,
+             world geometry, projection, controller, interaction, planet, Diamond, Window,
+             route, or content authority is introduced.
+          */'''
+              )
+              for before, after in (
+                  ('DGB_LAWS', 'SHOWROOM'),
+                  ('LAWS', 'SHOWROOM'),
+                  ('Laws', 'Showroom'),
+                  ('laws', 'showroom'),
+                  ('ownsLawContent', 'ownsShowroomContent'),
+                  ('law-content', 'showroom-content'),
+                  ('0x4c415753', '0x53484f57'),
+                  ('SHOWROOM_COSMOS_ARCHCOIN_SCENE_FIELD_v5',
+                   'SHOWROOM_COSMOS_ARCHCOIN_SCENE_FIELD_v1'),
+              ):
+                  cosmos = cosmos.replace(before, after)
+              cosmos = cosmos.replace('opacity: .93;', 'opacity: .84;', 1)
+              cosmos = cosmos.replace('opacity: .86;', 'opacity: .82;', 1)
+              cosmos = cosmos.replace('opacity: .78;', 'opacity: .76;', 1)
+              cosmos = replace_once(
+                  cosmos,
+                  '''      sceneContained: true,
+                fullViewportLayer: false,''',
+                  '''      sceneContained: true,
+                singleCosmosAuthority: true,
+                wrapperSourceFetchUsed: false,
+                synchronousNetworkRequestUsed: false,
+                fullViewportLayer: false,''',
+                  'COSMOS_SINGLE_AUTHORITY_RECEIPT'
+              )
+              cosmos_path.write_text(cosmos, encoding='utf-8')
+
+              crystals = crystals.replace(
+                  '''/* /showroom/index.crystals.js
+             Canonical Main Compass crystal corridor cloned for Showroom.
+             Showroom retains its controller, compositor, semantic records,
+             labels, palette identity, routes, Diamond, Window, and Cosmos.
+             Mesh topology, facet-color construction, normals, shaders, halo,
+             GL draw state, scale hierarchy, and spherical presentation are
+             duplicated from /assets/compass/compass.crystals.js.
+          */''',
+                  '''/* /showroom/index.crystals.js
+             Showroom canonical crystal corridor with viewport-safe spatial integration.
+
+             The accepted Main crystal mesh, facet-color construction, normals, shader,
+             autonomous facet motion, and Showroom semantic identity remain intact.
+             This round corrects only Showroom-owned target spacing, scale hierarchy,
+             surface closure, and the detached full-mesh halo pass. The luminous response
+             remains inside the ordinary crystal shader and the canonical Cosmos field.
+          */'''
+              )
+              crystals = crystals.replace(
+                  'SHOWROOM_CANONICAL_MAIN_CRYSTAL_CORRIDOR_CLONE_v1',
+                  'SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2'
+              )
+              crystals = crystals.replace(
+                  '''  Visual-sizing renewal:
+            - cardinal crystals are increased by 50 percent;
+            - room crystals are increased by 50 percent;
+            - cardinal positions are moved outward toward the second orbit ring;
+            - room-cluster positions are moved outward proportionally;
+            - original depth coordinates remain unchanged;
+            - compositor hit radii continue to scale with rendered crystal size.''',
+                  '''  Spatial-integration renewal:
+            - cardinal and room crystals use bounded viewport-safe scales;
+            - cardinal anchors preserve clear globe and label separation;
+            - room-cluster anchors use a larger Showroom-specific spherical envelope;
+            - the ordinary crystal surface is opaque with depth writes enabled;
+            - the detached additive full-mesh halo draw is retired;
+            - compositor hit radii continue to scale with rendered crystal size.'''
+              )
+              crystals = replace_once(
+                  crystals,
+                  '''  const QUALITY = Object.freeze({
+            maximumDeltaSeconds: 0.05,
+            interpolationSpeed: 8.2,
+            reducedMotionInterpolationSpeed: 26,
+            ambientFrameIntervalMs: 1000 / 30,
+            cardinalHitRadius: 76,
+            roomHitRadius: 48,
+            visibleOpacityThreshold: 0.025,
+            haloDisableWidth: 0
+          });''',
+                  '''  const QUALITY = Object.freeze({
+            maximumDeltaSeconds: 0.05,
+            interpolationSpeed: 8.2,
+            reducedMotionInterpolationSpeed: 26,
+            ambientFrameIntervalMs: 1000 / 30,
+            cardinalHitRadius: 76,
+            roomHitRadius: 48,
+            visibleOpacityThreshold: 0.025,
+            haloPassEnabled: false,
+            cardinalDepthRadius: 1.16,
+            roomDepthRadius: 1.04
+          });''',
+                  'CRYSTAL_QUALITY'
+              )
+              crystals = replace_once(
+                  crystals,
+                  '''  const CARDINAL_BASE_POSITIONS = Object.freeze({
+            north: Object.freeze([0, 1.34, 0]),
+            east: Object.freeze([1.50, 0, 0]),
+            south: Object.freeze([0, -1.34, 0]),
+            west: Object.freeze([-1.50, 0, 0])
+          });''',
+                  '''  const CARDINAL_BASE_POSITIONS = Object.freeze({
+            north: Object.freeze([0, 1.58, 0]),
+            east: Object.freeze([1.64, 0, 0]),
+            south: Object.freeze([0, -1.58, 0]),
+            west: Object.freeze([-1.64, 0, 0])
+          });''',
+                  'CARDINAL_POSITIONS'
+              )
+              crystals = replace_once(
+                  crystals,
+                  '''const ROOM_BASE_POSITIONS = Object.freeze({
+            1: Object.freeze([0, 0.42155918243834756, -0.9713677415028749]),
+            2: Object.freeze([1.3178909481432288, 0.29135821915396054, 0]),
+            3: Object.freeze([0, -0.5073345276802548, 0.9389695242664297]),
+            4: Object.freeze([-1.351990798995593, -0.12787386777498447, 0])
+          });''',
+                  '''const ROOM_BASE_POSITIONS = Object.freeze({
+            1: Object.freeze([0, 0.6781044462968384, -0.9340074437527643]),
+            2: Object.freeze([1.5996947133694057, 0.4682798483199145, 0]),
+            3: Object.freeze([0, -0.8163844035631221, 0.902855311794644]),
+            4: Object.freeze([-1.640152968399066, -0.2058989384512462, 0])
+          });''',
+                  'ROOM_POSITIONS'
+              )
+              crystals = replace_once(
+                  crystals,
+                  '''  const MATERIALS = Object.freeze({
+            CARDINAL_IDLE: Object.freeze({
+              scale: 0.96,
+              specular: 1.18,
+              rim: 1.02,
+              emissive: 0.17,
+              alpha: 0.90,
+              sparkle: 0.26,
+              halo: 0.82,
+              contrast: 1.16
+            }),
+            CARDINAL_FOCUSED: Object.freeze({
+              scale: 1.30,
+              specular: 1.50,
+              rim: 1.30,
+              emissive: 0.24,
+              alpha: 0.96,
+              sparkle: 0.36,
+              halo: 1.18,
+              contrast: 1.24
+            }),
+            ROOM_IDLE: Object.freeze({
+              scale: 0.88,
+              specular: 1.04,
+              rim: 0.90,
+              emissive: 0.15,
+              alpha: 0.88,
+              sparkle: 0.22,
+              halo: 0.64,
+              contrast: 1.10
+            }),
+            ROOM_PRIMARY: Object.freeze({
+              scale: 1.12,
+              specular: 1.24,
+              rim: 1.08,
+              emissive: 0.21,
+              alpha: 0.94,
+              sparkle: 0.30,
+              halo: 0.86,
+              contrast: 1.17
+            })
+          });''',
+                  '''  const MATERIALS = Object.freeze({
+            CARDINAL_IDLE: Object.freeze({
+              scale: 0.78,
+              specular: 1.12,
+              rim: 0.94,
+              emissive: 0.18,
+              alpha: 1.00,
+              sparkle: 0.24,
+              halo: 0.30,
+              contrast: 1.14
+            }),
+            CARDINAL_FOCUSED: Object.freeze({
+              scale: 0.90,
+              specular: 1.30,
+              rim: 1.08,
+              emissive: 0.23,
+              alpha: 1.00,
+              sparkle: 0.31,
+              halo: 0.40,
+              contrast: 1.20
+            }),
+            ROOM_IDLE: Object.freeze({
+              scale: 0.68,
+              specular: 1.02,
+              rim: 0.86,
+              emissive: 0.16,
+              alpha: 1.00,
+              sparkle: 0.20,
+              halo: 0.24,
+              contrast: 1.10
+            }),
+            ROOM_PRIMARY: Object.freeze({
+              scale: 0.78,
+              specular: 1.18,
+              rim: 0.98,
+              emissive: 0.20,
+              alpha: 1.00,
+              sparkle: 0.27,
+              halo: 0.32,
+              contrast: 1.16
+            })
+          });''',
+                  'MATERIALS'
+              )
+              crystals = crystals.replace(
+                  '? 1.16\n        : 1.04;',
+                  '? QUALITY.cardinalDepthRadius\n        : QUALITY.roomDepthRadius;'
+              )
+              crystals = crystals.replace(
+                  '? 1.16\n      : 1.04;',
+                  '? QUALITY.cardinalDepthRadius\n      : QUALITY.roomDepthRadius;'
+              )
+              crystals = replace_once(
+                  crystals,
+                  '''    node.target.float =
+                  state.reducedMotion
+                    ? 0
+                    : selected
+                      ? 0.012
+                      : 0.004 + depth * 0.005;''',
+                  '''    node.target.float = 0;''',
+                  'FLOAT_DRIFT'
+              )
+              crystals = replace_once(
+                  crystals,
+                  '''    const haloEnabled =
+                  finiteNumber(
+                    payload.frame.viewport
+                      .cssWidth,
+                    0
+                  ) >
+                  QUALITY.haloDisableWidth;''',
+                  '''    const haloEnabled =
+                  QUALITY.haloPassEnabled === true;''',
+                  'DETACHED_HALO_PASS'
+              )
+              crystals = crystals.replace(
+                  '''        cardinalScaleIncrease:
+                    1.5,
+
+                  roomScaleIncrease:
+                    1.5,''',
+                  '''        cardinalMaximumScale:
+                    MATERIALS.CARDINAL_FOCUSED.scale,
+
+                  roomMaximumScale:
+                    MATERIALS.ROOM_PRIMARY.scale,'''
+              )
+              crystals = crystals.replace(
+                  '''        cardinalScaleMultiplier:
+                    1.5,
+
+                  roomScaleMultiplier:
+                    1.5,''',
+                  '''        cardinalMaximumScale:
+                    MATERIALS.CARDINAL_FOCUSED.scale,
+
+                  roomMaximumScale:
+                    MATERIALS.ROOM_PRIMARY.scale,'''
+              )
+              crystals = crystals.replace('cardinalScaleIncrease:', 'cardinalMaximumScale:')
+              crystals = crystals.replace('roomScaleIncrease:', 'roomMaximumScale:')
+              crystal_path.write_text(crystals, encoding='utf-8')
+              crystal_source_path.write_text(crystals, encoding='utf-8')
+
+              html = html_path.read_text(encoding='utf-8')
+              html = replace_once(
+                  html,
+                  'data-showroom-cosmos-contract="SHOWROOM_COSMOS_LUMINOUS_CONTINUITY_WRAPPER_v1"',
+                  'data-showroom-cosmos-contract="SHOWROOM_COSMOS_ARCHCOIN_SCENE_FIELD_v1"',
+                  'HTML_COSMOS_CONTRACT'
+              )
+              html = replace_once(
+                  html,
+                  'data-showroom-cosmos-static-fallback="css-atmosphere"',
+                  'data-showroom-cosmos-static-fallback="scene-contained-static-base-starfield"\n  data-showroom-cosmos-authority-count="1"\n  data-showroom-cosmos-synchronous-fetch="false"\n  data-showroom-globe-first-startup="true"\n  data-showroom-detached-crystal-halo="false"',
+                  'HTML_COSMOS_METADATA'
+              )
+              html = replace_once(
+                  html,
+                  '/showroom/index.crystals.js?v=SHOWROOM_CANONICAL_MAIN_CRYSTAL_CLONE_20260726H',
+                  '/showroom/index.crystals.js?v=SHOWROOM_STARTUP_SPATIAL_COSMOS_20260726I',
+                  'HTML_CRYSTAL_CACHE'
+              )
+              html = replace_once(
+                  html,
+                  '/showroom/index.cosmos.js?v=SHOWROOM_COSMOS_LUMINOUS_CONTINUITY_20260726G',
+                  '/showroom/index.cosmos.js?v=SHOWROOM_STARTUP_SPATIAL_COSMOS_20260726I',
+                  'HTML_COSMOS_CACHE'
+              )
+              html = replace_once(
+                  html,
+                  '''    try {
+                    await loadSerial(orbitScripts);
+
+                    runWhenIdle(
+                      mountPlanet,
+                      1000
+                    );
+
+                    setRootFlag(
+                      "data-showroom-staged-orbit-loaded",
+                      "true"
+                    );
+                  } catch (error) {''',
+                  '''    try {
+                    const coreOrbitScripts =
+                      orbitScripts.slice(0, 3);
+
+                    const crystalScripts =
+                      orbitScripts.slice(3);
+
+                    await loadSerial(coreOrbitScripts);
+
+                    const planetMounted =
+                      mountPlanet();
+
+                    setRootFlag(
+                      "data-showroom-globe-first-startup",
+                      planetMounted
+                        ? "complete"
+                        : "held"
+                    );
+
+                    setRootFlag(
+                      "data-showroom-staged-orbit-loaded",
+                      "true"
+                    );
+
+                    setRootFlag(
+                      "data-showroom-staged-crystals-loading",
+                      "true"
+                    );
+
+                    void loadSerial(crystalScripts)
+                      .then(() => {
+                        setRootFlag(
+                          "data-showroom-staged-crystals-loaded",
+                          "true"
+                        );
+                      })
+                      .catch(error => {
+                        setRootFlag(
+                          "data-showroom-staged-crystals-error",
+                          "true"
+                        );
+
+                        console.error(error);
+                      })
+                      .finally(() => {
+                        setRootFlag(
+                          "data-showroom-staged-crystals-loading",
+                          "false"
+                        );
+                      });
+                  } catch (error) {''',
+                  'HTML_GLOBE_FIRST_LOADER'
+              )
+              html_path.write_text(html, encoding='utf-8')
+
+              if retired_cosmos_source.exists():
+                  retired_cosmos_source.unlink()
+
+      - name: Static verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check showroom/index.cosmos.js
+          node --check showroom/index.crystals.js
+          cmp showroom/index.crystals.js showroom/index.crystals.source.js
+          test ! -e showroom/index.cosmos.source.js
+          ! grep -q 'XMLHttpRequest' showroom/index.cosmos.js
+          ! grep -q 'loadSourceSynchronously' showroom/index.cosmos.js
+          ! grep -q 'index.cosmos.source.js' showroom/index.cosmos.js
+          grep -q 'SHOWROOM_COSMOS_ARCHCOIN_SCENE_FIELD_v1' showroom/index.cosmos.js
+          grep -q 'SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2' showroom/index.crystals.js
+          grep -q 'haloPassEnabled: false' showroom/index.crystals.js
+          grep -q 'node.target.float = 0;' showroom/index.crystals.js
+          grep -q 'const planetMounted =' showroom/index.html
+          grep -q 'void loadSerial(crystalScripts)' showroom/index.html
+          grep -q 'SHOWROOM_STARTUP_SPATIAL_COSMOS_20260726I' showroom/index.html
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('showroom/index.html').read_text()
+          scripts = re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>', html, flags=re.I)
+          for index, script in enumerate(scripts):
+              Path(f'/tmp/showroom-inline-{index}.js').write_text(script)
+          print(len(scripts))
+          PY
+          for file in /tmp/showroom-inline-*.js; do node --check "$file"; done
+
+      - name: Install browser runtime
+        run: |
+          mkdir -p /tmp/showroom-browser
+          cd /tmp/showroom-browser
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install chromium >/dev/null
+
+      - name: Three-viewport runtime verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/showroom-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid || true' EXIT
+          sleep 2
+          cat >/tmp/showroom-browser-test.cjs <<'NODE'
+          const { chromium } = require('/tmp/showroom-browser/node_modules/playwright');
+          const fs = require('node:fs');
+
+          const profiles = [
+            { name: 'phone', width: 390, height: 844, dpr: 3 },
+            { name: 'tablet', width: 768, height: 1024, dpr: 2 },
+            { name: 'desktop', width: 1440, height: 900, dpr: 1 }
+          ];
+
+          (async () => {
+            const browser = await chromium.launch({
+              headless: true,
+              args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist']
+            });
+            const results = [];
+            for (const profile of profiles) {
+              const context = await browser.newContext({
+                viewport: { width: profile.width, height: profile.height },
+                deviceScaleFactor: profile.dpr
+              });
+              const page = await context.newPage();
+              const errors = [];
+              page.on('pageerror', error => errors.push(String(error)));
+              page.on('console', message => {
+                if (message.type() === 'error') errors.push(message.text());
+              });
+              const started = Date.now();
+              await page.goto('http://127.0.0.1:4173/showroom/', {
+                waitUntil: 'domcontentloaded', timeout: 30000
+              });
+              await page.locator('#showroom-orbit').scrollIntoViewIfNeeded();
+              await page.waitForFunction(() =>
+                document.querySelector('[data-showroom-root]')?.getAttribute('data-showroom-planet-mounted') === 'true',
+                null, { timeout: 12000 }
+              );
+              const globeMs = Date.now() - started;
+              await page.waitForFunction(() =>
+                document.querySelector('[data-showroom-root]')?.getAttribute('data-showroom-crystals-ready') === 'true',
+                null, { timeout: 22000 }
+              );
+              const crystalsMs = Date.now() - started;
+              await page.waitForFunction(() => globalThis.SHOWROOM_COSMOS?.initialized === true,
+                null, { timeout: 12000 });
+              const cosmosMs = Date.now() - started;
+              await page.waitForTimeout(500);
+              const state = await page.evaluate(() => {
+                const root = document.querySelector('[data-showroom-root]');
+                const field = document.querySelector('[data-showroom-orbit-field]');
+                const cosmosCanvases = document.querySelectorAll('[data-showroom-cosmos-canvas]').length;
+                const allScripts = [...document.scripts].map(script => script.src).filter(Boolean);
+                const crystalReceipt = globalThis.SHOWROOM_CRYSTALS_RECEIPT ||
+                  globalThis.SHOWROOM_CRYSTALS?.receipt?.() || null;
+                return {
+                  root: root ? { ...root.dataset } : null,
+                  fieldRect: field?.getBoundingClientRect().toJSON?.() || null,
+                  cosmosCanvases,
+                  allScripts,
+                  crystalReceipt,
+                  cosmosReceipt: globalThis.SHOWROOM_COSMOS_RECEIPT || null
+                };
+              });
+              if (errors.length) throw new Error(`${profile.name}: ${errors.join(' | ')}`);
+              if (!(globeMs <= crystalsMs)) throw new Error(`${profile.name}: globe did not precede crystals`);
+              if (state.cosmosCanvases !== 2) throw new Error(`${profile.name}: expected two canonical Cosmos canvases`);
+              if (state.allScripts.some(src => src.includes('index.cosmos.source.js'))) {
+                throw new Error(`${profile.name}: retired Cosmos source requested`);
+              }
+              if (state.root?.showroomDetachedCrystalHalo !== 'false') {
+                throw new Error(`${profile.name}: detached halo metadata missing`);
+              }
+              await page.screenshot({
+                path: `/tmp/showroom-${profile.name}.png`,
+                fullPage: false
+              });
+              results.push({ profile, globeMs, crystalsMs, cosmosMs, state });
+              await context.close();
+            }
+            fs.writeFileSync('/tmp/showroom-runtime-results.json', JSON.stringify(results, null, 2));
+            console.log(JSON.stringify(results.map(result => ({
+              profile: result.profile.name,
+              globeMs: result.globeMs,
+              crystalsMs: result.crystalsMs,
+              cosmosMs: result.cosmosMs,
+              cosmosCanvases: result.state.cosmosCanvases
+            })), null, 2));
+            await browser.close();
+          })().catch(error => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+          node /tmp/showroom-browser-test.cjs
+
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: showroom-startup-spatial-cosmos-evidence
+          path: |
+            /tmp/showroom-runtime-results.json
+            /tmp/showroom-phone.png
+            /tmp/showroom-tablet.png
+            /tmp/showroom-desktop.png
+            /tmp/showroom-server.log
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Commit task-branch product candidate
+        if: success()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/index.html showroom/index.cosmos.js showroom/index.crystals.js showroom/index.crystals.source.js
+          git add -u showroom/index.cosmos.source.js
+          if git diff --cached --quiet; then
+            echo 'Candidate already committed.'
+            exit 0
+          fi
+          git diff --cached --check
+          git commit -m 'Repair Showroom startup spatial and Cosmos integration'
+          git push origin HEAD:agent/showroom-startup-spatial-cosmos-001

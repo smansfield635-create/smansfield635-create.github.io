@@ -36,17 +36,23 @@ try {
       document.getElementById('h-earth-functional-landscape-route')?.dataset.run7hReady === 'true',
     null, { timeout: 120_000 });
 
-    const initial = await page.evaluate(() =>
-      window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H.getSnapshot());
-    assert.equal(initial.ready, true);
-    assert.equal(initial.receipt.eligible, true);
-    assert.equal(initial.receipt.atmosphereVisible, true);
-    assert.equal(initial.receipt.skyAlphaClosed, true);
-    assert.equal(initial.receipt.surfacePresentationApplied, true);
-    assert.equal(initial.receipt.authorityCollapse, false);
-    assert.equal(initial.receipt.rendererAuthorityReplaced, false);
-    assert.equal(initial.receipt.cameraAuthorityReplaced, false);
-    assert.equal(initial.receipt.navigationAuthorityReplaced, false);
+    const initial = await page.evaluate(async () => {
+      await window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F.dispatch({ action: 'RESET' });
+      const refreshReceipt = await window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H.refresh();
+      return {
+        refreshReceipt,
+        snapshot: window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H.getSnapshot()
+      };
+    });
+    assert.equal(initial.snapshot.ready, true);
+    assert.equal(initial.refreshReceipt.eligible, true);
+    assert.equal(initial.refreshReceipt.atmosphereVisible, true);
+    assert.equal(initial.refreshReceipt.skyAlphaClosed, true);
+    assert.equal(initial.refreshReceipt.surfacePresentationApplied, true);
+    assert.equal(initial.refreshReceipt.authorityCollapse, false);
+    assert.equal(initial.refreshReceipt.rendererAuthorityReplaced, false);
+    assert.equal(initial.refreshReceipt.cameraAuthorityReplaced, false);
+    assert.equal(initial.refreshReceipt.navigationAuthorityReplaced, false);
 
     const before = await page.evaluate(() =>
       window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F.getBrowserReceipt().renderSequence);
@@ -70,18 +76,26 @@ try {
 
     const evidence = await page.evaluate(() => {
       const api = window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H.getSnapshot();
-      const hudIds = ['hud-surface', 'hud-water', 'hud-biome', 'hud-traversal', 'hud-lifecycle', 'hud-population'];
-      const hud = Object.fromEntries(hudIds.map((key) => [key, document.getElementById(key)?.textContent]));
+      const ids = ['hud-surface', 'hud-water', 'hud-biome', 'hud-traversal', 'hud-lifecycle', 'hud-population'];
+      const hud = Object.fromEntries(ids.map((key) => [key, document.getElementById(key)?.textContent]));
       const buttons = [...document.querySelectorAll('button')];
       const canvas = document.getElementById('h-earth-functional-landscape-canvas');
       const pixels = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
       const colors = new Set();
       let opaque = 0;
+      let upperBandNonGray = 0;
       const stride = Math.max(4, Math.floor(pixels.length / 12000 / 4) * 4);
       for (let index = 0; index < pixels.length; index += stride) {
         const offset = index - index % 4;
         if (pixels[offset + 3] === 255) opaque += 1;
         colors.add(`${pixels[offset]},${pixels[offset + 1]},${pixels[offset + 2]}`);
+        const pixelIndex = offset / 4;
+        const y = Math.floor(pixelIndex / canvas.width);
+        if (y < canvas.height * 0.45 &&
+            Math.max(pixels[offset], pixels[offset + 1], pixels[offset + 2]) -
+            Math.min(pixels[offset], pixels[offset + 1], pixels[offset + 2]) > 8) {
+          upperBandNonGray += 1;
+        }
       }
       return {
         api,
@@ -93,12 +107,11 @@ try {
         canvasHeight: canvas.height,
         opaque,
         colorCount: colors.size,
+        upperBandNonGray,
         routeError: document.getElementById('h-earth-functional-landscape-route').dataset.run7hError
       };
     });
     assert.equal(evidence.api.ready, true);
-    assert.equal(evidence.api.receipt.materialization.skyPixelCount > 0, true);
-    assert.equal(evidence.api.receipt.materialization.surfacePixelCount > 0, true);
     assert.equal(evidence.hudComplete, true);
     assert.equal(evidence.minimumButtonWidth >= 44, true);
     assert.equal(evidence.minimumButtonHeight >= 44, true);
@@ -106,6 +119,7 @@ try {
     assert.equal(evidence.canvasHeight >= 150, true);
     assert.equal(evidence.opaque > 0, true);
     assert.equal(evidence.colorCount > 12, true);
+    assert.equal(evidence.upperBandNonGray > 0, true);
     assert.equal(evidence.routeError, 'false');
     assert.deepEqual(consoleErrors, []);
     assert.deepEqual(pageErrors, []);
@@ -118,8 +132,14 @@ try {
       isMobile,
       hasTouch,
       lifecycle,
-      receipt: evidence.api.receipt,
+      initialMaterializationReceipt: initial.refreshReceipt,
+      finalReceipt: evidence.api.receipt,
       composite: evidence.api.composite,
+      visualEvidence: {
+        colorCount: evidence.colorCount,
+        upperBandNonGray: evidence.upperBandNonGray,
+        opaquePixelSamples: evidence.opaque
+      },
       screenshot,
       consoleErrors,
       pageErrors

@@ -1,85 +1,10 @@
 /* /laws/index.crystals.js
-   LAW COMPASS controller-decoupled crystal renderer.
-
-   Module:
-   DGB_LAWS_CRYSTALS
-   1.1.0-controller-decoupled-crystal-renderer-with-planet-participant
-
-   Controller anchor:
-   DGB_LAWS_CONTROLLER
-   1.0.0-law-compass-controller-authority
-
-   Compositor anchor:
-   DGB_LAWS_COMPOSITOR
-   1.0.0-camera-depth-layer-orchestration
-
-   Planet participant anchor:
-   DGB_LAWS_PLANET_WORLD_PARTICIPANT
-   1.0.0-laws-world-pass-participant
-
-   Owned:
-   - crystal meshes and materials;
-   - category and law geometry;
-   - controller-state interpolation for visual rendering;
-   - crystal target positions and animation;
-   - WebGL programs, buffers, and crystal drawing;
-   - canonical crystal-to-semantic-control association;
-   - visible law/category node delivery to the compositor;
-   - optional center-planet participant admission into the shared pass;
-   - planet draw delegation to DGB_LAWS_PLANET_WORLD_PARTICIPANT;
-   - compositor projection-record forwarding to the controller;
-   - crystal-renderer lifecycle and failure reporting.
-
-   Not owned:
-   - planet identity;
-   - Audralia geometry source;
-   - planet terrain source;
-   - planet rotation state;
-   - planet mesh/material authority;
-   - pointer or swipe interpretation;
-   - drag quaternion generation;
-   - orbit or cluster gesture authority;
-   - cluster-exit decisions;
-   - semantic interaction authorization;
-   - label styling or label offsets;
-   - Compass-overlap policy;
-   - camera eye or camera target;
-   - view or projection matrix construction;
-   - Compass-plane depth calculation;
-   - front/rear classification;
-   - rear/front canvas construction;
-   - page-level layer ordering;
-   - Compass navigation, geometry, state, or renderer lifecycle;
-   - canonical navigation state;
-   - transition legality;
-   - canonical routes;
-   - human-law statements;
-   - software-law statements;
-   - failure-pattern statements;
-   - audit-question statements;
-   - page doctrine;
-   - contextual narrative.
-
-   Runtime flow:
-   controller frame
-   -> visual quaternion interpolation
-   -> crystal world targets
-   -> optional planet participant node request
-   -> compositor depth classification
-   -> rear/front WebGL drawing
-   -> planet draw delegated to participant when encountered
-   -> compositor projection records for law/category controls only
-   -> controller.updateSemanticProjection(records)
-   -> CSS presents canonical labels
-
-   Source status:
-   LAW_COMPASS_CRYSTALS_RENDERER_STANDARD_WITH_PLANET_PARTICIPANT
-   !=
-   RUNTIME_PASS
-   !=
-   VISUAL_PASS
-   !=
-   PRODUCTION_AUTHORIZATION
+   Canonical Main Compass crystal corridor cloned for the Laws page.
+   Page identity remains Laws-owned: controller, compositor, planet,
+   semantic records, labels, palettes, content, and routes are retained.
+   Mesh topology, facet colors, normals, shaders, halo pass, draw state,
+   scale hierarchy, and spherical presentation are duplicated from
+   /assets/compass/compass.crystals.js.
 */
 
 (() => {
@@ -87,10 +12,10 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "DGB_LAWS_CRYSTALS_CONTROLLER_DECOUPLED_RENDERER_WITH_PLANET_PARTICIPANT_v1",
+      "DGB_LAWS_CRYSTALS_CANONICAL_MAIN_CORRIDOR_CLONE_v1",
 
     version:
-      "1.1.0-controller-decoupled-crystal-renderer-with-planet-participant",
+      "2.0.0-canonical-main-crystal-corridor-clone",
 
     file:
       "/laws/index.crystals.js",
@@ -173,147 +98,124 @@
   });
 
   const SPHERE = Object.freeze({
-    coordinateSystem:
-      "RIGHT_HANDED_EUCLIDEAN_XYZ",
+  coordinateSystem:
+    "RIGHT_HANDED_EUCLIDEAN_XYZ",
 
-    orientationRepresentation:
-      "UNIT_QUATERNION",
+  orientationRepresentation:
+    "UNIT_QUATERNION",
 
-    constellation:
-      Object.freeze({
-        horizontalRadius:
-          1.46,
+  constellation:
+    Object.freeze({
+      horizontalRadius:
+        1.50,
 
-        verticalRadius:
-          1.28,
+      verticalRadius:
+        1.34,
 
-        depthRadius:
-          1.14,
+      depthRadius:
+        1.16,
 
-        primaryAnchor:
-          Object.freeze([
-            0,
-            0.78,
-            0.625
-          ]),
+      primaryAnchor:
+        Object.freeze([
+          0,
+          0.78,
+          0.625
+        ]),
 
-        vectors:
-          Object.freeze({
-            flow:
-              Object.freeze([
-                0,
-                1,
-                0
-              ]),
+      vectors:
+        Object.freeze({
+          flow:
+            Object.freeze([0, 1, 0]),
+          integrity:
+            Object.freeze([1, 0, 0]),
+          reality:
+            Object.freeze([0, -1, 0]),
+          structure:
+            Object.freeze([-1, 0, 0])
+        })
+    }),
 
-            integrity:
-              Object.freeze([
-                1,
-                0,
-                0
-              ]),
+  cluster:
+    Object.freeze({
+      model:
+        "CANONICAL_MAIN_SPHERICAL_XYZ_CLUSTER",
 
-            reality:
-              Object.freeze([
-                0,
-                -1,
-                0
-              ]),
+      memberCount:
+        4,
 
-            structure:
-              Object.freeze([
-                -1,
-                0,
-                0
-              ])
-          })
-      }),
+      horizontalRadius:
+        1.36,
 
-    cluster:
-      Object.freeze({
-        model:
-          "EUCLIDEAN_COMMON_RADIUS_ORBIT",
+      verticalRadius:
+        1.18,
 
-        memberCount:
-          4,
+      depthRadius:
+        1.04,
 
-        commonRadius:
-          1.40,
+      primaryAnchor:
+        Object.freeze([
+          0,
+          0.70,
+          0.714
+        ]),
 
-        phase:
-          -Math.PI / 2,
+      latitudeAmplitude:
+        0.48,
 
-        localPlane:
-          "XY",
+      latitudeFrequency:
+        1.73,
 
-        planeNormal:
-          Object.freeze([
-            0,
-            0,
-            1
-          ]),
-
-        maximumTiltRadians:
-          0.30,
-
-        projectedClearanceMarginPx:
-          8,
-
-        primaryAnchor:
-          Object.freeze([
-            0,
-            0.70,
-            0.714
-          ])
-      })
-  });
+      projectedClearanceMarginPx:
+        8
+    })
+});
 
   const QUALITY = Object.freeze({
-    categorySegments:
-      8,
+  categorySegments:
+    8,
 
-    lawSegments:
-      6,
+  lawSegments:
+    6,
 
-    categoryScale:
-      0.96,
+  categoryScale:
+    0.96,
 
-    focusedCategoryScale:
-      1.30,
+  focusedCategoryScale:
+    1.30,
 
-    lawScale:
-      0.88,
+  lawScale:
+    0.88,
 
-    primaryLawScale:
-      1.12,
+  primaryLawScale:
+    1.12,
 
-    selectedLawScale:
-      1.18,
+  selectedLawScale:
+    1.18,
 
-    visualSettleSpeed:
-      7.4,
+  visualSettleSpeed:
+    7.4,
 
-    transformSettleSpeed:
-      6.2,
+  transformSettleSpeed:
+    6.2,
 
-    maximumDeltaSeconds:
-      0.05,
+  maximumDeltaSeconds:
+    0.05,
 
-    maximumYaw:
-      0.20,
+  maximumYaw:
+    0.22,
 
-    maximumPitch:
-      0.13,
+  maximumPitch:
+    0.14,
 
-    bloomDisableWidthPx:
-      420,
+  bloomDisableWidthPx:
+    420,
 
-    normalEpsilon:
-      1e-7,
+  normalEpsilon:
+    1e-7,
 
-    projectionVisibilityThreshold:
-      0.08
-  });
+  projectionVisibilityThreshold:
+    0.08
+});
 
   const PALETTE = Object.freeze({
     flow:
@@ -765,61 +667,40 @@
     uniform mat4 uModel;
     uniform mat4 uView;
     uniform mat4 uProjection;
-    uniform mat3 uViewNormalMatrix;
+    uniform mat3 uNormalMatrix;
     uniform float uHaloPass;
     uniform float uHaloExpansion;
 
-    varying vec3 vViewNormal;
+    varying vec3 vNormal;
     varying vec3 vColor;
     varying vec3 vViewPosition;
     varying vec3 vWorldPosition;
     varying float vHaloPass;
 
     void main() {
-      vec3 position = aPosition;
+      vec3 pos = aPosition;
 
       if (uHaloPass > 0.5) {
-        position +=
-          normalize(aNormal) *
-          uHaloExpansion;
+        pos += normalize(aNormal) * uHaloExpansion;
       }
 
-      vec4 worldPosition =
-        uModel *
-        vec4(position, 1.0);
+      vec4 world = uModel * vec4(pos, 1.0);
+      vec4 view = uView * world;
 
-      vec4 viewPosition =
-        uView *
-        worldPosition;
+      vNormal = normalize(uNormalMatrix * aNormal);
+      vColor = aColor;
+      vViewPosition = view.xyz;
+      vWorldPosition = world.xyz;
+      vHaloPass = uHaloPass;
 
-      vViewNormal =
-        normalize(
-          uViewNormalMatrix *
-          aNormal
-        );
-
-      vColor =
-        aColor;
-
-      vViewPosition =
-        viewPosition.xyz;
-
-      vWorldPosition =
-        worldPosition.xyz;
-
-      vHaloPass =
-        uHaloPass;
-
-      gl_Position =
-        uProjection *
-        viewPosition;
+      gl_Position = uProjection * view;
     }
   `;
 
   const fragmentShaderSource = `
     precision mediump float;
 
-    varying vec3 vViewNormal;
+    varying vec3 vNormal;
     varying vec3 vColor;
     varying vec3 vViewPosition;
     varying vec3 vWorldPosition;
@@ -837,16 +718,16 @@
     uniform float uHaloStrength;
     uniform float uSaturation;
 
-    uniform vec3 uKeyLightView;
-    uniform vec3 uFillLightView;
-    uniform vec3 uRimLightView;
+    uniform vec3 uKeyLight;
+    uniform vec3 uFillLight;
+    uniform vec3 uRimLight;
     uniform vec3 uAmbientColor;
 
-    float hash31(vec3 point) {
+    float hash31(vec3 p) {
       return fract(
         sin(
           dot(
-            point,
+            p,
             vec3(
               12.9898,
               78.233,
@@ -859,10 +740,10 @@
     }
 
     void main() {
-      vec3 normal =
-        normalize(vViewNormal);
+      vec3 n =
+        normalize(vNormal);
 
-      vec3 viewDirection =
+      vec3 viewDir =
         normalize(-vViewPosition);
 
       vec3 sourceBase =
@@ -894,8 +775,8 @@
 
       float facingToCamera =
         dot(
-          normal,
-          viewDirection
+          n,
+          viewDir
         );
 
       float rearSuppression =
@@ -912,20 +793,13 @@
           2.4
         );
 
-      vec3 keyDirection =
-        normalize(-uKeyLightView);
-
-      vec3 fillDirection =
-        normalize(-uFillLightView);
-
-      vec3 rimDirection =
-        normalize(-uRimLightView);
-
       float key =
         max(
           dot(
-            normal,
-            keyDirection
+            n,
+            normalize(
+              -uKeyLight
+            )
           ),
           0.0
         );
@@ -933,8 +807,10 @@
       float fill =
         max(
           dot(
-            normal,
-            fillDirection
+            n,
+            normalize(
+              -uFillLight
+            )
           ),
           0.0
         );
@@ -942,8 +818,10 @@
       float rear =
         max(
           dot(
-            normal,
-            rimDirection
+            n,
+            normalize(
+              -uRimLight
+            )
           ),
           0.0
         );
@@ -958,18 +836,17 @@
           2.05
         );
 
-      vec3 halfDirection =
-        normalize(
-          keyDirection +
-          viewDirection
-        );
-
       float facing =
         pow(
           max(
             dot(
-              normal,
-              halfDirection
+              reflect(
+                normalize(
+                  uKeyLight
+                ),
+                n
+              ),
+              viewDir
             ),
             0.0
           ),
@@ -980,7 +857,7 @@
         pow(
           abs(
             dot(
-              normal,
+              n,
               normalize(
                 vec3(
                   0.45,
@@ -997,7 +874,7 @@
         hash31(
           floor(
             (
-              normal +
+              n +
               vWorldPosition
             ) *
             18.0
@@ -1107,7 +984,7 @@
         diffuse *
         twinkle;
 
-      vec3 specular =
+      vec3 spec =
         vec3(
           1.0,
           0.96,
@@ -1164,7 +1041,7 @@
         (
           (
             lit +
-            specular +
+            spec +
             rim +
             coolRim +
             emissive +
@@ -1929,51 +1806,88 @@
     options = {}
   ) {
     const points =
-      options.points || 8;
+      options.points ||
+      8;
 
     const radius =
-      options.radius || 0.62;
+      options.radius ||
+      0.62;
 
     const inner =
       options.inner ||
       radius * 0.46;
 
     const depth =
-      options.depth || 0.42;
+      options.depth ||
+      0.42;
 
     const crown =
-      options.crown || 0.22;
+      options.crown ||
+      0.22;
 
     const color =
-      options.color || PALETTE.flow;
+      options.color ||
+      PALETTE.flow;
 
     const warmth =
-      options.warmth || 0;
+      options.warmth ||
+      0;
 
     const vertices = [];
     const faces = [];
 
-    function add(point) {
-      vertices.push(point);
+    function add(
+      point
+    ) {
+      vertices.push(
+        point
+      );
 
-      return vertices.length - 1;
+      return vertices.length -
+        1;
     }
 
-    function face(a, b, c) {
-      faces.push([a, b, c]);
+    function face(
+      a,
+      b,
+      c
+    ) {
+      faces.push([
+        a,
+        b,
+        c
+      ]);
     }
 
     const frontApex =
-      add([0, 0, depth]);
+      add([
+        0,
+        0,
+        depth
+      ]);
 
     const rearApex =
-      add([0, 0, -depth]);
+      add([
+        0,
+        0,
+        -depth
+      ]);
 
     const frontCrown =
-      add([0, 0, depth + crown]);
+      add([
+        0,
+        0,
+        depth +
+        crown
+      ]);
 
     const rearCrown =
-      add([0, 0, -depth - crown * 0.72]);
+      add([
+        0,
+        0,
+        -depth -
+        crown * 0.72
+      ]);
 
     const outer = [];
     const innerRing = [];
@@ -1986,7 +1900,8 @@
       index += 1
     ) {
       const isPoint =
-        index % 2 === 0;
+        index % 2 ===
+        0;
 
       const angle =
         (
@@ -1994,7 +1909,10 @@
           2 *
           index
         ) /
-          (points * 2) -
+        (
+          points *
+          2
+        ) -
         Math.PI / 2;
 
       const activeRadius =
@@ -2078,7 +1996,11 @@
       index += 1
     ) {
       const next =
-        (index + 1) % count;
+        (
+          index +
+          1
+        ) %
+        count;
 
       face(
         frontApex,
@@ -2151,25 +2073,39 @@
         faceIndex
       ) => {
         const a =
-          vertices[triangle[0]];
+          vertices[
+            triangle[0]
+          ];
 
         const b =
-          vertices[triangle[1]];
+          vertices[
+            triangle[1]
+          ];
 
         const c =
-          vertices[triangle[2]];
+          vertices[
+            triangle[2]
+          ];
 
         const normal =
           normalizeVector(
             cross(
-              subtract(b, a),
-              subtract(c, a)
+              subtract(
+                b,
+                a
+              ),
+              subtract(
+                c,
+                a
+              )
             )
           );
 
         const lift =
           0.84 +
-          (faceIndex % 7) *
+          (
+            faceIndex % 7
+          ) *
           0.034;
 
         const sparkleLift =
@@ -2195,27 +2131,24 @@
               Math.min(
                 color[0] *
                   lift +
-                warmth *
-                  0.06 +
-                sparkleLift,
+                  warmth * 0.06 +
+                  sparkleLift,
                 1
               ),
 
               Math.min(
                 color[1] *
                   lift +
-                warmth *
-                  0.04 +
-                sparkleLift,
+                  warmth * 0.04 +
+                  sparkleLift,
                 1
               ),
 
               Math.min(
                 color[2] *
                   lift +
-                warmth *
-                  0.02 +
-                sparkleLift,
+                  warmth * 0.02 +
+                  sparkleLift,
                 1
               )
             );
@@ -2226,13 +2159,19 @@
 
     return Object.freeze({
       positions:
-        new Float32Array(positions),
+        new Float32Array(
+          positions
+        ),
 
       normals:
-        new Float32Array(normals),
+        new Float32Array(
+          normals
+        ),
 
       colors:
-        new Float32Array(colors),
+        new Float32Array(
+          colors
+        ),
 
       vertexCount:
         positions.length / 3
@@ -2256,73 +2195,51 @@
   }
 
   function createCpuMeshes() {
-    const meshes =
-      new Map();
+  const meshes = new Map();
 
-    DIRECTIONS.forEach(
-      direction => {
-        const warm =
-          direction === "reality" ||
-          direction === "structure";
+  DIRECTIONS.forEach(direction => {
+    const warm =
+      direction === "reality" ||
+      direction === "structure";
 
-        meshes.set(
-          `category-${direction}`,
-          createDiamondStarMesh({
-            points:
-              QUALITY.categorySegments,
-
-            radius:
-              0.72,
-
-            inner:
-              0.30,
-
-            depth:
-              0.42,
-
-            crown:
-              0.20,
-
-            color:
-              PALETTE[direction],
-
-            warmth:
-              warm ? 0.10 : 0.02
-          })
-        );
-
-        meshes.set(
-          `law-${direction}`,
-          createDiamondStarMesh({
-            points:
-              QUALITY.lawSegments,
-
-            radius:
-              0.42,
-
-            inner:
-              0.20,
-
-            depth:
-              0.25,
-
-            crown:
-              0.10,
-
-            color:
-              lawColorForDirection(
-                direction
-              ),
-
-            warmth:
-              warm ? 0.08 : 0.02
-          })
-        );
-      }
+    meshes.set(
+      `category-${direction}`,
+      createDiamondStarMesh({
+        points: QUALITY.categorySegments,
+        radius: 0.72,
+        inner: 0.30,
+        depth: 0.42,
+        crown: 0.20,
+        color: PALETTE[direction],
+        warmth: warm ? 0.10 : 0.02
+      })
     );
 
-    return meshes;
-  }
+    const lawColor =
+      direction === "flow"
+        ? PALETTE.lawFlow
+        : direction === "integrity"
+          ? PALETTE.lawIntegrity
+          : direction === "reality"
+            ? PALETTE.lawReality
+            : PALETTE.lawStructure;
+
+    meshes.set(
+      `law-${direction}`,
+      createDiamondStarMesh({
+        points: QUALITY.lawSegments,
+        radius: 0.42,
+        inner: 0.20,
+        depth: 0.25,
+        crown: 0.10,
+        color: lawColor,
+        warmth: warm ? 0.08 : 0.02
+      })
+    );
+  });
+
+  return meshes;
+}
 
   function createRenderer(
     layer,
@@ -2409,10 +2326,10 @@
             "uProjection"
           ),
 
-        viewNormalMatrix:
+        normalMatrix:
           gl.getUniformLocation(
             program,
-            "uViewNormalMatrix"
+            "uNormalMatrix"
           ),
 
         time:
@@ -2493,22 +2410,22 @@
             "uHaloExpansion"
           ),
 
-        keyLightView:
+        keyLight:
           gl.getUniformLocation(
             program,
-            "uKeyLightView"
+            "uKeyLight"
           ),
 
-        fillLightView:
+        fillLight:
           gl.getUniformLocation(
             program,
-            "uFillLightView"
+            "uFillLight"
           ),
 
-        rimLightView:
+        rimLight:
           gl.getUniformLocation(
             program,
-            "uRimLightView"
+            "uRimLight"
           ),
 
         ambientColor:
@@ -2605,120 +2522,61 @@
     );
   }
 
-  function clusterBaseVector(index, count) {
-    invariant(
-      count === SPHERE.cluster.memberCount,
-      "LAWS_CRYSTALS_CLUSTER_MEMBER_COUNT_INVALID",
-      {
-        expected:
-          SPHERE.cluster.memberCount,
+  function clusterBaseVector(
+  index,
+  count
+) {
+  const safeCount = Math.max(1, count);
+  const longitude =
+    Math.PI * 2 * index / safeCount -
+    Math.PI / 2;
+  const latitude =
+    Math.sin(
+      (index + 0.5) *
+      SPHERE.cluster.latitudeFrequency
+    ) *
+    SPHERE.cluster.latitudeAmplitude;
+  const cosineLatitude = Math.cos(latitude);
 
-        actual:
-          count
-      }
-    );
+  return normalizeVector([
+    Math.cos(longitude) * cosineLatitude,
+    Math.sin(latitude),
+    Math.sin(longitude) * cosineLatitude
+  ]);
+}
 
-    const angle =
-      SPHERE.cluster.phase +
-      index *
-        Math.PI * 2 /
-        SPHERE.cluster.memberCount;
+function validateClusterSphereContract() {
+  const vectors = Array.from(
+    { length: SPHERE.cluster.memberCount },
+    (_, index) =>
+      clusterBaseVector(index, SPHERE.cluster.memberCount)
+  );
 
-    return [
-      Math.cos(angle),
-      Math.sin(angle),
-      0
-    ];
-  }
+  invariant(
+    vectors.length === 4,
+    "LAWS_CRYSTALS_CLUSTER_SPHERE_REQUIRES_FOUR_MEMBERS"
+  );
 
-  function validateClusterOrbitContract() {
-    const vectors =
-      Array.from(
-        {
-          length:
-            SPHERE.cluster.memberCount
-        },
-        (_, index) =>
-          clusterBaseVector(
-            index,
-            SPHERE.cluster.memberCount
-          )
-      );
+  const edgeA = subtract(vectors[1], vectors[0]);
+  const edgeB = subtract(vectors[2], vectors[0]);
+  const edgeC = subtract(vectors[3], vectors[0]);
+  const determinant =
+    edgeA[0] * (edgeB[1] * edgeC[2] - edgeB[2] * edgeC[1]) -
+    edgeA[1] * (edgeB[0] * edgeC[2] - edgeB[2] * edgeC[0]) +
+    edgeA[2] * (edgeB[0] * edgeC[1] - edgeB[1] * edgeC[0]);
 
-    invariant(
-      vectors.length === 4,
-      "LAWS_CRYSTALS_CLUSTER_ORBIT_REQUIRES_FOUR_MEMBERS"
-    );
+  invariant(
+    Math.abs(determinant) > 1e-4,
+    "LAWS_CRYSTALS_NONCOPLANAR_DISTRIBUTION_INVALID",
+    { determinant }
+  );
 
-    vectors.forEach(
-      (vector, index) => {
-        invariant(
-          Math.abs(
-            vectorLength(vector) - 1
-          ) <= 1e-12,
-          "LAWS_CRYSTALS_CLUSTER_UNIT_RADIUS_INVALID:" + index
-        );
-
-        invariant(
-          Math.abs(vector[2]) <= 1e-12,
-          "LAWS_CRYSTALS_CLUSTER_COPLANARITY_INVALID:" + index
-        );
-      }
-    );
-
-    for (let index = 0; index < 4; index += 1) {
-      const adjacent =
-        vectors[(index + 1) % 4];
-      const opposite =
-        vectors[(index + 2) % 4];
-
-      invariant(
-        Math.abs(
-          dot(vectors[index], adjacent)
-        ) <= 1e-12,
-        "LAWS_CRYSTALS_CLUSTER_90_DEGREE_SPACING_INVALID:" + index
-      );
-
-      invariant(
-        Math.abs(
-          dot(vectors[index], opposite) + 1
-        ) <= 1e-12,
-        "LAWS_CRYSTALS_CLUSTER_180_DEGREE_SPACING_INVALID:" + index
-      );
-    }
-
-    RECEIPT.clusterOrbitModel =
-      SPHERE.cluster.model;
-    RECEIPT.clusterOrbitMemberCount =
-      SPHERE.cluster.memberCount;
-    RECEIPT.clusterOrbitCommonRadius =
-      SPHERE.cluster.commonRadius;
-    RECEIPT.clusterOrbitCoplanar =
-      true;
-    RECEIPT.clusterOrbitEqualAngularSpacing =
-      true;
-    RECEIPT.clusterOrbitMaximumTiltRadians =
-      SPHERE.cluster.maximumTiltRadians;
-    RECEIPT.clusterProjectedClearanceMarginPx =
-      SPHERE.cluster.projectedClearanceMarginPx;
-
-    if (state.root) {
-      state.root.dataset.lawsClusterOrbitModel =
-        SPHERE.cluster.model;
-      state.root.dataset.lawsClusterOrbitMemberCount =
-        String(SPHERE.cluster.memberCount);
-      state.root.dataset.lawsClusterOrbitCommonRadius =
-        String(SPHERE.cluster.commonRadius);
-      state.root.dataset.lawsClusterOrbitCoplanar =
-        "true";
-      state.root.dataset.lawsClusterOrbitEqualAngularSpacing =
-        "true";
-      state.root.dataset.lawsClusterOrbitMaximumTiltRadians =
-        String(SPHERE.cluster.maximumTiltRadians);
-    }
-
-    return true;
-  }
+  RECEIPT.clusterGeometryModel = SPHERE.cluster.model;
+  RECEIPT.clusterMemberCount = SPHERE.cluster.memberCount;
+  RECEIPT.clusterNoncoplanar = true;
+  RECEIPT.clusterFullXyzRotation = true;
+  return true;
+}
 
   function makeNode(options) {
     return {
@@ -3442,67 +3300,8 @@
   }
 
   function boundClusterQuaternion(value) {
-    const quaternion =
-      quaternionNormalize(value);
-    const normal =
-      normalizeVector(
-        quaternionRotateVector(
-          quaternion,
-          SPHERE.cluster.planeNormal
-        ),
-        SPHERE.cluster.planeNormal
-      );
-    const tilt =
-      Math.acos(
-        clamp(
-          normal[2],
-          -1,
-          1
-        )
-      );
-
-    if (
-      tilt <=
-      SPHERE.cluster.maximumTiltRadians +
-        1e-12
-    ) {
-      return quaternion;
-    }
-
-    const swingAxis =
-      normalizeVector(
-        [
-          -normal[1],
-          normal[0],
-          0
-        ],
-        [1, 0, 0]
-      );
-    const swing =
-      quaternionFromAxisAngleVector(
-        swingAxis,
-        SPHERE.cluster.maximumTiltRadians
-      );
-    const twistLength =
-      Math.hypot(
-        quaternion[2],
-        quaternion[3]
-      );
-    const twist =
-      twistLength > 1e-12
-        ? quaternionNormalize([
-            0,
-            0,
-            quaternion[2],
-            quaternion[3]
-          ])
-        : [0, 0, 0, 1];
-
-    return quaternionMultiply(
-      swing,
-      twist
-    );
-  }
+  return quaternionNormalize(value);
+}
 
   function clusterQuaternionFromFrame(
     frame,
@@ -3677,48 +3476,28 @@
     };
   }
 
-  function euclideanLawPosition(
+  function sphericalLawPosition(
+  node,
+  localQuaternion
+) {
+  const unit = rotatedLawUnitVector(
     node,
     localQuaternion
-  ) {
-    const unit =
-      rotatedLawUnitVector(
-        node,
-        boundClusterQuaternion(
-          localQuaternion
-        )
-      );
-    const radius =
-      SPHERE.cluster.commonRadius;
+  );
 
-    return {
-      x:
-        unit[0] * radius,
-
-      y:
-        unit[1] * radius,
-
-      z:
-        unit[2] * radius,
-
-      depth:
-        (unit[2] + 1) / 2,
-
-      primary:
-        clamp(
-          (
-            dot(
-              unit,
-              clusterAnchorVector()
-            ) +
-            1
-          ) /
-            2,
-          0,
-          1
-        )
-    };
-  }
+  return {
+    x: unit[0] * SPHERE.cluster.horizontalRadius,
+    y: unit[1] * SPHERE.cluster.verticalRadius,
+    z: unit[2] * SPHERE.cluster.depthRadius,
+    depth: (unit[2] + 1) / 2,
+    primary:
+      clamp(
+        (dot(unit, clusterAnchorVector()) + 1) / 2,
+        0,
+        1
+      )
+  };
+}
 
   function setUniformScale(
     target,
@@ -3893,7 +3672,7 @@
     activeLawNodes(direction).forEach(
       node => {
         const sphere =
-          euclideanLawPosition(
+          sphericalLawPosition(
             node,
             localQuaternion
           );
@@ -4286,21 +4065,21 @@
     gl.useProgram(renderer.program);
 
     gl.uniform3f(
-      renderer.uniforms.keyLightView,
+      renderer.uniforms.keyLight,
       -0.42,
       -0.82,
       -0.68
     );
 
     gl.uniform3f(
-      renderer.uniforms.fillLightView,
+      renderer.uniforms.fillLight,
       0.72,
       -0.24,
       -0.54
     );
 
     gl.uniform3f(
-      renderer.uniforms.rimLightView,
+      renderer.uniforms.rimLight,
       0.08,
       0.46,
       1
@@ -4535,7 +4314,7 @@
     );
 
     gl.uniformMatrix3fv(
-      renderer.uniforms.viewNormalMatrix,
+      renderer.uniforms.normalMatrix,
       false,
       new Float32Array(normalMatrix)
     );
@@ -5812,7 +5591,7 @@
       state.registry =
         buildRegistry();
 
-      validateClusterOrbitContract();
+      validateClusterSphereContract();
 
       initializeRenderers();
 

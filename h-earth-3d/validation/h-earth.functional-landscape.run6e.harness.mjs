@@ -16,9 +16,13 @@ const frame = constructHEarthFunctionalLandscapeFrame({
 });
 
 assert.equal(frame.ok, true);
-assert.equal(frame.primitiveCount, 20);
-assert.equal(frame.primitives.every((primitive) =>
-  primitive.admitted === true && primitive.admissionAuthority === 'WEST'), true);
+assert.equal(frame.primitiveCount, 18);
+assert.equal(
+  frame.primitives.every((primitive) =>
+    primitive.admitted === true &&
+    primitive.admissionAuthority === 'WEST'),
+  true
+);
 assert.equal(frame.westAggregateFrameAdmissionRecord.admitted, true);
 assert.equal(frame.transfer.provisional, true);
 assert.equal(frame.transfer.geometryIndexAuthority, false);
@@ -32,7 +36,12 @@ assert.deepEqual(
 );
 assert.equal(frame.semanticAddressCount, 256);
 assert.equal(frame.semanticAddressIds.length, 256);
-assert.equal(frame.proxySummarizedAddressIds.length, 64);
+assert.equal(frame.terrainAddressCount, 124);
+assert.equal(frame.terrainAddressIds.length, 124);
+assert.equal(frame.shorelineWaterAddressCount, 96);
+assert.equal(frame.shorelineWaterAddressIds.length, 96);
+assert.equal(frame.proxySummarizedAddressCount, 36);
+assert.equal(frame.proxySummarizedAddressIds.length, 36);
 assert.equal(frame.formationIds.length > 0, true);
 assert.equal(frame.shorelineBandIds.length, 7);
 
@@ -46,7 +55,7 @@ assert.equal(handoff.frameOccurrenceId, frame.frameOccurrenceId);
 assert.equal(handoff.rendererFrame, frame);
 assert.equal(handoff.renderPlan.eligible, true);
 assert.equal(handoff.renderPlan.triangles.length > 0, true);
-assert.equal(handoff.visiblePrimitiveCount, 20);
+assert.equal(handoff.visiblePrimitiveCount, 18);
 assert.equal(handoff.plannedPrimitiveCount > 0, true);
 assert.equal(handoff.cameraAuthorityPreserved, true);
 assert.equal(handoff.viewportAuthorityPreserved, true);
@@ -59,10 +68,12 @@ console.log(JSON.stringify({
   contractId: handoff.contractId,
   eligible: true,
   status: handoff.status,
-  neutralPrimitiveCount: 20,
+  neutralPrimitiveCount: 18,
   admittedPrimitiveCount: frame.primitiveCount,
   semanticAddressCount: frame.semanticAddressCount,
-  proxySummarizedAddressCount: frame.proxySummarizedAddressIds.length,
+  terrainAddressCount: frame.terrainAddressCount,
+  shorelineWaterAddressCount: frame.shorelineWaterAddressCount,
+  proxySummarizedAddressCount: frame.proxySummarizedAddressCount,
   formationCount: frame.formationIds.length,
   shorelineBandCount: frame.shorelineBandIds.length,
   acceptedRenderTriangleCount: handoff.renderPlan.triangles.length,

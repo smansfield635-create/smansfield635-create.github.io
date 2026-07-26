@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/h-earth-functional-environment-run7h-live-verification-001
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:

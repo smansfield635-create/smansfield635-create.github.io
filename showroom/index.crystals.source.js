@@ -1,4 +1,11 @@
-/* TARGET FILE: /showroom/index.crystals.js */
+/* /showroom/index.crystals.js
+   Canonical Main Compass crystal corridor cloned for Showroom.
+   Showroom retains its controller, compositor, semantic records,
+   labels, palette identity, routes, Diamond, Window, and Cosmos.
+   Mesh topology, facet-color construction, normals, shaders, halo,
+   GL draw state, scale hierarchy, and spherical presentation are
+   duplicated from /assets/compass/compass.crystals.js.
+*/
 /* TNT FULL-FILE REPLACEMENT */
 /* SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v8 */
 /*
@@ -72,7 +79,7 @@
   "use strict";
 
   const CONTRACT =
-    "SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v8";
+    "SHOWROOM_CANONICAL_MAIN_CRYSTAL_CORRIDOR_CLONE_v1";
 
   const OWNER =
     "/showroom/index.crystals.js";
@@ -209,90 +216,29 @@
   });
 
   const QUALITY = Object.freeze({
-    maximumDeltaSeconds:
-      0.05,
-
-    interpolationSpeed:
-      8.2,
-
-    reducedMotionInterpolationSpeed:
-      26,
-
-    ambientFrameIntervalMs:
-      1000 / 30,
-
-    cardinalHitRadius:
-      76,
-
-    roomHitRadius:
-      48,
-
-    visibleOpacityThreshold:
-      0.025,
-
-    haloDisableWidth:
-      420
-  });
+  maximumDeltaSeconds: 0.05,
+  interpolationSpeed: 8.2,
+  reducedMotionInterpolationSpeed: 26,
+  ambientFrameIntervalMs: 1000 / 30,
+  cardinalHitRadius: 76,
+  roomHitRadius: 48,
+  visibleOpacityThreshold: 0.025,
+  haloDisableWidth: 0
+});
 
   const CARDINAL_BASE_POSITIONS = Object.freeze({
-    north:
-      Object.freeze([
-        0,
-        1.68,
-        -0.48
-      ]),
+  north: Object.freeze([0, 1.34, 0]),
+  east: Object.freeze([1.50, 0, 0]),
+  south: Object.freeze([0, -1.34, 0]),
+  west: Object.freeze([-1.50, 0, 0])
+});
 
-    east:
-      Object.freeze([
-        1.86,
-        0,
-        0.54
-      ]),
-
-    south:
-      Object.freeze([
-        0,
-        -1.68,
-        0.44
-      ]),
-
-    west:
-      Object.freeze([
-        -1.86,
-        0,
-        -0.58
-      ])
-  });
-
-  const ROOM_BASE_POSITIONS = Object.freeze({
-    1:
-      Object.freeze([
-        -1.06,
-        0.94,
-        -0.46
-      ]),
-
-    2:
-      Object.freeze([
-        1.06,
-        0.94,
-        0.50
-      ]),
-
-    3:
-      Object.freeze([
-        1.06,
-        -0.94,
-        -0.42
-      ]),
-
-    4:
-      Object.freeze([
-        -1.06,
-        -0.94,
-        0.46
-      ])
-  });
+const ROOM_BASE_POSITIONS = Object.freeze({
+  1: Object.freeze([0, 0.42155918243834756, -0.9713677415028749]),
+  2: Object.freeze([1.3178909481432288, 0.29135821915396054, 0]),
+  3: Object.freeze([0, -0.5073345276802548, 0.9389695242664297]),
+  4: Object.freeze([-1.351990798995593, -0.12787386777498447, 0])
+});
 
   const PALETTES = Object.freeze({
     north:
@@ -421,126 +367,47 @@
   });
 
   const MATERIALS = Object.freeze({
-    CARDINAL:
-      Object.freeze({
-        baseScale:
-          1.23,
-
-        activeScale:
-          1.50,
-
-        opacity:
-          0.97,
-
-        emissive:
-          0.18,
-
-        rim:
-          1.12,
-
-        sparkle:
-          0.18,
-
-        halo:
-          0.70,
-
-        idleSpin:
-          0.16,
-
-        idleFloat:
-          0.018
-      }),
-
-    LOCAL:
-      Object.freeze({
-        baseScale:
-          1.125,
-
-        activeScale:
-          1.32,
-
-        opacity:
-          0.93,
-
-        emissive:
-          0.10,
-
-        rim:
-          0.84,
-
-        sparkle:
-          0.08,
-
-        halo:
-          0.30,
-
-        idleSpin:
-          0.08,
-
-        idleFloat:
-          0.010
-      }),
-
-    PORTAL:
-      Object.freeze({
-        baseScale:
-          1.17,
-
-        activeScale:
-          1.38,
-
-        opacity:
-          0.95,
-
-        emissive:
-          0.16,
-
-        rim:
-          1.08,
-
-        sparkle:
-          0.16,
-
-        halo:
-          0.54,
-
-        idleSpin:
-          0.10,
-
-        idleFloat:
-          0.012
-      }),
-
-    PRIMARY_PORTAL:
-      Object.freeze({
-        baseScale:
-          1.23,
-
-        activeScale:
-          1.47,
-
-        opacity:
-          0.98,
-
-        emissive:
-          0.21,
-
-        rim:
-          1.22,
-
-        sparkle:
-          0.21,
-
-        halo:
-          0.72,
-
-        idleSpin:
-          0.11,
-
-        idleFloat:
-          0.013
-      })
-  });
+  CARDINAL_IDLE: Object.freeze({
+    scale: 0.96,
+    specular: 1.18,
+    rim: 1.02,
+    emissive: 0.17,
+    alpha: 0.90,
+    sparkle: 0.26,
+    halo: 0.82,
+    contrast: 1.16
+  }),
+  CARDINAL_FOCUSED: Object.freeze({
+    scale: 1.30,
+    specular: 1.50,
+    rim: 1.30,
+    emissive: 0.24,
+    alpha: 0.96,
+    sparkle: 0.36,
+    halo: 1.18,
+    contrast: 1.24
+  }),
+  ROOM_IDLE: Object.freeze({
+    scale: 0.88,
+    specular: 1.04,
+    rim: 0.90,
+    emissive: 0.15,
+    alpha: 0.88,
+    sparkle: 0.22,
+    halo: 0.64,
+    contrast: 1.10
+  }),
+  ROOM_PRIMARY: Object.freeze({
+    scale: 1.12,
+    specular: 1.24,
+    rim: 1.08,
+    emissive: 0.21,
+    alpha: 0.94,
+    sparkle: 0.30,
+    halo: 0.86,
+    contrast: 1.17
+  })
+});
 
   const state = {
     root: null,
@@ -705,57 +572,38 @@
   const VERTEX_SHADER = `
     attribute vec3 aPosition;
     attribute vec3 aNormal;
-    attribute float aFacet;
+    attribute vec3 aColor;
 
     uniform mat4 uModel;
     uniform mat4 uView;
     uniform mat4 uProjection;
     uniform mat3 uNormalMatrix;
-    uniform float uScale;
     uniform float uHaloPass;
     uniform float uHaloExpansion;
 
     varying vec3 vNormal;
+    varying vec3 vColor;
     varying vec3 vViewPosition;
-    varying float vFacet;
+    varying vec3 vWorldPosition;
     varying float vHaloPass;
 
     void main() {
-      vec3 position =
-        aPosition * uScale;
+      vec3 pos = aPosition;
 
       if (uHaloPass > 0.5) {
-        position +=
-          normalize(aNormal) *
-          uHaloExpansion;
+        pos += normalize(aNormal) * uHaloExpansion;
       }
 
-      vec4 world =
-        uModel *
-        vec4(position, 1.0);
+      vec4 world = uModel * vec4(pos, 1.0);
+      vec4 view = uView * world;
 
-      vec4 view =
-        uView *
-        world;
+      vNormal = normalize(uNormalMatrix * aNormal);
+      vColor = aColor;
+      vViewPosition = view.xyz;
+      vWorldPosition = world.xyz;
+      vHaloPass = uHaloPass;
 
-      vNormal =
-        normalize(
-          uNormalMatrix *
-          aNormal
-        );
-
-      vViewPosition =
-        view.xyz;
-
-      vFacet =
-        aFacet;
-
-      vHaloPass =
-        uHaloPass;
-
-      gl_Position =
-        uProjection *
-        view;
+      gl_Position = uProjection * view;
     }
   `;
 
@@ -763,132 +611,249 @@
     precision mediump float;
 
     varying vec3 vNormal;
+    varying vec3 vColor;
     varying vec3 vViewPosition;
-    varying float vFacet;
+    varying vec3 vWorldPosition;
     varying float vHaloPass;
 
     uniform float uTime;
-    uniform float uOpacity;
+    uniform float uProminence;
+    uniform float uSpecular;
+    uniform float uRim;
     uniform float uEmissive;
-    uniform float uRimStrength;
-    uniform float uSparkleStrength;
+    uniform float uAlpha;
+    uniform float uSparkle;
+    uniform float uTwinkle;
+    uniform float uContrast;
     uniform float uHaloStrength;
-    uniform float uReducedMotion;
+    uniform float uSaturation;
 
-    uniform vec3 uPrimaryColor;
-    uniform vec3 uSecondaryColor;
-    uniform vec3 uRimColor;
-    uniform vec3 uHighlightColor;
+    uniform vec3 uKeyLight;
+    uniform vec3 uFillLight;
+    uniform vec3 uRimLight;
+    uniform vec3 uAmbientColor;
+
+    float hash31(vec3 p) {
+      return fract(
+        sin(
+          dot(
+            p,
+            vec3(
+              12.9898,
+              78.233,
+              37.719
+            )
+          )
+        ) *
+        43758.5453
+      );
+    }
 
     void main() {
-      vec3 normal =
+      vec3 n =
         normalize(vNormal);
 
-      vec3 viewDirection =
+      vec3 viewDir =
         normalize(-vViewPosition);
 
-      float facing =
+      vec3 sourceBase =
+        max(
+          vColor,
+          vec3(0.02)
+        );
+
+      float luminance =
+        dot(
+          sourceBase,
+          vec3(
+            0.2126,
+            0.7152,
+            0.0722
+          )
+        );
+
+      vec3 base =
+        mix(
+          vec3(luminance),
+          sourceBase,
+          clamp(
+            uSaturation,
+            0.0,
+            1.0
+          )
+        );
+
+      float facingToCamera =
+        dot(
+          n,
+          viewDir
+        );
+
+      float rearSuppression =
+        smoothstep(
+          -0.18,
+          0.34,
+          facingToCamera
+        );
+
+      float sideRim =
+        pow(
+          1.0 -
+          abs(facingToCamera),
+          2.4
+        );
+
+      float key =
         max(
           dot(
-            normal,
-            viewDirection
+            n,
+            normalize(
+              -uKeyLight
+            )
+          ),
+          0.0
+        );
+
+      float fill =
+        max(
+          dot(
+            n,
+            normalize(
+              -uFillLight
+            )
+          ),
+          0.0
+        );
+
+      float rear =
+        max(
+          dot(
+            n,
+            normalize(
+              -uRimLight
+            )
           ),
           0.0
         );
 
       float fresnel =
         pow(
-          1.0 - facing,
-          2.25
-        );
-
-      vec3 lightDirection =
-        normalize(
-          vec3(
-            0.42,
-            0.76,
-            0.58
-          )
-        );
-
-      vec3 halfDirection =
-        normalize(
-          lightDirection +
-          viewDirection
-        );
-
-      float diffuse =
-        max(
-          dot(
-            normal,
-            lightDirection
+          1.0 -
+          max(
+            facingToCamera,
+            0.0
           ),
-          0.0
+          2.05
         );
 
-      float specular =
+      float facing =
         pow(
           max(
             dot(
-              normal,
-              halfDirection
+              reflect(
+                normalize(
+                  uKeyLight
+                ),
+                n
+              ),
+              viewDir
             ),
             0.0
           ),
-          30.0
+          28.0
         );
 
-      float sparklePhase =
-        uReducedMotion > 0.5
-          ? 1.0
-          : (
-              0.70 +
-              0.30 *
-              sin(
-                uTime * 1.7 +
-                vFacet * 8.2
+      float facetBand =
+        pow(
+          abs(
+            dot(
+              n,
+              normalize(
+                vec3(
+                  0.45,
+                  0.72,
+                  0.53
+                )
               )
-            );
+            )
+          ),
+          5.0
+        );
 
-      float sparkle =
-        smoothstep(
-          0.72,
-          1.0,
-          specular +
-          vFacet * 0.28
-        ) *
-        sparklePhase *
-        uSparkleStrength;
-
-      vec3 base =
-        mix(
-          uSecondaryColor,
-          uPrimaryColor,
-          clamp(
-            0.34 +
-            diffuse * 0.66,
-            0.0,
-            1.0
+      float sparkleSeed =
+        hash31(
+          floor(
+            (
+              n +
+              vWorldPosition
+            ) *
+            18.0
           )
         );
 
+      float sparklePhase =
+        sin(
+          uTime *
+          1.85 +
+          sparkleSeed *
+          6.28318
+        );
+
+      float sparkle =
+        smoothstep(
+          0.74,
+          1.0,
+          facing +
+          facetBand *
+          0.34
+        ) *
+        (
+          0.76 +
+          sparklePhase *
+          0.24
+        ) *
+        uSparkle *
+        rearSuppression;
+
+      float twinkle =
+        1.0 +
+        sin(
+          uTime *
+          0.70 +
+          sparkleSeed *
+          6.28318
+        ) *
+        0.045 *
+        uTwinkle;
+
       if (vHaloPass > 0.5) {
         vec3 haloColor =
-          base * 0.45 +
-          uRimColor *
-          fresnel *
-          0.92;
+          base *
+          (
+            0.70 +
+            fresnel *
+            1.18 +
+            sideRim *
+            0.42 +
+            rear *
+            0.24
+          ) *
+          uHaloStrength *
+          twinkle;
 
         float haloAlpha =
           clamp(
             (
-              0.025 +
-              fresnel * 0.18
+              0.040 +
+              fresnel *
+              0.18 +
+              sideRim *
+              0.08
             ) *
-            uHaloStrength *
-            uOpacity,
+            uProminence *
+            uHaloStrength,
             0.0,
-            0.28
+            0.34
           );
 
         gl_FragColor =
@@ -900,39 +865,123 @@
         return;
       }
 
-      vec3 color =
-        base *
-        (
-          0.22 +
-          diffuse * 0.82
+      float diffuse =
+        0.24 +
+        key *
+        0.82 +
+        fill *
+        0.30 +
+        rear *
+        0.14;
+
+      diffuse =
+        mix(
+          diffuse,
+          pow(
+            diffuse,
+            0.68
+          ),
+          clamp(
+            uContrast -
+            1.0,
+            0.0,
+            0.7
+          )
         );
 
-      color +=
-        uHighlightColor *
-        specular *
-        0.92;
+      vec3 lit =
+        base *
+        diffuse *
+        twinkle;
 
-      color +=
-        uRimColor *
-        fresnel *
-        uRimStrength;
+      vec3 spec =
+        vec3(
+          1.0,
+          0.96,
+          0.82
+        ) *
+        facing *
+        uSpecular *
+        rearSuppression;
 
-      color +=
+      vec3 rim =
+        base *
+        (
+          fresnel *
+          0.72 +
+          sideRim *
+          0.38
+        ) *
+        uRim;
+
+      vec3 coolRim =
+        vec3(
+          0.68,
+          0.86,
+          1.0
+        ) *
+        (
+          fresnel *
+          0.22 +
+          sideRim *
+          0.14
+        ) *
+        uRim;
+
+      vec3 emissive =
         base *
         uEmissive;
 
-      color +=
-        uHighlightColor *
+      vec3 spark =
+        vec3(
+          1.0,
+          0.96,
+          0.78
+        ) *
         sparkle;
+
+      float rearDim =
+        mix(
+          0.62,
+          1.0,
+          rearSuppression
+        );
+
+      vec3 color =
+        (
+          (
+            lit +
+            spec +
+            rim +
+            coolRim +
+            emissive +
+            spark
+          ) *
+          uProminence +
+          uAmbientColor *
+          base *
+          0.20
+        ) *
+        rearDim;
+
+      float alpha =
+        clamp(
+          uAlpha *
+          (
+            0.70 +
+            uProminence *
+            0.30 +
+            fresnel *
+            0.08
+          ),
+          0.12,
+          1.0
+        );
 
       gl_FragColor =
         vec4(
           color,
-          clamp(
-            uOpacity,
-            0.0,
-            1.0
-          )
+          alpha
         );
     }
   `;
@@ -1782,81 +1831,106 @@
     ];
   }
 
-  function createCrystalMesh(options) {
+  function createDiamondStarMesh(
+    options = {}
+  ) {
     const points =
-      options.points;
+      options.points ||
+      8;
 
     const radius =
-      options.radius;
+      options.radius ||
+      0.62;
 
-    const innerRadius =
-      options.innerRadius;
+    const inner =
+      options.inner ||
+      radius * 0.46;
 
     const depth =
-      options.depth;
+      options.depth ||
+      0.42;
 
     const crown =
-      options.crown;
+      options.crown ||
+      0.22;
 
-    const compression =
-      options.compression;
+    const color =
+      options.color ||
+      PALETTES.north.primary;
+
+    const warmth =
+      options.warmth ||
+      0;
 
     const vertices = [];
-    const triangles = [];
+    const faces = [];
 
-    function addVertex(
-      x,
-      y,
-      z
+    function add(
+      point
     ) {
-      vertices.push([
-        x,
-        y,
-        z
-      ]);
-
-      return (
-        vertices.length -
-        1
+      vertices.push(
+        point
       );
+
+      return vertices.length -
+        1;
     }
 
-    function addTriangle(
-      first,
-      second,
-      third
+    function face(
+      a,
+      b,
+      c
     ) {
-      triangles.push([
-        first,
-        second,
-        third
+      faces.push([
+        a,
+        b,
+        c
       ]);
     }
 
     const frontApex =
-      addVertex(
+      add([
         0,
         0,
-        depth + crown
-      );
+        depth
+      ]);
 
     const rearApex =
-      addVertex(
+      add([
         0,
         0,
         -depth
-      );
+      ]);
+
+    const frontCrown =
+      add([
+        0,
+        0,
+        depth +
+        crown
+      ]);
+
+    const rearCrown =
+      add([
+        0,
+        0,
+        -depth -
+        crown * 0.72
+      ]);
 
     const outer = [];
-    const inner = [];
+    const innerRing = [];
+    const frontBevel = [];
+    const rearBevel = [];
 
     for (
       let index = 0;
       index < points * 2;
       index += 1
     ) {
-      const outerPoint =
-        index % 2 === 0;
+      const isPoint =
+        index % 2 ===
+        0;
 
       const angle =
         (
@@ -1871,97 +1945,173 @@
         Math.PI / 2;
 
       const activeRadius =
-        outerPoint
+        isPoint
           ? radius
-          : innerRadius;
+          : inner;
+
+      const yScale =
+        0.78;
+
+      const ridge =
+        isPoint
+          ? 0.05
+          : -0.02;
 
       outer.push(
-        addVertex(
+        add([
           Math.cos(angle) *
             activeRadius,
 
           Math.sin(angle) *
             activeRadius *
-            compression,
+            yScale,
 
-          outerPoint
-            ? 0.04
-            : -0.02
-        )
+          ridge
+        ])
       );
 
-      inner.push(
-        addVertex(
+      innerRing.push(
+        add([
           Math.cos(angle) *
             activeRadius *
-            0.42,
+            0.38,
 
           Math.sin(angle) *
             activeRadius *
-            compression *
-            0.42,
+            yScale *
+            0.38,
 
-          depth * 0.30
-        )
+          depth * 0.14
+        ])
+      );
+
+      frontBevel.push(
+        add([
+          Math.cos(angle) *
+            activeRadius *
+            0.72,
+
+          Math.sin(angle) *
+            activeRadius *
+            yScale *
+            0.72,
+
+          depth * 0.52
+        ])
+      );
+
+      rearBevel.push(
+        add([
+          Math.cos(angle) *
+            activeRadius *
+            0.68,
+
+          Math.sin(angle) *
+            activeRadius *
+            yScale *
+            0.68,
+
+          -depth * 0.48
+        ])
       );
     }
 
+    const count =
+      outer.length;
+
     for (
       let index = 0;
-      index < outer.length;
+      index < count;
       index += 1
     ) {
       const next =
         (
-          index + 1
+          index +
+          1
         ) %
-        outer.length;
+        count;
 
-      addTriangle(
+      face(
         frontApex,
-        inner[index],
-        inner[next]
+        innerRing[index],
+        innerRing[next]
       );
 
-      addTriangle(
-        inner[index],
+      face(
+        frontCrown,
+        frontBevel[next],
+        frontBevel[index]
+      );
+
+      face(
+        frontBevel[index],
         outer[index],
         outer[next]
       );
 
-      addTriangle(
-        inner[index],
+      face(
+        frontBevel[index],
         outer[next],
-        inner[next]
+        frontBevel[next]
       );
 
-      addTriangle(
+      face(
+        innerRing[index],
+        frontBevel[index],
+        frontBevel[next]
+      );
+
+      face(
+        innerRing[index],
+        frontBevel[next],
+        innerRing[next]
+      );
+
+      face(
         rearApex,
+        rearBevel[next],
+        rearBevel[index]
+      );
+
+      face(
+        rearCrown,
+        rearBevel[index],
+        rearBevel[next]
+      );
+
+      face(
+        rearBevel[index],
         outer[next],
         outer[index]
+      );
+
+      face(
+        rearBevel[index],
+        rearBevel[next],
+        outer[next]
       );
     }
 
     const positions = [];
     const normals = [];
-    const facets = [];
+    const colors = [];
 
-    triangles.forEach(
+    faces.forEach(
       (
         triangle,
-        triangleIndex
+        faceIndex
       ) => {
-        const first =
+        const a =
           vertices[
             triangle[0]
           ];
 
-        const second =
+        const b =
           vertices[
             triangle[1]
           ];
 
-        const third =
+        const c =
           vertices[
             triangle[2]
           ];
@@ -1970,45 +2120,69 @@
           normalizeVector(
             cross(
               subtract(
-                second,
-                first
+                b,
+                a
               ),
               subtract(
-                third,
-                first
+                c,
+                a
               )
             )
           );
 
-        const facet =
+        const lift =
+          0.84 +
           (
-            triangleIndex %
-            11
-          ) /
-          10;
+            faceIndex % 7
+          ) *
+          0.034;
 
-        for (
-          const point
-          of [
-            first,
-            second,
-            third
-          ]
-        ) {
-          positions.push(
-            point[0],
-            point[1],
-            point[2]
-          );
+        const sparkleLift =
+          faceIndex % 5 === 0
+            ? 0.13
+            : 0;
 
-          normals.push(
-            normal[0],
-            normal[1],
-            normal[2]
-          );
+        [a, b, c].forEach(
+          point => {
+            positions.push(
+              point[0],
+              point[1],
+              point[2]
+            );
 
-          facets.push(facet);
-        }
+            normals.push(
+              normal[0],
+              normal[1],
+              normal[2]
+            );
+
+            colors.push(
+              Math.min(
+                color[0] *
+                  lift +
+                  warmth * 0.06 +
+                  sparkleLift,
+                1
+              ),
+
+              Math.min(
+                color[1] *
+                  lift +
+                  warmth * 0.04 +
+                  sparkleLift,
+                1
+              ),
+
+              Math.min(
+                color[2] *
+                  lift +
+                  warmth * 0.02 +
+                  sparkleLift,
+                1
+              )
+            );
+          }
+        );
       }
     );
 
@@ -2023,76 +2197,47 @@
           normals
         ),
 
-      facets:
+      colors:
         new Float32Array(
-          facets
+          colors
         ),
 
       vertexCount:
-        positions.length / 3,
-
-      summary:
-        Object.freeze({
-          points,
-          radius,
-          innerRadius,
-          depth,
-          crown,
-          compression,
-
-          vertexCount:
-            positions.length / 3
-        })
+        positions.length / 3
     });
   }
 
-  function buildCpuMeshes() {
+function buildCpuMeshes() {
+  state.cpuMeshes.clear();
+
+  for (const wing of WINGS) {
+    const warm = wing === "south" || wing === "east";
     state.cpuMeshes.set(
-      NODE_KINDS.CARDINAL,
-      createCrystalMesh({
-        points:
-          8,
-
-        radius:
-          0.68,
-
-        innerRadius:
-          0.30,
-
-        depth:
-          0.42,
-
-        crown:
-          0.18,
-
-        compression:
-          0.80
+      `cardinal-${wing}`,
+      createDiamondStarMesh({
+        points: 8,
+        radius: 0.72,
+        inner: 0.30,
+        depth: 0.42,
+        crown: 0.20,
+        color: PALETTES[wing].primary,
+        warmth: warm ? 0.10 : 0.02
       })
     );
-
     state.cpuMeshes.set(
-      NODE_KINDS.ROOM,
-      createCrystalMesh({
-        points:
-          6,
-
-        radius:
-          0.42,
-
-        innerRadius:
-          0.20,
-
-        depth:
-          0.25,
-
-        crown:
-          0.10,
-
-        compression:
-          0.84
+      `room-${wing}`,
+      createDiamondStarMesh({
+        points: 6,
+        radius: 0.42,
+        inner: 0.20,
+        depth: 0.25,
+        crown: 0.10,
+        color: PALETTES[wing].primary,
+        warmth: warm ? 0.08 : 0.02
       })
     );
   }
+}
 
   function discoverDom() {
     state.root =
@@ -2562,6 +2707,14 @@
       settled:
         true,
 
+      selected:
+        false,
+
+      materialKey:
+        kind === NODE_KINDS.CARDINAL
+          ? "CARDINAL_IDLE"
+          : "ROOM_IDLE",
+
       current: {
         x:
           initialPosition[0],
@@ -3003,177 +3156,89 @@
   }
 
   function computeTargets(frame) {
-    if (
-      state.held ||
-      frame.held === true
-    ) {
-      return;
-    }
-
-    const mode =
-      displayMode(frame);
-
-    const activeCluster =
-      activeClusterId(frame);
-
-    const activeRoom =
-      activeRoomId(frame);
-
-    const selectedCardinal =
-      selectedCardinalId(frame);
-
-    const orbit =
-      orbitQuaternion(frame);
-
-    const cluster =
-      clusterQuaternion(frame);
-
-    for (
-      const node
-      of state.registry.values()
-    ) {
-      const material =
-        materialForNode(node);
-
-      let position;
-
-      let visible =
-        false;
-
-      let selected =
-        false;
-
-      if (
-        node.kind ===
-        NODE_KINDS.CARDINAL
-      ) {
-        position =
-          rotateVectorByQuaternion(
-            CARDINAL_BASE_POSITIONS[
-              node.cardinalId
-            ],
-            orbit
-          );
-
-        visible =
-          mode ===
-          DISPLAY_MODES.CONSTELLATION;
-
-        selected =
-          node.cardinalId ===
-          selectedCardinal;
-      } else {
-        position =
-          rotateVectorByQuaternion(
-            ROOM_BASE_POSITIONS[
-              roomOrdinal(
-                node.childId
-              )
-            ],
-            cluster
-          );
-
-        visible =
-          mode ===
-            DISPLAY_MODES.CLUSTER &&
-          node.clusterId ===
-            activeCluster;
-
-        selected =
-          node.childId ===
-          activeRoom;
-      }
-
-      node.targetVisible =
-        visible;
-
-      node.target.x =
-        position[0];
-
-      node.target.y =
-        position[1];
-
-      node.target.z =
-        position[2];
-
-      if (!visible) {
-        snapNodeInactive(node);
-        continue;
-      }
-
-      /*
-        Newly accepted presentation nodes become semantically visible
-        immediately. Their material values may still interpolate into place.
-      */
-      node.visible =
-        true;
-
-      node.target.scale =
-        selected
-          ? material.activeScale
-          : material.baseScale;
-
-      node.target.opacity =
-        material.opacity;
-
-      node.target.emissive =
-        selected
-          ? clamp(
-              material.emissive *
-              1.28,
-              0,
-              0.55
-            )
-          : material.emissive;
-
-      node.target.rim =
-        selected
-          ? clamp(
-              material.rim *
-              1.18,
-              0,
-              1.7
-            )
-          : material.rim;
-
-      node.target.sparkle =
-        state.reducedMotion
-          ? 0
-          : (
-              selected
-                ? clamp(
-                    material.sparkle *
-                    1.24,
-                    0,
-                    0.52
-                  )
-                : material.sparkle
-            );
-
-      node.target.halo =
-        selected
-          ? clamp(
-              material.halo *
-              1.18,
-              0,
-              1.4
-            )
-          : material.halo;
-
-      node.target.spin =
-        state.reducedMotion
-          ? 0
-          : material.idleSpin;
-
-      node.target.float =
-        state.reducedMotion
-          ? 0
-          : material.idleFloat;
-
-      node.settled =
-        !nodeHasInterpolation(node);
-    }
+  if (state.held || frame.held === true) {
+    return;
   }
+
+  const mode = displayMode(frame);
+  const activeCluster = activeClusterId(frame);
+  const activeRoom = activeRoomId(frame);
+  const selectedCardinal = selectedCardinalId(frame);
+  const orbit = orbitQuaternion(frame);
+  const cluster = clusterQuaternion(frame);
+
+  for (const node of state.registry.values()) {
+    let position;
+    let visible = false;
+    let selected = false;
+
+    if (node.kind === NODE_KINDS.CARDINAL) {
+      position = rotateVectorByQuaternion(
+        CARDINAL_BASE_POSITIONS[node.cardinalId],
+        orbit
+      );
+      visible = mode === DISPLAY_MODES.CONSTELLATION;
+      selected = node.cardinalId === selectedCardinal;
+    } else {
+      position = rotateVectorByQuaternion(
+        ROOM_BASE_POSITIONS[roomOrdinal(node.childId)],
+        cluster
+      );
+      visible =
+        mode === DISPLAY_MODES.CLUSTER &&
+        node.clusterId === activeCluster;
+      selected = node.childId === activeRoom;
+    }
+
+    node.targetVisible = visible;
+    node.target.x = position[0];
+    node.target.y = position[1];
+    node.target.z = position[2];
+    node.selected = selected;
+
+    if (!visible) {
+      snapNodeInactive(node);
+      continue;
+    }
+
+    node.visible = true;
+    node.materialKey =
+      node.kind === NODE_KINDS.CARDINAL
+        ? (selected ? "CARDINAL_FOCUSED" : "CARDINAL_IDLE")
+        : (selected ? "ROOM_PRIMARY" : "ROOM_IDLE");
+
+    const material = MATERIALS[node.materialKey];
+    const depthRadius =
+      node.kind === NODE_KINDS.CARDINAL
+        ? 1.16
+        : 1.04;
+    const depth = clamp(
+      (position[2] / depthRadius + 1) / 2,
+      0,
+      1
+    );
+
+    node.target.scale = material.scale;
+    node.target.opacity = material.alpha;
+    node.target.emissive = material.emissive;
+    node.target.rim = material.rim;
+    node.target.sparkle = state.reducedMotion ? 0 : material.sparkle;
+    node.target.halo = material.halo;
+    node.target.spin =
+      state.reducedMotion
+        ? 0
+        : node.kind === NODE_KINDS.CARDINAL
+          ? (selected ? 0.15 : 0.08 + depth * 0.05)
+          : (selected ? 0.13 : 0.07 + depth * 0.04);
+    node.target.float =
+      state.reducedMotion
+        ? 0
+        : selected
+          ? 0.012
+          : 0.004 + depth * 0.005;
+    node.settled = !nodeHasInterpolation(node);
+  }
+}
 
   function nodeHasInterpolation(node) {
     for (
@@ -3664,32 +3729,16 @@
   }
 
   function buildGpuMesh(
-    gl,
-    cpuMesh
-  ) {
-    return {
-      vertexCount:
-        cpuMesh.vertexCount,
-
-      position:
-        createBuffer(
-          gl,
-          cpuMesh.positions
-        ),
-
-      normal:
-        createBuffer(
-          gl,
-          cpuMesh.normals
-        ),
-
-      facet:
-        createBuffer(
-          gl,
-          cpuMesh.facets
-        )
-    };
-  }
+  gl,
+  cpuMesh
+) {
+  return {
+    vertexCount: cpuMesh.vertexCount,
+    position: createBuffer(gl, cpuMesh.positions),
+    normal: createBuffer(gl, cpuMesh.normals),
+    color: createBuffer(gl, cpuMesh.colors)
+  };
+}
 
   function bindAttribute(
     context,
@@ -3779,7 +3828,7 @@
         );
 
         context.gl.deleteBuffer(
-          mesh.facet
+          mesh.color
         );
       }
 
@@ -3822,7 +3871,7 @@
             true,
 
           premultipliedAlpha:
-            false,
+            true,
 
           preserveDrawingBuffer:
             false
@@ -3874,136 +3923,39 @@
         new Map(),
 
       attributes:
-        Object.freeze({
-          position:
-            gl.getAttribLocation(
-              program,
-              "aPosition"
-            ),
+      Object.freeze({
+        position:
+          gl.getAttribLocation(program, "aPosition"),
+        normal:
+          gl.getAttribLocation(program, "aNormal"),
+        color:
+          gl.getAttribLocation(program, "aColor")
+      }),
 
-          normal:
-            gl.getAttribLocation(
-              program,
-              "aNormal"
-            ),
-
-          facet:
-            gl.getAttribLocation(
-              program,
-              "aFacet"
-            )
-        }),
-
-      uniforms:
-        Object.freeze({
-          model:
-            gl.getUniformLocation(
-              program,
-              "uModel"
-            ),
-
-          view:
-            gl.getUniformLocation(
-              program,
-              "uView"
-            ),
-
-          projection:
-            gl.getUniformLocation(
-              program,
-              "uProjection"
-            ),
-
-          normalMatrix:
-            gl.getUniformLocation(
-              program,
-              "uNormalMatrix"
-            ),
-
-          scale:
-            gl.getUniformLocation(
-              program,
-              "uScale"
-            ),
-
-          time:
-            gl.getUniformLocation(
-              program,
-              "uTime"
-            ),
-
-          opacity:
-            gl.getUniformLocation(
-              program,
-              "uOpacity"
-            ),
-
-          emissive:
-            gl.getUniformLocation(
-              program,
-              "uEmissive"
-            ),
-
-          rimStrength:
-            gl.getUniformLocation(
-              program,
-              "uRimStrength"
-            ),
-
-          sparkleStrength:
-            gl.getUniformLocation(
-              program,
-              "uSparkleStrength"
-            ),
-
-          haloStrength:
-            gl.getUniformLocation(
-              program,
-              "uHaloStrength"
-            ),
-
-          reducedMotion:
-            gl.getUniformLocation(
-              program,
-              "uReducedMotion"
-            ),
-
-          primaryColor:
-            gl.getUniformLocation(
-              program,
-              "uPrimaryColor"
-            ),
-
-          secondaryColor:
-            gl.getUniformLocation(
-              program,
-              "uSecondaryColor"
-            ),
-
-          rimColor:
-            gl.getUniformLocation(
-              program,
-              "uRimColor"
-            ),
-
-          highlightColor:
-            gl.getUniformLocation(
-              program,
-              "uHighlightColor"
-            ),
-
-          haloPass:
-            gl.getUniformLocation(
-              program,
-              "uHaloPass"
-            ),
-
-          haloExpansion:
-            gl.getUniformLocation(
-              program,
-              "uHaloExpansion"
-            )
-        }),
+    uniforms:
+      Object.freeze({
+        model: gl.getUniformLocation(program, "uModel"),
+        view: gl.getUniformLocation(program, "uView"),
+        projection: gl.getUniformLocation(program, "uProjection"),
+        normalMatrix: gl.getUniformLocation(program, "uNormalMatrix"),
+        time: gl.getUniformLocation(program, "uTime"),
+        prominence: gl.getUniformLocation(program, "uProminence"),
+        specular: gl.getUniformLocation(program, "uSpecular"),
+        rim: gl.getUniformLocation(program, "uRim"),
+        emissive: gl.getUniformLocation(program, "uEmissive"),
+        alpha: gl.getUniformLocation(program, "uAlpha"),
+        sparkle: gl.getUniformLocation(program, "uSparkle"),
+        twinkle: gl.getUniformLocation(program, "uTwinkle"),
+        contrast: gl.getUniformLocation(program, "uContrast"),
+        haloStrength: gl.getUniformLocation(program, "uHaloStrength"),
+        saturation: gl.getUniformLocation(program, "uSaturation"),
+        keyLight: gl.getUniformLocation(program, "uKeyLight"),
+        fillLight: gl.getUniformLocation(program, "uFillLight"),
+        rimLight: gl.getUniformLocation(program, "uRimLight"),
+        ambientColor: gl.getUniformLocation(program, "uAmbientColor"),
+        haloPass: gl.getUniformLocation(program, "uHaloPass"),
+        haloExpansion: gl.getUniformLocation(program, "uHaloExpansion")
+      }),
 
       onContextLost:
         null,
@@ -4239,212 +4191,97 @@
     return matrix;
   }
 
-  function modelMatrix(node) {
-    const position =
-      nodeWorldPosition(node);
+  function scale4(
+  x,
+  y,
+  z
+) {
+  return [
+    x, 0, 0, 0,
+    0, y, 0, 0,
+    0, 0, z, 0,
+    0, 0, 0, 1
+  ];
+}
 
-    return multiply4(
-      translate4(
-        position[0],
-        position[1],
-        position[2]
-      ),
+function modelMatrix(node, haloPass) {
+  const position = nodeWorldPosition(node);
+  const haloScale =
+    haloPass
+      ? 1 + node.current.halo * 0.10
+      : 1;
+  const scale = node.current.scale * haloScale;
+
+  return multiply4(
+    translate4(position[0], position[1], position[2]),
+    multiply4(
+      rotateZ4(node.current.rz),
       multiply4(
-        rotateZ4(
-          node.current.rz
-        ),
+        rotateY4(node.current.ry),
         multiply4(
-          rotateY4(
-            node.current.ry
-          ),
-          rotateX4(
-            node.current.rx
-          )
+          rotateX4(node.current.rx),
+          scale4(scale, scale, scale)
         )
       )
-    );
-  }
+    )
+  );
+}
 
   function applyUniforms(
-    context,
-    node,
-    frame,
-    haloPass
-  ) {
-    const gl =
-      context.gl;
+  context,
+  node,
+  frame,
+  haloPass
+) {
+  const gl = context.gl;
+  const view = matrixFromFrame(frame, "view");
+  const projection = matrixFromFrame(frame, "projection");
+  const model = modelMatrix(node, haloPass);
+  const modelView = multiply4(view, model);
+  const normalMatrix = inverseTransposeNormalMatrix3(modelView);
+  const material =
+    MATERIALS[node.materialKey] ||
+    MATERIALS.ROOM_IDLE;
+  const depthRadius =
+    node.kind === NODE_KINDS.CARDINAL
+      ? 1.16
+      : 1.04;
+  const depth = clamp(
+    (node.current.z / depthRadius + 1) / 2,
+    0,
+    1
+  );
+  const prominence = clamp(
+    0.34 + depth * 0.46 + (node.selected ? 0.30 : 0.10),
+    0.10,
+    1.16
+  );
 
-    const view =
-      matrixFromFrame(
-        frame,
-        "view"
-      );
-
-    const projection =
-      matrixFromFrame(
-        frame,
-        "projection"
-      );
-
-    const model =
-      modelMatrix(node);
-
-    const modelView =
-      multiply4(
-        view,
-        model
-      );
-
-    const normalMatrix =
-      inverseTransposeNormalMatrix3(
-        modelView
-      );
-
-    const palette =
-      PALETTES[
-        node.cardinalId
-      ] ||
-      PALETTES.north;
-
-    const haloStrength =
-      finiteNumber(
-        frame.viewport.cssWidth,
-        0
-      ) <=
-      QUALITY.haloDisableWidth
-        ? 0
-        : node.current.halo;
-
-    gl.uniformMatrix4fv(
-      context.uniforms.model,
-      false,
-      new Float32Array(
-        model
-      )
-    );
-
-    gl.uniformMatrix4fv(
-      context.uniforms.view,
-      false,
-      new Float32Array(
-        view
-      )
-    );
-
-    gl.uniformMatrix4fv(
-      context.uniforms
-        .projection,
-      false,
-      new Float32Array(
-        projection
-      )
-    );
-
-    gl.uniformMatrix3fv(
-      context.uniforms
-        .normalMatrix,
-      false,
-      new Float32Array(
-        normalMatrix
-      )
-    );
-
-    gl.uniform1f(
-      context.uniforms.scale,
-      node.current.scale
-    );
-
-    gl.uniform1f(
-      context.uniforms.time,
-      state.lastAnimationTime *
-        0.001
-    );
-
-    gl.uniform1f(
-      context.uniforms.opacity,
-      node.current.opacity
-    );
-
-    gl.uniform1f(
-      context.uniforms.emissive,
-      node.current.emissive
-    );
-
-    gl.uniform1f(
-      context.uniforms
-        .rimStrength,
-      node.current.rim
-    );
-
-    gl.uniform1f(
-      context.uniforms
-        .sparkleStrength,
-      state.reducedMotion
-        ? 0
-        : node.current.sparkle
-    );
-
-    gl.uniform1f(
-      context.uniforms
-        .haloStrength,
-      haloStrength
-    );
-
-    gl.uniform1f(
-      context.uniforms
-        .reducedMotion,
-      state.reducedMotion
-        ? 1
-        : 0
-    );
-
-    gl.uniform3fv(
-      context.uniforms
-        .primaryColor,
-      new Float32Array(
-        palette.primary
-      )
-    );
-
-    gl.uniform3fv(
-      context.uniforms
-        .secondaryColor,
-      new Float32Array(
-        palette.secondary
-      )
-    );
-
-    gl.uniform3fv(
-      context.uniforms.rimColor,
-      new Float32Array(
-        palette.rim
-      )
-    );
-
-    gl.uniform3fv(
-      context.uniforms
-        .highlightColor,
-      new Float32Array(
-        palette.highlight
-      )
-    );
-
-    gl.uniform1f(
-      context.uniforms.haloPass,
-      haloPass
-        ? 1
-        : 0
-    );
-
-    gl.uniform1f(
-      context.uniforms
-        .haloExpansion,
-      node.kind ===
-        NODE_KINDS.CARDINAL
-        ? 0.075
-        : 0.052
-    );
-  }
+  gl.uniformMatrix4fv(context.uniforms.model, false, new Float32Array(model));
+  gl.uniformMatrix4fv(context.uniforms.view, false, new Float32Array(view));
+  gl.uniformMatrix4fv(context.uniforms.projection, false, new Float32Array(projection));
+  gl.uniformMatrix3fv(context.uniforms.normalMatrix, false, new Float32Array(normalMatrix));
+  gl.uniform1f(context.uniforms.time, state.lastAnimationTime * 0.001);
+  gl.uniform1f(context.uniforms.prominence, prominence);
+  gl.uniform1f(context.uniforms.specular, material.specular);
+  gl.uniform1f(context.uniforms.rim, node.current.rim);
+  gl.uniform1f(context.uniforms.emissive, node.current.emissive);
+  gl.uniform1f(context.uniforms.alpha, node.current.opacity);
+  gl.uniform1f(context.uniforms.sparkle, state.reducedMotion ? 0 : node.current.sparkle);
+  gl.uniform1f(context.uniforms.twinkle, state.reducedMotion ? 0 : 1);
+  gl.uniform1f(context.uniforms.contrast, material.contrast);
+  gl.uniform1f(context.uniforms.haloStrength, node.current.halo);
+  gl.uniform1f(context.uniforms.saturation, 1);
+  gl.uniform3f(context.uniforms.keyLight, -0.42, -0.82, -0.68);
+  gl.uniform3f(context.uniforms.fillLight, 0.72, -0.24, -0.54);
+  gl.uniform3f(context.uniforms.rimLight, 0.08, 0.46, 1.0);
+  gl.uniform3f(context.uniforms.ambientColor, 0.10, 0.12, 0.18);
+  gl.uniform1f(context.uniforms.haloPass, haloPass ? 1 : 0);
+  gl.uniform1f(
+    context.uniforms.haloExpansion,
+    node.kind === NODE_KINDS.CARDINAL ? 0.075 : 0.052
+  );
+}
 
   function drawNode(
     context,
@@ -4477,9 +4314,9 @@
 
     bindAttribute(
       context,
-      mesh.facet,
-      context.attributes.facet,
-      1
+        mesh.color,
+        context.attributes.color,
+        3
     );
 
     applyUniforms(

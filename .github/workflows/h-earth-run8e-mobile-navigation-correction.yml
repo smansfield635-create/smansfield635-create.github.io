@@ -84,7 +84,9 @@ jobs:
             'showroom/globe/h-earth/index.html',
             'showroom/globe/h-earth/functional-landscape/index.js',
             'showroom/globe/h-earth/functional-landscape/environment-integration.js',
-            'showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js'
+            'showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-mobile-navigation-correction-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
           }
           paths = {
             line.strip()
@@ -100,7 +102,7 @@ jobs:
             raise SystemExit(f'UNEXPECTED_MOBILE_CORRECTION_PATHS:{unexpected}')
           if missing:
             raise SystemExit(f'MISSING_MOBILE_CORRECTION_PATHS:{missing}')
-          if not 8 <= len(paths) <= 9:
+          if not 10 <= len(paths) <= 11:
             raise SystemExit(f'INVALID_MOBILE_CORRECTION_PATH_COUNT:{len(paths)}')
           PY
 

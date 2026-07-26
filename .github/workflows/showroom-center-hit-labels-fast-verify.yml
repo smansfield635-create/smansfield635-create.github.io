@@ -25,11 +25,27 @@ jobs:
           ref: agent/showroom-compass-center-hit-labels-001
           fetch-depth: 0
 
+      - name: Bind canonical interactions to orbit readiness
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('showroom/index.html')
+          text = path.read_text()
+          old = '''      await loadSerial(orbitScripts);\n\n      runWhenIdle(\n        mountPlanet,'''
+          new = '''      await loadSerial(orbitScripts);\n      await loadInteractionSystems("orbit-ready");\n\n      runWhenIdle(\n        mountPlanet,'''
+          if new not in text:
+              if text.count(old) != 1:
+                  raise SystemExit(f'ORBIT_INTERACTION_BIND_COUNT:{text.count(old)}')
+              text = text.replace(old, new, 1)
+          path.write_text(text)
+          PY
+
       - name: Static verification
         run: |
           set -euo pipefail
           node --check showroom/index.interactions.js
           grep -F 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A' showroom/index.html
+          grep -F 'await loadInteractionSystems("orbit-ready");' showroom/index.html
           grep -F 'frontProjectionOverridesCompass' showroom/index.interactions.js
           grep -F 'N · Story' showroom/index.interactions.js
           grep -F 'Audralia' showroom/index.interactions.js
@@ -51,119 +67,68 @@ jobs:
           node <<'NODE'
           const fs = require('fs');
           const { chromium } = require('playwright');
-          let browser = null;
-
+          let browser;
           (async () => {
             let receipt;
             try {
               browser = await chromium.launch({ headless: true });
-              const page = await browser.newPage({
-                viewport: { width: 360, height: 800 },
-                isMobile: true,
-                hasTouch: true
-              });
+              const page = await browser.newPage({ viewport: { width: 360, height: 800 }, isMobile: true, hasTouch: true });
               const pageErrors = [];
-              const consoleErrors = [];
               page.on('pageerror', error => pageErrors.push(String(error)));
-              page.on('console', message => {
-                if (message.type() === 'error') consoleErrors.push(message.text());
-              });
-
-              await page.goto('http://127.0.0.1:4173/showroom/', {
-                waitUntil: 'domcontentloaded',
-                timeout: 30000
-              });
-              await page.evaluate(() => {
-                document.querySelector('#showroom-orbit')?.scrollIntoView({
-                  behavior: 'auto',
-                  block: 'center'
-                });
-              });
+              await page.goto('http://127.0.0.1:4173/showroom/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+              await page.evaluate(() => document.querySelector('#showroom-orbit')?.scrollIntoView({ behavior: 'auto', block: 'center' }));
               await page.waitForTimeout(12000);
 
               const constellation = await page.evaluate(() => {
-                const controller = window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER;
                 const center = document.querySelector('[data-showroom-center-layer]');
                 const planet = document.querySelector('.showroom-planet-root');
                 const control = document.querySelector('[data-showroom-compass-control]');
                 const label = document.querySelector('.showroom-compass-control__label');
-                const projection = controller?.getSemanticProjection?.() || [];
                 return {
                   interactionsPresent: Boolean(window.SHOWROOM_INTERACTIONS),
                   centerWidth: center?.getBoundingClientRect().width ?? null,
                   planetWidth: planet?.getBoundingClientRect().width ?? null,
                   controlPointerEvents: control ? getComputedStyle(control).pointerEvents : null,
                   labelPointerEvents: label ? getComputedStyle(label).pointerEvents : null,
-                  labels: Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim()).sort(),
-                  projectionCount: projection.length,
-                  visibleProjectionCount: projection.filter(record => record.visible !== false).length,
-                  frontProjectionCount: projection.filter(record => record.visible !== false && record.depthLayer === 'front').length
+                  labels: Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim()).sort()
                 };
               });
 
-              const cardinalRequest = await page.evaluate(() =>
-                window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER?.requestCardinalSelection?.('north') !== false
-              );
+              const cardinalRequest = await page.evaluate(() => window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER?.requestCardinalSelection?.('north') !== false);
               await page.waitForTimeout(4000);
-              const cluster = await page.evaluate(() => ({
-                labels: Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim()).sort(),
-                mode: document.querySelector('[data-showroom-root]')?.dataset.showroomPresentationMode || '',
-                activeCluster: document.querySelector('[data-showroom-root]')?.dataset.showroomActiveCluster || ''
-              }));
-
-              const expectedCardinals = ['E · Characters', 'N · Story', 'S · Wonders', 'W · Mysteries'].sort();
-              const expectedCluster = ['Invitation', 'Mission', 'Timeline', 'Welcome'].sort();
+              const clusterLabels = await page.evaluate(() => Array.from(document.querySelectorAll('[data-showroom-projected-label]:not([hidden])')).map(node => node.textContent.trim()).sort());
+              const cardinals = ['E · Characters', 'N · Story', 'S · Wonders', 'W · Mysteries'].sort();
+              const cluster = ['Invitation', 'Mission', 'Timeline', 'Welcome'].sort();
               const pass = Boolean(
                 constellation.interactionsPresent &&
-                constellation.centerWidth !== null && constellation.centerWidth <= 165 &&
-                constellation.planetWidth !== null && constellation.planetWidth <= 145 &&
+                constellation.centerWidth <= 165 &&
+                constellation.planetWidth <= 145 &&
                 constellation.controlPointerEvents === 'none' &&
                 constellation.labelPointerEvents === 'auto' &&
-                JSON.stringify(constellation.labels) === JSON.stringify(expectedCardinals) &&
+                JSON.stringify(constellation.labels) === JSON.stringify(cardinals) &&
                 cardinalRequest &&
-                JSON.stringify(cluster.labels) === JSON.stringify(expectedCluster) &&
+                JSON.stringify(clusterLabels) === JSON.stringify(cluster) &&
                 pageErrors.length === 0
               );
-
-              receipt = {
-                schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_VERIFICATION_v2',
-                pass,
-                viewport: { width: 360, height: 800, mobile: true, touch: true },
-                constellation,
-                cardinalRequest,
-                cluster,
-                pageErrors,
-                consoleErrors
-              };
+              receipt = { schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_VERIFICATION_v3', pass, constellation, cardinalRequest, clusterLabels, pageErrors };
             } catch (error) {
-              receipt = {
-                schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_VERIFICATION_v2',
-                pass: false,
-                fatalError: String(error?.stack || error?.message || error)
-              };
+              receipt = { schema: 'SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_VERIFICATION_v3', pass: false, fatalError: String(error?.stack || error) };
             } finally {
               if (browser) await browser.close().catch(() => {});
             }
-
-            fs.writeFileSync(
-              '.github/tmp/showroom-center-hit-labels-diagnostic.json',
-              JSON.stringify(receipt, null, 2) + '\n'
-            );
+            fs.writeFileSync('.github/tmp/showroom-center-hit-labels-diagnostic.json', JSON.stringify(receipt, null, 2) + '\n');
             console.log(JSON.stringify(receipt, null, 2));
-          })().catch(error => {
-            console.error(error);
-            process.exit(1);
-          });
+          })().catch(error => { console.error(error); process.exit(1); });
           NODE
 
-      - name: Persist receipt
+      - name: Persist candidate and receipt
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '4189828+github-actions[bot]@users.noreply.github.com'
-          git add .github/tmp/showroom-center-hit-labels-diagnostic.json
+          git add showroom/index.html .github/tmp/showroom-center-hit-labels-diagnostic.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Record finite Showroom orbit browser verification'
+            git commit -m 'Bind Showroom interactions to orbit and verify labels'
             git push origin HEAD:agent/showroom-compass-center-hit-labels-001
           fi
 

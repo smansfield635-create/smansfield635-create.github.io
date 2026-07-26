@@ -22,7 +22,9 @@ export const H_EARTH_RUN_8E_ENGINEERING_SCOPE_PATHS = Object.freeze([
   '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
   '/.github/workflows/h-earth-run8e-public-route-validation.yml',
   '/showroom/globe/h-earth/functional-landscape/environment-integration.js',
-  '/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json'
+  '/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json',
+  '/.github/workflows/h-earth-run8e-pre-update-baseline-comparison.yml',
+  '/h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json'
 ]);
 
 const OCCURRENCES = Object.freeze(
@@ -58,11 +60,13 @@ export const H_EARTH_RUN_8E_ENGINEERING_SCOPE_EVIDENCE = freeze({
     'ACTUAL_TERRAIN_AND_VEGETATION_DEPTH_INTERACTION',
     'SINGLE_SKY_AUTHORITY_MATERIALIZATION',
     'SUN_DISC_MATERIALIZATION',
-    'DETERMINISTIC_BRANCH_NATIVE_ENGINEERING_EXECUTION'
+    'DETERMINISTIC_BRANCH_NATIVE_ENGINEERING_EXECUTION',
+    'RUN_7I_TO_RUN_8E_PRE_UPDATE_BASELINE_COMPARISON'
   ]),
   verifiedOn: '2026-07-26',
   evidenceLimitations: Object.freeze([
     'PUBLIC_ROUTE_BRANCH_EXECUTION_IS_A_SEPARATE_RUN_8E_OCCURRENCE',
+    'PRE_UPDATE_BASELINE_COMPARISON_DOES_NOT_ASSERT_VISUAL_QUALITY_SUPERIORITY',
     'PHYSICAL_SAMSUNG_EXECUTION_NOT_INCLUDED',
     'NO_MAIN_PROMOTION',
     'NO_DEPLOYMENT',
@@ -77,7 +81,7 @@ export const H_EARTH_RUN_8E_ENGINEERING_SCOPE_NODE = freeze({
   nodeSubtype: 'RUN_8E_INTEGRATION_ENGINEERING_SCOPE_PACKAGE',
   displayName: 'H-Earth Run 8E Integration Engineering Scope Package',
   description:
-    'Registers the bounded Run 8E successor package, West admission, Packet 002 transfer, frame, shared-depth renderer, sky/sun engineering-validation, and public-route branch execution paths.',
+    'Registers the bounded Run 8E successor package, West admission, Packet 002 transfer, frame, shared-depth renderer, sky/sun engineering-validation, public-route branch execution, and pre-update Run 7I comparison paths.',
   repositoryPaths: [...H_EARTH_RUN_8E_ENGINEERING_SCOPE_PATHS],
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: 'EXECUTED_IMPLEMENTATION_EVIDENCE',
@@ -124,13 +128,15 @@ export const H_EARTH_RUN_8E_ENGINEERING_SCOPE_NODE = freeze({
   requiredValidations: Object.freeze([
     'EXACT_RUN_8E_ENGINEERING_PATH_RESOLUTION',
     'AUTOMATIC_REPOSITORY_PREFLIGHT',
-    'RUN_8E_BRANCH_NATIVE_ENGINEERING_EXECUTION_PASS'
+    'RUN_8E_BRANCH_NATIVE_ENGINEERING_EXECUTION_PASS',
+    'RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_PASS'
   ]),
   stoppingBoundaries: Object.freeze([
     'STOP_IF_ANY_RUN_8E_ENGINEERING_PATH_REMAINS_UNRESOLVED',
     'STOP_IF_ANY_RUN_8_PREDECESSOR_IS_REOPENED',
     'STOP_IF_LEGACY_PROXY_AND_SUCCESSOR_MOUNTAIN_IDENTITIES_COLLAPSE',
-    'STOP_IF_ENGINEERING_RECEIPT_OVERCLAIMS_ROUTE_SAMSUNG_DEPLOYMENT_OR_LIVE_PROOF'
+    'STOP_IF_ENGINEERING_RECEIPT_OVERCLAIMS_ROUTE_SAMSUNG_DEPLOYMENT_OR_LIVE_PROOF',
+    'STOP_IF_BASELINE_COMPARISON_CLAIMS_VISUAL_QUALITY_SUPERIORITY'
   ]),
   currentIdentityReferences: Object.freeze([
     'H_EARTH_RUN_8E_INTEGRATION_AND_LIVE_DELIVERY_CONTROL_v1',

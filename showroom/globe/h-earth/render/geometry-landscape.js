@@ -1,11 +1,11 @@
 /**
  * /showroom/globe/h-earth/render/geometry-landscape.js
  *
- * H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_RUN_6C_v1
+ * H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_RUN_6C_v2
  *
  * Constructs connected neutral terrain chunks from the Run 6B realization
- * descriptors and canonical terrain field. It performs no admission, frame,
- * compositor, renderer, navigation, or production work.
+ * descriptors and canonical terrain field. Semantic group membership remains
+ * distinct from the subset physically realized as terrain in each chunk.
  */
 
 import {
@@ -35,16 +35,18 @@ const freeze = (value, seen = new WeakSet()) => {
 };
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_RUN_6C_v1';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_RUN_6C_v2_SEMANTIC_PHYSICAL_SEPARATION';
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
   contractId: H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID,
   samplesPerAxis: 9,
   adjacentLodVariation: false,
   uniformSharedBoundaryResolution: true,
-  terrainChunkMaximum: 12,
+  terrainChunkMaximum: 10,
   worldFieldContractId: H_EARTH_TERRAIN_FIELD.contractId,
   neutralPrimitiveOnly: true,
+  semanticGroupIdentityPreserved: true,
+  physicalTerrainMembershipSeparated: true,
   ownsAdmission: false,
   ownsFrame: false,
   ownsRenderer: false
@@ -104,9 +106,17 @@ function constructChunk(chunk) {
 
   for (let row = 0; row < size; row += 1) {
     const rowSamples = [];
-    const z = lerp(chunk.worldBounds.zMin, chunk.worldBounds.zMax, row / (size - 1));
+    const z = lerp(
+      chunk.worldBounds.zMin,
+      chunk.worldBounds.zMax,
+      row / (size - 1)
+    );
     for (let column = 0; column < size; column += 1) {
-      const x = lerp(chunk.worldBounds.xMin, chunk.worldBounds.xMax, column / (size - 1));
+      const x = lerp(
+        chunk.worldBounds.xMin,
+        chunk.worldBounds.xMax,
+        column / (size - 1)
+      );
       const sample = sampleHEarthTerrainField(x, z);
       rowSamples.push(sample);
       vertices.push(createHEarthVector3(x, sample.elevation, z));
@@ -129,11 +139,14 @@ function constructChunk(chunk) {
   const construction = constructHEarthTriangleMesh({
     primitiveId,
     geometryId: `${primitiveId}:GEOMETRY`,
-    primitiveType: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.primitiveType.TRIANGLE_MESH,
+    primitiveType:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.primitiveType.TRIANGLE_MESH,
     vertices,
     indices,
-    normalMode: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.normalMode.FACE_AND_VERTEX,
-    expectedClosure: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.expectedClosure.OPEN_ALLOWED,
+    normalMode:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.normalMode.FACE_AND_VERTEX,
+    expectedClosure:
+      H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.expectedClosure.OPEN_ALLOWED,
     semanticRole: 'FUNCTIONAL_LANDSCAPE_TERRAIN_CHUNK',
     materialHint: freeze({
       materialKey: 'worldTerrainField',
@@ -148,12 +161,18 @@ function constructChunk(chunk) {
     metadata: freeze({
       providerContractId: H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID,
       chunkId: chunk.chunkId,
-      memberAddressIds: chunk.memberAddressIds,
+      physicalRole: chunk.physicalRole,
+      semanticGroupMemberAddressIds: chunk.memberAddressIds,
+      memberAddressIds: chunk.terrainMemberAddressIds,
+      realizedTerrainAddressIds: chunk.terrainMemberAddressIds,
+      shorelineWaterAddressIds: chunk.shorelineWaterMemberAddressIds,
+      proxyAddressIds: chunk.proxyMemberAddressIds,
       formationIds: chunk.formationIds,
       sharedEdgeKeys: chunk.sharedEdgeKeys,
       edgeSamples,
       lodState: chunk.lodState,
       realizationState: chunk.realizationState,
+      semanticIdentityIndependentOfPhysicalGranularity: true,
       admitted: false,
       aggregateFrameAuthority: false
     })
@@ -163,6 +182,8 @@ function constructChunk(chunk) {
     ok: construction?.valid === true &&
       isHEarthNeutralPrimitiveRecord(construction?.primitiveRecord),
     chunkId: chunk.chunkId,
+    physicalRole: chunk.physicalRole,
+    realizedTerrainAddressCount: chunk.terrainMemberAddressIds.length,
     primitive: construction?.primitiveRecord ?? null,
     edgeSamples,
     issues: construction?.issues ?? []
@@ -173,7 +194,9 @@ export function constructHEarthFunctionalLandscapeTerrain({
   realizationPlan = H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN
 } = {}) {
   const issues = [];
-  if (realizationPlan?.eligible !== true || realizationPlan.physicalChunkCount !== 16) {
+  if (realizationPlan?.eligible !== true ||
+      realizationPlan.physicalChunkCount !== 16 ||
+      realizationPlan.terrainChunkCount !== 10) {
     return freeze({
       ok: false,
       status: 'FUNCTIONAL_LANDSCAPE_TERRAIN_REJECTED',
@@ -186,26 +209,35 @@ export function constructHEarthFunctionalLandscapeTerrain({
   }
 
   const terrainChunks = realizationPlan.chunks.filter((chunk) =>
-    chunk.rowGroup <= 2 && chunk.realizationState !== 'ATMOSPHERIC_OR_PROXY'
+    chunk.terrainMemberAddressIds.length > 0 &&
+    chunk.physicalRole.includes('TERRAIN')
   );
   const chunkResults = terrainChunks.map(constructChunk);
   chunkResults.forEach((result) => {
-    if (!result.ok) issues.push(`TERRAIN_CHUNK_INVALID:${result.chunkId}`);
+    if (!result.ok) {
+      issues.push(`TERRAIN_CHUNK_INVALID:${result.chunkId}`);
+    }
   });
 
-  const byId = new Map(chunkResults.map((result) => [result.chunkId, result]));
+  const byId = new Map(
+    chunkResults.map((result) => [result.chunkId, result])
+  );
   for (const chunk of terrainChunks) {
     const current = byId.get(chunk.chunkId);
     for (const side of ['east', 'south']) {
-      const neighborId = chunk.neighborChunkIds[side];
-      if (!neighborId || !byId.has(neighborId)) continue;
+      const neighborId = chunk.physicalNeighborChunkIds[side];
+      if (!neighborId || !byId.has(neighborId)) {
+        continue;
+      }
       const opposite = side === 'east' ? 'west' : 'north';
       const evaluation = evaluateHEarthTerrainSharedEdge({
         edgeA: current.edgeSamples[side],
         edgeB: byId.get(neighborId).edgeSamples[opposite]
       });
       if (!evaluation.eligible) {
-        issues.push(`SHARED_EDGE_FAILED:${chunk.chunkId}:${side}:${neighborId}`);
+        issues.push(
+          `SHARED_EDGE_FAILED:${chunk.chunkId}:${side}:${neighborId}`
+        );
       }
     }
   }
@@ -214,17 +246,33 @@ export function constructHEarthFunctionalLandscapeTerrain({
     .filter((result) => result.ok)
     .map((result) => result.primitive);
   const bounds = primitives.length > 0
-    ? mergeHEarthGeometryBounds(primitives.map((primitive) => primitive.geometry.bounds))
+    ? mergeHEarthGeometryBounds(
+        primitives.map((primitive) => primitive.geometry.bounds)
+      )
     : null;
+  const realizedTerrainAddressIds = [
+    ...new Set(
+      terrainChunks.flatMap((chunk) => chunk.terrainMemberAddressIds)
+    )
+  ].sort();
+
+  if (realizedTerrainAddressIds.length !== 124) {
+    issues.push(
+      `REALIZED_TERRAIN_ADDRESS_COUNT_EXPECTED_124_ACTUAL_${realizedTerrainAddressIds.length}`
+    );
+  }
 
   return freeze({
-    ok: issues.length === 0 && primitives.length === terrainChunks.length,
+    ok: issues.length === 0 &&
+      primitives.length === terrainChunks.length,
     status: issues.length === 0
       ? 'FUNCTIONAL_LANDSCAPE_TERRAIN_COMPLETE'
       : 'FUNCTIONAL_LANDSCAPE_TERRAIN_FAILED',
     contractId: H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID,
     requestedChunkCount: terrainChunks.length,
     constructedChunkCount: primitives.length,
+    realizedTerrainAddressCount: realizedTerrainAddressIds.length,
+    realizedTerrainAddressIds,
     chunkResults,
     primitives,
     bounds,

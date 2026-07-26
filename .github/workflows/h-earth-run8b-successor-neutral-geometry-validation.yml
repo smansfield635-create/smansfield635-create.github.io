@@ -124,3 +124,5 @@ jobs:
             /tmp/run8b-receipt.json
           if-no-files-found: error
           retention-days: 30
+
+# Final-head validation trigger after bounded witness correction and cleanup.

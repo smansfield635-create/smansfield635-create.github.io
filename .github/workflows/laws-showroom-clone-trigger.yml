@@ -26,50 +26,69 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
+          import traceback
 
-          workflow = Path(
-              ".github/workflows/laws-showroom-canonical-crystal-clone.yml"
-          ).read_text(encoding="utf-8").splitlines()
+          error_path = Path(".laws-showroom-clone-generation-error.txt")
+          if error_path.exists():
+              error_path.unlink()
 
-          start_marker = "      - name: Duplicate canonical crystal corridor"
-          end_marker = "      - name: Validate generated executables"
-          start = workflow.index(start_marker)
-          end = workflow.index(end_marker)
+          try:
+              workflow = Path(
+                  ".github/workflows/laws-showroom-canonical-crystal-clone.yml"
+              ).read_text(encoding="utf-8").splitlines()
 
-          run_line = None
-          for index in range(start + 1, end):
-              if workflow[index] == "        run: |":
-                  run_line = index
-                  break
+              start_marker = "      - name: Duplicate canonical crystal corridor"
+              end_marker = "      - name: Validate generated executables"
+              start = workflow.index(start_marker)
+              end = workflow.index(end_marker)
 
-          if run_line is None:
-              raise SystemExit("Embedded generator run block not found")
+              run_line = None
+              for index in range(start + 1, end):
+                  if workflow[index] == "        run: |":
+                      run_line = index
+                      break
 
-          code_lines = []
-          for line in workflow[run_line + 1:end]:
-              if line.startswith("          "):
-                  code_lines.append(line[10:])
-              elif line.strip():
-                  raise SystemExit(f"Unexpected generator indentation: {line!r}")
-              else:
-                  code_lines.append("")
+              if run_line is None:
+                  raise RuntimeError("Embedded generator run block not found")
 
-          code = "\n".join(code_lines)
-          exec(compile(code, "canonical-crystal-generator", "exec"), {})
+              code_lines = []
+              for line in workflow[run_line + 1:end]:
+                  if line.startswith("          "):
+                      code_lines.append(line[10:])
+                  elif line.strip():
+                      raise RuntimeError(
+                          f"Unexpected generator indentation: {line!r}"
+                      )
+                  else:
+                      code_lines.append("")
+
+              code = "\n".join(code_lines)
+              exec(compile(code, "canonical-crystal-generator", "exec"), {})
+          except BaseException:
+              error_path.write_text(traceback.format_exc(), encoding="utf-8")
 
       - name: Validate generated executables
         run: |
+          if [ -f .laws-showroom-clone-generation-error.txt ]; then
+            cat .laws-showroom-clone-generation-error.txt
+            exit 0
+          fi
           node --check laws/index.crystals.js
           node --check showroom/index.crystals.js
           cmp -s laws/index.crystals.js laws/index.crystals.source.js
           cmp -s showroom/index.crystals.js showroom/index.crystals.source.js
           git diff --check
 
-      - name: Commit generated candidate
+      - name: Commit generated candidate or diagnostic
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add laws/index.crystals.js laws/index.crystals.source.js laws/index.html \
-                  showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.html
-          git commit -m "Clone canonical crystal corridor into Laws and Showroom"
+          if [ -f .laws-showroom-clone-generation-error.txt ]; then
+            git add .laws-showroom-clone-generation-error.txt
+            git commit -m "Record canonical crystal generator diagnostic"
+          else
+            git add laws/index.crystals.js laws/index.crystals.source.js laws/index.html \
+                    showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.html
+            git commit -m "Clone canonical crystal corridor into Laws and Showroom"
+          fi
           git push origin HEAD:agent/laws-showroom-crystal-corridor-clone-001

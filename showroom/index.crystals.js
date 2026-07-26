@@ -4289,10 +4289,13 @@ function modelMatrix(node, haloPass) {
     frame,
     haloPass
   ) {
-    const mesh =
-      context.meshes.get(
-        node.kind
-      );
+    const meshKey =
+    node.kind === NODE_KINDS.CARDINAL
+      ? `cardinal-${node.cardinalId}`
+      : `room-${node.cardinalId}`;
+
+  const mesh =
+    context.meshes.get(meshKey);
 
     if (!mesh) {
       return 0;

@@ -2326,10 +2326,10 @@
             "uProjection"
           ),
 
-        viewNormalMatrix:
+        normalMatrix:
           gl.getUniformLocation(
             program,
-            "uViewNormalMatrix"
+            "uNormalMatrix"
           ),
 
         time:
@@ -2410,22 +2410,22 @@
             "uHaloExpansion"
           ),
 
-        keyLightView:
+        keyLight:
           gl.getUniformLocation(
             program,
-            "uKeyLightView"
+            "uKeyLight"
           ),
 
-        fillLightView:
+        fillLight:
           gl.getUniformLocation(
             program,
-            "uFillLightView"
+            "uFillLight"
           ),
 
-        rimLightView:
+        rimLight:
           gl.getUniformLocation(
             program,
-            "uRimLightView"
+            "uRimLight"
           ),
 
         ambientColor:
@@ -4065,21 +4065,21 @@ function validateClusterSphereContract() {
     gl.useProgram(renderer.program);
 
     gl.uniform3f(
-      renderer.uniforms.keyLightView,
+      renderer.uniforms.keyLight,
       -0.42,
       -0.82,
       -0.68
     );
 
     gl.uniform3f(
-      renderer.uniforms.fillLightView,
+      renderer.uniforms.fillLight,
       0.72,
       -0.24,
       -0.54
     );
 
     gl.uniform3f(
-      renderer.uniforms.rimLightView,
+      renderer.uniforms.rimLight,
       0.08,
       0.46,
       1
@@ -4314,7 +4314,7 @@ function validateClusterSphereContract() {
     );
 
     gl.uniformMatrix3fv(
-      renderer.uniforms.viewNormalMatrix,
+      renderer.uniforms.normalMatrix,
       false,
       new Float32Array(normalMatrix)
     );

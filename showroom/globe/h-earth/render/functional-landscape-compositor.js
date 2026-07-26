@@ -1,11 +1,11 @@
 /**
  * /showroom/globe/h-earth/render/functional-landscape-compositor.js
  *
- * H_EARTH_FUNCTIONAL_LANDSCAPE_COMPOSITOR_ADAPTER_RUN_6E_v1
+ * H_EARTH_FUNCTIONAL_LANDSCAPE_COMPOSITOR_ADAPTER_RUN_6E_v2
  *
  * Isolated successor compositor adapter. It consumes one lawful functional-
- * landscape admitted frame, preserves its camera and visibility state, and
- * produces one renderer handoff plus an executable successor render plan.
+ * landscape admitted frame, preserves primitive/admission identity across
+ * camera revisions, and produces one successor renderer handoff.
  */
 
 import {
@@ -20,15 +20,101 @@ import {
 } from './renderer.functional-landscape.js';
 
 const freeze = (value, seen = new WeakSet()) => {
-  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  if (seen.has(value)) return value;
+  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) {
+    return value;
+  }
+  if (seen.has(value)) {
+    return value;
+  }
   seen.add(value);
   Object.values(value).forEach((nested) => freeze(nested, seen));
   return Object.freeze(value);
 };
 
+const finiteVector = (value) => value &&
+  ['x', 'y', 'z'].every((axis) =>
+    typeof value[axis] === 'number' && Number.isFinite(value[axis]));
+
+const cameraValid = (camera) =>
+  finiteVector(camera?.position) &&
+  finiteVector(camera?.target) &&
+  finiteVector(camera?.up) &&
+  Number.isFinite(camera?.verticalFovDegrees) &&
+  Number.isFinite(camera?.nearPlane) &&
+  Number.isFinite(camera?.farPlane) &&
+  camera.nearPlane > 0 &&
+  camera.farPlane > camera.nearPlane;
+
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_COMPOSITOR_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_COMPOSITOR_ADAPTER_RUN_6E_v1';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_COMPOSITOR_ADAPTER_RUN_6E_v2_CAMERA_REVISION';
+
+export function applyHEarthFunctionalLandscapeCameraRevision({
+  baseFrame,
+  camera,
+  cameraRevision
+} = {}) {
+  const issues = [];
+
+  if (baseFrame?.ok !== true ||
+      baseFrame?.contractId !==
+        H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID ||
+      baseFrame?.presentationMode !==
+        H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE ||
+      !Array.isArray(baseFrame?.primitives) ||
+      baseFrame.primitives.length === 0) {
+    issues.push('BASE_FUNCTIONAL_LANDSCAPE_FRAME_INVALID');
+  }
+  if (!cameraValid(camera)) {
+    issues.push('CAMERA_REVISION_INVALID');
+  }
+  if (!Number.isSafeInteger(cameraRevision) || cameraRevision < 1) {
+    issues.push('CAMERA_REVISION_SEQUENCE_INVALID');
+  }
+
+  if (issues.length > 0) {
+    return freeze({
+      ok: false,
+      status: 'FUNCTIONAL_LANDSCAPE_CAMERA_REVISION_REJECTED',
+      contractId: H_EARTH_FUNCTIONAL_LANDSCAPE_COMPOSITOR_CONTRACT_ID,
+      issues
+    });
+  }
+
+  return freeze({
+    ...baseFrame,
+    status: 'FUNCTIONAL_LANDSCAPE_CAMERA_FRAME_COMPLETE',
+    frameOccurrenceId:
+      `${baseFrame.frameOccurrenceId}:CAMERA_REVISION_${cameraRevision}`,
+    frameId:
+      `${baseFrame.frameId}:CAMERA_REVISION_${cameraRevision}`,
+    revision: baseFrame.revision + cameraRevision,
+    cameraRevision,
+    baseFrameOccurrenceId: baseFrame.frameOccurrenceId,
+    camera: freeze({
+      position: freeze({ ...camera.position }),
+      target: freeze({ ...camera.target }),
+      up: freeze({ ...camera.up }),
+      verticalFovDegrees: camera.verticalFovDegrees,
+      nearPlane: camera.nearPlane,
+      farPlane: camera.farPlane,
+      sourceCapacityContractId:
+        camera.sourceCapacityContractId ??
+        baseFrame.camera.sourceCapacityContractId,
+      cameraAuthority:
+        camera.cameraAuthority ??
+        baseFrame.camera.cameraAuthority,
+      terrainClearanceReceiptId:
+        camera.terrainClearanceReceiptId ?? null
+    }),
+    primitiveMembershipPreserved: true,
+    admissionRecordsPreserved: true,
+    geometryReconstructed: false,
+    westAdmissionRepeated: false,
+    runtimeActivated: true,
+    productionAuthority: false,
+    issues: []
+  });
+}
 
 export function constructHEarthFunctionalLandscapeRendererHandoff({
   frame = constructHEarthFunctionalLandscapeFrame(),
@@ -38,18 +124,28 @@ export function constructHEarthFunctionalLandscapeRendererHandoff({
 
   if (frame?.ok !== true ||
       frame?.contractId !== H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID ||
-      frame?.presentationMode !== H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE ||
-      !Array.isArray(frame?.primitives) || frame.primitives.length === 0) {
+      frame?.presentationMode !==
+        H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE ||
+      !Array.isArray(frame?.primitives) ||
+      frame.primitives.length === 0) {
     issues.push('FUNCTIONAL_LANDSCAPE_FRAME_INVALID');
   }
 
   const width = Math.max(
     1,
-    Math.floor(materializationExtent?.width ?? frame?.viewport?.width ?? 1)
+    Math.floor(
+      materializationExtent?.width ??
+      frame?.viewport?.width ??
+      1
+    )
   );
   const height = Math.max(
     1,
-    Math.floor(materializationExtent?.height ?? frame?.viewport?.height ?? 1)
+    Math.floor(
+      materializationExtent?.height ??
+      frame?.viewport?.height ??
+      1
+    )
   );
 
   const renderPlan = issues.length === 0
@@ -111,6 +207,7 @@ export function constructHEarthFunctionalLandscapeRendererHandoff({
     presentationMode: H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE,
     frameOccurrenceId: frame.frameOccurrenceId,
     frameRevision: frame.revision,
+    cameraRevision: frame.cameraRevision ?? 0,
     frame,
     rendererFrame: frame,
     renderPlan,
@@ -125,7 +222,7 @@ export function constructHEarthFunctionalLandscapeRendererHandoff({
     compatibilityModesPreserved: frame.compatibilityModesPreserved,
     existingCompositorAltered: false,
     successorCompositorAdapter: true,
-    runtimeActivated: false,
+    runtimeActivated: frame.runtimeActivated === true,
     productionAuthority: false,
     issues: []
   });

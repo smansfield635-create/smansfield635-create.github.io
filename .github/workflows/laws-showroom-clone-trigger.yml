@@ -1,0 +1,29 @@
+name: Trigger canonical crystal clone
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+
+jobs:
+  trigger:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-showroom-crystal-corridor-clone-001
+          fetch-depth: 0
+      - name: Trigger branch generation workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "Trigger canonical crystal corridor generation"
+          git push origin HEAD:agent/laws-showroom-crystal-corridor-clone-001

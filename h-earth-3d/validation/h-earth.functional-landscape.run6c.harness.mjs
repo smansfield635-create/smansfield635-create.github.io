@@ -1,13 +1,17 @@
 import assert from 'node:assert/strict';
+
 import {
   constructHEarthFunctionalLandscapeTerrain
 } from '../../showroom/globe/h-earth/render/geometry-landscape.js';
+
 import {
   constructHEarthFunctionalShorelineGeometry
 } from '../../showroom/globe/h-earth/render/geometry-shoreline.js';
+
 import {
   constructHEarthDistantContextGeometry
 } from '../../showroom/globe/h-earth/render/geometry-distant-context.js';
+
 import {
   previewHEarthFunctionalLandscape
 } from '../../showroom/globe/h-earth/render/landscape-preview.js';
@@ -24,6 +28,7 @@ console.log(JSON.stringify({
     status: terrain.status,
     requestedChunkCount: terrain.requestedChunkCount,
     constructedChunkCount: terrain.constructedChunkCount,
+    realizedTerrainAddressCount: terrain.realizedTerrainAddressCount,
     issues: terrain.issues,
     chunkFailures: (terrain.chunkResults ?? [])
       .filter((result) => result.ok !== true)
@@ -55,24 +60,32 @@ console.log(JSON.stringify({
     status: preview.status,
     primitiveCount: preview.primitiveCount,
     semanticAddressCount: preview.semanticAddressCount,
-    proxySummarizedAddressCount: preview.proxySummarizedAddressIds?.length ?? 0,
+    terrainAddressCount: preview.terrainAddressCount,
+    shorelineWaterAddressCount: preview.shorelineWaterAddressCount,
+    proxySummarizedAddressCount: preview.proxySummarizedAddressCount,
     issues: preview.issues
   }
 }, null, 2));
 
 assert.equal(terrain.ok, true);
-assert.equal(terrain.requestedChunkCount, 12);
-assert.equal(terrain.constructedChunkCount, 12);
+assert.equal(terrain.requestedChunkCount, 10);
+assert.equal(terrain.constructedChunkCount, 10);
+assert.equal(terrain.realizedTerrainAddressCount, 124);
 assert.equal(terrain.chunkResults.every((result) => result.ok), true);
 assert.equal(shoreline.ok, true);
 assert.equal(shoreline.bandCount, 7);
 assert.equal(distant.ok, true);
 assert.equal(distant.primitives.length, 1);
 assert.equal(preview.ok, true);
-assert.equal(preview.primitiveCount, 20);
+assert.equal(preview.primitiveCount, 18);
 assert.equal(preview.semanticAddressCount, 256);
 assert.equal(preview.semanticAddressIds.length, 256);
-assert.equal(preview.proxySummarizedAddressIds.length, 64);
+assert.equal(preview.terrainAddressCount, 124);
+assert.equal(preview.terrainAddressIds.length, 124);
+assert.equal(preview.shorelineWaterAddressCount, 96);
+assert.equal(preview.shorelineWaterAddressIds.length, 96);
+assert.equal(preview.proxySummarizedAddressCount, 36);
+assert.equal(preview.proxySummarizedAddressIds.length, 36);
 assert.equal(preview.admitted, false);
 assert.equal(preview.WestAdmissionPerformed, false);
 assert.equal(preview.compositorNodeCreated, false);
@@ -88,9 +101,12 @@ const receipt = {
   distantProxyCount: distant.primitives.length,
   primitiveCount: preview.primitiveCount,
   semanticAddressCount: preview.semanticAddressCount,
-  proxySummarizedAddressCount: preview.proxySummarizedAddressIds.length,
+  terrainAddressCount: preview.terrainAddressCount,
+  shorelineWaterAddressCount: preview.shorelineWaterAddressCount,
+  proxySummarizedAddressCount: preview.proxySummarizedAddressCount,
   sharedEdgeValidation: 'PASS',
   admissionPerformed: false,
   issues: []
 };
+
 console.log(JSON.stringify(receipt, null, 2));

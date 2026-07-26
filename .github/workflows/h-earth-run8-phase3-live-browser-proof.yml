@@ -1,0 +1,89 @@
+name: H-Earth Run 8 Phase 3 Live Browser Proof
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8-phase3-live-browser-proof-001
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: read
+  pages: read
+
+jobs:
+  validate-run8-phase3-live-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      H_EARTH_EXPECTED_DEPLOYMENT_HEAD: 65ed401f5a99679a93b5baad751678bfc49c19c9
+      H_EARTH_PHASE3_OUTPUT: /tmp/h-earth-run8-phase3-live-browser-proof
+    steps:
+      - name: Check out Phase 3 workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Execute Phase 3 live-browser proof
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/h-earth.run8.phase3-live-browser-proof.harness.mjs \
+            2>&1 | tee /tmp/h-earth-run8-phase3-live-browser-proof.log
+
+      - name: Verify bounded Phase 3 scope
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          mapfile -t changed < <(git diff --name-only origin/main...HEAD | sort)
+          allowed=(
+            ".github/workflows/h-earth-run8-phase3-live-browser-proof.yml"
+            "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js"
+            "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8-phase3-live-browser-proof-scope.js"
+            "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js"
+            "h-earth-3d/validation/h-earth.run8.phase3-live-browser-proof.harness.mjs"
+            "h-earth-3d/validation/h-earth.run8.phase3-live-browser-proof.receipt.json"
+          )
+          if [ "${#changed[@]}" -lt 2 ] || [ "${#changed[@]}" -gt 6 ]; then
+            printf 'Unexpected Phase 3 path count: %s\n' "${#changed[@]}"
+            printf '%s\n' "${changed[@]}"
+            exit 1
+          fi
+          for path in "${changed[@]}"; do
+            found=false
+            for permitted in "${allowed[@]}"; do
+              if [ "$path" = "$permitted" ]; then
+                found=true
+                break
+              fi
+            done
+            if [ "$found" != true ]; then
+              printf 'Unauthorized Phase 3 path: %s\n' "$path"
+              exit 1
+            fi
+          done
+
+      - name: Upload Phase 3 live-browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8-phase3-live-browser-proof-evidence
+          path: |
+            /tmp/h-earth-run8-phase3-live-browser-proof.log
+            /tmp/h-earth-run8-phase3-live-browser-proof
+          if-no-files-found: error
+          retention-days: 90

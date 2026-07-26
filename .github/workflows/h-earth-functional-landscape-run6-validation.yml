@@ -33,7 +33,7 @@ jobs:
           } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6.program.js';
           import {
             evaluateHEarthFunctionalLandscapeRun6FAmendment
-          } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape.run-6f.amendment.js';
+          } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6f.amendment.js';
           import {
             evaluateHEarthRun6FVisualCaptureAmendment
           } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6f-visual-capture.amendment.js';

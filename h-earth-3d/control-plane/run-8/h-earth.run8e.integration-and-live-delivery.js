@@ -2,9 +2,10 @@
  * H_EARTH_RUN_8E_INTEGRATION_AND_LIVE_DELIVERY_CONTROL_v1
  *
  * Governs the bounded Run 8E integration occurrence. Engineering integration,
- * branch execution, baseline comparison, and ordered Run 8 stack promotion may
- * be reconciled independently; deployment, physical Samsung-device proof, and
- * live-browser identity remain separate closure conditions.
+ * branch execution, baseline comparison, ordered Run 8 stack promotion, and
+ * deployment reconciliation may be established independently; physical
+ * Samsung-device proof and live-browser identity remain separate closure
+ * conditions.
  */
 
 const freeze = (value, seen = new WeakSet()) => {
@@ -23,6 +24,8 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
   workspaceBranch: 'agent/h-earth-run8e-public-integration-001',
   promotionReconciliationBranch:
     'agent/h-earth-run8-phase1-main-promotion-reconciliation-001',
+  deploymentReconciliationBranch:
+    'agent/h-earth-run8-phase2-deployment-reconciliation-001',
   predecessorStatus: {
     run8A: 'PASS_CLOSED',
     run8B: 'PASS_CLOSED',
@@ -86,7 +89,28 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
       run8C: '82b237284d6390005843174b0dfe23b6b7ac81c0',
       run8D: '716a4370cf5ef320b12d3731aff577dcd6bb778b',
       run8E: 'df1e1c7aad32a63fd35186cca0351b49b561579e'
-    }
+    },
+    deploymentReconciliation: 'PASS',
+    publicHEarthRouteReplacement: 'PASS',
+    deploymentTargetMainHead:
+      '0ae82d417dd7868f0546891d4e720abdb294d466',
+    deployedLiveOrigin:
+      'https://smansfield635-create.github.io',
+    durableDeploymentReceipt:
+      '/h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.receipt.json',
+    durableDeploymentReceiptSha256:
+      'd5d6fd208545cae21fc8f6a5da041ec5dc57b2a897a881adb9a8fa825a2936b9',
+    deploymentValidationRun: 30221010693,
+    deploymentValidationJob: 89843362318,
+    deploymentEvidenceArtifact: 8637201596,
+    deploymentEvidenceArtifactDigest:
+      'sha256:81d3bbc5a6894daa29a46ebe7ff6b63945a1de6ce083ca2e5b5960a68e2e03e9',
+    pagesSourceBranch: 'main',
+    pagesSourcePath: '/',
+    pagesBuildType: 'legacy',
+    pagesLatestBuildStatus: 'built',
+    deployedFileIdentityCount: 6,
+    allDeployedFilesExact: true
   },
   closureConditions: [
     'PUBLIC_H_EARTH_ROUTE_REPLACEMENT',
@@ -98,11 +122,12 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
   ],
   closureState: {
     publicHEarthRouteBranchExecution: 'PASS',
+    publicHEarthRouteReplacement: 'PASS',
     samsungBrowserEmulation: 'PASS',
     samsungPhysicalExecution: 'NOT_EXECUTED',
     preUpdateBaselineComparison: 'PASS',
     run8StackPromotionToMain: 'PASS',
-    deployment: 'NOT_EXECUTED',
+    deployment: 'PASS',
     liveIdentityAndBrowserProof: 'NOT_EXECUTED',
     run8EPassClosed: false
   },
@@ -134,7 +159,9 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
   if (candidate?.executedOccurrences?.engineeringIntegration !== 'PASS' ||
       candidate?.executedOccurrences?.publicRouteBranchBrowserExecution !== 'PASS' ||
       candidate?.executedOccurrences?.preUpdateRun7IToRun8EComparison !== 'PASS' ||
-      candidate?.executedOccurrences?.run8StackPromotionToMain !== 'PASS') {
+      candidate?.executedOccurrences?.run8StackPromotionToMain !== 'PASS' ||
+      candidate?.executedOccurrences?.deploymentReconciliation !== 'PASS' ||
+      candidate?.executedOccurrences?.publicHEarthRouteReplacement !== 'PASS') {
     issues.push('RUN_8E_EXECUTED_OCCURRENCE_RECONCILIATION_INCOMPLETE');
   }
   if (candidate?.closureState?.preUpdateBaselineComparison !== 'PASS') {
@@ -142,6 +169,12 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
   }
   if (candidate?.closureState?.run8StackPromotionToMain !== 'PASS') {
     issues.push('RUN_8_STACK_MAIN_PROMOTION_NOT_RECONCILED');
+  }
+  if (candidate?.closureState?.publicHEarthRouteReplacement !== 'PASS') {
+    issues.push('PUBLIC_H_EARTH_ROUTE_REPLACEMENT_NOT_RECONCILED');
+  }
+  if (candidate?.closureState?.deployment !== 'PASS') {
+    issues.push('RUN_8E_DEPLOYMENT_NOT_RECONCILED');
   }
   if (candidate?.closureState?.run8EPassClosed !== false) {
     issues.push('RUN_8E_PREMATURE_PASS_CLOSED_CLAIM');

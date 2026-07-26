@@ -1,6 +1,12 @@
 {
-  "schema": "SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_VERIFICATION_v3",
+  "schema": "SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_VERIFICATION_v1",
   "pass": true,
+  "viewport": {
+    "width": 360,
+    "height": 800,
+    "mobile": true,
+    "touch": true
+  },
   "constellation": {
     "interactionsPresent": true,
     "centerWidth": 151.1875,
@@ -12,14 +18,22 @@
       "N · Story",
       "S · Wonders",
       "W · Mysteries"
-    ]
+    ],
+    "projectionCount": 20,
+    "visibleProjectionCount": 4,
+    "frontProjectionCount": 3
   },
   "cardinalRequest": true,
-  "clusterLabels": [
-    "Invitation",
-    "Mission",
-    "Timeline",
-    "Welcome"
-  ],
-  "pageErrors": []
+  "cluster": {
+    "labels": [
+      "Invitation",
+      "Mission",
+      "Timeline",
+      "Welcome"
+    ],
+    "rootMode": "cluster",
+    "activeCluster": "north"
+  },
+  "pageErrors": [],
+  "consoleErrors": []
 }

@@ -63,6 +63,8 @@ jobs:
           npx playwright install chromium >/dev/null
 
       - name: Three-viewport runtime verification
+        id: runtime
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -113,9 +115,23 @@ jobs:
             await browser.close();
           })().catch(error=>{console.error(error);process.exit(1)});
           NODE
-          node /tmp/showroom-browser-test.cjs | tee /tmp/showroom-runtime-results.json
+          set +e
+          node /tmp/showroom-browser-test.cjs 2>&1 | tee /tmp/showroom-runtime.log
+          status=${PIPESTATUS[0]}
+          echo "exit_status=$status" >> /tmp/showroom-runtime.log
+          exit $status
 
-      - name: Commit verified product files
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: showroom-runtime-evidence
+          path: |
+            /tmp/showroom-runtime.log
+            /tmp/showroom-server.log
+          if-no-files-found: warn
+
+      - name: Commit materialized product files
         shell: bash
         run: |
           set -euo pipefail

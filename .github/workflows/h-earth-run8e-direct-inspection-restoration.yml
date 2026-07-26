@@ -35,6 +35,8 @@ jobs:
           set -euo pipefail
           node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs \
             2>&1 | tee /tmp/h-earth-run8e-direct-inspection-constructor.log
+          node h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-direct-inspection-harness-fix.log
 
       - name: Install bounded Chromium dependency
         run: |
@@ -76,6 +78,7 @@ jobs:
           allowed = {
             '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
+            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json',
             'showroom/globe/h-earth/index.html',
@@ -95,6 +98,7 @@ jobs:
           required_initial = {
             '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
+            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs',
             'showroom/globe/h-earth/index.html',
             'showroom/globe/h-earth/functional-landscape/environment-integration.js',
@@ -106,7 +110,7 @@ jobs:
             raise SystemExit(f'UNEXPECTED_DIRECT_INSPECTION_PATHS:{unexpected}')
           if missing:
             raise SystemExit(f'MISSING_DIRECT_INSPECTION_PATHS:{missing}')
-          if not 7 <= len(paths) <= 11:
+          if not 8 <= len(paths) <= 12:
             raise SystemExit(f'INVALID_DIRECT_INSPECTION_PATH_COUNT:{len(paths)}')
           PY
 
@@ -124,6 +128,7 @@ jobs:
             showroom/globe/h-earth/functional-landscape/environment-integration.js \
             showroom/globe/h-earth/functional-landscape/direct-manipulation.js \
             showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js \
+            h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs \
             "$target"
           if git diff --cached --quiet; then
             echo 'Exact direct-inspection restoration already persisted.'
@@ -139,6 +144,7 @@ jobs:
           name: h-earth-run8e-direct-inspection-restoration-evidence
           path: |
             /tmp/h-earth-run8e-direct-inspection-constructor.log
+            /tmp/h-earth-run8e-direct-inspection-harness-fix.log
             /tmp/h-earth-run8e-direct-inspection-server.log
             /tmp/h-earth-run8e-direct-inspection-restoration.log
             /tmp/h-earth-run8e-direct-inspection-restoration

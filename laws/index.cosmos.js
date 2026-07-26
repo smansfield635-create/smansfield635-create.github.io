@@ -1,54 +1,661 @@
 /* /laws/index.cosmos.js
    LAWS_COSMOS_ARCHCOIN_SCENE_FIELD_v5
-   ARCHCOIN-density full-chamber background; decorative authority only.
 
-   Preserves the established Laws Cosmos lifecycle, canvases, visibility,
-   resize, reduced-motion, receipt, and teardown behavior. Changes are limited
-   to field density, void geometry, masks, colors, and spacecraft visibility.
+   Complete replacement. Decorative background authority only.
+   Static ARCHCOIN-derived Fibonacci field plus burst-only sparkles.
 */
 (() => {
   "use strict";
-  const G="DGB_LAWS_COSMOS",R="DGB_LAWS_COSMOS_RECEIPT",READY="DGB_LAWS_COSMOS_READY",FAIL="DGB_LAWS_COSMOS_FAILURE",DEAD="DGB_LAWS_COSMOS_DESTROYED";
-  if(globalThis[G]?.initialized)return;
-  const I={style:"laws-cosmos-runtime-style",layer:"laws-cosmos-layer",base:"laws-cosmos-canvas",spark:"laws-cosmos-sparkle-canvas",a:"laws-cosmos-spacecraft",b:"laws-cosmos-spacecraft-secondary"};
-  const C={mobile:820,compact:560,min:52,max:108,area:6100,dustMin:0,dustMax:0,dustArea:12800,rogue:.125,candidates:8,hWarp:1.13,vWarp:.84,rJitter:.022,aJitter:.075,zig:.018,voidX:.225,voidY:.205,frame:125,seed:0x4c415753};
-  const SAFE=["[data-laws-threshold-introduction]","[data-laws-panel]",".laws-value-deck",".laws-controller-panel",".laws-discovery__item",".laws-footer"];
-  const MASKS=[{x:.24,y:.28,rx:.16,ry:.095,r:-.46,f:.22},{x:.76,y:.25,rx:.12,ry:.17,r:.31,f:.20},{x:.72,y:.73,rx:.18,ry:.105,r:-.19,f:.24},{x:.27,y:.77,rx:.105,ry:.15,r:.52,f:.20}];
-  const COLORS=["255,248,224","154,217,225","234,208,131","170,155,224","255,248,224"],GOLD=Math.PI*(3-Math.sqrt(5));
-  const S={initialized:false,destroyed:false,failed:false,reason:"",visible:!document.hidden,active:true,reduced:false,quality:1,w:0,h:0,dpr:1,root:null,layer:null,base:null,spark:null,bc:null,sc:null,stars:[],dust:[],live:[],safe:0,rogue:0,phy:0,draws:0,frames:0,burst:0,tick:0,resize:0,media:null,observer:null,hnd:{}};
-  const api={initialized:false,start:()=>schedule(true),stop,destroy,resize:(x)=>resize(x||"manual"),setQuality,receipt:()=>Object.freeze(receipt())};globalThis[G]=api;
-  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v)),between=(r,a,b)=>a+r()*(b-a);
-  function hash(v){let x=v>>>0;x^=x>>>16;x=Math.imul(x,0x7feb352d);x^=x>>>15;x=Math.imul(x,0x846ca68b);return(x^(x>>>16))>>>0}
-  function rng(seed){let v=seed>>>0;return()=>{v+=0x6d2b79f5;let x=v;x=Math.imul(x^(x>>>15),x|1);x^=x+Math.imul(x^(x>>>7),x|61);return((x^(x>>>14))>>>0)/4294967296}}
-  function receipt(x={}){return{contract:"LAWS_COSMOS_ARCHCOIN_SCENE_FIELD_v5",sourceModel:"ARCHCOIN_FIBONACCI_PHYLLOTAXIS_FIELD_v1",renderingModel:"static-full-viewport-base-burst-only-overlay",geometryModel:"golden-angle-square-root-jitter-elliptical-void-masked",lawsIdentityPreserved:true,fullViewportCoverage:true,archcoinDensityParity:true,strictCentralVoid:true,initialized:S.initialized,destroyed:S.destroyed,failed:S.failed,failureReason:S.reason,reducedMotion:S.reduced,width:S.w,height:S.h,pixelRatio:S.dpr,quality:S.quality,starCount:S.stars.length,dustCount:S.dust.length,rogueCount:S.rogue,phyllotaxisCount:S.phy,safeRegionCount:S.safe,baseDrawCount:S.draws,sparkleFrameCount:S.frames,sparkleFrameIntervalMs:C.frame,continuousCanvasAnimation:false,requestAnimationFrameUsed:false,dualSpacecraftPreserved:false,ownsNavigation:false,ownsWorldGeometry:false,ownsProjection:false,ownsControllerState:false,ownsInteraction:false,ownsPlanet:false,ownsLawContent:false,visualPassClaimed:false,...x}}
-  function publish(x={}){const o=Object.freeze(receipt(x));globalThis[R]=o;if(S.root){S.root.dataset.lawsCosmosStatus=S.failed?"held":S.initialized?"available":"pending";S.root.dataset.lawsCosmosRunning=String(canRun());S.root.dataset.lawsCosmosModel=o.renderingModel;S.root.dataset.lawsCosmosContract=o.contract;S.root.dataset.lawsCosmosArchcoinDensityParity="true";S.root.dataset.lawsCosmosStrictCentralVoid="true";S.root.dataset.lawsCosmosReceipt=JSON.stringify(o)}return o}
-  function style(){let e=document.getElementById(I.style);if(!e){e=document.createElement("style");e.id=I.style;document.head.append(e)}e.textContent=`body>#${I.layer}{position:fixed;inset:0;z-index:1;overflow:hidden;pointer-events:none;contain:strict;isolation:isolate;background:radial-gradient(ellipse at 50% -10%,rgba(127,147,255,.15),transparent 48%),radial-gradient(ellipse at 108% 42%,rgba(124,220,255,.11),transparent 44%),radial-gradient(ellipse at 52% 112%,rgba(243,217,139,.10),transparent 47%),radial-gradient(ellipse at -10% 55%,rgba(255,157,99,.09),transparent 43%),radial-gradient(ellipse at 50% 50%,transparent 22%,rgba(2,4,10,.24) 100%)}body>#${I.layer} canvas{position:absolute;inset:0;width:100%;height:100%;display:block;mix-blend-mode:screen}#${I.base}{z-index:1;opacity:.93}#${I.spark}{z-index:2}.laws-cosmos-craft{display:none!important}@media(max-width:820px){#${I.base}{opacity:.86}}@media(max-width:560px){#${I.base}{opacity:.78}}@media(prefers-reduced-motion:reduce){#${I.spark}{display:none!important}}`}
-  function node(tag,id){const e=document.createElement(tag);e.id=id;e.setAttribute("aria-hidden","true");return e}
-  function craft(id,alt){const e=document.createElementNS("http://www.w3.org/2000/svg","svg");e.id=id;e.classList.add("laws-cosmos-craft");e.setAttribute("viewBox","0 0 120 54");e.setAttribute("aria-hidden","true");e.innerHTML=alt?'<path d="M4 29 38 18 72 5 91 21 116 27 91 33 72 49 38 36Z" fill="rgba(127,147,255,.20)" stroke="rgba(190,178,255,.68)" stroke-width="2"/>':'<path d="M3 28 34 17 70 3 94 20 117 27 94 34 70 51 34 37Z" fill="rgba(124,220,255,.17)" stroke="rgba(243,217,139,.72)" stroke-width="2"/>';return e}
-  function surfaces(){S.root=document.querySelector("[data-laws-root]");if(!S.root)throw Error("LAWS_COSMOS_ROOT_NOT_FOUND");S.layer=document.getElementById(I.layer)||node("div",I.layer);S.base=document.getElementById(I.base)||node("canvas",I.base);S.spark=document.getElementById(I.spark)||node("canvas",I.spark);const a=document.getElementById(I.a)||craft(I.a,false),b=document.getElementById(I.b)||craft(I.b,true);for(const e of[S.base,S.spark,a,b])if(!e.isConnected)S.layer.append(e);if(!S.layer.isConnected)document.body.prepend(S.layer);S.bc=S.base.getContext("2d",{alpha:true,desynchronized:true});S.sc=S.spark.getContext("2d",{alpha:true,desynchronized:true});if(!S.bc||!S.sc)throw Error("LAWS_COSMOS_CONTEXT_UNAVAILABLE")}
-  function regions(){const p=S.w<=C.mobile?14:24,a=[];for(const q of SAFE)for(const e of document.querySelectorAll(q)){const s=getComputedStyle(e),b=e.getBoundingClientRect();if(s.display==="none"||s.visibility==="hidden"||+s.opacity<=.01||b.width<=1||b.height<=1||b.bottom<0||b.top>S.h)continue;a.push({l:Math.max(0,b.left-p),t:Math.max(0,b.top-p),r:Math.min(S.w,b.right+p),b:Math.min(S.h,b.bottom+p)})}S.safe=a.length;return a}
-  const inside=(x,y,a)=>a.some(r=>x>=r.l&&x<=r.r&&y>=r.t&&y<=r.b);
-  function maskDistance(x,y,m){const c=Math.cos(m.r),s=Math.sin(m.r),dx=x-m.x,dy=y-m.y,rx=dx*c+dy*s,ry=-dx*s+dy*c;return Math.sqrt(rx*rx/(m.rx*m.rx)+ry*ry/(m.ry*m.ry))}
-  function masked(x,y,r,rogue){for(const m of MASKS){const d=maskDistance(x,y,m);if(d>=1+m.f)continue;if(d<=1){if(!rogue||r()<.84)return true;continue}if(r()<(1-(d-1)/m.f)*(rogue?.48:.82))return true}return false}
-  function central(x,y){const dx=(x-.5)/C.voidX,dy=(y-.5)/C.voidY;return dx*dx+dy*dy<1}
-  function color(r,x,y){const w=[Math.max(0,.72-y),Math.max(0,x-.28),Math.max(0,y-.28),Math.max(0,.72-x)];let n=r()*w.reduce((a,b)=>a+b,0);for(let i=0;i<4;i++){n-=w[i];if(n<=0)return COLORS[i]}return COLORS[4]}
-  function build(){const area=S.w*S.h,m=S.w<=C.compact?.70:S.w<=C.mobile?.84:1,d=S.quality*m,n=clamp(Math.floor(area/C.area*d),C.min,C.max),dn=0,r=rng(hash(C.seed^Math.round(S.w*7)^(Math.round(S.h*7)<<1)^Math.round(S.quality*1000))),safe=regions(),stars=[];let rogueCount=0,phy=0;for(let i=0;i<n*C.candidates&&stars.length<n;i++){const f=(i+1.5)/(n*C.candidates),rad=Math.sqrt(f)*.70,ang=i*GOLD+between(r,-C.aJitter,C.aJitter),zig=(i%2?1:-1)*C.zig;let x=.5+Math.cos(ang)*(rad+zig)*C.hWarp+between(r,-C.rJitter,C.rJitter),y=.5+Math.sin(ang)*(rad-zig)*C.vWarp+between(r,-C.rJitter,C.rJitter),rogue=r()<C.rogue;if(rogue){x=between(r,.014,.986);y=between(r,.014,.986)}if(x<.014||x>.986||y<.014||y>.986||central(x,y)||masked(x,y,r,rogue))continue;const px=x*S.w,py=y*S.h;if(inside(px,py,safe)&&r()<(rogue?.48:.76))continue;const z=Math.pow(r(),1.55);stars.push({x:px,y:py,z,size:between(r,.50,1.58)*(.62+z*.78),alpha:between(r,.27,.82)*(.68+z*.42),color:color(r,x,y)});rogue?rogueCount++:phy++}S.stars=stars;S.rogue=rogueCount;S.phy=phy;S.dust=Array.from({length:dn},()=>({x:between(r,0,S.w),y:between(r,0,S.h),size:between(r,.28,.92),alpha:between(r,.025,.14),color:r()<.24?"168,140,255":"179,205,224"}));S.live=[]}
-  function size(e,c){e.width=Math.max(1,Math.round(S.w*S.dpr));e.height=Math.max(1,Math.round(S.h*S.dpr));e.style.width=`${S.w}px`;e.style.height=`${S.h}px`;c.setTransform(S.dpr,0,0,S.dpr,0,0)}
-  function draw(){const c=S.bc;c.clearRect(0,0,S.w,S.h);for(const v of S.dust){c.fillStyle=`rgba(${v.color},${v.alpha})`;c.beginPath();c.arc(v.x,v.y,v.size,0,Math.PI*2);c.fill()}for(const v of S.stars){if(v.z>.74){c.fillStyle=`rgba(${v.color},${v.alpha*.12})`;c.beginPath();c.arc(v.x,v.y,v.size*2.7,0,Math.PI*2);c.fill()}c.fillStyle=`rgba(${v.color},${clamp(v.alpha,.08,.94)})`;c.beginPath();c.arc(v.x,v.y,v.size,0,Math.PI*2);c.fill()}S.draws++}
-  const clear=()=>S.sc?.clearRect(0,0,S.w,S.h),canRun=()=>S.initialized&&!S.destroyed&&!S.failed&&S.visible&&S.active&&!S.reduced;
-  function stop(){clearTimeout(S.burst);clearTimeout(S.tick);S.burst=S.tick=0;S.live=[];clear()}
-  function schedule(first=false){if(!canRun()||S.burst||S.tick||S.live.length||!S.stars.length)return;const r=rng(hash(C.seed^Date.now()));S.burst=setTimeout(()=>{S.burst=0;burst()},first?between(r,2800,4600):between(r,1500,3200))}
-  function burst(){if(!canRun())return;const r=rng(hash(C.seed^Math.round(performance.now()))),pool=S.stars.filter(v=>v.z>.42&&v.alpha>.36),count=r()<.24?2:1;S.live=[];for(let i=0;i<count;i++){const star=pool[Math.floor(r()*pool.length)];if(star)S.live.push({star,start:performance.now(),duration:between(r,620,980),reach:clamp(star.size*between(r,4.8,8.4),5,16),alpha:between(r,.58,.94)})}paint(performance.now());next()}
-  function next(){if(canRun()&&!S.tick&&S.live.length)S.tick=setTimeout(()=>{S.tick=0;frame()},C.frame)}
-  function frame(){if(!canRun()){stop();return}const now=performance.now();S.live=S.live.filter(v=>now-v.start<v.duration);paint(now);if(S.live.length)next();else{clear();schedule()}}
-  function paint(now){const c=S.sc;c.clearRect(0,0,S.w,S.h);c.lineCap="round";for(const v of S.live){const p=clamp((now-v.start)/v.duration,0,1),pulse=Math.sin(p*Math.PI),a=v.alpha*Math.pow(pulse,2.15),reach=v.reach*(.64+pulse*.82),s=v.star;c.strokeStyle=`rgba(${s.color},${a})`;c.lineWidth=.74;c.beginPath();c.moveTo(s.x-reach,s.y);c.lineTo(s.x+reach,s.y);c.moveTo(s.x,s.y-reach);c.lineTo(s.x,s.y+reach);c.stroke()}S.frames++}
-  function resize(reason="resize"){if(!S.layer)return false;const w=Math.max(1,innerWidth||document.documentElement.clientWidth||1),h=Math.max(1,innerHeight||document.documentElement.clientHeight||1),d=clamp(devicePixelRatio||1,1,w<=C.mobile?1:1.25);if(w===S.w&&h===S.h&&d===S.dpr&&reason!=="scroll")return false;S.w=w;S.h=h;S.dpr=d;size(S.base,S.bc);size(S.spark,S.sc);build();draw();clear();publish({lastAction:`field-${reason}`});return true}
-  function evaluate(reason){S.reduced=Boolean(S.media?.matches||S.root?.dataset?.reducedMotion==="true");if(canRun())schedule(true);else stop();publish({lastAction:reason});return canRun()}
-  function bind(){S.media=globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")||null;S.hnd.visibility=()=>{S.visible=!document.hidden;evaluate("visibility-change")};S.hnd.hide=()=>{S.active=false;stop()};S.hnd.show=()=>{S.active=true;evaluate("pageshow")};S.hnd.resize=()=>{clearTimeout(S.resize);S.resize=setTimeout(()=>resize("resize"),120)};S.hnd.motion=()=>evaluate("motion-change");document.addEventListener("visibilitychange",S.hnd.visibility,{passive:true});globalThis.addEventListener("pagehide",S.hnd.hide,{passive:true});globalThis.addEventListener("pageshow",S.hnd.show,{passive:true});globalThis.addEventListener("resize",S.hnd.resize,{passive:true});S.media?.addEventListener?.("change",S.hnd.motion);if("MutationObserver"in globalThis){S.observer=new MutationObserver(()=>evaluate("root-motion-change"));S.observer.observe(S.root,{attributes:true,attributeFilter:["data-reduced-motion"]})}}
-  function unbind(){document.removeEventListener("visibilitychange",S.hnd.visibility);globalThis.removeEventListener("pagehide",S.hnd.hide);globalThis.removeEventListener("pageshow",S.hnd.show);globalThis.removeEventListener("resize",S.hnd.resize);S.media?.removeEventListener?.("change",S.hnd.motion);S.observer?.disconnect?.()}
-  function setQuality(v){const n=clamp(Number(v),.62,1);if(!Number.isFinite(n)||Math.abs(n-S.quality)<.02)return false;S.quality=n;build();draw();clear();publish({lastAction:"quality-updated"});return true}
-  function destroy(){if(S.destroyed)return true;stop();clearTimeout(S.resize);unbind();S.layer?.remove();document.getElementById(I.style)?.remove();S.destroyed=true;S.initialized=false;api.initialized=false;publish({lastAction:"destroyed"});globalThis.dispatchEvent(new CustomEvent(DEAD,{detail:Object.freeze(receipt())}));return true}
-  function fail(e){if(S.failed)return;S.failed=true;S.reason=e instanceof Error?e.message:String(e);stop();publish({lastAction:"failure"});globalThis.dispatchEvent(new CustomEvent(FAIL,{detail:Object.freeze({reason:S.reason})}))}
-  function init(){try{style();surfaces();bind();S.initialized=true;api.initialized=true;resize("initialization");evaluate("initialized");const o=publish({lastAction:"ready"});globalThis.dispatchEvent(new CustomEvent(READY,{detail:o}))}catch(e){fail(e)}}
-  document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init,{once:true}):init();
+
+  const GLOBAL = "DGB_LAWS_COSMOS";
+  const RECEIPT = "DGB_LAWS_COSMOS_RECEIPT";
+  const READY = "DGB_LAWS_COSMOS_READY";
+  const FAILURE = "DGB_LAWS_COSMOS_FAILURE";
+  const DESTROYED = "DGB_LAWS_COSMOS_DESTROYED";
+  const CONTRACT = "LAWS_COSMOS_ARCHCOIN_SCENE_FIELD_v5";
+  const STYLE_ID = "laws-cosmos-runtime-style";
+  const LAYER_ID = "laws-cosmos-layer";
+  const BASE_ID = "laws-cosmos-canvas";
+  const SPARKLE_ID = "laws-cosmos-sparkle-canvas";
+  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const SEED = 0x4c415753;
+
+  if (globalThis[GLOBAL]?.initialized) return;
+
+  const CONFIG = Object.freeze({
+    mobileWidth: 820,
+    compactWidth: 560,
+    minimumStars: 52,
+    maximumStars: 108,
+    areaDivisor: 6100,
+    candidateMultiplier: 8,
+    rogueRatio: 0.125,
+    horizontalWarp: 1.13,
+    verticalWarp: 0.84,
+    radialJitter: 0.022,
+    angularJitter: 0.075,
+    zigzag: 0.018,
+    centerVoidX: 0.225,
+    centerVoidY: 0.205,
+    frameIntervalMs: 125,
+    firstBurstMinMs: 2800,
+    firstBurstMaxMs: 4600,
+    burstMinMs: 1500,
+    burstMaxMs: 3200,
+    sparkleMinMs: 620,
+    sparkleMaxMs: 980
+  });
+
+  const MASKS = Object.freeze([
+    Object.freeze({ x: 0.24, y: 0.28, rx: 0.16, ry: 0.095, rotation: -0.46, feather: 0.22 }),
+    Object.freeze({ x: 0.76, y: 0.25, rx: 0.12, ry: 0.17, rotation: 0.31, feather: 0.20 }),
+    Object.freeze({ x: 0.72, y: 0.73, rx: 0.18, ry: 0.105, rotation: -0.19, feather: 0.24 }),
+    Object.freeze({ x: 0.27, y: 0.77, rx: 0.105, ry: 0.15, rotation: 0.52, feather: 0.20 })
+  ]);
+
+  const COLORS = Object.freeze([
+    "255, 248, 224",
+    "154, 217, 225",
+    "234, 208, 131",
+    "170, 155, 224"
+  ]);
+
+  const state = {
+    initialized: false,
+    destroyed: false,
+    failed: false,
+    failureReason: "",
+    visible: !document.hidden,
+    pageActive: true,
+    reducedMotion: false,
+    quality: 1,
+    width: 0,
+    height: 0,
+    pixelRatio: 1,
+    root: null,
+    layer: null,
+    base: null,
+    sparkle: null,
+    baseContext: null,
+    sparkleContext: null,
+    stars: [],
+    sparklePool: [],
+    activeSparkles: [],
+    rogueCount: 0,
+    phyllotaxisCount: 0,
+    baseDrawCount: 0,
+    sparkleFrameCount: 0,
+    burstTimer: 0,
+    frameTimer: 0,
+    resizeTimer: 0,
+    motionQuery: null,
+    motionObserver: null,
+    handlers: {}
+  };
+
+  const api = {
+    initialized: false,
+    start: () => scheduleBurst(true),
+    stop,
+    destroy,
+    resize: reason => resize(reason || "manual"),
+    setQuality,
+    receipt: () => Object.freeze(buildReceipt())
+  };
+
+  globalThis[GLOBAL] = api;
+
+  const clamp = (value, minimum, maximum) =>
+    Math.min(maximum, Math.max(minimum, value));
+
+  const between = (random, minimum, maximum) =>
+    minimum + random() * (maximum - minimum);
+
+  function hash32(value) {
+    let x = value >>> 0;
+    x ^= x >>> 16;
+    x = Math.imul(x, 0x7feb352d);
+    x ^= x >>> 15;
+    x = Math.imul(x, 0x846ca68b);
+    x ^= x >>> 16;
+    return x >>> 0;
+  }
+
+  function randomFactory(seed) {
+    let value = seed >>> 0;
+    return () => {
+      value += 0x6d2b79f5;
+      let result = value;
+      result = Math.imul(result ^ (result >>> 15), result | 1);
+      result ^= result + Math.imul(result ^ (result >>> 7), result | 61);
+      return ((result ^ (result >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function buildReceipt(extra = {}) {
+    return {
+      contract: CONTRACT,
+      sourceModel: "ARCHCOIN_FIBONACCI_PHYLLOTAXIS_FIELD_v1",
+      renderingModel: "static-full-viewport-base-burst-only-overlay",
+      geometryModel: "golden-angle-square-root-jitter-elliptical-void-masked",
+      lawsIdentityPreserved: true,
+      fullViewportCoverage: true,
+      archcoinDensityParity: true,
+      strictCentralVoid: true,
+      continuousCanvasAnimation: false,
+      requestAnimationFrameUsed: false,
+      dualSpacecraftPreserved: false,
+      initialized: state.initialized,
+      destroyed: state.destroyed,
+      failed: state.failed,
+      failureReason: state.failureReason,
+      reducedMotion: state.reducedMotion,
+      width: state.width,
+      height: state.height,
+      pixelRatio: state.pixelRatio,
+      quality: state.quality,
+      starCount: state.stars.length,
+      rogueCount: state.rogueCount,
+      phyllotaxisCount: state.phyllotaxisCount,
+      baseDrawCount: state.baseDrawCount,
+      sparkleFrameCount: state.sparkleFrameCount,
+      sparkleFrameIntervalMs: CONFIG.frameIntervalMs,
+      ownsNavigation: false,
+      ownsWorldGeometry: false,
+      ownsProjection: false,
+      ownsControllerState: false,
+      ownsInteraction: false,
+      ownsPlanet: false,
+      ownsLawContent: false,
+      visualPassClaimed: false,
+      ...extra
+    };
+  }
+
+  function publish(extra = {}) {
+    const receipt = Object.freeze(buildReceipt(extra));
+    globalThis[RECEIPT] = receipt;
+
+    if (state.root) {
+      state.root.dataset.lawsCosmosStatus = state.failed
+        ? "held"
+        : state.initialized ? "available" : "pending";
+      state.root.dataset.lawsCosmosRunning = String(canRun());
+      state.root.dataset.lawsCosmosModel = receipt.renderingModel;
+      state.root.dataset.lawsCosmosContract = CONTRACT;
+      state.root.dataset.lawsCosmosArchcoinDensityParity = "true";
+      state.root.dataset.lawsCosmosStrictCentralVoid = "true";
+      state.root.dataset.lawsCosmosReceipt = JSON.stringify(receipt);
+    }
+
+    return receipt;
+  }
+
+  function installStyle() {
+    let style = document.getElementById(STYLE_ID);
+    if (!style) {
+      style = document.createElement("style");
+      style.id = STYLE_ID;
+      document.head.append(style);
+    }
+
+    style.textContent = `
+      body > #${LAYER_ID} {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        overflow: hidden;
+        pointer-events: none;
+        contain: strict;
+        isolation: isolate;
+        background:
+          radial-gradient(ellipse at 50% -10%, rgba(127,147,255,.15), transparent 48%),
+          radial-gradient(ellipse at 108% 42%, rgba(124,220,255,.11), transparent 44%),
+          radial-gradient(ellipse at 52% 112%, rgba(243,217,139,.10), transparent 47%),
+          radial-gradient(ellipse at -10% 55%, rgba(255,157,99,.09), transparent 43%),
+          radial-gradient(ellipse at 50% 50%, transparent 22%, rgba(2,4,10,.24) 100%);
+      }
+      body > #${LAYER_ID} canvas {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        mix-blend-mode: screen;
+      }
+      #${BASE_ID} { z-index: 1; opacity: .93; }
+      #${SPARKLE_ID} { z-index: 2; }
+      #laws-cosmos-spacecraft,
+      #laws-cosmos-spacecraft-secondary,
+      .laws-cosmos-craft { display: none !important; }
+      @media (max-width: 820px) { #${BASE_ID} { opacity: .86; } }
+      @media (max-width: 560px) { #${BASE_ID} { opacity: .78; } }
+      @media (prefers-reduced-motion: reduce) {
+        #${SPARKLE_ID} { display: none !important; }
+      }
+    `;
+  }
+
+  function canvas(id) {
+    const element = document.createElement("canvas");
+    element.id = id;
+    element.setAttribute("aria-hidden", "true");
+    return element;
+  }
+
+  function resolveSurfaces() {
+    state.root = document.querySelector("[data-laws-root]");
+    if (!state.root) throw new Error("LAWS_COSMOS_ROOT_NOT_FOUND");
+
+    state.layer = document.getElementById(LAYER_ID) || document.createElement("div");
+    state.layer.id = LAYER_ID;
+    state.layer.setAttribute("aria-hidden", "true");
+
+    state.base = document.getElementById(BASE_ID) || canvas(BASE_ID);
+    state.sparkle = document.getElementById(SPARKLE_ID) || canvas(SPARKLE_ID);
+
+    document.getElementById("laws-cosmos-spacecraft")?.remove();
+    document.getElementById("laws-cosmos-spacecraft-secondary")?.remove();
+
+    if (!state.base.isConnected) state.layer.append(state.base);
+    if (!state.sparkle.isConnected) state.layer.append(state.sparkle);
+    if (!state.layer.isConnected) document.body.prepend(state.layer);
+
+    state.baseContext = state.base.getContext("2d", { alpha: true, desynchronized: true });
+    state.sparkleContext = state.sparkle.getContext("2d", { alpha: true, desynchronized: true });
+
+    if (!state.baseContext || !state.sparkleContext) {
+      throw new Error("LAWS_COSMOS_CONTEXT_UNAVAILABLE");
+    }
+  }
+
+  function centralVoid(x, y) {
+    const dx = (x - 0.5) / CONFIG.centerVoidX;
+    const dy = (y - 0.5) / CONFIG.centerVoidY;
+    return dx * dx + dy * dy < 1;
+  }
+
+  function maskDistance(x, y, mask) {
+    const cosine = Math.cos(mask.rotation);
+    const sine = Math.sin(mask.rotation);
+    const dx = x - mask.x;
+    const dy = y - mask.y;
+    const rotatedX = dx * cosine + dy * sine;
+    const rotatedY = -dx * sine + dy * cosine;
+    return Math.sqrt(
+      rotatedX * rotatedX / (mask.rx * mask.rx) +
+      rotatedY * rotatedY / (mask.ry * mask.ry)
+    );
+  }
+
+  function masked(x, y, random, rogue) {
+    for (const mask of MASKS) {
+      const distance = maskDistance(x, y, mask);
+      if (distance >= 1 + mask.feather) continue;
+      if (distance <= 1) {
+        if (!rogue || random() < 0.84) return true;
+        continue;
+      }
+      const edge = 1 - (distance - 1) / mask.feather;
+      if (random() < edge * (rogue ? 0.48 : 0.82)) return true;
+    }
+    return false;
+  }
+
+  function color(random) {
+    const roll = random();
+    return roll < 0.79
+      ? COLORS[0]
+      : roll < 0.91
+        ? COLORS[1]
+        : roll < 0.975 ? COLORS[2] : COLORS[3];
+  }
+
+  function rebuildField() {
+    const mobileFactor = state.width <= CONFIG.compactWidth
+      ? 0.70
+      : state.width <= CONFIG.mobileWidth ? 0.84 : 1;
+    const starCount = clamp(
+      Math.floor(state.width * state.height / CONFIG.areaDivisor * state.quality * mobileFactor),
+      CONFIG.minimumStars,
+      CONFIG.maximumStars
+    );
+    const candidateCount = starCount * CONFIG.candidateMultiplier;
+    const random = randomFactory(hash32(
+      SEED ^ Math.round(state.width * 7) ^
+      (Math.round(state.height * 7) << 1) ^
+      Math.round(state.quality * 1000)
+    ));
+
+    const stars = [];
+    let rogueCount = 0;
+    let phyllotaxisCount = 0;
+
+    for (let index = 0; index < candidateCount && stars.length < starCount; index += 1) {
+      const normalized = (index + 1.5) / candidateCount;
+      const radius = Math.sqrt(normalized) * 0.70 +
+        between(random, -CONFIG.radialJitter, CONFIG.radialJitter);
+      const angle = index * GOLDEN_ANGLE +
+        between(random, -CONFIG.angularJitter, CONFIG.angularJitter) +
+        (index % 2 === 0 ? 1 : -1) * CONFIG.zigzag;
+      const rogue = random() < CONFIG.rogueRatio;
+
+      let x = 0.5 + Math.cos(angle) * radius * CONFIG.horizontalWarp;
+      let y = 0.5 + Math.sin(angle) * radius * CONFIG.verticalWarp;
+
+      if (rogue) {
+        x = between(random, 0.014, 0.986);
+        y = between(random, 0.014, 0.986);
+      }
+
+      if (
+        x < 0.014 || x > 0.986 ||
+        y < 0.014 || y > 0.986 ||
+        centralVoid(x, y) ||
+        masked(x, y, random, rogue)
+      ) continue;
+
+      const depth = Math.pow(random(), 1.55);
+      stars.push({
+        x: x * state.width,
+        y: y * state.height,
+        depth,
+        radius: between(random, 0.50, 1.58) * (0.62 + depth * 0.78),
+        alpha: between(random, 0.27, 0.82) * (0.68 + depth * 0.42),
+        color: color(random)
+      });
+
+      if (rogue) rogueCount += 1;
+      else phyllotaxisCount += 1;
+    }
+
+    state.stars = stars;
+    state.sparklePool = stars.filter(star => star.depth > 0.42 && star.alpha > 0.36);
+    state.activeSparkles = [];
+    state.rogueCount = rogueCount;
+    state.phyllotaxisCount = phyllotaxisCount;
+  }
+
+  function sizeCanvas(element, context) {
+    element.width = Math.max(1, Math.round(state.width * state.pixelRatio));
+    element.height = Math.max(1, Math.round(state.height * state.pixelRatio));
+    element.style.width = `${state.width}px`;
+    element.style.height = `${state.height}px`;
+    context.setTransform(state.pixelRatio, 0, 0, state.pixelRatio, 0, 0);
+  }
+
+  function drawBase() {
+    const context = state.baseContext;
+    context.clearRect(0, 0, state.width, state.height);
+
+    for (const star of state.stars) {
+      if (star.depth > 0.74) {
+        context.fillStyle = `rgba(${star.color}, ${star.alpha * 0.12})`;
+        context.beginPath();
+        context.arc(star.x, star.y, star.radius * 2.7, 0, Math.PI * 2);
+        context.fill();
+      }
+
+      context.fillStyle = `rgba(${star.color}, ${clamp(star.alpha, 0.08, 0.94)})`;
+      context.beginPath();
+      context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      context.fill();
+    }
+
+    state.baseDrawCount += 1;
+  }
+
+  function clearSparkles() {
+    state.sparkleContext?.clearRect(0, 0, state.width, state.height);
+  }
+
+  function canRun() {
+    return Boolean(
+      state.initialized && !state.destroyed && !state.failed &&
+      state.visible && state.pageActive && !state.reducedMotion
+    );
+  }
+
+  function stop() {
+    clearTimeout(state.burstTimer);
+    clearTimeout(state.frameTimer);
+    state.burstTimer = 0;
+    state.frameTimer = 0;
+    state.activeSparkles = [];
+    clearSparkles();
+    return true;
+  }
+
+  function scheduleBurst(first = false) {
+    if (!canRun() || state.burstTimer || state.frameTimer || state.activeSparkles.length || !state.sparklePool.length) {
+      return false;
+    }
+
+    const random = randomFactory(hash32(SEED ^ Date.now()));
+    const delay = first
+      ? between(random, CONFIG.firstBurstMinMs, CONFIG.firstBurstMaxMs)
+      : between(random, CONFIG.burstMinMs, CONFIG.burstMaxMs);
+
+    state.burstTimer = setTimeout(() => {
+      state.burstTimer = 0;
+      beginBurst();
+    }, delay);
+
+    return true;
+  }
+
+  function beginBurst() {
+    if (!canRun() || !state.sparklePool.length) return false;
+
+    const random = randomFactory(hash32(SEED ^ Math.round(performance.now())));
+    const count = random() < 0.24 ? 2 : 1;
+    const now = performance.now();
+    state.activeSparkles = [];
+
+    for (let index = 0; index < count; index += 1) {
+      const star = state.sparklePool[Math.floor(random() * state.sparklePool.length)];
+      if (!star) continue;
+      state.activeSparkles.push({
+        star,
+        start: now,
+        duration: between(random, CONFIG.sparkleMinMs, CONFIG.sparkleMaxMs),
+        reach: clamp(star.radius * between(random, 4.8, 8.4), 5, 16),
+        alpha: between(random, 0.58, 0.94)
+      });
+    }
+
+    drawSparkleFrame(now);
+    scheduleSparkleFrame();
+    return true;
+  }
+
+  function scheduleSparkleFrame() {
+    if (!canRun() || state.frameTimer || !state.activeSparkles.length) return;
+    state.frameTimer = setTimeout(() => {
+      state.frameTimer = 0;
+      runSparkleFrame();
+    }, CONFIG.frameIntervalMs);
+  }
+
+  function runSparkleFrame() {
+    if (!canRun()) {
+      stop();
+      return;
+    }
+
+    const now = performance.now();
+    state.activeSparkles = state.activeSparkles.filter(
+      sparkle => now - sparkle.start < sparkle.duration
+    );
+    drawSparkleFrame(now);
+
+    if (state.activeSparkles.length) scheduleSparkleFrame();
+    else {
+      clearSparkles();
+      scheduleBurst(false);
+    }
+  }
+
+  function drawSparkleFrame(now) {
+    const context = state.sparkleContext;
+    context.clearRect(0, 0, state.width, state.height);
+    context.lineCap = "round";
+
+    for (const sparkle of state.activeSparkles) {
+      const progress = clamp((now - sparkle.start) / sparkle.duration, 0, 1);
+      const pulse = Math.sin(progress * Math.PI);
+      const alpha = sparkle.alpha * Math.pow(pulse, 2.15);
+      const reach = sparkle.reach * (0.64 + pulse * 0.82);
+      const star = sparkle.star;
+
+      context.strokeStyle = `rgba(${star.color}, ${alpha})`;
+      context.lineWidth = 0.74;
+      context.beginPath();
+      context.moveTo(star.x - reach, star.y);
+      context.lineTo(star.x + reach, star.y);
+      context.moveTo(star.x, star.y - reach);
+      context.lineTo(star.x, star.y + reach);
+      context.stroke();
+    }
+
+    state.sparkleFrameCount += 1;
+  }
+
+  function resize(reason = "resize") {
+    if (!state.layer || !state.baseContext || !state.sparkleContext) return false;
+
+    const width = Math.max(1, innerWidth || document.documentElement.clientWidth || 1);
+    const height = Math.max(1, innerHeight || document.documentElement.clientHeight || 1);
+    const pixelRatio = clamp(devicePixelRatio || 1, 1, width <= CONFIG.mobileWidth ? 1 : 1.25);
+
+    if (width === state.width && height === state.height && pixelRatio === state.pixelRatio && reason !== "scroll") {
+      return false;
+    }
+
+    state.width = width;
+    state.height = height;
+    state.pixelRatio = pixelRatio;
+    sizeCanvas(state.base, state.baseContext);
+    sizeCanvas(state.sparkle, state.sparkleContext);
+    rebuildField();
+    drawBase();
+    clearSparkles();
+    publish({ lastAction: `field-${reason}` });
+    return true;
+  }
+
+  function resolveReducedMotion() {
+    state.reducedMotion = Boolean(
+      state.motionQuery?.matches ||
+      state.root?.dataset?.reducedMotion === "true" ||
+      state.root?.dataset?.lawsReducedMotion === "true"
+    );
+  }
+
+  function evaluate(reason) {
+    resolveReducedMotion();
+    if (canRun()) scheduleBurst(true);
+    else stop();
+    publish({ lastAction: reason });
+  }
+
+  function bind() {
+    state.motionQuery = matchMedia?.("(prefers-reduced-motion: reduce)") || null;
+    state.handlers.visibility = () => {
+      state.visible = !document.hidden;
+      evaluate("visibility-change");
+    };
+    state.handlers.pageHide = () => {
+      state.pageActive = false;
+      stop();
+    };
+    state.handlers.pageShow = () => {
+      state.pageActive = true;
+      evaluate("pageshow");
+    };
+    state.handlers.resize = () => {
+      clearTimeout(state.resizeTimer);
+      state.resizeTimer = setTimeout(() => resize("resize"), 120);
+    };
+    state.handlers.motion = () => evaluate("motion-change");
+
+    document.addEventListener("visibilitychange", state.handlers.visibility, { passive: true });
+    addEventListener("pagehide", state.handlers.pageHide, { passive: true });
+    addEventListener("pageshow", state.handlers.pageShow, { passive: true });
+    addEventListener("resize", state.handlers.resize, { passive: true });
+    state.motionQuery?.addEventListener?.("change", state.handlers.motion);
+
+    if ("MutationObserver" in globalThis) {
+      state.motionObserver = new MutationObserver(() => evaluate("root-motion-change"));
+      state.motionObserver.observe(state.root, {
+        attributes: true,
+        attributeFilter: ["data-reduced-motion", "data-laws-reduced-motion"]
+      });
+    }
+  }
+
+  function unbind() {
+    document.removeEventListener("visibilitychange", state.handlers.visibility);
+    removeEventListener("pagehide", state.handlers.pageHide);
+    removeEventListener("pageshow", state.handlers.pageShow);
+    removeEventListener("resize", state.handlers.resize);
+    state.motionQuery?.removeEventListener?.("change", state.handlers.motion);
+    state.motionObserver?.disconnect();
+  }
+
+  function setQuality(value) {
+    const next = clamp(Number(value), 0.62, 1);
+    if (!Number.isFinite(next) || Math.abs(next - state.quality) < 0.02) return false;
+    state.quality = next;
+    rebuildField();
+    drawBase();
+    clearSparkles();
+    publish({ lastAction: "quality-updated" });
+    return true;
+  }
+
+  function destroy() {
+    if (state.destroyed) return true;
+    stop();
+    clearTimeout(state.resizeTimer);
+    unbind();
+    state.layer?.remove();
+    document.getElementById(STYLE_ID)?.remove();
+    state.destroyed = true;
+    state.initialized = false;
+    api.initialized = false;
+    const receipt = publish({ lastAction: "destroyed" });
+    dispatchEvent(new CustomEvent(DESTROYED, { detail: receipt }));
+    return true;
+  }
+
+  function fail(error) {
+    state.failed = true;
+    state.failureReason = error instanceof Error ? error.message : String(error);
+    stop();
+    const receipt = publish({ lastAction: "failure" });
+    dispatchEvent(new CustomEvent(FAILURE, { detail: receipt }));
+  }
+
+  function initialize() {
+    try {
+      installStyle();
+      resolveSurfaces();
+      bind();
+      resolveReducedMotion();
+      state.initialized = true;
+      api.initialized = true;
+      resize("initialization");
+      evaluate("initialized");
+      const receipt = publish({ lastAction: "ready" });
+      dispatchEvent(new CustomEvent(READY, { detail: receipt }));
+    } catch (error) {
+      fail(error);
+    }
+  }
+
+  document.readyState === "loading"
+    ? document.addEventListener("DOMContentLoaded", initialize, { once: true })
+    : initialize();
 })();

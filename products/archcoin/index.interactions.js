@@ -6,7 +6,7 @@
 (() => {
   "use strict";
 
-  const MOTION_SOURCE_URL = "./index.motion.source.js";
+  const MOTION_SOURCE_URL = "./index.motion.source.js?v=ARCHCOIN_RETURN_SWIPE_RESISTANCE_v1";
   const PLANET_URL = "./index.planet.js";
   const STARFIELD_URL = "./index.starfield.js";
   const MOTION_READY_EVENT = "ARCHCOIN_ACCEPTED_MOTION_READY";
@@ -126,6 +126,16 @@
     });
   }
 
+  function replaceRequired(source, before, after, identity) {
+    const count = source.split(before).length - 1;
+    if (count !== 1) {
+      throw new Error(
+        `ARCHCOIN_REQUIRED_MOTION_PATTERN_INVALID:${identity}:${count}`
+      );
+    }
+    return source.replace(before, after);
+  }
+
   function publish(detail = {}) {
     const receipt = Object.freeze({
       module: "DGB_ARCHCOIN_ACCEPTED_PRODUCTION",
@@ -201,6 +211,70 @@
 
   async function evaluateAcceptedMotion() {
     let source = await fetchSource(MOTION_SOURCE_URL);
+
+    source = replaceRequired(
+      source,
+      "    flickMinimumDistancePx: 52,",
+      "    flickMinimumHorizontalDistancePx: 88,\n" +
+        "    flickMaximumVerticalDistancePx: 64,",
+      "cluster-return-horizontal-distance"
+    );
+    source = replaceRequired(
+      source,
+      "    flickMinimumAverageVelocityPxPerMs: 0.55,",
+      "    flickMinimumHorizontalAverageVelocityPxPerMs: 0.55,",
+      "cluster-return-horizontal-average-velocity"
+    );
+    source = replaceRequired(
+      source,
+      "    flickMinimumReleaseVelocityPxPerMs: 0.72,",
+      "    flickMinimumHorizontalReleaseVelocityPxPerMs: 0.72,",
+      "cluster-return-horizontal-release-velocity"
+    );
+    source = replaceRequired(
+      source,
+      "    flickMinimumDirectionalRatio: 1.28,",
+      "    flickMinimumHorizontalDominanceRatio: 1.75,",
+      "cluster-return-horizontal-dominance"
+    );
+    source = replaceRequired(
+      source,
+      "      const directionalRatio =\n" +
+        "        Math.max(absoluteX, absoluteY) / Math.max(1, Math.min(absoluteX, absoluteY));",
+      "      const horizontalDominanceRatio = absoluteX / Math.max(1, absoluteY);\n" +
+        "      const horizontalAverageVelocity = absoluteX / durationMs;\n" +
+        "      const horizontalReleaseVelocity =\n" +
+        "        Math.abs(endX - releaseStart.x) / releaseDuration;",
+      "cluster-return-horizontal-metrics"
+    );
+    source = replaceRequired(
+      source,
+      "        directionalRatio,\n        pauseBeforeRelease",
+      "        horizontalDistance: absoluteX,\n" +
+        "        verticalDistance: absoluteY,\n" +
+        "        horizontalAverageVelocity,\n" +
+        "        horizontalReleaseVelocity,\n" +
+        "        horizontalDominanceRatio,\n" +
+        "        pauseBeforeRelease",
+      "cluster-return-horizontal-metric-output"
+    );
+    source = replaceRequired(
+      source,
+      "        metrics.distance >= GESTURE.flickMinimumDistancePx &&\n" +
+        "        metrics.averageVelocity >= GESTURE.flickMinimumAverageVelocityPxPerMs &&\n" +
+        "        metrics.releaseVelocity >= GESTURE.flickMinimumReleaseVelocityPxPerMs &&\n" +
+        "        metrics.directionalRatio >= GESTURE.flickMinimumDirectionalRatio &&",
+      "        metrics.horizontalDistance >= GESTURE.flickMinimumHorizontalDistancePx &&\n" +
+        "        metrics.verticalDistance <= GESTURE.flickMaximumVerticalDistancePx &&\n" +
+        "        metrics.horizontalAverageVelocity >=\n" +
+        "          GESTURE.flickMinimumHorizontalAverageVelocityPxPerMs &&\n" +
+        "        metrics.horizontalReleaseVelocity >=\n" +
+        "          GESTURE.flickMinimumHorizontalReleaseVelocityPxPerMs &&\n" +
+        "        metrics.horizontalDominanceRatio >=\n" +
+        "          GESTURE.flickMinimumHorizontalDominanceRatio &&",
+      "cluster-return-horizontal-classifier"
+    );
+
     source = source
       .replaceAll("/* /prototypes/universal-compass/archcoin.interactions.round3.js", "/* /products/archcoin/index.motion.source.js")
       .replaceAll("ARCHCOIN calibration lab · Round 3.", "ARCHCOIN accepted production motion.")
@@ -212,7 +286,7 @@
       .replaceAll("./archcoin.index.interactions.source.js", "./index.interactions.source.js")
       .replaceAll("installCalibrationInteractions", "installAcceptedInteractions")
       .replaceAll("calibrationApi", "acceptedApi")
-      .replaceAll("5.0.0-calibration-round3-main-cluster-motion", "5.0.0-accepted-main-cluster-motion")
+      .replaceAll("5.0.0-calibration-round3-main-cluster-motion", "5.1.0-accepted-deliberate-horizontal-return")
       .replaceAll("round3-disposed", "accepted-motion-disposed")
       .replaceAll("archcoinCalibration", "archcoinProduction")
       .replaceAll("is-calibration-", "is-archcoin-");

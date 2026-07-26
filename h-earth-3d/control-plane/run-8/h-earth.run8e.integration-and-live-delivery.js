@@ -39,6 +39,22 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     'CAMERA_TO_SUCCESSOR_TERRAIN_RECONCILIATION',
     'BRANCH_NATIVE_VALIDATION'
   ],
+  executedOccurrences: {
+    engineeringIntegration: 'PASS',
+    WestAdmission: 'PASS',
+    packet002SuccessorTransfer: 'PASS',
+    frameComposition: 'PASS',
+    sharedDepthAndOcclusion: 'PASS',
+    publicRouteBranchBrowserExecution: 'PASS',
+    desktopBrowserExecution: 'PASS',
+    samsungPortraitBrowserEmulation: 'PASS',
+    samsungLandscapeBrowserEmulation: 'PASS',
+    durableEngineeringReceipt: '/h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json',
+    durablePublicRouteReceipt: '/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json',
+    durablePublicRouteReceiptGitBlob: '0e2e09a7d7b5d3ee2c1536ade93cb8a42d250ac5',
+    durablePublicRouteReceiptSha256: 'd87f40a1486af091a05b76a59a4963e1c8aeff8fd32d8cd0d64fdd5fb2848a5b',
+    publicRouteReceiptCommit: '57f9e55502a727db5d3985387dcb2beaa0d39e63'
+  },
   closureConditions: [
     'PUBLIC_H_EARTH_ROUTE_REPLACEMENT',
     'SAMSUNG_PHYSICAL_EXECUTION',
@@ -47,6 +63,16 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     'DEPLOYMENT',
     'LIVE_IDENTITY_AND_BROWSER_PROOF'
   ],
+  closureState: {
+    publicHEarthRouteBranchExecution: 'PASS',
+    samsungBrowserEmulation: 'PASS',
+    samsungPhysicalExecution: 'NOT_EXECUTED',
+    preUpdateBaselineComparison: 'NOT_EXECUTED',
+    run8StackPromotionToMain: 'NOT_EXECUTED',
+    deployment: 'NOT_EXECUTED',
+    liveIdentityAndBrowserProof: 'NOT_EXECUTED',
+    run8EPassClosed: false
+  },
   preservedBoundaries: {
     run8ALawReopened: false,
     run8BGeometryMutated: false,
@@ -71,6 +97,13 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
   }
   if (!Array.isArray(candidate?.closureConditions) || candidate.closureConditions.length < 5) {
     issues.push('RUN_8E_CLOSURE_CONDITIONS_INCOMPLETE');
+  }
+  if (candidate?.executedOccurrences?.engineeringIntegration !== 'PASS' ||
+      candidate?.executedOccurrences?.publicRouteBranchBrowserExecution !== 'PASS') {
+    issues.push('RUN_8E_EXECUTED_OCCURRENCE_RECONCILIATION_INCOMPLETE');
+  }
+  if (candidate?.closureState?.run8EPassClosed !== false) {
+    issues.push('RUN_8E_PREMATURE_PASS_CLOSED_CLAIM');
   }
   if (Object.values(candidate?.preservedBoundaries ?? {}).some((value) => value !== false)) {
     issues.push('RUN_8E_PREDECESSOR_BOUNDARY_VIOLATION');

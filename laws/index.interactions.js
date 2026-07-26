@@ -9,7 +9,7 @@
   "use strict";
 
   const BUILD =
-    "LAWS_COMPASS_EUCLIDEAN_ORBIT_DIRECT_MANIPULATION_v4";
+    "LAWS_COMPASS_SHARED_SPHERICAL_XYZ_CLUSTER_v1";
   const SOURCE_URL =
     `/laws/index.interactions.source.round4.js?build=${encodeURIComponent(BUILD)}`;
   const SELECTION_URL =
@@ -425,9 +425,11 @@
       nativeCrystalMaterialGlow: true,
       externalHaloOverlay: false,
       releaseSettlement: true,
-      horizontalDragYawSign: "NEGATIVE",
-      clusterMaximumTiltRadians: 0.30,
-      euclideanClusterOrbitRequired: true,
+      horizontalDragYawSign: "POSITIVE",
+      clusterGeometryModel:
+        "BOUNDED_NONCOPLANAR_SPHERICAL_XYZ_CLUSTER",
+      lawScaleProfile:
+        Object.freeze([0.68, 0.84, 0.91]),
       projectedConstellationLabels:
         Object.freeze({ ...CATEGORY_LABELS }),
       ...detail

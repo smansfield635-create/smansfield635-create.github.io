@@ -1,0 +1,115 @@
+{
+  "checkpointId": "LAWS_SHARED_COMPASS_CLUSTER_CONFORMANCE_P1_REFERENCE_EXTRACTION_AND_TRANSPLANT_SPECIFICATION_v1",
+  "status": "PASS_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baseBranch": "main",
+  "baseCommit": "626f5f0a7873187a81899a0211232e06caf905ff",
+  "candidateBranchAtCheckpoint": "agent/laws-shared-compass-cluster-conformance-001",
+  "terminology": {
+    "operation": "LAWS_SHARED_COMPASS_CLUSTER_CONFORMANCE",
+    "transplantMeaning": "Adopt the already-defined Compass-family opened-cluster geometry and interaction behavior while retaining Laws identities, semantics, routes, category constellation, category selection, and return behavior.",
+    "notAWholeCompassTransplant": true,
+    "notAGenericSphericalRedesign": true
+  },
+  "historicalDefectIntroduction": {
+    "pullRequest": 128,
+    "baseCommit": "dedc73841de2b41f5905fd842e9a593116caf300",
+    "mergeCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+    "introducedGeometryModel": "EUCLIDEAN_COMMON_RADIUS_ORBIT",
+    "introducedLocalPlane": "XY",
+    "introducedHorizontalMapping": "dy,-dx,0",
+    "classification": "SUPERSEDED_NONCONFORMING_IMPLEMENTATION"
+  },
+  "postIntroductionHistory": {
+    "targetFilesChangedAfterPullRequest128": false,
+    "evidenceRangeBase": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+    "evidenceRangeHead": "626f5f0a7873187a81899a0211232e06caf905ff",
+    "latestMainDeltaAfterPriorCheckpoint": {
+      "from": "26e1d2945af837ccbbe0f003c3d148be3d7c41ff",
+      "to": "626f5f0a7873187a81899a0211232e06caf905ff",
+      "changedPaths": [
+        "showroom/globe/h-earth/renderer.js"
+      ],
+      "lawsTargetIntersection": 0
+    },
+    "consequence": "The defective seven-file occurrence may be replaced without overwriting later unrelated edits to those files."
+  },
+  "retainedLawsBehavior": [
+    "INITIAL_FOUR_CATEGORY_CONSTELLATION",
+    "CATEGORY_SELECTION_TRANSITION",
+    "FOUR_LAWS_SPECIFIC_MEMBERS_PER_CATEGORY",
+    "LAWS_LABELS_CONTENT_AND_ROUTES",
+    "NEAREST_LAW_PRIMARY_SETTLEMENT",
+    "DELIBERATE_SWIPE_RETURN_TO_CATEGORY_CONSTELLATION",
+    "CONTROLLER_COMPOSITOR_AND_PLANET_AUTHORITY"
+  ],
+  "sharedCompassBehaviorToAdopt": {
+    "coordinateSystem": "RIGHT_HANDED_EUCLIDEAN_XYZ",
+    "clusterClass": "BOUNDED_NONCOPLANAR_SPHERICAL_XYZ_CLUSTER",
+    "memberCount": 4,
+    "horizontalDragMapping": "dy,dx,0",
+    "horizontalDragYawSign": "POSITIVE_DX",
+    "verticalDrag": "CONTROLLED_WORLD_X_PITCH",
+    "incrementalQuaternion": "BOUNDED_NORMALIZED_WORLD_SPACE_COMPOSITION",
+    "releaseSettlement": "NEAREST_MEMBER_TO_PRIMARY_ANCHOR",
+    "lawScale": 0.68,
+    "primaryLawScale": 0.84,
+    "selectedLawScale": 0.91
+  },
+  "sourceCustody": {
+    "currentTargets": {
+      "laws/index.crystals.js": "cd06f18bf8384efc97fcabeec5a4de94210c87a8",
+      "laws/index.interactions.source.round4.js": "24fc3e216f3526e9c6d30939454a73bdcf13cd7d",
+      "laws/index.interactions.js": "a6563d2e2e7064136925299a79731147f4a8580b",
+      "laws/index.html": "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260",
+      "laws/index.css": "9c2ef3e9636e134795102e48ea63553d2f3b9778",
+      "laws/validation/laws.orbit-direct-manipulation.harness.mjs": "9339b8cfce13fb73805f1b4515bb7e9cc303e9d6",
+      "laws/validation/laws.orbit-direct-manipulation.receipt.json": "9ac18b0e2da3b24331958bf5caa583129d5f1f95"
+    },
+    "preDefectLawsSources": {
+      "laws/index.crystals.js": "53559091d26eded7695c749797de91b1ea2ce169",
+      "laws/index.interactions.source.round4.js": "6ee820886846cfe102d030389ca18ed4a13a1a23"
+    },
+    "referenceSources": {
+      "products/archcoin/index.interactions.source.js": "c425ece001586db09aeb7353bfde2ab8177db7c3",
+      "products/archcoin/index.crystals.source.js": "570c8b64f803b46c3ff2eb22d650596d832467af",
+      "assets/compass/compass.crystals.js": "3d6427cbdb961576468d4aab05c0e4987549cea3",
+      "showroom/index.crystals.js": "462b80afc9e26351ab9c5d78afb19af42f87f8be"
+    }
+  },
+  "authorizedConstructionPaths": [
+    "laws/index.crystals.js",
+    "laws/index.interactions.source.round4.js",
+    "laws/index.interactions.js",
+    "laws/index.html",
+    "laws/index.css",
+    "laws/validation/laws.orbit-direct-manipulation.harness.mjs",
+    "laws/validation/laws.orbit-direct-manipulation.receipt.json"
+  ],
+  "protectedPaths": [
+    "laws/index.controller.js",
+    "laws/index.compositor.js",
+    "laws/index.planet.js",
+    "laws/index.cosmos.js"
+  ],
+  "constructionMethod": {
+    "sourceFilesBuiltBeforeValidation": true,
+    "workflowMayEditProductSource": false,
+    "base64Transport": false,
+    "temporaryTransformationScriptInFinalDiff": false,
+    "toolsRole": "VALIDATE_ALREADY_CONSTRUCTED_FILES"
+  },
+  "requiredValidation": [
+    "JAVASCRIPT_SYNTAX",
+    "POSITIVE_DX_DIRECT_MANIPULATION",
+    "FOUR_MEMBER_NONCOPLANAR_XYZ_DISTRIBUTION",
+    "BOUNDED_SCALE_PROFILE",
+    "NEAREST_LAW_RELEASE_SETTLEMENT",
+    "DELIBERATE_CLUSTER_RETURN",
+    "INITIAL_CATEGORY_CONSTELLATION_PRESERVED",
+    "EXACT_AUTHORIZED_PATH_SET",
+    "FOUR_COMPASS_BENCHMARK_SMOKE",
+    "MOBILE_AND_DESKTOP_BROWSER_REVIEW"
+  ],
+  "nextCheckpoint": "P2_DIRECT_SOURCE_CONSTRUCTION"
+}

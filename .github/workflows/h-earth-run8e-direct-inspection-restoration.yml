@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate-run8e-direct-inspection-restoration:
@@ -19,7 +19,6 @@ jobs:
     env:
       H_EARTH_DIRECT_INSPECTION_URL: http://127.0.0.1:4173/showroom/globe/h-earth/
       H_EARTH_DIRECT_INSPECTION_OUTPUT: /tmp/h-earth-run8e-direct-inspection-restoration
-      H_EARTH_DIRECT_INSPECTION_BRANCH: agent/h-earth-run8e-direct-inspection-restoration-001
     steps:
       - name: Check out direct-inspection branch head
         uses: actions/checkout@v4
@@ -92,6 +91,9 @@ jobs:
           from pathlib import Path
           allowed = {
             '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
+            'h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-direct-inspection-restoration-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.active-viewport-dedup-fix.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
             'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
@@ -103,10 +105,7 @@ jobs:
             'showroom/globe/h-earth/index.html',
             'showroom/globe/h-earth/functional-landscape/environment-integration.js',
             'showroom/globe/h-earth/functional-landscape/direct-manipulation.js',
-            'showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js',
-            'h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js',
-            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-direct-inspection-restoration-scope.js',
-            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+            'showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js'
           }
           paths = {
             line.strip()
@@ -114,67 +113,24 @@ jobs:
             if line.strip()
           }
           unexpected = sorted(paths - allowed)
-          required_initial = {
-            '.github/workflows/h-earth-run8e-direct-inspection-restoration.yml',
-            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.active-viewport-dedup-fix.mjs',
-            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.constructor.mjs',
-            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness-accounting-fix.mjs',
-            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.idempotency-gate.mjs',
-            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.pointer-isolation-fix.mjs',
-            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.resize-dedup-fix.mjs',
-            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs',
-            'showroom/globe/h-earth/index.html',
-            'showroom/globe/h-earth/functional-landscape/environment-integration.js',
-            'showroom/globe/h-earth/functional-landscape/direct-manipulation.js',
-            'showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js'
-          }
-          missing = sorted(required_initial - paths)
+          missing = sorted(allowed - paths)
           if unexpected:
             raise SystemExit(f'UNEXPECTED_DIRECT_INSPECTION_PATHS:{unexpected}')
           if missing:
             raise SystemExit(f'MISSING_DIRECT_INSPECTION_PATHS:{missing}')
-          if not 12 <= len(paths) <= 16:
+          if len(paths) != 16:
             raise SystemExit(f'INVALID_DIRECT_INSPECTION_PATH_COUNT:{len(paths)}')
           PY
 
-      - name: Stage exact restoration receipt
+      - name: Verify exact durable restoration receipt
         run: |
           set -euo pipefail
-          cp \
+          cmp --silent \
             /tmp/h-earth-run8e-direct-inspection-restoration/h-earth.run8e-direct-inspection-restoration.receipt.json \
             h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json
           git diff --check
 
-      - name: Persist exact generated integration and receipt
-        if: github.event_name != 'workflow_dispatch'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          update_content() {
-            local target="$1"
-            local message="$2"
-            local current_sha
-            current_sha="$(gh api \
-              "repos/${GITHUB_REPOSITORY}/contents/${target}?ref=${H_EARTH_DIRECT_INSPECTION_BRANCH}" \
-              --jq '.sha')"
-            gh api \
-              --method PUT \
-              "repos/${GITHUB_REPOSITORY}/contents/${target}" \
-              -f message="$message" \
-              -f branch="$H_EARTH_DIRECT_INSPECTION_BRANCH" \
-              -f content="$(base64 -w0 "$target")" \
-              -f sha="$current_sha" \
-              > /dev/null
-          }
-          update_content \
-            'showroom/globe/h-earth/functional-landscape/environment-integration.js' \
-            'Persist active-viewport Run 8E render scheduling'
-          update_content \
-            'h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json' \
-            'Persist exact direct-inspection restoration receipt'
-
-      - name: Upload restoration evidence and exact generated sources
+      - name: Upload restoration evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -190,10 +146,5 @@ jobs:
             /tmp/h-earth-run8e-direct-inspection-restoration.log
             /tmp/h-earth-run8e-direct-inspection-restoration
             /tmp/h-earth-run8e-direct-inspection-paths.txt
-            showroom/globe/h-earth/index.html
-            showroom/globe/h-earth/functional-landscape/environment-integration.js
-            showroom/globe/h-earth/functional-landscape/direct-manipulation.js
-            h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.harness.mjs
-            h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json
           if-no-files-found: error
           retention-days: 90

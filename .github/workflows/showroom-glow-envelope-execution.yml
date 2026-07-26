@@ -1,0 +1,310 @@
+name: Showroom glow and presentation envelope execution
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  construct-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out execution branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Construct bounded Showroom correction
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+
+          const runtimePath = 'showroom/index.crystals.js';
+          const sourcePath = 'showroom/index.crystals.source.js';
+          const compositorPath = 'showroom/index.compositor.js';
+          const htmlPath = 'showroom/index.html';
+
+          function replaceOnce(text, from, to, label) {
+            const count = text.split(from).length - 1;
+            if (count !== 1) throw new Error(`${label}: expected one match, found ${count}`);
+            return text.replace(from, to);
+          }
+
+          function replaceRegexOnce(text, pattern, replacement, label) {
+            const matches = text.match(new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`));
+            const count = matches ? matches.length : 0;
+            if (count !== 1) throw new Error(`${label}: expected one match, found ${count}`);
+            return text.replace(pattern, replacement);
+          }
+
+          function patchCrystals(input) {
+            let text = input;
+            text = replaceOnce(
+              text,
+              'Showroom canonical crystal corridor with viewport-safe spatial integration.',
+              'Showroom canonical crystal corridor with restored Main/Laws glow and presentation envelope.',
+              'crystal header'
+            );
+            text = replaceOnce(
+              text,
+              '"SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2"',
+              '"SHOWROOM_CANONICAL_CRYSTAL_GLOW_AND_PRESENTATION_v3"',
+              'crystal contract'
+            );
+            text = replaceRegexOnce(
+              text,
+              /  const QUALITY = Object\.freeze\(\{[\s\S]*?\n\}\);\n\n  const CARDINAL_BASE_POSITIONS/,
+              `  const QUALITY = Object.freeze({\n  maximumDeltaSeconds: 0.05,\n  interpolationSpeed: 8.2,\n  reducedMotionInterpolationSpeed: 26,\n  ambientFrameIntervalMs: 1000 / 30,\n  cardinalHitRadius: 76,\n  roomHitRadius: 48,\n  visibleOpacityThreshold: 0.025,\n  haloPassEnabled: true,\n  haloDisableWidth: 0,\n  cardinalDepthRadius: 1.16,\n  roomDepthRadius: 1.04\n});\n\n  const CARDINAL_BASE_POSITIONS`,
+              'quality block'
+            );
+            text = replaceRegexOnce(
+              text,
+              /  const CARDINAL_BASE_POSITIONS = Object\.freeze\(\{[\s\S]*?\n\}\);\n\nconst ROOM_BASE_POSITIONS = Object\.freeze\(\{[\s\S]*?\n\}\);\n\n  const PALETTES/,
+              `  const CARDINAL_BASE_POSITIONS = Object.freeze({\n  north: Object.freeze([0, 1.34, 0]),\n  east: Object.freeze([1.50, 0, 0]),\n  south: Object.freeze([0, -1.34, 0]),\n  west: Object.freeze([-1.50, 0, 0])\n});\n\nconst ROOM_BASE_POSITIONS = Object.freeze({\n  1: Object.freeze([0, 0.42155918243834756, -0.9713677415028749]),\n  2: Object.freeze([1.3178909481432288, 0.29135821915396054, 0]),\n  3: Object.freeze([0, -0.5073345276802548, 0.9389695242664297]),\n  4: Object.freeze([-1.351990798995593, -0.12787386777498447, 0])\n});\n\n  const PALETTES`,
+              'canonical positions'
+            );
+            text = replaceRegexOnce(
+              text,
+              /  const MATERIALS = Object\.freeze\(\{[\s\S]*?\n\}\);\n\n  const state =/,
+              `  const MATERIALS = Object.freeze({\n  CARDINAL_IDLE: Object.freeze({\n    scale: 0.96,\n    specular: 1.18,\n    rim: 1.02,\n    emissive: 0.17,\n    alpha: 0.90,\n    sparkle: 0.26,\n    halo: 0.82,\n    contrast: 1.16\n  }),\n  CARDINAL_FOCUSED: Object.freeze({\n    scale: 1.30,\n    specular: 1.50,\n    rim: 1.30,\n    emissive: 0.24,\n    alpha: 0.96,\n    sparkle: 0.36,\n    halo: 1.18,\n    contrast: 1.24\n  }),\n  ROOM_IDLE: Object.freeze({\n    scale: 0.88,\n    specular: 1.04,\n    rim: 0.90,\n    emissive: 0.15,\n    alpha: 0.88,\n    sparkle: 0.22,\n    halo: 0.64,\n    contrast: 1.10\n  }),\n  ROOM_PRIMARY: Object.freeze({\n    scale: 1.12,\n    specular: 1.24,\n    rim: 1.08,\n    emissive: 0.21,\n    alpha: 0.94,\n    sparkle: 0.30,\n    halo: 0.86,\n    contrast: 1.17\n  })\n});\n\n  const state =`,
+              'material block'
+            );
+            text = replaceOnce(
+              text,
+              `    const haloEnabled =\n      QUALITY.haloPassEnabled === true;`,
+              `    const haloEnabled =\n      QUALITY.haloPassEnabled === true &&\n      finiteNumber(\n        payload.frame.viewport.cssWidth,\n        0\n      ) > QUALITY.haloDisableWidth;`,
+              'halo execution gate'
+            );
+            text = text.replaceAll('cardinalPositionsMovedOutward:\n          true', 'cardinalPositionsUseCanonicalMainRadius:\n          true');
+            text = text.replaceAll('roomPositionsMovedOutward:\n          true', 'roomPositionsUseCanonicalMainCluster:\n          true');
+            text = text.replaceAll('positionsMovedOutward:\n          true', 'canonicalPresentationEnvelopeRestored:\n          true');
+            text = text.replaceAll('the detached additive full-mesh halo draw is retired;', 'the accepted additive full-mesh halo draw is restored;');
+            text = text.replaceAll('cardinal and room crystals use bounded viewport-safe scales;', 'cardinal and room crystals use the accepted Main/Laws scale hierarchy;');
+            return text;
+          }
+
+          const runtimeOriginal = fs.readFileSync(runtimePath, 'utf8');
+          const sourceOriginal = fs.readFileSync(sourcePath, 'utf8');
+          if (runtimeOriginal !== sourceOriginal) throw new Error('crystal runtime/source baseline mismatch');
+          const crystals = patchCrystals(runtimeOriginal);
+          fs.writeFileSync(runtimePath, crystals);
+          fs.writeFileSync(sourcePath, crystals);
+
+          let compositor = fs.readFileSync(compositorPath, 'utf8');
+          compositor = replaceOnce(
+            compositor,
+            '/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_REDUCED_COMPASS_OVERLOAD */',
+            '/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_CANONICAL_PRESENTATION_ENVELOPE */',
+            'compositor header'
+          );
+          compositor = replaceOnce(
+            compositor,
+            `  const state = {`,
+            `  const PRESENTATION_CAMERA = Object.freeze({\n    mobileAspectThreshold: 0.82,\n    constellation: Object.freeze({\n      normalEye: Object.freeze([0, 0.76, 6.05]),\n      mobileEye: Object.freeze([0, 0.76, 7.10]),\n      target: Object.freeze([0, 0.03, 0.06]),\n      normalFieldOfViewDegrees: 36,\n      mobileFieldOfViewDegrees: 34\n    }),\n    cluster: Object.freeze({\n      normalEye: Object.freeze([0, 0.62, 6.28]),\n      mobileEye: Object.freeze([0, 0.62, 7.68]),\n      target: Object.freeze([0, 0.02, 0.04]),\n      normalFieldOfViewDegrees: 36,\n      mobileFieldOfViewDegrees: 34\n    })\n  });\n\n  const state = {`,
+            'presentation camera insertion'
+          );
+          compositor = replaceOnce(
+            compositor,
+            `  function rebuildMatrices() {\n    const aspect =\n      state.viewport.cssWidth /\n      Math.max(\n        1,\n        state.viewport.cssHeight\n      );\n\n    const view =`,
+            `  function applyPresentationCamera(aspect) {\n    const mode = String(\n      state.controllerFrame &&\n      state.controllerFrame.presentationMode ||\n      "CONSTELLATION"\n    ).toUpperCase();\n    const preset =\n      mode === "CLUSTER"\n        ? PRESENTATION_CAMERA.cluster\n        : PRESENTATION_CAMERA.constellation;\n    const mobile =\n      aspect <=\n      PRESENTATION_CAMERA.mobileAspectThreshold;\n    state.camera.eye =\n      (mobile ? preset.mobileEye : preset.normalEye).slice();\n    state.camera.target =\n      preset.target.slice();\n    state.camera.fieldOfViewDegrees =\n      mobile\n        ? preset.mobileFieldOfViewDegrees\n        : preset.normalFieldOfViewDegrees;\n  }\n\n  function rebuildMatrices() {\n    const aspect =\n      state.viewport.cssWidth /\n      Math.max(\n        1,\n        state.viewport.cssHeight\n      );\n\n    applyPresentationCamera(aspect);\n\n    const view =`,
+            'responsive camera application'
+          );
+          fs.writeFileSync(compositorPath, compositor);
+
+          let html = fs.readFileSync(htmlPath, 'utf8');
+          html = html.replaceAll(
+            'SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_10_SPATIAL_COSMOS_CONTINUITY',
+            'SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_11_GLOW_PRESENTATION_ENVELOPE'
+          );
+          html = replaceOnce(
+            html,
+            '/showroom/index.compositor.js?v=SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6',
+            '/showroom/index.compositor.js?v=SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726K',
+            'compositor cache identity'
+          );
+          html = replaceOnce(
+            html,
+            '/showroom/index.crystals.js?v=SHOWROOM_COMPASS_SPATIAL_COSMOS_20260726J',
+            '/showroom/index.crystals.js?v=SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726K',
+            'crystal cache identity'
+          );
+          fs.writeFileSync(htmlPath, html);
+          NODE
+
+      - name: Static and structural verification
+        run: |
+          set -euo pipefail
+          node --check showroom/index.crystals.js
+          node --check showroom/index.crystals.source.js
+          node --check showroom/index.compositor.js
+          cmp --silent showroom/index.crystals.js showroom/index.crystals.source.js
+          grep -q 'SHOWROOM_CANONICAL_CRYSTAL_GLOW_AND_PRESENTATION_v3' showroom/index.crystals.js
+          grep -q 'haloPassEnabled: true' showroom/index.crystals.js
+          grep -q 'scale: 1.30' showroom/index.crystals.js
+          grep -q 'scale: 1.12' showroom/index.crystals.js
+          grep -q 'PRESENTATION_CAMERA' showroom/index.compositor.js
+          grep -q 'SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726K' showroom/index.html
+          ! grep -q 'SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2' showroom/index.crystals.js
+          ! grep -q 'showroom/index.cosmos.source.js' showroom/index.html
+          test ! -e showroom/index.cosmos.source.js
+          python3 - <<'PY'
+          import re, pathlib, subprocess, tempfile
+          html = pathlib.Path('showroom/index.html').read_text()
+          scripts = re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>', html, re.I)
+          for i, script in enumerate(scripts):
+              if not script.strip():
+                  continue
+              path = pathlib.Path(tempfile.gettempdir()) / f'showroom-inline-{i}.js'
+              path.write_text(script)
+              subprocess.run(['node', '--check', str(path)], check=True)
+          PY
+
+      - name: Install browser runtime
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Three-viewport constellation and cluster verification
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/showroom-round2-evidence
+          python3 -m http.server 4173 --directory . >/tmp/showroom-round2-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid || true' EXIT
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const fs = require('node:fs');
+
+          const configs = [
+            { name: 'samsung-portrait', width: 390, height: 844 },
+            { name: 'tablet', width: 800, height: 1100 },
+            { name: 'desktop', width: 1440, height: 1000 }
+          ];
+
+          function assert(condition, message) {
+            if (!condition) throw new Error(message);
+          }
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const evidence = [];
+            for (const cfg of configs) {
+              const page = await browser.newPage({ viewport: cfg, deviceScaleFactor: 1 });
+              const errors = [];
+              page.on('console', msg => { if (msg.type() === 'error') errors.push(`console:${msg.text()}`); });
+              page.on('pageerror', err => errors.push(`page:${err.message}`));
+              await page.goto('http://127.0.0.1:4173/showroom/', { waitUntil: 'domcontentloaded' });
+              await page.locator('#showroom-orbit').scrollIntoViewIfNeeded();
+              await page.waitForFunction(() => window.SHOWROOM_CRYSTALS?.getState?.().ready === true, null, { timeout: 30000 });
+              await page.waitForTimeout(750);
+
+              const constellation = await page.evaluate(() => {
+                const field = document.querySelector('[data-showroom-orbit-field]');
+                const fieldRect = field.getBoundingClientRect();
+                const visible = el => {
+                  const s = getComputedStyle(el);
+                  const r = el.getBoundingClientRect();
+                  return s.display !== 'none' && s.visibility !== 'hidden' && Number(s.opacity || 1) > 0.04 && r.width > 0 && r.height > 0;
+                };
+                const controls = [...document.querySelectorAll('[data-showroom-cardinal-control]')]
+                  .filter(visible)
+                  .map(el => {
+                    const r = el.getBoundingClientRect();
+                    return { id: el.getAttribute('data-showroom-cardinal-id'), x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height };
+                  });
+                const state = window.SHOWROOM_CRYSTALS.getState();
+                return { field: { x: fieldRect.left, y: fieldRect.top, w: fieldRect.width, h: fieldRect.height }, controls, state };
+              });
+
+              assert(constellation.controls.length === 4, `${cfg.name}: expected four visible cardinals`);
+              const cx = constellation.controls.map(v => v.x);
+              const cy = constellation.controls.map(v => v.y);
+              const spanX = Math.max(...cx) - Math.min(...cx);
+              const spanY = Math.max(...cy) - Math.min(...cy);
+              assert(spanX >= constellation.field.w * 0.40, `${cfg.name}: constellation horizontal envelope too small`);
+              assert(spanY >= constellation.field.h * 0.34, `${cfg.name}: constellation vertical envelope too small`);
+              const constellationDraws = constellation.state.counters.lastRearDrawCalls + constellation.state.counters.lastFrontDrawCalls;
+              assert(constellationDraws >= 8, `${cfg.name}: halo pass not represented in constellation draw count`);
+              assert(errors.length === 0, `${cfg.name}: runtime errors before cluster: ${errors.join(' | ')}`);
+              await page.screenshot({ path: `/tmp/showroom-round2-evidence/${cfg.name}-constellation.png`, fullPage: false });
+
+              await page.locator('[data-showroom-cardinal-control]').first().click({ force: true });
+              await page.waitForFunction(() => window.SHOWROOM_CRYSTALS?.getState?.().presentationMode === 'CLUSTER', null, { timeout: 10000 });
+              await page.waitForTimeout(750);
+
+              const cluster = await page.evaluate(() => {
+                const field = document.querySelector('[data-showroom-orbit-field]');
+                const fieldRect = field.getBoundingClientRect();
+                const visible = el => {
+                  const s = getComputedStyle(el);
+                  const r = el.getBoundingClientRect();
+                  return s.display !== 'none' && s.visibility !== 'hidden' && Number(s.opacity || 1) > 0.04 && r.width > 0 && r.height > 0;
+                };
+                const controls = [...document.querySelectorAll('[data-showroom-child-control]')]
+                  .filter(visible)
+                  .map(el => {
+                    const r = el.getBoundingClientRect();
+                    return { id: el.getAttribute('data-showroom-child-id'), x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height, area: r.width * r.height };
+                  });
+                const state = window.SHOWROOM_CRYSTALS.getState();
+                return { field: { x: fieldRect.left, y: fieldRect.top, w: fieldRect.width, h: fieldRect.height }, controls, state };
+              });
+
+              assert(cluster.controls.length === 4, `${cfg.name}: expected four visible cluster members`);
+              const kx = cluster.controls.map(v => v.x);
+              const ky = cluster.controls.map(v => v.y);
+              const kSpanX = Math.max(...kx) - Math.min(...kx);
+              const kSpanY = Math.max(...ky) - Math.min(...ky);
+              assert(kSpanX >= cluster.field.w * 0.34, `${cfg.name}: cluster horizontal envelope too small`);
+              assert(kSpanY >= cluster.field.h * 0.25, `${cfg.name}: cluster vertical envelope too small`);
+              const areas = cluster.controls.map(v => v.area).sort((a, b) => a - b);
+              assert(areas[areas.length - 1] / Math.max(1, areas[0]) >= 1.15, `${cfg.name}: cluster depth hierarchy not visible`);
+              const clusterDraws = cluster.state.counters.lastRearDrawCalls + cluster.state.counters.lastFrontDrawCalls;
+              assert(clusterDraws >= 8, `${cfg.name}: halo pass not represented in cluster draw count`);
+              assert(errors.length === 0, `${cfg.name}: runtime errors in cluster: ${errors.join(' | ')}`);
+              await page.screenshot({ path: `/tmp/showroom-round2-evidence/${cfg.name}-cluster.png`, fullPage: false });
+
+              evidence.push({ cfg, constellation: { spanX, spanY, drawCalls: constellationDraws }, cluster: { spanX: kSpanX, spanY: kSpanY, drawCalls: clusterDraws, areaRatio: areas[areas.length - 1] / Math.max(1, areas[0]) }, errors });
+              await page.close();
+            }
+            fs.writeFileSync('/tmp/showroom-round2-evidence/receipt.json', JSON.stringify({ status: 'PASS', evidence }, null, 2));
+            await browser.close();
+          })().catch(error => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: showroom-glow-envelope-execution-evidence
+          path: /tmp/showroom-round2-evidence
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Commit bounded product candidate
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.compositor.js showroom/index.html; then
+            echo 'Product files already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.compositor.js showroom/index.html
+          git commit -m 'Restore Showroom glow and presentation envelope'
+          git push origin "HEAD:${HEAD_BRANCH}"

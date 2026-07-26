@@ -77,24 +77,23 @@ equal(atmosphere.valid, true, 'ATMOSPHERE_FIXTURE_INVALID');
 equal(atmosphere.contractId, H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
   'ATMOSPHERE_FIXTURE_CONTRACT_MISMATCH');
 
-const shorelineAt = (x) => getHEarthCanonicalShorelineZ(x);
-const fixture = ({ id, x, shorelineDistance, expectedClass, observerY = null }) => ({
+const makeFixture = ({ id, x, distance, expectedClass, observerY }) => ({
   id,
   x,
-  shorelineDistance,
-  z: shorelineAt(x) - shorelineDistance,
+  distance,
+  z: getHEarthCanonicalShorelineZ(x) - distance,
   expectedClass,
   observerY
 });
 
 const fixtures = [
-  fixture({ id: 'DRY_INLAND', x: -128, shorelineDistance: 30, expectedClass: 'NO_WATER', observerY: 2.25 }),
-  fixture({ id: 'CONTACT_LANDWARD', x: -64, shorelineDistance: 1, expectedClass: 'SHORELINE_CONTACT', observerY: 0.6 }),
-  fixture({ id: 'CONTACT_WATERWARD', x: 0, shorelineDistance: -1, expectedClass: 'SHORELINE_CONTACT', observerY: 0 }),
-  fixture({ id: 'SHALLOW_WATER', x: 48, shorelineDistance: -10, expectedClass: 'SHALLOW_WATER', observerY: 1.2 }),
-  fixture({ id: 'NEARSHORE_WATER', x: 96, shorelineDistance: -35, expectedClass: 'NEARSHORE_WATER', observerY: 2.25 }),
-  fixture({ id: 'OPEN_WATER', x: 144, shorelineDistance: -90, expectedClass: 'OPEN_WATER', observerY: 3.5 }),
-  fixture({ id: 'OPEN_WATER_SUBMERGED', x: 144, shorelineDistance: -90, expectedClass: 'OPEN_WATER', observerY: -2 })
+  makeFixture({ id: 'DRY_INLAND', x: -128, distance: 30, expectedClass: 'NO_WATER', observerY: 2.25 }),
+  makeFixture({ id: 'CONTACT_LANDWARD', x: -64, distance: 1, expectedClass: 'SHORELINE_CONTACT', observerY: 0.6 }),
+  makeFixture({ id: 'CONTACT_WATERWARD', x: 0, distance: -1, expectedClass: 'SHORELINE_CONTACT', observerY: 0 }),
+  makeFixture({ id: 'SHALLOW_WATER', x: 48, distance: -10, expectedClass: 'SHALLOW_WATER', observerY: 1.2 }),
+  makeFixture({ id: 'NEARSHORE_WATER', x: 96, distance: -35, expectedClass: 'NEARSHORE_WATER', observerY: 2.25 }),
+  makeFixture({ id: 'OPEN_WATER', x: 144, distance: -90, expectedClass: 'OPEN_WATER', observerY: 3.5 }),
+  makeFixture({ id: 'OPEN_WATER_SUBMERGED', x: 144, distance: -90, expectedClass: 'OPEN_WATER', observerY: -2 })
 ];
 
 const sampleFixture = (entry) => ({
@@ -104,113 +103,107 @@ const sampleFixture = (entry) => ({
     observerY: entry.observerY
   })
 });
-
 const firstSamples = fixtures.map(sampleFixture);
 const secondSamples = fixtures.map(sampleFixture);
 deepEqual(firstSamples, secondSamples, 'DETERMINISTIC_WATER_RERUN_MISMATCH');
 
 const observedClasses = new Set();
 const summaries = [];
-const forbiddenFields = [
+const forbiddenFields = [...new Set([
   ...H_EARTH_WATER_STATE_FORBIDDEN_NATIVE_OUTPUTS,
   'traversalClass',
   'traversalCost',
   'ambientAudioClass',
   'biomeClass',
   'chunkState'
-];
+])];
 
-for (const [index, { fixture: entry, sample }] of firstSamples.entries()) {
-  equal(sample.valid, true, `WATER_SAMPLE_INVALID:${entry.id}`);
+for (const [index, { fixture, sample }] of firstSamples.entries()) {
+  equal(sample.valid, true, `WATER_SAMPLE_INVALID:${fixture.id}`);
   equal(sample.contractId, H_EARTH_WATER_STATE_CONTRACT_ID,
-    `WATER_CONTRACT_MISMATCH:${entry.id}`);
-  equal(sample.waterStateRevision, 1, `WATER_REVISION_MISMATCH:${entry.id}`);
-  equal(sample.waterClass, entry.expectedClass,
-    `WATER_CLASS_MISMATCH:${entry.id}`);
+    `WATER_CONTRACT_MISMATCH:${fixture.id}`);
+  equal(sample.waterStateRevision, 1, `WATER_REVISION_MISMATCH:${fixture.id}`);
+  equal(sample.waterClass, fixture.expectedClass,
+    `WATER_CLASS_MISMATCH:${fixture.id}`);
   observedClasses.add(sample.waterClass);
 
   const evaluation = evaluateHEarthWaterStateSample(sample);
-  equal(evaluation.eligible, true, `WATER_EVALUATION_FAIL:${entry.id}`);
-  deepEqual(evaluation.issues, [], `WATER_EVALUATION_ISSUES:${entry.id}`);
+  equal(evaluation.eligible, true, `WATER_EVALUATION_FAIL:${fixture.id}`);
+  deepEqual(evaluation.issues, [], `WATER_EVALUATION_ISSUES:${fixture.id}`);
 
-  const terrain = sampleHEarthTerrainField(entry.x, entry.z);
-  const surface = sampleHEarthSurfaceState(entry.x, entry.z);
-  equal(terrain.valid, true, `TERRAIN_FIXTURE_INVALID:${entry.id}`);
-  equal(surface.valid, true, `SURFACE_FIXTURE_INVALID:${entry.id}`);
+  const terrain = sampleHEarthTerrainField(fixture.x, fixture.z);
+  const surface = sampleHEarthSurfaceState(fixture.x, fixture.z);
+  equal(terrain.valid, true, `TERRAIN_FIXTURE_INVALID:${fixture.id}`);
+  equal(surface.valid, true, `SURFACE_FIXTURE_INVALID:${fixture.id}`);
   equal(sample.bedElevation, terrain.elevation,
-    `BED_TERRAIN_CORRESPONDENCE:${entry.id}`);
+    `BED_TERRAIN_CORRESPONDENCE:${fixture.id}`);
   equal(sample.shorelineDistance, terrain.shorelineDistance,
-    `SHORELINE_DISTANCE_CORRESPONDENCE:${entry.id}`);
+    `SHORELINE_DISTANCE_CORRESPONDENCE:${fixture.id}`);
   equal(sample.shorelineZ, terrain.shorelineZ,
-    `SHORELINE_Z_CORRESPONDENCE:${entry.id}`);
+    `SHORELINE_Z_CORRESPONDENCE:${fixture.id}`);
   equal(sample.semanticAddressId, surface.semanticAddressId,
-    `SEMANTIC_ADDRESS_CORRESPONDENCE:${entry.id}`);
+    `SEMANTIC_ADDRESS_CORRESPONDENCE:${fixture.id}`);
   equal(sample.chunkId, surface.chunkId,
-    `CHUNK_CORRESPONDENCE:${entry.id}`);
+    `CHUNK_CORRESPONDENCE:${fixture.id}`);
   deepEqual(sample.formationIds, surface.formationIds,
-    `FORMATION_CORRESPONDENCE:${entry.id}`);
+    `FORMATION_CORRESPONDENCE:${fixture.id}`);
 
-  equal(sample.sourceIdentities.terrainFieldContractId,
-    H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-    `TERRAIN_SOURCE_IDENTITY:${entry.id}`);
-  equal(sample.sourceIdentities.surfaceStateContractId,
-    H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID,
-    `SURFACE_SOURCE_IDENTITY:${entry.id}`);
-  equal(sample.sourceIdentities.atmosphereStateContractId,
-    H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
-    `ATMOSPHERE_SOURCE_IDENTITY:${entry.id}`);
-  equal(sample.sourceIdentities.waterStateContractId,
-    H_EARTH_WATER_STATE_CONTRACT_ID,
-    `WATER_SOURCE_IDENTITY:${entry.id}`);
+  const identities = sample.sourceIdentities;
+  equal(identities.terrainFieldContractId, H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
+    `TERRAIN_SOURCE_IDENTITY:${fixture.id}`);
+  equal(identities.surfaceStateContractId, H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID,
+    `SURFACE_SOURCE_IDENTITY:${fixture.id}`);
+  equal(identities.atmosphereStateContractId, H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
+    `ATMOSPHERE_SOURCE_IDENTITY:${fixture.id}`);
+  equal(identities.waterStateContractId, H_EARTH_WATER_STATE_CONTRACT_ID,
+    `WATER_SOURCE_IDENTITY:${fixture.id}`);
   equal(sample.correspondenceStatus, 'WATER_UPSTREAM_CORRESPONDENCE_PASS',
-    `CORRESPONDENCE_STATUS:${entry.id}`);
-  deepEqual(sample.issues, [], `WATER_SAMPLE_ISSUES:${entry.id}`);
+    `CORRESPONDENCE_STATUS:${fixture.id}`);
+  deepEqual(sample.issues, [], `WATER_SAMPLE_ISSUES:${fixture.id}`);
 
   for (const field of [
     'bedElevation', 'depth', 'shorelineDistance', 'shorelineZ',
     'waterwardDistance', 'flowSpeed', 'waveAmplitude', 'waveFrequency',
     'turbidity', 'foamIntensity', 'wetnessTransfer'
   ]) {
-    check(finite(sample[field]), `NONFINITE_WATER_FIELD:${entry.id}:${field}`);
+    check(finite(sample[field]), `NONFINITE_WATER_FIELD:${fixture.id}:${field}`);
   }
-  check(sample.depth >= 0, `NEGATIVE_DEPTH:${entry.id}`);
+  check(sample.depth >= 0, `NEGATIVE_DEPTH:${fixture.id}`);
   for (const field of ['turbidity', 'foamIntensity', 'wetnessTransfer']) {
     check(sample[field] >= 0 && sample[field] <= 1,
-      `WATER_FIELD_RANGE:${entry.id}:${field}`);
+      `WATER_FIELD_RANGE:${fixture.id}:${field}`);
   }
-
   forbiddenFields.forEach((field) => {
     check(!Object.prototype.hasOwnProperty.call(sample, field),
-      `FORBIDDEN_WATER_OUTPUT:${entry.id}:${field}`);
+      `FORBIDDEN_WATER_OUTPUT:${fixture.id}:${field}`);
   });
 
   if (sample.waterPresent) {
     check(typeof sample.waterBodyId === 'string' && sample.waterBodyId.length > 0,
-      `WATER_BODY_ID_MISSING:${entry.id}`);
-    check(finite(sample.surfaceElevation), `SURFACE_ELEVATION_NONFINITE:${entry.id}`);
+      `WATER_BODY_ID_MISSING:${fixture.id}`);
+    check(finite(sample.surfaceElevation), `SURFACE_ELEVATION_NONFINITE:${fixture.id}`);
     check(Math.abs(Math.hypot(sample.flowDirection.x, sample.flowDirection.z) - 1) < 1e-10,
-      `FLOW_DIRECTION_NOT_NORMALIZED:${entry.id}`);
+      `FLOW_DIRECTION_NOT_NORMALIZED:${fixture.id}`);
     check(Math.abs(Math.hypot(sample.waveDirection.x, sample.waveDirection.z) - 1) < 1e-10,
-      `WAVE_DIRECTION_NOT_NORMALIZED:${entry.id}`);
-    check(sample.waveAmplitude > 0, `WAVE_AMPLITUDE_NOT_POSITIVE:${entry.id}`);
-    check(sample.waveFrequency > 0, `WAVE_FREQUENCY_NOT_POSITIVE:${entry.id}`);
+      `WAVE_DIRECTION_NOT_NORMALIZED:${fixture.id}`);
+    check(sample.waveAmplitude > 0, `WAVE_AMPLITUDE_NOT_POSITIVE:${fixture.id}`);
+    check(sample.waveFrequency > 0, `WAVE_FREQUENCY_NOT_POSITIVE:${fixture.id}`);
   } else {
-    equal(sample.waterBodyId, null, `LAND_WATER_BODY_PRESENT:${entry.id}`);
-    equal(sample.surfaceElevation, null, `LAND_SURFACE_ELEVATION_PRESENT:${entry.id}`);
-    equal(sample.depth, 0, `LAND_DEPTH_PRESENT:${entry.id}`);
-    equal(sample.flowSpeed, 0, `LAND_FLOW_PRESENT:${entry.id}`);
-    equal(sample.waveAmplitude, 0, `LAND_WAVE_PRESENT:${entry.id}`);
-    equal(sample.buoyancyEligibility, false, `LAND_BUOYANCY_ELIGIBLE:${entry.id}`);
+    equal(sample.waterBodyId, null, `LAND_WATER_BODY_PRESENT:${fixture.id}`);
+    equal(sample.surfaceElevation, null, `LAND_SURFACE_ELEVATION_PRESENT:${fixture.id}`);
+    equal(sample.depth, 0, `LAND_DEPTH_PRESENT:${fixture.id}`);
+    equal(sample.flowSpeed, 0, `LAND_FLOW_PRESENT:${fixture.id}`);
+    equal(sample.waveAmplitude, 0, `LAND_WAVE_PRESENT:${fixture.id}`);
+    equal(sample.buoyancyEligibility, false, `LAND_BUOYANCY_ELIGIBLE:${fixture.id}`);
   }
 
-  if (entry.id === 'OPEN_WATER_SUBMERGED') {
+  if (fixture.id === 'OPEN_WATER_SUBMERGED') {
     equal(sample.underwaterState, 'SUBMERGED', 'SUBMERGED_CLASSIFICATION_MISSING');
   }
-  if (entry.id === 'CONTACT_WATERWARD') {
-    equal(sample.underwaterState, 'CONTACT_ZONE', 'CONTACT_UNDERWATER_CLASSIFICATION_MISSING');
+  if (fixture.id === 'CONTACT_WATERWARD') {
+    equal(sample.underwaterState, 'CONTACT_ZONE', 'CONTACT_CLASSIFICATION_MISSING');
   }
-
-  assertDeepFrozen(sample, `water.${entry.id}`);
+  assertDeepFrozen(sample, `water.${fixture.id}`);
 
   const timeSeconds = index * 7.5 + 3;
   const plan = buildHEarthWaterPresentation(sample, {
@@ -219,68 +212,67 @@ for (const [index, { fixture: entry, sample }] of firstSamples.entries()) {
     cameraDistance: 40 + index * 48,
     horizonDistance: 512
   });
-  equal(plan.eligible, true, `WATER_PRESENTATION_INVALID:${entry.id}`);
+  equal(plan.eligible, true, `WATER_PRESENTATION_INVALID:${fixture.id}`);
   equal(plan.contractId, H_EARTH_WATER_PRESENTATION_CONTRACT_ID,
-    `WATER_PRESENTATION_CONTRACT:${entry.id}`);
-  const presentationEvaluation = evaluateHEarthWaterPresentation(plan);
-  equal(presentationEvaluation.eligible, true,
-    `WATER_PRESENTATION_EVALUATION_FAIL:${entry.id}`);
-  deepEqual(presentationEvaluation.issues, [],
-    `WATER_PRESENTATION_EVALUATION_ISSUES:${entry.id}`);
+    `WATER_PRESENTATION_CONTRACT:${fixture.id}`);
+  const planEvaluation = evaluateHEarthWaterPresentation(plan);
+  equal(planEvaluation.eligible, true,
+    `WATER_PRESENTATION_EVALUATION_FAIL:${fixture.id}`);
+  deepEqual(planEvaluation.issues, [],
+    `WATER_PRESENTATION_EVALUATION_ISSUES:${fixture.id}`);
   equal(plan.visible, sample.waterPresent,
-    `WATER_PRESENTATION_VISIBILITY:${entry.id}`);
+    `WATER_PRESENTATION_VISIBILITY:${fixture.id}`);
   equal(plan.authority.ownsNativeWaterTruth, false,
-    `PRESENTATION_NATIVE_WATER_AUTHORITY_LEAK:${entry.id}`);
+    `PRESENTATION_NATIVE_WATER_AUTHORITY_LEAK:${fixture.id}`);
   equal(plan.authority.ownsRendererLoop, false,
-    `PRESENTATION_RENDERER_LOOP_LEAK:${entry.id}`);
+    `PRESENTATION_RENDERER_LOOP_LEAK:${fixture.id}`);
   equal(plan.authority.mutatesRenderer, false,
-    `PRESENTATION_RENDERER_MUTATION:${entry.id}`);
+    `PRESENTATION_RENDERER_MUTATION:${fixture.id}`);
   equal(plan.authority.createsDom, false,
-    `PRESENTATION_DOM_CREATION:${entry.id}`);
+    `PRESENTATION_DOM_CREATION:${fixture.id}`);
   equal(plan.authority.createsCanvas, false,
-    `PRESENTATION_CANVAS_CREATION:${entry.id}`);
-  assertDeepFrozen(plan, `presentation.${entry.id}`);
+    `PRESENTATION_CANVAS_CREATION:${fixture.id}`);
+  assertDeepFrozen(plan, `presentation.${fixture.id}`);
 
   if (sample.waterPresent) {
     check(Array.isArray(plan.surfaceColor) && plan.surfaceColor.length === 4,
-      `WATER_COLOR_SHAPE:${entry.id}`);
+      `WATER_COLOR_SHAPE:${fixture.id}`);
     plan.surfaceColor.forEach((channel, channelIndex) => {
       check(Number.isInteger(channel) && channel >= 0 && channel <= 255,
-        `WATER_COLOR_CHANNEL:${entry.id}:${channelIndex}`);
+        `WATER_COLOR_CHANNEL:${fixture.id}:${channelIndex}`);
     });
     equal(plan.horizonConsistency.required, true,
-      `HORIZON_CONTINUITY_NOT_REQUIRED:${entry.id}`);
+      `HORIZON_CONTINUITY_NOT_REQUIRED:${fixture.id}`);
     equal(plan.horizonConsistency.finiteGeometryOwnedHere, false,
-      `PRESENTATION_GEOMETRY_AUTHORITY_LEAK:${entry.id}`);
+      `PRESENTATION_GEOMETRY_AUTHORITY_LEAK:${fixture.id}`);
     check(plan.shorelineFoam.intensity >= 0 && plan.shorelineFoam.intensity <= 1,
-      `FOAM_INTENSITY_RANGE:${entry.id}`);
-    check(finite(plan.waveMotion.phase), `WAVE_PHASE_NONFINITE:${entry.id}`);
+      `FOAM_INTENSITY_RANGE:${fixture.id}`);
+    check(finite(plan.waveMotion.phase), `WAVE_PHASE_NONFINITE:${fixture.id}`);
     check(finite(plan.waveMotion.surfacePresentationOffset),
-      `WAVE_OFFSET_NONFINITE:${entry.id}`);
-
+      `WAVE_OFFSET_NONFINITE:${fixture.id}`);
     const phaseA = computeHEarthWaterWavePhase(sample, timeSeconds);
     const phaseB = computeHEarthWaterWavePhase(sample, timeSeconds);
-    deepEqual(phaseA, phaseB, `WAVE_PHASE_NONDETERMINISTIC:${entry.id}`);
+    deepEqual(phaseA, phaseB, `WAVE_PHASE_NONDETERMINISTIC:${fixture.id}`);
     const phaseLater = computeHEarthWaterWavePhase(sample, timeSeconds + 0.5);
     check(Math.abs(phaseLater.phase - phaseA.phase) > 1e-8,
-      `WAVE_PHASE_NOT_ADVANCING:${entry.id}`);
-    const color = computeHEarthWaterDepthColor(sample, atmosphere);
-    deepEqual(color, plan.surfaceColor, `DEPTH_COLOR_MISMATCH:${entry.id}`);
+      `WAVE_PHASE_NOT_ADVANCING:${fixture.id}`);
+    deepEqual(computeHEarthWaterDepthColor(sample, atmosphere), plan.surfaceColor,
+      `DEPTH_COLOR_MISMATCH:${fixture.id}`);
   } else {
-    deepEqual(plan.surfaceColor, [0, 0, 0, 0], `LAND_WATER_COLOR_PRESENT:${entry.id}`);
+    deepEqual(plan.surfaceColor, [0, 0, 0, 0],
+      `LAND_WATER_COLOR_PRESENT:${fixture.id}`);
     equal(plan.horizonConsistency.required, false,
-      `LAND_HORIZON_WATER_REQUIRED:${entry.id}`);
+      `LAND_HORIZON_WATER_REQUIRED:${fixture.id}`);
   }
-
   if (sample.underwaterState === 'SUBMERGED') {
     equal(plan.underwater.overlayRequired, true,
-      `UNDERWATER_OVERLAY_MISSING:${entry.id}`);
+      `UNDERWATER_OVERLAY_MISSING:${fixture.id}`);
     check(plan.underwater.distortionStrength > 0,
-      `UNDERWATER_DISTORTION_MISSING:${entry.id}`);
+      `UNDERWATER_DISTORTION_MISSING:${fixture.id}`);
   }
 
   summaries.push({
-    fixtureId: entry.id,
+    fixtureId: fixture.id,
     waterClass: sample.waterClass,
     shorelineDistance: sample.shorelineDistance,
     depth: sample.depth,
@@ -300,20 +292,28 @@ H_EARTH_WATER_CLASSES.forEach((waterClass) => {
   check(observedClasses.has(waterClass), `WATER_CLASS_NOT_OBSERVED:${waterClass}`);
 });
 
-const waterwardSamples = firstSamples
-  .filter(({ sample }) => sample.waterPresent)
-  .sort((left, right) => right.sample.shorelineDistance - left.sample.shorelineDistance);
-for (let index = 1; index < waterwardSamples.length; index += 1) {
-  check(waterwardSamples[index].sample.depth >=
-    waterwardSamples[index - 1].sample.depth - 1e-10,
-  `DEPTH_NOT_MONOTONIC_WATERWARD:${index}`);
+const profileX = 0;
+const profileDistances = [-1, -10, -35, -90];
+const depthProfile = profileDistances.map((distance) => sampleHEarthWaterState(
+  profileX,
+  getHEarthCanonicalShorelineZ(profileX) - distance,
+  { atmosphereState: atmosphere, observerY: 2.25 }
+));
+depthProfile.forEach((sample, index) => {
+  equal(sample.valid, true, `DEPTH_PROFILE_SAMPLE_INVALID:${index}`);
+  equal(sample.waterPresent, true, `DEPTH_PROFILE_WATER_MISSING:${index}`);
+});
+for (let index = 1; index < depthProfile.length; index += 1) {
+  check(depthProfile[index].depth >= depthProfile[index - 1].depth - 1e-10,
+    `DEPTH_NOT_MONOTONIC_WATERWARD:${index}`);
 }
 
-const dry = firstSamples.find(({ fixture: entry }) => entry.id === 'DRY_INLAND').sample;
-const contact = firstSamples.find(({ fixture: entry }) => entry.id === 'CONTACT_WATERWARD').sample;
-const shallow = firstSamples.find(({ fixture: entry }) => entry.id === 'SHALLOW_WATER').sample;
-const nearshore = firstSamples.find(({ fixture: entry }) => entry.id === 'NEARSHORE_WATER').sample;
-const open = firstSamples.find(({ fixture: entry }) => entry.id === 'OPEN_WATER').sample;
+const byId = (id) => firstSamples.find(({ fixture }) => fixture.id === id).sample;
+const dry = byId('DRY_INLAND');
+const contact = byId('CONTACT_WATERWARD');
+const shallow = byId('SHALLOW_WATER');
+const nearshore = byId('NEARSHORE_WATER');
+const open = byId('OPEN_WATER');
 check(dry.wetnessTransfer < contact.wetnessTransfer,
   'WETNESS_TRANSFER_NOT_INCREASING_TO_SHORE');
 check(contact.foamIntensity > shallow.foamIntensity,
@@ -338,17 +338,14 @@ invalidSamples.forEach((sample, index) => {
   equal(sample.status, 'WATER_STATE_REJECTED_INVALID_INPUT',
     `INVALID_WATER_STATUS:${index}`);
 });
-
 equal(computeHEarthWaterWavePhase(open, Number.NaN), null,
   'NONFINITE_WAVE_TIME_ACCEPTED');
-const invalidPresentation = buildHEarthWaterPresentation(open, {
+equal(buildHEarthWaterPresentation(open, {
   atmosphereState: atmosphere,
   timeSeconds: 0,
   cameraDistance: -1,
   horizonDistance: 512
-});
-equal(invalidPresentation.eligible, false,
-  'INVALID_WATER_PRESENTATION_ACCEPTED');
+}).eligible, false, 'INVALID_WATER_PRESENTATION_ACCEPTED');
 
 const waterReceipt = getHEarthWaterStateReceipt();
 const presentationReceipt = getHEarthWaterPresentationReceipt();
@@ -374,10 +371,15 @@ const deterministicCore = {
   presentationRevision: 1,
   observedClasses: [...observedClasses].sort(),
   fixtures: summaries,
+  depthProfile: depthProfile.map((sample) => ({
+    shorelineDistance: sample.shorelineDistance,
+    depth: sample.depth,
+    waterClass: sample.waterClass
+  })),
   forbiddenOutputsObserved: 0
 };
 const deterministicDigest = digest(deterministicCore);
-const rerunSummaries = secondSamples.map(({ fixture: entry, sample }, index) => {
+const rerunSummaries = secondSamples.map(({ fixture, sample }, index) => {
   const plan = buildHEarthWaterPresentation(sample, {
     atmosphereState: atmosphere,
     timeSeconds: index * 7.5 + 3,
@@ -385,7 +387,7 @@ const rerunSummaries = secondSamples.map(({ fixture: entry, sample }, index) => 
     horizonDistance: 512
   });
   return {
-    fixtureId: entry.id,
+    fixtureId: fixture.id,
     waterClass: sample.waterClass,
     shorelineDistance: sample.shorelineDistance,
     depth: sample.depth,
@@ -411,6 +413,7 @@ const execution = {
   status: 'RUN_7D_WATER_STATE_AND_PRESENTATION_PASS',
   runtime: process.version,
   fixtureCount: fixtures.length,
+  depthProfileSampleCount: depthProfile.length,
   waterClassCount: observedClasses.size,
   observedWaterClasses: [...observedClasses].sort(),
   assertionCount,

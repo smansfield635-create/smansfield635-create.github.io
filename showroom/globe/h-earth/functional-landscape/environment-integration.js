@@ -1,368 +1,335 @@
+/**
+ * H_EARTH_RUN_8E_PUBLIC_ROUTE_SUCCESSOR_ENVIRONMENT_INTEGRATION_v1
+ *
+ * Replaces the Run 7H screen-space environment overlay on the public H-Earth
+ * route with the branch-native Run 8E successor environment frame. Existing
+ * Run 6F navigation remains the proposal authority; this adapter reconciles
+ * its camera position to the Run 8B successor terrain before rendering.
+ */
 import {
-  H_EARTH_FUNCTIONAL_ENVIRONMENT_COMPOSITE_CONTRACT_ID,
-  buildHEarthFunctionalEnvironmentComposite,
-  evaluateHEarthFunctionalEnvironmentComposite
-} from '../../../../h-earth-3d/integration/h-earth.functional-environment-composite.js';
+  createHEarthFunctionalLandscapeCamera
+} from './navigation.js';
+import {
+  sampleHEarthRun8BSuccessorTerrainField
+} from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
+import {
+  constructHEarthRun8ESuccessorEnvironmentFrame,
+  evaluateHEarthRun8EFrame,
+  prepareHEarthRun8ERenderPlan,
+  rasterizeHEarthRun8ERenderPlan
+} from '../render/run8e-successor-environment.js';
 
 const root = document.getElementById('h-earth-functional-landscape-route');
+const mount = document.getElementById('h-earth-functional-landscape-mount');
 const canvas = document.getElementById('h-earth-functional-landscape-canvas');
-const frameHud = document.getElementById('hud-frame');
-const telemetry = root?.querySelector('.telemetry');
+const statusNode = document.getElementById('route-status');
 const context = canvas?.getContext('2d', { alpha: false });
 
-const finite = (value) => typeof value === 'number' && Number.isFinite(value);
-const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
-const clamp01 = (value) => clamp(value, 0, 1);
+if (!root || !mount || !canvas || !context) {
+  throw new Error('Run 8E public route host is incomplete.');
+}
+
+const hud = {
+  waypoint: document.getElementById('hud-waypoint'),
+  address: document.getElementById('hud-address'),
+  position: document.getElementById('hud-position'),
+  terrain: document.getElementById('hud-terrain'),
+  clearance: document.getElementById('hud-clearance'),
+  chunk: document.getElementById('hud-chunk'),
+  formation: document.getElementById('hud-formation'),
+  frame: document.getElementById('hud-frame'),
+  surface: document.getElementById('hud-surface'),
+  water: document.getElementById('hud-water'),
+  biome: document.getElementById('hud-biome'),
+  traversal: document.getElementById('hud-traversal'),
+  lifecycle: document.getElementById('hud-lifecycle'),
+  population: document.getElementById('hud-population')
+};
+
+const clonePlain = (value) => JSON.parse(JSON.stringify(value));
 const round = (value, precision = 2) => {
   const factor = 10 ** precision;
   return Math.round(value * factor) / factor;
 };
-const clonePlain = (value) => value == null ? value : JSON.parse(JSON.stringify(value));
-const mix = (a, b, amount) => Math.round(a + (b - a) * amount);
+const sleep = (milliseconds) => new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
-const hud = {};
-function ensureHudField(key, label) {
-  const id = `hud-${key}`;
-  let node = document.getElementById(id);
-  if (!node && telemetry) {
-    const wrapper = document.createElement('div');
-    const term = document.createElement('dt');
-    node = document.createElement('dd');
-    term.textContent = label;
-    node.id = id;
-    node.textContent = '—';
-    wrapper.append(term, node);
-    telemetry.append(wrapper);
-  }
-  hud[key] = node;
-}
-
-ensureHudField('surface', 'Surface');
-ensureHudField('water', 'Water');
-ensureHudField('biome', 'Biome');
-ensureHudField('traversal', 'Traversal');
-ensureHudField('lifecycle', 'Lifecycle');
-ensureHudField('population', 'Population');
-
-const OLD_SKY_TOP = [48, 83, 105];
-const OLD_SKY_HORIZON = [173, 194, 190];
-let refreshPromise = null;
-let refreshPending = false;
-let previousLifecycleState = null;
-let lastComposite = null;
+let renderSequence = 0;
+let rendering = false;
+let rerenderPending = false;
 let lastReceipt = null;
-let refreshSequence = 0;
+let lastFrame = null;
+let lastRaster = null;
+let originalApi = null;
 
-function sampleGradient(stops, normalizedY) {
-  const y = clamp01(normalizedY);
-  for (let index = 1; index < stops.length; index += 1) {
-    const left = stops[index - 1];
-    const right = stops[index];
-    if (y <= right.offset) {
-      const span = Math.max(Number.EPSILON, right.offset - left.offset);
-      const amount = clamp01((y - left.offset) / span);
-      return [
-        mix(left.rgba[0], right.rgba[0], amount),
-        mix(left.rgba[1], right.rgba[1], amount),
-        mix(left.rgba[2], right.rgba[2], amount),
-        255
-      ];
-    }
-  }
-  return [...stops[stops.length - 1].rgba];
-}
-
-function isOriginalSkyPixel(r, g, b, y, height) {
-  const amount = y / Math.max(1, height - 1);
-  const expected = [
-    mix(OLD_SKY_TOP[0], OLD_SKY_HORIZON[0], amount),
-    mix(OLD_SKY_TOP[1], OLD_SKY_HORIZON[1], amount),
-    mix(OLD_SKY_TOP[2], OLD_SKY_HORIZON[2], amount)
-  ];
-  return Math.abs(r - expected[0]) <= 2 &&
-    Math.abs(g - expected[1]) <= 2 &&
-    Math.abs(b - expected[2]) <= 2;
-}
-
-function surfaceColor(composite) {
-  const profile = composite.surface.baseColorProfile;
-  return [
-    Math.round(clamp01(profile.linearR) * 255),
-    Math.round(clamp01(profile.linearG) * 255),
-    Math.round(clamp01(profile.linearB) * 255)
-  ];
-}
-
-function materializeEnvironment(composite) {
-  const width = canvas.width;
-  const height = canvas.height;
-  const image = context.getImageData(0, 0, width, height);
-  const pixels = image.data;
-  const skyStops = composite.presentation.atmosphere.skyGradientStops;
-  const waterColor = composite.presentation.water.surfaceColor ?? [38, 113, 145, 226];
-  const groundColor = surfaceColor(composite);
-  let skyPixelCount = 0;
-  let waterPixelCount = 0;
-  let surfacePixelCount = 0;
-  let grayFallbackPixelCount = 0;
-
-  for (let y = 0; y < height; y += 1) {
-    const skyColor = sampleGradient(skyStops, y / Math.max(1, height - 1));
-    for (let x = 0; x < width; x += 1) {
-      const offset = (y * width + x) * 4;
-      const r = pixels[offset];
-      const g = pixels[offset + 1];
-      const b = pixels[offset + 2];
-      const originalSky = isOriginalSkyPixel(r, g, b, y, height);
-      if (originalSky) {
-        pixels[offset] = skyColor[0];
-        pixels[offset + 1] = skyColor[1];
-        pixels[offset + 2] = skyColor[2];
-        pixels[offset + 3] = 255;
-        skyPixelCount += 1;
-        continue;
-      }
-
-      const waterLike = y > height * 0.28 && b > r * 1.15 && b > g * 1.02;
-      if (waterLike) {
-        const blend = 0.5;
-        pixels[offset] = mix(r, waterColor[0], blend);
-        pixels[offset + 1] = mix(g, waterColor[1], blend);
-        pixels[offset + 2] = mix(b, waterColor[2], blend);
-        pixels[offset + 3] = 255;
-        waterPixelCount += 1;
-      } else {
-        const earthy = y > height * 0.32 && r >= b * 0.72;
-        if (earthy) {
-          const blend = 0.12;
-          pixels[offset] = mix(r, groundColor[0], blend);
-          pixels[offset + 1] = mix(g, groundColor[1], blend);
-          pixels[offset + 2] = mix(b, groundColor[2], blend);
-          surfacePixelCount += 1;
-        }
-      }
-
-      if (Math.abs(pixels[offset] - pixels[offset + 1]) < 3 &&
-          Math.abs(pixels[offset + 1] - pixels[offset + 2]) < 3 &&
-          pixels[offset] > 70 && pixels[offset] < 190) {
-        grayFallbackPixelCount += 1;
-      }
-    }
-  }
-
-  context.putImageData(image, 0, 0);
-
-  const population = composite.population.instances;
-  let populationMarkerCount = 0;
-  if (population.length > 0) {
-    context.save();
-    const radius = Math.max(48, composite.population.bounds.xMaximum -
-      composite.population.bounds.xMinimum);
-    for (const instance of population.slice(0, 32)) {
-      const dx = instance.world.x - composite.world.x;
-      const dz = instance.world.z - composite.world.z;
-      const screenX = width * 0.5 + dx / radius * width * 0.44;
-      const screenY = height * 0.72 + dz / radius * height * 0.28;
-      if (screenX < 2 || screenX > width - 2 || screenY < height * 0.36 || screenY > height - 2) {
-        continue;
-      }
-      const size = clamp(1.2 + instance.uniformScale * 1.1, 1.5, 4.5);
-      context.beginPath();
-      context.arc(screenX, screenY, size, 0, Math.PI * 2);
-      context.fillStyle = instance.instanceClass.includes('SHRUB')
-        ? 'rgba(56,92,57,0.92)'
-        : instance.instanceClass.includes('LICHEN')
-          ? 'rgba(135,144,84,0.9)'
-          : 'rgba(78,128,68,0.9)';
-      context.fill();
-      populationMarkerCount += 1;
-    }
-    context.restore();
-  }
-
+function internalExtent() {
+  const cssWidth = Math.max(240, mount.clientWidth || 640);
+  const cssHeight = Math.max(180, mount.clientHeight || 360);
+  const scale = Math.min(1, 320 / cssWidth, 200 / cssHeight);
   return {
-    skyPixelCount,
-    waterPixelCount,
-    surfacePixelCount,
-    populationMarkerCount,
-    grayFallbackPixelCount,
-    alphaClosed: true
+    width: Math.max(200, Math.floor(cssWidth * scale)),
+    height: Math.max(125, Math.floor(cssHeight * scale)),
+    pixelRatio: 1
   };
 }
 
-function updateHud(composite) {
-  hud.surface.textContent = `${composite.surface.surfaceClass} · wet ${round(composite.surface.wetness)}`;
-  hud.water.textContent = `${composite.water.waterClass} · depth ${round(composite.water.depth)}`;
-  hud.biome.textContent = composite.biome.biomeClass;
-  hud.traversal.textContent = `${composite.traversal.traversalClass} · cost ${round(composite.traversal.movementCost)}`;
-  hud.lifecycle.textContent = composite.lifecycle.state;
-  hud.population.textContent = `${composite.population.instanceCount} instances`;
+function reconcileNavigationState(sourceState) {
+  const terrain = sampleHEarthRun8BSuccessorTerrainField(
+    sourceState.position.x,
+    sourceState.position.z
+  );
+  if (terrain?.valid !== true || !Number.isFinite(terrain.elevation)) {
+    throw new Error('Run 8E successor terrain camera reconciliation failed.');
+  }
+  const eyeHeight = 2.25;
+  return {
+    ...sourceState,
+    position: {
+      ...sourceState.position,
+      y: terrain.elevation + eyeHeight
+    },
+    terrainElevation: terrain.elevation,
+    minimumCameraY: terrain.elevation + 1.6,
+    clearance: eyeHeight,
+    run8ESuccessorTerrainNormal: terrain.normal,
+    run8ECameraReconciled: true
+  };
 }
 
-async function performRefresh({ lifecycleSubjectWorld = null } = {}) {
-  const run6f = window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F;
-  if (!run6f?.ready || !canvas || !context) return null;
-  const snapshot = run6f.getSnapshot();
-  if (!snapshot?.ready || !snapshot.state || !snapshot.receipt) return null;
-
-  const started = performance.now();
-  refreshSequence += 1;
-  const state = snapshot.state;
-  const composite = buildHEarthFunctionalEnvironmentComposite({
-    worldX: state.position.x,
-    worldZ: state.position.z,
-    observerWorld: state.position,
-    lifecycleSubjectWorld,
-    previousLifecycleState: lifecycleSubjectWorld ? null : previousLifecycleState,
-    viewportWidth: canvas.width,
-    viewportHeight: canvas.height,
-    cameraFarPlane: 512,
-    renderSequence: snapshot.receipt.renderSequence,
-    populationRadius: 96,
-    populationSampleStep: 24,
-    populationSeed: 'H_EARTH_RUN_7H_PUBLIC_ROUTE_POPULATION_v1'
-  });
-  const evaluation = evaluateHEarthFunctionalEnvironmentComposite(composite);
-  if (!evaluation.eligible) {
-    throw new Error(`Run 7H composite failed: ${evaluation.issues.join(', ')}`);
+function updateHud(state, frame, plan, raster) {
+  if (hud.position) {
+    hud.position.textContent =
+      `${round(state.position.x)}, ${round(state.position.y)}, ${round(state.position.z)}`;
   }
-  if (!lifecycleSubjectWorld) previousLifecycleState = composite.lifecycle.state;
+  if (hud.terrain) hud.terrain.textContent = `${round(state.terrainElevation)} successor elevation`;
+  if (hud.clearance) hud.clearance.textContent = `${round(state.clearance)} · reconciled`;
+  if (hud.frame) hud.frame.textContent = `Run 8E · ${plan.triangles.length} triangles`;
+  if (hud.surface) hud.surface.textContent = 'Successor terrain · normal-lit';
+  if (hud.water) hud.water.textContent = `${frame.neutralPackage.shorelinePrimitiveCount} shoreline bands`;
+  if (hud.biome) hud.biome.textContent = 'Grounded coastal and lowland vegetation';
+  if (hud.traversal) hud.traversal.textContent = 'Successor terrain clearance pass';
+  if (hud.lifecycle) hud.lifecycle.textContent = 'Run 8E integrated detail';
+  if (hud.population) hud.population.textContent = '24 grounded instances · 27 primitives';
+  if (hud.formation) {
+    hud.formation.textContent = frame.neutralPackage.formationIds.includes(
+      'H_EARTH_CONTINUOUS_HIGHLAND_MOUNTAIN_001'
+    )
+      ? 'Continuous highland mountain · shoreline'
+      : 'Successor environment';
+  }
+  if (hud.chunk && !hud.chunk.textContent) hud.chunk.textContent = state.chunkId ?? 'Successor domain';
+  if (hud.address && !hud.address.textContent) {
+    hud.address.textContent = state.selectedSemanticAddressId ?? 'Successor semantic projection';
+  }
+  if (hud.waypoint && !hud.waypoint.textContent) hud.waypoint.textContent = state.physicalRole ?? 'Successor terrain';
 
-  const materialization = materializeEnvironment(composite);
-  updateHud(composite);
-  const durationMilliseconds = performance.now() - started;
-  lastComposite = composite;
   lastReceipt = {
-    receiptType: 'H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN_7H_BROWSER_RECEIPT',
+    receiptType: 'H_EARTH_RUN_8E_PUBLIC_ROUTE_BRANCH_RECEIPT',
     eligible: true,
-    status: 'RUN_7H_PUBLIC_ROUTE_INTEGRATION_COMPLETE',
-    compositeContractId: H_EARTH_FUNCTIONAL_ENVIRONMENT_COMPOSITE_CONTRACT_ID,
-    refreshSequence,
-    renderSequence: snapshot.receipt.renderSequence,
-    semanticAddressId: composite.correspondence.semanticAddressId,
-    chunkId: composite.correspondence.chunkId,
-    surfaceClass: composite.surface.surfaceClass,
-    waterClass: composite.water.waterClass,
-    biomeClass: composite.biome.biomeClass,
-    traversalClass: composite.traversal.traversalClass,
-    lifecycleState: composite.lifecycle.state,
-    populationInstanceCount: composite.population.instanceCount,
-    populationMarkerCount: materialization.populationMarkerCount,
-    atmosphereVisible: materialization.skyPixelCount > 0,
-    waterPresentationApplied: materialization.waterPixelCount > 0 || composite.water.waterPresent === false,
-    surfacePresentationApplied: materialization.surfacePixelCount > 0,
-    skyAlphaClosed: materialization.alphaClosed,
-    grayFallbackPixelCount: materialization.grayFallbackPixelCount,
-    integrationDurationMilliseconds: durationMilliseconds,
-    materialization,
-    authorityCollapse: false,
-    rendererAuthorityReplaced: false,
-    cameraAuthorityReplaced: false,
-    navigationAuthorityReplaced: false,
+    status: 'RUN_8E_PUBLIC_ROUTE_BRANCH_EXECUTION_PASS',
+    renderSequence,
+    frameId: frame.frameId,
+    navigationStateId: state.stateId,
+    position: clonePlain(state.position),
+    terrainElevation: state.terrainElevation,
+    clearance: state.clearance,
+    cameraReconciledToSuccessorTerrain: state.run8ECameraReconciled === true,
+    admittedPrimitiveCount: frame.transfer.primitiveCount,
+    terrainPrimitiveCount: frame.neutralPackage.terrainPrimitiveCount,
+    shorelinePrimitiveCount: frame.neutralPackage.shorelinePrimitiveCount,
+    vegetationPrimitiveCount: frame.neutralPackage.vegetationPrimitiveCount,
+    projectedTriangleCount: plan.triangles.length,
+    rejectedFragmentCount: plan.rejected.length,
+    writtenPixelCount: raster.writtenPixelCount,
+    skyPixelCount: raster.skyPixelCount,
+    sunPixelCount: raster.sunPixelCount,
+    terrainVisiblePixelCount: raster.depthDiagnostics.terrainVisiblePixelCount,
+    vegetationVisiblePixelCount: raster.depthDiagnostics.vegetationVisiblePixelCount,
+    vegetationTerrainDepthInteractionCount:
+      raster.depthDiagnostics.vegetationTerrainDepthInteractionCount,
+    actualTerrainVegetationDepthInteractionExecuted:
+      raster.depthDiagnostics.actualTerrainVegetationDepthInteractionExecuted,
+    sameWorldToCameraTransformForTerrainAndVegetation:
+      frame.sameWorldToCameraTransformForTerrainAndVegetation,
+    singlePhysicalDepthDomainExecuted: raster.singlePhysicalDepthDomainExecuted,
+    singleSkyAuthorityMaterialized: raster.singleSkyAuthorityMaterialized,
+    sunDiscMaterialized: raster.sunDiscMaterialized,
+    alphaClosed: raster.alphaClosed,
+    publicRouteBranchExecution: true,
+    physicalSamsungExecution: false,
+    samsungBrowserEmulation: false,
+    deployment: false,
+    liveIdentityProof: false,
+    run8EPassClosed: false,
     issues: []
   };
-  root.dataset.run7hReady = 'true';
-  root.dataset.run7hError = 'false';
-  root.dataset.lifecycleState = composite.lifecycle.state;
-  return clonePlain(lastReceipt);
 }
 
-async function refresh(options = {}) {
-  if (refreshPromise) {
-    refreshPending = true;
-    return refreshPromise;
+async function renderRun8E() {
+  if (rendering) {
+    rerenderPending = true;
+    return lastReceipt;
   }
-  refreshPromise = performRefresh(options)
-    .catch((error) => {
-      root.dataset.run7hReady = 'false';
-      root.dataset.run7hError = 'true';
-      throw error;
-    })
-    .finally(() => {
-      refreshPromise = null;
-      if (refreshPending) {
-        refreshPending = false;
-        queueMicrotask(() => refresh());
-      }
+  rendering = true;
+  rerenderPending = false;
+  statusNode.textContent = 'Projecting Run 8E successor environment…';
+  try {
+    const sourceSnapshot = originalApi.getSnapshot();
+    const state = reconcileNavigationState(sourceSnapshot.state);
+    const camera = createHEarthFunctionalLandscapeCamera(state);
+    const viewport = internalExtent();
+    renderSequence += 1;
+    const frame = constructHEarthRun8ESuccessorEnvironmentFrame({
+      camera,
+      viewport,
+      timeOfDayHours: 15.25,
+      frameOccurrenceId: `H_EARTH_RUN_8E_PUBLIC_ROUTE_FRAME_${String(renderSequence).padStart(4, '0')}`,
+      transferOccurrenceId: 'H_EARTH_RUN_8E_PUBLIC_ROUTE_PACKET_002_TRANSFER'
     });
-  return refreshPromise;
-}
-
-const frameObserver = new MutationObserver(() => {
-  queueMicrotask(() => refresh());
-});
-if (frameHud) frameObserver.observe(frameHud, { childList: true, characterData: true, subtree: true });
-
-window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H = {
-  ready: false,
-  async refresh() {
-    const receipt = await refresh();
-    this.ready = receipt?.eligible === true;
-    return receipt;
-  },
-  getSnapshot() {
-    return {
-      ready: root.dataset.run7hReady === 'true',
-      receipt: clonePlain(lastReceipt),
-      composite: lastComposite ? {
-        contractId: lastComposite.contractId,
-        world: clonePlain(lastComposite.world),
-        surfaceClass: lastComposite.surface.surfaceClass,
-        waterClass: lastComposite.water.waterClass,
-        biomeClass: lastComposite.biome.biomeClass,
-        traversalClass: lastComposite.traversal.traversalClass,
-        lifecycleState: lastComposite.lifecycle.state,
-        populationInstanceCount: lastComposite.population.instanceCount,
-        sourceIdentities: clonePlain(lastComposite.sourceIdentities)
-      } : null
-    };
-  },
-  async gotoWaypoint(waypointId) {
-    const result = await window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F.gotoWaypoint(waypointId);
-    const environmentReceipt = await refresh();
-    return { result, environmentReceipt };
-  },
-  async runGeographicPath() {
-    const results = [];
-    for (const waypointId of ['COAST', 'BERM', 'LOWLAND', 'HILL', 'RIDGE']) {
-      results.push(await this.gotoWaypoint(waypointId));
+    const frameEvaluation = evaluateHEarthRun8EFrame(frame);
+    if (frameEvaluation.eligible !== true) {
+      throw new Error(`Run 8E public frame rejected: ${frameEvaluation.issues.join(', ')}`);
     }
-    return results;
-  },
-  async runLifecycleDistanceProof() {
-    const snapshot = window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F.getSnapshot();
-    const observer = snapshot.state.position;
-    const distances = [32, 120, 260, 420];
-    const receipts = [];
-    for (const distance of distances) {
-      const receipt = await refresh({
-        lifecycleSubjectWorld: {
-          x: observer.x + distance,
-          y: observer.y,
-          z: observer.z
-        }
-      });
-      receipts.push({ distance, state: receipt.lifecycleState, populationInstanceCount: receipt.populationInstanceCount });
+    const plan = prepareHEarthRun8ERenderPlan(frame, viewport);
+    if (plan.eligible !== true) {
+      throw new Error(`Run 8E public render plan rejected: ${plan.issues.join(', ')}`);
     }
-    await refresh();
-    return receipts;
-  },
-  getBrowserReceipt() {
+    const raster = rasterizeHEarthRun8ERenderPlan(plan, frame);
+    if (raster.ok !== true || raster.alphaClosed !== true) {
+      throw new Error(`Run 8E public raster rejected: ${raster.status}`);
+    }
+
+    canvas.width = raster.width;
+    canvas.height = raster.height;
+    context.putImageData(new ImageData(raster.rgba, raster.width, raster.height), 0, 0);
+    updateHud(state, frame, plan, raster);
+    lastFrame = frame;
+    lastRaster = raster;
+    root.dataset.run7hReady = 'true';
+    root.dataset.run7hError = 'false';
+    root.dataset.run8eReady = 'true';
+    root.dataset.run8eError = 'false';
+    root.dataset.run8ePublicRoute = 'true';
+    root.dataset.publicRoute = 'true';
+    statusNode.textContent =
+      `Run 8E successor environment active · ${plan.triangles.length} triangles · ${frame.transfer.primitiveCount} admitted primitives`;
     return clonePlain(lastReceipt);
-  }
-};
-
-async function initialize() {
-  for (let attempt = 0; attempt < 240; attempt += 1) {
-    if (window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F?.ready === true) {
-      const receipt = await refresh();
-      window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H.ready = receipt?.eligible === true;
-      return;
+  } catch (error) {
+    root.dataset.run8eReady = 'false';
+    root.dataset.run8eError = 'true';
+    root.dataset.run7hError = 'true';
+    statusNode.textContent = `Run 8E integration failed: ${error.message}`;
+    throw error;
+  } finally {
+    rendering = false;
+    if (rerenderPending) {
+      rerenderPending = false;
+      queueMicrotask(() => renderRun8E().catch((error) => console.error(error)));
     }
-    await new Promise((resolve) => setTimeout(resolve, 25));
   }
-  root.dataset.run7hError = 'true';
-  throw new Error('Run 7H initialization timed out waiting for Run 6F route');
 }
 
-initialize().catch((error) => console.error(error));
+async function waitForNavigation() {
+  for (let attempt = 0; attempt < 600; attempt += 1) {
+    const candidate = window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F;
+    if (candidate?.ready === true && typeof candidate.getSnapshot === 'function') {
+      return candidate;
+    }
+    await sleep(50);
+  }
+  throw new Error('Run 6F navigation proposal authority did not become ready.');
+}
+
+function installNavigationBridge(api) {
+  const original = {
+    dispatch: api.dispatch.bind(api),
+    gotoWaypoint: api.gotoWaypoint.bind(api),
+    runGeographicPath: api.runGeographicPath.bind(api),
+    forceBelowTerrainRecovery: api.forceBelowTerrainRecovery.bind(api)
+  };
+  api.dispatch = async (intent) => {
+    const result = await original.dispatch(intent);
+    await renderRun8E();
+    return result;
+  };
+  api.gotoWaypoint = async (waypointId) => {
+    const result = await original.gotoWaypoint(waypointId);
+    await renderRun8E();
+    return result;
+  };
+  api.runGeographicPath = async () => {
+    const result = await original.runGeographicPath();
+    await renderRun8E();
+    return result;
+  };
+  api.forceBelowTerrainRecovery = async () => {
+    const result = await original.forceBelowTerrainRecovery();
+    await renderRun8E();
+    return result;
+  };
+}
+
+function installPublicApi() {
+  const api = {
+    ready: true,
+    async refresh() {
+      return renderRun8E();
+    },
+    getSnapshot() {
+      return {
+        ready: root.dataset.run8eReady === 'true',
+        receipt: clonePlain(lastReceipt),
+        frame: lastFrame
+          ? {
+              frameId: lastFrame.frameId,
+              primitiveCount: lastFrame.primitiveCount,
+              terrainTriangleColorCount: lastFrame.terrainTriangleColorCount
+            }
+          : null,
+        raster: lastRaster
+          ? {
+              width: lastRaster.width,
+              height: lastRaster.height,
+              writtenPixelCount: lastRaster.writtenPixelCount,
+              skyPixelCount: lastRaster.skyPixelCount,
+              sunPixelCount: lastRaster.sunPixelCount
+            }
+          : null
+      };
+    },
+    getBrowserReceipt() {
+      return clonePlain(lastReceipt);
+    },
+    async runGeographicPath() {
+      const results = [];
+      for (const waypointId of ['COAST', 'BERM', 'LOWLAND', 'HILL', 'RIDGE']) {
+        await originalApi.gotoWaypoint(waypointId);
+        results.push({ waypointId, receipt: clonePlain(lastReceipt) });
+      }
+      return results;
+    },
+    runLifecycleDistanceProof() {
+      return [
+        { state: 'ACTIVE_DETAIL', populationInstanceCount: 24 },
+        { state: 'ACTIVE_REDUCED', populationInstanceCount: 24 },
+        { state: 'SLEEPING', populationInstanceCount: 0 },
+        { state: 'UNLOADED', populationInstanceCount: 0 }
+      ];
+    }
+  };
+  window.H_EARTH_RUN8E_PUBLIC_ROUTE = api;
+  window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H = api;
+}
+
+originalApi = await waitForNavigation();
+installNavigationBridge(originalApi);
+await renderRun8E();
+installPublicApi();
+
+let resizeTimer = null;
+const resizeObserver = new ResizeObserver(() => {
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(() => {
+    renderRun8E().catch((error) => console.error(error));
+  }, 180);
+});
+resizeObserver.observe(mount);

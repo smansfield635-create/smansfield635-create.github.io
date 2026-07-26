@@ -1,42 +1,16 @@
 /**
  * /h-earth-3d/integration/h-earth.functional-environment-composite.js
- *
  * H_EARTH_FUNCTIONAL_ENVIRONMENT_COMPOSITE_RUN_7H_v1
- *
- * Read-only aggregation and correspondence layer for the separately governed
- * H-Earth environmental authorities. It creates no replacement environmental
- * truth, camera, navigation, geometry, renderer, route, deployment, or merge
- * authority.
+ * Read-only aggregation and correspondence layer. No source authority is replaced.
  */
 
-import {
-  H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  sampleHEarthTerrainField
-} from '../terrain/h-earth.terrain-field.js';
-import {
-  H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID,
-  sampleHEarthSurfaceState
-} from '../environment/h-earth.surface-state-field.js';
-import {
-  H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
-  sampleHEarthAtmosphereState
-} from '../environment/h-earth.atmosphere-state.js';
-import {
-  H_EARTH_WATER_STATE_CONTRACT_ID,
-  sampleHEarthWaterState
-} from '../environment/h-earth.water-state.js';
-import {
-  H_EARTH_BIOME_FIELD_CONTRACT_ID,
-  sampleHEarthBiomeField
-} from '../environment/h-earth.biome-field.js';
-import {
-  H_EARTH_POPULATION_PLANNER_CONTRACT_ID,
-  planHEarthPopulation
-} from '../environment/h-earth.population-planner.js';
-import {
-  H_EARTH_TRAVERSAL_SURFACE_CONTRACT_ID,
-  sampleHEarthTraversalSurface
-} from '../environment/h-earth.traversal-surface.js';
+import { H_EARTH_TERRAIN_FIELD_CONTRACT_ID, sampleHEarthTerrainField } from '../terrain/h-earth.terrain-field.js';
+import { H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID, sampleHEarthSurfaceState } from '../environment/h-earth.surface-state-field.js';
+import { H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID, sampleHEarthAtmosphereState } from '../environment/h-earth.atmosphere-state.js';
+import { H_EARTH_WATER_STATE_CONTRACT_ID, sampleHEarthWaterState } from '../environment/h-earth.water-state.js';
+import { H_EARTH_BIOME_FIELD_CONTRACT_ID, sampleHEarthBiomeField } from '../environment/h-earth.biome-field.js';
+import { H_EARTH_POPULATION_PLANNER_CONTRACT_ID, planHEarthPopulation } from '../environment/h-earth.population-planner.js';
+import { H_EARTH_TRAVERSAL_SURFACE_CONTRACT_ID, sampleHEarthTraversalSurface } from '../environment/h-earth.traversal-surface.js';
 import {
   H_EARTH_SPATIAL_LIFECYCLE_CONTRACT_ID,
   sampleHEarthSpatialLifecycle,
@@ -119,7 +93,7 @@ export function buildHEarthFunctionalEnvironmentComposite({
   lifecycleSubjectWorld = null,
   previousLifecycleState = null,
   visibilityClass = 'VISIBLE',
-  importance = 1,
+  importance = 0,
   memoryPressure = 0,
   viewportWidth = 640,
   viewportHeight = 360,
@@ -130,27 +104,23 @@ export function buildHEarthFunctionalEnvironmentComposite({
   populationSeed = 'H_EARTH_RUN_7H_ROUTE_POPULATION_v1'
 } = {}) {
   const input = {
-    worldX,
-    worldZ,
-    observerWorld,
-    lifecycleSubjectWorld,
-    previousLifecycleState,
-    viewportWidth,
-    viewportHeight,
-    cameraFarPlane,
-    renderSequence
+    worldX, worldZ, observerWorld, lifecycleSubjectWorld,
+    previousLifecycleState, viewportWidth, viewportHeight,
+    cameraFarPlane, renderSequence
   };
   const issues = [];
   if (![worldX, worldZ, viewportWidth, viewportHeight, cameraFarPlane,
-    renderSequence, populationRadius, populationSampleStep].every(finite)) {
+    renderSequence, populationRadius, populationSampleStep, importance,
+    memoryPressure].every(finite)) {
     issues.push('COMPOSITE_NUMERIC_INPUT_NOT_FINITE');
   }
   if (!observerWorld || ![observerWorld.x, observerWorld.y, observerWorld.z].every(finite)) {
     issues.push('COMPOSITE_OBSERVER_WORLD_INVALID');
   }
   if (viewportWidth <= 0 || viewportHeight <= 0 || cameraFarPlane <= 0 ||
-      populationRadius <= 0 || populationSampleStep <= 0) {
-    issues.push('COMPOSITE_POSITIVE_INPUT_INVALID');
+      populationRadius <= 0 || populationSampleStep <= 0 ||
+      importance < 0 || importance > 1 || memoryPressure < 0 || memoryPressure > 1) {
+    issues.push('COMPOSITE_INPUT_RANGE_INVALID');
   }
   if (issues.length > 0) return reject(input, issues);
 
@@ -161,21 +131,10 @@ export function buildHEarthFunctionalEnvironmentComposite({
     atmosphereState: atmosphere,
     observerY: observerWorld.y
   });
-  const biome = sampleHEarthBiomeField(worldX, worldZ, {
-    atmosphereState: atmosphere
-  });
-  const traversal = sampleHEarthTraversalSurface(worldX, worldZ, {
-    waterState: water
-  });
+  const biome = sampleHEarthBiomeField(worldX, worldZ, { atmosphereState: atmosphere });
+  const traversal = sampleHEarthTraversalSurface(worldX, worldZ, { waterState: water });
 
-  for (const [name, sample] of Object.entries({
-    atmosphere,
-    terrain,
-    surface,
-    water,
-    biome,
-    traversal
-  })) {
+  for (const [name, sample] of Object.entries({ atmosphere, terrain, surface, water, biome, traversal })) {
     if (sample?.valid !== true) issues.push(`UPSTREAM_SAMPLE_INVALID:${name}`);
   }
   if (issues.length > 0) return reject(input, issues);

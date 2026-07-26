@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/h-earth-run8a-dimensional-reconciliation-001
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -24,26 +25,28 @@ jobs:
           path = Path('h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js')
           text = path.read_text(encoding='utf-8')
           old_derivative = """const STEP = 0.5;
-const baselineBoundaryDerivativeZ = (x) =>
-  (sampleHEarthTerrainElevation(x, FORMER_BOUNDARY_Z + STEP) -
-    sampleHEarthTerrainElevation(x, FORMER_BOUNDARY_Z)) / STEP;"""
+          const baselineBoundaryDerivativeZ = (x) =>
+            (sampleHEarthTerrainElevation(x, FORMER_BOUNDARY_Z + STEP) -
+              sampleHEarthTerrainElevation(x, FORMER_BOUNDARY_Z)) / STEP;"""
           new_derivative = """const STEP = 0.5;
-const BOUNDARY_DERIVATIVE_EPSILON = 0.01;
-const baselineBoundaryDerivativeZ = (x) =>
-  (sampleHEarthTerrainElevation(
-    x,
-    FORMER_BOUNDARY_Z + BOUNDARY_DERIVATIVE_EPSILON
-  ) - sampleHEarthTerrainElevation(x, FORMER_BOUNDARY_Z)) /
-  BOUNDARY_DERIVATIVE_EPSILON;"""
+          const BOUNDARY_DERIVATIVE_EPSILON = 0.01;
+          const baselineBoundaryDerivativeZ = (x) =>
+            (sampleHEarthTerrainElevation(
+              x,
+              FORMER_BOUNDARY_Z + BOUNDARY_DERIVATIVE_EPSILON
+            ) - sampleHEarthTerrainElevation(x, FORMER_BOUNDARY_Z)) /
+            BOUNDARY_DERIVATIVE_EPSILON;"""
           old_height = "heightDiscontinuity: Math.abs(north - south),"
           new_height = "heightDiscontinuity: Math.abs((north + south) / 2 - center),"
           if old_derivative not in text:
             raise SystemExit('RUN8A_DERIVATIVE_ANCHOR_NOT_FOUND')
           if old_height not in text:
             raise SystemExit('RUN8A_HEIGHT_CONTINUITY_ANCHOR_NOT_FOUND')
-          text = text.replace(old_derivative, new_derivative, 1)
-          text = text.replace(old_height, new_height, 1)
-          path.write_text(text, encoding='utf-8')
+          path.write_text(
+            text.replace(old_derivative, new_derivative, 1)
+                .replace(old_height, new_height, 1),
+            encoding='utf-8'
+          )
           Path('.github/workflows/h-earth-run8a-continuity-correction.yml').unlink()
           PY
           git config user.name 'github-actions[bot]'

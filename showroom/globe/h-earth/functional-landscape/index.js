@@ -23,7 +23,15 @@ const root = document.getElementById('h-earth-functional-landscape-route');
 const mount = document.getElementById('h-earth-functional-landscape-mount');
 const canvas = document.getElementById('h-earth-functional-landscape-canvas');
 const statusNode = document.getElementById('route-status');
+
+if (!root || !mount || !canvas || !statusNode) {
+  throw new Error('H-Earth public landscape shell is incomplete.');
+}
+
 const context = canvas.getContext('2d', { alpha: false });
+if (!context) {
+  throw new Error('H-Earth landscape canvas context is unavailable.');
+}
 
 const hud = {
   waypoint: document.getElementById('hud-waypoint'),
@@ -41,6 +49,15 @@ const round = (value, precision = 2) => {
   const factor = 10 ** precision;
   return Math.round(value * factor) / factor;
 };
+const setText = (node, value) => {
+  if (node) {
+    node.textContent = String(value);
+  }
+};
+const humanize = (value) => String(value ?? '')
+  .toLowerCase()
+  .replaceAll('_', ' ')
+  .replace(/\b\w/g, (letter) => letter.toUpperCase());
 
 const initialNavigation =
   createHEarthFunctionalLandscapeNavigationState();
@@ -53,9 +70,9 @@ if (!initialNavigation.ok) {
 
 const baseFrame = constructHEarthFunctionalLandscapeFrame({
   frameOccurrenceId:
-    'H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6F_BROWSER_BASE_FRAME',
+    'H_EARTH_FUNCTIONAL_LANDSCAPE_PUBLIC_BASE_FRAME',
   transferOccurrenceId:
-    'H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6F_BROWSER_TRANSFER',
+    'H_EARTH_FUNCTIONAL_LANDSCAPE_PUBLIC_TRANSFER',
   revision: 1
 });
 
@@ -79,12 +96,12 @@ const internalExtent = () => {
   const cssHeight = Math.max(180, mount.clientHeight || 360);
   const scale = Math.min(
     1,
-    480 / cssWidth,
-    320 / cssHeight
+    640 / cssWidth,
+    420 / cssHeight
   );
   return {
-    width: Math.max(200, Math.floor(cssWidth * scale)),
-    height: Math.max(150, Math.floor(cssHeight * scale))
+    width: Math.max(240, Math.floor(cssWidth * scale)),
+    height: Math.max(180, Math.floor(cssHeight * scale))
   };
 };
 
@@ -108,27 +125,40 @@ function updateWaypointButtons() {
 
 function updateHud(frame, raster, handoff) {
   const state = navigationState;
-  const waypoint = H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS[
-    lastWaypointId
-  ];
-  hud.waypoint.textContent = waypoint?.label ?? state.physicalRole;
-  hud.address.textContent = state.selectedSemanticAddressId;
-  hud.position.textContent =
-    `${round(state.position.x)}, ${round(state.position.y)}, ${round(state.position.z)}`;
-  hud.terrain.textContent = `${round(state.terrainElevation)} elevation`;
-  hud.clearance.textContent =
-    `${round(state.clearance)}${state.recovered ? ' · recovered' : ''}`;
-  hud.chunk.textContent = state.chunkId;
-  hud.formation.textContent = state.formationIds.length > 0
-    ? state.formationIds.join(' · ')
-    : 'Coastal terrain';
-  hud.frame.textContent =
-    `${frame.cameraRevision} · ${handoff.renderPlan.triangles.length} triangles`;
+  const waypoint = lastWaypointId
+    ? H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS[lastWaypointId]
+    : null;
+
+  setText(
+    hud.waypoint,
+    waypoint?.label ?? humanize(state.physicalRole)
+  );
+  setText(hud.address, state.selectedSemanticAddressId);
+  setText(
+    hud.position,
+    `${round(state.position.x)}, ${round(state.position.y)}, ${round(state.position.z)}`
+  );
+  setText(hud.terrain, `${round(state.terrainElevation)} elevation`);
+  setText(
+    hud.clearance,
+    `${round(state.clearance)}${state.recovered ? ' · recovered' : ''}`
+  );
+  setText(hud.chunk, state.chunkId);
+  setText(
+    hud.formation,
+    state.formationIds.length > 0
+      ? state.formationIds.join(' · ')
+      : 'Coastal terrain'
+  );
+  setText(
+    hud.frame,
+    `${frame.cameraRevision} · ${handoff.renderPlan.triangles.length} triangles`
+  );
 
   lastBrowserReceipt = {
-    receiptType: 'H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6F_BROWSER_RECEIPT',
+    receiptType: 'H_EARTH_FUNCTIONAL_LANDSCAPE_PUBLIC_BROWSER_RECEIPT',
     eligible: true,
-    status: 'RUN_6F_BROWSER_FRAME_COMPLETE',
+    status: 'PUBLIC_LANDSCAPE_FRAME_COMPLETE',
     renderSequence,
     frameId: frame.frameId,
     cameraRevision: frame.cameraRevision,
@@ -164,7 +194,8 @@ function updateHud(frame, raster, handoff) {
     cameraTerrainClearancePass:
       state.clearance >= 1.6,
     packet001Altered: false,
-    existingPublicRouteReplaced: false,
+    existingPublicRouteReplaced: true,
+    publicRouteActive: true,
     productionAuthority: false,
     issues: []
   };
@@ -238,7 +269,7 @@ async function renderCurrentState() {
     updateHud(frame, raster, handoff);
     statusNode.textContent = navigationState.recovered
       ? 'Terrain clearance recovered. Landscape stable.'
-      : 'Functional landscape ready.';
+      : 'Landscape ready. Drag to look; use two fingers or the wheel to move.';
     root.dataset.run6fReady = 'true';
     root.dataset.run6fError = 'false';
   } catch (error) {
@@ -350,42 +381,190 @@ window.addEventListener('keydown', (event) => {
   applyIntent({ action });
 });
 
-let pointerStart = null;
-mount.addEventListener('pointerdown', (event) => {
-  pointerStart = {
-    x: event.clientX,
-    y: event.clientY,
-    pointerId: event.pointerId
-  };
-  mount.setPointerCapture(event.pointerId);
-});
+const activePointers = new Map();
+let gestureBaseline = null;
+let gestureFrameRequested = false;
+let gestureFrameRunning = false;
+const pendingGesture = {
+  lookX: 0,
+  lookY: 0,
+  move: 0,
+  strafe: 0,
+  zoom: 0
+};
 
-mount.addEventListener('pointerup', async (event) => {
-  if (!pointerStart || pointerStart.pointerId !== event.pointerId) {
+const hasPendingGesture = () =>
+  Object.values(pendingGesture).some((value) => Math.abs(value) > 0.01);
+
+function pointerGeometry() {
+  const points = [...activePointers.values()];
+  if (points.length < 2) {
+    return null;
+  }
+  const [first, second] = points;
+  return {
+    centroidX: (first.x + second.x) / 2,
+    centroidY: (first.y + second.y) / 2,
+    distance: Math.hypot(second.x - first.x, second.y - first.y)
+  };
+}
+
+function requestGestureFrame() {
+  if (gestureFrameRequested) {
     return;
   }
-  const deltaX = event.clientX - pointerStart.x;
-  const deltaY = event.clientY - pointerStart.y;
-  pointerStart = null;
+  gestureFrameRequested = true;
+  requestAnimationFrame(flushGestureFrame);
+}
 
-  if (Math.abs(deltaX) > 4) {
-    await applyIntent({
-      action: deltaX > 0 ? 'TURN_RIGHT' : 'TURN_LEFT',
-      degrees: Math.min(8, Math.abs(deltaX) / 10)
-    }, { render: false });
+async function flushGestureFrame() {
+  gestureFrameRequested = false;
+  if (gestureFrameRunning) {
+    requestGestureFrame();
+    return;
   }
-  if (Math.abs(deltaY) > 4) {
-    await applyIntent({
-      action: deltaY < 0 ? 'PITCH_UP' : 'PITCH_DOWN',
-      degrees: Math.min(8, Math.abs(deltaY) / 10)
-    }, { render: false });
+  if (!hasPendingGesture()) {
+    return;
   }
-  await renderCurrentState();
+
+  gestureFrameRunning = true;
+  const gesture = { ...pendingGesture };
+  Object.keys(pendingGesture).forEach((key) => {
+    pendingGesture[key] = 0;
+  });
+
+  try {
+    if (Math.abs(gesture.lookX) > 0.1) {
+      await applyIntent({
+        action: gesture.lookX > 0 ? 'TURN_RIGHT' : 'TURN_LEFT',
+        degrees: Math.min(8, Math.abs(gesture.lookX) * 0.13)
+      }, { render: false });
+    }
+    if (Math.abs(gesture.lookY) > 0.1) {
+      await applyIntent({
+        action: gesture.lookY < 0 ? 'PITCH_UP' : 'PITCH_DOWN',
+        degrees: Math.min(8, Math.abs(gesture.lookY) * 0.11)
+      }, { render: false });
+    }
+    if (Math.abs(gesture.move) > 0.1) {
+      await applyIntent({
+        action: gesture.move < 0 ? 'MOVE_FORWARD' : 'MOVE_BACKWARD',
+        magnitude: Math.min(12, Math.max(0.5, Math.abs(gesture.move) * 0.08))
+      }, { render: false });
+    }
+    if (Math.abs(gesture.strafe) > 0.1) {
+      await applyIntent({
+        action: gesture.strafe > 0 ? 'STRAFE_RIGHT' : 'STRAFE_LEFT',
+        magnitude: Math.min(12, Math.max(0.5, Math.abs(gesture.strafe) * 0.07))
+      }, { render: false });
+    }
+    if (Math.abs(gesture.zoom) > 0.1) {
+      await applyIntent({
+        action: gesture.zoom > 0 ? 'ZOOM_IN' : 'ZOOM_OUT',
+        degrees: Math.min(6, Math.max(0.25, Math.abs(gesture.zoom) * 0.05))
+      }, { render: false });
+    }
+    await renderCurrentState();
+  } finally {
+    gestureFrameRunning = false;
+    if (hasPendingGesture()) {
+      requestGestureFrame();
+    }
+  }
+}
+
+function resetGestureBaseline() {
+  if (activePointers.size === 1) {
+    const [point] = activePointers.values();
+    gestureBaseline = {
+      mode: 'LOOK',
+      x: point.x,
+      y: point.y
+    };
+    return;
+  }
+  if (activePointers.size >= 2) {
+    gestureBaseline = {
+      mode: 'MOVE',
+      ...pointerGeometry()
+    };
+    return;
+  }
+  gestureBaseline = null;
+}
+
+mount.addEventListener('pointerdown', (event) => {
+  activePointers.set(event.pointerId, {
+    x: event.clientX,
+    y: event.clientY,
+    pointerType: event.pointerType
+  });
+  mount.dataset.gestureActive = 'true';
+  mount.setPointerCapture(event.pointerId);
+  resetGestureBaseline();
 });
 
-mount.addEventListener('pointercancel', () => {
-  pointerStart = null;
+mount.addEventListener('pointermove', (event) => {
+  if (!activePointers.has(event.pointerId)) {
+    return;
+  }
+  event.preventDefault();
+  activePointers.set(event.pointerId, {
+    x: event.clientX,
+    y: event.clientY,
+    pointerType: event.pointerType
+  });
+
+  if (activePointers.size === 1) {
+    const point = activePointers.get(event.pointerId);
+    if (gestureBaseline?.mode !== 'LOOK') {
+      resetGestureBaseline();
+      return;
+    }
+    pendingGesture.lookX += point.x - gestureBaseline.x;
+    pendingGesture.lookY += point.y - gestureBaseline.y;
+    gestureBaseline.x = point.x;
+    gestureBaseline.y = point.y;
+    requestGestureFrame();
+    return;
+  }
+
+  const geometry = pointerGeometry();
+  if (!geometry) {
+    return;
+  }
+  if (gestureBaseline?.mode !== 'MOVE') {
+    resetGestureBaseline();
+    return;
+  }
+
+  pendingGesture.strafe += geometry.centroidX - gestureBaseline.centroidX;
+  pendingGesture.move += geometry.centroidY - gestureBaseline.centroidY;
+  pendingGesture.zoom += geometry.distance - gestureBaseline.distance;
+  gestureBaseline = {
+    mode: 'MOVE',
+    ...geometry
+  };
+  requestGestureFrame();
 });
+
+function releasePointer(event) {
+  activePointers.delete(event.pointerId);
+  if (activePointers.size === 0) {
+    mount.dataset.gestureActive = 'false';
+  }
+  resetGestureBaseline();
+}
+
+mount.addEventListener('pointerup', releasePointer);
+mount.addEventListener('pointercancel', releasePointer);
+mount.addEventListener('lostpointercapture', releasePointer);
+
+mount.addEventListener('wheel', (event) => {
+  event.preventDefault();
+  pendingGesture.move += event.deltaY;
+  requestGestureFrame();
+}, { passive: false });
 
 let resizeTimer = null;
 const resizeObserver = new ResizeObserver(() => {

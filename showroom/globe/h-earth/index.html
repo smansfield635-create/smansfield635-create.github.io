@@ -1,89 +1,47 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-route="/showroom/globe/h-earth/" data-page="h-earth-ground-view">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#111916">
-  <meta name="description" content="H-Earth coast-to-inland functional landscape.">
-  <title>H-Earth · Functional Landscape</title>
-  <link rel="stylesheet" href="./functional-landscape/index.css">
+  <meta name="theme-color" content="#061014">
+  <meta name="description" content="Navigate H-Earth from the coast into its governed inland landscape.">
+  <title>H-Earth · Ground-View Matrix</title>
+  <link rel="stylesheet" href="./index.css?v=H_EARTH_ORIGINAL_SHELL_FUNCTIONAL_LANDSCAPE_v1">
 </head>
 <body>
-  <main
-    id="h-earth-functional-landscape-route"
-    class="route-shell"
-    data-run6f-ready="false"
-    aria-labelledby="route-title"
-  >
-    <header class="route-header">
-      <div>
-        <p class="eyebrow">H-Earth</p>
-        <h1 id="route-title">Coast-to-inland functional landscape</h1>
-      </div>
-      <p id="route-status" class="route-status" role="status" aria-live="polite">
-        Constructing governed landscape…
-      </p>
-    </header>
-
-    <section class="viewer-panel" aria-label="Navigable H-Earth landscape">
-      <div
-        id="h-earth-functional-landscape-mount"
-        class="render-mount"
-        tabindex="0"
-        aria-label="Landscape viewport. Use W A S D or the controls below to navigate."
-      >
-        <canvas
-          id="h-earth-functional-landscape-canvas"
-          width="320"
-          height="180"
-          aria-hidden="true"
-        ></canvas>
-        <div class="reticle" aria-hidden="true"></div>
-        <div class="semantic-readout" aria-live="polite">
-          <span id="hud-waypoint">Coastal entry</span>
-          <span id="hud-address">Address pending</span>
+  <main id="h-earth-functional-landscape-route" class="h-earth-3d-route-root" data-h-earth-route="public-environment-host" data-h-earth-public-landscape="functional" data-run6f-ready="false" data-run6f-error="false" aria-labelledby="h-earth-3d-title">
+    <div class="h-earth-3d-shell">
+      <header class="h-earth-3d-public-header">
+        <a class="h-earth-3d-brand" href="/index.html" aria-label="Return to Compass">
+          <span class="h-earth-3d-brand-mark" aria-hidden="true"><span>H</span></span>
+          <span class="h-earth-3d-brand-copy"><span>Ground-View Matrix</span><strong id="h-earth-3d-title">H-Earth</strong></span>
+        </a>
+        <nav class="h-earth-3d-public-nav" aria-label="H-Earth navigation">
+          <a href="/index.html">Return to Compass</a>
+          <a id="h-earth-3d-diagnostic-link" href="/showroom/globe/h-earth/diagnostic/" data-h-earth-diagnostic-route-link="true">Diagnostics</a>
+        </nav>
+      </header>
+      <section class="h-earth-3d-arrival" aria-label="H-Earth environment">
+        <div><p class="h-earth-3d-kicker">H-Earth · Coastal Entry</p><h1>Enter the landscape.</h1></div>
+        <p id="route-status" class="h-earth-3d-route-status" role="status" aria-live="polite">Constructing governed landscape…</p>
+      </section>
+      <section class="h-earth-3d-stage-card" aria-label="Navigable H-Earth landscape">
+        <div id="h-earth-functional-landscape-mount" class="h-earth-3d-landscape-mount" tabindex="0" aria-label="H-Earth landscape. Drag to look. Use two fingers to move. Pinch or use the mouse wheel to change distance.">
+          <canvas id="h-earth-functional-landscape-canvas" width="480" height="320" aria-hidden="true"></canvas>
+          <div class="h-earth-3d-reticle" aria-hidden="true"></div>
+          <div class="h-earth-3d-landscape-readout" aria-live="polite"><span id="hud-waypoint">Coastal entry</span><span id="hud-address">Address pending</span></div>
+          <div class="h-earth-3d-gesture-guide" aria-hidden="true"><span>Drag to look</span><span>Two fingers to move</span><span>Pinch or wheel to zoom</span></div>
         </div>
-      </div>
-
-      <dl class="telemetry" aria-label="Navigation telemetry">
-        <div><dt>Position</dt><dd id="hud-position">—</dd></div>
-        <div><dt>Terrain</dt><dd id="hud-terrain">—</dd></div>
-        <div><dt>Clearance</dt><dd id="hud-clearance">—</dd></div>
-        <div><dt>Chunk</dt><dd id="hud-chunk">—</dd></div>
-        <div><dt>Formation</dt><dd id="hud-formation">—</dd></div>
-        <div><dt>Frame</dt><dd id="hud-frame">—</dd></div>
-      </dl>
-    </section>
-
-    <section class="controls" aria-label="Landscape controls">
-      <div class="movement-grid" aria-label="Movement">
-        <button type="button" data-action="TURN_LEFT" aria-label="Turn left">↶</button>
-        <button type="button" data-action="MOVE_FORWARD" aria-label="Move forward">↑</button>
-        <button type="button" data-action="TURN_RIGHT" aria-label="Turn right">↷</button>
-        <button type="button" data-action="STRAFE_LEFT" aria-label="Strafe left">←</button>
-        <button type="button" data-action="MOVE_BACKWARD" aria-label="Move backward">↓</button>
-        <button type="button" data-action="STRAFE_RIGHT" aria-label="Strafe right">→</button>
-      </div>
-
-      <div class="view-controls" aria-label="View controls">
-        <button type="button" data-action="PITCH_UP">Look up</button>
-        <button type="button" data-action="PITCH_DOWN">Look down</button>
-        <button type="button" data-action="ZOOM_IN">Zoom in</button>
-        <button type="button" data-action="ZOOM_OUT">Zoom out</button>
-        <button type="button" data-action="RESET">Reset coast</button>
-      </div>
-    </section>
-
-    <nav class="waypoints" aria-label="Geographic waypoints">
-      <button type="button" data-waypoint="COAST">Coast</button>
-      <button type="button" data-waypoint="BERM">Berm</button>
-      <button type="button" data-waypoint="LOWLAND">Lowland</button>
-      <button type="button" data-waypoint="HILL">Hill</button>
-      <button type="button" data-waypoint="RIDGE">Ridge</button>
-    </nav>
+        <details class="h-earth-3d-landscape-details">
+          <summary>Environment details</summary>
+          <dl>
+            <div><dt>Position</dt><dd id="hud-position">—</dd></div><div><dt>Terrain</dt><dd id="hud-terrain">—</dd></div><div><dt>Clearance</dt><dd id="hud-clearance">—</dd></div><div><dt>Chunk</dt><dd id="hud-chunk">—</dd></div><div><dt>Formation</dt><dd id="hud-formation">—</dd></div><div><dt>Frame</dt><dd id="hud-frame">—</dd></div>
+          </dl>
+        </details>
+      </section>
+    </div>
   </main>
-
   <script type="module" src="./functional-landscape/index.js"></script>
 </body>
 </html>

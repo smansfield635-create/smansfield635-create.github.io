@@ -29,9 +29,10 @@ jobs:
         env:
           H_EARTH_RUN7D_EXECUTION_CANDIDATE: h-earth-run7d-execution-candidate.json
         run: |
+          set -o pipefail
           node --experimental-default-type=module \
             h-earth-3d/validation/h-earth.functional-environment.run7d.harness.mjs \
-            | tee h-earth-run7d.log
+            2>&1 | tee h-earth-run7d.log
 
       - name: Verify execution candidate exists
         run: |

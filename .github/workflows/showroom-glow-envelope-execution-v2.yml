@@ -1,0 +1,190 @@
+name: Showroom glow envelope execution v2
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  construct-verify-capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Construct bounded candidate
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const runtimePath = 'showroom/index.crystals.js';
+          const sourcePath = 'showroom/index.crystals.source.js';
+          const compositorPath = 'showroom/index.compositor.js';
+          const htmlPath = 'showroom/index.html';
+
+          function once(text, from, to, label) {
+            const count = text.split(from).length - 1;
+            if (count === 0 && text.includes(to)) return text;
+            if (count !== 1) throw new Error(`${label}: ${count}`);
+            return text.replace(from, to);
+          }
+          function regexOnce(text, pattern, replacement, marker, label) {
+            if (text.includes(marker)) return text;
+            const match = text.match(pattern);
+            if (!match) throw new Error(`${label}: no match`);
+            return text.replace(pattern, replacement);
+          }
+
+          function patchCrystals(text) {
+            text = once(text, 'Showroom canonical crystal corridor with viewport-safe spatial integration.', 'Showroom canonical crystal corridor with restored Main/Laws glow and presentation envelope.', 'header');
+            text = once(text, '"SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2"', '"SHOWROOM_CANONICAL_CRYSTAL_GLOW_AND_PRESENTATION_v3"', 'contract');
+            text = regexOnce(text, /  const QUALITY = Object\.freeze\(\{[\s\S]*?\n\}\);\n\n  const CARDINAL_BASE_POSITIONS/, `  const QUALITY = Object.freeze({\n  maximumDeltaSeconds: 0.05,\n  interpolationSpeed: 8.2,\n  reducedMotionInterpolationSpeed: 26,\n  ambientFrameIntervalMs: 1000 / 30,\n  cardinalHitRadius: 76,\n  roomHitRadius: 48,\n  visibleOpacityThreshold: 0.025,\n  haloPassEnabled: true,\n  haloDisableWidth: 0,\n  cardinalDepthRadius: 1.16,\n  roomDepthRadius: 1.04\n});\n\n  const CARDINAL_BASE_POSITIONS`, 'haloPassEnabled: true', 'quality');
+            text = regexOnce(text, /  const CARDINAL_BASE_POSITIONS = Object\.freeze\(\{[\s\S]*?\n\}\);\n\nconst ROOM_BASE_POSITIONS = Object\.freeze\(\{[\s\S]*?\n\}\);\n\n  const PALETTES/, `  const CARDINAL_BASE_POSITIONS = Object.freeze({\n  north: Object.freeze([0, 1.34, 0]),\n  east: Object.freeze([1.50, 0, 0]),\n  south: Object.freeze([0, -1.34, 0]),\n  west: Object.freeze([-1.50, 0, 0])\n});\n\nconst ROOM_BASE_POSITIONS = Object.freeze({\n  1: Object.freeze([0, 0.42155918243834756, -0.9713677415028749]),\n  2: Object.freeze([1.3178909481432288, 0.29135821915396054, 0]),\n  3: Object.freeze([0, -0.5073345276802548, 0.9389695242664297]),\n  4: Object.freeze([-1.351990798995593, -0.12787386777498447, 0])\n});\n\n  const PALETTES`, 'north: Object.freeze([0, 1.34, 0])', 'positions');
+            text = regexOnce(text, /  const MATERIALS = Object\.freeze\(\{[\s\S]*?\n\}\);\n\n  const state =/, `  const MATERIALS = Object.freeze({\n  CARDINAL_IDLE: Object.freeze({ scale: 0.96, specular: 1.18, rim: 1.02, emissive: 0.17, alpha: 0.90, sparkle: 0.26, halo: 0.82, contrast: 1.16 }),\n  CARDINAL_FOCUSED: Object.freeze({ scale: 1.30, specular: 1.50, rim: 1.30, emissive: 0.24, alpha: 0.96, sparkle: 0.36, halo: 1.18, contrast: 1.24 }),\n  ROOM_IDLE: Object.freeze({ scale: 0.88, specular: 1.04, rim: 0.90, emissive: 0.15, alpha: 0.88, sparkle: 0.22, halo: 0.64, contrast: 1.10 }),\n  ROOM_PRIMARY: Object.freeze({ scale: 1.12, specular: 1.24, rim: 1.08, emissive: 0.21, alpha: 0.94, sparkle: 0.30, halo: 0.86, contrast: 1.17 })\n});\n\n  const state =`, 'CARDINAL_FOCUSED: Object.freeze({ scale: 1.30', 'materials');
+            text = once(text, `    const haloEnabled =\n      QUALITY.haloPassEnabled === true;`, `    const haloEnabled =\n      QUALITY.haloPassEnabled === true &&\n      finiteNumber(payload.frame.viewport.cssWidth, 0) >\n        QUALITY.haloDisableWidth;`, 'halo gate');
+            text = text.replaceAll('cardinalPositionsMovedOutward:\n          true', 'cardinalPositionsUseCanonicalMainRadius:\n          true');
+            text = text.replaceAll('roomPositionsMovedOutward:\n          true', 'roomPositionsUseCanonicalMainCluster:\n          true');
+            text = text.replaceAll('positionsMovedOutward:\n          true', 'canonicalPresentationEnvelopeRestored:\n          true');
+            text = text.replaceAll('the detached additive full-mesh halo draw is retired;', 'the accepted additive full-mesh halo draw is restored;');
+            text = text.replaceAll('cardinal and room crystals use bounded viewport-safe scales;', 'cardinal and room crystals use the accepted Main/Laws scale hierarchy;');
+            return text;
+          }
+
+          const baseline = fs.readFileSync(runtimePath, 'utf8');
+          if (baseline !== fs.readFileSync(sourcePath, 'utf8')) throw new Error('runtime/source mismatch');
+          const crystals = patchCrystals(baseline);
+          fs.writeFileSync(runtimePath, crystals);
+          fs.writeFileSync(sourcePath, crystals);
+
+          let compositor = fs.readFileSync(compositorPath, 'utf8');
+          compositor = once(compositor, '/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_REDUCED_COMPASS_OVERLOAD */', '/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_CANONICAL_PRESENTATION_ENVELOPE */', 'compositor header');
+          compositor = once(compositor, `  const state = {`, `  const PRESENTATION_CAMERA = Object.freeze({\n    mobileAspectThreshold: 0.82,\n    constellation: Object.freeze({ normalEye: Object.freeze([0, 0.76, 6.05]), mobileEye: Object.freeze([0, 0.76, 7.10]), target: Object.freeze([0, 0.03, 0.06]), normalFieldOfViewDegrees: 36, mobileFieldOfViewDegrees: 34 }),\n    cluster: Object.freeze({ normalEye: Object.freeze([0, 0.62, 6.28]), mobileEye: Object.freeze([0, 0.62, 7.68]), target: Object.freeze([0, 0.02, 0.04]), normalFieldOfViewDegrees: 36, mobileFieldOfViewDegrees: 34 })\n  });\n\n  const state = {`, 'camera block');
+          compositor = once(compositor, `  function rebuildMatrices() {\n    const aspect =\n      state.viewport.cssWidth /\n      Math.max(\n        1,\n        state.viewport.cssHeight\n      );\n\n    const view =`, `  function applyPresentationCamera(aspect) {\n    const mode = String(state.controllerFrame && state.controllerFrame.presentationMode || "CONSTELLATION").toUpperCase();\n    const preset = mode === "CLUSTER" ? PRESENTATION_CAMERA.cluster : PRESENTATION_CAMERA.constellation;\n    const mobile = aspect <= PRESENTATION_CAMERA.mobileAspectThreshold;\n    state.camera.eye = (mobile ? preset.mobileEye : preset.normalEye).slice();\n    state.camera.target = preset.target.slice();\n    state.camera.fieldOfViewDegrees = mobile ? preset.mobileFieldOfViewDegrees : preset.normalFieldOfViewDegrees;\n  }\n\n  function rebuildMatrices() {\n    const aspect =\n      state.viewport.cssWidth /\n      Math.max(\n        1,\n        state.viewport.cssHeight\n      );\n\n    applyPresentationCamera(aspect);\n\n    const view =`, 'camera application');
+          fs.writeFileSync(compositorPath, compositor);
+
+          let html = fs.readFileSync(htmlPath, 'utf8');
+          html = html.replaceAll('SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_10_SPATIAL_COSMOS_CONTINUITY', 'SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_11_GLOW_PRESENTATION_ENVELOPE');
+          html = once(html, '/showroom/index.compositor.js?v=SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6', '/showroom/index.compositor.js?v=SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726K', 'compositor cache');
+          html = once(html, '/showroom/index.crystals.js?v=SHOWROOM_COMPASS_SPATIAL_COSMOS_20260726J', '/showroom/index.crystals.js?v=SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726K', 'crystal cache');
+          fs.writeFileSync(htmlPath, html);
+          NODE
+
+      - name: Static verification
+        run: |
+          set -euo pipefail
+          node --check showroom/index.crystals.js
+          node --check showroom/index.crystals.source.js
+          node --check showroom/index.compositor.js
+          cmp --silent showroom/index.crystals.js showroom/index.crystals.source.js
+          grep -q 'SHOWROOM_CANONICAL_CRYSTAL_GLOW_AND_PRESENTATION_v3' showroom/index.crystals.js
+          grep -q 'haloPassEnabled: true' showroom/index.crystals.js
+          grep -q 'PRESENTATION_CAMERA' showroom/index.compositor.js
+          grep -q 'SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726K' showroom/index.html
+          test ! -e showroom/index.cosmos.source.js
+
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Execute and capture both presentation modes
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/showroom-round2-v2
+          python3 -m http.server 4173 --directory . >/tmp/showroom-round2-v2/server.log 2>&1 &
+          pid=$!
+          trap 'kill $pid || true' EXIT
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const fs = require('node:fs');
+          const configs = [
+            { name: 'samsung-portrait', width: 390, height: 844 },
+            { name: 'tablet', width: 800, height: 1100 },
+            { name: 'desktop', width: 1440, height: 1000 }
+          ];
+          const out = '/tmp/showroom-round2-v2';
+          const assert = (c, m) => { if (!c) throw new Error(m); };
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const receipt = [];
+            for (const cfg of configs) {
+              const page = await browser.newPage({ viewport: cfg, deviceScaleFactor: 1 });
+              const errors = [];
+              page.on('console', m => { if (m.type() === 'error') errors.push(`console:${m.text()}`); });
+              page.on('pageerror', e => errors.push(`page:${e.message}`));
+              await page.goto('http://127.0.0.1:4173/showroom/', { waitUntil: 'domcontentloaded' });
+              await page.locator('#showroom-orbit').scrollIntoViewIfNeeded();
+              await page.waitForFunction(() => window.SHOWROOM_CRYSTALS?.getState?.().ready === true, null, { timeout: 30000 });
+              await page.waitForTimeout(800);
+              await page.screenshot({ path: `${out}/${cfg.name}-constellation.png` });
+              const constellation = await page.evaluate(() => ({
+                crystals: window.SHOWROOM_CRYSTALS.getState(),
+                geometry: window.SHOWROOM_CRYSTALS.getGeometrySummary(),
+                compositorKeys: Object.keys(window.SHOWROOM_COMPOSITOR || {}),
+                compositorState: window.SHOWROOM_COMPOSITOR?.getState?.() || null
+              }));
+              assert(constellation.crystals.presentationMode === 'CONSTELLATION', `${cfg.name}: not constellation`);
+              assert(constellation.crystals.visibleCardinalCount === 4, `${cfg.name}: cardinal count`);
+              assert(constellation.crystals.counters.lastRearDrawCalls + constellation.crystals.counters.lastFrontDrawCalls >= 8, `${cfg.name}: halo draw count`);
+              const cardinal = page.locator('[data-showroom-cardinal-control]');
+              await cardinal.first().click({ force: true });
+              await page.waitForFunction(() => window.SHOWROOM_CRYSTALS?.getState?.().presentationMode === 'CLUSTER', null, { timeout: 10000 });
+              await page.waitForTimeout(800);
+              await page.screenshot({ path: `${out}/${cfg.name}-cluster.png` });
+              const cluster = await page.evaluate(() => ({
+                crystals: window.SHOWROOM_CRYSTALS.getState(),
+                visibleChildren: [...document.querySelectorAll('[data-showroom-child-control]')].filter(el => {
+                  const r = el.getBoundingClientRect();
+                  const s = getComputedStyle(el);
+                  return r.width > 0 && r.height > 0 && s.display !== 'none' && s.visibility !== 'hidden' && Number(s.opacity || 1) > 0.04;
+                }).length,
+                compositorState: window.SHOWROOM_COMPOSITOR?.getState?.() || null
+              }));
+              assert(cluster.crystals.presentationMode === 'CLUSTER', `${cfg.name}: cluster not open`);
+              assert((cluster.crystals.visibleRoomCount ?? cluster.visibleChildren) === 4, `${cfg.name}: room count`);
+              assert(cluster.crystals.counters.lastRearDrawCalls + cluster.crystals.counters.lastFrontDrawCalls >= 8, `${cfg.name}: cluster halo draw count`);
+              assert(errors.length === 0, `${cfg.name}: ${errors.join(' | ')}`);
+              receipt.push({ cfg, constellation, cluster, errors });
+              await page.close();
+            }
+            await browser.close();
+            fs.writeFileSync(`${out}/receipt.json`, JSON.stringify({ status: 'PASS', receipt }, null, 2));
+          })().catch(error => {
+            fs.writeFileSync(`${out}/failure.txt`, String(error && error.stack || error));
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: showroom-glow-envelope-v2-evidence
+          path: /tmp/showroom-round2-v2
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Commit product candidate
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.compositor.js showroom/index.html; then
+            echo 'Product already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.compositor.js showroom/index.html
+          git commit -m 'Restore Showroom glow and presentation envelope'
+          git push origin "HEAD:${HEAD_BRANCH}"

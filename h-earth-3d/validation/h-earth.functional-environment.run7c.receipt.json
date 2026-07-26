@@ -1,0 +1,58 @@
+{
+  "receiptType": "H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN_7C_RECEIPT",
+  "contractId": "H_EARTH_CANONICAL_ATMOSPHERE_STATE_RUN_7C_v1",
+  "presentationContractId": "H_EARTH_LOW_COST_ATMOSPHERE_PRESENTATION_RUN_7C_v1",
+  "eligible": true,
+  "status": "RUN_7C_ATMOSPHERE_STATE_AND_PRESENTATION_PASS",
+  "parentCheckpointCommit": "a7107b1b6cc4f83ff8d31f780e492f102ed92fae",
+  "executedWorkspaceCommit": "c0828e9d3f481e74833a522cf7f119fe74adabdd",
+  "workspaceBranch": "agent/h-earth-functional-environment-run7c-001",
+  "workspacePullRequest": 176,
+  "workflowRunId": 30190236875,
+  "workflowJobId": 89762081503,
+  "workflowConclusion": "success",
+  "executionArtifact": {
+    "artifactId": 8628305962,
+    "name": "h-earth-run7c-execution-evidence",
+    "digest": "sha256:2ea202b690353ce0e7eb52952fc76a0b6584076ae1a30cb14ece2c8c0ada8960",
+    "expired": false
+  },
+  "executedSourcePaths": [
+    "/h-earth-3d/environment/h-earth.atmosphere-state.js",
+    "/showroom/globe/h-earth/render/environment-atmosphere.js"
+  ],
+  "executedHarnessPath": "/h-earth-3d/validation/h-earth.functional-environment.run7c.harness.mjs",
+  "executionWorkflowPath": "/.github/workflows/h-earth-functional-environment-run7c-validation.yml",
+  "runtime": "v22.23.1",
+  "fixtureCount": 7,
+  "phaseCount": 4,
+  "assertionCount": 1322,
+  "passCount": 1322,
+  "failCount": 0,
+  "deterministicRerunMatch": true,
+  "deterministicDigest": "9fdb069ba5042d0e580c42a590d0ebb54a2f47c9ae98d5f83cccb96620b3b260",
+  "observedPhases": [
+    "DAY_HIGH_SUN",
+    "DAY_LOW_SUN",
+    "NIGHT",
+    "TWILIGHT"
+  ],
+  "presentationProof": {
+    "skyGradient": "PASS",
+    "sunDisc": "PASS",
+    "horizonHaze": "PASS",
+    "distanceFog": "PASS",
+    "terrainDistanceDesaturation": "PASS",
+    "opaqueFrameClosure": "PASS"
+  },
+  "forbiddenOutputsObserved": 0,
+  "workspaceExecution": true,
+  "localConstruction": false,
+  "createsDom": false,
+  "createsCanvas": false,
+  "rendererMutation": false,
+  "publicRouteMutation": false,
+  "productPromotionClaim": false,
+  "liveVerificationClaim": false,
+  "issues": []
+}

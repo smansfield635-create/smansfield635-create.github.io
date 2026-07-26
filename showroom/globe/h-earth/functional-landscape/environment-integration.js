@@ -18,9 +18,6 @@ import {
   prepareHEarthRun8ERenderPlan,
   rasterizeHEarthRun8ERenderPlan
 } from '../render/run8e-successor-environment.js';
-import {
-  installHEarthRun8EMobileNavigationControls
-} from './mobile-navigation-controls.js';
 
 const root = document.getElementById('h-earth-functional-landscape-route');
 const mount = document.getElementById('h-earth-functional-landscape-mount');
@@ -58,11 +55,19 @@ const sleep = (milliseconds) => new Promise((resolve) => window.setTimeout(resol
 
 let renderSequence = 0;
 let rendering = false;
-let rerenderPending = false;
 let lastReceipt = null;
 let lastFrame = null;
 let lastRaster = null;
 let originalApi = null;
+let renderRequestCount = 0;
+let coalescedRenderRequestCount = 0;
+let completedRenderCount = 0;
+let lastRenderDurationMilliseconds = 0;
+let scheduledRenderTimer = null;
+let renderLoopPromise = null;
+let renderNeeded = false;
+let requestedRenderReason = 'INITIAL';
+const scheduledRenderWaiters = [];
 
 function internalExtent() {
   const cssWidth = Math.max(240, mount.clientWidth || 640);
@@ -168,19 +173,24 @@ function updateHud(state, frame, plan, raster) {
   };
 }
 
-async function renderRun8E() {
-  if (rendering) {
-    rerenderPending = true;
-    return lastReceipt;
-  }
+const yieldToBrowser = () => new Promise((resolve) => {
+  requestAnimationFrame(() => resolve());
+});
+
+async function performRun8ERender(reason = 'DIRECT_REQUEST') {
   rendering = true;
-  rerenderPending = false;
+  root.dataset.run8eLoading = 'true';
   statusNode.textContent = 'Projecting Run 8E successor environment…';
+  const startedAt = performance.now();
+
   try {
+    await yieldToBrowser();
     const sourceSnapshot = originalApi.getSnapshot();
     const state = reconcileNavigationState(sourceSnapshot.state);
     const camera = createHEarthFunctionalLandscapeCamera(state);
     const viewport = internalExtent();
+
+    await yieldToBrowser();
     renderSequence += 1;
     const frame = constructHEarthRun8ESuccessorEnvironmentFrame({
       camera,
@@ -193,21 +203,42 @@ async function renderRun8E() {
     if (frameEvaluation.eligible !== true) {
       throw new Error(`Run 8E public frame rejected: ${frameEvaluation.issues.join(', ')}`);
     }
+
+    await yieldToBrowser();
     const plan = prepareHEarthRun8ERenderPlan(frame, viewport);
     if (plan.eligible !== true) {
       throw new Error(`Run 8E public render plan rejected: ${plan.issues.join(', ')}`);
     }
+
+    await yieldToBrowser();
     const raster = rasterizeHEarthRun8ERenderPlan(plan, frame);
     if (raster.ok !== true || raster.alphaClosed !== true) {
       throw new Error(`Run 8E public raster rejected: ${raster.status}`);
     }
 
+    await yieldToBrowser();
     canvas.width = raster.width;
     canvas.height = raster.height;
-    context.putImageData(new ImageData(raster.rgba, raster.width, raster.height), 0, 0);
+    context.putImageData(
+      new ImageData(raster.rgba, raster.width, raster.height),
+      0,
+      0
+    );
     updateHud(state, frame, plan, raster);
     lastFrame = frame;
     lastRaster = raster;
+    completedRenderCount += 1;
+    lastRenderDurationMilliseconds = performance.now() - startedAt;
+    lastReceipt.renderScheduling = {
+      reason,
+      renderRequestCount,
+      coalescedRenderRequestCount,
+      completedRenderCount,
+      lastRenderDurationMilliseconds,
+      directManipulationPreserved: true,
+      visibleControllerPresent: false,
+      fullRenderDuringActiveGesture: false
+    };
     root.dataset.run7hReady = 'true';
     root.dataset.run7hError = 'false';
     root.dataset.run8eReady = 'true';
@@ -225,11 +256,52 @@ async function renderRun8E() {
     throw error;
   } finally {
     rendering = false;
-    if (rerenderPending) {
-      rerenderPending = false;
-      queueMicrotask(() => renderRun8E().catch((error) => console.error(error)));
-    }
+    root.dataset.run8eLoading = 'false';
   }
+}
+
+async function executeRenderLoop() {
+  if (renderLoopPromise) {
+    renderNeeded = true;
+    coalescedRenderRequestCount += 1;
+    return renderLoopPromise;
+  }
+
+  renderLoopPromise = (async () => {
+    let finalReceipt = lastReceipt;
+    do {
+      renderNeeded = false;
+      const waiters = scheduledRenderWaiters.splice(0);
+      try {
+        finalReceipt = await performRun8ERender(requestedRenderReason);
+        waiters.forEach(({ resolve }) => resolve(finalReceipt));
+      } catch (error) {
+        waiters.forEach(({ reject }) => reject(error));
+        throw error;
+      }
+    } while (renderNeeded || scheduledRenderWaiters.length > 0);
+    return finalReceipt;
+  })().finally(() => {
+    renderLoopPromise = null;
+  });
+
+  return renderLoopPromise;
+}
+
+function requestRun8ERender({ delay = 0, reason = 'COALESCED_REQUEST' } = {}) {
+  renderRequestCount += 1;
+  requestedRenderReason = reason;
+  return new Promise((resolve, reject) => {
+    scheduledRenderWaiters.push({ resolve, reject });
+    if (scheduledRenderTimer !== null) {
+      clearTimeout(scheduledRenderTimer);
+      coalescedRenderRequestCount += 1;
+    }
+    scheduledRenderTimer = setTimeout(() => {
+      scheduledRenderTimer = null;
+      executeRenderLoop().catch((error) => console.error(error));
+    }, Math.max(0, delay));
+  });
 }
 
 async function waitForNavigation() {
@@ -260,24 +332,28 @@ function installNavigationBridge(api) {
         : api.forceBelowTerrainRecovery.bind(api)
   };
 
-  const renderAfterNavigation = async (operation) => {
+  const navigateThenRender = async (operation, reason) => {
     const result = await operation();
-    const run8ERenderReceipt = await renderRun8E();
-    return {
-      ...result,
-      run8ERenderReceipt
-    };
+    const run8ERenderReceipt = await requestRun8ERender({ delay: 0, reason });
+    return { ...result, run8ERenderReceipt };
   };
 
-  api.dispatch = async (intent) => renderAfterNavigation(
-    () => original.dispatchNavigationOnly(intent)
+  api.dispatch = async (intent) => navigateThenRender(
+    () => original.dispatchNavigationOnly(intent),
+    'PROGRAMMATIC_DISPATCH'
   );
-  api.gotoWaypoint = async (waypointId) => renderAfterNavigation(
-    () => original.gotoWaypointNavigationOnly(waypointId)
+  api.gotoWaypoint = async (waypointId) => navigateThenRender(
+    () => original.gotoWaypointNavigationOnly(waypointId),
+    'PROGRAMMATIC_WAYPOINT'
   );
-  api.reset = async () => renderAfterNavigation(
-    () => original.resetNavigationOnly()
+  api.reset = async () => navigateThenRender(
+    () => original.resetNavigationOnly(),
+    'PROGRAMMATIC_RESET'
   );
+  api.commitSuccessorRender = async () => requestRun8ERender({
+    delay: 0,
+    reason: 'DIRECT_MANIPULATION_SETTLED'
+  });
   api.runGeographicPath = async () => {
     const results = [];
     for (const waypointId of ['COAST', 'BERM', 'LOWLAND', 'HILL', 'RIDGE']) {
@@ -285,8 +361,9 @@ function installNavigationBridge(api) {
     }
     return results;
   };
-  api.forceBelowTerrainRecovery = async () => renderAfterNavigation(
-    () => original.forceBelowTerrainRecoveryNavigationOnly()
+  api.forceBelowTerrainRecovery = async () => navigateThenRender(
+    () => original.forceBelowTerrainRecoveryNavigationOnly(),
+    'PROGRAMMATIC_RECOVERY'
   );
 }
 
@@ -294,7 +371,10 @@ function installPublicApi() {
   const api = {
     ready: true,
     async refresh() {
-      return renderRun8E();
+      return requestRun8ERender({
+        delay: 0,
+        reason: 'PUBLIC_REFRESH'
+      });
     },
     getSnapshot() {
       return {
@@ -321,6 +401,18 @@ function installPublicApi() {
     getBrowserReceipt() {
       return clonePlain(lastReceipt);
     },
+    getSchedulingReceipt() {
+      return clonePlain({
+        renderRequestCount,
+        coalescedRenderRequestCount,
+        completedRenderCount,
+        lastRenderDurationMilliseconds,
+        rendering,
+        pendingWaiterCount: scheduledRenderWaiters.length,
+        directManipulationPreserved: true,
+        visibleControllerPresent: false
+      });
+    },
     async runGeographicPath() {
       const results = [];
       for (const waypointId of ['COAST', 'BERM', 'LOWLAND', 'HILL', 'RIDGE']) {
@@ -344,15 +436,34 @@ function installPublicApi() {
 
 originalApi = await waitForNavigation();
 installNavigationBridge(originalApi);
-await renderRun8E();
 installPublicApi();
-installHEarthRun8EMobileNavigationControls({ root, mount });
+root.dataset.run8eReady = 'false';
+root.dataset.run8eError = 'false';
+root.dataset.run8eLoading = 'true';
+statusNode.textContent =
+  'Run 8 successor environment preparing · direct inspection available.';
+
+const beginInitialRender = () => {
+  requestRun8ERender({
+    delay: 0,
+    reason: 'DEFERRED_INITIAL_SUCCESSOR_RENDER'
+  }).catch((error) => console.error(error));
+};
+
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(beginInitialRender, { timeout: 1200 });
+} else {
+  setTimeout(beginInitialRender, 120);
+}
 
 let resizeTimer = null;
 const resizeObserver = new ResizeObserver(() => {
-  window.clearTimeout(resizeTimer);
-  resizeTimer = window.setTimeout(() => {
-    renderRun8E().catch((error) => console.error(error));
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    requestRun8ERender({
+      delay: 0,
+      reason: 'VIEWPORT_RESIZE_SETTLED'
+    }).catch((error) => console.error(error));
   }, 180);
 });
 resizeObserver.observe(mount);

@@ -234,6 +234,8 @@ function resetPointerBaselines() {
 }
 
 mount.addEventListener('pointerdown', (event) => {
+  event.preventDefault();
+  event.stopImmediatePropagation();
   pointers.set(event.pointerId, {
     x: event.clientX,
     y: event.clientY,

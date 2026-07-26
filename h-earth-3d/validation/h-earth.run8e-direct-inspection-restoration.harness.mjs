@@ -243,8 +243,13 @@ try {
     assert.equal(final.interaction.lastError, null);
     assert.equal(final.scheduling.directManipulationPreserved, true);
     assert.equal(final.scheduling.visibleControllerPresent, false);
+    const successorRenderDelta =
+      final.scheduling.completedRenderCount -
+      baseline.scheduling.completedRenderCount;
+    assert.equal(successorRenderDelta, 3);
+    assert.equal(final.interaction.navigationIntentCount >= 3, true);
     assert.equal(
-      final.scheduling.completedRenderCount < final.interaction.navigationIntentCount,
+      successorRenderDelta < final.interaction.pointerMoveCount,
       true
     );
     assert.equal(

@@ -63,7 +63,7 @@ jobs:
           H_EARTH_RUN8E_URL: http://127.0.0.1:4173/showroom/globe/h-earth/
           H_EARTH_RUN8E_OUTPUT: /tmp/run8e-public-artifacts
         run: |
-          cat > /tmp/run8e-public-browser.mjs <<'NODE'
+          cat > h-earth-run8e-public-browser.mjs <<'NODE'
           import assert from 'node:assert/strict';
           import fs from 'node:fs/promises';
           import path from 'node:path';
@@ -226,7 +226,7 @@ jobs:
           NODE
 
           set -o pipefail
-          node /tmp/run8e-public-browser.mjs 2>&1 | tee /tmp/run8e-public-browser.log
+          node h-earth-run8e-public-browser.mjs 2>&1 | tee /tmp/run8e-public-browser.log
 
       - name: Verify Run 8E public-route receipt
         run: |

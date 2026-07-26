@@ -89,6 +89,7 @@ jobs:
           NODE
 
       - name: Upload Run 8A evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: h-earth-run8a-dimensional-reconciliation-evidence

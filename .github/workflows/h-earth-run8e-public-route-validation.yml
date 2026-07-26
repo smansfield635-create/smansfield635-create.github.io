@@ -129,7 +129,8 @@ jobs:
               assert.equal(receipts.every((receipt) => receipt.cameraReconciledToSuccessorTerrain), true);
               assert.equal(receipts.every((receipt) => receipt.singlePhysicalDepthDomainExecuted), true);
               assert.equal(receipts.every((receipt) => receipt.singleSkyAuthorityMaterialized), true);
-              assert.equal(receipts.every((receipt) => receipt.sunDiscMaterialized), true);
+              assert.equal(receipts.every((receipt) => receipt.sunDiscIntegrationActive), true);
+              assert.equal(Math.max(...receipts.map((receipt) => receipt.sunPixelCount)) > 0, true);
               assert.equal(receipts.every((receipt) => receipt.alphaClosed), true);
               assert.equal(Math.max(...receipts.map((receipt) => receipt.terrainVisiblePixelCount)) > 0, true);
               assert.equal(Math.max(...receipts.map((receipt) => receipt.vegetationVisiblePixelCount)) > 0, true);

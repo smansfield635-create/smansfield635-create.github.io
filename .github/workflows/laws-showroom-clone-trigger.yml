@@ -1,4 +1,4 @@
-name: Trigger canonical crystal clone
+name: Execute canonical crystal clone
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  trigger:
+  execute:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
@@ -21,9 +21,55 @@ jobs:
         with:
           ref: agent/laws-showroom-crystal-corridor-clone-001
           fetch-depth: 0
-      - name: Trigger branch generation workflow
+
+      - name: Execute embedded deterministic generator
+        shell: python
+        run: |
+          from pathlib import Path
+
+          workflow = Path(
+              ".github/workflows/laws-showroom-canonical-crystal-clone.yml"
+          ).read_text(encoding="utf-8").splitlines()
+
+          start_marker = "      - name: Duplicate canonical crystal corridor"
+          end_marker = "      - name: Validate generated executables"
+          start = workflow.index(start_marker)
+          end = workflow.index(end_marker)
+
+          run_line = None
+          for index in range(start + 1, end):
+              if workflow[index] == "        run: |":
+                  run_line = index
+                  break
+
+          if run_line is None:
+              raise SystemExit("Embedded generator run block not found")
+
+          code_lines = []
+          for line in workflow[run_line + 1:end]:
+              if line.startswith("          "):
+                  code_lines.append(line[10:])
+              elif line.strip():
+                  raise SystemExit(f"Unexpected generator indentation: {line!r}")
+              else:
+                  code_lines.append("")
+
+          code = "\n".join(code_lines)
+          exec(compile(code, "canonical-crystal-generator", "exec"), {})
+
+      - name: Validate generated executables
+        run: |
+          node --check laws/index.crystals.js
+          node --check showroom/index.crystals.js
+          cmp -s laws/index.crystals.js laws/index.crystals.source.js
+          cmp -s showroom/index.crystals.js showroom/index.crystals.source.js
+          git diff --check
+
+      - name: Commit generated candidate
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit --allow-empty -m "Trigger canonical crystal corridor generation"
+          git add laws/index.crystals.js laws/index.crystals.source.js laws/index.html \
+                  showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.html
+          git commit -m "Clone canonical crystal corridor into Laws and Showroom"
           git push origin HEAD:agent/laws-showroom-crystal-corridor-clone-001

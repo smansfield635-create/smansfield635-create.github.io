@@ -1,0 +1,949 @@
+name: Laws Showroom canonical crystal clone
+
+on:
+  push:
+    branches:
+      - agent/laws-showroom-crystal-corridor-clone-001
+
+permissions:
+  contents: write
+
+jobs:
+  clone-corridor:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-showroom-crystal-corridor-clone-001
+          fetch-depth: 0
+
+      - name: Duplicate canonical crystal corridor
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          def read(path):
+              return Path(path).read_text(encoding="utf-8")
+
+          def write(path, text):
+              Path(path).write_text(text, encoding="utf-8")
+
+          def section(text, start, end, replacement, identity):
+              if text.count(start) != 1:
+                  raise SystemExit(f"{identity}: start count={text.count(start)}")
+              start_index = text.index(start)
+              end_index = text.find(end, start_index + len(start))
+              if end_index < 0:
+                  raise SystemExit(f"{identity}: end marker missing")
+              return text[:start_index] + replacement + text[end_index:]
+
+          def extract(text, start, end, identity):
+              if text.count(start) != 1:
+                  raise SystemExit(f"{identity}: source start count={text.count(start)}")
+              start_index = text.index(start)
+              end_index = text.find(end, start_index + len(start))
+              if end_index < 0:
+                  raise SystemExit(f"{identity}: source end marker missing")
+              return text[start_index:end_index]
+
+          def replace_once(text, before, after, identity):
+              count = text.count(before)
+              if count != 1:
+                  raise SystemExit(f"{identity}: expected 1, found {count}")
+              return text.replace(before, after)
+
+          main = read("assets/compass/compass.crystals.js")
+          laws_base = read("laws/index.crystals.source.js")
+          showroom_base = read("showroom/index.crystals.source.js")
+
+          canonical_shader = extract(
+              main,
+              "  const vertexShaderSource = `",
+              "\n\n  function qs(",
+              "canonical-shader",
+          )
+          canonical_mesh = extract(
+              main,
+              "  function createDiamondStarMesh(",
+              "\n\n  function buildGpuMesh(",
+              "canonical-mesh",
+          )
+
+          # ------------------------------------------------------------
+          # Laws: direct complete source with canonical visual corridor.
+          # ------------------------------------------------------------
+          laws = laws_base
+          laws = replace_once(
+              laws,
+              '"DGB_LAWS_CRYSTALS_CONTROLLER_DECOUPLED_RENDERER_WITH_PLANET_PARTICIPANT_v1"',
+              '"DGB_LAWS_CRYSTALS_CANONICAL_MAIN_CORRIDOR_CLONE_v1"',
+              "laws-contract-id",
+          )
+          laws = replace_once(
+              laws,
+              '"1.1.0-controller-decoupled-crystal-renderer-with-planet-participant"',
+              '"2.0.0-canonical-main-crystal-corridor-clone"',
+              "laws-contract-version",
+          )
+
+          laws_sphere = '''  const SPHERE = Object.freeze({
+            coordinateSystem:
+              "RIGHT_HANDED_EUCLIDEAN_XYZ",
+
+            orientationRepresentation:
+              "UNIT_QUATERNION",
+
+            constellation:
+              Object.freeze({
+                horizontalRadius:
+                  1.50,
+
+                verticalRadius:
+                  1.34,
+
+                depthRadius:
+                  1.16,
+
+                primaryAnchor:
+                  Object.freeze([
+                    0,
+                    0.78,
+                    0.625
+                  ]),
+
+                vectors:
+                  Object.freeze({
+                    flow:
+                      Object.freeze([0, 1, 0]),
+                    integrity:
+                      Object.freeze([1, 0, 0]),
+                    reality:
+                      Object.freeze([0, -1, 0]),
+                    structure:
+                      Object.freeze([-1, 0, 0])
+                  })
+              }),
+
+            cluster:
+              Object.freeze({
+                model:
+                  "CANONICAL_MAIN_SPHERICAL_XYZ_CLUSTER",
+
+                memberCount:
+                  4,
+
+                horizontalRadius:
+                  1.36,
+
+                verticalRadius:
+                  1.18,
+
+                depthRadius:
+                  1.04,
+
+                primaryAnchor:
+                  Object.freeze([
+                    0,
+                    0.70,
+                    0.714
+                  ]),
+
+                latitudeAmplitude:
+                  0.48,
+
+                latitudeFrequency:
+                  1.73,
+
+                projectedClearanceMarginPx:
+                  8
+              })
+          });'''
+          laws = section(
+              laws,
+              "  const SPHERE = Object.freeze({",
+              "\n\n  const QUALITY = Object.freeze({",
+              laws_sphere,
+              "laws-sphere",
+          )
+
+          laws_quality = '''  const QUALITY = Object.freeze({
+            categorySegments:
+              8,
+
+            lawSegments:
+              6,
+
+            categoryScale:
+              0.96,
+
+            focusedCategoryScale:
+              1.30,
+
+            lawScale:
+              0.88,
+
+            primaryLawScale:
+              1.12,
+
+            selectedLawScale:
+              1.18,
+
+            visualSettleSpeed:
+              7.4,
+
+            transformSettleSpeed:
+              6.2,
+
+            maximumDeltaSeconds:
+              0.05,
+
+            maximumYaw:
+              0.22,
+
+            maximumPitch:
+              0.14,
+
+            bloomDisableWidthPx:
+              420,
+
+            normalEpsilon:
+              1e-7,
+
+            projectionVisibilityThreshold:
+              0.08
+          });'''
+          laws = section(
+              laws,
+              "  const QUALITY = Object.freeze({",
+              "\n\n  const PALETTE = Object.freeze({",
+              laws_quality,
+              "laws-quality",
+          )
+
+          laws = section(
+              laws,
+              "  const vertexShaderSource = `",
+              "\n\n  function invariant(",
+              canonical_shader,
+              "laws-shader-clone",
+          )
+
+          laws_mesh = canonical_mesh.replace(
+              "STAR_PALETTE.north",
+              "PALETTE.flow",
+          )
+          laws = section(
+              laws,
+              "  function createDiamondStarMesh(",
+              "\n\n  function buildGpuMesh(",
+              laws_mesh,
+              "laws-mesh-clone",
+          )
+
+          laws_build_meshes = '''  function buildMeshes(
+            gl
+          ) {
+            const meshes = new Map();
+
+            DIRECTIONS.forEach(direction => {
+              const warm =
+                direction === "reality" ||
+                direction === "structure";
+
+              meshes.set(
+                `category-${direction}`,
+                buildGpuMesh(
+                  gl,
+                  createDiamondStarMesh({
+                    points: QUALITY.categorySegments,
+                    radius: 0.72,
+                    inner: 0.30,
+                    depth: 0.42,
+                    crown: 0.20,
+                    color: PALETTE[direction],
+                    warmth: warm ? 0.10 : 0.02
+                  })
+                )
+              );
+
+              const lawColor =
+                direction === "flow"
+                  ? PALETTE.lawFlow
+                  : direction === "integrity"
+                    ? PALETTE.lawIntegrity
+                    : direction === "reality"
+                      ? PALETTE.lawReality
+                      : PALETTE.lawStructure;
+
+              meshes.set(
+                `law-${direction}`,
+                buildGpuMesh(
+                  gl,
+                  createDiamondStarMesh({
+                    points: QUALITY.lawSegments,
+                    radius: 0.42,
+                    inner: 0.20,
+                    depth: 0.25,
+                    crown: 0.10,
+                    color: lawColor,
+                    warmth: warm ? 0.08 : 0.02
+                  })
+                )
+              );
+            });
+
+            return meshes;
+          }'''
+          laws = section(
+              laws,
+              "  function buildMeshes(",
+              "\n\n  function clusterBaseVector(",
+              laws_build_meshes,
+              "laws-build-meshes",
+          )
+
+          laws_cluster = '''  function clusterBaseVector(
+            index,
+            count
+          ) {
+            const safeCount = Math.max(1, count);
+            const longitude =
+              Math.PI * 2 * index / safeCount -
+              Math.PI / 2;
+            const latitude =
+              Math.sin(
+                (index + 0.5) *
+                SPHERE.cluster.latitudeFrequency
+              ) *
+              SPHERE.cluster.latitudeAmplitude;
+            const cosineLatitude = Math.cos(latitude);
+
+            return normalizeVector([
+              Math.cos(longitude) * cosineLatitude,
+              Math.sin(latitude),
+              Math.sin(longitude) * cosineLatitude
+            ]);
+          }
+
+          function validateClusterSphereContract() {
+            const vectors = Array.from(
+              { length: SPHERE.cluster.memberCount },
+              (_, index) =>
+                clusterBaseVector(index, SPHERE.cluster.memberCount)
+            );
+
+            invariant(
+              vectors.length === 4,
+              "LAWS_CRYSTALS_CLUSTER_SPHERE_REQUIRES_FOUR_MEMBERS"
+            );
+
+            const edgeA = subtract(vectors[1], vectors[0]);
+            const edgeB = subtract(vectors[2], vectors[0]);
+            const edgeC = subtract(vectors[3], vectors[0]);
+            const determinant =
+              edgeA[0] * (edgeB[1] * edgeC[2] - edgeB[2] * edgeC[1]) -
+              edgeA[1] * (edgeB[0] * edgeC[2] - edgeB[2] * edgeC[0]) +
+              edgeA[2] * (edgeB[0] * edgeC[1] - edgeB[1] * edgeC[0]);
+
+            invariant(
+              Math.abs(determinant) > 1e-4,
+              "LAWS_CRYSTALS_NONCOPLANAR_DISTRIBUTION_INVALID",
+              { determinant }
+            );
+
+            RECEIPT.clusterGeometryModel = SPHERE.cluster.model;
+            RECEIPT.clusterMemberCount = SPHERE.cluster.memberCount;
+            RECEIPT.clusterNoncoplanar = true;
+            RECEIPT.clusterFullXyzRotation = true;
+            return true;
+          }'''
+          laws = section(
+              laws,
+              "  function clusterBaseVector(",
+              "\n\n  function makeNode(",
+              laws_cluster,
+              "laws-cluster-clone",
+          )
+
+          laws = section(
+              laws,
+              "  function boundClusterQuaternion(value) {",
+              "\n\n  function clusterQuaternionFromFrame(",
+              '''  function boundClusterQuaternion(value) {
+            return quaternionNormalize(value);
+          }''',
+              "laws-full-quaternion",
+          )
+
+          laws = section(
+              laws,
+              "  function euclideanLawPosition(",
+              "\n\n  function setUniformScale(",
+              '''  function sphericalLawPosition(
+            node,
+            localQuaternion
+          ) {
+            const unit = rotatedLawUnitVector(
+              node,
+              localQuaternion
+            );
+
+            return {
+              x: unit[0] * SPHERE.cluster.horizontalRadius,
+              y: unit[1] * SPHERE.cluster.verticalRadius,
+              z: unit[2] * SPHERE.cluster.depthRadius,
+              depth: (unit[2] + 1) / 2,
+              primary:
+                clamp(
+                  (dot(unit, clusterAnchorVector()) + 1) / 2,
+                  0,
+                  1
+                )
+            };
+          }''',
+              "laws-spherical-law-position",
+          )
+          laws = laws.replace("euclideanLawPosition(", "sphericalLawPosition(")
+          laws = replace_once(
+              laws,
+              "validateClusterOrbitContract();",
+              "validateClusterSphereContract();",
+              "laws-validation-call",
+          )
+
+          laws_header = '''/* /laws/index.crystals.js
+             Canonical Main Compass crystal corridor cloned for the Laws page.
+             Page identity remains Laws-owned: controller, compositor, planet,
+             semantic records, labels, palettes, content, and routes are retained.
+             Mesh topology, facet colors, normals, shaders, halo pass, draw state,
+             scale hierarchy, and spherical presentation are duplicated from
+             /assets/compass/compass.crystals.js.
+          */\n'''
+          laws = re.sub(r"\A/\*[\s\S]*?\*/\n", laws_header, laws, count=1)
+
+          # ------------------------------------------------------------
+          # Showroom: retain integration APIs; duplicate visual machinery.
+          # ------------------------------------------------------------
+          showroom = showroom_base
+          showroom = replace_once(
+              showroom,
+              '"SHOWROOM_FOUR_BY_FOUR_NARRATIVE_CONSTELLATION_CRYSTALS_TNT_v8"',
+              '"SHOWROOM_CANONICAL_MAIN_CRYSTAL_CORRIDOR_CLONE_v1"',
+              "showroom-contract",
+          )
+
+          showroom_positions = '''  const CARDINAL_BASE_POSITIONS = Object.freeze({
+            north: Object.freeze([0, 1.34, 0]),
+            east: Object.freeze([1.50, 0, 0]),
+            south: Object.freeze([0, -1.34, 0]),
+            west: Object.freeze([-1.50, 0, 0])
+          });
+
+          const ROOM_BASE_POSITIONS = Object.freeze({
+            1: Object.freeze([0, 0.42155918243834756, -0.9713677415028749]),
+            2: Object.freeze([1.3178909481432288, 0.29135821915396054, 0]),
+            3: Object.freeze([0, -0.5073345276802548, 0.9389695242664297]),
+            4: Object.freeze([-1.351990798995593, -0.12787386777498447, 0])
+          });'''
+          showroom = section(
+              showroom,
+              "  const CARDINAL_BASE_POSITIONS = Object.freeze({",
+              "\n\n  const PALETTES = Object.freeze({",
+              showroom_positions,
+              "showroom-spherical-positions",
+          )
+
+          showroom_quality = '''  const QUALITY = Object.freeze({
+            maximumDeltaSeconds: 0.05,
+            interpolationSpeed: 8.2,
+            reducedMotionInterpolationSpeed: 26,
+            ambientFrameIntervalMs: 1000 / 30,
+            cardinalHitRadius: 76,
+            roomHitRadius: 48,
+            visibleOpacityThreshold: 0.025,
+            haloDisableWidth: 0
+          });'''
+          showroom = section(
+              showroom,
+              "  const QUALITY = Object.freeze({",
+              "\n\n  const CARDINAL_BASE_POSITIONS = Object.freeze({",
+              showroom_quality,
+              "showroom-quality",
+          )
+
+          showroom_materials = '''  const MATERIALS = Object.freeze({
+            CARDINAL_IDLE: Object.freeze({
+              scale: 0.96,
+              specular: 1.18,
+              rim: 1.02,
+              emissive: 0.17,
+              alpha: 0.90,
+              sparkle: 0.26,
+              halo: 0.82,
+              contrast: 1.16
+            }),
+            CARDINAL_FOCUSED: Object.freeze({
+              scale: 1.30,
+              specular: 1.50,
+              rim: 1.30,
+              emissive: 0.24,
+              alpha: 0.96,
+              sparkle: 0.36,
+              halo: 1.18,
+              contrast: 1.24
+            }),
+            ROOM_IDLE: Object.freeze({
+              scale: 0.88,
+              specular: 1.04,
+              rim: 0.90,
+              emissive: 0.15,
+              alpha: 0.88,
+              sparkle: 0.22,
+              halo: 0.64,
+              contrast: 1.10
+            }),
+            ROOM_PRIMARY: Object.freeze({
+              scale: 1.12,
+              specular: 1.24,
+              rim: 1.08,
+              emissive: 0.21,
+              alpha: 0.94,
+              sparkle: 0.30,
+              halo: 0.86,
+              contrast: 1.17
+            })
+          });'''
+          showroom = section(
+              showroom,
+              "  const MATERIALS = Object.freeze({",
+              "\n\n  const state = {",
+              showroom_materials,
+              "showroom-materials",
+          )
+
+          showroom_shader = canonical_shader.replace(
+              "const vertexShaderSource",
+              "const VERTEX_SHADER",
+          ).replace(
+              "const fragmentShaderSource",
+              "const FRAGMENT_SHADER",
+          )
+          showroom = section(
+              showroom,
+              "  const VERTEX_SHADER = `",
+              "\n\n  function invariant(",
+              showroom_shader,
+              "showroom-shader-clone",
+          )
+
+          showroom_mesh = canonical_mesh.replace(
+              "STAR_PALETTE.north",
+              "PALETTES.north.primary",
+          )
+          showroom_mesh += '''
+
+          function buildCpuMeshes() {
+            state.cpuMeshes.clear();
+
+            for (const wing of WINGS) {
+              const warm = wing === "south" || wing === "east";
+              state.cpuMeshes.set(
+                `cardinal-${wing}`,
+                createDiamondStarMesh({
+                  points: 8,
+                  radius: 0.72,
+                  inner: 0.30,
+                  depth: 0.42,
+                  crown: 0.20,
+                  color: PALETTES[wing].primary,
+                  warmth: warm ? 0.10 : 0.02
+                })
+              );
+              state.cpuMeshes.set(
+                `room-${wing}`,
+                createDiamondStarMesh({
+                  points: 6,
+                  radius: 0.42,
+                  inner: 0.20,
+                  depth: 0.25,
+                  crown: 0.10,
+                  color: PALETTES[wing].primary,
+                  warmth: warm ? 0.08 : 0.02
+                })
+              );
+            }
+          }'''
+          showroom = section(
+              showroom,
+              "  function createCrystalMesh(options) {",
+              "\n\n  function discoverDom() {",
+              showroom_mesh,
+              "showroom-mesh-clone",
+          )
+
+          showroom_gpu = '''  function buildGpuMesh(
+            gl,
+            cpuMesh
+          ) {
+            return {
+              vertexCount: cpuMesh.vertexCount,
+              position: createBuffer(gl, cpuMesh.positions),
+              normal: createBuffer(gl, cpuMesh.normals),
+              color: createBuffer(gl, cpuMesh.colors)
+            };
+          }'''
+          showroom = section(
+              showroom,
+              "  function buildGpuMesh(",
+              "\n\n  function bindAttribute(",
+              showroom_gpu,
+              "showroom-gpu-mesh",
+          )
+          showroom = showroom.replace("mesh.facet", "mesh.color")
+
+          showroom_compute = '''  function computeTargets(frame) {
+            if (state.held || frame.held === true) {
+              return;
+            }
+
+            const mode = displayMode(frame);
+            const activeCluster = activeClusterId(frame);
+            const activeRoom = activeRoomId(frame);
+            const selectedCardinal = selectedCardinalId(frame);
+            const orbit = orbitQuaternion(frame);
+            const cluster = clusterQuaternion(frame);
+
+            for (const node of state.registry.values()) {
+              let position;
+              let visible = false;
+              let selected = false;
+
+              if (node.kind === NODE_KINDS.CARDINAL) {
+                position = rotateVectorByQuaternion(
+                  CARDINAL_BASE_POSITIONS[node.cardinalId],
+                  orbit
+                );
+                visible = mode === DISPLAY_MODES.CONSTELLATION;
+                selected = node.cardinalId === selectedCardinal;
+              } else {
+                position = rotateVectorByQuaternion(
+                  ROOM_BASE_POSITIONS[roomOrdinal(node.childId)],
+                  cluster
+                );
+                visible =
+                  mode === DISPLAY_MODES.CLUSTER &&
+                  node.clusterId === activeCluster;
+                selected = node.childId === activeRoom;
+              }
+
+              node.targetVisible = visible;
+              node.target.x = position[0];
+              node.target.y = position[1];
+              node.target.z = position[2];
+              node.selected = selected;
+
+              if (!visible) {
+                snapNodeInactive(node);
+                continue;
+              }
+
+              node.visible = true;
+              node.materialKey =
+                node.kind === NODE_KINDS.CARDINAL
+                  ? (selected ? "CARDINAL_FOCUSED" : "CARDINAL_IDLE")
+                  : (selected ? "ROOM_PRIMARY" : "ROOM_IDLE");
+
+              const material = MATERIALS[node.materialKey];
+              const depthRadius =
+                node.kind === NODE_KINDS.CARDINAL
+                  ? 1.16
+                  : 1.04;
+              const depth = clamp(
+                (position[2] / depthRadius + 1) / 2,
+                0,
+                1
+              );
+
+              node.target.scale = material.scale;
+              node.target.opacity = material.alpha;
+              node.target.emissive = material.emissive;
+              node.target.rim = material.rim;
+              node.target.sparkle = state.reducedMotion ? 0 : material.sparkle;
+              node.target.halo = material.halo;
+              node.target.spin =
+                state.reducedMotion
+                  ? 0
+                  : node.kind === NODE_KINDS.CARDINAL
+                    ? (selected ? 0.15 : 0.08 + depth * 0.05)
+                    : (selected ? 0.13 : 0.07 + depth * 0.04);
+              node.target.float =
+                state.reducedMotion
+                  ? 0
+                  : selected
+                    ? 0.012
+                    : 0.004 + depth * 0.005;
+              node.settled = !nodeHasInterpolation(node);
+            }
+          }'''
+          showroom = section(
+              showroom,
+              "  function computeTargets(frame) {",
+              "\n\n  function nodeHasInterpolation(node) {",
+              showroom_compute,
+              "showroom-compute-targets",
+          )
+
+          showroom = replace_once(
+              showroom,
+              "      settled:\n        true,",
+              "      settled:\n        true,\n\n      selected:\n        false,\n\n      materialKey:\n        kind === NODE_KINDS.CARDINAL\n          ? \"CARDINAL_IDLE\"\n          : \"ROOM_IDLE\",",
+              "showroom-node-material-state",
+          )
+
+          showroom_model = '''  function scale4(
+            x,
+            y,
+            z
+          ) {
+            return [
+              x, 0, 0, 0,
+              0, y, 0, 0,
+              0, 0, z, 0,
+              0, 0, 0, 1
+            ];
+          }
+
+          function modelMatrix(node, haloPass) {
+            const position = nodeWorldPosition(node);
+            const haloScale =
+              haloPass
+                ? 1 + node.current.halo * 0.10
+                : 1;
+            const scale = node.current.scale * haloScale;
+
+            return multiply4(
+              translate4(position[0], position[1], position[2]),
+              multiply4(
+                rotateZ4(node.current.rz),
+                multiply4(
+                  rotateY4(node.current.ry),
+                  multiply4(
+                    rotateX4(node.current.rx),
+                    scale4(scale, scale, scale)
+                  )
+                )
+              )
+            );
+          }'''
+          showroom = section(
+              showroom,
+              "  function modelMatrix(node) {",
+              "\n\n  function applyUniforms(",
+              showroom_model,
+              "showroom-model-matrix",
+          )
+
+          showroom_uniforms = '''  function applyUniforms(
+            context,
+            node,
+            frame,
+            haloPass
+          ) {
+            const gl = context.gl;
+            const view = matrixFromFrame(frame, "view");
+            const projection = matrixFromFrame(frame, "projection");
+            const model = modelMatrix(node, haloPass);
+            const modelView = multiply4(view, model);
+            const normalMatrix = inverseTransposeNormalMatrix3(modelView);
+            const material =
+              MATERIALS[node.materialKey] ||
+              MATERIALS.ROOM_IDLE;
+            const depthRadius =
+              node.kind === NODE_KINDS.CARDINAL
+                ? 1.16
+                : 1.04;
+            const depth = clamp(
+              (node.current.z / depthRadius + 1) / 2,
+              0,
+              1
+            );
+            const prominence = clamp(
+              0.34 + depth * 0.46 + (node.selected ? 0.30 : 0.10),
+              0.10,
+              1.16
+            );
+
+            gl.uniformMatrix4fv(context.uniforms.model, false, new Float32Array(model));
+            gl.uniformMatrix4fv(context.uniforms.view, false, new Float32Array(view));
+            gl.uniformMatrix4fv(context.uniforms.projection, false, new Float32Array(projection));
+            gl.uniformMatrix3fv(context.uniforms.normalMatrix, false, new Float32Array(normalMatrix));
+            gl.uniform1f(context.uniforms.time, state.lastAnimationTime * 0.001);
+            gl.uniform1f(context.uniforms.prominence, prominence);
+            gl.uniform1f(context.uniforms.specular, material.specular);
+            gl.uniform1f(context.uniforms.rim, node.current.rim);
+            gl.uniform1f(context.uniforms.emissive, node.current.emissive);
+            gl.uniform1f(context.uniforms.alpha, node.current.opacity);
+            gl.uniform1f(context.uniforms.sparkle, state.reducedMotion ? 0 : node.current.sparkle);
+            gl.uniform1f(context.uniforms.twinkle, state.reducedMotion ? 0 : 1);
+            gl.uniform1f(context.uniforms.contrast, material.contrast);
+            gl.uniform1f(context.uniforms.haloStrength, node.current.halo);
+            gl.uniform1f(context.uniforms.saturation, 1);
+            gl.uniform3f(context.uniforms.keyLight, -0.42, -0.82, -0.68);
+            gl.uniform3f(context.uniforms.fillLight, 0.72, -0.24, -0.54);
+            gl.uniform3f(context.uniforms.rimLight, 0.08, 0.46, 1.0);
+            gl.uniform3f(context.uniforms.ambientColor, 0.10, 0.12, 0.18);
+            gl.uniform1f(context.uniforms.haloPass, haloPass ? 1 : 0);
+            gl.uniform1f(
+              context.uniforms.haloExpansion,
+              node.kind === NODE_KINDS.CARDINAL ? 0.075 : 0.052
+            );
+          }'''
+          showroom = section(
+              showroom,
+              "  function applyUniforms(",
+              "\n\n  function drawNode(",
+              showroom_uniforms,
+              "showroom-uniforms",
+          )
+
+          showroom = replace_once(
+              showroom,
+              "        mesh.facet,\n        context.attributes.facet,\n        1",
+              "        mesh.color,\n        context.attributes.color,\n        3",
+              "showroom-color-attribute-bind",
+          )
+          showroom = showroom.replace(
+              "premultipliedAlpha:\n            false",
+              "premultipliedAlpha:\n            true",
+          )
+
+          attributes_uniforms = '''      attributes:
+                Object.freeze({
+                  position:
+                    gl.getAttribLocation(program, "aPosition"),
+                  normal:
+                    gl.getAttribLocation(program, "aNormal"),
+                  color:
+                    gl.getAttribLocation(program, "aColor")
+                }),
+
+              uniforms:
+                Object.freeze({
+                  model: gl.getUniformLocation(program, "uModel"),
+                  view: gl.getUniformLocation(program, "uView"),
+                  projection: gl.getUniformLocation(program, "uProjection"),
+                  normalMatrix: gl.getUniformLocation(program, "uNormalMatrix"),
+                  time: gl.getUniformLocation(program, "uTime"),
+                  prominence: gl.getUniformLocation(program, "uProminence"),
+                  specular: gl.getUniformLocation(program, "uSpecular"),
+                  rim: gl.getUniformLocation(program, "uRim"),
+                  emissive: gl.getUniformLocation(program, "uEmissive"),
+                  alpha: gl.getUniformLocation(program, "uAlpha"),
+                  sparkle: gl.getUniformLocation(program, "uSparkle"),
+                  twinkle: gl.getUniformLocation(program, "uTwinkle"),
+                  contrast: gl.getUniformLocation(program, "uContrast"),
+                  haloStrength: gl.getUniformLocation(program, "uHaloStrength"),
+                  saturation: gl.getUniformLocation(program, "uSaturation"),
+                  keyLight: gl.getUniformLocation(program, "uKeyLight"),
+                  fillLight: gl.getUniformLocation(program, "uFillLight"),
+                  rimLight: gl.getUniformLocation(program, "uRimLight"),
+                  ambientColor: gl.getUniformLocation(program, "uAmbientColor"),
+                  haloPass: gl.getUniformLocation(program, "uHaloPass"),
+                  haloExpansion: gl.getUniformLocation(program, "uHaloExpansion")
+                }),'''
+          showroom = section(
+              showroom,
+              "      attributes:\n        Object.freeze({",
+              "\n\n      onContextLost:",
+              attributes_uniforms,
+              "showroom-context-contract",
+          )
+
+          showroom_header = '''/* /showroom/index.crystals.js
+             Canonical Main Compass crystal corridor cloned for Showroom.
+             Showroom retains its controller, compositor, semantic records,
+             labels, palette identity, routes, Diamond, Window, and Cosmos.
+             Mesh topology, facet-color construction, normals, shaders, halo,
+             GL draw state, scale hierarchy, and spherical presentation are
+             duplicated from /assets/compass/compass.crystals.js.
+          */\n'''
+          showroom = re.sub(r"\A/\*[\s\S]*?\*/\n", showroom_header, showroom, count=1)
+
+          # Retire wrapper/source divergence: executable and custody source match.
+          write("laws/index.crystals.js", laws)
+          write("laws/index.crystals.source.js", laws)
+          write("showroom/index.crystals.js", showroom)
+          write("showroom/index.crystals.source.js", showroom)
+
+          laws_html = read("laws/index.html")
+          laws_html = replace_once(
+              laws_html,
+              "/laws/index.crystals.js?v=LAWS_CRYSTALS_LIVING_CONTINUITY_20260726G",
+              "/laws/index.crystals.js?v=LAWS_CANONICAL_MAIN_CRYSTAL_CLONE_20260726H",
+              "laws-html-cache",
+          )
+          laws_html = replace_once(
+              laws_html,
+              'data-laws-bounded-round="LAWS_SHOWROOM_CROSS_COMPASS_CONTINUITY_20260726G"',
+              'data-laws-bounded-round="LAWS_SHOWROOM_CANONICAL_CRYSTAL_CLONE_20260726H"',
+              "laws-html-round",
+          )
+          laws_html = replace_once(
+              laws_html,
+              'data-laws-crystal-face-visibility="double-sided-opaque-single-surface-living-rotation"',
+              'data-laws-crystal-face-visibility="canonical-main-corridor-clone"',
+              "laws-html-contract",
+          )
+          write("laws/index.html", laws_html)
+
+          showroom_html = read("showroom/index.html")
+          showroom_html = replace_once(
+              showroom_html,
+              "/showroom/index.crystals.js?v=SHOWROOM_CARDINAL_LABELS_PRIMARY_PROMINENCE_SPHERICAL_CLUSTER_v1",
+              "/showroom/index.crystals.js?v=SHOWROOM_CANONICAL_MAIN_CRYSTAL_CLONE_20260726H",
+              "showroom-html-cache",
+          )
+          write("showroom/index.html", showroom_html)
+
+          # Required source-level identity and retirement checks.
+          for path, text in {
+              "laws/index.crystals.js": laws,
+              "showroom/index.crystals.js": showroom,
+          }.items():
+              required = [
+                  "function createDiamondStarMesh(",
+                  "attribute vec3 aColor;",
+                  "varying vec3 vWorldPosition;",
+                  "float rearSuppression =",
+                  "float facetBand =",
+                  "if (vHaloPass > 0.5)",
+                  "gl.disable(\n      gl.CULL_FACE",
+              ]
+              for token in required:
+                  if token not in text:
+                      raise SystemExit(f"{path}: required canonical token missing: {token}")
+
+          if "loadSourceSynchronously" in laws or "transformSource" in laws:
+              raise SystemExit("laws wrapper mechanism remains")
+          if "loadSourceSynchronously" in showroom or "transformSource" in showroom:
+              raise SystemExit("showroom wrapper mechanism remains")
+
+      - name: Validate generated executables
+        run: |
+          node --check laws/index.crystals.js
+          node --check showroom/index.crystals.js
+          cmp -s laws/index.crystals.js laws/index.crystals.source.js
+          cmp -s showroom/index.crystals.js showroom/index.crystals.source.js
+          git diff --check
+          git diff --name-only
+
+      - name: Commit clone candidate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.crystals.js laws/index.crystals.source.js laws/index.html \
+                  showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.html
+          git commit -m "Clone canonical crystal corridor into Laws and Showroom"
+          git push origin HEAD:agent/laws-showroom-crystal-corridor-clone-001

@@ -11,7 +11,7 @@ import {
 } from './h-earth.run8a.dimensional-reconciliation.js';
 
 import {
-  H_EARTH_RUN_8B_CONTROL_CONTRACT_ID,
+  H_EARTH_RUN_8B_CONTRACT_ID,
   H_EARTH_RUN_8B_PACKAGE
 } from './h-earth.run8b.successor-neutral-geometry.js';
 
@@ -139,7 +139,11 @@ export function evaluateHEarthRun8CControlContract() {
   ]) {
     if (!requiredOutputs.has(output)) issues.push(`RUN_8A_REQUIRED_OUTPUT_MISSING:${output}`);
   }
-  if (H_EARTH_RUN_8B_PACKAGE?.status !== 'RUN_8B_AUTHORIZED_NEUTRAL_CONSTRUCTION_PACKAGE') {
+  if (
+    H_EARTH_RUN_8B_PACKAGE?.contractId !== H_EARTH_RUN_8B_CONTRACT_ID ||
+    H_EARTH_RUN_8B_PACKAGE?.successorNeutralGeometryContractId !==
+      H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_CONTRACT_ID
+  ) {
     issues.push('RUN_8B_CONTROL_PACKAGE_IDENTITY_INVALID');
   }
   if (H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_PROFILE.contractId !==
@@ -150,7 +154,7 @@ export function evaluateHEarthRun8CControlContract() {
       H_EARTH_RUN_8C_NORMAL_LIGHT_MATERIAL_CONTRACT_ID) {
     issues.push('RUN_8C_LIGHT_MATERIAL_PROFILE_IDENTITY_INVALID');
   }
-  if (H_EARTH_RUN_8A_CONTRACT_ID.length === 0 || H_EARTH_RUN_8B_CONTROL_CONTRACT_ID.length === 0) {
+  if (H_EARTH_RUN_8A_CONTRACT_ID.length === 0 || H_EARTH_RUN_8B_CONTRACT_ID.length === 0) {
     issues.push('CONTROLLING_PREDECESSOR_IDENTITY_MISSING');
   }
 
@@ -169,7 +173,7 @@ export const H_EARTH_RUN_8C_PACKAGE = freeze({
   sourceFile: H_EARTH_RUN_8C_CONTROL_SOURCE_FILE,
   programClass: 'NORMAL_DRIVEN_LIGHT_AND_MATERIAL_REALIZATION',
   controllingRun8AContractId: H_EARTH_RUN_8A_CONTRACT_ID,
-  controllingRun8BContractId: H_EARTH_RUN_8B_CONTROL_CONTRACT_ID,
+  controllingRun8BContractId: H_EARTH_RUN_8B_CONTRACT_ID,
   successorSurfaceMaterialContractId:
     H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
   successorNormalLightMaterialContractId:

@@ -1,0 +1,128 @@
+name: H-Earth Run 8C Normal Light Material Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8c-normal-light-material-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8b-successor-neutral-geometry-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8c:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out Run 8C workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify bounded changed-path scope
+        run: |
+          set -euo pipefail
+          git diff --name-only f3375d629633bbdadcbebcd91f2dc19796e366e1...HEAD > /tmp/run8c-paths.txt
+          cat /tmp/run8c-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed = {
+            '.github/workflows/h-earth-run8c-normal-light-material-validation.yml',
+            'h-earth-3d/control-plane/run-8/h-earth.run8c.normal-light-material.js',
+            'h-earth-3d/environment/h-earth.successor-surface-material.run8c.js',
+            'showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8c-normal-light-material-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8c.normal-light-material.harness.mjs',
+            'h-earth-3d/validation/h-earth.run8c.normal-light-material.receipt.json'
+          }
+          paths = {line.strip() for line in Path('/tmp/run8c-paths.txt').read_text().splitlines() if line.strip()}
+          unexpected = sorted(paths - allowed)
+          required = allowed - {'h-earth-3d/validation/h-earth.run8c.normal-light-material.receipt.json'}
+          missing = sorted(required - paths)
+          if unexpected:
+            raise SystemExit(f'UNEXPECTED_RUN8C_PATHS:{unexpected}')
+          if missing:
+            raise SystemExit(f'MISSING_RUN8C_PATHS:{missing}')
+          product_paths = {
+            'h-earth-3d/environment/h-earth.successor-surface-material.run8c.js',
+            'showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js'
+          }
+          if len(paths & product_paths) != 2:
+            raise SystemExit('RUN8C_PRODUCT_REALIZATION_SCOPE_INVALID')
+          PY
+
+      - name: Execute Run 8C normal light material harness
+        env:
+          H_EARTH_RUN8C_RECEIPT: /tmp/run8c-receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8c.normal-light-material.harness.mjs \
+            2>&1 | tee /tmp/run8c.log
+
+      - name: Verify Run 8C receipt state
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('/tmp/run8c-receipt.json', 'utf8'));
+          const requiredTrue = [
+            'eligible',
+            'daySunDiscVisible',
+            'dawnSunDiscVisible',
+            'dayNightDifferentiation',
+            'normalDrivenVariation',
+            'materialDifferentiation',
+            'distanceHazeMonotonic',
+            'successorMountainMaterialized',
+            'run8BNeutralPrimitivePreserved',
+            'deterministicRepeatExecution',
+            'materialAndLightingPresentation'
+          ];
+          if (receipt.status !== 'RUN_8C_PASS_CLOSED') process.exit(1);
+          if (!requiredTrue.every((key) => receipt[key] === true)) process.exit(1);
+          if (
+            receipt.nightSunDiscVisible !== false ||
+            receipt.vertexAttributeCount <= 0 ||
+            receipt.surfaceClassCount < 5 ||
+            receipt.materialProfileCount < 5 ||
+            receipt.uniqueFinalColorCount < 128 ||
+            receipt.diffuseRange <= 0.05 ||
+            receipt.meanDayLuminance <= receipt.meanNightLuminance ||
+            receipt.farHazeMean <= receipt.nearHazeMean ||
+            receipt.assertionsPassed <= 0 ||
+            receipt.rendererMutation !== false ||
+            receipt.geometryMutation !== false ||
+            receipt.WestAdmissionExecuted !== false ||
+            receipt.packet002TransferExecuted !== false ||
+            receipt.vegetationInstanceConstruction !== false ||
+            receipt.publicRouteMutation !== false ||
+            receipt.deployment !== false ||
+            receipt.publicVisualImprovementClaim !== false ||
+            receipt.localConstruction !== false ||
+            receipt.issues.length !== 0
+          ) process.exit(1);
+          const durable = 'h-earth-3d/validation/h-earth.run8c.normal-light-material.receipt.json';
+          if (
+            fs.existsSync(durable) &&
+            fs.readFileSync(durable, 'utf8') !== fs.readFileSync('/tmp/run8c-receipt.json', 'utf8')
+          ) process.exit(1);
+          NODE
+
+      - name: Upload Run 8C evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8c-normal-light-material-evidence
+          path: |
+            /tmp/run8c.log
+            /tmp/run8c-receipt.json
+          if-no-files-found: error
+          retention-days: 30

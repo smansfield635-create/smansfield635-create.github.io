@@ -19,7 +19,10 @@ export const H_EARTH_RUN_8E_ENGINEERING_SCOPE_PATHS = Object.freeze([
   '/h-earth-3d/validation/h-earth.run8e.integration-engineering.harness.mjs',
   '/h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json',
   '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-integration-engineering-scope.js',
-  '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+  '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+  '/.github/workflows/h-earth-run8e-public-route-validation.yml',
+  '/showroom/globe/h-earth/functional-landscape/environment-integration.js',
+  '/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json'
 ]);
 
 const OCCURRENCES = Object.freeze(
@@ -59,7 +62,7 @@ export const H_EARTH_RUN_8E_ENGINEERING_SCOPE_EVIDENCE = freeze({
   ]),
   verifiedOn: '2026-07-26',
   evidenceLimitations: Object.freeze([
-    'PUBLIC_ROUTE_MUTATION_NOT_INCLUDED_IN_THIS_ENGINEERING_OCCURRENCE',
+    'PUBLIC_ROUTE_BRANCH_EXECUTION_IS_A_SEPARATE_RUN_8E_OCCURRENCE',
     'PHYSICAL_SAMSUNG_EXECUTION_NOT_INCLUDED',
     'NO_MAIN_PROMOTION',
     'NO_DEPLOYMENT',
@@ -74,7 +77,7 @@ export const H_EARTH_RUN_8E_ENGINEERING_SCOPE_NODE = freeze({
   nodeSubtype: 'RUN_8E_INTEGRATION_ENGINEERING_SCOPE_PACKAGE',
   displayName: 'H-Earth Run 8E Integration Engineering Scope Package',
   description:
-    'Registers the bounded Run 8E successor package, West admission, Packet 002 transfer, frame, shared-depth renderer and sky/sun engineering-validation paths.',
+    'Registers the bounded Run 8E successor package, West admission, Packet 002 transfer, frame, shared-depth renderer, sky/sun engineering-validation, and public-route branch execution paths.',
   repositoryPaths: [...H_EARTH_RUN_8E_ENGINEERING_SCOPE_PATHS],
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: 'EXECUTED_IMPLEMENTATION_EVIDENCE',

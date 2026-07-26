@@ -1,0 +1,125 @@
+name: Showroom glow envelope execution v5
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  mobile-fit-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Apply mobile cluster fit
+        run: node .github/tmp/showroom-mobile-cluster-fit.mjs
+
+      - name: Static and scope verification
+        run: |
+          set -euo pipefail
+          node --check showroom/index.crystals.js
+          node --check showroom/index.crystals.source.js
+          node --check showroom/index.compositor.js
+          cmp --silent showroom/index.crystals.js showroom/index.crystals.source.js
+          grep -q 'SHOWROOM_CANONICAL_CRYSTAL_GLOW_AND_PRESENTATION_v4' showroom/index.crystals.js
+          grep -q 'mobileClusterHorizontalScale: 0.62' showroom/index.crystals.js
+          grep -q 'SHOWROOM_GLOW_PRESENTATION_ENVELOPE_20260726M' showroom/index.html
+          test ! -e showroom/index.cosmos.source.js
+
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Execute final presentation candidate
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/showroom-round2-v5
+          python3 -m http.server 4173 --directory . >/tmp/showroom-round2-v5/server.log 2>&1 &
+          pid=$!
+          trap 'kill $pid || true' EXIT
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const fs = require('node:fs');
+          const configs = [
+            { name: 'samsung-portrait', width: 390, height: 844 },
+            { name: 'tablet', width: 800, height: 1100 },
+            { name: 'desktop', width: 1440, height: 1000 }
+          ];
+          const out = '/tmp/showroom-round2-v5';
+          const assert = (condition, message) => { if (!condition) throw new Error(message); };
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const evidence = [];
+            for (const cfg of configs) {
+              const page = await browser.newPage({ viewport: cfg, deviceScaleFactor: 1 });
+              const errors = [];
+              page.on('console', message => { if (message.type() === 'error') errors.push(`console:${message.text()}`); });
+              page.on('pageerror', error => errors.push(`page:${error.message}`));
+              await page.goto('http://127.0.0.1:4173/showroom/', { waitUntil: 'domcontentloaded' });
+              await page.locator('#showroom-orbit').scrollIntoViewIfNeeded();
+              await page.waitForFunction(() => window.SHOWROOM_CRYSTALS?.getState?.().ready === true, null, { timeout: 30000 });
+              await page.waitForTimeout(900);
+              await page.screenshot({ path: `${out}/${cfg.name}-constellation.png` });
+              const constellation = await page.evaluate(() => ({
+                crystals: window.SHOWROOM_CRYSTALS.getState()
+              }));
+              assert(constellation.crystals.presentationMode === 'CONSTELLATION', `${cfg.name}: constellation mode absent`);
+              assert(constellation.crystals.visibleCardinalCount === 4, `${cfg.name}: four cardinals absent`);
+              assert(constellation.crystals.counters.lastRearDrawCalls + constellation.crystals.counters.lastFrontDrawCalls >= 8, `${cfg.name}: constellation halo pass absent`);
+
+              const opened = await page.evaluate(() => window.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER.requestCardinalSelection('north'));
+              assert(opened === true, `${cfg.name}: north cluster opening rejected`);
+              await page.waitForFunction(() => window.SHOWROOM_CRYSTALS?.getState?.().presentationMode === 'CLUSTER', null, { timeout: 10000 });
+              await page.waitForTimeout(900);
+              await page.screenshot({ path: `${out}/${cfg.name}-cluster.png` });
+              const cluster = await page.evaluate(() => ({ crystals: window.SHOWROOM_CRYSTALS.getState() }));
+              assert(cluster.crystals.presentationMode === 'CLUSTER', `${cfg.name}: cluster mode absent`);
+              assert(cluster.crystals.visibleRoomCount === 4, `${cfg.name}: four cluster members absent`);
+              assert(cluster.crystals.counters.lastRearDrawCalls + cluster.crystals.counters.lastFrontDrawCalls >= 8, `${cfg.name}: cluster halo pass absent`);
+              assert(errors.length === 0, `${cfg.name}: ${errors.join(' | ')}`);
+              evidence.push({ cfg, constellation, cluster, errors });
+              await page.close();
+            }
+            await browser.close();
+            fs.writeFileSync(`${out}/receipt.json`, JSON.stringify({ status: 'PASS', evidence }, null, 2));
+          })().catch(error => {
+            fs.writeFileSync(`${out}/failure.txt`, String(error && error.stack || error));
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload final candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: showroom-glow-envelope-v5-evidence
+          path: /tmp/showroom-round2-v5
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Commit final product candidate
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.html; then
+            echo 'Final candidate already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.html
+          git commit -m 'Fit Showroom opened clusters to mobile field'
+          git push origin "HEAD:${HEAD_BRANCH}"

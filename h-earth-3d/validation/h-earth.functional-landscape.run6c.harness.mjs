@@ -13,20 +13,59 @@ import {
 } from '../../showroom/globe/h-earth/render/landscape-preview.js';
 
 const terrain = constructHEarthFunctionalLandscapeTerrain();
+const shoreline = constructHEarthFunctionalShorelineGeometry();
+const distant = constructHEarthDistantContextGeometry();
+const preview = previewHEarthFunctionalLandscape();
+
+console.log(JSON.stringify({
+  diagnosticType: 'H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6C_DIAGNOSTIC',
+  terrain: {
+    ok: terrain.ok,
+    status: terrain.status,
+    requestedChunkCount: terrain.requestedChunkCount,
+    constructedChunkCount: terrain.constructedChunkCount,
+    issues: terrain.issues,
+    chunkFailures: (terrain.chunkResults ?? [])
+      .filter((result) => result.ok !== true)
+      .map((result) => ({
+        chunkId: result.chunkId,
+        issues: result.issues
+      }))
+  },
+  shoreline: {
+    ok: shoreline.ok,
+    status: shoreline.status,
+    bandCount: shoreline.bandCount,
+    issues: shoreline.issues,
+    bandFailures: (shoreline.results ?? [])
+      .filter((result) => result.ok !== true)
+      .map((result) => ({
+        bandId: result.bandId,
+        issues: result.issues
+      }))
+  },
+  distant: {
+    ok: distant.ok,
+    status: distant.status,
+    primitiveCount: distant.primitives?.length ?? 0,
+    issues: distant.issues
+  },
+  preview: {
+    ok: preview.ok,
+    status: preview.status,
+    primitiveCount: preview.primitiveCount,
+    issues: preview.issues
+  }
+}, null, 2));
+
 assert.equal(terrain.ok, true);
 assert.equal(terrain.requestedChunkCount, 12);
 assert.equal(terrain.constructedChunkCount, 12);
 assert.equal(terrain.chunkResults.every((result) => result.ok), true);
-
-const shoreline = constructHEarthFunctionalShorelineGeometry();
 assert.equal(shoreline.ok, true);
 assert.equal(shoreline.bandCount, 7);
-
-const distant = constructHEarthDistantContextGeometry();
 assert.equal(distant.ok, true);
 assert.equal(distant.primitives.length, 1);
-
-const preview = previewHEarthFunctionalLandscape();
 assert.equal(preview.ok, true);
 assert.equal(preview.primitiveCount, 20);
 assert.equal(preview.admitted, false);

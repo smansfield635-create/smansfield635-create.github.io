@@ -30,7 +30,9 @@ assert.deepEqual(
   frame.compatibilityModesPreserved,
   H_EARTH_FUNCTIONAL_LANDSCAPE_COMPATIBILITY_MODES
 );
-assert.equal(frame.semanticAddressIds.length > 0, true);
+assert.equal(frame.semanticAddressCount, 256);
+assert.equal(frame.semanticAddressIds.length, 256);
+assert.equal(frame.proxySummarizedAddressIds.length, 64);
 assert.equal(frame.formationIds.length > 0, true);
 assert.equal(frame.shorelineBandIds.length, 7);
 
@@ -59,7 +61,8 @@ console.log(JSON.stringify({
   status: handoff.status,
   neutralPrimitiveCount: 20,
   admittedPrimitiveCount: frame.primitiveCount,
-  semanticAddressCount: frame.semanticAddressIds.length,
+  semanticAddressCount: frame.semanticAddressCount,
+  proxySummarizedAddressCount: frame.proxySummarizedAddressIds.length,
   formationCount: frame.formationIds.length,
   shorelineBandCount: frame.shorelineBandIds.length,
   acceptedRenderTriangleCount: handoff.renderPlan.triangles.length,

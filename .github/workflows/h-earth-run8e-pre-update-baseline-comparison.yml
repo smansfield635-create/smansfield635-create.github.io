@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/h-earth-run8e-public-integration-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8d-grounded-vegetation-001
   workflow_dispatch:
 
 permissions:
@@ -13,11 +16,14 @@ jobs:
   reconcile-baseline-workflow:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
     steps:
-      - name: Check out Run 8E workspace
+      - name: Check out Run 8E source branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - name: Restore replay-stable comparison workflow and registry scope
         run: |
@@ -35,7 +41,7 @@ jobs:
           ], text=True)
 
           original = original.replace(
-              "      RUN8E_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}\n",
+              '      RUN8E_CANDIDATE_HEAD: $' + '{{ github.event.pull_request.head.sha || github.sha }}\n',
               ''
           )
 
@@ -103,4 +109,4 @@ jobs:
             h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-integration-engineering-scope.js
           git diff --cached --quiet && exit 0
           git commit -m 'Reconcile Run 8E baseline comparison workflow'
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "HEAD:${TARGET_BRANCH}"

@@ -1,0 +1,47 @@
+name: H-Earth Run 8C Night Evaluation Correction
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8c-normal-light-material-001
+
+permissions:
+  contents: write
+
+jobs:
+  correct-run8c-night-evaluation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-run8c-normal-light-material-001
+          fetch-depth: 0
+
+      - name: Correct night-state diffuse evaluation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js')
+          text = path.read_text(encoding='utf-8')
+          old = """  if (!finite(record?.summary?.diffuseRange) || record.summary.diffuseRange <= 0.05) {
+    issues.push('RUN_8C_NORMAL_DRIVEN_LIGHT_VARIATION_INSUFFICIENT');
+  }
+"""
+          new = """  if (
+    !finite(record?.summary?.diffuseRange) ||
+    (record?.sunIntensity > 0.02 && record.summary.diffuseRange <= 0.05)
+  ) {
+    issues.push('RUN_8C_NORMAL_DRIVEN_LIGHT_VARIATION_INSUFFICIENT');
+  }
+"""
+          if old not in text:
+            raise SystemExit('RUN8C_NIGHT_EVALUATION_ANCHOR_NOT_FOUND')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          Path('.github/workflows/h-earth-run8c-night-evaluation-correction.yml').unlink()
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js
+          git add -u .github/workflows/h-earth-run8c-night-evaluation-correction.yml
+          git commit -m 'Correct Run 8C night-state diffuse evaluation'
+          git push origin HEAD:agent/h-earth-run8c-normal-light-material-001

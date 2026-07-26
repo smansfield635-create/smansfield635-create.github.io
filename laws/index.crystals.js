@@ -1,44 +1,37 @@
 /* /laws/index.crystals.js
-   Laws shared Compass-family spherical XYZ crystal loader.
+   Laws Compass bounded perceptual-continuity loader.
 
-   This bounded replacement preserves the controller-decoupled source in
-   /laws/index.crystals.source.js, preserves the accepted Main Compass cluster
-   presentation, restores the proven double-sided Compass crystal render state,
-   and makes the ordinary crystal surface opaque while retaining the separate
-   translucent halo pass.
+   This complete replacement preserves the accepted spherical X/Y/Z category
+   and law-cluster positions while removing Laws-only visual variance that
+   caused orientation-dependent fragmentation: geometry-scale amplification,
+   full-mesh halo duplication, autonomous crystal spin, and float drift.
 */
 (() => {
   "use strict";
 
   const CONTRACT = Object.freeze({
-    id: "DGB_LAWS_CRYSTALS_RENDER_CONTINUITY_AND_OPAQUE_SURFACE_v3",
+    id: "DGB_LAWS_CRYSTALS_PERCEPTUAL_CONTINUITY_v4",
     sourceUrl:
-      "./index.crystals.source.js?v=LAWS_CRYSTALS_SOURCE_RENDER_CONTINUITY_20260726E",
+      "./index.crystals.source.js?v=LAWS_CRYSTALS_SOURCE_PERCEPTUAL_CONTINUITY_20260726F",
     geometryModel: "BOUNDED_SPHERICAL_XYZ_CLUSTER",
-    presentationModel: "MAIN_COMPASS_SPHERICAL_CLUSTER_PRESENTATION",
-    faceVisibilityModel: "DOUBLE_SIDED_OPAQUE_ORDINARY_SURFACE_SEPARATE_HALO",
+    presentationModel: "INVARIANT_FRONT_FACING_CRYSTAL_PRESENTATION",
+    faceVisibilityModel: "DOUBLE_SIDED_OPAQUE_SINGLE_SURFACE_PASS",
+    categoryScale: 0.96,
+    lawScale: 0.88,
     memberCount: 4,
     horizontalRadius: 1.36,
     verticalRadius: 1.18,
     depthRadius: 1.04,
     latitudeAmplitude: 0.48,
     latitudeFrequency: 1.73,
-    scaleProfile: Object.freeze({
-      law: 0.88,
-      primary: 1.12,
-      selected: 1.18
-    }),
-    depthScale: Object.freeze({
-      base: 0.70,
-      range: 0.38
-    }),
-    primaryLift: 1.14,
-    selectedLift: 1.08,
-    yOffset: -0.08,
-    zOffset: 0.18,
     cullFaceEnabled: false,
     ordinarySurfaceOpaque: true,
-    haloPassSeparate: true,
+    haloPassEnabled: false,
+    autonomousCrystalRotationEnabled: false,
+    crystalFloatEnabled: false,
+    depthBasedGeometryScaleEnabled: false,
+    primaryGeometryScaleLiftEnabled: false,
+    selectedGeometryScaleLiftEnabled: false,
     ownsController: false,
     ownsCompositor: false,
     ownsPlanet: false,
@@ -47,7 +40,7 @@
   });
 
   const SCRIPT_ATTRIBUTE =
-    "data-laws-main-compass-presentation-crystals-source";
+    "data-laws-perceptual-continuity-crystals-source";
 
   function fail(code, details = null) {
     const error = new Error(code);
@@ -181,120 +174,70 @@
       "  function clusterBaseVector(index, count) {",
       "\n\n  function makeNode(options) {",
 `  function clusterBaseVector(index, count) {
-    const safeCount =
-      Math.max(
-        1,
-        count
-      );
+    const safeCount = Math.max(1, count);
 
     invariant(
-      safeCount ===
-        SPHERE.cluster.memberCount,
+      safeCount === SPHERE.cluster.memberCount,
       "LAWS_CRYSTALS_CLUSTER_MEMBER_COUNT_INVALID",
       {
-        expected:
-          SPHERE.cluster.memberCount,
-        actual:
-          safeCount
+        expected: SPHERE.cluster.memberCount,
+        actual: safeCount
       }
     );
 
     const longitude =
-      (
-        Math.PI *
-        2 *
-        index
-      ) /
-      safeCount -
+      (Math.PI * 2 * index) / safeCount -
       Math.PI / 2;
 
     const latitude =
       Math.sin(
-        (
-          index +
-          0.5
-        ) *
-        SPHERE.cluster
-          .latitudeFrequency
+        (index + 0.5) *
+        SPHERE.cluster.latitudeFrequency
       ) *
-      SPHERE.cluster
-        .latitudeAmplitude;
+      SPHERE.cluster.latitudeAmplitude;
 
-    const cosineLatitude =
-      Math.cos(latitude);
+    const cosineLatitude = Math.cos(latitude);
 
     return normalizeVector([
-      Math.cos(longitude) *
-        cosineLatitude,
-
+      Math.cos(longitude) * cosineLatitude,
       Math.sin(latitude),
-
-      Math.sin(longitude) *
-        cosineLatitude
+      Math.sin(longitude) * cosineLatitude
     ]);
   }
 
   function validateClusterSphereContract() {
-    const vectors =
-      Array.from(
-        {
-          length:
-            SPHERE.cluster.memberCount
-        },
-        (_, index) =>
-          clusterBaseVector(
-            index,
-            SPHERE.cluster.memberCount
-          )
-      );
+    const vectors = Array.from(
+      { length: SPHERE.cluster.memberCount },
+      (_, index) =>
+        clusterBaseVector(
+          index,
+          SPHERE.cluster.memberCount
+        )
+    );
 
     invariant(
       vectors.length === 4,
       "LAWS_CRYSTALS_CLUSTER_SPHERE_REQUIRES_FOUR_MEMBERS"
     );
 
-    vectors.forEach(
-      (vector, index) => {
-        invariant(
-          Math.abs(
-            vectorLength(vector) - 1
-          ) <= 1e-12,
-          "LAWS_CRYSTALS_CLUSTER_UNIT_VECTOR_INVALID:" + index
-        );
-      }
-    );
+    vectors.forEach((vector, index) => {
+      invariant(
+        Math.abs(vectorLength(vector) - 1) <= 1e-12,
+        "LAWS_CRYSTALS_CLUSTER_UNIT_VECTOR_INVALID:" + index
+      );
+    });
 
-    const edgeA =
-      subtract(
-        vectors[1],
-        vectors[0]
-      );
-    const edgeB =
-      subtract(
-        vectors[2],
-        vectors[0]
-      );
-    const edgeC =
-      subtract(
-        vectors[3],
-        vectors[0]
-      );
+    const edgeA = subtract(vectors[1], vectors[0]);
+    const edgeB = subtract(vectors[2], vectors[0]);
+    const edgeC = subtract(vectors[3], vectors[0]);
+
     const determinant =
       edgeA[0] *
-        (
-          edgeB[1] * edgeC[2] -
-          edgeB[2] * edgeC[1]
-        ) -
+        (edgeB[1] * edgeC[2] - edgeB[2] * edgeC[1]) -
       edgeA[1] *
-        (
-          edgeB[0] * edgeC[2] -
-          edgeB[2] * edgeC[0]
-        ) +
+        (edgeB[0] * edgeC[2] - edgeB[2] * edgeC[0]) +
       edgeA[2] *
-        (
-          edgeB[0] * edgeC[1] -
-          edgeB[1] * edgeC[0]
-        );
+        (edgeB[0] * edgeC[1] - edgeB[1] * edgeC[0]);
 
     invariant(
       Math.abs(determinant) > 1e-4,
@@ -302,30 +245,20 @@
       { determinant }
     );
 
-    RECEIPT.clusterGeometryModel =
-      SPHERE.cluster.model;
-    RECEIPT.clusterMemberCount =
-      SPHERE.cluster.memberCount;
-    RECEIPT.clusterHorizontalRadius =
-      SPHERE.cluster.horizontalRadius;
-    RECEIPT.clusterVerticalRadius =
-      SPHERE.cluster.verticalRadius;
-    RECEIPT.clusterDepthRadius =
-      SPHERE.cluster.depthRadius;
-    RECEIPT.clusterLatitudeAmplitude =
-      SPHERE.cluster.latitudeAmplitude;
-    RECEIPT.clusterLatitudeFrequency =
-      SPHERE.cluster.latitudeFrequency;
-    RECEIPT.clusterNoncoplanar =
-      true;
-    RECEIPT.clusterFullXyzRotation =
-      true;
+    RECEIPT.clusterGeometryModel = SPHERE.cluster.model;
+    RECEIPT.clusterMemberCount = SPHERE.cluster.memberCount;
+    RECEIPT.clusterHorizontalRadius = SPHERE.cluster.horizontalRadius;
+    RECEIPT.clusterVerticalRadius = SPHERE.cluster.verticalRadius;
+    RECEIPT.clusterDepthRadius = SPHERE.cluster.depthRadius;
+    RECEIPT.clusterLatitudeAmplitude = SPHERE.cluster.latitudeAmplitude;
+    RECEIPT.clusterLatitudeFrequency = SPHERE.cluster.latitudeFrequency;
+    RECEIPT.clusterNoncoplanar = true;
+    RECEIPT.clusterFullXyzRotation = true;
     RECEIPT.clusterProjectedClearanceMarginPx =
       SPHERE.cluster.projectedClearanceMarginPx;
 
     if (state.root) {
-      state.root.dataset.lawsClusterGeometryModel =
-        SPHERE.cluster.model;
+      state.root.dataset.lawsClusterGeometryModel = SPHERE.cluster.model;
       state.root.dataset.lawsClusterMemberCount =
         String(SPHERE.cluster.memberCount);
       state.root.dataset.lawsClusterHorizontalRadius =
@@ -338,10 +271,8 @@
         String(SPHERE.cluster.latitudeAmplitude);
       state.root.dataset.lawsClusterLatitudeFrequency =
         String(SPHERE.cluster.latitudeFrequency);
-      state.root.dataset.lawsClusterNoncoplanar =
-        "true";
-      state.root.dataset.lawsClusterFullXyzRotation =
-        "true";
+      state.root.dataset.lawsClusterNoncoplanar = "true";
+      state.root.dataset.lawsClusterFullXyzRotation = "true";
     }
 
     return true;
@@ -367,47 +298,78 @@
     node,
     localQuaternion
   ) {
-    const unit =
-      rotatedLawUnitVector(
-        node,
-        localQuaternion
-      );
+    const unit = rotatedLawUnitVector(
+      node,
+      localQuaternion
+    );
 
     return {
       x:
         unit[0] *
-        SPHERE.cluster
-          .horizontalRadius,
+        SPHERE.cluster.horizontalRadius,
 
       y:
         unit[1] *
-        SPHERE.cluster
-          .verticalRadius,
+        SPHERE.cluster.verticalRadius,
 
       z:
         unit[2] *
-        SPHERE.cluster
-          .depthRadius,
+        SPHERE.cluster.depthRadius,
 
       depth:
         (unit[2] + 1) / 2,
 
       primary:
         clamp(
-          (
-            dot(
-              unit,
-              clusterAnchorVector()
-            ) +
-            1
-          ) /
-            2,
+          (dot(unit, clusterAnchorVector()) + 1) / 2,
           0,
           1
         )
     };
   }`,
       "SPHERICAL_LAW_POSITION"
+    );
+
+    source = replaceSection(
+      source,
+      "  function updateConstellationTargets() {",
+      "\n\n  function updateClusterTargets(",
+`  function updateConstellationTargets() {
+    state.visualPrimaryDirection =
+      nearestPrimaryDirection();
+
+    DIRECTIONS.forEach(direction => {
+      const node = state.registry.get(direction);
+      const sphere = sphericalCategoryPosition(direction);
+      const primary =
+        direction === state.visualPrimaryDirection;
+
+      node.visible = true;
+      node.depthScore = sphere.depth;
+      node.primaryScore = sphere.primary;
+      node.material =
+        primary
+          ? "CATEGORY_FOCUSED"
+          : "CATEGORY_IDLE";
+
+      Object.assign(
+        node.target,
+        setUniformScale(
+          {
+            x: sphere.x,
+            y: sphere.y,
+            z: sphere.z,
+            prominence: primary ? 0.90 : 0.78,
+            halo: 0,
+            rotationSpeed: 0,
+            float: 0
+          },
+          QUALITY.categoryScale
+        )
+      );
+    });
+  }`,
+      "INVARIANT_CONSTELLATION_PRESENTATION"
     );
 
     source = replaceSection(
@@ -419,8 +381,7 @@
     direction
   ) {
     const localQuaternion =
-      state.clusterQuaternions
-        .get(direction) ||
+      state.clusterQuaternions.get(direction) ||
       [0, 0, 0, 1];
 
     const primaryLaw =
@@ -434,137 +395,169 @@
       primaryLaw
     );
 
-    activeLawNodes(direction).forEach(
-      node => {
-        const sphere =
-          sphericalLawPosition(
-            node,
-            localQuaternion
-          );
-
-        const selected =
-          frame.state === "LAW_SELECTED" &&
-          frame.selectedLaw === node.id;
-
-        const primary =
-          node.id === primaryLaw;
-
-        node.visible = true;
-        node.depthScore = sphere.depth;
-        node.primaryScore = sphere.primary;
-
-        node.material =
-          selected
-            ? "LAW_SELECTED"
-            : primary
-              ? "LAW_PRIMARY"
-              : "LAW_IDLE";
-
-        const depthScale =
-          0.70 +
-          sphere.depth *
-            0.38;
-
-        const primaryLift =
-          primary
-            ? 1.14
-            : 1;
-
-        const selectedLift =
-          selected
-            ? 1.08
-            : 1;
-
-        const ordinaryScale =
-          (
-            selected
-              ? QUALITY.selectedLawScale
-              : primary
-                ? QUALITY.primaryLawScale
-                : QUALITY.lawScale
-          ) *
-          depthScale *
-          primaryLift *
-          selectedLift;
-
-        const prominence =
-          0.30 +
-          sphere.depth *
-            0.48 +
-          sphere.primary *
-            0.28 +
-          (
-            selected
-              ? 0.08
-              : 0
-          );
-
-        const halo =
-          0.20 +
-          sphere.depth *
-            0.30 +
-          sphere.primary *
-            0.44 +
-          (
-            selected
-              ? 0.18
-              : 0
-          );
-
-        const rotationSpeed =
-          primary || selected
-            ? 0.13
-            : 0.07 +
-              sphere.depth *
-                0.04;
-
-        const float =
-          primary || selected
-            ? 0.012
-            : 0.004 +
-              sphere.depth *
-                0.004;
-
-        Object.assign(
-          node.target,
-          setUniformScale(
-            {
-              x:
-                sphere.x,
-
-              y:
-                sphere.y -
-                0.08,
-
-              z:
-                sphere.z +
-                0.18,
-
-              prominence:
-                clamp(
-                  prominence,
-                  0.10,
-                  1.20
-                ),
-
-              halo:
-                clamp(
-                  halo,
-                  0,
-                  1.24
-                ),
-
-              rotationSpeed,
-
-              float
-            },
-            ordinaryScale
-          )
+    activeLawNodes(direction).forEach(node => {
+      const sphere =
+        sphericalLawPosition(
+          node,
+          localQuaternion
         );
-      }
-    );
+
+      const selected =
+        frame.state === "LAW_SELECTED" &&
+        frame.selectedLaw === node.id;
+
+      const primary =
+        node.id === primaryLaw;
+
+      node.visible = true;
+      node.depthScore = sphere.depth;
+      node.primaryScore = sphere.primary;
+      node.material =
+        selected
+          ? "LAW_SELECTED"
+          : primary
+            ? "LAW_PRIMARY"
+            : "LAW_IDLE";
+
+      Object.assign(
+        node.target,
+        setUniformScale(
+          {
+            x: sphere.x,
+            y: sphere.y - 0.08,
+            z: sphere.z + 0.18,
+            prominence:
+              selected
+                ? 0.92
+                : primary
+                  ? 0.86
+                  : 0.76,
+            halo: 0,
+            rotationSpeed: 0,
+            float: 0
+          },
+          QUALITY.lawScale
+        )
+      );
+    });
   }`,
-      "MAIN_COMPASS_CLUSTER_PRESENTATION"
+      "INVARIANT_CLUSTER_PRESENTATION"
+    );
+
+    source = replaceSection(
+      source,
+      "  function updateTransforms(deltaSeconds) {",
+      "\n\n  function nodeFloatY(node) {",
+`  function updateTransforms(deltaSeconds) {
+    const interpolation =
+      state.reducedMotion
+        ? 1
+        : Math.min(
+            1,
+            deltaSeconds *
+              QUALITY.transformSettleSpeed
+          );
+
+    state.registry.forEach(node => {
+      [
+        "x",
+        "y",
+        "z",
+        "sx",
+        "sy",
+        "sz",
+        "prominence",
+        "halo",
+        "rotationSpeed",
+        "float"
+      ].forEach(key => {
+        node.transform[key] =
+          node.transform[key] +
+          (node.target[key] - node.transform[key]) *
+            interpolation;
+      });
+
+      node.transform.rx = 0;
+      node.transform.ry = 0;
+      node.transform.rz = 0;
+      node.transform.rotationSpeed = 0;
+      node.transform.float = 0;
+      node.transform.halo = 0;
+    });
+  }`,
+      "FRONT_FACING_CRYSTAL_ORIENTATION"
+    );
+
+    source = replaceSection(
+      source,
+      "  function nodeFloatY(node) {",
+      "\n\n  function modelMatrix(",
+`  function nodeFloatY(node) {
+    return 0;
+  }`,
+      "NO_CRYSTAL_FLOAT"
+    );
+
+    source = replaceSection(
+      source,
+      "  function drawCrystalNodes(",
+      "\n\n  function projectedRadiusForNode(",
+`  function drawCrystalNodes(
+    renderer,
+    nodes
+  ) {
+    const gl = renderer.gl;
+
+    const layer =
+      renderer.id === DEPTH_LAYERS.REAR
+        ? state.compositor.getRearLayer()
+        : state.compositor.getFrontLayer();
+
+    gl.viewport(
+      0,
+      0,
+      layer.width,
+      layer.height
+    );
+
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(
+      gl.COLOR_BUFFER_BIT |
+      gl.DEPTH_BUFFER_BIT
+    );
+
+    configureSharedUniforms(renderer);
+
+    gl.depthMask(true);
+    gl.blendFunc(
+      gl.SRC_ALPHA,
+      gl.ONE_MINUS_SRC_ALPHA
+    );
+
+    let drawCalls = 0;
+
+    nodes.forEach(node => {
+      drawCalls += drawNode(
+        renderer,
+        node,
+        false
+      );
+    });
+
+    const error = gl.getError();
+
+    invariant(
+      error === gl.NO_ERROR,
+      "LAWS_CRYSTALS_" + renderer.id + "_DRAW_FAILURE",
+      { error }
+    );
+
+    return Object.freeze({
+      drawCalls,
+      visibleNodeCount: nodes.length
+    });
+  }`,
+      "SINGLE_SURFACE_RENDER_PASS"
     );
 
     source = replaceRequired(
@@ -604,12 +597,17 @@
       "gl.enable(gl.CULL_FACE);",
       "gl.cullFace(gl.BACK);",
       "gl.frontFace(gl.CCW);",
-      "0.68 +\n            sphere.depth *\n              0.36"
+      "drawNode(\n              renderer,\n              node,\n              true",
+      "node.transform.rz +=",
+      "sphere.depth *\n             0.42",
+      "QUALITY.focusedCategoryScale",
+      "QUALITY.primaryLawScale",
+      "QUALITY.selectedLawScale"
     ];
 
     for (const token of retiredTokens) {
       if (source.includes(token)) {
-        fail("LAWS_CRYSTALS_RETIRED_RENDER_TOKEN_REMAINS", { token });
+        fail("LAWS_CRYSTALS_RETIRED_VARIANCE_TOKEN_REMAINS", { token });
       }
     }
 
@@ -618,22 +616,24 @@
       "horizontalRadius:\n          1.36",
       "verticalRadius:\n          1.18",
       "depthRadius:\n          1.04",
-      "latitudeAmplitude:\n          0.48",
-      "latitudeFrequency:\n          1.73",
       "function sphericalLawPosition(",
       "LAWS_CRYSTALS_NONCOPLANAR_DISTRIBUTION_INVALID",
-      "const depthScale =\n          0.70 +",
-      "const primaryLift =\n          primary\n            ? 1.14",
-      "const selectedLift =\n          selected\n            ? 1.08",
-      "sphere.y -\n                0.08",
-      "sphere.z +\n                0.18",
+      "QUALITY.categoryScale",
+      "QUALITY.lawScale",
+      "prominence: primary ? 0.90 : 0.78",
+      "halo: 0",
+      "rotationSpeed: 0",
+      "node.transform.rx = 0;",
+      "node.transform.ry = 0;",
+      "node.transform.rz = 0;",
+      "function nodeFloatY(node) {\n    return 0;",
       "gl.disable(gl.CULL_FACE);",
       "float alpha =\n        1.0;"
     ];
 
     for (const token of requiredTokens) {
       if (!source.includes(token)) {
-        fail("LAWS_CRYSTALS_REQUIRED_RENDER_TOKEN_MISSING", { token });
+        fail("LAWS_CRYSTALS_REQUIRED_CONTINUITY_TOKEN_MISSING", { token });
       }
     }
 
@@ -657,7 +657,7 @@
     script.dataset.ready = "false";
     script.textContent =
       source +
-      "\n//# sourceURL=/laws/index.crystals.render-continuity.js";
+      "\n//# sourceURL=/laws/index.crystals.perceptual-continuity.js";
     document.head.append(script);
     script.dataset.ready = "true";
 
@@ -671,7 +671,13 @@
       root.dataset.lawsMainCompassClusterPresentation = "true";
       root.dataset.lawsCrystalBackFaceCulling = "false";
       root.dataset.lawsCrystalOrdinarySurfaceOpaque = "true";
-      root.dataset.lawsCrystalHaloPassSeparate = "true";
+      root.dataset.lawsCrystalHaloPassEnabled = "false";
+      root.dataset.lawsCrystalAutonomousRotationEnabled = "false";
+      root.dataset.lawsCrystalFloatEnabled = "false";
+      root.dataset.lawsCrystalDepthScaleEnabled = "false";
+      root.dataset.lawsCrystalPrimaryScaleLiftEnabled = "false";
+      root.dataset.lawsCrystalSelectedScaleLiftEnabled = "false";
+      root.dataset.lawsCrystalPerceptualContinuity = "true";
     }
 
     globalThis.DGB_LAWS_CRYSTALS_WRAPPER_RECEIPT = Object.freeze({
@@ -680,22 +686,23 @@
       geometryModel: CONTRACT.geometryModel,
       presentationModel: CONTRACT.presentationModel,
       faceVisibilityModel: CONTRACT.faceVisibilityModel,
+      categoryScale: CONTRACT.categoryScale,
+      lawScale: CONTRACT.lawScale,
       memberCount: CONTRACT.memberCount,
       horizontalRadius: CONTRACT.horizontalRadius,
       verticalRadius: CONTRACT.verticalRadius,
       depthRadius: CONTRACT.depthRadius,
       latitudeAmplitude: CONTRACT.latitudeAmplitude,
       latitudeFrequency: CONTRACT.latitudeFrequency,
-      scaleProfile: CONTRACT.scaleProfile,
-      depthScale: CONTRACT.depthScale,
-      primaryLift: CONTRACT.primaryLift,
-      selectedLift: CONTRACT.selectedLift,
-      yOffset: CONTRACT.yOffset,
-      zOffset: CONTRACT.zOffset,
       backFaceCullingEnabled: false,
       doubleSidedCrystalDrawing: true,
       ordinarySurfaceOpaque: true,
-      haloPassSeparate: true,
+      haloPassEnabled: false,
+      autonomousCrystalRotationEnabled: false,
+      crystalFloatEnabled: false,
+      depthBasedGeometryScaleEnabled: false,
+      primaryGeometryScaleLiftEnabled: false,
+      selectedGeometryScaleLiftEnabled: false,
       sourceTransformed: true,
       sourceExecuted: Boolean(globalThis.DGB_LAWS_CRYSTALS),
       protectedAuthoritiesChanged: false,

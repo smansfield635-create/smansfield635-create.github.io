@@ -26,6 +26,7 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
+          import re
           import traceback
 
           error_path = Path(".laws-showroom-clone-generation-error.txt")
@@ -63,6 +64,82 @@ jobs:
                       code_lines.append("")
 
               code = "\n".join(code_lines)
+
+              # Correct the Laws source markers to its actual complete-file
+              # architecture. This changes construction mechanics only; the
+              # cloned canonical mesh bytes remain sourced from Main Compass.
+              code = code.replace(
+                  '"\\n\\n  function buildGpuMesh("',
+                  '"\\n\\n  function lawColorForDirection("',
+                  1,
+              )
+
+              corrected_laws_mesh_builder = r'''laws_build_meshes = '''  function createCpuMeshes() {
+            const meshes = new Map();
+
+            DIRECTIONS.forEach(direction => {
+              const warm =
+                direction === "reality" ||
+                direction === "structure";
+
+              meshes.set(
+                `category-${direction}`,
+                createDiamondStarMesh({
+                  points: QUALITY.categorySegments,
+                  radius: 0.72,
+                  inner: 0.30,
+                  depth: 0.42,
+                  crown: 0.20,
+                  color: PALETTE[direction],
+                  warmth: warm ? 0.10 : 0.02
+                })
+              );
+
+              const lawColor =
+                direction === "flow"
+                  ? PALETTE.lawFlow
+                  : direction === "integrity"
+                    ? PALETTE.lawIntegrity
+                    : direction === "reality"
+                      ? PALETTE.lawReality
+                      : PALETTE.lawStructure;
+
+              meshes.set(
+                `law-${direction}`,
+                createDiamondStarMesh({
+                  points: QUALITY.lawSegments,
+                  radius: 0.42,
+                  inner: 0.20,
+                  depth: 0.25,
+                  crown: 0.10,
+                  color: lawColor,
+                  warmth: warm ? 0.08 : 0.02
+                })
+              );
+            });
+
+            return meshes;
+          }'''
+          laws = section(
+              laws,
+              "  function createCpuMeshes() {",
+              "\n\n  function createRenderer(",
+              laws_build_meshes,
+              "laws-build-meshes",
+          )'''
+
+              code, count = re.subn(
+                  r"laws_build_meshes = '''  function buildMeshes\([\s\S]*?"
+                  r'"laws-build-meshes",\n          \)',
+                  corrected_laws_mesh_builder,
+                  code,
+                  count=1,
+              )
+              if count != 1:
+                  raise RuntimeError(
+                      f"Could not correct Laws CPU mesh builder block: {count}"
+                  )
+
               exec(compile(code, "canonical-crystal-generator", "exec"), {})
           except BaseException:
               error_path.write_text(traceback.format_exc(), encoding="utf-8")
@@ -87,6 +164,7 @@ jobs:
             git add .laws-showroom-clone-generation-error.txt
             git commit -m "Record canonical crystal generator diagnostic"
           else
+            git add -A .laws-showroom-clone-generation-error.txt
             git add laws/index.crystals.js laws/index.crystals.source.js laws/index.html \
                     showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.html
             git commit -m "Clone canonical crystal corridor into Laws and Showroom"

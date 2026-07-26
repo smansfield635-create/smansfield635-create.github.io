@@ -1,4 +1,4 @@
-name: Showroom bounded product materialization
+name: Showroom live deployment verification
 
 on:
   pull_request:
@@ -6,73 +6,64 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  materialize-and-verify:
+  verify-live-showroom:
     if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/showroom-startup-spatial-cosmos-001'
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: agent/showroom-startup-spatial-cosmos-001
-          fetch-depth: 0
-          show-progress: false
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Construct bounded Showroom product
-        run: python3 .github/scripts/showroom_materialize.py
-
-      - name: Static and structural verification
+      - name: Poll public HTML and asset identities
         shell: bash
         run: |
           set -euo pipefail
-          node --check showroom/index.cosmos.js
-          node --check showroom/index.crystals.js
-          cmp showroom/index.crystals.js showroom/index.crystals.source.js
-          test ! -e showroom/index.cosmos.source.js
-          ! grep -q 'XMLHttpRequest' showroom/index.cosmos.js
-          ! grep -q 'loadSourceSynchronously' showroom/index.cosmos.js
-          ! grep -q 'index.cosmos.source.js' showroom/index.cosmos.js
-          grep -q 'SHOWROOM_COSMOS_ARCHCOIN_SCENE_FIELD_v1' showroom/index.cosmos.js
-          grep -q 'SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2' showroom/index.crystals.js
-          grep -q 'haloPassEnabled: false' showroom/index.crystals.js
-          grep -q 'node.target.float = 0;' showroom/index.crystals.js
-          grep -q 'SHOWROOM_COMPASS_SPATIAL_COSMOS_20260726J' showroom/index.html
-          test "$(grep -F -c '"data-showroom-child": "cosmos"' showroom/index.html)" -eq 1
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          html=Path('showroom/index.html').read_text()
-          scripts=re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>',html,flags=re.I)
-          for i,s in enumerate(scripts): Path(f'/tmp/showroom-inline-{i}.js').write_text(s)
-          print(f'inline_scripts={len(scripts)}')
-          PY
-          for file in /tmp/showroom-inline-*.js; do node --check "$file"; done
+          live=https://diamondgatebridge.com/showroom/
+          cache=SHOWROOM_COMPASS_SPATIAL_COSMOS_20260726J
+          contract=SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_10_SPATIAL_COSMOS_CONTINUITY
+          confirmed=false
+          for attempt in $(seq 1 30); do
+            if curl -fsSL -H 'Cache-Control: no-cache' "${live}?cb=2aded111a95d727a4ca12da62d9ebe5f02ddd727-${attempt}" -o /tmp/showroom-live.html \
+              && grep -q "$cache" /tmp/showroom-live.html \
+              && grep -q "$contract" /tmp/showroom-live.html; then
+              confirmed=true
+              break
+            fi
+            sleep 10
+          done
+          test "$confirmed" = true
+          grep -q "/showroom/index.cosmos.js?v=$cache" /tmp/showroom-live.html
+          grep -q "/showroom/index.crystals.js?v=$cache" /tmp/showroom-live.html
+          grep -q 'SHOWROOM_MIRRORLAND_NARRATIVE_ATLAS_CSS_TNT_v14_0_COSMOS_COMPLEMENTARY_STAGE_RENEWAL' /tmp/showroom-live.html
 
-      - name: Install browser runtime
+          curl -fsSL -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/showroom/index.cosmos.js?v=${cache}&cb=2aded111a95d727a4ca12da62d9ebe5f02ddd727" -o /tmp/showroom-live-cosmos.js
+          curl -fsSL -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/showroom/index.crystals.js?v=${cache}&cb=2aded111a95d727a4ca12da62d9ebe5f02ddd727" -o /tmp/showroom-live-crystals.js
+          grep -q 'SHOWROOM_COSMOS_ARCHCOIN_SCENE_FIELD_v1' /tmp/showroom-live-cosmos.js
+          grep -q 'SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2' /tmp/showroom-live-crystals.js
+          ! grep -q 'XMLHttpRequest' /tmp/showroom-live-cosmos.js
+          status=$(curl -sS -o /tmp/showroom-retired-source-response -w '%{http_code}' -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/showroom/index.cosmos.source.js?cb=2aded111a95d727a4ca12da62d9ebe5f02ddd727")
+          test "$status" = 404
+          printf 'public_html=PASS\npublic_cosmos=PASS\npublic_crystals=PASS\nretired_source_status=%s\n' "$status" | tee /tmp/showroom-live-fetch.txt
+
+      - name: Install live-browser runtime
         run: |
-          mkdir -p /tmp/showroom-browser
-          cd /tmp/showroom-browser
+          mkdir -p /tmp/showroom-live-browser
+          cd /tmp/showroom-live-browser
           npm init -y >/dev/null 2>&1
           npm install playwright@1.55.0 >/dev/null 2>&1
           npx playwright install chromium >/dev/null
 
-      - name: Three-viewport runtime verification
-        id: runtime
+      - name: Execute public runtime at three viewports
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 >/tmp/showroom-server.log 2>&1 &
-          server_pid=$!
-          trap 'kill $server_pid || true' EXIT
-          sleep 2
-          cat >/tmp/showroom-browser-test.cjs <<'NODE'
-          const { chromium } = require('/tmp/showroom-browser/node_modules/playwright');
+          cat >/tmp/showroom-live-browser.cjs <<'NODE'
+          const { chromium } = require('/tmp/showroom-live-browser/node_modules/playwright');
+          const fs = require('node:fs');
           const profiles=[
             {name:'phone',width:390,height:844,dpr:3},
             {name:'tablet',width:768,height:1024,dpr:2},
@@ -87,79 +78,44 @@ jobs:
               const errors=[];
               page.on('pageerror',e=>errors.push(String(e)));
               page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
-              await page.goto('http://127.0.0.1:4173/showroom/',{waitUntil:'domcontentloaded',timeout:30000});
+              await page.goto(`https://diamondgatebridge.com/showroom/?cb=2aded111a95d727a4ca12da62d9ebe5f02ddd727-${p.name}`,{waitUntil:'domcontentloaded',timeout:30000});
               await page.locator('#showroom-orbit').scrollIntoViewIfNeeded();
-              await page.waitForFunction(()=>Boolean(window.SHOWROOM_COSMOS_RECEIPT?.initialized),null,{timeout:15000});
-              await page.waitForFunction(()=>Boolean(window.SHOWROOM_CRYSTALS?.getState?.().ready),null,{timeout:15000});
+              await page.waitForFunction(()=>Boolean(window.SHOWROOM_COSMOS_RECEIPT?.initialized),null,{timeout:20000});
+              await page.waitForFunction(()=>Boolean(window.SHOWROOM_CRYSTALS?.getState?.().ready),null,{timeout:20000});
               const result=await page.evaluate(()=>({
+                htmlContract:document.documentElement.dataset.contract,
                 cosmosContract:window.SHOWROOM_COSMOS_RECEIPT?.contract,
                 crystalContract:window.SHOWROOM_CRYSTALS?.contract,
                 cosmosCanvases:document.querySelectorAll('[data-showroom-cosmos-canvas]').length,
                 compositorCanvases:document.querySelectorAll('canvas[data-showroom-compositor-layer]').length,
                 oldSourceReferences:[...document.scripts].filter(s=>s.src.includes('index.cosmos.source.js')).length,
-                rootCosmosStatus:document.querySelector('[data-showroom-root]')?.dataset.showroomCosmosStatus,
+                cosmosStatus:document.querySelector('[data-showroom-root]')?.dataset.showroomCosmosStatus,
                 crystalReady:window.SHOWROOM_CRYSTALS?.getState?.().ready
               }));
               result.profile=p.name; result.errors=errors;
+              if(result.htmlContract!=='SHOWROOM_MIRRORLAND_IMMERSIVE_MISSION_CONTEXT_HTML_TNT_v17_10_SPATIAL_COSMOS_CONTINUITY') throw new Error(`${p.name}: html contract`);
               if(result.cosmosContract!=='SHOWROOM_COSMOS_ARCHCOIN_SCENE_FIELD_v1') throw new Error(`${p.name}: cosmos contract`);
               if(result.crystalContract!=='SHOWROOM_CANONICAL_CRYSTAL_SPATIAL_INTEGRATION_v2') throw new Error(`${p.name}: crystal contract`);
-              if(result.cosmosCanvases!==2) throw new Error(`${p.name}: cosmos canvas count ${result.cosmosCanvases}`);
-              if(result.compositorCanvases!==2) throw new Error(`${p.name}: compositor canvas count ${result.compositorCanvases}`);
+              if(result.cosmosCanvases!==2 || result.compositorCanvases!==2) throw new Error(`${p.name}: canvas closure`);
               if(result.oldSourceReferences!==0) throw new Error(`${p.name}: retired source reference`);
               if(errors.length) throw new Error(`${p.name}: runtime errors ${errors.join(' | ')}`);
               results.push(result);
               await context.close();
             }
-            console.log(JSON.stringify(results,null,2));
             await browser.close();
+            fs.writeFileSync('/tmp/showroom-live-runtime.json',JSON.stringify(results,null,2));
+            console.log(JSON.stringify(results,null,2));
           })().catch(error=>{console.error(error);process.exit(1)});
           NODE
-          set +e
-          node /tmp/showroom-browser-test.cjs 2>&1 | tee /tmp/showroom-runtime.log
-          status=${PIPESTATUS[0]}
-          echo "exit_status=$status" >> /tmp/showroom-runtime.log
-          exit $status
+          node /tmp/showroom-live-browser.cjs
 
-      - name: Upload runtime evidence
+      - name: Upload live verification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: showroom-runtime-evidence
+          name: showroom-live-verification-evidence
           path: |
-            /tmp/showroom-runtime.log
-            /tmp/showroom-server.log
+            /tmp/showroom-live-fetch.txt
+            /tmp/showroom-live-runtime.json
+            /tmp/showroom-live.html
           if-no-files-found: warn
-
-      - name: Publish clean bounded task branch
-        shell: bash
-        run: |
-          set -euo pipefail
-          product_dir=/tmp/showroom-product
-          rm -rf "$product_dir"
-          mkdir -p "$product_dir/showroom"
-          cp showroom/index.html "$product_dir/showroom/index.html"
-          cp showroom/index.cosmos.js "$product_dir/showroom/index.cosmos.js"
-          cp showroom/index.crystals.js "$product_dir/showroom/index.crystals.js"
-          cp showroom/index.crystals.source.js "$product_dir/showroom/index.crystals.source.js"
-
-          git fetch origin main
-          test "$(git rev-parse origin/main:showroom/index.html)" = "2c0788736adfa3755b979251c3cba14ea7051635"
-          test "$(git rev-parse origin/main:showroom/index.cosmos.js)" = "2ddbc4ee98eb3cd358032ad763ee73d7f34600e7"
-          test "$(git rev-parse origin/main:showroom/index.crystals.js)" = "2f2f233465cb3bbe3128040df122093b20f4f00a"
-          test "$(git rev-parse origin/main:showroom/index.crystals.source.js)" = "2f2f233465cb3bbe3128040df122093b20f4f00a"
-
-          task_branch=agent/showroom-compass-spatial-cosmos-continuity-003
-          git switch --detach origin/main
-          git switch -c "$task_branch"
-          cp "$product_dir/showroom/index.html" showroom/index.html
-          cp "$product_dir/showroom/index.cosmos.js" showroom/index.cosmos.js
-          cp "$product_dir/showroom/index.crystals.js" showroom/index.crystals.js
-          cp "$product_dir/showroom/index.crystals.source.js" showroom/index.crystals.source.js
-          rm -f showroom/index.cosmos.source.js
-
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add showroom/index.html showroom/index.cosmos.js showroom/index.crystals.js showroom/index.crystals.source.js
-          git add -u showroom/index.cosmos.source.js
-          git commit -m 'Publish bounded Showroom spatial Cosmos correction'
-          git push origin HEAD:"$task_branch"

@@ -46,9 +46,7 @@ try {
     });
     assert.equal(initial.snapshot.ready, true);
     assert.equal(initial.refreshReceipt.eligible, true);
-    assert.equal(initial.refreshReceipt.atmosphereVisible, true);
     assert.equal(initial.refreshReceipt.skyAlphaClosed, true);
-    assert.equal(initial.refreshReceipt.surfacePresentationApplied, true);
     assert.equal(initial.refreshReceipt.authorityCollapse, false);
     assert.equal(initial.refreshReceipt.rendererAuthorityReplaced, false);
     assert.equal(initial.refreshReceipt.cameraAuthorityReplaced, false);
@@ -84,17 +82,23 @@ try {
       const colors = new Set();
       let opaque = 0;
       let upperBandNonGray = 0;
+      let lowerBandBlue = 0;
       const stride = Math.max(4, Math.floor(pixels.length / 12000 / 4) * 4);
       for (let index = 0; index < pixels.length; index += stride) {
         const offset = index - index % 4;
+        const red = pixels[offset];
+        const green = pixels[offset + 1];
+        const blue = pixels[offset + 2];
         if (pixels[offset + 3] === 255) opaque += 1;
-        colors.add(`${pixels[offset]},${pixels[offset + 1]},${pixels[offset + 2]}`);
+        colors.add(`${red},${green},${blue}`);
         const pixelIndex = offset / 4;
         const y = Math.floor(pixelIndex / canvas.width);
         if (y < canvas.height * 0.45 &&
-            Math.max(pixels[offset], pixels[offset + 1], pixels[offset + 2]) -
-            Math.min(pixels[offset], pixels[offset + 1], pixels[offset + 2]) > 8) {
+            Math.max(red, green, blue) - Math.min(red, green, blue) > 8) {
           upperBandNonGray += 1;
+        }
+        if (y > canvas.height * 0.3 && blue > red * 1.08 && blue > green) {
+          lowerBandBlue += 1;
         }
       }
       return {
@@ -108,6 +112,7 @@ try {
         opaque,
         colorCount: colors.size,
         upperBandNonGray,
+        lowerBandBlue,
         routeError: document.getElementById('h-earth-functional-landscape-route').dataset.run7hError
       };
     });
@@ -120,6 +125,7 @@ try {
     assert.equal(evidence.opaque > 0, true);
     assert.equal(evidence.colorCount > 12, true);
     assert.equal(evidence.upperBandNonGray > 0, true);
+    assert.equal(evidence.lowerBandBlue > 0, true);
     assert.equal(evidence.routeError, 'false');
     assert.deepEqual(consoleErrors, []);
     assert.deepEqual(pageErrors, []);
@@ -138,6 +144,7 @@ try {
       visualEvidence: {
         colorCount: evidence.colorCount,
         upperBandNonGray: evidence.upperBandNonGray,
+        lowerBandBlue: evidence.lowerBandBlue,
         opaquePixelSamples: evidence.opaque
       },
       screenshot,

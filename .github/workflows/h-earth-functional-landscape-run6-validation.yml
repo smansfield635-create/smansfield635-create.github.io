@@ -39,8 +39,29 @@ jobs:
       - name: Run checkpoint 6B
         run: node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6b.harness.mjs
 
-      - name: Run checkpoint 6C
-        run: node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6c.harness.mjs
+      - name: Run checkpoint 6C with captured diagnostics
+        id: run6c
+        continue-on-error: true
+        run: |
+          set +e
+          node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6c.harness.mjs > run6c-diagnostic.log 2>&1
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          cat run6c-diagnostic.log
+          exit $code
+
+      - name: Upload checkpoint 6C diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run6c-diagnostic
+          path: run6c-diagnostic.log
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Enforce checkpoint 6C pass
+        if: steps.run6c.outcome == 'failure'
+        run: exit 1
 
       - name: Run checkpoint 6D
         run: node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6d.harness.mjs

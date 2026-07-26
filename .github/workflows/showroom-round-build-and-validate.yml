@@ -64,7 +64,6 @@ jobs:
 
       - name: Three-viewport runtime verification
         id: runtime
-        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
@@ -91,15 +90,15 @@ jobs:
               await page.goto('http://127.0.0.1:4173/showroom/',{waitUntil:'domcontentloaded',timeout:30000});
               await page.locator('#showroom-orbit').scrollIntoViewIfNeeded();
               await page.waitForFunction(()=>Boolean(window.SHOWROOM_COSMOS_RECEIPT?.initialized),null,{timeout:15000});
-              await page.waitForFunction(()=>Boolean(window.SHOWROOM_CRYSTALS_RECEIPT),null,{timeout:15000});
+              await page.waitForFunction(()=>Boolean(window.SHOWROOM_CRYSTALS?.getState?.().ready),null,{timeout:15000});
               const result=await page.evaluate(()=>({
                 cosmosContract:window.SHOWROOM_COSMOS_RECEIPT?.contract,
-                crystalContract:window.SHOWROOM_CRYSTALS_RECEIPT?.contract,
+                crystalContract:window.SHOWROOM_CRYSTALS?.contract,
                 cosmosCanvases:document.querySelectorAll('[data-showroom-cosmos-canvas]').length,
                 compositorCanvases:document.querySelectorAll('canvas[data-showroom-compositor-layer]').length,
                 oldSourceReferences:[...document.scripts].filter(s=>s.src.includes('index.cosmos.source.js')).length,
                 rootCosmosStatus:document.querySelector('[data-showroom-root]')?.dataset.showroomCosmosStatus,
-                crystalReady:document.querySelector('[data-showroom-root]')?.dataset.showroomCrystalsReady
+                crystalReady:window.SHOWROOM_CRYSTALS?.getState?.().ready
               }));
               result.profile=p.name; result.errors=errors;
               if(result.cosmosContract!=='SHOWROOM_COSMOS_ARCHCOIN_SCENE_FIELD_v1') throw new Error(`${p.name}: cosmos contract`);

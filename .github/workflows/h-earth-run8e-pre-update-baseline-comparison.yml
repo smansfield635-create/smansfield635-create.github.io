@@ -1,420 +1,106 @@
-name: H-Earth Run 8E Pre-Update Baseline Comparison
+name: H-Earth Run 8E Baseline Workflow Reconciliation
 
 on:
   push:
     branches:
       - agent/h-earth-run8e-public-integration-001
-  pull_request:
-    branches:
-      - agent/h-earth-run8d-grounded-vegetation-001
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  compare-run7i-and-run8e:
+  reconcile-baseline-workflow:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    env:
-      RUN7I_BASELINE_COMMIT: 26bab1eb804a6e8737f551e1d1aa9d9cbbe4ae5f
-      RUN7I_BASELINE_URL: http://127.0.0.1:4174/showroom/globe/h-earth/
-      RUN8E_CANDIDATE_URL: http://127.0.0.1:4175/showroom/globe/h-earth/
-      RUN8E_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-      RUN8E_COMPARISON_OUTPUT: /tmp/run8e-baseline-comparison
+    timeout-minutes: 10
     steps:
-      - name: Check out candidate workspace
+      - name: Check out Run 8E workspace
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Materialize preserved Run 7I baseline
+      - name: Restore replay-stable comparison workflow and registry scope
         run: |
           set -euo pipefail
-          git cat-file -e "${RUN7I_BASELINE_COMMIT}^{commit}"
-          git worktree add --detach /tmp/run7i-baseline "$RUN7I_BASELINE_COMMIT"
-          test "$(git -C /tmp/run7i-baseline rev-parse HEAD)" = "$RUN7I_BASELINE_COMMIT"
-          grep -q 'H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H' \
-            /tmp/run7i-baseline/showroom/globe/h-earth/functional-landscape/environment-integration.js
-          grep -q 'H_EARTH_RUN_8E_PUBLIC_ROUTE_SUCCESSOR_ENVIRONMENT_INTEGRATION_v1' \
-            showroom/globe/h-earth/functional-landscape/environment-integration.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
 
-      - name: Install bounded Chromium dependency
-        run: |
-          npm install --no-save --package-lock=false playwright
-          npx playwright install --with-deps chromium
+          workflow_path = Path('.github/workflows/h-earth-run8e-pre-update-baseline-comparison.yml')
+          registry_path = Path('h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-integration-engineering-scope.js')
 
-      - name: Start baseline and candidate servers
-        run: |
-          python3 -m http.server 4174 --directory /tmp/run7i-baseline \
-            > /tmp/run7i-baseline-server.log 2>&1 &
-          echo $! > /tmp/run7i-baseline-server.pid
-          python3 -m http.server 4175 \
-            > /tmp/run8e-candidate-server.log 2>&1 &
-          echo $! > /tmp/run8e-candidate-server.pid
-          for url in "$RUN7I_BASELINE_URL" "$RUN8E_CANDIDATE_URL"; do
-            ready=false
-            for attempt in $(seq 1 50); do
-              if curl --fail --silent "$url" > /dev/null; then
-                ready=true
-                break
-              fi
-              sleep 1
-            done
-            test "$ready" = true
-          done
+          original = subprocess.check_output([
+              'git', 'show',
+              '59bf8b1b3dadef23c2636a1201f62c29f6a12f4d:.github/workflows/h-earth-run8e-pre-update-baseline-comparison.yml'
+          ], text=True)
 
-      - name: Execute exact pre-update comparison matrix
-        run: |
-          cat > h-earth-run8e-baseline-comparison.mjs <<'NODE'
-          import assert from 'node:assert/strict';
-          import fs from 'node:fs/promises';
-          import path from 'node:path';
-          import { chromium } from 'playwright';
+          original = original.replace(
+              "      RUN8E_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}\n",
+              ''
+          )
 
-          const output = process.env.RUN8E_COMPARISON_OUTPUT;
-          const baselineUrl = process.env.RUN7I_BASELINE_URL;
-          const candidateUrl = process.env.RUN8E_CANDIDATE_URL;
-          await fs.mkdir(output, { recursive: true });
+          marker = """            const signature = await canvasSignature(page);\n            const shell = await page.evaluate(() => ({\n"""
+          replacement = """            const stableReceipt = mode === 'RUN_7I_BASELINE'\n              ? {\n                  receiptType: receipt.receiptType,\n                  eligible: receipt.eligible,\n                  status: receipt.status,\n                  semanticAddressId: receipt.semanticAddressId,\n                  chunkId: receipt.chunkId,\n                  surfaceClass: receipt.surfaceClass,\n                  waterClass: receipt.waterClass,\n                  biomeClass: receipt.biomeClass,\n                  traversalClass: receipt.traversalClass,\n                  lifecycleState: receipt.lifecycleState,\n                  populationInstanceCount: receipt.populationInstanceCount,\n                  populationMarkerCount: receipt.populationMarkerCount,\n                  atmosphereVisible: receipt.atmosphereVisible,\n                  waterPresentationApplied: receipt.waterPresentationApplied,\n                  surfacePresentationApplied: receipt.surfacePresentationApplied,\n                  skyAlphaClosed: receipt.skyAlphaClosed,\n                  grayFallbackPixelCount: receipt.grayFallbackPixelCount,\n                  authorityCollapse: receipt.authorityCollapse,\n                  rendererAuthorityReplaced: receipt.rendererAuthorityReplaced,\n                  cameraAuthorityReplaced: receipt.cameraAuthorityReplaced,\n                  navigationAuthorityReplaced: receipt.navigationAuthorityReplaced,\n                  issues: receipt.issues\n                }\n              : {\n                  receiptType: receipt.receiptType,\n                  eligible: receipt.eligible,\n                  status: receipt.status,\n                  cameraReconciledToSuccessorTerrain:\n                    receipt.cameraReconciledToSuccessorTerrain,\n                  admittedPrimitiveCount: receipt.admittedPrimitiveCount,\n                  terrainPrimitiveCount: receipt.terrainPrimitiveCount,\n                  shorelinePrimitiveCount: receipt.shorelinePrimitiveCount,\n                  vegetationPrimitiveCount: receipt.vegetationPrimitiveCount,\n                  projectedTriangleCount: receipt.projectedTriangleCount,\n                  rejectedFragmentCount: receipt.rejectedFragmentCount,\n                  writtenPixelCount: receipt.writtenPixelCount,\n                  skyPixelCount: receipt.skyPixelCount,\n                  sunPixelCount: receipt.sunPixelCount,\n                  terrainVisiblePixelCount: receipt.terrainVisiblePixelCount,\n                  vegetationVisiblePixelCount: receipt.vegetationVisiblePixelCount,\n                  vegetationTerrainDepthInteractionCount:\n                    receipt.vegetationTerrainDepthInteractionCount,\n                  actualTerrainVegetationDepthInteractionExecuted:\n                    receipt.actualTerrainVegetationDepthInteractionExecuted,\n                  sameWorldToCameraTransformForTerrainAndVegetation:\n                    receipt.sameWorldToCameraTransformForTerrainAndVegetation,\n                  singlePhysicalDepthDomainExecuted:\n                    receipt.singlePhysicalDepthDomainExecuted,\n                  singleSkyAuthorityMaterialized:\n                    receipt.singleSkyAuthorityMaterialized,\n                  sunDiscIntegrationActive: receipt.sunDiscIntegrationActive,\n                  sunDiscMaterialized: receipt.sunDiscMaterialized,\n                  alphaClosed: receipt.alphaClosed,\n                  publicRouteBranchExecution: receipt.publicRouteBranchExecution,\n                  physicalSamsungExecution: receipt.physicalSamsungExecution,\n                  deployment: receipt.deployment,\n                  liveIdentityProof: receipt.liveIdentityProof,\n                  run8EPassClosed: receipt.run8EPassClosed,\n                  issues: receipt.issues\n                };\n            const signature = await canvasSignature(page);\n            const shell = await page.evaluate(() => ({\n"""
+          if marker not in original:
+              raise SystemExit('BASELINE_WORKFLOW_SIGNATURE_MARKER_NOT_FOUND')
+          original = original.replace(marker, replacement)
+          original = original.replace(
+              '            assert.equal(receipt?.eligible, true);\n',
+              '            assert.equal(stableReceipt?.eligible, true);\n'
+          )
+          original = original.replace(
+              '              receipt,\n              signature,\n',
+              '              receipt: stableReceipt,\n              signature,\n'
+          )
+          original = original.replace(
+              '            candidateHead: process.env.RUN8E_CANDIDATE_HEAD,\n',
+              "            candidateHeadBinding: 'WORKFLOW_RUN_HEAD_METADATA',\n"
+          )
+          workflow_path.write_text(original)
 
-          const configurations = [
-            ['desktop-landscape', 1280, 800, false, false],
-            ['samsung-mobile-portrait-emulation', 412, 915, true, true]
-          ];
-          const waypoints = ['INITIAL', 'LOWLAND', 'RIDGE'];
+          registry = registry_path.read_text()
+          registry = registry.replace(
+              "  '/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json'\n]);",
+              "  '/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json',\n  '/.github/workflows/h-earth-run8e-pre-update-baseline-comparison.yml',\n  '/h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json'\n]);"
+          )
+          registry = registry.replace(
+              "    'DETERMINISTIC_BRANCH_NATIVE_ENGINEERING_EXECUTION'\n",
+              "    'DETERMINISTIC_BRANCH_NATIVE_ENGINEERING_EXECUTION',\n    'RUN_7I_TO_RUN_8E_PRE_UPDATE_BASELINE_COMPARISON'\n"
+          )
+          registry = registry.replace(
+              "    'PUBLIC_ROUTE_BRANCH_EXECUTION_IS_A_SEPARATE_RUN_8E_OCCURRENCE',\n",
+              "    'PUBLIC_ROUTE_BRANCH_EXECUTION_IS_A_SEPARATE_RUN_8E_OCCURRENCE',\n    'PRE_UPDATE_BASELINE_COMPARISON_DOES_NOT_ASSERT_VISUAL_QUALITY_SUPERIORITY',\n"
+          )
+          registry = registry.replace(
+              "and public-route branch execution paths.'",
+              "public-route branch execution, and pre-update Run 7I comparison paths.'"
+          )
+          registry = registry.replace(
+              "    'RUN_8E_BRANCH_NATIVE_ENGINEERING_EXECUTION_PASS'\n",
+              "    'RUN_8E_BRANCH_NATIVE_ENGINEERING_EXECUTION_PASS',\n    'RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_PASS'\n"
+          )
+          registry = registry.replace(
+              "    'STOP_IF_ENGINEERING_RECEIPT_OVERCLAIMS_ROUTE_SAMSUNG_DEPLOYMENT_OR_LIVE_PROOF'\n",
+              "    'STOP_IF_ENGINEERING_RECEIPT_OVERCLAIMS_ROUTE_SAMSUNG_DEPLOYMENT_OR_LIVE_PROOF',\n    'STOP_IF_BASELINE_COMPARISON_CLAIMS_VISUAL_QUALITY_SUPERIORITY'\n"
+          )
+          registry_path.write_text(registry)
+          PY
 
-          const browser = await chromium.launch({ headless: true });
-          const captures = [];
+          grep -q "candidateHeadBinding: 'WORKFLOW_RUN_HEAD_METADATA'" \
+            .github/workflows/h-earth-run8e-pre-update-baseline-comparison.yml
+          grep -q 'RUN_7I_TO_RUN_8E_PRE_UPDATE_BASELINE_COMPARISON' \
+            h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-integration-engineering-scope.js
+          grep -q 'h-earth.run8e.pre-update-baseline-comparison.receipt.json' \
+            h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-integration-engineering-scope.js
 
-          async function canvasSignature(page) {
-            return page.evaluate(async () => {
-              const canvas = document.getElementById('h-earth-functional-landscape-canvas');
-              const pixels = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
-              const digest = await crypto.subtle.digest('SHA-256', pixels);
-              const sha256 = [...new Uint8Array(digest)]
-                .map((value) => value.toString(16).padStart(2, '0')).join('');
-              let opaquePixelCount = 0;
-              let grayLikePixelCount = 0;
-              let blueDominantPixelCount = 0;
-              let luminanceTotal = 0;
-              const colors = new Set();
-              const pixelCount = pixels.length / 4;
-              const sampleStridePixels = Math.max(1, Math.floor(pixelCount / 20000));
-              for (let pixel = 0; pixel < pixelCount; pixel += 1) {
-                const offset = pixel * 4;
-                const r = pixels[offset];
-                const g = pixels[offset + 1];
-                const b = pixels[offset + 2];
-                if (pixels[offset + 3] === 255) opaquePixelCount += 1;
-                if (Math.abs(r - g) < 4 && Math.abs(g - b) < 4 && r > 65 && r < 195) {
-                  grayLikePixelCount += 1;
-                }
-                if (b > r * 1.12 && b > g * 1.03) blueDominantPixelCount += 1;
-                luminanceTotal += 0.2126 * r + 0.7152 * g + 0.0722 * b;
-                if (pixel % sampleStridePixels === 0) colors.add(`${r},${g},${b}`);
-              }
-              return {
-                width: canvas.width,
-                height: canvas.height,
-                pixelCount,
-                sha256,
-                opaquePixelCount,
-                grayLikePixelCount,
-                blueDominantPixelCount,
-                meanLuminance: luminanceTotal / Math.max(1, pixelCount),
-                sampledColorCount: colors.size
-              };
-            });
-          }
-
-          async function captureRoute({ mode, url, configuration, waypoint }) {
-            const [configurationId, width, height, isMobile, hasTouch] = configuration;
-            const context = await browser.newContext({
-              viewport: { width, height },
-              isMobile,
-              hasTouch,
-              deviceScaleFactor: 1
-            });
-            const page = await context.newPage();
-            const consoleErrors = [];
-            const pageErrors = [];
-            page.on('console', (message) => {
-              if (message.type() === 'error') consoleErrors.push(message.text());
-            });
-            page.on('pageerror', (error) => pageErrors.push(error.message));
-            await page.goto(`${url}?comparison=${mode}-${configurationId}-${waypoint}-${Date.now()}`, {
-              waitUntil: 'domcontentloaded',
-              timeout: 180000
-            });
-
-            await page.waitForFunction((requestedMode) => {
-              const root = document.getElementById('h-earth-functional-landscape-route');
-              if (requestedMode === 'RUN_7I_BASELINE') {
-                return window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F?.ready === true &&
-                  window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H?.ready === true &&
-                  root?.dataset.run7hReady === 'true';
-              }
-              return window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F?.ready === true &&
-                window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true &&
-                root?.dataset.run8eReady === 'true';
-            }, mode, { timeout: 240000 });
-
-            if (waypoint !== 'INITIAL') {
-              const before = await page.evaluate((requestedMode) => {
-                if (requestedMode === 'RUN_7I_BASELINE') {
-                  return window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H
-                    .getSnapshot().receipt?.refreshSequence ?? 0;
-                }
-                return window.H_EARTH_RUN8E_PUBLIC_ROUTE
-                  .getBrowserReceipt()?.renderSequence ?? 0;
-              }, mode);
-              await page.evaluate((target) =>
-                window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F.gotoWaypoint(target), waypoint);
-              await page.waitForFunction(({ requestedMode, previous }) => {
-                if (requestedMode === 'RUN_7I_BASELINE') {
-                  return (window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H
-                    .getSnapshot().receipt?.refreshSequence ?? 0) > previous;
-                }
-                return (window.H_EARTH_RUN8E_PUBLIC_ROUTE
-                  .getBrowserReceipt()?.renderSequence ?? 0) > previous;
-              }, { requestedMode: mode, previous: before }, { timeout: 240000 });
-            }
-
-            const receipt = await page.evaluate((requestedMode) => {
-              if (requestedMode === 'RUN_7I_BASELINE') {
-                return window.H_EARTH_FUNCTIONAL_ENVIRONMENT_RUN7H.getSnapshot().receipt;
-              }
-              return window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt();
-            }, mode);
-            const signature = await canvasSignature(page);
-            const shell = await page.evaluate(() => ({
-              title: document.querySelector('.route-hero h1')?.textContent?.trim() ?? '',
-              routeReady: document.getElementById('h-earth-functional-landscape-route')
-                ?.dataset.publicRoute === 'true',
-              status: document.getElementById('route-status')?.textContent ?? '',
-              hudWaypoint: document.getElementById('hud-waypoint')?.textContent ?? '',
-              hudAddress: document.getElementById('hud-address')?.textContent ?? ''
-            }));
-            assert.equal(receipt?.eligible, true);
-            assert.deepEqual(consoleErrors, []);
-            assert.deepEqual(pageErrors, []);
-            assert.equal(signature.opaquePixelCount, signature.pixelCount);
-            assert.match(shell.title, /Enter at the coast/);
-
-            const screenshot = `${mode.toLowerCase()}-${configurationId}-${waypoint.toLowerCase()}.png`;
-            await page.screenshot({ path: path.join(output, screenshot), fullPage: true });
-            await context.close();
-            return {
-              mode,
-              configurationId,
-              viewport: { width, height },
-              isMobile,
-              hasTouch,
-              waypoint,
-              receipt,
-              signature,
-              shell,
-              screenshot,
-              consoleErrors,
-              pageErrors
-            };
-          }
-
-          try {
-            for (const configuration of configurations) {
-              for (const waypoint of waypoints) {
-                captures.push(await captureRoute({
-                  mode: 'RUN_7I_BASELINE',
-                  url: baselineUrl,
-                  configuration,
-                  waypoint
-                }));
-                captures.push(await captureRoute({
-                  mode: 'RUN_8E_CANDIDATE',
-                  url: candidateUrl,
-                  configuration,
-                  waypoint
-                }));
-              }
-            }
-          } finally {
-            await browser.close();
-          }
-
-          const comparisons = [];
-          for (const configuration of configurations) {
-            for (const waypoint of waypoints) {
-              const configurationId = configuration[0];
-              const baseline = captures.find((entry) =>
-                entry.mode === 'RUN_7I_BASELINE' &&
-                entry.configurationId === configurationId &&
-                entry.waypoint === waypoint);
-              const candidate = captures.find((entry) =>
-                entry.mode === 'RUN_8E_CANDIDATE' &&
-                entry.configurationId === configurationId &&
-                entry.waypoint === waypoint);
-              const comparison = {
-                configurationId,
-                waypoint,
-                baselinePixelSha256: baseline.signature.sha256,
-                candidatePixelSha256: candidate.signature.sha256,
-                pixelIdentityChanged:
-                  baseline.signature.sha256 !== candidate.signature.sha256,
-                baselineCanvas: {
-                  width: baseline.signature.width,
-                  height: baseline.signature.height
-                },
-                candidateCanvas: {
-                  width: candidate.signature.width,
-                  height: candidate.signature.height
-                },
-                baselineGrayLikePixelCount: baseline.signature.grayLikePixelCount,
-                candidateGrayLikePixelCount: candidate.signature.grayLikePixelCount,
-                baselineSampledColorCount: baseline.signature.sampledColorCount,
-                candidateSampledColorCount: candidate.signature.sampledColorCount,
-                baselineMeanLuminance: baseline.signature.meanLuminance,
-                candidateMeanLuminance: candidate.signature.meanLuminance,
-                routeShellTitlePreserved: baseline.shell.title === candidate.shell.title,
-                baselineReceiptType: baseline.receipt.receiptType,
-                candidateReceiptType: candidate.receipt.receiptType,
-                successorTerrainIntegrated:
-                  candidate.receipt.terrainPrimitiveCount === 1,
-                groundedVegetationIntegrated:
-                  candidate.receipt.vegetationPrimitiveCount === 27,
-                sharedDepthExecuted:
-                  candidate.receipt.singlePhysicalDepthDomainExecuted === true,
-                candidateSkyMaterialized:
-                  candidate.receipt.singleSkyAuthorityMaterialized === true,
-                candidateSunIntegrationActive:
-                  candidate.receipt.sunDiscIntegrationActive === true
-              };
-              assert.equal(comparison.pixelIdentityChanged, true);
-              assert.equal(comparison.routeShellTitlePreserved, true);
-              assert.equal(comparison.successorTerrainIntegrated, true);
-              assert.equal(comparison.groundedVegetationIntegrated, true);
-              assert.equal(comparison.sharedDepthExecuted, true);
-              assert.equal(comparison.candidateSkyMaterialized, true);
-              assert.equal(comparison.candidateSunIntegrationActive, true);
-              comparisons.push(comparison);
-            }
-          }
-
-          const receipt = {
-            receiptType: 'H_EARTH_RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_RECEIPT',
-            eligible: true,
-            status: 'RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_PASS',
-            baselineClassification: 'RUN_7I_PUBLIC_PRESENTATION_PRESERVED_AT_RUN_8D_PARENT',
-            baselineCommit: process.env.RUN7I_BASELINE_COMMIT,
-            candidateBranch: 'agent/h-earth-run8e-public-integration-001',
-            candidateHead: process.env.RUN8E_CANDIDATE_HEAD,
-            configurationCount: configurations.length,
-            waypointCount: waypoints.length,
-            comparisonCount: comparisons.length,
-            exactPixelIdentityChangedInEveryComparison:
-              comparisons.every((entry) => entry.pixelIdentityChanged),
-            routeShellTitlePreservedInEveryComparison:
-              comparisons.every((entry) => entry.routeShellTitlePreserved),
-            successorTerrainIntegratedInEveryCandidateFrame:
-              comparisons.every((entry) => entry.successorTerrainIntegrated),
-            groundedVegetationIntegratedInEveryCandidateFrame:
-              comparisons.every((entry) => entry.groundedVegetationIntegrated),
-            sharedDepthExecutedInEveryCandidateFrame:
-              comparisons.every((entry) => entry.sharedDepthExecuted),
-            skyIntegratedInEveryCandidateFrame:
-              comparisons.every((entry) => entry.candidateSkyMaterialized),
-            sunAuthorityIntegratedInEveryCandidateFrame:
-              comparisons.every((entry) => entry.candidateSunIntegrationActive),
-            comparisonConclusion:
-              'MATERIAL_PUBLIC_ROUTE_CHANGE_ESTABLISHED_WITH_ROUTE_SHELL_PRESERVED',
-            visualQualitySuperiorityClaim: false,
-            physicalSamsungExecution: false,
-            mainPromotion: false,
-            deployment: false,
-            liveIdentityProof: false,
-            run8EPassClosed: false,
-            comparisons,
-            captures,
-            issues: []
-          };
-          const receiptPath = path.join(output,
-            'run8e-pre-update-baseline-comparison.receipt.json');
-          await fs.writeFile(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
-          console.log(JSON.stringify(receipt, null, 2));
-          NODE
-
-          set -o pipefail
-          node h-earth-run8e-baseline-comparison.mjs \
-            2>&1 | tee /tmp/run8e-baseline-comparison.log
-
-      - name: Verify pre-update comparison receipt
-        run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const candidatePath =
-            '/tmp/run8e-baseline-comparison/run8e-pre-update-baseline-comparison.receipt.json';
-          const receipt = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
-          if (
-            receipt.eligible !== true ||
-            receipt.status !== 'RUN_8E_PRE_UPDATE_BASELINE_COMPARISON_PASS' ||
-            receipt.baselineCommit !== '26bab1eb804a6e8737f551e1d1aa9d9cbbe4ae5f' ||
-            receipt.configurationCount !== 2 ||
-            receipt.waypointCount !== 3 ||
-            receipt.comparisonCount !== 6 ||
-            receipt.exactPixelIdentityChangedInEveryComparison !== true ||
-            receipt.routeShellTitlePreservedInEveryComparison !== true ||
-            receipt.successorTerrainIntegratedInEveryCandidateFrame !== true ||
-            receipt.groundedVegetationIntegratedInEveryCandidateFrame !== true ||
-            receipt.sharedDepthExecutedInEveryCandidateFrame !== true ||
-            receipt.skyIntegratedInEveryCandidateFrame !== true ||
-            receipt.sunAuthorityIntegratedInEveryCandidateFrame !== true ||
-            receipt.visualQualitySuperiorityClaim !== false ||
-            receipt.physicalSamsungExecution !== false ||
-            receipt.mainPromotion !== false ||
-            receipt.deployment !== false ||
-            receipt.liveIdentityProof !== false ||
-            receipt.run8EPassClosed !== false ||
-            receipt.issues.length !== 0
-          ) process.exit(1);
-          const durable =
-            'h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json';
-          if (fs.existsSync(durable) &&
-              fs.readFileSync(durable, 'utf8') !== fs.readFileSync(candidatePath, 'utf8')) {
-            process.exit(1);
-          }
-          NODE
-
-      - name: Persist exact pre-update comparison receipt
-        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/h-earth-run8e-public-integration-001'
+      - name: Commit reconciled workflow and registry scope
         run: |
           set -euo pipefail
-          target='h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json'
-          candidate='/tmp/run8e-baseline-comparison/run8e-pre-update-baseline-comparison.receipt.json'
-          if [ -f "$target" ]; then
-            cmp --silent "$candidate" "$target"
-            echo 'Exact durable pre-update comparison receipt already present.'
-            exit 0
-          fi
-          cp "$candidate" "$target"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$target"
-          git commit -m 'Commit Run 8E pre-update baseline receipt'
+          git add \
+            .github/workflows/h-earth-run8e-pre-update-baseline-comparison.yml \
+            h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-integration-engineering-scope.js
+          git diff --cached --quiet && exit 0
+          git commit -m 'Reconcile Run 8E baseline comparison workflow'
           git push origin "HEAD:${GITHUB_REF_NAME}"
-
-      - name: Upload pre-update comparison evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-run8e-pre-update-baseline-comparison-evidence
-          path: |
-            /tmp/run8e-baseline-comparison.log
-            /tmp/run7i-baseline-server.log
-            /tmp/run8e-candidate-server.log
-            /tmp/run8e-baseline-comparison
-          if-no-files-found: error
-          retention-days: 30

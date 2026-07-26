@@ -155,6 +155,18 @@ jobs:
                   raise RuntimeError("Showroom color bind generator literal missing")
               code = code.replace(old_bind, new_bind, 1)
 
+              old_cache = (
+                  "/showroom/index.crystals.js?v="
+                  "SHOWROOM_CARDINAL_LABELS_PRIMARY_PROMINENCE_SPHERICAL_CLUSTER_v1"
+              )
+              new_cache = (
+                  "/showroom/index.crystals.js?v="
+                  "SHOWROOM_PRIMARY_SELECTION_CLUSTER_SPACING_v2"
+              )
+              if old_cache not in code:
+                  raise RuntimeError("Showroom generator cache literal missing")
+              code = code.replace(old_cache, new_cache, 1)
+
               exec(compile(code, "canonical-crystal-generator", "exec"), {})
           except BaseException:
               error_path.write_text(traceback.format_exc(), encoding="utf-8")

@@ -1,12 +1,12 @@
 /**
  * /showroom/globe/h-earth/render/landscape-preview.js
  *
- * H_EARTH_FUNCTIONAL_LANDSCAPE_PREVIEW_RUN_6C_v2
+ * H_EARTH_FUNCTIONAL_LANDSCAPE_PREVIEW_RUN_6C_v3
  *
  * Neutral, pre-admission aggregate for connected terrain, complete shoreline
- * bands, water progression, and distant highland context. The aggregate also
- * preserves all 256 semantic address identities independently of whether each
- * address is represented by active terrain geometry or a distant proxy.
+ * bands, water progression, and distant highland context. The aggregate
+ * preserves all 256 semantic addresses while distinguishing terrain,
+ * shoreline/water, and proxy realization membership.
  */
 
 import {
@@ -45,7 +45,7 @@ const canonical = (values) => Object.freeze(
 );
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_PREVIEW_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_PREVIEW_RUN_6C_v2_FULL_SEMANTIC_MEMBERSHIP';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_PREVIEW_RUN_6C_v3_REALIZATION_PARTITIONS';
 
 export function previewHEarthFunctionalLandscape() {
   const terrain = constructHEarthFunctionalLandscapeTerrain();
@@ -55,7 +55,9 @@ export function previewHEarthFunctionalLandscape() {
   const issues = [];
 
   for (const [name, result] of Object.entries(components)) {
-    if (result?.ok !== true) issues.push(`COMPONENT_INVALID:${name}`);
+    if (result?.ok !== true) {
+      issues.push(`COMPONENT_INVALID:${name}`);
+    }
     if (!Array.isArray(result?.primitives) ||
       !result.primitives.every(isHEarthNeutralPrimitiveRecord)) {
       issues.push(`COMPONENT_PRIMITIVES_INVALID:${name}`);
@@ -68,35 +70,71 @@ export function previewHEarthFunctionalLandscape() {
     ...distantContext.primitives
   ];
   const bounds = primitives.length > 0
-    ? mergeHEarthGeometryBounds(primitives.map((primitive) => primitive.geometry.bounds))
+    ? mergeHEarthGeometryBounds(
+        primitives.map((primitive) => primitive.geometry.bounds)
+      )
     : null;
-  if (!isHEarthAABB3D(bounds)) issues.push('AGGREGATE_BOUNDS_INVALID');
+  if (!isHEarthAABB3D(bounds)) {
+    issues.push('AGGREGATE_BOUNDS_INVALID');
+  }
 
   const primitiveIds = primitives.map((primitive) => primitive.primitiveId);
   if (new Set(primitiveIds).size !== primitiveIds.length) {
     issues.push('DUPLICATE_PRIMITIVE_ID');
   }
 
+  const plan = H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN;
   const semanticAddressIds = canonical(
-    H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN.chunks
-      .flatMap((chunk) => chunk.memberAddressIds)
+    plan.chunks.flatMap((chunk) => chunk.memberAddressIds)
   );
-  const formationIds = canonical(
-    H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN.chunks
-      .flatMap((chunk) => chunk.formationIds)
+  const terrainAddressIds = canonical(
+    plan.chunks.flatMap((chunk) => chunk.terrainMemberAddressIds)
+  );
+  const shorelineWaterAddressIds = canonical(
+    plan.chunks.flatMap((chunk) => chunk.shorelineWaterMemberAddressIds)
   );
   const proxySummarizedAddressIds = canonical(
-    H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN.chunks
-      .filter((chunk) => chunk.realizationState === 'ATMOSPHERIC_OR_PROXY' ||
-        chunk.rowGroup === 3)
-      .flatMap((chunk) => chunk.memberAddressIds)
+    plan.chunks.flatMap((chunk) => chunk.proxyMemberAddressIds)
+  );
+  const formationIds = canonical(
+    plan.chunks.flatMap((chunk) => chunk.formationIds)
   );
 
   if (semanticAddressIds.length !== 256) {
-    issues.push(`SEMANTIC_ADDRESS_COUNT_EXPECTED_256_ACTUAL_${semanticAddressIds.length}`);
+    issues.push(
+      `SEMANTIC_ADDRESS_COUNT_EXPECTED_256_ACTUAL_${semanticAddressIds.length}`
+    );
   }
-  if (proxySummarizedAddressIds.length !== 64) {
-    issues.push(`PROXY_SUMMARIZED_ADDRESS_COUNT_EXPECTED_64_ACTUAL_${proxySummarizedAddressIds.length}`);
+  if (terrainAddressIds.length !== 124) {
+    issues.push(
+      `TERRAIN_ADDRESS_COUNT_EXPECTED_124_ACTUAL_${terrainAddressIds.length}`
+    );
+  }
+  if (shorelineWaterAddressIds.length !== 96) {
+    issues.push(
+      `SHORELINE_WATER_ADDRESS_COUNT_EXPECTED_96_ACTUAL_${shorelineWaterAddressIds.length}`
+    );
+  }
+  if (proxySummarizedAddressIds.length !== 36) {
+    issues.push(
+      `PROXY_ADDRESS_COUNT_EXPECTED_36_ACTUAL_${proxySummarizedAddressIds.length}`
+    );
+  }
+
+  const partitionIds = [
+    ...terrainAddressIds,
+    ...shorelineWaterAddressIds,
+    ...proxySummarizedAddressIds
+  ];
+  if (partitionIds.length !== 256 ||
+      new Set(partitionIds).size !== 256) {
+    issues.push('REALIZATION_PARTITIONS_NOT_DISJOINT_AND_EXHAUSTIVE');
+  }
+
+  if (primitives.length !== 18) {
+    issues.push(
+      `NEUTRAL_PRIMITIVE_COUNT_EXPECTED_18_ACTUAL_${primitives.length}`
+    );
   }
 
   return freeze({
@@ -105,8 +143,7 @@ export function previewHEarthFunctionalLandscape() {
       ? 'FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW_COMPLETE'
       : 'FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW_FAILED',
     contractId: H_EARTH_FUNCTIONAL_LANDSCAPE_PREVIEW_CONTRACT_ID,
-    realizationPlanContractId:
-      H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN.contractId,
+    realizationPlanContractId: plan.contractId,
     componentResults: components,
     primitiveCount: primitives.length,
     primitiveIds,
@@ -114,8 +151,13 @@ export function previewHEarthFunctionalLandscape() {
     bounds,
     semanticAddressCount: semanticAddressIds.length,
     semanticAddressIds,
-    formationIds,
+    terrainAddressCount: terrainAddressIds.length,
+    terrainAddressIds,
+    shorelineWaterAddressCount: shorelineWaterAddressIds.length,
+    shorelineWaterAddressIds,
+    proxySummarizedAddressCount: proxySummarizedAddressIds.length,
     proxySummarizedAddressIds,
+    formationIds,
     semanticIdentityIndependentOfPhysicalGranularity: true,
     admitted: false,
     WestAdmissionPerformed: false,

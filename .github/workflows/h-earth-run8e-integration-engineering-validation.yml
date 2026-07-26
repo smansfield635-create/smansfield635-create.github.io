@@ -42,11 +42,17 @@ jobs:
             'h-earth-3d/validation/h-earth.run8e.integration-engineering.harness.mjs',
             'h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json',
             'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-integration-engineering-scope.js',
-            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            '.github/workflows/h-earth-run8e-public-route-validation.yml',
+            'showroom/globe/h-earth/functional-landscape/environment-integration.js',
+            'h-earth-3d/validation/h-earth.run8e.public-route.receipt.json'
           }
           paths = {line.strip() for line in Path('/tmp/run8e-paths.txt').read_text().splitlines() if line.strip()}
           unexpected = sorted(paths - allowed)
-          required = allowed - {'h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json'}
+          required = allowed - {
+            'h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json',
+            'h-earth-3d/validation/h-earth.run8e.public-route.receipt.json'
+          }
           missing = sorted(required - paths)
           if unexpected:
             raise SystemExit(f'UNEXPECTED_RUN8E_PATHS:{unexpected}')

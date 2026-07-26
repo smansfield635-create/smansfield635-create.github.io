@@ -1,7 +1,7 @@
 /**
  * /showroom/globe/h-earth/render/functional-landscape-frame.js
  *
- * H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v2
+ * H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v3
  *
  * Constructs one successor renderer frame from the neutral functional
  * landscape, existing West admission, and the bounded successor transfer.
@@ -27,8 +27,12 @@ import {
 } from '../capacity.js';
 
 const freeze = (value, seen = new WeakSet()) => {
-  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  if (seen.has(value)) return value;
+  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) {
+    return value;
+  }
+  if (seen.has(value)) {
+    return value;
+  }
   seen.add(value);
   Object.values(value).forEach((nested) => freeze(nested, seen));
   return Object.freeze(value);
@@ -39,7 +43,7 @@ const finiteVector = (value) => value &&
     typeof value[axis] === 'number' && Number.isFinite(value[axis]));
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v2_FULL_SEMANTIC_MEMBERSHIP';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v3_REALIZATION_PARTITIONS';
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE =
   'FUNCTIONAL_LANDSCAPE_COAST_TO_INLAND_PROOF';
@@ -66,7 +70,8 @@ function defaultCamera() {
 
 function defaultEnvironment() {
   return freeze({
-    environmentSnapshotId: 'H_EARTH_FUNCTIONAL_LANDSCAPE_ENVIRONMENT_SNAPSHOT_001',
+    environmentSnapshotId:
+      'H_EARTH_FUNCTIONAL_LANDSCAPE_ENVIRONMENT_SNAPSHOT_001',
     sourceEnvironmentContractId:
       'H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034M_PUBLIC_STAGE_ENVIRONMENT_DESCRIPTOR_v1',
     skyTop: [38, 72, 96, 255],
@@ -105,23 +110,29 @@ function createPresentationAssignment(primitive) {
 }
 
 export function constructHEarthFunctionalLandscapeFrame({
-  frameOccurrenceId = 'H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_OCCURRENCE_001',
-  transferOccurrenceId = 'H_EARTH_FUNCTIONAL_LANDSCAPE_TRANSFER_OCCURRENCE_001',
+  frameOccurrenceId =
+    'H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_OCCURRENCE_001',
+  transferOccurrenceId =
+    'H_EARTH_FUNCTIONAL_LANDSCAPE_TRANSFER_OCCURRENCE_001',
   camera = defaultCamera(),
   viewport = { width: 1280, height: 720, pixelRatio: 1 },
   environment = defaultEnvironment(),
   revision = 1
 } = {}) {
   const issues = [];
-  if (typeof frameOccurrenceId !== 'string' || frameOccurrenceId.length === 0) {
+  if (typeof frameOccurrenceId !== 'string' ||
+      frameOccurrenceId.length === 0) {
     issues.push('FRAME_OCCURRENCE_ID_INVALID');
   }
-  if (!finiteVector(camera?.position) || !finiteVector(camera?.target) ||
+  if (!finiteVector(camera?.position) ||
+      !finiteVector(camera?.target) ||
       !finiteVector(camera?.up)) {
     issues.push('CAMERA_INVALID');
   }
-  if (!Number.isFinite(viewport?.width) || !Number.isFinite(viewport?.height) ||
-      viewport.width <= 0 || viewport.height <= 0) {
+  if (!Number.isFinite(viewport?.width) ||
+      !Number.isFinite(viewport?.height) ||
+      viewport.width <= 0 ||
+      viewport.height <= 0) {
     issues.push('VIEWPORT_INVALID');
   }
   if (!Number.isSafeInteger(revision) || revision < 1) {
@@ -129,14 +140,17 @@ export function constructHEarthFunctionalLandscapeFrame({
   }
 
   const neutralPreview = previewHEarthFunctionalLandscape();
-  if (neutralPreview.ok !== true) issues.push('NEUTRAL_PREVIEW_INVALID');
+  if (neutralPreview.ok !== true) {
+    issues.push('NEUTRAL_PREVIEW_INVALID');
+  }
 
   const westAdmission = issues.length === 0
     ? admitHEarthPrimitiveBatch(neutralPreview.primitives, {
         frameId: `${frameOccurrenceId}:WEST_AGGREGATE`,
         metadata: {
           successorProgram: 'H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6',
-          presentationMode: H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE
+          presentationMode:
+            H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE
         }
       })
     : null;
@@ -175,7 +189,8 @@ export function constructHEarthFunctionalLandscapeFrame({
 
   const admittedPrimitives = transfer.admittedPrimitives;
   const presentationAssignments = admittedPrimitives.map(
-    createPresentationAssignment);
+    createPresentationAssignment
+  );
 
   return freeze({
     ok: true,
@@ -201,6 +216,11 @@ export function constructHEarthFunctionalLandscapeFrame({
     bounds: transfer.bounds,
     semanticAddressCount: transfer.semanticAddressCount,
     semanticAddressIds: transfer.semanticAddressIds,
+    terrainAddressCount: transfer.terrainAddressCount,
+    terrainAddressIds: transfer.terrainAddressIds,
+    shorelineWaterAddressCount: transfer.shorelineWaterAddressCount,
+    shorelineWaterAddressIds: transfer.shorelineWaterAddressIds,
+    proxySummarizedAddressCount: transfer.proxySummarizedAddressCount,
     proxySummarizedAddressIds: transfer.proxySummarizedAddressIds,
     formationIds: transfer.formationIds,
     shorelineBandIds: transfer.shorelineBandIds,

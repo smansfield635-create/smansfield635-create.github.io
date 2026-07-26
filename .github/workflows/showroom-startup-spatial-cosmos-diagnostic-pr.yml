@@ -1,0 +1,96 @@
+name: Showroom startup spatial Cosmos diagnostic PR
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Extract exact ownership and load-chain source
+        shell: python
+        run: |
+          from pathlib import Path
+
+          targets = {
+            'showroom/index.html': [
+              'function loadScript', 'orbitSequence', 'requestIdleCallback',
+              'IntersectionObserver', 'mountPlanet', 'index.crystals.js',
+              'index.cosmos.js', 'devicePixelRatio'
+            ],
+            'showroom/index.cosmos.js': [
+              'installLuminousStyle', 'loadSourceSynchronously',
+              'request.open', 'data-showroom-orbit-field',
+              'data-showroom-cosmic-field', 'mix-blend-mode'
+            ],
+            'showroom/index.crystals.js': [
+              'const SPHERE', 'const QUALITY', 'updateConstellationTargets',
+              'updateClusterTargets', 'drawCrystalNodes', 'uHaloPass',
+              'bloomDisableWidthPx', 'devicePixelRatio', 'setUniformScale',
+              'waitForCompositor'
+            ],
+            'showroom/index.compositor.js': [
+              'devicePixelRatio', 'camera', 'projection', 'resize',
+              'getFrontLayer', 'getRearLayer'
+            ],
+            'laws/index.cosmos.js': [
+              'data-laws-orbit-field', 'data-laws-cosmic-field',
+              'mix-blend-mode', 'canvas'
+            ],
+            'products/archcoin/index.starfield.js': [
+              'radial-gradient', 'canvas', 'devicePixelRatio', 'opacity'
+            ],
+            'assets/compass/compass.crystals.js': [
+              'const SPHERE', 'const QUALITY', 'updateConstellationTargets',
+              'updateClusterTargets', 'drawCrystalNodes'
+            ]
+          }
+
+          def emit(path, tokens, radius=38):
+              text = Path(path).read_text(encoding='utf-8')
+              lines = text.splitlines()
+              print(f'\n===== FILE {path} lines={len(lines)} bytes={len(text.encode())} =====')
+              emitted = set()
+              for token in tokens:
+                  matches = [i for i, line in enumerate(lines) if token in line]
+                  print(f'\n--- TOKEN {token!r} MATCHES {matches[:20]} count={len(matches)} ---')
+                  for index in matches[:4]:
+                      start = max(0, index-radius)
+                      end = min(len(lines), index+radius+1)
+                      key = (start, end)
+                      if key in emitted:
+                          continue
+                      emitted.add(key)
+                      print(f'--- RANGE {start+1}:{end} ---')
+                      for n in range(start, end):
+                          print(f'{n+1:05d}: {lines[n]}')
+
+          for path, tokens in targets.items():
+              emit(path, tokens)
+
+      - name: Syntax check current Showroom executables
+        run: |
+          node --check showroom/index.cosmos.js
+          node --check showroom/index.crystals.js
+          node --check showroom/index.compositor.js
+          node --check showroom/index.controller.js
+
+      - name: Record exact baseline
+        run: |
+          printf 'HEAD=' && git rev-parse HEAD
+          git status --short

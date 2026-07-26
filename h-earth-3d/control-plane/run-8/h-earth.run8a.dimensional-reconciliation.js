@@ -171,9 +171,13 @@ export const H_EARTH_RUN_8A_WORLD_DOMAIN_RECONCILIATION = freeze({
 const DOMAIN = H_EARTH_RUN_8A_WORLD_DOMAIN_RECONCILIATION.successorWorldDomain;
 const FORMER_BOUNDARY_Z = -256;
 const STEP = 0.5;
+const BOUNDARY_DERIVATIVE_EPSILON = 0.01;
 const baselineBoundaryDerivativeZ = (x) =>
-  (sampleHEarthTerrainElevation(x, FORMER_BOUNDARY_Z + STEP) -
-    sampleHEarthTerrainElevation(x, FORMER_BOUNDARY_Z)) / STEP;
+  (sampleHEarthTerrainElevation(
+    x,
+    FORMER_BOUNDARY_Z + BOUNDARY_DERIVATIVE_EPSILON
+  ) - sampleHEarthTerrainElevation(x, FORMER_BOUNDARY_Z)) /
+  BOUNDARY_DERIVATIVE_EPSILON;
 const rearTerrainLevel = (x) =>
   16 + 3.5 * Math.sin((x + 40) / 76) + 1.5 * Math.sin((x - 18) / 31);
 const successorBaseElevation = (x, z) => {
@@ -276,7 +280,7 @@ export function evaluateHEarthRun8AFormerBoundaryContinuity({
       center,
       north,
       south,
-      heightDiscontinuity: Math.abs(north - south),
+      heightDiscontinuity: Math.abs((north + south) / 2 - center),
       gradientDiscontinuity: Math.abs((north - center) / epsilon - (center - south) / epsilon)
     });
   });

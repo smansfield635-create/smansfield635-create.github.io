@@ -48,6 +48,11 @@
   data-laws-controller-navigation-authority="true"
   data-laws-controller-registry-source="declared-dom-placeholders"
 
+  data-laws-bounded-round="LAWS_MAIN_COMPASS_PRESENTATION_FACE_AND_GESTURE_20260726D"
+  data-laws-controlling-reference="MAIN_COMPASS"
+  data-laws-crystal-face-visibility="back-face-culled-front-surface"
+  data-laws-interaction-model="main-compass-gesture-continuity"
+
   data-laws-compositor-required-surface="data-upstream-compass-mount"
   data-laws-crystals-required-surface="data-laws-objects"
   data-laws-category-controls-declared="true"
@@ -105,10 +110,15 @@
   data-compass-renderer-navigation-authority="false"
   data-compass-controller-navigation-authority="true"
 
-  data-laws-cluster-orbit-model="euclidean-common-radius-coplanar"
+  data-laws-cluster-orbit-model="bounded-spherical-xyz"
   data-laws-cluster-orbit-member-count="4"
-  data-laws-cluster-orbit-common-radius="1.40"
-  data-laws-cluster-orbit-maximum-tilt-radians="0.30"
+  data-laws-cluster-horizontal-radius="1.36"
+  data-laws-cluster-vertical-radius="1.18"
+  data-laws-cluster-depth-radius="1.04"
+  data-laws-cluster-full-xyz-rotation="true"
+  data-laws-cluster-main-compass-presentation="true"
+  data-laws-flick-requires-open-space-origin="false"
+  data-laws-controlled-drag-settlement="nearest-primary"
   data-laws-horizontal-drag-yaw-sign="positive"
 >
 <head>
@@ -2358,7 +2368,7 @@ FALSE
     },
     {
       src:
-        "/laws/index.crystals.js?v=LAWS_COMPASS_EUCLIDEAN_COMMON_RADIUS_ORBIT_v3",
+        "/laws/index.crystals.js?v=LAWS_MAIN_CLUSTER_FACE_REPAIR_20260726D",
       attributes: {
         "data-laws-child": "crystals",
         "data-laws-staged-group": "orbit"
@@ -2369,7 +2379,7 @@ FALSE
   const interactionScripts = [
     {
       src:
-        "/laws/index.interactions.js?v=LAWS_ROTATION_SAFE_SWIPE_V7_20260726C",
+        "/laws/index.interactions.js?v=LAWS_MAIN_GESTURE_CONTINUITY_V8_20260726D",
       attributes: {
         "data-laws-child": "interactions",
         "data-laws-staged-group": "interaction"

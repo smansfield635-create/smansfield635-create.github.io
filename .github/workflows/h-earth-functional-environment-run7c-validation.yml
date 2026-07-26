@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/h-earth-functional-environment-run7c-001
+  pull_request:
+    branches:
+      - agent/h-earth-functional-environment-run7b-001
   workflow_dispatch:
 
 permissions:

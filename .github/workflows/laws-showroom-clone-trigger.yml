@@ -1,4 +1,4 @@
-name: Execute canonical crystal clone
+name: Validate canonical crystal clone
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  execute:
+  validate-clone:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
@@ -22,188 +22,163 @@ jobs:
           ref: agent/laws-showroom-crystal-corridor-clone-001
           fetch-depth: 0
 
-      - name: Execute embedded deterministic generator
+      - name: Repair target integration contracts
         shell: python
         run: |
           from pathlib import Path
-          import traceback
+          import re
 
-          error_path = Path(".laws-showroom-clone-generation-error.txt")
-          if error_path.exists():
-              error_path.unlink()
+          def replace_once(text, before, after, identity):
+              count = text.count(before)
+              if count != 1:
+                  raise SystemExit(f"{identity}: expected 1, found {count}")
+              return text.replace(before, after)
 
-          try:
-              workflow = Path(
-                  ".github/workflows/laws-showroom-canonical-crystal-clone.yml"
-              ).read_text(encoding="utf-8").splitlines()
+          laws_path = Path("laws/index.crystals.js")
+          laws = laws_path.read_text(encoding="utf-8")
 
-              start_marker = "      - name: Duplicate canonical crystal corridor"
-              end_marker = "      - name: Validate generated executables"
-              start = workflow.index(start_marker)
-              end = workflow.index(end_marker)
+          replacements = {
+              "uViewNormalMatrix": "uNormalMatrix",
+              "viewNormalMatrix": "normalMatrix",
+              "uKeyLightView": "uKeyLight",
+              "keyLightView": "keyLight",
+              "uFillLightView": "uFillLight",
+              "fillLightView": "fillLight",
+              "uRimLightView": "uRimLight",
+              "rimLightView": "rimLight",
+          }
+          for before, after in replacements.items():
+              if before not in laws:
+                  raise SystemExit(f"laws uniform integration token missing: {before}")
+              laws = laws.replace(before, after)
 
-              run_line = None
-              for index in range(start + 1, end):
-                  if workflow[index] == "        run: |":
-                      run_line = index
-                      break
-
-              if run_line is None:
-                  raise RuntimeError("Embedded generator run block not found")
-
-              code_lines = []
-              for line in workflow[run_line + 1:end]:
-                  if line.startswith("          "):
-                      code_lines.append(line[10:])
-                  elif line.strip():
-                      raise RuntimeError(
-                          f"Unexpected generator indentation: {line!r}"
-                      )
-                  else:
-                      code_lines.append("")
-
-              code = "\n".join(code_lines)
-
-              old_marker = '"\\n\\n  function buildGpuMesh("'
-              first = code.find(old_marker)
-              second = code.find(old_marker, first + len(old_marker))
-              if first < 0 or second < 0:
-                  raise RuntimeError(
-                      f"Expected two buildGpuMesh markers: first={first}, second={second}"
-                  )
-              new_marker = '"\\n\\n  function lawColorForDirection("'
-              code = (
-                  code[:second]
-                  + new_marker
-                  + code[second + len(old_marker):]
-              )
-
-              corrected_laws_mesh_builder = r"""laws_build_meshes = '''  function createCpuMeshes() {
-            const meshes = new Map();
-
-            DIRECTIONS.forEach(direction => {
-              const warm =
-                direction === "reality" ||
-                direction === "structure";
-
-              meshes.set(
-                `category-${direction}`,
-                createDiamondStarMesh({
-                  points: QUALITY.categorySegments,
-                  radius: 0.72,
-                  inner: 0.30,
-                  depth: 0.42,
-                  crown: 0.20,
-                  color: PALETTE[direction],
-                  warmth: warm ? 0.10 : 0.02
-                })
-              );
-
-              const lawColor =
-                direction === "flow"
-                  ? PALETTE.lawFlow
-                  : direction === "integrity"
-                    ? PALETTE.lawIntegrity
-                    : direction === "reality"
-                      ? PALETTE.lawReality
-                      : PALETTE.lawStructure;
-
-              meshes.set(
-                `law-${direction}`,
-                createDiamondStarMesh({
-                  points: QUALITY.lawSegments,
-                  radius: 0.42,
-                  inner: 0.20,
-                  depth: 0.25,
-                  crown: 0.10,
-                  color: lawColor,
-                  warmth: warm ? 0.08 : 0.02
-                })
-              );
-            });
-
-            return meshes;
-          }'''
-          laws = section(
+          laws_path.write_text(laws, encoding="utf-8")
+          Path("laws/index.crystals.source.js").write_text(
               laws,
-              "  function createCpuMeshes() {",
-              "\n\n  function createRenderer(",
-              laws_build_meshes,
-              "laws-build-meshes",
-          )"""
+              encoding="utf-8",
+          )
 
-              builder_start = code.index("laws_build_meshes =")
-              builder_end = code.index("laws_cluster =", builder_start)
-              code = (
-                  code[:builder_start]
-                  + corrected_laws_mesh_builder
-                  + "\n\n"
-                  + code[builder_end:]
-              )
+          showroom_path = Path("showroom/index.crystals.js")
+          showroom = showroom_path.read_text(encoding="utf-8")
+          showroom = replace_once(
+              showroom,
+              '''    const mesh =
+              context.meshes.get(
+                node.kind
+              );''',
+              '''    const meshKey =
+              node.kind === NODE_KINDS.CARDINAL
+                ? `cardinal-${node.cardinalId}`
+                : `room-${node.cardinalId}`;
 
-              old_bind = (
-                  '"        mesh.facet,\\n'
-                  '        context.attributes.facet,\\n'
-                  '        1"'
-              )
-              new_bind = (
-                  '"      mesh.color,\\n'
-                  '      context.attributes.facet,\\n'
-                  '      1"'
-              )
-              if old_bind not in code:
-                  raise RuntimeError("Showroom color bind generator literal missing")
-              code = code.replace(old_bind, new_bind, 1)
+            const mesh =
+              context.meshes.get(meshKey);''',
+              "showroom-mesh-key",
+          )
+          showroom_path.write_text(showroom, encoding="utf-8")
+          Path("showroom/index.crystals.source.js").write_text(
+              showroom,
+              encoding="utf-8",
+          )
 
-              old_cache = (
-                  "/showroom/index.crystals.js?v="
-                  "SHOWROOM_CARDINAL_LABELS_PRIMARY_PROMINENCE_SPHERICAL_CLUSTER_v1"
-              )
-              new_cache = (
-                  "/showroom/index.crystals.js?v="
-                  "SHOWROOM_PRIMARY_SELECTION_CLUSTER_SPACING_v2"
-              )
-              if old_cache not in code:
-                  raise RuntimeError("Showroom generator cache literal missing")
-              code = code.replace(old_cache, new_cache, 1)
+          diagnostic = Path(".laws-showroom-clone-generation-error.txt")
+          if diagnostic.exists():
+              diagnostic.unlink()
 
-              strict_cull_token = '"gl.disable(\\n      gl.CULL_FACE",'
-              broad_cull_token = '"gl.disable",'
-              if strict_cull_token not in code:
-                  raise RuntimeError("Strict cull verification token missing")
-              code = code.replace(
-                  strict_cull_token,
-                  broad_cull_token,
-                  1,
-              )
-
-              exec(compile(code, "canonical-crystal-generator", "exec"), {})
-          except BaseException:
-              error_path.write_text(traceback.format_exc(), encoding="utf-8")
-
-      - name: Validate generated executables
+      - name: Validate syntax and cloned shader contracts
+        shell: bash
         run: |
-          if [ -f .laws-showroom-clone-generation-error.txt ]; then
-            cat .laws-showroom-clone-generation-error.txt
-            exit 0
-          fi
+          set -euo pipefail
           node --check laws/index.crystals.js
           node --check showroom/index.crystals.js
           cmp -s laws/index.crystals.js laws/index.crystals.source.js
           cmp -s showroom/index.crystals.js showroom/index.crystals.source.js
           git diff --check
 
-      - name: Commit generated candidate or diagnostic
+      - name: Validate shader and renderer identities
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          required_common = [
+              "function createDiamondStarMesh(",
+              "attribute vec3 aColor;",
+              "varying vec3 vWorldPosition;",
+              "float rearSuppression =",
+              "float facetBand =",
+              "if (vHaloPass > 0.5)",
+              "gl.CULL_FACE",
+              "gl.LEQUAL",
+              "gl.SRC_ALPHA",
+              "gl.ONE_MINUS_SRC_ALPHA",
+          ]
+
+          for path in [
+              "laws/index.crystals.js",
+              "showroom/index.crystals.js",
+          ]:
+              text = Path(path).read_text(encoding="utf-8")
+              for token in required_common:
+                  if token not in text:
+                      raise SystemExit(f"{path}: missing canonical token {token}")
+              for retired in [
+                  "loadSourceSynchronously",
+                  "transformSource",
+                  "uViewNormalMatrix",
+                  "uKeyLightView",
+                  "uFillLightView",
+                  "uRimLightView",
+              ]:
+                  if retired in text:
+                      raise SystemExit(f"{path}: retired token remains {retired}")
+
+          laws = Path("laws/index.crystals.js").read_text(encoding="utf-8")
+          for token in [
+              '"uNormalMatrix"',
+              '"uKeyLight"',
+              '"uFillLight"',
+              '"uRimLight"',
+              "renderer.uniforms.normalMatrix",
+              "renderer.uniforms.keyLight",
+              "renderer.uniforms.fillLight",
+              "renderer.uniforms.rimLight",
+          ]:
+              if token not in laws:
+                  raise SystemExit(f"laws renderer contract missing {token}")
+
+          showroom = Path("showroom/index.crystals.js").read_text(encoding="utf-8")
+          for token in [
+              "`cardinal-${node.cardinalId}`",
+              "`room-${node.cardinalId}`",
+              "context.meshes.get(meshKey)",
+              "context.attributes.color",
+              "context.uniforms.normalMatrix",
+              "context.uniforms.keyLight",
+              "context.uniforms.fillLight",
+              "context.uniforms.rimLight",
+          ]:
+              if token not in showroom:
+                  raise SystemExit(f"showroom renderer contract missing {token}")
+
+          declared = set(re.findall(
+              r"uniform\s+(?:float|vec[234]|mat[234])\s+(u[A-Za-z0-9_]+)\s*;",
+              laws,
+          ))
+          looked_up = set(re.findall(
+              r'getUniformLocation\(\s*program,\s*"(u[A-Za-z0-9_]+)"\s*\)',
+              laws,
+          ))
+          missing = declared - looked_up
+          if missing:
+              raise SystemExit(f"laws declared uniforms not looked up: {sorted(missing)}")
+
+      - name: Commit repaired candidate
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [ -f .laws-showroom-clone-generation-error.txt ]; then
-            git add .laws-showroom-clone-generation-error.txt
-            git commit -m "Record canonical crystal generator diagnostic"
-          else
-            git add -A .laws-showroom-clone-generation-error.txt
-            git add laws/index.crystals.js laws/index.crystals.source.js laws/index.html \
-                    showroom/index.crystals.js showroom/index.crystals.source.js showroom/index.html
-            git commit -m "Clone canonical crystal corridor into Laws and Showroom"
-          fi
+          git add -A .laws-showroom-clone-generation-error.txt
+          git add laws/index.crystals.js laws/index.crystals.source.js \
+                  showroom/index.crystals.js showroom/index.crystals.source.js
+          git commit -m "Close cloned crystal renderer integration contracts"
           git push origin HEAD:agent/laws-showroom-crystal-corridor-clone-001

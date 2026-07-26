@@ -1,0 +1,25 @@
+{
+  "schema": "SHOWROOM_CENTER_HIT_PROJECTED_LABELS_BROWSER_VERIFICATION_v3",
+  "pass": true,
+  "constellation": {
+    "interactionsPresent": true,
+    "centerWidth": 151.1875,
+    "planetWidth": 129.59375,
+    "controlPointerEvents": "none",
+    "labelPointerEvents": "auto",
+    "labels": [
+      "E · Characters",
+      "N · Story",
+      "S · Wonders",
+      "W · Mysteries"
+    ]
+  },
+  "cardinalRequest": true,
+  "clusterLabels": [
+    "Invitation",
+    "Mission",
+    "Timeline",
+    "Welcome"
+  ],
+  "pageErrors": []
+}

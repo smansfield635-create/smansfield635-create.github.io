@@ -1,7 +1,7 @@
 /* TARGET FILE: /showroom/index.compositor.js */
 /* COMPLETE REPLACEMENT */ 
 /* GROUP_D_COMPOSITOR_COMPASS_SPECIFIC_REDUCTION */
-/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_REDUCED_COMPASS_OVERLOAD */
+/* SHOWROOM_CONSTELLATION_SINGLE_FRAME_COMPOSITOR_TNT_v6_CANONICAL_PRESENTATION_ENVELOPE */
 
 (() => {
   "use strict";
@@ -178,6 +178,12 @@
 
     classificationHysteresis:
       0.075
+  });
+
+  const PRESENTATION_CAMERA = Object.freeze({
+    mobileAspectThreshold: 0.82,
+    constellation: Object.freeze({ normalEye: Object.freeze([0, 0.76, 6.05]), mobileEye: Object.freeze([0, 0.76, 7.10]), target: Object.freeze([0, 0.03, 0.06]), normalFieldOfViewDegrees: 36, mobileFieldOfViewDegrees: 34 }),
+    cluster: Object.freeze({ normalEye: Object.freeze([0, 0.62, 6.28]), mobileEye: Object.freeze([0, 0.62, 7.68]), target: Object.freeze([0, 0.02, 0.04]), normalFieldOfViewDegrees: 36, mobileFieldOfViewDegrees: 34 })
   });
 
   const state = {
@@ -1992,6 +1998,15 @@
       ) / 2;
   }
 
+  function applyPresentationCamera(aspect) {
+    const mode = String(state.controllerFrame && state.controllerFrame.presentationMode || "CONSTELLATION").toUpperCase();
+    const preset = mode === "CLUSTER" ? PRESENTATION_CAMERA.cluster : PRESENTATION_CAMERA.constellation;
+    const mobile = aspect <= PRESENTATION_CAMERA.mobileAspectThreshold;
+    state.camera.eye = (mobile ? preset.mobileEye : preset.normalEye).slice();
+    state.camera.target = preset.target.slice();
+    state.camera.fieldOfViewDegrees = mobile ? preset.mobileFieldOfViewDegrees : preset.normalFieldOfViewDegrees;
+  }
+
   function rebuildMatrices() {
     const aspect =
       state.viewport.cssWidth /
@@ -1999,6 +2014,8 @@
         1,
         state.viewport.cssHeight
       );
+
+    applyPresentationCamera(aspect);
 
     const view =
       createLookAtMatrix(

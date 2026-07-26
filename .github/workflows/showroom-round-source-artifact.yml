@@ -1,0 +1,47 @@
+name: Showroom round source artifact
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-artifact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          show-progress: false
+
+      - name: Assemble exact source package
+        run: |
+          mkdir -p /tmp/showroom-round-source/showroom
+          mkdir -p /tmp/showroom-round-source/laws
+          mkdir -p /tmp/showroom-round-source/products/archcoin
+          mkdir -p /tmp/showroom-round-source/assets/compass
+          cp showroom/index.html /tmp/showroom-round-source/showroom/
+          cp showroom/index.cosmos.js /tmp/showroom-round-source/showroom/
+          cp showroom/index.cosmos.source.js /tmp/showroom-round-source/showroom/
+          cp showroom/index.crystals.js /tmp/showroom-round-source/showroom/
+          cp showroom/index.crystals.source.js /tmp/showroom-round-source/showroom/
+          cp showroom/index.compositor.js /tmp/showroom-round-source/showroom/
+          cp showroom/index.controller.js /tmp/showroom-round-source/showroom/
+          cp laws/index.cosmos.js /tmp/showroom-round-source/laws/
+          cp laws/index.css /tmp/showroom-round-source/laws/
+          cp products/archcoin/index.starfield.js /tmp/showroom-round-source/products/archcoin/
+          cp products/archcoin/index.compositor.js /tmp/showroom-round-source/products/archcoin/
+          cp assets/compass/compass.crystals.js /tmp/showroom-round-source/assets/compass/
+          find /tmp/showroom-round-source -type f -print0 | sort -z | xargs -0 sha256sum > /tmp/showroom-round-source/SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: showroom-round-source
+          path: /tmp/showroom-round-source
+          if-no-files-found: error
+          retention-days: 7

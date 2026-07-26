@@ -181,9 +181,9 @@
   });
 
   const PRESENTATION_CAMERA = Object.freeze({
-    mobileAspectThreshold: 0.82,
-    constellation: Object.freeze({ normalEye: Object.freeze([0, 0.76, 6.05]), mobileEye: Object.freeze([0, 0.76, 7.10]), target: Object.freeze([0, 0.03, 0.06]), normalFieldOfViewDegrees: 36, mobileFieldOfViewDegrees: 34 }),
-    cluster: Object.freeze({ normalEye: Object.freeze([0, 0.62, 6.28]), mobileEye: Object.freeze([0, 0.62, 7.68]), target: Object.freeze([0, 0.02, 0.04]), normalFieldOfViewDegrees: 36, mobileFieldOfViewDegrees: 34 })
+    mobileWidthThreshold: 520,
+    constellation: Object.freeze({ normalEye: Object.freeze([0, 0.76, 6.05]), mobileEye: Object.freeze([0, 0.76, 8.00]), target: Object.freeze([0, 0.03, 0.06]), normalFieldOfViewDegrees: 36, mobileFieldOfViewDegrees: 38 }),
+    cluster: Object.freeze({ normalEye: Object.freeze([0, 0.62, 4.60]), mobileEye: Object.freeze([0, 0.62, 4.80]), target: Object.freeze([0, 0.02, 0.04]), normalFieldOfViewDegrees: 36, mobileFieldOfViewDegrees: 36 })
   });
 
   const state = {
@@ -2001,7 +2001,7 @@
   function applyPresentationCamera(aspect) {
     const mode = String(state.controllerFrame && state.controllerFrame.presentationMode || "CONSTELLATION").toUpperCase();
     const preset = mode === "CLUSTER" ? PRESENTATION_CAMERA.cluster : PRESENTATION_CAMERA.constellation;
-    const mobile = aspect <= PRESENTATION_CAMERA.mobileAspectThreshold;
+    const mobile = state.viewport.cssWidth <= PRESENTATION_CAMERA.mobileWidthThreshold;
     state.camera.eye = (mobile ? preset.mobileEye : preset.normalEye).slice();
     state.camera.target = preset.target.slice();
     state.camera.fieldOfViewDegrees = mobile ? preset.mobileFieldOfViewDegrees : preset.normalFieldOfViewDegrees;

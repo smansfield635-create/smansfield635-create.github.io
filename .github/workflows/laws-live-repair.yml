@@ -1,0 +1,88 @@
+name: Laws checkpoint zero live repair
+
+on:
+  push:
+    branches:
+      - agent/laws-checkpoint-zero-direct-authority-001
+    paths:
+      - .github/workflows/laws-live-repair.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repair branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Complete direct interaction and scene Cosmos package
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git show 38e279c56965ce32ba15e64f957d4cdf7e76e7f4:laws/index.cosmos.js > laws/index.cosmos.js
+
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("laws/index.html")
+          text = path.read_text(encoding="utf-8")
+
+          replacements = {
+              "LAWS_COMPASS_CENTER_EXCLUSIVE_SPHERICAL_XYZ_DIRECT_MANIPULATION_v6":
+                  "LAWS_DIRECT_49548d4a6d29c2169812dd61130b161d96351bec_20260726A",
+              "LAWS_COSMOS_ARCHCOIN_SCENE_FIELD_v5":
+                  "LAWS_SCENE_76d71d7cbafe52421c9eb68e3604792cc6755cf3_20260726A",
+          }
+
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count < 1:
+                  raise SystemExit(f"Expected HTML identity not found: {old}")
+              text = text.replace(old, new)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+          rm .github/workflows/laws-live-repair.yml
+
+          node --check laws/index.interactions.js
+          node --check laws/index.cosmos.js
+
+          test ! -e laws/index.interactions.loader.source.js
+          test ! -e laws/index.interactions.source.round4.js
+
+          grep -q 'LAWS_CHECKPOINT_ZERO_DIRECT_INTERACTION_AUTHORITY_v1' laws/index.interactions.js
+          grep -q 'centerCompassExclusiveHitZone:true' laws/index.interactions.js
+          grep -q 'loaderRelayUsed:false' laws/index.interactions.js
+          grep -q 'mountSelector: "\[data-laws-cosmic-field\]"' laws/index.cosmos.js
+          grep -q 'sceneContained: true' laws/index.cosmos.js
+          grep -q 'LAWS_DIRECT_49548d4a6d29c2169812dd61130b161d96351bec_20260726A' laws/index.html
+          grep -q 'LAWS_SCENE_76d71d7cbafe52421c9eb68e3604792cc6755cf3_20260726A' laws/index.html
+
+          if grep -R -n -E 'index\.interactions\.loader\.source\.js|index\.interactions\.source\.round4\.js' laws/index.html laws/index.interactions.js; then
+            echo 'Retired interaction relay reference remains' >&2
+            exit 1
+          fi
+
+          git diff --check
+
+      - name: Commit verified repair package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- \
+            laws/index.interactions.js \
+            laws/index.cosmos.js \
+            laws/index.html \
+            laws/index.interactions.loader.source.js \
+            laws/index.interactions.source.round4.js \
+            .github/workflows/laws-live-repair.yml
+          git commit -m "Complete Laws checkpoint zero live repair"
+          git push origin HEAD:agent/laws-checkpoint-zero-direct-authority-001

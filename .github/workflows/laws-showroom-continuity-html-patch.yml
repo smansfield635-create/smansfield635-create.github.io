@@ -1,0 +1,73 @@
+name: Laws Showroom continuity HTML patch
+
+on:
+  push:
+    branches:
+      - agent/laws-showroom-continuity-work-001
+
+permissions:
+  contents: write
+
+jobs:
+  patch-html:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-showroom-continuity-work-001
+          fetch-depth: 0
+
+      - name: Renew exact continuity cache identities
+        shell: python
+        run: |
+          from pathlib import Path
+
+          def replace_once(path, before, after):
+              file = Path(path)
+              text = file.read_text(encoding="utf-8")
+              count = text.count(before)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected one match, found {count}: {before}")
+              file.write_text(text.replace(before, after), encoding="utf-8")
+
+          replace_once(
+              "laws/index.html",
+              "/laws/index.crystals.js?v=LAWS_MAIN_CLUSTER_FACE_REPAIR_20260726D",
+              "/laws/index.crystals.js?v=LAWS_CRYSTALS_LIVING_CONTINUITY_20260726G",
+          )
+          replace_once(
+              "laws/index.html",
+              'data-laws-bounded-round="LAWS_MAIN_COMPASS_PRESENTATION_FACE_AND_GESTURE_20260726D"',
+              'data-laws-bounded-round="LAWS_SHOWROOM_CROSS_COMPASS_CONTINUITY_20260726G"',
+          )
+          replace_once(
+              "laws/index.html",
+              'data-laws-crystal-face-visibility="back-face-culled-front-surface"',
+              'data-laws-crystal-face-visibility="double-sided-opaque-single-surface-living-rotation"',
+          )
+
+          replace_once(
+              "showroom/index.html",
+              "/showroom/index.cosmos.js?v=SHOWROOM_COSMOS_HARDENED_v1",
+              "/showroom/index.cosmos.js?v=SHOWROOM_COSMOS_LUMINOUS_CONTINUITY_20260726G",
+          )
+          replace_once(
+              "showroom/index.html",
+              'data-showroom-cosmos-contract="SHOWROOM_COSMOS_HARDENED_v1"',
+              'data-showroom-cosmos-contract="SHOWROOM_COSMOS_LUMINOUS_CONTINUITY_WRAPPER_v1"',
+          )
+          replace_once(
+              "showroom/index.html",
+              '      },\n      skipWhenReducedMotion: true\n    },\n    {\n      src:\n        "/assets/manor-blueprint/manor.blueprint.registry.js',
+              '      }\n    },\n    {\n      src:\n        "/assets/manor-blueprint/manor.blueprint.registry.js',
+          )
+
+      - name: Commit cache closure
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.html showroom/index.html
+          git diff --cached --check
+          git commit -m "Renew Laws and Showroom continuity cache identities"
+          git push origin HEAD:agent/laws-showroom-continuity-work-001

@@ -308,10 +308,10 @@ function resolveWorldBasis(normal, yawRadians) {
   const reference = Math.abs(up.y) < 0.92
     ? createHEarthVector3(0, 1, 0)
     : createHEarthVector3(0, 0, 1);
-  const baseRightResult = normalizeHEarthVector3(crossHEarthVector3(reference, up), 1e-12);
+  const baseRightResult = normalizeHEarthVector3(crossHEarthVector3(up, reference), 1e-12);
   if (baseRightResult?.valid !== true) return null;
   const baseRight = baseRightResult.vector;
-  const baseForwardResult = normalizeHEarthVector3(crossHEarthVector3(up, baseRight), 1e-12);
+  const baseForwardResult = normalizeHEarthVector3(crossHEarthVector3(baseRight, up), 1e-12);
   if (baseForwardResult?.valid !== true) return null;
   const baseForward = baseForwardResult.vector;
   const cosine = Math.cos(yawRadians);

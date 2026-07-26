@@ -1,10 +1,11 @@
 /**
  * /showroom/globe/h-earth/render/geometry-distant-context.js
  *
- * H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_RUN_6C_v1
+ * H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_RUN_6C_v2
  *
  * Constructs coarse, non-navigable highland/mountain proxy geometry from the
- * durable Run 6B formation authority.
+ * durable Run 6B formation authority. The crest envelope preserves nonzero
+ * endpoint clearance so every strip triangle remains nondegenerate.
  */
 
 import {
@@ -27,7 +28,7 @@ const freeze = (value, seen = new WeakSet()) => {
 };
 
 export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID =
-  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_RUN_6C_v1';
+  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_RUN_6C_v2_NONDEGENERATE_ENDPOINT_ENVELOPE';
 
 function constructHighlandProxy(formation) {
   const sampleCount = 17;
@@ -36,6 +37,7 @@ function constructHighlandProxy(formation) {
   const { worldBounds, elevationEnvelope } = formation;
   const baseY = elevationEnvelope.minimum;
   const amplitude = elevationEnvelope.maximum - elevationEnvelope.minimum;
+  const minimumEnvelope = 0.08;
 
   for (let index = 0; index < sampleCount; index += 1) {
     const progress = index / (sampleCount - 1);
@@ -43,7 +45,8 @@ function constructHighlandProxy(formation) {
       (worldBounds.xMax - worldBounds.xMin) * progress;
     const z = worldBounds.zMin +
       7 * Math.sin(progress * Math.PI * 2);
-    const envelope = Math.sin(progress * Math.PI);
+    const envelope = minimumEnvelope +
+      (1 - minimumEnvelope) * Math.sin(progress * Math.PI);
     const crest = baseY + amplitude * envelope *
       (0.72 + 0.18 * Math.sin(progress * Math.PI * 5));
     vertices.push(
@@ -86,6 +89,8 @@ function constructHighlandProxy(formation) {
       sourceAddressRule: formation.addressRule,
       worldBounds: formation.worldBounds,
       elevationEnvelope: formation.elevationEnvelope,
+      crestEndpointPolicy: 'NONZERO_MINIMUM_ENVELOPE',
+      minimumEnvelope,
       lodClass: 'DISTANT_COMPOSITE_PROXY',
       proxySourceIdentities: [formation.formationId],
       navigable: false,

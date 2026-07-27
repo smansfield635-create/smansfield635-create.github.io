@@ -1,0 +1,55 @@
+name: Main Compass Round 002 Live Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify live HTML and CSS generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="https://diamondgatebridge.com/?round002=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          css="https://diamondgatebridge.com/assets/compass/compass.css?v=dgb-main-compass-architecture-context-round-002-v1&round002=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+
+          curl --fail --location --silent --show-error \
+            -H 'Cache-Control: no-cache' \
+            -H 'Pragma: no-cache' \
+            "$root" > /tmp/live-index.html
+
+          curl --fail --location --silent --show-error \
+            -H 'Cache-Control: no-cache' \
+            -H 'Pragma: no-cache' \
+            "$css" > /tmp/live-compass.css
+
+          grep -Fq 'dgb-main-compass-architecture-context-round-002-v1' /tmp/live-index.html
+          grep -Fq '<details' /tmp/live-index.html
+          grep -Fq 'class="compass-practical-context"' /tmp/live-index.html
+          grep -Fq 'Direct destinations' /tmp/live-index.html
+          grep -Fq 'href="/characters/"' /tmp/live-index.html
+          grep -Fq 'href="/explore/frontier/"' /tmp/live-index.html
+          grep -Fq 'href="/products/"' /tmp/live-index.html
+          grep -Fq 'href="/laws/"' /tmp/live-index.html
+          test "$(grep -Fc 'compass-formula-artifact__practical-summary' /tmp/live-index.html)" -eq 3
+          test "$(grep -Fc 'compass-formula-artifact__engineering-summary' /tmp/live-index.html)" -eq 3
+
+          grep -Fq 'Main Compass architecture and context round 002' /tmp/live-compass.css
+          grep -Fq '.compass-formula-artifact--pcr > summary' /tmp/live-compass.css
+          grep -Fq '.compass-formula-artifact--split > summary' /tmp/live-compass.css
+          grep -Fq 'grid-template-columns: repeat(2, minmax(0, 1fr));' /tmp/live-compass.css
+
+          echo "LIVE_HTML_ROUND_002=PASS"
+          echo "LIVE_CSS_ROUND_002=PASS"
+          echo "LIVE_DIRECT_ROUTES=PASS"
+          echo "LIVE_PRACTICAL_FIRST_FORMULAS=PASS"

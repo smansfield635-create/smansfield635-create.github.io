@@ -43,7 +43,7 @@
     "thermalAndMemoryMeasurementRequired": true
   },
   "scope": {
-    "changedPathCount": 5,
+    "changedPathCount": 6,
     "controlOrGovernanceOnly": true,
     "productRouteMutated": false,
     "rendererImplemented": false,

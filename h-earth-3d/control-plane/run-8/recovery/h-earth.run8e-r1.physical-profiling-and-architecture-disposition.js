@@ -105,7 +105,8 @@ export const H_EARTH_RUN_8E_R1_CONTROL = freeze({
     currentCpu: 'DETERMINISTIC_REFERENCE_ONLY'
   },
   physicalEvidenceBoundary: {
-    repositoryProfilerPackage: 'AUTHORIZED',
+    repositoryProfilerPackage: 'EXECUTABLE_CANDIDATE',
+    repositoryPackageValidation: 'PENDING_FINAL_EXECUTION',
     browserEmulation: 'SUPPORTING_ONLY',
     physicalSamsungReceiptRequired: true,
     physicalSamsungExecution: 'NOT_YET_EXECUTED_FOR_R1',

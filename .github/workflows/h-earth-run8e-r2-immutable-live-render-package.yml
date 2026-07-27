@@ -41,10 +41,11 @@ jobs:
       - name: Verify executed package source identity and cleanup
         run: |
           set -euo pipefail
+          WORKFLOW=.github/workflows/h-earth-run8e-r2-immutable-live-render-package.yml
           test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
           test ! -e h-earth-3d/validation/h-earth.run8e-r2a.attempt-002.apply.mjs
-          test "$(git show HEAD:.github/workflows/h-earth-run8e-r2-immutable-live-render-package.yml | grep -c 'contents: read')" = "1"
-          test "$(git show HEAD:.github/workflows/h-earth-run8e-r2-immutable-live-render-package.yml | grep -c 'contents: write' || true)" = "0"
+          test "$(grep -Ec '^  contents: read$' "$WORKFLOW")" = "1"
+          test "$(grep -Ec '^  contents: write$' "$WORKFLOW" || true)" = "0"
 
       - name: Execute final R2A closure validation
         run: |

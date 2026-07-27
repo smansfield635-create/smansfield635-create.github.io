@@ -1,0 +1,92 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3D_DIAGNOSTIC_DIRECT_INTERACTION_ATTEMPT_FAILURE_RECEIPT",
+  "attempt": 2,
+  "eligible": false,
+  "status": "RUN_8E_R3D_ATTEMPT_002_MATERIAL_EXECUTION_PASS_FINAL_GATE_FAILURE_PRESERVED",
+  "recordedAt": "2026-07-27T18:36:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3d-direct-interaction-no-bitmap-001",
+  "pullRequest": 233,
+  "head": "8014bea3a09e6d1363e10b6439b743725751b628",
+  "baseExactHead": "5c7a7eef489da94a230812eecc5e531e285b7cac",
+  "workflowRun": 30294287794,
+  "workflowJob": 90071329468,
+  "artifact": 8664000420,
+  "artifactDigest": "sha256:578c7cd60dfc1d7c6c500fe6ba35a07730b7a895d3cd3b635e27154f8a9bd146",
+  "failureStage": "VERIFY_EXACT_SCOPE_DIRECT_INTERACTION_AND_R3E_STOPPING_BOUNDARY",
+  "failureCodes": [
+    "R3D_REQUIRED_PATHS_MISSING_SHOWROM_TYPO",
+    "R3D_UNEXPECTED_PATH_SHOWROOM_INDEX_HTML",
+    "R3D_CORRESPONDENCE_AUDIT_NEGATIVE_BOUNDARIES_REQUIRED_TRUTHY"
+  ],
+  "rootCause": "The final workflow gate contained two validation defects: the required diagnostic HTML path was misspelled as showrom, and the correspondence audit used all(values), which incorrectly rejected intentionally false non-mutation boundary fields.",
+  "materialExecution": {
+    "browserExecution": "PASS",
+    "automaticRegistryPreflight": "PASS",
+    "executionReceiptStatus": "RUN_8E_R3D_EXECUTION_PASS",
+    "acceptedProposalCount": 7,
+    "rejectedProposalCount": 0,
+    "gpuFrameCount": 5,
+    "distinctFrameArtifactCount": 5,
+    "maximumInputToFrameLatencyMilliseconds": 4.500000000011823,
+    "pointerDownCount": 5,
+    "pointerMoveCount": 5,
+    "pointerUpCount": 5,
+    "wheelEventCount": 1,
+    "touchPointerCount": 5,
+    "actionCounts": {
+      "TURN_RIGHT": 1,
+      "PITCH_UP": 1,
+      "MOVE_FORWARD": 3,
+      "ZOOM_IN": 2
+    },
+    "resourceCounters": {
+      "contextCreationCount": 1,
+      "shaderCompileCount": 4,
+      "programLinkCount": 2,
+      "bufferCreateCount": 9,
+      "bufferUploadCount": 9,
+      "postInitializationResourceCreationCount": 0,
+      "postInitializationBufferUploadCount": 0,
+      "frameCount": 6,
+      "cameraUniformUpdateCount": 12,
+      "geometryDrawCallCount": 24,
+      "totalDrawnIndexCount": 882720
+    },
+    "bitmapPreviewTransformCount": 0,
+    "cpuRasterRefreshCount": 0,
+    "drawImageCount": 0,
+    "canvas2DContextRequestCount": 0,
+    "imageBitmapCreateCount": 0,
+    "worldRebuildCount": 0,
+    "publicRouteBindingCount": 0,
+    "navigationAuthorityMutationCount": 0,
+    "cameraAuthorityCreationCount": 0,
+    "frameArtifacts": {
+      "initial": "ef5957da367f220b516a8a3b1d6c8787608cf20357747c26648a744ce03929a5",
+      "look": "67c36d07e722f8eb306763d53229e84bc6151d991227deab5cfd8aea0fd52ed9",
+      "travel": "3245399954bafc887d200820fa8b13762ff65ebd5d40a0ae97e9773b351d49a5",
+      "pinch": "8172df658a9aeb0aabf5804ad19316cf4f9c96b625ae086181e0bd144d30d12c",
+      "wheel": "d3e97dfbd1e4e62eaf5c8dd00c92d81555c4d7cdf225f3a0b65c442c8cd2c0ea"
+    }
+  },
+  "correctionScope": [
+    "CORRECT_REQUIRED_DIAGNOSTIC_HTML_PATH",
+    "SPLIT_POSITIVE_CORRESPONDENCE_FROM_NEGATIVE_BOUNDARY_ASSERTIONS",
+    "PRESERVE_ATTEMPT_002_MATERIAL_BROWSER_EVIDENCE",
+    "NO_RUNTIME_OR_ARCHITECTURE_CHANGE"
+  ],
+  "boundaries": {
+    "publicRouteMutated": false,
+    "publicDirectManipulationMutated": false,
+    "navigationAuthorityMutated": false,
+    "cameraAuthorityCreated": false,
+    "liveRendererPackageMutated": false,
+    "gpuTransportAdapterMutated": false,
+    "r3EWorkStarted": false,
+    "deploymentPerformed": false,
+    "run8EPassClosed": false
+  },
+  "nextAction": "RETRY_R3D_AFTER_FINAL_GATE_VALIDATION_CORRECTION",
+  "stoppingBoundary": "STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E"
+}

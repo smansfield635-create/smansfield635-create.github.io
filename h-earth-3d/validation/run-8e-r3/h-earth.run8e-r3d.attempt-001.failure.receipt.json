@@ -1,0 +1,40 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3D_DIAGNOSTIC_DIRECT_INTERACTION_ATTEMPT_FAILURE_RECEIPT",
+  "attempt": 1,
+  "eligible": false,
+  "status": "RUN_8E_R3D_ATTEMPT_001_FAIL_PRESERVED",
+  "recordedAt": "2026-07-27T18:27:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3d-direct-interaction-no-bitmap-001",
+  "pullRequest": 233,
+  "head": "ec13c97b103c3291a3e930c2138feb5984d3c363",
+  "baseExactHead": "5c7a7eef489da94a230812eecc5e531e285b7cac",
+  "workflowRun": 30293664139,
+  "workflowJob": 90069233222,
+  "failureStage": "VERIFY_SOURCE_SYNTAX_AND_R3D_AUTHORITY",
+  "failureCode": "PUBLIC_DIRECT_MANIPULATION_WITNESS_MISMATCH",
+  "rootCause": "The R3D control evaluator referenced candidate.bequiredInputs instead of candidate.requiredInputs for the protected public direct-manipulation witness blob check.",
+  "protectedR3CBaseAndSourceIdentitiesPassed": true,
+  "browserExecutionStarted": false,
+  "chromiumInstalled": false,
+  "gpuInteractionExecuted": false,
+  "evidenceArtifactCreated": false,
+  "correctionScope": [
+    "CORRECT_REQUIRED_INPUTS_PROPERTY_NAME",
+    "REGISTER_AND_PRESERVE_ATTEMPT_001_FAILURE_RECEIPT",
+    "NO_RUNTIME_OR_ARCHITECTURE_CHANGE"
+  ],
+  "boundaries": {
+    "publicRouteMutated": false,
+    "publicDirectManipulationMutated": false,
+    "navigationAuthorityMutated": false,
+    "cameraAuthorityCreated": false,
+    "liveRenderPackageMutated": false,
+    "gpuTransportAdapterMutated": false,
+    "r3EWorkStarted": false,
+    "deploymentPerformed": false,
+    "run8EPassClosed": false
+  },
+  "nextAction": "RETRY_R3D_AFTER_BOUNDED_CONTROL_EVALUATOR_CORRECTION",
+  "stoppingBoundary": "STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E"
+}

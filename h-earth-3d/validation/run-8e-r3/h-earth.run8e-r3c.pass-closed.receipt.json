@@ -1,0 +1,158 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3C_PERSISTENT_GPU_RESOURCE_AND_CONTINUOUS_CAMERA_LOOP_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3C_PASS_CLOSED",
+  "recordedAt": "2026-07-27T17:50:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3c-persistent-gpu-camera-loop-001",
+  "pullRequest": 231,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R3B",
+    "status": "PASS_CLOSED",
+    "branch": "agent/h-earth-run8e-r3b-isolated-webgl2-fixed-frame-001",
+    "exactHead": "11b6c8c4cb3bec4e6666d9d1e6500e18fa271ce1",
+    "pullRequest": 227,
+    "fixedFrameSha256": "74c3c3b136241f7ab413411dac565897a19c124f92f174e3c0f0dfb2cbbff639"
+  },
+  "coreExecution": {
+    "head": "1b02cb845d3b81c04fc3718233f5142765592f83",
+    "runId": 30290450153,
+    "jobId": 90058672196,
+    "artifactId": 8662569874,
+    "artifactDigest": "sha256:3aea0979d3523da1c6e2c3f41cdcfcf64a0501f58f6df9b1187b0ea5fda92e87",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30290450161,
+    "automaticRepositoryRegistryPreflight": "PASS"
+  },
+  "closureControlValidation": {
+    "head": "721679e77df7b3492aa9da8950c7c74c8c804087",
+    "runId": 30290836319,
+    "jobId": 90059932269,
+    "artifactId": 8662717012,
+    "artifactDigest": "sha256:a6035cd2f3ad49881b2ae5e3554f0fa9e2057bae9d31c66362837b9ecae211d6",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30290836357,
+    "automaticRepositoryRegistryPreflight": "PASS",
+    "receiptPresentDuringExecution": false
+  },
+  "persistentResourceExecution": {
+    "rendererId": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+    "logicalPromotedPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "chromiumRuntimePackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD",
+    "canonicalGpuTransport": true,
+    "contextCreationCount": 1,
+    "shaderCreateCount": 4,
+    "shaderCompileCount": 4,
+    "programCreateCount": 2,
+    "programLinkCount": 2,
+    "vertexArrayCreateCount": 1,
+    "gpuBufferCount": 9,
+    "bufferUploadCount": 9,
+    "uploadedByteLength": 2145444,
+    "textureCount": 3,
+    "framebufferCount": 2,
+    "resourceIdentityStable": true,
+    "packageUploadedOnce": true,
+    "postInitializationResourceCreationCount": 0,
+    "postInitializationBufferUploadCount": 0
+  },
+  "continuousCameraLoop": {
+    "requestAnimationFrameUsed": true,
+    "targetFrameCount": 180,
+    "completedFrameCount": 180,
+    "scheduledCallbackCount": 180,
+    "maximumConcurrentCallbacks": 1,
+    "durationMs": 4366.55,
+    "cameraUniformUpdatesPerFrame": 2,
+    "cameraUniformUpdateCount": 360,
+    "drawRangesPerFrame": 4,
+    "geometryDrawCallCount": 720,
+    "totalDrawnIndexCount": 26481600,
+    "worldRebuildCount": 0,
+    "packageUploadCountDuringLoop": 0,
+    "resourceCreationCountDuringLoop": 0,
+    "waypointIds": ["COAST", "BERM", "LOWLAND", "HILL", "RIDGE"],
+    "interpolationModel": "SMOOTHSTEP_BETWEEN_GOVERNED_R3A_WAYPOINT_CAMERA_PACKETS",
+    "navigationAuthorityMutated": false,
+    "cameraAuthorityCreated": false,
+    "successorTerrainCameraReconciliationPreserved": true
+  },
+  "frameArtifacts": {
+    "start": {
+      "frameNumber": 1,
+      "width": 640,
+      "height": 360,
+      "byteLength": 36041,
+      "sha256": "ef5957da367f220b516a8a3b1d6c8787608cf20357747c26648a744ce03929a5",
+      "pixelHash": "fnv1a32:13de0f5d",
+      "nonClearPixelCount": 218951,
+      "uniqueColorBucketCount": 18
+    },
+    "middle": {
+      "frameNumber": 90,
+      "width": 640,
+      "height": 360,
+      "byteLength": 61166,
+      "sha256": "7464e078f2c3981126112517a7cecc4a9616e2c363a9bfd5d34a9448707e64e2",
+      "pixelHash": "fnv1a32:c50c9cca",
+      "nonClearPixelCount": 209923,
+      "uniqueColorBucketCount": 20
+    },
+    "final": {
+      "frameNumber": 180,
+      "width": 640,
+      "height": 360,
+      "byteLength": 37703,
+      "sha256": "6afece3cb60200c1d78147794c6ff8cf8b3b907f4ea0851ace4d326d767ff35b",
+      "pixelHash": "fnv1a32:f7b77601",
+      "nonClearPixelCount": 90642,
+      "uniqueColorBucketCount": 14
+    },
+    "distinctFrameArtifactCount": 3,
+    "diagnosticPageSha256": "0615244a9fdb8fb8adcf0412565a1b44f8bfabcbc911d291a9c26c0e247480ac"
+  },
+  "depthOutput": {
+    "nonClearPixelCount": 90642,
+    "uniqueColorBucketCount": 7,
+    "pixelHash": "fnv1a32:d98bf534"
+  },
+  "protectedSourceCustody": {
+    "liveRenderPackageGitBlob": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+    "canonicalGpuTransportGitBlob": "785856d7702a0e855c2672e6b8a7325ad5b3ba50",
+    "navigationSourceGitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+    "r3ALiveRendererContractGitBlob": "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+  },
+  "boundaries": {
+    "gestureBindingCreated": false,
+    "pointerBindingCreated": false,
+    "touchBindingCreated": false,
+    "wheelBindingCreated": false,
+    "directManipulationMutated": false,
+    "navigationAuthorityMutated": false,
+    "publicRouteBound": false,
+    "publicRouteMutated": false,
+    "deploymentPerformed": false,
+    "r3DWorkStarted": false,
+    "run8EPassClosed": false
+  },
+  "checkpointDisposition": {
+    "run8ER2": "PASS_CLOSED",
+    "run8ER3A": "PASS_CLOSED",
+    "run8ER3B": "PASS_CLOSED",
+    "run8ER3C": "PASS_CLOSED",
+    "run8ER3D": "NOT_STARTED",
+    "run8ER3": "OPEN_AT_R3D_BOUNDARY",
+    "run8E": "FAIL_OPEN"
+  },
+  "finalExactHeadValidation": {
+    "required": true,
+    "performedAfterReceiptAndFinalRegistryEvidenceReconciliation": false,
+    "finalHead": null,
+    "workflowRun": null,
+    "workflowJob": null,
+    "artifactId": null,
+    "artifactDigest": null
+  },
+  "stoppingBoundary": "STOP_BEFORE_DIAGNOSTIC_DIRECT_INTERACTION_R3D",
+  "issues": []
+}

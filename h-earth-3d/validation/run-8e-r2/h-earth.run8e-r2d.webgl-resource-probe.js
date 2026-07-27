@@ -1,7 +1,7 @@
 import {
   getHEarthRun8ER2ImmutableLiveRenderPackage,
   createHEarthRun8ER2GPUBufferViews
-} from '../../../..//showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
+} from '../../../showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
 import {
   H_EARTH_RUN_8E_R2D_CONTRACT_ID,
   H_EARTH_RUN_8E_R2D_CONTROL,

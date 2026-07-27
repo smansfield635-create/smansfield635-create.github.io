@@ -6,6 +6,7 @@ const validationPath = 'h-earth-3d/validation/h-earth.run8e-r2.immutable-live-re
 let source = fs.readFileSync(sourcePath, 'utf8');
 let validation = fs.readFileSync(validationPath, 'utf8');
 let changed = false;
+const primitiveInterpolation = '${primitive.primitiveId}';
 
 function replaceOnce(text, search, replacement, code) {
   if (!text.includes(search)) throw new Error(code);
@@ -33,7 +34,7 @@ function resolvePrimitiveRgba(primitive, role, issues) {
   if (role === 'VEGETATION') return vegetationRgba(primitive);
   const rgba = primitive?.renderMaterial?.rgba;
   if (!Array.isArray(rgba) || rgba.length !== 4 || rgba.some((channel) => !finite(channel))) {
-    issues.push(\`R2_PRIMITIVE_RGBA_MISSING:${primitive.primitiveId}\`);
+    issues.push(\`R2_PRIMITIVE_RGBA_MISSING:${primitiveInterpolation}\`);
     return [0, 0, 0, 255];
   }
   return rgba;
@@ -103,7 +104,7 @@ function resolvePrimitiveMaterialProjection(primitive, role, issues) {
       projectionModel: 'EXACT_RUN_6D_MATERIAL_DEFAULTS'
     };
   }
-  issues.push(\`R2_PRIMITIVE_MATERIAL_PROJECTION_MISSING:${primitive.primitiveId}\`);
+  issues.push(\`R2_PRIMITIVE_MATERIAL_PROJECTION_MISSING:${primitiveInterpolation}\`);
   return {
     rgba: [0, 0, 0, 255],
     transparencyClass: 'OPAQUE',

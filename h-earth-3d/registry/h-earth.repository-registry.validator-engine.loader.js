@@ -3,11 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Composes the accepted repository-registry lineage through Run 8E-R1,
-// the completed R2A-R2F chain, R3A-R3C execution, and bounded R3D1
-// diagnostic directory/host scaffolding. The loader remains read-only and
-// creates no interaction, renderer execution, public-route, deployment, R3D2,
-// or Run 8E pass authority.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3d1-diagnostic-host-scaffold-scope.js';
+// R2A-R2F, R3A-R3C, R3D1 scaffold closure, and bounded R3D2 diagnostic
+// pointer/touch navigation-proposal intake. The loader remains read-only and
+// creates no renderer, live-GPU, public-route, deployment, R3D3, or Run 8E pass authority.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3d2-pointer-touch-intake-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

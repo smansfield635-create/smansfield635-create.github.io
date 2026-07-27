@@ -28,7 +28,7 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     freeze({ checkpointId: 'RUN_8E_R3D', currentStatus: 'PASS_CLOSED' }),
     freeze({
       checkpointId: 'RUN_8E_R3E',
-      currentStatus: 'IN_PROGRESS',
+      currentStatus: 'PASS_CLOSED',
       boundedSubcheckpoints: freeze([
         freeze({ checkpointId: 'RUN_8E_R3E1', currentStatus: 'PASS_CLOSED', passReceiptGitBlob: '2c71944eabc6d4522d934ef2fc4af6a85a38f3b5' }),
         freeze({ checkpointId: 'RUN_8E_R3E2', currentStatus: 'PASS_CLOSED', passReceiptGitBlob: 'e33405c5e7f600e59a6b1103fd856a1d37ca51c5' }),
@@ -42,21 +42,32 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
           publicDirectManipulationAcceptance: 'PASS',
           publicSustainedInteractionAcceptance: 'PASS'
         }),
-        freeze({ checkpointId: 'RUN_8E_R3E5', currentStatus: 'EXECUTION_PENDING' })
+        freeze({
+          checkpointId: 'RUN_8E_R3E5',
+          currentStatus: 'PASS_CLOSED',
+          coreExecutionHead: 'a15b0bfd5e0e41feb58278ead324af25cb895b79',
+          workflowRun: 30313213795,
+          workflowJob: 90133161723,
+          artifactId: 8671168282,
+          artifactDigest: 'sha256:15556602decf44f2af92aabdc91f4677bbe25f863cf7bc8cb1be0372c34f47f3',
+          artifactFetchBackVerified: true,
+          r3FInputDisposition: 'ADMISSIBLE_AS_NEXT_CHECKPOINT_INPUT',
+          stoppingBoundary: 'STOP_BEFORE_PHYSICAL_REFERENCE_DEVICE_AND_BROADER_MOBILE_ACCEPTANCE_R3F'
+        })
       ])
     }),
     freeze({ checkpointId: 'RUN_8E_R3F', currentStatus: 'NOT_STARTED' }),
     freeze({ checkpointId: 'RUN_8E_R3G', currentStatus: 'NOT_STARTED' })
   ]),
   currentState: freeze({
-    run8ER3: 'OPEN_AT_R3E5_EXECUTION',
+    run8ER3: 'OPEN_AT_R3F_BOUNDARY',
     run8ER3D: 'PASS_CLOSED',
-    run8ER3E: 'IN_PROGRESS',
+    run8ER3E: 'PASS_CLOSED',
     run8ER3E1: 'PASS_CLOSED',
     run8ER3E2: 'PASS_CLOSED',
     run8ER3E3: 'PASS_CLOSED',
     run8ER3E4: 'PASS_CLOSED',
-    run8ER3E5: 'EXECUTION_PENDING',
+    run8ER3E5: 'PASS_CLOSED',
     run8ER3F: 'NOT_STARTED',
     run8ER3G: 'NOT_STARTED',
     run8E: 'FAIL_OPEN'
@@ -103,6 +114,9 @@ export function evaluateHEarthRun8ER3Control(candidate = H_EARTH_RUN_8E_R3_CONTR
     if (r3E?.currentStatus !== 'IN_PROGRESS' || candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3E5_EXECUTION' || candidate?.currentState?.run8ER3E5 !== 'EXECUTION_PENDING') issues.push('R3E5_PARENT_EXECUTION_STATE_INVALID');
   } else {
     if (r3E?.currentStatus !== 'PASS_CLOSED' || candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3F_BOUNDARY' || candidate?.currentState?.run8ER3E !== 'PASS_CLOSED' || candidate?.currentState?.run8ER3E5 !== 'PASS_CLOSED') issues.push('R3E5_PARENT_PASS_STATE_INVALID');
+    if (r3E5?.coreExecutionHead !== 'a15b0bfd5e0e41feb58278ead324af25cb895b79' || r3E5?.workflowRun !== 30313213795 || r3E5?.workflowJob !== 90133161723 || r3E5?.artifactId !== 8671168282 || r3E5?.artifactFetchBackVerified !== true) issues.push('R3E5_PARENT_CORE_EVIDENCE_INVALID');
+    if (r3E5?.artifactDigest !== 'sha256:15556602decf44f2af92aabdc91f4677bbe25f863cf7bc8cb1be0372c34f47f3') issues.push('R3E5_PARENT_ARTIFACT_DIGEST_INVALID');
+    if (r3E5?.r3FInputDisposition !== 'ADMISSIBLE_AS_NEXT_CHECKPOINT_INPUT') issues.push('R3F_INPUT_NOT_ADMISSIBLE');
   }
   if (Object.values(candidate?.authorizations ?? {}).some((value) => value !== true)) issues.push('R3E5_AUTHORIZATION_INCOMPLETE');
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) if (value !== false) issues.push(`R3E5_BOUNDARY_VIOLATION:${key}`);

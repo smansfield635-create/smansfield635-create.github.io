@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/main-compass-execution-helper-001
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write

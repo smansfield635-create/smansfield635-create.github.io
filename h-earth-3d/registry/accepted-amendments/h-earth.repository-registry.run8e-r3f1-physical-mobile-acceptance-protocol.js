@@ -27,16 +27,16 @@ const OCCURRENCES = freeze(H_EARTH_RUN_8E_R3F1_PATHS.map((repositoryPath) => fre
   contentSha256: null,
   byteCount: null,
   existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT',
-  fetchbackStatus: 'R3F1_PROTOCOL_EXECUTION_PENDING',
-  occurrenceClass: 'RUN_8E_R3F1_PHYSICAL_MOBILE_ACCEPTANCE_PROTOCOL_EXECUTION_OCCURRENCE'
+  fetchbackStatus: repositoryPath === PASS_RECEIPT_PATH ? 'R3F1_DURABLE_PASS_RECEIPT_PENDING' : 'R3F1_CORE_EXECUTION_EVIDENCE_FETCHED_BACK',
+  occurrenceClass: 'RUN_8E_R3F1_PHYSICAL_MOBILE_ACCEPTANCE_PROTOCOL_PASS_CLOSED_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3F1_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3F1_PHYSICAL_MOBILE_ACCEPTANCE_PROTOCOL_v1',
-  evidenceClass: 'R3F1_PROTOCOL_AND_EVIDENCE_INTAKE_AUTHORITY_EXECUTION_PENDING',
-  sourceKind: 'REPOSITORY_PROTOCOL_AND_VALIDATION_EXECUTION',
+  evidenceClass: 'R3F1_PROTOCOL_AND_EVIDENCE_INTAKE_AUTHORITY_CORE_EXECUTION_PASS_RECEIPT_PENDING',
+  sourceKind: 'GITHUB_ACTIONS_REPOSITORY_PROTOCOL_EXECUTION_ARTIFACT',
   sourceIdOrPath: '/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f.physical-mobile-evidence-contract.js',
-  sourceOccurrenceOrRevision: null,
+  sourceOccurrenceOrRevision: '08c4b9558d995acbc9ba1ff59990b8bc65d4a00d',
   assertionScope: freeze([
     'R3E5_PASS_CLOSED_INPUT',
     'R3F_FOUR_STAGE_SEQUENCE',
@@ -46,11 +46,12 @@ export const H_EARTH_RUN_8E_R3F1_EVIDENCE = freeze({
     'SECOND_ANDROID_PHYSICAL_LANE',
     'IOS_MOBILE_SAFARI_PHYSICAL_LANE',
     'LOWER_PERFORMANCE_MOBILE_LANE',
+    'TWENTY_TWO_FIELD_SESSION_RECORD',
     'DEVICE_NEUTRAL_IMPLEMENTATION_LAW',
     'NO_PHYSICAL_EXECUTION_IN_R3F1',
     'STOP_BEFORE_R3F2'
   ]),
-  verifiedOn: null,
+  verifiedOn: '2026-07-27',
   evidenceMetadata: freeze({
     baseExactHead: '548672ae99cd406805f0c8ca576cc650baf7ed18',
     predecessorPullRequest: 249,
@@ -59,13 +60,18 @@ export const H_EARTH_RUN_8E_R3F1_EVIDENCE = freeze({
     r3FSubcheckpointCount: 4,
     deviceLaneCount: 4,
     requiredSessionRecordFieldCount: 22,
-    coreWorkflowRun: null,
-    coreWorkflowJob: null,
-    coreArtifactId: null,
-    coreArtifactDigest: null
+    coreHead: '08c4b9558d995acbc9ba1ff59990b8bc65d4a00d',
+    coreWorkflowRun: 30314464717,
+    coreWorkflowJob: 90136979082,
+    coreArtifactId: 8671621390,
+    coreArtifactDigest: 'sha256:3345790f2b92b789c80c59ed49759a7c9af5520b8fbe2be238631e94ffdee151',
+    coreArtifactFetchBackVerified: true,
+    coreAutomaticRegistryPreflightRun: 30314464737,
+    coreAutomaticRegistryPreflightStatus: 'PASS'
   }),
   evidenceLimitations: freeze([
-    'CORE_EXECUTION_PENDING',
+    'DURABLE_R3F1_PASS_RECEIPT_PENDING',
+    'FINAL_EXACT_HEAD_REVALIDATION_PENDING',
     'NO_IMMUTABLE_PREVIEW_CREATED',
     'NO_REFERENCE_DEVICE_EXECUTION',
     'NO_BROADER_MOBILE_EXECUTION',
@@ -83,14 +89,14 @@ export const H_EARTH_RUN_8E_R3F1_NODE = freeze({
   nodeType: 'RECOVERY_ACCEPTANCE_PROTOCOL_CHECKPOINT',
   nodeSubtype: 'PHYSICAL_REFERENCE_DEVICE_AND_BROADER_MOBILE_EVIDENCE_INTAKE_AUTHORITY',
   displayName: 'H-Earth Run 8E R3F1 Physical and Broader-Mobile Acceptance Protocol',
-  description: 'Defines the immutable-preview, physical-evidence, device-lane, interaction, timing, capture, and claim laws required before R3F physical execution begins.',
+  description: 'Defines and validates the immutable-preview, physical-evidence, device-lane, interaction, timing, capture, and claim laws required before R3F physical execution begins.',
   repositoryPaths: [...H_EARTH_RUN_8E_R3F1_PATHS],
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: H_EARTH_RUN_8E_R3F1_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3F1_EVIDENCE.evidenceId],
-  authorityClass: 'R3F_PHYSICAL_MOBILE_ACCEPTANCE_PROTOCOL_EXECUTION_PENDING',
-  authorityPosture: 'R3E_PASS_CLOSED_R3F1_EXECUTION_PENDING_R3F2_NOT_STARTED_RUN_8E_FAIL_OPEN',
-  authoritySource: ['R3E5_PASS_RECEIPT', 'R3E5_FINAL_EXACT_HEAD_VALIDATION', 'R3F_INPUT_DECISION'],
+  authorityClass: 'R3F_PHYSICAL_MOBILE_ACCEPTANCE_PROTOCOL_PASS_CLOSED',
+  authorityPosture: 'R3F1_CORE_PASS_FETCHED_BACK_DURABLE_RECEIPT_PENDING_R3F2_NOT_STARTED_RUN_8E_FAIL_OPEN',
+  authoritySource: ['R3E5_PASS_RECEIPT', 'R3E5_FINAL_EXACT_HEAD_VALIDATION', 'R3F_INPUT_DECISION', 'R3F1_CORE_PROTOCOL_EXECUTION', 'R3F1_FETCHED_BACK_ARTIFACT'],
   authorityScope: ['DEFINE_R3F_SEQUENCE', 'DEFINE_PHYSICAL_EVIDENCE_CONTRACT', 'DEFINE_PREVIEW_TRANSPORT_LAW', 'DEFINE_CLAIM_BOUNDARIES'],
   authorityLimitations: ['NO_SHOWROOM_MUTATION','NO_PREVIEW_CREATION','NO_BROWSER_OR_GPU_EXECUTION','NO_PHYSICAL_DEVICE_EXECUTION','NO_R3F2','NO_DEPLOYMENT','NO_MAIN_MERGE','NO_RUN_8E_PASS'],
   parentRelations: [], childRelations: [], peerRelations: [], upstreamBoundaries: [], downstreamBoundaries: [],
@@ -101,9 +107,9 @@ export const H_EARTH_RUN_8E_R3F1_NODE = freeze({
   prohibitedMutations: ['SHOWROOM','PUBLIC_ROUTE','PUBLIC_RUNTIME','RENDERER','INPUT','PHYSICAL_EXECUTION','R3F2','DEPLOYMENT','MAIN'],
   requiredValidations: ['R3E5_RECEIPT_IDENTITY','R3F_INPUT_DECISION','EVIDENCE_CONTRACT','R3F_SEQUENCE','AUTOMATIC_REGISTRY_PREFLIGHT','EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_REFERENCE_DEVICE_IMMUTABLE_PREVIEW_AND_PHYSICAL_EXECUTION_R3F2'],
-  currentIdentityReferences: ['548672ae99cd406805f0c8ca576cc650baf7ed18','ddd7fbf4065abbfb51e222c3500328b5b7aaab00','f923fa8127c56b1304717e86cfbc44e746d80cc8'],
-  lifecycleStatus: 'EXECUTION_PENDING',
-  unresolvedFields: ['CORE_WORKFLOW_RUN','CORE_ARTIFACT','DURABLE_PASS_RECEIPT','FINAL_EXACT_HEAD_VALIDATION']
+  currentIdentityReferences: ['548672ae99cd406805f0c8ca576cc650baf7ed18','ddd7fbf4065abbfb51e222c3500328b5b7aaab00','f923fa8127c56b1304717e86cfbc44e746d80cc8','08c4b9558d995acbc9ba1ff59990b8bc65d4a00d','30314464717','90136979082','8671621390'],
+  lifecycleStatus: 'CORE_EXECUTION_PASS_RECEIPT_PENDING',
+  unresolvedFields: ['DURABLE_PASS_RECEIPT','FINAL_EXACT_HEAD_VALIDATION']
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R3F1_PATHS.map((repositoryPath) => [repositoryPath, {

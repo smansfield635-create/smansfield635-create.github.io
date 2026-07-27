@@ -1,18 +1,12 @@
-/** Read-only accepted-amendment facade for Run 8E R3E1 public-integration scope declaration. */
+/** Read-only accepted-amendment facade for Run 8E R3E1 public-integration scope. */
 import baseFacade from './h-earth.repository-registry.run8e-r3d5-r3d-closure-r3e-input-decision-scope.js';
 
-const freeze = (value, seen = new WeakSet()) => {
-  if (value === null || typeof value !== 'object' || Object.isFrozen(value) || seen.has(value)) return value;
-  seen.add(value);
-  Object.values(value).forEach((nested) => freeze(nested, seen));
-  return Object.freeze(value);
-};
-
+const freeze = (value) => Object.freeze(value);
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r3e1-public-integration-scope-001';
 const PASS_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e1.pass-closed.receipt.json';
 
-export const H_EARTH_RUN_8E_R3E1_PATHS = Object.freeze([
+export const H_EARTH_RUN_8E_R3E1_PATHS = freeze([
   '/.github/workflows/h-earth-run8e-r3e1-public-integration-scope.yml',
   '/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
   '/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e1.public-integration-scope-control.js',
@@ -23,7 +17,7 @@ export const H_EARTH_RUN_8E_R3E1_PATHS = Object.freeze([
   PASS_RECEIPT_PATH
 ]);
 
-const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R3E1_PATHS.map((repositoryPath) => freeze({
+const OCCURRENCES = freeze(H_EARTH_RUN_8E_R3E1_PATHS.map((repositoryPath) => freeze({
   repository: REPOSITORY,
   refType: 'BRANCH',
   refName: BRANCH,
@@ -32,18 +26,18 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R3E1_PATHS.map((repositoryPath)
   gitBlobSha: null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT_OR_PLANNED',
-  fetchbackStatus: 'R3E1_SCOPE_EXECUTION_AND_DURABLE_RECEIPT_PENDING',
+  existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT',
+  fetchbackStatus: 'R3E1_CORE_PASS_DURABLE_RECEIPT_PENDING',
   occurrenceClass: 'RUN_8E_R3E1_PUBLIC_INTEGRATION_SCOPE_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3E1_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3E1_PUBLIC_INTEGRATION_SCOPE_v1',
-  evidenceClass: 'R3E1_EXACT_PUBLIC_INTEGRATION_MUTATION_SCOPE_EXECUTION_PENDING',
+  evidenceClass: 'EXECUTED_R3E1_EXACT_PUBLIC_INTEGRATION_SCOPE_CORE_PASS',
   sourceKind: 'GITHUB_ACTIONS_NODE_SOURCE_AND_REGISTRY_RECONCILIATION',
   sourceIdOrPath: '/h-earth-3d/validation/h-earth.run8e-r3e1.public-integration-scope.harness.mjs',
-  sourceOccurrenceOrRevision: null,
-  assertionScope: [
+  sourceOccurrenceOrRevision: '15a518a9ae99c1e9c7ac5620c593be106e2c1948',
+  assertionScope: freeze([
     'EXACT_PUBLIC_SOURCE_BLOBS_READ',
     'CURRENT_RUNTIME_OWNER_COLLISIONS_CLASSIFIED',
     'TWO_PATH_FUTURE_PUBLIC_MUTATION_SCOPE_DECLARED',
@@ -51,28 +45,35 @@ export const H_EARTH_RUN_8E_R3E1_EVIDENCE = freeze({
     'EXACT_LOAD_ORDER_AND_ROLLBACK_GROUPS_DECLARED',
     'NO_SHOWROOM_MUTATION_PERFORMED',
     'STOP_BEFORE_R3E2'
-  ],
+  ]),
   verifiedOn: null,
-  evidenceMetadata: {
+  evidenceMetadata: freeze({
     baseExactHead: 'ccee63d4826f9ac5c8eb9069d0d33d3ad5ebcef7',
     predecessorPullRequest: 243,
     predecessorPassReceiptGitBlob: 'f9f6d9b1464882f7e8cf7143a4d4e90d4093dcec',
-    exactFutureMutationPaths: [
+    workflowRun: 30305137754,
+    workflowJob: 90107416323,
+    artifactId: 8668122923,
+    artifactDigest: 'sha256:1891c2309d459cf40da5ce1917ce2ece4be60fd7d8560ef911ef6679ee0b8bb4',
+    automaticRegistryPreflightRun: 30305137669,
+    exactFutureMutationPathCount: 2,
+    protectedWitnessCount: 11,
+    collisionFindingCount: 8,
+    rollbackGroupCount: 2,
+    currentModuleScriptOwnerCount: 3,
+    showroomMutationCount: 0,
+    exactFutureMutationPaths: freeze([
       '/showroom/globe/h-earth/index.html',
       '/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'
-    ],
-    protectedPublicRouteGitBlob: 'b5f72fb70f59276f868a5894ee0c5e8beccc40ca',
-    protectedCpuRouteControllerGitBlob: '83e85df2f4440c2825672f46fb16e28c73992db2',
-    protectedCpuEnvironmentIntegrationGitBlob: '6c047d61544fcbc4fad8673abfbacb7c827fdb22',
-    protectedDirectManipulationGitBlob: '322ee2bfed5184acd8eac600f19abd72380b6c2b'
-  },
-  evidenceLimitations: [
-    'EXECUTION_PENDING',
+    ])
+  }),
+  evidenceLimitations: freeze([
+    'DURABLE_R3E1_PASS_RECEIPT_PENDING',
     'NO_PUBLIC_SOURCE_MUTATION',
     'NO_BROWSER_OR_GPU_EXECUTION',
     'R3E2_NOT_STARTED',
     'RUN_8E_REMAINS_FAIL_OPEN'
-  ]
+  ])
 });
 
 export const H_EARTH_RUN_8E_R3E1_NODE = freeze({
@@ -80,14 +81,14 @@ export const H_EARTH_RUN_8E_R3E1_NODE = freeze({
   nodeType: 'RECOVERY_INTEGRATION_SCOPE_CHECKPOINT',
   nodeSubtype: 'EXACT_PUBLIC_ROUTE_MUTATION_SCOPE_AND_RUNTIME_OWNER_DISPOSITION',
   displayName: 'H-Earth Run 8E R3E1 Exact Public Integration Scope',
-  description: 'Reads the actual public runtime corridor, classifies legacy ownership collisions, and declares a two-path future R3E2 integration scope without mutating public source.',
+  description: 'Reads the actual public runtime corridor, classifies legacy ownership collisions, and closes a two-path future R3E2 integration scope without mutating public source.',
   repositoryPaths: [...H_EARTH_RUN_8E_R3E1_PATHS],
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: H_EARTH_RUN_8E_R3E1_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3E1_EVIDENCE.evidenceId],
-  authorityClass: 'BOUNDED_PUBLIC_INTEGRATION_SCOPE_DECLARATION_PENDING',
-  authorityPosture: 'R3E1_EXECUTION_PENDING_R3E2_NOT_STARTED_RUN_8E_FAIL_OPEN',
-  authoritySource: ['R3D5_PASS_CLOSED_RECEIPT', 'ACTUAL_PUBLIC_ROUTE_SOURCE', 'ACTUAL_LEGACY_RUNTIME_SOURCES'],
+  authorityClass: 'EXECUTED_PUBLIC_INTEGRATION_SCOPE_CORE_PASS',
+  authorityPosture: 'R3E1_PASS_CLOSED_RECEIPT_PENDING_R3E2_NOT_STARTED_RUN_8E_FAIL_OPEN',
+  authoritySource: ['R3D5_PASS_CLOSED_RECEIPT', 'ACTUAL_PUBLIC_ROUTE_SOURCE', 'ACTUAL_LEGACY_RUNTIME_SOURCES', 'R3E1_GITHUB_ACTIONS_EXECUTION'],
   authorityScope: ['READ_PUBLIC_RUNTIME', 'DECLARE_EXACT_FUTURE_MUTATION_SCOPE', 'DECLARE_LOAD_ORDER', 'DECLARE_ROLLBACK_GROUPS'],
   authorityLimitations: ['NO_SHOWROOM_MUTATION', 'NO_PUBLIC_BINDING', 'NO_BROWSER_EXECUTION', 'NO_GPU_EXECUTION', 'NO_R3E2', 'NO_DEPLOYMENT', 'NO_RUN_8E_PASS'],
   parentRelations: [], childRelations: [], peerRelations: [], upstreamBoundaries: [], downstreamBoundaries: [],
@@ -98,9 +99,9 @@ export const H_EARTH_RUN_8E_R3E1_NODE = freeze({
   prohibitedMutations: ['SHOWROOM', 'PUBLIC_ROUTE', 'PUBLIC_DIRECT_MANIPULATION', 'NAVIGATION', 'RENDERER', 'DIAGNOSTIC_BINDING', 'R3E2_OR_LATER'],
   requiredValidations: ['EXACT_SOURCE_BLOBS', 'SCOPE_DECLARATION_EVALUATION', 'NO_SHOWROOM_DELTA', 'AUTOMATIC_REGISTRY_PREFLIGHT', 'EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_ANY_PUBLIC_ROUTE_SOURCE_MUTATION_R3E2'],
-  currentIdentityReferences: ['ccee63d4826f9ac5c8eb9069d0d33d3ad5ebcef7'],
-  lifecycleStatus: 'EXECUTION_PENDING',
-  unresolvedFields: ['R3E1_EXECUTION_HEAD', 'R3E1_WORKFLOW_RUN', 'R3E1_ARTIFACT', 'R3E1_PASS_RECEIPT']
+  currentIdentityReferences: ['ccee63d4826f9ac5c8eb9069d0d33d3ad5ebcef7', '15a518a9ae99c1e9c7ac5620c593be106e2c1948', '30305137754', '8668122923'],
+  lifecycleStatus: 'PASS_CLOSED_FINAL_EXACT_HEAD_VALIDATION_PENDING',
+  unresolvedFields: ['R3E1_PASS_RECEIPT', 'FINAL_EXACT_HEAD_WORKFLOW_RUN']
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R3E1_PATHS.map((repositoryPath) => [repositoryPath, {
@@ -115,46 +116,29 @@ const combinedInstance = freeze({
 });
 
 export const getHEarthRepositoryRegistryInstance = () => combinedInstance;
-export const getHEarthRepositoryRegistryNode = (id) =>
-  id === H_EARTH_RUN_8E_R3E1_NODE.nodeId ? H_EARTH_RUN_8E_R3E1_NODE : baseFacade.getHEarthRepositoryRegistryNode(id);
-export const getHEarthRepositoryRegistryEvidence = (id) =>
-  id === H_EARTH_RUN_8E_R3E1_EVIDENCE.evidenceId ? H_EARTH_RUN_8E_R3E1_EVIDENCE : baseFacade.getHEarthRepositoryRegistryEvidence(id);
+export const getHEarthRepositoryRegistryNode = (id) => id === H_EARTH_RUN_8E_R3E1_NODE.nodeId ? H_EARTH_RUN_8E_R3E1_NODE : baseFacade.getHEarthRepositoryRegistryNode(id);
+export const getHEarthRepositoryRegistryEvidence = (id) => id === H_EARTH_RUN_8E_R3E1_EVIDENCE.evidenceId ? H_EARTH_RUN_8E_R3E1_EVIDENCE : baseFacade.getHEarthRepositoryRegistryEvidence(id);
 export function resolveHEarthRepositoryRegistryPath(repositoryPath) {
   const indexed = pathIndex.get(repositoryPath);
-  return indexed
-    ? freeze({ repositoryPath, resolved: true, nodes: [indexed.node], occurrences: indexed.occurrences, unresolved: false })
-    : baseFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
+  return indexed ? freeze({ repositoryPath, resolved: true, nodes: [indexed.node], occurrences: indexed.occurrences, unresolved: false }) : baseFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
 }
 export function resolveHEarthRepositoryRegistryOccurrence(input = {}) {
-  const local = OCCURRENCES.filter((entry) =>
-    (input.path == null || entry.path === input.path) &&
-    (input.commitSha == null || entry.commitSha === input.commitSha) &&
-    (input.gitBlobSha == null || entry.gitBlobSha === input.gitBlobSha) &&
-    (input.refName == null || entry.refName === input.refName))
-    .map((occurrence) => freeze({ nodeId: H_EARTH_RUN_8E_R3E1_NODE.nodeId, node: H_EARTH_RUN_8E_R3E1_NODE, occurrence }));
+  const local = OCCURRENCES.filter((entry) => (input.path == null || entry.path === input.path) && (input.commitSha == null || entry.commitSha === input.commitSha) && (input.gitBlobSha == null || entry.gitBlobSha === input.gitBlobSha) && (input.refName == null || entry.refName === input.refName)).map((occurrence) => freeze({ nodeId: H_EARTH_RUN_8E_R3E1_NODE.nodeId, node: H_EARTH_RUN_8E_R3E1_NODE, occurrence }));
   const base = baseFacade.resolveHEarthRepositoryRegistryOccurrence(input);
   return freeze({ query: base.query, matches: [...base.matches, ...local], resolved: base.resolved || local.length > 0 });
 }
 export function findHEarthRepositoryRegistryNodes(criteria = {}) {
   const base = baseFacade.findHEarthRepositoryRegistryNodes(criteria);
   const node = H_EARTH_RUN_8E_R3E1_NODE;
-  const match =
-    (criteria.repositoryPath == null || node.repositoryPaths.includes(criteria.repositoryPath)) &&
-    (criteria.nodeType == null || criteria.nodeType === node.nodeType) &&
-    (criteria.nodeSubtype == null || criteria.nodeSubtype === node.nodeSubtype) &&
-    (criteria.authorityClass == null || criteria.authorityClass === node.authorityClass) &&
-    (criteria.lifecycleStatus == null || criteria.lifecycleStatus === node.lifecycleStatus);
+  const match = (criteria.repositoryPath == null || node.repositoryPaths.includes(criteria.repositoryPath)) && (criteria.nodeType == null || criteria.nodeType === node.nodeType) && (criteria.nodeSubtype == null || criteria.nodeSubtype === node.nodeSubtype) && (criteria.authorityClass == null || criteria.authorityClass === node.authorityClass) && (criteria.lifecycleStatus == null || criteria.lifecycleStatus === node.lifecycleStatus);
   return freeze(match ? [...base, node] : base);
 }
-export const getHEarthRepositoryRegistryRelationsForNode = (id, direction = 'BOTH') =>
-  id === H_EARTH_RUN_8E_R3E1_NODE.nodeId ? Object.freeze([]) : baseFacade.getHEarthRepositoryRegistryRelationsForNode(id, direction);
-export const getHEarthRepositoryRegistryDependencyClosure = (id) =>
-  id === H_EARTH_RUN_8E_R3E1_NODE.nodeId
-    ? freeze({ nodeId: id, nodes: [H_EARTH_RUN_8E_R3E1_NODE], relations: [], unresolved: false })
-    : baseFacade.getHEarthRepositoryRegistryDependencyClosure(id);
+export const getHEarthRepositoryRegistryRelationsForNode = (id, direction = 'BOTH') => id === H_EARTH_RUN_8E_R3E1_NODE.nodeId ? freeze([]) : baseFacade.getHEarthRepositoryRegistryRelationsForNode(id, direction);
+export const getHEarthRepositoryRegistryDependencyClosure = (id) => id === H_EARTH_RUN_8E_R3E1_NODE.nodeId ? freeze({ nodeId: id, nodes: [H_EARTH_RUN_8E_R3E1_NODE], relations: [], unresolved: false }) : baseFacade.getHEarthRepositoryRegistryDependencyClosure(id);
 
 export const H_EARTH_RUN_8E_R3E1_FACADE = freeze({
   ...baseFacade,
+  H_EARTH_RUN_8E_R3E1_PATHS,
   getHEarthRepositoryRegistryInstance,
   getHEarthRepositoryRegistryNode,
   getHEarthRepositoryRegistryEvidence,

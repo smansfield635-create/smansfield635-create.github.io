@@ -264,13 +264,15 @@ async function runWorkerProbe(flattened) {
       worker.terminate();
       reject(error);
     };
+    const positionsBuffer = flattened.positions.buffer.slice(0);
+    const indicesBuffer = flattened.indices.buffer.slice(0);
     worker.postMessage({
-      positions: flattened.positions.buffer,
-      indices: flattened.indices.buffer,
+      positions: positionsBuffer,
+      indices: indicesBuffer,
       matrices,
       width: 160,
       height: 100
-    }, [flattened.positions.buffer.slice(0), flattened.indices.buffer.slice(0)]);
+    }, [positionsBuffer, indicesBuffer]);
   });
 }
 

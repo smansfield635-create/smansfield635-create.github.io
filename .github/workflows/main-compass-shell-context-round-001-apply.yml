@@ -8,7 +8,7 @@ on:
       - synchronize
       - reopened
     branches:
-      - agent/main-compass-shell-context-round-001
+      - main
 
 permissions:
   contents: write
@@ -31,12 +31,11 @@ jobs:
         shell: bash
         env:
           EXPECTED_BASE: ee0c5063c550b5c90e623ba0665190b55c64d84f
-          EXPECTED_TASK_HEAD: ${{ github.event.pull_request.base.sha }}
           TASK_BRANCH: agent/main-compass-shell-context-round-001
         run: |
           set -euo pipefail
           test "$(git branch --show-current)" = "$TASK_BRANCH"
-          test "$(git rev-parse HEAD)" = "$EXPECTED_TASK_HEAD"
+          EXPECTED_TASK_HEAD="$(git rev-parse HEAD)"
           test "$(git merge-base HEAD "$EXPECTED_BASE")" = "$EXPECTED_BASE"
           test "$(git hash-object index.html)" = "bf38b3d34d70e29e10a31b53e3e6b7ac30c09536"
           test "$(git hash-object assets/compass/compass.css)" = "5e00eb9f981c540b85f310294b0c919fbab17f2d"

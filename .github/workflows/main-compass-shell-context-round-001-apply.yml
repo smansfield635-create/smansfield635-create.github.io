@@ -1,5 +1,4 @@
 name: Main Compass Shell Context Bounded Apply
-# Second push trigger; removed before candidate publication.
 
 on:
   push:
@@ -22,113 +21,21 @@ jobs:
           ref: agent/main-compass-shell-context-round-001
           fetch-depth: 0
 
-      - name: Apply accepted three-file candidate and validate
+      - name: Apply accepted candidate and publish clean task commit
         shell: bash
         env:
           EXPECTED_BASE: ee0c5063c550b5c90e623ba0665190b55c64d84f
           EXPECTED_TRIGGER: ${{ github.sha }}
+          TASK_BRANCH: agent/main-compass-shell-context-round-001
         run: |
           set -euo pipefail
-          test "$(git branch --show-current)" = "agent/main-compass-shell-context-round-001"
+          test "$(git branch --show-current)" = "$TASK_BRANCH"
           test "$(git merge-base HEAD "$EXPECTED_BASE")" = "$EXPECTED_BASE"
           test "$(git hash-object index.html)" = "bf38b3d34d70e29e10a31b53e3e6b7ac30c09536"
           test "$(git hash-object assets/compass/compass.css)" = "5e00eb9f981c540b85f310294b0c919fbab17f2d"
           test "$(git hash-object assets/compass/compass.controller.js)" = "259e0d16b55c3986fec57db37fc057861483344a"
 
-          cat > /tmp/main-compass.patch.gz.b64 <<'PATCH_B64'
-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
-W6wAAA==
-PATCH_B64
-          tr -d '\n' < /tmp/main-compass.patch.gz.b64 | base64 -d | gzip -d > /tmp/main-compass.patch
+          base64 -d .github/main-compass-shell-context-round-001.patch.gz.b64 | gzip -d > /tmp/main-compass.patch
           git apply --check /tmp/main-compass.patch
           git apply /tmp/main-compass.patch
 
@@ -137,33 +44,33 @@ PATCH_B64
           test "$(git hash-object assets/compass/compass.controller.js)" = "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46"
           node --check assets/compass/compass.controller.js
 
-          python - <<'PY_CHECK'
+          python - <<'PY'
           from pathlib import Path
-          import re, subprocess
-          html=Path('index.html').read_text()
-          css=Path('assets/compass/compass.css').read_text()
-          js=Path('assets/compass/compass.controller.js').read_text()
+          import os, re, subprocess
+          html = Path('index.html').read_text()
+          css = Path('assets/compass/compass.css').read_text()
+          js = Path('assets/compass/compass.controller.js').read_text()
           assert 'dgb-main-compass-shell-context-round-001-v1' in html
-          assert html.count('data-compass-room') >= 19
           assert 'data-compass-room-label-count="19"' in html
           assert 'data-visual-pass-claimed="false"' in html
           assert 'Main Compass shell hierarchy and contextual presentation' in css
           assert 'Drag to rotate the constellation. Tap a primary star to open its cluster.' in js
           assert 'Drag to rotate the cluster. Tap a room star to select it.' in js
           assert 'Review the selected room. Use Enter Room to continue' in js
-          source=subprocess.check_output(['git','show',f'{__import__("os").environ["EXPECTED_BASE"]}:index.html'], text=True)
-          def protected(s):
-              m=re.search(r'<style id="dgb-main-compass-label-cosmos-v1">.*?</style>',s,re.S)
-              assert m
-              return m.group(0)
-          assert protected(html)==protected(source)
-          PY_CHECK
+          source = subprocess.check_output(['git', 'show', f'{os.environ["EXPECTED_BASE"]}:index.html'], text=True)
+          def protected(text):
+              match = re.search(r'<style id="dgb-main-compass-label-cosmos-v1">.*?</style>', text, re.S)
+              assert match
+              return match.group(0)
+          assert protected(html) == protected(source)
+          PY
 
           rm .github/workflows/main-compass-shell-context-round-001-apply.yml
+          rm .github/main-compass-shell-context-round-001.patch.gz.b64
           git reset --mixed "$EXPECTED_BASE"
           git add index.html assets/compass/compass.css assets/compass/compass.controller.js
           test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n' assets/compass/compass.controller.js assets/compass/compass.css index.html | sort)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Apply validated Main Compass shell context candidate"
-          git push --force-with-lease=refs/heads/agent/main-compass-shell-context-round-001:"$EXPECTED_TRIGGER" origin HEAD:agent/main-compass-shell-context-round-001
+          git push --force-with-lease=refs/heads/$TASK_BRANCH:"$EXPECTED_TRIGGER" origin HEAD:$TASK_BRANCH

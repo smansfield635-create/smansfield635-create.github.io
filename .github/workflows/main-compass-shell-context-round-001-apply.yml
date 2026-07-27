@@ -1,6 +1,5 @@
 name: Main Compass Shell Context Bounded Apply
 # Second push trigger; removed before candidate publication.
-# Server-generated merge trigger.
 
 on:
   push:

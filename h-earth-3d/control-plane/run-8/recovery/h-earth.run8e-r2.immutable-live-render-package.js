@@ -118,8 +118,20 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
       checkpointId: 'RUN_8E_R2E',
       name: 'REGISTRY_DURABLE_RECEIPT_AND_INDEPENDENT_SCOPE_AUDIT',
       requiredResult: 'PASS_CLOSED_BEFORE_R2F',
-      currentStatus: 'NOT_STARTED',
-      stoppingBoundary: 'STOP_BEFORE_R2_CLOSURE_AND_PROMOTION_R2F'
+      currentStatus: 'PASS_CLOSED',
+      executionEvidence: {
+        pullRequest: 224,
+        validatedCoreHead: '481dd572eb3351e42e11f48ff75edc37c9e03d76',
+        executionEvidenceHead: '2ae6c8cfad013c0ddd3d7f71990357add582ae34',
+        workflowRun: 30280738790,
+        workflowJob: 90026155156,
+        evidenceArtifact: 8658686555,
+        evidenceArtifactDigest: 'sha256:adbeab3e9b63dc6ec69282be2cb177f058b20d95203b12b6b5f89c0d53d58260',
+        exactOccurrenceManifestDigest: 'sha256:2ae01097d0ab58f6cfd6b2a158ee558f816a2342443b387da410879fb1f2da9a',
+        automaticRegistryPreflight: 'PASS',
+        passReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json'
+      },
+      stoppingBoundary: 'STOP_BEFORE_R2_CLOSURE_AND_PROMOTION_DECISION_R2F'
     },
     {
       checkpointId: 'RUN_8E_R2F',
@@ -222,13 +234,16 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'ALL_27_GPU_BUFFERS_DELETED',
     'NO_SHADER_PROGRAM_DRAW_CALL_OR_VISIBLE_PRESENTATION_CREATED',
     'NO_CAMERA_VIEWPORT_RENDER_LOOP_OR_ROUTE_BINDING_IN_PACKAGE',
-    'SOURCE_AUTHORITIES_AND_R1_FAIL_OPEN_BOUNDARY_PRESERVED'
+    'SOURCE_AUTHORITIES_AND_R1_FAIL_OPEN_BOUNDARY_PRESERVED',
+    'R2_REGISTRY_REPRESENTATION_AND_EXECUTION_CUSTODY_PASS_CLOSED'
   ],
   stoppingBoundary: {
-    currentCheckpoint: 'RUN_8E_R2D_PASS_CLOSED',
-    nextCheckpoint: 'RUN_8E_R2E_NOT_STARTED',
-    run8ER2MayCloseOnConstructionAndValidationPass: true,
-    run8ER2EStarted: false,
+    currentCheckpoint: 'RUN_8E_R2E_PASS_CLOSED',
+    nextCheckpoint: 'RUN_8E_R2F_NOT_STARTED',
+    run8ER2MayCloseOnConstructionAndValidationPass: false,
+    run8ER2EStarted: true,
+    run8ER2EPassClosed: true,
+    run8ER2FStarted: false,
     run8ER3Started: false,
     publicRendererInstalled: false,
     publicInteractionRestored: false,
@@ -267,7 +282,16 @@ export function evaluateHEarthRun8ER2Control(candidate = H_EARTH_RUN_8E_R2_CONTR
   if (r2D?.executionEvidence?.canonicalGpuUploadBytesExactAcrossNodeAndChromium !== true) {
     issues.push('R2D_CANONICAL_GPU_BYTES_NOT_EXACT');
   }
-  if (r2E?.currentStatus !== 'NOT_STARTED') issues.push('R2E_STARTED_BEFORE_R2D_STOP');
+  if (r2E?.currentStatus !== 'PASS_CLOSED') issues.push('R2E_NOT_PASS_CLOSED');
+  if (r2E?.executionEvidence?.workflowRun !== 30280738790) issues.push('R2E_WORKFLOW_RUN_MISMATCH');
+  if (r2E?.executionEvidence?.evidenceArtifactDigest !==
+      'sha256:adbeab3e9b63dc6ec69282be2cb177f058b20d95203b12b6b5f89c0d53d58260') {
+    issues.push('R2E_ARTIFACT_DIGEST_MISMATCH');
+  }
+  if (r2E?.executionEvidence?.exactOccurrenceManifestDigest !==
+      'sha256:2ae01097d0ab58f6cfd6b2a158ee558f816a2342443b387da410879fb1f2da9a') {
+    issues.push('R2E_OCCURRENCE_MANIFEST_DIGEST_MISMATCH');
+  }
   if (r2F?.checkpointId !== 'RUN_8E_R2F' || r2F?.currentStatus !== 'NOT_STARTED') {
     issues.push('R2F_STATE_INVALID');
   }
@@ -279,11 +303,19 @@ export function evaluateHEarthRun8ER2Control(candidate = H_EARTH_RUN_8E_R2_CONTR
   if (!candidate?.prohibitedMutations?.includes('VISIBLE_RENDERER_OR_RENDER_LOOP')) {
     issues.push('R2_RENDER_LOOP_BOUNDARY_MISSING');
   }
-  if (candidate?.stoppingBoundary?.run8ER2EStarted !== false) issues.push('R2E_STARTED_INSIDE_R2D_CLOSURE');
+  if (candidate?.stoppingBoundary?.currentCheckpoint !== 'RUN_8E_R2E_PASS_CLOSED') {
+    issues.push('R2E_PARENT_CURRENT_CHECKPOINT_INVALID');
+  }
+  if (candidate?.stoppingBoundary?.nextCheckpoint !== 'RUN_8E_R2F_NOT_STARTED') {
+    issues.push('R2F_PARENT_NEXT_CHECKPOINT_INVALID');
+  }
+  if (candidate?.stoppingBoundary?.run8ER2EPassClosed !== true) issues.push('R2E_PARENT_NOT_PASS_CLOSED');
+  if (candidate?.stoppingBoundary?.run8ER2FStarted !== false) issues.push('R2F_STARTED_INSIDE_R2E_CLOSURE');
   if (candidate?.stoppingBoundary?.run8ER3Started !== false) issues.push('R3_STARTED_INSIDE_R2');
+  if (candidate?.stoppingBoundary?.run8EPassClosed !== false) issues.push('RUN_8E_CLOSED_INSIDE_R2E');
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R2D_CONTROL_PASS_CLOSED' : 'RUN_8E_R2_CONTROL_FAIL',
+    status: issues.length === 0 ? 'RUN_8E_R2E_CONTROL_PASS_CLOSED' : 'RUN_8E_R2_CONTROL_FAIL',
     issues
   });
 }

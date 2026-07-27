@@ -18,6 +18,7 @@ export const H_EARTH_RUN_8E_R3B_PATHS = Object.freeze([
   '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
   '/h-earth-3d/validation/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.harness.mjs',
   '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-001.failure.receipt.json',
+  '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-002.failure.receipt.json',
   '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.pass-closed.receipt.json',
   '/showroom/globe/h-earth/diagnostic/run8e-r3b/index.html',
   '/showroom/globe/h-earth/diagnostic/run8e-r3b/fixed-frame.js'
@@ -33,7 +34,7 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R3B_PATHS.map((repositoryPath) 
   contentSha256: null,
   byteCount: null,
   existenceStatus: 'PRESENT_OR_RESERVED',
-  fetchbackStatus: 'R3B_ATTEMPT_001_PRESERVED_CORRECTION_AND_PASS_RECEIPT_PENDING',
+  fetchbackStatus: 'R3B_ATTEMPTS_001_AND_002_PRESERVED_EXACT_DRAWING_BUFFER_CAPTURE_CORRECTION_PENDING',
   occurrenceClass: 'RUN_8E_R3B_ISOLATED_WEBGL2_FIXED_FRAME_OCCURRENCE'
 })));
 
@@ -62,16 +63,26 @@ export const H_EARTH_RUN_8E_R3B_EVIDENCE = freeze({
     attempt001FailureArtifact: 8661282879,
     attempt001FailureArtifactDigest: 'sha256:5a0eb16b9b89958716a69768b2f579e05b9aa332f9b773a8a70bc9ac06bc66de',
     attempt001FailureCode: 'R3B_R3A_PACKET_REJECTED:R3A_PACKAGE_IDENTITY_MISMATCH',
+    attempt002ExecutionHead: '3643efcdabcf2458d21f89490c1f19ba750eb01d',
+    attempt002WorkflowRun: 30287795963,
+    attempt002WorkflowJob: 90049795407,
+    attempt002Artifact: 8661542367,
+    attempt002ArtifactDigest: 'sha256:5796ac2b40efa75f07f6b35036b9d353280c427304b45eb988693caa9d9e8497',
+    attempt002GpuExecutionStatus: 'PASS',
+    attempt002FinalOutputGate: 'FAIL_SCREENSHOT_DIMENSION_ASSERTION',
+    attempt002ColorNonClearPixelCount: 492648,
+    attempt002DepthNonClearPixelCount: 492648,
     workflowRun: null,
     workflowJob: null,
     artifactId: null,
     artifactDigest: null,
     fixedVisibleFramePath: null,
-    browserExecutionStatus: 'CORRECTION_PENDING_AFTER_ATTEMPT_001'
+    browserExecutionStatus: 'EXACT_DRAWING_BUFFER_CAPTURE_CORRECTION_PENDING_AFTER_ATTEMPT_002_GPU_PASS'
   },
   evidenceLimitations: [
     'R3B_ATTEMPT_001_FAILED_AND_PRESERVED',
-    'R3B_EXECUTION_CORRECTION_PENDING',
+    'R3B_ATTEMPT_002_GPU_EXECUTION_PASSED_OUTPUT_GATE_FAILED_AND_PRESERVED',
+    'R3B_EXACT_DRAWING_BUFFER_CAPTURE_CORRECTION_PENDING',
     'PERSISTENT_GPU_RESOURCES_NOT_ESTABLISHED',
     'CONTINUOUS_CAMERA_LOOP_NOT_ESTABLISHED',
     'NO_INTERACTION_BINDING',
@@ -91,7 +102,7 @@ export const H_EARTH_RUN_8E_R3B_NODE = freeze({
   evidenceClass: H_EARTH_RUN_8E_R3B_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3B_EVIDENCE.evidenceId],
   authorityClass: 'BOUNDED_ISOLATED_GPU_EXECUTION',
-  authorityPosture: 'R3B_ATTEMPT_001_FAILED_PRESERVED_CORRECTION_PENDING_R3C_NOT_STARTED_RUN_8E_FAIL_OPEN',
+  authorityPosture: 'R3B_ATTEMPTS_001_AND_002_PRESERVED_ATTEMPT_002_GPU_PASS_EXACT_CAPTURE_CORRECTION_PENDING_R3C_NOT_STARTED_RUN_8E_FAIL_OPEN',
   authoritySource: ['R2_PASS_CLOSED_PACKAGE', 'R3A_PASS_CLOSED_CAMERA_PACKET', 'R3B_CONTROL'],
   authorityScope: ['ISOLATED_WEBGL2_CONTEXT', 'FIXED_FRAME_SHADERS_AND_DRAW', 'COLOR_DEPTH_READBACK', 'SCREENSHOT_EVIDENCE'],
   authorityLimitations: ['NO_PUBLIC_ROUTE', 'NO_INTERACTION', 'NO_CONTINUOUS_LOOP', 'NO_DEPLOYMENT', 'NO_R3C', 'NO_RUN_8E_PASS'],
@@ -99,12 +110,12 @@ export const H_EARTH_RUN_8E_R3B_NODE = freeze({
   cardinalRole: 'NONE', cardinalStatus: 'NONE', cardinalCompleteness: 'NOT_APPLICABLE',
   orderingRules: ['R3A_PASS_CLOSED_BEFORE_R3B', 'R3B_PASS_CLOSED_BEFORE_R3C'],
   dependencyRelations: [],
-  allowedMutationScope: 'R3B_TEN_PATH_BOUNDED_SCOPE_ONLY',
+  allowedMutationScope: 'R3B_ELEVEN_PATH_BOUNDED_SCOPE_ONLY',
   prohibitedMutations: ['PUBLIC_ROUTE', 'DIRECT_MANIPULATION', 'NAVIGATION_AUTHORITY', 'R2_PACKAGE', 'R2D_GPU_ADAPTER', 'CONTINUOUS_LOOP', 'R3C_OR_LATER'],
   requiredValidations: ['REAL_BROWSER_WEBGL2_EXECUTION', 'SCREENSHOT_ARTIFACT', 'COLOR_DEPTH_READBACK', 'AUTOMATIC_REGISTRY_PREFLIGHT', 'EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_PERSISTENT_GPU_RESOURCES_AND_CONTINUOUS_CAMERA_LOOP_R3C'],
-  currentIdentityReferences: ['9560bc1f88800e12408a99a10032e9daf1e56713', 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25', 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD'],
-  lifecycleStatus: 'ATTEMPT_001_FAILED_PRESERVED_CORRECTION_PENDING',
+  currentIdentityReferences: ['9560bc1f88800e12408a99a10032e9daf1e56713', 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25', 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD', '30287127087', '30287795963'],
+  lifecycleStatus: 'ATTEMPT_002_GPU_PASS_EXACT_CAPTURE_CORRECTION_PENDING',
   unresolvedFields: ['SUCCESSFUL_WORKFLOW_RUN', 'SUCCESSFUL_ARTIFACT_DIGEST', 'PASS_RECEIPT', 'FINAL_EXACT_HEAD']
 });
 

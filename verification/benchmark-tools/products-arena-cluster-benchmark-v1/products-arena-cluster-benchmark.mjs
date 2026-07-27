@@ -144,25 +144,34 @@ async function quickFlick(page, profile, rect) {
   const startX = rect.left + rect.width * 0.13;
   const endX = rect.left + rect.width * 0.56;
   const y = rect.top + rect.height * 0.72;
-  const steps = 5;
-  if (profile.hasTouch) {
-    const client = await page.createCDPSession();
-    await client.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: startX, y, radiusX: 8, radiusY: 8, force: 1, id: 1 }] });
-    for (let i = 1; i <= steps; i += 1) {
-      await client.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: startX + (endX - startX) * i / steps, y, radiusX: 8, radiusY: 8, force: 1, id: 1 }] });
-      await sleep(8);
+  await page.evaluate(({ selector, startX, endX, y, pointerType }) => {
+    const scene = document.querySelector(selector);
+    if (!scene) throw new Error("PRODUCTS_SCENE_NOT_FOUND_FOR_FLICK");
+    const pointerId = 91;
+    const send = (type, x, buttons) => scene.dispatchEvent(new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      pointerId,
+      pointerType,
+      isPrimary: true,
+      clientX: x,
+      clientY: y,
+      button: 0,
+      buttons
+    }));
+    send("pointerdown", startX, 1);
+    for (let index = 1; index <= 5; index += 1) {
+      send("pointermove", startX + (endX - startX) * index / 5, 1);
     }
-    await client.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-    await client.detach();
-  } else {
-    await page.mouse.move(startX, y);
-    await page.mouse.down();
-    for (let i = 1; i <= steps; i += 1) {
-      await page.mouse.move(startX + (endX - startX) * i / steps, y);
-      await sleep(8);
-    }
-    await page.mouse.up();
-  }
+    send("pointerup", endX, 0);
+  }, {
+    selector: SELECTORS.scene,
+    startX,
+    endX,
+    y,
+    pointerType: profile.hasTouch ? "touch" : "mouse"
+  });
 }
 
 async function runProfile(browser, profileName) {
@@ -249,6 +258,7 @@ async function runProfile(browser, profileName) {
       const rect = element.getBoundingClientRect();
       return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
     });
+    record.quickFlickDriver = "DETERMINISTIC_POINTER_CONTRACT";
     await quickFlick(page, profile, flickSceneRect);
     await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "PRIMARY_ENTRY", { timeout: 10000 }).catch(() => {});
     await sleep(500);

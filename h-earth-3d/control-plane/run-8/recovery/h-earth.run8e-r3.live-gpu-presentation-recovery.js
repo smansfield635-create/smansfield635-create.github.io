@@ -71,9 +71,25 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     {
       checkpointId: 'RUN_8E_R3D',
       name: 'DIAGNOSTIC_DIRECT_INTERACTION_WITHOUT_BITMAP_PREVIEW',
-      currentStatus: 'EXECUTION_PENDING',
+      currentStatus: 'IN_PROGRESS',
       boundedSubcheckpoints: [
-        { checkpointId: 'RUN_8E_R3D1', name: 'DIAGNOSTIC_DIRECTORY_AND_HOST_SCAFFOLD', currentStatus: 'EXECUTION_PENDING', stoppingBoundary: 'STOP_BEFORE_POINTER_AND_TOUCH_INTAKE_R3D2' },
+        {
+          checkpointId: 'RUN_8E_R3D1',
+          name: 'DIAGNOSTIC_DIRECTORY_AND_HOST_SCAFFOLD',
+          currentStatus: 'PASS_CLOSED',
+          executionEvidence: {
+            successfulExecutionHead: '7cff5f1800c6e0743a44ac41ed501bf0c266dc61',
+            workflowRun: 30294915207,
+            workflowJob: 90073456239,
+            evidenceArtifact: 8664228635,
+            evidenceArtifactDigest: 'sha256:c650f1f3c391079f7cfaf564ea447687cf7afdc798e515a9e3fdb9d9e25f23fc',
+            diagnosticPathCount: 4,
+            registeredPathCount: 11,
+            staticHttpPathCount: 4,
+            executionBoundaryViolationCount: 0
+          },
+          stoppingBoundary: 'STOP_BEFORE_POINTER_AND_TOUCH_INTAKE_R3D2'
+        },
         { checkpointId: 'RUN_8E_R3D2', name: 'POINTER_AND_TOUCH_NAVIGATION_PROPOSAL_INTAKE', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_LIVE_GPU_CAMERA_BINDING_R3D3' },
         { checkpointId: 'RUN_8E_R3D3', name: 'LIVE_GPU_CAMERA_RESPONSE_WITHOUT_BITMAP_PREVIEW', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_INTERACTION_BROWSER_EXECUTION_R3D4' },
         { checkpointId: 'RUN_8E_R3D4', name: 'DIAGNOSTIC_INTERACTION_BROWSER_EXECUTION', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_R3D_CLOSURE_R3D5' },
@@ -86,12 +102,12 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     { checkpointId: 'RUN_8E_R3G', name: 'R3_CLOSURE_AND_PROMOTION_DECISION', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_ANY_LATER_RUN_8E_PHASE' }
   ],
   currentState: {
-    run8ER3: 'OPEN_AT_R3D1_EXECUTION',
+    run8ER3: 'OPEN_AT_R3D2_BOUNDARY',
     run8ER3A: 'PASS_CLOSED',
     run8ER3B: 'PASS_CLOSED',
     run8ER3C: 'PASS_CLOSED',
-    run8ER3D: 'EXECUTION_PENDING',
-    run8ER3D1: 'EXECUTION_PENDING',
+    run8ER3D: 'IN_PROGRESS',
+    run8ER3D1: 'PASS_CLOSED',
     run8ER3D2: 'NOT_STARTED',
     run8ER3D3: 'NOT_STARTED',
     run8ER3D4: 'NOT_STARTED',
@@ -148,8 +164,10 @@ export function evaluateHEarthRun8ER3Control(candidate = H_EARTH_RUN_8E_R3_CONTR
   if (checkpoints.slice(4).some((entry) => entry.currentStatus !== 'NOT_STARTED')) issues.push('LATER_R3_CHECKPOINT_STARTED');
   if (r3D1?.currentStatus === 'EXECUTION_PENDING') {
     if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3D1_EXECUTION' || candidate?.currentState?.run8ER3D1 !== 'EXECUTION_PENDING') issues.push('R3D1_PARENT_EXECUTION_STATE_INVALID');
-  } else if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3D2_BOUNDARY' || candidate?.currentState?.run8ER3D2 !== 'NOT_STARTED') {
-    issues.push('R3D2_PARENT_BOUNDARY_INVALID');
+  } else {
+    if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3D2_BOUNDARY' || candidate?.currentState?.run8ER3D1 !== 'PASS_CLOSED' || candidate?.currentState?.run8ER3D2 !== 'NOT_STARTED') issues.push('R3D2_PARENT_BOUNDARY_INVALID');
+    if (r3D1?.executionEvidence?.workflowRun !== 30294915207) issues.push('R3D1_WORKFLOW_RUN_MISMATCH');
+    if (r3D1?.executionEvidence?.evidenceArtifactDigest !== 'sha256:c650f1f3c391079f7cfaf564ea447687cf7afdc798e515a9e3fdb9d9e25f23fc') issues.push('R3D1_ARTIFACT_DIGEST_MISMATCH');
   }
   for (const key of ['publicRouteMutation','directManipulationMutation','navigationAuthorityMutation','cameraAuthorityMutation','immutablePackageMutation','canonicalGpuTransportMutation','persistentRendererMutation','interactionBinding','pointerBinding','touchBinding','wheelBinding','liveGpuCameraBinding','publicRouteBinding','deployment','mainMerge','run8EPassClosed']) {
     if (candidate?.boundaries?.[key] !== false) issues.push(`R3_BOUNDARY_VIOLATION:${key}`);

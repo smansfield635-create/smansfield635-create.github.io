@@ -8,14 +8,39 @@ const freeze = (value, seen = new WeakSet()) => {
   return Object.freeze(value);
 };
 
+const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
+const BRANCH = 'agent/h-earth-run8e-r1-material-ledger-preservation-001';
+const VALIDATED_CORE_HEAD = '799b3429259e08ac6afb687a50fdcf52e6d418a9';
 const RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.material-ledger.preservation.receipt.json';
+
+export const H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_PATHS = Object.freeze([
+  RECEIPT_PATH,
+  '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js',
+  '/h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs',
+  '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+  '/.github/workflows/h-earth-run8e-r1-material-ledger.yml'
+]);
+
+const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_PATHS.map((repositoryPath) => freeze({
+  repository: REPOSITORY,
+  refType: 'BRANCH',
+  refName: BRANCH,
+  commitSha: null,
+  path: repositoryPath,
+  gitBlobSha: null,
+  contentSha256: null,
+  byteCount: null,
+  existenceStatus: 'PRESENT',
+  fetchbackStatus: 'VERIFIED_ON_R1_MATERIAL_LEDGER_EXECUTION_BRANCH',
+  occurrenceClass: 'RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_EVIDENCE'
+})));
 
 export const H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_v1',
   evidenceClass: 'EXECUTED_MATERIAL_LEDGER_VALIDATION_AND_REGISTRY_PREFLIGHT',
   sourceKind: 'GITHUB_ACTIONS_EXECUTION_AND_DURABLE_REPOSITORY_RECEIPT',
   sourceIdOrPath: RECEIPT_PATH,
-  sourceOccurrenceOrRevision: '799b3429259e08ac6afb687a50fdcf52e6d418a9',
+  sourceOccurrenceOrRevision: VALIDATED_CORE_HEAD,
   assertionScope: Object.freeze([
     'MATERIAL_LEDGER_VALIDATION_PASS',
     'AUTOMATIC_REPOSITORY_REGISTRY_PREFLIGHT_PASS',
@@ -47,14 +72,8 @@ export const H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE = freeze({
   nodeSubtype: 'R1_MATERIAL_LEDGER_PASS_AND_R2_STOPPING_BOUNDARY',
   displayName: 'H-Earth Run 8E-R1 Material Ledger Execution Evidence',
   description: 'Binds the successful material-ledger workflow, automatic registry preflight, durable execution receipt, and explicit stopping boundary before R2.',
-  repositoryPaths: Object.freeze([
-    RECEIPT_PATH,
-    '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js',
-    '/h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs',
-    '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
-    '/.github/workflows/h-earth-run8e-r1-material-ledger.yml'
-  ]),
-  repositoryOccurrences: Object.freeze([]),
+  repositoryPaths: [...H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_PATHS],
+  repositoryOccurrences: OCCURRENCES,
   evidenceClass: H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_EVIDENCE.evidenceClass,
   evidenceReferences: Object.freeze([H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_EVIDENCE.evidenceId]),
   authorityClass: 'EXECUTED_EVIDENCE_PRESERVATION_VALIDATION',
@@ -103,10 +122,15 @@ export const H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE = freeze({
     'FINAL_HEAD_AUTOMATIC_REGISTRY_PREFLIGHT'
   ]),
   stoppingBoundaries: Object.freeze(['STOP_BEFORE_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_CONSTRUCTION']),
-  currentIdentityReferences: Object.freeze(['799b3429259e08ac6afb687a50fdcf52e6d418a9', RECEIPT_PATH]),
+  currentIdentityReferences: Object.freeze([VALIDATED_CORE_HEAD, RECEIPT_PATH]),
   lifecycleStatus: 'EXECUTION_RECEIPT_PRESERVED_FINAL_HEAD_VALIDATION_PENDING',
   unresolvedFields: Object.freeze(['FINAL_HEAD', 'FINAL_VALIDATION_RUN', 'MERGE_COMMIT'])
 });
+
+const pathIndex = new Map(H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_PATHS.map((repositoryPath) => [repositoryPath, {
+  node: H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE,
+  occurrences: OCCURRENCES.filter((entry) => entry.path === repositoryPath)
+}]));
 
 const baseInstance = baseFacade.getHEarthRepositoryRegistryInstance();
 const combinedInstance = freeze({
@@ -124,9 +148,27 @@ export const getHEarthRepositoryRegistryEvidence = (id) =>
   id === H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_EVIDENCE.evidenceId
     ? H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_EVIDENCE
     : baseFacade.getHEarthRepositoryRegistryEvidence(id);
-export const resolveHEarthRepositoryRegistryPath = (repositoryPath) => baseFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
-export const resolveHEarthRepositoryRegistryOccurrence = (input = {}) => baseFacade.resolveHEarthRepositoryRegistryOccurrence(input);
-export const findHEarthRepositoryRegistryNodes = (criteria = {}) => {
+
+export function resolveHEarthRepositoryRegistryPath(repositoryPath) {
+  const indexed = pathIndex.get(repositoryPath);
+  return indexed
+    ? freeze({ repositoryPath, resolved: true, nodes: [indexed.node], occurrences: indexed.occurrences, unresolved: false })
+    : baseFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
+}
+
+export function resolveHEarthRepositoryRegistryOccurrence(input = {}) {
+  const local = OCCURRENCES
+    .filter((entry) =>
+      (input.path == null || entry.path === input.path) &&
+      (input.commitSha == null || entry.commitSha === input.commitSha) &&
+      (input.gitBlobSha == null || entry.gitBlobSha === input.gitBlobSha) &&
+      (input.refName == null || entry.refName === input.refName))
+    .map((occurrence) => freeze({ nodeId: H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE.nodeId, node: H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE, occurrence }));
+  const base = baseFacade.resolveHEarthRepositoryRegistryOccurrence(input);
+  return freeze({ query: base.query, matches: [...base.matches, ...local], resolved: base.resolved || local.length > 0 });
+}
+
+export function findHEarthRepositoryRegistryNodes(criteria = {}) {
   const base = baseFacade.findHEarthRepositoryRegistryNodes(criteria);
   const node = H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE;
   const match =
@@ -136,9 +178,12 @@ export const findHEarthRepositoryRegistryNodes = (criteria = {}) => {
     (criteria.authorityClass == null || criteria.authorityClass === node.authorityClass) &&
     (criteria.lifecycleStatus == null || criteria.lifecycleStatus === node.lifecycleStatus);
   return freeze(match ? [...base, node] : base);
-};
+}
+
 export const getHEarthRepositoryRegistryRelationsForNode = (id, direction = 'BOTH') =>
-  id === H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE.nodeId ? Object.freeze([]) : baseFacade.getHEarthRepositoryRegistryRelationsForNode(id, direction);
+  id === H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE.nodeId
+    ? Object.freeze([])
+    : baseFacade.getHEarthRepositoryRegistryRelationsForNode(id, direction);
 export const getHEarthRepositoryRegistryDependencyClosure = (id) =>
   id === H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE.nodeId
     ? freeze({ nodeId: id, nodes: [H_EARTH_RUN_8E_R1_MATERIAL_LEDGER_EXECUTION_NODE], relations: [], unresolved: false })

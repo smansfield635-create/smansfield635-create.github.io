@@ -1,0 +1,140 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2E_REGISTRY_EXECUTION_CUSTODY_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2E_PASS_CLOSED",
+  "recordedAt": "2026-07-27T15:42:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2e-registry-execution-custody-001",
+  "pullRequest": 224,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2D",
+    "status": "PASS_CLOSED",
+    "branch": "agent/h-earth-run8e-r2d-gpu-resource-lifecycle-001",
+    "exactHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9"
+  },
+  "coreExecution": {
+    "head": "481dd572eb3351e42e11f48ff75edc37c9e03d76",
+    "runId": 30280225199,
+    "jobId": 90024428747,
+    "artifactId": 8658482156,
+    "artifactDigest": "sha256:65a0b6b4a494f4330285bb214800b66c6115a8f3477251a80b6e0e3fcb82d161",
+    "conclusion": "success"
+  },
+  "execution": {
+    "attempt": "R2E_EXECUTION_EVIDENCE_HEAD",
+    "head": "2ae6c8cfad013c0ddd3d7f71990357add582ae34",
+    "runId": 30280738790,
+    "jobId": 90026155156,
+    "conclusion": "success",
+    "javascriptAndJsonSyntax": "PASS",
+    "registryLoaderIdentity": "PASS",
+    "independentRegistryAndExactScopeAudit": "PASS",
+    "automaticRepositoryRegistryPreflight": "PASS",
+    "boundedScopeAndR2FStoppingBoundary": "PASS",
+    "evidenceUpload": "PASS"
+  },
+  "artifact": {
+    "artifactId": 8658686555,
+    "artifactName": "h-earth-run8e-r2e-registry-execution-custody-evidence",
+    "artifactDigest": "sha256:adbeab3e9b63dc6ec69282be2cb177f058b20d95203b12b6b5f89c0d53d58260",
+    "artifactWorkflowHead": "2ae6c8cfad013c0ddd3d7f71990357add582ae34",
+    "retentionDays": 90
+  },
+  "closureControlValidation": {
+    "head": "079ef0aa2ead229eea0aa96470026b044869c4f9",
+    "runId": 30281157018,
+    "jobId": 90027587773,
+    "artifactId": 8658858011,
+    "artifactDigest": "sha256:bc072d597a8ce174e46947a1e391831b8d2dd0073fc503ca7f58345158f5e313",
+    "conclusion": "success",
+    "receiptPresentDuringExecution": false
+  },
+  "registryAudit": {
+    "inventoryId": "H_EARTH_RUN_8E_R2E_EXACT_GOVERNED_PATH_INVENTORY_v1",
+    "checkpointCount": 4,
+    "r2UniquePathCount": 27,
+    "r2CheckpointOccurrenceCount": 30,
+    "r2eRegisteredPathCount": 9,
+    "r2eNonRegistryPathCount": 6,
+    "exactOccurrenceManifestDigest": "sha256:2ae01097d0ab58f6cfd6b2a158ee558f816a2342443b387da410879fb1f2da9a",
+    "allR2PathsResolve": true,
+    "allR2ENonRegistryPathsResolve": true,
+    "unregisteredGovernedPathCount": 0,
+    "duplicateLocalNodeIdCount": 0,
+    "duplicateEvidenceIdCount": 0,
+    "unresolvedRequiredOccurrenceCount": 0,
+    "checkpointStackOrderExact": true,
+    "passReceiptsMatchExactHeads": true,
+    "artifactIdentitiesMatch": true,
+    "automaticPreflightDisposition": "PASS"
+  },
+  "stackCustody": {
+    "r2a": {
+      "pullRequest": 217,
+      "baseHead": "a660d54b0df30e768b95e2314b918d0f263883ed",
+      "finalHead": "22b23594005dabdd9374501dae1c561f2dafa648",
+      "status": "PASS_CLOSED"
+    },
+    "r2b": {
+      "pullRequest": 218,
+      "baseHead": "22b23594005dabdd9374501dae1c561f2dafa648",
+      "finalHead": "39de87edefcc037eaafa8a988dc0c84e40e3d1ba",
+      "status": "PASS_CLOSED"
+    },
+    "r2c": {
+      "pullRequest": 219,
+      "baseHead": "39de87edefcc037eaafa8a988dc0c84e40e3d1ba",
+      "finalHead": "845b6d6acffdd461153b3474044ec533ffd4403b",
+      "status": "PASS_CLOSED"
+    },
+    "r2d": {
+      "pullRequest": 220,
+      "baseHead": "845b6d6acffdd461153b3474044ec533ffd4403b",
+      "finalHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9",
+      "status": "PASS_CLOSED"
+    },
+    "r2e": {
+      "pullRequest": 224,
+      "baseHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9",
+      "executionEvidenceHead": "2ae6c8cfad013c0ddd3d7f71990357add582ae34",
+      "status": "PASS_CLOSED"
+    },
+    "allPullRequestsDraftOpenUnmerged": true,
+    "r2StackMerged": false
+  },
+  "boundaries": {
+    "liveRenderPackageMutated": false,
+    "gpuTransportAdapterMutated": false,
+    "sourceAuthorityMutated": false,
+    "publicRouteMutated": false,
+    "cameraNavigationOrGestureChanged": false,
+    "shaderProgramRenderLoopOrVisiblePresentationCreated": false,
+    "deploymentPerformed": false,
+    "r2FWorkStarted": false,
+    "r3WorkStarted": false,
+    "run8EPassClosed": false,
+    "r2StackMerged": false
+  },
+  "checkpointDisposition": {
+    "run8ER2A": "PASS_CLOSED",
+    "run8ER2B": "PASS_CLOSED",
+    "run8ER2C": "PASS_CLOSED",
+    "run8ER2D": "PASS_CLOSED",
+    "run8ER2E": "PASS_CLOSED",
+    "run8ER2F": "NOT_STARTED",
+    "run8ER3": "NOT_STARTED",
+    "run8ER2": "OPEN_AT_R2F_BOUNDARY",
+    "run8E": "FAIL_OPEN"
+  },
+  "finalExactHeadValidation": {
+    "required": true,
+    "performedAfterReceiptAndFinalRegistryEvidenceOverlay": false,
+    "finalHead": null,
+    "workflowRun": null,
+    "workflowJob": null,
+    "artifactId": null,
+    "artifactDigest": null
+  },
+  "stoppingBoundary": "STOP_BEFORE_R2_CLOSURE_AND_PROMOTION_DECISION_R2F",
+  "issues": []
+}

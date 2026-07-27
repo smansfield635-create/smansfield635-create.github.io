@@ -2,19 +2,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-// Composes accepted Step 1, post-merge, Step 2, camera-capacity,
-// audit-continuity, renderer-presentation, public-route-interaction,
-// compositor-camera-authority, functional-landscape Run 6, functional
-// environment Runs 7C–7H, Run 7I public/live evidence, Run 8A dimensional
-// reconciliation, Run 8B successor neutral geometry, Run 8C normal-light-
-// material realization, Run 8D grounded vegetation, Run 8E bounded
-// integration-engineering, Run 8 Phase 1 ordered-main-promotion, Run 8
-// Phase 2 deployment reconciliation, Run 8 Phase 3 live-browser-proof,
-// Run 8E mobile-navigation-correction, Run 8E direct-inspection-restoration,
-// Run 8E-R1 profiler, executed R1 repository-package evidence, the
-// reference-device/mobile-compatibility scope correction, and the R1
-// reference-device material-ledger preservation and execution overlays.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js';
+// Composes the accepted repository-registry lineage through the Run 8E-R1
+// material-ledger execution facade, the bounded Run 8E R2A-R2E registry
+// representation, and the R2E core-execution evidence overlay. The loader
+// remains read-only and creates no workflow, mutation, merge,
+// canonicalization, production, deployment, R2F, R3, or Run 8E pass authority.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r2e-execution-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

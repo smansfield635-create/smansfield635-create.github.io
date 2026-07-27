@@ -35,7 +35,7 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
       checkpointId: 'RUN_8E_R2A',
       name: 'CORE_PACKAGE_CONTRACT_AND_SOURCE_SHAPE_EXECUTION',
       requiredResult: 'PASS_CLOSED_BEFORE_R2B',
-      currentStatus: 'ATTEMPT_001_FAIL_OPEN',
+      currentStatus: 'PASS_CLOSED',
       allowedScope: [
         'R2_CONTROL_CONTRACT',
         'ISOLATED_PACKAGE_CANDIDATE',
@@ -43,7 +43,20 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
         'READ_ONLY_WORKFLOW',
         'R2A_FAILURE_AND_PASS_RECEIPTS'
       ],
-      stoppingBoundary: 'STOP_BEFORE_DETERMINISTIC_PACKAGE_CUSTODY_R2B'
+      executionEvidence: {
+        attempt: 'R2A_ATTEMPT_002',
+        executionStartHead: '81a85604ff6a66dbf023c41c263a69507cd5d276',
+        correctedSourceHead: 'e0403370b888f0478ec51cdd96cc2fcdd267e25b',
+        workflowRun: 30235565337,
+        workflowJob: 89882629845,
+        evidenceArtifact: 8641519551,
+        evidenceArtifactDigest: 'sha256:605f28dd6e2eb6410126773cee6dc672ff40f964d88e4a7ffbfbf223ecfe095c',
+        packageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
+        contentDigest: 'fnv1a32:fd913c25',
+        passReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2a.pass-closed.receipt.json',
+        predecessorFailureReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2a.attempt-001.failure.receipt.json'
+      },
+      stoppingBoundary: 'STOP_BEFORE_DETERMINISTIC_PACKAGE_CONSTRUCTION_AND_IMMUTABLE_BUFFER_CUSTODY_R2B'
     },
     {
       checkpointId: 'RUN_8E_R2B',
@@ -172,6 +185,8 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'SOURCE_AUTHORITIES_AND_R1_FAIL_OPEN_BOUNDARY_PRESERVED'
   ],
   stoppingBoundary: {
+    currentCheckpoint: 'RUN_8E_R2A_PASS_CLOSED',
+    nextCheckpoint: 'RUN_8E_R2B_NOT_STARTED',
     run8ER2MayCloseOnConstructionAndValidationPass: true,
     run8ER3Started: false,
     publicRendererInstalled: false,
@@ -182,19 +197,25 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
 
 export function evaluateHEarthRun8ER2Control(candidate = H_EARTH_RUN_8E_R2_CONTROL) {
   const issues = [];
+  const checkpoints = candidate?.boundedSubcheckpoints ?? [];
+  const r2A = checkpoints[0];
+  const r2B = checkpoints[1];
   if (candidate?.contractId !== H_EARTH_RUN_8E_R2_CONTRACT_ID) issues.push('R2_CONTRACT_ID_MISMATCH');
   if (candidate?.predecessor?.run8ER1DiagnosticCheckpoint !== 'PASS_CLOSED') issues.push('R1_NOT_PASS_CLOSED');
   if (candidate?.predecessor?.run8E !== 'FAIL_OPEN') issues.push('RUN_8E_NOT_FAIL_OPEN');
-  if (candidate?.boundedSubcheckpoints?.length !== 6) issues.push('R2_BOUNDED_CHECKPOINT_SEQUENCE_INVALID');
-  if (candidate?.boundedSubcheckpoints?.[0]?.checkpointId !== 'RUN_8E_R2A') issues.push('R2A_NOT_FIRST_CHECKPOINT');
-  if (candidate?.boundedSubcheckpoints?.[5]?.checkpointId !== 'RUN_8E_R2F') issues.push('R2F_NOT_FINAL_CHECKPOINT');
+  if (checkpoints.length !== 6) issues.push('R2_BOUNDED_CHECKPOINT_SEQUENCE_INVALID');
+  if (r2A?.checkpointId !== 'RUN_8E_R2A' || r2A?.currentStatus !== 'PASS_CLOSED') issues.push('R2A_NOT_PASS_CLOSED');
+  if (r2A?.executionEvidence?.packageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25') issues.push('R2A_PACKAGE_IDENTITY_MISMATCH');
+  if (r2A?.executionEvidence?.contentDigest !== 'fnv1a32:fd913c25') issues.push('R2A_CONTENT_DIGEST_MISMATCH');
+  if (r2B?.checkpointId !== 'RUN_8E_R2B' || r2B?.currentStatus !== 'NOT_STARTED') issues.push('R2B_STARTED_BEFORE_R2A_STOP');
+  if (checkpoints[5]?.checkpointId !== 'RUN_8E_R2F') issues.push('R2F_NOT_FINAL_CHECKPOINT');
   if (candidate?.expectedCorpus?.primitiveCount !== 35) issues.push('R2_PRIMITIVE_CORPUS_INVALID');
   if (candidate?.expectedCorpus?.indexCount !== 147120) issues.push('R2_INDEX_CORPUS_INVALID');
   if (!candidate?.prohibitedMutations?.includes('WEBGL_CONTEXT_OR_RENDER_LOOP')) issues.push('R2_RENDER_LOOP_BOUNDARY_MISSING');
   if (candidate?.stoppingBoundary?.run8ER3Started !== false) issues.push('R3_STARTED_INSIDE_R2');
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R2_CONTROL_PASS' : 'RUN_8E_R2_CONTROL_FAIL',
+    status: issues.length === 0 ? 'RUN_8E_R2A_CONTROL_PASS_CLOSED' : 'RUN_8E_R2_CONTROL_FAIL',
     issues
   });
 }

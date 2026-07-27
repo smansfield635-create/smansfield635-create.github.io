@@ -31,8 +31,8 @@ const receiptPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e5.pass-clo
 assert(fs.existsSync(receiptPath), 'R3F1_R3E5_RECEIPT_MISSING');
 const predecessorReceipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
 assert(predecessorReceipt?.eligible === true && predecessorReceipt?.status === 'RUN_8E_R3E5_PASS_CLOSED', 'R3F1_R3E5_RECEIPT_INVALID');
-assert(predecessorReceipt?.currentState?.run8ER3F === 'NOT_STARTED', 'R3F1_PREDECESSOR_R3F_ALREADY_STARTED');
-assert(predecessorReceipt?.boundaries?.physicalReferenceDeviceExecution === false, 'R3F1_PREDECESSOR_PHYSICAL_EXECUTION_VIOLATION');
+assert(predecessorReceipt?.closureResult?.run8ER3F === 'NOT_STARTED', 'R3F1_PREDECESSOR_R3F_ALREADY_STARTED');
+assert(predecessorReceipt?.boundaries?.physicalReferenceDeviceExecuted === false, 'R3F1_PREDECESSOR_PHYSICAL_EXECUTION_VIOLATION');
 
 const registry = loadHEarthRepositoryRegistryValidatorDependencies();
 assert(registry.identityVerified === true, 'R3F1_REGISTRY_LOADER_IDENTITY_FAILED');
@@ -53,11 +53,11 @@ assert(H_EARTH_RUN_8E_R3F_EVIDENCE_CONTRACT.previewTransportLaw.productionDeploy
 assert(H_EARTH_RUN_8E_R3F_EVIDENCE_CONTRACT.claimLaw.deviceBrandBackendSelectionProhibited === true, 'R3F1_DEVICE_BRAND_SELECTION_NOT_PROHIBITED');
 assert(H_EARTH_RUN_8E_R3F_EVIDENCE_CONTRACT.claimLaw.samsungOnlyImplementationProhibited === true, 'R3F1_SAMSUNG_ONLY_IMPLEMENTATION_NOT_PROHIBITED');
 
-const makeSessionTemplate = (lane) => Object.fromEntries(
+const makeSessionTemplate = () => Object.fromEntries(
   H_EARTH_RUN_8E_R3F_EVIDENCE_CONTRACT.requiredSessionRecordFields.map((field) => [field, null])
 );
 const sessionTemplates = Object.fromEntries(deviceLanes.map((lane) => [lane.laneId, {
-  ...makeSessionTemplate(lane),
+  ...makeSessionTemplate(),
   deviceLaneId: lane.laneId,
   sourceHead: '548672ae99cd406805f0c8ca576cc650baf7ed18',
   publicHtmlGitBlob: '0daedf61f7e19af095f4db5fc47563a9cd786837',

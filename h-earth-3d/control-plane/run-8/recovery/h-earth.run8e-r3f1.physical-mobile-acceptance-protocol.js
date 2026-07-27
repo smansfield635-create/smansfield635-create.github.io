@@ -24,7 +24,7 @@ export const H_EARTH_RUN_8E_R3F1_CONTROL = freeze({
   branch: 'agent/h-earth-run8e-r3f1-physical-mobile-acceptance-protocol-001',
   baseBranch: 'agent/h-earth-run8e-r3e5-r3e-closure-r3f-input-decision-001',
   baseExactHead: '548672ae99cd406805f0c8ca576cc650baf7ed18',
-  currentStatus: 'EXECUTION_PENDING',
+  currentStatus: 'PASS_CLOSED',
   predecessor: freeze({
     checkpointId: 'RUN_8E_R3E5',
     status: 'PASS_CLOSED',
@@ -50,19 +50,21 @@ export const H_EARTH_RUN_8E_R3F1_CONTROL = freeze({
     samsungOnlyImplementationProhibited: true
   }),
   requiredR3FSequence: freeze([
-    freeze({ checkpointId: 'RUN_8E_R3F1', currentStatus: 'EXECUTION_PENDING' }),
+    freeze({ checkpointId: 'RUN_8E_R3F1', currentStatus: 'PASS_CLOSED' }),
     freeze({ checkpointId: 'RUN_8E_R3F2', currentStatus: 'NOT_STARTED' }),
     freeze({ checkpointId: 'RUN_8E_R3F3', currentStatus: 'NOT_STARTED' }),
     freeze({ checkpointId: 'RUN_8E_R3F4', currentStatus: 'NOT_STARTED' })
   ]),
   executionEvidence: freeze({
-    successfulExecutionHead: null,
-    workflowRun: null,
-    workflowJob: null,
-    artifactId: null,
-    artifactDigest: null,
-    automaticRepositoryRegistryPreflightRun: null,
-    protocolContractEligible: null,
+    successfulExecutionHead: '08c4b9558d995acbc9ba1ff59990b8bc65d4a00d',
+    workflowRun: 30314464717,
+    workflowJob: 90136979082,
+    artifactId: 8671621390,
+    artifactDigest: 'sha256:3345790f2b92b789c80c59ed49759a7c9af5520b8fbe2be238631e94ffdee151',
+    artifactFetchBackVerified: true,
+    automaticRepositoryRegistryPreflightRun: 30314464737,
+    automaticRepositoryRegistryPreflightStatus: 'PASS',
+    protocolContractEligible: true,
     requiredSessionRecordFieldCount: 22,
     deviceLaneCount: 4,
     r3FSubcheckpointCount: 4,
@@ -98,7 +100,7 @@ export function evaluateHEarthRun8ER3F1Control(candidate = H_EARTH_RUN_8E_R3F1_C
   const parent = evaluateHEarthRun8ER3Control();
   const inputDecision = evaluateHEarthRun8ER3FInputDecision();
   const evidenceContract = evaluateHEarthRun8ER3FEvidenceContract();
-  if (parent.eligible !== true || parent.status !== 'RUN_8E_R3F1_PARENT_EXECUTION_ELIGIBLE') issues.push(...parent.issues.map((issue) => `PARENT:${issue}`), 'R3F1_PARENT_NOT_ELIGIBLE');
+  if (parent.eligible !== true || !['RUN_8E_R3F1_PARENT_EXECUTION_ELIGIBLE','RUN_8E_R3F1_PARENT_PASS_CLOSED'].includes(parent.status)) issues.push(...parent.issues.map((issue) => `PARENT:${issue}`), 'R3F1_PARENT_NOT_ELIGIBLE');
   if (inputDecision.eligible !== true || inputDecision.status !== 'RUN_8E_R3F_INPUT_ADMISSIBLE_NOT_STARTED') issues.push(...inputDecision.issues.map((issue) => `INPUT:${issue}`), 'R3F_INPUT_NOT_ADMISSIBLE');
   if (evidenceContract.eligible !== true) issues.push(...evidenceContract.issues.map((issue) => `EVIDENCE:${issue}`));
   if (candidate?.contractId !== H_EARTH_RUN_8E_R3F1_CONTROL_ID) issues.push('R3F1_CONTROL_ID_MISMATCH');
@@ -113,8 +115,9 @@ export function evaluateHEarthRun8ER3F1Control(candidate = H_EARTH_RUN_8E_R3F1_C
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) if (value !== false) issues.push(`R3F1_BOUNDARY_VIOLATION:${key}`);
   if (candidate?.currentStatus === 'PASS_CLOSED') {
     const evidence = candidate?.executionEvidence ?? {};
-    if (!Number.isSafeInteger(evidence.workflowRun) || !Number.isSafeInteger(evidence.workflowJob) || !Number.isSafeInteger(evidence.artifactId)) issues.push('R3F1_WORKFLOW_IDENTITY_MISSING');
-    if (typeof evidence.artifactDigest !== 'string' || !evidence.artifactDigest.startsWith('sha256:')) issues.push('R3F1_ARTIFACT_DIGEST_MISSING');
+    if (evidence.successfulExecutionHead !== '08c4b9558d995acbc9ba1ff59990b8bc65d4a00d' || evidence.workflowRun !== 30314464717 || evidence.workflowJob !== 90136979082 || evidence.artifactId !== 8671621390 || evidence.artifactFetchBackVerified !== true) issues.push('R3F1_CORE_WORKFLOW_IDENTITY_INVALID');
+    if (evidence.artifactDigest !== 'sha256:3345790f2b92b789c80c59ed49759a7c9af5520b8fbe2be238631e94ffdee151') issues.push('R3F1_ARTIFACT_DIGEST_INVALID');
+    if (evidence.automaticRepositoryRegistryPreflightRun !== 30314464737 || evidence.automaticRepositoryRegistryPreflightStatus !== 'PASS') issues.push('R3F1_AUTOMATIC_PREFLIGHT_INVALID');
     if (evidence.protocolContractEligible !== true || evidence.requiredSessionRecordFieldCount !== 22 || evidence.deviceLaneCount !== 4 || evidence.r3FSubcheckpointCount !== 4) issues.push('R3F1_PROTOCOL_EXECUTION_EVIDENCE_INVALID');
     for (const key of ['showroomMutationCount','browserExecutionCount','gpuExecutionCount','physicalDeviceExecutionCount','productionDeploymentCount']) if (evidence[key] !== 0) issues.push(`R3F1_NON_EXECUTION_COUNTER_INVALID:${key}`);
   }

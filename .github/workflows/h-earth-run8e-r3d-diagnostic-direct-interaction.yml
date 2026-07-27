@@ -54,6 +54,7 @@ jobs:
           node --check h-earth-3d/validation/h-earth.run8e-r3d.diagnostic-direct-interaction.harness.mjs
           node --check showroom/globe/h-earth/render/direct-interaction.run8e-r3d.js
           node --check showroom/globe/h-earth/diagnostic/run8e-r3d/direct-interaction.js
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.attempt-001.failure.receipt.json','utf8'))"
           if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.pass-closed.receipt.json; then
             node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.pass-closed.receipt.json','utf8'))"
           fi
@@ -135,8 +136,9 @@ jobs:
             'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d-diagnostic-direct-interaction-scope.js',
             'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
             'h-earth-3d/validation/h-earth.run8e-r3d.diagnostic-direct-interaction.harness.mjs',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.attempt-001.failure.receipt.json',
             'showroom/globe/h-earth/render/direct-interaction.run8e-r3d.js',
-            'showroom/globe/h-earth/diagnostic/run8e-r3d/index.html',
+            'showrom/globe/h-earth/diagnostic/run8e-r3d/index.html',
             'showroom/globe/h-earth/diagnostic/run8e-r3d/direct-interaction.js'
           }
           optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.pass-closed.receipt.json'}
@@ -148,7 +150,7 @@ jobs:
             'showroom/globe/h-earth/index.html',
             'showroom/globe/h-earth/functional-landscape/direct-manipulation.js',
             'showroom/globe/h-earth/functional-landscape/navigation.js',
-            'showroom/globe/h-earth/render/live-render-package.run8e-r2.js',
+             'showroom/globe/h-earth/render/live-render-package.run8e-r2.js',
             'showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js',
             'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js',
             'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js'

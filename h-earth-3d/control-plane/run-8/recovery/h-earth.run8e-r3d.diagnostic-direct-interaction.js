@@ -87,7 +87,7 @@ export function evaluateHEarthRun8ER3DControl(candidate = H_EARTH_RUN_8E_R3D_CON
   if (!['EXECUTION_PENDING', 'PASS_CLOSED'].includes(candidate?.currentStatus)) issues.push('R3D_STATUS_INVALID');
   if (candidate?.requiredInputs?.r3CPassClosed !== true) issues.push('R3C_NOT_PASS_CLOSED');
   if (candidate?.requiredInputs?.persistentRendererGitBlob !== 'b8b3c713d5f0b7c79808e8942ce385887589d880') issues.push('R3C_RENDERER_IDENTITY_MISMATCH');
-  if (candidate?.bequiredInputs?.publicDirectManipulationWitnessGitBlob !== '322ee2bfed5184acd8eac600f19abd72380b6c2b') issues.push('PUBLIC_DIRECT_MANIPULATION_WITNESS_MISMATCH');
+  if (candidate?.requiredInputs?.publicDirectManipulationWitnessGitBlob !== '322ee2bfed5184acd8eac600f19abd72380b6c2b') issues.push('PUBLIC_DIRECT_MANIPULATION_WITNESS_MISMATCH');
   for (const [key, value] of Object.entries(candidate?.requiredExecution ?? {})) {
     if (key === 'minimumDistinctVisibleFrames') {
       if (!Number.isSafeInteger(value) || value < 5) issues.push('R3D_MINIMUM_DISTINCT_FRAME_COUNT_INVALID');

@@ -10,6 +10,8 @@ const freeze = (value, seen = new WeakSet()) => {
 
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r3d-direct-interaction-no-bitmap-001';
+const FAILURE_RECEIPT_PATH =
+  '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.attempt-001.failure.receipt.json';
 const PASS_RECEIPT_PATH =
   '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.pass-closed.receipt.json';
 
@@ -20,6 +22,7 @@ export const H_EARTH_RUN_8E_R3D_PATHS = Object.freeze([
   '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d-diagnostic-direct-interaction-scope.js',
   '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
   '/h-earth-3d/validation/h-earth.run8e-r3d.diagnostic-direct-interaction.harness.mjs',
+  FAILURE_RECEIPT_PATH,
   PASS_RECEIPT_PATH,
   '/showroom/globe/h-earth/render/direct-interaction.run8e-r3d.js',
   '/showroom/globe/h-earth/diagnostic/run8e-r3d/index.html',
@@ -76,6 +79,13 @@ export const H_EARTH_RUN_8E_R3D_EVIDENCE = freeze({
       'TWO_FINGER_PINCH_ZOOM',
       'WHEEL_FALLBACK'
     ],
+    attempt001FailureHead: 'ec13c97b103c3291a3e930c2138feb5984d3c363',
+    attempt001FailureRun: 30293664139,
+    attempt001FailureJob: 90069233222,
+    attempt001FailureStage: 'VERIFY_SOURCE_SYNTAX_AND_R3D_AUTHORITY',
+    attempt001FailureCode: 'PUBLIC_DIRECT_MANIPULATION_WITNESS_MISMATCH',
+    attempt001BrowserExecutionStarted: false,
+    attempt001FailureReceiptPath: FAILURE_RECEIPT_PATH,
     requiredDistinctVisibleFrames: 5,
     requiredPostInitializationResourceCreationCount: 0,
     requiredPostInitializationBufferUploadCount: 0,
@@ -83,8 +93,9 @@ export const H_EARTH_RUN_8E_R3D_EVIDENCE = freeze({
     requiredCpuRasterRefreshCount: 0
   },
   evidenceLimitations: [
+    'ATTEMPT_001_CONTROL_EVALUATOR_TYPO_FAILED_AND_PRESERVED',
     'EXECUTION_PENDING',
-    'BROWSER_EVENT_OBJECTS_ARE_AUTOMATION_DISPATDHED_NOT_PHYSICAL_DEVICE_INPUT',
+    'BROWSER_EVENT_OBJECTS_ARE_AUTOMATION_DISPATCHED_NOT_PHYSICAL_DEVICE_INPUT',
     'NO_PUBLIC_ROUTE_BINDING',
     'NO_DEPLOYMENT',
     'R3E_NOT_STARTED',
@@ -114,7 +125,7 @@ export const H_EARTH_RUN_8E_R3D_NODE = freeze({
     'DIAGNOSTIC_POINTER_AND_TOUCH_BINDING',
     'DIRECT_NAVIGATION_PROPOSAL_TO_GPU_FRAME',
     'PROHIBIT_BITMAP_PREVIEW',
-    'PRESERVE_R3E_STOPPING_BOUNDARYg
+    'PRESERVE_R3E_STOPPING_BOUNDARY'
   ],
   authorityLimitations: [
     'NO_PUBLIC_ROUTE',
@@ -141,8 +152,8 @@ export const H_EARTH_RUN_8E_R3D_NODE = freeze({
   prohibitedMutations: [
     'PUBLIC_ROUTE',
     'PUBLIC_DIRECT_MANIPULATION',
-   'NAVIGATION_AUTHORITY',
-   'R2_PACKAGE',
+    'NAVIGATION_AUTHORITY',
+    'R2_PACKAGE',
     'R2D_GPU_ADAPTER',
     'R3E_OR_LATER'
   ],
@@ -152,18 +163,21 @@ export const H_EARTH_RUN_8E_R3D_NODE = freeze({
     'NO_BITMAP_PREVIEW_SOURCE_AND_RUNTIME_AUDIT',
     'PERSISTENT_RESOURCE_COUNTERS',
     'DISTINCT_FRAME_ARTIFACTS',
-   'FINAL_AUTOMATIC_REGISTRY_PREFLIGHT',
+    'FINAL_AUTOMATIC_REGISTRY_PREFLIGHT',
     'FINAL_EXACT_SCOPE'
   ],
   stoppingBoundaries: ['STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E'],
   currentIdentityReferences: [
     '5c7a7eef489da94a230812eecc5e531e285b7cac',
+    'ec13c97b103c3291a3e930c2138feb5984d3c363',
+    '30293664139',
+    '90069233222',
     '30291054680',
     '8662798227'
   ],
   lifecycleStatus: 'EXECUTION_PENDING',
   unresolvedFields: [
-    'R3D_EXECUTION_HEAD',
+    'R3D_SUCCESSFUL_EXECUTION_HEAD',
     'R3D_WORKFLOW_RUN',
     'R3D_ARTIFACT',
     'R3D_PASS_RECEIPT'

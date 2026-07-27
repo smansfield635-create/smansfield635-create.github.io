@@ -1,0 +1,117 @@
+name: H-Earth Run 8E R2E Registry Custody Audit
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r2e-registry-custody-audit-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r2d-gpu-resource-lifecycle-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r2e-registry-custody:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      H_EARTH_RUN8E_R2E_OUTPUT: /tmp/h-earth-run8e-r2e
+    steps:
+      - name: Check out R2E branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-run8e-r2e-registry-custody-audit-001
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify R2D predecessor and protected sources
+        run: |
+          set -euo pipefail
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r2d-gpu-resource-lifecycle-001)" = "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9"
+          test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
+          test "$(git hash-object showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js)" = "785856d7702a0e855c2672e6b8a7325ad5b3ba50"
+          node - <<'NODE'
+          const receipt = require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.pass-closed.receipt.json');
+          if (receipt.status !== 'RUN_8E_R2D_PASS_CLOSED') process.exit(1);
+          if (receipt.checkpointDisposition.run8ER2E !== 'NOT_STARTED') process.exit(1);
+          if (receipt.stoppingBoundary !== 'STOP_BEFORE_REGISTRY_DURABLE_RECEIPT_AND_INDEPENDENT_SCOPE_AUDIT_R2E') process.exit(1);
+          NODE
+
+      - name: Verify R2E syntax
+        run: |
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2e.registry-custody-and-scope-audit.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2-scope.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r2e.registry-custody-and-scope-audit.validation.mjs
+
+      - name: Execute registry custody and independent scope audit
+        run: |
+          mkdir -p "$H_EARTH_RUN8E_R2E_OUTPUT"
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8e-r2e.registry-custody-and-scope-audit.validation.mjs 2>&1 \
+            | tee "$H_EARTH_RUN8E_R2E_OUTPUT/r2e-validation.log"
+
+      - name: Verify exact R2E scope and R2F stopping boundary
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --check
+          BASE_SHA=9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9
+          git diff --name-only "$BASE_SHA"...HEAD | sort >/tmp/h-earth-run8e-r2e-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r2e-paths.txt').read_text().splitlines() if line.strip()]
+          required = {
+              '.github/workflows/h-earth-run8e-r2e-registry-custody-audit.yml',
+              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2e.registry-custody-and-scope-audit.js',
+              'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2-scope.js',
+              'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+              'h-earth-3d/validation/h-earth.run8e-r2e.registry-custody-and-scope-audit.validation.mjs'
+          }
+          actual = set(paths)
+          if actual != required:
+              raise SystemExit(f'R2E_SCOPE_MISMATCH:missing={sorted(required-actual)}:unexpected={sorted(actual-required)}')
+          forbidden = [
+              path for path in paths
+              if path in {
+                  'showroom/globe/h-earth/render/live-render-package.run8e-r2.js',
+                  'showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js',
+                  'showroom/globe/h-earth/index.html',
+                  'showroom/globe/h-earth/index.js'
+              }
+              or 'run8e-r2f' in path.lower()
+              or 'run-8e-r2f' in path.lower()
+              or 'run8e-r3' in path.lower()
+              or 'run-8e-r3' in path.lower()
+          ]
+          if forbidden:
+              raise SystemExit(f'R2E_PROTECTED_OR_LATER_CHECKPOINT_PATH:{forbidden}')
+          print({
+              'checkpoint': 'RUN_8E_R2E',
+              'pathCount': len(paths),
+              'paths': paths,
+              'packageSourceMutation': False,
+              'gpuTransportAdapterMutation': False,
+              'publicRouteMutation': False,
+              'run8ER2FStarted': False,
+              'run8ER3Started': False,
+              'run8EPassClosed': False
+          })
+          PY
+
+      - name: Upload R2E evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r2e-registry-custody-audit-evidence
+          path: |
+            /tmp/h-earth-run8e-r2e
+            /tmp/h-earth-run8e-r2e-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

@@ -99,7 +99,12 @@ try {
 
   const canvasPath = path.join(outputDirectory, 'h-earth.run8e-r3b.fixed-visible-frame.png');
   const pagePath = path.join(outputDirectory, 'h-earth.run8e-r3b.diagnostic-page.png');
-  await page.locator('#r3b-canvas').screenshot({ path: canvasPath });
+  const canvasDataUrl = await page.evaluate(() => {
+    const canvas = document.getElementById('r3b-canvas');
+    if (!(canvas instanceof HTMLCanvasElement)) throw new Error('R3B_CANVAS_MISSING_FOR_EXACT_PNG_CAPTURE');
+    return canvas.toDataURL('image/png');
+  });
+  fs.writeFileSync(canvasPath, Buffer.from(canvasDataUrl.split(',')[1], 'base64'));
   await page.screenshot({ path: pagePath, fullPage: true });
   assert(fs.statSync(canvasPath).size > 10000, 'R3B_CANVAS_SCREENSHOT_TOO_SMALL');
   assert(fs.statSync(pagePath).size > 10000, 'R3B_PAGE_SCREENSHOT_TOO_SMALL');

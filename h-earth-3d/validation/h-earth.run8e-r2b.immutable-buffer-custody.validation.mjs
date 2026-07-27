@@ -22,6 +22,11 @@ const R2A_RECEIPT_PATH = new URL(
   import.meta.url
 );
 const r2aReceipt = JSON.parse(fs.readFileSync(R2A_RECEIPT_PATH, 'utf8'));
+const R2B_RECEIPT_PATH = new URL(
+  './run-8e-r2/h-earth.run8e-r2b.pass-closed.receipt.json',
+  import.meta.url
+);
+const r2bReceipt = JSON.parse(fs.readFileSync(R2B_RECEIPT_PATH, 'utf8'));
 const BUFFER_KEYS = Object.freeze([
   'positions',
   'normals',
@@ -194,11 +199,20 @@ assert.equal(r2aReceipt.validatedPackage.contentDigest, 'fnv1a32:fd913c25');
 const parentControl = evaluateHEarthRun8ER2Control(H_EARTH_RUN_8E_R2_CONTROL);
 assert.equal(parentControl.eligible, true, `R2B_PARENT_CONTROL_FAILED:${parentControl.issues.join(',')}`);
 assert.equal(H_EARTH_RUN_8E_R2_CONTROL.boundedSubcheckpoints[0].currentStatus, 'PASS_CLOSED');
-assert.equal(H_EARTH_RUN_8E_R2_CONTROL.boundedSubcheckpoints[1].currentStatus, 'NOT_STARTED');
+assert.equal(H_EARTH_RUN_8E_R2_CONTROL.boundedSubcheckpoints[1].currentStatus, 'PASS_CLOSED');
+assert.equal(H_EARTH_RUN_8E_R2_CONTROL.boundedSubcheckpoints[2].currentStatus, 'NOT_STARTED');
 
 const r2bControl = evaluateHEarthRun8ER2BControl(H_EARTH_RUN_8E_R2B_CONTROL);
 assert.equal(r2bControl.eligible, true, `R2B_CONTROL_FAILED:${r2bControl.issues.join(',')}`);
-assert.equal(H_EARTH_RUN_8E_R2B_CONTROL.currentStatus, 'EXECUTION_OPEN');
+assert.equal(H_EARTH_RUN_8E_R2B_CONTROL.currentStatus, 'PASS_CLOSED');
+assert.equal(r2bControl.status, 'RUN_8E_R2B_CONTROL_PASS_CLOSED');
+assert.equal(r2bReceipt.status, 'RUN_8E_R2B_PASS_CLOSED');
+assert.equal(r2bReceipt.execution.runId, 30236786081);
+assert.equal(r2bReceipt.execution.jobId, 89885991485);
+assert.equal(r2bReceipt.artifact.artifactId, 8641894512);
+assert.equal(r2bReceipt.validatedCustody.custodyManifestDigest,
+  'sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d');
+assert.equal(r2bReceipt.checkpointDisposition.run8ER2C, 'NOT_STARTED');
 
 const explicitPackages = [0, 1, 2, 3].map((index) =>
   buildHEarthRun8ER2ImmutableLiveRenderPackage({
@@ -261,13 +275,21 @@ const custodyManifest = {
   bufferDigests: explicitBufferDigests[0]
 };
 const custodyManifestDigest = `sha256:${sha256Text(stableJson(custodyManifest))}`;
+assert.equal(custodyManifestDigest, r2bReceipt.validatedCustody.custodyManifestDigest,
+  'R2B_CUSTODY_MANIFEST_DIGEST_DRIFT');
 
 const receipt = {
   receiptType: 'H_EARTH_RUN_8E_R2B_IMMUTABLE_BUFFER_CUSTODY_VALIDATION_RECEIPT',
   eligible: true,
-  status: 'RUN_8E_R2B_EXECUTION_PASS',
+  status: 'RUN_8E_R2B_PASS_CLOSED_FINAL_HEAD_VALIDATION',
   generatedAt: new Date().toISOString(),
   contractId: H_EARTH_RUN_8E_R2B_CONTRACT_ID,
+  closure: {
+    run8ER2A: 'PASS_CLOSED',
+    run8ER2B: 'PASS_CLOSED',
+    run8ER2C: 'NOT_STARTED',
+    workflowReadOnly: true
+  },
   predecessor: {
     checkpoint: 'RUN_8E_R2A',
     status: 'PASS_CLOSED',

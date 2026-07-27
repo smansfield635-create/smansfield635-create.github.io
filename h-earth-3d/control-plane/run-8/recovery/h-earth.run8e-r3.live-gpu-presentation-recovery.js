@@ -68,8 +68,26 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     {
       checkpointId: 'RUN_8E_R3C',
       name: 'PERSISTENT_GPU_RESOURCES_AND_CONTINUOUS_CAMERA_LOOP',
-      currentStatus: 'EXECUTION_PENDING',
-      requiredResult: 'PASS_CLOSED_BEFORE_R3D',
+      currentStatus: 'PASS_CLOSED',
+      executionEvidence: {
+        successfulExecutionHead: '1b02cb845d3b81c04fc3718233f5142765592f83',
+        workflowRun: 30290450153,
+        workflowJob: 90058672196,
+        evidenceArtifact: 8662569874,
+        evidenceArtifactDigest: 'sha256:3aea0979d3523da1c6e2c3f41cdcfcf64a0501f58f6df9b1187b0ea5fda92e87',
+        automaticRegistryPreflightRun: 30290450161,
+        automaticRegistryPreflight: 'PASS',
+        frameCount: 180,
+        cameraUniformUpdateCount: 360,
+        geometryDrawCallCount: 720,
+        totalDrawnIndexCount: 26481600,
+        postInitializationResourceCreationCount: 0,
+        postInitializationBufferUploadCount: 0,
+        distinctFrameArtifactCount: 3,
+        startFrameSha256: 'ef5957da367f220b516a8a3b1d6c8787608cf20357747c26648a744ce03929a5',
+        middleFrameSha256: '7464e078f2c3981126112517a7cecc4a9616e2c363a9bfd5d34a9448707e64e2',
+        finalFrameSha256: '6afece3cb60200c1d78147794c6ff8cf8b3b907f4ea0851ace4d326d767ff35b'
+      },
       stoppingBoundary: 'STOP_BEFORE_DIAGNOSTIC_DIRECT_INTERACTION_R3D'
     },
     { checkpointId: 'RUN_8E_R3D', name: 'DIAGNOSTIC_DIRECT_INTERACTION_WITHOUT_BITMAP_PREVIEW', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E' },
@@ -78,10 +96,10 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     { checkpointId: 'RUN_8E_R3G', name: 'R3_CLOSURE_AND_PROMOTION_DECISION', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_ANY_LATER_RUN_8E_PHASE' }
   ],
   currentState: {
-    run8ER3: 'OPEN_AT_R3C_EXECUTION',
+    run8ER3: 'OPEN_AT_R3D_BOUNDARY',
     run8ER3A: 'PASS_CLOSED',
     run8ER3B: 'PASS_CLOSED',
-    run8ER3C: 'EXECUTION_PENDING',
+    run8ER3C: 'PASS_CLOSED',
     run8ER3D: 'NOT_STARTED',
     run8ER3E: 'NOT_STARTED',
     run8ER3F: 'NOT_STARTED',
@@ -99,8 +117,8 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     isolatedShaderProgramsExecuted: true,
     isolatedGpuDrawExecuted: true,
     isolatedVisibleFixedFrameExecuted: true,
-    persistentGpuResourcesAuthorized: true,
-    continuousCameraLoopAuthorized: true,
+    persistentGpuResourcesExecuted: true,
+    continuousCameraLoopExecuted: true,
     interactionBinding: false,
     publicRouteBinding: false,
     deployment: false,
@@ -130,13 +148,27 @@ export function evaluateHEarthRun8ER3Control(candidate = H_EARTH_RUN_8E_R3_CONTR
     if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3C_EXECUTION' || candidate?.currentState?.run8ER3C !== 'EXECUTION_PENDING') issues.push('R3C_PARENT_EXECUTION_STATE_INVALID');
   }
   if (r3C?.currentStatus === 'PASS_CLOSED') {
+    if (r3C?.executionEvidence?.workflowRun !== 30290450153) issues.push('R3C_WORKFLOW_RUN_MISMATCH');
+    if (r3C?.executionEvidence?.evidenceArtifactDigest !== 'sha256:3aea0979d3523da1c6e2c3f41cdcfcf64a0501f58f6df9b1187b0ea5fda92e87') issues.push('R3C_ARTIFACT_DIGEST_MISMATCH');
+    if (r3C?.executionEvidence?.frameCount !== 180 || r3C?.executionEvidence?.cameraUniformUpdateCount !== 360) issues.push('R3C_FRAME_OR_UNIFORM_COUNT_MISMATCH');
+    if (r3C?.executionEvidence?.geometryDrawCallCount !== 720 || r3C?.executionEvidence?.totalDrawnIndexCount !== 26481600) issues.push('R3C_DRAW_EXECUTION_MISMATCH');
+    if (r3C?.executionEvidence?.postInitializationResourceCreationCount !== 0 || r3C?.executionEvidence?.postInitializationBufferUploadCount !== 0) issues.push('R3C_RESOURCE_PERSISTENCE_MISMATCH');
     if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3D_BOUNDARY' || candidate?.currentState?.run8ER3D !== 'NOT_STARTED') issues.push('R3D_PARENT_BOUNDARY_INVALID');
   }
   for (const key of ['publicRouteMutation','directManipulationMutation','navigationAuthorityMutation','cameraAuthorityMutation','immutablePackageMutation','canonicalGpuTransportMutation','interactionBinding','publicRouteBinding','deployment','mainMerge','run8EPassClosed']) {
     if (candidate?.boundaries?.[key] !== false) issues.push(`R3_BOUNDARY_VIOLATION:${key}`);
   }
-  for (const key of ['isolatedWebGL2ContextExecuted','isolatedShaderProgramsExecuted','isolatedGpuDrawExecuted','isolatedVisibleFixedFrameExecuted','persistentGpuResourcesAuthorized','continuousCameraLoopAuthorized']) {
-    if (candidate?.boundaries?.[key] !== true) issues.push(`R3C_AUTHORITY_OR_PREDECESSOR_FACT_MISSING:${key}`);
+  for (const key of ['isolatedWebGL2ContextExecuted','isolatedShaderProgramsExecuted','isolatedGpuDrawExecuted','isolatedVisibleFixedFrameExecuted']) {
+    if (candidate?.boundaries?.[key] !== true) issues.push(`R3B_EXECUTION_FACT_MISSING:${key}`);
+  }
+  if (r3C?.currentStatus === 'EXECUTION_PENDING') {
+    for (const key of ['persistentGpuResourcesAuthorized','continuousCameraLoopAuthorized']) {
+      if (candidate?.boundaries?.[key] !== true) issues.push(`R3C_AUTHORIZATION_MISSING:${key}`);
+    }
+  } else {
+    for (const key of ['persistentGpuResourcesExecuted','continuousCameraLoopExecuted']) {
+      if (candidate?.boundaries?.[key] !== true) issues.push(`R3C_EXECUTION_FACT_MISSING:${key}`);
+    }
   }
   return freeze({
     eligible: issues.length === 0,

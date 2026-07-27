@@ -1,0 +1,132 @@
+name: Temporary Laws Secondary Label and Glow Round V3
+
+on:
+  push:
+    branches:
+      - agent/laws-compass-secondary-label-glow-001
+    paths:
+      - .github/workflows/laws-secondary-label-glow-temp-v3.yml
+      - verification/laws-secondary-label-glow-temp/construct.py
+      - verification/laws-secondary-label-glow-temp/test.mjs
+
+permissions:
+  contents: write
+
+jobs:
+  construct-verify-and-persist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out bounded Laws task branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          show-progress: false
+          ref: agent/laws-compass-secondary-label-glow-001
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Apply canonical-file correction
+        run: |
+          set -euo pipefail
+          python3 verification/laws-secondary-label-glow-temp/construct.py
+
+      - name: Verify syntax and static identities
+        run: |
+          set -euo pipefail
+          node --check laws/index.crystals.js
+          node --check laws/index.crystals.source.js
+          node --check laws/index.interactions.js
+          python3 - <<'PY'
+          from pathlib import Path
+          marker = 'LAWS_MOBILE_HALO_SECONDARY_LABELS_20260726J'
+          for name in ('laws/index.crystals.js', 'laws/index.crystals.source.js'):
+              source = Path(name).read_text()
+              assert source.count('bloomDisableWidthPx:\n    0,') == 1
+              assert 'bloomDisableWidthPx:\n    420,' not in source
+              assert marker in source
+          interactions = Path('laws/index.interactions.js').read_text()
+          assert interactions.count(marker) == 1
+          assert 'DGB_LAWS_ACTIVE_CLUSTER_SECONDARY_LABELS_v1' in interactions
+          html = Path('laws/index.html').read_text()
+          assert html.count(marker) >= 4
+          PY
+          git diff --check
+
+      - name: Install Chromium runtime
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start bounded Laws server
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 > /tmp/laws-secondary-label-server.log 2>&1 &
+          for attempt in $(seq 1 50); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/laws-secondary-label-server.log
+          exit 1
+
+      - name: Execute multi-viewport verification
+        run: |
+          set -euo pipefail
+          node verification/laws-secondary-label-glow-temp/test.mjs
+
+      - name: Verify bounded path set
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          {
+            git diff --name-only origin/main...HEAD
+            git diff --name-only
+            git ls-files --others --exclude-standard | grep -v '^node_modules/' || true
+          } | sed '/^$/d' | sort -u > /tmp/laws-secondary-label-paths.txt
+          cat /tmp/laws-secondary-label-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed = {
+            '.github/workflows/laws-secondary-label-glow-temp-v2.yml',
+            '.github/workflows/laws-secondary-label-glow-temp-v3.yml',
+            'verification/laws-secondary-label-glow-temp/construct.py',
+            'verification/laws-secondary-label-glow-temp/test.mjs',
+            'laws/index.html',
+            'laws/index.crystals.js',
+            'laws/index.crystals.source.js',
+            'laws/index.interactions.js'
+          }
+          paths = {line.strip() for line in Path('/tmp/laws-secondary-label-paths.txt').read_text().splitlines() if line.strip()}
+          if paths != allowed:
+              raise SystemExit(f'BOUNDED_PATH_SET_MISMATCH:{sorted(paths)}')
+          PY
+
+      - name: Commit verified production files
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add laws/index.html laws/index.crystals.js laws/index.crystals.source.js laws/index.interactions.js
+          git commit -m 'Add Laws secondary labels and restore mobile crystal halo'
+          git push origin HEAD:agent/laws-compass-secondary-label-glow-001
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-secondary-label-glow-evidence-v3
+          path: |
+            /tmp/laws-secondary-label-server.log
+            /tmp/laws-secondary-label-glow-results.json
+            /tmp/laws-secondary-label-paths.txt
+            /tmp/laws-samsung-portrait.png
+            /tmp/laws-large-phone.png
+            /tmp/laws-tablet.png
+            /tmp/laws-desktop.png
+          if-no-files-found: warn
+          retention-days: 30

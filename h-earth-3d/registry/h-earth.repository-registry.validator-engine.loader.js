@@ -3,11 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Composes the accepted repository-registry lineage through Run 8E-R1,
-// the completed R2A-R2F chain, R3A shared-camera contract, and bounded R3B
-// isolated WebGL2 fixed-frame execution. The loader remains read-only and
-// creates no public-route, interaction, continuous-loop, deployment, R3C, or
-// Run 8E pass authority.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3b-isolated-webgl2-fixed-frame-scope.js';
+// the completed R2A-R2F chain, R3A shared-camera contract, R3B fixed-frame
+// execution, and bounded R3C persistent-resource camera-loop execution. The
+// loader remains read-only and creates no interaction, public-route,
+// deployment, R3D, or Run 8E pass authority.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3c-persistent-gpu-camera-loop-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY
@@ -15,7 +15,6 @@ import {
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
 const readJson = (fileName) => JSON.parse(fs.readFileSync(path.join(directory, fileName), 'utf8'));
-
 const FILES = Object.freeze({
   consolidated: 'h-earth.repository-registry.validator-contract.json',
   input: 'h-earth.repository-registry.validator-contract.input.json',

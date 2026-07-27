@@ -1,0 +1,167 @@
+name: H-Earth Run 8E R3B Isolated WebGL2 Fixed Frame
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3b-isolated-webgl2-fixed-frame-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3a-live-renderer-contract-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3b-isolated-webgl2-fixed-frame:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      H_EARTH_RUN8E_R3B_URL: http://127.0.0.1:4173/showroom/globe/h-earth/diagnostic/run8e-r3b/
+      H_EARTH_RUN8E_R3B_OUTPUT: /tmp/h-earth-run8e-r3b
+    steps:
+      - name: Check out exact R3B event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R3A base and protected identities
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3a-live-renderer-contract-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3a-live-renderer-contract-001)" = "9560bc1f88800e12408a99a10032e9daf1e56713"
+          test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
+          test "$(git hash-object showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js)" = "785856d7702a0e855c2672e6b8a7325ad5b3ba50"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+          test "$(git hash-object showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js)" = "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+
+      - name: Verify source syntax and R3B authority
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3b-isolated-webgl2-fixed-frame-scope.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.harness.mjs
+          node --check showroom/globe/h-earth/diagnostic/run8e-r3b/fixed-frame.js
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-001.failure.receipt.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-002.failure.receipt.json','utf8'))"
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.pass-closed.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.pass-closed.receipt.json','utf8'))"
+          fi
+          node --input-type=module - <<'NODE'
+          import { evaluateHEarthRun8ER3Control } from './h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js';
+          import { evaluateHEarthRun8ER3BControl } from './h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.js';
+          const parent = evaluateHEarthRun8ER3Control();
+          const child = evaluateHEarthRun8ER3BControl();
+          if (!parent.eligible) throw new Error(parent.issues.join(','));
+          if (!child.eligible) throw new Error(child.issues.join(','));
+          NODE
+
+      - name: Install bounded Chromium dependency
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start isolated workspace server
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-run8e-r3b-server.log 2>&1 &
+          echo $! >/tmp/h-earth-run8e-r3b-server.pid
+          for attempt in $(seq 1 60); do
+            if curl --silent --fail "$H_EARTH_RUN8E_R3B_URL" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-run8e-r3b-server.log
+          exit 1
+
+      - name: Execute real isolated WebGL2 fixed frame
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.harness.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-r3b-harness.log
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only 9560bc1f88800e12408a99a10032e9daf1e56713...HEAD \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | sort -u > /tmp/h-earth-run8e-r3b-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3b-governed-paths.txt \
+            --task "Run 8E R3B isolated WebGL2 fixed frame" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3B_OUTPUT/h-earth.run8e-r3b.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3b/h-earth.run8e-r3b.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`R3B_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact scope, output, and R3C stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 9560bc1f88800e12408a99a10032e9daf1e56713...HEAD | sort \
+            > "$H_EARTH_RUN8E_R3B_OUTPUT/r3b-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3b/r3b-changed-paths.txt').read_text().splitlines() if line.strip()}
+          required = {
+            '.github/workflows/h-earth-run8e-r3b-isolated-webgl2-fixed-frame.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3b-isolated-webgl2-fixed-frame-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.harness.mjs',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-001.failure.receipt.json',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-002.failure.receipt.json',
+            'showroom/globe/h-earth/diagnostic/run8e-r3b/index.html',
+            'showroom/globe/h-earth/diagnostic/run8e-r3b/fixed-frame.js'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.pass-closed.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'R3B_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'R3B_UNEXPECTED_PATHS:{unexpected}')
+          forbidden = [p for p in paths if p in {
+            'showroom/globe/h-earth/index.html',
+            'showroom/globe/h-earth/functional-landscape/environment-integration.js',
+            'showroom/globe/h-earth/functional-landscape/direct-manipulation.js',
+            'showroom/globe/h-earth/functional-landscape/navigation.js',
+            'showroom/globe/h-earth/render/live-render-package.run8e-r2.js',
+            'showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js',
+            'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'
+          }]
+          if forbidden: raise SystemExit(f'R3B_FORBIDDEN_PATHS:{forbidden}')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3b/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.execution.receipt.json').read_text())
+          if receipt['eligible'] is not True: raise SystemExit('R3B_EXECUTION_RECEIPT_NOT_ELIGIBLE')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_PERSISTENT_GPU_RESOURCES_AND_CONTINUOUS_CAMERA_LOOP_R3C':
+            raise SystemExit('R3B_STOPPING_BOUNDARY_MISMATCH')
+          PY
+          test -s "$H_EARTH_RUN8E_R3B_OUTPUT/h-earth.run8e-r3b.fixed-visible-frame.png"
+          test -s "$H_EARTH_RUN8E_R3B_OUTPUT/h-earth.run8e-r3b.diagnostic-page.png"
+          file "$H_EARTH_RUN8E_R3B_OUTPUT/h-earth.run8e-r3b.fixed-visible-frame.png" | grep -q 'PNG image data, 960 x 540'
+
+      - name: Upload R3B fixed-frame evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3b-isolated-webgl2-fixed-frame-evidence
+          path: |
+            /tmp/h-earth-run8e-r3b
+            /tmp/h-earth-run8e-r3b-harness.log
+            /tmp/h-earth-run8e-r3b-server.log
+            /tmp/h-earth-run8e-r3b-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

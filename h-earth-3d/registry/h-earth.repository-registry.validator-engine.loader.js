@@ -3,11 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Composes the accepted repository-registry lineage through Run 8E-R1,
-// the completed R2A-R2F evidence chain, and the bounded R3A shared-camera
-// GPU-presentation contract. The loader remains read-only and creates no
-// source-authority, WebGL execution, public-route, deployment, R3B, or Run 8E
-// pass authority.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3a-shared-camera-gpu-presentation-scope.js';
+// the completed R2A-R2F chain, R3A shared-camera contract, and bounded R3B
+// isolated WebGL2 fixed-frame execution. The loader remains read-only and
+// creates no public-route, interaction, continuous-loop, deployment, R3C, or
+// Run 8E pass authority.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3b-isolated-webgl2-fixed-frame-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY
@@ -38,7 +38,6 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     algorithm: readJson(FILES.algorithm),
     instruction: readJson(FILES.instruction)
   };
-
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
   const expected = H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY;
@@ -55,7 +54,6 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     candidateNotAccepted: registryInstance.accepted === false,
     candidateNotCanonical: discovery.canonical === false
   };
-
   return deepFreeze({
     loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v1',
     files: FILES,

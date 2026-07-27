@@ -1,0 +1,44 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3B_ATTEMPT_001_FAILURE_RECEIPT",
+  "eligible": false,
+  "status": "RUN_8E_R3B_ATTEMPT_001_FAIL_PRESERVED",
+  "recordedAt": "2026-07-27T17:01:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3b-isolated-webgl2-fixed-frame-001",
+  "pullRequest": 227,
+  "attempt": 1,
+  "executionHead": "066f86c84ce2cfd692b1852d0b67a32f91e246a0",
+  "workflowRun": 30287127087,
+  "workflowJob": 90047590976,
+  "artifactId": 8661282879,
+  "artifactDigest": "sha256:5a0eb16b9b89958716a69768b2f579e05b9aa332f9b773a8a70bc9ac06bc66de",
+  "failureStage": "R3A_PACKET_EVALUATION_AFTER_REAL_WEBGL2_CONTEXT_CREATION_BEFORE_SHADER_COMPILATION",
+  "failureCode": "R3B_R3A_PACKET_REJECTED:R3A_PACKAGE_IDENTITY_MISMATCH",
+  "diagnosis": {
+    "nodePackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "chromiumPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD",
+    "r2dCrossRuntimeIdentityDistinctionPreviouslyEstablished": true,
+    "canonicalGpuUploadBytesExactAcrossNodeAndChromium": true,
+    "geometryOrGpuBufferDefectEstablished": false,
+    "requiredCorrection": "R3B_RUNTIME_CORRESPONDENCE_MUST_ACCEPT_THE_KNOWN_CHROMIUM_PACKAGE_IDENTITY_WHILE_PRESERVING_THE_PROMOTED_LOGICAL_R2_PACKAGE_IDENTITY_AND_EXACT_CANONICAL_GPU_TRANSPORT"
+  },
+  "executionObserved": {
+    "realWebGL2ContextCreated": true,
+    "shaderCompilationReached": false,
+    "gpuBufferUploadReached": false,
+    "drawRangeExecutionReached": false,
+    "visibleFrameProduced": false
+  },
+  "boundaries": {
+    "publicRouteMutated": false,
+    "directManipulationMutated": false,
+    "navigationAuthorityMutated": false,
+    "liveRenderPackageMutated": false,
+    "gpuTransportAdapterMutated": false,
+    "r3CWorkStarted": false,
+    "run8EPassClosed": false
+  },
+  "issues": [
+    "R3A_EVALUATOR_NODE_PACKAGE_IDENTITY_ONLY_IN_CHROMIUM_EXECUTION"
+  ]
+}

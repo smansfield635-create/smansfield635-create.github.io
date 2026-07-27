@@ -8,12 +8,24 @@ on:
       - .github/workflows/laws-secondary-label-glow-temp-v3.yml
       - verification/laws-secondary-label-glow-temp/construct.py
       - verification/laws-secondary-label-glow-temp/test.mjs
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - .github/workflows/laws-secondary-label-glow-temp-v3.yml
+      - verification/laws-secondary-label-glow-temp/construct.py
+      - verification/laws-secondary-label-glow-temp/test.mjs
 
 permissions:
   contents: write
 
 jobs:
   construct-verify-and-persist:
+    if: github.event_name == 'push' || github.event.pull_request.head.ref == 'agent/laws-compass-secondary-label-glow-001'
     runs-on: ubuntu-latest
     timeout-minutes: 35
 

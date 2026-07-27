@@ -1,6 +1,30 @@
 import fs from 'node:fs';
 import { chromium } from 'playwright';
 
+let failureWritten = false;
+function persistFailure(error) {
+  if (failureWritten) return;
+  failureWritten = true;
+  const payload = {
+    status: 'FAIL',
+    error: String(error),
+    stack: error && error.stack ? String(error.stack) : ''
+  };
+  try {
+    fs.writeFileSync('/tmp/laws-secondary-label-glow-results.json', JSON.stringify(payload, null, 2));
+  } catch (_) {}
+}
+process.on('uncaughtException', error => {
+  persistFailure(error);
+  console.error(error);
+  process.exit(1);
+});
+process.on('unhandledRejection', error => {
+  persistFailure(error);
+  console.error(error);
+  process.exit(1);
+});
+
 const configurations = [
   { name: 'samsung-portrait', width: 360, height: 800 },
   { name: 'large-phone', width: 412, height: 915 },
@@ -53,16 +77,18 @@ for (const config of configurations) {
     const activeControls = [...document.querySelectorAll('[data-laws-law][data-direction="flow"][data-projection-visible="true"]')]
       .filter(control => getComputedStyle(control).pointerEvents !== 'none').length;
     return {
+      mode: String(document.querySelector('[data-laws-root]')?.getAttribute('data-laws-presentation-mode') || ''),
       texts,
       contained,
       activeControls,
       placement: labels.every(label => label.dataset.lawsProjectedPlacement === 'inward-edge-constrained'),
-      labelState: globalThis.DGB_LAWS_SECONDARY_LABELS?.getState?.() || null
+      labelState: globalThis.DGB_LAWS_SECONDARY_LABELS?.getState?.() || null,
+      rootState: Object.fromEntries([...document.querySelector('[data-laws-root]').attributes].filter(attribute => attribute.name.startsWith('data-laws-')).map(attribute => [attribute.name, attribute.value]))
     };
   });
 
   if (audit.texts.join('|') !== expectedFlow.join('|')) {
-    throw new Error(`${config.name}:SECONDARY_LABELS_INVALID:${audit.texts.join('|')}`);
+    throw new Error(`${config.name}:SECONDARY_LABELS_INVALID:${audit.texts.join('|')}:${JSON.stringify(audit)}`);
   }
   if (!audit.contained || !audit.placement || audit.activeControls !== 4 || audit.labelState?.visibleCount !== 4) {
     throw new Error(`${config.name}:SECONDARY_LABEL_CONTRACT_FAILED:${JSON.stringify(audit)}`);

@@ -54,7 +54,8 @@ jobs:
               'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r1.reference-device-and-mobile-compatibility-amendment.js',
               'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-reference-device-mobile-compatibility-scope.js',
               'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
-              'h-earth-3d/validation/h-earth.run8e-r1.reference-device-mobile-compatibility.validation.mjs'
+              'h-earth-3d/validation/h-earth.run8e-r1.reference-device-mobile-compatibility.validation.mjs',
+              'h-earth-3d/validation/h-earth.run8e-r1.reference-device-mobile-compatibility.correction.receipt.json'
           }
           unexpected = sorted(set(paths) - allowed)
           missing = sorted(allowed - set(paths))

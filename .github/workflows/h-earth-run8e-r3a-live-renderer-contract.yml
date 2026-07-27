@@ -1,0 +1,115 @@
+name: H-Earth Run 8E R3A Live Renderer Contract
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3a-live-renderer-contract-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r2f-closure-promotion-decision-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3a-live-renderer-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      H_EARTH_RUN8E_R3A_OUTPUT: /tmp/h-earth-run8e-r3a
+    steps:
+      - name: Check out exact R3A event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R2F base and protected identities
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r2f-closure-promotion-decision-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r2f-closure-promotion-decision-001)" = "02aa90591a34968c8b6bacba926a156293ad0f76"
+          test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
+          test "$(git hash-object showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js)" = "785856d7702a0e855c2672e6b8a7325ad5b3ba50"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+
+      - name: Verify JavaScript and JSON syntax
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3a.shared-camera-gpu-presentation.js
+          node --check showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3a-shared-camera-gpu-presentation-scope.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3a.shared-camera-gpu-presentation.validation.mjs
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3a.pass-closed.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3a.pass-closed.receipt.json','utf8'))"
+          fi
+
+      - name: Execute R3A shared-camera uniform-packet audit
+        run: |
+          set -euo pipefail
+          mkdir -p "$H_EARTH_RUN8E_R3A_OUTPUT"
+          node h-earth-3d/validation/h-earth.run8e-r3a.shared-camera-gpu-presentation.validation.mjs \
+            | tee "$H_EARTH_RUN8E_R3A_OUTPUT/r3a-validation.log"
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only 02aa90591a34968c8b6bacba926a156293ad0f76...HEAD \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | sort -u > /tmp/h-earth-run8e-r3a-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3a-governed-paths.txt \
+            --task "Run 8E R3A shared-camera GPU presentation contract" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3A_OUTPUT/h-earth.run8e-r3a.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3a/h-earth.run8e-r3a.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') {
+            throw new Error(`R3A_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          }
+          NODE
+
+      - name: Verify bounded scope and R3B stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 02aa90591a34968c8b6bacba926a156293ad0f76...HEAD | sort \
+            > "$H_EARTH_RUN8E_R3A_OUTPUT/r3a-changed-paths.txt"
+          node - <<'NODE'
+          const fs = require('fs');
+          const receipt = JSON.parse(fs.readFileSync(
+            '/tmp/h-earth-run8e-r3a/h-earth.run8e-r3a.shared-camera-gpu-presentation.execution.receipt.json',
+            'utf8'
+          ));
+          if (receipt.eligible !== true) throw new Error(receipt.issues.join(','));
+          if (receipt.stoppingBoundary !== 'STOP_BEFORE_ISOLATED_WEBGL2_FIXED_FRAME_EXECUTION_R3B') {
+            throw new Error('R3A_STOPPING_BOUNDARY_MISMATCH');
+          }
+          if (receipt.boundaries.webglContextCreated !== false ||
+              receipt.boundaries.shaderOrProgramCreated !== false ||
+              receipt.boundaries.renderLoopCreated !== false ||
+              receipt.boundaries.publicRouteBound !== false ||
+              receipt.boundaries.visiblePresentationCreated !== false) {
+            throw new Error('R3A_EXECUTION_BOUNDARY_FAILED');
+          }
+          NODE
+
+      - name: Upload R3A contract evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3a-live-renderer-contract-evidence
+          path: |
+            /tmp/h-earth-run8e-r3a
+            /tmp/h-earth-run8e-r3a-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

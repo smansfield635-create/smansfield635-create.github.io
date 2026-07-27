@@ -17,7 +17,7 @@ export const H_EARTH_RUN_8E_R2F_CONTROL = freeze({
   branch: 'agent/h-earth-run8e-r2f-closure-promotion-decision-001',
   baseBranch: 'agent/h-earth-run8e-r2e-registry-execution-custody-001',
   baseExactHead: '096bfbaf45b8987041600385ae16646b00137b9b',
-  currentStatus: 'EXECUTION_PENDING',
+  currentStatus: 'PASS_CLOSED',
   predecessor: {
     run8ER2A: 'PASS_CLOSED',
     run8ER2B: 'PASS_CLOSED',
@@ -61,9 +61,9 @@ export const H_EARTH_RUN_8E_R2F_CONTROL = freeze({
     run8EPassClosed: false
   },
   promotionDecision: {
-    r2ConstructionClosure: 'PENDING_EXECUTION',
+    r2ConstructionClosure: 'PASS_CLOSED',
     promotionTarget: 'RUN_8E_R3_INPUT',
-    promotionToR3Input: 'PENDING_EXECUTION',
+    promotionToR3Input: 'APPROVED',
     mainBranchPromotion: 'NOT_EXECUTED',
     mainMergeAuthorityCreated: false,
     deploymentAuthorityCreated: false,
@@ -71,12 +71,12 @@ export const H_EARTH_RUN_8E_R2F_CONTROL = freeze({
     run8EPassAuthorityCreated: false
   },
   executionCustody: {
-    executionHead: null,
-    workflowRun: null,
-    workflowJob: null,
-    artifactId: null,
-    artifactDigest: null,
-    closureManifestDigest: null,
+    executionHead: 'fb92cca39d5a277df3dba8d586fb9ff017eca34a',
+    workflowRun: 30283048662,
+    workflowJob: 90033938538,
+    artifactId: 8659616243,
+    artifactDigest: 'sha256:a130adddfc535ce3acd28e81cd4d4c09b1c131b0cda427bc0d51fbbf9683e300',
+    closureManifestDigest: 'sha256:f565c1973859fa8365bca57d06f794f81b85bce436b5887ca5c81e926a6d1a73',
     durablePassReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2f.pass-closed.receipt.json',
     finalExactHead: null
   },

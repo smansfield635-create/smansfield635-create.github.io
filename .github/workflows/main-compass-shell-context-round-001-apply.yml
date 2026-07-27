@@ -1,0 +1,79 @@
+name: Main Compass Shell Context Bounded Apply
+# Temporary scheduled transport; remove after successful task publication.
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-validate-rewrite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out task branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/main-compass-shell-context-round-001
+          fetch-depth: 0
+
+      - name: Apply accepted candidate and publish clean task commit
+        shell: bash
+        env:
+          EXPECTED_BASE: ee0c5063c550b5c90e623ba0665190b55c64d84f
+          TASK_BRANCH: agent/main-compass-shell-context-round-001
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "$TASK_BRANCH"
+          if [ ! -f .github/main-compass-shell-context-round-001.patch.gz.b64 ]; then
+            echo "Bounded payload absent; no operation required."
+            exit 0
+          fi
+          EXPECTED_TASK_HEAD="$(git rev-parse HEAD)"
+          test "$(git merge-base HEAD "$EXPECTED_BASE")" = "$EXPECTED_BASE"
+          test "$(git hash-object index.html)" = "bf38b3d34d70e29e10a31b53e3e6b7ac30c09536"
+          test "$(git hash-object assets/compass/compass.css)" = "5e00eb9f981c540b85f310294b0c919fbab17f2d"
+          test "$(git hash-object assets/compass/compass.controller.js)" = "259e0d16b55c3986fec57db37fc057861483344a"
+
+          base64 -d .github/main-compass-shell-context-round-001.patch.gz.b64 | gzip -d > /tmp/main-compass.patch
+          git apply --check /tmp/main-compass.patch
+          git apply /tmp/main-compass.patch
+
+          test "$(git hash-object index.html)" = "24872f1f449c8d6535a9ade4f7bd6d208cd7827d"
+          test "$(git hash-object assets/compass/compass.css)" = "54d1ff84ab551ecbde1415dcf616c3228facb0e2"
+          test "$(git hash-object assets/compass/compass.controller.js)" = "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46"
+          node --check assets/compass/compass.controller.js
+
+          python - <<'PY'
+          from pathlib import Path
+          import os, re, subprocess
+          html = Path('index.html').read_text()
+          css = Path('assets/compass/compass.css').read_text()
+          js = Path('assets/compass/compass.controller.js').read_text()
+          assert 'dgb-main-compass-shell-context-round-001-v1' in html
+          assert 'data-compass-room-label-count="19"' in html
+          assert 'data-visual-pass-claimed="false"' in html
+          assert 'Main Compass shell hierarchy and contextual presentation' in css
+          assert 'Drag to rotate the constellation. Tap a primary star to open its cluster.' in js
+          assert 'Drag to rotate the cluster. Tap a room star to select it.' in js
+          assert 'Review the selected room. Use Enter Room to continue' in js
+          source = subprocess.check_output(['git', 'show', f'{os.environ["EXPECTED_BASE"]}:index.html'], text=True)
+          def protected(text):
+              match = re.search(r'<style id="dgb-main-compass-label-cosmos-v1">.*?</style>', text, re.S)
+              assert match
+              return match.group(0)
+          assert protected(html) == protected(source)
+          PY
+
+          rm .github/workflows/main-compass-shell-context-round-001-apply.yml
+          rm .github/main-compass-shell-context-round-001.patch.gz.b64
+          git reset --mixed "$EXPECTED_BASE"
+          git add index.html assets/compass/compass.css assets/compass/compass.controller.js
+          test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n' assets/compass/compass.controller.js assets/compass/compass.css index.html | sort)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Apply validated Main Compass shell context candidate"
+          git push --force-with-lease=refs/heads/$TASK_BRANCH:"$EXPECTED_TASK_HEAD" origin HEAD:$TASK_BRANCH

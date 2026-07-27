@@ -24,9 +24,28 @@ export const H_EARTH_RUN_8E_R2D_CONTROL = freeze({
     correspondenceAuditManifestDigest:
       'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe'
   },
+  discoveredTransportBoundary: {
+    nodeAndChromiumRawPackageIdentityExact: false,
+    exactRawTypedBuffers: [
+      'positions',
+      'baseColorsLinear',
+      'materialModelCodes',
+      'surfaceClassCodes',
+      'primitiveIndices',
+      'roleCodes',
+      'indices'
+    ],
+    runtimeDriftTypedBuffers: ['normals', 'materialParameters'],
+    disposition: 'CANONICALIZE_ONLY_AT_GPU_TRANSPORT_BOUNDARY',
+    sourceAuthorityCorrectionRequired: false,
+    liveRenderPackageSourceCorrectionRequired: false
+  },
   requiredProofs: [
     'WEBGL_2_CONTEXT_CREATED_IN_ISOLATED_VALIDATION_PAGE',
     'NINE_COPY_ON_REQUEST_TYPED_ARRAY_VIEWS_UPLOADED_TO_GPU_BUFFERS',
+    'NORMAL_AND_MATERIAL_PARAMETER_VIEWS_CANONICALIZED_AT_TRANSPORT_BOUNDARY',
+    'CANONICAL_GPU_UPLOAD_BYTES_ARE_EXACT_BETWEEN_NODE_AND_CHROMIUM',
+    'CANONICALIZATION_ADJUSTMENT_REMAINS_WITHIN_FIXED_SUB_MICRO_UNIT_BOUND',
     'GPU_BUFFER_BYTE_SIZES_MATCH_TYPED_ARRAY_BYTE_LENGTHS',
     'GPU_BUFFER_TARGETS_AND_STATIC_DRAW_USAGE_MATCH_UPLOAD_MANIFEST',
     'ALL_CREATED_GPU_BUFFERS_ARE_RECOGNIZED_BY_CONTEXT',
@@ -36,7 +55,8 @@ export const H_EARTH_RUN_8E_R2D_CONTROL = freeze({
     'CONTEXT_RESTORATION_EVENT_IS_OBSERVED',
     'POST_RESTORATION_RESOURCE_SET_UPLOADS_AND_DELETES_CLEANLY',
     'NO_WEBGL_ERROR_REMAINS_AFTER_EACH_LIFECYCLE_STAGE',
-    'PACKAGE_AND_TYPED_SOURCE_DIGESTS_REMAIN_UNCHANGED',
+    'PACKAGE_SOURCE_AND_SOURCE_AUTHORITIES_REMAIN_UNCHANGED',
+    'CANONICAL_TYPED_UPLOAD_DIGESTS_REMAIN_UNCHANGED_AFTER_LIFECYCLE',
     'NO_SHADER_PROGRAM_VERTEX_ARRAY_TEXTURE_FRAMEBUFFER_OR_DRAW_CALL_IS_CREATED',
     'CI_SOFTWARE_RENDERER_TIMING_IS_NOT_PERFORMANCE_AUTHORITY'
   ],
@@ -46,10 +66,14 @@ export const H_EARTH_RUN_8E_R2D_CONTROL = freeze({
     elementArrayBufferCountPerCycle: 1,
     lifecycleCycleCount: 3,
     expectedIndexType: 'UNSIGNED_INT',
-    expectedUsage: 'STATIC_DRAW'
+    expectedUsage: 'STATIC_DRAW',
+    canonicalizedFloatBufferCount: 2,
+    canonicalizationDecimalPlaces: 6,
+    maximumPermittedAbsoluteAdjustment: 0.00000051
   },
   permittedScope: [
     'R2D_CONTROL_OVERLAY',
+    'R2D_DETERMINISTIC_GPU_TRANSPORT_ADAPTER',
     'R2D_ISOLATED_BROWSER_PROBE',
     'R2D_PLAYWRIGHT_VALIDATION_HARNESS',
     'R2D_READ_ONLY_WORKFLOW',
@@ -97,6 +121,12 @@ export function evaluateHEarthRun8ER2DControl(candidate = H_EARTH_RUN_8E_R2D_CON
   }
   if (candidate?.expectedUploadManifest?.sourceBufferCount !== 9) issues.push('R2D_UPLOAD_CORPUS_INVALID');
   if (candidate?.expectedUploadManifest?.lifecycleCycleCount !== 3) issues.push('R2D_LIFECYCLE_CYCLE_COUNT_INVALID');
+  if (candidate?.expectedUploadManifest?.canonicalizedFloatBufferCount !== 2) {
+    issues.push('R2D_CANONICALIZED_BUFFER_COUNT_INVALID');
+  }
+  if (!candidate?.permittedScope?.includes('R2D_DETERMINISTIC_GPU_TRANSPORT_ADAPTER')) {
+    issues.push('R2D_GPU_TRANSPORT_ADAPTER_NOT_AUTHORIZED');
+  }
   if (!candidate?.prohibitedScope?.includes('DRAW_CALL_OR_RENDER_LOOP')) issues.push('R2D_DRAW_BOUNDARY_MISSING');
   if (candidate?.stoppingBoundary?.run8ER2EStarted !== false) issues.push('R2E_STARTED_INSIDE_R2D');
   return freeze({

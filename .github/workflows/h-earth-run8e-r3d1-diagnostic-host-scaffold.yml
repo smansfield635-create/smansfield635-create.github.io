@@ -1,0 +1,158 @@
+name: H-Earth Run 8E R3D1 Diagnostic Host Scaffold
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3d1-diagnostic-host-scaffold-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3c-persistent-gpu-camera-loop-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3d1-diagnostic-host-scaffold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      H_EARTH_RUN8E_R3D1_URL: http://127.0.0.1:4173/showroom/globe/h-earth/diagnostic/run8e-r3d/
+      H_EARTH_RUN8E_R3D1_OUTPUT: /tmp/h-earth-run8e-r3d1
+    steps:
+      - name: Check out exact R3D1 event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R3C base and protected witnesses
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3c-persistent-gpu-camera-loop-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3c-persistent-gpu-camera-loop-001)" = "5c7a7eef489da94a230812eecc5e531e285b7cac"
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js)" = "b8b3c713d5f0b7c79808e8942ce385887589d880"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = "b5f72fb70f59276f868a5894ee0c5e8beccc40ca"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/direct-manipulation.js)" = "322ee2bfed5184acd8eac600f19abd72380b6c2b"
+
+      - name: Verify R3D1 syntax authority and static scaffold
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3d1.diagnostic-host-scaffold.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d1-diagnostic-host-scaffold-scope.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3d1.diagnostic-host-scaffold.validation.mjs
+          node --check showroom/globe/h-earth/diagnostic/run8e-r3d/diagnostic-host.js
+          node --check showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.placeholder.js
+          node --check showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.placeholder.js
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d1.pass-closed.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d1.pass-closed.receipt.json','utf8'))"
+          fi
+          node h-earth-3d/validation/h-earth.run8e-r3d1.diagnostic-host-scaffold.validation.mjs
+
+      - name: Start static scaffold server
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-run8e-r3d1-server.log 2>&1 &
+          echo $! >/tmp/h-earth-run8e-r3d1-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail "$H_EARTH_RUN8E_R3D1_URL" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-run8e-r3d1-server.log
+          exit 1
+
+      - name: Verify static HTTP path resolution
+        run: |
+          set -euo pipefail
+          mkdir -p "$H_EARTH_RUN8E_R3D1_OUTPUT/http"
+          curl --silent --fail "$H_EARTH_RUN8E_R3D1_URL" -o "$H_EARTH_RUN8E_R3D1_OUTPUT/http/index.html"
+          curl --silent --fail "${H_EARTH_RUN8E_R3D1_URL}diagnostic-host.js" -o "$H_EARTH_RUN8E_R3D1_OUTPUT/http/diagnostic-host.js"
+          curl --silent --fail "${H_EARTH_RUN8E_R3D1_URL}pointer-touch-intake.placeholder.js" -o "$H_EARTH_RUN8E_R3D1_OUTPUT/http/pointer-touch-intake.placeholder.js"
+          curl --silent --fail "${H_EARTH_RUN8E_R3D1_URL}live-gpu-binding.placeholder.js" -o "$H_EARTH_RUN8E_R3D1_OUTPUT/http/live-gpu-binding.placeholder.js"
+          test -s "$H_EARTH_RUN8E_R3D1_OUTPUT/http/index.html"
+          test -s "$H_EARTH_RUN8E_R3D1_OUTPUT/http/diagnostic-host.js"
+          test -s "$H_EARTH_RUN8E_R3D1_OUTPUT/http/pointer-touch-intake.placeholder.js"
+          test -s "$H_EARTH_RUN8E_R3D1_OUTPUT/http/live-gpu-binding.placeholder.js"
+          grep -q 'src="./diagnostic-host.js"' "$H_EARTH_RUN8E_R3D1_OUTPUT/http/index.html"
+          grep -q "from './pointer-touch-intake.placeholder.js'" "$H_EARTH_RUN8E_R3D1_OUTPUT/http/diagnostic-host.js"
+          grep -q "from './live-gpu-binding.placeholder.js'" "$H_EARTH_RUN8E_R3D1_OUTPUT/http/diagnostic-host.js"
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only 5c7a7eef489da94a230812eecc5e531e285b7cac...HEAD \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | sort -u > /tmp/h-earth-run8e-r3d1-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3d1-governed-paths.txt \
+            --task "Run 8E R3D1 diagnostic host scaffold" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3D1_OUTPUT/h-earth.run8e-r3d1.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3d1/h-earth.run8e-r3d1.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`R3D1_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact scope and R3D2 stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 5c7a7eef489da94a230812eecc5e531e285b7cac...HEAD | sort > "$H_EARTH_RUN8E_R3D1_OUTPUT/r3d1-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3d1/r3d1-changed-paths.txt').read_text().splitlines() if line.strip()}
+          required = {
+            '.github/workflows/h-earth-run8e-r3d1-diagnostic-host-scaffold.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3d1.diagnostic-host-scaffold.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d1-diagnostic-host-scaffold-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3d1.diagnostic-host-scaffold.validation.mjs',
+            'showroom/globe/h-earth/diagnostic/run8e-r3d/index.html',
+            'showroom/globe/h-earth/diagnostic/run8e-r3d/diagnostic-host.js',
+            'showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.placeholder.js',
+            'showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.placeholder.js'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d1.pass-closed.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'R3D1_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'R3D1_UNEXPECTED_PATHS:{unexpected}')
+          forbidden = [p for p in paths if p in {
+            'showroom/globe/h-earth/index.html',
+            'showroom/globe/h-earth/functional-landscape/direct-manipulation.js',
+            'showroom/globe/h-earth/functional-landscape/navigation.js',
+            'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js',
+            'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js',
+            'showroom/globe/h-earth/render/live-render-package.run8e-r2.js'
+          }]
+          if forbidden: raise SystemExit(f'R3D1_FORBIDDEN_PATHS:{forbidden}')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3d1/h-earth.run8e-r3d1.diagnostic-host-scaffold.validation.receipt.json').read_text())
+          if receipt['eligible'] is not True: raise SystemExit('R3D1_VALIDATION_RECEIPT_NOT_ELIGIBLE')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_POINTER_AND_TOUCH_INTAKE_R3D2': raise SystemExit('R3D1_STOPPING_BOUNDARY_MISMATCH')
+          if any(receipt['executionBoundaries'].values()): raise SystemExit('R3D1_EXECUTION_BOUNDARY_VIOLATION')
+          PY
+
+      - name: Upload R3D1 scaffold evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3d1-diagnostic-host-scaffold-evidence
+          path: |
+            /tmp/h-earth-run8e-r3d1
+            /tmp/h-earth-run8e-r3d1-server.log
+            /tmp/h-earth-run8e-r3d1-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

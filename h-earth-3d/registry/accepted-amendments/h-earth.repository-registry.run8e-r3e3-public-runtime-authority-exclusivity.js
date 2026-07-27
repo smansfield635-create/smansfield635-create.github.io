@@ -5,6 +5,7 @@ const freeze = (value) => Object.freeze(value);
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r3e3-public-runtime-authority-exclusivity-001';
 const PASS_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e3.pass-closed.receipt.json';
+const PASS_RECEIPT_GIT_BLOB = '5c5f1ae06220f88f497dc2b45f4d749679849918';
 
 export const H_EARTH_RUN_8E_R3E3_PATHS = freeze([
   '/.github/workflows/h-earth-run8e-r3e3-public-runtime-authority-exclusivity.yml',
@@ -22,19 +23,19 @@ const OCCURRENCES = freeze(H_EARTH_RUN_8E_R3E3_PATHS.map((repositoryPath) => fre
   refName: BRANCH,
   commitSha: null,
   path: repositoryPath,
-  gitBlobSha: null,
+  gitBlobSha: repositoryPath === PASS_RECEIPT_PATH ? PASS_RECEIPT_GIT_BLOB : null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT',
-  fetchbackStatus: 'R3E3_CORE_EXECUTION_PASS_DURABLE_RECEIPT_PENDING',
-  occurrenceClass: 'RUN_8E_R3E3_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_CORE_PASS_OCCURRENCE'
+  existenceStatus: 'PRESENT',
+  fetchbackStatus: 'R3E3_DURABLE_PASS_RECEIPT_PRESENT_FINAL_EXACT_HEAD_VALIDATION_PENDING',
+  occurrenceClass: 'RUN_8E_R3E3_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_PASS_CLOSED_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3E3_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3E3_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_v1',
-  evidenceClass: 'EXECUTED_R3E3_INITIAL_AND_RELOAD_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_CORE_PASS',
+  evidenceClass: 'EXECUTED_R3E3_INITIAL_AND_RELOAD_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_WITH_DURABLE_PASS_CLOSED_RECEIPT',
   sourceKind: 'GITHUB_ACTIONS_MOBILE_CHROMIUM_RUNTIME_INSTRUMENTATION',
-  sourceIdOrPath: '/showroom/globe/h-earth/',
+  sourceIdOrPath: PASS_RECEIPT_PATH,
   sourceOccurrenceOrRevision: '9ce869c03951a5760a1c29e87d261bc20a66d309',
   assertionScope: freeze([
     'INITIAL_DOCUMENT_ONE_WEBGL2_CONTEXT',
@@ -50,7 +51,8 @@ export const H_EARTH_RUN_8E_R3E3_EVIDENCE = freeze({
     'LIMITED_LOOK_PROPOSAL_TO_DISTINCT_VISIBLE_GPU_FRAME',
     'ZERO_POST_INITIALIZATION_RESOURCE_ACTIVITY',
     'ZERO_WORLD_REBUILD_OR_DEFERRED_FRAME_CHAIN',
-    'NO_PUBLIC_SOURCE_MUTATION',
+    'R3E3_PASS_CLOSED',
+    'R3_OPEN_AT_R3E4_BOUNDARY',
     'STOP_BEFORE_R3E4'
   ]),
   verifiedOn: null,
@@ -66,6 +68,15 @@ export const H_EARTH_RUN_8E_R3E3_EVIDENCE = freeze({
     coreArtifactId: 8669318353,
     coreArtifactDigest: 'sha256:4b81bf80bdda5d6fc90d3dc8d6a3c3eeca40c6bd5dd5486e7ecf92234b69df2f',
     coreAutomaticRegistryPreflightRun: 30308290926,
+    closureControlHead: '6c0798c034b8b0c07071c8a229eac99a0d76333b',
+    closureControlWorkflowRun: 30308583781,
+    closureControlWorkflowJob: 90118656279,
+    closureControlArtifactId: 8669437398,
+    closureControlArtifactDigest: 'sha256:209cca8e4d5a1a0198a4eb547bf71cf7825889a1a2ca1c366934c6b929e8ac35',
+    closureControlAutomaticRegistryPreflightRun: 30308583872,
+    closureControlReceiptPresent: false,
+    durablePassReceiptCommit: '9f82f0cae5048fa44fbbbf927af56fd31112ec65',
+    durablePassReceiptGitBlob: PASS_RECEIPT_GIT_BLOB,
     documentLoadCount: 2,
     acceptedNavigationProposalCount: 2,
     visibleGpuFrameCount: 4,
@@ -88,7 +99,8 @@ export const H_EARTH_RUN_8E_R3E3_EVIDENCE = freeze({
     maximumSynchronousResponseMs: 261.8
   }),
   evidenceLimitations: freeze([
-    'DURABLE_R3E3_PASS_RECEIPT_PENDING',
+    'FINAL_EXACT_HEAD_VALIDATION_PENDING',
+    'FINAL_EXACT_HEAD_VALIDATION_NOT_EMBEDDED_IN_PASS_RECEIPT',
     'LIMITED_ONE_FINGER_LOOK_PROBE_ONLY',
     'NO_FULL_PUBLIC_DIRECT_MANIPULATION_ACCEPTANCE',
     'NO_SUSTAINED_PUBLIC_INTERACTION_ACCEPTANCE',
@@ -109,22 +121,22 @@ export const H_EARTH_RUN_8E_R3E3_NODE = freeze({
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: H_EARTH_RUN_8E_R3E3_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3E3_EVIDENCE.evidenceId],
-  authorityClass: 'EXECUTED_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_CORE_PASS',
-  authorityPosture: 'R3E3_CORE_EXECUTION_PASS_RECEIPT_PENDING_R3_OPEN_AT_R3E4_BOUNDARY_RUN_8E_FAIL_OPEN',
-  authoritySource: ['R3E2_PASS_CLOSED_PUBLIC_SOURCE_COMPOSITION', 'R3D2_POINTER_TOUCH_INTAKE', 'R3D3_LIVE_GPU_BINDING', 'R3E3_MOBILE_CHROMIUM_EXECUTION'],
+  authorityClass: 'EXECUTED_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_PASS_CLOSED',
+  authorityPosture: 'R3E3_PASS_CLOSED_UNMERGED_R3_OPEN_AT_R3E4_BOUNDARY_RUN_8E_FAIL_OPEN',
+  authoritySource: ['R3E2_PASS_CLOSED_PUBLIC_SOURCE_COMPOSITION', 'R3D2_POINTER_TOUCH_INTAKE', 'R3D3_LIVE_GPU_BINDING', 'R3E3_MOBILE_CHROMIUM_EXECUTION', 'R3E3_DURABLE_PASS_RECEIPT'],
   authorityScope: ['EXECUTE_PUBLIC_ROUTE', 'INSTRUMENT_RUNTIME_OWNERS', 'PROBE_ONE_LOOK_PROPOSAL', 'AUDIT_RELOAD_EXCLUSIVITY'],
   authorityLimitations: ['NO_PUBLIC_SOURCE_MUTATION', 'NO_FULL_PUBLIC_INTERACTION_ACCEPTANCE', 'NO_R3E4', 'NO_DEPLOYMENT', 'NO_PHYSICAL_DEVICE_ACCEPTANCE', 'NO_RUN_8E_PASS'],
   parentRelations: [], childRelations: [], peerRelations: [], upstreamBoundaries: [], downstreamBoundaries: [],
   cardinalRole: 'NONE', cardinalStatus: 'NONE', cardinalCompleteness: 'NOT_APPLICABLE',
   orderingRules: ['R3E2_PASS_CLOSED_BEFORE_R3E3', 'R3E3_PASS_CLOSED_BEFORE_R3E4'],
   dependencyRelations: [],
-  allowedMutationScope: 'R3E3_SEVEN_PATH_CONTROL_EVIDENCE_SCOPE_ONLY',
+  allowedMutationScope: 'NONE_AFTER_FINAL_EXACT_HEAD_VALIDATION',
   prohibitedMutations: ['SHOWROOM', 'PUBLIC_ROUTE', 'PUBLIC_ORCHESTRATOR', 'NAVIGATION', 'RENDERER', 'INPUT', 'R3E4_OR_LATER'],
-  requiredValidations: ['MOBILE_CHROMIUM_INITIAL_LOAD', 'MOBILE_CHROMIUM_RELOAD', 'CONTEXT_AND_LISTENER_INSTRUMENTATION', 'VISIBLE_FRAME_CORRESPONDENCE', 'AUTOMATIC_REGISTRY_PREFLIGHT', 'EXACT_SCOPE'],
+  requiredValidations: ['FINAL_MOBILE_CHROMIUM_INITIAL_LOAD', 'FINAL_MOBILE_CHROMIUM_RELOAD', 'FINAL_CONTEXT_AND_LISTENER_INSTRUMENTATION', 'FINAL_VISIBLE_FRAME_CORRESPONDENCE', 'FINAL_AUTOMATIC_REGISTRY_PREFLIGHT', 'FINAL_EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_PUBLIC_DIRECT_MANIPULATION_ACCEPTANCE_R3E4'],
-  currentIdentityReferences: ['2017755b4c0186ef546774c3cfefe57b0e9c3199', '9ce869c03951a5760a1c29e87d261bc20a66d309', '30308290969', '8669318353', '0daedf61f7e19af095f4db5fc47563a9cd786837', '2b0a916b3a6d11da84316925f8abd8a3a1447445'],
-  lifecycleStatus: 'CORE_EXECUTION_PASS_RECEIPT_PENDING',
-  unresolvedFields: ['R3E3_PASS_RECEIPT', 'FINAL_EXACT_HEAD_WORKFLOW_RUN']
+  currentIdentityReferences: ['2017755b4c0186ef546774c3cfefe57b0e9c3199', '9ce869c03951a5760a1c29e87d261bc20a66d309', '6c0798c034b8b0c07071c8a229eac99a0d76333b', '9f82f0cae5048fa44fbbbf927af56fd31112ec65', '30308290969', '30308583781', '8669318353', '8669437398', PASS_RECEIPT_GIT_BLOB],
+  lifecycleStatus: 'PASS_CLOSED_FINAL_EXACT_HEAD_VALIDATION_PENDING',
+  unresolvedFields: ['FINAL_EXACT_HEAD_WORKFLOW_RUN']
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R3E3_PATHS.map((repositoryPath) => [repositoryPath, {

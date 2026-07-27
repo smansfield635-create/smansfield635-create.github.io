@@ -41,13 +41,38 @@ jobs:
         run: |
           set -euo pipefail
           node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2-execution-scope.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2e-execution-scope.js
           node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js
           node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2e.registry-execution-custody.js
           node --check h-earth-3d/validation/h-earth.run8e-r2e.registry-execution-custody.validation.mjs
           node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.path-inventory.json','utf8'))"
           if test -f h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json; then
             node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json','utf8'))"
           fi
+
+      - name: Verify final closure controls when durable receipt exists
+        run: |
+          set -euo pipefail
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import { H_EARTH_RUN_8E_R2_CONTROL } from './h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js';
+          import { H_EARTH_RUN_8E_R2E_CONTROL } from './h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2e.registry-execution-custody.js';
+          const receiptPath = './h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json';
+          if (fs.existsSync(receiptPath)) {
+            const r2e = H_EARTH_RUN_8E_R2_CONTROL.boundedSubcheckpoints.find((entry) => entry.checkpointId === 'RUN_8E_R2E');
+            const r2f = H_EARTH_RUN_8E_R2_CONTROL.boundedSubcheckpoints.find((entry) => entry.checkpointId === 'RUN_8E_R2F');
+            if (r2e?.currentStatus !== 'PASS_CLOSED') throw new Error('R2E_PARENT_CONTROL_NOT_PASS_CLOSED');
+            if (r2f?.currentStatus !== 'NOT_STARTED') throw new Error('R2F_STARTED');
+            if (H_EARTH_RUN_8E_R2_CONTROL.predecessor.run8E !== 'FAIL_OPEN') throw new Error('RUN_8E_NOT_FAIL_OPEN');
+            if (H_EARTH_RUN_8E_R2_CONTROL.stoppingBoundary.nextCheckpoint !== 'RUN_8E_R2F_NOT_STARTED') {
+              throw new Error('R2_PARENT_NOT_OPEN_AT_R2F_BOUNDARY');
+            }
+            if (H_EARTH_RUN_8E_R2E_CONTROL.currentStatus !== 'PASS_CLOSED') {
+              throw new Error('R2E_CHILD_CONTROL_NOT_PASS_CLOSED');
+            }
+          }
+          NODE
 
       - name: Execute independent registry and exact-scope audit
         run: |

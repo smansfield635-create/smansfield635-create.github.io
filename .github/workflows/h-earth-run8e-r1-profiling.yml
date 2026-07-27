@@ -1,0 +1,115 @@
+name: H-Earth Run 8E R1 Profiling and Architecture Disposition
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r1-physical-profiling-001
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-run8e-r1-profiling:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      H_EARTH_RUN8E_R1_URL: http://127.0.0.1:4173/showroom/globe/h-earth/diagnostic/run8e-r1/
+      H_EARTH_RUN8E_R1_OUTPUT: /tmp/h-earth-run8e-r1
+    steps:
+      - name: Check out R1 profiling branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-run8e-r1-physical-profiling-001
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Correct bounded profiler source idempotently
+        run: node h-earth-3d/validation/h-earth.run8e-r1.profiler-fix.mjs
+
+      - name: Persist corrected profiler source
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Profiler source already corrected.'
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add showroom/globe/h-earth/diagnostic/run8e-r1/profiler.js
+          git commit -m 'Correct Run 8E R1 worker transfer'
+          git push origin HEAD:agent/h-earth-run8e-r1-physical-profiling-001
+
+      - name: Verify JavaScript syntax
+        run: |
+          node --check showroom/globe/h-earth/diagnostic/run8e-r1/profiler.js
+          node --check showroom/globe/h-earth/diagnostic/run8e-r1/candidate-worker.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r1.physical-profiling-and-architecture-disposition.js
+          node --check h-earth-3d/validation/h-earth.run8e-r1.profiling.harness.mjs
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start bounded workspace server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-run8e-r1-server.log 2>&1 &
+          echo $! >/tmp/h-earth-run8e-r1-server.pid
+          for attempt in $(seq 1 60); do
+            if curl --silent --fail http://127.0.0.1:4173/showroom/globe/h-earth/diagnostic/run8e-r1/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-run8e-r1-server.log
+          exit 1
+
+      - name: Execute fixed-camera architecture probes and Samsung emulation
+        run: node h-earth-3d/validation/h-earth.run8e-r1.profiling.harness.mjs
+
+      - name: Verify bounded R1 scope
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 9c5e975eee14c38b667660dd328751d4e2a7e2c3...HEAD | sort >/tmp/h-earth-run8e-r1-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r1-paths.txt').read_text().splitlines() if line.strip()]
+          forbidden = [path for path in paths if path.startswith('showroom/globe/h-earth/render/') or path.endswith('/navigation.js')]
+          if forbidden:
+              raise SystemExit(f'R1_FORBIDDEN_AUTHORITY_MUTATION:{forbidden}')
+          required = {
+              '.github/workflows/h-earth-run8e-r1-profiling.yml',
+              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r1.physical-profiling-and-architecture-disposition.js',
+              'h-earth-3d/validation/h-earth.run8e-r1.profiler-fix.mjs',
+              'h-earth-3d/validation/h-earth.run8e-r1.profiling.harness.mjs',
+              'showroom/globe/h-earth/diagnostic/run8e-r1/index.html',
+              'showroom/globe/h-earth/diagnostic/run8e-r1/profiler.js',
+              'showroom/globe/h-earth/diagnostic/run8e-r1/candidate-worker.js'
+          }
+          missing = sorted(required - set(paths))
+          if missing:
+              raise SystemExit(f'R1_REQUIRED_PATHS_MISSING:{missing}')
+          print({'pathCount': len(paths), 'paths': paths})
+          PY
+
+      - name: Upload R1 profiling evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r1-profiling-evidence
+          path: |
+            /tmp/h-earth-run8e-r1
+            /tmp/h-earth-run8e-r1-server.log
+            /tmp/h-earth-run8e-r1-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

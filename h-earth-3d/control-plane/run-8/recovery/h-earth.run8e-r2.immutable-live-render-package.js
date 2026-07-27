@@ -36,13 +36,6 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
       name: 'CORE_PACKAGE_CONTRACT_AND_SOURCE_SHAPE_EXECUTION',
       requiredResult: 'PASS_CLOSED_BEFORE_R2B',
       currentStatus: 'PASS_CLOSED',
-      allowedScope: [
-        'R2_CONTROL_CONTRACT',
-        'ISOLATED_PACKAGE_CANDIDATE',
-        'CORE_VALIDATION_HARNESS',
-        'READ_ONLY_WORKFLOW',
-        'R2A_FAILURE_AND_PASS_RECEIPTS'
-      ],
       executionEvidence: {
         attempt: 'R2A_ATTEMPT_002',
         executionStartHead: '81a85604ff6a66dbf023c41c263a69507cd5d276',
@@ -98,8 +91,28 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
       checkpointId: 'RUN_8E_R2D',
       name: 'GPU_UPLOAD_VIEW_AND_RESOURCE_LIFECYCLE_VALIDATION',
       requiredResult: 'PASS_CLOSED_BEFORE_R2E',
-      currentStatus: 'NOT_STARTED',
-      stoppingBoundary: 'STOP_BEFORE_REGISTRY_AND_EXECUTION_CUSTODY_R2E'
+      currentStatus: 'PASS_CLOSED',
+      executionEvidence: {
+        attempt: 'R2D_ATTEMPT_004_CANONICAL_GPU_TRANSPORT',
+        executionHead: 'f346df7873b366d961e1bf1dc45d0082a4607590',
+        workflowRun: 30240226591,
+        workflowJob: 89895687377,
+        evidenceArtifact: 8642985618,
+        evidenceArtifactDigest: 'sha256:9b1006036a93bfb3cf6c532c21068a37d5013ab5f8d1635cdd917655870de03c',
+        custodyManifestDigest: 'sha256:0ef98ea0f82370278ecc946247b32a8ab615a665834abdb33fee741ae6b7ec6e',
+        gpuUploadViewContractId: 'H_EARTH_RUN_8E_R2D_DETERMINISTIC_GPU_UPLOAD_VIEWS_v1',
+        canonicalGpuUploadByteLengthPerCycle: 2145444,
+        createdBufferCount: 27,
+        deletedBufferCount: 27,
+        canonicalGpuUploadBytesExactAcrossNodeAndChromium: true,
+        passReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.pass-closed.receipt.json',
+        predecessorFailureReceipts: [
+          '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-001.failure.receipt.json',
+          '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-002.failure.receipt.json',
+          '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-003.failure.receipt.json'
+        ]
+      },
+      stoppingBoundary: 'STOP_BEFORE_REGISTRY_DURABLE_RECEIPT_AND_INDEPENDENT_SCOPE_AUDIT_R2E'
     },
     {
       checkpointId: 'RUN_8E_R2E',
@@ -121,6 +134,7 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'BUILD_THE_WORLD_ONCE',
     'KEEP_WORLD_CAMERA_NAVIGATION_MATERIAL_AND_LIGHT_AUTHORITIES_SHARED',
     'EXPOSE_FRESH_GPU_UPLOAD_VIEWS_WITHOUT_EXPOSING_MUTABLE_PACKAGE_STORAGE',
+    'CANONICALIZE_RUNTIME_DRIFT_ONLY_AT_THE_GPU_TRANSPORT_BOUNDARY',
     'DO_NOT_CREATE_A_RENDER_LOOP_IN_R2',
     'DO_NOT_BIND_R2_TO_THE_PUBLIC_ROUTE'
   ],
@@ -147,7 +161,8 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'SOURCE_AUTHORITY_TABLE',
     'DEFAULT_ATMOSPHERE_UNIFORM_SEED',
     'DETERMINISTIC_PACKAGE_IDENTITY',
-    'COPY_ON_REQUEST_GPU_BUFFER_VIEWS'
+    'COPY_ON_REQUEST_GPU_BUFFER_VIEWS',
+    'DETERMINISTIC_CANONICAL_GPU_TRANSPORT_VIEWS'
   ],
   correspondenceRequirements: {
     primitiveMembership: 'EXACT',
@@ -159,6 +174,7 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     shorelineAndVegetationMaterials: 'EXISTING_PRIMITIVE_RENDER_INTENT_PROJECTION',
     transparencyClasses: 'PRESERVED',
     semanticAndFormationProvenance: 'PRESERVED',
+    gpuTransportCanonicalization: 'NORMALS_AND_MATERIAL_PARAMETERS_ONLY',
     pixelIdentity: 'NOT_REQUIRED'
   },
   expectedCorpus: {
@@ -168,12 +184,15 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     vegetationPrimitiveCount: 27,
     semanticAddressCount: 256,
     triangleCount: 49040,
-    indexCount: 147120
+    indexCount: 147120,
+    gpuUploadBufferCount: 9,
+    gpuUploadByteLengthPerCycle: 2145444
   },
   permittedMutations: [
     'NEW_R2_CONTROL_CONTRACT',
     'NEW_ISOLATED_R2_RENDER_PACKAGE_MODULE',
     'NEW_R2_VALIDATION_AND_DIAGNOSTIC_HARNESS',
+    'NEW_R2_GPU_TRANSPORT_ADAPTER',
     'NEW_R2_REGISTRY_OVERLAY',
     'NEW_READ_ONLY_R2_WORKFLOW',
     'REGISTRY_LOADER_ACTIVATION'
@@ -188,28 +207,28 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'SHORELINE_GEOMETRY',
     'VEGETATION_GEOMETRY_OR_EXPANSION',
     'MATERIAL_OR_LIGHT_RETUNING',
-    'WEBGL_CONTEXT_OR_RENDER_LOOP',
+    'VISIBLE_RENDERER_OR_RENDER_LOOP',
     'DEPLOYMENT_OR_LIVE_PROMOTION',
     'RUN_8E_PASS_CLOSED'
   ],
   acceptanceCriteria: [
     'PACKAGE_BUILD_ELIGIBLE',
     'PACKAGE_OBJECT_AND_ALL_EXPOSED_SOURCE_ARRAYS_FROZEN',
-    'SECOND_GET_RETURNS_SAME_CACHED_PACKAGE_OBJECT',
-    'TWO_EXPLICIT_BUILDS_HAVE_IDENTICAL_DETERMINISTIC_IDENTITY',
-    'GPU_VIEW_CALLS_RETURN_DISTINCT_MUTABLE_TYPED_ARRAY_COPIES',
-    'GPU_VIEW_MUTATION_CANNOT_MUTATE_PACKAGE_OR_LATER_VIEWS',
-    'ALL_NUMERIC_BUFFER_VALUES_FINITE',
-    'ALL_INDICES_IN_RANGE',
-    'PRIMITIVE_SPANS_AND_DRAW_RANGES_COVER_INDEX_BUFFER_EXACTLY',
-    'EXPECTED_CORPUS_COUNTS_MATCH',
-    'NO_CAMERA_VIEWPORT_WEBGL_CONTEXT_RENDER_LOOP_OR_ROUTE_BINDING_IN_PACKAGE',
+    'DETERMINISTIC_PACKAGE_CONSTRUCTION_ESTABLISHED',
+    'SOURCE_AUTHORITY_CORRESPONDENCE_ESTABLISHED',
+    'CANONICAL_GPU_UPLOAD_BYTES_EXACT_ACROSS_NODE_AND_CHROMIUM',
+    'THREE_GPU_RESOURCE_LIFECYCLE_CYCLES_PASS',
+    'CONTEXT_LOSS_AND_RESTORATION_PASS',
+    'ALL_27_GPU_BUFFERS_DELETED',
+    'NO_SHADER_PROGRAM_DRAW_CALL_OR_VISIBLE_PRESENTATION_CREATED',
+    'NO_CAMERA_VIEWPORT_RENDER_LOOP_OR_ROUTE_BINDING_IN_PACKAGE',
     'SOURCE_AUTHORITIES_AND_R1_FAIL_OPEN_BOUNDARY_PRESERVED'
   ],
   stoppingBoundary: {
-    currentCheckpoint: 'RUN_8E_R2C_PASS_CLOSED',
-    nextCheckpoint: 'RUN_8E_R2D_NOT_STARTED',
+    currentCheckpoint: 'RUN_8E_R2D_PASS_CLOSED',
+    nextCheckpoint: 'RUN_8E_R2E_NOT_STARTED',
     run8ER2MayCloseOnConstructionAndValidationPass: true,
+    run8ER2EStarted: false,
     run8ER3Started: false,
     publicRendererInstalled: false,
     publicInteractionRestored: false,
@@ -220,30 +239,51 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
 export function evaluateHEarthRun8ER2Control(candidate = H_EARTH_RUN_8E_R2_CONTROL) {
   const issues = [];
   const checkpoints = candidate?.boundedSubcheckpoints ?? [];
-  const r2A = checkpoints[0];
-  const r2B = checkpoints[1];
-  const r2C = checkpoints[2];
-  const r2D = checkpoints[3];
+  const [r2A, r2B, r2C, r2D, r2E, r2F] = checkpoints;
   if (candidate?.contractId !== H_EARTH_RUN_8E_R2_CONTRACT_ID) issues.push('R2_CONTRACT_ID_MISMATCH');
   if (candidate?.predecessor?.run8ER1DiagnosticCheckpoint !== 'PASS_CLOSED') issues.push('R1_NOT_PASS_CLOSED');
   if (candidate?.predecessor?.run8E !== 'FAIL_OPEN') issues.push('RUN_8E_NOT_FAIL_OPEN');
   if (checkpoints.length !== 6) issues.push('R2_BOUNDED_CHECKPOINT_SEQUENCE_INVALID');
-  if (r2A?.checkpointId !== 'RUN_8E_R2A' || r2A?.currentStatus !== 'PASS_CLOSED') issues.push('R2A_NOT_PASS_CLOSED');
-  if (r2A?.executionEvidence?.packageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25') issues.push('R2A_PACKAGE_IDENTITY_MISMATCH');
-  if (r2A?.executionEvidence?.contentDigest !== 'fnv1a32:fd913c25') issues.push('R2A_CONTENT_DIGEST_MISMATCH');
-  if (r2B?.checkpointId !== 'RUN_8E_R2B' || r2B?.currentStatus !== 'PASS_CLOSED') issues.push('R2B_NOT_PASS_CLOSED');
-  if (r2B?.executionEvidence?.custodyManifestDigest !== 'sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d') issues.push('R2B_CUSTODY_DIGEST_MISMATCH');
-  if (r2C?.checkpointId !== 'RUN_8E_R2C' || r2C?.currentStatus !== 'PASS_CLOSED') issues.push('R2C_NOT_PASS_CLOSED');
-  if (r2C?.executionEvidence?.auditManifestDigest !== 'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe') issues.push('R2C_AUDIT_DIGEST_MISMATCH');
-  if (r2D?.checkpointId !== 'RUN_8E_R2D' || r2D?.currentStatus !== 'NOT_STARTED') issues.push('R2D_STARTED_BEFORE_R2C_STOP');
-  if (checkpoints[5]?.checkpointId !== 'RUN_8E_R2F') issues.push('R2F_NOT_FINAL_CHECKPOINT');
+  if (r2A?.currentStatus !== 'PASS_CLOSED') issues.push('R2A_NOT_PASS_CLOSED');
+  if (r2A?.executionEvidence?.packageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25') {
+    issues.push('R2A_PACKAGE_IDENTITY_MISMATCH');
+  }
+  if (r2B?.currentStatus !== 'PASS_CLOSED') issues.push('R2B_NOT_PASS_CLOSED');
+  if (r2B?.executionEvidence?.custodyManifestDigest !==
+      'sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d') {
+    issues.push('R2B_CUSTODY_DIGEST_MISMATCH');
+  }
+  if (r2C?.currentStatus !== 'PASS_CLOSED') issues.push('R2C_NOT_PASS_CLOSED');
+  if (r2C?.executionEvidence?.auditManifestDigest !==
+      'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe') {
+    issues.push('R2C_AUDIT_DIGEST_MISMATCH');
+  }
+  if (r2D?.currentStatus !== 'PASS_CLOSED') issues.push('R2D_NOT_PASS_CLOSED');
+  if (r2D?.executionEvidence?.workflowRun !== 30240226591) issues.push('R2D_WORKFLOW_RUN_MISMATCH');
+  if (r2D?.executionEvidence?.custodyManifestDigest !==
+      'sha256:0ef98ea0f82370278ecc946247b32a8ab615a665834abdb33fee741ae6b7ec6e') {
+    issues.push('R2D_CUSTODY_DIGEST_MISMATCH');
+  }
+  if (r2D?.executionEvidence?.canonicalGpuUploadBytesExactAcrossNodeAndChromium !== true) {
+    issues.push('R2D_CANONICAL_GPU_BYTES_NOT_EXACT');
+  }
+  if (r2E?.currentStatus !== 'NOT_STARTED') issues.push('R2E_STARTED_BEFORE_R2D_STOP');
+  if (r2F?.checkpointId !== 'RUN_8E_R2F' || r2F?.currentStatus !== 'NOT_STARTED') {
+    issues.push('R2F_STATE_INVALID');
+  }
   if (candidate?.expectedCorpus?.primitiveCount !== 35) issues.push('R2_PRIMITIVE_CORPUS_INVALID');
   if (candidate?.expectedCorpus?.indexCount !== 147120) issues.push('R2_INDEX_CORPUS_INVALID');
-  if (!candidate?.prohibitedMutations?.includes('WEBGL_CONTEXT_OR_RENDER_LOOP')) issues.push('R2_RENDER_LOOP_BOUNDARY_MISSING');
+  if (candidate?.expectedCorpus?.gpuUploadByteLengthPerCycle !== 2145444) {
+    issues.push('R2_GPU_UPLOAD_BYTE_LENGTH_INVALID');
+  }
+  if (!candidate?.prohibitedMutations?.includes('VISIBLE_RENDERER_OR_RENDER_LOOP')) {
+    issues.push('R2_RENDER_LOOP_BOUNDARY_MISSING');
+  }
+  if (candidate?.stoppingBoundary?.run8ER2EStarted !== false) issues.push('R2E_STARTED_INSIDE_R2D_CLOSURE');
   if (candidate?.stoppingBoundary?.run8ER3Started !== false) issues.push('R3_STARTED_INSIDE_R2');
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R2C_CONTROL_PASS_CLOSED' : 'RUN_8E_R2_CONTROL_FAIL',
+    status: issues.length === 0 ? 'RUN_8E_R2D_CONTROL_PASS_CLOSED' : 'RUN_8E_R2_CONTROL_FAIL',
     issues
   });
 }

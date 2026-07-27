@@ -1,0 +1,67 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2D_GPU_RESOURCE_LIFECYCLE_ATTEMPT_FAILURE_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2D_ATTEMPT_002_FAIL_OPEN",
+  "recordedAt": "2026-07-27T05:23:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2d-gpu-resource-lifecycle-001",
+  "pullRequest": 220,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2C",
+    "status": "PASS_CLOSED",
+    "exactHead": "845b6d6acffdd461153b3474044ec533ffd4403b"
+  },
+  "attempt": {
+    "head": "546920161b2eadaae706435e39a740aa0967d890",
+    "runId": 30239487344,
+    "jobId": 89893562624,
+    "conclusion": "failure",
+    "predecessorAndProtectedPackageIdentity": "PASS",
+    "javascriptAndJsonSyntax": "PASS",
+    "chromiumInstallation": "PASS",
+    "isolatedServer": "PASS",
+    "browserLifecycleValidation": "FAIL_DURING_CONTEXT_RESTORATION",
+    "boundedScopeAndR2EStoppingBoundary": "PASS",
+    "evidenceUpload": "PASS"
+  },
+  "artifact": {
+    "artifactId": 8642738119,
+    "artifactName": "h-earth-run8e-r2d-gpu-resource-lifecycle-evidence",
+    "artifactDigest": "sha256:f1a0f8f42f502dd8324c9a1858bda9c8379bb25c293eb63d71d767d273c4c402",
+    "artifactWorkflowHead": "546920161b2eadaae706435e39a740aa0967d890"
+  },
+  "failure": {
+    "failureClass": "SWIFTSHADER_CONTEXT_RESTORE_REQUESTED_BEFORE_RESTORATION_WINDOW",
+    "exactError": "R2D_CONTEXT_RESTORE_EVENT_TIMEOUT",
+    "browserWarning": "WebGL: INVALID_OPERATION: restoreContext: context restoration not allowed",
+    "firstUploadCycleCompleted": true,
+    "firstDeleteCycleCompleted": true,
+    "secondUploadCycleCompleted": true,
+    "secondDeleteCycleCompleted": true,
+    "contextLossEventObserved": true,
+    "contextRestoreEventObserved": false,
+    "postRestoreUploadExecuted": false,
+    "typedCrossRuntimeDigestComparisonCompleted": false,
+    "packageSourceGitBlobSha": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+    "causeDisposition": "PROBE_RESTORATION_TIMING_DEFECT"
+  },
+  "nodeTypedUploadEvidence": {
+    "typedUploadByteLength": 2145444,
+    "sourceBufferCount": 9
+  },
+  "boundaries": {
+    "r2aR2bOrR2cInvalidated": false,
+    "packageSourceMutated": false,
+    "sourceAuthorityMutated": false,
+    "shaderProgramOrDrawCallCreated": false,
+    "visiblePresentationCreated": false,
+    "publicRouteBound": false,
+    "run8ER2EStarted": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false
+  },
+  "nextAuthorizedAction": "DELAY_RESTORE_REQUEST_AFTER_CONTEXT_LOSS_EVENT_AND_RERUN_SAME_R2D_LIFECYCLE",
+  "issues": [
+    "CONTEXT_RESTORE_REQUEST_REJECTED_BEFORE_SWIFTSHADER_RESTORATION_WINDOW"
+  ]
+}

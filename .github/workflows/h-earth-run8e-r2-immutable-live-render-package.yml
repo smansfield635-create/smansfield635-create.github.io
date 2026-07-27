@@ -1,113 +1,16 @@
-name: H-Earth Run 8E R2A Core Package Execution
+name: H-Earth Run 8E R2A Cleanup Boundary
 
 on:
-  push:
-    branches:
-      - agent/h-earth-run8e-r2-immutable-live-render-package-001
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  validate-run8e-r2a-core-package:
+  cleanup-boundary:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      H_EARTH_RUN8E_R2_OUTPUT: /tmp/h-earth-run8e-r2a
     steps:
-      - name: Check out R2A branch
-        uses: actions/checkout@v4
-        with:
-          ref: agent/h-earth-run8e-r2-immutable-live-render-package-001
-          fetch-depth: 0
-
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Verify attempt 002 correction script
-        run: node --check h-earth-3d/validation/h-earth.run8e-r2a.attempt-002.apply.mjs
-
-      - name: Apply and preserve exact attempt 002 correction
+      - name: Preserve cleanup boundary
         run: |
-          node h-earth-3d/validation/h-earth.run8e-r2a.attempt-002.apply.mjs
-          if ! git diff --quiet -- showroom/globe/h-earth/render/live-render-package.run8e-r2.js h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add showroom/globe/h-earth/render/live-render-package.run8e-r2.js h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs
-            git commit -m "Correct Run 8E R2A shoreline material projection"
-            git push origin HEAD:agent/h-earth-run8e-r2-immutable-live-render-package-001
-          fi
-
-      - name: Verify JavaScript and JSON syntax
-        run: |
-          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js
-          node --check showroom/globe/h-earth/render/live-render-package.run8e-r2.js
-          node --check h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs
-          node --check h-earth-3d/validation/h-earth.run8e-r2a.attempt-002.apply.mjs
-          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2a.attempt-001.failure.receipt.json','utf8'))"
-
-      - name: Execute R2A core package validation with complete log capture
-        run: |
-          mkdir -p "$H_EARTH_RUN8E_R2_OUTPUT"
-          set -o pipefail
-          node h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs 2>&1 \
-            | tee "$H_EARTH_RUN8E_R2_OUTPUT/r2a-validation.log"
-
-      - name: Verify bounded R2A scope and R2B stopping boundary
-        if: always()
-        run: |
-          set -euo pipefail
-          git diff --check
-          BASE_SHA=a660d54b0df30e768b95e2314b918d0f263883ed
-          git diff --name-only "$BASE_SHA"...HEAD | sort >/tmp/h-earth-run8e-r2a-paths.txt
-          python3 - <<'PY'
-          from pathlib import Path
-          paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r2a-paths.txt').read_text().splitlines() if line.strip()]
-          allowed = {
-              '.github/workflows/h-earth-run8e-r2-immutable-live-render-package.yml',
-              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js',
-              'h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs',
-              'h-earth-3d/validation/h-earth.run8e-r2a.attempt-002.apply.mjs',
-              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2a.attempt-001.failure.receipt.json',
-              'showroom/globe/h-earth/render/live-render-package.run8e-r2.js'
-          }
-          unexpected = sorted(set(paths) - allowed)
-          if unexpected:
-              raise SystemExit(f'R2A_UNEXPECTED_PATHS:{unexpected}')
-          missing = sorted(allowed - set(paths))
-          if missing:
-              raise SystemExit(f'R2A_REQUIRED_PATHS_MISSING:{missing}')
-          forbidden = [
-              path for path in paths
-              if path in {
-                  'showroom/globe/h-earth/index.html',
-                  'showroom/globe/h-earth/index.js',
-                  'showroom/globe/h-earth/render/renderer.functional-landscape.js',
-                  'showroom/globe/h-earth/render/run8e-successor-environment.js'
-              }
-              or 'run8e-r2b' in path.lower()
-              or 'run-8e-r2b' in path.lower()
-              or 'run8e-r3' in path.lower()
-              or 'run-8e-r3' in path.lower()
-          ]
-          if forbidden:
-              raise SystemExit(f'R2A_LATER_CHECKPOINT_OR_PROTECTED_MUTATION:{forbidden}')
-          print({'checkpoint': 'RUN_8E_R2A', 'pathCount': len(paths), 'paths': paths, 'run8ER2BStarted': False, 'run8ER3Started': False})
-          PY
-
-      - name: Upload R2A evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-run8e-r2a-core-package-evidence
-          path: |
-            /tmp/h-earth-run8e-r2a
-            /tmp/h-earth-run8e-r2a-paths.txt
-          if-no-files-found: warn
-          retention-days: 90
+          echo 'RUN_8E_R2A_CLEANUP_BOUNDARY'
+          echo 'TEMPORARY_SCRIPT_REMOVAL_AND_FINAL_READ_ONLY_WORKFLOW_INSTALLATION_PENDING'

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>H-Earth Run 8E R2D GPU Resource Lifecycle</title>
+  <style>
+    html, body { margin: 0; min-height: 100%; background: #111; color: #eee; font-family: monospace; }
+    main { padding: 16px; }
+    canvas { width: 64px; height: 64px; border: 1px solid #555; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Run 8E R2D GPU Resource Lifecycle</h1>
+    <p data-r2d-status>Initializing isolated WebGL 2 resource probe.</p>
+    <canvas width="64" height="64" aria-label="Isolated validation canvas"></canvas>
+    <pre data-r2d-receipt></pre>
+  </main>
+  <script type="module" src="./h-earth.run8e-r2d.webgl-resource-probe.js"></script>
+</body>
+</html>

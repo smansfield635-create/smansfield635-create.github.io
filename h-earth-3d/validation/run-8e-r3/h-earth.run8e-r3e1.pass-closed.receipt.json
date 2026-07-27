@@ -1,0 +1,117 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3E1_EXACT_PUBLIC_INTEGRATION_SCOPE_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3E1_PASS_CLOSED",
+  "recordedAt": "2026-07-27T21:08:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3e1-public-integration-scope-001",
+  "pullRequest": 244,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R3D5",
+    "status": "PASS_CLOSED",
+    "branch": "agent/h-earth-run8e-r3d5-r3d-closure-r3e-input-decision-001",
+    "exactHead": "ccee63d4826f9ac5c8eb9069d0d33d3ad5ebcef7",
+    "pullRequest": 243,
+    "finalWorkflowRun": 30303974940,
+    "finalWorkflowJob": 90103548271,
+    "finalArtifact": 8667678685,
+    "finalArtifactDigest": "sha256:d62581b68b94e5104895f5d35688a9a68b0189108d2e8100cf4e81369a47ef94",
+    "passReceiptGitBlob": "f9f6d9b1464882f7e8cf7143a4d4e90d4093dcec"
+  },
+  "coreExecution": {
+    "head": "15a518a9ae99c1e9c7ac5620c593be106e2c1948",
+    "runId": 30305137754,
+    "jobId": 90107416323,
+    "artifactId": 8668122923,
+    "artifactDigest": "sha256:1891c2309d459cf40da5ce1917ce2ece4be60fd7d8560ef911ef6679ee0b8bb4",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30305137669,
+    "automaticRepositoryRegistryPreflight": "PASS"
+  },
+  "closureControlValidation": {
+    "head": "3392c35d4ea075f1e46d67951e80d6a521e95933",
+    "runId": 30305476333,
+    "jobId": 90108562585,
+    "artifactId": 8668246285,
+    "artifactDigest": "sha256:56ec30d041ce103cdce7dbb0230e1d1ed50287d847c7d218ee98cc61cb57d9c6",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30305476339,
+    "automaticRepositoryRegistryPreflight": "PASS",
+    "receiptPresentDuringValidation": false
+  },
+  "sourceInspectionResult": {
+    "currentModuleScriptCount": 3,
+    "canvasContextOwnerCount": 2,
+    "pointerOwnerCount": 2,
+    "framePresentationOwnerCount": 3,
+    "deferredExecutionOwnerCount": 4,
+    "collisionFindingCount": 8,
+    "exactFutureMutationPathCount": 2,
+    "protectedFutureWitnessCount": 11,
+    "rollbackGroupCount": 2,
+    "intendedActiveWebGL2ContextCount": 1,
+    "intendedActivePersistentRendererCount": 1,
+    "intendedActiveNavigationStateStreamCount": 1,
+    "intendedActivePointerTouchIntakeCount": 1,
+    "intendedActiveFramePresentationAuthorityCount": 1,
+    "intendedLegacyRuntimeOwnerCount": 0
+  },
+  "exactFutureMutationScope": [
+    {
+      "path": "/showroom/globe/h-earth/index.html",
+      "mutationClass": "MODIFY_EXISTING_PUBLIC_LOAD_ORDER_ONLY"
+    },
+    {
+      "path": "/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "mutationClass": "CREATE_NEW_PUBLIC_ORCHESTRATION_MODULE"
+    }
+  ],
+  "protectedWitnesses": {
+    "publicRouteGitBlob": "b5f72fb70f59276f868a5894ee0c5e8beccc40ca",
+    "publicShellCssGitBlob": "f208b7f11096a7bf5da282226903ac634c1eab01",
+    "cpuRouteControllerGitBlob": "83e85df2f4440c2825672f46fb16e28c73992db2",
+    "cpuEnvironmentIntegrationGitBlob": "6c047d61544fcbc4fad8673abfbacb7c827fdb22",
+    "publicDirectManipulationGitBlob": "322ee2bfed5184acd8eac600f19abd72380b6c2b",
+    "navigationGitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+    "r3AFramePacketGitBlob": "4e187fc38780dfb2020482b674ac331f5a65b2c1",
+    "r3CPersistentRendererGitBlob": "b8b3c713d5f0b7c79808e8942ce385887589d880",
+    "r3D2PointerTouchIntakeGitBlob": "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6",
+    "r3D3LiveGpuBindingGitBlob": "5017bbaf857a644287cb829037b0fde4646f270d",
+    "r3D3DiagnosticHostGitBlob": "b8bf34e7dc3a8e91000274cdabab26250888ebf0"
+  },
+  "rollbackGroups": [
+    {
+      "groupId": "R3E_PUBLIC_HTML_LOAD_ORDER",
+      "operation": "RESTORE_PUBLIC_ROUTE_FILE_TO_GIT_BLOB_b5f72fb70f59276f868a5894ee0c5e8beccc40ca"
+    },
+    {
+      "groupId": "R3E_PUBLIC_GPU_ORCHESTRATOR",
+      "operation": "DELETE_NEW_PUBLIC_ORCHESTRATION_MODULE"
+    }
+  ],
+  "boundaries": {
+    "showroomSourceMutated": false,
+    "publicRouteMutated": false,
+    "publicRouteBound": false,
+    "publicDirectManipulationMutated": false,
+    "admittedAuthorityMutated": false,
+    "browserExecuted": false,
+    "gpuExecuted": false,
+    "deploymentPerformed": false,
+    "physicalDeviceAcceptancePerformed": false,
+    "r3E2WorkStarted": false,
+    "mainMerged": false,
+    "run8EPassClosed": false
+  },
+  "finalExactHeadValidation": {
+    "performedAfterReceiptAndFinalRegistryEvidenceReconciliation": false,
+    "finalHead": null,
+    "workflowRun": null,
+    "workflowJob": null,
+    "artifactId": null,
+    "artifactDigest": null
+  },
+  "nextCheckpoint": "RUN_8E_R3E2_NOT_STARTED",
+  "stoppingBoundary": "STOP_BEFORE_ANY_PUBLIC_ROUTE_SOURCE_MUTATION_R3E2",
+  "issues": []
+}

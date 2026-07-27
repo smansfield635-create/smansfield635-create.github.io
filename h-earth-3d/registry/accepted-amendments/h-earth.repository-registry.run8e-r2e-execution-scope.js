@@ -1,4 +1,4 @@
-/** Read-only execution-evidence overlay for the Run 8E R2E registry core audit. */
+/** Read-only execution-evidence overlay for the Run 8E R2E registry audit and durable closure receipt. */
 import baseFacade from './h-earth.repository-registry.run8e-r2-execution-scope.js';
 
 const freeze = (value, seen = new WeakSet()) => {
@@ -11,6 +11,7 @@ const freeze = (value, seen = new WeakSet()) => {
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r2e-registry-execution-custody-001';
 const CORE_HEAD = '481dd572eb3351e42e11f48ff75edc37c9e03d76';
+const EXECUTION_EVIDENCE_HEAD = '2ae6c8cfad013c0ddd3d7f71990357add582ae34';
 const EXECUTION_OVERLAY_PATH = '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2e-execution-scope.js';
 const PASS_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json';
 
@@ -28,17 +29,17 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R2E_EXECUTION_PATHS.map((reposi
   gitBlobSha: null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: 'PRESENT_OR_RESERVED',
-  fetchbackStatus: 'R2E_CORE_EXECUTION_PRESERVED_RECEIPT_PENDING',
-  occurrenceClass: 'RUN_8E_R2E_EXECUTION_EVIDENCE_OCCURRENCE'
+  existenceStatus: 'PRESENT',
+  fetchbackStatus: 'R2E_DURABLE_PASS_RECEIPT_PRESENT_FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+  occurrenceClass: 'RUN_8E_R2E_EXECUTION_AND_PASS_CLOSED_EVIDENCE_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R2E_EXECUTION_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R2E_CORE_EXECUTION_v1',
-  evidenceClass: 'EXECUTED_REGISTRY_AND_EXACT_SCOPE_AUDIT',
-  sourceKind: 'GITHUB_ACTIONS_EXECUTION_AND_DURABLE_ARTIFACT',
-  sourceIdOrPath: '/h-earth-3d/validation/h-earth.run8e-r2e.registry-execution-custody.validation.mjs',
-  sourceOccurrenceOrRevision: CORE_HEAD,
+  evidenceClass: 'EXECUTED_REGISTRY_EXACT_SCOPE_AUDIT_AND_DURABLE_PASS_CLOSED_RECEIPT',
+  sourceKind: 'GITHUB_ACTIONS_EXECUTION_DURABLE_ARTIFACT_AND_REPOSITORY_RECEIPT',
+  sourceIdOrPath: PASS_RECEIPT_PATH,
+  sourceOccurrenceOrRevision: EXECUTION_EVIDENCE_HEAD,
   assertionScope: Object.freeze([
     'ALL_R2_PATHS_RESOLVE',
     'ALL_R2E_NON_REGISTRY_PATHS_RESOLVE',
@@ -49,6 +50,8 @@ export const H_EARTH_RUN_8E_R2E_EXECUTION_EVIDENCE = freeze({
     'PASS_RECEIPTS_AND_ARTIFACT_IDENTITIES_MATCH',
     'AUTOMATIC_REPOSITORY_REGISTRY_PREFLIGHT_PASS',
     'R2A_THROUGH_R2D_PASS_CLOSED',
+    'R2E_PASS_CLOSED',
+    'R2_OPEN_AT_R2F_BOUNDARY',
     'R2F_AND_R3_NOT_STARTED',
     'RUN_8E_FAIL_OPEN'
   ]),
@@ -58,14 +61,27 @@ export const H_EARTH_RUN_8E_R2E_EXECUTION_EVIDENCE = freeze({
     branch: BRANCH,
     baseHead: '9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9',
     validatedCoreHead: CORE_HEAD,
-    workflowRun: 30280225199,
-    workflowJob: 90024428747,
-    artifactId: 8658482156,
-    artifactDigest: 'sha256:65a0b6b4a494f4330285bb214800b66c6115a8f3477251a80b6e0e3fcb82d161',
+    coreWorkflowRun: 30280225199,
+    coreWorkflowJob: 90024428747,
+    coreArtifactId: 8658482156,
+    coreArtifactDigest: 'sha256:65a0b6b4a494f4330285bb214800b66c6115a8f3477251a80b6e0e3fcb82d161',
+    executionEvidenceHead: EXECUTION_EVIDENCE_HEAD,
+    executionWorkflowRun: 30280738790,
+    executionWorkflowJob: 90026155156,
+    executionArtifactId: 8658686555,
+    executionArtifactDigest: 'sha256:adbeab3e9b63dc6ec69282be2cb177f058b20d95203b12b6b5f89c0d53d58260',
+    closureControlHead: '079ef0aa2ead229eea0aa96470026b044869c4f9',
+    closureControlWorkflowRun: 30281157018,
+    closureControlWorkflowJob: 90027587773,
+    closureControlArtifactId: 8658858011,
+    closureControlArtifactDigest: 'sha256:bc072d597a8ce174e46947a1e391831b8d2dd0073fc503ca7f58345158f5e313',
+    durablePassReceiptPath: PASS_RECEIPT_PATH,
+    durablePassReceiptCommit: '48b86a4a1db9a8b5b6c23d99b3e55cde1825c1d0',
     exactOccurrenceManifestDigest: 'sha256:2ae01097d0ab58f6cfd6b2a158ee558f816a2342443b387da410879fb1f2da9a',
     checkpointCount: 4,
     r2UniquePathCount: 27,
     r2CheckpointOccurrenceCount: 30,
+    r2eRegisteredPathCount: 9,
     r2eNonRegistryPathCount: 6,
     unregisteredGovernedPathCount: 0,
     duplicateNodeIdCount: 0,
@@ -74,8 +90,7 @@ export const H_EARTH_RUN_8E_R2E_EXECUTION_EVIDENCE = freeze({
     automaticPreflightDisposition: 'PASS'
   }),
   evidenceLimitations: Object.freeze([
-    'DURABLE_R2E_PASS_RECEIPT_PENDING',
-    'FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+    'FINAL_EXACT_HEAD_REVALIDATION_MUST_PASS_BEFORE_NO_FURTHER_MUTATION_BOUNDARY',
     'R2_STACK_UNMERGED',
     'R2F_NOT_STARTED',
     'R3_NOT_STARTED',
@@ -86,17 +101,17 @@ export const H_EARTH_RUN_8E_R2E_EXECUTION_EVIDENCE = freeze({
 export const H_EARTH_RUN_8E_R2E_EXECUTION_NODE = freeze({
   nodeId: 'H_EARTH_RUN_8E_R2E_CORE_EXECUTION_EVIDENCE',
   nodeType: 'EXECUTED_RECOVERY_EVIDENCE_PACKET',
-  nodeSubtype: 'R2E_REGISTRY_AND_EXACT_SCOPE_AUDIT_PASS',
-  displayName: 'H-Earth Run 8E R2E Core Execution Evidence',
-  description: 'Preserves the successful R2E registry, exact occurrence, stack, receipt, artifact, bounded-scope, and automatic-preflight audit before the durable pass receipt.',
+  nodeSubtype: 'R2E_REGISTRY_EXACT_SCOPE_AUDIT_AND_DURABLE_PASS_CLOSED_RECEIPT',
+  displayName: 'H-Earth Run 8E R2E Execution and Pass-Closed Evidence',
+  description: 'Preserves the successful R2E registry and exact-scope audit, automatic preflight, exact occurrence manifest, closure-control validation, and durable pass-closed receipt while stopping before R2F.',
   repositoryPaths: [...H_EARTH_RUN_8E_R2E_EXECUTION_PATHS],
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: H_EARTH_RUN_8E_R2E_EXECUTION_EVIDENCE.evidenceClass,
   evidenceReferences: Object.freeze([H_EARTH_RUN_8E_R2E_EXECUTION_EVIDENCE.evidenceId]),
-  authorityClass: 'EXECUTED_EVIDENCE_PRESERVATION_VALIDATION',
-  authorityPosture: 'R2E_CORE_EXECUTION_PASS_RECEIPT_PENDING_R2F_NOT_STARTED_RUN_8E_FAIL_OPEN',
-  authoritySource: Object.freeze(['EXACT_CORE_HEAD', 'GITHUB_ACTIONS_WORKFLOW', 'DURABLE_ARTIFACT']),
-  authorityScope: Object.freeze(['PRESERVE_R2E_CORE_EXECUTION', 'PRESERVE_EXACT_OCCURRENCE_MANIFEST', 'PRESERVE_AUTOMATIC_PREFLIGHT_PASS', 'STOP_BEFORE_R2F']),
+  authorityClass: 'EXECUTED_EVIDENCE_AND_DURABLE_RECEIPT_PRESERVATION',
+  authorityPosture: 'R2E_PASS_CLOSED_UNMERGED_R2_OPEN_AT_R2F_BOUNDARY_RUN_8E_FAIL_OPEN',
+  authoritySource: Object.freeze(['EXACT_CORE_HEAD', 'EXACT_EXECUTION_EVIDENCE_HEAD', 'GITHUB_ACTIONS_WORKFLOWS', 'DURABLE_ARTIFACTS', 'DURABLE_PASS_RECEIPT']),
+  authorityScope: Object.freeze(['PRESERVE_R2E_PASS_CLOSED', 'PRESERVE_EXACT_OCCURRENCE_MANIFEST', 'PRESERVE_AUTOMATIC_PREFLIGHT_PASS', 'PRESERVE_R2F_STOPPING_BOUNDARY']),
   authorityLimitations: Object.freeze(['NO_CANONICAL_AUTHORITY', 'NO_PRODUCTION_AUTHORITY', 'NO_MERGE_AUTHORITY', 'NO_DEPLOYMENT_AUTHORITY', 'NO_R2F_OR_R3_AUTHORITY', 'NO_RUN_8E_PASS_AUTHORITY']),
   parentRelations: Object.freeze([]),
   childRelations: Object.freeze([]),
@@ -106,15 +121,15 @@ export const H_EARTH_RUN_8E_R2E_EXECUTION_NODE = freeze({
   cardinalRole: 'NONE',
   cardinalStatus: 'NONE',
   cardinalCompleteness: 'NOT_APPLICABLE',
-  orderingRules: Object.freeze(['CORE_EXECUTION_BEFORE_DURABLE_RECEIPT', 'DURABLE_RECEIPT_BEFORE_FINAL_EXACT_HEAD_REVALIDATION', 'STOP_BEFORE_R2F']),
+  orderingRules: Object.freeze(['CORE_EXECUTION_BEFORE_EXECUTION_EVIDENCE_OVERLAY', 'EXECUTION_EVIDENCE_BEFORE_DURABLE_RECEIPT', 'DURABLE_RECEIPT_BEFORE_FINAL_EXACT_HEAD_REVALIDATION', 'STOP_BEFORE_R2F']),
   dependencyRelations: Object.freeze([]),
-  allowedMutationScope: 'R2E_EXECUTION_EVIDENCE_AND_RECEIPT_ONLY',
+  allowedMutationScope: 'NONE_AFTER_FINAL_EXACT_HEAD_REVALIDATION',
   prohibitedMutations: Object.freeze(['LIVE_RENDER_PACKAGE_MUTATION', 'GPU_TRANSPORT_ADAPTER_MUTATION', 'PUBLIC_ROUTE_CAMERA_NAVIGATION_OR_GESTURE_MUTATION', 'VISIBLE_RENDERER_OR_DEPLOYMENT', 'R2F_OR_R3_WORK', 'RUN_8E_PASS_CLOSED', 'R2_STACK_MERGE']),
-  requiredValidations: Object.freeze(['DURABLE_PASS_RECEIPT', 'FINAL_EXACT_HEAD_AUDIT', 'FINAL_AUTOMATIC_REGISTRY_PREFLIGHT']),
+  requiredValidations: Object.freeze(['FINAL_EXACT_HEAD_AUDIT', 'FINAL_AUTOMATIC_REGISTRY_PREFLIGHT']),
   stoppingBoundaries: Object.freeze(['STOP_BEFORE_R2_CLOSURE_AND_PROMOTION_DECISION_R2F']),
-  currentIdentityReferences: Object.freeze([CORE_HEAD, '30280225199', '8658482156', PASS_RECEIPT_PATH]),
-  lifecycleStatus: 'CORE_EXECUTION_PASS_RECEIPT_PENDING',
-  unresolvedFields: Object.freeze(['DURABLE_PASS_RECEIPT', 'FINAL_EXACT_HEAD', 'FINAL_VALIDATION_RUN'])
+  currentIdentityReferences: Object.freeze([CORE_HEAD, EXECUTION_EVIDENCE_HEAD, PASS_RECEIPT_PATH, '30280738790', '8658686555']),
+  lifecycleStatus: 'PASS_CLOSED_UNMERGED_FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+  unresolvedFields: Object.freeze(['FINAL_EXACT_HEAD_VALIDATION_RUN'])
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R2E_EXECUTION_PATHS.map((repositoryPath) => [repositoryPath, {

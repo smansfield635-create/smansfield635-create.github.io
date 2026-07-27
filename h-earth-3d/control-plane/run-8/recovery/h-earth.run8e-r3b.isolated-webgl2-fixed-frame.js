@@ -27,7 +27,8 @@ export const H_EARTH_RUN_8E_R3B_CONTROL = freeze({
     r3APassClosed: true,
     r3AFinalExactHead: '9560bc1f88800e12408a99a10032e9daf1e56713',
     r3AContractId: 'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1',
-    immutablePackageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
+    logicalPromotedPackageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
+    chromiumRuntimePackageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD',
     immutablePackageGitBlob: '1699654f39c9e183f4cfc6f75b20ba051641b763',
     canonicalGpuTransportGitBlob: '785856d7702a0e855c2672e6b8a7325ad5b3ba50',
     navigationSourceGitBlob: '8ab3446c536fc24423d5601acce232b19fa71c91',
@@ -80,6 +81,8 @@ export function evaluateHEarthRun8ER3BControl(candidate = H_EARTH_RUN_8E_R3B_CON
   if (candidate?.contractId !== H_EARTH_RUN_8E_R3B_CONTROL_ID) issues.push('R3B_CONTROL_ID_MISMATCH');
   if (candidate?.baseExactHead !== '9560bc1f88800e12408a99a10032e9daf1e56713') issues.push('R3B_BASE_HEAD_MISMATCH');
   if (candidate?.currentStatus !== 'EXECUTION_PENDING') issues.push('R3B_STATUS_INVALID');
+  if (candidate?.requiredInputs?.logicalPromotedPackageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25') issues.push('R3B_LOGICAL_PACKAGE_IDENTITY_MISMATCH');
+  if (candidate?.requiredInputs?.chromiumRuntimePackageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD') issues.push('R3B_CHROMIUM_PACKAGE_IDENTITY_MISMATCH');
   for (const [key, value] of Object.entries(candidate?.requiredExecution ?? {})) {
     if (value !== true) issues.push(`R3B_REQUIRED_EXECUTION_MISSING:${key}`);
   }

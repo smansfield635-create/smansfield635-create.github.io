@@ -1,0 +1,89 @@
+name: H-Earth Run 8E R2 Immutable Live Render Package
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r2-immutable-live-render-package-001
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r2-immutable-live-render-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      H_EARTH_RUN8E_R2_OUTPUT: /tmp/h-earth-run8e-r2
+    steps:
+      - name: Check out R2 branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-run8e-r2-immutable-live-render-package-001
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify JavaScript syntax
+        run: |
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js
+          node --check showroom/globe/h-earth/render/live-render-package.run8e-r2.js
+          node --check h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs
+
+      - name: Execute immutable live render package validation
+        run: node h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs
+
+      - name: Verify bounded R2 scope and R3 stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          BASE_SHA=a660d54b0df30e768b95e2314b918d0f263883ed
+          git diff --name-only "$BASE_SHA"...HEAD | sort >/tmp/h-earth-run8e-r2-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r2-paths.txt').read_text().splitlines() if line.strip()]
+          allowed = {
+              '.github/workflows/h-earth-run8e-r2-immutable-live-render-package.yml',
+              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js',
+              'h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs',
+              'showroom/globe/h-earth/render/live-render-package.run8e-r2.js'
+          }
+          unexpected = sorted(set(paths) - allowed)
+          if unexpected:
+              raise SystemExit(f'R2_UNEXPECTED_PATHS:{unexpected}')
+          required = allowed
+          missing = sorted(required - set(paths))
+          if missing:
+              raise SystemExit(f'R2_REQUIRED_PATHS_MISSING:{missing}')
+          forbidden = [
+              path for path in paths
+              if path in {
+                  'showroom/globe/h-earth/index.html',
+                  'showroom/globe/h-earth/index.js',
+                  'showroom/globe/h-earth/render/renderer.functional-landscape.js',
+                  'showroom/globe/h-earth/render/run8e-successor-environment.js'
+              }
+              or 'run8e-r3' in path.lower()
+              or 'run-8e-r3' in path.lower()
+          ]
+          if forbidden:
+              raise SystemExit(f'R2_PUBLIC_REFERENCE_OR_R3_MUTATION:{forbidden}')
+          print({'pathCount': len(paths), 'paths': paths, 'run8ER3Started': False})
+          PY
+
+      - name: Upload R2 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r2-immutable-live-render-package-evidence
+          path: |
+            /tmp/h-earth-run8e-r2
+            /tmp/h-earth-run8e-r2-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

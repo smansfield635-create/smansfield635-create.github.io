@@ -21,6 +21,66 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     run8EPassClosed: false,
     materialLedgerMergeCommit: 'a660d54b0df30e768b95e2314b918d0f263883ed'
   },
+  boundedExecutionLaw: {
+    checkpointSequenceLocked: true,
+    laterFailureCannotInvalidateEarlierPassedCheckpoint: true,
+    eachCheckpointRequiresExactCommit: true,
+    eachCheckpointRequiresWorkflowResult: true,
+    eachCheckpointRequiresArtifactOrDurableFailureReceipt: true,
+    eachCheckpointRequiresStoppingBoundary: true,
+    noCheckpointMayClaimLaterCheckpointCompletion: true
+  },
+  boundedSubcheckpoints: [
+    {
+      checkpointId: 'RUN_8E_R2A',
+      name: 'CORE_PACKAGE_CONTRACT_AND_SOURCE_SHAPE_EXECUTION',
+      requiredResult: 'PASS_CLOSED_BEFORE_R2B',
+      currentStatus: 'ATTEMPT_001_FAIL_OPEN',
+      allowedScope: [
+        'R2_CONTROL_CONTRACT',
+        'ISOLATED_PACKAGE_CANDIDATE',
+        'CORE_VALIDATION_HARNESS',
+        'READ_ONLY_WORKFLOW',
+        'R2A_FAILURE_AND_PASS_RECEIPTS'
+      ],
+      stoppingBoundary: 'STOP_BEFORE_DETERMINISTIC_PACKAGE_CUSTODY_R2B'
+    },
+    {
+      checkpointId: 'RUN_8E_R2B',
+      name: 'DETERMINISTIC_PACKAGE_CONSTRUCTION_AND_IMMUTABLE_BUFFER_CUSTODY',
+      requiredResult: 'PASS_CLOSED_BEFORE_R2C',
+      currentStatus: 'NOT_STARTED',
+      stoppingBoundary: 'STOP_BEFORE_AUTHORITY_CORRESPONDENCE_AUDIT_R2C'
+    },
+    {
+      checkpointId: 'RUN_8E_R2C',
+      name: 'SOURCE_AUTHORITY_GEOMETRY_MATERIAL_AND_PROVENANCE_CORRESPONDENCE_AUDIT',
+      requiredResult: 'PASS_CLOSED_BEFORE_R2D',
+      currentStatus: 'NOT_STARTED',
+      stoppingBoundary: 'STOP_BEFORE_GPU_UPLOAD_AND_RESOURCE_LIFECYCLE_R2D'
+    },
+    {
+      checkpointId: 'RUN_8E_R2D',
+      name: 'GPU_UPLOAD_VIEW_AND_RESOURCE_LIFECYCLE_VALIDATION',
+      requiredResult: 'PASS_CLOSED_BEFORE_R2E',
+      currentStatus: 'NOT_STARTED',
+      stoppingBoundary: 'STOP_BEFORE_REGISTRY_AND_EXECUTION_CUSTODY_R2E'
+    },
+    {
+      checkpointId: 'RUN_8E_R2E',
+      name: 'REGISTRY_DURABLE_RECEIPT_AND_INDEPENDENT_SCOPE_AUDIT',
+      requiredResult: 'PASS_CLOSED_BEFORE_R2F',
+      currentStatus: 'NOT_STARTED',
+      stoppingBoundary: 'STOP_BEFORE_R2_CLOSURE_AND_PROMOTION_R2F'
+    },
+    {
+      checkpointId: 'RUN_8E_R2F',
+      name: 'R2_CLOSURE_AND_PROMOTION_DECISION',
+      requiredResult: 'PASS_CLOSED_TO_COMPLETE_R2',
+      currentStatus: 'NOT_STARTED',
+      stoppingBoundary: 'STOP_BEFORE_RUN_8E_R3'
+    }
+  ],
   governingLaw: [
     'DO_NOT_REBUILD_THE_WORLD_BECAUSE_THE_CAMERA_MOVED',
     'BUILD_THE_WORLD_ONCE',
@@ -125,6 +185,9 @@ export function evaluateHEarthRun8ER2Control(candidate = H_EARTH_RUN_8E_R2_CONTR
   if (candidate?.contractId !== H_EARTH_RUN_8E_R2_CONTRACT_ID) issues.push('R2_CONTRACT_ID_MISMATCH');
   if (candidate?.predecessor?.run8ER1DiagnosticCheckpoint !== 'PASS_CLOSED') issues.push('R1_NOT_PASS_CLOSED');
   if (candidate?.predecessor?.run8E !== 'FAIL_OPEN') issues.push('RUN_8E_NOT_FAIL_OPEN');
+  if (candidate?.boundedSubcheckpoints?.length !== 6) issues.push('R2_BOUNDED_CHECKPOINT_SEQUENCE_INVALID');
+  if (candidate?.boundedSubcheckpoints?.[0]?.checkpointId !== 'RUN_8E_R2A') issues.push('R2A_NOT_FIRST_CHECKPOINT');
+  if (candidate?.boundedSubcheckpoints?.[5]?.checkpointId !== 'RUN_8E_R2F') issues.push('R2F_NOT_FINAL_CHECKPOINT');
   if (candidate?.expectedCorpus?.primitiveCount !== 35) issues.push('R2_PRIMITIVE_CORPUS_INVALID');
   if (candidate?.expectedCorpus?.indexCount !== 147120) issues.push('R2_INDEX_CORPUS_INVALID');
   if (!candidate?.prohibitedMutations?.includes('WEBGL_CONTEXT_OR_RENDER_LOOP')) issues.push('R2_RENDER_LOOP_BOUNDARY_MISSING');

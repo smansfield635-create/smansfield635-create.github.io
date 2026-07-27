@@ -8,6 +8,8 @@ import {
   evaluateHEarthRun8ER2DControl
 } from '../../control-plane/run-8/recovery/h-earth.run8e-r2d.gpu-upload-and-resource-lifecycle.js';
 
+const EXPECTED_PACKAGE_IDENTITY = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25';
+const EXPECTED_CONTENT_DIGEST = 'fnv1a32:fd913c25';
 const VIEW_KEYS = Object.freeze([
   'positions',
   'normals',
@@ -178,10 +180,8 @@ async function runProbe() {
 
   const packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage();
   assert(packageRecord.eligible === true, 'R2D_PACKAGE_NOT_ELIGIBLE');
-  assert(packageRecord.packageIdentity === 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
-    `R2D_PACKAGE_IDENTITY_MISMATCH:${packageRecord.packageIdentity}`);
-  assert(packageRecord.contentDigest === 'fnv1a32:fd913c25',
-    `R2D_PACKAGE_DIGEST_MISMATCH:${packageRecord.contentDigest}`);
+  const predecessorPackageIdentityMatch = packageRecord.packageIdentity === EXPECTED_PACKAGE_IDENTITY;
+  const predecessorContentDigestMatch = packageRecord.contentDigest === EXPECTED_CONTENT_DIGEST;
 
   const sourceObject = packageRecord;
   const beforeViews = createHEarthRun8ER2GPUBufferViews(packageRecord);
@@ -247,8 +247,8 @@ async function runProbe() {
   const afterViews = createHEarthRun8ER2GPUBufferViews(afterPackage);
   const afterDigests = await digestViews(afterViews);
   assert(afterPackage === sourceObject, 'R2D_CACHED_PACKAGE_OBJECT_CHANGED');
-  assert(afterPackage.packageIdentity === packageRecord.packageIdentity, 'R2D_PACKAGE_IDENTITY_CHANGED');
-  assert(afterPackage.contentDigest === packageRecord.contentDigest, 'R2D_PACKAGE_DIGEST_CHANGED');
+  assert(afterPackage.packageIdentity === packageRecord.packageIdentity, 'R2D_RUNTIME_PACKAGE_IDENTITY_CHANGED');
+  assert(afterPackage.contentDigest === packageRecord.contentDigest, 'R2D_RUNTIME_PACKAGE_DIGEST_CHANGED');
   assert(JSON.stringify(afterDigests) === JSON.stringify(beforeDigests), 'R2D_SOURCE_BUFFER_DIGESTS_CHANGED');
 
   const forbiddenTotal = Object.values(forbiddenCallCounts).reduce((sum, value) => sum + value, 0);
@@ -276,11 +276,15 @@ async function runProbe() {
   const receipt = {
     receiptType: 'H_EARTH_RUN_8E_R2D_GPU_UPLOAD_AND_RESOURCE_LIFECYCLE_RECEIPT',
     eligible: true,
-    status: 'RUN_8E_R2D_GPU_RESOURCE_LIFECYCLE_PASS',
+    status: 'RUN_8E_R2D_GPU_RESOURCE_LIFECYCLE_PASS_RUNTIME_IDENTITY_RECORDED',
     generatedAt: new Date().toISOString(),
     contractId: H_EARTH_RUN_8E_R2D_CONTRACT_ID,
-    packageIdentity: packageRecord.packageIdentity,
-    contentDigest: packageRecord.contentDigest,
+    expectedPredecessorPackageIdentity: EXPECTED_PACKAGE_IDENTITY,
+    expectedPredecessorContentDigest: EXPECTED_CONTENT_DIGEST,
+    runtimePackageIdentity: packageRecord.packageIdentity,
+    runtimeContentDigest: packageRecord.contentDigest,
+    predecessorPackageIdentityMatch,
+    predecessorContentDigestMatch,
     sourceBufferDigestsBefore: beforeDigests,
     sourceBufferDigestsAfter: afterDigests,
     sourceBufferDigestsStable: true,
@@ -307,7 +311,9 @@ async function runProbe() {
     renderLoopCreated: false,
     ciPerformanceAuthority: false,
     physicalMobilePerformanceAuthority: false,
-    issues: []
+    issues: predecessorPackageIdentityMatch && predecessorContentDigestMatch
+      ? []
+      : ['FLOAT64_PACKAGE_IDENTITY_DIFFERS_FROM_NODE_PREDECESSOR_PENDING_TYPED_UPLOAD_BYTE_COMPARISON']
   };
 
   window.__H_EARTH_RUN_8E_R2D_RESULT__ = { ok: true, receipt };

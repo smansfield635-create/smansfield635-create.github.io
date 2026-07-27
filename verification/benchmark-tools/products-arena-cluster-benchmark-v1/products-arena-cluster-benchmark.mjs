@@ -261,7 +261,7 @@ async function runProfile(browser, profileName) {
     record.quickFlickDriver = "DETERMINISTIC_POINTER_CONTRACT";
     await quickFlick(page, profile, flickSceneRect);
     await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "PRIMARY_ENTRY", { timeout: 10000 }).catch(() => {});
-    await sleep(500);
+    await sleep(800);
     record.afterFlick = await rootFacts(page);
     record.afterFlickPathname = new URL(page.url()).pathname;
     record.afterFlickRendererReceipt = await page.evaluate(() => globalThis.DGB_PRODUCTS_CRYSTALS_RECEIPT || null);
@@ -275,6 +275,14 @@ async function runProfile(browser, profileName) {
     await page.waitForFunction(() => location.pathname === "/", { timeout: 10000 });
     record.centerReturn = { pathname: new URL(page.url()).pathname, receipt: await page.evaluate(() => globalThis.DGB_PRODUCTS_CENTER_CONTROL_RECEIPT || null) };
     if (record.centerReturn.pathname !== "/") record.findings.push({ id: "CENTER_GLOBE_RETURN_FAILED", observed: record.centerReturn });
+    record.centerDestinationTelemetry = {
+      console: telemetry.console.slice(),
+      pageErrors: telemetry.pageErrors.slice(),
+      requestFailures: telemetry.requestFailures.slice()
+    };
+    telemetry.console.length = 0;
+    telemetry.pageErrors.length = 0;
+    telemetry.requestFailures.length = 0;
 
     await page.goto(`${ORIGIN}/products/`, { waitUntil: "domcontentloaded", timeout: 30000 });
     await waitForReady(page);

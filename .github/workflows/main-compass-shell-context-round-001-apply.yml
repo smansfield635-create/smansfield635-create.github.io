@@ -1,4 +1,5 @@
 name: Main Compass Shell Context Bounded Apply
+# Registered through the GitHub contents API.
 
 on:
   pull_request_target:

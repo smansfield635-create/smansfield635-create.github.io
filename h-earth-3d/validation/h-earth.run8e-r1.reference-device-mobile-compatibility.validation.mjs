@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_AMENDMENT,
   H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_AMENDMENT_ID,
@@ -96,6 +97,30 @@ assert(
   'REFERENCE_DEVICE_SCOPE_NOT_ACTIVE_IN_LOADER'
 );
 
+const directory = path.dirname(fileURLToPath(import.meta.url));
+const durableReceipt = JSON.parse(fs.readFileSync(
+  path.join(directory, 'h-earth.run8e-r1.reference-device-mobile-compatibility.correction.receipt.json'),
+  'utf8'
+));
+assert(
+  durableReceipt.receiptType ===
+    'H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_MOBILE_COMPATIBILITY_CORRECTION_RECEIPT',
+  'DURABLE_RECEIPT_TYPE_INVALID'
+);
+assert(
+  durableReceipt.status === 'RUN_8E_R1_REFERENCE_DEVICE_AND_MOBILE_COMPATIBILITY_CORRECTION_PASS',
+  'DURABLE_RECEIPT_STATUS_INVALID'
+);
+assert(durableReceipt.validatedHead === '49bb5096731b42d2683838638daaaac6462fc669', 'DURABLE_RECEIPT_HEAD_INVALID');
+assert(durableReceipt.workflowEvidence?.runId === 30231121889, 'DURABLE_RECEIPT_RUN_INVALID');
+assert(durableReceipt.workflowEvidence?.jobId === 89870091381, 'DURABLE_RECEIPT_JOB_INVALID');
+assert(durableReceipt.workflowEvidence?.artifactId === 8640124721, 'DURABLE_RECEIPT_ARTIFACT_INVALID');
+assert(durableReceipt.scope?.productRouteMutated === false, 'DURABLE_RECEIPT_PRODUCT_MUTATION_INVALID');
+assert(durableReceipt.scope?.rendererImplemented === false, 'DURABLE_RECEIPT_RENDERER_MUTATION_INVALID');
+assert(durableReceipt.boundaries?.run8ER2ProductMutationAuthorized === false, 'DURABLE_RECEIPT_R2_BOUNDARY_INVALID');
+assert(durableReceipt.boundaries?.run8ER1PassClosed === false, 'DURABLE_RECEIPT_R1_CLOSURE_INVALID');
+assert(durableReceipt.boundaries?.run8EPassClosed === false, 'DURABLE_RECEIPT_RUN8E_CLOSURE_INVALID');
+
 const receipt = {
   receiptType: 'H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_MOBILE_COMPATIBILITY_VALIDATION_RECEIPT',
   status: 'RUN_8E_R1_REFERENCE_DEVICE_AND_MOBILE_COMPATIBILITY_CORRECTION_PASS',
@@ -130,6 +155,7 @@ const receipt = {
     evidenceId: H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_EVIDENCE.evidenceId,
     loaderIdentityVerified: loader.identityVerified
   },
+  durableReceiptValidated: true,
   issues: []
 };
 

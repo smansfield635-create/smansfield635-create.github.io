@@ -14,7 +14,7 @@ export const H_EARTH_RUN_8E_R2B_CONTROL = freeze({
   parentContractId: 'H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1',
   checkpointId: 'RUN_8E_R2B',
   checkpointName: 'DETERMINISTIC_PACKAGE_CONSTRUCTION_AND_IMMUTABLE_BUFFER_CUSTODY',
-  currentStatus: 'EXECUTION_OPEN',
+  currentStatus: 'PASS_CLOSED',
   predecessor: {
     checkpointId: 'RUN_8E_R2A',
     status: 'PASS_CLOSED',
@@ -59,8 +59,16 @@ export const H_EARTH_RUN_8E_R2B_CONTROL = freeze({
     'RUN_8E_R2C_OR_LATER_EXECUTION',
     'DEPLOYMENT_OR_RUN_8E_PASS_CLAIM'
   ],
+  executionEvidence: {
+    workflowRun: 30236786081,
+    workflowJob: 89885991485,
+    evidenceArtifact: 8641894512,
+    evidenceArtifactDigest: 'sha256:fa602494403da07fe834d436b37089f66509af8a5beacf0873ff5b7ac237782e',
+    custodyManifestDigest: 'sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d',
+    passReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2b.pass-closed.receipt.json'
+  },
   stoppingBoundary: {
-    currentCheckpoint: 'RUN_8E_R2B_EXECUTION_OPEN',
+    currentCheckpoint: 'RUN_8E_R2B_PASS_CLOSED',
     nextCheckpoint: 'RUN_8E_R2C_NOT_STARTED',
     run8ER2CStarted: false,
     run8ER3Started: false,
@@ -82,7 +90,7 @@ export function evaluateHEarthRun8ER2BControl(candidate = H_EARTH_RUN_8E_R2B_CON
   }
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R2B_CONTROL_PASS' : 'RUN_8E_R2B_CONTROL_FAIL',
+    status: issues.length === 0 ? 'RUN_8E_R2B_CONTROL_PASS_CLOSED' : 'RUN_8E_R2B_CONTROL_FAIL',
     issues
   });
 }

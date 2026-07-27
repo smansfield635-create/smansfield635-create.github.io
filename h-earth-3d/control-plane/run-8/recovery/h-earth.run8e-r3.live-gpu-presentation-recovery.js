@@ -53,7 +53,16 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
       checkpointId: 'RUN_8E_R3F',
       currentStatus: 'IN_PROGRESS',
       boundedSubcheckpoints: freeze([
-        freeze({ checkpointId: 'RUN_8E_R3F1', currentStatus: 'EXECUTION_PENDING' }),
+        freeze({
+          checkpointId: 'RUN_8E_R3F1',
+          currentStatus: 'PASS_CLOSED',
+          successfulExecutionHead: '08c4b9558d995acbc9ba1ff59990b8bc65d4a00d',
+          workflowRun: 30314464717,
+          workflowJob: 90136979082,
+          artifactId: 8671621390,
+          artifactDigest: 'sha256:3345790f2b92b789c80c59ed49759a7c9af5520b8fbe2be238631e94ffdee151',
+          artifactFetchBackVerified: true
+        }),
         freeze({ checkpointId: 'RUN_8E_R3F2', currentStatus: 'NOT_STARTED' }),
         freeze({ checkpointId: 'RUN_8E_R3F3', currentStatus: 'NOT_STARTED' }),
         freeze({ checkpointId: 'RUN_8E_R3F4', currentStatus: 'NOT_STARTED' })
@@ -62,7 +71,7 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     freeze({ checkpointId: 'RUN_8E_R3G', currentStatus: 'NOT_STARTED' })
   ]),
   currentState: freeze({
-    run8ER3: 'OPEN_AT_R3F1_EXECUTION',
+    run8ER3: 'OPEN_AT_R3F2_BOUNDARY',
     run8ER3D: 'PASS_CLOSED',
     run8ER3E: 'PASS_CLOSED',
     run8ER3E1: 'PASS_CLOSED',
@@ -71,7 +80,7 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     run8ER3E4: 'PASS_CLOSED',
     run8ER3E5: 'PASS_CLOSED',
     run8ER3F: 'IN_PROGRESS',
-    run8ER3F1: 'EXECUTION_PENDING',
+    run8ER3F1: 'PASS_CLOSED',
     run8ER3F2: 'NOT_STARTED',
     run8ER3F3: 'NOT_STARTED',
     run8ER3F4: 'NOT_STARTED',
@@ -129,6 +138,8 @@ export function evaluateHEarthRun8ER3Control(candidate = H_EARTH_RUN_8E_R3_CONTR
     if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3F1_EXECUTION' || candidate?.currentState?.run8ER3F1 !== 'EXECUTION_PENDING') issues.push('R3F1_PARENT_EXECUTION_STATE_INVALID');
   } else {
     if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3F2_BOUNDARY' || candidate?.currentState?.run8ER3F1 !== 'PASS_CLOSED') issues.push('R3F1_PARENT_PASS_STATE_INVALID');
+    if (r3F1?.successfulExecutionHead !== '08c4b9558d995acbc9ba1ff59990b8bc65d4a00d' || r3F1?.workflowRun !== 30314464717 || r3F1?.workflowJob !== 90136979082 || r3F1?.artifactId !== 8671621390 || r3F1?.artifactFetchBackVerified !== true) issues.push('R3F1_PARENT_CORE_EVIDENCE_INVALID');
+    if (r3F1?.artifactDigest !== 'sha256:3345790f2b92b789c80c59ed49759a7c9af5520b8fbe2be238631e94ffdee151') issues.push('R3F1_PARENT_ARTIFACT_DIGEST_INVALID');
   }
   if (Object.values(candidate?.authorizations ?? {}).some((value) => value !== true)) issues.push('R3F1_AUTHORIZATION_INCOMPLETE');
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) if (value !== false) issues.push(`R3F1_BOUNDARY_VIOLATION:${key}`);

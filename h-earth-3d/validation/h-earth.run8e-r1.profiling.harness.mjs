@@ -33,7 +33,7 @@ await page.goto(targetUrl, { waitUntil: 'networkidle', timeout: 120000 });
 await page.waitForFunction(() => Boolean(window.H_EARTH_RUN8E_R1_PROFILER), null, { timeout: 120000 });
 await page.waitForFunction(() => !document.getElementById('start-physical')?.disabled, null, { timeout: 120000 });
 
-await page.click('#run-probes');
+await page.evaluate(() => document.getElementById('run-probes').click());
 await page.waitForFunction(
   () => Boolean(window.H_EARTH_RUN8E_R1_ARCHITECTURE_RECEIPT),
   null,
@@ -56,7 +56,7 @@ assert(
   'R1_WEBGL2_DISPOSITION_MISSING'
 );
 
-await page.click('#start-physical');
+await page.evaluate(() => document.getElementById('start-physical').click());
 const frame = page.frames().find((candidate) =>
   candidate.url().includes('/showroom/globe/h-earth/') &&
   !candidate.url().includes('/diagnostic/run8e-r1/'));
@@ -113,7 +113,7 @@ await frame.evaluate(async () => {
   await pause(1800);
 });
 
-await page.click('#stop-physical');
+await page.evaluate(() => document.getElementById('stop-physical').click());
 await page.waitForFunction(() => Boolean(window.H_EARTH_RUN8E_R1_PHYSICAL_RECEIPT), null, { timeout: 30000 });
 const emulation = await page.evaluate(() => window.H_EARTH_RUN8E_R1_PHYSICAL_RECEIPT);
 assert(emulation.interaction.pointerMoveCount > 0, 'R1_POINTER_MOVES_NOT_CAPTURED');

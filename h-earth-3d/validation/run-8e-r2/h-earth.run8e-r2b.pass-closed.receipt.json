@@ -1,0 +1,105 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2B_IMMUTABLE_BUFFER_CUSTODY_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2B_PASS_CLOSED",
+  "recordedAt": "2026-07-27T04:22:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2b-immutable-buffer-custody-001",
+  "pullRequest": 218,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2A",
+    "status": "PASS_CLOSED",
+    "exactHead": "22b23594005dabdd9374501dae1c561f2dafa648"
+  },
+  "execution": {
+    "head": "a626b93a9707ed1174b3648afa7c51f836c76594",
+    "runId": 30236786081,
+    "jobId": 89885991485,
+    "conclusion": "success",
+    "predecessorAndPackageIdentity": "PASS",
+    "javascriptSyntax": "PASS",
+    "deterministicConstructionAndCustodyValidation": "PASS",
+    "boundedScopeAndR2CStoppingBoundary": "PASS",
+    "evidenceUpload": "PASS"
+  },
+  "artifact": {
+    "artifactId": 8641894512,
+    "artifactName": "h-earth-run8e-r2b-immutable-buffer-custody-evidence",
+    "artifactDigest": "sha256:fa602494403da07fe834d436b37089f66509af8a5beacf0873ff5b7ac237782e",
+    "artifactWorkflowHead": "a626b93a9707ed1174b3648afa7c51f836c76594"
+  },
+  "validatedCustody": {
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "contentDigest": "fnv1a32:fd913c25",
+    "independentlyRecomputedContentDigest": "fnv1a32:fd913c25",
+    "explicitReconstructionCount": 4,
+    "postMutationReconstructionCount": 1,
+    "sourceBufferCount": 9,
+    "frozenGraphObjectCount": 52,
+    "frozenGraphArrayCount": 23,
+    "rejectedAssignmentCount": 9,
+    "rejectedStructuralMutationCount": 9,
+    "rejectedObjectMutationCount": 2,
+    "gpuViewRequestCount": 2,
+    "uniqueArrayBufferCount": 18,
+    "gpuViewMutationCount": 27,
+    "sourceMutationCount": 0,
+    "laterViewMutationCount": 0,
+    "custodyManifestDigest": "sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d",
+    "custodyManifest": {
+      "contractId": "H_EARTH_RUN_8E_R2B_DETERMINISTIC_PACKAGE_AND_IMMUTABLE_BUFFER_CUSTODY_v1",
+      "predecessorHead": "22b23594005dabdd9374501dae1c561f2dafa648",
+      "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+      "contentDigest": "fnv1a32:fd913c25",
+      "primitiveIdsDigest": "sha256:0aef758775f67fbb9a9261e887706d790cee5b5b05906b9d37210c44b5daff42",
+      "primitiveSpansDigest": "sha256:0859f99b05733fa75ec63538480013055bcabce66ebcb6d5c4f2c25d03a1e76e",
+      "drawRangesDigest": "sha256:0aee419a93ad0149da0e55e4a0d464ae9c9e88a069972e165277f28959b363b7",
+      "environmentDefaultsDigest": "sha256:cb9b6d1c1330fb63adb607b1ecd4245e79370d3b302b3baa196573a38fcb52eb",
+      "sourceAuthoritiesDigest": "sha256:347f681fa5c7416343e269dd5708bdd51fe0213a1116a36ca5b5a8d4c88e9ae4",
+      "bufferDigests": {
+        "positions": "sha256:128b20ee08a719ff357057acaf771137db8583879519c7771d7258e124cee215",
+        "normals": "sha256:9643cb0d619bfc6b3cdd3ed56cdbb0cae88b40f52ee7c79b2df0d48ec0d8e465",
+        "baseColorsLinear": "sha256:9c41b094f75852056eb10e9d65489c4b5b2907bd53a2d793f90024a9ab34c3d3",
+        "materialParameters": "sha256:86f243d3159fd2157ebdd09b84f7500394038b23c7ecccb33a032f76b2bb5ee4",
+        "materialModelCodes": "sha256:1e5f376de3548d58b219d1cb8bb6eda3490352dac523ebd9789890912c80dfe4",
+        "surfaceClassCodes": "sha256:fbced2834767e2b27107d2973021bc01b0950033518ac3aa302959f6efaac80b",
+        "primitiveIndices": "sha256:70333aea00bbd7de2ff93ec15db83af1395f7221d761e6eedec1ffd0efcd8183",
+        "roleCodes": "sha256:6cf769ec3b220b9fb173872a37dcff3fb0f1dfa39491e383636558b535a516d3",
+        "indices": "sha256:9ad9e6c04d2b1449d2aaab2ed815891c87f07f4781de5176721021b17fbcbfc5"
+      }
+    }
+  },
+  "executedSourceIdentities": {
+    "packagePath": "/showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "packageGitBlobSha": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+    "r2bControlPath": "/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2b.immutable-buffer-custody.js",
+    "r2bControlGitBlobSha": "1972f2f81e9bb4f388aec995f4cb3476b50a06d5",
+    "validationPath": "/h-earth-3d/validation/h-earth.run8e-r2b.immutable-buffer-custody.validation.mjs",
+    "validationGitBlobSha": "cde8a1d3670ac505066198de0b7cb91b460e8f9e",
+    "workflowPath": "/.github/workflows/h-earth-run8e-r2b-immutable-buffer-custody.yml",
+    "workflowGitBlobSha": "b96e8719f8cd0137d224be9e0406c4d4d6a3454d"
+  },
+  "boundaries": {
+    "packageSourceMutated": false,
+    "sourceAuthorityCorrespondenceDispositionIssued": false,
+    "gpuResourceCreated": false,
+    "webglContextCreated": false,
+    "renderLoopCreated": false,
+    "publicRouteBound": false,
+    "run8ER2CStarted": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false,
+    "mainChangedByR2B": false,
+    "r2aBranchChangedByR2B": false,
+    "packageSourceChangedByR2B": false
+  },
+  "checkpointDisposition": {
+    "run8ER2A": "PASS_CLOSED",
+    "run8ER2B": "PASS_CLOSED",
+    "run8ER2C": "NOT_STARTED",
+    "run8ER2": "OPEN_AT_R2C_BOUNDARY",
+    "run8E": "FAIL_OPEN"
+  },
+  "stoppingBoundary": "STOP_BEFORE_SOURCE_AUTHORITY_GEOMETRY_MATERIAL_AND_PROVENANCE_CORRESPONDENCE_AUDIT_R2C",
+  "issues": []
+}

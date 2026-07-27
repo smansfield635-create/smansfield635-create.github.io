@@ -62,7 +62,17 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
       checkpointId: 'RUN_8E_R2B',
       name: 'DETERMINISTIC_PACKAGE_CONSTRUCTION_AND_IMMUTABLE_BUFFER_CUSTODY',
       requiredResult: 'PASS_CLOSED_BEFORE_R2C',
-      currentStatus: 'NOT_STARTED',
+      currentStatus: 'PASS_CLOSED',
+      executionEvidence: {
+        workflowRun: 30236786081,
+        workflowJob: 89885991485,
+        evidenceArtifact: 8641894512,
+        evidenceArtifactDigest: 'sha256:fa602494403da07fe834d436b37089f66509af8a5beacf0873ff5b7ac237782e',
+        packageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
+        contentDigest: 'fnv1a32:fd913c25',
+        custodyManifestDigest: 'sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d',
+        passReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2b.pass-closed.receipt.json'
+      },
       stoppingBoundary: 'STOP_BEFORE_AUTHORITY_CORRESPONDENCE_AUDIT_R2C'
     },
     {
@@ -185,8 +195,8 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'SOURCE_AUTHORITIES_AND_R1_FAIL_OPEN_BOUNDARY_PRESERVED'
   ],
   stoppingBoundary: {
-    currentCheckpoint: 'RUN_8E_R2A_PASS_CLOSED',
-    nextCheckpoint: 'RUN_8E_R2B_NOT_STARTED',
+    currentCheckpoint: 'RUN_8E_R2B_PASS_CLOSED',
+    nextCheckpoint: 'RUN_8E_R2C_NOT_STARTED',
     run8ER2MayCloseOnConstructionAndValidationPass: true,
     run8ER3Started: false,
     publicRendererInstalled: false,
@@ -207,7 +217,8 @@ export function evaluateHEarthRun8ER2Control(candidate = H_EARTH_RUN_8E_R2_CONTR
   if (r2A?.checkpointId !== 'RUN_8E_R2A' || r2A?.currentStatus !== 'PASS_CLOSED') issues.push('R2A_NOT_PASS_CLOSED');
   if (r2A?.executionEvidence?.packageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25') issues.push('R2A_PACKAGE_IDENTITY_MISMATCH');
   if (r2A?.executionEvidence?.contentDigest !== 'fnv1a32:fd913c25') issues.push('R2A_CONTENT_DIGEST_MISMATCH');
-  if (r2B?.checkpointId !== 'RUN_8E_R2B' || r2B?.currentStatus !== 'NOT_STARTED') issues.push('R2B_STARTED_BEFORE_R2A_STOP');
+  if (r2B?.checkpointId !== 'RUN_8E_R2B' || r2B?.currentStatus !== 'PASS_CLOSED') issues.push('R2B_NOT_PASS_CLOSED');
+  if (r2B?.executionEvidence?.custodyManifestDigest !== 'sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d') issues.push('R2B_CUSTODY_DIGEST_MISMATCH');
   if (checkpoints[5]?.checkpointId !== 'RUN_8E_R2F') issues.push('R2F_NOT_FINAL_CHECKPOINT');
   if (candidate?.expectedCorpus?.primitiveCount !== 35) issues.push('R2_PRIMITIVE_CORPUS_INVALID');
   if (candidate?.expectedCorpus?.indexCount !== 147120) issues.push('R2_INDEX_CORPUS_INVALID');
@@ -215,7 +226,7 @@ export function evaluateHEarthRun8ER2Control(candidate = H_EARTH_RUN_8E_R2_CONTR
   if (candidate?.stoppingBoundary?.run8ER3Started !== false) issues.push('R3_STARTED_INSIDE_R2');
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R2A_CONTROL_PASS_CLOSED' : 'RUN_8E_R2_CONTROL_FAIL',
+    status: issues.length === 0 ? 'RUN_8E_R2B_CONTROL_PASS_CLOSED' : 'RUN_8E_R2_CONTROL_FAIL',
     issues
   });
 }

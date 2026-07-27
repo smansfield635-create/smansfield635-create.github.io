@@ -50,6 +50,7 @@ jobs:
           node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
           node --check h-earth-3d/validation/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.harness.mjs
           node --check showroom/globe/h-earth/diagnostic/run8e-r3b/fixed-frame.js
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-001.failure.receipt.json','utf8'))"
           if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.pass-closed.receipt.json; then
             node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.pass-closed.receipt.json','utf8'))"
           fi
@@ -122,6 +123,7 @@ jobs:
             'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3b-isolated-webgl2-fixed-frame-scope.js',
             'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
             'h-earth-3d/validation/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.harness.mjs',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-001.failure.receipt.json',
             'showroom/globe/h-earth/diagnostic/run8e-r3b/index.html',
             'showroom/globe/h-earth/diagnostic/run8e-r3b/fixed-frame.js'
           }

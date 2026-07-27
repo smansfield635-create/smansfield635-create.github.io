@@ -243,11 +243,18 @@ async function runProfile(browser, profileName) {
       await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "CLUSTER_OPEN", { timeout: 8000 });
     }
 
-    await quickFlick(page, profile, sceneRect);
+    await page.$eval(SELECTORS.scene, element => element.scrollIntoView({ block: "center", inline: "center" }));
+    await sleep(700);
+    const flickSceneRect = await page.$eval(SELECTORS.scene, element => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+    });
+    await quickFlick(page, profile, flickSceneRect);
     await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "PRIMARY_ENTRY", { timeout: 10000 }).catch(() => {});
     await sleep(500);
     record.afterFlick = await rootFacts(page);
     record.afterFlickPathname = new URL(page.url()).pathname;
+    record.afterFlickRendererReceipt = await page.evaluate(() => globalThis.DGB_PRODUCTS_CRYSTALS_RECEIPT || null);
     if (record.afterFlick.state !== "PRIMARY_ENTRY" || record.afterFlickPathname !== "/products/") {
       record.findings.push({ id: "QUICK_FLICK_LOCAL_RETURN_FAILED", observed: { facts: record.afterFlick, pathname: record.afterFlickPathname } });
     }

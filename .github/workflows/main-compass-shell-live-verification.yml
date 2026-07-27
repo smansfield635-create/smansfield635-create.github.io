@@ -1,0 +1,66 @@
+name: Main Compass Shell Live Verification
+
+on:
+  push:
+    branches:
+      - agent/main-compass-shell-live-verification-001
+    paths:
+      - .github/main-compass-shell-live-verification.trigger
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-main-compass:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check live HTML identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://diamondgatebridge.com/?dgb_receipt=${GITHUB_SHA}"
+          curl --fail --location --silent --show-error --compressed \
+            -H 'Cache-Control: no-cache, no-store, max-age=0' \
+            -H 'Pragma: no-cache' \
+            "$url" > /tmp/live-index.html
+          test -s /tmp/live-index.html
+          grep -F 'dgb-main-compass-shell-context-round-001-v1' /tmp/live-index.html
+          grep -F 'You can keep getting everything done and still be running out of strength.' /tmp/live-index.html
+          grep -F 'Choose a direction, open its cluster, select a room, and enter the path that fits what you are looking for.' /tmp/live-index.html
+          ! grep -F 'Swipe across empty space to rotate the constellation.' /tmp/live-index.html
+
+      - name: Check live CSS and controller blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error --compressed \
+            -H 'Cache-Control: no-cache, no-store, max-age=0' \
+            'https://diamondgatebridge.com/assets/compass/compass.css?v=dgb-main-compass-shell-context-round-001-v1' \
+            > /tmp/live-compass.css
+          curl --fail --location --silent --show-error --compressed \
+            -H 'Cache-Control: no-cache, no-store, max-age=0' \
+            'https://diamondgatebridge.com/assets/compass/compass.controller.js?v=dgb-main-compass-shell-context-round-001-v1' \
+            > /tmp/live-compass.controller.js
+          test "$(git hash-object /tmp/live-compass.css)" = '54d1ff84ab551ecbde1415dcf616c3228facb0e2'
+          test "$(git hash-object /tmp/live-compass.controller.js)" = '83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46'
+          node --check /tmp/live-compass.controller.js
+
+      - name: Check live browser initialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
+          test -n "$chrome"
+          "$chrome" \
+            --headless=new \
+            --no-sandbox \
+            --disable-gpu \
+            --disable-dev-shm-usage \
+            --virtual-time-budget=10000 \
+            --dump-dom \
+            "https://diamondgatebridge.com/?dgb_browser_receipt=${GITHUB_SHA}" \
+            > /tmp/live-dom.html
+          grep -F 'data-compass-mode="CONSTELLATION"' /tmp/live-dom.html
+          grep -F 'Drag to rotate the constellation. Tap a primary star to open its cluster.' /tmp/live-dom.html
+          grep -F 'data-visual-pass-claimed="false"' /tmp/live-dom.html

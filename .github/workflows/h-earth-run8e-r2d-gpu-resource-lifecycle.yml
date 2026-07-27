@@ -1,0 +1,142 @@
+name: H-Earth Run 8E R2D GPU Resource Lifecycle
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r2d-gpu-resource-lifecycle-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r2c-authority-correspondence-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r2d-gpu-resource-lifecycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      H_EARTH_RUN8E_R2D_URL: http://127.0.0.1:4174/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.html
+      H_EARTH_RUN8E_R2D_OUTPUT: /tmp/h-earth-run8e-r2d
+    steps:
+      - name: Check out R2D branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-run8e-r2d-gpu-resource-lifecycle-001
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify R2C predecessor and protected package identity
+        run: |
+          set -euo pipefail
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r2c-authority-correspondence-001)" = "845b6d6acffdd461153b3474044ec533ffd4403b"
+          test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
+          node - <<'NODE'
+          const receipt = require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.pass-closed.receipt.json');
+          if (receipt.status !== 'RUN_8E_R2C_PASS_CLOSED') process.exit(1);
+          if (receipt.validatedPackage.packageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25') process.exit(1);
+          if (receipt.validatedPackage.contentDigest !== 'fnv1a32:fd913c25') process.exit(1);
+          if (receipt.sourceCustody.auditManifestDigest !== 'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe') process.exit(1);
+          if (receipt.checkpointDisposition.run8ER2D !== 'NOT_STARTED') process.exit(1);
+          NODE
+
+      - name: Verify R2D JavaScript syntax
+        run: |
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2d.gpu-upload-and-resource-lifecycle.js
+          node --check h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.js
+          node --check h-earth-3d/validation/h-earth.run8e-r2d.gpu-resource-lifecycle.harness.mjs
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start isolated workspace server
+        run: |
+          python3 -m http.server 4174 --bind 127.0.0.1 >/tmp/h-earth-run8e-r2d-server.log 2>&1 &
+          echo $! >/tmp/h-earth-run8e-r2d-server.pid
+          for attempt in $(seq 1 60); do
+            if curl --silent --fail "$H_EARTH_RUN8E_R2D_URL" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-run8e-r2d-server.log
+          exit 1
+
+      - name: Execute isolated WebGL 2 upload and lifecycle validation
+        run: |
+          mkdir -p "$H_EARTH_RUN8E_R2D_OUTPUT"
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8e-r2d.gpu-resource-lifecycle.harness.mjs 2>&1 \
+            | tee "$H_EARTH_RUN8E_R2D_OUTPUT/r2d-harness.log"
+
+      - name: Verify bounded R2D scope and R2E stopping boundary
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --check
+          BASE_SHA=845b6d6acffdd461153b3474044ec533ffd4403b
+          git diff --name-only "$BASE_SHA"...HEAD | sort >/tmp/h-earth-run8e-r2d-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r2d-paths.txt').read_text().splitlines() if line.strip()]
+          required = {
+              '.github/workflows/h-earth-run8e-r2d-gpu-resource-lifecycle.yml',
+              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2d.gpu-upload-and-resource-lifecycle.js',
+              'h-earth-3d/validation/h-earth.run8e-r2d.gpu-resource-lifecycle.harness.mjs',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.html',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.js'
+          }
+          actual = set(paths)
+          unexpected = sorted(actual - required)
+          missing = sorted(required - actual)
+          if unexpected:
+              raise SystemExit(f'R2D_UNEXPECTED_PATHS:{unexpected}')
+          if missing:
+              raise SystemExit(f'R2D_REQUIRED_PATHS_MISSING:{missing}')
+          forbidden = [
+              path for path in paths
+              if path in {
+                  'showroom/globe/h-earth/render/live-render-package.run8e-r2.js',
+                  'showroom/globe/h-earth/index.html',
+                  'showroom/globe/h-earth/index.js',
+                  'showroom/globe/h-earth/render/renderer.functional-landscape.js',
+                  'showroom/globe/h-earth/render/run8e-successor-environment.js'
+              }
+              or 'run8e-r2e' in path.lower()
+              or 'run-8e-r2e' in path.lower()
+              or 'run8e-r3' in path.lower()
+              or 'run-8e-r3' in path.lower()
+          ]
+          if forbidden:
+              raise SystemExit(f'R2D_PROTECTED_OR_LATER_CHECKPOINT_PATH:{forbidden}')
+          print({
+              'checkpoint': 'RUN_8E_R2D',
+              'pathCount': len(paths),
+              'paths': paths,
+              'packageSourceMutation': False,
+              'publicRouteMutation': False,
+              'visiblePresentationCreated': False,
+              'run8ER2EStarted': False,
+              'run8ER3Started': False,
+              'run8EPassClosed': False
+          })
+          PY
+
+      - name: Upload R2D lifecycle evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r2d-gpu-resource-lifecycle-evidence
+          path: |
+            /tmp/h-earth-run8e-r2d
+            /tmp/h-earth-run8e-r2d-server.log
+            /tmp/h-earth-run8e-r2d-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

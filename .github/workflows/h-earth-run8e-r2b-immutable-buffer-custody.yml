@@ -1,4 +1,4 @@
-name: H-Earth Run 8E R2B Immutable Buffer Custody
+name: H-Earth Run 8E R2B Pass-Closed Validation
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  validate-run8e-r2b-immutable-buffer-custody:
+  validate-run8e-r2b-pass-closed:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -37,12 +37,14 @@ jobs:
           test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
           node -e "const r=require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2a.pass-closed.receipt.json'); if(r.status!=='RUN_8E_R2A_PASS_CLOSED') process.exit(1)"
 
-      - name: Verify R2B JavaScript syntax
+      - name: Verify R2B closure syntax and receipt
         run: |
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js
           node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2b.immutable-buffer-custody.js
           node --check h-earth-3d/validation/h-earth.run8e-r2b.immutable-buffer-custody.validation.mjs
+          node -e "const r=require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2b.pass-closed.receipt.json'); if(r.status!=='RUN_8E_R2B_PASS_CLOSED') process.exit(1)"
 
-      - name: Execute deterministic construction and immutable custody validation
+      - name: Execute final deterministic construction and immutable custody validation
         run: |
           mkdir -p "$H_EARTH_RUN8E_R2B_OUTPUT"
           set -o pipefail
@@ -61,8 +63,10 @@ jobs:
           paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r2b-paths.txt').read_text().splitlines() if line.strip()]
           required = {
               '.github/workflows/h-earth-run8e-r2b-immutable-buffer-custody.yml',
+              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js',
               'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2b.immutable-buffer-custody.js',
-              'h-earth-3d/validation/h-earth.run8e-r2b.immutable-buffer-custody.validation.mjs'
+              'h-earth-3d/validation/h-earth.run8e-r2b.immutable-buffer-custody.validation.mjs',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2b.pass-closed.receipt.json'
           }
           actual = set(paths)
           unexpected = sorted(actual - required)
@@ -89,6 +93,7 @@ jobs:
               raise SystemExit(f'R2B_PROTECTED_OR_LATER_CHECKPOINT_PATH:{forbidden}')
           print({
               'checkpoint': 'RUN_8E_R2B',
+              'status': 'PASS_CLOSED',
               'pathCount': len(paths),
               'paths': paths,
               'packageSourceMutated': False,
@@ -102,7 +107,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-run8e-r2b-immutable-buffer-custody-evidence
+          name: h-earth-run8e-r2b-pass-closed-evidence
           path: |
             /tmp/h-earth-run8e-r2b
             /tmp/h-earth-run8e-r2b-paths.txt

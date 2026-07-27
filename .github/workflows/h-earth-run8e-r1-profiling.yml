@@ -74,7 +74,9 @@ jobs:
           exit 1
 
       - name: Execute fixed-camera architecture probes and Samsung emulation
-        run: node h-earth-3d/validation/h-earth.run8e-r1.profiling.harness.mjs
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8e-r1.profiling.harness.mjs 2>&1 | tee /tmp/h-earth-run8e-r1-harness.log
 
       - name: Verify bounded R1 scope
         run: |
@@ -109,6 +111,7 @@ jobs:
           name: h-earth-run8e-r1-profiling-evidence
           path: |
             /tmp/h-earth-run8e-r1
+            /tmp/h-earth-run8e-r1-harness.log
             /tmp/h-earth-run8e-r1-server.log
             /tmp/h-earth-run8e-r1-paths.txt
           if-no-files-found: warn

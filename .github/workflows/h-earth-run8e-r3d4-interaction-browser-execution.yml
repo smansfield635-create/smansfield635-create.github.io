@@ -1,0 +1,146 @@
+name: H-Earth Run 8E R3D4 Interaction Browser Execution
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3d4-interaction-browser-execution-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3d3-live-gpu-camera-response-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3d4-interaction-browser-execution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      H_EARTH_RUN8E_R3D4_URL: http://127.0.0.1:4173/showroom/globe/h-earth/diagnostic/run8e-r3d/
+      H_EARTH_RUN8E_R3D4_OUTPUT: /tmp/h-earth-run8e-r3d4
+    steps:
+      - name: Check out exact R3D4 event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R3D3 base and protected interaction renderer sources
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3d3-live-gpu-camera-response-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3d3-live-gpu-camera-response-001)" = "45dbf26ca8495ba03657ff0aeba52225359d23e5"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+          test "$(git hash-object showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js)" = "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js)" = "b8b3c713d5f0b7c79808e8942ce385887589d880"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js)" = "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js)" = "5017bbaf857a644287cb829037b0fde4646f270d"
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = "b5f72fb70f59276f868a5894ee0c5e8beccc40ca"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/direct-manipulation.js)" = "322ee2bfed5184acd8eac600f19abd72380b6c2b"
+
+      - name: Verify R3D4 syntax authority and bounded audit source
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3d4.interaction-browser-execution.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d4-interaction-browser-execution-scope.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.pass-closed.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.pass-closed.receipt.json','utf8'))"
+          fi
+          ! git diff --name-only 45dbf26ca8495ba03657ff0aeba52225359d23e5...HEAD | grep -Eq '^showroom/globe/h-earth/'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.52.0
+          npx playwright install --with-deps chromium
+
+      - name: Start isolated R3D3 diagnostic server
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-run8e-r3d4-server.log 2>&1 &
+          echo $! >/tmp/h-earth-run8e-r3d4-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail "$H_EARTH_RUN8E_R3D4_URL" >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/h-earth-run8e-r3d4-server.log
+          exit 1
+
+      - name: Execute portrait and landscape sustained interaction audit
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only 45dbf26ca8495ba03657ff0aeba52225359d23e5...HEAD \
+            | grep -E '^h-earth-3d/' \
+            | sort -u > /tmp/h-earth-run8e-r3d4-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3d4-governed-paths.txt \
+            --task "Run 8E R3D4 portrait and landscape interaction browser execution" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3D4_OUTPUT/h-earth.run8e-r3d4.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3d4/h-earth.run8e-r3d4.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`R3D4_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact scope and R3D5 stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 45dbf26ca8495ba03657ff0aeba52225359d23e5...HEAD | sort > "$H_EARTH_RUN8E_R3D4_OUTPUT/r3d4-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3d4/r3d4-changed-paths.txt').read_text().splitlines() if line.strip()}
+          required = {
+            '.github/workflows/h-earth-run8e-r3d4-interaction-browser-execution.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3d4.interaction-browser-execution.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d4-interaction-browser-execution-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.pass-closed.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'R3D4_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'R3D4_UNEXPECTED_PATHS:{unexpected}')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3d4/h-earth.run8e-r3d4.interaction-browser-execution.receipt.json').read_text())
+          if receipt['eligible'] is not True: raise SystemExit('R3D4_EXECUTION_RECEIPT_NOT_ELIGIBLE')
+          if receipt['aggregate']['browserSessionCount'] != 2: raise SystemExit('R3D4_BROWSER_SESSION_COUNT_INVALID')
+          if receipt['aggregate']['orientationCount'] != 2: raise SystemExit('R3D4_ORIENTATION_COUNT_INVALID')
+          if receipt['aggregate']['maximumDeliveryLagMs'] >= 2000: raise SystemExit('R3D4_DELIVERY_BACKLOG_THRESHOLD_FAILED')
+          if receipt['aggregate']['maximumCompletionLagMs'] >= 2000: raise SystemExit('R3D4_COMPLETION_BACKLOG_THRESHOLD_FAILED')
+          if receipt['aggregate']['maximumConcurrentCallbacks'] != 1: raise SystemExit('R3D4_CALLBACK_CONCURRENCY_INVALID')
+          if receipt['aggregate']['postInitializationResourceCreationCount'] != 0: raise SystemExit('R3D4_RESOURCE_RECREATION_OBSERVED')
+          if receipt['aggregate']['postInitializationBufferUploadCount'] != 0: raise SystemExit('R3D4_BUFFER_REUPLOAD_OBSERVED')
+          if receipt['aggregate']['bitmapPreviewApplicationCount'] != 0 or receipt['aggregate']['cssTransformPreviewCount'] != 0: raise SystemExit('R3D4_BITMAP_PREVIEW_OBSERVED')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_R3D_CLOSURE_AND_R3E_INPUT_DECISION_R3D5': raise SystemExit('R3D4_STOPPING_BOUNDARY_MISMATCH')
+          if any(receipt['boundaries'].values()): raise SystemExit('R3D4_BOUNDARY_VIOLATION')
+          PY
+
+      - name: Upload R3D4 browser execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3d4-interaction-browser-execution-evidence
+          path: |
+            /tmp/h-earth-run8e-r3d4
+            /tmp/h-earth-run8e-r3d4-server.log
+            /tmp/h-earth-run8e-r3d4-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

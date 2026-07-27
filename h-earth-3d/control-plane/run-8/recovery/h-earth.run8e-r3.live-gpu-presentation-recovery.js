@@ -64,8 +64,30 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
         {
           checkpointId: 'RUN_8E_R3D4',
           name: 'DIAGNOSTIC_INTERACTION_BROWSER_EXECUTION',
-          currentStatus: 'EXECUTION_PENDING',
-          requiredResult: 'PASS_CLOSED_BEFORE_R3D5',
+          currentStatus: 'PASS_CLOSED',
+          executionEvidence: {
+            successfulExecutionHead: '579ab9c3bd1371239e8a3a81f65ee4fffaa18a65',
+            workflowRun: 30300915536,
+            workflowJob: 90093335073,
+            evidenceArtifact: 8666527165,
+            evidenceArtifactDigest: 'sha256:7ace397a3fe7f476711337c667c6e65195ad4f4ef23871163bfd9434abd87b17',
+            automaticRegistryPreflightRun: 30300915486,
+            browserSessionCount: 2,
+            scheduledInteractionGroupCount: 48,
+            acceptedProposalCount: 72,
+            visibleGpuFrameCount: 72,
+            maximumDeliveryLagMs: 276.40000000000873,
+            maximumCompletionLagMs: 606.9000000000087,
+            maximumActionProcessingMs: 409.5,
+            maximumConcurrentCallbacks: 1,
+            worldRebuildCount: 0,
+            deferredRenderCommitCount: 0,
+            queuedFrameChainCount: 0,
+            postInitializationResourceCreationCount: 0,
+            postInitializationBufferUploadCount: 0,
+            bitmapPreviewApplicationCount: 0,
+            cssTransformPreviewCount: 0
+          },
           stoppingBoundary: 'STOP_BEFORE_R3D_CLOSURE_AND_R3E_INPUT_DECISION_R3D5'
         },
         { checkpointId: 'RUN_8E_R3D5', name: 'R3D_CLOSURE_AND_R3E_INPUT_DECISION', currentStatus: 'NOT_STARTED' }
@@ -77,12 +99,12 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     { checkpointId: 'RUN_8E_R3G', currentStatus: 'NOT_STARTED' }
   ],
   currentState: {
-    run8ER3: 'OPEN_AT_R3D4_EXECUTION',
+    run8ER3: 'OPEN_AT_R3D5_BOUNDARY',
     run8ER3D: 'IN_PROGRESS',
     run8ER3D1: 'PASS_CLOSED',
     run8ER3D2: 'PASS_CLOSED',
     run8ER3D3: 'PASS_CLOSED',
-    run8ER3D4: 'EXECUTION_PENDING',
+    run8ER3D4: 'PASS_CLOSED',
     run8ER3D5: 'NOT_STARTED',
     run8ER3E: 'NOT_STARTED',
     run8ER3F: 'NOT_STARTED',

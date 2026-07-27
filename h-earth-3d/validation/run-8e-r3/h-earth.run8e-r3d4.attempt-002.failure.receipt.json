@@ -1,0 +1,57 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3D4_INTERACTION_BROWSER_EXECUTION_ATTEMPT_FAILURE_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3D4_ATTEMPT_002_FAIL_PRESERVED",
+  "recordedAt": "2026-07-27T20:00:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3d4-interaction-browser-execution-001",
+  "pullRequest": 242,
+  "attempt": 2,
+  "head": "1b60d3fca26676d11f90cdbdf74b15caf177ed62",
+  "workflowRun": 30300474765,
+  "workflowJob": 90091860196,
+  "artifactId": 8666353073,
+  "artifactDigest": "sha256:765d89df80512c452654678735db6f864228a9c1d1511de9c80a896a1a6c0685",
+  "conclusion": "failure",
+  "failedStep": "Execute portrait and landscape sustained interaction audit",
+  "failureEvidence": {
+    "exactHarnessStderrCaptured": true,
+    "failureCode": "R3D4_PORTRAIT_VIEWPORT_MISMATCH",
+    "sourceLine": 247,
+    "classification": "AUDIT_MODEL_EXACT_INNER_VIEWPORT_EQUALITY_ASSERTION",
+    "applicationAndAuditBehaviorOtherwiseUnchangedFromAttempt001": true
+  },
+  "diagnosis": {
+    "requestedContextViewportWasConfigured": true,
+    "strictWindowInnerDimensionEqualityWasNotAValidMobileEmulationInvariant": true,
+    "orientationAndPositiveVisualViewportAreTheCorrectExecutionInvariants": true,
+    "backlogThresholdWasNotReachedOrEvaluatedBeforeFailure": true
+  },
+  "applicationDefectEstablished": false,
+  "interactionBacklogDefectEstablished": false,
+  "rendererDefectEstablished": false,
+  "sourceIdentityChecksPassed": true,
+  "syntaxChecksPassed": true,
+  "protectedShowroomSourceMutation": false,
+  "correctiveAction": "REPLACE_EXACT_WINDOW_INNER_DIMENSION_EQUALITY_WITH_REQUESTED_VIEWPORT_CUSTODY_AND_ACTUAL_ORIENTATION_ASPECT_VALIDATION",
+  "nonWeakenedThresholds": {
+    "maximumDeliveryLagMs": 2000,
+    "maximumCompletionLagMs": 2000,
+    "maximumActionProcessingMs": 1000,
+    "maximumConcurrentCallbacks": 1,
+    "minimumAcceptedProposalsPerSession": 30,
+    "minimumDistinctVisibleFrameHashesPerSession": 8
+  },
+  "boundaries": {
+    "publicRouteMutated": false,
+    "publicDirectManipulationMutated": false,
+    "navigationAuthorityMutated": false,
+    "persistentRendererSourceMutated": false,
+    "pointerTouchIntakeSourceMutated": false,
+    "liveGpuBindingSourceMutated": false,
+    "deploymentPerformed": false,
+    "r3D5WorkStarted": false,
+    "run8EPassClosed": false
+  },
+  "issues": []
+}

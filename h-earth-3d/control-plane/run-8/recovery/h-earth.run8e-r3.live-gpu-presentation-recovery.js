@@ -34,8 +34,23 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
         freeze({
           checkpointId: 'RUN_8E_R3E2',
           name: 'BRANCH_LOCAL_PUBLIC_LIVE_GPU_COMPOSITION',
-          currentStatus: 'EXECUTION_PENDING',
+          currentStatus: 'PASS_CLOSED',
           exactPublicMutationPathCount: 2,
+          executionEvidence: freeze({
+            successfulExecutionHead: '9cb9a0a98fcfc6fbf354ef9dacc6adf13743891c',
+            workflowRun: 30306926100,
+            workflowJob: 90113310977,
+            evidenceArtifact: 8668783374,
+            evidenceArtifactDigest: 'sha256:a4e2e9a23e7cdc55345b24537db2d5b414af4b78be0e07ab871270ab0619bb90',
+            automaticRegistryPreflightRun: 30306925973,
+            publicHtmlGitBlob: '0daedf61f7e19af095f4db5fc47563a9cd786837',
+            publicOrchestratorGitBlob: '2b0a916b3a6d11da84316925f8abd8a3a1447445',
+            publicModuleScriptCount: 1,
+            legacyModuleScriptCount: 0,
+            protectedWitnessMutationCount: 0,
+            browserExecutionCount: 0,
+            gpuExecutionCount: 0
+          }),
           stoppingBoundary: 'STOP_BEFORE_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_EXECUTION_R3E3'
         }),
         freeze({ checkpointId: 'RUN_8E_R3E3', currentStatus: 'NOT_STARTED' }),
@@ -47,11 +62,11 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     freeze({ checkpointId: 'RUN_8E_R3G', currentStatus: 'NOT_STARTED' })
   ]),
   currentState: freeze({
-    run8ER3: 'OPEN_AT_R3E2_EXECUTION',
+    run8ER3: 'OPEN_AT_R3E3_BOUNDARY',
     run8ER3D: 'PASS_CLOSED',
     run8ER3E: 'IN_PROGRESS',
     run8ER3E1: 'PASS_CLOSED',
-    run8ER3E2: 'EXECUTION_PENDING',
+    run8ER3E2: 'PASS_CLOSED',
     run8ER3E3: 'NOT_STARTED',
     run8ER3E4: 'NOT_STARTED',
     run8ER3E5: 'NOT_STARTED',
@@ -98,8 +113,13 @@ export function evaluateHEarthRun8ER3Control(candidate = H_EARTH_RUN_8E_R3_CONTR
   if (checkpoints.slice(5).some((entry) => entry.currentStatus !== 'NOT_STARTED')) issues.push('R3F_OR_R3G_STARTED');
   if (r3E2?.currentStatus === 'EXECUTION_PENDING') {
     if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3E2_EXECUTION' || candidate?.currentState?.run8ER3E2 !== 'EXECUTION_PENDING') issues.push('R3E2_PARENT_EXECUTION_STATE_INVALID');
-  } else if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3E3_BOUNDARY' || candidate?.currentState?.run8ER3E3 !== 'NOT_STARTED') {
-    issues.push('R3E3_PARENT_BOUNDARY_INVALID');
+  } else {
+    if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3E3_BOUNDARY' || candidate?.currentState?.run8ER3E2 !== 'PASS_CLOSED' || candidate?.currentState?.run8ER3E3 !== 'NOT_STARTED') issues.push('R3E3_PARENT_BOUNDARY_INVALID');
+    const evidence = r3E2?.executionEvidence ?? {};
+    if (evidence.workflowRun !== 30306926100 || evidence.workflowJob !== 90113310977) issues.push('R3E2_WORKFLOW_IDENTITY_MISMATCH');
+    if (evidence.evidenceArtifactDigest !== 'sha256:a4e2e9a23e7cdc55345b24537db2d5b414af4b78be0e07ab871270ab0619bb90') issues.push('R3E2_ARTIFACT_DIGEST_MISMATCH');
+    if (evidence.publicHtmlGitBlob !== '0daedf61f7e19af095f4db5fc47563a9cd786837' || evidence.publicOrchestratorGitBlob !== '2b0a916b3a6d11da84316925f8abd8a3a1447445') issues.push('R3E2_PUBLIC_SOURCE_IDENTITY_MISMATCH');
+    if (evidence.publicModuleScriptCount !== 1 || evidence.legacyModuleScriptCount !== 0 || evidence.protectedWitnessMutationCount !== 0 || evidence.browserExecutionCount !== 0 || evidence.gpuExecutionCount !== 0) issues.push('R3E2_EVIDENCE_COUNTS_INVALID');
   }
   for (const key of ['exactDeclaredPublicMutationAuthorized','publicHtmlLoadOrderMutationAuthorized','publicGpuOrchestratorCreationAuthorized']) if (candidate?.boundaries?.[key] !== true) issues.push(`R3E2_AUTHORIZATION_MISSING:${key}`);
   for (const key of ['undeclaredShowroomMutation','protectedWitnessMutation','admittedAuthorityMutation','browserExecution','gpuExecution','authorityExclusivityAcceptance','deployment','physicalDeviceAcceptance','r3E3Work','mainMerge','run8EPassClosed']) if (candidate?.boundaries?.[key] !== false) issues.push(`R3E2_BOUNDARY_VIOLATION:${key}`);

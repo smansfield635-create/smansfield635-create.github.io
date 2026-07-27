@@ -11,11 +11,15 @@ const freeze = (value, seen = new WeakSet()) => {
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-reference-device-mobile-compatibility-001';
 const BASE_MAIN_HEAD = '70ed4a1ab13b562d88609b8f12b5e42545205e03';
+const VALIDATED_HEAD = '49bb5096731b42d2683838638daaaac6462fc669';
+const RECEIPT_PATH =
+  '/h-earth-3d/validation/h-earth.run8e-r1.reference-device-mobile-compatibility.correction.receipt.json';
 
 export const H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_PATHS = Object.freeze([
   '/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r1.reference-device-and-mobile-compatibility-amendment.js',
   '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-reference-device-mobile-compatibility-scope.js',
   '/h-earth-3d/validation/h-earth.run8e-r1.reference-device-mobile-compatibility.validation.mjs',
+  RECEIPT_PATH,
   '/.github/workflows/h-earth-run8e-r1-reference-device-mobile-compatibility.yml',
   '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
 ]);
@@ -24,7 +28,7 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_PATHS
   repository: REPOSITORY,
   refType: 'BRANCH',
   refName: BRANCH,
-  commitSha: null,
+  commitSha: repositoryPath === RECEIPT_PATH ? VALIDATED_HEAD : null,
   path: repositoryPath,
   gitBlobSha: null,
   contentSha256: null,
@@ -38,9 +42,8 @@ export const H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_MOBILE_COMPATIBILITY_CORRECTION_v1',
   evidenceClass: 'DEVICE_NEUTRAL_VALIDATION_AND_PLATFORM_SCOPE_CORRECTION',
   sourceKind: 'REPOSITORY_CONTROL_AMENDMENT_AND_READ_ONLY_VALIDATION',
-  sourceIdOrPath:
-    '/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r1.reference-device-and-mobile-compatibility-amendment.js',
-  sourceOccurrenceOrRevision: BRANCH,
+  sourceIdOrPath: RECEIPT_PATH,
+  sourceOccurrenceOrRevision: VALIDATED_HEAD,
   assertionScope: Object.freeze([
     'PRODUCT_TARGET_ALL_SUPPORTED_MOBILE_DEVICES',
     'SAMSUNG_REFERENCE_DEVICE_NOT_PLATFORM_BOUNDARY',
@@ -55,6 +58,13 @@ export const H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_EVIDENCE = freeze({
   evidenceMetadata: freeze({
     baseMainHead: BASE_MAIN_HEAD,
     branch: BRANCH,
+    validatedHead: VALIDATED_HEAD,
+    validationRun: 30231121889,
+    validationJob: 89870091381,
+    evidenceArtifact: 8640124721,
+    evidenceArtifactDigest:
+      'sha256:070387f5b13ca4a07690d862cdef5a5b2beb8db6bf11f076456151002b8c8f92',
+    automaticRegistryPreflightRun: 30231121890,
     productRouteMutated: false,
     rendererSourceMutated: false,
     cameraAuthorityMutated: false,
@@ -83,11 +93,12 @@ export const H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_NODE = freeze({
   evidenceClass: H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_EVIDENCE.evidenceClass,
   evidenceReferences: Object.freeze([H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_EVIDENCE.evidenceId]),
   authorityClass: 'DEVICE_NEUTRAL_PLATFORM_AND_VALIDATION_SCOPE_CORRECTION',
-  authorityPosture: 'REFERENCE_DEVICE_EVIDENCE_PENDING_PRODUCT_MUTATION_WITHHELD',
+  authorityPosture: 'SCOPE_CORRECTION_PASS_REFERENCE_DEVICE_INTERACTION_PENDING',
   authoritySource: Object.freeze([
     'USER_AUTHORIZED_DEVICE_NEUTRAL_CORRECTION',
     'RUN_8E_R1_PHYSICAL_REFERENCE_DEVICE_ARCHITECTURE_PROBES',
-    'RUN_8E_FAIL_OPEN_DISPOSITION'
+    'RUN_8E_FAIL_OPEN_DISPOSITION',
+    'EXECUTED_DEVICE_NEUTRAL_CORRECTION_VALIDATION'
   ]),
   authorityScope: Object.freeze([
     'RECLASSIFY_SAMSUNG_AS_REFERENCE_DEVICE_ONLY',
@@ -119,7 +130,7 @@ export const H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_NODE = freeze({
     'SECOND_ANDROID_IOS_AND_LOWER_PERFORMANCE_VALIDATION_BEFORE_ALL_MOBILE_COMPATIBILITY_CLAIM'
   ]),
   dependencyRelations: Object.freeze([]),
-  allowedMutationScope: 'CONTROL_REGISTRY_VALIDATION_AND_WORKFLOW_ONLY',
+  allowedMutationScope: 'CONTROL_REGISTRY_VALIDATION_WORKFLOW_AND_DURABLE_RECEIPT_ONLY',
   prohibitedMutations: Object.freeze([
     'PUBLIC_ROUTE_MUTATION',
     'RENDERER_IMPLEMENTATION',
@@ -141,11 +152,16 @@ export const H_EARTH_RUN_8E_R1_REFERENCE_DEVICE_SCOPE_NODE = freeze({
     'STOP_BEFORE_RUN_8E_R2_PRODUCT_MUTATION',
     'STOP_BEFORE_BROAD_MOBILE_COMPATIBILITY_CLAIM'
   ]),
-  currentIdentityReferences: Object.freeze([BASE_MAIN_HEAD, BRANCH]),
-  lifecycleStatus: 'DEVICE_NEUTRAL_SCOPE_CORRECTION_CANDIDATE',
+  currentIdentityReferences: Object.freeze([
+    BASE_MAIN_HEAD,
+    VALIDATED_HEAD,
+    BRANCH,
+    '30231121889',
+    '8640124721'
+  ]),
+  lifecycleStatus: 'DEVICE_NEUTRAL_SCOPE_CORRECTION_PASS_REFERENCE_DEVICE_INTERACTION_PENDING',
   unresolvedFields: Object.freeze([
-    'FINAL_CORRECTION_BRANCH_HEAD',
-    'VALIDATION_RUN_IDENTITY',
+    'FINAL_CORRECTION_BRANCH_HEAD_AFTER_RECEIPT_RECONCILIATION',
     'MERGE_COMMIT',
     'REFERENCE_DEVICE_PHYSICAL_INTERACTION_RECEIPT',
     'RUN_8E_R1_FINAL_DISPOSITION'

@@ -113,9 +113,12 @@ function expectedDrawRanges(spans) {
 const control = evaluateHEarthRun8ER2CControl(H_EARTH_RUN_8E_R2C_CONTROL);
 assert.equal(control.eligible, true, `R2C_CONTROL_FAILED:${control.issues.join(',')}`);
 assert.equal(r2BReceipt.status, 'RUN_8E_R2B_PASS_CLOSED');
-assert.equal(r2BReceipt.finalExactHead, '39de87edefcc037eaafa8a988dc0c84e40e3d1ba');
-assert.equal(r2BReceipt.packageCustody.packageIdentity,
+assert.equal(r2BReceipt.checkpointDisposition.run8ER2B, 'PASS_CLOSED');
+assert.equal(H_EARTH_RUN_8E_R2C_CONTROL.predecessor.exactHead,
+  '39de87edefcc037eaafa8a988dc0c84e40e3d1ba');
+assert.equal(r2BReceipt.validatedCustody.packageIdentity,
   'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25');
+assert.equal(r2BReceipt.validatedCustody.contentDigest, 'fnv1a32:fd913c25');
 
 const neutralPackage = buildHEarthRun8ENeutralPackage();
 assert.equal(neutralPackage.ok, true, `R2C_NEUTRAL_PACKAGE_FAILED:${neutralPackage.issues.join(',')}`);
@@ -135,8 +138,8 @@ const packageRecord = buildHEarthRun8ER2ImmutableLiveRenderPackage({
   packageOccurrenceId: 'H_EARTH_RUN_8E_R2C_CORRESPONDENCE_AUDIT:PACKAGE'
 });
 assert.equal(packageRecord.eligible, true, `R2C_PACKAGE_FAILED:${packageRecord.issues?.join(',')}`);
-assert.equal(packageRecord.packageIdentity, r2BReceipt.packageCustody.packageIdentity);
-assert.equal(packageRecord.contentDigest, r2BReceipt.packageCustody.contentDigest);
+assert.equal(packageRecord.packageIdentity, r2BReceipt.validatedCustody.packageIdentity);
+assert.equal(packageRecord.contentDigest, r2BReceipt.validatedCustody.contentDigest);
 
 const admittedPrimitives = transfer.admittedPrimitives;
 const admittedOrder = admittedPrimitives.map((primitive) => primitive.primitiveId);

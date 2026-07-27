@@ -3,10 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Composes the accepted repository-registry lineage through Run 8E-R1,
-// the bounded R2A-R2E evidence chain, and the R2F closure/promotion-decision
-// overlay. The loader remains read-only and creates no source, main-merge,
-// deployment, production, R3, or Run 8E pass authority.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r2f-closure-promotion-scope.js';
+// the completed R2A-R2F evidence chain, and the bounded R3A shared-camera
+// GPU-presentation contract. The loader remains read-only and creates no
+// source-authority, WebGL execution, public-route, deployment, R3B, or Run 8E
+// pass authority.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3a-shared-camera-gpu-presentation-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

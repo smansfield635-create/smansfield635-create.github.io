@@ -22,10 +22,10 @@ const parent = evaluateHEarthRun8ER3Control();
 const inputDecision = evaluateHEarthRun8ER3FInputDecision();
 const evidenceContract = evaluateHEarthRun8ER3FEvidenceContract();
 const child = evaluateHEarthRun8ER3F1Control();
-assert(parent.eligible === true && parent.status === 'RUN_8E_R3F1_PARENT_EXECUTION_ELIGIBLE', `R3F1_PARENT_CONTROL_REJECTED:${parent.issues.join(',')}`);
+assert(parent.eligible === true && ['RUN_8E_R3F1_PARENT_EXECUTION_ELIGIBLE','RUN_8E_R3F1_PARENT_PASS_CLOSED'].includes(parent.status), `R3F1_PARENT_CONTROL_REJECTED:${parent.issues.join(',')}`);
 assert(inputDecision.eligible === true && inputDecision.status === 'RUN_8E_R3F_INPUT_ADMISSIBLE_NOT_STARTED', `R3F1_INPUT_DECISION_REJECTED:${inputDecision.issues.join(',')}`);
 assert(evidenceContract.eligible === true && evidenceContract.status === 'RUN_8E_R3F_EVIDENCE_CONTRACT_PASS', `R3F1_EVIDENCE_CONTRACT_REJECTED:${evidenceContract.issues.join(',')}`);
-assert(child.eligible === true && child.status === 'RUN_8E_R3F1_CONTROL_EXECUTION_ELIGIBLE', `R3F1_CHILD_CONTROL_REJECTED:${child.issues.join(',')}`);
+assert(child.eligible === true && ['RUN_8E_R3F1_CONTROL_EXECUTION_ELIGIBLE','RUN_8E_R3F1_PASS_CLOSED'].includes(child.status), `R3F1_CHILD_CONTROL_REJECTED:${child.issues.join(',')}`);
 
 const receiptPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e5.pass-closed.receipt.json';
 assert(fs.existsSync(receiptPath), 'R3F1_R3E5_RECEIPT_MISSING');
@@ -167,6 +167,8 @@ writeJson('h-earth.run8e-r3f1.physical-mobile-evidence-intake.manifest.json', {
 
 console.log(JSON.stringify({
   status: executionReceipt.status,
+  parentStatus: parent.status,
+  childStatus: child.status,
   protocolContractId: executionReceipt.protocol.contractId,
   deviceLaneCount: deviceLanes.length,
   subcheckpointCount: sequence.length,

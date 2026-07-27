@@ -55,9 +55,9 @@ try{
    if(!api?.ready||!(canvas instanceof HTMLCanvasElement))throw new Error('R3E4_PUBLIC_RUNTIME_MISSING');
    const before=api.getReceipt(),rect=canvas.getBoundingClientRect(),pt=(x,y)=>({x:rect.left+rect.width*x,y:rect.top+rect.height*y});
    const fire=(type,id,p,buttons=1)=>canvas.dispatchEvent(new PointerEvent(type,{pointerId:id,pointerType:'touch',clientX:p.x,clientY:p.y,buttons,bubbles:true,cancelable:true,isPrimary:id===1}));
-   const look=d=>{const a=pt(d>0?.3:.7,.35),b=pt(d>0?.68:.32,.35);fire('pointerdown',1,a);fire('pointermove',1,b);fire('pointerup',1,b,0)};
-   const travel=d=>{const sy=d>0?.7:.42,ey=d>0?.42:.7,a=pt(.3,sy),b=pt(.7,sy),c=pt(.3,ey),e=pt(.7,ey);fire('pointerdown',1,a);fire('pointerdown',2,b);fire('pointermove',1,c);fire('pointermove',2,e);fire('pointerup',1,c,0);fire('pointerup',2,e,0)};
-   const pinch=d=>{const na=pt(.42,.62),nb=pt(.58,.62),fa=pt(.22,.62),fb=pt(.78,.62),a=d>0?na:fa,b=d>0?nb:fb,c=d>0?fa:na,e=d>0?fb:nb;fire('pointerdown',1,a);fire('pointerdown',2,b);fire('pointermove',1,c);fire('pointermove',2,e);fire('pointerup',1,c,0);fire('pointerup',2,e,0)};
+   const look=d=>{const a=pt(d>0?.30:.65,.35),b=pt(d>0?.70:.35,.35);fire('pointerdown',1,a);fire('pointermove',1,b);fire('pointerup',1,b,0)};
+   const travel=d=>{const sy=d>0?.62:.50,ey=d>0?.48:.60,a=pt(.3,sy),b=pt(.7,sy),c=pt(.3,ey),e=pt(.7,ey);fire('pointerdown',1,a);fire('pointerdown',2,b);fire('pointermove',1,c);fire('pointermove',2,e);fire('pointerup',1,c,0);fire('pointerup',2,e,0)};
+   const pinch=d=>{const na=pt(.44,.62),nb=pt(.56,.62),fa=pt(.20,.62),fb=pt(.80,.62),oa=pt(.14,.62),ob=pt(.86,.62),ia=pt(.36,.62),ib=pt(.64,.62),a=d>0?na:oa,b=d>0?nb:ob,c=d>0?fa:ia,e=d>0?fb:ib;fire('pointerdown',1,a);fire('pointerdown',2,b);fire('pointermove',1,c);fire('pointermove',2,e);fire('pointerup',1,c,0);fire('pointerup',2,e,0)};
    const pattern=[['LOOK_RIGHT',()=>look(1)],['LOOK_LEFT',()=>look(-1)],['TRAVEL_FORWARD',()=>travel(1)],['TRAVEL_BACKWARD',()=>travel(-1)],['ZOOM_IN',()=>pinch(1)],['ZOOM_OUT',()=>pinch(-1)]];
    const timing=new Array(GROUPS);let active=0,peak=0,done=0;const start=performance.now()+250;
    await new Promise((resolve,reject)=>Array.from({length:GROUPS},(_,i)=>pattern[i%6]).forEach(([label,run],i)=>{const due=start+i*CADENCE;setTimeout(()=>{const began=performance.now();active++;peak=Math.max(peak,active);try{run();const ended=performance.now();timing[i]={i,label,delivery:began-due,completion:ended-due,processing:ended-began}}catch(e){reject(e);return}finally{active--}if(++done===GROUPS)resolve()},Math.max(0,due-performance.now()))}));
@@ -71,11 +71,13 @@ try{
   },{GROUPS,CADENCE,COALESCING});
   await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:files.post});
   await page.screenshot({path:files.page,fullPage:true});
+  const initialFrameSha=sha(files.initial),postInteractionFrameSha=sha(files.post),publicPageSha=sha(files.page);
+  json(`${prefix}.preassert.raw-session.json`,{id,width,height,execution,events,scripts,captures:{initialFrameSha,postInteractionFrameSha,publicPageSha}});
   const t=execution.timing,delivery=t.map(x=>x.delivery),completion=t.map(x=>x.completion),processing=t.map(x=>x.processing),after=execution.after,runtime=after.runtimeExclusivity,resources=after.liveGpu.resources,audit=execution.document.audit;
   const timing={maxDelivery:max(delivery),p95Delivery:p95(delivery),maxCompletion:max(completion),p95Completion:p95(completion),maxProcessing:max(processing),p95Processing:p95(processing),maxGpu:after.liveGpu.counters.maximumSynchronousResponseMs};
   const canvasListeners=audit.listeners.filter(x=>x.target==='canvas#h-earth-functional-landscape-canvas'),types=canvasListeners.map(x=>x.type).sort(),contexts=audit.contexts.filter(x=>x.created).map(x=>x.type);
   const proposals=execution.proposals.length,packets=after.liveGpu.counters.r3AFramePacketCount-execution.before.liveGpu.counters.r3AFramePacketCount,frames=execution.frames.length;
-  assert(execution.declaration===COALESCING&&t.length===GROUPS&&execution.peak===1,`R3E4_${id}_SCHEDULE`);
+  assert(execution.declaration===COALESCING&&t.length===GROUPS&&execution.peak===1&&initialFrameSha!==postInteractionFrameSha,`R3E4_${id}_SCHEDULE_OR_POST_CAPTURE`);
   assert(proposals>0&&proposals===packets&&packets===frames,`R3E4_${id}_COUNTS`);
   assert(execution.correspondence.length===proposals&&execution.correspondence.every(x=>x.navigationSequence===x.frameNavigationSequence&&x.frameSequence&&x.cameraUniformUpdated&&x.presented&&x.frameHash&&x.hashChanged),`R3E4_${id}_CORRESPONDENCE`);
   assert(JSON.stringify(execution.actions)===JSON.stringify(ACTIONS)&&execution.proposals.every(p=>p.inputClass!=='WHEEL_DIAGNOSTIC_EQUIVALENT'),`R3E4_${id}_TOUCH_MATRIX`);

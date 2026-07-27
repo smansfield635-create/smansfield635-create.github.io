@@ -4,6 +4,7 @@ import baseFacade from './h-earth.repository-registry.run8e-r3e3-public-runtime-
 const freeze = (value) => Object.freeze(value);
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r3e4-public-direct-manipulation-acceptance-001';
+const FAILURE_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e4.attempt-001.failure.receipt.json';
 const PASS_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e4.pass-closed.receipt.json';
 
 export const H_EARTH_RUN_8E_R3E4_PATHS = freeze([
@@ -13,6 +14,7 @@ export const H_EARTH_RUN_8E_R3E4_PATHS = freeze([
   '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3e4-public-direct-manipulation-acceptance.js',
   '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
   '/h-earth-3d/validation/h-earth.run8e-r3e4.public-direct-manipulation-acceptance.harness.mjs',
+  FAILURE_RECEIPT_PATH,
   PASS_RECEIPT_PATH
 ]);
 
@@ -65,9 +67,17 @@ export const H_EARTH_RUN_8E_R3E4_EVIDENCE = freeze({
     maximumTimerDeliveryLagExclusiveMs: 2000,
     maximumActionCompletionLagExclusiveMs: 2000,
     maximumSynchronousActionProcessingExclusiveMs: 1000,
-    maximumConcurrentCallbacks: 1
+    maximumConcurrentCallbacks: 1,
+    attempt001Head: '7b22d872fe65ccec9ccf825a4b2d58f142589335',
+    attempt001WorkflowRun: 30310253299,
+    attempt001WorkflowJob: 90123949684,
+    attempt001ArtifactId: 8670053915,
+    attempt001ArtifactDigest: 'sha256:bc50349262ac5512dbd420231e10f0193e10b3909f1362311eeaa9c4a112d760',
+    attempt001FailureClass: 'HARNESS_IDENTIFIER_SHADOWING',
+    attempt001PublicRouteDefectExposed: false
   }),
   evidenceLimitations: freeze([
+    'ATTEMPT_001_HARNESS_FAILURE_PRESERVED',
     'EXECUTION_PENDING',
     'NO_REFERENCE_DEVICE_ACCEPTANCE',
     'NO_DEPLOYMENT',
@@ -97,11 +107,11 @@ export const H_EARTH_RUN_8E_R3E4_NODE = freeze({
   cardinalRole: 'NONE', cardinalStatus: 'NONE', cardinalCompleteness: 'NOT_APPLICABLE',
   orderingRules: ['R3E3_PASS_CLOSED_BEFORE_R3E4', 'R3E4_PASS_CLOSED_BEFORE_R3E5'],
   dependencyRelations: [],
-  allowedMutationScope: 'R3E4_SIX_PATH_CONTROL_AND_EXECUTION_EVIDENCE_SCOPE_PLUS_RESERVED_PASS_RECEIPT',
+  allowedMutationScope: 'R3E4_CONTROL_EXECUTION_EVIDENCE_SCOPE_WITH_DURABLE_ATTEMPT_FAILURE_AND_RESERVED_PASS_RECEIPT',
   prohibitedMutations: ['SHOWROOM', 'PUBLIC_ROUTE', 'PUBLIC_ORCHESTRATOR', 'NAVIGATION', 'RENDERER', 'INPUT', 'DEPLOYMENT', 'MAIN'],
   requiredValidations: ['PORTRAIT_PUBLIC_ROUTE_EXECUTION', 'LANDSCAPE_PUBLIC_ROUTE_EXECUTION', 'COMPLETE_TOUCH_MATRIX', 'PROPOSAL_FRAME_CORRESPONDENCE', 'SUSTAINED_TIMING', 'RUNTIME_EXCLUSIVITY', 'AUTOMATIC_REGISTRY_PREFLIGHT', 'EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_R3E_CLOSURE_AND_R3F_INPUT_DECISION_R3E5'],
-  currentIdentityReferences: ['504b81ff50acd7b23cf3cdb2e915ed53f0112ff9', '5c5f1ae06220f88f497dc2b45f4d749679849918'],
+  currentIdentityReferences: ['504b81ff50acd7b23cf3cdb2e915ed53f0112ff9', '5c5f1ae06220f88f497dc2b45f4d749679849918', '7b22d872fe65ccec9ccf825a4b2d58f142589335', '30310253299', '90123949684', '8670053915'],
   lifecycleStatus: 'EXECUTION_PENDING',
   unresolvedFields: ['CORE_EXECUTION_RUN', 'CORE_EXECUTION_ARTIFACT', 'DURABLE_PASS_RECEIPT', 'FINAL_EXACT_HEAD_VALIDATION']
 });

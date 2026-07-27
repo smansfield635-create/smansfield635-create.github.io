@@ -1,0 +1,110 @@
+name: H-Earth Run 8E R2B Immutable Buffer Custody
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r2b-immutable-buffer-custody-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r2-immutable-live-render-package-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r2b-immutable-buffer-custody:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      H_EARTH_RUN8E_R2B_OUTPUT: /tmp/h-earth-run8e-r2b
+    steps:
+      - name: Check out R2B branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-run8e-r2b-immutable-buffer-custody-001
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify R2A predecessor and protected package identity
+        run: |
+          set -euo pipefail
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r2-immutable-live-render-package-001)" = "22b23594005dabdd9374501dae1c561f2dafa648"
+          test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
+          node -e "const r=require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2a.pass-closed.receipt.json'); if(r.status!=='RUN_8E_R2A_PASS_CLOSED') process.exit(1)"
+
+      - name: Verify R2B JavaScript syntax
+        run: |
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2b.immutable-buffer-custody.js
+          node --check h-earth-3d/validation/h-earth.run8e-r2b.immutable-buffer-custody.validation.mjs
+
+      - name: Execute deterministic construction and immutable custody validation
+        run: |
+          mkdir -p "$H_EARTH_RUN8E_R2B_OUTPUT"
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8e-r2b.immutable-buffer-custody.validation.mjs 2>&1 \
+            | tee "$H_EARTH_RUN8E_R2B_OUTPUT/r2b-validation.log"
+
+      - name: Verify bounded R2B scope and R2C stopping boundary
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --check
+          BASE_SHA=22b23594005dabdd9374501dae1c561f2dafa648
+          git diff --name-only "$BASE_SHA"...HEAD | sort >/tmp/h-earth-run8e-r2b-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r2b-paths.txt').read_text().splitlines() if line.strip()]
+          required = {
+              '.github/workflows/h-earth-run8e-r2b-immutable-buffer-custody.yml',
+              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2b.immutable-buffer-custody.js',
+              'h-earth-3d/validation/h-earth.run8e-r2b.immutable-buffer-custody.validation.mjs'
+          }
+          actual = set(paths)
+          unexpected = sorted(actual - required)
+          missing = sorted(required - actual)
+          if unexpected:
+              raise SystemExit(f'R2B_UNEXPECTED_PATHS:{unexpected}')
+          if missing:
+              raise SystemExit(f'R2B_REQUIRED_PATHS_MISSING:{missing}')
+          forbidden = [
+              path for path in paths
+              if path in {
+                  'showroom/globe/h-earth/render/live-render-package.run8e-r2.js',
+                  'showroom/globe/h-earth/index.html',
+                  'showroom/globe/h-earth/index.js',
+                  'showroom/globe/h-earth/render/renderer.functional-landscape.js',
+                  'showroom/globe/h-earth/render/run8e-successor-environment.js'
+              }
+              or 'run8e-r2c' in path.lower()
+              or 'run-8e-r2c' in path.lower()
+              or 'run8e-r3' in path.lower()
+              or 'run-8e-r3' in path.lower()
+          ]
+          if forbidden:
+              raise SystemExit(f'R2B_PROTECTED_OR_LATER_CHECKPOINT_PATH:{forbidden}')
+          print({
+              'checkpoint': 'RUN_8E_R2B',
+              'pathCount': len(paths),
+              'paths': paths,
+              'packageSourceMutated': False,
+              'run8ER2CStarted': False,
+              'run8ER3Started': False,
+              'run8EPassClosed': False
+          })
+          PY
+
+      - name: Upload R2B custody evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r2b-immutable-buffer-custody-evidence
+          path: |
+            /tmp/h-earth-run8e-r2b
+            /tmp/h-earth-run8e-r2b-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

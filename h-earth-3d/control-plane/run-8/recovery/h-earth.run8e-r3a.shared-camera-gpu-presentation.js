@@ -22,7 +22,7 @@ export const H_EARTH_RUN_8E_R3A_CONTROL = freeze({
   branch: 'agent/h-earth-run8e-r3a-live-renderer-contract-001',
   baseBranch: 'agent/h-earth-run8e-r2f-closure-promotion-decision-001',
   baseExactHead: '02aa90591a34968c8b6bacba926a156293ad0f76',
-  currentStatus: 'EXECUTION_PENDING',
+  currentStatus: 'PASS_CLOSED',
   requiredInputs: {
     r2PassClosed: true,
     r2FPassClosed: true,
@@ -33,6 +33,18 @@ export const H_EARTH_RUN_8E_R3A_CONTROL = freeze({
     canonicalGpuTransportGitBlob: '785856d7702a0e855c2672e6b8a7325ad5b3ba50',
     navigationContractId: 'H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1',
     navigationSourceGitBlob: '8ab3446c536fc24423d5601acce232b19fa71c91'
+  },
+  executionCustody: {
+    coreHead: 'e244f82ceab3d5c780224b564ee162d4dac326d9',
+    workflowRun: 30284854902,
+    workflowJob: 90040012506,
+    artifactId: 8660349498,
+    artifactDigest: 'sha256:c76331601d89985246644e0743396450d372b01fe63c435bdcc293d25fe4eb36',
+    packetManifestDigest: 'sha256:c04ccd3d365145063ca3bdd4e479b5db931e1a42c8526ad5dc9908a4bc3bd709',
+    packetCount: 10,
+    automaticRegistryPreflight: 'PASS',
+    durablePassReceipt: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3a.pass-closed.receipt.json',
+    finalExactHead: null
   },
   requiredResults: {
     sharedNavigationStateConsumedWithoutMutation: true,
@@ -78,7 +90,16 @@ export function evaluateHEarthRun8ER3AControl(candidate = H_EARTH_RUN_8E_R3A_CON
   if (parent.eligible !== true) issues.push(...parent.issues.map((issue) => `PARENT:${issue}`));
   if (candidate?.contractId !== H_EARTH_RUN_8E_R3A_CONTROL_ID) issues.push('R3A_CONTROL_ID_MISMATCH');
   if (candidate?.baseExactHead !== '02aa90591a34968c8b6bacba926a156293ad0f76') issues.push('R3A_BASE_HEAD_MISMATCH');
-  if (candidate?.currentStatus !== 'EXECUTION_PENDING') issues.push('R3A_STATUS_INVALID');
+  if (candidate?.currentStatus !== 'PASS_CLOSED') issues.push('R3A_NOT_PASS_CLOSED');
+  if (candidate?.executionCustody?.workflowRun !== 30284854902) issues.push('R3A_WORKFLOW_RUN_MISMATCH');
+  if (candidate?.executionCustody?.artifactDigest !==
+      'sha256:c76331601d89985246644e0743396450d372b01fe63c435bdcc293d25fe4eb36') {
+    issues.push('R3A_ARTIFACT_DIGEST_MISMATCH');
+  }
+  if (candidate?.executionCustody?.packetManifestDigest !==
+      'sha256:c04ccd3d365145063ca3bdd4e479b5db931e1a42c8526ad5dc9908a4bc3bd709') {
+    issues.push('R3A_PACKET_MANIFEST_DIGEST_MISMATCH');
+  }
   if (candidate?.requiredInputs?.r2PromotionToR3InputApproved !== true) issues.push('R3A_INPUT_PROMOTION_NOT_APPROVED');
   if (candidate?.requiredInputs?.immutablePackageGitBlob !== '1699654f39c9e183f4cfc6f75b20ba051641b763') {
     issues.push('R3A_PACKAGE_BLOB_MISMATCH');
@@ -98,7 +119,7 @@ export function evaluateHEarthRun8ER3AControl(candidate = H_EARTH_RUN_8E_R3A_CON
   }
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R3A_CONTROL_EXECUTION_ELIGIBLE' : 'RUN_8E_R3A_CONTROL_FAIL',
+    status: issues.length === 0 ? 'RUN_8E_R3A_PASS_CLOSED' : 'RUN_8E_R3A_CONTROL_FAIL',
     issues
   });
 }

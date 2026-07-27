@@ -1,0 +1,49 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2A_CORE_PACKAGE_ATTEMPT_FAILURE_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2A_ATTEMPT_001_FAIL_OPEN",
+  "recordedAt": "2026-07-27T03:20:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2-immutable-live-render-package-001",
+  "baseMainHead": "a660d54b0df30e768b95e2314b918d0f263883ed",
+  "attemptHead": "94803608705d8b7ce36827a93071667c00e038be",
+  "pullRequest": 217,
+  "workflow": {
+    "runId": 30234301513,
+    "jobId": 89878989950,
+    "conclusion": "failure",
+    "syntaxStep": "PASS",
+    "packageValidationStep": "FAIL",
+    "boundedScopeStep": "SKIPPED_AFTER_FAILURE",
+    "evidenceUploadStep": "PASS_WITH_NO_RETAINED_ARTIFACT"
+  },
+  "failure": {
+    "checkpoint": "R2A_CORE_PACKAGE_CONTRACT_AND_SOURCE_SHAPE_EXECUTION",
+    "failureClass": "PACKAGE_VALIDATION_RUNTIME_FAILURE",
+    "exactExceptionPreservedInWorkflowJobLog": true,
+    "exactExceptionExtractedIntoReceipt": false,
+    "causeDisposition": "UNRESOLVED_PENDING_DIAGNOSTIC_LOG_CAPTURE_RERUN",
+    "implementationCorrectionApplied": false
+  },
+  "preservedCompletedWork": {
+    "r1MaterialLedgerMergeCommit": "a660d54b0df30e768b95e2314b918d0f263883ed",
+    "r1DiagnosticCheckpoint": "PASS_CLOSED",
+    "r2BranchCreated": true,
+    "r2ControlContractCreated": true,
+    "r2IsolatedPackageCandidateCreated": true,
+    "r2ValidationHarnessCreated": true,
+    "r2ReadOnlyWorkflowCreated": true
+  },
+  "boundaries": {
+    "mainChanged": false,
+    "publicRouteChanged": false,
+    "currentCpuReferenceRendererChanged": false,
+    "cameraOrNavigationAuthorityChanged": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false
+  },
+  "nextAuthorizedAction": "ADD_COMPLETE_R2A_LOG_CAPTURE_AND_RERUN_WITHOUT_ARCHITECTURAL_SCOPE_EXPANSION",
+  "issues": [
+    "EXACT_RUNTIME_EXCEPTION_NOT_YET_EXTRACTED_INTO_DURABLE_RECEIPT"
+  ]
+}

@@ -72,6 +72,86 @@ jobs:
           cat /tmp/products-arena-server.log
           exit 1
 
+      - name: Capture readiness diagnostic
+        env:
+          PRODUCTS_ARENA_ORIGIN: http://127.0.0.1:4173
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import puppeteer from "puppeteer-core";
+
+          const browser = await puppeteer.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: "new",
+            args: [
+              "--no-sandbox",
+              "--disable-setuid-sandbox",
+              "--disable-dev-shm-usage",
+              "--enable-webgl",
+              "--ignore-gpu-blocklist",
+              "--use-gl=swiftshader"
+            ]
+          });
+
+          const page = await browser.newPage();
+          await page.setViewport({ width: 430, height: 932, deviceScaleFactor: 1, hasTouch: true, isMobile: true });
+          const telemetry = { console: [], pageErrors: [], requestFailures: [] };
+          page.on("console", message => telemetry.console.push({ type: message.type(), text: message.text() }));
+          page.on("pageerror", error => telemetry.pageErrors.push(String(error?.message || error)));
+          page.on("requestfailed", request => telemetry.requestFailures.push({ url: request.url(), error: request.failure()?.errorText || "" }));
+
+          const response = await page.goto(`${process.env.PRODUCTS_ARENA_ORIGIN}/products/`, {
+            waitUntil: "domcontentloaded",
+            timeout: 30000
+          });
+          await new Promise(resolve => setTimeout(resolve, 7000));
+
+          const diagnostic = await page.evaluate(() => {
+            const root = document.querySelector('[data-page-id="products"]');
+            const pick = value => value ? JSON.parse(JSON.stringify(value)) : null;
+            return {
+              url: location.href,
+              readyState: document.readyState,
+              rootPresent: Boolean(root),
+              dataset: root ? {
+                productsState: root.dataset.productsState,
+                controller: root.dataset.productsControllerStatus,
+                crystals: root.dataset.productsCrystalsStatus,
+                cosmos: root.dataset.productsCosmosStatus,
+                planet: root.dataset.productsPlanetStatus,
+                center: root.dataset.productsCenterControlStatus,
+                centerPlanetCount: root.dataset.productsCenterPlanetCount,
+                cosmicFieldCount: root.dataset.productsCosmicFieldCount,
+                visibleLabelCount: root.dataset.productsVisibleProductLabelCount
+              } : null,
+              globals: {
+                controller: pick(globalThis.DGB_PRODUCTS_CONTROLLER_RECEIPT),
+                crystals: pick(globalThis.DGB_PRODUCTS_CRYSTALS_RECEIPT),
+                cosmos: pick(globalThis.DGB_PRODUCTS_COSMOS_RECEIPT),
+                planet: pick(globalThis.DGB_PRODUCTS_CENTER_PLANET_RECEIPT),
+                center: pick(globalThis.DGB_PRODUCTS_CENTER_CONTROL_RECEIPT),
+                geometry: pick(globalThis.AUDRALIA_PLANET_GEOMETRY_RECEIPT)
+              },
+              dom: {
+                products: document.querySelectorAll('[data-products-product]').length,
+                planetCanvases: document.querySelectorAll('[data-products-planet-canvas]').length,
+                planetFallbacks: document.querySelectorAll('[data-products-planet-fallback]').length,
+                cosmosCanvases: document.querySelectorAll('[data-products-cosmos-canvas]').length,
+                crystalsCanvases: document.querySelectorAll('[data-products-crystals-canvas]').length
+              }
+            };
+          });
+
+          const output = {
+            responseStatus: response?.status() ?? null,
+            diagnostic,
+            telemetry
+          };
+          fs.writeFileSync("products-arena-cluster-readiness-diagnostic.json", JSON.stringify(output, null, 2));
+          console.log(JSON.stringify(output, null, 2));
+          await browser.close();
+          NODE
+
       - name: Execute four-profile Arena Cluster benchmark
         env:
           PRODUCTS_ARENA_ORIGIN: http://127.0.0.1:4173
@@ -85,6 +165,7 @@ jobs:
           if-no-files-found: warn
           path: |
             products-arena-cluster-source-assertions.json
+            products-arena-cluster-readiness-diagnostic.json
             products-arena-cluster-benchmark-v1.json
             products-arena-cluster-benchmark-v1-screenshots/**
             /tmp/products-arena-server.log

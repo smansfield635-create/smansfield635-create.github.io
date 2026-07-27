@@ -44,21 +44,24 @@ jobs:
           if (receipt.sourceCustody.auditManifestDigest !== 'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe') process.exit(1);
           if (receipt.checkpointDisposition.run8ER2D !== 'NOT_STARTED') process.exit(1);
           const attempt1 = require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-001.failure.receipt.json');
-          if (attempt1.status !== 'RUN_8E_R2D_ATTEMPT_001_FAIL_OPEN') process.exit(1);
-          if (attempt1.failure.gpuUploadExecuted !== false) process.exit(1);
           const attempt2 = require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-002.failure.receipt.json');
+          const attempt3 = require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-003.failure.receipt.json');
+          if (attempt1.status !== 'RUN_8E_R2D_ATTEMPT_001_FAIL_OPEN') process.exit(1);
           if (attempt2.status !== 'RUN_8E_R2D_ATTEMPT_002_FAIL_OPEN') process.exit(1);
-          if (attempt2.failure.firstUploadCycleCompleted !== true) process.exit(1);
-          if (attempt2.failure.contextRestoreEventObserved !== false) process.exit(1);
+          if (attempt3.status !== 'RUN_8E_R2D_ATTEMPT_003_FAIL_OPEN') process.exit(1);
+          if (attempt3.validatedBeforeFailure.createdBufferCount !== 27) process.exit(1);
+          if (attempt3.crossRuntimeComparison.differentTypedUploadBuffers.join(',') !== 'normals,materialParameters') process.exit(1);
           NODE
 
       - name: Verify R2D JavaScript and JSON syntax
         run: |
           node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2d.gpu-upload-and-resource-lifecycle.js
+          node --check showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js
           node --check h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.js
+          node --check h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.canonical-webgl-probe.js
           node --check h-earth-3d/validation/h-earth.run8e-r2d.gpu-resource-lifecycle.harness.mjs
-          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-001.failure.receipt.json','utf8'))"
-          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-002.failure.receipt.json','utf8'))"
+          node --check h-earth-3d/validation/h-earth.run8e-r2d.canonical-gpu-resource-lifecycle.harness.mjs
+          node -e "for (const file of ['h-earth.run8e-r2d.attempt-001.failure.receipt.json','h-earth.run8e-r2d.attempt-002.failure.receipt.json','h-earth.run8e-r2d.attempt-003.failure.receipt.json']) JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/'+file,'utf8'))"
 
       - name: Install bounded Chromium dependency
         run: |
@@ -78,12 +81,12 @@ jobs:
           cat /tmp/h-earth-run8e-r2d-server.log
           exit 1
 
-      - name: Execute isolated WebGL 2 upload and lifecycle validation
+      - name: Execute canonical WebGL 2 upload and lifecycle validation
         run: |
           mkdir -p "$H_EARTH_RUN8E_R2D_OUTPUT"
           set -o pipefail
-          node h-earth-3d/validation/h-earth.run8e-r2d.gpu-resource-lifecycle.harness.mjs 2>&1 \
-            | tee "$H_EARTH_RUN8E_R2D_OUTPUT/r2d-harness.log"
+          node h-earth-3d/validation/h-earth.run8e-r2d.canonical-gpu-resource-lifecycle.harness.mjs 2>&1 \
+            | tee "$H_EARTH_RUN8E_R2D_OUTPUT/r2d-canonical-harness.log"
 
       - name: Verify bounded R2D scope and R2E stopping boundary
         if: always()
@@ -99,10 +102,14 @@ jobs:
               '.github/workflows/h-earth-run8e-r2d-gpu-resource-lifecycle.yml',
               'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2d.gpu-upload-and-resource-lifecycle.js',
               'h-earth-3d/validation/h-earth.run8e-r2d.gpu-resource-lifecycle.harness.mjs',
+              'h-earth-3d/validation/h-earth.run8e-r2d.canonical-gpu-resource-lifecycle.harness.mjs',
               'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-001.failure.receipt.json',
               'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-002.failure.receipt.json',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-003.failure.receipt.json',
               'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.html',
-              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.js'
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.js',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.canonical-webgl-probe.js',
+              'showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js'
           }
           actual = set(paths)
           unexpected = sorted(actual - required)
@@ -132,6 +139,8 @@ jobs:
               'pathCount': len(paths),
               'paths': paths,
               'packageSourceMutation': False,
+              'sourceAuthorityMutation': False,
+              'gpuTransportAdapterAdded': True,
               'publicRouteMutation': False,
               'visiblePresentationCreated': False,
               'run8ER2EStarted': False,

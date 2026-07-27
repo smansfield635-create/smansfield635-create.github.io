@@ -3,6 +3,7 @@
 /* GROUP_A_INTERACTIONS_CONSUMER_ALIGNMENT_TO_EXISTING_ANCHORS_ONLY */
 /* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED */
 /* SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A */
+/* SHOWROOM_LABEL_CONTAINMENT_20260726B */
 
 (() => { 
   "use strict";
@@ -1678,28 +1679,49 @@
       const magnitude = Math.hypot(dx, dy) || 1;
       const offset =
         kind === SEMANTIC_KINDS.CARDINAL
-? Math.min(62, Math.max(34, radius * 0.64 + 12))
-: Math.min(42, Math.max(23, radius * 0.5 + 9));
-      const left = x + (dx / magnitude) * offset;
-      const top = y + (dy / magnitude) * offset;
+          ? Math.min(48, Math.max(26, radius * 0.30 + 10))
+          : Math.min(30, Math.max(17, radius * 0.24 + 8));
+      const candidateLeft = x - (dx / magnitude) * offset;
+      const candidateTop = y - (dy / magnitude) * offset;
       const depth = normalizeLower(record.depthLayer) || "unknown";
       const primary =
         kind === SEMANTIC_KINDS.CARDINAL
-? identity === normalizeWing(frame && frame.orbitFocus)
-: identity === normalizeRoomId(
-    frame && frame.cluster
-      ? frame.cluster.primaryRoom
-      : ""
-  );
+          ? identity === normalizeWing(frame && frame.orbitFocus)
+          : identity === normalizeRoomId(
+              frame && frame.cluster
+                ? frame.cluster.primaryRoom
+                : ""
+            );
 
       element.textContent = label;
       element.hidden = false;
-      element.style.left = `${left}px`;
-      element.style.top = `${top}px`;
-      element.style.zIndex = depth === "front" ? "28" : "8";
       element.dataset.showroomProjectedKind = kind;
       element.dataset.showroomProjectedDepth = depth;
       element.dataset.showroomProjectedPrimary = primary ? "true" : "false";
+      element.dataset.showroomProjectedPlacement = "inward-edge-constrained";
+      element.style.visibility = "hidden";
+      element.style.left = "0px";
+      element.style.top = "0px";
+
+      const labelRect = element.getBoundingClientRect();
+      const labelWidth = Math.max(1, labelRect.width || element.offsetWidth || 1);
+      const labelHeight = Math.max(1, labelRect.height || element.offsetHeight || 1);
+      const safeInset = kind === SEMANTIC_KINDS.CARDINAL ? 10 : 8;
+      const minLeft = safeInset + labelWidth / 2;
+      const maxLeft = Math.max(minLeft, rect.width - safeInset - labelWidth / 2);
+      const minTop = safeInset + labelHeight / 2;
+      const maxTop = Math.max(minTop, rect.height - safeInset - labelHeight / 2);
+      const left = Math.min(maxLeft, Math.max(minLeft, candidateLeft));
+      const top = Math.min(maxTop, Math.max(minTop, candidateTop));
+      const clamped =
+        Math.abs(left - candidateLeft) > 0.5 ||
+        Math.abs(top - candidateTop) > 0.5;
+
+      element.style.left = `${left}px`;
+      element.style.top = `${top}px`;
+      element.style.zIndex = depth === "front" ? "28" : "8";
+      element.style.visibility = "visible";
+      element.dataset.showroomProjectedClamped = clamped ? "true" : "false";
     }
 
     for (const [identity, element] of state.projectedLabels) {

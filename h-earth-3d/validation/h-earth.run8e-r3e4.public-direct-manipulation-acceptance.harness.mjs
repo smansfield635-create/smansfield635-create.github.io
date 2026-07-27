@@ -1,0 +1,100 @@
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import { chromium } from 'playwright';
+import { evaluateHEarthRun8ER3Control } from '../control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js';
+import { evaluateHEarthRun8ER3E4Control } from '../control-plane/run-8/recovery/h-earth.run8e-r3e4.public-direct-manipulation-acceptance.js';
+
+const OUT=process.env.H_EARTH_RUN8E_R3E4_OUTPUT??'/tmp/h-earth-run8e-r3e4';
+const URL=process.env.H_EARTH_RUN8E_R3E4_URL??'http://127.0.0.1:4173/showroom/globe/h-earth/';
+const GROUPS=24,CADENCE=350,MAX_DELIVERY=2000,MAX_COMPLETION=2000,MAX_PROCESSING=1000;
+const COALESCING='NONE_ONE_SYNCHRONOUS_FRAME_PER_ACCEPTED_PROPOSAL';
+const ORCHESTRATOR='/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js';
+const LEGACY=['/showroom/globe/h-earth/functional-landscape/index.js','/showroom/globe/h-earth/functional-landscape/environment-integration.js','/showroom/globe/h-earth/functional-landscape/direct-manipulation.js'];
+const LISTENERS=['lostpointercapture','pointercancel','pointerdown','pointermove','pointerup','wheel'];
+const ACTIONS=['MOVE_BACKWARD','MOVE_FORWARD','TURN_LEFT','TURN_RIGHT','ZOOM_IN','ZOOM_OUT'];
+const VIEWS=[['PORTRAIT',390,844],['LANDSCAPE',844,390]];
+fs.mkdirSync(OUT,{recursive:true});
+const assert=(v,c)=>{if(!v)throw new Error(c)};
+const json=(n,v)=>fs.writeFileSync(path.join(OUT,n),JSON.stringify(v,null,2)+'\n');
+const sha=f=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+const max=a=>Math.max(...a), p95=a=>[...a].sort((x,y)=>x-y)[Math.ceil(a.length*.95)-1]??0;
+const parent=evaluateHEarthRun8ER3Control(),child=evaluateHEarthRun8ER3E4Control();
+assert(parent.eligible,`R3E4_PARENT:${parent.issues.join(',')}`);
+assert(child.eligible,`R3E4_CHILD:${child.issues.join(',')}`);
+
+let browser;const sessions=[];
+try{
+ browser=await chromium.launch({headless:true});
+ for(const [id,width,height] of VIEWS){
+  const context=await browser.newContext({viewport:{width,height},deviceScaleFactor:1,isMobile:true,hasTouch:true});
+  await context.addInitScript(()=>{
+   const rel=()=>String(new Error().stack??'').includes('/showroom/globe/h-earth/');
+   const name=t=>t===window?'window':t===document?'document':t instanceof Element?(t.id?`${t.tagName.toLowerCase()}#${t.id}`:t.tagName.toLowerCase()):String(t);
+   const a={contexts:[],listeners:[],timeouts:0,intervals:0,rafs:0,microtasks:0};
+   Object.defineProperty(window,'__R3E4_AUDIT',{value:a});
+   const gc=HTMLCanvasElement.prototype.getContext;
+   HTMLCanvasElement.prototype.getContext=function(type,...args){const r=gc.call(this,type,...args);if(this.id==='h-earth-functional-landscape-canvas')a.contexts.push({type:String(type),created:Boolean(r)});return r};
+   const ae=EventTarget.prototype.addEventListener;
+   EventTarget.prototype.addEventListener=function(type,fn,opt){const target=name(this);if(rel()||target.includes('h-earth-functional-landscape'))a.listeners.push({target,type:String(type)});return ae.call(this,type,fn,opt)};
+   for(const [key,prop] of [['setTimeout','timeouts'],['setInterval','intervals'],['requestAnimationFrame','rafs'],['queueMicrotask','microtasks']]){const old=window[key].bind(window);window[key]=function(...args){if(rel())a[prop]++;return old(...args)}}
+  });
+  const page=await context.newPage(),events={console:[],page:[],requests:[]},scripts=[];
+  page.setDefaultTimeout(120000);
+  page.on('console',m=>{if(m.type()==='error')events.console.push(m.text())});
+  page.on('pageerror',e=>events.page.push(e.message));
+  page.on('requestfailed',r=>events.requests.push({url:r.url(),error:r.failure()?.errorText}));
+  page.on('request',r=>{if(r.resourceType()==='script')scripts.push(new URL(r.url()).pathname)});
+  await page.goto(URL,{waitUntil:'networkidle'});
+  await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true);
+  const prefix=`h-earth.run8e-r3e4.${id.toLowerCase()}`;
+  const files={initial:path.join(OUT,`${prefix}.initial-frame.png`),post:path.join(OUT,`${prefix}.post-interaction-frame.png`),page:path.join(OUT,`${prefix}.public-page.png`)};
+  await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:files.initial});
+  const execution=await page.evaluate(async({GROUPS,CADENCE,COALESCING})=>{
+   const api=window.H_EARTH_RUN8E_PUBLIC_ROUTE,canvas=document.getElementById('h-earth-functional-landscape-canvas');
+   if(!api?.ready||!(canvas instanceof HTMLCanvasElement))throw new Error('R3E4_PUBLIC_RUNTIME_MISSING');
+   const before=api.getReceipt(),rect=canvas.getBoundingClientRect(),pt=(x,y)=>({x:rect.left+rect.width*x,y:rect.top+rect.height*y});
+   const fire=(type,id,p,buttons=1)=>canvas.dispatchEvent(new PointerEvent(type,{pointerId:id,pointerType:'touch',clientX:p.x,clientY:p.y,buttons,bubbles:true,cancelable:true,isPrimary:id===1}));
+   const look=d=>{const a=pt(d>0?.3:.7,.35),b=pt(d>0?.68:.32,.35);fire('pointerdown',1,a);fire('pointermove',1,b);fire('pointerup',1,b,0)};
+   const travel=d=>{const sy=d>0?.7:.42,ey=d>0?.42:.7,a=pt(.3,sy),b=pt(.7,sy),c=pt(.3,ey),e=pt(.7,ey);fire('pointerdown',1,a);fire('pointerdown',2,b);fire('pointermove',1,c);fire('pointermove',2,e);fire('pointerup',1,c,0);fire('pointerup',2,e,0)};
+   const pinch=d=>{const na=pt(.42,.62),nb=pt(.58,.62),fa=pt(.22,.62),fb=pt(.78,.62),a=d>0?na:fa,b=d>0?nb:fb,c=d>0?fa:na,e=d>0?fb:nb;fire('pointerdown',1,a);fire('pointerdown',2,b);fire('pointermove',1,c);fire('pointermove',2,e);fire('pointerup',1,c,0);fire('pointerup',2,e,0)};
+   const pattern=[['LOOK_RIGHT',()=>look(1)],['LOOK_LEFT',()=>look(-1)],['TRAVEL_FORWARD',()=>travel(1)],['TRAVEL_BACKWARD',()=>travel(-1)],['ZOOM_IN',()=>pinch(1)],['ZOOM_OUT',()=>pinch(-1)]];
+   const timing=new Array(GROUPS);let active=0,peak=0,done=0;const start=performance.now()+250;
+   await new Promise((resolve,reject)=>Array.from({length:GROUPS},(_,i)=>pattern[i%6]).forEach(([label,run],i)=>{const due=start+i*CADENCE;setTimeout(()=>{const began=performance.now();active++;peak=Math.max(peak,active);try{run();const ended=performance.now();timing[i]={i,label,delivery:began-due,completion:ended-due,processing:ended-began}}catch(e){reject(e);return}finally{active--}if(++done===GROUPS)resolve()},Math.max(0,due-performance.now()))}));
+   const after=api.getReceipt(),first=before.intake.counters.navigationProposalCount;
+   const proposals=after.intake.proposals.filter(p=>p.sequence>first&&p.accepted),frames=after.liveGpu.frameRecords.filter(f=>f.sourceKind==='ACCEPTED_NAVIGATION_PROPOSAL'&&f.sourceSequence>first),map=new Map(frames.map(f=>[f.sourceSequence,f]));
+   let previous=before.liveGpu.frameRecords.at(-1)?.colorSummary.byteHash;
+   const correspondence=proposals.map(p=>{const f=map.get(p.sequence),changed=Boolean(f)&&f.colorSummary.byteHash!==previous;if(f)previous=f.colorSummary.byteHash;return{proposalSequence:p.sequence,inputClass:p.inputClass,action:p.intent.action,navigationSequence:p.afterNavigationSequence,frameSequence:f?.frameSequence,frameNavigationSequence:f?.navigationSequence,cameraUniformUpdated:Boolean(f&&f.cameraPosition?.length===3&&f.viewProjectionMatrix?.length===16&&Number.isFinite(f.verticalFovDegrees)),presented:f?.sourceKind==='ACCEPTED_NAVIGATION_PROPOSAL',frameHash:f?.colorSummary.byteHash,hashChanged:changed}});
+   const visible=e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity||1)!==0&&r.width>0&&r.height>0};
+   const audit=window.__R3E4_AUDIT,canvasStyle=getComputedStyle(canvas);
+   return{declaration:COALESCING,before,after,timing,peak,proposals,frames,correspondence,actions:[...new Set(proposals.map(p=>p.intent.action))].sort(),document:{audit,canvasTransform:canvasStyle.transform,canvasTranslate:canvasStyle.translate,visibleControllers:[...document.querySelectorAll('.controls,.movement-grid,.view-controls,.waypoints,#h-earth-run8e-mobile-navigation-controls')].filter(visible).length,visibleImages:[...document.querySelectorAll('#h-earth-functional-landscape-route img')].filter(visible).length}};
+  },{GROUPS,CADENCE,COALESCING});
+  await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:files.post});
+  await page.screenshot({path:files.page,fullPage:true});
+  const t=execution.timing,delivery=t.map(x=>x.delivery),completion=t.map(x=>x.completion),processing=t.map(x=>x.processing),after=execution.after,runtime=after.runtimeExclusivity,resources=after.liveGpu.resources,audit=execution.document.audit;
+  const timing={maxDelivery:max(delivery),p95Delivery:p95(delivery),maxCompletion:max(completion),p95Completion:p95(completion),maxProcessing:max(processing),p95Processing:p95(processing),maxGpu:after.liveGpu.counters.maximumSynchronousResponseMs};
+  const canvasListeners=audit.listeners.filter(x=>x.target==='canvas#h-earth-functional-landscape-canvas'),types=canvasListeners.map(x=>x.type).sort(),contexts=audit.contexts.filter(x=>x.created).map(x=>x.type);
+  const proposals=execution.proposals.length,packets=after.liveGpu.counters.r3AFramePacketCount-execution.before.liveGpu.counters.r3AFramePacketCount,frames=execution.frames.length;
+  assert(execution.declaration===COALESCING&&t.length===GROUPS&&execution.peak===1,`R3E4_${id}_SCHEDULE`);
+  assert(proposals>0&&proposals===packets&&packets===frames,`R3E4_${id}_COUNTS`);
+  assert(execution.correspondence.length===proposals&&execution.correspondence.every(x=>x.navigationSequence===x.frameNavigationSequence&&x.frameSequence&&x.cameraUniformUpdated&&x.presented&&x.frameHash&&x.hashChanged),`R3E4_${id}_CORRESPONDENCE`);
+  assert(JSON.stringify(execution.actions)===JSON.stringify(ACTIONS)&&execution.proposals.every(p=>p.inputClass!=='WHEEL_DIAGNOSTIC_EQUIVALENT'),`R3E4_${id}_TOUCH_MATRIX`);
+  assert(timing.maxDelivery<MAX_DELIVERY&&timing.maxCompletion<MAX_COMPLETION&&timing.maxProcessing<MAX_PROCESSING,`R3E4_${id}_TIMING`);
+  assert(scripts.filter(x=>x===ORCHESTRATOR).length===1&&scripts.every(x=>!LEGACY.includes(x)),`R3E4_${id}_MODULES`);
+  assert(contexts.filter(x=>x==='webgl2').length===1&&!contexts.includes('2d')&&canvasListeners.length===6&&JSON.stringify(types)===JSON.stringify(LISTENERS),`R3E4_${id}_OWNERS`);
+  assert(audit.timeouts===0&&audit.intervals===0&&audit.rafs===0&&audit.microtasks===0,`R3E4_${id}_DEFERRED_OWNER`);
+  assert(runtime.activeWebGL2ContextCount===1&&runtime.activePersistentRendererCount===1&&runtime.activeNavigationStateStreamCount===1&&runtime.activePointerTouchIntakeCount===1&&runtime.activeFramePresentationAuthorityCount===1&&!runtime.duplicatePointerListeners,`R3E4_${id}_EXCLUSIVITY`);
+  assert(resources.counters.contextCreationCount===1&&resources.counters.bufferCreateCount===9&&resources.counters.bufferUploadCount===9&&resources.counters.postInitializationResourceCreationCount===0&&resources.counters.postInitializationBufferUploadCount===0&&resources.resourceIdentityStable&&resources.packageUploadedOnce,`R3E4_${id}_RESOURCES`);
+  assert(after.liveGpu.counters.worldRebuildCount===0&&after.liveGpu.counters.bitmapPreviewApplicationCount===0&&after.liveGpu.counters.cssTransformPreviewCount===0&&after.liveGpu.counters.deferredRenderCommitCount===0&&after.liveGpu.counters.queuedFrameChainCount===0&&after.intake.counters.deferredCommitCount===0&&after.intake.counters.queuedNavigationChainCount===0,`R3E4_${id}_OBSOLETE_PATH`);
+  assert(execution.document.canvasTransform==='none'&&['none','0px'].includes(execution.document.canvasTranslate)&&execution.document.visibleControllers===0&&execution.document.visibleImages===0,`R3E4_${id}_VISIBLE_CONTROLLER_OR_BITMAP`);
+  assert(!events.console.length&&!events.page.length&&!events.requests.length,`R3E4_${id}_BROWSER_ERRORS`);
+  const screenshot=Object.fromEntries(Object.entries(files).map(([k,f])=>[k,{filename:path.basename(f),sha256:sha(f),bytes:fs.statSync(f).size}]));
+  const session={id,eligible:true,status:`RUN_8E_R3E4_${id}_PASS`,timing,proposalCount:proposals,packetCount:packets,frameCount:frames,execution,ownerLedger:{scripts,contexts,listenerTypes:types,runtime},resourceLedger:resources,events,screenshot};
+  sessions.push(session);json(`${prefix}.session.json`,session);json(`${prefix}.frame-hash-sequence.json`,execution.frames.map(f=>f.colorSummary.byteHash));json(`${prefix}.navigation-sequence.json`,execution.proposals);json(`${prefix}.frame-packet-sequence.json`,execution.frames);json(`${prefix}.timing-ledger.json`,{thresholds:{GROUPS,CADENCE,MAX_DELIVERY,MAX_COMPLETION,MAX_PROCESSING},timing,records:t});json(`${prefix}.resource-identity-ledger.json`,session.resourceLedger);json(`${prefix}.listener-and-runtime-owner-ledger.json`,session.ownerLedger);
+  await context.close();
+ }
+ const sum=k=>sessions.reduce((n,s)=>n+s[k],0),aggregate={sessions:sessions.length,groups:GROUPS*sessions.length,acceptedProposals:sum('proposalCount'),framePackets:sum('packetCount'),visibleFrames:sum('frameCount'),maxDelivery:max(sessions.map(s=>s.timing.maxDelivery)),maxCompletion:max(sessions.map(s=>s.timing.maxCompletion)),maxProcessing:max(sessions.map(s=>s.timing.maxProcessing)),maxGpu:max(sessions.map(s=>s.timing.maxGpu))};
+ assert(aggregate.sessions===2&&aggregate.groups===48&&aggregate.acceptedProposals===aggregate.framePackets&&aggregate.framePackets===aggregate.visibleFrames,'R3E4_AGGREGATE');
+ const receipt={receiptType:'H_EARTH_RUN_8E_R3E4_PUBLIC_DIRECT_MANIPULATION_EXECUTION_RECEIPT',eligible:true,status:'RUN_8E_R3E4_EXECUTION_PASS',targetUrl:URL,parentControl:parent,childControl:child,declaration:{publicSourceMutationAuthorized:false,showroomDeltaExpected:'ZERO',frameCoalescingPolicy:COALESCING,wheelSubstitutionAllowed:false},thresholds:{groupsPerOrientation:GROUPS,cadenceMs:CADENCE,maxDeliveryMs:MAX_DELIVERY,maxCompletionMs:MAX_COMPLETION,maxProcessingMs:MAX_PROCESSING,maxCallbacks:1},sessions,aggregate,acceptance:{oneFingerLook:'PASS',twoFingerTravel:'PASS',pinchZoom:'PASS',portrait:'PASS',landscape:'PASS',sustainedInteraction:'PASS',runtimeAuthorityExclusivity:'PRESERVED',flatBitmapDragging:false,worldRebuildDuringGesture:false,obsoleteInputBacklog:false},boundaries:{publicSourceMutated:false,showroomMutated:false,sourcePatchApplied:false,referenceDeviceAcceptance:false,deployment:false,promotion:false,mainMerge:false,r3E5:false,r3F:false,run8EPassClosed:false},nextCheckpoint:'RUN_8E_R3E5_NOT_STARTED',stoppingBoundary:'STOP_BEFORE_R3E_CLOSURE_AND_R3F_INPUT_DECISION_R3E5',issues:[]};
+ json('h-earth.run8e-r3e4.public-direct-manipulation-acceptance.execution.receipt.json',receipt);console.log(JSON.stringify({status:receipt.status,aggregate,acceptance:receipt.acceptance,screenshots:sessions.map(s=>({id:s.id,screenshot:s.screenshot})),stoppingBoundary:receipt.stoppingBoundary},null,2));
+}catch(error){json('h-earth.run8e-r3e4.current-attempt.failure.runtime.json',{receiptType:'H_EARTH_RUN_8E_R3E4_CURRENT_ATTEMPT_RUNTIME_FAILURE',eligible:true,status:'RUN_8E_R3E4_FAIL_OPEN',failureLaw:'FAILED_ATTEMPT_RECEIPT_REQUIRED_PUBLIC_SOURCE_PATCH_PROHIBITED',error:error?.message??String(error),stack:error?.stack,completedSessions:sessions,publicSourcePatched:false,stoppingBoundary:'STOP_AND_CREATE_SEPARATELY_BOUNDED_CORRECTIVE_CHECKPOINT'});throw error}finally{await browser?.close()}

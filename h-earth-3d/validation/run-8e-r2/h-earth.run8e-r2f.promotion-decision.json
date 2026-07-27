@@ -1,8 +1,8 @@
 {
   "decisionId": "H_EARTH_RUN_8E_R2F_CLOSURE_AND_PROMOTION_DECISION_v1",
   "checkpoint": "RUN_8E_R2F",
-  "status": "EXECUTION_PENDING",
-  "recordedAt": null,
+  "status": "PASS_CLOSED",
+  "recordedAt": "2026-07-27T16:05:00.000Z",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "branch": "agent/h-earth-run8e-r2f-closure-promotion-decision-001",
   "baseBranch": "agent/h-earth-run8e-r2e-registry-execution-custody-001",
@@ -77,25 +77,42 @@
     "run8EPassClosed": false
   },
   "promotionDecision": {
-    "r2ConstructionClosure": "PENDING_EXECUTION",
+    "r2ConstructionClosure": "PASS_CLOSED",
     "promotionTarget": "RUN_8E_R3_INPUT",
-    "promotionToR3Input": "PENDING_EXECUTION",
+    "promotionToR3Input": "APPROVED",
     "mainBranchPromotion": "NOT_EXECUTED",
     "mainMergeAuthorityCreated": false,
     "deploymentAuthorityCreated": false,
     "publicRouteAuthorityCreated": false,
     "run8EPassAuthorityCreated": false
   },
-  "execution": null,
-  "finalExactHeadValidation": null,
+  "execution": {
+    "head": "fb92cca39d5a277df3dba8d586fb9ff017eca34a",
+    "runId": 30283048662,
+    "jobId": 90033938538,
+    "conclusion": "success",
+    "artifactId": 8659616243,
+    "artifactDigest": "sha256:a130adddfc535ce3acd28e81cd4d4c09b1c131b0cda427bc0d51fbbf9683e300",
+    "closureManifestDigest": "sha256:f565c1973859fa8365bca57d06f794f81b85bce436b5887ca5c81e926a6d1a73",
+    "automaticRepositoryRegistryPreflight": "PASS"
+  },
+  "finalExactHeadValidation": {
+    "required": true,
+    "performedAfterDurableReceiptAndFinalRegistryOverlay": false,
+    "finalHead": null,
+    "workflowRun": null,
+    "workflowJob": null,
+    "artifactId": null,
+    "artifactDigest": null
+  },
   "checkpointDisposition": {
     "run8ER2A": "PASS_CLOSED",
     "run8ER2B": "PASS_CLOSED",
     "run8ER2C": "PASS_CLOSED",
     "run8ER2D": "PASS_CLOSED",
     "run8ER2E": "PASS_CLOSED",
-    "run8ER2F": "EXECUTION_PENDING",
-    "run8ER2": "OPEN_AT_R2F_EXECUTION",
+    "run8ER2F": "PASS_CLOSED",
+    "run8ER2": "PASS_CLOSED",
     "run8ER3": "NOT_STARTED",
     "run8E": "FAIL_OPEN"
   },

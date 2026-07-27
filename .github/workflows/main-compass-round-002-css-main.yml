@@ -1,0 +1,120 @@
+name: Main Compass Round 002 CSS Correction
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: write
+
+jobs:
+  correct-css-scope:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact head branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Apply bounded CSS correction
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('assets/compass/compass.css')
+          css = path.read_text(encoding='utf-8')
+          marker = '/* Main Compass architecture and context round 002 */'
+          assert css.count(marker) == 1
+          prefix, suffix = css.split(marker, 1)
+
+          old_summary = '.compass-formula-artifact > summary'
+          new_summary = '.compass-supporting-foundation > .compass-formula-artifact > summary'
+          assert suffix.count(old_summary) == 5, suffix.count(old_summary)
+          suffix = suffix.replace(old_summary, new_summary)
+
+          old_math = '''.compass-formula-artifact__engineering-summary .compass-formula-artifact__math {
+  width: 100%;
+}'''
+          new_math = '''.compass-formula-artifact__engineering-summary .compass-formula-artifact__math {
+  width: 100%;
+  font-size: clamp(0.92rem, 1.65vw, 1.28rem);
+  line-height: 1.40;
+}'''
+          assert old_math in suffix
+          suffix = suffix.replace(old_math, new_math, 1)
+
+          old_media = '''@media (max-width: 900px) {
+  .compass-route-deck {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compass-supporting-foundation > .compass-formula-artifact > summary {
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.9fr);
+  }
+}'''
+          new_media = '''@media (max-width: 900px) {
+  .compass-route-deck {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compass-supporting-foundation > .compass-formula-artifact > summary {
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.9fr);
+  }
+
+  .compass-formula-artifact--split .compass-formula-artifact__math {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compass-formula-artifact--split .formula-line:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .compass-formula-artifact--pcr .formula-line,
+  .compass-formula-artifact--split .formula-line {
+    white-space: normal;
+  }
+}'''
+          assert old_media in suffix
+          suffix = suffix.replace(old_media, new_media, 1)
+
+          css = prefix + marker + suffix
+          assert css.count('{') == css.count('}'), 'CSS brace imbalance'
+          assert '\n.compass-formula-artifact > summary' not in suffix
+          assert suffix.count(new_summary) == 5
+          assert 'font-size: clamp(0.92rem, 1.65vw, 1.28rem);' in suffix
+          path.write_text(css, encoding='utf-8')
+          print('ROUND_002_FORMULA_SCOPE=PASS')
+          print('ROUND_002_TABLET_EQUATION_LAYOUT=PASS')
+          PY
+
+      - name: Remove temporary workflow and validate bounded diff
+        shell: bash
+        run: |
+          rm .github/workflows/main-compass-round-002-css-main.yml
+          git diff --check
+          mapfile -t paths < <(git diff --name-only | sort)
+          expected=(
+            ".github/workflows/main-compass-round-002-css-main.yml"
+            "assets/compass/compass.css"
+          )
+          if [[ "${paths[*]}" != "${expected[*]}" ]]; then
+            printf 'Unexpected paths:\n%s\n' "${paths[*]}"
+            exit 1
+          fi
+
+      - name: Commit corrected CSS candidate
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Scope Main Compass round 002 formula layout [round-002-css-corrected]"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}

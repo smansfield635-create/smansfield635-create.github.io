@@ -1,0 +1,152 @@
+name: H-Earth Run 8E R3D2 Pointer Touch Intake
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3d2-pointer-touch-intake-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3d1-diagnostic-host-scaffold-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3d2-pointer-touch-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      H_EARTH_RUN8E_R3D2_URL: http://127.0.0.1:4173/showroom/globe/h-earth/diagnostic/run8e-r3d/
+      H_EARTH_RUN8E_R3D2_OUTPUT: /tmp/h-earth-run8e-r3d2
+    steps:
+      - name: Check out exact R3D2 event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R3D1 base and protected witnesses
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3d1-diagnostic-host-scaffold-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3d1-diagnostic-host-scaffold-001)" = "ccac32e8a273fcd47bae684630f49970304c218d"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js)" = "b8b3c713d5f0b7c79808e8942ce385887589d880"
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = "b5f72fb70f59276f868a5894ee0c5e8beccc40ca"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/direct-manipulation.js)" = "322ee2bfed5184acd8eac600f19abd72380b6c2b"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.placeholder.js)" = "14705aed628c58bb3eb93d97e773f1fdc394dc44"
+
+      - name: Verify R3D2 syntax authority and bounded source
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3d2.pointer-touch-intake.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d2-pointer-touch-intake-scope.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3d2.pointer-touch-intake.harness.mjs
+          node --check showroom/globe/h-earth/diagnostic/run8e-r3d/diagnostic-host.js
+          node --check showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d2.pass-closed.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d2.pass-closed.receipt.json','utf8'))"
+          fi
+          grep -q "from '../../functional-landscape/navigation.js'" showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js
+          ! grep -Eq "getContext\(|createHEarthRun8ER3CPersistentRenderer|renderFrame\(|canvas\.style\.transform|translate3d\(|scale\(" showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js showroom/globe/h-earth/diagnostic/run8e-r3d/diagnostic-host.js
+
+      - name: Install bounded Chromium dependency
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.52.0
+          npx playwright install --with-deps chromium
+
+      - name: Start isolated diagnostic server
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-run8e-r3d2-server.log 2>&1 &
+          echo $! >/tmp/h-earth-run8e-r3d2-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail "$H_EARTH_RUN8E_R3D2_URL" >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/h-earth-run8e-r3d2-server.log
+          exit 1
+
+      - name: Execute pointer touch and wheel navigation-proposal intake
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/h-earth.run8e-r3d2.pointer-touch-intake.harness.mjs
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only ccac32e8a273fcd47bae684630f49970304c218d...HEAD \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | sort -u > /tmp/h-earth-run8e-r3d2-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3d2-governed-paths.txt \
+            --task "Run 8E R3D2 pointer touch navigation proposal intake" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3D2_OUTPUT/h-earth.run8e-r3d2.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3d2/h-earth.run8e-r3d2.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`R3D2_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact scope and R3D3 stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only ccac32e8a273fcd47bae684630f49970304c218d...HEAD | sort > "$H_EARTH_RUN8E_R3D2_OUTPUT/r3d2-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3d2/r3d2-changed-paths.txt').read_text().splitlines() if line.strip()}
+          required = {
+            '.github/workflows/h-earth-run8e-r3d2-pointer-touch-intake.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3d2.pointer-touch-intake.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d2-pointer-touch-intake-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3d2.pointer-touch-intake.harness.mjs',
+            'showroom/globe/h-earth/diagnostic/run8e-r3d/index.html',
+            'showroom/globe/h-earth/diagnostic/run8e-r3d/diagnostic-host.js',
+            'showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d2.pass-closed.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'R3D2_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'R3D2_UNEXPECTED_PATHS:{unexpected}')
+          forbidden = [p for p in paths if p in {
+            'showroom/globe/h-earth/index.html',
+            'showroom/globe/h-earth/functional-landscape/direct-manipulation.js',
+            'showroom/globe/h-earth/functional-landscape/navigation.js',
+            'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js',
+            'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js',
+            'showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.placeholder.js'
+          }]
+          if forbidden: raise SystemExit(f'R3D2_FORBIDDEN_PATHS:{forbidden}')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3d2/h-earth.run8e-r3d2.pointer-touch-intake.execution.receipt.json').read_text())
+          if receipt['eligible'] is not True: raise SystemExit('R3D2_EXECUTION_RECEIPT_NOT_ELIGIBLE')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_LIVE_GPU_CAMERA_BINDING_R3D3': raise SystemExit('R3D2_STOPPING_BOUNDARY_MISMATCH')
+          if any(receipt['finalReceipt']['boundaries'].values()): raise SystemExit('R3D2_EXECUTION_BOUNDARY_VIOLATION')
+          if receipt['pageAudit']['getContextCallCount'] != 0: raise SystemExit('R3D2_CONTEXT_CALL_OBSERVED')
+          PY
+
+      - name: Upload R3D2 input-intake evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3d2-pointer-touch-intake-evidence
+          path: |
+            /tmp/h-earth-run8e-r3d2
+            /tmp/h-earth-run8e-r3d2-server.log
+            /tmp/h-earth-run8e-r3d2-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

@@ -43,12 +43,13 @@ jobs:
           test "$(git hash-object h-earth-3d/environment/h-earth.successor-surface-material.run8c.js)" = "caaef944e0681a98b722f9c99526d38d8f25ec50"
           test "$(git hash-object showroom/globe/h-earth/render/renderer.functional-landscape.js)" = "71ec6950e1a47c31862b596b4144635a97cbaa20"
           test "$(git hash-object h-earth-3d/environment/h-earth.atmosphere-state.js)" = "7d50eaf13d0bc719039bc24e571b3dec0dcaf978"
-          node -e "const r=require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2b.pass-closed.receipt.json'); if(r.status!=='RUN_8E_R2B_PASS_CLOSED'||r.finalExactHead!=='39de87edefcc037eaafa8a988dc0c84e40e3d1ba') process.exit(1)"
+          node -e "const r=require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2b.pass-closed.receipt.json'); if(r.status!=='RUN_8E_R2B_PASS_CLOSED'||r.checkpointDisposition?.run8ER2B!=='PASS_CLOSED'||r.validatedCustody?.packageIdentity!=='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25') process.exit(1)"
 
-      - name: Verify R2C JavaScript syntax
+      - name: Verify R2C JavaScript and JSON syntax
         run: |
           node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2c.source-authority-correspondence.js
           node --check h-earth-3d/validation/h-earth.run8e-r2c.source-authority-correspondence.validation.mjs
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.attempt-001.failure.receipt.json','utf8'))"
 
       - name: Execute source authority correspondence audit
         run: |
@@ -70,7 +71,8 @@ jobs:
           required = {
               '.github/workflows/h-earth-run8e-r2c-authority-correspondence.yml',
               'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2c.source-authority-correspondence.js',
-              'h-earth-3d/validation/h-earth.run8e-r2c.source-authority-correspondence.validation.mjs'
+              'h-earth-3d/validation/h-earth.run8e-r2c.source-authority-correspondence.validation.mjs',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.attempt-001.failure.receipt.json'
           }
           actual = set(paths)
           unexpected = sorted(actual - required)

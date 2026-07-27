@@ -11,6 +11,7 @@ const freeze = (value, seen = new WeakSet()) => {
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r2e-registry-scope-audit-001';
 const R2D_PASS_CLOSED_HEAD = '9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9';
+const R2E_EXECUTION_HEAD = 'b7d4a2553a3a6755d64cb30fab15fd6338a2855e';
 
 export const H_EARTH_RUN_8E_R2_GOVERNED_PATHS = Object.freeze([
   '/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js',
@@ -52,7 +53,7 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R2_GOVERNED_PATHS.map((reposito
   gitBlobSha: null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: 'PRESENT_OR_PLANNED_R2E_RECEIPT',
+  existenceStatus: 'PRESENT',
   fetchbackStatus: 'VERIFIED_BY_R2E_INDEPENDENT_SCOPE_AUDIT',
   occurrenceClass: 'RUN_8E_R2_CUMULATIVE_PACKAGE_SCOPE'
 })));
@@ -62,12 +63,13 @@ export const H_EARTH_RUN_8E_R2_PACKAGE_EVIDENCE = freeze({
   evidenceClass: 'R2A_THROUGH_R2E_CUMULATIVE_REPOSITORY_PACKAGE_AND_EXECUTION_CUSTODY',
   sourceKind: 'STACKED_GITHUB_BRANCH_WORKFLOWS_DURABLE_RECEIPTS_AND_REGISTRY_AUDIT',
   sourceIdOrPath: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json',
-  sourceOccurrenceOrRevision: R2D_PASS_CLOSED_HEAD,
+  sourceOccurrenceOrRevision: R2E_EXECUTION_HEAD,
   assertionScope: Object.freeze([
     'R2A_PASS_CLOSED',
     'R2B_PASS_CLOSED',
     'R2C_PASS_CLOSED',
     'R2D_PASS_CLOSED',
+    'R2E_PASS_CLOSED',
     'CUMULATIVE_R2_GOVERNED_PATH_REGISTRATION',
     'GIT_REGISTRY_LOADER_SCOPE_EQUALITY',
     'AUTOMATIC_REPOSITORY_REGISTRY_PREFLIGHT_PASS',
@@ -76,14 +78,25 @@ export const H_EARTH_RUN_8E_R2_PACKAGE_EVIDENCE = freeze({
   verifiedOn: '2026-07-27',
   evidenceMetadata: freeze({
     predecessorR2DHead: R2D_PASS_CLOSED_HEAD,
+    r2EExecutionHead: R2E_EXECUTION_HEAD,
     predecessorR2DCustodyManifestDigest: 'sha256:0ef98ea0f82370278ecc946247b32a8ab615a665834abdb33fee741ae6b7ec6e',
     governedPathCount: H_EARTH_RUN_8E_R2_GOVERNED_PATHS.length,
+    cumulativeManifestDigest: 'sha256:ac156b619704889790e911c24023bfc23f24d3ec443194a2e6c46211b02663dd',
+    cumulativeByteCount: 220755,
+    validationRun: 30276376269,
+    validationJob: 90011388187,
+    evidenceArtifact: 8656954357,
+    evidenceArtifactDigest: 'sha256:2c0100cad7169ed1ee40ca750640ff91a698b581e3b079b030f0ed678eaf6289',
+    automaticRegistryPreflightRun: 30276376061,
+    automaticRegistryPreflightJob: 90011387581,
+    automaticRegistryPreflightArtifact: 8656951286,
+    automaticRegistryPreflightArtifactDigest: 'sha256:691b44d1bb23af857dc7ecf61cd41222a7a90ef7acfcba31a571a061dcfbba68',
     priorAutomaticPreflightFailureRun: 30240950338,
     priorAutomaticPreflightFailureCode: 'REQUESTED_PATH_UNRESOLVED',
     run8ER2FStarted: false
   }),
   evidenceLimitations: Object.freeze([
-    'R2E_EXECUTION_IDENTITIES_PENDING_UNTIL_PASS_RECEIPT',
+    'FINAL_EXACT_HEAD_AUDIT_BOUND_BY_NONRECURSIVE_WORKFLOW_ARTIFACT',
     'R2F_NOT_STARTED',
     'NO_PUBLIC_RENDERER_INSTALLATION',
     'RUN_8E_REMAINS_FAIL_OPEN'
@@ -101,7 +114,7 @@ export const H_EARTH_RUN_8E_R2_PACKAGE_NODE = freeze({
   evidenceClass: H_EARTH_RUN_8E_R2_PACKAGE_EVIDENCE.evidenceClass,
   evidenceReferences: Object.freeze([H_EARTH_RUN_8E_R2_PACKAGE_EVIDENCE.evidenceId]),
   authorityClass: 'BOUNDED_R2_ENGINEERING_AND_VALIDATION_PACKAGE',
-  authorityPosture: 'R2E_EXECUTION_OPEN_R2F_NOT_STARTED_RUN8E_FAIL_OPEN',
+  authorityPosture: 'R2E_PASS_CLOSED_R2F_NOT_STARTED_RUN8E_FAIL_OPEN',
   authoritySource: Object.freeze([
     'R2A_IMMUTABLE_LIVE_RENDER_PACKAGE',
     'R2B_IMMUTABLE_BUFFER_CUSTODY',
@@ -158,9 +171,13 @@ export const H_EARTH_RUN_8E_R2_PACKAGE_NODE = freeze({
     'FINAL_EXACT_HEAD_R2E_AUDIT'
   ]),
   stoppingBoundaries: Object.freeze(['STOP_BEFORE_RUN_8E_R2F_CLOSURE_AND_PROMOTION_DECISION']),
-  currentIdentityReferences: Object.freeze([R2D_PASS_CLOSED_HEAD]),
-  lifecycleStatus: 'R2E_EXECUTION_OPEN',
-  unresolvedFields: Object.freeze(['R2E_FINAL_HEAD', 'R2E_VALIDATION_RUN', 'R2E_PASS_RECEIPT'])
+  currentIdentityReferences: Object.freeze([
+    R2D_PASS_CLOSED_HEAD,
+    R2E_EXECUTION_HEAD,
+    '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json'
+  ]),
+  lifecycleStatus: 'R2E_PASS_CLOSED',
+  unresolvedFields: Object.freeze([])
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R2_GOVERNED_PATHS.map((repositoryPath) => [repositoryPath, {

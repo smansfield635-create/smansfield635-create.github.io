@@ -1,4 +1,4 @@
-/** Read-only accepted-amendment facade for Run 8E R3A contract and uniform-packet custody. */
+/** Read-only accepted-amendment facade for Run 8E R3A contract, execution, and pass-closed custody. */
 import baseFacade from './h-earth.repository-registry.run8e-r2f-closure-promotion-scope.js';
 
 const freeze = (value, seen = new WeakSet()) => {
@@ -30,17 +30,17 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R3A_PATHS.map((repositoryPath) 
   gitBlobSha: null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: 'PRESENT_OR_RESERVED',
-  fetchbackStatus: 'R3A_EXECUTION_AND_DURABLE_RECEIPT_PENDING',
+  existenceStatus: 'PRESENT',
+  fetchbackStatus: 'R3A_DURABLE_PASS_RECEIPT_PRESENT_FINAL_EXACT_HEAD_REVALIDATION_PENDING',
   occurrenceClass: 'RUN_8E_R3A_CONTRACT_AND_EXECUTION_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3A_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_v1',
-  evidenceClass: 'R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_AND_UNIFORM_PACKET_CANDIDATE',
+  evidenceClass: 'EXECUTED_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_AND_DURABLE_PASS_CLOSED_RECEIPT',
   sourceKind: 'REPOSITORY_SOURCE_AND_EXECUTABLE_VALIDATION',
   sourceIdOrPath: '/h-earth-3d/validation/h-earth.run8e-r3a.shared-camera-gpu-presentation.validation.mjs',
-  sourceOccurrenceOrRevision: BRANCH,
+  sourceOccurrenceOrRevision: 'e244f82ceab3d5c780224b564ee162d4dac326d9',
   assertionScope: Object.freeze([
     'R2_INPUT_PASS_CLOSED_AND_APPROVED',
     'SHARED_NAVIGATION_STATE_CONSUMED_WITHOUT_MUTATION',
@@ -57,10 +57,23 @@ export const H_EARTH_RUN_8E_R3A_EVIDENCE = freeze({
     predecessorPullRequest: 225,
     immutablePackageGitBlob: '1699654f39c9e183f4cfc6f75b20ba051641b763',
     canonicalGpuTransportGitBlob: '785856d7702a0e855c2672e6b8a7325ad5b3ba50',
-    navigationSourceGitBlob: '8ab3446c536fc24423d5601acce232b19fa71c91'
+    navigationSourceGitBlob: '8ab3446c536fc24423d5601acce232b19fa71c91',
+    coreHead: 'e244f82ceab3d5c780224b564ee162d4dac326d9',
+    coreWorkflowRun: 30284854902,
+    coreWorkflowJob: 90040012506,
+    coreArtifactId: 8660349498,
+    coreArtifactDigest: 'sha256:c76331601d89985246644e0743396450d372b01fe63c435bdcc293d25fe4eb36',
+    closureControlHead: 'ebadd50727ba5ec225e62fb5c730fcda354eba10',
+    closureControlWorkflowRun: 30285088426,
+    closureControlWorkflowJob: 90040780321,
+    closureControlArtifactId: 8660449213,
+    closureControlArtifactDigest: 'sha256:8eb0912f63e604379dd4f8f93200e5c82348178c83988661cb086460e2831af0',
+    packetManifestDigest: 'sha256:c04ccd3d365145063ca3bdd4e479b5db931e1a42c8526ad5dc9908a4bc3bd709',
+    durablePassReceiptCommit: '6046f2935bd2e22b5a050302af418b7a1f9fe143',
+    automaticPreflightDisposition: 'PASS'
   }),
   evidenceLimitations: Object.freeze([
-    'R3A_EXECUTION_PENDING',
+    'FINAL_EXACT_HEAD_REVALIDATION_REQUIRED',
     'NO_GPU_FIXED_FRAME_EXECUTION',
     'NO_PUBLIC_ROUTE_BINDING',
     'NO_MOBILE_ACCEPTANCE',
@@ -79,9 +92,9 @@ export const H_EARTH_RUN_8E_R3A_NODE = freeze({
   evidenceClass: H_EARTH_RUN_8E_R3A_EVIDENCE.evidenceClass,
   evidenceReferences: Object.freeze([H_EARTH_RUN_8E_R3A_EVIDENCE.evidenceId]),
   authorityClass: 'BOUNDED_R3A_ENGINEERING_CONTRACT_AND_EXECUTION_CUSTODY',
-  authorityPosture: 'R3A_EXECUTION_PENDING_R3B_NOT_STARTED_RUN_8E_FAIL_OPEN',
-  authoritySource: Object.freeze(['R2F_PASS_CLOSED', 'R2_R3_INPUT_PROMOTION', 'EXACT_REPOSITORY_SOURCES']),
-  authorityScope: Object.freeze(['R3A_CONTRACT', 'CAMERA_UNIFORM_PACKET', 'RENDERER_INTERFACE_DESCRIPTOR', 'EXECUTABLE_VALIDATION']),
+  authorityPosture: 'R3A_PASS_CLOSED_R3_OPEN_AT_R3B_BOUNDARY_RUN_8E_FAIL_OPEN',
+  authoritySource: Object.freeze(['R2F_PASS_CLOSED', 'R2_R3_INPUT_PROMOTION', 'EXACT_REPOSITORY_SOURCES', 'GITHUB_ACTIONS_EXECUTION', 'DURABLE_ARTIFACTS', 'DURABLE_PASS_RECEIPT']),
+  authorityScope: Object.freeze(['R3A_CONTRACT', 'CAMERA_UNIFORM_PACKET', 'RENDERER_INTERFACE_DESCRIPTOR', 'EXECUTABLE_VALIDATION', 'PASS_CLOSED_CUSTODY']),
   authorityLimitations: Object.freeze(['NO_WEBGL_CONTEXT', 'NO_SHADER_OR_PROGRAM', 'NO_RENDER_LOOP', 'NO_PUBLIC_ROUTE', 'NO_VISIBLE_PRESENTATION', 'NO_R3B_OR_LATER_AUTHORITY', 'NO_RUN_8E_PASS_AUTHORITY']),
   parentRelations: Object.freeze([]),
   childRelations: Object.freeze([]),
@@ -98,8 +111,8 @@ export const H_EARTH_RUN_8E_R3A_NODE = freeze({
   requiredValidations: Object.freeze(['R3A_EXECUTABLE_AUDIT', 'AUTOMATIC_REPOSITORY_REGISTRY_PREFLIGHT', 'FINAL_EXACT_HEAD_REVALIDATION']),
   stoppingBoundaries: Object.freeze(['STOP_BEFORE_ISOLATED_WEBGL2_FIXED_FRAME_EXECUTION_R3B']),
   currentIdentityReferences: Object.freeze(['02aa90591a34968c8b6bacba926a156293ad0f76', BRANCH]),
-  lifecycleStatus: 'EXECUTION_PENDING',
-  unresolvedFields: Object.freeze(['EXECUTION_HEAD', 'WORKFLOW_RUN', 'DURABLE_PASS_RECEIPT', 'FINAL_EXACT_HEAD'])
+  lifecycleStatus: 'PASS_CLOSED_FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+  unresolvedFields: Object.freeze(['FINAL_EXACT_HEAD_VALIDATION_RUN'])
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R3A_PATHS.map((repositoryPath) => [repositoryPath, {

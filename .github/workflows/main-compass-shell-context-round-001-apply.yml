@@ -1,4 +1,5 @@
 name: Main Compass Shell Context Bounded Apply
+# Second push trigger; removed before candidate publication.
 
 on:
   push:
@@ -29,7 +30,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git branch --show-current)" = "agent/main-compass-shell-context-round-001"
-          test "$(git rev-parse HEAD^)" = "$EXPECTED_BASE"
+          test "$(git merge-base HEAD "$EXPECTED_BASE")" = "$EXPECTED_BASE"
           test "$(git hash-object index.html)" = "bf38b3d34d70e29e10a31b53e3e6b7ac30c09536"
           test "$(git hash-object assets/compass/compass.css)" = "5e00eb9f981c540b85f310294b0c919fbab17f2d"
           test "$(git hash-object assets/compass/compass.controller.js)" = "259e0d16b55c3986fec57db37fc057861483344a"
@@ -150,7 +151,7 @@ PATCH_B64
           assert 'Drag to rotate the constellation. Tap a primary star to open its cluster.' in js
           assert 'Drag to rotate the cluster. Tap a room star to select it.' in js
           assert 'Review the selected room. Use Enter Room to continue' in js
-          source=subprocess.check_output(['git','show','HEAD^:index.html'], text=True)
+          source=subprocess.check_output(['git','show',f'{__import__("os").environ["EXPECTED_BASE"]}:index.html'], text=True)
           def protected(s):
               m=re.search(r'<style id="dgb-main-compass-label-cosmos-v1">.*?</style>',s,re.S)
               assert m

@@ -43,7 +43,7 @@ function resolveTransparencyClass(primitive) {
   const value = primitive?.renderMaterial?.transparencyClass;
   return typeof value === 'string' && value.length > 0 ? value : 'OPAQUE';
 }
-`;
+`.replaceAll('\\`', '`');
 
 const newMaterialBlock = String.raw`function vegetationRgba(primitive) {
   const intent = String(primitive?.materialHint?.materialIntent ?? '');
@@ -113,7 +113,7 @@ function resolvePrimitiveMaterialProjection(primitive, role, issues) {
     projectionModel: 'REJECTED'
   };
 }
-`;
+`.replaceAll('\\`', '`');
 
 if (source.includes('function resolvePrimitiveRgba')) {
   source = replaceOnce(source, oldMaterialBlock, newMaterialBlock, 'R2A_MATERIAL_BLOCK_ANCHOR_NOT_FOUND');

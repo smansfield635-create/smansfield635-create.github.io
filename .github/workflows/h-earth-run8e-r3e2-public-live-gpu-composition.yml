@@ -1,0 +1,140 @@
+name: H-Earth Run 8E R3E2 Public Live GPU Composition
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3e2-public-live-gpu-composition-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3e1-public-integration-scope-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3e2-public-live-gpu-composition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      H_EARTH_RUN8E_R3E2_OUTPUT: /tmp/h-earth-run8e-r3e2
+    steps:
+      - name: Check out exact R3E2 event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R3E1 base and protected source identities
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3e1-public-integration-scope-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3e1-public-integration-scope-001)" = "4d1692cb3f1555833bef7864a3f6ebc998b86a17"
+          test "$(git show 4d1692cb3f1555833bef7864a3f6ebc998b86a17:showroom/globe/h-earth/index.html | git hash-object --stdin)" = "b5f72fb70f59276f868a5894ee0c5e8beccc40ca"
+          test "$(git hash-object showroom/globe/h-earth/index.css)" = "f208b7f11096a7bf5da282226903ac634c1eab01"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/index.css)" = "481148416a8d0466e76c4cb2eca7a67d8932a242"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/index.js)" = "83e85df2f4440c2825672f46fb16e28c73992db2"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/environment-integration.js)" = "6c047d61544fcbc4fad8673abfbacb7c827fdb22"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/direct-manipulation.js)" = "322ee2bfed5184acd8eac600f19abd72380b6c2b"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+          test "$(git hash-object showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js)" = "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js)" = "b8b3c713d5f0b7c79808e8942ce385887589d880"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js)" = "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js)" = "5017bbaf857a644287cb829037b0fde4646f270d"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/diagnostic-host.js)" = "b8bf34e7dc3a8e91000274cdabab26250888ebf0"
+          test "$(git hash-object h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e1.pass-closed.receipt.json)" = "2c71944eabc6d4522d934ef2fc4af6a85a38f3b5"
+
+      - name: Verify R3E2 syntax and source composition controls
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e2.public-live-gpu-composition.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3e2-public-live-gpu-composition.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3e2.public-live-gpu-composition.harness.mjs
+          node --check showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e2.pass-closed.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e2.pass-closed.receipt.json','utf8'))"
+          fi
+          test "$(grep -c '<script type=\"module\"' showroom/globe/h-earth/index.html)" = "1"
+          grep -q 'public-live-gpu-integration.run8e-r3e.js' showroom/globe/h-earth/index.html
+          ! grep -q '<script type="module" src="./functional-landscape/index.js' showroom/globe/h-earth/index.html
+          ! grep -q '<script type="module" src="./functional-landscape/environment-integration.js' showroom/globe/h-earth/index.html
+          ! grep -q '<script type="module" src="./functional-landscape/direct-manipulation.js' showroom/globe/h-earth/index.html
+          ! grep -Eq "getContext\\([[:space:]]*['\"]2d|putImageData\\(|rasterizeHEarth|translate3d\\(|style\\.transform[[:space:]]*=|setTimeout\\(|navigationChain|requestAnimationFrame\\(" showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+
+      - name: Execute branch-local public composition reconciliation
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/h-earth.run8e-r3e2.public-live-gpu-composition.harness.mjs
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only 4d1692cb3f1555833bef7864a3f6ebc998b86a17...HEAD \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | sort -u > /tmp/h-earth-run8e-r3e2-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3e2-governed-paths.txt \
+            --task "Run 8E R3E2 branch-local public live GPU composition" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3E2_OUTPUT/h-earth.run8e-r3e2.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3e2/h-earth.run8e-r3e2.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`R3E2_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact scope and R3E3 stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 4d1692cb3f1555833bef7864a3f6ebc998b86a17...HEAD | sort > "$H_EARTH_RUN8E_R3E2_OUTPUT/r3e2-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3e2/r3e2-changed-paths.txt').read_text().splitlines() if line.strip()}
+          required = {
+            '.github/workflows/h-earth-run8e-r3e2-public-live-gpu-composition.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e2.public-live-gpu-composition.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3e2-public-live-gpu-composition.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3e2.public-live-gpu-composition.harness.mjs',
+            'showroom/globe/h-earth/index.html',
+            'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e2.pass-closed.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'R3E2_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'R3E2_UNEXPECTED_PATHS:{unexpected}')
+          showroom = sorted(path for path in paths if path.startswith('showroom/'))
+          expected_showroom = sorted([
+            'showroom/globe/h-earth/index.html',
+            'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'
+          ])
+          if showroom != expected_showroom: raise SystemExit(f'R3E2_SHOWROOM_SCOPE_INVALID:{showroom}')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3e2/h-earth.run8e-r3e2.public-live-gpu-composition.execution.receipt.json').read_text())
+          if receipt['eligible'] is not True: raise SystemExit('R3E2_EXECUTION_RECEIPT_NOT_ELIGIBLE')
+          if receipt['publicHtml']['exactLoadOrderOnlyDelta'] is not True: raise SystemExit('R3E2_HTML_DELTA_NOT_EXACT')
+          if receipt['sourceComposition']['exactPublicMutationPathCount'] != 2: raise SystemExit('R3E2_PUBLIC_PATH_COUNT_INVALID')
+          if receipt['sourceComposition']['browserExecutionCount'] != 0 or receipt['sourceComposition']['gpuExecutionCount'] != 0: raise SystemExit('R3E2_EXECUTION_BOUNDARY_VIOLATION')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_EXECUTION_R3E3': raise SystemExit('R3E2_STOPPING_BOUNDARY_MISMATCH')
+          PY
+
+      - name: Upload R3E2 source-composition evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3e2-public-live-gpu-composition-evidence
+          path: |
+            /tmp/h-earth-run8e-r3e2
+            /tmp/h-earth-run8e-r3e2-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

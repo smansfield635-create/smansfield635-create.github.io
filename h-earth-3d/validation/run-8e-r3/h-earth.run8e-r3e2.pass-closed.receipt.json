@@ -1,0 +1,107 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_SOURCE_COMPOSITION_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3E2_PASS_CLOSED",
+  "recordedAt": "2026-07-27T21:34:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3e2-public-live-gpu-composition-001",
+  "pullRequest": 245,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R3E1",
+    "status": "PASS_CLOSED",
+    "branch": "agent/h-earth-run8e-r3e1-public-integration-scope-001",
+    "exactHead": "4d1692cb3f1555833bef7864a3f6ebc998b86a17",
+    "pullRequest": 244,
+    "finalWorkflowRun": 30305608308,
+    "finalWorkflowJob": 90109013296,
+    "finalArtifact": 8668297147,
+    "finalArtifactDigest": "sha256:38386acc14bc140c5a97e5f3240a9312bfc489a361442b417adb7e5552770773",
+    "passReceiptGitBlob": "2c71944eabc6d4522d934ef2fc4af6a85a38f3b5"
+  },
+  "coreExecution": {
+    "head": "9cb9a0a98fcfc6fbf354ef9dacc6adf13743891c",
+    "runId": 30306926100,
+    "jobId": 90113310977,
+    "artifactId": 8668783374,
+    "artifactDigest": "sha256:a4e2e9a23e7cdc55345b24537db2d5b414af4b78be0e07ab871270ab0619bb90",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30306925973,
+    "automaticRepositoryRegistryPreflight": "PASS"
+  },
+  "closureControlValidation": {
+    "head": "e29a10a74325ecff9bbede3f24a3e80909330f7b",
+    "runId": 30307350292,
+    "jobId": 90114685844,
+    "artifactId": 8668945016,
+    "artifactDigest": "sha256:6c4585d5d16c27beeca26d3070db06760bc6388f24bc715f1ed3bb366cfadedf",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30307350320,
+    "automaticRepositoryRegistryPreflight": "PASS",
+    "receiptPresentDuringValidation": false
+  },
+  "sourceComposition": {
+    "exactPublicMutationPathCount": 2,
+    "publicRoutePreMutationGitBlob": "b5f72fb70f59276f868a5894ee0c5e8beccc40ca",
+    "publicRouteComposedGitBlob": "0daedf61f7e19af095f4db5fc47563a9cd786837",
+    "publicOrchestratorGitBlob": "2b0a916b3a6d11da84316925f8abd8a3a1447445",
+    "baseHtmlByteLength": 12919,
+    "composedHtmlByteLength": 12693,
+    "publicOrchestratorByteLength": 8456,
+    "activePublicModuleScriptCount": 1,
+    "legacyPublicModuleScriptCount": 0,
+    "exactLoadOrderOnlyDelta": true,
+    "existingCanvasMountHudCopyLayoutAndCssPreserved": true,
+    "pointerTouchIntakeInstallCount": 1,
+    "liveGpuBindingCreateCount": 1,
+    "proposalToVisibleGpuBindingPresent": true,
+    "runtimeExclusivityReceiptPresent": true,
+    "prohibitedOrchestratorPatternCount": 0,
+    "protectedWitnessMutationCount": 0
+  },
+  "protectedWitnesses": {
+    "publicShellCssGitBlob": "f208b7f11096a7bf5da282226903ac634c1eab01",
+    "functionalLandscapeCssGitBlob": "481148416a8d0466e76c4cb2eca7a67d8932a242",
+    "legacyCpuControllerGitBlob": "83e85df2f4440c2825672f46fb16e28c73992db2",
+    "legacyEnvironmentIntegrationGitBlob": "6c047d61544fcbc4fad8673abfbacb7c827fdb22",
+    "legacyDirectManipulationGitBlob": "322ee2bfed5184acd8eac600f19abd72380b6c2b",
+    "navigationSourceGitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+    "r3AFramePacketGitBlob": "4e187fc38780dfb2020482b674ac331f5a65b2c1",
+    "persistentRendererGitBlob": "b8b3c713d5f0b7c79808e8942ce385887589d880",
+    "pointerTouchIntakeGitBlob": "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6",
+    "liveGpuBindingGitBlob": "5017bbaf857a644287cb829037b0fde4646f270d",
+    "diagnosticHostGitBlob": "b8bf34e7dc3a8e91000274cdabab26250888ebf0"
+  },
+  "boundaries": {
+    "branchLocalSourceComposition": true,
+    "browserExecuted": false,
+    "gpuExecuted": false,
+    "authorityExclusivityAccepted": false,
+    "publicInteractionAccepted": false,
+    "deploymentPerformed": false,
+    "physicalDeviceAcceptancePerformed": false,
+    "r3E3WorkStarted": false,
+    "mainMerged": false,
+    "run8EPassClosed": false
+  },
+  "rollbackGroups": [
+    {
+      "groupId": "R3E_PUBLIC_HTML_LOAD_ORDER",
+      "operation": "RESTORE_PUBLIC_ROUTE_FILE_TO_GIT_BLOB_b5f72fb70f59276f868a5894ee0c5e8beccc40ca"
+    },
+    {
+      "groupId": "R3E_PUBLIC_GPU_ORCHESTRATOR",
+      "operation": "DELETE_NEW_PUBLIC_ORCHESTRATION_MODULE"
+    }
+  ],
+  "finalExactHeadValidation": {
+    "performedAfterReceiptAndFinalRegistryEvidenceReconciliation": false,
+    "finalHead": null,
+    "workflowRun": null,
+    "workflowJob": null,
+    "artifactId": null,
+    "artifactDigest": null
+  },
+  "nextCheckpoint": "RUN_8E_R3E3_NOT_STARTED",
+  "stoppingBoundary": "STOP_BEFORE_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_EXECUTION_R3E3",
+  "issues": []
+}

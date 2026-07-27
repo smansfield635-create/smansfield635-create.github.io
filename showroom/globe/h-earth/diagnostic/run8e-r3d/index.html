@@ -1,30 +1,31 @@
 <!doctype html>
-<html lang="en" data-r3d1-ready="false">
+<html lang="en" data-r3d2-ready="false">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#071317">
-  <meta name="description" content="Bounded Run 8E R3D diagnostic host scaffold. No interaction or renderer execution is installed in R3D1.">
-  <title>H-Earth Run 8E · R3D Diagnostic Scaffold</title>
+  <meta name="description" content="Bounded Run 8E R3D2 diagnostic pointer and touch navigation-proposal intake. No GPU binding or public route integration.">
+  <title>H-Earth Run 8E · R3D2 Input Intake</title>
   <style>
     :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #071317; color: #dce9eb; }
     * { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 20px; }
     main { width: min(760px, 100%); display: grid; gap: 14px; }
     section { border: 1px solid #355159; border-radius: 12px; padding: 16px; background: #0c1d22; }
-    canvas { display: block; width: 100%; aspect-ratio: 16 / 9; background: #091216; border: 1px dashed #46646c; border-radius: 8px; }
-    code { overflow-wrap: anywhere; }
+    canvas { display: block; width: 100%; aspect-ratio: 16 / 9; background: #091216; border: 1px dashed #46646c; border-radius: 8px; touch-action: none; }
+    pre { overflow: auto; max-height: 320px; white-space: pre-wrap; }
   </style>
 </head>
 <body>
-  <main id="r3d-diagnostic-host" data-checkpoint="RUN_8E_R3D1">
+  <main id="r3d-diagnostic-host" data-checkpoint="RUN_8E_R3D2">
     <section>
-      <h1>R3D diagnostic host scaffold</h1>
-      <p id="r3d-status">Resolving bounded diagnostic modules…</p>
-      <p>This page intentionally contains no pointer, touch, wheel, gesture, WebGL, persistent-renderer, or public-route binding.</p>
+      <h1>R3D2 pointer and touch intake</h1>
+      <p id="r3d-status">Installing bounded input intake…</p>
+      <p>One-finger look, two-finger forward/back travel, pinch zoom, and wheel equivalents create navigation proposals only.</p>
+      <p>No WebGL context, renderer initialization, bitmap preview, or public-route binding is installed.</p>
     </section>
-    <section aria-label="Reserved live GPU diagnostic surface">
+    <section aria-label="Diagnostic interaction surface">
       <canvas id="r3d-canvas" width="640" height="360"></canvas>
     </section>
     <section>

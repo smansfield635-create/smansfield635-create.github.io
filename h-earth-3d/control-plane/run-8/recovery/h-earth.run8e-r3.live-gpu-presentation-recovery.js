@@ -61,8 +61,25 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
         {
           checkpointId: 'RUN_8E_R3D2',
           name: 'POINTER_AND_TOUCH_NAVIGATION_PROPOSAL_INTAKE',
-          currentStatus: 'EXECUTION_PENDING',
-          requiredResult: 'PASS_CLOSED_BEFORE_R3D3',
+          currentStatus: 'PASS_CLOSED',
+          executionEvidence: {
+            successfulExecutionHead: '5436cec48f46e9c5417af877af8d6927a6f8ef52',
+            workflowRun: 30296987991,
+            workflowJob: 90080344166,
+            evidenceArtifact: 8665023404,
+            evidenceArtifactDigest: 'sha256:a679e9bdc06ec95ba00a656572da44da8848fb2133d0c2c8c50faba68f385a29',
+            automaticRegistryPreflightRun: 30296988090,
+            navigationProposalCount: 7,
+            acceptedNavigationProposalCount: 7,
+            touchPointerEventCount: 15,
+            oneFingerLookProposalCount: 1,
+            twoFingerTravelProposalCount: 2,
+            pinchProposalCount: 2,
+            wheelProposalCount: 2,
+            getContextCallCount: 0,
+            deferredCommitCount: 0,
+            queuedNavigationChainCount: 0
+          },
           stoppingBoundary: 'STOP_BEFORE_LIVE_GPU_CAMERA_BINDING_R3D3'
         },
         { checkpointId: 'RUN_8E_R3D3', name: 'LIVE_GPU_CAMERA_RESPONSE_WITHOUT_BITMAP_PREVIEW', currentStatus: 'NOT_STARTED' },
@@ -76,10 +93,10 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     { checkpointId: 'RUN_8E_R3G', currentStatus: 'NOT_STARTED' }
   ],
   currentState: {
-    run8ER3: 'OPEN_AT_R3D2_EXECUTION',
+    run8ER3: 'OPEN_AT_R3D3_BOUNDARY',
     run8ER3D: 'IN_PROGRESS',
     run8ER3D1: 'PASS_CLOSED',
-    run8ER3D2: 'EXECUTION_PENDING',
+    run8ER3D2: 'PASS_CLOSED',
     run8ER3D3: 'NOT_STARTED',
     run8ER3D4: 'NOT_STARTED',
     run8ER3D5: 'NOT_STARTED',

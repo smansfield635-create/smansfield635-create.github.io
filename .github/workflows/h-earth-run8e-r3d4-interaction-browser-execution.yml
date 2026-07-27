@@ -52,6 +52,9 @@ jobs:
           node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d4-interaction-browser-execution-scope.js
           node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
           node --check h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs
+          node --check h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.v2.harness.mjs
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.attempt-001.failure.receipt.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.attempt-002.failure.receipt.json','utf8'))"
           if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.pass-closed.receipt.json; then
             node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.pass-closed.receipt.json','utf8'))"
           fi
@@ -75,12 +78,12 @@ jobs:
           cat /tmp/h-earth-run8e-r3d4-server.log
           exit 1
 
-      - name: Execute portrait and landscape sustained interaction audit
+      - name: Execute corrected portrait and landscape sustained interaction audit
         run: |
           set -uo pipefail
           mkdir -p "$H_EARTH_RUN8E_R3D4_OUTPUT"
           set +e
-          node h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs \
+          node h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.v2.harness.mjs \
             >"$H_EARTH_RUN8E_R3D4_OUTPUT/h-earth.run8e-r3d4.harness.stdout-stderr.log" 2>&1
           status=$?
           set -e
@@ -119,7 +122,10 @@ jobs:
             'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3d4.interaction-browser-execution.js',
             'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d4-interaction-browser-execution-scope.js',
             'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
-            'h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs'
+            'h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs',
+            'h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.v2.harness.mjs',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.attempt-001.failure.receipt.json',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.attempt-002.failure.receipt.json'
           }
           optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.pass-closed.receipt.json'}
           missing = sorted(required - paths)
@@ -128,10 +134,12 @@ jobs:
           if unexpected: raise SystemExit(f'R3D4_UNEXPECTED_PATHS:{unexpected}')
           receipt = json.loads(Path('/tmp/h-earth-run8e-r3d4/h-earth.run8e-r3d4.interaction-browser-execution.receipt.json').read_text())
           if receipt['eligible'] is not True: raise SystemExit('R3D4_EXECUTION_RECEIPT_NOT_ELIGIBLE')
+          if receipt['harnessVersion'] != 2: raise SystemExit('R3D4_HARNESS_VERSION_INVALID')
           if receipt['aggregate']['browserSessionCount'] != 2: raise SystemExit('R3D4_BROWSER_SESSION_COUNT_INVALID')
           if receipt['aggregate']['orientationCount'] != 2: raise SystemExit('R3D4_ORIENTATION_COUNT_INVALID')
           if receipt['aggregate']['maximumDeliveryLagMs'] >= 2000: raise SystemExit('R3D4_DELIVERY_BACKLOG_THRESHOLD_FAILED')
           if receipt['aggregate']['maximumCompletionLagMs'] >= 2000: raise SystemExit('R3D4_COMPLETION_BACKLOG_THRESHOLD_FAILED')
+          if receipt['aggregate']['maximumActionProcessingMs'] >= 1000: raise SystemExit('R3D4_ACTION_PROCESSING_THRESHOLD_FAILED')
           if receipt['aggregate']['maximumConcurrentCallbacks'] != 1: raise SystemExit('R3D4_CALLBACK_CONCURRENCY_INVALID')
           if receipt['aggregate']['postInitializationResourceCreationCount'] != 0: raise SystemExit('R3D4_RESOURCE_RECREATION_OBSERVED')
           if receipt['aggregate']['postInitializationBufferUploadCount'] != 0: raise SystemExit('R3D4_BUFFER_REUPLOAD_OBSERVED')

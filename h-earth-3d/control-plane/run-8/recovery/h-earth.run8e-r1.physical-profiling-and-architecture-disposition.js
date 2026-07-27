@@ -104,9 +104,27 @@ export const H_EARTH_RUN_8E_R1_CONTROL = freeze({
     workerCpu: 'RESPONSIVE_FALLBACK_REFERENCE_ACCELERATION_OR_DIAGNOSTIC_OPTION',
     currentCpu: 'DETERMINISTIC_REFERENCE_ONLY'
   },
+  repositoryPackageEvidence: {
+    status: 'PASS',
+    validatedHead: 'db38b89bda29bde41a5874d94e2ab5c80d49ff7c',
+    durableReceipt:
+      '/h-earth-3d/validation/h-earth.run8e-r1.repository-profiling-package.receipt.json',
+    durableReceiptGitBlob: '7108503ebd05807f0001cf50636aa3c806d3635d',
+    validationRun: 30228676176,
+    validationJob: 89863366514,
+    evidenceArtifact: 8639446224,
+    evidenceArtifactDigest:
+      'sha256:318d85a619b75b49a4da939e721d0dbd4fba81465342ccf35222fb706193c287',
+    currentCpuFullFrameMaximumMilliseconds: 5899.7,
+    emulatedLongestMainThreadTaskMilliseconds: 10972,
+    workerCpuMaximumMilliseconds: 24.4,
+    webgl2ProbeAvailable: true,
+    physicalSamsungPerformanceClaimed: false
+  },
   physicalEvidenceBoundary: {
-    repositoryProfilerPackage: 'EXECUTABLE_CANDIDATE',
-    repositoryPackageValidation: 'PENDING_FINAL_EXECUTION',
+    repositoryProfilerPackage: 'PASS',
+    repositoryPackageValidation: 'PASS',
+    profilerRouteDeployment: 'NOT_YET_EXECUTED',
     browserEmulation: 'SUPPORTING_ONLY',
     physicalSamsungReceiptRequired: true,
     physicalSamsungExecution: 'NOT_YET_EXECUTED_FOR_R1',
@@ -129,6 +147,7 @@ export function evaluateHEarthRun8ER1Control(candidate = H_EARTH_RUN_8E_R1_CONTR
   if (candidate?.rendererLanes?.deterministicCpuReference?.preserved !== true) issues.push('CPU_REFERENCE_NOT_PRESERVED');
   if (candidate?.rendererLanes?.realtimeGpuLive?.primaryBackendCandidate !== 'WEBGL_2') issues.push('WEBGL2_NOT_PRIMARY');
   if (candidate?.fixedCameraCorpus?.length !== 5) issues.push('FIXED_CAMERA_CORPUS_INVALID');
+  if (candidate?.repositoryPackageEvidence?.status !== 'PASS') issues.push('R1_REPOSITORY_PACKAGE_NOT_PASS');
   if (candidate?.physicalEvidenceBoundary?.r1PassClosed !== false) issues.push('R1_CLOSED_WITHOUT_PHYSICAL_RECEIPT');
   return freeze({
     eligible: issues.length === 0,

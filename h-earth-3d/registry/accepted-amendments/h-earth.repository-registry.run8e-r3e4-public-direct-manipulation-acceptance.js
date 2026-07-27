@@ -6,6 +6,7 @@ const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r3e4-public-direct-manipulation-acceptance-001';
 const FAILURE_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e4.attempt-001.failure.receipt.json';
 const FAILURE_RECEIPT_002_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e4.attempt-002.failure.receipt.json';
+const FAILURE_RECEIPT_003_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e4.attempt-003.failure.receipt.json';
 const PASS_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e4.pass-closed.receipt.json';
 
 export const H_EARTH_RUN_8E_R3E4_PATHS = freeze([
@@ -17,6 +18,7 @@ export const H_EARTH_RUN_8E_R3E4_PATHS = freeze([
   '/h-earth-3d/validation/h-earth.run8e-r3e4.public-direct-manipulation-acceptance.harness.mjs',
   FAILURE_RECEIPT_PATH,
   FAILURE_RECEIPT_002_PATH,
+  FAILURE_RECEIPT_003_PATH,
   PASS_RECEIPT_PATH
 ]);
 
@@ -83,11 +85,19 @@ export const H_EARTH_RUN_8E_R3E4_EVIDENCE = freeze({
     attempt002ArtifactId: 8670173567,
     attempt002ArtifactDigest: 'sha256:de9e1d1552821d7eea3e303d92661060e517bbb15f40bec02c51b9ea6b98a76c',
     attempt002FailureClass: 'UNRESOLVED_CORRESPONDENCE_ASSERTION_WITH_INADEQUATE_PREASSERT_EVIDENCE',
-    attempt002PublicRouteDefectStatus: 'NOT_ESTABLISHED'
+    attempt002PublicRouteDefectStatus: 'NOT_ESTABLISHED',
+    attempt003Head: 'eba1e6b4693f2d94458a8d9e2133e01a3ef53a78',
+    attempt003WorkflowRun: 30310892017,
+    attempt003WorkflowJob: 90126006062,
+    attempt003ArtifactId: 8670312585,
+    attempt003ArtifactDigest: 'sha256:ed0083f9cd4fc23c61ae8efea01cdc6f9104e57ecb1a7a8a726eb1ddddd47d1b',
+    attempt003FailureClass: 'HARNESS_CAMERA_POSITION_OBJECT_MISCLASSIFIED_AS_ARRAY',
+    attempt003PublicRouteCorrespondenceDefectExposed: false
   }),
   evidenceLimitations: freeze([
     'ATTEMPT_001_HARNESS_FAILURE_PRESERVED',
     'ATTEMPT_002_CORRESPONDENCE_FAILURE_PRESERVED',
+    'ATTEMPT_003_CAMERA_SCHEMA_FAILURE_PRESERVED',
     'EXECUTION_PENDING',
     'NO_REFERENCE_DEVICE_ACCEPTANCE',
     'NO_DEPLOYMENT',
@@ -121,7 +131,7 @@ export const H_EARTH_RUN_8E_R3E4_NODE = freeze({
   prohibitedMutations: ['SHOWROOM', 'PUBLIC_ROUTE', 'PUBLIC_ORCHESTRATOR', 'NAVIGATION', 'RENDERER', 'INPUT', 'DEPLOYMENT', 'MAIN'],
   requiredValidations: ['PORTRAIT_PUBLIC_ROUTE_EXECUTION', 'LANDSCAPE_PUBLIC_ROUTE_EXECUTION', 'COMPLETE_TOUCH_MATRIX', 'PROPOSAL_FRAME_CORRESPONDENCE', 'SUSTAINED_TIMING', 'RUNTIME_EXCLUSIVITY', 'AUTOMATIC_REGISTRY_PREFLIGHT', 'EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_R3E_CLOSURE_AND_R3F_INPUT_DECISION_R3E5'],
-  currentIdentityReferences: ['504b81ff50acd7b23cf3cdb2e915ed53f0112ff9', '5c5f1ae06220f88f497dc2b45f4d749679849918', '7b22d872fe65ccec9ccf825a4b2d58f142589335', '30310253299', '90123949684', '8670053915', '2c5bc13b239481a0e8caa6761b534a44d2feebe9', '30310550908', '90124912076', '8670173567'],
+  currentIdentityReferences: ['504b81ff50acd7b23cf3cdb2e915ed53f0112ff9', '5c5f1ae06220f88f497dc2b45f4d749679849918', '7b22d872fe65ccec9ccf825a4b2d58f142589335', '30310253299', '90123949684', '8670053915', '2c5bc13b239481a0e8caa6761b534a44d2feebe9', '30310550908', '90124912076', '8670173567', 'eba1e6b4693f2d94458a8d9e2133e01a3ef53a78', '30310892017', '90126006062', '8670312585'],
   lifecycleStatus: 'EXECUTION_PENDING',
   unresolvedFields: ['CORE_EXECUTION_RUN', 'CORE_EXECUTION_ARTIFACT', 'DURABLE_PASS_RECEIPT', 'FINAL_EXACT_HEAD_VALIDATION']
 });

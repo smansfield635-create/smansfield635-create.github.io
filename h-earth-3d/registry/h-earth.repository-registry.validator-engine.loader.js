@@ -3,11 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Composes the accepted repository-registry lineage through the Run 8E-R1
-// material-ledger execution facade, then adds the bounded Run 8E R2A-R2E
-// registry representation and execution-custody facade. The loader remains
-// read-only and creates no workflow, mutation, merge, canonicalization,
-// production, deployment, R2F, R3, or Run 8E pass authority.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r2-execution-scope.js';
+// material-ledger execution facade, the bounded Run 8E R2A-R2E registry
+// representation, and the R2E core-execution evidence overlay. The loader
+// remains read-only and creates no workflow, mutation, merge,
+// canonicalization, production, deployment, R2F, R3, or Run 8E pass authority.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r2e-execution-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

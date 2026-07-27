@@ -1,0 +1,154 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3D5_R3D_CLOSURE_AND_R3E_INPUT_DECISION_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3D5_PASS_CLOSED",
+  "recordedAt": "2026-07-27T20:45:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3d5-r3d-closure-r3e-input-decision-001",
+  "pullRequest": 243,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R3D4",
+    "status": "PASS_CLOSED",
+    "branch": "agent/h-earth-run8e-r3d4-interaction-browser-execution-001",
+    "exactHead": "641c25f76d44f95709693a1cc0aec7ecbb53ae2e",
+    "pullRequest": 242,
+    "finalWorkflowRun": 30301479872,
+    "finalWorkflowJob": 90095219458,
+    "finalArtifact": 8666741737,
+    "finalArtifactDigest": "sha256:c1f7845ff732718f44168e23fcb520f1ab74315102777025a694de4b6ca40292"
+  },
+  "predecessorReceipts": {
+    "r3D1": {
+      "path": "h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d1.pass-closed.receipt.json",
+      "gitBlob": "0ea8f618f597aef527655f28951d9cf4e9629485",
+      "status": "RUN_8E_R3D1_PASS_CLOSED"
+    },
+    "r3D2": {
+      "path": "h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d2.pass-closed.receipt.json",
+      "gitBlob": "69748b18b155e87930b52104f3e3c16385e3150f",
+      "status": "RUN_8E_R3D2_PASS_CLOSED"
+    },
+    "r3D3": {
+      "path": "h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d3.pass-closed.receipt.json",
+      "gitBlob": "c744db650a1f0ba3bec208312b82cd469ce5dc0b",
+      "status": "RUN_8E_R3D3_PASS_CLOSED"
+    },
+    "r3D4": {
+      "path": "h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.pass-closed.receipt.json",
+      "gitBlob": "8f8a7d91354911d318edf850e87ab6ea890077a9",
+      "status": "RUN_8E_R3D4_PASS_CLOSED"
+    }
+  },
+  "coreExecution": {
+    "head": "119ea9d5d09774efc9270664bd561462e3afc1f5",
+    "runId": 30303543863,
+    "jobId": 90102105502,
+    "artifactId": 8667508612,
+    "artifactDigest": "sha256:c8cfa71d54f437f5cef03c463fa37c7ab31b61541038991912e198f9cef70ec8",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30303543805,
+    "automaticRepositoryRegistryPreflight": "PASS"
+  },
+  "closureControlValidation": {
+    "head": "576f35e01ba8dcdbf05f0fe52fbf2d92d827e5ae",
+    "runId": 30303809611,
+    "jobId": 90103001979,
+    "artifactId": 8667613047,
+    "artifactDigest": "sha256:801f3c7d290c081bb5acc16a5a3906fbd3029fc794ac967c547e718485fcf308",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30303809556,
+    "automaticRepositoryRegistryPreflight": "PASS",
+    "receiptPresentDuringValidation": false
+  },
+  "r3DClosureResult": {
+    "subcheckpointCount": 5,
+    "r3D1": "PASS_CLOSED",
+    "r3D2": "PASS_CLOSED",
+    "r3D3": "PASS_CLOSED",
+    "r3D4": "PASS_CLOSED",
+    "r3D5": "PASS_CLOSED",
+    "unresolvedSubcheckpointCount": 0,
+    "r3DStatus": "PASS_CLOSED",
+    "r3State": "OPEN_AT_R3E_BOUNDARY",
+    "r3EStatus": "NOT_STARTED",
+    "r3FStatus": "NOT_STARTED",
+    "r3GStatus": "NOT_STARTED",
+    "run8EStatus": "FAIL_OPEN"
+  },
+  "r3EInputDecision": {
+    "decisionId": "H_EARTH_RUN_8E_R3E_PUBLIC_ROUTE_INTEGRATION_INPUT_DECISION_v1",
+    "disposition": "ADMISSIBLE_AS_NEXT_CHECKPOINT_INPUT",
+    "authorizedNextAction": "CREATE_SEPARATE_R3E_BRANCH_FROM_R3D5_FINAL_EXACT_HEAD",
+    "symbolicRequiredBase": "R3D5_FINAL_EXACT_HEAD",
+    "r3EBranchCreated": false,
+    "r3EImplementationStarted": false,
+    "admittedInputCount": 7,
+    "admittedInputs": [
+      {
+        "inputId": "navigationAuthority",
+        "path": "/showroom/globe/h-earth/functional-landscape/navigation.js",
+        "gitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91"
+      },
+      {
+        "inputId": "r3AFramePacketAuthority",
+        "path": "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "gitBlob": "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+      },
+      {
+        "inputId": "r3CPersistentRenderer",
+        "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+        "gitBlob": "b8b3c713d5f0b7c79808e8942ce385887589d880"
+      },
+      {
+        "inputId": "r3D2PointerTouchIntake",
+        "path": "/showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+        "gitBlob": "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6"
+      },
+      {
+        "inputId": "r3D3LiveGpuBinding",
+        "path": "/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+        "gitBlob": "5017bbaf857a644287cb829037b0fde4646f270d"
+      },
+      {
+        "inputId": "publicRouteWitness",
+        "path": "/showroom/globe/h-earth/index.html",
+        "gitBlob": "b5f72fb70f59276f868a5894ee0c5e8beccc40ca"
+      },
+      {
+        "inputId": "publicDirectManipulationWitness",
+        "path": "/showroom/globe/h-earth/functional-landscape/direct-manipulation.js",
+        "gitBlob": "322ee2bfed5184acd8eac600f19abd72380b6c2b"
+      }
+    ]
+  },
+  "boundaries": {
+    "showroomSourceMutated": false,
+    "publicRouteMutated": false,
+    "publicRouteBound": false,
+    "publicDirectManipulationMutated": false,
+    "navigationAuthorityMutated": false,
+    "rendererSourceMutated": false,
+    "interactionSourceMutated": false,
+    "browserExecuted": false,
+    "gpuExecuted": false,
+    "r3EBranchCreated": false,
+    "r3EImplementationStarted": false,
+    "deploymentPerformed": false,
+    "physicalDeviceAcceptancePerformed": false,
+    "r3FWorkStarted": false,
+    "r3GWorkStarted": false,
+    "mainMerged": false,
+    "run8EPassClosed": false
+  },
+  "finalExactHeadValidation": {
+    "performedAfterReceiptAndFinalRegistryEvidenceReconciliation": false,
+    "finalHead": null,
+    "workflowRun": null,
+    "workflowJob": null,
+    "artifactId": null,
+    "artifactDigest": null
+  },
+  "nextCheckpoint": "RUN_8E_R3E_NOT_STARTED",
+  "stoppingBoundary": "STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E",
+  "issues": []
+}

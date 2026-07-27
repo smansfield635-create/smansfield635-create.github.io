@@ -3,10 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Composes the accepted repository-registry lineage through Run 8E-R1,
-// R2A-R2F, R3A-R3C, R3D1-R3D3 closure, and bounded R3D4 portrait/
-// landscape interaction browser execution. The loader remains read-only and
-// creates no public-route, deployment, physical-device, R3D5, or Run 8E pass authority.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3d4-interaction-browser-execution-scope.js';
+// R2A-R2F, R3A-R3C, R3D1-R3D4 closure, and bounded R3D5 R3D closure/
+// R3E input disposition. The loader remains read-only and creates no showroom,
+// public-route, deployment, physical-device, R3E implementation, or Run 8E pass authority.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3d5-r3d-closure-r3e-input-decision-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

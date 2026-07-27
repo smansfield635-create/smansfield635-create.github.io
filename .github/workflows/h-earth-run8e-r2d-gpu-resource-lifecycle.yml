@@ -43,9 +43,13 @@ jobs:
           if (receipt.validatedPackage.contentDigest !== 'fnv1a32:fd913c25') process.exit(1);
           if (receipt.sourceCustody.auditManifestDigest !== 'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe') process.exit(1);
           if (receipt.checkpointDisposition.run8ER2D !== 'NOT_STARTED') process.exit(1);
-          const attempt = require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-001.failure.receipt.json');
-          if (attempt.status !== 'RUN_8E_R2D_ATTEMPT_001_FAIL_OPEN') process.exit(1);
-          if (attempt.failure.gpuUploadExecuted !== false) process.exit(1);
+          const attempt1 = require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-001.failure.receipt.json');
+          if (attempt1.status !== 'RUN_8E_R2D_ATTEMPT_001_FAIL_OPEN') process.exit(1);
+          if (attempt1.failure.gpuUploadExecuted !== false) process.exit(1);
+          const attempt2 = require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-002.failure.receipt.json');
+          if (attempt2.status !== 'RUN_8E_R2D_ATTEMPT_002_FAIL_OPEN') process.exit(1);
+          if (attempt2.failure.firstUploadCycleCompleted !== true) process.exit(1);
+          if (attempt2.failure.contextRestoreEventObserved !== false) process.exit(1);
           NODE
 
       - name: Verify R2D JavaScript and JSON syntax
@@ -54,6 +58,7 @@ jobs:
           node --check h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.js
           node --check h-earth-3d/validation/h-earth.run8e-r2d.gpu-resource-lifecycle.harness.mjs
           node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-001.failure.receipt.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-002.failure.receipt.json','utf8'))"
 
       - name: Install bounded Chromium dependency
         run: |
@@ -95,6 +100,7 @@ jobs:
               'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2d.gpu-upload-and-resource-lifecycle.js',
               'h-earth-3d/validation/h-earth.run8e-r2d.gpu-resource-lifecycle.harness.mjs',
               'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-001.failure.receipt.json',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.attempt-002.failure.receipt.json',
               'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.html',
               'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.webgl-resource-probe.js'
           }

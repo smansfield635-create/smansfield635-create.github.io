@@ -27,17 +27,17 @@ const OCCURRENCES = freeze(H_EARTH_RUN_8E_R3E2_PATHS.map((repositoryPath) => fre
   gitBlobSha: null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT_OR_PLANNED',
-  fetchbackStatus: 'R3E2_SOURCE_COMPOSITION_VALIDATION_AND_DURABLE_RECEIPT_PENDING',
-  occurrenceClass: 'RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_OCCURRENCE'
+  existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT',
+  fetchbackStatus: 'R3E2_CORE_SOURCE_COMPOSITION_PASS_DURABLE_RECEIPT_PENDING',
+  occurrenceClass: 'RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_CORE_PASS_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3E2_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1',
-  evidenceClass: 'R3E2_BRANCH_LOCAL_PUBLIC_LIVE_GPU_SOURCE_COMPOSITION_PENDING',
+  evidenceClass: 'EXECUTED_R3E2_BRANCH_LOCAL_PUBLIC_LIVE_GPU_SOURCE_COMPOSITION_CORE_PASS',
   sourceKind: 'GITHUB_ACTIONS_NODE_SOURCE_LOAD_ORDER_AND_REGISTRY_RECONCILIATION',
   sourceIdOrPath: '/showroom/globe/h-earth/index.html',
-  sourceOccurrenceOrRevision: null,
+  sourceOccurrenceOrRevision: '9cb9a0a98fcfc6fbf354ef9dacc6adf13743891c',
   assertionScope: freeze([
     'EXACT_TWO_PUBLIC_PATH_MUTATION',
     'LEGACY_THREE_MODULE_LOADS_REMOVED',
@@ -61,10 +61,28 @@ export const H_EARTH_RUN_8E_R3E2_EVIDENCE = freeze({
     r3AFramePacketGitBlob: '4e187fc38780dfb2020482b674ac331f5a65b2c1',
     persistentRendererGitBlob: 'b8b3c713d5f0b7c79808e8942ce385887589d880',
     pointerTouchIntakeGitBlob: 'bb96858fec09d14bbe10aa9ffa8a7f07af3621e6',
-    liveGpuBindingGitBlob: '5017bbaf857a644287cb829037b0fde4646f270d'
+    liveGpuBindingGitBlob: '5017bbaf857a644287cb829037b0fde4646f270d',
+    coreHead: '9cb9a0a98fcfc6fbf354ef9dacc6adf13743891c',
+    coreWorkflowRun: 30306926100,
+    coreWorkflowJob: 90113310977,
+    coreArtifactId: 8668783374,
+    coreArtifactDigest: 'sha256:a4e2e9a23e7cdc55345b24537db2d5b414af4b78be0e07ab871270ab0619bb90',
+    coreAutomaticRegistryPreflightRun: 30306925973,
+    publicHtmlGitBlob: '0daedf61f7e19af095f4db5fc47563a9cd786837',
+    publicOrchestratorGitBlob: '2b0a916b3a6d11da84316925f8abd8a3a1447445',
+    baseHtmlByteLength: 12919,
+    composedHtmlByteLength: 12693,
+    publicOrchestratorByteLength: 8456,
+    publicModuleScriptCount: 1,
+    legacyModuleScriptCount: 0,
+    exactLoadOrderOnlyDelta: true,
+    protectedWitnessMutationCount: 0,
+    prohibitedPatternCount: 0,
+    browserExecutionCount: 0,
+    gpuExecutionCount: 0
   }),
   evidenceLimitations: freeze([
-    'SOURCE_COMPOSITION_EXECUTION_PENDING',
+    'DURABLE_R3E2_PASS_RECEIPT_PENDING',
     'NO_BROWSER_EXECUTION',
     'NO_GPU_EXECUTION',
     'AUTHORITY_EXCLUSIVITY_NOT_YET_EXECUTED',
@@ -83,8 +101,8 @@ export const H_EARTH_RUN_8E_R3E2_NODE = freeze({
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: H_EARTH_RUN_8E_R3E2_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3E2_EVIDENCE.evidenceId],
-  authorityClass: 'BOUNDED_PUBLIC_SOURCE_COMPOSITION_EXECUTION_PENDING',
-  authorityPosture: 'R3E2_SOURCE_COMPOSITION_PENDING_UNMERGED_R3E3_NOT_STARTED_RUN_8E_FAIL_OPEN',
+  authorityClass: 'EXECUTED_BOUNDED_PUBLIC_SOURCE_COMPOSITION_CORE_PASS',
+  authorityPosture: 'R3E2_CORE_SOURCE_COMPOSITION_PASS_RECEIPT_PENDING_R3E3_NOT_STARTED_RUN_8E_FAIL_OPEN',
   authoritySource: ['R3E1_PASS_CLOSED_SCOPE','R3D2_POINTER_TOUCH_INTAKE','R3D3_LIVE_GPU_BINDING','EXISTING_PUBLIC_ROUTE_HOST'],
   authorityScope: ['MODIFY_PUBLIC_MODULE_LOAD_ORDER','CREATE_PUBLIC_GPU_ORCHESTRATOR','PRESERVE_PUBLIC_HOST_IDENTITIES','DECLARE_RUNTIME_EXCLUSIVITY_RECEIPT'],
   authorityLimitations: ['NO_BROWSER_EXECUTION','NO_GPU_EXECUTION','NO_AUTHORITY_EXCLUSIVITY_ACCEPTANCE','NO_DEPLOYMENT','NO_R3E3','NO_RUN_8E_PASS'],
@@ -96,9 +114,9 @@ export const H_EARTH_RUN_8E_R3E2_NODE = freeze({
   prohibitedMutations: ['PROTECTED_PUBLIC_WITNESSES','NAVIGATION','FRAME_PACKET','PERSISTENT_RENDERER','POINTER_TOUCH_INTAKE','LIVE_GPU_BINDING','DIAGNOSTIC_HOST','R3E3_OR_LATER'],
   requiredValidations: ['EXACT_HTML_LOAD_ORDER_DELTA','PUBLIC_ORCHESTRATOR_SOURCE_AUDIT','PROTECTED_BLOB_IDENTITIES','AUTOMATIC_REGISTRY_PREFLIGHT','EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_PUBLIC_RUNTIME_AUTHORITY_EXCLUSIVITY_EXECUTION_R3E3'],
-  currentIdentityReferences: ['4d1692cb3f1555833bef7864a3f6ebc998b86a17','2c71944eabc6d4522d934ef2fc4af6a85a38f3b5'],
-  lifecycleStatus: 'EXECUTION_PENDING',
-  unresolvedFields: ['R3E2_EXECUTION_HEAD','R3E2_WORKFLOW_RUN','R3E2_ARTIFACT','R3E2_PASS_RECEIPT']
+  currentIdentityReferences: ['4d1692cb3f1555833bef7864a3f6ebc998b86a17','2c71944eabc6d4522d934ef2fc4af6a85a38f3b5','9cb9a0a98fcfc6fbf354ef9dacc6adf13743891c','30306926100','90113310977','8668783374','0daedf61f7e19af095f4db5fc47563a9cd786837','2b0a916b3a6d11da84316925f8abd8a3a1447445'],
+  lifecycleStatus: 'CORE_EXECUTION_PASS_RECEIPT_PENDING',
+  unresolvedFields: ['R3E2_PASS_RECEIPT','FINAL_EXACT_HEAD_WORKFLOW_RUN']
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R3E2_PATHS.map((repositoryPath) => [repositoryPath, { node: H_EARTH_RUN_8E_R3E2_NODE, occurrences: OCCURRENCES.filter((entry) => entry.path === repositoryPath) }]));

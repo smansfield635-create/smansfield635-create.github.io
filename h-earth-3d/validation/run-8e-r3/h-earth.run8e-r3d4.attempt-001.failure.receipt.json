@@ -1,0 +1,43 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3D4_INTERACTION_BROWSER_EXECUTION_ATTEMPT_FAILURE_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3D4_ATTEMPT_001_FAIL_PRESERVED",
+  "recordedAt": "2026-07-27T19:59:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3d4-interaction-browser-execution-001",
+  "pullRequest": 242,
+  "attempt": 1,
+  "head": "ecee671d27e4402daf921e8d95e43ace0075b5d0",
+  "workflowRun": 30300093963,
+  "workflowJob": 90090629096,
+  "artifactId": 8666211635,
+  "artifactDigest": "sha256:1e3c75aed5b63a99bf7ca7cb9b7076888efeba11a8bebd2fe589aeec74b57510",
+  "conclusion": "failure",
+  "failedStep": "Execute portrait and landscape sustained interaction audit",
+  "failureEvidence": {
+    "exactHarnessStderrCaptured": false,
+    "artifactContainedServerLogOnly": true,
+    "reproducedByAttempt": 2,
+    "reproducedFailureCode": "R3D4_PORTRAIT_VIEWPORT_MISMATCH",
+    "classification": "AUDIT_MODEL_EXACT_INNER_VIEWPORT_EQUALITY_ASSERTION"
+  },
+  "applicationDefectEstablished": false,
+  "interactionBacklogDefectEstablished": false,
+  "rendererDefectEstablished": false,
+  "sourceIdentityChecksPassed": true,
+  "syntaxChecksPassed": true,
+  "protectedShowroomSourceMutation": false,
+  "correctiveAction": "CAPTURE_EXACT_HARNESS_STDERR_WITHOUT_CHANGING_APPLICATION_OR_AUDIT_LOGIC",
+  "boundaries": {
+    "publicRouteMutated": false,
+    "publicDirectManipulationMutated": false,
+    "navigationAuthorityMutated": false,
+    "persistentRendererSourceMutated": false,
+    "pointerTouchIntakeSourceMutated": false,
+    "liveGpuBindingSourceMutated": false,
+    "deploymentPerformed": false,
+    "r3D5WorkStarted": false,
+    "run8EPassClosed": false
+  },
+  "issues": []
+}

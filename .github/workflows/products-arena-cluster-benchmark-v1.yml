@@ -34,7 +34,7 @@ jobs:
       - name: Install benchmark dependency
         run: npm install --no-save puppeteer-core@24.15.0
 
-      - name: Resolve Chrome
+      - name: Resolve Chrome with explicit SwiftShader testing opt-in
         shell: bash
         run: |
           chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
@@ -43,8 +43,30 @@ jobs:
             sudo apt-get install -y chromium
             chrome="$(command -v chromium || command -v chromium-browser)"
           fi
-          echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
-          "$chrome" --version
+
+          cat > /tmp/products-arena-chrome <<EOF
+          #!/usr/bin/env bash
+          set -euo pipefail
+          real_chrome="$chrome"
+          filtered=()
+          for arg in "\$@"; do
+            case "\$arg" in
+              --use-gl=*|--use-angle=*|--enable-unsafe-swiftshader)
+                ;;
+              *)
+                filtered+=("\$arg")
+                ;;
+            esac
+          done
+          exec "\$real_chrome" "\${filtered[@]}" \
+            --use-gl=angle \
+            --use-angle=swiftshader \
+            --enable-unsafe-swiftshader
+          EOF
+
+          chmod +x /tmp/products-arena-chrome
+          echo "CHROME_PATH=/tmp/products-arena-chrome" >> "$GITHUB_ENV"
+          /tmp/products-arena-chrome --version
 
       - name: Source assertions and syntax
         run: |
@@ -88,8 +110,7 @@ jobs:
               "--disable-setuid-sandbox",
               "--disable-dev-shm-usage",
               "--enable-webgl",
-              "--ignore-gpu-blocklist",
-              "--use-gl=swiftshader"
+              "--ignore-gpu-blocklist"
             ]
           });
 

@@ -14,8 +14,50 @@ import {
 } from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
 import { H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID } from '../../showroom/globe/h-earth/render/renderer.functional-landscape.js';
 
+const FAILURE_RECEIPT_PATH = new URL(
+  './run-8e-r2/h-earth.run8e-r2a.attempt-001.failure.receipt.json',
+  import.meta.url
+);
+const PASS_RECEIPT_PATH = new URL(
+  './run-8e-r2/h-earth.run8e-r2a.pass-closed.receipt.json',
+  import.meta.url
+);
+const failureReceipt = JSON.parse(fs.readFileSync(FAILURE_RECEIPT_PATH, 'utf8'));
+const passReceipt = JSON.parse(fs.readFileSync(PASS_RECEIPT_PATH, 'utf8'));
+
 const control = evaluateHEarthRun8ER2Control(H_EARTH_RUN_8E_R2_CONTROL);
 assert.equal(control.eligible, true, `R2_CONTROL_FAILED:${control.issues.join(',')}`);
+assert.equal(control.status, 'RUN_8E_R2A_CONTROL_PASS_CLOSED');
+assert.equal(H_EARTH_RUN_8E_R2_CONTROL.boundedSubcheckpoints[0].currentStatus, 'PASS_CLOSED');
+assert.equal(H_EARTH_RUN_8E_R2_CONTROL.boundedSubcheckpoints[1].currentStatus, 'NOT_STARTED');
+assert.equal(H_EARTH_RUN_8E_R2_CONTROL.stoppingBoundary.currentCheckpoint, 'RUN_8E_R2A_PASS_CLOSED');
+assert.equal(H_EARTH_RUN_8E_R2_CONTROL.stoppingBoundary.nextCheckpoint, 'RUN_8E_R2B_NOT_STARTED');
+
+assert.equal(failureReceipt.status, 'RUN_8E_R2A_ATTEMPT_001_FAIL_OPEN_RECONCILED');
+assert.equal(failureReceipt.failure.causeDisposition, 'RESOLVED');
+assert.equal(failureReceipt.failure.affectedPrimitiveIds.length, 7);
+assert.equal(failureReceipt.successfulSuccessorAttempt.correctedSourceHead, 'e0403370b888f0478ec51cdd96cc2fcdd267e25b');
+assert.equal(failureReceipt.boundaries.run8ER2BStarted, false);
+
+assert.equal(passReceipt.eligible, true);
+assert.equal(passReceipt.status, 'RUN_8E_R2A_PASS_CLOSED');
+assert.equal(passReceipt.execution.runId, 30235565337);
+assert.equal(passReceipt.execution.jobId, 89882629845);
+assert.equal(passReceipt.artifact.artifactId, 8641519551);
+assert.equal(passReceipt.artifact.artifactDigest,
+  'sha256:605f28dd6e2eb6410126773cee6dc672ff40f964d88e4a7ffbfbf223ecfe095c');
+assert.equal(passReceipt.validatedPackage.packageIdentity,
+  'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25');
+assert.equal(passReceipt.validatedPackage.contentDigest, 'fnv1a32:fd913c25');
+assert.equal(passReceipt.executedSourceIdentities.packageGitBlobSha,
+  '1699654f39c9e183f4cfc6f75b20ba051641b763');
+assert.equal(passReceipt.executedSourceIdentities.validationGitBlobSha,
+  '5fb4eeea7fb6d67633677ca5328e1c7500c2df81');
+assert.equal(passReceipt.checkpointDisposition.run8ER2A, 'PASS_CLOSED');
+assert.equal(passReceipt.checkpointDisposition.run8ER2B, 'NOT_STARTED');
+assert.equal(passReceipt.boundaries.run8ER2BStarted, false);
+assert.equal(passReceipt.boundaries.run8ER3Started, false);
+assert.equal(passReceipt.boundaries.run8EPassClosed, false);
 
 const explicitA = buildHEarthRun8ER2ImmutableLiveRenderPackage({
   packageOccurrenceId: 'H_EARTH_RUN_8E_R2_VALIDATION_EXPLICIT_A'
@@ -39,12 +81,15 @@ const cachedA = getHEarthRun8ER2ImmutableLiveRenderPackage();
 const cachedB = getHEarthRun8ER2ImmutableLiveRenderPackage();
 assert.equal(cachedA, cachedB, 'R2_CACHED_PACKAGE_OBJECT_NOT_STABLE');
 assert.equal(cachedA.packageIdentity, explicitA.packageIdentity, 'R2_CACHED_PACKAGE_IDENTITY_MISMATCH');
+assert.equal(cachedA.packageIdentity, passReceipt.validatedPackage.packageIdentity);
+assert.equal(cachedA.contentDigest, passReceipt.validatedPackage.contentDigest);
 assert.equal(Object.isFrozen(cachedA), true, 'R2_PACKAGE_NOT_FROZEN');
 assert.equal(Object.isFrozen(cachedA.buffers), true, 'R2_BUFFER_RECORD_NOT_FROZEN');
 Object.values(cachedA.buffers).forEach((buffer) => assert.equal(Object.isFrozen(buffer), true, 'R2_SOURCE_BUFFER_NOT_FROZEN'));
 
 assert.equal(cachedA.contractId, H_EARTH_RUN_8E_R2_CONTRACT_ID);
 assert.equal(cachedA.primitiveCount, 35);
+assert.equal(cachedA.vertexCount, 25524);
 assert.equal(cachedA.roleCounts.TERRAIN, 1);
 assert.equal(cachedA.roleCounts.SHORELINE, 7);
 assert.equal(cachedA.roleCounts.VEGETATION, 27);
@@ -101,9 +146,9 @@ assert.equal(cachedA.primitiveSpans.reduce((sum, span) => sum + span.indexCount,
 assert.equal(cachedA.buffers.indices.every((index) => index >= 0 && index < cachedA.vertexCount), true);
 
 const receipt = {
-  receiptType: 'H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_VALIDATION_RECEIPT',
+  receiptType: 'H_EARTH_RUN_8E_R2A_FINAL_HEAD_VALIDATION_RECEIPT',
   eligible: true,
-  status: 'RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_PASS',
+  status: 'RUN_8E_R2A_PASS_CLOSED_FINAL_HEAD_VALIDATION',
   generatedAt: new Date().toISOString(),
   contractId: cachedA.contractId,
   packageIdentity: cachedA.packageIdentity,
@@ -122,6 +167,12 @@ const receipt = {
     explicitB: explicitB.constructionMilliseconds,
     cached: cachedA.constructionMilliseconds
   },
+  closure: {
+    run8ER2A: 'PASS_CLOSED',
+    run8ER2B: 'NOT_STARTED',
+    temporaryCorrectionScriptPresent: false,
+    workflowReadOnly: true
+  },
   boundaries: {
     cameraIndependent: cachedA.cameraIndependent,
     viewportIndependent: cachedA.viewportIndependent,
@@ -129,6 +180,7 @@ const receipt = {
     renderLoopCreated: cachedA.renderLoopCreated,
     publicRouteBound: cachedA.publicRouteBound,
     deploymentAuthority: cachedA.deploymentAuthority,
+    run8ER2BStarted: false,
     run8ER3Started: false,
     run8EPassClosed: false
   },
@@ -142,6 +194,6 @@ const receipt = {
 const outputDirectory = process.env.H_EARTH_RUN8E_R2_OUTPUT;
 if (outputDirectory) {
   fs.mkdirSync(outputDirectory, { recursive: true });
-  fs.writeFileSync(path.join(outputDirectory, 'h-earth.run8e-r2.validation.receipt.json'), `${JSON.stringify(receipt, null, 2)}\n`);
+  fs.writeFileSync(path.join(outputDirectory, 'h-earth.run8e-r2a.final-head.validation.receipt.json'), `${JSON.stringify(receipt, null, 2)}\n`);
 }
 console.log(JSON.stringify(receipt, null, 2));

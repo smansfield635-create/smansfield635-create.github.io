@@ -1,0 +1,97 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3A_PASS_CLOSED",
+  "recordedAt": "2026-07-27T16:33:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3a-live-renderer-contract-001",
+  "pullRequest": 226,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2F",
+    "status": "PASS_CLOSED",
+    "branch": "agent/h-earth-run8e-r2f-closure-promotion-decision-001",
+    "exactHead": "02aa90591a34968c8b6bacba926a156293ad0f76",
+    "pullRequest": 225,
+    "promotionToR3Input": "APPROVED"
+  },
+  "coreExecution": {
+    "head": "e244f82ceab3d5c780224b564ee162d4dac326d9",
+    "runId": 30284854902,
+    "jobId": 90040012506,
+    "artifactId": 8660349498,
+    "artifactDigest": "sha256:c76331601d89985246644e0743396450d372b01fe63c435bdcc293d25fe4eb36",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30284854885,
+    "automaticRepositoryRegistryPreflight": "PASS"
+  },
+  "closureControlValidation": {
+    "head": "ebadd50727ba5ec225e62fb5c730fcda354eba10",
+    "runId": 30285088426,
+    "jobId": 90040780321,
+    "artifactId": 8660449213,
+    "artifactDigest": "sha256:8eb0912f63e604379dd4f8f93200e5c82348178c83988661cb086460e2831af0",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30285089793,
+    "automaticRepositoryRegistryPreflight": "PASS",
+    "receiptPresentDuringExecution": false
+  },
+  "packetAudit": {
+    "packetCount": 10,
+    "waypointCount": 5,
+    "viewportCount": 2,
+    "portraitAndLandscapePackets": true,
+    "packetManifestDigest": "sha256:c04ccd3d365145063ca3bdd4e479b5db931e1a42c8526ad5dc9908a4bc3bd709",
+    "sameCameraStateDeterministic": true,
+    "differentCameraStatesChangeViewProjection": true,
+    "successorTerrainCameraReconciliationPreserved": true,
+    "sharedNavigationStateMutated": false
+  },
+  "rendererInterface": {
+    "contractId": "H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1",
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "packageContentDigest": "fnv1a32:fd913c25",
+    "gpuTransportContractId": "H_EARTH_RUN_8E_R2D_DETERMINISTIC_GPU_UPLOAD_VIEWS_v1",
+    "attributeCount": 8,
+    "uniformCount": 12,
+    "drawRangeCount": 4,
+    "packageUploadedOnceRequired": true,
+    "cameraUniformsUpdatedPerFrameRequired": true,
+    "worldRebuildPerCameraMoveProhibited": true
+  },
+  "protectedSourceCustody": {
+    "liveRenderPackageGitBlob": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+    "canonicalGpuTransportGitBlob": "785856d7702a0e855c2672e6b8a7325ad5b3ba50",
+    "navigationSourceGitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91"
+  },
+  "boundaries": {
+    "webglContextCreated": false,
+    "shaderOrProgramCreated": false,
+    "gpuDrawCallCreated": false,
+    "renderLoopCreated": false,
+    "interactionBindingCreated": false,
+    "publicRouteMutated": false,
+    "directManipulationMutated": false,
+    "visiblePresentationCreated": false,
+    "deploymentPerformed": false,
+    "r3BWorkStarted": false,
+    "run8EPassClosed": false
+  },
+  "checkpointDisposition": {
+    "run8ER2": "PASS_CLOSED",
+    "run8ER3A": "PASS_CLOSED",
+    "run8ER3B": "NOT_STARTED",
+    "run8ER3": "OPEN_AT_R3B_BOUNDARY",
+    "run8E": "FAIL_OPEN"
+  },
+  "finalExactHeadValidation": {
+    "required": true,
+    "performedAfterReceiptAndFinalRegistryEvidenceReconciliation": false,
+    "finalHead": null,
+    "workflowRun": null,
+    "workflowJob": null,
+    "artifactId": null,
+    "artifactDigest": null
+  },
+  "stoppingBoundary": "STOP_BEFORE_ISOLATED_WEBGL2_FIXED_FRAME_EXECUTION_R3B",
+  "issues": []
+}

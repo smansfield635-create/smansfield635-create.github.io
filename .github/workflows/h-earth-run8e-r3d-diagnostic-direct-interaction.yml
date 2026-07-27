@@ -54,11 +54,15 @@ jobs:
           node --check h-earth-3d/validation/h-earth.run8e-r3d.diagnostic-direct-interaction.harness.mjs
           node --check showroom/globe/h-earth/render/direct-interaction.run8e-r3d.js
           node --check showroom/globe/h-earth/diagnostic/run8e-r3d/direct-interaction.js
-          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.attempt-001.failure.receipt.json','utf8'))"
+          for receipt in \
+            h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.attempt-001.failure.receipt.json \
+            h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.attempt-002.failure.receipt.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$receipt','utf8'))"
+          done
           if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.pass-closed.receipt.json; then
             node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.pass-closed.receipt.json','utf8'))"
           fi
-          if grep -En "style\.transform[[:space:]]*=|translate3d\(|createImageBitmap[[:space:]]*\(|\.drawImage[[:space:]]*\(|getContext\([\'\"]2d|successorApi|\.refresh[[:space:]]*\(" \
+          if grep -En "style\.transform[[:space:]]*=|translate3d\(|createImageBitmap[[:space:]]*\(|\.drawImage[[:space:]]*\(|getContext\(['\"]2d|successorApi|\.refresh[[:space:]]*\(" \
             showroom/globe/h-earth/render/direct-interaction.run8e-r3d.js \
             showroom/globe/h-earth/diagnostic/run8e-r3d/direct-interaction.js; then
             echo "R3D_BITMAP_OR_CPU_PREVIEW_SOURCE_DETECTED"
@@ -137,8 +141,9 @@ jobs:
             'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
             'h-earth-3d/validation/h-earth.run8e-r3d.diagnostic-direct-interaction.harness.mjs',
             'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.attempt-001.failure.receipt.json',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.attempt-002.failure.receipt.json',
             'showroom/globe/h-earth/render/direct-interaction.run8e-r3d.js',
-            'showrom/globe/h-earth/diagnostic/run8e-r3d/index.html',
+            'showroom/globe/h-earth/diagnostic/run8e-r3d/index.html',
             'showroom/globe/h-earth/diagnostic/run8e-r3d/direct-interaction.js'
           }
           optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.pass-closed.receipt.json'}
@@ -162,8 +167,19 @@ jobs:
           if receipt['distinctFrameArtifactCount'] != 5: raise SystemExit('R3D_DISTINCT_FRAME_COUNT_INVALID')
           if receipt['stoppingBoundary'] != 'STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E':
             raise SystemExit('R3D_STOPPING_BOUNDARY_MISMATCH')
-          if not all(receipt['correspondence'].values()):
-            raise SystemExit('R3D_CORRESPONDENCE_AUDIT_FAILED')
+          positive = {
+            'realBrowserPointerEventObjects', 'touchPointerEvents', 'oneFingerLook',
+            'twoFingerTravel', 'pinchZoom', 'wheelFallback',
+            'acceptedNavigationProposalsDriveGpuFrames', 'noBitmapPreview',
+            'noCpuRasterRefresh', 'samePersistentRendererRetained',
+            'noResourceRecreation', 'noGpuReupload', 'visibleFramesDistinct'
+          }
+          negative = {'navigationAuthorityMutated', 'cameraAuthorityCreated', 'publicRouteBound'}
+          correspondence = receipt['correspondence']
+          if any(correspondence.get(key) is not True for key in positive):
+            raise SystemExit('R3D_POSITIVE_CORRESPONDENCE_AUDIT_FAILED')
+          if any(correspondence.get(key) is not False for key in negative):
+            raise SystemExit('R3D_NEGATIVE_BOUNDARY_CORRESPONDENCE_AUDIT_FAILED')
           PY
           for label in initial look travel pinch wheel; do
             test -s "$H_EARTH_RUN8E_R3D_OUTPUT/h-earth.run8e-r3d.${label}-frame.png"

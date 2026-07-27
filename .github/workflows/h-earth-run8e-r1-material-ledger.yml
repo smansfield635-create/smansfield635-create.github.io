@@ -33,15 +33,21 @@ jobs:
       - name: Verify JSON and JavaScript syntax
         run: |
           node --check h-earth-3d/validation/h-earth.run8e-r1.material-ledger.validation.mjs
+          node --check h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs
           node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-scope.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js
           node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
           node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-001.transcribed.json','utf8'))"
           node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-002.transcribed.json','utf8'))"
           node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.physical-interaction.transcribed.json','utf8'))"
           node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.material-ledger.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.material-ledger.preservation.receipt.json','utf8'))"
 
       - name: Execute material ledger validation
         run: node h-earth-3d/validation/h-earth.run8e-r1.material-ledger.validation.mjs
+
+      - name: Execute material ledger execution validation
+        run: node h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs
 
       - name: Verify bounded evidence-only scope and R2 stopping boundary
         run: |
@@ -55,12 +61,15 @@ jobs:
           allowed = {
               '.github/workflows/h-earth-run8e-r1-material-ledger.yml',
               'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-scope.js',
+              'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js',
               'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
               'h-earth-3d/validation/h-earth.run8e-r1.material-ledger.validation.mjs',
+              'h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs',
               'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-001.transcribed.json',
               'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.architecture-probe-002.transcribed.json',
               'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.physical-interaction.transcribed.json',
-              'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.material-ledger.json'
+              'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.reference-device.material-ledger.json',
+              'h-earth-3d/validation/run-8e-r1-material-ledger/h-earth.run8e-r1.material-ledger.preservation.receipt.json'
           }
           unexpected = sorted(set(paths) - allowed)
           missing = sorted(allowed - set(paths))

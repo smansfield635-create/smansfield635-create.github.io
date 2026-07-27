@@ -1,0 +1,136 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R1_REPOSITORY_PROFILING_PACKAGE_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R1_REPOSITORY_PROFILING_PACKAGE_PASS_PHYSICAL_SAMSUNG_PENDING",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "baseMainHead": "9c5e975eee14c38b667660dd328751d4e2a7e2c3",
+  "branch": "agent/h-earth-run8e-r1-physical-profiling-001",
+  "validatedHead": "db38b89bda29bde41a5874d94e2ab5c80d49ff7c",
+  "verifiedOn": "2026-07-27",
+  "workflowEvidence": {
+    "runId": 30228676176,
+    "jobId": 89863366514,
+    "artifactId": 8639446224,
+    "artifactDigest": "sha256:318d85a619b75b49a4da939e721d0dbd4fba81465342ccf35222fb706193c287",
+    "artifactName": "h-earth-run8e-r1-profiling-evidence"
+  },
+  "scope": {
+    "fixedCameraStateCount": 5,
+    "cameraStateIds": [
+      "COASTAL_ENTRY",
+      "INLAND_HILL",
+      "MOUNTAIN_FACING",
+      "OVERHEAD_OBLIQUE",
+      "SHORELINE_RETURN"
+    ],
+    "admittedPrimitiveCount": 35,
+    "candidateAResultCount": 5,
+    "candidateBResultCount": 5,
+    "candidateCResultCount": 5,
+    "rendererReplacementPerformed": false,
+    "publicRouteMutated": false,
+    "cameraAuthorityMutated": false,
+    "navigationAuthorityMutated": false,
+    "terrainOrEnvironmentAuthorityMutated": false
+  },
+  "staticPipelineProfileMilliseconds": {
+    "worldPackageConstruction": 1884.1,
+    "westAdmission": 1852.3,
+    "packet002Transfer": 0.6
+  },
+  "candidateA": {
+    "candidateId": "CANDIDATE_A_INSTRUMENTED_CURRENT_MAIN_THREAD_CPU_RENDERER",
+    "publicSuitabilityAlreadyFailedPhysicalEvidence": true,
+    "fullWorldFrameConstructionRangeMilliseconds": {
+      "minimum": 4976.4,
+      "maximum": 5899.7
+    },
+    "materialAndLightProjectionRangeMilliseconds": {
+      "minimum": 1904.9,
+      "maximum": 2499.6
+    },
+    "cameraTransformAndClippingRangeMilliseconds": {
+      "minimum": 51,
+      "maximum": 89.7
+    },
+    "baseRasterizationRangeMilliseconds": {
+      "minimum": 7.5,
+      "maximum": 13.7
+    },
+    "fullRun8ERasterRangeMilliseconds": {
+      "minimum": 21,
+      "maximum": 34.2
+    },
+    "secondDepthTraversalCompositeRangeMilliseconds": {
+      "minimum": 12.6,
+      "maximum": 20.5
+    },
+    "putImageDataRangeMilliseconds": {
+      "minimum": 0.1,
+      "maximum": 0.4
+    },
+    "projectedTriangleCountRange": {
+      "minimum": 4499,
+      "maximum": 12702
+    },
+    "disposition": "DETERMINISTIC_REFERENCE_ONLY"
+  },
+  "candidateB": {
+    "candidateId": "CANDIDATE_B_CACHED_WORLD_WORKER_CPU_PROBE",
+    "available": true,
+    "submittedTriangleCountPerState": 49040,
+    "durationRangeMilliseconds": {
+      "minimum": 8.5,
+      "maximum": 24.4
+    },
+    "offscreenCanvas2D": true,
+    "disposition": "RESPONSIVE_FALLBACK_REFERENCE_ACCELERATION_OR_DIAGNOSTIC_OPTION"
+  },
+  "candidateC": {
+    "candidateId": "CANDIDATE_C_CACHED_WORLD_WEBGL_2_GPU_PROBE",
+    "available": true,
+    "indexCount": 147120,
+    "drawCallsPerState": 1,
+    "ciDurationRangeMilliseconds": {
+      "minimum": 0,
+      "maximum": 0.1
+    },
+    "ciExecutionQualification": "SOFTWARE_GPU_OR_CI_WEBGL_IMPLEMENTATION_NOT_PHYSICAL_SAMSUNG_PERFORMANCE",
+    "disposition": "PRIMARY_LIVE_RENDERER_CANDIDATE_WEBGL_2"
+  },
+  "samsungEmulationSupportingEvidence": {
+    "physicalSamsungExecution": false,
+    "pointerMoveCount": 40,
+    "navigationIntentCount": 18,
+    "previewTransformMutationCount": 22,
+    "committedSuccessorRenderCount": 2,
+    "lastSuccessorRenderDurationMilliseconds": 5575.3,
+    "longTaskCount": 15,
+    "longestMainThreadTaskMilliseconds": 10972,
+    "maximumGestureBacklogDepth": 1,
+    "previewStillActiveAtCapture": true,
+    "renderStillActiveAtCapture": true,
+    "finalNavigationSequence": 19,
+    "finalRenderedNavigationStateId": "H_EARTH_NAVIGATION_STATE_0012",
+    "truthfulContinuousRealtimeInteractionEstablished": false
+  },
+  "architectureDisposition": {
+    "deterministicCpuReferenceRenderer": "PRESERVE_REFERENCE_ONLY",
+    "realtimeLiveRendererPrimaryCandidate": "WEBGL_2",
+    "workerCpuDisposition": "FALLBACK_REFERENCE_ACCELERATION_OR_DIAGNOSTIC_OPTION",
+    "sharedWorldAuthorityRequired": true,
+    "sharedCameraAndNavigationAuthorityRequired": true,
+    "sharedMaterialAndLightAuthorityRequired": true,
+    "geometricAndAuthorityCorrespondenceRequired": true,
+    "pixelIdentityRequired": false
+  },
+  "physicalEvidenceBoundary": {
+    "repositoryProfilingPackage": "PASS",
+    "samsungEmulation": "SUPPORTING_ONLY",
+    "physicalSamsungProfilerRoute": "READY_FOR_DEPLOYMENT",
+    "physicalSamsungReceipt": "NOT_YET_CAPTURED",
+    "run8ER1PassClosed": false,
+    "run8EPassClosed": false
+  },
+  "issues": []
+}

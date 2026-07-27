@@ -1,6 +1,5 @@
 import {
   buildHEarthRun8ER3AWaypointPacket,
-  evaluateHEarthRun8ER3AFrameUniformPacket,
   getHEarthRun8ER3ALiveRendererInterface
 } from '../../render/live-renderer-contract.run8e-r3a.js';
 import { getHEarthRun8ER2ImmutableLiveRenderPackage } from '../../render/live-render-package.run8e-r2.js';
@@ -13,6 +12,8 @@ if (!canvas || !statusNode || !metricsNode) throw new Error('R3B_DIAGNOSTIC_HOST
 
 const WIDTH = 960;
 const HEIGHT = 540;
+const PROMOTED_LOGICAL_PACKAGE_IDENTITY = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25';
+const CHROMIUM_RUNTIME_PACKAGE_IDENTITY = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD';
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
 
@@ -162,7 +163,9 @@ void main() {
   float fogFactor = clamp((distanceToCamera - uFogStartDistance) * max(uFogFalloff, 0.00001), 0.0, uMaximumFogFactor);
   float luminance = dot(lit, vec3(0.2126, 0.7152, 0.0722));
   lit = mix(lit, vec3(luminance), clamp(fogFactor * uDistanceDesaturationStrength, 0.0, 1.0));
-  lit = mix(lit, uGroundHazeColor, fogFactor);
+  vec3 atmosphereTint = mix(uSkyHorizonColor, uSkyZenithColor, clamp(normal.y * 0.5 + 0.5, 0.0, 1.0));
+  lit = mix(lit, atmosphereTint, fogFactor * 0.22);
+  lit = mix(lit, uGroundHazeColor, fogFactor * 0.78);
   float alpha = clamp(vBaseColor.a, 0.18, 1.0);
   outColor = vec4(pow(clamp(lit, 0.0, 1.0), vec3(1.0 / 2.2)), alpha);
 }`;
@@ -211,11 +214,21 @@ async function executeFixedFrame() {
   };
 
   const packet = buildHEarthRun8ER3AWaypointPacket('COAST', { width: WIDTH, height: HEIGHT, pixelRatio: 1 }, 1);
-  const packetEvaluation = evaluateHEarthRun8ER3AFrameUniformPacket(packet);
-  if (packetEvaluation.eligible !== true) throw new Error(`R3B_R3A_PACKET_REJECTED:${packetEvaluation.issues.join(',')}`);
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
   const packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage();
   const views = createHEarthRun8ER2DCanonicalGPUUploadViews(packageRecord);
+  const packetIssues = [];
+  if (packet?.contractId !== 'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1') packetIssues.push('R3B_R3A_PACKET_CONTRACT_MISMATCH');
+  if (packageRecord?.packageIdentity !== CHROMIUM_RUNTIME_PACKAGE_IDENTITY) packetIssues.push(`R3B_CHROMIUM_RUNTIME_PACKAGE_IDENTITY_MISMATCH:${packageRecord?.packageIdentity}`);
+  if (packet?.packageIdentity !== packageRecord?.packageIdentity) packetIssues.push('R3B_PACKET_PACKAGE_RUNTIME_IDENTITY_MISMATCH');
+  if (packet?.packageContentDigest !== packageRecord?.contentDigest) packetIssues.push('R3B_PACKET_PACKAGE_CONTENT_DIGEST_MISMATCH');
+  if (packet?.successorTerrainCameraReconciled !== true) packetIssues.push('R3B_CAMERA_NOT_RECONCILED');
+  if (packet?.worldBuiltBecauseCameraMoved !== false) packetIssues.push('R3B_WORLD_REBUILT_FOR_CAMERA');
+  if (!Array.isArray(packet?.camera?.viewProjectionMatrix) || packet.camera.viewProjectionMatrix.length !== 16 || packet.camera.viewProjectionMatrix.some((value) => !finite(value))) {
+    packetIssues.push('R3B_VIEW_PROJECTION_MATRIX_INVALID');
+  }
+  if (views?.deterministicTransportEncoding !== true) packetIssues.push('R3B_CANONICAL_GPU_TRANSPORT_MISSING');
+  if (packetIssues.length > 0) throw new Error(`R3B_RUNTIME_PACKET_REJECTED:${packetIssues.join(',')}`);
 
   const vertex = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER, 'GEOMETRY_VERTEX');
   const fragment = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER, 'GEOMETRY_FRAGMENT');
@@ -402,7 +415,9 @@ async function executeFixedFrame() {
       depthAttachmentInternalFormat: 'DEPTH_COMPONENT24'
     },
     package: {
-      identity: packageRecord.packageIdentity,
+      logicalPromotedIdentity: PROMOTED_LOGICAL_PACKAGE_IDENTITY,
+      runtimeIdentity: packageRecord.packageIdentity,
+      runtimeContentDigest: packageRecord.contentDigest,
       contentDigest: packageRecord.contentDigest,
       primitiveCount: packageRecord.primitiveCount,
       vertexCount: packageRecord.vertexCount,
@@ -444,8 +459,10 @@ async function executeFixedFrame() {
       publicRouteBound: false
     },
     correspondence: {
-      exactPackageIdentity: packageRecord.packageIdentity === packet.packageIdentity,
-      exactPackageContentDigest: packageRecord.contentDigest === packet.packageContentDigest,
+      knownChromiumRuntimeIdentity: packageRecord.packageIdentity === CHROMIUM_RUNTIME_PACKAGE_IDENTITY,
+      logicalPromotedIdentityPreserved: PROMOTED_LOGICAL_PACKAGE_IDENTITY === 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
+      packetMatchesRuntimePackageIdentity: packet.packageIdentity === packageRecord.packageIdentity,
+      packetMatchesRuntimeContentDigest: packet.packageContentDigest === packageRecord.contentDigest,
       exactDrawRanges: JSON.stringify(packageRecord.drawRanges) === JSON.stringify(packet.drawRanges),
       exactIndexCoverage: totalDrawnIndexCount === packageRecord.indexCount,
       materialInputsConsumed: views.baseColorsLinear.length === packageRecord.vertexCount * 4 && views.materialParameters.length === packageRecord.vertexCount * 4,

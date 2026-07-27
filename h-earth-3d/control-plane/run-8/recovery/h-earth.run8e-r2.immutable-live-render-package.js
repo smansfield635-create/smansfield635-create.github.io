@@ -118,7 +118,22 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
       checkpointId: 'RUN_8E_R2E',
       name: 'REGISTRY_DURABLE_RECEIPT_AND_INDEPENDENT_SCOPE_AUDIT',
       requiredResult: 'PASS_CLOSED_BEFORE_R2F',
-      currentStatus: 'NOT_STARTED',
+      currentStatus: 'PASS_CLOSED',
+      executionEvidence: {
+        executionHead: 'c7a7a58458b22fbda650165ab7876a2640679455',
+        workflowRun: 30276245196,
+        workflowJob: 90010942725,
+        evidenceArtifact: 8656899123,
+        evidenceArtifactDigest: 'sha256:ab2235534a1d59c4a2030ba2b6c1d0caf7cef637b27ee6eebf904f446a401997',
+        automaticRegistryPreflightRun: 30276239789,
+        automaticRegistryPreflightJob: 90010923826,
+        automaticRegistryPreflightArtifact: 8656897130,
+        automaticRegistryPreflightArtifactDigest: 'sha256:b548333c6958b9ff0553c4b9af14a0480eb6c6534ab10eba96e7965218f793d9',
+        registeredPathCount: 33,
+        registeredGovernedPathCount: 25,
+        custodyManifestDigest: 'sha256:40607b14ed9bf5f06225d2f2eb566e63ccdf700347065e457db8d7d50dcfc45e',
+        passReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json'
+      },
       stoppingBoundary: 'STOP_BEFORE_R2_CLOSURE_AND_PROMOTION_R2F'
     },
     {
@@ -135,6 +150,7 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'KEEP_WORLD_CAMERA_NAVIGATION_MATERIAL_AND_LIGHT_AUTHORITIES_SHARED',
     'EXPOSE_FRESH_GPU_UPLOAD_VIEWS_WITHOUT_EXPOSING_MUTABLE_PACKAGE_STORAGE',
     'CANONICALIZE_RUNTIME_DRIFT_ONLY_AT_THE_GPU_TRANSPORT_BOUNDARY',
+    'REGISTER_AND_AUDIT_ALL_GOVERNED_R2_PATHS_BEFORE_R2_PROMOTION',
     'DO_NOT_CREATE_A_RENDER_LOOP_IN_R2',
     'DO_NOT_BIND_R2_TO_THE_PUBLIC_ROUTE'
   ],
@@ -162,7 +178,9 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'DEFAULT_ATMOSPHERE_UNIFORM_SEED',
     'DETERMINISTIC_PACKAGE_IDENTITY',
     'COPY_ON_REQUEST_GPU_BUFFER_VIEWS',
-    'DETERMINISTIC_CANONICAL_GPU_TRANSPORT_VIEWS'
+    'DETERMINISTIC_CANONICAL_GPU_TRANSPORT_VIEWS',
+    'ACTIVE_REGISTRY_REPRESENTATION',
+    'DURABLE_EXECUTION_CUSTODY'
   ],
   correspondenceRequirements: {
     primitiveMembership: 'EXACT',
@@ -175,6 +193,7 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     transparencyClasses: 'PRESERVED',
     semanticAndFormationProvenance: 'PRESERVED',
     gpuTransportCanonicalization: 'NORMALS_AND_MATERIAL_PARAMETERS_ONLY',
+    registryPathResolution: 'ALL_R2_GOVERNED_PATHS_REGISTERED',
     pixelIdentity: 'NOT_REQUIRED'
   },
   expectedCorpus: {
@@ -186,7 +205,9 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     triangleCount: 49040,
     indexCount: 147120,
     gpuUploadBufferCount: 9,
-    gpuUploadByteLengthPerCycle: 2145444
+    gpuUploadByteLengthPerCycle: 2145444,
+    registryPathCountAtR2EExecution: 33,
+    automaticPreflightGovernedPathCountAtR2EExecution: 25
   },
   permittedMutations: [
     'NEW_R2_CONTROL_CONTRACT',
@@ -220,15 +241,18 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'THREE_GPU_RESOURCE_LIFECYCLE_CYCLES_PASS',
     'CONTEXT_LOSS_AND_RESTORATION_PASS',
     'ALL_27_GPU_BUFFERS_DELETED',
+    'ALL_R2_GOVERNED_PATHS_RESOLVE_IN_ACTIVE_REGISTRY',
+    'AUTOMATIC_REPOSITORY_REGISTRY_PREFLIGHT_PASS',
+    'DURABLE_R2E_RECEIPT_PRESERVED',
     'NO_SHADER_PROGRAM_DRAW_CALL_OR_VISIBLE_PRESENTATION_CREATED',
     'NO_CAMERA_VIEWPORT_RENDER_LOOP_OR_ROUTE_BINDING_IN_PACKAGE',
     'SOURCE_AUTHORITIES_AND_R1_FAIL_OPEN_BOUNDARY_PRESERVED'
   ],
   stoppingBoundary: {
-    currentCheckpoint: 'RUN_8E_R2D_PASS_CLOSED',
-    nextCheckpoint: 'RUN_8E_R2E_NOT_STARTED',
+    currentCheckpoint: 'RUN_8E_R2E_PASS_CLOSED',
+    nextCheckpoint: 'RUN_8E_R2F_NOT_STARTED',
     run8ER2MayCloseOnConstructionAndValidationPass: true,
-    run8ER2EStarted: false,
+    run8ER2FStarted: false,
     run8ER3Started: false,
     publicRendererInstalled: false,
     publicInteractionRestored: false,
@@ -267,7 +291,15 @@ export function evaluateHEarthRun8ER2Control(candidate = H_EARTH_RUN_8E_R2_CONTR
   if (r2D?.executionEvidence?.canonicalGpuUploadBytesExactAcrossNodeAndChromium !== true) {
     issues.push('R2D_CANONICAL_GPU_BYTES_NOT_EXACT');
   }
-  if (r2E?.currentStatus !== 'NOT_STARTED') issues.push('R2E_STARTED_BEFORE_R2D_STOP');
+  if (r2E?.currentStatus !== 'PASS_CLOSED') issues.push('R2E_NOT_PASS_CLOSED');
+  if (r2E?.executionEvidence?.workflowRun !== 30276245196) issues.push('R2E_WORKFLOW_RUN_MISMATCH');
+  if (r2E?.executionEvidence?.automaticRegistryPreflightRun !== 30276239789) {
+    issues.push('R2E_AUTOMATIC_PREFLIGHT_RUN_MISMATCH');
+  }
+  if (r2E?.executionEvidence?.custodyManifestDigest !==
+      'sha256:40607b14ed9bf5f06225d2f2eb566e63ccdf700347065e457db8d7d50dcfc45e') {
+    issues.push('R2E_CUSTODY_DIGEST_MISMATCH');
+  }
   if (r2F?.checkpointId !== 'RUN_8E_R2F' || r2F?.currentStatus !== 'NOT_STARTED') {
     issues.push('R2F_STATE_INVALID');
   }
@@ -276,14 +308,17 @@ export function evaluateHEarthRun8ER2Control(candidate = H_EARTH_RUN_8E_R2_CONTR
   if (candidate?.expectedCorpus?.gpuUploadByteLengthPerCycle !== 2145444) {
     issues.push('R2_GPU_UPLOAD_BYTE_LENGTH_INVALID');
   }
+  if (candidate?.expectedCorpus?.registryPathCountAtR2EExecution !== 33) {
+    issues.push('R2_REGISTRY_PATH_COUNT_INVALID');
+  }
   if (!candidate?.prohibitedMutations?.includes('VISIBLE_RENDERER_OR_RENDER_LOOP')) {
     issues.push('R2_RENDER_LOOP_BOUNDARY_MISSING');
   }
-  if (candidate?.stoppingBoundary?.run8ER2EStarted !== false) issues.push('R2E_STARTED_INSIDE_R2D_CLOSURE');
+  if (candidate?.stoppingBoundary?.run8ER2FStarted !== false) issues.push('R2F_STARTED_INSIDE_R2E_CLOSURE');
   if (candidate?.stoppingBoundary?.run8ER3Started !== false) issues.push('R3_STARTED_INSIDE_R2');
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R2D_CONTROL_PASS_CLOSED' : 'RUN_8E_R2_CONTROL_FAIL',
+    status: issues.length === 0 ? 'RUN_8E_R2E_CONTROL_PASS_CLOSED' : 'RUN_8E_R2_CONTROL_FAIL',
     issues
   });
 }

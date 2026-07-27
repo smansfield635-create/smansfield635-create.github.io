@@ -1,0 +1,104 @@
+{
+  "decisionId": "H_EARTH_RUN_8E_R2F_CLOSURE_AND_PROMOTION_DECISION_v1",
+  "checkpoint": "RUN_8E_R2F",
+  "status": "EXECUTION_PENDING",
+  "recordedAt": null,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2f-closure-promotion-decision-001",
+  "baseBranch": "agent/h-earth-run8e-r2e-registry-execution-custody-001",
+  "baseExactHead": "096bfbaf45b8987041600385ae16646b00137b9b",
+  "controllingStack": [
+    {
+      "checkpoint": "RUN_8E_R2A",
+      "pullRequest": 217,
+      "baseHead": "a660d54b0df30e768b95e2314b918d0f263883ed",
+      "finalHead": "22b23594005dabdd9374501dae1c561f2dafa648",
+      "status": "PASS_CLOSED"
+    },
+    {
+      "checkpoint": "RUN_8E_R2B",
+      "pullRequest": 218,
+      "baseHead": "22b23594005dabdd9374501dae1c561f2dafa648",
+      "finalHead": "39de87edefcc037eaafa8a988dc0c84e40e3d1ba",
+      "status": "PASS_CLOSED"
+    },
+    {
+      "checkpoint": "RUN_8E_R2C",
+      "pullRequest": 219,
+      "baseHead": "39de87edefcc037eaafa8a988dc0c84e40e3d1ba",
+      "finalHead": "845b6d6acffdd461153b3474044ec533ffd4403b",
+      "status": "PASS_CLOSED"
+    },
+    {
+      "checkpoint": "RUN_8E_R2D",
+      "pullRequest": 220,
+      "baseHead": "845b6d6acffdd461153b3474044ec533ffd4403b",
+      "finalHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9",
+      "status": "PASS_CLOSED"
+    },
+    {
+      "checkpoint": "RUN_8E_R2E",
+      "pullRequest": 224,
+      "baseHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9",
+      "finalHead": "096bfbaf45b8987041600385ae16646b00137b9b",
+      "status": "PASS_CLOSED"
+    }
+  ],
+  "supersededOccurrences": [
+    {
+      "pullRequest": 223,
+      "state": "CLOSED_UNMERGED",
+      "classification": "SUPERSEDED_R2E_CANDIDATE",
+      "controllingReplacement": 224
+    }
+  ],
+  "protectedIdentities": {
+    "liveRenderPackagePath": "/showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "liveRenderPackageGitBlobSha": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+    "gpuTransportAdapterPath": "/showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+    "gpuTransportAdapterGitBlobSha": "785856d7702a0e855c2672e6b8a7325ad5b3ba50",
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "packageContentDigest": "fnv1a32:fd913c25",
+    "r2bCustodyManifestDigest": "sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d",
+    "r2cAuditManifestDigest": "sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe",
+    "r2dCustodyManifestDigest": "sha256:0ef98ea0f82370278ecc946247b32a8ab615a665834abdb33fee741ae6b7ec6e",
+    "r2eOccurrenceManifestDigest": "sha256:2ae01097d0ab58f6cfd6b2a158ee558f816a2342443b387da410879fb1f2da9a"
+  },
+  "closureCriteria": {
+    "r2AThroughR2EPassClosed": true,
+    "stackBaseHeadChainExact": true,
+    "singleControllingR2EOccurrence": true,
+    "allControllingPullRequestsOpenDraftUnmerged": true,
+    "protectedPackageIdentitiesPreserved": true,
+    "registryAndAutomaticPreflightPass": true,
+    "visibleRendererOrRenderLoopAbsent": true,
+    "publicRouteCameraNavigationGestureUnchanged": true,
+    "deploymentAbsent": true,
+    "run8EPassClosed": false
+  },
+  "promotionDecision": {
+    "r2ConstructionClosure": "PENDING_EXECUTION",
+    "promotionTarget": "RUN_8E_R3_INPUT",
+    "promotionToR3Input": "PENDING_EXECUTION",
+    "mainBranchPromotion": "NOT_EXECUTED",
+    "mainMergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "publicRouteAuthorityCreated": false,
+    "run8EPassAuthorityCreated": false
+  },
+  "execution": null,
+  "finalExactHeadValidation": null,
+  "checkpointDisposition": {
+    "run8ER2A": "PASS_CLOSED",
+    "run8ER2B": "PASS_CLOSED",
+    "run8ER2C": "PASS_CLOSED",
+    "run8ER2D": "PASS_CLOSED",
+    "run8ER2E": "PASS_CLOSED",
+    "run8ER2F": "EXECUTION_PENDING",
+    "run8ER2": "OPEN_AT_R2F_EXECUTION",
+    "run8ER3": "NOT_STARTED",
+    "run8E": "FAIL_OPEN"
+  },
+  "stoppingBoundary": "STOP_BEFORE_RUN_8E_R3",
+  "issues": []
+}

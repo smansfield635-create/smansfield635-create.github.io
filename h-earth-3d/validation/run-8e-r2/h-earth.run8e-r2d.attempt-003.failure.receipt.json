@@ -1,0 +1,89 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2D_GPU_RESOURCE_LIFECYCLE_ATTEMPT_FAILURE_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2D_ATTEMPT_003_FAIL_OPEN",
+  "recordedAt": "2026-07-27T05:30:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2d-gpu-resource-lifecycle-001",
+  "pullRequest": 220,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2C",
+    "status": "PASS_CLOSED",
+    "exactHead": "845b6d6acffdd461153b3474044ec533ffd4403b"
+  },
+  "attempt": {
+    "head": "119389959657d2654b15454746fbd699db69eb17",
+    "runId": 30239782065,
+    "jobId": 89894416525,
+    "conclusion": "failure",
+    "predecessorAndProtectedPackageIdentity": "PASS",
+    "javascriptAndJsonSyntax": "PASS",
+    "chromiumInstallation": "PASS",
+    "isolatedServer": "PASS",
+    "browserLifecycleValidation": "GPU_LIFECYCLE_PASS_CROSS_RUNTIME_DIGEST_COMPARISON_FAIL",
+    "boundedScopeAndR2EStoppingBoundary": "PASS",
+    "evidenceUpload": "PASS"
+  },
+  "artifact": {
+    "artifactId": 8642834739,
+    "artifactName": "h-earth-run8e-r2d-gpu-resource-lifecycle-evidence",
+    "artifactDigest": "sha256:64695be34a6288a45a17d2574d484264c78f785e58f872c39238d3668b33ab73",
+    "artifactWorkflowHead": "119389959657d2654b15454746fbd699db69eb17"
+  },
+  "validatedBeforeFailure": {
+    "webgl2ContextCreated": true,
+    "firstUploadAndDeleteCycle": "PASS",
+    "secondUploadAndDeleteCycle": "PASS",
+    "contextLossObserved": true,
+    "contextRestoreObserved": true,
+    "postRestoreUploadAndDeleteCycle": "PASS",
+    "createdBufferCount": 27,
+    "deletedBufferCount": 27,
+    "bufferByteLengthPerCycle": 2145444,
+    "shaderOrProgramCreated": false,
+    "drawCallCount": 0,
+    "packageMutationObserved": false
+  },
+  "crossRuntimeComparison": {
+    "nodePackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "chromiumPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD",
+    "exactTypedUploadBuffers": [
+      "positions",
+      "baseColorsLinear",
+      "materialModelCodes",
+      "surfaceClassCodes",
+      "primitiveIndices",
+      "roleCodes",
+      "indices"
+    ],
+    "differentTypedUploadBuffers": [
+      "normals",
+      "materialParameters"
+    ],
+    "nodeNormalDigest": "sha256:584aeae0f9011309b9ea2dac17ecd29c02727804bb4854f661858ecafbb8543f",
+    "chromiumNormalDigest": "sha256:de429a410bccd86c54120e7aaf56549c6326d708ab40080e2ff0e8e714d98f90",
+    "nodeMaterialParameterDigest": "sha256:be31b0e27be17a4c72ce7ddc9762793441b9e2ec4e0fefe01fd3bf88f338c97b",
+    "chromiumMaterialParameterDigest": "sha256:05309b57c7838daeb2e84d93fd73056e5cb587eb77d9caaf69de9770fd83cdcd",
+    "failureClass": "CROSS_RUNTIME_FLOAT32_UPLOAD_DRIFT_IN_NORMALS_AND_MATERIAL_PARAMETERS"
+  },
+  "causeDisposition": {
+    "packageSourceDefect": false,
+    "sourceAuthorityDefect": false,
+    "gpuResourceLifecycleDefect": false,
+    "transportEncodingDefect": true,
+    "nextCorrection": "DETERMINISTIC_GPU_TRANSPORT_CANONICALIZATION_FOR_NORMALS_AND_MATERIAL_PARAMETERS"
+  },
+  "boundaries": {
+    "r2aR2bOrR2cInvalidated": false,
+    "packageSourceMutated": false,
+    "sourceAuthorityMutated": false,
+    "visiblePresentationCreated": false,
+    "publicRouteBound": false,
+    "run8ER2EStarted": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false
+  },
+  "issues": [
+    "NORMAL_AND_MATERIAL_PARAMETER_GPU_UPLOAD_BYTES_NOT_CROSS_RUNTIME_EXACT"
+  ]
+}

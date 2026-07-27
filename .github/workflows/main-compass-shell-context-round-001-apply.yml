@@ -23,7 +23,7 @@ jobs:
       - name: Apply accepted candidate and publish clean task commit
         shell: bash
         env:
-          EXPECTED_BASE: ee0c5063c550b5c90e623ba0665190b55c64d84f
+          EXPECTED_BASE: 4b415b32a0c85e350afdb7222051ce48b0b45adb
           TASK_BRANCH: agent/main-compass-shell-context-round-001
         run: |
           set -euo pipefail
@@ -68,8 +68,8 @@ jobs:
           assert protected(html) == protected(source)
           PY
 
-          rm .github/workflows/main-compass-shell-context-round-001-apply.yml
-          rm .github/main-compass-shell-context-round-001.patch.gz.b64
+          rm -f .github/workflows/main-compass-shell-context-round-001-apply.yml
+          rm -f .github/main-compass-shell-context-round-001.patch.gz.b64
           git reset --mixed "$EXPECTED_BASE"
           git add index.html assets/compass/compass.css assets/compass/compass.controller.js
           test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n' assets/compass/compass.controller.js assets/compass/compass.css index.html | sort)"

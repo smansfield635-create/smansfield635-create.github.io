@@ -1,0 +1,69 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2C_CORRESPONDENCE_AUDIT_ATTEMPT_FAILURE_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2C_ATTEMPT_001_HARNESS_FAIL_OPEN_RECONCILED",
+  "recordedAt": "2026-07-27T04:49:00.000Z",
+  "reconciledAt": "2026-07-27T04:56:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2c-authority-correspondence-001",
+  "pullRequest": 219,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2B",
+    "status": "PASS_CLOSED",
+    "exactHead": "39de87edefcc037eaafa8a988dc0c84e40e3d1ba"
+  },
+  "attempt": {
+    "head": "bab64d282b04848ba31c469c415e06a3ff0f7948",
+    "runId": 30238009721,
+    "jobId": 89889403682,
+    "conclusion": "failure",
+    "predecessorAndProtectedSourceIdentityStep": "FAIL",
+    "javascriptSyntaxStep": "SKIPPED",
+    "correspondenceAuditStep": "SKIPPED",
+    "boundedScopeAndR2DStoppingBoundary": "PASS",
+    "evidenceUpload": "PASS"
+  },
+  "failure": {
+    "failureClass": "R2B_RECEIPT_SCHEMA_REFERENCE_MISMATCH_IN_R2C_HARNESS",
+    "incorrectWorkflowReference": "receipt.finalExactHead",
+    "incorrectValidationReferences": [
+      "receipt.finalExactHead",
+      "receipt.packageCustody.packageIdentity",
+      "receipt.packageCustody.contentDigest"
+    ],
+    "actualReceiptReferences": [
+      "receipt.checkpointDisposition.run8ER2B",
+      "receipt.validatedCustody.packageIdentity",
+      "receipt.validatedCustody.contentDigest"
+    ],
+    "sourceAuthorityCorrespondenceAuditExecuted": false,
+    "protectedSourceIdentityDisproved": false,
+    "causeDisposition": "RESOLVED"
+  },
+  "successfulSuccessorAttempt": {
+    "attempt": "R2C_ATTEMPT_002",
+    "head": "efadea38fa16304de52265da84c16ec1d84afd47",
+    "runId": 30238237230,
+    "jobId": 89890046797,
+    "conclusion": "success",
+    "artifactId": 8642344020,
+    "artifactDigest": "sha256:012a3c3ba16659fc93da4b62cf38a2c64f3dfc84a925551a10470ef6dcc99556",
+    "auditManifestDigest": "sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe",
+    "checkpointDisposition": "PASS_CLOSED"
+  },
+  "boundaries": {
+    "r2aChanged": false,
+    "r2bChanged": false,
+    "liveRenderPackageSourceChanged": false,
+    "sourceAuthorityChanged": false,
+    "publicRouteChanged": false,
+    "gpuResourceCreatedOrUploaded": false,
+    "webglContextCreated": false,
+    "renderLoopCreated": false,
+    "run8ER2DStarted": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false
+  },
+  "nextAuthorizedAction": "STOP_BEFORE_RUN_8E_R2D",
+  "issues": []
+}

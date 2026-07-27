@@ -1,0 +1,122 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2C_SOURCE_AUTHORITY_CORRESPONDENCE_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2C_PASS_CLOSED",
+  "recordedAt": "2026-07-27T04:55:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2c-authority-correspondence-001",
+  "pullRequest": 219,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2B",
+    "status": "PASS_CLOSED",
+    "exactHead": "39de87edefcc037eaafa8a988dc0c84e40e3d1ba",
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "contentDigest": "fnv1a32:fd913c25",
+    "custodyManifestDigest": "sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d"
+  },
+  "execution": {
+    "attempt": "R2C_ATTEMPT_002",
+    "head": "efadea38fa16304de52265da84c16ec1d84afd47",
+    "runId": 30238237230,
+    "jobId": 89890046797,
+    "conclusion": "success",
+    "predecessorAndProtectedSourceIdentity": "PASS",
+    "javascriptAndJsonSyntax": "PASS",
+    "sourceAuthorityCorrespondenceAudit": "PASS",
+    "boundedScopeAndR2DStoppingBoundary": "PASS",
+    "evidenceUpload": "PASS"
+  },
+  "artifact": {
+    "artifactId": 8642344020,
+    "artifactName": "h-earth-run8e-r2c-authority-correspondence-evidence",
+    "artifactDigest": "sha256:012a3c3ba16659fc93da4b62cf38a2c64f3dfc84a925551a10470ef6dcc99556",
+    "artifactWorkflowHead": "efadea38fa16304de52265da84c16ec1d84afd47"
+  },
+  "validatedPackage": {
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "contentDigest": "fnv1a32:fd913c25",
+    "primitiveCount": 35,
+    "vertexCount": 25524,
+    "triangleCount": 49040,
+    "indexCount": 147120,
+    "drawRangeCount": 4
+  },
+  "geometryCorrespondence": {
+    "auditedPrimitiveCount": 35,
+    "auditedVertexCount": 25524,
+    "auditedIndexCount": 147120,
+    "sourceNormalPrimitiveCount": 35,
+    "geometryIdsExact": true,
+    "positionsExact": true,
+    "topologyExact": true,
+    "normalsExact": true,
+    "boundsExact": true,
+    "primitiveOrderExact": true,
+    "digest": "sha256:e3b06024644329861719d2f265d3ffe22a85e870208e70bdf79abf7c1a731d6f"
+  },
+  "materialCorrespondence": {
+    "terrainVertexCount": 24360,
+    "terrainMaterialSampleCount": 24360,
+    "shorelineVertexCount": 462,
+    "shorelineMaterialProjectionCount": 7,
+    "vegetationVertexCount": 702,
+    "vegetationMaterialProjectionCount": 27,
+    "run8CPerVertexChannelsExact": true,
+    "run6DShorelineProjectionExact": true,
+    "run8EVegetationProjectionExact": true,
+    "transparencyClassesExact": true,
+    "drawRangeGroupingExact": true,
+    "digest": "sha256:242768168cc2ee0b69fb90db8474987f6f903913b6233f011c1dcd4afd4a3285"
+  },
+  "provenanceCorrespondence": {
+    "semanticAddressCount": 256,
+    "terrainAddressCount": 124,
+    "shorelineWaterAddressCount": 96,
+    "proxySummarizedAddressCount": 36,
+    "semanticPartitionUnionExact": true,
+    "semanticPartitionsDisjoint": true,
+    "formationIdsExact": true,
+    "shorelineBandIdsExact": true,
+    "legacyProxyIncluded": false,
+    "successorMountainIncluded": true,
+    "digest": "sha256:f982c1a28f438a3bec032ca48ebcebbc0b609b5d8645438ea38b3e18b80d3ca6"
+  },
+  "atmosphereCorrespondence": {
+    "defaultsExact": true,
+    "digest": "sha256:a92cd6b31e97c0e2a09f105f6bdd474818c77624ef20a6136db4ec32d0b46014"
+  },
+  "sourceCustody": {
+    "sourceManifestEntryCount": 9,
+    "sourceManifestDigest": "sha256:b0654a8fc2cffe173f0a524c8f4d0ba95eaf2c54cab99c10641a3f27480d508f",
+    "auditManifestDigest": "sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe",
+    "r2cControlGitBlobShaAtExecution": "3d919aab32dfbf4b4bdaed1ac4ee704d0a763dbb",
+    "r2cValidationGitBlobShaAtExecution": "e5bc9f2625459a35f55a9efbe6ab232defa8cd11",
+    "r2cWorkflowGitBlobShaAtExecution": "4c0dc6d99900c47d6a49417b45b6e99dcde4612d",
+    "attempt001FailureReceiptGitBlobSha": "01d1eca5ce9e028ea32b54bdab4932ed2b702bf0"
+  },
+  "predecessorFailureReceipt": "/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.attempt-001.failure.receipt.json",
+  "boundaries": {
+    "packageSourceMutated": false,
+    "sourceAuthorityMutated": false,
+    "geometryMaterialLightOrProvenanceRetuned": false,
+    "gpuResourceCreatedOrUploaded": false,
+    "webglContextCreated": false,
+    "renderLoopCreated": false,
+    "publicRouteBound": false,
+    "cameraNavigationOrGestureChanged": false,
+    "run8ER2DStarted": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false,
+    "pixelIdentityRequired": false
+  },
+  "checkpointDisposition": {
+    "run8ER2A": "PASS_CLOSED",
+    "run8ER2B": "PASS_CLOSED",
+    "run8ER2C": "PASS_CLOSED",
+    "run8ER2D": "NOT_STARTED",
+    "run8ER2": "OPEN_AT_R2D_BOUNDARY",
+    "run8E": "FAIL_OPEN"
+  },
+  "stoppingBoundary": "STOP_BEFORE_GPU_UPLOAD_VIEW_AND_RESOURCE_LIFECYCLE_VALIDATION_R2D",
+  "issues": []
+}

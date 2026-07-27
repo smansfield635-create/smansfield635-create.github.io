@@ -1,0 +1,138 @@
+name: H-Earth Run 8E R2C Pass-Closed Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r2c-authority-correspondence-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r2b-immutable-buffer-custody-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r2c-pass-closed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      H_EARTH_RUN8E_R2C_OUTPUT: /tmp/h-earth-run8e-r2c-final
+    steps:
+      - name: Check out R2C branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-run8e-r2c-authority-correspondence-001
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify R2B predecessor and protected source identities
+        run: |
+          set -euo pipefail
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r2b-immutable-buffer-custody-001)" = "39de87edefcc037eaafa8a988dc0c84e40e3d1ba"
+          test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
+          test "$(git hash-object showroom/globe/h-earth/render/run8e-successor-environment.js)" = "fa6fb8bdc579be109c30a963c2bbdcea398a1d57"
+          test "$(git hash-object h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js)" = "9d32fd89070fa534d63c3c6a3feb4c8f5fd519f4"
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js)" = "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46"
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-shoreline.js)" = "36b6520bc0f6d393ae926cffc21c237521c087e3"
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js)" = "cd7a15e9cc67dbb598ae68c26027fd4ea26bdd5b"
+          test "$(git hash-object h-earth-3d/environment/h-earth.successor-surface-material.run8c.js)" = "caaef944e0681a98b722f9c99526d38d8f25ec50"
+          test "$(git hash-object showroom/globe/h-earth/render/renderer.functional-landscape.js)" = "71ec6950e1a47c31862b596b4144635a97cbaa20"
+          test "$(git hash-object h-earth-3d/environment/h-earth.atmosphere-state.js)" = "7d50eaf13d0bc719039bc24e571b3dec0dcaf978"
+
+      - name: Verify R2C closure syntax and receipts
+        run: |
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2c.source-authority-correspondence.js
+          node --check h-earth-3d/validation/h-earth.run8e-r2c.source-authority-correspondence.validation.mjs
+          node - <<'NODE'
+          const fs = require('fs');
+          const failure = JSON.parse(fs.readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.attempt-001.failure.receipt.json', 'utf8'));
+          const pass = JSON.parse(fs.readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.pass-closed.receipt.json', 'utf8'));
+          if (failure.status !== 'RUN_8E_R2C_ATTEMPT_001_HARNESS_FAIL_OPEN_RECONCILED') process.exit(1);
+          if (failure.failure?.causeDisposition !== 'RESOLVED') process.exit(1);
+          if (pass.status !== 'RUN_8E_R2C_PASS_CLOSED') process.exit(1);
+          if (pass.sourceCustody?.auditManifestDigest !== 'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe') process.exit(1);
+          if (pass.checkpointDisposition?.run8ER2C !== 'PASS_CLOSED') process.exit(1);
+          if (pass.checkpointDisposition?.run8ER2D !== 'NOT_STARTED') process.exit(1);
+          NODE
+
+      - name: Execute final source authority correspondence audit
+        run: |
+          mkdir -p "$H_EARTH_RUN8E_R2C_OUTPUT"
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8e-r2c.source-authority-correspondence.validation.mjs 2>&1 \
+            | tee "$H_EARTH_RUN8E_R2C_OUTPUT/r2c-final-correspondence-audit.log"
+
+      - name: Verify exact R2C scope and R2D stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          BASE_SHA=39de87edefcc037eaafa8a988dc0c84e40e3d1ba
+          git diff --name-only "$BASE_SHA"...HEAD | sort >/tmp/h-earth-run8e-r2c-final-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r2c-final-paths.txt').read_text().splitlines() if line.strip()]
+          required = {
+              '.github/workflows/h-earth-run8e-r2c-authority-correspondence.yml',
+              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js',
+              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2c.source-authority-correspondence.js',
+              'h-earth-3d/validation/h-earth.run8e-r2c.source-authority-correspondence.validation.mjs',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.attempt-001.failure.receipt.json',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.pass-closed.receipt.json'
+          }
+          actual = set(paths)
+          unexpected = sorted(actual - required)
+          missing = sorted(required - actual)
+          if unexpected:
+              raise SystemExit(f'R2C_FINAL_UNEXPECTED_PATHS:{unexpected}')
+          if missing:
+              raise SystemExit(f'R2C_FINAL_REQUIRED_PATHS_MISSING:{missing}')
+          forbidden = [
+              path for path in paths
+              if path in {
+                  'showroom/globe/h-earth/render/live-render-package.run8e-r2.js',
+                  'showroom/globe/h-earth/render/run8e-successor-environment.js',
+                  'h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js',
+                  'showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js',
+                  'showroom/globe/h-earth/render/geometry-shoreline.js',
+                  'showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js',
+                  'h-earth-3d/environment/h-earth.successor-surface-material.run8c.js',
+                  'showroom/globe/h-earth/render/renderer.functional-landscape.js',
+                  'h-earth-3d/environment/h-earth.atmosphere-state.js',
+                  'showroom/globe/h-earth/index.html',
+                  'showroom/globe/h-earth/index.js'
+              }
+              or 'run8e-r2d' in path.lower()
+              or 'run-8e-r2d' in path.lower()
+              or 'run8e-r3' in path.lower()
+              or 'run-8e-r3' in path.lower()
+          ]
+          if forbidden:
+              raise SystemExit(f'R2C_FINAL_PROTECTED_OR_LATER_CHECKPOINT_PATH:{forbidden}')
+          print({
+              'checkpoint': 'RUN_8E_R2C',
+              'status': 'PASS_CLOSED',
+              'pathCount': len(paths),
+              'paths': paths,
+              'protectedSourceMutation': False,
+              'run8ER2DStarted': False,
+              'run8ER3Started': False,
+              'run8EPassClosed': False
+          })
+          PY
+
+      - name: Upload final R2C closure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r2c-pass-closed-evidence
+          path: |
+            /tmp/h-earth-run8e-r2c-final
+            /tmp/h-earth-run8e-r2c-final-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

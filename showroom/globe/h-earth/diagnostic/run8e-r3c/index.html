@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>H-Earth Run 8E R3C Persistent GPU Camera Loop</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background:#071018; color:#e7f2f7; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:radial-gradient(circle at top,#173142,#071018 62%); }
+    main { width:min(1120px,100%); padding:20px; display:grid; gap:14px; }
+    h1 { margin:0; font-size:clamp(20px,4vw,34px); }
+    p { margin:0; color:#b8cad4; }
+    .frame { border:1px solid #315368; border-radius:12px; overflow:hidden; background:#000; box-shadow:0 18px 50px #0008; }
+    canvas { display:block; width:100%; height:auto; aspect-ratio:16/9; }
+    pre { margin:0; padding:14px; max-height:34vh; overflow:auto; border:1px solid #274657; border-radius:10px; background:#09151d; font-size:12px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Run 8E R3C · Persistent GPU Camera Loop</h1>
+    <p id="r3c-status">Preparing bounded execution…</p>
+    <div class="frame"><canvas id="r3c-canvas" aria-label="H-Earth continuous WebGL2 diagnostic frame"></canvas></div>
+    <pre id="r3c-metrics">Awaiting execution receipt…</pre>
+  </main>
+  <script type="module" src="./continuous-loop.js"></script>
+</body>
+</html>

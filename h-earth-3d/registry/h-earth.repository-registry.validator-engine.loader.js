@@ -11,9 +11,9 @@ import { fileURLToPath } from 'node:url';
 // integration-engineering, Run 8 Phase 1 ordered-main-promotion, Run 8
 // Phase 2 deployment reconciliation, Run 8 Phase 3 live-browser-proof,
 // Run 8E mobile-navigation-correction, Run 8E direct-inspection-restoration,
-// Run 8E-R1 profiling, reference-device custody, and the bounded Run 8E-R2
-// immutable package, correspondence, GPU transport, and registry overlays.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r2-scope.js';
+// Run 8E-R1 profiling and reference-device custody, the bounded Run 8E-R2
+// package/correspondence/GPU overlays, and the R2E pass-closed execution overlay.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r2e-execution-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

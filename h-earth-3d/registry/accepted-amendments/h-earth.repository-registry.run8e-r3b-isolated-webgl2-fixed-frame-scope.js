@@ -10,6 +10,7 @@ const freeze = (value, seen = new WeakSet()) => {
 
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r3b-isolated-webgl2-fixed-frame-001';
+const PASS_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.pass-closed.receipt.json';
 export const H_EARTH_RUN_8E_R3B_PATHS = Object.freeze([
   '/.github/workflows/h-earth-run8e-r3b-isolated-webgl2-fixed-frame.yml',
   '/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
@@ -19,7 +20,7 @@ export const H_EARTH_RUN_8E_R3B_PATHS = Object.freeze([
   '/h-earth-3d/validation/h-earth.run8e-r3b.isolated-webgl2-fixed-frame.harness.mjs',
   '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-001.failure.receipt.json',
   '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.attempt-002.failure.receipt.json',
-  '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.pass-closed.receipt.json',
+  PASS_RECEIPT_PATH,
   '/showroom/globe/h-earth/diagnostic/run8e-r3b/index.html',
   '/showroom/globe/h-earth/diagnostic/run8e-r3b/fixed-frame.js'
 ]);
@@ -30,21 +31,19 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R3B_PATHS.map((repositoryPath) 
   refName: BRANCH,
   commitSha: null,
   path: repositoryPath,
-  gitBlobSha: null,
+  gitBlobSha: repositoryPath === PASS_RECEIPT_PATH ? '1a3e1e9113b8e123525bdc924bf9c6ef1b0b1fd5' : null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: repositoryPath.endsWith('pass-closed.receipt.json') ? 'RESERVED' : 'PRESENT',
-  fetchbackStatus: repositoryPath.endsWith('pass-closed.receipt.json')
-    ? 'R3B_CORE_EXECUTION_PASS_DURABLE_RECEIPT_PENDING'
-    : 'R3B_CORE_EXECUTION_PASS_FETCHBACK_ESTABLISHED',
-  occurrenceClass: 'RUN_8E_R3B_ISOLATED_WEBGL2_FIXED_FRAME_OCCURRENCE'
+  existenceStatus: 'PRESENT',
+  fetchbackStatus: 'R3B_DURABLE_PASS_RECEIPT_PRESENT_FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+  occurrenceClass: 'RUN_8E_R3B_ISOLATED_WEBGL2_FIXED_FRAME_PASS_CLOSED_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3B_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3B_ISOLATED_WEBGL2_FIXED_FRAME_v1',
-  evidenceClass: 'EXECUTED_REAL_WEBGL2_FIXED_VISIBLE_FRAME_WITH_COLOR_DEPTH_READBACK',
-  sourceKind: 'GITHUB_ACTIONS_REAL_BROWSER_EXECUTION_SCREENSHOT_AND_READBACK_ARTIFACT',
-  sourceIdOrPath: '/showroom/globe/h-earth/diagnostic/run8e-r3b/fixed-frame.js',
+  evidenceClass: 'EXECUTED_REAL_WEBGL2_FIXED_VISIBLE_FRAME_WITH_DURABLE_PASS_CLOSED_RECEIPT',
+  sourceKind: 'GITHUB_ACTIONS_REAL_BROWSER_EXECUTION_SCREENSHOT_READBACK_ARTIFACT_AND_REPOSITORY_RECEIPT',
+  sourceIdOrPath: PASS_RECEIPT_PATH,
   sourceOccurrenceOrRevision: '1fb2bdee01806097f4785cb484c9132574dbdeaf',
   assertionScope: [
     'REAL_WEBGL2_CONTEXT',
@@ -54,6 +53,8 @@ export const H_EARTH_RUN_8E_R3B_EVIDENCE = freeze({
     'REAL_COLOR_AND_DEPTH_OUTPUT',
     'INSPECTABLE_VISIBLE_FIXED_FRAME',
     'PACKAGE_CAMERA_MATERIAL_ATMOSPHERE_DEPTH_CORRESPONDENCE',
+    'R3B_PASS_CLOSED',
+    'R3_OPEN_AT_R3C_BOUNDARY',
     'NO_PUBLIC_ROUTE_OR_CONTINUOUS_LOOP'
   ],
   verifiedOn: '2026-07-27',
@@ -79,6 +80,14 @@ export const H_EARTH_RUN_8E_R3B_EVIDENCE = freeze({
     artifactDigest: 'sha256:6f48e588064dcd194ce9136fe6d1fcdbdf3d3ef3543bb9700548554f2667e1ef',
     automaticRegistryPreflightRun: 30288214972,
     automaticRegistryPreflight: 'PASS',
+    closureControlHead: 'f2b0eca2bdbb10ab0fb6f8dc31a4d926718de420',
+    closureControlWorkflowRun: 30288589086,
+    closureControlWorkflowJob: 90052432762,
+    closureControlArtifact: 8661849421,
+    closureControlArtifactDigest: 'sha256:b77802fe2f6c475c955cbf288fe6b6c43e46a5356fb6e9696ed4918cc434153c',
+    durablePassReceiptPath: PASS_RECEIPT_PATH,
+    durablePassReceiptCommit: '99649ba4982e2676e63f7bced4e0d29fdf622857',
+    durablePassReceiptGitBlob: '1a3e1e9113b8e123525bdc924bf9c6ef1b0b1fd5',
     logicalPromotedPackageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
     chromiumRuntimePackageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD',
     webGLContextVersion: 'WebGL 2.0 (OpenGL ES 3.0 Chromium)',
@@ -105,7 +114,6 @@ export const H_EARTH_RUN_8E_R3B_EVIDENCE = freeze({
   evidenceLimitations: [
     'R3B_ATTEMPT_001_FAILED_AND_PRESERVED',
     'R3B_ATTEMPT_002_GPU_EXECUTION_PASSED_OUTPUT_GATE_FAILED_AND_PRESERVED',
-    'DURABLE_R3B_PASS_RECEIPT_PENDING',
     'FINAL_EXACT_HEAD_REVALIDATION_PENDING',
     'PERSISTENT_GPU_RESOURCES_NOT_ESTABLISHED',
     'CONTINUOUS_CAMERA_LOOP_NOT_ESTABLISHED',
@@ -120,27 +128,27 @@ export const H_EARTH_RUN_8E_R3B_NODE = freeze({
   nodeType: 'RECOVERY_EXECUTION_CHECKPOINT',
   nodeSubtype: 'ISOLATED_WEBGL2_FIXED_VISIBLE_FRAME',
   displayName: 'H-Earth Run 8E R3B Isolated WebGL2 Fixed Frame',
-  description: 'Executes the exact immutable R2 package through the R3A camera packet in an isolated WebGL2 diagnostic page with real shaders, four governed draw ranges, color and depth output, readback, and inspectable screenshot evidence.',
+  description: 'Executes the exact immutable R2 package through the R3A camera packet in an isolated WebGL2 diagnostic page with real shaders, four governed draw ranges, color and depth output, readback, inspectable screenshot evidence, and a durable pass-closed receipt.',
   repositoryPaths: [...H_EARTH_RUN_8E_R3B_PATHS],
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: H_EARTH_RUN_8E_R3B_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3B_EVIDENCE.evidenceId],
-  authorityClass: 'EXECUTED_BOUNDED_ISOLATED_GPU_FIXED_FRAME',
-  authorityPosture: 'R3B_CORE_EXECUTION_PASS_RECEIPT_PENDING_R3C_NOT_STARTED_RUN_8E_FAIL_OPEN',
-  authoritySource: ['R2_PASS_CLOSED_PACKAGE', 'R3A_PASS_CLOSED_CAMERA_PACKET', 'R3B_GITHUB_ACTIONS_BROWSER_EXECUTION', 'R3B_SCREENSHOT_ARTIFACT'],
-  authorityScope: ['ISOLATED_WEBGL2_CONTEXT', 'FIXED_FRAME_SHADERS_AND_DRAW', 'COLOR_DEPTH_READBACK', 'SCREENSHOT_EVIDENCE'],
+  authorityClass: 'EXECUTED_BOUNDED_ISOLATED_GPU_FIXED_FRAME_PASS_CLOSED',
+  authorityPosture: 'R3B_PASS_CLOSED_UNMERGED_R3_OPEN_AT_R3C_BOUNDARY_RUN_8E_FAIL_OPEN',
+  authoritySource: ['R2_PASS_CLOSED_PACKAGE', 'R3A_PASS_CLOSED_CAMERA_PACKET', 'R3B_GITHUB_ACTIONS_BROWSER_EXECUTION', 'R3B_SCREENSHOT_ARTIFACT', 'R3B_DURABLE_PASS_RECEIPT'],
+  authorityScope: ['PRESERVE_R3B_REAL_WEBGL2_EXECUTION', 'PRESERVE_FIXED_FRAME_AND_DEPTH_EVIDENCE', 'PRESERVE_FAILURE_ATTEMPT_CUSTODY', 'PRESERVE_R3C_STOPPING_BOUNDARY'],
   authorityLimitations: ['NO_PUBLIC_ROUTE', 'NO_INTERACTION', 'NO_CONTINUOUS_LOOP', 'NO_DEPLOYMENT', 'NO_R3C', 'NO_RUN_8E_PASS'],
   parentRelations: [], childRelations: [], peerRelations: [], upstreamBoundaries: [], downstreamBoundaries: [],
   cardinalRole: 'NONE', cardinalStatus: 'NONE', cardinalCompleteness: 'NOT_APPLICABLE',
   orderingRules: ['R3A_PASS_CLOSED_BEFORE_R3B', 'R3B_PASS_CLOSED_BEFORE_R3C'],
   dependencyRelations: [],
-  allowedMutationScope: 'R3B_ELEVEN_PATH_BOUNDED_SCOPE_ONLY',
+  allowedMutationScope: 'NONE_AFTER_FINAL_EXACT_HEAD_REVALIDATION',
   prohibitedMutations: ['PUBLIC_ROUTE', 'DIRECT_MANIPULATION', 'NAVIGATION_AUTHORITY', 'R2_PACKAGE', 'R2D_GPU_ADAPTER', 'CONTINUOUS_LOOP', 'R3C_OR_LATER'],
-  requiredValidations: ['REAL_BROWSER_WEBGL2_EXECUTION', 'SCREENSHOT_ARTIFACT', 'COLOR_DEPTH_READBACK', 'AUTOMATIC_REGISTRY_PREFLIGHT', 'EXACT_SCOPE', 'DURABLE_PASS_RECEIPT', 'FINAL_EXACT_HEAD_REVALIDATION'],
+  requiredValidations: ['FINAL_EXACT_HEAD_REAL_BROWSER_EXECUTION', 'FINAL_SCREENSHOT_ARTIFACT', 'FINAL_COLOR_DEPTH_READBACK', 'FINAL_AUTOMATIC_REGISTRY_PREFLIGHT', 'FINAL_EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_PERSISTENT_GPU_RESOURCES_AND_CONTINUOUS_CAMERA_LOOP_R3C'],
-  currentIdentityReferences: ['9560bc1f88800e12408a99a10032e9daf1e56713', '1fb2bdee01806097f4785cb484c9132574dbdeaf', '30288213937', '8661709112', '74c3c3b136241f7ab413411dac565897a19c124f92f174e3c0f0dfb2cbbff639'],
-  lifecycleStatus: 'CORE_EXECUTION_PASS_RECEIPT_PENDING',
-  unresolvedFields: ['DURABLE_PASS_RECEIPT', 'FINAL_EXACT_HEAD', 'FINAL_EXACT_HEAD_WORKFLOW_RUN']
+  currentIdentityReferences: ['9560bc1f88800e12408a99a10032e9daf1e56713', '1fb2bdee01806097f4785cb484c9132574dbdeaf', 'f2b0eca2bdbb10ab0fb6f8dc31a4d926718de420', '99649ba4982e2676e63f7bced4e0d29fdf622857', '30288213937', '8661709112', '74c3c3b136241f7ab413411dac565897a19c124f92f174e3c0f0dfb2cbbff639'],
+  lifecycleStatus: 'PASS_CLOSED_FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+  unresolvedFields: ['FINAL_EXACT_HEAD_WORKFLOW_RUN']
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R3B_PATHS.map((repositoryPath) => [repositoryPath, {

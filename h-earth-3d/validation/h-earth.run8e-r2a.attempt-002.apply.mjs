@@ -33,7 +33,7 @@ function resolvePrimitiveRgba(primitive, role, issues) {
   if (role === 'VEGETATION') return vegetationRgba(primitive);
   const rgba = primitive?.renderMaterial?.rgba;
   if (!Array.isArray(rgba) || rgba.length !== 4 || rgba.some((channel) => !finite(channel))) {
-    issues.push(`R2_PRIMITIVE_RGBA_MISSING:${primitive.primitiveId}`);
+    issues.push(\`R2_PRIMITIVE_RGBA_MISSING:${primitive.primitiveId}\`);
     return [0, 0, 0, 255];
   }
   return rgba;
@@ -103,7 +103,7 @@ function resolvePrimitiveMaterialProjection(primitive, role, issues) {
       projectionModel: 'EXACT_RUN_6D_MATERIAL_DEFAULTS'
     };
   }
-  issues.push(`R2_PRIMITIVE_MATERIAL_PROJECTION_MISSING:${primitive.primitiveId}`);
+  issues.push(\`R2_PRIMITIVE_MATERIAL_PROJECTION_MISSING:${primitive.primitiveId}\`);
   return {
     rgba: [0, 0, 0, 255],
     transparencyClass: 'OPAQUE',

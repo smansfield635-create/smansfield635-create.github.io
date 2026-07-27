@@ -102,23 +102,12 @@
       pointer-events: none;
       transform: translate(-50%, -50%);
       transform-origin: center;
-      opacity: 0.8;
+      opacity: 0;
       filter: brightness(0.92) saturate(0.9);
       transition: opacity 180ms ease, filter 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
     }
 
-    [data-compass-room-proxy][data-depth^="0.0"]::after,
-    [data-compass-room-proxy][data-depth^="0.1"]::after { opacity: 0.48; filter: brightness(0.68) saturate(0.72); }
-    [data-compass-room-proxy][data-depth^="0.2"]::after,
-    [data-compass-room-proxy][data-depth^="0.3"]::after { opacity: 0.58; filter: brightness(0.76) saturate(0.78); }
-    [data-compass-room-proxy][data-depth^="0.4"]::after,
-    [data-compass-room-proxy][data-depth^="0.5"]::after { opacity: 0.70; filter: brightness(0.84) saturate(0.84); }
-    [data-compass-room-proxy][data-depth^="0.8"]::after,
-    [data-compass-room-proxy][data-depth^="0.9"]::after,
-    [data-compass-room-proxy][data-depth="1.0000"]::after { opacity: 0.94; filter: brightness(1.04) saturate(1); }
-
     [data-compass-room-proxy][data-primary="true"]::after {
-      opacity: 1;
       color: rgba(255, 248, 224, 0.98);
       border-color: rgba(243, 217, 139, 0.42);
       background: linear-gradient(135deg, rgba(71, 56, 29, 0.9), rgba(11, 31, 43, 0.86));
@@ -133,6 +122,24 @@
       background: linear-gradient(135deg, #f6df97, #b98d3e);
       text-shadow: none;
       filter: none;
+    }
+
+    /* Selected room wins over every other cluster-label state. */
+    [data-compass-root][data-selected-cardinal]:not([data-selected-cardinal=""])[data-selected-room]:not([data-selected-room=""])
+    [data-compass-room-proxy][data-selected="true"]::after {
+      opacity: 1;
+    }
+
+    /* Keyboard focus is visible only when no room is selected. */
+    [data-compass-root][data-selected-cardinal]:not([data-selected-cardinal=""])[data-selected-room=""]
+    [data-compass-room-proxy][data-keyboard-focused="true"]::after {
+      opacity: 1;
+    }
+
+    /* Ordinary primary is visible only after settlement and without a stronger state. */
+    [data-compass-root][data-selected-cardinal]:not([data-selected-cardinal=""])[data-selected-room=""][data-cluster-phase="COMMITTED"]:not(:has([data-compass-room-proxy][data-keyboard-focused="true"]))
+    [data-compass-room-proxy][data-primary="true"]::after {
+      opacity: 1;
     }
 
     @media (max-width: 820px) {

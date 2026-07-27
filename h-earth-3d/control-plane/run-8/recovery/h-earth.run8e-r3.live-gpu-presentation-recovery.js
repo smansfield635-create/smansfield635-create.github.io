@@ -62,7 +62,7 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     {
       checkpointId: 'RUN_8E_R3D',
       name: 'DIAGNOSTIC_DIRECT_INTERACTION_WITHOUT_BITMAP_PREVIEW',
-      currentStatus: 'IN_PROGRESS',
+      currentStatus: 'PASS_CLOSED',
       boundedSubcheckpoints: [
         { checkpointId: 'RUN_8E_R3D1', currentStatus: 'PASS_CLOSED', finalExactHead: 'ccac32e8a273fcd47bae684630f49970304c218d' },
         { checkpointId: 'RUN_8E_R3D2', currentStatus: 'PASS_CLOSED', finalExactHead: 'a58ed510eda8c21aac6fa6870271d945387f7cbd' },
@@ -71,8 +71,22 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
         {
           checkpointId: 'RUN_8E_R3D5',
           name: 'R3D_CLOSURE_AND_R3E_INPUT_DECISION',
-          currentStatus: 'EXECUTION_PENDING',
-          requiredResult: 'R3D_PASS_CLOSED_AND_R3E_INPUT_ADMITTED',
+          currentStatus: 'PASS_CLOSED',
+          executionEvidence: {
+            successfulExecutionHead: '119ea9d5d09774efc9270664bd561462e3afc1f5',
+            workflowRun: 30303543863,
+            workflowJob: 90102105502,
+            evidenceArtifact: 8667508612,
+            evidenceArtifactDigest: 'sha256:c8cfa71d54f437f5cef03c463fa37c7ab31b61541038991912e198f9cef70ec8',
+            automaticRegistryPreflightRun: 30303543805,
+            predecessorReceiptCount: 4,
+            unresolvedPredecessorCount: 0,
+            admittedR3EInputCount: 7,
+            r3EInputDisposition: 'ADMISSIBLE_AS_NEXT_CHECKPOINT_INPUT',
+            showroomMutationCount: 0,
+            browserExecutionCount: 0,
+            gpuExecutionCount: 0
+          },
           stoppingBoundary: 'STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E'
         }
       ],
@@ -83,13 +97,13 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     { checkpointId: 'RUN_8E_R3G', currentStatus: 'NOT_STARTED' }
   ],
   currentState: {
-    run8ER3: 'OPEN_AT_R3D5_EXECUTION',
-    run8ER3D: 'IN_PROGRESS',
+    run8ER3: 'OPEN_AT_R3E_BOUNDARY',
+    run8ER3D: 'PASS_CLOSED',
     run8ER3D1: 'PASS_CLOSED',
     run8ER3D2: 'PASS_CLOSED',
     run8ER3D3: 'PASS_CLOSED',
     run8ER3D4: 'PASS_CLOSED',
-    run8ER3D5: 'EXECUTION_PENDING',
+    run8ER3D5: 'PASS_CLOSED',
     run8ER3E: 'NOT_STARTED',
     run8ER3F: 'NOT_STARTED',
     run8ER3G: 'NOT_STARTED',
@@ -140,6 +154,11 @@ export function evaluateHEarthRun8ER3Control(candidate = H_EARTH_RUN_8E_R3_CONTR
   } else {
     if (r3D?.currentStatus !== 'PASS_CLOSED') issues.push('R3D_NOT_PASS_CLOSED_AFTER_R3D5');
     if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3E_BOUNDARY' || candidate?.currentState?.run8ER3D !== 'PASS_CLOSED' || candidate?.currentState?.run8ER3E !== 'NOT_STARTED') issues.push('R3E_PARENT_BOUNDARY_INVALID');
+    const evidence = r3D5?.executionEvidence ?? {};
+    if (evidence.workflowRun !== 30303543863 || evidence.workflowJob !== 90102105502) issues.push('R3D5_WORKFLOW_IDENTITY_MISMATCH');
+    if (evidence.evidenceArtifactDigest !== 'sha256:c8cfa71d54f437f5cef03c463fa37c7ab31b61541038991912e198f9cef70ec8') issues.push('R3D5_ARTIFACT_DIGEST_MISMATCH');
+    if (evidence.predecessorReceiptCount !== 4 || evidence.unresolvedPredecessorCount !== 0 || evidence.admittedR3EInputCount !== 7) issues.push('R3D5_RECONCILIATION_COUNTS_INVALID');
+    if (evidence.r3EInputDisposition !== 'ADMISSIBLE_AS_NEXT_CHECKPOINT_INPUT') issues.push('R3D5_R3E_INPUT_DISPOSITION_INVALID');
   }
   for (const key of ['publicRouteMutation','publicDirectManipulationMutation','navigationAuthorityMutation','r3AFramePacketSourceMutation','persistentRendererSourceMutation','pointerTouchIntakeSourceMutation','liveGpuBindingSourceMutation','diagnosticRouteMutation','browserExecution','gpuExecution','publicRouteBinding','deployment','physicalDeviceAcceptance','r3EImplementation','mainMerge','run8EPassClosed']) {
     if (candidate?.boundaries?.[key] !== false) issues.push(`R3_BOUNDARY_VIOLATION:${key}`);

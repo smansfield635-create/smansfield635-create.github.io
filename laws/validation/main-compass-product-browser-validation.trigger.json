@@ -1,0 +1,7 @@
+{
+  "id": "MAIN_COMPASS_PRODUCT_BROWSER_VALIDATION_TRIGGER_v1",
+  "productHead": "2251b066310b23d7f45f2b8fc03108e673b45258",
+  "purpose": "Trigger the installed Four-Compass browser baseline against the exact Main Compass product candidate.",
+  "promotionAuthority": false,
+  "mergeAuthority": false
+}

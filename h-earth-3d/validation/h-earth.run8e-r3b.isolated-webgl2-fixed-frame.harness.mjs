@@ -67,7 +67,8 @@ try {
   }
   assert(receipt?.framebuffer?.geometryFramebufferComplete === true, 'R3B_GEOMETRY_FRAMEBUFFER_INCOMPLETE');
   assert(receipt?.framebuffer?.depthVisualizationFramebufferComplete === true, 'R3B_DEPTH_FRAMEBUFFER_INCOMPLETE');
-  assert(receipt?.package?.identity === 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25', 'R3B_PACKAGE_IDENTITY_MISMATCH');
+  assert(receipt?.package?.logicalPromotedIdentity === 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25', 'R3B_LOGICAL_PACKAGE_IDENTITY_MISMATCH');
+  assert(receipt?.package?.runtimeIdentity === 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD', 'R3B_CHROMIUM_RUNTIME_PACKAGE_IDENTITY_MISMATCH');
   assert(receipt?.package?.primitiveCount === 35, 'R3B_PRIMITIVE_COUNT_INVALID');
   assert(receipt?.package?.triangleCount === 49040, 'R3B_TRIANGLE_COUNT_INVALID');
   assert(receipt?.package?.indexCount === 147120, 'R3B_INDEX_COUNT_INVALID');

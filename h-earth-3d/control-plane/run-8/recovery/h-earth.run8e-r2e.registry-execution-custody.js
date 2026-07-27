@@ -17,7 +17,7 @@ export const H_EARTH_RUN_8E_R2E_CONTROL = freeze({
   branch: 'agent/h-earth-run8e-r2e-registry-execution-custody-001',
   baseBranch: 'agent/h-earth-run8e-r2d-gpu-resource-lifecycle-001',
   baseExactHead: '9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9',
-  currentStatus: 'CORE_REGISTRY_PACKAGE_READY',
+  currentStatus: 'EXECUTION_EVIDENCE_PRESERVED',
   predecessor: {
     run8ER2A: 'PASS_CLOSED',
     run8ER2B: 'PASS_CLOSED',
@@ -28,7 +28,7 @@ export const H_EARTH_RUN_8E_R2E_CONTROL = freeze({
   inventory: {
     inventoryId: 'H_EARTH_RUN_8E_R2E_EXACT_GOVERNED_PATH_INVENTORY_v1',
     r2UniquePathCount: 27,
-    r2ePlannedPathCount: 8,
+    r2ePlannedPathCount: 9,
     r2eNonRegistryPathCount: 6,
     pathClassesRequired: [
       'IMPLEMENTATION_SOURCE',
@@ -58,11 +58,12 @@ export const H_EARTH_RUN_8E_R2E_CONTROL = freeze({
     run8EFailOpen: true
   },
   executionCustody: {
-    validatedCoreHead: null,
-    workflowRun: null,
-    workflowJob: null,
-    artifactId: null,
-    artifactDigest: null,
+    validatedCoreHead: '481dd572eb3351e42e11f48ff75edc37c9e03d76',
+    workflowRun: 30280225199,
+    workflowJob: 90024428747,
+    artifactId: 8658482156,
+    artifactDigest: 'sha256:65a0b6b4a494f4330285bb214800b66c6115a8f3477251a80b6e0e3fcb82d161',
+    exactOccurrenceManifestDigest: 'sha256:2ae01097d0ab58f6cfd6b2a158ee558f816a2342443b387da410879fb1f2da9a',
     finalExactHead: null
   },
   boundaries: {

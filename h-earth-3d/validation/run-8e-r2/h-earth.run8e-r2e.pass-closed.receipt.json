@@ -1,0 +1,34 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2E_REGISTRY_AND_SCOPE_AUDIT_RECEIPT",
+  "eligible": false,
+  "status": "RUN_8E_R2E_EXECUTION_OPEN_NOT_PASS_CLOSED",
+  "recordedAt": "2026-07-27T06:10:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2e-registry-scope-audit-001",
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2D",
+    "status": "PASS_CLOSED",
+    "exactHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9"
+  },
+  "execution": null,
+  "registry": {
+    "cumulativeGovernedPathCount": 28,
+    "overlayActive": false,
+    "automaticPreflightPass": false
+  },
+  "scopeAudit": null,
+  "checkpointDisposition": {
+    "run8ER2A": "PASS_CLOSED",
+    "run8ER2B": "PASS_CLOSED",
+    "run8ER2C": "PASS_CLOSED",
+    "run8ER2D": "PASS_CLOSED",
+    "run8ER2E": "EXECUTION_OPEN",
+    "run8ER2F": "NOT_STARTED",
+    "run8ER2": "OPEN_AT_R2E",
+    "run8E": "FAIL_OPEN"
+  },
+  "stoppingBoundary": "STOP_BEFORE_RUN_8E_R2F_CLOSURE_AND_PROMOTION_DECISION",
+  "issues": [
+    "R2E_EXECUTION_AND_AUTOMATIC_PREFLIGHT_PENDING"
+  ]
+}

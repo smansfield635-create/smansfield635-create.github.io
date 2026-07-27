@@ -11,6 +11,7 @@ const freeze = (value, seen = new WeakSet()) => {
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r3d5-r3d-closure-r3e-input-decision-001';
 const PASS_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d5.pass-closed.receipt.json';
+const PASS_RECEIPT_GIT_BLOB = 'f9f6d9b1464882f7e8cf7143a4d4e90d4093dcec';
 
 export const H_EARTH_RUN_8E_R3D5_PATHS = Object.freeze([
   '/.github/workflows/h-earth-run8e-r3d5-r3d-closure-r3e-input-decision.yml',
@@ -29,19 +30,19 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R3D5_PATHS.map((repositoryPath)
   refName: BRANCH,
   commitSha: null,
   path: repositoryPath,
-  gitBlobSha: null,
+  gitBlobSha: repositoryPath === PASS_RECEIPT_PATH ? PASS_RECEIPT_GIT_BLOB : null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT',
-  fetchbackStatus: 'R3D5_CORE_EXECUTION_PASS_DURABLE_RECEIPT_PENDING',
-  occurrenceClass: 'RUN_8E_R3D5_R3D_CLOSURE_AND_R3E_INPUT_DECISION_OCCURRENCE'
+  existenceStatus: 'PRESENT',
+  fetchbackStatus: 'R3D5_DURABLE_PASS_RECEIPT_PRESENT_FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+  occurrenceClass: 'RUN_8E_R3D5_R3D_CLOSURE_AND_R3E_INPUT_DECISION_PASS_CLOSED_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3D5_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3D5_R3D_CLOSURE_AND_R3E_INPUT_DECISION_v1',
-  evidenceClass: 'EXECUTED_R3D5_REPOSITORY_RECONCILIATION_CORE_PASS',
+  evidenceClass: 'EXECUTED_R3D5_R3D_CLOSURE_AND_R3E_INPUT_DECISION_WITH_DURABLE_PASS_CLOSED_RECEIPT',
   sourceKind: 'GITHUB_ACTIONS_NODE_RECONCILIATION_AND_AUTOMATIC_REGISTRY_PREFLIGHT',
-  sourceIdOrPath: '/h-earth-3d/validation/h-earth.run8e-r3d5.r3d-closure-r3e-input-decision.harness.mjs',
+  sourceIdOrPath: PASS_RECEIPT_PATH,
   sourceOccurrenceOrRevision: '119ea9d5d09774efc9270664bd561462e3afc1f5',
   assertionScope: [
     'R3D1_R3D4_DURABLE_RECEIPT_IDENTITY_RECONCILIATION',
@@ -72,6 +73,12 @@ export const H_EARTH_RUN_8E_R3D5_EVIDENCE = freeze({
     artifactId: 8667508612,
     artifactDigest: 'sha256:c8cfa71d54f437f5cef03c463fa37c7ab31b61541038991912e198f9cef70ec8',
     automaticRegistryPreflightRun: 30303543805,
+    closureControlHead: '576f35e01ba8dcdbf05f0fe52fbf2d92d827e5ae',
+    closureControlWorkflowRun: 30303809611,
+    closureControlWorkflowJob: 90103001979,
+    closureControlArtifact: 8667613047,
+    closureControlArtifactDigest: 'sha256:801f3c7d290c081bb5acc16a5a3906fbd3029fc794ac967c547e718485fcf308',
+    closureControlAutomaticRegistryPreflightRun: 30303809556,
     predecessorReceiptCount: 4,
     unresolvedPredecessorCount: 0,
     r3DSubcheckpointCount: 5,
@@ -82,13 +89,16 @@ export const H_EARTH_RUN_8E_R3D5_EVIDENCE = freeze({
     admittedR3EInputCount: 7,
     r3EInputDisposition: 'ADMISSIBLE_AS_NEXT_CHECKPOINT_INPUT',
     r3ERequiredBase: 'R3D5_FINAL_EXACT_HEAD',
+    durablePassReceiptPath: PASS_RECEIPT_PATH,
+    durablePassReceiptCommit: '535744ed724820bc05b674bfe0eb24da2808fbf7',
+    durablePassReceiptGitBlob: PASS_RECEIPT_GIT_BLOB,
     showroomMutationCount: 0,
     browserExecutionCount: 0,
     gpuExecutionCount: 0
   },
   evidenceLimitations: [
-    'DURABLE_R3D5_PASS_RECEIPT_PENDING',
     'FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+    'FINAL_EXACT_HEAD_VALIDATION_NOT_EMBEDDED_IN_PASS_RECEIPT',
     'R3E_NOT_STARTED',
     'NO_PUBLIC_ROUTE_INTEGRATION',
     'NO_DEPLOYMENT',
@@ -107,14 +117,15 @@ export const H_EARTH_RUN_8E_R3D5_NODE = freeze({
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: H_EARTH_RUN_8E_R3D5_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3D5_EVIDENCE.evidenceId],
-  authorityClass: 'EXECUTED_R3D_CLOSURE_AND_R3E_INPUT_DECISION_CORE_PASS',
-  authorityPosture: 'R3D_PASS_CLOSED_CORE_EVIDENCE_DURABLE_R3D5_RECEIPT_PENDING_R3E_NOT_STARTED_RUN_8E_FAIL_OPEN',
+  authorityClass: 'EXECUTED_R3D_CLOSURE_AND_R3E_INPUT_DECISION_PASS_CLOSED',
+  authorityPosture: 'R3D_PASS_CLOSED_R3_OPEN_AT_R3E_BOUNDARY_R3E_NOT_STARTED_RUN_8E_FAIL_OPEN',
   authoritySource: [
     'R3D1_PASS_CLOSED_RECEIPT',
     'R3D2_PASS_CLOSED_RECEIPT',
     'R3D3_PASS_CLOSED_RECEIPT',
     'R3D4_PASS_CLOSED_RECEIPT',
-    'R3D5_GITHUB_ACTIONS_RECONCILIATION'
+    'R3D5_GITHUB_ACTIONS_RECONCILIATION',
+    'R3D5_DURABLE_PASS_RECEIPT'
   ],
   authorityScope: [
     'RECONCILE_R3D1_R3D4',
@@ -139,7 +150,7 @@ export const H_EARTH_RUN_8E_R3D5_NODE = freeze({
     'R3E_REQUIRES_SEPARATE_EXACT_SCOPE_AND_VALIDATION'
   ],
   dependencyRelations: [],
-  allowedMutationScope: 'R3D5_EIGHT_PATH_BOUNDED_SCOPE_ONLY',
+  allowedMutationScope: 'NONE_AFTER_FINAL_EXACT_HEAD_REVALIDATION',
   prohibitedMutations: [
     'SHOWROOM',
     'PUBLIC_ROUTE',
@@ -150,21 +161,24 @@ export const H_EARTH_RUN_8E_R3D5_NODE = freeze({
     'R3E_OR_LATER_IMPLEMENTATION'
   ],
   requiredValidations: [
-    'RECEIPT_FREE_CLOSURE_CONTROL_VALIDATION',
-    'DURABLE_PASS_RECEIPT',
-    'FINAL_EXACT_HEAD_REVALIDATION',
-    'AUTOMATIC_REGISTRY_PREFLIGHT',
-    'EXACT_SCOPE'
+    'FINAL_EXACT_HEAD_RECONCILIATION',
+    'FINAL_AUTOMATIC_REGISTRY_PREFLIGHT',
+    'FINAL_EXACT_SCOPE'
   ],
   stoppingBoundaries: ['STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E'],
   currentIdentityReferences: [
     '641c25f76d44f95709693a1cc0aec7ecbb53ae2e',
     '119ea9d5d09774efc9270664bd561462e3afc1f5',
+    '576f35e01ba8dcdbf05f0fe52fbf2d92d827e5ae',
+    '535744ed724820bc05b674bfe0eb24da2808fbf7',
     '30303543863',
-    '8667508612'
+    '30303809611',
+    '8667508612',
+    '8667613047',
+    PASS_RECEIPT_GIT_BLOB
   ],
-  lifecycleStatus: 'CORE_EXECUTION_PASS_RECEIPT_PENDING',
-  unresolvedFields: ['R3D5_PASS_RECEIPT', 'R3D5_FINAL_EXACT_HEAD']
+  lifecycleStatus: 'PASS_CLOSED_FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+  unresolvedFields: ['R3D5_FINAL_EXACT_HEAD_WORKFLOW_RUN']
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R3D5_PATHS.map((repositoryPath) => [repositoryPath, {

@@ -6,7 +6,7 @@ import { evaluateHEarthRun8ER3Control } from '../control-plane/run-8/recovery/h-
 import { evaluateHEarthRun8ER3E4Control } from '../control-plane/run-8/recovery/h-earth.run8e-r3e4.public-direct-manipulation-acceptance.js';
 
 const OUT=process.env.H_EARTH_RUN8E_R3E4_OUTPUT??'/tmp/h-earth-run8e-r3e4';
-const URL=process.env.H_EARTH_RUN8E_R3E4_URL??'http://127.0.0.1:4173/showroom/globe/h-earth/';
+const TARGET_URL=process.env.H_EARTH_RUN8E_R3E4_URL??'http://127.0.0.1:4173/showroom/globe/h-earth/';
 const GROUPS=24,CADENCE=350,MAX_DELIVERY=2000,MAX_COMPLETION=2000,MAX_PROCESSING=1000;
 const COALESCING='NONE_ONE_SYNCHRONOUS_FRAME_PER_ACCEPTED_PROPOSAL';
 const ORCHESTRATOR='/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js';
@@ -45,7 +45,7 @@ try{
   page.on('pageerror',e=>events.page.push(e.message));
   page.on('requestfailed',r=>events.requests.push({url:r.url(),error:r.failure()?.errorText}));
   page.on('request',r=>{if(r.resourceType()==='script')scripts.push(new URL(r.url()).pathname)});
-  await page.goto(URL,{waitUntil:'networkidle'});
+  await page.goto(TARGET_URL,{waitUntil:'networkidle'});
   await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true);
   const prefix=`h-earth.run8e-r3e4.${id.toLowerCase()}`;
   const files={initial:path.join(OUT,`${prefix}.initial-frame.png`),post:path.join(OUT,`${prefix}.post-interaction-frame.png`),page:path.join(OUT,`${prefix}.public-page.png`)};
@@ -95,6 +95,6 @@ try{
  }
  const sum=k=>sessions.reduce((n,s)=>n+s[k],0),aggregate={sessions:sessions.length,groups:GROUPS*sessions.length,acceptedProposals:sum('proposalCount'),framePackets:sum('packetCount'),visibleFrames:sum('frameCount'),maxDelivery:max(sessions.map(s=>s.timing.maxDelivery)),maxCompletion:max(sessions.map(s=>s.timing.maxCompletion)),maxProcessing:max(sessions.map(s=>s.timing.maxProcessing)),maxGpu:max(sessions.map(s=>s.timing.maxGpu))};
  assert(aggregate.sessions===2&&aggregate.groups===48&&aggregate.acceptedProposals===aggregate.framePackets&&aggregate.framePackets===aggregate.visibleFrames,'R3E4_AGGREGATE');
- const receipt={receiptType:'H_EARTH_RUN_8E_R3E4_PUBLIC_DIRECT_MANIPULATION_EXECUTION_RECEIPT',eligible:true,status:'RUN_8E_R3E4_EXECUTION_PASS',targetUrl:URL,parentControl:parent,childControl:child,declaration:{publicSourceMutationAuthorized:false,showroomDeltaExpected:'ZERO',frameCoalescingPolicy:COALESCING,wheelSubstitutionAllowed:false},thresholds:{groupsPerOrientation:GROUPS,cadenceMs:CADENCE,maxDeliveryMs:MAX_DELIVERY,maxCompletionMs:MAX_COMPLETION,maxProcessingMs:MAX_PROCESSING,maxCallbacks:1},sessions,aggregate,acceptance:{oneFingerLook:'PASS',twoFingerTravel:'PASS',pinchZoom:'PASS',portrait:'PASS',landscape:'PASS',sustainedInteraction:'PASS',runtimeAuthorityExclusivity:'PRESERVED',flatBitmapDragging:false,worldRebuildDuringGesture:false,obsoleteInputBacklog:false},boundaries:{publicSourceMutated:false,showroomMutated:false,sourcePatchApplied:false,referenceDeviceAcceptance:false,deployment:false,promotion:false,mainMerge:false,r3E5:false,r3F:false,run8EPassClosed:false},nextCheckpoint:'RUN_8E_R3E5_NOT_STARTED',stoppingBoundary:'STOP_BEFORE_R3E_CLOSURE_AND_R3F_INPUT_DECISION_R3E5',issues:[]};
+ const receipt={receiptType:'H_EARTH_RUN_8E_R3E4_PUBLIC_DIRECT_MANIPULATION_EXECUTION_RECEIPT',eligible:true,status:'RUN_8E_R3E4_EXECUTION_PASS',targetUrl:TARGET_URL,parentControl:parent,childControl:child,declaration:{publicSourceMutationAuthorized:false,showroomDeltaExpected:'ZERO',frameCoalescingPolicy:COALESCING,wheelSubstitutionAllowed:false},thresholds:{groupsPerOrientation:GROUPS,cadenceMs:CADENCE,maxDeliveryMs:MAX_DELIVERY,maxCompletionMs:MAX_COMPLETION,maxProcessingMs:MAX_PROCESSING,maxCallbacks:1},sessions,aggregate,acceptance:{oneFingerLook:'PASS',twoFingerTravel:'PASS',pinchZoom:'PASS',portrait:'PASS',landscape:'PASS',sustainedInteraction:'PASS',runtimeAuthorityExclusivity:'PRESERVED',flatBitmapDragging:false,worldRebuildDuringGesture:false,obsoleteInputBacklog:false},boundaries:{publicSourceMutated:false,showroomMutated:false,sourcePatchApplied:false,referenceDeviceAcceptance:false,deployment:false,promotion:false,mainMerge:false,r3E5:false,r3F:false,run8EPassClosed:false},nextCheckpoint:'RUN_8E_R3E5_NOT_STARTED',stoppingBoundary:'STOP_BEFORE_R3E_CLOSURE_AND_R3F_INPUT_DECISION_R3E5',issues:[]};
  json('h-earth.run8e-r3e4.public-direct-manipulation-acceptance.execution.receipt.json',receipt);console.log(JSON.stringify({status:receipt.status,aggregate,acceptance:receipt.acceptance,screenshots:sessions.map(s=>({id:s.id,screenshot:s.screenshot})),stoppingBoundary:receipt.stoppingBoundary},null,2));
 }catch(error){json('h-earth.run8e-r3e4.current-attempt.failure.runtime.json',{receiptType:'H_EARTH_RUN_8E_R3E4_CURRENT_ATTEMPT_RUNTIME_FAILURE',eligible:true,status:'RUN_8E_R3E4_FAIL_OPEN',failureLaw:'FAILED_ATTEMPT_RECEIPT_REQUIRED_PUBLIC_SOURCE_PATCH_PROHIBITED',error:error?.message??String(error),stack:error?.stack,completedSessions:sessions,publicSourcePatched:false,stoppingBoundary:'STOP_AND_CREATE_SEPARATELY_BOUNDED_CORRECTIVE_CHECKPOINT'});throw error}finally{await browser?.close()}

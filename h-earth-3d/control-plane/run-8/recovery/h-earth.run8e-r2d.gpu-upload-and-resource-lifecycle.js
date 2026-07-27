@@ -14,7 +14,7 @@ export const H_EARTH_RUN_8E_R2D_CONTROL = freeze({
   parentContractId: 'H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1',
   checkpointId: 'RUN_8E_R2D',
   checkpointName: 'GPU_UPLOAD_VIEW_AND_RESOURCE_LIFECYCLE_VALIDATION',
-  currentStatus: 'EXECUTION_OPEN',
+  currentStatus: 'PASS_CLOSED',
   predecessor: {
     checkpointId: 'RUN_8E_R2C',
     status: 'PASS_CLOSED',
@@ -24,8 +24,26 @@ export const H_EARTH_RUN_8E_R2D_CONTROL = freeze({
     correspondenceAuditManifestDigest:
       'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe'
   },
+  executionEvidence: {
+    attempt: 'R2D_ATTEMPT_004_CANONICAL_GPU_TRANSPORT',
+    executionHead: 'f346df7873b366d961e1bf1dc45d0082a4607590',
+    workflowRun: 30240226591,
+    workflowJob: 89895687377,
+    evidenceArtifact: 8642985618,
+    evidenceArtifactDigest: 'sha256:9b1006036a93bfb3cf6c532c21068a37d5013ab5f8d1635cdd917655870de03c',
+    passReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.pass-closed.receipt.json',
+    custodyManifestDigest: 'sha256:0ef98ea0f82370278ecc946247b32a8ab615a665834abdb33fee741ae6b7ec6e',
+    canonicalUploadByteLengthPerCycle: 2145444,
+    createdBufferCount: 27,
+    deletedBufferCount: 27,
+    contextLossObserved: true,
+    contextRestoreObserved: true,
+    canonicalGpuUploadBytesExactAcrossNodeAndChromium: true
+  },
   discoveredTransportBoundary: {
     nodeAndChromiumRawPackageIdentityExact: false,
+    nodePackageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
+    chromiumRuntimePackageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD',
     exactRawTypedBuffers: [
       'positions',
       'baseColorsLinear',
@@ -37,6 +55,10 @@ export const H_EARTH_RUN_8E_R2D_CONTROL = freeze({
     ],
     runtimeDriftTypedBuffers: ['normals', 'materialParameters'],
     disposition: 'CANONICALIZE_ONLY_AT_GPU_TRANSPORT_BOUNDARY',
+    canonicalGpuTransportContractId: 'H_EARTH_RUN_8E_R2D_DETERMINISTIC_GPU_UPLOAD_VIEWS_v1',
+    canonicalizationDecimalPlaces: 6,
+    observedMaximumAbsoluteAdjustment: 5.066394805908203e-7,
+    canonicalGpuUploadBytesExact: true,
     sourceAuthorityCorrectionRequired: false,
     liveRenderPackageSourceCorrectionRequired: false
   },
@@ -69,7 +91,13 @@ export const H_EARTH_RUN_8E_R2D_CONTROL = freeze({
     expectedUsage: 'STATIC_DRAW',
     canonicalizedFloatBufferCount: 2,
     canonicalizationDecimalPlaces: 6,
-    maximumPermittedAbsoluteAdjustment: 0.00000051
+    maximumPermittedAbsoluteAdjustment: 5.1e-7
+  },
+  attemptReconciliation: {
+    attempt001: 'PRESERVED_RUNTIME_IDENTITY_ASSUMPTION_FAILURE_BEFORE_GPU_UPLOAD',
+    attempt002: 'PRESERVED_CONTEXT_RESTORE_TIMING_FAILURE_AFTER_TWO_COMPLETE_UPLOAD_DELETE_CYCLES',
+    attempt003: 'PRESERVED_CROSS_RUNTIME_FLOAT32_DRIFT_AFTER_COMPLETE_GPU_LIFECYCLE',
+    attempt004: 'PASS_CANONICAL_TRANSPORT_AND_COMPLETE_RESOURCE_LIFECYCLE'
   },
   permittedScope: [
     'R2D_CONTROL_OVERLAY',
@@ -102,7 +130,7 @@ export const H_EARTH_RUN_8E_R2D_CONTROL = freeze({
     deviceBrandSpecificImplementation: false
   },
   stoppingBoundary: {
-    currentCheckpoint: 'RUN_8E_R2D_EXECUTION_OPEN',
+    currentCheckpoint: 'RUN_8E_R2D_PASS_CLOSED',
     nextCheckpoint: 'RUN_8E_R2E_NOT_STARTED',
     run8ER2EStarted: false,
     run8ER3Started: false,
@@ -115,23 +143,34 @@ export const H_EARTH_RUN_8E_R2D_CONTROL = freeze({
 export function evaluateHEarthRun8ER2DControl(candidate = H_EARTH_RUN_8E_R2D_CONTROL) {
   const issues = [];
   if (candidate?.contractId !== H_EARTH_RUN_8E_R2D_CONTRACT_ID) issues.push('R2D_CONTRACT_ID_MISMATCH');
+  if (candidate?.currentStatus !== 'PASS_CLOSED') issues.push('R2D_NOT_PASS_CLOSED');
   if (candidate?.predecessor?.status !== 'PASS_CLOSED') issues.push('R2C_NOT_PASS_CLOSED');
   if (candidate?.predecessor?.exactHead !== '845b6d6acffdd461153b3474044ec533ffd4403b') {
     issues.push('R2C_EXACT_HEAD_MISMATCH');
+  }
+  if (candidate?.executionEvidence?.workflowRun !== 30240226591) issues.push('R2D_WORKFLOW_RUN_MISMATCH');
+  if (candidate?.executionEvidence?.evidenceArtifact !== 8642985618) issues.push('R2D_ARTIFACT_MISMATCH');
+  if (candidate?.executionEvidence?.custodyManifestDigest !==
+      'sha256:0ef98ea0f82370278ecc946247b32a8ab615a665834abdb33fee741ae6b7ec6e') {
+    issues.push('R2D_CUSTODY_DIGEST_MISMATCH');
+  }
+  if (candidate?.executionEvidence?.createdBufferCount !== 27 ||
+      candidate?.executionEvidence?.deletedBufferCount !== 27) {
+    issues.push('R2D_RESOURCE_COUNT_MISMATCH');
+  }
+  if (candidate?.executionEvidence?.canonicalGpuUploadBytesExactAcrossNodeAndChromium !== true) {
+    issues.push('R2D_CANONICAL_GPU_BYTES_NOT_EXACT');
   }
   if (candidate?.expectedUploadManifest?.sourceBufferCount !== 9) issues.push('R2D_UPLOAD_CORPUS_INVALID');
   if (candidate?.expectedUploadManifest?.lifecycleCycleCount !== 3) issues.push('R2D_LIFECYCLE_CYCLE_COUNT_INVALID');
   if (candidate?.expectedUploadManifest?.canonicalizedFloatBufferCount !== 2) {
     issues.push('R2D_CANONICALIZED_BUFFER_COUNT_INVALID');
   }
-  if (!candidate?.permittedScope?.includes('R2D_DETERMINISTIC_GPU_TRANSPORT_ADAPTER')) {
-    issues.push('R2D_GPU_TRANSPORT_ADAPTER_NOT_AUTHORIZED');
-  }
   if (!candidate?.prohibitedScope?.includes('DRAW_CALL_OR_RENDER_LOOP')) issues.push('R2D_DRAW_BOUNDARY_MISSING');
   if (candidate?.stoppingBoundary?.run8ER2EStarted !== false) issues.push('R2E_STARTED_INSIDE_R2D');
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R2D_CONTROL_PASS' : 'RUN_8E_R2D_CONTROL_FAIL',
+    status: issues.length === 0 ? 'RUN_8E_R2D_CONTROL_PASS_CLOSED' : 'RUN_8E_R2D_CONTROL_FAIL',
     issues
   });
 }

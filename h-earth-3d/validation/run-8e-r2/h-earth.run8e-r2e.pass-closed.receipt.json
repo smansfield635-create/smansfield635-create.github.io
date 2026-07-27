@@ -1,34 +1,94 @@
 {
-  "receiptType": "H_EARTH_RUN_8E_R2E_REGISTRY_AND_SCOPE_AUDIT_RECEIPT",
-  "eligible": false,
-  "status": "RUN_8E_R2E_EXECUTION_OPEN_NOT_PASS_CLOSED",
-  "recordedAt": "2026-07-27T06:10:00.000Z",
+  "receiptType": "H_EARTH_RUN_8E_R2E_REGISTRY_AND_SCOPE_AUDIT_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2E_PASS_CLOSED",
+  "recordedAt": "2026-07-27T14:45:00.000Z",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "branch": "agent/h-earth-run8e-r2e-registry-scope-audit-001",
+  "pullRequest": 223,
   "predecessor": {
     "checkpoint": "RUN_8E_R2D",
     "status": "PASS_CLOSED",
-    "exactHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9"
+    "exactHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9",
+    "custodyManifestDigest": "sha256:0ef98ea0f82370278ecc946247b32a8ab615a665834abdb33fee741ae6b7ec6e"
   },
-  "execution": null,
+  "execution": {
+    "head": "b7d4a2553a3a6755d64cb30fab15fd6338a2855e",
+    "runId": 30276376269,
+    "jobId": 90011388187,
+    "conclusion": "success",
+    "predecessorAndSyntax": "PASS",
+    "cumulativeRegistryAndIndependentScopeAudit": "PASS",
+    "exactR2EScopeAndR2FStoppingBoundary": "PASS",
+    "evidenceUpload": "PASS"
+  },
+  "executionArtifact": {
+    "artifactId": 8656954357,
+    "artifactName": "h-earth-run8e-r2e-registry-scope-audit-evidence",
+    "artifactDigest": "sha256:2c0100cad7169ed1ee40ca750640ff91a698b581e3b079b030f0ed678eaf6289",
+    "artifactWorkflowHead": "b7d4a2553a3a6755d64cb30fab15fd6338a2855e"
+  },
+  "automaticRegistryPreflight": {
+    "runId": 30276376061,
+    "jobId": 90011387581,
+    "conclusion": "success",
+    "artifactId": 8656951286,
+    "artifactName": "h-earth-automatic-preflight-receipt",
+    "artifactDigest": "sha256:691b44d1bb23af857dc7ecf61cd41222a7a90ef7acfcba31a571a061dcfbba68",
+    "priorFailureRunId": 30240950338,
+    "priorFailureJobId": 89897847300,
+    "priorFailureCode": "REQUESTED_PATH_UNRESOLVED",
+    "priorUnresolvedR2DGovernedPathCount": 12,
+    "resolution": "CUMULATIVE_R2_REGISTRY_OVERLAY_ACTIVATED_THROUGH_VALIDATOR_LOADER"
+  },
   "registry": {
+    "nodeId": "H_EARTH_RUN_8E_R2_CUMULATIVE_REPOSITORY_PACKAGE",
+    "evidenceId": "EVIDENCE_H_EARTH_RUN_8E_R2_CUMULATIVE_PACKAGE_SCOPE_v1",
     "cumulativeGovernedPathCount": 28,
-    "overlayActive": false,
-    "automaticPreflightPass": false
+    "gitScopePathCount": 28,
+    "registryScopePathCount": 28,
+    "loaderResolvedPathCount": 28,
+    "gitRegistryLoaderSetEquality": true,
+    "allPathsExist": true,
+    "allPathsFetchbackHashed": true,
+    "cumulativeManifestDigestAtExecutionHead": "sha256:ac156b619704889790e911c24023bfc23f24d3ec443194a2e6c46211b02663dd",
+    "cumulativeByteCountAtExecutionHead": 220755
   },
-  "scopeAudit": null,
+  "predecessorReceipts": {
+    "run8ER2A": "RUN_8E_R2A_PASS_CLOSED",
+    "run8ER2B": "RUN_8E_R2B_PASS_CLOSED",
+    "run8ER2C": "RUN_8E_R2C_PASS_CLOSED",
+    "run8ER2D": "RUN_8E_R2D_PASS_CLOSED"
+  },
+  "boundaries": {
+    "r2aR2bR2cOrR2dInvalidated": false,
+    "liveRenderPackageMutated": false,
+    "gpuTransportAdapterMutated": false,
+    "sourceAuthorityMutated": false,
+    "productOrRuntimeAuthorityMutation": false,
+    "publicRouteMutation": false,
+    "cameraNavigationOrGestureMutation": false,
+    "shaderDrawOrRenderLoopCreated": false,
+    "deploymentPerformed": false,
+    "run8ER2FStarted": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false
+  },
   "checkpointDisposition": {
     "run8ER2A": "PASS_CLOSED",
     "run8ER2B": "PASS_CLOSED",
     "run8ER2C": "PASS_CLOSED",
     "run8ER2D": "PASS_CLOSED",
-    "run8ER2E": "EXECUTION_OPEN",
+    "run8ER2E": "PASS_CLOSED",
     "run8ER2F": "NOT_STARTED",
-    "run8ER2": "OPEN_AT_R2E",
+    "run8ER2": "OPEN_AT_R2F_BOUNDARY",
     "run8E": "FAIL_OPEN"
   },
+  "finalHeadEvidencePolicy": {
+    "finalExactHeadAuditRequired": true,
+    "finalClosureRunAndArtifactRecordedOutsideThisNonRecursiveReceipt": true,
+    "receiptOfReceiptCommitProhibited": true
+  },
   "stoppingBoundary": "STOP_BEFORE_RUN_8E_R2F_CLOSURE_AND_PROMOTION_DECISION",
-  "issues": [
-    "R2E_EXECUTION_AND_AUTOMATIC_PREFLIGHT_PENDING"
-  ]
+  "issues": []
 }

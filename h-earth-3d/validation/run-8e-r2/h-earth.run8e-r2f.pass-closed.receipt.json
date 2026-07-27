@@ -1,0 +1,151 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2F_CLOSURE_AND_PROMOTION_DECISION_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2F_PASS_CLOSED",
+  "recordedAt": "2026-07-27T16:11:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2f-closure-promotion-decision-001",
+  "pullRequest": 225,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2E",
+    "status": "PASS_CLOSED",
+    "branch": "agent/h-earth-run8e-r2e-registry-execution-custody-001",
+    "exactHead": "096bfbaf45b8987041600385ae16646b00137b9b",
+    "pullRequest": 224
+  },
+  "supersededOccurrenceReconciliation": {
+    "pullRequest": 223,
+    "state": "CLOSED_UNMERGED",
+    "classification": "SUPERSEDED_R2E_CANDIDATE",
+    "controllingReplacement": 224
+  },
+  "coreExecution": {
+    "head": "fb92cca39d5a277df3dba8d586fb9ff017eca34a",
+    "runId": 30283048662,
+    "jobId": 90033938538,
+    "conclusion": "success",
+    "artifactId": 8659616243,
+    "artifactName": "h-earth-run8e-r2f-closure-promotion-decision-evidence",
+    "artifactDigest": "sha256:a130adddfc535ce3acd28e81cd4d4c09b1c131b0cda427bc0d51fbbf9683e300",
+    "closureManifestDigest": "sha256:f565c1973859fa8365bca57d06f794f81b85bce436b5887ca5c81e926a6d1a73",
+    "automaticRepositoryRegistryPreflightRun": 30283052518,
+    "automaticRepositoryRegistryPreflight": "PASS"
+  },
+  "closureControlValidation": {
+    "head": "d5b0d39fed9881b0c403c3887a22db778e9b69b4",
+    "runId": 30283446783,
+    "jobId": 90035262877,
+    "conclusion": "success",
+    "artifactId": 8659772773,
+    "artifactName": "h-earth-run8e-r2f-closure-promotion-decision-evidence",
+    "artifactDigest": "sha256:de96f8ee34511263134c54e8667cac1023300d120d106d843fc75640c6c81eb8",
+    "closureManifestDigest": "sha256:33700d5af40e09ee6205e7981123ab867bdd7f484d158cbb65f69bc94deebca8",
+    "automaticRepositoryRegistryPreflightRun": 30283446747,
+    "automaticRepositoryRegistryPreflight": "PASS",
+    "durableReceiptPresentDuringExecution": false
+  },
+  "stackCustody": {
+    "r2a": {
+      "pullRequest": 217,
+      "baseHead": "a660d54b0df30e768b95e2314b918d0f263883ed",
+      "finalHead": "22b23594005dabdd9374501dae1c561f2dafa648",
+      "passReceiptGitBlobSha": "aa9c2849bbce57808e6067ef256e0d5a8af829e6",
+      "status": "PASS_CLOSED"
+    },
+    "r2b": {
+      "pullRequest": 218,
+      "baseHead": "22b23594005dabdd9374501dae1c561f2dafa648",
+      "finalHead": "39de87edefcc037eaafa8a988dc0c84e40e3d1ba",
+      "passReceiptGitBlobSha": "ce9e5bcf96540d69eae87df266db38d3d4edbbac",
+      "status": "PASS_CLOSED"
+    },
+    "r2c": {
+      "pullRequest": 219,
+      "baseHead": "39de87edefcc037eaafa8a988dc0c84e40e3d1ba",
+      "finalHead": "845b6d6acffdd461153b3474044ec533ffd4403b",
+      "passReceiptGitBlobSha": "ee6f7be12875a87c8de9708d8063b4d2445e59bd",
+      "status": "PASS_CLOSED"
+    },
+    "r2d": {
+      "pullRequest": 220,
+      "baseHead": "845b6d6acffdd461153b3474044ec533ffd4403b",
+      "finalHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9",
+      "passReceiptGitBlobSha": "7feaacf176df3ecd43e38965603b62d61482ed0c",
+      "status": "PASS_CLOSED"
+    },
+    "r2e": {
+      "pullRequest": 224,
+      "baseHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9",
+      "finalHead": "096bfbaf45b8987041600385ae16646b00137b9b",
+      "passReceiptGitBlobSha": "d0802f378306568b3f92edf6d31b60f0a4bb93f1",
+      "status": "PASS_CLOSED"
+    },
+    "r2f": {
+      "pullRequest": 225,
+      "baseHead": "096bfbaf45b8987041600385ae16646b00137b9b",
+      "executionHead": "fb92cca39d5a277df3dba8d586fb9ff017eca34a",
+      "closureControlHead": "d5b0d39fed9881b0c403c3887a22db778e9b69b4",
+      "status": "PASS_CLOSED"
+    },
+    "exactBaseHeadChain": true,
+    "controllingPullRequestsOpenDraftUnmerged": true,
+    "r2StackMerged": false
+  },
+  "protectedIdentities": {
+    "liveRenderPackagePath": "/showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "liveRenderPackageGitBlobSha": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+    "gpuTransportAdapterPath": "/showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+    "gpuTransportAdapterGitBlobSha": "785856d7702a0e855c2672e6b8a7325ad5b3ba50",
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "packageContentDigest": "fnv1a32:fd913c25",
+    "r2bCustodyManifestDigest": "sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d",
+    "r2cAuditManifestDigest": "sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe",
+    "r2dCustodyManifestDigest": "sha256:0ef98ea0f82370278ecc946247b32a8ab615a665834abdb33fee741ae6b7ec6e",
+    "r2eOccurrenceManifestDigest": "sha256:2ae01097d0ab58f6cfd6b2a158ee558f816a2342443b387da410879fb1f2da9a"
+  },
+  "closureResult": {
+    "r2AThroughR2FPassClosed": true,
+    "r2ConstructionClosure": "PASS_CLOSED",
+    "promotionTarget": "RUN_8E_R3_INPUT",
+    "promotionToR3Input": "APPROVED",
+    "mainBranchPromotion": "NOT_EXECUTED",
+    "mainMergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "publicRouteAuthorityCreated": false,
+    "run8EPassAuthorityCreated": false
+  },
+  "boundaries": {
+    "liveRenderPackageMutated": false,
+    "gpuTransportAdapterMutated": false,
+    "sourceAuthorityMutated": false,
+    "publicRouteMutated": false,
+    "cameraNavigationOrGestureChanged": false,
+    "shaderProgramDrawCallRenderLoopOrVisiblePresentationCreated": false,
+    "mainMergePerformed": false,
+    "deploymentPerformed": false,
+    "r3WorkStarted": false,
+    "run8EPassClosed": false
+  },
+  "checkpointDisposition": {
+    "run8ER2A": "PASS_CLOSED",
+    "run8ER2B": "PASS_CLOSED",
+    "run8ER2C": "PASS_CLOSED",
+    "run8ER2D": "PASS_CLOSED",
+    "run8ER2E": "PASS_CLOSED",
+    "run8ER2F": "PASS_CLOSED",
+    "run8ER2": "PASS_CLOSED",
+    "run8ER3": "NOT_STARTED",
+    "run8E": "FAIL_OPEN"
+  },
+  "finalExactHeadValidation": {
+    "required": true,
+    "performedAfterReceiptAndFinalRegistryOverlay": false,
+    "finalHead": null,
+    "workflowRun": null,
+    "workflowJob": null,
+    "artifactId": null,
+    "artifactDigest": null
+  },
+  "stoppingBoundary": "STOP_BEFORE_RUN_8E_R3",
+  "issues": []
+}

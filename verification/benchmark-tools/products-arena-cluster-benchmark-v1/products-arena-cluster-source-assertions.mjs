@@ -5,7 +5,14 @@ import { PRODUCTS, TOOL_ID } from "./products-arena-cluster-benchmark.config.mjs
 
 const root = process.cwd();
 const read = relative => fs.readFile(path.join(root, relative), "utf8");
-const sha1 = text => crypto.createHash("sha1").update(text).digest("hex");
+const gitBlobSha = text => {
+  const content = Buffer.from(text, "utf8");
+  return crypto
+    .createHash("sha1")
+    .update(`blob ${content.length}\0`)
+    .update(content)
+    .digest("hex");
+};
 
 const [html, arenaCss, controller, crystals, planet, cosmos, center] = await Promise.all([
   read("products/index.html"),
@@ -52,8 +59,8 @@ const assertions = {
   existingQuickFlickPreserved: crystals.includes("CLUSTER_FLICK_RETURN") && crystals.includes("requestControllerReturnToConstellation"),
   existingSettlementPreserved: crystals.includes("settledClusterQuaternion") && crystals.includes("requestControllerClusterCommit"),
   controllerProductCountPreserved: PRODUCTS.every(product => controller.includes(`id: "${product.id}"`) && controller.includes(`route: "${product.route}"`)),
-  controllerAnchorBlobPreserved: sha1(controller) === "3eb38cc35a88936b884891d3dfe735a71583bf34",
-  crystalsAnchorBlobPreserved: sha1(crystals) === "6622f9cfd9e44589cf0e94119697256385f1317d",
+  controllerAnchorBlobPreserved: gitBlobSha(controller) === "3eb38cc35a88936b884891d3dfe735a71583bf34",
+  crystalsAnchorBlobPreserved: gitBlobSha(crystals) === "6622f9cfd9e44589cf0e94119697256385f1317d",
   canonicalFourCompassFilesUntouchedByLane: true
 };
 

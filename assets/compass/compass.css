@@ -3234,3 +3234,327 @@ body:has(
 #dgb-compass-cosmos-canvas {
   opacity: 0.42;
 }
+
+
+/* Main Compass architecture and context round 002 */
+/* HTML/CSS-only correction. No scene, controller, renderer, route, or gesture ownership. */
+
+.compass-practical-context {
+  padding: 0;
+  overflow: hidden;
+}
+
+.compass-practical-context > summary {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px 18px;
+  min-height: 92px;
+  padding: clamp(17px, 2.3vw, 24px) clamp(18px, 2.6vw, 28px);
+  cursor: pointer;
+  list-style: none;
+}
+
+.compass-practical-context > summary::-webkit-details-marker {
+  display: none;
+}
+
+.compass-practical-context > summary::after {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(243, 217, 139, 0.34);
+  border-radius: 999px;
+  color: var(--compass-gold-hot);
+  background: rgba(7, 10, 16, 0.88);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.compass-practical-context[open] > summary::after {
+  content: "–";
+}
+
+.compass-practical-context__summary .compass-estate__kicker {
+  grid-column: 1;
+  margin-bottom: 0;
+}
+
+.compass-practical-context__title {
+  grid-column: 1;
+  color: rgba(255, 248, 224, 0.98);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 3vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.028em;
+}
+
+.compass-practical-context__body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 16px;
+  padding: 0 clamp(18px, 2.6vw, 28px) clamp(19px, 2.7vw, 30px);
+  border-top: 1px solid rgba(225, 218, 198, 0.10);
+}
+
+.compass-practical-context__body > p {
+  max-width: 78ch;
+  margin: 0;
+  color: var(--compass-text-secondary);
+  line-height: 1.62;
+}
+
+.compass-practical-context__lead {
+  padding-top: 18px;
+}
+
+.compass-practical-context__bridge,
+.compass-practical-context__orientation {
+  color: var(--compass-text-primary) !important;
+}
+
+.compass-practical-context__routes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.compass-practical-context__routes article {
+  min-width: 0;
+  padding: 15px 16px;
+  border: 1px solid rgba(225, 218, 198, 0.12);
+  border-radius: 15px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.038), rgba(124, 220, 255, 0.018)),
+    rgba(4, 7, 12, 0.88);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 10px 26px rgba(0, 0, 0, 0.18);
+}
+
+.compass-practical-context__routes h3 {
+  margin: 0 0 7px;
+  color: var(--compass-gold-hot);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  letter-spacing: -0.012em;
+}
+
+.compass-practical-context__routes p {
+  margin: 0;
+  color: var(--compass-text-secondary);
+  font-size: 0.94rem;
+  line-height: 1.52;
+}
+
+.compass-supporting-entry__group {
+  position: relative;
+  z-index: 1;
+  margin-top: 20px;
+}
+
+.compass-supporting-entry__group-title {
+  margin: 0 0 11px;
+  color: rgba(243, 217, 139, 0.94);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.compass-route-deck {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.compass-route-card {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+  min-height: 150px;
+  padding: 17px 18px;
+  border: 1px solid rgba(124, 220, 255, 0.23);
+  border-radius: 17px;
+  color: inherit;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), transparent 28%),
+    linear-gradient(155deg, rgba(14, 24, 36, 0.96), rgba(5, 8, 14, 0.98));
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition:
+    transform 180ms var(--compass-ease),
+    border-color 180ms var(--compass-ease),
+    box-shadow 180ms var(--compass-ease);
+}
+
+.compass-route-card:hover,
+.compass-route-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(243, 217, 139, 0.46);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.31),
+    0 0 24px rgba(124, 220, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+.compass-route-card__label {
+  color: rgba(255, 248, 224, 0.98);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.12rem;
+  font-weight: 800;
+}
+
+.compass-route-card__purpose {
+  color: var(--compass-text-secondary);
+  font-size: 0.91rem;
+  line-height: 1.48;
+}
+
+.compass-route-card__action {
+  align-self: end;
+  margin-top: auto;
+  color: var(--compass-gold-hot);
+  font-size: 0.70rem;
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.compass-formula-artifact > summary {
+  grid-template-columns: minmax(0, 1.12fr) minmax(290px, 0.88fr);
+  align-items: center;
+  column-gap: clamp(16px, 2.5vw, 28px);
+  row-gap: 10px;
+}
+
+.compass-formula-artifact__practical-summary {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  color: var(--compass-text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.08rem, 1.8vw, 1.34rem);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.compass-formula-artifact__engineering-summary {
+  grid-column: 2;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.compass-formula-artifact > summary::after {
+  grid-column: 2;
+  justify-self: start;
+}
+
+.compass-formula-artifact__engineering-summary .compass-formula-artifact__math {
+  width: 100%;
+}
+
+.compass-formula-artifact--pcr .compass-formula-artifact__math {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+  align-items: center;
+  line-height: 1.45;
+}
+
+.compass-formula-artifact--split .compass-formula-artifact__math {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 12px;
+  align-items: center;
+  line-height: 1.45;
+}
+
+.compass-formula-artifact--pcr .formula-line,
+.compass-formula-artifact--split .formula-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  min-width: 0;
+  margin-top: 0 !important;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .compass-route-deck {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compass-formula-artifact > summary {
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.9fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .compass-practical-context__routes,
+  .compass-route-deck {
+    grid-template-columns: 1fr;
+  }
+
+  .compass-route-card {
+    min-height: 0;
+  }
+
+  .compass-formula-artifact > summary {
+    grid-template-columns: 1fr;
+  }
+
+  .compass-formula-artifact__practical-summary,
+  .compass-formula-artifact__engineering-summary,
+  .compass-formula-artifact > summary::after {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .compass-formula-artifact__engineering-summary {
+    padding-top: 3px;
+  }
+
+  .compass-formula-artifact--split .compass-formula-artifact__math {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compass-formula-artifact--split .formula-line:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .compass-practical-context > summary {
+    min-height: 80px;
+    padding: 15px 16px;
+  }
+
+  .compass-practical-context__body {
+    padding: 0 16px 17px;
+  }
+
+  .compass-formula-artifact--pcr .compass-formula-artifact__math,
+  .compass-formula-artifact--split .compass-formula-artifact__math {
+    grid-template-columns: 1fr;
+  }
+
+  .compass-formula-artifact--split .formula-line:last-child {
+    grid-column: auto;
+  }
+
+  .compass-formula-artifact--pcr .formula-line,
+  .compass-formula-artifact--split .formula-line {
+    white-space: normal;
+  }
+}

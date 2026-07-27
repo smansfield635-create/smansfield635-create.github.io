@@ -30,184 +30,12 @@ jobs:
         with:
           node-version: 22
 
-      - name: Apply exact R2A attempt 002 shoreline material correction once
+      - name: Verify attempt 002 correction script
+        run: node --check h-earth-3d/validation/h-earth.run8e-r2a.attempt-002.apply.mjs
+
+      - name: Apply and preserve exact attempt 002 correction
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          source_path = Path('showroom/globe/h-earth/render/live-render-package.run8e-r2.js')
-          validation_path = Path('h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs')
-          source = source_path.read_text()
-          validation = validation_path.read_text()
-          changed = False
-
-          import_anchor = "import { H_EARTH_SURFACE_CLASSES } from '../../../../h-earth-3d/environment/h-earth.surface-state-field.js';\n"
-          import_addition = import_anchor + "import { H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID } from './renderer.functional-landscape.js';\n"
-          if 'H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID' not in source:
-              if import_anchor not in source:
-                  raise SystemExit('R2A_IMPORT_ANCHOR_NOT_FOUND')
-              source = source.replace(import_anchor, import_addition, 1)
-              changed = True
-
-          old_material_block = '''function vegetationRgba(primitive) {
-            const intent = String(primitive?.materialHint?.materialIntent ?? '');
-            if (intent.includes('TRUNK') || intent.includes('WOODY')) return [89, 63, 39, 255];
-            if (intent.includes('CONIFER')) return [38, 73, 48, 255];
-            if (intent.includes('SHRUB')) return [52, 94, 52, 255];
-            return [78, 126, 65, 255];
-          }
-
-          function resolvePrimitiveRgba(primitive, role, issues) {
-            if (role === 'VEGETATION') return vegetationRgba(primitive);
-            const rgba = primitive?.renderMaterial?.rgba;
-            if (!Array.isArray(rgba) || rgba.length !== 4 || rgba.some((channel) => !finite(channel))) {
-              issues.push(`R2_PRIMITIVE_RGBA_MISSING:${primitive.primitiveId}`);
-              return [0, 0, 0, 255];
-            }
-            return rgba;
-          }
-
-          function resolveTransparencyClass(primitive) {
-            const value = primitive?.renderMaterial?.transparencyClass;
-            return typeof value === 'string' && value.length > 0 ? value : 'OPAQUE';
-          }
-          '''.replace('          ', '')
-
-          new_material_block = '''function vegetationRgba(primitive) {
-            const intent = String(primitive?.materialHint?.materialIntent ?? '');
-            if (intent.includes('TRUNK') || intent.includes('WOODY')) return [89, 63, 39, 255];
-            if (intent.includes('CONIFER')) return [38, 73, 48, 255];
-            if (intent.includes('SHRUB')) return [52, 94, 52, 255];
-            return [78, 126, 65, 255];
-          }
-
-          function functionalLandscapeMaterialDefaults(primitive) {
-            const intent = primitive?.materialHint?.materialIntent ??
-              primitive?.materialHint?.materialReference ?? 'DEFAULT';
-            if (String(intent).includes('WATER')) {
-              return { rgba: [46, 118, 144, 210], transparencyClass: 'TRANSLUCENT' };
-            }
-            if (String(intent).includes('FOAM')) {
-              return { rgba: [232, 242, 235, 190], transparencyClass: 'TRANSLUCENT' };
-            }
-            if (String(intent).includes('HIGHLAND') || String(intent).includes('DISTANT')) {
-              return { rgba: [68, 83, 79, 255], transparencyClass: 'OPAQUE' };
-            }
-            return { rgba: [116, 103, 73, 255], transparencyClass: 'OPAQUE' };
-          }
-
-          function resolvePrimitiveMaterialProjection(primitive, role, issues) {
-            const materialReference = primitive?.materialHint?.materialReference ?? null;
-            const materialIntent = primitive?.materialHint?.materialIntent ?? null;
-            if (role === 'VEGETATION') {
-              return {
-                rgba: vegetationRgba(primitive),
-                transparencyClass: 'OPAQUE',
-                materialReference,
-                materialIntent,
-                sourceAuthorityContractId: 'H_EARTH_RUN_8E_SUCCESSOR_ENVIRONMENT_FRAME_AND_RENDER_INTEGRATION_v1',
-                projectionModel: 'EXISTING_RUN_8E_VEGETATION_COLOR_PROJECTION'
-              };
-            }
-            const directRgba = primitive?.renderMaterial?.rgba;
-            if (Array.isArray(directRgba) && directRgba.length === 4 && directRgba.every(finite)) {
-              const directTransparency = primitive?.renderMaterial?.transparencyClass;
-              return {
-                rgba: [...directRgba],
-                transparencyClass: typeof directTransparency === 'string' && directTransparency.length > 0
-                  ? directTransparency : 'OPAQUE',
-                materialReference,
-                materialIntent,
-                sourceAuthorityContractId: 'DIRECT_PRIMITIVE_RENDER_MATERIAL',
-                projectionModel: 'DIRECT_PRIMITIVE_RENDER_MATERIAL'
-              };
-            }
-            if (role === 'SHORELINE' && (materialReference || materialIntent)) {
-              return {
-                ...functionalLandscapeMaterialDefaults(primitive),
-                materialReference,
-                materialIntent,
-                sourceAuthorityContractId: H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID,
-                projectionModel: 'EXACT_RUN_6D_MATERIAL_DEFAULTS'
-              };
-            }
-            issues.push(`R2_PRIMITIVE_MATERIAL_PROJECTION_MISSING:${primitive.primitiveId}`);
-            return {
-              rgba: [0, 0, 0, 255],
-              transparencyClass: 'OPAQUE',
-              materialReference,
-              materialIntent,
-              sourceAuthorityContractId: null,
-              projectionModel: 'REJECTED'
-            };
-          }
-          '''.replace('          ', '')
-
-          if 'function resolvePrimitiveRgba' in source:
-              if old_material_block not in source:
-                  raise SystemExit('R2A_MATERIAL_BLOCK_ANCHOR_NOT_FOUND')
-              source = source.replace(old_material_block, new_material_block, 1)
-              changed = True
-
-          old_loop = "    const rgba = role === 'TERRAIN' ? null : resolvePrimitiveRgba(primitive, role, issues);\n    const transparencyClass = resolveTransparencyClass(primitive);\n"
-          new_loop = "    const primitiveMaterial = role === 'TERRAIN' ? null : resolvePrimitiveMaterialProjection(primitive, role, issues);\n    const rgba = primitiveMaterial?.rgba ?? null;\n    const transparencyClass = primitiveMaterial?.transparencyClass ?? 'OPAQUE';\n"
-          if old_loop in source:
-              source = source.replace(old_loop, new_loop, 1)
-              changed = True
-          elif 'resolvePrimitiveMaterialProjection(primitive, role, issues)' not in source:
-              raise SystemExit('R2A_LOOP_ANCHOR_NOT_FOUND')
-
-          span_anchor = "      normalSource: resolvedNormals.source,\n      vertexStart: vertexOffset,\n"
-          span_replacement = "      normalSource: resolvedNormals.source,\n      materialReference: primitiveMaterial?.materialReference ?? null,\n      materialIntent: primitiveMaterial?.materialIntent ?? null,\n      materialProjectionAuthorityContractId: primitiveMaterial?.sourceAuthorityContractId ?? null,\n      materialProjectionModel: primitiveMaterial?.projectionModel ?? null,\n      vertexStart: vertexOffset,\n"
-          if 'materialProjectionAuthorityContractId' not in source:
-              if span_anchor not in source:
-                  raise SystemExit('R2A_SPAN_ANCHOR_NOT_FOUND')
-              source = source.replace(span_anchor, span_replacement, 1)
-              changed = True
-
-          authority_anchor = "      run8CMaterialContractId: H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,\n      atmosphereContractId: H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,\n"
-          authority_replacement = "      run8CMaterialContractId: H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,\n      functionalLandscapeRendererContractId: H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID,\n      atmosphereContractId: H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,\n"
-          if 'functionalLandscapeRendererContractId:' not in source:
-              if authority_anchor not in source:
-                  raise SystemExit('R2A_AUTHORITY_ANCHOR_NOT_FOUND')
-              source = source.replace(authority_anchor, authority_replacement, 1)
-              changed = True
-
-          validation_import = "import { H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID } from '../../showroom/globe/h-earth/render/renderer.functional-landscape.js';\n"
-          validation_anchor = "} from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.js';\n"
-          if 'renderer.functional-landscape.js' not in validation:
-              if validation_anchor not in validation:
-                  raise SystemExit('R2A_VALIDATION_IMPORT_ANCHOR_NOT_FOUND')
-              validation = validation.replace(validation_anchor, validation_anchor + validation_import, 1)
-              changed = True
-
-          validation_assert_anchor = "assert.equal(cachedA.roleCounts.VEGETATION, 27);\n"
-          validation_assertions = """assert.equal(cachedA.roleCounts.VEGETATION, 27);
-const shorelineSpans = cachedA.primitiveSpans.filter((span) => span.role === 'SHORELINE');
-assert.equal(shorelineSpans.length, 7, 'R2A_SHORELINE_SPAN_COUNT_INVALID');
-assert.equal(shorelineSpans.every((span) =>
-  span.materialProjectionAuthorityContractId === H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID &&
-  span.materialProjectionModel === 'EXACT_RUN_6D_MATERIAL_DEFAULTS' &&
-  typeof span.materialReference === 'string' && span.materialReference.length > 0 &&
-  typeof span.materialIntent === 'string' && span.materialIntent.length > 0), true,
-'R2A_SHORELINE_MATERIAL_AUTHORITY_NOT_PRESERVED');
-assert.equal(shorelineSpans.filter((span) => span.transparencyClass === 'TRANSLUCENT').length, 4,
-  'R2A_SHORELINE_TRANSLUCENT_RANGE_COUNT_INVALID');
-assert.equal(shorelineSpans.filter((span) => span.transparencyClass === 'OPAQUE').length, 3,
-  'R2A_SHORELINE_OPAQUE_RANGE_COUNT_INVALID');
-"""
-          if 'R2A_SHORELINE_MATERIAL_AUTHORITY_NOT_PRESERVED' not in validation:
-              if validation_assert_anchor not in validation:
-                  raise SystemExit('R2A_VALIDATION_ASSERT_ANCHOR_NOT_FOUND')
-              validation = validation.replace(validation_assert_anchor, validation_assertions, 1)
-              changed = True
-
-          if changed:
-              source_path.write_text(source)
-              validation_path.write_text(validation)
-          print({'r2aAttempt002CorrectionApplied': changed})
-          PY
-
+          node h-earth-3d/validation/h-earth.run8e-r2a.attempt-002.apply.mjs
           if ! git diff --quiet -- showroom/globe/h-earth/render/live-render-package.run8e-r2.js h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -216,11 +44,12 @@ assert.equal(shorelineSpans.filter((span) => span.transparencyClass === 'OPAQUE'
             git push origin HEAD:agent/h-earth-run8e-r2-immutable-live-render-package-001
           fi
 
-      - name: Verify JavaScript syntax
+      - name: Verify JavaScript and JSON syntax
         run: |
           node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js
           node --check showroom/globe/h-earth/render/live-render-package.run8e-r2.js
           node --check h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs
+          node --check h-earth-3d/validation/h-earth.run8e-r2a.attempt-002.apply.mjs
           node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2a.attempt-001.failure.receipt.json','utf8'))"
 
       - name: Execute R2A core package validation with complete log capture
@@ -244,6 +73,7 @@ assert.equal(shorelineSpans.filter((span) => span.transparencyClass === 'OPAQUE'
               '.github/workflows/h-earth-run8e-r2-immutable-live-render-package.yml',
               'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js',
               'h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs',
+              'h-earth-3d/validation/h-earth.run8e-r2a.attempt-002.apply.mjs',
               'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2a.attempt-001.failure.receipt.json',
               'showroom/globe/h-earth/render/live-render-package.run8e-r2.js'
           }

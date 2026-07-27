@@ -10,6 +10,8 @@ const freeze = (value, seen = new WeakSet()) => {
 
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r3d4-interaction-browser-execution-001';
+const ATTEMPT_001_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.attempt-001.failure.receipt.json';
+const ATTEMPT_002_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.attempt-002.failure.receipt.json';
 const PASS_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d4.pass-closed.receipt.json';
 
 export const H_EARTH_RUN_8E_R3D4_PATHS = Object.freeze([
@@ -19,6 +21,9 @@ export const H_EARTH_RUN_8E_R3D4_PATHS = Object.freeze([
   '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3d4-interaction-browser-execution-scope.js',
   '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
   '/h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs',
+  '/h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.v2.harness.mjs',
+  ATTEMPT_001_PATH,
+  ATTEMPT_002_PATH,
   PASS_RECEIPT_PATH
 ]);
 
@@ -31,14 +36,16 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R3D4_PATHS.map((repositoryPath)
   gitBlobSha: null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT_OR_PLANNED',
-  fetchbackStatus: 'R3D4_PORTRAIT_LANDSCAPE_BROWSER_EXECUTION_AND_DURABLE_RECEIPT_PENDING',
+  existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT',
+  fetchbackStatus: repositoryPath === ATTEMPT_001_PATH || repositoryPath === ATTEMPT_002_PATH
+    ? 'DURABLE_FAILURE_RECEIPT_PRESENT'
+    : 'R3D4_CORRECTED_BROWSER_EXECUTION_AND_DURABLE_PASS_RECEIPT_PENDING',
   occurrenceClass: 'RUN_8E_R3D4_INTERACTION_BROWSER_EXECUTION_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3D4_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3D4_INTERACTION_BROWSER_EXECUTION_v1',
-  evidenceClass: 'R3D4_PORTRAIT_LANDSCAPE_SUSTAINED_INTERACTION_BROWSER_EXECUTION_PENDING',
+  evidenceClass: 'R3D4_CORRECTED_PORTRAIT_LANDSCAPE_SUSTAINED_INTERACTION_BROWSER_EXECUTION_PENDING_WITH_TWO_PRESERVED_FAILURES',
   sourceKind: 'GITHUB_ACTIONS_TWO_SESSION_MOBILE_CHROMIUM_WEBGL2_INTERACTION_STRESS_EXECUTION',
   sourceIdOrPath: '/showroom/globe/h-earth/diagnostic/run8e-r3d/',
   sourceOccurrenceOrRevision: null,
@@ -63,16 +70,38 @@ export const H_EARTH_RUN_8E_R3D4_EVIDENCE = freeze({
     maximumDeliveryLagThresholdMs: 2000,
     maximumCompletionLagThresholdMs: 2000,
     maximumActionProcessingThresholdMs: 1000,
-    portraitViewport: { width: 390, height: 844 },
-    landscapeViewport: { width: 844, height: 390 },
+    requestedPortraitViewport: { width: 390, height: 844 },
+    requestedLandscapeViewport: { width: 844, height: 390 },
+    correctedViewportInvariant: 'REQUESTED_VIEWPORT_CUSTODY_PLUS_ACTUAL_ORIENTATION_ASPECT_AND_POSITIVE_VISUAL_VIEWPORT',
     navigationSourceGitBlob: '8ab3446c536fc24423d5601acce232b19fa71c91',
     r3AFramePacketGitBlob: '4e187fc38780dfb2020482b674ac331f5a65b2c1',
     persistentRendererGitBlob: 'b8b3c713d5f0b7c79808e8942ce385887589d880',
     pointerTouchIntakeGitBlob: 'bb96858fec09d14bbe10aa9ffa8a7f07af3621e6',
-    liveGpuBindingGitBlob: '5017bbaf857a644287cb829037b0fde4646f270d'
+    liveGpuBindingGitBlob: '5017bbaf857a644287cb829037b0fde4646f270d',
+    attempt001: {
+      head: 'ecee671d27e4402daf921e8d95e43ace0075b5d0',
+      workflowRun: 30300093963,
+      workflowJob: 90090629096,
+      artifactId: 8666211635,
+      artifactDigest: 'sha256:1e3c75aed5b63a99bf7ca7cb9b7076888efeba11a8bebd2fe589aeec74b57510',
+      failureReceiptPath: ATTEMPT_001_PATH,
+      exactStderrCaptured: false
+    },
+    attempt002: {
+      head: '1b60d3fca26676d11f90cdbdf74b15caf177ed62',
+      workflowRun: 30300474765,
+      workflowJob: 90091860196,
+      artifactId: 8666353073,
+      artifactDigest: 'sha256:765d89df80512c452654678735db6f864228a9c1d1511de9c80a896a1a6c0685',
+      failureReceiptPath: ATTEMPT_002_PATH,
+      exactFailureCode: 'R3D4_PORTRAIT_VIEWPORT_MISMATCH',
+      failureClassification: 'AUDIT_MODEL_EXACT_INNER_VIEWPORT_EQUALITY_ASSERTION'
+    },
+    originalHarnessPath: '/h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs',
+    correctedHarnessPath: '/h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.v2.harness.mjs'
   },
   evidenceLimitations: [
-    'EXECUTION_PENDING',
+    'CORRECTED_EXECUTION_PENDING',
     'DIAGNOSTIC_BROWSER_EMULATION_ONLY',
     'NO_PHYSICAL_DEVICE_ACCEPTANCE',
     'NO_PUBLIC_ROUTE_BINDING',
@@ -93,21 +122,21 @@ export const H_EARTH_RUN_8E_R3D4_NODE = freeze({
   evidenceClass: H_EARTH_RUN_8E_R3D4_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3D4_EVIDENCE.evidenceId],
   authorityClass: 'BOUNDED_DIAGNOSTIC_INTERACTION_BROWSER_EXECUTION_PENDING',
-  authorityPosture: 'R3D4_EXECUTION_PENDING_UNMERGED_R3D5_NOT_STARTED_RUN_8E_FAIL_OPEN',
-  authoritySource: ['R3D3_PASS_CLOSED_LIVE_GPU_CAMERA_RESPONSE', 'EXISTING_DIAGNOSTIC_INPUT_AND_GPU_BINDING'],
+  authorityPosture: 'R3D4_CORRECTED_EXECUTION_PENDING_TWO_FAILURES_PRESERVED_R3D5_NOT_STARTED_RUN_8E_FAIL_OPEN',
+  authoritySource: ['R3D3_PASS_CLOSED_LIVE_GPU_CAMERA_RESPONSE', 'EXISTING_DIAGNOSTIC_INPUT_AND_GPU_BINDING', 'R3D4_ATTEMPT_001_AND_002_FAILURE_CUSTODY'],
   authorityScope: ['EXECUTE_PORTRAIT_SESSION', 'EXECUTE_LANDSCAPE_SESSION', 'MEASURE_SCHEDULED_INPUT_DELIVERY_AND_VISIBLE_FRAME_RESPONSE'],
-  authorityLimitations: ['NO_SOURCE_MUTATION_OUTSIDE_CONTROL_REGISTRY_VALIDATION', 'NO_PUBLIC_ROUTE', 'NO_DEPLOYMENT', 'NO_PHYSICAL_DEVICE_ACCEPTANCE', 'NO_R3D5', 'NO_RUN_8E_PASS'],
+  authorityLimitations: ['NO_SHOWROOM_SOURCE_MUTATION', 'NO_PUBLIC_ROUTE', 'NO_DEPLOYMENT', 'NO_PHYSICAL_DEVICE_ACCEPTANCE', 'NO_R3D5', 'NO_RUN_8E_PASS'],
   parentRelations: [], childRelations: [], peerRelations: [], upstreamBoundaries: [], downstreamBoundaries: [],
   cardinalRole: 'NONE', cardinalStatus: 'NONE', cardinalCompleteness: 'NOT_APPLICABLE',
   orderingRules: ['R3D3_PASS_CLOSED_BEFORE_R3D4', 'R3D4_PASS_CLOSED_BEFORE_R3D5'],
   dependencyRelations: [],
-  allowedMutationScope: 'R3D4_SEVEN_PATH_BOUNDED_SCOPE_ONLY',
+  allowedMutationScope: 'R3D4_TEN_PATH_BOUNDED_SCOPE_ONLY',
   prohibitedMutations: ['PUBLIC_ROUTE', 'PUBLIC_DIRECT_MANIPULATION', 'NAVIGATION_SOURCE', 'R3A_SOURCE', 'R3C_RENDERER_SOURCE', 'R3D2_INPUT_SOURCE', 'R3D3_BINDING_SOURCE', 'R3D5_OR_LATER'],
   requiredValidations: ['PORTRAIT_AND_LANDSCAPE_MOBILE_CHROMIUM', 'SCHEDULED_INPUT_BACKLOG_AUDIT', 'VISIBLE_FRAME_CORRESPONDENCE', 'PERSISTENT_RESOURCE_AUDIT', 'AUTOMATIC_REGISTRY_PREFLIGHT', 'EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_R3D_CLOSURE_AND_R3E_INPUT_DECISION_R3D5'],
-  currentIdentityReferences: ['45dbf26ca8495ba03657ff0aeba52225359d23e5'],
-  lifecycleStatus: 'EXECUTION_PENDING',
-  unresolvedFields: ['R3D4_EXECUTION_HEAD', 'R3D4_WORKFLOW_RUN', 'R3D4_ARTIFACT', 'R3D4_PASS_RECEIPT']
+  currentIdentityReferences: ['45dbf26ca8495ba03657ff0aeba52225359d23e5', 'ecee671d27e4402daf921e8d95e43ace0075b5d0', '1b60d3fca26676d11f90cdbdf74b15caf177ed62'],
+  lifecycleStatus: 'CORRECTED_EXECUTION_PENDING',
+  unresolvedFields: ['R3D4_SUCCESSFUL_EXECUTION_HEAD', 'R3D4_WORKFLOW_RUN', 'R3D4_ARTIFACT', 'R3D4_PASS_RECEIPT']
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R3D4_PATHS.map((repositoryPath) => [repositoryPath, {

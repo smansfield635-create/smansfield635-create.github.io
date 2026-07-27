@@ -3,9 +3,9 @@
  *
  * Governs the bounded Run 8E integration occurrence. Engineering integration,
  * branch execution, baseline comparison, ordered Run 8 stack promotion,
- * deployment reconciliation, and live-browser identity may be established
- * independently; physical Samsung-device proof remains the final separate
- * closure condition.
+ * deployment reconciliation, live-browser identity, and interaction-restoration
+ * engineering may be established independently; post-restoration physical
+ * Samsung-device proof remains the final separate closure condition.
  */
 
 const freeze = (value, seen = new WeakSet()) => {
@@ -28,6 +28,10 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     'agent/h-earth-run8-phase2-deployment-reconciliation-001',
   liveBrowserProofBranch:
     'agent/h-earth-run8-phase3-live-browser-proof-001',
+  mobileNavigationCorrectionBranch:
+    'agent/h-earth-run8e-mobile-navigation-correction-001',
+  directInspectionRestorationBranch:
+    'agent/h-earth-run8e-direct-inspection-restoration-001',
   predecessorStatus: {
     run8A: 'PASS_CLOSED',
     run8B: 'PASS_CLOSED',
@@ -45,6 +49,8 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     'SINGLE_SKY_AUTHORITY',
     'SUN_DISC_AND_ATMOSPHERE_PRESENTATION',
     'CAMERA_TO_SUCCESSOR_TERRAIN_RECONCILIATION',
+    'DIRECT_INSPECTION_INTERACTION_PRESERVATION',
+    'SUCCESSOR_RENDER_SCHEDULING',
     'BRANCH_NATIVE_VALIDATION'
   ],
   executedOccurrences: {
@@ -143,7 +149,41 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     sunDiscVisibleInAtLeastOneFrame: true,
     liveAlphaClosureEstablished: true,
     liveConsoleAndPageErrorsAbsent: true,
+    mobileNavigationControllerCorrection:
+      'SUPERSEDED_USER_FACING_MODEL',
+    directInspectionRestoration: 'PASS',
+    durableDirectInspectionRestorationReceipt:
+      '/h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json',
+    durableDirectInspectionRestorationReceiptGitBlob:
+      '706aa420092ef67c2b9a4a4cdfa942516b4687bf',
+    durableDirectInspectionRestorationReceiptSha256:
+      '8027f0e2e04c2be0672e07270c4beabf038af98ad2fe4ae3cff84b00e02bd455',
+    directInspectionRestorationValidationRun: 30225506434,
+    directInspectionRestorationValidationJob: 89854921928,
+    directInspectionRestorationEvidenceArtifact: 8638450885,
+    directInspectionRestorationEvidenceArtifactDigest:
+      'sha256:83121975de3044a2b0406302694a5d9e63faa98074a919882f8ecaa06b68ba59',
+    directInspectionConfigurationCount: 2,
+    oneFingerContinuousLookRestored: true,
+    twoFingerContinuousTravelRestored: true,
+    pinchZoomRestored: true,
+    unobstructedInspectionRestored: true,
+    visibleDirectionalControllerRemoved: true,
+    coastControllerPanelRemoved: true,
+    fullSuccessorRenderDuringActiveGesture: false,
+    successorRenderAfterGestureSettles: true,
+    completedAndActiveViewportDeduplication: true,
+    postRestorationPhysicalSamsungExecution: 'NOT_EXECUTED',
     physicalSamsungExecution: 'NOT_EXECUTED'
+  },
+  mobileControllerDisposition: {
+    interactionRepairRequirement: false,
+    visibleDirectionalController: 'REJECTED_AND_REMOVED',
+    coastControllerPanel: 'REJECTED_AND_REMOVED',
+    pressAndHoldControllerModel: 'REJECTED_AND_REMOVED',
+    navigationOnlyStateMutationPath: 'RETAINED',
+    duplicateRun6RenderSuppression: 'RETAINED',
+    cacheIdentityUpdate: 'RETAINED'
   },
   closureConditions: [
     'PUBLIC_H_EARTH_ROUTE_REPLACEMENT',
@@ -151,7 +191,8 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     'PRE_UPDATE_BASELINE_COMPARISON',
     'RUN_8_STACK_PROMOTION_TO_MAIN',
     'DEPLOYMENT',
-    'LIVE_IDENTITY_AND_BROWSER_PROOF'
+    'LIVE_IDENTITY_AND_BROWSER_PROOF',
+    'DIRECT_INSPECTION_RESTORATION'
   ],
   closureState: {
     publicHEarthRouteBranchExecution: 'PASS',
@@ -162,6 +203,7 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     run8StackPromotionToMain: 'PASS',
     deployment: 'PASS',
     liveIdentityAndBrowserProof: 'PASS',
+    directInspectionRestoration: 'PASS',
     run8EPassClosed: false
   },
   preservedBoundaries: {
@@ -172,7 +214,11 @@ export const H_EARTH_RUN_8E_CONTROL = freeze({
     run6TerrainMutatedInPlace: false,
     legacyProxyClaimedAsProvenLod: false,
     cameraAuthorityCreated: false,
-    navigationAuthorityCreated: false
+    navigationAuthorityCreated: false,
+    acceptedInteractionAuthorityMutated: false,
+    interactionRedesignAuthorityCreated: false,
+    zDepthLawMutated: false,
+    visibleControllerRetained: false
   }
 });
 
@@ -183,10 +229,10 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
   if (!Object.values(candidate?.predecessorStatus ?? {}).every((status) => status === 'PASS_CLOSED')) {
     issues.push('RUN_8E_PREDECESSOR_NOT_CLOSED');
   }
-  if (!Array.isArray(candidate?.authorizedEngineeringScope) || candidate.authorizedEngineeringScope.length < 8) {
+  if (!Array.isArray(candidate?.authorizedEngineeringScope) || candidate.authorizedEngineeringScope.length < 10) {
     issues.push('RUN_8E_ENGINEERING_SCOPE_INCOMPLETE');
   }
-  if (!Array.isArray(candidate?.closureConditions) || candidate.closureConditions.length < 5) {
+  if (!Array.isArray(candidate?.closureConditions) || candidate.closureConditions.length < 6) {
     issues.push('RUN_8E_CLOSURE_CONDITIONS_INCOMPLETE');
   }
   if (candidate?.executedOccurrences?.engineeringIntegration !== 'PASS' ||
@@ -195,7 +241,8 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
       candidate?.executedOccurrences?.run8StackPromotionToMain !== 'PASS' ||
       candidate?.executedOccurrences?.deploymentReconciliation !== 'PASS' ||
       candidate?.executedOccurrences?.publicHEarthRouteReplacement !== 'PASS' ||
-      candidate?.executedOccurrences?.liveBrowserProof !== 'PASS') {
+      candidate?.executedOccurrences?.liveBrowserProof !== 'PASS' ||
+      candidate?.executedOccurrences?.directInspectionRestoration !== 'PASS') {
     issues.push('RUN_8E_EXECUTED_OCCURRENCE_RECONCILIATION_INCOMPLETE');
   }
   if (candidate?.closureState?.preUpdateBaselineComparison !== 'PASS') {
@@ -212,6 +259,13 @@ export function evaluateHEarthRun8EControlContract(candidate = H_EARTH_RUN_8E_CO
   }
   if (candidate?.closureState?.liveIdentityAndBrowserProof !== 'PASS') {
     issues.push('RUN_8E_LIVE_BROWSER_PROOF_NOT_RECONCILED');
+  }
+  if (candidate?.closureState?.directInspectionRestoration !== 'PASS') {
+    issues.push('RUN_8E_DIRECT_INSPECTION_RESTORATION_NOT_RECONCILED');
+  }
+  if (candidate?.mobileControllerDisposition?.interactionRepairRequirement !== false ||
+      candidate?.mobileControllerDisposition?.visibleDirectionalController !== 'REJECTED_AND_REMOVED') {
+    issues.push('RUN_8E_REJECTED_CONTROLLER_DISPOSITION_INVALID');
   }
   if (candidate?.closureState?.samsungPhysicalExecution !== 'NOT_EXECUTED') {
     issues.push('RUN_8E_PHYSICAL_SAMSUNG_STATE_INVALID');

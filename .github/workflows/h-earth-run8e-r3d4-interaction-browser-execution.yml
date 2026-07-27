@@ -77,8 +77,15 @@ jobs:
 
       - name: Execute portrait and landscape sustained interaction audit
         run: |
-          set -euo pipefail
-          node h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs
+          set -uo pipefail
+          mkdir -p "$H_EARTH_RUN8E_R3D4_OUTPUT"
+          set +e
+          node h-earth-3d/validation/h-earth.run8e-r3d4.interaction-browser-execution.harness.mjs \
+            >"$H_EARTH_RUN8E_R3D4_OUTPUT/h-earth.run8e-r3d4.harness.stdout-stderr.log" 2>&1
+          status=$?
+          set -e
+          cat "$H_EARTH_RUN8E_R3D4_OUTPUT/h-earth.run8e-r3d4.harness.stdout-stderr.log"
+          exit "$status"
 
       - name: Execute automatic repository-registry preflight
         run: |

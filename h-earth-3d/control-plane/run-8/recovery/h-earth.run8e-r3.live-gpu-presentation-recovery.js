@@ -60,13 +60,26 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
         {
           checkpointId: 'RUN_8E_R3D3',
           name: 'LIVE_GPU_CAMERA_RESPONSE_WITHOUT_BITMAP_PREVIEW',
-          currentStatus: 'EXECUTION_PENDING',
-          requiredFlow: [
-            'ACCEPTED_DIAGNOSTIC_NAVIGATION_STATE',
-            'R3A_FRAME_UNIFORM_PACKET',
-            'R3C_PERSISTENT_RENDERER_RENDER_FRAME',
-            'GPU_FRAMEBUFFER_BLIT_TO_VISIBLE_CANVAS'
-          ],
+          currentStatus: 'PASS_CLOSED',
+          executionEvidence: {
+            successfulExecutionHead: 'a1fab0b653fd6004bc35a692cd786d568695e2b9',
+            workflowRun: 30298763874,
+            workflowJob: 90086226228,
+            evidenceArtifact: 8665702890,
+            evidenceArtifactDigest: 'sha256:b752025984227dab39d2ffae59563df332b8ac030b1955bb71b6b07a5da5ef9c',
+            automaticRegistryPreflightRun: 30298763954,
+            acceptedNavigationProposalCount: 7,
+            visibleGpuFrameCount: 8,
+            distinctFrameHashCount: 8,
+            webGLContextCount: 1,
+            gpuBufferUploadCount: 9,
+            cameraUniformUpdateCount: 16,
+            geometryDrawCallCount: 32,
+            postInitializationResourceCreationCount: 0,
+            postInitializationBufferUploadCount: 0,
+            worldRebuildCount: 0,
+            maximumSynchronousResponseMs: 187.29999999998836
+          },
           stoppingBoundary: 'STOP_BEFORE_INTERACTION_BROWSER_EXECUTION_R3D4'
         },
         { checkpointId: 'RUN_8E_R3D4', name: 'DIAGNOSTIC_INTERACTION_BROWSER_EXECUTION', currentStatus: 'NOT_STARTED' },
@@ -79,11 +92,11 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     { checkpointId: 'RUN_8E_R3G', currentStatus: 'NOT_STARTED' }
   ],
   currentState: {
-    run8ER3: 'OPEN_AT_R3D3_EXECUTION',
+    run8ER3: 'OPEN_AT_R3D4_BOUNDARY',
     run8ER3D: 'IN_PROGRESS',
     run8ER3D1: 'PASS_CLOSED',
     run8ER3D2: 'PASS_CLOSED',
-    run8ER3D3: 'EXECUTION_PENDING',
+    run8ER3D3: 'PASS_CLOSED',
     run8ER3D4: 'NOT_STARTED',
     run8ER3D5: 'NOT_STARTED',
     run8ER3E: 'NOT_STARTED',

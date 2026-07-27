@@ -15,8 +15,8 @@ const writeJson = (filename, value) => fs.writeFileSync(path.join(outputDirector
 const parent = evaluateHEarthRun8ER3Control();
 const child = evaluateHEarthRun8ER3E5Control();
 const inputDecision = evaluateHEarthRun8ER3FInputDecision();
-assert(parent.eligible === true && parent.status === 'RUN_8E_R3E5_PARENT_EXECUTION_ELIGIBLE', `R3E5_PARENT_CONTROL_REJECTED:${parent.issues.join(',')}`);
-assert(child.eligible === true && child.status === 'RUN_8E_R3E5_CONTROL_EXECUTION_ELIGIBLE', `R3E5_CHILD_CONTROL_REJECTED:${child.issues.join(',')}`);
+assert(parent.eligible === true && ['RUN_8E_R3E5_PARENT_EXECUTION_ELIGIBLE','RUN_8E_R3E5_PARENT_PASS_CLOSED'].includes(parent.status), `R3E5_PARENT_CONTROL_REJECTED:${parent.issues.join(',')}`);
+assert(child.eligible === true && ['RUN_8E_R3E5_CONTROL_EXECUTION_ELIGIBLE','RUN_8E_R3E5_PASS_CLOSED'].includes(child.status), `R3E5_CHILD_CONTROL_REJECTED:${child.issues.join(',')}`);
 assert(inputDecision.eligible === true, `R3E5_R3F_INPUT_DECISION_REJECTED:${inputDecision.issues.join(',')}`);
 
 const receiptDefinitions = [

@@ -1,0 +1,1 @@
+R3F1 durable pass receipt path is reserved as /h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json. This marker is temporary and must not remain in final bounded scope.

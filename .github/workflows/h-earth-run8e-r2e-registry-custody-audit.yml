@@ -1,4 +1,4 @@
-name: H-Earth Run 8E R2E Registry Custody Audit
+name: H-Earth Run 8E R2E Pass-Closed Validation
 
 on:
   push:
@@ -13,11 +13,11 @@ permissions:
   contents: read
 
 jobs:
-  validate-run8e-r2e-registry-custody:
+  validate-run8e-r2e-pass-closed:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      H_EARTH_RUN8E_R2E_OUTPUT: /tmp/h-earth-run8e-r2e
+      H_EARTH_RUN8E_R2E_OUTPUT: /tmp/h-earth-run8e-r2e-final
     steps:
       - name: Check out R2E branch
         uses: actions/checkout@v4
@@ -36,29 +36,89 @@ jobs:
           test "$(git merge-base HEAD origin/agent/h-earth-run8e-r2d-gpu-resource-lifecycle-001)" = "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9"
           test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
           test "$(git hash-object showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js)" = "785856d7702a0e855c2672e6b8a7325ad5b3ba50"
-          node - <<'NODE'
-          const receipt = require('./h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2d.pass-closed.receipt.json');
-          if (receipt.status !== 'RUN_8E_R2D_PASS_CLOSED') process.exit(1);
-          if (receipt.checkpointDisposition.run8ER2E !== 'NOT_STARTED') process.exit(1);
-          if (receipt.stoppingBoundary !== 'STOP_BEFORE_REGISTRY_DURABLE_RECEIPT_AND_INDEPENDENT_SCOPE_AUDIT_R2E') process.exit(1);
-          NODE
+          test "$(git hash-object h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2d.gpu-upload-and-resource-lifecycle.js)" = "6fcc92b9f73b4e66dd5c41c8a6592f62db56817e"
 
-      - name: Verify R2E syntax
+      - name: Verify R2E closure syntax and receipt
         run: |
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js
           node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2e.registry-custody-and-scope-audit.js
           node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2-scope.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2e-execution-scope.js
           node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
           node --check h-earth-3d/validation/h-earth.run8e-r2e.registry-custody-and-scope-audit.validation.mjs
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json','utf8'))"
 
-      - name: Execute registry custody and independent scope audit
+      - name: Verify child and parent checkpoint closure
+        run: |
+          node --experimental-default-type=module - <<'NODE'
+          import { H_EARTH_RUN_8E_R2_CONTROL, evaluateHEarthRun8ER2Control } from './h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js';
+          import { H_EARTH_RUN_8E_R2E_CONTROL, evaluateHEarthRun8ER2EControl } from './h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2e.registry-custody-and-scope-audit.js';
+          const child = evaluateHEarthRun8ER2EControl(H_EARTH_RUN_8E_R2E_CONTROL);
+          const parent = evaluateHEarthRun8ER2Control(H_EARTH_RUN_8E_R2_CONTROL);
+          if (!child.eligible || child.status !== 'RUN_8E_R2E_CONTROL_PASS_CLOSED') throw new Error(`R2E_CHILD_CONTROL:${child.issues}`);
+          if (!parent.eligible || parent.status !== 'RUN_8E_R2E_CONTROL_PASS_CLOSED') throw new Error(`R2E_PARENT_CONTROL:${parent.issues}`);
+          const checkpoints = H_EARTH_RUN_8E_R2_CONTROL.boundedSubcheckpoints;
+          if (checkpoints[4].currentStatus !== 'PASS_CLOSED') throw new Error('R2E_PARENT_STATUS');
+          if (checkpoints[5].currentStatus !== 'NOT_STARTED') throw new Error('R2F_STARTED');
+          if (H_EARTH_RUN_8E_R2_CONTROL.stoppingBoundary.nextCheckpoint !== 'RUN_8E_R2F_NOT_STARTED') throw new Error('R2F_BOUNDARY');
+          NODE
+
+      - name: Verify active execution overlay and durable custody
+        run: |
+          node --experimental-default-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import loadDependencies from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          import {
+            H_EARTH_RUN_8E_R2_ALL_PATHS,
+            H_EARTH_RUN_8E_R2_PACKAGE_NODE,
+            H_EARTH_RUN_8E_R2_GPU_TRANSPORT_NODE
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2-scope.js';
+          import {
+            H_EARTH_RUN_8E_R2E_EXECUTION_NODE,
+            H_EARTH_RUN_8E_R2E_EXECUTION_EVIDENCE,
+            H_EARTH_RUN_8E_R2E_EXECUTION_PATHS
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2e-execution-scope.js';
+          const dependencies = loadDependencies();
+          if (!dependencies.identityVerified) throw new Error('R2E_LOADER_IDENTITY');
+          const facade = dependencies.registryFacade;
+          for (const repositoryPath of [...H_EARTH_RUN_8E_R2_ALL_PATHS, ...H_EARTH_RUN_8E_R2E_EXECUTION_PATHS]) {
+            if (!facade.resolveHEarthRepositoryRegistryPath(repositoryPath).resolved) throw new Error(`R2E_UNRESOLVED:${repositoryPath}`);
+          }
+          for (const id of [H_EARTH_RUN_8E_R2_PACKAGE_NODE.nodeId, H_EARTH_RUN_8E_R2_GPU_TRANSPORT_NODE.nodeId, H_EARTH_RUN_8E_R2E_EXECUTION_NODE.nodeId]) {
+            if (!dependencies.registryInstance.nodes.some((node) => node.nodeId === id)) throw new Error(`R2E_NODE_MISSING:${id}`);
+          }
+          if (!dependencies.registryInstance.evidenceRecords.some((entry) => entry.evidenceId === H_EARTH_RUN_8E_R2E_EXECUTION_EVIDENCE.evidenceId)) throw new Error('R2E_EXECUTION_EVIDENCE_MISSING');
+          const receipt = JSON.parse(fs.readFileSync('h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json','utf8'));
+          if (receipt.status !== 'RUN_8E_R2E_PASS_CLOSED') throw new Error('R2E_RECEIPT_STATUS');
+          if (receipt.execution.runId !== 30276245196 || receipt.execution.jobId !== 90010942725) throw new Error('R2E_EXECUTION_IDENTITY');
+          if (receipt.automaticRepositoryRegistryPreflight.runId !== 30276239789) throw new Error('R2E_PREFLIGHT_IDENTITY');
+          if (receipt.custodyManifestDigest !== 'sha256:40607b14ed9bf5f06225d2f2eb566e63ccdf700347065e457db8d7d50dcfc45e') throw new Error('R2E_CUSTODY_DIGEST');
+          if (receipt.checkpointDisposition.run8ER2F !== 'NOT_STARTED') throw new Error('R2F_RECEIPT_STATE');
+          NODE
+
+      - name: Re-execute registry custody and independent scope audit
         run: |
           mkdir -p "$H_EARTH_RUN8E_R2E_OUTPUT"
           set -o pipefail
           node h-earth-3d/validation/h-earth.run8e-r2e.registry-custody-and-scope-audit.validation.mjs 2>&1 \
-            | tee "$H_EARTH_RUN8E_R2E_OUTPUT/r2e-validation.log"
+            | tee "$H_EARTH_RUN8E_R2E_OUTPUT/r2e-final-validation.log"
+
+      - name: Execute final automatic registry preflight over R2 governed paths
+        run: |
+          node --experimental-default-type=module - <<'NODE' >/tmp/h-earth-run8e-r2e-governed-paths.txt
+          import { H_EARTH_RUN_8E_R2_ALL_PATHS } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2-scope.js';
+          for (const repositoryPath of H_EARTH_RUN_8E_R2_ALL_PATHS) {
+            if ((repositoryPath.startsWith('/h-earth-3d/') || repositoryPath.startsWith('/showroom/globe/h-earth/')) && !repositoryPath.startsWith('/h-earth-3d/registry/')) {
+              console.log(repositoryPath.slice(1));
+            }
+          }
+          NODE
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r2e-governed-paths.txt \
+            --task "Run 8E R2E final pass-closed registry audit" \
+            --output "$H_EARTH_RUN8E_R2E_OUTPUT/h-earth.run8e-r2e.final-automatic-preflight.receipt.json"
 
       - name: Verify exact R2E scope and R2F stopping boundary
-        if: always()
         run: |
           set -euo pipefail
           git diff --check
@@ -69,14 +129,17 @@ jobs:
           paths = [line.strip() for line in Path('/tmp/h-earth-run8e-r2e-paths.txt').read_text().splitlines() if line.strip()]
           required = {
               '.github/workflows/h-earth-run8e-r2e-registry-custody-audit.yml',
+              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js',
               'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2e.registry-custody-and-scope-audit.js',
               'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2-scope.js',
+              'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r2e-execution-scope.js',
               'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
-              'h-earth-3d/validation/h-earth.run8e-r2e.registry-custody-and-scope-audit.validation.mjs'
+              'h-earth-3d/validation/h-earth.run8e-r2e.registry-custody-and-scope-audit.validation.mjs',
+              'h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2e.pass-closed.receipt.json'
           }
           actual = set(paths)
           if actual != required:
-              raise SystemExit(f'R2E_SCOPE_MISMATCH:missing={sorted(required-actual)}:unexpected={sorted(actual-required)}')
+              raise SystemExit(f'R2E_FINAL_SCOPE_MISMATCH:missing={sorted(required-actual)}:unexpected={sorted(actual-required)}')
           forbidden = [
               path for path in paths
               if path in {
@@ -94,24 +157,23 @@ jobs:
               raise SystemExit(f'R2E_PROTECTED_OR_LATER_CHECKPOINT_PATH:{forbidden}')
           print({
               'checkpoint': 'RUN_8E_R2E',
+              'status': 'PASS_CLOSED',
               'pathCount': len(paths),
               'paths': paths,
-              'packageSourceMutation': False,
-              'gpuTransportAdapterMutation': False,
-              'publicRouteMutation': False,
               'run8ER2FStarted': False,
               'run8ER3Started': False,
               'run8EPassClosed': False
           })
           PY
 
-      - name: Upload R2E evidence
+      - name: Upload final R2E closure evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-run8e-r2e-registry-custody-audit-evidence
+          name: h-earth-run8e-r2e-pass-closed-evidence
           path: |
-            /tmp/h-earth-run8e-r2e
+            /tmp/h-earth-run8e-r2e-final
             /tmp/h-earth-run8e-r2e-paths.txt
+            /tmp/h-earth-run8e-r2e-governed-paths.txt
           if-no-files-found: warn
           retention-days: 90

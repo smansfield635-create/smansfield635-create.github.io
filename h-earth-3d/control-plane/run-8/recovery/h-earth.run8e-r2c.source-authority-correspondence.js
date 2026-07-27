@@ -14,7 +14,7 @@ export const H_EARTH_RUN_8E_R2C_CONTROL = freeze({
   parentContractId: 'H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1',
   checkpointId: 'RUN_8E_R2C',
   checkpointName: 'SOURCE_AUTHORITY_GEOMETRY_MATERIAL_AND_PROVENANCE_CORRESPONDENCE_AUDIT',
-  currentStatus: 'EXECUTION_OPEN',
+  currentStatus: 'PASS_CLOSED',
   predecessor: {
     checkpointId: 'RUN_8E_R2B',
     status: 'PASS_CLOSED',
@@ -22,6 +22,18 @@ export const H_EARTH_RUN_8E_R2C_CONTROL = freeze({
     packageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
     contentDigest: 'fnv1a32:fd913c25',
     custodyManifestDigest: 'sha256:7e8eb51269053c7c49ff05c6cf1f0250e68066df408fb65ee63cd49f74316b3d'
+  },
+  executionEvidence: {
+    attempt: 'R2C_ATTEMPT_002',
+    executionHead: 'efadea38fa16304de52265da84c16ec1d84afd47',
+    workflowRun: 30238237230,
+    workflowJob: 89890046797,
+    evidenceArtifact: 8642344020,
+    evidenceArtifactDigest: 'sha256:012a3c3ba16659fc93da4b62cf38a2c64f3dfc84a925551a10470ef6dcc99556',
+    sourceManifestDigest: 'sha256:b0654a8fc2cffe173f0a524c8f4d0ba95eaf2c54cab99c10641a3f27480d508f',
+    auditManifestDigest: 'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe',
+    passReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.pass-closed.receipt.json',
+    predecessorFailureReceipt: '/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2c.attempt-001.failure.receipt.json'
   },
   protectedSourceManifest: {
     liveRenderPackage: {
@@ -104,7 +116,7 @@ export const H_EARTH_RUN_8E_R2C_CONTROL = freeze({
     'DEPLOYMENT_OR_RUN_8E_PASS_CLAIM'
   ],
   stoppingBoundary: {
-    currentCheckpoint: 'RUN_8E_R2C_EXECUTION_OPEN',
+    currentCheckpoint: 'RUN_8E_R2C_PASS_CLOSED',
     nextCheckpoint: 'RUN_8E_R2D_NOT_STARTED',
     run8ER2DStarted: false,
     run8ER3Started: false,
@@ -115,8 +127,12 @@ export const H_EARTH_RUN_8E_R2C_CONTROL = freeze({
 export function evaluateHEarthRun8ER2CControl(candidate = H_EARTH_RUN_8E_R2C_CONTROL) {
   const issues = [];
   if (candidate?.contractId !== H_EARTH_RUN_8E_R2C_CONTRACT_ID) issues.push('R2C_CONTRACT_ID_MISMATCH');
+  if (candidate?.currentStatus !== 'PASS_CLOSED') issues.push('R2C_NOT_PASS_CLOSED');
   if (candidate?.predecessor?.status !== 'PASS_CLOSED') issues.push('R2B_NOT_PASS_CLOSED');
   if (candidate?.predecessor?.exactHead !== '39de87edefcc037eaafa8a988dc0c84e40e3d1ba') issues.push('R2B_EXACT_HEAD_MISMATCH');
+  if (candidate?.executionEvidence?.auditManifestDigest !== 'sha256:4a891f5b39a4c361a2cceaa59c9c4200aeffe7603ed9126e4fbf3209889e4dfe') {
+    issues.push('R2C_AUDIT_MANIFEST_IDENTITY_MISMATCH');
+  }
   if (Object.keys(candidate?.protectedSourceManifest ?? {}).length !== 9) issues.push('R2C_SOURCE_MANIFEST_INVALID');
   if (candidate?.semanticProvenancePolicy?.rendererPackageIsNotASecondSemanticRegistry !== true) {
     issues.push('R2C_SEMANTIC_PROVENANCE_POLICY_INVALID');
@@ -127,7 +143,7 @@ export function evaluateHEarthRun8ER2CControl(candidate = H_EARTH_RUN_8E_R2C_CON
   }
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R2C_CONTROL_PASS' : 'RUN_8E_R2C_CONTROL_FAIL',
+    status: issues.length === 0 ? 'RUN_8E_R2C_CONTROL_PASS_CLOSED' : 'RUN_8E_R2C_CONTROL_FAIL',
     issues
   });
 }

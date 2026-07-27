@@ -53,8 +53,26 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     {
       checkpointId: 'RUN_8E_R3B',
       name: 'ISOLATED_WEBGL2_FIXED_FRAME_EXECUTION',
-      currentStatus: 'EXECUTION_PENDING',
-      requiredResult: 'PASS_CLOSED_BEFORE_R3C',
+      currentStatus: 'PASS_CLOSED',
+      executionEvidence: {
+        successfulExecutionHead: '1fb2bdee01806097f4785cb484c9132574dbdeaf',
+        workflowRun: 30288213937,
+        workflowJob: 90051195459,
+        evidenceArtifact: 8661709112,
+        evidenceArtifactDigest: 'sha256:6f48e588064dcd194ce9136fe6d1fcdbdf3d3ef3543bb9700548554f2667e1ef',
+        automaticRegistryPreflightRun: 30288214972,
+        automaticRegistryPreflight: 'PASS',
+        logicalPromotedPackageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25',
+        chromiumRuntimePackageIdentity: 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_E7D54BDD',
+        fixedFrameSha256: '74c3c3b136241f7ab413411dac565897a19c124f92f174e3c0f0dfb2cbbff639',
+        fixedFrameWidth: 960,
+        fixedFrameHeight: 540,
+        geometryDrawCallCount: 4,
+        drawnIndexCount: 147120,
+        colorNonClearPixelCount: 492648,
+        depthNonClearPixelCount: 492648,
+        failureAttemptsPreserved: 2
+      },
       stoppingBoundary: 'STOP_BEFORE_PERSISTENT_GPU_RESOURCES_AND_CONTINUOUS_CAMERA_LOOP_R3C'
     },
     { checkpointId: 'RUN_8E_R3C', name: 'PERSISTENT_GPU_RESOURCES_AND_CONTINUOUS_CAMERA_LOOP', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_DIAGNOSTIC_DIRECT_INTERACTION_R3D' },
@@ -64,9 +82,9 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     { checkpointId: 'RUN_8E_R3G', name: 'R3_CLOSURE_AND_PROMOTION_DECISION', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_ANY_LATER_RUN_8E_PHASE' }
   ],
   currentState: {
-    run8ER3: 'OPEN_AT_R3B_EXECUTION',
+    run8ER3: 'OPEN_AT_R3C_BOUNDARY',
     run8ER3A: 'PASS_CLOSED',
-    run8ER3B: 'EXECUTION_PENDING',
+    run8ER3B: 'PASS_CLOSED',
     run8ER3C: 'NOT_STARTED',
     run8ER3D: 'NOT_STARTED',
     run8ER3E: 'NOT_STARTED',
@@ -81,10 +99,10 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     cameraAuthorityMutation: false,
     immutablePackageMutation: false,
     canonicalGpuTransportMutation: false,
-    isolatedWebGL2ContextCreationAuthorized: true,
-    isolatedShaderProgramCreationAuthorized: true,
-    isolatedGpuDrawAuthorized: true,
-    isolatedVisibleFixedFrameAuthorized: true,
+    isolatedWebGL2ContextExecuted: true,
+    isolatedShaderProgramsExecuted: true,
+    isolatedGpuDrawExecuted: true,
+    isolatedVisibleFixedFrameExecuted: true,
     persistentRenderLoopCreation: false,
     interactionBinding: false,
     deployment: false,
@@ -96,6 +114,7 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
 export function evaluateHEarthRun8ER3Control(candidate = H_EARTH_RUN_8E_R3_CONTROL) {
   const issues = [];
   const checkpoints = candidate?.boundedSubcheckpoints ?? [];
+  const r3B = checkpoints[1];
   if (candidate?.contractId !== H_EARTH_RUN_8E_R3_CONTRACT_ID) issues.push('R3_CONTRACT_ID_MISMATCH');
   if (candidate?.predecessor?.run8ER2 !== 'PASS_CLOSED') issues.push('R2_NOT_PASS_CLOSED');
   if (candidate?.predecessor?.run8ER3A !== 'PASS_CLOSED') issues.push('R3A_NOT_PASS_CLOSED');
@@ -103,18 +122,25 @@ export function evaluateHEarthRun8ER3Control(candidate = H_EARTH_RUN_8E_R3_CONTR
   if (candidate?.predecessor?.run8E !== 'FAIL_OPEN') issues.push('RUN_8E_NOT_FAIL_OPEN');
   if (checkpoints.length !== 7) issues.push('R3_CHECKPOINT_SEQUENCE_INVALID');
   if (checkpoints[0]?.currentStatus !== 'PASS_CLOSED') issues.push('R3A_PASS_CLOSED_STATE_INVALID');
-  if (checkpoints[1]?.checkpointId !== 'RUN_8E_R3B' || checkpoints[1]?.currentStatus !== 'EXECUTION_PENDING') issues.push('R3B_EXECUTION_STATE_INVALID');
+  if (r3B?.checkpointId !== 'RUN_8E_R3B' || !['EXECUTION_PENDING', 'PASS_CLOSED'].includes(r3B?.currentStatus)) issues.push('R3B_STATE_INVALID');
   if (checkpoints.slice(2).some((entry) => entry.currentStatus !== 'NOT_STARTED')) issues.push('LATER_R3_CHECKPOINT_STARTED');
-  if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3B_EXECUTION' || candidate?.currentState?.run8ER3B !== 'EXECUTION_PENDING') issues.push('R3B_PARENT_STATE_INVALID');
+  if (r3B?.currentStatus === 'PASS_CLOSED') {
+    if (r3B?.executionEvidence?.workflowRun !== 30288213937) issues.push('R3B_WORKFLOW_RUN_MISMATCH');
+    if (r3B?.executionEvidence?.evidenceArtifactDigest !== 'sha256:6f48e588064dcd194ce9136fe6d1fcdbdf3d3ef3543bb9700548554f2667e1ef') issues.push('R3B_ARTIFACT_DIGEST_MISMATCH');
+    if (r3B?.executionEvidence?.fixedFrameSha256 !== '74c3c3b136241f7ab413411dac565897a19c124f92f174e3c0f0dfb2cbbff639') issues.push('R3B_FIXED_FRAME_DIGEST_MISMATCH');
+    if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3C_BOUNDARY' || candidate?.currentState?.run8ER3C !== 'NOT_STARTED') issues.push('R3C_PARENT_BOUNDARY_INVALID');
+  }
   for (const key of ['publicRouteMutation','directManipulationMutation','navigationAuthorityMutation','cameraAuthorityMutation','immutablePackageMutation','canonicalGpuTransportMutation','persistentRenderLoopCreation','interactionBinding','deployment','mainMerge','run8EPassClosed']) {
     if (candidate?.boundaries?.[key] !== false) issues.push(`R3_BOUNDARY_VIOLATION:${key}`);
   }
-  for (const key of ['isolatedWebGL2ContextCreationAuthorized','isolatedShaderProgramCreationAuthorized','isolatedGpuDrawAuthorized','isolatedVisibleFixedFrameAuthorized']) {
-    if (candidate?.boundaries?.[key] !== true) issues.push(`R3B_AUTHORIZATION_MISSING:${key}`);
+  for (const key of ['isolatedWebGL2ContextExecuted','isolatedShaderProgramsExecuted','isolatedGpuDrawExecuted','isolatedVisibleFixedFrameExecuted']) {
+    if (r3B?.currentStatus === 'PASS_CLOSED' && candidate?.boundaries?.[key] !== true) issues.push(`R3B_EXECUTION_FACT_MISSING:${key}`);
   }
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R3B_CONTROL_EXECUTION_ELIGIBLE' : 'RUN_8E_R3_CONTROL_FAIL',
+    status: issues.length === 0
+      ? (r3B?.currentStatus === 'PASS_CLOSED' ? 'RUN_8E_R3B_PARENT_PASS_CLOSED' : 'RUN_8E_R3B_CONTROL_EXECUTION_ELIGIBLE')
+      : 'RUN_8E_R3_CONTROL_FAIL',
     issues
   });
 }

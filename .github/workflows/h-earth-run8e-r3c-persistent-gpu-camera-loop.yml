@@ -1,0 +1,178 @@
+name: H-Earth Run 8E R3C Persistent GPU Camera Loop
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3c-persistent-gpu-camera-loop-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3b-isolated-webgl2-fixed-frame-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3c-persistent-gpu-camera-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      H_EARTH_RUN8E_R3C_URL: http://127.0.0.1:4173/showroom/globe/h-earth/diagnostic/run8e-r3c/
+      H_EARTH_RUN8E_R3C_OUTPUT: /tmp/h-earth-run8e-r3c
+    steps:
+      - name: Check out exact R3C event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R3B base and protected identities
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3b-isolated-webgl2-fixed-frame-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3b-isolated-webgl2-fixed-frame-001)" = "11b6c8c4cb3bec4e6666d9d1e6500e18fa271ce1"
+          test "$(git hash-object showroom/globe/h-earth/render/live-render-package.run8e-r2.js)" = "1699654f39c9e183f4cfc6f75b20ba051641b763"
+          test "$(git hash-object showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js)" = "785856d7702a0e855c2672e6b8a7325ad5b3ba50"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+          test "$(git hash-object showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js)" = "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+          test "$(git hash-object h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3b.pass-closed.receipt.json)" = "1a3e1e9113b8e123525bdc924bf9c6ef1b0b1fd5"
+
+      - name: Verify source syntax and R3C authority
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3c.persistent-gpu-camera-loop.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3c-persistent-gpu-camera-loop-scope.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3c.persistent-gpu-camera-loop.harness.mjs
+          node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          node --check showroom/globe/h-earth/diagnostic/run8e-r3c/continuous-loop.js
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3c.pass-closed.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3c.pass-closed.receipt.json','utf8'))"
+          fi
+          if grep -Eiq 'addEventListener\([^)]*(pointer|touch|wheel)|on(pointer|touch|wheel)[[:space:]]*=' showroom/globe/h-earth/diagnostic/run8e-r3c/continuous-loop.js showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js; then
+            echo R3C_INTERACTION_BINDING_SOURCE_DETECTED
+            exit 1
+          fi
+          node --input-type=module - <<'NODE'
+          import { evaluateHEarthRun8ER3Control } from './h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js';
+          import { evaluateHEarthRun8ER3CControl } from './h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3c.persistent-gpu-camera-loop.js';
+          const parent = evaluateHEarthRun8ER3Control();
+          const child = evaluateHEarthRun8ER3CControl();
+          if (!parent.eligible) throw new Error(parent.issues.join(','));
+          if (!child.eligible) throw new Error(child.issues.join(','));
+          NODE
+
+      - name: Install bounded Chromium dependency
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Start isolated workspace server
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/h-earth-run8e-r3c-server.log 2>&1 &
+          echo $! >/tmp/h-earth-run8e-r3c-server.pid
+          for attempt in $(seq 1 60); do
+            if curl --silent --fail "$H_EARTH_RUN8E_R3C_URL" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/h-earth-run8e-r3c-server.log
+          exit 1
+
+      - name: Execute persistent resources and continuous camera loop
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.run8e-r3c.persistent-gpu-camera-loop.harness.mjs \
+            2>&1 | tee /tmp/h-earth-run8e-r3c-harness.log
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only 11b6c8c4cb3bec4e6666d9d1e6500e18fa271ce1...HEAD \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | sort -u > /tmp/h-earth-run8e-r3c-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3c-governed-paths.txt \
+            --task "Run 8E R3C persistent GPU resources and continuous camera loop" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3C_OUTPUT/h-earth.run8e-r3c.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3c/h-earth.run8e-r3c.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`R3C_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact scope, persistent resources, and R3D stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 11b6c8c4cb3bec4e6666d9d1e6500e18fa271ce1...HEAD | sort \
+            > "$H_EARTH_RUN8E_R3C_OUTPUT/r3c-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3c/r3c-changed-paths.txt').read_text().splitlines() if line.strip()}
+          required = {
+            '.github/workflows/h-earth-run8e-r3c-persistent-gpu-camera-loop.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3c.persistent-gpu-camera-loop.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3c-persistent-gpu-camera-loop-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3c.persistent-gpu-camera-loop.harness.mjs',
+            'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js',
+            'showroom/globe/h-earth/diagnostic/run8e-r3c/index.html',
+            'showroom/globe/h-earth/diagnostic/run8e-r3c/continuous-loop.js'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3c.pass-closed.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'R3C_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'R3C_UNEXPECTED_PATHS:{unexpected}')
+          forbidden = [p for p in paths if p in {
+            'showroom/globe/h-earth/index.html',
+            'showroom/globe/h-earth/functional-landscape/environment-integration.js',
+            'showroom/globe/h-earth/functional-landscape/direct-manipulation.js',
+            'showroom/globe/h-earth/functional-landscape/navigation.js',
+            'showroom/globe/h-earth/render/live-render-package.run8e-r2.js',
+            'showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js',
+            'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js',
+            'showroom/globe/h-earth/diagnostic/run8e-r3b/fixed-frame.js',
+            'showroom/globe/h-earth/diagnostic/run8e-r3b/index.html'
+          }]
+          if forbidden: raise SystemExit(f'R3C_FORBIDDEN_PATHS:{forbidden}')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3c/h-earth.run8e-r3c.persistent-gpu-camera-loop.execution.receipt.json').read_text())
+          if receipt['eligible'] is not True: raise SystemExit('R3C_EXECUTION_RECEIPT_NOT_ELIGIBLE')
+          browser = receipt['browserReceipt']
+          if browser['loop']['completedFrameCount'] != 180: raise SystemExit('R3C_FRAME_COUNT_INVALID')
+          if browser['resources']['counters']['postInitializationResourceCreationCount'] != 0: raise SystemExit('R3C_RESOURCE_RECREATION_DETECTED')
+          if browser['resources']['counters']['postInitializationBufferUploadCount'] != 0: raise SystemExit('R3C_BUFFER_REUPLOAD_DETECTED')
+          if browser['distinctCaptureHashCount'] != 3: raise SystemExit('R3C_FRAME_CAPTURES_NOT_DISTINCT')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_DIAGNOSTIC_DIRECT_INTERACTION_R3D': raise SystemExit('R3C_STOPPING_BOUNDARY_MISMATCH')
+          PY
+          for label in start middle final; do
+            test -s "$H_EARTH_RUN8E_R3C_OUTPUT/h-earth.run8e-r3c.${label}-frame.png"
+            file "$H_EARTH_RUN8E_R3C_OUTPUT/h-earth.run8e-r3c.${label}-frame.png" | grep -q 'PNG image data, 640 x 360'
+          done
+          test -s "$H_EARTH_RUN8E_R3C_OUTPUT/h-earth.run8e-r3c.diagnostic-page.png"
+
+      - name: Upload R3C continuous-loop evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3c-persistent-gpu-camera-loop-evidence
+          path: |
+            /tmp/h-earth-run8e-r3c
+            /tmp/h-earth-run8e-r3c-harness.log
+            /tmp/h-earth-run8e-r3c-server.log
+            /tmp/h-earth-run8e-r3c-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

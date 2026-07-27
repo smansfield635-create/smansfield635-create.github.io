@@ -1,0 +1,120 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3E5_R3E_CLOSURE_AND_R3F_INPUT_DECISION_PASS_CLOSED_RECEIPT",
+  "receiptVersion": 1,
+  "status": "RUN_8E_R3E5_PASS_CLOSED",
+  "eligible": true,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3e5-r3e-closure-r3f-input-decision-001",
+  "baseBranch": "agent/h-earth-run8e-r3e4-public-direct-manipulation-acceptance-001",
+  "baseExactHead": "6af68581b5c2d7a2528eedfb34efdfdbbf9aa1b3",
+  "draftPullRequest": 249,
+  "predecessorPullRequest": 248,
+  "predecessorStatus": "RUN_8E_R3E4_PASS_CLOSED",
+  "predecessorPassReceiptGitBlob": "7b2db7ed51a345edea88ad8a1288db4db150201d",
+  "predecessorReceipts": {
+    "r3E1": {
+      "path": "/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e1.pass-closed.receipt.json",
+      "gitBlob": "2c71944eabc6d4522d934ef2fc4af6a85a38f3b5",
+      "status": "RUN_8E_R3E1_PASS_CLOSED"
+    },
+    "r3E2": {
+      "path": "/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e2.pass-closed.receipt.json",
+      "gitBlob": "e33405c5e7f600e59a6b1103fd856a1d37ca51c5",
+      "status": "RUN_8E_R3E2_PASS_CLOSED"
+    },
+    "r3E3": {
+      "path": "/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e3.pass-closed.receipt.json",
+      "gitBlob": "5c5f1ae06220f88f497dc2b45f4d749679849918",
+      "status": "RUN_8E_R3E3_PASS_CLOSED"
+    },
+    "r3E4": {
+      "path": "/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e4.pass-closed.receipt.json",
+      "gitBlob": "7b2db7ed51a345edea88ad8a1288db4db150201d",
+      "status": "RUN_8E_R3E4_PASS_CLOSED"
+    }
+  },
+  "coreExecution": {
+    "head": "a15b0bfd5e0e41feb58278ead324af25cb895b79",
+    "workflowRun": 30313213795,
+    "workflowJob": 90133161723,
+    "artifactId": 8671168282,
+    "artifactDigest": "sha256:15556602decf44f2af92aabdc91f4677bbe25f863cf7bc8cb1be0372c34f47f3",
+    "artifactFetchBackVerified": true,
+    "automaticRepositoryRegistryPreflightRun": 30313213810,
+    "automaticRepositoryRegistryPreflightStatus": "PASS"
+  },
+  "receiptFreeClosureControl": {
+    "head": "e0130bb65d6f09e195fda0fdaa2c1f0385af5d20",
+    "workflowRun": 30313557641,
+    "workflowJob": 90134458240,
+    "artifactId": 8671317591,
+    "artifactDigest": "sha256:4695f9b5d6dfba93228cd1de756a88e880a6ffe9b8974031d0fad5855754d76f",
+    "artifactFetchBackVerified": true,
+    "automaticRepositoryRegistryPreflightRun": 30313557626,
+    "automaticRepositoryRegistryPreflightStatus": "PASS",
+    "passReceiptPresentDuringValidation": false,
+    "parentControlStatus": "RUN_8E_R3E5_PARENT_PASS_CLOSED",
+    "childControlStatus": "RUN_8E_R3E5_PASS_CLOSED",
+    "registryLifecycleStatus": "CORE_EXECUTION_PASS_RECEIPT_PENDING"
+  },
+  "closureResult": {
+    "r3ESubcheckpointCount": 5,
+    "predecessorPassClosedCount": 4,
+    "unresolvedPredecessorCount": 0,
+    "r3EClosureEligible": true,
+    "run8ER3E": "PASS_CLOSED",
+    "run8ER3": "OPEN_AT_R3F_BOUNDARY",
+    "run8ER3F": "NOT_STARTED",
+    "run8ER3G": "NOT_STARTED",
+    "run8E": "FAIL_OPEN"
+  },
+  "r3FInputDecision": {
+    "decisionId": "H_EARTH_RUN_8E_R3F_PHYSICAL_REFERENCE_DEVICE_AND_BROADER_MOBILE_ACCEPTANCE_INPUT_DECISION_v1",
+    "status": "RUN_8E_R3F_INPUT_ADMISSIBLE_NOT_STARTED",
+    "disposition": "ADMISSIBLE_AS_NEXT_CHECKPOINT_INPUT",
+    "authorizedNextAction": "CREATE_SEPARATE_R3F_BRANCH_FROM_R3E5_FINAL_EXACT_HEAD",
+    "symbolicRequiredBase": "R3E5_FINAL_EXACT_HEAD",
+    "admittedInputCount": 11,
+    "separateR3FBranchRequired": true,
+    "r3FExecutionInsideR3E5": false
+  },
+  "referenceDeviceLaw": {
+    "officialSamsungPhoneRole": "PHYSICAL_REFERENCE_DEVICE_ONLY",
+    "evidenceHardwareNotImplementationTarget": true,
+    "allSupportedMobileDevicesRemainProductTarget": true,
+    "samsungOnlyImplementationProhibited": true,
+    "deviceBrandBackendSelectionProhibited": true,
+    "soloDeveloperMobilePhoneDevelopmentContextPreserved": true
+  },
+  "protectedRuntimeInputs": {
+    "publicHtmlGitBlob": "0daedf61f7e19af095f4db5fc47563a9cd786837",
+    "publicOrchestratorGitBlob": "2b0a916b3a6d11da84316925f8abd8a3a1447445",
+    "navigationSourceGitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+    "r3AFramePacketGitBlob": "4e187fc38780dfb2020482b674ac331f5a65b2c1",
+    "persistentRendererGitBlob": "b8b3c713d5f0b7c79808e8942ce385887589d880",
+    "pointerTouchIntakeGitBlob": "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6",
+    "liveGpuBindingGitBlob": "5017bbaf857a644287cb829037b0fde4646f270d"
+  },
+  "boundaries": {
+    "showroomSourceMutated": false,
+    "publicRouteMutated": false,
+    "publicRuntimeMutated": false,
+    "browserExecuted": false,
+    "gpuExecuted": false,
+    "physicalReferenceDeviceExecuted": false,
+    "broaderMobileAcceptanceExecuted": false,
+    "r3FBranchCreated": false,
+    "r3FExecutionStarted": false,
+    "deploymentPerformed": false,
+    "promotionPerformed": false,
+    "r3GWorkStarted": false,
+    "mainMerged": false,
+    "run8EPassClosed": false
+  },
+  "receiptPath": "/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e5.pass-closed.receipt.json",
+  "finalExactHeadRevalidation": "PENDING_AFTER_DURABLE_RECEIPT_AND_FINAL_REGISTRY_RECONCILIATION",
+  "nextCheckpoint": "RUN_8E_R3F_NOT_STARTED",
+  "stoppingBoundary": "STOP_BEFORE_PHYSICAL_REFERENCE_DEVICE_AND_BROADER_MOBILE_ACCEPTANCE_R3F",
+  "issuedOn": "2026-07-27",
+  "issues": []
+}

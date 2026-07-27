@@ -105,16 +105,16 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     {
       checkpointId: 'RUN_8E_R2F',
       name: 'R2_CLOSURE_AND_PROMOTION_DECISION',
-      currentStatus: 'EXECUTION_PENDING',
-      pullRequest: null,
+      currentStatus: 'PASS_CLOSED',
+      pullRequest: 225,
       baseHead: '096bfbaf45b8987041600385ae16646b00137b9b',
       finalHead: null,
-      workflowRun: null,
-      workflowJob: null,
-      artifactId: null,
-      artifactDigest: null,
-      closureManifestDigest: null,
-      promotionToR3Input: 'PENDING_EXECUTION',
+      workflowRun: 30283048662,
+      workflowJob: 90033938538,
+      artifactId: 8659616243,
+      artifactDigest: 'sha256:a130adddfc535ce3acd28e81cd4d4c09b1c131b0cda427bc0d51fbbf9683e300',
+      closureManifestDigest: 'sha256:f565c1973859fa8365bca57d06f794f81b85bce436b5887ca5c81e926a6d1a73',
+      promotionToR3Input: 'APPROVED',
       stoppingBoundary: 'STOP_BEFORE_RUN_8E_R3'
     }
   ],
@@ -148,9 +148,9 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     visiblePresentationCreated: false
   },
   promotionDecision: {
-    r2ConstructionClosure: 'PENDING_EXECUTION',
+    r2ConstructionClosure: 'PASS_CLOSED',
     promotionTarget: 'RUN_8E_R3_INPUT',
-    promotionToR3Input: 'PENDING_EXECUTION',
+    promotionToR3Input: 'APPROVED',
     mainBranchPromotion: 'NOT_EXECUTED',
     mainMergeAuthorityCreated: false,
     deploymentAuthorityCreated: false,
@@ -171,12 +171,12 @@ export const H_EARTH_RUN_8E_R2_CONTROL = freeze({
     'RUN_8E_PASS_CLOSED'
   ],
   stoppingBoundary: {
-    currentCheckpoint: 'RUN_8E_R2F_EXECUTION_PENDING',
+    currentCheckpoint: 'RUN_8E_R2F_PASS_CLOSED',
     nextCheckpoint: 'RUN_8E_R3_NOT_STARTED',
-    run8ER2Complete: false,
+    run8ER2Complete: true,
     run8ER2FStarted: true,
-    run8ER2FPassClosed: false,
-    promotionToR3InputApproved: false,
+    run8ER2FPassClosed: true,
+    promotionToR3InputApproved: true,
     mainMergeExecuted: false,
     deploymentExecuted: false,
     run8ER3Started: false,

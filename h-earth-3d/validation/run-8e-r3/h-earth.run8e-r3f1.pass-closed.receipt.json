@@ -1,0 +1,160 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3F1_PHYSICAL_MOBILE_ACCEPTANCE_PROTOCOL_PASS_CLOSED_RECEIPT",
+  "receiptVersion": 1,
+  "status": "RUN_8E_R3F1_PASS_CLOSED",
+  "eligible": true,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3f1-physical-mobile-acceptance-protocol-001",
+  "baseBranch": "agent/h-earth-run8e-r3e5-r3e-closure-r3f-input-decision-001",
+  "baseExactHead": "548672ae99cd406805f0c8ca576cc650baf7ed18",
+  "draftPullRequest": 250,
+  "predecessorPullRequest": 249,
+  "predecessorStatus": "RUN_8E_R3E5_PASS_CLOSED",
+  "predecessorPassReceiptGitBlob": "ddd7fbf4065abbfb51e222c3500328b5b7aaab00",
+  "predecessorFinalValidation": {
+    "head": "548672ae99cd406805f0c8ca576cc650baf7ed18",
+    "workflowRun": 30313774927,
+    "workflowJob": 90134863655,
+    "artifactId": 8671366254,
+    "artifactDigest": "sha256:86dd2af17cdd0e477f7edd6aeef37263283cbf69f49cf705278c00195d98685e"
+  },
+  "protectedRuntimeInputs": {
+    "publicHtmlGitBlob": "0daedf61f7e19af095f4db5fc47563a9cd786837",
+    "publicOrchestratorGitBlob": "2b0a916b3a6d11da84316925f8abd8a3a1447445",
+    "navigationSourceGitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+    "r3AFramePacketGitBlob": "4e187fc38780dfb2020482b674ac331f5a65b2c1",
+    "persistentRendererGitBlob": "b8b3c713d5f0b7c79808e8942ce385887589d880",
+    "pointerTouchIntakeGitBlob": "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6",
+    "liveGpuBindingGitBlob": "5017bbaf857a644287cb829037b0fde4646f270d"
+  },
+  "coreExecution": {
+    "head": "08c4b9558d995acbc9ba1ff59990b8bc65d4a00d",
+    "workflowRun": 30314464717,
+    "workflowJob": 90136979082,
+    "artifactId": 8671621390,
+    "artifactDigest": "sha256:3345790f2b92b789c80c59ed49759a7c9af5520b8fbe2be238631e94ffdee151",
+    "artifactFetchBackVerified": true,
+    "automaticRepositoryRegistryPreflightRun": 30314464737,
+    "automaticRepositoryRegistryPreflightStatus": "PASS",
+    "parentControlStatus": "RUN_8E_R3F1_PARENT_EXECUTION_ELIGIBLE",
+    "childControlStatus": "RUN_8E_R3F1_CONTROL_EXECUTION_ELIGIBLE"
+  },
+  "receiptFreeClosureControl": {
+    "head": "55fec155a28d7aabd29d7692d84d39cda1cd5059",
+    "workflowRun": 30314682014,
+    "workflowJob": 90137636672,
+    "artifactId": 8671700660,
+    "artifactDigest": "sha256:2bbbe3eac3ad202e9d07fe41739e1c57a8c8b1718e3c82d264b778b53460570a",
+    "artifactFetchBackVerified": true,
+    "automaticRepositoryRegistryPreflightRun": 30314681951,
+    "passReceiptPresentDuringValidation": false,
+    "parentControlStatus": "RUN_8E_R3F1_PARENT_PASS_CLOSED",
+    "childControlStatus": "RUN_8E_R3F1_PASS_CLOSED",
+    "registryLifecycleStatus": "CORE_EXECUTION_PASS_RECEIPT_PENDING"
+  },
+  "protocolResult": {
+    "contractId": "H_EARTH_RUN_8E_R3F_PHYSICAL_REFERENCE_DEVICE_AND_BROADER_MOBILE_EVIDENCE_CONTRACT_v1",
+    "r3FSubcheckpointCount": 4,
+    "deviceLaneCount": 4,
+    "requiredSessionRecordFieldCount": 22,
+    "physicalAcceptingEvidenceClasses": [
+      "PHYSICAL_LOCAL",
+      "REMOTE_PHYSICAL"
+    ],
+    "supplementalOnlyEvidenceClasses": [
+      "EMULATED_BROWSER",
+      "DESKTOP_MOBILE_VIEWPORT"
+    ],
+    "immutableNonProductionPreviewRequired": true,
+    "productionDeploymentAllowed": false,
+    "sameImmutablePreviewPackageRequiredAcrossPhysicalLanes": true,
+    "referenceDeviceRole": "CURRENT_OFFICIAL_SAMSUNG_PHONE_PHYSICAL_REFERENCE_DEVICE_ONLY",
+    "productTarget": "ALL_SUPPORTED_MOBILE_DEVICES",
+    "samsungOnlyImplementationProhibited": true,
+    "deviceBrandBackendSelectionProhibited": true
+  },
+  "r3FSequence": [
+    {
+      "checkpointId": "RUN_8E_R3F1",
+      "name": "PHYSICAL_MOBILE_ACCEPTANCE_PROTOCOL_AND_EVIDENCE_INTAKE_AUTHORITY",
+      "status": "PASS_CLOSED"
+    },
+    {
+      "checkpointId": "RUN_8E_R3F2",
+      "name": "REFERENCE_DEVICE_IMMUTABLE_PREVIEW_AND_PHYSICAL_EXECUTION",
+      "status": "NOT_STARTED"
+    },
+    {
+      "checkpointId": "RUN_8E_R3F3",
+      "name": "BROADER_MOBILE_PHYSICAL_EXECUTION_AND_DEVICE_AGNOSTIC_ACCEPTANCE",
+      "status": "NOT_STARTED"
+    },
+    {
+      "checkpointId": "RUN_8E_R3F4",
+      "name": "R3F_ACCEPTANCE_RECONCILIATION_AND_CLOSURE",
+      "status": "NOT_STARTED"
+    }
+  ],
+  "requiredDeviceLanes": [
+    "R3F_REFERENCE_ANDROID_PHYSICAL",
+    "R3F_SECOND_ANDROID_DIFFERENT_GPU_OR_SCREEN_CLASS",
+    "R3F_IOS_MOBILE_SAFARI_PHYSICAL",
+    "R3F_LOWER_PERFORMANCE_MOBILE_PHYSICAL"
+  ],
+  "requiredInteractionMatrix": {
+    "oneFingerLook": true,
+    "twoFingerForwardTravel": true,
+    "twoFingerBackwardTravel": true,
+    "pinchZoomIn": true,
+    "pinchZoomOut": true,
+    "immediatePerspectiveFeedback": true,
+    "continuousDirectInspection": true,
+    "realTimeGpuPresentation": true,
+    "portrait": true,
+    "landscape": true,
+    "noVisibleController": true,
+    "noFlatBitmapDragging": true,
+    "noWorldRebuildDuringGesture": true,
+    "noMultiSecondInputBacklog": true
+  },
+  "timingLaw": {
+    "maximumObservedInputToVisibleResponseExclusiveMs": 2000,
+    "maximumObservedFrozenPresentationExclusiveMs": 2000,
+    "continuousInteractionDurationMinimumMs": 600000,
+    "obsoleteInputBacklogAllowed": false
+  },
+  "boundaries": {
+    "showroomSourceMutated": false,
+    "publicRouteMutated": false,
+    "publicRuntimeMutated": false,
+    "immutablePreviewCreated": false,
+    "browserExecuted": false,
+    "gpuExecuted": false,
+    "physicalReferenceDeviceExecuted": false,
+    "broaderMobileExecuted": false,
+    "productionDeployed": false,
+    "r3F2Started": false,
+    "r3F3Started": false,
+    "r3F4Started": false,
+    "r3GStarted": false,
+    "mainMerged": false,
+    "run8EPassClosed": false
+  },
+  "currentState": {
+    "run8ER3E": "PASS_CLOSED",
+    "run8ER3F": "IN_PROGRESS",
+    "run8ER3F1": "PASS_CLOSED",
+    "run8ER3F2": "NOT_STARTED",
+    "run8ER3F3": "NOT_STARTED",
+    "run8ER3F4": "NOT_STARTED",
+    "run8ER3G": "NOT_STARTED",
+    "run8ER3": "OPEN_AT_R3F2_BOUNDARY",
+    "run8E": "FAIL_OPEN"
+  },
+  "receiptPath": "/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json",
+  "finalExactHeadRevalidation": "PENDING_AFTER_DURABLE_RECEIPT_AND_FINAL_REGISTRY_RECONCILIATION",
+  "nextCheckpoint": "RUN_8E_R3F2_NOT_STARTED",
+  "stoppingBoundary": "STOP_BEFORE_REFERENCE_DEVICE_IMMUTABLE_PREVIEW_AND_PHYSICAL_EXECUTION_R3F2",
+  "issuedOn": "2026-07-27",
+  "issues": []
+}

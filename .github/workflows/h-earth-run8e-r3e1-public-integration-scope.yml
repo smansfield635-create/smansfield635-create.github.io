@@ -1,0 +1,139 @@
+name: H-Earth Run 8E R3E1 Public Integration Scope
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3e1-public-integration-scope-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3d5-r3d-closure-r3e-input-decision-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3e1-public-integration-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      H_EARTH_RUN8E_R3E1_OUTPUT: /tmp/h-earth-run8e-r3e1
+    steps:
+      - name: Check out exact R3E1 event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R3D5 base and admitted source identities
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3d5-r3d-closure-r3e-input-decision-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3d5-r3d-closure-r3e-input-decision-001)" = "ccee63d4826f9ac5c8eb9069d0d33d3ad5ebcef7"
+          test "$(git hash-object h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d5.pass-closed.receipt.json)" = "f9f6d9b1464882f7e8cf7143a4d4e90d4093dcec"
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = "b5f72fb70f59276f868a5894ee0c5e8beccc40ca"
+          test "$(git hash-object showroom/globe/h-earth/index.css)" = "f208b7f11096a7bf5da282226903ac634c1eab01"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/index.js)" = "83e85df2f4440c2825672f46fb16e28c73992db2"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/environment-integration.js)" = "6c047d61544fcbc4fad8673abfbacb7c827fdb22"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/direct-manipulation.js)" = "322ee2bfed5184acd8eac600f19abd72380b6c2b"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+          test "$(git hash-object showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js)" = "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js)" = "b8b3c713d5f0b7c79808e8942ce385887589d880"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js)" = "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js)" = "5017bbaf857a644287cb829037b0fde4646f270d"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/diagnostic-host.js)" = "b8bf34e7dc3a8e91000274cdabab26250888ebf0"
+
+      - name: Verify R3E1 syntax and exact declaration
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e1.public-integration-scope-control.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e1.public-integration-scope-declaration.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3e1-public-integration-scope.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3e1.public-integration-scope.harness.mjs
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e1.pass-closed.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e1.pass-closed.receipt.json','utf8'))"
+          fi
+          grep -q "public-live-gpu-integration.run8e-r3e.js" h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e1.public-integration-scope-declaration.js
+          grep -q "STOP_BEFORE_ANY_PUBLIC_ROUTE_SOURCE_MUTATION_R3E2" h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e1.public-integration-scope-declaration.js
+          test ! -e showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+
+      - name: Execute public integration scope reconciliation
+        run: |
+          set -euo pipefail
+          mkdir -p "$H_EARTH_RUN8E_R3E1_OUTPUT"
+          node h-earth-3d/validation/h-earth.run8e-r3e1.public-integration-scope.harness.mjs \
+            | tee "$H_EARTH_RUN8E_R3E1_OUTPUT/h-earth.run8e-r3e1.harness.stdout.log"
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only ccee63d4826f9ac5c8eb9069d0d33d3ad5ebcef7...HEAD \
+            | grep -E '^h-earth-3d/' \
+            | sort -u > /tmp/h-earth-run8e-r3e1-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3e1-governed-paths.txt \
+            --task "Run 8E R3E1 exact public integration mutation scope" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3E1_OUTPUT/h-earth.run8e-r3e1.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3e1/h-earth.run8e-r3e1.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`R3E1_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact scope and R3E2 stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only ccee63d4826f9ac5c8eb9069d0d33d3ad5ebcef7...HEAD | sort > "$H_EARTH_RUN8E_R3E1_OUTPUT/r3e1-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3e1/r3e1-changed-paths.txt').read_text().splitlines() if line.strip()}
+          required = {
+            '.github/workflows/h-earth-run8e-r3e1-public-integration-scope.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e1.public-integration-scope-control.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e1.public-integration-scope-declaration.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3e1-public-integration-scope.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3e1.public-integration-scope.harness.mjs'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e1.pass-closed.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'R3E1_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'R3E1_UNEXPECTED_PATHS:{unexpected}')
+          showroom = sorted(p for p in paths if p.startswith('showroom/'))
+          if showroom: raise SystemExit(f'R3E1_SHOWROOM_MUTATION:{showroom}')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3e1/h-earth.run8e-r3e1.public-integration-scope.execution.receipt.json').read_text())
+          if receipt['eligible'] is not True: raise SystemExit('R3E1_EXECUTION_RECEIPT_NOT_ELIGIBLE')
+          if receipt['declarationResult']['exactFutureMutationPathCount'] != 2: raise SystemExit('R3E1_FUTURE_SCOPE_COUNT_INVALID')
+          if receipt['currentRuntimeOwnerCounts'] != {
+            'moduleScriptCount': 3,
+            'canvasContextOwnerCount': 2,
+            'pointerOwnerCount': 2,
+            'framePresentationOwnerCount': 3,
+            'deferredExecutionOwnerCount': 4
+          }: raise SystemExit('R3E1_RUNTIME_OWNER_COUNTS_INVALID')
+          if any(receipt['boundaries'].values()): raise SystemExit('R3E1_BOUNDARY_VIOLATION')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_ANY_PUBLIC_ROUTE_SOURCE_MUTATION_R3E2': raise SystemExit('R3E1_STOPPING_BOUNDARY_MISMATCH')
+          PY
+
+      - name: Upload R3E1 scope evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3e1-public-integration-scope-evidence
+          path: |
+            /tmp/h-earth-run8e-r3e1
+            /tmp/h-earth-run8e-r3e1-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

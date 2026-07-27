@@ -10,57 +10,23 @@
 >
 <head>
   <meta charset="utf-8">
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1,viewport-fit=cover"
-  >
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Products · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Products turn recurring needs into usable systems. Open the constellation to explore the active product chambers."
-  >
-  <link
-    rel="stylesheet"
-    href="/assets/manor.css"
-  >
-  <link
-    rel="stylesheet"
-    href="/products/index.css"
-  >
+  <meta name="description" content="Products turn recurring needs into usable systems. Open the constellation to explore the active product chambers.">
+  <link rel="stylesheet" href="/assets/manor.css">
+  <link rel="stylesheet" href="/products/index.css">
+  <link rel="stylesheet" href="/products/index.arena.css">
 </head>
 <body>
-  <a
-    class="skip-link"
-    href="#products-main"
-  >
-    Skip to Products
-  </a>
+  <a class="skip-link" href="#products-main">Skip to Products</a>
 
   <div class="products-shell">
-    <header
-      class="products-topbar"
-      aria-label="Products header"
-    >
-      <a
-        class="products-brand"
-        href="/"
-        aria-label="Return to Diamond Gate Bridge compass"
-      >
-        <span
-          class="products-brand__mark"
-          aria-hidden="true"
-        >
-          PR
-        </span>
-
+    <header class="products-topbar" aria-label="Products header">
+      <a class="products-brand" href="/" aria-label="Return to Diamond Gate Bridge compass">
+        <span class="products-brand__mark" aria-hidden="true">PR</span>
         <span class="products-brand__copy">
-          <span class="products-brand__eyebrow">
-            Diamond Gate Bridge
-          </span>
-
-          <strong class="products-brand__title">
-            Products
-          </strong>
+          <span class="products-brand__eyebrow">Diamond Gate Bridge</span>
+          <strong class="products-brand__title">Products</strong>
         </span>
       </a>
     </header>
@@ -71,6 +37,7 @@
       data-page-id="products"
       data-route="/products/"
       data-products-root="true"
+      data-products-model-class="ARENA_CLUSTER"
       data-products-state="PRIMARY_ENTRY"
       data-products-held="false"
       data-orbit-focus="products"
@@ -92,38 +59,44 @@
       data-reduced-motion="false"
       data-products-controller-status="pending"
       data-products-crystals-status="pending"
+      data-products-planet-status="pending"
+      data-products-cosmos-status="pending"
+      data-products-center-control-status="pending"
       data-visual-pass-claimed="false"
     >
-      <section
-        class="products-header"
-        aria-labelledby="products-page-title"
-      >
-        <p class="products-header__kicker">
-          Products
-        </p>
-
-        <h1
-          id="products-page-title"
-          class="products-header__title"
-        >
-          PRODUCTS
-        </h1>
-
-        <p class="products-header__intro">
-          Products turn recurring needs into usable systems. Open the constellation to explore the active product chambers.
-        </p>
+      <section class="products-header" aria-labelledby="products-page-title">
+        <p class="products-header__kicker">Products</p>
+        <h1 id="products-page-title" class="products-header__title">PRODUCTS</h1>
+        <p class="products-header__intro">Products turn recurring needs into usable systems. Open the constellation to explore the active product chambers.</p>
       </section>
 
-      <section
-        class="products-scene"
-        data-products-scene
-        aria-label="Products compass scene"
-      >
+      <section class="products-scene" data-products-scene aria-label="Products Arena Cluster scene">
+        <div class="products-cosmic-field" data-products-cosmic-field aria-hidden="true"></div>
+
         <div
-          class="products-semantic"
-          data-products-semantic
-          aria-label="Enhanced Products semantic controls"
+          class="products-planet-mount"
+          data-products-planet-mount
+          data-products-planet-world-position="0,0,0"
+          data-products-planet-product-member="false"
+          data-products-planet-label-member="false"
+          data-products-planet-settlement-member="false"
+          data-products-planet-navigation-authority="false"
+          aria-hidden="true"
+        ></div>
+
+        <button
+          type="button"
+          class="products-center-control"
+          data-products-center-control
+          data-products-center-route="/"
+          data-products-center-role="MAIN_COMPASS_RETURN"
+          aria-label="Return to the Main Compass"
+          hidden
         >
+          <span class="products-center-control__label">Main Compass</span>
+        </button>
+
+        <div class="products-semantic" data-products-semantic aria-label="Enhanced Products semantic controls">
           <button
             type="button"
             class="products-star products-star--primary"
@@ -131,344 +104,81 @@
             data-destination-type="cluster-entry"
             data-destination-id="products"
             data-label="PRODUCTS"
-            aria-label="Open the six-product constellation"
+            aria-label="Open the six-product arena cluster"
           >
-            <span class="products-star__label">
-              PRODUCTS
-            </span>
-            <span class="products-star__short">
-              OPEN SIX PRODUCTS
-            </span>
+            <span class="products-star__label">PRODUCTS</span>
+            <span class="products-star__short">OPEN SIX PRODUCTS</span>
           </button>
 
-          <button
-            type="button"
-            class="products-star"
-            data-products-product
-            data-product-id="archcoin"
-            data-destination-type="product"
-            data-destination-id="archcoin"
-            data-label="ARCHCOIN"
-            data-route="/products/archcoin/"
-            aria-label="Open ARCHCOIN product preview"
-            hidden
-          >
-            <span class="products-star__label">
-              ARCHCOIN
-            </span>
-            <span class="products-star__short">
-              TRACE
-            </span>
+          <button type="button" class="products-star" data-products-product data-product-id="archcoin" data-destination-type="product" data-destination-id="archcoin" data-label="ARCHCOIN" data-route="/products/archcoin/" aria-label="Open ARCHCOIN product preview" hidden>
+            <span class="products-star__label">ARCHCOIN</span><span class="products-star__short">TRACE</span>
           </button>
-
-          <button
-            type="button"
-            class="products-star"
-            data-products-product
-            data-product-id="five-flags"
-            data-destination-type="product"
-            data-destination-id="five-flags"
-            data-label="FIVE FLAGS"
-            data-route="/products/five-flags/"
-            aria-label="Open FIVE FLAGS product preview"
-            hidden
-          >
-            <span class="products-star__label">
-              FIVE FLAGS
-            </span>
-            <span class="products-star__short">
-              SIGNALS
-            </span>
+          <button type="button" class="products-star" data-products-product data-product-id="five-flags" data-destination-type="product" data-destination-id="five-flags" data-label="FIVE FLAGS" data-route="/products/five-flags/" aria-label="Open FIVE FLAGS product preview" hidden>
+            <span class="products-star__label">FIVE FLAGS</span><span class="products-star__short">SIGNALS</span>
           </button>
-
-          <button
-            type="button"
-            class="products-star"
-            data-products-product
-            data-product-id="aai"
-            data-destination-type="product"
-            data-destination-id="aai"
-            data-label="AAI"
-            data-route="/products/on-your-side-ai/"
-            aria-label="Open AAI product preview"
-            hidden
-          >
-            <span class="products-star__label">
-              AAI
-            </span>
-            <span class="products-star__short">
-              SUPPORT
-            </span>
+          <button type="button" class="products-star" data-products-product data-product-id="aai" data-destination-type="product" data-destination-id="aai" data-label="AAI" data-route="/products/on-your-side-ai/" aria-label="Open AAI product preview" hidden>
+            <span class="products-star__label">AAI</span><span class="products-star__short">SUPPORT</span>
           </button>
-
-          <button
-            type="button"
-            class="products-star"
-            data-products-product
-            data-product-id="education"
-            data-destination-type="product"
-            data-destination-id="education"
-            data-label="EDUCATION"
-            data-route="/products/education/"
-            aria-label="Open EDUCATION product preview"
-            hidden
-          >
-            <span class="products-star__label">
-              EDUCATION
-            </span>
-            <span class="products-star__short">
-              LEARNING
-            </span>
+          <button type="button" class="products-star" data-products-product data-product-id="education" data-destination-type="product" data-destination-id="education" data-label="EDUCATION" data-route="/products/education/" aria-label="Open EDUCATION product preview" hidden>
+            <span class="products-star__label">EDUCATION</span><span class="products-star__short">LEARNING</span>
           </button>
-
-          <button
-            type="button"
-            class="products-star"
-            data-products-product
-            data-product-id="nutrition"
-            data-destination-type="product"
-            data-destination-id="nutrition"
-            data-label="NUTRITION"
-            data-route="/products/nutrition/"
-            aria-label="Open NUTRITION product preview"
-            hidden
-          >
-            <span class="products-star__label">
-              NUTRITION
-            </span>
-            <span class="products-star__short">
-              BASELINE
-            </span>
+          <button type="button" class="products-star" data-products-product data-product-id="nutrition" data-destination-type="product" data-destination-id="nutrition" data-label="NUTRITION" data-route="/products/nutrition/" aria-label="Open NUTRITION product preview" hidden>
+            <span class="products-star__label">NUTRITION</span><span class="products-star__short">BASELINE</span>
           </button>
-
-          <button
-            type="button"
-            class="products-star"
-            data-products-product
-            data-product-id="book"
-            data-destination-type="product"
-            data-destination-id="book"
-            data-label="BOOK"
-            data-route="/nine-summits-of-love/"
-            aria-label="Open BOOK product preview"
-            hidden
-          >
-            <span class="products-star__label">
-              BOOK
-            </span>
-            <span class="products-star__short">
-              LONG FORM
-            </span>
+          <button type="button" class="products-star" data-products-product data-product-id="book" data-destination-type="product" data-destination-id="book" data-label="BOOK" data-route="/nine-summits-of-love/" aria-label="Open BOOK product preview" hidden>
+            <span class="products-star__label">BOOK</span><span class="products-star__short">LONG FORM</span>
           </button>
         </div>
       </section>
 
-      <p
-        class="products-guidance"
-        data-products-guidance
-      >
-        Select PRODUCTS to open the cluster.
-      </p>
+      <p class="products-guidance" data-products-guidance>Select PRODUCTS to open the cluster.</p>
 
-      <section
-        class="products-preview"
-        data-products-preview-panel
-        aria-labelledby="products-preview-title"
-      >
-        <p
-          class="products-preview__eyebrow"
-          data-products-preview-eyebrow
-        >
-          Products
-        </p>
-
-        <h2
-          id="products-preview-title"
-          class="products-preview__title"
-          data-products-preview-title
-        >
-          Open the constellation
-        </h2>
-
-        <p
-          class="products-preview__summary"
-          data-products-preview-summary
-        >
-          Products turn recurring needs into usable systems. Open the constellation to explore the active product chambers.
-        </p>
-
-        <p
-          class="products-preview__relationship"
-          data-products-preview-relationship
-        >
-          Select the primary Products star to open the six-product cluster.
-        </p>
-
+      <section class="products-preview" data-products-preview-panel aria-labelledby="products-preview-title">
+        <p class="products-preview__eyebrow" data-products-preview-eyebrow>Products</p>
+        <h2 id="products-preview-title" class="products-preview__title" data-products-preview-title>Open the constellation</h2>
+        <p class="products-preview__summary" data-products-preview-summary>Products turn recurring needs into usable systems. Open the constellation to explore the active product chambers.</p>
+        <p class="products-preview__relationship" data-products-preview-relationship>Select the primary Products star to open the six-product cluster.</p>
         <div class="products-preview__actions">
-          <a
-            class="products-action products-action--primary"
-            data-products-enter
-            aria-disabled="true"
-            tabindex="-1"
-          >
-            Enter Product
-          </a>
-
-          <button
-            type="button"
-            class="products-action"
-            data-products-return-to-orbit
-            hidden
-            aria-hidden="true"
-            aria-disabled="true"
-            tabindex="-1"
-          >
-            Return to Orbit
-          </button>
-
-          <button
-            type="button"
-            class="products-action"
-            data-products-return-to-constellation
-            hidden
-            aria-hidden="true"
-            aria-disabled="true"
-            tabindex="-1"
-          >
-            Return to Constellation
-          </button>
+          <a class="products-action products-action--primary" data-products-enter aria-disabled="true" tabindex="-1">Enter Product</a>
+          <button type="button" class="products-action" data-products-return-to-orbit hidden aria-hidden="true" aria-disabled="true" tabindex="-1">Return to Orbit</button>
+          <button type="button" class="products-action" data-products-return-to-constellation hidden aria-hidden="true" aria-disabled="true" tabindex="-1">Return to Constellation</button>
         </div>
       </section>
 
-      <section
-        class="products-fallback"
-        data-products-fallback
-        aria-labelledby="products-fallback-title"
-      >
-        <h2
-          id="products-fallback-title"
-          class="products-fallback__title"
-        >
-          Product links
-        </h2>
-
-        <p class="products-fallback__intro">
-          Direct product links remain available without JavaScript or if the enhanced compass is unavailable.
-        </p>
-
+      <section class="products-fallback" data-products-fallback aria-labelledby="products-fallback-title">
+        <h2 id="products-fallback-title" class="products-fallback__title">Product links</h2>
+        <p class="products-fallback__intro">Direct product links remain available without JavaScript or if the enhanced compass is unavailable.</p>
         <div class="products-fallback__grid">
-          <a
-            class="products-fallback__link"
-            href="/products/archcoin/"
-            data-products-fallback-link
-            data-product-id="archcoin"
-            aria-label="Go directly to ARCHCOIN"
-          >
-            <span class="products-fallback__label">ARCHCOIN</span>
-            <span class="products-fallback__short">TRACE</span>
-          </a>
-
-          <a
-            class="products-fallback__link"
-            href="/products/five-flags/"
-            data-products-fallback-link
-            data-product-id="five-flags"
-            aria-label="Go directly to FIVE FLAGS"
-          >
-            <span class="products-fallback__label">FIVE FLAGS</span>
-            <span class="products-fallback__short">SIGNALS</span>
-          </a>
-
-          <a
-            class="products-fallback__link"
-            href="/products/on-your-side-ai/"
-            data-products-fallback-link
-            data-product-id="aai"
-            aria-label="Go directly to AAI"
-          >
-            <span class="products-fallback__label">AAI</span>
-            <span class="products-fallback__short">SUPPORT</span>
-          </a>
-
-          <a
-            class="products-fallback__link"
-            href="/products/education/"
-            data-products-fallback-link
-            data-product-id="education"
-            aria-label="Go directly to EDUCATION"
-          >
-            <span class="products-fallback__label">EDUCATION</span>
-            <span class="products-fallback__short">LEARNING</span>
-          </a>
-
-          <a
-            class="products-fallback__link"
-            href="/products/nutrition/"
-            data-products-fallback-link
-            data-product-id="nutrition"
-            aria-label="Go directly to NUTRITION"
-          >
-            <span class="products-fallback__label">NUTRITION</span>
-            <span class="products-fallback__short">BASELINE</span>
-          </a>
-
-          <a
-            class="products-fallback__link"
-            href="/nine-summits-of-love/"
-            data-products-fallback-link
-            data-product-id="book"
-            aria-label="Go directly to BOOK"
-          >
-            <span class="products-fallback__label">BOOK</span>
-            <span class="products-fallback__short">LONG FORM</span>
-          </a>
+          <a class="products-fallback__link" href="/products/archcoin/" data-products-fallback-link data-product-id="archcoin" aria-label="Go directly to ARCHCOIN"><span class="products-fallback__label">ARCHCOIN</span><span class="products-fallback__short">TRACE</span></a>
+          <a class="products-fallback__link" href="/products/five-flags/" data-products-fallback-link data-product-id="five-flags" aria-label="Go directly to FIVE FLAGS"><span class="products-fallback__label">FIVE FLAGS</span><span class="products-fallback__short">SIGNALS</span></a>
+          <a class="products-fallback__link" href="/products/on-your-side-ai/" data-products-fallback-link data-product-id="aai" aria-label="Go directly to AAI"><span class="products-fallback__label">AAI</span><span class="products-fallback__short">SUPPORT</span></a>
+          <a class="products-fallback__link" href="/products/education/" data-products-fallback-link data-product-id="education" aria-label="Go directly to EDUCATION"><span class="products-fallback__label">EDUCATION</span><span class="products-fallback__short">LEARNING</span></a>
+          <a class="products-fallback__link" href="/products/nutrition/" data-products-fallback-link data-product-id="nutrition" aria-label="Go directly to NUTRITION"><span class="products-fallback__label">NUTRITION</span><span class="products-fallback__short">BASELINE</span></a>
+          <a class="products-fallback__link" href="/nine-summits-of-love/" data-products-fallback-link data-product-id="book" aria-label="Go directly to BOOK"><span class="products-fallback__label">BOOK</span><span class="products-fallback__short">LONG FORM</span></a>
         </div>
       </section>
 
-      <section
-        class="products-guardrail"
-        aria-label="Products guardrail"
-      >
-        <p class="products-guardrail__copy">
-          Enhanced navigation is compass-first. Fallback links remain available if scripting or WebGL is unavailable.
-        </p>
+      <section class="products-guardrail" aria-label="Products guardrail">
+        <p class="products-guardrail__copy">Enhanced navigation is compass-first. Fallback links remain available if scripting or WebGL is unavailable.</p>
       </section>
 
-      <output
-        class="products-receipt"
-        data-products-controller-receipt
-        hidden
-        aria-hidden="true"
-      ></output>
-
-      <output
-        class="products-receipt"
-        data-products-crystals-receipt
-        hidden
-        aria-hidden="true"
-      ></output>
+      <output class="products-receipt" data-products-controller-receipt hidden aria-hidden="true"></output>
+      <output class="products-receipt" data-products-crystals-receipt hidden aria-hidden="true"></output>
+      <output class="products-receipt" data-products-cosmos-receipt hidden aria-hidden="true"></output>
+      <output class="products-receipt" data-products-planet-receipt hidden aria-hidden="true"></output>
+      <output class="products-receipt" data-products-center-control-receipt hidden aria-hidden="true"></output>
     </main>
 
-    <footer class="products-footer">
-      <span>Products · Diamond Gate Bridge</span>
-    </footer>
+    <footer class="products-footer"><span>Products · Diamond Gate Bridge</span></footer>
   </div>
 
-  <noscript>
-    <style>
-      [data-products-semantic] .products-star[data-products-product] {
-        display: none !important;
-      }
-    </style>
-  </noscript>
+  <noscript><style>[data-products-semantic] .products-star[data-products-product]{display:none!important}</style></noscript>
 
-  <script
-    defer
-    src="/products/index.controller.js"
-  ></script>
-  <script
-    defer
-    src="/products/index.crystals.js"
-  ></script>
+  <script defer src="/assets/audralia/audralia.planet.js"></script>
+  <script defer src="/products/index.controller.js"></script>
+  <script defer src="/products/index.cosmos.js"></script>
+  <script defer src="/products/index.planet.js"></script>
+  <script defer src="/products/index.crystals.js"></script>
+  <script defer src="/products/index.controller.center.js"></script>
 </body>
 </html>

@@ -1,0 +1,86 @@
+name: Products Arena Cluster Benchmark v1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/products-cluster-cosmic-center-label-001
+    paths:
+      - "products/**"
+      - "verification/benchmark-tools/products-arena-cluster-benchmark-v1/**"
+      - ".github/workflows/products-arena-cluster-benchmark-v1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  products-arena-cluster:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/products-cluster-cosmic-center-label-001
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install benchmark dependency
+        run: npm install --no-save puppeteer-core@24.15.0
+
+      - name: Resolve Chrome
+        shell: bash
+        run: |
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$chrome" ]; then
+            sudo apt-get update
+            sudo apt-get install -y chromium
+            chrome="$(command -v chromium || command -v chromium-browser)"
+          fi
+          echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
+          "$chrome" --version
+
+      - name: Source assertions and syntax
+        run: |
+          node --check products/index.controller.js
+          node --check products/index.crystals.js
+          node --check products/index.cosmos.js
+          node --check products/index.planet.js
+          node --check products/index.controller.center.js
+          node --check verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-benchmark.config.mjs
+          node --check verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-source-assertions.mjs
+          node --check verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-benchmark.mjs
+          node verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-source-assertions.mjs | tee products-arena-cluster-source-assertions.json
+
+      - name: Start branch-local static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/products-arena-server.log 2>&1 &
+          echo $! > /tmp/products-arena-server.pid
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/products/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/products-arena-server.log
+          exit 1
+
+      - name: Execute four-profile Arena Cluster benchmark
+        env:
+          PRODUCTS_ARENA_ORIGIN: http://127.0.0.1:4173
+        run: node verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-benchmark.mjs
+
+      - name: Upload executed evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: products-arena-cluster-benchmark-v1-evidence
+          if-no-files-found: warn
+          path: |
+            products-arena-cluster-source-assertions.json
+            products-arena-cluster-benchmark-v1.json
+            products-arena-cluster-benchmark-v1-screenshots/**
+            /tmp/products-arena-server.log

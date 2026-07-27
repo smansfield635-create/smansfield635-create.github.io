@@ -3,18 +3,20 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 // Composes the accepted repository-registry lineage through Run 8E-R1,
-// the completed R2A-R2F chain, R3A shared-camera contract, R3B fixed-frame
-// execution, and bounded R3C persistent-resource camera-loop execution. The
-// loader remains read-only and creates no interaction, public-route,
-// deployment, R3D, or Run 8E pass authority.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3c-persistent-gpu-camera-loop-scope.js';
+// the completed R2A-R2F chain, R3A shared-camera contract, R3B isolated
+// fixed-frame execution, R3C persistent GPU camera loop, and bounded R3D
+// diagnostic direct interaction. The loader remains read-only and creates no
+// public-route, deployment, R3E, physical-device, or Run 8E pass authority.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3d-diagnostic-direct-interaction-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY
 } from './h-earth.repository-registry.validator-engine.identity.js';
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
-const readJson = (fileName) => JSON.parse(fs.readFileSync(path.join(directory, fileName), 'utf8'));
+const readJson = (fileName) =>
+  JSON.parse(fs.readFileSync(path.join(directory, fileName), 'utf8'));
+
 const FILES = Object.freeze({
   consolidated: 'h-earth.repository-registry.validator-contract.json',
   input: 'h-earth.repository-registry.validator-contract.input.json',
@@ -41,15 +43,25 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
   const expected = H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY;
   const identityChecks = {
-    contractId: contracts.consolidated.contractId === expected.contract.contractId,
-    contractVersion: contracts.consolidated.contractVersion === expected.contract.contractVersion,
+    contractId:
+      contracts.consolidated.contractId === expected.contract.contractId,
+    contractVersion:
+      contracts.consolidated.contractVersion ===
+      expected.contract.contractVersion,
     registryId: registryInstance.registryId === expected.registry.registryId,
-    registryVersion: registryInstance.registryVersion === expected.registry.registryVersion,
+    registryVersion:
+      registryInstance.registryVersion === expected.registry.registryVersion,
     schemaId: registryInstance.schemaId === expected.registry.schemaId,
-    schemaVersion: registryInstance.schemaVersion === expected.registry.schemaVersion,
-    candidateGitBlobSha: discovery.candidateGitBlobSha === expected.registry.candidateGitBlobSha,
-    instructionId: contracts.instruction.instructionId === expected.instruction.instructionId,
-    instructionVersion: contracts.instruction.instructionVersion === expected.instruction.instructionVersion,
+    schemaVersion:
+      registryInstance.schemaVersion === expected.registry.schemaVersion,
+    candidateGitBlobSha:
+      discovery.candidateGitBlobSha === expected.registry.candidateGitBlobSha,
+    instructionId:
+      contracts.instruction.instructionId ===
+      expected.instruction.instructionId,
+    instructionVersion:
+      contracts.instruction.instructionVersion ===
+      expected.instruction.instructionVersion,
     candidateNotAccepted: registryInstance.accepted === false,
     candidateNotCanonical: discovery.canonical === false
   };

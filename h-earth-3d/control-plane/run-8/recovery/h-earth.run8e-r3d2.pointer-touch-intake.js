@@ -23,7 +23,7 @@ export const H_EARTH_RUN_8E_R3D2_CONTROL = freeze({
   branch: 'agent/h-earth-run8e-r3d2-pointer-touch-intake-001',
   baseBranch: 'agent/h-earth-run8e-r3d1-diagnostic-host-scaffold-001',
   baseExactHead: 'ccac32e8a273fcd47bae684630f49970304c218d',
-  currentStatus: 'EXECUTION_PENDING',
+  currentStatus: 'PASS_CLOSED',
   requiredInputs: {
     r3D1PassClosed: true,
     r3D1FinalExactHead: 'ccac32e8a273fcd47bae684630f49970304c218d',
@@ -33,6 +33,28 @@ export const H_EARTH_RUN_8E_R3D2_CONTROL = freeze({
     publicRouteGitBlob: 'b5f72fb70f59276f868a5894ee0c5e8beccc40ca',
     publicDirectManipulationWitnessGitBlob: '322ee2bfed5184acd8eac600f19abd72380b6c2b',
     liveGpuBindingPlaceholderGitBlob: '14705aed628c58bb3eb93d97e773f1fdc394dc44'
+  },
+  executionEvidence: {
+    successfulExecutionHead: '5436cec48f46e9c5417af877af8d6927a6f8ef52',
+    workflowRun: 30296987991,
+    workflowJob: 90080344166,
+    artifactId: 8665023404,
+    artifactDigest: 'sha256:a679e9bdc06ec95ba00a656572da44da8848fb2133d0c2c8c50faba68f385a29',
+    automaticRepositoryRegistryPreflightRun: 30296988090,
+    automaticRepositoryRegistryPreflight: 'PASS',
+    proposalCount: 7,
+    acceptedProposalCount: 7,
+    rejectedProposalCount: 0,
+    touchPointerEventCount: 15,
+    oneFingerLookProposalCount: 1,
+    twoFingerTravelProposalCount: 2,
+    pinchProposalCount: 2,
+    wheelProposalCount: 2,
+    maximumActivePointerCount: 2,
+    getContextCallCount: 0,
+    deferredCommitCount: 0,
+    queuedNavigationChainCount: 0,
+    screenshotSha256: '87a314939f99b0cc14a5ba354f650436a2d81fd95b1ac90e15b0bcb44a85f3db'
   },
   requiredExecution: {
     diagnosticPointerListenersInstalled: true,
@@ -92,6 +114,12 @@ export function evaluateHEarthRun8ER3D2Control(candidate = H_EARTH_RUN_8E_R3D2_C
   }
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) {
     if (value !== false) issues.push(`R3D2_BOUNDARY_VIOLATION:${key}`);
+  }
+  if (candidate?.currentStatus === 'PASS_CLOSED') {
+    if (candidate?.executionEvidence?.workflowRun !== 30296987991) issues.push('R3D2_WORKFLOW_RUN_MISMATCH');
+    if (candidate?.executionEvidence?.artifactDigest !== 'sha256:a679e9bdc06ec95ba00a656572da44da8848fb2133d0c2c8c50faba68f385a29') issues.push('R3D2_ARTIFACT_DIGEST_MISMATCH');
+    if (candidate?.executionEvidence?.proposalCount !== 7 || candidate?.executionEvidence?.acceptedProposalCount !== 7 || candidate?.executionEvidence?.rejectedProposalCount !== 0) issues.push('R3D2_PROPOSAL_EVIDENCE_MISMATCH');
+    if (candidate?.executionEvidence?.getContextCallCount !== 0 || candidate?.executionEvidence?.deferredCommitCount !== 0 || candidate?.executionEvidence?.queuedNavigationChainCount !== 0) issues.push('R3D2_BOUNDARY_COUNTER_MISMATCH');
   }
   if (candidate?.nextCheckpoint !== 'RUN_8E_R3D3_NOT_STARTED') issues.push('R3D3_STATE_INVALID');
   if (candidate?.stoppingBoundary !== 'STOP_BEFORE_LIVE_GPU_CAMERA_BINDING_R3D3') issues.push('R3D2_STOPPING_BOUNDARY_MISMATCH');

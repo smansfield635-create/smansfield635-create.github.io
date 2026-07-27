@@ -1,0 +1,122 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3D_DIAGNOSTIC_DIRECT_INTERACTION_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3D_PASS_CLOSED",
+  "recordedAt": "2026-07-27T18:48:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3d-direct-interaction-no-bitmap-001",
+  "pullRequest": 233,
+  "baseBranch": "agent/h-earth-run8e-r3c-persistent-gpu-camera-loop-001",
+  "baseExactHead": "5c7a7eef489da94a230812eecc5e531e285b7cac",
+  "successfulExecutionHead": "7b64352e8a50506e522a36f164e297ab8ec0a71d",
+  "workflowRun": 30295159071,
+  "workflowJob": 90074239864,
+  "artifact": 8664329836,
+  "artifactDigest": "sha256:f48c3e2d1f4c11938a4db8b9cb7a904a51e700bcb7a282d993a1401f769d0ca2",
+  "automaticRegistryPreflight": "PASS",
+  "exactScopeAudit": "PASS",
+  "protectedIdentityAudit": "PASS",
+  "noBitmapSourceAudit": "PASS",
+  "browserExecution": {
+    "status": "RUN_8E_R3D_EXECUTION_PASS",
+    "realBrowserPointerEventObjects": true,
+    "touchPointerEvents": true,
+    "oneFingerLook": true,
+    "twoFingerTravel": true,
+    "pinchZoom": true,
+    "wheelFallback": true,
+    "acceptedProposalCount": 7,
+    "rejectedProposalCount": 0,
+    "gpuFrameCount": 4,
+    "distinctVisibleFrameArtifactCount": 5,
+    "maximumInputToFrameLatencyMilliseconds": 6.600000000000364,
+    "actionCounts": {
+      "TURN_RIGHT": 1,
+      "PITCH_UP": 1,
+      "MOVE_FORWARD": 3,
+      "ZOOM_IN": 2
+    },
+    "resourceCounters": {
+      "contextCreationCount": 1,
+      "shaderCreateCount": 4,
+      "shaderCompileCount": 4,
+      "programCreateCount": 2,
+      "programLinkCount": 2,
+      "vertexArrayCreateCount": 1,
+      "bufferCreateCount": 9,
+      "bufferUploadCount": 9,
+      "uploadedByteLength": 2145444,
+      "postInitializationResourceCreationCount": 0,
+      "postInitializationBufferUploadCount": 0,
+      "frameCount": 5,
+      "cameraUniformUpdateCount": 10,
+      "geometryDrawCallCount": 20,
+      "totalDrawnIndexCount": 735600
+    },
+    "bitmapPreviewTransformCount": 0,
+    "cpuRasterRefreshCount": 0,
+    "drawImageCount": 0,
+    "canvas2DContextRequestCount": 0,
+    "imageBitmapCreateCount": 0,
+    "worldRebuildCount": 0,
+    "publicRouteBindingCount": 0,
+    "navigationAuthorityMutationCount": 0,
+    "cameraAuthorityCreationCount": 0,
+    "depthOutput": {
+      "nonClearPixelCount": 205035,
+      "uniqueColorBucketCount": 16,
+      "byteHash": "fnv1a32:ea9487c7"
+    },
+    "frameArtifacts": {
+      "initial": "ef5957da367f220b516a8a3b1d6c8787608cf20357747c26648a744ce03929a5",
+      "look": "67c36d07e722f8eb306763d53229e84bc6151d991227deab5cfd8aea0fd52ed9",
+      "travel": "3245399954bafc887d200820fa8b13762ff65ebd5d40a0ae97e9773b351d49a5",
+      "pinch": "8172df658a9aeb0aabf5804ad19316cf4f9c96b625ae086181e0bd144d30d12c",
+      "wheel": "d3e97dfbd1e4e62eaf5c8dd00c92d81555c4d7cdf225f3a0b65c442c8cd2c0ea"
+    }
+  },
+  "failedAttemptsPreserved": [
+    {
+      "attempt": 1,
+      "head": "ec13c97b103c3291a3e930c2138feb5984d3c363",
+      "workflowRun": 30293664139,
+      "workflowJob": 90069233222,
+      "failureStage": "VERIFY_SOURCE_SYNTAX_AND_R3D_AUTHORITY"
+    },
+    {
+      "attempt": 2,
+      "head": "8014bea3a09e6d1363e10b6439b743725751b628",
+      "workflowRun": 30294287794,
+      "workflowJob": 90071329468,
+      "artifact": 8664000420,
+      "artifactDigest": "sha256:578c7cd60dfc1d7c6c500fe6ba35a07730b7a895d3cd3b635e27154f8a9bd146",
+      "materialBrowserExecution": "PASS",
+      "failureStage": "FINAL_SCOPE_AND_CORRESPONDENCE_GATE"
+    }
+  ],
+  "protectedIdentities": {
+    "liveRenderPackageGitBlob": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+    "canonicalGpuTransportGitBlob": "785856d7702a0e855c2672e6b8a7325ad5b3ba50",
+    "navigationSourceGitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+    "r3ALiveRendererContractGitBlob": "4e187fc38780dfb2020482b674ac331f5a65b2c1",
+    "r3CPersistentRendererGitBlob": "b8b3c713d5f0b7c79808e8942ce385887589d880",
+    "publicDirectManipulationWitnessGitBlob": "322ee2bfed5184acd8eac600f19abd72380b6c2b",
+    "publicRouteWitnessGitBlob": "b5f72fb70f59276f868a5894ee0c5e8beccc40ca"
+  },
+  "boundaries": {
+    "publicRouteBound": false,
+    "publicRouteMutated": false,
+    "publicDirectManipulationMutated": false,
+    "navigationAuthorityMutated": false,
+    "cameraAuthorityCreated": false,
+    "liveRenderPackageMutated": false,
+    "gpuTransportAdapterMutated": false,
+    "deploymentPerformed": false,
+    "r3EWorkStarted": false,
+    "physicalDeviceAcceptanceClaimed": false,
+    "run8EPassClosed": false
+  },
+  "nextCheckpoint": "RUN_8E_R3E_NOT_STARTED",
+  "stoppingBoundary": "STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E",
+  "issues": []
+}

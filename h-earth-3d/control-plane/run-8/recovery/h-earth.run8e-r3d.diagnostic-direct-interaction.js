@@ -22,7 +22,7 @@ export const H_EARTH_RUN_8E_R3D_CONTROL = freeze({
   branch: 'agent/h-earth-run8e-r3d-direct-interaction-no-bitmap-001',
   baseBranch: 'agent/h-earth-run8e-r3c-persistent-gpu-camera-loop-001',
   baseExactHead: '5c7a7eef489da94a230812eecc5e531e285b7cac',
-  currentStatus: 'EXECUTION_PENDING',
+  currentStatus: 'PASS_CLOSED',
   requiredInputs: {
     r3CPassClosed: true,
     r3CFinalExactHead: '5c7a7eef489da94a230812eecc5e531e285b7cac',
@@ -53,6 +53,23 @@ export const H_EARTH_RUN_8E_R3D_CONTROL = freeze({
     visibleFramesChangeAcrossGestures: true,
     inputToFrameLatencyMeasured: true,
     minimumDistinctVisibleFrames: 5
+  },
+  executionEvidence: {
+    successfulExecutionHead: '7b64352e8a50506e522a36f164e297ab8ec0a71d',
+    workflowRun: 30295159071,
+    workflowJob: 90074239864,
+    evidenceArtifact: 8664329836,
+    evidenceArtifactDigest: 'sha256:f48c3e2d1f4c11938a4db8b9cb7a904a51e700bcb7a282d993a1401f769d0ca2',
+    acceptedProposalCount: 7,
+    rejectedProposalCount: 0,
+    distinctVisibleFrameArtifactCount: 5,
+    maximumInputToFrameLatencyMilliseconds: 6.600000000000364,
+    postInitializationResourceCreationCount: 0,
+    postInitializationBufferUploadCount: 0,
+    bitmapPreviewTransformCount: 0,
+    cpuRasterRefreshCount: 0,
+    passReceiptPath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.pass-closed.receipt.json',
+    passReceiptGitBlob: '6773c9744e0f43a53d3a978ac070afd90f4286c1'
   },
   rejectionConditions: [
     'CSS_TRANSFORM_BITMAP_PREVIEW',
@@ -94,6 +111,11 @@ export function evaluateHEarthRun8ER3DControl(candidate = H_EARTH_RUN_8E_R3D_CON
     } else if (value !== true) {
       issues.push(`R3D_REQUIRED_EXECUTION_MISSING:${key}`);
     }
+  }
+  if (candidate?.currentStatus === 'PASS_CLOSED') {
+    if (candidate?.executionEvidence?.successfulExecutionHead !== '7b64352e8a50506e522a36f164e297ab8ec0a71d') issues.push('R3D_EXECUTION_HEAD_MISMATCH');
+    if (candidate?.executionEvidence?.passReceiptGitBlob !== '6773c9744e0f43a53d3a978ac070afd90f4286c1') issues.push('R3D_PASS_RECEIPT_BLOB_MISMATCH');
+    if (candidate?.executionEvidence?.distinctVisibleFrameArtifactCount !== 5) issues.push('R3D_DISTINCT_FRAME_COUNT_MISMATCH');
   }
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) {
     if (value !== false) issues.push(`R3D_BOUNDARY_VIOLATION:${key}`);

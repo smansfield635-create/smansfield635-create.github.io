@@ -76,8 +76,23 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     {
       checkpointId: 'RUN_8E_R3D',
       name: 'DIAGNOSTIC_DIRECT_INTERACTION_WITHOUT_BITMAP_PREVIEW',
-      currentStatus: 'EXECUTION_PENDING',
-      requiredResult: 'PASS_CLOSED_BEFORE_R3E',
+      currentStatus: 'PASS_CLOSED',
+      executionEvidence: {
+        successfulExecutionHead: '7b64352e8a50506e522a36f164e297ab8ec0a71d',
+        workflowRun: 30295159071,
+        workflowJob: 90074239864,
+        evidenceArtifact: 8664329836,
+        evidenceArtifactDigest: 'sha256:f48c3e2d1f4c11938a4db8b9cb7a904a51e700bcb7a282d993a1401f769d0ca2',
+        acceptedProposalCount: 7,
+        distinctVisibleFrameArtifactCount: 5,
+        maximumInputToFrameLatencyMilliseconds: 6.600000000000364,
+        postInitializationResourceCreationCount: 0,
+        postInitializationBufferUploadCount: 0,
+        bitmapPreviewTransformCount: 0,
+        cpuRasterRefreshCount: 0,
+        durablePassReceipt: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3d.pass-closed.receipt.json',
+        durablePassReceiptGitBlob: '6773c9744e0f43a53d3a978ac070afd90f4286c1'
+      },
       stoppingBoundary: 'STOP_BEFORE_PUBLIC_ROUTE_BRANCH_INTEGRATION_R3E'
     },
     { checkpointId: 'RUN_8E_R3E', name: 'PUBLIC_ROUTE_BRANCH_INTEGRATION_AND_MOBILE_BROWSER_EXECUTION', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_PHYSICAL_AND_BROADER_MOBILE_ACCEPTANCE_R3F' },
@@ -85,11 +100,11 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     { checkpointId: 'RUN_8E_R3G', name: 'R3_CLOSURE_AND_PROMOTION_DECISION', currentStatus: 'NOT_STARTED', stoppingBoundary: 'STOP_BEFORE_ANY_LATER_RUN_8E_PHASE' }
   ],
   currentState: {
-    run8ER3: 'OPEN_AT_R3D_EXECUTION',
+    run8ER3: 'OPEN_AT_R3E_BOUNDARY',
     run8ER3A: 'PASS_CLOSED',
     run8ER3B: 'PASS_CLOSED',
     run8ER3C: 'PASS_CLOSED',
-    run8ER3D: 'EXECUTION_PENDING',
+    run8ER3D: 'PASS_CLOSED',
     run8ER3E: 'NOT_STARTED',
     run8ER3F: 'NOT_STARTED',
     run8ER3G: 'NOT_STARTED',
@@ -136,6 +151,8 @@ export function evaluateHEarthRun8ER3Control(candidate = H_EARTH_RUN_8E_R3_CONTR
   }
   if (r3D?.currentStatus === 'PASS_CLOSED') {
     if (candidate?.currentState?.run8ER3 !== 'OPEN_AT_R3E_BOUNDARY' || candidate?.currentState?.run8ER3E !== 'NOT_STARTED') issues.push('R3E_PARENT_BOUNDARY_INVALID');
+    if (r3D?.executionEvidence?.successfulExecutionHead !== '7b64352e8a50506e522a36f164e297ab8ec0a71d') issues.push('R3D_EXECUTION_HEAD_MISMATCH');
+    if (r3D?.executionEvidence?.durablePassReceiptGitBlob !== '6773c9744e0f43a53d3a978ac070afd90f4286c1') issues.push('R3D_PASS_RECEIPT_BLOB_MISMATCH');
   }
   for (const key of ['publicRouteMutation','publicRouteBinding','publicDirectManipulationMutation','navigationAuthorityMutation','cameraAuthorityMutation','immutablePackageMutation','canonicalGpuTransportMutation','bitmapPreviewAuthorized','deployment','mainMerge','run8EPassClosed']) {
     if (candidate?.boundaries?.[key] !== false) issues.push(`R3_BOUNDARY_VIOLATION:${key}`);

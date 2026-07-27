@@ -26,7 +26,7 @@ export const H_EARTH_RUN_8E_R3D_PATHS = Object.freeze([
   PASS_RECEIPT,
   '/showroom/globe/h-earth/render/direct-interaction.run8e-r3d.js',
   '/showroom/globe/h-earth/diagnostic/run8e-r3d/index.html',
-  '/showroom/globe/h-earth/diagnostic/run8e-r3d/direct-interaction.js'
+  '/showrom/globe/h-earth/diagnostic/run8e-r3d/direct-interaction.js'
 ]);
 
 const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R3D_PATHS.map((repositoryPath) => freeze({
@@ -35,30 +35,30 @@ const OCCURRENCES = Object.freeze(H_EARTH_RUN_8E_R3D_PATHS.map((repositoryPath) 
   refName: BRANCH,
   commitSha: null,
   path: repositoryPath,
-  gitBlobSha: null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: repositoryPath === PASS_RECEIPT ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT_OR_PLANNED',
-  fetchbackStatus: 'R3D_EXECUTION_AND_DURABLE_PASS_RECEIPT_PENDING',
+  gitBlobSha: repositoryPath === PASS_RECEIPT_PATH ? '6773c9744e0f43a53d3a978ac070afd90f4286c1' : null,
+  existenceStatus: 'PRESENT',
+  fetchbackStatus: 'R3D_PASS_CLOSED_FINAL_EXACT_HEAD_REVALIDATION_PENDING',
   occurrenceClass: 'RUN_8E_R3D_DIAGNOSTIC_DIRECT_INTERACTION_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3D_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3D_DIAGNOSTIC_DIRECT_INTERACTION_v1',
-  evidenceClass: 'R3D_DIRECT_GPU_INTERACTION_CORE_BROWSER_PASS_WITH_FINAL_GATE_CORRECTION_PENDING',
+  evidenceClass: 'EXECUTED_R3D_DIRECT_GPU_INTERACTION_WITH_DURABLE_PASS_CLOSED_RECEIPT',
   sourceKind: 'GITHUB_ACTIONS_REAL_BROWSER_POINTER_TOUCH_WHEEL_WEBGL2_EXECUTION_SCREENSHOTS_AND_RECEIPTS',
   sourceIdOrPath: '/showroom/globe/h-earth/diagnostic/run8e-r3d/',
-  sourceOccurrenceOrRevision: '8014bea3a09e6d1363e10b6439b743725751b628',
+  sourceOccurrenceOrRevision: '7b64352e8a50506e522a36f164e297ab8ec0a71d',
   assertionScope: [
     'REAL_BROWSER_POINTER_EVENT_PATH',
     'TOUCH_POINTER_EVENT_PATH',
-    'ONE_FINGER_LOOK',
+   'ONE_FINGER_LOOK',
     'TWO_FINGER_TRAVEL',
     'PINCH_ZOOM',
     'WHEEL_FALLBACK',
-    'ACCEPTED_NAVIGATION_PROPOSALS_DRIVE_GPU_FRAMES',
+   'ACCEPTED_NAVIGATION_PROPOSALS_DRIVE_GPU_FRAMES',
     'NO_BITMAP_PREVIEW',
-    'NO_CPU_RASTER_REFRESH',
+   'NO_CPU_RASTER_REFRESH',
     'PERSISTENT_GPU_RESOURCE_IDENTITY',
     'FIVE_DISTINCT_VISIBLE_GESTURE_FRAMES',
     'R3D_STOP_BEFORE_PUBLIC_ROUTE'
@@ -78,7 +78,7 @@ export const H_EARTH_RUN_8E_R3D_EVIDENCE = freeze({
     attempt001FailureCode: 'PUBLIC_DIRECT_MANIPULATION_WITNESS_MISMATCH',
     attempt001BrowserExecutionStarted: false,
     attempt001FailureReceiptPath: FAILURE_001,
-    attempt002Head: '8014bea3a09e6d1363e10b6439b743725751b628',
+    attempt002Head: '8014bea3a09e6d1363e10b6439b74372575b628',
     attempt002WorkflowRun: 30294287794,
     attempt002WorkflowJob: 90071329468,
     attempt002Artifact: 8664000420,
@@ -99,6 +99,22 @@ export const H_EARTH_RUN_8E_R3D_EVIDENCE = freeze({
     attempt002BitmapPreviewTransformCount: 0,
     attempt002CpuRasterRefreshCount: 0,
     attempt002FailureReceiptPath: FAILURE_002,
+    successfulExecutionHead: '7b64352e8a50506e522a36f164e297ab8ec0a71d',
+    successfulWorkflowRun: 30295159071,
+    successfulWorkflowJob: 90074239864,
+    successfulArtifact: 8664329836,
+    successfulArtifactDigest: 'sha256:f48c3e2d1f4c11938a4db8b9cb7a904a51e700bcb7a282d993a1401f769d0ca2',
+    successfulAutomaticRegistryPreflight: 'PASS',
+    successfulExactScopeAudit: 'PASS',
+    successfulAcceptedProposalCount: 7,
+    successfulDistinctFrameArtifactCount: 5,
+    successfulMaximumInputToFrameLatencyMilliseconds: 6.600000000000364,
+    successfulPostInitializationResourceCreationCount: 0,
+    successfulPostInitializationBufferUploadCount: 0,
+    successfulBitmapPreviewTransformCount: 0,
+    successfulCpuRasterRefreshCount: 0,
+    durablePassReceiptPath: PASS_RECEIPT,
+    durablePassReceiptGitBlob: '6773c9744e0f43a53d3a978ac070afd90f4286c1',
     requiredDistinctVisibleFrames: 5,
     requiredPostInitializationResourceCreationCount: 0,
     requiredPostInitializationBufferUploadCount: 0,
@@ -106,15 +122,15 @@ export const H_EARTH_RUN_8E_R3D_EVIDENCE = freeze({
     requiredCpuRasterRefreshCount: 0
   },
   evidenceLimitations: [
-    'ATTEMPT_002_MATERIAL_BROWSER_PROOF_PASS_FINAL_SCOPE_GATE_FAILED',
-    'RETRY_AFTER_FINAL_GATE_CORRECTION_PENDING',
+   'FINAL_EXACT_HEAD_REVALIDATION_PENDING',
+    'FINAL_EXACT_HEAD_WORKFLOW_RUN_NOT_EMBEDDED_IN_PASS_RECEIPT',
     'NO_PUBLIC_ROUTE_BINDING',
-    'NO_DEPLOYMENT',
+   'NO_DEPLOYMENT',
     'NO_PHYSICAL_DEVICE_ACCEPTANCE',
-    'R3E_NOT_STARTED',
+   'R3E_NOT_STARTED',
     'RUN_8E_REMAINS_FAIL_OPEN'
   ]
-});
+});});
 
 export const H_EARTH_RUN_8E_R3D_NODE = freeze({
   nodeId: 'H_EARTH_RUN_8E_R3D_DIAGNOSTIC_DIRECT_INTERACTION',
@@ -126,26 +142,27 @@ export const H_EARTH_RUN_8E_R3D_NODE = freeze({
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: H_EARTH_RUN_8E_R3D_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3D_EVIDENCE.evidenceId],
-  authorityClass: 'BOUNDED_DIAGNOSTIC_DIRECT_GPU_INTERACTION_EXECUTION_PENDING',
-  authorityPosture: 'ATTEMPTS_001_AND_002_PRESERVED_RETRY_PENDING_UNMERGED_R3E_NOT_STARTED_RUN_8E_FAIL_OPEN',
+  authorityClass: 'EXECUTED_BOUNDED_DIAGNOSTIC_DIRECT_GPU_INTERACTION_PASS_CLOSED',
+  authorityPosture: 'R3D_PASS_CLOSED_UNMERGED_R3_OPEN_AT_R3E_BOUNDARY_RUN_8E_FAIL_OPEN',
   authoritySource: [
     'R3C_PASS_CLOSED_PERSISTENT_RENDERER',
     'R3A_SHARED_CAMERA_PACKET',
     'ACCEPTED_NAVIGATION_PROPOSAL_AUTHORITY',
-    'ATTEMPT_002_REAL_BROWSER_CORE_PASS'
+    'R3D_SUCCESSFUL_REAL_BROWSER_EXECUTION',
+    'R3D_DURABLE_PASS_RECEIPT'
   ],
   authorityScope: [
     'DIAGNOSTIC_POINTER_AND_TOUCH_BINDING',
-    'DIRECT_NAY%GATION_PROPOSAL_TO_GPU_FRAME',
+   'DIRECT_NAVIGATION_PROPOSAL_TO_GPU_FRAME',
     'PROHIBIT_BITMAP_PREVIEW',
-    'PRESERVE_R3E_STOPPING_BOUNDARY'
+    'PRESERVE_R3E_STOPPING_BOUNDARYg
   ],
   authorityLimitations: [
     'NO_PUBLIC_ROUTE',
-    'NO_PUBLIC_DIRECT_MANIPULATION_MUTATION',
-    'NO_DEPLOYMENT',
+   'NO_PUBLIC_DIRECT_MANIPULATION_MUTATION',
+   'NO_DEPLOYMENT',
     'NO_PHYSICAL_DEVICE_ACCEPTANCE',
-    'NO_R3E',
+   'NO_R3E',
     'NO_RUN_8E_PASS'
   ],
   parentRelations: [],
@@ -162,7 +179,7 @@ export const H_EARTH_RUN_8E_R3D_NODE = freeze({
   prohibitedMutations: ['PUBLIC_ROUTE', 'PUBLIC_DIRECT_MANIPULATION', 'NAVIGATION_AUTHORITY', 'R2_PACKAGE', 'R2D_GPU_ADAPTER', 'R3E_OR_LATER'],
   requiredValidations: [
     'REAL_BROWSER_POINTER_TOUCH_AND_WHEEL_EXECUTION',
-    'DIRECT_GPU_FRAME_RESPONSE',
+   'DIRECT_GPU_FRAME_RESPONSE',
     'NO_BITMAP_PREVIEW_SOURCE_AND_RUNTIME_AUDIT',
     'PERSISTENT_RESOURCE_COUNTERS',
     'FIVE_DISTINCT_FRAME_ARTIFACTS',
@@ -174,12 +191,13 @@ export const H_EARTH_RUN_8E_R3D_NODE = freeze({
     '5c7a7eef489da94a230812eecc5e531e285b7cac',
     'ec13c97b103c3291a3e930c2138feb5984d3c363',
     '8014bea3a09e6d1363e10b6439b743725751b628',
-    '30293664139',
-    '30294287794',
-    '8664000420'
+    '7b64352e8a50506e522a36f164e297ab8ec0a71d',
+    '30295159071',
+   '8664329836',
+    '6773c9744e0f43a53d3a978ac070afd90f4286c1'
   ],
-  lifecycleStatus: 'EXECUTION_PENDING_AFTER_ATTEMPT_002_FINAL_GATE_FAILURE',
-  unresolvedFields: ['R3D_SUCCESSFUL_EXECUTION_HEAD', 'R3D_PASS_WORKFLOW_RUN', 'R3D_PASS_ARTIFACT', 'R3D_PASS_RECEIPT']
+  lifecycleStatus: 'PASS_CLOSED_FINAL_EXAACT_HEAD_REVALIDATION_PENDING',
+  unresolvedFields: ['FINAL_EXAACT_HEAD_WORKFLOW_RUN']
 });
 
 const pathIndex = new Map(H_EARTH_RUN_8E_R3D_PATHS.map((repositoryPath) => [

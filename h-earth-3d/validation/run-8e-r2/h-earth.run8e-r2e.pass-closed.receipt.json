@@ -1,0 +1,137 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2E_REGISTRY_CUSTODY_AND_SCOPE_AUDIT_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2E_PASS_CLOSED",
+  "recordedAt": "2026-07-27T14:44:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2e-registry-custody-audit-001",
+  "pullRequest": 222,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R2D",
+    "status": "PASS_CLOSED",
+    "exactHead": "9cc33fee5c82bbe47e3bb57f8bc40d1ffa3a31b9",
+    "custodyManifestDigest": "sha256:0ef98ea0f82370278ecc946247b32a8ab615a665834abdb33fee741ae6b7ec6e"
+  },
+  "execution": {
+    "head": "c7a7a58458b22fbda650165ab7876a2640679455",
+    "runId": 30276245196,
+    "jobId": 90010942725,
+    "conclusion": "success",
+    "predecessorAndProtectedSources": "PASS",
+    "syntax": "PASS",
+    "registryCustodyAndIndependentScopeAudit": "PASS",
+    "exactFivePathExecutionScope": "PASS",
+    "r2FStoppingBoundary": "PASS",
+    "evidenceUpload": "PASS"
+  },
+  "executionArtifact": {
+    "artifactId": 8656899123,
+    "artifactName": "h-earth-run8e-r2e-registry-custody-audit-evidence",
+    "artifactDigest": "sha256:ab2235534a1d59c4a2030ba2b6c1d0caf7cef637b27ee6eebf904f446a401997",
+    "artifactWorkflowHead": "c7a7a58458b22fbda650165ab7876a2640679455",
+    "runtimeReceiptSha256": "sha256:386385951959d648968b5beee8a7e260b724795e7477fed8a4edf44959eb7d6b",
+    "runtimeReceiptByteCount": 13583
+  },
+  "automaticRepositoryRegistryPreflight": {
+    "runId": 30276239789,
+    "jobId": 90010923826,
+    "conclusion": "success",
+    "artifactId": 8656897130,
+    "artifactName": "h-earth-automatic-preflight-receipt",
+    "artifactDigest": "sha256:b548333c6958b9ff0553c4b9af14a0480eb6c6534ab10eba96e7965218f793d9",
+    "internalReceiptId": "H_EARTH_AUTOMATIC_PREFLIGHT_C245CC313B12A35BB9D4_v1",
+    "internalFinalDisposition": "PASS",
+    "classifiedGovernedPathCount": 25,
+    "registeredGovernedPathCount": 25,
+    "failureCodes": []
+  },
+  "registryRepresentation": {
+    "identityVerified": true,
+    "registeredPathCount": 33,
+    "nodeCountAdded": 3,
+    "evidenceRecordCountAdded": 3,
+    "activeNodeIds": [
+      "H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_CHECKPOINTS_A_TO_C",
+      "H_EARTH_RUN_8E_R2D_CANONICAL_GPU_TRANSPORT_AND_RESOURCE_LIFECYCLE",
+      "H_EARTH_RUN_8E_R2E_REGISTRY_CUSTODY_AND_SCOPE_AUDIT"
+    ],
+    "packageAndGpuTransportNodeIdentitySeparate": true,
+    "allR2AThroughR2EPathsResolved": true
+  },
+  "predecessorReceiptCustody": [
+    {
+      "checkpoint": "RUN_8E_R2A",
+      "gitBlobSha": "aa9c2849bbce57808e6067ef256e0d5a8af829e6",
+      "contentSha256": "sha256:a497b64ad1d81b4bec9787d23c34cc2cab31e36c04a525de0f7ec2348f5f3272",
+      "byteCount": 3902
+    },
+    {
+      "checkpoint": "RUN_8E_R2B",
+      "gitBlobSha": "ce9e5bcf96540d69eae87df266db38d3d4edbbac",
+      "contentSha256": "sha256:ff895f1cb44869469514366fae9758b10fa99041fa0e739c15029af3369b05d4",
+      "byteCount": 5171
+    },
+    {
+      "checkpoint": "RUN_8E_R2C",
+      "gitBlobSha": "ee6f7be12875a87c8de9708d8063b4d2445e59bd",
+      "contentSha256": "sha256:6a8101d560c0a94231a64e90c6990cae4d93a85a2d5d9da8fbe66cac04426cca",
+      "byteCount": 4835
+    },
+    {
+      "checkpoint": "RUN_8E_R2D",
+      "gitBlobSha": "7feaacf176df3ecd43e38965603b62d61482ed0c",
+      "contentSha256": "sha256:fec835f51fe2073be47fd14f4f915799ce4064ae4fcee06e17bfbdea53d73763",
+      "byteCount": 6646
+    }
+  ],
+  "protectedSourceCustody": [
+    {
+      "path": "/showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "gitBlobSha": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+      "contentSha256": "sha256:5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae",
+      "byteCount": 26551,
+      "mutatedByR2E": false
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "gitBlobSha": "785856d7702a0e855c2672e6b8a7325ad5b3ba50",
+      "contentSha256": "sha256:daf888d1e2e673ed058c87b390655ee2b82ea8b5f737727be4247d7f5f8c0d08",
+      "byteCount": 5173,
+      "mutatedByR2E": false
+    },
+    {
+      "path": "/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2d.gpu-upload-and-resource-lifecycle.js",
+      "gitBlobSha": "6fcc92b9f73b4e66dd5c41c8a6592f62db56817e",
+      "contentSha256": "sha256:ab9371a19cca43a40003258b10be3e71316fa83e21817e0e9425d86ee1a3bd14",
+      "byteCount": 8143,
+      "mutatedByR2E": false
+    }
+  ],
+  "custodyManifestDigest": "sha256:40607b14ed9bf5f06225d2f2eb566e63ccdf700347065e457db8d7d50dcfc45e",
+  "boundaries": {
+    "r2aR2bR2cOrR2dInvalidated": false,
+    "liveRenderPackageMutated": false,
+    "gpuTransportAdapterMutated": false,
+    "sourceAuthorityMutated": false,
+    "publicRouteMutated": false,
+    "cameraNavigationOrGestureChanged": false,
+    "shaderProgramOrVisibleRendererCreated": false,
+    "renderLoopCreated": false,
+    "deploymentPerformed": false,
+    "run8ER2FStarted": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false
+  },
+  "checkpointDisposition": {
+    "run8ER2A": "PASS_CLOSED",
+    "run8ER2B": "PASS_CLOSED",
+    "run8ER2C": "PASS_CLOSED",
+    "run8ER2D": "PASS_CLOSED",
+    "run8ER2E": "PASS_CLOSED",
+    "run8ER2F": "NOT_STARTED",
+    "run8ER2": "OPEN_AT_R2F_BOUNDARY",
+    "run8E": "FAIL_OPEN"
+  },
+  "stoppingBoundary": "STOP_BEFORE_R2F_CLOSURE_AND_PROMOTION_DECISION",
+  "issues": []
+}

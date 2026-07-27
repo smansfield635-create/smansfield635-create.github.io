@@ -21,7 +21,7 @@ export const H_EARTH_RUN_8E_R3E5_CONTROL = freeze({
   branch: 'agent/h-earth-run8e-r3e5-r3e-closure-r3f-input-decision-001',
   baseBranch: 'agent/h-earth-run8e-r3e4-public-direct-manipulation-acceptance-001',
   baseExactHead: '6af68581b5c2d7a2528eedfb34efdfdbbf9aa1b3',
-  currentStatus: 'EXECUTION_PENDING',
+  currentStatus: 'PASS_CLOSED',
   predecessorReceipts: freeze({
     r3E1: freeze({ path: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e1.pass-closed.receipt.json', gitBlob: '2c71944eabc6d4522d934ef2fc4af6a85a38f3b5', status: 'RUN_8E_R3E1_PASS_CLOSED' }),
     r3E2: freeze({ path: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e2.pass-closed.receipt.json', gitBlob: 'e33405c5e7f600e59a6b1103fd856a1d37ca51c5', status: 'RUN_8E_R3E2_PASS_CLOSED' }),
@@ -29,12 +29,14 @@ export const H_EARTH_RUN_8E_R3E5_CONTROL = freeze({
     r3E4: freeze({ path: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e4.pass-closed.receipt.json', gitBlob: '7b2db7ed51a345edea88ad8a1288db4db150201d', status: 'RUN_8E_R3E4_PASS_CLOSED' })
   }),
   executionEvidence: freeze({
-    successfulExecutionHead: null,
-    workflowRun: null,
-    workflowJob: null,
-    artifactId: null,
-    artifactDigest: null,
-    automaticRepositoryRegistryPreflightRun: null,
+    successfulExecutionHead: 'a15b0bfd5e0e41feb58278ead324af25cb895b79',
+    workflowRun: 30313213795,
+    workflowJob: 90133161723,
+    artifactId: 8671168282,
+    artifactDigest: 'sha256:15556602decf44f2af92aabdc91f4677bbe25f863cf7bc8cb1be0372c34f47f3',
+    artifactFetchBackVerified: true,
+    automaticRepositoryRegistryPreflightRun: 30313213810,
+    automaticRepositoryRegistryPreflightStatus: 'PASS',
     predecessorReceiptCount: 4,
     predecessorPassClosedCount: 4,
     unresolvedPredecessorCount: 0,
@@ -118,8 +120,10 @@ export function evaluateHEarthRun8ER3E5Control(candidate = H_EARTH_RUN_8E_R3E5_C
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) if (value !== false) issues.push(`R3E5_BOUNDARY_VIOLATION:${key}`);
   if (candidate?.currentStatus === 'PASS_CLOSED') {
     const evidence = candidate?.executionEvidence ?? {};
-    if (!Number.isSafeInteger(evidence.workflowRun) || !Number.isSafeInteger(evidence.workflowJob) || !Number.isSafeInteger(evidence.artifactId)) issues.push('R3E5_CORE_WORKFLOW_IDENTITY_MISSING');
-    if (typeof evidence.artifactDigest !== 'string' || !evidence.artifactDigest.startsWith('sha256:')) issues.push('R3E5_CORE_ARTIFACT_DIGEST_MISSING');
+    if (evidence.successfulExecutionHead !== 'a15b0bfd5e0e41feb58278ead324af25cb895b79') issues.push('R3E5_CORE_EXECUTION_HEAD_MISMATCH');
+    if (evidence.workflowRun !== 30313213795 || evidence.workflowJob !== 90133161723 || evidence.artifactId !== 8671168282) issues.push('R3E5_CORE_WORKFLOW_IDENTITY_MISMATCH');
+    if (evidence.artifactDigest !== 'sha256:15556602decf44f2af92aabdc91f4677bbe25f863cf7bc8cb1be0372c34f47f3' || evidence.artifactFetchBackVerified !== true) issues.push('R3E5_CORE_ARTIFACT_IDENTITY_INVALID');
+    if (evidence.automaticRepositoryRegistryPreflightRun !== 30313213810 || evidence.automaticRepositoryRegistryPreflightStatus !== 'PASS') issues.push('R3E5_CORE_PREFLIGHT_IDENTITY_INVALID');
     if (evidence.predecessorReceiptCount !== 4 || evidence.predecessorPassClosedCount !== 4 || evidence.unresolvedPredecessorCount !== 0) issues.push('R3E5_PREDECESSOR_EVIDENCE_MISMATCH');
     if (evidence.r3ESubcheckpointCount !== 5 || evidence.admittedR3FInputCount !== 11) issues.push('R3E5_CLOSURE_COUNT_MISMATCH');
     if (evidence.r3EResultingStatus !== 'PASS_CLOSED' || evidence.r3ResultingState !== 'OPEN_AT_R3F_BOUNDARY' || evidence.r3FResultingStatus !== 'NOT_STARTED' || evidence.run8EResultingStatus !== 'FAIL_OPEN') issues.push('R3E5_RESULTING_STATE_MISMATCH');

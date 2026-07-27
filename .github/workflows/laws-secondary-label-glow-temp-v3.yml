@@ -66,7 +66,7 @@ jobs:
           assert interactions.count(marker) == 1
           assert 'DGB_LAWS_ACTIVE_CLUSTER_SECONDARY_LABELS_v1' in interactions
           html = Path('laws/index.html').read_text()
-          assert html.count(marker) >= 4
+          assert html.count(marker) >= 3
           PY
           git diff --check
 

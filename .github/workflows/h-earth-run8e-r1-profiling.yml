@@ -31,21 +31,25 @@ jobs:
         with:
           node-version: 22
 
-      - name: Correct bounded profiler source idempotently
-        run: node h-earth-3d/validation/h-earth.run8e-r1.profiler-fix.mjs
+      - name: Correct bounded profiler and harness sources idempotently
+        run: |
+          node h-earth-3d/validation/h-earth.run8e-r1.profiler-fix.mjs
+          node h-earth-3d/validation/h-earth.run8e-r1.harness-click-fix.mjs
 
-      - name: Persist corrected profiler source
+      - name: Persist corrected profiling sources
         if: github.event_name == 'push'
         run: |
           set -euo pipefail
           if git diff --quiet; then
-            echo 'Profiler source already corrected.'
+            echo 'Profiling sources already corrected.'
             exit 0
           fi
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add showroom/globe/h-earth/diagnostic/run8e-r1/profiler.js
-          git commit -m 'Correct Run 8E R1 worker transfer'
+          git add \
+            showroom/globe/h-earth/diagnostic/run8e-r1/profiler.js \
+            h-earth-3d/validation/h-earth.run8e-r1.profiling.harness.mjs
+          git commit -m 'Correct Run 8E R1 profiling execution'
           git push origin HEAD:agent/h-earth-run8e-r1-physical-profiling-001
 
       - name: Verify JavaScript syntax
@@ -53,6 +57,8 @@ jobs:
           node --check showroom/globe/h-earth/diagnostic/run8e-r1/profiler.js
           node --check showroom/globe/h-earth/diagnostic/run8e-r1/candidate-worker.js
           node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r1.physical-profiling-and-architecture-disposition.js
+          node --check h-earth-3d/validation/h-earth.run8e-r1.profiler-fix.mjs
+          node --check h-earth-3d/validation/h-earth.run8e-r1.harness-click-fix.mjs
           node --check h-earth-3d/validation/h-earth.run8e-r1.profiling.harness.mjs
 
       - name: Install bounded Chromium dependency
@@ -93,6 +99,7 @@ jobs:
               '.github/workflows/h-earth-run8e-r1-profiling.yml',
               'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r1.physical-profiling-and-architecture-disposition.js',
               'h-earth-3d/validation/h-earth.run8e-r1.profiler-fix.mjs',
+              'h-earth-3d/validation/h-earth.run8e-r1.harness-click-fix.mjs',
               'h-earth-3d/validation/h-earth.run8e-r1.profiling.harness.mjs',
               'showroom/globe/h-earth/diagnostic/run8e-r1/index.html',
               'showroom/globe/h-earth/diagnostic/run8e-r1/profiler.js',

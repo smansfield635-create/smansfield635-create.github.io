@@ -316,13 +316,13 @@
 
   const GUIDANCE = Object.freeze({
     CONSTELLATION:
-      "Drag any star, label, or open part of the constellation to rotate the shared sphere. Release to bring the nearest cardinal forward. Tap a star to open its cluster.",
+      "Drag to rotate the constellation. Tap a primary star to open its cluster.",
 
     CLUSTER_OPEN:
-      "Pull and hold to rotate the room stars as one cluster. Release a controlled drag to settle the nearest room forward. Use a quick swipe to return to the constellation.",
+      "Drag to rotate the cluster. Tap a room star to select it. Swipe across open space to return to the constellation.",
 
     ROOM_SELECTED:
-      "Inspect the selected path. A controlled pull still rotates the room cluster. Use Enter Room to navigate, Return To Orbit to reopen the cluster, or a quick swipe to return to the constellation.",
+      "Review the selected room. Use Enter Room to continue, Return To Orbit to reopen the cluster, or swipe across open space to return to the constellation.",
 
     MIRRORLAND_REVEALING:
       "Mirrorland is revealing. Wait for the Window to stabilize.",

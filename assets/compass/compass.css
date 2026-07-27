@@ -1290,6 +1290,284 @@ summary:focus-visible {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Main Compass shell hierarchy and contextual presentation                    */
+/* Shell-only authority: no scene, renderer, route, or gesture ownership.      */
+/* -------------------------------------------------------------------------- */
+
+.compass-philosophy-claim {
+  margin-top: 16px !important;
+  padding: 15px 17px;
+  border-left: 3px solid rgba(243, 217, 139, 0.62);
+  border-radius: 0 15px 15px 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(243, 217, 139, 0.085),
+      rgba(124, 220, 255, 0.028) 72%,
+      transparent
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 10px 28px rgba(0, 0, 0, 0.16);
+  font-size: clamp(1.02rem, 1.55vw, 1.16rem) !important;
+  line-height: 1.58 !important;
+}
+
+.compass-philosophy-claim strong {
+  color: rgba(255, 248, 224, 0.98);
+  font-weight: 800;
+}
+
+.compass-philosophy-claim--conclusion {
+  border-left-color: rgba(124, 220, 255, 0.68);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(124, 220, 255, 0.095),
+      rgba(216, 184, 106, 0.035) 74%,
+      transparent
+    );
+}
+
+.compass-practical-context,
+.compass-supporting-entry,
+.compass-supporting-foundation {
+  position: relative;
+  max-width: 1040px;
+  padding: clamp(19px, 2.6vw, 30px);
+  border: 1px solid rgba(124, 220, 255, 0.20);
+  border-radius: var(--compass-radius-lg);
+  background:
+    radial-gradient(
+      ellipse at 12% 0%,
+      rgba(124, 220, 255, 0.080),
+      transparent 22rem
+    ),
+    radial-gradient(
+      ellipse at 92% 100%,
+      rgba(216, 184, 106, 0.055),
+      transparent 24rem
+    ),
+    rgba(7, 10, 16, 0.91);
+  box-shadow:
+    0 18px 54px rgba(0, 0, 0, 0.28),
+    0 0 28px rgba(124, 220, 255, 0.040),
+    inset 0 1px 0 rgba(255, 255, 255, 0.060);
+}
+
+.compass-practical-context::before,
+.compass-supporting-entry::before,
+.compass-supporting-foundation::before {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  pointer-events: none;
+  border: 1px solid rgba(225, 218, 198, 0.075);
+  border-radius: calc(var(--compass-radius-lg) - 8px);
+}
+
+.compass-practical-context h2,
+.compass-supporting-entry h2,
+.compass-supporting-foundation h2 {
+  position: relative;
+  z-index: 1;
+  max-width: 820px;
+  margin: 0 0 12px;
+  color: rgba(255, 248, 224, 0.98);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.65rem, 3.6vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+}
+
+.compass-practical-context > p,
+.compass-supporting-entry > p,
+.compass-supporting-foundation__header > p {
+  position: relative;
+  z-index: 1;
+  max-width: 74ch;
+  color: var(--compass-text-secondary);
+  line-height: 1.62;
+}
+
+.compass-practical-context__lead {
+  margin: 0;
+  color: var(--compass-text-primary) !important;
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+}
+
+.compass-practical-context__principles {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.compass-practical-context__principles p {
+  margin: 0;
+  padding: 15px 16px;
+  border: 1px solid rgba(225, 218, 198, 0.12);
+  border-radius: 15px;
+  color: var(--compass-text-primary);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.038),
+      rgba(124, 220, 255, 0.018)
+    ),
+    rgba(4, 7, 12, 0.88);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 10px 26px rgba(0, 0, 0, 0.18);
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+.compass-practical-context__definition {
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(243, 217, 139, 0.28);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(243, 217, 139, 0.070),
+      rgba(124, 220, 255, 0.025)
+    ),
+    rgba(4, 7, 12, 0.90);
+}
+
+.compass-practical-context__definition strong {
+  color: var(--compass-gold-hot);
+  font-weight: 900;
+}
+
+.compass-orientation__aid {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  margin-top: 15px;
+  padding: 9px 13px;
+  border: 1px solid rgba(124, 220, 255, 0.24);
+  border-radius: 999px;
+  color: rgba(225, 248, 255, 0.92);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(18, 34, 46, 0.94),
+      rgba(7, 10, 16, 0.94)
+    );
+  box-shadow:
+    0 9px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.065);
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.compass-orientation__aid:hover {
+  border-color: rgba(243, 217, 139, 0.42);
+  color: rgba(255, 248, 224, 0.98);
+}
+
+.compass-supporting-entry {
+  border-color: rgba(216, 184, 106, 0.20);
+}
+
+.compass-supporting-entry > p:not(.compass-estate__kicker) {
+  margin: 0;
+}
+
+.compass-supporting-entry .compass-value-deck {
+  position: relative;
+  z-index: 1;
+  max-width: none;
+  margin-top: 18px;
+}
+
+.compass-supporting-foundation {
+  display: grid;
+  gap: 16px;
+}
+
+.compass-supporting-foundation__header {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+.compass-supporting-foundation__header > p {
+  margin: 0;
+}
+
+.compass-supporting-foundation > .compass-formula-artifact {
+  margin-top: 0;
+}
+
+.compass-formula-artifact__entry {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: clamp(18px, 2.2vw, 23px) clamp(16px, 2.2vw, 22px) 0;
+  color: var(--compass-text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.08rem, 1.8vw, 1.32rem);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+@media (max-width: 820px) {
+  .compass-practical-context,
+  .compass-supporting-entry,
+  .compass-supporting-foundation {
+    padding: 18px;
+  }
+
+  .compass-practical-context__principles {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .compass-philosophy-claim {
+    padding: 13px 14px;
+  }
+
+  .compass-practical-context,
+  .compass-supporting-entry,
+  .compass-supporting-foundation {
+    padding: 15px 16px;
+    border-radius: 22px;
+  }
+
+  .compass-practical-context::before,
+  .compass-supporting-entry::before,
+  .compass-supporting-foundation::before {
+    inset: 9px;
+    border-radius: 15px;
+  }
+
+  .compass-practical-context__principles p {
+    padding: 13px 14px;
+  }
+
+  .compass-orientation__aid {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .compass-formula-artifact__entry {
+    padding: 15px 13px 0;
+    font-size: 1rem;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /* Compass scene                                                              */
 /* -------------------------------------------------------------------------- */
 

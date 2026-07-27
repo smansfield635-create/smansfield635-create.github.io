@@ -1,0 +1,95 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3D1_DIAGNOSTIC_DIRECTORY_AND_HOST_SCAFFOLD_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3D1_PASS_CLOSED",
+  "recordedAt": "2026-07-27T18:47:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3d1-diagnostic-host-scaffold-001",
+  "pullRequest": 234,
+  "predecessor": {
+    "checkpoint": "RUN_8E_R3C",
+    "status": "PASS_CLOSED",
+    "branch": "agent/h-earth-run8e-r3c-persistent-gpu-camera-loop-001",
+    "exactHead": "5c7a7eef489da94a230812eecc5e531e285b7cac",
+    "pullRequest": 231,
+    "finalWorkflowRun": 30291054680,
+    "finalArtifact": 8662798227,
+    "finalArtifactDigest": "sha256:581150c9278012228f98e30efe634fd2201f027001ccce756223e00cd34aeeb2"
+  },
+  "coreExecution": {
+    "head": "7cff5f1800c6e0743a44ac41ed501bf0c266dc61",
+    "runId": 30294915207,
+    "jobId": 90073456239,
+    "artifactId": 8664228635,
+    "artifactDigest": "sha256:c650f1f3c391079f7cfaf564ea447687cf7afdc798e515a9e3fdb9d9e25f23fc",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30294915184,
+    "automaticRepositoryRegistryPreflight": "PASS"
+  },
+  "closureControlValidation": {
+    "head": "4cd531c0aa70b5734ebfe9de3a5a3d19f412c47f",
+    "runId": 30295173564,
+    "jobId": 90074288203,
+    "artifactId": 8664324405,
+    "artifactDigest": "sha256:2a3ecc69d57bca8a7ede67b9ec0235bb4b705b2e5fc4a6bdca01e5fce2ab79bb",
+    "conclusion": "success",
+    "automaticRepositoryRegistryPreflightRun": 30295175507,
+    "automaticRepositoryRegistryPreflight": "PASS",
+    "receiptPresentDuringValidation": false
+  },
+  "scaffoldResult": {
+    "diagnosticDirectory": "/showroom/globe/h-earth/diagnostic/run8e-r3d/",
+    "diagnosticPathCount": 4,
+    "registeredPathCount": 11,
+    "staticHttpPathCount": 4,
+    "diagnosticDirectoryCreated": true,
+    "diagnosticHtmlHostCreated": true,
+    "diagnosticHostModuleCreated": true,
+    "pointerTouchIntakePlaceholderCreated": true,
+    "liveGpuBindingPlaceholderCreated": true,
+    "relativeModulePathsResolve": true,
+    "staticHttpPathsResolve": true,
+    "executionBoundaryViolationCount": 0
+  },
+  "diagnosticPaths": [
+    "/showroom/globe/h-earth/diagnostic/run8e-r3d/index.html",
+    "/showroom/globe/h-earth/diagnostic/run8e-r3d/diagnostic-host.js",
+    "/showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.placeholder.js",
+    "/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.placeholder.js"
+  ],
+  "protectedWitnesses": {
+    "persistentRendererGitBlob": "b8b3c713d5f0b7c79808e8942ce385887589d880",
+    "navigationSourceGitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+    "publicRouteGitBlob": "b5f72fb70f59276f868a5894ee0c5e8beccc40ca",
+    "publicDirectManipulationGitBlob": "322ee2bfed5184acd8eac600f19abd72380b6c2b"
+  },
+  "boundaries": {
+    "pointerBindingCreated": false,
+    "touchBindingCreated": false,
+    "wheelBindingCreated": false,
+    "gestureExecuted": false,
+    "navigationProposalExecuted": false,
+    "webGLContextCreated": false,
+    "persistentRendererInitialized": false,
+    "liveGpuCameraBindingCreated": false,
+    "bitmapPreviewExecuted": false,
+    "publicRouteMutated": false,
+    "publicDirectManipulationMutated": false,
+    "navigationAuthorityMutated": false,
+    "persistentRendererMutated": false,
+    "deploymentPerformed": false,
+    "r3D2WorkStarted": false,
+    "run8EPassClosed": false
+  },
+  "finalExactHeadValidation": {
+    "performedAfterReceiptAndFinalRegistryEvidenceReconciliation": false,
+    "finalHead": null,
+    "workflowRun": null,
+    "workflowJob": null,
+    "artifactId": null,
+    "artifactDigest": null
+  },
+  "nextCheckpoint": "RUN_8E_R3D2_NOT_STARTED",
+  "stoppingBoundary": "STOP_BEFORE_POINTER_AND_TOUCH_INTAKE_R3D2",
+  "issues": []
+}

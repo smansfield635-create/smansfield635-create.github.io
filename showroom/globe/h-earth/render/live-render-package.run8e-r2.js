@@ -20,6 +20,7 @@ import {
   evaluateHEarthAtmosphereStateSample
 } from '../../../../h-earth-3d/environment/h-earth.atmosphere-state.js';
 import { H_EARTH_SURFACE_CLASSES } from '../../../../h-earth-3d/environment/h-earth.surface-state-field.js';
+import { H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID } from './renderer.functional-landscape.js';
 
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const freezeArray = (values) => Object.freeze(Array.from(values));
@@ -114,19 +115,65 @@ function vegetationRgba(primitive) {
   return [78, 126, 65, 255];
 }
 
-function resolvePrimitiveRgba(primitive, role, issues) {
-  if (role === 'VEGETATION') return vegetationRgba(primitive);
-  const rgba = primitive?.renderMaterial?.rgba;
-  if (!Array.isArray(rgba) || rgba.length !== 4 || rgba.some((channel) => !finite(channel))) {
-    issues.push(`R2_PRIMITIVE_RGBA_MISSING:${primitive.primitiveId}`);
-    return [0, 0, 0, 255];
+function functionalLandscapeMaterialDefaults(primitive) {
+  const intent = primitive?.materialHint?.materialIntent ??
+    primitive?.materialHint?.materialReference ?? 'DEFAULT';
+  if (String(intent).includes('WATER')) {
+    return { rgba: [46, 118, 144, 210], transparencyClass: 'TRANSLUCENT' };
   }
-  return rgba;
+  if (String(intent).includes('FOAM')) {
+    return { rgba: [232, 242, 235, 190], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (String(intent).includes('HIGHLAND') || String(intent).includes('DISTANT')) {
+    return { rgba: [68, 83, 79, 255], transparencyClass: 'OPAQUE' };
+  }
+  return { rgba: [116, 103, 73, 255], transparencyClass: 'OPAQUE' };
 }
 
-function resolveTransparencyClass(primitive) {
-  const value = primitive?.renderMaterial?.transparencyClass;
-  return typeof value === 'string' && value.length > 0 ? value : 'OPAQUE';
+function resolvePrimitiveMaterialProjection(primitive, role, issues) {
+  const materialReference = primitive?.materialHint?.materialReference ?? null;
+  const materialIntent = primitive?.materialHint?.materialIntent ?? null;
+  if (role === 'VEGETATION') {
+    return {
+      rgba: vegetationRgba(primitive),
+      transparencyClass: 'OPAQUE',
+      materialReference,
+      materialIntent,
+      sourceAuthorityContractId: 'H_EARTH_RUN_8E_SUCCESSOR_ENVIRONMENT_FRAME_AND_RENDER_INTEGRATION_v1',
+      projectionModel: 'EXISTING_RUN_8E_VEGETATION_COLOR_PROJECTION'
+    };
+  }
+  const directRgba = primitive?.renderMaterial?.rgba;
+  if (Array.isArray(directRgba) && directRgba.length === 4 && directRgba.every(finite)) {
+    const directTransparency = primitive?.renderMaterial?.transparencyClass;
+    return {
+      rgba: [...directRgba],
+      transparencyClass: typeof directTransparency === 'string' && directTransparency.length > 0
+        ? directTransparency : 'OPAQUE',
+      materialReference,
+      materialIntent,
+      sourceAuthorityContractId: 'DIRECT_PRIMITIVE_RENDER_MATERIAL',
+      projectionModel: 'DIRECT_PRIMITIVE_RENDER_MATERIAL'
+    };
+  }
+  if (role === 'SHORELINE' && (materialReference || materialIntent)) {
+    return {
+      ...functionalLandscapeMaterialDefaults(primitive),
+      materialReference,
+      materialIntent,
+      sourceAuthorityContractId: H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID,
+      projectionModel: 'EXACT_RUN_6D_MATERIAL_DEFAULTS'
+    };
+  }
+  issues.push(`R2_PRIMITIVE_MATERIAL_PROJECTION_MISSING:${primitive.primitiveId}`);
+  return {
+    rgba: [0, 0, 0, 255],
+    transparencyClass: 'OPAQUE',
+    materialReference,
+    materialIntent,
+    sourceAuthorityContractId: null,
+    projectionModel: 'REJECTED'
+  };
 }
 
 function createHashWriter() {
@@ -277,8 +324,9 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     const materialModelCode = role === 'TERRAIN'
       ? H_EARTH_RUN_8E_R2_MATERIAL_MODEL.RUN_8C_INTRINSIC_TERRAIN
       : H_EARTH_RUN_8E_R2_MATERIAL_MODEL.PRIMITIVE_RGBA;
-    const rgba = role === 'TERRAIN' ? null : resolvePrimitiveRgba(primitive, role, issues);
-    const transparencyClass = resolveTransparencyClass(primitive);
+    const primitiveMaterial = role === 'TERRAIN' ? null : resolvePrimitiveMaterialProjection(primitive, role, issues);
+    const rgba = primitiveMaterial?.rgba ?? null;
+    const transparencyClass = primitiveMaterial?.transparencyClass ?? 'OPAQUE';
     const indexStart = indices.length;
 
     vertices.forEach((vertex, localVertexIndex) => {
@@ -342,6 +390,10 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
       materialModelCode,
       transparencyClass,
       normalSource: resolvedNormals.source,
+      materialReference: primitiveMaterial?.materialReference ?? null,
+      materialIntent: primitiveMaterial?.materialIntent ?? null,
+      materialProjectionAuthorityContractId: primitiveMaterial?.sourceAuthorityContractId ?? null,
+      materialProjectionModel: primitiveMaterial?.projectionModel ?? null,
       vertexStart: vertexOffset,
       vertexCount: vertices.length,
       indexStart,
@@ -447,6 +499,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
       westAdmissionContractId: transfer.westContractId,
       packet002TransferContractId: transfer.contractId,
       run8CMaterialContractId: H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
+      functionalLandscapeRendererContractId: H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID,
       atmosphereContractId: H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
       semanticAddressCount: transfer.semanticAddressCount,
       terrainAddressCount: transfer.terrainAddressCount,

@@ -12,6 +12,7 @@ import {
   createHEarthRun8ER2GPUBufferViews,
   getHEarthRun8ER2ImmutableLiveRenderPackage
 } from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
+import { H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID } from '../../showroom/globe/h-earth/render/renderer.functional-landscape.js';
 
 const control = evaluateHEarthRun8ER2Control(H_EARTH_RUN_8E_R2_CONTROL);
 assert.equal(control.eligible, true, `R2_CONTROL_FAILED:${control.issues.join(',')}`);
@@ -47,6 +48,18 @@ assert.equal(cachedA.primitiveCount, 35);
 assert.equal(cachedA.roleCounts.TERRAIN, 1);
 assert.equal(cachedA.roleCounts.SHORELINE, 7);
 assert.equal(cachedA.roleCounts.VEGETATION, 27);
+const shorelineSpans = cachedA.primitiveSpans.filter((span) => span.role === 'SHORELINE');
+assert.equal(shorelineSpans.length, 7, 'R2A_SHORELINE_SPAN_COUNT_INVALID');
+assert.equal(shorelineSpans.every((span) =>
+  span.materialProjectionAuthorityContractId === H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID &&
+  span.materialProjectionModel === 'EXACT_RUN_6D_MATERIAL_DEFAULTS' &&
+  typeof span.materialReference === 'string' && span.materialReference.length > 0 &&
+  typeof span.materialIntent === 'string' && span.materialIntent.length > 0), true,
+'R2A_SHORELINE_MATERIAL_AUTHORITY_NOT_PRESERVED');
+assert.equal(shorelineSpans.filter((span) => span.transparencyClass === 'TRANSLUCENT').length, 4,
+  'R2A_SHORELINE_TRANSLUCENT_RANGE_COUNT_INVALID');
+assert.equal(shorelineSpans.filter((span) => span.transparencyClass === 'OPAQUE').length, 3,
+  'R2A_SHORELINE_OPAQUE_RANGE_COUNT_INVALID');
 assert.equal(cachedA.triangleCount, 49040);
 assert.equal(cachedA.indexCount, 147120);
 assert.equal(cachedA.sourceAuthorities.semanticAddressCount, 256);

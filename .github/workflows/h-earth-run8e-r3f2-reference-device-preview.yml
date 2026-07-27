@@ -1,0 +1,137 @@
+name: H-Earth Run 8E R3F2 Reference Device Preview
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3f2-reference-device-physical-execution-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3f1-physical-mobile-acceptance-protocol-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3f2-reference-device-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      H_EARTH_RUN8E_R3F2_OUTPUT: /tmp/h-earth-run8e-r3f2
+      H_EARTH_RUN8E_R3F2_PREVIEW_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Check out exact R3F2 event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R3F1 base and protected H-Earth identities
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3f1-physical-mobile-acceptance-protocol-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3f1-physical-mobile-acceptance-protocol-001)" = "3642f3a561d787d37d988a8a66f2270d0b13bd45"
+          test "$(git hash-object h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json)" = "d8b5f3b4626014af6b62362d1bac26e120f50e60"
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = "0daedf61f7e19af095f4db5fc47563a9cd786837"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js)" = "2b0a916b3a6d11da84316925f8abd8a3a1447445"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+          test "$(git hash-object showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js)" = "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js)" = "b8b3c713d5f0b7c79808e8942ce385887589d880"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js)" = "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js)" = "5017bbaf857a644287cb829037b0fde4646f270d"
+
+      - name: Verify R3F2 syntax and non-production boundary
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2.reference-device-immutable-preview-and-physical-execution.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3f2-reference-device-preview.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs
+          node --check h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json','utf8'))"
+          fi
+          ! git diff --name-only 3642f3a561d787d37d988a8a66f2270d0b13bd45...HEAD | grep -Eq '^showroom/'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.52.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute immutable hosted-preview validation
+        run: |
+          set -o pipefail
+          mkdir -p "$H_EARTH_RUN8E_R3F2_OUTPUT"
+          node h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs \
+            2>&1 | tee "$H_EARTH_RUN8E_R3F2_OUTPUT/h-earth.run8e-r3f2.preview-validation.log"
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only 3642f3a561d787d37d988a8a66f2270d0b13bd45...HEAD \
+            | grep -E '^h-earth-3d/' \
+            | sort -u > /tmp/h-earth-run8e-r3f2-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3f2-governed-paths.txt \
+            --task "Run 8E R3F2 immutable hosted preview and reference-device evidence intake" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3F2_OUTPUT/h-earth.run8e-r3f2.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3f2/h-earth.run8e-r3f2.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`R3F2_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact preview scope and physical-execution stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 3642f3a561d787d37d988a8a66f2270d0b13bd45...HEAD | sort > "$H_EARTH_RUN8E_R3F2_OUTPUT/r3f2-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3f2/r3f2-changed-paths.txt').read_text().splitlines() if line.strip()}
+          required = {
+            '.github/workflows/h-earth-run8e-r3f2-reference-device-preview.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2.reference-device-immutable-preview-and-physical-execution.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3f2-reference-device-preview.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.html',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'R3F2_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'R3F2_UNEXPECTED_PATHS:{unexpected}')
+          if any(path.startswith('showroom/') for path in paths): raise SystemExit('R3F2_SHOWROOM_MUTATION_OBSERVED')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3f2/h-earth.run8e-r3f2.immutable-hosted-preview.execution.receipt.json').read_text())
+          if receipt['eligible'] is not True or receipt['status'] != 'RUN_8E_R3F2_PREVIEW_VALIDATION_PASS': raise SystemExit('R3F2_PREVIEW_RECEIPT_INVALID')
+          if receipt['evidenceClass'] != 'SUPPLEMENTAL_HOSTED_BROWSER_VALIDATION_NOT_PHYSICAL_ACCEPTANCE': raise SystemExit('R3F2_PHYSICAL_EVIDENCE_MISCLASSIFIED')
+          hosted = receipt['hostedValidation']
+          if not all(hosted[key] is True for key in ['routeApiReady','iframeSameOriginAccess','launcherInstrumentationReady']): raise SystemExit('R3F2_HOSTED_VALIDATION_FAILED')
+          if hosted['activeWebGL2ContextCount'] != 1: raise SystemExit('R3F2_WEBGL2_CONTEXT_COUNT_INVALID')
+          if receipt['nextState'] != 'RUN_8E_R3F2_PHYSICAL_EXECUTION_PENDING': raise SystemExit('R3F2_NEXT_STATE_INVALID')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_REFERENCE_DEVICE_PHYSICAL_EXECUTION_R3F2': raise SystemExit('R3F2_STOPPING_BOUNDARY_MISMATCH')
+          if any(receipt['boundaries'].values()): raise SystemExit('R3F2_BOUNDARY_VIOLATION')
+          PY
+
+      - name: Upload R3F2 immutable-preview evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-immutable-hosted-preview-evidence
+          path: |
+            /tmp/h-earth-run8e-r3f2
+            /tmp/h-earth-run8e-r3f2-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

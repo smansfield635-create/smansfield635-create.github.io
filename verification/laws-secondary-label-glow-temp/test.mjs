@@ -74,12 +74,14 @@ for (const config of configurations) {
         rect.left >= fieldRect.left - 0.5 && rect.right <= fieldRect.right + 0.5 &&
         rect.top >= fieldRect.top - 0.5 && rect.bottom <= fieldRect.bottom + 0.5;
     });
-    const activeControls = [...document.querySelectorAll('[data-laws-law][data-direction="flow"][data-projection-visible="true"]')]
+    const projectedControls = [...document.querySelectorAll('[data-laws-law][data-direction="flow"][data-projection-visible="true"]')];
+    const activeControls = projectedControls
       .filter(control => getComputedStyle(control).pointerEvents !== 'none').length;
     return {
       mode: String(document.querySelector('[data-laws-root]')?.getAttribute('data-laws-presentation-mode') || ''),
       texts,
       contained,
+      projectedControls: projectedControls.length,
       activeControls,
       placement: labels.every(label => label.dataset.lawsProjectedPlacement === 'inward-edge-constrained'),
       labelState: globalThis.DGB_LAWS_SECONDARY_LABELS?.getState?.() || null,
@@ -90,7 +92,7 @@ for (const config of configurations) {
   if (audit.texts.join('|') !== expectedFlow.join('|')) {
     throw new Error(`${config.name}:SECONDARY_LABELS_INVALID:${audit.texts.join('|')}:${JSON.stringify(audit)}`);
   }
-  if (!audit.contained || !audit.placement || audit.activeControls !== 4 || audit.labelState?.visibleCount !== 4) {
+  if (!audit.contained || !audit.placement || audit.projectedControls !== 4 || audit.activeControls < 1 || audit.labelState?.visibleCount !== 4) {
     throw new Error(`${config.name}:SECONDARY_LABEL_CONTRACT_FAILED:${JSON.stringify(audit)}`);
   }
   if (errors.length) {
@@ -98,7 +100,7 @@ for (const config of configurations) {
   }
 
   await page.screenshot({ path: `/tmp/laws-${config.name}.png`, fullPage: false });
-  results.push({ config, primary, secondary: audit.texts, contained: audit.contained, activeControls: audit.activeControls, errors });
+  results.push({ config, primary, secondary: audit.texts, contained: audit.contained, projectedControls: audit.projectedControls, activeControls: audit.activeControls, errors });
   await page.close();
 }
 

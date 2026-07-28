@@ -4,7 +4,6 @@ import crypto from 'node:crypto';
 import { chromium } from 'playwright';
 import { evaluateHEarthRun8ER3Control } from '../control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js';
 import {
-  H_EARTH_RUN_8E_R3F2_CONTROL,
   evaluateHEarthRun8ER3F2Control
 } from '../control-plane/run-8/recovery/h-earth.run8e-r3f2.reference-device-immutable-preview-and-physical-execution.js';
 import { loadHEarthRepositoryRegistryValidatorDependencies } from '../registry/h-earth.repository-registry.validator-engine.loader.js';
@@ -21,8 +20,8 @@ const publicHtmlGitBlob = '0daedf61f7e19af095f4db5fc47563a9cd786837';
 const publicOrchestratorGitBlob = '2b0a916b3a6d11da84316925f8abd8a3a1447445';
 const launcherPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.html';
 const launcherScriptPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js';
-const routeUrl = `https://cdn.jsdelivr.net/gh/${repository}@${sourceHead}/showroom/globe/h-earth/index.html`;
-const launcherUrl = `https://cdn.jsdelivr.net/gh/${repository}@${previewHead}/${launcherPath}`;
+const routeUrl = `https://raw.githack.com/${repository}/${sourceHead}/showroom/globe/h-earth/index.html`;
+const launcherUrl = `https://raw.githack.com/${repository}/${previewHead}/${launcherPath}`;
 
 fs.mkdirSync(outputDirectory, { recursive: true });
 const assert = (condition, code) => { if (!condition) throw new Error(code); };
@@ -38,14 +37,19 @@ assert(parent.eligible === true && parent.status === 'RUN_8E_R3F2_PARENT_PREVIEW
 assert(child.eligible === true && child.status === 'RUN_8E_R3F2_PREVIEW_CONSTRUCTION_ELIGIBLE', `R3F2_CHILD_REJECTED:${child.issues.join(',')}`);
 
 const predecessorPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json';
+const failureReceiptPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-001.failure.receipt.json';
 assert(fs.existsSync(predecessorPath), 'R3F2_R3F1_RECEIPT_MISSING');
+assert(fs.existsSync(failureReceiptPath), 'R3F2_ATTEMPT_001_FAILURE_RECEIPT_MISSING');
 const predecessor = JSON.parse(fs.readFileSync(predecessorPath, 'utf8'));
+const failureReceipt = JSON.parse(fs.readFileSync(failureReceiptPath, 'utf8'));
 assert(predecessor?.eligible === true && predecessor?.status === 'RUN_8E_R3F1_PASS_CLOSED', 'R3F2_R3F1_RECEIPT_INVALID');
 assert(predecessor?.receiptPath === '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json', 'R3F2_R3F1_RECEIPT_PATH_INVALID');
+assert(failureReceipt?.failureClass === 'HOSTED_LAUNCHER_NOT_RENDERED_AS_DOCUMENT', 'R3F2_ATTEMPT_001_FAILURE_CLASS_INVALID');
+assert(failureReceipt?.publicSourceDefectEstablished === false, 'R3F2_ATTEMPT_001_PUBLIC_SOURCE_DEFECT_CLAIMED');
 
 const launcherHtml = fs.readFileSync(launcherPath, 'utf8');
 const launcherScript = fs.readFileSync(launcherScriptPath, 'utf8');
-for (const required of [sourceHead, publicHtmlGitBlob, publicOrchestratorGitBlob, '600000', 'PHYSICAL_LOCAL', 'IMMUTABLE_HOSTED_PREVIEW']) {
+for (const required of [sourceHead, publicHtmlGitBlob, publicOrchestratorGitBlob, '600000', 'PHYSICAL_LOCAL', 'IMMUTABLE_HOSTED_PREVIEW', 'raw.githack.com']) {
   assert(launcherScript.includes(required), `R3F2_LAUNCHER_REQUIREMENT_MISSING:${required}`);
 }
 assert(launcherHtml.includes('h-earth.run8e-r3f2.reference-device-evidence-launcher.js'), 'R3F2_LAUNCHER_SCRIPT_LINK_MISSING');
@@ -76,8 +80,12 @@ async function fetchWithRetry(url, attempts = 24) {
 
 const launcherFetch = await fetchWithRetry(launcherUrl);
 const routeFetch = await fetchWithRetry(routeUrl);
+const launcherContentType = launcherFetch.response.headers.get('content-type') ?? '';
+const routeContentType = routeFetch.response.headers.get('content-type') ?? '';
 assert(launcherFetch.response.status === 200, 'R3F2_LAUNCHER_HTTP_NOT_200');
 assert(routeFetch.response.status === 200, 'R3F2_ROUTE_HTTP_NOT_200');
+assert(launcherContentType.toLowerCase().includes('text/html'), `R3F2_LAUNCHER_CONTENT_TYPE_INVALID:${launcherContentType}`);
+assert(routeContentType.toLowerCase().includes('text/html'), `R3F2_ROUTE_CONTENT_TYPE_INVALID:${routeContentType}`);
 const hostedLauncherHtml = await launcherFetch.response.text();
 const hostedRouteHtml = await routeFetch.response.text();
 assert(hostedLauncherHtml.includes('H-Earth Run 8E'), 'R3F2_HOSTED_LAUNCHER_CONTENT_INVALID');
@@ -88,6 +96,7 @@ const context = await browser.newContext({ viewport: { width: 412, height: 915 }
 const page = await context.newPage();
 const launcherResponse = await page.goto(launcherUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
 assert(launcherResponse?.status() === 200, 'R3F2_BROWSER_LAUNCHER_HTTP_NOT_200');
+await page.locator('#deviceModel').waitFor({ state: 'visible', timeout: 30000 });
 await page.fill('#deviceModel', 'CI_SUPPLEMENTAL_ANDROID_EMULATION');
 await page.fill('#attestation', 'Supplemental hosted-preview validation only; not physical acceptance.');
 await page.click('#startButton');
@@ -118,6 +127,8 @@ await browser.close();
 const previewManifest = {
   manifestId: 'H_EARTH_RUN_8E_R3F2_IMMUTABLE_HOSTED_PREVIEW_MANIFEST_v1',
   transportClass: 'IMMUTABLE_HOSTED_PREVIEW',
+  hostClass: 'COMMIT_PINNED_HTML_EXECUTION_CDN',
+  host: 'raw.githack.com',
   previewPackageHead: previewHead,
   launcherUrl,
   routeUrl,
@@ -128,8 +139,11 @@ const previewManifest = {
   packageDescriptorSha256: descriptorDigest,
   launcherHttpStatus: launcherFetch.response.status,
   routeHttpStatus: routeFetch.response.status,
+  launcherContentType,
+  routeContentType,
   launcherFetchAttempt: launcherFetch.attempt,
   routeFetchAttempt: routeFetch.attempt,
+  failedAttemptCount: 1,
   productionDeployment: false,
   physicalReferenceDeviceExecution: false,
   broaderMobileExecution: false
@@ -145,6 +159,17 @@ const executionReceipt = {
     status: predecessor.status,
     eligible: predecessor.eligible,
     expectedGitBlob: 'd8b5f3b4626014af6b62362d1bac26e120f50e60'
+  },
+  failedAttemptCustody: {
+    path: `/${failureReceiptPath}`,
+    attemptId: failureReceipt.attemptId,
+    head: failureReceipt.head,
+    workflowRun: failureReceipt.workflowRun,
+    workflowJob: failureReceipt.workflowJob,
+    artifactId: failureReceipt.artifactId,
+    artifactDigest: failureReceipt.artifactDigest,
+    failureClass: failureReceipt.failureClass,
+    publicSourceDefectEstablished: false
   },
   previewManifest,
   hostedValidation,
@@ -181,6 +206,8 @@ console.log(JSON.stringify({
   launcherUrl,
   routeUrl,
   packageDescriptorSha256: descriptorDigest,
+  launcherContentType,
+  routeContentType,
   hostedValidation,
   registeredPathCount: executionReceipt.registryAudit.registeredPathCount,
   boundaries: executionReceipt.boundaries,

@@ -21,7 +21,7 @@ export const H_EARTH_RUN_8E_R3F2_CONTROL = freeze({
   branch: 'agent/h-earth-run8e-r3f2-reference-device-physical-execution-001',
   baseBranch: 'agent/h-earth-run8e-r3f1-physical-mobile-acceptance-protocol-001',
   baseExactHead: '3642f3a561d787d37d988a8a66f2270d0b13bd45',
-  currentStatus: 'PREVIEW_CONSTRUCTION_PENDING',
+  currentStatus: 'PREVIEW_READY_PHYSICAL_EXECUTION_PENDING',
   predecessor: freeze({
     checkpointId: 'RUN_8E_R3F1', status: 'PASS_CLOSED', exactHead: '3642f3a561d787d37d988a8a66f2270d0b13bd45', pullRequest: 250,
     passReceiptPath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json',
@@ -39,10 +39,10 @@ export const H_EARTH_RUN_8E_R3F2_CONTROL = freeze({
     launcherTemplatePath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.html',
     launcherScriptPath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js',
     packageFilename: 'H_EARTH_RUN8E_R3F2_SIGNED_OFFLINE_REFERENCE_DEVICE_PACKAGE.html',
-    previewPackageHead: null,
-    packageSha256: null,
-    packageByteCount: null,
-    packageManifestSha256: null,
+    previewPackageHead: 'fcdcb4e80a98a86773d5276447b880efde2099c9',
+    packageSha256: 'sha256:3020154330597b877b59016399046279c511b32a875f5d4d87f5d651e2648e09',
+    packageByteCount: 1213597,
+    packageManifestSha256: 'sha256:c74d7438ba10f36deee567166a1a8654ee57ebfb2302a44d69c06238955e3626',
     loopbackValidationRequired: true,
     physicalFileExecutionAllowed: true,
     exactSourceIdentityRequired: true,
@@ -55,11 +55,26 @@ export const H_EARTH_RUN_8E_R3F2_CONTROL = freeze({
     freeze({ attemptId: 'RUN_8E_R3F2_PREVIEW_ATTEMPT_004', head: 'ca8c7581b4aa5e858bafcee33be52f9d6f043407', workflowRun: 30317274233, workflowJob: 90145435624, artifactId: 8672621878, artifactDigest: 'sha256:1ed10394547ab440baa319d03a4454f64ad742e93782c2045856a358ba81c6f3', failureClass: 'CROSS_REALM_CANVAS_INSTANCEOF_MISCLASSIFICATION', publicSourceDefectEstablished: false })
   ]),
   previewValidationEvidence: freeze({
-    successfulValidationHead: null, workflowRun: null, workflowJob: null, artifactId: null, artifactDigest: null,
-    automaticRepositoryRegistryPreflightRun: null, packageSha256: null, packageByteCount: null,
-    packageManifestSha256: null, loopbackRouteApiReady: null, loopbackSameOriginAccess: null,
-    launcherInstrumentationReady: null, activeWebGL2ContextCount: null,
-    showroomMutationCount: 0, physicalDeviceExecutionCount: 0, productionDeploymentCount: 0
+    successfulValidationHead: 'fcdcb4e80a98a86773d5276447b880efde2099c9',
+    workflowRun: 30317603086,
+    workflowJob: 90146467936,
+    artifactId: 8672743584,
+    artifactDigest: 'sha256:f6ef339a26c79b70a1371a78ce941c410a2a406ee7bfad4e4c79b25b8ab1ac2d',
+    automaticRepositoryRegistryPreflightRun: 30317603097,
+    packageSha256: 'sha256:3020154330597b877b59016399046279c511b32a875f5d4d87f5d651e2648e09',
+    packageByteCount: 1213597,
+    packageManifestSha256: 'sha256:c74d7438ba10f36deee567166a1a8654ee57ebfb2302a44d69c06238955e3626',
+    loopbackRouteApiReady: true,
+    loopbackSameOriginAccess: true,
+    fileRouteApiReady: true,
+    fileSameOriginAccess: true,
+    launcherInstrumentationReady: true,
+    webCryptoAvailable: true,
+    activeWebGL2ContextCount: 1,
+    artifactFetchBackVerified: true,
+    showroomMutationCount: 0,
+    physicalDeviceExecutionCount: 0,
+    productionDeploymentCount: 0
   }),
   physicalReferenceDeviceExecution: freeze({
     status: 'NOT_EXECUTED', deviceLaneId: 'R3F_REFERENCE_ANDROID_PHYSICAL',
@@ -99,7 +114,7 @@ export function evaluateHEarthRun8ER3F2Control(candidate = H_EARTH_RUN_8E_R3F2_C
     if (typeof preview.packageSha256 !== 'string' || !preview.packageSha256.startsWith('sha256:') || !Number.isSafeInteger(preview.packageByteCount)) issues.push('R3F2_PACKAGE_IDENTITY_MISSING');
     const execution = candidate?.previewValidationEvidence ?? {};
     if (!Number.isSafeInteger(execution.workflowRun) || !Number.isSafeInteger(execution.workflowJob) || !Number.isSafeInteger(execution.artifactId)) issues.push('R3F2_PREVIEW_WORKFLOW_IDENTITY_MISSING');
-    if (execution.packageSha256 !== preview.packageSha256 || execution.loopbackRouteApiReady !== true || execution.loopbackSameOriginAccess !== true || execution.launcherInstrumentationReady !== true || execution.activeWebGL2ContextCount !== 1) issues.push('R3F2_PACKAGE_VALIDATION_NOT_PASS');
+    if (execution.packageSha256 !== preview.packageSha256 || execution.packageManifestSha256 !== preview.packageManifestSha256 || execution.loopbackRouteApiReady !== true || execution.loopbackSameOriginAccess !== true || execution.fileRouteApiReady !== true || execution.fileSameOriginAccess !== true || execution.launcherInstrumentationReady !== true || execution.webCryptoAvailable !== true || execution.activeWebGL2ContextCount !== 1 || execution.artifactFetchBackVerified !== true) issues.push('R3F2_PACKAGE_VALIDATION_NOT_PASS');
   }
   if (candidate?.physicalReferenceDeviceExecution?.status !== 'NOT_EXECUTED' && candidate?.currentStatus !== 'PASS_CLOSED') issues.push('R3F2_PHYSICAL_EXECUTION_STATE_INVALID');
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) if (value !== false) issues.push(`R3F2_BOUNDARY_VIOLATION:${key}`);

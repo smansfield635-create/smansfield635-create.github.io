@@ -50,6 +50,15 @@ await page.waitForFunction(() => Boolean(
 await page.click("[data-products-primary-entry]");
 await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "CLUSTER_OPEN");
 
+await page.evaluate(() => {
+  document.querySelector("[data-products-center-control]")?.scrollIntoView({
+    behavior: "instant",
+    block: "center",
+    inline: "center"
+  });
+});
+await new Promise(resolve => setTimeout(resolve, 250));
+
 const initial = await page.evaluate(() => {
   const root = document.querySelector('[data-page-id="products"]');
   const center = document.querySelector("[data-products-center-control]");
@@ -65,16 +74,22 @@ const initial = await page.evaluate(() => {
     centerExpanded: center.getAttribute("aria-expanded"),
     centerRect: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
     topElementIsCenter: Boolean(top?.closest?.("[data-products-center-control]")),
+    pointInsideViewport:
+      x >= 0 && x <= innerWidth && y >= 0 && y <= innerHeight,
+    viewport: { width: innerWidth, height: innerHeight },
     point: { x, y }
   };
 });
 
 assert(initial.returnHidden === true, "RETURN_MAIN_HIDDEN_BEFORE_GLOBE_TAP", initial);
 assert(initial.centerExpanded === "false", "CENTER_COLLAPSED_BEFORE_GLOBE_TAP", initial);
+assert(initial.pointInsideViewport === true, "CENTER_TOUCH_POINT_OUTSIDE_VIEWPORT", initial);
 assert(initial.topElementIsCenter === true, "CENTER_TOUCH_POINT_NOT_OWNED_BY_GLOBE", initial);
 
-await page.touchscreen.tap(initial.point.x, initial.point.y);
-await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsCenterDisclosure === "open");
+if (failures.length === 0) {
+  await page.touchscreen.tap(initial.point.x, initial.point.y);
+}
+await new Promise(resolve => setTimeout(resolve, 350));
 
 const afterGlobeTap = await page.evaluate(() => {
   const root = document.querySelector('[data-page-id="products"]');
@@ -84,21 +99,23 @@ const afterGlobeTap = await page.evaluate(() => {
     disclosure: root.dataset.productsCenterDisclosure,
     returnHidden: returnControl.hidden,
     returnAriaHidden: returnControl.getAttribute("aria-hidden"),
-    centerExpanded: center.getAttribute("aria-expanded")
+    centerExpanded: center.getAttribute("aria-expanded"),
+    lastAction: globalThis.DGB_PRODUCTS_CONTROLLER_RECEIPT?.lastAction || ""
   };
 });
 
 assert(afterGlobeTap.disclosure === "open", "GLOBE_TAP_DID_NOT_OPEN_DISCLOSURE", afterGlobeTap);
 assert(afterGlobeTap.returnHidden === false, "RETURN_MAIN_NOT_VISIBLE_AFTER_GLOBE_TAP", afterGlobeTap);
 
-await page.evaluate(() => {
-  const product = Array.from(document.querySelectorAll("[data-products-product]"))
-    .find(element => !element.hidden && getComputedStyle(element).pointerEvents !== "none");
-  if (!product) throw new Error("NO_INTERACTIVE_PRODUCT_CONTROL");
-  product.click();
-});
-
-await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "PRODUCT_SELECTED");
+if (afterGlobeTap.disclosure === "open") {
+  await page.evaluate(() => {
+    const product = Array.from(document.querySelectorAll("[data-products-product]"))
+      .find(element => !element.hidden && getComputedStyle(element).pointerEvents !== "none");
+    if (!product) throw new Error("NO_INTERACTIVE_PRODUCT_CONTROL");
+    product.click();
+  });
+  await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "PRODUCT_SELECTED");
+}
 
 const afterProductTap = await page.evaluate(() => {
   const root = document.querySelector('[data-page-id="products"]');
@@ -115,11 +132,13 @@ const afterProductTap = await page.evaluate(() => {
   };
 });
 
-assert(afterProductTap.disclosure === "closed", "PRODUCT_TAP_DID_NOT_CLOSE_DISCLOSURE", afterProductTap);
-assert(afterProductTap.returnHidden === true, "RETURN_MAIN_VISIBLE_AFTER_PRODUCT_TAP", afterProductTap);
-assert(afterProductTap.returnAriaHidden === "true", "RETURN_MAIN_ACCESSIBLE_AFTER_PRODUCT_TAP", afterProductTap);
-assert(afterProductTap.returnTabIndex === -1, "RETURN_MAIN_FOCUSABLE_AFTER_PRODUCT_TAP", afterProductTap);
-assert(afterProductTap.centerExpanded === "false", "CENTER_EXPANDED_AFTER_PRODUCT_TAP", afterProductTap);
+if (afterGlobeTap.disclosure === "open") {
+  assert(afterProductTap.disclosure === "closed", "PRODUCT_TAP_DID_NOT_CLOSE_DISCLOSURE", afterProductTap);
+  assert(afterProductTap.returnHidden === true, "RETURN_MAIN_VISIBLE_AFTER_PRODUCT_TAP", afterProductTap);
+  assert(afterProductTap.returnAriaHidden === "true", "RETURN_MAIN_ACCESSIBLE_AFTER_PRODUCT_TAP", afterProductTap);
+  assert(afterProductTap.returnTabIndex === -1, "RETURN_MAIN_FOCUSABLE_AFTER_PRODUCT_TAP", afterProductTap);
+  assert(afterProductTap.centerExpanded === "false", "CENTER_EXPANDED_AFTER_PRODUCT_TAP", afterProductTap);
+}
 
 await page.screenshot({
   path: "products-globe-touch-corridor-reference-mobile.png",

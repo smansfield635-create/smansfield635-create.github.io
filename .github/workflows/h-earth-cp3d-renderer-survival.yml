@@ -25,16 +25,6 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Execute identity corridor
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs
-
-      - name: Execute corrected Run 8B geometry harness
-        env:
-          H_EARTH_RUN8B_RECEIPT: h-earth-3d/validation/evidence/cp3d/cp3d1d-run8b-geometry-receipt.json
-        run: |
-          mkdir -p h-earth-3d/validation/evidence/cp3d
-          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
-
       - name: Install browser runtime
         run: |
           npm install --no-save playwright@1.54.1
@@ -52,6 +42,22 @@ jobs:
           done
           cat /tmp/h-earth-cp3d-server.log
           exit 1
+
+      - name: Execute CP3D_1D corrected cross-runtime identity verification
+        env:
+          CP3D_ORIGIN: http://127.0.0.1:4173
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1d-corrected-cross-runtime-identity.harness.mjs
+
+      - name: Execute identity corridor after corrected identity promotion
+        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs
+
+      - name: Execute corrected Run 8B geometry harness
+        env:
+          H_EARTH_RUN8B_RECEIPT: h-earth-3d/validation/evidence/cp3d/cp3d1d-run8b-geometry-receipt.json
+        run: |
+          mkdir -p h-earth-3d/validation/evidence/cp3d
+          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
 
       - name: Execute CP3D_1D full renderer survival
         env:

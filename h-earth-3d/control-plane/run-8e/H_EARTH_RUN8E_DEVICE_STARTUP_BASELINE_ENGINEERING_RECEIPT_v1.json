@@ -1,0 +1,97 @@
+{
+  "artifactId": "H_EARTH_RUN8E_DEVICE_STARTUP_BASELINE_ENGINEERING_RECEIPT_v1",
+  "artifactClass": "BOUNDED_DEVICE_STARTUP_BASELINE_ENGINEERING_RECEIPT",
+  "checkpoint": "CHECKPOINT_0_EVIDENCE_BASELINE_LOCK",
+  "status": "PARTIAL_BASELINE_LOCKED_ADDITIONAL_DEVICE_ARTIFACTS_REQUIRED",
+  "repository": {
+    "fullName": "smansfield635-create/smansfield635-create.github.io",
+    "branch": "agent/h-earth-run8e-device-startup-baseline-001",
+    "productionMainAtCheckpointStart": "c50cf8df8dae4cd4d1be967f2f7de5a3e8c686b3",
+    "publicRoute": "https://diamondgatebridge.com/showroom/globe/h-earth/",
+    "diagnosticRoute": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/"
+  },
+  "preservedEvidence": {
+    "fd05BrowserPackage": {
+      "packetId": "H_EARTH_FD05_BROWSER_EVIDENCE_PACKAGE_a2507ce5-f588-4a99-b03c-55de1bbe8578",
+      "fileName": "H_EARTH_FD05_BROWSER_EVIDENCE_PACKAGE_a2507ce5-f588-4a99-b03c-55de1bbe8578.json",
+      "googleDriveFileId": "1R7gEXp57bbfi-9wxsxykjg86CanqGWq8",
+      "captureTimestamp": "2026-07-28T16:31:13.792Z",
+      "internalCanonicalPackageDigest": {
+        "algorithm": "SHA-256",
+        "canonicalization": "RFC8785",
+        "value": "f056752557da4440bbbe0cfa065da6dc728e74d9e38e47ec8e2e15bc856304cd"
+      },
+      "rawDownloadedFileSha256": "7798ab0def6bd7c90a284567fdd13b71eb7e35a9871e763f35c061bac58501d2",
+      "transport": "19_OF_19_FULFILLED",
+      "httpSuccess": "19_OF_19",
+      "completeBodyCustody": "19_OF_19",
+      "nativeImports": "19_OF_19_FULFILLED_0_REJECTED",
+      "contracts": "18_MATCH_1_MISMATCH",
+      "contractFinding": {
+        "path": "/showroom/globe/h-earth/capacity.js",
+        "code": "UNEXPECTED_OR_STALE_CONTRACT",
+        "runtimeCauseSupported": false
+      },
+      "supportedConclusion": "FAILURE_BOUNDARY_IS_DOWNSTREAM_OF_MODULE_TRANSPORT_AND_NATIVE_IMPORT",
+      "deviceIdentity": "NOT_PRESENT_IN_BROWSER_PACKAGE"
+    }
+  },
+  "deviceOccurrenceLedger": [
+    {
+      "deviceRole": "CONTROL",
+      "reportedDevice": "S26_ULTRA",
+      "reportedRuntimeOutcome": [
+        "BOOT_STARTED_PASS",
+        "CANVAS_PASS",
+        "WEBGL2_PASS",
+        "RENDERER_CONSTRUCTED_PASS",
+        "RENDERER_MOUNTED_PASS",
+        "FIRST_FRAME_PASS",
+        "READY_PASS"
+      ],
+      "artifactBinding": "REPORTED_IN_WORKFLOW_NOT_YET_BOUND_TO_AN_EXACT_DEVICE_RECEIPT",
+      "sameCommitAsBaseline": "NOT_YET_ARTIFACT_PROVEN"
+    },
+    {
+      "deviceRole": "FAILURE_DEVICE",
+      "reportedDevice": "S25",
+      "reportedRuntimeOutcome": [
+        "NO_FIRST_FRAME_EVENT_WITHIN_12_SECONDS"
+      ],
+      "artifactBinding": "FD05_PACKAGE_AVAILABLE_BUT_PACKAGE_DOES_NOT_CONTAIN_DEVICE_IDENTITY_OR_LIVE_RUNTIME_LEDGER",
+      "sameCommitAsBaseline": "NOT_YET_ARTIFACT_PROVEN"
+    },
+    {
+      "deviceRole": "FAILURE_DEVICE",
+      "reportedDevice": "SAMSUNG_TABLET",
+      "reportedRuntimeOutcome": [
+        "R3E2_LIVE_GPU_BINDING_NOT_READY"
+      ],
+      "artifactBinding": "REPORTED_IN_WORKFLOW_NOT_YET_BOUND_TO_AN_EXACT_DEVICE_RECEIPT",
+      "sameCommitAsBaseline": "NOT_YET_ARTIFACT_PROVEN"
+    }
+  ],
+  "checkpointEvaluation": {
+    "threeDeviceOccurrencesIdentified": true,
+    "threeDeviceOccurrencesArtifactBound": false,
+    "sameProductionCommitConfirmedAcrossThreeDevices": false,
+    "productFilesChanged": false,
+    "runtimeSourceMutationAuthorized": false,
+    "checkpointPass": false
+  },
+  "requiredToCloseCheckpoint": [
+    "S26_ULTRA_RUNTIME_DIAGNOSTIC_RECEIPT_OR_EXACT_SCREENSHOT_WITH_TIMESTAMP",
+    "S25_RUNTIME_DIAGNOSTIC_RECEIPT_OR_EXACT_SCREENSHOT_WITH_TIMESTAMP",
+    "SAMSUNG_TABLET_RUNTIME_DIAGNOSTIC_RECEIPT_OR_EXACT_SCREENSHOT_WITH_TIMESTAMP",
+    "DEVICE_MODEL_ANDROID_VERSION_BROWSER_VERSION_FOR_EACH_OCCURRENCE",
+    "EXACT_DEPLOYED_COMMIT_CONFIRMATION_FOR_EACH_OCCURRENCE"
+  ],
+  "nextAuthorizedAction": "RECOVER_OR_CAPTURE_THE_THREE_DEVICE_RUNTIME_ARTIFACTS_AND_AMEND_THIS_RECEIPT_ONLY",
+  "prohibitions": [
+    "NO_PRODUCT_SOURCE_MUTATION",
+    "NO_RENDERER_CORRECTION",
+    "NO_CONTROLLER_CORRECTION",
+    "NO_DEVICE_SPECIFIC_BRANCHING",
+    "NO_CHECKPOINT_1_ADVANCEMENT_BEFORE_BASELINE_CLOSURE"
+  ]
+}

@@ -45,7 +45,7 @@ jobs:
           test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js)" = "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6"
           test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js)" = "5017bbaf857a644287cb829037b0fde4646f270d"
 
-      - name: Verify R3F2 syntax, failure custody, and non-production boundary
+      - name: Verify R3F2 syntax, failed-attempt custody, and non-production boundary
         run: |
           set -euo pipefail
           node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
@@ -55,6 +55,7 @@ jobs:
           node --check h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs
           node --check h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js
           node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-001.failure.receipt.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-002.failure.receipt.json','utf8'))"
           if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json; then
             node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json','utf8'))"
           fi
@@ -66,7 +67,7 @@ jobs:
           npm install --no-save playwright@1.52.0
           npx playwright install --with-deps chromium
 
-      - name: Execute immutable hosted-preview validation
+      - name: Execute immutable hosted-preview qualification
         run: |
           set -o pipefail
           mkdir -p "$H_EARTH_RUN8E_R3F2_OUTPUT"
@@ -82,7 +83,7 @@ jobs:
           node --experimental-default-type=module \
             tools/h-earth-repository-registry-auto-preflight.mjs \
             --paths-file /tmp/h-earth-run8e-r3f2-governed-paths.txt \
-            --task "Run 8E R3F2 immutable hosted preview and reference-device evidence intake" \
+            --task "Run 8E R3F2 bounded commit-pinned host qualification and reference-device evidence intake" \
             --mutation-intent \
             --output "$H_EARTH_RUN8E_R3F2_OUTPUT/h-earth.run8e-r3f2.automatic-preflight.receipt.json"
           node - <<'NODE'
@@ -108,7 +109,8 @@ jobs:
             'h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs',
             'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.html',
             'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js',
-            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-001.failure.receipt.json'
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-001.failure.receipt.json',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-002.failure.receipt.json'
           }
           optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json'}
           missing = sorted(required - paths)
@@ -119,10 +121,12 @@ jobs:
           receipt = json.loads(Path('/tmp/h-earth-run8e-r3f2/h-earth.run8e-r3f2.immutable-hosted-preview.execution.receipt.json').read_text())
           if receipt['eligible'] is not True or receipt['status'] != 'RUN_8E_R3F2_PREVIEW_VALIDATION_PASS': raise SystemExit('R3F2_PREVIEW_RECEIPT_INVALID')
           if receipt['evidenceClass'] != 'SUPPLEMENTAL_HOSTED_BROWSER_VALIDATION_NOT_PHYSICAL_ACCEPTANCE': raise SystemExit('R3F2_PHYSICAL_EVIDENCE_MISCLASSIFIED')
-          if receipt['failedAttemptCustody']['publicSourceDefectEstablished'] is not False: raise SystemExit('R3F2_ATTEMPT_001_PUBLIC_SOURCE_DEFECT_CLAIMED')
+          if len(receipt['failedAttemptCustody']) != 2 or any(row['publicSourceDefectEstablished'] is not False for row in receipt['failedAttemptCustody']): raise SystemExit('R3F2_FAILED_ATTEMPT_CUSTODY_INVALID')
           hosted = receipt['hostedValidation']
+          if hosted['passed'] is not True: raise SystemExit('R3F2_SELECTED_HOST_NOT_PASS')
           if not all(hosted[key] is True for key in ['routeApiReady','iframeSameOriginAccess','launcherInstrumentationReady']): raise SystemExit('R3F2_HOSTED_VALIDATION_FAILED')
           if hosted['activeWebGL2ContextCount'] != 1: raise SystemExit('R3F2_WEBGL2_CONTEXT_COUNT_INVALID')
+          if receipt['previewManifest']['selectedHost'] not in receipt['previewManifest']['hostCandidates']: raise SystemExit('R3F2_SELECTED_HOST_INVALID')
           if receipt['nextState'] != 'RUN_8E_R3F2_PHYSICAL_EXECUTION_PENDING': raise SystemExit('R3F2_NEXT_STATE_INVALID')
           if receipt['stoppingBoundary'] != 'STOP_BEFORE_REFERENCE_DEVICE_PHYSICAL_EXECUTION_R3F2': raise SystemExit('R3F2_STOPPING_BOUNDARY_MISMATCH')
           if any(receipt['boundaries'].values()): raise SystemExit('R3F2_BOUNDARY_VIOLATION')

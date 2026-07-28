@@ -178,7 +178,7 @@
       if (nodes.length >= 2) measureCenter(nodes);
       if (state.source) drawFront(nodes);
       state.frameCount += 1;
-      if (state.frameCount === 1 || state.frameCount % 30 === 0) publish("available");
+      if (state.frameCount === 1 || state.frameCount % 120 === 0) publish("available");
       state.raf = requestAnimationFrame(frame);
     } catch (error) {
       state.lastError = error?.message || String(error);

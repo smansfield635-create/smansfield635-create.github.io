@@ -1,0 +1,100 @@
+{
+  "selfIdentity": {
+    "identityClass": "SHA256_OF_CANONICAL_MANIFEST_PAYLOAD_EXCLUDING_SELF_IDENTITY",
+    "canonicalization": "UTF8_JSON_SORTED_KEYS_COMPACT",
+    "canonicalPayloadSha256": "sha256:e2e1aec478a2a391f29e32c983c56408cfad42fe5c47093b07dad5e5ee84591e"
+  },
+  "manifestId": "H_EARTH_RUN_8E_R3F2_P2_EXACT_PREVIEW_PACKAGE_MANIFEST_v1",
+  "manifestVersion": "1.0.0",
+  "occurrenceClass": "MATERIALIZED_NOT_PUBLISHED",
+  "nonProduction": true,
+  "candidateId": "H_EARTH_RUN8E_R3F2_CANDIDATE_SHA256_3020154361523CF19113E4C759C234A6C74FF5A493B8E47124CA59470DA7A234",
+  "previewPath": "/preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/",
+  "packageIdentity": {
+    "packageHead": "fcdcb4e80a98a86773d5276447b880efde2099c9",
+    "packageSha256": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234",
+    "packageByteCount": 1213597,
+    "packageManifestSha256": "sha256:c74d71c1115b5b122d3d12e56014002bd15201c05af25b7d027e8d9ad88f7174",
+    "sourceHead": "548672ae99cd406805f0c8ca576cc650baf7ed18",
+    "publicHtmlGitBlob": "0daedf61f7e19af095f4db5fc47563a9cd786837",
+    "publicOrchestratorGitBlob": "2b0a916b3a6d11da84316925f8abd8a3a1447445",
+    "functionalCssGitBlob": "481148416a8d0466e76c4cb2eca7a67d8932a242",
+    "publicShellCssGitBlob": "f208b7f11096a7bf5da282226903ac634c1eab01"
+  },
+  "servedFileSetLaw": {
+    "exactFileCount": 3,
+    "externalRuntimeRequestCountAllowed": 0,
+    "mutableMainDependencyCountAllowed": 0,
+    "undeclaredRuntimeDependencyCountAllowed": 0,
+    "serviceWorkerAllowed": false
+  },
+  "servedFiles": [
+    {
+      "relativePath": "index.html",
+      "role": "EXACT_VALIDATED_SELF_CONTAINED_CANDIDATE",
+      "runtimeDependency": true,
+      "byteCount": 1213597,
+      "contentSha256": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234",
+      "gitBlobSha1": "c5127e2d4d9d3558230a8eccd757dade74d6d8c3"
+    },
+    {
+      "relativePath": "device-evidence-receipt.schema.json",
+      "role": "PHYSICAL_SESSION_NORMALIZED_EVIDENCE_SCHEMA",
+      "runtimeDependency": false,
+      "byteCount": 4586,
+      "contentSha256": "sha256:04ce5ec86f102fb7646b02ad19a3f862b8e6370dcdc971dc252d6bc607e3d18a",
+      "gitBlobSha1": "987268f38fc8b6db6f19b982cc8386439aa0de48"
+    },
+    {
+      "relativePath": "preview-manifest.json",
+      "role": "SERVED_FILE_AND_CANDIDATE_IDENTITY_MANIFEST",
+      "runtimeDependency": false,
+      "identityClass": "CANONICAL_MANIFEST_PAYLOAD_SHA256_PLUS_REPOSITORY_GIT_BLOB_CUSTODY",
+      "contentIdentityReference": "#/selfIdentity"
+    }
+  ],
+  "identityExposure": [
+    {
+      "requirement": "NON_PRODUCTION_LABEL",
+      "surface": "index.html setup text and manifest nonProduction=true"
+    },
+    {
+      "requirement": "CANDIDATE_ID",
+      "surface": "preview-manifest.json and P7 handoff"
+    },
+    {
+      "requirement": "PACKAGE_SHA256",
+      "surface": "hashed URL path and preview-manifest.json"
+    },
+    {
+      "requirement": "PACKAGE_HEAD",
+      "surface": "index.html embedded package metadata and preview-manifest.json"
+    },
+    {
+      "requirement": "SOURCE_HEAD",
+      "surface": "index.html embedded package metadata and preview-manifest.json"
+    },
+    {
+      "requirement": "TEST_SESSION_IDENTIFIER",
+      "surface": "index.html generated evidenceId and normalized receipt sessionIdentifier"
+    }
+  ],
+  "deliveryIntent": {
+    "httpsRequired": true,
+    "cacheControl": "public, max-age=31536000, immutable",
+    "xRobotsTag": "noindex, nofollow, noarchive",
+    "publicationConfigurationCreated": false,
+    "networkPublicationPerformed": false,
+    "previewUrlIssued": false
+  },
+  "boundaries": {
+    "showroomMutated": false,
+    "publicLiveHEarthChanged": false,
+    "mainChanged": false,
+    "recoveryStackMerged": false,
+    "productionDeployment": false,
+    "physicalReferenceDeviceExecuted": false,
+    "broaderMobileExecuted": false,
+    "run8EPassClosed": false
+  }
+}

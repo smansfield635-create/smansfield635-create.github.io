@@ -18,7 +18,7 @@ export const H_EARTH_RUN_8E_R3F2_P3_CONTROL = freeze({
   contractId: H_EARTH_RUN_8E_R3F2_P3_CONTROL_ID,
   checkpointId: 'RUN_8E_R3F2_P3',
   checkpointName: 'NON_PRODUCTION_PUBLICATION_CONFIGURATION',
-  currentStatus: 'CONFIGURATION_COMPLETE_PENDING_DURABLE_RECEIPT',
+  currentStatus: 'PASS_CLOSED',
   repository: 'smansfield635-create/smansfield635-create.github.io',
   branch: 'agent/h-earth-run8e-r3f2-p3-non-production-publication-configuration-001',
   baseBranch: 'agent/h-earth-run8e-r3f2-p2-exact-preview-package-materialization-001',
@@ -106,7 +106,16 @@ export const H_EARTH_RUN_8E_R3F2_P3_CONTROL = freeze({
     publicationWorkflowManualOnly: true,
     exactSourceTreeUnchanged: true
   }),
-  closureEvidence: null,
+  closureEvidence: freeze({
+    coreHead: 'a31a059759e12a61959bf13b465f95bec92c9f9f',
+    coreWorkflowRun: 30321900139,
+    coreWorkflowJob: 90159329413,
+    coreArtifactId: 8674301060,
+    coreArtifactDigest: 'sha256:11183c135cc498d762d0fbec25a9b69208b69e1034de1c8374481a1fbad75c0d',
+    automaticRegistryPreflightRun: 30321900117,
+    passReceiptPath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3.pass-closed.receipt.json',
+    passReceiptGitBlob: 'dbc4f8cb32b33b9cb17567abc9e55e59fe394afd'
+  }),
   boundaries: freeze({
     previewFilesMaterialized: true,
     deploymentConfigurationCreated: true,
@@ -144,6 +153,14 @@ export function evaluateHEarthRun8ER3F2P3Control(candidate = H_EARTH_RUN_8E_R3F2
   if (delivery.serviceWorkerAllowed !== false || delivery.mixedContentAllowed !== false || delivery.externalRuntimeRequestCountAllowed !== 0 || delivery.mutableMainDependencyCountAllowed !== 0) issues.push('P3_RUNTIME_DRIFT_LAW_INVALID');
   if (!Array.isArray(candidate?.exactSourceTree) || candidate.exactSourceTree.length !== 3 || candidate.exactSourceTree[0]?.contentSha256 !== candidate?.candidateIdentity?.packageSha256) issues.push('P3_EXACT_SOURCE_TREE_INVALID');
   if (Object.values(candidate?.passCriteria ?? {}).some((value) => value !== true)) issues.push('P3_PASS_CRITERIA_INVALID');
+  if (candidate?.currentStatus === 'PASS_CLOSED') {
+    const closure = candidate?.closureEvidence ?? {};
+    if (closure.coreHead !== 'a31a059759e12a61959bf13b465f95bec92c9f9f') issues.push('P3_CORE_HEAD_MISMATCH');
+    if (closure.coreWorkflowRun !== 30321900139 || closure.coreWorkflowJob !== 90159329413) issues.push('P3_CORE_WORKFLOW_IDENTITY_MISMATCH');
+    if (closure.coreArtifactId !== 8674301060 || closure.coreArtifactDigest !== 'sha256:11183c135cc498d762d0fbec25a9b69208b69e1034de1c8374481a1fbad75c0d') issues.push('P3_CORE_ARTIFACT_IDENTITY_MISMATCH');
+    if (closure.automaticRegistryPreflightRun !== 30321900117) issues.push('P3_PREFLIGHT_IDENTITY_MISMATCH');
+    if (closure.passReceiptPath !== '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3.pass-closed.receipt.json' || closure.passReceiptGitBlob !== 'dbc4f8cb32b33b9cb17567abc9e55e59fe394afd') issues.push('P3_PASS_RECEIPT_IDENTITY_MISMATCH');
+  }
   if (candidate?.boundaries?.previewFilesMaterialized !== true || candidate?.boundaries?.deploymentConfigurationCreated !== true) issues.push('P3_CONFIGURATION_BOUNDARY_INVALID');
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) {
     if (!['previewFilesMaterialized','deploymentConfigurationCreated'].includes(key) && value !== false) issues.push(`P3_BOUNDARY_VIOLATION:${key}`);

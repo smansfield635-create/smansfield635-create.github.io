@@ -1,0 +1,94 @@
+{
+  "configId": "H_EARTH_RUN_8E_R3F2_P3_CLOUDFLARE_PAGES_DIRECT_UPLOAD_CONFIGURATION_v1",
+  "checkpointId": "RUN_8E_R3F2_P3",
+  "provider": "CLOUDFLARE_PAGES_DIRECT_UPLOAD",
+  "project": {
+    "name": "h-earth-run8e-r3f2-preview-30201543",
+    "productionBranch": "production-disabled-r3f2",
+    "previewBranch": "r3f2-candidate-3020154361523cf1",
+    "gitIntegration": false,
+    "customDomains": [],
+    "productionDomainUseAllowed": false
+  },
+  "source": {
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "p2ExactHead": "75ecf5ad0b618318aea384c9422591425320de8f",
+    "p2PassReceiptGitBlob": "203f960330da70e2947082ac356586caa5e166f0",
+    "repositoryRoot": "preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234",
+    "urlPath": "/preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/",
+    "exactFileCount": 3,
+    "files": [
+      {
+        "relativePath": "index.html",
+        "byteCount": 1213597,
+        "contentSha256": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234",
+        "gitBlobSha1": "c5127e2d4d9d3558230a8eccd757dade74d6d8c3",
+        "expectedContentTypePrefix": "text/html"
+      },
+      {
+        "relativePath": "preview-manifest.json",
+        "byteCount": 3981,
+        "contentSha256": "sha256:b77b3e88ef4868d0602468da90693c64c46b09442e1fe15013ed4dcf69156dd4",
+        "gitBlobSha1": "81dbbb97898023ae0dabea313ac69b865302d533",
+        "expectedContentTypePrefix": "application/json"
+      },
+      {
+        "relativePath": "device-evidence-receipt.schema.json",
+        "byteCount": 4586,
+        "contentSha256": "sha256:04ce5ec86f102fb7646b02ad19a3f862b8e6370dcdc971dc252d6bc607e3d18a",
+        "gitBlobSha1": "987268f38fc8b6db6f19b982cc8386439aa0de48",
+        "expectedContentTypePrefix": "application/json"
+      }
+    ]
+  },
+  "staging": {
+    "root": "/tmp/h-earth-run8e-r3f2-p4-pages-root",
+    "copyOnlyExactSourceTree": true,
+    "generatedConfigurationFiles": ["_headers"],
+    "generatedConfigurationFilesAreServedAssets": false,
+    "functionsAllowed": false,
+    "workerAllowed": false,
+    "redirectsAllowed": false
+  },
+  "headers": {
+    "templatePath": "h-earth-3d/deployment/run-8e-r3f2/h-earth.run8e-r3f2-p3.cloudflare-pages.headers.txt",
+    "cacheControl": "public, max-age=31536000, immutable",
+    "xRobotsTag": "noindex, nofollow, noarchive",
+    "xContentTypeOptions": "nosniff",
+    "referrerPolicy": "no-referrer"
+  },
+  "publicationGate": {
+    "workflowPath": ".github/workflows/h-earth-run8e-r3f2-p4-immutable-preview-publication.yml",
+    "trigger": "workflow_dispatch",
+    "authorizedBranch": "agent/h-earth-run8e-r3f2-p4-immutable-preview-publication-001",
+    "requiredAuthorizationLiteral": "RUN_8E_R3F2_P4_AUTHORIZE_FIRST_NETWORK_PUBLICATION",
+    "requiredSecrets": ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"],
+    "githubEnvironment": "h-earth-run8e-r3f2-preview-publication",
+    "automaticPushDeployment": false,
+    "automaticPullRequestDeployment": false
+  },
+  "publicationCommand": {
+    "projectCreate": "wrangler pages project create h-earth-run8e-r3f2-preview-30201543 --production-branch production-disabled-r3f2",
+    "previewDeploy": "wrangler pages deploy /tmp/h-earth-run8e-r3f2-p4-pages-root --project-name h-earth-run8e-r3f2-preview-30201543 --branch r3f2-candidate-3020154361523cf1 --commit-hash <P4_EXACT_HEAD> --commit-dirty=false",
+    "uniqueDeploymentUrlRequired": true,
+    "branchAliasAcceptedAsEvidenceUrl": false
+  },
+  "acceptanceBeforePublication": {
+    "configurationValidationRequired": true,
+    "p3PassReceiptRequired": true,
+    "exactSourceDigestRevalidationRequired": true,
+    "liveHEarthUnchangedRequired": true,
+    "mainUnchangedRequired": true,
+    "networkPublicationDuringP3Allowed": false
+  },
+  "boundaries": {
+    "deploymentConfigurationCreated": true,
+    "networkPublicationPerformed": false,
+    "previewUrlIssued": false,
+    "productionDeployment": false,
+    "customDomainBound": false,
+    "mainChanged": false,
+    "publicLiveHEarthChanged": false,
+    "physicalReferenceDeviceExecuted": false
+  }
+}

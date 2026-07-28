@@ -11,6 +11,7 @@ const paths = Object.freeze({
   package: path.join(root, 'showroom/globe/h-earth/render/live-render-package.run8e-r2.js'),
   binding: path.join(root, 'showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js'),
   integration: path.join(root, 'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'),
+  receiptWrapper: path.join(root, 'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js'),
   route: path.join(root, 'showroom/globe/h-earth/index.html'),
   cp2b: path.join(root, 'showroom/globe/h-earth/diagnostic/touch-motion-cp2b/physical-attempt-recorder.js'),
   cp3b: path.join(root, 'showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js')
@@ -34,7 +35,8 @@ assert.match(source.renderer, /getHEarthRun8ER2ImmutableLiveRenderPackage\s*}\s*
 assert.match(source.binding, /createHEarthRun8ER3CPersistentRenderer\s*}\s*from\s*['"]\.\.\/\.\.\/render\/persistent-live-renderer\.run8e-r3c\.js['"]/, 'CP3D_BINDING_RENDERER_IMPORT_MISMATCH');
 assert.match(source.integration, /createHEarthRun8ER3D3LiveGpuBinding\s*}\s*from\s*['"]\.\.\/diagnostic\/run8e-r3d\/live-gpu-binding\.js['"]/, 'CP3D_PUBLIC_INTEGRATION_BINDING_IMPORT_MISMATCH');
 assert.match(source.integration, /installHEarthRun8ER3D2PointerTouchIntake\s*}\s*from\s*['"]\.\.\/diagnostic\/run8e-r3d\/pointer-touch-intake\.js['"]/, 'CP3D_PUBLIC_INTEGRATION_CP3B_IMPORT_MISMATCH');
-assert.match(source.route, /public-live-gpu-integration\.run8e-r3e\.js/, 'CP3D_ROUTE_PUBLIC_INTEGRATION_SELECTION_MISMATCH');
+assert.match(source.receiptWrapper, /await\s+import\(['"]\.\/public-live-gpu-integration\.run8e-r3e\.js['"]\)/, 'CP3D_RECEIPT_WRAPPER_INTEGRATION_IMPORT_MISMATCH');
+assert.match(source.route, /public-live-gpu-integration\.run8e-r3e\.receipt\.js/, 'CP3D_ROUTE_RECEIPT_WRAPPER_SELECTION_MISMATCH');
 
 const bindingImportedIdentity = packageDeclaredIdentity;
 const publicIntegrationIdentity = packageDeclaredIdentity;
@@ -70,7 +72,8 @@ const receipt = Object.freeze({
     rendererConsumesExactPackage: true,
     bindingConsumesExactRenderer: true,
     publicIntegrationConsumesExactBinding: true,
-    routeSelectsExactPublicIntegration: true
+    receiptWrapperConsumesExactPublicIntegration: true,
+    routeSelectsExactReceiptWrapper: true
   },
   touchWitnesses: {
     cp2bRecorderAvailable: true,

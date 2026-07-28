@@ -17,7 +17,7 @@ export const H_EARTH_RUN_8E_R3F2_P2_CONTROL = freeze({
   contractId: H_EARTH_RUN_8E_R3F2_P2_CONTROL_ID,
   checkpointId: 'RUN_8E_R3F2_P2',
   checkpointName: 'EXACT_PREVIEW_PACKAGE_MATERIALIZATION',
-  currentStatus: 'MATERIALIZED_PENDING_DURABLE_RECEIPT',
+  currentStatus: 'PASS_CLOSED',
   repository: 'smansfield635-create/smansfield635-create.github.io',
   branch: 'agent/h-earth-run8e-r3f2-p2-exact-preview-package-materialization-001',
   baseBranch: 'agent/h-earth-run8e-r3f2-p1-immutable-preview-occurrence-contract-001',
@@ -93,7 +93,16 @@ export const H_EARTH_RUN_8E_R3F2_P2_CONTROL = freeze({
       previewFileIdentityDefectEstablished: false
     })
   }),
-  closureEvidence: null,
+  closureEvidence: freeze({
+    receiptFreeClosureHead: 'a7eafbcb5d9ffc850c936de2e071ba8ad3dbd374',
+    workflowRun: 30320641140,
+    workflowJob: 90155590397,
+    artifactId: 8673843255,
+    artifactDigest: 'sha256:990666ea8ff33316e180eeaef48abcbfa30a88460b49435e75a8602ffe98f3df',
+    automaticRegistryPreflightRun: 30320641168,
+    passReceiptPath: PASS_RECEIPT_PATH,
+    passReceiptGitBlob: '203f960330da70e2947082ac356586caa5e166f0'
+  }),
   boundaries: freeze({
     previewFilesMaterialized: true,
     deploymentConfigurationCreated: false,
@@ -137,6 +146,14 @@ export function evaluateHEarthRun8ER3F2P2Control(candidate = H_EARTH_RUN_8E_R3F2
     if (evidence.initialAttempt?.candidatePackageDefectEstablished !== false || evidence.initialAttempt?.previewFileIdentityDefectEstablished !== false) issues.push('P2_INITIAL_ATTEMPT_MISCLASSIFIED');
   } else if (candidate?.boundaries?.previewFilesMaterialized !== false) {
     issues.push('P2_OPEN_STATE_BOUNDARY_INVALID');
+  }
+  if (candidate?.currentStatus === 'PASS_CLOSED') {
+    const closure = candidate?.closureEvidence ?? {};
+    if (closure.receiptFreeClosureHead !== 'a7eafbcb5d9ffc850c936de2e071ba8ad3dbd374') issues.push('P2_CLOSURE_HEAD_MISMATCH');
+    if (closure.workflowRun !== 30320641140 || closure.workflowJob !== 90155590397) issues.push('P2_CLOSURE_WORKFLOW_IDENTITY_MISMATCH');
+    if (closure.artifactId !== 8673843255 || closure.artifactDigest !== 'sha256:990666ea8ff33316e180eeaef48abcbfa30a88460b49435e75a8602ffe98f3df') issues.push('P2_CLOSURE_ARTIFACT_IDENTITY_MISMATCH');
+    if (closure.automaticRegistryPreflightRun !== 30320641168) issues.push('P2_CLOSURE_PREFLIGHT_IDENTITY_MISMATCH');
+    if (closure.passReceiptPath !== PASS_RECEIPT_PATH || closure.passReceiptGitBlob !== '203f960330da70e2947082ac356586caa5e166f0') issues.push('P2_PASS_RECEIPT_IDENTITY_MISMATCH');
   }
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) if (key !== 'previewFilesMaterialized' && value !== false) issues.push(`P2_BOUNDARY_VIOLATION:${key}`);
   if (candidate?.nextCheckpoint !== 'RUN_8E_R3F2_P3_NON_PRODUCTION_PUBLICATION_CONFIGURATION') issues.push('P2_NEXT_CHECKPOINT_INVALID');

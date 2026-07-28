@@ -65,6 +65,29 @@ async function sha256(bytes) {
   return [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('');
 }
 
+export function buildCP3D1APositionLocalizationSnapshot(runtime = 'UNKNOWN') {
+  const packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage();
+  if (packageRecord?.eligible !== true) {
+    throw new Error(`CP3D1A_PACKAGE_NOT_ELIGIBLE:${packageRecord?.issues?.join(',') ?? 'UNKNOWN'}`);
+  }
+  return Object.freeze({
+    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D1A_POSITION_LOCALIZATION_SNAPSHOT_v1',
+    runtime,
+    packageIdentity: packageRecord.packageIdentity,
+    positions: [...packageRecord.buffers.positions],
+    primitiveSpans: packageRecord.primitiveSpans.map(span => ({
+      primitiveIndex: span.primitiveIndex,
+      primitiveId: span.primitiveId,
+      geometryId: span.geometryId,
+      role: span.role,
+      vertexStart: span.vertexStart,
+      vertexCount: span.vertexCount,
+      indexStart: span.indexStart,
+      indexCount: span.indexCount
+    }))
+  });
+}
+
 export async function buildCP3D1PackageDeterminismReceipt(runtime = 'UNKNOWN') {
   const packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage();
   if (packageRecord?.eligible !== true) {

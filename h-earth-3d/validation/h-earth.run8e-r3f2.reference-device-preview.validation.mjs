@@ -1,7 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import http from 'node:http';
 import crypto from 'node:crypto';
+import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
+import { buildHEarthRun8ER3F2SignedOfflinePackage } from './h-earth.run8e-r3f2.signed-offline-package.builder.mjs';
 import { evaluateHEarthRun8ER3Control } from '../control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js';
 import { evaluateHEarthRun8ER3F2Control } from '../control-plane/run-8/recovery/h-earth.run8e-r3f2.reference-device-immutable-preview-and-physical-execution.js';
 import { loadHEarthRepositoryRegistryValidatorDependencies } from '../registry/h-earth.repository-registry.validator-engine.loader.js';
@@ -9,24 +12,10 @@ import { H_EARTH_RUN_8E_R3F2_NODE, H_EARTH_RUN_8E_R3F2_PATHS } from '../registry
 
 const outputDirectory = process.env.H_EARTH_RUN8E_R3F2_OUTPUT ?? '/tmp/h-earth-run8e-r3f2';
 const previewHead = process.env.H_EARTH_RUN8E_R3F2_PREVIEW_HEAD ?? process.env.GITHUB_SHA;
-const repository = 'smansfield635-create/smansfield635-create.github.io';
-const sourceHead = '548672ae99cd406805f0c8ca576cc650baf7ed18';
-const publicHtmlGitBlob = '0daedf61f7e19af095f4db5fc47563a9cd786837';
-const publicOrchestratorGitBlob = '2b0a916b3a6d11da84316925f8abd8a3a1447445';
-const launcherPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.html';
-const launcherScriptPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js';
-const routePath = 'showroom/globe/h-earth/index.html';
-const hostCandidates = ['rawcdn.githack.com', 'cdn.statically.io', 'raw.githack.com', 'cdn.jsdelivr.net'];
-
 fs.mkdirSync(outputDirectory, { recursive: true });
 const assert = (condition, code) => { if (!condition) throw new Error(code); };
 const writeJson = (filename, value) => fs.writeFileSync(path.join(outputDirectory, filename), `${JSON.stringify(value, null, 2)}\n`);
 const sha256 = (value) => `sha256:${crypto.createHash('sha256').update(value).digest('hex')}`;
-const hostedUrl = (host, revision, repositoryPath) => {
-  if (host === 'cdn.statically.io') return `https://${host}/gh/${repository}/${revision}/${repositoryPath}`;
-  if (host === 'cdn.jsdelivr.net') return `https://${host}/gh/${repository}@${revision}/${repositoryPath}`;
-  return `https://${host}/${repository}/${revision}/${repositoryPath}`;
-};
 
 assert(/^[0-9a-f]{40}$/.test(previewHead ?? ''), 'R3F2_PREVIEW_HEAD_INVALID');
 const parent = evaluateHEarthRun8ER3Control();
@@ -35,30 +24,16 @@ assert(parent.eligible === true && parent.status === 'RUN_8E_R3F2_PARENT_PREVIEW
 assert(child.eligible === true && child.status === 'RUN_8E_R3F2_PREVIEW_CONSTRUCTION_ELIGIBLE', `R3F2_CHILD_REJECTED:${child.issues.join(',')}`);
 
 const predecessorPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json';
-const failurePaths = [
-  'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-001.failure.receipt.json',
-  'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-002.failure.receipt.json'
-];
-assert(fs.existsSync(predecessorPath), 'R3F2_R3F1_RECEIPT_MISSING');
+const failurePaths = [1, 2, 3].map((number) => `h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-00${number}.failure.receipt.json`);
 const predecessor = JSON.parse(fs.readFileSync(predecessorPath, 'utf8'));
 assert(predecessor?.eligible === true && predecessor?.status === 'RUN_8E_R3F1_PASS_CLOSED', 'R3F2_R3F1_RECEIPT_INVALID');
-assert(predecessor?.receiptPath === '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json', 'R3F2_R3F1_RECEIPT_PATH_INVALID');
 const failedAttempts = failurePaths.map((receiptPath, index) => {
   assert(fs.existsSync(receiptPath), `R3F2_ATTEMPT_00${index + 1}_FAILURE_RECEIPT_MISSING`);
   const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
   assert(receipt?.eligible === true && receipt?.publicSourceDefectEstablished === false, `R3F2_ATTEMPT_00${index + 1}_FAILURE_RECEIPT_INVALID`);
   return receipt;
 });
-assert(failedAttempts[0].failureClass === 'HOSTED_LAUNCHER_NOT_RENDERED_AS_DOCUMENT', 'R3F2_ATTEMPT_001_FAILURE_CLASS_INVALID');
-assert(failedAttempts[1].failureClass === 'HOSTED_LAUNCHER_DOM_NOT_OBSERVED_AFTER_TEXT_HTML_RESPONSE', 'R3F2_ATTEMPT_002_FAILURE_CLASS_INVALID');
-
-const launcherHtml = fs.readFileSync(launcherPath, 'utf8');
-const launcherScript = fs.readFileSync(launcherScriptPath, 'utf8');
-for (const required of [sourceHead, publicHtmlGitBlob, publicOrchestratorGitBlob, '600000', 'PHYSICAL_LOCAL', 'IMMUTABLE_HOSTED_PREVIEW', 'cdn.statically.io', 'cdn.jsdelivr.net']) {
-  assert(launcherScript.includes(required), `R3F2_LAUNCHER_REQUIREMENT_MISSING:${required}`);
-}
-assert(launcherHtml.includes('h-earth.run8e-r3f2.reference-device-evidence-launcher.js'), 'R3F2_LAUNCHER_SCRIPT_LINK_MISSING');
-assert(!launcherHtml.includes('/showroom/globe/h-earth/index.html'), 'R3F2_LAUNCHER_HTML_EMBEDS_MUTABLE_ROUTE');
+assert(failedAttempts[2].authorizedCorrection === 'CONSTRUCT_SIGNED_SELF_CONTAINED_OFFLINE_PACKAGE_AND_VALIDATE_BY_LOOPBACK', 'R3F2_OFFLINE_PACKAGE_NOT_AUTHORIZED');
 
 const registry = loadHEarthRepositoryRegistryValidatorDependencies();
 assert(registry.identityVerified === true, 'R3F2_REGISTRY_LOADER_IDENTITY_FAILED');
@@ -70,128 +45,97 @@ for (const repositoryPath of H_EARTH_RUN_8E_R3F2_PATHS) {
   assert(resolution?.resolved === true, `R3F2_REGISTRY_PATH_UNRESOLVED:${repositoryPath}`);
 }
 
-async function fetchWithRetry(url, attempts = 8) {
-  let lastStatus = null;
-  let lastError = null;
-  for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    try {
-      const response = await fetch(url, { redirect: 'follow', cache: 'no-store' });
-      lastStatus = response.status;
-      if (response.ok) return { response, attempt };
-    } catch (error) {
-      lastError = error?.message ?? String(error);
-    }
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-  }
-  throw new Error(`HOSTED_URL_UNAVAILABLE:${lastStatus}:${lastError}`);
+const built = await buildHEarthRun8ER3F2SignedOfflinePackage({ outputDirectory, packageHead: previewHead });
+const manifest = built.manifest;
+assert(manifest.packageClass === 'SIGNED_OFFLINE_PACKAGE', 'R3F2_PACKAGE_CLASS_INVALID');
+assert(manifest.signatureClass === 'GIT_COMMIT_AND_SHA256_CONTENT_BINDING', 'R3F2_SIGNATURE_CLASS_INVALID');
+assert(manifest.packageHead === previewHead, 'R3F2_PACKAGE_HEAD_MISMATCH');
+assert(manifest.sourceHead === '548672ae99cd406805f0c8ca576cc650baf7ed18', 'R3F2_PACKAGE_SOURCE_HEAD_MISMATCH');
+assert(manifest.publicHtmlGitBlob === '0daedf61f7e19af095f4db5fc47563a9cd786837', 'R3F2_PACKAGE_HTML_BLOB_MISMATCH');
+assert(manifest.publicOrchestratorGitBlob === '2b0a916b3a6d11da84316925f8abd8a3a1447445', 'R3F2_PACKAGE_ORCHESTRATOR_BLOB_MISMATCH');
+assert(manifest.packageByteCount > 100000, 'R3F2_PACKAGE_UNEXPECTEDLY_SMALL');
+assert(manifest.packageSha256 === sha256(fs.readFileSync(built.packagePath)), 'R3F2_PACKAGE_DIGEST_MISMATCH');
+assert(built.packageDocument.includes('H_EARTH_RUN8E_R3F2_SIGNED_OFFLINE_PACKAGE'), 'R3F2_PACKAGE_MARKER_MISSING');
+assert(!built.packageDocument.includes('src="./functional-landscape/public-live-gpu-integration'), 'R3F2_EXTERNAL_MODULE_REMAINED');
+assert(!built.packageDocument.includes('href="./functional-landscape/index.css'), 'R3F2_EXTERNAL_FUNCTIONAL_CSS_REMAINED');
+
+async function inspectPackage(page, url, evidenceClass, screenshotName) {
+  const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  if (url.startsWith('http:')) assert(response?.status() === 200, 'R3F2_LOOPBACK_PACKAGE_HTTP_NOT_200');
+  await page.locator('#deviceModel').waitFor({ state: 'visible', timeout: 30000 });
+  await page.fill('#deviceModel', `CI_${evidenceClass}`);
+  await page.fill('#attestation', 'Supplemental signed-offline package validation only; not physical acceptance.');
+  await page.click('#startButton');
+  await page.waitForFunction(() => document.getElementById('routeFrame')?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 60000 });
+  const result = await page.evaluate(() => {
+    const frame = document.getElementById('routeFrame');
+    const api = frame?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE;
+    const receipt = api?.getSnapshot?.();
+    const canvas = frame?.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
+    return {
+      routeApiReady: api?.ready === true,
+      sameOriginAccess: Boolean(frame?.contentDocument && api),
+      launcherInstrumentationReady: canvas instanceof HTMLCanvasElement && Boolean(receipt?.intake && receipt?.liveGpu),
+      routeIntegrationId: api?.integrationId ?? null,
+      initialAcceptedProposalCount: receipt?.intake?.counters?.acceptedNavigationProposalCount ?? null,
+      initialVisibleFrameCount: receipt?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? null,
+      activeWebGL2ContextCount: receipt?.runtimeExclusivity?.activeWebGL2ContextCount ?? null,
+      packageClass: window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA?.packageClass ?? null,
+      packageHead: window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA?.packageHead ?? null
+    };
+  });
+  assert(result.routeApiReady === true, `R3F2_${evidenceClass}_ROUTE_API_NOT_READY`);
+  assert(result.sameOriginAccess === true, `R3F2_${evidenceClass}_SAME_ORIGIN_ACCESS_FAILED`);
+  assert(result.launcherInstrumentationReady === true, `R3F2_${evidenceClass}_INSTRUMENTATION_NOT_READY`);
+  assert(result.activeWebGL2ContextCount === 1, `R3F2_${evidenceClass}_WEBGL2_CONTEXT_COUNT_INVALID`);
+  assert(result.packageClass === 'SIGNED_OFFLINE_PACKAGE' && result.packageHead === previewHead, `R3F2_${evidenceClass}_PACKAGE_IDENTITY_INVALID`);
+  await page.screenshot({ path: path.join(outputDirectory, screenshotName), fullPage: true });
+  return result;
 }
+
+const server = http.createServer((request, response) => {
+  if (request.url === '/' || request.url === `/${manifest.packageFilename}`) {
+    response.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
+    response.end(built.packageDocument);
+    return;
+  }
+  response.writeHead(404).end();
+});
+await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+const address = server.address();
+const loopbackUrl = `http://127.0.0.1:${address.port}/${manifest.packageFilename}`;
+const fileUrl = pathToFileURL(built.packagePath).href;
 
 const browser = await chromium.launch({ headless: true });
-const qualificationAttempts = [];
-let selected = null;
-for (const host of hostCandidates) {
-  const launcherUrl = hostedUrl(host, previewHead, launcherPath);
-  const routeUrl = hostedUrl(host, sourceHead, routePath);
-  const attempt = { host, launcherUrl, routeUrl, passed: false };
-  let page;
-  try {
-    const launcherFetch = await fetchWithRetry(launcherUrl);
-    const routeFetch = await fetchWithRetry(routeUrl);
-    attempt.launcherHttpStatus = launcherFetch.response.status;
-    attempt.routeHttpStatus = routeFetch.response.status;
-    attempt.launcherContentType = launcherFetch.response.headers.get('content-type') ?? '';
-    attempt.routeContentType = routeFetch.response.headers.get('content-type') ?? '';
-    const hostedLauncherHtml = await launcherFetch.response.text();
-    const hostedRouteHtml = await routeFetch.response.text();
-    attempt.launcherBytesMatched = hostedLauncherHtml.includes('H-Earth Run 8E');
-    attempt.routeBytesMatched = hostedRouteHtml.includes('h-earth-functional-landscape-route');
-    if (!attempt.launcherBytesMatched || !attempt.routeBytesMatched) throw new Error('HOSTED_BYTES_IDENTITY_NOT_OBSERVED');
-
-    const context = await browser.newContext({ viewport: { width: 412, height: 915 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
-    page = await context.newPage();
-    const response = await page.goto(launcherUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    attempt.browserLauncherHttpStatus = response?.status() ?? null;
-    await page.locator('#deviceModel').waitFor({ state: 'visible', timeout: 15000 });
-    attempt.launcherDomReady = true;
-    await page.fill('#deviceModel', 'CI_SUPPLEMENTAL_ANDROID_EMULATION');
-    await page.fill('#attestation', 'Supplemental hosted-preview validation only; not physical acceptance.');
-    await page.click('#startButton');
-    await page.waitForFunction(() => document.getElementById('routeFrame')?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 60000 });
-    const hostedValidation = await page.evaluate(() => {
-      const frame = document.getElementById('routeFrame');
-      const api = frame?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE;
-      const receipt = api?.getSnapshot?.();
-      const canvas = frame?.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
-      return {
-        routeApiReady: api?.ready === true,
-        iframeSameOriginAccess: Boolean(frame?.contentDocument && api),
-        launcherInstrumentationReady: canvas instanceof HTMLCanvasElement && Boolean(receipt?.intake && receipt?.liveGpu),
-        routeIntegrationId: api?.integrationId ?? null,
-        initialAcceptedProposalCount: receipt?.intake?.counters?.acceptedNavigationProposalCount ?? null,
-        initialVisibleFrameCount: receipt?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? null,
-        activeWebGL2ContextCount: receipt?.runtimeExclusivity?.activeWebGL2ContextCount ?? null,
-        publicRouteSource: frame?.src ?? null
-      };
-    });
-    Object.assign(attempt, hostedValidation);
-    if (hostedValidation.routeApiReady !== true || hostedValidation.iframeSameOriginAccess !== true || hostedValidation.launcherInstrumentationReady !== true || hostedValidation.activeWebGL2ContextCount !== 1) {
-      throw new Error('HOSTED_RUNTIME_QUALIFICATION_FAILED');
-    }
-    attempt.passed = true;
-    await page.screenshot({ path: path.join(outputDirectory, 'h-earth.run8e-r3f2.hosted-launcher.png'), fullPage: true });
-    selected = { host, launcherUrl, routeUrl, attempt };
-    await context.close();
-    qualificationAttempts.push(attempt);
-    break;
-  } catch (error) {
-    attempt.error = error?.message ?? String(error);
-    qualificationAttempts.push(attempt);
-    if (page) await page.context().close().catch(() => {});
-  }
-}
+const context = await browser.newContext({ viewport: { width: 412, height: 915 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+const loopbackPage = await context.newPage();
+const loopbackValidation = await inspectPackage(loopbackPage, loopbackUrl, 'LOOPBACK', 'h-earth.run8e-r3f2.offline-package.loopback.png');
+await loopbackPage.close();
+const filePage = await context.newPage();
+const fileValidation = await inspectPackage(filePage, fileUrl, 'FILE_URL', 'h-earth.run8e-r3f2.offline-package.file-url.png');
+await filePage.close();
+await context.close();
 await browser.close();
-assert(selected !== null, `R3F2_NO_HOST_CANDIDATE_PASSED:${qualificationAttempts.map((entry) => `${entry.host}:${entry.error}`).join('|')}`);
+await new Promise((resolve) => server.close(resolve));
 
-const descriptor = `${selected.host}|${previewHead}|${sourceHead}|${publicHtmlGitBlob}|${publicOrchestratorGitBlob}`;
-const descriptorDigest = sha256(descriptor);
-const previewManifest = {
-  manifestId: 'H_EARTH_RUN_8E_R3F2_IMMUTABLE_HOSTED_PREVIEW_MANIFEST_v1',
-  transportClass: 'IMMUTABLE_HOSTED_PREVIEW',
-  hostQualificationClass: 'BOUNDED_COMMIT_PINNED_HTML_EXECUTION_HOST_SET',
-  hostCandidates,
-  selectedHost: selected.host,
-  previewPackageHead: previewHead,
-  launcherUrl: selected.launcherUrl,
-  routeUrl: selected.routeUrl,
-  sourceHead,
-  publicHtmlGitBlob,
-  publicOrchestratorGitBlob,
-  packageDescriptor: descriptor,
-  packageDescriptorSha256: descriptorDigest,
-  qualificationAttempts,
-  failedAttemptCount: 2,
-  productionDeployment: false,
-  physicalReferenceDeviceExecution: false,
-  broaderMobileExecution: false
-};
+const packageManifestSha256 = sha256(fs.readFileSync(path.join(outputDirectory, 'h-earth.run8e-r3f2.signed-offline-package.manifest.json')));
 const executionReceipt = {
-  receiptType: 'H_EARTH_RUN_8E_R3F2_IMMUTABLE_HOSTED_PREVIEW_VALIDATION_RECEIPT',
+  receiptType: 'H_EARTH_RUN_8E_R3F2_SIGNED_OFFLINE_PACKAGE_VALIDATION_RECEIPT',
   eligible: true,
   status: 'RUN_8E_R3F2_PREVIEW_VALIDATION_PASS',
   parentControl: parent,
   childControl: child,
   predecessor: { path: `/${predecessorPath}`, status: predecessor.status, eligible: predecessor.eligible, expectedGitBlob: 'd8b5f3b4626014af6b62362d1bac26e120f50e60' },
   failedAttemptCustody: failedAttempts.map((receipt, index) => ({ path: `/${failurePaths[index]}`, attemptId: receipt.attemptId, head: receipt.head, workflowRun: receipt.workflowRun, workflowJob: receipt.workflowJob, artifactId: receipt.artifactId, artifactDigest: receipt.artifactDigest, failureClass: receipt.failureClass, publicSourceDefectEstablished: false })),
-  previewManifest,
-  hostedValidation: selected.attempt,
+  packageManifest: manifest,
+  packageManifestSha256,
+  validation: { loopbackUrl, fileUrl, loopbackValidation, fileValidation },
   registryAudit: { identityVerified: registry.identityVerified, nodeId: registeredNode.nodeId, lifecycleStatus: registeredNode.lifecycleStatus, registeredPathCount: H_EARTH_RUN_8E_R3F2_PATHS.length, allPathsResolved: true, loaderReadOnly: registry.boundary.readOnly },
-  evidenceClass: 'SUPPLEMENTAL_HOSTED_BROWSER_VALIDATION_NOT_PHYSICAL_ACCEPTANCE',
+  evidenceClass: 'SUPPLEMENTAL_SIGNED_OFFLINE_PACKAGE_BROWSER_VALIDATION_NOT_PHYSICAL_ACCEPTANCE',
   boundaries: { showroomSourceMutated: false, publicRouteMutated: false, publicRuntimeMutated: false, physicalReferenceDeviceExecuted: false, physicalReferenceDeviceAccepted: false, broaderMobileExecuted: false, productionDeployed: false, promoted: false, mainMerged: false, run8EPassClosed: false },
   nextState: 'RUN_8E_R3F2_PHYSICAL_EXECUTION_PENDING',
   stoppingBoundary: 'STOP_BEFORE_REFERENCE_DEVICE_PHYSICAL_EXECUTION_R3F2',
   issues: []
 };
-writeJson('h-earth.run8e-r3f2.host-qualification.attempts.json', qualificationAttempts);
-writeJson('h-earth.run8e-r3f2.immutable-hosted-preview.manifest.json', previewManifest);
-writeJson('h-earth.run8e-r3f2.immutable-hosted-preview.execution.receipt.json', executionReceipt);
-console.log(JSON.stringify({ status: executionReceipt.status, previewPackageHead: previewHead, selectedHost: selected.host, launcherUrl: selected.launcherUrl, routeUrl: selected.routeUrl, packageDescriptorSha256: descriptorDigest, hostedValidation: selected.attempt, registeredPathCount: executionReceipt.registryAudit.registeredPathCount, boundaries: executionReceipt.boundaries, stoppingBoundary: executionReceipt.stoppingBoundary }, null, 2));
+writeJson('h-earth.run8e-r3f2.signed-offline-package.execution.receipt.json', executionReceipt);
+console.log(JSON.stringify({ status: executionReceipt.status, packageFilename: manifest.packageFilename, packageByteCount: manifest.packageByteCount, packageSha256: manifest.packageSha256, packageManifestSha256, loopbackValidation, fileValidation, registeredPathCount: executionReceipt.registryAudit.registeredPathCount, boundaries: executionReceipt.boundaries, stoppingBoundary: executionReceipt.stoppingBoundary }, null, 2));

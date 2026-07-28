@@ -30,11 +30,32 @@ try {
   assert.ok(response, 'CP3D_ROUTE_RESPONSE_MISSING');
   assert.ok(response.status() >= 200 && response.status() < 400, `CP3D_ROUTE_HTTP_STATUS:${response.status()}`);
 
-  await page.waitForFunction(() => globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 90_000 });
+  await page.waitForFunction(() => {
+    const ready = globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true;
+    const startup = globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+    return ready || Boolean(startup?.firstFailureStage);
+  }, null, { timeout: 30_000 });
+
+  const startupReceipt = await page.evaluate(() => globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null);
+  if (startupReceipt?.firstFailureStage) {
+    const failureReceipt = {
+      receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_REAL_BROWSER_RENDERER_SURVIVAL_FAILURE_v1',
+      eligible: false,
+      status: 'CP3D_REAL_BROWSER_RENDERER_SURVIVAL_FAIL',
+      route,
+      startupReceipt,
+      consoleMessages,
+      pageErrors
+    };
+    await page.screenshot({ path: `${evidenceDirectory}/cp3d-browser-failure.png`, fullPage: true });
+    await writeFile(`${evidenceDirectory}/cp3d-browser-survival.failure.json`, `${JSON.stringify(failureReceipt, null, 2)}\n`);
+    throw new Error(`CP3D_BROWSER_STARTUP_FAILURE:${startupReceipt.firstFailureStage}:${startupReceipt.exceptionMessage ?? startupReceipt.failureClass ?? 'UNKNOWN'}`);
+  }
+
   await page.waitForFunction(() => {
     const snapshot = globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.();
     return Number(snapshot?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? 0) >= 1;
-  }, null, { timeout: 90_000 });
+  }, null, { timeout: 60_000 });
 
   receipt = await page.evaluate(() => globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE.getSnapshot());
   assert.equal(receipt?.eligible, true, 'CP3D_PUBLIC_RECEIPT_NOT_ELIGIBLE');

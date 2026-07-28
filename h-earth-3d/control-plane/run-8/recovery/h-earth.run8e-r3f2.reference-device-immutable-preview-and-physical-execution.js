@@ -36,12 +36,12 @@ export const H_EARTH_RUN_8E_R3F2_CONTROL = freeze({
   }),
   immutablePreview: freeze({
     transportClass: 'IMMUTABLE_HOSTED_PREVIEW',
-    hostClass: 'COMMIT_PINNED_OPEN_SOURCE_CDN',
-    host: 'cdn.jsdelivr.net',
+    hostClass: 'COMMIT_PINNED_HTML_EXECUTION_CDN',
+    host: 'raw.githack.com',
     routeSourceHead: '548672ae99cd406805f0c8ca576cc650baf7ed18',
     publicHtmlGitBlob: '0daedf61f7e19af095f4db5fc47563a9cd786837',
     publicOrchestratorGitBlob: '2b0a916b3a6d11da84316925f8abd8a3a1447445',
-    routeUrl: 'https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@548672ae99cd406805f0c8ca576cc650baf7ed18/showroom/globe/h-earth/index.html',
+    routeUrl: 'https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/548672ae99cd406805f0c8ca576cc650baf7ed18/showroom/globe/h-earth/index.html',
     launcherPath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.html',
     launcherScriptPath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js',
     previewPackageHead: null,
@@ -51,6 +51,17 @@ export const H_EARTH_RUN_8E_R3F2_CONTROL = freeze({
     exactSourceIdentityRequired: true,
     productionDeployment: false
   }),
+  failedAttemptCustody: freeze([{ 
+    attemptId: 'RUN_8E_R3F2_PREVIEW_ATTEMPT_001',
+    head: '3c4f9d4d985365dc74e740bca9bd9db2cbbb7442',
+    workflowRun: 30315690708,
+    workflowJob: 90140603432,
+    artifactId: 8672061710,
+    artifactDigest: 'sha256:0cbb9c6c28bb9ab4103cda3ec04b7563a3bc69e0b0355a4324bd34d9f73aa918',
+    failureClass: 'HOSTED_LAUNCHER_NOT_RENDERED_AS_DOCUMENT',
+    publicSourceDefectEstablished: false,
+    authorizedCorrection: 'CHANGE_COMMIT_PINNED_HOST_ONLY_AND_RERUN'
+  }]),
   previewValidationEvidence: freeze({
     successfulValidationHead: null,
     workflowRun: null,
@@ -110,10 +121,11 @@ export function evaluateHEarthRun8ER3F2Control(candidate = H_EARTH_RUN_8E_R3F2_C
   if (candidate?.predecessor?.passReceiptGitBlob !== 'd8b5f3b4626014af6b62362d1bac26e120f50e60') issues.push('R3F1_PASS_RECEIPT_BLOB_MISMATCH');
   if (!['PREVIEW_CONSTRUCTION_PENDING', 'PREVIEW_READY_PHYSICAL_EXECUTION_PENDING', 'PASS_CLOSED'].includes(candidate?.currentStatus)) issues.push('R3F2_STATUS_INVALID');
   const preview = candidate?.immutablePreview ?? {};
-  if (preview.transportClass !== 'IMMUTABLE_HOSTED_PREVIEW' || preview.host !== 'cdn.jsdelivr.net') issues.push('R3F2_PREVIEW_TRANSPORT_INVALID');
+  if (preview.transportClass !== 'IMMUTABLE_HOSTED_PREVIEW' || preview.host !== 'raw.githack.com') issues.push('R3F2_PREVIEW_TRANSPORT_INVALID');
   if (preview.routeSourceHead !== '548672ae99cd406805f0c8ca576cc650baf7ed18') issues.push('R3F2_ROUTE_SOURCE_HEAD_MISMATCH');
   if (preview.publicHtmlGitBlob !== '0daedf61f7e19af095f4db5fc47563a9cd786837' || preview.publicOrchestratorGitBlob !== '2b0a916b3a6d11da84316925f8abd8a3a1447445') issues.push('R3F2_PUBLIC_SOURCE_BLOB_MISMATCH');
   if (preview.sameOriginEvidenceInstrumentation !== true || preview.productionDeployment !== false) issues.push('R3F2_PREVIEW_BOUNDARY_INVALID');
+  if ((candidate?.failedAttemptCustody ?? []).length !== 1 || candidate?.failedAttemptCustody?.[0]?.publicSourceDefectEstablished !== false) issues.push('R3F2_FAILED_ATTEMPT_CUSTODY_INVALID');
   if (candidate?.currentStatus !== 'PREVIEW_CONSTRUCTION_PENDING') {
     if (!/^[0-9a-f]{40}$/.test(preview.previewPackageHead ?? '')) issues.push('R3F2_PREVIEW_PACKAGE_HEAD_MISSING');
     if (typeof preview.launcherUrl !== 'string' || !preview.launcherUrl.includes(preview.previewPackageHead)) issues.push('R3F2_LAUNCHER_URL_INVALID');

@@ -46,7 +46,7 @@ jobs:
       - name: Run browser gate
         run: |
           python3 -m http.server 4173 >/tmp/products-http.log 2>&1 &
-          cat > /tmp/products-gate.mjs <<'EOF'
+          cat > products-gate.mjs <<'EOF'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
 
@@ -122,7 +122,7 @@ jobs:
           }
           console.log(JSON.stringify(result, null, 2));
           EOF
-          node /tmp/products-gate.mjs
+          node products-gate.mjs
 
       - uses: actions/upload-artifact@v4
         if: always()

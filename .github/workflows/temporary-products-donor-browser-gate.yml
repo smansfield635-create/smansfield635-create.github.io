@@ -8,8 +8,6 @@ on:
 permissions:
   contents: write
 
-actions:
-
 jobs:
   browser-gate:
     if: github.actor != 'github-actions[bot]'

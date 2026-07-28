@@ -14,7 +14,7 @@ export const H_EARTH_RUN_8E_R3F2_P3C_CONTROL = freeze({
   contractId: H_EARTH_RUN_8E_R3F2_P3C_CONTROL_ID,
   checkpointId: 'RUN_8E_R3F2_P3C',
   checkpointName: 'EXECUTABLE_PUBLICATION_TRIGGER_CORRECTION',
-  currentStatus: 'CORRECTION_EXECUTION_OPEN',
+  currentStatus: 'PASS_CLOSED',
   repository: 'smansfield635-create/smansfield635-create.github.io',
   branch: 'agent/h-earth-run8e-r3f2-p3c-executable-publication-trigger-correction-001',
   baseBranch: 'agent/h-earth-run8e-r3f2-p3-non-production-publication-configuration-001',
@@ -71,7 +71,15 @@ export const H_EARTH_RUN_8E_R3F2_P3C_CONTROL = freeze({
     'PRODUCTION_DEPLOYMENT','CUSTOM_DOMAIN_BINDING','HOSTED_BROWSER_VALIDATION',
     'PHYSICAL_REFERENCE_DEVICE_EXECUTION','R3F3_WORK','R3F4_WORK','R3G_WORK','RUN_8E_PASS_CLOSED'
   ]),
-  closureEvidence: null,
+  closureEvidence: freeze({
+    coreHead: '828aaa730fccc4d449896b8a42288dbf3df9d476',
+    coreWorkflowRun: 30322920026,
+    coreWorkflowJob: 90162334174,
+    coreArtifactId: 8674634271,
+    coreArtifactDigest: 'sha256:d3922d67de48c135d51530af23a0bc7a6790690cbae6592ff6dad461a348b959',
+    passReceiptPath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3c.pass-closed.receipt.json',
+    passReceiptGitBlob: '76fcfe93021084859f664e327ce5de60017c8c6c'
+  }),
   boundaries: freeze({
     previewFilesMaterialized: true,
     deploymentConfigurationCreated: true,
@@ -105,6 +113,10 @@ export function evaluateHEarthRun8ER3F2P3CControl(candidate = H_EARTH_RUN_8E_R3F
   if (trigger.exactAuthorizationSha256 !== 'sha256:fcec8433e8ce995065abd617eba4382f6183227c31f425afa6773efdb7ac66bd' || trigger.exactAuthorizationGitBlob !== 'be55de54f562278927472d961bfca89e20d3d590') issues.push('P3C_AUTHORIZATION_IDENTITY_INVALID');
   if (trigger.requiredChangedPathCount !== 1 || trigger.p3CorrectionReceiptRequiredInParent !== true) issues.push('P3C_ONE_SHOT_GATE_INVALID');
   if (candidate?.preservedConfiguration?.packageSha256 !== 'sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234') issues.push('P3C_PACKAGE_IDENTITY_DRIFT');
+  if (candidate?.currentStatus === 'PASS_CLOSED') {
+    if (candidate?.closureEvidence?.passReceiptGitBlob !== '76fcfe93021084859f664e327ce5de60017c8c6c') issues.push('P3C_RECEIPT_BLOB_MISMATCH');
+    if (candidate?.closureEvidence?.coreWorkflowRun !== 30322920026 || candidate?.closureEvidence?.coreWorkflowJob !== 90162334174) issues.push('P3C_CORE_WORKFLOW_IDENTITY_MISMATCH');
+  }
   if (candidate?.boundaries?.executablePublicationTriggerConfigured !== true || candidate?.boundaries?.networkPublicationPerformed !== false || candidate?.boundaries?.mainChanged !== false) issues.push('P3C_BOUNDARY_INVALID');
   if (candidate?.nextCheckpoint !== 'RUN_8E_R3F2_P4_IMMUTABLE_PREVIEW_PUBLICATION_OCCURRENCE') issues.push('P3C_NEXT_CHECKPOINT_INVALID');
   if (candidate?.stoppingBoundary !== 'STOP_BEFORE_FIRST_NETWORK_PUBLICATION') issues.push('P3C_STOPPING_BOUNDARY_INVALID');

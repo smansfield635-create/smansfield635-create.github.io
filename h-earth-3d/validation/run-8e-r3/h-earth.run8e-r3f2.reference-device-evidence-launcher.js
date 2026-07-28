@@ -4,7 +4,7 @@
   const SOURCE_HEAD = '548672ae99cd406805f0c8ca576cc650baf7ed18';
   const PUBLIC_HTML_BLOB = '0daedf61f7e19af095f4db5fc47563a9cd786837';
   const PUBLIC_ORCHESTRATOR_BLOB = '2b0a916b3a6d11da84316925f8abd8a3a1447445';
-  const ROUTE_URL = `https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@${SOURCE_HEAD}/showroom/globe/h-earth/index.html`;
+  const ROUTE_URL = `https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/${SOURCE_HEAD}/showroom/globe/h-earth/index.html`;
   const MINIMUM_DURATION_MS = 600000;
   const MAXIMUM_RESPONSE_MS = 2000;
   const byId = (id) => document.getElementById(id);
@@ -42,7 +42,8 @@
 
   const orientationValue = () => matchMedia('(orientation: portrait)').matches ? 'PORTRAIT' : 'LANDSCAPE';
   const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-  const sha256Hex = async (bytes) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))).map((value) => value.toString(16).padStart(2, '0')).join('');
+  const sha256Hex = async (bytes) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)))
+    .map((value) => value.toString(16).padStart(2, '0')).join('');
   const fileDigest = async (file) => file ? `sha256:${await sha256Hex(await file.arrayBuffer())}` : null;
   const dataUrlDigest = async (dataUrl) => {
     if (!dataUrl) return null;
@@ -50,7 +51,8 @@
     const bytes = Uint8Array.from(atob(encoded), (character) => character.charCodeAt(0));
     return `sha256:${await sha256Hex(bytes.buffer)}`;
   };
-  const previewHead = () => location.pathname.match(/@([0-9a-f]{40})\//i)?.[1] ?? new URLSearchParams(location.search).get('previewHead');
+  const previewHead = () => location.pathname.match(/\/([0-9a-f]{40})\//i)?.[1]
+    ?? new URLSearchParams(location.search).get('previewHead');
   const packageDescriptor = () => `${previewHead() ?? 'UNRESOLVED'}|${SOURCE_HEAD}|${PUBLIC_HTML_BLOB}|${PUBLIC_ORCHESTRATOR_BLOB}`;
   const currentApi = () => frame.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE ?? null;
   const snapshot = () => currentApi()?.getSnapshot?.() ?? null;
@@ -82,8 +84,8 @@
     const acceptedCount = receipt.intake?.counters?.acceptedNavigationProposalCount ?? 0;
     const visibleFrameCount = receipt.liveGpu?.counters?.gpuFramebufferPresentationCount ?? 0;
     const now = performance.now();
-    const timestampDelta = event && Number.isFinite(event.timeStamp) ? now - event.timeStamp : 0;
-    const responseMs = timestampDelta >= 0 && timestampDelta < 60000 ? timestampDelta : 0;
+    const delta = event && Number.isFinite(event.timeStamp) ? now - event.timeStamp : 0;
+    const responseMs = delta >= 0 && delta < 60000 ? delta : 0;
     for (const proposal of proposals.filter((item) => item.sequence > state.lastProposalSequence)) {
       state.maximumResponseMs = Math.max(state.maximumResponseMs, responseMs);
       state.proposalTrace.push({

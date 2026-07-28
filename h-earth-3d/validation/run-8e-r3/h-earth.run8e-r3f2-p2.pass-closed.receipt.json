@@ -1,0 +1,102 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3F2_P2_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3F2_P2_PASS_CLOSED",
+  "contractId": "H_EARTH_RUN_8E_R3F2_P2_EXACT_PREVIEW_PACKAGE_MATERIALIZATION_v1",
+  "checkpointId": "RUN_8E_R3F2_P2",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3f2-p2-exact-preview-package-materialization-001",
+  "baseExactHead": "7815de03a713414798d5d927038852e6dda210b8",
+  "predecessor": {
+    "checkpointId": "RUN_8E_R3F2_P1",
+    "status": "PASS_CLOSED",
+    "exactHead": "7815de03a713414798d5d927038852e6dda210b8",
+    "passReceiptGitBlob": "f2d4a9f86153912cbd68be8662873f77854107f4"
+  },
+  "candidateIdentity": {
+    "candidateId": "H_EARTH_RUN8E_R3F2_CANDIDATE_SHA256_3020154361523CF19113E4C759C234A6C74FF5A493B8E47124CA59470DA7A234",
+    "packageHead": "fcdcb4e80a98a86773d5276447b880efde2099c9",
+    "packageSha256": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234",
+    "packageByteCount": 1213597,
+    "packageManifestSha256": "sha256:c74d71c1115b5b122d3d12e56014002bd15201c05af25b7d027e8d9ad88f7174",
+    "sourceHead": "548672ae99cd406805f0c8ca576cc650baf7ed18",
+    "publicHtmlGitBlob": "0daedf61f7e19af095f4db5fc47563a9cd786837",
+    "publicOrchestratorGitBlob": "2b0a916b3a6d11da84316925f8abd8a3a1447445"
+  },
+  "materializedPreviewTree": {
+    "repositoryRoot": "/preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/",
+    "exactFileCount": 3,
+    "files": [
+      {
+        "relativePath": "index.html",
+        "byteCount": 1213597,
+        "contentSha256": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234",
+        "gitBlobSha1": "c5127e2d4d9d3558230a8eccd757dade74d6d8c3"
+      },
+      {
+        "relativePath": "preview-manifest.json",
+        "byteCount": 3981,
+        "contentSha256": "sha256:b77b3e88ef4868d0602468da90693c64c46b09442e1fe15013ed4dcf69156dd4",
+        "gitBlobSha1": "81dbbb97898023ae0dabea313ac69b865302d533",
+        "canonicalPayloadSha256": "sha256:e2e1aec478a2a391f29e32c983c56408cfad42fe5c47093b07dad5e5ee84591e"
+      },
+      {
+        "relativePath": "device-evidence-receipt.schema.json",
+        "byteCount": 4586,
+        "contentSha256": "sha256:04ce5ec86f102fb7646b02ad19a3f862b8e6370dcdc971dc252d6bc607e3d18a",
+        "gitBlobSha1": "987268f38fc8b6db6f19b982cc8386439aa0de48"
+      }
+    ],
+    "externalRuntimeRequestCount": 0,
+    "mutableMainDependencyCount": 0,
+    "undeclaredRuntimeDependencyCount": 0,
+    "normalizedReceiptRequiredFieldCount": 23
+  },
+  "initialAttemptCustody": {
+    "workflowRun": 30320403072,
+    "workflowJob": 90154898966,
+    "artifactId": 8673762913,
+    "artifactDigest": "sha256:7e1c992b90a73912007f97434d23940c0bcf7f3850b76b2b362eb9ddc74ecfc3",
+    "materializationPassed": true,
+    "registryPreflightPassed": false,
+    "failureClass": "P2_REGISTRY_DEPENDENCY_CLOSURE_HELPER_DEFECT",
+    "candidatePackageDefectEstablished": false,
+    "previewFileIdentityDefectEstablished": false
+  },
+  "materializationExecution": {
+    "head": "15de81cb063e4afad540c8260587aab4e0ea8de9",
+    "workflowRun": 30320530822,
+    "workflowJob": 90155272418,
+    "artifactId": 8673806780,
+    "artifactDigest": "sha256:2c25c2ac3500dd93db05246348f48f2252d4ebecabee8af80dd36a28662461eb",
+    "automaticRegistryPreflightRun": 30320530811,
+    "automaticRegistryPreflight": "PASS"
+  },
+  "receiptFreeClosureControl": {
+    "head": "a7eafbcb5d9ffc850c936de2e071ba8ad3dbd374",
+    "workflowRun": 30320641140,
+    "workflowJob": 90155590397,
+    "artifactId": 8673843255,
+    "artifactDigest": "sha256:990666ea8ff33316e180eeaef48abcbfa30a88460b49435e75a8602ffe98f3df",
+    "automaticRegistryPreflightRun": 30320641168,
+    "automaticRegistryPreflight": "PASS",
+    "passReceiptPresentDuringControl": false
+  },
+  "boundaries": {
+    "previewFilesMaterialized": true,
+    "deploymentConfigurationCreated": false,
+    "networkPublicationPerformed": false,
+    "previewUrlIssued": false,
+    "showroomMutated": false,
+    "publicLiveHEarthChanged": false,
+    "mainChanged": false,
+    "recoveryStackMerged": false,
+    "productionDeployment": false,
+    "physicalReferenceDeviceExecuted": false,
+    "broaderMobileExecuted": false,
+    "run8EPassClosed": false
+  },
+  "nextCheckpoint": "RUN_8E_R3F2_P3_NON_PRODUCTION_PUBLICATION_CONFIGURATION",
+  "stoppingBoundary": "STOP_BEFORE_HOSTING_OR_NETWORK_PUBLICATION",
+  "issues": []
+}

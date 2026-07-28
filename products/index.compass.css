@@ -101,19 +101,38 @@
 [data-upstream-compass-control] {
   position: absolute;
   inset: 0;
-  display: block;
+  display: grid;
+  place-items: center;
   min-width: 44px;
   min-height: 44px;
   padding: 0;
   margin: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 50%;
   color: inherit;
   background: transparent;
   cursor: pointer;
   pointer-events: auto;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  transition: filter 180ms ease;
+}
+
+.products-compass-control:hover,
+.products-compass-control:focus-visible,
+.products-compass-control[data-selected="true"],
+.products-compass-control[aria-expanded="true"],
+[data-products-center-control]:hover,
+[data-products-center-control]:focus-visible,
+[data-products-center-control][data-selected="true"],
+[data-products-center-control][aria-expanded="true"] {
+  filter: brightness(1.08) drop-shadow(0 0 14px rgba(234, 208, 131, .16));
+}
+
+.products-compass-control:focus-visible,
+[data-products-center-control]:focus-visible {
+  outline: 3px solid rgba(234, 208, 131, .92);
+  outline-offset: 4px;
 }
 
 .products-compass-control__label {
@@ -256,6 +275,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .products-compass-control,
+  [data-products-center-control],
   .products-semantic [data-products-product]::after {
     transition: none;
   }

@@ -15,14 +15,21 @@ const gitBlobSha = text => {
 };
 const count = (text, pattern) => (text.match(pattern) || []).length;
 
-const [html, arenaCss, controller, crystals, planet, center] = await Promise.all([
+const [html, arenaCss, compassCss, controller, crystals, planet, compositor] = await Promise.all([
   read("products/index.html"),
   read("products/index.arena.css"),
+  read("products/index.compass.css"),
   read("products/index.controller.js"),
   read("products/index.crystals.js"),
   read("products/index.planet.js"),
-  read("products/index.controller.center.js")
+  read("products/index.compositor.js")
 ]);
+
+const centerControlStart = html.indexOf('<button type="button" class="products-compass-control"');
+const centerControlEnd = html.indexOf("</button>", centerControlStart);
+const centerControlMarkup = centerControlStart >= 0 && centerControlEnd > centerControlStart
+  ? html.slice(centerControlStart, centerControlEnd + "</button>".length)
+  : "";
 
 const assertions = {
   toolIdentity: TOOL_ID === "PRODUCTS_ARENA_CLUSTER_BENCHMARK_v1",
@@ -32,56 +39,68 @@ const assertions = {
     html.includes(`data-product-id="${product.id}"`) &&
     html.includes(`data-route="${product.route}"`)
   ),
+  singleCenterControl:
+    count(html, /data-products-center-control/g) === 1 &&
+    count(html, /data-upstream-compass-control/g) === 1,
   centerDisclosureSemantics:
-    html.includes('data-products-center-role="MAIN_COMPASS_RETURN_DISCLOSURE"') &&
-    html.includes('aria-controls="products-context"') &&
-    html.includes('aria-expanded="false"'),
+    centerControlMarkup.includes('data-products-center-role="MAIN_COMPASS_RETURN_DISCLOSURE"') &&
+    centerControlMarkup.includes('data-products-compass-semantic-model') === false &&
+    centerControlMarkup.includes('aria-label="Open Main Compass return options"') &&
+    centerControlMarkup.includes('aria-controls="products-context"') &&
+    centerControlMarkup.includes('aria-expanded="false"'),
+  renderedGlobeOwnedByCenterControl:
+    centerControlMarkup.includes("data-products-planet-mount") &&
+    centerControlMarkup.includes("data-products-compass-visual-mount") &&
+    centerControlMarkup.indexOf("data-products-planet-mount") < centerControlMarkup.lastIndexOf("</button>"),
+  globeRemainsVisualOnly:
+    centerControlMarkup.includes('data-products-compass-visual-only="true"') &&
+    centerControlMarkup.includes('data-products-compass-pointer-authority="false"') &&
+    centerControlMarkup.includes('aria-hidden="true"'),
   explicitReturnOption:
-    html.includes('data-products-return-main-compass') &&
+    html.includes("data-products-return-main-compass") &&
     html.includes('href="/"') &&
-    html.includes('Return to Main Compass'),
+    html.includes("Return to Main Compass"),
+  controllerOwnsDisclosure:
+    controller.includes("function setCenterDisclosure(open)") &&
+    controller.includes("state.centerDisclosureOpen = Boolean(open) && centerStateAllowed()") &&
+    controller.includes('state.centerControl.setAttribute(\n        "aria-expanded"'),
   singleTapDisclosureContract:
-    center.includes('function activateDisclosure') &&
-    center.includes('activateDisclosure(event, "single-tap")') &&
-    center.includes('state.disclosureOpen = Boolean(open)'),
-  secondSingleTapClosesDisclosure:
-    center.includes('const nextOpen = !state.disclosureOpen') &&
-    center.includes('setDisclosure(nextOpen') &&
-    center.includes('state.control.setAttribute("aria-expanded"'),
+    controller.includes("function requestCompassSelection(event)") &&
+    controller.includes("setCenterDisclosure(true)") &&
+    controller.includes('lastAction: "compass-selected-local"'),
   explicitReturnNavigation:
-    center.includes('navigateToMainCompass("explicit-main-compass-navigation-requested"') &&
-    count(center, /location\.assign/g) === 1,
-  doubleTapBounded:
-    center.includes("const DOUBLE_TAP_WINDOW_MS = 300") &&
-    center.includes('navigateToMainCompass("double-tap-main-compass-navigation-requested"'),
-  movementCancellation:
-    center.includes("const TAP_MAX_MOVEMENT_PX = 10") &&
-    center.includes('lastAction: "center-tap-cancelled-for-drag"'),
-  pointerCancelClearsPendingTap:
-    center.includes("function onPointerCancel") &&
-    center.includes("state.lastTapAt = 0") &&
-    center.includes('lastAction: "center-pointer-cancelled"'),
+    controller.includes("function requestReturnToMainCompass(event)") &&
+    controller.includes("globalThis.location.assign(CENTER_CONTINUITY.route)") &&
+    count(controller, /globalThis\.location\.assign/g) === 2,
   noSecondProductsAuthority:
-    center.includes("createsSecondController: false") &&
-    center.includes("ownsProductRegistry: false") &&
-    center.includes("ownsGesture: false") &&
-    center.includes("ownsCanvas: false") &&
-    center.includes("ownsAnimationLoop: false"),
+    count(controller, /const CONTROLLER_SYMBOL = "DGB_PRODUCTS_CONTROLLER"/g) === 1 &&
+    !compassCss.includes("animation:") &&
+    count(html, /data-products-center-control/g) === 1,
+  archcoinControlAffordance:
+    compassCss.includes(".products-compass-control:hover") &&
+    compassCss.includes('.products-compass-control[aria-expanded="true"]') &&
+    compassCss.includes("brightness(1.08)") &&
+    compassCss.includes("drop-shadow(0 0 14px rgba(234, 208, 131, .16))"),
+  keyboardFocusAffordance:
+    compassCss.includes(".products-compass-control:focus-visible") &&
+    compassCss.includes("outline: 3px solid rgba(234, 208, 131, .92)") &&
+    compassCss.includes("outline-offset: 4px"),
   sharedCenterSize:
     arenaCss.includes("--products-center-size: clamp(4.5rem, 9vw, 7rem)") &&
     count(arenaCss, /width:\s*var\(--products-center-size\)/g) === 2,
   mobileSizeAuthority:
     arenaCss.includes("--products-center-size: clamp(4.25rem, 18vw, 5.5rem)"),
-  oversizedGoldenRingAbsent:
-    !arenaCss.includes("inset: -8px") &&
-    arenaCss.includes(".products-center-control:focus-visible::after") &&
-    arenaCss.includes("inset: .18rem"),
   touchFootprintMatchesVisiblePlanet:
     count(arenaCss, /width:\s*var\(--products-center-size\)/g) === 2,
   planetVisualAuthorityPreserved:
     planet.includes("ownsNavigation: false") &&
     planet.includes("fallback: false") &&
     !planet.includes("location.assign"),
+  compositorArchitecturePreserved:
+    compositor.includes("function beginFrame") &&
+    compositor.includes("function partitionNodes") &&
+    compositor.includes("rearTarget") &&
+    compositor.includes("frontTarget"),
   quickFlickSourcePreserved:
     crystals.includes("CLUSTER_FLICK_RETURN") &&
     crystals.includes("requestControllerReturnToConstellation"),
@@ -92,9 +111,9 @@ const assertions = {
     crystals.includes("function nearestPrimaryProduct") &&
     crystals.includes('element.dataset.primary = primary ? "true" : "false"'),
   controllerAnchorBlobPreserved:
-    gitBlobSha(controller) === "3eb38cc35a88936b884891d3dfe735a71583bf34",
+    gitBlobSha(controller) === "3bf31e29f6743a8660b12a30c5fb56d087ca3199",
   crystalsAnchorBlobPreserved:
-    gitBlobSha(crystals) === "6622f9cfd9e44589cf0e94119697256385f1317d"
+    gitBlobSha(crystals) === "db6889500dccab53365a564feb1aa96f34b4200d"
 };
 
 const failures = Object.entries(assertions)
@@ -103,21 +122,19 @@ const failures = Object.entries(assertions)
 
 const receipt = {
   tool: TOOL_ID,
-  checkpoint: "PRODUCTS_ARENA_CLUSTER_CORRECTIVE_CONTINUITY_CHECKPOINT_3",
-  classification: "CORRECTIVE_CONTINUITY_SOURCE_ASSERTIONS",
+  checkpoint: "PRODUCTS_ARENA_CLUSTER_ACCEPTED_COMPASS_CONTINUITY_CHECKPOINT_4",
+  classification: "ACCEPTED_COMPASS_SOURCE_ASSERTIONS",
   anchors: {
-    controllerGitBlob: "3eb38cc35a88936b884891d3dfe735a71583bf34",
-    crystalsGitBlob: "6622f9cfd9e44589cf0e94119697256385f1317d"
+    controllerGitBlob: "3bf31e29f6743a8660b12a30c5fb56d087ca3199",
+    crystalsGitBlob: "db6889500dccab53365a564feb1aa96f34b4200d"
   },
   contract: {
-    singleTapDisclosure: true,
-    secondSingleTapClose: true,
+    oneCenterControl: true,
+    renderedGlobeInsideControl: true,
+    accessibleName: "Open Main Compass return options",
+    disclosureBeforeNavigation: true,
     explicitReturnNavigation: true,
-    doubleTapWindowMs: 300,
-    tapMaximumMovementPx: 10,
-    sharedPlanetControlSize: true,
-    mobileSizeAuthority: "clamp(4.25rem, 18vw, 5.5rem)",
-    desktopSizeAuthority: "clamp(4.5rem, 9vw, 7rem)",
+    archcoinAffordanceModel: true,
     productCount: 6,
     cardinalCount: 0,
     visiblePrimaryLabelCount: 1,

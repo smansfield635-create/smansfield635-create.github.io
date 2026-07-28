@@ -1,0 +1,130 @@
+name: Products Compass Checkpoint Zero Browser Gate
+
+on:
+  push:
+    branches:
+      - agent/products-compass-checkpoint-zero-rebuild-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Source assertions
+        run: |
+          node --check products/index.controller.js
+          node --check products/index.crystals.js
+          node --check products/index.planet.js
+          node --check products/index.compositor.js
+          test -f products/index.compass.css
+          test ! -f products/index.arena.css
+          grep -q '/products/index.compass.css' products/index.html
+          ! grep -q '/products/index.arena.css' products/index.html
+          grep -q '/products/index.compositor.js' products/index.html
+          grep -q 'rear-center-front-semantic' products/index.html
+          grep -q 'FIXED_CENTER_INDEPENDENT_SIBLING' products/index.html
+          test "$(grep -o 'data-products-product' products/index.html | wc -l)" -eq 6
+
+      - name: Install browser
+        run: |
+          npm install --no-save playwright@1.52.0
+          npx playwright install --with-deps chromium
+
+      - name: Run browser gate
+        run: |
+          python3 -m http.server 4173 >/tmp/products-http.log 2>&1 &
+          cat > /tmp/products-gate.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+
+          const browser = await chromium.launch({ headless: true });
+          const page = await browser.newPage({ viewport: { width: 360, height: 800 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+          const failures = [];
+          page.on('pageerror', error => failures.push(`pageerror:${error.message}`));
+          page.on('console', message => {
+            if (message.type() === 'error') failures.push(`console:${message.text()}`);
+          });
+
+          await page.goto('http://127.0.0.1:4173/products/', { waitUntil: 'networkidle' });
+          await page.waitForSelector('[data-products-primary-entry]');
+          await page.click('[data-products-primary-entry]');
+          await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === 'CLUSTER_OPEN');
+          await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsCompositorStatus === 'available');
+          await page.waitForTimeout(1200);
+
+          const result = await page.evaluate(() => {
+            const root = document.querySelector('[data-page-id="products"]');
+            const scene = document.querySelector('[data-products-scene]');
+            const rear = scene?.querySelector('canvas[data-products-crystals-canvas]');
+            const center = scene?.querySelector('[data-products-center-layer]');
+            const front = scene?.querySelector('canvas[data-products-front-crystals-canvas]');
+            const semantic = scene?.querySelector('[data-products-semantic]');
+            const products = [...document.querySelectorAll('[data-products-product]')];
+            const visibleLabels = products.filter(node => {
+              const label = node.querySelector('.products-star__label');
+              return label && getComputedStyle(label).visibility === 'visible' && Number(getComputedStyle(label).opacity) > 0;
+            });
+            const rect = scene.getBoundingClientRect();
+            const centerRect = center.getBoundingClientRect();
+            const centerPoint = [centerRect.left - rect.left + centerRect.width / 2, centerRect.top - rect.top + centerRect.height / 2];
+            return {
+              state: root.dataset.productsState,
+              compositor: root.dataset.productsCompositorStatus,
+              depthComposition: root.dataset.productsDepthComposition,
+              productCount: products.length,
+              visibleLabelCount: visibleLabels.length,
+              layers: {
+                rear: Number(getComputedStyle(rear).zIndex),
+                center: Number(getComputedStyle(center).zIndex),
+                front: Number(getComputedStyle(front).zIndex),
+                semantic: Number(getComputedStyle(semantic).zIndex)
+              },
+              centerPoint,
+              sceneSize: [rect.width, rect.height],
+              frontCanvasPixels: [front.width, front.height],
+              receipt: globalThis.DGB_PRODUCTS_COMPASS_COMPOSITOR_RECEIPT || null
+            };
+          });
+
+          const checks = [
+            [result.state === 'CLUSTER_OPEN', 'cluster did not open'],
+            [result.compositor === 'available', 'compositor unavailable'],
+            [result.depthComposition === 'rear-center-front-semantic', 'depth contract missing'],
+            [result.productCount === 6, 'six-product registry missing'],
+            [result.visibleLabelCount >= 1, 'Index-style rotating label not visible'],
+            [result.layers.rear < result.layers.center, 'rear layer is not behind globe'],
+            [result.layers.center < result.layers.front, 'front layer is not above globe'],
+            [result.layers.front < result.layers.semantic, 'semantic layer is not highest'],
+            [result.frontCanvasPixels[0] > 0 && result.frontCanvasPixels[1] > 0, 'front canvas has no pixels'],
+            [result.receipt?.rearCanvas && result.receipt?.centerCompass && result.receipt?.frontCanvas && result.receipt?.semanticLayer, 'compositor receipt incomplete']
+          ];
+          for (const [pass, message] of checks) if (!pass) failures.push(message);
+
+          await page.screenshot({ path: 'products-compass-checkpoint-zero.png', fullPage: true });
+          fs.writeFileSync('products-compass-checkpoint-zero.json', JSON.stringify({ result, failures }, null, 2));
+          await browser.close();
+          if (failures.length) {
+            console.error(JSON.stringify({ result, failures }, null, 2));
+            process.exit(1);
+          }
+          console.log(JSON.stringify(result, null, 2));
+          EOF
+          node /tmp/products-gate.mjs
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: products-compass-checkpoint-zero-evidence
+          path: |
+            products-compass-checkpoint-zero.png
+            products-compass-checkpoint-zero.json

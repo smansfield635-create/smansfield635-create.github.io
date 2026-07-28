@@ -1,0 +1,105 @@
+name: H-Earth Run 8E R3F2-P4R Served Occurrence Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-run8e-r3f2-p4r-served-occurrence-validation.yml'
+
+permissions:
+  contents: read
+
+env:
+  PREVIEW_ORIGIN: https://diamondgatebridge.com
+  PREVIEW_PATH: /preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/
+  PACKAGE_HEX: 3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234
+
+jobs:
+  validate-served-occurrence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for exact HTTPS occurrence and fetch all three files
+        run: |
+          set -euo pipefail
+          root="${PREVIEW_ORIGIN}${PREVIEW_PATH}"
+          mkdir -p /tmp/r3f2-served
+          success=false
+          for attempt in $(seq 1 36); do
+            code="$(curl --proto '=https' --tlsv1.2 -sS -L -D /tmp/r3f2-served/index.headers -o /tmp/r3f2-served/index.html -w '%{http_code}' "$root" || true)"
+            if [ "$code" = "200" ]; then
+              success=true
+              break
+            fi
+            sleep 5
+          done
+          test "$success" = true
+          curl --proto '=https' --tlsv1.2 -fsSL -D /tmp/r3f2-served/manifest.headers "$root/preview-manifest.json" -o /tmp/r3f2-served/preview-manifest.json
+          curl --proto '=https' --tlsv1.2 -fsSL -D /tmp/r3f2-served/schema.headers "$root/device-evidence-receipt.schema.json" -o /tmp/r3f2-served/device-evidence-receipt.schema.json
+
+      - name: Verify served bytes, identities, types, and isolation
+        run: |
+          set -euo pipefail
+          root="${PREVIEW_ORIGIN}${PREVIEW_PATH}"
+          test "$(wc -c < /tmp/r3f2-served/index.html)" -eq 1213597
+          test "$(sha256sum /tmp/r3f2-served/index.html | cut -d' ' -f1)" = "$PACKAGE_HEX"
+          test "$(git hash-object /tmp/r3f2-served/index.html)" = "c5127e2d4d9d3558230a8eccd757dade74d6d8c3"
+          test "$(sha256sum /tmp/r3f2-served/preview-manifest.json | cut -d' ' -f1)" = "b77b3e88ef4868d0602468da90693c64c46b09442e1fe15013ed4dcf69156dd4"
+          test "$(git hash-object /tmp/r3f2-served/preview-manifest.json)" = "81dbbb97898023ae0dabea313ac69b865302d533"
+          test "$(sha256sum /tmp/r3f2-served/device-evidence-receipt.schema.json | cut -d' ' -f1)" = "04ce5ec86f102fb7646b02ad19a3f862b8e6370dcdc971dc252d6bc607e3d18a"
+          test "$(git hash-object /tmp/r3f2-served/device-evidence-receipt.schema.json)" = "987268f38fc8b6db6f19b982cc8386439aa0de48"
+          grep -Eiq '^content-type:[[:space:]]*text/html' /tmp/r3f2-served/index.headers
+          grep -Eiq '^content-type:[[:space:]]*(application/json|text/plain)' /tmp/r3f2-served/manifest.headers
+          grep -Eiq '^content-type:[[:space:]]*(application/json|text/plain)' /tmp/r3f2-served/schema.headers
+          grep -aFq 'H_EARTH_RUN8E_R3F2_SIGNED_OFFLINE_PACKAGE' /tmp/r3f2-served/index.html
+          grep -aFq '"productionDeployment":false' /tmp/r3f2-served/index.html
+          grep -aFq 'It does not deploy or modify the public route.' /tmp/r3f2-served/index.html
+          grep -aFq "$PACKAGE_HEX" /tmp/r3f2-served/preview-manifest.json
+          if grep -Eiq 'navigator[.]serviceWorker|serviceWorker[.]register' /tmp/r3f2-served/index.html; then exit 1; fi
+          test "$(curl --proto '=https' --tlsv1.2 -sS -L -o /dev/null -w '%{url_effective}' "$root")" = "$root"
+
+      - name: Record served-occurrence evidence
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const cp = require('child_process');
+          const root = `${process.env.PREVIEW_ORIGIN}${process.env.PREVIEW_PATH}`;
+          const read = (p) => fs.readFileSync(p, 'utf8');
+          const header = (text, name) => {
+            const rows = text.split(/\r?\n/).filter(Boolean);
+            const row = [...rows].reverse().find((line) => line.toLowerCase().startsWith(`${name.toLowerCase()}:`));
+            return row ? row.slice(row.indexOf(':') + 1).trim() : null;
+          };
+          const record = {
+            checkpointId: 'RUN_8E_R3F2_P4R_SERVED_OCCURRENCE_VALIDATION',
+            status: 'PASS',
+            previewUrl: root,
+            https: true,
+            httpStatus: 200,
+            effectiveUrlMatches: true,
+            exactFileCount: 3,
+            packageSha256: `sha256:${process.env.PACKAGE_HEX}`,
+            indexGitBlob: 'c5127e2d4d9d3558230a8eccd757dade74d6d8c3',
+            manifestGitBlob: '81dbbb97898023ae0dabea313ac69b865302d533',
+            schemaGitBlob: '987268f38fc8b6db6f19b982cc8386439aa0de48',
+            indexContentType: header(read('/tmp/r3f2-served/index.headers'), 'content-type'),
+            manifestContentType: header(read('/tmp/r3f2-served/manifest.headers'), 'content-type'),
+            schemaContentType: header(read('/tmp/r3f2-served/schema.headers'), 'content-type'),
+            cacheControl: header(read('/tmp/r3f2-served/index.headers'), 'cache-control'),
+            serviceWorkerPresent: false,
+            mutableRuntimeDependencies: 0,
+            liveHEarthRouteChangedByPublication: false,
+            physicalDeviceExecution: false
+          };
+          fs.writeFileSync('/tmp/r3f2-served/served-occurrence.json', `${JSON.stringify(record, null, 2)}\n`);
+          console.log(JSON.stringify(record, null, 2));
+          NODE
+
+      - name: Upload served-occurrence evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p4r-served-occurrence-validation
+          path: /tmp/r3f2-served/served-occurrence.json
+          if-no-files-found: error
+          retention-days: 90

@@ -97,7 +97,17 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     });
     proposals.push(record);
     if (proposals.length > 64) proposals.shift();
-    onProposal?.(record, navigationState);
+
+    // Browser input can be delivered re-entrantly while a slow mobile GPU is
+    // constructing. Publish the accepted proposal in the next microtask so the
+    // public integration has completed assignment of its live GPU binding.
+    if (onProposal) {
+      counters.deferredCommitCount += 1;
+      queueMicrotask(() => {
+        counters.deferredCommitCount -= 1;
+        if (!destroyed) onProposal(record, navigationState);
+      });
+    }
     return record;
   };
 
@@ -214,7 +224,8 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
       wheelDiagnosticEquivalent: true,
       touchConsumedThroughPointerEvents: true,
       existingNavigationProposalAuthorityConsumed: true,
-      immediateProposalIntake: true
+      immediateProposalIntake: true,
+      proposalPublicationSerializedBehindStartup: true
     },
     boundaries: {
       webGLContextCreated: false,

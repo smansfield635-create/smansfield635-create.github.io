@@ -1,0 +1,167 @@
+name: Temporary Products center final gate
+
+on:
+  push:
+    branches:
+      - agent/products-arena-corrective-continuity-001
+    paths:
+      - ".github/workflows/temporary-products-center-final-gate.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/products-arena-corrective-continuity-001
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify candidate source boundary
+        run: |
+          node --check products/index.controller.js
+          node --check products/index.crystals.js
+          node --check products/index.cosmos.js
+          node --check products/index.planet.js
+          git diff --check eb90d5635347c33c2766eaf9e9f4f606307b59cf...HEAD
+          test ! -e products/index.controller.center.js
+          test ! -e products/index.planet.presentation.adapter.js
+          test "$(git hash-object products/index.planet.js)" = "6626b6476b85845b8125b886c69ad68cf4ef645a"
+          test "$(git hash-object products/index.crystals.js)" = "6622f9cfd9e44589cf0e94119697256385f1317d"
+          ! grep -q "DGB_PRODUCTS_CONTROLLER_CENTER" products/index.controller.js
+          ! grep -q "DGB_PRODUCTS_CENTER_CONTROL_RECEIPT" products/index.controller.js
+
+      - name: Install browser dependency
+        run: npm install --no-save puppeteer-core@24.15.0
+
+      - name: Resolve Chrome
+        run: |
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$chrome" ]; then
+            sudo apt-get update
+            sudo apt-get install -y chromium
+            chrome="$(command -v chromium || command -v chromium-browser)"
+          fi
+          echo "CHROME_PATH=$chrome" >> "$GITHUB_ENV"
+
+      - name: Start branch-local server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/products-final-gate-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/products/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/products-final-gate-server.log
+          exit 1
+
+      - name: Execute Samsung-class browser gate
+        env:
+          PRODUCTS_ORIGIN: http://127.0.0.1:4173
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict";
+          import puppeteer from "puppeteer-core";
+
+          const browser = await puppeteer.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: "new",
+            args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
+          });
+          const page = await browser.newPage();
+          await page.setViewport({ width: 412, height: 915, deviceScaleFactor: 2.625, isMobile: true, hasTouch: true });
+
+          async function openArena() {
+            await page.goto(`${process.env.PRODUCTS_ORIGIN}/products/`, { waitUntil: "networkidle0", timeout: 30000 });
+            await page.waitForSelector('[data-products-primary-entry]');
+            await page.evaluate(() => document.querySelector('[data-products-primary-entry]').click());
+            await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "CLUSTER_OPEN");
+            await page.waitForFunction(() => {
+              const control = document.querySelector('[data-products-center-control]');
+              return control && !control.hidden && control.getAttribute('aria-hidden') === 'false';
+            });
+          }
+
+          await openArena();
+          const initial = await page.evaluate(() => ({
+            pathname: location.pathname,
+            controls: document.querySelectorAll('[data-products-center-control]').length,
+            returns: document.querySelectorAll('[data-products-return-main-compass]').length,
+            secondController: Boolean(globalThis.DGB_PRODUCTS_CONTROLLER_CENTER),
+            secondReceipt: Boolean(globalThis.DGB_PRODUCTS_CENTER_CONTROL_RECEIPT)
+          }));
+          assert.deepEqual(initial, {
+            pathname: "/products/",
+            controls: 1,
+            returns: 1,
+            secondController: false,
+            secondReceipt: false
+          });
+
+          await page.evaluate(() => document.querySelector('[data-products-center-control]').click());
+          await page.waitForFunction(() => document.querySelector('[data-products-center-control]')?.getAttribute('aria-expanded') === 'true');
+          const disclosed = await page.evaluate(() => {
+            const link = document.querySelector('[data-products-return-main-compass]');
+            return {
+              pathname: location.pathname,
+              hidden: link.hidden,
+              ariaHidden: link.getAttribute('aria-hidden'),
+              href: link.getAttribute('href')
+            };
+          });
+          assert.deepEqual(disclosed, { pathname: "/products/", hidden: false, ariaHidden: "false", href: "/" });
+
+          await page.evaluate(() => document.querySelector('[data-products-return-main-compass]').click());
+          await page.waitForFunction(() => location.pathname === "/");
+
+          await openArena();
+          await page.evaluate(() => {
+            const control = document.querySelector('[data-products-center-control]');
+            control.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 21, clientX: 100, clientY: 100 }));
+            control.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 21, clientX: 140, clientY: 140 }));
+            control.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 21, clientX: 140, clientY: 140 }));
+          });
+          assert.equal(await page.$eval('[data-products-center-control]', el => el.getAttribute('aria-expanded')), 'false');
+
+          await page.evaluate(() => {
+            const control = document.querySelector('[data-products-center-control]');
+            control.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 22, clientX: 100, clientY: 100 }));
+            control.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 22, clientX: 100, clientY: 100 }));
+          });
+          assert.equal(await page.$eval('[data-products-center-control]', el => el.getAttribute('aria-expanded')), 'false');
+
+          await page.evaluate(() => {
+            const control = document.querySelector('[data-products-center-control]');
+            const tap = id => {
+              control.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: id, clientX: 100, clientY: 100 }));
+              control.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: id, clientX: 100, clientY: 100 }));
+            };
+            tap(31);
+            tap(32);
+          });
+          await page.waitForFunction(() => location.pathname === "/");
+
+          await browser.close();
+          console.log(JSON.stringify({ status: "PASS", viewport: "412x915@2.625", route: "/products/" }));
+          NODE
+
+      - name: Remove temporary workflow
+        run: rm -f .github/workflows/temporary-products-center-final-gate.yml
+
+      - name: Commit validated self-cleaned candidate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Close Products center continuity merge gate"
+          changed="$(git diff --name-only eb90d5635347c33c2766eaf9e9f4f606307b59cf HEAD)"
+          test "$changed" = "$(printf '%s\n' products/index.arena.css products/index.controller.js products/index.html)"
+          git push origin HEAD:agent/products-arena-corrective-continuity-001

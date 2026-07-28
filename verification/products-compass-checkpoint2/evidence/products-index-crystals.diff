@@ -1,0 +1,622 @@
+diff --git a/products/index.crystals.js b/products/index.crystals.js
+index 6622f9cf..db688950 100644
+--- a/products/index.crystals.js
++++ b/products/index.crystals.js
+@@ -20,13 +20,13 @@
+   "use strict";
+ 
+   const CONTRACT = Object.freeze({
+-    id: "PRODUCTS_CRYSTALS_COMPASS_RENDERER_ANCHOR_v1",
++    id: "PRODUCTS_CRYSTALS_COMPOSITOR_COORDINATED_RENDERER_v2",
+     sourceContractId:
+       "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
+     continuationAnchorId:
+       "ARCHCOIN_CRYSTALS_COMPASS_RENDERER_ANCHOR_v1",
+     file: "/products/index.crystals.js",
+-    releaseId: "products-crystals-compass-renderer-anchor-v1",
++    releaseId: "products-crystals-compositor-coordinated-v2",
+     visualPassClaimed: false,
+     productionAuthorized: false,
+     deploymentAuthorized: false
+@@ -36,6 +36,8 @@
+   const RENDERER_SYMBOL = "DGB_PRODUCTS_CRYSTALS";
+   const RECEIPT_SYMBOL = "DGB_PRODUCTS_CRYSTALS_RECEIPT";
+   const FAILURE_EVENT = "PRODUCTS_CRYSTALS_RENDER_FAILURE";
++  const COMPOSITOR_SYMBOL = "DGB_PRODUCTS_COMPOSITOR";
++  const DEPTH_LAYERS = Object.freeze({ REAR: "REAR", FRONT: "FRONT" });
+ 
+   const NODE_TYPES = Object.freeze({
+     PRIMARY: "primary",
+@@ -261,6 +263,9 @@
+     mount: null,
+     semanticLayer: null,
+     receiptOutput: null,
++    compositor: null,
++    rearRenderer: null,
++    frontRenderer: null,
+     canvas: null,
+     gl: null,
+     program: null,
+@@ -815,26 +820,24 @@
+     });
+   }
+ 
+-  function createCanvas() {
+-    const existing = qs("canvas[data-products-crystals-canvas]", state.mount);
+-
+-    if (existing) {
+-      return existing;
+-    }
+-
+-    const canvas = document.createElement("canvas");
+-    canvas.dataset.productsCrystalsCanvas = "true";
+-    canvas.setAttribute("aria-hidden", "true");
+-    canvas.setAttribute("role", "presentation");
+-    canvas.style.position = "absolute";
+-    canvas.style.inset = "0";
+-    canvas.style.width = "100%";
+-    canvas.style.height = "100%";
+-    canvas.style.display = "block";
+-    canvas.style.pointerEvents = "none";
+-
+-    state.mount.prepend(canvas);
+-    return canvas;
++  function requireCompositor() {
++    const compositor = globalThis[COMPOSITOR_SYMBOL];
++    if (!compositor) throw new Error("PRODUCTS_COMPOSITOR_REQUIRED");
++    [
++      "initialize",
++      "resize",
++      "beginFrame",
++      "projectWorldPoint",
++      "renderComposite",
++      "getRearLayer",
++      "getFrontLayer",
++      "receipt"
++    ].forEach(surface => {
++      if (typeof compositor[surface] !== "function") {
++        throw new Error(`PRODUCTS_COMPOSITOR_SURFACE_REQUIRED:${surface}`);
++      }
++    });
++    return compositor;
+   }
+ 
+   function getGL(canvas) {
+@@ -847,6 +850,55 @@
+     });
+   }
+ 
++  function createRenderer(layer) {
++    const gl = getGL(layer.canvas);
++    if (!gl) throw new Error(`PRODUCTS_${layer.id}_WEBGL_CONTEXT_UNAVAILABLE`);
++    gl.enable(gl.DEPTH_TEST);
++    gl.depthFunc(gl.LEQUAL);
++    gl.enable(gl.BLEND);
++    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
++    gl.disable(gl.CULL_FACE);
++    const program = createProgram(gl);
++    const attribs = Object.freeze({
++      position: gl.getAttribLocation(program, "aPosition"),
++      normal: gl.getAttribLocation(program, "aNormal"),
++      color: gl.getAttribLocation(program, "aColor")
++    });
++    const uniforms = Object.freeze({
++      model: gl.getUniformLocation(program, "uModel"),
++      view: gl.getUniformLocation(program, "uView"),
++      projection: gl.getUniformLocation(program, "uProjection"),
++      normalMatrix: gl.getUniformLocation(program, "uNormalMatrix"),
++      time: gl.getUniformLocation(program, "uTime"),
++      prominence: gl.getUniformLocation(program, "uProminence"),
++      specular: gl.getUniformLocation(program, "uSpecular"),
++      rim: gl.getUniformLocation(program, "uRim"),
++      emissive: gl.getUniformLocation(program, "uEmissive"),
++      alpha: gl.getUniformLocation(program, "uAlpha"),
++      sparkle: gl.getUniformLocation(program, "uSparkle"),
++      twinkle: gl.getUniformLocation(program, "uTwinkle"),
++      contrast: gl.getUniformLocation(program, "uContrast"),
++      haloStrength: gl.getUniformLocation(program, "uHaloStrength"),
++      saturation: gl.getUniformLocation(program, "uSaturation"),
++      haloPass: gl.getUniformLocation(program, "uHaloPass"),
++      haloExpansion: gl.getUniformLocation(program, "uHaloExpansion"),
++      keyLight: gl.getUniformLocation(program, "uKeyLight"),
++      fillLight: gl.getUniformLocation(program, "uFillLight"),
++      rimLight: gl.getUniformLocation(program, "uRimLight"),
++      ambientColor: gl.getUniformLocation(program, "uAmbientColor")
++    });
++    return { id: layer.id, canvas: layer.canvas, gl, program, attribs, uniforms, meshes: buildMeshes(gl) };
++  }
++
++  function activateRenderer(renderer) {
++    state.canvas = renderer.canvas;
++    state.gl = renderer.gl;
++    state.program = renderer.program;
++    state.attribs = renderer.attribs;
++    state.uniforms = renderer.uniforms;
++    state.meshes = renderer.meshes;
++  }
++
+   function compileShader(gl, type, source) {
+     const shader = gl.createShader(type);
+ 
+@@ -1672,30 +1724,20 @@
+     );
+   }
+ 
+-  function projectNode(node) {
+-    if (!state.view || !state.projection) {
+-      return null;
+-    }
+-
++  function worldCenterForNode(node) {
+     const model = modelMatrix(node, false);
+-    const mvp = multiply4(state.projection, multiply4(state.view, model));
+-    const clip = transformPoint4(mvp, [0, 0, 0, 1]);
+-
+-    if (!clip[3]) {
+-      return null;
+-    }
+-
+-    const x = clip[0] / clip[3];
+-    const y = clip[1] / clip[3];
+-
+-    if (x < -1.30 || x > 1.30 || y < -1.30 || y > 1.30) {
+-      return null;
+-    }
++    const world = transformPoint4(model, [0, 0, 0, 1]);
++    return [world[0], world[1], world[2]];
++  }
+ 
+-    return {
+-      x: ((x + 1) / 2) * state.cssWidth,
+-      y: ((1 - y) / 2) * state.cssHeight
+-    };
++  function projectNode(node) {
++    if (!state.compositor) return null;
++    const projection = state.compositor.projectWorldPoint(worldCenterForNode(node), {
++      projectedRadius: Math.max(24, 54 * node.transform.sx),
++      rejectionMargin: 0.30
++    });
++    if (!projection) return null;
++    return { x: projection.x, y: projection.y, visible: projection.visible };
+   }
+ 
+   function semanticElementForNode(node) {
+@@ -1826,32 +1868,15 @@
+   }
+ 
+   function resize() {
+-    const rect = state.canvas.getBoundingClientRect();
+-
+-    const lowPower =
+-      navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+-
+-    const cap = lowPower
+-      ? QUALITY.lowPowerDevicePixelRatioCap
+-      : QUALITY.normalDevicePixelRatioCap;
+-
+-    const pixelRatio = Math.min(globalThis.devicePixelRatio || 1, cap);
+-
+-    const width = Math.max(1, Math.floor(rect.width * pixelRatio));
+-    const height = Math.max(1, Math.floor(rect.height * pixelRatio));
+-
+-    if (state.canvas.width !== width || state.canvas.height !== height) {
+-      state.canvas.width = width;
+-      state.canvas.height = height;
+-    }
+-
+-    state.cssWidth = Math.max(1, rect.width);
+-    state.cssHeight = Math.max(1, rect.height);
+-    state.width = width;
+-    state.height = height;
+-    state.pixelRatio = pixelRatio;
+-
+-    state.gl.viewport(0, 0, width, height);
++    const viewport = state.compositor.resize();
++    state.cssWidth = viewport.cssWidth;
++    state.cssHeight = viewport.cssHeight;
++    state.width = viewport.width;
++    state.height = viewport.height;
++    state.pixelRatio = viewport.pixelRatio;
++    [state.rearRenderer, state.frontRenderer].forEach(renderer => {
++      renderer.gl.viewport(0, 0, viewport.width, viewport.height);
++    });
+   }
+ 
+   function bindAttrib(gl, buffer, location, size) {
+@@ -1860,68 +1885,68 @@
+     gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+   }
+ 
+-  function applyMaterial(materialName, prominence, haloStrength) {
+-    const gl = state.gl;
++  function applyMaterial(renderer, materialName, prominence, haloStrength) {
++    const gl = renderer.gl;
++    const uniforms = renderer.uniforms;
+     const material = MATERIALS[materialName] || MATERIALS.PRODUCT_IDLE;
+     const bloomDisabled = state.cssWidth <= QUALITY.bloomDisableWidthPx;
+-
+-    gl.uniform1f(state.uniforms.twinkle, state.reducedMotion ? 0 : 1);
+-    gl.uniform1f(state.uniforms.sparkle, state.reducedMotion ? 0 : material.sparkle);
+-    gl.uniform1f(state.uniforms.prominence, prominence);
+-    gl.uniform1f(state.uniforms.specular, material.specular);
+-    gl.uniform1f(state.uniforms.rim, material.rim);
+-    gl.uniform1f(state.uniforms.emissive, material.emissive);
+-    gl.uniform1f(state.uniforms.alpha, material.alpha);
+-    gl.uniform1f(state.uniforms.contrast, material.contrast);
+-    gl.uniform1f(
+-      state.uniforms.haloStrength,
+-      bloomDisabled ? 0 : material.halo * haloStrength
+-    );
+-    gl.uniform1f(state.uniforms.saturation, 1);
+-  }
+-
+-  function drawNode(node, haloPass) {
+-    if (!node.visible || node.transform.prominence < 0.04) {
+-      return 0;
+-    }
+-
+-    const mesh = state.meshes.get(node.meshKey);
+-
+-    if (!mesh) {
+-      return 0;
+-    }
+-
+-    const gl = state.gl;
+-
+-    bindAttrib(gl, mesh.position, state.attribs.position, 3);
+-    bindAttrib(gl, mesh.normal, state.attribs.normal, 3);
+-    bindAttrib(gl, mesh.color, state.attribs.color, 3);
+-
++    gl.uniform1f(uniforms.twinkle, state.reducedMotion ? 0 : 1);
++    gl.uniform1f(uniforms.sparkle, state.reducedMotion ? 0 : material.sparkle);
++    gl.uniform1f(uniforms.prominence, prominence);
++    gl.uniform1f(uniforms.specular, material.specular);
++    gl.uniform1f(uniforms.rim, material.rim);
++    gl.uniform1f(uniforms.emissive, material.emissive);
++    gl.uniform1f(uniforms.alpha, material.alpha);
++    gl.uniform1f(uniforms.contrast, material.contrast);
++    gl.uniform1f(uniforms.haloStrength, bloomDisabled ? 0 : material.halo * haloStrength);
++    gl.uniform1f(uniforms.saturation, 1);
++  }
++
++  function drawNode(renderer, node, haloPass) {
++    if (!node.visible || node.transform.prominence < 0.04) return 0;
++    const mesh = renderer.meshes.get(node.meshKey);
++    if (!mesh) return 0;
++    const gl = renderer.gl;
++    const uniforms = renderer.uniforms;
++    bindAttrib(gl, mesh.position, renderer.attribs.position, 3);
++    bindAttrib(gl, mesh.normal, renderer.attribs.normal, 3);
++    bindAttrib(gl, mesh.color, renderer.attribs.color, 3);
+     const model = modelMatrix(node, haloPass);
+-
+-    gl.uniformMatrix4fv(state.uniforms.model, false, new Float32Array(model));
+-    gl.uniformMatrix4fv(state.uniforms.view, false, new Float32Array(state.view));
+-    gl.uniformMatrix4fv(
+-      state.uniforms.projection,
+-      false,
+-      new Float32Array(state.projection)
+-    );
+-    gl.uniformMatrix3fv(
+-      state.uniforms.normalMatrix,
+-      false,
+-      new Float32Array(normalMatrix3(model))
+-    );
+-    gl.uniform1f(state.uniforms.time, state.time);
+-    gl.uniform1f(state.uniforms.haloPass, haloPass ? 1 : 0);
+-    gl.uniform1f(state.uniforms.haloExpansion, 0.075);
+-
+-    applyMaterial(node.material, node.transform.prominence, node.transform.halo);
+-
++    gl.uniformMatrix4fv(uniforms.model, false, new Float32Array(model));
++    gl.uniformMatrix4fv(uniforms.view, false, new Float32Array(state.view));
++    gl.uniformMatrix4fv(uniforms.projection, false, new Float32Array(state.projection));
++    gl.uniformMatrix3fv(uniforms.normalMatrix, false, new Float32Array(normalMatrix3(model)));
++    gl.uniform1f(uniforms.time, state.time);
++    gl.uniform1f(uniforms.haloPass, haloPass ? 1 : 0);
++    gl.uniform1f(uniforms.haloExpansion, 0.075);
++    applyMaterial(renderer, node.material, node.transform.prominence, node.transform.halo);
+     gl.drawArrays(gl.TRIANGLES, 0, mesh.vertexCount);
+-
+     return 1;
+   }
+ 
++  function drawLayer(renderer, nodes) {
++    activateRenderer(renderer);
++    const gl = renderer.gl;
++    gl.clearColor(0.015, 0.018, 0.034, 0);
++    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
++    gl.useProgram(renderer.program);
++    gl.uniform3f(renderer.uniforms.keyLight, -0.42, -0.82, -0.68);
++    gl.uniform3f(renderer.uniforms.fillLight, 0.72, -0.24, -0.54);
++    gl.uniform3f(renderer.uniforms.rimLight, 0.08, 0.46, 1);
++    gl.uniform3f(renderer.uniforms.ambientColor, 0.10, 0.12, 0.18);
++    let drawCalls = 0;
++    const bloomDisabled = state.cssWidth <= QUALITY.bloomDisableWidthPx;
++    if (!bloomDisabled) {
++      gl.depthMask(false);
++      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
++      nodes.forEach(node => { drawCalls += drawNode(renderer, node, true); });
++    }
++    gl.depthMask(true);
++    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
++    nodes.forEach(node => { drawCalls += drawNode(renderer, node, false); });
++    return { drawCalls, glError: gl.getError() };
++  }
++
+   function pointerDistance(pointer, clientX, clientY) {
+     return Math.hypot(clientX - pointer.startX, clientY - pointer.startY);
+   }
+@@ -2732,71 +2757,54 @@
+   }
+ 
+   function render(now) {
+-    if (!state.running) {
+-      return;
+-    }
+-
++    if (!state.running) return;
+     const seconds = now * 0.001;
+     const deltaTime = state.lastTime ? Math.min(0.05, seconds - state.lastTime) : 0.016;
+-
+     state.lastTime = seconds;
+     state.time = seconds;
+     state.frame = getControllerFrame();
+     state.reducedMotion = Boolean(state.frame.reducedMotion);
+-
+     resize();
+     syncQuaternionTargets(deltaTime);
+     updateTargets();
+     updateTransforms(deltaTime);
+ 
+-    const aspect = state.width / Math.max(1, state.height);
+-
+-    state.view = lookAt4(state.camera.eye, state.camera.target, [0, 1, 0]);
+-    state.projection = perspective4(
+-      Math.PI / (aspect < QUALITY.mobileAspectThreshold ? 4.45 : 4.85),
+-      aspect,
+-      0.1,
+-      60
+-    );
+-
+-    const gl = state.gl;
+-
+-    gl.clearColor(0.015, 0.018, 0.034, 0);
+-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
++    const frame = state.compositor.beginFrame({
++      frame: state.frame,
++      nowSeconds: seconds,
++      deltaSeconds: deltaTime
++    });
++    state.view = frame.viewMatrix;
++    state.projection = frame.projectionMatrix;
++    state.width = frame.viewport.width;
++    state.height = frame.viewport.height;
++    state.cssWidth = frame.viewport.cssWidth;
++    state.cssHeight = frame.viewport.cssHeight;
++    state.pixelRatio = frame.viewport.pixelRatio;
+ 
+     syncSemanticObjects();
+-
+-    gl.useProgram(state.program);
+-
+-    gl.uniform3f(state.uniforms.keyLight, -0.42, -0.82, -0.68);
+-    gl.uniform3f(state.uniforms.fillLight, 0.72, -0.24, -0.54);
+-    gl.uniform3f(state.uniforms.rimLight, 0.08, 0.46, 1);
+-    gl.uniform3f(state.uniforms.ambientColor, 0.10, 0.12, 0.18);
+-
+-    let drawCalls = 0;
+-    const bloomDisabled = state.cssWidth <= QUALITY.bloomDisableWidthPx;
+-    const drawNodes = sortNodesForDraw(Array.from(state.registry.values()));
+-
+-    if (!bloomDisabled) {
+-      gl.depthMask(false);
+-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+-
+-      drawNodes.forEach(node => {
+-        drawCalls += drawNode(node, true);
+-      });
+-    }
+-
+-    gl.depthMask(true);
+-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+-
+-    drawNodes.forEach(node => {
+-      drawCalls += drawNode(node, false);
++    const nodes = Array.from(state.registry.values()).filter(
++      node => node.visible && node.transform.prominence >= 0.04
++    );
++    const composite = state.compositor.renderComposite({
++      nodes,
++      getWorldCenter: worldCenterForNode,
++      getPreviousLayer: node => node.depthLayer || DEPTH_LAYERS.REAR,
++      setClassification: (node, classification) => {
++        node.depthLayer = classification.layer;
++        node.viewDepth = classification.viewDepth;
++        const element = semanticElementForNode(node);
++        if (element) element.dataset.productsDepthLayer = classification.layer.toLowerCase();
++      },
++      sort: (a, b) => a.transform.z - b.transform.z,
++      drawRear: rearNodes => drawLayer(state.rearRenderer, rearNodes),
++      drawFront: frontNodes => drawLayer(state.frontRenderer, frontNodes)
+     });
+-
+-    const error = gl.getError();
+-
++    const rearError = composite.rearResult?.glError ?? 0;
++    const frontError = composite.frontResult?.glError ?? 0;
++    const noError = rearError === state.rearRenderer.gl.NO_ERROR && frontError === state.frontRenderer.gl.NO_ERROR;
+     emitReceipt({
+-      status: error === gl.NO_ERROR ? "available" : "held",
++      status: noError ? "available" : "held",
+       rendererInitialized: true,
+       registryPrimaryCount: 1,
+       registryProductCount: 6,
+@@ -2804,64 +2812,51 @@
+       visualPrimaryProductId: state.visualPrimaryProductId,
+       selectedProductId: state.frame.selectedProductId || "",
+       gestureActive: Boolean(state.pointer && state.pointer.dragging),
+-      glError: error === gl.NO_ERROR ? "NO_ERROR" : String(error),
+-      drawCallsLastFrame: drawCalls
++      glError: noError ? "NO_ERROR" : `REAR:${rearError};FRONT:${frontError}`,
++      rearVisibleNodeCount: composite.rearNodes.length,
++      frontVisibleNodeCount: composite.frontNodes.length,
++      drawCallsLastFrame:
++        Number(composite.rearResult?.drawCalls || 0) + Number(composite.frontResult?.drawCalls || 0)
+     });
+-
+     state.raf = requestAnimationFrame(render);
+   }
+ 
+   function disposeResources() {
+     state.running = false;
+-
+-    if (state.raf) {
+-      cancelAnimationFrame(state.raf);
+-      state.raf = 0;
+-    }
+-
++    if (state.raf) cancelAnimationFrame(state.raf);
++    state.raf = 0;
+     if (state.pointer && state.pointer.controllerGestureBegan) {
+-      if (state.pointer.gestureScope === "orbit") {
+-        requestControllerOrbitCancel("renderer-dispose");
+-      } else {
+-        requestControllerClusterCancel("renderer-dispose");
+-      }
++      if (state.pointer.gestureScope === "orbit") requestControllerOrbitCancel("renderer-dispose");
++      else requestControllerClusterCancel("renderer-dispose");
+     }
+-
+     state.pointer = null;
+-
+-    if (state.gl) {
+-      state.meshes.forEach(mesh => {
+-        state.gl.deleteBuffer(mesh.position);
+-        state.gl.deleteBuffer(mesh.normal);
+-        state.gl.deleteBuffer(mesh.color);
++    [state.rearRenderer, state.frontRenderer].forEach(renderer => {
++      if (!renderer) return;
++      renderer.meshes.forEach(mesh => {
++        renderer.gl.deleteBuffer(mesh.position);
++        renderer.gl.deleteBuffer(mesh.normal);
++        renderer.gl.deleteBuffer(mesh.color);
+       });
+-
+-      if (state.program) {
+-        state.gl.deleteProgram(state.program);
+-      }
+-    }
+-
+-    state.meshes.clear();
+-    state.registry.clear();
+-
+-    emitReceipt({
+-      status: "disposed",
+-      rendererInitialized: false,
+-      gestureActive: false
++      renderer.meshes.clear();
++      renderer.gl.deleteProgram(renderer.program);
+     });
++    state.registry.clear();
++    state.compositor?.dispose?.();
++    emitReceipt({ status: "disposed", rendererInitialized: false, gestureActive: false });
+   }
+ 
+   function bindContextLifecycle() {
+-    state.canvas.addEventListener("webglcontextlost", event => {
+-      event.preventDefault();
+-      emitFailure("WEBGL_CONTEXT_LOST");
+-    });
+-
+-    state.canvas.addEventListener("webglcontextrestored", () => {
+-      emitReceipt({
+-        status: "held",
+-        rendererInitialized: false,
+-        glError: "WEBGL_CONTEXT_RESTORED_RELOAD_REQUIRED"
++    [state.rearRenderer, state.frontRenderer].forEach(renderer => {
++      renderer.canvas.addEventListener("webglcontextlost", event => {
++        event.preventDefault();
++        emitFailure(`WEBGL_CONTEXT_LOST:${renderer.id}`);
++      });
++      renderer.canvas.addEventListener("webglcontextrestored", () => {
++        emitReceipt({
++          status: "held",
++          rendererInitialized: false,
++          glError: `WEBGL_CONTEXT_RESTORED_RELOAD_REQUIRED:${renderer.id}`
++        });
+       });
+     });
+   }
+@@ -2934,7 +2929,7 @@
+       },
+ 
+       start: () => {
+-        if (!state.running && state.gl && state.program) {
++        if (!state.running && state.rearRenderer && state.frontRenderer) {
+           state.running = true;
+           state.lastTime = 0;
+           state.raf = requestAnimationFrame(render);
+@@ -2971,57 +2966,12 @@
+       resolveDom();
+       exposeApi();
+ 
+-      state.canvas = createCanvas();
+-
+-      const gl = getGL(state.canvas);
+-
+-      if (!gl) {
+-        throw new Error("WEBGL_CONTEXT_UNAVAILABLE");
+-      }
+-
+-      state.gl = gl;
+-
++      state.compositor = requireCompositor();
++      state.compositor.initialize();
++      state.rearRenderer = createRenderer(state.compositor.getRearLayer());
++      state.frontRenderer = createRenderer(state.compositor.getFrontLayer());
++      activateRenderer(state.rearRenderer);
+       bindContextLifecycle();
+-
+-      gl.enable(gl.DEPTH_TEST);
+-      gl.depthFunc(gl.LEQUAL);
+-      gl.enable(gl.BLEND);
+-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+-      gl.disable(gl.CULL_FACE);
+-
+-      state.program = createProgram(gl);
+-
+-      state.attribs = Object.freeze({
+-        position: gl.getAttribLocation(state.program, "aPosition"),
+-        normal: gl.getAttribLocation(state.program, "aNormal"),
+-        color: gl.getAttribLocation(state.program, "aColor")
+-      });
+-
+-      state.uniforms = Object.freeze({
+-        model: gl.getUniformLocation(state.program, "uModel"),
+-        view: gl.getUniformLocation(state.program, "uView"),
+-        projection: gl.getUniformLocation(state.program, "uProjection"),
+-        normalMatrix: gl.getUniformLocation(state.program, "uNormalMatrix"),
+-        time: gl.getUniformLocation(state.program, "uTime"),
+-        prominence: gl.getUniformLocation(state.program, "uProminence"),
+-        specular: gl.getUniformLocation(state.program, "uSpecular"),
+-        rim: gl.getUniformLocation(state.program, "uRim"),
+-        emissive: gl.getUniformLocation(state.program, "uEmissive"),
+-        alpha: gl.getUniformLocation(state.program, "uAlpha"),
+-        sparkle: gl.getUniformLocation(state.program, "uSparkle"),
+-        twinkle: gl.getUniformLocation(state.program, "uTwinkle"),
+-        contrast: gl.getUniformLocation(state.program, "uContrast"),
+-        haloStrength: gl.getUniformLocation(state.program, "uHaloStrength"),
+-        saturation: gl.getUniformLocation(state.program, "uSaturation"),
+-        haloPass: gl.getUniformLocation(state.program, "uHaloPass"),
+-        haloExpansion: gl.getUniformLocation(state.program, "uHaloExpansion"),
+-        keyLight: gl.getUniformLocation(state.program, "uKeyLight"),
+-        fillLight: gl.getUniformLocation(state.program, "uFillLight"),
+-        rimLight: gl.getUniformLocation(state.program, "uRimLight"),
+-        ambientColor: gl.getUniformLocation(state.program, "uAmbientColor")
+-      });
+-
+-      state.meshes = buildMeshes(gl);
+       state.registry = buildRegistry();
+       initializeOrientations();
+       bindPointerBridge();

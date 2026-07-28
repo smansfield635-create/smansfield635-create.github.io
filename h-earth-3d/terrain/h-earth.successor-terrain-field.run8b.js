@@ -40,6 +40,23 @@ export const H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID =
 export const H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_SOURCE_FILE =
   '/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 
+export const H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID = freeze({
+  contractId: 'H_EARTH_RUN_8B_CANONICAL_ELEVATION_BINARY_GRID_2_NEGATIVE_24_v1',
+  denominator: 16777216,
+  spacingWorldUnits: 1 / 16777216,
+  selectedByCheckpoint: 'CP3D_1C_CANONICAL_TRANSCENDENTAL_NUMERIC_NORMALIZATION_DECISION',
+  applicationBoundary: 'RUN_8B_SUCCESSOR_FIELD_PROJECTION_BEFORE_NEUTRAL_GEOMETRY',
+  negativeZeroNormalized: true
+});
+
+export function canonicalizeHEarthRun8BElevation(value) {
+  if (!finite(value)) return value;
+  const canonical = Math.round(
+    value * H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID.denominator
+  ) / H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID.denominator;
+  return Object.is(canonical, -0) ? 0 : canonical;
+}
+
 export const H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD = freeze({
   contractId: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,
   generationRevision: 2,
@@ -73,7 +90,9 @@ export const H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD = freeze({
         .profiles.FULL_DETAIL.refinementSpacingWorldUnits,
     sharedEdgeRule: 'SAME_WORLD_COORDINATE_SAME_SUCCESSOR_SAMPLE_AND_NORMAL',
     normalRule: 'RUN_8A_SUCCESSOR_FIELD_CENTRAL_DIFFERENCE',
-    deterministic: true
+    deterministic: true,
+    canonicalElevationGridContractId:
+      H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID.contractId
   },
   ownership: {
     ownsSuccessorWorldSpaceElevationLaw: true,
@@ -95,7 +114,9 @@ export const H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD = freeze({
 });
 
 export function sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ) {
-  return sampleHEarthRun8ASuccessorTerrainElevation(worldX, worldZ);
+  return canonicalizeHEarthRun8BElevation(
+    sampleHEarthRun8ASuccessorTerrainElevation(worldX, worldZ)
+  );
 }
 
 export function sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ) {
@@ -110,8 +131,12 @@ export function sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ) {
     });
   }
 
+  const elevation = canonicalizeHEarthRun8BElevation(source.elevation);
+
   return freeze({
     ...source,
+    world: { ...source.world, y: elevation },
+    elevation,
     status: 'RUN_8B_SUCCESSOR_TERRAIN_SAMPLE_COMPLETE',
     contractId: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,
     generationRevision:
@@ -119,6 +144,8 @@ export function sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ) {
     controllingRun8AContractId: H_EARTH_RUN_8A_CONTRACT_ID,
     dimensionalSurfaceContractId:
       H_EARTH_RUN_8A_MOUNTAIN_DIMENSIONAL_SURFACE_CONTRACT.contractId,
+    canonicalElevationGridContractId:
+      H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID.contractId,
     predecessorContractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
     predecessorMutated: false
   });
@@ -178,6 +205,10 @@ export function evaluateHEarthRun8BSuccessorTerrainField() {
   if (witnesses.some((sample) => !finite(sample.elevation))) {
     issues.push('SUCCESSOR_FIELD_WITNESS_ELEVATION_NONFINITE');
   }
+  if (witnesses.some((sample) =>
+    sample.elevation !== canonicalizeHEarthRun8BElevation(sample.elevation))) {
+    issues.push('SUCCESSOR_FIELD_WITNESS_NOT_CANONICAL');
+  }
 
   return freeze({
     eligible: issues.length === 0,
@@ -189,6 +220,7 @@ export function evaluateHEarthRun8BSuccessorTerrainField() {
       H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.generationRevision,
     predecessorContractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
     predecessorMutated: false,
+    canonicalElevationGrid: H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID,
     continuity,
     witnesses,
     geometryConstructed: false,

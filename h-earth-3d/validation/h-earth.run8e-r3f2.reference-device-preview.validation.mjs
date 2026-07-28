@@ -24,7 +24,7 @@ assert(parent.eligible === true && parent.status === 'RUN_8E_R3F2_PARENT_PREVIEW
 assert(child.eligible === true && child.status === 'RUN_8E_R3F2_PREVIEW_CONSTRUCTION_ELIGIBLE', `R3F2_CHILD_REJECTED:${child.issues.join(',')}`);
 
 const predecessorPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json';
-const failurePaths = [1, 2, 3].map((number) => `h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-00${number}.failure.receipt.json`);
+const failurePaths = [1, 2, 3, 4].map((number) => `h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-00${number}.failure.receipt.json`);
 const predecessor = JSON.parse(fs.readFileSync(predecessorPath, 'utf8'));
 assert(predecessor?.eligible === true && predecessor?.status === 'RUN_8E_R3F1_PASS_CLOSED', 'R3F2_R3F1_RECEIPT_INVALID');
 const failedAttempts = failurePaths.map((receiptPath, index) => {
@@ -34,6 +34,8 @@ const failedAttempts = failurePaths.map((receiptPath, index) => {
   return receipt;
 });
 assert(failedAttempts[2].authorizedCorrection === 'CONSTRUCT_SIGNED_SELF_CONTAINED_OFFLINE_PACKAGE_AND_VALIDATE_BY_LOOPBACK', 'R3F2_OFFLINE_PACKAGE_NOT_AUTHORIZED');
+assert(failedAttempts[3].failureClass === 'CROSS_REALM_CANVAS_INSTANCEOF_MISCLASSIFICATION', 'R3F2_ATTEMPT_004_FAILURE_CLASS_INVALID');
+assert(failedAttempts[3].authorizedCorrection === 'REPLACE_PARENT_REALM_INSTANCEOF_WITH_TAG_OR_IFRAME_REALM_CANVAS_CHECK', 'R3F2_REALM_CHECK_CORRECTION_NOT_AUTHORIZED');
 
 const registry = loadHEarthRepositoryRegistryValidatorDependencies();
 assert(registry.identityVerified === true, 'R3F2_REGISTRY_LOADER_IDENTITY_FAILED');
@@ -75,13 +77,14 @@ async function inspectPackage(page, url, evidenceClass, screenshotName) {
     return {
       routeApiReady: api?.ready === true,
       sameOriginAccess: Boolean(frame?.contentDocument && api),
-      launcherInstrumentationReady: canvas instanceof HTMLCanvasElement && Boolean(receipt?.intake && receipt?.liveGpu),
+      launcherInstrumentationReady: canvas?.tagName === 'CANVAS' && Boolean(receipt?.intake && receipt?.liveGpu),
       routeIntegrationId: api?.integrationId ?? null,
       initialAcceptedProposalCount: receipt?.intake?.counters?.acceptedNavigationProposalCount ?? null,
       initialVisibleFrameCount: receipt?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? null,
       activeWebGL2ContextCount: receipt?.runtimeExclusivity?.activeWebGL2ContextCount ?? null,
       packageClass: window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA?.packageClass ?? null,
-      packageHead: window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA?.packageHead ?? null
+      packageHead: window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA?.packageHead ?? null,
+      webCryptoAvailable: Boolean(globalThis.crypto?.subtle)
     };
   });
   assert(result.routeApiReady === true, `R3F2_${evidenceClass}_ROUTE_API_NOT_READY`);
@@ -89,6 +92,7 @@ async function inspectPackage(page, url, evidenceClass, screenshotName) {
   assert(result.launcherInstrumentationReady === true, `R3F2_${evidenceClass}_INSTRUMENTATION_NOT_READY`);
   assert(result.activeWebGL2ContextCount === 1, `R3F2_${evidenceClass}_WEBGL2_CONTEXT_COUNT_INVALID`);
   assert(result.packageClass === 'SIGNED_OFFLINE_PACKAGE' && result.packageHead === previewHead, `R3F2_${evidenceClass}_PACKAGE_IDENTITY_INVALID`);
+  assert(result.webCryptoAvailable === true, `R3F2_${evidenceClass}_WEB_CRYPTO_UNAVAILABLE`);
   await page.screenshot({ path: path.join(outputDirectory, screenshotName), fullPage: true });
   return result;
 }

@@ -1,0 +1,11 @@
+{
+  "authorizationType": "H_EARTH_RUN_8E_R3F2_P4_FIRST_NETWORK_PUBLICATION_AUTHORIZATION",
+  "authorizationStatus": "RUN_8E_R3F2_P4_AUTHORIZE_FIRST_NETWORK_PUBLICATION",
+  "candidateId": "H_EARTH_RUN8E_R3F2_CANDIDATE_SHA256_3020154361523CF19113E4C759C234A6C74FF5A493B8E47124CA59470DA7A234",
+  "packageSha256": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234",
+  "p3PassReceiptGitBlob": "dbc4f8cb32b33b9cb17567abc9e55e59fe394afd",
+  "publicationBranch": "agent/h-earth-run8e-r3f2-p4-immutable-preview-publication-001",
+  "productionDeployment": false,
+  "customDomainBinding": false,
+  "physicalDeviceExecution": false
+}

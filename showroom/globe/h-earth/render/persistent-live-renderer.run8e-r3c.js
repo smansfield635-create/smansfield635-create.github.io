@@ -5,7 +5,7 @@ import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract
 
 export const H_EARTH_RUN_8E_R3C_RENDERER_ID='H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1';
 const LOGICAL_ID='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25';
-const RUNTIME_ID='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_F59361792';
+const RUNTIME_ID='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_59361792';
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const c3=v=>{const a=Array.isArray(v)?v:[0,0,0],s=a.some(x=>x>1)?255:1;return a.slice(0,3).map(x=>Math.min(1,Math.max(0,Number(x)/s)));};
 const hash=b=>{let h=0x811c9dc5;for(const x of b){h^=x;h=Math.imul(h,0x01000193)>>>0;}return `fnv1a32:${h.toString(16).padStart(8,'0')}`;};

@@ -6,22 +6,36 @@ import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 import { buildHEarthRun8ER3F2SignedOfflinePackage } from './h-earth.run8e-r3f2.signed-offline-package.builder.mjs';
 import { evaluateHEarthRun8ER3Control } from '../control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js';
-import { evaluateHEarthRun8ER3F2Control } from '../control-plane/run-8/recovery/h-earth.run8e-r3f2.reference-device-immutable-preview-and-physical-execution.js';
+import {
+  H_EARTH_RUN_8E_R3F2_CONTROL,
+  evaluateHEarthRun8ER3F2Control
+} from '../control-plane/run-8/recovery/h-earth.run8e-r3f2.reference-device-immutable-preview-and-physical-execution.js';
 import { loadHEarthRepositoryRegistryValidatorDependencies } from '../registry/h-earth.repository-registry.validator-engine.loader.js';
 import { H_EARTH_RUN_8E_R3F2_NODE, H_EARTH_RUN_8E_R3F2_PATHS } from '../registry/accepted-amendments/h-earth.repository-registry.run8e-r3f2-reference-device-preview.js';
 
 const outputDirectory = process.env.H_EARTH_RUN8E_R3F2_OUTPUT ?? '/tmp/h-earth-run8e-r3f2';
-const previewHead = process.env.H_EARTH_RUN8E_R3F2_PREVIEW_HEAD ?? process.env.GITHUB_SHA;
+const eventHead = process.env.H_EARTH_RUN8E_R3F2_PREVIEW_HEAD ?? process.env.GITHUB_SHA;
+const previewHead = H_EARTH_RUN_8E_R3F2_CONTROL.currentStatus === 'PREVIEW_CONSTRUCTION_PENDING'
+  ? eventHead
+  : H_EARTH_RUN_8E_R3F2_CONTROL.immutablePreview.previewPackageHead;
+const previewReady = H_EARTH_RUN_8E_R3F2_CONTROL.currentStatus === 'PREVIEW_READY_PHYSICAL_EXECUTION_PENDING';
 fs.mkdirSync(outputDirectory, { recursive: true });
 const assert = (condition, code) => { if (!condition) throw new Error(code); };
 const writeJson = (filename, value) => fs.writeFileSync(path.join(outputDirectory, filename), `${JSON.stringify(value, null, 2)}\n`);
 const sha256 = (value) => `sha256:${crypto.createHash('sha256').update(value).digest('hex')}`;
 
+assert(/^[0-9a-f]{40}$/.test(eventHead ?? ''), 'R3F2_EVENT_HEAD_INVALID');
 assert(/^[0-9a-f]{40}$/.test(previewHead ?? ''), 'R3F2_PREVIEW_HEAD_INVALID');
 const parent = evaluateHEarthRun8ER3Control();
 const child = evaluateHEarthRun8ER3F2Control();
-assert(parent.eligible === true && parent.status === 'RUN_8E_R3F2_PARENT_PREVIEW_CONSTRUCTION_ELIGIBLE', `R3F2_PARENT_REJECTED:${parent.issues.join(',')}`);
-assert(child.eligible === true && child.status === 'RUN_8E_R3F2_PREVIEW_CONSTRUCTION_ELIGIBLE', `R3F2_CHILD_REJECTED:${child.issues.join(',')}`);
+const expectedParentStatus = previewReady
+  ? 'RUN_8E_R3F2_PARENT_PREVIEW_READY_PHYSICAL_EXECUTION_PENDING'
+  : 'RUN_8E_R3F2_PARENT_PREVIEW_CONSTRUCTION_ELIGIBLE';
+const expectedChildStatus = previewReady
+  ? 'RUN_8E_R3F2_PREVIEW_READY_PHYSICAL_EXECUTION_PENDING'
+  : 'RUN_8E_R3F2_PREVIEW_CONSTRUCTION_ELIGIBLE';
+assert(parent.eligible === true && parent.status === expectedParentStatus, `R3F2_PARENT_REJECTED:${parent.issues.join(',')}`);
+assert(child.eligible === true && child.status === expectedChildStatus, `R3F2_CHILD_REJECTED:${child.issues.join(',')}`);
 
 const predecessorPath = 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f1.pass-closed.receipt.json';
 const failurePaths = [1, 2, 3, 4].map((number) => `h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-00${number}.failure.receipt.json`);
@@ -60,6 +74,10 @@ assert(manifest.packageSha256 === sha256(fs.readFileSync(built.packagePath)), 'R
 assert(built.packageDocument.includes('H_EARTH_RUN8E_R3F2_SIGNED_OFFLINE_PACKAGE'), 'R3F2_PACKAGE_MARKER_MISSING');
 assert(!built.packageDocument.includes('src="./functional-landscape/public-live-gpu-integration'), 'R3F2_EXTERNAL_MODULE_REMAINED');
 assert(!built.packageDocument.includes('href="./functional-landscape/index.css'), 'R3F2_EXTERNAL_FUNCTIONAL_CSS_REMAINED');
+if (previewReady) {
+  assert(manifest.packageSha256 === H_EARTH_RUN_8E_R3F2_CONTROL.immutablePreview.packageSha256, 'R3F2_FROZEN_PACKAGE_DIGEST_MISMATCH');
+  assert(manifest.packageByteCount === H_EARTH_RUN_8E_R3F2_CONTROL.immutablePreview.packageByteCount, 'R3F2_FROZEN_PACKAGE_SIZE_MISMATCH');
+}
 
 async function inspectPackage(page, url, evidenceClass, screenshotName) {
   const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -123,10 +141,15 @@ await browser.close();
 await new Promise((resolve) => server.close(resolve));
 
 const packageManifestSha256 = sha256(fs.readFileSync(path.join(outputDirectory, 'h-earth.run8e-r3f2.signed-offline-package.manifest.json')));
+if (previewReady) {
+  assert(packageManifestSha256 === H_EARTH_RUN_8E_R3F2_CONTROL.immutablePreview.packageManifestSha256, 'R3F2_FROZEN_MANIFEST_DIGEST_MISMATCH');
+}
 const executionReceipt = {
   receiptType: 'H_EARTH_RUN_8E_R3F2_SIGNED_OFFLINE_PACKAGE_VALIDATION_RECEIPT',
   eligible: true,
-  status: 'RUN_8E_R3F2_PREVIEW_VALIDATION_PASS',
+  status: previewReady ? 'RUN_8E_R3F2_PREVIEW_READY_REVALIDATION_PASS' : 'RUN_8E_R3F2_PREVIEW_VALIDATION_PASS',
+  eventHead,
+  validatedPreviewHead: previewHead,
   parentControl: parent,
   childControl: child,
   predecessor: { path: `/${predecessorPath}`, status: predecessor.status, eligible: predecessor.eligible, expectedGitBlob: 'd8b5f3b4626014af6b62362d1bac26e120f50e60' },
@@ -142,4 +165,4 @@ const executionReceipt = {
   issues: []
 };
 writeJson('h-earth.run8e-r3f2.signed-offline-package.execution.receipt.json', executionReceipt);
-console.log(JSON.stringify({ status: executionReceipt.status, packageFilename: manifest.packageFilename, packageByteCount: manifest.packageByteCount, packageSha256: manifest.packageSha256, packageManifestSha256, loopbackValidation, fileValidation, registeredPathCount: executionReceipt.registryAudit.registeredPathCount, boundaries: executionReceipt.boundaries, stoppingBoundary: executionReceipt.stoppingBoundary }, null, 2));
+console.log(JSON.stringify({ status: executionReceipt.status, eventHead, validatedPreviewHead: previewHead, packageFilename: manifest.packageFilename, packageByteCount: manifest.packageByteCount, packageSha256: manifest.packageSha256, packageManifestSha256, loopbackValidation, fileValidation, registeredPathCount: executionReceipt.registryAudit.registeredPathCount, boundaries: executionReceipt.boundaries, stoppingBoundary: executionReceipt.stoppingBoundary }, null, 2));

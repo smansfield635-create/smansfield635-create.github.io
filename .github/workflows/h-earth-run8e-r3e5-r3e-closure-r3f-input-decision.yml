@@ -1,0 +1,135 @@
+name: H-Earth Run 8E R3E5 R3E Closure R3F Input Decision
+
+on:
+  push:
+    branches:
+      - agent/h-earth-run8e-r3e5-r3e-closure-r3f-input-decision-001
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3e4-public-direct-manipulation-acceptance-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run8e-r3e5-r3e-closure-r3f-input-decision:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      H_EARTH_RUN8E_R3E5_OUTPUT: /tmp/h-earth-run8e-r3e5
+    steps:
+      - name: Check out exact R3E5 event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact R3E4 base and durable predecessor receipts
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3e4-public-direct-manipulation-acceptance-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3e4-public-direct-manipulation-acceptance-001)" = "6af68581b5c2d7a2528eedfb34efdfdbbf9aa1b3"
+          test "$(git hash-object h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e1.pass-closed.receipt.json)" = "2c71944eabc6d4522d934ef2fc4af6a85a38f3b5"
+          test "$(git hash-object h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e2.pass-closed.receipt.json)" = "e33405c5e7f600e59a6b1103fd856a1d37ca51c5"
+          test "$(git hash-object h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e3.pass-closed.receipt.json)" = "5c5f1ae06220f88f497dc2b45f4d749679849918"
+          test "$(git hash-object h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e4.pass-closed.receipt.json)" = "7b2db7ed51a345edea88ad8a1288db4db150201d"
+
+      - name: Verify protected R3F runtime input identities
+        run: |
+          set -euo pipefail
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = "0daedf61f7e19af095f4db5fc47563a9cd786837"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js)" = "2b0a916b3a6d11da84316925f8abd8a3a1447445"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/navigation.js)" = "8ab3446c536fc24423d5601acce232b19fa71c91"
+          test "$(git hash-object showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js)" = "4e187fc38780dfb2020482b674ac331f5a65b2c1"
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js)" = "b8b3c713d5f0b7c79808e8942ce385887589d880"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js)" = "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6"
+          test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js)" = "5017bbaf857a644287cb829037b0fde4646f270d"
+
+      - name: Verify R3E5 syntax and closure-only boundary
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e5.r3e-closure-r3f-input-decision.js
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f.input-decision.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3e5-r3e-closure-r3f-input-decision.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3e5.r3e-closure-r3f-input-decision.harness.mjs
+          if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e5.pass-closed.receipt.json; then
+            node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e5.pass-closed.receipt.json','utf8'))"
+          fi
+          ! git diff --name-only 6af68581b5c2d7a2528eedfb34efdfdbbf9aa1b3...HEAD | grep -Eq '^showroom/'
+
+      - name: Execute R3E closure and R3F input decision reconciliation
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/h-earth.run8e-r3e5.r3e-closure-r3f-input-decision.harness.mjs
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only 6af68581b5c2d7a2528eedfb34efdfdbbf9aa1b3...HEAD \
+            | grep -E '^h-earth-3d/' \
+            | sort -u > /tmp/h-earth-run8e-r3e5-governed-paths.txt || true
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3e5-governed-paths.txt \
+            --task "Run 8E R3E5 R3E closure and R3F input decision" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3E5_OUTPUT/h-earth.run8e-r3e5.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3e5/h-earth.run8e-r3e5.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`R3E5_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact scope and R3F stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 6af68581b5c2d7a2528eedfb34efdfdbbf9aa1b3...HEAD | sort > "$H_EARTH_RUN8E_R3E5_OUTPUT/r3e5-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3e5/r3e5-changed-paths.txt').read_text().splitlines() if line.strip()}
+          required = {
+            '.github/workflows/h-earth-run8e-r3e5-r3e-closure-r3f-input-decision.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3e5.r3e-closure-r3f-input-decision.js',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f.input-decision.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3e5-r3e-closure-r3f-input-decision.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3e5.r3e-closure-r3f-input-decision.harness.mjs'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3e5.pass-closed.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'R3E5_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'R3E5_UNEXPECTED_PATHS:{unexpected}')
+          if any(path.startswith('showroom/') for path in paths): raise SystemExit('R3E5_SHOWROOM_MUTATION_OBSERVED')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3e5/h-earth.run8e-r3e5.r3e-closure-r3f-input-decision.execution.receipt.json').read_text())
+          if receipt['eligible'] is not True or receipt['status'] != 'RUN_8E_R3E5_EXECUTION_PASS': raise SystemExit('R3E5_EXECUTION_RECEIPT_INVALID')
+          if receipt['closureLedger']['r3EClosureEligible'] is not True or receipt['closureLedger']['resultingR3EStatus'] != 'PASS_CLOSED': raise SystemExit('R3E5_R3E_CLOSURE_INVALID')
+          if receipt['r3FInputDecision']['disposition'] != 'ADMISSIBLE_AS_NEXT_CHECKPOINT_INPUT': raise SystemExit('R3E5_R3F_INPUT_DISPOSITION_INVALID')
+          if receipt['r3FInputDecision']['symbolicRequiredBase'] != 'R3E5_FINAL_EXACT_HEAD': raise SystemExit('R3E5_R3F_BASE_REQUIREMENT_INVALID')
+          if len(receipt['r3FInputDecision']['admittedInputs']) != 11: raise SystemExit('R3E5_R3F_INPUT_COUNT_INVALID')
+          if receipt['r3FInputDecision']['referenceDeviceLaw']['officialSamsungPhoneRole'] != 'PHYSICAL_REFERENCE_DEVICE_ONLY': raise SystemExit('R3E5_REFERENCE_DEVICE_ROLE_INVALID')
+          if receipt['nextCheckpoint'] != 'RUN_8E_R3F_NOT_STARTED': raise SystemExit('R3E5_R3F_STATE_INVALID')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_PHYSICAL_REFERENCE_DEVICE_AND_BROADER_MOBILE_ACCEPTANCE_R3F': raise SystemExit('R3E5_STOPPING_BOUNDARY_MISMATCH')
+          if any(receipt['boundaries'].values()): raise SystemExit('R3E5_EXECUTION_BOUNDARY_VIOLATION')
+          PY
+
+      - name: Upload R3E5 closure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3e5-r3e-closure-r3f-input-decision-evidence
+          path: |
+            /tmp/h-earth-run8e-r3e5
+            /tmp/h-earth-run8e-r3e5-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

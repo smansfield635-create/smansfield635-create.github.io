@@ -52,7 +52,7 @@ jobs:
           done
           test "$(find "$PREVIEW_ROOT" -maxdepth 1 -type f | wc -l)" -eq 3
 
-      - name: Verify exact candidate identities and non-production markers
+      - name: Verify exact candidate identities and preview markings
         run: |
           set -euo pipefail
           test "$(wc -c < "$PREVIEW_ROOT/index.html")" -eq 1213597
@@ -62,8 +62,11 @@ jobs:
           test "$(git hash-object "$PREVIEW_ROOT/preview-manifest.json")" = "81dbbb97898023ae0dabea313ac69b865302d533"
           test "$(sha256sum "$PREVIEW_ROOT/device-evidence-receipt.schema.json" | cut -d' ' -f1)" = "04ce5ec86f102fb7646b02ad19a3f862b8e6370dcdc971dc252d6bc607e3d18a"
           test "$(git hash-object "$PREVIEW_ROOT/device-evidence-receipt.schema.json")" = "987268f38fc8b6db6f19b982cc8386439aa0de48"
-          grep -aiq 'noindex' "$PREVIEW_ROOT/index.html"
-          grep -aFq "$PACKAGE_HEX" "$PREVIEW_ROOT/index.html"
+          grep -aFq 'H_EARTH_RUN8E_R3F2_SIGNED_OFFLINE_PACKAGE' "$PREVIEW_ROOT/index.html"
+          grep -aFq '"productionDeployment":false' "$PREVIEW_ROOT/index.html"
+          grep -aFq 'It does not deploy or modify the public route.' "$PREVIEW_ROOT/index.html"
+          grep -aFq 'fcdcb4e80a98a86773d5276447b880efde2099c9' "$PREVIEW_ROOT/index.html"
+          grep -aFq "$PACKAGE_HEX" "$PREVIEW_ROOT/preview-manifest.json"
           if grep -Eiq 'navigator[.]serviceWorker|serviceWorker[.]register' "$PREVIEW_ROOT/index.html"; then exit 1; fi
 
       - name: Remove ephemeral workflow and commit only preview publication
@@ -111,6 +114,9 @@ jobs:
             expectedOrigin: 'https://diamondgatebridge.com',
             packageSha256: `sha256:${process.env.PACKAGE_HEX}`,
             exactFileCount: 3,
+            noIndexHeaderAvailable: false,
+            noIndexMetaEmbedded: false,
+            discoveryControl: 'UNLINKED_HASH_BEARING_PATH',
             liveHEarthRouteChanged: false,
             ordinaryTrafficRedirected: false,
             recoveryStackMerged: false,

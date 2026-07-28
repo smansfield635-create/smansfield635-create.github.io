@@ -17,7 +17,7 @@ export const H_EARTH_RUN_8E_R3F2_P2_CONTROL = freeze({
   contractId: H_EARTH_RUN_8E_R3F2_P2_CONTROL_ID,
   checkpointId: 'RUN_8E_R3F2_P2',
   checkpointName: 'EXACT_PREVIEW_PACKAGE_MATERIALIZATION',
-  currentStatus: 'MATERIALIZATION_EXECUTION_OPEN',
+  currentStatus: 'MATERIALIZED_PENDING_DURABLE_RECEIPT',
   repository: 'smansfield635-create/smansfield635-create.github.io',
   branch: 'agent/h-earth-run8e-r3f2-p2-exact-preview-package-materialization-001',
   baseBranch: 'agent/h-earth-run8e-r3f2-p1-immutable-preview-occurrence-contract-001',
@@ -62,12 +62,9 @@ export const H_EARTH_RUN_8E_R3F2_P2_CONTROL = freeze({
     normalizedReceiptRequiredFieldCount: 23
   }),
   authorizedWork: freeze([
-    'MATERIALIZE_IMMUTABLE_PREVIEW_DIRECTORY',
-    'INSTALL_EXACT_VALIDATED_PACKAGE_BYTES',
-    'INSTALL_PREVIEW_MANIFEST',
-    'INSTALL_DEVICE_EVIDENCE_RECEIPT_SCHEMA',
-    'VERIFY_EXACT_FILE_DIGESTS',
-    'VERIFY_ZERO_MUTABLE_RUNTIME_DEPENDENCIES'
+    'MATERIALIZE_IMMUTABLE_PREVIEW_DIRECTORY','INSTALL_EXACT_VALIDATED_PACKAGE_BYTES',
+    'INSTALL_PREVIEW_MANIFEST','INSTALL_DEVICE_EVIDENCE_RECEIPT_SCHEMA',
+    'VERIFY_EXACT_FILE_DIGESTS','VERIFY_ZERO_MUTABLE_RUNTIME_DEPENDENCIES'
   ]),
   prohibitedWork: freeze([
     'PREVIEW_DEPLOYMENT_CONFIGURATION','NETWORK_PUBLICATION','PREVIEW_URL_ISSUANCE',
@@ -75,10 +72,30 @@ export const H_EARTH_RUN_8E_R3F2_P2_CONTROL = freeze({
     'PRODUCTION_DEPLOYMENT','PHYSICAL_REFERENCE_DEVICE_EXECUTION','R3F3_WORK','R3F4_WORK',
     'R3G_WORK','RUN_8E_PASS_CLOSED'
   ]),
-  materializationEvidence: null,
+  materializationEvidence: freeze({
+    materializationHead: '15de81cb063e4afad540c8260587aab4e0ea8de9',
+    workflowRun: 30320530822,
+    workflowJob: 90155272418,
+    artifactId: 8673806780,
+    artifactDigest: 'sha256:2c25c2ac3500dd93db05246348f48f2252d4ebecabee8af80dd36a28662461eb',
+    automaticRegistryPreflightRun: 30320530811,
+    exactFileCount: 3,
+    exactFileIdentitiesVerified: true,
+    initialAttempt: freeze({
+      workflowRun: 30320403072,
+      workflowJob: 90154898966,
+      artifactId: 8673762913,
+      artifactDigest: 'sha256:7e1c992b90a73912007f97434d23940c0bcf7f3850b76b2b362eb9ddc74ecfc3',
+      materializationPassed: true,
+      registryPreflightPassed: false,
+      failureClass: 'P2_REGISTRY_DEPENDENCY_CLOSURE_HELPER_DEFECT',
+      candidatePackageDefectEstablished: false,
+      previewFileIdentityDefectEstablished: false
+    })
+  }),
   closureEvidence: null,
   boundaries: freeze({
-    previewFilesMaterialized: false,
+    previewFilesMaterialized: true,
     deploymentConfigurationCreated: false,
     networkPublicationPerformed: false,
     previewUrlIssued: false,
@@ -110,11 +127,18 @@ export function evaluateHEarthRun8ER3F2P2Control(candidate = H_EARTH_RUN_8E_R3F2
   if (tree.files?.[0]?.contentSha256 !== candidate?.candidateIdentity?.packageSha256 || tree.files?.[0]?.byteCount !== 1213597) issues.push('P2_ENTRY_FILE_IDENTITY_INVALID');
   if (tree.externalRuntimeRequestCount !== 0 || tree.mutableMainDependencyCount !== 0 || tree.undeclaredRuntimeDependencyCount !== 0) issues.push('P2_DEPENDENCY_LAW_INVALID');
   if (tree.identityExposureCount !== 6 || tree.normalizedReceiptRequiredFieldCount !== 23) issues.push('P2_IDENTITY_OR_SCHEMA_COUNT_INVALID');
-  if (candidate?.currentStatus !== 'MATERIALIZATION_EXECUTION_OPEN' && candidate?.boundaries?.previewFilesMaterialized !== true) issues.push('P2_MATERIALIZED_STATE_WITHOUT_BOUNDARY');
-  if (candidate?.currentStatus === 'MATERIALIZATION_EXECUTION_OPEN' && candidate?.boundaries?.previewFilesMaterialized !== false) issues.push('P2_OPEN_STATE_BOUNDARY_INVALID');
-  for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) {
-    if (key !== 'previewFilesMaterialized' && value !== false) issues.push(`P2_BOUNDARY_VIOLATION:${key}`);
+  if (candidate?.currentStatus !== 'MATERIALIZATION_EXECUTION_OPEN') {
+    if (candidate?.boundaries?.previewFilesMaterialized !== true) issues.push('P2_MATERIALIZED_STATE_WITHOUT_BOUNDARY');
+    const evidence = candidate?.materializationEvidence ?? {};
+    if (evidence.materializationHead !== '15de81cb063e4afad540c8260587aab4e0ea8de9') issues.push('P2_MATERIALIZATION_HEAD_MISMATCH');
+    if (evidence.workflowRun !== 30320530822 || evidence.workflowJob !== 90155272418) issues.push('P2_WORKFLOW_IDENTITY_MISMATCH');
+    if (evidence.artifactId !== 8673806780 || evidence.artifactDigest !== 'sha256:2c25c2ac3500dd93db05246348f48f2252d4ebecabee8af80dd36a28662461eb') issues.push('P2_ARTIFACT_IDENTITY_MISMATCH');
+    if (evidence.exactFileCount !== 3 || evidence.exactFileIdentitiesVerified !== true) issues.push('P2_MATERIALIZATION_EVIDENCE_INVALID');
+    if (evidence.initialAttempt?.candidatePackageDefectEstablished !== false || evidence.initialAttempt?.previewFileIdentityDefectEstablished !== false) issues.push('P2_INITIAL_ATTEMPT_MISCLASSIFIED');
+  } else if (candidate?.boundaries?.previewFilesMaterialized !== false) {
+    issues.push('P2_OPEN_STATE_BOUNDARY_INVALID');
   }
+  for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) if (key !== 'previewFilesMaterialized' && value !== false) issues.push(`P2_BOUNDARY_VIOLATION:${key}`);
   if (candidate?.nextCheckpoint !== 'RUN_8E_R3F2_P3_NON_PRODUCTION_PUBLICATION_CONFIGURATION') issues.push('P2_NEXT_CHECKPOINT_INVALID');
   if (candidate?.stoppingBoundary !== 'STOP_BEFORE_HOSTING_OR_NETWORK_PUBLICATION') issues.push('P2_STOPPING_BOUNDARY_INVALID');
   return freeze({

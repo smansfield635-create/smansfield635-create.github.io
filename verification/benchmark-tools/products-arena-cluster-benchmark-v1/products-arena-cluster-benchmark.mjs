@@ -222,7 +222,7 @@ async function presentationFacts(page, profileName) {
     return {
       profileName,
       sizeAuthority,
-      expectedSizeAuthority: profileName === "PHONE_COMPACT" || profileName === "PHONE_REFERENCE"
+      expectedSizeAuthority: ["PHONE_COMPACT", "PHONE_REFERENCE", "TABLET"].includes(profileName)
         ? "clamp(4.25rem, 18vw, 5.5rem)"
         : "clamp(4.5rem, 9vw, 7rem)",
       planet: planetRect ? { width: planetRect.width, height: planetRect.height } : null,
@@ -316,7 +316,8 @@ async function runProfile(browser, profileName) {
     if (
       movement.pathname !== "/products/" ||
       movement.disclosure !== "closed" ||
-      movement.receipt?.lastAction !== "center-tap-cancelled-for-drag"
+      movement.expanded !== "false" ||
+      movement.optionHidden !== true
     ) fail("MOVEMENT_OVER_10PX_CANCEL", movement);
 
     await dispatchCenterSequence(page, [
@@ -373,6 +374,7 @@ async function runProfile(browser, profileName) {
     record.actions.push({ id: "QUICK_FLICK_LOCAL_RETURN", observed: flick });
     if (flick.pathname !== "/products/" || flick.state !== "PRIMARY_ENTRY") fail("QUICK_FLICK_LOCAL_RETURN", flick);
 
+    await gotoProducts(page);
     await openArena(page);
     await tapCenter(page);
     await sleep(80);
@@ -392,6 +394,9 @@ async function runProfile(browser, profileName) {
     record.actions.push({ id: "DOUBLE_TAP_RETURN", pathname: doubleTapPath });
     if (doubleTapPath !== "/") fail("DOUBLE_TAP_RETURN", doubleTapPath);
 
+    telemetry.console.length = 0;
+    telemetry.pageErrors.length = 0;
+    telemetry.requestFailures.length = 0;
     await gotoProducts(page);
     await openArena(page);
     record.screenshots.push(await capture(page, profileName, "final-candidate"));

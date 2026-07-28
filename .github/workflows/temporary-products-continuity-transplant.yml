@@ -1,0 +1,72 @@
+name: Temporary Products continuity transplant
+
+on:
+  push:
+    branches:
+      - agent/products-arena-corrective-continuity-001
+    paths:
+      - ".github/workflows/temporary-products-continuity-transplant.yml"
+      - "verification/temporary-products-controller-transplant.mjs"
+
+permissions:
+  contents: write
+
+jobs:
+  transplant:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/products-arena-corrective-continuity-001
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify baseline identities
+        run: |
+          test "$(git hash-object products/index.controller.js)" = \
+            "3eb38cc35a88936b884891d3dfe735a71583bf34"
+          test "$(git hash-object products/index.html)" = \
+            "61766e2d79dc4448d5c7772109e9383afa1eeca7"
+          test "$(git hash-object products/index.arena.css)" = \
+            "eaed7439f2423375db90941f375dba6879654b0c"
+
+      - name: Apply deterministic transplant
+        run: |
+          node verification/temporary-products-controller-transplant.mjs
+
+      - name: Validate candidate
+        run: |
+          node --check products/index.controller.js
+          git diff --check
+          test "$(git diff --name-only | sort)" = "$(printf '%s\n' \
+            products/index.arena.css \
+            products/index.controller.js \
+            products/index.html | sort)"
+          test "$(git hash-object products/index.planet.js)" = "$(git rev-parse eb90d5635347c33c2766eaf9e9f4f606307b59cf:products/index.planet.js)"
+          test "$(git hash-object products/index.crystals.js)" = "$(git rev-parse eb90d5635347c33c2766eaf9e9f4f606307b59cf:products/index.crystals.js)"
+          ! grep -q "DGB_PRODUCTS_CONTROLLER_CENTER" products/index.controller.js
+          ! grep -q "DGB_PRODUCTS_CENTER_CONTROL_RECEIPT" products/index.controller.js
+
+      - name: Remove temporary transport files
+        run: |
+          rm -f verification/temporary-products-controller-transplant.mjs
+          rm -f .github/workflows/temporary-products-continuity-transplant.yml
+
+      - name: Commit candidate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Integrate Products center continuity into primary controller"
+          changed="$(git diff --name-only eb90d5635347c33c2766eaf9e9f4f606307b59cf HEAD)"
+          test "$changed" = "$(printf '%s\n' \
+            products/index.arena.css \
+            products/index.controller.js \
+            products/index.html)"
+          git push origin HEAD:agent/products-arena-corrective-continuity-001

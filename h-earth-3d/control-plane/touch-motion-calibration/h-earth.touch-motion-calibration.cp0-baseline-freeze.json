@@ -58,7 +58,7 @@
     {
       "role": "CURRENT_GUIDED_EIGHT_GESTURE_ACCEPTANCE_DIAGNOSTIC",
       "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/interaction-acceptance.run8e.js",
-      "blobSha": "5296e01b6c1eee265949a74bde69a6f425501545:PATH_BLOB_NOT_YET_SEPARATELY_FETCHED",
+      "blobSha": "3e47f49c9692e22e77c784afa6877a5ed6cd9c19",
       "contractId": "H_EARTH_GUIDED_INTERACTION_ACCEPTANCE_SESSION_v2"
     }
   ],

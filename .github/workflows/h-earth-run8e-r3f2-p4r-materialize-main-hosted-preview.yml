@@ -1,0 +1,130 @@
+name: H-Earth Run 8E R3F2-P4R Main-Hosted Preview Materialization
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-run8e-r3f2-p4r-materialize-main-hosted-preview.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-run8e-r3f2-p4r-main-hosted-preview
+  cancel-in-progress: false
+
+env:
+  AUTHORIZED_BRANCH: agent/h-earth-run8e-r3f2-p4r-main-hosted-parallel-preview-001
+  SOURCE_BRANCH: agent/h-earth-run8e-r3f2-p3c-executable-publication-trigger-correction-001
+  SOURCE_HEAD: 912226b530b2cf188c1a10556c2b5eb2de5ec7be
+  PREVIEW_ROOT: preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234
+  WORKFLOW_PATH: .github/workflows/h-earth-run8e-r3f2-p4r-materialize-main-hosted-preview.yml
+  PACKAGE_HEX: 3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234
+
+jobs:
+  materialize-and-validate:
+    if: github.head_ref == 'agent/h-earth-run8e-r3f2-p4r-main-hosted-parallel-preview-001'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact publication branch head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Verify bounded branch and fetch exact governed source
+        run: |
+          set -euo pipefail
+          test "$GITHUB_HEAD_REF" = "$AUTHORIZED_BRANCH"
+          test "$GITHUB_BASE_REF" = "main"
+          git fetch --no-tags origin "$SOURCE_BRANCH"
+          test "$(git rev-parse FETCH_HEAD)" = "$SOURCE_HEAD"
+          git fetch --no-tags origin main
+          test "$(git merge-base HEAD origin/main)" = "$(git rev-parse origin/main)"
+
+      - name: Materialize exact three-file preview tree
+        run: |
+          set -euo pipefail
+          mkdir -p "$PREVIEW_ROOT"
+          for file in index.html preview-manifest.json device-evidence-receipt.schema.json; do
+            git show "$SOURCE_HEAD:$PREVIEW_ROOT/$file" > "$PREVIEW_ROOT/$file"
+          done
+          test "$(find "$PREVIEW_ROOT" -maxdepth 1 -type f | wc -l)" -eq 3
+
+      - name: Verify exact candidate identities and non-production markers
+        run: |
+          set -euo pipefail
+          test "$(wc -c < "$PREVIEW_ROOT/index.html")" -eq 1213597
+          test "$(sha256sum "$PREVIEW_ROOT/index.html" | cut -d' ' -f1)" = "$PACKAGE_HEX"
+          test "$(git hash-object "$PREVIEW_ROOT/index.html")" = "c5127e2d4d9d3558230a8eccd757dade74d6d8c3"
+          test "$(sha256sum "$PREVIEW_ROOT/preview-manifest.json" | cut -d' ' -f1)" = "b77b3e88ef4868d0602468da90693c64c46b09442e1fe15013ed4dcf69156dd4"
+          test "$(git hash-object "$PREVIEW_ROOT/preview-manifest.json")" = "81dbbb97898023ae0dabea313ac69b865302d533"
+          test "$(sha256sum "$PREVIEW_ROOT/device-evidence-receipt.schema.json" | cut -d' ' -f1)" = "04ce5ec86f102fb7646b02ad19a3f862b8e6370dcdc971dc252d6bc607e3d18a"
+          test "$(git hash-object "$PREVIEW_ROOT/device-evidence-receipt.schema.json")" = "987268f38fc8b6db6f19b982cc8386439aa0de48"
+          grep -aiq 'noindex' "$PREVIEW_ROOT/index.html"
+          grep -aFq "$PACKAGE_HEX" "$PREVIEW_ROOT/index.html"
+          if grep -Eiq 'navigator[.]serviceWorker|serviceWorker[.]register' "$PREVIEW_ROOT/index.html"; then exit 1; fi
+
+      - name: Remove ephemeral workflow and commit only preview publication
+        run: |
+          set -euo pipefail
+          rm "$WORKFLOW_PATH"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "$PREVIEW_ROOT" "$WORKFLOW_PATH"
+          git commit -m "Publish immutable R3F2 parallel preview"
+          git push origin HEAD:"$AUTHORIZED_BRANCH"
+
+      - name: Verify final branch diff contains only the exact preview tree
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main "$AUTHORIZED_BRANCH"
+          git checkout -B verify "origin/$AUTHORIZED_BRANCH"
+          mapfile -t changed < <(git diff --name-only origin/main...HEAD | sed '/^$/d')
+          test "${#changed[@]}" -eq 3
+          printf '%s\n' "${changed[@]}" | sort > /tmp/changed.txt
+          printf '%s\n' \
+            "$PREVIEW_ROOT/device-evidence-receipt.schema.json" \
+            "$PREVIEW_ROOT/index.html" \
+            "$PREVIEW_ROOT/preview-manifest.json" | sort > /tmp/expected.txt
+          diff -u /tmp/expected.txt /tmp/changed.txt
+          test -z "$(git diff --name-only origin/main...HEAD -- showroom)"
+          test ! -e "$WORKFLOW_PATH"
+
+      - name: Record main-hosted publication candidate evidence
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-run8e-r3f2-p4r
+          node <<'NODE'
+          const fs = require('fs');
+          const { execFileSync } = require('child_process');
+          const sh = (...args) => execFileSync(args[0], args.slice(1), { encoding: 'utf8' }).trim();
+          const root = process.env.PREVIEW_ROOT;
+          const record = {
+            checkpointId: 'RUN_8E_R3F2_P4R',
+            occurrenceClass: 'MAIN_HOSTED_PARALLEL_IMMUTABLE_PREVIEW_CANDIDATE',
+            branch: process.env.AUTHORIZED_BRANCH,
+            branchHead: sh('git', 'rev-parse', 'HEAD'),
+            mainBaseHead: sh('git', 'rev-parse', 'origin/main'),
+            previewPath: `/${root}/`,
+            expectedOrigin: 'https://diamondgatebridge.com',
+            packageSha256: `sha256:${process.env.PACKAGE_HEX}`,
+            exactFileCount: 3,
+            liveHEarthRouteChanged: false,
+            ordinaryTrafficRedirected: false,
+            recoveryStackMerged: false,
+            productionAcceptanceClaimed: false,
+            physicalDeviceExecution: false
+          };
+          fs.writeFileSync('/tmp/h-earth-run8e-r3f2-p4r/materialization.json', `${JSON.stringify(record, null, 2)}\n`);
+          console.log(JSON.stringify(record, null, 2));
+          NODE
+
+      - name: Upload P4R materialization evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p4r-main-hosted-preview-materialization
+          path: /tmp/h-earth-run8e-r3f2-p4r/materialization.json
+          if-no-files-found: error
+          retention-days: 90

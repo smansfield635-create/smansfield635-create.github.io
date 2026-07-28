@@ -43,9 +43,7 @@ const occurrences = freeze(H_EARTH_RUN_8E_R3F2_P2_PATHS.map((repositoryPath) => 
       : 'PRESENT',
   fetchbackStatus: H_EARTH_RUN_8E_R3F2_P2_CONTROL.currentStatus === 'PASS_CLOSED'
     ? 'R3F2_P2_PASS_CLOSED_FETCHBACK_PENDING'
-    : materialized
-      ? 'R3F2_P2_MATERIALIZED_FETCHBACK_PENDING'
-      : 'R3F2_P2_MATERIALIZATION_PENDING',
+    : materialized ? 'R3F2_P2_MATERIALIZED_FETCHBACK_PENDING' : 'R3F2_P2_MATERIALIZATION_PENDING',
   occurrenceClass: PREVIEW_PATHS.includes(repositoryPath)
     ? 'RUN_8E_R3F2_P2_MATERIALIZED_PREVIEW_FILE_OCCURRENCE'
     : 'RUN_8E_R3F2_P2_CONTROL_OCCURRENCE'
@@ -159,7 +157,9 @@ export function findHEarthRepositoryRegistryNodes(criteria = {}) {
   return freeze(match ? [...base, node] : base);
 }
 export const getHEarthRepositoryRegistryRelationsForNode = (id, direction = 'BOTH') => id === H_EARTH_RUN_8E_R3F2_P2_NODE.nodeId ? freeze([]) : baseFacade.getHEarthRepositoryRegistryRelationsForNode(id, direction);
-export const getHEarthRepositoryRegistryDependencyClosure = (id) => id === H_EARTH_RUN_8E_R3F2_P2_NODE.nodeId ? freeze({ nodeId: id, nodes: [node], relations: [], unresolved: false }) : baseFacade.getHEarthRepositoryRegistryDependencyClosure(id);
+export const getHEarthRepositoryRegistryDependencyClosure = (id) => id === H_EARTH_RUN_8E_R3F2_P2_NODE.nodeId
+  ? freeze({ nodeId: id, nodes: [H_EARTH_RUN_8E_R3F2_P2_NODE], relations: [], unresolved: false })
+  : baseFacade.getHEarthRepositoryRegistryDependencyClosure(id);
 
 export const H_EARTH_RUN_8E_R3F2_P2_FACADE = freeze({
   ...baseFacade,

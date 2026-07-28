@@ -36,7 +36,7 @@ jobs:
           grep -q '/products/index.compositor.js' products/index.html
           grep -q 'rear-center-front-semantic' products/index.html
           grep -q 'FIXED_CENTER_INDEPENDENT_SIBLING' products/index.html
-          test "$(grep -o 'data-products-product' products/index.html | wc -l)" -eq 6
+          test "$(grep -o 'data-products-product data-product-id' products/index.html | wc -l)" -eq 6
 
       - name: Install browser
         run: |

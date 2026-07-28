@@ -18,6 +18,7 @@
   const rootSelector = '[data-page-id="products"]';
   const centerSelector = "[data-products-center-control]";
   const returnSelector = "[data-products-return-main-compass]";
+  const stylesheetHref = "/products/index.globe-guard.css";
   const nonGlobeSelector = [
     "[data-products-primary-entry]",
     "[data-products-product]",
@@ -25,6 +26,15 @@
     "[data-products-return-to-constellation]",
     "[data-products-enter]"
   ].join(",");
+
+  function installStylesheet() {
+    if (document.querySelector(`link[href="${stylesheetHref}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = stylesheetHref;
+    link.dataset.productsGlobeGuardStyles = "true";
+    document.head.append(link);
+  }
 
   function closeDisclosure(root, reason) {
     const center = root.querySelector(centerSelector);
@@ -85,9 +95,12 @@
       status: "available",
       disclosureIsolation: true,
       centerOnlyDisclosure: true,
+      protectedTouchCorridor: true,
       createsSecondController: false
     });
   }
+
+  installStylesheet();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initialize, { once: true });

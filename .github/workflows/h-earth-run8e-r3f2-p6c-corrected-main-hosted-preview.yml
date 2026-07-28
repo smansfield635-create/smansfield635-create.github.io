@@ -55,6 +55,7 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf /tmp/r3f2-p6c-source "$BUILD_OUTPUT"
+          mkdir -p "$BUILD_OUTPUT"
           git worktree add --detach /tmp/r3f2-p6c-source "$CORRECTION_HEAD"
           cd /tmp/r3f2-p6c-source
           npm install --no-save esbuild@0.25.5
@@ -76,7 +77,7 @@ jobs:
           mkdir -p "$NEW_ROOT"
           cp "$BUILD_OUTPUT/H_EARTH_RUN8E_R3F2_SIGNED_OFFLINE_REFERENCE_DEVICE_PACKAGE.html" "$NEW_ROOT/index.html"
           python3 - <<'PY'
-          import copy, hashlib, json, os, subprocess
+          import hashlib, json, os, subprocess
           from pathlib import Path
 
           old_root = Path(os.environ['OLD_ROOT'])

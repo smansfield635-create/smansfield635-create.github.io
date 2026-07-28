@@ -1,0 +1,150 @@
+name: H-Earth Run 8E R3F2-P2 Exact Preview Package Materialization
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3f2-p1-immutable-preview-occurrence-contract-001
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-run8e-r3f2-p2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate-run8e-r3f2-p2-materialization:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      H_EARTH_RUN8E_R3F2_P2_OUTPUT: /tmp/h-earth-run8e-r3f2-p2
+      PREVIEW_ROOT: preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234
+    steps:
+      - name: Check out exact P2 event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact P1 base and protected identities
+        run: |
+          set -euo pipefail
+          git fetch origin agent/h-earth-run8e-r3f2-p1-immutable-preview-occurrence-contract-001
+          test "$(git merge-base HEAD origin/agent/h-earth-run8e-r3f2-p1-immutable-preview-occurrence-contract-001)" = "7815de03a713414798d5d927038852e6dda210b8"
+          test "$(git hash-object h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p1.pass-closed.receipt.json)" = "f2d4a9f86153912cbd68be8662873f77854107f4"
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = "0daedf61f7e19af095f4db5fc47563a9cd786837"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js)" = "2b0a916b3a6d11da84316925f8abd8a3a1447445"
+
+      - name: Verify P2 syntax and no-publication boundary
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2-p2.exact-preview-package-materialization.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3f2-p2-exact-preview-package-materialization.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3f2-p2.exact-preview-package-materialization.harness.mjs
+          ! git diff --name-only 7815de03a713414798d5d927038852e6dda210b8...HEAD | grep -Eq '^showroom/'
+          ! git diff --name-only 7815de03a713414798d5d927038852e6dda210b8...HEAD | grep -Eq '(^|/)(_headers|vercel\.json|netlify\.toml|firebase\.json|wrangler\.toml)$'
+
+      - name: Install bounded package dependency
+        run: |
+          set -euo pipefail
+          npm install --no-save esbuild@0.25.5
+
+      - name: Materialize and validate exact three-file preview tree
+        id: materialize
+        run: |
+          set -euo pipefail
+          mkdir -p "$H_EARTH_RUN8E_R3F2_P2_OUTPUT"
+          node h-earth-3d/validation/h-earth.run8e-r3f2-p2.exact-preview-package-materialization.harness.mjs \
+            2>&1 | tee "$H_EARTH_RUN8E_R3F2_P2_OUTPUT/h-earth.run8e-r3f2-p2.materialization.log"
+          if test -n "$(git status --porcelain -- "$PREVIEW_ROOT")"; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add \
+              "$PREVIEW_ROOT/index.html" \
+              "$PREVIEW_ROOT/preview-manifest.json" \
+              "$PREVIEW_ROOT/device-evidence-receipt.schema.json"
+            git commit -m "Materialize exact R3F2 immutable preview package"
+            git push origin "HEAD:${GITHUB_HEAD_REF}"
+            echo "created=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "created=false" >> "$GITHUB_OUTPUT"
+          fi
+          export H_EARTH_RUN8E_R3F2_P2_MATERIALIZED_HEAD="$(git rev-parse HEAD)"
+          node h-earth-3d/validation/h-earth.run8e-r3f2-p2.exact-preview-package-materialization.harness.mjs \
+            > "$H_EARTH_RUN8E_R3F2_P2_OUTPUT/h-earth.run8e-r3f2-p2.materialization-final.json"
+          echo "materialized_head=$H_EARTH_RUN8E_R3F2_P2_MATERIALIZED_HEAD" >> "$GITHUB_OUTPUT"
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only 7815de03a713414798d5d927038852e6dda210b8...HEAD | sort -u > /tmp/h-earth-run8e-r3f2-p2-governed-paths.txt
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-run8e-r3f2-p2-governed-paths.txt \
+            --task "Run 8E R3F2-P2 exact preview package materialization" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3F2_P2_OUTPUT/h-earth.run8e-r3f2-p2.automatic-preflight.receipt.json"
+          node - <<'NODE'
+          const receipt = require('/tmp/h-earth-run8e-r3f2-p2/h-earth.run8e-r3f2-p2.automatic-preflight.receipt.json');
+          if (receipt.finalDisposition !== 'PASS') throw new Error(`P2_AUTOMATIC_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
+          NODE
+
+      - name: Verify exact P2 scope and P3 stopping boundary
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --name-only 7815de03a713414798d5d927038852e6dda210b8...HEAD | sort > "$H_EARTH_RUN8E_R3F2_P2_OUTPUT/p2-changed-paths.txt"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          paths = {line.strip() for line in Path('/tmp/h-earth-run8e-r3f2-p2/p2-changed-paths.txt').read_text().splitlines() if line.strip()}
+          root = 'preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234'
+          required = {
+            '.github/workflows/h-earth-run8e-r3f2-p2-exact-preview-package-materialization.yml',
+            'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2-p2.exact-preview-package-materialization.js',
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3f2-p2-exact-preview-package-materialization.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'h-earth-3d/validation/h-earth.run8e-r3f2-p2.exact-preview-package-materialization.harness.mjs',
+            f'{root}/index.html',
+            f'{root}/preview-manifest.json',
+            f'{root}/device-evidence-receipt.schema.json'
+          }
+          optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p2.pass-closed.receipt.json'}
+          missing = sorted(required - paths)
+          unexpected = sorted(paths - required - optional)
+          if missing: raise SystemExit(f'P2_REQUIRED_PATHS_MISSING:{missing}')
+          if unexpected: raise SystemExit(f'P2_UNEXPECTED_PATHS:{unexpected}')
+          if any(path.startswith('showroom/') for path in paths): raise SystemExit('P2_SHOWROOM_MUTATION_OBSERVED')
+          receipt = json.loads(Path('/tmp/h-earth-run8e-r3f2-p2/h-earth.run8e-r3f2-p2.materialization-validation.receipt.json').read_text())
+          if receipt['eligible'] is not True or receipt['status'] != 'RUN_8E_R3F2_P2_MATERIALIZATION_VALIDATION_PASS': raise SystemExit('P2_RECEIPT_INVALID')
+          if receipt['previewTree']['exactFileCount'] != 3: raise SystemExit('P2_FILE_COUNT_INVALID')
+          if receipt['previewTree']['externalRuntimeRequestCount'] != 0 or receipt['previewTree']['mutableMainDependencyCount'] != 0: raise SystemExit('P2_DEPENDENCY_BOUNDARY_INVALID')
+          if receipt['nextCheckpoint'] != 'RUN_8E_R3F2_P3_NON_PRODUCTION_PUBLICATION_CONFIGURATION': raise SystemExit('P2_NEXT_CHECKPOINT_INVALID')
+          if receipt['stoppingBoundary'] != 'STOP_BEFORE_HOSTING_OR_NETWORK_PUBLICATION': raise SystemExit('P2_STOPPING_BOUNDARY_INVALID')
+          for key, value in receipt['boundaries'].items():
+            if key == 'previewFilesMaterialized':
+              if value is not True: raise SystemExit('P2_MATERIALIZATION_NOT_TRUE')
+            elif value is not False:
+              raise SystemExit(f'P2_BOUNDARY_VIOLATION:{key}')
+          PY
+          test "$(git hash-object "$PREVIEW_ROOT/index.html")" = "c5127e2d4d9d3558230a8eccd757dade74d6d8c3"
+          test "$(git hash-object "$PREVIEW_ROOT/preview-manifest.json")" = "81dbbb97898023ae0dabea313ac69b865302d533"
+          test "$(git hash-object "$PREVIEW_ROOT/device-evidence-receipt.schema.json")" = "987268f38fc8b6db6f19b982cc8386439aa0de48"
+
+      - name: Upload P2 materialization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p2-exact-preview-package-materialization-evidence
+          path: |
+            /tmp/h-earth-run8e-r3f2-p2
+            /tmp/h-earth-run8e-r3f2-p2-governed-paths.txt
+          if-no-files-found: warn
+          retention-days: 90

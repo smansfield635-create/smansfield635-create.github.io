@@ -36,6 +36,7 @@ jobs:
           grep -q '/products/index.compositor.js' products/index.html
           grep -q 'rear-center-front-semantic' products/index.html
           grep -q 'FIXED_CENTER_INDEPENDENT_SIBLING' products/index.html
+          grep -q 'content: attr(data-label)' products/index.compass.css
           test "$(grep -o 'data-products-product data-product-id' products/index.html | wc -l)" -eq 6
 
       - name: Install browser
@@ -74,8 +75,8 @@ jobs:
             const semantic = scene?.querySelector('[data-products-semantic]');
             const products = [...document.querySelectorAll('[data-products-product]')];
             const visibleLabels = products.filter(node => {
-              const label = node.querySelector('.products-star__label');
-              return label && getComputedStyle(label).visibility === 'visible' && Number(getComputedStyle(label).opacity) > 0;
+              const pseudo = getComputedStyle(node, '::after');
+              return pseudo.content !== 'none' && pseudo.content !== 'normal' && Number(pseudo.opacity) > 0;
             });
             const rect = scene.getBoundingClientRect();
             const centerRect = center.getBoundingClientRect();
@@ -86,6 +87,7 @@ jobs:
               depthComposition: root.dataset.productsDepthComposition,
               productCount: products.length,
               visibleLabelCount: visibleLabels.length,
+              visibleLabels: visibleLabels.map(node => node.dataset.label),
               layers: {
                 rear: Number(getComputedStyle(rear).zIndex),
                 center: Number(getComputedStyle(center).zIndex),

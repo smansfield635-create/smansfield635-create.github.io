@@ -1,0 +1,188 @@
+name: H-Earth Run 8E R3F2-P6C Cross-Realm Instrumentation Correction
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3f2-p3c-executable-publication-trigger-correction-001
+    paths:
+      - '.github/workflows/h-earth-run8e-r3f2-p6c-cross-realm-instrumentation-correction.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-run8e-r3f2-p6c-cross-realm-instrumentation-correction
+  cancel-in-progress: false
+
+env:
+  AUTHORIZED_BRANCH: agent/h-earth-run8e-r3f2-p6c-cross-realm-instrumentation-correction-001
+  BASE_HEAD: 912226b530b2cf188c1a10556c2b5eb2de5ec7be
+  LAUNCHER_PATH: h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js
+  VALIDATION_PATH: h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs
+  WORKFLOW_PATH: .github/workflows/h-earth-run8e-r3f2-p6c-cross-realm-instrumentation-correction.yml
+  OUTPUT_ROOT: /tmp/h-earth-run8e-r3f2-p6c
+
+jobs:
+  correct-build-and-validate:
+    if: github.head_ref == 'agent/h-earth-run8e-r3f2-p6c-cross-realm-instrumentation-correction-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact correction branch head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact predecessor and protected public source
+        run: |
+          set -euo pipefail
+          test "$GITHUB_HEAD_REF" = "$AUTHORIZED_BRANCH"
+          test "$GITHUB_BASE_REF" = "agent/h-earth-run8e-r3f2-p3c-executable-publication-trigger-correction-001"
+          git fetch --no-tags origin "+refs/heads/$GITHUB_BASE_REF:refs/remotes/origin/$GITHUB_BASE_REF"
+          test "$(git rev-parse "refs/remotes/origin/$GITHUB_BASE_REF")" = "$BASE_HEAD"
+          test "$(git merge-base HEAD "$BASE_HEAD")" = "$BASE_HEAD"
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = "0daedf61f7e19af095f4db5fc47563a9cd786837"
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js)" = "2b0a916b3a6d11da84316925f8abd8a3a1447445"
+          test "$(git hash-object "$LAUNCHER_PATH")" = "448504d52199c7ab8689095de7ac26803fa4e444"
+          test "$(git hash-object "$VALIDATION_PATH")" = "0e4f43f96f7bfd3cafdb2d2f8b6a4c42e96c4dce"
+
+      - name: Apply bounded realm-neutral launcher and validation correction
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          launcher_path = Path('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js')
+          validation_path = Path('h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs')
+
+          def replace_one(text, old, new, code):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{code}:COUNT={count}')
+              return text.replace(old, new, 1)
+
+          launcher = launcher_path.read_text()
+          launcher = replace_one(
+              launcher,
+              "  const fileDigest = async (file) => file ? digest(await file.arrayBuffer()) : null;\n  const canvasImage = () => {",
+              "  const fileDigest = async (file) => file ? digest(await file.arrayBuffer()) : null;\n  const isCanvasElement = (value) => value?.nodeType === 1\n    && String(value?.localName ?? '').toLowerCase() === 'canvas'\n    && typeof value?.toDataURL === 'function'\n    && typeof value?.addEventListener === 'function';\n  const canvasImage = () => {",
+              'P6C_IS_CANVAS_INSERTION_FAILED'
+          )
+          launcher = replace_one(
+              launcher,
+              "      return canvas instanceof HTMLCanvasElement ? canvas.toDataURL('image/png') : null;",
+              "      return isCanvasElement(canvas) ? canvas.toDataURL('image/png') : null;",
+              'P6C_CANVAS_IMAGE_REALM_CHECK_FAILED'
+          )
+          launcher = replace_one(
+              launcher,
+              "    if (!(canvas instanceof HTMLCanvasElement)) throw new Error('R3F2_CANVAS_NOT_FOUND');\n    for (const type of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) {",
+              "    if (!isCanvasElement(canvas)) throw new Error('R3F2_CANVAS_NOT_FOUND');\n    canvas.dataset.r3f2EvidenceInstrumented = 'true';\n    for (const type of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) {",
+              'P6C_INSTRUMENT_REALM_CHECK_FAILED'
+          )
+          if 'instanceof HTMLCanvasElement' in launcher:
+              raise SystemExit('P6C_PARENT_REALM_INSTANCEOF_REMAINED')
+          launcher_path.write_text(launcher)
+
+          validation = validation_path.read_text()
+          validation = replace_one(
+              validation,
+              "  await page.waitForFunction(() => document.getElementById('routeFrame')?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 60000 });\n  const result = await page.evaluate(() => {",
+              "  await page.waitForFunction(() => document.getElementById('routeFrame')?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 60000 });\n  await page.waitForFunction(() => {\n    const notice = document.getElementById('phaseNotice')?.textContent ?? '';\n    return notice.startsWith('Physical session active')\n      || notice.startsWith('Ten-minute minimum complete')\n      || notice.startsWith('Instrumentation failed:');\n  }, null, { timeout: 30000 });\n  const result = await page.evaluate(() => {",
+              'P6C_VALIDATION_NOTICE_WAIT_INSERTION_FAILED'
+          )
+          validation = replace_one(
+              validation,
+              "      launcherInstrumentationReady: canvas?.tagName === 'CANVAS' && Boolean(receipt?.intake && receipt?.liveGpu),\n      routeIntegrationId: api?.integrationId ?? null,",
+              "      launcherInstrumentationReady: canvas?.tagName === 'CANVAS'\n        && canvas?.dataset?.r3f2EvidenceInstrumented === 'true'\n        && Boolean(receipt?.intake && receipt?.liveGpu),\n      instrumentationMarker: canvas?.dataset?.r3f2EvidenceInstrumented === 'true',\n      phaseNotice: document.getElementById('phaseNotice')?.textContent ?? null,\n      routeIntegrationId: api?.integrationId ?? null,",
+              'P6C_VALIDATION_MARKER_INSERTION_FAILED'
+          )
+          validation = replace_one(
+              validation,
+              "  assert(result.launcherInstrumentationReady === true, `R3F2_${evidenceClass}_INSTRUMENTATION_NOT_READY`);\n  assert(result.activeWebGL2ContextCount === 1, `R3F2_${evidenceClass}_WEBGL2_CONTEXT_COUNT_INVALID`);",
+              "  assert(result.launcherInstrumentationReady === true, `R3F2_${evidenceClass}_INSTRUMENTATION_NOT_READY`);\n  assert(result.instrumentationMarker === true, `R3F2_${evidenceClass}_INSTRUMENTATION_MARKER_MISSING`);\n  assert(!result.phaseNotice?.startsWith('Instrumentation failed:'), `R3F2_${evidenceClass}_INSTRUMENTATION_FAILED:${result.phaseNotice}`);\n  assert(result.phaseNotice?.startsWith('Physical session active') || result.phaseNotice?.startsWith('Ten-minute minimum complete'), `R3F2_${evidenceClass}_PHASE_NOTICE_INVALID:${result.phaseNotice}`);\n  assert(result.activeWebGL2ContextCount === 1, `R3F2_${evidenceClass}_WEBGL2_CONTEXT_COUNT_INVALID`);",
+              'P6C_VALIDATION_ASSERTION_INSERTION_FAILED'
+          )
+          validation_path.write_text(validation)
+          PY
+          node --check "$LAUNCHER_PATH"
+          node --check "$VALIDATION_PATH"
+          ! grep -Fq 'instanceof HTMLCanvasElement' "$LAUNCHER_PATH"
+          grep -Fq "canvas.dataset.r3f2EvidenceInstrumented = 'true'" "$LAUNCHER_PATH"
+          grep -Fq 'INSTRUMENTATION_MARKER_MISSING' "$VALIDATION_PATH"
+
+      - name: Commit exact source correction and remove ephemeral workflow
+        id: commit
+        run: |
+          set -euo pipefail
+          rm "$WORKFLOW_PATH"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "$LAUNCHER_PATH" "$VALIDATION_PATH" "$WORKFLOW_PATH"
+          git commit -m "Correct cross-realm R3F2 evidence instrumentation"
+          corrected_head="$(git rev-parse HEAD)"
+          echo "corrected_head=$corrected_head" >> "$GITHUB_OUTPUT"
+          git push origin HEAD:"$AUTHORIZED_BRANCH"
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install bounded builder and browser dependencies
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.52.0 esbuild@0.25.5
+          npx playwright install --with-deps chromium
+
+      - name: Rebuild and execute corrected package validation
+        env:
+          H_EARTH_RUN8E_R3F2_OUTPUT: /tmp/h-earth-run8e-r3f2-p6c
+          H_EARTH_RUN8E_R3F2_PREVIEW_HEAD: ${{ steps.commit.outputs.corrected_head }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$H_EARTH_RUN8E_R3F2_OUTPUT"
+          node h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs \
+            2>&1 | tee "$H_EARTH_RUN8E_R3F2_OUTPUT/h-earth.run8e-r3f2-p6c.validation.log"
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = '/tmp/h-earth-run8e-r3f2-p6c/h-earth.run8e-r3f2.signed-offline-package.execution.receipt.json';
+          const receipt = JSON.parse(fs.readFileSync(path, 'utf8'));
+          if (receipt.eligible !== true || receipt.status !== 'RUN_8E_R3F2_PREVIEW_VALIDATION_PASS') throw new Error('P6C_VALIDATION_RECEIPT_NOT_PASS');
+          for (const mode of ['loopbackValidation', 'fileValidation']) {
+            const row = receipt.validation[mode];
+            if (row.launcherInstrumentationReady !== true || row.instrumentationMarker !== true) throw new Error(`P6C_${mode}_INSTRUMENTATION_NOT_READY`);
+            if (String(row.phaseNotice || '').startsWith('Instrumentation failed:')) throw new Error(`P6C_${mode}_INSTRUMENTATION_FAILURE_REMAINED`);
+            if (row.activeWebGL2ContextCount !== 1) throw new Error(`P6C_${mode}_WEBGL2_CONTEXT_INVALID`);
+          }
+          console.log(JSON.stringify({
+            correctedHead: receipt.packageManifest.packageHead,
+            packageSha256: receipt.packageManifest.packageSha256,
+            packageByteCount: receipt.packageManifest.packageByteCount,
+            packageManifestSha256: receipt.packageManifestSha256,
+            loopbackValidation: receipt.validation.loopbackValidation,
+            fileValidation: receipt.validation.fileValidation
+          }, null, 2));
+          NODE
+
+      - name: Verify final two-path correction scope
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$GITHUB_BASE_REF" "$AUTHORIZED_BRANCH"
+          git checkout -B verify "origin/$AUTHORIZED_BRANCH"
+          mapfile -t changed < <(git diff --name-only "origin/$GITHUB_BASE_REF"...HEAD | sed '/^$/d')
+          test "${#changed[@]}" -eq 2
+          printf '%s\n' "${changed[@]}" | sort > /tmp/p6c-changed.txt
+          printf '%s\n' "$LAUNCHER_PATH" "$VALIDATION_PATH" | sort > /tmp/p6c-expected.txt
+          diff -u /tmp/p6c-expected.txt /tmp/p6c-changed.txt
+          test -z "$(git diff --name-only "origin/$GITHUB_BASE_REF"...HEAD -- showroom)"
+          test ! -e "$WORKFLOW_PATH"
+
+      - name: Upload corrected package and P6C evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p6c-cross-realm-instrumentation-correction
+          path: /tmp/h-earth-run8e-r3f2-p6c
+          if-no-files-found: error
+          retention-days: 90

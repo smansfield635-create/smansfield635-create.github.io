@@ -315,3 +315,36 @@
     transition: none;
   }
 }
+
+/* PRODUCTS_CENTER_CONTINUITY_PRESENTATION */
+.products-center-control {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 4;
+  width: clamp(108px, 24vw, 148px);
+  height: clamp(108px, 24vw, 148px);
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.products-center-control[hidden] {
+  display: none !important;
+}
+
+.products-center-control__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.products-action--main-compass[hidden] {
+  display: none !important;
+}

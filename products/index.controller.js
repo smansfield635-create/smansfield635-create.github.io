@@ -56,6 +56,13 @@
     identity: Object.freeze([0, 0, 0, 1])
   });
 
+  const CENTER_CONTINUITY = Object.freeze({
+    route: "/",
+    allowedStates: Object.freeze([STATES.CLUSTER_OPEN, STATES.PRODUCT_SELECTED]),
+    doubleTapWindowMs: 300,
+    tapMaximumMovementPx: 10
+  });
+
   const TRANSITIONS = Object.freeze({
     [STATES.PRIMARY_ENTRY]: Object.freeze([
       STATES.PRIMARY_ENTRY,
@@ -181,6 +188,8 @@
     enterProduct: "[data-products-enter]",
     returnToOrbit: "[data-products-return-to-orbit]",
     returnToConstellation: "[data-products-return-to-constellation]",
+    centerControl: "[data-products-center-control]",
+    returnMainCompass: "[data-products-return-main-compass]",
     guidance: "[data-products-guidance]",
     controllerReceipt: "[data-products-controller-receipt]"
   });
@@ -236,6 +245,12 @@
     enterButton: null,
     returnToOrbitButton: null,
     returnToConstellationButton: null,
+    centerControl: null,
+    returnMainCompass: null,
+    centerDisclosureOpen: false,
+    centerLastTapAt: 0,
+    centerPointer: null,
+    centerSuppressClickUntil: 0,
     guidance: null,
     controllerReceiptOutput: null,
     current: STATES.PRIMARY_ENTRY,
@@ -721,6 +736,7 @@
 
   function syncPresentation() {
     syncDatasets();
+    syncCenterAvailability();
 
     if (state.current === STATES.PRIMARY_ENTRY) {
       setPanel(defaultPanel());
@@ -1579,6 +1595,187 @@
     return true;
   }
 
+
+  function centerStateAllowed() {
+    return CENTER_CONTINUITY.allowedStates.includes(state.current);
+  }
+
+  function setCenterDisclosure(open) {
+    state.centerDisclosureOpen = Boolean(open) && centerStateAllowed();
+
+    if (state.centerControl) {
+      state.centerControl.setAttribute(
+        "aria-expanded",
+        state.centerDisclosureOpen ? "true" : "false"
+      );
+    }
+
+    if (state.returnMainCompass) {
+      state.returnMainCompass.hidden = !state.centerDisclosureOpen;
+      state.returnMainCompass.setAttribute(
+        "aria-hidden",
+        state.centerDisclosureOpen ? "false" : "true"
+      );
+      state.returnMainCompass.tabIndex = state.centerDisclosureOpen ? 0 : -1;
+    }
+
+    if (state.root) {
+      state.root.dataset.productsCenterDisclosure = state.centerDisclosureOpen
+        ? "open"
+        : "closed";
+    }
+
+    return state.centerDisclosureOpen;
+  }
+
+  function syncCenterAvailability() {
+    if (!state.centerControl) {
+      return false;
+    }
+
+    const available = centerStateAllowed() && state.current !== STATES.HELD;
+    state.centerControl.hidden = !available;
+    state.centerControl.disabled = !available;
+    state.centerControl.setAttribute("aria-hidden", available ? "false" : "true");
+    state.centerControl.setAttribute("aria-disabled", available ? "false" : "true");
+    state.centerControl.tabIndex = available ? 0 : -1;
+
+    if (!available) {
+      state.centerLastTapAt = 0;
+      state.centerPointer = null;
+      setCenterDisclosure(false);
+    }
+
+    return available;
+  }
+
+  function navigateToMainCompass(event, action) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    if (!centerStateAllowed()) {
+      return false;
+    }
+
+    emitReceipt({
+      lastAction: action,
+      lastFailure: null,
+      returnRoute: CENTER_CONTINUITY.route
+    });
+    globalThis.location.assign(CENTER_CONTINUITY.route);
+    return true;
+  }
+
+  function activateCenterDisclosure(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    if (!centerStateAllowed()) {
+      return false;
+    }
+
+    setCenterDisclosure(!state.centerDisclosureOpen);
+    emitReceipt({
+      lastAction: state.centerDisclosureOpen
+        ? "center-disclosure-opened"
+        : "center-disclosure-closed",
+      lastFailure: null
+    });
+    return true;
+  }
+
+  function resetCenterPointer() {
+    if (
+      state.centerPointer &&
+      state.centerControl?.hasPointerCapture?.(state.centerPointer.id)
+    ) {
+      try {
+        state.centerControl.releasePointerCapture(state.centerPointer.id);
+      } catch (_) {}
+    }
+    state.centerPointer = null;
+  }
+
+  function onCenterPointerDown(event) {
+    if (!centerStateAllowed()) return;
+    state.centerPointer = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      moved: false
+    };
+    try {
+      state.centerControl.setPointerCapture(event.pointerId);
+    } catch (_) {}
+  }
+
+  function onCenterPointerMove(event) {
+    if (!state.centerPointer || event.pointerId !== state.centerPointer.id) return;
+    const distance = Math.hypot(
+      event.clientX - state.centerPointer.x,
+      event.clientY - state.centerPointer.y
+    );
+    if (distance > CENTER_CONTINUITY.tapMaximumMovementPx) {
+      state.centerPointer.moved = true;
+      state.centerLastTapAt = 0;
+    }
+  }
+
+  function onCenterPointerCancel(event) {
+    if (!state.centerPointer || event.pointerId !== state.centerPointer.id) return;
+    state.centerLastTapAt = 0;
+    resetCenterPointer();
+  }
+
+  function onCenterPointerUp(event) {
+    if (!state.centerPointer || event.pointerId !== state.centerPointer.id) return;
+    const moved = state.centerPointer.moved;
+    resetCenterPointer();
+    if (moved) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    state.centerSuppressClickUntil = performance.now() + 500;
+
+    const now = performance.now();
+    const doubleTap =
+      state.centerLastTapAt > 0 &&
+      now - state.centerLastTapAt <= CENTER_CONTINUITY.doubleTapWindowMs;
+
+    if (doubleTap) {
+      state.centerLastTapAt = 0;
+      navigateToMainCompass(event, "double-tap-main-compass-navigation-requested");
+      return;
+    }
+
+    state.centerLastTapAt = now;
+    activateCenterDisclosure(event);
+  }
+
+  function onCenterClick(event) {
+    if (performance.now() < state.centerSuppressClickUntil) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    activateCenterDisclosure(event);
+  }
+
+  function bindCenterControls() {
+    state.centerControl.addEventListener("pointerdown", onCenterPointerDown);
+    state.centerControl.addEventListener("pointermove", onCenterPointerMove);
+    state.centerControl.addEventListener("pointerup", onCenterPointerUp);
+    state.centerControl.addEventListener("pointercancel", onCenterPointerCancel);
+    state.centerControl.addEventListener("click", onCenterClick);
+    state.returnMainCompass.addEventListener("click", event => {
+      navigateToMainCompass(event, "explicit-main-compass-navigation-requested");
+    });
+  }
+
   function handleSemanticClick(event) {
     const control = event.target.closest(
       `${SELECTORS.primaryEntry}, ${SELECTORS.productRecord}`
@@ -1688,6 +1885,20 @@
     state.enterButton = qs(SELECTORS.enterProduct, state.root);
     state.returnToOrbitButton = qs(SELECTORS.returnToOrbit, state.root);
     state.returnToConstellationButton = qs(SELECTORS.returnToConstellation, state.root);
+    state.centerControl = qs(SELECTORS.centerControl, state.root);
+    if (!state.centerControl) {
+      throw new Error("PRODUCTS_CENTER_CONTROL_NOT_FOUND");
+    }
+    state.returnMainCompass = qs(SELECTORS.returnMainCompass, state.root);
+    if (!state.returnMainCompass) {
+      throw new Error("PRODUCTS_CENTER_RETURN_OPTION_NOT_FOUND");
+    }
+    if (String(state.centerControl.dataset.productsCenterRoute || "").trim() !== CENTER_CONTINUITY.route) {
+      throw new Error("PRODUCTS_CENTER_ROUTE_INVALID");
+    }
+    if (String(state.returnMainCompass.getAttribute("href") || "").trim() !== CENTER_CONTINUITY.route) {
+      throw new Error("PRODUCTS_CENTER_RETURN_OPTION_ROUTE_INVALID");
+    }
     state.guidance = qs(SELECTORS.guidance, state.root);
     state.controllerReceiptOutput = qs(SELECTORS.controllerReceipt, state.root);
   }
@@ -1823,6 +2034,7 @@
       exposeApi();
       bindSemanticControls();
       bindPanelControls();
+      bindCenterControls();
 
       state.initialized = true;
 

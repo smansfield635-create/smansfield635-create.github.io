@@ -924,13 +924,13 @@ async function runProfile(browser, profileName) {
     record.metrics = await documentMetrics(page);
     record.finalPlanet = await planetFacts(page);
 
-    if (record.metrics.horizontalOverflowPx > 1) {
+    if (record.metrics.horizontalOverflowPx > 0) {
       record.findings.push({
         id: "HORIZONTAL_OVERFLOW",
         observed: record.metrics.horizontalOverflowPx
       });
     }
-    if ((record.metrics.maximumPlanetProductOverlap || 0) > 1) {
+    if ((record.metrics.maximumPlanetProductOverlap || 0) > 0) {
       record.findings.push({
         id: "CENTER_PLANET_STAR_COLLISION",
         observed: record.metrics.maximumPlanetProductOverlap
@@ -1022,8 +1022,8 @@ const receipt = {
     centerPlanetCanvasCount: 1,
     centerPlanetFallbackCount: 0,
     centerPlanetRenderFramesMinimum: 1,
-    centerPlanetProductOverlapMaximum: 1,
-    horizontalOverflowMaximum: 1,
+    centerPlanetProductOverlapMaximum: 0,
+    horizontalOverflowMaximum: 0,
     allSixRoutesPass: true,
     quickFlickLocalReturn: true,
     centerEstateReturn: true,

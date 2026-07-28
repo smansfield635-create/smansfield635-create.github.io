@@ -1,0 +1,216 @@
+/* /products/index.arena.css
+   PRODUCTS_ARENA_CLUSTER_PRESENTATION_TRANSPLANT_v1
+   Page-local layer, center-planet, one-label, and responsive authority.
+*/
+
+.products-scene[data-products-scene] {
+  isolation: isolate;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+.products-cosmic-field,
+.products-planet-mount,
+.products-center-control,
+.products-semantic,
+.products-scene > canvas[data-products-crystals-canvas] {
+  position: absolute;
+}
+
+.products-cosmic-field {
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+
+.products-cosmic-field canvas[data-products-cosmos-canvas] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.products-cosmic-field canvas[data-products-cosmos-canvas="base"] {
+  z-index: 1;
+  opacity: .9;
+}
+
+.products-cosmic-field canvas[data-products-cosmos-canvas="sparkle"] {
+  z-index: 2;
+}
+
+.products-scene > canvas[data-products-crystals-canvas] {
+  inset: 0;
+  z-index: 3 !important;
+  width: 100%;
+  height: 100%;
+}
+
+.products-planet-mount {
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  width: clamp(2.25rem, 5vw, 3.75rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  filter: drop-shadow(0 0 1.1rem rgba(91, 196, 255, .36));
+}
+
+.products-planet-mount canvas[data-products-planet-canvas] {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.products-planet-fallback {
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255,255,255,.72), transparent 9%),
+    radial-gradient(circle at 56% 58%, rgba(99,192,116,.76), transparent 26%),
+    radial-gradient(circle at 40% 46%, rgba(132,218,156,.58), transparent 22%),
+    radial-gradient(circle at 52% 48%, #2578a8 0 54%, #08294c 78%, #020813 100%);
+  box-shadow:
+    inset -1rem -.8rem 1.4rem rgba(0,0,0,.54),
+    inset .5rem .4rem 1rem rgba(255,255,255,.18),
+    0 0 1.4rem rgba(88,190,255,.46);
+}
+
+.products-center-control {
+  left: 50%;
+  top: 50%;
+  z-index: 8;
+  width: clamp(4.8rem, 13vw, 6.8rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  cursor: pointer;
+  background: transparent;
+  color: transparent;
+  touch-action: manipulation;
+}
+
+.products-center-control:not([hidden]) {
+  display: grid;
+  place-items: center;
+}
+
+.products-center-control::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.products-center-control:hover::after,
+.products-center-control:focus-visible::after {
+  border-color: rgba(255, 232, 163, .72);
+  box-shadow: 0 0 1.1rem rgba(243, 200, 111, .38);
+}
+
+.products-center-control__label {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + .45rem);
+  transform: translateX(-50%);
+  min-width: max-content;
+  padding: .32rem .52rem;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 999px;
+  color: rgba(255,244,216,.92);
+  background: rgba(3,8,19,.84);
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.products-center-control:hover .products-center-control__label,
+.products-center-control:focus-visible .products-center-control__label {
+  opacity: 1;
+}
+
+.products-semantic[data-products-semantic] {
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+.products-semantic [data-products-primary-entry],
+.products-semantic [data-products-product] {
+  pointer-events: auto;
+}
+
+/* Exactly one product text label is visible in the arena. The buttons remain
+   projected hit surfaces even when their text children are suppressed. */
+.products-semantic [data-products-product] > span {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.products-semantic [data-products-product][data-primary="true"] > span {
+  visibility: visible;
+  opacity: 1;
+}
+
+.products-page[data-products-state="PRIMARY_ENTRY"] .products-planet-mount,
+.products-page[data-products-state="PRIMARY_ENTRY"] .products-center-control,
+.products-page[data-products-state="HELD"] .products-planet-mount,
+.products-page[data-products-state="HELD"] .products-center-control {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.products-page[data-products-state="CLUSTER_OPEN"] .products-planet-mount,
+.products-page[data-products-state="PRODUCT_SELECTED"] .products-planet-mount,
+.products-page[data-products-state="CLUSTER_OPEN"] .products-center-control,
+.products-page[data-products-state="PRODUCT_SELECTED"] .products-center-control {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media (max-width: 560px) {
+  .products-planet-mount {
+    width: 2.25rem;
+  }
+
+  .products-center-control {
+    width: 5.3rem;
+  }
+
+  .products-center-control__label {
+    display: none;
+  }
+
+  .products-cosmic-field canvas[data-products-cosmos-canvas="base"] {
+    opacity: .82;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .products-cosmic-field canvas[data-products-cosmos-canvas="sparkle"] {
+    display: none !important;
+  }
+
+  .products-center-control::after,
+  .products-center-control__label {
+    transition: none;
+  }
+}

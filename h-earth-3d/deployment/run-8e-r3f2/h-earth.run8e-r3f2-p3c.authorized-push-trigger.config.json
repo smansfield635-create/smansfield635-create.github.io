@@ -1,0 +1,36 @@
+{
+  "configurationId": "H_EARTH_RUN_8E_R3F2_P3C_EXECUTABLE_PUBLICATION_TRIGGER_CORRECTION_v1",
+  "status": "CORRECTION_EXECUTION_OPEN",
+  "supersedesTriggerOnly": "WORKFLOW_DISPATCH_ONLY",
+  "preservesProvider": "CLOUDFLARE_PAGES_DIRECT_UPLOAD",
+  "correctedTrigger": {
+    "event": "push",
+    "branch": "agent/h-earth-run8e-r3f2-p4-immutable-preview-publication-001",
+    "path": "h-earth-3d/deployment/run-8e-r3f2/h-earth.run8e-r3f2-p4.publication-authorization.json",
+    "authorizationSha256": "sha256:fcec8433e8ce995065abd617eba4382f6183227c31f425afa6773efdb7ac66bd",
+    "authorizationGitBlob": "be55de54f562278927472d961bfca89e20d3d590",
+    "requiredChangedPathCount": 1,
+    "requiresP3PassReceiptInParent": true,
+    "requiresP3CorrectionPassReceiptInParent": true
+  },
+  "preservedPublicationConfiguration": {
+    "provider": "CLOUDFLARE_PAGES_DIRECT_UPLOAD",
+    "projectName": "h-earth-run8e-r3f2-preview-30201543",
+    "productionBranchSentinel": "production-disabled-r3f2",
+    "previewBranch": "r3f2-candidate-3020154361523cf1",
+    "uniqueDeploymentUrlRequired": true,
+    "branchAliasAcceptedAsEvidenceUrl": false,
+    "customDomainAttachmentAllowed": false,
+    "liveDomainRouteBindingAllowed": false,
+    "gitIntegrationAllowed": false,
+    "packageSha256": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234"
+  },
+  "boundaries": {
+    "mainChanged": false,
+    "networkPublicationPerformed": false,
+    "pagesProjectCreated": false,
+    "previewUrlIssued": false,
+    "productionDeployment": false,
+    "physicalReferenceDeviceExecuted": false
+  }
+}

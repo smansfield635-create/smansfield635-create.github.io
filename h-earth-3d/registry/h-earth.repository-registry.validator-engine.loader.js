@@ -5,13 +5,13 @@ import { fileURLToPath } from 'node:url';
 // Composes the accepted repository-registry lineage through Run 8E-R1,
 // R2A-R2F, R3A-R3E pass closure, R3F1 pass closure, bounded R3F2 signed
 // offline package validation, R3F2-P1 contract closure, R3F2-P2 exact
-// preview package materialization, and R3F2-P3 non-production publication
-// configuration.
+// preview package materialization, R3F2-P3 non-production publication
+// configuration, and R3F2-P3C executable publication-trigger correction.
 // The loader remains read-only and creates no network publication, preview URL,
 // showroom mutation, public-source mutation, physical-device acceptance,
 // broader-mobile acceptance, production deployment, promotion, main merge,
 // R3G work, or Run 8E pass.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3f2-p3-non-production-publication-configuration.js';
+import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r3f2-p3c-executable-publication-trigger-correction.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

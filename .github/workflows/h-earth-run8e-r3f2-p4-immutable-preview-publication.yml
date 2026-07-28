@@ -1,20 +1,11 @@
 name: H-Earth Run 8E R3F2-P4 Immutable Preview Publication
 
 on:
-  workflow_dispatch:
-    inputs:
-      authorization:
-        description: Exact P4 publication authorization literal
-        required: true
-        type: string
-      expected_p3_head:
-        description: Exact pass-closed P3 head
-        required: true
-        type: string
-      expected_p3_receipt_blob:
-        description: Exact P3 pass-receipt Git blob
-        required: true
-        type: string
+  push:
+    branches:
+      - agent/h-earth-run8e-r3f2-p4-immutable-preview-publication-001
+    paths:
+      - h-earth-3d/deployment/run-8e-r3f2/h-earth.run8e-r3f2-p4.publication-authorization.json
 
 permissions:
   contents: read
@@ -30,8 +21,13 @@ env:
   PRODUCTION_BRANCH_SENTINEL: production-disabled-r3f2
   PREVIEW_BRANCH: r3f2-candidate-3020154361523cf1
   AUTHORIZED_BRANCH: agent/h-earth-run8e-r3f2-p4-immutable-preview-publication-001
-  AUTHORIZATION_LITERAL: RUN_8E_R3F2_P4_AUTHORIZE_FIRST_NETWORK_PUBLICATION
+  AUTHORIZATION_PATH: h-earth-3d/deployment/run-8e-r3f2/h-earth.run8e-r3f2-p4.publication-authorization.json
+  AUTHORIZATION_SHA256: fcec8433e8ce995065abd617eba4382f6183227c31f425afa6773efdb7ac66bd
+  AUTHORIZATION_GIT_BLOB: be55de54f562278927472d961bfca89e20d3d590
   P3_RECEIPT_PATH: h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3.pass-closed.receipt.json
+  P3_RECEIPT_BLOB: dbc4f8cb32b33b9cb17567abc9e55e59fe394afd
+  P3C_RECEIPT_PATH: h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3c.pass-closed.receipt.json
+  P3C_RECEIPT_BLOB: 76fcfe93021084859f664e327ce5de60017c8c6c
 
 jobs:
   publish-immutable-preview:
@@ -39,28 +35,31 @@ jobs:
     runs-on: ubuntu-latest
     environment: h-earth-run8e-r3f2-preview-publication
     steps:
-      - name: Check out exact P4 event head
+      - name: Check out exact P4 authorization commit
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
 
-      - name: Verify P3 custody and explicit P4 authorization
-        env:
-          AUTHORIZATION: ${{ inputs.authorization }}
-          EXPECTED_P3_HEAD: ${{ inputs.expected_p3_head }}
-          EXPECTED_P3_RECEIPT_BLOB: ${{ inputs.expected_p3_receipt_blob }}
+      - name: Verify one-shot P4 authorization and P3C custody
         run: |
           set -euo pipefail
           test "$GITHUB_REF_NAME" = "$AUTHORIZED_BRANCH"
-          test "$AUTHORIZATION" = "$AUTHORIZATION_LITERAL"
-          test "${#EXPECTED_P3_HEAD}" -eq 40
-          test "${#EXPECTED_P3_RECEIPT_BLOB}" -eq 40
-          git cat-file -e "${EXPECTED_P3_HEAD}^{commit}"
-          git merge-base --is-ancestor "$EXPECTED_P3_HEAD" "$GITHUB_SHA"
-          actual_receipt_blob="$(git rev-parse "${EXPECTED_P3_HEAD}:${P3_RECEIPT_PATH}")"
-          test "$actual_receipt_blob" = "$EXPECTED_P3_RECEIPT_BLOB"
-          node -e "const r=require('./${P3_RECEIPT_PATH}'); if(r.eligible!==true||r.status!=='RUN_8E_R3F2_P3_PASS_CLOSED') process.exit(1)"
+          test "$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | sed '/^$/d' | wc -l)" -eq 1
+          test "$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA")" = "$AUTHORIZATION_PATH"
+          test "$(sha256sum "$AUTHORIZATION_PATH" | cut -d' ' -f1)" = "$AUTHORIZATION_SHA256"
+          test "$(git hash-object "$AUTHORIZATION_PATH")" = "$AUTHORIZATION_GIT_BLOB"
+          parent="$(git rev-parse "$GITHUB_SHA^")"
+          test "$(git rev-parse "$parent:$P3_RECEIPT_PATH")" = "$P3_RECEIPT_BLOB"
+          test "$(git rev-parse "$parent:$P3C_RECEIPT_PATH")" = "$P3C_RECEIPT_BLOB"
+          node <<'NODE'
+          const fs = require('fs');
+          const a = JSON.parse(fs.readFileSync(process.env.AUTHORIZATION_PATH, 'utf8'));
+          if (a.authorizationStatus !== 'RUN_8E_R3F2_P4_AUTHORIZE_FIRST_NETWORK_PUBLICATION') process.exit(1);
+          if (a.packageSha256 !== 'sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234') process.exit(1);
+          if (a.p3PassReceiptGitBlob !== 'dbc4f8cb32b33b9cb17567abc9e55e59fe394afd') process.exit(1);
+          if (a.productionDeployment !== false || a.customDomainBinding !== false || a.physicalDeviceExecution !== false) process.exit(1);
+          NODE
 
       - name: Verify exact immutable source tree
         run: |
@@ -72,10 +71,7 @@ jobs:
           test "$(git hash-object "$PREVIEW_ROOT/preview-manifest.json")" = "81dbbb97898023ae0dabea313ac69b865302d533"
           test "$(sha256sum "$PREVIEW_ROOT/device-evidence-receipt.schema.json" | cut -d' ' -f1)" = "04ce5ec86f102fb7646b02ad19a3f862b8e6370dcdc971dc252d6bc607e3d18a"
           test "$(git hash-object "$PREVIEW_ROOT/device-evidence-receipt.schema.json")" = "987268f38fc8b6db6f19b982cc8386439aa0de48"
-          if grep -Eiq 'navigator[.]serviceWorker|serviceWorker[.]register' "$PREVIEW_ROOT/index.html"; then
-            echo SERVICE_WORKER_DRIFT_DETECTED
-            exit 1
-          fi
+          if grep -Eiq 'navigator[.]serviceWorker|serviceWorker[.]register' "$PREVIEW_ROOT/index.html"; then exit 1; fi
 
       - name: Build isolated Pages upload root
         run: |

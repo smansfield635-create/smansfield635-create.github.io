@@ -1,0 +1,112 @@
+name: H-Earth Run 8E R3F2-P3C Executable Publication Trigger Correction
+
+on:
+  pull_request:
+    branches:
+      - agent/h-earth-run8e-r3f2-p3-non-production-publication-configuration-001
+    paths:
+      - '.github/workflows/h-earth-run8e-r3f2-p3c-executable-publication-trigger-correction.yml'
+      - '.github/workflows/h-earth-run8e-r3f2-p4-immutable-preview-publication.yml'
+      - 'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.js'
+      - 'h-earth-3d/deployment/run-8e-r3f2/h-earth.run8e-r3f2-p3c.authorized-push-trigger.config.json'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3f2-p3c-executable-publication-trigger-correction.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+      - 'h-earth-3d/validation/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.harness.mjs'
+      - 'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3c.pass-closed.receipt.json'
+  push:
+    branches:
+      - agent/h-earth-run8e-r3f2-p3c-executable-publication-trigger-correction-001
+
+permissions:
+  contents: read
+
+env:
+  H_EARTH_RUN8E_R3F2_P3C_OUTPUT: /tmp/h-earth-run8e-r3f2-p3c
+  P3_BASE_HEAD: a5fb1b70071a470e3b7aeb80957014c638f8ae14
+  P4_AUTHORIZATION_PATH: h-earth-3d/deployment/run-8e-r3f2/h-earth.run8e-r3f2-p4.publication-authorization.json
+
+jobs:
+  validate-run8e-r3f2-p3c:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact P3C event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact P3 base and protected preview identities
+        run: |
+          set -euo pipefail
+          git cat-file -e "${P3_BASE_HEAD}^{commit}"
+          git merge-base --is-ancestor "$P3_BASE_HEAD" "$GITHUB_SHA"
+          test "$(git rev-parse "${P3_BASE_HEAD}:h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3.pass-closed.receipt.json")" = "dbc4f8cb32b33b9cb17567abc9e55e59fe394afd"
+          test "$(git hash-object preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/index.html)" = "c5127e2d4d9d3558230a8eccd757dade74d6d8c3"
+          test "$(git hash-object preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/preview-manifest.json)" = "81dbbb97898023ae0dabea313ac69b865302d533"
+          test "$(git hash-object preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/device-evidence-receipt.schema.json)" = "987268f38fc8b6db6f19b982cc8386439aa0de48"
+          test ! -e "$P4_AUTHORIZATION_PATH"
+
+      - name: Verify P3C syntax and corrected trigger
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3f2-p3c-executable-publication-trigger-correction.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --check h-earth-3d/validation/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.harness.mjs
+          grep -q '^  push:' .github/workflows/h-earth-run8e-r3f2-p4-immutable-preview-publication.yml
+          ! grep -q 'workflow_dispatch:' .github/workflows/h-earth-run8e-r3f2-p4-immutable-preview-publication.yml
+          grep -q 'be55de54f562278927472d961bfca89e20d3d590' .github/workflows/h-earth-run8e-r3f2-p4-immutable-preview-publication.yml
+
+      - name: Execute P3C correction validation
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module h-earth-3d/validation/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.harness.mjs
+
+      - name: Execute automatic repository-registry preflight
+        run: |
+          set -euo pipefail
+          mkdir -p "$H_EARTH_RUN8E_R3F2_P3C_OUTPUT"
+          git diff --name-only "$P3_BASE_HEAD...$GITHUB_SHA" > "$H_EARTH_RUN8E_R3F2_P3C_OUTPUT/changed-paths.txt"
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file "$H_EARTH_RUN8E_R3F2_P3C_OUTPUT/changed-paths.txt" \
+            --task "Run 8E R3F2-P3C executable publication trigger correction" \
+            --mutation-intent \
+            --output "$H_EARTH_RUN8E_R3F2_P3C_OUTPUT/registry-preflight.json"
+
+      - name: Verify exact P3C scope and P4 stopping boundary
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff --name-only "$P3_BASE_HEAD...$GITHUB_SHA")
+          test "${#changed[@]}" -ge 7
+          test "${#changed[@]}" -le 8
+          for path in "${changed[@]}"; do
+            case "$path" in
+              .github/workflows/h-earth-run8e-r3f2-p3c-executable-publication-trigger-correction.yml|\
+              .github/workflows/h-earth-run8e-r3f2-p4-immutable-preview-publication.yml|\
+              h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.js|\
+              h-earth-3d/deployment/run-8e-r3f2/h-earth.run8e-r3f2-p3c.authorized-push-trigger.config.json|\
+              h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r3f2-p3c-executable-publication-trigger-correction.js|\
+              h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js|\
+              h-earth-3d/validation/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.harness.mjs|\
+              h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3c.pass-closed.receipt.json) ;;
+              *) echo "UNAUTHORIZED_P3C_PATH:$path"; exit 1 ;;
+            esac
+          done
+          test ! -e "$P4_AUTHORIZATION_PATH"
+          test "$(git diff --name-only "$P3_BASE_HEAD...$GITHUB_SHA" -- preview showroom | wc -l)" -eq 0
+          grep -q "STOP_BEFORE_FIRST_NETWORK_PUBLICATION" h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.js
+          grep -q "networkPublicationPerformed: false" h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.js
+          grep -q "mainChanged: false" h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3f2-p3c.executable-publication-trigger-correction.js
+
+      - name: Upload P3C correction evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p3c-executable-publication-trigger-correction-evidence
+          path: /tmp/h-earth-run8e-r3f2-p3c
+          if-no-files-found: error
+          retention-days: 90

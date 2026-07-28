@@ -1,0 +1,69 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3F2_P3C_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3F2_P3C_PASS_CLOSED",
+  "contractId": "H_EARTH_RUN_8E_R3F2_P3C_EXECUTABLE_PUBLICATION_TRIGGER_CORRECTION_v1",
+  "checkpointId": "RUN_8E_R3F2_P3C",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3f2-p3c-executable-publication-trigger-correction-001",
+  "baseExactHead": "a5fb1b70071a470e3b7aeb80957014c638f8ae14",
+  "predecessor": {
+    "checkpointId": "RUN_8E_R3F2_P3",
+    "status": "PASS_CLOSED",
+    "exactHead": "a5fb1b70071a470e3b7aeb80957014c638f8ae14",
+    "passReceiptGitBlob": "dbc4f8cb32b33b9cb17567abc9e55e59fe394afd"
+  },
+  "defect": {
+    "defectId": "R3F2_P3_WORKFLOW_DISPATCH_DEFAULT_BRANCH_EXECUTABILITY_DEFECT",
+    "candidatePackageDefectEstablished": false,
+    "cloudflareConfigurationDefectEstablished": false,
+    "publicationOccurred": false,
+    "mainMutationRequired": false
+  },
+  "correctedTrigger": {
+    "event": "push",
+    "branch": "agent/h-earth-run8e-r3f2-p4-immutable-preview-publication-001",
+    "authorizationPath": "h-earth-3d/deployment/run-8e-r3f2/h-earth.run8e-r3f2-p4.publication-authorization.json",
+    "authorizationSha256": "sha256:fcec8433e8ce995065abd617eba4382f6183227c31f425afa6773efdb7ac66bd",
+    "authorizationGitBlob": "be55de54f562278927472d961bfca89e20d3d590",
+    "requiredChangedPathCount": 1,
+    "p3CorrectionReceiptRequiredInParent": true
+  },
+  "preservedPublicationConfiguration": {
+    "provider": "CLOUDFLARE_PAGES_DIRECT_UPLOAD",
+    "projectName": "h-earth-run8e-r3f2-preview-30201543",
+    "productionBranchSentinel": "production-disabled-r3f2",
+    "previewBranch": "r3f2-candidate-3020154361523cf1",
+    "uniqueDeploymentUrlRequired": true,
+    "branchAliasAcceptedAsEvidenceUrl": false,
+    "customDomainAttachmentAllowed": false,
+    "liveDomainRouteBindingAllowed": false,
+    "packageSha256": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234"
+  },
+  "coreExecution": {
+    "head": "828aaa730fccc4d449896b8a42288dbf3df9d476",
+    "workflowRun": 30322920026,
+    "workflowJob": 90162334174,
+    "artifactId": 8674634271,
+    "artifactDigest": "sha256:d3922d67de48c135d51530af23a0bc7a6790690cbae6592ff6dad461a348b959",
+    "artifactFetchback": "VERIFIED"
+  },
+  "boundaries": {
+    "previewFilesMaterialized": true,
+    "deploymentConfigurationCreated": true,
+    "executablePublicationTriggerConfigured": true,
+    "pagesProjectCreated": false,
+    "networkPublicationPerformed": false,
+    "previewUrlIssued": false,
+    "showroomMutated": false,
+    "publicLiveHEarthChanged": false,
+    "mainChanged": false,
+    "recoveryStackMerged": false,
+    "productionDeployment": false,
+    "physicalReferenceDeviceExecuted": false,
+    "run8EPassClosed": false
+  },
+  "nextCheckpoint": "RUN_8E_R3F2_P4_IMMUTABLE_PREVIEW_PUBLICATION_OCCURRENCE",
+  "stoppingBoundary": "STOP_BEFORE_FIRST_NETWORK_PUBLICATION",
+  "issues": []
+}

@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'showroom/globe/h-earth/**'
+      - 'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'
       - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-**'
       - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1**'
       - '.github/workflows/h-earth-cp3d-renderer-survival.yml'
@@ -16,7 +17,7 @@ permissions:
 jobs:
   cp3d-renderer-survival:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +27,13 @@ jobs:
 
       - name: Execute identity corridor
         run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs
+
+      - name: Execute corrected Run 8B geometry harness
+        env:
+          H_EARTH_RUN8B_RECEIPT: h-earth-3d/validation/evidence/cp3d/cp3d1d-run8b-geometry-receipt.json
+        run: |
+          mkdir -p h-earth-3d/validation/evidence/cp3d
+          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
 
       - name: Install browser runtime
         run: |
@@ -45,13 +53,7 @@ jobs:
           cat /tmp/h-earth-cp3d-server.log
           exit 1
 
-      - name: Execute CP3D_1C canonical normalization decision
-        env:
-          CP3D_ORIGIN: http://127.0.0.1:4173
-          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1c-canonical-numeric-normalization-decision.harness.mjs
-
-      - name: Execute real-browser renderer survival
+      - name: Execute CP3D_1D full renderer survival
         env:
           CP3D_ORIGIN: http://127.0.0.1:4173
           CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d

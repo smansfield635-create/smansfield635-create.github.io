@@ -1,0 +1,281 @@
+name: H-Earth Run 8E R3F2-P6C Corrected Main-Hosted Preview
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-run8e-r3f2-p6c-corrected-main-hosted-preview.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-run8e-r3f2-p6c-corrected-main-hosted-preview
+  cancel-in-progress: false
+
+env:
+  AUTHORIZED_BRANCH: agent/h-earth-run8e-r3f2-p6c-corrected-main-hosted-preview-001
+  CORRECTION_BRANCH: agent/h-earth-run8e-r3f2-p6c-cross-realm-instrumentation-correction-001
+  CORRECTION_HEAD: 51c2c82b4695c97d309d38e9e01aec728b95601d
+  CORRECTED_PACKAGE_HEX: 69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5
+  CORRECTED_PACKAGE_BYTES: '1213849'
+  CORRECTED_PACKAGE_MANIFEST_SHA256: sha256:5161a9706a73f2fc04a9044c6faae54631faf3a7a46bbabdcf99a9fd09842803
+  OLD_PACKAGE_HEX: 3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234
+  OLD_ROOT: preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234
+  NEW_ROOT: preview/h-earth/run8e/r3f2/sha256-69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5
+  WORKFLOW_PATH: .github/workflows/h-earth-run8e-r3f2-p6c-corrected-main-hosted-preview.yml
+  BUILD_OUTPUT: /tmp/h-earth-run8e-r3f2-p6c-publication-build
+
+jobs:
+  materialize-corrected-preview:
+    if: github.head_ref == 'agent/h-earth-run8e-r3f2-p6c-corrected-main-hosted-preview-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact publication branch head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Verify bounded publication branch and exact correction source
+        run: |
+          set -euo pipefail
+          test "$GITHUB_HEAD_REF" = "$AUTHORIZED_BRANCH"
+          test "$GITHUB_BASE_REF" = "main"
+          git fetch --no-tags origin "+refs/heads/$CORRECTION_BRANCH:refs/remotes/origin/$CORRECTION_BRANCH"
+          test "$(git rev-parse "refs/remotes/origin/$CORRECTION_BRANCH")" = "$CORRECTION_HEAD"
+          test "$(git rev-parse "$CORRECTION_HEAD:h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js")" = "689d3398d8af9f409192d8a34de03834daff0fdd"
+          test "$(git rev-parse "$CORRECTION_HEAD:h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs")" = "ccce10f9e932af3ccb0e7ab1a29c736b992df5ee"
+          test -f "$OLD_ROOT/device-evidence-receipt.schema.json"
+          test ! -e "$NEW_ROOT"
+
+      - name: Rebuild exact corrected package from correction head
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/r3f2-p6c-source "$BUILD_OUTPUT"
+          git worktree add --detach /tmp/r3f2-p6c-source "$CORRECTION_HEAD"
+          cd /tmp/r3f2-p6c-source
+          npm install --no-save esbuild@0.25.5
+          H_EARTH_RUN8E_R3F2_OUTPUT="$BUILD_OUTPUT" \
+          H_EARTH_RUN8E_R3F2_PREVIEW_HEAD="$CORRECTION_HEAD" \
+            node h-earth-3d/validation/h-earth.run8e-r3f2.signed-offline-package.builder.mjs \
+            > "$BUILD_OUTPUT/builder-output.json"
+          package="$BUILD_OUTPUT/H_EARTH_RUN8E_R3F2_SIGNED_OFFLINE_REFERENCE_DEVICE_PACKAGE.html"
+          test "$(wc -c < "$package")" -eq "$CORRECTED_PACKAGE_BYTES"
+          test "$(sha256sum "$package" | cut -d' ' -f1)" = "$CORRECTED_PACKAGE_HEX"
+          test "$(node -p "require('$BUILD_OUTPUT/h-earth.run8e-r3f2.signed-offline-package.manifest.json').packageHead")" = "$CORRECTION_HEAD"
+          test "$(node -p "require('$BUILD_OUTPUT/h-earth.run8e-r3f2.signed-offline-package.manifest.json').packageSha256")" = "sha256:$CORRECTED_PACKAGE_HEX"
+          ! grep -Fq 'instanceof HTMLCanvasElement' "$package"
+          grep -Fq 'r3f2EvidenceInstrumented' "$package"
+
+      - name: Generate exact corrected three-file preview tree
+        run: |
+          set -euo pipefail
+          mkdir -p "$NEW_ROOT"
+          cp "$BUILD_OUTPUT/H_EARTH_RUN8E_R3F2_SIGNED_OFFLINE_REFERENCE_DEVICE_PACKAGE.html" "$NEW_ROOT/index.html"
+          python3 - <<'PY'
+          import copy, hashlib, json, os, subprocess
+          from pathlib import Path
+
+          old_root = Path(os.environ['OLD_ROOT'])
+          new_root = Path(os.environ['NEW_ROOT'])
+          old_hex = os.environ['OLD_PACKAGE_HEX']
+          new_hex = os.environ['CORRECTED_PACKAGE_HEX']
+          correction_head = os.environ['CORRECTION_HEAD']
+
+          schema = json.loads((old_root / 'device-evidence-receipt.schema.json').read_text())
+          schema['$id'] = f'https://diamondgatebridge.com/{new_root.as_posix()}/device-evidence-receipt.schema.json'
+          schema['description'] = 'Normalized evidence-receipt schema for the corrected immutable non-production R3F2 candidate. It does not itself establish physical acceptance.'
+          schema['properties']['candidateId']['const'] = f'H_EARTH_RUN8E_R3F2_CANDIDATE_SHA256_{new_hex.upper()}'
+          schema['properties']['previewUrl']['pattern'] = f'/{new_root.as_posix()}/?$'
+          schema['properties']['packageSha256']['const'] = f'sha256:{new_hex}'
+          schema_path = new_root / 'device-evidence-receipt.schema.json'
+          schema_path.write_text(json.dumps(schema, indent=2) + '\n')
+
+          def sha256_file(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+
+          def git_blob(path):
+              return subprocess.check_output(['git', 'hash-object', str(path)], text=True).strip()
+
+          index_path = new_root / 'index.html'
+          schema_sha = sha256_file(schema_path)
+          schema_blob = git_blob(schema_path)
+          manifest_payload = {
+              'manifestId': 'H_EARTH_RUN_8E_R3F2_P6C_CORRECTED_PREVIEW_PACKAGE_MANIFEST_v1',
+              'manifestVersion': '1.0.0',
+              'occurrenceClass': 'CORRECTED_INSTRUMENTATION_MAIN_HOSTED_PARALLEL_PREVIEW',
+              'nonProduction': True,
+              'candidateId': f'H_EARTH_RUN8E_R3F2_CANDIDATE_SHA256_{new_hex.upper()}',
+              'previewPath': f'/{new_root.as_posix()}/',
+              'packageIdentity': {
+                  'packageHead': correction_head,
+                  'packageSha256': f'sha256:{new_hex}',
+                  'packageByteCount': int(os.environ['CORRECTED_PACKAGE_BYTES']),
+                  'validatedPackageManifestSha256': os.environ['CORRECTED_PACKAGE_MANIFEST_SHA256'],
+                  'sourceHead': '548672ae99cd406805f0c8ca576cc650baf7ed18',
+                  'publicHtmlGitBlob': '0daedf61f7e19af095f4db5fc47563a9cd786837',
+                  'publicOrchestratorGitBlob': '2b0a916b3a6d11da84316925f8abd8a3a1447445',
+                  'functionalCssGitBlob': '481148416a8d0466e76c4cb2eca7a67d8932a242',
+                  'publicShellCssGitBlob': 'f208b7f11096a7bf5da282226903ac634c1eab01'
+              },
+              'instrumentationCorrection': {
+                  'defectClass': 'CROSS_REALM_CANVAS_INSTANCEOF_FALSE_NEGATIVE',
+                  'realmNeutralCanvasQualification': True,
+                  'instrumentationMarkerRequired': True,
+                  'launcherGitBlob': '689d3398d8af9f409192d8a34de03834daff0fdd',
+                  'validationGitBlob': 'ccce10f9e932af3ccb0e7ab1a29c736b992df5ee',
+                  'validationRun': 30325076598,
+                  'validationJob': 90168653477,
+                  'validationArtifact': 8675355501,
+                  'validationArtifactDigest': 'sha256:38d04e2d18bc7e654a244cd93f347cecd64b38171be31f7b7fbfdf78a63f80d6',
+                  'loopbackInstrumentation': 'PASS',
+                  'directFileInstrumentation': 'PASS'
+              },
+              'servedFileSetLaw': {
+                  'exactFileCount': 3,
+                  'externalRuntimeRequestCountAllowed': 0,
+                  'mutableMainDependencyCountAllowed': 0,
+                  'undeclaredRuntimeDependencyCountAllowed': 0,
+                  'serviceWorkerAllowed': False
+              },
+              'servedFiles': [
+                  {
+                      'relativePath': 'index.html',
+                      'role': 'EXACT_CORRECTED_VALIDATED_SELF_CONTAINED_CANDIDATE',
+                      'runtimeDependency': True,
+                      'byteCount': index_path.stat().st_size,
+                      'contentSha256': f'sha256:{sha256_file(index_path)}',
+                      'gitBlobSha1': git_blob(index_path)
+                  },
+                  {
+                      'relativePath': 'device-evidence-receipt.schema.json',
+                      'role': 'PHYSICAL_SESSION_NORMALIZED_EVIDENCE_SCHEMA',
+                      'runtimeDependency': False,
+                      'byteCount': schema_path.stat().st_size,
+                      'contentSha256': f'sha256:{schema_sha}',
+                      'gitBlobSha1': schema_blob
+                  },
+                  {
+                      'relativePath': 'preview-manifest.json',
+                      'role': 'SERVED_FILE_AND_CANDIDATE_IDENTITY_MANIFEST',
+                      'runtimeDependency': False,
+                      'identityClass': 'CANONICAL_MANIFEST_PAYLOAD_SHA256_PLUS_REPOSITORY_GIT_BLOB_CUSTODY',
+                      'contentIdentityReference': '#/selfIdentity'
+                  }
+              ],
+              'identityExposure': [
+                  {'requirement': 'NON_PRODUCTION_LABEL', 'surface': 'index.html setup text and manifest nonProduction=true'},
+                  {'requirement': 'CANDIDATE_ID', 'surface': 'preview-manifest.json and physical-session handoff'},
+                  {'requirement': 'PACKAGE_SHA256', 'surface': 'hashed URL path and preview-manifest.json'},
+                  {'requirement': 'PACKAGE_HEAD', 'surface': 'index.html embedded package metadata and preview-manifest.json'},
+                  {'requirement': 'SOURCE_HEAD', 'surface': 'index.html embedded package metadata and preview-manifest.json'},
+                  {'requirement': 'TEST_SESSION_IDENTIFIER', 'surface': 'index.html generated evidenceId and normalized receipt sessionIdentifier'}
+              ],
+              'delivery': {
+                  'transport': 'GITHUB_PAGES_MAIN_HOST_PARALLEL_HASH_PATH',
+                  'httpsRequired': True,
+                  'customDomainAdded': False,
+                  'ordinaryHEarthRouteReplaced': False,
+                  'ordinaryTrafficRedirected': False,
+                  'publicNavigationLinkAdded': False,
+                  'discoveryControl': 'UNLINKED_HASH_BEARING_PATH',
+                  'cacheControlExpectedFromHost': 'max-age=600'
+              },
+              'boundaries': {
+                  'showroomMutated': False,
+                  'publicLiveHEarthRouteChanged': False,
+                  'recoveryStackMerged': False,
+                  'productionAcceptanceEmbedded': False,
+                  'physicalReferenceDeviceExecuted': False,
+                  'broaderMobileAccepted': False,
+                  'run8EPassClosed': False
+              }
+          }
+          canonical = json.dumps(manifest_payload, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()
+          manifest = {
+              'selfIdentity': {
+                  'identityClass': 'SHA256_OF_CANONICAL_MANIFEST_PAYLOAD_EXCLUDING_SELF_IDENTITY',
+                  'canonicalization': 'UTF8_JSON_SORTED_KEYS_COMPACT',
+                  'canonicalPayloadSha256': f"sha256:{hashlib.sha256(canonical).hexdigest()}"
+              },
+              **manifest_payload
+          }
+          (new_root / 'preview-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
+          PY
+          test "$(find "$NEW_ROOT" -maxdepth 1 -type f | wc -l)" -eq 3
+          test "$(wc -c < "$NEW_ROOT/index.html")" -eq "$CORRECTED_PACKAGE_BYTES"
+          test "$(sha256sum "$NEW_ROOT/index.html" | cut -d' ' -f1)" = "$CORRECTED_PACKAGE_HEX"
+          grep -Fq "H_EARTH_RUN8E_R3F2_CANDIDATE_SHA256_${CORRECTED_PACKAGE_HEX^^}" "$NEW_ROOT/preview-manifest.json"
+          grep -Fq "sha256:$CORRECTED_PACKAGE_HEX" "$NEW_ROOT/device-evidence-receipt.schema.json"
+          ! grep -Fq "$OLD_PACKAGE_HEX" "$NEW_ROOT/device-evidence-receipt.schema.json"
+
+      - name: Remove ephemeral workflow and commit only corrected preview tree
+        run: |
+          set -euo pipefail
+          rm "$WORKFLOW_PATH"
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add "$NEW_ROOT" "$WORKFLOW_PATH"
+          git commit -m "Publish corrected immutable R3F2 preview"
+          git push origin HEAD:"$AUTHORIZED_BRANCH"
+
+      - name: Verify final three-path publication scope and record identities
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main "$AUTHORIZED_BRANCH"
+          git checkout -B verify "origin/$AUTHORIZED_BRANCH"
+          mapfile -t changed < <(git diff --name-only origin/main...HEAD | sed '/^$/d')
+          test "${#changed[@]}" -eq 3
+          printf '%s\n' "${changed[@]}" | sort > /tmp/p6c-preview-changed.txt
+          printf '%s\n' \
+            "$NEW_ROOT/device-evidence-receipt.schema.json" \
+            "$NEW_ROOT/index.html" \
+            "$NEW_ROOT/preview-manifest.json" | sort > /tmp/p6c-preview-expected.txt
+          diff -u /tmp/p6c-preview-expected.txt /tmp/p6c-preview-changed.txt
+          test -z "$(git diff --name-only origin/main...HEAD -- showroom)"
+          test ! -e "$WORKFLOW_PATH"
+          mkdir -p /tmp/r3f2-p6c-publication
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          root = Path(os.environ['NEW_ROOT'])
+          rows = []
+          for name in ['index.html', 'preview-manifest.json', 'device-evidence-receipt.schema.json']:
+              path = root / name
+              rows.append({
+                  'relativePath': name,
+                  'byteCount': path.stat().st_size,
+                  'contentSha256': 'sha256:' + hashlib.sha256(path.read_bytes()).hexdigest(),
+                  'gitBlobSha1': subprocess.check_output(['git', 'hash-object', str(path)], text=True).strip()
+              })
+          record = {
+              'checkpointId': 'RUN_8E_R3F2_P6C_CORRECTED_MAIN_HOSTED_PREVIEW_MATERIALIZATION',
+              'status': 'PASS',
+              'branch': os.environ['AUTHORIZED_BRANCH'],
+              'branchHead': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+              'mainBaseHead': subprocess.check_output(['git', 'rev-parse', 'origin/main'], text=True).strip(),
+              'previewPath': '/' + root.as_posix() + '/',
+              'packageHead': os.environ['CORRECTION_HEAD'],
+              'packageSha256': 'sha256:' + os.environ['CORRECTED_PACKAGE_HEX'],
+              'exactFileCount': 3,
+              'servedFiles': rows,
+              'oldImmutableOccurrenceModified': False,
+              'liveHEarthRouteChanged': False,
+              'ordinaryTrafficRedirected': False,
+              'recoveryStackMerged': False,
+              'physicalDeviceExecution': False
+          }
+          Path('/tmp/r3f2-p6c-publication/materialization.json').write_text(json.dumps(record, indent=2) + '\n')
+          print(json.dumps(record, indent=2))
+          PY
+
+      - name: Upload corrected preview materialization evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p6c-corrected-preview-materialization
+          path: /tmp/r3f2-p6c-publication/materialization.json
+          if-no-files-found: error
+          retention-days: 90

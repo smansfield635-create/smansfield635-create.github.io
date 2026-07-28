@@ -51,7 +51,8 @@ export const H_EARTH_RUN_8E_R3F2_CONTROL = freeze({
   failedAttemptCustody: freeze([
     freeze({ attemptId: 'RUN_8E_R3F2_PREVIEW_ATTEMPT_001', head: '3c4f9d4d985365dc74e740bca9bd9db2cbbb7442', workflowRun: 30315690708, workflowJob: 90140603432, artifactId: 8672061710, artifactDigest: 'sha256:0cbb9c6c28bb9ab4103cda3ec04b7563a3bc69e0b0355a4324bd34d9f73aa918', failureClass: 'HOSTED_LAUNCHER_NOT_RENDERED_AS_DOCUMENT', publicSourceDefectEstablished: false }),
     freeze({ attemptId: 'RUN_8E_R3F2_PREVIEW_ATTEMPT_002', head: '461c003ba5323e79f9c10eb901b230ad4f2edcbb', workflowRun: 30316181910, workflowJob: 90142097491, artifactId: 8672242272, artifactDigest: 'sha256:8e026e9d6e9f082f56f01b3a05e0d22a2db4da1e74a12021347e9ea773e8870b', failureClass: 'HOSTED_LAUNCHER_DOM_NOT_OBSERVED_AFTER_TEXT_HTML_RESPONSE', publicSourceDefectEstablished: false }),
-    freeze({ attemptId: 'RUN_8E_R3F2_PREVIEW_ATTEMPT_003', head: '37dd0ca6331a74c0bf3e143586f292d98d59885e', workflowRun: 30316573748, workflowJob: 90143276958, artifactId: 8672384865, artifactDigest: 'sha256:fa339f348c7287acbd3d7d65b0195250c57d138019fe41157f71d1c198ca0795', failureClass: 'ALL_BOUNDED_EXTERNAL_HOST_CANDIDATES_FAILED_DOM_QUALIFICATION', publicSourceDefectEstablished: false })
+    freeze({ attemptId: 'RUN_8E_R3F2_PREVIEW_ATTEMPT_003', head: '37dd0ca6331a74c0bf3e143586f292d98d59885e', workflowRun: 30316573748, workflowJob: 90143276958, artifactId: 8672384865, artifactDigest: 'sha256:fa339f348c7287acbd3d7d65b0195250c57d138019fe41157f71d1c198ca0795', failureClass: 'ALL_BOUNDED_EXTERNAL_HOST_CANDIDATES_FAILED_DOM_QUALIFICATION', publicSourceDefectEstablished: false }),
+    freeze({ attemptId: 'RUN_8E_R3F2_PREVIEW_ATTEMPT_004', head: 'ca8c7581b4aa5e858bafcee33be52f9d6f043407', workflowRun: 30317274233, workflowJob: 90145435624, artifactId: 8672621878, artifactDigest: 'sha256:1ed10394547ab440baa319d03a4454f64ad742e93782c2045856a358ba81c6f3', failureClass: 'CROSS_REALM_CANVAS_INSTANCEOF_MISCLASSIFICATION', publicSourceDefectEstablished: false })
   ]),
   previewValidationEvidence: freeze({
     successfulValidationHead: null, workflowRun: null, workflowJob: null, artifactId: null, artifactDigest: null,
@@ -92,7 +93,7 @@ export function evaluateHEarthRun8ER3F2Control(candidate = H_EARTH_RUN_8E_R3F2_C
   if (preview.routeSourceHead !== '548672ae99cd406805f0c8ca576cc650baf7ed18') issues.push('R3F2_ROUTE_SOURCE_HEAD_MISMATCH');
   if (preview.publicHtmlGitBlob !== '0daedf61f7e19af095f4db5fc47563a9cd786837' || preview.publicOrchestratorGitBlob !== '2b0a916b3a6d11da84316925f8abd8a3a1447445') issues.push('R3F2_PUBLIC_SOURCE_BLOB_MISMATCH');
   if (preview.loopbackValidationRequired !== true || preview.physicalFileExecutionAllowed !== true || preview.productionDeployment !== false) issues.push('R3F2_PACKAGE_BOUNDARY_INVALID');
-  if ((candidate?.failedAttemptCustody ?? []).length !== 3 || candidate.failedAttemptCustody.some((entry) => entry.publicSourceDefectEstablished !== false)) issues.push('R3F2_FAILED_ATTEMPT_CUSTODY_INVALID');
+  if ((candidate?.failedAttemptCustody ?? []).length !== 4 || candidate.failedAttemptCustody.some((entry) => entry.publicSourceDefectEstablished !== false)) issues.push('R3F2_FAILED_ATTEMPT_CUSTODY_INVALID');
   if (candidate?.currentStatus !== 'PREVIEW_CONSTRUCTION_PENDING') {
     if (!/^[0-9a-f]{40}$/.test(preview.previewPackageHead ?? '')) issues.push('R3F2_PREVIEW_PACKAGE_HEAD_MISSING');
     if (typeof preview.packageSha256 !== 'string' || !preview.packageSha256.startsWith('sha256:') || !Number.isSafeInteger(preview.packageByteCount)) issues.push('R3F2_PACKAGE_IDENTITY_MISSING');

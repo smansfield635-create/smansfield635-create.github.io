@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/products-compass-checkpoint-zero-rebuild-001
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:

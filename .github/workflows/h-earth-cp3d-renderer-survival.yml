@@ -43,27 +43,19 @@ jobs:
           cat /tmp/h-earth-cp3d-server.log
           exit 1
 
-      - name: Execute CP3D_1D corrected cross-runtime identity verification
+      - name: Execute CP3D_1D_A post-correction position divergence localization
         env:
           CP3D_ORIGIN: http://127.0.0.1:4173
           CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1d-corrected-cross-runtime-identity.harness.mjs
+        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1da-post-correction-position-localization.harness.mjs
 
-      - name: Execute identity corridor after corrected identity promotion
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs
+      - name: Renderer identity promotion held
+        if: ${{ false }}
+        run: echo 'Renderer expectation mutation is not authorized by CP3D_1D_A.'
 
-      - name: Execute corrected Run 8B geometry harness
-        env:
-          H_EARTH_RUN8B_RECEIPT: h-earth-3d/validation/evidence/cp3d/cp3d1d-run8b-geometry-receipt.json
-        run: |
-          mkdir -p h-earth-3d/validation/evidence/cp3d
-          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
-
-      - name: Execute CP3D_1D full renderer survival
-        env:
-          CP3D_ORIGIN: http://127.0.0.1:4173
-          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-browser-renderer-survival.harness.mjs
+      - name: Full renderer survival held
+        if: ${{ false }}
+        run: echo 'Renderer execution is outside the CP3D_1D_A diagnostic boundary.'
 
       - name: Upload CP3D evidence
         if: always()

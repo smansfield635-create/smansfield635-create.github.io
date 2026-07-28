@@ -38,10 +38,9 @@ jobs:
           set -euo pipefail
           test "$GITHUB_HEAD_REF" = "$AUTHORIZED_BRANCH"
           test "$GITHUB_BASE_REF" = "main"
-          git fetch --no-tags origin "$SOURCE_BRANCH"
-          test "$(git rev-parse FETCH_HEAD)" = "$SOURCE_HEAD"
-          git fetch --no-tags origin main
-          test "$(git merge-base HEAD origin/main)" = "$(git rev-parse origin/main)"
+          git fetch --no-tags origin "+refs/heads/$SOURCE_BRANCH:refs/remotes/origin/$SOURCE_BRANCH"
+          test "$(git rev-parse "refs/remotes/origin/$SOURCE_BRANCH")" = "$SOURCE_HEAD"
+          git cat-file -e "$SOURCE_HEAD^{commit}"
 
       - name: Materialize exact three-file preview tree
         run: |

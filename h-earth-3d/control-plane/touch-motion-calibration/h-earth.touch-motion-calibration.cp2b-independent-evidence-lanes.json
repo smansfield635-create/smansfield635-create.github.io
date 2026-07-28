@@ -1,0 +1,122 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP2B_INDEPENDENT_EVIDENCE_LANES_v1",
+  "program": "H_EARTH_TOUCH_MOTION_CALIBRATION_AND_FLUIDITY",
+  "checkpoint": "CP2B_PHYSICAL_BROWSER_EVENT_AND_VISIBLE_FRAME_TRACE",
+  "classification": "CONTROLLING_CHECKPOINT_REQUIREMENT",
+  "status": "ACCEPTED_FOR_CP2B_EXECUTION",
+  "sourceClarification": "Gesture supplied by the user and gesture successfully executed by the system are separate evidence questions.",
+  "governingLaw": {
+    "physicalAttemptValidityDoesNotRequireExpectedSystemBehavior": true,
+    "expectedSystemBehaviorIsTheObjectBeingTested": true
+  },
+  "evidenceLanes": {
+    "laneA": {
+      "id": "USER_INTENT_AND_FINGER_MOTION",
+      "independentFromSystemOutcome": true,
+      "requiredFields": [
+        "requestedGesture",
+        "expectedInputPattern",
+        "contactCount",
+        "pointerIds",
+        "pointerCoordinates",
+        "contactStartPositions",
+        "contactEndPositions",
+        "perContactDisplacement",
+        "centroidDisplacement",
+        "distanceBetweenContactsChange",
+        "gestureDuration",
+        "eventCount",
+        "eventOrdering",
+        "orientation",
+        "viewportDimensions",
+        "devicePixelRatio"
+      ],
+      "inputConformanceDomain": [
+        "CONFIRMED",
+        "PARTIAL",
+        "AMBIGUOUS",
+        "NOT_SUPPLIED"
+      ]
+    },
+    "laneB": {
+      "id": "SYSTEM_CLASSIFICATION_AND_VISIBLE_RESULT",
+      "independentFromInputConformance": true,
+      "requiredWitnesses": [
+        "travelVersusPinchDecision",
+        "proposalType",
+        "proposalMagnitude",
+        "proposalSign",
+        "navigationStateBefore",
+        "navigationStateAfter",
+        "navigationStateDelta",
+        "cameraPositionBefore",
+        "cameraPositionAfter",
+        "cameraPositionDelta",
+        "cameraForwardVectorBefore",
+        "signedTravel",
+        "frameSequenceIdentities",
+        "framePresentationTimestamps",
+        "automatedWorldResult",
+        "userVisibleDisposition"
+      ],
+      "systemOutcomeDomain": [
+        "EXPECTED_RESULT",
+        "WRONG_DIRECTION",
+        "NO_MOVEMENT",
+        "WRONG_GESTURE",
+        "MIXED_GESTURE",
+        "VISIBLE_RESULT_UNRESOLVED"
+      ]
+    }
+  },
+  "moveBackwardGuidedAttempt": {
+    "requestedGesture": "MOVE_BACKWARD",
+    "expectedInputPattern": "TWO_CONTACT_DOWNWARD_CENTROID_MOTION",
+    "expectedWorldResult": "NEGATIVE_SIGNED_TRAVEL",
+    "workflow": [
+      "SHOW_REQUESTED_MOTION",
+      "USER_PERFORMS_MOTION",
+      "CAPTURE_RAW_INPUT",
+      "DETERMINE_INPUT_CONFORMANCE",
+      "CAPTURE_CLASSIFICATION_AND_STATE_CHANGE",
+      "CAPTURE_PRESENTED_FRAMES",
+      "ASK_USER_WHAT_WAS_VISIBLY_OBSERVED",
+      "RECORD_DISPOSITION",
+      "ALLOW_RETRY_OR_CONTINUE"
+    ]
+  },
+  "continuationRules": {
+    "CONFIRMED": "CONTINUE_AND_MARK_ATTEMPT_EVIDENCE_COMPLETE",
+    "PARTIAL": "RETRY_RECOMMENDED",
+    "AMBIGUOUS": "RETRY_OR_ACCEPT_AS_AMBIGUOUS",
+    "NOT_SUPPLIED": "RETRY_REQUIRED"
+  },
+  "completeFailureExample": {
+    "requestedGesture": "MOVE_BACKWARD",
+    "inputConformance": "CONFIRMED",
+    "automatedWorldResult": "UNRESOLVED",
+    "userVisibleResult": "MOVED_FORWARD",
+    "systemOutcome": "WRONG_DIRECTION",
+    "attemptStatus": "COMPLETE_WITH_RESULT_DIVERGENCE",
+    "testProceeds": true
+  },
+  "controllingRequirements": {
+    "cp2bMustPreserveUserIntent": true,
+    "cp2bMustMeasurePhysicalInput": true,
+    "cp2bMustProceedAfterConfirmedInput": true,
+    "cp2bMustNotRequireExpectedOutputForAdvancement": true,
+    "cp2bMustAllowWrongDirectionAsACompleteResult": true,
+    "cp2bMustBindUserObservationToTheSameAttempt": true
+  },
+  "generalization": {
+    "appliesToAllEightMotions": true,
+    "method": "Measure whether the requested physical gesture was materially supplied, then independently judge what the control system did with it."
+  },
+  "boundaries": {
+    "productionMutationPerformed": false,
+    "cp2bRuntimeImplemented": false,
+    "moveBackwardCorrectionApplied": false,
+    "generalCalibrationStarted": false
+  },
+  "nextAction": "Construct CP2B guided physical-browser diagnostic under this two-lane authority model."
+}

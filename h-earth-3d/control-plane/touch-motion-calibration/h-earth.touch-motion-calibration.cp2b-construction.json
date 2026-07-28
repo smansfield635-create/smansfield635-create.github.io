@@ -1,0 +1,77 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP2B_PHYSICAL_ATTEMPT_TRACE_CONSTRUCTION_v1",
+  "program": "H_EARTH_TOUCH_MOTION_CALIBRATION_AND_FLUIDITY",
+  "checkpoint": "CP2B_PHYSICAL_BROWSER_EVENT_AND_VISIBLE_FRAME_TRACE",
+  "status": "CONSTRUCTION_PASS_PHYSICAL_EXECUTION_PENDING",
+  "parentHead": "936fc7804fc080f427cc3255751515d25fe9f509",
+  "authorityQuestion": "Can one guided physical gesture attempt preserve user intent and measured finger motion independently from system classification and visible outcome?",
+  "answer": "YES_BY_CONSTRUCTION_PHYSICAL_EXECUTION_PENDING",
+  "evidenceLanes": {
+    "laneA": "USER_INTENT_AND_FINGER_MOTION",
+    "laneB": "SYSTEM_CLASSIFICATION_AND_VISIBLE_RESULT",
+    "independent": true
+  },
+  "implementedCapabilities": [
+    "guided attempt identity",
+    "raw pointer event capture",
+    "per-contact start end and displacement",
+    "centroid displacement",
+    "inter-contact distance change",
+    "gesture duration and event ordering",
+    "viewport orientation and device pixel ratio",
+    "input conformance classification",
+    "proposal and navigation witness capture",
+    "camera-forward and signed-travel witness",
+    "frame identity and presentation witness capture",
+    "same-attempt user visible observation",
+    "outcome-independent continuation"
+  ],
+  "inputConformanceDomain": ["CONFIRMED", "PARTIAL", "AMBIGUOUS", "NOT_SUPPLIED"],
+  "systemOutcomeDomain": [
+    "EXPECTED_RESULT",
+    "WRONG_DIRECTION",
+    "NO_MOVEMENT",
+    "WRONG_GESTURE",
+    "MIXED_GESTURE",
+    "VISIBLE_RESULT_UNRESOLVED"
+  ],
+  "continuationLaw": {
+    "CONFIRMED": "CONTINUE_AND_MARK_ATTEMPT_EVIDENCE_COMPLETE",
+    "PARTIAL": "RETRY_RECOMMENDED",
+    "AMBIGUOUS": "RETRY_OR_ACCEPT_AS_AMBIGUOUS",
+    "NOT_SUPPLIED": "RETRY_REQUIRED"
+  },
+  "controllingRequirements": {
+    "mustPreserveUserIntent": true,
+    "mustMeasurePhysicalInput": true,
+    "mustProceedAfterConfirmedInput": true,
+    "mustNotRequireExpectedOutputForAdvancement": true,
+    "mustAllowWrongDirectionAsCompleteResult": true,
+    "mustBindUserObservationToSameAttempt": true
+  },
+  "filesAdded": [
+    "/showroom/globe/h-earth/diagnostic/touch-motion-cp2b/physical-attempt-recorder.js",
+    "/showroom/globe/h-earth/diagnostic/touch-motion-cp2b/browser-attempt-binding.js",
+    "/h-earth-3d/validation/h-earth.touch-motion-calibration.cp2b-independent-lanes.harness.mjs",
+    "/h-earth-3d/control-plane/touch-motion-calibration/h-earth.touch-motion-calibration.cp2b-construction.json"
+  ],
+  "execution": {
+    "sourceHarnessCreated": true,
+    "connectorBackedRepositoryWriteCompleted": true,
+    "localNetworkExecutionAttempted": true,
+    "localNetworkExecutionCompleted": false,
+    "localNetworkExecutionBlocker": "Container could not resolve github.com; no physical browser or device execution was claimed.",
+    "physicalDeviceExecutionPerformed": false
+  },
+  "boundaries": {
+    "productionTouchImplementationMutated": false,
+    "navigationAuthorityMutated": false,
+    "cameraAuthorityMutated": false,
+    "rendererMutated": false,
+    "compositorMutated": false,
+    "motionCorrectionApplied": false,
+    "generalCalibrationStarted": false
+  },
+  "nextRequiredAction": "LOAD_CP2B_BINDING_ON_PHYSICAL_RUN8E_ROUTE_AND_COMPLETE_GUIDED_MOVE_BACKWARD_ATTEMPT",
+  "stoppingBoundary": "STOP_BEFORE_MOVE_BACKWARD_CORRECTION_OR_ALL_MOTION_CALIBRATION"
+}

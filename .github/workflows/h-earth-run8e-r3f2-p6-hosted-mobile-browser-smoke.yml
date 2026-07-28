@@ -1,0 +1,205 @@
+name: H-Earth Run 8E R3F2-P6 Hosted Mobile Browser Smoke
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-run8e-r3f2-p6-hosted-mobile-browser-smoke.yml'
+
+permissions:
+  contents: read
+
+env:
+  PREVIEW_URL: https://diamondgatebridge.com/preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/
+
+jobs:
+  hosted-mobile-browser-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pinned Playwright Chromium
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r3f2-p6
+          cd /tmp/r3f2-p6
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Execute hosted mobile browser smoke
+        working-directory: /tmp/r3f2-p6
+        run: |
+          set -euo pipefail
+          cat > smoke.mjs <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import { chromium } from 'playwright';
+
+          const url = process.env.PREVIEW_URL;
+          const consoleErrors = [];
+          const pageErrors = [];
+          const failedRequests = [];
+          const requests = [];
+          const browser = await chromium.launch({
+            headless: true,
+            args: [
+              '--enable-webgl',
+              '--ignore-gpu-blocklist',
+              '--use-gl=angle',
+              '--use-angle=swiftshader',
+              '--disable-gpu-sandbox'
+            ]
+          });
+          const context = await browser.newContext({
+            viewport: { width: 412, height: 915 },
+            screen: { width: 412, height: 915 },
+            deviceScaleFactor: 2,
+            isMobile: true,
+            hasTouch: true,
+            userAgent: 'Mozilla/5.0 (Linux; Android 16; SM-S948U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36'
+          });
+          const page = await context.newPage();
+          page.on('console', (message) => {
+            if (message.type() === 'error') consoleErrors.push(message.text());
+          });
+          page.on('pageerror', (error) => pageErrors.push(error.message));
+          page.on('request', (request) => requests.push(request.url()));
+          page.on('requestfailed', (request) => failedRequests.push({ url: request.url(), error: request.failure()?.errorText ?? null }));
+
+          const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
+          assert(response, 'P6_DOCUMENT_RESPONSE_MISSING');
+          assert.equal(response.status(), 200, 'P6_DOCUMENT_STATUS_NOT_200');
+          assert.equal(page.url(), url, 'P6_EFFECTIVE_URL_MISMATCH');
+          await page.locator('#deviceModel').fill('Samsung Galaxy reference-class smoke');
+          await page.locator('#attestation').fill('Automated hosted-browser smoke only; not physical acceptance.');
+          await page.locator('#startButton').click();
+          await page.waitForFunction(() => {
+            const frame = document.getElementById('routeFrame');
+            return frame?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true;
+          }, null, { timeout: 90000 });
+          await page.waitForTimeout(1500);
+
+          const readState = () => page.evaluate(() => {
+            const frame = document.getElementById('routeFrame');
+            const api = frame?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE;
+            const snapshot = api?.getSnapshot?.() ?? null;
+            const canvas = frame?.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
+            const iframeRect = frame?.getBoundingClientRect();
+            const canvasRect = canvas?.getBoundingClientRect();
+            return {
+              snapshot,
+              canvasPresent: Boolean(canvas),
+              canvasRect: canvasRect && iframeRect ? {
+                x: iframeRect.x + canvasRect.x,
+                y: iframeRect.y + canvasRect.y,
+                width: canvasRect.width,
+                height: canvasRect.height
+              } : null,
+              routeReady: api?.ready === true,
+              orientation: matchMedia('(orientation: portrait)').matches ? 'PORTRAIT' : 'LANDSCAPE',
+              phaseNotice: document.getElementById('phaseNotice')?.textContent ?? null
+            };
+          });
+
+          const initial = await readState();
+          assert.equal(initial.routeReady, true, 'P6_ROUTE_API_NOT_READY');
+          assert.equal(initial.canvasPresent, true, 'P6_CANVAS_NOT_PRESENT');
+          assert(initial.canvasRect?.width > 0 && initial.canvasRect?.height > 0, 'P6_CANVAS_NOT_VISIBLE');
+          assert(initial.snapshot, 'P6_INITIAL_SNAPSHOT_MISSING');
+          const initialRuntime = initial.snapshot.runtimeExclusivity;
+          const initialGpu = initial.snapshot.liveGpu;
+          assert.equal(initialRuntime.activeWebGL2ContextCount, 1, 'P6_WEBGL2_CONTEXT_COUNT');
+          assert.equal(initialRuntime.activePersistentRendererCount, 1, 'P6_RENDERER_COUNT');
+          assert.equal(initialRuntime.activeNavigationStateStreamCount, 1, 'P6_NAVIGATION_STREAM_COUNT');
+          assert.equal(initialRuntime.activePointerTouchIntakeCount, 1, 'P6_INPUT_CORRIDOR_COUNT');
+          assert.equal(initialRuntime.activeFramePresentationAuthorityCount, 1, 'P6_FRAME_AUTHORITY_COUNT');
+          assert.equal(initialRuntime.legacyModuleScriptCount, 0, 'P6_LEGACY_MODULE_ACTIVE');
+          assert.equal(initialRuntime.cssBitmapPreview, false, 'P6_BITMAP_PREVIEW_ACTIVE');
+          assert.equal(initialRuntime.cpuWorldRebuildPerCameraChange, false, 'P6_CPU_WORLD_REBUILD_ACTIVE');
+          assert.equal(initialGpu.counters.rendererInitializationCount, 1, 'P6_RENDERER_INITIALIZATION_COUNT');
+          assert.equal(initialGpu.counters.worldRebuildCount, 0, 'P6_INITIAL_WORLD_REBUILD_COUNT');
+          assert.equal(initialGpu.counters.bitmapPreviewApplicationCount, 0, 'P6_INITIAL_BITMAP_PREVIEW_COUNT');
+          assert(initialGpu.counters.gpuFramebufferPresentationCount >= 1, 'P6_NO_VISIBLE_GPU_FRAME');
+          await page.screenshot({ path: 'portrait.png', fullPage: true });
+
+          const cdp = await context.newCDPSession(page);
+          const rect = initial.canvasRect;
+          const cx = rect.x + rect.width * 0.5;
+          const cy = rect.y + rect.height * 0.5;
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: cx, y: cy, radiusX: 2, radiusY: 2, force: 0.5, id: 1 }] });
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: cx + 36, y: cy + 18, radiusX: 2, radiusY: 2, force: 0.5, id: 1 }] });
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+          await page.waitForTimeout(350);
+
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [
+            { x: cx - 24, y: cy - 20, radiusX: 2, radiusY: 2, force: 0.5, id: 2 },
+            { x: cx + 24, y: cy - 20, radiusX: 2, radiusY: 2, force: 0.5, id: 3 }
+          ] });
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [
+            { x: cx - 24, y: cy + 32, radiusX: 2, radiusY: 2, force: 0.5, id: 2 },
+            { x: cx + 24, y: cy + 32, radiusX: 2, radiusY: 2, force: 0.5, id: 3 }
+          ] });
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+          await page.waitForTimeout(500);
+
+          await page.setViewportSize({ width: 915, height: 412 });
+          await page.waitForTimeout(750);
+          const landscape = await readState();
+          assert.equal(landscape.orientation, 'LANDSCAPE', 'P6_LANDSCAPE_TRANSITION_FAILED');
+          assert.equal(landscape.routeReady, true, 'P6_ROUTE_LOST_AFTER_ORIENTATION');
+          await page.screenshot({ path: 'landscape.png', fullPage: true });
+
+          const final = landscape;
+          const finalRuntime = final.snapshot.runtimeExclusivity;
+          const finalGpu = final.snapshot.liveGpu;
+          assert.equal(finalRuntime.activeWebGL2ContextCount, 1, 'P6_FINAL_WEBGL2_CONTEXT_COUNT');
+          assert.equal(finalRuntime.activePersistentRendererCount, 1, 'P6_FINAL_RENDERER_COUNT');
+          assert.equal(finalRuntime.activePointerTouchIntakeCount, 1, 'P6_FINAL_INPUT_CORRIDOR_COUNT');
+          assert.equal(finalRuntime.activeFramePresentationAuthorityCount, 1, 'P6_FINAL_FRAME_AUTHORITY_COUNT');
+          assert.equal(finalRuntime.cssBitmapPreview, false, 'P6_FINAL_BITMAP_PREVIEW_ACTIVE');
+          assert.equal(finalGpu.counters.rendererInitializationCount, 1, 'P6_FINAL_RENDERER_INITIALIZATION_COUNT');
+          assert.equal(finalGpu.counters.worldRebuildCount, 0, 'P6_FINAL_WORLD_REBUILD_COUNT');
+          assert.equal(finalGpu.counters.bitmapPreviewApplicationCount, 0, 'P6_FINAL_BITMAP_PREVIEW_COUNT');
+          assert(finalGpu.counters.gpuFramebufferPresentationCount >= initialGpu.counters.gpuFramebufferPresentationCount, 'P6_FRAME_COUNT_REGRESSED');
+          assert.equal(failedRequests.length, 0, `P6_FAILED_REQUESTS:${JSON.stringify(failedRequests)}`);
+          assert.equal(pageErrors.length, 0, `P6_PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
+
+          const record = {
+            checkpointId: 'RUN_8E_R3F2_P6_HOSTED_MOBILE_BROWSER_SMOKE',
+            status: 'PASS',
+            previewUrl: url,
+            userAgent: await page.evaluate(() => navigator.userAgent),
+            initialOrientation: initial.orientation,
+            finalOrientation: final.orientation,
+            initialRuntimeExclusivity: initialRuntime,
+            finalRuntimeExclusivity: finalRuntime,
+            initialGpuCounters: initialGpu.counters,
+            finalGpuCounters: finalGpu.counters,
+            requestCount: requests.length,
+            failedRequests,
+            pageErrors,
+            consoleErrors,
+            physicalDeviceExecution: false,
+            physicalAcceptance: false
+          };
+          fs.writeFileSync('hosted-mobile-browser-smoke.json', `${JSON.stringify(record, null, 2)}\n`);
+          console.log(JSON.stringify(record, null, 2));
+          await browser.close();
+          NODE
+          node smoke.mjs
+
+      - name: Upload hosted mobile-browser smoke evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p6-hosted-mobile-browser-smoke
+          path: |
+            /tmp/r3f2-p6/hosted-mobile-browser-smoke.json
+            /tmp/r3f2-p6/portrait.png
+            /tmp/r3f2-p6/landscape.png
+          if-no-files-found: error
+          retention-days: 90

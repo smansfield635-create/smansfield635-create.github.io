@@ -1,4 +1,4 @@
-name: H-Earth Run 8E R3F2-P6D Browser Response Custody
+name: H-Earth Run 8E R3F2-P6D Final Host-Augmentation Custody
 
 on:
   pull_request:
@@ -14,13 +14,29 @@ env:
   PREVIEW_URL: https://diamondgatebridge.com/preview/h-earth/run8e/r3f2/sha256-69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5/
   PACKAGE_HEX: 69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5
   PACKAGE_HEAD: 51c2c82b4695c97d309d38e9e01aec728b95601d
-  OUTPUT_ROOT: /tmp/h-earth-run8e-r3f2-p6d
+  PACKAGE_BYTES: '1213849'
+  PACKAGE_PATH: preview/h-earth/run8e/r3f2/sha256-69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5/index.html
+  OUTPUT_ROOT: /tmp/h-earth-run8e-r3f2-p6d-final
 
 jobs:
-  measure-browser-response-custody:
+  validate-final-custody-and-mobile-smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
+      - name: Check out exact validation branch
+        uses: actions/checkout@v4
+
+      - name: Verify governed package source identity
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTPUT_ROOT"
+          test -f "$PACKAGE_PATH"
+          test "$(wc -c < "$PACKAGE_PATH")" -eq "$PACKAGE_BYTES"
+          test "$(sha256sum "$PACKAGE_PATH" | cut -d' ' -f1)" = "$PACKAGE_HEX"
+          test "$(git hash-object "$PACKAGE_PATH")" = "81e6aabc8605198125ae0d560900a32e00370005"
+          grep -Fq 'r3f2EvidenceInstrumented' "$PACKAGE_PATH"
+          ! grep -Fq 'static.cloudflareinsights.com' "$PACKAGE_PATH"
+
       - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
@@ -29,27 +45,32 @@ jobs:
       - name: Install pinned Playwright Chromium
         run: |
           set -euo pipefail
-          mkdir -p "$OUTPUT_ROOT"
           cd "$OUTPUT_ROOT"
           npm init -y >/dev/null
           npm install --no-audit --no-fund playwright@1.54.1
           npx playwright install --with-deps chromium
 
-      - name: Measure exact browser response and host telemetry
-        working-directory: /tmp/h-earth-run8e-r3f2-p6d
+      - name: Prove host augmentation custody and corrected mobile execution
+        working-directory: /tmp/h-earth-run8e-r3f2-p6d-final
         run: |
           set -euo pipefail
-          cat > custody.mjs <<'NODE'
+          cat > final-custody.mjs <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
           import assert from 'node:assert/strict';
           import { chromium } from 'playwright';
 
+          const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
           const url = process.env.PREVIEW_URL;
-          const expectedOrigin = new URL(url).origin;
+          const source = fs.readFileSync(process.env.GITHUB_WORKSPACE + '/' + process.env.PACKAGE_PATH);
+          assert.equal(source.length, Number(process.env.PACKAGE_BYTES), 'P6D_SOURCE_BYTE_COUNT_MISMATCH');
+          assert.equal(sha256(source), process.env.PACKAGE_HEX, 'P6D_SOURCE_SHA256_MISMATCH');
+          assert(!source.includes(Buffer.from('static.cloudflareinsights.com')), 'P6D_SOURCE_CONTAINS_HOST_TELEMETRY');
+
           const requests = [];
-          const responses = [];
           const failedRequests = [];
+          const pageErrors = [];
+          const consoleErrors = [];
           const browser = await chromium.launch({
             headless: true,
             args: ['--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--disable-gpu-sandbox']
@@ -64,21 +85,52 @@ jobs:
           });
           const page = await context.newPage();
           page.on('request', (request) => requests.push({ url: request.url(), resourceType: request.resourceType() }));
-          page.on('response', (response) => responses.push({ url: response.url(), status: response.status(), resourceType: response.request().resourceType() }));
           page.on('requestfailed', (request) => failedRequests.push({ url: request.url(), error: request.failure()?.errorText ?? null }));
+          page.on('pageerror', (error) => pageErrors.push(error.message));
+          page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
 
           const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
           assert(response, 'P6D_DOCUMENT_RESPONSE_MISSING');
           assert.equal(response.status(), 200, 'P6D_DOCUMENT_STATUS_NOT_200');
           assert.equal(page.url(), url, 'P6D_EFFECTIVE_URL_MISMATCH');
-          const body = Buffer.from(await response.body());
-          const browserResponseSha256 = crypto.createHash('sha256').update(body).digest('hex');
-          const browserResponseByteCount = body.length;
-          const browserResponseContainsCloudflareBeacon = body.includes(Buffer.from('static.cloudflareinsights.com'));
-          const headers = await response.allHeaders();
+          const browserBody = Buffer.from(await response.body());
+          const browserText = browserBody.toString('utf8');
 
-          await page.locator('#deviceModel').fill('Samsung Galaxy reference-class response custody');
-          await page.locator('#attestation').fill('Automated browser response custody only; not physical acceptance.');
+          const beaconPattern = /<script\b[^>]*\bsrc=(?:"https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js\/[^"]+"|'https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js\/[^']+')[^>]*><\/script>/gi;
+          const beaconMatches = [...browserText.matchAll(beaconPattern)];
+          assert.equal(beaconMatches.length, 1, `P6D_HOST_AUGMENTATION_COUNT:${beaconMatches.length}`);
+          const match = beaconMatches[0];
+          const matchStart = match.index;
+          const matchEnd = matchStart + match[0].length;
+          const starts = new Set([matchStart]);
+          const ends = new Set([matchEnd]);
+          if (browserText.slice(matchStart - 2, matchStart) === '\r\n') starts.add(matchStart - 2);
+          if (browserText.slice(matchStart - 1, matchStart) === '\n') starts.add(matchStart - 1);
+          if (browserText.slice(matchEnd, matchEnd + 2) === '\r\n') ends.add(matchEnd + 2);
+          if (browserText.slice(matchEnd, matchEnd + 1) === '\n') ends.add(matchEnd + 1);
+
+          let normalized = null;
+          let removedStart = null;
+          let removedEnd = null;
+          for (const start of starts) {
+            for (const end of ends) {
+              const candidate = Buffer.from(browserText.slice(0, start) + browserText.slice(end), 'utf8');
+              if (candidate.equals(source)) {
+                normalized = candidate;
+                removedStart = start;
+                removedEnd = end;
+                break;
+              }
+            }
+            if (normalized) break;
+          }
+          assert(normalized, 'P6D_BROWSER_BODY_NOT_SOURCE_PLUS_SINGLE_KNOWN_HOST_AUGMENTATION');
+          const removedBytes = browserBody.subarray(removedStart, removedEnd);
+          assert(removedBytes.includes(Buffer.from('static.cloudflareinsights.com')), 'P6D_REMOVED_BYTES_NOT_HOST_TELEMETRY');
+          assert.equal(sha256(normalized), process.env.PACKAGE_HEX, 'P6D_NORMALIZED_PACKAGE_SHA256_MISMATCH');
+
+          await page.locator('#deviceModel').fill('Samsung Galaxy reference-class final hosted smoke');
+          await page.locator('#attestation').fill('Automated final pre-device validation only; not physical acceptance.');
           await page.locator('#startButton').click();
           await page.waitForFunction(() => document.getElementById('routeFrame')?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 90000 });
           await page.waitForFunction(() => {
@@ -86,69 +138,137 @@ jobs:
             return notice.startsWith('Physical session active') || notice.startsWith('Instrumentation failed:');
           }, null, { timeout: 30000 });
           await page.waitForTimeout(1200);
-          const runtime = await page.evaluate(() => {
+
+          const readState = () => page.evaluate(() => {
             const frame = document.getElementById('routeFrame');
             const api = frame?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE;
             const canvas = frame?.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
             const snapshot = api?.getSnapshot?.() ?? null;
             return {
               routeReady: api?.ready === true,
-              instrumentationMarker: canvas?.dataset?.r3f2EvidenceInstrumented === 'true',
               phaseNotice: document.getElementById('phaseNotice')?.textContent ?? null,
+              instrumentationMarker: canvas?.dataset?.r3f2EvidenceInstrumented === 'true',
+              canvasPresent: canvas?.tagName === 'CANVAS',
+              canvasWidth: canvas?.getBoundingClientRect?.().width ?? 0,
+              canvasHeight: canvas?.getBoundingClientRect?.().height ?? 0,
+              orientation: matchMedia('(orientation: portrait)').matches ? 'PORTRAIT' : 'LANDSCAPE',
               packageHead: window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA?.packageHead ?? null,
-              runtimeExclusivity: snapshot?.runtimeExclusivity ?? null,
-              gpuCounters: snapshot?.liveGpu?.counters ?? null
+              packageClass: window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA?.packageClass ?? null,
+              snapshot
             };
           });
-          assert.equal(runtime.routeReady, true, 'P6D_ROUTE_NOT_READY');
-          assert.equal(runtime.instrumentationMarker, true, 'P6D_INSTRUMENTATION_MARKER_MISSING');
-          assert(!runtime.phaseNotice?.startsWith('Instrumentation failed:'), `P6D_INSTRUMENTATION_FAILED:${runtime.phaseNotice}`);
-          assert(runtime.phaseNotice?.startsWith('Physical session active'), `P6D_PHASE_NOTICE_INVALID:${runtime.phaseNotice}`);
-          assert.equal(runtime.packageHead, process.env.PACKAGE_HEAD, 'P6D_PACKAGE_HEAD_MISMATCH');
-          assert.equal(runtime.runtimeExclusivity?.activeWebGL2ContextCount, 1, 'P6D_WEBGL2_CONTEXT_COUNT');
-          assert.equal(runtime.runtimeExclusivity?.activePersistentRendererCount, 1, 'P6D_RENDERER_COUNT');
-          assert.equal(runtime.runtimeExclusivity?.activePointerTouchIntakeCount, 1, 'P6D_INPUT_COUNT');
-          assert.equal(runtime.runtimeExclusivity?.activeFramePresentationAuthorityCount, 1, 'P6D_FRAME_AUTHORITY_COUNT');
-          assert((runtime.gpuCounters?.gpuFramebufferPresentationCount ?? 0) >= 1, 'P6D_VISIBLE_FRAME_MISSING');
 
+          const initial = await readState();
+          assert.equal(initial.routeReady, true, 'P6D_ROUTE_NOT_READY');
+          assert.equal(initial.instrumentationMarker, true, 'P6D_INSTRUMENTATION_MARKER_MISSING');
+          assert.equal(initial.canvasPresent, true, 'P6D_CANVAS_MISSING');
+          assert(initial.canvasWidth > 0 && initial.canvasHeight > 0, 'P6D_CANVAS_NOT_VISIBLE');
+          assert(!initial.phaseNotice?.startsWith('Instrumentation failed:'), `P6D_INSTRUMENTATION_FAILED:${initial.phaseNotice}`);
+          assert(initial.phaseNotice?.startsWith('Physical session active'), `P6D_PHASE_NOTICE_INVALID:${initial.phaseNotice}`);
+          assert.equal(initial.packageHead, process.env.PACKAGE_HEAD, 'P6D_PACKAGE_HEAD_MISMATCH');
+          assert.equal(initial.packageClass, 'SIGNED_OFFLINE_PACKAGE', 'P6D_PACKAGE_CLASS_MISMATCH');
+          const r0 = initial.snapshot?.runtimeExclusivity;
+          const g0 = initial.snapshot?.liveGpu?.counters;
+          assert.equal(r0?.activeWebGL2ContextCount, 1, 'P6D_WEBGL2_CONTEXT_COUNT');
+          assert.equal(r0?.activePersistentRendererCount, 1, 'P6D_RENDERER_COUNT');
+          assert.equal(r0?.activeNavigationStateStreamCount, 1, 'P6D_NAVIGATION_STREAM_COUNT');
+          assert.equal(r0?.activePointerTouchIntakeCount, 1, 'P6D_INPUT_CORRIDOR_COUNT');
+          assert.equal(r0?.activeFramePresentationAuthorityCount, 1, 'P6D_FRAME_AUTHORITY_COUNT');
+          assert.equal(r0?.legacyModuleScriptCount, 0, 'P6D_LEGACY_MODULE_COUNT');
+          assert.equal(r0?.cssBitmapPreview, false, 'P6D_BITMAP_PREVIEW_ACTIVE');
+          assert.equal(r0?.cpuWorldRebuildPerCameraChange, false, 'P6D_CPU_REBUILD_ACTIVE');
+          assert.equal(g0?.rendererInitializationCount, 1, 'P6D_RENDERER_INITIALIZATION_COUNT');
+          assert.equal(g0?.worldRebuildCount, 0, 'P6D_WORLD_REBUILD_COUNT');
+          assert((g0?.gpuFramebufferPresentationCount ?? 0) >= 1, 'P6D_VISIBLE_GPU_FRAME_MISSING');
+          await page.screenshot({ path: 'final-portrait.png', fullPage: true });
+
+          await page.setViewportSize({ width: 915, height: 412 });
+          await page.waitForTimeout(750);
+          const final = await readState();
+          assert.equal(final.orientation, 'LANDSCAPE', 'P6D_LANDSCAPE_TRANSITION_FAILED');
+          assert.equal(final.routeReady, true, 'P6D_ROUTE_LOST_AFTER_ROTATION');
+          assert.equal(final.instrumentationMarker, true, 'P6D_MARKER_LOST_AFTER_ROTATION');
+          assert(!final.phaseNotice?.startsWith('Instrumentation failed:'), `P6D_POST_ROTATION_INSTRUMENTATION_FAILED:${final.phaseNotice}`);
+          const r1 = final.snapshot?.runtimeExclusivity;
+          const g1 = final.snapshot?.liveGpu?.counters;
+          assert.equal(r1?.activeWebGL2ContextCount, 1, 'P6D_FINAL_WEBGL2_CONTEXT_COUNT');
+          assert.equal(r1?.activePersistentRendererCount, 1, 'P6D_FINAL_RENDERER_COUNT');
+          assert.equal(r1?.activePointerTouchIntakeCount, 1, 'P6D_FINAL_INPUT_CORRIDOR_COUNT');
+          assert.equal(r1?.activeFramePresentationAuthorityCount, 1, 'P6D_FINAL_FRAME_AUTHORITY_COUNT');
+          assert.equal(g1?.rendererInitializationCount, 1, 'P6D_FINAL_RENDERER_INITIALIZATION_COUNT');
+          assert.equal(g1?.worldRebuildCount, 0, 'P6D_FINAL_WORLD_REBUILD_COUNT');
+          assert((g1?.gpuFramebufferPresentationCount ?? 0) >= (g0?.gpuFramebufferPresentationCount ?? 0), 'P6D_GPU_FRAME_COUNT_REGRESSED');
+          await page.screenshot({ path: 'final-landscape.png', fullPage: true });
+
+          const expectedOrigin = new URL(url).origin;
           const offOriginRequests = requests.filter((row) => new URL(row.url).origin !== expectedOrigin);
           const cloudflareTelemetryRequests = offOriginRequests.filter((row) => new URL(row.url).hostname === 'static.cloudflareinsights.com');
           const otherOffOriginRequests = offOriginRequests.filter((row) => new URL(row.url).hostname !== 'static.cloudflareinsights.com');
+          assert.equal(cloudflareTelemetryRequests.length, 1, `P6D_CLOUDFLARE_TELEMETRY_REQUEST_COUNT:${cloudflareTelemetryRequests.length}`);
           assert.equal(otherOffOriginRequests.length, 0, `P6D_UNEXPECTED_EXTERNAL_REQUESTS:${JSON.stringify(otherOffOriginRequests)}`);
           assert.equal(failedRequests.length, 0, `P6D_FAILED_REQUESTS:${JSON.stringify(failedRequests)}`);
+          assert.equal(pageErrors.length, 0, `P6D_PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
 
           const record = {
-            checkpointId: 'RUN_8E_R3F2_P6D_BROWSER_RESPONSE_CUSTODY',
-            status: 'OBSERVED',
+            checkpointId: 'RUN_8E_R3F2_P6D_FINAL_HOST_AUGMENTATION_CUSTODY_AND_MOBILE_SMOKE',
+            status: 'PASS',
             previewUrl: url,
-            expectedPackageSha256: `sha256:${process.env.PACKAGE_HEX}`,
-            browserResponseSha256: `sha256:${browserResponseSha256}`,
-            browserResponseByteCount,
-            browserResponseExactPackageMatch: browserResponseSha256 === process.env.PACKAGE_HEX && browserResponseByteCount === 1213849,
-            browserResponseContainsCloudflareBeacon,
-            documentResponseHeaders: headers,
-            requestCount: requests.length,
-            offOriginRequestCount: offOriginRequests.length,
-            cloudflareTelemetryRequests,
-            otherOffOriginRequests,
-            failedRequests,
-            runtime,
+            packageHead: process.env.PACKAGE_HEAD,
+            governedPackage: {
+              byteCount: source.length,
+              sha256: `sha256:${sha256(source)}`,
+              gitBlobSha1: '81e6aabc8605198125ae0d560900a32e00370005'
+            },
+            browserResponse: {
+              byteCount: browserBody.length,
+              sha256: `sha256:${sha256(browserBody)}`,
+              exactPackageMatchBeforeHostAugmentationRemoval: browserBody.equals(source),
+              knownHostAugmentationCount: beaconMatches.length,
+              removedHostAugmentationByteCount: removedBytes.length,
+              removedHostAugmentationSha256: `sha256:${sha256(removedBytes)}`,
+              packageMatchAfterRemovingOnlyKnownHostAugmentation: normalized.equals(source),
+              normalizedSha256: `sha256:${sha256(normalized)}`
+            },
+            dependencyClassification: {
+              candidateAuthoredExternalRuntimeDependencies: 0,
+              hostInjectedTelemetryRequests: cloudflareTelemetryRequests,
+              unexpectedExternalRequests: otherOffOriginRequests,
+              failedRequests,
+              pageErrors,
+              consoleErrors
+            },
+            initial: {
+              orientation: initial.orientation,
+              phaseNotice: initial.phaseNotice,
+              instrumentationMarker: initial.instrumentationMarker,
+              runtimeExclusivity: r0,
+              gpuCounters: g0
+            },
+            final: {
+              orientation: final.orientation,
+              phaseNotice: final.phaseNotice,
+              instrumentationMarker: final.instrumentationMarker,
+              runtimeExclusivity: r1,
+              gpuCounters: g1
+            },
+            custodyLaw: 'GOVERNED_PACKAGE_BYTES_PLUS_DISCLOSED_NON_AUTHORITATIVE_HOST_ANALYTICS_AUGMENTATION',
             physicalDeviceExecution: false,
-            physicalAcceptance: false
+            physicalAcceptance: false,
+            samsungSessionEligible: true
           };
-          fs.writeFileSync('browser-response-custody.json', `${JSON.stringify(record, null, 2)}\n`);
-          await page.screenshot({ path: 'browser-response-custody.png', fullPage: true });
+          fs.writeFileSync('final-host-augmentation-custody.json', `${JSON.stringify(record, null, 2)}\n`);
           console.log(JSON.stringify(record, null, 2));
           await browser.close();
           NODE
-          node custody.mjs
+          node final-custody.mjs
 
-      - name: Upload browser response custody evidence
+      - name: Upload final custody and mobile-smoke evidence
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-run8e-r3f2-p6d-browser-response-custody
+          name: h-earth-run8e-r3f2-p6d-final-host-augmentation-custody
           path: |
-            /tmp/h-earth-run8e-r3f2-p6d/browser-response-custody.json
-            /tmp/h-earth-run8e-r3f2-p6d/browser-response-custody.png
+            /tmp/h-earth-run8e-r3f2-p6d-final/final-host-augmentation-custody.json
+            /tmp/h-earth-run8e-r3f2-p6d-final/final-portrait.png
+            /tmp/h-earth-run8e-r3f2-p6d-final/final-landscape.png
           if-no-files-found: error
           retention-days: 90

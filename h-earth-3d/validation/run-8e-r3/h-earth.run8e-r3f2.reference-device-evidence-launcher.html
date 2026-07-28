@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1016">
+  <title>H-Earth R3F2 Physical Evidence</title>
+  <style>
+    :root{color-scheme:dark;font-family:system-ui,sans-serif;background:#0b1016;color:#eef4f8}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#0b1016}button,input,textarea{font:inherit}.panel{max-width:760px;margin:0 auto;padding:20px}.card{border:1px solid #34414d;border-radius:12px;padding:16px;background:#121a22;margin-bottom:14px}h1{font-size:1.25rem;margin:0 0 12px}h2{font-size:1rem;margin:0 0 8px}p,li,label{line-height:1.4}code{overflow-wrap:anywhere}.grid{display:grid;gap:10px}label{display:grid;gap:5px}input,textarea{width:100%;border:1px solid #4b5965;border-radius:8px;background:#0b1016;color:#eef4f8;padding:10px}textarea{min-height:84px}button{border:1px solid #6f8496;border-radius:10px;background:#203040;color:#fff;padding:12px 14px;font-weight:650}button:disabled{opacity:.45}.warning{color:#ffd596}.hidden{display:none!important}#session{position:fixed;inset:0;background:#000;z-index:10}#routeFrame{width:100%;height:100%;border:0;display:block;background:#000}#phaseNotice{position:fixed;inset:auto 10px 10px 10px;z-index:12;padding:10px 12px;background:rgba(0,0,0,.76);border-radius:8px;text-align:center;pointer-events:none}#finishBar{position:fixed;inset:0 0 auto 0;z-index:13;padding:env(safe-area-inset-top) 8px 8px;background:rgba(0,0,0,.78);display:none}#finishBar button{width:100%}.metric{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #2e3943;padding:6px 0}
+  </style>
+</head>
+<body>
+  <main id="setup" class="panel">
+    <div class="card">
+      <h1>H-Earth Run 8E · R3F2 reference-device evidence</h1>
+      <p>This launcher opens the unchanged, commit-pinned H-Earth environment and records instrumented physical-interaction evidence. It does not deploy or modify the public route.</p>
+      <p class="warning"><strong>Before starting:</strong> start the Samsung screen recorder and keep it running through the complete session and return to this page.</p>
+    </div>
+    <div class="card grid">
+      <label>Device model or redacted class<input id="deviceModel" autocomplete="off" placeholder="Samsung Galaxy reference phone"></label>
+      <label>Operator attestation<textarea id="attestation" placeholder="I physically operated this device and this evidence accurately records the session."></textarea></label>
+      <label>Screen recording file, selected after the session<input id="recordingFile" type="file" accept="video/*"></label>
+      <label>Native page/environment screenshot, selected after the session<input id="pageScreenshotFile" type="file" accept="image/*"></label>
+    </div>
+    <div class="card">
+      <h2>Required sequence</h2>
+      <ol>
+        <li>Begin in portrait and perform one-finger look, two-finger forward/back travel, and pinch zoom in/out.</li>
+        <li>Rotate to landscape and repeat the interaction set.</li>
+        <li>Send the browser to the background once, then return.</li>
+        <li>Continue direct inspection until the ten-minute minimum is complete.</li>
+      </ol>
+      <p>No navigation controller should appear. Do not accept flat bitmap dragging, frozen multi-second feedback, or world rebuilding during gestures.</p>
+    </div>
+    <div class="card"><button id="startButton">Start physical evidence session</button><p id="setupStatus"></p></div>
+  </main>
+
+  <section id="session" class="hidden" aria-label="H-Earth physical evidence session">
+    <iframe id="routeFrame" title="Immutable H-Earth route"></iframe>
+    <div id="phaseNotice">Loading immutable H-Earth route…</div>
+    <div id="finishBar"><button id="finishButton">Finish and return to evidence form</button></div>
+  </section>
+
+  <main id="results" class="panel hidden">
+    <div class="card"><h1>Evidence session complete</h1><div id="metrics"></div><p id="resultStatus"></p></div>
+    <div class="card grid"><button id="buildButton">Build evidence JSON</button><button id="downloadButton" disabled>Download evidence JSON</button></div>
+  </main>
+  <script src="./h-earth.run8e-r3f2.reference-device-evidence-launcher.js"></script>
+</body>
+</html>

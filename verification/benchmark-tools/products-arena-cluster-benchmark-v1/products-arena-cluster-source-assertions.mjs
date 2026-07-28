@@ -172,8 +172,8 @@ const failures = Object.entries(assertions)
 
 const receipt = {
   tool: TOOL_ID,
-  classification: "STRENGTHENED_SOURCE_ASSERTIONS",
-  checkpoint: "PRODUCTS_ARENA_CLUSTER_CHECKPOINT_3R",
+  classification: "RECONCILED_SOURCE_ASSERTIONS",
+  checkpoint: "PRODUCTS_ARENA_CLUSTER_BOUNDED_TEST_RECONCILIATION_v1",
   anchors: {
     controllerGitBlob: "3eb38cc35a88936b884891d3dfe735a71583bf34",
     crystalsGitBlob: "6622f9cfd9e44589cf0e94119697256385f1317d"
@@ -182,7 +182,8 @@ const receipt = {
     productCount: 6,
     cardinalCount: 0,
     visiblePrimaryLabelCount: 1,
-    centerPlanetProductOverlap: 0,
+    semanticControlPlanetMountRectangleOverlap: "diagnostic_nonblocking",
+    visibleMeshCollisionMeasured: false,
     horizontalOverflow: 0,
     allSixRoutesPass: true,
     quickFlickLocalReturn: true,

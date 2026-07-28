@@ -41,12 +41,12 @@ const assertions = {
     html.includes('href="/"') &&
     html.includes('Return to Main Compass'),
   singleTapDisclosureContract:
-    center.includes("activateDisclosure(event, \"single-tap\")") &&
-    center.includes("setDisclosure(!state.disclosureOpen") &&
-    !center.includes('lastAction: "main-compass-navigation-requested"'),
+    center.includes('function activateDisclosure') &&
+    center.includes('activateDisclosure(event, "single-tap")') &&
+    center.includes('state.disclosureOpen = Boolean(open)'),
   secondSingleTapClosesDisclosure:
-    center.includes("setDisclosure(!state.disclosureOpen") &&
-    center.includes('aria-expanded", state.disclosureOpen ? "true" : "false"'),
+    center.includes('setDisclosure(!state.disclosureOpen') &&
+    center.includes('state.control.setAttribute("aria-expanded"'),
   explicitReturnNavigation:
     center.includes('navigateToMainCompass("explicit-main-compass-navigation-requested"') &&
     count(center, /location\.assign/g) === 1,

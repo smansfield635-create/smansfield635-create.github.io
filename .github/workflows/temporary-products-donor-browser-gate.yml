@@ -1,0 +1,71 @@
+name: Temporary Products Donor Browser Gate
+
+on:
+  push:
+    branches:
+      - agent/products-arena-proven-donor-restoration-001
+
+permissions:
+  contents: write
+
+actions:
+
+jobs:
+  browser-gate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/products-arena-proven-donor-restoration-001
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install browser runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/products-server.log 2>&1 &
+          echo $! > /tmp/products-server.pid
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/products/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/products-server.log
+          exit 1
+
+      - name: Run Samsung-class browser gate
+        run: node verification/temporary-products-donor-browser-gate.mjs
+
+      - name: Upload browser evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: products-donor-browser-evidence
+          path: verification/products-donor-browser-evidence/
+          if-no-files-found: error
+
+      - name: Validate source boundaries
+        run: |
+          node --check products/index.controller.js
+          git diff --check
+          grep -q 'function requestCompassSelection(event)' products/index.controller.js
+          grep -q 'function requestReturnToMainCompass(event)' products/index.controller.js
+          ! grep -q 'doubleTapWindowMs' products/index.controller.js
+          ! grep -q 'centerPointer' products/index.controller.js
+
+      - name: Self-clean and commit passed gate
+        run: |
+          rm -rf verification/products-donor-browser-evidence
+          rm verification/temporary-products-donor-browser-gate.mjs
+          rm .github/workflows/temporary-products-donor-browser-gate.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add verification/temporary-products-donor-browser-gate.mjs .github/workflows/temporary-products-donor-browser-gate.yml verification/products-donor-browser-evidence
+          git commit -m 'Close Products donor browser execution gate'
+          git push origin HEAD:agent/products-arena-proven-donor-restoration-001

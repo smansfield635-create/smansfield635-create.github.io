@@ -27,7 +27,7 @@ const occurrences = freeze(H_EARTH_RUN_8E_R3F2_P1_PATHS.map((repositoryPath) => 
   gitBlobSha: null,
   contentSha256: null,
   byteCount: null,
-  existenceStatus: repositoryPath === PASS_RECEIPT_PATH ? 'RESERVED_UNTIL_PASS_CLOSED' : 'PRESENT',
+  existenceStatus: 'PRESENT',
   fetchbackStatus: H_EARTH_RUN_8E_R3F2_P1_CONTRACT.currentStatus === 'PASS_CLOSED'
     ? 'R3F2_P1_PASS_CLOSED_FETCHBACK_PENDING'
     : 'R3F2_P1_CONTRACT_VALIDATION_PENDING',
@@ -53,7 +53,7 @@ export const H_EARTH_RUN_8E_R3F2_P1_EVIDENCE = freeze({
     'DEVICE_EVIDENCE_RECEIPT_SCHEMA',
     'STOP_BEFORE_PREVIEW_MATERIALIZATION_OR_DEPLOYMENT_CONFIGURATION'
   ]),
-  verifiedOn: null,
+  verifiedOn: '2026-07-28T01:10:11Z',
   evidenceMetadata: freeze({
     baseExactHead: H_EARTH_RUN_8E_R3F2_P1_CONTRACT.baseExactHead,
     packageHead: H_EARTH_RUN_8E_R3F2_P1_CONTRACT.predecessor.packageHead,
@@ -61,11 +61,11 @@ export const H_EARTH_RUN_8E_R3F2_P1_EVIDENCE = freeze({
     packageByteCount: H_EARTH_RUN_8E_R3F2_P1_CONTRACT.predecessor.packageByteCount,
     packageManifestSha256: H_EARTH_RUN_8E_R3F2_P1_CONTRACT.predecessor.packageManifestSha256,
     previewUrlPath: H_EARTH_RUN_8E_R3F2_P1_CONTRACT.immutablePreviewOccurrence.urlPath,
-    coreWorkflowRun: null,
-    coreWorkflowJob: null,
-    coreArtifactId: null,
-    coreArtifactDigest: null,
-    passReceiptGitBlob: null
+    coreWorkflowRun: 30319469235,
+    coreWorkflowJob: 90152108696,
+    coreArtifactId: 8673429708,
+    coreArtifactDigest: 'sha256:ec20a320682c1d94d86d71eabc0ce0cdb202c1e5ce088aa0c17755d0e09b46c9',
+    passReceiptGitBlob: 'f2d4a9f86153912cbd68be8662873f77854107f4'
   }),
   evidenceLimitations: freeze([
     'PREVIEW_FILES_NOT_MATERIALIZED',
@@ -109,7 +109,9 @@ export const H_EARTH_RUN_8E_R3F2_P1_NODE = freeze({
   currentIdentityReferences: [
     H_EARTH_RUN_8E_R3F2_P1_CONTRACT.baseExactHead,
     H_EARTH_RUN_8E_R3F2_P1_CONTRACT.predecessor.packageSha256,
-    H_EARTH_RUN_8E_R3F2_P1_CONTRACT.predecessor.packageManifestSha256
+    H_EARTH_RUN_8E_R3F2_P1_CONTRACT.predecessor.packageManifestSha256,
+    '01fb91cb37e77b8dc5938e1acdb7466163cbd4cf',
+    'f2d4a9f86153912cbd68be8662873f77854107f4'
   ],
   lifecycleStatus: H_EARTH_RUN_8E_R3F2_P1_CONTRACT.currentStatus,
   unresolvedFields: H_EARTH_RUN_8E_R3F2_P1_CONTRACT.currentStatus === 'PASS_CLOSED' ? [] : ['CORE_WORKFLOW_CUSTODY','PASS_RECEIPT_GIT_BLOB']

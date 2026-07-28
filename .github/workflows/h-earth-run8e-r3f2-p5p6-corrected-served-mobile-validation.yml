@@ -1,0 +1,260 @@
+name: H-Earth Run 8E R3F2-P5P6 Corrected Served and Mobile Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-run8e-r3f2-p5p6-corrected-served-mobile-validation.yml'
+
+permissions:
+  contents: read
+
+env:
+  PREVIEW_URL: https://diamondgatebridge.com/preview/h-earth/run8e/r3f2/sha256-69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5/
+  PACKAGE_HEX: 69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5
+  PACKAGE_HEAD: 51c2c82b4695c97d309d38e9e01aec728b95601d
+  OUTPUT_ROOT: /tmp/h-earth-run8e-r3f2-p5p6
+
+jobs:
+  validate-corrected-served-mobile-occurrence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch and verify exact public served occurrence
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTPUT_ROOT/http"
+          success=false
+          for attempt in $(seq 1 48); do
+            code="$(curl --proto '=https' --tlsv1.2 -sS -L -D "$OUTPUT_ROOT/http/index.headers" -o "$OUTPUT_ROOT/http/index.html" -w '%{http_code}' "$PREVIEW_URL" || true)"
+            if [ "$code" = "200" ] && [ "$(sha256sum "$OUTPUT_ROOT/http/index.html" | cut -d' ' -f1)" = "$PACKAGE_HEX" ]; then
+              success=true
+              break
+            fi
+            sleep 5
+          done
+          test "$success" = true
+          curl --proto '=https' --tlsv1.2 -fsSL -D "$OUTPUT_ROOT/http/manifest.headers" "${PREVIEW_URL}preview-manifest.json" -o "$OUTPUT_ROOT/http/preview-manifest.json"
+          curl --proto '=https' --tlsv1.2 -fsSL -D "$OUTPUT_ROOT/http/schema.headers" "${PREVIEW_URL}device-evidence-receipt.schema.json" -o "$OUTPUT_ROOT/http/device-evidence-receipt.schema.json"
+          test "$(wc -c < "$OUTPUT_ROOT/http/index.html")" -eq 1213849
+          test "$(sha256sum "$OUTPUT_ROOT/http/index.html" | cut -d' ' -f1)" = "$PACKAGE_HEX"
+          test "$(git hash-object "$OUTPUT_ROOT/http/index.html")" = "81e6aabc8605198125ae0d560900a32e00370005"
+          test "$(wc -c < "$OUTPUT_ROOT/http/preview-manifest.json")" -eq 4742
+          test "$(sha256sum "$OUTPUT_ROOT/http/preview-manifest.json" | cut -d' ' -f1)" = "3b4089d6038ef1aa4a6392ca1384992a2ffd7ff6076e7cc13110d5f933cedf04"
+          test "$(git hash-object "$OUTPUT_ROOT/http/preview-manifest.json")" = "12950c99e6543e2a58fa712825fe2a5920bba9b8"
+          test "$(wc -c < "$OUTPUT_ROOT/http/device-evidence-receipt.schema.json")" -eq 4596
+          test "$(sha256sum "$OUTPUT_ROOT/http/device-evidence-receipt.schema.json" | cut -d' ' -f1)" = "373d1d2d642b54b811b1b652a81d124d0d9d48f2f2a8681c6d00930dd2ffce8b"
+          test "$(git hash-object "$OUTPUT_ROOT/http/device-evidence-receipt.schema.json")" = "a95ea7bcee6357415205c26fb0239f4d7c71f4e2"
+          grep -Eiq '^content-type:[[:space:]]*text/html' "$OUTPUT_ROOT/http/index.headers"
+          grep -Eiq '^content-type:[[:space:]]*application/json' "$OUTPUT_ROOT/http/manifest.headers"
+          grep -Eiq '^content-type:[[:space:]]*application/json' "$OUTPUT_ROOT/http/schema.headers"
+          test "$(curl --proto '=https' --tlsv1.2 -sS -L -o /dev/null -w '%{url_effective}' "$PREVIEW_URL")" = "$PREVIEW_URL"
+          grep -Fq 'r3f2EvidenceInstrumented' "$OUTPUT_ROOT/http/index.html"
+          ! grep -Fq 'instanceof HTMLCanvasElement' "$OUTPUT_ROOT/http/index.html"
+          grep -Fq "$PACKAGE_HEAD" "$OUTPUT_ROOT/http/index.html"
+          grep -Fq "sha256:$PACKAGE_HEX" "$OUTPUT_ROOT/http/preview-manifest.json"
+
+      - name: Install pinned Playwright Chromium
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTPUT_ROOT/browser"
+          cd "$OUTPUT_ROOT/browser"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Execute corrected hosted mobile-browser smoke
+        working-directory: /tmp/h-earth-run8e-r3f2-p5p6/browser
+        run: |
+          set -euo pipefail
+          cat > smoke.mjs <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import { chromium } from 'playwright';
+
+          const url = process.env.PREVIEW_URL;
+          const expectedOrigin = new URL(url).origin;
+          const requests = [];
+          const failedRequests = [];
+          const pageErrors = [];
+          const consoleErrors = [];
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--disable-gpu-sandbox']
+          });
+          const context = await browser.newContext({
+            viewport: { width: 412, height: 915 },
+            screen: { width: 412, height: 915 },
+            deviceScaleFactor: 2,
+            isMobile: true,
+            hasTouch: true,
+            userAgent: 'Mozilla/5.0 (Linux; Android 16; SM-S948U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36'
+          });
+          const page = await context.newPage();
+          page.on('request', (request) => requests.push(request.url()));
+          page.on('requestfailed', (request) => failedRequests.push({ url: request.url(), error: request.failure()?.errorText ?? null }));
+          page.on('pageerror', (error) => pageErrors.push(error.message));
+          page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+
+          const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
+          assert(response, 'P5P6_DOCUMENT_RESPONSE_MISSING');
+          assert.equal(response.status(), 200, 'P5P6_DOCUMENT_STATUS_NOT_200');
+          assert.equal(page.url(), url, 'P5P6_EFFECTIVE_URL_MISMATCH');
+          await page.locator('#deviceModel').fill('Samsung Galaxy reference-class hosted smoke');
+          await page.locator('#attestation').fill('Automated corrected hosted-browser smoke only; not physical acceptance.');
+          await page.locator('#startButton').click();
+          await page.waitForFunction(() => document.getElementById('routeFrame')?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 90000 });
+          await page.waitForFunction(() => {
+            const notice = document.getElementById('phaseNotice')?.textContent ?? '';
+            return notice.startsWith('Physical session active') || notice.startsWith('Instrumentation failed:');
+          }, null, { timeout: 30000 });
+          await page.waitForTimeout(1200);
+
+          const readState = () => page.evaluate(() => {
+            const frame = document.getElementById('routeFrame');
+            const api = frame?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE;
+            const canvas = frame?.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
+            const snapshot = api?.getSnapshot?.() ?? null;
+            return {
+              routeReady: api?.ready === true,
+              phaseNotice: document.getElementById('phaseNotice')?.textContent ?? null,
+              instrumentationMarker: canvas?.dataset?.r3f2EvidenceInstrumented === 'true',
+              canvasPresent: canvas?.tagName === 'CANVAS',
+              canvasWidth: canvas?.getBoundingClientRect?.().width ?? 0,
+              canvasHeight: canvas?.getBoundingClientRect?.().height ?? 0,
+              orientation: matchMedia('(orientation: portrait)').matches ? 'PORTRAIT' : 'LANDSCAPE',
+              packageMetadata: window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA ?? null,
+              snapshot
+            };
+          });
+
+          const initial = await readState();
+          assert.equal(initial.routeReady, true, 'P5P6_ROUTE_NOT_READY');
+          assert.equal(initial.instrumentationMarker, true, 'P5P6_INSTRUMENTATION_MARKER_MISSING');
+          assert.equal(initial.canvasPresent, true, 'P5P6_CANVAS_MISSING');
+          assert(initial.canvasWidth > 0 && initial.canvasHeight > 0, 'P5P6_CANVAS_NOT_VISIBLE');
+          assert(!initial.phaseNotice?.startsWith('Instrumentation failed:'), `P5P6_INSTRUMENTATION_FAILED:${initial.phaseNotice}`);
+          assert(initial.phaseNotice?.startsWith('Physical session active'), `P5P6_PHASE_NOTICE_INVALID:${initial.phaseNotice}`);
+          assert.equal(initial.packageMetadata?.packageHead, process.env.PACKAGE_HEAD, 'P5P6_PACKAGE_HEAD_MISMATCH');
+          assert.equal(initial.packageMetadata?.packageClass, 'SIGNED_OFFLINE_PACKAGE', 'P5P6_PACKAGE_CLASS_MISMATCH');
+          assert(initial.snapshot, 'P5P6_SNAPSHOT_MISSING');
+          const r0 = initial.snapshot.runtimeExclusivity;
+          const g0 = initial.snapshot.liveGpu;
+          assert.equal(r0.activeWebGL2ContextCount, 1, 'P5P6_WEBGL2_CONTEXT_COUNT');
+          assert.equal(r0.activePersistentRendererCount, 1, 'P5P6_RENDERER_COUNT');
+          assert.equal(r0.activeNavigationStateStreamCount, 1, 'P5P6_NAVIGATION_STREAM_COUNT');
+          assert.equal(r0.activePointerTouchIntakeCount, 1, 'P5P6_INPUT_CORRIDOR_COUNT');
+          assert.equal(r0.activeFramePresentationAuthorityCount, 1, 'P5P6_FRAME_AUTHORITY_COUNT');
+          assert.equal(r0.legacyModuleScriptCount, 0, 'P5P6_LEGACY_MODULE_COUNT');
+          assert.equal(r0.cssBitmapPreview, false, 'P5P6_BITMAP_PREVIEW_ACTIVE');
+          assert.equal(r0.cpuWorldRebuildPerCameraChange, false, 'P5P6_CPU_REBUILD_ACTIVE');
+          assert.equal(g0.counters.rendererInitializationCount, 1, 'P5P6_RENDERER_INITIALIZATION_COUNT');
+          assert.equal(g0.counters.worldRebuildCount, 0, 'P5P6_WORLD_REBUILD_COUNT');
+          assert.equal(g0.counters.bitmapPreviewApplicationCount, 0, 'P5P6_BITMAP_APPLICATION_COUNT');
+          assert(g0.counters.gpuFramebufferPresentationCount >= 1, 'P5P6_VISIBLE_GPU_FRAME_MISSING');
+          await page.screenshot({ path: 'corrected-portrait.png', fullPage: true });
+
+          await page.setViewportSize({ width: 915, height: 412 });
+          await page.waitForTimeout(750);
+          const final = await readState();
+          assert.equal(final.orientation, 'LANDSCAPE', 'P5P6_LANDSCAPE_TRANSITION_FAILED');
+          assert.equal(final.routeReady, true, 'P5P6_ROUTE_LOST_AFTER_ROTATION');
+          assert.equal(final.instrumentationMarker, true, 'P5P6_MARKER_LOST_AFTER_ROTATION');
+          assert(!final.phaseNotice?.startsWith('Instrumentation failed:'), `P5P6_POST_ROTATION_INSTRUMENTATION_FAILED:${final.phaseNotice}`);
+          const r1 = final.snapshot.runtimeExclusivity;
+          const g1 = final.snapshot.liveGpu;
+          assert.equal(r1.activeWebGL2ContextCount, 1, 'P5P6_FINAL_WEBGL2_CONTEXT_COUNT');
+          assert.equal(r1.activePersistentRendererCount, 1, 'P5P6_FINAL_RENDERER_COUNT');
+          assert.equal(r1.activePointerTouchIntakeCount, 1, 'P5P6_FINAL_INPUT_CORRIDOR_COUNT');
+          assert.equal(r1.activeFramePresentationAuthorityCount, 1, 'P5P6_FINAL_FRAME_AUTHORITY_COUNT');
+          assert.equal(g1.counters.rendererInitializationCount, 1, 'P5P6_FINAL_RENDERER_INITIALIZATION_COUNT');
+          assert.equal(g1.counters.worldRebuildCount, 0, 'P5P6_FINAL_WORLD_REBUILD_COUNT');
+          assert(g1.counters.gpuFramebufferPresentationCount >= g0.counters.gpuFramebufferPresentationCount, 'P5P6_GPU_FRAME_COUNT_REGRESSED');
+          await page.screenshot({ path: 'corrected-landscape.png', fullPage: true });
+
+          assert.equal(failedRequests.length, 0, `P5P6_FAILED_REQUESTS:${JSON.stringify(failedRequests)}`);
+          assert.equal(pageErrors.length, 0, `P5P6_PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
+          const externalRequests = requests.filter((requestUrl) => new URL(requestUrl).origin !== expectedOrigin);
+          assert.equal(externalRequests.length, 0, `P5P6_EXTERNAL_REQUESTS:${JSON.stringify(externalRequests)}`);
+
+          const record = {
+            checkpointId: 'RUN_8E_R3F2_P5P6_CORRECTED_SERVED_MOBILE_VALIDATION',
+            status: 'PASS',
+            previewUrl: url,
+            packageHead: process.env.PACKAGE_HEAD,
+            packageSha256: `sha256:${process.env.PACKAGE_HEX}`,
+            initial: {
+              orientation: initial.orientation,
+              phaseNotice: initial.phaseNotice,
+              instrumentationMarker: initial.instrumentationMarker,
+              runtimeExclusivity: r0,
+              gpuCounters: g0.counters
+            },
+            final: {
+              orientation: final.orientation,
+              phaseNotice: final.phaseNotice,
+              instrumentationMarker: final.instrumentationMarker,
+              runtimeExclusivity: r1,
+              gpuCounters: g1.counters
+            },
+            requestCount: requests.length,
+            externalRequestCount: externalRequests.length,
+            failedRequests,
+            pageErrors,
+            consoleErrors,
+            physicalDeviceExecution: false,
+            physicalAcceptance: false
+          };
+          fs.writeFileSync('corrected-hosted-mobile-validation.json', `${JSON.stringify(record, null, 2)}\n`);
+          console.log(JSON.stringify(record, null, 2));
+          await browser.close();
+          NODE
+          node smoke.mjs
+
+      - name: Record combined HTTP and browser validation evidence
+        run: |
+          set -euo pipefail
+          cp "$OUTPUT_ROOT/browser/corrected-hosted-mobile-validation.json" "$OUTPUT_ROOT/"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ['OUTPUT_ROOT'])
+          browser = json.loads((root / 'corrected-hosted-mobile-validation.json').read_text())
+          combined = {
+              'checkpointId': 'RUN_8E_R3F2_P5P6_CORRECTED_SERVED_AND_HOSTED_MOBILE_VALIDATION',
+              'status': 'PASS',
+              'previewUrl': os.environ['PREVIEW_URL'],
+              'https': True,
+              'httpStatus': 200,
+              'exactServedByteMatch': True,
+              'exactFileCount': 3,
+              'packageSha256': 'sha256:' + os.environ['PACKAGE_HEX'],
+              'packageHead': os.environ['PACKAGE_HEAD'],
+              'indexGitBlob': '81e6aabc8605198125ae0d560900a32e00370005',
+              'manifestGitBlob': '12950c99e6543e2a58fa712825fe2a5920bba9b8',
+              'schemaGitBlob': 'a95ea7bcee6357415205c26fb0239f4d7c71f4e2',
+              'hostedMobileBrowser': browser,
+              'samsungPhysicalSessionExecuted': False,
+              'samsungPhysicalSessionAuthorizedAfterThisPass': True
+          }
+          (root / 'combined-validation.json').write_text(json.dumps(combined, indent=2) + '\n')
+          print(json.dumps(combined, indent=2))
+          PY
+
+      - name: Upload corrected P5P6 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p5p6-corrected-served-mobile-validation
+          path: |
+            /tmp/h-earth-run8e-r3f2-p5p6/combined-validation.json
+            /tmp/h-earth-run8e-r3f2-p5p6/corrected-hosted-mobile-validation.json
+            /tmp/h-earth-run8e-r3f2-p5p6/browser/corrected-portrait.png
+            /tmp/h-earth-run8e-r3f2-p5p6/browser/corrected-landscape.png
+          if-no-files-found: error
+          retention-days: 90

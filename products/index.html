@@ -63,8 +63,6 @@
       data-products-crystals-status="pending"
       data-products-planet-status="pending"
       data-products-cosmos-status="pending"
-      data-products-center-control-status="pending"
-      data-products-center-disclosure="closed"
       data-products-first-view="integrated-arena"
       data-visual-pass-claimed="false"
     >
@@ -79,7 +77,7 @@
           <div class="products-header__legend" aria-label="Arena orientation">
             <span>Six product stars</span>
             <span>Drag to rotate</span>
-            <span>Center world opens return options</span>
+            <span>Compass-standard terminal arena</span>
           </div>
         </header>
 
@@ -97,20 +95,6 @@
               data-products-planet-navigation-authority="false"
               aria-hidden="true"
             ></div>
-
-            <button
-              type="button"
-              class="products-center-control"
-              data-products-center-control
-              data-products-center-route="/"
-              data-products-center-role="MAIN_COMPASS_RETURN_DISCLOSURE"
-              aria-label="Open Main Compass return option"
-              aria-controls="products-context"
-              aria-expanded="false"
-              hidden
-            >
-              <span class="products-center-control__label">Main Compass options</span>
-            </button>
 
             <div class="products-semantic" data-products-semantic aria-label="Enhanced Products semantic controls">
               <button
@@ -160,7 +144,6 @@
               <a class="products-action products-action--primary" data-products-enter aria-disabled="true" tabindex="-1">Enter Product</a>
               <button type="button" class="products-action" data-products-return-to-orbit hidden aria-hidden="true" aria-disabled="true" tabindex="-1">Return to Orbit</button>
               <button type="button" class="products-action" data-products-return-to-constellation hidden aria-hidden="true" aria-disabled="true" tabindex="-1">Return to Constellation</button>
-              <a class="products-action products-action--main-compass" href="/" data-products-return-main-compass hidden aria-hidden="true" tabindex="-1">Return to Main Compass</a>
             </div>
           </section>
         </aside>
@@ -191,7 +174,6 @@
       <output class="products-receipt" data-products-crystals-receipt hidden aria-hidden="true"></output>
       <output class="products-receipt" data-products-cosmos-receipt hidden aria-hidden="true"></output>
       <output class="products-receipt" data-products-planet-receipt hidden aria-hidden="true"></output>
-      <output class="products-receipt" data-products-center-control-receipt hidden aria-hidden="true"></output>
     </main>
 
     <footer class="products-footer"><span>Products · Diamond Gate Bridge</span></footer>
@@ -202,9 +184,7 @@
   <script defer src="/assets/audralia/audralia.planet.js"></script>
   <script defer src="/products/index.controller.js"></script>
   <script defer src="/products/index.cosmos.js"></script>
-  <script defer src="/products/index.planet.presentation.adapter.js"></script>
   <script defer src="/products/index.planet.js"></script>
   <script defer src="/products/index.crystals.js"></script>
-  <script defer src="/products/index.controller.center.js"></script>
 </body>
 </html>

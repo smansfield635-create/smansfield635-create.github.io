@@ -18,7 +18,7 @@ export const H_EARTH_RUN_8E_R3F2_P1_CONTRACT = freeze({
   contractId: H_EARTH_RUN_8E_R3F2_P1_CONTRACT_ID,
   checkpointId: 'RUN_8E_R3F2_P1',
   checkpointName: 'IMMUTABLE_PREVIEW_OCCURRENCE_CONTRACT',
-  currentStatus: 'CONTRACT_COMPLETE_PENDING_DURABLE_RECEIPT',
+  currentStatus: 'PASS_CLOSED',
   repository: 'smansfield635-create/smansfield635-create.github.io',
   branch: 'agent/h-earth-run8e-r3f2-p1-immutable-preview-occurrence-contract-001',
   baseBranch: 'agent/h-earth-run8e-r3f2-validated-package-baseline-001',
@@ -114,6 +114,15 @@ export const H_EARTH_RUN_8E_R3F2_P1_CONTRACT = freeze({
     deviceEvidenceSchemaComplete: true,
     mutableRuntimeDependencyCountAllowed: 0
   }),
+  closureEvidence: freeze({
+    coreCandidateHead: '01fb91cb37e77b8dc5938e1acdb7466163cbd4cf',
+    workflowRun: 30319469235,
+    workflowJob: 90152108696,
+    artifactId: 8673429708,
+    artifactDigest: 'sha256:ec20a320682c1d94d86d71eabc0ce0cdb202c1e5ce088aa0c17755d0e09b46c9',
+    passReceiptPath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p1.pass-closed.receipt.json',
+    passReceiptGitBlob: 'f2d4a9f86153912cbd68be8662873f77854107f4'
+  }),
   boundaries: freeze({
     previewFilesMaterialized: false,
     deploymentConfigurationCreated: false,
@@ -155,6 +164,13 @@ export function evaluateHEarthRun8ER3F2P1Contract(candidate = H_EARTH_RUN_8E_R3F
   if ((candidate?.visibleIdentityRequirements ?? []).length !== 6) issues.push('P1_VISIBLE_IDENTITY_REQUIREMENTS_INCOMPLETE');
   if ((candidate?.deviceEvidenceReceiptRequiredFields ?? []).length !== 23) issues.push('P1_DEVICE_RECEIPT_SCHEMA_INCOMPLETE');
   if (Object.values(candidate?.passCriteria ?? {}).some((value) => value !== true && value !== 0)) issues.push('P1_PASS_CRITERIA_INVALID');
+  if (candidate?.currentStatus === 'PASS_CLOSED') {
+    const closure = candidate?.closureEvidence ?? {};
+    if (closure.coreCandidateHead !== '01fb91cb37e77b8dc5938e1acdb7466163cbd4cf') issues.push('P1_CORE_HEAD_MISMATCH');
+    if (closure.workflowRun !== 30319469235 || closure.workflowJob !== 90152108696) issues.push('P1_CORE_WORKFLOW_IDENTITY_MISMATCH');
+    if (closure.artifactId !== 8673429708 || closure.artifactDigest !== 'sha256:ec20a320682c1d94d86d71eabc0ce0cdb202c1e5ce088aa0c17755d0e09b46c9') issues.push('P1_CORE_ARTIFACT_IDENTITY_MISMATCH');
+    if (closure.passReceiptPath !== '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p1.pass-closed.receipt.json' || closure.passReceiptGitBlob !== 'f2d4a9f86153912cbd68be8662873f77854107f4') issues.push('P1_PASS_RECEIPT_IDENTITY_MISMATCH');
+  }
   for (const [key, value] of Object.entries(candidate?.boundaries ?? {})) if (value !== false) issues.push(`P1_BOUNDARY_VIOLATION:${key}`);
   if (candidate?.nextCheckpoint !== 'RUN_8E_R3F2_P2_EXACT_PREVIEW_PACKAGE_MATERIALIZATION') issues.push('P1_NEXT_CHECKPOINT_INVALID');
   if (candidate?.stoppingBoundary !== 'STOP_BEFORE_PREVIEW_FILES_OR_DEPLOYMENT_CONFIGURATION') issues.push('P1_STOPPING_BOUNDARY_INVALID');

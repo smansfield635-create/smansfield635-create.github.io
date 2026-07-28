@@ -1,0 +1,81 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3F2_P3_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R3F2_P3_PASS_CLOSED",
+  "contractId": "H_EARTH_RUN_8E_R3F2_P3_NON_PRODUCTION_PUBLICATION_CONFIGURATION_v1",
+  "checkpointId": "RUN_8E_R3F2_P3",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3f2-p3-non-production-publication-configuration-001",
+  "baseExactHead": "75ecf5ad0b618318aea384c9422591425320de8f",
+  "predecessor": {
+    "checkpointId": "RUN_8E_R3F2_P2",
+    "status": "PASS_CLOSED",
+    "exactHead": "75ecf5ad0b618318aea384c9422591425320de8f",
+    "passReceiptGitBlob": "203f960330da70e2947082ac356586caa5e166f0"
+  },
+  "candidateIdentity": {
+    "candidateId": "H_EARTH_RUN8E_R3F2_CANDIDATE_SHA256_3020154361523CF19113E4C759C234A6C74FF5A493B8E47124CA59470DA7A234",
+    "packageHead": "fcdcb4e80a98a86773d5276447b880efde2099c9",
+    "packageSha256": "sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234",
+    "packageByteCount": 1213597,
+    "sourceHead": "548672ae99cd406805f0c8ca576cc650baf7ed18",
+    "publicHtmlGitBlob": "0daedf61f7e19af095f4db5fc47563a9cd786837",
+    "publicOrchestratorGitBlob": "2b0a916b3a6d11da84316925f8abd8a3a1447445"
+  },
+  "publicationConfiguration": {
+    "provider": "CLOUDFLARE_PAGES_DIRECT_UPLOAD",
+    "projectName": "h-earth-run8e-r3f2-preview-30201543",
+    "productionBranchSentinel": "production-disabled-r3f2",
+    "previewBranch": "r3f2-candidate-3020154361523cf1",
+    "publicationBranch": "agent/h-earth-run8e-r3f2-p4-immutable-preview-publication-001",
+    "publicationWorkflowPath": "/.github/workflows/h-earth-run8e-r3f2-p4-immutable-preview-publication.yml",
+    "workflowTrigger": "WORKFLOW_DISPATCH_ONLY",
+    "githubEnvironment": "h-earth-run8e-r3f2-preview-publication",
+    "uniqueDeploymentUrlRequired": true,
+    "branchAliasAcceptedAsEvidenceUrl": false,
+    "customDomainAttachmentAllowed": false,
+    "liveDomainRouteBindingAllowed": false,
+    "gitIntegrationAllowed": false
+  },
+  "deliveryConfiguration": {
+    "httpsRequired": true,
+    "cacheControl": "public, max-age=31536000, immutable",
+    "xRobotsTag": "noindex, nofollow, noarchive",
+    "xContentTypeOptions": "nosniff",
+    "referrerPolicy": "no-referrer",
+    "serviceWorkerAllowed": false,
+    "externalRuntimeRequestCountAllowed": 0,
+    "mutableMainDependencyCountAllowed": 0
+  },
+  "coreExecution": {
+    "head": "a31a059759e12a61959bf13b465f95bec92c9f9f",
+    "workflowRun": 30321900139,
+    "workflowJob": 90159329413,
+    "artifactId": 8674301060,
+    "artifactDigest": "sha256:11183c135cc498d762d0fbec25a9b69208b69e1034de1c8374481a1fbad75c0d",
+    "automaticRegistryPreflightRun": 30321900117,
+    "automaticRegistryPreflight": "PASS",
+    "artifactFetchback": "VERIFIED",
+    "passReceiptPresentDuringValidation": false
+  },
+  "boundaries": {
+    "previewFilesMaterialized": true,
+    "deploymentConfigurationCreated": true,
+    "pagesProjectCreated": false,
+    "networkPublicationPerformed": false,
+    "previewUrlIssued": false,
+    "hostedBrowserValidationPerformed": false,
+    "showroomMutated": false,
+    "publicLiveHEarthChanged": false,
+    "mainChanged": false,
+    "recoveryStackMerged": false,
+    "productionDeployment": false,
+    "customDomainBound": false,
+    "physicalReferenceDeviceExecuted": false,
+    "broaderMobileExecuted": false,
+    "run8EPassClosed": false
+  },
+  "nextCheckpoint": "RUN_8E_R3F2_P4_IMMUTABLE_PREVIEW_PUBLICATION_OCCURRENCE",
+  "stoppingBoundary": "STOP_BEFORE_FIRST_NETWORK_PUBLICATION",
+  "issues": []
+}

@@ -1,0 +1,149 @@
+name: H-Earth Run 8E R3F2-P4 Immutable Preview Publication
+
+on:
+  workflow_dispatch:
+    inputs:
+      authorization:
+        description: Exact P4 publication authorization literal
+        required: true
+        type: string
+      expected_p3_head:
+        description: Exact pass-closed P3 head
+        required: true
+        type: string
+      expected_p3_receipt_blob:
+        description: Exact P3 pass-receipt Git blob
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-run8e-r3f2-p4-first-publication
+  cancel-in-progress: false
+
+env:
+  PREVIEW_ROOT: preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234
+  STAGING_ROOT: /tmp/h-earth-run8e-r3f2-p4-pages-root
+  PROJECT_NAME: h-earth-run8e-r3f2-preview-30201543
+  PRODUCTION_BRANCH_SENTINEL: production-disabled-r3f2
+  PREVIEW_BRANCH: r3f2-candidate-3020154361523cf1
+  AUTHORIZED_BRANCH: agent/h-earth-run8e-r3f2-p4-immutable-preview-publication-001
+  AUTHORIZATION_LITERAL: RUN_8E_R3F2_P4_AUTHORIZE_FIRST_NETWORK_PUBLICATION
+  P3_RECEIPT_PATH: h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3.pass-closed.receipt.json
+
+jobs:
+  publish-immutable-preview:
+    if: github.ref_name == 'agent/h-earth-run8e-r3f2-p4-immutable-preview-publication-001'
+    runs-on: ubuntu-latest
+    environment: h-earth-run8e-r3f2-preview-publication
+    steps:
+      - name: Check out exact P4 event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify P3 custody and explicit P4 authorization
+        env:
+          AUTHORIZATION: ${{ inputs.authorization }}
+          EXPECTED_P3_HEAD: ${{ inputs.expected_p3_head }}
+          EXPECTED_P3_RECEIPT_BLOB: ${{ inputs.expected_p3_receipt_blob }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "$AUTHORIZED_BRANCH"
+          test "$AUTHORIZATION" = "$AUTHORIZATION_LITERAL"
+          test "${#EXPECTED_P3_HEAD}" -eq 40
+          test "${#EXPECTED_P3_RECEIPT_BLOB}" -eq 40
+          git cat-file -e "${EXPECTED_P3_HEAD}^{commit}"
+          git merge-base --is-ancestor "$EXPECTED_P3_HEAD" "$GITHUB_SHA"
+          actual_receipt_blob="$(git rev-parse "${EXPECTED_P3_HEAD}:${P3_RECEIPT_PATH}")"
+          test "$actual_receipt_blob" = "$EXPECTED_P3_RECEIPT_BLOB"
+          node -e "const r=require('./${P3_RECEIPT_PATH}'); if(r.eligible!==true||r.status!=='RUN_8E_R3F2_P3_PASS_CLOSED') process.exit(1)"
+
+      - name: Verify exact immutable source tree
+        run: |
+          set -euo pipefail
+          test "$(find "$PREVIEW_ROOT" -maxdepth 1 -type f | wc -l)" -eq 3
+          test "$(sha256sum "$PREVIEW_ROOT/index.html" | cut -d' ' -f1)" = "3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234"
+          test "$(git hash-object "$PREVIEW_ROOT/index.html")" = "c5127e2d4d9d3558230a8eccd757dade74d6d8c3"
+          test "$(sha256sum "$PREVIEW_ROOT/preview-manifest.json" | cut -d' ' -f1)" = "b77b3e88ef4868d0602468da90693c64c46b09442e1fe15013ed4dcf69156dd4"
+          test "$(git hash-object "$PREVIEW_ROOT/preview-manifest.json")" = "81dbbb97898023ae0dabea313ac69b865302d533"
+          test "$(sha256sum "$PREVIEW_ROOT/device-evidence-receipt.schema.json" | cut -d' ' -f1)" = "04ce5ec86f102fb7646b02ad19a3f862b8e6370dcdc971dc252d6bc607e3d18a"
+          test "$(git hash-object "$PREVIEW_ROOT/device-evidence-receipt.schema.json")" = "987268f38fc8b6db6f19b982cc8386439aa0de48"
+          if grep -Eiq 'navigator[.]serviceWorker|serviceWorker[.]register' "$PREVIEW_ROOT/index.html"; then
+            echo SERVICE_WORKER_DRIFT_DETECTED
+            exit 1
+          fi
+
+      - name: Build isolated Pages upload root
+        run: |
+          set -euo pipefail
+          rm -rf "$STAGING_ROOT"
+          mkdir -p "$STAGING_ROOT/$PREVIEW_ROOT"
+          cp "$PREVIEW_ROOT/index.html" "$STAGING_ROOT/$PREVIEW_ROOT/index.html"
+          cp "$PREVIEW_ROOT/preview-manifest.json" "$STAGING_ROOT/$PREVIEW_ROOT/preview-manifest.json"
+          cp "$PREVIEW_ROOT/device-evidence-receipt.schema.json" "$STAGING_ROOT/$PREVIEW_ROOT/device-evidence-receipt.schema.json"
+          cp h-earth-3d/deployment/run-8e-r3f2/h-earth.run8e-r3f2-p3.cloudflare-pages.headers.txt "$STAGING_ROOT/_headers"
+          test "$(find "$STAGING_ROOT/$PREVIEW_ROOT" -maxdepth 1 -type f | wc -l)" -eq 3
+          test ! -e "$STAGING_ROOT/_worker.js"
+          test ! -d "$STAGING_ROOT/functions"
+          test ! -e "$STAGING_ROOT/_redirects"
+
+      - name: Ensure isolated Pages project exists and deploy preview occurrence
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4'
+          preCommands: |
+            if ! wrangler pages project list --json | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const rows=JSON.parse(s);process.exit(rows.some(r=>r.name===process.env.PROJECT_NAME)?0:1)})"; then
+              wrangler pages project create "$PROJECT_NAME" --production-branch "$PRODUCTION_BRANCH_SENTINEL"
+            fi
+          command: >-
+            pages deploy ${{ env.STAGING_ROOT }}
+            --project-name=${{ env.PROJECT_NAME }}
+            --branch=${{ env.PREVIEW_BRANCH }}
+            --commit-hash=${{ github.sha }}
+            --commit-message=RUN_8E_R3F2_P4_IMMUTABLE_PREVIEW_PUBLICATION
+            --commit-dirty=false
+
+      - name: Record unique deployment occurrence
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+          DEPLOYMENT_ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+          DEPLOYMENT_ID: ${{ steps.deploy.outputs.pages-deployment-id }}
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOYMENT_URL"
+          test -n "$DEPLOYMENT_ID"
+          case "$DEPLOYMENT_URL" in https://*.pages.dev) ;; *) exit 1 ;; esac
+          test "$DEPLOYMENT_URL" != "$DEPLOYMENT_ALIAS_URL"
+          mkdir -p /tmp/h-earth-run8e-r3f2-p4
+          node <<'NODE'
+          const fs = require('fs');
+          const record = {
+            checkpointId: 'RUN_8E_R3F2_P4',
+            deploymentId: process.env.DEPLOYMENT_ID,
+            uniqueDeploymentOrigin: process.env.DEPLOYMENT_URL,
+            branchAliasOrigin: process.env.DEPLOYMENT_ALIAS_URL || null,
+            previewPath: '/preview/h-earth/run8e/r3f2/sha256-3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234/',
+            candidateSha256: 'sha256:3020154361523cf19113e4c759c234a6c74ff5a493b8e47124ca59470da7a234',
+            p4Head: process.env.GITHUB_SHA,
+            evidenceUrlClass: 'UNIQUE_ATOMIC_PAGES_DEPLOYMENT_URL',
+            branchAliasAcceptedAsEvidenceUrl: false,
+            productionDeployment: false,
+            customDomainBound: false
+          };
+          fs.writeFileSync('/tmp/h-earth-run8e-r3f2-p4/publication-occurrence.json', `${JSON.stringify(record, null, 2)}\n`);
+          NODE
+
+      - name: Upload publication occurrence evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p4-immutable-preview-publication-occurrence
+          path: /tmp/h-earth-run8e-r3f2-p4/publication-occurrence.json
+          if-no-files-found: error
+          retention-days: 90

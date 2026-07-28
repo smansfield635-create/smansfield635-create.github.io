@@ -1,15 +1,16 @@
 /* /products/index.planet.presentation.adapter.js
-   PRODUCTS_CENTER_PLANET_VISIBLE_PRESENTATION_HOTFIX_v1
-   Bounded presentation adapter: enlarges the actual center-planet projection and
-   suppresses only the planet halo pass. It does not alter the Products cluster,
-   its large orbital path, product geometry, controller, routes, or gestures.
+   PRODUCTS_CENTER_PLANET_VISIBLE_PRESENTATION_HOTFIX_v2
+   Bounded presentation adapter: enlarges the actual center-planet projection,
+   keeps it centered in its mount, and suppresses only the planet halo pass.
+   It does not alter the Products cluster, its large orbital path, product
+   geometry, controller, routes, or gestures.
 */
 (() => {
   "use strict";
 
   const MODULE = "DGB_PRODUCTS_CENTER_PLANET_PRESENTATION_ADAPTER";
   const PARTICIPANT_KEY = "DGB_LAWS_PLANET_WORLD_PARTICIPANT";
-  const SCALE = 2.15;
+  const SCALE = 1.75;
 
   if (globalThis[MODULE]?.initialized) return;
 
@@ -35,9 +36,11 @@
               ? options.projectionMatrix.slice()
               : options?.projectionMatrix;
 
-            if (Array.isArray(projectionMatrix) && projectionMatrix.length >= 6) {
+            if (Array.isArray(projectionMatrix) && projectionMatrix.length >= 10) {
               projectionMatrix[0] *= SCALE;
               projectionMatrix[5] *= SCALE;
+              projectionMatrix[8] = 0;
+              projectionMatrix[9] = 0;
               scaledSurfacePasses += 1;
             }
 
@@ -66,16 +69,18 @@
 
   globalThis[MODULE] = Object.freeze({
     initialized: true,
-    contract: "PRODUCTS_CENTER_PLANET_VISIBLE_PRESENTATION_HOTFIX_v1",
+    contract: "PRODUCTS_CENTER_PLANET_VISIBLE_PRESENTATION_HOTFIX_v2",
     renderedPlanetScale: SCALE,
+    projectionCentered: true,
     planetHaloPassSuppressed: true,
     largeProductsOrbitPreserved: true,
     ownsClusterGeometry: false,
     ownsProductGeometry: false,
     ownsNavigation: false,
     receipt: () => Object.freeze({
-      contract: "PRODUCTS_CENTER_PLANET_VISIBLE_PRESENTATION_HOTFIX_v1",
+      contract: "PRODUCTS_CENTER_PLANET_VISIBLE_PRESENTATION_HOTFIX_v2",
       renderedPlanetScale: SCALE,
+      projectionCentered: true,
       planetHaloPassSuppressed: true,
       largeProductsOrbitPreserved: true,
       suppressedHaloPasses,

@@ -24,10 +24,14 @@
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const digest = async (bytes) => `sha256:${Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))).map((v) => v.toString(16).padStart(2, '0')).join('')}`;
   const fileDigest = async (file) => file ? digest(await file.arrayBuffer()) : null;
+  const isCanvasElement = (value) => value?.nodeType === 1
+    && String(value?.localName ?? '').toLowerCase() === 'canvas'
+    && typeof value?.toDataURL === 'function'
+    && typeof value?.addEventListener === 'function';
   const canvasImage = () => {
     try {
       const canvas = frame.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
-      return canvas instanceof HTMLCanvasElement ? canvas.toDataURL('image/png') : null;
+      return isCanvasElement(canvas) ? canvas.toDataURL('image/png') : null;
     } catch { return null; }
   };
   const dataUrlDigest = async (url) => {
@@ -60,7 +64,8 @@
   }
   function instrument() {
     const canvas = frame.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
-    if (!(canvas instanceof HTMLCanvasElement)) throw new Error('R3F2_CANVAS_NOT_FOUND');
+    if (!isCanvasElement(canvas)) throw new Error('R3F2_CANVAS_NOT_FOUND');
+    canvas.dataset.r3f2EvidenceInstrumented = 'true';
     for (const type of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) {
       canvas.addEventListener(type, (event) => {
         state.events.push({ type, pointerType: event.pointerType, pointerId: event.pointerId, epochMs: Date.now(), monotonicMs: performance.now(), x: event.clientX, y: event.clientY });

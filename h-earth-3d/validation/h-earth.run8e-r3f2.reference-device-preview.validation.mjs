@@ -69,6 +69,12 @@ async function inspectPackage(page, url, evidenceClass, screenshotName) {
   await page.fill('#attestation', 'Supplemental signed-offline package validation only; not physical acceptance.');
   await page.click('#startButton');
   await page.waitForFunction(() => document.getElementById('routeFrame')?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 60000 });
+  await page.waitForFunction(() => {
+    const notice = document.getElementById('phaseNotice')?.textContent ?? '';
+    return notice.startsWith('Physical session active')
+      || notice.startsWith('Ten-minute minimum complete')
+      || notice.startsWith('Instrumentation failed:');
+  }, null, { timeout: 30000 });
   const result = await page.evaluate(() => {
     const frame = document.getElementById('routeFrame');
     const api = frame?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE;
@@ -77,7 +83,11 @@ async function inspectPackage(page, url, evidenceClass, screenshotName) {
     return {
       routeApiReady: api?.ready === true,
       sameOriginAccess: Boolean(frame?.contentDocument && api),
-      launcherInstrumentationReady: canvas?.tagName === 'CANVAS' && Boolean(receipt?.intake && receipt?.liveGpu),
+      launcherInstrumentationReady: canvas?.tagName === 'CANVAS'
+        && canvas?.dataset?.r3f2EvidenceInstrumented === 'true'
+        && Boolean(receipt?.intake && receipt?.liveGpu),
+      instrumentationMarker: canvas?.dataset?.r3f2EvidenceInstrumented === 'true',
+      phaseNotice: document.getElementById('phaseNotice')?.textContent ?? null,
       routeIntegrationId: api?.integrationId ?? null,
       initialAcceptedProposalCount: receipt?.intake?.counters?.acceptedNavigationProposalCount ?? null,
       initialVisibleFrameCount: receipt?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? null,
@@ -90,6 +100,9 @@ async function inspectPackage(page, url, evidenceClass, screenshotName) {
   assert(result.routeApiReady === true, `R3F2_${evidenceClass}_ROUTE_API_NOT_READY`);
   assert(result.sameOriginAccess === true, `R3F2_${evidenceClass}_SAME_ORIGIN_ACCESS_FAILED`);
   assert(result.launcherInstrumentationReady === true, `R3F2_${evidenceClass}_INSTRUMENTATION_NOT_READY`);
+  assert(result.instrumentationMarker === true, `R3F2_${evidenceClass}_INSTRUMENTATION_MARKER_MISSING`);
+  assert(!result.phaseNotice?.startsWith('Instrumentation failed:'), `R3F2_${evidenceClass}_INSTRUMENTATION_FAILED:${result.phaseNotice}`);
+  assert(result.phaseNotice?.startsWith('Physical session active') || result.phaseNotice?.startsWith('Ten-minute minimum complete'), `R3F2_${evidenceClass}_PHASE_NOTICE_INVALID:${result.phaseNotice}`);
   assert(result.activeWebGL2ContextCount === 1, `R3F2_${evidenceClass}_WEBGL2_CONTEXT_COUNT_INVALID`);
   assert(result.packageClass === 'SIGNED_OFFLINE_PACKAGE' && result.packageHead === previewHead, `R3F2_${evidenceClass}_PACKAGE_IDENTITY_INVALID`);
   assert(result.webCryptoAvailable === true, `R3F2_${evidenceClass}_WEB_CRYPTO_UNAVAILABLE`);

@@ -14,6 +14,7 @@
   <title>Products · Diamond Gate Bridge</title>
   <meta name="description" content="Explore six Diamond Gate Bridge product systems through one navigable Arena Cluster.">
   <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/assets/compass/upstream-compass.css">
   <link rel="stylesheet" href="/products/index.css">
   <link rel="stylesheet" href="/products/index.arena.css">
 </head>
@@ -77,7 +78,7 @@
           <div class="products-header__legend" aria-label="Arena orientation">
             <span>Six product stars</span>
             <span>Drag to rotate</span>
-            <span>Center world opens return options</span>
+            <span>Main Compass remains fixed at center</span>
           </div>
         </header>
 
@@ -86,29 +87,41 @@
             <div class="products-cosmic-field" data-products-cosmic-field aria-hidden="true"></div>
 
             <div
-              class="products-planet-mount"
-              data-products-planet-mount
-              data-products-planet-world-position="0,0,0"
-              data-products-planet-product-member="false"
-              data-products-planet-label-member="false"
-              data-products-planet-settlement-member="false"
-              data-products-planet-navigation-authority="false"
-              aria-hidden="true"
-            ></div>
-
-            <button
-              type="button"
-              class="products-center-control"
-              data-products-center-control
-              data-products-center-route="/"
-              data-products-center-role="MAIN_COMPASS_RETURN_DISCLOSURE"
-              aria-label="Open Main Compass return option"
-              aria-controls="products-context"
-              aria-expanded="false"
-              hidden
+              class="products-compass-layer"
+              data-products-compass-layer
+              data-products-center-layer
             >
-              <span class="products-center-control__label">Main Compass options</span>
-            </button>
+              <div
+                class="products-compass-mount products-planet-mount"
+                data-upstream-compass-mount
+                data-products-compass-visual-mount
+                data-products-planet-mount
+                data-products-compass-visual-only="true"
+                data-products-compass-pointer-authority="false"
+                data-products-planet-world-position="0,0,0"
+                data-products-planet-product-member="false"
+                data-products-planet-label-member="false"
+                data-products-planet-settlement-member="false"
+                data-products-planet-navigation-authority="false"
+                aria-hidden="true"
+              ></div>
+
+              <button
+                type="button"
+                class="products-compass-control"
+                data-upstream-compass-control
+                data-products-center-control
+                data-products-center-route="/"
+                data-products-center-role="MAIN_COMPASS_RETURN_DISCLOSURE"
+                data-fixed-center="true"
+                aria-label="Select Main Compass return option"
+                aria-controls="products-context"
+                aria-expanded="false"
+                hidden
+              >
+                <span class="products-compass-control__label">Main Compass return</span>
+              </button>
+            </div>
 
             <div class="products-semantic" data-products-semantic aria-label="Enhanced Products semantic controls">
               <button

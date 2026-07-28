@@ -59,8 +59,8 @@
   const CENTER_CONTINUITY = Object.freeze({
     route: "/",
     allowedStates: Object.freeze([STATES.CLUSTER_OPEN, STATES.PRODUCT_SELECTED]),
-    doubleTapWindowMs: 300,
-    tapMaximumMovementPx: 10
+    immediateNavigation: false,
+    explicitReturnRequired: true
   });
 
   const TRANSITIONS = Object.freeze({
@@ -248,9 +248,6 @@
     centerControl: null,
     returnMainCompass: null,
     centerDisclosureOpen: false,
-    centerLastTapAt: 0,
-    centerPointer: null,
-    centerSuppressClickUntil: 0,
     guidance: null,
     controllerReceiptOutput: null,
     current: STATES.PRIMARY_ENTRY,
@@ -1641,139 +1638,74 @@
     state.centerControl.tabIndex = available ? 0 : -1;
 
     if (!available) {
-      state.centerLastTapAt = 0;
-      state.centerPointer = null;
       setCenterDisclosure(false);
     }
 
     return available;
   }
 
-  function navigateToMainCompass(event, action) {
+  function requestCompassSelection(event) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
 
-    if (!centerStateAllowed()) {
+    if (!centerStateAllowed() || state.current === STATES.HELD) {
+      return false;
+    }
+
+    clearViewportSchedules();
+    setCenterDisclosure(true);
+
+    emitReceipt({
+      lastAction: "compass-selected-local",
+      lastFailure: null,
+      selectedDestinationType: "home-compass",
+      selectedDestinationId: "main-compass",
+      selectedDestinationLabel: "Main Compass",
+      selectedRoute: CENTER_CONTINUITY.route,
+      immediateNavigation: false,
+      explicitReturnRequired: true
+    });
+
+    if (state.previewPanel) {
+      state.previewPanel.scrollIntoView({
+        behavior: state.reducedMotion ? "auto" : "smooth",
+        block: "start",
+        inline: "nearest"
+      });
+    }
+
+    return true;
+  }
+
+  function requestReturnToMainCompass(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    if (
+      !centerStateAllowed() ||
+      !state.centerDisclosureOpen ||
+      state.current === STATES.HELD
+    ) {
       return false;
     }
 
     emitReceipt({
-      lastAction: action,
+      lastAction: "main-compass-return-confirmed",
       lastFailure: null,
       returnRoute: CENTER_CONTINUITY.route
     });
+
     globalThis.location.assign(CENTER_CONTINUITY.route);
     return true;
   }
 
-  function activateCenterDisclosure(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    if (!centerStateAllowed()) {
-      return false;
-    }
-
-    setCenterDisclosure(!state.centerDisclosureOpen);
-    emitReceipt({
-      lastAction: state.centerDisclosureOpen
-        ? "center-disclosure-opened"
-        : "center-disclosure-closed",
-      lastFailure: null
-    });
-    return true;
-  }
-
-  function resetCenterPointer() {
-    if (
-      state.centerPointer &&
-      state.centerControl?.hasPointerCapture?.(state.centerPointer.id)
-    ) {
-      try {
-        state.centerControl.releasePointerCapture(state.centerPointer.id);
-      } catch (_) {}
-    }
-    state.centerPointer = null;
-  }
-
-  function onCenterPointerDown(event) {
-    if (!centerStateAllowed()) return;
-    state.centerPointer = {
-      id: event.pointerId,
-      x: event.clientX,
-      y: event.clientY,
-      moved: false
-    };
-    try {
-      state.centerControl.setPointerCapture(event.pointerId);
-    } catch (_) {}
-  }
-
-  function onCenterPointerMove(event) {
-    if (!state.centerPointer || event.pointerId !== state.centerPointer.id) return;
-    const distance = Math.hypot(
-      event.clientX - state.centerPointer.x,
-      event.clientY - state.centerPointer.y
-    );
-    if (distance > CENTER_CONTINUITY.tapMaximumMovementPx) {
-      state.centerPointer.moved = true;
-      state.centerLastTapAt = 0;
-    }
-  }
-
-  function onCenterPointerCancel(event) {
-    if (!state.centerPointer || event.pointerId !== state.centerPointer.id) return;
-    state.centerLastTapAt = 0;
-    resetCenterPointer();
-  }
-
-  function onCenterPointerUp(event) {
-    if (!state.centerPointer || event.pointerId !== state.centerPointer.id) return;
-    const moved = state.centerPointer.moved;
-    resetCenterPointer();
-    if (moved) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-    state.centerSuppressClickUntil = performance.now() + 500;
-
-    const now = performance.now();
-    const doubleTap =
-      state.centerLastTapAt > 0 &&
-      now - state.centerLastTapAt <= CENTER_CONTINUITY.doubleTapWindowMs;
-
-    if (doubleTap) {
-      state.centerLastTapAt = 0;
-      navigateToMainCompass(event, "double-tap-main-compass-navigation-requested");
-      return;
-    }
-
-    state.centerLastTapAt = now;
-    activateCenterDisclosure(event);
-  }
-
-  function onCenterClick(event) {
-    if (performance.now() < state.centerSuppressClickUntil) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
-    activateCenterDisclosure(event);
-  }
-
   function bindCenterControls() {
-    state.centerControl.addEventListener("pointerdown", onCenterPointerDown);
-    state.centerControl.addEventListener("pointermove", onCenterPointerMove);
-    state.centerControl.addEventListener("pointerup", onCenterPointerUp);
-    state.centerControl.addEventListener("pointercancel", onCenterPointerCancel);
-    state.centerControl.addEventListener("click", onCenterClick);
-    state.returnMainCompass.addEventListener("click", event => {
-      navigateToMainCompass(event, "explicit-main-compass-navigation-requested");
-    });
+    state.centerControl.addEventListener("click", requestCompassSelection);
+    state.returnMainCompass.addEventListener("click", requestReturnToMainCompass);
   }
 
   function handleSemanticClick(event) {
@@ -2019,6 +1951,8 @@
       requestReturnToConstellation,
       requestPrimaryProductsSelection,
       requestProductSelection,
+      requestCompassSelection,
+      requestReturnToMainCompass,
 
       /* DOM-facing extensions outside the frozen renderer-facing grammar. */
       requestReturnToOrbit,

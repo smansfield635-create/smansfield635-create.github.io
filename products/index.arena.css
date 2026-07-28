@@ -1,10 +1,11 @@
 /* /products/index.arena.css
-   PRODUCTS_ARENA_CLUSTER_PRESENTATION_TRANSPLANT_v2
-   Page-local layer, accepted center-world, Main-Compass-derived one-label,
+   PRODUCTS_ARENA_CLUSTER_PRESENTATION_CONTINUITY_v3
+   Page-local center-world continuity, Main-Compass-derived one-label,
    and responsive Arena authority.
-*/
+ */
 
 .products-scene[data-products-scene] {
+  --products-center-size: clamp(4.5rem, 9vw, 7rem);
   isolation: isolate;
   overflow: hidden;
   touch-action: none;
@@ -57,12 +58,12 @@
   left: 50%;
   top: 50%;
   z-index: 4;
-  width: clamp(2.25rem, 5vw, 3.75rem);
+  width: var(--products-center-size);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   pointer-events: none;
-  filter: drop-shadow(0 0 1.1rem rgba(91, 196, 255, .36));
+  filter: drop-shadow(0 0 1.25rem rgba(91, 196, 255, .4));
 }
 
 .products-planet-mount canvas[data-products-planet-canvas] {
@@ -83,14 +84,14 @@
   left: 50%;
   top: 50%;
   z-index: 8;
-  width: clamp(4.8rem, 13vw, 6.8rem);
+  width: var(--products-center-size);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   cursor: pointer;
   background: transparent;
   color: transparent;
-  touch-action: manipulation;
+  touch-action: none;
 }
 
 .products-center-control:not([hidden]) {
@@ -101,16 +102,25 @@
 .products-center-control::after {
   content: "";
   position: absolute;
-  inset: -8px;
+  inset: .18rem;
   border-radius: 50%;
   border: 1px solid transparent;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  transition: border-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+  opacity: 0;
 }
 
-.products-center-control:hover::after,
 .products-center-control:focus-visible::after {
-  border-color: rgba(255, 232, 163, .72);
-  box-shadow: 0 0 1.1rem rgba(243, 200, 111, .38);
+  border-color: rgba(255, 232, 163, .82);
+  box-shadow: 0 0 .65rem rgba(243, 200, 111, .32);
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .products-center-control:hover::after {
+    border-color: rgba(141, 216, 255, .34);
+    box-shadow: 0 0 .5rem rgba(91, 196, 255, .22);
+    opacity: 1;
+  }
 }
 
 .products-center-control__label {
@@ -134,7 +144,8 @@
 }
 
 .products-center-control:hover .products-center-control__label,
-.products-center-control:focus-visible .products-center-control__label {
+.products-center-control:focus-visible .products-center-control__label,
+.products-center-control[aria-expanded="true"] .products-center-control__label {
   opacity: 1;
 }
 
@@ -221,6 +232,25 @@
     box-shadow 180ms ease;
 }
 
+.products-action--main-compass {
+  border-color: rgba(243, 200, 111, .48);
+  color: rgba(255, 248, 224, .98);
+  background:
+    linear-gradient(135deg, rgba(94, 68, 24, .72), rgba(15, 34, 48, .82));
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, .28),
+    0 0 18px rgba(243, 200, 111, .1);
+}
+
+.products-action--main-compass:hover,
+.products-action--main-compass:focus-visible {
+  border-color: rgba(255, 232, 163, .78);
+}
+
+.products-page[data-products-center-disclosure="open"] .products-context {
+  border-color: rgba(243, 200, 111, .28);
+}
+
 .products-page[data-products-state="PRIMARY_ENTRY"] .products-planet-mount,
 .products-page[data-products-state="PRIMARY_ENTRY"] .products-center-control,
 .products-page[data-products-state="HELD"] .products-planet-mount,
@@ -239,6 +269,10 @@
 }
 
 @media (max-width: 820px) {
+  .products-scene[data-products-scene] {
+    --products-center-size: clamp(4.25rem, 18vw, 5.5rem);
+  }
+
   .products-semantic
   [data-products-product][data-primary="true"]
   > .products-star__label {
@@ -251,14 +285,6 @@
 }
 
 @media (max-width: 560px) {
-  .products-planet-mount {
-    width: 2.25rem;
-  }
-
-  .products-center-control {
-    width: 5.3rem;
-  }
-
   .products-center-control__label {
     display: none;
   }

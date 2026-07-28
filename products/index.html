@@ -64,6 +64,7 @@
       data-products-planet-status="pending"
       data-products-cosmos-status="pending"
       data-products-center-control-status="pending"
+      data-products-center-disclosure="closed"
       data-products-first-view="integrated-arena"
       data-visual-pass-claimed="false"
     >
@@ -78,7 +79,7 @@
           <div class="products-header__legend" aria-label="Arena orientation">
             <span>Six product stars</span>
             <span>Drag to rotate</span>
-            <span>Center world returns home</span>
+            <span>Center world opens return options</span>
           </div>
         </header>
 
@@ -102,11 +103,13 @@
               class="products-center-control"
               data-products-center-control
               data-products-center-route="/"
-              data-products-center-role="MAIN_COMPASS_RETURN"
-              aria-label="Return to the Main Compass"
+              data-products-center-role="MAIN_COMPASS_RETURN_DISCLOSURE"
+              aria-label="Open Main Compass return option"
+              aria-controls="products-context"
+              aria-expanded="false"
               hidden
             >
-              <span class="products-center-control__label">Main Compass</span>
+              <span class="products-center-control__label">Main Compass options</span>
             </button>
 
             <div class="products-semantic" data-products-semantic aria-label="Enhanced Products semantic controls">
@@ -145,7 +148,7 @@
           </section>
         </div>
 
-        <aside class="products-context" aria-label="Current product context">
+        <aside id="products-context" class="products-context" aria-label="Current product context">
           <p class="products-guidance" data-products-guidance>Select PRODUCTS to open the cluster.</p>
 
           <section class="products-preview" data-products-preview-panel aria-labelledby="products-preview-title">
@@ -157,6 +160,7 @@
               <a class="products-action products-action--primary" data-products-enter aria-disabled="true" tabindex="-1">Enter Product</a>
               <button type="button" class="products-action" data-products-return-to-orbit hidden aria-hidden="true" aria-disabled="true" tabindex="-1">Return to Orbit</button>
               <button type="button" class="products-action" data-products-return-to-constellation hidden aria-hidden="true" aria-disabled="true" tabindex="-1">Return to Constellation</button>
+              <a class="products-action products-action--main-compass" href="/" data-products-return-main-compass hidden aria-hidden="true" tabindex="-1">Return to Main Compass</a>
             </div>
           </section>
         </aside>

@@ -1,33 +1,29 @@
 (() => {
   'use strict';
 
+  const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
   const SOURCE_HEAD = '548672ae99cd406805f0c8ca576cc650baf7ed18';
   const PUBLIC_HTML_BLOB = '0daedf61f7e19af095f4db5fc47563a9cd786837';
   const PUBLIC_ORCHESTRATOR_BLOB = '2b0a916b3a6d11da84316925f8abd8a3a1447445';
-  const ROUTE_URL = `https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/${SOURCE_HEAD}/showroom/globe/h-earth/index.html`;
   const MINIMUM_DURATION_MS = 600000;
   const MAXIMUM_RESPONSE_MS = 2000;
   const byId = (id) => document.getElementById(id);
+
+  function hostedUrl(host, revision, repositoryPath) {
+    const origin = `${location.protocol}//${host}`;
+    if (host === 'cdn.statically.io') return `${origin}/gh/${REPOSITORY}/${revision}/${repositoryPath}`;
+    if (host === 'cdn.jsdelivr.net') return `${origin}/gh/${REPOSITORY}@${revision}/${repositoryPath}`;
+    return `${origin}/${REPOSITORY}/${revision}/${repositoryPath}`;
+  }
+
+  const SELECTED_HOST = location.hostname;
+  const ROUTE_URL = hostedUrl(SELECTED_HOST, SOURCE_HEAD, 'showroom/globe/h-earth/index.html');
   const state = {
-    startedAtEpoch: null,
-    startedAtMonotonic: null,
-    endedAtEpoch: null,
-    endedAtMonotonic: null,
-    initialReceipt: null,
-    finalReceipt: null,
-    initialCanvas: null,
-    finalCanvas: null,
-    eventTrace: [],
-    proposalTrace: [],
-    orientationEvents: [],
-    visibilityEvents: [],
-    observedOrientations: new Set(),
-    observedHidden: false,
-    observedReturn: false,
-    maximumResponseMs: 0,
-    lastProposalSequence: 0,
-    sessionComplete: false,
-    evidence: null
+    startedAtEpoch: null, startedAtMonotonic: null, endedAtEpoch: null, endedAtMonotonic: null,
+    initialReceipt: null, finalReceipt: null, initialCanvas: null, finalCanvas: null,
+    eventTrace: [], proposalTrace: [], orientationEvents: [], visibilityEvents: [],
+    observedOrientations: new Set(), observedHidden: false, observedReturn: false,
+    maximumResponseMs: 0, lastProposalSequence: 0, sessionComplete: false, evidence: null
   };
 
   const setup = byId('setup');
@@ -47,22 +43,20 @@
   const fileDigest = async (file) => file ? `sha256:${await sha256Hex(await file.arrayBuffer())}` : null;
   const dataUrlDigest = async (dataUrl) => {
     if (!dataUrl) return null;
-    const encoded = dataUrl.split(',')[1] || '';
-    const bytes = Uint8Array.from(atob(encoded), (character) => character.charCodeAt(0));
+    const bytes = Uint8Array.from(atob(dataUrl.split(',')[1] || ''), (character) => character.charCodeAt(0));
     return `sha256:${await sha256Hex(bytes.buffer)}`;
   };
-  const previewHead = () => location.pathname.match(/\/([0-9a-f]{40})\//i)?.[1]
+  const previewHead = () => location.pathname.match(/@([0-9a-f]{40})\//i)?.[1]
+    ?? location.pathname.match(/\/([0-9a-f]{40})\//i)?.[1]
     ?? new URLSearchParams(location.search).get('previewHead');
-  const packageDescriptor = () => `${previewHead() ?? 'UNRESOLVED'}|${SOURCE_HEAD}|${PUBLIC_HTML_BLOB}|${PUBLIC_ORCHESTRATOR_BLOB}`;
+  const packageDescriptor = () => `${SELECTED_HOST}|${previewHead() ?? 'UNRESOLVED'}|${SOURCE_HEAD}|${PUBLIC_HTML_BLOB}|${PUBLIC_ORCHESTRATOR_BLOB}`;
   const currentApi = () => frame.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE ?? null;
   const snapshot = () => currentApi()?.getSnapshot?.() ?? null;
   const captureCanvas = () => {
     try {
       const canvas = frame.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
       return canvas instanceof HTMLCanvasElement ? canvas.toDataURL('image/png') : null;
-    } catch {
-      return null;
-    }
+    } catch { return null; }
   };
 
   function recordOrientation(reason) {
@@ -70,13 +64,11 @@
     state.observedOrientations.add(orientation);
     state.orientationEvents.push({ reason, orientation, epochMs: Date.now(), monotonicMs: performance.now(), width: innerWidth, height: innerHeight });
   }
-
   function recordVisibility() {
     state.visibilityEvents.push({ visibilityState: document.visibilityState, epochMs: Date.now(), monotonicMs: performance.now() });
     if (document.visibilityState === 'hidden') state.observedHidden = true;
     if (document.visibilityState === 'visible' && state.observedHidden) state.observedReturn = true;
   }
-
   function readProposalProgress(eventType, event) {
     const receipt = snapshot();
     if (!receipt) return;
@@ -88,34 +80,16 @@
     const responseMs = delta >= 0 && delta < 60000 ? delta : 0;
     for (const proposal of proposals.filter((item) => item.sequence > state.lastProposalSequence)) {
       state.maximumResponseMs = Math.max(state.maximumResponseMs, responseMs);
-      state.proposalTrace.push({
-        capturedAtEpochMs: Date.now(),
-        capturedAtMonotonicMs: now,
-        eventType,
-        proposal,
-        acceptedProposalCount: acceptedCount,
-        visibleFrameCount,
-        estimatedInputToVisibleResponseMs: responseMs
-      });
+      state.proposalTrace.push({ capturedAtEpochMs: Date.now(), capturedAtMonotonicMs: now, eventType, proposal, acceptedProposalCount: acceptedCount, visibleFrameCount, estimatedInputToVisibleResponseMs: responseMs });
       state.lastProposalSequence = Math.max(state.lastProposalSequence, proposal.sequence);
     }
   }
-
   function attachRouteInstrumentation() {
     const canvas = frame.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
     if (!(canvas instanceof HTMLCanvasElement)) throw new Error('R3F2_CANVAS_NOT_FOUND');
-    for (const type of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) {
+    for (const type of ['pointerdown','pointermove','pointerup','pointercancel']) {
       canvas.addEventListener(type, (event) => {
-        state.eventTrace.push({
-          type,
-          pointerType: event.pointerType,
-          pointerId: event.pointerId,
-          epochMs: Date.now(),
-          monotonicMs: performance.now(),
-          eventTimeStamp: event.timeStamp,
-          x: event.clientX,
-          y: event.clientY
-        });
+        state.eventTrace.push({ type, pointerType: event.pointerType, pointerId: event.pointerId, epochMs: Date.now(), monotonicMs: performance.now(), eventTimeStamp: event.timeStamp, x: event.clientX, y: event.clientY });
         queueMicrotask(() => readProposalProgress(type, event));
       }, { passive: true });
     }
@@ -123,11 +97,9 @@
     state.lastProposalSequence = state.initialReceipt?.intake?.counters?.navigationProposalCount ?? 0;
     state.initialCanvas = captureCanvas();
   }
-
   function updateNotice() {
     if (!state.startedAtMonotonic || state.sessionComplete) return;
-    const elapsed = performance.now() - state.startedAtMonotonic;
-    const remaining = Math.max(0, MINIMUM_DURATION_MS - elapsed);
+    const remaining = Math.max(0, MINIMUM_DURATION_MS - (performance.now() - state.startedAtMonotonic));
     const minutes = Math.floor(remaining / 60000);
     const seconds = Math.floor((remaining % 60000) / 1000);
     notice.textContent = remaining > 0
@@ -182,6 +154,7 @@
     const duration = state.endedAtMonotonic - state.startedAtMonotonic;
     metrics.innerHTML = [
       ['Duration', `${Math.round(duration / 1000)} seconds`],
+      ['Host', SELECTED_HOST],
       ['Orientations', [...state.observedOrientations].join(', ') || 'none'],
       ['Background return', String(state.observedReturn)],
       ['Accepted proposals', String(state.finalReceipt?.intake?.counters?.acceptedNavigationProposalCount ?? 0)],
@@ -205,17 +178,13 @@
     const duration = state.endedAtMonotonic - state.startedAtMonotonic;
     const interactionResults = {
       oneFingerLook: state.proposalTrace.some((entry) => entry.proposal?.inputClass === 'ONE_FINGER_LOOK'),
-      twoFingerForwardTravel: actions.has('MOVE_FORWARD'),
-      twoFingerBackwardTravel: actions.has('MOVE_BACKWARD'),
-      pinchZoomIn: actions.has('ZOOM_IN'),
-      pinchZoomOut: actions.has('ZOOM_OUT'),
+      twoFingerForwardTravel: actions.has('MOVE_FORWARD'), twoFingerBackwardTravel: actions.has('MOVE_BACKWARD'),
+      pinchZoomIn: actions.has('ZOOM_IN'), pinchZoomOut: actions.has('ZOOM_OUT'),
       immediatePerspectiveFeedback: state.maximumResponseMs < MAXIMUM_RESPONSE_MS,
       continuousDirectInspection: duration >= MINIMUM_DURATION_MS,
       realTimeGpuPresentation: (finalLive.counters?.gpuFramebufferPresentationCount ?? 0) > (state.initialReceipt?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? 0),
-      portrait: state.observedOrientations.has('PORTRAIT'),
-      landscape: state.observedOrientations.has('LANDSCAPE'),
-      orientationTransition: state.observedOrientations.size >= 2,
-      backgroundReturn: state.observedReturn,
+      portrait: state.observedOrientations.has('PORTRAIT'), landscape: state.observedOrientations.has('LANDSCAPE'),
+      orientationTransition: state.observedOrientations.size >= 2, backgroundReturn: state.observedReturn,
       noVisibleController: frame.contentDocument?.querySelectorAll('[data-navigation-controller],.joystick,.virtual-stick,.mobile-controller').length === 0,
       noFlatBitmapDragging: runtime.cssBitmapPreview === false,
       noWorldRebuildDuringGesture: runtime.cpuWorldRebuildPerCameraChange === false,
@@ -224,43 +193,21 @@
     const evidenceId = `H_EARTH_R3F2_REFERENCE_ANDROID_${new Date(state.startedAtEpoch).toISOString().replace(/[:.]/g, '-')}`;
     const descriptorBytes = new TextEncoder().encode(packageDescriptor());
     state.evidence = {
-      evidenceId,
-      capturedAt: new Date(state.endedAtEpoch).toISOString(),
-      deviceLaneId: 'R3F_REFERENCE_ANDROID_PHYSICAL',
-      physicalityClass: 'PHYSICAL_LOCAL',
-      deviceModelOrRedactedClass: byId('deviceModel').value.trim(),
-      operatingSystemFamily: /Android/i.test(navigator.userAgent) ? 'ANDROID' : 'UNKNOWN',
-      operatingSystemVersion: navigator.userAgent.match(/Android\s([^;]+)/i)?.[1] ?? null,
-      browserClass: 'ANDROID_CHROMIUM',
+      evidenceId, capturedAt: new Date(state.endedAtEpoch).toISOString(), deviceLaneId: 'R3F_REFERENCE_ANDROID_PHYSICAL', physicalityClass: 'PHYSICAL_LOCAL',
+      deviceModelOrRedactedClass: byId('deviceModel').value.trim(), operatingSystemFamily: /Android/i.test(navigator.userAgent) ? 'ANDROID' : 'UNKNOWN',
+      operatingSystemVersion: navigator.userAgent.match(/Android\s([^;]+)/i)?.[1] ?? null, browserClass: 'ANDROID_CHROMIUM',
       browserVersion: navigator.userAgent.match(/Chrome\/(\d+(?:\.\d+)*)/i)?.[1] ?? null,
-      viewportCssPixels: { width: innerWidth, height: innerHeight },
-      devicePixelRatio,
-      orientation: [...state.observedOrientations],
-      previewTransportClass: 'IMMUTABLE_HOSTED_PREVIEW',
-      previewPackageSha256: `sha256:${await sha256Hex(descriptorBytes)}`,
-      previewPackageHead: previewHead(),
-      previewLauncherUrl: location.href,
-      immutableRouteUrl: ROUTE_URL,
-      sourceHead: SOURCE_HEAD,
-      publicHtmlGitBlob: PUBLIC_HTML_BLOB,
-      publicOrchestratorGitBlob: PUBLIC_ORCHESTRATOR_BLOB,
+      viewportCssPixels: { width: innerWidth, height: innerHeight }, devicePixelRatio, orientation: [...state.observedOrientations],
+      previewTransportClass: 'IMMUTABLE_HOSTED_PREVIEW', selectedPreviewHost: SELECTED_HOST,
+      previewPackageSha256: `sha256:${await sha256Hex(descriptorBytes)}`, previewPackageHead: previewHead(), previewLauncherUrl: location.href,
+      immutableRouteUrl: ROUTE_URL, sourceHead: SOURCE_HEAD, publicHtmlGitBlob: PUBLIC_HTML_BLOB, publicOrchestratorGitBlob: PUBLIC_ORCHESTRATOR_BLOB,
       interactionResults,
-      timingResults: {
-        maximumObservedInputToVisibleResponseMs: state.maximumResponseMs,
-        maximumObservedFrozenPresentationMs: state.maximumResponseMs,
-        obsoleteInputBacklogObserved: state.maximumResponseMs >= MAXIMUM_RESPONSE_MS,
-        continuousInteractionDurationMs: duration,
-        timingMethod: 'INSTRUMENTED_TRACE_WITH_MONOTONIC_TIMESTAMPS'
-      },
+      timingResults: { maximumObservedInputToVisibleResponseMs: state.maximumResponseMs, maximumObservedFrozenPresentationMs: state.maximumResponseMs, obsoleteInputBacklogObserved: state.maximumResponseMs >= MAXIMUM_RESPONSE_MS, continuousInteractionDurationMs: duration, timingMethod: 'INSTRUMENTED_TRACE_WITH_MONOTONIC_TIMESTAMPS' },
       runtimeExclusivityResults: {
-        activeWebGL2ContextCount: runtime.activeWebGL2ContextCount ?? null,
-        activePersistentRendererCount: runtime.activePersistentRendererCount ?? null,
-        activeNavigationStreamCount: runtime.activeNavigationStateStreamCount ?? null,
-        activePointerTouchIntakeCount: runtime.activePointerTouchIntakeCount ?? null,
-        activeFramePresentationAuthorityCount: runtime.activeFramePresentationAuthorityCount ?? null,
-        canvas2DContextCount: finalLive.resources?.counters?.canvas2DContextCount ?? 0,
-        legacyModuleRequestCount: runtime.legacyModuleScriptCount ?? 0,
-        duplicateInputListenerCount: runtime.duplicatePointerListeners ? 1 : 0,
+        activeWebGL2ContextCount: runtime.activeWebGL2ContextCount ?? null, activePersistentRendererCount: runtime.activePersistentRendererCount ?? null,
+        activeNavigationStreamCount: runtime.activeNavigationStateStreamCount ?? null, activePointerTouchIntakeCount: runtime.activePointerTouchIntakeCount ?? null,
+        activeFramePresentationAuthorityCount: runtime.activeFramePresentationAuthorityCount ?? null, canvas2DContextCount: finalLive.resources?.counters?.canvas2DContextCount ?? 0,
+        legacyModuleRequestCount: runtime.legacyModuleScriptCount ?? 0, duplicateInputListenerCount: runtime.duplicatePointerListeners ? 1 : 0,
         worldRebuildDuringGestureCount: finalLive.counters?.worldRebuildCount ?? 0
       },
       captureArtifacts: {
@@ -270,18 +217,9 @@
         pageOrEnvironmentScreenshot: { name: pageScreenshot.name, size: pageScreenshot.size, sha256: await fileDigest(pageScreenshot) },
         rawInstrumentedTrace: { eventTrace: state.eventTrace, proposalTrace: state.proposalTrace, orientationEvents: state.orientationEvents, visibilityEvents: state.visibilityEvents }
       },
-      publicRouteInitialReceipt: state.initialReceipt,
-      publicRouteFinalReceipt: state.finalReceipt,
-      operatorAttestation: byId('attestation').value.trim(),
-      acceptanceCandidate: Object.values(interactionResults).every(Boolean),
-      boundaries: {
-        productionDeployment: false,
-        publicSourceMutation: false,
-        samsungOnlyImplementationClaim: false,
-        broaderMobileAcceptanceClaim: false,
-        r3F2PassClosedClaim: false,
-        run8EPassClosedClaim: false
-      }
+      publicRouteInitialReceipt: state.initialReceipt, publicRouteFinalReceipt: state.finalReceipt,
+      operatorAttestation: byId('attestation').value.trim(), acceptanceCandidate: Object.values(interactionResults).every(Boolean),
+      boundaries: { productionDeployment: false, publicSourceMutation: false, samsungOnlyImplementationClaim: false, broaderMobileAcceptanceClaim: false, r3F2PassClosedClaim: false, run8EPassClosedClaim: false }
     };
     byId('downloadButton').disabled = false;
     resultStatus.textContent = `Evidence JSON built. Candidate acceptance: ${state.evidence.acceptanceCandidate}.`;

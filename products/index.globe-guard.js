@@ -16,6 +16,7 @@
   });
 
   const rootSelector = '[data-page-id="products"]';
+  const sceneSelector = "[data-products-scene]";
   const centerSelector = "[data-products-center-control]";
   const returnSelector = "[data-products-return-main-compass]";
   const stylesheetHref = "/products/index.globe-guard.css";
@@ -52,11 +53,29 @@
     root.dataset.productsCenterDisclosureSource = String(reason || "non-globe-action");
   }
 
+  function isolateCenterPointerFromCrystals(scene, event) {
+    const center = event.target instanceof Element
+      ? event.target.closest(centerSelector)
+      : null;
+
+    if (!center || !scene.contains(center)) return;
+    event.stopImmediatePropagation();
+  }
+
   function initialize() {
     const root = document.querySelector(rootSelector);
     if (!root) return;
 
+    const scene = root.querySelector(sceneSelector);
+    if (!scene) return;
+
     closeDisclosure(root, "guard-initialized");
+
+    ["pointerdown", "pointermove", "pointerup", "pointercancel"].forEach(type => {
+      scene.addEventListener(type, event => {
+        isolateCenterPointerFromCrystals(scene, event);
+      });
+    });
 
     root.addEventListener(
       "click",
@@ -96,6 +115,7 @@
       disclosureIsolation: true,
       centerOnlyDisclosure: true,
       protectedTouchCorridor: true,
+      crystalPointerIsolation: true,
       createsSecondController: false
     });
   }

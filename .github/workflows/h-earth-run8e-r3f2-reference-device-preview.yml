@@ -45,7 +45,7 @@ jobs:
           test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js)" = "bb96858fec09d14bbe10aa9ffa8a7f07af3621e6"
           test "$(git hash-object showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js)" = "5017bbaf857a644287cb829037b0fde4646f270d"
 
-      - name: Verify R3F2 syntax and non-production boundary
+      - name: Verify R3F2 syntax, failure custody, and non-production boundary
         run: |
           set -euo pipefail
           node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
@@ -54,6 +54,7 @@ jobs:
           node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
           node --check h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs
           node --check h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js
+          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-001.failure.receipt.json','utf8'))"
           if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json; then
             node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json','utf8'))"
           fi
@@ -106,7 +107,8 @@ jobs:
             'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
             'h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs',
             'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.html',
-            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js'
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-001.failure.receipt.json'
           }
           optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json'}
           missing = sorted(required - paths)
@@ -117,6 +119,7 @@ jobs:
           receipt = json.loads(Path('/tmp/h-earth-run8e-r3f2/h-earth.run8e-r3f2.immutable-hosted-preview.execution.receipt.json').read_text())
           if receipt['eligible'] is not True or receipt['status'] != 'RUN_8E_R3F2_PREVIEW_VALIDATION_PASS': raise SystemExit('R3F2_PREVIEW_RECEIPT_INVALID')
           if receipt['evidenceClass'] != 'SUPPLEMENTAL_HOSTED_BROWSER_VALIDATION_NOT_PHYSICAL_ACCEPTANCE': raise SystemExit('R3F2_PHYSICAL_EVIDENCE_MISCLASSIFIED')
+          if receipt['failedAttemptCustody']['publicSourceDefectEstablished'] is not False: raise SystemExit('R3F2_ATTEMPT_001_PUBLIC_SOURCE_DEFECT_CLAIMED')
           hosted = receipt['hostedValidation']
           if not all(hosted[key] is True for key in ['routeApiReady','iframeSameOriginAccess','launcherInstrumentationReady']): raise SystemExit('R3F2_HOSTED_VALIDATION_FAILED')
           if hosted['activeWebGL2ContextCount'] != 1: raise SystemExit('R3F2_WEBGL2_CONTEXT_COUNT_INVALID')

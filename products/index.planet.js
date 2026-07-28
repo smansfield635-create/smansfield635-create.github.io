@@ -1,254 +1,153 @@
 /* /products/index.planet.js
-   PRODUCTS_ARENA_CLUSTER_CENTER_PLANET_TRANSPLANT_v1
-   Independent fixed center-world renderer consuming the canonical Audralia
-   geometry authority. Visual only: no navigation, product-registry, label,
-   settlement, projection, or gesture authority.
+   PRODUCTS_ARENA_CLUSTER_CENTER_WORLD_ARCHCOIN_DONOR_v1
+   Products-adapted standalone center-world host modeled on the accepted
+   ARCHCOIN center-world implementation. It consumes the canonical Audralia
+   geometry authority through the separately governed Laws planet participant.
+
+   Visual only:
+   - no navigation authority;
+   - no product registry authority;
+   - no label authority;
+   - no settlement authority;
+   - no product gesture authority;
+   - no simulated Earth-like fallback.
 */
 (() => {
   "use strict";
 
+  const BUILD = "PRODUCTS_ARENA_CLUSTER_CENTER_WORLD_ARCHCOIN_DONOR_v1";
   const MODULE = "DGB_PRODUCTS_CENTER_PLANET";
   const RECEIPT_KEY = "DGB_PRODUCTS_CENTER_PLANET_RECEIPT";
   const READY_EVENT = "PRODUCTS_CENTER_PLANET_READY";
   const FAILURE_EVENT = "PRODUCTS_CENTER_PLANET_FAILURE";
+
+  const ROOT_SELECTOR = '[data-page-id="products"]';
+  const MOUNT_SELECTOR = "[data-products-planet-mount]";
+  const OUTPUT_SELECTOR = "[data-products-planet-receipt]";
+  const CANVAS_ATTRIBUTE = "data-products-planet-canvas";
+
   const GEOMETRY_GLOBAL = "DGBAudraliaPlanetGeometry";
-  const GEOMETRY_CONTRACT = "AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1";
+  const GEOMETRY_CONTRACT =
+    "AUDRALIA_G1_DETERMINISTIC_PLANET_GEOMETRY_AUTHORITY_TNT_v1";
+  const PARTICIPANT_GLOBAL = "DGB_LAWS_PLANET_WORLD_PARTICIPANT";
+
+  const GEOMETRY_URL =
+    `/assets/audralia/audralia.planet.js?build=${encodeURIComponent(BUILD)}`;
+  const PARTICIPANT_URL =
+    `/laws/index.planet.js?build=${encodeURIComponent(BUILD)}`;
 
   if (globalThis[MODULE]?.initialized) return;
 
-  const CONFIG = Object.freeze({
-    root: '[data-page-id="products"]',
-    mount: '[data-products-planet-mount]',
-    canvas: 'data-products-planet-canvas',
-    terrainLevel: 3,
-    oceanLevel: 2,
-    cloudLevel: 2,
-    atmosphereLevel: 2,
-    dprCap: 1.5,
-    geometryRetryMs: 100,
-    maximumGeometryAttempts: 40,
-    rotationSeconds: 72,
-    cloudRotationSeconds: 108,
-    pitch: -0.22,
-    cameraDistance: 3.3,
-    worldScale: 0.86
-  });
-
-  const MATERIAL_COLORS = Object.freeze([
-    [0.025, 0.10, 0.25],
-    [0.05, 0.24, 0.44],
-    [0.12, 0.48, 0.58],
-    [0.50, 0.47, 0.32],
-    [0.68, 0.59, 0.38],
-    [0.21, 0.45, 0.29],
-    [0.11, 0.33, 0.26],
-    [0.52, 0.44, 0.31],
-    [0.31, 0.43, 0.34],
-    [0.41, 0.41, 0.43],
-    [0.82, 0.88, 0.86],
-    [0.18, 0.52, 0.63],
-    [0.12, 0.39, 0.51]
-  ]);
-
   const state = {
     initialized: false,
+    mounted: false,
     ready: false,
     failed: false,
     disposed: false,
-    fallback: false,
     reducedMotion: false,
     root: null,
     mount: null,
+    output: null,
     canvas: null,
     gl: null,
-    program: null,
-    attribs: null,
-    uniforms: null,
-    terrain: null,
-    ocean: null,
-    clouds: null,
-    atmosphere: null,
-    geometryAuthority: null,
-    geometryPacket: null,
+    renderer: null,
+    participant: null,
     resizeObserver: null,
+    intersectionObserver: null,
+    removalObserver: null,
     motionQuery: null,
-    frame: 0,
-    startedAt: 0,
-    geometryAttempts: 0,
+    motionListener: null,
+    raf: 0,
+    frameTimer: 0,
+    running: false,
+    documentVisible: !document.hidden,
+    mountVisible: true,
+    staticFrameRendered: false,
+    previous: performance.now(),
+    lastRendered: 0,
     width: 0,
     height: 0,
     dpr: 1,
     renderFrames: 0,
+    nodeWaitFrames: 0,
     lastError: ""
   };
 
-  const VERTEX_SHADER = `
-    attribute vec3 aPosition;
-    attribute vec3 aNormal;
-    attribute vec3 aColor;
-    uniform mat4 uProjection;
-    uniform float uYaw;
-    uniform float uPitch;
-    uniform float uScale;
-    uniform float uDistance;
-    varying vec3 vNormal;
-    varying vec3 vColor;
-    varying vec3 vWorld;
+  function normalize3(vector) {
+    const length = Math.hypot(vector[0], vector[1], vector[2]) || 1;
+    return [vector[0] / length, vector[1] / length, vector[2] / length];
+  }
 
-    vec3 rotatePoint(vec3 point) {
-      float cy = cos(uYaw);
-      float sy = sin(uYaw);
-      float cp = cos(uPitch);
-      float sp = sin(uPitch);
-      vec3 yawed = vec3(point.x * cy + point.z * sy, point.y, -point.x * sy + point.z * cy);
-      return vec3(yawed.x, yawed.y * cp - yawed.z * sp, yawed.y * sp + yawed.z * cp);
-    }
+  function cross3(a, b) {
+    return [
+      a[1] * b[2] - a[2] * b[1],
+      a[2] * b[0] - a[0] * b[2],
+      a[0] * b[1] - a[1] * b[0]
+    ];
+  }
 
-    void main() {
-      vec3 world = rotatePoint(aPosition * uScale);
-      vec3 normal = normalize(rotatePoint(aNormal));
-      world.z -= uDistance;
-      vNormal = normal;
-      vColor = aColor;
-      vWorld = world;
-      gl_Position = uProjection * vec4(world, 1.0);
-    }
-  `;
+  function dot3(a, b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
 
-  const FRAGMENT_SHADER = `
-    precision mediump float;
-    uniform int uMode;
-    uniform float uAlpha;
-    uniform float uPulse;
-    varying vec3 vNormal;
-    varying vec3 vColor;
-    varying vec3 vWorld;
+  function lookAt(eye, target, up = [0, 1, 0]) {
+    const z = normalize3([
+      eye[0] - target[0],
+      eye[1] - target[1],
+      eye[2] - target[2]
+    ]);
+    const x = normalize3(cross3(up, z));
+    const y = cross3(z, x);
+    return [
+      x[0], y[0], z[0], 0,
+      x[1], y[1], z[1], 0,
+      x[2], y[2], z[2], 0,
+      -dot3(x, eye), -dot3(y, eye), -dot3(z, eye), 1
+    ];
+  }
 
-    void main() {
-      vec3 n = normalize(vNormal);
-      vec3 light = normalize(vec3(-0.45, 0.70, 0.58));
-      float diffuse = max(dot(n, light), 0.0);
-      float rim = pow(1.0 - max(dot(n, normalize(-vWorld)), 0.0), 2.2);
-      vec3 color = vColor;
-      float alpha = uAlpha;
-
-      if (uMode == 1) {
-        color = mix(vec3(0.02, 0.10, 0.25), vec3(0.08, 0.38, 0.62), diffuse + 0.15);
-      } else if (uMode == 2) {
-        color = vec3(0.90, 0.96, 0.98);
-        alpha *= 0.16 + diffuse * 0.16;
-      } else if (uMode == 3) {
-        color = vec3(0.27, 0.72, 1.0);
-        alpha *= (0.08 + rim * 0.42) * (0.86 + uPulse * 0.14);
-      } else {
-        color = color * (0.30 + diffuse * 0.90) + rim * vec3(0.16, 0.34, 0.44);
-      }
-
-      gl_FragColor = vec4(color, alpha);
-    }
-  `;
-
-  function perspective(fov, aspect, near, far) {
-    const f = 1 / Math.tan(fov / 2);
+  function perspective(fieldOfView, aspect, near, far) {
+    const f = 1 / Math.tan(fieldOfView / 2);
     const nf = 1 / (near - far);
-    return new Float32Array([
+    return [
       f / aspect, 0, 0, 0,
       0, f, 0, 0,
       0, 0, (far + near) * nf, -1,
       0, 0, 2 * far * near * nf, 0
-    ]);
+    ];
   }
 
-  function compileShader(gl, type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      const message = gl.getShaderInfoLog(shader) || "UNKNOWN_SHADER_ERROR";
-      gl.deleteShader(shader);
-      throw new Error(message);
-    }
-    return shader;
-  }
-
-  function createProgram(gl) {
-    const vertex = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER);
-    const fragment = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER);
-    const program = gl.createProgram();
-    gl.attachShader(program, vertex);
-    gl.attachShader(program, fragment);
-    gl.linkProgram(program);
-    gl.deleteShader(vertex);
-    gl.deleteShader(fragment);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      throw new Error(gl.getProgramInfoLog(program) || "PRODUCTS_PLANET_PROGRAM_LINK_FAILED");
-    }
-    return program;
-  }
-
-  function makeBuffer(gl, target, data) {
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(target, buffer);
-    gl.bufferData(target, data, gl.STATIC_DRAW);
-    return buffer;
-  }
-
-  function terrainColors(mesh) {
-    const colors = new Float32Array(mesh.vertexCount * 3);
-    for (let index = 0; index < mesh.vertexCount; index += 1) {
-      const hint = Number(mesh.materialHints?.[index] ?? 5);
-      const color = MATERIAL_COLORS[hint] || MATERIAL_COLORS[5];
-      colors[index * 3] = color[0];
-      colors[index * 3 + 1] = color[1];
-      colors[index * 3 + 2] = color[2];
-    }
-    return colors;
-  }
-
-  function solidColors(vertexCount, color) {
-    const colors = new Float32Array(vertexCount * 3);
-    for (let index = 0; index < vertexCount; index += 1) {
-      colors[index * 3] = color[0];
-      colors[index * 3 + 1] = color[1];
-      colors[index * 3 + 2] = color[2];
-    }
-    return colors;
-  }
-
-  function gpuMesh(gl, mesh, colors) {
-    const indices = mesh.indices instanceof Uint16Array
-      ? mesh.indices
-      : new Uint16Array(mesh.indices);
-    return {
-      vertexCount: mesh.vertexCount,
-      indexCount: indices.length,
-      position: makeBuffer(gl, gl.ARRAY_BUFFER, mesh.positions),
-      normal: makeBuffer(gl, gl.ARRAY_BUFFER, mesh.normals),
-      color: makeBuffer(gl, gl.ARRAY_BUFFER, colors),
-      index: makeBuffer(gl, gl.ELEMENT_ARRAY_BUFFER, indices)
-    };
-  }
-
-  function deleteMesh(mesh) {
-    if (!mesh || !state.gl) return;
-    for (const key of ["position", "normal", "color", "index"]) {
-      if (mesh[key]) state.gl.deleteBuffer(mesh[key]);
+  function geometryReceipt() {
+    const authority = globalThis[GEOMETRY_GLOBAL];
+    try {
+      return authority?.getReceiptLight?.() ||
+        globalThis.AUDRALIA_PLANET_GEOMETRY_RECEIPT ||
+        null;
+    } catch {
+      return globalThis.AUDRALIA_PLANET_GEOMETRY_RECEIPT || null;
     }
   }
 
   function buildReceipt(extra = {}) {
-    const geometryStatus = state.geometryAuthority?.getReceiptLight?.() || null;
+    const geometry = geometryReceipt();
     return {
-      contract: "PRODUCTS_ARENA_CLUSTER_CENTER_PLANET_TRANSPLANT_v1",
+      contract: BUILD,
       module: MODULE,
+      donor: "/products/archcoin/index.planet.source.js",
+      sourceParticipant: "/laws/index.planet.js",
+      sourceGeometry: "/assets/audralia/audralia.planet.js",
       sourceGeometryContract: GEOMETRY_CONTRACT,
-      sourceGeometryReady: Boolean(geometryStatus?.ready),
-      sourceGeometryHash: geometryStatus?.geometryHash || state.geometryPacket?.geometryHash || "",
+      sourceGeometryReady: Boolean(
+        globalThis[GEOMETRY_GLOBAL] &&
+        globalThis[GEOMETRY_GLOBAL].contract === GEOMETRY_CONTRACT
+      ),
+      sourceGeometryHash: geometry?.geometryHash || "",
       initialized: state.initialized,
+      mounted: state.mounted,
       ready: state.ready,
       failed: state.failed,
       disposed: state.disposed,
-      fallback: state.fallback,
+      fallback: false,
       reducedMotion: state.reducedMotion,
       worldPosition: Object.freeze([0, 0, 0]),
       orbit: "NONE",
@@ -262,10 +161,14 @@
       ownsNavigation: false,
       ownsControllerState: false,
       ownsProductGeometry: false,
+      independentNavigationAuthority: false,
+      visualIdentity: "mini-audralia",
+      rendererMode: state.gl ? "webgl-3d" : "unavailable",
+      boundedFrameRate: 30,
+      environmentalSuspension: true,
       width: state.width,
       height: state.height,
       devicePixelRatio: state.dpr,
-      geometryAttempts: state.geometryAttempts,
       renderFrames: state.renderFrames,
       lastError: state.lastError,
       visualPassClaimed: false,
@@ -276,233 +179,396 @@
   function publish(extra = {}) {
     const receipt = Object.freeze(buildReceipt(extra));
     globalThis[RECEIPT_KEY] = receipt;
+
     if (state.root) {
-      state.root.dataset.productsPlanetStatus = state.failed ? "held" : state.ready ? "available" : "pending";
-      state.root.dataset.productsCenterPlanetCount = state.ready || state.fallback ? "1" : "0";
+      state.root.dataset.productsPlanetStatus =
+        state.failed ? "held" : state.ready ? "available" : "pending";
+      state.root.dataset.productsCenterPlanetCount = state.ready ? "1" : "0";
       state.root.dataset.productsPlanetReceipt = JSON.stringify(receipt);
     }
-    const output = document.querySelector("[data-products-planet-receipt]");
-    if (output) output.value = JSON.stringify(receipt);
+
+    if (state.output) {
+      const serialized = JSON.stringify(receipt);
+      state.output.value = serialized;
+      state.output.textContent = serialized;
+    }
+
     return receipt;
   }
 
-  function createFallback(reason) {
-    state.fallback = true;
-    const fallback = document.createElement("div");
-    fallback.className = "products-planet-fallback";
-    fallback.setAttribute("data-products-planet-fallback", "true");
-    fallback.setAttribute("aria-hidden", "true");
-    state.mount.replaceChildren(fallback);
+  function dispatch(name, detail) {
+    globalThis.dispatchEvent(new CustomEvent(name, { detail }));
+  }
+
+  function loadScript(url, marker, readyCheck) {
+    if (readyCheck()) return Promise.resolve(null);
+
+    return new Promise((resolve, reject) => {
+      const selector = `script[data-${marker}]`;
+      const existing = document.querySelector(selector);
+      if (existing) {
+        if (existing.dataset.ready === "true" || readyCheck()) {
+          resolve(existing);
+        } else {
+          existing.addEventListener("load", () => resolve(existing), { once: true });
+          existing.addEventListener("error", () => reject(
+            new Error(`PRODUCTS_CENTER_WORLD_SCRIPT_LOAD_FAILED:${url}`)
+          ), { once: true });
+        }
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = url;
+      script.async = false;
+      script.fetchPriority = "low";
+      script.dataset[marker] = "true";
+      script.addEventListener("load", () => {
+        script.dataset.ready = "true";
+        resolve(script);
+      }, { once: true });
+      script.addEventListener("error", () => reject(
+        new Error(`PRODUCTS_CENTER_WORLD_SCRIPT_LOAD_FAILED:${url}`)
+      ), { once: true });
+      document.head.append(script);
+    });
+  }
+
+  function resize() {
+    if (!state.canvas || !state.gl || !state.mount) {
+      return { aspect: 1 };
+    }
+
+    const rect = state.mount.getBoundingClientRect();
+    const hardwareConcurrency = Number(navigator.hardwareConcurrency || 0);
+    const deviceMemory = Number(navigator.deviceMemory || 0);
+    const lowPower =
+      rect.width <= 420 ||
+      (hardwareConcurrency > 0 && hardwareConcurrency <= 4) ||
+      (deviceMemory > 0 && deviceMemory <= 4);
+    const ratioCap = lowPower ? 1 : 1.5;
+    const ratio = Math.min(
+      ratioCap,
+      Math.max(1, globalThis.devicePixelRatio || 1)
+    );
+    const width = Math.max(2, Math.round(rect.width * ratio));
+    const height = Math.max(2, Math.round(rect.height * ratio));
+
+    state.width = Math.max(1, Math.round(rect.width));
+    state.height = Math.max(1, Math.round(rect.height));
+    state.dpr = ratio;
+
+    if (state.canvas.width !== width || state.canvas.height !== height) {
+      state.canvas.width = width;
+      state.canvas.height = height;
+    }
+
+    state.gl.viewport(0, 0, width, height);
+    return { aspect: width / Math.max(1, height) };
+  }
+
+  function requestFrame() {
+    state.frameTimer = 0;
+    if (!state.raf) state.raf = requestAnimationFrame(frame);
+  }
+
+  function scheduleFrame() {
+    if (
+      !state.running ||
+      !state.mount?.isConnected ||
+      state.raf ||
+      state.frameTimer ||
+      !state.documentVisible ||
+      !state.mountVisible ||
+      (state.reducedMotion && state.staticFrameRendered)
+    ) return;
+
+    const targetFrameInterval = 1000 / 30;
+    const elapsed = performance.now() - state.lastRendered;
+    const wait = Math.max(0, targetFrameInterval - elapsed);
+    if (wait > 4) state.frameTimer = setTimeout(requestFrame, wait);
+    else requestFrame();
+  }
+
+  function markReady() {
+    if (state.ready) return;
     state.ready = true;
-    publish({ lastAction: "planet-fallback", fallbackReason: reason });
-    globalThis.dispatchEvent(new CustomEvent(READY_EVENT, { detail: globalThis[RECEIPT_KEY] }));
+    state.failed = false;
+    state.lastError = "";
+    const receipt = publish({ lastAction: "planet-ready-first-frame" });
+    dispatch(READY_EVENT, receipt);
+  }
+
+  function frame(now) {
+    state.raf = 0;
+    if (
+      !state.running ||
+      !state.mount?.isConnected ||
+      !state.documentVisible ||
+      !state.mountVisible
+    ) return;
+
+    try {
+      const dimensions = resize();
+      const deltaSeconds = Math.min(
+        0.05,
+        Math.max(0, (now - state.previous) / 1000)
+      );
+      state.previous = now;
+      state.lastRendered = now;
+
+      state.participant.update({
+        time: now / 1000,
+        deltaSeconds,
+        reducedMotion: state.reducedMotion
+      });
+
+      const node = state.participant.getNode({
+        time: now / 1000,
+        deltaSeconds
+      });
+
+      const gl = state.gl;
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      if (node) {
+        const viewMatrix = lookAt([0, 0.20, 1.88], [0, 0.01, 0.02]);
+        const projectionMatrix = perspective(
+          Math.PI / 4.45,
+          dimensions.aspect,
+          0.1,
+          60
+        );
+        state.participant.draw({
+          renderer: state.renderer,
+          node,
+          viewMatrix,
+          projectionMatrix,
+          haloPass: true
+        });
+        state.participant.draw({
+          renderer: state.renderer,
+          node,
+          viewMatrix,
+          projectionMatrix,
+          haloPass: false
+        });
+        state.renderFrames += 1;
+        state.nodeWaitFrames = 0;
+        state.staticFrameRendered = state.reducedMotion;
+        markReady();
+      } else {
+        state.nodeWaitFrames += 1;
+        state.staticFrameRendered = false;
+        if (state.nodeWaitFrames > 240) {
+          throw new Error("PRODUCTS_CENTER_WORLD_PARTICIPANT_NODE_UNAVAILABLE");
+        }
+      }
+
+      if (state.renderFrames > 0 && state.renderFrames % 120 === 0) {
+        publish({ lastAction: "planet-rendering" });
+      }
+
+      scheduleFrame();
+    } catch (error) {
+      fail(error);
+    }
+  }
+
+  function stop() {
+    if (!state.running) return true;
+    state.running = false;
+    if (state.raf) cancelAnimationFrame(state.raf);
+    if (state.frameTimer) clearTimeout(state.frameTimer);
+    state.raf = 0;
+    state.frameTimer = 0;
+    state.resizeObserver?.disconnect();
+    state.intersectionObserver?.disconnect();
+    state.removalObserver?.disconnect();
+    document.removeEventListener("visibilitychange", onVisibilityChange);
+    if (state.motionQuery && state.motionListener) {
+      if (typeof state.motionQuery.removeEventListener === "function") {
+        state.motionQuery.removeEventListener("change", state.motionListener);
+      } else if (typeof state.motionQuery.removeListener === "function") {
+        state.motionQuery.removeListener(state.motionListener);
+      }
+    }
+    return true;
+  }
+
+  function dispose(reason = "api") {
+    stop();
+    state.disposed = true;
+    state.ready = false;
+    state.mounted = false;
+    state.canvas?.remove();
+    state.canvas = null;
+    state.gl = null;
+    state.renderer = null;
+    state.participant = null;
+    publish({ lastAction: "planet-disposed", reason });
+    return true;
   }
 
   function fail(error) {
     const message = error instanceof Error ? error.message : String(error);
     state.lastError = message;
     state.failed = true;
-    publish({ lastAction: "planet-failure", lastFailure: message });
-    globalThis.dispatchEvent(new CustomEvent(FAILURE_EVENT, { detail: Object.freeze({ message }) }));
-    if (state.mount && !state.ready) createFallback(message);
-  }
-
-  function resolveReducedMotion() {
-    state.reducedMotion = Boolean(state.motionQuery?.matches || state.root?.dataset.reducedMotion === "true");
-  }
-
-  function resize() {
-    if (!state.canvas || !state.gl) return;
-    const rect = state.mount.getBoundingClientRect();
-    state.width = Math.max(1, Math.round(rect.width));
-    state.height = Math.max(1, Math.round(rect.height));
-    state.dpr = Math.min(globalThis.devicePixelRatio || 1, CONFIG.dprCap);
-    const width = Math.max(1, Math.round(state.width * state.dpr));
-    const height = Math.max(1, Math.round(state.height * state.dpr));
-    if (state.canvas.width !== width) state.canvas.width = width;
-    if (state.canvas.height !== height) state.canvas.height = height;
-    state.gl.viewport(0, 0, width, height);
-  }
-
-  function bindMesh(mesh) {
-    const gl = state.gl;
-    gl.bindBuffer(gl.ARRAY_BUFFER, mesh.position);
-    gl.enableVertexAttribArray(state.attribs.position);
-    gl.vertexAttribPointer(state.attribs.position, 3, gl.FLOAT, false, 0, 0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, mesh.normal);
-    gl.enableVertexAttribArray(state.attribs.normal);
-    gl.vertexAttribPointer(state.attribs.normal, 3, gl.FLOAT, false, 0, 0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, mesh.color);
-    gl.enableVertexAttribArray(state.attribs.color);
-    gl.vertexAttribPointer(state.attribs.color, 3, gl.FLOAT, false, 0, 0);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.index);
-  }
-
-  function drawMesh(mesh, mode, alpha, yaw, scale, pulse) {
-    if (!mesh) return;
-    const gl = state.gl;
-    bindMesh(mesh);
-    gl.uniform1i(state.uniforms.mode, mode);
-    gl.uniform1f(state.uniforms.alpha, alpha);
-    gl.uniform1f(state.uniforms.yaw, yaw);
-    gl.uniform1f(state.uniforms.pitch, CONFIG.pitch);
-    gl.uniform1f(state.uniforms.scale, scale);
-    gl.uniform1f(state.uniforms.distance, CONFIG.cameraDistance);
-    gl.uniform1f(state.uniforms.pulse, pulse);
-    gl.drawElements(gl.TRIANGLES, mesh.indexCount, gl.UNSIGNED_SHORT, 0);
-  }
-
-  function render(now) {
-    if (state.disposed || !state.gl || !state.ready || state.fallback) return;
-    resize();
-    const gl = state.gl;
-    const seconds = (now - state.startedAt) / 1000;
-    const yaw = state.reducedMotion ? 0.55 : seconds * Math.PI * 2 / CONFIG.rotationSeconds;
-    const cloudYaw = state.reducedMotion ? 0.82 : seconds * Math.PI * 2 / CONFIG.cloudRotationSeconds;
-    const pulse = state.reducedMotion ? 0 : (Math.sin(seconds * 0.55) + 1) / 2;
-    const aspect = state.canvas.width / Math.max(1, state.canvas.height);
-
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.useProgram(state.program);
-    gl.uniformMatrix4fv(state.uniforms.projection, false, perspective(Math.PI / 4.2, aspect, 0.1, 20));
-
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthMask(true);
-    gl.disable(gl.BLEND);
-    drawMesh(state.ocean, 1, 1, yaw, CONFIG.worldScale * 1.002, pulse);
-    drawMesh(state.terrain, 0, 1, yaw, CONFIG.worldScale, pulse);
-
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.depthMask(false);
-    drawMesh(state.clouds, 2, 0.45, cloudYaw, CONFIG.worldScale * 1.012, pulse);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    drawMesh(state.atmosphere, 3, 0.42, yaw, CONFIG.worldScale * 1.035, pulse);
-    gl.depthMask(true);
-
-    state.renderFrames += 1;
-    if (state.renderFrames % 60 === 0) publish({ lastAction: "planet-rendering" });
-    state.frame = requestAnimationFrame(render);
-  }
-
-  function buildGeometry() {
-    const authority = globalThis[GEOMETRY_GLOBAL];
-    if (!authority || authority.contract !== GEOMETRY_CONTRACT) return false;
-    state.geometryAuthority = authority;
-    state.geometryPacket = authority.createGeometry({
-      terrainLevel: CONFIG.terrainLevel,
-      oceanLevel: CONFIG.oceanLevel,
-      cloudLevel: CONFIG.cloudLevel,
-      atmosphereLevel: CONFIG.atmosphereLevel,
-      includeHydrology: false,
-      deepValidation: false
+    state.ready = false;
+    stop();
+    if (state.mount) state.mount.replaceChildren();
+    const receipt = publish({
+      lastAction: "planet-failure-no-simulated-fallback",
+      lastFailure: message,
+      fallbackReason: null
     });
-    const gl = state.gl;
-    state.terrain = gpuMesh(gl, state.geometryPacket.terrain, terrainColors(state.geometryPacket.terrain));
-    state.ocean = gpuMesh(gl, state.geometryPacket.ocean, solidColors(state.geometryPacket.ocean.vertexCount, [0.05, 0.28, 0.50]));
-    state.clouds = gpuMesh(gl, state.geometryPacket.clouds, solidColors(state.geometryPacket.clouds.vertexCount, [0.92, 0.97, 1.0]));
-    state.atmosphere = gpuMesh(gl, state.geometryPacket.atmosphere, solidColors(state.geometryPacket.atmosphere.vertexCount, [0.35, 0.78, 1.0]));
-    return true;
+    dispatch(FAILURE_EVENT, Object.freeze({ message, receipt }));
   }
 
-  function waitForGeometry() {
-    state.geometryAttempts += 1;
-    try {
-      if (buildGeometry()) {
-        state.ready = true;
-        state.startedAt = performance.now();
-        publish({ lastAction: "planet-ready" });
-        globalThis.dispatchEvent(new CustomEvent(READY_EVENT, { detail: globalThis[RECEIPT_KEY] }));
-        state.frame = requestAnimationFrame(render);
-        return;
-      }
-      if (state.geometryAttempts >= CONFIG.maximumGeometryAttempts) {
-        throw new Error("PRODUCTS_PLANET_GEOMETRY_AUTHORITY_UNAVAILABLE");
-      }
-      setTimeout(waitForGeometry, CONFIG.geometryRetryMs);
-    } catch (error) {
-      fail(error);
+  function onVisibilityChange() {
+    state.documentVisible = !document.hidden;
+    if (state.documentVisible) {
+      state.previous = performance.now();
+      state.staticFrameRendered = false;
+      scheduleFrame();
     }
   }
 
-  function dispose() {
-    state.disposed = true;
-    if (state.frame) cancelAnimationFrame(state.frame);
-    state.resizeObserver?.disconnect();
-    state.motionQuery?.removeEventListener?.("change", onMotion);
-    deleteMesh(state.terrain);
-    deleteMesh(state.ocean);
-    deleteMesh(state.clouds);
-    deleteMesh(state.atmosphere);
-    if (state.program && state.gl) state.gl.deleteProgram(state.program);
-    state.canvas?.remove();
-    publish({ lastAction: "planet-disposed" });
-  }
-
-  function onMotion() {
-    resolveReducedMotion();
-    publish({ lastAction: "reduced-motion-changed" });
-  }
-
-  function initialize() {
+  async function initialize() {
     try {
-      state.root = document.querySelector(CONFIG.root);
-      state.mount = document.querySelector(CONFIG.mount);
-      if (!state.root || !state.mount) throw new Error("PRODUCTS_PLANET_MOUNT_NOT_FOUND");
+      state.root = document.querySelector(ROOT_SELECTOR);
+      state.mount = document.querySelector(MOUNT_SELECTOR);
+      state.output = document.querySelector(OUTPUT_SELECTOR);
+      if (!state.root || !state.mount) {
+        throw new Error("PRODUCTS_PLANET_MOUNT_NOT_FOUND");
+      }
+
+      state.initialized = true;
+      publish({ lastAction: "planet-initializing" });
+
+      await loadScript(
+        GEOMETRY_URL,
+        "productsCenterWorldAudraliaGeometry",
+        () => Boolean(
+          globalThis[GEOMETRY_GLOBAL] &&
+          globalThis[GEOMETRY_GLOBAL].contract === GEOMETRY_CONTRACT
+        )
+      );
+
+      await loadScript(
+        PARTICIPANT_URL,
+        "productsCenterWorldPlanetParticipant",
+        () => Boolean(
+          globalThis[PARTICIPANT_GLOBAL] &&
+          typeof globalThis[PARTICIPANT_GLOBAL].draw === "function"
+        )
+      );
+
+      state.participant = globalThis[PARTICIPANT_GLOBAL];
+      if (
+        !state.participant ||
+        typeof state.participant.update !== "function" ||
+        typeof state.participant.getNode !== "function" ||
+        typeof state.participant.draw !== "function"
+      ) {
+        throw new Error("PRODUCTS_CENTER_WORLD_PARTICIPANT_UNAVAILABLE");
+      }
 
       state.canvas = document.createElement("canvas");
-      state.canvas.setAttribute(CONFIG.canvas, "true");
+      state.canvas.setAttribute(CANVAS_ATTRIBUTE, "true");
       state.canvas.setAttribute("aria-hidden", "true");
       state.canvas.style.pointerEvents = "none";
       state.mount.replaceChildren(state.canvas);
 
-      state.gl = state.canvas.getContext("webgl", { alpha: true, antialias: true, premultipliedAlpha: true });
+      state.gl = state.canvas.getContext("webgl", {
+        alpha: true,
+        antialias: true,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false
+      });
       if (!state.gl) {
-        createFallback("WEBGL_CONTEXT_UNAVAILABLE");
-        state.initialized = true;
-        return;
+        throw new Error("PRODUCTS_CENTER_WORLD_WEBGL_UNAVAILABLE");
       }
 
-      const gl = state.gl;
-      state.program = createProgram(gl);
-      state.attribs = Object.freeze({
-        position: gl.getAttribLocation(state.program, "aPosition"),
-        normal: gl.getAttribLocation(state.program, "aNormal"),
-        color: gl.getAttribLocation(state.program, "aColor")
-      });
-      state.uniforms = Object.freeze({
-        projection: gl.getUniformLocation(state.program, "uProjection"),
-        yaw: gl.getUniformLocation(state.program, "uYaw"),
-        pitch: gl.getUniformLocation(state.program, "uPitch"),
-        scale: gl.getUniformLocation(state.program, "uScale"),
-        distance: gl.getUniformLocation(state.program, "uDistance"),
-        mode: gl.getUniformLocation(state.program, "uMode"),
-        alpha: gl.getUniformLocation(state.program, "uAlpha"),
-        pulse: gl.getUniformLocation(state.program, "uPulse")
+      state.renderer = Object.freeze({
+        id: "PRODUCTS_ACCEPTED_CENTER_WORLD_HOST",
+        gl: state.gl
       });
 
-      state.motionQuery = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)") || null;
-      state.motionQuery?.addEventListener?.("change", onMotion);
-      resolveReducedMotion();
+      state.motionQuery = matchMedia("(prefers-reduced-motion: reduce)");
+      state.reducedMotion = state.motionQuery.matches;
+      state.motionListener = event => {
+        state.reducedMotion = event.matches;
+        state.previous = performance.now();
+        state.staticFrameRendered = false;
+        publish({ lastAction: "reduced-motion-changed" });
+        scheduleFrame();
+      };
+      if (typeof state.motionQuery.addEventListener === "function") {
+        state.motionQuery.addEventListener("change", state.motionListener);
+      } else if (typeof state.motionQuery.addListener === "function") {
+        state.motionQuery.addListener(state.motionListener);
+      }
 
-      state.resizeObserver = new ResizeObserver(resize);
+      state.resizeObserver = new ResizeObserver(() => {
+        state.staticFrameRendered = false;
+        scheduleFrame();
+      });
       state.resizeObserver.observe(state.mount);
-      state.initialized = true;
-      publish({ lastAction: "planet-initialized" });
-      waitForGeometry();
+
+      state.intersectionObserver = typeof IntersectionObserver === "function"
+        ? new IntersectionObserver(entries => {
+            state.mountVisible = entries.some(entry => entry.isIntersecting);
+            if (state.mountVisible) {
+              state.previous = performance.now();
+              state.staticFrameRendered = false;
+              scheduleFrame();
+            }
+          }, { rootMargin: "120px 0px", threshold: 0 })
+        : null;
+      state.intersectionObserver?.observe(state.mount);
+
+      state.removalObserver = typeof MutationObserver === "function"
+        ? new MutationObserver(() => {
+            if (!state.mount?.isConnected) stop();
+          })
+        : null;
+      state.removalObserver?.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+      });
+
+      document.addEventListener("visibilitychange", onVisibilityChange);
+      globalThis.addEventListener("pagehide", () => stop(), { once: true });
+
+      state.mounted = true;
+      state.running = true;
+      state.previous = performance.now();
+      publish({
+        lastAction: "planet-mounted-awaiting-first-frame",
+        canvasCreated: true,
+        independentNavigationAuthority: false
+      });
+      scheduleFrame();
     } catch (error) {
       fail(error);
     }
   }
 
   globalThis[MODULE] = Object.freeze({
-    initialized: false,
+    initialized: true,
+    contract: BUILD,
     receipt: () => Object.freeze(buildReceipt()),
     resize,
     dispose
   });
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
-  else initialize();
+  globalThis[RECEIPT_KEY] = Object.freeze(buildReceipt());
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  } else {
+    initialize();
+  }
 })();

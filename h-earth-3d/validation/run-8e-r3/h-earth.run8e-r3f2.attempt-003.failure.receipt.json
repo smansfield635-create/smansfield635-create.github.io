@@ -1,0 +1,33 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R3F2_IMMUTABLE_HOSTED_PREVIEW_ATTEMPT_FAILURE",
+  "attemptId": "RUN_8E_R3F2_PREVIEW_ATTEMPT_003",
+  "status": "RUN_8E_R3F2_PREVIEW_ATTEMPT_FAIL_OPEN",
+  "eligible": true,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r3f2-reference-device-physical-execution-001",
+  "head": "37dd0ca6331a74c0bf3e143586f292d98d59885e",
+  "pullRequest": 251,
+  "workflowRun": 30316573748,
+  "workflowJob": 90143276958,
+  "artifactId": 8672384865,
+  "artifactDigest": "sha256:fa339f348c7287acbd3d7d65b0195250c57d138019fe41157f71d1c198ca0795",
+  "failureClass": "ALL_BOUNDED_EXTERNAL_HOST_CANDIDATES_FAILED_DOM_QUALIFICATION",
+  "failureStage": "IMMUTABLE_HOSTED_PREVIEW_HOST_QUALIFICATION",
+  "hostCandidates": [
+    "rawcdn.githack.com",
+    "cdn.statically.io",
+    "raw.githack.com",
+    "cdn.jsdelivr.net"
+  ],
+  "candidateFailureClass": "LAUNCHER_DOM_NOT_OBSERVED",
+  "repositoryAndSourceChecksPassed": true,
+  "publicSourceDefectEstablished": false,
+  "externalHostedPreviewSuitable": false,
+  "authorizedCorrection": "CONSTRUCT_SIGNED_SELF_CONTAINED_OFFLINE_PACKAGE_AND_VALIDATE_BY_LOOPBACK",
+  "publicSourceMutationAuthorized": false,
+  "physicalReferenceDeviceExecutionPerformed": false,
+  "productionDeploymentPerformed": false,
+  "run8E": "FAIL_OPEN",
+  "stoppingBoundary": "STOP_BEFORE_REFERENCE_DEVICE_PHYSICAL_EXECUTION_R3F2",
+  "recordedOn": "2026-07-27"
+}

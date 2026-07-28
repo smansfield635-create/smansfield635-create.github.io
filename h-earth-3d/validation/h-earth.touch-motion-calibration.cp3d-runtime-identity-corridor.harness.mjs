@@ -20,9 +20,10 @@ const paths = Object.freeze({
 const sourceEntries = await Promise.all(Object.entries(paths).map(async ([key, filename]) => [key, await readFile(filename, 'utf8')]));
 const source = Object.freeze(Object.fromEntries(sourceEntries));
 
-const rendererExpectedMatch = source.renderer.match(/const\s+RUNTIME_ID\s*=\s*['"]([^'"]+)['"]/);
-assert.ok(rendererExpectedMatch, 'CP3D_RENDERER_EXPECTED_IDENTITY_NOT_FOUND');
-const rendererExpectedIdentity = rendererExpectedMatch[1];
+const logicalIdentityMatch = source.renderer.match(/const\s+LOGICAL_ID\s*=\s*['"]([^'"]+)['"]/);
+assert.ok(logicalIdentityMatch, 'CP3D_RENDERER_PROMOTED_IDENTITY_NOT_FOUND');
+assert.match(source.renderer, /const\s+RUNTIME_ID\s*=\s*LOGICAL_ID\s*;/, 'CP3D_RENDERER_RUNTIME_IDENTITY_NOT_BOUND_TO_PROMOTED_IDENTITY');
+const rendererExpectedIdentity = logicalIdentityMatch[1];
 
 const packageModule = await import(`${pathToFileURL(paths.package).href}?cp3d=${Date.now()}`);
 assert.equal(typeof packageModule.getHEarthRun8ER2ImmutableLiveRenderPackage, 'function', 'CP3D_PACKAGE_GETTER_NOT_EXPORTED');

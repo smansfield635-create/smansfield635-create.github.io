@@ -1,11 +1,12 @@
 /* /products/index.arena.css
-   PRODUCTS_ARENA_CLUSTER_PRESENTATION_CONTINUITY_v3
+   PRODUCTS_ARENA_CLUSTER_PRESENTATION_CONTINUITY_v4
    Page-local center-world continuity, Main-Compass-derived one-label,
-   and responsive Arena authority.
+   responsive Arena authority, and product-first hit testing.
  */
 
 .products-scene[data-products-scene] {
   --products-center-size: clamp(4.5rem, 9vw, 7rem);
+  --products-center-hit-size: calc(var(--products-center-size) * .72);
   isolation: isolate;
   overflow: hidden;
   touch-action: none;
@@ -83,8 +84,8 @@
 .products-center-control {
   left: 50%;
   top: 50%;
-  z-index: 8;
-  width: var(--products-center-size);
+  z-index: 6;
+  width: var(--products-center-hit-size);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;

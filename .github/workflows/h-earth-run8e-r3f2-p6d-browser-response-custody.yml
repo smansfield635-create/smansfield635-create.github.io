@@ -1,0 +1,154 @@
+name: H-Earth Run 8E R3F2-P6D Browser Response Custody
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-run8e-r3f2-p6d-browser-response-custody.yml'
+
+permissions:
+  contents: read
+
+env:
+  PREVIEW_URL: https://diamondgatebridge.com/preview/h-earth/run8e/r3f2/sha256-69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5/
+  PACKAGE_HEX: 69c145d2e91df57e9476ed3e7893891d5cc3f2eb63b06739e5914fa1bfe06ad5
+  PACKAGE_HEAD: 51c2c82b4695c97d309d38e9e01aec728b95601d
+  OUTPUT_ROOT: /tmp/h-earth-run8e-r3f2-p6d
+
+jobs:
+  measure-browser-response-custody:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pinned Playwright Chromium
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTPUT_ROOT"
+          cd "$OUTPUT_ROOT"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Measure exact browser response and host telemetry
+        working-directory: /tmp/h-earth-run8e-r3f2-p6d
+        run: |
+          set -euo pipefail
+          cat > custody.mjs <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          import { chromium } from 'playwright';
+
+          const url = process.env.PREVIEW_URL;
+          const expectedOrigin = new URL(url).origin;
+          const requests = [];
+          const responses = [];
+          const failedRequests = [];
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--disable-gpu-sandbox']
+          });
+          const context = await browser.newContext({
+            viewport: { width: 412, height: 915 },
+            screen: { width: 412, height: 915 },
+            deviceScaleFactor: 2,
+            isMobile: true,
+            hasTouch: true,
+            userAgent: 'Mozilla/5.0 (Linux; Android 16; SM-S948U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36'
+          });
+          const page = await context.newPage();
+          page.on('request', (request) => requests.push({ url: request.url(), resourceType: request.resourceType() }));
+          page.on('response', (response) => responses.push({ url: response.url(), status: response.status(), resourceType: response.request().resourceType() }));
+          page.on('requestfailed', (request) => failedRequests.push({ url: request.url(), error: request.failure()?.errorText ?? null }));
+
+          const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90000 });
+          assert(response, 'P6D_DOCUMENT_RESPONSE_MISSING');
+          assert.equal(response.status(), 200, 'P6D_DOCUMENT_STATUS_NOT_200');
+          assert.equal(page.url(), url, 'P6D_EFFECTIVE_URL_MISMATCH');
+          const body = Buffer.from(await response.body());
+          const browserResponseSha256 = crypto.createHash('sha256').update(body).digest('hex');
+          const browserResponseByteCount = body.length;
+          const browserResponseContainsCloudflareBeacon = body.includes(Buffer.from('static.cloudflareinsights.com'));
+          const headers = await response.allHeaders();
+
+          await page.locator('#deviceModel').fill('Samsung Galaxy reference-class response custody');
+          await page.locator('#attestation').fill('Automated browser response custody only; not physical acceptance.');
+          await page.locator('#startButton').click();
+          await page.waitForFunction(() => document.getElementById('routeFrame')?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 90000 });
+          await page.waitForFunction(() => {
+            const notice = document.getElementById('phaseNotice')?.textContent ?? '';
+            return notice.startsWith('Physical session active') || notice.startsWith('Instrumentation failed:');
+          }, null, { timeout: 30000 });
+          await page.waitForTimeout(1200);
+          const runtime = await page.evaluate(() => {
+            const frame = document.getElementById('routeFrame');
+            const api = frame?.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE;
+            const canvas = frame?.contentDocument?.getElementById('h-earth-functional-landscape-canvas');
+            const snapshot = api?.getSnapshot?.() ?? null;
+            return {
+              routeReady: api?.ready === true,
+              instrumentationMarker: canvas?.dataset?.r3f2EvidenceInstrumented === 'true',
+              phaseNotice: document.getElementById('phaseNotice')?.textContent ?? null,
+              packageHead: window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA?.packageHead ?? null,
+              runtimeExclusivity: snapshot?.runtimeExclusivity ?? null,
+              gpuCounters: snapshot?.liveGpu?.counters ?? null
+            };
+          });
+          assert.equal(runtime.routeReady, true, 'P6D_ROUTE_NOT_READY');
+          assert.equal(runtime.instrumentationMarker, true, 'P6D_INSTRUMENTATION_MARKER_MISSING');
+          assert(!runtime.phaseNotice?.startsWith('Instrumentation failed:'), `P6D_INSTRUMENTATION_FAILED:${runtime.phaseNotice}`);
+          assert(runtime.phaseNotice?.startsWith('Physical session active'), `P6D_PHASE_NOTICE_INVALID:${runtime.phaseNotice}`);
+          assert.equal(runtime.packageHead, process.env.PACKAGE_HEAD, 'P6D_PACKAGE_HEAD_MISMATCH');
+          assert.equal(runtime.runtimeExclusivity?.activeWebGL2ContextCount, 1, 'P6D_WEBGL2_CONTEXT_COUNT');
+          assert.equal(runtime.runtimeExclusivity?.activePersistentRendererCount, 1, 'P6D_RENDERER_COUNT');
+          assert.equal(runtime.runtimeExclusivity?.activePointerTouchIntakeCount, 1, 'P6D_INPUT_COUNT');
+          assert.equal(runtime.runtimeExclusivity?.activeFramePresentationAuthorityCount, 1, 'P6D_FRAME_AUTHORITY_COUNT');
+          assert((runtime.gpuCounters?.gpuFramebufferPresentationCount ?? 0) >= 1, 'P6D_VISIBLE_FRAME_MISSING');
+
+          const offOriginRequests = requests.filter((row) => new URL(row.url).origin !== expectedOrigin);
+          const cloudflareTelemetryRequests = offOriginRequests.filter((row) => new URL(row.url).hostname === 'static.cloudflareinsights.com');
+          const otherOffOriginRequests = offOriginRequests.filter((row) => new URL(row.url).hostname !== 'static.cloudflareinsights.com');
+          assert.equal(otherOffOriginRequests.length, 0, `P6D_UNEXPECTED_EXTERNAL_REQUESTS:${JSON.stringify(otherOffOriginRequests)}`);
+          assert.equal(failedRequests.length, 0, `P6D_FAILED_REQUESTS:${JSON.stringify(failedRequests)}`);
+
+          const record = {
+            checkpointId: 'RUN_8E_R3F2_P6D_BROWSER_RESPONSE_CUSTODY',
+            status: 'OBSERVED',
+            previewUrl: url,
+            expectedPackageSha256: `sha256:${process.env.PACKAGE_HEX}`,
+            browserResponseSha256: `sha256:${browserResponseSha256}`,
+            browserResponseByteCount,
+            browserResponseExactPackageMatch: browserResponseSha256 === process.env.PACKAGE_HEX && browserResponseByteCount === 1213849,
+            browserResponseContainsCloudflareBeacon,
+            documentResponseHeaders: headers,
+            requestCount: requests.length,
+            offOriginRequestCount: offOriginRequests.length,
+            cloudflareTelemetryRequests,
+            otherOffOriginRequests,
+            failedRequests,
+            runtime,
+            physicalDeviceExecution: false,
+            physicalAcceptance: false
+          };
+          fs.writeFileSync('browser-response-custody.json', `${JSON.stringify(record, null, 2)}\n`);
+          await page.screenshot({ path: 'browser-response-custody.png', fullPage: true });
+          console.log(JSON.stringify(record, null, 2));
+          await browser.close();
+          NODE
+          node custody.mjs
+
+      - name: Upload browser response custody evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run8e-r3f2-p6d-browser-response-custody
+          path: |
+            /tmp/h-earth-run8e-r3f2-p6d/browser-response-custody.json
+            /tmp/h-earth-run8e-r3f2-p6d/browser-response-custody.png
+          if-no-files-found: error
+          retention-days: 90

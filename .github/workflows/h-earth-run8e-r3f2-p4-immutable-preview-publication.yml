@@ -27,7 +27,7 @@ env:
   P3_RECEIPT_PATH: h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3.pass-closed.receipt.json
   P3_RECEIPT_BLOB: dbc4f8cb32b33b9cb17567abc9e55e59fe394afd
   P3C_RECEIPT_PATH: h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2-p3c.pass-closed.receipt.json
-  P3C_RECEIPT_BLOB: __PENDING_P3C_RECEIPT_BLOB__
+  P3C_RECEIPT_BLOB: 76fcfe93021084859f664e327ce5de60017c8c6c
 
 jobs:
   publish-immutable-preview:
@@ -51,7 +51,6 @@ jobs:
           test "$(git hash-object "$AUTHORIZATION_PATH")" = "$AUTHORIZATION_GIT_BLOB"
           parent="$(git rev-parse "$GITHUB_SHA^")"
           test "$(git rev-parse "$parent:$P3_RECEIPT_PATH")" = "$P3_RECEIPT_BLOB"
-          test "$P3C_RECEIPT_BLOB" != "__PENDING_P3C_RECEIPT_BLOB__"
           test "$(git rev-parse "$parent:$P3C_RECEIPT_PATH")" = "$P3C_RECEIPT_BLOB"
           node <<'NODE'
           const fs = require('fs');

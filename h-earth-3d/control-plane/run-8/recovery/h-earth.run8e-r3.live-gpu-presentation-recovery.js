@@ -74,8 +74,8 @@ export const H_EARTH_RUN_8E_R3_CONTROL = freeze({
     run8E: 'FAIL_OPEN'
   }),
   authorizations: freeze({
-    immutableHostedPreviewConstruction: true,
-    supplementalHostedPreviewBrowserValidation: true,
+    signedOfflinePackageConstruction: true,
+    supplementalLoopbackAndFileBrowserValidation: true,
     physicalEvidenceLauncherConstruction: true,
     repositoryCustody: true
   }),

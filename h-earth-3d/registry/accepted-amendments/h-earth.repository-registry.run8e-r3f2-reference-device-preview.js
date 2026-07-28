@@ -4,6 +4,7 @@ import baseFacade from './h-earth.repository-registry.run8e-r3f1-physical-mobile
 const freeze = (value) => Object.freeze(value);
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const BRANCH = 'agent/h-earth-run8e-r3f2-reference-device-physical-execution-001';
+const FAILURE_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-001.failure.receipt.json';
 const PREVIEW_READY_RECEIPT_PATH = '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json';
 
 export const H_EARTH_RUN_8E_R3F2_PATHS = freeze([
@@ -15,6 +16,7 @@ export const H_EARTH_RUN_8E_R3F2_PATHS = freeze([
   '/h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs',
   '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.html',
   '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js',
+  FAILURE_RECEIPT_PATH,
   PREVIEW_READY_RECEIPT_PATH
 ]);
 
@@ -28,13 +30,15 @@ const OCCURRENCES = freeze(H_EARTH_RUN_8E_R3F2_PATHS.map((repositoryPath) => fre
   contentSha256: null,
   byteCount: null,
   existenceStatus: repositoryPath === PREVIEW_READY_RECEIPT_PATH ? 'RESERVED_UNTIL_PREVIEW_READY' : 'PRESENT',
-  fetchbackStatus: 'R3F2_PREVIEW_VALIDATION_PENDING',
-  occurrenceClass: 'RUN_8E_R3F2_IMMUTABLE_PREVIEW_CONSTRUCTION_OCCURRENCE'
+  fetchbackStatus: repositoryPath === FAILURE_RECEIPT_PATH ? 'R3F2_ATTEMPT_001_FAILURE_RECEIPT_PRESERVED' : 'R3F2_PREVIEW_VALIDATION_PENDING',
+  occurrenceClass: repositoryPath === FAILURE_RECEIPT_PATH
+    ? 'RUN_8E_R3F2_FAILED_PREVIEW_ATTEMPT_OCCURRENCE'
+    : 'RUN_8E_R3F2_IMMUTABLE_PREVIEW_CONSTRUCTION_OCCURRENCE'
 })));
 
 export const H_EARTH_RUN_8E_R3F2_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_RUN_8E_R3F2_REFERENCE_DEVICE_IMMUTABLE_PREVIEW_v1',
-  evidenceClass: 'R3F2_IMMUTABLE_PREVIEW_CONSTRUCTION_AND_VALIDATION_PENDING',
+  evidenceClass: 'R3F2_IMMUTABLE_PREVIEW_CONSTRUCTION_AND_VALIDATION_PENDING_WITH_FAILED_ATTEMPT_CUSTODY',
   sourceKind: 'COMMIT_PINNED_HOSTED_PREVIEW_AND_REPOSITORY_VALIDATION',
   sourceIdOrPath: '/h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.html',
   sourceOccurrenceOrRevision: null,
@@ -49,6 +53,7 @@ export const H_EARTH_RUN_8E_R3F2_EVIDENCE = freeze({
     'BACKGROUND_RETURN',
     'SCREEN_RECORDING_AND_SCREENSHOTS',
     'RAW_INSTRUMENTED_TRACE',
+    'ATTEMPT_001_TRANSPORT_FAILURE_PRESERVED',
     'NO_PRODUCTION_DEPLOYMENT',
     'STOP_BEFORE_PHYSICAL_EXECUTION'
   ]),
@@ -60,6 +65,14 @@ export const H_EARTH_RUN_8E_R3F2_EVIDENCE = freeze({
     routeSourceHead: '548672ae99cd406805f0c8ca576cc650baf7ed18',
     publicHtmlGitBlob: '0daedf61f7e19af095f4db5fc47563a9cd786837',
     publicOrchestratorGitBlob: '2b0a916b3a6d11da84316925f8abd8a3a1447445',
+    previewHost: 'raw.githack.com',
+    attempt001Head: '3c4f9d4d985365dc74e740bca9bd9db2cbbb7442',
+    attempt001WorkflowRun: 30315690708,
+    attempt001WorkflowJob: 90140603432,
+    attempt001ArtifactId: 8672061710,
+    attempt001ArtifactDigest: 'sha256:0cbb9c6c28bb9ab4103cda3ec04b7563a3bc69e0b0355a4324bd34d9f73aa918',
+    attempt001FailureClass: 'HOSTED_LAUNCHER_NOT_RENDERED_AS_DOCUMENT',
+    attempt001PublicSourceDefectEstablished: false,
     previewPackageHead: null,
     launcherUrl: null,
     packageDescriptorSha256: null,
@@ -69,6 +82,7 @@ export const H_EARTH_RUN_8E_R3F2_EVIDENCE = freeze({
     artifactDigest: null
   }),
   evidenceLimitations: freeze([
+    'ATTEMPT_001_TRANSPORT_FAILURE_PRESERVED',
     'PREVIEW_VALIDATION_PENDING',
     'PHYSICAL_REFERENCE_DEVICE_EXECUTION_NOT_PERFORMED',
     'R3F2_NOT_PASS_CLOSED',
@@ -91,19 +105,19 @@ export const H_EARTH_RUN_8E_R3F2_NODE = freeze({
   evidenceClass: H_EARTH_RUN_8E_R3F2_EVIDENCE.evidenceClass,
   evidenceReferences: [H_EARTH_RUN_8E_R3F2_EVIDENCE.evidenceId],
   authorityClass: 'R3F2_IMMUTABLE_PREVIEW_CONSTRUCTION_PENDING',
-  authorityPosture: 'R3F1_PASS_CLOSED_R3F2_PREVIEW_CONSTRUCTION_PENDING_PHYSICAL_EXECUTION_NOT_STARTED_RUN_8E_FAIL_OPEN',
-  authoritySource: ['R3F1_PASS_RECEIPT', 'R3F1_FINAL_EXACT_HEAD_VALIDATION', 'R3F_PHYSICAL_EVIDENCE_CONTRACT'],
-  authorityScope: ['CONSTRUCT_IMMUTABLE_HOSTED_PREVIEW', 'VALIDATE_COMMIT_PINNED_ROUTE', 'INSTALL_REFERENCE_DEVICE_EVIDENCE_LAUNCHER'],
+  authorityPosture: 'R3F1_PASS_CLOSED_R3F2_PREVIEW_CONSTRUCTION_PENDING_ATTEMPT_001_TRANSPORT_FAILURE_PRESERVED_PHYSICAL_EXECUTION_NOT_STARTED_RUN_8E_FAIL_OPEN',
+  authoritySource: ['R3F1_PASS_RECEIPT', 'R3F1_FINAL_EXACT_HEAD_VALIDATION', 'R3F_PHYSICAL_EVIDENCE_CONTRACT', 'R3F2_ATTEMPT_001_FAILURE_RECEIPT'],
+  authorityScope: ['CONSTRUCT_IMMUTABLE_HOSTED_PREVIEW', 'VALIDATE_COMMIT_PINNED_ROUTE', 'INSTALL_REFERENCE_DEVICE_EVIDENCE_LAUNCHER', 'PRESERVE_FAILED_ATTEMPT_CUSTODY'],
   authorityLimitations: ['NO_SHOWROOM_MUTATION','NO_PUBLIC_ROUTE_MUTATION','NO_PHYSICAL_ACCEPTANCE_CLAIM','NO_BROADER_MOBILE_ACCEPTANCE','NO_PRODUCTION_DEPLOYMENT','NO_MAIN_MERGE','NO_RUN_8E_PASS'],
   parentRelations: [], childRelations: [], peerRelations: [], upstreamBoundaries: [], downstreamBoundaries: [],
   cardinalRole: 'NONE', cardinalStatus: 'NONE', cardinalCompleteness: 'NOT_APPLICABLE',
   orderingRules: ['R3F1_PASS_CLOSED_BEFORE_R3F2', 'PREVIEW_READY_BEFORE_REFERENCE_DEVICE_PHYSICAL_EXECUTION'],
   dependencyRelations: [],
-  allowedMutationScope: 'R3F2_CONTROL_PREVIEW_LAUNCHER_REGISTRY_VALIDATION_AND_PREVIEW_RECEIPT_PATHS_ONLY',
+  allowedMutationScope: 'R3F2_CONTROL_PREVIEW_LAUNCHER_REGISTRY_VALIDATION_FAILURE_AND_PREVIEW_RECEIPT_PATHS_ONLY',
   prohibitedMutations: ['SHOWROOM','PUBLIC_ROUTE','PUBLIC_RUNTIME','RENDERER','INPUT','PRODUCTION_DEPLOYMENT','MAIN'],
-  requiredValidations: ['R3F1_RECEIPT_IDENTITY','HOSTED_ROUTE_HTTP','HOSTED_LAUNCHER_HTTP','ROUTE_API_READY','SAME_ORIGIN_ACCESS','INSTRUMENTATION_READY','AUTOMATIC_REGISTRY_PREFLIGHT','EXACT_SCOPE'],
+  requiredValidations: ['R3F1_RECEIPT_IDENTITY','FAILED_ATTEMPT_CUSTODY','HOSTED_ROUTE_HTTP','HOSTED_LAUNCHER_HTTP','HTML_CONTENT_TYPE','ROUTE_API_READY','SAME_ORIGIN_ACCESS','INSTRUMENTATION_READY','AUTOMATIC_REGISTRY_PREFLIGHT','EXACT_SCOPE'],
   stoppingBoundaries: ['STOP_BEFORE_REFERENCE_DEVICE_PHYSICAL_EXECUTION_R3F2'],
-  currentIdentityReferences: ['3642f3a561d787d37d988a8a66f2270d0b13bd45','d8b5f3b4626014af6b62362d1bac26e120f50e60','548672ae99cd406805f0c8ca576cc650baf7ed18','0daedf61f7e19af095f4db5fc47563a9cd786837','2b0a916b3a6d11da84316925f8abd8a3a1447445'],
+  currentIdentityReferences: ['3642f3a561d787d37d988a8a66f2270d0b13bd45','d8b5f3b4626014af6b62362d1bac26e120f50e60','548672ae99cd406805f0c8ca576cc650baf7ed18','0daedf61f7e19af095f4db5fc47563a9cd786837','2b0a916b3a6d11da84316925f8abd8a3a1447445','3c4f9d4d985365dc74e740bca9bd9db2cbbb7442','30315690708','90140603432','8672061710'],
   lifecycleStatus: 'PREVIEW_CONSTRUCTION_PENDING',
   unresolvedFields: ['PREVIEW_PACKAGE_HEAD','HOSTED_PREVIEW_VALIDATION','PREVIEW_READY_RECEIPT','PHYSICAL_REFERENCE_DEVICE_EVIDENCE']
 });

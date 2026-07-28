@@ -1,0 +1,97 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2A_CORE_PACKAGE_PASS_CLOSED_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2A_PASS_CLOSED",
+  "recordedAt": "2026-07-27T03:54:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2-immutable-live-render-package-001",
+  "pullRequest": 217,
+  "baseMainHeadAtR2Start": "a660d54b0df30e768b95e2314b918d0f263883ed",
+  "currentMainHeadObservedBeforeClosure": "2251b066310b23d7f45f2b8fc03108e673b45258",
+  "currentMainInterveningChangeClassification": "UNRELATED_ROOT_MAIN_COMPASS_ONLY",
+  "execution": {
+    "attempt": "R2A_ATTEMPT_002",
+    "executionStartHead": "81a85604ff6a66dbf023c41c263a69507cd5d276",
+    "correctedSourceHeadCreatedInsideWorkflow": "e0403370b888f0478ec51cdd96cc2fcdd267e25b",
+    "runId": 30235565337,
+    "jobId": 89882629845,
+    "conclusion": "success",
+    "correctionScriptSyntax": "PASS",
+    "correctionCommitPreservation": "PASS",
+    "javascriptAndJsonSyntax": "PASS",
+    "corePackageValidation": "PASS",
+    "boundedScopeAndR2BStoppingBoundary": "PASS",
+    "evidenceUpload": "PASS"
+  },
+  "artifact": {
+    "artifactId": 8641519551,
+    "artifactName": "h-earth-run8e-r2a-core-package-evidence",
+    "artifactDigest": "sha256:605f28dd6e2eb6410126773cee6dc672ff40f964d88e4a7ffbfbf223ecfe095c",
+    "artifactWorkflowHead": "81a85604ff6a66dbf023c41c263a69507cd5d276",
+    "artifactContainsCorrectedWorkingTreeExecution": true
+  },
+  "validatedPackage": {
+    "contractId": "H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1",
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "contentDigest": "fnv1a32:fd913c25",
+    "primitiveCount": 35,
+    "vertexCount": 25524,
+    "triangleCount": 49040,
+    "indexCount": 147120,
+    "drawRangeCount": 4,
+    "roleCounts": {
+      "TERRAIN": 1,
+      "SHORELINE": 7,
+      "VEGETATION": 27
+    },
+    "normalSourceCounts": {
+      "SOURCE_GEOMETRY_NORMALS": 35,
+      "DETERMINISTIC_GEOMETRIC_DERIVATION": 0
+    },
+    "deterministicIdentityAcrossExplicitBuilds": true,
+    "cachedObjectIdentityStable": true,
+    "copyOnRequestGpuViewsValidated": true,
+    "sourcePackageMutationFromGpuViews": false
+  },
+  "executedSourceIdentities": {
+    "packagePath": "/showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+    "packageGitBlobSha": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+    "validationPath": "/h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs",
+    "validationGitBlobSha": "5fb4eeea7fb6d67633677ca5328e1c7500c2df81"
+  },
+  "shorelineCorrection": {
+    "affectedPrimitiveCount": 7,
+    "materialAuthorityContractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_SUCCESSOR_RUN_6D_v1",
+    "projectionModel": "EXACT_RUN_6D_MATERIAL_DEFAULTS",
+    "materialReferencesPreserved": true,
+    "materialIntentsPreserved": true,
+    "translucentShorelineSpanCount": 4,
+    "opaqueShorelineSpanCount": 3,
+    "cpuReferenceRendererMutated": false,
+    "fallbackMaterialAuthorityInvented": false
+  },
+  "boundaries": {
+    "cameraIndependent": true,
+    "viewportIndependent": true,
+    "webglContextCreated": false,
+    "renderLoopCreated": false,
+    "publicRouteBound": false,
+    "deploymentAuthority": false,
+    "mainChangedByR2A": false,
+    "publicRouteChanged": false,
+    "currentCpuReferenceRendererChanged": false,
+    "cameraOrNavigationAuthorityChanged": false,
+    "run8ER2BStarted": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false
+  },
+  "predecessorFailureReceipt": "/h-earth-3d/validation/run-8e-r2/h-earth.run8e-r2a.attempt-001.failure.receipt.json",
+  "checkpointDisposition": {
+    "run8ER2A": "PASS_CLOSED",
+    "run8ER2B": "NOT_STARTED",
+    "run8ER2": "OPEN_AT_R2B_BOUNDARY",
+    "run8E": "FAIL_OPEN"
+  },
+  "stoppingBoundary": "STOP_BEFORE_DETERMINISTIC_PACKAGE_CONSTRUCTION_AND_IMMUTABLE_BUFFER_CUSTODY_R2B",
+  "issues": []
+}

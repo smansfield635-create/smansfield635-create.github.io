@@ -1,0 +1,95 @@
+{
+  "receiptType": "H_EARTH_RUN_8E_R2A_CORE_PACKAGE_ATTEMPT_FAILURE_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8E_R2A_ATTEMPT_001_FAIL_OPEN_RECONCILED",
+  "recordedAt": "2026-07-27T03:20:00.000Z",
+  "reconciledAt": "2026-07-27T03:53:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-run8e-r2-immutable-live-render-package-001",
+  "baseMainHead": "a660d54b0df30e768b95e2314b918d0f263883ed",
+  "attemptHead": "94803608705d8b7ce36827a93071667c00e038be",
+  "pullRequest": 217,
+  "initialWorkflow": {
+    "runId": 30234301513,
+    "jobId": 89878989950,
+    "conclusion": "failure",
+    "syntaxStep": "PASS",
+    "packageValidationStep": "FAIL",
+    "boundedScopeStep": "SKIPPED_AFTER_FAILURE",
+    "evidenceUploadStep": "PASS_WITH_NO_RETAINED_ARTIFACT"
+  },
+  "diagnosticWorkflow": {
+    "head": "4fb171b3360a16820433c5a2f6461acd2c45bd83",
+    "runId": 30234454522,
+    "jobId": 89879442027,
+    "conclusion": "failure",
+    "syntaxStep": "PASS",
+    "packageValidationStep": "FAIL",
+    "boundedScopeStep": "PASS",
+    "evidenceUploadStep": "PASS",
+    "artifactId": 8641166960,
+    "artifactName": "h-earth-run8e-r2a-core-package-evidence",
+    "artifactDigest": "sha256:edc9a14d49d0f0883342eaba42d8a4486e17c42cff7a81d9d5a0ae46898b9729"
+  },
+  "failure": {
+    "checkpoint": "R2A_CORE_PACKAGE_CONTRACT_AND_SOURCE_SHAPE_EXECUTION",
+    "failureClass": "SHORELINE_MATERIAL_SOURCE_SHAPE_MISMATCH",
+    "exactExceptionPreservedInWorkflowArtifact": true,
+    "exactExceptionExtractedIntoReceipt": true,
+    "affectedPrimitiveIds": [
+      "H_EARTH_FUNCTIONAL_SHORELINE:DRY_SAND_EDGE",
+      "H_EARTH_FUNCTIONAL_SHORELINE:DAMP_TRANSITION",
+      "H_EARTH_FUNCTIONAL_SHORELINE:WET_SAND",
+      "H_EARTH_FUNCTIONAL_SHORELINE:FOAM_CONTACT",
+      "H_EARTH_FUNCTIONAL_SHORELINE:SHALLOW_WATER",
+      "H_EARTH_FUNCTIONAL_SHORELINE:NEARSHORE_WATER",
+      "H_EARTH_FUNCTIONAL_SHORELINE:OPEN_WATER"
+    ],
+    "exactIssueCodePrefix": "R2_PRIMITIVE_RGBA_MISSING",
+    "causeDisposition": "RESOLVED",
+    "rootCause": "THE_SEVEN_GOVERNED_SHORELINE_PRIMITIVES_PRESERVE_MATERIAL_REFERENCE_AND_MATERIAL_INTENT_BUT_DO_NOT_OWN_DIRECT_RENDER_MATERIAL_RGBA;THE_INITIAL_R2A_PACKAGE_INCORRECTLY_REQUIRED_DIRECT_RGBA",
+    "existingAuthorityConsumed": {
+      "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_SUCCESSOR_RUN_6D_v1",
+      "sourcePath": "/showroom/globe/h-earth/render/renderer.functional-landscape.js",
+      "projectionModel": "EXACT_RUN_6D_MATERIAL_DEFAULTS"
+    },
+    "implementationCorrectionApplied": true,
+    "correctionScope": [
+      "/showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "/h-earth-3d/validation/h-earth.run8e-r2.immutable-live-render-package.validation.mjs"
+    ],
+    "protectedSourceMutationPerformed": false
+  },
+  "successfulSuccessorAttempt": {
+    "attempt": "R2A_ATTEMPT_002",
+    "executionStartHead": "81a85604ff6a66dbf023c41c263a69507cd5d276",
+    "correctedSourceHead": "e0403370b888f0478ec51cdd96cc2fcdd267e25b",
+    "runId": 30235565337,
+    "jobId": 89882629845,
+    "conclusion": "success",
+    "artifactId": 8641519551,
+    "artifactDigest": "sha256:605f28dd6e2eb6410126773cee6dc672ff40f964d88e4a7ffbfbf223ecfe095c",
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25",
+    "contentDigest": "fnv1a32:fd913c25"
+  },
+  "preservedCompletedWork": {
+    "r1MaterialLedgerMergeCommit": "a660d54b0df30e768b95e2314b918d0f263883ed",
+    "r1DiagnosticCheckpoint": "PASS_CLOSED",
+    "r2BranchCreated": true,
+    "r2ControlContractCreated": true,
+    "r2IsolatedPackageCandidateCreated": true,
+    "r2ValidationHarnessCreated": true,
+    "r2WorkflowCreated": true
+  },
+  "boundaries": {
+    "mainChangedByAttempt001": false,
+    "publicRouteChanged": false,
+    "currentCpuReferenceRendererChanged": false,
+    "cameraOrNavigationAuthorityChanged": false,
+    "run8ER2BStarted": false,
+    "run8ER3Started": false,
+    "run8EPassClosed": false
+  },
+  "nextAuthorizedAction": "CLOSE_RUN_8E_R2A_AND_STOP_BEFORE_R2B",
+  "issues": []
+}

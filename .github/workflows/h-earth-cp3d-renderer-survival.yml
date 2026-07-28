@@ -6,6 +6,7 @@ on:
     paths:
       - 'showroom/globe/h-earth/**'
       - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-**'
+      - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1**'
       - '.github/workflows/h-earth-cp3d-renderer-survival.yml'
   workflow_dispatch:
 
@@ -43,6 +44,12 @@ jobs:
           done
           cat /tmp/h-earth-cp3d-server.log
           exit 1
+
+      - name: Execute CP3D_1A first position localization
+        env:
+          CP3D_ORIGIN: http://127.0.0.1:4173
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1a-first-position-localization.harness.mjs
 
       - name: Execute real-browser renderer survival
         env:

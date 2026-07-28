@@ -57,7 +57,7 @@ jobs:
           node --check h-earth-3d/validation/h-earth.run8e-r3f2.reference-device-preview.validation.mjs
           node --check h-earth-3d/validation/h-earth.run8e-r3f2.signed-offline-package.builder.mjs
           node --check h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js
-          for number in 001 002 003; do
+          for number in 001 002 003 004; do
             node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-${number}.failure.receipt.json','utf8'))"
           done
           if test -f h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json; then
@@ -116,7 +116,8 @@ jobs:
             'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.reference-device-evidence-launcher.js',
             'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-001.failure.receipt.json',
             'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-002.failure.receipt.json',
-            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-003.failure.receipt.json'
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-003.failure.receipt.json',
+            'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.attempt-004.failure.receipt.json'
           }
           optional = {'h-earth-3d/validation/run-8e-r3/h-earth.run8e-r3f2.preview-ready.receipt.json'}
           missing = sorted(required - paths)
@@ -127,13 +128,13 @@ jobs:
           receipt = json.loads(Path('/tmp/h-earth-run8e-r3f2/h-earth.run8e-r3f2.signed-offline-package.execution.receipt.json').read_text())
           if receipt['eligible'] is not True or receipt['status'] != 'RUN_8E_R3F2_PREVIEW_VALIDATION_PASS': raise SystemExit('R3F2_PREVIEW_RECEIPT_INVALID')
           if receipt['evidenceClass'] != 'SUPPLEMENTAL_SIGNED_OFFLINE_PACKAGE_BROWSER_VALIDATION_NOT_PHYSICAL_ACCEPTANCE': raise SystemExit('R3F2_PHYSICAL_EVIDENCE_MISCLASSIFIED')
-          if len(receipt['failedAttemptCustody']) != 3 or any(row['publicSourceDefectEstablished'] is not False for row in receipt['failedAttemptCustody']): raise SystemExit('R3F2_FAILED_ATTEMPT_CUSTODY_INVALID')
+          if len(receipt['failedAttemptCustody']) != 4 or any(row['publicSourceDefectEstablished'] is not False for row in receipt['failedAttemptCustody']): raise SystemExit('R3F2_FAILED_ATTEMPT_CUSTODY_INVALID')
           manifest = receipt['packageManifest']
           if manifest['packageClass'] != 'SIGNED_OFFLINE_PACKAGE' or manifest['signatureClass'] != 'GIT_COMMIT_AND_SHA256_CONTENT_BINDING': raise SystemExit('R3F2_PACKAGE_IDENTITY_INVALID')
           if not manifest['packageSha256'].startswith('sha256:') or manifest['packageByteCount'] <= 100000: raise SystemExit('R3F2_PACKAGE_DIGEST_OR_SIZE_INVALID')
           for mode in ['loopbackValidation', 'fileValidation']:
             result = receipt['validation'][mode]
-            if not all(result[key] is True for key in ['routeApiReady','sameOriginAccess','launcherInstrumentationReady']): raise SystemExit(f'R3F2_{mode}_FAILED')
+            if not all(result[key] is True for key in ['routeApiReady','sameOriginAccess','launcherInstrumentationReady','webCryptoAvailable']): raise SystemExit(f'R3F2_{mode}_FAILED')
             if result['activeWebGL2ContextCount'] != 1: raise SystemExit(f'R3F2_{mode}_WEBGL2_CONTEXT_INVALID')
           if receipt['nextState'] != 'RUN_8E_R3F2_PHYSICAL_EXECUTION_PENDING': raise SystemExit('R3F2_NEXT_STATE_INVALID')
           if receipt['stoppingBoundary'] != 'STOP_BEFORE_REFERENCE_DEVICE_PHYSICAL_EXECUTION_R3F2': raise SystemExit('R3F2_STOPPING_BOUNDARY_MISMATCH')

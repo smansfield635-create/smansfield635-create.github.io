@@ -192,9 +192,10 @@
 
     if (!ALLOWED_STATES.has(currentState()) || state.failed) return false;
 
+    const nextOpen = !state.disclosureOpen;
     state.activationCount += 1;
     state.lastFailure = null;
-    setDisclosure(!state.disclosureOpen, `${source}-center-disclosure-${state.disclosureOpen ? "opened" : "closed"}`);
+    setDisclosure(nextOpen, `${source}-center-disclosure-${nextOpen ? "opened" : "closed"}`);
     return true;
   }
 

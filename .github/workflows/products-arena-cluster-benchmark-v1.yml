@@ -70,7 +70,7 @@ jobs:
           node --check products/index.crystals.js
           node --check products/index.cosmos.js
           node --check products/index.planet.js
-          node --check products/index.controller.center.js
+          node --check products/index.compositor.js
           node --check laws/index.planet.js
           node --check assets/audralia/audralia.planet.js
           node --check verification/benchmark-tools/products-arena-cluster-benchmark-v1/products-arena-cluster-benchmark.config.mjs
@@ -224,6 +224,12 @@ jobs:
                 products: document.querySelectorAll(
                   "[data-products-product]"
                 ).length,
+                centerControls: document.querySelectorAll(
+                  "[data-products-center-control]"
+                ).length,
+                nestedPlanetMounts: document.querySelectorAll(
+                  "[data-products-center-control] [data-products-planet-mount]"
+                ).length,
                 planetCanvases: document.querySelectorAll(
                   "[data-products-planet-canvas]"
                 ).length,
@@ -260,6 +266,8 @@ jobs:
             Number(
               diagnostic.globals.planet.renderFrames || 0
             ) < 1 ||
+            diagnostic.dom.centerControls !== 1 ||
+            diagnostic.dom.nestedPlanetMounts !== 1 ||
             diagnostic.dom.planetCanvases !== 1 ||
             diagnostic.dom.planetFallbacks !== 0
           ) {

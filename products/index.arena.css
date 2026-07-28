@@ -1,10 +1,11 @@
 /* /products/index.arena.css
-   PRODUCTS_ARENA_CLUSTER_PRESENTATION_CONTINUITY_v5
-   Accepted-compass center-world transplant for Products.
+   PRODUCTS_ARENA_CLUSTER_PRESENTATION_CONTINUITY_v3
+   Page-local center-world continuity, Main-Compass-derived one-label,
+   and responsive Arena authority.
  */
 
 .products-scene[data-products-scene] {
-  --products-center-size: clamp(126px, 15vw, 184px);
+  --products-center-size: clamp(4.5rem, 9vw, 7rem);
   isolation: isolate;
   overflow: hidden;
   touch-action: none;
@@ -37,8 +38,14 @@
   mix-blend-mode: screen;
 }
 
-.products-cosmic-field canvas[data-products-cosmos-canvas="base"] { z-index: 1; opacity: .9; }
-.products-cosmic-field canvas[data-products-cosmos-canvas="sparkle"] { z-index: 2; }
+.products-cosmic-field canvas[data-products-cosmos-canvas="base"] {
+  z-index: 1;
+  opacity: .9;
+}
+
+.products-cosmic-field canvas[data-products-cosmos-canvas="sparkle"] {
+  z-index: 2;
+}
 
 .products-scene > canvas[data-products-crystals-canvas] {
   inset: 0;
@@ -52,63 +59,68 @@
   top: 50%;
   z-index: 4;
   width: var(--products-center-size);
-  height: var(--products-center-size);
+  aspect-ratio: 1;
   transform: translate(-50%, -50%);
-  overflow: visible;
-  border: 0;
   border-radius: 50%;
-  isolation: isolate;
   pointer-events: none;
-  background: transparent;
-  box-shadow: none;
-}
-
-.products-planet-mount::before,
-.products-planet-mount::after {
-  display: none !important;
-  content: none !important;
+  filter: drop-shadow(0 0 1.25rem rgba(91, 196, 255, .4));
 }
 
 .products-planet-mount canvas[data-products-planet-canvas] {
-  position: absolute !important;
-  inset: -10% !important;
-  z-index: 4 !important;
-  display: block !important;
-  width: 120% !important;
-  height: 120% !important;
-  border: 0 !important;
-  border-radius: 50% !important;
-  background: transparent !important;
-  pointer-events: none !important;
-  filter: drop-shadow(0 0 10px rgba(82, 190, 255, .32));
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-.products-planet-mount:empty { filter: none; }
+/* A failed renderer publishes a held receipt and leaves the mount empty.
+   The prior simulated Earth-like CSS fallback is intentionally retired. */
+.products-planet-mount:empty {
+  filter: none;
+}
 
 .products-center-control {
   left: 50%;
   top: 50%;
-  z-index: 6;
+  z-index: 8;
   width: var(--products-center-size);
-  height: var(--products-center-size);
-  padding: 0;
+  aspect-ratio: 1;
   transform: translate(-50%, -50%);
-  overflow: visible;
-  border: 0;
   border-radius: 50%;
   cursor: pointer;
   background: transparent;
-  box-shadow: none;
   color: transparent;
   touch-action: none;
 }
 
-.products-center-control:not([hidden]) { display: grid; place-items: center; }
+.products-center-control:not([hidden]) {
+  display: grid;
+  place-items: center;
+}
 
-.products-center-control::before,
 .products-center-control::after {
-  display: none !important;
-  content: none !important;
+  content: "";
+  position: absolute;
+  inset: .18rem;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  transition: border-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+  opacity: 0;
+}
+
+.products-center-control:focus-visible::after {
+  border-color: rgba(255, 232, 163, .82);
+  box-shadow: 0 0 .65rem rgba(243, 200, 111, .32);
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .products-center-control:hover::after {
+    border-color: rgba(141, 216, 255, .34);
+    box-shadow: 0 0 .5rem rgba(91, 196, 255, .22);
+    opacity: 1;
+  }
 }
 
 .products-center-control__label {
@@ -133,7 +145,9 @@
 
 .products-center-control:hover .products-center-control__label,
 .products-center-control:focus-visible .products-center-control__label,
-.products-center-control[aria-expanded="true"] .products-center-control__label { opacity: 1; }
+.products-center-control[aria-expanded="true"] .products-center-control__label {
+  opacity: 1;
+}
 
 .products-semantic[data-products-semantic] {
   inset: 0;
@@ -142,14 +156,21 @@
 }
 
 .products-semantic [data-products-primary-entry],
-.products-semantic [data-products-product] { pointer-events: auto; }
+.products-semantic [data-products-product] {
+  pointer-events: auto;
+}
 
+/* Six semantic controls remain present. Their internal text remains hidden
+   until the renderer marks exactly one projected product as primary. */
 .products-semantic [data-products-product] > span,
 .products-semantic [data-products-product][data-primary="true"] > span {
   visibility: hidden;
   opacity: 0;
 }
 
+/* Main Compass label geometry adapted to the Products semantic control.
+   The readable pill is the primary product's existing label span; the short
+   descriptor remains visually hidden. */
 .products-semantic
 [data-products-product][data-primary="true"]
 > .products-star__label {
@@ -167,39 +188,68 @@
   border: 1px solid rgba(243, 217, 139, .42);
   border-radius: 999px;
   color: rgba(255, 248, 224, .98);
-  background: linear-gradient(135deg, rgba(71, 56, 29, .9), rgba(11, 31, 43, .86));
-  box-shadow: 0 8px 24px rgba(0,0,0,.34), 0 0 20px rgba(243,217,139,.12), inset 0 1px 0 rgba(255,255,255,.1);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(
+    135deg,
+    rgba(71, 56, 29, .9),
+    rgba(11, 31, 43, .86)
+  );
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, .34),
+    0 0 20px rgba(243, 217, 139, .12),
+    inset 0 1px 0 rgba(255, 255, 255, .1);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   font-size: .7rem;
   font-weight: 850;
   line-height: 1.08;
   letter-spacing: .055em;
   text-align: center;
+  text-indent: 0;
   text-transform: uppercase;
-  text-shadow: 0 1px 5px rgba(0,0,0,.95);
+  text-shadow: 0 1px 5px rgba(0, 0, 0, .95);
   white-space: normal;
   overflow: visible;
   overflow-wrap: anywhere;
+  clip: auto;
+  clip-path: none;
   pointer-events: none;
   transform: translate(-50%, -50%);
   transform-origin: center;
   visibility: visible;
   opacity: 1;
   filter: brightness(1.08) saturate(1.04);
-  transition: opacity 180ms ease, filter 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+  transition:
+    opacity 180ms ease,
+    filter 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .products-action--main-compass {
-  border-color: rgba(243,200,111,.48);
-  color: rgba(255,248,224,.98);
-  background: linear-gradient(135deg, rgba(94,68,24,.72), rgba(15,34,48,.82));
-  box-shadow: 0 8px 22px rgba(0,0,0,.28), 0 0 18px rgba(243,200,111,.1);
+  border-color: rgba(243, 200, 111, .48);
+  color: rgba(255, 248, 224, .98);
+  background:
+    linear-gradient(135deg, rgba(94, 68, 24, .72), rgba(15, 34, 48, .82));
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, .28),
+    0 0 18px rgba(243, 200, 111, .1);
 }
 
 .products-action--main-compass:hover,
-.products-action--main-compass:focus-visible { border-color: rgba(255,232,163,.78); }
+.products-action--main-compass:focus-visible {
+  border-color: rgba(255, 232, 163, .78);
+}
 
-.products-page[data-products-center-disclosure="open"] .products-context { border-color: rgba(243,200,111,.28); }
+.products-page[data-products-center-disclosure="open"] .products-context {
+  border-color: rgba(243, 200, 111, .28);
+}
 
 .products-page[data-products-state="PRIMARY_ENTRY"] .products-planet-mount,
 .products-page[data-products-state="PRIMARY_ENTRY"] .products-center-control,
@@ -219,9 +269,13 @@
 }
 
 @media (max-width: 820px) {
-  .products-scene[data-products-scene] { --products-center-size: clamp(100px, 27vw, 126px); }
+  .products-scene[data-products-scene] {
+    --products-center-size: clamp(4.25rem, 18vw, 5.5rem);
+  }
 
-  .products-semantic [data-products-product][data-primary="true"] > .products-star__label {
+  .products-semantic
+  [data-products-product][data-primary="true"]
+  > .products-star__label {
     max-width: 7.6rem;
     min-height: 1.55rem;
     padding: .27rem .42rem;
@@ -231,16 +285,33 @@
 }
 
 @media (max-width: 560px) {
-  .products-center-control__label { display: none; }
-  .products-semantic [data-products-product][data-primary="true"] > .products-star__label {
+  .products-center-control__label {
+    display: none;
+  }
+
+  .products-semantic
+  [data-products-product][data-primary="true"]
+  > .products-star__label {
     max-width: 6.8rem;
     padding: .25rem .38rem;
     font-size: .60rem;
   }
-  .products-cosmic-field canvas[data-products-cosmos-canvas="base"] { opacity: .82; }
+
+  .products-cosmic-field canvas[data-products-cosmos-canvas="base"] {
+    opacity: .82;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .products-cosmic-field canvas[data-products-cosmos-canvas="sparkle"] {
+    display: none !important;
+  }
+
+  .products-center-control::after,
   .products-center-control__label,
-  .products-semantic [data-products-product][data-primary="true"] > .products-star__label { transition: none; }
+  .products-semantic
+  [data-products-product][data-primary="true"]
+  > .products-star__label {
+    transition: none;
+  }
 }

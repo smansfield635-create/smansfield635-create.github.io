@@ -45,7 +45,8 @@ const assertions = {
     center.includes('activateDisclosure(event, "single-tap")') &&
     center.includes('state.disclosureOpen = Boolean(open)'),
   secondSingleTapClosesDisclosure:
-    center.includes('setDisclosure(!state.disclosureOpen') &&
+    center.includes('const nextOpen = !state.disclosureOpen') &&
+    center.includes('setDisclosure(nextOpen') &&
     center.includes('state.control.setAttribute("aria-expanded"'),
   explicitReturnNavigation:
     center.includes('navigateToMainCompass("explicit-main-compass-navigation-requested"') &&

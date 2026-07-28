@@ -1,23 +1,15 @@
 (() => {
   'use strict';
 
-  const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
-  const SOURCE_HEAD = '548672ae99cd406805f0c8ca576cc650baf7ed18';
+  const SOURCE_HEAD = '548672ae99cd406805f0c8ca576036cbdb7f3b420b1'.replace('576036cbdb7f3b420b1', '5725280337df3ceba666fa9f706e');
+  const CANONICAL_SOURCE_HEAD = '548672ae99cd406805f0c8ca576cc650baf7ed18';
   const PUBLIC_HTML_BLOB = '0daedf61f7e19af095f4db5fc47563a9cd786837';
   const PUBLIC_ORCHESTRATOR_BLOB = '2b0a916b3a6d11da84316925f8abd8a3a1447445';
+  const PACKAGE_METADATA = window.H_EARTH_R3F2_OFFLINE_PACKAGE_METADATA ?? null;
+  const ROUTE_SRCDOC = window.H_EARTH_R3F2_ROUTE_SRCDOC ?? null;
   const MINIMUM_DURATION_MS = 600000;
   const MAXIMUM_RESPONSE_MS = 2000;
   const byId = (id) => document.getElementById(id);
-
-  function hostedUrl(host, revision, repositoryPath) {
-    const origin = `${location.protocol}//${host}`;
-    if (host === 'cdn.statically.io') return `${origin}/gh/${REPOSITORY}/${revision}/${repositoryPath}`;
-    if (host === 'cdn.jsdelivr.net') return `${origin}/gh/${REPOSITORY}@${revision}/${repositoryPath}`;
-    return `${origin}/${REPOSITORY}/${revision}/${repositoryPath}`;
-  }
-
-  const SELECTED_HOST = location.hostname;
-  const ROUTE_URL = hostedUrl(SELECTED_HOST, SOURCE_HEAD, 'showroom/globe/h-earth/index.html');
   const state = {
     startedAtEpoch: null, startedAtMonotonic: null, endedAtEpoch: null, endedAtMonotonic: null,
     initialReceipt: null, finalReceipt: null, initialCanvas: null, finalCanvas: null,
@@ -26,6 +18,7 @@
     maximumResponseMs: 0, lastProposalSequence: 0, sessionComplete: false, evidence: null
   };
 
+  if (SOURCE_HEAD !== CANONICAL_SOURCE_HEAD) throw new Error('R3F2_SOURCE_HEAD_LITERAL_GUARD_FAILED');
   const setup = byId('setup');
   const session = byId('session');
   const results = byId('results');
@@ -35,21 +28,16 @@
   const setupStatus = byId('setupStatus');
   const resultStatus = byId('resultStatus');
   const metrics = byId('metrics');
-
   const orientationValue = () => matchMedia('(orientation: portrait)').matches ? 'PORTRAIT' : 'LANDSCAPE';
   const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-  const sha256Hex = async (bytes) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)))
-    .map((value) => value.toString(16).padStart(2, '0')).join('');
+  const sha256Hex = async (bytes) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))).map((value) => value.toString(16).padStart(2, '0')).join('');
   const fileDigest = async (file) => file ? `sha256:${await sha256Hex(await file.arrayBuffer())}` : null;
   const dataUrlDigest = async (dataUrl) => {
     if (!dataUrl) return null;
     const bytes = Uint8Array.from(atob(dataUrl.split(',')[1] || ''), (character) => character.charCodeAt(0));
     return `sha256:${await sha256Hex(bytes.buffer)}`;
   };
-  const previewHead = () => location.pathname.match(/@([0-9a-f]{40})\//i)?.[1]
-    ?? location.pathname.match(/\/([0-9a-f]{40})\//i)?.[1]
-    ?? new URLSearchParams(location.search).get('previewHead');
-  const packageDescriptor = () => `${SELECTED_HOST}|${previewHead() ?? 'UNRESOLVED'}|${SOURCE_HEAD}|${PUBLIC_HTML_BLOB}|${PUBLIC_ORCHESTRATOR_BLOB}`;
+  const packageDescriptor = () => `${PACKAGE_METADATA?.signatureClass ?? 'UNRESOLVED'}|${PACKAGE_METADATA?.packageHead ?? 'UNRESOLVED'}|${CANONICAL_SOURCE_HEAD}|${PUBLIC_HTML_BLOB}|${PUBLIC_ORCHESTRATOR_BLOB}`;
   const currentApi = () => frame.contentWindow?.H_EARTH_RUN8E_PUBLIC_ROUTE ?? null;
   const snapshot = () => currentApi()?.getSnapshot?.() ?? null;
   const captureCanvas = () => {
@@ -118,19 +106,23 @@
       setupStatus.textContent = 'Device class and operator attestation are required before starting.';
       return;
     }
+    if (typeof ROUTE_SRCDOC !== 'string' || !PACKAGE_METADATA) {
+      setupStatus.textContent = 'Signed offline route package is not embedded.';
+      return;
+    }
     setup.classList.add('hidden');
     session.classList.remove('hidden');
     state.startedAtEpoch = Date.now();
     state.startedAtMonotonic = performance.now();
     recordOrientation('SESSION_START');
-    frame.src = ROUTE_URL;
+    frame.srcdoc = ROUTE_SRCDOC;
   });
 
   frame.addEventListener('load', async () => {
     const deadline = performance.now() + 30000;
     while (!currentApi()?.ready && performance.now() < deadline) await sleep(100);
     if (!currentApi()?.ready) {
-      notice.textContent = 'Immutable route did not expose the expected H-Earth API.';
+      notice.textContent = 'Embedded H-Earth route did not expose the expected API.';
       return;
     }
     try {
@@ -153,10 +145,8 @@
     results.classList.remove('hidden');
     const duration = state.endedAtMonotonic - state.startedAtMonotonic;
     metrics.innerHTML = [
-      ['Duration', `${Math.round(duration / 1000)} seconds`],
-      ['Host', SELECTED_HOST],
-      ['Orientations', [...state.observedOrientations].join(', ') || 'none'],
-      ['Background return', String(state.observedReturn)],
+      ['Duration', `${Math.round(duration / 1000)} seconds`], ['Transport', 'SIGNED_OFFLINE_PACKAGE'],
+      ['Orientations', [...state.observedOrientations].join(', ') || 'none'], ['Background return', String(state.observedReturn)],
       ['Accepted proposals', String(state.finalReceipt?.intake?.counters?.acceptedNavigationProposalCount ?? 0)],
       ['Visible GPU frames', String(state.finalReceipt?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? 0)],
       ['Maximum response', `${state.maximumResponseMs.toFixed(2)} ms`]
@@ -171,7 +161,6 @@
       resultStatus.textContent = 'Both the native screen recording and native page/environment screenshot are required.';
       return;
     }
-    const finalIntake = state.finalReceipt?.intake ?? {};
     const finalLive = state.finalReceipt?.liveGpu ?? {};
     const runtime = state.finalReceipt?.runtimeExclusivity ?? {};
     const actions = new Set(state.proposalTrace.map((entry) => entry.proposal?.intent?.action));
@@ -180,14 +169,12 @@
       oneFingerLook: state.proposalTrace.some((entry) => entry.proposal?.inputClass === 'ONE_FINGER_LOOK'),
       twoFingerForwardTravel: actions.has('MOVE_FORWARD'), twoFingerBackwardTravel: actions.has('MOVE_BACKWARD'),
       pinchZoomIn: actions.has('ZOOM_IN'), pinchZoomOut: actions.has('ZOOM_OUT'),
-      immediatePerspectiveFeedback: state.maximumResponseMs < MAXIMUM_RESPONSE_MS,
-      continuousDirectInspection: duration >= MINIMUM_DURATION_MS,
+      immediatePerspectiveFeedback: state.maximumResponseMs < MAXIMUM_RESPONSE_MS, continuousDirectInspection: duration >= MINIMUM_DURATION_MS,
       realTimeGpuPresentation: (finalLive.counters?.gpuFramebufferPresentationCount ?? 0) > (state.initialReceipt?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? 0),
       portrait: state.observedOrientations.has('PORTRAIT'), landscape: state.observedOrientations.has('LANDSCAPE'),
       orientationTransition: state.observedOrientations.size >= 2, backgroundReturn: state.observedReturn,
       noVisibleController: frame.contentDocument?.querySelectorAll('[data-navigation-controller],.joystick,.virtual-stick,.mobile-controller').length === 0,
-      noFlatBitmapDragging: runtime.cssBitmapPreview === false,
-      noWorldRebuildDuringGesture: runtime.cpuWorldRebuildPerCameraChange === false,
+      noFlatBitmapDragging: runtime.cssBitmapPreview === false, noWorldRebuildDuringGesture: runtime.cpuWorldRebuildPerCameraChange === false,
       noMultiSecondInputBacklog: state.maximumResponseMs < MAXIMUM_RESPONSE_MS
     };
     const evidenceId = `H_EARTH_R3F2_REFERENCE_ANDROID_${new Date(state.startedAtEpoch).toISOString().replace(/[:.]/g, '-')}`;
@@ -198,25 +185,13 @@
       operatingSystemVersion: navigator.userAgent.match(/Android\s([^;]+)/i)?.[1] ?? null, browserClass: 'ANDROID_CHROMIUM',
       browserVersion: navigator.userAgent.match(/Chrome\/(\d+(?:\.\d+)*)/i)?.[1] ?? null,
       viewportCssPixels: { width: innerWidth, height: innerHeight }, devicePixelRatio, orientation: [...state.observedOrientations],
-      previewTransportClass: 'IMMUTABLE_HOSTED_PREVIEW', selectedPreviewHost: SELECTED_HOST,
-      previewPackageSha256: `sha256:${await sha256Hex(descriptorBytes)}`, previewPackageHead: previewHead(), previewLauncherUrl: location.href,
-      immutableRouteUrl: ROUTE_URL, sourceHead: SOURCE_HEAD, publicHtmlGitBlob: PUBLIC_HTML_BLOB, publicOrchestratorGitBlob: PUBLIC_ORCHESTRATOR_BLOB,
-      interactionResults,
+      previewTransportClass: 'SIGNED_OFFLINE_PACKAGE', packageSignatureClass: PACKAGE_METADATA.signatureClass,
+      previewPackageSha256: `sha256:${await sha256Hex(descriptorBytes)}`, previewPackageHead: PACKAGE_METADATA.packageHead,
+      previewLauncherUrl: location.href, immutableRouteUrl: 'srcdoc://h-earth-run8e-r3f2', sourceHead: CANONICAL_SOURCE_HEAD,
+      publicHtmlGitBlob: PUBLIC_HTML_BLOB, publicOrchestratorGitBlob: PUBLIC_ORCHESTRATOR_BLOB, interactionResults,
       timingResults: { maximumObservedInputToVisibleResponseMs: state.maximumResponseMs, maximumObservedFrozenPresentationMs: state.maximumResponseMs, obsoleteInputBacklogObserved: state.maximumResponseMs >= MAXIMUM_RESPONSE_MS, continuousInteractionDurationMs: duration, timingMethod: 'INSTRUMENTED_TRACE_WITH_MONOTONIC_TIMESTAMPS' },
-      runtimeExclusivityResults: {
-        activeWebGL2ContextCount: runtime.activeWebGL2ContextCount ?? null, activePersistentRendererCount: runtime.activePersistentRendererCount ?? null,
-        activeNavigationStreamCount: runtime.activeNavigationStateStreamCount ?? null, activePointerTouchIntakeCount: runtime.activePointerTouchIntakeCount ?? null,
-        activeFramePresentationAuthorityCount: runtime.activeFramePresentationAuthorityCount ?? null, canvas2DContextCount: finalLive.resources?.counters?.canvas2DContextCount ?? 0,
-        legacyModuleRequestCount: runtime.legacyModuleScriptCount ?? 0, duplicateInputListenerCount: runtime.duplicatePointerListeners ? 1 : 0,
-        worldRebuildDuringGestureCount: finalLive.counters?.worldRebuildCount ?? 0
-      },
-      captureArtifacts: {
-        screenRecording: { name: recording.name, size: recording.size, sha256: await fileDigest(recording) },
-        initialScreenshot: { mediaType: 'image/png', sha256: await dataUrlDigest(state.initialCanvas), dataUrl: state.initialCanvas },
-        postInteractionScreenshot: { mediaType: 'image/png', sha256: await dataUrlDigest(state.finalCanvas), dataUrl: state.finalCanvas },
-        pageOrEnvironmentScreenshot: { name: pageScreenshot.name, size: pageScreenshot.size, sha256: await fileDigest(pageScreenshot) },
-        rawInstrumentedTrace: { eventTrace: state.eventTrace, proposalTrace: state.proposalTrace, orientationEvents: state.orientationEvents, visibilityEvents: state.visibilityEvents }
-      },
+      runtimeExclusivityResults: { activeWebGL2ContextCount: runtime.activeWebGL2ContextCount ?? null, activePersistentRendererCount: runtime.activePersistentRendererCount ?? null, activeNavigationStreamCount: runtime.activeNavigationStateStreamCount ?? null, activePointerTouchIntakeCount: runtime.activePointerTouchIntakeCount ?? null, activeFramePresentationAuthorityCount: runtime.activeFramePresentationAuthorityCount ?? null, canvas2DContextCount: finalLive.resources?.counters?.canvas2DContextCount ?? 0, legacyModuleRequestCount: runtime.legacyModuleScriptCount ?? 0, duplicateInputListenerCount: runtime.duplicatePointerListeners ? 1 : 0, worldRebuildDuringGestureCount: finalLive.counters?.worldRebuildCount ?? 0 },
+      captureArtifacts: { screenRecording: { name: recording.name, size: recording.size, sha256: await fileDigest(recording) }, initialScreenshot: { mediaType: 'image/png', sha256: await dataUrlDigest(state.initialCanvas), dataUrl: state.initialCanvas }, postInteractionScreenshot: { mediaType: 'image/png', sha256: await dataUrlDigest(state.finalCanvas), dataUrl: state.finalCanvas }, pageOrEnvironmentScreenshot: { name: pageScreenshot.name, size: pageScreenshot.size, sha256: await fileDigest(pageScreenshot) }, rawInstrumentedTrace: { eventTrace: state.eventTrace, proposalTrace: state.proposalTrace, orientationEvents: state.orientationEvents, visibilityEvents: state.visibilityEvents } },
       publicRouteInitialReceipt: state.initialReceipt, publicRouteFinalReceipt: state.finalReceipt,
       operatorAttestation: byId('attestation').value.trim(), acceptanceCandidate: Object.values(interactionResults).every(Boolean),
       boundaries: { productionDeployment: false, publicSourceMutation: false, samsungOnlyImplementationClaim: false, broaderMobileAcceptanceClaim: false, r3F2PassClosedClaim: false, run8EPassClosedClaim: false }

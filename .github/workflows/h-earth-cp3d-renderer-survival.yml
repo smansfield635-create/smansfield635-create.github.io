@@ -43,23 +43,19 @@ jobs:
           cat /tmp/h-earth-cp3d-server.log
           exit 1
 
-      - name: Execute CP3D_1D_B canonicalization boundary scope decision
+      - name: Execute CP3D_1D_C shoreline correction full-package equality
         env:
           CP3D_ORIGIN: http://127.0.0.1:4173
           CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1b-boundary-scope-decision.harness.mjs
+        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1d-corrected-cross-runtime-identity.harness.mjs
 
-      - name: Production canonicalization mutation held
+      - name: Renderer identity promotion held pending verified identity
         if: ${{ false }}
-        run: echo 'Production boundary selection is not authorized until the CP3D_1D_B receipt is reviewed.'
+        run: echo 'The corrected package identity must be read from the passing Node-Chromium receipt before repository promotion.'
 
-      - name: Renderer identity promotion held
+      - name: Full renderer survival held pending identity promotion
         if: ${{ false }}
-        run: echo 'Renderer expectation mutation remains unauthorized.'
-
-      - name: Full renderer survival held
-        if: ${{ false }}
-        run: echo 'Renderer execution is outside the CP3D_1D_B diagnostic boundary.'
+        run: echo 'Renderer survival follows only after the verified corrected identity is installed in the renderer guard.'
 
       - name: Upload CP3D evidence
         if: always()

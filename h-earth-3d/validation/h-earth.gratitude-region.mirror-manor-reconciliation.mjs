@@ -28,6 +28,7 @@ const round = (value, digits = 9) => Number(value.toFixed(digits));
 const SEARCH = freeze({ xMinimum: 24, xMaximum: 132, zMinimum: -212, zMaximum: -132, step: 4 });
 const BEACH_TARGET = freeze({ ...H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.COAST.position });
 const MOUNTAIN_TARGET = freeze({ x: -96, z: -264 });
+const SUPPLIED_HILL_ADDRESSES = freeze(['H_EARTH_GROUND_CELL_001:R06:C11', 'H_EARTH_GROUND_CELL_001:R06:C12']);
 
 export const H_EARTH_GRATITUDE_REGION_MIRROR_MANOR_RECONCILIATION = freeze({
   contractId: 'H_EARTH_GRATITUDE_REGION_MIRROR_MANOR_RECONCILIATION_v1',
@@ -43,13 +44,10 @@ export const H_EARTH_GRATITUDE_REGION_MIRROR_MANOR_RECONCILIATION = freeze({
 
 function sampleSearchFrame() {
   const samples = [];
-  const byKey = new Map();
   for (let z = SEARCH.zMinimum; z <= SEARCH.zMaximum; z += SEARCH.step) {
     for (let x = SEARCH.xMinimum; x <= SEARCH.xMaximum; x += SEARCH.step) {
       const metrics = extractGRCRTerrainMetrics(x, z);
-      if (!metrics.valid) continue;
-      samples.push(metrics);
-      byKey.set(keyOf(x, z), metrics);
+      if (metrics.valid) samples.push(metrics);
     }
   }
   samples.sort((a, b) => a.world.z - b.world.z || a.world.x - b.world.x);
@@ -58,6 +56,7 @@ function sampleSearchFrame() {
     eligible: samples.length > 0,
     status: samples.length > 0 ? 'MANOR_SEARCH_FRAME_SAMPLED' : 'MANOR_SEARCH_FRAME_EMPTY',
     searchBounds: SEARCH,
+    suppliedSemanticHillAddresses: SUPPLIED_HILL_ADDRESSES,
     sampleCount: samples.length,
     samples: freeze(samples),
     issues: freeze(samples.length > 0 ? [] : ['NO_VALID_SEARCH_SAMPLES'])
@@ -83,7 +82,8 @@ function identifyPeakCandidates(frame) {
   const offsets = [-SEARCH.step, 0, SEARCH.step];
   const peaks = [];
   for (const sample of frame.samples) {
-    if (sample.elevation < 6 || sample.slope > 1.25) continue;
+    const onSearchBoundary = sample.world.x === SEARCH.xMinimum || sample.world.x === SEARCH.xMaximum || sample.world.z === SEARCH.zMinimum || sample.world.z === SEARCH.zMaximum;
+    if (onSearchBoundary || sample.elevation < 6 || sample.slope > 1.25) continue;
     const neighbors = [];
     for (const dx of offsets) for (const dz of offsets) {
       if (dx === 0 && dz === 0) continue;
@@ -104,9 +104,11 @@ function identifyPeakCandidates(frame) {
   return freeze(peaks.sort((a, b) => b.elevation - a.elevation || a.world.x - b.world.x || a.world.z - b.world.z));
 }
 
-function evaluatePair(left, right) {
+function evaluatePair(leftInput, rightInput) {
+  const left = leftInput.world.x <= rightInput.world.x ? leftInput : rightInput;
+  const right = leftInput.world.x <= rightInput.world.x ? rightInput : leftInput;
   const distance = Math.hypot(right.world.x - left.world.x, right.world.z - left.world.z);
-  if (distance < 20 || distance > 96) return null;
+  if (distance < 16 || distance > 96) return null;
   const crossSection = traceLine(left.world, right.world, 2);
   if (crossSection.length < 3) return null;
   const saddle = [...crossSection].sort((a, b) => a.metrics.elevation - b.metrics.elevation || Math.abs(a.t - 0.5) - Math.abs(b.t - 0.5))[0];
@@ -118,34 +120,64 @@ function evaluatePair(left, right) {
   return freeze({ left, right, distance, lowerPeakElevation: lowerPeak, crossSection, saddle, drop, midpoint: freeze(midpoint), score });
 }
 
+function deriveSuppliedSemanticPair(frame) {
+  const buckets = new Map(SUPPLIED_HILL_ADDRESSES.map((address) => [address, []]));
+  for (const sample of frame.samples) {
+    const projection = resolveGRCRSemanticAddressProjection(sample.world.x, sample.world.z);
+    const selected = projection.valid ? projection.selectedSemanticAddressId : null;
+    if (selected && buckets.has(selected)) buckets.get(selected).push(freeze({ sample, projection }));
+  }
+  const selectedPeaks = SUPPLIED_HILL_ADDRESSES.map((address) => {
+    const candidates = buckets.get(address)
+      .filter((entry) => entry.sample.slope <= 1.5)
+      .sort((a, b) => b.sample.elevation - a.sample.elevation || a.sample.slope - b.sample.slope || a.sample.world.x - b.sample.world.x || a.sample.world.z - b.sample.world.z);
+    return candidates[0] ?? null;
+  });
+  const pair = selectedPeaks.every(Boolean) ? evaluatePair(selectedPeaks[0].sample, selectedPeaks[1].sample) : null;
+  return freeze({
+    eligible: pair !== null && pair.drop >= 0.25,
+    basis: 'SUPPLIED_SEMANTIC_HILL_ADDRESS_PAIR',
+    addresses: SUPPLIED_HILL_ADDRESSES,
+    addressCandidateCounts: freeze(Object.fromEntries(SUPPLIED_HILL_ADDRESSES.map((address) => [address, buckets.get(address).length]))),
+    selectedAddressPeaks: freeze(selectedPeaks),
+    pair,
+    issues: freeze(pair && pair.drop >= 0.25 ? [] : ['SUPPLIED_SEMANTIC_PAIR_NOT_TERRAIN_ELIGIBLE'])
+  });
+}
+
 function deriveHillPair(frame) {
+  const supplied = deriveSuppliedSemanticPair(frame);
   const peaks = identifyPeakCandidates(frame).slice(0, 48);
   const pairs = [];
-  for (let leftIndex = 0; leftIndex < peaks.length; leftIndex += 1) {
-    for (let rightIndex = leftIndex + 1; rightIndex < peaks.length; rightIndex += 1) {
-      const first = peaks[leftIndex];
-      const second = peaks[rightIndex];
-      const left = first.world.x <= second.world.x ? first : second;
-      const right = first.world.x <= second.world.x ? second : first;
-      const pair = evaluatePair(left, right);
-      if (pair && pair.drop >= 0.5) pairs.push(pair);
+  if (supplied.eligible) pairs.push(freeze({ ...supplied.pair, selectionBasis: supplied.basis }));
+  if (!supplied.eligible) {
+    for (let leftIndex = 0; leftIndex < peaks.length; leftIndex += 1) {
+      for (let rightIndex = leftIndex + 1; rightIndex < peaks.length; rightIndex += 1) {
+        const pair = evaluatePair(peaks[leftIndex], peaks[rightIndex]);
+        if (pair && pair.drop >= 0.5) pairs.push(freeze({ ...pair, selectionBasis: 'BROAD_TERRAIN_DERIVED_FALLBACK' }));
+      }
     }
   }
   if (pairs.length === 0) {
     const left = [...frame.samples].filter((sample) => sample.world.x <= 76).sort((a, b) => b.elevation - a.elevation || a.world.x - b.world.x)[0] ?? null;
     const right = [...frame.samples].filter((sample) => sample.world.x > 76).sort((a, b) => b.elevation - a.elevation || a.world.x - b.world.x)[0] ?? null;
     const fallback = left && right ? evaluatePair(left, right) : null;
-    if (fallback) pairs.push(fallback);
+    if (fallback) pairs.push(freeze({ ...fallback, selectionBasis: 'BROAD_TERRAIN_MAXIMA_LAST_RESORT' }));
   }
-  pairs.sort((a, b) => b.score - a.score || a.left.world.x - b.left.world.x || a.right.world.x - b.right.world.x);
+  pairs.sort((a, b) => {
+    const basisDifference = (a.selectionBasis === supplied.basis ? 0 : 1) - (b.selectionBasis === supplied.basis ? 0 : 1);
+    return basisDifference || b.score - a.score || a.left.world.x - b.left.world.x || a.right.world.x - b.right.world.x;
+  });
   const selected = pairs[0] ?? null;
   return freeze({
     checkpointId: 'GR-CR-03B',
     eligible: selected !== null,
     status: selected ? 'TWO_HILL_ENCLOSURE_DERIVED_NONFINAL' : 'TWO_HILL_ENCLOSURE_NOT_FOUND',
+    suppliedSemanticEvidence: supplied,
     peakCandidateCount: peaks.length,
     pairCandidateCount: pairs.length,
     selectedPair: selected,
+    selectionBasis: selected?.selectionBasis ?? null,
     accepted: false,
     finalHillIdentity: false,
     issues: freeze(selected ? [] : ['NO_ELIGIBLE_HILL_PAIR'])
@@ -260,17 +292,17 @@ function deriveSiteCandidates(frame, hillPair, corridor) {
       evaluateFootprint(center, corridor, 20, 16),
       evaluateFootprint(center, corridor, 28, 20)
     ]);
-    const compatibleFootprintCount = footprints.filter((entry) => entry.compatible).length;
+    const compatibleFootprintCount = footprints.filter((item) => item.compatible).length;
+    const clearSightlineCount = [beachward, mountainward].filter((item) => item.valid && item.clear).length;
     const score = (connected.eligible ? connected.sampleCount : 0)
       + (1 / (1 + entry.sample.slope)) * 20
       + Math.min(12, Math.max(0, entry.sample.elevation - corridor.origin.elevation))
-      + (beachward.valid && beachward.clear ? 10 : 0)
-      + (mountainward.valid && mountainward.clear ? 10 : 0)
+      + clearSightlineCount * 10
       + (approach.eligible ? 8 : 0)
       + compatibleFootprintCount * 6
       - Math.abs(entry.local.alongCorridor) * 0.08;
-    return freeze({ center: freeze({ x: center.x, z: center.z }), terrain: entry.sample, local: entry.local, connected, beachward, mountainward, approach, footprints, compatibleFootprintCount, score });
-  }).sort((a, b) => b.score - a.score || a.center.x - b.center.x || a.center.z - b.center.z);
+    return freeze({ center: freeze({ x: center.x, z: center.z }), terrain: entry.sample, local: entry.local, connected, beachward, mountainward, approach, footprints, compatibleFootprintCount, clearSightlineCount, score });
+  }).sort((a, b) => b.clearSightlineCount - a.clearSightlineCount || b.compatibleFootprintCount - a.compatibleFootprintCount || b.score - a.score || a.center.x - b.center.x || a.center.z - b.center.z);
   return freeze({
     checkpointId: 'GR-CR-03D',
     eligible: evaluated.length > 0,
@@ -308,13 +340,14 @@ export function deriveGRCRMirrorManorCandidate() {
     finalPlacement: false,
     finalCoordinatesAssigned: false,
     searchFrameSummary: freeze({ bounds: SEARCH, sampleCount: frame.sampleCount }),
+    hillPairSelectionBasis: hillPair.selectionBasis,
     hillPair: hillPair.selectedPair,
     lowCorridor: corridor,
     selectedSite: selected,
     envelope,
     centerFormationMembership: centerFormation,
     centerSemanticProjection: centerProjection,
-    viewSummary: selected ? freeze({ beachwardClear: selected.beachward.clear, beachwardMaximumObstruction: selected.beachward.maximumObstruction, mountainwardClear: selected.mountainward.clear, mountainwardMaximumObstruction: selected.mountainward.maximumObstruction }) : null,
+    viewSummary: selected ? freeze({ clearSightlineCount: selected.clearSightlineCount, beachwardGroundViewStatus: selected.beachward.clear ? 'CLEAR' : 'OBSTRUCTED_NONFINAL', beachwardClear: selected.beachward.clear, beachwardMaximumObstruction: selected.beachward.maximumObstruction, mountainwardGroundViewStatus: selected.mountainward.clear ? 'CLEAR' : 'OBSTRUCTED_NONFINAL', mountainwardClear: selected.mountainward.clear, mountainwardMaximumObstruction: selected.mountainward.maximumObstruction }) : null,
     approachSummary: selected ? freeze({ eligible: selected.approach.eligible, sampleCount: selected.approach.sampleCount, maximumSlope: selected.approach.maximumSlope, maximumNeighborElevationDelta: selected.approach.maximumNeighborElevationDelta }) : null,
     footprintSummary: selected ? freeze(selected.footprints.map((footprint) => ({ width: footprint.width, depth: footprint.depth, compatible: footprint.compatible, elevationRange: round(footprint.elevationRange), maximumSlope: round(footprint.maximumSlope), corridorConflictCount: footprint.corridorConflictCount }))) : freeze([]),
     preservationRules: freeze(['MANOR_MUST_NOT_FILL_LOW_CORRIDOR', 'TWO_HILL_ENCLOSURE_MUST_REMAIN_LEGIBLE', 'BEACHWARD_AND_MOUNTAINWARD_RELATIONS_MUST_BE_PRESERVED', 'FINAL_SCALE_MUST_BE_DERIVED_FROM_SITE_CAPACITY']),

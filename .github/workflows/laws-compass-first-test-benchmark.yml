@@ -1,0 +1,99 @@
+name: Laws Compass FIRST Test Benchmark
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "laws/**"
+      - "verification/benchmark-tools/four-compass-benchmark-v1/laws-first-test-benchmark.mjs"
+      - ".github/workflows/laws-compass-first-test-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-first-test-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  LAWS_FIRST_ORIGIN: http://127.0.0.1:4173
+
+jobs:
+  laws-first-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate source syntax
+        run: |
+          node --check laws/index.interactions.js
+          node --check laws/index.controller.js
+          node --check verification/benchmark-tools/four-compass-benchmark-v1/laws-first-test-benchmark.mjs
+
+      - name: Start exact-head static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-first-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/laws-first-server.log
+          exit 1
+
+      - name: Execute Laws FIRST browser benchmark
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node verification/benchmark-tools/four-compass-benchmark-v1/laws-first-test-benchmark.mjs
+
+      - name: Validate receipt
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('laws-first-test-benchmark-v1.json', 'utf8'));
+          const failures = [];
+          if (receipt.pass !== true || receipt.failures.length !== 0) failures.push('receipt');
+          if (receipt.execution.commit !== process.env.EXECUTION_COMMIT) failures.push('commit');
+          if (receipt.invariant.primaryStars !== 4 || receipt.invariant.fifthStar !== false) failures.push('geometry');
+          if (receipt.invariant.first.T !== 'Test' || receipt.invariant.testRole !== 'cross-cutting-no-fifth-star') failures.push('test');
+          if (receipt.invariant.clusterVisibleLabelCount !== 1) failures.push('label_count');
+          if (receipt.observations.length !== 2 || receipt.screenshotManifest.length !== 6) failures.push('evidence_count');
+          if (failures.length) throw new Error(`LAWS_FIRST_RECEIPT_INVALID:${failures.join(',')}`);
+          NODE
+
+      - name: Upload exact-head evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-compass-first-test-benchmark-v1-evidence
+          path: |
+            laws-first-test-benchmark-v1.json
+            laws-first-test-benchmark-v1-screenshots/**
+            /tmp/laws-first-server.log
+          if-no-files-found: error
+          retention-days: 30

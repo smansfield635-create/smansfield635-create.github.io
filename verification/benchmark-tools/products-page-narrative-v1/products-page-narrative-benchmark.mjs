@@ -26,7 +26,7 @@ const campaigns = [
   ["mr-lee", "/campaigns/wave/mr-lee/", "campaigns/wave/mr-lee/index.html", "seventh-degree black belt"],
   ["thai-boxing", "/campaigns/wave/thai-boxing/", "campaigns/wave/thai-boxing/index.html", "Tai-Boxing Class"]
 ];
-const assets = [
+const preservedSourceAssets = [
   "campaigns/assets/consider-energy-baseline.svg",
   "campaigns/assets/consider-energy-symbolic.svg",
   "campaigns/assets/rob-rise-over-bullying.svg",
@@ -58,16 +58,20 @@ for (const script of ["/products/index.controller.js", "/products/index.cosmos.j
 }
 
 assert(campaignCss.includes(".campaign-tablist") && campaignCss.includes(".campaign-disclosure"), "SHARED_CAMPAIGN_STYLE_AUTHORITY_INCOMPLETE");
+assert(campaignCss.includes(".campaign-native-visual--baseline") && campaignCss.includes(".campaign-native-visual--wave") && campaignCss.includes(".campaign-native-visual--profile") && campaignCss.includes(".campaign-native-visual--training"), "NATIVE_VISUAL_STYLE_AUTHORITY_INCOMPLETE");
 assert(campaignTabs.includes("ArrowRight") && campaignTabs.includes("Home") && campaignTabs.includes("End") && campaignTabs.includes("aria-selected"), "ACCESSIBLE_TAB_CONTROLLER_INCOMPLETE");
 assert(!campaignTabs.includes("innerHTML"), "TAB_CONTROLLER_UNSAFE_HTML_MUTATION");
-for (const asset of assets) {
+for (const asset of preservedSourceAssets) {
   assert(fs.existsSync(asset), `CAMPAIGN_ASSET_MISSING:${asset}`);
   if (fs.existsSync(asset)) assert(fs.statSync(asset).size > 1000, `CAMPAIGN_ASSET_EMPTY:${asset}`, fs.statSync(asset).size);
 }
+
+const campaignHtmlById = new Map();
 for (const [id, route, file, phrase] of campaigns) {
   assert(fs.existsSync(file), `CAMPAIGN_PAGE_MISSING:${file}`);
   if (!fs.existsSync(file)) continue;
   const html = fs.readFileSync(file, "utf8");
+  campaignHtmlById.set(id, html);
   assert(html.includes(`data-route="${route}"`), `CAMPAIGN_ROUTE_INVALID:${id}`);
   assert(html.toLowerCase().includes(phrase.toLowerCase()), `CAMPAIGN_PHRASE_MISSING:${id}`);
   assert(html.includes('href="/campaigns/index.css"') && html.includes('src="/campaigns/index.tabs.js"'), `SHARED_AUTHORITY_REFERENCE_MISSING:${id}`);
@@ -79,14 +83,26 @@ for (const [id, route, file, phrase] of campaigns) {
   assert(!/Rise Above Bullying|Secret Life Edition/i.test(html), `CAMPAIGN_IDENTITY_DRIFT:${id}`);
 }
 
+const considerHtml = campaignHtmlById.get("consider-energy") || "";
+const waveHtml = campaignHtmlById.get("wave") || "";
+const mrLeeHtml = campaignHtmlById.get("mr-lee") || "";
+const boxingHtml = campaignHtmlById.get("thai-boxing") || "";
+assert(considerHtml.includes('data-campaign-native-visual="baseline"'), "BASELINE_NATIVE_VISUAL_MISSING");
+assert(!considerHtml.includes("consider-energy-baseline.svg"), "BROKEN_BASELINE_ASSET_STILL_REFERENCED");
+assert(waveHtml.includes('data-campaign-native-visual="wave"') && waveHtml.includes("campaign-wave-figure"), "WAVE_NATIVE_VISUAL_MISSING");
+assert(!waveHtml.includes("wave-flyer.svg"), "WAVE_FLYER_USED_AS_PAGE_ARTWORK");
+assert(mrLeeHtml.includes('data-campaign-native-visual="mr-lee"') && mrLeeHtml.includes("campaign-profile-seal"), "MR_LEE_NATIVE_PROFILE_MISSING");
+assert(!mrLeeHtml.includes("mr-lee-resume.svg"), "MR_LEE_RESUME_USED_AS_PAGE_ARTWORK");
+assert(boxingHtml.includes('data-campaign-native-visual="thai-boxing"') && boxingHtml.includes("campaign-training-orbit"), "TAI_BOXING_NATIVE_VISUAL_MISSING");
+assert(!boxingHtml.includes("tai-boxing-class.svg"), "TAI_BOXING_FLYER_USED_AS_PAGE_ARTWORK");
+
 const lifeHtml = fs.readFileSync("campaigns/consider-the-energy/secret-of-life-edition/index.html", "utf8");
 for (const phrase of ["Learn to Live to Love", "Learn to Love to Laugh", "Learn to Live to Listen"]) assert(lifeHtml.includes(phrase), `SECRET_OF_LIFE_PHRASE_MISSING:${phrase}`);
 assert(lifeHtml.includes('href="/nine-summits-of-love/"') && lifeHtml.includes('href="/book/"'), "SECRET_OF_LIFE_LINKS_MISSING");
 const robHtml = fs.readFileSync("campaigns/rob/index.html", "utf8").toLowerCase();
 for (const phrase of ["beyond the playground", "workplace", "supermarket", "cognitive dissonance", "communal accountability", "due process"]) assert(robHtml.includes(phrase), `ROB_CONTEXT_MISSING:${phrase}`);
-assert(fs.readFileSync("campaigns/wave/index.html", "utf8").includes("Women Against Violence Everywhere"), "WAVE_EXPANSION_MISSING");
-assert(/seventh-degree black belt/i.test(fs.readFileSync("campaigns/wave/mr-lee/index.html", "utf8")), "MR_LEE_CREDENTIAL_MISSING");
-const boxingHtml = fs.readFileSync("campaigns/wave/thai-boxing/index.html", "utf8");
+assert(waveHtml.includes("Women Against Violence Everywhere"), "WAVE_EXPANSION_MISSING");
+assert(/seventh-degree black belt/i.test(mrLeeHtml), "MR_LEE_CREDENTIAL_MISSING");
 assert(boxingHtml.includes("$25") && boxingHtml.includes("$10") && boxingHtml.includes("817-500-8769"), "TAI_BOXING_SOURCE_DETAILS_MISSING");
 assert(/current schedule, location, registration process/i.test(boxingHtml), "TAI_BOXING_BOUNDARY_MISSING");
 
@@ -169,7 +185,10 @@ for (const [id, route] of campaigns) {
     const initial = await page.evaluate(() => {
       const tabs = [...document.querySelectorAll('[role="tab"]')];
       const panels = [...document.querySelectorAll('[role="tabpanel"]')];
-      const hero = document.querySelector(".campaign-hero__media img");
+      const heroMedia = document.querySelector(".campaign-hero__media");
+      const heroImage = heroMedia?.querySelector("img");
+      const nativeVisual = heroMedia?.querySelector("[data-campaign-native-visual]");
+      const images = [...document.images].map(image => ({ src: image.getAttribute("src"), complete: image.complete, width: image.naturalWidth, height: image.naturalHeight }));
       return {
         route: document.documentElement.dataset.route,
         h1Count: document.querySelectorAll("h1").length,
@@ -178,7 +197,10 @@ for (const [id, route] of campaigns) {
         selected: tabs.filter(tab => tab.getAttribute("aria-selected") === "true").map(tab => tab.id),
         visible: panels.filter(panel => !panel.hidden && panel.getAttribute("aria-hidden") === "false").map(panel => panel.id),
         openDetails: document.querySelectorAll("details[open]").length,
-        hero: hero ? { complete: hero.complete, width: hero.naturalWidth, height: hero.naturalHeight } : null,
+        heroMedia: Boolean(heroMedia),
+        heroImage: heroImage ? { complete: heroImage.complete, width: heroImage.naturalWidth, height: heroImage.naturalHeight } : null,
+        nativeVisual: nativeVisual?.dataset.campaignNativeVisual || null,
+        brokenImages: images.filter(image => !image.complete || image.width <= 0 || image.height <= 0),
         overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
         receipt: globalThis.DGB_CAMPAIGN_TABS_RECEIPT
       };
@@ -186,11 +208,13 @@ for (const [id, route] of campaigns) {
     assert(initial.route === route && initial.h1Count === 1, "CAMPAIGN_RUNTIME_ROUTE_INVALID", initial, `${id}:${profile.id}`);
     assert(initial.tabCount === 4 && initial.panelCount === 4 && initial.selected.length === 1 && initial.visible.length === 1, "CAMPAIGN_INITIAL_TAB_STATE_INVALID", initial, `${id}:${profile.id}`);
     assert(initial.openDetails === 0, "CAMPAIGN_DISCLOSURE_BASELINE_INVALID", initial, `${id}:${profile.id}`);
-    assert(initial.hero?.complete && initial.hero.width > 0 && initial.hero.height > 0, "CAMPAIGN_HERO_IMAGE_FAILED", initial, `${id}:${profile.id}`);
+    assert(initial.heroMedia && (initial.nativeVisual || (initial.heroImage?.complete && initial.heroImage.width > 0 && initial.heroImage.height > 0)), "CAMPAIGN_HERO_VISUAL_FAILED", initial, `${id}:${profile.id}`);
+    assert(initial.brokenImages.length === 0, "CAMPAIGN_IMAGE_DECODE_FAILED", initial.brokenImages, `${id}:${profile.id}`);
     assert(initial.overflow <= 1, "CAMPAIGN_HORIZONTAL_OVERFLOW", initial, `${id}:${profile.id}`);
     await page.click('[role="tab"]:nth-of-type(2)');
-    const clicked = await page.evaluate(() => ({ selected: document.querySelector('[role="tab"][aria-selected="true"]')?.id || "", visible: [...document.querySelectorAll('[role="tabpanel"]')].filter(panel => !panel.hidden && panel.getAttribute("aria-hidden") === "false").map(panel => panel.id) }));
+    const clicked = await page.evaluate(() => ({ selected: document.querySelector('[role="tab"][aria-selected="true"]')?.id || "", visible: [...document.querySelectorAll('[role="tabpanel"]')].filter(panel => !panel.hidden && panel.getAttribute("aria-hidden") === "false").map(panel => panel.id), visibleNativeVisuals: [...document.querySelectorAll('[role="tabpanel"]:not([hidden]) [data-campaign-native-visual]')].map(node => node.dataset.campaignNativeVisual) }));
     assert(clicked.selected.endsWith("tab-2") && clicked.visible.length === 1 && clicked.visible[0].endsWith("panel-2"), "CAMPAIGN_TAB_CLICK_FAILED", clicked, `${id}:${profile.id}`);
+    if (id === "consider-energy") assert(clicked.visibleNativeVisuals.includes("baseline"), "BASELINE_NATIVE_VISUAL_NOT_REVEALED", clicked, profile.id);
     await page.focus('[role="tab"][aria-selected="true"]');
     await page.keyboard.press("End");
     const keyboard = await page.evaluate(() => ({ selected: document.querySelector('[role="tab"][aria-selected="true"]')?.id || "", visible: [...document.querySelectorAll('[role="tabpanel"]')].filter(panel => !panel.hidden && panel.getAttribute("aria-hidden") === "false").map(panel => panel.id) }));
@@ -205,7 +229,7 @@ for (const [id, route] of campaigns) {
 await browser.close();
 const receipt = {
   tool: "PRODUCTS_PAGE_NARRATIVE_BENCHMARK_v1",
-  checkpoint: "CONSIDER_ENERGY_COMMUNITY_CAMPAIGN_FAMILY",
+  checkpoint: "CAMPAIGN_VISUAL_INTEGRATION_AND_ASSET_CORRECTION",
   campaignRoutes: campaigns.map(([, route]) => route),
   observations,
   failures,

@@ -2,7 +2,7 @@ name: Laws celestial gateway CP2 registry repair 004
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review]
     branches: [main]
     paths:
       - .github/workflows/laws-celestial-gateway-cp2-registry-repair-004.yml

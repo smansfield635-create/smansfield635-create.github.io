@@ -1,0 +1,386 @@
+name: H-Earth CP4 0B Three-File Materialization
+
+on:
+  push:
+    branches:
+      - agent/h-earth-touch-motion-cp4-calibration-testing-001
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-cp4-0b-three-file-materialization
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SOURCE_HEAD: 9ce2b2ef9078d99c93f847957479e37c41f83a53
+      OUTPUT_DIR: h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview
+      WORKFLOW_PATH: .github/workflows/h-earth-cp4-0b-three-file-materialization.yml
+      TOOL_ROOT: /tmp/h-earth-cp4-0b-tools
+      EVIDENCE_ROOT: /tmp/h-earth-cp4-0b-evidence
+    steps:
+      - name: Check out exact CP4 branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify bounded source occurrence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "${SOURCE_HEAD}^{commit}")" = "${SOURCE_HEAD}"
+          mapfile -t changed < <(git diff --name-only "${SOURCE_HEAD}..HEAD" | sort)
+          if [ "${#changed[@]}" -ne 1 ] || [ "${changed[0]}" != "${WORKFLOW_PATH}" ]; then
+            printf 'Unexpected pre-materialization delta from source head:\n'
+            printf '%s\n' "${changed[@]}"
+            exit 1
+          fi
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = 'a192e161149392fc2f849e6c2e6eb503d3ae90da'
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/index.css)" = '481148416a8d0466e76c4cb2eca7a67d8932a242'
+          test "$(git hash-object showroom/globe/h-earth/index.css)" = 'f208b7f11096a7bf5da282226903ac634c1eab01'
+          test "$(git hash-object showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js)" = 'c9f5ad33bebcf13793c9a0ef37ac363f7b4391ce'
+
+      - name: Install pinned materialization tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${TOOL_ROOT}" "${EVIDENCE_ROOT}"
+          cd "${TOOL_ROOT}"
+          npm init -y >/dev/null
+          npm install --no-save --package-lock=false esbuild@0.25.6 playwright@1.54.1
+          npx playwright install --with-deps chromium
+
+      - name: Construct sealed three-file runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "${TOOL_ROOT}/materialize.mjs" <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import { build } from 'esbuild';
+
+          const repo = process.cwd();
+          const sourceHead = process.env.SOURCE_HEAD;
+          const outputDir = path.join(repo, process.env.OUTPUT_DIR);
+          const evidenceRoot = process.env.EVIDENCE_ROOT;
+          const read = (relative) => fs.readFileSync(path.join(repo, relative), 'utf8');
+          const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
+
+          const sourceHtmlPath = 'showroom/globe/h-earth/index.html';
+          const functionalCssPath = 'showroom/globe/h-earth/functional-landscape/index.css';
+          const routeCssPath = 'showroom/globe/h-earth/index.css';
+          const wrapperPath = 'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js';
+          const observerPath = './showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js';
+          const integrationPath = './showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js';
+          const acceptancePath = './showroom/globe/h-earth/diagnostic/run8e-r3d/interaction-acceptance.run8e.js';
+
+          const sourceHtml = read(sourceHtmlPath);
+          const functionalCss = read(functionalCssPath);
+          const routeCss = read(routeCssPath);
+          const wrapperSource = read(wrapperPath);
+
+          const styleMatches = [...sourceHtml.matchAll(/<style>([\s\S]*?)<\/style>/gi)];
+          if (styleMatches.length !== 1) throw new Error(`CP4_0B_INLINE_STYLE_COUNT_INVALID:${styleMatches.length}`);
+          const inlineStyle = styleMatches[0][1].trim();
+
+          const scriptMatches = [...sourceHtml.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)];
+          const diagnosticMonitor = scriptMatches
+            .map((match) => match[1])
+            .find((body) => body.includes('window.H_EARTH_RUNTIME_DIAGNOSTICS'));
+          if (!diagnosticMonitor) throw new Error('CP4_0B_INLINE_DIAGNOSTIC_MONITOR_MISSING');
+
+          const expectedWrapperFragments = [
+            "import '../diagnostic/renderer-startup-observer.v1.js';",
+            "await import('./public-live-gpu-integration.run8e-r3e.js');",
+            'window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();',
+            "await import('../diagnostic/run8e-r3d/interaction-acceptance.run8e.js');",
+            "window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.fail('RENDERER_CONSTRUCTOR_RETURNED', error);",
+            'throw error;'
+          ];
+          for (const fragment of expectedWrapperFragments) {
+            if (!wrapperSource.includes(fragment)) throw new Error(`CP4_0B_WRAPPER_BEHAVIOR_MISSING:${fragment}`);
+          }
+
+          fs.mkdirSync(outputDir, { recursive: true });
+          fs.mkdirSync(evidenceRoot, { recursive: true });
+
+          let outputHtml = sourceHtml
+            .replace(/<link\b[^>]*rel=["']stylesheet["'][^>]*>\s*/gi, '')
+            .replace(/<style>[\s\S]*?<\/style>\s*/gi, '')
+            .replace(/<script\b[\s\S]*?<\/script>\s*/gi, '');
+          outputHtml = outputHtml.replace(
+            '</head>',
+            '  <link rel="stylesheet" href="./preview.css">\n</head>'
+          );
+          outputHtml = outputHtml.replace(
+            '</body>',
+            '  <script src="./preview.js"></script>\n</body>'
+          );
+          outputHtml = outputHtml.replace(
+            '<title>H-Earth · Ground-View Matrix</title>',
+            '<title>H-Earth · CP4 Sealed Physical Preview</title>'
+          );
+          outputHtml = outputHtml.replace(
+            '<main id="h-earth-3d-route-root"',
+            `<main data-cp4-source-head="${sourceHead}" data-cp4-materialization="CP4_0B_DETERMINISTIC_THREE_FILE_RUNTIME" id="h-earth-3d-route-root"`
+          );
+          outputHtml = `<!-- CP4_0B sealed preview. Source head: ${sourceHead}. No repository-relative runtime module graph. -->\n${outputHtml}`;
+
+          const outputCss = [
+            `/* CP4_0B sealed preview.css\n * Source head: ${sourceHead}\n * Order: functional-landscape/index.css -> index.css -> index.html inline style\n */`,
+            functionalCss,
+            routeCss,
+            inlineStyle
+          ].join('\n\n');
+
+          const entryPath = path.join(repo, '.cp4-0b-materialization-entry.mjs');
+          const entrySource = `/* CP4_0B synthetic execution entry derived from exact wrapper ${wrapperPath}. */\n${diagnosticMonitor.trim()}\n\n(async () => {\n  await import(${JSON.stringify(observerPath)});\n  try {\n    await import(${JSON.stringify(integrationPath)});\n    window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();\n    await import(${JSON.stringify(acceptancePath)});\n  } catch (error) {\n    window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.fail('RENDERER_CONSTRUCTOR_RETURNED', error);\n    throw error;\n  }\n})();\n`;
+          fs.writeFileSync(entryPath, entrySource);
+
+          const previewJsPath = path.join(outputDir, 'preview.js');
+          const result = await build({
+            absWorkingDir: repo,
+            entryPoints: [entryPath],
+            bundle: true,
+            outfile: previewJsPath,
+            format: 'iife',
+            platform: 'browser',
+            target: ['es2022'],
+            charset: 'utf8',
+            treeShaking: false,
+            minify: false,
+            legalComments: 'none',
+            sourcemap: false,
+            metafile: true,
+            logLevel: 'info',
+            banner: {
+              js: `/* H_EARTH_CP4_0B_DETERMINISTIC_THREE_FILE_MATERIALIZATION_v1\n * SOURCE_HEAD=${sourceHead}\n * ORIGINAL_EXECUTABLE_MODULE_COUNT=53\n * ORIGINAL_HTML_ENTRY_COUNT=1\n * ORIGINAL_STYLESHEET_COUNT=2\n * ORIGINAL_WRAPPER_BLOB=c9f5ad33bebcf13793c9a0ef37ac363f7b4391ce\n */`
+            }
+          });
+          fs.rmSync(entryPath, { force: true });
+
+          const metafileInputs = Object.keys(result.metafile.inputs).map((value) => value.replaceAll('\\', '/'));
+          const syntheticInputs = metafileInputs.filter((value) => value.endsWith('.cp4-0b-materialization-entry.mjs'));
+          const exactSourceInputs = metafileInputs.filter((value) => !value.endsWith('.cp4-0b-materialization-entry.mjs'));
+          if (syntheticInputs.length !== 1) throw new Error(`CP4_0B_SYNTHETIC_ENTRY_COUNT_INVALID:${syntheticInputs.length}`);
+          if (exactSourceInputs.length + 1 !== 53) {
+            throw new Error(`CP4_0B_EXECUTABLE_SOURCE_REPRESENTATION_COUNT_INVALID:${exactSourceInputs.length + 1}`);
+          }
+
+          fs.writeFileSync(path.join(outputDir, 'index.html'), outputHtml);
+          fs.writeFileSync(path.join(outputDir, 'preview.css'), outputCss);
+
+          const files = ['index.html', 'preview.css', 'preview.js'].map((name) => {
+            const content = fs.readFileSync(path.join(outputDir, name));
+            return {
+              name,
+              byteLength: content.length,
+              sha256: sha256(content)
+            };
+          });
+          const manifest = {
+            artifactId: 'H_EARTH_CP4_0B_DETERMINISTIC_THREE_FILE_MATERIALIZATION_v1',
+            sourceHead,
+            originalSourceBlobCount: 56,
+            originalExecutableJavaScriptModuleCount: 53,
+            originalHtmlEntryCount: 1,
+            originalStylesheetCount: 2,
+            representedExecutableSourceCount: exactSourceInputs.length + 1,
+            esbuildInputCount: metafileInputs.length,
+            outputFiles: files,
+            executionOrder: [
+              'INLINE_DIAGNOSTIC_MONITOR',
+              'STARTUP_OBSERVER_INSTALLATION',
+              'COMPLETE_RENDERER_AND_PACKAGE_MODULE_BODY',
+              'PUBLIC_INTEGRATION_EXECUTION',
+              'WRAPPER_TRY_CATCH_BEHAVIOR',
+              'CONSTRUCTOR_RETURNED_PUBLICATION',
+              'INTERACTION_ACCEPTANCE_INSTALLATION'
+            ]
+          };
+          fs.writeFileSync(path.join(evidenceRoot, 'materialization-manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+          fs.writeFileSync(path.join(evidenceRoot, 'esbuild-metafile.json'), JSON.stringify(result.metafile, null, 2) + '\n');
+          console.log(JSON.stringify(manifest, null, 2));
+          NODE
+          node "${TOOL_ROOT}/materialize.mjs" | tee "${EVIDENCE_ROOT}/materialization.log"
+
+      - name: Validate sealed output statically
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "${TOOL_ROOT}/validate-static.mjs" <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const repo = process.cwd();
+          const outputDir = path.join(repo, process.env.OUTPUT_DIR);
+          const evidenceRoot = process.env.EVIDENCE_ROOT;
+          const html = fs.readFileSync(path.join(outputDir, 'index.html'), 'utf8');
+          const css = fs.readFileSync(path.join(outputDir, 'preview.css'), 'utf8');
+          const js = fs.readFileSync(path.join(outputDir, 'preview.js'), 'utf8');
+
+          const count = (text, pattern) => [...text.matchAll(pattern)].length;
+          const esmStaticImportCount = count(js, /(^|[;{}\n])\s*import\s+(?!\s*\()/gm);
+          const esmExportCount = count(js, /(^|[;{}\n])\s*export\s+/gm);
+          const dynamicImportCount = count(js, /\bimport\s*\(/g);
+          const fetchLikeCount = count(js, /\b(fetch|XMLHttpRequest|WebSocket|EventSource)\b/g);
+          const serviceWorkerCount = count(js, /serviceWorker\s*\.\s*register/g);
+          const beaconCount = count(js, /sendBeacon\s*\(/g);
+          const cssImportCount = count(css, /@import\b/gi);
+          const cssUrlCount = count(css, /url\s*\(/gi);
+          const htmlSubresources = [...html.matchAll(/<(script|link|img|source|iframe)\b[^>]*(?:src|href)=["']([^"']+)["'][^>]*>/gi)]
+            .map((match) => ({ tag: match[1].toLowerCase(), url: match[2] }));
+          const allowedSubresources = new Set(['./preview.css', './preview.js']);
+          const undeclaredSubresources = htmlSubresources.filter(({ url }) => !allowedSubresources.has(url));
+          const externalSubresources = htmlSubresources.filter(({ url }) => /^(?:https?:)?\/\//i.test(url));
+          const repositoryRelativeSubresources = htmlSubresources.filter(({ url }) => /^(?:\.\.?\/|\/)/.test(url) && !allowedSubresources.has(url));
+
+          const receipt = {
+            outputEsmImportCount: esmStaticImportCount + esmExportCount,
+            outputDynamicImportCount: dynamicImportCount,
+            outputRepositoryRelativeRequestCount: repositoryRelativeSubresources.length,
+            outputExternalRequestCount: fetchLikeCount + beaconCount + externalSubresources.length,
+            outputServiceWorkerCount: serviceWorkerCount,
+            outputUndeclaredAssetCount: undeclaredSubresources.length + cssImportCount + cssUrlCount,
+            htmlSubresources,
+            cssImportCount,
+            cssUrlCount,
+            fetchLikeCount,
+            beaconCount
+          };
+          const failures = Object.entries(receipt)
+            .filter(([key, value]) => key.startsWith('output') && typeof value === 'number' && value !== 0);
+          fs.writeFileSync(path.join(evidenceRoot, 'static-validation.json'), JSON.stringify(receipt, null, 2) + '\n');
+          console.log(JSON.stringify(receipt, null, 2));
+          if (failures.length) throw new Error(`CP4_0B_STATIC_ACCEPTANCE_FAILED:${JSON.stringify(failures)}`);
+          NODE
+          node --check "${OUTPUT_DIR}/preview.js"
+          node "${TOOL_ROOT}/validate-static.mjs" | tee "${EVIDENCE_ROOT}/static-validation.log"
+
+      - name: Execute sealed browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "${TOOL_ROOT}/validate-browser.mjs" <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import { chromium } from 'playwright';
+
+          const outputPath = process.env.OUTPUT_DIR.replaceAll('\\', '/');
+          const url = `http://127.0.0.1:4173/${outputPath}/index.html`;
+          const evidenceRoot = process.env.EVIDENCE_ROOT;
+          const browser = await chromium.launch({
+            headless: true,
+            args: [
+              '--use-gl=angle',
+              '--use-angle=swiftshader',
+              '--enable-webgl',
+              '--ignore-gpu-blocklist',
+              '--disable-dev-shm-usage'
+            ]
+          });
+          const page = await browser.newPage({ viewport: { width: 412, height: 915 }, deviceScaleFactor: 1 });
+          const consoleErrors = [];
+          const pageErrors = [];
+          page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+          page.on('pageerror', (error) => pageErrors.push(error.stack ?? error.message));
+          await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+          await page.waitForFunction(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true, null, { timeout: 30000 });
+          await page.waitForFunction(() => {
+            const receipt = window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+            return receipt?.stages?.READY_PUBLISHED === 'PASS';
+          }, null, { timeout: 30000 });
+          const runtime = await page.evaluate(() => {
+            const startup = window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getReceipt();
+            const route = window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt();
+            const liveGpu = window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+            const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+            return {
+              startup,
+              routeStatus: route.status,
+              routeEligible: route.eligible,
+              runtimeExclusivity: route.runtimeExclusivity,
+              visibleFrames: liveGpu.counters.gpuFramebufferPresentationCount,
+              contextCreationCount: liveGpu.resources.counters.contextCreationCount,
+              rendererInitializationCount: liveGpu.counters.rendererInitializationCount,
+              packageUploadedOnce: liveGpu.correspondence.packageUploadedOnce,
+              resourceIdentityStable: liveGpu.correspondence.resourceIdentityStable,
+              interactionAcceptanceMounted: [...document.querySelectorAll('section')].some((node) => node.getAttribute('aria-label') === 'Guided interaction acceptance'),
+              canvasSize: { width: canvas.width, height: canvas.height }
+            };
+          });
+          await page.screenshot({ path: path.join(evidenceRoot, 'sealed-preview.png'), fullPage: true });
+          await browser.close();
+          const receipt = { url, consoleErrors, pageErrors, runtime };
+          fs.writeFileSync(path.join(evidenceRoot, 'browser-validation.json'), JSON.stringify(receipt, null, 2) + '\n');
+          console.log(JSON.stringify(receipt, null, 2));
+          const issues = [];
+          if (consoleErrors.length) issues.push('CONSOLE_ERRORS_PRESENT');
+          if (pageErrors.length) issues.push('PAGE_ERRORS_PRESENT');
+          if (runtime.startup.firstFailureStage !== null) issues.push(`STARTUP_FAILURE:${runtime.startup.firstFailureStage}`);
+          if (runtime.startup.stages.READY_PUBLISHED !== 'PASS') issues.push('READY_NOT_PUBLISHED');
+          if (runtime.routeEligible !== true) issues.push('ROUTE_NOT_ELIGIBLE');
+          if (runtime.visibleFrames < 1) issues.push('NO_VISIBLE_FRAME');
+          if (runtime.contextCreationCount !== 1) issues.push('WEBGL2_CONTEXT_COUNT_INVALID');
+          if (runtime.rendererInitializationCount !== 1) issues.push('RENDERER_INITIALIZATION_COUNT_INVALID');
+          if (runtime.packageUploadedOnce !== true) issues.push('PACKAGE_NOT_UPLOADED_ONCE');
+          if (runtime.resourceIdentityStable !== true) issues.push('RESOURCE_IDENTITY_NOT_STABLE');
+          if (runtime.interactionAcceptanceMounted !== true) issues.push('INTERACTION_ACCEPTANCE_NOT_INSTALLED');
+          if (issues.length) throw new Error(`CP4_0B_BROWSER_ACCEPTANCE_FAILED:${issues.join(',')}`);
+          NODE
+          python3 -m http.server 4173 --bind 127.0.0.1 >"${EVIDENCE_ROOT}/http-server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill ${server_pid} 2>/dev/null || true' EXIT
+          sleep 2
+          node "${TOOL_ROOT}/validate-browser.mjs" | tee "${EVIDENCE_ROOT}/browser-validation.log"
+
+      - name: Verify final bounded tree and commit outputs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/agent/h-earth-touch-motion-cp4-calibration-testing-001'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "${OUTPUT_DIR}/index.html"
+          test -f "${OUTPUT_DIR}/preview.css"
+          test -f "${OUTPUT_DIR}/preview.js"
+          rm -f "${WORKFLOW_PATH}"
+          rm -f .cp4-0b-materialization-entry.mjs
+          mapfile -t worktree_paths < <(git status --short | sed -E 's/^.. //' | sort)
+          expected=(
+            "${WORKFLOW_PATH}"
+            "${OUTPUT_DIR}/index.html"
+            "${OUTPUT_DIR}/preview.css"
+            "${OUTPUT_DIR}/preview.js"
+          )
+          if [ "${#worktree_paths[@]}" -ne "${#expected[@]}" ]; then
+            printf 'Unexpected CP4_0B worktree path count:\n'
+            printf '%s\n' "${worktree_paths[@]}"
+            exit 1
+          fi
+          for index in "${!expected[@]}"; do
+            if [ "${worktree_paths[$index]}" != "${expected[$index]}" ]; then
+              printf 'Unexpected CP4_0B path at index %s: %s != %s\n' "$index" "${worktree_paths[$index]}" "${expected[$index]}"
+              exit 1
+            fi
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${OUTPUT_DIR}/index.html" "${OUTPUT_DIR}/preview.css" "${OUTPUT_DIR}/preview.js"
+          git add -u "${WORKFLOW_PATH}"
+          git commit -m 'Materialize CP4 0B sealed three-file preview'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload CP4 0B evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp4-0b-three-file-materialization-evidence
+          path: /tmp/h-earth-cp4-0b-evidence
+          if-no-files-found: warn
+          retention-days: 90

@@ -30,12 +30,16 @@ const source = {
   html: fs.readFileSync("showroom/index.html", "utf8"),
   css: fs.readFileSync("showroom/index.css", "utf8"),
   interactions: fs.readFileSync("showroom/index.interactions.js", "utf8"),
+  gestures: fs.readFileSync("showroom/index.interaction.gestures.js", "utf8"),
   controller: fs.readFileSync("showroom/index.controller.js", "utf8")
 };
 const sourceCardinalControls = (source.html.match(/data-showroom-cardinal-control/g) || []).length;
 const sourceRoomControls = (source.html.match(/data-showroom-child-control/g) || []).length;
-assert(source.html.includes('data-showroom-projected-label-model="four-cardinal-compass-family-and-one-active-room-label"'), "LABEL_MODEL_SOURCE_MISSING");
-assert(source.interactions.includes("SHOWROOM_LABEL_HIERARCHY_PRIMARY_ONLY_20260729A"), "INTERACTION_BUILD_MARKER_MISSING");
+assert(source.html.includes('data-showroom-projected-label-model="four-cardinal-compass-family-and-one-camera-front-room-label"'), "LABEL_MODEL_SOURCE_MISSING");
+assert(source.interactions.includes("SHOWROOM_CLUSTER_CAMERA_FRONT_LOCK_AND_COMPASS_FIT_20260729B"), "INTERACTION_BUILD_MARKER_MISSING");
+assert(source.gestures.includes("SHOWROOM_CLUSTER_CAMERA_FRONT_LOCK_AND_COMPASS_FIT_20260729B"), "GESTURE_BUILD_MARKER_MISSING");
+assert(source.gestures.includes("cluster: Object.freeze([0, 0, 1])"), "CAMERA_FRONT_ANCHOR_MISSING");
+assert(source.gestures.includes("ROOM_PRIMARY_HYSTERESIS"), "ROOM_PRIMARY_HYSTERESIS_MISSING");
 assert(source.interactions.includes('"cluster-primary-only"'), "PRIMARY_ONLY_CONTENT_MODEL_MISSING");
 assert(source.interactions.includes("previewPrimaryRoom") && source.interactions.includes("orbitPreviewFocus"), "PREVIEW_PRIMARY_AUTHORITY_MISSING");
 assert(source.interactions.includes("showroomProjectedCardinalLetter") && source.interactions.includes("showroomProjectedCardinalWord"), "CARDINAL_LABEL_PARTS_MISSING");
@@ -93,6 +97,15 @@ for (const profile of profiles) {
     const fieldRect = field?.getBoundingClientRect();
     const cardinalLabels = [...document.querySelectorAll('[data-showroom-projected-kind="cardinal"]')];
     const roomLabels = [...document.querySelectorAll('[data-showroom-projected-kind="room"]')];
+    const compassControl = document.querySelector("[data-showroom-compass-control]");
+    const compassLabel = compassControl?.querySelector(".showroom-compass-control__label");
+    const compassInstruction = compassControl?.querySelector(".showroom-compass-control__instruction");
+    const compassRect = compassControl?.getBoundingClientRect();
+    const compassLabelRect = compassLabel?.getBoundingClientRect();
+    const compassInstructionRect = compassInstruction?.getBoundingClientRect();
+    const compassBefore = compassControl ? getComputedStyle(compassControl, "::before") : null;
+    const compassVisualWidth = Number.parseFloat(compassBefore?.width || "0");
+    const compassContentWidth = Math.max(compassLabelRect?.width || 0, compassInstructionRect?.width || 0);
     const describe = element => {
       const rect = element.getBoundingClientRect();
       const style = getComputedStyle(element);
@@ -126,6 +139,10 @@ for (const profile of profiles) {
       roomVisibleCount: roomLabels.filter(isVisible).length,
       roomPrimaryCount: roomLabels.filter(element => isVisible(element) && element.dataset.showroomProjectedPrimary === "true").length,
       visibleRoomLabels: roomLabels.filter(isVisible).map(describe),
+      compassHitWidth: compassRect?.width || 0,
+      compassVisualWidth,
+      compassContentWidth,
+      compassVisualToHitRatio: compassRect?.width ? compassVisualWidth / compassRect.width : 0,
       horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       h1Count: document.querySelectorAll("h1").length
     };
@@ -152,57 +169,109 @@ for (const profile of profiles) {
   assert(initial.horizontalOverflow <= 1 && initial.h1Count === 1, "INITIAL_LAYOUT_REGRESSION", initial, profile.id);
   await shot("initial");
 
-  const clusterAccepted = await page.evaluate(() => globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER.requestCardinalSelection("east"));
-  assert(clusterAccepted !== false, "EAST_CLUSTER_SELECTION_REJECTED", clusterAccepted, profile.id);
+  assert(
+    initial.compassVisualWidth > 0 &&
+    initial.compassHitWidth > initial.compassVisualWidth + 20 &&
+    initial.compassVisualToHitRatio < 0.72 &&
+    initial.compassVisualWidth <= initial.compassContentWidth + 48,
+    "MAIN_COMPASS_VISUAL_CAPSULE_NOT_COMPACT",
+    initial,
+    profile.id
+  );
+
+  const clusterAccepted = await page.evaluate(() => globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER.requestCardinalSelection("south"));
+  assert(clusterAccepted !== false, "SOUTH_CLUSTER_SELECTION_REJECTED", clusterAccepted, profile.id);
   await page.waitForFunction(() => document.querySelector("[data-showroom-root]")?.dataset.showroomControllerState === "CLUSTER_OPEN", { timeout: 15000 });
   await waitForVisibleCounts(0, 1);
-  await sleep(180);
-  const cluster = await inspect("CLUSTER_OPEN");
-  assert(cluster.cardinalVisibleCount === 0, "CARDINAL_LABEL_VISIBLE_IN_CLUSTER", cluster, profile.id);
-  assert(cluster.roomVisibleCount === 1 && cluster.roomPrimaryCount === 1, "CLUSTER_SINGLE_LABEL_INVALID", cluster, profile.id);
-  assert(cluster.visibleRoomLabels[0]?.id === "east-1" && cluster.visibleRoomLabels[0]?.text === "Jeeves", "INITIAL_CLUSTER_PRIMARY_LABEL_INVALID", cluster.visibleRoomLabels, profile.id);
-  assert(cluster.visibleRoomLabels.every(item => item.placement === "inward-edge-primary-only" && item.contained), "CLUSTER_LABEL_PLACEMENT_INVALID", cluster.visibleRoomLabels, profile.id);
-  assert(cluster.horizontalOverflow <= 1, "CLUSTER_LAYOUT_OVERFLOW", cluster, profile.id);
-  await shot("cluster");
-
-  const previewAccepted = await page.evaluate(() => {
-    const controller = globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER;
-    controller.beginClusterGesture("east");
-    return controller.requestClusterPreview("east", {
-      quaternion: [0, 0, 0, 1],
-      primaryId: "east-2"
-    });
-  });
-  assert(previewAccepted !== false, "CLUSTER_PREVIEW_REJECTED", previewAccepted, profile.id);
   await page.waitForFunction(() => {
-    const root = document.querySelector("[data-showroom-root]");
-    const visibleLabels = [...document.querySelectorAll('[data-showroom-projected-kind="room"]')].filter(element => {
-      if (element.hidden) return false;
-      const style = getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
-      return style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity || 1) > 0.01 && rect.width > 0 && rect.height > 0;
-    });
-    return root?.dataset.showroomClusterGestureActive === "true" && root?.dataset.showroomClusterPreviewPrimaryRoom === "east-2" && visibleLabels.length === 1 && visibleLabels[0].dataset.showroomProjectedLabel === "east-2";
+    const label = [...document.querySelectorAll('[data-showroom-projected-kind="room"]')].find(element => !element.hidden && getComputedStyle(element).visibility !== "hidden");
+    return label?.dataset.showroomProjectedLabel === "south-3";
   }, { timeout: 15000 });
   await sleep(180);
-  const preview = await inspect("CLUSTER_GESTURE_PREVIEW");
-  assert(preview.roomVisibleCount === 1 && preview.roomPrimaryCount === 1, "PREVIEW_SINGLE_LABEL_INVALID", preview, profile.id);
-  assert(preview.visibleRoomLabels[0]?.id === "east-2" && preview.visibleRoomLabels[0]?.text === "Elara", "PREVIEW_PRIMARY_LABEL_INVALID", preview.visibleRoomLabels, profile.id);
-  await shot("preview");
+  const cluster = await inspect("CLUSTER_OPEN_CAMERA_FRONT");
+  assert(cluster.cardinalVisibleCount === 0, "CARDINAL_LABEL_VISIBLE_IN_CLUSTER", cluster, profile.id);
+  assert(cluster.roomVisibleCount === 1 && cluster.roomPrimaryCount === 1, "CLUSTER_SINGLE_LABEL_INVALID", cluster, profile.id);
+  assert(cluster.visibleRoomLabels[0]?.id === "south-3" && cluster.visibleRoomLabels[0]?.text === "Stars", "INITIAL_CAMERA_FRONT_LABEL_INVALID", cluster.visibleRoomLabels, profile.id);
+  assert(cluster.visibleRoomLabels.every(item => item.placement === "inward-edge-primary-only" && item.contained), "CLUSTER_LABEL_PLACEMENT_INVALID", cluster.visibleRoomLabels, profile.id);
+  assert(cluster.horizontalOverflow <= 1, "CLUSTER_LAYOUT_OVERFLOW", cluster, profile.id);
+  await shot("cluster-camera-front");
 
-  const commitAccepted = await page.evaluate(() => globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER.requestClusterCommit("east"));
-  assert(commitAccepted !== false, "CLUSTER_COMMIT_REJECTED", commitAccepted, profile.id);
+  const dragStarted = await page.evaluate(async () => {
+    const field = document.querySelector("[data-showroom-orbit-field]");
+    if (!field) return false;
+    const rect = field.getBoundingClientRect();
+    const pointerId = 41;
+    const startX = rect.left + rect.width * 0.72;
+    const startY = rect.top + rect.height * 0.78;
+    const endX = startX - rect.width * 0.32;
+    const endY = startY;
+    const dispatch = (type, x, y, buttons, pressure) => field.dispatchEvent(new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      pointerId,
+      pointerType: "touch",
+      isPrimary: true,
+      clientX: x,
+      clientY: y,
+      button: type === "pointerdown" ? 0 : -1,
+      buttons,
+      pressure
+    }));
+    dispatch("pointerdown", startX, startY, 1, 0.5);
+    for (let step = 1; step <= 12; step += 1) {
+      const progress = step / 12;
+      dispatch("pointermove", startX + (endX - startX) * progress, endY, 1, 0.5);
+      await new Promise(resolve => setTimeout(resolve, 36));
+    }
+    globalThis.__SHOWROOM_LABEL_TEST_POINTER__ = { pointerId, endX, endY };
+    return true;
+  });
+  assert(dragStarted, "TOUCH_DRAG_START_FAILED", dragStarted, profile.id);
+
   await page.waitForFunction(() => {
     const root = document.querySelector("[data-showroom-root]");
-    return root?.dataset.showroomClusterGestureActive === "false" && root?.dataset.showroomClusterPrimaryRoom === "east-2";
+    const label = [...document.querySelectorAll('[data-showroom-projected-kind="room"]')].find(element => !element.hidden && getComputedStyle(element).visibility !== "hidden");
+    return root?.dataset.showroomClusterGestureActive === "true" && label?.dataset.showroomProjectedLabel === "south-2";
+  }, { timeout: 15000 });
+  await sleep(120);
+  const preview = await inspect("ACTUAL_TOUCH_GESTURE_PREVIEW");
+  assert(preview.roomVisibleCount === 1 && preview.roomPrimaryCount === 1, "PREVIEW_SINGLE_LABEL_INVALID", preview, profile.id);
+  assert(preview.visibleRoomLabels[0]?.id === "south-2" && preview.visibleRoomLabels[0]?.text === "Diamond", "ACTUAL_TOUCH_FRONT_LOCK_INVALID", preview.visibleRoomLabels, profile.id);
+  await shot("touch-preview-diamond");
+
+  const pointerReleased = await page.evaluate(() => {
+    const field = document.querySelector("[data-showroom-orbit-field]");
+    const pointer = globalThis.__SHOWROOM_LABEL_TEST_POINTER__;
+    if (!field || !pointer) return false;
+    field.dispatchEvent(new PointerEvent("pointerup", {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      pointerId: pointer.pointerId,
+      pointerType: "touch",
+      isPrimary: true,
+      clientX: pointer.endX,
+      clientY: pointer.endY,
+      button: 0,
+      buttons: 0,
+      pressure: 0
+    }));
+    return true;
+  });
+  assert(pointerReleased, "TOUCH_DRAG_RELEASE_FAILED", pointerReleased, profile.id);
+  await page.waitForFunction(() => {
+    const root = document.querySelector("[data-showroom-root]");
+    const label = [...document.querySelectorAll('[data-showroom-projected-kind="room"]')].find(element => !element.hidden && getComputedStyle(element).visibility !== "hidden");
+    return root?.dataset.showroomClusterGestureActive === "false" && root?.dataset.showroomClusterPrimaryRoom === "south-2" && label?.dataset.showroomProjectedLabel === "south-2";
   }, { timeout: 15000 });
   await waitForVisibleCounts(0, 1);
   await sleep(180);
-  const committed = await inspect("CLUSTER_GESTURE_COMMITTED");
+  const committed = await inspect("ACTUAL_TOUCH_GESTURE_COMMITTED");
   assert(committed.roomVisibleCount === 1 && committed.roomPrimaryCount === 1, "COMMITTED_SINGLE_LABEL_INVALID", committed, profile.id);
-  assert(committed.visibleRoomLabels[0]?.id === "east-2" && committed.visibleRoomLabels[0]?.text === "Elara", "COMMITTED_PRIMARY_LABEL_INVALID", committed.visibleRoomLabels, profile.id);
+  assert(committed.visibleRoomLabels[0]?.id === "south-2" && committed.visibleRoomLabels[0]?.text === "Diamond", "COMMITTED_FRONT_LOCK_INVALID", committed.visibleRoomLabels, profile.id);
   assert(committed.horizontalOverflow <= 1, "COMMITTED_LAYOUT_OVERFLOW", committed, profile.id);
-  await shot("committed");
+  await shot("touch-committed-diamond");
 
   const returnAccepted = await page.evaluate(() => globalThis.SHOWROOM_MIRRORLAND_CONSTELLATION_CONTROLLER.requestReturnToConstellation());
   assert(returnAccepted !== false, "RETURN_TO_CONSTELLATION_REJECTED", returnAccepted, profile.id);
@@ -226,7 +295,7 @@ const screenshotManifest = fs.readdirSync(SHOTS).sort().map(file => {
 });
 const receipt = {
   tool: "SHOWROOM_LABEL_CONFORMANCE_BENCHMARK_v1",
-  checkpoint: "SHOWROOM_LABEL_HIERARCHY_PRIMARY_ONLY_20260729A",
+  checkpoint: "SHOWROOM_CLUSTER_CAMERA_FRONT_LOCK_AND_COMPASS_FIT_20260729B",
   execution: {
     repository: process.env.GITHUB_REPOSITORY || "smansfield635-create/smansfield635-create.github.io",
     branch: process.env.EXECUTION_BRANCH || process.env.GITHUB_REF_NAME || "",
@@ -239,16 +308,18 @@ const receipt = {
     constellationVisibleLabelCount: 4,
     clusterVisibleLabelCount: 1,
     cardinalLabelModel: "compass-family-letter-word",
-    clusterLabelModel: "primary-only",
-    previewAuthority: "cluster.previewPrimaryRoom",
-    committedAuthority: "cluster.primaryRoom"
+    clusterLabelModel: "camera-front-primary-only",
+    initialClusterFrontRoom: "south-3",
+    touchGestureFrontRoom: "south-2",
+    primarySelectionAuthority: "actual-touch-quaternion-camera-front-lock",
+    visualCompassCapsule: "content-fit-with-larger-semantic-control"
   },
   observations,
   screenshotManifest,
   failures,
   pass: failures.length === 0,
   stoppingBoundary: {
-    proves: ["EXACT_HEAD_BROWSER_EXECUTION", "FOUR_CARDINAL_LABEL_HIERARCHY", "SINGLE_CLUSTER_LABEL", "PREVIEW_AND_COMMIT_PRIMARY_TRACKING", "LABEL_CONTAINMENT"],
+    proves: ["EXACT_HEAD_BROWSER_EXECUTION", "FOUR_CARDINAL_LABEL_HIERARCHY", "SINGLE_CLUSTER_LABEL", "ACTUAL_TOUCH_GESTURE_FRONT_LOCK", "CAMERA_FRONT_INITIAL_LABEL", "COMPACT_VISIBLE_COMPASS_CAPSULE", "LABEL_CONTAINMENT"],
     doesNotProve: ["PHYSICAL_SAMSUNG_ACCEPTANCE", "UNIVERSAL_VISUAL_CORRECTNESS", "SCIENTIFIC_VALIDATION"]
   }
 };

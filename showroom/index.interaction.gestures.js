@@ -1,6 +1,7 @@
 /* TARGET FILE: /showroom/index.interaction.gestures.js */
 /* TNT FULL-FILE ADDITION */
 /* SHOWROOM_INTERACTION_GESTURE_SUPPORT_TNT_v1 */
+/* SHOWROOM_CLUSTER_CAMERA_FRONT_LOCK_AND_COMPASS_FIT_20260729B */
 
 (() => {
   "use strict";
@@ -38,16 +39,18 @@
   });
 
   const ROOM_BASE_POSITIONS = Object.freeze({
-    1: Object.freeze([-0.92, 0.82, -0.46]),
-    2: Object.freeze([0.92, 0.82, 0.50]),
-    3: Object.freeze([0.92, -0.82, -0.42]),
-    4: Object.freeze([-0.92, -0.82, 0.46])
+    1: Object.freeze([0, 0.42155918243834756, -0.9713677415028749]),
+    2: Object.freeze([1.3178909481432288, 0.29135821915396054, 0]),
+    3: Object.freeze([0, -0.5073345276802548, 0.9389695242664297]),
+    4: Object.freeze([-1.351990798995593, -0.12787386777498447, 0])
   });
 
   const PRIMARY_ANCHORS = Object.freeze({
     orbit: Object.freeze([0, 1, 0.08]),
-    cluster: Object.freeze([0, 1, 0.16])
+    cluster: Object.freeze([0, 0, 1])
   });
+
+  const ROOM_PRIMARY_HYSTERESIS = 0.075;
 
   const DEFAULT_CONFIG = Object.freeze({
     radiansPerViewport: Math.PI * 1.14,
@@ -319,7 +322,12 @@
     return bestWing;
   }
 
-  function primaryRoomForQuaternion(roomIds, quaternion) {
+  function primaryRoomForQuaternion(
+    roomIds,
+    quaternion,
+    previousRoomId = "",
+    hysteresis = ROOM_PRIMARY_HYSTERESIS
+  ) {
     const anchor = normalizeVector(PRIMARY_ANCHORS.cluster);
     const normalizedQuaternion = quaternionNormalize(quaternion);
 
@@ -334,25 +342,43 @@
       return "";
     }
 
+    const scores = new Map();
     let bestRoom = candidates[0];
     let bestScore = -Infinity;
 
     for (const roomId of candidates) {
       const ordinal = roomOrdinal(roomId);
-
-      const rotated =
-        normalizeVector(
-          quaternionRotateVector(
-            normalizedQuaternion,
-            ROOM_BASE_POSITIONS[ordinal]
-          )
-        );
-
+      const rotated = quaternionRotateVector(
+        normalizedQuaternion,
+        ROOM_BASE_POSITIONS[ordinal]
+      );
       const score = dot(rotated, anchor);
+
+      scores.set(roomId, score);
 
       if (score > bestScore) {
         bestScore = score;
         bestRoom = roomId;
+      }
+    }
+
+    const previous = String(
+      previousRoomId == null ? "" : previousRoomId
+    ).trim();
+    const margin = Math.max(
+      0,
+      finiteNumber(hysteresis, ROOM_PRIMARY_HYSTERESIS)
+    );
+
+    if (
+      previous &&
+      previous !== bestRoom &&
+      scores.has(previous)
+    ) {
+      const previousScore = scores.get(previous);
+
+      if (bestScore < previousScore + margin) {
+        return previous;
       }
     }
 

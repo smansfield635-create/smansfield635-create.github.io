@@ -1373,10 +1373,12 @@ main {
 [data-showroom-compass-control]::before,
 [data-showroom-full-center-hit-target="true"]::before {
   position: absolute;
-  right: 18%;
+  right: auto;
   bottom: 17%;
-  left: 18%;
-  min-height: 2.35rem;
+  left: 50%;
+  width: clamp(7rem, 49%, 8.4rem);
+  min-height: 2.15rem;
+  transform: translateX(-50%);
   border: 1px solid rgba(245, 213, 130, 0.18);
   border-radius: 999px;
   content: "";
@@ -1438,8 +1440,10 @@ main {
     Georgia,
     "Times New Roman",
     serif;
-  min-width: 64%;
-  padding: 0.42rem 0.78rem 0.12rem;
+  min-width: 0;
+  width: max-content;
+  max-width: 8.1rem;
+  padding: 0.34rem 0.58rem 0.08rem;
   border-radius: 999px 999px 0 0;
   font-size: clamp(0.7rem, 1.15vw, 0.9rem);
   font-weight: 650;
@@ -1447,8 +1451,10 @@ main {
 }
 
 .showroom-compass-control__instruction {
-  min-width: 64%;
-  padding: 0.12rem 0.78rem 0.42rem;
+  min-width: 0;
+  width: max-content;
+  max-width: 8.1rem;
+  padding: 0.08rem 0.58rem 0.34rem;
   border-radius: 0 0 999px 999px;
   color: var(--showroom-cream-soft);
   font-size: 0.48rem;
@@ -3701,10 +3707,12 @@ canvas[data-showroom-window-canvas],
   .showroom-compass-control::before,
   [data-showroom-compass-control]::before,
   [data-showroom-full-center-hit-target="true"]::before {
-    right: 15%;
+    right: auto;
     bottom: 15%;
-    left: 15%;
-    min-height: 2.05rem;
+    left: 50%;
+    width: clamp(6.7rem, 54%, 7.8rem);
+    min-height: 2rem;
+    transform: translateX(-50%);
   }
 
   .showroom-compass-control__label {
@@ -4285,6 +4293,7 @@ canvas[data-showroom-window-canvas],
 /* ================================================================
    23. COMPASS-FAMILY LABEL HIERARCHY AND PRIMARY-ONLY CLUSTER LABEL
    SHOWROOM_LABEL_HIERARCHY_PRIMARY_ONLY_20260729A
+   SHOWROOM_CLUSTER_CAMERA_FRONT_LOCK_AND_COMPASS_FIT_20260729B
    ================================================================ */
 
 .showroom-projected-label-layer {

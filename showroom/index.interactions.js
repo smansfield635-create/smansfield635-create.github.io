@@ -5,6 +5,7 @@
 /* SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A */
 /* SHOWROOM_LABEL_CONTAINMENT_20260726B */
 /* SHOWROOM_LABEL_HIERARCHY_PRIMARY_ONLY_20260729A */
+/* SHOWROOM_CLUSTER_CAMERA_FRONT_LOCK_AND_COMPASS_FIT_20260729B */
 
 (() => { 
   "use strict";
@@ -1661,6 +1662,10 @@
       state.controller ||
       resolveController();
 
+    const gestures =
+      state.gestures ||
+      resolveGestures();
+
     if (
       !layer ||
       !controller ||
@@ -1693,12 +1698,27 @@
         ? frame.orbitPreviewFocus
         : frame && frame.orbitFocus
     );
-    const clusterPrimary = normalizeRoomId(
+    const controllerClusterPrimary = normalizeRoomId(
       frame && frame.cluster
         ? frame.cluster.gestureActive
           ? frame.cluster.previewPrimaryRoom
           : frame.cluster.primaryRoom
         : ""
+    );
+    const clusterPrimary = normalizeRoomId(
+      frame &&
+      frame.cluster &&
+      gestures &&
+      typeof gestures.primaryRoomForQuaternion === "function" &&
+      typeof gestures.orientationQuaternion === "function"
+        ? gestures.primaryRoomForQuaternion(
+            frame.cluster.roomIds,
+            gestures.orientationQuaternion(
+              frame.cluster.orientation
+            ),
+            controllerClusterPrimary
+          )
+        : controllerClusterPrimary
     );
 
     layer.dataset.showroomProjectedLabelMode =
@@ -2638,10 +2658,19 @@
         pointer.gestureScope === GESTURE_SCOPES.CLUSTER &&
         pointer.activeWing
       ) {
+        const previousPrimaryId =
+          pointer.previewPrimaryId ||
+          normalizeRoomId(
+            frame && frame.cluster
+              ? frame.cluster.previewPrimaryRoom ||
+                frame.cluster.primaryRoom
+              : ""
+          );
         const primaryId =
           gestures.primaryRoomForQuaternion(
             pointer.clusterRoomIds,
-            pointer.currentQuaternion
+            pointer.currentQuaternion,
+            previousPrimaryId
           );
 
         if (!primaryId) {

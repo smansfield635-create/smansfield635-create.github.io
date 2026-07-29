@@ -1,0 +1,160 @@
+name: Laws CP3 Auxiliary Identity Corrected Revalidation
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-cp3-auxiliary-identity-corrected-revalidation
+  cancel-in-progress: false
+
+jobs:
+  revalidate:
+    if: github.event.pull_request.head.ref == 'agent/laws-cp3-auxiliary-harness-correction-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out frozen corrected candidate
+        uses: actions/checkout@v4
+        with:
+          ref: dfefecfd8e8dc2671e0fdb5d14eca54412e52c6a
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Execute complete corrected-head Checkpoint 3 revalidation
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=343b0c269dd343a57c6ecb7e785141134cc5660f
+          checkpoint3=8607693d75fffed5a8a85c42b8fdc28fff0b0554
+          candidate=dfefecfd8e8dc2671e0fdb5d14eca54412e52c6a
+
+          test "$(git rev-parse HEAD)" = "$candidate"
+          git merge-base --is-ancestor "$base" "$candidate"
+          git merge-base --is-ancestor "$checkpoint3" "$candidate"
+          test "$(git rev-list --count "$checkpoint3".."$candidate")" = "2"
+          test "$(git rev-list --count "$candidate"..origin/main)" = "0"
+
+          git diff --name-only "$base"..."$candidate" | sort > /tmp/actual-paths.txt
+          cat > /tmp/expected-paths.txt <<'EOF'
+          laws/index.controller.js
+          laws/index.crystals.js
+          laws/index.css
+          laws/index.html
+          laws/index.interactions.js
+          laws/research/index.html
+          laws/test/index.html
+          EOF
+          diff -u /tmp/expected-paths.txt /tmp/actual-paths.txt
+          test "$(git diff --name-only "$checkpoint3"..."$candidate")" = "laws/index.interactions.js"
+          test "$(git diff --numstat "$checkpoint3"..."$candidate" -- laws/index.interactions.js)" = $'1\t1\tlaws/index.interactions.js'
+
+          node --check laws/index.controller.js
+          node --check laws/index.crystals.js
+          node --check laws/index.interactions.js
+          git diff --check "$base"..."$candidate"
+
+          grep -Fq 'right:"auto",bottom:"auto"' laws/index.interactions.js
+          grep -Fq 'el.style.setProperty("left",`${r.x}px`,"important")' laws/index.interactions.js
+          grep -Fq 'el.style.setProperty("top",`${r.y}px`,"important")' laws/index.interactions.js
+          grep -Fq 'el.style.setProperty("right","auto","important")' laws/index.interactions.js
+          grep -Fq 'el.style.setProperty("bottom","auto","important")' laws/index.interactions.js
+          grep -Fq 'el.style.setProperty("transform","translate(-50%, -50%)","important")' laws/index.interactions.js
+
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+          import subprocess
+
+          html = Path('laws/index.html').read_text()
+          controller = Path('laws/index.controller.js').read_text()
+          crystals = Path('laws/index.crystals.js').read_text()
+          interactions = Path('laws/index.interactions.js').read_text()
+
+          def require(condition, code):
+              if not condition:
+                  raise SystemExit(code)
+
+          class ContractParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.records = []
+
+              def handle_starttag(self, tag, attrs):
+                  self.records.append((tag, dict(attrs)))
+
+          parser = ContractParser()
+          parser.feed(html)
+          records = [attrs for _, attrs in parser.records]
+
+          category_records = [attrs for attrs in records if 'data-laws-category' in attrs]
+          law_records = [attrs for attrs in records if 'data-laws-law' in attrs]
+          auxiliary_records = [attrs for attrs in records if 'data-laws-auxiliary' in attrs]
+
+          require(len(category_records) == 4, 'REQUIRED_CATEGORY_IDENTITIES_INVALID')
+          require(len(law_records) == 16, 'REQUIRED_LAW_IDENTITIES_INVALID')
+          require(len(auxiliary_records) == 2, 'AUXILIARY_IDENTITY_COUNT_INVALID')
+
+          auxiliary_by_id = {}
+          for attrs in auxiliary_records:
+              auxiliary_id = attrs.get('data-laws-auxiliary-id', '')
+              require(auxiliary_id in {'test', 'research'}, f'AUXILIARY_ID_INVALID:{auxiliary_id}')
+              require(auxiliary_id not in auxiliary_by_id, f'AUXILIARY_ID_DUPLICATE:{auxiliary_id}')
+              auxiliary_by_id[auxiliary_id] = attrs
+
+          require(set(auxiliary_by_id) == {'test', 'research'}, 'AUXILIARY_IDENTITY_SET_INVALID')
+          require('data-laws-auxiliary' in auxiliary_by_id['test'], 'TEST_AUXILIARY_MARKER_MISSING')
+          require(auxiliary_by_id['test'].get('data-laws-auxiliary-id') == 'test', 'TEST_AUXILIARY_IDENTITY_INVALID')
+          require('data-laws-auxiliary' in auxiliary_by_id['research'], 'RESEARCH_AUXILIARY_MARKER_MISSING')
+          require(auxiliary_by_id['research'].get('data-laws-auxiliary-id') == 'research', 'RESEARCH_AUXILIARY_IDENTITY_INVALID')
+
+          require(html.count('data-laws-primary-star-count="6"') == 1, 'SIX_PRIMARY_STAR_CONTRACT_INVALID')
+          require(html.count('data-laws-horizontal-drag-yaw-sign="positive"') == 1, 'INTERACTION_SIGN_CONTRACT_INVALID')
+          require(controller.count('function requestAuxiliarySelection') == 1, 'AUXILIARY_CONTROLLER_AUTHORITY_INVALID')
+          require(interactions.count('function applyProjection') == 1, 'PROJECTION_APPLICATION_AUTHORITY_INVALID')
+
+          vectors = {
+              'test': (0.62, 0.56, 0.70),
+              'research': (-0.62, -0.56, 0.70),
+          }
+          for name, values in vectors.items():
+              pattern = rf'{name}:\s*Object\.freeze\(\[\s*{values[0]:g},\s*{values[1]:g},\s*{values[2]:g}\s*\]\)'
+              require(re.search(pattern, crystals, re.S) is not None, f'AUXILIARY_VECTOR_INVALID:{name}')
+              require(abs(values[2]) > 1e-9, f'AUXILIARY_VECTOR_COPLANAR:{name}')
+          require(vectors['test'] != vectors['research'], 'AUXILIARY_POSITIONS_NOT_DISTINCT')
+
+          expected_scripts = [
+              '/laws/index.controller.js?v=LAWS_CONTROLLER_ROUTE_AUTHORITY_NO_CONTENT_v1',
+              '/laws/index.compositor.js?v=LAWS_COMPASS_COMPOSITOR_TNT_v1',
+              '/laws/index.crystals.js?v=LAWS_CANONICAL_MAIN_CRYSTAL_CLONE_20260726H',
+              '/laws/index.interactions.js?v=LAWS_ACTIVE_CLUSTER_SECONDARY_LABELS_20260727A',
+              '/laws/index.cosmos.js?v=LAWS_SCENE_VISIBLE_76d71d7cbafe52421c9eb68e3604792cc6755cf3_20260726C',
+          ]
+          for source in expected_scripts:
+              require(html.count(source) == 1, f'HTML_SCRIPT_IDENTITY_INVALID:{source}')
+              path = source.split('?', 1)[0].lstrip('/')
+              require(Path(path).is_file(), f'DEPENDENCY_MISSING:{path}')
+          positions = [html.index(source) for source in expected_scripts[:4]]
+          require(positions == sorted(positions), 'DEPENDENCY_ORDER_INVALID')
+
+          old_html = subprocess.check_output(['git', 'show', '8607693d75fffed5a8a85c42b8fdc28fff0b0554:laws/index.html'], text=True)
+          old_interactions = subprocess.check_output(['git', 'show', '8607693d75fffed5a8a85c42b8fdc28fff0b0554:laws/index.interactions.js'], text=True)
+          token_pattern = r'/laws/index\.interactions\.js\?v=([^"\s]+)'
+          old_token = re.search(token_pattern, old_html)
+          new_token = re.search(token_pattern, html)
+          require(old_token and new_token, 'INTERACTIONS_CACHE_IDENTITY_MISSING')
+          source_changed = old_interactions != interactions
+          token_changed = old_token.group(1) != new_token.group(1)
+          require(not source_changed or token_changed, 'CACHE_CHAIN_STALE_AFTER_INTERACTIONS_SOURCE_MUTATION')
+
+          print('CHECKPOINT_3_CORRECTED_HEAD_REVALIDATION=PASS')
+          PY

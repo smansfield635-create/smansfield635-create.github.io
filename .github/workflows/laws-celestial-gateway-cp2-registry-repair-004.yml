@@ -1,0 +1,134 @@
+name: Laws celestial gateway CP2 registry repair 004
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+    paths:
+      - .github/workflows/laws-celestial-gateway-cp2-registry-repair-004.yml
+      - .github/laws-celestial-gateway-cp2-registry-repair-004.request.txt
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.head_ref == 'agent/laws-celestial-gateway-cp2-registry-repair-execution-004'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-celestial-gateway-auxiliary-clusters-cp2-001
+          fetch-depth: 0
+
+      - name: Restore bounded crystal registry authority
+        env:
+          TARGET_BRANCH: agent/laws-celestial-gateway-auxiliary-clusters-cp2-001
+          EXPECTED_TARGET_HEAD: f682d6f99ba35629edb25c367d4b4c2dfdbeb529
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_TARGET_HEAD"
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('laws/index.crystals.js')
+          text = path.read_text(encoding='utf-8')
+
+          old = '''      }
+    );
+
+  }
+
+  function clusterAnchorVector() {'''
+
+          new = '''      }
+    );
+
+    RECEIPT.categoryCount =
+      Array.from(registry.values())
+        .filter(
+          node =>
+            node.type === NODE_TYPES.CATEGORY
+        ).length;
+
+    RECEIPT.auxiliaryCount =
+      Array.from(registry.values())
+        .filter(
+          node =>
+            node.type === NODE_TYPES.AUXILIARY
+        ).length;
+
+    RECEIPT.lawCount =
+      Array.from(registry.values())
+        .filter(
+          node =>
+            node.type === NODE_TYPES.LAW
+        ).length;
+
+    RECEIPT.canonicalSemanticLawCount =
+      lawElements.length;
+
+    return registry;
+  }
+
+  function constellationAnchorVector() {
+    return normalizeVector(
+      SPHERE.constellation.primaryAnchor
+    );
+  }
+
+  function clusterAnchorVector() {'''
+
+          count = text.count(old)
+          if count != 1:
+              raise SystemExit(f'REGISTRY_REPAIR_ANCHOR_COUNT={count}')
+
+          text = text.replace(old, new, 1)
+
+          start = text.index('  function buildRegistry() {')
+          end = text.index('  function clusterAnchorVector() {', start)
+          segment = text[start:end]
+
+          for token in (
+              'return registry;',
+              'RECEIPT.categoryCount =',
+              'RECEIPT.auxiliaryCount =',
+              'RECEIPT.lawCount =',
+              'RECEIPT.canonicalSemanticLawCount =',
+              'function constellationAnchorVector()',
+          ):
+              actual = segment.count(token)
+              if actual != 1:
+                  raise SystemExit(
+                      f'REGISTRY_REPAIR_ASSERTION_FAILED token={token!r} actual={actual}'
+                  )
+
+          if old in text:
+              raise SystemExit('DEFECTIVE_REGISTRY_EXIT_REMAINS')
+
+          path.write_text(text, encoding='utf-8')
+          print('REGISTRY_REPAIR_SOURCE_ASSERTIONS=PASS')
+          PY
+
+          node --check laws/index.controller.js
+          node --check laws/index.crystals.js
+          node --check laws/index.interactions.js
+          git diff --check
+          test "$(git diff --name-only)" = "laws/index.crystals.js"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.crystals.js
+          git commit -m "Restore Laws crystal registry finalization"
+
+          NEW_HEAD="$(git rev-parse HEAD)"
+          git push origin "HEAD:$TARGET_BRANCH"
+          git fetch origin "$TARGET_BRANCH"
+          test "$(git rev-parse "origin/$TARGET_BRANCH")" = "$NEW_HEAD"
+
+          echo "CHECKPOINT_2_REGISTRY_REPAIR=PASS" >> "$GITHUB_STEP_SUMMARY"
+          echo "REPAIRED_CANDIDATE_HEAD=$NEW_HEAD" >> "$GITHUB_STEP_SUMMARY"
+          echo "MUTATED_PRODUCT_PATH=laws/index.crystals.js" >> "$GITHUB_STEP_SUMMARY"
+          echo "MAIN_MUTATION=FALSE" >> "$GITHUB_STEP_SUMMARY"

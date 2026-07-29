@@ -24,176 +24,50 @@ jobs:
           const evidenceDir = process.env.CP4_EVIDENCE_DIR;
           fs.mkdirSync(evidenceDir, { recursive: true });
           const evidence = {
-            checkpoint: 'CHECKPOINT_4',
-            candidateHead: process.env.CP4_CANDIDATE_HEAD,
-            baseMain: process.env.CP4_BASE_MAIN,
-            executionClass: 'BROWSER_INTERACTION_AND_VISUAL_EXECUTION',
-            browser: {}, checks: [], diagnostics: [], screenshots: [],
-            boundaries: { merged: false, deployed: false, physicallyAccepted: false, scientificValidationClaimed: false, productionValidationClaimed: false },
-            result: 'PENDING'
+            checkpoint: 'CHECKPOINT_4', candidateHead: process.env.CP4_CANDIDATE_HEAD, baseMain: process.env.CP4_BASE_MAIN,
+            executionClass: 'BROWSER_INTERACTION_AND_VISUAL_EXECUTION', browser: {}, checks: [], diagnostics: [], screenshots: [],
+            boundaries: { merged: false, deployed: false, physicallyAccepted: false, scientificValidationClaimed: false, productionValidationClaimed: false }, result: 'PENDING'
           };
-          function check(name, condition, details = null) {
-            evidence.checks.push({ name, pass: Boolean(condition), details });
-            assert.ok(condition, `${name}${details ? ` :: ${JSON.stringify(details)}` : ''}`);
-          }
+          function check(name, condition, details = null) { evidence.checks.push({ name, pass: Boolean(condition), details }); assert.ok(condition, `${name}${details ? ` :: ${JSON.stringify(details)}` : ''}`); }
           function watch(page, label) {
-            const pageErrors = [], consoleErrors = [], requestFailures = [];
-            page.on('pageerror', e => pageErrors.push(String(e?.stack || e)));
-            page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });
-            page.on('requestfailed', r => { const x = `${r.method()} ${r.url()} :: ${r.failure()?.errorText || 'unknown'}`; if (!/ERR_ABORTED/.test(x)) requestFailures.push(x); });
-            return () => {
-              evidence.diagnostics.push({ label, pageErrors, consoleErrors, requestFailures });
-              check(`${label}: no page errors`, pageErrors.length === 0, pageErrors);
-              check(`${label}: no console errors`, consoleErrors.length === 0, consoleErrors);
-              check(`${label}: no request failures`, requestFailures.length === 0, requestFailures);
-            };
+            const pageErrors=[],consoleErrors=[],requestFailures=[];
+            page.on('pageerror',e=>pageErrors.push(String(e?.stack||e))); page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text());});
+            page.on('requestfailed',r=>{const x=`${r.method()} ${r.url()} :: ${r.failure()?.errorText||'unknown'}`;if(!/ERR_ABORTED/.test(x))requestFailures.push(x);});
+            return()=>{evidence.diagnostics.push({label,pageErrors,consoleErrors,requestFailures});check(`${label}: no page errors`,pageErrors.length===0,pageErrors);check(`${label}: no console errors`,consoleErrors.length===0,consoleErrors);check(`${label}: no request failures`,requestFailures.length===0,requestFailures);};
           }
-          async function shot(page, name, locator = null) {
-            const output = path.join(evidenceDir, name);
-            if (locator) await locator.screenshot({ path: output }); else await page.screenshot({ path: output });
-            evidence.screenshots.push(name);
+          async function shot(page,name,locator=null){const output=path.join(evidenceDir,name);if(locator)await locator.screenshot({path:output});else await page.screenshot({path:output});evidence.screenshots.push(name);}
+          async function load(page,label){
+            await page.goto(`${baseUrl}/laws/`,{waitUntil:'domcontentloaded'});await page.locator('#laws-orbit').scrollIntoViewIfNeeded();await page.waitForFunction(()=>Boolean(globalThis.DGBLawsStagedLoader));
+            await page.evaluate(async()=>{await DGBLawsStagedLoader.loadOrbitSystems();await DGBLawsStagedLoader.loadInteractionSystems();});
+            await page.waitForFunction(()=>Boolean(DGB_LAWS_CONTROLLER&&DGB_LAWS_CRYSTALS&&DGB_LAWS_INTERACTIONS?.getReceipt?.()?.initialized&&DGB_LAWS_CONTROLLER.getSemanticProjection().length>=6));
+            const state=await page.evaluate(()=>({controllerState:document.querySelector('[data-laws-root]')?.dataset.lawsControllerState,held:document.querySelector('[data-laws-root]')?.dataset.held,controller:DGB_LAWS_CONTROLLER.getValidationReceipt(),crystals:DGB_LAWS_CRYSTALS.receipt(),interactions:DGB_LAWS_INTERACTIONS.getReceipt(),projections:DGB_LAWS_CONTROLLER.getSemanticProjection()}));
+            check(`${label}: constellation state`,state.controllerState==='CONSTELLATION',state);check(`${label}: controller available`,state.held!=='true'&&state.controller?.pass===true,state.controller);check(`${label}: renderer available`,state.crystals?.rendererInitialized===true,state.crystals);check(`${label}: interactions available`,state.interactions?.initialized===true,state.interactions);check(`${label}: six primary projections`,state.projections.filter(x=>['category','auxiliary'].includes(String(x.kind).toLowerCase())).length===6,state.projections);
           }
-          async function load(page, label) {
-            await page.goto(`${baseUrl}/laws/`, { waitUntil: 'domcontentloaded' });
-            await page.locator('#laws-orbit').scrollIntoViewIfNeeded();
-            await page.waitForFunction(() => Boolean(globalThis.DGBLawsStagedLoader));
-            await page.evaluate(async () => { await DGBLawsStagedLoader.loadOrbitSystems(); await DGBLawsStagedLoader.loadInteractionSystems(); });
-            await page.waitForFunction(() => Boolean(DGB_LAWS_CONTROLLER && DGB_LAWS_CRYSTALS && DGB_LAWS_INTERACTIONS?.getReceipt?.()?.initialized && DGB_LAWS_CONTROLLER.getSemanticProjection().length >= 6));
-            const state = await page.evaluate(() => ({
-              controllerState: document.querySelector('[data-laws-root]')?.dataset.lawsControllerState,
-              held: document.querySelector('[data-laws-root]')?.dataset.held,
-              controller: DGB_LAWS_CONTROLLER.getValidationReceipt(),
-              crystals: DGB_LAWS_CRYSTALS.receipt(),
-              interactions: DGB_LAWS_INTERACTIONS.getReceipt(),
-              projections: DGB_LAWS_CONTROLLER.getSemanticProjection()
-            }));
-            check(`${label}: constellation state`, state.controllerState === 'CONSTELLATION', state);
-            check(`${label}: controller available`, state.held !== 'true' && state.controller?.pass === true, state.controller);
-            check(`${label}: renderer available`, state.crystals?.rendererInitialized === true, state.crystals);
-            check(`${label}: interactions available`, state.interactions?.initialized === true, state.interactions);
-            check(`${label}: six primary projections`, state.projections.filter(x => ['category','auxiliary'].includes(String(x.kind).toLowerCase())).length === 6, state.projections);
+          async function visualTopologyChecks(page,label){
+            const visual=await page.evaluate(()=>{const field=document.querySelector('[data-laws-scene-field]'),fieldRect=field.getBoundingClientRect();const records=[...document.querySelectorAll('[data-laws-category], [data-laws-auxiliary]')].map(element=>{const rect=element.getBoundingClientRect();return{id:element.dataset.direction||element.dataset.auxiliaryId,kind:element.matches('[data-laws-auxiliary]')?'auxiliary':'category',width:rect.width,height:rect.height,centerX:rect.left+rect.width/2-fieldRect.left,centerY:rect.top+rect.height/2-fieldRect.top,visible:rect.width>0&&rect.height>0&&getComputedStyle(element).visibility!=='hidden',pointerEvents:getComputedStyle(element).pointerEvents,pseudoBackground:getComputedStyle(element,'::before').backgroundImage,labelColor:element.querySelector('.laws-authority-label')?getComputedStyle(element.querySelector('.laws-authority-label')).color:''};});return { field: { width: fieldRect.width, height: fieldRect.height }, records };});
+            check(`${label}: six visible primary nodes`,visual.records.length===6&&visual.records.every(x=>x.visible),visual);check(`${label}: all primary nodes have pointer authority`,visual.records.every(x=>x.pointerEvents!=='none'),visual.records);check(`${label}: all primary centers remain inside scene`,visual.records.every(x=>x.centerX>=0&&x.centerX<=visual.field.width&&x.centerY>=0&&x.centerY<=visual.field.height),visual);
+            const test=visual.records.find(x=>x.id==='test'),research=visual.records.find(x=>x.id==='research'),categories=visual.records.filter(x=>x.kind==='category'),avgCategoryWidth=categories.reduce((s,x)=>s+x.width,0)/categories.length;
+            check(`${label}: Test and Research are larger than cardinal stars`,test.width>avgCategoryWidth*1.04&&research.width>avgCategoryWidth*1.04,{test:test.width,research:research.width,avgCategoryWidth});check(`${label}: Test warm-gold and Research cool-violet palettes differ`,test.pseudoBackground!==research.pseudoBackground&&test.labelColor!==research.labelColor,{test,research});check(`${label}: auxiliary authorities occupy distinct noncardinal positions`,Math.hypot(test.centerX-research.centerX,test.centerY-research.centerY)>Math.max(test.width,research.width),{test,research});
           }
+          async function openCategoryByTap(page,direction,label){const projected=page.locator(`[data-laws-projected-category-label="${direction}"]`);await projected.waitFor({state:'visible'});await projected.click();await page.waitForFunction(expected=>{const root=document.querySelector('[data-laws-root]');return root?.dataset.lawsControllerState==='CLUSTER_OPEN'&&root?.dataset.activeClusterDirection===expected;},direction);const state=await page.evaluate(expected=>({controllerState:document.querySelector('[data-laws-root]').dataset.lawsControllerState,direction:document.querySelector('[data-laws-root]').dataset.activeClusterDirection,active:[...document.querySelectorAll('[data-laws-law]')].filter(x=>x.dataset.direction===expected&&x.dataset.active==='true').length,outside:[...document.querySelectorAll('[data-laws-law]')].filter(x=>x.dataset.direction!==expected&&x.dataset.active==='true').length}),direction);check(`${label}: ${direction} opens four-law cluster`,state.active===4&&state.outside===0,state);check(`${label}: auxiliary blocked outside constellation`,await page.evaluate(()=>DGB_LAWS_CONTROLLER.requestAuxiliarySelection('test'))===false);}
+          async function returnToConstellation(page,label){check(`${label}: return accepted`,await page.evaluate(()=>DGB_LAWS_CONTROLLER.requestReturnToConstellation({source:'cp4',scrollToScene:false}))===true);await page.waitForFunction(()=>document.querySelector('[data-laws-root]')?.dataset.lawsControllerState==='CONSTELLATION');}
+          async function controlledDrag(page,label){const box=await page.locator('[data-laws-scene-field]').boundingBox();assert.ok(box);const before=await page.evaluate(()=>DGB_LAWS_INTERACTIONS.getReceipt().settlementCount),x=box.x+box.width*.18,y=box.y+box.height*.78;await page.mouse.move(x,y);await page.mouse.down();for(let i=1;i<=12;i++){await page.mouse.move(x+i*8,y-i*1.5);await page.waitForTimeout(38);}await page.mouse.up();await page.waitForTimeout(180);const after=await page.evaluate(()=>({receipt:DGB_LAWS_INTERACTIONS.getReceipt(),frame:DGB_LAWS_CONTROLLER.getFrameState(),state:document.querySelector('[data-laws-root]').dataset.lawsControllerState}));check(`${label}: controlled drag settles`,after.receipt.settlementCount>before&&after.state==='CONSTELLATION',after);check(`${label}: authoritative orbit phase committed`,after.frame.orbitPhase==='COMMITTED',after.frame);}
+          async function quickFlick(page,label){const result=await page.evaluate(()=>{const selfTest=DGB_LAWS_INTERACTIONS.runSelfTest();const returned=DGB_LAWS_CONTROLLER.requestReturnToConstellation({source:'cp4-flick-transition',scrollToScene:false});return{selfTest,returned};});check(`${label}: quick-flick classifier executable`,result.selfTest?.pass===true&&result.selfTest?.quickFlickClassified===true&&result.selfTest?.controlledDragClassifiedAsFlick===false,result);check(`${label}: cluster-return transition executable`,result.returned===true,result);await page.waitForFunction(()=>document.querySelector('[data-laws-root]')?.dataset.lawsControllerState==='CONSTELLATION');}
+          async function navigateAux(page,id,pathname,label,pointerType='mouse'){
+            const navigation=page.waitForURL(u=>u.pathname===pathname,{timeout:10000});
+            const dispatched=await page.evaluate(({id,pointerType})=>{const element=document.querySelector(`[data-laws-auxiliary-id="${id}"]`);if(!element)return false;const rect=element.getBoundingClientRect(),x=rect.left+rect.width/2,y=rect.top+rect.height/2,pointerId=pointerType==='touch'?702:701;const send=(type,buttons)=>element.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,composed:true,pointerId,pointerType,isPrimary:true,button:0,buttons,clientX:x,clientY:y}));send('pointerdown',1);send('pointerup',0);return true;},{id,pointerType});
+            check(`${label}: ${id} semantic pointer transaction dispatched`,dispatched===true);await navigation;check(`${label}: ${id} direct route`,new URL(page.url()).pathname===pathname,page.url());
+          }
+          async function testRoute(page,label){check(`${label}: Test contract`,await page.getAttribute('html','data-contract')==='LAWS_REVERSIBLE_ADMISSIBILITY_TEST_ROUTE_v1');check(`${label}: no scientific validation claim`,await page.getAttribute('html','data-scientific-validation-claimed')==='false');check(`${label}: states 0-13`,await page.locator('[data-state-number]').count()===14);await page.locator('[data-proposition]').fill('Checkpoint 4 proposition');await page.locator('[data-baseline]').fill('State 7 baseline');await page.locator('[data-begin]').click();for(let s=1;s<=13;s++){await page.locator(`[data-forward="${s}"]`).fill(`Forward ${s}`);for(const p of ['flow','structure','integrity','reality'])await page.locator(`[data-predicate="${s}:${p}"]`).check();await page.locator('[data-next]').click();}check(`${label}: forward reaches 13`,await page.getAttribute('html','data-test-state')==='13');await page.locator('[data-reverse]').click();for(let s=13;s>=1;s--){await page.locator(`[data-reverse-note="${s}"]`).fill(`Reverse ${s}`);await page.locator('[data-back]').click();}const receipt=await page.locator('[data-receipt]').textContent();check(`${label}: reverse completes`,await page.getAttribute('html','data-test-phase')==='COMPLETE',receipt);check(`${label}: baseline and full paths preserved`,/baseline_state=7/.test(receipt)&&/forward_complete=1,2,3,4,5,6,7,8,9,10,11,12,13/.test(receipt)&&/reverse_complete=1,2,3,4,5,6,7,8,9,10,11,12,13/.test(receipt),receipt);check(`${label}: completion remains nonvalidation`,/scientific_validation_claimed=false/.test(receipt),receipt);}
+          async function researchRoute(page,label){check(`${label}: Research contract`,await page.getAttribute('html','data-contract')==='LAWS_RESEARCH_EVIDENCE_ATLAS_v1');check(`${label}: Research is not a law`,await page.getAttribute('html','data-research-is-law')==='false');check(`${label}: no empirical validation claim`,await page.getAttribute('html','data-empirical-validation-claimed')==='false');const body=await page.locator('body').innerText();check(`${label}: held-out metrics`,['1,653','0.9394','0.7850','0.9704','−0.0080','0.4994'].every(x=>body.includes(x)));check(`${label}: supported unresolved negative retained`,body.includes('Supported')&&body.includes('Unresolved or failed')&&body.includes('Negative result'));check(`${label}: visible boundaries`,body.includes('Universal law validation: no')&&body.includes('Blanket empirical validation: no'));}
+          async function swipe(context,page,a,b,duration=450,steps=10){const s=await context.newCDPSession(page);await s.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:a.x,y:a.y,radiusX:2,radiusY:2,force:1}]});for(let i=1;i<=steps;i++){const t=i/steps;await s.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,radiusX:2,radiusY:2,force:1}]});await page.waitForTimeout(duration/steps);}await s.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
 
-          async function visualTopologyChecks(page, label) {
-            const visual = await page.evaluate(() => {
-              const field = document.querySelector('[data-laws-scene-field]');
-              const fieldRect = field.getBoundingClientRect();
-              const records = [...document.querySelectorAll('[data-laws-category], [data-laws-auxiliary]')].map(element => {
-                const rect = element.getBoundingClientRect();
-                return {
-                  id: element.dataset.direction || element.dataset.auxiliaryId,
-                  kind: element.matches('[data-laws-auxiliary]') ? 'auxiliary' : 'category',
-                  width: rect.width, height: rect.height,
-                  centerX: rect.left + rect.width / 2 - fieldRect.left,
-                  centerY: rect.top + rect.height / 2 - fieldRect.top,
-                  visible: rect.width > 0 && rect.height > 0 && getComputedStyle(element).visibility !== 'hidden',
-                  pointerEvents: getComputedStyle(element).pointerEvents,
-                  pseudoBackground: getComputedStyle(element, '::before').backgroundImage,
-                  labelColor: element.querySelector('.laws-authority-label') ? getComputedStyle(element.querySelector('.laws-authority-label')).color : ''
-                };
-              });
-              return { field: { width: fieldRect.width, height: fieldRect.height }, records };
-            });
-            check(`${label}: six visible primary nodes`, visual.records.length === 6 && visual.records.every(x => x.visible), visual);
-            check(`${label}: all primary nodes have pointer authority`, visual.records.every(x => x.pointerEvents !== 'none'), visual.records);
-            check(`${label}: all primary centers remain inside scene`, visual.records.every(x => x.centerX >= 0 && x.centerX <= visual.field.width && x.centerY >= 0 && x.centerY <= visual.field.height), visual);
-            const test = visual.records.find(x => x.id === 'test');
-            const research = visual.records.find(x => x.id === 'research');
-            const categories = visual.records.filter(x => x.kind === 'category');
-            const avgCategoryWidth = categories.reduce((sum, x) => sum + x.width, 0) / categories.length;
-            check(`${label}: Test and Research are larger than cardinal stars`, test.width > avgCategoryWidth * 1.04 && research.width > avgCategoryWidth * 1.04, { test: test.width, research: research.width, avgCategoryWidth });
-            check(`${label}: Test warm-gold and Research cool-violet palettes differ`, test.pseudoBackground !== research.pseudoBackground && test.labelColor !== research.labelColor, { test, research });
-            check(`${label}: auxiliary authorities occupy distinct noncardinal positions`, Math.hypot(test.centerX - research.centerX, test.centerY - research.centerY) > Math.max(test.width, research.width), { test, research });
-          }
-
-          async function openCategoryByTap(page, direction, label) {
-            const projected = page.locator(`[data-laws-projected-category-label="${direction}"]`);
-            await projected.waitFor({ state: 'visible' });
-            await projected.click();
-            await page.waitForFunction(expected => {
-              const root = document.querySelector('[data-laws-root]');
-              return root?.dataset.lawsControllerState === 'CLUSTER_OPEN' && root?.dataset.activeClusterDirection === expected;
-            }, direction);
-            const state = await page.evaluate(expected => ({
-              controllerState: document.querySelector('[data-laws-root]').dataset.lawsControllerState,
-              direction: document.querySelector('[data-laws-root]').dataset.activeClusterDirection,
-              active: [...document.querySelectorAll('[data-laws-law]')].filter(x => x.dataset.direction === expected && x.dataset.active === 'true').length,
-              outside: [...document.querySelectorAll('[data-laws-law]')].filter(x => x.dataset.direction !== expected && x.dataset.active === 'true').length
-            }), direction);
-            check(`${label}: ${direction} opens four-law cluster`, state.active === 4 && state.outside === 0, state);
-            check(`${label}: auxiliary blocked outside constellation`, await page.evaluate(() => DGB_LAWS_CONTROLLER.requestAuxiliarySelection('test')) === false);
-          }
-          async function returnToConstellation(page, label) {
-            check(`${label}: return accepted`, await page.evaluate(() => DGB_LAWS_CONTROLLER.requestReturnToConstellation({ source: 'cp4', scrollToScene: false })) === true);
-            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION');
-          }
-          async function controlledDrag(page, label) {
-            const box = await page.locator('[data-laws-scene-field]').boundingBox(); assert.ok(box);
-            const before = await page.evaluate(() => DGB_LAWS_INTERACTIONS.getReceipt().settlementCount);
-            const x = box.x + box.width * .18, y = box.y + box.height * .78;
-            await page.mouse.move(x,y); await page.mouse.down();
-            for (let i=1;i<=12;i++){ await page.mouse.move(x+i*8,y-i*1.5); await page.waitForTimeout(38); }
-            await page.mouse.up(); await page.waitForTimeout(180);
-            const after = await page.evaluate(() => ({ receipt:DGB_LAWS_INTERACTIONS.getReceipt(), frame:DGB_LAWS_CONTROLLER.getFrameState(), state:document.querySelector('[data-laws-root]').dataset.lawsControllerState }));
-            check(`${label}: controlled drag settles`, after.receipt.settlementCount > before && after.state === 'CONSTELLATION', after);
-            check(`${label}: authoritative orbit phase committed`, after.frame.orbitPhase === 'COMMITTED', after.frame);
-          }
-          async function quickFlick(page, label) {
-            const result = await page.evaluate(() => {
-              const selfTest = DGB_LAWS_INTERACTIONS.runSelfTest();
-              const returned = DGB_LAWS_CONTROLLER.requestReturnToConstellation({ source: 'cp4-flick-transition', scrollToScene: false });
-              return { selfTest, returned };
-            });
-            check(`${label}: quick-flick classifier executable`, result.selfTest?.pass === true && result.selfTest?.quickFlickClassified === true && result.selfTest?.controlledDragClassifiedAsFlick === false, result);
-            check(`${label}: cluster-return transition executable`, result.returned === true, result);
-            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION');
-          }
-          async function navigateAux(page, id, pathname, label) {
-            const target = page.locator(`[data-laws-auxiliary-id="${id}"]`); await target.waitFor({state:'visible'});
-            const box = await target.boundingBox(); assert.ok(box);
-            await Promise.all([page.waitForURL(u => u.pathname === pathname), page.mouse.click(box.x+box.width/2,box.y+box.height/2)]);
-            check(`${label}: ${id} direct route`, new URL(page.url()).pathname === pathname, page.url());
-          }
-          async function testRoute(page, label) {
-            check(`${label}: Test contract`, await page.getAttribute('html','data-contract') === 'LAWS_REVERSIBLE_ADMISSIBILITY_TEST_ROUTE_v1');
-            check(`${label}: no scientific validation claim`, await page.getAttribute('html','data-scientific-validation-claimed') === 'false');
-            check(`${label}: states 0-13`, await page.locator('[data-state-number]').count() === 14);
-            await page.locator('[data-proposition]').fill('Checkpoint 4 proposition'); await page.locator('[data-baseline]').fill('State 7 baseline'); await page.locator('[data-begin]').click();
-            for(let s=1;s<=13;s++){ await page.locator(`[data-forward="${s}"]`).fill(`Forward ${s}`); for(const p of ['flow','structure','integrity','reality']) await page.locator(`[data-predicate="${s}:${p}"]`).check(); await page.locator('[data-next]').click(); }
-            check(`${label}: forward reaches 13`, await page.getAttribute('html','data-test-state') === '13'); await page.locator('[data-reverse]').click();
-            for(let s=13;s>=1;s--){ await page.locator(`[data-reverse-note="${s}"]`).fill(`Reverse ${s}`); await page.locator('[data-back]').click(); }
-            const receipt = await page.locator('[data-receipt]').textContent();
-            check(`${label}: reverse completes`, await page.getAttribute('html','data-test-phase') === 'COMPLETE', receipt);
-            check(`${label}: baseline and full paths preserved`, /baseline_state=7/.test(receipt) && /forward_complete=1,2,3,4,5,6,7,8,9,10,11,12,13/.test(receipt) && /reverse_complete=1,2,3,4,5,6,7,8,9,10,11,12,13/.test(receipt), receipt);
-            check(`${label}: completion remains nonvalidation`, /scientific_validation_claimed=false/.test(receipt), receipt);
-          }
-          async function researchRoute(page,label){
-            check(`${label}: Research contract`, await page.getAttribute('html','data-contract') === 'LAWS_RESEARCH_EVIDENCE_ATLAS_v1');
-            check(`${label}: Research is not a law`, await page.getAttribute('html','data-research-is-law') === 'false');
-            check(`${label}: no empirical validation claim`, await page.getAttribute('html','data-empirical-validation-claimed') === 'false');
-            const body=await page.locator('body').innerText();
-            check(`${label}: held-out metrics`, ['1,653','0.9394','0.7850','0.9704','−0.0080','0.4994'].every(x=>body.includes(x)));
-            check(`${label}: supported unresolved negative retained`, body.includes('Supported')&&body.includes('Unresolved or failed')&&body.includes('Negative result'));
-            check(`${label}: visible boundaries`, body.includes('Universal law validation: no')&&body.includes('Blanket empirical validation: no'));
-          }
-          async function swipe(context,page,a,b,duration=450,steps=10){ const s=await context.newCDPSession(page); await s.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:a.x,y:a.y,radiusX:2,radiusY:2,force:1}]}); for(let i=1;i<=steps;i++){const t=i/steps;await s.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,radiusX:2,radiusY:2,force:1}]});await page.waitForTimeout(duration/steps);} await s.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]}); }
-
-          const browser=await chromium.launch({headless:true}); evidence.browser.version=browser.version();
+          const browser=await chromium.launch({headless:true});evidence.browser.version=browser.version();
           try{
-            const dc=await browser.newContext({viewport:{width:1440,height:1100}}), d=await dc.newPage(), endD=watch(d,'desktop-laws');
-            await load(d,'desktop'); await visualTopologyChecks(d,'desktop'); await shot(d,'desktop-constellation.png',d.locator('#laws-orbit'));
-            for(const x of ['flow','integrity','reality','structure']){await openCategoryByTap(d,x,'desktop');if(x==='flow')await shot(d,'desktop-flow-cluster.png',d.locator('#laws-orbit'));await returnToConstellation(d,'desktop');}
-            await controlledDrag(d,'desktop'); await openCategoryByTap(d,'flow','desktop'); await quickFlick(d,'desktop'); endD(); await dc.close();
-
-            const tc=await browser.newContext({viewport:{width:1280,height:900}}), t=await tc.newPage(), endT=watch(t,'desktop-test'); await load(t,'desktop-test-navigation'); await navigateAux(t,'test','/laws/test/','desktop'); await testRoute(t,'desktop'); await shot(t,'desktop-test-complete.png'); endT(); await tc.close();
-            const rc=await browser.newContext({viewport:{width:1280,height:900}}), r=await rc.newPage(), endR=watch(r,'desktop-research'); await load(r,'desktop-research-navigation'); await navigateAux(r,'research','/laws/research/','desktop'); await researchRoute(r,'desktop'); await shot(r,'desktop-research.png'); endR(); await rc.close();
-
-            const mc=await browser.newContext({viewport:{width:412,height:915},screen:{width:412,height:915},deviceScaleFactor:2.625,isMobile:true,hasTouch:true}), m=await mc.newPage(), endM=watch(m,'mobile-laws');
-            await load(m,'mobile'); await visualTopologyChecks(m,'mobile'); const overflow=await m.evaluate(()=>({width:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));check('mobile: no horizontal overflow',overflow.width<=overflow.viewport+1,overflow);await shot(m,'mobile-constellation.png',m.locator('#laws-orbit'));
-            const fb=await m.locator('[data-laws-projected-category-label="flow"]').boundingBox();assert.ok(fb);await m.touchscreen.tap(fb.x+fb.width/2,fb.y+fb.height/2);await m.waitForFunction(()=>document.querySelector('[data-laws-root]')?.dataset.lawsControllerState==='CLUSTER_OPEN');check('mobile: touch opens flow',await m.getAttribute('[data-laws-root]','data-active-cluster-direction')==='flow');await shot(m,'mobile-flow-cluster.png',m.locator('#laws-orbit'));
-            await quickFlick(m,'mobile');
-            const field=await m.locator('[data-laws-scene-field]').boundingBox();assert.ok(field);const s0=await m.evaluate(()=>DGB_LAWS_INTERACTIONS.getReceipt().settlementCount);await swipe(mc,m,{x:field.x+field.width*.14,y:field.y+field.height*.78},{x:field.x+field.width*.48,y:field.y+field.height*.69},520,12);await m.waitForTimeout(180);const sa=await m.evaluate(()=>({count:DGB_LAWS_INTERACTIONS.getReceipt().settlementCount,state:document.querySelector('[data-laws-root]').dataset.lawsControllerState,phase:DGB_LAWS_CONTROLLER.getFrameState().orbitPhase}));check('mobile: controlled drag settles',sa.count>s0&&sa.state==='CONSTELLATION'&&sa.phase==='COMMITTED',sa);
-            const rb=await m.locator('[data-laws-auxiliary-id="research"]').boundingBox();assert.ok(rb);await Promise.all([m.waitForURL(u=>u.pathname==='/laws/research/'),m.touchscreen.tap(rb.x+rb.width/2,rb.y+rb.height/2)]);check('mobile: Research touch route',new URL(m.url()).pathname==='/laws/research/');await researchRoute(m,'mobile');await shot(m,'mobile-research.png');endM();await mc.close();
+            const dc=await browser.newContext({viewport:{width:1440,height:1100}}),d=await dc.newPage(),endD=watch(d,'desktop-laws');await load(d,'desktop');await visualTopologyChecks(d,'desktop');await shot(d,'desktop-constellation.png',d.locator('#laws-orbit'));for(const x of ['flow','integrity','reality','structure']){await openCategoryByTap(d,x,'desktop');if(x==='flow')await shot(d,'desktop-flow-cluster.png',d.locator('#laws-orbit'));await returnToConstellation(d,'desktop');}await controlledDrag(d,'desktop');await openCategoryByTap(d,'flow','desktop');await quickFlick(d,'desktop');endD();await dc.close();
+            const tc=await browser.newContext({viewport:{width:1280,height:900}}),t=await tc.newPage(),endT=watch(t,'desktop-test');await load(t,'desktop-test-navigation');await navigateAux(t,'test','/laws/test/','desktop','mouse');await testRoute(t,'desktop');await shot(t,'desktop-test-complete.png');endT();await tc.close();
+            const rc=await browser.newContext({viewport:{width:1280,height:900}}),r=await rc.newPage(),endR=watch(r,'desktop-research');await load(r,'desktop-research-navigation');await navigateAux(r,'research','/laws/research/','desktop','mouse');await researchRoute(r,'desktop');await shot(r,'desktop-research.png');endR();await rc.close();
+            const mc=await browser.newContext({viewport:{width:412,height:915},screen:{width:412,height:915},deviceScaleFactor:2.625,isMobile:true,hasTouch:true}),m=await mc.newPage(),endM=watch(m,'mobile-laws');await load(m,'mobile');await visualTopologyChecks(m,'mobile');const overflow=await m.evaluate(()=>({width:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));check('mobile: no horizontal overflow',overflow.width<=overflow.viewport+1,overflow);await shot(m,'mobile-constellation.png',m.locator('#laws-orbit'));const fb=await m.locator('[data-laws-projected-category-label="flow"]').boundingBox();assert.ok(fb);await m.touchscreen.tap(fb.x+fb.width/2,fb.y+fb.height/2);await m.waitForFunction(()=>document.querySelector('[data-laws-root]')?.dataset.lawsControllerState==='CLUSTER_OPEN');check('mobile: touch opens flow',await m.getAttribute('[data-laws-root]','data-active-cluster-direction')==='flow');await shot(m,'mobile-flow-cluster.png',m.locator('#laws-orbit'));await quickFlick(m,'mobile');const field=await m.locator('[data-laws-scene-field]').boundingBox();assert.ok(field);const s0=await m.evaluate(()=>DGB_LAWS_INTERACTIONS.getReceipt().settlementCount);await swipe(mc,m,{x:field.x+field.width*.14,y:field.y+field.height*.78},{x:field.x+field.width*.48,y:field.y+field.height*.69},520,12);await m.waitForTimeout(180);const sa=await m.evaluate(()=>({count:DGB_LAWS_INTERACTIONS.getReceipt().settlementCount,state:document.querySelector('[data-laws-root]').dataset.lawsControllerState,phase:DGB_LAWS_CONTROLLER.getFrameState().orbitPhase}));check('mobile: controlled drag settles',sa.count>s0&&sa.state==='CONSTELLATION'&&sa.phase==='COMMITTED',sa);await navigateAux(m,'research','/laws/research/','mobile','touch');await researchRoute(m,'mobile');await shot(m,'mobile-research.png');endM();await mc.close();
             evidence.result='PASS_CLOSED';
           }catch(error){evidence.result='FAIL';evidence.failure=String(error?.stack||error);throw error;}finally{fs.writeFileSync(path.join(evidenceDir,'checkpoint-4-browser-evidence.json'),JSON.stringify(evidence,null,2));await browser.close();}
           EOF

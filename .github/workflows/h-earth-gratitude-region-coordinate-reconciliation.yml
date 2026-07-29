@@ -47,13 +47,22 @@ jobs:
           node h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.runner.mjs \
             2>&1 | tee /tmp/h-earth-gr-cr-entry.log
 
+      - name: Execute bounded Mirror Manor reconciliation
+        env:
+          H_EARTH_GR_CR_MANOR_RECEIPT: /tmp/h-earth-gr-cr-manor-receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gr-cr-manor.log
+
       - name: Verify emitted checkpoint receipts
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const receiptPaths = [
             '/tmp/h-earth-gr-cr-receipt.json',
-            '/tmp/h-earth-gr-cr-entry-receipt.json'
+            '/tmp/h-earth-gr-cr-entry-receipt.json',
+            '/tmp/h-earth-gr-cr-manor-receipt.json'
           ];
           for (const receiptPath of receiptPaths) {
             if (!fs.existsSync(receiptPath)) process.exit(1);
@@ -79,5 +88,7 @@ jobs:
             /tmp/h-earth-gr-cr-receipt.json
             /tmp/h-earth-gr-cr-entry.log
             /tmp/h-earth-gr-cr-entry-receipt.json
+            /tmp/h-earth-gr-cr-manor.log
+            /tmp/h-earth-gr-cr-manor-receipt.json
           if-no-files-found: warn
           retention-days: 30

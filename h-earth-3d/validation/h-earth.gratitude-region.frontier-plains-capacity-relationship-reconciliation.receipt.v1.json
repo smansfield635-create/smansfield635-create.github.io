@@ -1,0 +1,221 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_FRONTIER_PLAINS_CAPACITY_RELATIONSHIP_RECONCILIATION_DURABLE_RECEIPT_v1",
+  "areaId": "GRATITUDE_REGION_FRONTIER_PLAINS",
+  "humanName": "Frontier Plains",
+  "sectionId": "GRATITUDE_REGION_FRONTIER_PLAINS_CAPACITY_AND_RELATIONSHIP_ANALYSIS",
+  "status": "PASS_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-gratitude-region-coordinate-reconciliation-001",
+  "pullRequest": 311,
+  "numberedGRCRSectionIdentityAssigned": false,
+  "microCheckpointInventoryAssigned": false,
+  "sectionIdentitySource": "CONTROLLING_SPATIAL_DEVELOPMENT_ARTIFACT_AREA_ID",
+  "frozenPriorSections": {
+    "GR-CR-01_ANALYSIS_HARNESS": "PASS_CLOSED_DO_NOT_REOPEN",
+    "GR-CR-02_ENTRY_ZONE": "PASS_CLOSED_DO_NOT_REOPEN",
+    "GR-CR-03_MIRROR_MANOR": "PASS_CLOSED_DO_NOT_REOPEN",
+    "GR-CR-04_CAVERN_PRECINCT": "PASS_CLOSED_DO_NOT_REOPEN"
+  },
+  "executionCustody": {
+    "finalAnalyticalHead": "eb6e594e588951e11cc8863c52d188e1e3c88f33",
+    "analysisBlob": "3b1123831ab195900365560b47d10c496f223609",
+    "runnerBlob": "d89d835bc249032af394836a03a486ded4e8a2b1",
+    "workflowBlob": "3d08fdff80169cbf3a7926b840525585bba85bb2",
+    "workflowRun": 30472069495,
+    "workflowJob": 90644530470,
+    "evidenceArtifact": 8732069541,
+    "artifactDigest": "sha256:d1b4c08bc7ef21b696a198165719318c9ac8e25fd080238435dea179f3689dd5",
+    "firstExecutionDigest": "f4de3310fd39f1bcb0c0fd477917549f669ddc12319dc9fe927c14e61e7bb3da",
+    "secondExecutionDigest": "f4de3310fd39f1bcb0c0fd477917549f669ddc12319dc9fe927c14e61e7bb3da",
+    "deterministicRepeatExecution": true,
+    "evidenceDigest": "ad767e4251159aadbfa397d3092d3593c9e638e02e43b79588fc8b7480da3d7b",
+    "primaryCandidateDigest": "ced76a62e2159c83dc7b8a7da5ad0ba985796a9f5644e52f34a29815e094aaf4"
+  },
+  "preservedCorrectionHistory": {
+    "firstFrontierExecutionHead": "7621dcb2bbf498f55ea0e03ecd72dd3e0f051cd0",
+    "firstFrontierWorkflowRun": 30471726360,
+    "firstFrontierWorkflowJob": 90643372586,
+    "firstFrontierExecutionClosed": false,
+    "firstFrontierStoppingIssue": "MANOR_ROUTE_ENDPOINT_INTERSECTED_SHARED_CAVERN_APPROACH_DEPARTURE_AREA",
+    "correction": "PERMIT_ONLY_LOCAL_SHARED_DEPARTURE_OVERLAP_WITHIN_32_WORLD_UNITS_OF_ROUTE_ORIGIN_WHILE_PRESERVING_CAVERN_APPROACH_EXCLUSION_BEYOND_THAT_OVERLAP",
+    "candidateEnvelopeRulesRelaxed": false,
+    "capacityThresholdsRelaxed": false,
+    "preservationBoundaryRelaxedBeyondSharedDeparture": false
+  },
+  "primaryNonfinalCandidate": {
+    "candidateId": "GRATITUDE_REGION_FRONTIER_PLAINS_PRECINCT_ENVELOPE_CANDIDATE_01",
+    "candidateClass": "MEASURED_OR_DERIVED_CANDIDATE_PENDING_LATER_MANIFEST_ACCEPTANCE",
+    "sourceSearchAreaId": "MODERATE_MOUNTAIN_FOOTHILL_OR_OTHER_BROAD_EXISTING_SURFACE",
+    "eligible": true,
+    "accepted": false,
+    "finalPlacement": false,
+    "finalCoordinatesAssigned": false,
+    "seed": {
+      "x": 192,
+      "z": -160
+    },
+    "envelopeCenter": {
+      "x": 193.66037735849056,
+      "z": -158.49056603773585
+    },
+    "bounds": {
+      "xMinimum": 152,
+      "xMaximum": 240,
+      "zMinimum": -200,
+      "zMaximum": -112
+    },
+    "elevationRange": {
+      "minimum": 1.4981665015220642,
+      "maximum": 8.914003729820251
+    },
+    "slopeRange": {
+      "minimum": 0.004133291981146714,
+      "maximum": 0.6616272386184067
+    },
+    "connectedSampleCount": 106,
+    "grossUsableAreaWorldUnitsSquared": 6784,
+    "meanSlope": 0.09339813249653743,
+    "expansionSampleCount": 107,
+    "expansionCapacityWorldUnitsSquared": 6848,
+    "worldBoundaryClearance": 16,
+    "boundaryClipped": false,
+    "mountainCoreConflictSampleCount": 0,
+    "entryZoneBufferConflictSampleCount": 0,
+    "mirrorManorBufferConflictSampleCount": 0,
+    "cavernPrecinctBufferConflictSampleCount": 0,
+    "cavernApproachConflictSampleCount": 0,
+    "mirrorManorLowCorridorConflictSampleCount": 0
+  },
+  "integratedCapacityModel": {
+    "precinctModel": "ONE_INTEGRATED_CLOSED_SYSTEM_PRECINCT",
+    "functionalCellCapacityCount": 11,
+    "capacitySupported": true,
+    "elevenIndependentLaneZonesRejected": true,
+    "nominalAreaPerFunctionalCapacityIfEvenlyReserved": 616.7272727272727,
+    "nominalAreaIsNotPlacement": true,
+    "exactLaneToCellMappingDeferred": true,
+    "exactLaneToCellMappingAssigned": false,
+    "exactCellPlacementAuthorized": false,
+    "exactCellPlacementAssigned": false,
+    "elevenFunctionalCellsAssigned": false
+  },
+  "accessAndRelationshipEvidence": {
+    "entryZoneRoute": {
+      "status": "CONNECTED_LAND_ROUTE_CANDIDATE_DERIVED_NOT_ACCEPTED",
+      "eligible": true,
+      "accepted": false,
+      "pathPointCount": 25,
+      "pathDistance": 215.19595949289337,
+      "maximumSlope": 0.24530407241551574,
+      "maximumNeighborElevationDelta": 1.4972593784332275
+    },
+    "mirrorManorRoute": {
+      "status": "CONNECTED_LAND_ROUTE_CANDIDATE_DERIVED_NOT_ACCEPTED",
+      "eligible": true,
+      "accepted": false,
+      "pathPointCount": 15,
+      "pathDistance": 128.5685424949238,
+      "maximumSlope": 0.5122246356355095,
+      "maximumNeighborElevationDelta": 5.590129256248474
+    },
+    "optionalWaterRelation": {
+      "status": "MEASURED_SHORELINE_RELATION_DERIVED_NONFINAL",
+      "available": true,
+      "accepted": false,
+      "nearestMeasuredShorelinePoint": {
+        "x": 96,
+        "z": -76.78286533081312
+      },
+      "straightLineDistance": 127.04759542214717,
+      "waterInfrastructureAssigned": false
+    },
+    "separation": {
+      "entryZoneEnvelopeDistance": 128,
+      "mirrorManorEnvelopeDistance": 56,
+      "cavernPrecinctEnvelopeDistance": 113.27841806805036,
+      "cavernApproachMinimumDistance": 72,
+      "mountainCoreMinimumDistance": 125.2836781069266
+    }
+  },
+  "addressEvidence": {
+    "status": "SEMANTIC_AND_PHYSICAL_ADDRESS_CORRESPONDENCE_DERIVED_NONFINAL",
+    "physicalChunkIds": [
+      "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C13_C16",
+      "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C13_C16"
+    ],
+    "representativeSemanticAddressIds": [
+      "H_EARTH_GROUND_CELL_001:R02:C15",
+      "H_EARTH_GROUND_CELL_001:R05:C15",
+      "H_EARTH_GROUND_CELL_001:R06:C13",
+      "H_EARTH_GROUND_CELL_001:R07:C15",
+      "H_EARTH_GROUND_CELL_001:R07:C16"
+    ],
+    "semanticAddressEvidenceIsNotFunctionalCellPlacement": true
+  },
+  "sharedFlowAndInfrastructureRelations": [
+    {
+      "corridorClass": "ENTRY_ACCESS_RELATION",
+      "status": "CONNECTED_LAND_ROUTE_CANDIDATE_DERIVED_NOT_ACCEPTED",
+      "accepted": false,
+      "exactInfrastructureAssigned": false
+    },
+    {
+      "corridorClass": "MANOR_ACCESS_RELATION",
+      "status": "CONNECTED_LAND_ROUTE_CANDIDATE_DERIVED_NOT_ACCEPTED",
+      "accepted": false,
+      "exactInfrastructureAssigned": false
+    },
+    {
+      "corridorClass": "OPTIONAL_WATER_RELATION",
+      "status": "MEASURED_SHORELINE_RELATION_DERIVED_NONFINAL",
+      "accepted": false,
+      "exactInfrastructureAssigned": false
+    },
+    {
+      "corridorClass": "INTERNAL_SHARED_FLOW_RESERVE",
+      "status": "CAPACITY_RELATION_ONLY_NO_EXACT_CENTERLINE",
+      "accepted": false,
+      "exactInfrastructureAssigned": false
+    }
+  ],
+  "authorityBoundary": {
+    "frontierPlainsCandidateAccepted": false,
+    "finalRegionalCandidateAccepted": false,
+    "exactCellPlacementAuthorized": false,
+    "exactCellPlacementAssigned": false,
+    "exactLaneToCellMappingAssigned": false,
+    "frontierObjectsOrFacilitiesAuthorized": false,
+    "terrainFlatteningAuthorized": false,
+    "sharedInfrastructureGeometryAuthorized": false,
+    "productConstructionAuthorized": false,
+    "terrainMutation": false,
+    "geometryConstruction": false,
+    "runtimeMutation": false,
+    "gameplayMutation": false,
+    "publicRouteMutation": false,
+    "productionMutation": false,
+    "controllingManifestMutation": false,
+    "narrativeMeaningAssigned": false,
+    "nextProgramTargetAssigned": false
+  },
+  "registryLifecycle": {
+    "spatialReconciliation": "VALID",
+    "registryOccurrenceResolution": "OPEN_SEPARATE_LIFECYCLE_LANE",
+    "registryWorkflowRun": 30472069601,
+    "registryWorkflowJob": 90644530120,
+    "failureCodes": [
+      "OPERATION_SCOPE_UNRESOLVED",
+      "REQUESTED_PATH_UNRESOLVED"
+    ],
+    "resolvedPaths": [],
+    "resolvedOccurrences": [],
+    "mergeAuthorityCreated": false,
+    "retargetAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false
+  },
+  "currentStopPoint": "FRONTIER_PLAINS_CAPACITY_AND_RELATIONSHIP_ANALYSIS_PASS_CLOSED",
+  "nextSection": "FOLLOW_CONTROLLING_ROADMAP_WHEN_RETRIEVED",
+  "nextProgramTargetAssigned": false,
+  "productConstruction": "BLOCKED",
+  "issues": []
+}

@@ -67,12 +67,20 @@
     "structure"
   ]);
 
+  const AUXILIARY_IDS = Object.freeze([
+    "test",
+    "research"
+  ]);
+
   const NODE_TYPES = Object.freeze({
     CATEGORY:
       "category",
 
     LAW:
       "law",
+
+    AUXILIARY:
+      "auxiliary",
 
     PLANET:
       "compass-planet"
@@ -131,7 +139,11 @@
           reality:
             Object.freeze([0, -1, 0]),
           structure:
-            Object.freeze([-1, 0, 0])
+            Object.freeze([-1, 0, 0]),
+          test:
+            Object.freeze([0.62, 0.56, 0.70]),
+          research:
+            Object.freeze([-0.62, -0.56, 0.70])
         })
     }),
 
@@ -182,6 +194,9 @@
 
   focusedCategoryScale:
     1.30,
+
+  auxiliaryScale:
+    1.10,
 
   lawScale:
     0.88,
@@ -244,6 +259,20 @@
         0.98,
         0.58,
         0.40
+      ]),
+
+    test:
+      Object.freeze([
+        1.0,
+        0.92,
+        0.48
+      ]),
+
+    research:
+      Object.freeze([
+        0.52,
+        0.34,
+        1.0
       ]),
 
     lawFlow:
@@ -309,6 +338,23 @@
           1.18,
         contrast:
           1.24
+      }),
+    AUTHORITY_IDLE:
+      Object.freeze({
+        specular:
+          1.58,
+        rim:
+          1.36,
+        emissive:
+          0.27,
+        alpha:
+          0.98,
+        sparkle:
+          0.42,
+        halo:
+          1.24,
+        contrast:
+          1.34
       }),
     LAW_IDLE:
       Object.freeze({
@@ -443,6 +489,9 @@
       SCENE_PROJECTIONS.HELD,
 
     categoryCount:
+      0,
+
+    auxiliaryCount:
       0,
 
     lawCount:
@@ -2195,51 +2244,57 @@
   }
 
   function createCpuMeshes() {
-  const meshes = new Map();
+    const meshes = new Map();
 
-  DIRECTIONS.forEach(direction => {
-    const warm =
-      direction === "reality" ||
-      direction === "structure";
+    DIRECTIONS.forEach(direction => {
+      const warm =
+        direction === "reality" ||
+        direction === "structure";
 
-    meshes.set(
-      `category-${direction}`,
-      createDiamondStarMesh({
-        points: QUALITY.categorySegments,
-        radius: 0.72,
-        inner: 0.30,
-        depth: 0.42,
-        crown: 0.20,
-        color: PALETTE[direction],
-        warmth: warm ? 0.10 : 0.02
-      })
-    );
+      meshes.set(
+        `category-${direction}`,
+        createDiamondStarMesh({
+          points: QUALITY.categorySegments,
+          radius: 0.72,
+          inner: 0.30,
+          depth: 0.42,
+          crown: 0.20,
+          color: PALETTE[direction],
+          warmth: warm ? 0.10 : 0.02
+        })
+      );
 
-    const lawColor =
-      direction === "flow"
-        ? PALETTE.lawFlow
-        : direction === "integrity"
-          ? PALETTE.lawIntegrity
-          : direction === "reality"
-            ? PALETTE.lawReality
-            : PALETTE.lawStructure;
+      meshes.set(
+        `law-${direction}`,
+        createDiamondStarMesh({
+          points: QUALITY.lawSegments,
+          radius: 0.42,
+          inner: 0.20,
+          depth: 0.25,
+          crown: 0.10,
+          color: lawColorForDirection(direction),
+          warmth: warm ? 0.08 : 0.02
+        })
+      );
+    });
 
-    meshes.set(
-      `law-${direction}`,
-      createDiamondStarMesh({
-        points: QUALITY.lawSegments,
-        radius: 0.42,
-        inner: 0.20,
-        depth: 0.25,
-        crown: 0.10,
-        color: lawColor,
-        warmth: warm ? 0.08 : 0.02
-      })
-    );
-  });
+    AUXILIARY_IDS.forEach(id => {
+      meshes.set(
+        `auxiliary-${id}`,
+        createDiamondStarMesh({
+          points: QUALITY.categorySegments,
+          radius: 0.79,
+          inner: 0.31,
+          depth: 0.46,
+          crown: 0.22,
+          color: PALETTE[id],
+          warmth: id === "test" ? 0.14 : 0.01
+        })
+      );
+    });
 
-  return meshes;
-}
+    return meshes;
+  }
 
   function createRenderer(
     layer,
@@ -2636,10 +2691,17 @@ function validateClusterSphereContract() {
                 options.direction
               ]
               .slice()
-          : clusterBaseVector(
-              options.lawIndex,
-              options.lawCount
-            ),
+          : options.type === NODE_TYPES.AUXILIARY
+            ? SPHERE
+                .constellation
+                .vectors[
+                  options.id
+                ]
+                .slice()
+            : clusterBaseVector(
+                options.lawIndex,
+                options.lawCount
+              ),
 
       depthScore:
         0,
@@ -3238,11 +3300,72 @@ function validateClusterSphereContract() {
       }
     );
 
+    AUXILIARY_IDS.forEach(
+      (
+        id,
+        auxiliaryIndex
+      ) => {
+        const element =
+          qs(
+            `[data-laws-auxiliary][data-laws-auxiliary-id="${id}"]`,
+            state.root
+          );
+
+        invariant(
+          element,
+          `LAWS_CRYSTALS_AUXILIARY_CONTROL_REQUIRED:${id}`
+        );
+
+        invariant(
+          !registry.has(id),
+          `LAWS_CRYSTALS_DUPLICATE_AUXILIARY_ID:${id}`
+        );
+
+        registry.set(
+          id,
+          makeNode({
+            id,
+
+            type:
+              NODE_TYPES.AUXILIARY,
+
+            direction:
+              "",
+
+            label:
+              element.dataset.label ||
+              id,
+
+            semanticElement:
+              element,
+
+            meshKey:
+              `auxiliary-${id}`,
+
+            material:
+              "AUTHORITY_IDLE",
+
+            phase:
+              0.86 +
+              auxiliaryIndex *
+                2.41
+          })
+        );
+      }
+    );
+
     RECEIPT.categoryCount =
       Array.from(registry.values())
         .filter(
           node =>
             node.type === NODE_TYPES.CATEGORY
+        ).length;
+
+    RECEIPT.auxiliaryCount =
+      Array.from(registry.values())
+        .filter(
+          node =>
+            node.type === NODE_TYPES.AUXILIARY
         ).length;
 
     RECEIPT.lawCount =
@@ -3590,7 +3713,7 @@ function validateClusterSphereContract() {
           (
             0.72 +
             sphere.depth *
-            0.42
+              0.42
           );
 
         Object.assign(
@@ -3641,6 +3764,72 @@ function validateClusterSphereContract() {
                   : 0.004 +
                     sphere.depth *
                       0.005
+            },
+            scale
+          )
+        );
+      }
+    );
+
+    AUXILIARY_IDS.forEach(
+      id => {
+        const node =
+          state.registry.get(id);
+
+        const sphere =
+          sphericalCategoryPosition(id);
+
+        node.visible = true;
+        node.depthScore = sphere.depth;
+        node.primaryScore = 0;
+        node.material = "AUTHORITY_IDLE";
+
+        const scale =
+          QUALITY.auxiliaryScale *
+          (
+            0.78 +
+            sphere.depth *
+              0.34
+          );
+
+        Object.assign(
+          node.target,
+          setUniformScale(
+            {
+              x:
+                sphere.x,
+
+              y:
+                sphere.y,
+
+              z:
+                sphere.z,
+
+              prominence:
+                clamp(
+                  0.56 +
+                    sphere.depth *
+                      0.48,
+                  0.22,
+                  1.18
+                ),
+
+              halo:
+                clamp(
+                  0.48 +
+                    sphere.depth *
+                      0.52,
+                  0.24,
+                  1.30
+                ),
+
+              rotationSpeed:
+                0.13 +
+                sphere.depth *
+                  0.04,
+
+              float:
+                0.010
             },
             scale
           )
@@ -4443,9 +4632,11 @@ function validateClusterSphereContract() {
 
   function projectedRadiusForNode(node) {
     const base =
-      node.type === NODE_TYPES.CATEGORY
-        ? 78
-        : 48;
+      node.type === NODE_TYPES.AUXILIARY
+        ? 88
+        : node.type === NODE_TYPES.CATEGORY
+          ? 78
+          : 48;
 
     return Math.max(
       18,
@@ -4475,6 +4666,7 @@ function validateClusterSphereContract() {
           node &&
           (
             node.type === NODE_TYPES.CATEGORY ||
+            node.type === NODE_TYPES.AUXILIARY ||
             node.type === NODE_TYPES.LAW
           )
       )

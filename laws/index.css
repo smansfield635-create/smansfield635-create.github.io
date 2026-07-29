@@ -111,6 +111,7 @@
 
   --laws-center-size: clamp(9rem, 20vw, 15rem);
   --laws-category-size: clamp(3.15rem, 5.8vw, 5.1rem);
+  --laws-authority-size: clamp(3.65rem, 6.6vw, 5.85rem);
   --laws-law-size: clamp(1.95rem, 3.55vw, 3rem);
   --laws-stage-min: clamp(430px, 58vh, 720px);
 
@@ -993,6 +994,7 @@ canvas[data-compass-compositor-layer="front"] {
 .laws-star,
 [data-laws-category],
 [data-laws-law],
+[data-laws-auxiliary],
 [data-laws-fallback-star],
 [data-laws-semantic-star] {
   position: absolute;
@@ -1015,6 +1017,7 @@ canvas[data-compass-compositor-layer="front"] {
 .laws-star > *:not(.sr-only),
 [data-laws-category] > *:not(.sr-only),
 [data-laws-law] > *:not(.sr-only),
+[data-laws-auxiliary] > *:not(.sr-only),
 [data-laws-fallback-star] > *:not(.sr-only),
 [data-laws-semantic-star] > *:not(.sr-only) {
   display: none !important;
@@ -1026,6 +1029,12 @@ canvas[data-compass-compositor-layer="front"] {
   aspect-ratio: 1;
 }
 
+.laws-star--authority,
+[data-laws-auxiliary] {
+  width: var(--laws-authority-size);
+  aspect-ratio: 1;
+}
+
 .laws-star--small,
 [data-laws-law] {
   width: var(--laws-law-size);
@@ -1034,7 +1043,8 @@ canvas[data-compass-compositor-layer="front"] {
 
 .laws-star::before,
 [data-laws-category]::before,
-[data-laws-law]::before {
+[data-laws-law]::before,
+[data-laws-auxiliary]::before {
   display: block;
   width: 100%;
   height: 100%;
@@ -1098,12 +1108,34 @@ canvas[data-compass-compositor-layer="front"] {
     0 0 2.4rem rgba(255, 116, 116, 0.12);
 }
 
+[data-laws-auxiliary-id="test"]::before {
+  background:
+    radial-gradient(circle at 42% 34%, #fff 0 7%, #fff2a8 18%, #f1bf4f 48%, #6e3c00 84%);
+  box-shadow:
+    inset 0 0 0.35rem rgba(255, 255, 255, 0.74),
+    inset 0 0 0.95rem rgba(111, 63, 0, 0.66),
+    0 0 1.4rem rgba(255, 225, 116, 0.66),
+    0 0 3.1rem rgba(241, 191, 79, 0.28);
+}
+
+[data-laws-auxiliary-id="research"]::before {
+  background:
+    radial-gradient(circle at 42% 34%, #fff 0 7%, #c9d8ff 18%, #8a62ff 48%, #24104f 84%);
+  box-shadow:
+    inset 0 0 0.35rem rgba(255, 255, 255, 0.70),
+    inset 0 0 0.95rem rgba(36, 16, 79, 0.70),
+    0 0 1.4rem rgba(157, 126, 255, 0.62),
+    0 0 3.1rem rgba(102, 76, 226, 0.30);
+}
+
 .laws-star:hover,
 .laws-star:focus-visible,
 [data-laws-category]:hover,
 [data-laws-category]:focus-visible,
 [data-laws-law]:hover,
-[data-laws-law]:focus-visible {
+[data-laws-law]:focus-visible,
+[data-laws-auxiliary]:hover,
+[data-laws-auxiliary]:focus-visible {
   filter:
     brightness(1.10)
     drop-shadow(0 0 1rem rgba(243, 217, 139, 0.40));
@@ -1146,6 +1178,51 @@ canvas[data-compass-compositor-layer="front"] {
   top: 50%;
   left: 10%;
   transform: translateY(-50%);
+}
+
+[data-laws-auxiliary][data-laws-auxiliary-id="test"] {
+  top: 22%;
+  left: 72%;
+  transform: translate(-50%, -50%);
+}
+
+[data-laws-auxiliary][data-laws-auxiliary-id="research"] {
+  bottom: 22%;
+  left: 28%;
+  transform: translate(-50%, 50%);
+}
+
+[data-laws-auxiliary] > .laws-authority-label {
+  position: absolute;
+  left: 50%;
+  top: 74%;
+  display: block !important;
+  min-width: max-content;
+  padding: 0.3rem 0.56rem;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  color: rgba(255, 250, 233, 0.98);
+  background: rgba(3, 6, 14, 0.88);
+  box-shadow: 0 0.45rem 1.2rem rgba(0, 0, 0, 0.48);
+  font-size: clamp(0.62rem, 1.25vw, 0.78rem);
+  font-weight: 950;
+  letter-spacing: 0.09em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 0.12rem 0.3rem #000;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+[data-laws-auxiliary-id="test"] > .laws-authority-label {
+  border-color: rgba(255, 225, 116, 0.52);
+  color: #fff1ae;
+}
+
+[data-laws-auxiliary-id="research"] > .laws-authority-label {
+  border-color: rgba(157, 126, 255, 0.52);
+  color: #dcd2ff;
 }
 
 [data-laws-law] {
@@ -1296,10 +1373,13 @@ canvas[data-compass-compositor-layer="front"] {
 
 [data-laws-root][data-laws-crystals-ready="true"] [data-laws-category],
 [data-laws-root][data-laws-crystals-ready="true"] [data-laws-law],
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-auxiliary],
 [data-laws-root][data-laws-crystals-status="available"] [data-laws-category],
 [data-laws-root][data-laws-crystals-status="available"] [data-laws-law],
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-auxiliary],
 [data-laws-root][data-laws-crystals-status="ready"] [data-laws-category],
-[data-laws-root][data-laws-crystals-status="ready"] [data-laws-law] {
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-law],
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-auxiliary] {
   color: transparent !important;
   background: transparent !important;
   border-color: transparent !important;
@@ -1309,10 +1389,13 @@ canvas[data-compass-compositor-layer="front"] {
 
 [data-laws-root][data-laws-crystals-ready="true"] [data-laws-category]::before,
 [data-laws-root][data-laws-crystals-ready="true"] [data-laws-law]::before,
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-auxiliary]::before,
 [data-laws-root][data-laws-crystals-status="available"] [data-laws-category]::before,
 [data-laws-root][data-laws-crystals-status="available"] [data-laws-law]::before,
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-auxiliary]::before,
 [data-laws-root][data-laws-crystals-status="ready"] [data-laws-category]::before,
-[data-laws-root][data-laws-crystals-status="ready"] [data-laws-law]::before {
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-law]::before,
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-auxiliary]::before {
   opacity: 0;
   background: transparent !important;
   box-shadow: none !important;
@@ -1321,7 +1404,10 @@ canvas[data-compass-compositor-layer="front"] {
 
 [data-laws-root][data-laws-crystals-ready="true"] [data-laws-category],
 [data-laws-root][data-laws-crystals-status="available"] [data-laws-category],
-[data-laws-root][data-laws-crystals-status="ready"] [data-laws-category] {
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-category],
+[data-laws-root][data-laws-crystals-ready="true"] [data-laws-auxiliary],
+[data-laws-root][data-laws-crystals-status="available"] [data-laws-auxiliary],
+[data-laws-root][data-laws-crystals-status="ready"] [data-laws-auxiliary] {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;

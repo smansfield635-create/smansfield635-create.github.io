@@ -132,6 +132,7 @@
     NONE: "",
     CATEGORY: "category",
     LAW: "law",
+    AUXILIARY: "auxiliary",
     HOME_COMPASS: "home-compass"
   });
 
@@ -169,6 +170,15 @@
     reality: "Reality",
     structure: "Structure"
   });
+
+  const AUXILIARY_ROUTES = Object.freeze({
+    test: "/laws/test/",
+    research: "/laws/research/"
+  });
+
+  const AUXILIARY_IDS = Object.freeze(
+    Object.keys(AUXILIARY_ROUTES)
+  );
 
   const MAIN_COMPASS = Object.freeze({
     destinationType: DESTINATION_TYPES.HOME_COMPASS,
@@ -852,6 +862,22 @@
     );
   }
 
+  function findAuxiliaryElement(auxiliaryId) {
+    const id = normalizeId(auxiliaryId).toLowerCase();
+
+    if (
+      !AUXILIARY_IDS.includes(id) ||
+      !state.root
+    ) {
+      return null;
+    }
+
+    return qs(
+      `[data-laws-auxiliary][data-laws-auxiliary-id="${escapeSelectorValue(id)}"]`,
+      state.root
+    );
+  }
+
   function lawRecordById(lawId) {
     return (
       registry.lawById.get(
@@ -970,9 +996,14 @@
       return Boolean(findCategoryElement(id));
     }
 
+    if (kind === "auxiliary") {
+      return Boolean(findAuxiliaryElement(id));
+    }
+
     return Boolean(
       findLawElement(id) ||
-      findCategoryElement(id)
+      findCategoryElement(id) ||
+      findAuxiliaryElement(id)
     );
   }
 
@@ -990,6 +1021,7 @@
 
       destinationId: normalizeId(
         element.dataset.destinationId ||
+        element.dataset.auxiliaryId ||
         element.dataset.lawId ||
         element.dataset.direction ||
         ""
@@ -3142,6 +3174,62 @@
     return true;
   }
 
+  function requestAuxiliarySelection(auxiliaryId) {
+    if (arguments.length !== 1) {
+      return false;
+    }
+
+    const id =
+      normalizeId(auxiliaryId).toLowerCase();
+
+    if (
+      isHeld() ||
+      state.current !== STATES.CONSTELLATION ||
+      !AUXILIARY_IDS.includes(id)
+    ) {
+      return false;
+    }
+
+    const element =
+      findAuxiliaryElement(id);
+
+    const destination =
+      destinationFromElement(element);
+
+    const expectedRoute =
+      AUXILIARY_ROUTES[id];
+
+    if (
+      !element ||
+      !destination ||
+      destination.destinationType !==
+        DESTINATION_TYPES.AUXILIARY ||
+      destination.destinationId !== id ||
+      destination.route !== expectedRoute
+    ) {
+      recordAction(
+        "auxiliary-selection-rejected",
+        `AUXILIARY_ROUTE_INVALID:${id}`
+      );
+
+      return false;
+    }
+
+    if (state.orbitGestureActive) {
+      requestOrbitCancel("auxiliary-selection");
+    }
+
+    recordAction(
+      `auxiliary-route-confirmed:${id}`
+    );
+
+    globalThis.location.assign(
+      expectedRoute
+    );
+
+    return true;
+  }
+
   function requestCompassSelection() {
     if (isHeld()) {
       return false;
@@ -4613,6 +4701,8 @@
         mainCompass: MAIN_COMPASS,
         directions: DIRECTIONS,
         directionLabels: DIRECTION_LABELS,
+        auxiliaryIds: AUXILIARY_IDS,
+        auxiliaryRoutes: AUXILIARY_ROUTES,
 
         getCanonicalLawRecords:
           () => registry.lawRecords,
@@ -4666,6 +4756,7 @@
 
         requestCategorySelection,
         requestLawSelection,
+        requestAuxiliarySelection,
         requestCompassSelection,
         requestEnterSelection,
         requestReturnToOrbit,

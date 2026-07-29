@@ -1,11 +1,11 @@
 /** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
-import { getHEarthRun8ER2ImmutableLiveRenderPackage } from './live-render-package.run8e-r2.js';
+import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
 
 export const H_EARTH_RUN_8E_R3C_RENDERER_ID='H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1';
-const LOGICAL_ID='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25';
-const RUNTIME_ID='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_59361792';
+const LOGICAL_ID='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898';
+const RUNTIME_ID=LOGICAL_ID;
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const c3=v=>{const a=Array.isArray(v)?v:[0,0,0],s=a.some(x=>x>1)?255:1;return a.slice(0,3).map(x=>Math.min(1,Math.max(0,Number(x)/s)));};
 const hash=b=>{let h=0x811c9dc5;for(const x of b){h^=x;h=Math.imul(h,0x01000193)>>>0;}return `fnv1a32:${h.toString(16).padStart(8,'0')}`;};
@@ -39,7 +39,7 @@ export function createHEarthRun8ER3CPersistentRenderer({canvas,width=640,height=
  const framebuffer=()=>{post();c.framebufferCreateCount++;const f=gl.createFramebuffer();if(!f)throw new Error('R3C_FRAMEBUFFER_CREATE_FAILED');return f;};
  const uniform=(p,n)=>{const u=gl.getUniformLocation(p,n);if(u===null)throw new Error(`R3C_UNIFORM_MISSING:${n}`);return u;};
  const complete=l=>{const s=gl.checkFramebufferStatus(gl.FRAMEBUFFER);if(s!==gl.FRAMEBUFFER_COMPLETE)throw new Error(`R3C_FRAMEBUFFER_INCOMPLETE:${l}:${s}`);};
- const pkg=getHEarthRun8ER2ImmutableLiveRenderPackage(),views=createHEarthRun8ER2DCanonicalGPUUploadViews(pkg),iface=getHEarthRun8ER3ALiveRendererInterface();
+ const pkg=getHEarthRun8ER2CanonicalLiveRenderPackage(),views=createHEarthRun8ER2DCanonicalGPUUploadViews(pkg),iface=getHEarthRun8ER3ALiveRendererInterface();
  if(pkg.packageIdentity!==RUNTIME_ID)throw new Error(`R3C_RUNTIME_PACKAGE_IDENTITY_MISMATCH:${pkg.packageIdentity}`);if(views.deterministicTransportEncoding!==true)throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
  function initialize(packet){if(initialized)throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');if(packet.packageIdentity!==pkg.packageIdentity||packet.packageContentDigest!==pkg.contentDigest)throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
   r.gv=shader(gl.VERTEX_SHADER,VS,'GV');r.gf=shader(gl.FRAGMENT_SHADER,FS,'GF');r.gp=program(r.gv,r.gf,'GP');r.dv=shader(gl.VERTEX_SHADER,DVS,'DV');r.df=shader(gl.FRAGMENT_SHADER,DFS,'DF');r.dp=program(r.dv,r.df,'DP');post();c.vertexArrayCreateCount++;r.vao=gl.createVertexArray();gl.bindVertexArray(r.vao);

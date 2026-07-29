@@ -30,6 +30,27 @@ const freeze = (value, seen = new WeakSet()) => {
   return Object.freeze(value);
 };
 
+const CP3D_CANONICAL_SCALE = 2 ** 24;
+const CP3D_CANONICAL_SHORELINE_BANDS = new Set([
+  'DRY_SAND_EDGE',
+  'DAMP_TRANSITION'
+]);
+
+function canonicalizeCP3DCoordinate(value) {
+  const canonical = Math.round(value * CP3D_CANONICAL_SCALE) / CP3D_CANONICAL_SCALE;
+  return Object.is(canonical, -0) ? 0 : canonical;
+}
+
+function canonicalizeCP3DShorelinePoint(point, bandId) {
+  if (!CP3D_CANONICAL_SHORELINE_BANDS.has(bandId)) return point;
+  return {
+    ...point,
+    x: canonicalizeCP3DCoordinate(point.x),
+    y: canonicalizeCP3DCoordinate(point.y),
+    z: canonicalizeCP3DCoordinate(point.z)
+  };
+}
+
 export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID =
   'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1';
 
@@ -125,8 +146,8 @@ function constructBand(band) {
 
   for (let index = 0; index < sampleCount; index += 1) {
     const x = xAt(index);
-    const inner = pointAtOffset(x, band.innerOffset);
-    const outer = pointAtOffset(x, band.outerOffset);
+    const inner = canonicalizeCP3DShorelinePoint(pointAtOffset(x, band.innerOffset), band.bandId);
+    const outer = canonicalizeCP3DShorelinePoint(pointAtOffset(x, band.outerOffset), band.bandId);
     vertices.push(
       createHEarthVector3(inner.x, inner.y, inner.z),
       createHEarthVector3(outer.x, outer.y, outer.z)
@@ -168,6 +189,9 @@ function constructBand(band) {
       innerOffset: band.innerOffset,
       outerOffset: band.outerOffset,
       sourceSampleIds,
+      cp3dCanonicalCoordinateLaw: CP3D_CANONICAL_SHORELINE_BANDS.has(band.bandId)
+        ? 'ROUND_TO_2_POW_NEGATIVE_24_BEFORE_BOUNDS_AND_NORMALS'
+        : null,
       admitted: false,
       aggregateFrameAuthority: false
     })

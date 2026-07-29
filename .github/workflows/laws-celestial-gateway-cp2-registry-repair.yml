@@ -1,0 +1,83 @@
+name: Laws celestial gateway CP2 registry repair
+
+on:
+  pull_request:
+    branches: [main]
+    paths: [.github/workflows/laws-celestial-gateway-cp2-registry-repair.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.head_ref == 'agent/laws-celestial-gateway-cp2-registry-repair-001'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-celestial-gateway-auxiliary-clusters-cp2-001
+          fetch-depth: 0
+      - name: Restore registry finalization
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('laws/index.crystals.js')
+          text = path.read_text(encoding='utf-8')
+          old = '''      }
+    );
+
+  }
+
+  function clusterAnchorVector() {'''
+          new = '''      }
+    );
+
+    RECEIPT.categoryCount =
+      Array.from(registry.values())
+        .filter(node => node.type === NODE_TYPES.CATEGORY).length;
+
+    RECEIPT.auxiliaryCount =
+      Array.from(registry.values())
+        .filter(node => node.type === NODE_TYPES.AUXILIARY).length;
+
+    RECEIPT.lawCount =
+      Array.from(registry.values())
+        .filter(node => node.type === NODE_TYPES.LAW).length;
+
+    RECEIPT.canonicalSemanticLawCount = lawElements.length;
+
+    return registry;
+  }
+
+  function constellationAnchorVector() {
+    return normalizeVector(
+      SPHERE.constellation.primaryAnchor
+    );
+  }
+
+  function clusterAnchorVector() {'''
+          count = text.count(old)
+          if count != 1:
+              raise SystemExit(f'repair anchor count={count}')
+          text = text.replace(old, new, 1)
+          required = [
+              'return registry;',
+              'function constellationAnchorVector()',
+              'RECEIPT.categoryCount =',
+              'RECEIPT.canonicalSemanticLawCount =',
+          ]
+          missing = [item for item in required if item not in text]
+          if missing:
+              raise SystemExit('missing=' + ','.join(missing))
+          path.write_text(text, encoding='utf-8')
+          PY
+          node --check laws/index.crystals.js
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.crystals.js
+          git commit -m "Restore Laws crystal registry finalization"
+          git push origin HEAD:agent/laws-celestial-gateway-auxiliary-clusters-cp2-001
+          echo "REPAIRED_CANDIDATE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "CHECKPOINT_2_REGISTRY_REPAIR=PASS" >> "$GITHUB_STEP_SUMMARY"

@@ -88,7 +88,7 @@ jobs:
           if (receipt.execution.commit !== process.env.EXECUTION_COMMIT) failures.push('commit');
           if (receipt.invariant.cardinalCount !== 4 || receipt.invariant.roomCount !== 16) failures.push('membership');
           if (receipt.invariant.constellationVisibleLabelCount !== 4 || receipt.invariant.clusterVisibleLabelCount !== 1) failures.push('label_count');
-          if (receipt.invariant.cardinalLabelModel !== 'compass-family-letter-word' || receipt.invariant.clusterLabelModel !== 'primary-only') failures.push('label_model');
+          if (receipt.invariant.cardinalLabelModel !== 'compass-family-letter-word' || receipt.invariant.clusterLabelModel !== 'camera-front-primary-only') failures.push('label_model');
           if (receipt.observations.length !== 2 || receipt.screenshotManifest.length !== 10) failures.push('evidence_count');
           if (failures.length) throw new Error(`SHOWROOM_LABEL_RECEIPT_INVALID:${failures.join(',')}`);
           NODE

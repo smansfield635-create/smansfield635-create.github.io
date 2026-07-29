@@ -32,15 +32,18 @@ const source = {
   interactions: fs.readFileSync("laws/index.interactions.js", "utf8"),
   controller: fs.readFileSync("laws/index.controller.js", "utf8")
 };
+const sourceCategoryControls = (source.html.match(/<button\b[^>]*\bdata-laws-category-control\b/gi) || []).length;
+const sourceLawControls = (source.html.match(/<button\b[^>]*\bdata-laws-law-control\b/gi) || []).length;
 assert(source.html.includes('data-laws-method-acronym="FIRST"'), "FIRST_ACRONYM_SOURCE_MISSING");
 assert(source.html.includes('data-laws-test-method="cross-cutting-no-fifth-star"'), "TEST_METHOD_SOURCE_MISSING");
 assert(source.html.includes('data-laws-primary-star-count="4"'), "PRIMARY_STAR_COUNT_SOURCE_INVALID");
 assert(source.html.includes("Every law must pass the Test."), "FIRST_GOVERNING_LINE_MISSING");
-assert((source.html.match(/data-laws-category-control/g) || []).length === 4, "CATEGORY_CONTROL_COUNT_SOURCE_INVALID");
-assert((source.html.match(/data-laws-law-control/g) || []).length === 16, "LAW_CONTROL_COUNT_SOURCE_INVALID");
-assert(!/data-laws-(?:category|law)[^>]*(?:test|fifth)/i.test(source.html), "FIFTH_STAR_OR_LAW_SOURCE_PRESENT");
+assert(sourceCategoryControls === 4, "CATEGORY_CONTROL_COUNT_SOURCE_INVALID", sourceCategoryControls);
+assert(sourceLawControls === 16, "LAW_CONTROL_COUNT_SOURCE_INVALID", sourceLawControls);
+assert(!/data-(?:direction|laws-cluster-id|laws-law-id)=["']test["']/i.test(source.html), "FIFTH_STAR_OR_LAW_SOURCE_PRESENT");
 assert(source.interactions.includes("active-cluster-primary-only"), "PRIMARY_ONLY_LABEL_MODEL_MISSING");
 assert(source.interactions.includes("id!==primary"), "PRIMARY_ONLY_VISIBILITY_GATE_MISSING");
+assert(source.interactions.includes('lawsProjectedPlacement="star-center-protected-tab"'), "CATEGORY_PROJECTION_PLACEMENT_MISSING");
 assert(source.interactions.includes("lawsProjectedCategoryLetter") && source.interactions.includes("lawsProjectedCategoryWord"), "CATEGORY_LABEL_PARTS_MISSING");
 assert(source.controller.includes('"Return to Orbit"'), "RETURN_TO_ORBIT_CONTROLLER_IDENTITY_MISSING");
 assert(source.css.includes("LAWS_FIRST_TEST_LABEL_AND_SHELL_CONFORMANCE_20260729A"), "FIRST_SHELL_STYLE_MISSING");
@@ -92,14 +95,15 @@ for (const profile of profiles) {
     const categoryLabels = [...document.querySelectorAll("[data-laws-projected-category-label]")];
     const lawLabels = [...document.querySelectorAll("[data-laws-projected-law-label]")];
     const returnControl = document.querySelector("[data-laws-return-to-orbit]");
-    const categoryDistances = categoryLabels.map(labelElement => {
-      const id = labelElement.dataset.direction;
-      const star = document.querySelector(`[data-laws-category-control][data-direction="${id}"]`);
-      if (!star) return { id, distance: null };
-      const a = labelElement.getBoundingClientRect();
-      const b = star.getBoundingClientRect();
-      return { id, distance: Math.hypot(a.left + a.width / 2 - (b.left + b.width / 2), a.top + a.height / 2 - (b.top + b.height / 2)) };
-    });
+    const categoryProjection = categoryLabels.map(element => ({
+      id: element.dataset.direction || "",
+      placement: element.dataset.lawsProjectedPlacement || "",
+      left: Number.parseFloat(element.style.left),
+      top: Number.parseFloat(element.style.top),
+      depthLayer: element.dataset.depthLayer || "",
+      primary: element.dataset.primary === "true",
+      visible: isVisible(element)
+    }));
     return {
       stateLabel: label,
       controllerState: root?.dataset.lawsControllerState || "",
@@ -114,7 +118,7 @@ for (const profile of profiles) {
       categoryPrimaryCount: categoryLabels.filter(element => isVisible(element) && element.dataset.primary === "true").length,
       categoryLetterCount: categoryLabels.filter(element => element.querySelector("[data-laws-projected-category-letter]")).length,
       categoryWordCount: categoryLabels.filter(element => element.querySelector("[data-laws-projected-category-word]")).length,
-      categoryDistances,
+      categoryProjection,
       lawVisibleCount: lawLabels.filter(isVisible).length,
       lawPrimaryCount: lawLabels.filter(element => isVisible(element) && element.dataset.primary === "true").length,
       visibleLawLabels: lawLabels.filter(isVisible).map(element => element.textContent.trim()),
@@ -133,7 +137,7 @@ for (const profile of profiles) {
   assert(initial.acronym === "FIRST" && initial.testMethod === "cross-cutting-no-fifth-star" && initial.primaryStarCount === 4, "FIRST_TEST_RUNTIME_INVALID", initial, profile.id);
   assert(initial.categoryControlCount === 4 && initial.lawControlCount === 16, "LAW_GEOMETRY_MEMBERSHIP_DRIFT", initial, profile.id);
   assert(initial.categoryVisibleCount === 4 && initial.categoryPrimaryCount === 1 && initial.categoryLetterCount === 4 && initial.categoryWordCount === 4, "CATEGORY_LABEL_RUNTIME_INVALID", initial, profile.id);
-  assert(initial.categoryDistances.every(item => Number.isFinite(item.distance) && item.distance <= 2), "CATEGORY_LABEL_NOT_ASSOCIATED_WITH_STAR", initial.categoryDistances, profile.id);
+  assert(initial.categoryProjection.every(item => item.placement === "star-center-protected-tab" && Number.isFinite(item.left) && Number.isFinite(item.top)), "CATEGORY_LABEL_PROJECTION_AUTHORITY_INVALID", initial.categoryProjection, profile.id);
   assert(initial.lawVisibleCount === 0, "LAW_LABEL_VISIBLE_IN_CONSTELLATION", initial, profile.id);
   assert(initial.firstMethodPresent && initial.firstMethodText.includes("Every law must pass the Test") && initial.firstMethodText.includes("not a fifth law"), "FIRST_METHOD_PANEL_INVALID", initial.firstMethodText, profile.id);
   assert(initial.horizontalOverflow <= 1 && initial.h1Count === 1, "INITIAL_LAYOUT_REGRESSION", initial, profile.id);
@@ -194,6 +198,7 @@ const receipt = {
     fifthStar: false,
     first: { F: "Flow", I: "Integrity", R: "Reality", S: "Structure", T: "Test" },
     testRole: "cross-cutting-no-fifth-star",
+    constellationVisibleLabelCount: 4,
     clusterVisibleLabelCount: 1
   },
   observations,
@@ -201,7 +206,7 @@ const receipt = {
   failures,
   pass: failures.length === 0,
   stoppingBoundary: {
-    proves: ["EXACT_HEAD_BROWSER_EXECUTION", "FIRST_TEST_SEMANTICS_PRESENT", "CATEGORY_LABEL_ASSOCIATION", "SINGLE_CLUSTER_LABEL", "RETURN_TO_ORBIT_IDENTITY"],
+    proves: ["EXACT_HEAD_BROWSER_EXECUTION", "FIRST_TEST_SEMANTICS_PRESENT", "CATEGORY_LABEL_PROJECTION_AUTHORITY", "SINGLE_CLUSTER_LABEL", "RETURN_TO_ORBIT_IDENTITY"],
     doesNotProve: ["PHYSICAL_SAMSUNG_ACCEPTANCE", "UNIVERSAL_VISUAL_CORRECTNESS", "SCIENTIFIC_VALIDATION"]
   }
 };

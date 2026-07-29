@@ -1,4 +1,4 @@
-name: Laws celestial gateway CP2 registry repair
+name: Laws celestial gateway CP2 registry repair 002
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   repair:
-    if: github.head_ref == 'agent/laws-celestial-gateway-cp2-resume-002'
+    if: github.head_ref == 'agent/laws-celestial-gateway-cp2-registry-repair-002'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

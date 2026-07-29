@@ -229,6 +229,9 @@ async function capture(page, authorityId, profileName, stateLabel, config, scree
     cardinal: config.cardinal,
     child: config.child,
     returnControl: config.returnControl,
+    categoryLabel: config.categoryLabel,
+    childLabel: config.childLabel,
+    method: config.method,
     panel: config.panel
   })) elements[name] = await selectorRect(page, selector);
   const metrics = await documentMetrics(page);
@@ -238,8 +241,41 @@ async function capture(page, authorityId, profileName, stateLabel, config, scree
     cardinalReturn: overlap(elements.cardinal, elements.returnControl),
     childReturn: overlap(elements.child, elements.returnControl)
   };
+  const lawsConformance = config.route === "/laws/" ? await page.evaluate(() => {
+    const rendered = element => {
+      if (!element || element.hidden) return false;
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity || 1) > 0.01 && rect.width > 0 && rect.height > 0;
+    };
+    const categories = Array.from(document.querySelectorAll("[data-laws-projected-category-label]"));
+    const laws = Array.from(document.querySelectorAll("[data-laws-projected-law-label]"));
+    const returnControl = document.querySelector("[data-laws-return-to-orbit]");
+    const root = document.querySelector("[data-laws-root]");
+    return {
+      firstMethodPresent: Boolean(document.querySelector("[data-laws-first-method]")),
+      acronym: document.documentElement.dataset.lawsMethodAcronym || "",
+      testMethod: document.documentElement.dataset.lawsTestMethod || "",
+      primaryStarCount: Number(document.documentElement.dataset.lawsPrimaryStarCount || 0),
+      categoryVisibleCount: categories.filter(rendered).length,
+      categoryPrimaryCount: categories.filter(element => rendered(element) && element.dataset.primary === "true").length,
+      categoryLetterCount: categories.filter(element => element.querySelector("[data-laws-projected-category-letter]")).length,
+      categoryWordCount: categories.filter(element => element.querySelector("[data-laws-projected-category-word]")).length,
+      lawVisibleCount: laws.filter(rendered).length,
+      lawPrimaryCount: laws.filter(element => rendered(element) && element.dataset.primary === "true").length,
+      returnText: (returnControl?.textContent || "").replace(/\s+/g, " ").trim(),
+      returnVisible: rendered(returnControl),
+      controllerState: root?.dataset.lawsControllerState || ""
+    };
+  }) : null;
   const findings = [];
   if (metrics.horizontalOverflowPx > 2) findings.push({ id: "HORIZONTAL_OVERFLOW", observed: metrics.horizontalOverflowPx });
+  if (lawsConformance) {
+    if (!lawsConformance.firstMethodPresent || lawsConformance.acronym !== "FIRST" || lawsConformance.testMethod !== "cross-cutting-no-fifth-star" || lawsConformance.primaryStarCount !== 4) findings.push({ id: "LAWS_FIRST_TEST_METHOD_INVALID", observed: lawsConformance });
+    if (["INITIAL", "CONTROLLED_DRAG"].includes(stateLabel) && (lawsConformance.categoryVisibleCount !== 4 || lawsConformance.categoryPrimaryCount !== 1 || lawsConformance.categoryLetterCount !== 4 || lawsConformance.categoryWordCount !== 4)) findings.push({ id: "LAWS_CATEGORY_LABEL_CONFORMANCE_FAILED", observed: lawsConformance });
+    if (["CARDINAL_ATTEMPT", "CHILD_ATTEMPT"].includes(stateLabel) && (lawsConformance.lawVisibleCount !== 1 || lawsConformance.lawPrimaryCount !== 1)) findings.push({ id: "LAWS_CLUSTER_SINGLE_LABEL_FAILED", observed: lawsConformance });
+    if (stateLabel === "CHILD_ATTEMPT" && (!lawsConformance.returnVisible || lawsConformance.returnText !== "Return to Orbit")) findings.push({ id: "LAWS_RETURN_TO_ORBIT_IDENTITY_FAILED", observed: lawsConformance });
+  }
   for (const name of ["root", "scene"]) {
     const element = elements[name];
     if (!element) findings.push({ id: "IMPORTANT_ELEMENT_ABSENT", element: name });
@@ -252,7 +288,7 @@ async function capture(page, authorityId, profileName, stateLabel, config, scree
   for (const [name, value] of Object.entries(overlaps)) {
     if (value && value.ratioOfSmaller > 0.65) findings.push({ id: "INTERACTIVE_CONTROL_OVERLAP", pair: name, observed: value });
   }
-  return { stateLabel, fullPage, filename, byteLength: buffer.length, sha256: digestBytes(buffer), state, metrics, elements, overlaps, findings };
+  return { stateLabel, fullPage, filename, byteLength: buffer.length, sha256: digestBytes(buffer), state, metrics, elements, overlaps, lawsConformance, findings };
 }
 
 async function runCompassScenario(browser, authorityId, profileName, config) {

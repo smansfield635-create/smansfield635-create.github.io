@@ -1187,7 +1187,7 @@
 
   function setReturnToOrbitVisible(
     visible,
-    label = "Return"
+    label = "Return to Orbit"
   ) {
     const control =
       state.returnToOrbitButton;
@@ -2140,8 +2140,8 @@
       setReturnToOrbitVisible(
         true,
         state.current === STATES.CONSTELLATION
-          ? "Return"
-          : "Return"
+          ? "Return to Orbit"
+          : "Return to Orbit"
       );
 
       setGuidance("");
@@ -2258,7 +2258,7 @@
         "Enter"
       );
 
-      setReturnToOrbitVisible(true, "Return");
+      setReturnToOrbitVisible(true, "Return to Orbit");
       setGuidance("");
       return;
     }

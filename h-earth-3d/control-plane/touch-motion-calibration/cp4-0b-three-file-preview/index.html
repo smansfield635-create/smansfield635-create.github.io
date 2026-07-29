@@ -1,4 +1,4 @@
-<!-- CP4_0B sealed preview. Source head: 9ce2b2ef9078d99c93f847957479e37c41f83a53. No repository-relative runtime module graph. -->
+<!-- CP4 corrected sealed preview · source 3f1147bb782134cb67b1f207e92b4c8e4f42c9f5 -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,11 +7,11 @@
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#061014">
   <meta name="description" content="H-Earth Ground-View Matrix with live runtime diagnostics.">
-  <title>H-Earth · CP4 Sealed Physical Preview</title>
-    <link rel="stylesheet" href="./preview.css">
+  <title>H-Earth · CP4 Corrected Tablet-Fluidity Preview</title>
+  <link rel="stylesheet" href="./preview.css">
 </head>
 <body>
-  <main data-cp4-source-head="9ce2b2ef9078d99c93f847957479e37c41f83a53" data-cp4-materialization="CP4_0B_DETERMINISTIC_THREE_FILE_RUNTIME" id="h-earth-3d-route-root" class="h-earth-3d-route-root h-earth-live-route" data-h-earth-route="public-environment-host" data-h-earth-public-route="functional-landscape" data-h-earth-gesture-primary="true">
+  <main id="h-earth-3d-route-root" class="h-earth-3d-route-root h-earth-live-route" data-h-earth-route="public-environment-host" data-h-earth-public-route="functional-landscape" data-h-earth-gesture-primary="true">
     <div id="h-earth-functional-landscape-route" class="h-earth-3d-shell" data-run6f-ready="false" data-run6f-error="false" data-run7h-ready="false" data-run7h-error="false" data-run8e-ready="false" data-run8e-error="false" data-public-route="true" data-gesture-used="false">
       <header class="h-earth-3d-public-header" aria-label="H-Earth navigation"><a class="h-earth-3d-brand" href="/index.html" aria-label="Return to Compass"><span class="h-earth-3d-brand-mark" aria-hidden="true"><span>H</span></span><span class="h-earth-3d-brand-copy"><span>Ground-View Matrix</span><strong>H-Earth</strong></span></a><nav class="h-earth-3d-public-nav" aria-label="H-Earth public navigation"><a id="h-earth-return-to-compass" href="/index.html">Return to Compass</a><a id="h-earth-3d-diagnostic-link" href="/showroom/globe/h-earth/diagnostic/">FD_05 Diagnostics</a></nav></header>
       <section class="h-earth-3d-arrival h-earth-live-arrival" aria-labelledby="h-earth-live-title"><div class="h-earth-3d-arrival-copy"><p class="h-earth-3d-kicker">H-Earth · Navigable Ground View</p><h1 id="h-earth-live-title" class="h-earth-3d-title">Enter at the coast. Move inland.</h1><p class="h-earth-3d-lead">The current Run 8E environment remains the rendered world. The panel below observes that same production bootstrap.</p></div><aside class="h-earth-3d-arrival-note" aria-label="Navigation guidance"><p><strong>Direct manipulation:</strong> drag to look, slide two fingers or use the mouse wheel to move, and pinch to zoom.</p><p id="route-status" class="h-earth-live-status" role="status" aria-live="polite">Starting current H-Earth GPU environment…</p></aside></section>
@@ -23,6 +23,45 @@
       </section>
     </div>
   </main>
-    <script src="./preview.js"></script>
+  <script>
+    (() => {
+      const records = new Map();
+      const errorNode = document.getElementById('h-earth-runtime-diagnostic-error');
+      const setStage = (stage, status, detail = null, timestamp = new Date().toISOString()) => {
+        const row = document.querySelector(`[data-stage="${stage}"]`);
+        if (row) { row.dataset.status = status; row.querySelector('output').textContent = status; }
+        records.set(stage, { stage, status, detail, timestamp });
+        document.getElementById('h-earth-runtime-fact-time').textContent = timestamp;
+        if (status === 'FAIL' && errorNode) { errorNode.hidden = false; errorNode.textContent = JSON.stringify({ stage, detail, timestamp }, null, 2); }
+      };
+      const setFacts = (detail = {}) => {
+        const viewport = detail.viewport;
+        if (viewport) document.getElementById('h-earth-runtime-fact-viewport').textContent = `${viewport.width} × ${viewport.height}`;
+        if (detail.devicePixelRatio) document.getElementById('h-earth-runtime-fact-dpr').textContent = String(detail.devicePixelRatio);
+        if (Number.isFinite(detail.visibleFrames)) document.getElementById('h-earth-runtime-fact-frames').textContent = String(detail.visibleFrames);
+        const capabilities = detail.resources?.capabilities ?? detail.resources?.webgl ?? {};
+        document.getElementById('h-earth-runtime-fact-vendor').textContent = capabilities.vendor ?? capabilities.unmaskedVendor ?? 'not exposed';
+        document.getElementById('h-earth-runtime-fact-renderer').textContent = capabilities.renderer ?? capabilities.unmaskedRenderer ?? 'not exposed';
+      };
+      window.H_EARTH_RUNTIME_DIAGNOSTICS = Object.freeze({mark:setStage,getSnapshot:()=>({stages:[...records.values()],userAgent:navigator.userAgent,framed:window.parent!==window})});
+      window.addEventListener('h-earth-runtime-diagnostic-stage',event=>setStage(event.detail.stage,event.detail.status,event.detail.detail,event.detail.timestamp));
+      window.addEventListener('h-earth-runtime-diagnostic-facts',event=>setFacts(event.detail));
+      window.addEventListener('error',event=>setStage('BOOT_STARTED','FAIL',{message:event.message,filename:event.filename,line:event.lineno,column:event.colno}));
+      window.addEventListener('unhandledrejection',event=>setStage('BOOT_STARTED','FAIL',{unhandledRejection:String(event.reason),stack:event.reason?.stack??null}));
+      setStage('BOOT_STARTED','PENDING','Host diagnostic monitor installed.');
+      const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+      setStage('CANVAS_ACQUIRED',canvas instanceof HTMLCanvasElement?'PASS':'FAIL',canvas?{id:canvas.id,width:canvas.width,height:canvas.height}:'Canvas missing.');
+      document.getElementById('h-earth-runtime-fact-dpr').textContent=String(window.devicePixelRatio||1);
+      window.setTimeout(()=>{const snapshot=window.H_EARTH_RUNTIME_DIAGNOSTICS.getSnapshot();const firstFrame=snapshot.stages.find(entry=>entry.stage==='FIRST_FRAME_DRAWN');const startup=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();if((!firstFrame||firstFrame.status==='PENDING')&&!startup?.firstFailureStage)setStage('FIRST_FRAME_DRAWN','FAIL','No first-frame event within 12 seconds.');},12000);
+      let latestReceipt=null;
+      const ledger=document.getElementById('h-earth-startup-ledger');
+      const renderReceipt=receipt=>{latestReceipt=receipt;const entries=Object.entries(receipt.stages||{});ledger.replaceChildren(...entries.map(([stage,status])=>{const li=document.createElement('li');li.dataset.status=status;const code=document.createElement('code');code.textContent=stage;const output=document.createElement('output');output.textContent=status;li.append(code,output);return li;}));document.getElementById('h-earth-startup-result').textContent=`DEVICE RESULT: ${receipt.firstFailureStage?'FAIL':receipt.stages?.READY_PUBLISHED==='PASS'?'PASS':'STARTING'}`;document.getElementById('h-earth-startup-first-failure').textContent=`FIRST FAILURE: ${receipt.firstFailureStage||'None recorded.'}${receipt.failureClass?` · ${receipt.failureClass}`:''}`;document.getElementById('h-earth-startup-explanation').textContent=`WHAT THIS MEANS: ${receipt.plainLanguageSummary}`;document.getElementById('h-earth-startup-technical').textContent=JSON.stringify(receipt,null,2);};
+      window.addEventListener('h-earth-renderer-startup-receipt',event=>renderReceipt(event.detail));
+      document.getElementById('h-earth-startup-copy').addEventListener('click',async()=>{if(latestReceipt)await navigator.clipboard.writeText(JSON.stringify(latestReceipt,null,2));});
+      document.getElementById('h-earth-startup-download').addEventListener('click',()=>{if(!latestReceipt)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(latestReceipt,null,2)],{type:'application/json'}));a.download='h-earth-renderer-startup-receipt.json';a.click();URL.revokeObjectURL(a.href);});
+    })();
+  </script>
+  <script id="h-earth-current-run8e-module" type="module" src="./preview.js"></script>
+  <script>document.getElementById('h-earth-current-run8e-module').addEventListener('error',()=>{window.H_EARTH_RUNTIME_DIAGNOSTICS?.mark('BOOT_STARTED','FAIL','Current Run 8E module graph failed to load.');});</script>
 </body>
 </html>

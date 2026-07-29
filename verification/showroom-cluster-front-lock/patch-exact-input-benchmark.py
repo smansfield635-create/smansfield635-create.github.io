@@ -3,7 +3,6 @@ import re
 
 root = Path(__file__).resolve().parents[2]
 benchmark = root / "verification/benchmark-tools/four-compass-benchmark-v1/showroom-label-conformance-benchmark.mjs"
-workflow = root / ".github/workflows/showroom-label-conformance-benchmark.yml"
 
 text = benchmark.read_text(encoding="utf-8")
 pattern = re.compile(r'''  const dragStarted = await page\.evaluate\(async \(\) => \{.*?  assert\(dragStarted, "TOUCH_DRAG_START_FAILED", dragStarted, profile\.id\);''', re.S)
@@ -69,13 +68,5 @@ if count != 1:
     raise SystemExit(f"ACTUAL_INPUT_RELEASE_BLOCK_MATCH_COUNT:{count}")
 
 benchmark.write_text(text, encoding="utf-8")
-
-workflow_text = workflow.read_text(encoding="utf-8")
-old = "receipt.invariant.clusterLabelModel !== 'primary-only'"
-new = "receipt.invariant.clusterLabelModel !== 'camera-front-primary-only'"
-if workflow_text.count(old) != 1:
-    raise SystemExit(f"WORKFLOW_LABEL_MODEL_MATCH_COUNT:{workflow_text.count(old)}")
-workflow.write_text(workflow_text.replace(old, new, 1), encoding="utf-8")
-
 Path(__file__).unlink()
 print("SHOWROOM_ACTUAL_POINTER_BENCHMARK_PATCH_20260729C")

@@ -1,7 +1,7 @@
 name: H-Earth Gratitude Region Coordinate Reconciliation
 
-# Isolated validation trigger for bounded GR-CR sections.
-# GR-CR-04 Cavern Precinct read-only reconciliation trigger.
+# Isolated validation trigger for bounded Gratitude Region reconciliation.
+# Frontier Plains uses its controlling area identity; no GR-CR-05 label is assumed.
 on:
   push:
     branches:
@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Execute bounded analysis harness
+      - name: Execute bounded analysis harness regression
         env:
           H_EARTH_GR_CR_RECEIPT: /tmp/h-earth-gr-cr-receipt.json
         run: |
@@ -40,7 +40,7 @@ jobs:
           node h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs \
             2>&1 | tee /tmp/h-earth-gr-cr.log
 
-      - name: Execute bounded Entry Zone reconciliation
+      - name: Execute bounded Entry Zone regression
         env:
           H_EARTH_GR_CR_ENTRY_RECEIPT: /tmp/h-earth-gr-cr-entry-receipt.json
         run: |
@@ -48,7 +48,7 @@ jobs:
           node h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.runner.mjs \
             2>&1 | tee /tmp/h-earth-gr-cr-entry.log
 
-      - name: Execute bounded Mirror Manor reconciliation
+      - name: Execute bounded Mirror Manor regression
         env:
           H_EARTH_GR_CR_MANOR_RECEIPT: /tmp/h-earth-gr-cr-manor-receipt.json
         run: |
@@ -56,7 +56,7 @@ jobs:
           node h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.runner.mjs \
             2>&1 | tee /tmp/h-earth-gr-cr-manor.log
 
-      - name: Execute bounded Cavern Precinct reconciliation
+      - name: Execute bounded Cavern Precinct regression
         env:
           H_EARTH_GR_CR_CAVERN_RECEIPT: /tmp/h-earth-gr-cr-cavern-receipt.json
         run: |
@@ -64,7 +64,15 @@ jobs:
           node h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.runner.mjs \
             2>&1 | tee /tmp/h-earth-gr-cr-cavern.log
 
-      - name: Verify emitted checkpoint receipts
+      - name: Execute bounded Frontier Plains capacity and relationship analysis
+        env:
+          H_EARTH_GR_FRONTIER_PLAINS_RECEIPT: /tmp/h-earth-gr-frontier-plains-receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gr-frontier-plains.log
+
+      - name: Verify emitted reconciliation receipts
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
@@ -72,7 +80,8 @@ jobs:
             '/tmp/h-earth-gr-cr-receipt.json',
             '/tmp/h-earth-gr-cr-entry-receipt.json',
             '/tmp/h-earth-gr-cr-manor-receipt.json',
-            '/tmp/h-earth-gr-cr-cavern-receipt.json'
+            '/tmp/h-earth-gr-cr-cavern-receipt.json',
+            '/tmp/h-earth-gr-frontier-plains-receipt.json'
           ];
           for (const receiptPath of receiptPaths) {
             if (!fs.existsSync(receiptPath)) process.exit(1);
@@ -86,6 +95,14 @@ jobs:
             if (receipt.productionMutation !== false) process.exit(1);
             if (receipt.controllingManifestMutation !== false) process.exit(1);
           }
+          const frontier = JSON.parse(fs.readFileSync('/tmp/h-earth-gr-frontier-plains-receipt.json', 'utf8'));
+          if (frontier.numberedGRCRSectionIdentityAssigned !== false) process.exit(1);
+          if (frontier.microCheckpointInventoryAssigned !== false) process.exit(1);
+          if (frontier.frontierPlainsCandidateAccepted !== false) process.exit(1);
+          if (frontier.exactCellPlacementAuthorized !== false) process.exit(1);
+          if (frontier.exactCellPlacementAssigned !== false) process.exit(1);
+          if (frontier.elevenFunctionalCellsAssigned !== false) process.exit(1);
+          if (frontier.productConstructionAuthorized !== false) process.exit(1);
           NODE
 
       - name: Upload bounded reconciliation evidence
@@ -102,5 +119,7 @@ jobs:
             /tmp/h-earth-gr-cr-manor-receipt.json
             /tmp/h-earth-gr-cr-cavern.log
             /tmp/h-earth-gr-cr-cavern-receipt.json
+            /tmp/h-earth-gr-frontier-plains.log
+            /tmp/h-earth-gr-frontier-plains-receipt.json
           if-no-files-found: warn
           retention-days: 30

@@ -23,16 +23,7 @@
     "executionReceiptSha256": "7cf53b9f6a213c42bb64cb375d26d0e19f0ef7d2065aee29163efa2681e8431a",
     "executionLogSha256": "07e430fd75b0846fc28e3df7b3d83c7b75906df8d51629e7b3e38f2be6248d4f"
   },
-  "completedMicroCheckpoints": [
-    "GR-CR-02A",
-    "GR-CR-02B",
-    "GR-CR-02C",
-    "GR-CR-02D",
-    "GR-CR-02E",
-    "GR-CR-02F",
-    "GR-CR-02G",
-    "GR-CR-02H"
-  ],
+  "completedMicroCheckpoints": ["GR-CR-02A", "GR-CR-02B", "GR-CR-02C", "GR-CR-02D", "GR-CR-02E", "GR-CR-02F", "GR-CR-02G", "GR-CR-02H"],
   "correctionHistory": {
     "failedAttemptRunId": 30465870866,
     "failedAttemptIssue": "GLOBAL_LANDWARD_MOST_SHORELINE_CROSSING_WAS_INCORRECTLY_APPLIED_AS_ONE_EXCLUSION_LINE_ACROSS_ALL_X",
@@ -49,100 +40,19 @@
     "deterministicRepeatExecution": true,
     "issues": []
   },
-  "measuredAnchors": {
-    "coast": {
-      "position": { "x": 0, "z": -96 },
-      "elevation": 1.5266286134719849,
-      "slope": 0.23614200362255808,
-      "yawDegrees": 0,
-      "pitchDegrees": -8,
-      "finalCoordinate": false
-    },
-    "berm": {
-      "position": { "x": 0, "z": -132 },
-      "elevation": -0.16044354438781738,
-      "slope": 0.28051879927490087,
-      "yawDegrees": 0,
-      "pitchDegrees": -7,
-      "finalCoordinate": false
-    }
-  },
-  "shoreline": {
-    "traceCount": 25,
-    "crossingCount": 25,
-    "exactCrossingCount": 25,
-    "approximateCrossingCount": 0,
-    "selectionRule": "WATERWARD_MOST_POSITIVE_TO_NONPOSITIVE_SEA_LEVEL_CROSSING",
-    "shorelineZRange": {
-      "minimum": -112.63197577282469,
-      "maximum": -74.78286533081312
-    },
-    "acceptedBoundary": false
-  },
-  "waterwardExclusion": {
-    "model": "LOCAL_INTERPOLATED_TRACE",
-    "waterwardDirection": "INCREASING_WORLD_Z",
-    "landwardSafetyBuffer": 2,
-    "referenceAtCoast": {
-      "x": 0,
-      "exclusionStartZ": -88.838742187851
-    },
-    "xRange": {
-      "minimum": -96,
-      "maximum": 96
-    },
-    "exclusionZRange": {
-      "minimum": -114.63197577282469,
-      "maximum": -76.78286533081312
-    },
-    "acceptedBoundary": false
-  },
-  "safeOrientationSurface": {
-    "sampleCount": 76,
-    "maximumSlopeThreshold": 0.6,
-    "orientationBasis": {
-      "yawDegrees": 0,
-      "pitchDegrees": -8,
-      "eyeHeight": 2.25
-    },
-    "acceptedSurface": false
-  },
-  "firstLawfulInlandExit": {
-    "position": { "x": 0, "z": -108 },
-    "distanceFromCoast": 12,
-    "elevation": 4.363334059715271,
-    "slope": 0.1579775955193752,
-    "acceptedCoordinate": false
-  },
   "entryZoneCandidate": {
     "candidateId": "GRATITUDE_REGION_ENTRY_ZONE_CANDIDATE_01",
     "candidateClass": "MEASURED_OR_DERIVED_CANDIDATE_PENDING_LATER_MANIFEST_ACCEPTANCE",
     "eligible": true,
     "accepted": false,
     "finalPlacement": false,
-    "center": {
-      "x": 1.0454545454545454,
-      "z": -104.6590909090909
-    },
-    "bounds": {
-      "xMinimum": -24,
-      "xMaximum": 24,
-      "zMinimum": -132,
-      "zMaximum": -88
-    },
-    "elevationRange": {
-      "minimum": -0.16044354438781738,
-      "maximum": 5.570830881595612
-    },
-    "slopeRange": {
-      "minimum": 0.03722603713947951,
-      "maximum": 0.3346133760439463
-    },
+    "center": {"x": 1.0454545454545454, "z": -104.6590909090909},
+    "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
+    "elevationRange": {"minimum": -0.16044354438781738, "maximum": 5.570830881595612},
+    "slopeRange": {"minimum": 0.03722603713947951, "maximum": 0.3346133760439463},
     "connectedSampleCount": 88,
     "approximateSampleAreaWorldUnitsSquared": 1408,
-    "formationMembership": [
-      "H_EARTH_COASTAL_BERM_001"
-    ],
+    "formationMembership": ["H_EARTH_COASTAL_BERM_001"],
     "centerSemanticAddressId": "H_EARTH_GROUND_CELL_001:R02:C09",
     "centerPhysicalChunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C09_C12",
     "candidateDigest": "67415311d14c6931a351898d92b5b9d4130400fdd94f732b25928373f0819bd1"

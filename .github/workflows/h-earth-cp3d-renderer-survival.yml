@@ -19,7 +19,24 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Record and verify executed head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: |
+          mkdir -p "$CP3D_EVIDENCE_DIR"
+          executed_head="$(git rev-parse HEAD)"
+          printf '%s\n' "$executed_head" | tee "$CP3D_EVIDENCE_DIR/cp3d-executed-head.txt"
+          printf '%s\n' "$EXPECTED_HEAD" | tee "$CP3D_EVIDENCE_DIR/cp3d-expected-head.txt"
+          test "$executed_head" = "$EXPECTED_HEAD"
+          git status --short | tee "$CP3D_EVIDENCE_DIR/cp3d-working-tree.txt"
 
       - uses: actions/setup-node@v4
         with:
@@ -73,4 +90,4 @@ jobs:
           path: |
             h-earth-3d/validation/evidence/cp3d/**
             /tmp/h-earth-cp3d-server.log
-          if-no-files-found: warn
+          if-no-files-found: error

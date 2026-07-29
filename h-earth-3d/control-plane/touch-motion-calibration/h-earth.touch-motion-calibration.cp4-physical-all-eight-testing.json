@@ -1,0 +1,170 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP4_PHYSICAL_ALL_EIGHT_TESTING_v1",
+  "checkpoint": "CP4_PHYSICAL_ALL_EIGHT_TESTING",
+  "status": "ACTIVE_BOUNDED_RELEASE_AND_ORIENTATION_CONFIRMATION",
+  "lane": "LANE_B",
+  "baseHead": "79f0f0cf0b2912bd73df5ab9ad3aff700a98e784",
+  "stackedOnBranch": "agent/h-earth-touch-motion-cp3d-runtime-identity-reconciliation-001",
+  "branch": "agent/h-earth-touch-motion-cp4-calibration-testing-001",
+  "authorityQuestion": "DO_ALL_EIGHT_TOUCH_GESTURES_PRODUCE_FLUID_TRUTHFUL_CONTINUOUS_CAMERA_MOTION_ON_SUPPORTED_TOUCH_DEVICES_WITHOUT_INPUT_BACKLOG_OR_RENDERER_REGRESSION",
+  "gestures": [
+    "TURN_LEFT",
+    "TURN_RIGHT",
+    "PITCH_UP",
+    "PITCH_DOWN",
+    "MOVE_FORWARD",
+    "MOVE_BACKWARD",
+    "ZOOM_IN",
+    "ZOOM_OUT"
+  ],
+  "frozenDependencies": {
+    "rendererIdentityMutationProhibited": true,
+    "packageDeterminismMutationProhibited": true,
+    "renderPackageIdentityPreserved": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898",
+    "rendererIdentityPreserved": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+    "gestureLatticeMutationPerformed": false,
+    "cameraLawMutationPerformed": false,
+    "navigationAuthorityMutationPerformed": false,
+    "worldGeometryMutationPerformed": false,
+    "pr295MergeDependencyPreserved": true
+  },
+  "testOrder": [
+    "BASELINE_ROUTE_AND_FIRST_FRAME",
+    "TURN_LEFT_RIGHT_SYMMETRY",
+    "PITCH_UP_DOWN_SYMMETRY",
+    "FORWARD_BACKWARD_SYMMETRY",
+    "PINCH_ZOOM_IN_OUT_SYMMETRY",
+    "GESTURE_OWNERSHIP_AND_TRANSITION_STABILITY",
+    "RELEASE_TERMINATION",
+    "SUSTAINED_INPUT_BACKLOG_AND_FRAME_FLUIDITY",
+    "PORTRAIT_LANDSCAPE_CONTINUITY"
+  ],
+  "requiredObservations": {
+    "cameraResponseImmediate": true,
+    "continuousMotionWhileHeld": true,
+    "motionStopsOnRelease": "PASS_EXECUTED_BROWSER_PENDING_PHYSICAL_CONFIRMATION",
+    "directionalPairsOpposed": true,
+    "pinchTravelLockStable": true,
+    "noMultiSecondInputBacklog": true,
+    "framePresentationContinuous": true,
+    "worldGeometryPreserved": true,
+    "portraitLandscapeSupported": null
+  },
+  "referenceDevice": {
+    "deviceRole": "PHYSICAL_REFERENCE_ONLY",
+    "deviceClass": "SAMSUNG_GALAXY_PHONE",
+    "samsungOnlyImplementationProhibited": true,
+    "allSupportedTouchDevicesRemainTarget": true
+  },
+  "physicalEvidence": {
+    "samsungPhone": {
+      "gestureMotion": "SMOOTH_GLIDE_OBSERVED",
+      "guidedAcceptanceRecorder": "NOT_REGISTERING_GESTURE_STREAM",
+      "classification": "PRODUCT_MOTION_PASS_DIAGNOSTIC_RECORDER_DIVERGENCE"
+    },
+    "androidTablet": {
+      "guidedReceiptVersion": "H_EARTH_GUIDED_INTERACTION_ACCEPTANCE_RECEIPT_v2",
+      "terminalState": "COMPLETE",
+      "viewport": {
+        "width": 683,
+        "height": 760,
+        "devicePixelRatio": 1.5
+      },
+      "webglVendor": "Google Inc. (Qualcomm)",
+      "webglRenderer": "ANGLE (Qualcomm, Adreno (TM) 619, OpenGL ES 3.2)",
+      "elapsedSeconds": 25.125,
+      "rendererReadyAtStart": true,
+      "visibleFrameAtStart": true,
+      "framesPresentedDuringSession": 67,
+      "proposalsDuringSession": 67,
+      "requiredStepCount": 8,
+      "stepsResolved": 8,
+      "passCount": 8,
+      "skippedCount": 0,
+      "notCompletedCount": 0,
+      "firstAttemptPassActions": [
+        "TURN_LEFT",
+        "TURN_RIGHT",
+        "PITCH_UP",
+        "PITCH_DOWN",
+        "MOVE_FORWARD",
+        "MOVE_BACKWARD",
+        "ZOOM_IN",
+        "ZOOM_OUT"
+      ],
+      "gestureFunctionalAcceptance": "PASS",
+      "guidedInstrumentQualityAcceptance": "PASS",
+      "separatePhysicalFluidityObservationBeforeCorrection": "POPPING_DRAG_INSTEAD_OF_CONTINUOUS_GLIDE",
+      "separatePhysicalFluidityObservationAfterCorrection": "SMOOTH_CONTINUOUS_GLIDE_OBSERVED",
+      "priorPullPopBehaviorAfterCorrection": "NOT_OBSERVED",
+      "traversalSpeedObservation": "SMOOTH_BUT_SLOWER_THAN_USER_PREFERENCE",
+      "traversalSpeedDisposition": "NONBLOCKING_FUTURE_CALIBRATION_CANDIDATE",
+      "functionalDisposition": "PASS_CLOSED",
+      "fluidityDisposition": "PASS_CLOSED"
+    }
+  },
+  "tabletFluidityCorrection": {
+    "checkpoint": "CP4_0E_TABLET_FLUIDITY_CORRECTION",
+    "status": "PASS_CLOSED_PHYSICALLY_VALIDATED",
+    "sourceCorrectionHead": "3f1147bb782134cb67b1f207e92b4c8e4f42c9f5",
+    "correctedPreviewHead": "b2e47d02fd64450281e56bbd33c852c896607212",
+    "correctedPreviewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/b2e47d02fd64450281e56bbd33c852c896607212/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
+    "physicalRetestReceiptCommit": "b07727fad5070323d05d74009d1f2683e53ce74a",
+    "rootCauseDisposition": "PER_NAVIGATION_FRAME_SYNCHRONOUS_GPU_READBACK_AND_PNG_ENCODING_REMOVED_FROM_CONTINUOUS_PRESENTATION_PATH",
+    "persistentRendererPresentationPathChanged": true,
+    "liveGpuBindingCaptureFrequencyChanged": true,
+    "initialEvidenceCaptureRetained": true,
+    "continuousNavigationReadbackCountExpected": 0,
+    "continuousNavigationPngEncodingCountExpected": 0,
+    "executedTabletSizedBrowserProof": {
+      "status": "PASS",
+      "viewport": {
+        "width": 694,
+        "height": 747,
+        "deviceScaleFactor": 1.5
+      },
+      "sustainedPresentationFrames": 8,
+      "additionalFramebufferReadbacks": 0,
+      "additionalPngEncodes": 0,
+      "postReleasePresentationFrames": 0,
+      "consoleErrors": 0,
+      "pageErrors": 0,
+      "failedRequests": 0
+    },
+    "physicalTabletFluidityRetest": {
+      "status": "PASS",
+      "guidedEightOfEight": "PASS",
+      "sustainedTraversal": "SMOOTH_CONTINUOUS_GLIDE_OBSERVED",
+      "pullPopBehavior": "ELIMINATED_NOT_OBSERVED",
+      "multiSecondInputBacklog": "NOT_OBSERVED",
+      "speedPreference": "SLOWER_THAN_DESIRED_NONBLOCKING"
+    },
+    "livePagesDeploymentChanged": false
+  },
+  "nonLivePreview": {
+    "cp4_0aExactDependencyClosure": "PASS_CLOSED",
+    "cp4_0bThreeFileMaterialization": "PASS_CLOSED",
+    "cp4_0cInitialNonLivePublication": "PASS_CLOSED",
+    "cp4_0eCorrectedMaterialization": "PASS_CLOSED",
+    "cp4_0fPhysicalTabletFluidityRetest": "PASS_CLOSED",
+    "materializationHead": "b2e47d02fd64450281e56bbd33c852c896607212",
+    "previewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/b2e47d02fd64450281e56bbd33c852c896607212/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
+    "commitPinned": true,
+    "livePagesDeploymentChanged": false,
+    "physicalTestingMayBegin": true
+  },
+  "acceptanceBoundary": {
+    "exploratoryAndBoundedTestingAuthorized": true,
+    "tabletEightOfEightFunctionalAcceptanceClosed": true,
+    "correctedTabletFluidityPhysicalAcceptanceClosed": true,
+    "traversalSpeedPreferenceNonblocking": true,
+    "physicalReleaseTerminationConfirmationRequired": true,
+    "portraitLandscapePhysicalAcceptanceRequired": true,
+    "cp4AcceptanceAuthorized": false,
+    "cp4MergeAuthorized": false,
+    "cp3dPassClosedRequiredBeforeIntegration": true,
+    "pr295MergeRequiredBeforeIntegration": true
+  },
+  "nextAction": "CONFIRM_PHYSICAL_RELEASE_TERMINATION_AND_PORTRAIT_LANDSCAPE_CONTINUITY",
+  "stoppingBoundary": "STOP_BEFORE_CP4_FINAL_ACCEPTANCE_MERGE_OR_LIVE_DEPLOYMENT"
+}

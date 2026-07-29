@@ -22,13 +22,22 @@ const browser = await chromium.launch({
   ]
 });
 
-const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+const page = await browser.newPage({
+  viewport: { width: 694, height: 747 },
+  deviceScaleFactor: 1.5,
+  isMobile: true,
+  hasTouch: true,
+  userAgent:
+    'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 ' +
+    '(KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36'
+});
 const consoleMessages = [];
 const pageErrors = [];
 page.on('console', message => consoleMessages.push({ type: message.type(), text: message.text() }));
 page.on('pageerror', error => pageErrors.push({ name: error.name, message: error.message, stack: error.stack ?? null }));
 
 let publicReceipt = null;
+let tabletFluidityFacts = null;
 try {
   const nodePackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
   assert.equal(nodePackage?.eligible, true, 'CP3D_CANONICAL_NODE_PACKAGE_NOT_ELIGIBLE');
@@ -103,6 +112,10 @@ try {
   assert.equal(publicReceipt?.liveGpu?.resources?.initialized, true, 'CP3D_RENDERER_CONSTRUCTOR_OR_INITIALIZATION_NOT_COMPLETE');
   assert.ok(Number(publicReceipt?.liveGpu?.counters?.rendererInitializationCount ?? 0) >= 1, 'CP3D_RENDERER_INITIALIZATION_COUNT_ZERO');
   assert.ok(Number(publicReceipt?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? 0) >= 1, 'CP3D_FIRST_FRAME_NOT_PRESENTED');
+  assert.equal(publicReceipt?.liveGpu?.counters?.diagnosticEvidenceReadbackCount, 1, 'CP4_INITIAL_EVIDENCE_READBACK_COUNT_INVALID');
+  assert.equal(publicReceipt?.liveGpu?.counters?.diagnosticPngEncodingCount, 1, 'CP4_INITIAL_PNG_ENCODING_COUNT_INVALID');
+  assert.equal(publicReceipt?.liveGpu?.resources?.counters?.colorReadbackCount, 1, 'CP4_RENDERER_INITIAL_COLOR_READBACK_COUNT_INVALID');
+  assert.equal(publicReceipt?.liveGpu?.resources?.counters?.visiblePresentationCount, 1, 'CP4_RENDERER_INITIAL_PRESENTATION_COUNT_INVALID');
   assert.equal(publicReceipt?.liveGpu?.correspondence?.packageUploadedOnce, true, 'CP3D_PACKAGE_NOT_UPLOADED_ONCE');
   assert.equal(publicReceipt?.liveGpu?.correspondence?.resourceIdentityStable, true, 'CP3D_GPU_RESOURCE_IDENTITY_UNSTABLE');
   assert.equal(publicReceipt?.runtimeExclusivity?.activeWebGL2ContextCount, 1, 'CP3D_WEBGL2_CONTEXT_COUNT_INVALID');
@@ -110,6 +123,117 @@ try {
   assert.equal(publicReceipt?.runtimeExclusivity?.activePointerTouchIntakeCount, 1, 'CP3D_TOUCH_INTAKE_COUNT_INVALID');
   assert.equal(publicReceipt?.runtimeExclusivity?.activeFramePresentationAuthorityCount, 1, 'CP3D_FRAME_AUTHORITY_COUNT_INVALID');
   assert.equal(publicReceipt?.runtimeExclusivity?.legacyModuleScriptCount, 0, 'CP3D_LEGACY_RUNTIME_PRESENT');
+
+  tabletFluidityFacts = await page.evaluate(async () => {
+    const api = globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE;
+    const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+    if (!api?.getLiveGpuReceipt || !(canvas instanceof HTMLCanvasElement)) {
+      throw new Error('CP4_TABLET_FLUIDITY_HOST_UNAVAILABLE');
+    }
+    const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+    const snapshot = () => {
+      const gpu = api.getLiveGpuReceipt();
+      return {
+        presentations: Number(gpu?.counters?.gpuFramebufferPresentationCount ?? 0),
+        readbacks: Number(gpu?.counters?.diagnosticEvidenceReadbackCount ?? 0),
+        pngEncodes: Number(gpu?.counters?.diagnosticPngEncodingCount ?? 0),
+        presentationOnlyFrames: Number(gpu?.counters?.navigationFramesPresentedWithoutReadbackCount ?? 0),
+        rendererPresentations: Number(gpu?.resources?.counters?.visiblePresentationCount ?? 0),
+        rendererColorReadbacks: Number(gpu?.resources?.counters?.colorReadbackCount ?? 0),
+        rendererPngEncodes: Number(gpu?.resources?.counters?.pngEncodingCount ?? 0),
+        maximumPresentationOnlyResponseMs: Number(gpu?.counters?.maximumPresentationOnlyResponseMs ?? 0),
+        maximumEvidenceCaptureResponseMs: Number(gpu?.counters?.maximumEvidenceCaptureResponseMs ?? 0),
+        continuousPresentationWithoutReadback:
+          gpu?.correspondence?.continuousPresentationWithoutReadback === true,
+        diagnosticReadbackSeparatedFromPresentation:
+          gpu?.correspondence?.diagnosticReadbackSeparatedFromPresentation === true
+      };
+    };
+    const bounds = canvas.getBoundingClientRect();
+    const emit = (type, pointerId, x, y, isPrimary) => {
+      canvas.dispatchEvent(new PointerEvent(type, {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+        pointerId,
+        pointerType: 'touch',
+        isPrimary,
+        clientX: x,
+        clientY: y,
+        buttons: type === 'pointerup' ? 0 : 1,
+        pressure: type === 'pointerup' ? 0 : 0.5
+      }));
+    };
+
+    const firstX = bounds.left + bounds.width * 0.42;
+    const secondX = bounds.left + bounds.width * 0.58;
+    const startY = bounds.top + bounds.height * 0.72;
+    const movedY = bounds.top + bounds.height * 0.48;
+    const before = snapshot();
+
+    emit('pointerdown', 101, firstX, startY, true);
+    emit('pointerdown', 102, secondX, startY, false);
+    emit('pointermove', 101, firstX, movedY, true);
+    emit('pointermove', 102, secondX, movedY, false);
+    await sleep(1200);
+    const active = snapshot();
+
+    emit('pointerup', 101, firstX, movedY, true);
+    emit('pointerup', 102, secondX, movedY, false);
+    await sleep(150);
+    const releaseSettled = snapshot();
+    await sleep(350);
+    const afterRelease = snapshot();
+
+    return {
+      canvas: {
+        width: canvas.width,
+        height: canvas.height,
+        clientWidth: canvas.clientWidth,
+        clientHeight: canvas.clientHeight
+      },
+      before,
+      active,
+      releaseSettled,
+      afterRelease,
+      deltas: {
+        activePresentations: active.presentations - before.presentations,
+        activeReadbacks: active.readbacks - before.readbacks,
+        activePngEncodes: active.pngEncodes - before.pngEncodes,
+        activePresentationOnlyFrames:
+          active.presentationOnlyFrames - before.presentationOnlyFrames,
+        rendererActivePresentations:
+          active.rendererPresentations - before.rendererPresentations,
+        rendererActiveColorReadbacks:
+          active.rendererColorReadbacks - before.rendererColorReadbacks,
+        rendererActivePngEncodes:
+          active.rendererPngEncodes - before.rendererPngEncodes,
+        postReleasePresentations:
+          afterRelease.presentations - releaseSettled.presentations
+      }
+    };
+  });
+
+  assert.ok(tabletFluidityFacts.deltas.activePresentations >= 5, 'CP4_TABLET_SUSTAINED_PRESENTATION_COUNT_TOO_LOW');
+  assert.equal(tabletFluidityFacts.deltas.activeReadbacks, 0, 'CP4_TABLET_NAVIGATION_TRIGGERED_BINDING_READBACK');
+  assert.equal(tabletFluidityFacts.deltas.activePngEncodes, 0, 'CP4_TABLET_NAVIGATION_TRIGGERED_BINDING_PNG_ENCODING');
+  assert.equal(tabletFluidityFacts.deltas.rendererActiveColorReadbacks, 0, 'CP4_TABLET_NAVIGATION_TRIGGERED_RENDERER_READBACK');
+  assert.equal(tabletFluidityFacts.deltas.rendererActivePngEncodes, 0, 'CP4_TABLET_NAVIGATION_TRIGGERED_RENDERER_PNG_ENCODING');
+  assert.equal(
+    tabletFluidityFacts.deltas.rendererActivePresentations,
+    tabletFluidityFacts.deltas.activePresentations,
+    'CP4_TABLET_BINDING_RENDERER_PRESENTATION_COUNT_DIVERGED'
+  );
+  assert.ok(
+    tabletFluidityFacts.deltas.activePresentationOnlyFrames >=
+      tabletFluidityFacts.deltas.activePresentations,
+    'CP4_TABLET_PRESENTATION_ONLY_COUNTER_DID_NOT_COVER_ACTIVE_FRAMES'
+  );
+  assert.equal(tabletFluidityFacts.active.continuousPresentationWithoutReadback, true, 'CP4_TABLET_PRESENTATION_READBACK_SEPARATION_NOT_PUBLISHED');
+  assert.equal(tabletFluidityFacts.active.diagnosticReadbackSeparatedFromPresentation, true, 'CP4_TABLET_DIAGNOSTIC_SEPARATION_CORRESPONDENCE_MISSING');
+  assert.equal(tabletFluidityFacts.deltas.postReleasePresentations, 0, 'CP4_TABLET_MOTION_CONTINUED_AFTER_RELEASE');
+
+  publicReceipt = await page.evaluate(() => globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE.getSnapshot());
 
   const canvasFacts = await page.evaluate(() => {
     const canvas = document.getElementById('h-earth-functional-landscape-canvas');
@@ -127,12 +251,12 @@ try {
   assert.equal(canvasFacts.routeReady, 'true', 'CP3D_ROUTE_NOT_READY');
   assert.equal(canvasFacts.routeError, 'false', 'CP3D_ROUTE_ERROR_PRESENT');
 
-  await page.screenshot({ path: `${evidenceDirectory}/cp3d-first-frame.png`, fullPage: true });
+  await page.screenshot({ path: `${evidenceDirectory}/cp4-tablet-fluidity-corrected.png`, fullPage: true });
 
   const executionReceipt = {
-    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_REAL_BROWSER_RENDERER_SURVIVAL_RECEIPT_v2',
+    receiptType: 'H_EARTH_TOUCH_MOTION_CP4_TABLET_FLUIDITY_CORRECTION_BROWSER_RECEIPT_v1',
     eligible: true,
-    status: 'CP3D_REAL_BROWSER_RENDERER_SURVIVAL_PASS',
+    status: 'CP4_TABLET_FLUIDITY_CORRECTION_BROWSER_PASS',
     route,
     canonicalPackagePreflight: 'PASS',
     rendererConstructorReturned: 'PASS',
@@ -141,12 +265,15 @@ try {
     touchRuntimeInstalled: 'PASS',
     cp2bObservationCompatible: 'PASS',
     cp3bRuntimeReceiptAvailable: 'PASS',
+    continuousPresentationWithoutReadback: 'PASS',
+    releaseTermination: 'PASS',
+    tabletFluidityFacts,
     publicReceipt,
     canvasFacts,
     consoleMessages,
     pageErrors
   };
-  await writeFile(`${evidenceDirectory}/cp3d-browser-survival.receipt.json`, `${JSON.stringify(executionReceipt, null, 2)}\n`);
+  await writeFile(`${evidenceDirectory}/cp4-tablet-fluidity-correction.receipt.json`, `${JSON.stringify(executionReceipt, null, 2)}\n`);
   console.log(JSON.stringify(executionReceipt, null, 2));
 } catch (error) {
   const failureEvidence = await page.evaluate(() => ({
@@ -157,13 +284,14 @@ try {
       ? { ...document.getElementById('h-earth-functional-landscape-route').dataset }
       : null
   })).catch(() => null);
-  await page.screenshot({ path: `${evidenceDirectory}/cp3d-browser-failure.png`, fullPage: true }).catch(() => {});
-  await writeFile(`${evidenceDirectory}/cp3d-browser-failure.receipt.json`, `${JSON.stringify({
-    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_BROWSER_FAILURE_RECEIPT_v2',
+  await page.screenshot({ path: `${evidenceDirectory}/cp4-tablet-fluidity-failure.png`, fullPage: true }).catch(() => {});
+  await writeFile(`${evidenceDirectory}/cp4-tablet-fluidity-failure.receipt.json`, `${JSON.stringify({
+    receiptType: 'H_EARTH_TOUCH_MOTION_CP4_TABLET_FLUIDITY_CORRECTION_FAILURE_v1',
     eligible: false,
-    status: 'CP3D_BROWSER_SURVIVAL_FAIL',
+    status: 'CP4_TABLET_FLUIDITY_CORRECTION_BROWSER_FAIL',
     error: { name: error.name, message: error.message, stack: error.stack ?? null },
     failureEvidence,
+    tabletFluidityFacts,
     publicReceipt,
     consoleMessages,
     pageErrors

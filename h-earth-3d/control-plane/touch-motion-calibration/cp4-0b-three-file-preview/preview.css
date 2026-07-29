@@ -1,0 +1,2837 @@
+/* CP4 corrected preview · source 3f1147bb782134cb67b1f207e92b4c8e4f42c9f5 */
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0b110f;
+  color: #edf3ef;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(83, 118, 100, 0.2), transparent 46%),
+    linear-gradient(180deg, #0e1713 0%, #070b09 100%);
+}
+
+button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid rgba(205, 224, 211, 0.25);
+  border-radius: 12px;
+  background: rgba(24, 38, 32, 0.92);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible {
+  border-color: rgba(223, 240, 229, 0.8);
+  background: rgba(42, 62, 52, 0.98);
+  outline: none;
+}
+
+button[aria-pressed="true"] {
+  background: #dbe9df;
+  color: #14201a;
+  border-color: #f4fff7;
+}
+
+.route-shell {
+  width: min(1180px, 100%);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    max(18px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(22px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.route-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: #9fb9aa;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(1.35rem, 4vw, 2.45rem);
+  line-height: 1.05;
+}
+
+.route-status {
+  max-width: 280px;
+  margin: 0;
+  color: #c6d8cd;
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.viewer-panel {
+  overflow: hidden;
+  border: 1px solid rgba(208, 226, 214, 0.2);
+  border-radius: 18px;
+  background: rgba(12, 19, 16, 0.9);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+}
+
+.render-mount {
+  position: relative;
+  width: 100%;
+  min-height: 360px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #537184;
+  touch-action: none;
+  outline: none;
+}
+
+.render-mount:focus-visible {
+  box-shadow: inset 0 0 0 3px rgba(235, 248, 239, 0.86);
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  image-rendering: auto;
+}
+
+.reticle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  translate: -50% -50%;
+  opacity: 0.66;
+  pointer-events: none;
+}
+
+.reticle::before,
+.reticle::after {
+  content: "";
+  position: absolute;
+  background: rgba(245, 252, 247, 0.9);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.72);
+}
+
+.reticle::before {
+  left: 8px;
+  top: 0;
+  width: 2px;
+  height: 18px;
+}
+
+.reticle::after {
+  left: 0;
+  top: 8px;
+  width: 18px;
+  height: 2px;
+}
+
+.semantic-readout {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 24px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  pointer-events: none;
+}
+
+.semantic-readout span {
+  padding: 6px 9px;
+  border: 1px solid rgba(240, 249, 243, 0.24);
+  border-radius: 999px;
+  background: rgba(4, 9, 7, 0.72);
+  color: #f3faf5;
+  font-size: 0.72rem;
+  backdrop-filter: blur(8px);
+}
+
+.telemetry {
+  margin: 0;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  border-top: 1px solid rgba(208, 226, 214, 0.16);
+}
+
+.telemetry div {
+  min-width: 0;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.telemetry dt {
+  color: #89a397;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.telemetry dd {
+  margin: 4px 0 0;
+  overflow: hidden;
+  color: #ecf4ef;
+  font-size: 0.74rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.7fr) minmax(300px, 1.3fr);
+  gap: 12px;
+}
+
+.movement-grid,
+.view-controls,
+.waypoints {
+  display: grid;
+  gap: 8px;
+}
+
+.movement-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.view-controls {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.waypoints {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.route-footer {
+  color: #81978b;
+  font-size: 0.73rem;
+  line-height: 1.45;
+}
+
+.route-footer p {
+  margin: 0;
+}
+
+@media (max-width: 820px) {
+  .route-header {
+    align-items: start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .route-status {
+    max-width: none;
+    text-align: left;
+  }
+
+  .render-mount {
+    min-height: 300px;
+  }
+
+  .telemetry {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .view-controls {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .route-shell {
+    gap: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .render-mount {
+    min-height: 340px;
+    aspect-ratio: 4 / 5;
+  }
+
+  .telemetry {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .waypoints {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .view-controls {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .route-shell {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    grid-template-areas:
+      "header header"
+      "viewer controls"
+      "viewer waypoints"
+      "footer footer";
+    gap: 10px;
+  }
+
+  .route-header { grid-area: header; }
+  .viewer-panel { grid-area: viewer; }
+  .controls { grid-area: controls; }
+  .waypoints { grid-area: waypoints; }
+  .route-footer { grid-area: footer; }
+
+  .render-mount {
+    min-height: 280px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .telemetry {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .controls,
+  .view-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .waypoints {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/*
+  /showroom/globe/h-earth/index.css
+  COMPLETE RENEWED FILE CANDIDATE
+
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034S_STEP_034W_PAGE_ENTRY_AND_STEP_034Q_PREVIEW_DIAGNOSTIC_CORRESPONDENCE_v1
+
+  Renews:
+
+  H_EARTH_3D_ROUTE_SHELL_STYLE_FILE_RENEWAL_STEP_034R_STEP_034Q_PUBLIC_ENVIRONMENT_AND_RENDERER_SURFACE_SUPPORT_v1
+
+  Companion public shell:
+
+  /showroom/globe/h-earth/index.html
+
+  H_EARTH_3D_ROUTE_ENTRY_FILE_RENEWAL_STEP_034W_STEP_034Q_BRANCH_SPECIFIC_PREBOOTSTRAP_IMPORT_DIAGNOSTICS_v1
+
+  Current public bootstrap:
+
+  /showroom/globe/h-earth/index.js
+
+  H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034Q_BRANCH_SPECIFIC_DEPLOYED_MODULE_RESPONSE_DIAGNOSTICS_v1
+
+  Current compositor:
+
+  /showroom/globe/h-earth/compositor.js
+
+  H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1
+
+  Current renderer:
+
+  /showroom/globe/h-earth/renderer.js
+
+  H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1
+
+  Diagnostic route:
+
+  /showroom/globe/h-earth/diagnostic/
+
+  Purpose:
+
+  Style the public H-Earth route shell, the unique public renderer mount,
+  renderer-generated semantic layers, renderer-generated admitted objects,
+  the Step 034Q temporary descriptor-only source preview, public controls,
+  selected-surface presentation, Ground Condition Read, read-only Layer 4
+  status, compact public receipts, branch-specific pre-bootstrap import
+  evidence, and explicit route-entry hold or failure surfaces.
+
+  Page-entry correspondence law:
+
+  - Pending contract verification is informational, not failure evidence.
+  - Contract failure is styled as failure only after a controlled failure
+    state or completed rejected entry occurrence is published.
+  - Branch-specific pre-bootstrap import failure is visually distinguishable
+    from import-pending and all-imports-fulfilled states.
+  - Long requested paths, resolved URLs, stacks, and receipt payloads remain
+    readable without horizontal page overflow.
+  - This stylesheet does not infer the failing transitive module.
+  - This stylesheet does not claim that a displayed branch receipt proves an
+    exact parser occurrence.
+
+  Source-preview law:
+
+  The Step 034Q descriptor-only source preview may be displayed temporarily
+  inside:
+
+    #h-earth-3d-renderer-mount
+
+  It is not a renderer baseline, visual-pass surface, validation surface,
+  deployment surface, or production surface.
+
+  The preview may become visible only when Step 034Q has mounted its
+  descriptor-owned nodes and the route is not in an explicit failure or
+  fallback state.
+
+  When the compositor-renderer corridor fails, is rejected, or remains held,
+  the plain fallback status surface may cover the descriptor preview.
+
+  The fallback node itself must not create terrain, water, foam, shoreline,
+  rocks, atmosphere, manor context, or other completed environment imagery.
+
+  Renderer-generated geometry may become visually present only inside:
+
+    #h-earth-3d-renderer-mount
+
+  Stage law:
+
+  The visual stage contains only:
+
+  - #h-earth-3d-renderer-mount
+  - #h-earth-3d-fallback
+
+  Controls, selected-surface cards, readouts, Layer 4 status, compact receipts,
+  and diagnostic navigation remain outside the renderer stage.
+
+  Boundary:
+
+  PUBLIC_ROUTE_STYLE_SUPPORT_ONLY = true
+  PAGE_ENTRY_CONTRACT_CORRESPONDENCE_SUPPORT = true
+  BRANCH_SPECIFIC_PREBOOTSTRAP_IMPORT_STATE_SUPPORT = true
+  STEP_034Q_SOURCE_PREVIEW_PRESENTATION_SUPPORT = true
+  PACKET_002_CONSTRUCTION = false
+  ADMITTED_FRAME_CONSTRUCTION = false
+  GEOMETRY_CONSTRUCTION = false
+  COMPOSITOR_CONSTRUCTION = false
+  RENDERER_CONSTRUCTION = false
+  RENDERER_MOUNT_IMPLEMENTATION = false
+  CAMERA_AUTHORITY = false
+  VIEWPORT_AUTHORITY = false
+  VISIBILITY_AUTHORITY = false
+  SOURCE_PREVIEW_AS_VISUAL_BASELINE = false
+  FAKE_SCENE_GEOMETRY = false
+  SHELL_OWNED_SCENE_OBJECTS = false
+  WEBGL_ACTIVATION = false
+  CANVAS_ACTIVATION = false
+  SVG_ACTIVATION = false
+  IFRAME_ACTIVATION = false
+  STEP_012H_1_RUN_EXECUTION = false
+  STEP_012I_VECTOR_EXECUTION = false
+  STEP_012I_RUNNER_EXECUTION = false
+  TARGET_002_RUNTIME_EXECUTION = false
+  TARGET_003_REPLAY_EXECUTION = false
+  CANONICAL_DIGEST_GENERATION = false
+  REPLAY_COMPARISON = false
+  RENDERER_PASS_CLAIM = false
+  VISUAL_PASS_CLAIM = false
+  VALIDATION_CLAIM = false
+  PRODUCTION_CLAIM = false
+  DEPLOYMENT_CLAIM = false
+  RUNTIME_LATTICE_ACTIVATION = false
+  MATRIX_COLLAPSE = false
+*/
+
+:root {
+  color-scheme: dark;
+
+  --h-earth-bg-deep: #020609;
+  --h-earth-bg: #061014;
+  --h-earth-bg-raised: #0a171c;
+  --h-earth-bg-soft: #102128;
+
+  --h-earth-panel: rgba(7, 16, 20, 0.88);
+  --h-earth-panel-strong: rgba(4, 10, 13, 0.96);
+  --h-earth-panel-soft: rgba(255, 255, 255, 0.045);
+
+  --h-earth-border: rgba(220, 242, 238, 0.16);
+  --h-earth-border-strong: rgba(220, 242, 238, 0.3);
+  --h-earth-border-soft: rgba(220, 242, 238, 0.085);
+
+  --h-earth-text: #eef8f6;
+  --h-earth-muted: rgba(238, 248, 246, 0.72);
+  --h-earth-soft: rgba(238, 248, 246, 0.54);
+  --h-earth-faint: rgba(238, 248, 246, 0.36);
+
+  --h-earth-accent: #9ed8c7;
+  --h-earth-accent-strong: #dcfff4;
+  --h-earth-blue: #9ccbe8;
+  --h-earth-violet: #c6b9ef;
+  --h-earth-warm: #e8d2a0;
+
+  --h-earth-ok: #b7efc8;
+  --h-earth-held: #f0d28d;
+  --h-earth-warn: #efad7f;
+  --h-earth-error: #ef9797;
+  --h-earth-info: #a8d4f0;
+
+  --h-earth-radius-xl: 34px;
+  --h-earth-radius-lg: 28px;
+  --h-earth-radius-md: 18px;
+  --h-earth-radius-sm: 12px;
+
+  --h-earth-shadow:
+    0 28px 100px rgba(0, 0, 0, 0.5);
+
+  --h-earth-shadow-soft:
+    0 16px 54px rgba(0, 0, 0, 0.34);
+
+  --h-earth-mono:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    Menlo,
+    monospace;
+
+  --h-earth-stage-min-height: 620px;
+
+  --h-earth-preview-sky-top:
+    rgba(62, 101, 118, 0.42);
+
+  --h-earth-preview-sky-bottom:
+    rgba(16, 38, 47, 0.24);
+
+  --h-earth-preview-water:
+    rgba(37, 92, 113, 0.82);
+
+  --h-earth-preview-water-light:
+    rgba(111, 181, 204, 0.36);
+
+  --h-earth-preview-foam:
+    rgba(224, 241, 238, 0.9);
+
+  --h-earth-preview-wet-sand:
+    rgba(71, 70, 61, 0.96);
+
+  --h-earth-preview-dry-sand:
+    rgba(166, 143, 103, 0.93);
+
+  --h-earth-preview-rock:
+    rgba(60, 65, 64, 0.96);
+
+  --h-earth-preview-rock-edge:
+    rgba(151, 162, 158, 0.62);
+
+  --h-earth-preview-structure:
+    rgba(98, 87, 72, 0.92);
+
+  --h-earth-preview-air:
+    rgba(139, 192, 207, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  overflow-x: hidden;
+  color: var(--h-earth-text);
+  background:
+    radial-gradient(
+      circle at 12% -10%,
+      rgba(103, 174, 155, 0.18),
+      transparent 34rem
+    ),
+    radial-gradient(
+      circle at 92% 2%,
+      rgba(99, 145, 180, 0.12),
+      transparent 32rem
+    ),
+    linear-gradient(
+      180deg,
+      var(--h-earth-bg-deep),
+      var(--h-earth-bg) 48%,
+      #010304
+    );
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  color: var(--h-earth-text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: transparent;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  background:
+    radial-gradient(
+      circle at 18% 18%,
+      rgba(255, 255, 255, 0.12) 0 1px,
+      transparent 1.8px
+    ),
+    radial-gradient(
+      circle at 76% 26%,
+      rgba(255, 255, 255, 0.1) 0 1px,
+      transparent 1.8px
+    );
+  background-size:
+    260px 300px,
+    340px 320px;
+  mask-image:
+    linear-gradient(
+      180deg,
+      black,
+      rgba(0, 0, 0, 0.42) 66%,
+      transparent
+    );
+}
+
+a {
+  color: inherit;
+}
+
+button,
+summary,
+pre {
+  font: inherit;
+}
+
+button,
+summary {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(220, 255, 244, 0.72);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: #03100d;
+  background: rgba(220, 255, 244, 0.84);
+}
+
+/* ==========================================================================
+   PUBLIC ROUTE ROOT
+   ========================================================================== */
+
+.h-earth-3d-route-root {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding:
+    max(24px, env(safe-area-inset-top))
+    24px
+    max(40px, env(safe-area-inset-bottom));
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.02),
+      transparent 260px
+    ),
+    radial-gradient(
+      circle at 6% 32%,
+      rgba(103, 174, 155, 0.1),
+      transparent 34rem
+    ),
+    radial-gradient(
+      circle at 94% 46%,
+      rgba(99, 145, 180, 0.08),
+      transparent 36rem
+    );
+}
+
+.h-earth-3d-route-root[data-h-earth-route="public-environment-host"] {
+  --h-earth-public-route-host-bound: 1;
+}
+
+.h-earth-3d-route-root[data-h-earth-executable-browser-corridor="true"] {
+  --h-earth-executable-browser-corridor-bound: 1;
+}
+
+.h-earth-3d-route-root[data-h-earth-shell-owned-scene-objects="false"],
+.h-earth-3d-route-root[data-h-earth-fake-scene-geometry="false"] {
+  --h-earth-shell-geometry-denied: 1;
+}
+
+.h-earth-3d-route-root[data-h-earth-stage-contains-controls="false"],
+.h-earth-3d-route-root[data-h-earth-stage-contains-selected-card="false"],
+.h-earth-3d-route-root[data-h-earth-stage-contains-receipts="false"] {
+  --h-earth-stage-containment-boundary-held: 1;
+}
+
+.h-earth-3d-shell {
+  display: grid;
+  gap: 22px;
+  width: min(1500px, 100%);
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.h-earth-3d-public-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px;
+  border: 1px solid var(--h-earth-border);
+  border-radius: var(--h-earth-radius-lg);
+  background: rgba(5, 11, 14, 0.78);
+  box-shadow: var(--h-earth-shadow-soft);
+  backdrop-filter: blur(18px);
+}
+
+.h-earth-3d-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.h-earth-3d-brand-mark {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(220, 255, 244, 0.24);
+  border-radius: 17px;
+  color: var(--h-earth-accent-strong);
+  background:
+    radial-gradient(
+      circle at 38% 28%,
+      rgba(220, 255, 244, 0.28),
+      transparent 36%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(17, 47, 46, 0.94),
+      rgba(4, 8, 10, 0.98)
+    );
+  box-shadow:
+    inset 0 0 26px rgba(103, 174, 155, 0.16),
+    0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.h-earth-3d-brand-mark > span {
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.h-earth-3d-brand-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.h-earth-3d-brand-copy > span,
+.h-earth-3d-kicker,
+.h-earth-3d-panel-title,
+.h-earth-3d-card-kicker {
+  margin: 0;
+  color: var(--h-earth-soft);
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.h-earth-3d-brand-copy > strong {
+  font-size: clamp(1.08rem, 2vw, 1.58rem);
+  letter-spacing: -0.035em;
+}
+
+.h-earth-3d-public-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.h-earth-3d-public-nav a,
+.h-earth-3d-action-button,
+.h-earth-3d-inline-copy-button {
+  border: 1px solid rgba(220, 255, 244, 0.18);
+  border-radius: 999px;
+  color: var(--h-earth-text);
+  background: rgba(255, 255, 255, 0.055);
+  text-decoration: none;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.h-earth-3d-public-nav a {
+  padding: 9px 12px;
+  font-size: 0.84rem;
+}
+
+.h-earth-3d-public-nav a:hover,
+.h-earth-3d-public-nav a:focus-visible,
+.h-earth-3d-action-button:hover,
+.h-earth-3d-action-button:focus-visible,
+.h-earth-3d-inline-copy-button:hover,
+.h-earth-3d-inline-copy-button:focus-visible {
+  border-color: rgba(220, 255, 244, 0.44);
+  color: var(--h-earth-accent-strong);
+  background: rgba(220, 255, 244, 0.11);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+#h-earth-3d-diagnostic-link {
+  border-color: rgba(156, 203, 232, 0.32);
+}
+
+/* ==========================================================================
+   ARRIVAL
+   ========================================================================== */
+
+.h-earth-3d-arrival {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.5fr)
+    minmax(280px, 0.5fr);
+  gap: 18px;
+}
+
+.h-earth-3d-arrival-copy,
+.h-earth-3d-arrival-note,
+.h-earth-3d-public-control-strip,
+.h-earth-3d-world-shell,
+.h-earth-3d-panel,
+.h-earth-3d-readout-card,
+.h-earth-3d-layer-4-status-card,
+.h-earth-3d-target-drawer,
+.h-earth-3d-developer-drawer {
+  border: 1px solid var(--h-earth-border);
+  border-radius: var(--h-earth-radius-lg);
+  background: var(--h-earth-panel);
+  box-shadow: var(--h-earth-shadow-soft);
+  backdrop-filter: blur(16px);
+}
+
+.h-earth-3d-arrival-copy {
+  padding: clamp(22px, 4vw, 40px);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(103, 174, 155, 0.09),
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(99, 145, 180, 0.11),
+      transparent 28rem
+    ),
+    rgba(255, 255, 255, 0.03);
+}
+
+.h-earth-3d-title {
+  max-width: 1080px;
+  margin: 8px 0 0;
+  font-size: clamp(2.35rem, 6.4vw, 5.8rem);
+  line-height: 0.91;
+  letter-spacing: -0.078em;
+  text-wrap: balance;
+}
+
+.h-earth-3d-lead {
+  max-width: 980px;
+  margin: 20px 0 0;
+  color: var(--h-earth-muted);
+  font-size: clamp(1rem, 1.35vw, 1.16rem);
+  line-height: 1.68;
+}
+
+.h-earth-3d-arrival-note {
+  display: grid;
+  align-content: center;
+  padding: 20px;
+  border-color: rgba(232, 210, 160, 0.22);
+  background:
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(232, 210, 160, 0.1),
+      transparent 38%
+    ),
+    var(--h-earth-panel);
+}
+
+.h-earth-3d-arrival-note p {
+  margin: 0;
+  color: rgba(246, 232, 202, 0.84);
+  line-height: 1.62;
+}
+
+/* ==========================================================================
+   PUBLIC CONTROL STRIP
+   ========================================================================== */
+
+.h-earth-3d-public-control-strip {
+  padding: 14px;
+}
+
+.h-earth-3d-hud {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+  gap: 12px;
+}
+
+.h-earth-3d-hud-panel {
+  padding: 14px;
+  border: 1px solid var(--h-earth-border-soft);
+  border-radius: var(--h-earth-radius-md);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.h-earth-3d-action-panel {
+  min-width: 210px;
+}
+
+.h-earth-3d-status {
+  margin-top: 8px;
+  color: var(--h-earth-info);
+  font-family: var(--h-earth-mono);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.h-earth-3d-action-button {
+  margin-top: 10px;
+  padding: 10px 15px;
+  border-color: rgba(158, 216, 199, 0.32);
+}
+
+/* ==========================================================================
+   WORLD SHELL AND UNIQUE STAGE
+   ========================================================================== */
+
+.h-earth-3d-world-shell {
+  padding: 12px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.025),
+      transparent 220px
+    ),
+    var(--h-earth-panel-strong);
+}
+
+.h-earth-3d-world-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: var(--h-earth-stage-min-height);
+  overflow: hidden;
+  border: 1px solid var(--h-earth-border-soft);
+  border-radius: calc(var(--h-earth-radius-lg) - 8px);
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      rgba(63, 105, 114, 0.12),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      #071217,
+      #041015 48%,
+      #02080b
+    );
+  box-shadow:
+    inset 0 0 90px rgba(0, 0, 0, 0.4);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.h-earth-3d-world-stage[data-h-earth-stage-contains-controls="false"] {
+  --h-earth-controls-excluded-from-stage: 1;
+}
+
+.h-earth-3d-world-stage[data-h-earth-stage-contains-selected-card="false"] {
+  --h-earth-selected-card-excluded-from-stage: 1;
+}
+
+.h-earth-3d-world-stage[data-h-earth-stage-contains-receipts="false"] {
+  --h-earth-receipts-excluded-from-stage: 1;
+}
+
+/* ==========================================================================
+   RENDERER MOUNT
+   ========================================================================== */
+
+.h-earth-3d-renderer-mount {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  overflow: hidden;
+  pointer-events: auto;
+  background: transparent;
+}
+
+.h-earth-3d-renderer-mount:empty {
+  pointer-events: none;
+}
+
+.h-earth-3d-renderer-mount:not(:empty) {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.008),
+      transparent
+    );
+}
+
+/*
+  Renderer-generated root support.
+
+  These selectors do not create renderer nodes. They provide layout support
+  only when the backed renderer or Step 034Q source-preview adapter has
+  already mounted the nodes.
+*/
+
+.h-earth-3d-renderer-mount
+  > [data-h-earth-renderer-root],
+.h-earth-3d-renderer-mount
+  > [data-h-earth-source-preview-root="true"],
+.h-earth-3d-renderer-mount
+  > .h-earth-renderer-root,
+.h-earth-3d-renderer-mount
+  > .h-earth-3d-renderer-root,
+.h-earth-3d-renderer-mount
+  > .h-earth-render-root,
+.h-earth-3d-renderer-mount
+  > .h-earth-source-preview-root {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transform-origin: center;
+  contain: layout paint style;
+}
+
+/* Renderer-generated semantic layer support */
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-renderer-layer],
+.h-earth-3d-renderer-mount
+  [data-h-earth-semantic-layer],
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-layer="true"],
+.h-earth-3d-renderer-mount
+  .h-earth-render-layer,
+.h-earth-3d-renderer-mount
+  [class*="h-earth-renderer-layer"],
+.h-earth-3d-renderer-mount
+  [class*="h-earth-3d-renderer-layer"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform-origin: center;
+}
+
+/* Renderer-generated object support */
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-renderer-object],
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-object="true"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-object-id],
+.h-earth-3d-renderer-mount
+  .h-earth-render-object,
+.h-earth-3d-renderer-mount
+  [class*="h-earth-renderer-object"],
+.h-earth-3d-renderer-mount
+  [class*="h-earth-3d-renderer-object"] {
+  position: absolute;
+  box-sizing: border-box;
+  min-width: 1px;
+  min-height: 1px;
+  transform-origin: center;
+  pointer-events: auto;
+}
+
+/* Renderer-generated line primitives */
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-renderer-primitive="line"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-primitive-kind="line"],
+.h-earth-3d-renderer-mount
+  .h-earth-renderer-line {
+  height: 1px;
+  transform-origin: 0 50%;
+}
+
+/* Renderer-generated point primitives */
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-renderer-primitive="point"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-primitive-kind="point"],
+.h-earth-3d-renderer-mount
+  .h-earth-renderer-point {
+  border-radius: 50%;
+}
+
+/* Renderer-generated polygon and surface primitives */
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-renderer-primitive="polygon"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-renderer-primitive="triangle"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-primitive-kind="polygon"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-primitive-kind="triangle"],
+.h-earth-3d-renderer-mount
+  .h-earth-renderer-polygon,
+.h-earth-3d-renderer-mount
+  .h-earth-renderer-triangle {
+  transform-origin: center;
+}
+
+/*
+  Renderer material hooks.
+
+  These are presentation variables only. They do not assign topology,
+  projection, coordinates, bounds, or visibility.
+*/
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role="ground"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material="ground"] {
+  --h-earth-renderer-material-fill:
+    rgba(87, 78, 60, 0.92);
+  --h-earth-renderer-material-stroke:
+    rgba(184, 164, 125, 0.7);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role="wet-sand"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material="wet-sand"] {
+  --h-earth-renderer-material-fill:
+    rgba(73, 73, 64, 0.94);
+  --h-earth-renderer-material-stroke:
+    rgba(173, 164, 132, 0.74);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role="dry-sand"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material="dry-sand"] {
+  --h-earth-renderer-material-fill:
+    rgba(174, 151, 109, 0.92);
+  --h-earth-renderer-material-stroke:
+    rgba(227, 207, 164, 0.76);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role="water"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material="water"] {
+  --h-earth-renderer-material-fill:
+    rgba(28, 84, 106, 0.9);
+  --h-earth-renderer-material-stroke:
+    rgba(118, 191, 219, 0.76);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role="foam"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material="foam"] {
+  --h-earth-renderer-material-fill:
+    rgba(220, 238, 235, 0.9);
+  --h-earth-renderer-material-stroke:
+    rgba(248, 255, 253, 0.9);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role="rock"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material="rock"] {
+  --h-earth-renderer-material-fill:
+    rgba(67, 71, 70, 0.96);
+  --h-earth-renderer-material-stroke:
+    rgba(151, 160, 157, 0.72);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role="vegetation"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material="vegetation"] {
+  --h-earth-renderer-material-fill:
+    rgba(55, 92, 63, 0.94);
+  --h-earth-renderer-material-stroke:
+    rgba(133, 179, 126, 0.72);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role="structure"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material="structure"] {
+  --h-earth-renderer-material-fill:
+    rgba(99, 90, 76, 0.96);
+  --h-earth-renderer-material-stroke:
+    rgba(199, 180, 148, 0.76);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role="air"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material="air"] {
+  --h-earth-renderer-material-fill:
+    rgba(124, 174, 191, 0.16);
+  --h-earth-renderer-material-stroke:
+    rgba(171, 215, 229, 0.36);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-material-role],
+.h-earth-3d-renderer-mount
+  [data-h-earth-material] {
+  color:
+    var(
+      --h-earth-renderer-material-stroke,
+      currentColor
+    );
+  border-color:
+    var(
+      --h-earth-renderer-material-stroke,
+      transparent
+    );
+  background-color:
+    var(
+      --h-earth-renderer-material-fill,
+      transparent
+    );
+}
+
+/* Semantic layer ordering support */
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-layer-role="background"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-semantic-layer-role="background"] {
+  z-index: 1;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-layer-role="atmosphere"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-semantic-layer-role="atmosphere"] {
+  z-index: 2;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-layer-role="distant-context"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-semantic-layer-role="distant-context"] {
+  z-index: 3;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-layer-role="midground"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-semantic-layer-role="midground"] {
+  z-index: 4;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-layer-role="water"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-semantic-layer-role="water"] {
+  z-index: 5;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-layer-role="ground"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-semantic-layer-role="ground"] {
+  z-index: 6;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-layer-role="foreground"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-semantic-layer-role="foreground"] {
+  z-index: 7;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-layer-role="interaction"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-semantic-layer-role="interaction"] {
+  z-index: 8;
+  pointer-events: auto;
+}
+
+/* Visibility support */
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-visibility="hidden"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-visible="false"],
+.h-earth-3d-renderer-mount
+  [hidden] {
+  display: none !important;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-visibility="visible"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-visible="true"] {
+  visibility: visible;
+}
+
+/* Interaction support */
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-interactive="true"],
+.h-earth-3d-renderer-mount
+  [data-h-earth-selected-target="true"] {
+  cursor: pointer;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-selected-target="true"] {
+  filter:
+    brightness(1.06)
+    saturate(1.05);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-interactive="true"]:focus-visible,
+.h-earth-3d-renderer-mount
+  [data-h-earth-selected-target="true"]:focus-visible {
+  outline:
+    2px solid
+    rgba(220, 255, 244, 0.78);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   STEP 034Q DESCRIPTOR-ONLY SOURCE PREVIEW
+   ========================================================================== */
+
+/*
+  These rules style nodes that Step 034Q has already created.
+
+  The stylesheet does not create source-preview objects, coordinates,
+  dimensions, row bands, target identities, or occurrence evidence.
+*/
+
+.h-earth-3d-renderer-mount
+  > [data-h-earth-source-preview-root="true"],
+.h-earth-3d-renderer-mount
+  > .h-earth-source-preview-root {
+  z-index: 1;
+  background:
+    radial-gradient(
+      circle at 70% 18%,
+      rgba(198, 224, 230, 0.12),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      var(--h-earth-preview-sky-top),
+      var(--h-earth-preview-sky-bottom) 46%,
+      rgba(5, 16, 20, 0.94) 100%
+    );
+  box-shadow:
+    inset 0 0 110px rgba(0, 0, 0, 0.34);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-layer="true"],
+.h-earth-3d-renderer-mount
+  .h-earth-render-layer {
+  z-index: 1;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-air-haze-light {
+  z-index: 2;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(154, 204, 218, 0.1),
+      rgba(77, 136, 155, 0.04) 45%,
+      transparent 72%
+    );
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-distant-world-context {
+  z-index: 3;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-manor-exterior-context {
+  z-index: 4;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-water-surface-plane {
+  z-index: 5;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-nearshore-wave-band {
+  z-index: 6;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-shoreline-foam-line {
+  z-index: 7;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-tide-pools-stones-rocks-detail {
+  z-index: 8;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-dry-sand-transition {
+  z-index: 9;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-foreground-wet-sand {
+  z-index: 10;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-layer-inspection-anchor-overlay {
+  z-index: 12;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-band] {
+  opacity: 0.72;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-object="true"],
+.h-earth-3d-renderer-mount
+  .h-earth-render-descriptor-only {
+  appearance: none;
+  padding: 0;
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.09);
+  color: var(--h-earth-text);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    inset 0 0 24px rgba(255, 255, 255, 0.025),
+    0 8px 24px rgba(0, 0, 0, 0.16);
+  overflow: visible;
+  cursor: pointer;
+  transition:
+    filter 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-object="true"]:hover,
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-object="true"]:focus-visible,
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-object="true"][aria-current="true"] {
+  z-index: 30;
+  border-color: rgba(220, 255, 244, 0.46);
+  filter:
+    brightness(1.08)
+    saturate(1.06);
+  box-shadow:
+    inset 0 0 26px rgba(220, 255, 244, 0.04),
+    0 0 0 1px rgba(220, 255, 244, 0.08),
+    0 12px 32px rgba(0, 0, 0, 0.26);
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-wet-sand {
+  border-radius: 44% 48% 10% 10% / 26% 28% 12% 12%;
+  border-color: rgba(184, 170, 135, 0.22);
+  background:
+    radial-gradient(
+      ellipse at 28% 38%,
+      rgba(220, 210, 174, 0.08),
+      transparent 22%
+    ),
+    radial-gradient(
+      ellipse at 71% 57%,
+      rgba(216, 229, 224, 0.06),
+      transparent 20%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(91, 90, 77, 0.94),
+      var(--h-earth-preview-wet-sand)
+    );
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-dry-sand {
+  border-radius: 46% 46% 14% 14% / 42% 42% 18% 18%;
+  border-color: rgba(226, 205, 159, 0.25);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(195, 169, 121, 0.9),
+      var(--h-earth-preview-dry-sand)
+    );
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-tide-pool {
+  border-radius: 48%;
+  border-color: rgba(149, 211, 228, 0.35);
+  background:
+    radial-gradient(
+      ellipse at 45% 34%,
+      rgba(211, 242, 248, 0.26),
+      transparent 36%
+    ),
+    rgba(36, 99, 119, 0.78);
+  box-shadow:
+    inset 0 0 18px rgba(160, 220, 233, 0.14),
+    0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-foam {
+  border-radius: 999px;
+  border-color: rgba(247, 255, 253, 0.52);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(240, 250, 248, 0.62),
+      var(--h-earth-preview-foam),
+      rgba(227, 243, 240, 0.55)
+    );
+  box-shadow:
+    0 0 18px rgba(221, 242, 238, 0.18);
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-nearshore-wave {
+  border-radius: 999px 999px 42% 42%;
+  border-color: rgba(154, 212, 229, 0.24);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(133, 201, 220, 0.32),
+      rgba(45, 112, 133, 0.7)
+    );
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-water {
+  border-radius: 10% 10% 2% 2% / 20% 20% 4% 4%;
+  border-color: rgba(120, 192, 215, 0.22);
+  background:
+    radial-gradient(
+      ellipse at 50% 4%,
+      var(--h-earth-preview-water-light),
+      transparent 44%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(52, 121, 145, 0.84),
+      var(--h-earth-preview-water)
+    );
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-air-haze {
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(
+      ellipse at 52% 40%,
+      rgba(160, 211, 224, 0.12),
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      var(--h-earth-preview-air),
+      transparent 76%
+    );
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-manor-context {
+  border-radius: 16% 16% 5% 5%;
+  border-color: rgba(209, 190, 156, 0.26);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(69, 62, 53, 0.94),
+      var(--h-earth-preview-structure),
+      rgba(65, 58, 49, 0.95)
+    );
+  clip-path:
+    polygon(
+      6% 100%,
+      8% 48%,
+      20% 48%,
+      20% 26%,
+      34% 26%,
+      34% 42%,
+      48% 42%,
+      48% 15%,
+      63% 15%,
+      63% 39%,
+      78% 39%,
+      78% 54%,
+      94% 54%,
+      96% 100%
+    );
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-stone {
+  border-radius:
+    44% 56% 48% 52% /
+    56% 42% 58% 44%;
+  border-color: var(--h-earth-preview-rock-edge);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(112, 119, 115, 0.92),
+      rgba(57, 62, 61, 0.97)
+    );
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-jagged-rock,
+.h-earth-3d-renderer-mount
+  .h-earth-material-distant-rock {
+  border-color: var(--h-earth-preview-rock-edge);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(89, 96, 93, 0.95),
+      var(--h-earth-preview-rock)
+    );
+  clip-path:
+    polygon(
+      4% 100%,
+      12% 48%,
+      26% 34%,
+      37% 6%,
+      48% 31%,
+      61% 17%,
+      71% 45%,
+      84% 32%,
+      96% 100%
+    );
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-material-inspection-anchor {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border:
+    2px solid
+    rgba(220, 255, 244, 0.76);
+  background:
+    radial-gradient(
+      circle,
+      rgba(220, 255, 244, 0.34),
+      rgba(31, 87, 77, 0.86) 48%,
+      rgba(3, 14, 12, 0.96) 72%
+    );
+  box-shadow:
+    0 0 0 6px rgba(220, 255, 244, 0.08),
+    0 0 30px rgba(158, 216, 199, 0.22);
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-primitive-contoured-terrain-band,
+.h-earth-3d-renderer-mount
+  .h-earth-primitive-terrain-band,
+.h-earth-3d-renderer-mount
+  .h-earth-primitive-water-depth-band,
+.h-earth-3d-renderer-mount
+  .h-earth-primitive-water-plane,
+.h-earth-3d-renderer-mount
+  .h-earth-primitive-irregular-shoreline-band {
+  transform-origin: center;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-render-label,
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-label="true"] {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 60;
+  display: none;
+  width: max-content;
+  max-width: min(240px, 72vw);
+  padding: 6px 8px;
+  border: 1px solid rgba(220, 255, 244, 0.22);
+  border-radius: 8px;
+  color: rgba(241, 251, 248, 0.92);
+  background: rgba(3, 10, 12, 0.9);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
+  font-family: var(--h-earth-mono);
+  font-size: 0.66rem;
+  line-height: 1.3;
+  text-align: center;
+  white-space: normal;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-object="true"]:hover
+  .h-earth-render-label,
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-object="true"]:focus-visible
+  .h-earth-render-label,
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-object="true"][aria-current="true"]
+  .h-earth-render-label {
+  display: block;
+}
+
+.h-earth-3d-renderer-mount
+  .h-earth-source-preview-caption,
+.h-earth-3d-renderer-mount
+  [data-h-earth-source-preview-caption="true"] {
+  overflow-wrap: anywhere;
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.32);
+}
+
+/* ==========================================================================
+   FALLBACK — STATUS ONLY
+   ========================================================================== */
+
+.h-earth-3d-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: clamp(24px, 6vw, 72px);
+  color: var(--h-earth-muted);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 15, 19, 0.96),
+      rgba(2, 8, 11, 0.98)
+    );
+  font-family: var(--h-earth-mono);
+  font-size: clamp(0.82rem, 1.2vw, 1rem);
+  line-height: 1.68;
+  text-align: center;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/*
+  No visual bands, material blocks, terrain shapes, shoreline fields,
+  pseudo-landscape silhouettes, or object-placement imagery may be created
+  under the fallback node.
+*/
+
+.h-earth-3d-fallback > * {
+  max-width: 840px;
+}
+
+.h-earth-3d-fallback:empty {
+  display: none;
+}
+
+/*
+  Step 034Q temporary source preview visibility.
+
+  The fallback is hidden only after Step 034Q reports that its descriptor
+  preview is mounted or restored and the route is not in an explicit failure
+  or fallback class.
+*/
+
+.h-earth-3d-route-root[data-h-earth-source-preview-mounted="true"]:not(.h-earth-3d-boot-error):not(.h-earth-3d-boot-fallback)
+  .h-earth-3d-renderer-mount:not(:empty)
+  + .h-earth-3d-fallback {
+  display: none;
+}
+
+/* Renderer takeover */
+
+.h-earth-3d-boot-ready
+  .h-earth-3d-renderer-mount:not(:empty)
+  + .h-earth-3d-fallback {
+  display: none;
+}
+
+.h-earth-3d-boot-ready
+  .h-earth-3d-world-stage {
+  border-color: rgba(183, 239, 200, 0.28);
+}
+
+.h-earth-3d-boot-ready
+  .h-earth-3d-status {
+  color: var(--h-earth-ok);
+}
+
+/* Explicit descriptor-preview hold */
+
+.h-earth-3d-route-root[data-h-earth-preview-only-hold="true"]
+  .h-earth-3d-fallback {
+  display: grid;
+  color: var(--h-earth-held);
+  border: 0;
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      rgba(240, 210, 141, 0.055),
+      transparent 28rem
+    ),
+    linear-gradient(
+      180deg,
+      rgba(11, 15, 15, 0.97),
+      rgba(4, 8, 9, 0.99)
+    );
+}
+
+.h-earth-3d-route-root[data-h-earth-preview-only-hold="true"]
+  .h-earth-3d-renderer-mount {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Ineligible entry input */
+
+.h-earth-3d-route-root[data-h-earth-route-entry-input-observed="ineligible"]
+  .h-earth-3d-fallback {
+  color: var(--h-earth-warn);
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(239, 173, 127, 0.06),
+      transparent 28rem
+    ),
+    linear-gradient(
+      180deg,
+      rgba(15, 11, 9, 0.98),
+      rgba(6, 5, 5, 0.99)
+    );
+}
+
+/* Controlled fallback */
+
+.h-earth-3d-boot-fallback
+  .h-earth-3d-fallback {
+  display: grid !important;
+  color: var(--h-earth-held);
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(240, 210, 141, 0.065),
+      transparent 30rem
+    ),
+    linear-gradient(
+      180deg,
+      rgba(15, 12, 8, 0.98),
+      rgba(6, 5, 3, 0.99)
+    );
+}
+
+.h-earth-3d-boot-fallback
+  .h-earth-3d-world-stage {
+  border-color: rgba(240, 210, 141, 0.32);
+}
+
+.h-earth-3d-boot-fallback
+  .h-earth-3d-status {
+  color: var(--h-earth-held);
+}
+
+/* Entry or bootstrap error */
+
+.h-earth-3d-boot-error
+  .h-earth-3d-fallback {
+  display: grid !important;
+  color: var(--h-earth-error);
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(239, 151, 151, 0.065),
+      transparent 30rem
+    ),
+    linear-gradient(
+      180deg,
+      rgba(17, 8, 9, 0.98),
+      rgba(6, 3, 4, 0.99)
+    );
+}
+
+.h-earth-3d-boot-error
+  .h-earth-3d-world-stage {
+  border-color: rgba(239, 151, 151, 0.34);
+}
+
+.h-earth-3d-boot-error
+  .h-earth-3d-status {
+  color: var(--h-earth-error);
+}
+
+/* Branch-specific pre-bootstrap import rejection */
+
+.h-earth-3d-route-root[data-h-earth-failed-import-branch]:not([data-h-earth-failed-import-branch=""])
+  .h-earth-3d-fallback {
+  display: grid !important;
+  color: var(--h-earth-error);
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(239, 151, 151, 0.07),
+      transparent 30rem
+    ),
+    linear-gradient(
+      180deg,
+      rgba(18, 7, 9, 0.985),
+      rgba(6, 3, 4, 0.995)
+    );
+}
+
+.h-earth-3d-route-root[data-h-earth-failed-import-branch]:not([data-h-earth-failed-import-branch=""])
+  .h-earth-3d-world-stage {
+  border-color: rgba(239, 151, 151, 0.38);
+  box-shadow:
+    inset 0 0 90px rgba(0, 0, 0, 0.44),
+    0 0 0 1px rgba(239, 151, 151, 0.08);
+}
+
+.h-earth-3d-route-root[data-h-earth-failed-import-branch]:not([data-h-earth-failed-import-branch=""])
+  .h-earth-3d-status {
+  color: var(--h-earth-error);
+}
+
+/* ==========================================================================
+   SELECTED TARGET PANEL
+   ========================================================================== */
+
+.h-earth-3d-selected-target-panel {
+  padding: 18px;
+  border-color: rgba(158, 216, 199, 0.22);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(158, 216, 199, 0.1),
+      transparent 32%
+    ),
+    var(--h-earth-panel);
+}
+
+.h-earth-3d-card-title {
+  margin: 6px 0 0;
+  font-size: clamp(1.12rem, 2vw, 1.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.h-earth-3d-selected-target-facts,
+.h-earth-3d-readout-facts,
+.h-earth-3d-layer-4-facts {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+}
+
+.h-earth-3d-selected-target-facts {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+}
+
+.h-earth-3d-selected-target-facts > div,
+.h-earth-3d-readout-facts > div,
+.h-earth-3d-layer-4-facts > div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--h-earth-border-soft);
+  border-radius: var(--h-earth-radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.h-earth-3d-selected-target-facts dt,
+.h-earth-3d-readout-facts dt,
+.h-earth-3d-layer-4-facts dt {
+  color: var(--h-earth-soft);
+  font-size: 0.7rem;
+  font-weight: 720;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.h-earth-3d-selected-target-facts dd,
+.h-earth-3d-readout-facts dd,
+.h-earth-3d-layer-4-facts dd {
+  margin: 6px 0 0;
+  color: var(--h-earth-text);
+  font-family: var(--h-earth-mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================================================
+   GROUND CONDITION READ
+   ========================================================================== */
+
+.h-earth-3d-readout-card {
+  padding: 18px;
+  border-color: rgba(232, 210, 160, 0.22);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(232, 210, 160, 0.09),
+      transparent 34%
+    ),
+    var(--h-earth-panel);
+}
+
+.h-earth-3d-public-readout-line {
+  margin: 16px 0 0;
+  color: var(--h-earth-muted);
+  line-height: 1.65;
+}
+
+.h-earth-3d-public-readout-details {
+  margin-top: 16px;
+  border-top: 1px solid var(--h-earth-border-soft);
+  padding-top: 14px;
+}
+
+.h-earth-3d-public-readout-details > summary,
+.h-earth-3d-layer-4-projection > summary,
+.h-earth-3d-target-drawer-toggle,
+.h-earth-3d-developer-drawer-toggle {
+  color: var(--h-earth-accent-strong);
+  font-weight: 700;
+}
+
+.h-earth-3d-readout-facts {
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+}
+
+.h-earth-3d-readout-boundary {
+  margin: 16px 0 0;
+  color: var(--h-earth-soft);
+  font-size: 0.86rem;
+  line-height: 1.58;
+}
+
+/* ==========================================================================
+   LAYER 4 STATUS
+   ========================================================================== */
+
+.h-earth-3d-layer-4-status-card {
+  padding: 18px;
+  border-color: rgba(198, 185, 239, 0.26);
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(198, 185, 239, 0.12),
+      transparent 34%
+    ),
+    var(--h-earth-panel);
+}
+
+.h-earth-3d-layer-4-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.h-earth-3d-layer-4-status {
+  flex: 0 0 auto;
+  max-width: 420px;
+  padding: 8px 10px;
+  border: 1px solid rgba(198, 185, 239, 0.24);
+  border-radius: 999px;
+  color: var(--h-earth-violet);
+  background: rgba(198, 185, 239, 0.07);
+  font-family: var(--h-earth-mono);
+  font-size: 0.72rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.h-earth-3d-layer-4-status[data-h-earth-layer-4-status="ready"],
+.h-earth-3d-layer-4-status[data-h-earth-layer-4-status="observed"] {
+  color: var(--h-earth-ok);
+  border-color: rgba(183, 239, 200, 0.28);
+  background: rgba(183, 239, 200, 0.07);
+}
+
+.h-earth-3d-layer-4-status[data-h-earth-layer-4-status="failed"] {
+  color: var(--h-earth-error);
+  border-color: rgba(239, 151, 151, 0.3);
+  background: rgba(239, 151, 151, 0.075);
+}
+
+.h-earth-3d-layer-4-facts {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+}
+
+.h-earth-3d-layer-4-summary {
+  margin: 16px 0 0;
+  color: var(--h-earth-muted);
+  line-height: 1.62;
+}
+
+.h-earth-3d-layer-4-projection {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--h-earth-border-soft);
+}
+
+.h-earth-3d-layer-4-projection-payload {
+  max-height: 420px;
+  overflow: auto;
+  margin-top: 12px;
+  padding: 13px;
+  border: 1px solid rgba(198, 185, 239, 0.18);
+  border-radius: var(--h-earth-radius-sm);
+  color: rgba(238, 248, 246, 0.84);
+  background: rgba(0, 0, 0, 0.24);
+  font-family: var(--h-earth-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   TARGET DRAWER
+   ========================================================================== */
+
+.h-earth-3d-target-drawer,
+.h-earth-3d-developer-drawer {
+  overflow: hidden;
+}
+
+.h-earth-3d-target-drawer-toggle,
+.h-earth-3d-developer-drawer-toggle {
+  display: block;
+  padding: 16px 18px;
+  list-style-position: inside;
+}
+
+.h-earth-3d-target-drawer[open]
+  .h-earth-3d-target-drawer-toggle,
+.h-earth-3d-developer-drawer[open]
+  .h-earth-3d-developer-drawer-toggle {
+  border-bottom: 1px solid var(--h-earth-border-soft);
+}
+
+.h-earth-3d-target-panel {
+  margin: 12px;
+  padding: 16px;
+}
+
+.h-earth-3d-target-list {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.h-earth-3d-target-list
+  button,
+.h-earth-3d-target-list
+  [role="button"] {
+  min-height: 88px;
+  padding: 12px;
+  border: 1px solid var(--h-earth-border-soft);
+  border-radius: var(--h-earth-radius-md);
+  color: var(--h-earth-text);
+  background: rgba(255, 255, 255, 0.035);
+  text-align: left;
+}
+
+.h-earth-3d-target-list
+  button:hover,
+.h-earth-3d-target-list
+  button:focus-visible,
+.h-earth-3d-target-list
+  [role="button"]:hover,
+.h-earth-3d-target-list
+  [role="button"]:focus-visible {
+  border-color: rgba(158, 216, 199, 0.34);
+  background: rgba(158, 216, 199, 0.075);
+}
+
+.h-earth-3d-target-list
+  [data-h-earth-selected="true"],
+.h-earth-3d-target-list
+  [aria-pressed="true"],
+.h-earth-3d-target-list
+  [aria-current="true"] {
+  border-color: rgba(183, 239, 200, 0.38);
+  background: rgba(183, 239, 200, 0.08);
+}
+
+.h-earth-3d-empty-panel-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--h-earth-soft);
+  line-height: 1.55;
+}
+
+/* ==========================================================================
+   COMPACT PUBLIC RECEIPTS
+   ========================================================================== */
+
+.h-earth-3d-developer-drawer-body {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+}
+
+.h-earth-3d-developer-drawer-body
+  .h-earth-3d-panel {
+  padding: 16px;
+}
+
+.h-earth-3d-panel-heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.h-earth-3d-inline-copy-button {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+}
+
+.h-earth-3d-inspection-panel,
+.h-earth-3d-debug,
+.h-earth-3d-public-stage-receipt {
+  max-height: 430px;
+  overflow: auto;
+  margin-top: 12px;
+  padding: 13px;
+  border: 1px solid var(--h-earth-border-soft);
+  border-radius: var(--h-earth-radius-sm);
+  color: rgba(238, 248, 246, 0.84);
+  background: rgba(0, 0, 0, 0.24);
+  font-family: var(--h-earth-mono);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.h-earth-3d-copy-status {
+  margin: 0;
+  color: var(--h-earth-muted);
+  font-family: var(--h-earth-mono);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.h-earth-3d-copy-status[data-h-earth-copy-state="success"] {
+  color: var(--h-earth-ok);
+}
+
+.h-earth-3d-copy-status[data-h-earth-copy-state="failure"] {
+  color: var(--h-earth-error);
+}
+
+.h-earth-3d-claim-boundary {
+  padding: 14px;
+  border: 1px solid rgba(232, 210, 160, 0.2);
+  border-radius: var(--h-earth-radius-md);
+  background: rgba(232, 210, 160, 0.045);
+}
+
+.h-earth-3d-claim-boundary p {
+  margin: 0;
+  color: rgba(246, 232, 202, 0.82);
+  line-height: 1.58;
+}
+
+.h-earth-3d-claim-boundary p + p {
+  margin-top: 10px;
+}
+
+/* ==========================================================================
+   HTML ENTRY AND PRE-BOOTSTRAP IMPORT STATES
+   ========================================================================== */
+
+/*
+  Initial false values mean "not yet observed" and are not styled as failure.
+*/
+
+.h-earth-3d-route-root[data-h-earth-index-module-imported="false"]
+  .h-earth-3d-status {
+  color: var(--h-earth-info);
+}
+
+.h-earth-3d-route-root[data-h-earth-prebootstrap-import-diagnostic-complete="false"]
+  .h-earth-3d-status {
+  color: var(--h-earth-info);
+}
+
+.h-earth-3d-route-root[data-h-earth-prebootstrap-import-diagnostic-complete="false"]
+  .h-earth-3d-world-stage {
+  border-color: rgba(168, 212, 240, 0.2);
+}
+
+.h-earth-3d-route-root[data-h-earth-index-module-imported="true"]
+  .h-earth-3d-status {
+  color: var(--h-earth-accent-strong);
+}
+
+.h-earth-3d-route-root[data-h-earth-prebootstrap-import-diagnostic-complete="true"][data-h-earth-failed-import-branch=""]
+  .h-earth-3d-status {
+  color: var(--h-earth-accent-strong);
+}
+
+.h-earth-3d-route-root[data-h-earth-prebootstrap-import-diagnostic-complete="true"][data-h-earth-failed-import-branch=""]
+  .h-earth-3d-world-stage {
+  border-color: rgba(158, 216, 199, 0.24);
+}
+
+.h-earth-3d-route-root[data-h-earth-index-contract-verified="true"]
+  .h-earth-3d-status {
+  color: var(--h-earth-ok);
+}
+
+.h-earth-3d-route-root[data-h-earth-index-contract-verified="true"]
+  .h-earth-3d-world-stage {
+  border-color: rgba(183, 239, 200, 0.26);
+}
+
+/*
+  Contract verification false becomes failure styling only after the HTML
+  entry occurrence is complete and the page has entered an explicit error
+  state.
+*/
+
+.h-earth-3d-route-root.h-earth-3d-boot-error[data-h-earth-html-entry-task-complete="true"][data-h-earth-index-contract-verified="false"]
+  .h-earth-3d-status {
+  color: var(--h-earth-error);
+}
+
+.h-earth-3d-route-root[data-h-earth-index-initialization-started="true"]
+  .h-earth-3d-status {
+  border-color: rgba(158, 216, 199, 0.18);
+}
+
+.h-earth-3d-route-root[data-h-earth-renderer-bootstrap-requested="true"]
+  .h-earth-3d-world-stage {
+  border-color: rgba(158, 216, 199, 0.28);
+  box-shadow:
+    inset 0 0 90px rgba(0, 0, 0, 0.36),
+    0 0 0 1px rgba(158, 216, 199, 0.06);
+}
+
+.h-earth-3d-route-root[data-h-earth-renderer-bootstrap-requested="false"][data-h-earth-index-initialization-started="false"]
+  .h-earth-3d-world-stage {
+  border-color: rgba(168, 212, 240, 0.2);
+}
+
+.h-earth-3d-route-root[data-h-earth-source-preview-mounted="true"]
+  .h-earth-3d-world-stage {
+  box-shadow:
+    inset 0 0 90px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(156, 203, 232, 0.07);
+}
+
+.h-earth-3d-route-root[data-h-earth-source-preview-taken-over="true"]
+  .h-earth-3d-world-stage {
+  border-color: rgba(183, 239, 200, 0.28);
+}
+
+.h-earth-3d-route-root[data-h-earth-renderer-mounted="true"]
+  .h-earth-3d-world-stage {
+  border-color: rgba(183, 239, 200, 0.34);
+}
+
+/* ==========================================================================
+   STRICT FALLBACK VISUAL NEUTRALIZATION
+   ========================================================================== */
+
+/*
+  Descriptor-preview or stale renderer-like nodes under the fallback are
+  intentionally neutralized. They may remain as diagnostic evidence, but
+  they may not compose an environment inside the fallback surface.
+*/
+
+.h-earth-3d-fallback
+  [data-h-earth-source-preview-band],
+.h-earth-3d-fallback
+  [data-h-earth-preview-band],
+.h-earth-3d-fallback
+  [data-h-earth-material-role],
+.h-earth-3d-fallback
+  [data-h-earth-organic-placement-role],
+.h-earth-3d-fallback
+  [class*="h-earth-material-"],
+.h-earth-3d-fallback
+  [class*="h-earth-object-"],
+.h-earth-3d-fallback
+  [class*="h-earth-preview-"],
+.h-earth-3d-fallback
+  [class*="h-earth-source-preview-"] {
+  position: static !important;
+  inset: auto !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  clip-path: none !important;
+  transform: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  color: inherit !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+.h-earth-3d-fallback
+  [data-h-earth-source-preview-band]::before,
+.h-earth-3d-fallback
+  [data-h-earth-source-preview-band]::after,
+.h-earth-3d-fallback
+  [data-h-earth-preview-band]::before,
+.h-earth-3d-fallback
+  [data-h-earth-preview-band]::after,
+.h-earth-3d-fallback
+  [class*="h-earth-material-"]::before,
+.h-earth-3d-fallback
+  [class*="h-earth-material-"]::after,
+.h-earth-3d-fallback
+  [class*="h-earth-object-"]::before,
+.h-earth-3d-fallback
+  [class*="h-earth-object-"]::after,
+.h-earth-3d-fallback
+  [class*="h-earth-preview-"]::before,
+.h-earth-3d-fallback
+  [class*="h-earth-preview-"]::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Prevent stale preview wrappers from establishing a landscape layout. */
+
+.h-earth-3d-fallback
+  [data-h-earth-source-preview-root],
+.h-earth-3d-fallback
+  [data-h-earth-preview-root],
+.h-earth-3d-fallback
+  .h-earth-3d-source-preview,
+.h-earth-3d-fallback
+  .h-earth-3d-preview {
+  position: static !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  color: inherit !important;
+  background: transparent !important;
+}
+
+/* ==========================================================================
+   SCROLLBARS
+   ========================================================================== */
+
+.h-earth-3d-layer-4-projection-payload,
+.h-earth-3d-inspection-panel,
+.h-earth-3d-debug,
+.h-earth-3d-public-stage-receipt {
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgba(220, 255, 244, 0.22)
+    rgba(255, 255, 255, 0.035);
+}
+
+.h-earth-3d-layer-4-projection-payload::-webkit-scrollbar,
+.h-earth-3d-inspection-panel::-webkit-scrollbar,
+.h-earth-3d-debug::-webkit-scrollbar,
+.h-earth-3d-public-stage-receipt::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.h-earth-3d-layer-4-projection-payload::-webkit-scrollbar-track,
+.h-earth-3d-inspection-panel::-webkit-scrollbar-track,
+.h-earth-3d-debug::-webkit-scrollbar-track,
+.h-earth-3d-public-stage-receipt::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.h-earth-3d-layer-4-projection-payload::-webkit-scrollbar-thumb,
+.h-earth-3d-inspection-panel::-webkit-scrollbar-thumb,
+.h-earth-3d-debug::-webkit-scrollbar-thumb,
+.h-earth-3d-public-stage-receipt::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(255, 255, 255, 0.035);
+  border-radius: 999px;
+  background: rgba(220, 255, 244, 0.22);
+}
+
+.h-earth-3d-layer-4-projection-payload::-webkit-scrollbar-thumb:hover,
+.h-earth-3d-inspection-panel::-webkit-scrollbar-thumb:hover,
+.h-earth-3d-debug::-webkit-scrollbar-thumb:hover,
+.h-earth-3d-public-stage-receipt::-webkit-scrollbar-thumb:hover {
+  background: rgba(220, 255, 244, 0.34);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1180px) {
+  :root {
+    --h-earth-stage-min-height: 560px;
+  }
+
+  .h-earth-3d-readout-facts {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .h-earth-3d-target-list {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 920px) {
+  :root {
+    --h-earth-stage-min-height: 500px;
+  }
+
+  .h-earth-3d-route-root {
+    padding: 16px;
+  }
+
+  .h-earth-3d-public-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .h-earth-3d-public-nav {
+    justify-content: flex-start;
+  }
+
+  .h-earth-3d-arrival {
+    grid-template-columns: 1fr;
+  }
+
+  .h-earth-3d-hud {
+    grid-template-columns: 1fr;
+  }
+
+  .h-earth-3d-action-panel {
+    min-width: 0;
+  }
+
+  .h-earth-3d-layer-4-heading,
+  .h-earth-3d-panel-heading-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .h-earth-3d-layer-4-status {
+    max-width: none;
+  }
+
+  .h-earth-3d-selected-target-facts,
+  .h-earth-3d-layer-4-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .h-earth-3d-inline-copy-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --h-earth-stage-min-height: 420px;
+  }
+
+  .h-earth-3d-route-root {
+    padding:
+      max(10px, env(safe-area-inset-top))
+      10px
+      max(24px, env(safe-area-inset-bottom));
+  }
+
+  .h-earth-3d-shell {
+    gap: 14px;
+  }
+
+  .h-earth-3d-public-header,
+  .h-earth-3d-arrival-copy,
+  .h-earth-3d-arrival-note,
+  .h-earth-3d-public-control-strip,
+  .h-earth-3d-world-shell,
+  .h-earth-3d-panel,
+  .h-earth-3d-readout-card,
+  .h-earth-3d-layer-4-status-card,
+  .h-earth-3d-target-drawer,
+  .h-earth-3d-developer-drawer {
+    border-radius: 20px;
+  }
+
+  .h-earth-3d-brand-mark {
+    width: 42px;
+    height: 42px;
+  }
+
+  .h-earth-3d-public-nav a {
+    padding: 8px 10px;
+    font-size: 0.78rem;
+  }
+
+  .h-earth-3d-title {
+    font-size: clamp(2.1rem, 12vw, 4rem);
+  }
+
+  .h-earth-3d-world-shell {
+    padding: 7px;
+  }
+
+  .h-earth-3d-world-stage {
+    border-radius: 15px;
+  }
+
+  .h-earth-3d-fallback {
+    padding: 22px;
+    font-size: 0.76rem;
+  }
+
+  .h-earth-3d-readout-facts,
+  .h-earth-3d-target-list {
+    grid-template-columns: 1fr;
+  }
+
+  .h-earth-3d-action-button,
+  .h-earth-3d-inline-copy-button {
+    width: 100%;
+  }
+
+  .h-earth-3d-layer-4-projection-payload,
+  .h-earth-3d-inspection-panel,
+  .h-earth-3d-debug,
+  .h-earth-3d-public-stage-receipt {
+    max-height: 360px;
+    font-size: 0.69rem;
+  }
+
+  .h-earth-3d-renderer-mount
+    .h-earth-source-preview-caption,
+  .h-earth-3d-renderer-mount
+    [data-h-earth-source-preview-caption="true"] {
+    left: 12px !important;
+    top: 12px !important;
+    max-width: calc(100% - 24px) !important;
+    padding: 8px 9px !important;
+    font-size: 0.66rem !important;
+  }
+
+  .h-earth-3d-renderer-mount
+    .h-earth-render-label,
+  .h-earth-3d-renderer-mount
+    [data-h-earth-source-preview-label="true"] {
+    max-width: min(190px, 78vw);
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 420px) {
+  :root {
+    --h-earth-stage-min-height: 360px;
+  }
+
+  .h-earth-3d-route-root {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .h-earth-3d-public-header {
+    padding: 11px;
+  }
+
+  .h-earth-3d-brand-copy > span {
+    font-size: 0.62rem;
+  }
+
+  .h-earth-3d-brand-copy > strong {
+    font-size: 1rem;
+  }
+
+  .h-earth-3d-arrival-copy,
+  .h-earth-3d-arrival-note,
+  .h-earth-3d-public-control-strip,
+  .h-earth-3d-panel,
+  .h-earth-3d-readout-card,
+  .h-earth-3d-layer-4-status-card {
+    padding: 12px;
+  }
+
+  .h-earth-3d-title {
+    font-size: clamp(2rem, 13vw, 3.45rem);
+  }
+
+  .h-earth-3d-fallback {
+    padding: 16px;
+    font-size: 0.7rem;
+  }
+
+  .h-earth-3d-renderer-mount
+    .h-earth-source-preview-caption,
+  .h-earth-3d-renderer-mount
+    [data-h-earth-source-preview-caption="true"] {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.h-earth-live-route{--h-earth-stage-min-height:clamp(560px,72dvh,920px)}
+    .h-earth-live-route .h-earth-3d-shell{gap:16px}.h-earth-live-route .h-earth-3d-public-header{position:relative;z-index:10}
+    .h-earth-live-arrival{grid-template-columns:minmax(0,1fr) minmax(230px,.34fr);gap:12px}.h-earth-live-arrival .h-earth-3d-arrival-copy{padding:clamp(18px,3vw,30px)}
+    .h-earth-live-arrival .h-earth-3d-title{max-width:900px;font-size:clamp(2rem,5.4vw,4.8rem);line-height:.94}.h-earth-live-status{margin:0;color:var(--h-earth-info);font-family:var(--h-earth-mono);font-size:.74rem;line-height:1.45;overflow-wrap:anywhere}
+    .h-earth-live-route .h-earth-3d-world-shell{padding:10px}.h-earth-live-route .h-earth-3d-world-stage{min-height:var(--h-earth-stage-min-height);border-color:rgba(220,242,238,.2);touch-action:none}
+    .h-earth-live-route .h-earth-3d-renderer-mount{cursor:grab;user-select:none;-webkit-user-select:none;overscroll-behavior:contain}.h-earth-live-route canvas{display:block;width:100%;height:100%;object-fit:fill}
+    .h-earth-live-gesture-hint{position:absolute;top:14px;left:50%;z-index:8;width:max-content;max-width:calc(100% - 28px);translate:-50% 0;padding:8px 12px;border:1px solid rgba(220,255,244,.2);border-radius:999px;color:rgba(238,248,246,.82);background:rgba(2,8,10,.7);font-size:.72rem;font-weight:720;text-align:center;pointer-events:none}.h-earth-live-route[data-gesture-used="true"] .h-earth-live-gesture-hint{opacity:0}
+    .h-earth-live-details,.h-earth-runtime-diagnostics,.h-earth-startup-receipt{margin-top:10px;border:1px solid var(--h-earth-border-soft);border-radius:var(--h-earth-radius-md);background:rgba(255,255,255,.025)}
+    .h-earth-live-details summary,.h-earth-runtime-diagnostics summary,.h-earth-startup-receipt summary{padding:12px 14px;color:var(--h-earth-muted);font-size:.8rem;font-weight:760;letter-spacing:.04em;cursor:pointer}.h-earth-live-details .telemetry{grid-template-columns:repeat(6,minmax(0,1fr));border-top-color:var(--h-earth-border-soft)}
+    .h-earth-runtime-diagnostics__body,.h-earth-startup-receipt__body{padding:0 12px 12px}.h-earth-runtime-diagnostics__summary{margin:0 0 10px;color:var(--h-earth-muted);font-size:.76rem;line-height:1.45}.h-earth-runtime-diagnostics__ledger,.h-earth-startup-receipt__ledger{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+    .h-earth-runtime-diagnostics__ledger li,.h-earth-startup-receipt__ledger li{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:10px;padding:8px 10px;border-radius:9px;background:rgba(255,255,255,.035);font-family:var(--h-earth-mono);font-size:.7rem}.h-earth-runtime-diagnostics__ledger code,.h-earth-startup-receipt__ledger code{overflow-wrap:anywhere;color:var(--h-earth-text)}.h-earth-runtime-diagnostics__ledger output,.h-earth-startup-receipt__ledger output{font-weight:800;text-align:right}
+    .h-earth-runtime-diagnostics__ledger li[data-status="PASS"] output,.h-earth-startup-receipt__ledger li[data-status="PASS"] output{color:#94efbc}.h-earth-runtime-diagnostics__ledger li[data-status="FAIL"] output,.h-earth-startup-receipt__ledger li[data-status="FAIL"] output{color:#ff9f9f}.h-earth-runtime-diagnostics__ledger li[data-status="PENDING"] output{color:#ffd78a}.h-earth-startup-receipt__ledger li[data-status="NOT_REACHED"] output{color:#9fb0bd}
+    .h-earth-runtime-diagnostics__error{margin:10px 0 0;padding:10px;border-radius:9px;background:rgba(120,20,20,.22);color:#ffd2d2;font-family:var(--h-earth-mono);font-size:.7rem;white-space:pre-wrap;overflow-wrap:anywhere}.h-earth-runtime-diagnostics__facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}.h-earth-runtime-diagnostics__facts div{padding:8px;border-radius:9px;background:rgba(255,255,255,.035)}.h-earth-runtime-diagnostics__facts dt{color:var(--h-earth-soft);font-size:.62rem;text-transform:uppercase}.h-earth-runtime-diagnostics__facts dd{margin:3px 0 0;color:var(--h-earth-text);font-family:var(--h-earth-mono);font-size:.68rem;overflow-wrap:anywhere}
+    .h-earth-startup-receipt__result{padding:10px;border-radius:9px;background:rgba(255,255,255,.035)}.h-earth-startup-receipt__result strong{display:block;margin-bottom:5px}.h-earth-startup-receipt__result p{margin:4px 0}.h-earth-startup-receipt__technical{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--h-earth-mono);font-size:.68rem}.h-earth-startup-receipt__actions{display:flex;gap:8px;margin:10px 0}.h-earth-startup-receipt__actions button{padding:8px 10px}
+    @media(max-width:820px){.h-earth-live-arrival{grid-template-columns:1fr}.h-earth-live-details .telemetry{grid-template-columns:repeat(3,minmax(0,1fr))}.h-earth-runtime-diagnostics__facts{grid-template-columns:1fr 1fr}}@media(max-width:520px){.h-earth-live-route{--h-earth-stage-min-height:max(520px,66dvh)}.h-earth-live-route .h-earth-3d-public-header{align-items:stretch;flex-direction:column}.h-earth-live-route .h-earth-3d-public-nav{display:grid;grid-template-columns:1fr 1fr}.h-earth-live-details .telemetry{grid-template-columns:repeat(2,minmax(0,1fr))}.h-earth-runtime-diagnostics__ledger li,.h-earth-startup-receipt__ledger li{grid-template-columns:1fr}.h-earth-runtime-diagnostics__ledger output,.h-earth-startup-receipt__ledger output{text-align:left}.h-earth-runtime-diagnostics__facts{grid-template-columns:1fr}}

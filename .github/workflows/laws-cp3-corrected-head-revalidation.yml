@@ -1,11 +1,9 @@
 name: Laws CP3 Corrected Head Revalidation
 
 on:
-  push:
-    branches:
-      - agent/laws-cp3-corrected-head-revalidation-001
-    paths:
-      - .github/workflows/laws-cp3-corrected-head-revalidation.yml
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -17,6 +15,7 @@ concurrency:
 
 jobs:
   revalidate:
+    if: github.event.pull_request.head.ref == 'agent/laws-cp3-corrected-head-revalidation-001'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

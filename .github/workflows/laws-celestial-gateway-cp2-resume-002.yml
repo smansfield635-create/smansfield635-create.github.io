@@ -20,6 +20,7 @@ jobs:
       - name: Restore crystal registry finalization and constellation anchor
         run: |
           set -euo pipefail
+          echo "REPAIR_SYNC=002"
           python3 - <<'PY'
           from pathlib import Path
           path = Path('laws/index.crystals.js')

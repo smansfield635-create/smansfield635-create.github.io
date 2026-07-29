@@ -33,7 +33,8 @@ function executeOnce(){
   const receipt=readJson(RECEIPT_PATH);
   const issues=[];
   const actualHead=git('rev-parse','HEAD');
-  const changedPaths=sortedUnique(git('diff','--name-only',`${ADMISSION_MAIN_HEAD}..HEAD`).split('\n').filter(Boolean));
+  const mergeBase=git('merge-base',ADMISSION_MAIN_HEAD,'HEAD');
+  const changedPaths=sortedUnique(git('diff','--name-only',`${mergeBase}..HEAD`).split('\n').filter(Boolean));
   const allowed=new Set([...EXPECTED_DURABLE_PATHS,TEMPORARY_WORKFLOW_PATH]);
   const unexpected=changedPaths.filter(path=>!allowed.has(path));
   if(unexpected.length)issues.push(`UNEXPECTED_CHANGED_PATHS:${unexpected.join(',')}`);
@@ -42,7 +43,16 @@ function executeOnce(){
   if(!exact(disposition.plannedDurableCandidatePaths,EXPECTED_DURABLE_PATHS))issues.push('PLANNED_DURABLE_PATH_SET_MISMATCH');
   if(disposition.artifactIdentity?.verifiedControllingBase!==VERIFIED_CONTROLLING_BASE)issues.push('VERIFIED_CONTROLLING_BASE_MISMATCH');
   if(disposition.artifactIdentity?.admissionMainHead!==ADMISSION_MAIN_HEAD)issues.push('ADMISSION_MAIN_HEAD_MISMATCH');
-  const frozen=(disposition.frozenInputInventory??[]).map(record=>{const exists=fs.existsSync(record.path);const actual=exists?git('hash-object',record.path):null;const matches=actual===record.gitBlob;if(!matches)issues.push(`FROZEN_INPUT_MISMATCH:${record.path}:${actual}:${record.gitBlob}`);return freeze({...record,exists,actualGitBlob:actual,matches})});
+  const frozen=(disposition.frozenInputInventory??[]).map(record=>{
+    const durableMutationTarget=EXPECTED_DURABLE_PATHS.includes(record.path);
+    const currentExists=fs.existsSync(record.path);
+    const actualGitBlob=durableMutationTarget
+      ? git('rev-parse',`${VERIFIED_CONTROLLING_BASE}:${record.path}`)
+      : currentExists?git('hash-object',record.path):null;
+    const matches=actualGitBlob===record.gitBlob;
+    if(!matches)issues.push(`FROZEN_INPUT_MISMATCH:${record.path}:${actualGitBlob}:${record.gitBlob}`);
+    return freeze({...record,currentExists,verifiedAt:durableMutationTarget?VERIFIED_CONTROLLING_BASE:'CURRENT_HEAD',actualGitBlob,matches});
+  });
   if(frozen.length!==24)issues.push(`FROZEN_INPUT_COUNT:${frozen.length}`);
   if(receipt.status!=='FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED'||receipt.eligible!==true)issues.push('FP05_RECEIPT_NOT_PASS_CLOSED');
   if(receipt.areaDispositionCount!==4||receipt.completeLifecycleDispositionCount!==4)issues.push('AREA_DISPOSITION_COUNT_MISMATCH');
@@ -62,19 +72,24 @@ function executeOnce(){
   if(registryFacade.resolveHEarthRepositoryRegistryPath(`/${RECEIPT_PATH}`).resolved!==true)issues.push('FINAL_RECEIPT_PATH_NOT_REGISTRY_RESOLVED');
   const pairPass=(receipt.pairRelationshipMatrix??[]).every(record=>record.status==='PASS');
   const preservationPass=(receipt.preservationLaws??[]).every(record=>record.status==='PASS');
+  const protectedMutationPaths=frozen
+    .filter(record=>changedPaths.includes(record.path)&&!EXPECTED_DURABLE_PATHS.includes(record.path))
+    .map(record=>record.path);
+  if(protectedMutationPaths.length)issues.push(`PROTECTED_MUTATION_PATHS:${protectedMutationPaths.join(',')}`);
   return freeze({
     schemaVersion:'H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_REPOSITORY_ADMISSION_RECEIPT_v1',
     eligible:issues.length===0,
     status:issues.length===0?'FINAL_PLACEMENT_REPOSITORY_ADMISSION_PASS_CLOSED':'FINAL_PLACEMENT_REPOSITORY_ADMISSION_FAIL_STOPPED',
     admissionMainHead:ADMISSION_MAIN_HEAD,
     verifiedControllingBase:VERIFIED_CONTROLLING_BASE,
+    mergeBase,
     executedHead:actualHead,
     changedPaths,
     expectedDurablePaths:EXPECTED_DURABLE_PATHS,
     exactExpectedPathSet:unexpected.length===0&&EXPECTED_DURABLE_PATHS.every(path=>changedPaths.includes(path)),
     frozenInputCount:frozen.length,
     exactFrozenInputMatchCount:frozen.filter(record=>record.matches).length,
-    protectedMutationPaths:frozen.filter(record=>changedPaths.includes(record.path)).map(record=>record.path),
+    protectedMutationPaths,
     finalPlacementStatus:receipt.status,
     areaDispositionCount:receipt.areaDispositionCount,
     completeLifecycleDispositionCount:receipt.completeLifecycleDispositionCount,

@@ -42,8 +42,12 @@ const SIGHTLINE_WITNESS = freeze({ from: { x: 72, z: -172 }, to: { x: 72, z: -18
 
 export const H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS = freeze({
   contractId: 'H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS_v1',
-  checkpointId: 'GR-CR-01K',
-  status: 'CANDIDATE_ENVELOPE_DERIVATION_ENABLED',
+  checkpointId: 'GR-CR-01L',
+  status: 'INTEGRATED_HARNESS_DETERMINISM_EXECUTION_ENABLED',
+  completedMicroCheckpoints: freeze([
+    'GR-CR-01A', 'GR-CR-01B', 'GR-CR-01C', 'GR-CR-01D', 'GR-CR-01E', 'GR-CR-01F',
+    'GR-CR-01G', 'GR-CR-01H', 'GR-CR-01I', 'GR-CR-01J', 'GR-CR-01K'
+  ]),
   sourceImportsEstablished: true,
   terrainSamplingExecuted: true,
   terrainMetricExtractionEnabled: true,
@@ -52,10 +56,11 @@ export const H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS = freeze
   connectedSurfaceSearchEnabled: true,
   terrainOcclusionSightlineEnabled: true,
   candidateEnvelopeDerivationEnabled: true,
+  integratedDeterminismExecutionEnabled: true,
   areaCandidateCoordinatesDerived: false,
   selfTestEnvelopeDerived: true,
-  durableReceiptEmitted: false,
-  nextCheckpoint: 'GR-CR-01L_EXECUTE_INTEGRATED_DETERMINISM_RECEIPT'
+  nextSection: 'GR-CR-02_ENTRY_ZONE',
+  nextSectionExecuted: false
 });
 
 function importIssues() {
@@ -176,10 +181,7 @@ export function deriveGRCRCandidateEnvelope(connectedSurface, { envelopeId = 'GR
   const zs = samples.map((sample) => sample.world.z);
   const elevations = samples.map((sample) => sample.elevation);
   const slopes = samples.map((sample) => sample.slope);
-  const center = freeze({
-    x: xs.reduce((sum, value) => sum + value, 0) / xs.length,
-    z: zs.reduce((sum, value) => sum + value, 0) / zs.length
-  });
+  const center = freeze({ x: xs.reduce((sum, value) => sum + value, 0) / xs.length, z: zs.reduce((sum, value) => sum + value, 0) / zs.length });
   const envelopeCore = {
     envelopeId,
     selfTestOnly,
@@ -196,32 +198,69 @@ export function deriveGRCRCandidateEnvelope(connectedSurface, { envelopeId = 'GR
   return freeze({ eligible: true, status: 'CANDIDATE_ENVELOPE_DERIVED_NONFINAL', ...envelopeCore, envelopeDigest: digest(envelopeCore), issues: freeze([]) });
 }
 
-export function evaluateGRCR01KCandidateEnvelope() {
-  const sampleA = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
-  const sampleB = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
+function executeIntegratedCore() {
+  const issues = importIssues();
+  const witnessA = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
+  const witnessB = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
+  const metrics = extractGRCRTerrainMetrics(WITNESS.x, WITNESS.z);
   const membership = resolveGRCRFormationMembership(FORMATION_WITNESS.x, FORMATION_WITNESS.z);
   const projection = resolveGRCRSemanticAddressProjection(ADDRESS_WITNESS.x, ADDRESS_WITNESS.z);
   const connected = searchGRCRConnectedSurface({ centerX: CONNECTED_SURFACE_WITNESS.x, centerZ: CONNECTED_SURFACE_WITNESS.z });
   const sightline = evaluateGRCRTerrainSightline(SIGHTLINE_WITNESS);
   const envelope = deriveGRCRCandidateEnvelope(connected);
-  const envelopeRepeat = deriveGRCRCandidateEnvelope(connected);
-  const issues = importIssues();
-  if (sampleA?.valid !== true || sampleB?.valid !== true) issues.push('WITNESS_SAMPLE_INVALID');
-  if (stable(sampleA) !== stable(sampleB)) issues.push('REPEATED_WITNESS_NOT_BYTE_STABLE');
+
+  if (witnessA?.valid !== true || witnessB?.valid !== true) issues.push('WITNESS_SAMPLE_INVALID');
+  if (stable(witnessA) !== stable(witnessB)) issues.push('REPEATED_WITNESS_NOT_BYTE_STABLE');
+  if (metrics.valid !== true || ![metrics.elevation, metrics.gradient?.x, metrics.gradient?.z, metrics.slope, metrics.curvature].every(Number.isFinite)) issues.push('TERRAIN_METRICS_INVALID');
   if (!membership.formationIds.includes('H_EARTH_NAVIGABLE_HILL_001')) issues.push('HILL_FORMATION_WITNESS_NOT_RESOLVED');
-  if (projection.valid !== true || !String(projection.selectedSemanticAddressId).endsWith(':R06:C11')) issues.push('SEMANTIC_PROJECTION_WITNESS_FAILED');
+  if (projection.valid !== true || projection.targetSemanticCoordinate?.row !== 6 || projection.targetSemanticCoordinate?.column !== 11 || !String(projection.selectedSemanticAddressId).endsWith(':R06:C11')) issues.push('SEMANTIC_PROJECTION_WITNESS_FAILED');
   if (connected.eligible !== true || connected.sampleCount < 2) issues.push('CONNECTED_SURFACE_WITNESS_FAILED');
-  if (sightline.valid !== true || sightline.samples.length !== 23) issues.push('SIGHTLINE_WITNESS_FAILED');
+  if (sightline.valid !== true || sightline.samples.length !== 23 || !Number.isFinite(sightline.maximumObstruction)) issues.push('SIGHTLINE_WITNESS_FAILED');
   if (envelope.eligible !== true || envelope.selfTestOnly !== true || envelope.accepted !== false) issues.push('CANDIDATE_ENVELOPE_WITNESS_FAILED');
-  if (envelope.envelopeDigest !== envelopeRepeat.envelopeDigest) issues.push('CANDIDATE_ENVELOPE_NONDETERMINISTIC');
+
   return freeze({
-    checkpointId: 'GR-CR-01K',
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'GR_CR_01K_CANDIDATE_ENVELOPE_PASS' : 'GR_CR_01K_CANDIDATE_ENVELOPE_FAIL',
-    envelope,
-    envelopeRepeatDigest: envelopeRepeat.envelopeDigest,
+    issues: freeze(issues),
+    importedContractIds: freeze({
+      successorTerrain: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,
+      formations: H_EARTH_TERRAIN_FORMATIONS_CONTRACT_ID,
+      realizationPlanner: H_EARTH_LANDSCAPE_REALIZATION_PLANNER_CONTRACT_ID,
+      successorMountain: H_EARTH_RUN_8A_MOUNTAIN_DIMENSIONAL_SURFACE_CONTRACT.contractId
+    }),
+    witness: freeze({ coordinate: WITNESS, elevation: witnessA.elevation, sampleDigest: digest(witnessA) }),
+    terrainMetrics: freeze({ elevation: metrics.elevation, gradient: metrics.gradient, slope: metrics.slope, curvature: metrics.curvature }),
+    formationWitness: freeze({ coordinate: FORMATION_WITNESS, formationIds: membership.formationIds, mountainContribution: membership.successorMountainContribution }),
+    semanticProjectionWitness: freeze({ coordinate: ADDRESS_WITNESS, chunkId: projection.chunkId, selectedSemanticAddressId: projection.selectedSemanticAddressId, targetSemanticCoordinate: projection.targetSemanticCoordinate, projectionModel: projection.projectionModel }),
+    connectedSurfaceWitness: freeze({ coordinate: CONNECTED_SURFACE_WITNESS, sampleCount: connected.sampleCount, digest: digest(connected) }),
+    sightlineWitness: freeze({ ...SIGHTLINE_WITNESS, clear: sightline.clear, blockedSampleCount: sightline.blockedSampleCount, maximumObstruction: sightline.maximumObstruction, digest: digest(sightline) }),
+    envelopeWitness: freeze({ envelopeId: envelope.envelopeId, selfTestOnly: envelope.selfTestOnly, accepted: envelope.accepted, bounds: envelope.bounds, elevationRange: envelope.elevationRange, slopeRange: envelope.slopeRange, connectedSampleCount: envelope.connectedSampleCount, envelopeDigest: envelope.envelopeDigest })
+  });
+}
+
+export function executeGRCR01IntegratedHarness() {
+  const first = executeIntegratedCore();
+  const second = executeIntegratedCore();
+  const firstDigest = digest(first);
+  const secondDigest = digest(second);
+  const deterministic = firstDigest === secondDigest;
+  const issues = [...first.issues];
+  if (!deterministic) issues.push('INTEGRATED_REPEAT_EXECUTION_NONDETERMINISTIC');
+  return freeze({
+    schemaVersion: 'H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS_RECEIPT_v1',
+    checkpointId: 'GR-CR-01L',
+    sectionId: 'GR-CR-01_ANALYSIS_HARNESS',
+    eligible: issues.length === 0,
+    status: issues.length === 0 ? 'GR_CR_01L_INTEGRATED_HARNESS_PASS' : 'GR_CR_01L_INTEGRATED_HARNESS_FAIL',
+    sectionStatus: issues.length === 0 ? 'PASS_CLOSED' : 'FAIL_STOPPED',
+    completedMicroCheckpoints: freeze(['01A','01B','01C','01D','01E','01F','01G','01H','01I','01J','01K','01L']),
+    firstExecutionDigest: firstDigest,
+    secondExecutionDigest: secondDigest,
+    deterministicRepeatExecution: deterministic,
+    evidence: first,
     areaCandidateCoordinatesDerived: false,
     selfTestEnvelopeDerived: true,
+    entryZoneMeasurementExecuted: false,
+    nextSection: 'GR-CR-02_ENTRY_ZONE',
     terrainMutation: false,
     geometryConstruction: false,
     runtimeMutation: false,
@@ -235,7 +274,7 @@ export function evaluateGRCR01KCandidateEnvelope() {
 
 const directExecution = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (directExecution) {
-  const receipt = evaluateGRCR01KCandidateEnvelope();
+  const receipt = executeGRCR01IntegratedHarness();
   const outputPath = process.env.H_EARTH_GR_CR_RECEIPT;
   if (outputPath) fs.writeFileSync(outputPath, `${JSON.stringify(receipt, null, 2)}\n`);
   console.log(JSON.stringify(receipt));

@@ -1,0 +1,59 @@
+name: H-Earth Gratitude Region Coordinate Reconciliation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-gratitude-region-coordinate-reconciliation-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-coordinate-reconciliation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out coordinate-reconciliation branch
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute bounded analysis harness
+        env:
+          H_EARTH_GR_CR_RECEIPT: /tmp/h-earth-gr-cr-receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs \
+            2>&1 | tee /tmp/h-earth-gr-cr.log
+
+      - name: Verify emitted checkpoint receipt when present
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receiptPath = '/tmp/h-earth-gr-cr-receipt.json';
+          if (!fs.existsSync(receiptPath)) process.exit(0);
+          const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+          if (receipt.eligible !== true || !String(receipt.status).endsWith('_PASS')) process.exit(1);
+          if (receipt.terrainMutation !== false) process.exit(1);
+          if (receipt.geometryConstruction !== false) process.exit(1);
+          if (receipt.runtimeMutation !== false) process.exit(1);
+          if (receipt.gameplayMutation !== false) process.exit(1);
+          if (receipt.publicRouteMutation !== false) process.exit(1);
+          if (receipt.productionMutation !== false) process.exit(1);
+          if (receipt.controllingManifestMutation !== false) process.exit(1);
+          NODE
+
+      - name: Upload bounded harness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-coordinate-reconciliation-evidence
+          path: |
+            /tmp/h-earth-gr-cr.log
+            /tmp/h-earth-gr-cr-receipt.json
+          if-no-files-found: warn
+          retention-days: 30

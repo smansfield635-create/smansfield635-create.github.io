@@ -1,7 +1,7 @@
 {
   "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP4_PHYSICAL_ALL_EIGHT_TESTING_v1",
   "checkpoint": "CP4_PHYSICAL_ALL_EIGHT_TESTING",
-  "status": "ACTIVE_BOUNDED_TESTING",
+  "status": "ACTIVE_BOUNDED_TABLET_FLUIDITY_RETEST",
   "lane": "LANE_B",
   "baseHead": "79f0f0cf0b2912bd73df5ab9ad3aff700a98e784",
   "stackedOnBranch": "agent/h-earth-touch-motion-cp3d-runtime-identity-reconciliation-001",
@@ -20,7 +20,12 @@
   "frozenDependencies": {
     "rendererIdentityMutationProhibited": true,
     "packageDeterminismMutationProhibited": true,
-    "rendererPackageStateFrozenAtBaseHead": true,
+    "renderPackageIdentityPreserved": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898",
+    "rendererIdentityPreserved": "H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1",
+    "gestureLatticeMutationPerformed": false,
+    "cameraLawMutationPerformed": false,
+    "navigationAuthorityMutationPerformed": false,
+    "worldGeometryMutationPerformed": false,
     "pr295MergeDependencyPreserved": true
   },
   "testOrder": [
@@ -35,14 +40,14 @@
     "PORTRAIT_LANDSCAPE_CONTINUITY"
   ],
   "requiredObservations": {
-    "cameraResponseImmediate": null,
-    "continuousMotionWhileHeld": null,
-    "motionStopsOnRelease": null,
-    "directionalPairsOpposed": null,
-    "pinchTravelLockStable": null,
-    "noMultiSecondInputBacklog": null,
-    "framePresentationContinuous": null,
-    "worldGeometryPreserved": null,
+    "cameraResponseImmediate": true,
+    "continuousMotionWhileHeld": "PASS_PHONE_PENDING_CORRECTED_TABLET_RETEST",
+    "motionStopsOnRelease": "PASS_EXECUTED_BROWSER_PENDING_PHYSICAL_CONFIRMATION",
+    "directionalPairsOpposed": true,
+    "pinchTravelLockStable": true,
+    "noMultiSecondInputBacklog": "PASS_PHONE_PENDING_CORRECTED_TABLET_RETEST",
+    "framePresentationContinuous": "PASS_PHONE_PENDING_CORRECTED_TABLET_RETEST",
+    "worldGeometryPreserved": true,
     "portraitLandscapeSupported": null
   },
   "referenceDevice": {
@@ -51,24 +56,99 @@
     "samsungOnlyImplementationProhibited": true,
     "allSupportedTouchDevicesRemainTarget": true
   },
+  "physicalEvidence": {
+    "samsungPhone": {
+      "gestureMotion": "SMOOTH_GLIDE_OBSERVED",
+      "guidedAcceptanceRecorder": "NOT_REGISTERING_GESTURE_STREAM",
+      "classification": "PRODUCT_MOTION_PASS_DIAGNOSTIC_RECORDER_DIVERGENCE"
+    },
+    "androidTablet": {
+      "guidedReceiptVersion": "H_EARTH_GUIDED_INTERACTION_ACCEPTANCE_RECEIPT_v2",
+      "terminalState": "COMPLETE",
+      "viewport": {
+        "width": 694,
+        "height": 747,
+        "devicePixelRatio": 1.5
+      },
+      "webglVendor": "Google Inc. (Qualcomm)",
+      "webglRenderer": "ANGLE (Qualcomm, Adreno (TM) 619, OpenGL ES 3.2)",
+      "elapsedSeconds": 44.944,
+      "rendererReadyAtStart": true,
+      "visibleFrameAtStart": true,
+      "framesPresentedDuringSession": 56,
+      "proposalsDuringSession": 56,
+      "requiredStepCount": 8,
+      "stepsResolved": 8,
+      "passCount": 8,
+      "skippedCount": 0,
+      "notCompletedCount": 0,
+      "firstAttemptPassActions": [
+        "TURN_LEFT",
+        "TURN_RIGHT",
+        "PITCH_UP",
+        "PITCH_DOWN",
+        "MOVE_FORWARD",
+        "MOVE_BACKWARD",
+        "ZOOM_IN",
+        "ZOOM_OUT"
+      ],
+      "gestureFunctionalAcceptance": "PASS",
+      "guidedInstrumentQualityAcceptance": "PASS",
+      "separatePhysicalFluidityObservationBeforeCorrection": "POPPING_DRAG_INSTEAD_OF_CONTINUOUS_GLIDE",
+      "functionalDisposition": "PASS_CLOSED",
+      "fluidityDisposition": "RETEST_REQUIRED_AFTER_PRESENTATION_PATH_CORRECTION"
+    }
+  },
+  "tabletFluidityCorrection": {
+    "checkpoint": "CP4_0E_TABLET_FLUIDITY_CORRECTION",
+    "status": "PASS_CLOSED_PENDING_PHYSICAL_TABLET_RETEST",
+    "sourceCorrectionHead": "3f1147bb782134cb67b1f207e92b4c8e4f42c9f5",
+    "correctedPreviewHead": "b2e47d02fd64450281e56bbd33c852c896607212",
+    "correctedPreviewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/b2e47d02fd64450281e56bbd33c852c896607212/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
+    "rootCauseDisposition": "PER_NAVIGATION_FRAME_SYNCHRONOUS_GPU_READBACK_AND_PNG_ENCODING_REMOVED_FROM_CONTINUOUS_PRESENTATION_PATH",
+    "persistentRendererPresentationPathChanged": true,
+    "liveGpuBindingCaptureFrequencyChanged": true,
+    "initialEvidenceCaptureRetained": true,
+    "continuousNavigationReadbackCountExpected": 0,
+    "continuousNavigationPngEncodingCountExpected": 0,
+    "executedTabletSizedBrowserProof": {
+      "status": "PASS",
+      "viewport": {
+        "width": 694,
+        "height": 747,
+        "deviceScaleFactor": 1.5
+      },
+      "sustainedPresentationFrames": 8,
+      "additionalFramebufferReadbacks": 0,
+      "additionalPngEncodes": 0,
+      "postReleasePresentationFrames": 0,
+      "consoleErrors": 0,
+      "pageErrors": 0,
+      "failedRequests": 0
+    },
+    "livePagesDeploymentChanged": false
+  },
   "nonLivePreview": {
     "cp4_0aExactDependencyClosure": "PASS_CLOSED",
     "cp4_0bThreeFileMaterialization": "PASS_CLOSED",
-    "cp4_0cNonLivePublication": "PASS_CLOSED",
-    "materializationHead": "83e15166dafcab2b3718e4f2069c87d2afa11a59",
-    "publicationReceiptHead": "94be6a479a8b8faee2062905d383453c9e4e3647",
-    "previewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/83e15166dafcab2b3718e4f2069c87d2afa11a59/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
+    "cp4_0cInitialNonLivePublication": "PASS_CLOSED",
+    "cp4_0eCorrectedMaterialization": "PASS_CLOSED_PENDING_PHYSICAL_TABLET_RETEST",
+    "materializationHead": "b2e47d02fd64450281e56bbd33c852c896607212",
+    "previewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/b2e47d02fd64450281e56bbd33c852c896607212/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
     "commitPinned": true,
     "livePagesDeploymentChanged": false,
     "physicalTestingMayBegin": true
   },
   "acceptanceBoundary": {
     "exploratoryAndBoundedTestingAuthorized": true,
+    "tabletEightOfEightFunctionalAcceptanceClosed": true,
+    "correctedTabletFluidityPhysicalAcceptanceRequired": true,
+    "portraitLandscapePhysicalAcceptanceRequired": true,
     "cp4AcceptanceAuthorized": false,
     "cp4MergeAuthorized": false,
     "cp3dPassClosedRequiredBeforeIntegration": true,
     "pr295MergeRequiredBeforeIntegration": true
   },
-  "nextAction": "EXECUTE_CP4_0D_PHYSICAL_ALL_EIGHT_TOUCH_TESTING_AGAINST_COMMIT_PINNED_NON_LIVE_PREVIEW",
-  "stoppingBoundary": "STOP_BEFORE_CP4_ACCEPTANCE_MERGE_OR_ANY_RENDERER_OR_PACKAGE_IDENTITY_MUTATION"
+  "nextAction": "EXECUTE_CORRECTED_PHYSICAL_TABLET_FLUIDITY_RELEASE_AND_ORIENTATION_RETEST_AGAINST_COMMIT_PINNED_PREVIEW",
+  "stoppingBoundary": "STOP_BEFORE_CP4_ACCEPTANCE_MERGE_OR_LIVE_DEPLOYMENT"
 }

@@ -51,6 +51,17 @@
     "samsungOnlyImplementationProhibited": true,
     "allSupportedTouchDevicesRemainTarget": true
   },
+  "nonLivePreview": {
+    "cp4_0aExactDependencyClosure": "PASS_CLOSED",
+    "cp4_0bThreeFileMaterialization": "PASS_CLOSED",
+    "cp4_0cNonLivePublication": "PASS_CLOSED",
+    "materializationHead": "83e15166dafcab2b3718e4f2069c87d2afa11a59",
+    "publicationReceiptHead": "94be6a479a8b8faee2062905d383453c9e4e3647",
+    "previewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/83e15166dafcab2b3718e4f2069c87d2afa11a59/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
+    "commitPinned": true,
+    "livePagesDeploymentChanged": false,
+    "physicalTestingMayBegin": true
+  },
   "acceptanceBoundary": {
     "exploratoryAndBoundedTestingAuthorized": true,
     "cp4AcceptanceAuthorized": false,
@@ -58,6 +69,6 @@
     "cp3dPassClosedRequiredBeforeIntegration": true,
     "pr295MergeRequiredBeforeIntegration": true
   },
-  "nextAction": "EXECUTE_BASELINE_ROUTE_AND_FIRST_FRAME_THEN_BEGIN_TURN_LEFT_RIGHT_PHYSICAL_CALIBRATION",
+  "nextAction": "EXECUTE_CP4_0D_PHYSICAL_ALL_EIGHT_TOUCH_TESTING_AGAINST_COMMIT_PINNED_NON_LIVE_PREVIEW",
   "stoppingBoundary": "STOP_BEFORE_CP4_ACCEPTANCE_MERGE_OR_ANY_RENDERER_OR_PACKAGE_IDENTITY_MUTATION"
 }

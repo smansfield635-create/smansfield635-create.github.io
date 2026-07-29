@@ -29,7 +29,7 @@
   - no DOM-mounted planet dependency;
   - center planet rendered by Laws world pass, not CSS;
   - [data-upstream-compass-control] remains semantic click authority;
-  - no visible compass/star label bubbles;
+  - Compass-family category labels use an in-star letter and protected word tab;
   - semantic controls preserved as hit targets;
   - law stars visible only when their family is active or projection-visible;
   - compositor/crystals/interactions compatible;
@@ -2675,4 +2675,89 @@ FALSE
   [data-laws-scene-field]::after {
   content: none;
   display: none;
+}
+
+
+/* LAWS_FIRST_TEST_LABEL_AND_SHELL_CONFORMANCE_20260729A */
+.laws-atlas-key__legend .laws-atlas-key__method {
+  border-color: rgba(124, 220, 255, 0.30);
+  color: rgba(255, 248, 224, 0.96);
+  background: linear-gradient(135deg, rgba(14, 35, 48, 0.78), rgba(45, 35, 18, 0.72));
+  box-shadow: 0 0 18px rgba(124, 220, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.laws-first-method {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  margin-top: 2px;
+  padding: 13px 14px;
+  border: 1px solid rgba(124, 220, 255, 0.20);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(7, 18, 29, 0.86), rgba(30, 24, 13, 0.72));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.laws-first-method__acronym {
+  display: grid;
+  place-items: center;
+  min-width: 4.5rem;
+  min-height: 4.5rem;
+  padding: 0.55rem;
+  border: 1px solid rgba(243, 217, 139, 0.46);
+  border-radius: 50%;
+  color: #120f08;
+  background: radial-gradient(circle at 35% 30%, #fff2b8, #c89d48 68%, #6f5324);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.10em;
+  box-shadow: 0 0 24px rgba(243, 217, 139, 0.14);
+}
+
+.laws-first-method strong {
+  color: rgba(255, 248, 224, 0.98);
+  font-size: 1rem;
+}
+
+.laws-first-method p {
+  margin: 0.28rem 0 0;
+  color: var(--laws-ink-soft);
+  font-size: 0.88rem;
+}
+
+.laws-atlas-key__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.laws-atlas-key__actions > * {
+  width: 100%;
+}
+
+.laws-atlas-key__main-compass {
+  grid-column: 1 / -1;
+}
+
+.laws-atlas-key__return:not([hidden]) {
+  border-color: rgba(124, 220, 255, 0.30);
+  background: linear-gradient(135deg, rgba(7, 24, 37, 0.90), rgba(8, 13, 22, 0.94));
+}
+
+@media (max-width: 560px) {
+  .laws-first-method {
+    grid-template-columns: 1fr;
+  }
+  .laws-first-method__acronym {
+    min-width: 3.8rem;
+    min-height: 3.8rem;
+    justify-self: start;
+  }
+  .laws-atlas-key__actions {
+    grid-template-columns: 1fr;
+  }
+  .laws-atlas-key__main-compass {
+    grid-column: auto;
+  }
 }

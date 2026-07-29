@@ -48,12 +48,15 @@
   data-laws-controller-navigation-authority="true"
   data-laws-controller-registry-source="declared-dom-placeholders"
 
-  data-laws-bounded-round="LAWS_ACTIVE_CLUSTER_SECONDARY_LABELS_20260727A"
+  data-laws-bounded-round="LAWS_FIRST_TEST_LABEL_AND_SHELL_CONFORMANCE_20260729A"
   data-laws-controlling-reference="MAIN_COMPASS"
   data-laws-crystal-face-visibility="canonical-main-corridor-clone"
   data-laws-interaction-model="main-compass-gesture-continuity"
-  data-laws-secondary-label-model="active-cluster-four-law-labels-inward-edge-constrained"
+  data-laws-secondary-label-model="active-cluster-primary-law-label-only"
   data-laws-secondary-label-pointer-authority="none"
+  data-laws-method-acronym="FIRST"
+  data-laws-test-method="cross-cutting-no-fifth-star"
+  data-laws-primary-star-count="4"
 
   data-laws-compositor-required-surface="data-upstream-compass-mount"
   data-laws-crystals-required-surface="data-laws-objects"
@@ -743,7 +746,20 @@
               <strong>S</strong>
               Structure
             </span>
+
+            <span class="laws-atlas-key__method" data-laws-atlas-method="test">
+              <strong>T</strong>
+              Test
+            </span>
           </div>
+
+          <section class="laws-first-method" data-laws-first-method aria-label="FIRST method">
+            <span class="laws-first-method__acronym" aria-label="Flow Integrity Reality Structure Test">FIRST</span>
+            <div>
+              <strong>Every law must pass the Test.</strong>
+              <p>Test is the cross-cutting method applied to Flow, Integrity, Reality, and Structure. It is not a fifth law and does not add a fifth star.</p>
+            </div>
+          </section>
         </div>
 
         <div class="laws-controller-panel__actions laws-atlas-key__actions">
@@ -762,10 +778,14 @@
             class="button laws-atlas-key__return"
             type="button"
             data-laws-return-to-orbit
+            hidden
+            aria-hidden="true"
+            aria-disabled="true"
+            tabindex="-1"
             disabled
           >
             <span data-laws-return-to-orbit-label>
-              Return
+              Return to Orbit
             </span>
           </button>
 

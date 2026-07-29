@@ -5,7 +5,7 @@ const deepFreeze = value => {
 };
 
 export const TOOL_ID = "METAVERSE_FOUR_COMPASS_BENCHMARK_TOOL_v1";
-export const ORIGIN = "https://smansfield635-create.github.io";
+export const ORIGIN = process.env.FOUR_COMPASS_ORIGIN || "https://smansfield635-create.github.io";
 
 export const PROFILES = deepFreeze({
   DESKTOP: {
@@ -67,13 +67,16 @@ export const COMPASS_CORPUS = deepFreeze({
   LAWS_COMPASS: {
     lane: "FOUR_COMPASS_CORPUS",
     route: "/laws/",
-    posture: "NEGATIVE_REFERENCE",
+    posture: "POSITIVE_REFERENCE",
     root: "div[data-laws-root]",
     scene: "[data-laws-scene]",
     gestureSurface: "canvas[data-laws-crystals-canvas='front']",
     cardinal: "button[data-laws-category-control][data-laws-cluster-id='flow']",
     child: "button[data-laws-law-control][data-route='/laws/categories/flow/signals/']",
     returnControl: "[data-laws-return-to-orbit]",
+    categoryLabel: "[data-laws-projected-category-label][data-primary='true']",
+    childLabel: "[data-laws-projected-law-label][data-primary='true']",
+    method: "[data-laws-first-method]",
     panel: "[data-laws-panel], [data-laws-front-host]",
     stateAttr: "data-laws-controller-state"
   }

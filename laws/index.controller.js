@@ -63,7 +63,7 @@
    by the HTML through [data-laws-law][data-route].
 
    Required DOM declaration:
-   - 4 [data-laws-category] controls, one per direction.
+   - 6 [data-laws-category] controls, one per direction.
    - 16 [data-laws-law] controls.
    - Each law declares:
      data-law-id
@@ -78,7 +78,7 @@
 
    Required count:
    - 4 directions
-   - 16 declared law routes
+   - 24 declared child routes
    - 4 laws per direction
 
    Source status:
@@ -161,14 +161,18 @@
     "flow",
     "integrity",
     "reality",
-    "structure"
+    "structure",
+    "test",
+    "research"
   ]);
 
   const DIRECTION_LABELS = Object.freeze({
     flow: "Flow",
     integrity: "Integrity",
     reality: "Reality",
-    structure: "Structure"
+    structure: "Structure",
+    test: "Test",
+    research: "Research"
   });
 
   const AUXILIARY_ROUTES = Object.freeze({
@@ -223,7 +227,10 @@
         0,
         HALF_SQRT_TWO,
         HALF_SQRT_TWO
-      ])
+      ]),
+
+      test: Object.freeze([0, 0, -0.3826834323650898, 0.9238795325112867]),
+      research: Object.freeze([0, 0, 0.3826834323650898, 0.9238795325112867])
     });
 
   const PRESENTATION_BY_STATE = Object.freeze({
@@ -4083,9 +4090,9 @@
 
     return Object.freeze({
       pass: true,
-      categoryCount: 4,
-      lawCount: 16,
-      routeCount: 16,
+      categoryCount: 6,
+      lawCount: 24,
+      routeCount: 24,
       lawsPerDirection: 4,
       registrySource: "declared-dom"
     });
@@ -4204,12 +4211,12 @@
 
   function validateSourceConstants() {
     invariant(
-      DIRECTIONS.length === 4,
+      DIRECTIONS.length === 6,
       "LAWS_DIRECTION_COUNT_INVALID"
     );
 
     invariant(
-      new Set(DIRECTIONS).size === 4,
+      new Set(DIRECTIONS).size === 6,
       "LAWS_DUPLICATE_DIRECTION"
     );
 
@@ -4226,7 +4233,7 @@
 
     return Object.freeze({
       pass: true,
-      directionCount: 4,
+      directionCount: 6,
       controllerContainsLawContent: false
     });
   }
@@ -4527,22 +4534,22 @@
 
   function validateRuntimeRegistry() {
     invariant(
-      registry.lawRecords.length === 16,
+      registry.lawRecords.length === 24,
       "LAWS_RUNTIME_REGISTRY_LAW_COUNT_INVALID"
     );
 
     invariant(
-      registry.lawRoutes.length === 16,
+      registry.lawRoutes.length === 24,
       "LAWS_RUNTIME_REGISTRY_ROUTE_COUNT_INVALID"
     );
 
     invariant(
-      registry.lawById.size === 16,
+      registry.lawById.size === 24,
       "LAWS_RUNTIME_REGISTRY_ID_MAP_INVALID"
     );
 
     invariant(
-      registry.lawByRoute.size === 16,
+      registry.lawByRoute.size === 24,
       "LAWS_RUNTIME_REGISTRY_ROUTE_MAP_INVALID"
     );
 
@@ -4563,8 +4570,8 @@
     return Object.freeze({
       pass: true,
       registrySource: "declared-dom",
-      lawCount: 16,
-      routeCount: 16,
+      lawCount: 24,
+      routeCount: 24,
       lawsPerDirection: 4
     });
   }
@@ -4606,7 +4613,7 @@
 
       pass,
 
-      directionCount: 4,
+      directionCount: 6,
       lawCount: includeDom ? registry.lawRecords.length : 0,
       lawsPerDirection: includeDom ? 4 : 0,
 
@@ -4952,7 +4959,7 @@
               explicitPrimaryIdentityRequired: true,
 
               routeRegistrySource: "declared-dom",
-              directionCount: 4,
+              directionCount: 6,
               lawCount: registry.lawRecords.length,
               lawsPerDirection: 4,
 

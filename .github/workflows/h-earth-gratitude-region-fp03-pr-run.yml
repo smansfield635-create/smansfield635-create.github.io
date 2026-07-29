@@ -1,0 +1,39 @@
+name: H-Earth Gratitude Region FP-03 retrievable execution
+on:
+  pull_request:
+    branches: [agent/h-earth-gratitude-region-fp03-execution-001]
+permissions:
+  contents: read
+jobs:
+  execute-fp03:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Execute the bounded candidate at its exact execution commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXECUTION_COMMIT=65454a6d46764505048599dfcc56abef20e3007b
+          git worktree add --detach /tmp/h-earth-fp03 "$EXECUTION_COMMIT"
+          python3 - <<'PY'
+          from pathlib import Path
+          workflow = Path('/tmp/h-earth-fp03/.github/workflows/h-earth-gratitude-region-final-placement-freeze.yml').read_text()
+          start = workflow.index("          node --input-type=module <<'NODE'\n") + len("          node --input-type=module <<'NODE'\n")
+          end = workflow.index("\n          NODE", start)
+          lines = workflow[start:end].splitlines()
+          Path('/tmp/h-earth-fp03-execute.mjs').write_text('\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n')
+          PY
+          cd /tmp/h-earth-fp03
+          mkdir -p fp03-evidence
+          node /tmp/h-earth-fp03-execute.mjs
+      - name: Upload FP-03 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-fp03-execution-evidence
+          path: /tmp/h-earth-fp03/fp03-evidence
+          if-no-files-found: error
+          retention-days: 90

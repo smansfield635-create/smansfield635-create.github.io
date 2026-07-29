@@ -1,0 +1,44 @@
+name: Temporary Showroom Label Hierarchy Applicator
+
+on:
+  push:
+    branches:
+      - agent/laws-showroom-label-visibility-cp1-001
+
+permissions:
+  contents: write
+
+concurrency:
+  group: showroom-label-hierarchy-applicator
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout applicator commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Apply bounded Showroom label correction
+        run: python3 verification/showroom-label-correction/apply-showroom-label-hierarchy.py
+
+      - name: Validate syntax and final temporary-path absence
+        run: |
+          node --check showroom/index.interactions.js
+          node --check verification/benchmark-tools/four-compass-benchmark-v1/showroom-label-conformance-benchmark.mjs
+          test ! -e verification/showroom-label-correction/apply-showroom-label-hierarchy.py
+          test ! -e .github/workflows/showroom-label-hierarchy-applicator.yml
+          git diff --check
+
+      - name: Commit exact bounded candidate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Apply Showroom label hierarchy and primary-only cluster label"
+          git push origin HEAD:agent/laws-showroom-label-visibility-cp1-001

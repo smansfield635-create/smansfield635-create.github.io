@@ -300,8 +300,18 @@ function executeFP02MirrorManorSiteDisposition(disposition) {
       !(candidate?.hillPair?.drop > 0)) {
     issues.push('MIRROR_MANOR_TWO_HILL_RELATION_NOT_ESTABLISHED');
   }
-  if (!(selectedSite?.terrain?.elevation > corridor?.origin?.elevation)) {
-    issues.push('MIRROR_MANOR_SITE_NOT_ABOVE_LOW_CORRIDOR');
+  const saddleElevation =
+    candidate?.hillPair?.saddle?.metrics?.elevation ??
+    durableReceipt?.twoHillAndCorridorEvidence?.saddle?.y ??
+    null;
+  const siteMinimumElevation =
+    candidate?.envelope?.elevationRange?.minimum ??
+    durableCandidate?.elevationRange?.minimum ??
+    null;
+  if (!Number.isFinite(saddleElevation) ||
+      !Number.isFinite(siteMinimumElevation) ||
+      !(siteMinimumElevation > saddleElevation + 0.25)) {
+    issues.push('MIRROR_MANOR_SITE_NOT_ABOVE_SADDLE_ELEVATION');
   }
   if (candidate?.viewSummary?.beachwardClear !== true) {
     issues.push('MIRROR_MANOR_BEACHWARD_VIEW_NOT_CLEAR');
@@ -402,6 +412,15 @@ function executeFP02MirrorManorSiteDisposition(disposition) {
         candidate?.centerSemanticProjection?.physicalChunkId ?? null
     }) : null,
     twoHillRelationPreserved: passed,
+    upperSiteRelationship: freeze({
+      siteMinimumElevation,
+      saddleElevation,
+      minimumRequiredVerticalSeparation: 0.25,
+      upperSiteConfirmed:
+        Number.isFinite(siteMinimumElevation) &&
+        Number.isFinite(saddleElevation) &&
+        siteMinimumElevation > saddleElevation + 0.25
+    }),
     lowerNaturalApproachPreserved:
       candidate?.approachSummary?.eligible === true,
     lowCorridorPreserved: passed ? freeze({

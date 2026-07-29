@@ -2,91 +2,24 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-// Composes accepted Step 1, post-merge, Step 2, camera-capacity,
-// audit-continuity, renderer-presentation, public-route-interaction,
-// compositor-camera-authority, functional-landscape Run 6, functional
-// environment Runs 7C–7H, Run 7I public/live evidence, Run 8A dimensional
-// reconciliation, Run 8B successor neutral geometry, Run 8C normal-light-
-// material realization, Run 8D grounded vegetation, Run 8E bounded
-// integration-engineering, Run 8 Phase 1 ordered-main-promotion, Run 8
-// Phase 2 deployment reconciliation, Run 8 Phase 3 live-browser-proof,
-// Run 8E mobile-navigation-correction, Run 8E direct-inspection-restoration,
-// Run 8E-R1 profiler, executed R1 repository-package evidence, the
-// reference-device/mobile-compatibility scope correction, the R1
-// reference-device material-ledger preservation and execution overlays, the
-// complete nonfinal Gratitude Region coordinate-reconciliation package, its
-// exact Mirror Manor runner occurrence-identity correction, and its
-// controlling-artifact active-main reference amendment.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.gratitude-region-controlling-artifact-reference-update.js';
-import {
-  deepFreeze,
-  H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY
-} from './h-earth.repository-registry.validator-engine.identity.js';
-
-const directory = path.dirname(fileURLToPath(import.meta.url));
-const readJson = (fileName) => JSON.parse(fs.readFileSync(path.join(directory, fileName), 'utf8'));
-
-const FILES = Object.freeze({
-  consolidated: 'h-earth.repository-registry.validator-contract.json',
-  input: 'h-earth.repository-registry.validator-contract.input.json',
-  receipt: 'h-earth.repository-registry.validator-contract.receipt.json',
-  dispositions: 'h-earth.repository-registry.validator-contract.dispositions.json',
-  failures: 'h-earth.repository-registry.validator-contract.failures.json',
-  criticality: 'h-earth.repository-registry.validator-contract.criticality.json',
-  algorithm: 'h-earth.repository-registry.validator-contract.algorithm.json',
-  instruction: 'h-earth.repository-registry.tool-instruction.json'
-});
-
-export function loadHEarthRepositoryRegistryValidatorDependencies() {
-  const contracts = {
-    consolidated: readJson(FILES.consolidated),
-    input: readJson(FILES.input),
-    receipt: readJson(FILES.receipt),
-    dispositions: readJson(FILES.dispositions),
-    failures: readJson(FILES.failures),
-    criticality: readJson(FILES.criticality),
-    algorithm: readJson(FILES.algorithm),
-    instruction: readJson(FILES.instruction)
-  };
-
-  const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
-  const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
-  const expected = H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY;
-  const identityChecks = {
-    contractId: contracts.consolidated.contractId === expected.contract.contractId,
-    contractVersion: contracts.consolidated.contractVersion === expected.contract.contractVersion,
-    registryId: registryInstance.registryId === expected.registry.registryId,
-    registryVersion: registryInstance.registryVersion === expected.registry.registryVersion,
-    schemaId: registryInstance.schemaId === expected.registry.schemaId,
-    schemaVersion: registryInstance.schemaVersion === expected.registry.schemaVersion,
-    candidateGitBlobSha: discovery.candidateGitBlobSha === expected.registry.candidateGitBlobSha,
-    instructionId: contracts.instruction.instructionId === expected.instruction.instructionId,
-    instructionVersion: contracts.instruction.instructionVersion === expected.instruction.instructionVersion,
-    candidateNotAccepted: registryInstance.accepted === false,
-    candidateNotCanonical: discovery.canonical === false
-  };
-
-  return deepFreeze({
-    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v1',
-    files: FILES,
-    contracts,
-    registryFacade,
-    registryInstance,
-    discovery,
-    identityChecks,
-    identityVerified: Object.values(identityChecks).every(Boolean),
-    boundary: {
-      readOnly: true,
-      networkDependencyRequired: false,
-      mutationAuthorityCreated: false,
-      workflowEnforcementInstalled: false
-    },
-    stoppingCondition: {
-      contractAndRegistryLoaderComplete: true,
-      advanceBeyondTarget4B2: false,
-      nextAuthorizedSubtarget: '4B-3'
-    }
-  });
+// Composes all prior accepted overlays through the executed Gratitude Region
+// final spatial placement disposition. The final-placement overlay establishes
+// placement authority only and does not create construction or product authority.
+import registryFacade, {
+  H_EARTH_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_SCOPE_NODE as FINAL_PLACEMENT_NODE,
+  H_EARTH_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_EVIDENCE as FINAL_PLACEMENT_EVIDENCE
+} from './accepted-amendments/h-earth.repository-registry.gratitude-region-final-spatial-placement-disposition.js';
+import { deepFreeze, H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY } from './h-earth.repository-registry.validator-engine.identity.js';
+const directory=path.dirname(fileURLToPath(import.meta.url));
+const readJson=fileName=>JSON.parse(fs.readFileSync(path.join(directory,fileName),'utf8'));
+const FILES=Object.freeze({consolidated:'h-earth.repository-registry.validator-contract.json',input:'h-earth.repository-registry.validator-contract.input.json',receipt:'h-earth.repository-registry.validator-contract.receipt.json',dispositions:'h-earth.repository-registry.validator-contract.dispositions.json',failures:'h-earth.repository-registry.validator-contract.failures.json',criticality:'h-earth.repository-registry.validator-contract.criticality.json',algorithm:'h-earth.repository-registry.validator-contract.algorithm.json',instruction:'h-earth.repository-registry.tool-instruction.json'});
+export function loadHEarthRepositoryRegistryValidatorDependencies(){
+  const contracts={consolidated:readJson(FILES.consolidated),input:readJson(FILES.input),receipt:readJson(FILES.receipt),dispositions:readJson(FILES.dispositions),failures:readJson(FILES.failures),criticality:readJson(FILES.criticality),algorithm:readJson(FILES.algorithm),instruction:readJson(FILES.instruction)};
+  const registryInstance=registryFacade.getHEarthRepositoryRegistryInstance();
+  const discovery=registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
+  const expected=H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY;
+  const identityChecks={contractId:contracts.consolidated.contractId===expected.contract.contractId,contractVersion:contracts.consolidated.contractVersion===expected.contract.contractVersion,registryId:registryInstance.registryId===expected.registry.registryId,registryVersion:registryInstance.registryVersion===expected.registry.registryVersion,schemaId:registryInstance.schemaId===expected.registry.schemaId,schemaVersion:registryInstance.schemaVersion===expected.registry.schemaVersion,candidateGitBlobSha:discovery.candidateGitBlobSha===expected.registry.candidateGitBlobSha,instructionId:contracts.instruction.instructionId===expected.instruction.instructionId,instructionVersion:contracts.instruction.instructionVersion===expected.instruction.instructionVersion,candidateNotAccepted:registryInstance.accepted===false,candidateNotCanonical:discovery.canonical===false};
+  const finalPlacementChecks={nodeLifecycle:FINAL_PLACEMENT_NODE.lifecycleStatus==='ACCEPTED_FINAL_PLACEMENT_DISPOSITION',evidenceStatus:FINAL_PLACEMENT_EVIDENCE.finalPlacementStatus==='FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED',areaDispositionCount:FINAL_PLACEMENT_EVIDENCE.validationSummary.areaDispositionCount===4,pairRelationshipCount:FINAL_PLACEMENT_EVIDENCE.validationSummary.pairRelationshipCount===6,preservationLawCount:FINAL_PLACEMENT_EVIDENCE.validationSummary.preservationLawCount===13,zeroUnresolvedRequiredPlacementFields:FINAL_PLACEMENT_EVIDENCE.validationSummary.unresolvedRequiredPlacementFieldCount===0,constructionNotAuthorized:FINAL_PLACEMENT_NODE.authorityLimitations.includes('NO_AUTOMATIC_CONSTRUCTION_AUTHORITY')};
+  return deepFreeze({loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v1',files:FILES,contracts,registryFacade,registryInstance,discovery,identityChecks,identityVerified:Object.values(identityChecks).every(Boolean),finalPlacementChecks,finalPlacementDispositionVerified:Object.values(finalPlacementChecks).every(Boolean),boundary:{readOnly:true,networkDependencyRequired:false,mutationAuthorityCreated:false,workflowEnforcementInstalled:false},stoppingCondition:{contractAndRegistryLoaderComplete:true,finalPlacementDispositionLoaded:true,constructionAuthorityCreated:false}});
 }
-
 export default loadHEarthRepositoryRegistryValidatorDependencies;

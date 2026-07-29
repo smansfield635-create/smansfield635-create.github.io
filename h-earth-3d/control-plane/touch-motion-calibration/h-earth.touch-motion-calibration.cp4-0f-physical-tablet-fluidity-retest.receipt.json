@@ -1,0 +1,71 @@
+{
+  "artifactId": "H_EARTH_CP4_PHYSICAL_TABLET_FLUIDITY_RETEST_v1",
+  "checkpoint": "CP4_0F_PHYSICAL_TABLET_FLUIDITY_RETEST",
+  "status": "PASS_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/h-earth-touch-motion-cp4-calibration-testing-001",
+  "correctedPreviewHead": "b2e47d02fd64450281e56bbd33c852c896607212",
+  "correctedPreviewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/b2e47d02fd64450281e56bbd33c852c896607212/h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview/index.html",
+  "device": {
+    "class": "ANDROID_TABLET",
+    "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "pixelRatio": 1.5,
+    "viewport": {
+      "width": 683,
+      "height": 760,
+      "pixelRatio": 1
+    },
+    "webglVendor": "Google Inc. (Qualcomm)",
+    "webglRenderer": "ANGLE (Qualcomm, Adreno (TM) 619, OpenGL ES 3.2)"
+  },
+  "guidedAcceptance": {
+    "version": "H_EARTH_GUIDED_INTERACTION_ACCEPTANCE_RECEIPT_v2",
+    "terminalState": "COMPLETE",
+    "elapsedSeconds": 25.125,
+    "rendererReadyAtStart": true,
+    "visibleFrameAtStart": true,
+    "framesPresentedDuringSession": 67,
+    "proposalsDuringSession": 67,
+    "requiredStepCount": 8,
+    "stepsResolved": 8,
+    "passCount": 8,
+    "skippedCount": 0,
+    "notCompletedCount": 0,
+    "allActionsPassedOnFirstAttempt": true,
+    "gestureFunctionalAcceptance": "PASS",
+    "guidedGestureQualityAcceptance": "PASS"
+  },
+  "physicalObservation": {
+    "sustainedTwoFingerTraversal": "SMOOTH_CONTINUOUS_GLIDE_OBSERVED",
+    "priorPullPopBehavior": "NOT_OBSERVED_AFTER_CORRECTION",
+    "framePacingDisposition": "PASS",
+    "multiSecondInputBacklog": "NOT_OBSERVED",
+    "traversalSpeed": "SMOOTH_BUT_SLOWER_THAN_USER_PREFERENCE",
+    "traversalSpeedDisposition": "NONBLOCKING_FUTURE_CALIBRATION_CANDIDATE",
+    "hardwareConstraintAcceptedByUser": true
+  },
+  "acceptance": {
+    "tabletFunctionalRetest": "PASS_CLOSED",
+    "tabletFluidityRetest": "PASS_CLOSED",
+    "framePacingCorrectionPhysicallyValidated": true,
+    "rendererRegressionObserved": false,
+    "gestureRegressionObserved": false,
+    "speedPreferenceBlocksFluidityAcceptance": false,
+    "portraitLandscapePhysicalAcceptance": "NOT_RECORDED_BY_THIS_RECEIPT",
+    "physicalReleaseTermination": "NOT_RECORDED_BY_THIS_RECEIPT",
+    "cp4FinalAcceptance": "HOLD_PENDING_REMAINING_PHYSICAL_BOUNDARIES",
+    "mergeAuthorized": false,
+    "liveDeploymentAuthorized": false
+  },
+  "mutationBoundary": {
+    "additionalSourceMutationPerformed": false,
+    "rendererIdentityChanged": false,
+    "renderPackageChanged": false,
+    "gestureLatticeChanged": false,
+    "cameraLawChanged": false,
+    "navigationAuthorityChanged": false,
+    "worldGeometryChanged": false
+  },
+  "nextCheckpoint": "CP4_PHYSICAL_RELEASE_AND_ORIENTATION_CONFIRMATION",
+  "stoppingBoundary": "STOP_BEFORE_CP4_FINAL_ACCEPTANCE_MERGE_OR_LIVE_DEPLOYMENT"
+}

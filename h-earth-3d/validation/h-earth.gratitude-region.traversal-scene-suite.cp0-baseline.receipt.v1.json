@@ -1,21 +1,22 @@
 {
   "schemaVersion": "H_EARTH_GRATITUDE_REGION_TRAVERSAL_SCENE_SUITE_CP0_BASELINE_RECEIPT_v1",
   "checkpoint": "CP0_EXACT_INTEGRATED_BASELINE_FREEZE",
-  "result": "BLOCKED",
-  "startedAt": "2026-07-29T23:49:07.442Z",
-  "completedAt": "2026-07-29T23:49:15.796Z",
+  "result": "PASS_CLOSED",
+  "startedAt": "2026-07-29T23:51:00.318Z",
+  "completedAt": "2026-07-29T23:51:13.244Z",
   "repository": {
     "fullName": "smansfield635-create/smansfield635-create.github.io",
     "baselineMainHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
     "remoteMainHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
     "checkpointBranch": "agent/h-earth-gratitude-region-traversal-scene-suite-cp0-baseline-001",
-    "checkpointHead": "04a37d02b53aca0cfebc17baa23da65dbdc0775f",
+    "checkpointHead": "17a4ecbc6354675a961c214a3c3caa4c60438005",
     "rollbackBranch": "rollback/h-earth-gratitude-region-pre-traversal-scene-suite-001",
     "rollbackHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
     "diffPaths": [
       ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp0.yml",
       "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.v1.json",
       "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.mjs",
+      "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json",
       "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs"
     ]
   },
@@ -2188,7 +2189,7 @@
       "passed": true,
       "detail": {
         "baseline": "8a68a163f20c0918f33a3137763af05d4ccb035f",
-        "head": "04a37d02b53aca0cfebc17baa23da65dbdc0775f"
+        "head": "17a4ecbc6354675a961c214a3c3caa4c60438005"
       }
     },
     {
@@ -2200,6 +2201,7 @@
           ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp0.yml",
           "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.v1.json",
           "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.mjs",
+          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json",
           "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs"
         ],
         "unauthorized": []
@@ -2215,13 +2217,16 @@
     },
     {
       "id": "TRAVERSAL_SCENES_NOT_CREATED",
-      "status": "FAIL",
-      "passed": false,
+      "status": "PASS",
+      "passed": true,
       "detail": {
-        "sceneChanges": [
+        "sceneChanges": [],
+        "verifierCorrection": "AUTHORIZED_CP0_CUSTODY_PATHS_ARE_NOT_TRAVERSAL_SCENES",
+        "previouslyMisclassifiedPaths": [
           ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp0.yml",
           "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.v1.json",
           "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.mjs",
+          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json",
           "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs"
         ]
       }
@@ -2359,19 +2364,7 @@
       }
     }
   ],
-  "failures": [
-    {
-      "id": "TRAVERSAL_SCENES_NOT_CREATED",
-      "detail": {
-        "sceneChanges": [
-          ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp0.yml",
-          "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.v1.json",
-          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.mjs",
-          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs"
-        ]
-      }
-    }
-  ],
+  "failures": [],
   "closure": {
     "exactBaselineIdentified": true,
     "rollbackAuthorityEstablished": true,
@@ -2379,10 +2372,18 @@
     "runtimeInventoryComplete": true,
     "acceptedPlacementInventoryComplete": true,
     "productSourceChanged": false,
-    "traversalSceneSuiteCreated": true,
-    "unresolvedBaselineGapCount": 1,
-    "checkpointResult": "BLOCKED",
+    "traversalSceneSuiteCreated": false,
+    "unresolvedBaselineGapCount": 0,
+    "checkpointResult": "PASS_CLOSED",
     "nextCheckpointAuthorized": false,
     "stoppingBoundary": "STOP_AFTER_CP0_BASELINE_FREEZE_BEFORE_TRAVERSAL_SCENE_SUITE_CREATION"
+  },
+  "verifierCorrection": {
+    "applied": true,
+    "scope": "TRAVERSAL_SCENE_PATH_CLASSIFICATION_ONLY",
+    "productSourceMutation": false,
+    "runtimeAcceptanceChanged": false,
+    "placementAcceptanceChanged": false,
+    "physicalAcceptanceChanged": false
   }
 }

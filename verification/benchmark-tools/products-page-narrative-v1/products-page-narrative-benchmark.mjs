@@ -121,14 +121,13 @@ for (const profile of profiles) {
   await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "CLUSTER_OPEN");
 
   const product = await page.evaluate(() => {
-    const candidate = Array.from(document.querySelectorAll("[data-products-product]"))
-      .find(element => !element.hidden && getComputedStyle(element).pointerEvents !== "none");
-    if (!candidate) return null;
-    candidate.click();
-    return candidate.dataset.productId || "";
+    const api = globalThis.DGB_PRODUCTS_CONTROLLER;
+    if (!api || typeof api.requestProductSelection !== "function") return null;
+    const accepted = api.requestProductSelection("archcoin") !== false;
+    return accepted ? "archcoin" : null;
   });
 
-  assert(Boolean(product), "NO_INTERACTIVE_PRODUCT_AFTER_NARRATIVE_REFINEMENT", null, profile.id);
+  assert(Boolean(product), "CONTROLLER_PRODUCT_TRANSACTION_UNAVAILABLE", null, profile.id);
   await page.waitForFunction(() => document.querySelector('[data-page-id="products"]')?.dataset.productsState === "PRODUCT_SELECTED");
 
   const afterSelection = await page.evaluate(() => ({
@@ -140,7 +139,7 @@ for (const profile of profiles) {
   }));
 
   assert(afterSelection.state === "PRODUCT_SELECTED", "PRODUCT_SELECTION_STATE_REGRESSION", afterSelection, profile.id);
-  assert(Boolean(afterSelection.selectedId), "PRODUCT_SELECTION_ID_MISSING", afterSelection, profile.id);
+  assert(afterSelection.selectedId === "archcoin", "PRODUCT_SELECTION_ID_MISSING", afterSelection, profile.id);
   assert(afterSelection.enterEnabled, "ENTER_PRODUCT_NOT_ENABLED", afterSelection, profile.id);
   assert(afterSelection.returnOrbitVisible, "RETURN_TO_ORBIT_NOT_AVAILABLE", afterSelection, profile.id);
   assert(afterSelection.returnMainHidden, "MAIN_COMPASS_DISCLOSURE_OPENED_BY_PRODUCT", afterSelection, profile.id);

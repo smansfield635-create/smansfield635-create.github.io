@@ -9,7 +9,8 @@
   "temporaryValidationBase": "agent/h-earth-gratitude-region-coordinate-reconciliation-validation-base-001",
   "executionCustody": {
     "executedHead": "d5e9076249eff57e834aadfa5224e08a60df03b3",
-    "durableReceiptParentHead": "b4df4bb90f406097e52df5b705f26f50d7397cc1",
+    "durableReceiptCreationHead": "b4df4bb90f406097e52df5b705f26f50d7397cc1",
+    "durableReceiptNormalizationParent": "a29c7422da6d8e4d1e7fc9de2f02b83cb2c9429b",
     "entryReconciliationPath": "h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.mjs",
     "entryReconciliationGitBlob": "b7e5d6378a772e3ba62320e609cb491365002d05",
     "runnerPath": "h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.runner.mjs",

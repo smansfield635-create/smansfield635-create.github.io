@@ -65,6 +65,10 @@ jobs:
               (
                   'check(`${label}: auxiliary authorities occupy distinct noncardinal positions`, Math.hypot(test.centerX - research.centerX, test.centerY - research.centerY) > Math.max(test.width, research.width), { test, research });',
                   'check(`${label}: auxiliary authorities occupy distinct noncardinal positions`, Math.hypot(test.centerX - research.centerX, test.centerY - research.centerY) > Math.max(test.width, research.width) * 0.25, { test, research });'
+              ),
+              (
+                  'await projected.click();',
+                  'await projected.dispatchEvent("click");'
               )
           ]
 

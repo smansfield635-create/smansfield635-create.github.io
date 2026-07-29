@@ -1,6 +1,6 @@
 name: H-Earth Gratitude Region Coordinate Reconciliation
 
-# GR-CR-01L isolated validation trigger after retargeting the draft PR.
+# Isolated validation trigger for bounded GR-CR sections.
 on:
   push:
     branches:
@@ -39,24 +39,37 @@ jobs:
           node h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs \
             2>&1 | tee /tmp/h-earth-gr-cr.log
 
-      - name: Verify emitted checkpoint receipt when present
+      - name: Execute bounded Entry Zone reconciliation
+        env:
+          H_EARTH_GR_CR_ENTRY_RECEIPT: /tmp/h-earth-gr-cr-entry-receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gr-cr-entry.log
+
+      - name: Verify emitted checkpoint receipts
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const receiptPath = '/tmp/h-earth-gr-cr-receipt.json';
-          if (!fs.existsSync(receiptPath)) process.exit(0);
-          const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
-          if (receipt.eligible !== true || !String(receipt.status).endsWith('_PASS')) process.exit(1);
-          if (receipt.terrainMutation !== false) process.exit(1);
-          if (receipt.geometryConstruction !== false) process.exit(1);
-          if (receipt.runtimeMutation !== false) process.exit(1);
-          if (receipt.gameplayMutation !== false) process.exit(1);
-          if (receipt.publicRouteMutation !== false) process.exit(1);
-          if (receipt.productionMutation !== false) process.exit(1);
-          if (receipt.controllingManifestMutation !== false) process.exit(1);
+          const receiptPaths = [
+            '/tmp/h-earth-gr-cr-receipt.json',
+            '/tmp/h-earth-gr-cr-entry-receipt.json'
+          ];
+          for (const receiptPath of receiptPaths) {
+            if (!fs.existsSync(receiptPath)) process.exit(1);
+            const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+            if (receipt.eligible !== true || !String(receipt.status).endsWith('_PASS')) process.exit(1);
+            if (receipt.terrainMutation !== false) process.exit(1);
+            if (receipt.geometryConstruction !== false) process.exit(1);
+            if (receipt.runtimeMutation !== false) process.exit(1);
+            if (receipt.gameplayMutation !== false) process.exit(1);
+            if (receipt.publicRouteMutation !== false) process.exit(1);
+            if (receipt.productionMutation !== false) process.exit(1);
+            if (receipt.controllingManifestMutation !== false) process.exit(1);
+          }
           NODE
 
-      - name: Upload bounded harness evidence
+      - name: Upload bounded reconciliation evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -64,5 +77,7 @@ jobs:
           path: |
             /tmp/h-earth-gr-cr.log
             /tmp/h-earth-gr-cr-receipt.json
+            /tmp/h-earth-gr-cr-entry.log
+            /tmp/h-earth-gr-cr-entry-receipt.json
           if-no-files-found: warn
           retention-days: 30

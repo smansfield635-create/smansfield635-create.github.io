@@ -1,4 +1,10 @@
-import { extractGRCRTerrainMetrics } from './h-earth.gratitude-region.coordinate-reconciliation.harness.mjs';
+import crypto from 'node:crypto';
+import {
+  deriveGRCRCandidateEnvelope,
+  extractGRCRTerrainMetrics,
+  resolveGRCRFormationMembership,
+  resolveGRCRSemanticAddressProjection
+} from './h-earth.gratitude-region.coordinate-reconciliation.harness.mjs';
 import {
   H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID,
   H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,
@@ -12,13 +18,19 @@ const freeze = (value, seen = new WeakSet()) => {
   Object.values(value).forEach((nested) => freeze(nested, seen));
   return Object.isFrozen(value) ? value : Object.freeze(value);
 };
+const stable = (value) => value === null || typeof value !== 'object'
+  ? JSON.stringify(value)
+  : Array.isArray(value)
+    ? `[${value.map(stable).join(',')}]`
+    : `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stable(value[key])}`).join(',')}}`;
+const digest = (value) => crypto.createHash('sha256').update(stable(value)).digest('hex');
 const keyOf = (x, z) => `${x},${z}`;
 
 export const H_EARTH_GRATITUDE_REGION_ENTRY_ZONE_RECONCILIATION = freeze({
   contractId: 'H_EARTH_GRATITUDE_REGION_ENTRY_ZONE_RECONCILIATION_v1',
-  checkpointId: 'GR-CR-02F',
-  status: 'FIRST_LAWFUL_INLAND_EXIT_SEARCH_ENABLED',
-  completedMicroCheckpoints: freeze(['GR-CR-02A', 'GR-CR-02B', 'GR-CR-02C', 'GR-CR-02D', 'GR-CR-02E', 'GR-CR-02F']),
+  checkpointId: 'GR-CR-02G',
+  status: 'NONFINAL_ENTRY_ENVELOPE_DERIVATION_ENABLED',
+  completedMicroCheckpoints: freeze(['GR-CR-02A', 'GR-CR-02B', 'GR-CR-02C', 'GR-CR-02D', 'GR-CR-02E', 'GR-CR-02F', 'GR-CR-02G']),
   finalCoordinatesAssigned: false,
   terrainMutation: false,
   geometryConstruction: false
@@ -39,21 +51,27 @@ export function traceGRCREntryShoreline({ xMinimum = -96, xMaximum = 96, xStep =
   for (let x = xMinimum; x <= xMaximum; x += xStep) {
     let previous = extractGRCRTerrainMetrics(x, landwardZ);
     let crossing = null;
+    let nearest = previous.valid ? { z: previous.world.z, elevation: previous.elevation, distance: Math.abs(previous.elevation - seaLevel) } : null;
     for (let z = landwardZ + zStep; z <= waterwardZ; z += zStep) {
       const current = extractGRCRTerrainMetrics(x, z);
+      if (current.valid) {
+        const distance = Math.abs(current.elevation - seaLevel);
+        if (!nearest || distance < nearest.distance) nearest = { z: current.world.z, elevation: current.elevation, distance };
+      }
       if (!previous.valid || !current.valid) { previous = current; continue; }
       if (previous.elevation > seaLevel && current.elevation <= seaLevel) {
         const denominator = current.elevation - previous.elevation;
         const fraction = denominator === 0 ? 0 : (seaLevel - previous.elevation) / denominator;
-        crossing = freeze({ x, z: previous.world.z + fraction * (current.world.z - previous.world.z), seaLevel, landElevation: previous.elevation, waterElevation: current.elevation });
+        crossing = freeze({ x, z: previous.world.z + fraction * (current.world.z - previous.world.z), seaLevel, method: 'ZERO_CROSSING_INTERPOLATION', landElevation: previous.elevation, waterElevation: current.elevation });
         break;
       }
       previous = current;
     }
+    if (!crossing && nearest) crossing = freeze({ x, z: nearest.z, seaLevel, method: 'NEAREST_SEA_LEVEL_SAMPLE', sampleElevation: nearest.elevation, absoluteSeaLevelDistance: nearest.distance });
     traces.push(freeze({ x, crossing }));
   }
   const crossings = traces.filter((entry) => entry.crossing !== null).map((entry) => entry.crossing);
-  return freeze({ checkpointId: 'GR-CR-02C', eligible: crossings.length >= 3, traceCount: traces.length, crossingCount: crossings.length, crossings: freeze(crossings), unresolvedX: freeze(traces.filter((entry) => entry.crossing === null).map((entry) => entry.x)), finalBoundary: false });
+  return freeze({ checkpointId: 'GR-CR-02C', eligible: crossings.length >= 3, traceCount: traces.length, crossingCount: crossings.length, exactCrossingCount: crossings.filter((entry) => entry.method === 'ZERO_CROSSING_INTERPOLATION').length, approximateCrossingCount: crossings.filter((entry) => entry.method === 'NEAREST_SEA_LEVEL_SAMPLE').length, crossings: freeze(crossings), unresolvedX: freeze(traces.filter((entry) => entry.crossing === null).map((entry) => entry.x)), finalBoundary: false });
 }
 
 export function deriveGRCREntryWaterwardExclusion(shoreline = traceGRCREntryShoreline(), { landwardSafetyBuffer = 2 } = {}) {
@@ -61,13 +79,12 @@ export function deriveGRCREntryWaterwardExclusion(shoreline = traceGRCREntryShor
   const zs = shoreline.crossings.map((crossing) => crossing.z);
   const xs = shoreline.crossings.map((crossing) => crossing.x);
   const exclusionStartZ = Math.min(...zs) - landwardSafetyBuffer;
-  return freeze({ checkpointId: 'GR-CR-02D', eligible: true, status: 'WATERWARD_EXCLUSION_DERIVED_NONFINAL', waterwardDirection: 'INCREASING_WORLD_Z', exclusionRule: `WORLD_Z_GREATER_THAN_OR_EQUAL_TO_${exclusionStartZ}`, exclusionStartZ, xRange: freeze({ minimum: Math.min(...xs), maximum: Math.max(...xs) }), shorelineZRange: freeze({ minimum: Math.min(...zs), maximum: Math.max(...zs) }), landwardSafetyBuffer, accepted: false, finalBoundary: false, issues: freeze([]) });
+  return freeze({ checkpointId: 'GR-CR-02D', eligible: true, status: 'WATERWARD_EXCLUSION_DERIVED_NONFINAL', waterwardDirection: 'INCREASING_WORLD_Z', exclusionStartZ, xRange: freeze({ minimum: Math.min(...xs), maximum: Math.max(...xs) }), shorelineZRange: freeze({ minimum: Math.min(...zs), maximum: Math.max(...zs) }), landwardSafetyBuffer, accepted: false, finalBoundary: false, issues: freeze([]) });
 }
 
-export function searchGRCREntrySafeOrientationSurface({ radius = 24, step = 4, maximumSlope = 0.45, maximumNeighborElevationDelta = 3, minimumElevationAboveSea = 0.25 } = {}) {
+export function searchGRCREntrySafeOrientationSurface({ radius = 24, step = 4, maximumSlope = 0.6, maximumNeighborElevationDelta = 4, minimumElevationAboveSea = 0.25 } = {}) {
   const coast = H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.COAST;
-  const shoreline = traceGRCREntryShoreline();
-  const exclusion = deriveGRCREntryWaterwardExclusion(shoreline);
+  const exclusion = deriveGRCREntryWaterwardExclusion();
   if (!exclusion.eligible) return freeze({ checkpointId: 'GR-CR-02E', eligible: false, status: 'WATERWARD_EXCLUSION_REQUIRED', samples: freeze([]), issues: freeze(['WATERWARD_EXCLUSION_INELIGIBLE']) });
   const seaLevel = H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain.seaLevelY;
   const points = new Map();
@@ -99,7 +116,7 @@ export function searchGRCREntrySafeOrientationSurface({ radius = 24, step = 4, m
   return freeze({ checkpointId: 'GR-CR-02E', eligible: samples.length >= 5, status: samples.length >= 5 ? 'SAFE_ORIENTATION_SURFACE_DERIVED_NONFINAL' : 'SAFE_ORIENTATION_SURFACE_INSUFFICIENT', orientationBasis: freeze({ yawDegrees: coast.yawDegrees, pitchDegrees: coast.pitchDegrees, eyeHeight: H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.eyeHeight }), centerAnchor: freeze({ ...coast.position }), radius, step, maximumSlope, minimumElevationAboveSea, waterwardExclusionStartZ: exclusion.exclusionStartZ, sampleCount: samples.length, samples: freeze(samples), accepted: false, finalBoundary: false, issues: freeze(samples.length >= 5 ? [] : ['INSUFFICIENT_SAFE_SURFACE']) });
 }
 
-export function identifyGRCREntryFirstLawfulInlandExit({ sampleSpacing = 2, minimumInlandDistance = 12, maximumSlope = 0.55, minimumElevationAboveSea = 0.25 } = {}) {
+export function identifyGRCREntryFirstLawfulInlandExit({ sampleSpacing = 2, minimumInlandDistance = 12, maximumSlope = 0.65, minimumElevationAboveSea = 0.25 } = {}) {
   const coast = H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.COAST;
   const berm = H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.BERM;
   const seaLevel = H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain.seaLevelY;
@@ -119,6 +136,81 @@ export function identifyGRCREntryFirstLawfulInlandExit({ sampleSpacing = 2, mini
     if (!exit && traveled >= minimumInlandDistance && lawful) exit = sample;
   }
   return freeze({ checkpointId: 'GR-CR-02F', eligible: exit !== null, status: exit ? 'FIRST_LAWFUL_INLAND_EXIT_DERIVED_NONFINAL' : 'NO_LAWFUL_INLAND_EXIT_FOUND', coastAnchor: freeze({ ...coast.position }), bermAnchor: freeze({ ...berm.position }), pathLength: distance, sampleSpacing, pathSampleCount: pathSamples.length, pathSamples: freeze(pathSamples), firstLawfulExit: exit, accepted: false, finalCoordinate: false, issues: freeze(exit ? [] : ['NO_LAWFUL_INLAND_EXIT']) });
+}
+
+export function deriveGRCREntryCandidateEnvelope() {
+  const coast = sampleGRCREntryCoastAnchor();
+  const berm = sampleGRCREntryBermAnchor();
+  const shoreline = traceGRCREntryShoreline();
+  const exclusion = deriveGRCREntryWaterwardExclusion(shoreline);
+  const safe = searchGRCREntrySafeOrientationSurface();
+  const inland = identifyGRCREntryFirstLawfulInlandExit();
+  const samplesByKey = new Map();
+  for (const sample of safe.samples ?? []) samplesByKey.set(keyOf(sample.world.x, sample.world.z), sample);
+  for (const sample of inland.pathSamples ?? []) if (sample.lawful && sample.metrics?.valid) samplesByKey.set(keyOf(sample.metrics.world.x, sample.metrics.world.z), sample.metrics);
+  if (berm.terrain?.valid) samplesByKey.set(keyOf(berm.terrain.world.x, berm.terrain.world.z), berm.terrain);
+  const samples = [...samplesByKey.values()].sort((a, b) => a.world.z - b.world.z || a.world.x - b.world.x);
+  const surface = freeze({ eligible: samples.length > 0, step: 4, samples: freeze(samples) });
+  const envelope = deriveGRCRCandidateEnvelope(surface, { envelopeId: 'GRATITUDE_REGION_ENTRY_ZONE_CANDIDATE_01', selfTestOnly: false });
+  const centerMembership = envelope.eligible ? resolveGRCRFormationMembership(envelope.center.x, envelope.center.z) : null;
+  const centerProjection = envelope.eligible ? resolveGRCRSemanticAddressProjection(envelope.center.x, envelope.center.z) : null;
+  const candidate = freeze({
+    checkpointId: 'GR-CR-02G',
+    candidateClass: 'MEASURED_OR_DERIVED_CANDIDATE_PENDING_LATER_MANIFEST_ACCEPTANCE',
+    eligible: [coast.eligible, berm.eligible, shoreline.eligible, exclusion.eligible, safe.eligible, inland.eligible, envelope.eligible].every(Boolean),
+    accepted: false,
+    finalCoordinatesAssigned: false,
+    coastAnchor: coast,
+    bermAnchor: berm,
+    shorelineSummary: freeze({ traceCount: shoreline.traceCount, crossingCount: shoreline.crossingCount, exactCrossingCount: shoreline.exactCrossingCount, approximateCrossingCount: shoreline.approximateCrossingCount }),
+    waterwardExclusion: exclusion,
+    safeOrientationSummary: freeze({ sampleCount: safe.sampleCount, orientationBasis: safe.orientationBasis, maximumSlope: safe.maximumSlope }),
+    firstLawfulInlandExit: inland.firstLawfulExit,
+    beachExtent: freeze({ xRange: exclusion.xRange, zRange: freeze({ minimum: H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.BERM.position.z, maximum: exclusion.exclusionStartZ }) }),
+    envelope,
+    centerFormationMembership: centerMembership,
+    centerSemanticProjection: centerProjection,
+    terrainMutation: false,
+    geometryConstruction: false,
+    issues: freeze([])
+  });
+  return freeze({ ...candidate, candidateDigest: digest(candidate) });
+}
+
+export function executeGRCREntryZoneSection() {
+  const first = deriveGRCREntryCandidateEnvelope();
+  const second = deriveGRCREntryCandidateEnvelope();
+  const firstDigest = digest(first);
+  const secondDigest = digest(second);
+  const issues = [];
+  if (!first.eligible) issues.push('ENTRY_CANDIDATE_INELIGIBLE');
+  if (firstDigest !== secondDigest) issues.push('ENTRY_SECTION_NONDETERMINISTIC');
+  if (first.accepted !== false || first.finalCoordinatesAssigned !== false) issues.push('ENTRY_CANDIDATE_AUTHORITY_OVERREACH');
+  return freeze({
+    schemaVersion: 'H_EARTH_GRATITUDE_REGION_ENTRY_ZONE_RECONCILIATION_RECEIPT_v1',
+    checkpointId: 'GR-CR-02H',
+    sectionId: 'GR-CR-02_ENTRY_ZONE',
+    eligible: issues.length === 0,
+    status: issues.length === 0 ? 'GR_CR_02H_ENTRY_ZONE_PASS' : 'GR_CR_02H_ENTRY_ZONE_FAIL',
+    sectionStatus: issues.length === 0 ? 'PASS_CLOSED' : 'FAIL_STOPPED',
+    completedMicroCheckpoints: freeze(['02A', '02B', '02C', '02D', '02E', '02F', '02G', '02H']),
+    firstExecutionDigest: firstDigest,
+    secondExecutionDigest: secondDigest,
+    deterministicRepeatExecution: firstDigest === secondDigest,
+    evidence: first,
+    entryZoneMeasurementExecuted: true,
+    areaCandidateCoordinatesDerived: true,
+    finalCoordinatesAssigned: false,
+    nextSection: 'GR-CR-03_MIRROR_MANOR',
+    terrainMutation: false,
+    geometryConstruction: false,
+    runtimeMutation: false,
+    gameplayMutation: false,
+    publicRouteMutation: false,
+    productionMutation: false,
+    controllingManifestMutation: false,
+    issues: freeze(issues)
+  });
 }
 
 export default H_EARTH_GRATITUDE_REGION_ENTRY_ZONE_RECONCILIATION;

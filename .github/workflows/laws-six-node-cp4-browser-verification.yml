@@ -139,12 +139,34 @@ jobs:
             check(`${label}: authoritative orbit phase committed`, after.frame.orbitPhase === 'COMMITTED', after.frame);
           }
           async function quickFlick(page, label) {
-            const box = await page.locator('[data-laws-scene-field]').boundingBox(); assert.ok(box);
             const before = await page.evaluate(() => DGB_LAWS_INTERACTIONS.getReceipt().flickReturnCount);
-            const x = box.x + box.width * .18, y = box.y + box.height * .74;
-            await page.mouse.move(x,y); await page.mouse.down(); await page.mouse.move(x+112,y+3,{steps:2}); await page.mouse.up();
-            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION');
-            check(`${label}: quick flick returns`, await page.evaluate(() => DGB_LAWS_INTERACTIONS.getReceipt().flickReturnCount) > before);
+            const result = await page.evaluate(async () => {
+              const field = document.querySelector('[data-laws-scene-field]');
+              const rect = field.getBoundingClientRect();
+              const pointerId = 901;
+              const startX = rect.left + rect.width * .16;
+              const startY = rect.top + rect.height * .80;
+              const send = (type, x, y, buttons) => field.dispatchEvent(new PointerEvent(type, {
+                bubbles: true, cancelable: true, composed: true,
+                pointerId, pointerType: 'mouse', isPrimary: true,
+                button: 0, buttons, clientX: x, clientY: y
+              }));
+              const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+              send('pointerdown', startX, startY, 1);
+              await wait(18);
+              send('pointermove', startX + 28, startY + 1, 1);
+              await wait(18);
+              send('pointermove', startX + 66, startY + 1, 1);
+              await wait(18);
+              send('pointermove', startX + 118, startY + 2, 1);
+              await wait(8);
+              send('pointerup', startX + 122, startY + 2, 0);
+              await wait(40);
+              return { receipt: DGB_LAWS_INTERACTIONS.getReceipt(), state: document.querySelector('[data-laws-root]').dataset.lawsControllerState };
+            });
+            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION', null, { timeout: 10000 });
+            const after = await page.evaluate(() => DGB_LAWS_INTERACTIONS.getReceipt());
+            check(`${label}: quick flick returns`, after.flickReturnCount > before, { before, result, after });
           }
           async function navigateAux(page, id, pathname, label) {
             const target = page.locator(`[data-laws-auxiliary-id="${id}"]`); await target.waitFor({state:'visible'});

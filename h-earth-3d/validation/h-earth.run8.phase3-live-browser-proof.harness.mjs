@@ -8,7 +8,6 @@ import { chromium } from 'playwright';
 
 const repositoryRoot = process.cwd();
 const sourceHead = '9ce2b2ef9078d99c93f847957479e37c41f83a53';
-const expectedCarrierHead = '0ba019b3544ca8335ad8322f7765422236029ceb';
 const branch = process.env.GITHUB_HEAD_REF || 'agent/h-earth-touch-motion-cp4-calibration-testing-001';
 const sourceRoot = '/tmp/h-earth-cp4-0b-source';
 const generatedRoot = '/tmp/h-earth-cp4-0b-generated';
@@ -35,8 +34,10 @@ console.log(`CP4_0B exact source head: ${sourceHead}`);
 
 run('git', ['fetch', 'origin', branch, '--quiet']);
 const remoteHead = run('git', ['rev-parse', `origin/${branch}`]).trim();
-if (remoteHead !== expectedCarrierHead) {
-  throw new Error(`CP4_0B_CARRIER_HEAD_MISMATCH:${remoteHead}`);
+const carrierDelta = run('git', ['diff', '--name-only', `${sourceHead}..${remoteHead}`]).trim().split('\n').filter(Boolean).sort();
+const allowedCarrierDelta = [workflowPath, harnessPath].sort();
+if (JSON.stringify(carrierDelta) !== JSON.stringify(allowedCarrierDelta)) {
+  throw new Error(`CP4_0B_CARRIER_SCOPE_MISMATCH:${JSON.stringify(carrierDelta)}`);
 }
 run('git', ['cat-file', '-e', `${sourceHead}^{commit}`]);
 
@@ -238,7 +239,7 @@ try {
   const manifest = {
     artifactId: 'H_EARTH_CP4_0B_DETERMINISTIC_THREE_FILE_MATERIALIZATION_v1',
     sourceHead,
-    carrierHead: expectedCarrierHead,
+    carrierHead: remoteHead,
     originalSourceBlobCount: 56,
     originalExecutableJavaScriptModuleCount: 53,
     originalHtmlEntryCount: 1,

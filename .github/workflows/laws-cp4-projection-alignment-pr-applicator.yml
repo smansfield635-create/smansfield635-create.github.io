@@ -1,72 +1,14 @@
-name: Laws CP4 Projection Alignment PR Applicator
+name: Laws CP4 Projection Alignment PR Applicator Retired
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: laws-cp4-projection-alignment-pr-applicator
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  apply-bounded-correction:
-    if: github.event.pull_request.head.ref == 'agent/laws-six-node-cp4-browser-verification-001'
+  retired:
+    if: false
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
-      - name: Check out exact Laws candidate branch
-        uses: actions/checkout@v4
-        with:
-          ref: agent/laws-fifth-test-star-reversible-admissibility-cp1-001
-          fetch-depth: 0
-
-      - name: Verify and apply correction when needed
-        shell: bash
-        run: |
-          set -euo pipefail
-          current_head="$(git rev-parse HEAD)"
-          original="8607693d75fffed5a8a85c42b8fdc28fff0b0554"
-          old='Object.assign(el.style,{position:"absolute",left:`${r.x}px`,top:`${r.y}px`,width:`${z*2}px`,height:`${z*2}px`,margin:"0",transform:"translate(-50%, -50%)",pointerEvents:p>P.OFF?"auto":"none"});'
-          new='Object.assign(el.style,{position:"absolute",left:`${r.x}px`,top:`${r.y}px`,right:"auto",bottom:"auto",width:`${z*2}px`,height:`${z*2}px`,margin:"0",transform:"translate(-50%, -50%)",pointerEvents:p>P.OFF?"auto":"none"});'
-          python3 - "$current_head" "$original" "$old" "$new" <<'PY'
-          from pathlib import Path
-          import sys
-          current, original, old, new = sys.argv[1:]
-          path = Path('laws/index.interactions.js')
-          source = path.read_text()
-          if new in source and old not in source:
-              print('CP4_ALIGNMENT_CORRECTION_ALREADY_PRESENT=true')
-              raise SystemExit(0)
-          if current != original:
-              raise SystemExit(f'UNEXPECTED_CANDIDATE_HEAD:{current}')
-          count = source.count(old)
-          if count != 1:
-              raise SystemExit(f'CP4_ALIGNMENT_PATCH_ANCHOR_INVALID:{count}')
-          path.write_text(source.replace(old, new, 1))
-          print('CP4_LIVE_PROJECTION_OFFSET_RESET=APPLIED')
-          PY
-          node --check laws/index.interactions.js
-          grep -Fq 'right:"auto",bottom:"auto"' laws/index.interactions.js
-          git diff --check
-          changed="$(git diff --name-only)"
-          if [ -z "$changed" ]; then
-            echo "NO_COMMIT_REQUIRED=true"
-            exit 0
-          fi
-          test "$changed" = "laws/index.interactions.js"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add laws/index.interactions.js
-          git commit -m "Align Laws semantic hit targets with live projections"
-          git push origin HEAD:agent/laws-fifth-test-star-reversible-admissibility-cp1-001
-          echo "CORRECTED_CANDIDATE_HEAD=$(git rev-parse HEAD)"
-          echo "CORRECTED_INTERACTIONS_BLOB=$(git hash-object laws/index.interactions.js)"
+      - run: echo "Projection alignment correction is committed."

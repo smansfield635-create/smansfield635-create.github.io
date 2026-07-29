@@ -1,0 +1,526 @@
+name: Laws Six-Node CP4 Browser Verification
+
+on:
+  push:
+    branches:
+      - agent/laws-six-node-cp4-browser-verification-001
+    paths:
+      - .github/workflows/laws-six-node-cp4-browser-verification.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-six-node-cp4-browser-verification
+  cancel-in-progress: false
+
+jobs:
+  browser-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out immutable Checkpoint 3 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 8607693d75fffed5a8a85c42b8fdc28fff0b0554
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify candidate identity and bounded source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "8607693d75fffed5a8a85c42b8fdc28fff0b0554"
+          git merge-base --is-ancestor 343b0c269dd343a57c6ecb7e785141134cc5660f HEAD
+          test "$(git diff --name-only 343b0c269dd343a57c6ecb7e785141134cc5660f...HEAD | wc -l | tr -d ' ')" = "7"
+          git diff --name-only 343b0c269dd343a57c6ecb7e785141134cc5660f...HEAD | sort > /tmp/cp4-paths.txt
+          cat > /tmp/cp4-expected-paths.txt <<'EOF'
+          laws/index.controller.js
+          laws/index.crystals.js
+          laws/index.css
+          laws/index.html
+          laws/index.interactions.js
+          laws/research/index.html
+          laws/test/index.html
+          EOF
+          diff -u /tmp/cp4-expected-paths.txt /tmp/cp4-paths.txt
+          node --check laws/index.controller.js
+          node --check laws/index.interactions.js
+          node --check laws/index.crystals.js
+          git diff --check 343b0c269dd343a57c6ecb7e785141134cc5660f...HEAD
+
+      - name: Install Chromium execution harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cp4
+          cd /tmp/cp4
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute desktop and mobile browser corridor
+        shell: bash
+        env:
+          CP4_BASE_URL: http://127.0.0.1:4173
+          CP4_CANDIDATE_HEAD: 8607693d75fffed5a8a85c42b8fdc28fff0b0554
+          CP4_BASE_MAIN: 343b0c269dd343a57c6ecb7e785141134cc5660f
+          CP4_EVIDENCE_DIR: ${{ github.workspace }}/cp4-evidence
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/cp4-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill ${server_pid} 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null
+
+          cat > /tmp/cp4/run.mjs <<'EOF'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import { chromium } from 'playwright';
+
+          const baseUrl = process.env.CP4_BASE_URL;
+          const evidenceDir = process.env.CP4_EVIDENCE_DIR;
+          const candidateHead = process.env.CP4_CANDIDATE_HEAD;
+          const baseMain = process.env.CP4_BASE_MAIN;
+          fs.mkdirSync(evidenceDir, { recursive: true });
+
+          const evidence = {
+            checkpoint: 'CHECKPOINT_4',
+            candidateHead,
+            baseMain,
+            executionClass: 'BROWSER_INTERACTION_AND_VISUAL_EXECUTION',
+            browser: {},
+            checks: [],
+            diagnostics: [],
+            screenshots: [],
+            boundaries: {
+              merged: false,
+              deployed: false,
+              physicallyAccepted: false,
+              scientificValidationClaimed: false,
+              productionValidationClaimed: false
+            },
+            result: 'PENDING'
+          };
+
+          function check(name, condition, details = null) {
+            evidence.checks.push({ name, pass: Boolean(condition), details });
+            assert.ok(condition, `${name}${details ? ` :: ${JSON.stringify(details)}` : ''}`);
+          }
+
+          function diagnosticHarness(page, label) {
+            const consoleErrors = [];
+            const pageErrors = [];
+            const requestFailures = [];
+            page.on('console', message => {
+              if (message.type() === 'error') consoleErrors.push(message.text());
+            });
+            page.on('pageerror', error => pageErrors.push(String(error?.stack || error)));
+            page.on('requestfailed', request => {
+              const failure = request.failure();
+              const text = `${request.method()} ${request.url()} :: ${failure?.errorText || 'unknown'}`;
+              if (!/net::ERR_ABORTED/.test(text)) requestFailures.push(text);
+            });
+            return () => {
+              evidence.diagnostics.push({ label, consoleErrors, pageErrors, requestFailures });
+              check(`${label}: no page errors`, pageErrors.length === 0, pageErrors);
+              check(`${label}: no console errors`, consoleErrors.length === 0, consoleErrors);
+              check(`${label}: no request failures`, requestFailures.length === 0, requestFailures);
+            };
+          }
+
+          async function loadLawsRuntime(page, label) {
+            await page.goto(`${baseUrl}/laws/`, { waitUntil: 'domcontentloaded' });
+            await page.locator('#laws-orbit').scrollIntoViewIfNeeded();
+            await page.waitForFunction(() => Boolean(globalThis.DGBLawsStagedLoader));
+            await page.evaluate(async () => {
+              await globalThis.DGBLawsStagedLoader.loadOrbitSystems();
+              await globalThis.DGBLawsStagedLoader.loadInteractionSystems();
+            });
+            await page.waitForFunction(() => {
+              const controller = globalThis.DGB_LAWS_CONTROLLER;
+              const crystals = globalThis.DGB_LAWS_CRYSTALS;
+              const interactions = globalThis.DGB_LAWS_INTERACTIONS;
+              const receipt = interactions?.getReceipt?.();
+              return Boolean(
+                controller &&
+                crystals &&
+                interactions &&
+                receipt?.initialized === true &&
+                controller.getSemanticProjection().length >= 6
+              );
+            }, null, { timeout: 20000 });
+
+            const state = await page.evaluate(() => {
+              const root = document.querySelector('[data-laws-root]');
+              const controller = globalThis.DGB_LAWS_CONTROLLER;
+              const crystals = globalThis.DGB_LAWS_CRYSTALS;
+              const interactions = globalThis.DGB_LAWS_INTERACTIONS;
+              return {
+                rootState: root?.dataset.lawsState,
+                controllerState: root?.dataset.lawsControllerState,
+                presentationMode: root?.dataset.lawsPresentationMode,
+                held: root?.dataset.lawsHeld,
+                controllerReceipt: controller?.getValidationReceipt?.(),
+                crystalsReceipt: crystals?.receipt?.(),
+                interactionsReceipt: interactions?.getReceipt?.(),
+                projections: controller?.getSemanticProjection?.() || []
+              };
+            });
+
+            check(`${label}: constellation runtime state`, state.rootState === 'CONSTELLATION', state);
+            check(`${label}: controller not held`, state.held !== 'true', state);
+            check(`${label}: controller self-test pass`, state.controllerReceipt?.pass === true, state.controllerReceipt);
+            check(`${label}: interactions initialized`, state.interactionsReceipt?.initialized === true, state.interactionsReceipt);
+            check(`${label}: crystals renderer initialized`, state.crystalsReceipt?.rendererInitialized === true, state.crystalsReceipt);
+            check(`${label}: six primary semantic projections`, state.projections.filter(x => ['category', 'auxiliary'].includes(String(x.kind).toLowerCase())).length === 6, state.projections);
+            check(`${label}: four category projections`, state.projections.filter(x => String(x.kind).toLowerCase() === 'category').length === 4, state.projections);
+            check(`${label}: two auxiliary projections`, state.projections.filter(x => String(x.kind).toLowerCase() === 'auxiliary').length === 2, state.projections);
+            return state;
+          }
+
+          async function capture(page, filename, locator = null) {
+            const output = path.join(evidenceDir, filename);
+            if (locator) {
+              await locator.screenshot({ path: output });
+            } else {
+              await page.screenshot({ path: output, fullPage: false });
+            }
+            evidence.screenshots.push(filename);
+          }
+
+          async function visualTopologyChecks(page, label) {
+            const visual = await page.evaluate(() => {
+              const field = document.querySelector('[data-laws-scene-field]');
+              const fieldRect = field.getBoundingClientRect();
+              const records = [...document.querySelectorAll('[data-laws-category], [data-laws-auxiliary]')].map(element => {
+                const rect = element.getBoundingClientRect();
+                return {
+                  id: element.dataset.direction || element.dataset.auxiliaryId,
+                  kind: element.matches('[data-laws-auxiliary]') ? 'auxiliary' : 'category',
+                  width: rect.width,
+                  height: rect.height,
+                  centerX: rect.left + rect.width / 2 - fieldRect.left,
+                  centerY: rect.top + rect.height / 2 - fieldRect.top,
+                  visible: rect.width > 0 && rect.height > 0 && getComputedStyle(element).visibility !== 'hidden',
+                  pointerEvents: getComputedStyle(element).pointerEvents,
+                  pseudoBackground: getComputedStyle(element, '::before').backgroundImage,
+                  labelColor: element.querySelector('.laws-authority-label') ? getComputedStyle(element.querySelector('.laws-authority-label')).color : ''
+                };
+              });
+              return { field: { width: fieldRect.width, height: fieldRect.height }, records };
+            });
+
+            check(`${label}: six visible primary nodes`, visual.records.length === 6 && visual.records.every(x => x.visible), visual);
+            check(`${label}: all primary nodes have pointer authority`, visual.records.every(x => x.pointerEvents !== 'none'), visual.records);
+            check(`${label}: all primary centers remain inside scene`, visual.records.every(x => x.centerX >= 0 && x.centerX <= visual.field.width && x.centerY >= 0 && x.centerY <= visual.field.height), visual);
+            const test = visual.records.find(x => x.id === 'test');
+            const research = visual.records.find(x => x.id === 'research');
+            const categories = visual.records.filter(x => x.kind === 'category');
+            const avgCategoryWidth = categories.reduce((sum, x) => sum + x.width, 0) / categories.length;
+            check(`${label}: Test and Research are larger than cardinal stars`, test.width > avgCategoryWidth * 1.04 && research.width > avgCategoryWidth * 1.04, { test: test.width, research: research.width, avgCategoryWidth });
+            check(`${label}: Test warm-gold and Research cool-violet palettes differ`, test.pseudoBackground !== research.pseudoBackground && test.labelColor !== research.labelColor, { test, research });
+            check(`${label}: auxiliary authorities occupy distinct noncardinal positions`, Math.hypot(test.centerX - research.centerX, test.centerY - research.centerY) > Math.max(test.width, research.width), { test, research });
+          }
+
+          async function openCategoryByTap(page, direction, label) {
+            const projected = page.locator(`[data-laws-projected-category-label="${direction}"]`);
+            await projected.waitFor({ state: 'visible' });
+            await projected.click();
+            await page.waitForFunction(expected => {
+              const root = document.querySelector('[data-laws-root]');
+              return root?.dataset.lawsState === 'CLUSTER_OPEN' && root?.dataset.lawsActiveCluster === expected;
+            }, direction);
+            const cluster = await page.evaluate(expected => {
+              const root = document.querySelector('[data-laws-root]');
+              const all = [...document.querySelectorAll('[data-laws-law]')].map(element => ({
+                id: element.dataset.lawId,
+                direction: element.dataset.direction,
+                visibility: getComputedStyle(element).visibility,
+                pointerEvents: getComputedStyle(element).pointerEvents,
+                active: element.dataset.active
+              }));
+              return {
+                rootState: root.dataset.lawsState,
+                activeCluster: root.dataset.lawsActiveCluster,
+                active: all.filter(x => x.direction === expected && x.visibility !== 'hidden'),
+                inactive: all.filter(x => x.direction !== expected && x.visibility !== 'hidden')
+              };
+            }, direction);
+            check(`${label}: ${direction} opens its four-law cluster`, cluster.active.length === 4 && cluster.inactive.length === 0, cluster);
+            const rejected = await page.evaluate(() => globalThis.DGB_LAWS_CONTROLLER.requestAuxiliarySelection('test'));
+            check(`${label}: auxiliary routing rejected outside constellation`, rejected === false, rejected);
+          }
+
+          async function returnToConstellation(page, label) {
+            const returned = await page.evaluate(() => globalThis.DGB_LAWS_CONTROLLER.requestReturnToConstellation({ source: 'cp4-browser', scrollToScene: false }));
+            check(`${label}: controller accepts return to constellation`, returned === true, returned);
+            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsState === 'CONSTELLATION');
+          }
+
+          async function controlledDesktopDrag(page, label) {
+            const field = page.locator('[data-laws-scene-field]');
+            const box = await field.boundingBox();
+            assert.ok(box, 'scene field bounding box required');
+            const before = await page.evaluate(() => globalThis.DGB_LAWS_INTERACTIONS.getReceipt().settlementCount);
+            const startX = box.x + box.width * 0.18;
+            const startY = box.y + box.height * 0.77;
+            await page.mouse.move(startX, startY);
+            await page.mouse.down();
+            for (let step = 1; step <= 12; step += 1) {
+              await page.mouse.move(startX + step * 8, startY - step * 1.5);
+              await page.waitForTimeout(38);
+            }
+            await page.mouse.up();
+            await page.waitForTimeout(180);
+            const after = await page.evaluate(() => ({
+              receipt: globalThis.DGB_LAWS_INTERACTIONS.getReceipt(),
+              frame: globalThis.DGB_LAWS_CONTROLLER.getFrameState(),
+              rootState: document.querySelector('[data-laws-root]').dataset.lawsState
+            }));
+            check(`${label}: controlled drag settles rather than flicks`, after.receipt.settlementCount > before && after.rootState === 'CONSTELLATION', after);
+            check(`${label}: controlled drag ends committed`, after.frame.orbitOrientation?.phase === 'COMMITTED', after.frame.orbitOrientation);
+          }
+
+          async function quickDesktopFlick(page, label) {
+            const field = page.locator('[data-laws-scene-field]');
+            const box = await field.boundingBox();
+            assert.ok(box, 'scene field bounding box required');
+            const before = await page.evaluate(() => globalThis.DGB_LAWS_INTERACTIONS.getReceipt().flickReturnCount);
+            const startX = box.x + box.width * 0.18;
+            const startY = box.y + box.height * 0.74;
+            await page.mouse.move(startX, startY);
+            await page.mouse.down();
+            await page.mouse.move(startX + 112, startY + 3, { steps: 2 });
+            await page.mouse.up();
+            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsState === 'CONSTELLATION');
+            const after = await page.evaluate(() => globalThis.DGB_LAWS_INTERACTIONS.getReceipt());
+            check(`${label}: quick flick returns from cluster`, after.flickReturnCount > before, after);
+          }
+
+          async function actualAuxiliaryNavigation(page, auxiliaryId, expectedPath, label) {
+            const target = page.locator(`[data-laws-auxiliary-id="${auxiliaryId}"]`);
+            await target.waitFor({ state: 'visible' });
+            const box = await target.boundingBox();
+            assert.ok(box, `${auxiliaryId} bounding box required`);
+            await Promise.all([
+              page.waitForURL(url => url.pathname === expectedPath, { timeout: 10000 }),
+              page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)
+            ]);
+            check(`${label}: ${auxiliaryId} direct route`, new URL(page.url()).pathname === expectedPath, page.url());
+          }
+
+          async function executeTestRoute(page, label) {
+            check(`${label}: Test contract`, await page.getAttribute('html', 'data-contract') === 'LAWS_REVERSIBLE_ADMISSIBILITY_TEST_ROUTE_v1');
+            check(`${label}: Test disclaims scientific validation`, await page.getAttribute('html', 'data-scientific-validation-claimed') === 'false');
+            check(`${label}: states 0 through 13 generated`, await page.locator('[data-state-number]').count() === 14);
+            await page.locator('[data-proposition]').fill('Checkpoint 4 reversible admissibility proposition');
+            await page.locator('[data-baseline]').fill('State 7 fixed baseline authority');
+            await page.locator('[data-begin]').click();
+            for (let state = 1; state <= 13; state += 1) {
+              await page.locator(`[data-forward="${state}"]`).fill(`Forward evidence state ${state}`);
+              for (const predicate of ['flow', 'structure', 'integrity', 'reality']) {
+                await page.locator(`[data-predicate="${state}:${predicate}"]`).check();
+              }
+              await page.locator('[data-next]').click();
+            }
+            check(`${label}: forward traversal reaches state 13`, await page.getAttribute('html', 'data-test-state') === '13');
+            await page.locator('[data-reverse]').click();
+            for (let state = 13; state >= 1; state -= 1) {
+              await page.locator(`[data-reverse-note="${state}"]`).fill(`Reverse audit state ${state}`);
+              await page.locator('[data-back]').click();
+            }
+            const receipt = await page.locator('[data-receipt]').textContent();
+            check(`${label}: reverse audit completes`, await page.getAttribute('html', 'data-test-phase') === 'COMPLETE', receipt);
+            check(`${label}: fixed baseline preserved`, /baseline_state=7/.test(receipt), receipt);
+            check(`${label}: all forward states preserved`, /forward_complete=1,2,3,4,5,6,7,8,9,10,11,12,13/.test(receipt), receipt);
+            check(`${label}: all reverse states preserved`, /reverse_complete=1,2,3,4,5,6,7,8,9,10,11,12,13/.test(receipt), receipt);
+            check(`${label}: completion does not become validation`, /scientific_validation_claimed=false/.test(receipt), receipt);
+          }
+
+          async function executeResearchRoute(page, label) {
+            check(`${label}: Research contract`, await page.getAttribute('html', 'data-contract') === 'LAWS_RESEARCH_EVIDENCE_ATLAS_v1');
+            check(`${label}: Research is not a law`, await page.getAttribute('html', 'data-research-is-law') === 'false');
+            check(`${label}: Research disclaims empirical validation`, await page.getAttribute('html', 'data-empirical-validation-claimed') === 'false');
+            const body = await page.locator('body').innerText();
+            check(`${label}: held-out metrics preserved`, ['1,653', '0.9394', '0.7850', '0.9704', '−0.0080', '0.4994'].every(value => body.includes(value)), body.slice(0, 1000));
+            check(`${label}: supported and negative results both preserved`, body.includes('Supported') && body.includes('Unresolved or failed') && body.includes('Negative result'), body.slice(0, 1600));
+            check(`${label}: validation boundaries visible`, body.includes('Universal law validation: no') && body.includes('Blanket empirical validation: no'), body.slice(0, 1000));
+          }
+
+          async function dispatchTouchSwipe(context, page, start, end, durationMs = 450, steps = 10) {
+            const session = await context.newCDPSession(page);
+            await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: start.x, y: start.y, radiusX: 2, radiusY: 2, force: 1 }] });
+            for (let i = 1; i <= steps; i += 1) {
+              const t = i / steps;
+              await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: start.x + (end.x - start.x) * t, y: start.y + (end.y - start.y) * t, radiusX: 2, radiusY: 2, force: 1 }] });
+              await page.waitForTimeout(durationMs / steps);
+            }
+            await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+          }
+
+          const browser = await chromium.launch({ headless: true });
+          evidence.browser.version = browser.version();
+
+          try {
+            const desktopContext = await browser.newContext({ viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1 });
+            const desktop = await desktopContext.newPage();
+            const finishDesktopDiagnostics = diagnosticHarness(desktop, 'desktop-laws');
+            await loadLawsRuntime(desktop, 'desktop');
+            await visualTopologyChecks(desktop, 'desktop');
+            await capture(desktop, 'desktop-constellation.png', desktop.locator('#laws-orbit'));
+
+            for (const direction of ['flow', 'integrity', 'reality', 'structure']) {
+              await openCategoryByTap(desktop, direction, 'desktop');
+              if (direction === 'flow') await capture(desktop, 'desktop-flow-cluster.png', desktop.locator('#laws-orbit'));
+              await returnToConstellation(desktop, 'desktop');
+            }
+
+            await controlledDesktopDrag(desktop, 'desktop');
+            await openCategoryByTap(desktop, 'flow', 'desktop');
+            await quickDesktopFlick(desktop, 'desktop');
+            finishDesktopDiagnostics();
+            await desktopContext.close();
+
+            const testContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+            const testPage = await testContext.newPage();
+            const finishTestDiagnostics = diagnosticHarness(testPage, 'desktop-test-route');
+            await loadLawsRuntime(testPage, 'desktop-test-navigation');
+            await actualAuxiliaryNavigation(testPage, 'test', '/laws/test/', 'desktop');
+            await executeTestRoute(testPage, 'desktop');
+            await capture(testPage, 'desktop-test-complete.png');
+            finishTestDiagnostics();
+            await testContext.close();
+
+            const researchContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+            const researchPage = await researchContext.newPage();
+            const finishResearchDiagnostics = diagnosticHarness(researchPage, 'desktop-research-route');
+            await loadLawsRuntime(researchPage, 'desktop-research-navigation');
+            await actualAuxiliaryNavigation(researchPage, 'research', '/laws/research/', 'desktop');
+            await executeResearchRoute(researchPage, 'desktop');
+            await capture(researchPage, 'desktop-research.png');
+            finishResearchDiagnostics();
+            await researchContext.close();
+
+            const mobileContext = await browser.newContext({
+              viewport: { width: 412, height: 915 },
+              screen: { width: 412, height: 915 },
+              deviceScaleFactor: 2.625,
+              isMobile: true,
+              hasTouch: true
+            });
+            const mobile = await mobileContext.newPage();
+            const finishMobileDiagnostics = diagnosticHarness(mobile, 'mobile-laws');
+            await loadLawsRuntime(mobile, 'mobile');
+            await visualTopologyChecks(mobile, 'mobile');
+            const overflow = await mobile.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth }));
+            check('mobile: no horizontal overflow', overflow.width <= overflow.viewport + 1, overflow);
+            await capture(mobile, 'mobile-constellation.png', mobile.locator('#laws-orbit'));
+
+            const flowLabel = mobile.locator('[data-laws-projected-category-label="flow"]');
+            const flowBox = await flowLabel.boundingBox();
+            assert.ok(flowBox, 'mobile flow label bounding box required');
+            await mobile.touchscreen.tap(flowBox.x + flowBox.width / 2, flowBox.y + flowBox.height / 2);
+            await mobile.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsState === 'CLUSTER_OPEN');
+            check('mobile: touch opens cardinal cluster', await mobile.getAttribute('[data-laws-root]', 'data-laws-active-cluster') === 'flow');
+            await capture(mobile, 'mobile-flow-cluster.png', mobile.locator('#laws-orbit'));
+
+            const fieldBox = await mobile.locator('[data-laws-scene-field]').boundingBox();
+            assert.ok(fieldBox, 'mobile scene field bounding box required');
+            const flickBefore = await mobile.evaluate(() => globalThis.DGB_LAWS_INTERACTIONS.getReceipt().flickReturnCount);
+            await dispatchTouchSwipe(
+              mobileContext,
+              mobile,
+              { x: fieldBox.x + fieldBox.width * 0.14, y: fieldBox.y + fieldBox.height * 0.74 },
+              { x: fieldBox.x + fieldBox.width * 0.54, y: fieldBox.y + fieldBox.height * 0.75 },
+              120,
+              3
+            );
+            await mobile.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsState === 'CONSTELLATION');
+            const flickAfter = await mobile.evaluate(() => globalThis.DGB_LAWS_INTERACTIONS.getReceipt().flickReturnCount);
+            check('mobile: touch flick returns to constellation', flickAfter > flickBefore, { flickBefore, flickAfter });
+
+            const orbitBefore = await mobile.evaluate(() => globalThis.DGB_LAWS_INTERACTIONS.getReceipt().settlementCount);
+            await dispatchTouchSwipe(
+              mobileContext,
+              mobile,
+              { x: fieldBox.x + fieldBox.width * 0.14, y: fieldBox.y + fieldBox.height * 0.78 },
+              { x: fieldBox.x + fieldBox.width * 0.48, y: fieldBox.y + fieldBox.height * 0.69 },
+              520,
+              12
+            );
+            await mobile.waitForTimeout(180);
+            const orbitAfter = await mobile.evaluate(() => ({
+              settlementCount: globalThis.DGB_LAWS_INTERACTIONS.getReceipt().settlementCount,
+              rootState: document.querySelector('[data-laws-root]').dataset.lawsState,
+              phase: globalThis.DGB_LAWS_CONTROLLER.getFrameState().orbitOrientation?.phase
+            }));
+            check('mobile: controlled touch drag settles in constellation', orbitAfter.settlementCount > orbitBefore && orbitAfter.rootState === 'CONSTELLATION' && orbitAfter.phase === 'COMMITTED', { orbitBefore, orbitAfter });
+
+            const researchTarget = mobile.locator('[data-laws-auxiliary-id="research"]');
+            const researchBox = await researchTarget.boundingBox();
+            assert.ok(researchBox, 'mobile Research bounding box required');
+            await Promise.all([
+              mobile.waitForURL(url => url.pathname === '/laws/research/', { timeout: 10000 }),
+              mobile.touchscreen.tap(researchBox.x + researchBox.width / 2, researchBox.y + researchBox.height / 2)
+            ]);
+            check('mobile: Research touch route', new URL(mobile.url()).pathname === '/laws/research/', mobile.url());
+            await executeResearchRoute(mobile, 'mobile');
+            await capture(mobile, 'mobile-research.png');
+            finishMobileDiagnostics();
+            await mobileContext.close();
+
+            evidence.result = 'PASS_CLOSED';
+          } catch (error) {
+            evidence.result = 'FAIL';
+            evidence.failure = String(error?.stack || error);
+            throw error;
+          } finally {
+            fs.writeFileSync(path.join(evidenceDir, 'checkpoint-4-browser-evidence.json'), JSON.stringify(evidence, null, 2));
+            await browser.close();
+          }
+          EOF
+
+          cd /tmp/cp4
+          node run.mjs
+
+      - name: Record exact source identities
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p cp4-evidence
+          {
+            echo "CANDIDATE_HEAD=$(git rev-parse HEAD)"
+            echo "BASE_MAIN=343b0c269dd343a57c6ecb7e785141134cc5660f"
+            for path in \
+              laws/index.html \
+              laws/index.controller.js \
+              laws/index.interactions.js \
+              laws/index.crystals.js \
+              laws/index.css \
+              laws/test/index.html \
+              laws/research/index.html; do
+              printf '%s\t%s\t%s\n' "$path" "$(git hash-object "$path")" "$(wc -c < "$path" | tr -d ' ')"
+            done
+          } > cp4-evidence/source-identities.tsv
+          cp /tmp/cp4-server.log cp4-evidence/server.log || true
+          git status --short --untracked-files=all > cp4-evidence/worktree-status.txt
+
+      - name: Upload Checkpoint 4 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-six-node-cp4-browser-evidence
+          path: cp4-evidence
+          if-no-files-found: error
+          retention-days: 30

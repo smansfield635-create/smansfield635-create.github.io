@@ -1,0 +1,209 @@
+name: H-Earth Gratitude Region Reference Update Registry Completion
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/h-earth-gratitude-region-controlling-artifact-reference-update-registry-completion.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  complete-reference-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact durable candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 5218a8f658b2cc342dfd02bb8517701fcab61d73
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify durable candidate identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=d30bb105762b4205df90c3450de6c13076ef072e
+          CANDIDATE=5218a8f658b2cc342dfd02bb8517701fcab61d73
+          AMENDMENT=h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-coordinate-reconciliation.active-main-reference-amendment.v1.json
+          OVERLAY=h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gratitude-region-controlling-artifact-reference-update.js
+          LOADER=h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          test "$(git rev-parse HEAD)" = "$CANDIDATE"
+          test "$(git merge-base "$BASE" "$CANDIDATE")" = "$BASE"
+          mapfile -t paths < <(git diff --name-only "$BASE"..."$CANDIDATE")
+          test "${#paths[@]}" -eq 3
+          test "$(printf '%s\n' "${paths[@]}" | sort)" = "$(printf '%s\n' "$AMENDMENT" "$OVERLAY" "$LOADER" | sort)"
+          test "$(git hash-object "$AMENDMENT")" = "7ef817685ce12a3a93fdf0a03391ac52c2df2664"
+          test "$(git hash-object "$OVERLAY")" = "0f3463e99eb735c2964ec933a5bcadf53c77ad2a"
+          test "$(git hash-object "$LOADER")" = "dd0e6ae7042f102e8a3c66bcbede4bff20f358b5"
+          test "$(git hash-object h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json)" = "ee5ca94f5ae55ce8f11b460428b800ad4e9a2a9d"
+          test "$(git hash-object h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json)" = "1702d62036a6b241fdadddfabc304a5288f38652"
+
+      - name: Execute registry verification and emit composite custody twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+          import { execFileSync } from 'node:child_process';
+          import loadDependencies from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          import registryFacade, { H_EARTH_GRATITUDE_REGION_CONTROLLING_ARTIFACT_REFERENCE_UPDATE_SCOPE_NODE } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gratitude-region-controlling-artifact-reference-update.js';
+          import { runAutomaticHEarthPreflight } from './h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js';
+
+          const BASE = 'd30bb105762b4205df90c3450de6c13076ef072e';
+          const CANDIDATE = '5218a8f658b2cc342dfd02bb8517701fcab61d73';
+          const PACKAGE_HEAD = 'a0cadd1e5ce70d98c34f11ddacb063c91816bd93';
+          const PACKAGE_MERGE = 'd30bb105762b4205df90c3450de6c13076ef072e';
+          const AMENDMENT_PATH = '/h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-coordinate-reconciliation.active-main-reference-amendment.v1.json';
+          const AMENDMENT_BLOB = '7ef817685ce12a3a93fdf0a03391ac52c2df2664';
+          const OVERLAY_PATH = '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gratitude-region-controlling-artifact-reference-update.js';
+          const OVERLAY_BLOB = '0f3463e99eb735c2964ec933a5bcadf53c77ad2a';
+          const LOADER_PATH = '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const LOADER_BLOB = 'dd0e6ae7042f102e8a3c66bcbede4bff20f358b5';
+          const SPATIAL_PATH = '/h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json';
+          const SPATIAL_BLOB = 'ee5ca94f5ae55ce8f11b460428b800ad4e9a2a9d';
+          const MANIFEST_PATH = '/h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json';
+          const MANIFEST_BLOB = '1702d62036a6b241fdadddfabc304a5288f38652';
+          const NODE_ID = H_EARTH_GRATITUDE_REGION_CONTROLLING_ARTIFACT_REFERENCE_UPDATE_SCOPE_NODE.nodeId;
+          const changedPaths = [AMENDMENT_PATH, OVERLAY_PATH, LOADER_PATH];
+          const stable = (value) => value === null || typeof value !== 'object' ? JSON.stringify(value) : Array.isArray(value) ? `[${value.map(stable).join(',')}]` : `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stable(value[key])}`).join(',')}}`;
+          const digest = (value) => crypto.createHash('sha256').update(stable(value)).digest('hex');
+          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
+          const blobAt = (commit, repositoryPath) => git('ls-tree', commit, '--', repositoryPath.replace(/^\//, '')).match(/^\d+\s+blob\s+([0-9a-f]{40})\t/)?.[1] ?? null;
+          const readJson = (repositoryPath) => JSON.parse(fs.readFileSync(repositoryPath.replace(/^\//, ''), 'utf8'));
+
+          function execute() {
+            const issues = [];
+            const amendment = readJson(AMENDMENT_PATH);
+            const dependencies = loadDependencies();
+            const node = registryFacade.getHEarthRepositoryRegistryNode(NODE_ID);
+            const packageOccurrences = node.repositoryOccurrences.filter((occurrence) => occurrence.commitSha === PACKAGE_HEAD);
+            const exactPackageBlobMatches = packageOccurrences.length === 16 && packageOccurrences.every((occurrence) => blobAt(PACKAGE_MERGE, occurrence.path) === occurrence.gitBlobSha);
+            if (git('rev-parse', 'HEAD') !== CANDIDATE) issues.push('CANDIDATE_HEAD_MISMATCH');
+            if (blobAt(CANDIDATE, AMENDMENT_PATH) !== AMENDMENT_BLOB || blobAt(CANDIDATE, OVERLAY_PATH) !== OVERLAY_BLOB || blobAt(CANDIDATE, LOADER_PATH) !== LOADER_BLOB) issues.push('CANDIDATE_BLOB_MISMATCH');
+            if (blobAt(CANDIDATE, SPATIAL_PATH) !== SPATIAL_BLOB || blobAt(CANDIDATE, MANIFEST_PATH) !== MANIFEST_BLOB) issues.push('CONTROLLING_V1_BLOB_CHANGED');
+            if (!exactPackageBlobMatches) issues.push('ACTIVE_MAIN_PACKAGE_BLOB_MISMATCH');
+            if (dependencies.identityVerified !== true || dependencies.registryFacade !== registryFacade) issues.push('LOADER_FACADE_VERIFICATION_FAILED');
+            if (amendment.activeMainPackageReference.activeMainMergeCommit !== PACKAGE_MERGE || amendment.activeMainPackageReference.activePackagePathCount !== 16) issues.push('AMENDMENT_PACKAGE_REFERENCE_MISMATCH');
+            if (amendment.registryCustody.activeRegistryResolution !== 'PASS_CLOSED' || amendment.postMergeExecutionCustody.status !== 'PASS_CLOSED' || amendment.postMergeExecutionCustody.deterministicRepeatExecution !== true) issues.push('AMENDMENT_CUSTODY_MISMATCH');
+            for (const key of ['referenceUpdateActiveOnMain','mergeAuthorityCreated','candidateAcceptance','finalCoordinatesAssigned','canonicalization','terrainMutation','geometryConstruction','runtimeMutation','gameplayMutation','publicRouteMutation','livePageChange','productConstruction']) if (amendment.authorityBoundary[key] !== false) issues.push(`AUTHORITY_OVERREACH:${key}`);
+            for (const repositoryPath of changedPaths) {
+              const resolution = registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
+              if (resolution.resolved !== true || resolution.unresolved !== false || !resolution.nodes.some((candidateNode) => candidateNode.nodeId === NODE_ID)) issues.push(`PATH_SCOPE_FAILURE:${repositoryPath}`);
+            }
+            const occurrence = registryFacade.resolveHEarthRepositoryRegistryOccurrence({ path: AMENDMENT_PATH, refName: 'agent/h-earth-gratitude-region-controlling-artifact-reference-update-001', gitBlobSha: AMENDMENT_BLOB });
+            if (occurrence.resolved !== true || occurrence.matches.length !== 1) issues.push('AMENDMENT_OCCURRENCE_NOT_EXACTLY_RESOLVED');
+            const preflight = runAutomaticHEarthPreflight({ paths: changedPaths, taskText: 'Validate Gratitude Region controlling-artifact active-main reference update candidate only', mutationIntent: false });
+            const failureCodes = preflight.validatorReceipt?.failureCodes ?? [];
+            const resolvedPaths = preflight.validatorReceipt?.resolvedPaths ?? [];
+            if (preflight.finalDisposition !== 'PASS' || preflight.continuation !== 'READ_ONLY_CONTINUATION_PERMITTED' || failureCodes.length !== 0 || resolvedPaths.length !== 3) issues.push('REFERENCE_UPDATE_PREFLIGHT_FAILURE');
+            if (node.authorityClass !== 'NO_AUTHORITY' || node.allowedMutationScope !== 'READ_ONLY_INSPECTION' || node.lifecycleStatus !== 'CANDIDATE') issues.push('REGISTRY_AUTHORITY_OVERREACH');
+            if (stable(node.unresolvedFields) !== stable(['SEPARATE_FINAL_PLACEMENT_DISPOSITION'])) issues.push('UNRESOLVED_FIELDS_MISMATCH');
+            const base = {
+              schemaVersion: 'H_EARTH_GRATITUDE_REGION_CONTROLLING_ARTIFACT_REFERENCE_UPDATE_COMPOSITE_VALIDATION_RECEIPT_v1',
+              baseMainHead: BASE,
+              candidateHead: CANDIDATE,
+              candidateChangedPathCount: 3,
+              candidateChangedPaths: changedPaths,
+              referenceAmendmentBlob: AMENDMENT_BLOB,
+              registryOverlayBlob: OVERLAY_BLOB,
+              correctedLoaderBlob: LOADER_BLOB,
+              spatialV1BlobPreserved: blobAt(CANDIDATE, SPATIAL_PATH) === SPATIAL_BLOB,
+              manifestV1BlobPreserved: blobAt(CANDIDATE, MANIFEST_PATH) === MANIFEST_BLOB,
+              activeMainPackageMergeCommit: PACKAGE_MERGE,
+              activePackagePathCount: packageOccurrences.length,
+              exactActivePackageBlobMatches: exactPackageBlobMatches,
+              macosExecutionEvidence: {
+                workflowRun: 30483053322,
+                workflowJob: 90681767710,
+                evidenceArtifact: 8736455635,
+                artifactDigest: 'sha256:b34166677169fdc7255697ad958c58116ba0f44144298e4bab7559bfa1f3ec58',
+                candidateIdentityStep: 'PASS',
+                priorAnalyticalRegressions: 'PASS',
+                regionalClosureAudit: 'REGIONAL_CANDIDATE_SET_COMPLETENESS_AND_CLOSURE_AUDIT_PASS_CLOSED',
+                closureAuditDigest: 'c3ed6395005aaa47c49389920be815032fca7b63c49ce899a5cee06908bf56e7',
+                closureExecutionDigest: '9f87ce88f98e9015b09274bc855826e3dfa3700e7839173cf213eebf911cbd75'
+              },
+              registryPreflight: preflight.finalDisposition,
+              registryPreflightResolvedPathCount: resolvedPaths.length,
+              registryPreflightFailureCodes: failureCodes,
+              amendmentOccurrenceResolvedExactlyOnce: occurrence.resolved === true && occurrence.matches.length === 1,
+              unresolvedFields: node.unresolvedFields,
+              referenceUpdateActiveOnMain: false,
+              mergeAuthorityCreated: false,
+              candidateAcceptance: false,
+              finalCoordinatesAssigned: false,
+              canonicalization: false,
+              terrainMutation: false,
+              geometryConstruction: false,
+              runtimeMutation: false,
+              livePageChange: false,
+              productConstruction: false,
+              stoppingBoundary: 'STOP_BEFORE_REFERENCE_UPDATE_CANDIDATE_MERGE_OR_FINAL_CANDIDATE_PLACEMENT_DISPOSITION',
+              issues
+            };
+            return { ...base, receiptDigest: digest(base), status: issues.length === 0 ? 'PASS_CLOSED' : 'FAIL_STOPPED' };
+          }
+
+          const first = execute();
+          const second = execute();
+          const deterministic = first.receiptDigest === second.receiptDigest;
+          fs.writeFileSync('/tmp/h-earth-gratitude-region-reference-update-composite.first.json', `${JSON.stringify(first, null, 2)}\n`);
+          fs.writeFileSync('/tmp/h-earth-gratitude-region-reference-update-composite.second.json', `${JSON.stringify(second, null, 2)}\n`);
+          const custody = {
+            schemaVersion: 'H_EARTH_GRATITUDE_REGION_CONTROLLING_ARTIFACT_REFERENCE_UPDATE_COMPOSITE_VALIDATION_CUSTODY_v1',
+            status: deterministic && first.status === 'PASS_CLOSED' && second.status === 'PASS_CLOSED' ? 'PASS_CLOSED' : 'FAIL_STOPPED',
+            baseMainHead: first.baseMainHead,
+            candidateHead: first.candidateHead,
+            candidateChangedPathCount: first.candidateChangedPathCount,
+            referenceAmendmentBlob: first.referenceAmendmentBlob,
+            registryOverlayBlob: first.registryOverlayBlob,
+            correctedLoaderBlob: first.correctedLoaderBlob,
+            activeMainPackageMergeCommit: first.activeMainPackageMergeCommit,
+            activePackagePathCount: first.activePackagePathCount,
+            exactActivePackageBlobMatches: first.exactActivePackageBlobMatches,
+            macosExecutionEvidence: first.macosExecutionEvidence,
+            registryPreflight: first.registryPreflight,
+            registryPreflightResolvedPathCount: first.registryPreflightResolvedPathCount,
+            registryPreflightFailureCodes: first.registryPreflightFailureCodes,
+            firstExecutionDigest: first.receiptDigest,
+            secondExecutionDigest: second.receiptDigest,
+            deterministicRepeatExecution: deterministic,
+            unresolvedFields: first.unresolvedFields,
+            referenceUpdateActiveOnMain: false,
+            mergeAuthorityCreated: false,
+            candidateAcceptance: false,
+            finalCoordinatesAssigned: false,
+            canonicalization: false,
+            terrainMutation: false,
+            geometryConstruction: false,
+            runtimeMutation: false,
+            livePageChange: false,
+            productConstruction: false,
+            stoppingBoundary: first.stoppingBoundary
+          };
+          fs.writeFileSync('/tmp/h-earth-gratitude-region-reference-update-composite.custody.json', `${JSON.stringify(custody, null, 2)}\n`);
+          console.log(JSON.stringify(custody, null, 2));
+          if (custody.status !== 'PASS_CLOSED') process.exitCode = 1;
+          NODE
+
+      - name: Upload composite reference-update evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-controlling-artifact-reference-update-composite-evidence
+          path: |
+            /tmp/h-earth-gratitude-region-reference-update-composite.first.json
+            /tmp/h-earth-gratitude-region-reference-update-composite.second.json
+            /tmp/h-earth-gratitude-region-reference-update-composite.custody.json
+          if-no-files-found: error
+          retention-days: 30

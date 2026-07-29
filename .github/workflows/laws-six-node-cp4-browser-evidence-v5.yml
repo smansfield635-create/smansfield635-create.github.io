@@ -72,7 +72,7 @@ jobs:
               ),
               (
                   'await projected.click();',
-                  'const projectedBox = await projected.boundingBox();\n  assert.ok(projectedBox, `${direction} projected label bounding box required`);\n  const tapX = projectedBox.x + projectedBox.width / 2;\n  const tapY = projectedBox.y + projectedBox.height / 2;\n  await projected.dispatchEvent("pointerdown", { pointerId: 41, pointerType: "mouse", isPrimary: true, button: 0, buttons: 1, clientX: tapX, clientY: tapY });\n  await page.locator("[data-laws-scene-field]").dispatchEvent("pointerup", { pointerId: 41, pointerType: "mouse", isPrimary: true, button: 0, buttons: 0, clientX: tapX, clientY: tapY });'
+                  'const projectedBox = await projected.boundingBox();\n  assert.ok(projectedBox, `${direction} projected label bounding box required`);\n  const tapX = projectedBox.x + projectedBox.width / 2;\n  const tapY = projectedBox.y + projectedBox.height / 2;\n  await page.mouse.move(tapX, tapY);\n  await page.mouse.down();\n  await page.mouse.up();'
               )
           ]
 

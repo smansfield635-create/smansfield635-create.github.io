@@ -1,0 +1,143 @@
+name: H-Earth Gratitude Region Final Placement FP-02 Execution
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: h-earth-gratitude-region-final-placement-fp02-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  execute-fp02-manor-site-disposition:
+    runs-on: macos-14
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact FP-02 candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: 3b692438aa0eb7f2a87174f07d0b05cbc8566d62
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute FP-00 through FP-02 twice
+        env:
+          FIRST_RECEIPT: /tmp/h-earth-gratitude-region-fp02-first.json
+          SECOND_RECEIPT: /tmp/h-earth-gratitude-region-fp02-second.json
+        run: |
+          set -o pipefail
+          H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_BASELINE_RECEIPT="$FIRST_RECEIPT" \
+            node h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gratitude-region-fp02-first.log
+          H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_BASELINE_RECEIPT="$SECOND_RECEIPT" \
+            node h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gratitude-region-fp02-second.log
+
+      - name: Verify FP-02 result and deterministic custody
+        run: |
+          node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+
+          const firstPath = '/tmp/h-earth-gratitude-region-fp02-first.json';
+          const secondPath = '/tmp/h-earth-gratitude-region-fp02-second.json';
+          const firstText = fs.readFileSync(firstPath, 'utf8');
+          const secondText = fs.readFileSync(secondPath, 'utf8');
+          const first = JSON.parse(firstText);
+          const second = JSON.parse(secondText);
+          const issues = [];
+          const check = (condition, code) => {
+            if (!condition) issues.push(code);
+          };
+          const sha256 = (text) =>
+            crypto.createHash('sha256').update(text).digest('hex');
+
+          for (const [label, receipt] of [['FIRST', first], ['SECOND', second]]) {
+            check(receipt.status === 'FP_00_THROUGH_FP_02_PASS_CLOSED', `${label}_STATUS:${receipt.status}`);
+            check(receipt.eligible === true, `${label}_NOT_ELIGIBLE`);
+            check(receipt.fp00?.frozenInputCount === 24, `${label}_FROZEN_INPUT_COUNT`);
+            check(receipt.fp00?.exactFrozenInputMatchCount === 24, `${label}_FROZEN_MATCH_COUNT`);
+            check(receipt.fp00?.priorAuthorityMutation === false, `${label}_PRIOR_AUTHORITY_MUTATION`);
+            check((receipt.fp00?.protectedMutationPaths ?? []).length === 0, `${label}_PROTECTED_MUTATION_PATHS`);
+            check(receipt.fp01?.disposition === 'ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL', `${label}_ENTRY_DISPOSITION`);
+            check(receipt.fp02?.status === 'FP_02_MIRROR_MANOR_SITE_DISPOSITION_PASS_CLOSED', `${label}_FP02_STATUS:${receipt.fp02?.status}`);
+            check(receipt.fp02?.disposition === 'ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY', `${label}_FP02_DISPOSITION:${receipt.fp02?.disposition}`);
+            check(receipt.fp02?.acceptedSiteEnvelope?.center?.x === 80, `${label}_MANOR_CENTER_X`);
+            check(receipt.fp02?.acceptedSiteEnvelope?.center?.z === -172, `${label}_MANOR_CENTER_Z`);
+            check(receipt.fp02?.acceptedSiteEnvelope?.bounds?.xMinimum === 64, `${label}_MANOR_X_MIN`);
+            check(receipt.fp02?.acceptedSiteEnvelope?.bounds?.xMaximum === 96, `${label}_MANOR_X_MAX`);
+            check(receipt.fp02?.acceptedSiteEnvelope?.bounds?.zMinimum === -188, `${label}_MANOR_Z_MIN`);
+            check(receipt.fp02?.acceptedSiteEnvelope?.bounds?.zMaximum === -156, `${label}_MANOR_Z_MAX`);
+            check(receipt.fp02?.lowCorridorPreserved?.noBuildHalfWidth === 6, `${label}_CORRIDOR_HALF_WIDTH`);
+            check(receipt.fp02?.gullyOrLowCorridorBlocked === false, `${label}_CORRIDOR_BLOCKED`);
+            check(receipt.fp02?.lowerNaturalApproachPreserved === true, `${label}_LOWER_APPROACH`);
+            check(receipt.fp02?.twoHillRelationPreserved === true, `${label}_TWO_HILL_RELATION`);
+            check(receipt.fp02?.beachwardViewPreserved === true, `${label}_BEACHWARD_VIEW`);
+            check(receipt.fp02?.mountainwardViewPreserved === true, `${label}_MOUNTAINWARD_VIEW`);
+            check(receipt.fp02?.selectedFootprintClass === null, `${label}_FOOTPRINT_SELECTED`);
+            check((receipt.fp02?.supportedFootprintClasses ?? []).length === 3, `${label}_FOOTPRINT_DOMAIN`);
+            check(receipt.fp02?.downstreamConstructionRequirements?.minimumEntrances === 4, `${label}_MINIMUM_ENTRANCES`);
+            check(receipt.fp02?.downstreamConstructionRequirements?.oneEntranceRelatesToLowerNaturalApproach === true, `${label}_LOWER_APPROACH_ENTRANCE`);
+            check(receipt.fp02?.downstreamConstructionRequirements?.exactEntranceCoordinatesAssigned === false, `${label}_ENTRANCE_COORDINATES_ASSIGNED`);
+            check(receipt.fp02?.downstreamConstructionRequirements?.exactFootprintClassSelected === false, `${label}_FOOTPRINT_CLASS_ASSIGNED`);
+            check(receipt.fp02?.terrainMutation === false, `${label}_TERRAIN_MUTATION`);
+            check(receipt.fp02?.buildingGeometry === false, `${label}_BUILDING_GEOMETRY`);
+            check(receipt.deterministicRepeatExecution === true, `${label}_INTERNAL_NONDETERMINISM`);
+            check(receipt.firstExecutionDigest === receipt.secondExecutionDigest, `${label}_INTERNAL_DIGEST_MISMATCH`);
+            check(Object.values(receipt.authorityBoundary ?? {}).every((value) => value === false), `${label}_AUTHORITY_OVERREACH`);
+          }
+
+          check(first.firstExecutionDigest === second.firstExecutionDigest, 'CROSS_RUN_FIRST_DIGEST_MISMATCH');
+          check(first.secondExecutionDigest === second.secondExecutionDigest, 'CROSS_RUN_SECOND_DIGEST_MISMATCH');
+          check(firstText === secondText, 'CROSS_RUN_RECEIPT_BYTES_MISMATCH');
+
+          const summary = {
+            schemaVersion: 'H_EARTH_GRATITUDE_REGION_FP02_EXECUTION_CUSTODY_v1',
+            status: issues.length === 0 ? 'PASS_CLOSED' : 'FAIL_STOPPED',
+            executedHead: '3b692438aa0eb7f2a87174f07d0b05cbc8566d62',
+            firstReceiptSha256: sha256(firstText),
+            secondReceiptSha256: sha256(secondText),
+            firstExecutionDigest: first.firstExecutionDigest,
+            secondExecutionDigest: first.secondExecutionDigest,
+            crossRunReceiptBytesIdentical: firstText === secondText,
+            frozenInputCount: first.fp00?.frozenInputCount,
+            exactFrozenInputMatchCount: first.fp00?.exactFrozenInputMatchCount,
+            protectedMutationPaths: first.fp00?.protectedMutationPaths,
+            entryDisposition: first.fp01?.disposition,
+            manorDisposition: first.fp02?.disposition,
+            acceptedSiteEnvelope: first.fp02?.acceptedSiteEnvelope,
+            lowCorridorPreserved: first.fp02?.lowCorridorPreserved,
+            supportedFootprintClasses: first.fp02?.supportedFootprintClasses,
+            selectedFootprintClass: first.fp02?.selectedFootprintClass,
+            downstreamConstructionRequirements: first.fp02?.downstreamConstructionRequirements,
+            nextCheckpoint: first.nextCheckpoint,
+            issues
+          };
+          fs.writeFileSync(
+            '/tmp/h-earth-gratitude-region-fp02-execution-summary.json',
+            `${JSON.stringify(summary, null, 2)}\n`
+          );
+          console.log(JSON.stringify(summary, null, 2));
+          if (issues.length > 0) process.exit(1);
+          NODE
+
+      - name: Upload FP-02 execution evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-fp02-execution-evidence
+          path: |
+            /tmp/h-earth-gratitude-region-fp02-first.json
+            /tmp/h-earth-gratitude-region-fp02-second.json
+            /tmp/h-earth-gratitude-region-fp02-first.log
+            /tmp/h-earth-gratitude-region-fp02-second.log
+            /tmp/h-earth-gratitude-region-fp02-execution-summary.json
+          if-no-files-found: error
+          retention-days: 90

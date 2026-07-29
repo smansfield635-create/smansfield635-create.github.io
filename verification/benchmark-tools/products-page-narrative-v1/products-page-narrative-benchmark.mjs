@@ -19,7 +19,7 @@ const html = fs.readFileSync("products/index.html", "utf8");
 const narrativeCss = fs.readFileSync("products/index.narrative.css", "utf8");
 
 assert(html.includes('/products/index.narrative.css'), "NARRATIVE_STYLESHEET_NOT_LINKED");
-assert(html.includes('class="products-mission"'), "MISSION_SECTION_MISSING");
+assert(html.includes('data-products-mission'), "MISSION_SECTION_MISSING");
 assert(html.includes('class="products-impact"'), "IMPACT_SECTION_MISSING");
 assert(html.includes('class="products-ecosystem"'), "ECOSYSTEM_SECTION_MISSING");
 assert(html.includes('class="products-campaigns"'), "CAMPAIGNS_SECTION_MISSING");
@@ -81,7 +81,7 @@ for (const profile of profiles) {
 
   const initial = await page.evaluate(() => {
     const root = document.querySelector('[data-page-id="products"]');
-    const mission = document.querySelector(".products-mission");
+    const mission = document.querySelector("[data-products-mission]");
     const impact = document.querySelector(".products-impact");
     const ecosystem = document.querySelector(".products-ecosystem");
     const campaigns = document.querySelector(".products-campaigns");

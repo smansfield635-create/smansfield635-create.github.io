@@ -36,11 +36,10 @@ const context = await browser.newContext({
 await context.addCookies([{
   name: '__Http-phish',
   value: '1',
-  domain: 'rawcdn.githack.com',
-  path: '/',
+  url: 'https://rawcdn.githack.com/',
   secure: true,
-  httpOnly: false,
-  sameSite: 'Lax'
+  httpOnly: true,
+  sameSite: 'None'
 }]);
 
 const page = await context.newPage();

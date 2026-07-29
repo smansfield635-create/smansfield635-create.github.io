@@ -25,7 +25,7 @@ const digest = (value) => crypto.createHash('sha256').update(stable(value)).dige
 const keyOf = (x, z) => `${x},${z}`;
 const round = (value, digits = 9) => Number(value.toFixed(digits));
 
-const SEARCH = freeze({ xMinimum: 24, xMaximum: 132, zMinimum: -212, zMaximum: -132, step: 4 });
+const SEARCH = freeze({ xMinimum: 24, xMaximum: 176, zMinimum: -236, zMaximum: -132, step: 4 });
 const BEACH_TARGET = freeze({ ...H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.COAST.position });
 const MOUNTAIN_TARGET = freeze({ x: -96, z: -264 });
 const SUPPLIED_HILL_ADDRESSES = freeze(['H_EARTH_GROUND_CELL_001:R06:C11', 'H_EARTH_GROUND_CELL_001:R06:C12']);
@@ -159,8 +159,9 @@ function deriveHillPair(frame) {
     }
   }
   if (pairs.length === 0) {
-    const left = [...frame.samples].filter((sample) => sample.world.x <= 76).sort((a, b) => b.elevation - a.elevation || a.world.x - b.world.x)[0] ?? null;
-    const right = [...frame.samples].filter((sample) => sample.world.x > 76).sort((a, b) => b.elevation - a.elevation || a.world.x - b.world.x)[0] ?? null;
+    const interiorSamples = frame.samples.filter((sample) => sample.world.x > SEARCH.xMinimum && sample.world.x < SEARCH.xMaximum && sample.world.z > SEARCH.zMinimum && sample.world.z < SEARCH.zMaximum);
+    const left = [...interiorSamples].filter((sample) => sample.world.x <= 96).sort((a, b) => b.elevation - a.elevation || a.world.x - b.world.x)[0] ?? null;
+    const right = [...interiorSamples].filter((sample) => sample.world.x > 96).sort((a, b) => b.elevation - a.elevation || a.world.x - b.world.x)[0] ?? null;
     const fallback = left && right ? evaluatePair(left, right) : null;
     if (fallback) pairs.push(freeze({ ...fallback, selectionBasis: 'BROAD_TERRAIN_MAXIMA_LAST_RESORT' }));
   }
@@ -272,6 +273,7 @@ function deriveSiteCandidates(frame, hillPair, corridor) {
   const strict = [];
   const relaxed = [];
   for (const sample of frame.samples) {
+    if (sample.world.z < -220) continue;
     const local = projectLocal(corridor, sample.world);
     if (Math.abs(local.acrossCorridor) > Math.max(8, halfDistance - 6) || Math.abs(local.alongCorridor) > 36) continue;
     if (Math.abs(local.acrossCorridor) < corridor.noBuildHalfWidth) continue;

@@ -1,1 +1,2 @@
 Temporary pull-request trigger for the bounded Showroom cluster front-lock applicator.
+Retry after correcting first-occurrence benchmark patching.

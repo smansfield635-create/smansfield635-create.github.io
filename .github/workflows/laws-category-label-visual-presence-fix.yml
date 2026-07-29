@@ -1,0 +1,52 @@
+name: Laws Category Label Visual Presence Fix
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/laws-category-label-visual-presence-fix.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Separate visual category labels from hit-test visibility
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          path = Path('laws/index.interactions.js')
+          text = path.read_text()
+          old = 'if(m!==MODE.CONSTELLATION||!r?.visible){el.hidden=true;continue;}'
+          new = 'if(m!==MODE.CONSTELLATION||!r){el.hidden=true;continue;}'
+          if text.count(old) != 1:
+            raise SystemExit(f'category gate target count: {text.count(old)}')
+          text = text.replace(old, new, 1)
+          old = 'el.dataset.depthLayer=r.depthLayer;el.dataset.primary=String(id===primary);}'
+          new = 'el.dataset.depthLayer=r.depthLayer;el.dataset.primary=String(id===primary);el.dataset.lawsProjectedPlacement="star-center-protected-tab";}'
+          if text.count(old) != 1:
+            raise SystemExit(f'category placement target count: {text.count(old)}')
+          text = text.replace(old, new, 1)
+          path.write_text(text)
+          PY
+          node --check laws/index.interactions.js
+
+      - name: Commit bounded production correction
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.interactions.js
+          git commit -m "Keep all Laws category labels visually present"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}

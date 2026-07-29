@@ -40,6 +40,17 @@ jobs:
           ref: agent/laws-fifth-test-star-reversible-admissibility-cp1-001
           fetch-depth: 0
 
+      - name: Reconcile exact current main before mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge --no-edit origin/main
+          git merge-base --is-ancestor origin/main HEAD
+          test "$(git diff --name-only origin/main...HEAD | grep -E '^laws/(index\.html|index\.controller\.js|index\.interactions\.js|index\.crystals\.js|index\.css|index\.crystals\.source\.js)$' | wc -l | tr -d ' ')" = "0"
+
       - name: Verify frozen Laws source custody
         shell: bash
         run: |
@@ -63,6 +74,15 @@ jobs:
           echo "b6ea1315c95fc316326ab4efaf8c864341dbb314dc0bf855e762f7d3f2592e17  /tmp/patch2.py" | sha256sum -c -
           echo "d27241821358085610e365e2f6634d04d3cf715ad23446e1c99ab05c2835b9b1  /tmp/patch3.py" | sha256sum -c -
           python -m py_compile /tmp/patch1.py /tmp/patch2.py /tmp/patch3.py
+          python - <<'PY'
+          from pathlib import Path
+          source = Path('/tmp/patch1.py').read_text()
+          needle = 'html direct nav'
+          index = source.find(needle)
+          print('PATCH1_DIRECT_NAV_CONTEXT_BEGIN')
+          print(source[max(0, index - 1400):index + 700])
+          print('PATCH1_DIRECT_NAV_CONTEXT_END')
+          PY
 
       - name: Apply bounded six-node source candidate
         shell: bash

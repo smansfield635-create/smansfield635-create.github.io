@@ -243,7 +243,7 @@ jobs:
               'const D=Object.freeze(["flow","integrity","reality","structure","test","research"])',
               'test:[0.76,0,0.65]',
               'research:[-0.76,0,0.65]',
-              "data.labelLines",
+              "control.dataset.labelLines",
               'line==="&"?"ampersand":"word"',
               "requestCategorySelection",
               "requestLawSelection",

@@ -1,4 +1,4 @@
-name: Laws celestial gateway CP2 registry repair
+name: Laws celestial gateway CP3 reconciliation verification
 
 on:
   pull_request:
@@ -6,144 +6,282 @@ on:
     branches: [main]
     paths:
       - .github/workflows/laws-celestial-gateway-cp2-construction.yml
-      - .cp2-repair-trigger/registry-repair.request
 
 permissions:
   contents: write
 
 jobs:
-  repair:
+  verify:
     if: github.head_ref == 'agent/laws-celestial-gateway-cp2-execution-001'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: agent/laws-celestial-gateway-auxiliary-clusters-cp2-001
           fetch-depth: 0
-      - name: Restore crystal registry finalization and constellation anchor
+      - name: Reconcile and verify Checkpoint 3
         run: |
           set -euo pipefail
           python3 - <<'PY'
+          from collections import Counter
+          from html.parser import HTMLParser
           from pathlib import Path
+          import re
           import subprocess
-
-          base = '0bf5bcd63132d92fa6a4758a4f57ef2a6f524038'
-          candidate = 'f682d6f99ba35629edb25c367d4b4c2dfdbeb529'
-          paths = [
-              'laws/index.controller.js',
-              'laws/index.crystals.js',
-              'laws/index.css',
-              'laws/index.html',
-              'laws/index.interactions.js',
-              'laws/research/index.html',
-              'laws/test/index.html',
+          
+          FROZEN_BASE = "0bf5bcd63132d92fa6a4758a4f57ef2a6f524038"
+          CURRENT_MAIN = "8a68a163f20c0918f33a3137763af05d4ccb035f"
+          REPAIRED_HEAD = "ecbb347032f121e4dc6f93afc877e40d6e585922"
+          
+          LAWS_PATHS = [
+              "laws/index.controller.js",
+              "laws/index.crystals.js",
+              "laws/index.css",
+              "laws/index.html",
+              "laws/index.interactions.js",
+              "laws/research/index.html",
+              "laws/test/index.html",
           ]
-
-          subprocess.run(['git', 'reset', '--hard', base], check=True)
-          subprocess.run(['git', 'checkout', candidate, '--', *paths], check=True)
-
-          changed = subprocess.check_output(
-              ['git', 'diff', '--name-only', base],
-              text=True,
+          
+          INTERVENING_MAIN_PATHS = [
+              "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+              "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gratitude-region-final-spatial-placement-disposition.js",
+              "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js",
+              "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.mjs",
+              "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json",
+              "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.runner.mjs",
+          ]
+          
+          def git(*args):
+              return subprocess.check_output(["git", *args], text=True).strip()
+          
+          def fail(code, detail=""):
+              raise SystemExit(f"{code}:{detail}" if detail else code)
+          
+          def require_token(source, token, code):
+              if token not in source:
+                  fail(code, token)
+          
+          def require_regex(source, pattern, code):
+              if re.search(pattern, source, flags=re.S) is None:
+                  fail(code, pattern)
+          
+          subprocess.run(["git", "fetch", "origin", "main"], check=True)
+          if git("rev-parse", "origin/main") != CURRENT_MAIN:
+              fail("CP3_CURRENT_MAIN_MOVED", git("rev-parse", "origin/main"))
+          
+          actual_intervening = git(
+              "diff", "--name-only", f"{FROZEN_BASE}..{CURRENT_MAIN}"
           ).splitlines()
-          if changed != paths:
-              raise SystemExit(
-                  'CP2_CANDIDATE_PATH_SET_INVALID:' + ','.join(changed)
-              )
-
-          path = Path('laws/index.crystals.js')
-          text = path.read_text(encoding='utf-8')
-
-          old = (
-              "      }\n"
-              "    );\n"
-              "\n"
-              "  }\n"
-              "\n"
-              "  function clusterAnchorVector() {"
-          )
-
-          new = (
-              "      }\n"
-              "    );\n"
-              "\n"
-              "    RECEIPT.categoryCount =\n"
-              "      Array.from(registry.values())\n"
-              "        .filter(\n"
-              "          node =>\n"
-              "            node.type === NODE_TYPES.CATEGORY\n"
-              "        ).length;\n"
-              "\n"
-              "    RECEIPT.auxiliaryCount =\n"
-              "      Array.from(registry.values())\n"
-              "        .filter(\n"
-              "          node =>\n"
-              "            node.type === NODE_TYPES.AUXILIARY\n"
-              "        ).length;\n"
-              "\n"
-              "    RECEIPT.lawCount =\n"
-              "      Array.from(registry.values())\n"
-              "        .filter(\n"
-              "          node =>\n"
-              "            node.type === NODE_TYPES.LAW\n"
-              "        ).length;\n"
-              "\n"
-              "    RECEIPT.canonicalSemanticLawCount =\n"
-              "      lawElements.length;\n"
-              "\n"
-              "    return registry;\n"
-              "  }\n"
-              "\n"
-              "  function constellationAnchorVector() {\n"
-              "    return normalizeVector(\n"
-              "      SPHERE.constellation.primaryAnchor\n"
-              "    );\n"
-              "  }\n"
-              "\n"
-              "  function clusterAnchorVector() {"
-          )
-
-          count = text.count(old)
-          if count != 1:
-              raise SystemExit(f'CP2_REGISTRY_REPAIR_ANCHOR_INVALID:{count}')
-
-          text = text.replace(old, new, 1)
-
-          start = text.index('  function buildRegistry() {')
-          end = text.index('  function clusterAnchorVector() {', start)
-          segment = text[start:end]
-
-          required = [
-              'return registry;',
-              'function constellationAnchorVector()',
-              'RECEIPT.categoryCount =',
-              'RECEIPT.auxiliaryCount =',
-              'RECEIPT.lawCount =',
-              'RECEIPT.canonicalSemanticLawCount =',
-          ]
-          invalid = [item for item in required if segment.count(item) != 1]
-          if invalid:
-              raise SystemExit(
-                  'CP2_REGISTRY_REPAIR_INVALID:' + ','.join(invalid)
-              )
-
-          path.write_text(text, encoding='utf-8')
-          print('CP2_CANDIDATE_PATH_SET=PASS')
-          print('CP2_REGISTRY_REPAIR_SOURCE_ASSERTIONS=PASS')
+          if actual_intervening != INTERVENING_MAIN_PATHS:
+              fail("CP3_MAIN_RECONCILIATION_PATH_SET_INVALID", ",".join(actual_intervening))
+          if any(path.startswith("laws/") for path in actual_intervening):
+              fail("CP3_MAIN_RECONCILIATION_LAWS_OVERLAP")
+          
+          subprocess.run(["git", "reset", "--hard", CURRENT_MAIN], check=True)
+          subprocess.run(["git", "checkout", REPAIRED_HEAD, "--", *LAWS_PATHS], check=True)
+          
+          actual_laws_paths = git("diff", "--name-only", CURRENT_MAIN).splitlines()
+          if actual_laws_paths != LAWS_PATHS:
+              fail("CP3_RECONCILED_PATH_SET_INVALID", ",".join(actual_laws_paths))
+          
+          for path in LAWS_PATHS:
+              expected_blob = git("rev-parse", f"{REPAIRED_HEAD}:{path}")
+              actual_blob = git("hash-object", path)
+              if actual_blob != expected_blob:
+                  fail("CP3_BLOB_IDENTITY_MISMATCH", f"{path}:{actual_blob}:{expected_blob}")
+          
+          controller = Path("laws/index.controller.js").read_text(encoding="utf-8")
+          crystals = Path("laws/index.crystals.js").read_text(encoding="utf-8")
+          css = Path("laws/index.css").read_text(encoding="utf-8")
+          html = Path("laws/index.html").read_text(encoding="utf-8")
+          interactions = Path("laws/index.interactions.js").read_text(encoding="utf-8")
+          research = Path("laws/research/index.html").read_text(encoding="utf-8")
+          test = Path("laws/test/index.html").read_text(encoding="utf-8")
+          
+          for token in (
+              '"flow"', '"integrity"', '"reality"', '"structure"', '"test"', '"research"',
+              "DIRECTIONS.length === 6",
+              "registry.lawRecords.length === 24",
+              "registry.lawRoutes.length === 24",
+              "directionCount: 6",
+              "lawCount: 24",
+              "routeCount: 24",
+              "requestCategorySelection",
+              "requestLawSelection",
+              "requestReturnToConstellation",
+          ):
+              require_token(controller, token, "CP3_CONTROLLER_TOKEN_MISSING")
+          
+          for token in (
+              'const GATEWAY_IDS = Object.freeze(["test", "research"]);',
+              "const AUXILIARY_IDS = Object.freeze([]);",
+              "AUTHORITY_SOLAR",
+              "AUTHORITY_LUNAR",
+              "createCelestialSphereMesh",
+              'mode:direction === "test" ? "solar" : "lunar"',
+          ):
+              require_token(crystals, token, "CP3_CRYSTALS_TOKEN_MISSING")
+          
+          require_regex(crystals, r"categoryScale:\s*0\.768,", "CP3_CARDINAL_SCALE_INVALID")
+          require_regex(crystals, r"focusedCategoryScale:\s*1\.04,", "CP3_FOCUSED_CARDINAL_SCALE_INVALID")
+          
+          registry_start = crystals.index("  function buildRegistry() {")
+          registry_end = crystals.index("  function clusterAnchorVector() {", registry_start)
+          registry_segment = crystals[registry_start:registry_end]
+          for token in (
+              "RECEIPT.categoryCount =",
+              "RECEIPT.auxiliaryCount =",
+              "RECEIPT.lawCount =",
+              "RECEIPT.canonicalSemanticLawCount =",
+              "return registry;",
+              "function constellationAnchorVector()",
+          ):
+              if registry_segment.count(token) != 1:
+                  fail("CP3_REGISTRY_AUTHORITY_INVALID", f"{token}:{registry_segment.count(token)}")
+          
+          class LawsHTMLAudit(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.html_attrs = {}
+                  self.categories = []
+                  self.laws = []
+                  self.ids = set()
+          
+              def handle_starttag(self, tag, attrs):
+                  data = dict(attrs)
+                  if tag == "html":
+                      self.html_attrs = data
+                  if "id" in data:
+                      self.ids.add(data["id"])
+                  if tag == "button" and "data-laws-category" in data:
+                      self.categories.append(data)
+                  if tag == "button" and "data-laws-law" in data:
+                      self.laws.append(data)
+          
+          audit = LawsHTMLAudit()
+          audit.feed(html)
+          
+          expected_meta = {
+              "data-laws-category-count": "6",
+              "data-laws-cardinal-count": "4",
+              "data-laws-celestial-gateway-count": "2",
+              "data-laws-law-count": "24",
+              "data-laws-route-destination-count": "24",
+              "data-laws-primary-star-count": "6",
+          }
+          for key, value in expected_meta.items():
+              if audit.html_attrs.get(key) != value:
+                  fail("CP3_HTML_METADATA_INVALID", f"{key}:{audit.html_attrs.get(key)}")
+          
+          expected_directions = {"flow", "integrity", "reality", "structure", "test", "research"}
+          category_directions = [item.get("data-direction", "") for item in audit.categories]
+          if len(audit.categories) != 6 or set(category_directions) != expected_directions:
+              fail("CP3_CATEGORY_REGISTRY_INVALID", ",".join(category_directions))
+          
+          category_by_direction = {
+              item["data-direction"]: item for item in audit.categories
+          }
+          test_gateway = category_by_direction["test"]
+          research_gateway = category_by_direction["research"]
+          if (
+              test_gateway.get("data-laws-gateway") != "solar"
+              or test_gateway.get("data-laws-object-shape") != "solar-object"
+              or test_gateway.get("data-laws-object-behavior") != "cluster"
+              or test_gateway.get("data-laws-cluster-id") != "test"
+          ):
+              fail("CP3_TEST_GATEWAY_INVALID")
+          if (
+              research_gateway.get("data-laws-gateway") != "lunar"
+              or research_gateway.get("data-laws-object-shape") != "lunar-object"
+              or research_gateway.get("data-laws-object-behavior") != "cluster"
+              or research_gateway.get("data-laws-cluster-id") != "research"
+          ):
+              fail("CP3_RESEARCH_GATEWAY_INVALID")
+          
+          if len(audit.laws) != 24:
+              fail("CP3_LAW_CONTROL_COUNT_INVALID", str(len(audit.laws)))
+          direction_counts = Counter(item.get("data-direction", "") for item in audit.laws)
+          if direction_counts != Counter({direction: 4 for direction in expected_directions}):
+              fail("CP3_LAW_DIRECTION_COUNTS_INVALID", repr(direction_counts))
+          
+          routes = [item.get("data-route", "") for item in audit.laws]
+          law_ids = [item.get("data-law-id", "") for item in audit.laws]
+          if len(set(routes)) != 24 or not all(routes):
+              fail("CP3_ROUTE_REGISTRY_INVALID")
+          if len(set(law_ids)) != 24 or not all(law_ids):
+              fail("CP3_LAW_ID_REGISTRY_INVALID")
+          
+          expected_auxiliary_labels = {
+              "test-admission-baseline": "Admission|&|Baseline",
+              "test-forward-construction": "Forward|Construction",
+              "test-reverse-audit": "Reverse|Audit",
+              "test-results-records": "Results|&|Records",
+              "research-evidence-sources": "Evidence|&|Sources",
+              "research-methods-models": "Methods|&|Models",
+              "research-applied-investigations": "Applied|Investigations",
+              "research-findings-boundaries": "Findings|&|Boundaries",
+          }
+          law_by_id = {item["data-law-id"]: item for item in audit.laws}
+          for law_id, label_lines in expected_auxiliary_labels.items():
+              record = law_by_id.get(law_id)
+              if record is None or record.get("data-label-lines") != label_lines:
+                  fail("CP3_STACKED_LABEL_DECLARATION_INVALID", law_id)
+          
+          for token in (
+              "--laws-category-size:clamp(2.52rem,4.64vw,4.08rem)",
+              "--laws-authority-size:clamp(4.15rem,7.4vw,6.45rem)",
+              '[data-laws-category][data-laws-gateway="solar"]::before',
+              '[data-laws-category][data-laws-gateway="lunar"]::before',
+              '[data-laws-projected-law-label]{display:grid',
+              '[data-laws-label-line="ampersand"]',
+              "white-space:normal",
+          ):
+              require_token(css, token, "CP3_CSS_TOKEN_MISSING")
+          
+          for token in (
+              'const D=Object.freeze(["flow","integrity","reality","structure","test","research"])',
+              'test:[0.76,0,0.65]',
+              'research:[-0.76,0,0.65]',
+              "data.labelLines",
+              'line==="&"?"ampersand":"word"',
+              "requestCategorySelection",
+              "requestLawSelection",
+              "requestReturnToConstellation",
+          ):
+              require_token(interactions, token, "CP3_INTERACTIONS_TOKEN_MISSING")
+          
+          for section_id in (
+              "admission-baseline",
+              "forward-construction",
+              "reverse-audit",
+              "results-records",
+          ):
+              require_token(test, f'id="{section_id}"', "CP3_TEST_SECTION_MISSING")
+          require_token(test, 'data-contract="LAWS_TEST_FOUR_MEMBER_CLUSTER_SUPPORT_PAGE_v1"', "CP3_TEST_CONTRACT_INVALID")
+          require_token(test, 'data-scientific-validation-claimed="false"', "CP3_TEST_BOUNDARY_INVALID")
+          
+          for section_id in (
+              "evidence-sources",
+              "methods-models",
+              "applied-investigations",
+              "findings-boundaries",
+          ):
+              require_token(research, f'id="{section_id}"', "CP3_RESEARCH_SECTION_MISSING")
+          require_token(research, 'data-contract="LAWS_RESEARCH_FOUR_MEMBER_CLUSTER_ATLAS_v1"', "CP3_RESEARCH_CONTRACT_INVALID")
+          require_token(research, 'data-empirical-validation-claimed="false"', "CP3_RESEARCH_BOUNDARY_INVALID")
+          
+          subprocess.run(["git", "diff", "--check"], check=True)
+          
+          print("CP3_MAIN_RECONCILIATION=PASS")
+          print("CP3_EXACT_SEVEN_PATH_SET=PASS")
+          print("CP3_REPAIRED_BLOB_IDENTITY=PASS")
+          print("CP3_CONTROLLER_STRUCTURE=PASS")
+          print("CP3_CRYSTAL_REGISTRY_AND_GEOMETRY=PASS")
+          print("CP3_HTML_ROUTE_AND_CLUSTER_REGISTRY=PASS")
+          print("CP3_STACKED_LABEL_ARCHITECTURE=PASS")
+          print("CP3_TEST_RESEARCH_SUPPORT_PAGES=PASS")
+          print("CHECKPOINT_3=PASS_CLOSED")
+          print("CHECKPOINT_4_STARTED=FALSE")
+          print("MAIN_MUTATION=FALSE")
           PY
-
-          node --check laws/index.crystals.js
-          git diff --check
-
-          test "$(git diff --name-only 0bf5bcd63132d92fa6a4758a4f57ef2a6f524038 | tr '\n' ',' | sed 's/,$//')" = "laws/index.controller.js,laws/index.crystals.js,laws/index.css,laws/index.html,laws/index.interactions.js,laws/research/index.html,laws/test/index.html"
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add laws/index.controller.js laws/index.crystals.js laws/index.css laws/index.html laws/index.interactions.js laws/research/index.html laws/test/index.html
-          git commit -m "Restore Laws crystal registry finalization"
-          git push --force-with-lease origin HEAD:agent/laws-celestial-gateway-auxiliary-clusters-cp2-001
-
-          echo "REPAIRED_CANDIDATE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
-          echo "CHECKPOINT_2_REGISTRY_REPAIR=PASS" >> "$GITHUB_STEP_SUMMARY"
-          echo "CHECKPOINT_3_STARTED=FALSE" >> "$GITHUB_STEP_SUMMARY"
-          echo "MAIN_MUTATION=FALSE" >> "$GITHUB_STEP_SUMMARY"

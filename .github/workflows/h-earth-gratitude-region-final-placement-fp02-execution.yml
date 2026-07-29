@@ -20,7 +20,7 @@ jobs:
       - name: Check out exact FP-02 candidate head
         uses: actions/checkout@v4
         with:
-          ref: 3b692438aa0eb7f2a87174f07d0b05cbc8566d62
+          ref: 554a693c82876d9533bd577475a818a570d03b0d
           fetch-depth: 0
 
       - name: Use Node.js 22
@@ -76,6 +76,7 @@ jobs:
             check(receipt.fp02?.acceptedSiteEnvelope?.bounds?.xMaximum === 96, `${label}_MANOR_X_MAX`);
             check(receipt.fp02?.acceptedSiteEnvelope?.bounds?.zMinimum === -188, `${label}_MANOR_Z_MIN`);
             check(receipt.fp02?.acceptedSiteEnvelope?.bounds?.zMaximum === -156, `${label}_MANOR_Z_MAX`);
+            check(receipt.fp02?.upperSiteRelationship?.upperSiteConfirmed === true, `${label}_UPPER_SITE_RELATION`);
             check(receipt.fp02?.lowCorridorPreserved?.noBuildHalfWidth === 6, `${label}_CORRIDOR_HALF_WIDTH`);
             check(receipt.fp02?.gullyOrLowCorridorBlocked === false, `${label}_CORRIDOR_BLOCKED`);
             check(receipt.fp02?.lowerNaturalApproachPreserved === true, `${label}_LOWER_APPROACH`);
@@ -102,7 +103,7 @@ jobs:
           const summary = {
             schemaVersion: 'H_EARTH_GRATITUDE_REGION_FP02_EXECUTION_CUSTODY_v1',
             status: issues.length === 0 ? 'PASS_CLOSED' : 'FAIL_STOPPED',
-            executedHead: '3b692438aa0eb7f2a87174f07d0b05cbc8566d62',
+            executedHead: '554a693c82876d9533bd577475a818a570d03b0d',
             firstReceiptSha256: sha256(firstText),
             secondReceiptSha256: sha256(secondText),
             firstExecutionDigest: first.firstExecutionDigest,
@@ -114,6 +115,7 @@ jobs:
             entryDisposition: first.fp01?.disposition,
             manorDisposition: first.fp02?.disposition,
             acceptedSiteEnvelope: first.fp02?.acceptedSiteEnvelope,
+            upperSiteRelationship: first.fp02?.upperSiteRelationship,
             lowCorridorPreserved: first.fp02?.lowCorridorPreserved,
             supportedFootprintClasses: first.fp02?.supportedFootprintClasses,
             selectedFootprintClass: first.fp02?.selectedFootprintClass,

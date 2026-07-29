@@ -184,7 +184,10 @@ jobs:
             'laws/test/index.html',
             'laws/research/index.html',
           }
-          lines = subprocess.check_output(['git', 'status', '--short'], text=True).splitlines()
+          lines = subprocess.check_output(
+              ['git', 'status', '--short', '--untracked-files=all'],
+              text=True,
+          ).splitlines()
           paths = {line[3:] for line in lines}
           unexpected = sorted(paths - allowed)
           required = {

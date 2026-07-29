@@ -52,6 +52,7 @@
   });
 
   const POINTER_TERRITORIES = Object.freeze({
+    CENTER_CONTROL: "CENTER_CONTROL",
     BLOCKED_CONTROL: "BLOCKED_CONTROL",
     RENDERED_PRIMARY: "RENDERED_PRIMARY",
     RENDERED_PRODUCT: "RENDERED_PRODUCT",
@@ -61,6 +62,7 @@
 
   const GESTURE_TYPES = Object.freeze({
     POINTER_DOWN: "pointerdown",
+    CENTER_TAP: "center-tap",
     TAP: "tap",
     EMPTY_TAP: "empty-tap",
     ORBIT_DRAG: "orbit-drag",
@@ -2081,6 +2083,7 @@
     }
 
     return target.closest([
+      "[data-products-center-control]",
       "[data-products-enter]",
       "[data-products-return-to-orbit]",
       "[data-products-return-to-constellation]",
@@ -2091,6 +2094,30 @@
       "textarea",
       "select"
     ].join(", "));
+  }
+
+  function centerControlAtPoint(clientX, clientY) {
+    const control = state.root
+      ? state.root.querySelector("[data-products-center-control]")
+      : null;
+
+    if (
+      !control ||
+      control.hidden ||
+      control.disabled ||
+      control.getAttribute("aria-hidden") === "true"
+    ) {
+      return null;
+    }
+
+    const rect = control.getBoundingClientRect();
+    const inside =
+      clientX >= rect.left &&
+      clientX <= rect.right &&
+      clientY >= rect.top &&
+      clientY <= rect.bottom;
+
+    return inside ? control : null;
   }
 
   function classifyPointerTerritory(event) {
@@ -2105,6 +2132,13 @@
     if (!inside) {
       return {
         territory: POINTER_TERRITORIES.OUTSIDE_SCENE,
+        nodeId: ""
+      };
+    }
+
+    if (centerControlAtPoint(event.clientX, event.clientY)) {
+      return {
+        territory: POINTER_TERRITORIES.CENTER_CONTROL,
         nodeId: ""
       };
     }
@@ -2289,6 +2323,16 @@
     );
   }
 
+  function requestControllerCompassSelection() {
+    const api = globalThis[CONTROLLER_SYMBOL];
+
+    return Boolean(
+      api &&
+      typeof api.requestCompassSelection === "function" &&
+      api.requestCompassSelection() !== false
+    );
+  }
+
   function requestNodeSelection(node, territory) {
     const api = globalThis[CONTROLLER_SYMBOL];
     let available = false;
@@ -2354,6 +2398,46 @@
       emitReceipt({
         lastPointerTerritory: classification.territory,
         lastGestureType: GESTURE_TYPES.BLOCKED
+      });
+      return;
+    }
+
+    if (classification.territory === POINTER_TERRITORIES.CENTER_CONTROL) {
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch (_) {}
+
+      const now = performance.now();
+      const startQuaternion = state.clusterQuaternion.slice();
+
+      state.pointer = {
+        id: event.pointerId,
+        pointerType: event.pointerType || "unknown",
+        startX: event.clientX,
+        startY: event.clientY,
+        lastX: event.clientX,
+        lastY: event.clientY,
+        startTime: now,
+        territory: classification.territory,
+        nodeId: "",
+        gestureScope: "center",
+        dragging: false,
+        controllerGestureBegan: false,
+        startQuaternion,
+        currentQuaternion: startQuaternion.slice(),
+        samples: [{
+          x: event.clientX,
+          y: event.clientY,
+          time: now
+        }]
+      };
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      emitReceipt({
+        lastPointerTerritory: classification.territory,
+        lastGestureType: GESTURE_TYPES.POINTER_DOWN
       });
       return;
     }
@@ -2424,6 +2508,15 @@
     addPointerSample(pointer, event.clientX, event.clientY, now);
 
     const distance = pointerDistance(pointer, event.clientX, event.clientY);
+
+    if (pointer.gestureScope === "center") {
+      if (distance >= GESTURE.dragDeadZonePx) {
+        pointer.dragging = true;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
 
     if (!pointer.dragging && distance < GESTURE.dragDeadZonePx) {
       return;
@@ -2659,6 +2752,33 @@
     releasePointerCapture(event);
     clearGestureDatasets();
 
+    if (pointer.gestureScope === "center") {
+      state.suppressClickUntil = performance.now() + GESTURE.suppressClickMs;
+      state.semanticPointerBlockedUntil = state.suppressClickUntil;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      const activated =
+        !pointer.dragging &&
+        metrics.distance <= GESTURE.maximumTapDistancePx &&
+        requestControllerCompassSelection();
+
+      emitReceipt({
+        status: activated ? "available" : "available",
+        lastPointerTerritory: pointer.territory,
+        lastGestureType: activated
+          ? GESTURE_TYPES.CENTER_TAP
+          : GESTURE_TYPES.CANCELLED,
+        lastGestureDistance: metrics.distance,
+        lastGestureDurationMs: metrics.durationMs,
+        gestureActive: false,
+        glError: activated ? "NO_ERROR" : "CENTER_TAP_CANCELLED"
+      });
+      return;
+    }
+
     if (pointer.dragging && pointer.gestureScope === "orbit") {
       finishOrbitDrag(pointer, event, metrics);
       return;
@@ -2703,6 +2823,16 @@
     state.pointer = null;
 
     releasePointerCapture(event);
+
+    if (pointer.gestureScope === "center") {
+      clearGestureDatasets();
+      emitReceipt({
+        lastPointerTerritory: pointer.territory,
+        lastGestureType: GESTURE_TYPES.CANCELLED,
+        gestureActive: false
+      });
+      return;
+    }
 
     if (pointer.controllerGestureBegan) {
       if (pointer.gestureScope === "orbit") {

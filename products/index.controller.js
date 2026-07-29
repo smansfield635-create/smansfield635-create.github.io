@@ -1144,6 +1144,7 @@
     }
 
     clearViewportSchedules();
+    setCenterDisclosure(false);
 
     const transaction = beginAtomicTransition({
       state: STATES.PRODUCT_SELECTED,
@@ -1183,6 +1184,7 @@
     }
 
     clearViewportSchedules();
+    setCenterDisclosure(false);
 
     const transaction = beginAtomicTransition({
       state: STATES.CLUSTER_OPEN,

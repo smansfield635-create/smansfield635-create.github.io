@@ -6,12 +6,10 @@ import {
   H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,
   sampleHEarthRun8BSuccessorTerrainField
 } from '../terrain/h-earth.successor-terrain-field.run8b.js';
-
 import {
   H_EARTH_TERRAIN_FORMATIONS,
   H_EARTH_TERRAIN_FORMATIONS_CONTRACT_ID
 } from '../terrain/h-earth.terrain-formations.js';
-
 import {
   H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN,
   H_EARTH_LANDSCAPE_REALIZATION_PLANNER_CONTRACT_ID
@@ -28,22 +26,21 @@ const stable = (value) => value === null || typeof value !== 'object'
   : Array.isArray(value)
     ? `[${value.map(stable).join(',')}]`
     : `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stable(value[key])}`).join(',')}}`;
-
 const WITNESS = freeze({ x: 0, z: -256 });
 
 export const H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS = freeze({
   contractId: 'H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS_v1',
-  checkpointId: 'GR-CR-01D',
-  status: 'REPEATED_WITNESS_DETERMINISM_ENABLED',
+  checkpointId: 'GR-CR-01E',
+  status: 'ELEVATION_AND_GRADIENT_EXTRACTION_ENABLED',
   sourceImportsEstablished: true,
   terrainSamplingExecuted: true,
-  deterministicRepeatEnabled: true,
+  elevationGradientExtractionEnabled: true,
   candidateCoordinatesDerived: false,
   durableReceiptEmitted: false,
-  nextCheckpoint: 'GR-CR-01E_ADD_ELEVATION_AND_GRADIENT_EXTRACTION'
+  nextCheckpoint: 'GR-CR-01F_ADD_SLOPE_AND_CURVATURE_EXTRACTION'
 });
 
-export function evaluateGRCR01BLockedImports() {
+function importIssues() {
   const issues = [];
   if (H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.contractId !== H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID) issues.push('SUCCESSOR_TERRAIN_CONTRACT_ID_MISMATCH');
   if (H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain.zMinimum !== -320) issues.push('SUCCESSOR_WORLD_DOMAIN_NOT_LOCKED');
@@ -51,27 +48,38 @@ export function evaluateGRCR01BLockedImports() {
   if (H_EARTH_TERRAIN_FORMATIONS_CONTRACT_ID.length === 0) issues.push('FORMATION_CONTRACT_ID_MISSING');
   if (H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN.contractId !== H_EARTH_LANDSCAPE_REALIZATION_PLANNER_CONTRACT_ID) issues.push('REALIZATION_PLAN_CONTRACT_ID_MISMATCH');
   if (H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN.eligible !== true) issues.push('REALIZATION_PLAN_NOT_ELIGIBLE');
-  return freeze({ eligible: issues.length === 0, issues: freeze(issues) });
+  return issues;
 }
 
-export function evaluateGRCR01DRepeatedWitnessDeterminism() {
-  const imports = evaluateGRCR01BLockedImports();
+export function extractGRCRTerrainElevationAndGradient(worldX, worldZ) {
+  const sample = sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ);
+  if (sample?.valid !== true) return freeze({ valid: false, worldX, worldZ });
+  return freeze({
+    valid: true,
+    contractId: sample.contractId,
+    world: sample.world,
+    elevation: sample.elevation,
+    gradient: freeze({ x: sample.gradient.x, z: sample.gradient.z })
+  });
+}
+
+export function evaluateGRCR01EElevationGradientExtraction() {
   const sampleA = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
   const sampleB = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
-  const serializedA = stable(sampleA);
-  const serializedB = stable(sampleB);
-  const issues = [...imports.issues];
+  const extraction = extractGRCRTerrainElevationAndGradient(WITNESS.x, WITNESS.z);
+  const issues = importIssues();
   if (sampleA?.valid !== true || sampleB?.valid !== true) issues.push('WITNESS_SAMPLE_INVALID');
-  if (!Number.isFinite(sampleA?.elevation) || !Number.isFinite(sampleB?.elevation)) issues.push('WITNESS_ELEVATION_NONFINITE');
-  if (serializedA !== serializedB) issues.push('REPEATED_WITNESS_NOT_BYTE_STABLE');
+  if (stable(sampleA) !== stable(sampleB)) issues.push('REPEATED_WITNESS_NOT_BYTE_STABLE');
+  if (extraction.valid !== true) issues.push('ELEVATION_GRADIENT_EXTRACTION_INVALID');
+  if (!Number.isFinite(extraction.elevation)) issues.push('EXTRACTED_ELEVATION_NONFINITE');
+  if (!Number.isFinite(extraction.gradient?.x) || !Number.isFinite(extraction.gradient?.z)) issues.push('EXTRACTED_GRADIENT_NONFINITE');
   return freeze({
-    checkpointId: 'GR-CR-01D',
+    checkpointId: 'GR-CR-01E',
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'GR_CR_01D_REPEAT_DETERMINISM_PASS' : 'GR_CR_01D_REPEAT_DETERMINISM_FAIL',
+    status: issues.length === 0 ? 'GR_CR_01E_ELEVATION_GRADIENT_PASS' : 'GR_CR_01E_ELEVATION_GRADIENT_FAIL',
     witness: WITNESS,
-    firstSample: sampleA,
-    secondSample: sampleB,
-    repeatedSampleByteStable: serializedA === serializedB,
+    extraction,
+    repeatedSampleByteStable: stable(sampleA) === stable(sampleB),
     terrainSamplingExecuted: true,
     candidateCoordinatesDerived: false,
     terrainMutation: false,
@@ -87,7 +95,7 @@ export function evaluateGRCR01DRepeatedWitnessDeterminism() {
 
 const directExecution = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (directExecution) {
-  const receipt = evaluateGRCR01DRepeatedWitnessDeterminism();
+  const receipt = evaluateGRCR01EElevationGradientExtraction();
   const outputPath = process.env.H_EARTH_GR_CR_RECEIPT;
   if (outputPath) fs.writeFileSync(outputPath, `${JSON.stringify(receipt, null, 2)}\n`);
   console.log(JSON.stringify(receipt));

@@ -6,6 +6,13 @@ on:
       - agent/laws-fifth-test-star-reversible-admissibility-cp1-001
     paths:
       - .github/workflows/laws-six-node-cp3-applicator.yml
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -17,6 +24,13 @@ concurrency:
 
 jobs:
   apply-and-validate:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
+      (
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        github.event.pull_request.head.ref == 'agent/laws-fifth-test-star-reversible-admissibility-cp1-001'
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

@@ -1,0 +1,45 @@
+name: Temporary Showroom Cluster Front-Lock Applicator
+
+on:
+  pull_request:
+    branches:
+      - agent/laws-showroom-cluster-front-lock-compass-fit-cp1-001
+    paths:
+      - "verification/showroom-cluster-front-lock-trigger.txt"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: showroom-cluster-front-lock-applicator
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout bounded target branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-showroom-cluster-front-lock-compass-fit-cp1-001
+          fetch-depth: 0
+
+      - name: Apply bounded Showroom correction
+        run: python3 verification/showroom-cluster-front-lock/apply-showroom-cluster-front-lock.py
+
+      - name: Validate exact source candidate
+        run: |
+          node --check showroom/index.interaction.gestures.js
+          node --check showroom/index.interactions.js
+          node --check verification/benchmark-tools/four-compass-benchmark-v1/showroom-label-conformance-benchmark.mjs
+          test ! -e verification/showroom-cluster-front-lock/apply-showroom-cluster-front-lock.py
+          git diff --check
+
+      - name: Commit bounded candidate
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Correct Showroom camera-front cluster lock and compass fit"
+          git push origin HEAD:agent/laws-showroom-cluster-front-lock-compass-fit-cp1-001

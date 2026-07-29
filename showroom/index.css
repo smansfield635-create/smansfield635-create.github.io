@@ -4283,7 +4283,8 @@ canvas[data-showroom-window-canvas],
    ================================================================ */
 
 /* ================================================================
-   23. BOUNDED PROJECTED STAR LABELS AND CENTER HIT CORRECTION
+   23. COMPASS-FAMILY LABEL HIERARCHY AND PRIMARY-ONLY CLUSTER LABEL
+   SHOWROOM_LABEL_HIERARCHY_PRIMARY_ONLY_20260729A
    ================================================================ */
 
 .showroom-projected-label-layer {
@@ -4296,66 +4297,148 @@ canvas[data-showroom-window-canvas],
 
 .showroom-projected-label {
   position: absolute;
-  max-width: 8.5rem;
-  padding: 0.2rem 0.34rem;
-  border-radius: 0.42rem;
-  color: rgba(246, 238, 223, 0.96);
-  background: rgba(3, 7, 18, 0.42);
-  box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.3);
-  font-size: clamp(0.56rem, 1.6vw, 0.76rem);
-  font-weight: 850;
-  letter-spacing: 0.08em;
-  line-height: 1.05;
-  text-align: center;
-  text-shadow:
-    0 0.08rem 0.22rem rgba(0, 0, 0, 0.98),
-    0 0 0.6rem rgba(0, 0, 0, 0.98);
-  text-transform: uppercase;
-  white-space: nowrap;
-  opacity: 0.92;
   pointer-events: none;
   transform: translate(-50%, -50%);
 }
 
 .showroom-projected-label[data-showroom-projected-kind="cardinal"] {
-  color: #fff2b2;
-  font-size: clamp(0.62rem, 1.8vw, 0.82rem);
+  width: clamp(5rem, 12vw, 6.4rem);
+  height: clamp(4rem, 9.6vw, 5.2rem);
+  padding: 0;
+  color: rgba(255, 248, 224, 0.96);
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.showroom-projected-label__cardinal-letter {
+  position: absolute;
+  top: 39%;
+  left: 50%;
+  display: grid;
+  width: 1.68rem;
+  height: 1.68rem;
+  place-items: center;
+  border: 1px solid rgba(255, 248, 224, 0.38);
+  border-radius: 50%;
+  color: #140f07;
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      #fff4c8,
+      #d7ae5c 66%,
+      #705121
+    );
+  box-shadow:
+    0 0 0.9rem rgba(243, 217, 139, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  font-size: 0.82rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+
+.showroom-projected-label__cardinal-word {
+  position: absolute;
+  top: 69%;
+  left: 50%;
+  display: block;
+  min-width: 4.15rem;
+  padding: 0.24rem 0.44rem;
+  border: 1px solid rgba(225, 218, 198, 0.22);
+  border-radius: 999px;
+  color: rgba(255, 248, 224, 0.97);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(4, 8, 16, 0.9),
+      rgba(20, 31, 43, 0.84)
+    );
+  box-shadow:
+    0 0.35rem 1rem rgba(0, 0, 0, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  font-size: clamp(0.54rem, 1.12vw, 0.7rem);
+  font-weight: 900;
+  letter-spacing: 0.075em;
+  line-height: 1.05;
+  text-align: center;
+  text-shadow:
+    0 0.1rem 0.18rem rgba(0, 0, 0, 0.98),
+    0 0 0.55rem rgba(0, 0, 0, 0.98);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(3px);
 }
 
 .showroom-projected-label[data-showroom-projected-kind="room"] {
-  max-width: 7.2rem;
-  color: rgba(235, 242, 255, 0.94);
-  font-size: clamp(0.52rem, 1.45vw, 0.7rem);
-  letter-spacing: 0.055em;
+  max-width: min(10rem, 44vw);
+  padding: 0.28rem 0.48rem;
+  border: 1px solid rgba(225, 218, 198, 0.22);
+  border-radius: 999px;
+  color: rgba(246, 238, 223, 0.97);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(3, 6, 13, 0.9),
+      rgba(22, 31, 42, 0.82)
+    );
+  box-shadow:
+    0 0.35rem 1rem rgba(0, 0, 0, 0.48),
+    0 0 0.72rem rgba(117, 233, 255, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  font-size: clamp(0.58rem, 1.2vw, 0.74rem);
+  font-weight: 900;
+  letter-spacing: 0.075em;
+  line-height: 1.05;
+  text-align: center;
+  text-shadow:
+    0 0.1rem 0.18rem rgba(0, 0, 0, 0.98),
+    0 0 0.55rem rgba(0, 0, 0, 0.98);
+  text-transform: uppercase;
+  white-space: nowrap;
+  backdrop-filter: blur(3px);
 }
 
 .showroom-projected-label[data-showroom-projected-depth="rear"] {
-  opacity: 0.42;
-  filter: saturate(0.72) brightness(0.78);
+  opacity: 0.46;
+  filter: saturate(0.72) brightness(0.74);
 }
 
 .showroom-projected-label[data-showroom-projected-primary="true"] {
   opacity: 1;
-  filter: brightness(1.16);
-  box-shadow:
-    0 0 0.8rem rgba(245, 213, 130, 0.2),
-    0 0 1.35rem rgba(117, 233, 255, 0.12);
+  filter:
+    brightness(1.14)
+    drop-shadow(0 0 0.52rem rgba(245, 213, 130, 0.34));
+}
+
+.showroom-projected-label[data-showroom-projected-kind="room"]
+[data-showroom-projected-primary="true"] {
+  color: #fff3be;
 }
 
 @media (max-width: 520px) {
-  .showroom-projected-label {
-    max-width: 6.7rem;
-    padding: 0.17rem 0.28rem;
+  .showroom-projected-label[data-showroom-projected-kind="cardinal"] {
+    width: 5rem;
+    height: 4.15rem;
+  }
+
+  .showroom-projected-label__cardinal-letter {
+    width: 1.52rem;
+    height: 1.52rem;
+    font-size: 0.74rem;
+  }
+
+  .showroom-projected-label__cardinal-word {
+    min-width: 3.75rem;
+    padding: 0.21rem 0.38rem;
     font-size: 0.54rem;
   }
 
-  .showroom-projected-label[data-showroom-projected-kind="cardinal"] {
-    font-size: 0.62rem;
-  }
-
   .showroom-projected-label[data-showroom-projected-kind="room"] {
-    max-width: 5.8rem;
-    font-size: 0.49rem;
+    max-width: 7.4rem;
+    padding: 0.25rem 0.42rem;
+    font-size: 0.56rem;
   }
 }
-

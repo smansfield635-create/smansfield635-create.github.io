@@ -1,0 +1,158 @@
+name: Laws Six-Node CP4 PR Evidence
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-six-node-cp4-pr-evidence-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  browser-verification:
+    if: github.event.pull_request.head.ref == 'agent/laws-six-node-cp4-browser-verification-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out verification harness custody
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: verification-branch
+          persist-credentials: false
+
+      - name: Extract exact browser harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cp4
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path('verification-branch/.github/workflows/laws-six-node-cp4-browser-verification.yml').read_text().splitlines()
+          start_marker = "          cat > /tmp/cp4/run.mjs <<'EOF'"
+          end_marker = "          EOF"
+          try:
+              start = source.index(start_marker) + 1
+          except ValueError as error:
+              raise SystemExit('CP4_HARNESS_START_MARKER_NOT_FOUND') from error
+          try:
+              end = source.index(end_marker, start)
+          except ValueError as error:
+              raise SystemExit('CP4_HARNESS_END_MARKER_NOT_FOUND') from error
+          lines = source[start:end]
+          normalized = []
+          for line in lines:
+              if line.startswith('          '):
+                  normalized.append(line[10:])
+              else:
+                  normalized.append(line)
+          Path('/tmp/cp4/run.mjs').write_text('\n'.join(normalized) + '\n')
+          print(f'CP4_HARNESS_LINES={len(normalized)}')
+          PY
+          node --check /tmp/cp4/run.mjs
+
+      - name: Check out immutable Checkpoint 3 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 8607693d75fffed5a8a85c42b8fdc28fff0b0554
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify candidate identity and bounded source tree
+        shell: bash
+        working-directory: candidate
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "8607693d75fffed5a8a85c42b8fdc28fff0b0554"
+          git merge-base --is-ancestor 343b0c269dd343a57c6ecb7e785141134cc5660f HEAD
+          test "$(git diff --name-only 343b0c269dd343a57c6ecb7e785141134cc5660f...HEAD | wc -l | tr -d ' ')" = "7"
+          git diff --name-only 343b0c269dd343a57c6ecb7e785141134cc5660f...HEAD | sort > /tmp/cp4-paths.txt
+          cat > /tmp/cp4-expected-paths.txt <<'EOF'
+          laws/index.controller.js
+          laws/index.crystals.js
+          laws/index.css
+          laws/index.html
+          laws/index.interactions.js
+          laws/research/index.html
+          laws/test/index.html
+          EOF
+          diff -u /tmp/cp4-expected-paths.txt /tmp/cp4-paths.txt
+          node --check laws/index.controller.js
+          node --check laws/index.interactions.js
+          node --check laws/index.crystals.js
+          git diff --check 343b0c269dd343a57c6ecb7e785141134cc5660f...HEAD
+
+      - name: Install Chromium execution harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/cp4
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute desktop and mobile browser corridor
+        shell: bash
+        env:
+          CP4_BASE_URL: http://127.0.0.1:4173
+          CP4_CANDIDATE_HEAD: 8607693d75fffed5a8a85c42b8fdc28fff0b0554
+          CP4_BASE_MAIN: 343b0c269dd343a57c6ecb7e785141134cc5660f
+          CP4_EVIDENCE_DIR: ${{ github.workspace }}/cp4-evidence
+        run: |
+          set -euo pipefail
+          cd candidate
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/cp4-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill ${server_pid} 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null
+          cd /tmp/cp4
+          node run.mjs
+
+      - name: Record exact source identities
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p cp4-evidence
+          cd candidate
+          {
+            echo "CANDIDATE_HEAD=$(git rev-parse HEAD)"
+            echo "BASE_MAIN=343b0c269dd343a57c6ecb7e785141134cc5660f"
+            for path in \
+              laws/index.html \
+              laws/index.controller.js \
+              laws/index.interactions.js \
+              laws/index.crystals.js \
+              laws/index.css \
+              laws/test/index.html \
+              laws/research/index.html; do
+              printf '%s\t%s\t%s\n' "$path" "$(git hash-object "$path")" "$(wc -c < "$path" | tr -d ' ')"
+            done
+          } > ../cp4-evidence/source-identities.tsv
+          cp /tmp/cp4-server.log ../cp4-evidence/server.log || true
+          git status --short --untracked-files=all > ../cp4-evidence/candidate-worktree-status.txt
+
+      - name: Upload Checkpoint 4 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-six-node-cp4-browser-evidence
+          path: cp4-evidence
+          if-no-files-found: error
+          retention-days: 30

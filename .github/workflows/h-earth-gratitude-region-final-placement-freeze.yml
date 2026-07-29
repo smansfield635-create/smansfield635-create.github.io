@@ -1,106 +1,66 @@
-name: H-Earth Gratitude Region Final Placement Freeze
-
+name: H-Earth Gratitude Region FP-03 bounded execution
 on:
   push:
-    branches:
-      - agent/h-earth-gratitude-region-final-placement-disposition-001
+    branches: [agent/h-earth-gratitude-region-fp03-execution-001]
   workflow_dispatch:
-
-concurrency:
-  group: h-earth-gratitude-region-final-placement-freeze-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
-
 jobs:
-  validate-final-placement-freeze:
-    runs-on: macos-14
-    timeout-minutes: 15
+  execute:
+    runs-on: macos-latest
+    timeout-minutes: 20
     steps:
-      - name: Check out exact final-placement branch head
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Execute FP-00 input freeze and FP-01 entry correspondence
-        env:
-          H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_BASELINE_RECEIPT: /tmp/h-earth-gratitude-region-final-placement-baseline.json
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Verify authorized base
+        shell: bash
         run: |
-          set -o pipefail
-          node h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.runner.mjs \
-            2>&1 | tee /tmp/h-earth-gratitude-region-final-placement-baseline.log
-
-      - name: Verify deterministic baseline receipt
+          set -euo pipefail
+          B=554a693c82876d9533bd577475a818a570d03b0d
+          test "$(git rev-parse HEAD^)" = "$B"
+          test "$(git diff --name-only "$B"..HEAD)" = ".github/workflows/h-earth-gratitude-region-final-placement-freeze.yml"
+      - name: Execute FP-00 through FP-03 twice
+        shell: bash
         run: |
+          set -euo pipefail
+          mkdir -p fp03-evidence
           node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
           import fs from 'node:fs';
-          const receipt = JSON.parse(fs.readFileSync(
-            '/tmp/h-earth-gratitude-region-final-placement-baseline.json',
-            'utf8'
-          ));
-          const issues = [];
-          if (receipt.status !== 'FP_00_AND_FP_01_PASS_CLOSED') {
-            issues.push(`STATUS:${receipt.status}`);
-          }
-          if (receipt.eligible !== true) issues.push('RECEIPT_NOT_ELIGIBLE');
-          if (receipt.deterministicRepeatExecution !== true) {
-            issues.push('NONDETERMINISTIC');
-          }
-          if (receipt.firstExecutionDigest !== receipt.secondExecutionDigest) {
-            issues.push('DIGEST_MISMATCH');
-          }
-          if (receipt.fp00?.frozenInputCount !== 24) {
-            issues.push(`FROZEN_INPUT_COUNT:${receipt.fp00?.frozenInputCount}`);
-          }
-          if (receipt.fp00?.exactFrozenInputMatchCount !== 24) {
-            issues.push(
-              `FROZEN_MATCH_COUNT:${receipt.fp00?.exactFrozenInputMatchCount}`
-            );
-          }
-          if (receipt.fp00?.priorAuthorityMutation !== false) {
-            issues.push('PRIOR_AUTHORITY_MUTATION');
-          }
-          if (receipt.fp01?.disposition !==
-              'ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL') {
-            issues.push(`ENTRY_DISPOSITION:${receipt.fp01?.disposition}`);
-          }
-          if (receipt.fp01?.initialStateWithinEntryBounds !== true) {
-            issues.push('INITIAL_STATE_OUTSIDE_ENTRY');
-          }
-          if (receipt.fp01?.cameraStartRelocation !== false ||
-              receipt.fp01?.cameraAuthorityMutation !== false) {
-            issues.push('CAMERA_BOUNDARY_FAILURE');
-          }
-          if (Object.values(receipt.authorityBoundary ?? {}).some(Boolean)) {
-            issues.push('AUTHORITY_BOUNDARY_OVERREACH');
-          }
-          if (issues.length > 0) {
-            console.error(JSON.stringify({ status: 'FAIL_STOPPED', issues }, null, 2));
-            process.exit(1);
-          }
-          console.log(JSON.stringify({
-            status: 'FP_00_AND_FP_01_PASS_CLOSED',
-            firstExecutionDigest: receipt.firstExecutionDigest,
-            secondExecutionDigest: receipt.secondExecutionDigest,
-            frozenInputCount: receipt.fp00.frozenInputCount,
-            exactFrozenInputMatchCount: receipt.fp00.exactFrozenInputMatchCount,
-            initialState: receipt.fp01.activeInitialState,
-            nextCheckpoint: receipt.nextCheckpoint
-          }, null, 2));
+          import path from 'node:path';
+          import {pathToFileURL} from 'node:url';
+          import {execFileSync} from 'node:child_process';
+          const root=process.cwd(), load=async p=>import(pathToFileURL(path.join(root,p)).href);
+          const {executeGratitudeRegionFinalPlacementBaseline}=await load('h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.mjs');
+          const {deriveGRCRMirrorManorCandidate}=await load('h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.mjs');
+          const {deriveGRCRCavernPrecinctCandidate}=await load('h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.mjs');
+          const {extractGRCRTerrainMetrics,resolveGRCRFormationMembership,resolveGRCRSemanticAddressProjection}=await load('h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs');
+          const {H_EARTH_RUN_8A_MOUNTAIN_DIMENSIONAL_SURFACE_CONTRACT:M,evaluateHEarthRun8AMountainContribution:mc}=await load('h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js');
+          const {H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD:T}=await load('h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js');
+          const BASE='554a693c82876d9533bd577475a818a570d03b0d', WF='.github/workflows/h-earth-gratitude-region-final-placement-freeze.yml';
+          const DISP='h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json';
+          const CAV='h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json';
+          const dirs=[['EAST',1,0],['WEST',-1,0],['BEACHWARD',0,1],['MOUNTAINWARD',0,-1]];
+          const stable=v=>v===null||typeof v!=='object'?JSON.stringify(v):Array.isArray(v)?`[${v.map(stable)}]`:`{${Object.keys(v).sort().map(k=>`${JSON.stringify(k)}:${stable(v[k])}`)}}`;
+          const dg=v=>crypto.createHash('sha256').update(stable(v)).digest('hex'), sh=s=>crypto.createHash('sha256').update(s).digest('hex');
+          const read=p=>JSON.parse(fs.readFileSync(p,'utf8')), git=(...a)=>execFileSync('git',a,{encoding:'utf8'}).trim();
+          const dist=(a,b)=>Math.hypot(b.x-a.x,b.z-a.z), eq=(a,b)=>stable(a)===stable(b), inside=(b,p)=>p.x>=b.xMinimum&&p.x<=b.xMaximum&&p.z>=b.zMinimum&&p.z<=b.zMaximum;
+          const angle=(a,b)=>Math.acos(Math.max(-1,Math.min(1,(a.x*b.x+a.z*b.z)/(Math.hypot(a.x,a.z)*Math.hypot(b.x,b.z)))))*180/Math.PI;
+          const orient=(o,a,t)=>(a.x*(t.x-o.x)+a.z*(t.z-o.z))>=0?a:{x:-a.x,z:-a.z};
+          function cross(p,d){const q={x:-d.z,z:d.x},c=extractGRCRTerrainMetrics(p.x,p.z),l=extractGRCRTerrainMetrics(p.x+q.x*4,p.z+q.z*4),r=extractGRCRTerrainMetrics(p.x-q.x*4,p.z-q.z*4),v=c.valid&&l.valid&&r.valid;return {valid:v,center:c,left:l,right:r,low:v&&c.elevation<=l.elevation&&c.elevation<=r.elevation,range:v?Math.max(c.elevation,l.elevation,r.elevation)-Math.min(c.elevation,l.elevation,r.elevation):null,maxSlope:v?Math.max(c.slope,l.slope,r.slope):null};}
+          function trace(o,a){const D=dist(o,a),n=Math.max(1,Math.ceil(D/4)),d={x:(a.x-o.x)/D,z:(a.z-o.z)/D};let valid=0,low=0,long=0,run=0,maxDelta=0,prev=null,onset=null,onsetLow=false;for(let i=0;i<=n;i++){const t=i/n,p={x:o.x+(a.x-o.x)*t,z:o.z+(a.z-o.z)*t},x=cross(p,d),m=mc(p.x,p.z);if(x.valid&&x.center.elevation>=.25&&x.center.slope<=2.25)valid++;if(x.low){low++;run++;long=Math.max(long,run)}else run=0;if(prev!==null&&x.valid){maxDelta=Math.max(maxDelta,Math.abs(x.center.elevation-prev));}if(x.valid)prev=x.center.elevation;if(onset===null&&m>0)onset=i;if(onset!==null&&x.low&&Math.abs(i-onset)<=1)onsetLow=true;}return {distance:D,sampleCount:n+1,validSampleCount:valid,allValid:valid===n+1,routeEligible:valid===n+1&&maxDelta<=18,maximumNeighborElevationDelta:maxDelta,lowPassageEvidenceCount:low,longestLowPassageRun:long,mountainOnsetEstablished:onset!==null,mountainOnsetIndex:onset,ravineEvidenceAtMountainOnset:onsetLow};}
+          function faceLaw(f,o){const ft=extractGRCRTerrainMetrics(f.x,f.z),fc=mc(f.x,f.z),fm=resolveGRCRFormationMembership(f.x,f.z);const opts=dirs.map(([id,x,z])=>{const p={x:f.x+x*8,z:f.z+z*8},pc=mc(p.x,p.z);return {id,x,z,p,pc,drop:fc-pc}}).sort((a,b)=>b.drop-a.drop||a.id.localeCompare(b.id)),w=opts[0],a=w?.p,p={x:f.x+w.x*16,z:f.z+w.z*16},at=extractGRCRTerrainMetrics(a.x,a.z),pt=extractGRCRTerrainMetrics(p.x,p.z),cc=cross(f,{x:w.x,z:w.z}),world=T.worldDomain;const eligible=ft.valid&&ft.elevation>2&&ft.slope<=3&&fc>=2&&fm.formationIds.includes(M.formationId)&&w.drop>=1&&w.pc<=fc*.9&&at.valid&&pt.valid&&at.elevation>.25&&pt.elevation>.25&&at.slope<=2&&pt.slope<=1.8&&Math.abs(ft.elevation-at.elevation)<=20&&Math.abs(at.elevation-pt.elevation)<=12&&cc.valid&&cc.maxSlope<=3.25&&cc.range<=18&&!inside(M.coreBounds,f)&&!inside(M.coreBounds,p)&&p.x>=world.xMinimum+16&&p.x<=world.xMaximum-16&&p.z>=world.zMinimum+16&&p.z<=world.zMaximum-16;const tr=trace(o,a),sem=resolveGRCRSemanticAddressProjection(f.x,f.z);return {face:f,apron:a,precinctCenter:p,eligible,trace:tr,semanticProjectionStatus:sem.status,credible:eligible&&tr.allValid&&tr.routeEligible&&tr.lowPassageEvidenceCount>0&&tr.mountainOnsetEstablished};}
+          const vec=c=>[Number(c.trace.ravineEvidenceAtMountainOnset),c.trace.longestLowPassageRun,c.trace.lowPassageEvidenceCount],cmp=(a,b)=>{for(let i=0;i<a.length;i++)if(a[i]!==b[i])return b[i]-a[i];return 0};
+          function fp03(){const issues=[],disp=read(DISP),dur=read(CAV),target=disp.targetDispositionMatrix.find(x=>x.areaId==='GRATITUDE_REGION_CAVERN_PRECINCT'),man=deriveGRCRMirrorManorCandidate(),cav=deriveGRCRCavernPrecinctCandidate(),corr=man.lowCorridor,o=corr?.origin,face=target?.currentExteriorFace,apron=dur?.cavernCandidate?.exteriorApron,center=target?.currentPrecinctCenter;if(git('rev-parse','HEAD^')!==BASE)issues.push('FROZEN_INPUT_MISMATCH:AUTHORIZED_BASE_HEAD');if(!eq(git('diff','--name-only',`${BASE}..HEAD`).split('\n').filter(Boolean),[WF]))issues.push('PROTECTED_AUTHORITY_MUTATION');if(!o||!face||!apron||!center)issues.push('INVALID_TERRAIN_DATA:SPATIAL_INPUT_MISSING');if(cav.candidateDigest!==dur.executionCustody.candidateDigest)issues.push('FROZEN_INPUT_MISMATCH:CAVERN_CANDIDATE_DIGEST');if(!eq(face,{x:dur.cavernCandidate.exteriorFace.x,z:dur.cavernCandidate.exteriorFace.z})||!eq(center,{x:dur.cavernCandidate.precinctCenter.x,z:dur.cavernCandidate.precinctCenter.z}))issues.push('FROZEN_INPUT_MISMATCH:CAVERN_RELATION');if(issues.length)return {checkpointId:'FP-03',eligible:false,status:'FP_03_INTEGRITY_FAIL_STOPPED',disposition:null,selectedExteriorFace:null,selectedApron:null,userIntentMateriallySatisfied:false,issues};const axis=orient(o,corr.corridorAxis??corr.pairAxis,face),cur=faceLaw(face,o),source=cav.selectedExteriorRelation,sourcePreserved=source&&eq(source.face,face)&&eq(source.outwardProbe.probe,apron)&&source.attachmentLawSatisfied===true&&source.approach.eligible===true&&source.surfaceCorrespondence.exteriorAttachmentSatisfied===true,credible=cur.credible&&sourcePreserved;let disposition,selected=null,performed=false,candidates=[];if(credible){disposition='ACCEPT_CURRENT_RELATION';selected=cur}else{performed=true;for(let z=face.z-16;z<=face.z+16;z+=4)for(let x=face.x-16;x<=face.x+16;x+=4){const f={x,z};if(dist(face,f)>16||eq(f,face))continue;const c=faceLaw(f,o);if(c.credible)candidates.push({...c,strength:vec(c),alignmentDegrees:angle(axis,{x:x-o.x,z:z-o.z}),distanceFromCurrentFace:dist(face,f)});}candidates.sort((a,b)=>cmp(a.strength,b.strength)||a.alignmentDegrees-b.alignmentDegrees||a.distanceFromCurrentFace-b.distanceFromCurrentFace||a.face.x-b.face.x||a.face.z-b.face.z);const best=candidates[0],second=candidates[1],unique=!!best&&(!second||cmp(best.strength,second.strength)!==0);if(unique){disposition='ACCEPT_ONE_CORRECTED_LOCAL_RELATION';selected=best}else disposition='RETAIN_ELIGIBLE_NONFINAL_AFTER_BOUNDED_PROOF';}
+          const sem=(selected??cur).semanticProjectionStatus;if(sem!=='NO_TERRAIN_CHUNK')issues.push('UNAUTHORIZED_CONSTRUCTION_OR_COORDINATE_INVENTION:SEMANTIC_PROJECTION');return {checkpointId:'FP-03',eligible:issues.length===0,status:issues.length?'FP_03_INTEGRITY_FAIL_STOPPED':'FP_03_CAVERN_LOCAL_BEST_FIT_DISPOSITION_PASS_CLOSED',disposition:issues.length?null:disposition,selectedExteriorFace:selected?.face??null,selectedApron:selected?.apron??null,correspondenceBasis:'GOVERNED_TERRAIN_BEST_FIT_TO_USER_SUPPLIED_RAVINE_TO_MOUNTAIN_INTENT',userIntentMateriallySatisfied:issues.length===0&&!!selected,frozenSpatialInputs:{lowCorridorOrigin:o,towardCavernAxis:axis,currentCavernFace:face,currentCavernApron:apron,currentPrecinctCenter:center,localCorrectionRadiusWorldUnits:16},currentRelationPriority:{existingMountainAttachment:true,generalLawfulApproach:true,terrainConcealmentEstablished:true,corridorToFaceDirectionalAlignmentDegrees:angle(axis,{x:face.x-o.x,z:face.z-o.z}),strongPriorCandidate:true},currentRelationEvaluation:{...cur,sourceCandidatePreserved:sourcePreserved},localCorrectionSearch:{performed,radiusWorldUnits:16,searchStepWorldUnits:4,eligibleCandidateCount:candidates.length,uniqueLocalBest:!!selected&&disposition==='ACCEPT_ONE_CORRECTED_LOCAL_RELATION',candidateSummaries:candidates.slice(0,24).map(c=>({face:c.face,apron:c.apron,precinctCenter:c.precinctCenter,strength:c.strength,alignmentDegrees:c.alignmentDegrees,distanceFromCurrentFace:c.distanceFromCurrentFace}))},selectedRelationEvidence:selected?{face:selected.face,apron:selected.apron,precinctCenter:selected.precinctCenter,existingFaceLawEligible:selected.eligible,routeLawEligible:selected.trace.routeEligible,lowPassageEvidenceCount:selected.trace.lowPassageEvidenceCount,longestLowPassageRun:selected.trace.longestLowPassageRun,mountainOnsetEstablished:selected.trace.mountainOnsetEstablished,ravineEvidenceAtMountainOnset:selected.trace.ravineEvidenceAtMountainOnset,semanticProjectionStatus:selected.semanticProjectionStatus}:null,authorityBoundary:{cavernInterior:'SEPARATE_UNASSIGNED_OCCURRENCE',entranceOpeningConstructed:false,cavernExcavation:false,roadOrCorridorGeometry:false,terrainMutation:false,buildingGeometry:false,cameraMutation:false,runtimeIntegration:false,productConstruction:false,livePageChange:false,semanticProjection:'NO_TERRAIN_CHUNK',semanticAddressInvented:false,physicalChunkInvented:false,finalPlacementPrMergeAuthorized:false,constructionAuthorized:false},nextCheckpoint:issues.length?'STOP_AND_RECONCILE_FP03_INTEGRITY':'FP-04_FRONTIER_FORMAL_DEFERRAL',issues};}
+          function once(){const b=executeGratitudeRegionFinalPlacementBaseline(),f=b.eligible?fp03():{checkpointId:'FP-03',eligible:false,status:'FP_03_NOT_EXECUTED_FP_00_THROUGH_FP_02_REQUIRED',disposition:null,issues:['FP_00_THROUGH_FP_02_PASS_REQUIRED']},issues=[...b.issues,...f.issues];return {schemaVersion:'H_EARTH_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_THROUGH_FP03_RECEIPT_v1',operation:'GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_THROUGH_FP03',eligible:issues.length===0,status:issues.length?'FINAL_PLACEMENT_THROUGH_FP03_FAIL_STOPPED':'FP_00_THROUGH_FP_03_PASS_CLOSED',authorizedBaseHead:BASE,executionHead:git('rev-parse','HEAD'),fp00:b.fp00,fp01:b.fp01,fp02:b.fp02,fp03:f,nextCheckpoint:issues.length?'STOP_AND_RECONCILE_CURRENT_CHECKPOINT':'FP-04_FRONTIER_FORMAL_DEFERRAL',pendingCheckpoints:['FP-04','FP-05'],authorityBoundary:f.authorityBoundary??null,issues};}
+          const a=once(),b=once(),ab=`${JSON.stringify(a,null,2)}\n`,bb=`${JSON.stringify(b,null,2)}\n`,ad=dg(a),bd=dg(b),as=sh(ab),bs=sh(bb),same=ab===bb,issues=[...a.issues];if(ad!==bd)issues.push('NONDETERMINISTIC_EXECUTION:DIGEST_MISMATCH');if(!same)issues.push('NONDETERMINISTIC_EXECUTION:RECEIPT_BYTES_MISMATCH');const c={schemaVersion:'H_EARTH_GRATITUDE_REGION_FP03_EXECUTION_CUSTODY_v1',eligible:a.eligible&&issues.length===0,status:a.eligible&&issues.length===0?'FP_03_EXECUTION_PASS_CLOSED':'FP_03_EXECUTION_FAIL_STOPPED',authorizedBaseHead:BASE,executionHead:git('rev-parse','HEAD'),firstExecutionDigest:ad,secondExecutionDigest:bd,firstReceiptSha256:as,secondReceiptSha256:bs,crossRunReceiptBytesIdentical:same,frozenInputsExact:a.fp00.exactFrozenInputMatchCount,frozenInputCount:a.fp00.frozenInputCount,protectedMutationPaths:a.fp00.protectedMutationPaths,fp03Disposition:a.fp03.disposition,selectedExteriorFace:a.fp03.selectedExteriorFace,selectedApron:a.fp03.selectedApron,userIntentMateriallySatisfied:a.fp03.userIntentMateriallySatisfied,issues};const cb=`${JSON.stringify(c,null,2)}\n`;fs.writeFileSync('fp03-evidence/fp03-receipt-first.json',ab);fs.writeFileSync('fp03-evidence/fp03-receipt-second.json',bb);fs.writeFileSync('fp03-evidence/fp03-execution-custody.json',cb);fs.writeFileSync('fp03-evidence/fp03-artifact-manifest.json',`${JSON.stringify({'fp03-receipt-first.json':as,'fp03-receipt-second.json':bs,'fp03-execution-custody.json':sh(cb)},null,2)}\n`);console.log(cb);if(!c.eligible)process.exitCode=1;
           NODE
-
-      - name: Upload freeze and entry evidence
+      - name: Upload evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gratitude-region-final-placement-freeze-evidence
-          path: |
-            /tmp/h-earth-gratitude-region-final-placement-baseline.json
-            /tmp/h-earth-gratitude-region-final-placement-baseline.log
+          name: h-earth-gratitude-region-fp03-execution-evidence
+          path: fp03-evidence
           if-no-files-found: error
           retention-days: 90

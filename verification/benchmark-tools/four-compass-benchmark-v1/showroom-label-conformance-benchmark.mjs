@@ -196,38 +196,57 @@ for (const profile of profiles) {
   assert(cluster.horizontalOverflow <= 1, "CLUSTER_LAYOUT_OVERFLOW", cluster, profile.id);
   await shot("cluster-camera-front");
 
-  const dragStarted = await page.evaluate(async () => {
-    const field = document.querySelector("[data-showroom-orbit-field]");
-    if (!field) return false;
-    const rect = field.getBoundingClientRect();
-    const pointerId = 41;
-    const startX = rect.left + rect.width * 0.72;
-    const startY = rect.top + rect.height * 0.78;
-    const endX = startX - rect.width * 0.32;
-    const endY = startY;
-    const dispatch = (type, x, y, buttons, pressure) => field.dispatchEvent(new PointerEvent(type, {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      pointerId,
-      pointerType: "touch",
-      isPrimary: true,
-      clientX: x,
-      clientY: y,
-      button: type === "pointerdown" ? 0 : -1,
-      buttons,
-      pressure
-    }));
-    dispatch("pointerdown", startX, startY, 1, 0.5);
+  const fieldRectForInput = await page.$eval("[data-showroom-orbit-field]", element => {
+    const rect = element.getBoundingClientRect();
+    return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+  });
+  const startX = Math.round(fieldRectForInput.left + fieldRectForInput.width * 0.72);
+  const startY = Math.round(fieldRectForInput.top + fieldRectForInput.height * 0.78);
+  const endX = Math.round(startX - fieldRectForInput.width * 0.32);
+  const endY = startY;
+  let releaseActualPointer;
+
+  if (profile.mobile) {
+    const cdp = await page.createCDPSession();
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ x: startX, y: startY, id: 41, radiusX: 1, radiusY: 1, force: 0.5 }]
+    });
     for (let step = 1; step <= 12; step += 1) {
       const progress = step / 12;
-      dispatch("pointermove", startX + (endX - startX) * progress, endY, 1, 0.5);
-      await new Promise(resolve => setTimeout(resolve, 36));
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{
+          x: Math.round(startX + (endX - startX) * progress),
+          y: endY,
+          id: 41,
+          radiusX: 1,
+          radiusY: 1,
+          force: 0.5
+        }]
+      });
+      await sleep(36);
     }
-    globalThis.__SHOWROOM_LABEL_TEST_POINTER__ = { pointerId, endX, endY };
-    return true;
-  });
-  assert(dragStarted, "TOUCH_DRAG_START_FAILED", dragStarted, profile.id);
+    releaseActualPointer = () => cdp.send("Input.dispatchTouchEvent", {
+      type: "touchEnd",
+      touchPoints: []
+    });
+  } else {
+    await page.mouse.move(startX, startY);
+    await page.mouse.down({ button: "left" });
+    for (let step = 1; step <= 12; step += 1) {
+      const progress = step / 12;
+      await page.mouse.move(
+        Math.round(startX + (endX - startX) * progress),
+        endY,
+        { steps: 1 }
+      );
+      await sleep(36);
+    }
+    releaseActualPointer = () => page.mouse.up({ button: "left" });
+  }
+
+  assert(typeof releaseActualPointer === "function", "ACTUAL_POINTER_INPUT_START_FAILED", null, profile.id);
 
   await page.waitForFunction(() => {
     const root = document.querySelector("[data-showroom-root]");
@@ -240,26 +259,7 @@ for (const profile of profiles) {
   assert(preview.visibleRoomLabels[0]?.id === "south-2" && preview.visibleRoomLabels[0]?.text === "Diamond", "ACTUAL_TOUCH_FRONT_LOCK_INVALID", preview.visibleRoomLabels, profile.id);
   await shot("touch-preview-diamond");
 
-  const pointerReleased = await page.evaluate(() => {
-    const field = document.querySelector("[data-showroom-orbit-field]");
-    const pointer = globalThis.__SHOWROOM_LABEL_TEST_POINTER__;
-    if (!field || !pointer) return false;
-    field.dispatchEvent(new PointerEvent("pointerup", {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-      pointerId: pointer.pointerId,
-      pointerType: "touch",
-      isPrimary: true,
-      clientX: pointer.endX,
-      clientY: pointer.endY,
-      button: 0,
-      buttons: 0,
-      pressure: 0
-    }));
-    return true;
-  });
-  assert(pointerReleased, "TOUCH_DRAG_RELEASE_FAILED", pointerReleased, profile.id);
+  await releaseActualPointer();
   await page.waitForFunction(() => {
     const root = document.querySelector("[data-showroom-root]");
     const label = [...document.querySelectorAll('[data-showroom-projected-kind="room"]')].find(element => !element.hidden && getComputedStyle(element).visibility !== "hidden");

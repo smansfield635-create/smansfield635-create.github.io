@@ -1,0 +1,925 @@
+{
+  "receiptType": "H_EARTH_GRATITUDE_REGION_FOUR_AREA_READ_ONLY_COORDINATE_RECONCILIATION_RECEIPT",
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_FOUR_AREA_READ_ONLY_COORDINATE_RECONCILIATION_v1",
+  "baselineMainHead": "f24294725991be3f6e3f202cf275de52fb6065b5",
+  "controllingManifestPath": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json",
+  "controllingManifestBlob": "1702d62036a6b241fdadddfabc304a5288f38652",
+  "spatialDevelopmentArtifactPath": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json",
+  "spatialDevelopmentArtifactBlob": "ee5ca94f5ae55ce8f11b460428b800ad4e9a2a9d",
+  "authorizationStatus": "AUTHORIZED_BOUNDED_READ_ONLY",
+  "resultsClassification": "MEASURED_OR_DERIVED_CANDIDATES_PENDING_LATER_MANIFEST_ACCEPTANCE",
+  "terrainFieldContractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+  "terrainFieldGenerationRevision": 2,
+  "areaCandidates": [
+    {
+      "areaId": "GRATITUDE_REGION_ENTRY_ZONE",
+      "humanName": "Entry Zone",
+      "coordinateStatus": "MEASURED_CANDIDATE",
+      "centerAnchor": {
+        "x": 0,
+        "y": 1.526629,
+        "z": -96,
+        "elevation": 1.526629,
+        "slope": 0.236142,
+        "curvature": 0.002913,
+        "mountainContribution": 0,
+        "shorelineZ": -79.255078,
+        "shorelineDistance": 16.744922,
+        "normal": {
+          "x": -0.040383,
+          "y": 0.973233,
+          "z": 0.226245
+        },
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "anchorSource": "EXISTING_COAST_NAVIGATION_WAYPOINT"
+      },
+      "boundaryEnvelope": {
+        "sampleCount": 821,
+        "sampleSpacingWorldUnits": 2,
+        "sampledSupportAreaSquareWorldUnits": 3284,
+        "bounds": {
+          "xMinimum": -46,
+          "xMaximum": 46,
+          "zMinimum": -131,
+          "zMaximum": -87
+        },
+        "elevationRange": {
+          "minimum": -0.265103,
+          "maximum": 8.180917
+        },
+        "slopeRange": {
+          "minimum": 0.013654,
+          "maximum": 0.348892
+        }
+      },
+      "waterBoundaryPolyline": [
+        {
+          "x": -46,
+          "z": -89.296459
+        },
+        {
+          "x": -38,
+          "z": -87.560113
+        },
+        {
+          "x": -30,
+          "z": -85.563962
+        },
+        {
+          "x": -22,
+          "z": -83.522638
+        },
+        {
+          "x": -14,
+          "z": -81.647694
+        },
+        {
+          "x": -6,
+          "z": -80.11341
+        },
+        {
+          "x": 2,
+          "z": -79.029254
+        },
+        {
+          "x": 10,
+          "z": -78.423777
+        },
+        {
+          "x": 18,
+          "z": -78.242677
+        },
+        {
+          "x": 26,
+          "z": -78.361327
+        },
+        {
+          "x": 34,
+          "z": -78.609512
+        },
+        {
+          "x": 42,
+          "z": -78.804002
+        }
+      ],
+      "firstInlandExitCandidate": {
+        "x": 0,
+        "y": -0.160444,
+        "z": -132,
+        "elevation": -0.160444,
+        "slope": 0.280519,
+        "curvature": 0.006441,
+        "mountainContribution": 0,
+        "shorelineZ": -79.255078,
+        "shorelineDistance": 52.744922,
+        "normal": {
+          "x": -0.049174,
+          "y": 0.962834,
+          "z": -0.265579
+        },
+        "yawDegrees": 0,
+        "pitchDegrees": -7,
+        "anchorSource": "EXISTING_BERM_NAVIGATION_WAYPOINT"
+      },
+      "formationMembership": [
+        "H_EARTH_COASTAL_BERM_001"
+      ],
+      "semanticAddressCorrespondence": {
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+        "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+        "formationIds": [],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+        "targetSemanticCoordinate": {
+          "row": 3,
+          "column": 8
+        },
+        "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER"
+      },
+      "preservationAreas": [
+        "WATERWARD_SIDE_OF_CANONICAL_SHORELINE",
+        "EXISTING_COAST_TO_BERM_NAVIGATION_RELATION"
+      ],
+      "confidence": "HIGH_SOURCE_AND_EXECUTION_BACKED",
+      "acceptedByManifest": false
+    },
+    {
+      "areaId": "GRATITUDE_REGION_MIRROR_MANOR_PRECINCT",
+      "humanName": "Mirror Manor Precinct",
+      "coordinateStatus": "MEASURED_CANDIDATE",
+      "candidateId": "GRATITUDE_REGION_PRIMARY_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+      "centerAnchor": {
+        "x": 72,
+        "y": 29.543441,
+        "z": -172,
+        "elevation": 29.543441,
+        "slope": 0.048067,
+        "curvature": -0.014285,
+        "mountainContribution": 0,
+        "shorelineZ": -76.991156,
+        "shorelineDistance": 95.008844,
+        "normal": {
+          "x": -0.023609,
+          "y": 0.998847,
+          "z": 0.041806
+        },
+        "yawDegrees": 18,
+        "pitchDegrees": -8,
+        "anchorSource": "EXISTING_HILL_NAVIGATION_WAYPOINT_AND_PHYSICAL_SCREENSHOT_ALIGNMENT"
+      },
+      "coreShelfEnvelope": {
+        "sampleCount": 53,
+        "sampleSpacingWorldUnits": 2,
+        "sampledSupportAreaSquareWorldUnits": 212,
+        "bounds": {
+          "xMinimum": 66,
+          "xMaximum": 82,
+          "zMinimum": -180,
+          "zMaximum": -168
+        },
+        "elevationRange": {
+          "minimum": 28.548313,
+          "maximum": 29.563382
+        },
+        "slopeRange": {
+          "minimum": 0.031718,
+          "maximum": 0.213112
+        }
+      },
+      "broaderPrecinctEnvelope": {
+        "sampleCount": 210,
+        "sampleSpacingWorldUnits": 2,
+        "sampledSupportAreaSquareWorldUnits": 840,
+        "bounds": {
+          "xMinimum": 60,
+          "xMaximum": 92,
+          "zMinimum": -196,
+          "zMaximum": -164
+        },
+        "elevationRange": {
+          "minimum": 24.004742,
+          "maximum": 29.563382
+        },
+        "slopeRange": {
+          "minimum": 0.031718,
+          "maximum": 0.349964
+        }
+      },
+      "formationMembership": [
+        "H_EARTH_NAVIGABLE_HILL_001"
+      ],
+      "semanticAddressCorrespondence": {
+        "center": {
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+          "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+          "formationIds": [
+            "H_EARTH_COASTAL_BERM_001",
+            "H_EARTH_DRAINAGE_VALLEY_001",
+            "H_EARTH_NAVIGABLE_HILL_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C11",
+          "targetSemanticCoordinate": {
+            "row": 6,
+            "column": 11
+          },
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER"
+        },
+        "userObservedAddresses": [
+          "H_EARTH_GROUND_CELL_001:R06:C11",
+          "H_EARTH_GROUND_CELL_001:R06:C12"
+        ],
+        "semanticAddressesAreDirectWorldCoordinates": false
+      },
+      "sightlines": {
+        "beachwardAtCenter": {
+          "visible": true,
+          "minimumClearance": 1.385526,
+          "minimumClearancePoint": {
+            "x": 66.514286,
+            "z": -166.209524,
+            "lineY": 29.658827,
+            "terrainY": 28.273301,
+            "clearance": 1.385526
+          }
+        },
+        "mountainwardAtCenter": {
+          "visible": true,
+          "minimumClearance": 1.480587,
+          "minimumClearancePoint": {
+            "x": -93.641026,
+            "z": -263.589744,
+            "lineY": 102.55246,
+            "terrainY": 101.071873,
+            "clearance": 1.480587
+          }
+        },
+        "mountainSummitTarget": {
+          "x": -98,
+          "y": 102.164539,
+          "z": -266,
+          "elevation": 102.164539,
+          "slope": 0.114228,
+          "curvature": -0.100066,
+          "mountainContribution": 98.061589,
+          "shorelineZ": -88.415003,
+          "shorelineDistance": 177.584997,
+          "normal": {
+            "x": -0.033207,
+            "y": 0.993539,
+            "z": 0.108523
+          }
+        },
+        "coreShelfBeachVisibleSampleCount": 37,
+        "coreShelfMountainVisibleSampleCount": 53,
+        "coreShelfSampleCount": 53
+      },
+      "noBuildAndPreservationAreas": [
+        {
+          "id": "H_EARTH_DRAINAGE_VALLEY_001_PRESERVATION_ENVELOPE",
+          "formationId": "H_EARTH_DRAINAGE_VALLEY_001",
+          "bounds": {
+            "xMin": -54,
+            "xMax": 52,
+            "zMin": -210,
+            "zMax": -128
+          },
+          "law": "LOW_CORRIDOR_AND_DRAINAGE_RELATION_REMAINS_DISTINCT_FROM_MANOR_FOOTPRINT"
+        }
+      ],
+      "confidence": "HIGH_CANDIDATE_SITE_ENVELOPE_FINAL_FOOTPRINT_UNRESOLVED",
+      "finalAnchorAssigned": false,
+      "acceptedByManifest": false
+    },
+    {
+      "areaId": "GRATITUDE_REGION_CAVERN_PRECINCT",
+      "humanName": "Cavern Precinct",
+      "coordinateStatus": "MEASURED_CANDIDATE",
+      "exteriorFaceCandidateBand": {
+        "sampleCount": 7,
+        "sampleSpacingWorldUnits": 2,
+        "sampledSupportAreaSquareWorldUnits": 28,
+        "bounds": {
+          "xMinimum": 40,
+          "xMaximum": 52,
+          "zMinimum": -240,
+          "zMaximum": -230
+        },
+        "elevationRange": {
+          "minimum": 14.533048,
+          "maximum": 17.236572
+        },
+        "slopeRange": {
+          "minimum": 1.345377,
+          "maximum": 2.150209
+        }
+      },
+      "approachCandidateBand": {
+        "sampleCount": 7,
+        "sampleSpacingWorldUnits": 2,
+        "sampledSupportAreaSquareWorldUnits": 28,
+        "bounds": {
+          "xMinimum": 40,
+          "xMaximum": 52,
+          "zMinimum": -228,
+          "zMaximum": -218
+        },
+        "elevationRange": {
+          "minimum": 7.715011,
+          "maximum": 11.836277
+        },
+        "slopeRange": {
+          "minimum": 0.231175,
+          "maximum": 0.453118
+        }
+      },
+      "representativeCandidateOnly": {
+        "face": {
+          "x": 46,
+          "y": 17.236572,
+          "z": -233,
+          "elevation": 17.236572,
+          "slope": 1.842125,
+          "curvature": 0.045141,
+          "mountainContribution": 9.107872,
+          "shorelineZ": -78.828881,
+          "shorelineDistance": 154.171119,
+          "normal": {
+            "x": 0.399179,
+            "y": 0.477088,
+            "z": 0.782971
+          }
+        },
+        "approach": {
+          "x": 46,
+          "y": 9.782288,
+          "z": -221,
+          "elevation": 9.782288,
+          "slope": 0.410666,
+          "curvature": 0.009954,
+          "mountainContribution": 0.014793,
+          "shorelineZ": -78.828881,
+          "shorelineDistance": 142.171119,
+          "normal": {
+            "x": -0.363289,
+            "y": 0.925035,
+            "z": -0.111045
+          }
+        },
+        "distanceFromManorCandidate": 66.309879,
+        "elevationDelta": 7.454284
+      },
+      "candidateCount": 7,
+      "formationMembership": [
+        "H_EARTH_CONTINUOUS_HIGHLAND_MOUNTAIN_001"
+      ],
+      "semanticAddressCorrespondence": {
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R13_R16_C09_C12",
+        "physicalRole": "INLAND_ELEVATED_TERRAIN_WITH_PROXY_PARTITIONS",
+        "formationIds": [
+          "H_EARTH_DISTANT_HIGHLAND_001"
+        ],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R15:C11",
+        "targetSemanticCoordinate": {
+          "row": 16,
+          "column": 10
+        },
+        "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER"
+      },
+      "preservationAreas": [
+        "MOUNTAIN_EXTERIOR_MUST_REMAIN_CONTINUOUS",
+        "CAVERN_INTERIOR_REMAINS_SEPARATE_LATER_OCCURRENCE",
+        "NO_TERRAIN_PHASE_ENTRY"
+      ],
+      "confidence": "MODERATE_EXTERIOR_FACE_BAND_CAVERN_FUNCTION_STILL_BLOCKING",
+      "finalEntranceAssigned": false,
+      "acceptedByManifest": false
+    },
+    {
+      "areaId": "GRATITUDE_REGION_FRONTIER_PLAINS",
+      "humanName": "Frontier Plains",
+      "coordinateStatus": "MEASURED_CANDIDATE",
+      "centerAnchor": {
+        "x": -144,
+        "y": -0.047892,
+        "z": -176,
+        "elevation": -0.047892,
+        "slope": 0.092575,
+        "curvature": -0.00015,
+        "mountainContribution": 0,
+        "shorelineZ": -85.685229,
+        "shorelineDistance": 90.314771,
+        "normal": {
+          "x": 0.07447,
+          "y": 0.995742,
+          "z": 0.054328
+        },
+        "anchorSource": "DERIVED_CENTER_OF_MAXIMUM_ALL_ELIGIBLE_AXIS_ALIGNED_LOWLAND_RECTANGLE"
+      },
+      "boundaryEnvelope": {
+        "sampleCount": 289,
+        "sampleSpacingWorldUnits": 4,
+        "sampledSupportAreaSquareWorldUnits": 4624,
+        "bounds": {
+          "xMinimum": -176,
+          "xMaximum": -112,
+          "zMinimum": -208,
+          "zMaximum": -144
+        },
+        "elevationRange": {
+          "minimum": -3.984898,
+          "maximum": 2.673264
+        },
+        "slopeRange": {
+          "minimum": 0.03253,
+          "maximum": 0.117405
+        }
+      },
+      "derivation": {
+        "searchFormationId": "H_EARTH_LOWLAND_001",
+        "searchBounds": {
+          "xMin": -176,
+          "xMax": -18,
+          "zMin": -210,
+          "zMax": -125
+        },
+        "sampleSpacingWorldUnits": 4,
+        "eligibility": {
+          "minimumShorelineDistance": 50,
+          "elevationMinimum": -4,
+          "elevationMaximum": 12,
+          "maximumSlope": 0.12
+        },
+        "maximalRectangleSampleArea": 289
+      },
+      "formationMembership": [
+        "H_EARTH_LOWLAND_001"
+      ],
+      "semanticAddressCorrespondence": {
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C01_C04",
+        "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+        "formationIds": [
+          "H_EARTH_COASTAL_BERM_001",
+          "H_EARTH_LOWLAND_001"
+        ],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C04",
+        "targetSemanticCoordinate": {
+          "row": 6,
+          "column": 4
+        },
+        "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER"
+      },
+      "preservationAreas": [
+        "NO_TERRAIN_FLATTENING_ASSUMED",
+        "NO_FRONTIER_OBJECT_OR_FACILITY_PLACEMENT",
+        "REQUIRED_RESERVE_FAMILIES_REMAIN_UNRESOLVED"
+      ],
+      "confidence": "HIGH_LAND_CAPACITY_CANDIDATE_FUNCTIONAL_RESERVES_UNRESOLVED",
+      "acceptedByManifest": false
+    }
+  ],
+  "routeCandidates": {
+    "entryToManor": {
+      "status": "MEASURED_ROUTE_CANDIDATE_PENDING_MANIFEST_ACCEPTANCE",
+      "analysisStepWorldUnits": 4,
+      "maximumPermittedSampleSlope": 0.55,
+      "nodeCount": 52,
+      "pathLengthWorldUnits": 204,
+      "weightedCost": 280.242428,
+      "start": {
+        "x": 0,
+        "y": 1.526629,
+        "z": -96,
+        "elevation": 1.526629,
+        "slope": 0.236142,
+        "curvature": 0.002913,
+        "mountainContribution": 0,
+        "shorelineZ": -79.255078,
+        "shorelineDistance": 16.744922,
+        "normal": {
+          "x": -0.040383,
+          "y": 0.973233,
+          "z": 0.226245
+        }
+      },
+      "end": {
+        "x": 72,
+        "y": 29.543441,
+        "z": -172,
+        "elevation": 29.543441,
+        "slope": 0.048067,
+        "curvature": -0.014285,
+        "mountainContribution": 0,
+        "shorelineZ": -76.991156,
+        "shorelineDistance": 95.008844,
+        "normal": {
+          "x": -0.023609,
+          "y": 0.998847,
+          "z": 0.041806
+        }
+      },
+      "minimumElevation": 1.526629,
+      "maximumElevation": 29.543441,
+      "maximumEncounteredSlope": 0.543766,
+      "polyline": [
+        {
+          "x": 0,
+          "z": -96,
+          "y": 1.526629
+        },
+        {
+          "x": 16,
+          "z": -112,
+          "y": 5.570831
+        },
+        {
+          "x": 44,
+          "z": -116,
+          "y": 8.239318
+        },
+        {
+          "x": 72,
+          "z": -120,
+          "y": 9.452993
+        },
+        {
+          "x": 100,
+          "z": -124,
+          "y": 7.233323
+        },
+        {
+          "x": 100,
+          "z": -156,
+          "y": 18.720309
+        },
+        {
+          "x": 80,
+          "z": -168,
+          "y": 28.535392
+        },
+        {
+          "x": 72,
+          "z": -172,
+          "y": 29.543441
+        }
+      ]
+    },
+    "entryToFrontier": {
+      "status": "MEASURED_ROUTE_CANDIDATE_PENDING_MANIFEST_ACCEPTANCE",
+      "analysisStepWorldUnits": 4,
+      "maximumPermittedSampleSlope": 0.55,
+      "nodeCount": 57,
+      "pathLengthWorldUnits": 224,
+      "weightedCost": 250.743042,
+      "start": {
+        "x": 0,
+        "y": 1.526629,
+        "z": -96,
+        "elevation": 1.526629,
+        "slope": 0.236142,
+        "curvature": 0.002913,
+        "mountainContribution": 0,
+        "shorelineZ": -79.255078,
+        "shorelineDistance": 16.744922,
+        "normal": {
+          "x": -0.040383,
+          "y": 0.973233,
+          "z": 0.226245
+        }
+      },
+      "end": {
+        "x": -144,
+        "y": -0.047892,
+        "z": -176,
+        "elevation": -0.047892,
+        "slope": 0.092575,
+        "curvature": -0.00015,
+        "mountainContribution": 0,
+        "shorelineZ": -85.685229,
+        "shorelineDistance": 90.314771,
+        "normal": {
+          "x": 0.07447,
+          "y": 0.995742,
+          "z": 0.054328
+        }
+      },
+      "minimumElevation": -1.167313,
+      "maximumElevation": 1.526629,
+      "maximumEncounteredSlope": 0.236142,
+      "polyline": [
+        {
+          "x": 0,
+          "z": -96,
+          "y": 1.526629
+        },
+        {
+          "x": -32,
+          "z": -96,
+          "y": 0.114342
+        },
+        {
+          "x": -64,
+          "z": -96,
+          "y": -0.941123
+        },
+        {
+          "x": -96,
+          "z": -96,
+          "y": -1.067182
+        },
+        {
+          "x": -108,
+          "z": -116,
+          "y": 0.461569
+        },
+        {
+          "x": -140,
+          "z": -116,
+          "y": 1.236738
+        },
+        {
+          "x": -144,
+          "z": -144,
+          "y": -0.854377
+        },
+        {
+          "x": -144,
+          "z": -176,
+          "y": -0.047892
+        }
+      ]
+    },
+    "manorToCavernApproach": {
+      "status": "MEASURED_ROUTE_CANDIDATE_PENDING_MANIFEST_ACCEPTANCE",
+      "analysisStepWorldUnits": 4,
+      "maximumPermittedSampleSlope": 0.55,
+      "nodeCount": 19,
+      "pathLengthWorldUnits": 72,
+      "weightedCost": 107.673012,
+      "start": {
+        "x": 72,
+        "y": 29.543441,
+        "z": -172,
+        "elevation": 29.543441,
+        "slope": 0.048067,
+        "curvature": -0.014285,
+        "mountainContribution": 0,
+        "shorelineZ": -76.991156,
+        "shorelineDistance": 95.008844,
+        "normal": {
+          "x": -0.023609,
+          "y": 0.998847,
+          "z": 0.041806
+        }
+      },
+      "end": {
+        "x": 48,
+        "y": 10.714113,
+        "z": -220,
+        "elevation": 10.714113,
+        "slope": 0.425258,
+        "curvature": 0.002835,
+        "mountainContribution": 0,
+        "shorelineZ": -78.815707,
+        "shorelineDistance": 141.184293,
+        "normal": {
+          "x": -0.361189,
+          "y": 0.920245,
+          "z": -0.150635
+        }
+      },
+      "minimumElevation": 10.714113,
+      "maximumElevation": 29.543441,
+      "maximumEncounteredSlope": 0.425258,
+      "polyline": [
+        {
+          "x": 72,
+          "z": -172,
+          "y": 29.543441
+        },
+        {
+          "x": 72,
+          "z": -204,
+          "y": 21.839368
+        },
+        {
+          "x": 56,
+          "z": -220,
+          "y": 13.752079
+        },
+        {
+          "x": 48,
+          "z": -220,
+          "y": 10.714113
+        }
+      ]
+    },
+    "frontierToCavernApproach": {
+      "status": "MEASURED_ROUTE_CANDIDATE_PENDING_MANIFEST_ACCEPTANCE",
+      "analysisStepWorldUnits": 4,
+      "maximumPermittedSampleSlope": 0.55,
+      "nodeCount": 60,
+      "pathLengthWorldUnits": 236,
+      "weightedCost": 295.343125,
+      "start": {
+        "x": -144,
+        "y": -0.047892,
+        "z": -176,
+        "elevation": -0.047892,
+        "slope": 0.092575,
+        "curvature": -0.00015,
+        "mountainContribution": 0,
+        "shorelineZ": -85.685229,
+        "shorelineDistance": 90.314771,
+        "normal": {
+          "x": 0.07447,
+          "y": 0.995742,
+          "z": 0.054328
+        }
+      },
+      "end": {
+        "x": 48,
+        "y": 10.714113,
+        "z": -220,
+        "elevation": 10.714113,
+        "slope": 0.425258,
+        "curvature": 0.002835,
+        "mountainContribution": 0,
+        "shorelineZ": -78.815707,
+        "shorelineDistance": 141.184293,
+        "normal": {
+          "x": -0.361189,
+          "y": 0.920245,
+          "z": -0.150635
+        }
+      },
+      "minimumElevation": -6.826029,
+      "maximumElevation": 10.714113,
+      "maximumEncounteredSlope": 0.438616,
+      "polyline": [
+        {
+          "x": -144,
+          "z": -176,
+          "y": -0.047892
+        },
+        {
+          "x": -112,
+          "z": -176,
+          "y": -2.472162
+        },
+        {
+          "x": -80,
+          "z": -176,
+          "y": -2.900096
+        },
+        {
+          "x": -48,
+          "z": -176,
+          "y": -1.88714
+        },
+        {
+          "x": -16,
+          "z": -176,
+          "y": -5.231212
+        },
+        {
+          "x": -4,
+          "z": -196,
+          "y": -6.764934
+        },
+        {
+          "x": 4,
+          "z": -220,
+          "y": -5.205666
+        },
+        {
+          "x": 36,
+          "z": -220,
+          "y": 5.75881
+        },
+        {
+          "x": 48,
+          "z": -220,
+          "y": 10.714113
+        }
+      ]
+    },
+    "frontierToManor": {
+      "status": "MEASURED_ROUTE_CANDIDATE_PENDING_MANIFEST_ACCEPTANCE",
+      "analysisStepWorldUnits": 4,
+      "maximumPermittedSampleSlope": 0.55,
+      "nodeCount": 72,
+      "pathLengthWorldUnits": 284,
+      "weightedCost": 380.397594,
+      "start": {
+        "x": -144,
+        "y": -0.047892,
+        "z": -176,
+        "elevation": -0.047892,
+        "slope": 0.092575,
+        "curvature": -0.00015,
+        "mountainContribution": 0,
+        "shorelineZ": -85.685229,
+        "shorelineDistance": 90.314771,
+        "normal": {
+          "x": 0.07447,
+          "y": 0.995742,
+          "z": 0.054328
+        }
+      },
+      "end": {
+        "x": 72,
+        "y": 29.543441,
+        "z": -172,
+        "elevation": 29.543441,
+        "slope": 0.048067,
+        "curvature": -0.014285,
+        "mountainContribution": 0,
+        "shorelineZ": -76.991156,
+        "shorelineDistance": 95.008844,
+        "normal": {
+          "x": -0.023609,
+          "y": 0.998847,
+          "z": 0.041806
+        }
+      },
+      "minimumElevation": -6.826029,
+      "maximumElevation": 29.543441,
+      "maximumEncounteredSlope": 0.547199,
+      "polyline": [
+        {
+          "x": -144,
+          "z": -176,
+          "y": -0.047892
+        },
+        {
+          "x": -112,
+          "z": -176,
+          "y": -2.472162
+        },
+        {
+          "x": -80,
+          "z": -176,
+          "y": -2.900096
+        },
+        {
+          "x": -48,
+          "z": -176,
+          "y": -1.88714
+        },
+        {
+          "x": -16,
+          "z": -176,
+          "y": -5.231212
+        },
+        {
+          "x": -4,
+          "z": -196,
+          "y": -6.764934
+        },
+        {
+          "x": 16,
+          "z": -208,
+          "y": -2.456794
+        },
+        {
+          "x": 48,
+          "z": -208,
+          "y": 13.163468
+        },
+        {
+          "x": 72,
+          "z": -200,
+          "y": 22.810244
+        },
+        {
+          "x": 72,
+          "z": -172,
+          "y": 29.543441
+        }
+      ]
+    }
+  },
+  "sourceHoldsPreserved": {
+    "broadTerrainMeasurementProgramAuthorized": false,
+    "finalCoordinatesAssigned": false,
+    "fourAreaEnvelopesAccepted": false,
+    "terrainMutationAuthorized": false,
+    "finalPlacementAuthorized": false,
+    "geometryConstructionAuthorized": false,
+    "gameplayChangeAuthorized": false,
+    "runtimeChangeAuthorized": false,
+    "publicRouteChangeAuthorized": false,
+    "productionChangeAuthorized": false,
+    "futureRegionConstructionAuthorized": false,
+    "spiritFormTraversalBlockerActive": true,
+    "mirrorMeIdentityClassBlockerActive": true,
+    "cavernFunctionBlockerActive": true,
+    "frontierReserveFamiliesBlockerActive": true
+  },
+  "assertionsPassed": 40861,
+  "issues": [],
+  "eligible": true,
+  "status": "GRATITUDE_REGION_FOUR_AREA_READ_ONLY_COORDINATE_RECONCILIATION_PASS",
+  "deterministicDigestAlgorithm": "SHA256_STABLE_JSON",
+  "deterministicDigest": "b6b261fb4e298e46a5def5ad2c7a58f26a1869e8678926b9956f647700f04d7a"
+}

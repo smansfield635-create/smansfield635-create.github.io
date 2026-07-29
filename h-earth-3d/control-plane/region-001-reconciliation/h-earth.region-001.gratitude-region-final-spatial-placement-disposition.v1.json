@@ -1,0 +1,241 @@
+{
+  "schemaVersion": "H_EARTH_REGION_001_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_v1",
+  "artifactIdentity": {
+    "artifactId": "H_EARTH_REGION_001_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_v1",
+    "artifactClass": "ADDITIVE_FINAL_PLACEMENT_DISPOSITION_CANDIDATE",
+    "status": "FP_00_INPUT_FREEZE_ESTABLISHED_FP_01_THROUGH_FP_05_PENDING_EXECUTION",
+    "canonical": false,
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "baseMainHead": "343b0c269dd343a57c6ecb7e785141134cc5660f",
+    "workingBranch": "agent/h-earth-gratitude-region-final-placement-disposition-001",
+    "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+    "grCr05Created": false
+  },
+  "operation": {
+    "operationClass": "FINAL_SPATIAL_CANDIDATE_ACCEPTANCE_AND_PLACEMENT_DISPOSITION",
+    "authorityQuestion": "WHICH_OF_THE_FOUR_ELIGIBLE_GRATITUDE_REGION_ANALYTICAL_CANDIDATES_RECEIVE_FINAL_PLACEMENT_DISPOSITIONS_WITHOUT_REOPENING_PRIOR_ANALYSIS_OR_CREATING_CONSTRUCTION_AUTHORITY?",
+    "regressionDefinition": "NO_PRIOR_AUTHORITY_IS_EDITED_REOPENED_OR_REINTERPRETED_OUTSIDE_THIS_ADDITIVE_DISPOSITION_LAYER",
+    "currentLifecycleField": "SEPARATE_FINAL_PLACEMENT_DISPOSITION",
+    "stoppingBoundary": "STOP_BEFORE_FINAL_PLACEMENT_PR_MERGE"
+  },
+  "plannedDurableCandidatePaths": [
+    "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+    "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.runner.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json",
+    "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gratitude-region-final-spatial-placement-disposition.js",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js"
+  ],
+  "frozenRepositoryTopology": {
+    "currentMainHead": "343b0c269dd343a57c6ecb7e785141134cc5660f",
+    "pr311PackageHead": "a0cadd1e5ce70d98c34f11ddacb063c91816bd93",
+    "pr311BaseAtMerge": "8ed5faaffb3ce62190e5268a2538b3d4c6e4ea2f",
+    "pr311MergeCommit": "d30bb105762b4205df90c3450de6c13076ef072e",
+    "pr323AuthorizedHead": "e9c923ed110d43fdef885701059dade50d83b824",
+    "pr323MergeCommit": "343b0c269dd343a57c6ecb7e785141134cc5660f",
+    "activePackagePathCount": 16
+  },
+  "frozenInputInventory": [
+    {"scope":"PR_311_PACKAGE","path":".github/workflows/h-earth-gratitude-region-coordinate-reconciliation.yml","gitBlob":"30b4cd8045130723ef73cfaaa86011b390541c8f"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/control-plane/region-001-reconciliation/h-earth.gratitude-region.coordinate-reconciliation.input-ledger.v1.json","gitBlob":"c033b1a4de872b3e57fc11c3d2255331a175ec86"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.mjs","gitBlob":"2eb292b1a95abbb01f51a0492738cfccbf474b7d"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json","gitBlob":"48c51c8c889695cbd81b2bc0777e5d28a716776f"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.runner.mjs","gitBlob":"59d4de5eac912524c0041aeb1f61b63eca7418cd"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs","gitBlob":"530bd9953b5767e253858116c6abeff7fc5a62f4"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.receipt.v1.json","gitBlob":"52f065a7ff8eb317d617bc9c03ac119172a1c5d2"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.mjs","gitBlob":"b7e5d6378a772e3ba62320e609cb491365002d05"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json","gitBlob":"cefc91a7ffa3047317e3902f3b29a591aaabe468"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.runner.mjs","gitBlob":"ebf166d39cf815ded36af296006dd09a79232293"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.mjs","gitBlob":"3b1123831ab195900365560b47d10c496f223609"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json","gitBlob":"7b5c8596f39d6855cd975ada282c9a9b18f28fe9"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.runner.mjs","gitBlob":"d89d835bc249032af394836a03a486ded4e8a2b1"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.mjs","gitBlob":"ea41fe679c0b3f38efa8fd463418b9288b9387fb"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json","gitBlob":"9dfc45298d0e5f07537807e0518e9743840839d9"},
+    {"scope":"PR_311_PACKAGE","path":"h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.runner.mjs","gitBlob":"72d0ffcd9835a2a02b18b220382db105edbc4314"},
+    {"scope":"ACTIVE_REFERENCE_CUSTODY","path":"h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-coordinate-reconciliation.active-main-reference-amendment.v1.json","gitBlob":"7ef817685ce12a3a93fdf0a03391ac52c2df2664"},
+    {"scope":"ACTIVE_REFERENCE_CUSTODY","path":"h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gratitude-region-controlling-artifact-reference-update.js","gitBlob":"0f3463e99eb735c2964ec933a5bcadf53c77ad2a"},
+    {"scope":"ACTIVE_REFERENCE_CUSTODY","path":"h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js","gitBlob":"dd0e6ae7042f102e8a3c66bcbede4bff20f358b5"},
+    {"scope":"ORIGINAL_V1_AUTHORITY","path":"h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json","gitBlob":"ee5ca94f5ae55ce8f11b460428b800ad4e9a2a9d"},
+    {"scope":"ORIGINAL_V1_AUTHORITY","path":"h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json","gitBlob":"1702d62036a6b241fdadddfabc304a5288f38652"},
+    {"scope":"ACTIVE_INITIAL_CAMERA","path":"showroom/globe/h-earth/functional-landscape/navigation.js","gitBlob":"8ab3446c536fc24423d5601acce232b19fa71c91"},
+    {"scope":"ACTIVE_INITIAL_CAMERA","path":"showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js","gitBlob":"aae214ddbc4cd18aa8c737ee7bbb3de44322da96"},
+    {"scope":"ACTIVE_INITIAL_CAMERA","path":"showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js","gitBlob":"98c768be0cfb2ec4bc82e2b634913d91cc73a32f"}
+  ],
+  "frozenExecutedEvidence": {
+    "regionalClosureAuditDigest": "c3ed6395005aaa47c49389920be815032fca7b63c49ce899a5cee06908bf56e7",
+    "regionalClosureExecutionDigest": "9f87ce88f98e9015b09274bc855826e3dfa3700e7839173cf213eebf911cbd75",
+    "pr311PostMergeVerification": "PASS_CLOSED",
+    "pr323PostMergeVerification": "PASS_CLOSED",
+    "activeRegistryPreflight": "PASS"
+  },
+  "userSuppliedPhysicalCorrespondenceEvidence": {
+    "status": "RECEIVED_NOT_REPOSITORY_CUSTODIED",
+    "role": "INTERPRETIVE_PHYSICAL_DEVICE_CORRESPONDENCE_ONLY",
+    "coordinateAuthority": false,
+    "terrainTruthOverride": false,
+    "observations": [
+      "INLAND_ELEVATED_TERRAIN_AND_PROXY_PARTITION_RELATION",
+      "RIDGE_AND_SADDLE_OR_CORRIDOR_RELATION",
+      "COASTAL_FOREGROUND_AND_MOUNTAIN_MASS_RELATION",
+      "FIRST_RAVINE_OR_NARROW_APPROACH_INTERPRETATION"
+    ]
+  },
+  "targetDispositionMatrix": [
+    {
+      "areaId": "GRATITUDE_REGION_ENTRY_ZONE",
+      "targetDisposition": "ACCEPT",
+      "placementClass": "EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL",
+      "sourceCandidateId": "GRATITUDE_REGION_ENTRY_ZONE_CANDIDATE_01",
+      "sourceCandidateBounds": {"xMinimum":-24,"xMaximum":24,"zMinimum":-132,"zMaximum":-88},
+      "activeInitialState": {
+        "waypointId": "COAST",
+        "x": 0,
+        "z": -96,
+        "yPolicy": "DERIVE_FROM_ACTIVE_TERRAIN_CLEARANCE_LAW",
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "verticalFovDegrees": 56
+      },
+      "cameraStartRelocation": false,
+      "cameraAuthorityMutation": false
+    },
+    {
+      "areaId": "GRATITUDE_REGION_MIRROR_MANOR_PRECINCT",
+      "targetDisposition": "ACCEPT",
+      "acceptedScope": "UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
+      "sourceCandidateId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+      "center": {"x":80,"z":-172},
+      "bounds": {"xMinimum":64,"xMaximum":96,"zMinimum":-188,"zMaximum":-156},
+      "preservationRequirements": [
+        "LOWER_NATURAL_APPROACH_REMAINS_OPEN",
+        "LOW_CORRIDOR_NO_BUILD_HALF_WIDTH_REMAINS_6",
+        "TWO_HILL_RELATION_REMAINS_LEGIBLE",
+        "BEACHWARD_VIEW_REMAINS_CLEAR",
+        "MOUNTAINWARD_VIEW_REMAINS_CLEAR"
+      ],
+      "downstreamConstructionRequirements": [
+        "MAIN_STRUCTURE_AND_ATRIUM_REMAIN_WITHIN_ACCEPTED_UPPER_SITE",
+        "MINIMUM_FOUR_ENTRANCES",
+        "AT_LEAST_ONE_ENTRANCE_RELATES_TO_LOWER_NATURAL_APPROACH",
+        "GARDENS_SCULPTURES_LANDSCAPE_DEVELOPMENT_AND_HISTORICAL_INTERPRETATION_REMAIN_DOWNSTREAM"
+      ],
+      "unassigned": [
+        "EXACT_BUILDING_FOOTPRINT",
+        "BUILDING_ORIENTATION",
+        "ATRIUM_GEOMETRY",
+        "ENTRANCE_COORDINATES",
+        "GARDEN_LAYOUT",
+        "SCULPTURE_POSITIONS"
+      ]
+    },
+    {
+      "areaId": "GRATITUDE_REGION_CAVERN_PRECINCT",
+      "targetDisposition": "REQUIRE_BOUNDED_REFINEMENT",
+      "sourceCandidateId": "GRATITUDE_REGION_CAVERN_EXTERIOR_ENTRANCE_RELATION_CANDIDATE_01",
+      "currentExteriorFace": {"x":40,"z":-284},
+      "currentPrecinctCenter": {"x":56,"z":-284},
+      "authorityQuestion": "DOES_THE_CURRENT_RELATION_OR_EXACTLY_ONE_CORRECTED_LOCAL_RELATION_CORRESPOND_TO_THE_TERMINUS_OF_THE_FIRST_RAVINE_WHERE_THE_MOUNTAIN_MASS_BEGINS?",
+      "authorizedOutcomes": [
+        "ACCEPT_CURRENT_RELATION",
+        "ACCEPT_ONE_CORRECTED_LOCAL_RELATION",
+        "RETAIN_ELIGIBLE_NONFINAL_AFTER_BOUNDED_PROOF"
+      ],
+      "separateInteriorOccurrencePreserved": true
+    },
+    {
+      "areaId": "GRATITUDE_REGION_FRONTIER_PLAINS",
+      "targetDisposition": "RETAIN_ELIGIBLE_NONFINAL",
+      "sourceCandidateId": "GRATITUDE_REGION_FRONTIER_PLAINS_PRECINCT_ENVELOPE_CANDIDATE_01",
+      "preservedRole": "LARGE_REGIONAL_CAPACITY_RESERVE",
+      "separateFutureProject": true,
+      "allElevenSystemsAssignedToFrontier": false,
+      "distributedFunctionalSystemsTopologyDeferred": true,
+      "exactFunctionalCellsAssigned": false,
+      "constructionAuthority": false
+    }
+  ],
+  "boundedCheckpoints": [
+    {
+      "checkpointId": "FP-00",
+      "name": "FREEZE_INPUT_AUTHORITY",
+      "authorityQuestion": "ARE_ALL_REQUIRED_ACTIVE_MAIN_HISTORICAL_ANALYTICAL_REFERENCE_AND_CAMERA_INPUTS_PRESENT_AT_THE_EXACT_FROZEN_BLOBS?",
+      "requiredResult": "PASS_CLOSED",
+      "mutationScope": ["THIS_ADDITIVE_DISPOSITION_ARTIFACT_ONLY"],
+      "stoppingBoundary": "STOP_ON_ANY_BLOB_PATH_OR_BASE_HEAD_MISMATCH"
+    },
+    {
+      "checkpointId": "FP-01",
+      "name": "ENTRY_ARRIVAL_CORRESPONDENCE",
+      "authorityQuestion": "DOES_THE_ACTUAL_LIVE_INITIAL_NAVIGATION_STATE_FALL_WITHIN_THE_ELIGIBLE_ENTRY_ZONE_WITHOUT_CAMERA_RELOCATION?",
+      "requiredResult": "ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL",
+      "stoppingBoundary": "STOP_BEFORE_ANY_CAMERA_RUNTIME_OR_PUBLIC_ROUTE_MUTATION"
+    },
+    {
+      "checkpointId": "FP-02",
+      "name": "MIRROR_MANOR_SITE_DISPOSITION",
+      "authorityQuestion": "CAN_THE_UPPER_CONNECTED_HILL_SITE_ENVELOPE_BE_ACCEPTED_WHILE_PRESERVING_THE_LOWER_CORRIDOR_BOTH_VIEWS_AND_UNASSIGNED_ARCHITECTURE?",
+      "requiredResult": "ACCEPT_UPPER_SITE_ENVELOPE_ONLY",
+      "stoppingBoundary": "STOP_BEFORE_FOOTPRINT_OR_ENTRANCE_GEOMETRY_SELECTION"
+    },
+    {
+      "checkpointId": "FP-03",
+      "name": "CAVERN_FIRST_RAVINE_TERMINUS_CORRESPONDENCE",
+      "authorityQuestion": "DOES_THE_CURRENT_RELATION_OR_ONE_LOCAL_CORRECTION_MATCH_THE_FIRST_RAVINE_TERMINUS_UNDER_GOVERNED_TERRAIN_TRUTH?",
+      "requiredResultDomain": [
+        "ACCEPT_CURRENT_RELATION",
+        "ACCEPT_ONE_CORRECTED_LOCAL_RELATION",
+        "RETAIN_ELIGIBLE_NONFINAL_AFTER_BOUNDED_PROOF"
+      ],
+      "stoppingBoundary": "STOP_BEFORE_CAVERN_EXCAVATION_INTERIOR_ASSIGNMENT_OR_ROUTE_GEOMETRY"
+    },
+    {
+      "checkpointId": "FP-04",
+      "name": "FRONTIER_FORMAL_DEFERRAL",
+      "authorityQuestion": "CAN_FRONTIER_REMAIN_AN_ELIGIBLE_REGIONAL_CAPACITY_RESERVE_WHILE_THE_ELEVEN_SYSTEMS_MOVE_TO_A_SEPARATE_DISTRIBUTED_TOPOLOGY_PROGRAM?",
+      "requiredResult": "RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT",
+      "stoppingBoundary": "STOP_BEFORE_FUNCTIONAL_CELL_INFRASTRUCTURE_OR_SYSTEM_PLACEMENT"
+    },
+    {
+      "checkpointId": "FP-05",
+      "name": "REGIONAL_COMPOSITE_CLOSURE",
+      "authorityQuestion": "DO_ALL_FOUR_AREAS_HAVE_COMPLETE_LIFECYCLE_DISPOSITIONS_WITH_THE_SIX_PAIR_RELATIONSHIP_MATRIX_AND_ALL_PRESERVATION_LAWS_PASSING?",
+      "requiredResult": "FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED",
+      "requires": [
+        "EXECUTE_COMPLETE_DISPOSITION_TWICE",
+        "IDENTICAL_EXECUTION_DIGESTS",
+        "REGISTRY_PREFLIGHT_PASS",
+        "UNRESOLVED_REQUIRED_PLACEMENT_FIELDS_EQUALS_0"
+      ],
+      "stoppingBoundary": "STOP_BEFORE_FINAL_PLACEMENT_PR_MERGE"
+    }
+  ],
+  "postPlacementProgramBoundary": {
+    "nextConstructionProgramCandidate": [
+      "EXISTING_CAMERA_BOUND_ARRIVAL_PRESENTATION",
+      "MIRROR_MANOR_WITHIN_ACCEPTED_UPPER_SITE",
+      "VERIFIED_CAVERN_EXTERIOR_ENTRANCE"
+    ],
+    "deferred": [
+      "CAVERN_INTERIOR",
+      "FRONTIER_PLAINS",
+      "DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY",
+      "DYNAMIC_SUN_AND_WORLD_TIME_ACTIVATION"
+    ],
+    "timeOfDayCurrentStatus": "EXISTING_STATIC_AFTERNOON_ATMOSPHERE_AUTHORITY_PRESERVED_NOT_MUTATED_BY_THIS_LANE"
+  },
+  "authorityBoundary": {
+    "priorAuthorityMutation": false,
+    "grCr01To04Mutation": false,
+    "terrainMutation": false,
+    "cameraAuthorityMutation": false,
+    "buildingGeometry": false,
+    "cavernExcavation": false,
+    "roadOrCorridorGeometry": false,
+    "runtimeIntegration": false,
+    "publicRouteMutation": false,
+    "livePageChange": false,
+    "productConstruction": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthority": false
+  }
+}

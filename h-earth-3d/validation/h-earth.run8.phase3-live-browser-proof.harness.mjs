@@ -282,7 +282,7 @@ try {
   run('git', ['config', 'user.name', 'github-actions[bot]']);
   run('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com']);
   run('git', ['add', `${outputRelative}/index.html`, `${outputRelative}/preview.css`, `${outputRelative}/preview.js`]);
-  run('git', ['add', '-u', workflowPath, harnessPath]);
+  run('git', ['add', '-u', harnessPath]);
   run('git', ['commit', '-m', 'Materialize CP4 0B sealed three-file preview'], { stdio: 'inherit' });
   run('git', ['push', 'origin', `HEAD:${branch}`], { stdio: 'inherit' });
   console.log('CP4_0B_MATERIALIZATION_PUSHED');

@@ -1,0 +1,434 @@
+name: H-Earth Gratitude Region PR 311 Post-Merge Exact-Main Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/h-earth-gratitude-region-pr311-post-merge-exact-main-verification.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-pr311-exact-main-package:
+    runs-on: macos-14
+    timeout-minutes: 20
+    env:
+      PR_311_AUTHORIZED_HEAD: a0cadd1e5ce70d98c34f11ddacb063c91816bd93
+      BASE_AT_MERGE: 8ed5faaffb3ce62190e5268a2538b3d4c6e4ea2f
+      MERGE_COMMIT: d30bb105762b4205df90c3450de6c13076ef072e
+    steps:
+      - name: Check out exact PR 311 merge commit
+        uses: actions/checkout@v4
+        with:
+          ref: d30bb105762b4205df90c3450de6c13076ef072e
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact merge topology and active package blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat > /tmp/pr311-package.tsv <<'PACKAGE'
+          .github/workflows/h-earth-gratitude-region-coordinate-reconciliation.yml	30b4cd8045130723ef73cfaaa86011b390541c8f
+          h-earth-3d/control-plane/region-001-reconciliation/h-earth.gratitude-region.coordinate-reconciliation.input-ledger.v1.json	c033b1a4de872b3e57fc11c3d2255331a175ec86
+          h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.mjs	2eb292b1a95abbb01f51a0492738cfccbf474b7d
+          h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json	48c51c8c889695cbd81b2bc0777e5d28a716776f
+          h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.runner.mjs	59d4de5eac912524c0041aeb1f61b63eca7418cd
+          h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs	530bd9953b5767e253858116c6abeff7fc5a62f4
+          h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.receipt.v1.json	52f065a7ff8eb317d617bc9c03ac119172a1c5d2
+          h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.mjs	b7e5d6378a772e3ba62320e609cb491365002d05
+          h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json	cefc91a7ffa3047317e3902f3b29a591aaabe468
+          h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.runner.mjs	ebf166d39cf815ded36af296006dd09a79232293
+          h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.mjs	3b1123831ab195900365560b47d10c496f223609
+          h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json	7b5c8596f39d6855cd975ada282c9a9b18f28fe9
+          h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.runner.mjs	d89d835bc249032af394836a03a486ded4e8a2b1
+          h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.mjs	ea41fe679c0b3f38efa8fd463418b9288b9387fb
+          h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json	9dfc45298d0e5f07537807e0518e9743840839d9
+          h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.runner.mjs	72d0ffcd9835a2a02b18b220382db105edbc4314
+          PACKAGE
+
+          test "$(git rev-parse HEAD)" = "$MERGE_COMMIT"
+          test "$(git rev-parse "${MERGE_COMMIT}^1")" = "$BASE_AT_MERGE"
+          test "$(git rev-parse "${MERGE_COMMIT}^2")" = "$PR_311_AUTHORIZED_HEAD"
+
+          git ls-remote origin refs/heads/main | cut -f1 > /tmp/pr311-current-main-head.txt
+          test "$(cat /tmp/pr311-current-main-head.txt)" = "$MERGE_COMMIT"
+
+          git diff --name-status "$BASE_AT_MERGE" "$MERGE_COMMIT" -- > /tmp/pr311-merge-delta.name-status
+          git diff --numstat "$BASE_AT_MERGE" "$MERGE_COMMIT" -- > /tmp/pr311-merge-delta.numstat
+          cut -f2 /tmp/pr311-merge-delta.name-status > /tmp/pr311-merge-delta.paths
+          cut -f1 /tmp/pr311-package.tsv > /tmp/pr311-expected.paths
+
+          test "$(wc -l < /tmp/pr311-merge-delta.name-status | tr -d ' ')" = "16"
+          test "$(awk '$1 != "A" { count += 1 } END { print count + 0 }' /tmp/pr311-merge-delta.name-status)" = "0"
+          test "$(awk '{ additions += $1; deletions += $2 } END { print additions + 0 }' /tmp/pr311-merge-delta.numstat)" = "3856"
+          test "$(awk '{ deletions += $2 } END { print deletions + 0 }' /tmp/pr311-merge-delta.numstat)" = "0"
+          diff -u <(sort /tmp/pr311-expected.paths) <(sort /tmp/pr311-merge-delta.paths)
+
+          : > /tmp/pr311-active-package-blobs.tsv
+          while IFS=$'\t' read -r package_path expected_blob; do
+            active_blob="$(git rev-parse "$MERGE_COMMIT:$package_path")"
+            source_blob="$(git rev-parse "$PR_311_AUTHORIZED_HEAD:$package_path")"
+            test "$active_blob" = "$expected_blob"
+            test "$source_blob" = "$expected_blob"
+            printf '%s\t%s\t%s\n' "$package_path" "$expected_blob" "$active_blob" >> /tmp/pr311-active-package-blobs.tsv
+          done < /tmp/pr311-package.tsv
+
+          awk -F '\t' '
+            $2 ~ /^showroom\/globe\/h-earth\//
+            || $2 ~ /^h-earth-3d\/terrain\//
+            || $2 ~ /^h-earth-3d\/objects\//
+            || $2 ~ /^h-earth-3d\/integration\//
+            || $2 ~ /^h-earth-3d\/render\//
+            || $2 ~ /^h-earth-3d\/runtime\// { print $2 }
+          ' /tmp/pr311-merge-delta.name-status > /tmp/pr311-product-paths.txt
+          test ! -s /tmp/pr311-product-paths.txt
+
+      - name: Execute all merged analytical regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          H_EARTH_GR_CR_RECEIPT=/tmp/h-earth-gr-cr-receipt.json \
+            node h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs \
+            2>&1 | tee /tmp/h-earth-gr-cr.log
+
+          H_EARTH_GR_CR_ENTRY_RECEIPT=/tmp/h-earth-gr-cr-entry-receipt.json \
+            node h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gr-cr-entry.log
+
+          H_EARTH_GR_CR_MANOR_RECEIPT=/tmp/h-earth-gr-cr-manor-receipt.json \
+            node h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gr-cr-manor.log
+
+          H_EARTH_GR_CR_CAVERN_RECEIPT=/tmp/h-earth-gr-cr-cavern-receipt.json \
+            node h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gr-cr-cavern.log
+
+          H_EARTH_GR_FRONTIER_PLAINS_RECEIPT=/tmp/h-earth-gr-frontier-plains-receipt.json \
+            node h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gr-frontier-plains.log
+
+      - name: Execute merged regional closure audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'EXTRACT'
+          import fs from 'node:fs';
+          const workflowPath = '.github/workflows/h-earth-gratitude-region-coordinate-reconciliation.yml';
+          const text = fs.readFileSync(workflowPath, 'utf8');
+          const startNeedle = "          node --input-type=module <<'NODE' 2>&1 | tee /tmp/h-earth-gratitude-region-candidate-set-closure.log\n";
+          const start = text.indexOf(startNeedle);
+          if (start < 0) throw new Error('REGIONAL_CLOSURE_SCRIPT_START_NOT_FOUND');
+          const remainder = text.slice(start + startNeedle.length);
+          const end = remainder.indexOf('\n          NODE\n');
+          if (end < 0) throw new Error('REGIONAL_CLOSURE_SCRIPT_END_NOT_FOUND');
+          const script = remainder.slice(0, end)
+            .split('\n')
+            .map((line) => line.startsWith('          ') ? line.slice(10) : line)
+            .join('\n');
+          fs.writeFileSync('/tmp/h-earth-gratitude-region-candidate-set-closure.mjs', `${script}\n`);
+          EXTRACT
+
+          H_EARTH_GR_REGIONAL_CLOSURE_RECEIPT=/tmp/h-earth-gratitude-region-candidate-set-closure.json \
+            node /tmp/h-earth-gratitude-region-candidate-set-closure.mjs \
+            2>&1 | tee /tmp/h-earth-gratitude-region-candidate-set-closure.log
+
+      - name: Execute active registry preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          tail -n +2 /tmp/pr311-package.tsv | cut -f1 > /tmp/pr311-governed-paths.txt
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/pr311-governed-paths.txt \
+            --task "PR 311 post-merge exact-main package execution verification" \
+            --output /tmp/pr311-registry-preflight.json \
+            > /tmp/pr311-registry-preflight.stdout.json
+
+      - name: Emit deterministic post-merge verification receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE' | tee /tmp/pr311-post-merge-exact-main-verification.log
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+          import { execFileSync } from 'node:child_process';
+          import registryFacade, {
+            H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_CORRECTED_PACKAGE_OCCURRENCES,
+            H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_CORRECTED_SCOPE_NODE
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gratitude-region-coordinate-reconciliation-occurrence-correction.js';
+
+          const MERGE_COMMIT = process.env.MERGE_COMMIT;
+          const BASE_AT_MERGE = process.env.BASE_AT_MERGE;
+          const PACKAGE_HEAD = process.env.PR_311_AUTHORIZED_HEAD;
+          const read = (path) => fs.readFileSync(path, 'utf8');
+          const readJson = (path) => JSON.parse(read(path));
+          const lines = (path) => read(path).split(/\r?\n/).filter(Boolean);
+          const stable = (value) => value === null || typeof value !== 'object'
+            ? JSON.stringify(value)
+            : Array.isArray(value)
+              ? `[${value.map(stable).join(',')}]`
+              : `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stable(value[key])}`).join(',')}}`;
+          const digest = (value) => crypto.createHash('sha256').update(stable(value)).digest('hex');
+          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
+          const normalizeSet = (values) => [...new Set(values)].sort((a, b) => a.localeCompare(b));
+          const sameSet = (left, right) => {
+            const a = normalizeSet(left);
+            const b = normalizeSet(right);
+            return a.length === b.length && a.every((value, index) => value === b[index]);
+          };
+
+          const packageRows = lines('/tmp/pr311-package.tsv').map((line) => {
+            const [path, expectedBlob] = line.split('\t');
+            return {
+              path,
+              expectedBlob,
+              activeMainBlob: git('rev-parse', `${MERGE_COMMIT}:${path}`),
+              packageHeadBlob: git('rev-parse', `${PACKAGE_HEAD}:${path}`)
+            };
+          });
+          const mergeRows = lines('/tmp/pr311-merge-delta.name-status').map((line) => {
+            const [status, path] = line.split('\t');
+            return { status, path };
+          });
+          const numstatRows = lines('/tmp/pr311-merge-delta.numstat').map((line) => {
+            const [additions, deletions, path] = line.split('\t');
+            return { additions: Number(additions), deletions: Number(deletions), path };
+          });
+          const expectedPaths = packageRows.map((row) => row.path);
+          const mergedPaths = mergeRows.map((row) => row.path);
+          const productPaths = lines('/tmp/pr311-product-paths.txt');
+          const preflight = readJson('/tmp/pr311-registry-preflight.json');
+          const harness = readJson('/tmp/h-earth-gr-cr-receipt.json');
+          const entry = readJson('/tmp/h-earth-gr-cr-entry-receipt.json');
+          const manor = readJson('/tmp/h-earth-gr-cr-manor-receipt.json');
+          const cavern = readJson('/tmp/h-earth-gr-cr-cavern-receipt.json');
+          const frontier = readJson('/tmp/h-earth-gr-frontier-plains-receipt.json');
+          const closure = readJson('/tmp/h-earth-gratitude-region-candidate-set-closure.json');
+          const harnessDurable = readJson('h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.receipt.v1.json');
+          const entryDurable = readJson('h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json');
+          const manorDurable = readJson('h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json');
+          const cavernDurable = readJson('h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json');
+          const frontierDurable = readJson('h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json');
+
+          function buildReceipt() {
+            const issues = [];
+            const exactBlobMatches = packageRows.every((row) =>
+              row.activeMainBlob === row.expectedBlob
+              && row.packageHeadBlob === row.expectedBlob
+            );
+            const additions = numstatRows.reduce((sum, row) => sum + row.additions, 0);
+            const deletions = numstatRows.reduce((sum, row) => sum + row.deletions, 0);
+            const preflightFailures = preflight.validatorReceipt?.failureCodes ?? [];
+            const preflightResolved = preflight.validatorReceipt?.resolvedPaths ?? [];
+            const regressionChecks = [
+              harness.eligible === true && harness.sectionStatus === 'PASS_CLOSED' && harness.firstExecutionDigest === harnessDurable.executionReceipt.firstExecutionDigest,
+              entry.eligible === true && entry.sectionStatus === 'PASS_CLOSED' && entry.firstExecutionDigest === entryDurable.executionReceipt.firstExecutionDigest,
+              manor.eligible === true && manor.sectionStatus === 'PASS_CLOSED' && manor.firstExecutionDigest === manorDurable.executionReceipt.firstExecutionDigest,
+              cavern.eligible === true && cavern.sectionStatus === 'PASS_CLOSED' && cavern.firstExecutionDigest === cavernDurable.executionCustody.firstExecutionDigest,
+              frontier.eligible === true && frontier.firstExecutionDigest === frontierDurable.executionCustody.firstExecutionDigest,
+              closure.status === 'REGIONAL_CANDIDATE_SET_COMPLETENESS_AND_CLOSURE_AUDIT_PASS_CLOSED'
+            ];
+            const registeredMap = new Map(H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_CORRECTED_PACKAGE_OCCURRENCES);
+            const registryExactMatches = packageRows.every((row) => {
+              if (registeredMap.get(`/${row.path}`) !== row.expectedBlob) return false;
+              const resolution = registryFacade.resolveHEarthRepositoryRegistryOccurrence({
+                path: `/${row.path}`,
+                commitSha: PACKAGE_HEAD,
+                gitBlobSha: row.expectedBlob
+              });
+              return resolution.resolved === true && resolution.matches.length === 1;
+            });
+            const packageNodePresent = registryFacade.getHEarthRepositoryRegistryInstance().nodes
+              .some((node) => node.nodeId === H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_CORRECTED_SCOPE_NODE.nodeId);
+            const allMutationHolds = [harness, entry, manor, cavern, frontier].every((receipt) =>
+              receipt.terrainMutation === false
+              && receipt.geometryConstruction === false
+              && receipt.runtimeMutation === false
+              && receipt.gameplayMutation === false
+              && receipt.publicRouteMutation === false
+              && receipt.productionMutation === false
+              && receipt.controllingManifestMutation === false
+            );
+
+            if (git('rev-parse', 'HEAD') !== MERGE_COMMIT) issues.push('EXACT_MERGE_COMMIT_NOT_CHECKED_OUT');
+            if (read('/tmp/pr311-current-main-head.txt').trim() !== MERGE_COMMIT) issues.push('CURRENT_MAIN_HEAD_MOVED');
+            if (git('rev-parse', `${MERGE_COMMIT}^1`) !== BASE_AT_MERGE) issues.push('MERGE_FIRST_PARENT_MISMATCH');
+            if (git('rev-parse', `${MERGE_COMMIT}^2`) !== PACKAGE_HEAD) issues.push('MERGE_SECOND_PARENT_MISMATCH');
+            if (mergeRows.length !== 16) issues.push(`MERGED_PATH_COUNT_${mergeRows.length}_NOT_16`);
+            if (!mergeRows.every((row) => row.status === 'A')) issues.push('MERGE_DELTA_NOT_ALL_ADDITIONS');
+            if (!sameSet(mergedPaths, expectedPaths)) issues.push('MERGED_PATH_SET_MISMATCH');
+            if (!exactBlobMatches) issues.push('ACTIVE_MAIN_PACKAGE_BLOB_IDENTITY_DRIFT');
+            if (additions !== 3856) issues.push(`MERGE_ADDITIONS_${additions}_NOT_3856`);
+            if (deletions !== 0) issues.push(`MERGE_DELETIONS_${deletions}_NOT_0`);
+            if (productPaths.length !== 0) issues.push(`PRODUCT_PATHS_CHANGED_${productPaths.length}`);
+            if (!regressionChecks.every(Boolean)) issues.push('POST_MERGE_ANALYTICAL_REGRESSION_SET_FAILED');
+            if (preflight.finalDisposition !== 'PASS') issues.push(`REGISTRY_PREFLIGHT_${preflight.finalDisposition}`);
+            if (preflightFailures.length !== 0) issues.push(`REGISTRY_PREFLIGHT_FAILURE_CODES:${preflightFailures.join(',')}`);
+            if (preflightResolved.length !== 15) issues.push(`REGISTRY_PREFLIGHT_RESOLVED_${preflightResolved.length}_NOT_15`);
+            if (!registryExactMatches) issues.push('ACTIVE_REGISTRY_EXACT_OCCURRENCE_RESOLUTION_FAILED');
+            if (!packageNodePresent) issues.push('ACTIVE_REGISTRY_PACKAGE_NODE_MISSING');
+            if (!allMutationHolds) issues.push('ANALYTICAL_AUTHORITY_BOUNDARY_VIOLATION');
+            if (closure.closureDisposition?.ANY_CANDIDATE_ACCEPTED !== false) issues.push('CANDIDATE_ACCEPTANCE_AUTHORITY_EXPANSION');
+            if (closure.closureDisposition?.FINAL_COORDINATES_ASSIGNED !== false) issues.push('FINAL_COORDINATE_AUTHORITY_EXPANSION');
+
+            return {
+              schemaVersion: 'H_EARTH_GRATITUDE_REGION_PR_311_POST_MERGE_EXACT_MAIN_EXECUTION_VERIFICATION_RECEIPT_v1',
+              operation: 'PR_311_POST_MERGE_EXACT_MAIN_EXECUTION_VERIFICATION',
+              operationClass: 'READ_ONLY_CONTROL_EXECUTION_AND_EVIDENCE_RECONCILIATION',
+              mergeCustody: {
+                pr: 311,
+                authorizedHead: PACKAGE_HEAD,
+                baseAtMerge: BASE_AT_MERGE,
+                mergeCommit: MERGE_COMMIT,
+                currentMainHead: read('/tmp/pr311-current-main-head.txt').trim(),
+                firstParent: git('rev-parse', `${MERGE_COMMIT}^1`),
+                secondParent: git('rev-parse', `${MERGE_COMMIT}^2`)
+              },
+              exactPackageIntegration: {
+                expectedPathCount: 16,
+                actualPathCount: mergeRows.length,
+                allAdditions: mergeRows.every((row) => row.status === 'A'),
+                additions,
+                deletions,
+                exactPathSetConfirmed: sameSet(mergedPaths, expectedPaths),
+                exactPackageBlobIdentitiesPreserved: exactBlobMatches,
+                packageRows,
+                unrelatedChangedPathCount: mergedPaths.filter((path) => !expectedPaths.includes(path)).length,
+                productPathCount: productPaths.length,
+                productPaths
+              },
+              preservedExecutionCustody: {
+                analysisHarness: {
+                  executedHead: harnessDurable.executionCustody.executedHead,
+                  durableReceiptBlob: '52f065a7ff8eb317d617bc9c03ac119172a1c5d2',
+                  executionDigest: harnessDurable.executionReceipt.firstExecutionDigest
+                },
+                entryZone: {
+                  executedHead: entryDurable.executionCustody.executedHead,
+                  durableReceiptBlob: 'cefc91a7ffa3047317e3902f3b29a591aaabe468',
+                  executionDigest: entryDurable.executionReceipt.firstExecutionDigest
+                },
+                mirrorManor: {
+                  executedHead: manorDurable.executionCustody.executedHead,
+                  durableReceiptBlob: '9dfc45298d0e5f07537807e0518e9743840839d9',
+                  executionDigest: manorDurable.executionReceipt.firstExecutionDigest
+                },
+                cavernPrecinct: {
+                  executedHead: cavernDurable.executionCustody.finalExecutedHead,
+                  durableReceiptBlob: '48c51c8c889695cbd81b2bc0777e5d28a716776f',
+                  executionDigest: cavernDurable.executionCustody.firstExecutionDigest
+                },
+                frontierPlains: {
+                  executedHead: frontierDurable.executionCustody.finalAnalyticalHead,
+                  durableReceiptBlob: '7b5c8596f39d6855cd975ada282c9a9b18f28fe9',
+                  executionDigest: frontierDurable.executionCustody.firstExecutionDigest
+                },
+                regionalClosure: {
+                  packageHead: PACKAGE_HEAD,
+                  workflowRun: 30473762392,
+                  workflowJob: 90650192230,
+                  evidenceArtifact: 8732731793,
+                  artifactDigest: 'sha256:39e417b62bfb6afba13756eeee8dfa170264e278afbc71a1ef24b5e676a0adfd',
+                  closureAuditDigest: 'c3ed6395005aaa47c49389920be815032fca7b63c49ce899a5cee06908bf56e7',
+                  repeatExecutionDigest: '9f87ce88f98e9015b09274bc855826e3dfa3700e7839173cf213eebf911cbd75'
+                }
+              },
+              executionResults: {
+                postMergeAnalyticalRegressions: regressionChecks.every(Boolean) ? 'PASS' : 'FAIL',
+                regionalClosureAudit: closure.status,
+                registryPreflight: preflight.finalDisposition,
+                registryPreflightResolvedPathCount: preflightResolved.length,
+                registryPreflightFailureCodes: preflightFailures,
+                activeRegistryExactOccurrenceResolution: registryExactMatches,
+                activeRegistryPackageNodePresent: packageNodePresent
+              },
+              passingDisposition: {
+                PR_311_POST_MERGE_EXACT_MAIN_EXECUTION_VERIFICATION: issues.length === 0 ? 'PASS_CLOSED' : 'FAIL_STOPPED',
+                REGIONAL_ANALYTICAL_PACKAGE_ADMITTED_TO_MAIN: issues.length === 0,
+                EXPECTED_PACKAGE_PATH_COUNT: 16,
+                ACTUAL_PACKAGE_PATH_COUNT: mergeRows.length,
+                EXACT_PACKAGE_BLOB_IDENTITIES_PRESERVED: exactBlobMatches,
+                UNRELATED_CHANGED_PATHS: mergedPaths.filter((path) => !expectedPaths.includes(path)).length,
+                PRODUCT_PATHS_CHANGED: productPaths.length,
+                REGISTRY_PREFLIGHT: preflight.finalDisposition,
+                POST_MERGE_ANALYTICAL_REGRESSIONS: regressionChecks.every(Boolean) ? 'PASS' : 'FAIL'
+              },
+              authorityBoundary: {
+                CANDIDATES_ACCEPTED: false,
+                FINAL_COORDINATES_ASSIGNED: false,
+                CANONICALIZATION: false,
+                CONTROLLING_ARTIFACT_REFERENCE_UPDATED: false,
+                FINAL_CANDIDATE_PLACEMENT_DISPOSITION_ASSIGNED: false,
+                TERRAIN_MUTATION: false,
+                GEOMETRY_CONSTRUCTION: false,
+                RUNTIME_MUTATION: false,
+                LIVE_PAGE_CHANGE: false,
+                PRODUCT_CONSTRUCTION: false
+              },
+              stoppingBoundary: 'STOP_BEFORE_CONTROLLING_ARTIFACT_REFERENCE_UPDATE_OR_FINAL_CANDIDATE_PLACEMENT_DISPOSITION',
+              nextSeparateAuthorityLane: [
+                'CONTROLLING_ARTIFACT_REFERENCE_UPDATE_DECISION',
+                'FINAL_CANDIDATE_PLACEMENT_DISPOSITION_UNDER_SEPARATE_AUTHORITY'
+              ],
+              issues
+            };
+          }
+
+          const first = buildReceipt();
+          const second = buildReceipt();
+          const firstDigest = digest(first);
+          const secondDigest = digest(second);
+          const receipt = {
+            ...first,
+            firstVerificationExecutionDigest: firstDigest,
+            secondVerificationExecutionDigest: secondDigest,
+            deterministicRepeatExecution: firstDigest === secondDigest,
+            status: first.issues.length === 0 && firstDigest === secondDigest ? 'PASS_CLOSED' : 'FAIL_STOPPED'
+          };
+          if (firstDigest !== secondDigest) receipt.issues.push('POST_MERGE_EXACT_MAIN_VERIFICATION_NONDETERMINISTIC');
+          fs.writeFileSync('/tmp/pr311-post-merge-exact-main-verification.receipt.json', `${JSON.stringify(receipt, null, 2)}\n`);
+          console.log(JSON.stringify(receipt, null, 2));
+          if (receipt.status !== 'PASS_CLOSED') process.exitCode = 1;
+          NODE
+
+      - name: Upload post-merge verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-pr311-post-merge-exact-main-verification-evidence
+          path: |
+            /tmp/pr311-package.tsv
+            /tmp/pr311-current-main-head.txt
+            /tmp/pr311-merge-delta.name-status
+            /tmp/pr311-merge-delta.numstat
+            /tmp/pr311-merge-delta.paths
+            /tmp/pr311-expected.paths
+            /tmp/pr311-active-package-blobs.tsv
+            /tmp/pr311-product-paths.txt
+            /tmp/h-earth-gr-cr.log
+            /tmp/h-earth-gr-cr-receipt.json
+            /tmp/h-earth-gr-cr-entry.log
+            /tmp/h-earth-gr-cr-entry-receipt.json
+            /tmp/h-earth-gr-cr-manor.log
+            /tmp/h-earth-gr-cr-manor-receipt.json
+            /tmp/h-earth-gr-cr-cavern.log
+            /tmp/h-earth-gr-cr-cavern-receipt.json
+            /tmp/h-earth-gr-frontier-plains.log
+            /tmp/h-earth-gr-frontier-plains-receipt.json
+            /tmp/h-earth-gratitude-region-candidate-set-closure.log
+            /tmp/h-earth-gratitude-region-candidate-set-closure.json
+            /tmp/pr311-registry-preflight.json
+            /tmp/pr311-registry-preflight.stdout.json
+            /tmp/pr311-post-merge-exact-main-verification.log
+            /tmp/pr311-post-merge-exact-main-verification.receipt.json
+          if-no-files-found: warn
+          retention-days: 30

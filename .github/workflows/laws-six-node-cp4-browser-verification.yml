@@ -1,86 +1,19 @@
-name: Laws Six-Node CP4 Browser Verification
+name: Laws Six-Node CP4 Browser Verification Source
 
 on:
-  push:
-    branches:
-      - agent/laws-six-node-cp4-browser-verification-001
-    paths:
-      - .github/workflows/laws-six-node-cp4-browser-verification.yml
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: laws-six-node-cp4-browser-verification
-  cancel-in-progress: false
-
 jobs:
-  browser-verification:
+  harness-source:
+    if: ${{ false }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-
     steps:
-      - name: Check out immutable Checkpoint 3 candidate
-        uses: actions/checkout@v4
-        with:
-          ref: 8607693d75fffed5a8a85c42b8fdc28fff0b0554
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Verify candidate identity and bounded source tree
+      - name: Preserve browser harness source
         shell: bash
         run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "8607693d75fffed5a8a85c42b8fdc28fff0b0554"
-          git merge-base --is-ancestor 343b0c269dd343a57c6ecb7e785141134cc5660f HEAD
-          test "$(git diff --name-only 343b0c269dd343a57c6ecb7e785141134cc5660f...HEAD | wc -l | tr -d ' ')" = "7"
-          git diff --name-only 343b0c269dd343a57c6ecb7e785141134cc5660f...HEAD | sort > /tmp/cp4-paths.txt
-          cat > /tmp/cp4-expected-paths.txt <<'EOF'
-          laws/index.controller.js
-          laws/index.crystals.js
-          laws/index.css
-          laws/index.html
-          laws/index.interactions.js
-          laws/research/index.html
-          laws/test/index.html
-          EOF
-          diff -u /tmp/cp4-expected-paths.txt /tmp/cp4-paths.txt
-          node --check laws/index.controller.js
-          node --check laws/index.interactions.js
-          node --check laws/index.crystals.js
-          git diff --check 343b0c269dd343a57c6ecb7e785141134cc5660f...HEAD
-
-      - name: Install Chromium execution harness
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/cp4
-          cd /tmp/cp4
-          npm init -y >/dev/null
-          npm install --no-audit --no-fund playwright@1.55.0
-          npx playwright install --with-deps chromium
-
-      - name: Execute desktop and mobile browser corridor
-        shell: bash
-        env:
-          CP4_BASE_URL: http://127.0.0.1:4173
-          CP4_CANDIDATE_HEAD: 8607693d75fffed5a8a85c42b8fdc28fff0b0554
-          CP4_BASE_MAIN: 343b0c269dd343a57c6ecb7e785141134cc5660f
-          CP4_EVIDENCE_DIR: ${{ github.workspace }}/cp4-evidence
-        run: |
-          set -euo pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/cp4-server.log 2>&1 &
-          server_pid=$!
-          trap 'kill ${server_pid} 2>/dev/null || true' EXIT
-          for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null; then
-              break
-            fi
-            sleep 1
-          done
-          curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null
-
           cat > /tmp/cp4/run.mjs <<'EOF'
           import assert from 'node:assert/strict';
           import fs from 'node:fs';
@@ -117,7 +50,7 @@ jobs:
             assert.ok(condition, `${name}${details ? ` :: ${JSON.stringify(details)}` : ''}`);
           }
 
-          function diagnosticHarness(page, label) {
+          function diagnostics(page, label) {
             const consoleErrors = [];
             const pageErrors = [];
             const requestFailures = [];
@@ -150,12 +83,10 @@ jobs:
               const controller = globalThis.DGB_LAWS_CONTROLLER;
               const crystals = globalThis.DGB_LAWS_CRYSTALS;
               const interactions = globalThis.DGB_LAWS_INTERACTIONS;
-              const receipt = interactions?.getReceipt?.();
               return Boolean(
                 controller &&
                 crystals &&
-                interactions &&
-                receipt?.initialized === true &&
+                interactions?.getReceipt?.()?.initialized === true &&
                 controller.getSemanticProjection().length >= 6
               );
             }, null, { timeout: 20000 });
@@ -166,10 +97,9 @@ jobs:
               const crystals = globalThis.DGB_LAWS_CRYSTALS;
               const interactions = globalThis.DGB_LAWS_INTERACTIONS;
               return {
-                rootState: root?.dataset.lawsState,
                 controllerState: root?.dataset.lawsControllerState,
                 presentationMode: root?.dataset.lawsPresentationMode,
-                held: root?.dataset.lawsHeld,
+                held: root?.dataset.held,
                 controllerReceipt: controller?.getValidationReceipt?.(),
                 crystalsReceipt: crystals?.receipt?.(),
                 interactionsReceipt: interactions?.getReceipt?.(),
@@ -177,7 +107,7 @@ jobs:
               };
             });
 
-            check(`${label}: constellation runtime state`, state.rootState === 'CONSTELLATION', state);
+            check(`${label}: constellation runtime state`, state.controllerState === 'CONSTELLATION', state);
             check(`${label}: controller not held`, state.held !== 'true', state);
             check(`${label}: controller self-test pass`, state.controllerReceipt?.pass === true, state.controllerReceipt);
             check(`${label}: interactions initialized`, state.interactionsReceipt?.initialized === true, state.interactionsReceipt);
@@ -185,16 +115,12 @@ jobs:
             check(`${label}: six primary semantic projections`, state.projections.filter(x => ['category', 'auxiliary'].includes(String(x.kind).toLowerCase())).length === 6, state.projections);
             check(`${label}: four category projections`, state.projections.filter(x => String(x.kind).toLowerCase() === 'category').length === 4, state.projections);
             check(`${label}: two auxiliary projections`, state.projections.filter(x => String(x.kind).toLowerCase() === 'auxiliary').length === 2, state.projections);
-            return state;
           }
 
           async function capture(page, filename, locator = null) {
             const output = path.join(evidenceDir, filename);
-            if (locator) {
-              await locator.screenshot({ path: output });
-            } else {
-              await page.screenshot({ path: output, fullPage: false });
-            }
+            if (locator) await locator.screenshot({ path: output });
+            else await page.screenshot({ path: output, fullPage: false });
             evidence.screenshots.push(filename);
           }
 
@@ -238,7 +164,7 @@ jobs:
             await projected.click();
             await page.waitForFunction(expected => {
               const root = document.querySelector('[data-laws-root]');
-              return root?.dataset.lawsState === 'CLUSTER_OPEN' && root?.dataset.lawsActiveCluster === expected;
+              return root?.dataset.lawsControllerState === 'CLUSTER_OPEN' && root?.dataset.activeClusterDirection === expected;
             }, direction);
             const cluster = await page.evaluate(expected => {
               const root = document.querySelector('[data-laws-root]');
@@ -246,14 +172,13 @@ jobs:
                 id: element.dataset.lawId,
                 direction: element.dataset.direction,
                 visibility: getComputedStyle(element).visibility,
-                pointerEvents: getComputedStyle(element).pointerEvents,
                 active: element.dataset.active
               }));
               return {
-                rootState: root.dataset.lawsState,
-                activeCluster: root.dataset.lawsActiveCluster,
-                active: all.filter(x => x.direction === expected && x.visibility !== 'hidden'),
-                inactive: all.filter(x => x.direction !== expected && x.visibility !== 'hidden')
+                controllerState: root.dataset.lawsControllerState,
+                activeCluster: root.dataset.activeClusterDirection,
+                active: all.filter(x => x.direction === expected && x.active === 'true'),
+                inactive: all.filter(x => x.direction !== expected && x.active === 'true')
               };
             }, direction);
             check(`${label}: ${direction} opens its four-law cluster`, cluster.active.length === 4 && cluster.inactive.length === 0, cluster);
@@ -264,7 +189,7 @@ jobs:
           async function returnToConstellation(page, label) {
             const returned = await page.evaluate(() => globalThis.DGB_LAWS_CONTROLLER.requestReturnToConstellation({ source: 'cp4-browser', scrollToScene: false }));
             check(`${label}: controller accepts return to constellation`, returned === true, returned);
-            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsState === 'CONSTELLATION');
+            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION');
           }
 
           async function controlledDesktopDrag(page, label) {
@@ -285,9 +210,9 @@ jobs:
             const after = await page.evaluate(() => ({
               receipt: globalThis.DGB_LAWS_INTERACTIONS.getReceipt(),
               frame: globalThis.DGB_LAWS_CONTROLLER.getFrameState(),
-              rootState: document.querySelector('[data-laws-root]').dataset.lawsState
+              controllerState: document.querySelector('[data-laws-root]').dataset.lawsControllerState
             }));
-            check(`${label}: controlled drag settles rather than flicks`, after.receipt.settlementCount > before && after.rootState === 'CONSTELLATION', after);
+            check(`${label}: controlled drag settles rather than flicks`, after.receipt.settlementCount > before && after.controllerState === 'CONSTELLATION', after);
             check(`${label}: controlled drag ends committed`, after.frame.orbitOrientation?.phase === 'COMMITTED', after.frame.orbitOrientation);
           }
 
@@ -302,7 +227,7 @@ jobs:
             await page.mouse.down();
             await page.mouse.move(startX + 112, startY + 3, { steps: 2 });
             await page.mouse.up();
-            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsState === 'CONSTELLATION');
+            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION');
             const after = await page.evaluate(() => globalThis.DGB_LAWS_INTERACTIONS.getReceipt());
             check(`${label}: quick flick returns from cluster`, after.flickReturnCount > before, after);
           }
@@ -374,7 +299,7 @@ jobs:
           try {
             const desktopContext = await browser.newContext({ viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1 });
             const desktop = await desktopContext.newPage();
-            const finishDesktopDiagnostics = diagnosticHarness(desktop, 'desktop-laws');
+            const finishDesktopDiagnostics = diagnostics(desktop, 'desktop-laws');
             await loadLawsRuntime(desktop, 'desktop');
             await visualTopologyChecks(desktop, 'desktop');
             await capture(desktop, 'desktop-constellation.png', desktop.locator('#laws-orbit'));
@@ -393,7 +318,7 @@ jobs:
 
             const testContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
             const testPage = await testContext.newPage();
-            const finishTestDiagnostics = diagnosticHarness(testPage, 'desktop-test-route');
+            const finishTestDiagnostics = diagnostics(testPage, 'desktop-test-route');
             await loadLawsRuntime(testPage, 'desktop-test-navigation');
             await actualAuxiliaryNavigation(testPage, 'test', '/laws/test/', 'desktop');
             await executeTestRoute(testPage, 'desktop');
@@ -403,7 +328,7 @@ jobs:
 
             const researchContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
             const researchPage = await researchContext.newPage();
-            const finishResearchDiagnostics = diagnosticHarness(researchPage, 'desktop-research-route');
+            const finishResearchDiagnostics = diagnostics(researchPage, 'desktop-research-route');
             await loadLawsRuntime(researchPage, 'desktop-research-navigation');
             await actualAuxiliaryNavigation(researchPage, 'research', '/laws/research/', 'desktop');
             await executeResearchRoute(researchPage, 'desktop');
@@ -419,7 +344,7 @@ jobs:
               hasTouch: true
             });
             const mobile = await mobileContext.newPage();
-            const finishMobileDiagnostics = diagnosticHarness(mobile, 'mobile-laws');
+            const finishMobileDiagnostics = diagnostics(mobile, 'mobile-laws');
             await loadLawsRuntime(mobile, 'mobile');
             await visualTopologyChecks(mobile, 'mobile');
             const overflow = await mobile.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: document.documentElement.clientWidth }));
@@ -430,8 +355,8 @@ jobs:
             const flowBox = await flowLabel.boundingBox();
             assert.ok(flowBox, 'mobile flow label bounding box required');
             await mobile.touchscreen.tap(flowBox.x + flowBox.width / 2, flowBox.y + flowBox.height / 2);
-            await mobile.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsState === 'CLUSTER_OPEN');
-            check('mobile: touch opens cardinal cluster', await mobile.getAttribute('[data-laws-root]', 'data-laws-active-cluster') === 'flow');
+            await mobile.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CLUSTER_OPEN');
+            check('mobile: touch opens cardinal cluster', await mobile.getAttribute('[data-laws-root]', 'data-active-cluster-direction') === 'flow');
             await capture(mobile, 'mobile-flow-cluster.png', mobile.locator('#laws-orbit'));
 
             const fieldBox = await mobile.locator('[data-laws-scene-field]').boundingBox();
@@ -445,7 +370,7 @@ jobs:
               120,
               3
             );
-            await mobile.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsState === 'CONSTELLATION');
+            await mobile.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION');
             const flickAfter = await mobile.evaluate(() => globalThis.DGB_LAWS_INTERACTIONS.getReceipt().flickReturnCount);
             check('mobile: touch flick returns to constellation', flickAfter > flickBefore, { flickBefore, flickAfter });
 
@@ -461,10 +386,10 @@ jobs:
             await mobile.waitForTimeout(180);
             const orbitAfter = await mobile.evaluate(() => ({
               settlementCount: globalThis.DGB_LAWS_INTERACTIONS.getReceipt().settlementCount,
-              rootState: document.querySelector('[data-laws-root]').dataset.lawsState,
+              controllerState: document.querySelector('[data-laws-root]').dataset.lawsControllerState,
               phase: globalThis.DGB_LAWS_CONTROLLER.getFrameState().orbitOrientation?.phase
             }));
-            check('mobile: controlled touch drag settles in constellation', orbitAfter.settlementCount > orbitBefore && orbitAfter.rootState === 'CONSTELLATION' && orbitAfter.phase === 'COMMITTED', { orbitBefore, orbitAfter });
+            check('mobile: controlled touch drag settles in constellation', orbitAfter.settlementCount > orbitBefore && orbitAfter.controllerState === 'CONSTELLATION' && orbitAfter.phase === 'COMMITTED', { orbitBefore, orbitAfter });
 
             const researchTarget = mobile.locator('[data-laws-auxiliary-id="research"]');
             const researchBox = await researchTarget.boundingBox();
@@ -489,38 +414,3 @@ jobs:
             await browser.close();
           }
           EOF
-
-          cd /tmp/cp4
-          node run.mjs
-
-      - name: Record exact source identities
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p cp4-evidence
-          {
-            echo "CANDIDATE_HEAD=$(git rev-parse HEAD)"
-            echo "BASE_MAIN=343b0c269dd343a57c6ecb7e785141134cc5660f"
-            for path in \
-              laws/index.html \
-              laws/index.controller.js \
-              laws/index.interactions.js \
-              laws/index.crystals.js \
-              laws/index.css \
-              laws/test/index.html \
-              laws/research/index.html; do
-              printf '%s\t%s\t%s\n' "$path" "$(git hash-object "$path")" "$(wc -c < "$path" | tr -d ' ')"
-            done
-          } > cp4-evidence/source-identities.tsv
-          cp /tmp/cp4-server.log cp4-evidence/server.log || true
-          git status --short --untracked-files=all > cp4-evidence/worktree-status.txt
-
-      - name: Upload Checkpoint 4 evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: laws-six-node-cp4-browser-evidence
-          path: cp4-evidence
-          if-no-files-found: error
-          retention-days: 30

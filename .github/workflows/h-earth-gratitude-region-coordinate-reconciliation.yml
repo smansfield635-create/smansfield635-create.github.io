@@ -7,7 +7,12 @@ on:
   pull_request:
     branches:
       - main
+      - agent/h-earth-gratitude-region-coordinate-reconciliation-validation-base-001
   workflow_dispatch:
+
+concurrency:
+  group: h-earth-gratitude-region-coordinate-reconciliation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

@@ -47,36 +47,36 @@ jobs:
 
           replacements = [
               (
-                  'id: element.dataset.direction || element.dataset.auxiliaryId,',
-                  'id: element.dataset.direction || element.dataset.lawsAuxiliaryId || element.dataset.auxiliaryId,'
+                  'id:element.dataset.direction||element.dataset.auxiliaryId,',
+                  'id:element.dataset.direction||element.dataset.lawsAuxiliaryId||element.dataset.auxiliaryId,'
               ),
               (
                   'return { field: { width: fieldRect.width, height: fieldRect.height }, records };',
                   'return { field: { width: fieldRect.width, height: fieldRect.height }, records, projections: globalThis.DGB_LAWS_CONTROLLER.getSemanticProjection() };'
               ),
               (
-                  'async function visualTopologyChecks(page, label) {\n  const visual = await page.evaluate(() => {',
-                  'async function visualTopologyChecks(page, label) {\n  await page.waitForTimeout(260);\n  const visual = await page.evaluate(() => {'
+                  'async function visualTopologyChecks(page,label){\n  const visual=await page.evaluate(()=>{',
+                  'async function visualTopologyChecks(page,label){\n  await page.waitForTimeout(260);\n  const visual=await page.evaluate(()=>{'
               ),
               (
-                  'check(`${label}: all primary nodes have pointer authority`, visual.records.every(x => x.pointerEvents !== \'none\'), visual.records);',
-                  'const categoryTabs = await page.evaluate(() => [...document.querySelectorAll("[data-laws-projected-category-label]")].map(element => ({ id: element.dataset.lawsProjectedCategoryLabel, hidden: element.hidden, pointerEvents: getComputedStyle(element).pointerEvents, visibility: getComputedStyle(element).visibility })));\n  check(`${label}: cardinal projected labels retain pointer authority`, categoryTabs.length === 4 && categoryTabs.every(x => !x.hidden && x.pointerEvents !== "none" && x.visibility !== "hidden"), categoryTabs);\n  check(`${label}: auxiliary semantic controls retain pointer authority`, visual.records.filter(x => x.kind === "auxiliary").length === 2 && visual.records.filter(x => x.kind === "auxiliary").every(x => x.pointerEvents !== "none"), visual.records);'
+                  "check(`${label}: all primary nodes have pointer authority`,visual.records.every(x=>x.pointerEvents!=='none'),visual.records);",
+                  'const categoryTabs=await page.evaluate(()=>[...document.querySelectorAll("[data-laws-projected-category-label]")].map(element=>({id:element.dataset.lawsProjectedCategoryLabel,hidden:element.hidden,pointerEvents:getComputedStyle(element).pointerEvents,visibility:getComputedStyle(element).visibility})));check(`${label}: cardinal projected labels retain pointer authority`,categoryTabs.length===4&&categoryTabs.every(x=>!x.hidden&&x.pointerEvents!=="none"&&x.visibility!=="hidden"),categoryTabs);check(`${label}: auxiliary semantic controls retain pointer authority`,visual.records.filter(x=>x.kind==="auxiliary").length===2&&visual.records.filter(x=>x.kind==="auxiliary").every(x=>x.pointerEvents!=="none"),visual.records);'
               ),
               (
-                  'check(`${label}: all primary centers remain inside scene`, visual.records.every(x => x.centerX >= 0 && x.centerX <= visual.field.width && x.centerY >= 0 && x.centerY <= visual.field.height), visual);',
-                  'const projectionById = new Map((visual.projections || []).filter(x => ["category", "auxiliary"].includes(String(x.kind).toLowerCase())).map(x => [x.id, x]));\n  check(`${label}: semantic hit centers align with live projections`, visual.records.every(x => { const projection = projectionById.get(x.id); return Boolean(projection) && Math.abs(x.centerX - projection.x) <= 2 && Math.abs(x.centerY - projection.y) <= 2; }), visual);'
+                  'check(`${label}: all primary centers remain inside scene`,visual.records.every(x=>x.centerX>=0&&x.centerX<=visual.field.width&&x.centerY>=0&&x.centerY<=visual.field.height),visual);',
+                  'const projectionById=new Map((visual.projections||[]).filter(x=>["category","auxiliary"].includes(String(x.kind).toLowerCase())).map(x=>[x.id,x]));check(`${label}: semantic hit centers align with live projections`,visual.records.every(x=>{const projection=projectionById.get(x.id);return Boolean(projection)&&Math.abs(x.centerX-projection.x)<=2&&Math.abs(x.centerY-projection.y)<=2;}),visual);'
               ),
               (
-                  'check(`${label}: Test warm-gold and Research cool-violet palettes differ`, test.pseudoBackground !== research.pseudoBackground && test.labelColor !== research.labelColor, { test, research });',
-                  'check(`${label}: Test warm-gold and Research cool-violet labels differ`, Boolean(test.labelColor) && Boolean(research.labelColor) && test.labelColor !== research.labelColor, { test, research });'
+                  'check(`${label}: Test warm-gold and Research cool-violet palettes differ`,test.pseudoBackground!==research.pseudoBackground&&test.labelColor!==research.labelColor,{test,research});',
+                  'check(`${label}: Test warm-gold and Research cool-violet labels differ`,Boolean(test.labelColor)&&Boolean(research.labelColor)&&test.labelColor!==research.labelColor,{test,research});'
               ),
               (
-                  'check(`${label}: auxiliary authorities occupy distinct noncardinal positions`, Math.hypot(test.centerX - research.centerX, test.centerY - research.centerY) > Math.max(test.width, research.width), { test, research });',
-                  'check(`${label}: auxiliary authorities occupy distinct noncardinal positions`, Math.hypot(test.centerX - research.centerX, test.centerY - research.centerY) > Math.max(test.width, research.width) * 0.25, { test, research });'
+                  'check(`${label}: auxiliary authorities occupy distinct noncardinal positions`,Math.hypot(test.centerX-research.centerX,test.centerY-research.centerY)>Math.max(test.width,research.width),{test,research});',
+                  'check(`${label}: auxiliary authorities occupy distinct noncardinal positions`,Math.hypot(test.centerX-research.centerX,test.centerY-research.centerY)>Math.max(test.width,research.width)*0.25,{test,research});'
               ),
               (
                   'await projected.click();',
-                  'await page.evaluate(expected => document.querySelector(`[data-laws-projected-category-label="${expected}"]`)?.focus(), direction);\n  await page.keyboard.press("Enter");'
+                  'await page.evaluate(expected=>document.querySelector(`[data-laws-projected-category-label="${expected}"]`)?.focus(),direction);await page.keyboard.press("Enter");'
               )
           ]
 
@@ -105,6 +105,8 @@ jobs:
           set -euo pipefail
           base=343b0c269dd343a57c6ecb7e785141134cc5660f
           checkpoint3=8607693d75fffed5a8a85c42b8fdc28fff0b0554
+          expected=dfefecfd8e8dc2671e0fdb5d14eca54412e52c6a
+          test "$(git rev-parse HEAD)" = "$expected"
           marker='el.style.setProperty("transform","translate(-50%, -50%)","important")'
           grep -Fq "$marker" laws/index.interactions.js
           git merge-base --is-ancestor "$base" HEAD

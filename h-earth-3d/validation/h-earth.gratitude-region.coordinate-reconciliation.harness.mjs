@@ -36,20 +36,22 @@ const WITNESS = freeze({ x: 0, z: -256 });
 const FORMATION_WITNESS = freeze({ x: 72, z: -172 });
 const ADDRESS_WITNESS = FORMATION_WITNESS;
 const CONNECTED_SURFACE_WITNESS = FORMATION_WITNESS;
+const SIGHTLINE_WITNESS = freeze({ from: { x: 72, z: -172 }, to: { x: 72, z: -180 } });
 
 export const H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS = freeze({
   contractId: 'H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS_v1',
-  checkpointId: 'GR-CR-01I',
-  status: 'CONNECTED_SURFACE_SEARCH_ENABLED',
+  checkpointId: 'GR-CR-01J',
+  status: 'TERRAIN_OCCLUSION_SIGHTLINE_ANALYSIS_ENABLED',
   sourceImportsEstablished: true,
   terrainSamplingExecuted: true,
   terrainMetricExtractionEnabled: true,
   formationMembershipResolutionEnabled: true,
   semanticAddressProjectionEnabled: true,
   connectedSurfaceSearchEnabled: true,
+  terrainOcclusionSightlineEnabled: true,
   candidateCoordinatesDerived: false,
   durableReceiptEmitted: false,
-  nextCheckpoint: 'GR-CR-01J_ADD_TERRAIN_OCCLUSION_SIGHTLINE_ANALYSIS'
+  nextCheckpoint: 'GR-CR-01K_ADD_CANDIDATE_ENVELOPE_DERIVATION'
 });
 
 function importIssues() {
@@ -107,14 +109,7 @@ export function resolveGRCRSemanticAddressProjection(worldX, worldZ) {
   return freeze({ valid: true, status: 'SEMANTIC_ADDRESS_PROJECTED', world: freeze({ x: worldX, z: worldZ }), chunkId: chunk.chunkId, physicalRole: chunk.physicalRole, formationIds: chunk.formationIds, selectedSemanticAddressId: selected.address, targetSemanticCoordinate: freeze({ row: targetRow, column: targetColumn }), projectionModel: 'CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER' });
 }
 
-export function searchGRCRConnectedSurface({
-  centerX,
-  centerZ,
-  radius = 8,
-  step = 4,
-  maximumSlope = 0.48,
-  maximumNeighborElevationDelta = 4
-}) {
+export function searchGRCRConnectedSurface({ centerX, centerZ, radius = 8, step = 4, maximumSlope = 0.48, maximumNeighborElevationDelta = 4 }) {
   const points = new Map();
   for (let z = centerZ - radius; z <= centerZ + radius; z += step) {
     for (let x = centerX - radius; x <= centerX + radius; x += step) {
@@ -141,38 +136,65 @@ export function searchGRCRConnectedSurface({
     }
   }
   const samples = [...visited.values()].sort((a, b) => a.world.z - b.world.z || a.world.x - b.world.x);
+  return freeze({ eligible: samples.length > 0, status: samples.length > 0 ? 'CONNECTED_SURFACE_SEARCH_COMPLETE' : 'CONNECTED_SURFACE_SEARCH_EMPTY', center: freeze({ x: centerX, z: centerZ }), radius, step, maximumSlope, maximumNeighborElevationDelta, sampleCount: samples.length, samples: freeze(samples), issues: freeze([]) });
+}
+
+export function evaluateGRCRTerrainSightline({ from, to, sampleCount = 24, endpointEyeHeight = 2.25, terrainClearance = 0.15 }) {
+  const start = extractGRCRTerrainMetrics(from.x, from.z);
+  const end = extractGRCRTerrainMetrics(to.x, to.z);
+  if (!start.valid || !end.valid) return freeze({ valid: false, status: 'SIGHTLINE_ENDPOINT_INVALID', clear: false, issues: freeze(['INVALID_ENDPOINT']) });
+  const startY = start.elevation + endpointEyeHeight;
+  const endY = end.elevation + endpointEyeHeight;
+  const samples = [];
+  let maximumObstruction = Number.NEGATIVE_INFINITY;
+  let blockedSampleCount = 0;
+  for (let index = 1; index < sampleCount; index += 1) {
+    const t = index / sampleCount;
+    const x = from.x + (to.x - from.x) * t;
+    const z = from.z + (to.z - from.z) * t;
+    const terrain = extractGRCRTerrainMetrics(x, z);
+    if (!terrain.valid) return freeze({ valid: false, status: 'SIGHTLINE_INTERMEDIATE_SAMPLE_INVALID', clear: false, issues: freeze(['INVALID_INTERMEDIATE_SAMPLE']) });
+    const lineY = startY + (endY - startY) * t;
+    const obstruction = terrain.elevation + terrainClearance - lineY;
+    maximumObstruction = Math.max(maximumObstruction, obstruction);
+    if (obstruction > 0) blockedSampleCount += 1;
+    samples.push(freeze({ index, t, x, z, terrainElevation: terrain.elevation, lineY, obstruction }));
+  }
   return freeze({
-    eligible: samples.length > 0,
-    status: samples.length > 0 ? 'CONNECTED_SURFACE_SEARCH_COMPLETE' : 'CONNECTED_SURFACE_SEARCH_EMPTY',
-    center: freeze({ x: centerX, z: centerZ }),
-    radius,
-    step,
-    maximumSlope,
-    maximumNeighborElevationDelta,
-    sampleCount: samples.length,
+    valid: true,
+    status: 'TERRAIN_OCCLUSION_SIGHTLINE_COMPLETE',
+    clear: blockedSampleCount === 0,
+    from: freeze({ ...from, y: startY }),
+    to: freeze({ ...to, y: endY }),
+    sampleCount,
+    blockedSampleCount,
+    maximumObstruction,
     samples: freeze(samples),
     issues: freeze([])
   });
 }
 
-export function evaluateGRCR01IConnectedSurface() {
+export function evaluateGRCR01JSightline() {
   const sampleA = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
   const sampleB = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
   const membership = resolveGRCRFormationMembership(FORMATION_WITNESS.x, FORMATION_WITNESS.z);
   const projection = resolveGRCRSemanticAddressProjection(ADDRESS_WITNESS.x, ADDRESS_WITNESS.z);
   const connected = searchGRCRConnectedSurface({ centerX: CONNECTED_SURFACE_WITNESS.x, centerZ: CONNECTED_SURFACE_WITNESS.z });
+  const sightline = evaluateGRCRTerrainSightline(SIGHTLINE_WITNESS);
   const issues = importIssues();
   if (sampleA?.valid !== true || sampleB?.valid !== true) issues.push('WITNESS_SAMPLE_INVALID');
   if (stable(sampleA) !== stable(sampleB)) issues.push('REPEATED_WITNESS_NOT_BYTE_STABLE');
   if (!membership.formationIds.includes('H_EARTH_NAVIGABLE_HILL_001')) issues.push('HILL_FORMATION_WITNESS_NOT_RESOLVED');
   if (projection.valid !== true || !String(projection.selectedSemanticAddressId).endsWith(':R06:C11')) issues.push('SEMANTIC_PROJECTION_WITNESS_FAILED');
   if (connected.eligible !== true || connected.sampleCount < 2) issues.push('CONNECTED_SURFACE_WITNESS_FAILED');
+  if (sightline.valid !== true || sightline.samples.length !== 23) issues.push('SIGHTLINE_WITNESS_FAILED');
+  if (!Number.isFinite(sightline.maximumObstruction)) issues.push('SIGHTLINE_OBSTRUCTION_NONFINITE');
   return freeze({
-    checkpointId: 'GR-CR-01I',
+    checkpointId: 'GR-CR-01J',
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'GR_CR_01I_CONNECTED_SURFACE_PASS' : 'GR_CR_01I_CONNECTED_SURFACE_FAIL',
-    connectedSurfaceWitness: CONNECTED_SURFACE_WITNESS,
-    connectedSurface: connected,
+    status: issues.length === 0 ? 'GR_CR_01J_SIGHTLINE_PASS' : 'GR_CR_01J_SIGHTLINE_FAIL',
+    sightlineWitness: SIGHTLINE_WITNESS,
+    sightline,
     candidateCoordinatesDerived: false,
     terrainMutation: false,
     geometryConstruction: false,
@@ -187,7 +209,7 @@ export function evaluateGRCR01IConnectedSurface() {
 
 const directExecution = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (directExecution) {
-  const receipt = evaluateGRCR01IConnectedSurface();
+  const receipt = evaluateGRCR01JSightline();
   const outputPath = process.env.H_EARTH_GR_CR_RECEIPT;
   if (outputPath) fs.writeFileSync(outputPath, `${JSON.stringify(receipt, null, 2)}\n`);
   console.log(JSON.stringify(receipt));

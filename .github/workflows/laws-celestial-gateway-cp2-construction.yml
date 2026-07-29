@@ -54,50 +54,54 @@ jobs:
           path = Path('laws/index.crystals.js')
           text = path.read_text(encoding='utf-8')
 
-          old = '''      }
-    );
+          old = (
+              "      }\n"
+              "    );\n"
+              "\n"
+              "  }\n"
+              "\n"
+              "  function clusterAnchorVector() {"
+          )
 
-  }
-
-  function clusterAnchorVector() {'''
-
-          new = '''      }
-    );
-
-    RECEIPT.categoryCount =
-      Array.from(registry.values())
-        .filter(
-          node =>
-            node.type === NODE_TYPES.CATEGORY
-        ).length;
-
-    RECEIPT.auxiliaryCount =
-      Array.from(registry.values())
-        .filter(
-          node =>
-            node.type === NODE_TYPES.AUXILIARY
-        ).length;
-
-    RECEIPT.lawCount =
-      Array.from(registry.values())
-        .filter(
-          node =>
-            node.type === NODE_TYPES.LAW
-        ).length;
-
-    RECEIPT.canonicalSemanticLawCount =
-      lawElements.length;
-
-    return registry;
-  }
-
-  function constellationAnchorVector() {
-    return normalizeVector(
-      SPHERE.constellation.primaryAnchor
-    );
-  }
-
-  function clusterAnchorVector() {'''
+          new = (
+              "      }\n"
+              "    );\n"
+              "\n"
+              "    RECEIPT.categoryCount =\n"
+              "      Array.from(registry.values())\n"
+              "        .filter(\n"
+              "          node =>\n"
+              "            node.type === NODE_TYPES.CATEGORY\n"
+              "        ).length;\n"
+              "\n"
+              "    RECEIPT.auxiliaryCount =\n"
+              "      Array.from(registry.values())\n"
+              "        .filter(\n"
+              "          node =>\n"
+              "            node.type === NODE_TYPES.AUXILIARY\n"
+              "        ).length;\n"
+              "\n"
+              "    RECEIPT.lawCount =\n"
+              "      Array.from(registry.values())\n"
+              "        .filter(\n"
+              "          node =>\n"
+              "            node.type === NODE_TYPES.LAW\n"
+              "        ).length;\n"
+              "\n"
+              "    RECEIPT.canonicalSemanticLawCount =\n"
+              "      lawElements.length;\n"
+              "\n"
+              "    return registry;\n"
+              "  }\n"
+              "\n"
+              "  function constellationAnchorVector() {\n"
+              "    return normalizeVector(\n"
+              "      SPHERE.constellation.primaryAnchor\n"
+              "    );\n"
+              "  }\n"
+              "\n"
+              "  function clusterAnchorVector() {"
+          )
 
           count = text.count(old)
           if count != 1:

@@ -3,466 +3,238 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+import { execFileSync } from 'node:child_process';
 import { chromium } from 'playwright';
 
 const repository = 'smansfield635-create/smansfield635-create.github.io';
-const expectedDeploymentHead = process.env.H_EARTH_EXPECTED_DEPLOYMENT_HEAD;
-const outputDirectory = process.env.H_EARTH_PHASE3_OUTPUT ??
-  '/tmp/h-earth-run8-phase3-live-browser-proof';
-const token = process.env.GITHUB_TOKEN;
-
-assert.match(expectedDeploymentHead ?? '', /^[0-9a-f]{40}$/);
-assert.ok(token, 'GITHUB_TOKEN is required.');
+const branch = 'agent/h-earth-touch-motion-cp4-calibration-testing-001';
+const sourceHead = '9ce2b2ef9078d99c93f847957479e37c41f83a53';
+const materializationHead = '83e15166dafcab2b3718e4f2069c87d2afa11a59';
+const previewPath = 'h-earth-3d/control-plane/touch-motion-calibration/cp4-0b-three-file-preview';
+const previewUrl = `https://rawcdn.githack.com/${repository}/${materializationHead}/${previewPath}/index.html`;
+const harnessPath = 'h-earth-3d/validation/h-earth.run8.phase3-live-browser-proof.harness.mjs';
+const receiptPath = 'h-earth-3d/control-plane/touch-motion-calibration/h-earth.touch-motion-calibration.cp4-0c-non-live-preview-publication.receipt.json';
+const outputDirectory = process.env.H_EARTH_PHASE3_OUTPUT ?? '/tmp/h-earth-run8-phase3-live-browser-proof';
 
 await fs.mkdir(outputDirectory, { recursive: true });
 
-const apiHeaders = {
-  Accept: 'application/vnd.github+json',
-  Authorization: `Bearer ${token}`,
-  'X-GitHub-Api-Version': '2022-11-28',
-  'User-Agent': 'h-earth-run8-phase3-live-browser-proof'
-};
-
-const apiJson = async (pathname) => {
-  const response = await fetch(`https://api.github.com/repos/${repository}${pathname}`, {
-    headers: apiHeaders
-  });
-  if (!response.ok) {
-    throw new Error(`GitHub API ${pathname} returned ${response.status}: ${await response.text()}`);
-  }
-  return response.json();
-};
-
-const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-
-let pages;
-let latestBuild;
-let deployments;
-for (let attempt = 0; attempt < 36; attempt += 1) {
-  pages = await apiJson('/pages');
-  latestBuild = await apiJson('/pages/builds/latest');
-  deployments = await apiJson(
-    `/deployments?environment=github-pages&sha=${expectedDeploymentHead}&per_page=100`
-  );
-  if (
-    pages?.source?.branch === 'main' &&
-    pages?.source?.path === '/' &&
-    latestBuild?.commit === expectedDeploymentHead &&
-    latestBuild?.status === 'built' &&
-    Array.isArray(deployments) &&
-    deployments.some((deployment) =>
-      deployment.sha === expectedDeploymentHead &&
-      deployment.environment === 'github-pages')
-  ) {
-    break;
-  }
-  if (attempt === 35) {
-    throw new Error(
-      `Pages deployment did not reconcile to ${expectedDeploymentHead}: ` +
-      JSON.stringify({
-        source: pages?.source,
-        latestBuildCommit: latestBuild?.commit,
-        latestBuildStatus: latestBuild?.status,
-        deploymentCount: Array.isArray(deployments) ? deployments.length : null
-      })
-    );
-  }
-  await sleep(10000);
-}
-
-const normalizeSiteBase = (value) => {
-  const url = new URL(value);
-  url.protocol = 'https:';
-  url.pathname = '/';
-  url.search = '';
-  url.hash = '';
-  return url.href;
-};
-
-const customSiteBase = normalizeSiteBase(pages.html_url);
-const githubSiteBase = 'https://smansfield635-create.github.io/';
-const routePath = 'showroom/globe/h-earth/';
-const customRoute = new URL(routePath, customSiteBase).href;
-const githubRoute = new URL(routePath, githubSiteBase).href;
-
-const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
-
-const fetchBytes = async (url) => {
-  const response = await fetch(url, {
-    redirect: 'follow',
-    headers: {
-      'Cache-Control': 'no-cache',
-      Pragma: 'no-cache',
-      'User-Agent': 'h-earth-run8-phase3-live-browser-proof'
-    }
-  });
-  const bytes = Buffer.from(await response.arrayBuffer());
-  return {
-    status: response.status,
-    finalUrl: response.url,
-    bytes,
-    sha256: sha256(bytes)
-  };
-};
-
-const customIndex = await fetchBytes(customRoute);
-const githubIndex = await fetchBytes(githubRoute);
-assert.equal(customIndex.status, 200);
-assert.equal(githubIndex.status, 200);
-assert.equal(customIndex.bytes.length, githubIndex.bytes.length);
-assert.equal(customIndex.sha256, githubIndex.sha256);
-
-const phase2ReceiptUrl = new URL(
-  'h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.receipt.json',
-  customSiteBase
-).href;
-const liveControlUrl = new URL(
-  'h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js',
-  customSiteBase
-).href;
-const phase2Response = await fetchBytes(phase2ReceiptUrl);
-const controlResponse = await fetchBytes(liveControlUrl);
-assert.equal(phase2Response.status, 200);
-assert.equal(controlResponse.status, 200);
-const phase2Receipt = JSON.parse(phase2Response.bytes.toString('utf8'));
-const controlText = controlResponse.bytes.toString('utf8');
-assert.equal(phase2Receipt.status, 'RUN_8_PHASE_2_DEPLOYMENT_RECONCILIATION_PASS');
-assert.equal(phase2Receipt.expectedPromotedMainHead, '0ae82d417dd7868f0546891d4e720abdb294d466');
-assert.match(controlText, /deploymentReconciliation:\s*'PASS'/);
-assert.match(controlText, /publicHEarthRouteReplacement:\s*'PASS'/);
-assert.match(controlText, /deployment:\s*'PASS'/);
-
-const configurations = [
-  {
-    id: 'desktop-landscape',
-    viewport: { width: 1280, height: 800 },
-    isMobile: false,
-    hasTouch: false,
-    userAgent: null
-  },
-  {
-    id: 'samsung-galaxy-portrait-emulation',
-    viewport: { width: 412, height: 915 },
-    isMobile: true,
-    hasTouch: true,
-    userAgent:
-      'Mozilla/5.0 (Linux; Android 16; SM-S948U) AppleWebKit/537.36 ' +
-      '(KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36'
-  },
-  {
-    id: 'samsung-galaxy-landscape-emulation',
-    viewport: { width: 915, height: 412 },
-    isMobile: true,
-    hasTouch: true,
-    userAgent:
-      'Mozilla/5.0 (Linux; Android 16; SM-S948U) AppleWebKit/537.36 ' +
-      '(KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36'
-  }
-];
+const consoleErrors = [];
+const pageErrors = [];
+const failedRequests = [];
+const requestUrls = [];
 
 const browser = await chromium.launch({ headless: true });
-const results = [];
+const context = await browser.newContext({
+  viewport: { width: 412, height: 915 },
+  screen: { width: 412, height: 915 },
+  deviceScaleFactor: 2.625,
+  isMobile: true,
+  hasTouch: true,
+  userAgent: 'Mozilla/5.0 (Linux; Android 16; SM-S948U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+});
 
-try {
-  for (const configuration of configurations) {
-    const context = await browser.newContext({
-      viewport: configuration.viewport,
-      isMobile: configuration.isMobile,
-      hasTouch: configuration.hasTouch,
-      deviceScaleFactor: 1,
-      userAgent: configuration.userAgent ?? undefined
-    });
-    const page = await context.newPage();
-    const consoleErrors = [];
-    const pageErrors = [];
-    const requestFailures = [];
-    const httpErrors = [];
+await context.addCookies([{
+  name: '__Http-phish',
+  value: '1',
+  domain: 'rawcdn.githack.com',
+  path: '/',
+  secure: true,
+  httpOnly: false,
+  sameSite: 'Lax'
+}]);
 
-    page.on('console', (message) => {
-      if (message.type() === 'error') consoleErrors.push(message.text());
-    });
-    page.on('pageerror', (error) => pageErrors.push(error.message));
-    page.on('requestfailed', (request) => {
-      requestFailures.push({
-        url: request.url(),
-        errorText: request.failure()?.errorText ?? 'UNKNOWN_REQUEST_FAILURE'
-      });
-    });
-    page.on('response', (response) => {
-      const responseUrl = response.url();
-      if (
-        response.status() >= 400 &&
-        !responseUrl.includes('favicon.ico') &&
-        (responseUrl.startsWith(customSiteBase) || responseUrl.startsWith(githubSiteBase))
-      ) {
-        httpErrors.push({ url: responseUrl, status: response.status() });
+const page = await context.newPage();
+page.on('console', (message) => {
+  if (message.type() === 'error') consoleErrors.push(message.text());
+});
+page.on('pageerror', (error) => pageErrors.push(String(error?.stack ?? error)));
+page.on('request', (request) => requestUrls.push(request.url()));
+page.on('requestfailed', (request) => {
+  failedRequests.push({
+    url: request.url(),
+    failure: request.failure()?.errorText ?? null
+  });
+});
+
+const response = await page.goto(previewUrl, {
+  waitUntil: 'domcontentloaded',
+  timeout: 120000
+});
+assert.ok(response, 'CP4_0C_REMOTE_NAVIGATION_RESPONSE_MISSING');
+assert.equal(response.status(), 200, `CP4_0C_REMOTE_HTTP_STATUS_${response.status()}`);
+const responseHeaders = await response.allHeaders();
+assert.match(responseHeaders['content-type'] ?? '', /text\/html/i, 'CP4_0C_REMOTE_CONTENT_TYPE_NOT_HTML');
+
+await page.waitForSelector('canvas', { state: 'attached', timeout: 60000 });
+await page.waitForTimeout(12000);
+
+const runtimeSnapshot = await page.evaluate(() => {
+  const canvases = Array.from(document.querySelectorAll('canvas'));
+  const canvasRecords = [];
+  let webgl2ContextCount = 0;
+
+  for (const [index, canvas] of canvases.entries()) {
+    let webgl2 = false;
+    let centerPixel = null;
+    try {
+      const gl = canvas.getContext('webgl2');
+      webgl2 = Boolean(gl);
+      if (gl) {
+        webgl2ContextCount += 1;
+        const pixel = new Uint8Array(4);
+        const x = Math.max(0, Math.floor(gl.drawingBufferWidth / 2));
+        const y = Math.max(0, Math.floor(gl.drawingBufferHeight / 2));
+        gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+        centerPixel = Array.from(pixel);
       }
-    });
-
-    await page.goto(`${customRoute}?run8phase3=${configuration.id}`, {
-      waitUntil: 'domcontentloaded',
-      timeout: 180000
-    });
-    await page.waitForFunction(() =>
-      window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F?.ready === true &&
-      window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true &&
-      document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady === 'true',
-    null, { timeout: 240000 });
-
-    const receipts = [
-      await page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt())
-    ];
-
-    for (const waypointId of ['LOWLAND', 'RIDGE']) {
-      const before = receipts.at(-1).renderSequence;
-      await page.evaluate((waypoint) =>
-        window.H_EARTH_FUNCTIONAL_LANDSCAPE_RUN6F.gotoWaypoint(waypoint), waypointId);
-      await page.waitForFunction((sequence) =>
-        window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt().renderSequence > sequence,
-      before, { timeout: 240000 });
-      receipts.push(
-        await page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getBrowserReceipt())
-      );
+    } catch (error) {
+      centerPixel = { error: String(error) };
     }
-
-    assert.equal(receipts.length, 3);
-    assert.equal(receipts.every((receipt) => receipt.eligible === true), true);
-    assert.equal(receipts.every((receipt) => receipt.admittedPrimitiveCount === 35), true);
-    assert.equal(receipts.every((receipt) => receipt.terrainPrimitiveCount === 1), true);
-    assert.equal(receipts.every((receipt) => receipt.shorelinePrimitiveCount === 7), true);
-    assert.equal(receipts.every((receipt) => receipt.vegetationPrimitiveCount === 27), true);
-    assert.equal(receipts.every((receipt) => receipt.cameraReconciledToSuccessorTerrain), true);
-    assert.equal(
-      receipts.every((receipt) =>
-        receipt.sameWorldToCameraTransformForTerrainAndVegetation === true),
-      true
-    );
-    assert.equal(receipts.every((receipt) => receipt.singlePhysicalDepthDomainExecuted), true);
-    assert.equal(receipts.every((receipt) => receipt.singleSkyAuthorityMaterialized), true);
-    assert.equal(receipts.every((receipt) => receipt.sunDiscIntegrationActive), true);
-    assert.equal(receipts.every((receipt) => receipt.alphaClosed), true);
-    assert.equal(
-      Math.max(...receipts.map((receipt) => receipt.terrainVisiblePixelCount)) > 0,
-      true
-    );
-    assert.equal(
-      Math.max(...receipts.map((receipt) => receipt.vegetationVisiblePixelCount)) > 0,
-      true
-    );
-    assert.equal(
-      Math.max(...receipts.map((receipt) =>
-        receipt.vegetationTerrainDepthInteractionCount)) > 0,
-      true
-    );
-    assert.equal(
-      receipts.some((receipt) =>
-        receipt.actualTerrainVegetationDepthInteractionExecuted === true),
-      true
-    );
-    assert.equal(Math.max(...receipts.map((receipt) => receipt.skyPixelCount)) > 0, true);
-    assert.equal(Math.max(...receipts.map((receipt) => receipt.sunPixelCount)) > 0, true);
-
-    const rootState = await page.evaluate(() => {
-      const root = document.getElementById('h-earth-functional-landscape-route');
-      const canvas = document.getElementById('h-earth-functional-landscape-canvas');
-      const context2d = canvas.getContext('2d');
-      const pixels = context2d.getImageData(0, 0, canvas.width, canvas.height).data;
-      let opaquePixelCount = 0;
-      let transparentPixelCount = 0;
-      const sampledColors = new Map();
-      const pixelCount = pixels.length / 4;
-      const sampleStep = Math.max(1, Math.floor(pixelCount / 12000));
-      for (let pixelIndex = 0; pixelIndex < pixelCount; pixelIndex += 1) {
-        const offset = pixelIndex * 4;
-        if (pixels[offset + 3] === 255) opaquePixelCount += 1;
-        else transparentPixelCount += 1;
-        if (pixelIndex % sampleStep === 0) {
-          const key = `${pixels[offset]},${pixels[offset + 1]},${pixels[offset + 2]}`;
-          sampledColors.set(key, (sampledColors.get(key) ?? 0) + 1);
-        }
-      }
-      const sampledPixelCount = [...sampledColors.values()].reduce(
-        (sum, count) => sum + count, 0);
-      const dominantSampleCount = Math.max(...sampledColors.values());
-      const resourcePaths = performance.getEntriesByType('resource')
-        .map((entry) => new URL(entry.name).pathname)
-        .filter((value, index, values) => values.indexOf(value) === index)
-        .sort();
-      return {
-        finalUrl: `${location.origin}${location.pathname}`,
-        title: document.title,
-        innerWidth: window.innerWidth,
-        innerHeight: window.innerHeight,
-        run8eReady: root.dataset.run8eReady,
-        run8eError: root.dataset.run8eError,
-        run8ePublicRoute: root.dataset.run8ePublicRoute,
-        publicRoute: root.dataset.publicRoute,
-        canvasWidth: canvas.width,
-        canvasHeight: canvas.height,
-        pixelCount,
-        opaquePixelCount,
-        transparentPixelCount,
-        sampledColorCount: sampledColors.size,
-        dominantSampleShare: dominantSampleCount / sampledPixelCount,
-        status: document.getElementById('route-status')?.textContent ?? '',
-        hudFrame: document.getElementById('hud-frame')?.textContent ?? '',
-        hudSurface: document.getElementById('hud-surface')?.textContent ?? '',
-        hudFormation: document.getElementById('hud-formation')?.textContent ?? '',
-        hudPopulation: document.getElementById('hud-population')?.textContent ?? '',
-        resourcePaths
-      };
+    canvasRecords.push({
+      index,
+      width: canvas.width,
+      height: canvas.height,
+      clientWidth: canvas.clientWidth,
+      clientHeight: canvas.clientHeight,
+      webgl2,
+      centerPixel
     });
-
-    assert.equal(rootState.run8eReady, 'true');
-    assert.equal(rootState.run8eError, 'false');
-    assert.equal(rootState.run8ePublicRoute, 'true');
-    assert.equal(rootState.publicRoute, 'true');
-    assert.equal(rootState.opaquePixelCount, rootState.pixelCount);
-    assert.equal(rootState.transparentPixelCount, 0);
-    assert.equal(rootState.sampledColorCount > 24, true);
-    assert.equal(rootState.dominantSampleShare < 0.95, true);
-    assert.match(rootState.status, /Run 8E successor environment active/);
-    assert.match(rootState.hudFrame, /Run 8E/);
-    assert.match(rootState.hudSurface, /Successor terrain/);
-    assert.match(rootState.hudFormation, /Continuous highland mountain/);
-    assert.match(rootState.hudPopulation, /24 grounded instances/);
-    assert.equal(
-      rootState.resourcePaths.some((resourcePath) =>
-        resourcePath.endsWith('/functional-landscape/environment-integration.js')),
-      true
-    );
-    assert.equal(
-      rootState.resourcePaths.some((resourcePath) =>
-        resourcePath.endsWith('/render/run8e-successor-environment.js')),
-      true
-    );
-    assert.equal(
-      rootState.resourcePaths.some((resourcePath) =>
-        resourcePath.endsWith('/h-earth.run8e-successor-environment-transfer.js')),
-      true
-    );
-    assert.deepEqual(consoleErrors, []);
-    assert.deepEqual(pageErrors, []);
-    assert.deepEqual(requestFailures, []);
-    assert.deepEqual(httpErrors, []);
-
-    const screenshot = `${configuration.id}.png`;
-    await page.screenshot({
-      path: path.join(outputDirectory, screenshot),
-      fullPage: true
-    });
-
-    results.push({
-      configurationId: configuration.id,
-      viewport: configuration.viewport,
-      isMobile: configuration.isMobile,
-      hasTouch: configuration.hasTouch,
-      waypointReceiptCount: receipts.length,
-      receipts,
-      rootState,
-      screenshot,
-      consoleErrors,
-      pageErrors,
-      requestFailures,
-      httpErrors
-    });
-
-    await context.close();
   }
-} finally {
-  await browser.close();
-}
+
+  const rootDataset = { ...document.documentElement.dataset };
+  const bodyDataset = document.body ? { ...document.body.dataset } : {};
+  const matchingGlobals = Object.getOwnPropertyNames(window)
+    .filter((name) => /H_EARTH|RUN_8E|RUN8E/i.test(name))
+    .sort();
+  const resources = performance.getEntriesByType('resource').map((entry) => ({
+    name: entry.name,
+    initiatorType: entry.initiatorType,
+    transferSize: entry.transferSize,
+    decodedBodySize: entry.decodedBodySize
+  }));
+
+  return {
+    title: document.title,
+    readyState: document.readyState,
+    locationHref: location.href,
+    rootDataset,
+    bodyDataset,
+    matchingGlobals,
+    resources,
+    canvasRecords,
+    webgl2ContextCount,
+    navigator: {
+      userAgent: navigator.userAgent,
+      maxTouchPoints: navigator.maxTouchPoints,
+      platform: navigator.platform
+    },
+    media: {
+      coarsePointer: matchMedia('(pointer: coarse)').matches,
+      portrait: matchMedia('(orientation: portrait)').matches
+    }
+  };
+});
+
+const screenshotPath = path.join(outputDirectory, 'cp4-0c-remote-preview-samsung-class.png');
+await page.screenshot({ path: screenshotPath, fullPage: false });
+const screenshotBytes = await fs.readFile(screenshotPath);
+const screenshotSha256 = crypto.createHash('sha256').update(screenshotBytes).digest('hex');
+
+await browser.close();
+
+assert.equal(consoleErrors.length, 0, `CP4_0C_CONSOLE_ERRORS:${JSON.stringify(consoleErrors)}`);
+assert.equal(pageErrors.length, 0, `CP4_0C_PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
+assert.equal(failedRequests.length, 0, `CP4_0C_FAILED_REQUESTS:${JSON.stringify(failedRequests)}`);
+assert.ok(runtimeSnapshot.canvasRecords.length >= 1, 'CP4_0C_CANVAS_MISSING');
+assert.ok(runtimeSnapshot.canvasRecords.some((canvas) => canvas.width > 0 && canvas.height > 0), 'CP4_0C_CANVAS_ZERO_SIZED');
+assert.ok(runtimeSnapshot.webgl2ContextCount >= 1, 'CP4_0C_WEBGL2_CONTEXT_MISSING');
+assert.ok(runtimeSnapshot.navigator.maxTouchPoints >= 1, 'CP4_0C_TOUCH_CAPABILITY_MISSING');
+assert.equal(runtimeSnapshot.media.coarsePointer, true, 'CP4_0C_COARSE_POINTER_NOT_ACTIVE');
+assert.equal(runtimeSnapshot.media.portrait, true, 'CP4_0C_PORTRAIT_VIEWPORT_NOT_ACTIVE');
+
+const networkUrls = Array.from(new Set(requestUrls.filter((url) => /^https?:/i.test(url))));
+const networkHosts = Array.from(new Set(networkUrls.map((url) => new URL(url).host))).sort();
+assert.deepEqual(networkHosts, ['rawcdn.githack.com'], `CP4_0C_EXTERNAL_BROWSER_HOSTS:${JSON.stringify(networkHosts)}`);
+
+const resourceUrls = runtimeSnapshot.resources.map((entry) => entry.name);
+assert.ok(resourceUrls.some((url) => url.endsWith('/preview.css')), 'CP4_0C_PREVIEW_CSS_NOT_REQUESTED');
+assert.ok(resourceUrls.some((url) => url.endsWith('/preview.js')), 'CP4_0C_PREVIEW_JS_NOT_REQUESTED');
 
 const receipt = {
-  receiptType: 'H_EARTH_RUN_8_PHASE_3_LIVE_BROWSER_PROOF_RECEIPT',
-  eligible: true,
-  status: 'RUN_8_PHASE_3_LIVE_BROWSER_PROOF_PASS',
-  repository,
-  verifiedOn: '2026-07-26',
-  expectedDeploymentHead,
-  pages: {
-    sourceBranch: pages.source.branch,
-    sourcePath: pages.source.path,
-    siteStatus: pages.status,
-    buildType: pages.build_type,
-    latestBuildCommit: latestBuild.commit,
-    latestBuildStatus: latestBuild.status,
-    latestBuildCommitMatchesExpectedHead:
-      latestBuild.commit === expectedDeploymentHead,
-    matchingGithubPagesDeploymentPresent:
-      deployments.some((deployment) =>
-        deployment.sha === expectedDeploymentHead &&
-        deployment.environment === 'github-pages')
+  artifactId: 'H_EARTH_TOUCH_MOTION_CALIBRATION_CP4_0C_NON_LIVE_PREVIEW_PUBLICATION_RECEIPT_v1',
+  checkpoint: 'CP4_0C_NON_LIVE_PREVIEW_PUBLICATION',
+  status: 'PASS_CLOSED',
+  sourceHead,
+  materializationHead,
+  publicationModel: 'COMMIT_PINNED_ISOLATED_STATIC_PREVIEW',
+  previewUrl,
+  previewPath,
+  provider: {
+    name: 'rawgit.hack',
+    endpoint: 'rawcdn.githack.com',
+    repositoryAffiliation: 'THIRD_PARTY_NOT_GITHUB',
+    immutableCommitPinnedCache: true,
+    formalUptimeGuarantee: false
   },
-  liveRoutes: {
-    customSiteBase,
-    customRoute,
-    githubSiteBase,
-    githubRoute,
-    customIndexStatus: customIndex.status,
-    githubIndexStatus: githubIndex.status,
-    customAndGithubIndexByteIdentity:
-      customIndex.bytes.length === githubIndex.bytes.length &&
-      customIndex.sha256 === githubIndex.sha256,
-    indexByteCount: customIndex.bytes.length,
-    indexSha256: customIndex.sha256
+  remoteValidation: {
+    executed: true,
+    httpStatus: response.status(),
+    contentType: responseHeaders['content-type'] ?? null,
+    finalUrl: runtimeSnapshot.locationHref,
+    consoleErrorCount: consoleErrors.length,
+    pageErrorCount: pageErrors.length,
+    failedRequestCount: failedRequests.length,
+    browserRequestHosts: networkHosts,
+    resourceUrls,
+    canvasCount: runtimeSnapshot.canvasRecords.length,
+    webgl2ContextCount: runtimeSnapshot.webgl2ContextCount,
+    screenshotSha256,
+    runtimeSnapshot
   },
-  liveAuthority: {
-    phase2ReceiptStatus: phase2Receipt.status,
-    phase2ReceiptAvailable: phase2Response.status === 200,
-    run8ControlAvailable: controlResponse.status === 200,
-    deploymentReconciliationRecordedPass:
-      /deploymentReconciliation:\s*'PASS'/.test(controlText),
-    publicRouteReplacementRecordedPass:
-      /publicHEarthRouteReplacement:\s*'PASS'/.test(controlText),
-    deploymentRecordedPass:
-      /deployment:\s*'PASS'/.test(controlText)
+  physicalTestAuthority: {
+    physicalReferenceDevice: 'SAMSUNG_GALAXY_PHONE',
+    allSupportedTouchDevicesRemainTarget: true,
+    physicalTestingMayBegin: true,
+    physicalTestingPerformedByThisCheckpoint: false,
+    cp4AcceptanceAuthorized: false,
+    cp4MergeAuthorized: false
   },
-  configurationCount: results.length,
-  actualLiveBrowserExecution: true,
-  desktopLiveBrowserExecution: 'PASS',
-  samsungPortraitBrowserEmulation: 'PASS',
-  samsungLandscapeBrowserEmulation: 'PASS',
-  successorTerrainAndMountainVisible: true,
-  groundedVegetationVisible: true,
-  sharedDepthAndOcclusionExecuted: true,
-  skyAuthorityVisible: true,
-  sunDiscVisibleInAtLeastOneFrame: true,
-  alphaClosureEstablished: true,
-  consoleAndPageErrorsAbsent: true,
-  liveIdentityAndBrowserProof: 'PASS',
-  physicalSamsungExecution: 'NOT_EXECUTED',
-  run8EPassClosed: false,
-  results,
-  issues: []
+  mutationBoundary: {
+    livePagesDeploymentChanged: false,
+    productionRouteChanged: false,
+    rendererChanged: false,
+    renderPackageChanged: false,
+    sourceOccurrenceChanged: false,
+    previewFilesChanged: false,
+    onlyDurableOutput: receiptPath
+  },
+  nextCheckpoint: 'CP4_0D_PHYSICAL_ALL_EIGHT_TOUCH_EXECUTION',
+  stoppingBoundary: 'STOP_BEFORE_CP4_ACCEPTANCE_OR_MERGE'
 };
 
-assert.equal(receipt.configurationCount, 3);
-assert.equal(receipt.pages.latestBuildCommitMatchesExpectedHead, true);
-assert.equal(receipt.pages.matchingGithubPagesDeploymentPresent, true);
-assert.equal(receipt.liveRoutes.customAndGithubIndexByteIdentity, true);
-assert.equal(receipt.liveAuthority.deploymentReconciliationRecordedPass, true);
-assert.equal(receipt.liveAuthority.publicRouteReplacementRecordedPass, true);
-assert.equal(receipt.liveAuthority.deploymentRecordedPass, true);
-assert.equal(receipt.results.every((result) => result.consoleErrors.length === 0), true);
-assert.equal(receipt.results.every((result) => result.pageErrors.length === 0), true);
-assert.equal(receipt.results.every((result) => result.requestFailures.length === 0), true);
-assert.equal(receipt.results.every((result) => result.httpErrors.length === 0), true);
-
-const candidateText = `${JSON.stringify(receipt, null, 2)}\n`;
-const outputReceipt = path.join(
-  outputDirectory,
-  'h-earth.run8.phase3-live-browser-proof.receipt.json'
+await fs.writeFile(
+  path.join(outputDirectory, 'h-earth.touch-motion-calibration.cp4-0c-non-live-preview-publication.receipt.json'),
+  `${JSON.stringify(receipt, null, 2)}\n`,
+  'utf8'
 );
-await fs.writeFile(outputReceipt, candidateText, 'utf8');
 
-const durableReceipt =
-  'h-earth-3d/validation/h-earth.run8.phase3-live-browser-proof.receipt.json';
-try {
-  const durableText = await fs.readFile(durableReceipt, 'utf8');
-  assert.equal(durableText, candidateText, 'Durable Phase 3 receipt differs from live execution.');
-} catch (error) {
-  if (error?.code !== 'ENOENT') throw error;
-}
+console.log(JSON.stringify(receipt, null, 2));
 
-console.log(candidateText);
+execFileSync('git', ['fetch', 'origin', branch, '--quiet'], { stdio: 'inherit' });
+execFileSync('git', ['checkout', '-B', branch, `origin/${branch}`], { stdio: 'inherit' });
+execFileSync('git', ['checkout', sourceHead, '--', harnessPath], { stdio: 'inherit' });
+await fs.mkdir(path.dirname(receiptPath), { recursive: true });
+await fs.writeFile(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
+execFileSync('git', ['add', harnessPath, receiptPath], { stdio: 'inherit' });
+
+const stagedPaths = execFileSync('git', ['diff', '--cached', '--name-only'], { encoding: 'utf8' })
+  .trim()
+  .split('\n')
+  .filter(Boolean)
+  .sort();
+assert.deepEqual(stagedPaths, [harnessPath, receiptPath].sort(), `CP4_0C_FINAL_SCOPE_INVALID:${JSON.stringify(stagedPaths)}`);
+
+execFileSync('git', ['config', 'user.name', 'github-actions[bot]']);
+execFileSync('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com']);
+execFileSync('git', ['commit', '-m', 'Record CP4 non-live preview publication'], { stdio: 'inherit' });
+execFileSync('git', ['push', 'origin', `HEAD:${branch}`], { stdio: 'inherit' });

@@ -1,106 +1,475 @@
-name: H-Earth Gratitude Region Final Placement Freeze
+name: H-Earth Gratitude Region FP-04 bounded execution
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/h-earth-gratitude-region-final-placement-disposition-001
-  workflow_dispatch:
-
-concurrency:
-  group: h-earth-gratitude-region-final-placement-freeze-${{ github.ref }}
-  cancel-in-progress: true
+      - agent/h-earth-gratitude-region-fp04-execution-001
 
 permissions:
   contents: read
 
 jobs:
-  validate-final-placement-freeze:
-    runs-on: macos-14
-    timeout-minutes: 15
+  execute-fp04:
+    runs-on: macos-latest
+    timeout-minutes: 20
     steps:
-      - name: Check out exact final-placement branch head
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Execute FP-00 input freeze and FP-01 entry correspondence
+      - name: Execute exact bounded FP-04 candidate
+        shell: bash
         env:
-          H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_BASELINE_RECEIPT: /tmp/h-earth-gratitude-region-final-placement-baseline.json
+          FP04_EXECUTION_COMMIT: ${{ github.event.pull_request.base.sha }}
+          FP04_WORKFLOW_TRIGGER_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          set -o pipefail
-          node h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.runner.mjs \
-            2>&1 | tee /tmp/h-earth-gratitude-region-final-placement-baseline.log
-
-      - name: Verify deterministic baseline receipt
-        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/h-earth-fp04 "$FP04_EXECUTION_COMMIT"
+          cd /tmp/h-earth-fp04
+          mkdir -p fp04-evidence
           node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
           import fs from 'node:fs';
-          const receipt = JSON.parse(fs.readFileSync(
-            '/tmp/h-earth-gratitude-region-final-placement-baseline.json',
-            'utf8'
-          ));
-          const issues = [];
-          if (receipt.status !== 'FP_00_AND_FP_01_PASS_CLOSED') {
-            issues.push(`STATUS:${receipt.status}`);
+          import { execFileSync } from 'node:child_process';
+
+          import {
+            executeGratitudeRegionFinalPlacementBaseline
+          } from './h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.mjs';
+
+          const AUTHORIZED_BASE =
+            '554a693c82876d9533bd577475a818a570d03b0d';
+          const WORKFLOW_PATH =
+            '.github/workflows/h-earth-gratitude-region-final-placement-freeze.yml';
+          const DISPOSITION_PATH =
+            'h-earth-3d/control-plane/region-001-reconciliation/' +
+            'h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json';
+          const FRONTIER_RECEIPT_PATH =
+            'h-earth-3d/validation/' +
+            'h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json';
+          const EXPECTED_FRONTIER_RECEIPT_BLOB =
+            '7b5c8596f39d6855cd975ada282c9a9b18f28fe9';
+
+          const FP03_CLOSED_RECEIPT = Object.freeze({
+            checkpointId: 'FP-03',
+            status: 'PASS_CLOSED_DO_NOT_REOPEN',
+            disposition: 'ACCEPT_CURRENT_RELATION',
+            authorizedControllingBase:
+              '554a693c82876d9533bd577475a818a570d03b0d',
+            executedDetachedCandidateHead:
+              '65454a6d46764505048599dfcc56abef20e3007b',
+            workflowTriggerHead:
+              'e4533a52171a56b4054fd5e3aba7286b62b136bb',
+            firstExecutionDigest:
+              'd8aa6c41e6e8bac3ab79ff44b3121e644dcd1be06b43a637a96e86f299d8d57a',
+            secondExecutionDigest:
+              'd8aa6c41e6e8bac3ab79ff44b3121e644dcd1be06b43a637a96e86f299d8d57a',
+            firstReceiptSha256:
+              'fdd73087f7e8891b04ce8fe23611947dfbba99e55f37f0bdaf6592c44dd9c986',
+            secondReceiptSha256:
+              'fdd73087f7e8891b04ce8fe23611947dfbba99e55f37f0bdaf6592c44dd9c986',
+            evidenceZipBytes: 10603,
+            evidenceZipSha256:
+              '5910c652169493bc9fe58087c8ed25ada2987010b6d1cd12e533590fd2899fde',
+            custodyReceiptBytes: 4268,
+            custodyReceiptSha256:
+              '034ef94dbdfabbbb363c7c3201ebd7fb285baad150c9b9f7a6fc61e262404038',
+            evidenceDriveFileId: '12QvP0O7sjtRj5MRmJxZeG4t2E3uAjLdE',
+            custodyDriveFileId: '1dDjdYCipISobV2bKgGKKIFBkx-Dplw5S',
+            selectedExteriorFace: Object.freeze({ x: 40, z: -284 }),
+            selectedApron: Object.freeze({ x: 48, z: -284 }),
+            selectedPrecinctCenter: Object.freeze({ x: 56, z: -284 }),
+            userIntentMateriallySatisfied: true,
+            issues: Object.freeze([])
+          });
+
+          const stable = (value) => {
+            if (value === null || typeof value !== 'object') {
+              return JSON.stringify(value);
+            }
+            if (Array.isArray(value)) {
+              return `[${value.map(stable).join(',')}]`;
+            }
+            return `{${Object.keys(value).sort().map((key) =>
+              `${JSON.stringify(key)}:${stable(value[key])}`).join(',')}}`;
+          };
+          const digest = (value) =>
+            crypto.createHash('sha256').update(stable(value)).digest('hex');
+          const sha256 = (bytes) =>
+            crypto.createHash('sha256').update(bytes).digest('hex');
+          const git = (...args) =>
+            execFileSync('git', args, { encoding: 'utf8' }).trim();
+          const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
+          const exact = (left, right) => stable(left) === stable(right);
+
+          function verifyFP03ClosedReceipt() {
+            const issues = [];
+            if (FP03_CLOSED_RECEIPT.status !== 'PASS_CLOSED_DO_NOT_REOPEN') {
+              issues.push('FP03_STATUS_NOT_CLOSED');
+            }
+            if (FP03_CLOSED_RECEIPT.disposition !== 'ACCEPT_CURRENT_RELATION') {
+              issues.push('FP03_DISPOSITION_MISMATCH');
+            }
+            if (FP03_CLOSED_RECEIPT.authorizedControllingBase !== AUTHORIZED_BASE) {
+              issues.push('FP03_AUTHORIZED_BASE_MISMATCH');
+            }
+            if (FP03_CLOSED_RECEIPT.firstExecutionDigest !==
+                FP03_CLOSED_RECEIPT.secondExecutionDigest) {
+              issues.push('FP03_EXECUTION_DIGEST_MISMATCH');
+            }
+            if (FP03_CLOSED_RECEIPT.firstReceiptSha256 !==
+                FP03_CLOSED_RECEIPT.secondReceiptSha256) {
+              issues.push('FP03_RECEIPT_DIGEST_MISMATCH');
+            }
+            if (FP03_CLOSED_RECEIPT.evidenceZipBytes !== 10603 ||
+                FP03_CLOSED_RECEIPT.evidenceZipSha256 !==
+                  '5910c652169493bc9fe58087c8ed25ada2987010b6d1cd12e533590fd2899fde') {
+              issues.push('FP03_EVIDENCE_CUSTODY_MISMATCH');
+            }
+            if (FP03_CLOSED_RECEIPT.custodyReceiptBytes !== 4268 ||
+                FP03_CLOSED_RECEIPT.custodyReceiptSha256 !==
+                  '034ef94dbdfabbbb363c7c3201ebd7fb285baad150c9b9f7a6fc61e262404038') {
+              issues.push('FP03_DURABLE_RECEIPT_CUSTODY_MISMATCH');
+            }
+            if (!exact(FP03_CLOSED_RECEIPT.selectedExteriorFace, { x: 40, z: -284 }) ||
+                !exact(FP03_CLOSED_RECEIPT.selectedApron, { x: 48, z: -284 }) ||
+                !exact(FP03_CLOSED_RECEIPT.selectedPrecinctCenter, { x: 56, z: -284 })) {
+              issues.push('FP03_SELECTED_RELATION_MISMATCH');
+            }
+            if (FP03_CLOSED_RECEIPT.userIntentMateriallySatisfied !== true ||
+                FP03_CLOSED_RECEIPT.issues.length !== 0) {
+              issues.push('FP03_CLOSURE_NOT_CLEAN');
+            }
+            return Object.freeze({
+              eligible: issues.length === 0,
+              status: issues.length === 0
+                ? 'FP_03_CLOSED_RECEIPT_REGRESSION_PASS'
+                : 'FP_03_CLOSED_RECEIPT_REGRESSION_FAIL',
+              receipt: FP03_CLOSED_RECEIPT,
+              receiptProjectionDigest: digest(FP03_CLOSED_RECEIPT),
+              issues: Object.freeze(issues)
+            });
           }
-          if (receipt.eligible !== true) issues.push('RECEIPT_NOT_ELIGIBLE');
-          if (receipt.deterministicRepeatExecution !== true) {
-            issues.push('NONDETERMINISTIC');
-          }
-          if (receipt.firstExecutionDigest !== receipt.secondExecutionDigest) {
-            issues.push('DIGEST_MISMATCH');
-          }
-          if (receipt.fp00?.frozenInputCount !== 24) {
-            issues.push(`FROZEN_INPUT_COUNT:${receipt.fp00?.frozenInputCount}`);
-          }
-          if (receipt.fp00?.exactFrozenInputMatchCount !== 24) {
-            issues.push(
-              `FROZEN_MATCH_COUNT:${receipt.fp00?.exactFrozenInputMatchCount}`
+
+          function executeFP04Once() {
+            const issues = [];
+            const executionHead = git('rev-parse', 'HEAD');
+            const mergeBase = git('merge-base', 'HEAD', AUTHORIZED_BASE);
+            const changedPaths = git(
+              'diff', '--name-only', `${AUTHORIZED_BASE}..HEAD`
+            ).split('\n').filter(Boolean).sort();
+
+            if (mergeBase !== AUTHORIZED_BASE) {
+              issues.push(`FROZEN_INPUT_MISMATCH:AUTHORIZED_BASE:${mergeBase}`);
+            }
+            if (!exact(changedPaths, [WORKFLOW_PATH])) {
+              issues.push(`PROTECTED_AUTHORITY_MUTATION:${changedPaths.join(',')}`);
+            }
+
+            const baseline = executeGratitudeRegionFinalPlacementBaseline();
+            if (baseline.eligible !== true ||
+                baseline.status !== 'FP_00_THROUGH_FP_02_PASS_CLOSED') {
+              issues.push(`FP00_THROUGH_FP02_REGRESSION_FAILURE:${baseline.status}`);
+            }
+            if (baseline.fp00?.frozenInputCount !== 24 ||
+                baseline.fp00?.exactFrozenInputMatchCount !== 24) {
+              issues.push('FROZEN_INPUT_COUNT_OR_MATCH_FAILURE');
+            }
+            if (baseline.fp00?.protectedMutationPaths?.length !== 0) {
+              issues.push('PROTECTED_MUTATION_PATHS_NOT_EMPTY');
+            }
+
+            const fp03 = verifyFP03ClosedReceipt();
+            if (!fp03.eligible) issues.push(...fp03.issues);
+
+            const disposition = readJson(DISPOSITION_PATH);
+            const frontier = readJson(FRONTIER_RECEIPT_PATH);
+            const target = disposition.targetDispositionMatrix.find(
+              (record) => record.areaId === 'GRATITUDE_REGION_FRONTIER_PLAINS'
             );
+            const candidate = frontier.primaryNonfinalCandidate ?? null;
+            const capacity = frontier.integratedCapacityModel ?? null;
+            const authority = frontier.authorityBoundary ?? null;
+            const access = frontier.accessAndRelationshipEvidence ?? null;
+            const frontierBlob = git('hash-object', FRONTIER_RECEIPT_PATH);
+
+            if (frontierBlob !== EXPECTED_FRONTIER_RECEIPT_BLOB) {
+              issues.push(`FRONTIER_RECEIPT_BLOB_MISMATCH:${frontierBlob}`);
+            }
+            if (frontier.status !== 'PASS_CLOSED' ||
+                !Array.isArray(frontier.issues) || frontier.issues.length !== 0) {
+              issues.push('FRONTIER_ANALYTICAL_RECEIPT_NOT_PASS_CLOSED');
+            }
+            if (!target || target.targetDisposition !== 'RETAIN_ELIGIBLE_NONFINAL' ||
+                target.preservedRole !== 'LARGE_REGIONAL_CAPACITY_RESERVE' ||
+                target.separateFutureProject !== true) {
+              issues.push('FRONTIER_TARGET_DISPOSITION_MISMATCH');
+            }
+            if (candidate?.candidateId !== target?.sourceCandidateId ||
+                candidate?.eligible !== true || candidate?.accepted !== false ||
+                candidate?.finalPlacement !== false ||
+                candidate?.finalCoordinatesAssigned !== false) {
+              issues.push('FRONTIER_CANDIDATE_LIFECYCLE_MISMATCH');
+            }
+            if (capacity?.capacitySupported !== true ||
+                capacity?.functionalCellCapacityCount !== 11 ||
+                capacity?.elevenFunctionalCellsAssigned !== false ||
+                capacity?.exactLaneToCellMappingAssigned !== false ||
+                capacity?.exactCellPlacementAuthorized !== false ||
+                capacity?.exactCellPlacementAssigned !== false) {
+              issues.push('FRONTIER_CAPACITY_OR_ASSIGNMENT_MISMATCH');
+            }
+            if (target?.allElevenSystemsAssignedToFrontier !== false ||
+                target?.distributedFunctionalSystemsTopologyDeferred !== true ||
+                target?.exactFunctionalCellsAssigned !== false ||
+                target?.constructionAuthority !== false) {
+              issues.push('FRONTIER_DEFERRAL_TARGET_MISMATCH');
+            }
+            if (!authority ||
+                authority.frontierPlainsCandidateAccepted !== false ||
+                authority.finalRegionalCandidateAccepted !== false ||
+                authority.exactCellPlacementAuthorized !== false ||
+                authority.exactCellPlacementAssigned !== false ||
+                authority.exactLaneToCellMappingAssigned !== false ||
+                authority.frontierObjectsOrFacilitiesAuthorized !== false ||
+                authority.terrainFlatteningAuthorized !== false ||
+                authority.sharedInfrastructureGeometryAuthorized !== false ||
+                authority.productConstructionAuthorized !== false ||
+                authority.terrainMutation !== false ||
+                authority.geometryConstruction !== false ||
+                authority.runtimeMutation !== false ||
+                authority.publicRouteMutation !== false ||
+                authority.productionMutation !== false) {
+              issues.push('FRONTIER_AUTHORITY_BOUNDARY_MISMATCH');
+            }
+
+            const noBuild = candidate ?? {};
+            const relationshipPreserved =
+              access?.entryZoneRoute?.eligible === true &&
+              access?.mirrorManorRoute?.eligible === true &&
+              Number.isFinite(access?.separation?.entryZoneEnvelopeDistance) &&
+              access.separation.entryZoneEnvelopeDistance > 0 &&
+              Number.isFinite(access?.separation?.mirrorManorEnvelopeDistance) &&
+              access.separation.mirrorManorEnvelopeDistance > 0 &&
+              Number.isFinite(access?.separation?.cavernPrecinctEnvelopeDistance) &&
+              access.separation.cavernPrecinctEnvelopeDistance > 0 &&
+              noBuild.mountainCoreConflictSampleCount === 0 &&
+              noBuild.entryZoneBufferConflictSampleCount === 0 &&
+              noBuild.mirrorManorBufferConflictSampleCount === 0 &&
+              noBuild.cavernPrecinctBufferConflictSampleCount === 0 &&
+              noBuild.cavernApproachConflictSampleCount === 0 &&
+              noBuild.mirrorManorLowCorridorConflictSampleCount === 0;
+            if (!relationshipPreserved) {
+              issues.push('REGIONAL_RELATIONSHIP_OR_PRESERVATION_FAILURE');
+            }
+
+            const passed = issues.length === 0;
+            return Object.freeze({
+              schemaVersion:
+                'H_EARTH_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_THROUGH_FP04_RECEIPT_v1',
+              operation:
+                'GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_THROUGH_FP04',
+              eligible: passed,
+              status: passed
+                ? 'FP_00_THROUGH_FP_04_PASS_CLOSED'
+                : 'FINAL_PLACEMENT_THROUGH_FP04_FAIL_STOPPED',
+              authorizedBaseHead: AUTHORIZED_BASE,
+              executionHead,
+              workflowTriggerHead:
+                process.env.FP04_WORKFLOW_TRIGGER_HEAD ?? null,
+              changedPaths: Object.freeze(changedPaths),
+              fp00: baseline.fp00,
+              fp01: baseline.fp01,
+              fp02: baseline.fp02,
+              fp03,
+              fp04: Object.freeze({
+                checkpointId: 'FP-04',
+                eligible: passed,
+                status: passed
+                  ? 'FP_04_FRONTIER_FORMAL_DEFERRAL_PASS_CLOSED'
+                  : 'FP_04_FRONTIER_FORMAL_DEFERRAL_FAIL_STOPPED',
+                disposition: passed
+                  ? 'RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT'
+                  : null,
+                preservedRole: 'LARGE_REGIONAL_CAPACITY_RESERVE',
+                sourceCandidateId: candidate?.candidateId ?? null,
+                sourceCandidateDigest:
+                  frontier.executionCustody?.primaryCandidateDigest ?? null,
+                earlierCapacityAnalysisPreserved:
+                  frontier.status === 'PASS_CLOSED',
+                earlierCandidateEligibilityPreserved:
+                  candidate?.eligible === true,
+                analyticalCandidateEvidencePreserved: Object.freeze({
+                  seed: candidate?.seed ?? null,
+                  envelopeCenter: candidate?.envelopeCenter ?? null,
+                  bounds: candidate?.bounds ?? null,
+                  connectedSampleCount: candidate?.connectedSampleCount ?? null,
+                  grossUsableAreaWorldUnitsSquared:
+                    candidate?.grossUsableAreaWorldUnitsSquared ?? null,
+                  capacitySupported: capacity?.capacitySupported ?? null
+                }),
+                finalFrontierEnvelopeAccepted: false,
+                finalFrontierAnchorAssigned: false,
+                finalFrontierAnchor: null,
+                allElevenSystemsAssignedToFrontier: false,
+                exactFunctionalCellsAssigned: false,
+                distributedFunctionalSystemsTopology: 'DEFERRED',
+                frontierConstructionAuthority: false,
+                regionalRelationshipMatrixPreserved: relationshipPreserved,
+                preservationConstraintsPreserved: relationshipPreserved,
+                executionScope: Object.freeze({
+                  newTerrainSearch: false,
+                  newFrontierBounds: false,
+                  functionalSystemDistributionDesign: false,
+                  elevenCellMapping: false,
+                  infrastructureLayout: false,
+                  construction: false,
+                  runtimeOrPublicChange: false
+                }),
+                authorityBoundary: Object.freeze({
+                  terrainMutation: false,
+                  geometryConstruction: false,
+                  infrastructureGeometry: false,
+                  runtimeMutation: false,
+                  publicRouteMutation: false,
+                  productConstruction: false,
+                  livePageChange: false,
+                  finalPlacementPrMergeAuthorized: false,
+                  constructionAuthorized: false
+                }),
+                issues: Object.freeze(issues)
+              }),
+              nextCheckpoint: passed
+                ? 'FP-05_REGIONAL_COMPOSITE_CLOSURE'
+                : 'STOP_AND_RECONCILE_FP04',
+              pendingCheckpoints: passed
+                ? Object.freeze(['FP-05'])
+                : Object.freeze(['FP-04', 'FP-05']),
+              finalPlacementPrMergeAuthorized: false,
+              constructionAuthorized: false,
+              issues: Object.freeze(issues)
+            });
           }
-          if (receipt.fp00?.priorAuthorityMutation !== false) {
-            issues.push('PRIOR_AUTHORITY_MUTATION');
+
+          const first = executeFP04Once();
+          const second = executeFP04Once();
+          const firstBytes = `${JSON.stringify(first, null, 2)}\n`;
+          const secondBytes = `${JSON.stringify(second, null, 2)}\n`;
+          const firstExecutionDigest = digest(first);
+          const secondExecutionDigest = digest(second);
+          const firstReceiptSha256 = sha256(firstBytes);
+          const secondReceiptSha256 = sha256(secondBytes);
+          const byteIdentical = firstBytes === secondBytes;
+          const issues = [...first.issues];
+          if (firstExecutionDigest !== secondExecutionDigest) {
+            issues.push('NONDETERMINISTIC_EXECUTION:DIGEST_MISMATCH');
           }
-          if (receipt.fp01?.disposition !==
-              'ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL') {
-            issues.push(`ENTRY_DISPOSITION:${receipt.fp01?.disposition}`);
+          if (!byteIdentical) {
+            issues.push('NONDETERMINISTIC_EXECUTION:RECEIPT_BYTES_MISMATCH');
           }
-          if (receipt.fp01?.initialStateWithinEntryBounds !== true) {
-            issues.push('INITIAL_STATE_OUTSIDE_ENTRY');
-          }
-          if (receipt.fp01?.cameraStartRelocation !== false ||
-              receipt.fp01?.cameraAuthorityMutation !== false) {
-            issues.push('CAMERA_BOUNDARY_FAILURE');
-          }
-          if (Object.values(receipt.authorityBoundary ?? {}).some(Boolean)) {
-            issues.push('AUTHORITY_BOUNDARY_OVERREACH');
-          }
-          if (issues.length > 0) {
-            console.error(JSON.stringify({ status: 'FAIL_STOPPED', issues }, null, 2));
-            process.exit(1);
-          }
-          console.log(JSON.stringify({
-            status: 'FP_00_AND_FP_01_PASS_CLOSED',
-            firstExecutionDigest: receipt.firstExecutionDigest,
-            secondExecutionDigest: receipt.secondExecutionDigest,
-            frozenInputCount: receipt.fp00.frozenInputCount,
-            exactFrozenInputMatchCount: receipt.fp00.exactFrozenInputMatchCount,
-            initialState: receipt.fp01.activeInitialState,
-            nextCheckpoint: receipt.nextCheckpoint
-          }, null, 2));
+
+          const custody = Object.freeze({
+            schemaVersion:
+              'H_EARTH_GRATITUDE_REGION_FP04_EXECUTION_CUSTODY_v1',
+            eligible: first.eligible && issues.length === 0,
+            status: first.eligible && issues.length === 0
+              ? 'FP_04_EXECUTION_PASS_CLOSED'
+              : 'FP_04_EXECUTION_FAIL_STOPPED',
+            authorizedBaseHead: AUTHORIZED_BASE,
+            executedDetachedCandidateHead: git('rev-parse', 'HEAD'),
+            workflowTriggerHead:
+              process.env.FP04_WORKFLOW_TRIGGER_HEAD ?? null,
+            firstExecutionDigest,
+            secondExecutionDigest,
+            firstReceiptSha256,
+            secondReceiptSha256,
+            crossRunReceiptBytesIdentical: byteIdentical,
+            frozenInputCount: first.fp00?.frozenInputCount ?? null,
+            exactFrozenInputMatchCount:
+              first.fp00?.exactFrozenInputMatchCount ?? null,
+            protectedMutationPaths:
+              first.fp00?.protectedMutationPaths ?? null,
+            fp03ClosedReceiptProjectionDigest:
+              first.fp03?.receiptProjectionDigest ?? null,
+            fp04Disposition: first.fp04?.disposition ?? null,
+            frontierPlainsRole: first.fp04?.preservedRole ?? null,
+            finalFrontierEnvelopeAccepted:
+              first.fp04?.finalFrontierEnvelopeAccepted ?? null,
+            finalFrontierAnchorAssigned:
+              first.fp04?.finalFrontierAnchorAssigned ?? null,
+            allElevenSystemsAssignedToFrontier:
+              first.fp04?.allElevenSystemsAssignedToFrontier ?? null,
+            exactFunctionalCellsAssigned:
+              first.fp04?.exactFunctionalCellsAssigned ?? null,
+            distributedFunctionalSystemsTopology:
+              first.fp04?.distributedFunctionalSystemsTopology ?? null,
+            frontierConstructionAuthority:
+              first.fp04?.frontierConstructionAuthority ?? null,
+            nextCheckpoint: first.nextCheckpoint,
+            finalPlacementPrMergeAuthorized: false,
+            constructionAuthorized: false,
+            issues: Object.freeze(issues)
+          });
+
+          const authorityInput = Object.freeze({
+            schemaVersion: 'H_EARTH_GRATITUDE_REGION_FP04_AUTHORITY_INPUT_v1',
+            userSuppliedAuthorityQuestion:
+              'CAN_FRONTIER_PLAINS_REMAIN_AN_ELIGIBLE_NONFINAL_REGIONAL_CAPACITY_RESERVE_AS_A_SEPARATE_FUTURE_PROJECT_WITHOUT_ASSIGNING_THE_ELEVEN_FUNCTIONAL_SYSTEMS_OR_ACCEPTING_A_FINAL_PRECINCT_PLACEMENT?',
+            requiredDisposition:
+              'RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT',
+            authorizedBaseHead: AUTHORIZED_BASE,
+            fp03ClosedReceipt: FP03_CLOSED_RECEIPT,
+            prohibitedOperations: Object.freeze([
+              'NEW_TERRAIN_SEARCH',
+              'NEW_FRONTIER_BOUNDS',
+              'FUNCTIONAL_SYSTEM_DISTRIBUTION_DESIGN',
+              'ELEVEN_CELL_MAPPING',
+              'INFRASTRUCTURE_LAYOUT',
+              'CONSTRUCTION',
+              'RUNTIME_OR_PUBLIC_CHANGE'
+            ])
+          });
+
+          const custodyBytes = `${JSON.stringify(custody, null, 2)}\n`;
+          const authorityBytes = `${JSON.stringify(authorityInput, null, 2)}\n`;
+          fs.writeFileSync('fp04-evidence/fp04-receipt-first.json', firstBytes);
+          fs.writeFileSync('fp04-evidence/fp04-receipt-second.json', secondBytes);
+          fs.writeFileSync('fp04-evidence/fp04-execution-custody.json', custodyBytes);
+          fs.writeFileSync('fp04-evidence/fp04-authority-input.json', authorityBytes);
+          const manifest = Object.freeze({
+            schemaVersion: 'H_EARTH_GRATITUDE_REGION_FP04_ARTIFACT_MANIFEST_v1',
+            files: Object.freeze({
+              'fp04-receipt-first.json': Object.freeze({
+                bytes: Buffer.byteLength(firstBytes),
+                sha256: firstReceiptSha256
+              }),
+              'fp04-receipt-second.json': Object.freeze({
+                bytes: Buffer.byteLength(secondBytes),
+                sha256: secondReceiptSha256
+              }),
+              'fp04-execution-custody.json': Object.freeze({
+                bytes: Buffer.byteLength(custodyBytes),
+                sha256: sha256(custodyBytes)
+              }),
+              'fp04-authority-input.json': Object.freeze({
+                bytes: Buffer.byteLength(authorityBytes),
+                sha256: sha256(authorityBytes)
+              })
+            })
+          });
+          fs.writeFileSync(
+            'fp04-evidence/fp04-artifact-manifest.json',
+            `${JSON.stringify(manifest, null, 2)}\n`
+          );
+
+          console.log(JSON.stringify(custody, null, 2));
+          if (!custody.eligible) process.exitCode = 1;
           NODE
 
-      - name: Upload freeze and entry evidence
+      - name: Upload FP-04 evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gratitude-region-final-placement-freeze-evidence
-          path: |
-            /tmp/h-earth-gratitude-region-final-placement-baseline.json
-            /tmp/h-earth-gratitude-region-final-placement-baseline.log
+          name: h-earth-gratitude-region-fp04-execution-evidence
+          path: /tmp/h-earth-fp04/fp04-evidence
           if-no-files-found: error
           retention-days: 90

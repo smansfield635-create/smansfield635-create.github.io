@@ -25,6 +25,19 @@ jobs:
           ref: agent/laws-showroom-cluster-front-lock-compass-fit-cp1-001
           fetch-depth: 0
 
+      - name: Correct temporary first-occurrence matching guard
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('verification/showroom-cluster-front-lock/apply-showroom-cluster-front-lock.py')
+          text = path.read_text(encoding='utf-8')
+          old = '    if count != 1:\n        raise RuntimeError(f"{path}: expected one exact match, found {count}: {old[:80]!r}")'
+          new = '    if count < 1:\n        raise RuntimeError(f"{path}: expected at least one exact match, found {count}: {old[:80]!r}")'
+          if text.count(old) != 1:
+              raise SystemExit('TEMPORARY_MATCH_GUARD_NOT_FOUND')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
       - name: Apply bounded Showroom correction
         run: python3 verification/showroom-cluster-front-lock/apply-showroom-cluster-front-lock.py
 

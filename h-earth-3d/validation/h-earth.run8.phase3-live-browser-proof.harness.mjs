@@ -272,7 +272,8 @@ try {
   run('git', ['checkout', sourceHead, '--', harnessPath], { stdio: 'inherit' });
   if (fs.existsSync(path.join(repositoryRoot, workflowPath))) run('git', ['rm', '-f', workflowPath], { stdio: 'inherit' });
 
-  const status = run('git', ['status', '--short']).trim().split('\n').filter(Boolean);
+  fs.rmSync(path.join(repositoryRoot, 'node_modules'), { recursive: true, force: true });
+  const status = run('git', ['status', '--short', '--untracked-files=all']).trim().split('\n').filter(Boolean);
   const expectedPaths = [workflowPath, `${outputRelative}/index.html`, `${outputRelative}/preview.css`, `${outputRelative}/preview.js`, harnessPath].sort();
   const actualPaths = status.map((line) => line.slice(3)).sort();
   if (JSON.stringify(actualPaths) !== JSON.stringify(expectedPaths)) {

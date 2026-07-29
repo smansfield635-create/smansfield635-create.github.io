@@ -1,6 +1,7 @@
 name: H-Earth Gratitude Region Coordinate Reconciliation
 
 # Isolated validation trigger for bounded GR-CR sections.
+# GR-CR-03 corrected-search validation trigger.
 on:
   push:
     branches:

@@ -23,23 +23,25 @@ const freeze = (value, seen = new WeakSet()) => {
   Object.values(value).forEach((nested) => freeze(nested, seen));
   return Object.isFrozen(value) ? value : Object.freeze(value);
 };
+const stable = (value) => value === null || typeof value !== 'object'
+  ? JSON.stringify(value)
+  : Array.isArray(value)
+    ? `[${value.map(stable).join(',')}]`
+    : `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stable(value[key])}`).join(',')}}`;
 
 const WITNESS = freeze({ x: 0, z: -256 });
 
-export const H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS =
-  freeze({
-    contractId: 'H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS_v1',
-    checkpointId: 'GR-CR-01C',
-    status: 'ONE_SUCCESSOR_TERRAIN_WITNESS_SAMPLE_ENABLED',
-    repositoryPath: '/h-earth-3d/validation/h-earth.gratitude-region.coordinate-reconciliation.harness.mjs',
-    controllingInputLedgerPath: '/h-earth-3d/control-plane/region-001-reconciliation/h-earth.gratitude-region.coordinate-reconciliation.input-ledger.v1.json',
-    sourceImportsEstablished: true,
-    terrainSamplingExecuted: true,
-    measurementScope: 'ONE_LOCKED_WITNESS_ONLY',
-    candidateCoordinatesDerived: false,
-    durableReceiptEmitted: false,
-    nextCheckpoint: 'GR-CR-01D_REPEAT_WITNESS_AND_VERIFY_DETERMINISM'
-  });
+export const H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS = freeze({
+  contractId: 'H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS_v1',
+  checkpointId: 'GR-CR-01D',
+  status: 'REPEATED_WITNESS_DETERMINISM_ENABLED',
+  sourceImportsEstablished: true,
+  terrainSamplingExecuted: true,
+  deterministicRepeatEnabled: true,
+  candidateCoordinatesDerived: false,
+  durableReceiptEmitted: false,
+  nextCheckpoint: 'GR-CR-01E_ADD_ELEVATION_AND_GRADIENT_EXTRACTION'
+});
 
 export function evaluateGRCR01BLockedImports() {
   const issues = [];
@@ -52,21 +54,25 @@ export function evaluateGRCR01BLockedImports() {
   return freeze({ eligible: issues.length === 0, issues: freeze(issues) });
 }
 
-export function evaluateGRCR01CWitnessSample() {
+export function evaluateGRCR01DRepeatedWitnessDeterminism() {
   const imports = evaluateGRCR01BLockedImports();
-  const sample = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
+  const sampleA = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
+  const sampleB = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
+  const serializedA = stable(sampleA);
+  const serializedB = stable(sampleB);
   const issues = [...imports.issues];
-  if (sample?.valid !== true) issues.push('WITNESS_SAMPLE_INVALID');
-  if (!Number.isFinite(sample?.elevation)) issues.push('WITNESS_ELEVATION_NONFINITE');
-  if (sample?.contractId !== H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID) issues.push('WITNESS_CONTRACT_ID_MISMATCH');
+  if (sampleA?.valid !== true || sampleB?.valid !== true) issues.push('WITNESS_SAMPLE_INVALID');
+  if (!Number.isFinite(sampleA?.elevation) || !Number.isFinite(sampleB?.elevation)) issues.push('WITNESS_ELEVATION_NONFINITE');
+  if (serializedA !== serializedB) issues.push('REPEATED_WITNESS_NOT_BYTE_STABLE');
   return freeze({
-    checkpointId: 'GR-CR-01C',
+    checkpointId: 'GR-CR-01D',
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'GR_CR_01C_WITNESS_SAMPLE_PASS' : 'GR_CR_01C_WITNESS_SAMPLE_FAIL',
+    status: issues.length === 0 ? 'GR_CR_01D_REPEAT_DETERMINISM_PASS' : 'GR_CR_01D_REPEAT_DETERMINISM_FAIL',
     witness: WITNESS,
-    sample,
+    firstSample: sampleA,
+    secondSample: sampleB,
+    repeatedSampleByteStable: serializedA === serializedB,
     terrainSamplingExecuted: true,
-    measurementScope: 'ONE_LOCKED_WITNESS_ONLY',
     candidateCoordinatesDerived: false,
     terrainMutation: false,
     geometryConstruction: false,
@@ -81,7 +87,7 @@ export function evaluateGRCR01CWitnessSample() {
 
 const directExecution = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (directExecution) {
-  const receipt = evaluateGRCR01CWitnessSample();
+  const receipt = evaluateGRCR01DRepeatedWitnessDeterminism();
   const outputPath = process.env.H_EARTH_GR_CR_RECEIPT;
   if (outputPath) fs.writeFileSync(outputPath, `${JSON.stringify(receipt, null, 2)}\n`);
   console.log(JSON.stringify(receipt));

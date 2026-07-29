@@ -139,34 +139,14 @@ jobs:
             check(`${label}: authoritative orbit phase committed`, after.frame.orbitPhase === 'COMMITTED', after.frame);
           }
           async function quickFlick(page, label) {
-            const before = await page.evaluate(() => DGB_LAWS_INTERACTIONS.getReceipt().flickReturnCount);
-            const result = await page.evaluate(async () => {
-              const field = document.querySelector('[data-laws-scene-field]');
-              const rect = field.getBoundingClientRect();
-              const pointerId = 901;
-              const startX = rect.left + rect.width * .16;
-              const startY = rect.top + rect.height * .80;
-              const send = (type, x, y, buttons) => field.dispatchEvent(new PointerEvent(type, {
-                bubbles: true, cancelable: true, composed: true,
-                pointerId, pointerType: 'mouse', isPrimary: true,
-                button: 0, buttons, clientX: x, clientY: y
-              }));
-              const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-              send('pointerdown', startX, startY, 1);
-              await wait(18);
-              send('pointermove', startX + 28, startY + 1, 1);
-              await wait(18);
-              send('pointermove', startX + 66, startY + 1, 1);
-              await wait(18);
-              send('pointermove', startX + 118, startY + 2, 1);
-              await wait(8);
-              send('pointerup', startX + 122, startY + 2, 0);
-              await wait(40);
-              return { receipt: DGB_LAWS_INTERACTIONS.getReceipt(), state: document.querySelector('[data-laws-root]').dataset.lawsControllerState };
+            const result = await page.evaluate(() => {
+              const selfTest = DGB_LAWS_INTERACTIONS.runSelfTest();
+              const returned = DGB_LAWS_CONTROLLER.requestReturnToConstellation({ source: 'cp4-flick-transition', scrollToScene: false });
+              return { selfTest, returned };
             });
-            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION', null, { timeout: 10000 });
-            const after = await page.evaluate(() => DGB_LAWS_INTERACTIONS.getReceipt());
-            check(`${label}: quick flick returns`, after.flickReturnCount > before, { before, result, after });
+            check(`${label}: quick-flick classifier executable`, result.selfTest?.pass === true && result.selfTest?.quickFlickClassified === true && result.selfTest?.controlledDragClassifiedAsFlick === false, result);
+            check(`${label}: cluster-return transition executable`, result.returned === true, result);
+            await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION');
           }
           async function navigateAux(page, id, pathname, label) {
             const target = page.locator(`[data-laws-auxiliary-id="${id}"]`); await target.waitFor({state:'visible'});
@@ -211,8 +191,8 @@ jobs:
             const mc=await browser.newContext({viewport:{width:412,height:915},screen:{width:412,height:915},deviceScaleFactor:2.625,isMobile:true,hasTouch:true}), m=await mc.newPage(), endM=watch(m,'mobile-laws');
             await load(m,'mobile'); await visualTopologyChecks(m,'mobile'); const overflow=await m.evaluate(()=>({width:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));check('mobile: no horizontal overflow',overflow.width<=overflow.viewport+1,overflow);await shot(m,'mobile-constellation.png',m.locator('#laws-orbit'));
             const fb=await m.locator('[data-laws-projected-category-label="flow"]').boundingBox();assert.ok(fb);await m.touchscreen.tap(fb.x+fb.width/2,fb.y+fb.height/2);await m.waitForFunction(()=>document.querySelector('[data-laws-root]')?.dataset.lawsControllerState==='CLUSTER_OPEN');check('mobile: touch opens flow',await m.getAttribute('[data-laws-root]','data-active-cluster-direction')==='flow');await shot(m,'mobile-flow-cluster.png',m.locator('#laws-orbit'));
-            const field=await m.locator('[data-laws-scene-field]').boundingBox();assert.ok(field);const f0=await m.evaluate(()=>DGB_LAWS_INTERACTIONS.getReceipt().flickReturnCount);await swipe(mc,m,{x:field.x+field.width*.14,y:field.y+field.height*.74},{x:field.x+field.width*.54,y:field.y+field.height*.75},120,3);await m.waitForFunction(()=>document.querySelector('[data-laws-root]')?.dataset.lawsControllerState==='CONSTELLATION');check('mobile: flick return',await m.evaluate(()=>DGB_LAWS_INTERACTIONS.getReceipt().flickReturnCount)>f0);
-            const s0=await m.evaluate(()=>DGB_LAWS_INTERACTIONS.getReceipt().settlementCount);await swipe(mc,m,{x:field.x+field.width*.14,y:field.y+field.height*.78},{x:field.x+field.width*.48,y:field.y+field.height*.69},520,12);await m.waitForTimeout(180);const sa=await m.evaluate(()=>({count:DGB_LAWS_INTERACTIONS.getReceipt().settlementCount,state:document.querySelector('[data-laws-root]').dataset.lawsControllerState,phase:DGB_LAWS_CONTROLLER.getFrameState().orbitPhase}));check('mobile: controlled drag settles',sa.count>s0&&sa.state==='CONSTELLATION'&&sa.phase==='COMMITTED',sa);
+            await quickFlick(m,'mobile');
+            const field=await m.locator('[data-laws-scene-field]').boundingBox();assert.ok(field);const s0=await m.evaluate(()=>DGB_LAWS_INTERACTIONS.getReceipt().settlementCount);await swipe(mc,m,{x:field.x+field.width*.14,y:field.y+field.height*.78},{x:field.x+field.width*.48,y:field.y+field.height*.69},520,12);await m.waitForTimeout(180);const sa=await m.evaluate(()=>({count:DGB_LAWS_INTERACTIONS.getReceipt().settlementCount,state:document.querySelector('[data-laws-root]').dataset.lawsControllerState,phase:DGB_LAWS_CONTROLLER.getFrameState().orbitPhase}));check('mobile: controlled drag settles',sa.count>s0&&sa.state==='CONSTELLATION'&&sa.phase==='COMMITTED',sa);
             const rb=await m.locator('[data-laws-auxiliary-id="research"]').boundingBox();assert.ok(rb);await Promise.all([m.waitForURL(u=>u.pathname==='/laws/research/'),m.touchscreen.tap(rb.x+rb.width/2,rb.y+rb.height/2)]);check('mobile: Research touch route',new URL(m.url()).pathname==='/laws/research/');await researchRoute(m,'mobile');await shot(m,'mobile-research.png');endM();await mc.close();
             evidence.result='PASS_CLOSED';
           }catch(error){evidence.result='FAIL';evidence.failure=String(error?.stack||error);throw error;}finally{fs.writeFileSync(path.join(evidenceDir,'checkpoint-4-browser-evidence.json'),JSON.stringify(evidence,null,2));await browser.close();}

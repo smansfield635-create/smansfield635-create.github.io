@@ -1,0 +1,54 @@
+name: Laws celestial gateway CP2 resume
+
+on:
+  pull_request:
+    branches: [main]
+    paths: [.github/workflows/laws-celestial-gateway-cp2-resume.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  construct:
+    if: github.head_ref == 'agent/laws-celestial-gateway-cp2-resume-001'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 0bf5bcd63132d92fa6a4758a4f57ef2a6f524038
+          fetch-depth: 0
+      - name: Execute corrected bounded constructor
+        env:
+          SOURCE_BRANCH: agent/laws-celestial-gateway-cp2-execution-001
+          TARGET_BRANCH: agent/laws-celestial-gateway-auxiliary-clusters-cp2-001
+        run: |
+          set -euo pipefail
+          git fetch origin "$SOURCE_BRANCH":"refs/remotes/origin/$SOURCE_BRANCH"
+          git show "origin/$SOURCE_BRANCH:.github/workflows/laws-celestial-gateway-cp2-construction.yml" > /tmp/source-workflow.yml
+          python3 - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          lines = Path('/tmp/source-workflow.yml').read_text(encoding='utf-8').splitlines()
+          start = next(i for i, line in enumerate(lines) if "python3 - <<'PY'" in line) + 1
+          end = next(i for i in range(start, len(lines)) if lines[i].strip() == 'PY')
+          script = textwrap.dedent('\n'.join(lines[start:end])) + '\n'
+          old = "mk='    LAW_IDLE:\n       Object.freeze({'"
+          new = "mk='    LAW_IDLE:\n      Object.freeze({'"
+          if script.count(old) != 1:
+              raise SystemExit(f'material anchor count={script.count(old)}')
+          script = script.replace(old, new, 1)
+          Path('/tmp/construct.py').write_text(script, encoding='utf-8')
+          PY
+          git checkout -B "$TARGET_BRANCH" 0bf5bcd63132d92fa6a4758a4f57ef2a6f524038
+          python3 /tmp/construct.py
+          node --check laws/index.controller.js
+          node --check laws/index.crystals.js
+          node --check laws/index.interactions.js
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.controller.js laws/index.crystals.js laws/index.interactions.js laws/index.css laws/index.html laws/test/index.html laws/research/index.html
+          git commit -m "Build Laws celestial gateways and auxiliary clusters"
+          git push --force-with-lease origin "$TARGET_BRANCH"
+          echo "CANDIDATE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "CHECKPOINT_2=CONSTRUCTION_COMPLETE" >> "$GITHUB_STEP_SUMMARY"

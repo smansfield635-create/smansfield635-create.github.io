@@ -10,7 +10,9 @@ import {
 } from '../functional-landscape/navigation.js';
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import {
-  getHEarthRun8ER2ImmutableLiveRenderPackage,
+  getHEarthRun8ER2CanonicalLiveRenderPackage
+} from './live-render-package.run8e-r2.canonical.js';
+import {
   evaluateHEarthRun8ER2ImmutableLiveRenderPackage
 } from './live-render-package.run8e-r2.js';
 import {
@@ -122,7 +124,7 @@ export function createHEarthRun8ER3AFrameUniformPacket({
   const viewMatrix = lookAt(camera.position, camera.target, camera.up);
   const projectionMatrix = perspective(camera.verticalFovDegrees, width / height, camera.nearPlane, camera.farPlane);
   const viewProjectionMatrix = multiply4(projectionMatrix, viewMatrix);
-  const packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage();
+  const packageRecord = getHEarthRun8ER2CanonicalLiveRenderPackage();
   const packageEvaluation = evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord);
   if (packageEvaluation.eligible !== true) throw new Error(`R3A_PACKAGE_REJECTED:${packageEvaluation.issues.join(',')}`);
   const gpuViews = createHEarthRun8ER2DCanonicalGPUUploadViews(packageRecord);
@@ -191,7 +193,7 @@ export function createHEarthRun8ER3AFrameUniformPacket({
 }
 
 export function getHEarthRun8ER3ALiveRendererInterface() {
-  const packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage();
+  const packageRecord = getHEarthRun8ER2CanonicalLiveRenderPackage();
   return freeze({
     contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
     packageIdentity: packageRecord.packageIdentity,
@@ -228,7 +230,7 @@ export function getHEarthRun8ER3ALiveRendererInterface() {
 export function evaluateHEarthRun8ER3AFrameUniformPacket(packet) {
   const issues = [];
   if (packet?.contractId !== H_EARTH_RUN_8E_R3A_CONTRACT_ID) issues.push('R3A_PACKET_CONTRACT_MISMATCH');
-  if (packet?.packageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_FD913C25') issues.push('R3A_PACKAGE_IDENTITY_MISMATCH');
+  if (packet?.packageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898') issues.push('R3A_PACKAGE_IDENTITY_MISMATCH');
   for (const name of ['viewMatrix', 'projectionMatrix', 'viewProjectionMatrix']) {
     const matrix = packet?.camera?.[name];
     if (!Array.isArray(matrix) || matrix.length !== 16 || matrix.some((value) => !finite(value))) {

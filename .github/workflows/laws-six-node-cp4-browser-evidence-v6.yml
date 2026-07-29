@@ -30,7 +30,7 @@ jobs:
           path: verification-branch
           persist-credentials: false
 
-      - name: Build accepted v5 harness and replace activation mechanism
+      - name: Build accepted v5 harness with trusted category taps
         shell: bash
         run: |
           set -euo pipefail
@@ -54,10 +54,21 @@ jobs:
           path = Path('/tmp/cp4/run.mjs')
           source = path.read_text()
           old = 'await page.evaluate(expected => document.querySelector(`[data-laws-projected-category-label="${expected}"]`)?.focus(), direction);\n  await page.keyboard.press("Enter");'
-          new = 'await page.evaluate(expected => document.querySelector(`[data-laws-projected-category-label="${expected}"]`)?.click(), direction);'
+          new = '''const tapPoint = await page.evaluate(expected => {
+    const element = document.querySelector(`[data-laws-projected-category-label="${expected}"]`);
+    if (!element || element.hidden) return null;
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0
+      ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+      : null;
+  }, direction);
+  assert.ok(tapPoint, `${direction} projected label tap point required`);
+  await page.mouse.move(tapPoint.x, tapPoint.y);
+  await page.mouse.down();
+  await page.mouse.up();'''
           count = source.count(old)
           if count != 1:
-              raise SystemExit(f'CP4_NATIVE_CLICK_REPLACEMENT_INVALID:{count}')
+              raise SystemExit(f'CP4_TRUSTED_POINTER_REPLACEMENT_INVALID:{count}')
           path.write_text(source.replace(old, new, 1))
           PY
           node --check /tmp/cp4/run.mjs
@@ -77,6 +88,8 @@ jobs:
           set -euo pipefail
           base=343b0c269dd343a57c6ecb7e785141134cc5660f
           checkpoint3=8607693d75fffed5a8a85c42b8fdc28fff0b0554
+          expected=dfefecfd8e8dc2671e0fdb5d14eca54412e52c6a
+          test "$(git rev-parse HEAD)" = "$expected"
           marker='el.style.setProperty("transform","translate(-50%, -50%)","important")'
           grep -Fq "$marker" laws/index.interactions.js
           git merge-base --is-ancestor "$base" HEAD

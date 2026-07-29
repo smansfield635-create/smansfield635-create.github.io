@@ -31,6 +31,21 @@ jobs:
       - name: Apply bounded Showroom label correction
         run: python3 verification/showroom-label-correction/apply-showroom-label-hierarchy.py
 
+      - name: Normalize generated permanent-file starts
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [
+              Path('verification/benchmark-tools/four-compass-benchmark-v1/showroom-label-conformance-benchmark.mjs'),
+              Path('.github/workflows/showroom-label-conformance-benchmark.yml'),
+              Path('.github/workflows/showroom-four-compass-exact-head-regression.yml'),
+          ]
+          for path in paths:
+              text = path.read_text(encoding='utf-8')
+              if text.startswith('\\\n'):
+                  path.write_text(text[2:], encoding='utf-8')
+          PY
+
       - name: Validate syntax and final temporary-path absence
         run: |
           node --check showroom/index.interactions.js

@@ -1,0 +1,63 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP4_PHYSICAL_ALL_EIGHT_TESTING_v1",
+  "checkpoint": "CP4_PHYSICAL_ALL_EIGHT_TESTING",
+  "status": "ACTIVE_BOUNDED_TESTING",
+  "lane": "LANE_B",
+  "baseHead": "79f0f0cf0b2912bd73df5ab9ad3aff700a98e784",
+  "stackedOnBranch": "agent/h-earth-touch-motion-cp3d-runtime-identity-reconciliation-001",
+  "branch": "agent/h-earth-touch-motion-cp4-calibration-testing-001",
+  "authorityQuestion": "DO_ALL_EIGHT_TOUCH_GESTURES_PRODUCE_FLUID_TRUTHFUL_CONTINUOUS_CAMERA_MOTION_ON_SUPPORTED_TOUCH_DEVICES_WITHOUT_INPUT_BACKLOG_OR_RENDERER_REGRESSION",
+  "gestures": [
+    "TURN_LEFT",
+    "TURN_RIGHT",
+    "PITCH_UP",
+    "PITCH_DOWN",
+    "MOVE_FORWARD",
+    "MOVE_BACKWARD",
+    "ZOOM_IN",
+    "ZOOM_OUT"
+  ],
+  "frozenDependencies": {
+    "rendererIdentityMutationProhibited": true,
+    "packageDeterminismMutationProhibited": true,
+    "rendererPackageStateFrozenAtBaseHead": true,
+    "pr295MergeDependencyPreserved": true
+  },
+  "testOrder": [
+    "BASELINE_ROUTE_AND_FIRST_FRAME",
+    "TURN_LEFT_RIGHT_SYMMETRY",
+    "PITCH_UP_DOWN_SYMMETRY",
+    "FORWARD_BACKWARD_SYMMETRY",
+    "PINCH_ZOOM_IN_OUT_SYMMETRY",
+    "GESTURE_OWNERSHIP_AND_TRANSITION_STABILITY",
+    "RELEASE_TERMINATION",
+    "SUSTAINED_INPUT_BACKLOG_AND_FRAME_FLUIDITY",
+    "PORTRAIT_LANDSCAPE_CONTINUITY"
+  ],
+  "requiredObservations": {
+    "cameraResponseImmediate": null,
+    "continuousMotionWhileHeld": null,
+    "motionStopsOnRelease": null,
+    "directionalPairsOpposed": null,
+    "pinchTravelLockStable": null,
+    "noMultiSecondInputBacklog": null,
+    "framePresentationContinuous": null,
+    "worldGeometryPreserved": null,
+    "portraitLandscapeSupported": null
+  },
+  "referenceDevice": {
+    "deviceRole": "PHYSICAL_REFERENCE_ONLY",
+    "deviceClass": "SAMSUNG_GALAXY_PHONE",
+    "samsungOnlyImplementationProhibited": true,
+    "allSupportedTouchDevicesRemainTarget": true
+  },
+  "acceptanceBoundary": {
+    "exploratoryAndBoundedTestingAuthorized": true,
+    "cp4AcceptanceAuthorized": false,
+    "cp4MergeAuthorized": false,
+    "cp3dPassClosedRequiredBeforeIntegration": true,
+    "pr295MergeRequiredBeforeIntegration": true
+  },
+  "nextAction": "EXECUTE_BASELINE_ROUTE_AND_FIRST_FRAME_THEN_BEGIN_TURN_LEFT_RIGHT_PHYSICAL_CALIBRATION",
+  "stoppingBoundary": "STOP_BEFORE_CP4_ACCEPTANCE_MERGE_OR_ANY_RENDERER_OR_PACKAGE_IDENTITY_MUTATION"
+}

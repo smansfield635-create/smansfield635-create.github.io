@@ -55,6 +55,10 @@ jobs:
                   'return { field: { width: fieldRect.width, height: fieldRect.height }, records, projections: globalThis.DGB_LAWS_CONTROLLER.getSemanticProjection() };'
               ),
               (
+                  'async function visualTopologyChecks(page, label) {\n  const visual = await page.evaluate(() => {',
+                  'async function visualTopologyChecks(page, label) {\n  await page.waitForTimeout(260);\n  const visual = await page.evaluate(() => {'
+              ),
+              (
                   'check(`${label}: all primary nodes have pointer authority`, visual.records.every(x => x.pointerEvents !== \'none\'), visual.records);',
                   'const categoryTabs = await page.evaluate(() => [...document.querySelectorAll("[data-laws-projected-category-label]")].map(element => ({ id: element.dataset.lawsProjectedCategoryLabel, hidden: element.hidden, pointerEvents: getComputedStyle(element).pointerEvents, visibility: getComputedStyle(element).visibility })));\n  check(`${label}: cardinal projected labels retain pointer authority`, categoryTabs.length === 4 && categoryTabs.every(x => !x.hidden && x.pointerEvents !== "none" && x.visibility !== "hidden"), categoryTabs);\n  check(`${label}: auxiliary semantic controls retain pointer authority`, visual.records.filter(x => x.kind === "auxiliary").length === 2 && visual.records.filter(x => x.kind === "auxiliary").every(x => x.pointerEvents !== "none"), visual.records);'
               ),

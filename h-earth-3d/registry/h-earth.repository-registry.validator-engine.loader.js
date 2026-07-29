@@ -12,9 +12,10 @@ import { fileURLToPath } from 'node:url';
 // Phase 2 deployment reconciliation, Run 8 Phase 3 live-browser-proof,
 // Run 8E mobile-navigation-correction, Run 8E direct-inspection-restoration,
 // Run 8E-R1 profiler, executed R1 repository-package evidence, the
-// reference-device/mobile-compatibility scope correction, and the R1
-// reference-device material-ledger preservation and execution overlays.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js';
+// reference-device/mobile-compatibility scope correction, the R1
+// reference-device material-ledger preservation and execution overlays, and
+// the complete nonfinal Gratitude Region coordinate-reconciliation package.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.gratitude-region-coordinate-reconciliation-scope.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

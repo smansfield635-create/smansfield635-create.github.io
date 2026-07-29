@@ -10,8 +10,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: {fetch-depth: 0}
       - name: Execute exact bounded FP-05 candidate
         shell: bash
         env:
@@ -25,797 +24,201 @@ jobs:
           node --input-type=module <<'NODE'
           import crypto from 'node:crypto';
           import fs from 'node:fs';
-          import { execFileSync } from 'node:child_process';
+          import {execFileSync} from 'node:child_process';
+          import {executeGratitudeRegionFinalPlacementBaseline as baselineRun} from './h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.mjs';
+          import {loadHEarthRepositoryRegistryValidatorDependencies as registryLoad} from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
 
-          import {
-            executeGratitudeRegionFinalPlacementBaseline
-          } from './h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.mjs';
-          import {
-            loadHEarthRepositoryRegistryValidatorDependencies
-          } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
-
-          const AUTHORIZED_BASE =
-            '554a693c82876d9533bd577475a818a570d03b0d';
-          const WORKFLOW_PATH =
-            '.github/workflows/h-earth-gratitude-region-final-placement-freeze.yml';
-          const PATHS = Object.freeze({
-            disposition:
-              'h-earth-3d/control-plane/region-001-reconciliation/' +
-              'h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json',
-            original:
-              'h-earth-3d/control-plane/region-001-reconciliation/' +
-              'h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json',
-            entry:
-              'h-earth-3d/validation/' +
-              'h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json',
-            manor:
-              'h-earth-3d/validation/' +
-              'h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json',
-            cavern:
-              'h-earth-3d/validation/' +
-              'h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json',
-            frontier:
-              'h-earth-3d/validation/' +
-              'h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json'
-          });
-
-          const FP03 = Object.freeze({
-            status: 'PASS_CLOSED_DO_NOT_REOPEN',
-            disposition: 'ACCEPT_CURRENT_RELATION',
-            exteriorFace: Object.freeze({ x: 40, z: -284 }),
-            apron: Object.freeze({ x: 48, z: -284 }),
-            precinctCenter: Object.freeze({ x: 56, z: -284 }),
-            userIntentMateriallySatisfied: true,
-            authorizedBaseHead: AUTHORIZED_BASE,
-            executedDetachedCandidateHead:
-              '65454a6d46764505048599dfcc56abef20e3007b',
-            workflowTriggerHead:
-              'e4533a52171a56b4054fd5e3aba7286b62b136bb',
-            firstExecutionDigest:
-              'd8aa6c41e6e8bac3ab79ff44b3121e644dcd1be06b43a637a96e86f299d8d57a',
-            secondExecutionDigest:
-              'd8aa6c41e6e8bac3ab79ff44b3121e644dcd1be06b43a637a96e86f299d8d57a',
-            firstReceiptSha256:
-              'fdd73087f7e8891b04ce8fe23611947dfbba99e55f37f0bdaf6592c44dd9c986',
-            secondReceiptSha256:
-              'fdd73087f7e8891b04ce8fe23611947dfbba99e55f37f0bdaf6592c44dd9c986',
-            evidence: Object.freeze({
-              githubArtifactId: 8740913317,
-              driveEvidenceFileId: '12QvP0O7sjtRj5MRmJxZeG4t2E3uAjLdE',
-              driveEvidenceBytes: 10603,
-              driveEvidenceSha256:
-                '5910c652169493bc9fe58087c8ed25ada2987010b6d1cd12e533590fd2899fde',
-              driveReceiptFileId: '1dDjdYCipISobV2bKgGKKIFBkx-Dplw5S',
-              driveReceiptBytes: 4268,
-              driveReceiptSha256:
-                '034ef94dbdfabbbb363c7c3201ebd7fb285baad150c9b9f7a6fc61e262404038'
-            })
-          });
-
-          const FP04 = Object.freeze({
-            status: 'PASS_CLOSED_DO_NOT_REOPEN',
-            disposition:
-              'RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT',
-            preservedRole: 'LARGE_REGIONAL_CAPACITY_RESERVE',
-            finalFrontierEnvelopeAccepted: false,
-            finalFrontierAnchorAssigned: false,
-            allElevenSystemsAssignedToFrontier: false,
-            exactFunctionalCellsAssigned: false,
-            distributedFunctionalSystemsTopology: 'DEFERRED',
-            frontierConstructionAuthority: false,
-            authorizedBaseHead: AUTHORIZED_BASE,
-            executedDetachedCandidateHead:
-              '398267fe1a7bb42f7042e27936bf1c5d029574df',
-            workflowTriggerHead:
-              'd91b5ae02b747645f8eb0633f04d61fa135ee67d',
-            firstExecutionDigest:
-              '3312969933c7ae7f3397af5a2f8d0a7128a9b77f7bb0af868e56e5d77492582a',
-            secondExecutionDigest:
-              '3312969933c7ae7f3397af5a2f8d0a7128a9b77f7bb0af868e56e5d77492582a',
-            firstReceiptSha256:
-              '6d09b601e6128ac0abe657dad8fcc6ea12a5d1ad03c022e26ace653145fc53ad',
-            secondReceiptSha256:
-              '6d09b601e6128ac0abe657dad8fcc6ea12a5d1ad03c022e26ace653145fc53ad',
-            evidence: Object.freeze({
-              githubArtifactId: 8741378132,
-              driveEvidenceFileId: '1U2GA1kOZIdYWvNbsOlrI6DXAqoetH40k',
-              driveEvidenceBytes: 12480,
-              driveEvidenceSha256:
-                '0f114776d5cb9d693750920caa0ae42b1c26290b0ce2200456ab076b752d4351',
-              driveReceiptFileId: '1BusJWUbS5tvigU3tQJ9kpC8K3JFb1lwO',
-              driveReceiptBytes: 6317,
-              driveReceiptSha256:
-                'db35881dcf085c232716884ac54776a8c4d23b70fe07bb06570ea6f2dbbc8429'
-            })
-          });
-
-          const stable = (value) => value === null || typeof value !== 'object'
-            ? JSON.stringify(value)
-            : Array.isArray(value)
-              ? `[${value.map(stable).join(',')}]`
-              : `{${Object.keys(value).sort().map((key) =>
-                  `${JSON.stringify(key)}:${stable(value[key])}`).join(',')}}`;
-
-          const digest = (value) =>
-            crypto.createHash('sha256').update(stable(value)).digest('hex');
-          const sha256Text = (value) =>
-            crypto.createHash('sha256').update(value).digest('hex');
-          const git = (...args) =>
-            execFileSync('git', args, { encoding: 'utf8' }).trim();
-          const read = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
-          const exact = (left, right) => stable(left) === stable(right);
-          const projectXZ = (point) => point
-            ? Object.freeze({ x: point.x, z: point.z })
-            : null;
-          const normalizeBounds = (bounds) => bounds
-            ? Object.freeze({
-                xMinimum: bounds.xMinimum ?? bounds.xMin,
-                xMaximum: bounds.xMaximum ?? bounds.xMax,
-                zMinimum: bounds.zMinimum ?? bounds.zMin,
-                zMaximum: bounds.zMaximum ?? bounds.zMax
-              })
-            : null;
-          const boundsOverlap = (left, right) => !(
-            left.xMaximum < right.xMinimum ||
-            right.xMaximum < left.xMinimum ||
-            left.zMaximum < right.zMinimum ||
-            right.zMaximum < left.zMinimum
-          );
-          const boundsDistance = (left, right) => {
-            const dx = left.xMaximum < right.xMinimum
-              ? right.xMinimum - left.xMaximum
-              : right.xMaximum < left.xMinimum
-                ? left.xMinimum - right.xMaximum
-                : 0;
-            const dz = left.zMaximum < right.zMinimum
-              ? right.zMinimum - left.zMaximum
-              : right.zMaximum < left.zMinimum
-                ? left.zMinimum - right.zMaximum
-                : 0;
-            return Math.hypot(dx, dz);
+          const BASE='554a693c82876d9533bd577475a818a570d03b0d';
+          const WF='.github/workflows/h-earth-gratitude-region-final-placement-freeze.yml';
+          const P={
+            disposition:'h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json',
+            original:'h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json',
+            entry:'h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json',
+            manor:'h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json',
+            cavern:'h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json',
+            frontier:'h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json'
           };
-          const record = (id, passed, basis) => Object.freeze({
-            id,
-            status: passed ? 'PASS' : 'FAIL',
-            passed,
-            basis
-          });
+          const FP03={
+            status:'PASS_CLOSED_DO_NOT_REOPEN',
+            disposition:'ACCEPT_CURRENT_RELATION',
+            exteriorFace:{x:40,z:-284},
+            apron:{x:48,z:-284},
+            precinctCenter:{x:56,z:-284},
+            userIntentMateriallySatisfied:true,
+            authorizedBaseHead:BASE,
+            workflowTriggerHead:'e4533a52171a56b4054fd5e3aba7286b62b136bb',
+            executedDetachedCandidateHead:'65454a6d46764505048599dfcc56abef20e3007b',
+            executionDigest:'d8aa6c41e6e8bac3ab79ff44b3121e644dcd1be06b43a637a96e86f299d8d57a',
+            receiptSha256:'fdd73087f7e8891b04ce8fe23611947dfbba99e55f37f0bdaf6592c44dd9c986',
+            githubArtifactId:8740913317,
+            driveEvidence:{id:'12QvP0O7sjtRj5MRmJxZeG4t2E3uAjLdE',bytes:10603,sha256:'5910c652169493bc9fe58087c8ed25ada2987010b6d1cd12e533590fd2899fde'},
+            driveReceipt:{id:'1dDjdYCipISobV2bKgGKKIFBkx-Dplw5S',bytes:4268,sha256:'034ef94dbdfabbbb363c7c3201ebd7fb285baad150c9b9f7a6fc61e262404038'}
+          };
+          const FP04={
+            status:'PASS_CLOSED_DO_NOT_REOPEN',
+            disposition:'RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT',
+            preservedRole:'LARGE_REGIONAL_CAPACITY_RESERVE',
+            finalEnvelopeAccepted:false,
+            finalAnchorAssigned:false,
+            allElevenSystemsAssigned:false,
+            exactFunctionalCellsAssigned:false,
+            distributedTopology:'DEFERRED',
+            constructionAuthority:false,
+            authorizedBaseHead:BASE,
+            workflowTriggerHead:'d91b5ae02b747645f8eb0633f04d61fa135ee67d',
+            executedDetachedCandidateHead:'398267fe1a7bb42f7042e27936bf1c5d029574df',
+            executionDigest:'3312969933c7ae7f3397af5a2f8d0a7128a9b77f7bb0af868e56e5d77492582a',
+            receiptSha256:'6d09b601e6128ac0abe657dad8fcc6ea12a5d1ad03c022e26ace653145fc53ad',
+            githubArtifactId:8741378132,
+            driveEvidence:{id:'1U2GA1kOZIdYWvNbsOlrI6DXAqoetH40k',bytes:12480,sha256:'0f114776d5cb9d693750920caa0ae42b1c26290b0ce2200456ab076b752d4351'},
+            driveReceipt:{id:'1BusJWUbS5tvigU3tQJ9kpC8K3JFb1lwO',bytes:6317,sha256:'db35881dcf085c232716884ac54776a8c4d23b70fe07bb06570ea6f2dbbc8429'}
+          };
+          const stable=v=>v===null||typeof v!=='object'?JSON.stringify(v):Array.isArray(v)?`[${v.map(stable).join(',')}]`:`{${Object.keys(v).sort().map(k=>`${JSON.stringify(k)}:${stable(v[k])}`).join(',')}}`;
+          const dg=v=>crypto.createHash('sha256').update(stable(v)).digest('hex');
+          const sh=v=>crypto.createHash('sha256').update(v).digest('hex');
+          const git=(...a)=>execFileSync('git',a,{encoding:'utf8'}).trim();
+          const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const eq=(a,b)=>stable(a)===stable(b);
+          const xz=p=>({x:p.x,z:p.z});
+          const bnd=b=>({xMinimum:b.xMinimum??b.xMin,xMaximum:b.xMaximum??b.xMax,zMinimum:b.zMinimum??b.zMin,zMaximum:b.zMaximum??b.zMax});
+          const overlap=(a,b)=>!(a.xMaximum<b.xMinimum||b.xMaximum<a.xMinimum||a.zMaximum<b.zMinimum||b.zMaximum<a.zMinimum);
+          const distance=(a,b)=>Math.hypot(a.xMaximum<b.xMinimum?b.xMinimum-a.xMaximum:b.xMaximum<a.xMinimum?a.xMinimum-b.xMaximum:0,a.zMaximum<b.zMinimum?b.zMinimum-a.zMaximum:b.zMaximum<a.zMinimum?a.zMinimum-b.zMaximum:0);
+          const pass=(id,ok,basis)=>({id,status:ok?'PASS':'FAIL',passed:ok,basis});
 
-          function executeComposite() {
-            const issues = [];
-            const disposition = read(PATHS.disposition);
-            const original = read(PATHS.original);
-            const entry = read(PATHS.entry);
-            const manor = read(PATHS.manor);
-            const cavern = read(PATHS.cavern);
-            const frontier = read(PATHS.frontier);
-            const baseline = executeGratitudeRegionFinalPlacementBaseline();
-            const registry = loadHEarthRepositoryRegistryValidatorDependencies();
+          function execute(){
+            const issues=[];
+            const d=read(P.disposition),o=read(P.original),e=read(P.entry),m=read(P.manor),c=read(P.cavern),f=read(P.frontier),b=baselineRun(),r=registryLoad();
+            const head=git('rev-parse','HEAD'),mergeBase=git('merge-base','HEAD',BASE),changed=git('diff','--name-only',`${BASE}..HEAD`).split('\n').filter(Boolean).sort();
+            if(mergeBase!==BASE)issues.push(`AUTHORIZED_BASE_MISMATCH:${mergeBase}`);
+            if(!eq(changed,[WF]))issues.push(`UNAUTHORIZED_CHANGED_PATHS:${changed.join(',')}`);
+            if(!b.eligible||!b.fp00.eligible||!b.fp01.eligible||!b.fp02.eligible)issues.push('FP_00_THROUGH_FP_02_REGRESSION_FAILURE');
+            if(b.fp00.frozenInputCount!==24||b.fp00.exactFrozenInputMatchCount!==24||b.fp00.protectedMutationPaths.length)issues.push('FROZEN_INPUT_OR_PROTECTED_MUTATION_FAILURE');
 
-            const executionHead = git('rev-parse', 'HEAD');
-            const mergeBase = git('merge-base', 'HEAD', AUTHORIZED_BASE);
-            const changedPaths = git(
-              'diff', '--name-only', `${AUTHORIZED_BASE}..HEAD`
-            ).split('\n').filter(Boolean).sort();
+            const t=Object.fromEntries(d.targetDispositionMatrix.map(v=>[v.areaId,v]));
+            const eb=bnd(e.entryZoneCandidate.bounds),mb=bnd(m.mirrorManorCandidate.bounds),cb=bnd(c.cavernCandidate.precinctEnvelope.bounds),fb=bnd(f.primaryNonfinalCandidate.bounds);
+            const fp03=FP03.status==='PASS_CLOSED_DO_NOT_REOPEN'&&FP03.disposition==='ACCEPT_CURRENT_RELATION'&&eq(FP03.exteriorFace,xz(c.cavernCandidate.exteriorFace))&&eq(FP03.apron,xz(c.cavernCandidate.exteriorApron))&&eq(FP03.precinctCenter,xz(c.cavernCandidate.precinctCenter))&&eq(FP03.exteriorFace,t.GRATITUDE_REGION_CAVERN_PRECINCT.currentExteriorFace)&&eq(FP03.precinctCenter,t.GRATITUDE_REGION_CAVERN_PRECINCT.currentPrecinctCenter)&&FP03.userIntentMateriallySatisfied&&c.cavernCandidate.eligible&&c.cavernCandidate.surfaceCorrespondence.existingMountainExteriorAttachmentSatisfied&&c.cavernCandidate.lawfulApproachCandidate.eligible&&c.cavernCandidate.interiorTransitionRelation.separateBoundedInteriorOccurrenceRequired;
+            if(!fp03)issues.push('FP_03_CLOSED_AUTHORITY_MISMATCH');
+            const ft=t.GRATITUDE_REGION_FRONTIER_PLAINS;
+            const fp04=FP04.status==='PASS_CLOSED_DO_NOT_REOPEN'&&FP04.disposition==='RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT'&&FP04.preservedRole==='LARGE_REGIONAL_CAPACITY_RESERVE'&&!FP04.finalEnvelopeAccepted&&!FP04.finalAnchorAssigned&&!FP04.allElevenSystemsAssigned&&!FP04.exactFunctionalCellsAssigned&&FP04.distributedTopology==='DEFERRED'&&!FP04.constructionAuthority&&ft.targetDisposition==='RETAIN_ELIGIBLE_NONFINAL'&&ft.preservedRole===FP04.preservedRole&&ft.separateFutureProject&&!ft.allElevenSystemsAssignedToFrontier&&!ft.exactFunctionalCellsAssigned&&!ft.constructionAuthority&&f.primaryNonfinalCandidate.eligible&&!f.primaryNonfinalCandidate.accepted&&!f.primaryNonfinalCandidate.finalPlacement&&f.integratedCapacityModel.capacitySupported&&!f.integratedCapacityModel.elevenFunctionalCellsAssigned&&!f.authorityBoundary.frontierPlainsCandidateAccepted&&!f.authorityBoundary.productConstructionAuthorized;
+            if(!fp04)issues.push('FP_04_CLOSED_AUTHORITY_MISMATCH');
 
-            if (mergeBase !== AUTHORIZED_BASE) {
-              issues.push(`AUTHORIZED_BASE_MISMATCH:${mergeBase}`);
-            }
-            if (!exact(changedPaths, [WORKFLOW_PATH])) {
-              issues.push(`UNAUTHORIZED_CHANGED_PATHS:${changedPaths.join(',')}`);
-            }
-            if (baseline.eligible !== true ||
-                baseline.fp00?.eligible !== true ||
-                baseline.fp01?.eligible !== true ||
-                baseline.fp02?.eligible !== true) {
-              issues.push('FP_00_THROUGH_FP_02_REGRESSION_FAILURE');
-            }
-            if (baseline.fp00?.exactFrozenInputMatchCount !== 24 ||
-                baseline.fp00?.frozenInputCount !== 24 ||
-                baseline.fp00?.protectedMutationPaths?.length !== 0) {
-              issues.push('FROZEN_INPUT_OR_PROTECTED_MUTATION_FAILURE');
-            }
+            const areas=[
+              {areaId:'GRATITUDE_REGION_ENTRY_ZONE',lifecycleDisposition:'ACCEPTED',placementDisposition:'ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL',sourceCandidateId:e.entryZoneCandidate.candidateId,finalBounds:eb,activeInitialState:t.GRATITUDE_REGION_ENTRY_ZONE.activeInitialState,deferred:['ALARIC_STAR_GEOMETRY','MAP_PROJECTION_GEOMETRY'],requiredPlacementFieldsResolved:true},
+              {areaId:'GRATITUDE_REGION_MIRROR_MANOR_PRECINCT',lifecycleDisposition:'ACCEPTED',placementDisposition:'ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY',sourceCandidateId:m.mirrorManorCandidate.candidateId,finalSiteCenter:m.mirrorManorCandidate.center,finalSiteBounds:mb,deferred:['EXACT_BUILDING_FOOTPRINT','BUILDING_ORIENTATION','ATRIUM_GEOMETRY','ENTRANCE_COORDINATES','GARDEN_LAYOUT','SCULPTURE_POSITIONS'],requiredPlacementFieldsResolved:true},
+              {areaId:'GRATITUDE_REGION_CAVERN_PRECINCT',lifecycleDisposition:'ACCEPTED',placementDisposition:FP03.disposition,sourceCandidateId:c.cavernCandidate.candidateId,exteriorFace:FP03.exteriorFace,apron:FP03.apron,precinctCenter:FP03.precinctCenter,deferred:['CAVERN_INTERIOR_OCCURRENCE','ENTRANCE_OPENING_GEOMETRY','INTERIOR_TRANSITION_ANCHOR','CAVERN_SHAPE','CAVERN_SIZE','CAVERN_CONTENTS'],requiredPlacementFieldsResolved:true},
+              {areaId:'GRATITUDE_REGION_FRONTIER_PLAINS',lifecycleDisposition:'RETAINED_ELIGIBLE_NONFINAL',placementDisposition:FP04.disposition,sourceCandidateId:f.primaryNonfinalCandidate.candidateId,preservedRole:FP04.preservedRole,finalEnvelope:null,finalAnchor:null,deferred:['DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY','EXACT_FUNCTIONAL_CELLS','INFRASTRUCTURE_LAYOUT','FRONTIER_CONSTRUCTION'],requiredPlacementFieldsResolved:true}
+            ];
+            if(t.GRATITUDE_REGION_ENTRY_ZONE.targetDisposition!=='ACCEPT'||e.entryZoneCandidate.candidateId!==t.GRATITUDE_REGION_ENTRY_ZONE.sourceCandidateId||!eq(eb,bnd(t.GRATITUDE_REGION_ENTRY_ZONE.sourceCandidateBounds))||b.fp01.disposition!=='ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL')issues.push('ENTRY_ZONE_COMPOSITE_DISPOSITION_MISMATCH');
+            if(t.GRATITUDE_REGION_MIRROR_MANOR_PRECINCT.targetDisposition!=='ACCEPT'||t.GRATITUDE_REGION_MIRROR_MANOR_PRECINCT.acceptedScope!=='UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY'||m.mirrorManorCandidate.candidateId!==t.GRATITUDE_REGION_MIRROR_MANOR_PRECINCT.sourceCandidateId||!eq(mb,bnd(t.GRATITUDE_REGION_MIRROR_MANOR_PRECINCT.bounds))||b.fp02.disposition!=='ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY')issues.push('MIRROR_MANOR_COMPOSITE_DISPOSITION_MISMATCH');
 
-            const targets = Object.fromEntries(
-              disposition.targetDispositionMatrix.map((item) => [item.areaId, item])
-            );
-            const entryTarget = targets.GRATITUDE_REGION_ENTRY_ZONE;
-            const manorTarget = targets.GRATITUDE_REGION_MIRROR_MANOR_PRECINCT;
-            const cavernTarget = targets.GRATITUDE_REGION_CAVERN_PRECINCT;
-            const frontierTarget = targets.GRATITUDE_REGION_FRONTIER_PLAINS;
+            const s=f.accessAndRelationshipEvidence.separation;
+            const pairs=[
+              pass('ENTRY_ZONE__MIRROR_MANOR',!overlap(eb,mb)&&distance(eb,mb)>0,{relationship:'SEPARATE_CONNECTED_REGIONAL_AREAS',boundsDistance:distance(eb,mb)}),
+              pass('ENTRY_ZONE__CAVERN_PRECINCT',!overlap(eb,cb)&&c.cavernCandidate.distanceEvidence.entryZoneStraightLineDistance>0&&c.cavernCandidate.visibilityEvidence.entryZone==='TERRAIN_CONCEALED_FROM_ENTRY_ZONE_NONFINAL',{relationship:'DISTINCT_CONCEALED_MOUNTAIN_EXTERIOR_DESTINATION',boundsDistance:distance(eb,cb),straightLineDistance:c.cavernCandidate.distanceEvidence.entryZoneStraightLineDistance}),
+              pass('ENTRY_ZONE__FRONTIER_PLAINS',!overlap(eb,fb)&&f.accessAndRelationshipEvidence.entryZoneRoute.eligible&&s.entryZoneEnvelopeDistance>0,{relationship:'CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE',envelopeDistance:s.entryZoneEnvelopeDistance,routeAccepted:false}),
+              pass('MIRROR_MANOR__CAVERN_PRECINCT',!overlap(mb,cb)&&c.cavernCandidate.lawfulApproachCandidate.eligible&&c.cavernCandidate.visibilityEvidence.mirrorManor==='TERRAIN_CONCEALED_FROM_MIRROR_MANOR_NONFINAL'&&c.cavernCandidate.distanceEvidence.mirrorManorStraightLineDistance>0,{relationship:'LAWFUL_APPROACH_TO_CONCEALED_MOUNTAIN_EXTERIOR',boundsDistance:distance(mb,cb),approachPathDistance:c.cavernCandidate.distanceEvidence.mirrorManorApproachPathDistance}),
+              pass('MIRROR_MANOR__FRONTIER_PLAINS',!overlap(mb,fb)&&f.accessAndRelationshipEvidence.mirrorManorRoute.eligible&&s.mirrorManorEnvelopeDistance>0,{relationship:'CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE',envelopeDistance:s.mirrorManorEnvelopeDistance,routeAccepted:false}),
+              pass('CAVERN_PRECINCT__FRONTIER_PLAINS',!overlap(cb,fb)&&s.cavernPrecinctEnvelopeDistance>0&&s.cavernApproachMinimumDistance>16,{relationship:'SEPARATE_CAPACITY_RESERVE_CLEAR_OF_CAVERN_PRECINCT_AND_APPROACH',envelopeDistance:s.cavernPrecinctEnvelopeDistance,cavernApproachMinimumDistance:s.cavernApproachMinimumDistance})
+            ];
+            if(pairs.length!==6||pairs.some(v=>!v.passed))issues.push('SIX_PAIR_RELATIONSHIP_MATRIX_FAILURE');
 
-            const entryBounds = normalizeBounds(entry.entryZoneCandidate.bounds);
-            const manorBounds = normalizeBounds(manor.mirrorManorCandidate.bounds);
-            const cavernBounds = normalizeBounds(
-              cavern.cavernCandidate.precinctEnvelope.bounds
-            );
-            const frontierBounds = normalizeBounds(
-              frontier.primaryNonfinalCandidate.bounds
-            );
+            const source=Object.fromEntries(o.interactionAreaProgram.areas.map(v=>[v.areaId,v]));
+            const laws=[
+              pass('ENTRY_WATER_REMAINS_HARD_BOUNDARY',source.GRATITUDE_REGION_ENTRY_ZONE.preservationRules.includes('WATER_REMAINS_HARD_BOUNDARY')&&!b.fp01.cameraStartRelocation&&!b.fp01.cameraAuthorityMutation,'SOURCE_LAW_PLUS_UNCHANGED_CAMERA_BOUND_ARRIVAL'),
+              pass('ENTRY_CURRENT_NAVIGATION_MODEL_REMAINS_BASELINE',o.workingRegionalDecisions.movementLaw.preserveCurrentHEarthNavigationBehavior&&b.fp01.eligible,'ACTIVE_NAVIGATION_EXECUTED_UNCHANGED'),
+              pass('ENTRY_MUST_NOT_COLLAPSE_INTO_MANOR',pairs[0].passed,pairs[0].basis),
+              pass('MANOR_LOW_CORRIDOR_REMAINS_OPEN',b.fp02.lowerNaturalApproachPreserved&&!b.fp02.gullyOrLowCorridorBlocked,'FP_02_PROTECTED_LOW_CORRIDOR'),
+              pass('MANOR_TWO_HILL_RELATION_REMAINS_LEGIBLE',b.fp02.twoHillRelationPreserved,'FP_02_TWO_HILL_RELATION'),
+              pass('MANOR_BOTH_VIEWS_REMAIN_CLEAR',b.fp02.beachwardViewPreserved&&b.fp02.mountainwardViewPreserved,'FP_02_VIEW_PRESERVATION'),
+              pass('MANOR_ARCHITECTURE_REMAINS_UNASSIGNED',b.fp02.selectedFootprintClass===null&&!b.fp02.downstreamConstructionRequirements.exactEntranceCoordinatesAssigned&&!b.fp02.downstreamConstructionRequirements.exactBuildingOrientationAssigned&&!b.fp02.downstreamConstructionRequirements.atriumGeometryAssigned,'FP_02_STOP_BEFORE_ARCHITECTURE'),
+              pass('CAVERN_MOUNTAIN_EXTERIOR_ATTACHMENT_PRESERVED',c.cavernCandidate.surfaceCorrespondence.existingMountainExteriorAttachmentSatisfied&&FP03.disposition==='ACCEPT_CURRENT_RELATION','FP_03_CURRENT_RELATION'),
+              pass('CAVERN_INTERIOR_REMAINS_SEPARATE',c.cavernCandidate.interiorTransitionRelation.separateBoundedInteriorOccurrenceRequired&&!c.cavernCandidate.interiorTransitionRelation.interiorTransitionAnchorAssigned,'SEPARATE_UNASSIGNED_INTERIOR'),
+              pass('FRONTIER_NAME_DOES_NOT_PREASSIGN_FINAL_COORDINATES',source.GRATITUDE_REGION_FRONTIER_PLAINS.preservationRules.includes('PLAINS_NAME_DOES_NOT_PREASSIGN_LOWLAND_COORDINATES')&&!FP04.finalEnvelopeAccepted&&!FP04.finalAnchorAssigned,'FP_04_FORMAL_DEFERRAL'),
+              pass('FRONTIER_CAPACITY_EVIDENCE_PRESERVED_NONFINAL',f.primaryNonfinalCandidate.eligible&&!f.primaryNonfinalCandidate.accepted&&f.integratedCapacityModel.capacitySupported,'EXISTING_ANALYTICAL_CANDIDATE_RETAINED'),
+              pass('FRONTIER_NO_OBJECTS_FLATTENING_OR_SYSTEM_PLACEMENT',!f.authorityBoundary.frontierObjectsOrFacilitiesAuthorized&&!f.authorityBoundary.terrainFlatteningAuthorized&&!f.integratedCapacityModel.elevenFunctionalCellsAssigned&&!FP04.constructionAuthority,'FP_04_NONCONSTRUCTION'),
+              pass('GLOBAL_NO_AUTHORITY_OVERREACH',Object.values(d.authorityBoundary).every(v=>v===false),d.authorityBoundary)
+            ];
+            if(laws.some(v=>!v.passed))issues.push('PRESERVATION_LAW_FAILURE');
 
-            const fp03Pass =
-              FP03.status === 'PASS_CLOSED_DO_NOT_REOPEN' &&
-              FP03.disposition === 'ACCEPT_CURRENT_RELATION' &&
-              exact(FP03.exteriorFace, projectXZ(cavern.cavernCandidate.exteriorFace)) &&
-              exact(FP03.apron, projectXZ(cavern.cavernCandidate.exteriorApron)) &&
-              exact(FP03.precinctCenter, projectXZ(cavern.cavernCandidate.precinctCenter)) &&
-              exact(FP03.exteriorFace, cavernTarget.currentExteriorFace) &&
-              exact(FP03.precinctCenter, cavernTarget.currentPrecinctCenter) &&
-              FP03.userIntentMateriallySatisfied === true &&
-              FP03.firstExecutionDigest === FP03.secondExecutionDigest &&
-              FP03.firstReceiptSha256 === FP03.secondReceiptSha256 &&
-              cavern.cavernCandidate.eligible === true &&
-              cavern.cavernCandidate.surfaceCorrespondence
-                .existingMountainExteriorAttachmentSatisfied === true &&
-              cavern.cavernCandidate.lawfulApproachCandidate.eligible === true &&
-              cavern.cavernCandidate.interiorTransitionRelation
-                .separateBoundedInteriorOccurrenceRequired === true;
+            const registry={status:r.identityVerified&&r.boundary.readOnly&&!r.boundary.mutationAuthorityCreated?'PASS':'FAIL',identityVerified:r.identityVerified,identityChecks:r.identityChecks,readOnly:r.boundary.readOnly,mutationAuthorityCreated:r.boundary.mutationAuthorityCreated,networkDependencyRequired:r.boundary.networkDependencyRequired};
+            if(registry.status!=='PASS')issues.push('REGISTRY_PREFLIGHT_FAILURE');
+            const unresolved=areas.filter(v=>!v.requiredPlacementFieldsResolved).map(v=>v.areaId);
+            if(unresolved.length)issues.push('UNRESOLVED_REQUIRED_PLACEMENT_FIELDS');
+            const boundary={priorAuthorityMutation:false,grCr01To04Mutation:false,terrainMutation:false,cameraAuthorityMutation:false,buildingGeometry:false,cavernExcavation:false,roadOrCorridorGeometry:false,infrastructureGeometry:false,functionalSystemDistributionDesign:false,elevenCellMapping:false,runtimeIntegration:false,publicRouteMutation:false,livePageChange:false,productConstruction:false,finalPlacementPrMergeAuthorized:false,mergeAuthorityCreated:false,canonicalizationAuthority:false};
 
-            if (!fp03Pass) issues.push('FP_03_CLOSED_AUTHORITY_MISMATCH');
-
-            const fp04Pass =
-              FP04.status === 'PASS_CLOSED_DO_NOT_REOPEN' &&
-              FP04.disposition ===
-                'RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT' &&
-              FP04.preservedRole === 'LARGE_REGIONAL_CAPACITY_RESERVE' &&
-              FP04.finalFrontierEnvelopeAccepted === false &&
-              FP04.finalFrontierAnchorAssigned === false &&
-              FP04.allElevenSystemsAssignedToFrontier === false &&
-              FP04.exactFunctionalCellsAssigned === false &&
-              FP04.distributedFunctionalSystemsTopology === 'DEFERRED' &&
-              FP04.frontierConstructionAuthority === false &&
-              FP04.firstExecutionDigest === FP04.secondExecutionDigest &&
-              FP04.firstReceiptSha256 === FP04.secondReceiptSha256 &&
-              frontierTarget.targetDisposition === 'RETAIN_ELIGIBLE_NONFINAL' &&
-              frontierTarget.preservedRole === FP04.preservedRole &&
-              frontierTarget.separateFutureProject === true &&
-              frontierTarget.allElevenSystemsAssignedToFrontier === false &&
-              frontierTarget.exactFunctionalCellsAssigned === false &&
-              frontierTarget.constructionAuthority === false &&
-              frontier.primaryNonfinalCandidate.eligible === true &&
-              frontier.primaryNonfinalCandidate.accepted === false &&
-              frontier.primaryNonfinalCandidate.finalPlacement === false &&
-              frontier.integratedCapacityModel.capacitySupported === true &&
-              frontier.integratedCapacityModel.elevenFunctionalCellsAssigned === false &&
-              frontier.authorityBoundary.frontierPlainsCandidateAccepted === false &&
-              frontier.authorityBoundary.productConstructionAuthorized === false;
-
-            if (!fp04Pass) issues.push('FP_04_CLOSED_AUTHORITY_MISMATCH');
-
-            const areaDispositions = Object.freeze([
-              Object.freeze({
-                areaId: 'GRATITUDE_REGION_ENTRY_ZONE',
-                lifecycleDisposition: 'ACCEPTED',
-                placementDisposition:
-                  'ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL',
-                sourceCandidateId: entry.entryZoneCandidate.candidateId,
-                finalBounds: entryBounds,
-                activeInitialState: entryTarget.activeInitialState,
-                downstreamFieldsDeferred: Object.freeze([
-                  'ALARIC_STAR_GEOMETRY',
-                  'MAP_PROJECTION_GEOMETRY'
-                ]),
-                requiredPlacementFieldsResolved: true
-              }),
-              Object.freeze({
-                areaId: 'GRATITUDE_REGION_MIRROR_MANOR_PRECINCT',
-                lifecycleDisposition: 'ACCEPTED',
-                placementDisposition:
-                  'ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY',
-                sourceCandidateId: manor.mirrorManorCandidate.candidateId,
-                finalSiteCenter: manor.mirrorManorCandidate.center,
-                finalSiteBounds: manorBounds,
-                downstreamFieldsDeferred: Object.freeze([
-                  'EXACT_BUILDING_FOOTPRINT',
-                  'BUILDING_ORIENTATION',
-                  'ATRIUM_GEOMETRY',
-                  'ENTRANCE_COORDINATES',
-                  'GARDEN_LAYOUT',
-                  'SCULPTURE_POSITIONS'
-                ]),
-                requiredPlacementFieldsResolved: true
-              }),
-              Object.freeze({
-                areaId: 'GRATITUDE_REGION_CAVERN_PRECINCT',
-                lifecycleDisposition: 'ACCEPTED',
-                placementDisposition: FP03.disposition,
-                sourceCandidateId: cavern.cavernCandidate.candidateId,
-                exteriorFace: FP03.exteriorFace,
-                apron: FP03.apron,
-                precinctCenter: FP03.precinctCenter,
-                downstreamFieldsDeferred: Object.freeze([
-                  'CAVERN_INTERIOR_OCCURRENCE',
-                  'ENTRANCE_OPENING_GEOMETRY',
-                  'INTERIOR_TRANSITION_ANCHOR',
-                  'CAVERN_SHAPE',
-                  'CAVERN_SIZE',
-                  'CAVERN_CONTENTS'
-                ]),
-                requiredPlacementFieldsResolved: true
-              }),
-              Object.freeze({
-                areaId: 'GRATITUDE_REGION_FRONTIER_PLAINS',
-                lifecycleDisposition: 'RETAINED_ELIGIBLE_NONFINAL',
-                placementDisposition: FP04.disposition,
-                sourceCandidateId:
-                  frontier.primaryNonfinalCandidate.candidateId,
-                preservedRole: FP04.preservedRole,
-                finalEnvelope: null,
-                finalAnchor: null,
-                downstreamFieldsDeferred: Object.freeze([
-                  'DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY',
-                  'EXACT_FUNCTIONAL_CELLS',
-                  'INFRASTRUCTURE_LAYOUT',
-                  'FRONTIER_CONSTRUCTION'
-                ]),
-                requiredPlacementFieldsResolved: true
-              })
-            ]);
-
-            if (entryTarget.targetDisposition !== 'ACCEPT' ||
-                entry.entryZoneCandidate.candidateId !==
-                  entryTarget.sourceCandidateId ||
-                !exact(entryBounds, normalizeBounds(entryTarget.sourceCandidateBounds)) ||
-                baseline.fp01.disposition !==
-                  'ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL') {
-              issues.push('ENTRY_ZONE_COMPOSITE_DISPOSITION_MISMATCH');
-            }
-            if (manorTarget.targetDisposition !== 'ACCEPT' ||
-                manorTarget.acceptedScope !==
-                  'UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY' ||
-                manor.mirrorManorCandidate.candidateId !==
-                  manorTarget.sourceCandidateId ||
-                !exact(manorBounds, normalizeBounds(manorTarget.bounds)) ||
-                baseline.fp02.disposition !==
-                  'ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY') {
-              issues.push('MIRROR_MANOR_COMPOSITE_DISPOSITION_MISMATCH');
-            }
-
-            const pairRelationshipMatrix = Object.freeze([
-              record(
-                'ENTRY_ZONE__MIRROR_MANOR',
-                !boundsOverlap(entryBounds, manorBounds) &&
-                  boundsDistance(entryBounds, manorBounds) > 0,
-                Object.freeze({
-                  relationship: 'SEPARATE_CONNECTED_REGIONAL_AREAS',
-                  boundsDistance: boundsDistance(entryBounds, manorBounds),
-                  entryZoneMustNotCollapseIntoManorPrecinct: true
-                })
-              ),
-              record(
-                'ENTRY_ZONE__CAVERN_PRECINCT',
-                !boundsOverlap(entryBounds, cavernBounds) &&
-                  cavern.cavernCandidate.distanceEvidence
-                    .entryZoneStraightLineDistance > 0 &&
-                  cavern.cavernCandidate.visibilityEvidence.entryZone ===
-                    'TERRAIN_CONCEALED_FROM_ENTRY_ZONE_NONFINAL',
-                Object.freeze({
-                  relationship:
-                    'DISTINCT_CONCEALED_MOUNTAIN_EXTERIOR_DESTINATION',
-                  boundsDistance: boundsDistance(entryBounds, cavernBounds),
-                  straightLineDistance:
-                    cavern.cavernCandidate.distanceEvidence
-                      .entryZoneStraightLineDistance,
-                  visibility:
-                    cavern.cavernCandidate.visibilityEvidence.entryZone
-                })
-              ),
-              record(
-                'ENTRY_ZONE__FRONTIER_PLAINS',
-                !boundsOverlap(entryBounds, frontierBounds) &&
-                  frontier.accessAndRelationshipEvidence.entryZoneRoute
-                    .eligible === true &&
-                  frontier.accessAndRelationshipEvidence.separation
-                    .entryZoneEnvelopeDistance > 0,
-                Object.freeze({
-                  relationship:
-                    'CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE',
-                  envelopeDistance:
-                    frontier.accessAndRelationshipEvidence.separation
-                      .entryZoneEnvelopeDistance,
-                  routeStatus:
-                    frontier.accessAndRelationshipEvidence.entryZoneRoute.status,
-                  routeAccepted: false
-                })
-              ),
-              record(
-                'MIRROR_MANOR__CAVERN_PRECINCT',
-                !boundsOverlap(manorBounds, cavernBounds) &&
-                  cavern.cavernCandidate.lawfulApproachCandidate
-                    .eligible === true &&
-                  cavern.cavernCandidate.visibilityEvidence.mirrorManor ===
-                    'TERRAIN_CONCEALED_FROM_MIRROR_MANOR_NONFINAL' &&
-                  cavern.cavernCandidate.distanceEvidence
-                    .mirrorManorStraightLineDistance > 0,
-                Object.freeze({
-                  relationship:
-                    'LAWFUL_APPROACH_TO_CONCEALED_MOUNTAIN_EXTERIOR',
-                  boundsDistance: boundsDistance(manorBounds, cavernBounds),
-                  straightLineDistance:
-                    cavern.cavernCandidate.distanceEvidence
-                      .mirrorManorStraightLineDistance,
-                  approachPathDistance:
-                    cavern.cavernCandidate.distanceEvidence
-                      .mirrorManorApproachPathDistance,
-                  visibility:
-                    cavern.cavernCandidate.visibilityEvidence.mirrorManor
-                })
-              ),
-              record(
-                'MIRROR_MANOR__FRONTIER_PLAINS',
-                !boundsOverlap(manorBounds, frontierBounds) &&
-                  frontier.accessAndRelationshipEvidence.mirrorManorRoute
-                    .eligible === true &&
-                  frontier.accessAndRelationshipEvidence.separation
-                    .mirrorManorEnvelopeDistance > 0,
-                Object.freeze({
-                  relationship:
-                    'CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE',
-                  envelopeDistance:
-                    frontier.accessAndRelationshipEvidence.separation
-                      .mirrorManorEnvelopeDistance,
-                  routeStatus:
-                    frontier.accessAndRelationshipEvidence.mirrorManorRoute.status,
-                  routeAccepted: false
-                })
-              ),
-              record(
-                'CAVERN_PRECINCT__FRONTIER_PLAINS',
-                !boundsOverlap(cavernBounds, frontierBounds) &&
-                  frontier.accessAndRelationshipEvidence.separation
-                    .cavernPrecinctEnvelopeDistance > 0 &&
-                  frontier.accessAndRelationshipEvidence.separation
-                    .cavernApproachMinimumDistance > 16,
-                Object.freeze({
-                  relationship:
-                    'SEPARATE_CAPACITY_RESERVE_CLEAR_OF_CAVERN_PRECINCT_AND_APPROACH',
-                  envelopeDistance:
-                    frontier.accessAndRelationshipEvidence.separation
-                      .cavernPrecinctEnvelopeDistance,
-                  cavernApproachMinimumDistance:
-                    frontier.accessAndRelationshipEvidence.separation
-                      .cavernApproachMinimumDistance
-                })
-              )
-            ]);
-
-            if (pairRelationshipMatrix.length !== 6 ||
-                pairRelationshipMatrix.some((item) => !item.passed)) {
-              issues.push('SIX_PAIR_RELATIONSHIP_MATRIX_FAILURE');
-            }
-
-            const sourceAreas = Object.fromEntries(
-              original.interactionAreaProgram.areas.map((item) => [item.areaId, item])
-            );
-
-            const preservationLaws = Object.freeze([
-              record(
-                'ENTRY_WATER_REMAINS_HARD_BOUNDARY',
-                sourceAreas.GRATITUDE_REGION_ENTRY_ZONE.preservationRules
-                  .includes('WATER_REMAINS_HARD_BOUNDARY') &&
-                  baseline.fp01.cameraStartRelocation === false &&
-                  baseline.fp01.cameraAuthorityMutation === false,
-                'SOURCE_PRESERVATION_LAW_PLUS_UNCHANGED_ACTIVE_CAMERA_BOUND_ARRIVAL'
-              ),
-              record(
-                'ENTRY_CURRENT_NAVIGATION_MODEL_REMAINS_BASELINE',
-                original.workingRegionalDecisions.movementLaw
-                  .preserveCurrentHEarthNavigationBehavior === true &&
-                  baseline.fp01.eligible === true,
-                'ACTIVE_NAVIGATION_EXECUTED_WITHOUT_CAMERA_OR_RUNTIME_MUTATION'
-              ),
-              record(
-                'ENTRY_MUST_NOT_COLLAPSE_INTO_MANOR',
-                pairRelationshipMatrix[0].passed,
-                pairRelationshipMatrix[0].basis
-              ),
-              record(
-                'MANOR_LOW_CORRIDOR_REMAINS_OPEN',
-                baseline.fp02.lowerNaturalApproachPreserved === true &&
-                  baseline.fp02.lowCorridorOrGullyBlocked === false,
-                'FP_02_ACCEPTED_SITE_ENVELOPE_AND_PROTECTED_LOW_CORRIDOR'
-              ),
-              record(
-                'MANOR_TWO_HILL_RELATION_REMAINS_LEGIBLE',
-                baseline.fp02.twoHillRelationPreserved === true,
-                'FP_02_TWO_HILL_RELATION_PRESERVED'
-              ),
-              record(
-                'MANOR_BOTH_VIEWS_REMAIN_CLEAR',
-                baseline.fp02.beachwardViewPreserved === true &&
-                  baseline.fp02.mountainwardViewPreserved === true,
-                'FP_02_BEACHWARD_AND_MOUNTAINWARD_VIEW_PRESERVATION'
-              ),
-              record(
-                'MANOR_ARCHITECTURE_REMAINS_UNASSIGNED',
-                baseline.fp02.selectedFootprintClass === null &&
-                  baseline.fp02.exactEntranceCoordinatesAssigned === false &&
-                  baseline.fp02.exactBuildingOrientationAssigned === false &&
-                  baseline.fp02.atriumGeometryAssigned === false,
-                'FP_02_STOP_BEFORE_BUILDING_AND_ENTRANCE_GEOMETRY'
-              ),
-              record(
-                'CAVERN_MOUNTAIN_EXTERIOR_ATTACHMENT_PRESERVED',
-                cavern.cavernCandidate.surfaceCorrespondence
-                  .existingMountainExteriorAttachmentSatisfied === true &&
-                  FP03.disposition === 'ACCEPT_CURRENT_RELATION',
-                'FP_03_ACCEPTED_EXISTING_MOUNTAIN_EXTERIOR_RELATION'
-              ),
-              record(
-                'CAVERN_INTERIOR_REMAINS_SEPARATE',
-                cavern.cavernCandidate.interiorTransitionRelation
-                  .separateBoundedInteriorOccurrenceRequired === true &&
-                  cavern.cavernCandidate.interiorTransitionRelation
-                    .interiorTransitionAnchorAssigned === false,
-                'SEPARATE_UNASSIGNED_INTERIOR_OCCURRENCE'
-              ),
-              record(
-                'FRONTIER_NAME_DOES_NOT_PREASSIGN_FINAL_COORDINATES',
-                sourceAreas.GRATITUDE_REGION_FRONTIER_PLAINS.preservationRules
-                  .includes('PLAINS_NAME_DOES_NOT_PREASSIGN_LOWLAND_COORDINATES') &&
-                  FP04.finalFrontierEnvelopeAccepted === false &&
-                  FP04.finalFrontierAnchorAssigned === false,
-                'FP_04_FORMAL_DEFERRAL'
-              ),
-              record(
-                'FRONTIER_CAPACITY_EVIDENCE_PRESERVED_NONFINAL',
-                frontier.primaryNonfinalCandidate.eligible === true &&
-                  frontier.primaryNonfinalCandidate.accepted === false &&
-                  frontier.integratedCapacityModel.capacitySupported === true,
-                'EXISTING_ANALYTICAL_CANDIDATE_RETAINED_WITHOUT_FINAL_PLACEMENT'
-              ),
-              record(
-                'FRONTIER_NO_OBJECTS_FLATTENING_OR_SYSTEM_PLACEMENT',
-                frontier.authorityBoundary.frontierObjectsOrFacilitiesAuthorized === false &&
-                  frontier.authorityBoundary.terrainFlatteningAuthorized === false &&
-                  frontier.integratedCapacityModel.elevenFunctionalCellsAssigned === false &&
-                  FP04.frontierConstructionAuthority === false,
-                'FP_04_NONCONSTRUCTION_AND_DISTRIBUTED_TOPOLOGY_DEFERRAL'
-              ),
-              record(
-                'GLOBAL_NO_AUTHORITY_OVERREACH',
-                Object.values(disposition.authorityBoundary).every(
-                  (value) => value === false
-                ),
-                disposition.authorityBoundary
-              )
-            ]);
-
-            if (preservationLaws.some((item) => !item.passed)) {
-              issues.push('PRESERVATION_LAW_FAILURE');
-            }
-
-            const registryPreflight = Object.freeze({
-              status: registry.identityVerified &&
-                registry.boundary.readOnly === true &&
-                registry.boundary.mutationAuthorityCreated === false
-                  ? 'PASS'
-                  : 'FAIL',
-              identityVerified: registry.identityVerified,
-              identityChecks: registry.identityChecks,
-              readOnly: registry.boundary.readOnly,
-              mutationAuthorityCreated:
-                registry.boundary.mutationAuthorityCreated,
-              networkDependencyRequired:
-                registry.boundary.networkDependencyRequired
-            });
-            if (registryPreflight.status !== 'PASS') {
-              issues.push('REGISTRY_PREFLIGHT_FAILURE');
-            }
-
-            const unresolvedRequiredPlacementFields = areaDispositions
-              .filter((item) => item.requiredPlacementFieldsResolved !== true)
-              .map((item) => item.areaId);
-
-            if (unresolvedRequiredPlacementFields.length !== 0) {
-              issues.push('UNRESOLVED_REQUIRED_PLACEMENT_FIELDS');
-            }
-
-            const deferredFieldsAreNotUnresolvedRequiredFields = true;
-            const authorityBoundary = Object.freeze({
-              priorAuthorityMutation: false,
-              grCr01To04Mutation: false,
-              terrainMutation: false,
-              cameraAuthorityMutation: false,
-              buildingGeometry: false,
-              cavernExcavation: false,
-              roadOrCorridorGeometry: false,
-              infrastructureGeometry: false,
-              functionalSystemDistributionDesign: false,
-              elevenCellMapping: false,
-              runtimeIntegration: false,
-              publicRouteMutation: false,
-              livePageChange: false,
-              productConstruction: false,
-              finalPlacementPrMergeAuthorized: false,
-              mergeAuthorityCreated: false,
-              canonicalizationAuthority: false
-            });
-
-            return Object.freeze({
-              schemaVersion:
-                'H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_FP05_REGIONAL_COMPOSITE_RECEIPT_v1',
-              operation:
-                'H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_REGIONAL_COMPOSITE_CLOSURE',
-              checkpointId: 'FP-05',
-              eligible: issues.length === 0,
-              status: issues.length === 0
-                ? 'FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED'
-                : 'FP_05_REGIONAL_COMPOSITE_CLOSURE_FAIL_STOPPED',
-              authorizedBaseHead: AUTHORIZED_BASE,
-              executionHead,
-              workflowTriggerHead:
-                process.env.FP05_WORKFLOW_TRIGGER_HEAD ?? null,
-              closedCheckpointRegression: Object.freeze({
-                fp00: baseline.fp00.status,
-                fp01: baseline.fp01.status,
-                fp02: baseline.fp02.status,
-                fp03: FP03.status,
-                fp04: FP04.status,
-                doNotReopen: true
-              }),
-              externalDurableCustodyInputs: Object.freeze({
-                fp03: FP03,
-                fp04: FP04
-              }),
-              areaDispositionCount: areaDispositions.length,
-              completeLifecycleDispositionCount:
-                areaDispositions.filter(
-                  (item) => item.requiredPlacementFieldsResolved
-                ).length,
-              areaDispositions,
-              pairRelationshipCount: pairRelationshipMatrix.length,
-              pairRelationshipMatrix,
-              preservationLawCount: preservationLaws.length,
-              preservationLaws,
-              allPreservationLawsPass:
-                preservationLaws.every((item) => item.passed),
-              registryPreflight,
-              unresolvedRequiredPlacementFields,
-              unresolvedRequiredPlacementFieldCount:
-                unresolvedRequiredPlacementFields.length,
-              deferredFieldsAreNotUnresolvedRequiredFields,
-              regionalComposite: Object.freeze({
-                entryZone: 'ACCEPTED',
-                mirrorManorSiteEnvelope: 'ACCEPTED',
-                cavernCurrentExteriorRelation: 'ACCEPTED',
-                frontierPlains: 'RETAINED_ELIGIBLE_NONFINAL'
-              }),
-              nextProgramBoundary: Object.freeze({
-                finalPlacementProgramComplete: issues.length === 0,
-                nextConstructionProgramCandidates: Object.freeze([
-                  'EXISTING_CAMERA_BOUND_ARRIVAL_PRESENTATION',
-                  'MIRROR_MANOR_WITHIN_ACCEPTED_UPPER_SITE',
-                  'VERIFIED_CAVERN_EXTERIOR_ENTRANCE'
-                ]),
-                deferred: Object.freeze([
-                  'CAVERN_INTERIOR',
-                  'FRONTIER_PLAINS',
-                  'DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY',
-                  'DYNAMIC_SUN_AND_WORLD_TIME_ACTIVATION'
-                ]),
-                nextProgramExecutionAuthorized: false
-              }),
-              authorityBoundary,
-              stoppingBoundary: 'STOP_BEFORE_FINAL_PLACEMENT_PR_MERGE',
-              issues: Object.freeze(issues)
-            });
+            return {
+              schemaVersion:'H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_FP05_REGIONAL_COMPOSITE_RECEIPT_v1',
+              checkpointId:'FP-05',
+              eligible:issues.length===0,
+              status:issues.length===0?'FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED':'FP_05_REGIONAL_COMPOSITE_CLOSURE_FAIL_STOPPED',
+              authorizedBaseHead:BASE,
+              executionHead:head,
+              workflowTriggerHead:process.env.FP05_WORKFLOW_TRIGGER_HEAD??null,
+              closedCheckpointRegression:{fp00:b.fp00.status,fp01:b.fp01.status,fp02:b.fp02.status,fp03:FP03.status,fp04:FP04.status,doNotReopen:true},
+              externalDurableCustodyInputs:{fp03:FP03,fp04:FP04},
+              areaDispositionCount:areas.length,
+              completeLifecycleDispositionCount:areas.filter(v=>v.requiredPlacementFieldsResolved).length,
+              areaDispositions:areas,
+              pairRelationshipCount:pairs.length,
+              pairRelationshipMatrix:pairs,
+              preservationLawCount:laws.length,
+              preservationLaws:laws,
+              allPreservationLawsPass:laws.every(v=>v.passed),
+              registryPreflight:registry,
+              unresolvedRequiredPlacementFields:unresolved,
+              unresolvedRequiredPlacementFieldCount:unresolved.length,
+              deferredFieldsAreNotUnresolvedRequiredFields:true,
+              regionalComposite:{entryZone:'ACCEPTED',mirrorManorSiteEnvelope:'ACCEPTED',cavernCurrentExteriorRelation:'ACCEPTED',frontierPlains:'RETAINED_ELIGIBLE_NONFINAL'},
+              nextProgramBoundary:{finalPlacementProgramComplete:issues.length===0,nextConstructionProgramCandidates:['EXISTING_CAMERA_BOUND_ARRIVAL_PRESENTATION','MIRROR_MANOR_WITHIN_ACCEPTED_UPPER_SITE','VERIFIED_CAVERN_EXTERIOR_ENTRANCE'],deferred:['CAVERN_INTERIOR','FRONTIER_PLAINS','DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY','DYNAMIC_SUN_AND_WORLD_TIME_ACTIVATION'],nextProgramExecutionAuthorized:false},
+              authorityBoundary:boundary,
+              stoppingBoundary:'STOP_BEFORE_FINAL_PLACEMENT_PR_MERGE',
+              issues
+            };
           }
 
-          const first = executeComposite();
-          const second = executeComposite();
-          const firstText = `${JSON.stringify(first, null, 2)}\n`;
-          const secondText = `${JSON.stringify(second, null, 2)}\n`;
-          const firstDigest = digest(first);
-          const secondDigest = digest(second);
-          const firstReceiptSha256 = sha256Text(firstText);
-          const secondReceiptSha256 = sha256Text(secondText);
-          const byteIdentical = firstText === secondText;
-          const issues = [...first.issues];
-
-          if (firstDigest !== secondDigest) {
-            issues.push('NONDETERMINISTIC_EXECUTION_DIGEST_MISMATCH');
-          }
-          if (!byteIdentical) {
-            issues.push('NONDETERMINISTIC_RECEIPT_BYTES_MISMATCH');
-          }
-
-          const custody = Object.freeze({
-            schemaVersion:
-              'H_EARTH_GRATITUDE_REGION_FP05_EXECUTION_CUSTODY_v1',
-            eligible: first.eligible && issues.length === 0,
-            status: first.eligible && issues.length === 0
-              ? 'FP_05_EXECUTION_PASS_CLOSED'
-              : 'FP_05_EXECUTION_FAIL_STOPPED',
-            authorizedBaseHead: AUTHORIZED_BASE,
-            executedDetachedCandidateHead: git('rev-parse', 'HEAD'),
-            workflowTriggerHead:
-              process.env.FP05_WORKFLOW_TRIGGER_HEAD ?? null,
-            firstExecutionDigest,
-            secondExecutionDigest,
-            firstReceiptSha256,
-            secondReceiptSha256,
-            crossRunReceiptBytesIdentical: byteIdentical,
-            frozenInputCount: first.closedCheckpointRegression
-              ? 24
-              : null,
-            exactFrozenInputMatchCount:
-              executeGratitudeRegionFinalPlacementBaseline()
-                .fp00.exactFrozenInputMatchCount,
-            protectedMutationPaths:
-              executeGratitudeRegionFinalPlacementBaseline()
-                .fp00.protectedMutationPaths,
-            fp05Status: first.status,
-            areaDispositionCount: first.areaDispositionCount,
-            completeLifecycleDispositionCount:
-              first.completeLifecycleDispositionCount,
-            pairRelationshipCount: first.pairRelationshipCount,
-            allPairRelationshipsPass:
-              first.pairRelationshipMatrix.every((item) => item.passed),
-            preservationLawCount: first.preservationLawCount,
-            allPreservationLawsPass: first.allPreservationLawsPass,
-            registryPreflightStatus: first.registryPreflight.status,
-            unresolvedRequiredPlacementFieldCount:
-              first.unresolvedRequiredPlacementFieldCount,
-            regionalComposite: first.regionalComposite,
-            finalPlacementPrMergeAuthorized:
-              first.authorityBoundary.finalPlacementPrMergeAuthorized,
-            constructionAuthorized:
-              first.authorityBoundary.productConstruction,
-            issues: Object.freeze(issues)
-          });
-
-          const custodyText = `${JSON.stringify(custody, null, 2)}\n`;
-          const authorityInput = Object.freeze({
-            schemaVersion:
-              'H_EARTH_GRATITUDE_REGION_FP05_AUTHORITY_INPUT_v1',
-            authorizedBaseHead: AUTHORIZED_BASE,
-            sourcePaths: PATHS,
-            fp03DurableCustody: FP03,
-            fp04DurableCustody: FP04,
-            fp05AuthorityQuestion:
-              'DO_ALL_FOUR_AREAS_HAVE_COMPLETE_LIFECYCLE_DISPOSITIONS_WITH_THE_SIX_PAIR_RELATIONSHIP_MATRIX_AND_ALL_PRESERVATION_LAWS_PASSING?',
-            requiredResult:
-              'FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED',
-            stoppingBoundary: 'STOP_BEFORE_FINAL_PLACEMENT_PR_MERGE'
-          });
-          const authorityInputText =
-            `${JSON.stringify(authorityInput, null, 2)}\n`;
-
-          fs.writeFileSync(
-            'fp05-evidence/fp05-authority-input.json',
-            authorityInputText
-          );
-          fs.writeFileSync(
-            'fp05-evidence/fp05-regional-composite-receipt-first.json',
-            firstText
-          );
-          fs.writeFileSync(
-            'fp05-evidence/fp05-regional-composite-receipt-second.json',
-            secondText
-          );
-          fs.writeFileSync(
-            'fp05-evidence/fp05-execution-custody.json',
-            custodyText
-          );
-
-          const manifest = Object.freeze({
-            'fp05-authority-input.json':
-              sha256Text(authorityInputText),
-            'fp05-regional-composite-receipt-first.json':
-              firstReceiptSha256,
-            'fp05-regional-composite-receipt-second.json':
-              secondReceiptSha256,
-            'fp05-execution-custody.json':
-              sha256Text(custodyText)
-          });
-          fs.writeFileSync(
-            'fp05-evidence/fp05-artifact-manifest.json',
-            `${JSON.stringify(manifest, null, 2)}\n`
-          );
-
-          console.log(custodyText);
-          if (!custody.eligible) process.exitCode = 1;
+          const a=execute(),b=execute(),at=`${JSON.stringify(a,null,2)}\n`,bt=`${JSON.stringify(b,null,2)}\n`,ad=dg(a),bd=dg(b),ash=sh(at),bsh=sh(bt),same=at===bt,issues=[...a.issues];
+          if(ad!==bd)issues.push('NONDETERMINISTIC_EXECUTION_DIGEST_MISMATCH');
+          if(!same)issues.push('NONDETERMINISTIC_RECEIPT_BYTES_MISMATCH');
+          const base=baselineRun();
+          const custody={
+            schemaVersion:'H_EARTH_GRATITUDE_REGION_FP05_EXECUTION_CUSTODY_v1',
+            eligible:a.eligible&&issues.length===0,
+            status:a.eligible&&issues.length===0?'FP_05_EXECUTION_PASS_CLOSED':'FP_05_EXECUTION_FAIL_STOPPED',
+            authorizedBaseHead:BASE,
+            executedDetachedCandidateHead:git('rev-parse','HEAD'),
+            workflowTriggerHead:process.env.FP05_WORKFLOW_TRIGGER_HEAD??null,
+            firstExecutionDigest:ad,
+            secondExecutionDigest:bd,
+            firstReceiptSha256:ash,
+            secondReceiptSha256:bsh,
+            crossRunReceiptBytesIdentical:same,
+            frozenInputCount:base.fp00.frozenInputCount,
+            exactFrozenInputMatchCount:base.fp00.exactFrozenInputMatchCount,
+            protectedMutationPaths:base.fp00.protectedMutationPaths,
+            fp05Status:a.status,
+            areaDispositionCount:a.areaDispositionCount,
+            completeLifecycleDispositionCount:a.completeLifecycleDispositionCount,
+            pairRelationshipCount:a.pairRelationshipCount,
+            allPairRelationshipsPass:a.pairRelationshipMatrix.every(v=>v.passed),
+            preservationLawCount:a.preservationLawCount,
+            allPreservationLawsPass:a.allPreservationLawsPass,
+            registryPreflightStatus:a.registryPreflight.status,
+            unresolvedRequiredPlacementFieldCount:a.unresolvedRequiredPlacementFieldCount,
+            regionalComposite:a.regionalComposite,
+            finalPlacementPrMergeAuthorized:a.authorityBoundary.finalPlacementPrMergeAuthorized,
+            constructionAuthorized:a.authorityBoundary.productConstruction,
+            issues
+          };
+          const ct=`${JSON.stringify(custody,null,2)}\n`;
+          const authority={schemaVersion:'H_EARTH_GRATITUDE_REGION_FP05_AUTHORITY_INPUT_v1',authorizedBaseHead:BASE,sourcePaths:P,fp03DurableCustody:FP03,fp04DurableCustody:FP04,authorityQuestion:'DO_ALL_FOUR_AREAS_HAVE_COMPLETE_LIFECYCLE_DISPOSITIONS_WITH_THE_SIX_PAIR_RELATIONSHIP_MATRIX_AND_ALL_PRESERVATION_LAWS_PASSING?',requiredResult:'FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED',stoppingBoundary:'STOP_BEFORE_FINAL_PLACEMENT_PR_MERGE'};
+          const it=`${JSON.stringify(authority,null,2)}\n`;
+          fs.writeFileSync('fp05-evidence/fp05-authority-input.json',it);
+          fs.writeFileSync('fp05-evidence/fp05-regional-composite-receipt-first.json',at);
+          fs.writeFileSync('fp05-evidence/fp05-regional-composite-receipt-second.json',bt);
+          fs.writeFileSync('fp05-evidence/fp05-execution-custody.json',ct);
+          fs.writeFileSync('fp05-evidence/fp05-artifact-manifest.json',`${JSON.stringify({'fp05-authority-input.json':sh(it),'fp05-regional-composite-receipt-first.json':ash,'fp05-regional-composite-receipt-second.json':bsh,'fp05-execution-custody.json':sh(ct)},null,2)}\n`);
+          console.log(ct);
+          if(!custody.eligible)process.exitCode=1;
           NODE
       - name: Upload FP-05 evidence
         if: always()

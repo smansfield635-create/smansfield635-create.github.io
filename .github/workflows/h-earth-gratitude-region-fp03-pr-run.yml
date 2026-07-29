@@ -24,16 +24,36 @@ jobs:
           start = workflow.index("          node --input-type=module <<'NODE'\n") + len("          node --input-type=module <<'NODE'\n")
           end = workflow.index("\n          NODE", start)
           lines = workflow[start:end].splitlines()
-          Path('/tmp/h-earth-fp03-execute.mjs').write_text('\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n')
+          script = '\n'.join(line[10:] if line.startswith('          ') else line for line in lines) + '\n'
+          prior = "eq(source.outwardProbe.probe,apron)"
+          corrected = "eq(source.outwardProbe.probe,{x:apron.x,z:apron.z})"
+          if prior not in script:
+              raise SystemExit('FP03_APRON_RECORD_SHAPE_CORRECTION_TARGET_NOT_FOUND')
+          script = script.replace(prior, corrected, 1)
+          Path('/tmp/h-earth-fp03-execute.mjs').write_text(script)
           PY
           cd /tmp/h-earth-fp03
           mkdir -p fp03-evidence
           node /tmp/h-earth-fp03-execute.mjs
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          script = Path('/tmp/h-earth-fp03-execute.mjs').read_bytes()
+          record = {
+            'correctionId': 'FP03_CURRENT_APRON_COORDINATE_RECORD_SHAPE_CORRECTION_v1',
+            'scope': 'TEMPORARY_EXECUTION_VERIFIER_ONLY',
+            'priorComparison': 'SOURCE_COORDINATE_RECORD_VS_ENRICHED_DURABLE_APRON_RECORD',
+            'correctedComparison': 'SOURCE_COORDINATE_RECORD_VS_DURABLE_APRON_XZ_PROJECTION',
+            'terrainOrPlacementAuthorityChanged': False,
+            'validatorScriptSha256': hashlib.sha256(script).hexdigest()
+          }
+          Path('fp03-evidence/fp03-verifier-correction-custody.json').write_text(json.dumps(record, indent=2) + '\n')
+          PY
       - name: Upload FP-03 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gratitude-region-fp03-execution-evidence
+          name: h-earth-gratitude-region-fp03-execution-evidence-corrected
           path: /tmp/h-earth-fp03/fp03-evidence
           if-no-files-found: error
           retention-days: 90

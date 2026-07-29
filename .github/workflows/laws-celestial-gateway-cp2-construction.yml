@@ -25,6 +25,31 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
+          import subprocess
+
+          base = '0bf5bcd63132d92fa6a4758a4f57ef2a6f524038'
+          candidate = 'f682d6f99ba35629edb25c367d4b4c2dfdbeb529'
+          paths = [
+              'laws/index.controller.js',
+              'laws/index.crystals.js',
+              'laws/index.css',
+              'laws/index.html',
+              'laws/index.interactions.js',
+              'laws/research/index.html',
+              'laws/test/index.html',
+          ]
+
+          subprocess.run(['git', 'reset', '--hard', base], check=True)
+          subprocess.run(['git', 'checkout', candidate, '--', *paths], check=True)
+
+          changed = subprocess.check_output(
+              ['git', 'diff', '--name-only', base],
+              text=True,
+          ).splitlines()
+          if changed != paths:
+              raise SystemExit(
+                  'CP2_CANDIDATE_PATH_SET_INVALID:' + ','.join(changed)
+              )
 
           path = Path('laws/index.crystals.js')
           text = path.read_text(encoding='utf-8')
@@ -80,6 +105,10 @@ jobs:
 
           text = text.replace(old, new, 1)
 
+          start = text.index('  function buildRegistry() {')
+          end = text.index('  function clusterAnchorVector() {', start)
+          segment = text[start:end]
+
           required = [
               'return registry;',
               'function constellationAnchorVector()',
@@ -88,24 +117,29 @@ jobs:
               'RECEIPT.lawCount =',
               'RECEIPT.canonicalSemanticLawCount =',
           ]
-          missing = [item for item in required if item not in text]
-          if missing:
-              raise SystemExit('CP2_REGISTRY_REPAIR_MISSING:' + ','.join(missing))
+          invalid = [item for item in required if segment.count(item) != 1]
+          if invalid:
+              raise SystemExit(
+                  'CP2_REGISTRY_REPAIR_INVALID:' + ','.join(invalid)
+              )
 
           path.write_text(text, encoding='utf-8')
+          print('CP2_CANDIDATE_PATH_SET=PASS')
           print('CP2_REGISTRY_REPAIR_SOURCE_ASSERTIONS=PASS')
           PY
 
           node --check laws/index.crystals.js
           git diff --check
 
-          test "$(git diff --name-only)" = "laws/index.crystals.js"
+          test "$(git diff --name-only 0bf5bcd63132d92fa6a4758a4f57ef2a6f524038 | tr '\n' ',' | sed 's/,$//')" = "laws/index.controller.js,laws/index.crystals.js,laws/index.css,laws/index.html,laws/index.interactions.js,laws/research/index.html,laws/test/index.html"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add laws/index.crystals.js
+          git add laws/index.controller.js laws/index.crystals.js laws/index.css laws/index.html laws/index.interactions.js laws/research/index.html laws/test/index.html
           git commit -m "Restore Laws crystal registry finalization"
-          git push origin HEAD:agent/laws-celestial-gateway-auxiliary-clusters-cp2-001
+          git push --force-with-lease origin HEAD:agent/laws-celestial-gateway-auxiliary-clusters-cp2-001
 
           echo "REPAIRED_CANDIDATE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
           echo "CHECKPOINT_2_REGISTRY_REPAIR=PASS" >> "$GITHUB_STEP_SUMMARY"
+          echo "CHECKPOINT_3_STARTED=FALSE" >> "$GITHUB_STEP_SUMMARY"
+          echo "MAIN_MUTATION=FALSE" >> "$GITHUB_STEP_SUMMARY"

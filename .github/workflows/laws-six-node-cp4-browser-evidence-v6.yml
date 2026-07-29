@@ -1,0 +1,168 @@
+name: Laws Six-Node CP4 Browser Evidence v6
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-six-node-cp4-browser-evidence-v6
+  cancel-in-progress: false
+
+jobs:
+  browser-verification:
+    if: github.event.pull_request.head.ref == 'agent/laws-six-node-cp4-browser-verification-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out verifier custody
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: verification-branch
+          persist-credentials: false
+
+      - name: Build accepted v5 harness and replace activation mechanism
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cp4
+          python3 - <<'PY'
+          from pathlib import Path
+
+          workflow = Path('verification-branch/.github/workflows/laws-six-node-cp4-browser-evidence-v5.yml').read_text()
+          start_marker = "          python3 - <<'PY'\n"
+          end_marker = "          PY\n"
+          start = workflow.index(start_marker) + len(start_marker)
+          end = workflow.index(end_marker, start)
+          builder_lines = workflow[start:end].splitlines()
+          builder = '\n'.join(line[10:] if line.startswith('          ') else line for line in builder_lines) + '\n'
+          Path('/tmp/cp4/build_harness.py').write_text(builder)
+          PY
+          python3 /tmp/cp4/build_harness.py
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('/tmp/cp4/run.mjs')
+          source = path.read_text()
+          old = 'await page.evaluate(expected => document.querySelector(`[data-laws-projected-category-label="${expected}"]`)?.focus(), direction);\n  await page.keyboard.press("Enter");'
+          new = 'await page.evaluate(expected => document.querySelector(`[data-laws-projected-category-label="${expected}"]`)?.click(), direction);'
+          count = source.count(old)
+          if count != 1:
+              raise SystemExit(f'CP4_NATIVE_CLICK_REPLACEMENT_INVALID:{count}')
+          path.write_text(source.replace(old, new, 1))
+          PY
+          node --check /tmp/cp4/run.mjs
+
+      - name: Check out corrected Laws candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-fifth-test-star-reversible-admissibility-cp1-001
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify bounded corrected candidate
+        shell: bash
+        working-directory: candidate
+        run: |
+          set -euo pipefail
+          base=343b0c269dd343a57c6ecb7e785141134cc5660f
+          checkpoint3=8607693d75fffed5a8a85c42b8fdc28fff0b0554
+          marker='el.style.setProperty("transform","translate(-50%, -50%)","important")'
+          grep -Fq "$marker" laws/index.interactions.js
+          git merge-base --is-ancestor "$base" HEAD
+          git merge-base --is-ancestor "$checkpoint3" HEAD
+          test "$(git rev-list --count "$checkpoint3"..HEAD)" = "2"
+          git diff --name-only "$base"...HEAD | sort > /tmp/cp4-paths.txt
+          cat > /tmp/cp4-expected-paths.txt <<'EOF'
+          laws/index.controller.js
+          laws/index.crystals.js
+          laws/index.css
+          laws/index.html
+          laws/index.interactions.js
+          laws/research/index.html
+          laws/test/index.html
+          EOF
+          diff -u /tmp/cp4-expected-paths.txt /tmp/cp4-paths.txt
+          test "$(git diff --name-only "$checkpoint3"...HEAD)" = "laws/index.interactions.js"
+          node --check laws/index.controller.js
+          node --check laws/index.interactions.js
+          node --check laws/index.crystals.js
+          git diff --check "$base"...HEAD
+          test -z "$(find .github/workflows -maxdepth 1 -type f -name '*cp4*' -print 2>/dev/null || true)"
+          echo "CORRECTED_CANDIDATE_HEAD=$(git rev-parse HEAD)"
+
+      - name: Install Chromium execution harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/cp4
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute complete desktop and mobile corridor
+        shell: bash
+        env:
+          CP4_BASE_URL: http://127.0.0.1:4173
+          CP4_BASE_MAIN: 343b0c269dd343a57c6ecb7e785141134cc5660f
+          CP4_EVIDENCE_DIR: ${{ github.workspace }}/cp4-evidence-v6
+        run: |
+          set -euo pipefail
+          cd candidate
+          export CP4_CANDIDATE_HEAD="$(git rev-parse HEAD)"
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/cp4-server-v6.log 2>&1 &
+          server_pid=$!
+          trap 'kill ${server_pid} 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null
+          cd /tmp/cp4
+          node run.mjs
+
+      - name: Record corrected source identities
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p cp4-evidence-v6
+          cd candidate
+          {
+            echo "CANDIDATE_HEAD=$(git rev-parse HEAD)"
+            echo "BASE_MAIN=343b0c269dd343a57c6ecb7e785141134cc5660f"
+            echo "CHECKPOINT_3_HEAD=8607693d75fffed5a8a85c42b8fdc28fff0b0554"
+            for path in \
+              laws/index.html \
+              laws/index.controller.js \
+              laws/index.interactions.js \
+              laws/index.crystals.js \
+              laws/index.css \
+              laws/test/index.html \
+              laws/research/index.html; do
+              printf '%s\t%s\t%s\n' "$path" "$(git hash-object "$path")" "$(wc -c < "$path" | tr -d ' ')"
+            done
+          } > ../cp4-evidence-v6/source-identities.tsv
+          cp /tmp/cp4-server-v6.log ../cp4-evidence-v6/server.log || true
+          git status --short --untracked-files=all > ../cp4-evidence-v6/candidate-worktree-status.txt
+
+      - name: Upload Checkpoint 4 evidence v6
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-six-node-cp4-browser-evidence-v6
+          path: cp4-evidence-v6
+          if-no-files-found: error
+          retention-days: 30

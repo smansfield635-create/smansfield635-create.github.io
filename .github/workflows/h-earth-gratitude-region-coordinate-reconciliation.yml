@@ -1,7 +1,7 @@
 name: H-Earth Gratitude Region Coordinate Reconciliation
 
 # Isolated validation trigger for bounded GR-CR sections.
-# GR-CR-03 corrected-search validation trigger.
+# GR-CR-04 Cavern Precinct read-only reconciliation trigger.
 on:
   push:
     branches:
@@ -56,6 +56,14 @@ jobs:
           node h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.runner.mjs \
             2>&1 | tee /tmp/h-earth-gr-cr-manor.log
 
+      - name: Execute bounded Cavern Precinct reconciliation
+        env:
+          H_EARTH_GR_CR_CAVERN_RECEIPT: /tmp/h-earth-gr-cr-cavern-receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gr-cr-cavern.log
+
       - name: Verify emitted checkpoint receipts
         run: |
           node --input-type=module <<'NODE'
@@ -63,7 +71,8 @@ jobs:
           const receiptPaths = [
             '/tmp/h-earth-gr-cr-receipt.json',
             '/tmp/h-earth-gr-cr-entry-receipt.json',
-            '/tmp/h-earth-gr-cr-manor-receipt.json'
+            '/tmp/h-earth-gr-cr-manor-receipt.json',
+            '/tmp/h-earth-gr-cr-cavern-receipt.json'
           ];
           for (const receiptPath of receiptPaths) {
             if (!fs.existsSync(receiptPath)) process.exit(1);
@@ -91,5 +100,7 @@ jobs:
             /tmp/h-earth-gr-cr-entry-receipt.json
             /tmp/h-earth-gr-cr-manor.log
             /tmp/h-earth-gr-cr-manor-receipt.json
+            /tmp/h-earth-gr-cr-cavern.log
+            /tmp/h-earth-gr-cr-cavern-receipt.json
           if-no-files-found: warn
           retention-days: 30

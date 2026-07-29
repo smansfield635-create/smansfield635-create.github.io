@@ -14,9 +14,10 @@ import { fileURLToPath } from 'node:url';
 // Run 8E-R1 profiler, executed R1 repository-package evidence, the
 // reference-device/mobile-compatibility scope correction, the R1
 // reference-device material-ledger preservation and execution overlays, the
-// complete nonfinal Gratitude Region coordinate-reconciliation package, and
-// its exact Mirror Manor runner occurrence-identity correction.
-import registryFacade from './accepted-amendments/h-earth.repository-registry.gratitude-region-coordinate-reconciliation-occurrence-correction.js';
+// complete nonfinal Gratitude Region coordinate-reconciliation package, its
+// exact Mirror Manor runner occurrence-identity correction, and its
+// controlling-artifact active-main reference amendment.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.gratitude-region-controlling-artifact-reference-update.js';
 import {
   deepFreeze,
   H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY

@@ -131,6 +131,12 @@ for (const profile of profiles) {
     };
   }, stateLabel, visible.toString());
 
+  const waitForSingleLawLabel = () => page.waitForFunction(visibleSource => {
+    const isVisible = eval(`(${visibleSource})`);
+    const labels = [...document.querySelectorAll("[data-laws-projected-law-label]")];
+    return labels.filter(isVisible).length === 1 && labels.filter(element => isVisible(element) && element.dataset.primary === "true").length === 1;
+  }, { timeout: 15000 }, visible.toString());
+
   const initial = await inspect("INITIAL");
   assert([200, 304].includes(response?.status()), "LAWS_ROUTE_STATUS_INVALID", response?.status(), profile.id);
   assert(initial.controllerAvailable, "LAWS_CONTROLLER_RUNTIME_MISSING", initial, profile.id);
@@ -145,7 +151,8 @@ for (const profile of profiles) {
 
   await page.evaluate(() => globalThis.DGB_LAWS_CONTROLLER.requestCategorySelection("flow"));
   await page.waitForFunction(() => document.querySelector("[data-laws-root]")?.dataset.lawsControllerState === "CLUSTER_OPEN", { timeout: 15000 });
-  await sleep(650);
+  await waitForSingleLawLabel();
+  await sleep(150);
   const cluster = await inspect("CLUSTER_OPEN");
   assert(cluster.categoryVisibleCount === 0, "CATEGORY_LABEL_VISIBLE_IN_CLUSTER", cluster, profile.id);
   assert(cluster.lawVisibleCount === 1 && cluster.lawPrimaryCount === 1, "CLUSTER_VISIBLE_LABEL_COUNT_INVALID", cluster, profile.id);
@@ -159,7 +166,8 @@ for (const profile of profiles) {
     return id;
   });
   await page.waitForFunction(() => document.querySelector("[data-laws-root]")?.dataset.lawsControllerState === "LAW_SELECTED", { timeout: 15000 });
-  await sleep(450);
+  await waitForSingleLawLabel();
+  await sleep(150);
   const selected = await inspect("LAW_SELECTED");
   assert(Boolean(selectedId), "PRIMARY_LAW_ID_MISSING", selectedId, profile.id);
   assert(selected.lawVisibleCount === 1 && selected.lawPrimaryCount === 1, "SELECTED_LAW_LABEL_COUNT_INVALID", selected, profile.id);
@@ -169,7 +177,8 @@ for (const profile of profiles) {
 
   await page.click("[data-laws-return-to-orbit]");
   await page.waitForFunction(() => document.querySelector("[data-laws-root]")?.dataset.lawsControllerState === "CLUSTER_OPEN", { timeout: 15000 });
-  await sleep(350);
+  await waitForSingleLawLabel();
+  await sleep(150);
   const returned = await inspect("RETURNED_TO_ORBIT");
   assert(returned.lawVisibleCount === 1 && returned.lawPrimaryCount === 1, "RETURNED_CLUSTER_LABEL_COUNT_INVALID", returned, profile.id);
   assert(!returned.returnVisible, "RETURN_CONTROL_REMAINS_VISIBLE_AFTER_RETURN", returned, profile.id);

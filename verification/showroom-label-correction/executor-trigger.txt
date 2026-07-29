@@ -1,2 +1,2 @@
 Temporary same-repository pull-request trigger for the bounded Showroom label applicator.
-Retry 2 after generated-file sentinel correction.
+Retry 3 after workflow-file push isolation.

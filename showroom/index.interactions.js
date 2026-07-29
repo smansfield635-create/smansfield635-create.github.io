@@ -4,6 +4,7 @@
 /* SHOWROOM_COMPLETE_QUATERNION_INTERACTIONS_TNT_v6_COMPASS_SEMANTIC_RECOVERY_INITIALIZATION_GATE_CORRECTED */
 /* SHOWROOM_CENTER_HIT_PROJECTED_LABELS_20260726A */
 /* SHOWROOM_LABEL_CONTAINMENT_20260726B */
+/* SHOWROOM_LABEL_HIERARCHY_PRIMARY_ONLY_20260729A */
 
 (() => { 
   "use strict";
@@ -280,10 +281,17 @@
   ]);
 
   const CARDINAL_DISPLAY_LABELS = Object.freeze({
-    north: "N · Story",
-    east: "E · Characters",
-    south: "S · Wonders",
-    west: "W · Mysteries"
+    north: "Story",
+    east: "Characters",
+    south: "Wonders",
+    west: "Mysteries"
+  });
+
+  const CARDINAL_DISPLAY_LETTERS = Object.freeze({
+    north: "N",
+    east: "E",
+    south: "S",
+    west: "W"
   });
 
   const ROOM_DISPLAY_LABELS = Object.freeze({
@@ -1592,6 +1600,59 @@
     return layer;
   }
 
+  function syncProjectedLabelContent(
+    element,
+    kind,
+    identity,
+    label
+  ) {
+    if (kind === SEMANTIC_KINDS.CARDINAL) {
+      let letter =
+        element.querySelector(
+          "[data-showroom-projected-cardinal-letter]"
+        );
+      let word =
+        element.querySelector(
+          "[data-showroom-projected-cardinal-word]"
+        );
+
+      if (!letter || !word) {
+        element.replaceChildren();
+
+        letter = document.createElement("span");
+        letter.className =
+          "showroom-projected-label__cardinal-letter";
+        letter.dataset.showroomProjectedCardinalLetter = identity;
+        letter.setAttribute("aria-hidden", "true");
+
+        word = document.createElement("span");
+        word.className =
+          "showroom-projected-label__cardinal-word";
+        word.dataset.showroomProjectedCardinalWord = identity;
+
+        element.append(letter, word);
+      }
+
+      letter.textContent =
+        CARDINAL_DISPLAY_LETTERS[identity] || "";
+      word.textContent = label;
+      element.dataset.showroomProjectedContentModel =
+        "compass-family-letter-word";
+      return;
+    }
+
+    if (
+      element.dataset.showroomProjectedContentModel !==
+      "cluster-primary-only"
+    ) {
+      element.replaceChildren();
+    }
+
+    element.textContent = label;
+    element.dataset.showroomProjectedContentModel =
+      "cluster-primary-only";
+  }
+
   function syncProjectedLabels() {
     state.projectedLabelFrame = 0;
 
@@ -1627,6 +1688,23 @@
     const rect = state.orbitField.getBoundingClientRect();
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
+    const constellationPrimary = normalizeWing(
+      frame && frame.orbitGestureActive
+        ? frame.orbitPreviewFocus
+        : frame && frame.orbitFocus
+    );
+    const clusterPrimary = normalizeRoomId(
+      frame && frame.cluster
+        ? frame.cluster.gestureActive
+          ? frame.cluster.previewPrimaryRoom
+          : frame.cluster.primaryRoom
+        : ""
+    );
+
+    layer.dataset.showroomProjectedLabelMode =
+      normalizeLower(mode);
+    layer.dataset.showroomProjectedClusterModel =
+      "primary-only";
 
     for (const record of records) {
       if (!record || record.visible === false) {
@@ -1650,7 +1728,10 @@
 
       if (
         mode === PRESENTATION_MODES.CLUSTER &&
-        kind !== SEMANTIC_KINDS.ROOM
+        (
+          kind !== SEMANTIC_KINDS.ROOM ||
+          identity !== clusterPrimary
+        )
       ) {
         continue;
       }
@@ -1671,48 +1752,75 @@
         state.projectedLabels.set(identity, element);
       }
 
+      syncProjectedLabelContent(
+        element,
+        kind,
+        identity,
+        label
+      );
+
       const x = Number(record.x);
       const y = Number(record.y);
       const radius = Math.max(0, Number(record.radiusPx) || 0);
       const dx = x - centerX;
       const dy = y - centerY;
       const magnitude = Math.hypot(dx, dy) || 1;
-      const offset =
+      const roomOffset =
+        Math.min(30, Math.max(17, radius * 0.24 + 8));
+      const candidateLeft =
         kind === SEMANTIC_KINDS.CARDINAL
-          ? Math.min(48, Math.max(26, radius * 0.30 + 10))
-          : Math.min(30, Math.max(17, radius * 0.24 + 8));
-      const candidateLeft = x - (dx / magnitude) * offset;
-      const candidateTop = y - (dy / magnitude) * offset;
+          ? x
+          : x - (dx / magnitude) * roomOffset;
+      const candidateTop =
+        kind === SEMANTIC_KINDS.CARDINAL
+          ? y
+          : y - (dy / magnitude) * roomOffset;
       const depth = normalizeLower(record.depthLayer) || "unknown";
       const primary =
         kind === SEMANTIC_KINDS.CARDINAL
-          ? identity === normalizeWing(frame && frame.orbitFocus)
-          : identity === normalizeRoomId(
-              frame && frame.cluster
-                ? frame.cluster.primaryRoom
-                : ""
-            );
+          ? identity === constellationPrimary
+          : identity === clusterPrimary;
 
-      element.textContent = label;
       element.hidden = false;
       element.dataset.showroomProjectedKind = kind;
       element.dataset.showroomProjectedDepth = depth;
       element.dataset.showroomProjectedPrimary = primary ? "true" : "false";
-      element.dataset.showroomProjectedPlacement = "inward-edge-constrained";
+      element.dataset.showroomProjectedPlacement =
+        kind === SEMANTIC_KINDS.CARDINAL
+          ? "star-center-protected-letter-word"
+          : "inward-edge-primary-only";
       element.style.visibility = "hidden";
       element.style.left = "0px";
       element.style.top = "0px";
 
       const labelRect = element.getBoundingClientRect();
-      const labelWidth = Math.max(1, labelRect.width || element.offsetWidth || 1);
-      const labelHeight = Math.max(1, labelRect.height || element.offsetHeight || 1);
+      const labelWidth = Math.max(
+        1,
+        labelRect.width || element.offsetWidth || 1
+      );
+      const labelHeight = Math.max(
+        1,
+        labelRect.height || element.offsetHeight || 1
+      );
       const safeInset = kind === SEMANTIC_KINDS.CARDINAL ? 10 : 8;
       const minLeft = safeInset + labelWidth / 2;
-      const maxLeft = Math.max(minLeft, rect.width - safeInset - labelWidth / 2);
+      const maxLeft = Math.max(
+        minLeft,
+        rect.width - safeInset - labelWidth / 2
+      );
       const minTop = safeInset + labelHeight / 2;
-      const maxTop = Math.max(minTop, rect.height - safeInset - labelHeight / 2);
-      const left = Math.min(maxLeft, Math.max(minLeft, candidateLeft));
-      const top = Math.min(maxTop, Math.max(minTop, candidateTop));
+      const maxTop = Math.max(
+        minTop,
+        rect.height - safeInset - labelHeight / 2
+      );
+      const left = Math.min(
+        maxLeft,
+        Math.max(minLeft, candidateLeft)
+      );
+      const top = Math.min(
+        maxTop,
+        Math.max(minTop, candidateTop)
+      );
       const clamped =
         Math.abs(left - candidateLeft) > 0.5 ||
         Math.abs(top - candidateTop) > 0.5;

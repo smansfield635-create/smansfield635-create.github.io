@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   reconcile-gratitude-region:
@@ -93,6 +93,24 @@ jobs:
           const durable = 'h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region.four-area-coordinate-reconciliation.candidate.v1.json';
           if (fs.existsSync(durable) && fs.readFileSync(durable, 'utf8') !== fs.readFileSync(receiptPath, 'utf8')) process.exit(1);
           NODE
+
+      - name: Persist executed candidate receipt on branch
+        if: github.event_name == 'push' && github.ref_name == 'agent/h-earth-gratitude-region-four-area-coordinate-reconciliation-001'
+        run: |
+          set -euo pipefail
+          durable='h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region.four-area-coordinate-reconciliation.candidate.v1.json'
+          receipt='/tmp/h-earth-gratitude-region-coordinate-reconciliation.receipt.json'
+          if [ -f "$durable" ]; then
+            cmp --silent "$durable" "$receipt"
+            echo 'DURABLE_CANDIDATE_ALREADY_VERIFIED=true'
+            exit 0
+          fi
+          cp "$receipt" "$durable"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$durable"
+          git commit -m 'Persist Gratitude Region coordinate candidates'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 
       - name: Upload coordinate-reconciliation evidence
         if: always()

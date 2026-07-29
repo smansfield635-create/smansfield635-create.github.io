@@ -1,0 +1,57 @@
+name: Laws Compass FIRST Correction PR Trigger
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/laws-compass-first-test-shell-correction-apply.yml"
+      - ".github/workflows/laws-compass-first-test-shell-correction-pr-trigger.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract and execute bounded applicator
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          source = Path('.github/workflows/laws-compass-first-test-shell-correction-apply.yml').read_text().splitlines()
+          start = next(i for i, line in enumerate(source) if "python3 <<'PY'" in line) + 1
+          end = next(i for i in range(start, len(source)) if source[i].strip() == 'PY')
+          body = []
+          for line in source[start:end]:
+              body.append(line[10:] if line.startswith('          ') else line)
+          Path('/tmp/laws-apply.py').write_text('\n'.join(body) + '\n')
+          PY
+          python3 /tmp/laws-apply.py
+          node --check laws/index.interactions.js
+          node --check laws/index.controller.js
+          node --check verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs
+          node --check verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs
+
+      - name: Commit correction and remove one-use workflows
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/laws-compass-first-test-shell-correction-apply.yml
+          git rm .github/workflows/laws-compass-first-test-shell-correction-pr-trigger.yml
+          git add laws/index.html laws/index.css laws/index.interactions.js laws/index.controller.js \
+            verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs \
+            verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs \
+            .github/workflows/metaverse-benchmark-four-compass-tool.yml \
+            .github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml
+          git commit -m "Reconcile Laws Compass FIRST labels and shell"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}

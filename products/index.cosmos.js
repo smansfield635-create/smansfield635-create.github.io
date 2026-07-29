@@ -1,7 +1,7 @@
 /* /products/index.cosmos.js
-   PRODUCTS_ARENA_CLUSTER_COSMOS_TRANSPLANT_v1
-   Page-local decorative cosmic field. No navigation, controller, geometry,
-   projection, selection, or settlement authority.
+   PRODUCTS_PAGE_WIDE_ARCHCOIN_COSMOS_v1
+   Decorative-only, fixed page-wide Fibonacci/phyllotaxis starfield.
+   No navigation, controller, geometry, projection, selection, or interaction authority.
 */
 (() => {
   "use strict";
@@ -18,25 +18,20 @@
 
   const CONFIG = Object.freeze({
     root: '[data-page-id="products"]',
-    scene: '[data-products-scene]',
     mount: '[data-products-cosmic-field]',
     mobileWidth: 820,
-    compactWidth: 560,
     mobileDprCap: 1,
     desktopDprCap: 1.25,
-    minimumStars: 56,
-    maximumStars: 116,
-    areaDivisor: 5700,
-    rogueRatio: 0.12,
-    candidateMultiplier: 8,
-    centerVoidRadiusX: 0.18,
-    centerVoidRadiusY: 0.18,
+    minimumStars: 86,
+    maximumStars: 190,
+    areaDivisor: 7600,
+    rogueRatio: 0.13,
     minimumSparkles: 4,
     maximumSparkles: 8,
-    firstBurstMinMs: 2200,
-    firstBurstMaxMs: 4200,
-    burstDelayMinMs: 1500,
-    burstDelayMaxMs: 3100,
+    firstBurstMinMs: 2600,
+    firstBurstMaxMs: 4600,
+    burstDelayMinMs: 1700,
+    burstDelayMaxMs: 3400,
     burstDurationMinMs: 620,
     burstDurationMaxMs: 980,
     sparkleFrameMs: 125
@@ -54,10 +49,8 @@
     destroyed: false,
     failed: false,
     documentVisible: !document.hidden,
-    sceneVisible: true,
     reducedMotion: false,
     root: null,
-    scene: null,
     mount: null,
     baseCanvas: null,
     overlayCanvas: null,
@@ -71,16 +64,13 @@
     activeSparkles: [],
     burstTimer: 0,
     frameTimer: 0,
-    resizeObserver: null,
-    intersectionObserver: null,
     motionQuery: null,
     baseDrawCount: 0,
     sparkleFrameCount: 0
   };
 
-  function clamp(value, min, max) {
-    return Math.min(max, Math.max(min, value));
-  }
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const randomBetween = (random, min, max) => min + random() * (max - min);
 
   function randomFactory(seed) {
     let value = seed >>> 0;
@@ -93,25 +83,23 @@
     };
   }
 
-  function randomBetween(random, min, max) {
-    return min + random() * (max - min);
-  }
-
   function buildReceipt(extra = {}) {
     return {
-      contract: "PRODUCTS_ARENA_CLUSTER_COSMOS_TRANSPLANT_v1",
+      contract: "PRODUCTS_PAGE_WIDE_ARCHCOIN_COSMOS_v1",
       module: MODULE,
-      renderingModel: "static-base-burst-overlay",
-      geometryModel: "golden-angle-square-root-center-void",
+      sourceModel: "ARCHCOIN_FIBONACCI_PHYLLOTAXIS_FIELD_v1",
+      renderingModel: "fixed-page-static-base-burst-overlay",
+      geometryModel: "golden-angle-square-root-jitter-with-rogue-stars",
       pageLocalIdentity: true,
       decorativeOnly: true,
-      sceneContained: true,
+      sceneContained: false,
+      fullViewportLayer: true,
+      localOrbitalRingsPreserved: true,
       initialized: state.initialized,
       destroyed: state.destroyed,
       failed: state.failed,
       reducedMotion: state.reducedMotion,
       documentVisible: state.documentVisible,
-      sceneVisible: state.sceneVisible,
       width: state.width,
       height: state.height,
       devicePixelRatio: state.dpr,
@@ -139,6 +127,7 @@
     if (state.root) {
       state.root.dataset.productsCosmosStatus = state.failed ? "held" : state.initialized ? "available" : "pending";
       state.root.dataset.productsCosmicFieldCount = state.initialized ? "1" : "0";
+      state.root.dataset.productsCosmosScope = "page-wide";
       state.root.dataset.productsCosmosReceipt = JSON.stringify(receipt);
     }
     const output = document.querySelector("[data-products-cosmos-receipt]");
@@ -167,13 +156,12 @@
   }
 
   function canRun() {
-    return state.initialized && !state.destroyed && !state.failed && state.documentVisible && state.sceneVisible && !state.reducedMotion;
+    return state.initialized && !state.destroyed && !state.failed && state.documentVisible && !state.reducedMotion;
   }
 
   function configureSize() {
-    const rect = state.mount.getBoundingClientRect();
-    state.width = Math.max(1, Math.round(rect.width));
-    state.height = Math.max(1, Math.round(rect.height));
+    state.width = Math.max(320, Math.round(globalThis.innerWidth || document.documentElement.clientWidth));
+    state.height = Math.max(480, Math.round(globalThis.innerHeight || document.documentElement.clientHeight));
     const cap = state.width <= CONFIG.mobileWidth ? CONFIG.mobileDprCap : CONFIG.desktopDprCap;
     state.dpr = Math.min(globalThis.devicePixelRatio || 1, cap);
 
@@ -183,7 +171,6 @@
       canvas.style.width = `${state.width}px`;
       canvas.style.height = `${state.height}px`;
     }
-
     state.baseContext.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
     state.overlayContext.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
   }
@@ -191,29 +178,23 @@
   function generateStars() {
     const random = randomFactory(FIELD_SEED ^ state.width ^ (state.height << 7));
     const count = clamp(Math.round((state.width * state.height) / CONFIG.areaDivisor), CONFIG.minimumStars, CONFIG.maximumStars);
-    const candidates = [];
-
-    for (let index = 0; index < count * CONFIG.candidateMultiplier; index += 1) {
-      const radius = Math.sqrt((index + 0.5) / (count * CONFIG.candidateMultiplier));
-      const angle = index * GOLDEN_ANGLE + randomBetween(random, -0.075, 0.075);
-      const x = 0.5 + Math.cos(angle) * radius * 0.59 + randomBetween(random, -0.015, 0.015);
-      const y = 0.5 + Math.sin(angle) * radius * 0.48 + randomBetween(random, -0.015, 0.015);
-      const dx = (x - 0.5) / CONFIG.centerVoidRadiusX;
-      const dy = (y - 0.5) / CONFIG.centerVoidRadiusY;
-      if (x < 0.015 || x > 0.985 || y < 0.015 || y > 0.985 || dx * dx + dy * dy < 1) continue;
-      candidates.push({
+    const stars = [];
+    for (let index = 0; index < count; index += 1) {
+      const radius = Math.sqrt((index + 0.5) / count);
+      const angle = index * GOLDEN_ANGLE + randomBetween(random, -0.08, 0.08);
+      const x = clamp(0.5 + Math.cos(angle) * radius * 0.69 + randomBetween(random, -0.018, 0.018), 0.012, 0.988);
+      const y = clamp(0.5 + Math.sin(angle) * radius * 0.63 + randomBetween(random, -0.018, 0.018), 0.012, 0.988);
+      stars.push({
         x,
         y,
-        radius: randomBetween(random, 0.45, 1.5),
-        alpha: randomBetween(random, 0.28, 0.88),
+        radius: randomBetween(random, 0.42, 1.55),
+        alpha: randomBetween(random, 0.24, 0.82),
         color: COLORS[Math.floor(random() * COLORS.length)],
         rogue: random() < CONFIG.rogueRatio
       });
-      if (candidates.length >= count) break;
     }
-
-    state.stars = candidates;
-    state.sparkles = candidates.filter(star => star.rogue).slice(0, CONFIG.maximumSparkles * 2);
+    state.stars = stars;
+    state.sparkles = stars.filter(star => star.rogue).slice(0, CONFIG.maximumSparkles * 3);
   }
 
   function drawStar(context, star, alpha = star.alpha, scale = 1) {
@@ -242,7 +223,7 @@
     for (const item of state.activeSparkles) {
       const progress = clamp(1 - (item.endsAt - now) / item.duration, 0, 1);
       const pulse = Math.sin(progress * Math.PI);
-      drawStar(state.overlayContext, item.star, item.star.alpha * pulse, 1 + pulse * 1.8);
+      drawStar(state.overlayContext, item.star, item.star.alpha * pulse, 1 + pulse * 1.9);
     }
     state.sparkleFrameCount += 1;
     if (!state.activeSparkles.length) {
@@ -259,63 +240,68 @@
     const delay = first
       ? randomBetween(random, CONFIG.firstBurstMinMs, CONFIG.firstBurstMaxMs)
       : randomBetween(random, CONFIG.burstDelayMinMs, CONFIG.burstDelayMaxMs);
-    state.burstTimer = setTimeout(() => {
-      if (!canRun()) return;
-      const count = clamp(Math.round(randomBetween(random, CONFIG.minimumSparkles, CONFIG.maximumSparkles)), 1, state.sparkles.length || 1);
-      const shuffled = [...state.sparkles].sort(() => random() - 0.5).slice(0, count);
+    state.burstTimer = globalThis.setTimeout(() => {
+      if (!canRun() || !state.sparkles.length) return;
+      const quantity = clamp(Math.floor(randomBetween(random, CONFIG.minimumSparkles, CONFIG.maximumSparkles + 1)), 1, state.sparkles.length);
+      const pool = [...state.sparkles].sort(() => random() - 0.5).slice(0, quantity);
       const now = performance.now();
-      state.activeSparkles = shuffled.map(star => {
+      state.activeSparkles = pool.map(star => {
         const duration = randomBetween(random, CONFIG.burstDurationMinMs, CONFIG.burstDurationMaxMs);
         return { star, duration, endsAt: now + duration };
       });
-      if (!state.frameTimer) state.frameTimer = setInterval(drawSparkles, CONFIG.sparkleFrameMs);
+      if (!state.frameTimer) state.frameTimer = globalThis.setInterval(drawSparkles, CONFIG.sparkleFrameMs);
       scheduleBurst(false);
     }, delay);
   }
 
-  function stop() {
-    clearTimeout(state.burstTimer);
-    state.burstTimer = 0;
-    clearInterval(state.frameTimer);
-    state.frameTimer = 0;
-    state.activeSparkles = [];
-    if (state.overlayContext) state.overlayContext.clearRect(0, 0, state.width, state.height);
-  }
-
   function resize() {
-    if (!state.mount) return;
+    if (!state.initialized || state.destroyed) return;
     configureSize();
     generateStars();
     drawBase();
-    stop();
-    scheduleBurst(true);
-    publish({ lastAction: "cosmos-resized" });
+    publish({ lastAction: "resize" });
+  }
+
+  function stop() {
+    clearTimeout(state.burstTimer);
+    clearInterval(state.frameTimer);
+    state.burstTimer = 0;
+    state.frameTimer = 0;
+    state.activeSparkles = [];
+    state.overlayContext?.clearRect(0, 0, state.width, state.height);
   }
 
   function destroy() {
+    if (state.destroyed) return;
     stop();
-    state.resizeObserver?.disconnect();
-    state.intersectionObserver?.disconnect();
+    state.destroyed = true;
+    globalThis.removeEventListener("resize", resize);
+    document.removeEventListener("visibilitychange", onVisibility);
     state.motionQuery?.removeEventListener?.("change", onMotion);
     state.baseCanvas?.remove();
     state.overlayCanvas?.remove();
-    state.destroyed = true;
-    publish({ lastAction: "cosmos-destroyed" });
+    publish({ lastAction: "destroy" });
+  }
+
+  function onVisibility() {
+    state.documentVisible = !document.hidden;
+    if (canRun()) scheduleBurst(true);
+    else stop();
+    publish({ lastAction: "visibility" });
   }
 
   function onMotion() {
     resolveReducedMotion();
-    stop();
-    if (!state.reducedMotion) scheduleBurst(true);
-    publish({ lastAction: "reduced-motion-changed" });
+    if (canRun()) scheduleBurst(true);
+    else stop();
+    publish({ lastAction: "motion-policy" });
   }
 
   function initialize() {
     try {
       state.root = document.querySelector(CONFIG.root);
-      state.scene = document.querySelector(CONFIG.scene);
       state.mount = document.querySelector(CONFIG.mount);
-      if (!state.root || !state.scene || !state.mount) throw new Error("PRODUCTS_COSMOS_SURFACE_NOT_FOUND");
+      if (!state.root || !state.mount) throw new Error("PRODUCTS_PAGE_WIDE_COSMOS_SURFACE_NOT_FOUND");
 
       state.baseCanvas = state.mount.querySelector(`[${CANVAS_ATTR}="base"]`) || makeCanvas("base");
       state.overlayCanvas = state.mount.querySelector(`[${CANVAS_ATTR}="sparkle"]`) || makeCanvas("sparkle");
@@ -324,47 +310,27 @@
 
       state.baseContext = state.baseCanvas.getContext("2d", { alpha: true, desynchronized: true });
       state.overlayContext = state.overlayCanvas.getContext("2d", { alpha: true, desynchronized: true });
-      if (!state.baseContext || !state.overlayContext) throw new Error("PRODUCTS_COSMOS_CONTEXT_UNAVAILABLE");
+      if (!state.baseContext || !state.overlayContext) throw new Error("PRODUCTS_PAGE_WIDE_COSMOS_CONTEXT_UNAVAILABLE");
 
       state.motionQuery = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)") || null;
-      state.motionQuery?.addEventListener?.("change", onMotion);
       resolveReducedMotion();
-
-      state.resizeObserver = new ResizeObserver(resize);
-      state.resizeObserver.observe(state.mount);
-
-      state.intersectionObserver = new IntersectionObserver(entries => {
-        state.sceneVisible = entries.some(entry => entry.isIntersecting);
-        stop();
-        if (canRun()) scheduleBurst(true);
-        publish({ lastAction: "scene-visibility-changed" });
-      }, { threshold: 0.01 });
-      state.intersectionObserver.observe(state.scene);
-
-      document.addEventListener("visibilitychange", () => {
-        state.documentVisible = !document.hidden;
-        stop();
-        if (canRun()) scheduleBurst(true);
-        publish({ lastAction: "document-visibility-changed" });
-      });
+      configureSize();
+      generateStars();
+      drawBase();
 
       state.initialized = true;
-      resize();
-      publish({ lastAction: "cosmos-initialized" });
-      globalThis.dispatchEvent(new CustomEvent(READY_EVENT, { detail: globalThis[RECEIPT_KEY] }));
+      globalThis[MODULE] = Object.freeze({ initialized: true, resize, stop, destroy, receipt: () => Object.freeze(buildReceipt()) });
+      globalThis.addEventListener("resize", resize, { passive: true });
+      document.addEventListener("visibilitychange", onVisibility);
+      state.motionQuery?.addEventListener?.("change", onMotion);
+
+      const receipt = publish({ lastAction: "initialized" });
+      if (canRun()) scheduleBurst(true);
+      globalThis.dispatchEvent(new CustomEvent(READY_EVENT, { detail: receipt }));
     } catch (error) {
       fail(error);
     }
   }
-
-  globalThis[MODULE] = Object.freeze({
-    initialized: false,
-    start: () => scheduleBurst(true),
-    stop,
-    resize,
-    destroy,
-    receipt: () => Object.freeze(buildReceipt())
-  });
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
   else initialize();

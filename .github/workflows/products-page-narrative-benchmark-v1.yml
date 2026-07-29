@@ -44,10 +44,17 @@ jobs:
           set -euo pipefail
           git diff --name-only "${{ github.event.pull_request.base.sha || github.event.before }}" "${{ github.sha }}" > /tmp/products-page-changed-paths.txt || true
           cat /tmp/products-page-changed-paths.txt
-          if grep -E '^products/(index\.controller\.js|index\.crystals\.js|index\.compositor\.js|index\.planet\.js|index\.cosmos\.js|index\.compass\.css)$' /tmp/products-page-changed-paths.txt; then
-            echo "Frozen compass authority changed in page-only lane" >&2
+          if grep -E '^products/(index\.controller\.js|index\.crystals\.js|index\.compositor\.js|index\.planet\.js|index\.compass\.css)$' /tmp/products-page-changed-paths.txt; then
+            echo "Frozen compass authority changed in page correction lane" >&2
             exit 1
           fi
+
+      - name: Reject one-off narrative stylesheet
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -e products/index.narrative.css
+          ! grep -q '/products/index.narrative.css' products/index.html
 
       - name: Start branch-local static server
         shell: bash

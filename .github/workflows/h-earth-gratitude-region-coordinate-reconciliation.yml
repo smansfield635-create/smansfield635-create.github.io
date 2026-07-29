@@ -1,0 +1,105 @@
+name: H-Earth Gratitude Region Coordinate Reconciliation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-gratitude-region-four-area-coordinate-reconciliation-001
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile-gratitude-region:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out coordinate-reconciliation branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify bounded changed-path scope
+        run: |
+          set -euo pipefail
+          git diff --name-only f24294725991be3f6e3f202cf275de52fb6065b5...HEAD > /tmp/gratitude-region-paths.txt
+          cat /tmp/gratitude-region-paths.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed = {
+              '.github/workflows/h-earth-gratitude-region-coordinate-reconciliation.yml',
+              'h-earth-3d/validation/h-earth.gratitude-region.four-area-coordinate-reconciliation.harness.mjs',
+              'h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region.four-area-coordinate-reconciliation.candidate.v1.json',
+          }
+          required = allowed
+          paths = {
+              line.strip()
+              for line in Path('/tmp/gratitude-region-paths.txt').read_text().splitlines()
+              if line.strip()
+          }
+          unexpected = sorted(paths - allowed)
+          missing = sorted(required - paths)
+          if unexpected:
+              raise SystemExit(f'UNEXPECTED_GRATITUDE_REGION_PATHS:{unexpected}')
+          if missing:
+              raise SystemExit(f'MISSING_GRATITUDE_REGION_PATHS:{missing}')
+          PY
+
+      - name: Execute four-area read-only coordinate reconciliation
+        env:
+          H_EARTH_GRATITUDE_RECEIPT: /tmp/h-earth-gratitude-region-coordinate-reconciliation.receipt.json
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.gratitude-region.four-area-coordinate-reconciliation.harness.mjs \
+            2>&1 | tee /tmp/h-earth-gratitude-region-coordinate-reconciliation.log
+
+      - name: Verify receipt and durable candidate package
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receiptPath = '/tmp/h-earth-gratitude-region-coordinate-reconciliation.receipt.json';
+          const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+          const requiredFalse = [
+            'broadTerrainMeasurementProgramAuthorized',
+            'finalCoordinatesAssigned',
+            'fourAreaEnvelopesAccepted',
+            'terrainMutationAuthorized',
+            'finalPlacementAuthorized',
+            'geometryConstructionAuthorized',
+            'gameplayChangeAuthorized',
+            'runtimeChangeAuthorized',
+            'publicRouteChangeAuthorized',
+            'productionChangeAuthorized',
+            'futureRegionConstructionAuthorized'
+          ];
+          if (receipt.status !== 'GRATITUDE_REGION_FOUR_AREA_READ_ONLY_COORDINATE_RECONCILIATION_PASS') process.exit(1);
+          if (receipt.eligible !== true) process.exit(1);
+          if (receipt.authorizationStatus !== 'AUTHORIZED_BOUNDED_READ_ONLY') process.exit(1);
+          if (receipt.areaCandidates?.length !== 4) process.exit(1);
+          if (Object.keys(receipt.routeCandidates ?? {}).length !== 5) process.exit(1);
+          if (!requiredFalse.every((key) => receipt.sourceHoldsPreserved?.[key] === false)) process.exit(1);
+          if (receipt.areaCandidates.some((area) => area.acceptedByManifest !== false)) process.exit(1);
+          if (!receipt.deterministicDigest || receipt.issues?.length !== 0) process.exit(1);
+          const durable = 'h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region.four-area-coordinate-reconciliation.candidate.v1.json';
+          if (!fs.existsSync(durable)) process.exit(1);
+          if (fs.readFileSync(durable, 'utf8') !== fs.readFileSync(receiptPath, 'utf8')) process.exit(1);
+          NODE
+
+      - name: Upload coordinate-reconciliation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-coordinate-reconciliation-evidence
+          path: |
+            /tmp/h-earth-gratitude-region-coordinate-reconciliation.log
+            /tmp/h-earth-gratitude-region-coordinate-reconciliation.receipt.json
+          if-no-files-found: error
+          retention-days: 30

@@ -431,6 +431,7 @@ function routeReservationAllowed(point, start, context) {
   return reasons.filter((reason) => {
     if (reason === 'ENTRY_ZONE_PRESERVATION_BUFFER' && distanceXZ(point, start) <= 36) return false;
     if (reason === 'MIRROR_MANOR_PRESERVATION_BUFFER' && distanceXZ(point, start) <= 36) return false;
+    if (reason === 'CAVERN_APPROACH_PRESERVATION_CORRIDOR' && distanceXZ(point, start) <= 32) return false;
     return true;
   });
 }

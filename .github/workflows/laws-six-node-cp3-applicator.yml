@@ -91,6 +91,13 @@ jobs:
           )
           path.write_text(source)
           print('PATCH1_DIRECT_NAV_FIRST_MATCH_NORMALIZATION=APPLIED')
+
+          source2 = Path('/tmp/patch2.py').read_text()
+          needle = 'crystals create cpu meshes'
+          index = source2.find(needle)
+          print('PATCH2_CPU_MESH_CONTEXT_BEGIN')
+          print(source2[max(0, index - 1800):index + 900])
+          print('PATCH2_CPU_MESH_CONTEXT_END')
           PY
           python -m py_compile /tmp/patch1.py /tmp/patch2.py /tmp/patch3.py
 

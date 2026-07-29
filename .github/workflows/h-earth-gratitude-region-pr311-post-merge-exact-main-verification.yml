@@ -82,14 +82,9 @@ jobs:
             printf '%s\t%s\t%s\n' "$package_path" "$expected_blob" "$active_blob" >> /tmp/pr311-active-package-blobs.tsv
           done < /tmp/pr311-package.tsv
 
-          awk -F '\t' '
-            $2 ~ /^showroom\/globe\/h-earth\//
-            || $2 ~ /^h-earth-3d\/terrain\//
-            || $2 ~ /^h-earth-3d\/objects\//
-            || $2 ~ /^h-earth-3d\/integration\//
-            || $2 ~ /^h-earth-3d\/render\//
-            || $2 ~ /^h-earth-3d\/runtime\// { print $2 }
-          ' /tmp/pr311-merge-delta.name-status > /tmp/pr311-product-paths.txt
+          cut -f2 /tmp/pr311-merge-delta.name-status \
+            | grep -E '^(showroom/globe/h-earth/|h-earth-3d/(terrain|objects|integration|render|runtime)/)' \
+            > /tmp/pr311-product-paths.txt || true
           test ! -s /tmp/pr311-product-paths.txt
 
       - name: Execute all merged analytical regressions

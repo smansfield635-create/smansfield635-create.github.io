@@ -14,6 +14,7 @@ import {
   H_EARTH_RUN_8A_MOUNTAIN_DIMENSIONAL_SURFACE_CONTRACT,
   evaluateHEarthRun8AMountainContribution
 } from '../control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js';
+import { H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD } from '../terrain/h-earth.successor-terrain-field.run8b.js';
 
 const freeze = (value, seen = new WeakSet()) => {
   if (value === null || typeof value !== 'object' || seen.has(value)) return value;
@@ -36,6 +37,8 @@ const snap = (value, step) => Math.round(value / step) * step;
 const MOUNTAIN = H_EARTH_RUN_8A_MOUNTAIN_DIMENSIONAL_SURFACE_CONTRACT;
 const TRANSITION = MOUNTAIN.transitionBounds;
 const CORE = MOUNTAIN.coreBounds;
+const WORLD = H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain;
+const WORLD_BOUNDARY_MARGIN = 16;
 const SEARCH = freeze({
   xMinimum: TRANSITION.xMinimum + 4,
   xMaximum: TRANSITION.xMaximum - 4,
@@ -164,6 +167,10 @@ function sampleExistingMountainExterior(sample) {
         x: x + outward.direction.x * SEARCH.precinctOffsetDistance,
         z: z + outward.direction.z * SEARCH.precinctOffsetDistance
       };
+      if (precinctCenter.x < WORLD.xMinimum + WORLD_BOUNDARY_MARGIN
+        || precinctCenter.x > WORLD.xMaximum - WORLD_BOUNDARY_MARGIN
+        || precinctCenter.z < WORLD.zMinimum + WORLD_BOUNDARY_MARGIN
+        || precinctCenter.z > WORLD.zMaximum - WORLD_BOUNDARY_MARGIN) continue;
       const precinct = sample(precinctCenter.x, precinctCenter.z);
       if (!apron.valid || !precinct.valid) continue;
       if (apron.elevation <= ROUTE.minimumElevation || precinct.elevation <= ROUTE.minimumElevation) continue;
@@ -344,19 +351,28 @@ function derivePrecinctEnvelope(candidate) {
     ? deriveGRCRCandidateEnvelope(connected, { envelopeId: 'GRATITUDE_REGION_CAVERN_PRECINCT_RESERVABLE_ENVELOPE_CANDIDATE_01', selfTestOnly: false })
     : freeze({ eligible: false, status: 'CONNECTED_PRECINCT_SURFACE_REQUIRED', issues: freeze(['CONNECTED_PRECINCT_SURFACE_REQUIRED']) });
   const coreConflictSamples = (connected.samples ?? []).filter((sample) => contains(CORE, sample.world.x, sample.world.z));
+  const bounds = envelope.eligible ? envelope.bounds : null;
+  const worldBoundaryClearance = bounds ? Math.min(
+    bounds.xMinimum - WORLD.xMinimum,
+    WORLD.xMaximum - bounds.xMaximum,
+    bounds.zMinimum - WORLD.zMinimum,
+    WORLD.zMaximum - bounds.zMaximum
+  ) : Number.NEGATIVE_INFINITY;
+  const boundaryClipped = !Number.isFinite(worldBoundaryClearance) || worldBoundaryClearance < 4;
+  const eligible = connected.eligible === true && connected.sampleCount >= 5 && envelope.eligible === true && coreConflictSamples.length === 0 && boundaryClipped === false;
   return freeze({
     checkpointId: 'GR-CR-04F',
-    eligible: connected.eligible === true && connected.sampleCount >= 5 && envelope.eligible === true && coreConflictSamples.length === 0,
-    status: connected.eligible === true && connected.sampleCount >= 5 && envelope.eligible === true && coreConflictSamples.length === 0
-      ? 'RESERVABLE_CAVERN_PRECINCT_ENVELOPE_DERIVED_NONFINAL'
-      : 'RESERVABLE_CAVERN_PRECINCT_ENVELOPE_HELD',
+    eligible,
+    status: eligible ? 'RESERVABLE_CAVERN_PRECINCT_ENVELOPE_DERIVED_NONFINAL' : 'RESERVABLE_CAVERN_PRECINCT_ENVELOPE_HELD',
     connectedSurface: connected,
     envelope,
     mountainCoreConflictSampleCount: coreConflictSamples.length,
+    worldBoundaryClearance,
+    boundaryClipped,
     accepted: false,
     finalPlacement: false,
     finalCoordinatesAssigned: false,
-    issues: freeze(connected.eligible === true && connected.sampleCount >= 5 && envelope.eligible === true && coreConflictSamples.length === 0 ? [] : ['RESERVABLE_PRECINCT_ENVELOPE_INELIGIBLE'])
+    issues: freeze(eligible ? [] : [boundaryClipped ? 'WORLD_BOUNDARY_CLIPPED_PRECINCT_ENVELOPE' : 'RESERVABLE_PRECINCT_ENVELOPE_INELIGIBLE'])
   });
 }
 
@@ -472,6 +488,8 @@ export function deriveGRCRCavernPrecinctCandidate() {
       contractId: MOUNTAIN.contractId,
       coreBounds: CORE,
       transitionBounds: TRANSITION,
+      worldDomain: WORLD,
+      worldBoundaryMargin: WORLD_BOUNDARY_MARGIN,
       exteriorAttachmentLaw: 'ENTRANCE_MUST_ATTACH_TO_EXISTING_MOUNTAIN_EXTERIOR',
       mountainPhaseEntryRequired: false
     }),

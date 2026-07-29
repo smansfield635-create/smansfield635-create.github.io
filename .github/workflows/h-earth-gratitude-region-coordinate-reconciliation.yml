@@ -1,5 +1,6 @@
 name: H-Earth Gratitude Region Coordinate Reconciliation
 
+# GR-CR-01L isolated validation trigger after retargeting the draft PR.
 on:
   push:
     branches:

@@ -1,69 +1,14 @@
-name: Laws CP4 Live Projection Priority PR Applicator
+name: Laws CP4 Live Projection Priority PR Applicator Retired
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: laws-cp4-live-projection-priority-pr-applicator
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  apply-bounded-correction:
-    if: github.event.pull_request.head.ref == 'agent/laws-six-node-cp4-browser-verification-001'
+  retired:
+    if: false
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
-      - name: Check out active Laws candidate branch
-        uses: actions/checkout@v4
-        with:
-          ref: agent/laws-fifth-test-star-reversible-admissibility-cp1-001
-          fetch-depth: 0
-
-      - name: Apply explicit live-projection priority
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-
-          path = Path('laws/index.interactions.js')
-          source = path.read_text()
-          marker = 'el.style.setProperty("transform","translate(-50%, -50%)","important")'
-          if marker in source:
-              print('CP4_LIVE_PROJECTION_PRIORITY_ALREADY_PRESENT=true')
-              raise SystemExit(0)
-
-          old = 'Object.assign(el.style,{position:"absolute",left:`${r.x}px`,top:`${r.y}px`,right:"auto",bottom:"auto",width:`${z*2}px`,height:`${z*2}px`,margin:"0",transform:"translate(-50%, -50%)",pointerEvents:p>P.OFF?"auto":"none"});el.dataset.projectionVisible'
-          new = 'Object.assign(el.style,{position:"absolute",left:`${r.x}px`,top:`${r.y}px`,right:"auto",bottom:"auto",width:`${z*2}px`,height:`${z*2}px`,margin:"0",transform:"translate(-50%, -50%)",pointerEvents:p>P.OFF?"auto":"none"});el.style.setProperty("left",`${r.x}px`,"important");el.style.setProperty("top",`${r.y}px`,"important");el.style.setProperty("right","auto","important");el.style.setProperty("bottom","auto","important");el.style.setProperty("transform","translate(-50%, -50%)","important");el.dataset.projectionVisible'
-          count = source.count(old)
-          if count != 1:
-              raise SystemExit(f'CP4_LIVE_PROJECTION_PRIORITY_ANCHOR_INVALID:{count}')
-          path.write_text(source.replace(old, new, 1))
-          print('CP4_LIVE_PROJECTION_PRIORITY=APPLIED')
-          PY
-          node --check laws/index.interactions.js
-          grep -Fq 'el.style.setProperty("transform","translate(-50%, -50%)","important")' laws/index.interactions.js
-          git diff --check
-          changed="$(git diff --name-only)"
-          if [ -z "$changed" ]; then
-            echo "NO_COMMIT_REQUIRED=true"
-            exit 0
-          fi
-          test "$changed" = "laws/index.interactions.js"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add laws/index.interactions.js
-          git commit -m "Prioritize Laws live projection placement"
-          git push origin HEAD:agent/laws-fifth-test-star-reversible-admissibility-cp1-001
-          echo "CORRECTED_CANDIDATE_HEAD=$(git rev-parse HEAD)"
-          echo "CORRECTED_INTERACTIONS_BLOB=$(git hash-object laws/index.interactions.js)"
+      - run: echo "Live projection priority correction is committed."

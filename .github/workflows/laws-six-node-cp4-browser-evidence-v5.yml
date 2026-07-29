@@ -77,6 +77,10 @@ jobs:
               (
                   'await projected.click();',
                   'await page.evaluate(expected=>document.querySelector(`[data-laws-projected-category-label="${expected}"]`)?.focus(),direction);await page.keyboard.press("Enter");'
+              ),
+              (
+                  "send('pointerdown',1);send('pointerup',0);return true;",
+                  "send('pointerdown',1);const field=document.querySelector('[data-laws-scene-field]');field.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,cancelable:true,composed:true,pointerId,pointerType,isPrimary:true,button:0,buttons:0,clientX:x,clientY:y}));return true;"
               )
           ]
 

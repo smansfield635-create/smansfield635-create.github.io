@@ -75,12 +75,12 @@ jobs:
           echo "d27241821358085610e365e2f6634d04d3cf715ad23446e1c99ab05c2835b9b1  /tmp/patch3.py" | sha256sum -c -
           python - <<'PY'
           from pathlib import Path
-          path = Path('/tmp/patch1.py')
-          source = path.read_text()
+          path1 = Path('/tmp/patch1.py')
+          source1 = path1.read_text()
           anchor = '    count = text.count(old)\n'
-          if source.count(anchor) != 1:
+          if source1.count(anchor) != 1:
               raise SystemExit('PATCH1_REPLACE_ONCE_ANCHOR_INVALID')
-          source = source.replace(
+          source1 = source1.replace(
               anchor,
               anchor
               + '    if label == "html direct nav":\n'
@@ -89,15 +89,18 @@ jobs:
               + '        return text.replace(old, new, 1)\n',
               1,
           )
-          path.write_text(source)
+          path1.write_text(source1)
           print('PATCH1_DIRECT_NAV_FIRST_MATCH_NORMALIZATION=APPLIED')
 
-          source2 = Path('/tmp/patch2.py').read_text()
-          needle = 'crystals create cpu meshes'
-          index = source2.find(needle)
-          print('PATCH2_CPU_MESH_CONTEXT_BEGIN')
-          print(source2[max(0, index - 1800):index + 900])
-          print('PATCH2_CPU_MESH_CONTEXT_END')
+          path2 = Path('/tmp/patch2.py')
+          source2 = path2.read_text()
+          old = r'.*?\n  \}\n\n  function createRenderer\('
+          new = r'.*?\n\}\n\n  function createRenderer\('
+          if source2.count(old) != 1:
+              raise SystemExit(f'PATCH2_CPU_MESH_PATTERN_INVALID:{source2.count(old)}')
+          source2 = source2.replace(old, new, 1)
+          path2.write_text(source2)
+          print('PATCH2_CPU_MESH_CLOSING_INDENT_NORMALIZATION=APPLIED')
           PY
           python -m py_compile /tmp/patch1.py /tmp/patch2.py /tmp/patch3.py
 

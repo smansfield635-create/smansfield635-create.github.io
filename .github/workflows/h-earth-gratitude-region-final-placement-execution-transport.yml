@@ -1,0 +1,118 @@
+name: H-Earth Gratitude Region Final Placement Execution Transport
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: h-earth-gratitude-region-final-placement-execution-transport-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  execute-fp00-fp01:
+    runs-on: macos-14
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact frozen final-placement head
+        uses: actions/checkout@v4
+        with:
+          ref: f02fdf4f5f6497477d31fb26bf2bc55b53b13e69
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute existing FP-00 and FP-01 runner twice
+        env:
+          FIRST_RECEIPT: /tmp/h-earth-gratitude-region-fp00-fp01-first.json
+          SECOND_RECEIPT: /tmp/h-earth-gratitude-region-fp00-fp01-second.json
+        run: |
+          set -o pipefail
+          H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_BASELINE_RECEIPT="$FIRST_RECEIPT" \
+            node h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gratitude-region-fp00-fp01-first.log
+          H_EARTH_GRATITUDE_REGION_FINAL_PLACEMENT_BASELINE_RECEIPT="$SECOND_RECEIPT" \
+            node h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.runner.mjs \
+            2>&1 | tee /tmp/h-earth-gratitude-region-fp00-fp01-second.log
+
+      - name: Verify exact execution result and deterministic custody
+        run: |
+          node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+
+          const firstPath = '/tmp/h-earth-gratitude-region-fp00-fp01-first.json';
+          const secondPath = '/tmp/h-earth-gratitude-region-fp00-fp01-second.json';
+          const firstText = fs.readFileSync(firstPath, 'utf8');
+          const secondText = fs.readFileSync(secondPath, 'utf8');
+          const first = JSON.parse(firstText);
+          const second = JSON.parse(secondText);
+          const issues = [];
+          const requireCheck = (condition, code) => {
+            if (!condition) issues.push(code);
+          };
+          const sha256 = (text) => crypto.createHash('sha256').update(text).digest('hex');
+
+          for (const [label, receipt] of [['FIRST', first], ['SECOND', second]]) {
+            requireCheck(receipt.status === 'FP_00_AND_FP_01_PASS_CLOSED', `${label}_STATUS:${receipt.status}`);
+            requireCheck(receipt.eligible === true, `${label}_NOT_ELIGIBLE`);
+            requireCheck(receipt.fp00?.frozenInputCount === 24, `${label}_FROZEN_INPUT_COUNT:${receipt.fp00?.frozenInputCount}`);
+            requireCheck(receipt.fp00?.exactFrozenInputMatchCount === 24, `${label}_FROZEN_MATCH_COUNT:${receipt.fp00?.exactFrozenInputMatchCount}`);
+            requireCheck(receipt.fp00?.priorAuthorityMutation === false, `${label}_PRIOR_AUTHORITY_MUTATION`);
+            requireCheck((receipt.fp00?.protectedMutationPaths ?? []).length === 0, `${label}_PROTECTED_MUTATION_PATHS`);
+            requireCheck(receipt.fp01?.disposition === 'ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL', `${label}_ENTRY_DISPOSITION:${receipt.fp01?.disposition}`);
+            requireCheck(receipt.fp01?.initialStateWithinEntryBounds === true, `${label}_ENTRY_OUTSIDE_BOUNDS`);
+            requireCheck(receipt.fp01?.activeInitialState?.position?.x === 0, `${label}_ENTRY_X`);
+            requireCheck(receipt.fp01?.activeInitialState?.position?.z === -96, `${label}_ENTRY_Z`);
+            requireCheck(receipt.fp01?.activeInitialState?.yawDegrees === 0, `${label}_ENTRY_YAW`);
+            requireCheck(receipt.fp01?.activeInitialState?.pitchDegrees === -8, `${label}_ENTRY_PITCH`);
+            requireCheck(receipt.fp01?.activeInitialState?.verticalFovDegrees === 56, `${label}_ENTRY_FOV`);
+            requireCheck(receipt.fp01?.cameraStartRelocation === false, `${label}_CAMERA_RELOCATION`);
+            requireCheck(receipt.fp01?.cameraAuthorityMutation === false, `${label}_CAMERA_AUTHORITY_MUTATION`);
+            requireCheck(receipt.deterministicRepeatExecution === true, `${label}_INTERNAL_NONDETERMINISM`);
+            requireCheck(receipt.firstExecutionDigest === receipt.secondExecutionDigest, `${label}_INTERNAL_DIGEST_MISMATCH`);
+          }
+
+          requireCheck(first.firstExecutionDigest === second.firstExecutionDigest, 'CROSS_RUN_FIRST_DIGEST_MISMATCH');
+          requireCheck(first.secondExecutionDigest === second.secondExecutionDigest, 'CROSS_RUN_SECOND_DIGEST_MISMATCH');
+          requireCheck(firstText === secondText, 'CROSS_RUN_RECEIPT_BYTES_MISMATCH');
+
+          const summary = {
+            schemaVersion: 'H_EARTH_GRATITUDE_REGION_FP00_FP01_EXECUTION_TRANSPORT_RECEIPT_v1',
+            status: issues.length === 0 ? 'PASS_CLOSED' : 'FAIL_STOPPED',
+            executedHead: 'f02fdf4f5f6497477d31fb26bf2bc55b53b13e69',
+            firstReceiptSha256: sha256(firstText),
+            secondReceiptSha256: sha256(secondText),
+            firstExecutionDigest: first.firstExecutionDigest,
+            secondExecutionDigest: first.secondExecutionDigest,
+            crossRunReceiptBytesIdentical: firstText === secondText,
+            frozenInputCount: first.fp00?.frozenInputCount,
+            exactFrozenInputMatchCount: first.fp00?.exactFrozenInputMatchCount,
+            protectedMutationPaths: first.fp00?.protectedMutationPaths,
+            entryDisposition: first.fp01?.disposition,
+            initialState: first.fp01?.activeInitialState,
+            issues
+          };
+          fs.writeFileSync('/tmp/h-earth-gratitude-region-fp00-fp01-transport-summary.json', `${JSON.stringify(summary, null, 2)}\n`);
+          console.log(JSON.stringify(summary, null, 2));
+          if (issues.length > 0) process.exit(1);
+          NODE
+
+      - name: Upload FP-00 and FP-01 execution evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-fp00-fp01-execution-evidence
+          path: |
+            /tmp/h-earth-gratitude-region-fp00-fp01-first.json
+            /tmp/h-earth-gratitude-region-fp00-fp01-second.json
+            /tmp/h-earth-gratitude-region-fp00-fp01-first.log
+            /tmp/h-earth-gratitude-region-fp00-fp01-second.log
+            /tmp/h-earth-gratitude-region-fp00-fp01-transport-summary.json
+          if-no-files-found: error
+          retention-days: 90

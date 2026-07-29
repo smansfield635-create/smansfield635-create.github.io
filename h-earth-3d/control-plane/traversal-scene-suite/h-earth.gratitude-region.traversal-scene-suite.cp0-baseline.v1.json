@@ -1,0 +1,154 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_TRAVERSAL_SCENE_SUITE_CP0_BASELINE_v1",
+  "checkpoint": {
+    "id": "CP0_EXACT_INTEGRATED_BASELINE_FREEZE",
+    "status": "EXECUTION_PENDING",
+    "authorityQuestion": "IS_THE_EXACT_POST_FINAL_PLACEMENT_INTEGRATED_BASELINE_IDENTIFIED_ROLLBACK_SAFE_SOURCE_COMPLETE_RUNTIME_IDENTIFIED_AND_ACCEPTED_PLACEMENT_COMPLETE_BEFORE_ANY_TRAVERSAL_SCENE_SUITE_IS_CREATED"
+  },
+  "repository": {
+    "fullName": "smansfield635-create/smansfield635-create.github.io",
+    "baselineMainHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+    "baselineMainRelation": "MAIN_IDENTICAL_AT_CHECKPOINT_OPEN",
+    "checkpointBranch": "agent/h-earth-gratitude-region-traversal-scene-suite-cp0-baseline-001",
+    "rollbackBranch": "rollback/h-earth-gratitude-region-pre-traversal-scene-suite-001",
+    "rollbackHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+    "finalPlacementAdmissionPr": 348,
+    "finalPlacementAdmissionMergeCommit": "8a68a163f20c0918f33a3137763af05d4ccb035f"
+  },
+  "runtime": {
+    "publicUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/",
+    "routePath": "/showroom/globe/h-earth/",
+    "acceptedExecutionClass": "SERVED_BYTE_AND_BOOTSTRAP_IDENTITY_ONLY",
+    "physicalExecutionInCheckpoint": false
+  },
+  "authoritySeparation": {
+    "perceptualJudgment": "INVENTORY_ONLY_NO_NEW_JUDGMENT",
+    "engineeringDiagnosis": "NOT_AUTHORIZED",
+    "repositoryMutation": "CONTROL_AND_VERIFICATION_PATHS_ONLY",
+    "executedVerification": "REQUIRED_FOR_BASELINE_IDENTITY",
+    "physicalAcceptance": "PRIOR_EVIDENCE_INVENTORY_ONLY_NO_NEW_PHYSICAL_ACCEPTANCE"
+  },
+  "placementAuthority": {
+    "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+    "gitBlob": "ad6a7ac1871e1f248c40ac7836d487f786dc48e4",
+    "requiredStatus": "FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED",
+    "requiredClosedCheckpoints": [
+      "FP_00",
+      "FP_01",
+      "FP_02",
+      "FP_03",
+      "FP_04",
+      "FP_05"
+    ],
+    "requiredAreaCount": 4,
+    "requiredPairRelationshipCount": 6,
+    "requiredPreservationLawCount": 13
+  },
+  "acceptedPlacementInventory": [
+    {
+      "areaId": "GRATITUDE_REGION_ENTRY_ZONE",
+      "acceptanceClass": "FINAL_PLACEMENT_AUTHORITY_ACCEPTED",
+      "placementDisposition": "ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL",
+      "bounds": {
+        "xMinimum": -24,
+        "xMaximum": 24,
+        "zMinimum": -132,
+        "zMaximum": -88
+      },
+      "initialState": {
+        "waypointId": "COAST",
+        "x": 0,
+        "z": -96,
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "verticalFovDegrees": 56
+      }
+    },
+    {
+      "areaId": "GRATITUDE_REGION_MIRROR_MANOR_PRECINCT",
+      "acceptanceClass": "FINAL_PLACEMENT_AUTHORITY_ACCEPTED",
+      "placementDisposition": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
+      "siteCenter": {
+        "x": 80,
+        "z": -172
+      },
+      "bounds": {
+        "xMinimum": 64,
+        "xMaximum": 96,
+        "zMinimum": -188,
+        "zMaximum": -156
+      }
+    },
+    {
+      "areaId": "GRATITUDE_REGION_CAVERN_PRECINCT",
+      "acceptanceClass": "FINAL_PLACEMENT_AUTHORITY_ACCEPTED",
+      "placementDisposition": "ACCEPT_CURRENT_RELATION",
+      "exteriorFace": {
+        "x": 40,
+        "z": -284
+      },
+      "apron": {
+        "x": 48,
+        "z": -284
+      },
+      "precinctCenter": {
+        "x": 56,
+        "z": -284
+      }
+    },
+    {
+      "areaId": "GRATITUDE_REGION_FRONTIER_PLAINS",
+      "acceptanceClass": "RETAINED_ELIGIBLE_NONFINAL",
+      "placementDisposition": "RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT",
+      "finalEnvelope": null,
+      "finalAnchor": null
+    }
+  ],
+  "runtimeSourceRoots": [
+    "showroom/globe/h-earth/index.html",
+    "showroom/globe/h-earth/index.css",
+    "showroom/globe/h-earth/functional-landscape/index.css",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"
+  ],
+  "explicitAuthoritySources": [
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+    "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+    "showroom/globe/h-earth/functional-landscape/navigation.js",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+    "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+    "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+    "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json",
+    "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json"
+  ],
+  "priorPhysicalEvidence": {
+    "path": "h-earth-3d/control-plane/touch-motion-calibration/h-earth.touch-motion-calibration.cp4-physical-all-eight-testing.json",
+    "gitBlob": "e463d56174bda69e9aa49c7c353f422f7226e280",
+    "classification": "PRIOR_LIMITED_PHYSICAL_EVIDENCE_NOT_NEW_CP0_ACCEPTANCE",
+    "preserveOpenBoundaries": [
+      "PHYSICAL_RELEASE_TERMINATION_CONFIRMATION_REQUIRED",
+      "PORTRAIT_LANDSCAPE_PHYSICAL_ACCEPTANCE_REQUIRED"
+    ]
+  },
+  "allowedCheckpointMutationPaths": [
+    ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp0.yml",
+    "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.v1.json",
+    "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json"
+  ],
+  "prohibitedInCheckpoint": [
+    "TRAVERSAL_SCENE_CREATION",
+    "PRODUCT_SOURCE_MUTATION",
+    "TERRAIN_MUTATION",
+    "PLACEMENT_MUTATION",
+    "CAMERA_MUTATION",
+    "RUNTIME_BEHAVIOR_MUTATION",
+    "ENGINEERING_DIAGNOSIS",
+    "NEW_PERCEPTUAL_ACCEPTANCE",
+    "NEW_PHYSICAL_ACCEPTANCE"
+  ],
+  "stoppingBoundary": "STOP_AFTER_CP0_BASELINE_FREEZE_BEFORE_TRAVERSAL_SCENE_SUITE_CREATION"
+}

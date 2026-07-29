@@ -68,15 +68,27 @@ jobs:
           exit 1
 
       - name: Execute Laws FIRST browser benchmark
+        id: benchmark
+        continue-on-error: true
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: node verification/benchmark-tools/four-compass-benchmark-v1/laws-first-test-benchmark.mjs
 
-      - name: Validate receipt
+      - name: Report and validate receipt
+        if: always()
         run: |
           node <<'NODE'
           const fs = require('node:fs');
+          if (!fs.existsSync('laws-first-test-benchmark-v1.json')) {
+            throw new Error('LAWS_FIRST_RECEIPT_MISSING');
+          }
           const receipt = JSON.parse(fs.readFileSync('laws-first-test-benchmark-v1.json', 'utf8'));
+          console.log(JSON.stringify({
+            pass: receipt.pass,
+            failures: receipt.failures,
+            observations: receipt.observations.length,
+            screenshots: receipt.screenshotManifest.length
+          }, null, 2));
           const failures = [];
           if (receipt.pass !== true || receipt.failures.length !== 0) failures.push('receipt');
           if (receipt.execution.commit !== process.env.EXECUTION_COMMIT) failures.push('commit');
@@ -88,6 +100,7 @@ jobs:
           NODE
 
       - name: Upload exact-head evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: laws-compass-first-test-benchmark-v1-evidence

@@ -1,0 +1,11 @@
+{
+  "requestId": "LAWS_FIRST_TEST_LABEL_AND_SHELL_CONFORMANCE_20260729A",
+  "branch": "agent/laws-compass-first-test-shell-correction-cp0-001",
+  "primaryStars": 4,
+  "methodAcronym": "FIRST",
+  "testRole": "cross-cutting-no-fifth-star",
+  "requiredClusterVisibleLabelCount": 1,
+  "requiredReturnIdentity": "Return to Orbit",
+  "governingBenchmark": "METAVERSE_FOUR_COMPASS_BENCHMARK_TOOL_v1",
+  "status": "IMPLEMENTATION_REQUEST_PENDING_APPLICATOR"
+}

@@ -1,0 +1,14 @@
+name: Laws CP4 Live Projection Applicator
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  closed-verification-record:
+    if: ${{ false }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "CHECKPOINT_4_PASS_CLOSED_RUN_30492721281"

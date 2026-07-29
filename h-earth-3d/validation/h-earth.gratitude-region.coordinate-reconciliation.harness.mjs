@@ -30,14 +30,15 @@ const WITNESS = freeze({ x: 0, z: -256 });
 
 export const H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS = freeze({
   contractId: 'H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_HARNESS_v1',
-  checkpointId: 'GR-CR-01E',
-  status: 'ELEVATION_AND_GRADIENT_EXTRACTION_ENABLED',
+  checkpointId: 'GR-CR-01F',
+  status: 'SLOPE_AND_CURVATURE_EXTRACTION_ENABLED',
   sourceImportsEstablished: true,
   terrainSamplingExecuted: true,
   elevationGradientExtractionEnabled: true,
+  slopeCurvatureExtractionEnabled: true,
   candidateCoordinatesDerived: false,
   durableReceiptEmitted: false,
-  nextCheckpoint: 'GR-CR-01F_ADD_SLOPE_AND_CURVATURE_EXTRACTION'
+  nextCheckpoint: 'GR-CR-01G_ADD_FORMATION_MEMBERSHIP_RESOLUTION'
 });
 
 function importIssues() {
@@ -51,7 +52,7 @@ function importIssues() {
   return issues;
 }
 
-export function extractGRCRTerrainElevationAndGradient(worldX, worldZ) {
+export function extractGRCRTerrainMetrics(worldX, worldZ) {
   const sample = sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ);
   if (sample?.valid !== true) return freeze({ valid: false, worldX, worldZ });
   return freeze({
@@ -59,26 +60,30 @@ export function extractGRCRTerrainElevationAndGradient(worldX, worldZ) {
     contractId: sample.contractId,
     world: sample.world,
     elevation: sample.elevation,
-    gradient: freeze({ x: sample.gradient.x, z: sample.gradient.z })
+    gradient: freeze({ x: sample.gradient.x, z: sample.gradient.z }),
+    slope: sample.slope,
+    curvature: sample.curvature,
+    normal: sample.normal
   });
 }
 
-export function evaluateGRCR01EElevationGradientExtraction() {
+export function evaluateGRCR01FSlopeCurvatureExtraction() {
   const sampleA = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
   const sampleB = sampleHEarthRun8BSuccessorTerrainField(WITNESS.x, WITNESS.z);
-  const extraction = extractGRCRTerrainElevationAndGradient(WITNESS.x, WITNESS.z);
+  const metrics = extractGRCRTerrainMetrics(WITNESS.x, WITNESS.z);
   const issues = importIssues();
   if (sampleA?.valid !== true || sampleB?.valid !== true) issues.push('WITNESS_SAMPLE_INVALID');
   if (stable(sampleA) !== stable(sampleB)) issues.push('REPEATED_WITNESS_NOT_BYTE_STABLE');
-  if (extraction.valid !== true) issues.push('ELEVATION_GRADIENT_EXTRACTION_INVALID');
-  if (!Number.isFinite(extraction.elevation)) issues.push('EXTRACTED_ELEVATION_NONFINITE');
-  if (!Number.isFinite(extraction.gradient?.x) || !Number.isFinite(extraction.gradient?.z)) issues.push('EXTRACTED_GRADIENT_NONFINITE');
+  if (metrics.valid !== true) issues.push('TERRAIN_METRICS_EXTRACTION_INVALID');
+  for (const value of [metrics.elevation, metrics.gradient?.x, metrics.gradient?.z, metrics.slope, metrics.curvature]) {
+    if (!Number.isFinite(value)) issues.push('TERRAIN_METRIC_NONFINITE');
+  }
   return freeze({
-    checkpointId: 'GR-CR-01E',
+    checkpointId: 'GR-CR-01F',
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'GR_CR_01E_ELEVATION_GRADIENT_PASS' : 'GR_CR_01E_ELEVATION_GRADIENT_FAIL',
+    status: issues.length === 0 ? 'GR_CR_01F_SLOPE_CURVATURE_PASS' : 'GR_CR_01F_SLOPE_CURVATURE_FAIL',
     witness: WITNESS,
-    extraction,
+    metrics,
     repeatedSampleByteStable: stable(sampleA) === stable(sampleB),
     terrainSamplingExecuted: true,
     candidateCoordinatesDerived: false,
@@ -95,7 +100,7 @@ export function evaluateGRCR01EElevationGradientExtraction() {
 
 const directExecution = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (directExecution) {
-  const receipt = evaluateGRCR01EElevationGradientExtraction();
+  const receipt = evaluateGRCR01FSlopeCurvatureExtraction();
   const outputPath = process.env.H_EARTH_GR_CR_RECEIPT;
   if (outputPath) fs.writeFileSync(outputPath, `${JSON.stringify(receipt, null, 2)}\n`);
   console.log(JSON.stringify(receipt));

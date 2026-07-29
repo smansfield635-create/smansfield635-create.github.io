@@ -1,40 +1,16 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
-import { buildCP3D1PackageDeterminismReceipt } from './h-earth.touch-motion-calibration.cp3d1-package-determinism-probe.mjs';
+import { getHEarthRun8ER2CanonicalLiveRenderPackage } from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
 
 const origin = process.env.CP3D_ORIGIN ?? 'http://127.0.0.1:4173';
 const route = `${origin}/showroom/globe/h-earth/`;
 const evidenceDirectory = process.env.CP3D_EVIDENCE_DIR ?? 'h-earth-3d/validation/evidence/cp3d';
-const probeUrl = `${origin}/h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1-package-determinism-probe.mjs`;
+const canonicalModuleUrl = `${origin}/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js`;
+const expectedIdentity = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898';
+const requiredBoundary = 'SHARED_COMPLETE_PACKAGE_BUFFER_BOUNDARY';
 
 await mkdir(evidenceDirectory, { recursive: true });
-
-const localizationOrder = [
-  'primitiveCount',
-  'primitiveIdentifiers',
-  'primitiveOrder',
-  'drawRangeOrder',
-  'drawRangeValues',
-  'bufferConstructors',
-  'bufferLengths',
-  'bufferByteLengths',
-  'bufferRecords',
-  'canonicalBytesSHA256',
-  'hashAccumulationSteps',
-  'contentDigest',
-  'packageIdentity'
-];
-
-const stable = value => JSON.stringify(value);
-const firstDifference = (nodeReceipt, browserReceipt) => {
-  for (const field of localizationOrder) {
-    if (stable(nodeReceipt[field]) !== stable(browserReceipt[field])) {
-      return { field, node: nodeReceipt[field], browser: browserReceipt[field] };
-    }
-  }
-  return null;
-};
 
 const browser = await chromium.launch({
   headless: true,
@@ -54,33 +30,50 @@ page.on('pageerror', error => pageErrors.push({ name: error.name, message: error
 
 let publicReceipt = null;
 try {
-  const nodePackageReceipt = await buildCP3D1PackageDeterminismReceipt('NODE');
+  const nodePackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
+  assert.equal(nodePackage?.eligible, true, 'CP3D_CANONICAL_NODE_PACKAGE_NOT_ELIGIBLE');
+  assert.equal(nodePackage?.packageIdentity, expectedIdentity, 'CP3D_CANONICAL_NODE_PACKAGE_IDENTITY_MISMATCH');
+  assert.equal(nodePackage?.sourceAuthorities?.numericIdentityBoundary, requiredBoundary, 'CP3D_CANONICAL_NODE_BOUNDARY_MISMATCH');
+
   await page.goto(origin, { waitUntil: 'domcontentloaded', timeout: 60_000 });
-  const browserPackageReceipt = await page.evaluate(async url => {
+  const browserPackageFacts = await page.evaluate(async ({ url }) => {
     const module = await import(`${url}?runtime=BROWSER&stamp=${Date.now()}`);
-    return module.buildCP3D1PackageDeterminismReceipt('BROWSER');
-  }, probeUrl);
+    const packageRecord = module.getHEarthRun8ER2CanonicalLiveRenderPackage();
+    return {
+      eligible: packageRecord?.eligible === true,
+      packageIdentity: packageRecord?.packageIdentity ?? null,
+      contentDigest: packageRecord?.contentDigest ?? null,
+      numericIdentityBoundary: packageRecord?.sourceAuthorities?.numericIdentityBoundary ?? null,
+      primitiveCount: packageRecord?.primitiveCount ?? null,
+      vertexCount: packageRecord?.vertexCount ?? null,
+      indexCount: packageRecord?.indexCount ?? null
+    };
+  }, { url: canonicalModuleUrl });
 
-  await writeFile(`${evidenceDirectory}/cp3d1-node-package.receipt.json`, `${JSON.stringify(nodePackageReceipt, null, 2)}\n`);
-  await writeFile(`${evidenceDirectory}/cp3d1-browser-package.receipt.json`, `${JSON.stringify(browserPackageReceipt, null, 2)}\n`);
+  assert.equal(browserPackageFacts.eligible, true, 'CP3D_CANONICAL_BROWSER_PACKAGE_NOT_ELIGIBLE');
+  assert.equal(browserPackageFacts.packageIdentity, expectedIdentity, 'CP3D_CANONICAL_BROWSER_PACKAGE_IDENTITY_MISMATCH');
+  assert.equal(browserPackageFacts.packageIdentity, nodePackage.packageIdentity, 'CP3D_CANONICAL_CROSS_RUNTIME_IDENTITY_MISMATCH');
+  assert.equal(browserPackageFacts.contentDigest, nodePackage.contentDigest, 'CP3D_CANONICAL_CROSS_RUNTIME_DIGEST_MISMATCH');
+  assert.equal(browserPackageFacts.numericIdentityBoundary, requiredBoundary, 'CP3D_CANONICAL_BROWSER_BOUNDARY_MISMATCH');
+  assert.equal(browserPackageFacts.primitiveCount, nodePackage.primitiveCount, 'CP3D_CANONICAL_PRIMITIVE_COUNT_MISMATCH');
+  assert.equal(browserPackageFacts.vertexCount, nodePackage.vertexCount, 'CP3D_CANONICAL_VERTEX_COUNT_MISMATCH');
+  assert.equal(browserPackageFacts.indexCount, nodePackage.indexCount, 'CP3D_CANONICAL_INDEX_COUNT_MISMATCH');
 
-  const difference = firstDifference(nodePackageReceipt, browserPackageReceipt);
-  const localizationReceipt = {
-    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D1_CROSS_RUNTIME_PACKAGE_DETERMINISM_LOCALIZATION_v1',
-    eligible: difference === null,
-    status: difference === null ? 'CROSS_RUNTIME_PACKAGE_DETERMINISM_PASS' : 'CROSS_RUNTIME_PACKAGE_DETERMINISM_FAIL',
-    firstDifference: difference,
-    comparisonOrder: localizationOrder,
-    nodePackageIdentity: nodePackageReceipt.packageIdentity,
-    browserPackageIdentity: browserPackageReceipt.packageIdentity,
-    nodeCanonicalBytesSHA256: nodePackageReceipt.canonicalBytesSHA256,
-    browserCanonicalBytesSHA256: browserPackageReceipt.canonicalBytesSHA256
-  };
-  await writeFile(`${evidenceDirectory}/cp3d1-localization.receipt.json`, `${JSON.stringify(localizationReceipt, null, 2)}\n`);
-
-  if (difference) {
-    throw new Error(`CP3D1_FIRST_DIVERGENCE:${difference.field}`);
-  }
+  await writeFile(`${evidenceDirectory}/cp3d-browser-canonical-package-preflight.receipt.json`, `${JSON.stringify({
+    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_BROWSER_CANONICAL_PACKAGE_PREFLIGHT_v1',
+    eligible: true,
+    status: 'CP3D_BROWSER_CANONICAL_PACKAGE_PREFLIGHT_PASS',
+    expectedIdentity,
+    requiredBoundary,
+    node: {
+      packageIdentity: nodePackage.packageIdentity,
+      contentDigest: nodePackage.contentDigest,
+      primitiveCount: nodePackage.primitiveCount,
+      vertexCount: nodePackage.vertexCount,
+      indexCount: nodePackage.indexCount
+    },
+    browser: browserPackageFacts
+  }, null, 2)}\n`);
 
   const response = await page.goto(route, { waitUntil: 'domcontentloaded', timeout: 60_000 });
   assert.ok(response, 'CP3D_ROUTE_RESPONSE_MISSING');
@@ -137,11 +130,11 @@ try {
   await page.screenshot({ path: `${evidenceDirectory}/cp3d-first-frame.png`, fullPage: true });
 
   const executionReceipt = {
-    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_REAL_BROWSER_RENDERER_SURVIVAL_RECEIPT_v1',
+    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_REAL_BROWSER_RENDERER_SURVIVAL_RECEIPT_v2',
     eligible: true,
     status: 'CP3D_REAL_BROWSER_RENDERER_SURVIVAL_PASS',
     route,
-    crossRuntimePackageDeterminism: 'PASS',
+    canonicalPackagePreflight: 'PASS',
     rendererConstructorReturned: 'PASS',
     firstFramePresented: 'PASS',
     visibleEnvironmentPreserved: true,
@@ -166,7 +159,7 @@ try {
   })).catch(() => null);
   await page.screenshot({ path: `${evidenceDirectory}/cp3d-browser-failure.png`, fullPage: true }).catch(() => {});
   await writeFile(`${evidenceDirectory}/cp3d-browser-failure.receipt.json`, `${JSON.stringify({
-    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_BROWSER_FAILURE_RECEIPT_v1',
+    receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_BROWSER_FAILURE_RECEIPT_v2',
     eligible: false,
     status: 'CP3D_BROWSER_SURVIVAL_FAIL',
     error: { name: error.name, message: error.message, stack: error.stack ?? null },

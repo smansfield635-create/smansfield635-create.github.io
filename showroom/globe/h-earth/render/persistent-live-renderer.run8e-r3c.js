@@ -270,17 +270,17 @@ void main(){
     float cavernApproachEdge=transitionBand(cavernApproachStrata,0.095)*cavernApproach;
     float cavernGroundContact=max(
       cavernContact,
-      max(cavernOuterContact*0.82,max(cavernRelationContact*0.72,cavernApproachEdge*0.88))
+      max(cavernOuterContact*0.82,max(cavernRelationContact*0.72,cavernApproachEdge*0.96))
     );
     vec3 cavernStone=mix(vec3(0.028,0.052,0.060),vec3(0.27,0.39,0.42),cavernStrata*0.70+cavernFracture*0.30);
     palette=mix(palette,cavernStone,cavernRelation*(0.68+0.20*cavernStrata));
-    palette*=mix(1.0,0.43,cavernGroundContact*(0.38+0.48*cavernFracture));
-    palette*=mix(0.72,1.24,cavernApproachStrata*cavernApproach*0.86+(1.0-cavernApproach)*0.50);
+    palette*=mix(1.0,0.39,cavernGroundContact*(0.38+0.48*cavernFracture));
+    palette*=mix(0.68,1.28,cavernApproachStrata*cavernApproach*0.86+(1.0-cavernApproach)*0.50);
     palette=mix(palette,palette*vec3(0.60,0.84,0.96),cavernApproach*0.32);
     palette+=vec3(0.036,0.068,0.078)*cavernGroundContact*(0.35+0.65*cavernStrata);
-    palette+=vec3(-0.026,0.036,0.052)*(cavernApproachStrata-0.5)*cavernApproach;
-    presentationContact=max(presentationContact,cavernGroundContact*0.96);
-    presentationHighlight=max(presentationHighlight,cavernOuterContact*0.34+cavernRelationContact*0.26+cavernApproachEdge*0.34);
+    palette+=vec3(-0.030,0.041,0.058)*(cavernApproachStrata-0.5)*cavernApproach;
+    presentationContact=max(presentationContact,cavernGroundContact*0.98);
+    presentationHighlight=max(presentationHighlight,cavernOuterContact*0.34+cavernRelationContact*0.26+cavernApproachEdge*0.38);
 
     float ravineAxis=exp(-pow((vWorldPosition.x-40.0)/18.0,2.0));
     float ravineShoulder=ring(world,vec2(40.0,-252.0),18.0,46.0,5.0);
@@ -552,6 +552,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         temporallyStableWorldSpaceVariation: true,
         regressionColorDiversityRestoration: true,
         cavernApproachRegionalStrata: true,
+        cavernFinalThresholdIncrement: true,
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },

@@ -54,7 +54,7 @@ check('THREE_TEXTURE_SAMPLES_DECLARED', candidateSource.includes('H_EARTH_CP7E_C
 check('NO_DYNAMIC_OCTAVE_LOOPS_DECLARED', candidateSource.includes('H_EARTH_CP7E_DYNAMIC_PROCEDURAL_OCTAVE_LOOPS = 0'));
 check('FLOW_AND_CURVATURE_INPUTS_PRESENT', ['downslope','crossSlope','drainage','landform','flowDelta','curvatureDelta','alongFlow','acrossFlow'].every((token) => candidateSource.includes(token)));
 check('ACCEPTED_SIGNAL_PHASE_WARP_PRESENT', candidateSource.includes('CONTROL_FIELD_PHASE_WARP') && candidateSource.includes('CONTROL_FIELD_CONTOUR_AND_RAKE'));
-check('MANOR_CAVERN_RAVINE_MARKER_PRESERVED', candidateSource.includes('ravineWallContact') && candidateSource.includes('acceptedCp2PaletteAndAmplitudeTermsPreserved'));
+check('INHERITED_MANOR_CAVERN_RAVINE_AND_CONTACT_TERMS_DECLARED_PRESERVED', candidateSource.includes('manorCavernRavineAndContactTermsPreserved: true') && candidateSource.includes('acceptedCp2PaletteAndAmplitudeTermsPreserved: true'));
 
 fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
 const browser = await chromium.launch({ headless: true, args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist'] });

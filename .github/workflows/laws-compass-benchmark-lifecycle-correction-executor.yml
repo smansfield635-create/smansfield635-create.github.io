@@ -1,0 +1,94 @@
+name: Laws Compass Benchmark Lifecycle Correction Executor
+
+on:
+  push:
+    branches:
+      - agent/laws-compass-checkpoint-2-bounded-construction-002
+    paths:
+      - ".github/workflows/laws-compass-benchmark-lifecycle-correction-executor.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  correct-lifecycle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-compass-checkpoint-2-bounded-construction-002
+          fetch-depth: 0
+
+      - name: Apply bounded benchmark lifecycle correction
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          path = Path("verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs")
+          text = path.read_text()
+
+          replacements = [
+              (
+                  '''  try {\n    const browser = await puppeteer.launch({''',
+                  '''  let browser = null;\n  try {\n    browser = await puppeteer.launch({'''
+              ),
+              (
+                  '''    for (const profile of VIEWPORTS) {\n      const page = await browser.newPage();\n      await page.setViewport''',
+                  '''    for (const profile of VIEWPORTS) {\n      let page = null;\n      try {\n        page = await browser.newPage();\n        await page.setViewport'''
+              ),
+              (
+                  '''      for (const id of AUTHORITY_IDS) await dragAndSettle(id);''',
+                  '''      for (const id of AUTHORITY_IDS) {\n        try {\n          await dragAndSettle(id);\n        } catch (error) {\n          failures.push({\n            profile: profile.id,\n            id: "DRAG_AND_SETTLEMENT_ABORTED",\n            observed: { authorityId: id, error: String(error?.stack || error) }\n          });\n          throw error;\n        }\n      }'''
+              ),
+              (
+                  '''      observations.push({ profile: profile.id, initial, settlement, testPrimary, testCluster, researchPrimary, researchCluster, lawCluster, telemetry });\n      await page.close();\n    }\n\n    await browser.close();\n    const receipt = writeReceipt({ phase: "BROWSER_EXECUTION", browserExecuted: true });''',
+                  '''      observations.push({ profile: profile.id, initial, settlement, testPrimary, testCluster, researchPrimary, researchCluster, lawCluster, telemetry });\n      } finally {\n        if (page) {\n          await page.close().catch(() => {});\n        }\n      }\n    }\n\n    const receipt = writeReceipt({ phase: "BROWSER_EXECUTION", browserExecuted: true });'''
+              ),
+              (
+                  '''  } catch (error) {\n    failures.push({ profile: "browser", id: "BROWSER_EXECUTION_ABORTED", observed: String(error?.stack || error?.message || error) });\n    writeReceipt({ phase: "BROWSER_EXECUTION_ABORTED", browserExecuted: true });\n    process.exitCode = 1;\n  }\n}\n''',
+                  '''  } catch (error) {\n    failures.push({\n      profile: "browser",\n      id: "BROWSER_EXECUTION_ABORTED",\n      observed: String(error?.stack || error)\n    });\n    writeReceipt({\n      phase: "BROWSER_EXECUTION_ABORTED",\n      browserExecuted: true\n    });\n    process.exitCode = 1;\n  } finally {\n    if (browser) {\n      await browser.close().catch(() => {});\n    }\n  }\n}\n'''
+              )
+          ]
+
+          for old, new in replacements:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"EXPECTED_EXACTLY_ONE_REPLACEMENT_MATCH:{count}:{old[:80]!r}")
+              text = text.replace(old, new, 1)
+
+          required = [
+              "let browser = null;",
+              "browser = await puppeteer.launch({",
+              "let page = null;",
+              "await page.close().catch(() => {});",
+              "await browser.close().catch(() => {});",
+              'id: "DRAG_AND_SETTLEMENT_ABORTED"',
+              'observed: String(error?.stack || error)'
+          ]
+          for token in required:
+              if token not in text:
+                  raise SystemExit(f"REQUIRED_TOKEN_MISSING:{token}")
+
+          if "const browser = await puppeteer.launch" in text:
+              raise SystemExit("STALE_BROWSER_DECLARATION_REMAINS")
+          if "await browser.close();" in text:
+              raise SystemExit("UNGUARDED_BROWSER_CLOSE_REMAINS")
+          if "await page.close();" in text:
+              raise SystemExit("UNGUARDED_PAGE_CLOSE_REMAINS")
+
+          path.write_text(text)
+          PY
+
+          node --check verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs
+
+      - name: Commit benchmark-only correction
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs
+          test "$(git diff --cached --name-only)" = "verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs"
+          git commit -m "Checkpoint 3: guarantee benchmark browser cleanup"
+          git push origin HEAD:agent/laws-compass-checkpoint-2-bounded-construction-002

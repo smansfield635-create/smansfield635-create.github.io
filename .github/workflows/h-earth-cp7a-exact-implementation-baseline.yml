@@ -1,0 +1,61 @@
+name: H-Earth CP7A Exact Implementation Baseline
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-cp7a-exact-implementation-baseline.yml'
+      - 'h-earth-3d/control-plane/post-cp2-round2/cp7/h-earth.cp7a-exact-implementation-baseline.v1.mjs'
+      - 'h-earth-3d/validation/cp7/h-earth.cp7a-exact-implementation-baseline.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-exact-baseline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact CP7A candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute deterministic CP7A verifier first pass
+        run: >-
+          node h-earth-3d/validation/cp7/h-earth.cp7a-exact-implementation-baseline.mjs
+          h-earth-3d/validation/cp7/cp7a-evidence/receipt-first.json
+
+      - name: Execute deterministic CP7A verifier second pass
+        run: >-
+          node h-earth-3d/validation/cp7/h-earth.cp7a-exact-implementation-baseline.mjs
+          h-earth-3d/validation/cp7/cp7a-evidence/receipt-second.json
+
+      - name: Require identical receipts
+        run: cmp h-earth-3d/validation/cp7/cp7a-evidence/receipt-first.json h-earth-3d/validation/cp7/cp7a-evidence/receipt-second.json
+
+      - name: Upload CP7A evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp7a-exact-implementation-baseline
+          path: h-earth-3d/validation/cp7/cp7a-evidence/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce CP7A pass
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('h-earth-3d/validation/cp7/cp7a-evidence/receipt-first.json', 'utf8'));
+          if (receipt.result !== 'CP7A_EXACT_IMPLEMENTATION_BASELINE_PASS_CLOSED' || receipt.pass !== true) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`CP7A_PASS:${receipt.canonicalSha256}`);
+          NODE

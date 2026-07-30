@@ -64,7 +64,7 @@ export const H_EARTH_CP7A_EXACT_IMPLEMENTATION_BASELINE_v1 = deepFreeze({
     ],
     controlPrefix: 'h-earth-3d/control-plane/post-cp2-round2/cp7/',
     validationPrefix: 'h-earth-3d/validation/cp7/',
-    workflowPrefix: '.github/workflows/h-earth-cp7-',
+    workflowPrefix: '.github/workflows/h-earth-cp7',
     allOtherProductPathsProhibited: true
   },
 

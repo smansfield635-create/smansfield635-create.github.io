@@ -45,7 +45,8 @@ export const H_EARTH_MA1_EXISTING_METRIC_REPRODUCTION_v1 = deepFreeze({
     'h-earth-3d/control-plane/post-cp2-round2/metric-attribution/h-earth.ma1-existing-metric-reproduction.v1.mjs',
     'h-earth-3d/validation/metric-attribution/h-earth.ma1-existing-metric-reproduction-browser.mjs',
     'h-earth-3d/validation/metric-attribution/h-earth.ma1-existing-metric-reproduction-harness.html',
-    'h-earth-3d/validation/metric-attribution/h-earth.ma1-existing-metric-reproduction.runner.mjs'
+    'h-earth-3d/validation/metric-attribution/h-earth.ma1-existing-metric-reproduction.runner.mjs',
+    'h-earth-3d/research/metric-attribution/README.md'
   ],
   prohibitedWork: [
     'DIAGNOSTIC_PASS_A_THROUGH_G',

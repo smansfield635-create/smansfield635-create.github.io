@@ -37,8 +37,20 @@ export const H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001 = freeze({
       specificationSha256: '7c326be426256106753de89c951a0d26b7308bec30c040ce559884bc35e68b52'
     },
     A3: {
-      status: 'SOURCE_IMPLEMENTATION_CANDIDATE',
+      status: 'PASS_CLOSED',
+      branchHead: '2f811a1fa5896c04267e58bd2f996e31f8e995c4',
+      receiptSha256: '78f1f093a32365e2521b79c1d8d02194b9e17a3557772f1f2c64a00a231e4a30',
       stoppingBoundary: 'STOP_AFTER_SOURCE_IMPLEMENTATION_FETCH_BACK_BEFORE_DETERMINISTIC_KERNEL_EXECUTION'
+    },
+    A4: {
+      status: 'PASS_CLOSED',
+      assertionCount: 49,
+      deterministicGaugeReceiptDigest: 'fnv1a32:0117a46f',
+      receiptDigest: 'fnv1a32:f03a97e7',
+      receiptSha256: '66404327e5ff0fa4b81bafd24fa81d72d2968661cb02e43665f52b37a02bad8c',
+      browserExecutionPerformed: false,
+      liveRouteExecutionPerformed: false,
+      stoppingBoundary: 'STOP_AFTER_DETERMINISTIC_KERNEL_EXECUTION'
     }
   },
   authorizedA3MutationManifest: {
@@ -69,7 +81,7 @@ export const H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001 = freeze({
     narrativePresentationMutationAuthorized: false,
     userDifferentialRequired: false
   },
-  nextCheckpoint: 'A4_DETERMINISTIC_GAUGE_KERNEL_VERIFICATION'
+  nextCheckpoint: 'A5_EXACT_BROWSER_EXECUTION'
 });
 
 export default H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001;

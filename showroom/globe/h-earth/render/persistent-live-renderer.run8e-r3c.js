@@ -242,6 +242,7 @@ void main(){
     float manorGranularity=noise2(world*0.34+vec2(41.0,-23.0));
     float manorTerraceSignal=stableWave(manorRadius*0.44+vWorldPosition.y*0.72+manorGranularity*2.2);
     float manorTerraceContact=transitionBand(manorTerraceSignal,0.080)*manorEnvelope;
+    float manorChromatic=stableWave(manorRadius*0.29+world.x*0.12-world.y*0.09+vWorldPosition.y*0.37+manorGranularity*1.4);
     float manorContact=max(
       manorEdge,
       max(manorOuterContact*0.90,max(manorInnerContact*0.75,manorTerraceContact*0.70))
@@ -251,6 +252,7 @@ void main(){
     palette*=mix(1.0,0.54,manorContact*(0.36+0.42*manorPattern));
     palette*=mix(0.88,1.12,manorTerraceSignal*manorEnvelope*0.34);
     palette+=vec3(0.205,0.125,0.020)*manorContact*(0.42+0.58*manorGranularity);
+    palette+=vec3(0.062,0.016,-0.022)*(manorChromatic-0.5)*manorEnvelope;
     presentationContact=max(presentationContact,manorContact*0.72);
     presentationHighlight=max(presentationHighlight,manorOuterContact*0.44+manorTerraceContact*0.24);
 
@@ -270,11 +272,11 @@ void main(){
     );
     vec3 cavernStone=mix(vec3(0.028,0.052,0.060),vec3(0.27,0.39,0.42),cavernStrata*0.70+cavernFracture*0.30);
     palette=mix(palette,cavernStone,cavernRelation*(0.68+0.20*cavernStrata));
-    palette*=mix(1.0,0.56,cavernGroundContact*(0.34+0.46*cavernFracture));
+    palette*=mix(1.0,0.50,cavernGroundContact*(0.36+0.48*cavernFracture));
     palette*=mix(0.90,1.10,cavernRelationSignal*cavernApproach*0.30);
     palette=mix(palette,palette*vec3(0.60,0.84,0.96),cavernApproach*0.32);
-    palette+=vec3(0.028,0.054,0.062)*cavernGroundContact*(0.35+0.65*cavernStrata);
-    presentationContact=max(presentationContact,cavernGroundContact*0.68);
+    palette+=vec3(0.032,0.060,0.070)*cavernGroundContact*(0.35+0.65*cavernStrata);
+    presentationContact=max(presentationContact,cavernGroundContact*0.82);
     presentationHighlight=max(presentationHighlight,cavernOuterContact*0.34+cavernRelationContact*0.26);
 
     float ravineAxis=exp(-pow((vWorldPosition.x-40.0)/18.0,2.0));
@@ -545,7 +547,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         lawfulSlopeCurvatureModulation: true,
         boundedContactDepthReinforcement: true,
         temporallyStableWorldSpaceVariation: true,
-        secondBoundedCrestAndRelationCorrection: true,
+        regressionColorDiversityRestoration: true,
+        cavernNearThresholdReinforcement: true,
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },

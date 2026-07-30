@@ -193,6 +193,8 @@ RETURN_WITH_A_SUBSIGNAL_CAUSAL_AND_USEFUL_CUE_RETENTION_DISPOSITION_BEFORE_ANY_P
 | MA4 | `ad151f7ba98c0d16badf3ba0183ed3e21b516559` | `30565504244 / 90948893637` | `2ad7f10e86a3e8bdd1e9e06c415daa55da870b9f977155b247da8907fe4bc958` | `8768674259 / 7cdf75ae0d85eddcdc4633a6d8a344e4ee7097bd3d78bf0a9dbd8e0bc59398ad` |
 | MA5 | `30750006bce953c002f47d89f314faca83b224f1` | `30567031631 / 90954013381` | `7c4913af311c77ba4121c31c2c29f86b265bae76bc6bf11e783360bdfdf959cc` | `8769245958 / 1358f3ea4b9a5668134ace5a77c809f52496a4eb2eb048a132b4c43de4e9fdee` |
 
+MA5 canonical matrix SHA-256: `9463cf860a13cdbd38f3f5f7f24b27b15b958ecf1d3a3324557906fe8f940811`
+
 MA6's execution run, canonical closure receipt, artifact, and final merge accompany this document in the merged pull request and should be retained with it. They are excluded from the document body to avoid a self-referential digest.
 
 Canonical machine-readable packet:

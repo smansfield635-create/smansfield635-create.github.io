@@ -1,10 +1,9 @@
 /* /laws/index.crystals.js
-   Canonical Main Compass crystal corridor cloned for the Laws page.
+   Laws-owned exact two-object reconciliation.
    Page identity remains Laws-owned: controller, compositor, planet,
    semantic records, labels, palettes, content, and routes are retained.
-   Mesh topology, facet colors, normals, shaders, halo pass, draw state,
-   scale hierarchy, and spherical presentation are duplicated from
-   /assets/compass/compass.crystals.js.
+   Four existing Law stars retain baseline meshes, materials, scales, and positions.
+   Test and Research share one sphere topology at opposed depth poles.
 */
 
 (() => {
@@ -12,10 +11,10 @@
 
   const CONTRACT = Object.freeze({
     id:
-      "DGB_LAWS_CRYSTALS_CANONICAL_MAIN_CORRIDOR_CLONE_v1",
+      "DGB_LAWS_CRYSTALS_EXACT_TWO_OBJECT_RECONCILIATION_v2",
 
     version:
-      "2.0.0-canonical-main-crystal-corridor-clone",
+      "2.1.0-exact-two-object-field",
 
     file:
       "/laws/index.crystals.js",
@@ -134,12 +133,12 @@
 
       vectors:
         Object.freeze({
-flow: Object.freeze([0, 1, 0]),
-integrity: Object.freeze([0.8660254037844386, 0.5, 0]),
-reality: Object.freeze([0.8660254037844386, -0.5, 0]),
-structure: Object.freeze([0, -1, 0]),
-test: Object.freeze([-0.8660254037844386, -0.5, 0]),
-research: Object.freeze([-0.8660254037844386, 0.5, 0])
+          flow: Object.freeze([0, 1, 0]),
+          integrity: Object.freeze([1, 0, 0]),
+          reality: Object.freeze([0, -1, 0]),
+          structure: Object.freeze([-1, 0, 0]),
+          test: Object.freeze([0, 0, 1]),
+          research: Object.freeze([0, 0, -1])
         })
     }),
 
@@ -186,10 +185,10 @@ research: Object.freeze([-0.8660254037844386, 0.5, 0])
     6,
 
   categoryScale:
-     0.768,
+    0.96,
 
   focusedCategoryScale:
-     1.04,
+    1.30,
 
   auxiliaryScale:
     1.10,
@@ -2267,7 +2266,7 @@ research: Object.freeze([-0.8660254037844386, 0.5, 0])
     DIRECTIONS.forEach(direction => {
       const gateway=GATEWAY_IDS.includes(direction);
       const warm=direction === "reality" || direction === "structure" || direction === "test";
-      meshes.set(`category-${direction}`, gateway ? createCelestialSphereMesh({segments:30,rings:20,radius:direction === "test" ? 0.68 : 0.64,color:PALETTE[direction],mode:direction === "test" ? "solar" : "lunar"}) : createDiamondStarMesh({points:QUALITY.categorySegments,radius:0.72,inner:0.30,depth:0.42,crown:0.20,color:PALETTE[direction],warmth:warm ? 0.10 : 0.02}));
+      meshes.set(`category-${direction}`, gateway ? createCelestialSphereMesh({segments:30,rings:20,radius:0.66,color:PALETTE[direction],mode:direction === "test" ? "solar" : "lunar"}) : createDiamondStarMesh({points:QUALITY.categorySegments,radius:0.72,inner:0.30,depth:0.42,crown:0.20,color:PALETTE[direction],warmth:warm ? 0.10 : 0.02}));
       meshes.set(`law-${direction}`,createDiamondStarMesh({points:gateway?8:QUALITY.lawSegments,radius:gateway?0.48:0.42,inner:gateway?0.21:0.20,depth:gateway?0.29:0.25,crown:gateway?0.13:0.10,color:lawColorForDirection(direction),warmth:warm?0.08:0.02}));
     });
 
@@ -3248,7 +3247,8 @@ function validateClusterSphereContract() {
           ) => {
             const id =
               normalizeLawId(
-                element.dataset.lawId
+                element.dataset.lawId ||
+                element.dataset.memberId
               );
 
             invariant(
@@ -3285,9 +3285,7 @@ function validateClusterSphereContract() {
                 lawCount:
                   directionLaws.length,
                  meshKey:
-                   element.matches("[data-laws-law]")
-                     ? `law-${direction}`
-                     : `member-${direction}`,
+                   `law-${direction}`,
 
                 material:
                   "LAW_IDLE",
@@ -5464,6 +5462,7 @@ function validateClusterSphereContract() {
               state.relocatedLawElements.map(
                 element =>
                   element.dataset.lawId ||
+                  element.dataset.memberId ||
                   ""
               )
             ),

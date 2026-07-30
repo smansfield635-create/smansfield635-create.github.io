@@ -10,7 +10,7 @@ Source evidence:
 - MA3 artifact: `8768511411`, SHA-256 `5e9d8f04c2bccaaa3dc103dc696bcf0c4f610c9079a34e93a54663e769e1d094`
 - MA4 receipt: `2ad7f10e86a3e8bdd1e9e06c415daa55da870b9f977155b247da8907fe4bc958`
 - MA4 artifact: `8768674259`, SHA-256 `7cdf75ae0d85eddcdc4633a6d8a344e4ee7097bd3d78bf0a9dbd8e0bc59398ad`
-- Matrix SHA-256: `c0b9648ac3d1a87afc93f6daf8e43d4077e0e8471be5c81d7b61c0de9ce118f3`
+- Matrix SHA-256: `9463cf860a13cdbd38f3f5f7f24b27b15b958ecf1d3a3324557906fe8f940811`
 
 ## Aggregate correspondence to H
 
@@ -19,8 +19,8 @@ Source evidence:
 | 1 | G — accepted material, flat lighting | 0.951688 | 23/24 | 0.979521 | 0.992369 | 0.994535 |
 | 2 | F — constant material, accepted lighting | 0.856769 | 17/24 | 0.806672 | 0.801229 | 0.903744 |
 | 3 | C — surface-normal components | 0.818452 | 18/24 | 0.782356 | 0.954252 | 0.917117 |
-| 4 | A — elevation | 0.746460 | 16/24 | 0.723533 | 0.086046 | 0.876403 |
-| 5 | E — silhouette and major edges | 0.710858 | 18/24 | 0.690371 | 0.223227 | 0.891267 |
+| 4 | A — elevation | 0.746460 | 16/24 | 0.723533 | 0.086046 | 0.876109 |
+| 5 | E — silhouette and major edges | 0.710858 | 18/24 | 0.690371 | 0.223227 | 0.891274 |
 | 6 | B — slope magnitude | 0.683853 | 18/24 | 0.713430 | -0.043138 | 0.887954 |
 | 7 | D — depth | 0.652307 | 16/24 | 0.689473 | -0.136190 | 0.878935 |
 

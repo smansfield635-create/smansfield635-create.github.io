@@ -2,16 +2,18 @@
   "schemaVersion": "H_EARTH_GRATITUDE_REGION_TRAVERSAL_SCENE_SUITE_CP2_ROUND_1_PRESENTATION_v1",
   "checkpoint": {
     "id": "CP2_ROUND_1_PRESENTATION_CORRECTION_EXECUTION_LIVE_AVAILABILITY_AND_USER_DIFFERENTIAL",
-    "engineeringResult": "ENGINEERING_PASS_AWAITING_LIVE_ADMISSION",
-    "liveResult": "AWAITING_USER_DIFFERENTIAL",
-    "closureResult": "PASS_CLOSED_ONLY_AFTER_USER_DIFFERENTIAL",
-    "authorityQuestion": "CAN_ROUND_1_IMPROVE_PRESENTATION_READABILITY_AND_ACCEPTED_SITE_OR_EXTERIOR_RELATION_DIFFERENTIATION_WITHOUT_MUTATING_TERRAIN_PLACEMENT_CAMERA_NAVIGATION_TOUCH_OR_GEOMETRY_AUTHORITY_AND_THEN_REMAIN_OPEN_FOR_THE_REQUIRED_USER_DIFFERENTIAL"
+    "engineeringResult": "TARGETED_ENGINEERING_CORRECTION_IN_PROGRESS",
+    "liveResult": "NOT_AUTHORIZED_UNTIL_PASS_ENGINEERING",
+    "closureResult": "PASS_CLOSED_ONLY_AFTER_USER_DIFFERENTIAL_AND_SEPARATE_MERGE_DECISION",
+    "authorityQuestion": "CAN_THE_FIVE_REMAINING_LOW_DIFFERENTIATION_SCENES_BE_BROUGHT_WITHIN_THE_CP2_ACCEPTANCE_GATE_WITHOUT_DEGRADING_THE_THREE_CURRENTLY_RESOLVED_SCENES_OR_CHANGING_FROZEN_WORLD_AUTHORITIES"
   },
   "repository": {
     "fullName": "smansfield635-create/smansfield635-create.github.io",
     "currentMainAtCheckpointOpen": "3a6eafcb8c10c61849a452a0c068d34a12117cf5",
     "cp1IntegratedProgramHead": "ad2c3edfe59ef0d2b34b2990c7547c42819ae0b5",
     "cp2Branch": "agent/h-earth-gratitude-region-traversal-scene-suite-cp2-round1-presentation-001",
+    "cp2PullRequest": 353,
+    "controlledCorrectionBasisHead": "03b8e9de0b91336c623aa89b9c8917bb085897ef",
     "publicRoute": "https://diamondgatebridge.com/showroom/globe/h-earth/",
     "publicHarness": "https://diamondgatebridge.com/h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html"
   },
@@ -35,10 +37,136 @@
     "requireAllFrameHashesDifferFromBaseline": true,
     "requireAlphaClosed": true
   },
+  "targetedCorrection": {
+    "operation": "CP2_TARGETED_LOW_DIFFERENTIATION_SCENE_CORRECTION",
+    "controlledBasisPolicy": "PRESERVE_SUCCESSFUL_AGGREGATE_CHANGES_AND_DO_NOT_RESTART_FROM_CP1_UNLESS_INCOMPATIBILITY_IS_EXECUTION_PROVEN",
+    "targetSceneIds": [
+      "SCENE_01_HILL_FIELD_FILL",
+      "SCENE_02_ASCENDING_TOWARD_CREST",
+      "SCENE_05_RAVINE_APPROACH",
+      "SCENE_07_MANOR_SITE_APPROACH",
+      "SCENE_08_CAVERN_RELATION_APPROACH"
+    ],
+    "regressionSceneIds": [
+      "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+      "SCENE_04_LATERAL_SLOPE_TRAVEL",
+      "SCENE_06_COAST_TO_INLAND_TRANSITION"
+    ],
+    "authorizedCauseClasses": [
+      "LOCAL_COLOR_FREQUENCY",
+      "SLOPE_AND_CURVATURE_EXPRESSION",
+      "LARGE_FACE_COLOR_BREAKUP",
+      "CONTACT_AND_EDGE_SEPARATION",
+      "DISTANCE_SEPARATION",
+      "REGION_OR_TARGET_SPECIFIC_PRESENTATION_DIFFERENTIATION",
+      "TEMPORALLY_STABLE_MATERIAL_VARIATION"
+    ],
+    "requiredStrategy": [
+      "SHARED_WORLD_SPACE_MACRO_AND_MESO_FREQUENCY_CORRECTION_FIRST",
+      "LAWFUL_SLOPE_AND_CURVATURE_MODULATION",
+      "BOUNDED_CONTACT_OR_DEPTH_REINFORCEMENT",
+      "REGION_DERIVED_MANOR_SITE_AND_CAVERN_RELATION_MATERIAL_DIFFERENTIATION_ONLY"
+    ],
+    "prohibitedTechniques": [
+      "CAMERA_ID_CONDITIONAL",
+      "SCREENSHOT_SPECIFIC_OVERLAY",
+      "MANUALLY_PAINTED_SCREEN_SPACE_PATCH",
+      "TARGET_NAME_VISUAL_HACK",
+      "MANOR_GEOMETRY_OR_FOOTPRINT_OR_ORIENTATION_ASSIGNMENT",
+      "CAVERN_OPENING_OR_INTERIOR_CONSTRUCTION",
+      "CAMERA_RELOCATION_INTO_UNAUTHORIZED_CHUNK"
+    ],
+    "acceptance": {
+      "maximumLowDifferentiationSceneCount": 2,
+      "scene07MinimumColorBuckets": 14,
+      "scene07MinimumEdgeSignal": 0.12563,
+      "regressionMinimumColorBucketRetentionRatio": 0.9,
+      "regressionMinimumEdgeSignalRetentionRatio": 0.9,
+      "regressionMinimumLuminanceStandardDeviationRetentionRatio": 0.8,
+      "browserConsoleErrorMaximum": 0,
+      "pageErrorMaximum": 0,
+      "frozenAuthoritiesPreserved": true,
+      "productScopeExact": true
+    },
+    "controlledBasisSceneMetrics": {
+      "SCENE_03_DESCENDING_WITHOUT_HORIZON": {
+        "sampledColorBucketCount": 44,
+        "meanAdjacentChannelDifference": 0.6003010399562124,
+        "luminanceStandardDeviation": 21.89366057387928
+      },
+      "SCENE_04_LATERAL_SLOPE_TRAVEL": {
+        "sampledColorBucketCount": 47,
+        "meanAdjacentChannelDifference": 0.4148636466080685,
+        "luminanceStandardDeviation": 30.095884159749268
+      },
+      "SCENE_06_COAST_TO_INLAND_TRANSITION": {
+        "sampledColorBucketCount": 26,
+        "meanAdjacentChannelDifference": 0.5203313049357674,
+        "luminanceStandardDeviation": 20.519731079158515
+      }
+    },
+    "controlledBasisTargetSceneMetrics": {
+      "SCENE_01_HILL_FIELD_FILL": {
+        "sampledColorBucketCount": 11,
+        "meanAdjacentChannelDifference": 0.17106152805949967,
+        "luminanceStandardDeviation": 34.64763780448653
+      },
+      "SCENE_02_ASCENDING_TOWARD_CREST": {
+        "sampledColorBucketCount": 19,
+        "meanAdjacentChannelDifference": 0.1020937570430471,
+        "luminanceStandardDeviation": 29.732645052604823
+      },
+      "SCENE_05_RAVINE_APPROACH": {
+        "sampledColorBucketCount": 21,
+        "meanAdjacentChannelDifference": 0.14929650020927912,
+        "luminanceStandardDeviation": 30.54713247860278
+      },
+      "SCENE_07_MANOR_SITE_APPROACH": {
+        "sampledColorBucketCount": 14,
+        "meanAdjacentChannelDifference": 0.12069802633697158,
+        "luminanceStandardDeviation": 33.68194281554732
+      },
+      "SCENE_08_CAVERN_RELATION_APPROACH": {
+        "sampledColorBucketCount": 18,
+        "meanAdjacentChannelDifference": 0.13803116648958433,
+        "luminanceStandardDeviation": 29.450597772289942
+      }
+    },
+    "controlledBasisAggregate": {
+      "colorDifferentiationRatio": 1.7699115044247788,
+      "edgeSignalRatio": 2.3372366619580935,
+      "lowDifferentiationSceneCount": 5
+    },
+    "dispositions": [
+      "PASS_ENGINEERING",
+      "PARTIAL_IMPROVEMENT_REMAINS_BLOCKED",
+      "NO_MATERIAL_IMPROVEMENT_STOP",
+      "REGRESSION_ROLLBACK"
+    ]
+  },
+  "diagnosticHistory": [
+    {
+      "head": "03b8e9de0b91336c623aa89b9c8917bb085897ef",
+      "workflowRun": 30505048538,
+      "artifactId": 8745026162,
+      "artifactSha256": "0c8687417290391a96055574eef8ea4dab7a5c4038997f1453840098e9966672",
+      "result": "PARTIAL_IMPROVEMENT_REMAINS_BLOCKED",
+      "aggregateColorDifferentiationRatio": 1.7699115044247788,
+      "aggregateEdgeSignalRatio": 2.3372366619580935,
+      "lowDifferentiationSceneCount": 5,
+      "failedGates": [
+        "MAXIMUM_LOW_DIFFERENTIATION_SCENES",
+        "SCENE_07_EDGE_SIGNAL_MINIMUM"
+      ]
+    }
+  ],
   "presentationScope": {
     "mayAddress": [
       "TERRAIN_SCALE_CUES",
       "SLOPE_READABILITY",
+      "CURVATURE_READABILITY",
+      "LARGE_FACE_COLOR_BREAKUP",
+      "CONTACT_AND_EDGE_SEPARATION",
       "ROUTE_CONTAINMENT",
       "SHORELINE_DIFFERENTIATION",
       "VEGETATION_DIFFERENTIATION",
@@ -58,13 +186,17 @@
       "CAMERA_AUTHORITY",
       "NAVIGATION_AUTHORITY",
       "TOUCH_AUTHORITY",
-      "PERSISTENT_GPU_RESOURCE_LIFECYCLE"
+      "PERSISTENT_GPU_RESOURCE_LIFECYCLE",
+      "WORLD_GEOMETRY",
+      "VEGETATION_TOPOLOGY",
+      "NAVIGABLE_CHUNK_BOUNDARIES"
     ]
   },
   "allowedMutationPaths": [
     ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp2.yml",
     "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.v1.json",
     "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.runner.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-targeted-correction-verifier.mjs",
     "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.receipt.v1.json",
     "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
     "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
@@ -89,11 +221,14 @@
   ],
   "prohibited": [
     "TERRAIN_MUTATION",
+    "HEIGHTFIELD_MUTATION",
     "PLACEMENT_MUTATION",
     "CAMERA_MUTATION",
     "NAVIGATION_MUTATION",
     "TOUCH_MUTATION",
     "GEOMETRY_PACKAGE_MUTATION",
+    "VEGETATION_TOPOLOGY_MUTATION",
+    "NAVIGABLE_CHUNK_BOUNDARY_MUTATION",
     "BUILDING_GEOMETRY",
     "CAVERN_EXCAVATION",
     "ASSISTANT_PERCEPTUAL_ACCEPTANCE",
@@ -101,6 +236,7 @@
   ],
   "userDifferential": {
     "required": true,
+    "authorizedOnlyAfter": "PASS_ENGINEERING_AND_LIVE_DIFFERENTIAL_CANDIDATE_AVAILABILITY",
     "comparison": "CHANGED_LIVE_CP2_CANDIDATE_VERSUS_LAST_USER_ACCEPTED_LIVE_BASELINE",
     "mayNotBeReplacedBy": [
       "AUTOMATED_METRICS",
@@ -110,5 +246,9 @@
       "LIVE_BYTE_IDENTITY"
     ]
   },
-  "stoppingBoundary": "STOP_AFTER_LIVE_CANDIDATE_AVAILABILITY_AND_REPORT_AWAITING_USER_DIFFERENTIAL"
+  "mergeAuthority": {
+    "cp2MergeAuthorized": false,
+    "separateDecisionRequiredAfterUserPhysicalDisposition": true
+  },
+  "stoppingBoundary": "PASS_ENGINEERING_PERMITS_LIVE_DIFFERENTIAL_CANDIDATE_CREATION_BUT_DOES_NOT_AUTHORIZE_CP2_MERGE_OR_CLOSE_CP2"
 }

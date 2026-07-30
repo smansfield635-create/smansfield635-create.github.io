@@ -1,15 +1,6 @@
 name: H-Earth Gratitude Region Traversal Scene Suite CP1
 
 on:
-  push:
-    branches:
-      - agent/h-earth-gratitude-region-traversal-scene-suite-cp1-diagnosis-001
-    paths:
-      - .github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp1.yml
-      - h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1.v1.json
-      - h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html
-      - h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-browser.mjs
-      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.runner.mjs
   pull_request:
     branches:
       - agent/h-earth-gratitude-region-traversal-scene-suite-cp0-baseline-001
@@ -26,7 +17,7 @@ permissions:
 
 concurrency:
   group: h-earth-gratitude-region-traversal-scene-suite-cp1
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   execute-permanent-suite-and-diagnosis:

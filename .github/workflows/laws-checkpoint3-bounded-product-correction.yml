@@ -43,7 +43,25 @@ jobs:
               line[10:] if line.startswith('          ') else line
               for line in match.group(1).splitlines()
           )
-          prefix = "from pathlib import Path\nimport re\np=Path('laws/index.crystals.js')\ns=p.read_text(encoding='utf-8')\ns,n=re.subn(r'\\n\\s+normalizeLawId\\(\\s*element\\.dataset\\.lawId\\s*\\);', '\\n               normalizeLawId(\\n                 element.dataset.lawId\\n               );', s, count=1)\nif n != 1: raise RuntimeError(f'CRYSTALS_CHILD_ID_NORMALIZATION:{n}')\np.write_text(s, encoding='utf-8')\n"
+          prefix = (
+              "from pathlib import Path\n"
+              "import re\n"
+              "p=Path('laws/index.crystals.js')\n"
+              "s=p.read_text(encoding='utf-8')\n"
+              "s,n=re.subn(r'\\n\\s+normalizeLawId\\(\\s*element\\.dataset\\.lawId\\s*\\);', '\\n               normalizeLawId(\\n                 element.dataset.lawId\\n               );', s, count=1)\n"
+              "if n != 1: raise RuntimeError(f'CRYSTALS_CHILD_ID_NORMALIZATION:{n}')\n"
+              "s,n=re.subn(r'\\n\\s+type:\\s*\\n\\s+NODE_TYPES\\.LAW,', '\\n                 type:\\n                   NODE_TYPES.LAW,', s, count=1)\n"
+              "if n != 1: raise RuntimeError(f'CRYSTALS_CHILD_NODE_CLASS_NORMALIZATION:{n}')\n"
+              "s,n=re.subn(r'\\n\\s+label:\\s*\\n\\s+element\\.dataset\\.lawLabel \\|\\|\\s*\\n\\s+element\\.dataset\\.label \\|\\|\\s*\\n\\s+element\\.textContent\\.trim\\(\\),', '\\n                 label:\\n                   element.dataset.lawLabel ||\\n                   element.dataset.label ||\\n                   element.textContent.trim(),', s, count=1)\n"
+              "if n != 1: raise RuntimeError(f'CRYSTALS_CHILD_LABEL_NORMALIZATION:{n}')\n"
+              "s,n=re.subn(r'\\n\\s+meshKey:\\s*\\n\\s+`law-\\$\\{direction\\}`,', '\\n                 meshKey:\\n                   `law-${direction}`,', s, count=1)\n"
+              "if n != 1: raise RuntimeError(f'CRYSTALS_CHILD_MESH_NORMALIZATION:{n}')\n"
+              "s,n=re.subn(r'node\\.type === NODE_TYPES\\.LAW &&\\s*\\n\\s*node\\.direction === direction', 'node.type === NODE_TYPES.LAW &&\\n        node.direction === direction', s, count=1)\n"
+              "if n != 1: raise RuntimeError(f'CRYSTALS_ACTIVE_CHILD_NORMALIZATION:{n}')\n"
+              "s,n=re.subn(r'node\\.type === NODE_TYPES\\.CATEGORY \\|\\|\\s*\\n\\s*node\\.type === NODE_TYPES\\.AUXILIARY \\|\\|\\s*\\n\\s*node\\.type === NODE_TYPES\\.LAW', 'node.type === NODE_TYPES.CATEGORY ||\\n             node.type === NODE_TYPES.AUXILIARY ||\\n             node.type === NODE_TYPES.LAW', s, count=1)\n"
+              "if n != 1: raise RuntimeError(f'CRYSTALS_PROJECTION_NORMALIZATION:{n}')\n"
+              "p.write_text(s, encoding='utf-8')\n"
+          )
           payload = prefix + '\n' + payload
           subprocess.run(['python3', '-c', payload], check=True)
           for temporary in (

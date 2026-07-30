@@ -98,6 +98,18 @@
       "correctionScope": "TRANSFER_ENCODING_ONLY",
       "classificationLawChanged": false,
       "correspondenceValuesChanged": false
+    },
+    {
+      "checkpoint": "MA6",
+      "failedWorkflowRunId": 30567546917,
+      "failedJobId": 90955727124,
+      "blockingCondition": "EXPECTED_QUALIFIER_LEDGER_ARITHMETIC_ERROR_17_OF_24_IS_BELOW_0.75",
+      "matrixValuesEvaluated": true,
+      "correctionCount": 1,
+      "correctionScope": "EXPECTED_LEDGER_AND_HANDOFF_WORDING_ONLY",
+      "matchGateChanged": false,
+      "primaryClassificationChanged": false,
+      "secondaryCategoryChanged": false
     }
   ],
   "diagnosticPassRegistry": {
@@ -139,12 +151,14 @@
       "correspondenceComposite": 0.8567686756627473,
       "exactBandMatchCount": 17,
       "exactBandComparisonCount": 24,
+      "exactBandMatchFraction": 0.7083333333333334,
       "meanBandGridPearson": 0.8066720367284914,
       "sceneScorePearson": 0.8012289114198082,
       "meanPeakStrengthRatio": 0.8841710448211679,
       "dominantSceneExactMatchCount": 7,
       "aggregateScoreRatio": 0.9037440789991772,
-      "qualifies": true
+      "qualifies": false,
+      "failedGateTerm": "EXACT_BAND_MATCH_FRACTION"
     },
     {
       "rank": 3,
@@ -185,11 +199,13 @@
     }
   ],
   "causalClassification": {
-    "qualifyingPasses": ["C", "F", "G"],
-    "nonqualifyingPasses": ["A", "B", "D", "E"],
+    "qualifyingPasses": ["C", "G"],
+    "nonqualifyingPasses": ["A", "B", "D", "E", "F"],
     "primaryPass": "G",
     "primaryResult": "MATERIAL_CAUSE_ESTABLISHED_FOR_CURRENT_METRIC",
     "secondaryResult": "GEOMETRY_LIGHTING_INTERACTION_ESTABLISHED_FOR_CURRENT_METRIC",
+    "secondaryQualifyingPass": "C",
+    "strongButNonqualifyingPass": "F",
     "structuralGeometryCause": "NOT_ESTABLISHED_BY_CURRENT_METRIC",
     "cameraVisibleMacroFormCause": "NOT_ESTABLISHED_BY_CURRENT_METRIC",
     "metricAttribution": "MATERIAL_DOMINANT_WITH_GEOMETRY_LIGHTING_SECONDARY",
@@ -199,7 +215,8 @@
   "interpretation": {
     "established": [
       "THE_CURRENT_SCALAR_REPETITION_SCORE_IS_PRIMARILY_REPRODUCED_BY_THE_ACCEPTED_CP2_SPATIAL_MATERIAL_FIELD_EVEN_WITH_DIRECTIONAL_LIGHTING_REMOVED",
-      "SURFACE_NORMALS_AND_ACCEPTED_LIGHTING_ALSO_REPRODUCE_A_SECONDARY_PORTION_OF_THE_SCORE",
+      "SURFACE_NORMALS_ESTABLISH_SECONDARY_GEOMETRY_LIGHTING_SENSITIVITY",
+      "THE_CONSTANT_MATERIAL_WITH_ACCEPTED_LIGHTING_PASS_WAS_STRONG_BUT_DID_NOT_PASS_THE_FROZEN_EXACT_BAND_FRACTION_GATE",
       "ELEVATION_SLOPE_DEPTH_AND_MAJOR_EDGES_DO_NOT_PASS_THE_FULL_CORRESPONDENCE_GATE",
       "THE_PRIOR_BOUNDED_MORPHOLOGY_PROGRAM_TARGETED_A_VARIABLE_THAT_THE_CURRENT_FINAL_FRAME_METRIC_DOES_NOT_PRIMARILY_MEASURE"
     ],

@@ -1,0 +1,107 @@
+name: H-Earth Specialized Gauge Authority Reconciliation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-instrument-platform.yml'
+      - '.github/workflows/h-earth-specialized-gauge-authority-reconciliation.yml'
+      - 'gauges/h-earth/**'
+      - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001.v1.mjs'
+      - 'h-earth-3d/tools/instrument-platform/tool-registry.mjs'
+      - 'h-earth-3d/tools/instrument-platform/instrument-adapters.mjs'
+      - 'h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.*.mjs'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-specialized-gauge-authority-reconciliation.yml'
+      - 'gauges/h-earth/**'
+      - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001.v1.mjs'
+      - 'h-earth-3d/tools/instrument-platform/tool-registry.mjs'
+      - 'h-earth-3d/tools/instrument-platform/instrument-adapters.mjs'
+      - 'h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.*.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-specialized-gauge-reconciliation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact gauge reconciliation candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start exact-source gauge server
+        run: |
+          python3 -m http.server 4185 --bind 127.0.0.1 > /tmp/h-earth-specialized-gauge-server.log 2>&1 &
+          for attempt in $(seq 1 90); do
+            curl -fsS http://127.0.0.1:4185/gauges/h-earth/index.html >/dev/null \
+              && curl -fsS http://127.0.0.1:4185/h-earth-3d/tools/instrument-platform/index.html >/dev/null \
+              && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-specialized-gauge-server.log
+          exit 1
+
+      - name: Execute deterministic gauge kernel
+        run: |
+          node h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.runner.mjs \
+            | tee /tmp/h-earth-specialized-gauge-kernel.log
+
+      - name: Execute exact browser and unified-platform adapter verification
+        env:
+          H_EARTH_GAUGE_ORIGIN: http://127.0.0.1:4185
+        run: |
+          node h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.browser.mjs \
+            | tee /tmp/h-earth-specialized-gauge-browser.log
+
+      - name: Enforce A5 closure boundary
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const path = 'h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.browser.receipt.v1.json';
+          const receipt = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const readiness = receipt.directGauge?.readiness ?? {};
+          const valid =
+            receipt.status === 'PASS_CLOSED' &&
+            receipt.failureCount === 0 &&
+            readiness.requiredApplicableChecks === 11 &&
+            readiness.requiredApplicablePasses === 11 &&
+            readiness.requiredApplicableFailures === 0 &&
+            readiness.requiredApplicableUnresolved === 0 &&
+            readiness.readinessPercent === 100 &&
+            readiness.mergeEligible === true &&
+            receipt.boundaries?.liveHEarthMutationPerformed === false &&
+            receipt.boundaries?.showroomProductMutationPerformed === false;
+          if (!valid) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`H_EARTH_SPECIALIZED_GAUGE_A5_PASS:${receipt.executedHead}:${receipt.canonicalReceiptSha256}`);
+          NODE
+
+      - name: Upload specialized gauge reconciliation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-specialized-gauge-authority-reconciliation-001
+          path: |
+            h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.browser.receipt.v1.json
+            h-earth-3d/validation/instrument-platform/evidence/specialized-gauge-authority-reconciliation/
+            /tmp/h-earth-specialized-gauge-kernel.log
+            /tmp/h-earth-specialized-gauge-browser.log
+            /tmp/h-earth-specialized-gauge-server.log
+          retention-days: 90

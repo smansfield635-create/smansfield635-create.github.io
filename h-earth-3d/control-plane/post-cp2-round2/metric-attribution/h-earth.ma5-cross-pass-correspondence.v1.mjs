@@ -33,7 +33,7 @@ export const H_EARTH_MA5_CROSS_PASS_CORRESPONDENCE_v1 = deepFreeze({
   },
   frozenSources: ma0.frozenSources,
   matrix: {
-    expectedCanonicalSha256: 'c0b9648ac3d1a87afc93f6daf8e43d4077e0e8471be5c81d7b61c0de9ce118f3',
+    expectedCanonicalSha256: '9463cf860a13cdbd38f3f5f7f24b27b15b958ecf1d3a3324557906fe8f940811',
     referencePass: 'H',
     comparisonPassCount: 7,
     sceneCount: 8,

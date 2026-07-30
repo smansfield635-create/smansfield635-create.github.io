@@ -15,7 +15,7 @@ export const H_EARTH_CP7C_CONTROL_FIELD_GENERATOR_EXECUTION_v1 = deepFreeze({
   controllingBasis: {
     cp7bMergeHead: '3548f442d4b44a788f4eb38e3034e0a462736857',
     contractPath: 'h-earth-3d/control-plane/post-cp2-round2/cp7/h-earth.cp7b-control-field-contract.v1.mjs',
-    contractBlob: 'TO_BE_VERIFIED_FROM_MERGED_CP7B',
+    contractBlob: 'e1873b9cc476389945970c5ca7a52529ba89414e',
     terrainPath: 'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js',
     terrainBlob: '0bd36eec01a75311bf6441d575bae5a057195bbc',
     acceptedRendererPath: 'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js',

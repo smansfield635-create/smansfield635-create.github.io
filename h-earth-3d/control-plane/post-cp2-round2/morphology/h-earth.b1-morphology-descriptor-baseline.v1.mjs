@@ -10,6 +10,7 @@ const deepFreeze = (value, seen = new WeakSet()) => {
 export const H_EARTH_B1_MORPHOLOGY_DESCRIPTOR_BASELINE_v1 = deepFreeze({
   schemaVersion: 'H_EARTH_B1_MORPHOLOGY_DESCRIPTOR_BASELINE_v1',
   checkpoint: 'B1',
+  executionTriggerRevision: 1,
   status: 'REPETITION_LOCALIZATION_AND_MORPHOLOGY_DESCRIPTOR_BASELINE_ONLY',
   controllingB0Merge: '09373bed39a555e8b76a5db004e9529603748ca3',
   b0AuthorityId: b0.schemaVersion,

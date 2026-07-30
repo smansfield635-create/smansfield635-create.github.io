@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#061014">
+  <meta name="description" content="H-Earth Checkpoint 2 Round 1 live differential candidate.">
+  <title>H-Earth · CP2 Live Differential Candidate</title>
+  <link rel="stylesheet" href="../../functional-landscape/index.css?v=gesture-shell-001">
+  <link rel="stylesheet" href="../../index.css?v=034r">
+  <style>
+    .h-earth-live-route{--h-earth-stage-min-height:clamp(560px,72dvh,920px)}
+    .h-earth-live-route .h-earth-3d-shell{gap:16px}.h-earth-live-route .h-earth-3d-public-header{position:relative;z-index:10}
+    .h-earth-live-arrival{grid-template-columns:minmax(0,1fr) minmax(230px,.34fr);gap:12px}.h-earth-live-arrival .h-earth-3d-arrival-copy{padding:clamp(18px,3vw,30px)}
+    .h-earth-live-arrival .h-earth-3d-title{max-width:900px;font-size:clamp(2rem,5.4vw,4.8rem);line-height:.94}.h-earth-live-status{margin:0;color:var(--h-earth-info);font-family:var(--h-earth-mono);font-size:.74rem;line-height:1.45;overflow-wrap:anywhere}
+    .h-earth-live-route .h-earth-3d-world-shell{padding:10px}.h-earth-live-route .h-earth-3d-world-stage{min-height:var(--h-earth-stage-min-height);border-color:rgba(220,242,238,.2);touch-action:none}
+    .h-earth-live-route .h-earth-3d-renderer-mount{cursor:grab;user-select:none;-webkit-user-select:none;overscroll-behavior:contain}.h-earth-live-route canvas{display:block;width:100%;height:100%;object-fit:fill}
+    .h-earth-live-gesture-hint{position:absolute;top:14px;left:50%;z-index:8;width:max-content;max-width:calc(100% - 28px);translate:-50% 0;padding:8px 12px;border:1px solid rgba(220,255,244,.2);border-radius:999px;color:rgba(238,248,246,.82);background:rgba(2,8,10,.7);font-size:.72rem;font-weight:720;text-align:center;pointer-events:none}.h-earth-live-route[data-gesture-used="true"] .h-earth-live-gesture-hint{opacity:0}
+    .cp2-candidate-banner{margin:0;padding:12px 16px;border:1px solid rgba(255,211,118,.45);border-radius:12px;background:rgba(86,57,9,.32);color:#ffe5aa;font-family:var(--h-earth-mono);font-size:.72rem;line-height:1.55}
+    .cp2-candidate-banner strong{display:block;color:#fff1c9;font-size:.82rem}.cp2-candidate-banner code{overflow-wrap:anywhere}
+    .h-earth-live-details,.h-earth-startup-receipt{margin-top:10px;border:1px solid var(--h-earth-border-soft);border-radius:var(--h-earth-radius-md);background:rgba(255,255,255,.025)}
+    .h-earth-live-details summary,.h-earth-startup-receipt summary{padding:12px 14px;color:var(--h-earth-muted);font-size:.8rem;font-weight:760;letter-spacing:.04em;cursor:pointer}.h-earth-live-details .telemetry{grid-template-columns:repeat(6,minmax(0,1fr));border-top-color:var(--h-earth-border-soft)}
+    .h-earth-startup-receipt__body{padding:0 12px 12px}.h-earth-startup-receipt__technical{white-space:pre-wrap;overflow-wrap:anywhere;font-family:var(--h-earth-mono);font-size:.68rem}.h-earth-startup-receipt__result{padding:10px;border-radius:9px;background:rgba(255,255,255,.035)}
+    @media(max-width:820px){.h-earth-live-arrival{grid-template-columns:1fr}.h-earth-live-details .telemetry{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:520px){.h-earth-live-route{--h-earth-stage-min-height:max(520px,66dvh)}.h-earth-live-route .h-earth-3d-public-header{align-items:stretch;flex-direction:column}.h-earth-live-route .h-earth-3d-public-nav{display:grid;grid-template-columns:1fr 1fr}.h-earth-live-details .telemetry{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  </style>
+</head>
+<body>
+  <main id="h-earth-3d-route-root" class="h-earth-3d-route-root h-earth-live-route" data-h-earth-route="cp2-live-differential-candidate" data-h-earth-gesture-primary="true">
+    <div id="h-earth-functional-landscape-route" class="h-earth-3d-shell" data-run8e-ready="false" data-run8e-error="false" data-public-route="false" data-cp2-differential-candidate="true" data-gesture-used="false">
+      <header class="h-earth-3d-public-header" aria-label="H-Earth candidate navigation">
+        <a class="h-earth-3d-brand" href="../../" aria-label="Return to accepted H-Earth"><span class="h-earth-3d-brand-mark" aria-hidden="true"><span>H</span></span><span class="h-earth-3d-brand-copy"><span>Ground-View Matrix</span><strong>H-Earth</strong></span></a>
+        <nav class="h-earth-3d-public-nav" aria-label="Candidate navigation"><a href="../../">Accepted live baseline</a><a href="/index.html">Return to Compass</a></nav>
+      </header>
+
+      <p class="cp2-candidate-banner"><strong>Checkpoint 2 · Round 1 live differential candidate</strong>This is an isolated comparison route. It does not replace the accepted H-Earth page, does not merge PR #353, and is awaiting user experiential assessment. Engineering head: <code>1f52080969034c55855a70834cc0294791254c80</code>.</p>
+
+      <section class="h-earth-3d-arrival h-earth-live-arrival" aria-labelledby="h-earth-live-title">
+        <div class="h-earth-3d-arrival-copy"><p class="h-earth-3d-kicker">H-Earth · CP2 comparison candidate</p><h1 id="h-earth-live-title" class="h-earth-3d-title">Traverse the changed presentation.</h1><p class="h-earth-3d-lead">Compare terrain readability, slope, ravine, Manor-site, and Cavern-relation perception with the last accepted live H-Earth baseline.</p></div>
+        <aside class="h-earth-3d-arrival-note" aria-label="Navigation guidance"><p><strong>Direct manipulation:</strong> drag to look, slide two fingers or use the mouse wheel to move, and pinch to zoom.</p><p id="route-status" class="h-earth-live-status" role="status" aria-live="polite">Starting CP2 live differential candidate…</p></aside>
+      </section>
+
+      <section class="h-earth-3d-world-shell" aria-label="H-Earth CP2 differential landscape">
+        <div class="h-earth-3d-world-stage"><div id="h-earth-functional-landscape-mount" class="h-earth-3d-renderer-mount render-mount" tabindex="0" aria-label="Navigable H-Earth CP2 differential landscape. Drag one finger to look. Slide two fingers to move. Pinch to zoom." aria-describedby="h-earth-gesture-instructions"><canvas id="h-earth-functional-landscape-canvas" width="320" height="180" aria-hidden="true"></canvas><div class="reticle" aria-hidden="true"></div><div class="semantic-readout" aria-live="polite"><span id="hud-waypoint">Coastal entry</span><span id="hud-address">Address pending</span></div><div id="h-earth-gesture-instructions" class="h-earth-live-gesture-hint" aria-hidden="true">Drag to look · Two-finger slide to move · Pinch to zoom</div></div></div>
+
+        <details class="h-earth-live-details" open><summary>Candidate environment details</summary><dl class="telemetry" aria-label="Navigation telemetry"><div><dt>Position</dt><dd id="hud-position">—</dd></div><div><dt>Terrain</dt><dd id="hud-terrain">—</dd></div><div><dt>Clearance</dt><dd id="hud-clearance">—</dd></div><div><dt>Chunk</dt><dd id="hud-chunk">—</dd></div><div><dt>Formation</dt><dd id="hud-formation">—</dd></div><div><dt>Frame</dt><dd id="hud-frame">—</dd></div><div><dt>Surface</dt><dd id="hud-surface">—</dd></div><div><dt>Water</dt><dd id="hud-water">—</dd></div><div><dt>Biome</dt><dd id="hud-biome">—</dd></div><div><dt>Traversal</dt><dd id="hud-traversal">—</dd></div><div><dt>Lifecycle</dt><dd id="hud-lifecycle">—</dd></div><div><dt>Population</dt><dd id="hud-population">—</dd></div></dl></details>
+
+        <details class="h-earth-startup-receipt" open><summary>Candidate renderer startup receipt</summary><div class="h-earth-startup-receipt__body"><div class="h-earth-startup-receipt__result"><strong id="h-earth-startup-result">DEVICE RESULT: STARTING</strong><p id="h-earth-startup-first-failure">FIRST FAILURE: None recorded.</p><p id="h-earth-startup-explanation">WHAT THIS MEANS: Candidate renderer startup is still in progress.</p></div><details><summary>Technical details</summary><pre id="h-earth-startup-technical" class="h-earth-startup-receipt__technical">Receipt pending.</pre></details></div></details>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const records = new Map();
+      const mark = (stage, status, detail = null, timestamp = new Date().toISOString()) => records.set(stage, { stage, status, detail, timestamp });
+      window.H_EARTH_RUNTIME_DIAGNOSTICS = Object.freeze({ mark, getSnapshot: () => ({ stages: [...records.values()], userAgent: navigator.userAgent, candidate: true }) });
+      window.addEventListener('h-earth-runtime-diagnostic-stage', (event) => mark(event.detail.stage, event.detail.status, event.detail.detail, event.detail.timestamp));
+      window.addEventListener('error', (event) => mark('WINDOW_ERROR', 'FAIL', { message: event.message, filename: event.filename, line: event.lineno }));
+      window.addEventListener('unhandledrejection', (event) => mark('UNHANDLED_REJECTION', 'FAIL', { reason: String(event.reason), stack: event.reason?.stack ?? null }));
+      window.addEventListener('h-earth-renderer-startup-receipt', (event) => {
+        const receipt = event.detail;
+        document.getElementById('h-earth-startup-result').textContent = `DEVICE RESULT: ${receipt.firstFailureStage ? 'FAIL' : receipt.stages?.READY_PUBLISHED === 'PASS' ? 'PASS' : 'STARTING'}`;
+        document.getElementById('h-earth-startup-first-failure').textContent = `FIRST FAILURE: ${receipt.firstFailureStage || 'None recorded.'}`;
+        document.getElementById('h-earth-startup-explanation').textContent = `WHAT THIS MEANS: ${receipt.plainLanguageSummary}`;
+        document.getElementById('h-earth-startup-technical').textContent = JSON.stringify(receipt, null, 2);
+      });
+      mark('BOOT_STARTED', 'PENDING', 'CP2 differential host monitor installed.');
+    })();
+  </script>
+  <script id="h-earth-cp2-differential-module" type="module">
+    import '../../diagnostic/renderer-startup-observer.v1.js';
+    try {
+      await import('./public-live-gpu-integration.cp2-differential.js?v=1f520809');
+      window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();
+      await import('../../diagnostic/run8e-r3d/interaction-acceptance.run8e.js');
+    } catch (error) {
+      window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.fail('RENDERER_CONSTRUCTOR_RETURNED', error);
+      throw error;
+    }
+  </script>
+</body>
+</html>

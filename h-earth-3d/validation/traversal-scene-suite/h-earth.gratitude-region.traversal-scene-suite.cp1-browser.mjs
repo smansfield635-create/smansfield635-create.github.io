@@ -6,6 +6,7 @@ import {
   resolveHEarthNavigableTerrainChunk
 } from '../../../showroom/globe/h-earth/functional-landscape/navigation.js';
 import { sampleHEarthTerrainField } from '../../terrain/h-earth.terrain-field.js';
+import { sampleHEarthRun8BSuccessorTerrainField } from '../../terrain/h-earth.successor-terrain-field.run8b.js';
 import { createHEarthRun8ER3D3LiveGpuBinding } from '../../../showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js';
 import { getHEarthRun8ER2CanonicalLiveRenderPackage } from '../../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
 
@@ -56,17 +57,28 @@ function setFov(state, desired) {
 }
 
 function deriveAim(scene, positionedState) {
-  if (scene.camera.aimPolicy !== 'TARGET_TERRAIN_POINT') {
+  if (scene.camera.aimPolicy !== 'TARGET_PRESENTATION_TERRAIN_POINT') {
     return {
       policy: 'EXPLICIT_CAMERA_ANGLES',
       yawDegrees: scene.camera.yawDegrees,
       pitchDegrees: scene.camera.pitchDegrees
     };
   }
-  const targetSample = sampleHEarthTerrainField(scene.target.x, scene.target.z);
-  if (targetSample?.valid !== true || !Number.isFinite(targetSample.elevation)) {
-    throw new Error(`CP1_TARGET_TERRAIN_SAMPLE_INVALID:${scene.id}`);
+  const presentationCameraSample = sampleHEarthRun8BSuccessorTerrainField(
+    positionedState.position.x,
+    positionedState.position.z
+  );
+  const presentationTargetSample = sampleHEarthRun8BSuccessorTerrainField(
+    scene.target.x,
+    scene.target.z
+  );
+  if (presentationCameraSample?.valid !== true || !Number.isFinite(presentationCameraSample.elevation)) {
+    throw new Error(`CP1_PRESENTATION_CAMERA_TERRAIN_SAMPLE_INVALID:${scene.id}`);
   }
+  if (presentationTargetSample?.valid !== true || !Number.isFinite(presentationTargetSample.elevation)) {
+    throw new Error(`CP1_PRESENTATION_TARGET_TERRAIN_SAMPLE_INVALID:${scene.id}`);
+  }
+  const presentationCameraEyeElevation = presentationCameraSample.elevation + 2.25;
   const dx = scene.target.x - positionedState.position.x;
   const dz = scene.target.z - positionedState.position.z;
   const horizontalDistance = Math.hypot(dx, dz);
@@ -74,9 +86,15 @@ function deriveAim(scene, positionedState) {
   return {
     policy: scene.camera.aimPolicy,
     yawDegrees: normalizeDegrees(Math.atan2(dx, -dz) * 180 / Math.PI),
-    pitchDegrees: Math.atan2(targetSample.elevation - positionedState.position.y, horizontalDistance) * 180 / Math.PI,
-    targetElevation: targetSample.elevation,
-    cameraEyeElevation: positionedState.position.y,
+    pitchDegrees: Math.atan2(
+      presentationTargetSample.elevation - presentationCameraEyeElevation,
+      horizontalDistance
+    ) * 180 / Math.PI,
+    presentationTargetElevation: presentationTargetSample.elevation,
+    presentationCameraTerrainElevation: presentationCameraSample.elevation,
+    presentationCameraEyeElevation,
+    navigationCameraEyeElevation: positionedState.position.y,
+    cameraReconciliationDelta: presentationCameraEyeElevation - positionedState.position.y,
     horizontalDistance
   };
 }
@@ -195,14 +213,25 @@ function pixelMetrics(canvas) {
 function terrainFacts(scene, state, aim) {
   const cameraSample = sampleHEarthTerrainField(scene.camera.x, scene.camera.z);
   const targetSample = sampleHEarthTerrainField(scene.target.x, scene.target.z);
+  const presentationCameraSample = sampleHEarthRun8BSuccessorTerrainField(scene.camera.x, scene.camera.z);
+  const presentationTargetSample = sampleHEarthRun8BSuccessorTerrainField(scene.target.x, scene.target.z);
   const distance = Math.hypot(scene.target.x - scene.camera.x, scene.target.z - scene.camera.z);
   const elevationDelta = targetSample.elevation - cameraSample.elevation;
   return {
     cameraSample: clone(cameraSample),
     targetSample: clone(targetSample),
+    presentationCameraSample: clone(presentationCameraSample),
+    presentationTargetSample: clone(presentationTargetSample),
+    presentationCameraReconciliationDelta: presentationCameraSample.elevation - cameraSample.elevation,
+    presentationTargetReconciliationDelta: presentationTargetSample.elevation - targetSample.elevation,
     horizontalDistance: distance,
     elevationDelta,
     slopeDegrees: Math.atan2(elevationDelta, Math.max(distance, 1e-9)) * 180 / Math.PI,
+    presentationElevationDelta: presentationTargetSample.elevation - presentationCameraSample.elevation,
+    presentationSlopeDegrees: Math.atan2(
+      presentationTargetSample.elevation - presentationCameraSample.elevation,
+      Math.max(distance, 1e-9)
+    ) * 180 / Math.PI,
     cameraChunkId: resolveHEarthNavigableTerrainChunk(scene.camera.x, scene.camera.z)?.chunkId ?? null,
     targetChunkId: resolveHEarthNavigableTerrainChunk(scene.target.x, scene.target.z)?.chunkId ?? null,
     targetNavigationRequirement: scene.target.navigationRequirement ?? 'TARGET_EXPECTED_INSIDE_NAVIGABLE_CHUNK',
@@ -236,10 +265,10 @@ export async function createHEarthGratitudeRegionCp1Suite({ canvas, control } = 
       afterStateId: state.stateId
     }, state);
     const evidence = binding.captureLatestEvidence(scene.id);
-    const targetTerrain = sampleHEarthTerrainField(scene.target.x, scene.target.z);
+    const targetPresentationTerrain = sampleHEarthRun8BSuccessorTerrainField(scene.target.x, scene.target.z);
     const projection = projectPoint(frame.viewProjectionMatrix, {
       x: scene.target.x,
-      y: targetTerrain.elevation,
+      y: targetPresentationTerrain.elevation,
       z: scene.target.z
     });
     const record = {

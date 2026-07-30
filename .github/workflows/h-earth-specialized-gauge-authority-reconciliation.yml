@@ -63,21 +63,27 @@ jobs:
 
       - name: Execute exact browser and unified-platform adapter verification
         env:
-          H_EARTH_GAUGE_ORIGIN: http://127.0.0.1:4185
+          H_EARTH_GAUGE_ORIGIN: ${{ github.event_name == 'push' && 'https://smansfield635-create.github.io' || 'http://127.0.0.1:4185' }}
+          H_EARTH_GAUGE_PUBLIC_VERIFY: ${{ github.event_name == 'push' && 'true' || 'false' }}
         run: |
           node h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.browser.mjs \
             | tee /tmp/h-earth-specialized-gauge-browser.log
 
-      - name: Enforce A5 closure boundary
+      - name: Enforce checkpoint boundary
+        env:
+          EXPECT_PUBLIC: ${{ github.event_name == 'push' && 'true' || 'false' }}
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const path = 'h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.browser.receipt.v1.json';
           const receipt = JSON.parse(fs.readFileSync(path, 'utf8'));
           const readiness = receipt.directGauge?.readiness ?? {};
+          const expectPublic = process.env.EXPECT_PUBLIC === 'true';
           const valid =
             receipt.status === 'PASS_CLOSED' &&
             receipt.failureCount === 0 &&
+            receipt.deployedSourceVerification?.verified === true &&
+            receipt.publicVerificationPerformed === expectPublic &&
             readiness.requiredApplicableChecks === 11 &&
             readiness.requiredApplicablePasses === 11 &&
             readiness.requiredApplicableFailures === 0 &&
@@ -90,7 +96,8 @@ jobs:
             console.error(JSON.stringify(receipt, null, 2));
             process.exit(1);
           }
-          console.log(`H_EARTH_SPECIALIZED_GAUGE_A5_PASS:${receipt.executedHead}:${receipt.canonicalReceiptSha256}`);
+          const checkpoint = expectPublic ? 'A7_PUBLIC_PASS' : 'A5_BROWSER_PASS';
+          console.log(`H_EARTH_SPECIALIZED_GAUGE_${checkpoint}:${receipt.executedHead}:${receipt.canonicalReceiptSha256}`);
           NODE
 
       - name: Upload specialized gauge reconciliation evidence

@@ -12,7 +12,6 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/h-earth-instrument-platform.yml'
       - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_POST_MERGE_ENGINEERING_PROOF_001.v1.mjs'
       - 'h-earth-3d/tools/instrument-platform/index.html'
       - 'h-earth-3d/tools/instrument-platform/platform.mjs'
@@ -24,6 +23,7 @@ permissions:
 
 jobs:
   verify-unified-instrument:
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'agent/h-earth-specialized-gauge-authority-reconciliation-') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:

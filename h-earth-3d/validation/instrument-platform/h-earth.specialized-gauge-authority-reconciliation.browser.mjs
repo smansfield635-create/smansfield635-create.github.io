@@ -13,9 +13,11 @@ const ROOT = path.resolve(HERE, '../../..');
 const RECEIPT_PATH = path.join(HERE, 'h-earth.specialized-gauge-authority-reconciliation.browser.receipt.v1.json');
 const EVIDENCE_DIR = path.join(HERE, 'evidence', 'specialized-gauge-authority-reconciliation');
 const ORIGIN = process.env.H_EARTH_GAUGE_ORIGIN ?? 'http://127.0.0.1:4185';
+const PUBLIC_VERIFY = process.env.H_EARTH_GAUGE_PUBLIC_VERIFY === 'true';
 const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
 const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const fileSha256 = (repositoryPath) => sha256(fs.readFileSync(path.join(ROOT, repositoryPath)));
+const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 const checks = [];
 const failures = [];
 const check = (id, passed, detail = null) => {
@@ -39,10 +41,19 @@ const expectedPaths = [
   'h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.browser.mjs',
   'h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.runner.mjs'
 ].sort();
+const deployedIdentityPaths = [
+  'gauges/h-earth/index.html',
+  'gauges/h-earth/h-earth.current-authority-gauge.v3.mjs',
+  'h-earth-3d/tools/instrument-platform/index.html',
+  'h-earth-3d/tools/instrument-platform/platform.mjs',
+  'h-earth-3d/tools/instrument-platform/tool-registry.mjs',
+  'h-earth-3d/tools/instrument-platform/instrument-adapters.mjs',
+  'h-earth-3d/tools/instrument-platform/permanent-scene-registry.mjs'
+];
 
 check('EXACT_RECONCILIATION_BASE', mergeBase === base, { base, head, mergeBase });
-check('EXACT_A5_PATH_SCOPE', JSON.stringify(changedPaths) === JSON.stringify(expectedPaths), { changedPaths, expectedPaths });
-check('ALL_A5_PATHS_EXIST', expectedPaths.every((entry) => fs.existsSync(path.join(ROOT, entry))));
+check('EXACT_OPERATION_PATH_SCOPE', JSON.stringify(changedPaths) === JSON.stringify(expectedPaths), { changedPaths, expectedPaths });
+check('ALL_OPERATION_PATHS_EXIST', expectedPaths.every((entry) => fs.existsSync(path.join(ROOT, entry))));
 check('NO_SHOWROOM_PRODUCT_PATH_MUTATION', changedPaths.every((entry) => !entry.startsWith('showroom/')), { changedPaths });
 check('NO_TERRAIN_PATH_MUTATION', changedPaths.every((entry) => !entry.startsWith('h-earth-3d/terrain/')), { changedPaths });
 check('NO_ACCEPTED_RENDERER_OR_LIVE_BINDING_MUTATION', changedPaths.every((entry) => !entry.includes('persistent-live-renderer') && !entry.endsWith('/live-gpu-binding.js')), { changedPaths });
@@ -53,6 +64,56 @@ const deterministicRunnerPath = path.join(HERE, 'h-earth.specialized-gauge-autho
 const deterministicOutput = execFileSync(process.execPath, [deterministicRunnerPath], { cwd: ROOT, encoding: 'utf8' });
 const deterministicReceipt = JSON.parse(deterministicOutput);
 check('A4_DETERMINISTIC_RUNNER_REGRESSION', deterministicReceipt.status === 'PASS_CLOSED' && deterministicReceipt.assertionCount === 49, deterministicReceipt);
+
+async function fetchDeployedIdentity(repositoryPath, attempt) {
+  const url = new URL(`/${repositoryPath}`, ORIGIN);
+  url.searchParams.set('authority-reconciliation', `${head}-${attempt}-${Date.now()}`);
+  try {
+    const response = await fetch(url, { cache: 'no-store' });
+    const bytes = Buffer.from(await response.arrayBuffer());
+    const expectedSha256 = fileSha256(repositoryPath);
+    const actualSha256 = sha256(bytes);
+    return {
+      repositoryPath,
+      url: url.href,
+      httpStatus: response.status,
+      ok: response.ok,
+      expectedSha256,
+      actualSha256,
+      matches: response.ok && expectedSha256 === actualSha256
+    };
+  } catch (error) {
+    return {
+      repositoryPath,
+      url: url.href,
+      httpStatus: 0,
+      ok: false,
+      expectedSha256: fileSha256(repositoryPath),
+      actualSha256: null,
+      matches: false,
+      error: String(error?.message ?? error)
+    };
+  }
+}
+async function waitForExactDeployedSources() {
+  const maximumAttempts = PUBLIC_VERIFY ? 20 : 1;
+  let latest = [];
+  for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
+    latest = await Promise.all(deployedIdentityPaths.map((repositoryPath) => fetchDeployedIdentity(repositoryPath, attempt)));
+    if (latest.every((identity) => identity.matches)) {
+      return { verified: true, attempt, maximumAttempts, identities: latest };
+    }
+    if (attempt < maximumAttempts) await sleep(15000);
+  }
+  return { verified: false, attempt: maximumAttempts, maximumAttempts, identities: latest };
+}
+
+const deployedSourceVerification = await waitForExactDeployedSources();
+check(
+  PUBLIC_VERIFY ? 'PUBLIC_EXACT_SOURCE_IDENTITIES_MATCH' : 'LOCAL_EXACT_SOURCE_IDENTITIES_MATCH',
+  deployedSourceVerification.verified === true,
+  deployedSourceVerification
+);
 
 fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
 const browser = await chromium.launch({
@@ -90,7 +151,7 @@ try {
     { timeout: 900000 }
   );
   directReceipt = await gaugePage.evaluate(() => window.H_EARTH_CURRENT_AUTHORITY_GAUGE.getReceipt());
-  await gaugePage.screenshot({ path: path.join(EVIDENCE_DIR, 'h-earth-current-authority-gauge.png'), fullPage: true });
+  await gaugePage.screenshot({ path: path.join(EVIDENCE_DIR, PUBLIC_VERIFY ? 'h-earth-current-authority-gauge-public.png' : 'h-earth-current-authority-gauge.png'), fullPage: true });
   repeatReceipt = await gaugePage.evaluate(async ({ sourceHead }) => window.H_EARTH_CURRENT_AUTHORITY_GAUGE.run({ sourceHead }), { sourceHead: head });
   await gaugePage.close();
 
@@ -111,7 +172,7 @@ try {
   }, null, { timeout: 900000 });
   adapterObservation = await platformPage.evaluate(async () => window.H_EARTH_INSTRUMENT_PLATFORM.activateTool('H_EARTH_GAUGES'));
   adapterExecution = await platformPage.evaluate(async () => window.H_EARTH_INSTRUMENT_PLATFORM.executeActiveTool('RUN_CURRENT_AUTHORITY_AUDIT'));
-  await platformPage.screenshot({ path: path.join(EVIDENCE_DIR, 'h-earth-current-authority-gauge-through-unified-platform.png'), fullPage: true });
+  await platformPage.screenshot({ path: path.join(EVIDENCE_DIR, PUBLIC_VERIFY ? 'h-earth-current-authority-gauge-through-public-unified-platform.png' : 'h-earth-current-authority-gauge-through-unified-platform.png'), fullPage: true });
   await platformPage.close();
 } finally {
   await browser.close();
@@ -148,13 +209,18 @@ check('BROWSER_CONSOLE_ERRORS_ZERO', consoleErrors.length === 0, consoleErrors);
 check('BROWSER_HTTP_ERRORS_ZERO', httpErrors.length === 0, httpErrors);
 
 const body = {
-  receiptType: 'H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_A5_BROWSER_RECEIPT_v1',
+  receiptType: PUBLIC_VERIFY
+    ? 'H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_A7_PUBLIC_RECEIPT_v1'
+    : 'H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_A5_BROWSER_RECEIPT_v1',
   operationId: reconciliation.operationId,
-  checkpointId: 'A5_EXACT_BROWSER_EXECUTION',
+  checkpointId: PUBLIC_VERIFY ? 'A7_POST_MERGE_PUBLIC_EXECUTION' : 'A5_EXACT_BROWSER_EXECUTION',
   status: failures.length === 0 ? 'PASS_CLOSED' : 'FAIL',
   exactBase: base,
   executedHead: head,
+  executionOrigin: ORIGIN,
+  publicVerificationPerformed: PUBLIC_VERIFY,
   changedPaths,
+  deployedSourceVerification,
   checks,
   failureCount: failures.length,
   failures,
@@ -174,10 +240,15 @@ const body = {
     consoleErrors,
     pageErrors,
     httpErrors,
-    screenshots: [
-      'h-earth-3d/validation/instrument-platform/evidence/specialized-gauge-authority-reconciliation/h-earth-current-authority-gauge.png',
-      'h-earth-3d/validation/instrument-platform/evidence/specialized-gauge-authority-reconciliation/h-earth-current-authority-gauge-through-unified-platform.png'
-    ]
+    screenshots: PUBLIC_VERIFY
+      ? [
+          'h-earth-3d/validation/instrument-platform/evidence/specialized-gauge-authority-reconciliation/h-earth-current-authority-gauge-public.png',
+          'h-earth-3d/validation/instrument-platform/evidence/specialized-gauge-authority-reconciliation/h-earth-current-authority-gauge-through-public-unified-platform.png'
+        ]
+      : [
+          'h-earth-3d/validation/instrument-platform/evidence/specialized-gauge-authority-reconciliation/h-earth-current-authority-gauge.png',
+          'h-earth-3d/validation/instrument-platform/evidence/specialized-gauge-authority-reconciliation/h-earth-current-authority-gauge-through-unified-platform.png'
+        ]
   },
   boundaries: {
     repositoryMutationPerformedByGauge: false,
@@ -186,8 +257,12 @@ const body = {
     narrativePresentationMutationPerformed: false,
     userDifferentialRequired: false
   },
-  stopBoundary: 'STOP_AFTER_EXACT_BROWSER_EXECUTION',
-  nextCheckpoint: failures.length === 0 ? 'A6_PRODUCT_NON_MUTATION_AND_SEPARATION_AUDIT' : 'A5_HELD_WITH_BROWSER_BLOCKER'
+  stopBoundary: PUBLIC_VERIFY
+    ? 'STOP_AFTER_POST_MERGE_PUBLIC_GAUGE_EXECUTION'
+    : 'STOP_AFTER_EXACT_BROWSER_EXECUTION',
+  nextCheckpoint: failures.length === 0
+    ? PUBLIC_VERIFY ? 'A8_OPERATION_CLOSURE_PACKAGE' : 'A6_PRODUCT_NON_MUTATION_AND_SEPARATION_AUDIT'
+    : PUBLIC_VERIFY ? 'A7_HELD_WITH_PUBLIC_DEPLOYMENT_OR_EXECUTION_BLOCKER' : 'A5_HELD_WITH_BROWSER_BLOCKER'
 };
 const canonical = JSON.stringify(body);
 const receipt = Object.freeze({ ...body, canonicalReceiptSha256: sha256(canonical) });

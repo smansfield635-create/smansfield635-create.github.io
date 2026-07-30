@@ -6,6 +6,7 @@ import b0 from '../../control-plane/post-cp2-round2/morphology/h-earth.b0-morpho
 import authority from '../../control-plane/post-cp2-round2/morphology/h-earth.b2-protection-model.v1.mjs';
 import { buildHEarthB2ProtectionModel } from '../../analysis/morphology/h-earth.b2-protection-model.v1.mjs';
 
+const VERIFICATION_TRIGGER_REVISION = 1;
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
 const checks = [];
@@ -47,6 +48,7 @@ check('NO_HEIGHTFIELD_OR_PROBE_MUTATION', authority.boundaries.heightfieldMutati
 const receiptBody = {
   receiptType: 'H_EARTH_B2_PROTECTION_MODEL_RECEIPT_v1',
   checkpoint: 'B2',
+  verificationTriggerRevision: VERIFICATION_TRIGGER_REVISION,
   result: failures.length === 0 ? authority.result : 'B2_PROTECTION_MODEL_FAIL',
   pass: failures.length === 0,
   baseHead: authority.controllingB1Merge,

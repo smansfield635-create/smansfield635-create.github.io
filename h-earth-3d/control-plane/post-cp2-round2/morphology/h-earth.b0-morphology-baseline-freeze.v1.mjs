@@ -8,7 +8,8 @@ const deepFreeze = (value, seen = new WeakSet()) => {
 export const H_EARTH_B0_MORPHOLOGY_BASELINE_FREEZE_v1 = deepFreeze({
   schemaVersion: 'H_EARTH_B0_MORPHOLOGY_BASELINE_FREEZE_v1',
   checkpoint: 'B0',
-  executionTriggerRevision: 2,
+  executionTriggerRevision: 3,
+  executionCarrierPurpose: 'B1_VALIDATION_TRIGGER_ONLY',
   status: 'EXACT_ACCEPTED_HEIGHTFIELD_AND_PROTECTED_AUTHORITY_FREEZE',
   controllingHead: 'c85947c5d698ca00bd6c73c1ba43335593f69f84',
   priorDisposition: {

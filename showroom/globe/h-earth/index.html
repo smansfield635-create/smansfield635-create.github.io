@@ -30,7 +30,7 @@
 <body>
   <main id="h-earth-3d-route-root" class="h-earth-3d-route-root h-earth-live-route" data-h-earth-route="public-environment-host" data-h-earth-public-route="functional-landscape" data-h-earth-gesture-primary="true">
     <div id="h-earth-functional-landscape-route" class="h-earth-3d-shell" data-run6f-ready="false" data-run6f-error="false" data-run7h-ready="false" data-run7h-error="false" data-run8e-ready="false" data-run8e-error="false" data-public-route="true" data-gesture-used="false">
-      <header class="h-earth-3d-public-header" aria-label="H-Earth navigation"><a class="h-earth-3d-brand" href="/index.html" aria-label="Return to Compass"><span class="h-earth-3d-brand-mark" aria-hidden="true"><span>H</span></span><span class="h-earth-3d-brand-copy"><span>Ground-View Matrix</span><strong>H-Earth</strong></span></a><nav class="h-earth-3d-public-nav" aria-label="H-Earth public navigation"><a id="h-earth-return-to-compass" href="/index.html">Return to Compass</a><a id="h-earth-observatory-link" href="/showroom/globe/h-earth/observatory/">How this world is preserved</a></nav></header>
+      <header class="h-earth-3d-public-header" aria-label="H-Earth navigation"><a class="h-earth-3d-brand" href="/index.html" aria-label="Return to Compass"><span class="h-earth-3d-brand-mark" aria-hidden="true"><span>H</span></span><span class="h-earth-3d-brand-copy"><span>Ground-View Matrix</span><strong>H-Earth</strong></span></a><nav class="h-earth-3d-public-nav" aria-label="H-Earth public navigation"><a id="h-earth-return-to-compass" href="/index.html">Return to Compass</a><a id="h-earth-3d-diagnostic-link" href="/showroom/globe/h-earth/diagnostic/">FD_05 Diagnostics</a><a id="h-earth-observatory-link" href="/showroom/globe/h-earth/observatory/?candidate=H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001" hidden>How this world is preserved</a></nav></header>
       <section class="h-earth-3d-arrival h-earth-live-arrival" aria-labelledby="h-earth-live-title"><div class="h-earth-3d-arrival-copy"><p class="h-earth-3d-kicker">H-Earth · Navigable Ground View</p><h1 id="h-earth-live-title" class="h-earth-3d-title">Enter at the coast. Move inland.</h1><p class="h-earth-3d-lead">The current Run 8E environment remains the rendered world. The panel below observes that same production bootstrap.</p></div><aside class="h-earth-3d-arrival-note" aria-label="Navigation guidance"><p><strong>Direct manipulation:</strong> drag to look, slide two fingers or use the mouse wheel to move, and pinch to zoom.</p><p id="route-status" class="h-earth-live-status" role="status" aria-live="polite">Starting current H-Earth GPU environment…</p></aside></section>
       <section class="h-earth-3d-world-shell" aria-label="H-Earth functional landscape">
         <div class="h-earth-3d-world-stage"><div id="h-earth-functional-landscape-mount" class="h-earth-3d-renderer-mount render-mount" tabindex="0" aria-label="Navigable H-Earth landscape. Drag one finger to look. Slide two fingers to move. Pinch to zoom." aria-describedby="h-earth-gesture-instructions"><canvas id="h-earth-functional-landscape-canvas" width="320" height="180" aria-hidden="true"></canvas><div class="reticle" aria-hidden="true"></div><div class="semantic-readout" aria-live="polite"><span id="hud-waypoint">Coastal entry</span><span id="hud-address">Address pending</span></div><div id="h-earth-gesture-instructions" class="h-earth-live-gesture-hint" aria-hidden="true">Drag to look · Two-finger slide to move · Pinch to zoom</div></div></div>
@@ -40,6 +40,18 @@
       </section>
     </div>
   </main>
+  <script id="h-earth-observatory-candidate-gate">
+    (() => {
+      const candidateId = 'H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001';
+      const active = new URLSearchParams(location.search).get('candidate') === candidateId;
+      const fd05 = document.getElementById('h-earth-3d-diagnostic-link');
+      const observatory = document.getElementById('h-earth-observatory-link');
+      if (fd05) fd05.hidden = active;
+      if (observatory) observatory.hidden = !active;
+      document.documentElement.dataset.hEarthObservatoryCandidate = active ? 'active' : 'inactive';
+      window.H_EARTH_NARRATIVE_OBSERVATORY_CANDIDATE = Object.freeze({ candidateId, active });
+    })();
+  </script>
   <script>
     (() => {
       const records = new Map();

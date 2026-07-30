@@ -131,6 +131,11 @@ float stableWave(float phase){
   float retained=1.0-smoothstep(0.72,1.65,footprint);
   return mix(0.5,0.5+0.5*sin(phase),retained);
 }
+float transitionBand(float signal,float halfWidth){
+  float distanceToCenter=abs(signal-0.5);
+  float antialiasWidth=max(fwidth(signal)*1.5,0.012);
+  return 1.0-smoothstep(halfWidth-antialiasWidth,halfWidth+antialiasWidth,distanceToCenter);
+}
 float contour(float elevation){
   float interval=2.5;
   float centered=abs(fract(elevation/interval)-0.5);
@@ -158,6 +163,8 @@ void main(){
   float materialSignal=clamp(vMaterialParameters.x+vMaterialParameters.y*0.5,0.0,1.0);
   float identitySignal=float((vMaterialModelCode+vSurfaceClassCode+vPrimitiveIndex)%7u)/7.0;
   float distanceToCamera=length(vWorldPosition-uCameraPosition);
+  float presentationContact=0.0;
+  float presentationHighlight=0.0;
   vec3 base=max(vBaseColor.rgb,vec3(0.004));
   float outputAlpha=clamp(vBaseColor.a,0.18,1.0);
 
@@ -184,6 +191,15 @@ void main(){
     float faceBandA=stableWave(world.x*0.61+world.y*0.39+vWorldPosition.y*0.57+mesoField*4.1);
     float faceBandB=stableWave(world.x*1.07-world.y*0.73+vWorldPosition.y*0.31+macroField*5.3);
     float faceBandC=stableWave(world.x*1.71+world.y*1.23+vWorldPosition.y*0.18+detailField*2.7);
+    float crestSignal=stableWave(world.x*0.22-world.y*0.16+vWorldPosition.y*0.88+macroField*2.1);
+    float terraceSignal=stableWave(world.x*0.13+world.y*0.19+vWorldPosition.y*1.18+mesoField*1.6);
+    float crestContact=transitionBand(crestSignal,0.075);
+    float terraceContact=transitionBand(terraceSignal,0.070);
+    float sharedFaceContact=clamp(
+      max(crestContact,terraceContact)*(0.32+0.68*mix(0.45,1.0,slopeResponse)),
+      0.0,
+      1.0
+    );
     float faceBreak=clamp(
       macroField*0.22+
       mesoField*0.25+
@@ -202,9 +218,13 @@ void main(){
     palette*=mix(0.71,1.34,faceBreak);
     palette*=mix(0.86,1.15,directionalBreak);
     palette*=mix(0.93,1.08,fineBreak);
+    palette*=mix(1.0,0.72,sharedFaceContact*(0.30+0.24*nearDetail));
     palette+=vec3(0.026,0.021,0.014)*(faceBandA-faceBandB);
+    palette+=vec3(0.030,0.023,0.014)*(crestSignal-terraceSignal)*(0.30+0.45*slopeResponse);
     palette=mix(palette,palette*vec3(0.79,0.85,0.88),curvatureResponse*(0.18+0.26*slopeResponse));
     palette=mix(palette,base,0.27);
+    presentationContact=max(presentationContact,sharedFaceContact*0.24);
+    presentationHighlight=max(presentationHighlight,(1.0-sharedFaceContact)*abs(crestSignal-terraceSignal)*0.16);
 
     float contourLine=contour(vWorldPosition.y);
     palette*=mix(1.0,0.56,contourLine*(0.30+0.47*slopeResponse));
@@ -216,34 +236,58 @@ void main(){
     float manorRadius=distance(world,manorCenter);
     float manorEnvelope=radial(world,manorCenter,7.0,30.0);
     float manorEdge=ring(world,manorCenter,10.5,21.0,2.2);
+    float manorOuterContact=ring(world,manorCenter,21.5,31.5,2.4);
+    float manorInnerContact=ring(world,manorCenter,4.5,13.5,1.8);
     float manorPattern=stableWave(manorRadius*0.83+vWorldPosition.y*0.46+noise2(world*0.19)*4.0);
     float manorGranularity=noise2(world*0.34+vec2(41.0,-23.0));
+    float manorTerraceSignal=stableWave(manorRadius*0.44+vWorldPosition.y*0.72+manorGranularity*2.2);
+    float manorTerraceContact=transitionBand(manorTerraceSignal,0.080)*manorEnvelope;
+    float manorContact=max(
+      manorEdge,
+      max(manorOuterContact*0.90,max(manorInnerContact*0.75,manorTerraceContact*0.70))
+    );
     vec3 manorStone=mix(vec3(0.35,0.21,0.055),vec3(0.72,0.51,0.17),manorPattern*0.72+manorGranularity*0.28);
     palette=mix(palette,manorStone,manorEnvelope*(0.42+0.22*manorPattern));
-    palette*=mix(1.0,0.70,manorEdge*(0.45+0.40*manorPattern));
-    palette+=vec3(0.17,0.105,0.018)*manorEdge*(0.45+0.55*manorGranularity);
+    palette*=mix(1.0,0.54,manorContact*(0.36+0.42*manorPattern));
+    palette*=mix(0.88,1.12,manorTerraceSignal*manorEnvelope*0.34);
+    palette+=vec3(0.205,0.125,0.020)*manorContact*(0.42+0.58*manorGranularity);
+    presentationContact=max(presentationContact,manorContact*0.72);
+    presentationHighlight=max(presentationHighlight,manorOuterContact*0.44+manorTerraceContact*0.24);
 
     vec2 cavernCenter=vec2(40.0,-284.0);
     float cavernRadius=distance(world,cavernCenter);
     float cavernRelation=radial(world,cavernCenter,5.0,28.0);
     float cavernApproach=radial(world,vec2(48.0,-284.0),10.0,44.0);
     float cavernContact=ring(world,cavernCenter,8.0,24.0,2.8);
+    float cavernOuterContact=ring(world,cavernCenter,23.0,39.0,3.6);
     float cavernStrata=stableWave(cavernRadius*0.71+vWorldPosition.y*0.92+noise2(world*0.15)*4.6);
     float cavernFracture=stableWave(world.x*0.93-world.y*0.67+vWorldPosition.y*0.44);
+    float cavernRelationSignal=stableWave(cavernRadius*0.43+(world.y+284.0)*0.31+vWorldPosition.y*0.83+noise2(world*0.12)*2.0);
+    float cavernRelationContact=transitionBand(cavernRelationSignal,0.082)*cavernApproach;
+    float cavernGroundContact=max(
+      cavernContact,
+      max(cavernOuterContact*0.82,cavernRelationContact*0.72)
+    );
     vec3 cavernStone=mix(vec3(0.028,0.052,0.060),vec3(0.27,0.39,0.42),cavernStrata*0.70+cavernFracture*0.30);
     palette=mix(palette,cavernStone,cavernRelation*(0.68+0.20*cavernStrata));
-    palette*=mix(1.0,0.72,cavernContact*(0.38+0.42*cavernFracture));
-    palette=mix(palette,palette*vec3(0.62,0.86,0.96),cavernApproach*0.30);
-    palette+=vec3(0.018,0.038,0.044)*cavernContact*cavernStrata;
+    palette*=mix(1.0,0.56,cavernGroundContact*(0.34+0.46*cavernFracture));
+    palette*=mix(0.90,1.10,cavernRelationSignal*cavernApproach*0.30);
+    palette=mix(palette,palette*vec3(0.60,0.84,0.96),cavernApproach*0.32);
+    palette+=vec3(0.028,0.054,0.062)*cavernGroundContact*(0.35+0.65*cavernStrata);
+    presentationContact=max(presentationContact,cavernGroundContact*0.68);
+    presentationHighlight=max(presentationHighlight,cavernOuterContact*0.34+cavernRelationContact*0.26);
 
     float ravineAxis=exp(-pow((vWorldPosition.x-40.0)/18.0,2.0));
     float ravineShoulder=ring(world,vec2(40.0,-252.0),18.0,46.0,5.0);
     float ravineDepth=1.0-smoothstep(-292.0,-210.0,vWorldPosition.z);
     float routePulse=stableWave(vWorldPosition.z*0.56+vWorldPosition.y*0.31+mesoField*3.0);
+    float ravineWallSignal=stableWave(abs(vWorldPosition.x-40.0)*0.32+(-vWorldPosition.z-210.0)*0.09+vWorldPosition.y*0.51);
+    float ravineWallContact=transitionBand(ravineWallSignal,0.080)*ravineDepth;
     float routeSignal=ravineAxis*ravineDepth*(0.36+0.64*slopeResponse);
-    palette=mix(palette,vec3(0.060,0.125,0.14),routeSignal*(0.38+0.36*routePulse));
-    palette*=mix(1.0,0.78,ravineShoulder*ravineDepth*(0.18+0.32*slopeResponse));
-    palette+=vec3(0.020,0.040,0.046)*routeSignal*routePulse;
+    palette=mix(palette,vec3(0.060,0.125,0.14),routeSignal*(0.42+0.40*routePulse));
+    palette*=mix(1.0,0.70,max(ravineShoulder*ravineDepth*(0.18+0.32*slopeResponse),ravineWallContact*0.62));
+    palette+=vec3(0.026,0.050,0.058)*(routeSignal*routePulse+ravineWallContact*0.45);
+    presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
     base=palette;
   }else if(vRoleCode==2u){
     float wave=0.5+0.5*sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19);
@@ -270,6 +314,10 @@ void main(){
   vec3 atmosphere=mix(uSkyHorizonColor,uSkyZenithColor,clamp(n.y*0.5+0.5,0.0,1.0));
   vec3 haze=mix(uGroundHazeColor,atmosphere,0.44);
   lit=mix(lit,haze,fog*0.48);
+  if(vRoleCode==1u){
+    lit*=mix(1.0,0.76,clamp(presentationContact,0.0,1.0));
+    lit+=base*clamp(presentationHighlight,0.0,1.0)*0.038;
+  }
   lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));
   outColor=vec4(lit,outputAlpha);
 }`;
@@ -497,6 +545,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         lawfulSlopeCurvatureModulation: true,
         boundedContactDepthReinforcement: true,
         temporallyStableWorldSpaceVariation: true,
+        secondBoundedCrestAndRelationCorrection: true,
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },

@@ -21,7 +21,8 @@
     "physicalAcceptance": "NOT_PERFORMED"
   },
   "viewport": { "width": 960, "height": 540, "pixelRatio": 1 },
-  "sceneAimLaw": "DERIVE_YAW_AND_PITCH_FROM_SUCCESSOR_PRESENTATION_TERRAIN_CAMERA_EYE_TO_AUTHORIZED_TARGET_SUCCESSOR_TERRAIN_POINT",
+  "sceneAimLaw": "DERIVE_YAW_AND_PITCH_FROM_FROZEN_TERRAIN_CAMERA_EYE_TO_AUTHORIZED_TARGET_TERRAIN_POINT",
+  "presentationTerrainAuthority": "H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_USED_BY_R3A_CAMERA_RECONCILIATION_AND_LIVE_RENDER_PACKAGE",
   "placementAuthorityPath": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
   "scenes": [
     {

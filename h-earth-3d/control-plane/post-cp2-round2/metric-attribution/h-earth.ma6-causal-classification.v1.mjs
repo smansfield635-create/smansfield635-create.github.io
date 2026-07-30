@@ -46,8 +46,8 @@ export const H_EARTH_MA6_CAUSAL_CLASSIFICATION_v1 = deepFreeze({
     invalidOrUnderdefined: 'NO_PASS_QUALIFIES_OR_EXECUTION_INTEGRITY_FAILS'
   },
   expectedClassification: {
-    qualifyingPasses: ['C', 'F', 'G'],
-    nonqualifyingPasses: ['A', 'B', 'D', 'E'],
+    qualifyingPasses: ['C', 'G'],
+    nonqualifyingPasses: ['A', 'B', 'D', 'E', 'F'],
     primaryPass: 'G',
     primaryCategory: 'MATERIAL_CAUSE_ESTABLISHED_FOR_CURRENT_METRIC',
     secondaryCategories: ['GEOMETRY_LIGHTING_INTERACTION_ESTABLISHED_FOR_CURRENT_METRIC'],

@@ -1,0 +1,950 @@
+name: Laws Checkpoint 3 Bounded Product Correction
+
+on:
+  push:
+    branches:
+      - agent/laws-compass-checkpoint-2-bounded-construction-002
+    paths:
+      - ".github/workflows/laws-checkpoint3-bounded-product-correction.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  correct-product:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-compass-checkpoint-2-bounded-construction-002
+          fetch-depth: 0
+
+      - name: Apply bounded semantic correction
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          def read(path):
+              return Path(path).read_text(encoding="utf-8")
+
+          def write(path, text):
+              Path(path).write_text(text, encoding="utf-8")
+
+          def replace_once(text, old, new, label):
+              count = text.count(old)
+              if count != 1:
+                  raise RuntimeError(f"{label}: expected 1 exact occurrence, observed {count}")
+              return text.replace(old, new, 1)
+
+          def sub_once(text, pattern, replacement, label, flags=re.S):
+              result, count = re.subn(pattern, replacement, text, count=1, flags=flags)
+              if count != 1:
+                  raise RuntimeError(f"{label}: expected 1 regex occurrence, observed {count}")
+              return result
+
+          # HTML: sixteen Laws and eight explicitly non-Law cluster members.
+          path = "laws/index.html"
+          html = read(path)
+          html = replace_once(
+              html,
+              '  data-laws-law-count="24"',
+              '  data-laws-law-count="16"\n  data-laws-nonlaw-member-count="8"\n  data-laws-child-route-count="24"',
+              "HTML_COUNT_METADATA"
+          )
+          html = replace_once(
+              html,
+              '  data-laws-law-controls-declared="true"',
+              '  data-laws-law-controls-declared="true"\n  data-laws-member-controls-declared="true"',
+              "HTML_CONTROL_METADATA"
+          )
+
+          def convert_nonlaw_button(match):
+              tag = match.group(0)
+              tag = tag.replace(
+                  'laws-star--small laws-star--law',
+                  'laws-star--small laws-star--member',
+                  1
+              )
+              tag = tag.replace(' data-laws-law data-laws-law-control', '', 1)
+              tag = tag.replace(
+                  ' data-direction=',
+                  ' data-laws-member data-laws-member-control data-member-class="non-law" data-direction=',
+                  1
+              )
+              tag = tag.replace('data-law-id=', 'data-member-id=', 1)
+              tag = tag.replace('data-law-label=', 'data-member-label=', 1)
+              tag = tag.replace('data-destination-type="law"', 'data-destination-type="member"', 1)
+              return tag
+
+          html, converted = re.subn(
+              r'<button class="laws-star laws-star--small laws-star--law"[^>]*data-direction="(?:test|research)"[^>]*>',
+              convert_nonlaw_button,
+              html
+          )
+          if converted != 8:
+              raise RuntimeError(f"HTML_NONLAW_CONVERSION: expected 8, observed {converted}")
+          write(path, html)
+
+          # Controller: separate Law and non-Law registries while preserving one cluster engine.
+          path = "laws/index.controller.js"
+          controller = read(path)
+          controller = replace_once(
+              controller,
+              '  const DIRECTIONS = Object.freeze([\n    "flow",\n    "integrity",\n    "reality",\n    "structure",\n    "test",\n    "research"\n  ]);',
+              '  const DIRECTIONS = Object.freeze([\n    "flow",\n    "integrity",\n    "reality",\n    "structure",\n    "test",\n    "research"\n  ]);\n\n  const LAW_DIRECTIONS = Object.freeze([\n    "flow",\n    "integrity",\n    "reality",\n    "structure"\n  ]);\n\n  const NONLAW_DIRECTIONS = Object.freeze([\n    "test",\n    "research"\n  ]);',
+              "CONTROLLER_DIRECTION_CLASSES"
+          )
+          controller = replace_once(
+              controller,
+              '    LAW: "law",\n    AUXILIARY: "auxiliary",',
+              '    LAW: "law",\n    MEMBER: "member",\n    AUXILIARY: "auxiliary",',
+              "CONTROLLER_DESTINATION_MEMBER"
+          )
+          controller = sub_once(
+              controller,
+              r'  const CANONICAL_CONSTELLATION_QUATERNIONS =\n    Object\.freeze\(\{.*?\n    \}\);\n\n  const PRESENTATION_BY_STATE',
+              '''  const CANONICAL_CONSTELLATION_QUATERNIONS =
+    Object.freeze({
+      flow: Object.freeze([0, 0, 0, 1]),
+      integrity: Object.freeze([0, 0, -0.5, 0.8660254037844386]),
+      reality: Object.freeze([0, 0, -0.8660254037844386, 0.5]),
+      structure: Object.freeze([0, 0, -1, 0]),
+      test: Object.freeze([0, 0, -0.8660254037844386, -0.5]),
+      research: Object.freeze([0, 0, -0.5, -0.8660254037844386])
+    });
+
+  const PRESENTATION_BY_STATE''',
+              "CONTROLLER_EQUAL_PHASE_ORIENTATIONS"
+          )
+          controller = sub_once(
+              controller,
+              r'  const registry = \{.*?\n  \};\n\n  const state =',
+              '''  const registry = {
+    lawRecords: Object.freeze([]),
+    lawRoutes: Object.freeze([]),
+    lawById: new Map(),
+    lawByRoute: new Map(),
+    lawsByDirection: new Map(),
+    memberRecords: Object.freeze([]),
+    memberRoutes: Object.freeze([]),
+    memberById: new Map(),
+    memberByRoute: new Map(),
+    membersByDirection: new Map()
+  };
+
+  const state =''',
+              "CONTROLLER_SEPARATE_REGISTRIES"
+          )
+          controller = sub_once(
+              controller,
+              r'  function findLawElement\(lawId\) \{.*?\n  \}\n\n  function findAuxiliaryElement',
+              '''  function findLawElement(lawId) {
+    const id = normalizeId(lawId);
+    if (!id || !state.root) return null;
+    return qs(
+      `[data-laws-law][data-law-id="${escapeSelectorValue(id)}"]`,
+      state.root
+    );
+  }
+
+  function findMemberElement(memberId) {
+    const id = normalizeId(memberId);
+    if (!id || !state.root) return null;
+    return qs(
+      `[data-laws-member][data-member-id="${escapeSelectorValue(id)}"]`,
+      state.root
+    );
+  }
+
+  function findChildElement(childId) {
+    return findLawElement(childId) || findMemberElement(childId);
+  }
+
+  function findAuxiliaryElement''',
+              "CONTROLLER_MEMBER_ELEMENT_LOOKUP"
+          )
+          controller = sub_once(
+              controller,
+              r'  function lawRecordById\(lawId\) \{.*?\n  \}\n\n  function createClusterState',
+              '''  function lawRecordById(lawId) {
+    return registry.lawById.get(normalizeId(lawId)) || null;
+  }
+
+  function lawRecordByRoute(route) {
+    return registry.lawByRoute.get(normalizeRoute(route)) || null;
+  }
+
+  function memberRecordById(memberId) {
+    return registry.memberById.get(normalizeId(memberId)) || null;
+  }
+
+  function memberRecordByRoute(route) {
+    return registry.memberByRoute.get(normalizeRoute(route)) || null;
+  }
+
+  function childRecordById(childId) {
+    return lawRecordById(childId) || memberRecordById(childId);
+  }
+
+  function childRecordByRoute(route) {
+    return lawRecordByRoute(route) || memberRecordByRoute(route);
+  }
+
+  function lawIdsByDirection(direction) {
+    const normalizedDirection = normalizeDirection(direction);
+    const source = LAW_DIRECTIONS.includes(normalizedDirection)
+      ? registry.lawsByDirection
+      : registry.membersByDirection;
+    return source.get(normalizedDirection) || Object.freeze([]);
+  }
+
+  function createClusterState''',
+              "CONTROLLER_GENERIC_CLUSTER_RECORDS"
+          )
+          controller = sub_once(
+              controller,
+              r'  function canonicalControlExists\(record\) \{.*?\n  \}\n\n  function destinationFromElement',
+              '''  function canonicalControlExists(record) {
+    const kind = String(record.kind || "").trim().toLowerCase();
+    const id = String(
+      record.id || record.lawId || record.memberId || record.direction || ""
+    ).trim();
+    if (!id) return false;
+    if (kind === "law") return Boolean(findLawElement(id));
+    if (kind === "member") return Boolean(findMemberElement(id));
+    if (kind === "category" || kind === "direction") {
+      return Boolean(findCategoryElement(id));
+    }
+    if (kind === "auxiliary") return Boolean(findAuxiliaryElement(id));
+    return Boolean(
+      findLawElement(id) ||
+      findMemberElement(id) ||
+      findCategoryElement(id) ||
+      findAuxiliaryElement(id)
+    );
+  }
+
+  function destinationFromElement''',
+              "CONTROLLER_GENERIC_CONTROL_EXISTENCE"
+          )
+          controller = replace_once(
+              controller,
+              '        element.dataset.auxiliaryId ||\n        element.dataset.lawId ||',
+              '        element.dataset.auxiliaryId ||\n        element.dataset.memberId ||\n        element.dataset.lawId ||',
+              "CONTROLLER_DESTINATION_MEMBER_ID"
+          )
+          controller = replace_once(
+              controller,
+              '        element.dataset.label ||\n        element.dataset.lawLabel ||',
+              '        element.dataset.label ||\n        element.dataset.memberLabel ||\n        element.dataset.lawLabel ||',
+              "CONTROLLER_DESTINATION_MEMBER_LABEL"
+          )
+          controller = sub_once(
+              controller,
+              r'  function panelFromLaw\(element\) \{.*?\n  \}\n\n  function setPanel',
+              '''  function panelFromLaw(element) {
+    const fallback = element.matches("[data-laws-member]")
+      ? "Selected member"
+      : "Selected law";
+    return Object.freeze({
+      eyebrow: normalizeLabel(
+        element.dataset.panelEyebrow ||
+        element.dataset.memberLabel ||
+        element.dataset.lawLabel,
+        fallback
+      ),
+      title: normalizeLabel(
+        element.dataset.panelTitle ||
+        element.dataset.memberLabel ||
+        element.dataset.lawLabel ||
+        element.textContent,
+        fallback
+      ),
+      purpose: normalizeLabel(element.dataset.panelBody, ""),
+      relationship: normalizeLabel(
+        element.dataset.panelRelationship || element.dataset.panelWhy,
+        ""
+      )
+    });
+  }
+
+  function setPanel''',
+              "CONTROLLER_GENERIC_PANEL"
+          )
+          controller = sub_once(
+              controller,
+              r'    qsa\(\n      "\[data-laws-law\]",\n      state\.root\n    \)\.forEach\(element => \{.*?\n    \}\);\n\n    if \(state\.compassControl\)',
+              '''    qsa(
+      "[data-laws-law], [data-laws-member]",
+      state.root
+    ).forEach(element => {
+      const childId = normalizeId(
+        element.dataset.lawId || element.dataset.memberId
+      );
+      const childRecord = childRecordById(childId);
+      const inActiveCluster = Boolean(
+        cluster && childRecord && childRecord.direction === cluster.direction
+      );
+      const selected =
+        !frame.compassSelected &&
+        inActiveCluster &&
+        childId === frame.selectedLaw;
+      const primary =
+        inActiveCluster && childId === cluster.primaryLaw;
+      element.dataset.active = inActiveCluster ? "true" : "false";
+      element.dataset.selected = selected ? "true" : "false";
+      element.dataset.primary = primary ? "true" : "false";
+      element.setAttribute(
+        "aria-disabled",
+        inActiveCluster ? "false" : "true"
+      );
+      if (selected || primary) {
+        element.setAttribute("aria-current", "true");
+      } else {
+        element.removeAttribute("aria-current");
+      }
+    });
+
+    if (state.compassControl)''',
+              "CONTROLLER_GENERIC_CONTROL_SYNC"
+          )
+          controller = sub_once(
+              controller,
+              r'    if \(state\.current === STATES\.LAW_SELECTED\) \{.*?\n      return;\n    \}\n\n    setPanel\(\{',
+              '''    if (state.current === STATES.LAW_SELECTED) {
+      const child = findChildElement(state.selectedLaw);
+      const record = childRecordById(state.selectedLaw);
+      if (child) {
+        setPanel(panelFromLaw(child));
+        setPanelMetadata({
+          domain: directionLabel(state.selectedDirection),
+          functionLabel: normalizeLabel(child.dataset.panelFunction, ""),
+          coordinate: normalizeLabel(
+            child.dataset.coordinateLabel,
+            state.selectedLaw
+          ),
+          selection: record && record.memberClass === "non-law"
+            ? "Non-Law member selected"
+            : "Law selected",
+          route: record ? record.route : "",
+          lens: normalizeLabel(child.dataset.lens, "")
+        });
+      }
+      setEnterEnabled(Boolean(record && record.route), "Enter");
+      setReturnToOrbitVisible(true, "Return to Orbit");
+      setGuidance("");
+      return;
+    }
+
+    setPanel({''',
+              "CONTROLLER_GENERIC_SELECTED_PANEL"
+          )
+          controller = sub_once(
+              controller,
+              r'  function readDeclaredRegistry\(\) \{.*?\n  \}\n\n  function initializeOrientationState\(\)',
+              '''  function readDeclaredRegistry() {
+    const categoryElements = qsa("[data-laws-category]", state.root);
+    invariant(
+      categoryElements.length === 6,
+      "LAWS_DECLARED_CATEGORY_COUNT_INVALID",
+      { expected: 6, actual: categoryElements.length }
+    );
+    const seenDirections = new Set();
+    for (const element of categoryElements) {
+      const direction = normalizeDirection(element.dataset.direction);
+      invariant(direction, "LAWS_CATEGORY_DIRECTION_INVALID");
+      invariant(
+        !seenDirections.has(direction),
+        "LAWS_DUPLICATE_DECLARED_CATEGORY_DIRECTION",
+        { direction }
+      );
+      seenDirections.add(direction);
+    }
+    for (const direction of DIRECTIONS) {
+      invariant(
+        seenDirections.has(direction),
+        "LAWS_REQUIRED_CATEGORY_MISSING",
+        { direction }
+      );
+    }
+
+    const lawElements = qsa("[data-laws-law]", state.root);
+    invariant(
+      lawElements.length === 16,
+      "LAWS_DECLARED_LAW_COUNT_INVALID",
+      { expected: 16, actual: lawElements.length }
+    );
+    const lawRecords = [];
+    const lawIds = new Set();
+    const allRoutes = new Set();
+    const lawsByDirection = new Map(
+      LAW_DIRECTIONS.map(direction => [direction, []])
+    );
+    for (const element of lawElements) {
+      const lawId = normalizeId(element.dataset.lawId);
+      const direction = normalizeDirection(element.dataset.direction);
+      const route = normalizeRoute(
+        element.dataset.route || element.getAttribute("href")
+      );
+      invariant(lawId, "LAWS_DECLARED_LAW_ID_REQUIRED");
+      invariant(
+        LAW_DIRECTIONS.includes(direction),
+        "LAWS_DECLARED_LAW_DIRECTION_REQUIRED",
+        { lawId, direction }
+      );
+      invariant(route, "LAWS_DECLARED_LAW_ROUTE_REQUIRED", { lawId });
+      invariant(
+        route.startsWith("/laws/categories/"),
+        "LAWS_DECLARED_LAW_ROUTE_OUTSIDE_CATEGORIES",
+        { lawId, route }
+      );
+      invariant(!lawIds.has(lawId), "LAWS_DUPLICATE_DECLARED_LAW_ID", { lawId });
+      invariant(!allRoutes.has(route), "LAWS_DUPLICATE_DECLARED_CHILD_ROUTE", { route });
+      lawIds.add(lawId);
+      allRoutes.add(route);
+      const label = normalizeLabel(
+        element.dataset.lawLabel || element.dataset.label || element.textContent,
+        lawId
+      );
+      const record = Object.freeze({
+        kind: "law",
+        memberClass: "law",
+        direction,
+        lawId,
+        lawLabel: label,
+        route,
+        placeholderExisting: true,
+        registrySource: "declared-dom"
+      });
+      lawRecords.push(record);
+      lawsByDirection.get(direction).push(lawId);
+    }
+    for (const direction of LAW_DIRECTIONS) {
+      const list = lawsByDirection.get(direction);
+      invariant(
+        list.length === 4,
+        "LAWS_PER_LAW_DIRECTION_INVALID",
+        { direction, count: list.length }
+      );
+      lawsByDirection.set(direction, Object.freeze(list.slice()));
+    }
+
+    const memberElements = qsa("[data-laws-member]", state.root);
+    invariant(
+      memberElements.length === 8,
+      "LAWS_DECLARED_NONLAW_MEMBER_COUNT_INVALID",
+      { expected: 8, actual: memberElements.length }
+    );
+    const memberRecords = [];
+    const memberIds = new Set();
+    const membersByDirection = new Map(
+      NONLAW_DIRECTIONS.map(direction => [direction, []])
+    );
+    for (const element of memberElements) {
+      const memberId = normalizeId(element.dataset.memberId);
+      const direction = normalizeDirection(element.dataset.direction);
+      const route = normalizeRoute(
+        element.dataset.route || element.getAttribute("href")
+      );
+      invariant(memberId, "LAWS_DECLARED_MEMBER_ID_REQUIRED");
+      invariant(
+        NONLAW_DIRECTIONS.includes(direction),
+        "LAWS_DECLARED_MEMBER_DIRECTION_REQUIRED",
+        { memberId, direction }
+      );
+      invariant(route, "LAWS_DECLARED_MEMBER_ROUTE_REQUIRED", { memberId });
+      invariant(
+        route.startsWith(`/laws/${direction}/`),
+        "LAWS_DECLARED_MEMBER_ROUTE_OUTSIDE_AUTHORITY",
+        { memberId, route }
+      );
+      invariant(
+        !memberIds.has(memberId) && !lawIds.has(memberId),
+        "LAWS_DUPLICATE_DECLARED_CHILD_ID",
+        { memberId }
+      );
+      invariant(!allRoutes.has(route), "LAWS_DUPLICATE_DECLARED_CHILD_ROUTE", { route });
+      memberIds.add(memberId);
+      allRoutes.add(route);
+      const label = normalizeLabel(
+        element.dataset.memberLabel || element.dataset.label || element.textContent,
+        memberId
+      );
+      const record = Object.freeze({
+        kind: "member",
+        memberClass: "non-law",
+        direction,
+        memberId,
+        memberLabel: label,
+        lawId: memberId,
+        lawLabel: label,
+        route,
+        placeholderExisting: true,
+        registrySource: "declared-dom"
+      });
+      memberRecords.push(record);
+      membersByDirection.get(direction).push(memberId);
+    }
+    for (const direction of NONLAW_DIRECTIONS) {
+      const list = membersByDirection.get(direction);
+      invariant(
+        list.length === 4,
+        "LAWS_PER_NONLAW_DIRECTION_INVALID",
+        { direction, count: list.length }
+      );
+      membersByDirection.set(direction, Object.freeze(list.slice()));
+    }
+
+    registry.lawRecords = Object.freeze(lawRecords.slice());
+    registry.lawRoutes = Object.freeze(lawRecords.map(record => record.route));
+    registry.lawById = new Map(lawRecords.map(record => [record.lawId, record]));
+    registry.lawByRoute = new Map(lawRecords.map(record => [record.route, record]));
+    registry.lawsByDirection = lawsByDirection;
+    registry.memberRecords = Object.freeze(memberRecords.slice());
+    registry.memberRoutes = Object.freeze(memberRecords.map(record => record.route));
+    registry.memberById = new Map(memberRecords.map(record => [record.memberId, record]));
+    registry.memberByRoute = new Map(memberRecords.map(record => [record.route, record]));
+    registry.membersByDirection = membersByDirection;
+
+    return Object.freeze({
+      pass: true,
+      categoryCount: 6,
+      lawAuthorityCount: 4,
+      nonLawAuthorityCount: 2,
+      lawCount: 16,
+      nonLawMemberCount: 8,
+      routeCount: 24,
+      membersPerDirection: 4,
+      registrySource: "declared-dom"
+    });
+  }
+
+  function initializeOrientationState()''',
+              "CONTROLLER_REGISTRY_REWRITE"
+          )
+          controller = sub_once(
+              controller,
+              r'  function initializeClusters\(\) \{.*?\n  \}\n\n  function getClusterState',
+              '''  function initializeClusters() {
+    state.clusters.clear();
+    for (const direction of DIRECTIONS) {
+      const cluster = createClusterState(direction);
+      invariant(
+        cluster.lawIds.length === 4,
+        "LAWS_CLUSTER_MEMBER_COUNT_INVALID",
+        { direction, count: cluster.lawIds.length }
+      );
+      state.clusters.set(direction, cluster);
+    }
+  }
+
+  function getClusterState''',
+              "CONTROLLER_CLUSTER_COUNT"
+          )
+          controller = replace_once(
+              controller,
+              '    const canonical =\n      lawRecordById(id);\n\n    const element =\n      findLawElement(id);',
+              '    const canonical =\n      childRecordById(id);\n\n    const element =\n      findChildElement(id);',
+              "CONTROLLER_GENERIC_SELECTION_LOOKUP"
+          )
+          controller = replace_once(
+              controller,
+              '          selectedDestinationType:\n            DESTINATION_TYPES.LAW,',
+              '          selectedDestinationType:\n            canonical.memberClass === "non-law"\n              ? DESTINATION_TYPES.MEMBER\n              : DESTINATION_TYPES.LAW,',
+              "CONTROLLER_GENERIC_DESTINATION_TYPE"
+          )
+          controller = sub_once(
+              controller,
+              r'  function requestAuxiliarySelection\(auxiliaryId\) \{',
+              '''  function requestMemberSelection(memberId) {
+    const canonical = memberRecordById(memberId);
+    if (!canonical) return false;
+    return requestLawSelection(canonical.memberId);
+  }
+
+  function requestAuxiliarySelection(auxiliaryId) {''',
+              "CONTROLLER_MEMBER_SELECTION_API"
+          )
+          controller = sub_once(
+              controller,
+              r'  function requestEnterSelection\(\) \{.*?\n  \}\n\n  function requestReturnToMainCompass',
+              '''  function requestEnterSelection() {
+    if (
+      isHeld() ||
+      state.compassSelected ||
+      state.current !== STATES.LAW_SELECTED
+    ) {
+      return false;
+    }
+    const canonical = childRecordById(state.selectedLaw);
+    const expectedType = canonical && canonical.memberClass === "non-law"
+      ? DESTINATION_TYPES.MEMBER
+      : DESTINATION_TYPES.LAW;
+    if (
+      !canonical ||
+      state.selectedDestinationType !== expectedType ||
+      state.selectedDestinationId !== canonical.lawId ||
+      state.selectedRoute !== canonical.route ||
+      !childRecordByRoute(state.selectedRoute)
+    ) {
+      recordAction(
+        "selected-child-entry-rejected",
+        "SELECTED_CHILD_ROUTE_NOT_CANONICAL"
+      );
+      return false;
+    }
+    recordAction(`selected-child-entry-confirmed:${canonical.lawId}`);
+    globalThis.location.assign(canonical.route);
+    return true;
+  }
+
+  function requestReturnToMainCompass''',
+              "CONTROLLER_GENERIC_ROUTE_ENTRY"
+          )
+          controller = sub_once(
+              controller,
+              r'  function validateRuntimeRegistry\(\) \{.*?\n  \}\n\n  function runControllerSelfTest',
+              '''  function validateRuntimeRegistry() {
+    invariant(registry.lawRecords.length === 16, "LAWS_RUNTIME_REGISTRY_LAW_COUNT_INVALID");
+    invariant(registry.memberRecords.length === 8, "LAWS_RUNTIME_REGISTRY_MEMBER_COUNT_INVALID");
+    invariant(registry.lawRoutes.length === 16, "LAWS_RUNTIME_REGISTRY_LAW_ROUTE_COUNT_INVALID");
+    invariant(registry.memberRoutes.length === 8, "LAWS_RUNTIME_REGISTRY_MEMBER_ROUTE_COUNT_INVALID");
+    invariant(registry.lawById.size === 16, "LAWS_RUNTIME_REGISTRY_LAW_ID_MAP_INVALID");
+    invariant(registry.memberById.size === 8, "LAWS_RUNTIME_REGISTRY_MEMBER_ID_MAP_INVALID");
+    for (const direction of DIRECTIONS) {
+      const members = lawIdsByDirection(direction);
+      invariant(
+        members.length === 4,
+        "LAWS_RUNTIME_REGISTRY_DIRECTION_COUNT_INVALID",
+        { direction, count: members.length }
+      );
+    }
+    return Object.freeze({
+      pass: true,
+      registrySource: "declared-dom",
+      lawCount: 16,
+      nonLawMemberCount: 8,
+      routeCount: 24,
+      membersPerDirection: 4
+    });
+  }
+
+  function runControllerSelfTest''',
+              "CONTROLLER_RUNTIME_REGISTRY_VALIDATION"
+          )
+          controller = replace_once(
+              controller,
+              '      lawCount: includeDom ? registry.lawRecords.length : 0,\n      lawsPerDirection: includeDom ? 4 : 0,',
+              '      lawCount: includeDom ? registry.lawRecords.length : 0,\n      nonLawMemberCount: includeDom ? registry.memberRecords.length : 0,\n      totalChildRouteCount: includeDom\n        ? registry.lawRoutes.length + registry.memberRoutes.length\n        : 0,\n      lawsPerDirection: includeDom ? 4 : 0,',
+              "CONTROLLER_SELFTEST_COUNTS"
+          )
+          controller = replace_once(
+              controller,
+              '        getCanonicalLawRoutes:\n          () => registry.lawRoutes,\n\n        getFrameState:',
+              '        getCanonicalLawRoutes:\n          () => registry.lawRoutes,\n\n        getCanonicalMemberRecords:\n          () => registry.memberRecords,\n\n        getCanonicalMemberRoutes:\n          () => registry.memberRoutes,\n\n        getFrameState:',
+              "CONTROLLER_MEMBER_REGISTRY_API"
+          )
+          controller = replace_once(
+              controller,
+              '        requestCategorySelection,\n        requestLawSelection,\n        requestAuxiliarySelection,',
+              '        requestCategorySelection,\n        requestLawSelection,\n        requestMemberSelection,\n        requestAuxiliarySelection,',
+              "CONTROLLER_MEMBER_REQUEST_API"
+          )
+          controller = replace_once(
+              controller,
+              '      canonicalLawRoutes:\n        registry.lawRoutes,\n\n      lawCount:\n        registry.lawRecords.length,',
+              '      canonicalLawRoutes:\n        registry.lawRoutes,\n\n      canonicalMemberRecords:\n        registry.memberRecords,\n\n      canonicalMemberRoutes:\n        registry.memberRoutes,\n\n      lawCount:\n        registry.lawRecords.length,\n\n      nonLawMemberCount:\n        registry.memberRecords.length,\n\n      totalChildRouteCount:\n        registry.lawRoutes.length + registry.memberRoutes.length,',
+              "CONTROLLER_FRAME_COUNTS"
+          )
+          controller = replace_once(
+              controller,
+              '      lawCount: registry.lawRecords.length,\n      lawsPerDirection: 4,',
+              '      lawCount: registry.lawRecords.length,\n      nonLawMemberCount: registry.memberRecords.length,\n      totalChildRouteCount: registry.lawRoutes.length + registry.memberRoutes.length,\n      lawsPerDirection: 4,',
+              "CONTROLLER_COMPATIBILITY_COUNTS"
+          )
+          write(path, controller)
+
+          # Crystals: sixteen LAW nodes, eight MEMBER nodes, one equal-phase six-authority field.
+          path = "laws/index.crystals.js"
+          crystals = read(path)
+          crystals = replace_once(
+              crystals,
+              '    LAW:\n      "law",\n\n    AUXILIARY:',
+              '    LAW:\n      "law",\n\n    MEMBER:\n      "member",\n\n    AUXILIARY:',
+              "CRYSTALS_MEMBER_NODE_TYPE"
+          )
+          crystals = sub_once(
+              crystals,
+              r'      vectors:\n        Object\.freeze\(\{.*?\n        \}\)\n    \}\),',
+              '''      vectors:
+        Object.freeze({
+          flow: Object.freeze([0, 1, 0]),
+          integrity: Object.freeze([0.8660254037844386, 0.5, 0]),
+          reality: Object.freeze([0.8660254037844386, -0.5, 0]),
+          structure: Object.freeze([0, -1, 0]),
+          test: Object.freeze([-0.8660254037844386, -0.5, 0]),
+          research: Object.freeze([-0.8660254037844386, 0.5, 0])
+        })
+    }),''',
+              "CRYSTALS_EQUAL_PHASE_VECTORS"
+          )
+          crystals = replace_once(
+              crystals,
+              '    lawCount:\n      0,\n\n    canonicalSemanticLawCount:',
+              '    lawCount:\n      0,\n\n    memberCount:\n      0,\n\n    canonicalSemanticLawCount:',
+              "CRYSTALS_RECEIPT_MEMBER_COUNT"
+          )
+          crystals = replace_once(
+              crystals,
+              '    canonicalSemanticLawCount:\n      0,\n\n    relocatedCanonicalLawCount:',
+              '    canonicalSemanticLawCount:\n      0,\n\n    canonicalSemanticMemberCount:\n      0,\n\n    relocatedCanonicalLawCount:',
+              "CRYSTALS_RECEIPT_SEMANTIC_MEMBER_COUNT"
+          )
+          crystals = replace_once(
+              crystals,
+              '      "getCanonicalLawRecords",\n      "getCanonicalLawRoutes"',
+              '      "getCanonicalLawRecords",\n      "getCanonicalLawRoutes",\n      "getCanonicalMemberRecords",\n      "getCanonicalMemberRoutes"',
+              "CRYSTALS_CONTROLLER_MEMBER_SURFACES"
+          )
+          crystals = replace_once(
+              crystals,
+              '    invariant(\n      Array.isArray(records) &&\n        records.length === 16,\n      "LAWS_CRYSTALS_CONTROLLER_LAW_REGISTRY_INVALID"\n    );\n\n    return controller;',
+              '    invariant(\n      Array.isArray(records) &&\n        records.length === 16,\n      "LAWS_CRYSTALS_CONTROLLER_LAW_REGISTRY_INVALID"\n    );\n\n    const members = controller.getCanonicalMemberRecords();\n    invariant(\n      Array.isArray(members) && members.length === 8,\n      "LAWS_CRYSTALS_CONTROLLER_MEMBER_REGISTRY_INVALID"\n    );\n\n    return controller;',
+              "CRYSTALS_CONTROLLER_MEMBER_VALIDATION"
+          )
+          crystals = replace_once(
+              crystals,
+              '      "[data-laws-law]",',
+              '      "[data-laws-law], [data-laws-member]",',
+              "CRYSTALS_CANONICAL_CHILD_SELECTOR"
+          )
+          crystals = replace_once(
+              crystals,
+              '               normalizeLawId(\n                 element.dataset.lawId\n               );',
+              '               normalizeLawId(\n                 element.dataset.lawId ||\n                 element.dataset.memberId\n               );',
+              "CRYSTALS_CHILD_ID"
+          )
+          crystals = replace_once(
+              crystals,
+              '                 type:\n                   NODE_TYPES.LAW,',
+              '                 type:\n                   element.matches("[data-laws-law]")\n                     ? NODE_TYPES.LAW\n                     : NODE_TYPES.MEMBER,',
+              "CRYSTALS_CHILD_NODE_CLASS"
+          )
+          crystals = replace_once(
+              crystals,
+              '                   element.dataset.lawLabel ||\n                   element.dataset.label ||',
+              '                   element.dataset.memberLabel ||\n                   element.dataset.lawLabel ||\n                   element.dataset.label ||',
+              "CRYSTALS_CHILD_LABEL"
+          )
+          crystals = replace_once(
+              crystals,
+              '                 meshKey:\n                   `law-${direction}`,',
+              '                 meshKey:\n                   element.matches("[data-laws-law]")\n                     ? `law-${direction}`\n                     : `member-${direction}`,',
+              "CRYSTALS_CHILD_MESH_KEY"
+          )
+          crystals = replace_once(
+              crystals,
+              '    RECEIPT.canonicalSemanticLawCount =\n      lawElements.length;',
+              '    RECEIPT.memberCount =\n      Array.from(registry.values())\n        .filter(node => node.type === NODE_TYPES.MEMBER).length;\n\n    RECEIPT.canonicalSemanticLawCount =\n      lawElements.filter(element => element.matches("[data-laws-law]")).length;\n\n    RECEIPT.canonicalSemanticMemberCount =\n      lawElements.filter(element => element.matches("[data-laws-member]")).length;',
+              "CRYSTALS_SEMANTIC_COUNTS"
+          )
+          crystals = replace_once(
+              crystals,
+              '        node.type === NODE_TYPES.LAW &&\n        node.direction === direction',
+              '        (node.type === NODE_TYPES.LAW ||\n         node.type === NODE_TYPES.MEMBER) &&\n        node.direction === direction',
+              "CRYSTALS_ACTIVE_CHILD_NODES"
+          )
+          crystals = replace_once(
+              crystals,
+              '             node.type === NODE_TYPES.AUXILIARY ||\n             node.type === NODE_TYPES.LAW',
+              '             node.type === NODE_TYPES.AUXILIARY ||\n             node.type === NODE_TYPES.LAW ||\n             node.type === NODE_TYPES.MEMBER',
+              "CRYSTALS_PROJECT_MEMBER_NODES"
+          )
+          write(path, crystals)
+
+          # Interactions: index, project, hit-test, and dispatch both child classes.
+          path = "laws/index.interactions.js"
+          interactions = read(path)
+          interactions = replace_once(
+              interactions,
+              'const VECTOR=Object.freeze({flow:[0,1,0],integrity:[1,0,0],reality:[0,-1,0],structure:[-1,0,0],test:[0.76,0,0.65],research:[-0.76,0,0.65]});',
+              'const VECTOR=Object.freeze({flow:[0,1,0],integrity:[0.8660254037844386,0.5,0],reality:[0.8660254037844386,-0.5,0],structure:[0,-1,0],test:[-0.8660254037844386,-0.5,0],research:[-0.8660254037844386,0.5,0]});',
+              "INTERACTIONS_EQUAL_PHASE_VECTORS"
+          )
+          interactions = replace_once(
+              interactions,
+              'const KIND=Object.freeze({CATEGORY:"category",LAW:"law",AUXILIARY:"auxiliary",COMPASS:"compass",SPACE:"open-space"});',
+              'const KIND=Object.freeze({CATEGORY:"category",LAW:"law",MEMBER:"member",AUXILIARY:"auxiliary",COMPASS:"compass",SPACE:"open-space"});',
+              "INTERACTIONS_MEMBER_KIND"
+          )
+          interactions = replace_once(
+              interactions,
+              '"getCanonicalLawRecords","getCanonicalLawRoutes","subscribeFrameState"',
+              '"getCanonicalLawRecords","getCanonicalLawRoutes","getCanonicalMemberRecords","getCanonicalMemberRoutes","subscribeFrameState"',
+              "INTERACTIONS_MEMBER_REGISTRY_SURFACES"
+          )
+          interactions = replace_once(
+              interactions,
+              '"requestCategorySelection","requestLawSelection","requestAuxiliarySelection"',
+              '"requestCategorySelection","requestLawSelection","requestMemberSelection","requestAuxiliarySelection"',
+              "INTERACTIONS_MEMBER_SELECTION_SURFACE"
+          )
+          interactions = replace_once(
+              interactions,
+              'const lawRecord=r=>recordKind(r)==="law";\n  const auxiliaryRecord',
+              'const lawRecord=r=>recordKind(r)===KIND.LAW;\n  const memberRecord=r=>recordKind(r)===KIND.MEMBER;\n  const auxiliaryRecord',
+              "INTERACTIONS_MEMBER_RECORD"
+          )
+          interactions = replace_once(
+              interactions,
+              'S.controls.get(controlKey(KIND.CATEGORY,r.id))||S.controls.get(controlKey(KIND.AUXILIARY,r.id))',
+              'S.controls.get(controlKey(KIND.CATEGORY,r.id))||S.controls.get(controlKey(KIND.MEMBER,r.id))||S.controls.get(controlKey(KIND.AUXILIARY,r.id))',
+              "INTERACTIONS_MEMBER_CONTROL_LOOKUP"
+          )
+          interactions = replace_once(
+              interactions,
+              'r.id||r.lawId||r.direction',
+              'r.id||r.memberId||r.lawId||r.direction',
+              "INTERACTIONS_MEMBER_PROJECTION_ID"
+          )
+          interactions = replace_once(
+              interactions,
+              'S.root.querySelectorAll("[data-laws-category], [data-laws-law], [data-laws-auxiliary]")',
+              'S.root.querySelectorAll("[data-laws-category], [data-laws-law], [data-laws-member], [data-laws-auxiliary]")',
+              "INTERACTIONS_CONTROL_SELECTOR"
+          )
+          interactions = replace_once(
+              interactions,
+              'if(el.matches("[data-laws-law]")){const id=text(el.dataset.lawId);if(id)S.controls.set(controlKey(KIND.LAW,id),el);}else if(el.matches("[data-laws-auxiliary]"))',
+              'if(el.matches("[data-laws-law]")){const id=text(el.dataset.lawId);if(id)S.controls.set(controlKey(KIND.LAW,id),el);}else if(el.matches("[data-laws-member]")){const id=text(el.dataset.memberId);if(id)S.controls.set(controlKey(KIND.MEMBER,id),el);}else if(el.matches("[data-laws-auxiliary]"))',
+              "INTERACTIONS_MEMBER_CONTROL_INDEX"
+          )
+          interactions = replace_once(
+              interactions,
+              'S.root.querySelectorAll("[data-laws-law][data-law-id]")',
+              'S.root.querySelectorAll("[data-laws-law][data-law-id], [data-laws-member][data-member-id]")',
+              "INTERACTIONS_CHILD_LABEL_SELECTOR"
+          )
+          interactions = replace_once(
+              interactions,
+              'const id=text(control.dataset.lawId);',
+              'const id=text(control.dataset.lawId||control.dataset.memberId);',
+              "INTERACTIONS_CHILD_LABEL_ID"
+          )
+          interactions = replace_once(
+              interactions,
+              'control.dataset.lawLabel||control.dataset.label||id',
+              'control.dataset.memberLabel||control.dataset.lawLabel||control.dataset.label||id',
+              "INTERACTIONS_CHILD_LABEL_TEXT"
+          )
+          interactions = replace_once(
+              interactions,
+              'm===MODE.CLUSTER?`[data-laws-law][data-law-id="${escapeCss(primary)}"]`',
+              'm===MODE.CLUSTER?`[data-laws-law][data-law-id="${escapeCss(primary)}"], [data-laws-member][data-member-id="${escapeCss(primary)}"]`',
+              "INTERACTIONS_PRIMARY_CHILD_SELECTOR"
+          )
+          interactions = replace_once(
+              interactions,
+              'const active=activeDirection(),lawById=new Map(S.projections.filter(lawRecord).map(r=>[r.id,r]));',
+              'const active=activeDirection(),lawById=new Map(S.projections.filter(r=>lawRecord(r)||memberRecord(r)).map(r=>[r.id,r]));',
+              "INTERACTIONS_CHILD_PROJECTION_MAP"
+          )
+          interactions = replace_once(
+              interactions,
+              'const control=S.controls.get(controlKey(KIND.LAW,id)),r=lawById.get(id);',
+              'const control=S.controls.get(controlKey(KIND.LAW,id))||S.controls.get(controlKey(KIND.MEMBER,id)),r=lawById.get(id);',
+              "INTERACTIONS_CHILD_LABEL_CONTROL"
+          )
+          interactions = replace_once(
+              interactions,
+              'text(r?.lawId||r?.id)',
+              'text(r?.memberId||r?.lawId||r?.id)',
+              "INTERACTIONS_CHILD_CANONICAL_ID"
+          )
+          interactions = replace_once(
+              interactions,
+              'const cat=categoryRecord(r),law=lawRecord(r),aux=auxiliaryRecord(r);if(m===MODE.CONSTELLATION&&!(cat||aux))continue;if(m===MODE.CLUSTER&&!law)continue;if(law&&dir&&direction(lawCanonical(r.id)?.direction)!==dir)continue;const z=radius(r),d=dist(point.x,point.y,r.x,r.y),p=priority(r),kind=law?KIND.LAW:aux?KIND.AUXILIARY:KIND.CATEGORY;',
+              'const cat=categoryRecord(r),law=lawRecord(r),member=memberRecord(r),child=law||member,aux=auxiliaryRecord(r);if(m===MODE.CONSTELLATION&&!(cat||aux))continue;if(m===MODE.CLUSTER&&!child)continue;if(child&&dir&&direction(lawCanonical(r.id)?.direction)!==dir)continue;const z=radius(r),d=dist(point.x,point.y,r.x,r.y),p=priority(r),kind=law?KIND.LAW:member?KIND.MEMBER:aux?KIND.AUXILIARY:KIND.CATEGORY;',
+              "INTERACTIONS_MEMBER_CRYSTAL_HIT"
+          )
+          interactions = replace_once(
+              interactions,
+              'if(el?.matches("[data-laws-law]"))return{kind:KIND.LAW,id:text(el.dataset.lawId)};',
+              'if(el?.matches("[data-laws-law]"))return{kind:KIND.LAW,id:text(el.dataset.lawId)};if(el?.matches("[data-laws-member]"))return{kind:KIND.MEMBER,id:text(el.dataset.memberId)};',
+              "INTERACTIONS_MEMBER_IDENTITY"
+          )
+          interactions = interactions.replace(
+              '[data-laws-projected-category-label], [data-laws-law], [data-laws-auxiliary], [data-laws-category], [data-upstream-compass-control]',
+              '[data-laws-projected-category-label], [data-laws-law], [data-laws-member], [data-laws-auxiliary], [data-laws-category], [data-upstream-compass-control]'
+          )
+          interactions = replace_once(
+              interactions,
+              'x.kind===KIND.LAW?lawRecord(v)&&v.id===x.id:x.kind===KIND.AUXILIARY?',
+              'x.kind===KIND.LAW?lawRecord(v)&&v.id===x.id:x.kind===KIND.MEMBER?memberRecord(v)&&v.id===x.id:x.kind===KIND.AUXILIARY?',
+              "INTERACTIONS_MEMBER_SEMANTIC_RECORD"
+          )
+          interactions = replace_once(
+              interactions,
+              'if(t.kind===KIND.LAW)return S.controller.requestLawSelection(t.id)!==false;if(t.kind===KIND.AUXILIARY)',
+              'if(t.kind===KIND.LAW)return S.controller.requestLawSelection(t.id)!==false;if(t.kind===KIND.MEMBER)return S.controller.requestMemberSelection(t.id)!==false;if(t.kind===KIND.AUXILIARY)',
+              "INTERACTIONS_MEMBER_DISPATCH"
+          )
+          interactions = replace_once(
+              interactions,
+              'if(c.getCanonicalLawRecords().length!==24||c.getCanonicalLawRoutes().length!==24)throw Error("LAWS_INTERACTIONS_CANONICAL_REGISTRY_INVALID");',
+              'if(c.getCanonicalLawRecords().length!==16||c.getCanonicalLawRoutes().length!==16||c.getCanonicalMemberRecords().length!==8||c.getCanonicalMemberRoutes().length!==8)throw Error("LAWS_INTERACTIONS_CANONICAL_REGISTRY_INVALID");',
+              "INTERACTIONS_REGISTRY_COUNTS"
+          )
+          interactions = replace_once(
+              interactions,
+              'S.laws=Object.freeze(Array.from(S.controller.getCanonicalLawRecords()||[]));',
+              'S.laws=Object.freeze([...Array.from(S.controller.getCanonicalLawRecords()||[]),...Array.from(S.controller.getCanonicalMemberRecords()||[])]);',
+              "INTERACTIONS_COMBINED_CHILD_REGISTRY"
+          )
+          write(path, interactions)
+
+          # CSS: semantic-hook parity only; no visual redesign.
+          path = "laws/index.css"
+          css = read(path)
+          css = css.replace(
+              "[data-laws-law-control]",
+              ":is([data-laws-law-control], [data-laws-member-control])"
+          )
+          css = css.replace(
+              "[data-laws-law]",
+              ":is([data-laws-law], [data-laws-member])"
+          )
+          if "[data-laws-member]" not in css:
+              raise RuntimeError("CSS_MEMBER_HOOK_NOT_INSTALLED")
+          write(path, css)
+
+          # Final source invariants before committing.
+          html = read("laws/index.html")
+          if len(re.findall(r'\bdata-laws-law(?:\s|=|>)', html)) != 16:
+              raise RuntimeError("FINAL_HTML_LAW_COUNT_INVALID")
+          if len(re.findall(r'\bdata-laws-member(?:\s|=|>)', html)) != 8:
+              raise RuntimeError("FINAL_HTML_MEMBER_COUNT_INVALID")
+          if len(re.findall(r'\bdata-laws-category(?:\s|=|>)', html)) != 6:
+              raise RuntimeError("FINAL_HTML_AUTHORITY_COUNT_INVALID")
+          if html.count('data-route=') < 24:
+              raise RuntimeError("FINAL_HTML_ROUTE_COUNT_INVALID")
+          PY
+
+      - name: Validate corrected JavaScript syntax
+        run: |
+          node --check laws/index.controller.js
+          node --check laws/index.crystals.js
+          node --check laws/index.interactions.js
+
+      - name: Commit bounded correction and remove one-run workflow
+        shell: bash
+        run: |
+          rm .github/workflows/laws-checkpoint3-bounded-product-correction.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.html laws/index.controller.js laws/index.crystals.js laws/index.interactions.js laws/index.css .github/workflows/laws-checkpoint3-bounded-product-correction.yml
+          git commit -m "Checkpoint 3: separate Law and non-Law cluster members"
+          git push origin HEAD:agent/laws-compass-checkpoint-2-bounded-construction-002

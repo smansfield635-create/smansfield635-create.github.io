@@ -44,9 +44,9 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          RUNNER=$(git diff --name-only "$BASE_SHA..HEAD" | grep -E '^h-earth-3d/validation/metric-attribution/h-earth\.ma[1-6].*\.runner\.mjs$' | sort | tail -n 1)
+          RUNNER=$(git diff --name-only "$BASE_SHA..HEAD" | grep -E '^h-earth-3d/validation/metric-attribution/h-earth\.(ma[1-6]|rma[0-3]).*\.runner\.mjs$' | sort | tail -n 1)
           if [ -z "$RUNNER" ]; then
-            echo 'No bounded MA1-MA6 runner found in the pull request.'
+            echo 'No bounded MA1-MA6 or RMA0-RMA3 runner found in the pull request.'
             git diff --name-only "$BASE_SHA..HEAD"
             exit 1
           fi
@@ -66,6 +66,7 @@ jobs:
           path: |
             h-earth-3d/validation/metric-attribution/*.receipt.v1.json
             h-earth-3d/validation/metric-attribution/ma*-evidence/
+            h-earth-3d/validation/metric-attribution/rma*-evidence/
             h-earth-3d/research/metric-attribution/
             h-earth.metric-attribution-checkpoint.log
             /tmp/h-earth-metric-attribution-server.log

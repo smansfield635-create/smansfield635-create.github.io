@@ -24,6 +24,7 @@ jobs:
         shell: bash
         run: |
           python3 <<'PY'
+          from pathlib import Path
           import re
           import subprocess
 
@@ -67,6 +68,21 @@ jobs:
               raise SystemExit('ORIGINAL_PATCH_HELPER_NOT_FOUND')
           payload = payload.replace(original, corrected, 1)
           subprocess.run(['python3', '-c', payload], check=True)
+          for temporary in (
+              '.github/workflows/laws-checkpoint3-bounded-product-correction-trigger-v2.yml',
+              '.github/workflows/laws-checkpoint3-bounded-product-correction-push-v3.yml',
+              '.github/workflows/laws-checkpoint3-bounded-product-correction-diagnostic-v4.yml'
+          ):
+              Path(temporary).unlink(missing_ok=True)
+          subprocess.run(
+              [
+                  'git', 'add', '-u',
+                  '.github/workflows/laws-checkpoint3-bounded-product-correction-trigger-v2.yml',
+                  '.github/workflows/laws-checkpoint3-bounded-product-correction-push-v3.yml',
+                  '.github/workflows/laws-checkpoint3-bounded-product-correction-diagnostic-v4.yml'
+              ],
+              check=True
+          )
           PY
 
       - name: Validate corrected JavaScript syntax

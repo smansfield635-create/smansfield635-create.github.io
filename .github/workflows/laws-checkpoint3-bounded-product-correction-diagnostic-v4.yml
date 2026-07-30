@@ -1,0 +1,117 @@
+name: Laws Checkpoint 3 Bounded Product Correction Diagnostic Executor
+
+on:
+  push:
+    branches:
+      - agent/laws-compass-checkpoint-2-bounded-construction-002
+    paths:
+      - ".github/workflows/laws-checkpoint3-bounded-product-correction-diagnostic-v4.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  execute-bounded-correction:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch head
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-compass-checkpoint-2-bounded-construction-002
+          fetch-depth: 0
+
+      - name: Execute bounded patch and capture result
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+          import subprocess
+
+          status = Path('/tmp/laws-correction-status')
+          log = Path('/tmp/laws-correction-log')
+          try:
+              workflow = Path('.github/workflows/laws-checkpoint3-bounded-product-correction.yml').read_text(encoding='utf-8')
+              match = re.search(r"          python3 <<'PY'\n(.*?)\n          PY\n", workflow, re.S)
+              if not match:
+                  raise RuntimeError('BOUNDED_PATCH_PAYLOAD_NOT_FOUND')
+              payload = '\n'.join(
+                  line[10:] if line.startswith('          ') else line
+                  for line in match.group(1).splitlines()
+              )
+              original = '''def replace_once(text, old, new, label):
+    count = text.count(old)
+    if count != 1:
+        raise RuntimeError(f"{label}: expected 1 exact occurrence, observed {count}")
+    return text.replace(old, new, 1)
+'''
+              corrected = '''def replace_once(text, old, new, label):
+    count = text.count(old)
+    if count == 1:
+        return text.replace(old, new, 1)
+    if label == "CRYSTALS_CHILD_ID" and count == 0:
+        result, regex_count = re.subn(
+            r"normalizeLawId\\(\\s*element\\.dataset\\.lawId\\s*\\)",
+            "normalizeLawId(\\n                 element.dataset.lawId ||\\n                 element.dataset.memberId\\n               )",
+            text,
+            count=1
+        )
+        if regex_count == 1:
+            return result
+    raise RuntimeError(f"{label}: expected 1 exact occurrence, observed {count}")
+'''
+              if original not in payload:
+                  raise RuntimeError('PATCH_HELPER_NOT_FOUND')
+              payload = payload.replace(original, corrected, 1)
+              result = subprocess.run(
+                  ['python3', '-c', payload],
+                  text=True,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.STDOUT
+              )
+              if result.returncode != 0:
+                  raise RuntimeError(result.stdout.strip() or f'PATCH_EXIT_{result.returncode}')
+              for source in (
+                  'laws/index.controller.js',
+                  'laws/index.crystals.js',
+                  'laws/index.interactions.js'
+              ):
+                  check = subprocess.run(
+                      ['node', '--check', source],
+                      text=True,
+                      stdout=subprocess.PIPE,
+                      stderr=subprocess.STDOUT
+                  )
+                  if check.returncode != 0:
+                      raise RuntimeError(f'{source}: {check.stdout.strip()}')
+              status.write_text('PASS\n', encoding='utf-8')
+              log.write_text('BOUNDED_CORRECTION_AND_SYNTAX_PASS\n', encoding='utf-8')
+          except Exception as error:
+              status.write_text('FAIL\n', encoding='utf-8')
+              log.write_text(str(error) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit outcome and remove executor
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if grep -qx PASS /tmp/laws-correction-status; then
+            rm .github/workflows/laws-checkpoint3-bounded-product-correction.yml
+            rm .github/workflows/laws-checkpoint3-bounded-product-correction-trigger.yml
+            rm .github/workflows/laws-checkpoint3-bounded-product-correction-trigger-v2.yml
+            rm .github/workflows/laws-checkpoint3-bounded-product-correction-push-v3.yml
+            rm .github/workflows/laws-checkpoint3-bounded-product-correction-diagnostic-v4.yml
+            git add laws/index.html laws/index.controller.js laws/index.crystals.js laws/index.interactions.js laws/index.css .github/workflows/laws-checkpoint3-bounded-product-correction.yml .github/workflows/laws-checkpoint3-bounded-product-correction-trigger.yml .github/workflows/laws-checkpoint3-bounded-product-correction-trigger-v2.yml .github/workflows/laws-checkpoint3-bounded-product-correction-push-v3.yml .github/workflows/laws-checkpoint3-bounded-product-correction-diagnostic-v4.yml
+            git commit -m "Checkpoint 3: separate Law and non-Law cluster members"
+          else
+            rm .github/workflows/laws-checkpoint3-bounded-product-correction-diagnostic-v4.yml
+            {
+              echo "Checkpoint 3 bounded correction diagnostic"
+              echo
+              cat /tmp/laws-correction-log
+            } > /tmp/laws-correction-commit-message
+            git add .github/workflows/laws-checkpoint3-bounded-product-correction-diagnostic-v4.yml
+            git commit --allow-empty -F /tmp/laws-correction-commit-message
+          fi
+          git push origin HEAD:agent/laws-compass-checkpoint-2-bounded-construction-002

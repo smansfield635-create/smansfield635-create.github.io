@@ -80,7 +80,7 @@ The primary pass is the qualifying pass with the highest correspondence composit
 | Rank | Pass | Composite | Exact band matches | Grid Pearson | Scene-score Pearson | Aggregate ratio | Gate |
 |---:|---|---:|---:|---:|---:|---:|---|
 | 1 | G — accepted material, flat lighting | 0.951688 | 23/24 | 0.979521 | 0.992369 | 0.994535 | PASS |
-| 2 | F — constant material, accepted lighting | 0.856769 | 17/24 | 0.806672 | 0.801229 | 0.903744 | PASS |
+| 2 | F — constant material, accepted lighting | 0.856769 | 17/24 | 0.806672 | 0.801229 | 0.903744 | FAIL — 17/24 = 0.7083 < 0.75 |
 | 3 | C — surface normals | 0.818452 | 18/24 | 0.782356 | 0.954252 | 0.917117 | PASS |
 | 4 | A — elevation | 0.746460 | 16/24 | 0.723533 | 0.086046 | 0.876109 | FAIL |
 | 5 | E — silhouette and edges | 0.710858 | 18/24 | 0.690371 | 0.223227 | 0.891274 | FAIL |
@@ -89,14 +89,16 @@ The primary pass is the qualifying pass with the highest correspondence composit
 
 Pass G reproduced H's dominant orientation and lag in 7 of 8 scenes and in 23 of 24 scene-band comparisons. Its aggregate repetition score was within approximately `0.55%` of H even after directional lighting, rim, specular, fog, and atmospheric haze were removed.
 
-Passes C and F also passed, establishing secondary sensitivity to surface normals and geometry-lighting response. Elevation, slope, depth, and silhouette did not pass the complete gate.
+Pass C passed and establishes secondary geometry-lighting sensitivity through surface normals. Pass F was strong across grid, scene-score, peak-strength, dominant-scene, and aggregate terms, but it did not qualify because `17/24 = 0.7083` is below the frozen `0.75` exact-band threshold. Elevation, slope, depth, and silhouette did not pass the complete gate.
 
 ## What is established
 
 ```text
 FACT_1 = THE_CURRENT_SCALAR_REPETITION_SCORE_IS_PRIMARILY_REPRODUCED_BY_THE_ACCEPTED_CP2_SPATIAL_MATERIAL_FIELD
 
-FACT_2 = SURFACE_NORMALS_AND_ACCEPTED_LIGHTING_REPRODUCE_A_SECONDARY_PORTION_OF_THE_SCORE
+FACT_2 = SURFACE_NORMALS_ESTABLISH_SECONDARY_GEOMETRY_LIGHTING_SENSITIVITY
+
+FACT_2A = CONSTANT_MATERIAL_WITH_ACCEPTED_LIGHTING_WAS_STRONG_BUT_DID_NOT_PASS_THE_FROZEN_EXACT_BAND_GATE
 
 FACT_3 = ELEVATION_SLOPE_DEPTH_AND_MAJOR_EDGES_DO_NOT_PASS_THE_FULL_CORRESPONDENCE_GATE
 

@@ -1,0 +1,57 @@
+name: H-Earth CP5 Round 2 Multiscale Naturalism
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  execute-round2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact CP5 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start exact candidate server
+        run: |
+          python3 -m http.server 4177 --bind 127.0.0.1 > /tmp/h-earth-cp5-server.log 2>&1 &
+          echo $! > /tmp/h-earth-cp5-server.pid
+          for attempt in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:4177/h-earth-3d/validation/round2/h-earth.cp5-round2-harness.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-cp5-server.log
+          exit 1
+      - name: Execute all CP5 engineering gates
+        env:
+          CP5_HARNESS_URL: http://127.0.0.1:4177/h-earth-3d/validation/round2/h-earth.cp5-round2-harness.html
+        run: node h-earth-3d/validation/h-earth.cp5-round2-execution.runner.mjs | tee h-earth.cp5-round2-execution.log
+      - name: Upload CP5 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp5-round2-execution
+          path: |
+            h-earth-3d/validation/h-earth.cp5-round2-execution.receipt.v1.json
+            h-earth-3d/validation/round2/cp5-evidence
+            h-earth.cp5-round2-execution.log
+            /tmp/h-earth-cp5-server.log
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Enforce engineering disposition
+        run: |
+          node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync('h-earth-3d/validation/h-earth.cp5-round2-execution.receipt.v1.json','utf8'));console.log(r.disposition);if(r.disposition!=='ROUND2_PASS_ENGINEERING')process.exit(1);"

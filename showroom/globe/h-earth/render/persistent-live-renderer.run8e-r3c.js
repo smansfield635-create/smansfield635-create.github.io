@@ -160,8 +160,8 @@ void main(){
     vec3 rock=vec3(0.25,0.27,0.26);
     vec3 palette=mix(lowland,upland,elevationMix);
     palette=mix(palette,rock,clamp(slope*1.35,0.0,0.72));
-    float strata=0.5+0.5*sin(world.x*0.47+world.z*0.33+vWorldPosition.y*0.79+medium*3.2);
-    float crossGrain=0.5+0.5*sin(world.x*0.83-world.z*0.61+broad*4.8);
+    float strata=0.5+0.5*sin(world.x*0.47+world.y*0.33+vWorldPosition.y*0.79+medium*3.2);
+    float crossGrain=0.5+0.5*sin(world.x*0.83-world.y*0.61+broad*4.8);
     palette*=0.62+0.46*broad+0.24*medium+0.14*grain;
     palette*=mix(0.70,1.30,strata*0.68+crossGrain*0.32);
     palette=mix(palette,base,0.31);

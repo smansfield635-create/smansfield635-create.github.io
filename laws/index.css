@@ -2847,3 +2847,13 @@ FALSE
     grid-column: auto;
   }
 }
+
+
+/* CELESTIAL GATEWAY AND AUXILIARY CLUSTER CP2 */
+:root{--laws-category-size:clamp(2.52rem,4.64vw,4.08rem);--laws-authority-size:clamp(4.15rem,7.4vw,6.45rem)}
+[data-laws-category][data-laws-gateway]{width:var(--laws-authority-size);aspect-ratio:1}
+[data-laws-category][data-laws-gateway="solar"]::before{clip-path:circle(49% at 50% 50%);background:radial-gradient(circle at 34% 28%,#fffde2 0 8%,#fff0a1 17%,#ffbd3f 46%,#b84d00 76%,#4d1700 100%);box-shadow:inset -.65rem -.8rem 1.25rem rgba(117,30,0,.62),inset .35rem .25rem .8rem rgba(255,255,255,.48),0 0 1.35rem rgba(255,223,105,.78),0 0 3.6rem rgba(255,143,31,.42);filter:drop-shadow(0 0 .85rem rgba(255,198,63,.68))}
+[data-laws-category][data-laws-gateway="lunar"]::before{clip-path:circle(49% at 50% 50%);background:radial-gradient(circle at 33% 28%,rgba(255,255,255,.96) 0 7%,transparent 8%),radial-gradient(circle at 66% 62%,rgba(31,38,61,.72) 0 9%,transparent 10%),radial-gradient(circle at 44% 71%,rgba(58,66,91,.68) 0 6%,transparent 7%),radial-gradient(circle at 52% 43%,#d7dcf0 0 18%,#858da9 54%,#34394f 82%,#151827 100%);box-shadow:inset -.85rem -.7rem 1.35rem rgba(7,10,24,.78),inset .28rem .2rem .72rem rgba(255,255,255,.34),0 0 1.1rem rgba(178,194,255,.42),0 0 2.8rem rgba(111,91,205,.22);filter:drop-shadow(0 0 .68rem rgba(163,178,239,.44))}
+[data-laws-projected-law-label]{display:grid;min-width:clamp(4.8rem,12vw,7rem);gap:.05rem;border-radius:.8rem;white-space:normal}
+[data-laws-projected-law-label] [data-laws-label-line]{display:block}
+[data-laws-projected-law-label] [data-laws-label-line="ampersand"]{font-size:.72em;line-height:.82;opacity:.82}

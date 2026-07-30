@@ -23,6 +23,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   verify-specialized-gauge-reconciliation:
@@ -99,6 +100,68 @@ jobs:
           const checkpoint = expectPublic ? 'A7_PUBLIC_PASS' : 'A5_BROWSER_PASS';
           console.log(`H_EARTH_SPECIALIZED_GAUGE_${checkpoint}:${receipt.executedHead}:${receipt.canonicalReceiptSha256}`);
           NODE
+
+      - name: Publish A7 public execution receipt to PR 401
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const receiptPath = 'h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.browser.receipt.v1.json';
+            const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+            const readiness = receipt.directGauge?.readiness ?? {};
+            const observed = receipt.unifiedPlatformAdapter?.observation?.payload ?? {};
+            const executed = receipt.unifiedPlatformAdapter?.execution?.result ?? {};
+            const browserEvidence = receipt.browserEvidence ?? {};
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              '## Operation A · A7 public execution receipt',
+              '',
+              '```text',
+              'RECEIPT_TYPE = H_EARTH_A7_PUBLIC_EXECUTION_RECEIPT_v1',
+              'OPERATION = H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001',
+              'CHECKPOINT = A7_MERGE_CANDIDATE_AND_POST_MERGE_EXECUTION',
+              'STATUS = PASS_CLOSED',
+              `PUBLIC_EXECUTED_HEAD = ${receipt.executedHead}`,
+              `WORKFLOW_RUN_ID = ${context.runId}`,
+              `WORKFLOW_RUN_URL = ${runUrl}`,
+              `PUBLIC_RECEIPT_SHA256 = ${receipt.canonicalReceiptSha256}`,
+              `PUBLIC_SOURCE_IDENTITY_ATTEMPT = ${receipt.deployedSourceVerification?.attempt ?? 'UNKNOWN'}`,
+              `PUBLIC_SOURCE_IDENTITIES_MATCH = ${receipt.deployedSourceVerification?.verified === true}`,
+              '```',
+              '',
+              '```text',
+              `REQUIRED_APPLICABLE_CHECKS = ${readiness.requiredApplicableChecks}`,
+              `REQUIRED_APPLICABLE_PASSES = ${readiness.requiredApplicablePasses}`,
+              `REQUIRED_APPLICABLE_FAILURES = ${readiness.requiredApplicableFailures}`,
+              `REQUIRED_APPLICABLE_UNRESOLVED = ${readiness.requiredApplicableUnresolved}`,
+              `READINESS = ${readiness.readinessPercent}`,
+              `MERGE_ELIGIBLE = ${readiness.mergeEligible}`,
+              `DIRECT_GAUGE_RECEIPT_DIGEST = ${receipt.directGauge?.receiptDigest ?? 'NONE'}`,
+              `REPEATED_GAUGE_RECEIPT_DIGEST = ${receipt.repeatedGaugeReceiptDigest ?? 'NONE'}`,
+              `UNIFIED_PLATFORM_OBSERVATION_RECEIPT_DIGEST = ${observed.receiptDigest ?? 'NONE'}`,
+              `UNIFIED_PLATFORM_EXECUTION_RECEIPT_DIGEST = ${executed.receiptDigest ?? 'NONE'}`,
+              `ADAPTER_EXECUTED_SOURCE_HEAD = ${observed.executedSourceHead ?? 'NONE'}`,
+              '```',
+              '',
+              '```text',
+              `CONSOLE_ERRORS = ${(browserEvidence.consoleErrors ?? []).length}`,
+              `PAGE_ERRORS = ${(browserEvidence.pageErrors ?? []).length}`,
+              `HTTP_ERRORS = ${(browserEvidence.httpErrors ?? []).length}`,
+              `SHOWROOM_PRODUCT_MUTATION = ${receipt.boundaries?.showroomProductMutationPerformed === true}`,
+              `LIVE_H_EARTH_MUTATION = ${receipt.boundaries?.liveHEarthMutationPerformed === true}`,
+              `NARRATIVE_PRESENTATION_MUTATION = ${receipt.boundaries?.narrativePresentationMutationPerformed === true}`,
+              'USER_DIFFERENTIAL_REQUIRED = FALSE',
+              'NEXT = A8_OPERATION_CLOSURE_PACKAGE',
+              '```'
+            ].join('\n');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: 401,
+              body
+            });
 
       - name: Upload specialized gauge reconciliation evidence
         if: always()

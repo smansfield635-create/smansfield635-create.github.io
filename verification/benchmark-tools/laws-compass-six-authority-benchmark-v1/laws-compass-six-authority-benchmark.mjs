@@ -168,7 +168,13 @@ assert((source.html.match(/src="\/laws\/index\.compositor\.js/g) || []).length <
 assert((source.html.match(/src="\/laws\/index\.crystals\.js/g) || []).length <= 1, "SECOND_CRYSTALS_SCRIPT_PRESENT");
 assert((source.html.match(/src="\/laws\/index\.interactions\.js/g) || []).length <= 1, "SECOND_INTERACTIONS_SCRIPT_PRESENT");
 assert((source.controller.match(/globalThis\.DGB_LAWS_CONTROLLER\s*=/g) || []).length === 1, "SECOND_CONTROLLER_API_PRESENT");
-assert(source.html.includes('data-laws-category-count="6"') && source.html.includes('data-laws-law-count="24"'), "HTML_SIX_AUTHORITY_COUNTS_MISSING");
+assert(
+  source.html.includes('data-laws-category-count="6"') &&
+  source.html.includes('data-laws-law-count="16"') &&
+  source.html.includes('data-laws-nonlaw-member-count="8"') &&
+  source.html.includes('data-laws-child-route-count="24"'),
+  "HTML_SIX_AUTHORITY_COUNTS_MISSING"
+);
 assert(source.css.includes('[data-laws-category][data-laws-gateway="solar"]::before'), "TEST_SOLAR_PRESENTATION_MISSING");
 assert(source.css.includes('[data-laws-category][data-laws-gateway="lunar"]::before'), "RESEARCH_LUNAR_PRESENTATION_MISSING");
 

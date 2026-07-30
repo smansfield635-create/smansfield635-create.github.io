@@ -184,16 +184,19 @@ if (failures.length) {
 } else {
   fs.rmSync(SHOTS, { recursive: true, force: true });
   fs.mkdirSync(SHOTS, { recursive: true });
+  let browser = null;
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       executablePath: CHROME_PATH,
       headless: "new",
       args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--enable-webgl", "--ignore-gpu-blocklist", "--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"]
     });
 
     for (const profile of VIEWPORTS) {
-      const page = await browser.newPage();
-      await page.setViewport({ width: profile.width, height: profile.height, deviceScaleFactor: 1, isMobile: profile.mobile, hasTouch: profile.mobile });
+      let page = null;
+      try {
+        page = await browser.newPage();
+        await page.setViewport({ width: profile.width, height: profile.height, deviceScaleFactor: 1, isMobile: profile.mobile, hasTouch: profile.mobile });
       const telemetry = { pageErrors: [], requestFailures: [], consoleErrors: [] };
       page.on("pageerror", error => telemetry.pageErrors.push(String(error?.message || error)));
       page.on("requestfailed", request => telemetry.requestFailures.push({ url: request.url(), error: request.failure()?.errorText || "" }));
@@ -290,7 +293,18 @@ if (failures.length) {
       assert(initial.horizontalOverflow <= 1 && initial.h1Count === 1 && initial.bodyHeight > 0, "INITIAL_LAYOUT_INVALID", initial, profile.id);
       await page.screenshot({ path: path.join(SHOTS, `${profile.id.toLowerCase()}-initial-six-authority-field.png`), fullPage: true });
 
-      for (const id of AUTHORITY_IDS) await dragAndSettle(id);
+      for (const id of AUTHORITY_IDS) {
+        try {
+          await dragAndSettle(id);
+        } catch (error) {
+          failures.push({
+            profile: profile.id,
+            id: "DRAG_AND_SETTLEMENT_ABORTED",
+            observed: { authorityId: id, error: String(error?.stack || error) }
+          });
+          throw error;
+        }
+      }
       const settlement = await inspect("SIX_AUTHORITY_DRAG_SETTLEMENT");
       assert(settlement.settlementCount >= AUTHORITY_IDS.length, "SIX_AUTHORITY_SETTLEMENT_COUNT_INVALID", settlement, profile.id);
 
@@ -338,15 +352,29 @@ if (failures.length) {
 
       assert(telemetry.pageErrors.length === 0 && telemetry.requestFailures.length === 0, "RUNTIME_TELEMETRY_FAILURE", telemetry, profile.id);
       observations.push({ profile: profile.id, initial, settlement, testPrimary, testCluster, researchPrimary, researchCluster, lawCluster, telemetry });
-      await page.close();
+      } finally {
+        if (page) {
+          await page.close().catch(() => {});
+        }
+      }
     }
 
-    await browser.close();
     const receipt = writeReceipt({ phase: "BROWSER_EXECUTION", browserExecuted: true });
     if (!receipt.pass) process.exitCode = 1;
   } catch (error) {
-    failures.push({ profile: "browser", id: "BROWSER_EXECUTION_ABORTED", observed: String(error?.stack || error?.message || error) });
-    writeReceipt({ phase: "BROWSER_EXECUTION_ABORTED", browserExecuted: true });
+    failures.push({
+      profile: "browser",
+      id: "BROWSER_EXECUTION_ABORTED",
+      observed: String(error?.stack || error)
+    });
+    writeReceipt({
+      phase: "BROWSER_EXECUTION_ABORTED",
+      browserExecuted: true
+    });
     process.exitCode = 1;
+  } finally {
+    if (browser) {
+      await browser.close().catch(() => {});
+    }
   }
 }

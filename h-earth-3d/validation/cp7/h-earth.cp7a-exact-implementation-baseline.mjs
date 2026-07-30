@@ -57,7 +57,7 @@ check('WHOLE_CP7_PRODUCT_TARGETS_EXACT', JSON.stringify(envelope.exactProductTar
 ]));
 check('WHOLE_CP7_CONTROL_PREFIX_FIXED', envelope.controlPrefix === 'h-earth-3d/control-plane/post-cp2-round2/cp7/');
 check('WHOLE_CP7_VALIDATION_PREFIX_FIXED', envelope.validationPrefix === 'h-earth-3d/validation/cp7/');
-check('WHOLE_CP7_WORKFLOW_PREFIX_FIXED', envelope.workflowPrefix === '.github/workflows/h-earth-cp7-');
+check('WHOLE_CP7_WORKFLOW_PREFIX_FIXED', envelope.workflowPrefix === '.github/workflows/h-earth-cp7');
 check('ALL_OTHER_PRODUCT_PATHS_PROHIBITED', envelope.allOtherProductPathsProhibited === true);
 
 const custodyRef = `refs/heads/${authority.preservedPreboundedWork.custodyBranch}`;

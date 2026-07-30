@@ -1,0 +1,75 @@
+name: H-Earth CP8 Engineering Execution
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-cp8-engineering-execution.yml'
+      - 'h-earth-3d/control-plane/post-cp2-round2/h-earth.cp8-engineering-execution-control.v1.json'
+      - 'h-earth-3d/validation/cp8/h-earth.cp8-engineering-browser.mjs'
+      - 'h-earth-3d/validation/cp8/h-earth.cp8-engineering-harness.html'
+      - 'h-earth-3d/validation/cp8/h-earth.cp8-engineering-execution.runner.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  execute-fixed-engineering-suite:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact CP8 execution head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start exact CP8 candidate server
+        run: |
+          python3 -m http.server 4179 --bind 127.0.0.1 > /tmp/h-earth-cp8-server.log 2>&1 &
+          echo $! > /tmp/h-earth-cp8-server.pid
+          for attempt in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:4179/h-earth-3d/validation/cp8/h-earth.cp8-engineering-harness.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-cp8-server.log
+          exit 1
+      - name: Execute CP8 fixed engineering suite
+        env:
+          CP8_HARNESS_URL: http://127.0.0.1:4179/h-earth-3d/validation/cp8/h-earth.cp8-engineering-harness.html
+        run: node h-earth-3d/validation/cp8/h-earth.cp8-engineering-execution.runner.mjs | tee h-earth.cp8-engineering-execution.log
+      - name: Upload CP8 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp8-engineering-execution
+          path: |
+            h-earth-3d/validation/cp8/h-earth.cp8-engineering-execution.receipt.v1.json
+            h-earth-3d/validation/cp8/cp8-evidence/
+            h-earth.cp8-engineering-execution.log
+            /tmp/h-earth-cp8-server.log
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Report CP8 engineering disposition
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('h-earth-3d/validation/cp8/h-earth.cp8-engineering-execution.receipt.v1.json', 'utf8'));
+          const allowed = new Set([
+            'ROUND2_PASS_ENGINEERING',
+            'ROUND2_PARTIAL_IMPROVEMENT_REMAINS_BLOCKED',
+            'ROUND2_NO_MATERIAL_IMPROVEMENT_STOP',
+            'ROUND2_REGRESSION_ROLLBACK'
+          ]);
+          if (!allowed.has(receipt.disposition)) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`CP8_DISPOSITION:${receipt.disposition}:${receipt.candidateSourceSha256}`);
+          NODE

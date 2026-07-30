@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import control from '../../control-plane/post-cp2-round2/metric-attribution/h-earth.ma5-cross-pass-correspondence.v1.mjs';
-import matrix, { H_EARTH_MA5_MATRIX_RAW_JSON } from './h-earth.ma5-cross-pass-correspondence-matrix.v1.mjs';
+import matrix from './h-earth.ma5-cross-pass-correspondence-matrix.v1.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../../..');
@@ -47,15 +47,12 @@ for (const [name, source] of Object.entries(control.frozenSources)) {
   check(`FROZEN_SOURCE_${name.toUpperCase()}`, actual === source.blob, { path: source.path, expected: source.blob, actual });
 }
 
-const canonicalRaw = H_EARTH_MA5_MATRIX_RAW_JSON.replace(
-  /,"canonicalMatrixSha256":"[0-9a-f]{64}"}$/,
-  '}'
-);
-const calculatedMatrixSha256 = sha256(canonicalRaw);
-check('CANONICAL_MATRIX_SHA256_EXACT', calculatedMatrixSha256 === control.matrix.expectedCanonicalSha256 && matrix.canonicalMatrixSha256 === control.matrix.expectedCanonicalSha256, {
+const { canonicalMatrixSha256: recordedMatrixSha256, ...matrixBody } = matrix;
+const calculatedMatrixSha256 = sha256(JSON.stringify(matrixBody));
+check('CANONICAL_MATRIX_SHA256_EXACT', calculatedMatrixSha256 === control.matrix.expectedCanonicalSha256 && recordedMatrixSha256 === control.matrix.expectedCanonicalSha256, {
   expected: control.matrix.expectedCanonicalSha256,
   calculated: calculatedMatrixSha256,
-  recorded: matrix.canonicalMatrixSha256
+  recorded: recordedMatrixSha256
 });
 check('SOURCE_EVIDENCE_MA3_EXACT', JSON.stringify(matrix.sourceEvidence.ma3) === JSON.stringify(control.sourceEvidence.ma3), { actual: matrix.sourceEvidence.ma3, expected: control.sourceEvidence.ma3 });
 check('SOURCE_EVIDENCE_MA4_EXACT', JSON.stringify(matrix.sourceEvidence.ma4) === JSON.stringify(control.sourceEvidence.ma4), { actual: matrix.sourceEvidence.ma4, expected: control.sourceEvidence.ma4 });
@@ -113,7 +110,7 @@ for (const pass of matrix.passes) {
     pass.sceneScorePearson,
     pass.meanPeakStrengthRatio,
     pass.correspondenceComposite,
-    ...pass.perScene.flatMap((scene) => [scene.score, scene.hScore, scene.scoreRatio, scene.meanGridPearson])
+    ...pass.perScene.flatMap((scene) => [scene.score, scene.hScore, scene.scoreRatio, scene.meanGridPearson, scene.meanPeakStrengthRatio])
   ].every(Number.isFinite));
 }
 

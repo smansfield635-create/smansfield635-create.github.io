@@ -6,6 +6,7 @@ import b0 from '../../control-plane/post-cp2-round2/morphology/h-earth.b0-morpho
 import authority from '../../control-plane/post-cp2-round2/morphology/h-earth.b1-morphology-descriptor-baseline.v1.mjs';
 import { buildHEarthB1MorphologyDescriptorBaseline } from '../../analysis/morphology/h-earth.b1-morphology-descriptor-baseline.v1.mjs';
 
+const EXECUTION_REVISION = 1;
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
 const checks = [];
@@ -58,6 +59,7 @@ check('MORPHOLOGY_SCALE_DERIVED_FROM_DOMINANT_LAG', first.radii.large === first.
 check('NO_HEIGHTFIELD_OR_PROBE_MUTATION', authority.boundaries.heightfieldMutationPerformed === false && authority.boundaries.probeGenerationStarted === false && authority.boundaries.productMutationPerformed === false);
 
 const summary = {
+  executionRevision: EXECUTION_REVISION,
   baselineDigest: first.baselineDigest,
   grid: first.grid,
   domain: first.domain,

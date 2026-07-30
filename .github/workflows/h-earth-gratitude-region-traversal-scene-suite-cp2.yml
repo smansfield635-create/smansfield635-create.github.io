@@ -9,6 +9,7 @@ on:
       - .github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp2.yml
       - h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.v1.json
       - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.runner.mjs
+      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-targeted-correction-verifier.mjs
       - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.receipt.v1.json
       - showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
       - showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
@@ -22,6 +23,7 @@ on:
       - .github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp2.yml
       - h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.v1.json
       - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.runner.mjs
+      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-targeted-correction-verifier.mjs
       - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.receipt.v1.json
       - showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
       - showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
@@ -35,7 +37,7 @@ permissions:
 
 concurrency:
   group: h-earth-gratitude-region-traversal-scene-suite-cp2-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   execute-round-1-presentation:
@@ -82,7 +84,7 @@ jobs:
           echo 'LIVE_CP2_RENDERER_NOT_AVAILABLE_WITHIN_WINDOW' >&2
           exit 1
 
-      - name: Execute permanent suite and Round 1 differential
+      - name: Execute permanent suite and targeted Round 1 correction
         id: execute
         shell: bash
         env:
@@ -92,10 +94,20 @@ jobs:
           CP2_EVIDENCE_DIR: h-earth-3d/validation/traversal-scene-suite/cp2-evidence
         run: |
           set +e
-          node h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.runner.mjs | tee cp2-execution.log
-          code=${PIPESTATUS[0]}
+          node h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.runner.mjs \
+            | tee cp2-execution.log
+          runner_code=${PIPESTATUS[0]}
+          if test -f h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.receipt.v1.json; then
+            node h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-targeted-correction-verifier.mjs \
+              | tee -a cp2-execution.log
+            targeted_code=${PIPESTATUS[0]}
+          else
+            echo 'CP2_TARGETED_RECEIPT_NOT_CREATED' | tee -a cp2-execution.log
+            targeted_code=1
+          fi
           set -e
-          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
+          echo "runner_exit_code=${runner_code}" >> "$GITHUB_OUTPUT"
+          echo "exit_code=${targeted_code}" >> "$GITHUB_OUTPUT"
 
       - name: Upload Checkpoint 2 evidence
         if: always()
@@ -109,6 +121,6 @@ jobs:
             h-earth-3d/validation/traversal-scene-suite/cp2-evidence/*.png
           if-no-files-found: error
 
-      - name: Enforce engineering or live result
+      - name: Enforce targeted engineering or live result
         if: always()
         run: exit "${{ steps.execute.outputs.exit_code }}"

@@ -42,6 +42,7 @@ function setPitch(state, desired) {
   while (Math.abs(desired - state.pitchDegrees) > 1e-9) {
     const delta = desired - state.pitchDegrees;
     state = apply(state, { action: delta > 0 ? 'PITCH_UP' : 'PITCH_DOWN', degrees: Math.min(8, Math.abs(delta)) });
+    if ((state.pitchDegrees === 32 && desired > 32) || (state.pitchDegrees === -42 && desired < -42)) break;
   }
   return state;
 }
@@ -54,17 +55,44 @@ function setFov(state, desired) {
   return state;
 }
 
+function deriveAim(scene, positionedState) {
+  if (scene.camera.aimPolicy !== 'TARGET_TERRAIN_POINT') {
+    return {
+      policy: 'EXPLICIT_CAMERA_ANGLES',
+      yawDegrees: scene.camera.yawDegrees,
+      pitchDegrees: scene.camera.pitchDegrees
+    };
+  }
+  const targetSample = sampleHEarthTerrainField(scene.target.x, scene.target.z);
+  if (targetSample?.valid !== true || !Number.isFinite(targetSample.elevation)) {
+    throw new Error(`CP1_TARGET_TERRAIN_SAMPLE_INVALID:${scene.id}`);
+  }
+  const dx = scene.target.x - positionedState.position.x;
+  const dz = scene.target.z - positionedState.position.z;
+  const horizontalDistance = Math.hypot(dx, dz);
+  if (horizontalDistance <= 1e-9) throw new Error(`CP1_TARGET_HORIZONTAL_DISTANCE_ZERO:${scene.id}`);
+  return {
+    policy: scene.camera.aimPolicy,
+    yawDegrees: normalizeDegrees(Math.atan2(dx, -dz) * 180 / Math.PI),
+    pitchDegrees: Math.atan2(targetSample.elevation - positionedState.position.y, horizontalDistance) * 180 / Math.PI,
+    targetElevation: targetSample.elevation,
+    cameraEyeElevation: positionedState.position.y,
+    horizontalDistance
+  };
+}
+
 function createSceneState(scene) {
   const initial = createHEarthFunctionalLandscapeNavigationState({ waypointId: 'COAST' });
   if (initial?.ok !== true) throw new Error('CP1_INITIAL_NAVIGATION_STATE_REJECTED');
   let state = initial.state;
   state = apply(state, { action: 'SET_CAMERA_POSITION', position: { x: scene.camera.x, y: null, z: scene.camera.z } });
-  state = setYaw(state, scene.camera.yawDegrees);
-  state = setPitch(state, scene.camera.pitchDegrees);
+  const aim = deriveAim(scene, state);
+  state = setYaw(state, aim.yawDegrees);
+  state = setPitch(state, aim.pitchDegrees);
   state = setFov(state, scene.camera.verticalFovDegrees);
   const evaluation = evaluateHEarthFunctionalLandscapeNavigationState(state);
   if (evaluation.eligible !== true) throw new Error(`CP1_SCENE_STATE_INELIGIBLE:${scene.id}:${evaluation.issues.join(',')}`);
-  return state;
+  return { state, aim: { ...aim, resolvedYawDegrees: state.yawDegrees, resolvedPitchDegrees: state.pitchDegrees } };
 }
 
 function projectPoint(matrix, point) {
@@ -86,11 +114,15 @@ function pixelMetrics(canvas) {
   const height = canvas.height;
   const bytes = new Uint8Array(width * height * 4);
   gl.finish();
+  const preReadError = gl.getError();
   gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, bytes);
+  const readPixelsError = gl.getError();
   const pixelCount = width * height;
   let luminanceSum = 0;
   let luminanceSquareSum = 0;
   let alphaClosedCount = 0;
+  let alphaMinimum = 255;
+  let alphaMaximum = 0;
   let edgeSum = 0;
   let edgeCount = 0;
   const buckets = new Set();
@@ -105,6 +137,8 @@ function pixelMetrics(canvas) {
       luminanceSum += lum;
       luminanceSquareSum += lum * lum;
       if (a === 255) alphaClosedCount += 1;
+      alphaMinimum = Math.min(alphaMinimum, a);
+      alphaMaximum = Math.max(alphaMaximum, a);
       if ((x + y * width) % 31 === 0) buckets.add(`${r >> 4}:${g >> 4}:${b >> 4}`);
       if (x > 0) {
         const left = offset - 4;
@@ -142,7 +176,11 @@ function pixelMetrics(canvas) {
     byteHash: fnv(bytes),
     fingerprintHash: fnv(fingerprint),
     fingerprint,
+    preReadError,
+    readPixelsError,
     alphaClosedCount,
+    alphaMinimum,
+    alphaMaximum,
     sampledColorBucketCount: buckets.size,
     meanLuminance: mean,
     luminanceStandardDeviation: Math.sqrt(Math.max(0, luminanceSquareSum / pixelCount - mean * mean)),
@@ -154,7 +192,7 @@ function pixelMetrics(canvas) {
   };
 }
 
-function terrainFacts(scene, state) {
+function terrainFacts(scene, state, aim) {
   const cameraSample = sampleHEarthTerrainField(scene.camera.x, scene.camera.z);
   const targetSample = sampleHEarthTerrainField(scene.target.x, scene.target.z);
   const distance = Math.hypot(scene.target.x - scene.camera.x, scene.target.z - scene.camera.z);
@@ -167,6 +205,8 @@ function terrainFacts(scene, state) {
     slopeDegrees: Math.atan2(elevationDelta, Math.max(distance, 1e-9)) * 180 / Math.PI,
     cameraChunkId: resolveHEarthNavigableTerrainChunk(scene.camera.x, scene.camera.z)?.chunkId ?? null,
     targetChunkId: resolveHEarthNavigableTerrainChunk(scene.target.x, scene.target.z)?.chunkId ?? null,
+    targetNavigationRequirement: scene.target.navigationRequirement ?? 'TARGET_EXPECTED_INSIDE_NAVIGABLE_CHUNK',
+    aim: clone(aim),
     navigationState: clone(state),
     camera: clone(createHEarthFunctionalLandscapeCamera(state))
   };
@@ -186,7 +226,8 @@ export async function createHEarthGratitudeRegionCp1Suite({ canvas, control } = 
   const renderScene = (sceneId) => {
     const scene = sceneMap.get(sceneId);
     if (!scene) throw new Error(`CP1_SCENE_UNKNOWN:${sceneId}`);
-    const state = createSceneState(scene);
+    const created = createSceneState(scene);
+    const state = created.state;
     proposalSequence += 1;
     const frame = binding.acceptNavigationState({
       accepted: true,
@@ -205,7 +246,7 @@ export async function createHEarthGratitudeRegionCp1Suite({ canvas, control } = 
       scene: clone(scene),
       frame: clone(frame),
       evidence: clone(evidence),
-      terrain: terrainFacts(scene, state),
+      terrain: terrainFacts(scene, state, created.aim),
       targetProjection: projection,
       pixels: pixelMetrics(canvas)
     };
@@ -217,6 +258,7 @@ export async function createHEarthGratitudeRegionCp1Suite({ canvas, control } = 
     getSuiteIdentity: () => ({
       checkpoint: control.checkpoint.id,
       sceneCount: sceneMap.size,
+      sceneAimLaw: control.sceneAimLaw,
       rendererPackageIdentity: renderPackage.packageIdentity,
       rendererPackageDigest: renderPackage.contentDigest,
       roleDomain: ['TERRAIN', 'SHORELINE', 'VEGETATION'],

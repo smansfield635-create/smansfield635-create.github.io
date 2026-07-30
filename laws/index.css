@@ -993,7 +993,7 @@ canvas[data-compass-compositor-layer="front"] {
 
 .laws-star,
 [data-laws-category],
-[data-laws-law],
+:is([data-laws-law], [data-laws-member]),
 [data-laws-auxiliary],
 [data-laws-fallback-star],
 [data-laws-semantic-star] {
@@ -1016,7 +1016,7 @@ canvas[data-compass-compositor-layer="front"] {
 
 .laws-star > *:not(.sr-only),
 [data-laws-category] > *:not(.sr-only),
-[data-laws-law] > *:not(.sr-only),
+:is([data-laws-law], [data-laws-member]) > *:not(.sr-only),
 [data-laws-auxiliary] > *:not(.sr-only),
 [data-laws-fallback-star] > *:not(.sr-only),
 [data-laws-semantic-star] > *:not(.sr-only) {
@@ -1036,14 +1036,14 @@ canvas[data-compass-compositor-layer="front"] {
 }
 
 .laws-star--small,
-[data-laws-law] {
+:is([data-laws-law], [data-laws-member]) {
   width: var(--laws-law-size);
   aspect-ratio: 1;
 }
 
 .laws-star::before,
 [data-laws-category]::before,
-[data-laws-law]::before,
+:is([data-laws-law], [data-laws-member])::before,
 [data-laws-auxiliary]::before {
   display: block;
   width: 100%;
@@ -1132,8 +1132,8 @@ canvas[data-compass-compositor-layer="front"] {
 .laws-star:focus-visible,
 [data-laws-category]:hover,
 [data-laws-category]:focus-visible,
-[data-laws-law]:hover,
-[data-laws-law]:focus-visible,
+:is([data-laws-law], [data-laws-member]):hover,
+:is([data-laws-law], [data-laws-member]):focus-visible,
 [data-laws-auxiliary]:hover,
 [data-laws-auxiliary]:focus-visible {
   filter:
@@ -1142,7 +1142,7 @@ canvas[data-compass-compositor-layer="front"] {
 }
 
 [data-selected="true"]::before,
-[data-laws-law][data-selected="true"]::before,
+:is([data-laws-law], [data-laws-member])[data-selected="true"]::before,
 [data-laws-category][data-selected="true"]::before {
   box-shadow:
     inset 0 0 0.35rem rgba(255, 255, 255, 0.68),
@@ -1225,128 +1225,128 @@ canvas[data-compass-compositor-layer="front"] {
   color: #dcd2ff;
 }
 
-[data-laws-law] {
+:is([data-laws-law], [data-laws-member]) {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
 }
 
-[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="flow"] [data-laws-law][data-direction="flow"],
-[data-laws-root][data-active-law-cluster="true"][data-selected-direction="flow"] [data-laws-law][data-direction="flow"],
-[data-laws-root][data-active-cluster="flow"] [data-laws-law][data-direction="flow"],
-[data-laws-root][data-laws-active-cluster="flow"] [data-laws-law][data-direction="flow"],
-[data-laws-root][data-laws-active-category="flow"] [data-laws-law][data-direction="flow"],
-[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="integrity"] [data-laws-law][data-direction="integrity"],
-[data-laws-root][data-active-law-cluster="true"][data-selected-direction="integrity"] [data-laws-law][data-direction="integrity"],
-[data-laws-root][data-active-cluster="integrity"] [data-laws-law][data-direction="integrity"],
-[data-laws-root][data-laws-active-cluster="integrity"] [data-laws-law][data-direction="integrity"],
-[data-laws-root][data-laws-active-category="integrity"] [data-laws-law][data-direction="integrity"],
-[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="reality"] [data-laws-law][data-direction="reality"],
-[data-laws-root][data-active-law-cluster="true"][data-selected-direction="reality"] [data-laws-law][data-direction="reality"],
-[data-laws-root][data-active-cluster="reality"] [data-laws-law][data-direction="reality"],
-[data-laws-root][data-laws-active-cluster="reality"] [data-laws-law][data-direction="reality"],
-[data-laws-root][data-laws-active-category="reality"] [data-laws-law][data-direction="reality"],
-[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="structure"] [data-laws-law][data-direction="structure"],
-[data-laws-root][data-active-law-cluster="true"][data-selected-direction="structure"] [data-laws-law][data-direction="structure"],
-[data-laws-root][data-active-cluster="structure"] [data-laws-law][data-direction="structure"],
-[data-laws-root][data-laws-active-cluster="structure"] [data-laws-law][data-direction="structure"],
-[data-laws-root][data-laws-active-category="structure"] [data-laws-law][data-direction="structure"] {
+[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-active-law-cluster="true"][data-selected-direction="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-active-cluster="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-laws-active-cluster="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-laws-active-category="flow"] :is([data-laws-law], [data-laws-member])[data-direction="flow"],
+[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-active-law-cluster="true"][data-selected-direction="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-active-cluster="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-laws-active-cluster="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-laws-active-category="integrity"] :is([data-laws-law], [data-laws-member])[data-direction="integrity"],
+[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-active-law-cluster="true"][data-selected-direction="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-active-cluster="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-laws-active-cluster="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-laws-active-category="reality"] :is([data-laws-law], [data-laws-member])[data-direction="reality"],
+[data-laws-root][data-active-law-cluster="true"][data-active-cluster-direction="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"],
+[data-laws-root][data-active-law-cluster="true"][data-selected-direction="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"],
+[data-laws-root][data-active-cluster="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"],
+[data-laws-root][data-laws-active-cluster="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"],
+[data-laws-root][data-laws-active-category="structure"] :is([data-laws-law], [data-laws-member])[data-direction="structure"] {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
 }
 
-[data-laws-law][data-law-id="flow-signals"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="flow-signals"] {
   top: 18%;
   left: 31%;
   transform: translate(-50%, -50%);
 }
 
-[data-laws-law][data-law-id="flow-feedback"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="flow-feedback"] {
   top: 11%;
   left: 41%;
   transform: translate(-50%, -50%);
 }
 
-[data-laws-law][data-law-id="flow-cycles"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="flow-cycles"] {
   top: 11%;
   right: 41%;
   transform: translate(50%, -50%);
 }
 
-[data-laws-law][data-law-id="flow-handoffs"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="flow-handoffs"] {
   top: 18%;
   right: 31%;
   transform: translate(50%, -50%);
 }
 
-[data-laws-law][data-law-id="integrity-consistency"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="integrity-consistency"] {
   top: 31%;
   right: 18%;
   transform: translate(50%, -50%);
 }
 
-[data-laws-law][data-law-id="integrity-accountability"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="integrity-accountability"] {
   top: 41%;
   right: 11%;
   transform: translate(50%, -50%);
 }
 
-[data-laws-law][data-law-id="integrity-continuity"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="integrity-continuity"] {
   bottom: 41%;
   right: 11%;
   transform: translate(50%, 50%);
 }
 
-[data-laws-law][data-law-id="integrity-coherence"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="integrity-coherence"] {
   bottom: 31%;
   right: 18%;
   transform: translate(50%, 50%);
 }
 
-[data-laws-law][data-law-id="reality-theory"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="reality-theory"] {
   bottom: 18%;
   left: 31%;
   transform: translate(-50%, 50%);
 }
 
-[data-laws-law][data-law-id="reality-evidence"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="reality-evidence"] {
   bottom: 11%;
   left: 41%;
   transform: translate(-50%, 50%);
 }
 
-[data-laws-law][data-law-id="reality-measure"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="reality-measure"] {
   bottom: 11%;
   right: 41%;
   transform: translate(50%, 50%);
 }
 
-[data-laws-law][data-law-id="reality-limits"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="reality-limits"] {
   bottom: 18%;
   right: 31%;
   transform: translate(50%, 50%);
 }
 
-[data-laws-law][data-law-id="structure-constraints"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="structure-constraints"] {
   top: 31%;
   left: 18%;
   transform: translate(-50%, -50%);
 }
 
-[data-laws-law][data-law-id="structure-interfaces"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="structure-interfaces"] {
   top: 41%;
   left: 11%;
   transform: translate(-50%, -50%);
 }
 
-[data-laws-law][data-law-id="structure-boundaries"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="structure-boundaries"] {
   bottom: 41%;
   left: 11%;
   transform: translate(-50%, 50%);
 }
 
-[data-laws-law][data-law-id="structure-governance"] {
+:is([data-laws-law], [data-laws-member])[data-law-id="structure-governance"] {
   bottom: 31%;
   left: 18%;
   transform: translate(-50%, 50%);
@@ -1372,13 +1372,13 @@ canvas[data-compass-compositor-layer="front"] {
 }
 
 [data-laws-root][data-laws-crystals-ready="true"] [data-laws-category],
-[data-laws-root][data-laws-crystals-ready="true"] [data-laws-law],
+[data-laws-root][data-laws-crystals-ready="true"] :is([data-laws-law], [data-laws-member]),
 [data-laws-root][data-laws-crystals-ready="true"] [data-laws-auxiliary],
 [data-laws-root][data-laws-crystals-status="available"] [data-laws-category],
-[data-laws-root][data-laws-crystals-status="available"] [data-laws-law],
+[data-laws-root][data-laws-crystals-status="available"] :is([data-laws-law], [data-laws-member]),
 [data-laws-root][data-laws-crystals-status="available"] [data-laws-auxiliary],
 [data-laws-root][data-laws-crystals-status="ready"] [data-laws-category],
-[data-laws-root][data-laws-crystals-status="ready"] [data-laws-law],
+[data-laws-root][data-laws-crystals-status="ready"] :is([data-laws-law], [data-laws-member]),
 [data-laws-root][data-laws-crystals-status="ready"] [data-laws-auxiliary] {
   color: transparent !important;
   background: transparent !important;
@@ -1388,13 +1388,13 @@ canvas[data-compass-compositor-layer="front"] {
 }
 
 [data-laws-root][data-laws-crystals-ready="true"] [data-laws-category]::before,
-[data-laws-root][data-laws-crystals-ready="true"] [data-laws-law]::before,
+[data-laws-root][data-laws-crystals-ready="true"] :is([data-laws-law], [data-laws-member])::before,
 [data-laws-root][data-laws-crystals-ready="true"] [data-laws-auxiliary]::before,
 [data-laws-root][data-laws-crystals-status="available"] [data-laws-category]::before,
-[data-laws-root][data-laws-crystals-status="available"] [data-laws-law]::before,
+[data-laws-root][data-laws-crystals-status="available"] :is([data-laws-law], [data-laws-member])::before,
 [data-laws-root][data-laws-crystals-status="available"] [data-laws-auxiliary]::before,
 [data-laws-root][data-laws-crystals-status="ready"] [data-laws-category]::before,
-[data-laws-root][data-laws-crystals-status="ready"] [data-laws-law]::before,
+[data-laws-root][data-laws-crystals-status="ready"] :is([data-laws-law], [data-laws-member])::before,
 [data-laws-root][data-laws-crystals-status="ready"] [data-laws-auxiliary]::before {
   opacity: 0;
   background: transparent !important;
@@ -1413,9 +1413,9 @@ canvas[data-compass-compositor-layer="front"] {
   pointer-events: auto;
 }
 
-[data-laws-root][data-laws-crystals-ready="true"][data-active-law-cluster="true"] [data-laws-law],
-[data-laws-root][data-laws-crystals-status="available"][data-active-law-cluster="true"] [data-laws-law],
-[data-laws-root][data-laws-crystals-status="ready"][data-active-law-cluster="true"] [data-laws-law] {
+[data-laws-root][data-laws-crystals-ready="true"][data-active-law-cluster="true"] :is([data-laws-law], [data-laws-member]),
+[data-laws-root][data-laws-crystals-status="available"][data-active-law-cluster="true"] :is([data-laws-law], [data-laws-member]),
+[data-laws-root][data-laws-crystals-status="ready"][data-active-law-cluster="true"] :is([data-laws-law], [data-laws-member]) {
   pointer-events: auto;
 }
 
@@ -2041,8 +2041,8 @@ code {
 
 [data-laws-root][data-held="true"] [data-laws-category],
 [data-laws-root][data-laws-held="true"] [data-laws-category],
-[data-laws-root][data-held="true"] [data-laws-law],
-[data-laws-root][data-laws-held="true"] [data-laws-law] {
+[data-laws-root][data-held="true"] :is([data-laws-law], [data-laws-member]),
+[data-laws-root][data-laws-held="true"] :is([data-laws-law], [data-laws-member]) {
   pointer-events: none;
   filter: grayscale(0.35);
 }
@@ -2247,82 +2247,82 @@ code {
     left: 7%;
   }
 
-  [data-laws-law][data-law-id="flow-signals"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="flow-signals"] {
     top: 18%;
     left: 25%;
   }
 
-  [data-laws-law][data-law-id="flow-feedback"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="flow-feedback"] {
     top: 10%;
     left: 40%;
   }
 
-  [data-laws-law][data-law-id="flow-cycles"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="flow-cycles"] {
     top: 10%;
     right: 40%;
   }
 
-  [data-laws-law][data-law-id="flow-handoffs"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="flow-handoffs"] {
     top: 18%;
     right: 25%;
   }
 
-  [data-laws-law][data-law-id="integrity-consistency"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="integrity-consistency"] {
     top: 25%;
     right: 17%;
   }
 
-  [data-laws-law][data-law-id="integrity-accountability"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="integrity-accountability"] {
     top: 40%;
     right: 8%;
   }
 
-  [data-laws-law][data-law-id="integrity-continuity"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="integrity-continuity"] {
     bottom: 40%;
     right: 8%;
   }
 
-  [data-laws-law][data-law-id="integrity-coherence"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="integrity-coherence"] {
     bottom: 25%;
     right: 17%;
   }
 
-  [data-laws-law][data-law-id="reality-theory"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="reality-theory"] {
     bottom: 18%;
     left: 25%;
   }
 
-  [data-laws-law][data-law-id="reality-evidence"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="reality-evidence"] {
     bottom: 10%;
     left: 40%;
   }
 
-  [data-laws-law][data-law-id="reality-measure"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="reality-measure"] {
     bottom: 10%;
     right: 40%;
   }
 
-  [data-laws-law][data-law-id="reality-limits"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="reality-limits"] {
     bottom: 18%;
     right: 25%;
   }
 
-  [data-laws-law][data-law-id="structure-constraints"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="structure-constraints"] {
     top: 25%;
     left: 17%;
   }
 
-  [data-laws-law][data-law-id="structure-interfaces"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="structure-interfaces"] {
     top: 40%;
     left: 8%;
   }
 
-  [data-laws-law][data-law-id="structure-boundaries"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="structure-boundaries"] {
     bottom: 40%;
     left: 8%;
   }
 
-  [data-laws-law][data-law-id="structure-governance"] {
+  :is([data-laws-law], [data-laws-member])[data-law-id="structure-governance"] {
     bottom: 25%;
     left: 17%;
   }
@@ -2624,7 +2624,7 @@ RUNTIME SURFACES SUPPORTED:
 - [data-laws-planet-mount]
 - [data-laws-objects]
 - [data-laws-category]
-- [data-laws-law]
+- :is([data-laws-law], [data-laws-member])
 - [data-laws-controller-receipt]
 - [data-laws-controller-validation]
 - [data-laws-interactions-receipt]

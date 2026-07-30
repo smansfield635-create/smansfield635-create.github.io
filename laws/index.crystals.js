@@ -78,6 +78,9 @@
     LAW:
       "law",
 
+    MEMBER:
+      "member",
+
     AUXILIARY:
       "auxiliary",
 
@@ -131,18 +134,12 @@
 
       vectors:
         Object.freeze({
-          flow:
-            Object.freeze([0, 1, 0]),
-          integrity:
-            Object.freeze([1, 0, 0]),
-          reality:
-            Object.freeze([0, -1, 0]),
-          structure:
-            Object.freeze([-1, 0, 0]),
-          test:
-            Object.freeze([0.62, 0.56, 0.70]),
-          research:
-            Object.freeze([-0.62, -0.56, 0.70])
+flow: Object.freeze([0, 1, 0]),
+integrity: Object.freeze([0.8660254037844386, 0.5, 0]),
+reality: Object.freeze([0.8660254037844386, -0.5, 0]),
+structure: Object.freeze([0, -1, 0]),
+test: Object.freeze([-0.8660254037844386, -0.5, 0]),
+research: Object.freeze([-0.8660254037844386, 0.5, 0])
         })
     }),
 
@@ -502,7 +499,13 @@
     lawCount:
       0,
 
+    memberCount:
+      0,
+
     canonicalSemanticLawCount:
+      0,
+
+    canonicalSemanticMemberCount:
       0,
 
     relocatedCanonicalLawCount:
@@ -2804,7 +2807,9 @@ function validateClusterSphereContract() {
       "getFrameState",
       "updateSemanticProjection",
       "getCanonicalLawRecords",
-      "getCanonicalLawRoutes"
+      "getCanonicalLawRoutes",
+      "getCanonicalMemberRecords",
+      "getCanonicalMemberRoutes"
     ].forEach(
       surface => {
         invariant(
@@ -2822,6 +2827,12 @@ function validateClusterSphereContract() {
       Array.isArray(records) &&
         records.length === 16,
       "LAWS_CRYSTALS_CONTROLLER_LAW_REGISTRY_INVALID"
+    );
+
+    const members = controller.getCanonicalMemberRecords();
+    invariant(
+      Array.isArray(members) && members.length === 8,
+      "LAWS_CRYSTALS_CONTROLLER_MEMBER_REGISTRY_INVALID"
     );
 
     return controller;
@@ -3032,7 +3043,7 @@ function validateClusterSphereContract() {
 
   function canonicalLawElements() {
     return qsa(
-      "[data-laws-law]",
+      "[data-laws-law], [data-laws-member]",
       state.root
     );
   }
@@ -3061,9 +3072,10 @@ function validateClusterSphereContract() {
     controls.forEach(
       element => {
         const lawId =
-          normalizeLawId(
-            element.dataset.lawId
-          );
+               normalizeLawId(
+                 element.dataset.lawId ||
+                 element.dataset.memberId
+               );
 
         invariant(
           lawId,
@@ -3253,16 +3265,17 @@ function validateClusterSphereContract() {
               id,
               makeNode({
                 id,
-
-                type:
-                  NODE_TYPES.LAW,
+                 type:
+                   element.matches("[data-laws-law]")
+                     ? NODE_TYPES.LAW
+                     : NODE_TYPES.MEMBER,
 
                 direction,
-
-                label:
-                  element.dataset.lawLabel ||
-                  element.dataset.label ||
-                  element.textContent.trim(),
+                 label:
+                   element.dataset.memberLabel ||
+                   element.dataset.lawLabel ||
+                   element.dataset.label ||
+                   element.textContent.trim(),
 
                 semanticElement:
                   element,
@@ -3271,9 +3284,10 @@ function validateClusterSphereContract() {
 
                 lawCount:
                   directionLaws.length,
-
-                meshKey:
-                  `law-${direction}`,
+                 meshKey:
+                   element.matches("[data-laws-law]")
+                     ? `law-${direction}`
+                     : `member-${direction}`,
 
                 material:
                   "LAW_IDLE",
@@ -3311,8 +3325,15 @@ function validateClusterSphereContract() {
             node.type === NODE_TYPES.LAW
         ).length;
 
+    RECEIPT.memberCount =
+      Array.from(registry.values())
+        .filter(node => node.type === NODE_TYPES.MEMBER).length;
+
     RECEIPT.canonicalSemanticLawCount =
-      lawElements.length;
+      lawElements.filter(element => element.matches("[data-laws-law]")).length;
+
+    RECEIPT.canonicalSemanticMemberCount =
+      lawElements.filter(element => element.matches("[data-laws-member]")).length;
 
     return registry;
   }
@@ -3455,7 +3476,8 @@ function validateClusterSphereContract() {
       state.registry.values()
     ).filter(
       node =>
-        node.type === NODE_TYPES.LAW &&
+        (node.type === NODE_TYPES.LAW ||
+         node.type === NODE_TYPES.MEMBER) &&
         node.direction === direction
     );
   }
@@ -4585,8 +4607,9 @@ function validateClusterSphereContract() {
           node &&
           (
             node.type === NODE_TYPES.CATEGORY ||
-            node.type === NODE_TYPES.AUXILIARY ||
-            node.type === NODE_TYPES.LAW
+             node.type === NODE_TYPES.AUXILIARY ||
+             node.type === NODE_TYPES.LAW ||
+             node.type === NODE_TYPES.MEMBER
           )
       )
       .forEach(

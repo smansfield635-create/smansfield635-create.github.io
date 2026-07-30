@@ -91,7 +91,8 @@ export const H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001 = freeze({
       preMergeA5PassMaySubstituteForPublicExecution: false,
       correctionAttemptCount: 1,
       maximumCorrectionAttemptCount: 1,
-      correctionBranch: 'agent/h-earth-specialized-gauge-a7-evidence-transport-001',
+      correctionBranch: 'agent/h-earth-specialized-gauge-authority-reconciliation-a7-evidence-transport-001',
+      supersededCarrierPr: 402,
       correctionScope: [
         '.github/workflows/h-earth-specialized-gauge-authority-reconciliation.yml',
         'h-earth-3d/control-plane/instrument-platform/H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001.v1.mjs'

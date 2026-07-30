@@ -1,0 +1,99 @@
+name: H-Earth Narrative Observatory
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-narrative-observatory.yml'
+      - 'showroom/globe/h-earth/observatory/**'
+      - 'showroom/globe/h-earth/index.html'
+      - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001.v1.mjs'
+      - 'h-earth-3d/validation/instrument-platform/h-earth.narrative-observatory.*.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-observatory-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      H_EARTH_OBSERVATORY_ORIGIN: http://127.0.0.1:4186
+      H_EARTH_OBSERVATORY_B5_RECEIPT: /tmp/h-earth-narrative-observatory-b5.receipt.json
+      H_EARTH_OBSERVATORY_B6_RECEIPT: /tmp/h-earth-narrative-observatory-b6.browser.receipt.json
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute static and deterministic verification
+        run: |
+          node h-earth-3d/validation/instrument-platform/h-earth.narrative-observatory.runner.mjs \
+            | tee /tmp/h-earth-narrative-observatory-b5.log
+
+      - name: Start exact candidate server
+        run: |
+          python3 -m http.server 4186 --bind 127.0.0.1 > /tmp/h-earth-narrative-observatory-server.log 2>&1 &
+          for attempt in $(seq 1 90); do
+            curl -fsS http://127.0.0.1:4186/showroom/globe/h-earth/observatory/ >/dev/null \
+              && curl -fsS http://127.0.0.1:4186/showroom/globe/h-earth/ >/dev/null \
+              && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-narrative-observatory-server.log
+          exit 1
+
+      - name: Execute exact browser and traversal regression
+        run: |
+          node h-earth-3d/validation/instrument-platform/h-earth.narrative-observatory.browser.mjs \
+            | tee /tmp/h-earth-narrative-observatory-b6.log
+
+      - name: Enforce B5 and B6 checkpoint boundary
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const b5 = JSON.parse(fs.readFileSync(process.env.H_EARTH_OBSERVATORY_B5_RECEIPT, 'utf8'));
+          const b6 = JSON.parse(fs.readFileSync(process.env.H_EARTH_OBSERVATORY_B6_RECEIPT, 'utf8'));
+          const valid =
+            b5.status === 'PASS_CLOSED' &&
+            b5.exactChangedPaths.length === 7 &&
+            b5.unauthorizedChangedPaths === 0 &&
+            b5.protectedPathMutations === 0 &&
+            b5.failedAssertionCount === 0 &&
+            b6.status === 'PASS_CLOSED' &&
+            b6.failedAssertionCount === 0 &&
+            b6.pageErrors.length === 0 &&
+            b6.consoleErrors.length === 0 &&
+            b6.httpErrors.length === 0;
+          if (!valid) {
+            console.error(JSON.stringify({ b5, b6 }, null, 2));
+            process.exit(1);
+          }
+          console.log(`H_EARTH_NARRATIVE_OBSERVATORY_B5_B6_PASS:${process.env.CANDIDATE_HEAD}:${b5.receiptSha256}:${b6.receiptSha256}`);
+          NODE
+
+      - name: Upload Observatory evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-narrative-observatory-candidate
+          path: |
+            /tmp/h-earth-narrative-observatory-b5.receipt.json
+            /tmp/h-earth-narrative-observatory-b6.browser.receipt.json
+            /tmp/h-earth-narrative-observatory-b5.log
+            /tmp/h-earth-narrative-observatory-b6.log
+            /tmp/h-earth-narrative-observatory-server.log
+          retention-days: 90

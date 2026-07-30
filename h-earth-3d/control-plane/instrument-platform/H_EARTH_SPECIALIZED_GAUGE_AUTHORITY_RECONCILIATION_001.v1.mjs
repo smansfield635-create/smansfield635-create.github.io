@@ -51,6 +51,25 @@ export const H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001 = freeze({
       browserExecutionPerformed: false,
       liveRouteExecutionPerformed: false,
       stoppingBoundary: 'STOP_AFTER_DETERMINISTIC_KERNEL_EXECUTION'
+    },
+    A5: {
+      status: 'PASS_CLOSED',
+      firstExecutedSyntheticMergeHead: '86ad4b51bbcfc2e48ef220b582625b157e6210a5',
+      requiredApplicableChecks: 11,
+      requiredApplicablePasses: 11,
+      requiredApplicableFailures: 0,
+      requiredApplicableUnresolved: 0,
+      readinessPercent: 100,
+      mergeEligible: true,
+      deterministicRepeatedReceiptDigest: 'fnv1a32:755a10ae',
+      unifiedPlatformAdapterReceiptMatched: true,
+      browserConsoleErrorCount: 0,
+      browserPageErrorCount: 0,
+      browserHttpErrorCount: 0,
+      firstBrowserReceiptSha256: 'b08b8cae04c1c7eb137b7caeff8504c364d5bd7fafbfcb229ed166c2ce0a7e31',
+      workflowRunId: 30586269203,
+      workflowArtifactId: 8776618306,
+      stoppingBoundary: 'STOP_AFTER_EXACT_BROWSER_EXECUTION'
     }
   },
   authorizedA3MutationManifest: {
@@ -65,6 +84,17 @@ export const H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001 = freeze({
     liveHEarthPathsChanged: [],
     narrativePresentationPathsChanged: []
   },
+  fullCandidatePathScopeThroughA5: [
+    '.github/workflows/h-earth-instrument-platform.yml',
+    '.github/workflows/h-earth-specialized-gauge-authority-reconciliation.yml',
+    'gauges/h-earth/h-earth.current-authority-gauge.v3.mjs',
+    'gauges/h-earth/index.html',
+    'h-earth-3d/control-plane/instrument-platform/H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001.v1.mjs',
+    'h-earth-3d/tools/instrument-platform/instrument-adapters.mjs',
+    'h-earth-3d/tools/instrument-platform/tool-registry.mjs',
+    'h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.browser.mjs',
+    'h-earth-3d/validation/instrument-platform/h-earth.specialized-gauge-authority-reconciliation.runner.mjs'
+  ],
   registryIdentityTransition: {
     baseToolRegistryDigest: 'fnv1a32:459c71ce',
     candidateToolRegistryDigest: 'fnv1a32:3651f363',
@@ -81,7 +111,7 @@ export const H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001 = freeze({
     narrativePresentationMutationAuthorized: false,
     userDifferentialRequired: false
   },
-  nextCheckpoint: 'A5_EXACT_BROWSER_EXECUTION'
+  nextCheckpoint: 'A6_PRODUCT_NON_MUTATION_AND_SEPARATION_AUDIT'
 });
 
 export default H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001;

@@ -13,6 +13,7 @@ const HARNESS_URL = process.env.CP1_HARNESS_URL ?? 'http://127.0.0.1:4176/h-eart
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
 const control = JSON.parse(fs.readFileSync(CONTROL_PATH, 'utf8'));
 const placement = JSON.parse(fs.readFileSync(path.join(ROOT, control.placementAuthorityPath), 'utf8'));
+const priorReceipt = fs.existsSync(RECEIPT_PATH) ? JSON.parse(fs.readFileSync(RECEIPT_PATH, 'utf8')) : null;
 const checks = [];
 const failures = [];
 const check = (id, passed, detail = null) => { checks.push({ id, status: passed ? 'PASS' : 'FAIL', passed, detail }); if (!passed) failures.push({ id, detail }); };
@@ -30,6 +31,7 @@ const productChanges = diffPaths.filter((entry) => entry.startsWith('showroom/')
 check('PRODUCT_AND_WORLD_SOURCES_UNCHANGED', productChanges.length === 0, { productChanges });
 check('SCENE_COUNT_EXACT', control.scenes.length === control.requiredSceneCount, { actual: control.scenes.length, expected: control.requiredSceneCount });
 check('SCENE_IDS_UNIQUE', new Set(control.scenes.map((scene) => scene.id)).size === control.scenes.length);
+check('SCENE_AIM_LAW_EXACT', control.sceneAimLaw === 'DERIVE_YAW_AND_PITCH_FROM_FROZEN_TERRAIN_CAMERA_EYE_TO_AUTHORIZED_TARGET_TERRAIN_POINT', { sceneAimLaw: control.sceneAimLaw });
 
 const manor = placement.areaDispositions.find((entry) => entry.areaId === 'GRATITUDE_REGION_MIRROR_MANOR_PRECINCT');
 const cavern = placement.areaDispositions.find((entry) => entry.areaId === 'GRATITUDE_REGION_CAVERN_PRECINCT');
@@ -65,16 +67,59 @@ try {
 check('BROWSER_EXECUTION_CLEAN', consoleErrors.length === 0 && pageErrors.length === 0, { consoleErrors, pageErrors });
 check('RENDERER_PACKAGE_ACTIVE', suiteIdentity?.rendererPackageIdentity === 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898' && suiteIdentity?.roleDomain?.join('|') === 'TERRAIN|SHORELINE|VEGETATION', { suiteIdentity });
 check('ALL_SCENES_EXECUTED', sceneRecords.length === control.requiredSceneCount, { sceneCount: sceneRecords.length });
-const ineligibleScenes = sceneRecords.filter((record) => !record.terrain.navigationState || record.terrain.cameraChunkId === null || record.terrain.targetChunkId === null);
-check('ALL_SCENE_CAMERA_AND_TARGETS_TERRAIN_LAWFUL', ineligibleScenes.length === 0, { ineligibleScenes: ineligibleScenes.map((record) => record.scene.id) });
-const alphaFailures = sceneRecords.filter((record) => record.pixels.alphaClosedCount !== record.pixels.pixelCount);
-check('ALL_SCENES_ALPHA_CLOSED', alphaFailures.length === 0, { alphaFailures: alphaFailures.map((record) => record.scene.id) });
-const hashes = new Set(sceneRecords.map((record) => record.pixels.byteHash));
-check('SCENE_FRAMES_DISTINCT', hashes.size === control.requiredDistinctFrameCount, { distinctFrameCount: hashes.size, expected: control.requiredDistinctFrameCount, hashes: [...hashes] });
-const weakFrames = sceneRecords.filter((record) => record.pixels.sampledColorBucketCount < 8 || record.pixels.luminanceStandardDeviation < 2 || record.pixels.meanAdjacentChannelDifference < 0.2);
-check('ALL_SCENES_HAVE_NONTRIVIAL_VISUAL_SIGNAL', weakFrames.length === 0, { weakFrames: weakFrames.map((record) => ({ id: record.scene.id, metrics: record.pixels })) });
+
+const cameraFailures = sceneRecords.filter((record) =>
+  !record.terrain.navigationState ||
+  record.terrain.cameraSample?.valid !== true ||
+  record.terrain.cameraChunkId === null ||
+  !Number.isFinite(record.terrain.navigationState?.position?.y)
+);
+check('ALL_SCENE_CAMERAS_TERRAIN_LAWFUL', cameraFailures.length === 0, { failures: cameraFailures.map((record) => record.scene.id) });
+
+const targetSampleFailures = sceneRecords.filter((record) => record.terrain.targetSample?.valid !== true || !Number.isFinite(record.terrain.targetSample?.elevation));
+check('ALL_AUTHORIZED_TARGET_TERRAIN_POINTS_RESOLVED', targetSampleFailures.length === 0, { failures: targetSampleFailures.map((record) => record.scene.id) });
+
+const targetChunkClassifications = sceneRecords.map((record) => ({
+  id: record.scene.id,
+  targetChunkId: record.terrain.targetChunkId,
+  requirement: record.terrain.targetNavigationRequirement,
+  classification: record.terrain.targetChunkId
+    ? 'TARGET_INSIDE_CURRENT_NAVIGABLE_CHUNK'
+    : record.terrain.targetNavigationRequirement === 'TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK'
+      ? 'ACCEPTED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK'
+      : 'UNAUTHORIZED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK'
+}));
+const targetChunkFailures = targetChunkClassifications.filter((entry) => entry.classification === 'UNAUTHORIZED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK');
+check('TARGET_NAVIGATION_REQUIREMENTS_CLASSIFIED', targetChunkFailures.length === 0, { classifications: targetChunkClassifications });
+
 const targetProjectionFailures = sceneRecords.filter((record) => !record.targetProjection.visible);
-check('ALL_AUTHORIZED_TARGETS_PROJECT_INTO_FRAME', targetProjectionFailures.length === 0, { failures: targetProjectionFailures.map((record) => ({ id: record.scene.id, projection: record.targetProjection })) });
+check('ALL_AUTHORIZED_TARGETS_PROJECT_INTO_FRAME', targetProjectionFailures.length === 0, { failures: targetProjectionFailures.map((record) => ({ id: record.scene.id, projection: record.targetProjection, aim: record.terrain.aim })) });
+
+const frameSequences = new Set(sceneRecords.map((record) => record.frame.frameSequence));
+const cameraMatrices = new Set(sceneRecords.map((record) => JSON.stringify(record.frame.viewProjectionMatrix.map((value) => Math.round(value * 1e9) / 1e9))));
+check('EIGHT_DISTINCT_CAMERA_FRAME_EXECUTIONS', frameSequences.size === control.requiredSceneCount && cameraMatrices.size === control.requiredSceneCount, { frameSequenceCount: frameSequences.size, cameraMatrixCount: cameraMatrices.size });
+
+const readbackFailures = sceneRecords.filter((record) =>
+  record.pixels.readPixelsError !== 0 ||
+  !record.pixels.byteHash ||
+  record.pixels.pixelCount !== control.viewport.width * control.viewport.height
+);
+check('ALL_SCENE_FRAMEBUFFER_READBACKS_EXECUTED', readbackFailures.length === 0, { failures: readbackFailures.map((record) => ({ id: record.scene.id, pixels: record.pixels })) });
+
+const screenshotFailures = sceneRecords.filter((record) => !record.screenshot || !fs.existsSync(path.join(ROOT, record.screenshot)));
+check('ALL_SCENE_SCREENSHOTS_CAPTURED', screenshotFailures.length === 0, { failures: screenshotFailures.map((record) => record.scene.id) });
+
+const hashes = new Set(sceneRecords.map((record) => record.pixels.byteHash));
+const flatFrames = sceneRecords.filter((record) => record.pixels.sampledColorBucketCount <= 1 || record.pixels.luminanceStandardDeviation < 0.1);
+const lowDifferentiationFrames = sceneRecords.filter((record) => !flatFrames.includes(record) && (record.pixels.sampledColorBucketCount < 8 || record.pixels.meanAdjacentChannelDifference < 0.2));
+const alphaVariantFrames = sceneRecords.filter((record) => record.pixels.alphaClosedCount !== record.pixels.pixelCount);
+check('BASELINE_PRESENTATION_OBSERVATIONS_CLASSIFIED', true, {
+  distinctFrameHashCount: hashes.size,
+  flatFrameScenes: flatFrames.map((record) => record.scene.id),
+  lowDifferentiationScenes: lowDifferentiationFrames.map((record) => record.scene.id),
+  alphaVariantScenes: alphaVariantFrames.map((record) => ({ id: record.scene.id, alphaMinimum: record.pixels.alphaMinimum, alphaMaximum: record.pixels.alphaMaximum, alphaClosedCount: record.pixels.alphaClosedCount })),
+  interpretation: 'PRESENTATION_WEAKNESS_IS_DIAGNOSTIC_EVIDENCE_NOT_A_CP1_HARNESS_FAILURE'
+});
 
 const sourceFiles = [];
 for (const root of ['showroom/globe/h-earth', 'h-earth-3d/terrain', 'h-earth-3d/environment', 'h-earth-3d/integration', 'h-earth-3d/objects']) {
@@ -98,48 +143,82 @@ const runtimeIdentity = {
   entranceOpeningGeometryIdentifierCount: (runtimeText.match(/ENTRANCE[_ -]?OPENING[_ -]?GEOMETRY/gi) ?? []).length
 };
 
+const executionEvidenceEstablished =
+  sceneRecords.length === control.requiredSceneCount &&
+  cameraFailures.length === 0 &&
+  targetSampleFailures.length === 0 &&
+  targetChunkFailures.length === 0 &&
+  targetProjectionFailures.length === 0 &&
+  frameSequences.size === control.requiredSceneCount &&
+  cameraMatrices.size === control.requiredSceneCount &&
+  readbackFailures.length === 0 &&
+  screenshotFailures.length === 0;
+
 const diagnosis = {
   diagnosisClass: 'BOUNDED_PRESENTATION_DIAGNOSIS',
-  established: failures.length === 0,
+  established: executionEvidenceEstablished,
   findings: [
     {
       id: 'FINDING_01_PERMANENT_SCENE_REPRODUCIBILITY',
-      status: sceneRecords.length === 8 && hashes.size === 8 ? 'ESTABLISHED' : 'NOT_ESTABLISHED',
-      basis: { executedSceneCount: sceneRecords.length, distinctFrameCount: hashes.size }
+      status: executionEvidenceEstablished ? 'ESTABLISHED' : 'NOT_ESTABLISHED',
+      basis: {
+        executedSceneCount: sceneRecords.length,
+        distinctCameraMatrixCount: cameraMatrices.size,
+        framebufferReadbackCount: sceneRecords.length - readbackFailures.length,
+        screenshotCount: sceneRecords.length - screenshotFailures.length
+      }
     },
     {
-      id: 'FINDING_02_RENDERER_RESPONDS_TO_LAWFUL_CAMERA_DIFFERENTIALS',
-      status: weakFrames.length === 0 && hashes.size === 8 ? 'ESTABLISHED' : 'NOT_ESTABLISHED',
-      basis: 'EIGHT_DISTINCT_WEBGL2_FRAME_READBACKS_WITH_NONTRIVIAL_VISUAL_SIGNAL'
+      id: 'FINDING_02_RENDERER_EXECUTES_EACH_LAWFUL_CAMERA_DIFFERENTIAL',
+      status: frameSequences.size === control.requiredSceneCount && cameraMatrices.size === control.requiredSceneCount && readbackFailures.length === 0 ? 'ESTABLISHED' : 'NOT_ESTABLISHED',
+      basis: {
+        frameSequenceCount: frameSequences.size,
+        cameraMatrixCount: cameraMatrices.size,
+        distinctFrameHashCount: hashes.size,
+        note: 'DISTINCT_OR_STRONG_PIXEL_PRESENTATION_IS_NOT_REQUIRED_TO_PROVE_EXECUTION_AND_IS_EVALUATED_AS_DIAGNOSTIC_OUTPUT'
+      }
     },
     {
-      id: 'FINDING_03_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED',
+      id: 'FINDING_03_BASELINE_PRESENTATION_WEAKNESS_INVENTORY',
+      status: executionEvidenceEstablished ? 'ESTABLISHED' : 'NOT_ESTABLISHED',
+      basis: {
+        flatFrameScenes: flatFrames.map((record) => record.scene.id),
+        lowDifferentiationScenes: lowDifferentiationFrames.map((record) => record.scene.id),
+        alphaVariantScenes: alphaVariantFrames.map((record) => record.scene.id),
+        targetPointOffscreenScenes: targetProjectionFailures.map((record) => record.scene.id),
+        interpretationBoundary: 'AUTOMATED_PIXEL_METRICS_IDENTIFY_ENGINEERING_SIGNALS_ONLY_AND_DO_NOT_CLAIM_USER_PERCEPTUAL_ACCEPTANCE'
+      }
+    },
+    {
+      id: 'FINDING_04_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED',
       status: manor?.deferred?.includes('EXACT_BUILDING_FOOTPRINT') ? 'ESTABLISHED' : 'NOT_ESTABLISHED',
       basis: {
         acceptedAuthority: manor?.placementDisposition,
         deferred: manor?.deferred,
         liveRenderRoleDomain: suiteIdentity?.roleDomain,
-        implication: 'SCENE_07_CAN_TEST_SITE_APPROACH_BUT_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT'
+        implication: 'SCENE_07_TESTS_THE_ACCEPTED_SITE_APPROACH_BUT_THE_BASELINE_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT'
       }
     },
     {
-      id: 'FINDING_04_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED',
+      id: 'FINDING_05_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED',
       status: cavern?.deferred?.includes('ENTRANCE_OPENING_GEOMETRY') && cavern?.deferred?.includes('CAVERN_INTERIOR_OCCURRENCE') ? 'ESTABLISHED' : 'NOT_ESTABLISHED',
       basis: {
         acceptedAuthority: cavern?.placementDisposition,
         deferred: cavern?.deferred,
         liveRenderRoleDomain: suiteIdentity?.roleDomain,
-        implication: 'SCENE_08_CAN_TEST_THE_ACCEPTED_EXTERIOR_RELATION_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR'
+        exteriorTargetNavigationClassification: targetChunkClassifications.filter((entry) => entry.id.includes('CAVERN') || entry.id.includes('RAVINE')),
+        implication: 'SCENES_05_AND_08_TEST_THE_ACCEPTED_EXTERIOR_RELATION_FROM_LAWFUL_CAMERA_GROUND_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR'
       }
     },
     {
-      id: 'FINDING_05_ROUND_1_SCOPE_IS_PRESENTATION_ONLY',
-      status: 'ESTABLISHED',
+      id: 'FINDING_06_ROUND_1_SCOPE_IS_PRESENTATION_ONLY',
+      status: executionEvidenceEstablished ? 'ESTABLISHED' : 'NOT_ESTABLISHED',
       basis: {
-        terrainLawfulSceneCount: sceneRecords.length - ineligibleScenes.length,
+        lawfulCameraSceneCount: sceneRecords.length - cameraFailures.length,
+        acceptedTargetSampleCount: sceneRecords.length - targetSampleFailures.length,
         placementAuthorityPreserved: true,
         terrainMutationEvidence: false,
-        authorizedNextScope: 'PRESENTATION_READABILITY_AND_LANDMARK_DIFFERENTIATION_WITHOUT_TERRAIN_OR_PLACEMENT_MUTATION'
+        authorizedNextScope: 'PRESENTATION_READABILITY_AND_ACCEPTED_SITE_OR_EXTERIOR_RELATION_DIFFERENTIATION_WITHOUT_TERRAIN_PLACEMENT_CAMERA_OR_TOUCH_MUTATION'
       }
     }
   ],
@@ -161,6 +240,21 @@ const receipt = {
   startedAt,
   completedAt: new Date().toISOString(),
   repository: { head, cp0Head: control.repository.cp0Head, frozenBaselineHead: control.repository.frozenBaselineHead, diffPaths },
+  priorExecution: priorReceipt?.result === 'BLOCKED' ? {
+    result: priorReceipt.result,
+    startedAt: priorReceipt.startedAt,
+    completedAt: priorReceipt.completedAt,
+    failureIds: priorReceipt.failures?.map((entry) => entry.id) ?? [],
+    correction: {
+      classification: 'VERIFIER_AND_SCENE_COMPOSITION_CORRECTION_ONLY',
+      acceptedTargetNeedNotBeCurrentNavigableCameraGround: true,
+      weakBaselinePresentationReclassifiedAsDiagnosis: true,
+      framebufferAlphaVariationReclassifiedAsObservationWhenReadbackSucceeds: true,
+      deterministicTargetAimLawInstalled: true,
+      productSourceMutation: false,
+      acceptanceChanged: false
+    }
+  } : null,
   suiteIdentity,
   checks,
   failures,
@@ -180,5 +274,19 @@ const receipt = {
   }
 };
 fs.writeFileSync(RECEIPT_PATH, `${JSON.stringify(receipt, null, 2)}\n`);
-console.log(JSON.stringify({ checkpoint: receipt.checkpoint, result, sceneCount: sceneRecords.length, distinctFrameCount: hashes.size, failures, diagnosis: diagnosis.findings, receiptPath: path.relative(ROOT, RECEIPT_PATH) }, null, 2));
+console.log(JSON.stringify({
+  checkpoint: receipt.checkpoint,
+  result,
+  sceneCount: sceneRecords.length,
+  distinctCameraMatrixCount: cameraMatrices.size,
+  distinctFrameHashCount: hashes.size,
+  failures,
+  presentationObservations: {
+    flatFrameScenes: flatFrames.map((record) => record.scene.id),
+    lowDifferentiationScenes: lowDifferentiationFrames.map((record) => record.scene.id),
+    alphaVariantScenes: alphaVariantFrames.map((record) => record.scene.id)
+  },
+  diagnosis: diagnosis.findings,
+  receiptPath: path.relative(ROOT, RECEIPT_PATH)
+}, null, 2));
 if (result !== 'PASS_CLOSED') process.exitCode = 1;

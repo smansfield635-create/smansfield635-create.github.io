@@ -2,10 +2,10 @@
   "schemaVersion": "H_EARTH_GRATITUDE_REGION_TRAVERSAL_SCENE_SUITE_CP1_RECEIPT_v1",
   "checkpoint": "CP1_PERMANENT_TRAVERSAL_SUITE_AND_BOUNDED_DIAGNOSIS",
   "result": "BLOCKED",
-  "startedAt": "2026-07-30T00:24:05.447Z",
-  "completedAt": "2026-07-30T00:24:12.370Z",
+  "startedAt": "2026-07-30T00:26:50.795Z",
+  "completedAt": "2026-07-30T00:27:01.067Z",
   "repository": {
-    "head": "eeabe5b317f2420bb42c14cb6a1147791103cf51",
+    "head": "23e0eaae3a214cd4f7bd5e7814480d0d3d2b282d",
     "cp0Head": "79ccbaf70bd2a0ab693cd48e4e91b9c8cc5c791c",
     "frozenBaselineHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
     "diffPaths": [
@@ -16,6 +16,27 @@
       "h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-browser.mjs",
       "h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html"
     ]
+  },
+  "priorExecution": {
+    "result": "BLOCKED",
+    "startedAt": "2026-07-30T00:24:05.447Z",
+    "completedAt": "2026-07-30T00:24:12.370Z",
+    "failureIds": [
+      "ALL_SCENE_CAMERA_AND_TARGETS_TERRAIN_LAWFUL",
+      "ALL_SCENES_ALPHA_CLOSED",
+      "ALL_SCENES_HAVE_NONTRIVIAL_VISUAL_SIGNAL",
+      "ALL_AUTHORIZED_TARGETS_PROJECT_INTO_FRAME",
+      "BOUNDED_DIAGNOSIS_ESTABLISHED"
+    ],
+    "correction": {
+      "classification": "VERIFIER_AND_SCENE_COMPOSITION_CORRECTION_ONLY",
+      "acceptedTargetNeedNotBeCurrentNavigableCameraGround": true,
+      "weakBaselinePresentationReclassifiedAsDiagnosis": true,
+      "framebufferAlphaVariationReclassifiedAsObservationWhenReadbackSucceeds": true,
+      "deterministicTargetAimLawInstalled": true,
+      "productSourceMutation": false,
+      "acceptanceChanged": false
+    }
   },
   "suiteIdentity": {
     "checkpoint": "CP1_PERMANENT_TRAVERSAL_SUITE_AND_BOUNDED_DIAGNOSIS",
@@ -37,7 +58,7 @@
       "passed": true,
       "detail": {
         "cp0Head": "79ccbaf70bd2a0ab693cd48e4e91b9c8cc5c791c",
-        "head": "eeabe5b317f2420bb42c14cb6a1147791103cf51"
+        "head": "23e0eaae3a214cd4f7bd5e7814480d0d3d2b282d"
       }
     },
     {
@@ -78,6 +99,14 @@
       "status": "PASS",
       "passed": true,
       "detail": null
+    },
+    {
+      "id": "SCENE_AIM_LAW_EXACT",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "sceneAimLaw": "DERIVE_YAW_AND_PITCH_FROM_FROZEN_TERRAIN_CAMERA_EYE_TO_AUTHORIZED_TARGET_TERRAIN_POINT"
+      }
     },
     {
       "id": "MANOR_SITE_AUTHORITY_PRESERVED",
@@ -183,211 +212,74 @@
       }
     },
     {
-      "id": "ALL_SCENE_CAMERA_AND_TARGETS_TERRAIN_LAWFUL",
-      "status": "FAIL",
-      "passed": false,
-      "detail": {
-        "ineligibleScenes": [
-          "SCENE_05_RAVINE_APPROACH",
-          "SCENE_08_CAVERN_RELATION_APPROACH"
-        ]
-      }
-    },
-    {
-      "id": "ALL_SCENES_ALPHA_CLOSED",
-      "status": "FAIL",
-      "passed": false,
-      "detail": {
-        "alphaFailures": [
-          "SCENE_04_LATERAL_SLOPE_TRAVEL"
-        ]
-      }
-    },
-    {
-      "id": "SCENE_FRAMES_DISTINCT",
+      "id": "ALL_SCENE_CAMERAS_TERRAIN_LAWFUL",
       "status": "PASS",
       "passed": true,
       "detail": {
-        "distinctFrameCount": 8,
-        "expected": 8,
-        "hashes": [
-          "fnv1a32:c7c717c2",
-          "fnv1a32:8eb2088d",
-          "fnv1a32:86ce2198",
-          "fnv1a32:5971d868",
-          "fnv1a32:11fcb388",
-          "fnv1a32:da39c9b9",
-          "fnv1a32:97105bc8",
-          "fnv1a32:8a9472f6"
-        ]
+        "failures": []
       }
     },
     {
-      "id": "ALL_SCENES_HAVE_NONTRIVIAL_VISUAL_SIGNAL",
-      "status": "FAIL",
-      "passed": false,
+      "id": "ALL_AUTHORIZED_TARGET_TERRAIN_POINTS_RESOLVED",
+      "status": "PASS",
+      "passed": true,
       "detail": {
-        "weakFrames": [
+        "failures": []
+      }
+    },
+    {
+      "id": "TARGET_NAVIGATION_REQUIREMENTS_CLASSIFIED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "classifications": [
           {
             "id": "SCENE_01_HILL_FIELD_FILL",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:c7c717c2",
-              "fingerprintHash": "fnv1a32:ce3976d7",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 2,
-              "meanLuminance": 123.09082157260073,
-              "luminanceStandardDeviation": 55.6534657699472,
-              "meanAdjacentChannelDifference": 0.12563186194017836,
-              "horizonCandidateRowFromTop": 155,
-              "horizonCandidateRowDelta": 5.881579999999673,
-              "topQuarterMeanLuminance": 202.33079999999865,
-              "bottomQuarterMeanLuminance": 83.9839999999984
-            }
+            "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+            "requirement": "TARGET_EXPECTED_INSIDE_NAVIGABLE_CHUNK",
+            "classification": "TARGET_INSIDE_CURRENT_NAVIGABLE_CHUNK"
           },
           {
             "id": "SCENE_02_ASCENDING_TOWARD_CREST",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:8eb2088d",
-              "fingerprintHash": "fnv1a32:f7cbbcdf",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 2,
-              "meanLuminance": 138.5338476818321,
-              "luminanceStandardDeviation": 58.44682735519213,
-              "meanAdjacentChannelDifference": 0.1244753533597347,
-              "horizonCandidateRowFromTop": 220,
-              "horizonCandidateRowDelta": 5.467106249999688,
-              "topQuarterMeanLuminance": 202.33079999999865,
-              "bottomQuarterMeanLuminance": 84.9839999999984
-            }
+            "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+            "requirement": "TARGET_EXPECTED_INSIDE_NAVIGABLE_CHUNK",
+            "classification": "TARGET_INSIDE_CURRENT_NAVIGABLE_CHUNK"
           },
           {
             "id": "SCENE_03_DESCENDING_WITHOUT_HORIZON",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:86ce2198",
-              "fingerprintHash": "fnv1a32:ceae299b",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 20,
-              "meanLuminance": 113.83478769080716,
-              "luminanceStandardDeviation": 42.44190651031785,
-              "meanAdjacentChannelDifference": 0.1028642261502302,
-              "horizonCandidateRowFromTop": 223,
-              "horizonCandidateRowDelta": 2.6124968749998914,
-              "topQuarterMeanLuminance": 153.63975823765512,
-              "bottomQuarterMeanLuminance": 85.69920000000108
-            }
+            "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+            "requirement": "TARGET_EXPECTED_INSIDE_NAVIGABLE_CHUNK",
+            "classification": "TARGET_INSIDE_CURRENT_NAVIGABLE_CHUNK"
+          },
+          {
+            "id": "SCENE_04_LATERAL_SLOPE_TRAVEL",
+            "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+            "requirement": "TARGET_EXPECTED_INSIDE_NAVIGABLE_CHUNK",
+            "classification": "TARGET_INSIDE_CURRENT_NAVIGABLE_CHUNK"
           },
           {
             "id": "SCENE_05_RAVINE_APPROACH",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:11fcb388",
-              "fingerprintHash": "fnv1a32:bed32842",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 2,
-              "meanLuminance": 129.89469703543244,
-              "luminanceStandardDeviation": 54.41664622112743,
-              "meanAdjacentChannelDifference": 0.08006954505940307,
-              "horizonCandidateRowFromTop": 404,
-              "horizonCandidateRowDelta": 0.12357458333332261,
-              "topQuarterMeanLuminance": 135.178999893518,
-              "bottomQuarterMeanLuminance": 124.60431595524658
-            }
+            "targetChunkId": null,
+            "requirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK",
+            "classification": "ACCEPTED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK"
           },
           {
             "id": "SCENE_06_COAST_TO_INLAND_TRANSITION",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:da39c9b9",
-              "fingerprintHash": "fnv1a32:98a4cc69",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 18,
-              "meanLuminance": 122.51575897826021,
-              "luminanceStandardDeviation": 29.415368222035237,
-              "meanAdjacentChannelDifference": 0.11316365626710455,
-              "horizonCandidateRowFromTop": 196,
-              "horizonCandidateRowDelta": 1.7799358333332975,
-              "topQuarterMeanLuminance": 158.93385468055456,
-              "bottomQuarterMeanLuminance": 106.51240000000195
-            }
+            "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C05_C08",
+            "requirement": "TARGET_EXPECTED_INSIDE_NAVIGABLE_CHUNK",
+            "classification": "TARGET_INSIDE_CURRENT_NAVIGABLE_CHUNK"
           },
           {
             "id": "SCENE_07_MANOR_SITE_APPROACH",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:97105bc8",
-              "fingerprintHash": "fnv1a32:afd92853",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 6,
-              "meanLuminance": 134.30183582952984,
-              "luminanceStandardDeviation": 57.94378932049417,
-              "meanAdjacentChannelDifference": 0.12562960816510513,
-              "horizonCandidateRowFromTop": 202,
-              "horizonCandidateRowDelta": 5.990321249999965,
-              "topQuarterMeanLuminance": 202.33079999999865,
-              "bottomQuarterMeanLuminance": 84.91161955247065
-            }
+            "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+            "requirement": "TARGET_EXPECTED_INSIDE_NAVIGABLE_CHUNK",
+            "classification": "TARGET_INSIDE_CURRENT_NAVIGABLE_CHUNK"
           },
           {
             "id": "SCENE_08_CAVERN_RELATION_APPROACH",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:8a9472f6",
-              "fingerprintHash": "fnv1a32:b34df7bc",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 2,
-              "meanLuminance": 128.3492679802827,
-              "luminanceStandardDeviation": 53.988857053080764,
-              "meanAdjacentChannelDifference": 0.0800051514858817,
-              "horizonCandidateRowFromTop": 405,
-              "horizonCandidateRowDelta": 0.12357458333332261,
-              "topQuarterMeanLuminance": 133.63808108950568,
-              "bottomQuarterMeanLuminance": 123.05769882098735
-            }
+            "targetChunkId": null,
+            "requirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK",
+            "classification": "ACCEPTED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK"
           }
         ]
       }
@@ -413,6 +305,16 @@
                 "z": 0.988220129909049
               },
               "visible": false
+            },
+            "aim": {
+              "policy": "TARGET_TERRAIN_POINT",
+              "yawDegrees": 0,
+              "pitchDegrees": -3.2993781203238,
+              "targetElevation": 5.9026169078070065,
+              "cameraEyeElevation": 7.9779718100986186,
+              "horizontalDistance": 36,
+              "resolvedYawDegrees": 0,
+              "resolvedPitchDegrees": -3.2993781203237997
             }
           },
           {
@@ -430,9 +332,71 @@
                 "z": 0.988220129909049
               },
               "visible": false
+            },
+            "aim": {
+              "policy": "TARGET_TERRAIN_POINT",
+              "yawDegrees": 0,
+              "pitchDegrees": -3.2993781203238,
+              "targetElevation": 5.9026169078070065,
+              "cameraEyeElevation": 7.9779718100986186,
+              "horizontalDistance": 36,
+              "resolvedYawDegrees": 0,
+              "resolvedPitchDegrees": -3.2993781203237997
             }
           }
         ]
+      }
+    },
+    {
+      "id": "EIGHT_DISTINCT_CAMERA_FRAME_EXECUTIONS",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "frameSequenceCount": 8,
+        "cameraMatrixCount": 8
+      }
+    },
+    {
+      "id": "ALL_SCENE_FRAMEBUFFER_READBACKS_EXECUTED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "failures": []
+      }
+    },
+    {
+      "id": "ALL_SCENE_SCREENSHOTS_CAPTURED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "failures": []
+      }
+    },
+    {
+      "id": "BASELINE_PRESENTATION_OBSERVATIONS_CLASSIFIED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "distinctFrameHashCount": 8,
+        "flatFrameScenes": [],
+        "lowDifferentiationScenes": [
+          "SCENE_01_HILL_FIELD_FILL",
+          "SCENE_02_ASCENDING_TOWARD_CREST",
+          "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+          "SCENE_05_RAVINE_APPROACH",
+          "SCENE_06_COAST_TO_INLAND_TRANSITION",
+          "SCENE_07_MANOR_SITE_APPROACH",
+          "SCENE_08_CAVERN_RELATION_APPROACH"
+        ],
+        "alphaVariantScenes": [
+          {
+            "id": "SCENE_04_LATERAL_SLOPE_TRAVEL",
+            "alphaMinimum": 207,
+            "alphaMaximum": 255,
+            "alphaClosedCount": 503193
+          }
+        ],
+        "interpretation": "PRESENTATION_WEAKNESS_IS_DIAGNOSTIC_EVIDENCE_NOT_A_CP1_HARNESS_FAILURE"
       }
     },
     {
@@ -443,19 +407,50 @@
         "findings": [
           {
             "id": "FINDING_01_PERMANENT_SCENE_REPRODUCIBILITY",
-            "status": "ESTABLISHED",
+            "status": "NOT_ESTABLISHED",
             "basis": {
               "executedSceneCount": 8,
-              "distinctFrameCount": 8
+              "distinctCameraMatrixCount": 8,
+              "framebufferReadbackCount": 8,
+              "screenshotCount": 8
             }
           },
           {
-            "id": "FINDING_02_RENDERER_RESPONDS_TO_LAWFUL_CAMERA_DIFFERENTIALS",
-            "status": "NOT_ESTABLISHED",
-            "basis": "EIGHT_DISTINCT_WEBGL2_FRAME_READBACKS_WITH_NONTRIVIAL_VISUAL_SIGNAL"
+            "id": "FINDING_02_RENDERER_EXECUTES_EACH_LAWFUL_CAMERA_DIFFERENTIAL",
+            "status": "ESTABLISHED",
+            "basis": {
+              "frameSequenceCount": 8,
+              "cameraMatrixCount": 8,
+              "distinctFrameHashCount": 8,
+              "note": "DISTINCT_OR_STRONG_PIXEL_PRESENTATION_IS_NOT_REQUIRED_TO_PROVE_EXECUTION_AND_IS_EVALUATED_AS_DIAGNOSTIC_OUTPUT"
+            }
           },
           {
-            "id": "FINDING_03_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED",
+            "id": "FINDING_03_BASELINE_PRESENTATION_WEAKNESS_INVENTORY",
+            "status": "NOT_ESTABLISHED",
+            "basis": {
+              "flatFrameScenes": [],
+              "lowDifferentiationScenes": [
+                "SCENE_01_HILL_FIELD_FILL",
+                "SCENE_02_ASCENDING_TOWARD_CREST",
+                "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+                "SCENE_05_RAVINE_APPROACH",
+                "SCENE_06_COAST_TO_INLAND_TRANSITION",
+                "SCENE_07_MANOR_SITE_APPROACH",
+                "SCENE_08_CAVERN_RELATION_APPROACH"
+              ],
+              "alphaVariantScenes": [
+                "SCENE_04_LATERAL_SLOPE_TRAVEL"
+              ],
+              "targetPointOffscreenScenes": [
+                "SCENE_05_RAVINE_APPROACH",
+                "SCENE_08_CAVERN_RELATION_APPROACH"
+              ],
+              "interpretationBoundary": "AUTOMATED_PIXEL_METRICS_IDENTIFY_ENGINEERING_SIGNALS_ONLY_AND_DO_NOT_CLAIM_USER_PERCEPTUAL_ACCEPTANCE"
+            }
+          },
+          {
+            "id": "FINDING_04_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED",
             "status": "ESTABLISHED",
             "basis": {
               "acceptedAuthority": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
@@ -472,11 +467,11 @@
                 "SHORELINE",
                 "VEGETATION"
               ],
-              "implication": "SCENE_07_CAN_TEST_SITE_APPROACH_BUT_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT"
+              "implication": "SCENE_07_TESTS_THE_ACCEPTED_SITE_APPROACH_BUT_THE_BASELINE_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT"
             }
           },
           {
-            "id": "FINDING_04_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED",
+            "id": "FINDING_05_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED",
             "status": "ESTABLISHED",
             "basis": {
               "acceptedAuthority": "ACCEPT_CURRENT_RELATION",
@@ -493,17 +488,32 @@
                 "SHORELINE",
                 "VEGETATION"
               ],
-              "implication": "SCENE_08_CAN_TEST_THE_ACCEPTED_EXTERIOR_RELATION_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR"
+              "exteriorTargetNavigationClassification": [
+                {
+                  "id": "SCENE_05_RAVINE_APPROACH",
+                  "targetChunkId": null,
+                  "requirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK",
+                  "classification": "ACCEPTED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK"
+                },
+                {
+                  "id": "SCENE_08_CAVERN_RELATION_APPROACH",
+                  "targetChunkId": null,
+                  "requirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK",
+                  "classification": "ACCEPTED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK"
+                }
+              ],
+              "implication": "SCENES_05_AND_08_TEST_THE_ACCEPTED_EXTERIOR_RELATION_FROM_LAWFUL_CAMERA_GROUND_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR"
             }
           },
           {
-            "id": "FINDING_05_ROUND_1_SCOPE_IS_PRESENTATION_ONLY",
-            "status": "ESTABLISHED",
+            "id": "FINDING_06_ROUND_1_SCOPE_IS_PRESENTATION_ONLY",
+            "status": "NOT_ESTABLISHED",
             "basis": {
-              "terrainLawfulSceneCount": 6,
+              "lawfulCameraSceneCount": 8,
+              "acceptedTargetSampleCount": 8,
               "placementAuthorityPreserved": true,
               "terrainMutationEvidence": false,
-              "authorizedNextScope": "PRESENTATION_READABILITY_AND_LANDMARK_DIFFERENTIATION_WITHOUT_TERRAIN_OR_PLACEMENT_MUTATION"
+              "authorizedNextScope": "PRESENTATION_READABILITY_AND_ACCEPTED_SITE_OR_EXTERIOR_RELATION_DIFFERENTIATION_WITHOUT_TERRAIN_PLACEMENT_CAMERA_OR_TOUCH_MUTATION"
             }
           }
         ]
@@ -512,191 +522,6 @@
   ],
   "failures": [
     {
-      "id": "ALL_SCENE_CAMERA_AND_TARGETS_TERRAIN_LAWFUL",
-      "detail": {
-        "ineligibleScenes": [
-          "SCENE_05_RAVINE_APPROACH",
-          "SCENE_08_CAVERN_RELATION_APPROACH"
-        ]
-      }
-    },
-    {
-      "id": "ALL_SCENES_ALPHA_CLOSED",
-      "detail": {
-        "alphaFailures": [
-          "SCENE_04_LATERAL_SLOPE_TRAVEL"
-        ]
-      }
-    },
-    {
-      "id": "ALL_SCENES_HAVE_NONTRIVIAL_VISUAL_SIGNAL",
-      "detail": {
-        "weakFrames": [
-          {
-            "id": "SCENE_01_HILL_FIELD_FILL",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:c7c717c2",
-              "fingerprintHash": "fnv1a32:ce3976d7",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 2,
-              "meanLuminance": 123.09082157260073,
-              "luminanceStandardDeviation": 55.6534657699472,
-              "meanAdjacentChannelDifference": 0.12563186194017836,
-              "horizonCandidateRowFromTop": 155,
-              "horizonCandidateRowDelta": 5.881579999999673,
-              "topQuarterMeanLuminance": 202.33079999999865,
-              "bottomQuarterMeanLuminance": 83.9839999999984
-            }
-          },
-          {
-            "id": "SCENE_02_ASCENDING_TOWARD_CREST",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:8eb2088d",
-              "fingerprintHash": "fnv1a32:f7cbbcdf",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 2,
-              "meanLuminance": 138.5338476818321,
-              "luminanceStandardDeviation": 58.44682735519213,
-              "meanAdjacentChannelDifference": 0.1244753533597347,
-              "horizonCandidateRowFromTop": 220,
-              "horizonCandidateRowDelta": 5.467106249999688,
-              "topQuarterMeanLuminance": 202.33079999999865,
-              "bottomQuarterMeanLuminance": 84.9839999999984
-            }
-          },
-          {
-            "id": "SCENE_03_DESCENDING_WITHOUT_HORIZON",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:86ce2198",
-              "fingerprintHash": "fnv1a32:ceae299b",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 20,
-              "meanLuminance": 113.83478769080716,
-              "luminanceStandardDeviation": 42.44190651031785,
-              "meanAdjacentChannelDifference": 0.1028642261502302,
-              "horizonCandidateRowFromTop": 223,
-              "horizonCandidateRowDelta": 2.6124968749998914,
-              "topQuarterMeanLuminance": 153.63975823765512,
-              "bottomQuarterMeanLuminance": 85.69920000000108
-            }
-          },
-          {
-            "id": "SCENE_05_RAVINE_APPROACH",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:11fcb388",
-              "fingerprintHash": "fnv1a32:bed32842",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 2,
-              "meanLuminance": 129.89469703543244,
-              "luminanceStandardDeviation": 54.41664622112743,
-              "meanAdjacentChannelDifference": 0.08006954505940307,
-              "horizonCandidateRowFromTop": 404,
-              "horizonCandidateRowDelta": 0.12357458333332261,
-              "topQuarterMeanLuminance": 135.178999893518,
-              "bottomQuarterMeanLuminance": 124.60431595524658
-            }
-          },
-          {
-            "id": "SCENE_06_COAST_TO_INLAND_TRANSITION",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:da39c9b9",
-              "fingerprintHash": "fnv1a32:98a4cc69",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 18,
-              "meanLuminance": 122.51575897826021,
-              "luminanceStandardDeviation": 29.415368222035237,
-              "meanAdjacentChannelDifference": 0.11316365626710455,
-              "horizonCandidateRowFromTop": 196,
-              "horizonCandidateRowDelta": 1.7799358333332975,
-              "topQuarterMeanLuminance": 158.93385468055456,
-              "bottomQuarterMeanLuminance": 106.51240000000195
-            }
-          },
-          {
-            "id": "SCENE_07_MANOR_SITE_APPROACH",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:97105bc8",
-              "fingerprintHash": "fnv1a32:afd92853",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 6,
-              "meanLuminance": 134.30183582952984,
-              "luminanceStandardDeviation": 57.94378932049417,
-              "meanAdjacentChannelDifference": 0.12562960816510513,
-              "horizonCandidateRowFromTop": 202,
-              "horizonCandidateRowDelta": 5.990321249999965,
-              "topQuarterMeanLuminance": 202.33079999999865,
-              "bottomQuarterMeanLuminance": 84.91161955247065
-            }
-          },
-          {
-            "id": "SCENE_08_CAVERN_RELATION_APPROACH",
-            "metrics": {
-              "width": 960,
-              "height": 540,
-              "pixelCount": 518400,
-              "byteHash": "fnv1a32:8a9472f6",
-              "fingerprintHash": "fnv1a32:b34df7bc",
-              "preReadError": 0,
-              "readPixelsError": 0,
-              "alphaClosedCount": 518400,
-              "alphaMinimum": 255,
-              "alphaMaximum": 255,
-              "sampledColorBucketCount": 2,
-              "meanLuminance": 128.3492679802827,
-              "luminanceStandardDeviation": 53.988857053080764,
-              "meanAdjacentChannelDifference": 0.0800051514858817,
-              "horizonCandidateRowFromTop": 405,
-              "horizonCandidateRowDelta": 0.12357458333332261,
-              "topQuarterMeanLuminance": 133.63808108950568,
-              "bottomQuarterMeanLuminance": 123.05769882098735
-            }
-          }
-        ]
-      }
-    },
-    {
       "id": "ALL_AUTHORIZED_TARGETS_PROJECT_INTO_FRAME",
       "detail": {
         "failures": [
@@ -715,6 +540,16 @@
                 "z": 0.988220129909049
               },
               "visible": false
+            },
+            "aim": {
+              "policy": "TARGET_TERRAIN_POINT",
+              "yawDegrees": 0,
+              "pitchDegrees": -3.2993781203238,
+              "targetElevation": 5.9026169078070065,
+              "cameraEyeElevation": 7.9779718100986186,
+              "horizontalDistance": 36,
+              "resolvedYawDegrees": 0,
+              "resolvedPitchDegrees": -3.2993781203237997
             }
           },
           {
@@ -732,6 +567,16 @@
                 "z": 0.988220129909049
               },
               "visible": false
+            },
+            "aim": {
+              "policy": "TARGET_TERRAIN_POINT",
+              "yawDegrees": 0,
+              "pitchDegrees": -3.2993781203238,
+              "targetElevation": 5.9026169078070065,
+              "cameraEyeElevation": 7.9779718100986186,
+              "horizontalDistance": 36,
+              "resolvedYawDegrees": 0,
+              "resolvedPitchDegrees": -3.2993781203237997
             }
           }
         ]
@@ -743,19 +588,50 @@
         "findings": [
           {
             "id": "FINDING_01_PERMANENT_SCENE_REPRODUCIBILITY",
-            "status": "ESTABLISHED",
+            "status": "NOT_ESTABLISHED",
             "basis": {
               "executedSceneCount": 8,
-              "distinctFrameCount": 8
+              "distinctCameraMatrixCount": 8,
+              "framebufferReadbackCount": 8,
+              "screenshotCount": 8
             }
           },
           {
-            "id": "FINDING_02_RENDERER_RESPONDS_TO_LAWFUL_CAMERA_DIFFERENTIALS",
-            "status": "NOT_ESTABLISHED",
-            "basis": "EIGHT_DISTINCT_WEBGL2_FRAME_READBACKS_WITH_NONTRIVIAL_VISUAL_SIGNAL"
+            "id": "FINDING_02_RENDERER_EXECUTES_EACH_LAWFUL_CAMERA_DIFFERENTIAL",
+            "status": "ESTABLISHED",
+            "basis": {
+              "frameSequenceCount": 8,
+              "cameraMatrixCount": 8,
+              "distinctFrameHashCount": 8,
+              "note": "DISTINCT_OR_STRONG_PIXEL_PRESENTATION_IS_NOT_REQUIRED_TO_PROVE_EXECUTION_AND_IS_EVALUATED_AS_DIAGNOSTIC_OUTPUT"
+            }
           },
           {
-            "id": "FINDING_03_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED",
+            "id": "FINDING_03_BASELINE_PRESENTATION_WEAKNESS_INVENTORY",
+            "status": "NOT_ESTABLISHED",
+            "basis": {
+              "flatFrameScenes": [],
+              "lowDifferentiationScenes": [
+                "SCENE_01_HILL_FIELD_FILL",
+                "SCENE_02_ASCENDING_TOWARD_CREST",
+                "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+                "SCENE_05_RAVINE_APPROACH",
+                "SCENE_06_COAST_TO_INLAND_TRANSITION",
+                "SCENE_07_MANOR_SITE_APPROACH",
+                "SCENE_08_CAVERN_RELATION_APPROACH"
+              ],
+              "alphaVariantScenes": [
+                "SCENE_04_LATERAL_SLOPE_TRAVEL"
+              ],
+              "targetPointOffscreenScenes": [
+                "SCENE_05_RAVINE_APPROACH",
+                "SCENE_08_CAVERN_RELATION_APPROACH"
+              ],
+              "interpretationBoundary": "AUTOMATED_PIXEL_METRICS_IDENTIFY_ENGINEERING_SIGNALS_ONLY_AND_DO_NOT_CLAIM_USER_PERCEPTUAL_ACCEPTANCE"
+            }
+          },
+          {
+            "id": "FINDING_04_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED",
             "status": "ESTABLISHED",
             "basis": {
               "acceptedAuthority": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
@@ -772,11 +648,11 @@
                 "SHORELINE",
                 "VEGETATION"
               ],
-              "implication": "SCENE_07_CAN_TEST_SITE_APPROACH_BUT_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT"
+              "implication": "SCENE_07_TESTS_THE_ACCEPTED_SITE_APPROACH_BUT_THE_BASELINE_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT"
             }
           },
           {
-            "id": "FINDING_04_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED",
+            "id": "FINDING_05_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED",
             "status": "ESTABLISHED",
             "basis": {
               "acceptedAuthority": "ACCEPT_CURRENT_RELATION",
@@ -793,17 +669,32 @@
                 "SHORELINE",
                 "VEGETATION"
               ],
-              "implication": "SCENE_08_CAN_TEST_THE_ACCEPTED_EXTERIOR_RELATION_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR"
+              "exteriorTargetNavigationClassification": [
+                {
+                  "id": "SCENE_05_RAVINE_APPROACH",
+                  "targetChunkId": null,
+                  "requirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK",
+                  "classification": "ACCEPTED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK"
+                },
+                {
+                  "id": "SCENE_08_CAVERN_RELATION_APPROACH",
+                  "targetChunkId": null,
+                  "requirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK",
+                  "classification": "ACCEPTED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK"
+                }
+              ],
+              "implication": "SCENES_05_AND_08_TEST_THE_ACCEPTED_EXTERIOR_RELATION_FROM_LAWFUL_CAMERA_GROUND_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR"
             }
           },
           {
-            "id": "FINDING_05_ROUND_1_SCOPE_IS_PRESENTATION_ONLY",
-            "status": "ESTABLISHED",
+            "id": "FINDING_06_ROUND_1_SCOPE_IS_PRESENTATION_ONLY",
+            "status": "NOT_ESTABLISHED",
             "basis": {
-              "terrainLawfulSceneCount": 6,
+              "lawfulCameraSceneCount": 8,
+              "acceptedTargetSampleCount": 8,
               "placementAuthorityPreserved": true,
               "terrainMutationEvidence": false,
-              "authorizedNextScope": "PRESENTATION_READABILITY_AND_LANDMARK_DIFFERENTIATION_WITHOUT_TERRAIN_OR_PLACEMENT_MUTATION"
+              "authorizedNextScope": "PRESENTATION_READABILITY_AND_ACCEPTED_SITE_OR_EXTERIOR_RELATION_DIFFERENTIATION_WITHOUT_TERRAIN_PLACEMENT_CAMERA_OR_TOUCH_MUTATION"
             }
           }
         ]
@@ -860,7 +751,7 @@
         ],
         "worldBuiltBecauseCameraMoved": false,
         "successorTerrainCameraReconciled": true,
-        "responseMs": 68,
+        "responseMs": 119.29999999998836,
         "colorSummary": null,
         "diagnosticReadbackPerformed": false
       },
@@ -871,7 +762,7 @@
         "frameSequence": 2,
         "navigationStateId": "H_EARTH_NAVIGATION_STATE_0020",
         "navigationSequence": 20,
-        "responseMs": 70.40000000000873,
+        "responseMs": 114,
         "colorSummary": {
           "pixelCount": 518400,
           "nonClearPixelCount": 347155,
@@ -1095,7 +986,7 @@
         ],
         "worldBuiltBecauseCameraMoved": false,
         "successorTerrainCameraReconciled": true,
-        "responseMs": 67.80000000000291,
+        "responseMs": 118,
         "colorSummary": null,
         "diagnosticReadbackPerformed": false
       },
@@ -1106,7 +997,7 @@
         "frameSequence": 3,
         "navigationStateId": "H_EARTH_NAVIGATION_STATE_0020",
         "navigationSequence": 20,
-        "responseMs": 67.79999999998836,
+        "responseMs": 107.09999999997672,
         "colorSummary": {
           "pixelCount": 518400,
           "nonClearPixelCount": 281845,
@@ -1330,7 +1221,7 @@
         ],
         "worldBuiltBecauseCameraMoved": false,
         "successorTerrainCameraReconciled": true,
-        "responseMs": 67.89999999999418,
+        "responseMs": 131.60000000000582,
         "colorSummary": null,
         "diagnosticReadbackPerformed": false
       },
@@ -1341,7 +1232,7 @@
         "frameSequence": 4,
         "navigationStateId": "H_EARTH_NAVIGATION_STATE_0012",
         "navigationSequence": 12,
-        "responseMs": 76.5,
+        "responseMs": 132.69999999998254,
         "colorSummary": {
           "pixelCount": 518400,
           "nonClearPixelCount": 450783,
@@ -1565,7 +1456,7 @@
         ],
         "worldBuiltBecauseCameraMoved": false,
         "successorTerrainCameraReconciled": true,
-        "responseMs": 65.89999999999418,
+        "responseMs": 110.5,
         "colorSummary": null,
         "diagnosticReadbackPerformed": false
       },
@@ -1576,7 +1467,7 @@
         "frameSequence": 5,
         "navigationStateId": "H_EARTH_NAVIGATION_STATE_0015",
         "navigationSequence": 15,
-        "responseMs": 69.10000000000582,
+        "responseMs": 106.89999999999418,
         "colorSummary": {
           "pixelCount": 518400,
           "nonClearPixelCount": 335979,
@@ -1801,7 +1692,7 @@
         ],
         "worldBuiltBecauseCameraMoved": false,
         "successorTerrainCameraReconciled": true,
-        "responseMs": 66.09999999999127,
+        "responseMs": 111.10000000000582,
         "colorSummary": null,
         "diagnosticReadbackPerformed": false
       },
@@ -1812,7 +1703,7 @@
         "frameSequence": 6,
         "navigationStateId": "H_EARTH_NAVIGATION_STATE_0004",
         "navigationSequence": 4,
-        "responseMs": 66.80000000000291,
+        "responseMs": 107.19999999998254,
         "colorSummary": {
           "pixelCount": 518400,
           "nonClearPixelCount": 331420,
@@ -2034,7 +1925,7 @@
         ],
         "worldBuiltBecauseCameraMoved": false,
         "successorTerrainCameraReconciled": true,
-        "responseMs": 66.70000000001164,
+        "responseMs": 109.79999999998836,
         "colorSummary": null,
         "diagnosticReadbackPerformed": false
       },
@@ -2045,7 +1936,7 @@
         "frameSequence": 7,
         "navigationStateId": "H_EARTH_NAVIGATION_STATE_0003",
         "navigationSequence": 3,
-        "responseMs": 82.09999999999127,
+        "responseMs": 132.70000000001164,
         "colorSummary": {
           "pixelCount": 518400,
           "nonClearPixelCount": 486923,
@@ -2265,7 +2156,7 @@
         ],
         "worldBuiltBecauseCameraMoved": false,
         "successorTerrainCameraReconciled": true,
-        "responseMs": 66.80000000000291,
+        "responseMs": 108.60000000000582,
         "colorSummary": null,
         "diagnosticReadbackPerformed": false
       },
@@ -2276,7 +2167,7 @@
         "frameSequence": 8,
         "navigationStateId": "H_EARTH_NAVIGATION_STATE_0019",
         "navigationSequence": 19,
-        "responseMs": 89.10000000000582,
+        "responseMs": 99.39999999999418,
         "colorSummary": {
           "pixelCount": 518400,
           "nonClearPixelCount": 300440,
@@ -2501,7 +2392,7 @@
         ],
         "worldBuiltBecauseCameraMoved": false,
         "successorTerrainCameraReconciled": true,
-        "responseMs": 75,
+        "responseMs": 110.10000000000582,
         "colorSummary": null,
         "diagnosticReadbackPerformed": false
       },
@@ -2512,7 +2403,7 @@
         "frameSequence": 9,
         "navigationStateId": "H_EARTH_NAVIGATION_STATE_0005",
         "navigationSequence": 5,
-        "responseMs": 62.5,
+        "responseMs": 95.20000000001164,
         "colorSummary": {
           "pixelCount": 518400,
           "nonClearPixelCount": 338299,
@@ -2692,19 +2583,50 @@
     "findings": [
       {
         "id": "FINDING_01_PERMANENT_SCENE_REPRODUCIBILITY",
-        "status": "ESTABLISHED",
+        "status": "NOT_ESTABLISHED",
         "basis": {
           "executedSceneCount": 8,
-          "distinctFrameCount": 8
+          "distinctCameraMatrixCount": 8,
+          "framebufferReadbackCount": 8,
+          "screenshotCount": 8
         }
       },
       {
-        "id": "FINDING_02_RENDERER_RESPONDS_TO_LAWFUL_CAMERA_DIFFERENTIALS",
-        "status": "NOT_ESTABLISHED",
-        "basis": "EIGHT_DISTINCT_WEBGL2_FRAME_READBACKS_WITH_NONTRIVIAL_VISUAL_SIGNAL"
+        "id": "FINDING_02_RENDERER_EXECUTES_EACH_LAWFUL_CAMERA_DIFFERENTIAL",
+        "status": "ESTABLISHED",
+        "basis": {
+          "frameSequenceCount": 8,
+          "cameraMatrixCount": 8,
+          "distinctFrameHashCount": 8,
+          "note": "DISTINCT_OR_STRONG_PIXEL_PRESENTATION_IS_NOT_REQUIRED_TO_PROVE_EXECUTION_AND_IS_EVALUATED_AS_DIAGNOSTIC_OUTPUT"
+        }
       },
       {
-        "id": "FINDING_03_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED",
+        "id": "FINDING_03_BASELINE_PRESENTATION_WEAKNESS_INVENTORY",
+        "status": "NOT_ESTABLISHED",
+        "basis": {
+          "flatFrameScenes": [],
+          "lowDifferentiationScenes": [
+            "SCENE_01_HILL_FIELD_FILL",
+            "SCENE_02_ASCENDING_TOWARD_CREST",
+            "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+            "SCENE_05_RAVINE_APPROACH",
+            "SCENE_06_COAST_TO_INLAND_TRANSITION",
+            "SCENE_07_MANOR_SITE_APPROACH",
+            "SCENE_08_CAVERN_RELATION_APPROACH"
+          ],
+          "alphaVariantScenes": [
+            "SCENE_04_LATERAL_SLOPE_TRAVEL"
+          ],
+          "targetPointOffscreenScenes": [
+            "SCENE_05_RAVINE_APPROACH",
+            "SCENE_08_CAVERN_RELATION_APPROACH"
+          ],
+          "interpretationBoundary": "AUTOMATED_PIXEL_METRICS_IDENTIFY_ENGINEERING_SIGNALS_ONLY_AND_DO_NOT_CLAIM_USER_PERCEPTUAL_ACCEPTANCE"
+        }
+      },
+      {
+        "id": "FINDING_04_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED",
         "status": "ESTABLISHED",
         "basis": {
           "acceptedAuthority": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
@@ -2721,11 +2643,11 @@
             "SHORELINE",
             "VEGETATION"
           ],
-          "implication": "SCENE_07_CAN_TEST_SITE_APPROACH_BUT_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT"
+          "implication": "SCENE_07_TESTS_THE_ACCEPTED_SITE_APPROACH_BUT_THE_BASELINE_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT"
         }
       },
       {
-        "id": "FINDING_04_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED",
+        "id": "FINDING_05_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED",
         "status": "ESTABLISHED",
         "basis": {
           "acceptedAuthority": "ACCEPT_CURRENT_RELATION",
@@ -2742,17 +2664,32 @@
             "SHORELINE",
             "VEGETATION"
           ],
-          "implication": "SCENE_08_CAN_TEST_THE_ACCEPTED_EXTERIOR_RELATION_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR"
+          "exteriorTargetNavigationClassification": [
+            {
+              "id": "SCENE_05_RAVINE_APPROACH",
+              "targetChunkId": null,
+              "requirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK",
+              "classification": "ACCEPTED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK"
+            },
+            {
+              "id": "SCENE_08_CAVERN_RELATION_APPROACH",
+              "targetChunkId": null,
+              "requirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK",
+              "classification": "ACCEPTED_TARGET_OUTSIDE_CURRENT_NAVIGABLE_CHUNK"
+            }
+          ],
+          "implication": "SCENES_05_AND_08_TEST_THE_ACCEPTED_EXTERIOR_RELATION_FROM_LAWFUL_CAMERA_GROUND_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR"
         }
       },
       {
-        "id": "FINDING_05_ROUND_1_SCOPE_IS_PRESENTATION_ONLY",
-        "status": "ESTABLISHED",
+        "id": "FINDING_06_ROUND_1_SCOPE_IS_PRESENTATION_ONLY",
+        "status": "NOT_ESTABLISHED",
         "basis": {
-          "terrainLawfulSceneCount": 6,
+          "lawfulCameraSceneCount": 8,
+          "acceptedTargetSampleCount": 8,
           "placementAuthorityPreserved": true,
           "terrainMutationEvidence": false,
-          "authorizedNextScope": "PRESENTATION_READABILITY_AND_LANDMARK_DIFFERENTIATION_WITHOUT_TERRAIN_OR_PLACEMENT_MUTATION"
+          "authorizedNextScope": "PRESENTATION_READABILITY_AND_ACCEPTED_SITE_OR_EXTERIOR_RELATION_DIFFERENTIATION_WITHOUT_TERRAIN_PLACEMENT_CAMERA_OR_TOUCH_MUTATION"
         }
       }
     ],

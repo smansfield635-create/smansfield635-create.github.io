@@ -1,3 +1,4 @@
+// validation-trigger: 1
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';

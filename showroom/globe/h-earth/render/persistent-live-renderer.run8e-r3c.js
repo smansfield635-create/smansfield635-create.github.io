@@ -266,18 +266,21 @@ void main(){
     float cavernFracture=stableWave(world.x*0.93-world.y*0.67+vWorldPosition.y*0.44);
     float cavernRelationSignal=stableWave(cavernRadius*0.43+(world.y+284.0)*0.31+vWorldPosition.y*0.83+noise2(world*0.12)*2.0);
     float cavernRelationContact=transitionBand(cavernRelationSignal,0.082)*cavernApproach;
+    float cavernApproachStrata=stableWave((world.x-40.0)*0.46+(world.y+284.0)*0.57+vWorldPosition.y*0.61+noise2(world*0.10)*1.8);
+    float cavernApproachEdge=transitionBand(cavernApproachStrata,0.095)*cavernApproach;
     float cavernGroundContact=max(
       cavernContact,
-      max(cavernOuterContact*0.82,cavernRelationContact*0.72)
+      max(cavernOuterContact*0.82,max(cavernRelationContact*0.72,cavernApproachEdge*0.88))
     );
     vec3 cavernStone=mix(vec3(0.028,0.052,0.060),vec3(0.27,0.39,0.42),cavernStrata*0.70+cavernFracture*0.30);
     palette=mix(palette,cavernStone,cavernRelation*(0.68+0.20*cavernStrata));
-    palette*=mix(1.0,0.50,cavernGroundContact*(0.36+0.48*cavernFracture));
-    palette*=mix(0.90,1.10,cavernRelationSignal*cavernApproach*0.30);
+    palette*=mix(1.0,0.43,cavernGroundContact*(0.38+0.48*cavernFracture));
+    palette*=mix(0.72,1.24,cavernApproachStrata*cavernApproach*0.86+(1.0-cavernApproach)*0.50);
     palette=mix(palette,palette*vec3(0.60,0.84,0.96),cavernApproach*0.32);
-    palette+=vec3(0.032,0.060,0.070)*cavernGroundContact*(0.35+0.65*cavernStrata);
-    presentationContact=max(presentationContact,cavernGroundContact*0.82);
-    presentationHighlight=max(presentationHighlight,cavernOuterContact*0.34+cavernRelationContact*0.26);
+    palette+=vec3(0.036,0.068,0.078)*cavernGroundContact*(0.35+0.65*cavernStrata);
+    palette+=vec3(-0.026,0.036,0.052)*(cavernApproachStrata-0.5)*cavernApproach;
+    presentationContact=max(presentationContact,cavernGroundContact*0.96);
+    presentationHighlight=max(presentationHighlight,cavernOuterContact*0.34+cavernRelationContact*0.26+cavernApproachEdge*0.34);
 
     float ravineAxis=exp(-pow((vWorldPosition.x-40.0)/18.0,2.0));
     float ravineShoulder=ring(world,vec2(40.0,-252.0),18.0,46.0,5.0);
@@ -548,7 +551,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         boundedContactDepthReinforcement: true,
         temporallyStableWorldSpaceVariation: true,
         regressionColorDiversityRestoration: true,
-        cavernNearThresholdReinforcement: true,
+        cavernApproachRegionalStrata: true,
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },

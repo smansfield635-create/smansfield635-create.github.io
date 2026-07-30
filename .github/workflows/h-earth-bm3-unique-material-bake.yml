@@ -1,0 +1,72 @@
+name: H-Earth BM3 Unique Material Bake
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-bm3-unique-material-bake.yml'
+      - 'h-earth-3d/authoring/round2-baked-material/h-earth.bm3-unique-material-bake.v1.mjs'
+      - 'h-earth-3d/control-plane/post-cp2-round2/baked-material/h-earth.bm3-unique-material-bake-authority.v1.mjs'
+      - 'h-earth-3d/validation/baked-material/h-earth.bm3-unique-material-bake.mjs'
+      - 'showroom/globe/h-earth/render/terrain-material-field.round2-baked.v1.rgba'
+      - 'showroom/globe/h-earth/render/terrain-material-field.round2-baked.v1.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bake-and-verify-unique-material-field:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact BM3 head branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate exact deterministic baked field
+        run: node h-earth-3d/authoring/round2-baked-material/h-earth.bm3-unique-material-bake.v1.mjs --write | tee /tmp/bm3-bake.json
+      - name: Commit generated product bytes locally
+        id: commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/render/terrain-material-field.round2-baked.v1.rgba
+          git add showroom/globe/h-earth/render/terrain-material-field.round2-baked.v1.js
+          if git diff --cached --quiet; then
+            echo 'created=false' >> "$GITHUB_OUTPUT"
+          else
+            git commit -m 'Bake BM3 unique terrain material field'
+            echo 'created=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Execute BM3 verifier
+        run: node h-earth-3d/validation/baked-material/h-earth.bm3-unique-material-bake.mjs | tee /tmp/bm3-receipt.json
+      - name: Push generated product commit
+        if: steps.commit.outputs.created == 'true' && github.event_name == 'pull_request'
+        run: git push origin HEAD:${{ github.head_ref }}
+      - name: Upload BM3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-bm3-unique-material-bake
+          path: |
+            /tmp/bm3-bake.json
+            /tmp/bm3-receipt.json
+            showroom/globe/h-earth/render/terrain-material-field.round2-baked.v1.rgba
+            showroom/globe/h-earth/render/terrain-material-field.round2-baked.v1.js
+          retention-days: 90
+      - name: Enforce BM3 pass
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('/tmp/bm3-receipt.json', 'utf8'));
+          if (receipt.pass !== true || receipt.result !== 'BM3_UNIQUE_1024_BAKED_MATERIAL_FIELD_PASS_CLOSED') {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`BM3_PASS:${receipt.canonicalMapSha256}:${receipt.canonicalReceiptSha256}`);
+          NODE

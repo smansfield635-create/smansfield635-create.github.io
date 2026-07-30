@@ -1,4 +1,5 @@
 export const H_EARTH_OBSERVATORY_ROUTE_ID = 'THE_H_EARTH_OBSERVATORY';
+export const H_EARTH_OBSERVATORY_CANDIDATE_ID = 'H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001';
 
 export const H_EARTH_OBSERVATORY_SECTION_IDS = Object.freeze([
   'H_EARTH_WITHIN_MIRRORLAND',
@@ -144,6 +145,14 @@ specializedDetails.append(specializedBody);
 ladder.append(platformGroup, specializedDetails);
 technicalHost.replaceChildren(ladder);
 
+const candidateActive = new URLSearchParams(location.search).get('candidate') === H_EARTH_OBSERVATORY_CANDIDATE_ID;
+if (candidateActive) {
+  const candidateReturn = `/showroom/globe/h-earth/?candidate=${encodeURIComponent(H_EARTH_OBSERVATORY_CANDIDATE_ID)}`;
+  document.querySelectorAll('a[href="/showroom/globe/h-earth/"]').forEach((anchor) => {
+    anchor.href = candidateReturn;
+  });
+}
+
 document.getElementById('session-replay-disclosure')?.addEventListener('toggle', (event) => {
   if (event.currentTarget.open) document.documentElement.dataset.replayInspected = 'true';
 });
@@ -152,6 +161,7 @@ document.getElementById('technical-evidence-disclosure')?.addEventListener('togg
 });
 
 document.documentElement.dataset.observatoryContract = 'PASS';
+document.documentElement.dataset.observatoryCandidate = candidateActive ? 'active' : 'inactive';
 document.documentElement.dataset.replayChapterCount = String(H_EARTH_OBSERVATORY_REPLAY.length);
 document.documentElement.dataset.specializedDestinationCount = String(H_EARTH_OBSERVATORY_SPECIALIZED_DESTINATIONS.length);
 document.documentElement.dataset.repositoryControlsExposed = 'false';
@@ -160,6 +170,8 @@ document.body.dataset.jsState = 'ready';
 
 window.H_EARTH_OBSERVATORY = Object.freeze({
   routeId: H_EARTH_OBSERVATORY_ROUTE_ID,
+  candidateId: H_EARTH_OBSERVATORY_CANDIDATE_ID,
+  candidateActive,
   sections: H_EARTH_OBSERVATORY_SECTION_IDS,
   replay: H_EARTH_OBSERVATORY_REPLAY,
   specializedDestinations: H_EARTH_OBSERVATORY_SPECIALIZED_DESTINATIONS,

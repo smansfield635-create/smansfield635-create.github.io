@@ -3,7 +3,11 @@ import crypto from 'node:crypto';
 import { chromium } from 'playwright';
 
 const ORIGIN = process.env.H_EARTH_OBSERVATORY_ORIGIN || 'http://127.0.0.1:4186';
+const CANDIDATE_ID = 'H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001';
+const CANDIDATE_PATH = `/showroom/globe/h-earth/?candidate=${CANDIDATE_ID}`;
+const OBSERVATORY_PATH = `/showroom/globe/h-earth/observatory/?candidate=${CANDIDATE_ID}`;
 const candidateHead = process.env.CANDIDATE_HEAD || 'LOCAL_CANDIDATE';
+const publicVerificationPerformed = ORIGIN.startsWith('https://');
 const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const assertions = [];
 const pageErrors = [];
@@ -20,17 +24,12 @@ const captureErrors = (page, label) => {
     if (message.type() === 'error') consoleErrors.push({ label, text: message.text() });
   });
   page.on('response', (response) => {
-    if (response.status() >= 400 && response.url().startsWith(ORIGIN)) {
-      httpErrors.push({ label, status: response.status(), url: response.url() });
-    }
+    if (response.status() >= 400 && response.url().startsWith(ORIGIN)) httpErrors.push({ label, status: response.status(), url: response.url() });
   });
 };
-const digestCanvas = async (page) => {
-  const canvas = page.locator('#h-earth-functional-landscape-canvas');
-  return sha256(await canvas.screenshot({ type: 'png' }));
-};
-const waitForHEarth = async (page) => {
-  await page.goto(`${ORIGIN}/showroom/globe/h-earth/`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+const digestCanvas = async (page) => sha256(await page.locator('#h-earth-functional-landscape-canvas').screenshot({ type: 'png' }));
+const waitForHEarth = async (page, path = CANDIDATE_PATH) => {
+  await page.goto(`${ORIGIN}${path}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
   await page.locator('#h-earth-functional-landscape-canvas').waitFor({ state: 'visible', timeout: 30000 });
   await page.waitForFunction(() => {
     const route = document.getElementById('h-earth-functional-landscape-route');
@@ -55,13 +54,7 @@ const dispatchTouchSequence = async (page, frames) => {
 
 const browser = await chromium.launch({
   headless: true,
-  args: [
-    '--use-gl=swiftshader',
-    '--enable-webgl',
-    '--ignore-gpu-blocklist',
-    '--disable-dev-shm-usage',
-    '--no-sandbox'
-  ]
+  args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage', '--no-sandbox']
 });
 
 try {
@@ -69,17 +62,20 @@ try {
   const page = await desktop.newPage();
   captureErrors(page, 'desktop');
 
-  const observatoryResponse = await page.goto(`${ORIGIN}/showroom/globe/h-earth/observatory/`, { waitUntil: 'networkidle', timeout: 120000 });
+  const observatoryResponse = await page.goto(`${ORIGIN}${OBSERVATORY_PATH}`, { waitUntil: 'networkidle', timeout: 120000 });
   check('OBSERVATORY_ROUTE_REACHABLE', observatoryResponse?.ok() === true, observatoryResponse?.status());
   await page.waitForFunction(() => document.documentElement.dataset.observatoryContract === 'PASS', null, { timeout: 30000 });
   check('OBSERVATORY_ROUTE_IDENTITY', await page.locator('html').getAttribute('data-observatory') === 'THE_H_EARTH_OBSERVATORY');
+  check('OBSERVATORY_CANDIDATE_IDENTITY', await page.locator('html').getAttribute('data-observatory-candidate') === 'active');
   check('SEVEN_SECTION_STRUCTURE', await page.locator('[data-observatory-section]').count() === 7);
   check('READ_ONLY_REPLAY_EIGHT_CHAPTERS', await page.locator('[data-replay-chapter]').count() === 8);
   check('SPECIALIZED_DESTINATIONS_FOUR', await page.locator('[data-destination="H_EARTH_GAUGES"], [data-destination="FD_05"], [data-destination="RUN_8E_R1_PROFILER"], [data-destination="TERRAIN_WORKBENCH"]').count() === 4);
   check('TECHNICAL_EVIDENCE_OPTIONAL', !(await page.locator('#technical-evidence-disclosure').evaluate((node) => node.open)));
   check('SESSION_REPLAY_OPTIONAL', !(await page.locator('#session-replay-disclosure').evaluate((node) => node.open)));
   check('NO_DIAGNOSTIC_AUTO_LAUNCH', await page.locator('iframe').count() === 0 && await page.locator('html').getAttribute('data-diagnostic-auto-launch') === 'false');
-  check('RETURN_TO_H_EARTH_PERSISTENT', await page.locator('a.persistent-return[href="/showroom/globe/h-earth/"]').count() === 1);
+  check('RETURN_TO_H_EARTH_PERSISTENT', await page.locator('a.persistent-return').count() === 1);
+  const returnHref = await page.locator('a.persistent-return').getAttribute('href');
+  check('RETURN_PRESERVES_CANDIDATE_IDENTITY', returnHref?.includes(`candidate=${CANDIDATE_ID}`), returnHref);
   await page.locator('#session-replay-disclosure > summary').click();
   check('SESSION_REPLAY_DISCLOSURE_OPENS', await page.locator('#session-replay-disclosure').evaluate((node) => node.open));
   await page.locator('#technical-evidence-disclosure > summary').click();
@@ -87,14 +83,23 @@ try {
   check('UNIFIED_PLATFORM_ONE_LEVEL_DEEP', await page.locator('[data-destination="UNIFIED_INSTRUMENT_PLATFORM"]').count() === 1);
   check('SPECIALIZED_DIAGNOSTICS_SECOND_LEVEL', await page.locator('[data-disclosure-sequence="SPECIALIZED_DIAGNOSTICS"]').count() === 1);
 
-  await waitForHEarth(page);
+  const baselinePage = await desktop.newPage();
+  captureErrors(baselinePage, 'baseline-default');
+  await baselinePage.goto(`${ORIGIN}/showroom/globe/h-earth/`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  check('BASELINE_PUBLIC_DEFAULT_GATE_INACTIVE', await baselinePage.locator('html').getAttribute('data-h-earth-observatory-candidate') === 'inactive');
+  check('BASELINE_DIRECT_FD05_VISIBLE', await baselinePage.locator('#h-earth-3d-diagnostic-link').isVisible());
+  check('BASELINE_OBSERVATORY_ENTRY_HIDDEN', await baselinePage.locator('#h-earth-observatory-link').isHidden());
+  await baselinePage.close();
+
+  await waitForHEarth(page, CANDIDATE_PATH);
+  check('CANDIDATE_GATE_ACTIVE', await page.locator('html').getAttribute('data-h-earth-observatory-candidate') === 'active');
+  check('CANDIDATE_OBSERVATORY_ENTRY_VISIBLE', await page.locator('#h-earth-observatory-link').isVisible());
+  check('CANDIDATE_DIRECT_FD05_HIDDEN', await page.locator('#h-earth-3d-diagnostic-link').isHidden());
   check('H_EARTH_RUNTIME_STARTUP', (await page.locator('#h-earth-startup-result').textContent())?.includes('PASS') || await page.locator('#h-earth-functional-landscape-route').getAttribute('data-run8e-ready') === 'true');
   check('LIVE_CANVAS', await page.locator('#h-earth-functional-landscape-canvas').isVisible());
   check('LIVE_RUNTIME_DIAGNOSTICS', await page.locator('details.h-earth-runtime-diagnostics').count() === 1);
   check('RENDERER_STARTUP_RECEIPT', await page.locator('details.h-earth-startup-receipt').count() === 1);
   check('ENVIRONMENT_DETAILS', await page.locator('details.h-earth-live-details').count() === 1);
-  check('H_EARTH_OBSERVATORY_ENTRY', await page.locator('a#h-earth-observatory-link[href="/showroom/globe/h-earth/observatory/"]').count() === 1);
-  check('DIRECT_FD05_HEADER_REMOVED', await page.locator('header a[href="/showroom/globe/h-earth/diagnostic/"]').count() === 0);
 
   const mount = page.locator('#h-earth-functional-landscape-mount');
   const box = await mount.boundingBox();
@@ -132,7 +137,7 @@ try {
   const mobile = await browser.newContext({ viewport: { width: 430, height: 860 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
   const mobilePage = await mobile.newPage();
   captureErrors(mobilePage, 'mobile');
-  await waitForHEarth(mobilePage);
+  await waitForHEarth(mobilePage, CANDIDATE_PATH);
   const mobileMount = mobilePage.locator('#h-earth-functional-landscape-mount');
   const mobileBox = await mobileMount.boundingBox();
   check('MOBILE_STAGE_BOUNDS', Boolean(mobileBox && mobileBox.width > 200 && mobileBox.height > 300), mobileBox);
@@ -152,14 +157,8 @@ try {
   before = after;
   const positionBeforeTouchTravel = await mobilePage.locator('#hud-position').textContent();
   await dispatchTouchSequence(mobilePage, [
-    { type: 'touchStart', touchPoints: [
-      { x: mx - 35, y: my + 70, radiusX: 4, radiusY: 4, force: 1, id: 1 },
-      { x: mx + 35, y: my + 70, radiusX: 4, radiusY: 4, force: 1, id: 2 }
-    ] },
-    { type: 'touchMove', touchPoints: [
-      { x: mx - 35, y: my - 65, radiusX: 4, radiusY: 4, force: 1, id: 1 },
-      { x: mx + 35, y: my - 65, radiusX: 4, radiusY: 4, force: 1, id: 2 }
-    ] },
+    { type: 'touchStart', touchPoints: [{ x: mx - 35, y: my + 70, radiusX: 4, radiusY: 4, force: 1, id: 1 }, { x: mx + 35, y: my + 70, radiusX: 4, radiusY: 4, force: 1, id: 2 }] },
+    { type: 'touchMove', touchPoints: [{ x: mx - 35, y: my - 65, radiusX: 4, radiusY: 4, force: 1, id: 1 }, { x: mx + 35, y: my - 65, radiusX: 4, radiusY: 4, force: 1, id: 2 }] },
     { type: 'touchEnd', touchPoints: [] }
   ]);
   await mobilePage.waitForTimeout(900);
@@ -169,14 +168,8 @@ try {
 
   before = after;
   await dispatchTouchSequence(mobilePage, [
-    { type: 'touchStart', touchPoints: [
-      { x: mx - 25, y: my, radiusX: 4, radiusY: 4, force: 1, id: 1 },
-      { x: mx + 25, y: my, radiusX: 4, radiusY: 4, force: 1, id: 2 }
-    ] },
-    { type: 'touchMove', touchPoints: [
-      { x: mx - 95, y: my, radiusX: 4, radiusY: 4, force: 1, id: 1 },
-      { x: mx + 95, y: my, radiusX: 4, radiusY: 4, force: 1, id: 2 }
-    ] },
+    { type: 'touchStart', touchPoints: [{ x: mx - 25, y: my, radiusX: 4, radiusY: 4, force: 1, id: 1 }, { x: mx + 25, y: my, radiusX: 4, radiusY: 4, force: 1, id: 2 }] },
+    { type: 'touchMove', touchPoints: [{ x: mx - 95, y: my, radiusX: 4, radiusY: 4, force: 1, id: 1 }, { x: mx + 95, y: my, radiusX: 4, radiusY: 4, force: 1, id: 2 }] },
     { type: 'touchEnd', touchPoints: [] }
   ]);
   await mobilePage.waitForTimeout(800);
@@ -207,10 +200,20 @@ try {
   check('CANDIDATE_OWNED_HTTP_FAILURES_ZERO', httpErrors.length === 0, httpErrors);
 
   const receiptBody = {
-    schemaVersion: 'H_EARTH_NARRATIVE_OBSERVATORY_B6_BROWSER_RECEIPT_v1',
+    schemaVersion: publicVerificationPerformed
+      ? 'H_EARTH_NARRATIVE_OBSERVATORY_B8_PUBLIC_BROWSER_RECEIPT_v1'
+      : 'H_EARTH_NARRATIVE_OBSERVATORY_B6_BROWSER_RECEIPT_v1',
     status: 'PASS_CLOSED',
     candidateHead,
     origin: ORIGIN,
+    publicVerificationPerformed,
+    candidateId: CANDIDATE_ID,
+    candidateUrl: `${ORIGIN}${CANDIDATE_PATH}`,
+    observatoryUrl: `${ORIGIN}${OBSERVATORY_PATH}`,
+    baselineDefaultUrl: `${ORIGIN}/showroom/globe/h-earth/`,
+    baselinePublicDefaultUnchanged: true,
+    userDifferentialRecorded: false,
+    defaultPromoted: false,
     assertionCount: assertions.length,
     failedAssertionCount: assertions.filter((entry) => !entry.pass).length,
     pageErrors,
@@ -221,7 +224,8 @@ try {
   const receipt = { ...receiptBody, receiptSha256: sha256(JSON.stringify(receiptBody)) };
   const outputPath = process.env.H_EARTH_OBSERVATORY_B6_RECEIPT || '/tmp/h-earth-narrative-observatory-b6.browser.receipt.json';
   fs.writeFileSync(outputPath, `${JSON.stringify(receipt, null, 2)}\n`);
-  console.log(`H_EARTH_NARRATIVE_OBSERVATORY_B6_PASS:${candidateHead}:${receipt.receiptSha256}:${assertions.length}`);
+  const checkpoint = publicVerificationPerformed ? 'B8_PUBLIC' : 'B6';
+  console.log(`H_EARTH_NARRATIVE_OBSERVATORY_${checkpoint}_PASS:${candidateHead}:${receipt.receiptSha256}:${assertions.length}`);
 } finally {
   await browser.close();
 }

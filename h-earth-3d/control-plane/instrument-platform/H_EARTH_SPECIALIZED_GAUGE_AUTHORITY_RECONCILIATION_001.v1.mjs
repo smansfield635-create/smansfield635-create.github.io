@@ -54,22 +54,52 @@ export const H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001 = freeze({
     },
     A5: {
       status: 'PASS_CLOSED',
-      firstExecutedSyntheticMergeHead: '86ad4b51bbcfc2e48ef220b582625b157e6210a5',
+      finalExecutedSyntheticMergeHead: 'fa31f1ac74767784c78793f12bcae0d77ed213bc',
       requiredApplicableChecks: 11,
       requiredApplicablePasses: 11,
       requiredApplicableFailures: 0,
       requiredApplicableUnresolved: 0,
       readinessPercent: 100,
       mergeEligible: true,
-      deterministicRepeatedReceiptDigest: 'fnv1a32:755a10ae',
       unifiedPlatformAdapterReceiptMatched: true,
       browserConsoleErrorCount: 0,
       browserPageErrorCount: 0,
       browserHttpErrorCount: 0,
-      firstBrowserReceiptSha256: 'b08b8cae04c1c7eb137b7caeff8504c364d5bd7fafbfcb229ed166c2ce0a7e31',
-      workflowRunId: 30586269203,
-      workflowArtifactId: 8776618306,
+      finalBrowserCanonicalReceiptSha256: '3833522c8b4449cb13205862959dd8eed28663da18acd0eb72b01af8f833abaa',
+      finalWorkflowRunId: 30586808973,
       stoppingBoundary: 'STOP_AFTER_EXACT_BROWSER_EXECUTION'
+    },
+    A6: {
+      status: 'PASS_CLOSED',
+      auditedCandidateHead: '68ce8625d868f2ece5f24240bb95724c8db93c5b',
+      exactChangedPathCount: 9,
+      showroomProductPathsChanged: 0,
+      terrainPathsChanged: 0,
+      rendererPathsChanged: 0,
+      liveBindingPathsChanged: 0,
+      navigationPathsChanged: 0,
+      defaultHEarthSourceUnchanged: true,
+      defaultHEarthRuntimeUnchanged: true,
+      noRejectedVisualContentBoundToLive: 'PASS',
+      liveProductAndToolingPathsRemainSeparate: 'PASS',
+      stoppingBoundary: 'STOP_AFTER_PRODUCT_NON_MUTATION_AND_SEPARATION_AUDIT'
+    },
+    A7: {
+      status: 'HELD_VERIFICATION_EVIDENCE_TRANSPORT_BLOCKER',
+      firstMergeCommit: '113a6f3aa986c8bd6446ab0d90064f0213ad47ba',
+      implementationReclassifiedAsFailed: false,
+      preMergeA5PassMaySubstituteForPublicExecution: false,
+      correctionAttemptCount: 1,
+      maximumCorrectionAttemptCount: 1,
+      correctionBranch: 'agent/h-earth-specialized-gauge-a7-evidence-transport-001',
+      correctionScope: [
+        '.github/workflows/h-earth-specialized-gauge-authority-reconciliation.yml',
+        'h-earth-3d/control-plane/instrument-platform/H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001.v1.mjs'
+      ],
+      correctionChangesVerificationLogic: false,
+      correctionChangesProduct: false,
+      requiredSuccessTransport: 'H_EARTH_A7_PUBLIC_EXECUTION_RECEIPT_v1_COMMENT_ON_PR_401',
+      stopIfReceiptNotPublished: true
     }
   },
   authorizedA3MutationManifest: {
@@ -84,7 +114,7 @@ export const H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001 = freeze({
     liveHEarthPathsChanged: [],
     narrativePresentationPathsChanged: []
   },
-  fullCandidatePathScopeThroughA5: [
+  fullOperationPathScope: [
     '.github/workflows/h-earth-instrument-platform.yml',
     '.github/workflows/h-earth-specialized-gauge-authority-reconciliation.yml',
     'gauges/h-earth/h-earth.current-authority-gauge.v3.mjs',
@@ -111,7 +141,7 @@ export const H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001 = freeze({
     narrativePresentationMutationAuthorized: false,
     userDifferentialRequired: false
   },
-  nextCheckpoint: 'A6_PRODUCT_NON_MUTATION_AND_SEPARATION_AUDIT'
+  nextCheckpoint: 'A7_PUBLIC_EXECUTION_RECEIPT'
 });
 
 export default H_EARTH_SPECIALIZED_GAUGE_AUTHORITY_RECONCILIATION_001;

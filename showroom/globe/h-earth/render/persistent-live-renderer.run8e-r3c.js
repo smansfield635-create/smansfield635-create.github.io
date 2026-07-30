@@ -126,6 +126,11 @@ float noise2(vec2 p){
   return mix(mix(hash21(i),hash21(i+vec2(1.0,0.0)),f.x),
              mix(hash21(i+vec2(0.0,1.0)),hash21(i+vec2(1.0,1.0)),f.x),f.y);
 }
+float stableWave(float phase){
+  float footprint=max(fwidth(phase),0.00001);
+  float retained=1.0-smoothstep(0.72,1.65,footprint);
+  return mix(0.5,0.5+0.5*sin(phase),retained);
+}
 float contour(float elevation){
   float interval=2.5;
   float centered=abs(fract(elevation/interval)-0.5);
@@ -134,6 +139,12 @@ float contour(float elevation){
 }
 float radial(vec2 point,vec2 center,float innerRadius,float outerRadius){
   return 1.0-smoothstep(innerRadius,outerRadius,distance(point,center));
+}
+float ring(vec2 point,vec2 center,float innerRadius,float outerRadius,float feather){
+  float radius=distance(point,center);
+  float inner=smoothstep(innerRadius-feather,innerRadius+feather,radius);
+  float outer=1.0-smoothstep(outerRadius-feather,outerRadius+feather,radius);
+  return clamp(inner*outer,0.0,1.0);
 }
 void main(){
   vec3 n=normalize(vNormal);
@@ -146,6 +157,7 @@ void main(){
   float specular=pow(max(dot(n,halfDirection),0.0),24.0);
   float materialSignal=clamp(vMaterialParameters.x+vMaterialParameters.y*0.5,0.0,1.0);
   float identitySignal=float((vMaterialModelCode+vSurfaceClassCode+vPrimitiveIndex)%7u)/7.0;
+  float distanceToCamera=length(vWorldPosition-uCameraPosition);
   vec3 base=max(vBaseColor.rgb,vec3(0.004));
   float outputAlpha=clamp(vBaseColor.a,0.18,1.0);
 
@@ -154,42 +166,84 @@ void main(){
     float broad=noise2(world*0.035);
     float medium=noise2(world*0.13+vec2(17.0,-9.0));
     float grain=noise2(world*0.55+vec2(-31.0,23.0));
+    float macroField=noise2(world*0.018+vec2(5.0,-11.0));
+    float mesoField=noise2(world*0.082+vec2(-13.0,7.0));
+    float detailField=noise2(world*0.29+vec2(29.0,-17.0));
     float elevationMix=smoothstep(-1.0,34.0,vWorldPosition.y);
+    float slopeResponse=smoothstep(0.025,0.58,slope);
+    float curvatureResponse=clamp(length(fwidth(n))*3.25,0.0,1.0);
+    float nearDetail=1.0-smoothstep(72.0,250.0,distanceToCamera);
     vec3 lowland=vec3(0.29,0.27,0.19);
     vec3 upland=vec3(0.34,0.36,0.31);
     vec3 rock=vec3(0.25,0.27,0.26);
     vec3 palette=mix(lowland,upland,elevationMix);
     palette=mix(palette,rock,clamp(slope*1.35,0.0,0.72));
-    float strata=0.5+0.5*sin(world.x*0.47+world.y*0.33+vWorldPosition.y*0.79+medium*3.2);
-    float crossGrain=0.5+0.5*sin(world.x*0.83-world.y*0.61+broad*4.8);
+
+    float strata=stableWave(world.x*0.47+world.y*0.33+vWorldPosition.y*0.79+medium*3.2);
+    float crossGrain=stableWave(world.x*0.83-world.y*0.61+broad*4.8);
+    float faceBandA=stableWave(world.x*0.61+world.y*0.39+vWorldPosition.y*0.57+mesoField*4.1);
+    float faceBandB=stableWave(world.x*1.07-world.y*0.73+vWorldPosition.y*0.31+macroField*5.3);
+    float faceBandC=stableWave(world.x*1.71+world.y*1.23+vWorldPosition.y*0.18+detailField*2.7);
+    float faceBreak=clamp(
+      macroField*0.22+
+      mesoField*0.25+
+      detailField*0.15+
+      faceBandA*0.18+
+      faceBandB*0.13+
+      faceBandC*0.07,
+      0.0,
+      1.0
+    );
+    float directionalBreak=mix(faceBandA,faceBandB,0.35+0.45*slopeResponse);
+    float fineBreak=mix(0.5,faceBandC,nearDetail);
+
     palette*=0.62+0.46*broad+0.24*medium+0.14*grain;
     palette*=mix(0.70,1.30,strata*0.68+crossGrain*0.32);
-    palette=mix(palette,base,0.31);
+    palette*=mix(0.71,1.34,faceBreak);
+    palette*=mix(0.86,1.15,directionalBreak);
+    palette*=mix(0.93,1.08,fineBreak);
+    palette+=vec3(0.026,0.021,0.014)*(faceBandA-faceBandB);
+    palette=mix(palette,palette*vec3(0.79,0.85,0.88),curvatureResponse*(0.18+0.26*slopeResponse));
+    palette=mix(palette,base,0.27);
 
     float contourLine=contour(vWorldPosition.y);
-    palette*=mix(1.0,0.58,contourLine*(0.28+0.44*slope));
-    float slopeRake=0.5+0.5*sin(vWorldPosition.x*0.21+vWorldPosition.z*0.14+vWorldPosition.y*0.48);
-    palette*=mix(0.89,1.10,slopeRake*(0.22+0.78*slope));
+    palette*=mix(1.0,0.56,contourLine*(0.30+0.47*slopeResponse));
+    float slopeRake=stableWave(vWorldPosition.x*0.31+vWorldPosition.z*0.22+vWorldPosition.y*0.58);
+    palette*=mix(0.84,1.16,slopeRake*(0.26+0.74*slopeResponse));
+    palette+=vec3(0.020,0.018,0.014)*curvatureResponse*(0.35+0.65*slopeResponse);
 
-    float manorEnvelope=radial(world,vec2(80.0,-172.0),7.0,30.0);
-    float manorEdge=radial(world,vec2(80.0,-172.0),14.0,20.0)-radial(world,vec2(80.0,-172.0),5.0,11.0);
-    float manorPattern=0.5+0.5*sin((world.x-80.0)*0.72+vWorldPosition.y*0.38);
-    vec3 manorStone=mix(vec3(0.38,0.24,0.07),vec3(0.67,0.48,0.16),manorPattern);
-    palette=mix(palette,manorStone,manorEnvelope*(0.40+0.14*manorPattern));
-    palette+=vec3(0.24,0.14,0.025)*max(manorEdge,0.0);
+    vec2 manorCenter=vec2(80.0,-172.0);
+    float manorRadius=distance(world,manorCenter);
+    float manorEnvelope=radial(world,manorCenter,7.0,30.0);
+    float manorEdge=ring(world,manorCenter,10.5,21.0,2.2);
+    float manorPattern=stableWave(manorRadius*0.83+vWorldPosition.y*0.46+noise2(world*0.19)*4.0);
+    float manorGranularity=noise2(world*0.34+vec2(41.0,-23.0));
+    vec3 manorStone=mix(vec3(0.35,0.21,0.055),vec3(0.72,0.51,0.17),manorPattern*0.72+manorGranularity*0.28);
+    palette=mix(palette,manorStone,manorEnvelope*(0.42+0.22*manorPattern));
+    palette*=mix(1.0,0.70,manorEdge*(0.45+0.40*manorPattern));
+    palette+=vec3(0.17,0.105,0.018)*manorEdge*(0.45+0.55*manorGranularity);
 
-    float cavernRelation=radial(world,vec2(40.0,-284.0),5.0,28.0);
+    vec2 cavernCenter=vec2(40.0,-284.0);
+    float cavernRadius=distance(world,cavernCenter);
+    float cavernRelation=radial(world,cavernCenter,5.0,28.0);
     float cavernApproach=radial(world,vec2(48.0,-284.0),10.0,44.0);
-    float cavernStrata=0.5+0.5*sin(vWorldPosition.y*0.88+world.x*0.24-world.y*0.12);
-    vec3 cavernStone=mix(vec3(0.035,0.060,0.070),vec3(0.24,0.36,0.40),cavernStrata);
-    palette=mix(palette,cavernStone,cavernRelation*(0.68+0.18*cavernStrata));
-    palette=mix(palette,palette*vec3(0.66,0.88,0.96),cavernApproach*0.28);
+    float cavernContact=ring(world,cavernCenter,8.0,24.0,2.8);
+    float cavernStrata=stableWave(cavernRadius*0.71+vWorldPosition.y*0.92+noise2(world*0.15)*4.6);
+    float cavernFracture=stableWave(world.x*0.93-world.y*0.67+vWorldPosition.y*0.44);
+    vec3 cavernStone=mix(vec3(0.028,0.052,0.060),vec3(0.27,0.39,0.42),cavernStrata*0.70+cavernFracture*0.30);
+    palette=mix(palette,cavernStone,cavernRelation*(0.68+0.20*cavernStrata));
+    palette*=mix(1.0,0.72,cavernContact*(0.38+0.42*cavernFracture));
+    palette=mix(palette,palette*vec3(0.62,0.86,0.96),cavernApproach*0.30);
+    palette+=vec3(0.018,0.038,0.044)*cavernContact*cavernStrata;
 
     float ravineAxis=exp(-pow((vWorldPosition.x-40.0)/18.0,2.0));
+    float ravineShoulder=ring(world,vec2(40.0,-252.0),18.0,46.0,5.0);
     float ravineDepth=1.0-smoothstep(-292.0,-210.0,vWorldPosition.z);
-    float routePulse=0.5+0.5*sin(vWorldPosition.z*0.42+vWorldPosition.y*0.25);
-    float routeSignal=ravineAxis*ravineDepth*(0.36+0.64*slope);
-    palette=mix(palette,vec3(0.075,0.14,0.15),routeSignal*(0.30+0.28*routePulse));
+    float routePulse=stableWave(vWorldPosition.z*0.56+vWorldPosition.y*0.31+mesoField*3.0);
+    float routeSignal=ravineAxis*ravineDepth*(0.36+0.64*slopeResponse);
+    palette=mix(palette,vec3(0.060,0.125,0.14),routeSignal*(0.38+0.36*routePulse));
+    palette*=mix(1.0,0.78,ravineShoulder*ravineDepth*(0.18+0.32*slopeResponse));
+    palette+=vec3(0.020,0.040,0.046)*routeSignal*routePulse;
     base=palette;
   }else if(vRoleCode==2u){
     float wave=0.5+0.5*sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19);
@@ -209,7 +263,6 @@ void main(){
   lit+=base*rim*(vRoleCode==1u?0.18:0.10);
   lit+=uSunColor*specular*(vRoleCode==2u?0.36:0.07);
 
-  float distanceToCamera=length(vWorldPosition-uCameraPosition);
   float rawFog=clamp((distanceToCamera-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor);
   float fog=rawFog*(vRoleCode==1u?0.54:0.68);
   float luminance=dot(lit,vec3(0.2126,0.7152,0.0722));
@@ -440,6 +493,10 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       presentationProfile: {
         terrainScaleCues: true, slopeReadability: true, routeContainment: true,
         manorSiteDifferentiation: true, cavernExteriorRelationDifferentiation: true,
+        sharedMacroFrequencyCorrection: true,
+        lawfulSlopeCurvatureModulation: true,
+        boundedContactDepthReinforcement: true,
+        temporallyStableWorldSpaceVariation: true,
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },

@@ -1,4 +1,5 @@
 name: H-Earth B2 Protection Model
+# execution-trigger: 1
 
 on:
   pull_request:

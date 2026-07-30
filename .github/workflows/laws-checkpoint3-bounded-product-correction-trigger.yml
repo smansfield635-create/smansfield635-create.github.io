@@ -37,6 +37,30 @@ jobs:
               line[10:] if line.startswith('          ') else line
               for line in match.group(1).splitlines()
           )
+          original = '''def replace_once(text, old, new, label):
+    count = text.count(old)
+    if count != 1:
+        raise RuntimeError(f"{label}: expected 1 exact occurrence, observed {count}")
+    return text.replace(old, new, 1)
+'''
+          corrected = '''def replace_once(text, old, new, label):
+    count = text.count(old)
+    if count == 1:
+        return text.replace(old, new, 1)
+    if label == "CRYSTALS_CHILD_ID" and count == 0:
+        result, regex_count = re.subn(
+            r"normalizeLawId\\(\\s*element\\.dataset\\.lawId\\s*\\)",
+            "normalizeLawId(\\n                 element.dataset.lawId ||\\n                 element.dataset.memberId\\n               )",
+            text,
+            count=1
+        )
+        if regex_count == 1:
+            return result
+    raise RuntimeError(f"{label}: expected 1 exact occurrence, observed {count}")
+'''
+          if original not in payload:
+              raise SystemExit('PATCH_HELPER_NOT_FOUND')
+          payload = payload.replace(original, corrected, 1)
           subprocess.run(['python3', '-c', payload], check=True)
           PY
 

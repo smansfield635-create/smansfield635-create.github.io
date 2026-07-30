@@ -131,6 +131,11 @@ float stableWave(float phase){
   float retained=1.0-smoothstep(0.72,1.65,footprint);
   return mix(0.5,0.5+0.5*sin(phase),retained);
 }
+float transitionBand(float signal,float halfWidth){
+  float distanceToCenter=abs(signal-0.5);
+  float antialiasWidth=max(fwidth(signal)*1.5,0.012);
+  return 1.0-smoothstep(halfWidth-antialiasWidth,halfWidth+antialiasWidth,distanceToCenter);
+}
 float contour(float elevation){
   float interval=2.5;
   float centered=abs(fract(elevation/interval)-0.5);
@@ -216,34 +221,46 @@ void main(){
     float manorRadius=distance(world,manorCenter);
     float manorEnvelope=radial(world,manorCenter,7.0,30.0);
     float manorEdge=ring(world,manorCenter,10.5,21.0,2.2);
+    float manorOuterEdge=ring(world,manorCenter,21.5,31.0,2.2);
     float manorPattern=stableWave(manorRadius*0.83+vWorldPosition.y*0.46+noise2(world*0.19)*4.0);
     float manorGranularity=noise2(world*0.34+vec2(41.0,-23.0));
+    float manorCrestSignal=stableWave(manorRadius*0.38+vWorldPosition.y*0.58+manorGranularity*1.8);
+    float manorCrestEdge=transitionBand(manorCrestSignal,0.072)*manorEnvelope;
+    float manorContact=max(manorEdge,max(manorOuterEdge*0.72,manorCrestEdge*0.48));
     vec3 manorStone=mix(vec3(0.35,0.21,0.055),vec3(0.72,0.51,0.17),manorPattern*0.72+manorGranularity*0.28);
     palette=mix(palette,manorStone,manorEnvelope*(0.42+0.22*manorPattern));
-    palette*=mix(1.0,0.70,manorEdge*(0.45+0.40*manorPattern));
-    palette+=vec3(0.17,0.105,0.018)*manorEdge*(0.45+0.55*manorGranularity);
+    palette*=mix(1.0,0.64,manorContact*(0.32+0.36*manorPattern));
+    palette+=vec3(0.185,0.112,0.022)*manorContact*(0.40+0.60*manorGranularity);
+    palette+=vec3(0.050,0.021,-0.012)*(manorCrestSignal-0.5)*manorEnvelope;
 
     vec2 cavernCenter=vec2(40.0,-284.0);
     float cavernRadius=distance(world,cavernCenter);
     float cavernRelation=radial(world,cavernCenter,5.0,28.0);
     float cavernApproach=radial(world,vec2(48.0,-284.0),10.0,44.0);
     float cavernContact=ring(world,cavernCenter,8.0,24.0,2.8);
+    float cavernOuterContact=ring(world,cavernCenter,23.0,38.0,3.4);
     float cavernStrata=stableWave(cavernRadius*0.71+vWorldPosition.y*0.92+noise2(world*0.15)*4.6);
     float cavernFracture=stableWave(world.x*0.93-world.y*0.67+vWorldPosition.y*0.44);
+    float cavernLayerSignal=stableWave(cavernRadius*0.39+(world.y+284.0)*0.24+vWorldPosition.y*0.68+noise2(world*0.12)*1.6);
+    float cavernLayerEdge=transitionBand(cavernLayerSignal,0.074)*cavernApproach;
+    float cavernGroundContact=max(cavernContact,max(cavernOuterContact*0.74,cavernLayerEdge*0.55));
     vec3 cavernStone=mix(vec3(0.028,0.052,0.060),vec3(0.27,0.39,0.42),cavernStrata*0.70+cavernFracture*0.30);
     palette=mix(palette,cavernStone,cavernRelation*(0.68+0.20*cavernStrata));
-    palette*=mix(1.0,0.72,cavernContact*(0.38+0.42*cavernFracture));
+    palette*=mix(1.0,0.63,cavernGroundContact*(0.32+0.38*cavernFracture));
     palette=mix(palette,palette*vec3(0.62,0.86,0.96),cavernApproach*0.30);
-    palette+=vec3(0.018,0.038,0.044)*cavernContact*cavernStrata;
+    palette+=vec3(0.034,0.061,0.071)*cavernGroundContact*(0.36+0.64*cavernStrata);
+    palette+=vec3(-0.014,0.020,0.031)*(cavernLayerSignal-0.5)*cavernApproach;
 
     float ravineAxis=exp(-pow((vWorldPosition.x-40.0)/18.0,2.0));
     float ravineShoulder=ring(world,vec2(40.0,-252.0),18.0,46.0,5.0);
     float ravineDepth=1.0-smoothstep(-292.0,-210.0,vWorldPosition.z);
     float routePulse=stableWave(vWorldPosition.z*0.56+vWorldPosition.y*0.31+mesoField*3.0);
+    float ravineWallSignal=stableWave(abs(vWorldPosition.x-40.0)*0.23+(-vWorldPosition.z-210.0)*0.075+vWorldPosition.y*0.44);
+    float ravineWallEdge=transitionBand(ravineWallSignal,0.072)*ravineDepth;
     float routeSignal=ravineAxis*ravineDepth*(0.36+0.64*slopeResponse);
-    palette=mix(palette,vec3(0.060,0.125,0.14),routeSignal*(0.38+0.36*routePulse));
-    palette*=mix(1.0,0.78,ravineShoulder*ravineDepth*(0.18+0.32*slopeResponse));
-    palette+=vec3(0.020,0.040,0.046)*routeSignal*routePulse;
+    palette=mix(palette,vec3(0.060,0.125,0.14),routeSignal*(0.40+0.38*routePulse));
+    palette*=mix(1.0,0.74,max(ravineShoulder*ravineDepth*(0.18+0.32*slopeResponse),ravineWallEdge*0.52));
+    palette+=vec3(0.024,0.046,0.054)*(routeSignal*routePulse+ravineWallEdge*0.38);
     base=palette;
   }else if(vRoleCode==2u){
     float wave=0.5+0.5*sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19);
@@ -497,6 +514,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         lawfulSlopeCurvatureModulation: true,
         boundedContactDepthReinforcement: true,
         temporallyStableWorldSpaceVariation: true,
+        narrowRegionalCorrectionAfterRegressionRollback: true,
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },

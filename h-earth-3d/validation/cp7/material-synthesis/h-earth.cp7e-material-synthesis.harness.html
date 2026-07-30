@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth CP7E Material Synthesis Harness</title>
+  <style>
+    html,body{margin:0;background:#111;color:#eee;font:14px/1.4 system-ui,sans-serif}
+    main{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px}
+    canvas{width:100%;height:auto;background:#000}
+    #status{grid-column:1/-1;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+<main>
+  <canvas id="accepted"></canvas>
+  <canvas id="candidate"></canvas>
+  <pre id="status">CP7E_RUNNING</pre>
+</main>
+<script type="module">
+  import authority from '../../../control-plane/post-cp2-round2/cp7/h-earth.cp7e-bounded-material-synthesis.v1.mjs';
+  import { createCp7eMaterialSynthesisSuite } from './h-earth.cp7e-material-synthesis.browser.mjs';
+  const status = document.querySelector('#status');
+  try {
+    const result = await createCp7eMaterialSynthesisSuite({
+      acceptedCanvas: document.querySelector('#accepted'),
+      candidateCanvas: document.querySelector('#candidate'),
+      authority
+    });
+    window.H_EARTH_CP7E_RESULT = result;
+    status.textContent = JSON.stringify(result, null, 2);
+    document.documentElement.dataset.cp7eReady = 'true';
+  } catch (error) {
+    status.textContent = error?.stack ?? String(error);
+    document.documentElement.dataset.cp7eError = 'true';
+  }
+</script>
+</body>
+</html>

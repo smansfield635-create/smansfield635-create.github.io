@@ -24,17 +24,10 @@ export const H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001 = freeze({
     'h-earth-3d/validation/instrument-platform/h-earth.narrative-observatory.browser.mjs'
   ],
   protectedAuthorities: [
-    'ACCEPTED_CP2_RENDERER',
-    'RUN_8B_TERRAIN',
-    'CURRENT_LIVE_GPU_BINDING',
-    'RUN_8E_GPU_INTEGRATION',
-    'NAVIGATION_AUTHORITY',
-    'GESTURE_INTAKE',
-    'CAMERA_INTEGRATION',
-    'WORLD_GEOMETRY',
-    'VEGETATION',
-    'SPECIALIZED_GAUGE_CHECK_MATRIX',
-    'SPECIALIZED_GAUGE_READINESS_KERNEL'
+    'ACCEPTED_CP2_RENDERER', 'RUN_8B_TERRAIN', 'CURRENT_LIVE_GPU_BINDING',
+    'RUN_8E_GPU_INTEGRATION', 'NAVIGATION_AUTHORITY', 'GESTURE_INTAKE',
+    'CAMERA_INTEGRATION', 'WORLD_GEOMETRY', 'VEGETATION',
+    'SPECIALIZED_GAUGE_CHECK_MATRIX', 'SPECIALIZED_GAUGE_READINESS_KERNEL'
   ],
   checkpoints: {
     B_R0: {
@@ -51,9 +44,45 @@ export const H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001 = freeze({
       sourceImplementationPerformed: false,
       stopBoundary: 'STOP_AFTER_BRANCH_AND_SCOPE_FREEZE_BEFORE_SOURCE_IMPLEMENTATION'
     },
-    B2: { status: 'NOT_STARTED' },
-    B3: { status: 'NOT_STARTED' },
-    B4: { status: 'NOT_STARTED', userVisibleDifferentialOpenThrough: 'B9' },
+    B2: {
+      status: 'PASS_CLOSED',
+      routeImplemented: true,
+      sevenSectionStructure: true,
+      returnToHEarthPersistent: true,
+      mobileLayout: true,
+      desktopLayout: true,
+      hEarthHeaderChanged: false,
+      fd05LinkMoved: false,
+      fetchedBackRouteBlob: '0d47375b8922cd574c1a9704138989f9fa6a95e3',
+      fetchedBackModuleBlob: '81d79735ff4c934ee9e939792e4cdbcbae3c8801',
+      stopBoundary: 'STOP_AFTER_STANDALONE_ROUTE_FETCH_BACK'
+    },
+    B3: {
+      status: 'PASS_CLOSED',
+      replayChapterCount: 8,
+      replayReadOnly: true,
+      progressiveDisclosure: true,
+      technicalEvidenceOptional: true,
+      specializedDestinations: 4,
+      repositoryControlsExposed: false,
+      diagnosticAutoLaunches: false,
+      specializedGaugeState: {
+        sourceImplemented: true,
+        engineeringVerified: true,
+        merged: true,
+        publicPostMergeReceipt: 'NOT_RECORDED',
+        programClosure: false
+      },
+      heldFalseClaims: [
+        'PRODUCT_FAILURE_CONFIRMED',
+        'PRODUCT_ACCEPTANCE_GRANTED',
+        'DEFAULT_PROMOTION_COMPLETED',
+        'PUBLIC_DEFAULT_REVERIFIED'
+      ],
+      fetchedBackModuleBlob: '80462e5de9e86ecedba54e365bdf6a37de3f4d42',
+      stopBoundary: 'STOP_AFTER_REPLAY_AND_DISCLOSURE_FETCH_BACK'
+    },
+    B4: { status: 'IN_PROGRESS', userVisibleDifferentialOpenThrough: 'B9' },
     B5: { status: 'NOT_STARTED' },
     B6: { status: 'NOT_STARTED' },
     B7: { status: 'NOT_STARTED' },
@@ -66,9 +95,9 @@ export const H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001 = freeze({
     keyboardTraversalRequirement: false,
     specializedGaugeContractMutationAuthorized: false
   },
-  currentCheckpoint: 'B2_STANDALONE_OBSERVATORY_IMPLEMENTATION',
-  lastPassClosedCheckpoint: 'B1_FINAL_SOURCE_SCOPE_AND_BRANCH_FREEZE',
-  nextAuthorizedEvent: 'IMPLEMENT_STANDALONE_OBSERVATORY_ROUTE'
+  currentCheckpoint: 'B4_H_EARTH_OBSERVATORY_ENTRY_AND_FD_05_RELOCATION',
+  lastPassClosedCheckpoint: 'B3_READ_ONLY_SESSION_REPLAY_AND_PROGRESSIVE_DISCLOSURE_IMPLEMENTATION',
+  nextAuthorizedEvent: 'ADD_OBSERVATORY_ENTRY_AND_RELOCATE_DIRECT_FD05_DISCLOSURE'
 });
 
 export default H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001;

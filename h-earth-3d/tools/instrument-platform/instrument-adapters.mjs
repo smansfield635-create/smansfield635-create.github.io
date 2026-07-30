@@ -19,11 +19,25 @@ function frameRealm(frame) {
   if (!windowObject || !documentObject) throw new Error('INSTRUMENT_FRAME_REALM_UNAVAILABLE');
   return { windowObject, documentObject };
 }
+function resolvedToolUrl(tool) {
+  const url = new URL(tool.route, location.href);
+  if (tool.toolId === 'H_EARTH_GAUGES') {
+    const sourceHead = new URLSearchParams(location.search).get('head');
+    if (sourceHead) url.searchParams.set('head', sourceHead);
+    url.searchParams.set('platform', 'H_EARTH_INSTRUMENT_PLATFORM_v1');
+  }
+  return url;
+}
 async function ensureLoaded(frame, tool) {
-  let currentPath = null;
-  try { currentPath = frame.contentWindow?.location?.pathname; } catch {}
-  if (currentPath !== tool.route) {
-    frame.src = tool.route;
+  const target = resolvedToolUrl(tool);
+  let current = null;
+  try {
+    const currentUrl = new URL(frame.contentWindow?.location?.href ?? 'about:blank');
+    current = `${currentUrl.pathname}${currentUrl.search}`;
+  } catch {}
+  const targetIdentity = `${target.pathname}${target.search}`;
+  if (current !== targetIdentity) {
+    frame.src = target.href;
     await new Promise((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error(`INSTRUMENT_LOAD_TIMEOUT:${tool.toolId}`)), 180000);
       frame.addEventListener('load', () => {
@@ -40,14 +54,21 @@ async function probeGauges(frame) {
     () => windowObject.H_EARTH_CURRENT_AUTHORITY_GAUGE,
     { label: 'CURRENT_AUTHORITY_GAUGE_API' }
   );
-  let receipt = api.getReceipt?.() ?? null;
-  if (!receipt) receipt = await api.run();
+  const receipt = await waitUntil(() => {
+    const value = api.getReceipt?.() ?? null;
+    if (value) return value;
+    if (documentObject.documentElement.dataset.currentAuthorityGaugeReceipt === 'UNRESOLVED') {
+      throw new Error('CURRENT_AUTHORITY_GAUGE_UNRESOLVED');
+    }
+    return null;
+  }, { timeout: 600000, label: 'CURRENT_AUTHORITY_GAUGE_RECEIPT' });
   const read = (id) => documentObject.getElementById(id)?.textContent ?? null;
   return {
     ready: true,
     contract: api.contractId,
     receipt: api.receiptId,
     version: api.version,
+    executedSourceHead: receipt?.executedSourceHead ?? null,
     readiness: Number(receipt?.readiness?.readinessPercent ?? 0),
     mergeEligible: receipt?.readiness?.mergeEligible === true,
     counts: {

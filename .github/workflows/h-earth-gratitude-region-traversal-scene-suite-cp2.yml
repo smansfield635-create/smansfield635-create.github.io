@@ -1,0 +1,114 @@
+name: H-Earth Gratitude Region Traversal Scene Suite CP2
+
+on:
+  push:
+    branches:
+      - agent/h-earth-gratitude-region-traversal-scene-suite-cp2-round1-presentation-001
+      - main
+    paths:
+      - .github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp2.yml
+      - h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.v1.json
+      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.runner.mjs
+      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.receipt.v1.json
+      - showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+      - showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
+      - showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+      - showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js
+      - showroom/globe/h-earth/index.html
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp2.yml
+      - h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.v1.json
+      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.runner.mjs
+      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.receipt.v1.json
+      - showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+      - showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
+      - showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+      - showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js
+      - showroom/globe/h-earth/index.html
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-gratitude-region-traversal-scene-suite-cp2-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  execute-round-1-presentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout exact execution ref
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref == 'refs/heads/main' && 'main' || 'agent/h-earth-gratitude-region-traversal-scene-suite-cp2-round1-presentation-001' }}
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start branch candidate server
+        if: github.ref != 'refs/heads/main'
+        run: |
+          python3 -m http.server 4177 > /tmp/h-earth-cp2-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl --fail --silent http://127.0.0.1:4177/h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html > /dev/null && break
+            test "$attempt" -lt 60
+            sleep 1
+          done
+
+      - name: Wait for exact live CP2 renderer availability
+        if: github.ref == 'refs/heads/main'
+        run: |
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent -H 'Cache-Control: no-cache' \
+              "https://diamondgatebridge.com/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js?cp2=${GITHUB_SHA}" \
+              | grep -q 'H_EARTH_GRATITUDE_REGION_CP2_ROUND_1_PRESENTATION_PROFILE_v1'; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'LIVE_CP2_RENDERER_NOT_AVAILABLE_WITHIN_WINDOW' >&2
+          exit 1
+
+      - name: Execute permanent suite and Round 1 differential
+        id: execute
+        shell: bash
+        env:
+          CP2_EXECUTION_MODE: ${{ github.ref == 'refs/heads/main' && 'LIVE_PUBLIC' || 'ENGINEERING_BRANCH' }}
+          CP2_HARNESS_URL: ${{ github.ref == 'refs/heads/main' && 'https://diamondgatebridge.com/h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html' || 'http://127.0.0.1:4177/h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html' }}
+          CP2_PUBLIC_ROUTE: https://diamondgatebridge.com/showroom/globe/h-earth/
+          CP2_EVIDENCE_DIR: h-earth-3d/validation/traversal-scene-suite/cp2-evidence
+        run: |
+          set +e
+          node h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.runner.mjs | tee cp2-execution.log
+          code=${PIPESTATUS[0]}
+          set -e
+          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Checkpoint 2 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-traversal-scene-suite-cp2-${{ github.ref == 'refs/heads/main' && 'live' || 'engineering' }}
+          path: |
+            cp2-execution.log
+            /tmp/h-earth-cp2-server.log
+            h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.receipt.v1.json
+            h-earth-3d/validation/traversal-scene-suite/cp2-evidence/*.png
+          if-no-files-found: error
+
+      - name: Enforce engineering or live result
+        if: always()
+        run: exit "${{ steps.execute.outputs.exit_code }}"

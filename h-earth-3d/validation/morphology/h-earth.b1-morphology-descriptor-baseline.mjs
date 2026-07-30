@@ -6,7 +6,10 @@ import b0 from '../../control-plane/post-cp2-round2/morphology/h-earth.b0-morpho
 import authority from '../../control-plane/post-cp2-round2/morphology/h-earth.b1-morphology-descriptor-baseline.v1.mjs';
 import { buildHEarthB1MorphologyDescriptorBaseline } from '../../analysis/morphology/h-earth.b1-morphology-descriptor-baseline.v1.mjs';
 
-const TRUSTED_CARRIER_PATH = '.github/workflows/h-earth-b0-morphology-baseline-freeze.yml';
+const TRUSTED_CARRIER_PATHS = Object.freeze([
+  '.github/workflows/h-earth-b0-morphology-baseline-freeze.yml',
+  'h-earth-3d/control-plane/post-cp2-round2/morphology/h-earth.b0-morphology-baseline-freeze.v1.mjs'
+]);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
 const checks = [];
@@ -20,9 +23,9 @@ const countNonzero = (values) => values.reduce((sum, value) => sum + (value ? 1 
 
 const head = git('rev-parse', 'HEAD');
 const rawChangedPaths = git('diff', '--name-only', `${authority.controllingB0Merge}..${head}`).split(/\r?\n/).filter(Boolean).sort();
-const changedPaths = rawChangedPaths.filter((entry) => entry !== TRUSTED_CARRIER_PATH);
+const changedPaths = rawChangedPaths.filter((entry) => !TRUSTED_CARRIER_PATHS.includes(entry));
 const expectedPaths = [...authority.exactPathScope].sort();
-check('TRUSTED_CARRIER_IS_EXECUTION_ONLY', rawChangedPaths.includes(TRUSTED_CARRIER_PATH), { trustedCarrierPath: TRUSTED_CARRIER_PATH });
+check('TRUSTED_CARRIER_IS_EXECUTION_ONLY', TRUSTED_CARRIER_PATHS.every((entry) => rawChangedPaths.includes(entry)), { trustedCarrierPaths: TRUSTED_CARRIER_PATHS });
 check('EXACT_B1_PATH_SCOPE', JSON.stringify(changedPaths) === JSON.stringify(expectedPaths), { rawChangedPaths, changedPaths, expectedPaths });
 check('B1_HAS_NO_PRODUCT_MUTATION', rawChangedPaths.every((entry) => !entry.startsWith('showroom/')), { productPaths: rawChangedPaths.filter((entry) => entry.startsWith('showroom/')) });
 check('EXACT_B0_CLOSED_BASE', git('merge-base', authority.controllingB0Merge, head) === authority.controllingB0Merge, { base: authority.controllingB0Merge, head });
@@ -82,7 +85,7 @@ const receiptBody = {
   executedHead: head,
   rawChangedPaths,
   changedPaths,
-  trustedCarrierPath: TRUSTED_CARRIER_PATH,
+  trustedCarrierPaths: TRUSTED_CARRIER_PATHS,
   checks,
   failureCount: failures.length,
   failures,

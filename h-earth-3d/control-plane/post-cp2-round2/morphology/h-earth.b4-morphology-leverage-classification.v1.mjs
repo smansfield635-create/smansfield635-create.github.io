@@ -83,6 +83,7 @@ export const H_EARTH_B4_MORPHOLOGY_LEVERAGE_CLASSIFICATION_v1 = deepFreeze({
   exactPathScope: [
     '.github/workflows/h-earth-b4-morphology-leverage-classification.yml',
     'h-earth-3d/control-plane/post-cp2-round2/morphology/h-earth.b4-morphology-leverage-classification.v1.mjs',
+    'h-earth-3d/validation/morphology/h-earth.b4-b3-compatibility-wrapper.mjs',
     'h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage-browser.mjs',
     'h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage-harness.html',
     'h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage.runner.mjs'

@@ -87,7 +87,7 @@ export const H_EARTH_B3_TWO_FIXED_MORPHOLOGY_PROBES_v1 = deepFreeze({
   },
   artifactLaw: {
     outputClass: 'DIAGNOSTIC_OFFLINE_HEIGHTFIELD_PROBES',
-    encoding: 'FLOAT32_LITTLE_ENDIAN',
+    encoding: 'FLOAT64_LITTLE_ENDIAN',
     oneFilePerProbe: true,
     committedToProductSource: false,
     liveAdmission: false

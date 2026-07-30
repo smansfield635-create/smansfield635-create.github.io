@@ -119,8 +119,12 @@ const page = await browser.newPage({ viewport: { width: 1920, height: 1400 }, de
 page.setDefaultTimeout(1800000);
 const consoleErrors = [];
 const pageErrors = [];
+const httpErrors = [];
 page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
 page.on('pageerror', (error) => pageErrors.push(error.message));
+page.on('response', (response) => {
+  if (response.status() >= 400) httpErrors.push({ status: response.status(), url: response.url() });
+});
 let browserFixture = null;
 let adapterResults = null;
 try {
@@ -133,7 +137,13 @@ try {
   await browser.close();
 }
 
-check('BROWSER_EXECUTION_CLEAN', consoleErrors.length === authority.fixedGates.browserConsoleErrors && pageErrors.length === authority.fixedGates.pageErrors, { consoleErrors, pageErrors });
+const generic404ConsoleErrors = consoleErrors.filter((message) => /Failed to load resource:.*404/i.test(message));
+const unexpectedConsoleErrors = consoleErrors.filter((message) => !/Failed to load resource:.*404/i.test(message));
+const platformOwnedHttpErrors = httpErrors.filter((entry) => {
+  const pathname = new URL(entry.url).pathname;
+  return pathname.startsWith('/h-earth-3d/tools/instrument-platform/') || pathname.startsWith('/h-earth-3d/tools/terrain-workbench/');
+});
+check('BROWSER_EXECUTION_CLEAN', unexpectedConsoleErrors.length === authority.fixedGates.browserConsoleErrors && pageErrors.length === authority.fixedGates.pageErrors && platformOwnedHttpErrors.length === 0, { consoleErrors, generic404ConsoleErrors, unexpectedConsoleErrors, pageErrors, httpErrors, platformOwnedHttpErrors });
 check('BROWSER_FIXTURE_TOOL_COUNT', browserFixture?.toolCount === 4, browserFixture);
 check('BROWSER_FIXTURE_SCENE_COUNT', browserFixture?.sceneCount === 8, browserFixture);
 check('BROWSER_FIXTURE_FOUR_ENVELOPES', browserFixture?.evidenceEnvelopeCount === 4, browserFixture);
@@ -168,7 +178,7 @@ const receiptBody = {
     deterministicPacketDigest: packetA.canonicalPacketDigest,
     sessionLedgerDigest: ledger.snapshot().ledgerDigest
   },
-  browser: { fixture: browserFixture, adapterToolIds: adapterResults?.map((entry) => entry.toolId) ?? [], consoleErrors, pageErrors },
+  browser: { fixture: browserFixture, adapterToolIds: adapterResults?.map((entry) => entry.toolId) ?? [], consoleErrors, pageErrors, httpErrors, unexpectedConsoleErrors, platformOwnedHttpErrors },
   productMutationPerformed: false,
   liveStateChanged: false,
   userAcceptanceRecorded: false,

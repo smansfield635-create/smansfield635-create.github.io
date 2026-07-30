@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>H-Earth MA2 Diagnostic Pass Authority</title>
+  <style>
+    html,body{margin:0;background:#080b0d;color:#d8e1e5;font:13px system-ui,sans-serif}
+    main{padding:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    figure{margin:0;border:1px solid #26323a;background:#10161a;padding:5px}
+    figcaption{padding:3px 0 5px}
+    canvas{display:block;width:100%;height:auto;background:#000}
+    #status{grid-column:1/-1;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <main>
+    <figure><figcaption>Official accepted CP2</figcaption><canvas id="official"></canvas></figure>
+    <figure><figcaption>Pass A — elevation</figcaption><canvas id="pass-a"></canvas></figure>
+    <figure><figcaption>Pass B — slope</figcaption><canvas id="pass-b"></canvas></figure>
+    <figure><figcaption>Pass C — normals</figcaption><canvas id="pass-c"></canvas></figure>
+    <figure><figcaption>Pass D — depth</figcaption><canvas id="pass-d"></canvas></figure>
+    <figure><figcaption>Pass E — edges</figcaption><canvas id="pass-e"></canvas></figure>
+    <figure><figcaption>Pass F — constant material, accepted lighting</figcaption><canvas id="pass-f"></canvas></figure>
+    <figure><figcaption>Pass G — accepted material, flat lighting</figcaption><canvas id="pass-g"></canvas></figure>
+    <figure><figcaption>Pass H — diagnostic accepted CP2</figcaption><canvas id="pass-h"></canvas></figure>
+    <div id="status">INITIALIZING_MA2</div>
+  </main>
+  <script type="module">
+    import { createMA2DiagnosticPassAuthoritySuite } from './h-earth.ma2-diagnostic-pass-authority-browser.mjs';
+    const status = document.querySelector('#status');
+    try {
+      const suite = await createMA2DiagnosticPassAuthoritySuite({
+        officialCanvas: document.querySelector('#official'),
+        passCanvases: {
+          A: document.querySelector('#pass-a'),
+          B: document.querySelector('#pass-b'),
+          C: document.querySelector('#pass-c'),
+          D: document.querySelector('#pass-d'),
+          E: document.querySelector('#pass-e'),
+          F: document.querySelector('#pass-f'),
+          G: document.querySelector('#pass-g'),
+          H: document.querySelector('#pass-h')
+        }
+      });
+      window.H_EARTH_MA2 = suite;
+      document.documentElement.dataset.ma2Ready = 'true';
+      status.textContent = 'MA2_READY';
+    } catch (error) {
+      document.documentElement.dataset.ma2Error = 'true';
+      status.textContent = String(error?.stack || error);
+      console.error(error);
+    }
+  </script>
+</body>
+</html>

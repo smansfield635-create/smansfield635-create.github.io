@@ -1,4 +1,5 @@
 name: H-Earth B1 Morphology Baseline via Trusted B0 Carrier
+# carrier-execution-trigger: 1
 
 on:
   pull_request:

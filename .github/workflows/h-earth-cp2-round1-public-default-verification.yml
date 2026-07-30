@@ -1,0 +1,75 @@
+name: H-Earth CP2 Round 1 Public Default Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/h-earth-cp2-round1-public-default-verification.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public-default:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout verification ref
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start frozen pre-promotion witness
+        run: |
+          git worktree add --detach /tmp/h-earth-cp2-prepromotion a07611b91931a97e39d0bbd16d22a2c70c493e12
+          (cd /tmp/h-earth-cp2-prepromotion && python3 -m http.server 4178 > /tmp/h-earth-cp2-prepromotion.log 2>&1 &)
+          for attempt in $(seq 1 60); do
+            curl --fail --silent http://127.0.0.1:4178/showroom/globe/h-earth/ > /dev/null && exit 0
+            sleep 1
+          done
+          echo 'PREPROMOTION_WITNESS_NOT_AVAILABLE' >&2
+          exit 1
+
+      - name: Wait for public default promotion
+        run: |
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent -H 'Cache-Control: no-cache' \
+              "https://diamondgatebridge.com/showroom/globe/h-earth/?verify=${GITHUB_SHA}" \
+              | grep -q 'round1-1f520809'; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'PUBLIC_DEFAULT_PROMOTION_NOT_AVAILABLE_WITHIN_WINDOW' >&2
+          exit 1
+
+      - name: Execute public browser verification
+        env:
+          PREPROMOTION_ORIGIN: http://127.0.0.1:4178
+          PROMOTION_TARGET_ORIGIN: https://diamondgatebridge.com
+          PROMOTION_EVIDENCE_DIR: h-earth-3d/validation/cp2-round1-public-default-evidence
+        run: node h-earth-3d/validation/h-earth.cp2-round1-default-promotion.runner.mjs | tee cp2-round1-public-default.log
+
+      - name: Upload public verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp2-round1-public-default
+          path: |
+            cp2-round1-public-default.log
+            /tmp/h-earth-cp2-prepromotion.log
+            h-earth-3d/validation/cp2-round1-public-default-evidence/*
+          if-no-files-found: warn

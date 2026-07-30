@@ -3,14 +3,14 @@ import {
   proposeHEarthFunctionalLandscapeNavigation,
   evaluateHEarthFunctionalLandscapeNavigationState,
   resolveHEarthNavigableTerrainChunk
-} from '../../../../../showroom/globe/h-earth/functional-landscape/navigation.js';
-import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../terrain/h-earth.successor-terrain-field.run8b.js';
-import { createHEarthRun8ER3AFrameUniformPacket } from '../../../../../showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js';
-import { createHEarthRun8ER3CPersistentRenderer as createAcceptedRenderer } from '../../../../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js';
+} from '../../../../showroom/globe/h-earth/functional-landscape/navigation.js';
+import { sampleHEarthRun8BSuccessorTerrainField } from '../../../terrain/h-earth.successor-terrain-field.run8b.js';
+import { createHEarthRun8ER3AFrameUniformPacket } from '../../../../showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js';
+import { createHEarthRun8ER3CPersistentRenderer as createAcceptedRenderer } from '../../../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js';
 import {
   createHEarthRun8ER3CPersistentRenderer as createCandidateRenderer,
   H_EARTH_GRATITUDE_REGION_BM4_BAKED_MATERIAL_PROFILE_ID
-} from '../../../../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round2-baked-material-candidate.js';
+} from '../../../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round2-baked-material-candidate.js';
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const fnv = (bytes) => {

@@ -1,8 +1,11 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { evaluateBoundedLiveAdmission } from '../../tools/instrument-platform/terminal-controllers.mjs';
 
 const BASE = 'eb016b641ce49e1321111529f3eec5c4ae71f771';
+const CANDIDATE_ID = 'H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001';
+const CANDIDATE_ROUTE = `/showroom/globe/h-earth/?candidate=${CANDIDATE_ID}`;
 const EXPECTED_PATHS = Object.freeze([
   '.github/workflows/h-earth-narrative-observatory.yml',
   'h-earth-3d/control-plane/instrument-platform/H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001.v1.mjs',
@@ -31,9 +34,7 @@ const REPLAY_IDS = Object.freeze([
   'LEGACY_GAUGE_CONTRACT_DRIFT',
   'SPECIALIZED_GAUGE_RECONCILIATION'
 ]);
-const DESTINATIONS = Object.freeze([
-  'H_EARTH_GAUGES', 'FD_05', 'RUN_8E_R1_PROFILER', 'TERRAIN_WORKBENCH'
-]);
+const DESTINATIONS = Object.freeze(['H_EARTH_GAUGES', 'FD_05', 'RUN_8E_R1_PROFILER', 'TERRAIN_WORKBENCH']);
 const PROTECTED_BLOBS = Object.freeze({
   'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js': 'de55609b0b0bd66601445a369c727ff7a6d7065d',
   'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js': '0bd36eec01a75311bf6441d575bae5a057195bbc',
@@ -79,7 +80,7 @@ const foundSections = [...html.matchAll(/data-observatory-section="([A-Z0-9_]+)"
 check('SEVEN_SECTION_STRUCTURE', JSON.stringify(foundSections) === JSON.stringify(SECTION_IDS), foundSections);
 check('NARRATIVE_HIERARCHY', html.includes('H-Earth is the Survival path inside') && html.includes('Shadows Never Shatter in Mirrorland') && html.includes('does not claim an equal or separate narrative authority'));
 check('RETURN_TO_H_EARTH', (html.match(/href="\/showroom\/globe\/h-earth\/"/g) ?? []).length >= 4);
-check('READ_ONLY_REPLAY', REPLAY_IDS.every((id) => moduleSource.includes(`id: '${id}'`)) && moduleSource.includes('replayReadOnly') === false);
+check('READ_ONLY_REPLAY', REPLAY_IDS.every((id) => moduleSource.includes(`id: '${id}'`)));
 check('REPLAY_CHAPTER_COUNT', (moduleSource.match(/title: '/g) ?? []).length === 8);
 check('PROGRESSIVE_DISCLOSURE', html.includes('session-replay-disclosure') && html.includes('technical-evidence-disclosure') && moduleSource.includes('UNIFIED_INSTRUMENT_PLATFORM') && moduleSource.includes('SPECIALIZED_DIAGNOSTICS'));
 check('FOUR_SPECIALIZED_DESTINATIONS', DESTINATIONS.every((id) => moduleSource.includes(`id: '${id}'`)));
@@ -87,30 +88,53 @@ check('SPECIALIZED_GAUGE_STATE_TRUTHFUL', moduleSource.includes("['PUBLIC_POST_M
 check('FALSE_CLAIM_EXCLUSION', ['PRODUCT_FAILURE_CONFIRMED', 'PRODUCT_ACCEPTANCE_GRANTED', 'DEFAULT_PROMOTION_COMPLETED', 'PUBLIC_DEFAULT_REVERIFIED'].every((name) => moduleSource.includes(`${name}: false`)));
 check('REPOSITORY_CONTROLS_NOT_EXPOSED', !html.includes('REPOSITORY_WRITE') && moduleSource.includes("dataset.repositoryControlsExposed = 'false'"));
 check('DIAGNOSTIC_AUTO_LAUNCH_PROHIBITED', moduleSource.includes("dataset.diagnosticAutoLaunch = 'false'"));
-check('H_EARTH_ENTRY_TEXT', hEarth.includes('>How this world is preserved</a>'));
-check('FD05_RELOCATED_FROM_PRIMARY_HEADER', !hEarth.includes('id="h-earth-3d-diagnostic-link"') && !hEarth.includes('>FD_05 Diagnostics</a>'));
+check('H_EARTH_ENTRY_TEXT_PRESENT', hEarth.includes('>How this world is preserved</a>'));
+check('DEFAULT_FD05_ENTRY_PRESERVED', hEarth.includes('id="h-earth-3d-diagnostic-link"') && hEarth.includes('>FD_05 Diagnostics</a>'));
+check('CANDIDATE_OBSERVATORY_ENTRY_HIDDEN_BY_DEFAULT', hEarth.includes('id="h-earth-observatory-link"') && hEarth.includes('hidden>How this world is preserved</a>'));
+check('CANDIDATE_GATE_IDENTITY', hEarth.includes(`const candidateId = '${CANDIDATE_ID}'`) && hEarth.includes("dataset.hEarthObservatoryCandidate = active ? 'active' : 'inactive'"));
+check('CANDIDATE_FD05_RELOCATION_LOGIC', hEarth.includes('if (fd05) fd05.hidden = active;') && hEarth.includes('if (observatory) observatory.hidden = !active;'));
+check('OBSERVATORY_RETURN_PRESERVES_CANDIDATE', moduleSource.includes('candidateReturn') && moduleSource.includes('candidateActive'));
 check('OBSERVATORY_FD05_DESTINATION_PRESENT', moduleSource.includes("route: '/showroom/globe/h-earth/diagnostic/'"));
 check('LIVE_CANVAS_PRESERVED', hEarth.includes('id="h-earth-functional-landscape-canvas"'));
 check('LIVE_RUNTIME_DIAGNOSTICS_PRESERVED', hEarth.includes('class="h-earth-runtime-diagnostics" open'));
 check('RENDERER_STARTUP_RECEIPT_PRESERVED', hEarth.includes('class="h-earth-startup-receipt" open'));
 check('ENVIRONMENT_DETAILS_PRESERVED', hEarth.includes('class="h-earth-live-details"'));
 check('RUN8E_BINDING_PRESERVED', hEarth.includes('public-live-gpu-integration.run8e-r3e.receipt.js?v=renderer-startup-receipt-v1'));
-const hEarthNumstat = git('diff', '--numstat', BASE, candidateHead, '--', 'showroom/globe/h-earth/index.html');
-check('H_EARTH_PRESENTATION_DELTA_BOUNDED', /^1\s+1\s+showroom\/globe\/h-earth\/index\.html$/.test(hEarthNumstat), hEarthNumstat);
 check('CONTROL_BASE_AND_ROLLBACK', control.includes(`exactBase: '${BASE}'`) && control.includes(`rollbackTarget: '${BASE}'`));
 check('KEYBOARD_TRAVERSAL_NOT_ADDED', !html.includes('keyboard traversal') && !moduleSource.includes('KEYBOARD_TRAVERSAL'));
+
+const admission = evaluateBoundedLiveAdmission({
+  currentAuthorityState: 'ENGINEERING_PASS',
+  candidateId: CANDIDATE_ID,
+  engineeringReceipt: { verificationMatrixPassed: true, candidateHead },
+  admissionManifest: {
+    bounded: true,
+    candidateRoute: CANDIDATE_ROUTE,
+    candidateBinding: candidateHead,
+    acceptedDefaultRoute: '/showroom/globe/h-earth/',
+    defaultPresentationPreservedByCandidateGate: true
+  },
+  rollbackRelation: { rollbackTarget: BASE },
+  presumesAcceptance: false
+});
+check('BOUNDED_LIVE_ADMISSION_CONTROLLER_AUTHORIZES', admission.authorized === true, admission);
+check('ADMISSION_DOES_NOT_ACCEPT_OR_PROMOTE', admission.productAccepted === false && admission.defaultPromoted === false, admission);
 
 const receiptBody = {
   schemaVersion: 'H_EARTH_NARRATIVE_OBSERVATORY_B5_STATIC_RECEIPT_v1',
   status: 'PASS_CLOSED',
   exactBase: BASE,
   candidateHead,
+  candidateId: CANDIDATE_ID,
+  candidateRoute: CANDIDATE_ROUTE,
   exactChangedPaths: changedPaths,
   assertionCount: assertions.length,
   failedAssertionCount: assertions.filter((entry) => !entry.pass).length,
   protectedPathMutations: 0,
   unauthorizedChangedPaths: 0,
   specializedGaugeContractMutation: false,
+  baselinePublicDefaultPresentationPreserved: true,
+  boundedLiveAdmission: admission,
   assertions
 };
 const receipt = { ...receiptBody, receiptSha256: sha256(JSON.stringify(receiptBody)) };

@@ -1,0 +1,2667 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_TRAVERSAL_SCENE_SUITE_CP1_RECEIPT_v1",
+  "checkpoint": "CP1_PERMANENT_TRAVERSAL_SUITE_AND_BOUNDED_DIAGNOSIS",
+  "result": "BLOCKED",
+  "startedAt": "2026-07-30T00:16:12.576Z",
+  "completedAt": "2026-07-30T00:16:20.844Z",
+  "repository": {
+    "head": "779899612c54c1a4bb9217bcdaadc4ac3b8ae09b",
+    "cp0Head": "79ccbaf70bd2a0ab693cd48e4e91b9c8cc5c791c",
+    "frozenBaselineHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+    "diffPaths": [
+      ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp1.yml",
+      "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1.v1.json",
+      "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.runner.mjs",
+      "h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-browser.mjs",
+      "h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html"
+    ]
+  },
+  "suiteIdentity": {
+    "checkpoint": "CP1_PERMANENT_TRAVERSAL_SUITE_AND_BOUNDED_DIAGNOSIS",
+    "sceneCount": 8,
+    "rendererPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898",
+    "rendererPackageDigest": "fnv1a32:9bd0b898",
+    "roleDomain": [
+      "TERRAIN",
+      "SHORELINE",
+      "VEGETATION"
+    ],
+    "productMutation": false
+  },
+  "checks": [
+    {
+      "id": "CP0_HEAD_IS_ANCESTOR",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "cp0Head": "79ccbaf70bd2a0ab693cd48e4e91b9c8cc5c791c",
+        "head": "779899612c54c1a4bb9217bcdaadc4ac3b8ae09b"
+      }
+    },
+    {
+      "id": "CP1_DELTA_IS_CONTROL_AND_VERIFICATION_ONLY",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "diffPaths": [
+          ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp1.yml",
+          "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1.v1.json",
+          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.runner.mjs",
+          "h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-browser.mjs",
+          "h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html"
+        ],
+        "unauthorized": []
+      }
+    },
+    {
+      "id": "PRODUCT_AND_WORLD_SOURCES_UNCHANGED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "productChanges": []
+      }
+    },
+    {
+      "id": "SCENE_COUNT_EXACT",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "actual": 8,
+        "expected": 8
+      }
+    },
+    {
+      "id": "SCENE_IDS_UNIQUE",
+      "status": "PASS",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "id": "MANOR_SITE_AUTHORITY_PRESERVED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "manor": {
+          "areaId": "GRATITUDE_REGION_MIRROR_MANOR_PRECINCT",
+          "lifecycleDisposition": "ACCEPTED",
+          "placementDisposition": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
+          "sourceCandidateId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+          "finalSiteCenter": {
+            "x": 80,
+            "z": -172
+          },
+          "finalSiteBounds": {
+            "xMinimum": 64,
+            "xMaximum": 96,
+            "zMinimum": -188,
+            "zMaximum": -156
+          },
+          "deferred": [
+            "EXACT_BUILDING_FOOTPRINT",
+            "BUILDING_ORIENTATION",
+            "ATRIUM_GEOMETRY",
+            "ENTRANCE_COORDINATES",
+            "GARDEN_LAYOUT",
+            "SCULPTURE_POSITIONS"
+          ],
+          "requiredPlacementFieldsResolved": true
+        }
+      }
+    },
+    {
+      "id": "CAVERN_RELATION_AUTHORITY_PRESERVED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "cavern": {
+          "areaId": "GRATITUDE_REGION_CAVERN_PRECINCT",
+          "lifecycleDisposition": "ACCEPTED",
+          "placementDisposition": "ACCEPT_CURRENT_RELATION",
+          "sourceCandidateId": "GRATITUDE_REGION_CAVERN_EXTERIOR_ENTRANCE_RELATION_CANDIDATE_01",
+          "exteriorFace": {
+            "x": 40,
+            "z": -284
+          },
+          "apron": {
+            "x": 48,
+            "z": -284
+          },
+          "precinctCenter": {
+            "x": 56,
+            "z": -284
+          },
+          "deferred": [
+            "CAVERN_INTERIOR_OCCURRENCE",
+            "ENTRANCE_OPENING_GEOMETRY",
+            "INTERIOR_TRANSITION_ANCHOR",
+            "CAVERN_SHAPE",
+            "CAVERN_SIZE",
+            "CAVERN_CONTENTS"
+          ],
+          "requiredPlacementFieldsResolved": true
+        }
+      }
+    },
+    {
+      "id": "BROWSER_EXECUTION_CLEAN",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    },
+    {
+      "id": "RENDERER_PACKAGE_ACTIVE",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "suiteIdentity": {
+          "checkpoint": "CP1_PERMANENT_TRAVERSAL_SUITE_AND_BOUNDED_DIAGNOSIS",
+          "sceneCount": 8,
+          "rendererPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898",
+          "rendererPackageDigest": "fnv1a32:9bd0b898",
+          "roleDomain": [
+            "TERRAIN",
+            "SHORELINE",
+            "VEGETATION"
+          ],
+          "productMutation": false
+        }
+      }
+    },
+    {
+      "id": "ALL_SCENES_EXECUTED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "sceneCount": 8
+      }
+    },
+    {
+      "id": "ALL_SCENE_CAMERA_AND_TARGETS_TERRAIN_LAWFUL",
+      "status": "FAIL",
+      "passed": false,
+      "detail": {
+        "ineligibleScenes": [
+          "SCENE_05_RAVINE_APPROACH",
+          "SCENE_08_CAVERN_RELATION_APPROACH"
+        ]
+      }
+    },
+    {
+      "id": "ALL_SCENES_ALPHA_CLOSED",
+      "status": "FAIL",
+      "passed": false,
+      "detail": {
+        "alphaFailures": [
+          "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+          "SCENE_04_LATERAL_SLOPE_TRAVEL"
+        ]
+      }
+    },
+    {
+      "id": "SCENE_FRAMES_DISTINCT",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "distinctFrameCount": 8,
+        "expected": 8,
+        "hashes": [
+          "fnv1a32:ff9c6dc5",
+          "fnv1a32:cfd9c2cb",
+          "fnv1a32:34ef25b5",
+          "fnv1a32:e24758b1",
+          "fnv1a32:88fc3afa",
+          "fnv1a32:2d6d3436",
+          "fnv1a32:0726d86c",
+          "fnv1a32:50d800c7"
+        ]
+      }
+    },
+    {
+      "id": "ALL_SCENES_HAVE_NONTRIVIAL_VISUAL_SIGNAL",
+      "status": "FAIL",
+      "passed": false,
+      "detail": {
+        "weakFrames": [
+          {
+            "id": "SCENE_01_HILL_FIELD_FILL",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:ff9c6dc5",
+              "fingerprintHash": "fnv1a32:a31873c5",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 1,
+              "meanLuminance": 83.98399999970106,
+              "luminanceStandardDeviation": 0.00012798437240120545,
+              "meanAdjacentChannelDifference": 0,
+              "horizonCandidateRowFromTop": 485,
+              "horizonCandidateRowDelta": 0,
+              "topQuarterMeanLuminance": 83.9839999999984,
+              "bottomQuarterMeanLuminance": 83.9839999999984
+            }
+          },
+          {
+            "id": "SCENE_02_ASCENDING_TOWARD_CREST",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:cfd9c2cb",
+              "fingerprintHash": "fnv1a32:3e94e753",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 16,
+              "meanLuminance": 145.28346560267136,
+              "luminanceStandardDeviation": 58.64332718892759,
+              "meanAdjacentChannelDifference": 0.1678923983386458,
+              "horizonCandidateRowFromTop": 349,
+              "horizonCandidateRowDelta": 7.414744374999941,
+              "topQuarterMeanLuminance": 202.33079999999865,
+              "bottomQuarterMeanLuminance": 84.425854535492
+            }
+          },
+          {
+            "id": "SCENE_05_RAVINE_APPROACH",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:88fc3afa",
+              "fingerprintHash": "fnv1a32:982e6532",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 7,
+              "meanLuminance": 128.03913372335177,
+              "luminanceStandardDeviation": 53.84207119557543,
+              "meanAdjacentChannelDifference": 0.11076241991049293,
+              "horizonCandidateRowFromTop": 451,
+              "horizonCandidateRowDelta": 0.12357458333332261,
+              "topQuarterMeanLuminance": 134.24157958796243,
+              "bottomQuarterMeanLuminance": 119.43870056018501
+            }
+          },
+          {
+            "id": "SCENE_06_COAST_TO_INLAND_TRANSITION",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:2d6d3436",
+              "fingerprintHash": "fnv1a32:72187b9f",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 18,
+              "meanLuminance": 120.42426147259346,
+              "luminanceStandardDeviation": 27.684944644764396,
+              "meanAdjacentChannelDifference": 0.110840980070189,
+              "horizonCandidateRowFromTop": 179,
+              "horizonCandidateRowDelta": 1.7247391666666232,
+              "topQuarterMeanLuminance": 154.15376022993755,
+              "bottomQuarterMeanLuminance": 106.51240000000195
+            }
+          },
+          {
+            "id": "SCENE_07_MANOR_SITE_APPROACH",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:0726d86c",
+              "fingerprintHash": "fnv1a32:a49e0b0d",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 5,
+              "meanLuminance": 105.0855424206673,
+              "luminanceStandardDeviation": 44.329264670736386,
+              "meanAdjacentChannelDifference": 0.1262993013297273,
+              "horizonCandidateRowFromTop": 67,
+              "horizonCandidateRowDelta": 5.744358749999975,
+              "topQuarterMeanLuminance": 165.13909339043033,
+              "bottomQuarterMeanLuminance": 84.71433462654431
+            }
+          },
+          {
+            "id": "SCENE_08_CAVERN_RELATION_APPROACH",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:50d800c7",
+              "fingerprintHash": "fnv1a32:7de33165",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 2,
+              "meanLuminance": 128.1580260944822,
+              "luminanceStandardDeviation": 53.92713005191995,
+              "meanAdjacentChannelDifference": 0.079858334138253,
+              "horizonCandidateRowFromTop": 390,
+              "horizonCandidateRowDelta": 0.12357458333335103,
+              "topQuarterMeanLuminance": 133.37581077932046,
+              "bottomQuarterMeanLuminance": 122.93895377932064
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ALL_AUTHORIZED_TARGETS_PROJECT_INTO_FRAME",
+      "status": "FAIL",
+      "passed": false,
+      "detail": {
+        "failures": [
+          {
+            "id": "SCENE_02_ASCENDING_TOWARD_CREST",
+            "projection": {
+              "clip": {
+                "x": 26.041103062302767,
+                "y": 2.563129290176839,
+                "z": 15.574208120876222,
+                "w": 16.05876233452102
+              },
+              "ndc": {
+                "x": 1.6216133298344555,
+                "y": 0.15960939185624287,
+                "z": 0.9698261794059205
+              },
+              "visible": false
+            }
+          },
+          {
+            "id": "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+            "projection": {
+              "clip": {
+                "x": 24.89717945741822,
+                "y": -5.648187009033187,
+                "z": 16.62746151326394,
+                "w": 17.110987661128007
+              },
+              "ndc": {
+                "x": 1.4550404658393006,
+                "y": -0.33009123265657486,
+                "z": 0.971741774499521
+              },
+              "visible": false
+            }
+          },
+          {
+            "id": "SCENE_05_RAVINE_APPROACH",
+            "projection": {
+              "clip": {
+                "x": 0,
+                "y": -108.25429657865331,
+                "z": 41.28825707523043,
+                "w": 41.7477121683732
+              },
+              "ndc": {
+                "x": 0,
+                "y": -2.5930593787283867,
+                "z": 0.9889944845051692
+              },
+              "visible": false
+            }
+          },
+          {
+            "id": "SCENE_08_CAVERN_RELATION_APPROACH",
+            "projection": {
+              "clip": {
+                "x": 0,
+                "y": -121.7890050923125,
+                "z": 39.41833659218332,
+                "w": 39.87961688833539
+              },
+              "ndc": {
+                "x": 0,
+                "y": -3.0539161254564418,
+                "z": 0.9884331813556867
+              },
+              "visible": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "BOUNDED_DIAGNOSIS_ESTABLISHED",
+      "status": "FAIL",
+      "passed": false,
+      "detail": {
+        "findings": [
+          {
+            "id": "FINDING_01_PERMANENT_SCENE_REPRODUCIBILITY",
+            "status": "ESTABLISHED",
+            "basis": {
+              "executedSceneCount": 8,
+              "distinctFrameCount": 8
+            }
+          },
+          {
+            "id": "FINDING_02_RENDERER_RESPONDS_TO_LAWFUL_CAMERA_DIFFERENTIALS",
+            "status": "NOT_ESTABLISHED",
+            "basis": "EIGHT_DISTINCT_WEBGL2_FRAME_READBACKS_WITH_NONTRIVIAL_VISUAL_SIGNAL"
+          },
+          {
+            "id": "FINDING_03_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED",
+            "status": "ESTABLISHED",
+            "basis": {
+              "acceptedAuthority": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
+              "deferred": [
+                "EXACT_BUILDING_FOOTPRINT",
+                "BUILDING_ORIENTATION",
+                "ATRIUM_GEOMETRY",
+                "ENTRANCE_COORDINATES",
+                "GARDEN_LAYOUT",
+                "SCULPTURE_POSITIONS"
+              ],
+              "liveRenderRoleDomain": [
+                "TERRAIN",
+                "SHORELINE",
+                "VEGETATION"
+              ],
+              "implication": "SCENE_07_CAN_TEST_SITE_APPROACH_BUT_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT"
+            }
+          },
+          {
+            "id": "FINDING_04_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED",
+            "status": "ESTABLISHED",
+            "basis": {
+              "acceptedAuthority": "ACCEPT_CURRENT_RELATION",
+              "deferred": [
+                "CAVERN_INTERIOR_OCCURRENCE",
+                "ENTRANCE_OPENING_GEOMETRY",
+                "INTERIOR_TRANSITION_ANCHOR",
+                "CAVERN_SHAPE",
+                "CAVERN_SIZE",
+                "CAVERN_CONTENTS"
+              ],
+              "liveRenderRoleDomain": [
+                "TERRAIN",
+                "SHORELINE",
+                "VEGETATION"
+              ],
+              "implication": "SCENE_08_CAN_TEST_THE_ACCEPTED_EXTERIOR_RELATION_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR"
+            }
+          },
+          {
+            "id": "FINDING_05_ROUND_1_SCOPE_IS_PRESENTATION_ONLY",
+            "status": "ESTABLISHED",
+            "basis": {
+              "terrainLawfulSceneCount": 6,
+              "placementAuthorityPreserved": true,
+              "terrainMutationEvidence": false,
+              "authorizedNextScope": "PRESENTATION_READABILITY_AND_LANDMARK_DIFFERENTIATION_WITHOUT_TERRAIN_OR_PLACEMENT_MUTATION"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "failures": [
+    {
+      "id": "ALL_SCENE_CAMERA_AND_TARGETS_TERRAIN_LAWFUL",
+      "detail": {
+        "ineligibleScenes": [
+          "SCENE_05_RAVINE_APPROACH",
+          "SCENE_08_CAVERN_RELATION_APPROACH"
+        ]
+      }
+    },
+    {
+      "id": "ALL_SCENES_ALPHA_CLOSED",
+      "detail": {
+        "alphaFailures": [
+          "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+          "SCENE_04_LATERAL_SLOPE_TRAVEL"
+        ]
+      }
+    },
+    {
+      "id": "ALL_SCENES_HAVE_NONTRIVIAL_VISUAL_SIGNAL",
+      "detail": {
+        "weakFrames": [
+          {
+            "id": "SCENE_01_HILL_FIELD_FILL",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:ff9c6dc5",
+              "fingerprintHash": "fnv1a32:a31873c5",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 1,
+              "meanLuminance": 83.98399999970106,
+              "luminanceStandardDeviation": 0.00012798437240120545,
+              "meanAdjacentChannelDifference": 0,
+              "horizonCandidateRowFromTop": 485,
+              "horizonCandidateRowDelta": 0,
+              "topQuarterMeanLuminance": 83.9839999999984,
+              "bottomQuarterMeanLuminance": 83.9839999999984
+            }
+          },
+          {
+            "id": "SCENE_02_ASCENDING_TOWARD_CREST",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:cfd9c2cb",
+              "fingerprintHash": "fnv1a32:3e94e753",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 16,
+              "meanLuminance": 145.28346560267136,
+              "luminanceStandardDeviation": 58.64332718892759,
+              "meanAdjacentChannelDifference": 0.1678923983386458,
+              "horizonCandidateRowFromTop": 349,
+              "horizonCandidateRowDelta": 7.414744374999941,
+              "topQuarterMeanLuminance": 202.33079999999865,
+              "bottomQuarterMeanLuminance": 84.425854535492
+            }
+          },
+          {
+            "id": "SCENE_05_RAVINE_APPROACH",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:88fc3afa",
+              "fingerprintHash": "fnv1a32:982e6532",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 7,
+              "meanLuminance": 128.03913372335177,
+              "luminanceStandardDeviation": 53.84207119557543,
+              "meanAdjacentChannelDifference": 0.11076241991049293,
+              "horizonCandidateRowFromTop": 451,
+              "horizonCandidateRowDelta": 0.12357458333332261,
+              "topQuarterMeanLuminance": 134.24157958796243,
+              "bottomQuarterMeanLuminance": 119.43870056018501
+            }
+          },
+          {
+            "id": "SCENE_06_COAST_TO_INLAND_TRANSITION",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:2d6d3436",
+              "fingerprintHash": "fnv1a32:72187b9f",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 18,
+              "meanLuminance": 120.42426147259346,
+              "luminanceStandardDeviation": 27.684944644764396,
+              "meanAdjacentChannelDifference": 0.110840980070189,
+              "horizonCandidateRowFromTop": 179,
+              "horizonCandidateRowDelta": 1.7247391666666232,
+              "topQuarterMeanLuminance": 154.15376022993755,
+              "bottomQuarterMeanLuminance": 106.51240000000195
+            }
+          },
+          {
+            "id": "SCENE_07_MANOR_SITE_APPROACH",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:0726d86c",
+              "fingerprintHash": "fnv1a32:a49e0b0d",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 5,
+              "meanLuminance": 105.0855424206673,
+              "luminanceStandardDeviation": 44.329264670736386,
+              "meanAdjacentChannelDifference": 0.1262993013297273,
+              "horizonCandidateRowFromTop": 67,
+              "horizonCandidateRowDelta": 5.744358749999975,
+              "topQuarterMeanLuminance": 165.13909339043033,
+              "bottomQuarterMeanLuminance": 84.71433462654431
+            }
+          },
+          {
+            "id": "SCENE_08_CAVERN_RELATION_APPROACH",
+            "metrics": {
+              "width": 960,
+              "height": 540,
+              "pixelCount": 518400,
+              "byteHash": "fnv1a32:50d800c7",
+              "fingerprintHash": "fnv1a32:7de33165",
+              "alphaClosedCount": 518400,
+              "sampledColorBucketCount": 2,
+              "meanLuminance": 128.1580260944822,
+              "luminanceStandardDeviation": 53.92713005191995,
+              "meanAdjacentChannelDifference": 0.079858334138253,
+              "horizonCandidateRowFromTop": 390,
+              "horizonCandidateRowDelta": 0.12357458333335103,
+              "topQuarterMeanLuminance": 133.37581077932046,
+              "bottomQuarterMeanLuminance": 122.93895377932064
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ALL_AUTHORIZED_TARGETS_PROJECT_INTO_FRAME",
+      "detail": {
+        "failures": [
+          {
+            "id": "SCENE_02_ASCENDING_TOWARD_CREST",
+            "projection": {
+              "clip": {
+                "x": 26.041103062302767,
+                "y": 2.563129290176839,
+                "z": 15.574208120876222,
+                "w": 16.05876233452102
+              },
+              "ndc": {
+                "x": 1.6216133298344555,
+                "y": 0.15960939185624287,
+                "z": 0.9698261794059205
+              },
+              "visible": false
+            }
+          },
+          {
+            "id": "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+            "projection": {
+              "clip": {
+                "x": 24.89717945741822,
+                "y": -5.648187009033187,
+                "z": 16.62746151326394,
+                "w": 17.110987661128007
+              },
+              "ndc": {
+                "x": 1.4550404658393006,
+                "y": -0.33009123265657486,
+                "z": 0.971741774499521
+              },
+              "visible": false
+            }
+          },
+          {
+            "id": "SCENE_05_RAVINE_APPROACH",
+            "projection": {
+              "clip": {
+                "x": 0,
+                "y": -108.25429657865331,
+                "z": 41.28825707523043,
+                "w": 41.7477121683732
+              },
+              "ndc": {
+                "x": 0,
+                "y": -2.5930593787283867,
+                "z": 0.9889944845051692
+              },
+              "visible": false
+            }
+          },
+          {
+            "id": "SCENE_08_CAVERN_RELATION_APPROACH",
+            "projection": {
+              "clip": {
+                "x": 0,
+                "y": -121.7890050923125,
+                "z": 39.41833659218332,
+                "w": 39.87961688833539
+              },
+              "ndc": {
+                "x": 0,
+                "y": -3.0539161254564418,
+                "z": 0.9884331813556867
+              },
+              "visible": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "BOUNDED_DIAGNOSIS_ESTABLISHED",
+      "detail": {
+        "findings": [
+          {
+            "id": "FINDING_01_PERMANENT_SCENE_REPRODUCIBILITY",
+            "status": "ESTABLISHED",
+            "basis": {
+              "executedSceneCount": 8,
+              "distinctFrameCount": 8
+            }
+          },
+          {
+            "id": "FINDING_02_RENDERER_RESPONDS_TO_LAWFUL_CAMERA_DIFFERENTIALS",
+            "status": "NOT_ESTABLISHED",
+            "basis": "EIGHT_DISTINCT_WEBGL2_FRAME_READBACKS_WITH_NONTRIVIAL_VISUAL_SIGNAL"
+          },
+          {
+            "id": "FINDING_03_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED",
+            "status": "ESTABLISHED",
+            "basis": {
+              "acceptedAuthority": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
+              "deferred": [
+                "EXACT_BUILDING_FOOTPRINT",
+                "BUILDING_ORIENTATION",
+                "ATRIUM_GEOMETRY",
+                "ENTRANCE_COORDINATES",
+                "GARDEN_LAYOUT",
+                "SCULPTURE_POSITIONS"
+              ],
+              "liveRenderRoleDomain": [
+                "TERRAIN",
+                "SHORELINE",
+                "VEGETATION"
+              ],
+              "implication": "SCENE_07_CAN_TEST_SITE_APPROACH_BUT_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT"
+            }
+          },
+          {
+            "id": "FINDING_04_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED",
+            "status": "ESTABLISHED",
+            "basis": {
+              "acceptedAuthority": "ACCEPT_CURRENT_RELATION",
+              "deferred": [
+                "CAVERN_INTERIOR_OCCURRENCE",
+                "ENTRANCE_OPENING_GEOMETRY",
+                "INTERIOR_TRANSITION_ANCHOR",
+                "CAVERN_SHAPE",
+                "CAVERN_SIZE",
+                "CAVERN_CONTENTS"
+              ],
+              "liveRenderRoleDomain": [
+                "TERRAIN",
+                "SHORELINE",
+                "VEGETATION"
+              ],
+              "implication": "SCENE_08_CAN_TEST_THE_ACCEPTED_EXTERIOR_RELATION_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR"
+            }
+          },
+          {
+            "id": "FINDING_05_ROUND_1_SCOPE_IS_PRESENTATION_ONLY",
+            "status": "ESTABLISHED",
+            "basis": {
+              "terrainLawfulSceneCount": 6,
+              "placementAuthorityPreserved": true,
+              "terrainMutationEvidence": false,
+              "authorizedNextScope": "PRESENTATION_READABILITY_AND_LANDMARK_DIFFERENTIATION_WITHOUT_TERRAIN_OR_PLACEMENT_MUTATION"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "scene": {
+        "id": "SCENE_01_HILL_FIELD_FILL",
+        "purpose": "Test whether an approaching upper hill occupies enough of the field to communicate mass and scale.",
+        "camera": {
+          "x": 32,
+          "z": -172,
+          "yawDegrees": 90,
+          "pitchDegrees": -2,
+          "verticalFovDegrees": 44
+        },
+        "target": {
+          "x": 80,
+          "z": -172,
+          "authority": "MIRROR_MANOR_SITE_CENTER_AS_TERRAIN_TARGET_ONLY"
+        }
+      },
+      "frame": {
+        "frameSequence": 2,
+        "sourceKind": "ACCEPTED_NAVIGATION_PROPOSAL",
+        "sourceSequence": 1,
+        "inputClass": "CP1_DIAGNOSTIC_SCENE",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0017",
+        "navigationSequence": 17,
+        "cameraPosition": {
+          "x": 32,
+          "y": 14.031475186347961,
+          "z": -172
+        },
+        "verticalFovDegrees": 44,
+        "viewProjectionMatrix": [
+          0,
+          0.08637928547920558,
+          1.0003672714030907,
+          0.9993908270190955,
+          0,
+          2.473579097379803,
+          -0.034933594891755994,
+          -0.03489949670250099,
+          1.3922363550466665,
+          0,
+          0,
+          0,
+          239.46465306802665,
+          -37.47210086168827,
+          -32.02182707489782,
+          -31.49081504261388
+        ],
+        "worldBuiltBecauseCameraMoved": false,
+        "successorTerrainCameraReconciled": true,
+        "responseMs": 92.60000000000582,
+        "colorSummary": null,
+        "diagnosticReadbackPerformed": false
+      },
+      "evidence": {
+        "evidenceSequence": 2,
+        "sourceKind": "EXPLICIT_DIAGNOSTIC_CAPTURE",
+        "label": "SCENE_01_HILL_FIELD_FILL",
+        "frameSequence": 2,
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0017",
+        "navigationSequence": 17,
+        "responseMs": 91.19999999999709,
+        "colorSummary": {
+          "pixelCount": 518400,
+          "nonClearPixelCount": 518400,
+          "uniqueColorBucketCount": 1,
+          "meanLuminance": 83.98399999970106,
+          "luminanceStandardDeviation": 0.00012798437240120545,
+          "byteHash": "fnv1a32:ff9c6dc5"
+        }
+      },
+      "terrain": {
+        "cameraSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 32,
+            "y": 11.781475180480884,
+            "z": -172
+          },
+          "elevation": 11.781475180480884,
+          "shorelineZ": -78.54544980573174,
+          "shorelineDistance": 93.45455019426826,
+          "gradient": {
+            "x": 0.6984019006313353,
+            "z": 0.023424636862390713
+          },
+          "normal": {
+            "x": -0.5724771272054101,
+            "y": 0.8196958322821102,
+            "z": -0.019201077208823556
+          },
+          "slope": 0.6987946253496777,
+          "slopeClass": "STEEP_NONCLIMBING",
+          "curvature": -0.016356718159016737,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "targetSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 80,
+            "y": 28.969275964210468,
+            "z": -172
+          },
+          "elevation": 28.969275964210468,
+          "shorelineZ": -75.8111012414065,
+          "shorelineDistance": 96.1888987585935,
+          "gradient": {
+            "x": -0.16355556081024147,
+            "z": -0.04565164039405545
+          },
+          "normal": {
+            "x": 0.16124733897267118,
+            "y": 0.9858872310660943,
+            "z": 0.04500736934172039
+          },
+          "slope": 0.1698072252367983,
+          "slopeClass": "GENTLE",
+          "curvature": -0.05291306230351722,
+          "curvatureClass": "CONCAVE",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "horizontalDistance": 48,
+        "elevationDelta": 17.187800783729585,
+        "slopeDegrees": 19.701388736296636,
+        "cameraChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "navigationState": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0017",
+          "sequence": 17,
+          "action": "ZOOM_IN",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": 32,
+            "y": 14.031475180480884,
+            "z": -172
+          },
+          "yawDegrees": 90,
+          "pitchDegrees": -2,
+          "verticalFovDegrees": 44,
+          "terrainElevation": 11.781475180480884,
+          "minimumCameraY": 13.381475180480884,
+          "clearance": 2.25,
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+          "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+          "formationIds": [
+            "H_EARTH_COASTAL_BERM_001",
+            "H_EARTH_DRAINAGE_VALLEY_001",
+            "H_EARTH_NAVIGABLE_HILL_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C10",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0017",
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "camera": {
+          "position": {
+            "x": 32,
+            "y": 14.031475180480884,
+            "z": -172
+          },
+          "target": {
+            "x": 49.989034886343724,
+            "y": 13.403284239835866,
+            "z": -172
+          },
+          "up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "verticalFovDegrees": 44,
+          "nearPlane": 0.25,
+          "farPlane": 512,
+          "sourceCapacityContractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5",
+          "cameraAuthority": "SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0017"
+        }
+      },
+      "targetProjection": {
+        "clip": {
+          "x": 0,
+          "y": 41.096037467946324,
+          "z": 46.995553686508224,
+          "w": 47.44943796792696
+        },
+        "ndc": {
+          "x": 0,
+          "y": 0.8661016700708833,
+          "z": 0.9904343591651067
+        },
+        "visible": true
+      },
+      "pixels": {
+        "width": 960,
+        "height": 540,
+        "pixelCount": 518400,
+        "byteHash": "fnv1a32:ff9c6dc5",
+        "fingerprintHash": "fnv1a32:a31873c5",
+        "alphaClosedCount": 518400,
+        "sampledColorBucketCount": 1,
+        "meanLuminance": 83.98399999970106,
+        "luminanceStandardDeviation": 0.00012798437240120545,
+        "meanAdjacentChannelDifference": 0,
+        "horizonCandidateRowFromTop": 485,
+        "horizonCandidateRowDelta": 0,
+        "topQuarterMeanLuminance": 83.9839999999984,
+        "bottomQuarterMeanLuminance": 83.9839999999984
+      },
+      "screenshot": "h-earth-3d/validation/traversal-scene-suite/cp1-evidence/scene_01_hill_field_fill.png"
+    },
+    {
+      "scene": {
+        "id": "SCENE_02_ASCENDING_TOWARD_CREST",
+        "purpose": "Test the visual distinction of ascent toward the accepted upper connected hill.",
+        "camera": {
+          "x": 56,
+          "z": -184,
+          "yawDegrees": 63,
+          "pitchDegrees": 4,
+          "verticalFovDegrees": 50
+        },
+        "target": {
+          "x": 80,
+          "z": -172,
+          "authority": "MIRROR_MANOR_SITE_CENTER_AS_TERRAIN_TARGET_ONLY"
+        }
+      },
+      "frame": {
+        "frameSequence": 3,
+        "sourceKind": "ACCEPTED_NAVIGATION_PROPOSAL",
+        "sourceSequence": 2,
+        "inputClass": "CP1_DIAGNOSTIC_SCENE",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0013",
+        "navigationSequence": 13,
+        "cameraPosition": {
+          "x": 56,
+          "y": 26.65677797794342,
+          "z": -184
+        },
+        "verticalFovDegrees": 50,
+        "viewProjectionMatrix": [
+          0.5476419948020911,
+          -0.13328855343338744,
+          0.8897045050959156,
+          0.8888360770772764,
+          0,
+          2.139283009433738,
+          0.0698246285792442,
+          0.06975647374412537,
+          1.0748079322543813,
+          0.0679139101006089,
+          -0.45332708787621456,
+          -0.4528846016996639,
+          167.09670782588907,
+          -37.06607376368006,
+          -135.59718033591656,
+          -134.96506986218702
+        ],
+        "worldBuiltBecauseCameraMoved": false,
+        "successorTerrainCameraReconciled": true,
+        "responseMs": 89.30000000000291,
+        "colorSummary": null,
+        "diagnosticReadbackPerformed": false
+      },
+      "evidence": {
+        "evidenceSequence": 3,
+        "sourceKind": "EXPLICIT_DIAGNOSTIC_CAPTURE",
+        "label": "SCENE_02_ASCENDING_TOWARD_CREST",
+        "frameSequence": 3,
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0013",
+        "navigationSequence": 13,
+        "responseMs": 84.90000000000873,
+        "colorSummary": {
+          "pixelCount": 518400,
+          "nonClearPixelCount": 253224,
+          "uniqueColorBucketCount": 16,
+          "meanLuminance": 145.28346560267136,
+          "luminanceStandardDeviation": 58.64332718892759,
+          "byteHash": "fnv1a32:cfd9c2cb"
+        }
+      },
+      "terrain": {
+        "cameraSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 56,
+            "y": 24.406777988136174,
+            "z": -184
+          },
+          "elevation": 24.406777988136174,
+          "shorelineZ": -78.55797715446671,
+          "shorelineDistance": 105.44202284553329,
+          "gradient": {
+            "x": 0.39539829719601016,
+            "z": 0.2783784243394436
+          },
+          "normal": {
+            "x": -0.3559642344582074,
+            "y": 0.9002674947832308,
+            "z": -0.25061504668177403
+          },
+          "slope": 0.4835642258927098,
+          "slopeClass": "STEEP_NONCLIMBING",
+          "curvature": -0.0387405249818471,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "targetSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 80,
+            "y": 28.969275964210468,
+            "z": -172
+          },
+          "elevation": 28.969275964210468,
+          "shorelineZ": -75.8111012414065,
+          "shorelineDistance": 96.1888987585935,
+          "gradient": {
+            "x": -0.16355556081024147,
+            "z": -0.04565164039405545
+          },
+          "normal": {
+            "x": 0.16124733897267118,
+            "y": 0.9858872310660943,
+            "z": 0.04500736934172039
+          },
+          "slope": 0.1698072252367983,
+          "slopeClass": "GENTLE",
+          "curvature": -0.05291306230351722,
+          "curvatureClass": "CONCAVE",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "horizontalDistance": 26.832815729997478,
+        "elevationDelta": 4.562497976074294,
+        "slopeDegrees": 9.64995314292553,
+        "cameraChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "navigationState": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0013",
+          "sequence": 13,
+          "action": "ZOOM_IN",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": 56,
+            "y": 26.656777988136174,
+            "z": -184
+          },
+          "yawDegrees": 63,
+          "pitchDegrees": 4,
+          "verticalFovDegrees": 50,
+          "terrainElevation": 24.406777988136174,
+          "minimumCameraY": 26.006777988136175,
+          "clearance": 2.25,
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+          "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+          "formationIds": [
+            "H_EARTH_COASTAL_BERM_001",
+            "H_EARTH_DRAINAGE_VALLEY_001",
+            "H_EARTH_NAVIGABLE_HILL_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C10",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0013",
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "camera": {
+          "position": {
+            "x": 56,
+            "y": 26.656777988136174,
+            "z": -184
+          },
+          "target": {
+            "x": 71.99904938739097,
+            "y": 27.91239451553043,
+            "z": -192.15192283059395
+          },
+          "up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "verticalFovDegrees": 50,
+          "nearPlane": 0.25,
+          "farPlane": 512,
+          "sourceCapacityContractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5",
+          "cameraAuthority": "SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0013"
+        }
+      },
+      "targetProjection": {
+        "clip": {
+          "x": 26.041103062302767,
+          "y": 2.563129290176839,
+          "z": 15.574208120876222,
+          "w": 16.05876233452102
+        },
+        "ndc": {
+          "x": 1.6216133298344555,
+          "y": 0.15960939185624287,
+          "z": 0.9698261794059205
+        },
+        "visible": false
+      },
+      "pixels": {
+        "width": 960,
+        "height": 540,
+        "pixelCount": 518400,
+        "byteHash": "fnv1a32:cfd9c2cb",
+        "fingerprintHash": "fnv1a32:3e94e753",
+        "alphaClosedCount": 518400,
+        "sampledColorBucketCount": 16,
+        "meanLuminance": 145.28346560267136,
+        "luminanceStandardDeviation": 58.64332718892759,
+        "meanAdjacentChannelDifference": 0.1678923983386458,
+        "horizonCandidateRowFromTop": 349,
+        "horizonCandidateRowDelta": 7.414744374999941,
+        "topQuarterMeanLuminance": 202.33079999999865,
+        "bottomQuarterMeanLuminance": 84.425854535492
+      },
+      "screenshot": "h-earth-3d/validation/traversal-scene-suite/cp1-evidence/scene_02_ascending_toward_crest.png"
+    },
+    {
+      "scene": {
+        "id": "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+        "purpose": "Test downhill travel when a clear distant horizon may not remain visible.",
+        "camera": {
+          "x": 80,
+          "z": -172,
+          "yawDegrees": -117,
+          "pitchDegrees": -14,
+          "verticalFovDegrees": 52
+        },
+        "target": {
+          "x": 56,
+          "z": -184,
+          "authority": "LOWER_CONNECTED_TERRAIN_TARGET"
+        }
+      },
+      "frame": {
+        "frameSequence": 4,
+        "sourceKind": "ACCEPTED_NAVIGATION_PROPOSAL",
+        "sourceSequence": 3,
+        "inputClass": "CP1_DIAGNOSTIC_SCENE",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0019",
+        "navigationSequence": 19,
+        "cameraPosition": {
+          "x": 80,
+          "y": 31.219275951385498,
+          "z": -172
+        },
+        "verticalFovDegrees": 52,
+        "viewProjectionMatrix": [
+          -0.5235853869317796,
+          -0.4419511682767402,
+          -0.8653845121205194,
+          -0.8645398225040035,
+          0,
+          1.9894010550516483,
+          -0.24215826286454276,
+          -0.24192189559966767,
+          -1.02759418092129,
+          0.22518536767079395,
+          0.4409354325237246,
+          0.44050504166718607,
+          -134.8593681639195,
+          11.980316185880906,
+          152.13141673610596,
+          152.48267938448458
+        ],
+        "worldBuiltBecauseCameraMoved": false,
+        "successorTerrainCameraReconciled": true,
+        "responseMs": 90.59999999999127,
+        "colorSummary": null,
+        "diagnosticReadbackPerformed": false
+      },
+      "evidence": {
+        "evidenceSequence": 4,
+        "sourceKind": "EXPLICIT_DIAGNOSTIC_CAPTURE",
+        "label": "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+        "frameSequence": 4,
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0019",
+        "navigationSequence": 19,
+        "responseMs": 92.39999999999418,
+        "colorSummary": {
+          "pixelCount": 518400,
+          "nonClearPixelCount": 334363,
+          "uniqueColorBucketCount": 45,
+          "meanLuminance": 138.99459999479922,
+          "luminanceStandardDeviation": 54.40679077136751,
+          "byteHash": "fnv1a32:34ef25b5"
+        }
+      },
+      "terrain": {
+        "cameraSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 80,
+            "y": 28.969275964210468,
+            "z": -172
+          },
+          "elevation": 28.969275964210468,
+          "shorelineZ": -75.8111012414065,
+          "shorelineDistance": 96.1888987585935,
+          "gradient": {
+            "x": -0.16355556081024147,
+            "z": -0.04565164039405545
+          },
+          "normal": {
+            "x": 0.16124733897267118,
+            "y": 0.9858872310660943,
+            "z": 0.04500736934172039
+          },
+          "slope": 0.1698072252367983,
+          "slopeClass": "GENTLE",
+          "curvature": -0.05291306230351722,
+          "curvatureClass": "CONCAVE",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "targetSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 56,
+            "y": 24.406777988136174,
+            "z": -184
+          },
+          "elevation": 24.406777988136174,
+          "shorelineZ": -78.55797715446671,
+          "shorelineDistance": 105.44202284553329,
+          "gradient": {
+            "x": 0.39539829719601016,
+            "z": 0.2783784243394436
+          },
+          "normal": {
+            "x": -0.3559642344582074,
+            "y": 0.9002674947832308,
+            "z": -0.25061504668177403
+          },
+          "slope": 0.4835642258927098,
+          "slopeClass": "STEEP_NONCLIMBING",
+          "curvature": -0.0387405249818471,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "horizontalDistance": 26.832815729997478,
+        "elevationDelta": -4.562497976074294,
+        "slopeDegrees": -9.64995314292553,
+        "cameraChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "navigationState": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0019",
+          "sequence": 19,
+          "action": "ZOOM_IN",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": 80,
+            "y": 31.219275964210468,
+            "z": -172
+          },
+          "yawDegrees": -117,
+          "pitchDegrees": -14,
+          "verticalFovDegrees": 52,
+          "terrainElevation": 28.969275964210468,
+          "minimumCameraY": 30.56927596421047,
+          "clearance": 2.25,
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+          "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+          "formationIds": [
+            "H_EARTH_COASTAL_BERM_001",
+            "H_EARTH_DRAINAGE_VALLEY_001",
+            "H_EARTH_NAVIGABLE_HILL_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C11",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0019",
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "camera": {
+          "position": {
+            "x": 80,
+            "y": 31.219275964210468,
+            "z": -172
+          },
+          "target": {
+            "x": 64.43828319492793,
+            "y": 26.86468184341645,
+            "z": -164.07090924999065
+          },
+          "up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "verticalFovDegrees": 52,
+          "nearPlane": 0.25,
+          "farPlane": 512,
+          "sourceCapacityContractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5",
+          "cameraAuthority": "SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0019"
+        }
+      },
+      "targetProjection": {
+        "clip": {
+          "x": 24.89717945741822,
+          "y": -5.648187009033187,
+          "z": 16.62746151326394,
+          "w": 17.110987661128007
+        },
+        "ndc": {
+          "x": 1.4550404658393006,
+          "y": -0.33009123265657486,
+          "z": 0.971741774499521
+        },
+        "visible": false
+      },
+      "pixels": {
+        "width": 960,
+        "height": 540,
+        "pixelCount": 518400,
+        "byteHash": "fnv1a32:34ef25b5",
+        "fingerprintHash": "fnv1a32:e9d2ff92",
+        "alphaClosedCount": 471898,
+        "sampledColorBucketCount": 42,
+        "meanLuminance": 138.99459999479922,
+        "luminanceStandardDeviation": 54.40679077136751,
+        "meanAdjacentChannelDifference": 0.21907144466982195,
+        "horizonCandidateRowFromTop": 235,
+        "horizonCandidateRowDelta": 6.02270854166602,
+        "topQuarterMeanLuminance": 202.33022068518383,
+        "bottomQuarterMeanLuminance": 85.6699960000014
+      },
+      "screenshot": "h-earth-3d/validation/traversal-scene-suite/cp1-evidence/scene_03_descending_without_horizon.png"
+    },
+    {
+      "scene": {
+        "id": "SCENE_04_LATERAL_SLOPE_TRAVEL",
+        "purpose": "Test whether lateral movement across the hill reads differently from forward ascent or descent.",
+        "camera": {
+          "x": 68,
+          "z": -156,
+          "yawDegrees": 90,
+          "pitchDegrees": -8,
+          "verticalFovDegrees": 56
+        },
+        "target": {
+          "x": 92,
+          "z": -156,
+          "authority": "ACCEPTED_MANOR_SITE_ENVELOPE_EDGE"
+        }
+      },
+      "frame": {
+        "frameSequence": 5,
+        "sourceKind": "ACCEPTED_NAVIGATION_PROPOSAL",
+        "sourceSequence": 4,
+        "inputClass": "CP1_DIAGNOSTIC_SCENE",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0014",
+        "navigationSequence": 14,
+        "cameraPosition": {
+          "x": 68,
+          "y": 26.921731173992157,
+          "z": -156
+        },
+        "verticalFovDegrees": 56,
+        "viewProjectionMatrix": [
+          0,
+          0.26174653423991223,
+          0.9912355998297397,
+          0.9902680687415703,
+          0,
+          1.862423364669672,
+          -0.1393090785867974,
+          -0.13917310096006552,
+          1.0579086367573118,
+          0,
+          0,
+          0,
+          165.03374733414066,
+          -67.9384254841129,
+          -64.15382348450451,
+          -63.591447863729016
+        ],
+        "worldBuiltBecauseCameraMoved": false,
+        "successorTerrainCameraReconciled": true,
+        "responseMs": 91,
+        "colorSummary": null,
+        "diagnosticReadbackPerformed": false
+      },
+      "evidence": {
+        "evidenceSequence": 5,
+        "sourceKind": "EXPLICIT_DIAGNOSTIC_CAPTURE",
+        "label": "SCENE_04_LATERAL_SLOPE_TRAVEL",
+        "frameSequence": 5,
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0014",
+        "navigationSequence": 14,
+        "responseMs": 86.19999999999709,
+        "colorSummary": {
+          "pixelCount": 518400,
+          "nonClearPixelCount": 297194,
+          "uniqueColorBucketCount": 55,
+          "meanLuminance": 139.3043265028188,
+          "luminanceStandardDeviation": 56.852304405575545,
+          "byteHash": "fnv1a32:e24758b1"
+        }
+      },
+      "terrain": {
+        "cameraSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 68,
+            "y": 24.671731197186084,
+            "z": -156
+          },
+          "elevation": 24.671731197186084,
+          "shorelineZ": -77.50313118234129,
+          "shorelineDistance": 78.49686881765871,
+          "gradient": {
+            "x": 0.10149833265673891,
+            "z": -0.49521126888921074
+          },
+          "normal": {
+            "x": -0.09058250021671557,
+            "y": 0.8924530861315721,
+            "z": 0.44195282520730794
+          },
+          "slope": 0.5055057985492948,
+          "slopeClass": "STEEP_NONCLIMBING",
+          "curvature": -0.039665411980266185,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "targetSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 92,
+            "y": 21.576420218738413,
+            "z": -156
+          },
+          "elevation": 21.576420218738413,
+          "shorelineZ": -73.98018136280912,
+          "shorelineDistance": 82.01981863719088,
+          "gradient": {
+            "x": -0.3201798710431909,
+            "z": -0.42883786948862834
+          },
+          "normal": {
+            "x": 0.28229496265049164,
+            "y": 0.8816761707434483,
+            "z": 0.37809613064051245
+          },
+          "slope": 0.5351794728208287,
+          "slopeClass": "STEEP_NONCLIMBING",
+          "curvature": -0.027667916707088125,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "horizontalDistance": 24,
+        "elevationDelta": -3.095310978447671,
+        "slopeDegrees": -7.348943371015967,
+        "cameraChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "navigationState": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0014",
+          "sequence": 14,
+          "action": "TURN_RIGHT",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": 68,
+            "y": 26.921731197186084,
+            "z": -156
+          },
+          "yawDegrees": 90,
+          "pitchDegrees": -8,
+          "verticalFovDegrees": 56,
+          "terrainElevation": 24.671731197186084,
+          "minimumCameraY": 26.271731197186085,
+          "clearance": 2.25,
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+          "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+          "formationIds": [
+            "H_EARTH_COASTAL_BERM_001",
+            "H_EARTH_DRAINAGE_VALLEY_001",
+            "H_EARTH_NAVIGABLE_HILL_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R07:C11",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0014",
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "camera": {
+          "position": {
+            "x": 68,
+            "y": 26.921731197186084,
+            "z": -156
+          },
+          "target": {
+            "x": 85.82482523734826,
+            "y": 24.416615379904904,
+            "z": -156
+          },
+          "up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "verticalFovDegrees": 56,
+          "nearPlane": 0.25,
+          "farPlane": 512,
+          "sourceCapacityContractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5",
+          "cameraAuthority": "SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0014"
+        }
+      },
+      "targetProjection": {
+        "clip": {
+          "x": 0,
+          "y": -3.6733151927314367,
+          "z": 24.034060479957546,
+          "w": 24.51035715103616
+        },
+        "ndc": {
+          "x": 0,
+          "y": -0.14986787708134844,
+          "z": 0.9805675344449855
+        },
+        "visible": true
+      },
+      "pixels": {
+        "width": 960,
+        "height": 540,
+        "pixelCount": 518400,
+        "byteHash": "fnv1a32:e24758b1",
+        "fingerprintHash": "fnv1a32:b3038c15",
+        "alphaClosedCount": 503293,
+        "sampledColorBucketCount": 47,
+        "meanLuminance": 139.3043265028188,
+        "luminanceStandardDeviation": 56.852304405575545,
+        "meanAdjacentChannelDifference": 0.20181106925528833,
+        "horizonCandidateRowFromTop": 270,
+        "horizonCandidateRowDelta": 3.0906912500000487,
+        "topQuarterMeanLuminance": 199.27347612654188,
+        "bottomQuarterMeanLuminance": 83.82289369135928
+      },
+      "screenshot": "h-earth-3d/validation/traversal-scene-suite/cp1-evidence/scene_04_lateral_slope_travel.png"
+    },
+    {
+      "scene": {
+        "id": "SCENE_05_RAVINE_APPROACH",
+        "purpose": "Test whether the first inland ravine corridor provides legible route containment.",
+        "camera": {
+          "x": 40,
+          "z": -248,
+          "yawDegrees": 0,
+          "pitchDegrees": -6,
+          "verticalFovDegrees": 52
+        },
+        "target": {
+          "x": 40,
+          "z": -284,
+          "authority": "ACCEPTED_CAVERN_EXTERIOR_FACE_RELATION"
+        }
+      },
+      "frame": {
+        "frameSequence": 6,
+        "sourceKind": "ACCEPTED_NAVIGATION_PROPOSAL",
+        "sourceSequence": 5,
+        "inputClass": "CP1_DIAGNOSTIC_SCENE",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0004",
+        "navigationSequence": 4,
+        "cameraPosition": {
+          "x": 40,
+          "y": 62.776350140571594,
+          "z": -248
+        },
+        "verticalFovDegrees": 52,
+        "viewProjectionMatrix": [
+          1.153295910888354,
+          0,
+          0,
+          0,
+          0,
+          2.0390720626082937,
+          -0.10463059171246807,
+          -0.10452846326765355,
+          0,
+          -0.21431510979205043,
+          -0.9954935826133816,
+          -0.9945218953682734,
+          -46.13183643553416,
+          -181.15564899258425,
+          -240.81432608725407,
+          -240.07951464158572
+        ],
+        "worldBuiltBecauseCameraMoved": false,
+        "successorTerrainCameraReconciled": true,
+        "responseMs": 103.5,
+        "colorSummary": null,
+        "diagnosticReadbackPerformed": false
+      },
+      "evidence": {
+        "evidenceSequence": 6,
+        "sourceKind": "EXPLICIT_DIAGNOSTIC_CAPTURE",
+        "label": "SCENE_05_RAVINE_APPROACH",
+        "frameSequence": 6,
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0004",
+        "navigationSequence": 4,
+        "responseMs": 94.80000000000291,
+        "colorSummary": {
+          "pixelCount": 518400,
+          "nonClearPixelCount": 339937,
+          "uniqueColorBucketCount": 7,
+          "meanLuminance": 128.03913372335177,
+          "luminanceStandardDeviation": 53.84207119557543,
+          "byteHash": "fnv1a32:88fc3afa"
+        }
+      },
+      "terrain": {
+        "cameraSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 40,
+            "y": 5.7279718100986186,
+            "z": -248
+          },
+          "elevation": 5.7279718100986186,
+          "shorelineZ": -78.7699331491264,
+          "shorelineDistance": 169.23006685087358,
+          "gradient": {
+            "x": 0.186408264611444,
+            "z": -0.0027850416935963906
+          },
+          "normal": {
+            "x": -0.18325094764209854,
+            "y": 0.9830623552237521,
+            "z": 0.0027378696467032153
+          },
+          "slope": 0.18642906847561402,
+          "slopeClass": "GENTLE",
+          "curvature": 0.0022272923417112622,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "LOWLAND_SOIL"
+        },
+        "targetSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 40,
+            "y": 5.9026169078070065,
+            "z": -284
+          },
+          "elevation": 5.9026169078070065,
+          "shorelineZ": -78.7699331491264,
+          "shorelineDistance": 205.23006685087358,
+          "gradient": {
+            "x": 0.1335161446944051,
+            "z": 0
+          },
+          "normal": {
+            "x": -0.13234175621369457,
+            "y": 0.9912041462596266,
+            "z": 0
+          },
+          "slope": 0.1335161446944051,
+          "slopeClass": "GENTLE",
+          "curvature": -0.0032723275624597647,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "LOWLAND_SOIL"
+        },
+        "horizontalDistance": 36,
+        "elevationDelta": 0.174645097708388,
+        "slopeDegrees": 0.27795412536630065,
+        "cameraChunkId": "H_EARTH_LANDSCAPE_CHUNK_R13_R16_C09_C12",
+        "targetChunkId": null,
+        "navigationState": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0004",
+          "sequence": 4,
+          "action": "ZOOM_IN",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": 40,
+            "y": 7.9779718100986186,
+            "z": -248
+          },
+          "yawDegrees": 0,
+          "pitchDegrees": -6,
+          "verticalFovDegrees": 52,
+          "terrainElevation": 5.7279718100986186,
+          "minimumCameraY": 7.327971810098619,
+          "clearance": 2.25,
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R13_R16_C09_C12",
+          "physicalRole": "INLAND_ELEVATED_TERRAIN_WITH_PROXY_PARTITIONS",
+          "formationIds": [
+            "H_EARTH_DISTANT_HIGHLAND_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R14:C11",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0004",
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "camera": {
+          "position": {
+            "x": 40,
+            "y": 7.9779718100986186,
+            "z": -248
+          },
+          "target": {
+            "x": 40,
+            "y": 6.096459471280856,
+            "z": -265.9013941166289
+          },
+          "up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "verticalFovDegrees": 52,
+          "nearPlane": 0.25,
+          "farPlane": 512,
+          "sourceCapacityContractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5",
+          "cameraAuthority": "SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0004"
+        }
+      },
+      "targetProjection": {
+        "clip": {
+          "x": 0,
+          "y": -108.25429657865331,
+          "z": 41.28825707523043,
+          "w": 41.7477121683732
+        },
+        "ndc": {
+          "x": 0,
+          "y": -2.5930593787283867,
+          "z": 0.9889944845051692
+        },
+        "visible": false
+      },
+      "pixels": {
+        "width": 960,
+        "height": 540,
+        "pixelCount": 518400,
+        "byteHash": "fnv1a32:88fc3afa",
+        "fingerprintHash": "fnv1a32:982e6532",
+        "alphaClosedCount": 518400,
+        "sampledColorBucketCount": 7,
+        "meanLuminance": 128.03913372335177,
+        "luminanceStandardDeviation": 53.84207119557543,
+        "meanAdjacentChannelDifference": 0.11076241991049293,
+        "horizonCandidateRowFromTop": 451,
+        "horizonCandidateRowDelta": 0.12357458333332261,
+        "topQuarterMeanLuminance": 134.24157958796243,
+        "bottomQuarterMeanLuminance": 119.43870056018501
+      },
+      "screenshot": "h-earth-3d/validation/traversal-scene-suite/cp1-evidence/scene_05_ravine_approach.png"
+    },
+    {
+      "scene": {
+        "id": "SCENE_06_COAST_TO_INLAND_TRANSITION",
+        "purpose": "Test the continuity and visual change from the accepted coastal arrival toward inland terrain.",
+        "camera": {
+          "x": 0,
+          "z": -96,
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "verticalFovDegrees": 56
+        },
+        "target": {
+          "x": 0,
+          "z": -172,
+          "authority": "INLAND_TERRAIN_DIRECTION_ONLY"
+        }
+      },
+      "frame": {
+        "frameSequence": 7,
+        "sourceKind": "ACCEPTED_NAVIGATION_PROPOSAL",
+        "sourceSequence": 6,
+        "inputClass": "CP1_DIAGNOSTIC_SCENE",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0002",
+        "navigationSequence": 2,
+        "cameraPosition": {
+          "x": 0,
+          "y": 3.776628613471985,
+          "z": -96
+        },
+        "verticalFovDegrees": 56,
+        "viewProjectionMatrix": [
+          1.0579086367573118,
+          0,
+          0,
+          0,
+          0,
+          1.862423364669672,
+          -0.1393090785867973,
+          -0.13917310096006544,
+          0,
+          -0.26174653423991207,
+          -0.9912355998297397,
+          -0.9902680687415703,
+          0,
+          -32.16134865644181,
+          -95.13274319124024,
+          -94.54012948387934
+        ],
+        "worldBuiltBecauseCameraMoved": false,
+        "successorTerrainCameraReconciled": true,
+        "responseMs": 90.69999999999709,
+        "colorSummary": null,
+        "diagnosticReadbackPerformed": false
+      },
+      "evidence": {
+        "evidenceSequence": 7,
+        "sourceKind": "EXPLICIT_DIAGNOSTIC_CAPTURE",
+        "label": "SCENE_06_COAST_TO_INLAND_TRANSITION",
+        "frameSequence": 7,
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0002",
+        "navigationSequence": 2,
+        "responseMs": 113.80000000000291,
+        "colorSummary": {
+          "pixelCount": 518400,
+          "nonClearPixelCount": 492648,
+          "uniqueColorBucketCount": 19,
+          "meanLuminance": 120.42426147259346,
+          "luminanceStandardDeviation": 27.684944644764396,
+          "byteHash": "fnv1a32:2d6d3436"
+        }
+      },
+      "terrain": {
+        "cameraSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 0,
+            "y": 1.526628584078394,
+            "z": -96
+          },
+          "elevation": 1.526628584078394,
+          "shorelineZ": -79.25507841075921,
+          "shorelineDistance": 16.74492158924079,
+          "gradient": {
+            "x": 0.04149363077601054,
+            "z": -0.23246789989136252
+          },
+          "normal": {
+            "x": -0.04038296567392399,
+            "y": 0.9732328774003389,
+            "z": 0.22624540311448468
+          },
+          "slope": 0.2361420036225585,
+          "slopeClass": "MODERATE",
+          "curvature": 0.011650062638072,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "DRY_SAND"
+        },
+        "targetSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 0,
+            "y": -4.5805485062013185,
+            "z": -172
+          },
+          "elevation": -4.5805485062013185,
+          "shorelineZ": -79.25507841075921,
+          "shorelineDistance": 92.74492158924079,
+          "gradient": {
+            "x": 0.18525491806947336,
+            "z": 0.09013035114214762
+          },
+          "normal": {
+            "x": -0.18144441955395985,
+            "y": 0.9794310534088789,
+            "z": -0.0882764647632658
+          },
+          "slope": 0.20601666162214677,
+          "slopeClass": "GENTLE",
+          "curvature": 0.022566582926746293,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "LOWLAND_SOIL"
+        },
+        "horizontalDistance": 76,
+        "elevationDelta": -6.107177090279713,
+        "slopeDegrees": -4.594278973767286,
+        "cameraChunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+        "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C05_C08",
+        "navigationState": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0002",
+          "sequence": 2,
+          "action": "SET_CAMERA_POSITION",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": 0,
+            "y": 3.776628584078394,
+            "z": -96
+          },
+          "yawDegrees": 0,
+          "pitchDegrees": -8,
+          "verticalFovDegrees": 56,
+          "terrainElevation": 1.526628584078394,
+          "minimumCameraY": 3.126628584078394,
+          "clearance": 2.25,
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+          "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+          "formationIds": [],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R03:C08",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0002",
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "camera": {
+          "position": {
+            "x": 0,
+            "y": 3.776628584078394,
+            "z": -96
+          },
+          "target": {
+            "x": 0,
+            "y": 1.2715127667972164,
+            "z": -113.82482523734826
+          },
+          "up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "verticalFovDegrees": 56,
+          "nearPlane": 0.25,
+          "farPlane": 512,
+          "sourceCapacityContractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5",
+          "cameraAuthority": "SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0002"
+        }
+      },
+      "targetProjection": {
+        "clip": {
+          "x": 0,
+          "y": 4.32813467187097,
+          "z": 75.99789197129603,
+          "w": 76.42346747937675
+        },
+        "ndc": {
+          "x": 0,
+          "y": 0.056633581472064695,
+          "z": 0.9944313504461758
+        },
+        "visible": true
+      },
+      "pixels": {
+        "width": 960,
+        "height": 540,
+        "pixelCount": 518400,
+        "byteHash": "fnv1a32:2d6d3436",
+        "fingerprintHash": "fnv1a32:72187b9f",
+        "alphaClosedCount": 518400,
+        "sampledColorBucketCount": 18,
+        "meanLuminance": 120.42426147259346,
+        "luminanceStandardDeviation": 27.684944644764396,
+        "meanAdjacentChannelDifference": 0.110840980070189,
+        "horizonCandidateRowFromTop": 179,
+        "horizonCandidateRowDelta": 1.7247391666666232,
+        "topQuarterMeanLuminance": 154.15376022993755,
+        "bottomQuarterMeanLuminance": 106.51240000000195
+      },
+      "screenshot": "h-earth-3d/validation/traversal-scene-suite/cp1-evidence/scene_06_coast_to_inland_transition.png"
+    },
+    {
+      "scene": {
+        "id": "SCENE_07_MANOR_SITE_APPROACH",
+        "purpose": "Test whether the accepted Manor site can be approached reproducibly without implying unconstructed architecture.",
+        "camera": {
+          "x": 48,
+          "z": -172,
+          "yawDegrees": 90,
+          "pitchDegrees": -4,
+          "verticalFovDegrees": 48
+        },
+        "target": {
+          "x": 80,
+          "z": -172,
+          "authority": "ACCEPTED_MIRROR_MANOR_SITE_CENTER"
+        }
+      },
+      "frame": {
+        "frameSequence": 8,
+        "sourceKind": "ACCEPTED_NAVIGATION_PROPOSAL",
+        "sourceSequence": 7,
+        "inputClass": "CP1_DIAGNOSTIC_SCENE",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0017",
+        "navigationSequence": 17,
+        "cameraPosition": {
+          "x": 48,
+          "y": 24.41897940635681,
+          "z": -172
+        },
+        "verticalFovDegrees": 48,
+        "viewProjectionMatrix": [
+          0,
+          0.15667560524718957,
+          0.9985387098106399,
+          0.9975640502598243,
+          0,
+          2.2405655412083996,
+          -0.06982462857924421,
+          -0.06975647374412539,
+          1.263395685321122,
+          0,
+          0,
+          0,
+          217.30405787523296,
+          -62.23275286122571,
+          -46.72505616347016,
+          -46.179692516653695
+        ],
+        "worldBuiltBecauseCameraMoved": false,
+        "successorTerrainCameraReconciled": true,
+        "responseMs": 119.5,
+        "colorSummary": null,
+        "diagnosticReadbackPerformed": false
+      },
+      "evidence": {
+        "evidenceSequence": 8,
+        "sourceKind": "EXPLICIT_DIAGNOSTIC_CAPTURE",
+        "label": "SCENE_07_MANOR_SITE_APPROACH",
+        "frameSequence": 8,
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0017",
+        "navigationSequence": 17,
+        "responseMs": 100.40000000000873,
+        "colorSummary": {
+          "pixelCount": 518400,
+          "nonClearPixelCount": 429213,
+          "uniqueColorBucketCount": 6,
+          "meanLuminance": 105.0855424206673,
+          "luminanceStandardDeviation": 44.329264670736386,
+          "byteHash": "fnv1a32:0726d86c"
+        }
+      },
+      "terrain": {
+        "cameraSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 48,
+            "y": 22.168979393136777,
+            "z": -172
+          },
+          "elevation": 22.168979393136777,
+          "shorelineZ": -78.81570720675094,
+          "shorelineDistance": 93.18429279324906,
+          "gradient": {
+            "x": 0.5571432228521012,
+            "z": -0.01659579420513424
+          },
+          "normal": {
+            "x": -0.4866512627558577,
+            "y": 0.8734760521084967,
+            "z": 0.014496028803905723
+          },
+          "slope": 0.5573903400269197,
+          "slopeClass": "STEEP_NONCLIMBING",
+          "curvature": -0.042328456356273136,
+          "curvatureClass": "CONCAVE",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "targetSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 80,
+            "y": 28.969275964210468,
+            "z": -172
+          },
+          "elevation": 28.969275964210468,
+          "shorelineZ": -75.8111012414065,
+          "shorelineDistance": 96.1888987585935,
+          "gradient": {
+            "x": -0.16355556081024147,
+            "z": -0.04565164039405545
+          },
+          "normal": {
+            "x": 0.16124733897267118,
+            "y": 0.9858872310660943,
+            "z": 0.04500736934172039
+          },
+          "slope": 0.1698072252367983,
+          "slopeClass": "GENTLE",
+          "curvature": -0.05291306230351722,
+          "curvatureClass": "CONCAVE",
+          "materialProfile": "STONE_AND_SPARSE_SOIL"
+        },
+        "horizontalDistance": 32,
+        "elevationDelta": 6.800296571073691,
+        "slopeDegrees": 11.997407373070201,
+        "cameraChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "targetChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+        "navigationState": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0017",
+          "sequence": 17,
+          "action": "ZOOM_IN",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": 48,
+            "y": 24.418979393136777,
+            "z": -172
+          },
+          "yawDegrees": 90,
+          "pitchDegrees": -4,
+          "verticalFovDegrees": 48,
+          "terrainElevation": 22.168979393136777,
+          "minimumCameraY": 23.768979393136778,
+          "clearance": 2.25,
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+          "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+          "formationIds": [
+            "H_EARTH_COASTAL_BERM_001",
+            "H_EARTH_DRAINAGE_VALLEY_001",
+            "H_EARTH_NAVIGABLE_HILL_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C10",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0017",
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "camera": {
+          "position": {
+            "x": 48,
+            "y": 24.418979393136777,
+            "z": -172
+          },
+          "target": {
+            "x": 65.95615290467683,
+            "y": 23.16336286574252,
+            "z": -172
+          },
+          "up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "verticalFovDegrees": 48,
+          "nearPlane": 0.25,
+          "farPlane": 512,
+          "sourceCapacityContractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5",
+          "cameraAuthority": "SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0017"
+        }
+      },
+      "targetProjection": {
+        "clip": {
+          "x": 0,
+          "y": 15.20885703771615,
+          "z": 31.135271686970412,
+          "w": 31.60463696594848
+        },
+        "ndc": {
+          "x": 0,
+          "y": 0.48122232994172665,
+          "z": 0.9851488476363841
+        },
+        "visible": true
+      },
+      "pixels": {
+        "width": 960,
+        "height": 540,
+        "pixelCount": 518400,
+        "byteHash": "fnv1a32:0726d86c",
+        "fingerprintHash": "fnv1a32:a49e0b0d",
+        "alphaClosedCount": 518400,
+        "sampledColorBucketCount": 5,
+        "meanLuminance": 105.0855424206673,
+        "luminanceStandardDeviation": 44.329264670736386,
+        "meanAdjacentChannelDifference": 0.1262993013297273,
+        "horizonCandidateRowFromTop": 67,
+        "horizonCandidateRowDelta": 5.744358749999975,
+        "topQuarterMeanLuminance": 165.13909339043033,
+        "bottomQuarterMeanLuminance": 84.71433462654431
+      },
+      "screenshot": "h-earth-3d/validation/traversal-scene-suite/cp1-evidence/scene_07_manor_site_approach.png"
+    },
+    {
+      "scene": {
+        "id": "SCENE_08_CAVERN_RELATION_APPROACH",
+        "purpose": "Test whether the accepted Cavern exterior relation can be approached reproducibly without implying an unconstructed opening or interior.",
+        "camera": {
+          "x": 40,
+          "z": -248,
+          "yawDegrees": 0,
+          "pitchDegrees": -4,
+          "verticalFovDegrees": 48
+        },
+        "target": {
+          "x": 40,
+          "z": -284,
+          "authority": "ACCEPTED_CAVERN_EXTERIOR_FACE"
+        }
+      },
+      "frame": {
+        "frameSequence": 9,
+        "sourceKind": "ACCEPTED_NAVIGATION_PROPOSAL",
+        "sourceSequence": 8,
+        "inputClass": "CP1_DIAGNOSTIC_SCENE",
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0005",
+        "navigationSequence": 5,
+        "cameraPosition": {
+          "x": 40,
+          "y": 62.776350140571594,
+          "z": -248
+        },
+        "verticalFovDegrees": 48,
+        "viewProjectionMatrix": [
+          1.263395685321122,
+          0,
+          0,
+          0,
+          0,
+          2.2405655412083996,
+          -0.06982462857924389,
+          -0.06975647374412507,
+          0,
+          -0.15667560524718885,
+          -0.9985387098106399,
+          -0.9975640502598243,
+          -50.535827412844874,
+          -179.5100770291006,
+          -243.75450896080525,
+          -243.01682764410364
+        ],
+        "worldBuiltBecauseCameraMoved": false,
+        "successorTerrainCameraReconciled": true,
+        "responseMs": 90.40000000000873,
+        "colorSummary": null,
+        "diagnosticReadbackPerformed": false
+      },
+      "evidence": {
+        "evidenceSequence": 9,
+        "sourceKind": "EXPLICIT_DIAGNOSTIC_CAPTURE",
+        "label": "SCENE_08_CAVERN_RELATION_APPROACH",
+        "frameSequence": 9,
+        "navigationStateId": "H_EARTH_NAVIGATION_STATE_0005",
+        "navigationSequence": 5,
+        "responseMs": 91,
+        "colorSummary": {
+          "pixelCount": 518400,
+          "nonClearPixelCount": 339174,
+          "uniqueColorBucketCount": 2,
+          "meanLuminance": 128.1580260944822,
+          "luminanceStandardDeviation": 53.92713005191995,
+          "byteHash": "fnv1a32:50d800c7"
+        }
+      },
+      "terrain": {
+        "cameraSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 40,
+            "y": 5.7279718100986186,
+            "z": -248
+          },
+          "elevation": 5.7279718100986186,
+          "shorelineZ": -78.7699331491264,
+          "shorelineDistance": 169.23006685087358,
+          "gradient": {
+            "x": 0.186408264611444,
+            "z": -0.0027850416935963906
+          },
+          "normal": {
+            "x": -0.18325094764209854,
+            "y": 0.9830623552237521,
+            "z": 0.0027378696467032153
+          },
+          "slope": 0.18642906847561402,
+          "slopeClass": "GENTLE",
+          "curvature": 0.0022272923417112622,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "LOWLAND_SOIL"
+        },
+        "targetSample": {
+          "valid": true,
+          "status": "TERRAIN_SAMPLE_COMPLETE",
+          "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1",
+          "generationRevision": 1,
+          "world": {
+            "x": 40,
+            "y": 5.9026169078070065,
+            "z": -284
+          },
+          "elevation": 5.9026169078070065,
+          "shorelineZ": -78.7699331491264,
+          "shorelineDistance": 205.23006685087358,
+          "gradient": {
+            "x": 0.1335161446944051,
+            "z": 0
+          },
+          "normal": {
+            "x": -0.13234175621369457,
+            "y": 0.9912041462596266,
+            "z": 0
+          },
+          "slope": 0.1335161446944051,
+          "slopeClass": "GENTLE",
+          "curvature": -0.0032723275624597647,
+          "curvatureClass": "NEAR_PLANAR",
+          "materialProfile": "LOWLAND_SOIL"
+        },
+        "horizontalDistance": 36,
+        "elevationDelta": 0.174645097708388,
+        "slopeDegrees": 0.27795412536630065,
+        "cameraChunkId": "H_EARTH_LANDSCAPE_CHUNK_R13_R16_C09_C12",
+        "targetChunkId": null,
+        "navigationState": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "stateId": "H_EARTH_NAVIGATION_STATE_0005",
+          "sequence": 5,
+          "action": "ZOOM_IN",
+          "accepted": true,
+          "recovered": false,
+          "rejectionReason": null,
+          "position": {
+            "x": 40,
+            "y": 7.9779718100986186,
+            "z": -248
+          },
+          "yawDegrees": 0,
+          "pitchDegrees": -4,
+          "verticalFovDegrees": 48,
+          "terrainElevation": 5.7279718100986186,
+          "minimumCameraY": 7.327971810098619,
+          "clearance": 2.25,
+          "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R13_R16_C09_C12",
+          "physicalRole": "INLAND_ELEVATED_TERRAIN_WITH_PROXY_PARTITIONS",
+          "formationIds": [
+            "H_EARTH_DISTANT_HIGHLAND_001"
+          ],
+          "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R14:C11",
+          "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0005",
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "camera": {
+          "position": {
+            "x": 40,
+            "y": 7.9779718100986186,
+            "z": -248
+          },
+          "target": {
+            "x": 40,
+            "y": 6.722355282704363,
+            "z": -265.95615290467686
+          },
+          "up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "verticalFovDegrees": 48,
+          "nearPlane": 0.25,
+          "farPlane": 512,
+          "sourceCapacityContractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5",
+          "cameraAuthority": "SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL",
+          "terrainClearanceReceiptId": "H_EARTH_TERRAIN_CLEARANCE_RECEIPT_0005"
+        }
+      },
+      "targetProjection": {
+        "clip": {
+          "x": 0,
+          "y": -121.7890050923125,
+          "z": 39.41833659218332,
+          "w": 39.87961688833539
+        },
+        "ndc": {
+          "x": 0,
+          "y": -3.0539161254564418,
+          "z": 0.9884331813556867
+        },
+        "visible": false
+      },
+      "pixels": {
+        "width": 960,
+        "height": 540,
+        "pixelCount": 518400,
+        "byteHash": "fnv1a32:50d800c7",
+        "fingerprintHash": "fnv1a32:7de33165",
+        "alphaClosedCount": 518400,
+        "sampledColorBucketCount": 2,
+        "meanLuminance": 128.1580260944822,
+        "luminanceStandardDeviation": 53.92713005191995,
+        "meanAdjacentChannelDifference": 0.079858334138253,
+        "horizonCandidateRowFromTop": 390,
+        "horizonCandidateRowDelta": 0.12357458333335103,
+        "topQuarterMeanLuminance": 133.37581077932046,
+        "bottomQuarterMeanLuminance": 122.93895377932064
+      },
+      "screenshot": "h-earth-3d/validation/traversal-scene-suite/cp1-evidence/scene_08_cavern_relation_approach.png"
+    }
+  ],
+  "diagnosis": {
+    "diagnosisClass": "BOUNDED_PRESENTATION_DIAGNOSIS",
+    "established": false,
+    "findings": [
+      {
+        "id": "FINDING_01_PERMANENT_SCENE_REPRODUCIBILITY",
+        "status": "ESTABLISHED",
+        "basis": {
+          "executedSceneCount": 8,
+          "distinctFrameCount": 8
+        }
+      },
+      {
+        "id": "FINDING_02_RENDERER_RESPONDS_TO_LAWFUL_CAMERA_DIFFERENTIALS",
+        "status": "NOT_ESTABLISHED",
+        "basis": "EIGHT_DISTINCT_WEBGL2_FRAME_READBACKS_WITH_NONTRIVIAL_VISUAL_SIGNAL"
+      },
+      {
+        "id": "FINDING_03_MANOR_IDENTITY_IS_NOT_YET_CONSTRUCTED",
+        "status": "ESTABLISHED",
+        "basis": {
+          "acceptedAuthority": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
+          "deferred": [
+            "EXACT_BUILDING_FOOTPRINT",
+            "BUILDING_ORIENTATION",
+            "ATRIUM_GEOMETRY",
+            "ENTRANCE_COORDINATES",
+            "GARDEN_LAYOUT",
+            "SCULPTURE_POSITIONS"
+          ],
+          "liveRenderRoleDomain": [
+            "TERRAIN",
+            "SHORELINE",
+            "VEGETATION"
+          ],
+          "implication": "SCENE_07_CAN_TEST_SITE_APPROACH_BUT_CANNOT_PRESENT_A_DEDICATED_MANOR_OBJECT"
+        }
+      },
+      {
+        "id": "FINDING_04_CAVERN_OPENING_AND_INTERIOR_ARE_NOT_YET_CONSTRUCTED",
+        "status": "ESTABLISHED",
+        "basis": {
+          "acceptedAuthority": "ACCEPT_CURRENT_RELATION",
+          "deferred": [
+            "CAVERN_INTERIOR_OCCURRENCE",
+            "ENTRANCE_OPENING_GEOMETRY",
+            "INTERIOR_TRANSITION_ANCHOR",
+            "CAVERN_SHAPE",
+            "CAVERN_SIZE",
+            "CAVERN_CONTENTS"
+          ],
+          "liveRenderRoleDomain": [
+            "TERRAIN",
+            "SHORELINE",
+            "VEGETATION"
+          ],
+          "implication": "SCENE_08_CAN_TEST_THE_ACCEPTED_EXTERIOR_RELATION_BUT_CANNOT_PRESENT_AN_OPENING_OR_INTERIOR"
+        }
+      },
+      {
+        "id": "FINDING_05_ROUND_1_SCOPE_IS_PRESENTATION_ONLY",
+        "status": "ESTABLISHED",
+        "basis": {
+          "terrainLawfulSceneCount": 6,
+          "placementAuthorityPreserved": true,
+          "terrainMutationEvidence": false,
+          "authorizedNextScope": "PRESENTATION_READABILITY_AND_LANDMARK_DIFFERENTIATION_WITHOUT_TERRAIN_OR_PLACEMENT_MUTATION"
+        }
+      }
+    ],
+    "runtimeIdentityScan": {
+      "mirrorManorDedicatedIdentifierCount": 4,
+      "cavernPrecinctDedicatedIdentifierCount": 0,
+      "buildingFootprintIdentifierCount": 0,
+      "entranceOpeningGeometryIdentifierCount": 0
+    },
+    "boundedRound1CorrectionAuthorityCandidate": {
+      "authorizedLayer": "PRESENTATION_ONLY",
+      "mayAddress": [
+        "SCALE_CUES",
+        "SLOPE_READABILITY",
+        "ROUTE_CONTAINMENT",
+        "LANDMARK_DIFFERENTIATION",
+        "ACCEPTED_SITE_AND_EXTERIOR_RELATION_READABILITY"
+      ],
+      "mustPreserve": [
+        "FROZEN_TERRAIN_FIELD",
+        "ENTRY_ZONE_PLACEMENT",
+        "MIRROR_MANOR_SITE_ENVELOPE",
+        "CAVERN_EXTERIOR_RELATION",
+        "FRONTIER_NONFINAL_STATUS",
+        "CAMERA_AND_TOUCH_AUTHORITY"
+      ],
+      "notAuthorizedInCp1": [
+        "PRODUCT_MUTATION",
+        "BUILDING_GEOMETRY",
+        "CAVERN_EXCAVATION",
+        "HEIGHT_FIELD_MUTATION",
+        "LIVE_DEPLOYMENT"
+      ]
+    }
+  },
+  "authoritySeparation": {
+    "perceptualJudgment": "PRIOR_USER_OBSERVATIONS_CONSUMED_AS_INPUT_ONLY_NO_NEW_USER_INSPECTION",
+    "engineeringDiagnosis": "AUTHORIZED_AND_REQUIRED",
+    "repositoryMutation": "CP1_CONTROL_VALIDATION_WORKFLOW_AND_EVIDENCE_PATHS_ONLY",
+    "executedVerification": "REQUIRED",
+    "physicalAcceptance": "NOT_PERFORMED"
+  },
+  "closure": {
+    "productSourceChanged": false,
+    "liveExperienceChanged": false,
+    "newUserInspectionPerformed": false,
+    "newPhysicalAcceptancePerformed": false,
+    "traversalSceneSuiteCreated": false,
+    "engineeringDiagnosisEstablished": false,
+    "nextCheckpointAuthorized": false,
+    "nextCheckpointStarted": false,
+    "stoppingBoundary": "STOP_AFTER_CP1_DIAGNOSIS_BEFORE_ROUND_1_PRODUCT_MUTATION"
+  }
+}

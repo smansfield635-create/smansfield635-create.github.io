@@ -78,6 +78,20 @@
       document.getElementById('h-earth-startup-download').addEventListener('click',()=>{if(!latestReceipt)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(latestReceipt,null,2)],{type:'application/json'}));a.download='h-earth-renderer-startup-receipt.json';a.click();URL.revokeObjectURL(a.href);});
     })();
   </script>
+  <script id="h-earth-cp2-round1-default-promotion">
+    (() => {
+      const parameters = new URLSearchParams(window.location.search);
+      if (!parameters.has('cp2')) {
+        parameters.set('cp2', 'round1-1f520809');
+        const query = parameters.toString();
+        history.replaceState(
+          history.state,
+          '',
+          `${location.pathname}${query ? `?${query}` : ''}${location.hash}`
+        );
+      }
+    })();
+  </script>
   <script id="h-earth-current-run8e-module" type="module" src="./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=renderer-startup-receipt-v1"></script>
   <script>document.getElementById('h-earth-current-run8e-module').addEventListener('error',()=>{window.H_EARTH_RUNTIME_DIAGNOSTICS?.mark('BOOT_STARTED','FAIL','Current Run 8E module graph failed to load.');});</script>
 </body>

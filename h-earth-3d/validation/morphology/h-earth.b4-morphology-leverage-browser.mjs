@@ -78,7 +78,7 @@ function stateForView(camera, target) {
 }
 
 function extractShader(source, name) {
-  const match = source.match(new RegExp(`const ${name} = \\`([\\s\\S]*?)\\`;`));
+  const match = source.match(new RegExp('const ' + name + ' = `([\\s\\S]*?)`;'));
   if (!match) throw new Error(`B4_ACCEPTED_SHADER_NOT_FOUND:${name}`);
   return match[1];
 }
@@ -164,9 +164,8 @@ function createDiagnosticRenderer({ canvas, width, height, shaders, uploadViews,
     [uploadViews.primitiveIndices, 6, 1, gl.UNSIGNED_SHORT, true],
     [uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true]
   ];
-  const buffers = [];
   for (const [data, location, size, type, integer] of specs) {
-    const buffer = gl.createBuffer(); buffers.push(buffer); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW); gl.enableVertexAttribArray(location);
+    const buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW); gl.enableVertexAttribArray(location);
     if (integer) gl.vertexAttribIPointer(location, size, type, 0, 0); else gl.vertexAttribPointer(location, size, type, false, 0, 0);
   }
   const indexBuffer = gl.createBuffer();
@@ -215,7 +214,7 @@ function createDiagnosticRenderer({ canvas, width, height, shaders, uploadViews,
       gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
     }
     gl.depthMask(true); gl.disable(gl.BLEND); gl.finish();
-    if (gl.getError() !== gl.NO_ERROR) throw new Error('B4_DRAW_ERROR');
+    const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`B4_DRAW_ERROR:${error}`);
   };
   const readColor = () => {
     gl.bindFramebuffer(gl.FRAMEBUFFER, geometryFramebuffer); const bytes = new Uint8Array(width * height * 4); gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, bytes); return bytes;

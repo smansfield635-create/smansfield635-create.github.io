@@ -127,9 +127,9 @@ float noise2(vec2 p){
              mix(hash21(i+vec2(0.0,1.0)),hash21(i+vec2(1.0,1.0)),f.x),f.y);
 }
 float contour(float elevation){
-  float interval=4.0;
+  float interval=2.5;
   float centered=abs(fract(elevation/interval)-0.5);
-  float width=max(fwidth(elevation/interval)*1.35,0.018);
+  float width=max(fwidth(elevation/interval)*1.65,0.026);
   return smoothstep(0.47-width,0.49,centered);
 }
 float radial(vec2 point,vec2 center,float innerRadius,float outerRadius){
@@ -160,8 +160,11 @@ void main(){
     vec3 rock=vec3(0.25,0.27,0.26);
     vec3 palette=mix(lowland,upland,elevationMix);
     palette=mix(palette,rock,clamp(slope*1.35,0.0,0.72));
-    palette*=0.78+0.34*broad+0.14*medium+0.06*grain;
-    palette=mix(palette,base,0.44);
+    float strata=0.5+0.5*sin(world.x*0.47+world.z*0.33+vWorldPosition.y*0.79+medium*3.2);
+    float crossGrain=0.5+0.5*sin(world.x*0.83-world.z*0.61+broad*4.8);
+    palette*=0.62+0.46*broad+0.24*medium+0.14*grain;
+    palette*=mix(0.70,1.30,strata*0.68+crossGrain*0.32);
+    palette=mix(palette,base,0.31);
 
     float contourLine=contour(vWorldPosition.y);
     palette*=mix(1.0,0.58,contourLine*(0.28+0.44*slope));
@@ -170,18 +173,23 @@ void main(){
 
     float manorEnvelope=radial(world,vec2(80.0,-172.0),7.0,30.0);
     float manorEdge=radial(world,vec2(80.0,-172.0),14.0,20.0)-radial(world,vec2(80.0,-172.0),5.0,11.0);
-    palette=mix(palette,palette*vec3(1.34,1.13,0.73)+vec3(0.035,0.018,0.0),manorEnvelope*0.28);
-    palette+=vec3(0.12,0.075,0.018)*max(manorEdge,0.0);
+    float manorPattern=0.5+0.5*sin((world.x-80.0)*0.72+vWorldPosition.y*0.38);
+    vec3 manorStone=mix(vec3(0.38,0.24,0.07),vec3(0.67,0.48,0.16),manorPattern);
+    palette=mix(palette,manorStone,manorEnvelope*(0.40+0.14*manorPattern));
+    palette+=vec3(0.24,0.14,0.025)*max(manorEdge,0.0);
 
     float cavernRelation=radial(world,vec2(40.0,-284.0),5.0,28.0);
     float cavernApproach=radial(world,vec2(48.0,-284.0),10.0,44.0);
-    vec3 cavernStone=palette*vec3(0.54,0.64,0.72)+vec3(0.008,0.018,0.024);
-    palette=mix(palette,cavernStone,cavernRelation*0.60);
-    palette=mix(palette,palette*vec3(0.78,0.91,0.96),cavernApproach*0.18);
+    float cavernStrata=0.5+0.5*sin(vWorldPosition.y*0.88+world.x*0.24-world.y*0.12);
+    vec3 cavernStone=mix(vec3(0.035,0.060,0.070),vec3(0.24,0.36,0.40),cavernStrata);
+    palette=mix(palette,cavernStone,cavernRelation*(0.68+0.18*cavernStrata));
+    palette=mix(palette,palette*vec3(0.66,0.88,0.96),cavernApproach*0.28);
 
     float ravineAxis=exp(-pow((vWorldPosition.x-40.0)/18.0,2.0));
     float ravineDepth=1.0-smoothstep(-292.0,-210.0,vWorldPosition.z);
-    palette*=mix(1.0,0.76,ravineAxis*ravineDepth*(0.35+0.65*slope));
+    float routePulse=0.5+0.5*sin(vWorldPosition.z*0.42+vWorldPosition.y*0.25);
+    float routeSignal=ravineAxis*ravineDepth*(0.36+0.64*slope);
+    palette=mix(palette,vec3(0.075,0.14,0.15),routeSignal*(0.30+0.28*routePulse));
     base=palette;
   }else if(vRoleCode==2u){
     float wave=0.5+0.5*sin(vWorldPosition.x*0.34+vWorldPosition.z*0.19);
@@ -209,8 +217,7 @@ void main(){
   vec3 atmosphere=mix(uSkyHorizonColor,uSkyZenithColor,clamp(n.y*0.5+0.5,0.0,1.0));
   vec3 haze=mix(uGroundHazeColor,atmosphere,0.44);
   lit=mix(lit,haze,fog*0.48);
-  lit=lit/(lit+vec3(0.68));
-  lit=pow(clamp(lit,0.0,1.0),vec3(1.0/2.2));
+  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));
   outColor=vec4(lit,outputAlpha);
 }`;
 
@@ -226,49 +233,26 @@ uniform sampler2D uDepth;
 out vec4 outColor;
 void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
 
-export function createHEarthRun8ER3CPersistentRenderer({
-  canvas,
-  width = 640,
-  height = 360
-} = {}) {
+export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360 } = {}) {
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3C_CANVAS_REQUIRED');
   canvas.width = width;
   canvas.height = height;
   const gl = canvas.getContext('webgl2', {
-    alpha: false,
-    antialias: false,
-    depth: true,
-    stencil: false,
-    preserveDrawingBuffer: true,
-    powerPreference: 'high-performance'
+    alpha: false, antialias: false, depth: true, stencil: false,
+    preserveDrawingBuffer: true, powerPreference: 'high-performance'
   });
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');
-
   let initialized = false;
   const counters = {
-    contextCreationCount: 1,
-    shaderCreateCount: 0,
-    shaderCompileCount: 0,
-    programCreateCount: 0,
-    programLinkCount: 0,
-    vertexArrayCreateCount: 0,
-    bufferCreateCount: 0,
-    bufferUploadCount: 0,
-    uploadedByteLength: 0,
-    textureCreateCount: 0,
-    framebufferCreateCount: 0,
-    postInitializationResourceCreationCount: 0,
-    postInitializationBufferUploadCount: 0,
-    frameCount: 0,
-    visiblePresentationCount: 0,
-    colorReadbackCount: 0,
-    depthReadbackCount: 0,
-    pngEncodingCount: 0,
-    gpuFinishCount: 0,
-    cameraUniformUpdateCount: 0,
-    staticUniformUpdateCount: 0,
-    geometryDrawCallCount: 0,
-    totalDrawnIndexCount: 0,
+    contextCreationCount: 1, shaderCreateCount: 0, shaderCompileCount: 0,
+    programCreateCount: 0, programLinkCount: 0, vertexArrayCreateCount: 0,
+    bufferCreateCount: 0, bufferUploadCount: 0, uploadedByteLength: 0,
+    textureCreateCount: 0, framebufferCreateCount: 0,
+    postInitializationResourceCreationCount: 0, postInitializationBufferUploadCount: 0,
+    frameCount: 0, visiblePresentationCount: 0, colorReadbackCount: 0,
+    depthReadbackCount: 0, pngEncodingCount: 0, gpuFinishCount: 0,
+    cameraUniformUpdateCount: 0, staticUniformUpdateCount: 0,
+    geometryDrawCallCount: 0, totalDrawnIndexCount: 0,
     depthVisualizationDrawCallCount: 0
   };
   const resources = {};
@@ -276,57 +260,44 @@ export function createHEarthRun8ER3CPersistentRenderer({
     if (initialized) counters.postInitializationResourceCreationCount += 1;
   };
   const createShader = (type, source, label) => {
-    markPostInitializationCreation();
-    counters.shaderCreateCount += 1;
+    markPostInitializationCreation(); counters.shaderCreateCount += 1;
     const shader = gl.createShader(type);
     if (!shader) throw new Error(`R3C_SHADER_CREATE_FAILED:${label}`);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    counters.shaderCompileCount += 1;
+    gl.shaderSource(shader, source); gl.compileShader(shader); counters.shaderCompileCount += 1;
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       throw new Error(`R3C_SHADER_COMPILE_FAILED:${label}:${gl.getShaderInfoLog(shader)}`);
     }
     return shader;
   };
   const createProgram = (vertexShader, fragmentShader, label) => {
-    markPostInitializationCreation();
-    counters.programCreateCount += 1;
+    markPostInitializationCreation(); counters.programCreateCount += 1;
     const program = gl.createProgram();
     if (!program) throw new Error(`R3C_PROGRAM_CREATE_FAILED:${label}`);
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-    counters.programLinkCount += 1;
+    gl.attachShader(program, vertexShader); gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program); counters.programLinkCount += 1;
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
       throw new Error(`R3C_PROGRAM_LINK_FAILED:${label}:${gl.getProgramInfoLog(program)}`);
     }
     return program;
   };
   const createBuffer = () => {
-    markPostInitializationCreation();
-    counters.bufferCreateCount += 1;
-    const buffer = gl.createBuffer();
-    if (!buffer) throw new Error('R3C_BUFFER_CREATE_FAILED');
+    markPostInitializationCreation(); counters.bufferCreateCount += 1;
+    const buffer = gl.createBuffer(); if (!buffer) throw new Error('R3C_BUFFER_CREATE_FAILED');
     return buffer;
   };
   const upload = (target, data) => {
     if (initialized) counters.postInitializationBufferUploadCount += 1;
-    counters.bufferUploadCount += 1;
-    counters.uploadedByteLength += data.byteLength;
+    counters.bufferUploadCount += 1; counters.uploadedByteLength += data.byteLength;
     gl.bufferData(target, data, gl.STATIC_DRAW);
   };
   const createTexture = () => {
-    markPostInitializationCreation();
-    counters.textureCreateCount += 1;
-    const texture = gl.createTexture();
-    if (!texture) throw new Error('R3C_TEXTURE_CREATE_FAILED');
+    markPostInitializationCreation(); counters.textureCreateCount += 1;
+    const texture = gl.createTexture(); if (!texture) throw new Error('R3C_TEXTURE_CREATE_FAILED');
     return texture;
   };
   const createFramebuffer = () => {
-    markPostInitializationCreation();
-    counters.framebufferCreateCount += 1;
-    const framebuffer = gl.createFramebuffer();
-    if (!framebuffer) throw new Error('R3C_FRAMEBUFFER_CREATE_FAILED');
+    markPostInitializationCreation(); counters.framebufferCreateCount += 1;
+    const framebuffer = gl.createFramebuffer(); if (!framebuffer) throw new Error('R3C_FRAMEBUFFER_CREATE_FAILED');
     return framebuffer;
   };
   const uniform = (program, name) => {
@@ -336,45 +307,26 @@ export function createHEarthRun8ER3CPersistentRenderer({
   };
   const requireCompleteFramebuffer = (label) => {
     const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-    if (status !== gl.FRAMEBUFFER_COMPLETE) {
-      throw new Error(`R3C_FRAMEBUFFER_INCOMPLETE:${label}:${status}`);
-    }
+    if (status !== gl.FRAMEBUFFER_COMPLETE) throw new Error(`R3C_FRAMEBUFFER_INCOMPLETE:${label}:${status}`);
   };
-
   const renderPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
   const uploadViews = createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage);
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
-  if (renderPackage.packageIdentity !== RUNTIME_ID) {
-    throw new Error(`R3C_RUNTIME_PACKAGE_IDENTITY_MISMATCH:${renderPackage.packageIdentity}`);
-  }
-  if (uploadViews.deterministicTransportEncoding !== true) {
-    throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
-  }
+  if (renderPackage.packageIdentity !== RUNTIME_ID) throw new Error(`R3C_RUNTIME_PACKAGE_IDENTITY_MISMATCH:${renderPackage.packageIdentity}`);
+  if (uploadViews.deterministicTransportEncoding !== true) throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
 
   function initialize(packet) {
     if (initialized) throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');
-    if (
-      packet.packageIdentity !== renderPackage.packageIdentity ||
-      packet.packageContentDigest !== renderPackage.contentDigest
-    ) throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
-
+    if (packet.packageIdentity !== renderPackage.packageIdentity || packet.packageContentDigest !== renderPackage.contentDigest) {
+      throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
+    }
     resources.geometryVertexShader = createShader(gl.VERTEX_SHADER, VS, 'GV');
     resources.geometryFragmentShader = createShader(gl.FRAGMENT_SHADER, FS, 'GF');
-    resources.geometryProgram = createProgram(
-      resources.geometryVertexShader,
-      resources.geometryFragmentShader,
-      'GP'
-    );
+    resources.geometryProgram = createProgram(resources.geometryVertexShader, resources.geometryFragmentShader, 'GP');
     resources.depthVertexShader = createShader(gl.VERTEX_SHADER, DVS, 'DV');
     resources.depthFragmentShader = createShader(gl.FRAGMENT_SHADER, DFS, 'DF');
-    resources.depthProgram = createProgram(
-      resources.depthVertexShader,
-      resources.depthFragmentShader,
-      'DP'
-    );
-
-    markPostInitializationCreation();
-    counters.vertexArrayCreateCount += 1;
+    resources.depthProgram = createProgram(resources.depthVertexShader, resources.depthFragmentShader, 'DP');
+    markPostInitializationCreation(); counters.vertexArrayCreateCount += 1;
     resources.vertexArray = gl.createVertexArray();
     if (!resources.vertexArray) throw new Error('R3C_VERTEX_ARRAY_CREATE_FAILED');
     gl.bindVertexArray(resources.vertexArray);
@@ -390,319 +342,136 @@ export function createHEarthRun8ER3CPersistentRenderer({
     ];
     resources.buffers = [];
     for (const [name, data, location, size, type, integer] of specifications) {
-      const buffer = createBuffer();
-      resources.buffers.push({ name, buffer, byteLength: data.byteLength });
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      upload(gl.ARRAY_BUFFER, data);
-      gl.enableVertexAttribArray(location);
+      const buffer = createBuffer(); resources.buffers.push({ name, buffer, byteLength: data.byteLength });
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer); upload(gl.ARRAY_BUFFER, data); gl.enableVertexAttribArray(location);
       if (integer) gl.vertexAttribIPointer(location, size, type, 0, 0);
       else gl.vertexAttribPointer(location, size, type, false, 0, 0);
     }
     resources.indexBuffer = createBuffer();
-    resources.buffers.push({
-      name: 'indices',
-      buffer: resources.indexBuffer,
-      byteLength: uploadViews.indices.byteLength
-    });
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer);
-    upload(gl.ELEMENT_ARRAY_BUFFER, uploadViews.indices);
-
-    resources.colorTexture = createTexture();
-    resources.depthTexture = createTexture();
-    resources.geometryFramebuffer = createFramebuffer();
-    gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture);
-    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.bindTexture(gl.TEXTURE_2D, resources.depthTexture);
-    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.DEPTH_COMPONENT24, width, height);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    resources.buffers.push({ name: 'indices', buffer: resources.indexBuffer, byteLength: uploadViews.indices.byteLength });
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); upload(gl.ELEMENT_ARRAY_BUFFER, uploadViews.indices);
+    resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
+    gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.bindTexture(gl.TEXTURE_2D, resources.depthTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.DEPTH_COMPONENT24, width, height);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_MODE, gl.NONE);
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.COLOR_ATTACHMENT0,
-      gl.TEXTURE_2D,
-      resources.colorTexture,
-      0
-    );
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.DEPTH_ATTACHMENT,
-      gl.TEXTURE_2D,
-      resources.depthTexture,
-      0
-    );
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, resources.colorTexture, 0);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, resources.depthTexture, 0);
     requireCompleteFramebuffer('GEOMETRY');
-
-    resources.depthColorTexture = createTexture();
-    resources.depthFramebuffer = createFramebuffer();
-    gl.bindTexture(gl.TEXTURE_2D, resources.depthColorTexture);
-    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    resources.depthColorTexture = createTexture(); resources.depthFramebuffer = createFramebuffer();
+    gl.bindTexture(gl.TEXTURE_2D, resources.depthColorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.depthFramebuffer);
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.COLOR_ATTACHMENT0,
-      gl.TEXTURE_2D,
-      resources.depthColorTexture,
-      0
-    );
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, resources.depthColorTexture, 0);
     requireCompleteFramebuffer('DEPTH');
-
     resources.uniforms = {
-      viewProjection: uniform(resources.geometryProgram, 'uViewProjection'),
-      cameraPosition: uniform(resources.geometryProgram, 'uCameraPosition'),
-      sunDirection: uniform(resources.geometryProgram, 'uSunDirection'),
-      sunIntensity: uniform(resources.geometryProgram, 'uSunIntensity'),
-      sunColor: uniform(resources.geometryProgram, 'uSunColor'),
-      skyZenithColor: uniform(resources.geometryProgram, 'uSkyZenithColor'),
-      skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'),
-      groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
-      fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'),
-      fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
+      viewProjection: uniform(resources.geometryProgram, 'uViewProjection'), cameraPosition: uniform(resources.geometryProgram, 'uCameraPosition'),
+      sunDirection: uniform(resources.geometryProgram, 'uSunDirection'), sunIntensity: uniform(resources.geometryProgram, 'uSunIntensity'),
+      sunColor: uniform(resources.geometryProgram, 'uSunColor'), skyZenithColor: uniform(resources.geometryProgram, 'uSkyZenithColor'),
+      skyHorizonColor: uniform(resources.geometryProgram, 'uSkyHorizonColor'), groundHazeColor: uniform(resources.geometryProgram, 'uGroundHazeColor'),
+      fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'), fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
       maximumFogFactor: uniform(resources.geometryProgram, 'uMaximumFogFactor'),
-      distanceDesaturationStrength: uniform(
-        resources.geometryProgram,
-        'uDistanceDesaturationStrength'
-      ),
-      depth: uniform(resources.depthProgram, 'uDepth')
+      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'), depth: uniform(resources.depthProgram, 'uDepth')
     };
-
     const environment = packet.environmentUniforms;
-    resources.skyColor = color3(environment.skyHorizonColor).map((value, index) =>
-      Math.min(1, value * (index === 2 ? 0.92 : 0.88)));
+    resources.skyColor = color3(environment.skyHorizonColor).map((value, index) => Math.min(1, value * (index === 2 ? 0.92 : 0.88)));
     resources.clearColorBytes = resources.skyColor.map((entry) => Math.round(entry * 255));
     gl.useProgram(resources.geometryProgram);
-    gl.uniform3f(
-      resources.uniforms.sunDirection,
-      environment.sunDirection.x,
-      environment.sunDirection.y,
-      environment.sunDirection.z
-    );
-    gl.uniform1f(resources.uniforms.sunIntensity, environment.sunIntensity);
-    gl.uniform3fv(resources.uniforms.sunColor, color3(environment.sunColor));
-    gl.uniform3fv(resources.uniforms.skyZenithColor, color3(environment.skyZenithColor));
-    gl.uniform3fv(resources.uniforms.skyHorizonColor, resources.skyColor);
-    gl.uniform3fv(resources.uniforms.groundHazeColor, color3(environment.groundHazeColor));
-    gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
-    gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff);
-    gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
-    gl.uniform1f(
-      resources.uniforms.distanceDesaturationStrength,
-      environment.distanceDesaturationStrength
-    );
-    counters.staticUniformUpdateCount = 10;
-    initialized = true;
-    return getResourceReceipt();
+    gl.uniform3f(resources.uniforms.sunDirection, environment.sunDirection.x, environment.sunDirection.y, environment.sunDirection.z);
+    gl.uniform1f(resources.uniforms.sunIntensity, environment.sunIntensity); gl.uniform3fv(resources.uniforms.sunColor, color3(environment.sunColor));
+    gl.uniform3fv(resources.uniforms.skyZenithColor, color3(environment.skyZenithColor)); gl.uniform3fv(resources.uniforms.skyHorizonColor, resources.skyColor);
+    gl.uniform3fv(resources.uniforms.groundHazeColor, color3(environment.groundHazeColor)); gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
+    gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff); gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
+    gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
+    counters.staticUniformUpdateCount = 10; initialized = true; return getResourceReceipt();
   }
 
   function renderFrame(packet) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    if (
-      packet.packageIdentity !== renderPackage.packageIdentity ||
-      packet.packageContentDigest !== renderPackage.contentDigest
-    ) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
-    if (
-      !Array.isArray(packet.camera.viewProjectionMatrix) ||
-      packet.camera.viewProjectionMatrix.length !== 16 ||
-      packet.camera.viewProjectionMatrix.some((value) => !finite(value))
-    ) throw new Error('R3C_VIEW_PROJECTION_INVALID');
-
-    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(...resources.skyColor, 1);
-    gl.clearDepth(1);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
-    gl.disable(gl.CULL_FACE);
-    gl.useProgram(resources.geometryProgram);
-    gl.bindVertexArray(resources.vertexArray);
-    gl.uniformMatrix4fv(
-      resources.uniforms.viewProjection,
-      false,
-      new Float32Array(packet.camera.viewProjectionMatrix)
-    );
-    gl.uniform3f(
-      resources.uniforms.cameraPosition,
-      packet.camera.position.x,
-      packet.camera.position.y,
-      packet.camera.position.z
-    );
+    if (packet.packageIdentity !== renderPackage.packageIdentity || packet.packageContentDigest !== renderPackage.contentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
+    if (!Array.isArray(packet.camera.viewProjectionMatrix) || packet.camera.viewProjectionMatrix.length !== 16 || packet.camera.viewProjectionMatrix.some((value) => !finite(value))) throw new Error('R3C_VIEW_PROJECTION_INVALID');
+    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.viewport(0, 0, width, height);
+    gl.clearColor(...resources.skyColor, 1); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
+    gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
+    gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
     counters.cameraUniformUpdateCount += 2;
-
     for (const range of packet.drawRanges) {
       if (range.transparencyClass === 'TRANSLUCENT') {
-        gl.enable(gl.BLEND);
-        gl.blendFuncSeparate(
-          gl.SRC_ALPHA,
-          gl.ONE_MINUS_SRC_ALPHA,
-          gl.ONE,
-          gl.ONE_MINUS_SRC_ALPHA
-        );
-        gl.depthMask(false);
-      } else {
-        gl.disable(gl.BLEND);
-        gl.depthMask(true);
-      }
-      gl.drawElements(
-        gl.TRIANGLES,
-        range.indexCount,
-        gl.UNSIGNED_INT,
-        range.indexStart * 4
-      );
-      counters.geometryDrawCallCount += 1;
-      counters.totalDrawnIndexCount += range.indexCount;
+        gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
+      } else { gl.disable(gl.BLEND); gl.depthMask(true); }
+      gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
+      counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
     }
-    gl.depthMask(true);
-    gl.disable(gl.BLEND);
-    const error = gl.getError();
-    if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
+    gl.depthMask(true); gl.disable(gl.BLEND);
+    const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
   }
-
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(
-      0, 0, width, height,
-      0, 0, width, height,
-      gl.COLOR_BUFFER_BIT,
-      gl.NEAREST
-    );
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    counters.visiblePresentationCount += 1;
-    return Object.freeze({ frameNumber: counters.frameCount, width, height });
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
   }
-
   function captureColorFrame(label, { includePng = true } = {}) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
-    gl.finish();
-    counters.gpuFinishCount += 1;
-    const pixels = new Uint8Array(width * height * 4);
-    gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-    counters.colorReadbackCount += 1;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.finish(); counters.gpuFinishCount += 1;
+    const pixels = new Uint8Array(width * height * 4); gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels); counters.colorReadbackCount += 1;
     const summary = summarize(pixels, resources.clearColorBytes);
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0, 0, width, height, 0, 0, width, height, gl.COLOR_BUFFER_BIT, gl.NEAREST);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    const pngDataUrl = includePng ? canvas.toDataURL('image/png') : null;
-    if (includePng) counters.pngEncodingCount += 1;
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    const pngDataUrl = includePng ? canvas.toDataURL('image/png') : null; if (includePng) counters.pngEncodingCount += 1;
     return Object.freeze({ label, frameNumber: counters.frameCount, width, height, summary, pngDataUrl });
   }
-
   function captureDepthSummary() {
-    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.depthFramebuffer);
-    gl.viewport(0, 0, width, height);
-    gl.disable(gl.DEPTH_TEST);
-    gl.disable(gl.BLEND);
-    gl.useProgram(resources.depthProgram);
-    gl.bindVertexArray(null);
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, resources.depthTexture);
-    gl.uniform1i(resources.uniforms.depth, 0);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-    counters.depthVisualizationDrawCallCount += 1;
-    gl.finish();
-    counters.gpuFinishCount += 1;
-    const pixels = new Uint8Array(width * height * 4);
-    gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-    counters.depthReadbackCount += 1;
-    return summarize(pixels, [0, 0, 0]);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.depthFramebuffer); gl.viewport(0,0,width,height); gl.disable(gl.DEPTH_TEST); gl.disable(gl.BLEND);
+    gl.useProgram(resources.depthProgram); gl.bindVertexArray(null); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, resources.depthTexture);
+    gl.uniform1i(resources.uniforms.depth,0); gl.drawArrays(gl.TRIANGLES,0,3); counters.depthVisualizationDrawCallCount += 1; gl.finish(); counters.gpuFinishCount += 1;
+    const pixels = new Uint8Array(width*height*4); gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels); counters.depthReadbackCount += 1;
+    return summarize(pixels,[0,0,0]);
   }
-
   function getResourceReceipt() {
     const debugRenderer = gl.getExtension('WEBGL_debug_renderer_info');
     return {
       rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
       presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
       presentationProfile: {
-        terrainScaleCues: true,
-        slopeReadability: true,
-        routeContainment: true,
-        manorSiteDifferentiation: true,
-        cavernExteriorRelationDifferentiation: true,
-        geometryMutation: false,
-        terrainMutation: false,
-        placementMutation: false,
-        cameraMutation: false,
-        touchMutation: false
+        terrainScaleCues: true, slopeReadability: true, routeContainment: true,
+        manorSiteDifferentiation: true, cavernExteriorRelationDifferentiation: true,
+        geometryMutation: false, terrainMutation: false, placementMutation: false,
+        cameraMutation: false, touchMutation: false
       },
-      initialized,
-      dimensions: { width, height },
+      initialized, dimensions: { width, height },
       context: {
-        created: true,
-        lost: gl.isContextLost(),
-        vendor: gl.getParameter(gl.VENDOR),
-        renderer: gl.getParameter(gl.RENDERER),
+        created: true, lost: gl.isContextLost(), vendor: gl.getParameter(gl.VENDOR), renderer: gl.getParameter(gl.RENDERER),
         unmaskedVendor: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_VENDOR_WEBGL) : null,
         unmaskedRenderer: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_RENDERER_WEBGL) : null,
-        version: gl.getParameter(gl.VERSION),
-        shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
+        version: gl.getParameter(gl.VERSION), shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
       },
       package: {
-        logicalPromotedIdentity: LOGICAL_ID,
-        runtimeIdentity: renderPackage.packageIdentity,
-        runtimeContentDigest: renderPackage.contentDigest,
-        primitiveCount: renderPackage.primitiveCount,
-        vertexCount: renderPackage.vertexCount,
-        triangleCount: renderPackage.triangleCount,
-        indexCount: renderPackage.indexCount,
-        drawRangeCount: renderPackage.drawRanges.length,
+        logicalPromotedIdentity: LOGICAL_ID, runtimeIdentity: renderPackage.packageIdentity, runtimeContentDigest: renderPackage.contentDigest,
+        primitiveCount: renderPackage.primitiveCount, vertexCount: renderPackage.vertexCount, triangleCount: renderPackage.triangleCount,
+        indexCount: renderPackage.indexCount, drawRangeCount: renderPackage.drawRanges.length,
         canonicalGpuTransport: uploadViews.deterministicTransportEncoding === true
       },
       rendererInterface: {
-        contractId: rendererInterface.contractId,
-        attributeCount: rendererInterface.attributeLayout.length,
-        uniformCount: rendererInterface.frameUniformNames.length,
-        drawRangeCount: rendererInterface.drawRanges.length
+        contractId: rendererInterface.contractId, attributeCount: rendererInterface.attributeLayout.length,
+        uniformCount: rendererInterface.frameUniformNames.length, drawRangeCount: rendererInterface.drawRanges.length
       },
       counters: { ...counters },
-      persistentObjectCounts: {
-        contexts: 1,
-        programs: 2,
-        shaders: 4,
-        vertexArrays: 1,
-        gpuBuffers: resources.buffers?.length ?? 0,
-        textures: 3,
-        framebuffers: 2
-      },
-      resourceIdentityStable:
-        initialized &&
-        resources.buffers?.length === 9 &&
-        Boolean(
-          resources.geometryProgram &&
-          resources.depthProgram &&
-          resources.vertexArray &&
-          resources.geometryFramebuffer &&
-          resources.depthFramebuffer
-        ),
-      packageUploadedOnce:
-        counters.bufferUploadCount === 9 &&
-        counters.postInitializationBufferUploadCount === 0,
-      noPostInitializationResourceCreation:
-        counters.postInitializationResourceCreationCount === 0,
-      noPostInitializationBufferUpload:
-        counters.postInitializationBufferUploadCount === 0
+      persistentObjectCounts: { contexts: 1, programs: 2, shaders: 4, vertexArrays: 1, gpuBuffers: resources.buffers?.length ?? 0, textures: 3, framebuffers: 2 },
+      resourceIdentityStable: initialized && resources.buffers?.length === 9 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
+      packageUploadedOnce: counters.bufferUploadCount === 9 && counters.postInitializationBufferUploadCount === 0,
+      noPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === 0,
+      noPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0
     };
   }
-
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize,
-    renderFrame,
-    presentColorFrame,
-    captureColorFrame,
-    captureDepthSummary,
-    getResourceReceipt
+    initialize, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
-
 export default createHEarthRun8ER3CPersistentRenderer;

@@ -1,0 +1,119 @@
+name: Laws Compass Six-Authority Benchmark
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "laws/**"
+      - "verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs"
+      - ".github/workflows/laws-compass-six-authority-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-six-authority-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  BASELINE_COMMIT: 3a6eafcb8c10c61849a452a0c068d34a12117cf5
+  LAWS_SIX_ORIGIN: http://127.0.0.1:4173
+
+jobs:
+  laws-six-authority:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+          fetch-depth: 1
+
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - name: Fetch bounded comparison baseline
+        run: git fetch --no-tags --depth=1 origin "$BASELINE_COMMIT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate source syntax
+        run: |
+          node --check laws/index.controller.js
+          node --check laws/index.crystals.js
+          node --check laws/index.interactions.js
+          node --check verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs
+
+      - name: Start exact-head static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-six-authority-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/laws-six-authority-server.log
+          exit 1
+
+      - name: Execute six-authority benchmark
+        id: benchmark
+        continue-on-error: true
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs
+
+      - name: Report and validate six-authority receipt
+        if: always()
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const file = 'laws-six-authority-benchmark-v1.json';
+          if (!fs.existsSync(file)) throw new Error('LAWS_SIX_AUTHORITY_RECEIPT_MISSING');
+          const receipt = JSON.parse(fs.readFileSync(file, 'utf8'));
+          console.log(JSON.stringify({
+            pass: receipt.pass,
+            phase: receipt.phase,
+            browserExecuted: receipt.browserExecuted,
+            failures: receipt.failures,
+            observations: receipt.observations.length,
+            screenshots: receipt.screenshotManifest.length,
+            changedPathBoundary: receipt.execution
+          }, null, 2));
+          const failures = [];
+          if (receipt.execution.commit !== process.env.EXECUTION_COMMIT) failures.push('commit');
+          if (receipt.profile.id !== 'SIX_AUTHORITY_PROFILE') failures.push('profile');
+          if (receipt.productSourceMutatedByBenchmark !== false) failures.push('product_mutation');
+          if (receipt.fourAuthorityBenchmarkModified !== false) failures.push('old_benchmark_mutation');
+          if (receipt.pass !== true || receipt.failures.length !== 0) failures.push('receipt');
+          if (failures.length) throw new Error(`LAWS_SIX_AUTHORITY_RECEIPT_INVALID:${failures.join(',')}`);
+          NODE
+
+      - name: Upload exact-head six-authority evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-compass-six-authority-benchmark-v1-evidence
+          path: |
+            laws-six-authority-benchmark-v1.json
+            laws-six-authority-benchmark-v1-screenshots/**
+            /tmp/laws-six-authority-server.log
+          if-no-files-found: error
+          retention-days: 30

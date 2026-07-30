@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_TRAVERSAL_SCENE_SUITE_CP2_ROUND_1_PRESENTATION_v1",
+  "checkpoint": {
+    "id": "CP2_ROUND_1_PRESENTATION_CORRECTION_EXECUTION_LIVE_AVAILABILITY_AND_USER_DIFFERENTIAL",
+    "engineeringResult": "ENGINEERING_PASS_AWAITING_LIVE_ADMISSION",
+    "liveResult": "AWAITING_USER_DIFFERENTIAL",
+    "closureResult": "PASS_CLOSED_ONLY_AFTER_USER_DIFFERENTIAL",
+    "authorityQuestion": "CAN_ROUND_1_IMPROVE_PRESENTATION_READABILITY_AND_ACCEPTED_SITE_OR_EXTERIOR_RELATION_DIFFERENTIATION_WITHOUT_MUTATING_TERRAIN_PLACEMENT_CAMERA_NAVIGATION_TOUCH_OR_GEOMETRY_AUTHORITY_AND_THEN_REMAIN_OPEN_FOR_THE_REQUIRED_USER_DIFFERENTIAL"
+  },
+  "repository": {
+    "fullName": "smansfield635-create/smansfield635-create.github.io",
+    "currentMainAtCheckpointOpen": "3a6eafcb8c10c61849a452a0c068d34a12117cf5",
+    "cp1IntegratedProgramHead": "ad2c3edfe59ef0d2b34b2990c7547c42819ae0b5",
+    "cp2Branch": "agent/h-earth-gratitude-region-traversal-scene-suite-cp2-round1-presentation-001",
+    "publicRoute": "https://diamondgatebridge.com/showroom/globe/h-earth/",
+    "publicHarness": "https://diamondgatebridge.com/h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html"
+  },
+  "baseline": {
+    "receiptPath": "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.receipt.v1.json",
+    "requiredResult": "PASS_CLOSED",
+    "requiredSceneCount": 8,
+    "requiredLowDifferentiationSceneCount": 7,
+    "rendererPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898",
+    "rendererPackageDigest": "fnv1a32:9bd0b898"
+  },
+  "candidate": {
+    "presentationProfileId": "H_EARTH_GRATITUDE_REGION_CP2_ROUND_1_PRESENTATION_PROFILE_v1",
+    "requiredSceneCount": 8,
+    "requiredDistinctCameraMatrixCount": 8,
+    "requiredFramebufferReadbackCount": 8,
+    "requiredScreenshotCount": 8,
+    "maximumLowDifferentiationSceneCount": 2,
+    "minimumAggregateColorBucketRatio": 1.25,
+    "minimumAggregateEdgeSignalRatio": 1.15,
+    "requireAllFrameHashesDifferFromBaseline": true,
+    "requireAlphaClosed": true
+  },
+  "presentationScope": {
+    "mayAddress": [
+      "TERRAIN_SCALE_CUES",
+      "SLOPE_READABILITY",
+      "ROUTE_CONTAINMENT",
+      "SHORELINE_DIFFERENTIATION",
+      "VEGETATION_DIFFERENTIATION",
+      "ACCEPTED_MANOR_SITE_READABILITY",
+      "ACCEPTED_CAVERN_EXTERIOR_RELATION_READABILITY",
+      "DISTANCE_HAZE_BALANCE",
+      "FRAMEBUFFER_ALPHA_CLOSURE"
+    ],
+    "mustPreserve": [
+      "CANONICAL_LIVE_RENDER_PACKAGE_IDENTITY",
+      "CANONICAL_LIVE_RENDER_PACKAGE_DIGEST",
+      "FROZEN_TERRAIN_FIELD",
+      "ENTRY_ZONE_PLACEMENT",
+      "MIRROR_MANOR_SITE_ENVELOPE",
+      "CAVERN_EXTERIOR_RELATION",
+      "FRONTIER_NONFINAL_STATUS",
+      "CAMERA_AUTHORITY",
+      "NAVIGATION_AUTHORITY",
+      "TOUCH_AUTHORITY",
+      "PERSISTENT_GPU_RESOURCE_LIFECYCLE"
+    ]
+  },
+  "allowedMutationPaths": [
+    ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp2.yml",
+    "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.v1.json",
+    "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.runner.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp2-round1-presentation.receipt.v1.json",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+    "showroom/globe/h-earth/index.html"
+  ],
+  "exactSubstantiveProductMutationPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js"
+  ],
+  "cacheIdentityPaths": [
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+    "showroom/globe/h-earth/index.html"
+  ],
+  "prohibitedMutationPrefixes": [
+    "h-earth-3d/terrain/",
+    "h-earth-3d/environment/",
+    "h-earth-3d/integration/",
+    "h-earth-3d/objects/"
+  ],
+  "prohibited": [
+    "TERRAIN_MUTATION",
+    "PLACEMENT_MUTATION",
+    "CAMERA_MUTATION",
+    "NAVIGATION_MUTATION",
+    "TOUCH_MUTATION",
+    "GEOMETRY_PACKAGE_MUTATION",
+    "BUILDING_GEOMETRY",
+    "CAVERN_EXCAVATION",
+    "ASSISTANT_PERCEPTUAL_ACCEPTANCE",
+    "AUTOMATED_USER_DIFFERENTIAL_SUBSTITUTION"
+  ],
+  "userDifferential": {
+    "required": true,
+    "comparison": "CHANGED_LIVE_CP2_CANDIDATE_VERSUS_LAST_USER_ACCEPTED_LIVE_BASELINE",
+    "mayNotBeReplacedBy": [
+      "AUTOMATED_METRICS",
+      "SCREENSHOTS",
+      "ASSISTANT_JUDGMENT",
+      "ENGINEERING_PASS",
+      "LIVE_BYTE_IDENTITY"
+    ]
+  },
+  "stoppingBoundary": "STOP_AFTER_LIVE_CANDIDATE_AVAILABILITY_AND_REPORT_AWAITING_USER_DIFFERENTIAL"
+}

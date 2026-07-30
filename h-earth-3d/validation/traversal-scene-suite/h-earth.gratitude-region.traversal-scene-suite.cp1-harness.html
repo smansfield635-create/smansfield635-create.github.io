@@ -28,14 +28,10 @@
       status.textContent = JSON.stringify(window.H_EARTH_CP1_TRAVERSAL_SUITE.getSuiteIdentity(), null, 2);
       document.documentElement.dataset.cp1Ready = 'true';
     } catch (error) {
-      const detail = error?.stack ?? String(error);
+      document.documentElement.dataset.cp1Ready = 'false';
       document.documentElement.dataset.cp1Error = 'true';
-      status.textContent = detail;
-      window.H_EARTH_CP1_TRAVERSAL_SUITE = Object.freeze({
-        getSuiteIdentity(){ throw new Error(`CP1_HARNESS_INITIALIZATION_FAILED\n${detail}`); },
-        listSceneIds(){ throw new Error(`CP1_HARNESS_INITIALIZATION_FAILED\n${detail}`); }
-      });
-      document.documentElement.dataset.cp1Ready = 'true';
+      status.textContent = error?.stack ?? String(error);
+      throw error;
     }
   </script>
 </body>

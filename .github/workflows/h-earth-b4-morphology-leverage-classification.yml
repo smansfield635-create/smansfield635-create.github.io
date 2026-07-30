@@ -41,7 +41,9 @@ jobs:
       - name: Execute B4 fixed classification suite
         env:
           B4_HARNESS_URL: http://127.0.0.1:4180/h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage-harness.html
-        run: node h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage.runner.mjs | tee h-earth.b4-morphology-leverage.log
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/morphology/h-earth.b4-morphology-leverage.runner.mjs | tee h-earth.b4-morphology-leverage.log
       - name: Upload B4 evidence
         if: always()
         uses: actions/upload-artifact@v4

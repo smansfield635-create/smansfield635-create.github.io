@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Materialize macro, execute exact verifier, and clean transport
+      - name: Materialize smoothed macro, execute exact verifier, and clean transport
         run: |
           set -euo pipefail
           branch="candidate/h-earth-c2-r1-r1-7-assembly-001"
@@ -35,20 +35,116 @@ jobs:
           mkdir -p "$(dirname "$macro")"
           cat "$transport"/macro.part*.b64 | base64 -d > "$macro"
 
-          macro_sha="$(sha256sum "$macro" | cut -d' ' -f1)"
+          base_macro_sha="$(sha256sum "$macro" | cut -d' ' -f1)"
           verifier_sha="$(sha256sum "$verifier" | cut -d' ' -f1)"
+          test "$base_macro_sha" = "42afe39c516b9e2a72255f5155022ead63d43762a940e28ec77762f575cd174e"
+          test "$verifier_sha" = "48647ae1b21f617c4a643055ad1d12d9a618160372634487823c64651ddda442"
+
+          python - "$macro" <<'PY'
+          from pathlib import Path
+          import sys
+
+          path = Path(sys.argv[1])
+          source = path.read_text()
+          if 'function smoothScalarField(' in source:
+              raise SystemExit('SMOOTHING_ALREADY_PRESENT')
+
+          marker = 'function buildControlField() {\n'
+          smoothing = '''function smoothScalarField(source, width, height, passes = 3) {
+            let current = Float32Array.from(source);
+            const weights = [1, 2, 1];
+            for (let pass = 0; pass < passes; pass += 1) {
+              const horizontal = new Float32Array(current.length);
+              const vertical = new Float32Array(current.length);
+              for (let y = 0; y < height; y += 1) {
+                for (let x = 0; x < width; x += 1) {
+                  let sum = 0;
+                  let weightSum = 0;
+                  for (let offset = -1; offset <= 1; offset += 1) {
+                    const sampleX = clamp(x + offset, 0, width - 1);
+                    const weight = weights[offset + 1];
+                    sum += current[y * width + sampleX] * weight;
+                    weightSum += weight;
+                  }
+                  horizontal[y * width + x] = sum / weightSum;
+                }
+              }
+              for (let y = 0; y < height; y += 1) {
+                for (let x = 0; x < width; x += 1) {
+                  let sum = 0;
+                  let weightSum = 0;
+                  for (let offset = -1; offset <= 1; offset += 1) {
+                    const sampleY = clamp(y + offset, 0, height - 1);
+                    const weight = weights[offset + 1];
+                    sum += horizontal[sampleY * width + x] * weight;
+                    weightSum += weight;
+                  }
+                  vertical[y * width + x] = sum / weightSum;
+                }
+              }
+              current = vertical;
+            }
+            return current;
+          }
+
+          function smoothControlChannel(values, width, height, channel, passes = 3) {
+            const source = new Float32Array(width * height);
+            for (let y = 0; y < height; y += 1) {
+              for (let x = 0; x < width; x += 1) {
+                source[y * width + x] = values[indexOf(width, x, y, channel, CHANNEL_COUNT)];
+              }
+            }
+            const smoothed = smoothScalarField(source, width, height, passes);
+            for (let y = 0; y < height; y += 1) {
+              for (let x = 0; x < width; x += 1) {
+                values[indexOf(width, x, y, channel, CHANNEL_COUNT)] = smoothed[y * width + x];
+              }
+            }
+          }
+
+          function buildControlField() {
+          '''
+          if source.count(marker) != 1:
+              raise SystemExit('BUILD_MARKER_COUNT_INVALID')
+          source = source.replace(marker, smoothing, 1)
+
+          before_steps = '''  const alongStep =
+            (corridor.alongshoreMaximum - corridor.alongshoreMinimum) /
+            Math.max(1, width - 1);
+          '''
+          after_steps = '''  smoothControlChannel(values, width, height, CHANNEL.ALBEDO_SCALE, 3);
+            smoothControlChannel(values, width, height, CHANNEL.ROUGHNESS_OFFSET, 3);
+            smoothControlChannel(values, width, height, CHANNEL.CAVITY_RESPONSE, 3);
+            const smoothedPotentials = smoothScalarField(potentials, width, height, 3);
+
+            const alongStep =
+              (corridor.alongshoreMaximum - corridor.alongshoreMinimum) /
+              Math.max(1, width - 1);
+          '''
+          if source.count(before_steps) != 1:
+              raise SystemExit('STEP_MARKER_COUNT_INVALID')
+          source = source.replace(before_steps, after_steps, 1)
+
+          potential_marker = '  const potentialAt = (x, y) => potentials[\n'
+          if source.count(potential_marker) != 1:
+              raise SystemExit('POTENTIAL_MARKER_COUNT_INVALID')
+          source = source.replace(
+              potential_marker,
+              '  const potentialAt = (x, y) => smoothedPotentials[\n',
+              1
+          )
+          path.write_text(source)
+          PY
+
+          macro_sha="$(sha256sum "$macro" | cut -d' ' -f1)"
           macro_blob="$(git hash-object "$macro")"
           verifier_blob="$(git hash-object "$verifier")"
-          echo "MACRO_SHA256=$macro_sha"
-          echo "VERIFIER_SHA256=$verifier_sha"
-          echo "MACRO_GIT_BLOB=$macro_blob"
+          echo "SMOOTHED_MACRO_SHA256=$macro_sha"
+          echo "SMOOTHED_MACRO_GIT_BLOB=$macro_blob"
           echo "VERIFIER_GIT_BLOB=$verifier_blob"
 
-          test "$macro_sha" = "42afe39c516b9e2a72255f5155022ead63d43762a940e28ec77762f575cd174e"
-          test "$verifier_sha" = "48647ae1b21f617c4a643055ad1d12d9a618160372634487823c64651ddda442"
-          test "$macro_blob" = "0b72bae9838deac81c90f2ca3368307622d44568"
-          test "$verifier_blob" = "d08940d0c97afe2a4f62ea509c3405907df3b441"
-
+          grep -q 'function smoothScalarField' "$macro"
+          grep -q 'smoothControlChannel(values, width, height, CHANNEL.CAVITY_RESPONSE, 3)' "$macro"
           node --check "$macro"
           node --check "$verifier"
           R1_7_SKIP_GIT_ASSERTIONS=true node "$verifier"
@@ -65,5 +161,5 @@ jobs:
           git add "$macro"
           git rm -r "$transport"
           git rm .github/workflows/h-earth-c2-r1-r1-7-materialize-assembly.yml
-          git commit -m "R1.7 assembly: materialize and locally verify macro authority"
+          git commit -m "R1.7 assembly: materialize and verify smoothed macro authority"
           git push origin "HEAD:$branch"

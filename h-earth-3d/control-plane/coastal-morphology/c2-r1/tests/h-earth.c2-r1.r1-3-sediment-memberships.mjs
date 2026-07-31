@@ -36,7 +36,7 @@ for(let xi=0;xi<25;xi++){
   const ws=CLASSES.map(k=>s.weights[k]); ws.forEach(w=>{if(!finite(w))issues.push(`NONFINITE:${xi}:${d}`);if(w<0||w>1)issues.push(`RANGE:${xi}:${d}`)});
   maxNorm=Math.max(maxNorm,Math.abs(sum(ws)-1));minW=Math.min(minW,...ws);maxW=Math.max(maxW,...ws);counts[s.dominantClass]++;
  const dom=Math.max(...ws);maxDominant=Math.max(maxDominant,dom);minDominant=Math.min(minDominant,dom);
- if(s.material.luminous===true+issues.push(`LUMINOUS:${xi}:${d}`);
+ if(s.material.luminous===true)issues.push(`LUMINOUS:${xi}:${d}`);
  if(prev){maxCross=Math.max(maxCross,l1(prev.weights,s.weights));maxColor=Math.max(maxColor,cdist(prev.material.colorLinear,s.material.colorLinear))} prev=s;
  }
  for(const [a,b] of pairs){const ds=samples.filter(({s})=>s.valid&&s.weights[a]>=.08&&s.weights[b]>=.08).map(e=>e.d);widths[`${a}|${b}`].push(ds.length>1?ds.at(-1)-ds[0]:0)}

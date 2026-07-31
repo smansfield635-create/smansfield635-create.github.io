@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - agent/laws-compass-cp5-single-active-label-001
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 permissions:
   contents: write
@@ -23,7 +30,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "b8eb8783609ea584b9f2e0f132e706e23c211535"
+          test "$(git merge-base HEAD b8eb8783609ea584b9f2e0f132e706e23c211535)" = "b8eb8783609ea584b9f2e0f132e706e23c211535"
           test "$(git hash-object laws/index.interactions.js)" = "ffa47d116aecccab367d6cccdf65b2e18cea21bf"
           test "$(git hash-object laws/index.crystals.js)" = "43bb3659e24094074b72a45a1990bc66bd79e2be"
 

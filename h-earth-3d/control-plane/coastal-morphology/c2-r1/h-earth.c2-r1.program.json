@@ -1,6 +1,6 @@
 {
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
-  "status": "R1_5_PASS_CLOSED",
+  "status": "R1_6_IN_PROGRESS",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
   "failedC2GeometryAsStartingSource": "PROHIBITED",
@@ -16,9 +16,12 @@
     "representativeCapturesRequiredBeforeHumanReview": true,
     "visualSuccessorRequiresAcceptedUserDifferential": true,
     "readFirstRealCurrentHeadFailureBeforeCorrection": true,
-    "oneCoherentCommitSetBeforeControllingHeadChecks": true,
+    "oneCoherentImplementationBeforeControllingHeadChecks": true,
+    "oneCandidateBranchPushBeforeControllingHeadChecks": true,
     "correctivePushProhibitedBeforeControllingHeadFailureReadback": true,
-    "statusOnlyIntermediateCommitsProhibited": true
+    "closedPassWorkflowsManualOnly": true,
+    "statusOnlyIntermediateCommitsProhibited": true,
+    "candidateBranchMustBeVerifiedImmediatelyBeforeMutation": true
   },
   "passes": {
     "R1.0": {
@@ -69,6 +72,7 @@
       "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "startingHead": "f0a7c2b26448db2429feec8cbf45b58986da81d4",
       "executionHead": "6412f0167fa226104058f428b2c1c4a9a1799fb4",
+      "durableClosureHead": "7273cbb3dfd98f7fbca5d4e10ac51cd732678968",
       "rollbackBranch": "rollback/h-earth-c2-r1-r1-5-closed-001",
       "actualDepthUsed": true,
       "seabedSlopeUsed": true,
@@ -101,7 +105,35 @@
     },
     "R1.6": {
       "name": "RESTRAINED_SWASH_FOAM_AND_WETNESS",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "startingHead": "7273cbb3dfd98f7fbca5d4e10ac51cd732678968",
+      "rollbackBranch": "rollback/h-earth-c2-r1-r1-5-closed-001",
+      "immutableInputs": [
+        "R1.1_COASTAL_GEOMETRY",
+        "R1.2_NORMALS_AND_LIGHTING",
+        "R1.3_SEDIMENT_MEMBERSHIPS",
+        "R1.4_ACTUAL_DEPTH_OPTICS",
+        "R1.5_BREAKER_ELIGIBILITY_AND_INTENSITY"
+      ],
+      "owns": [
+        "SWASH_PHASE_AND_REACH_FIELDS",
+        "FOAM_GENERATION_AND_DECAY",
+        "FOAM_FRAGMENTATION",
+        "TEMPORARY_WETNESS_STATE",
+        "WETNESS_DECAY",
+        "CANDIDATE_ONLY_ANIMATION_BINDING"
+      ],
+      "coastalGeometryChangeAuthorized": false,
+      "normalChangeAuthorized": false,
+      "sedimentMembershipChangeAuthorized": false,
+      "waterOpticsChangeAuthorized": false,
+      "breakerEligibilityLawChangeAuthorized": false,
+      "openOceanGeometryDisplacementAuthorized": false,
+      "rendererLifecycleChangeAuthorized": false,
+      "cameraOrTraversalChangeAuthorized": false,
+      "publicRouteOrProductDefaultChangeAuthorized": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialReady": false
     },
     "R1.7": {
       "name": "BOUNDED_TERRAIN_MACRO_EXPRESSION",
@@ -125,7 +157,15 @@
     "mergeAuthorityCreated": false,
     "status": "PASS"
   },
+  "repositoryHandlingIncident": {
+    "incident": "TRANSIENT_EMPTY_NOOP_FILE_ON_MAIN",
+    "currentMainContentResidue": "NONE",
+    "hEarthSourceMutated": false,
+    "productMutated": false,
+    "programBlocker": false,
+    "historyRewriteAuthorized": false
+  },
   "productDefaultMutated": false,
-  "currentCheckpoint": "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
-  "nextAuthorizedCheckpoint": "R1.6_RESTRAINED_SWASH_FOAM_AND_WETNESS"
+  "currentCheckpoint": "R1.6_RESTRAINED_SWASH_FOAM_AND_WETNESS",
+  "nextCheckpointOnPass": "R1.7_BOUNDED_TERRAIN_MACRO_EXPRESSION"
 }

@@ -1,9 +1,9 @@
 /**
- * H_EARTH_REPOSITORY_REGISTRY_C2_R1_CANDIDATE_PATH_DISPOSITION_v3
+ * H_EARTH_REPOSITORY_REGISTRY_C2_R1_CANDIDATE_PATH_DISPOSITION_v4
  *
  * Read-only path-resolution overlay for the bounded C2-R1 candidate package.
- * It registers the control prefix, immutable R1.1-R1.4 authorities, and the
- * isolated R1.5 breaker-field authority. Registration creates no mutation,
+ * It registers the control prefix, immutable R1.1-R1.5 authorities, and the
+ * isolated R1.6 swash/foam/wetness authority. Registration creates no mutation,
  * merge, renderer, route, deployment, product, or visual-success authority.
  */
 
@@ -25,11 +25,12 @@ export const H_EARTH_C2_R1_CANDIDATE_EXACT_PATHS = Object.freeze([
   '/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js',
   '/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js',
   '/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js',
-  '/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js'
+  '/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js',
+  '/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js'
 ]);
 
 export const H_EARTH_C2_R1_CANDIDATE_PATH_DISPOSITION_ID =
-  'H_EARTH_REPOSITORY_REGISTRY_C2_R1_CANDIDATE_PATH_DISPOSITION_v3';
+  'H_EARTH_REPOSITORY_REGISTRY_C2_R1_CANDIDATE_PATH_DISPOSITION_v4';
 
 function controlsPath(repositoryPath) {
   return typeof repositoryPath === 'string' && (
@@ -55,17 +56,18 @@ function occurrenceFor(repositoryPath) {
 }
 
 export const H_EARTH_C2_R1_CANDIDATE_PATH_EVIDENCE = deepFreeze({
-  evidenceId: 'EVIDENCE_H_EARTH_C2_R1_CANDIDATE_PATH_DISPOSITION_v3',
+  evidenceId: 'EVIDENCE_H_EARTH_C2_R1_CANDIDATE_PATH_DISPOSITION_v4',
   evidenceClass: 'EXISTING_BOUNDARY_RELATION_OBSERVED',
   sourceKind: 'EXPLICIT_MANAGEMENT_DISPOSITION_AND_EXECUTED_REPOSITORY_WORK',
   sourceIdOrPath: CONTROL_PREFIX,
   sourceOccurrenceOrRevision:
-    'R1_0_PASS_CLOSED;R1_1_PASS_CLOSED;R1_2_PASS_CLOSED;R1_3_PASS_CLOSED;R1_4_PASS_CLOSED;R1_5_AUTHORIZED',
+    'R1_0_PASS_CLOSED;R1_1_PASS_CLOSED;R1_2_PASS_CLOSED;R1_3_PASS_CLOSED;R1_4_PASS_CLOSED;R1_5_PASS_CLOSED;R1_6_AUTHORIZED',
   assertionScope: Object.freeze([
     'C2_R1_CONTROL_PREFIX_PATH_RESOLUTION',
     'C2_R1_ISOLATED_TERRAIN_AUTHORITY_PATH_RESOLUTION',
     'C2_R1_ISOLATED_WATER_OPTICS_PATH_RESOLUTION',
     'C2_R1_ISOLATED_BREAKER_FIELD_PATH_RESOLUTION',
+    'C2_R1_ISOLATED_SWASH_FOAM_WETNESS_PATH_RESOLUTION',
     'AUTOMATIC_REPOSITORY_PREFLIGHT_ONLY'
   ]),
   verifiedOn: '2026-07-31',
@@ -74,8 +76,8 @@ export const H_EARTH_C2_R1_CANDIDATE_PATH_EVIDENCE = deepFreeze({
     'NO_NORMAL_OR_LIGHTING_CHANGE_AUTHORITY_BEYOND_ACCEPTED_R1_2',
     'NO_SEDIMENT_MEMBERSHIP_CHANGE_AUTHORITY_BEYOND_ACCEPTED_R1_3',
     'NO_WATER_OPTICS_CHANGE_AUTHORITY_BEYOND_ACCEPTED_R1_4',
-    'R1_5_BREAKER_ELIGIBILITY_AND_INTENSITY_ONLY',
-    'NO_FULL_SWASH_FOAM_DEPOSITION_OR_TEMPORARY_WETNESS_AUTHORITY',
+    'NO_BREAKER_ELIGIBILITY_LAW_CHANGE_AUTHORITY_BEYOND_ACCEPTED_R1_5',
+    'R1_6_SWASH_FOAM_WETNESS_AND_CANDIDATE_ANIMATION_ONLY',
     'NO_OPEN_OCEAN_GEOMETRY_DISPLACEMENT',
     'NO_RENDERER_CAMERA_TRAVERSAL_OR_ROUTE_AUTHORITY',
     'NO_PRODUCT_DEFAULT_MUTATION',
@@ -90,7 +92,7 @@ export const H_EARTH_C2_R1_CANDIDATE_PATH_NODE = deepFreeze({
   nodeSubtype: 'CANDIDATE_COASTAL_SUCCESSOR_PACKAGE',
   displayName: 'H-Earth C2-R1 Physically Coherent Coastal Successor Candidate',
   description:
-    'Sequential bounded C2 replacement attempt from the accepted pre-C2 baseline; R1.5 consumes accepted R1.1 geometry, R1.2 normals, R1.3 sediment memberships, and R1.4 actual-depth optics as immutable inputs.',
+    'Sequential bounded C2 replacement attempt from the accepted pre-C2 baseline; R1.6 consumes accepted R1.1 geometry, R1.2 normals, R1.3 sediment memberships, R1.4 actual-depth optics, and R1.5 breaker eligibility/intensity as immutable inputs.',
   repositoryPaths: Object.freeze([
     CONTROL_PREFIX,
     ...H_EARTH_C2_R1_CANDIDATE_EXACT_PATHS
@@ -108,7 +110,7 @@ export const H_EARTH_C2_R1_CANDIDATE_PATH_NODE = deepFreeze({
     'READ_ONLY_PATH_RESOLUTION_FOR_SEPARATELY_AUTHORIZED_BOUNDED_C2_R1_PASSES',
   authoritySource: Object.freeze([
     'EXPLICIT_USER_MANAGEMENT_DISPOSITION',
-    'R1_0_THROUGH_R1_4_EXECUTED_CLOSURE_EVIDENCE'
+    'R1_0_THROUGH_R1_5_EXECUTED_CLOSURE_EVIDENCE'
   ]),
   authorityScope: Object.freeze([
     'EXACT_AND_PREFIX_PATH_RESOLUTION',
@@ -130,7 +132,7 @@ export const H_EARTH_C2_R1_CANDIDATE_PATH_NODE = deepFreeze({
   cardinalStatus: 'NONE',
   cardinalCompleteness: 'NOT_APPLICABLE',
   orderingRules: Object.freeze([
-    'R1_0_BEFORE_R1_1_BEFORE_R1_2_BEFORE_R1_3_BEFORE_R1_4_BEFORE_R1_5',
+    'R1_0_BEFORE_R1_1_BEFORE_R1_2_BEFORE_R1_3_BEFORE_R1_4_BEFORE_R1_5_BEFORE_R1_6',
     'ONE_BOUNDED_PASS_AT_A_TIME'
   ]),
   dependencyRelations: Object.freeze([]),
@@ -140,8 +142,8 @@ export const H_EARTH_C2_R1_CANDIDATE_PATH_NODE = deepFreeze({
     'NORMAL_OR_LIGHTING_CHANGE_AFTER_R1_2_CLOSURE',
     'SEDIMENT_MEMBERSHIP_CHANGE_AFTER_R1_3_CLOSURE',
     'WATER_OPTICS_CHANGE_AFTER_R1_4_CLOSURE',
-    'FULL_SWASH_FOAM_DEPOSITION_OR_TEMPORARY_WETNESS_DURING_R1_5',
-    'OPEN_OCEAN_GEOMETRY_DISPLACEMENT_DURING_R1_5',
+    'BREAKER_ELIGIBILITY_LAW_CHANGE_AFTER_R1_5_CLOSURE',
+    'OPEN_OCEAN_GEOMETRY_DISPLACEMENT_DURING_R1_6',
     'RENDERER_LIFECYCLE_CHANGE',
     'CAMERA_OR_TRAVERSAL_CHANGE',
     'PUBLIC_ROUTE_OR_PRODUCT_DEFAULT_CHANGE',
@@ -153,20 +155,22 @@ export const H_EARTH_C2_R1_CANDIDATE_PATH_NODE = deepFreeze({
     'R1_2_NORMAL_SURFACE_BLOB_IDENTITY',
     'R1_3_SEDIMENT_BLOB_IDENTITY',
     'R1_4_WATER_OPTICS_BLOB_IDENTITY',
-    'R1_5_ACTUAL_DEPTH_USAGE',
-    'R1_5_DIRECTIONAL_SEABED_RISE',
-    'R1_5_BREAKER_CONTINUITY_AND_ALONGSHORE_VARIATION'
+    'R1_5_BREAKER_FIELD_BLOB_IDENTITY',
+    'R1_6_SWASH_ADVANCE_AND_RETREAT',
+    'R1_6_BREAKER_ALIGNED_TRANSIENT_NONLUMINOUS_FOAM',
+    'R1_6_TEMPORARY_WETNESS_AND_DECAY',
+    'R1_6_NO_PARALLEL_STRIPS_OR_FLOATING_BANDS'
   ]),
   stoppingBoundaries: Object.freeze([
     'STOP_ON_UNRESOLVED_CANDIDATE_PATH',
-    'STOP_ON_R1_1_R1_2_R1_3_OR_R1_4_IDENTITY_DRIFT',
-    'STOP_BEFORE_R1_6_WITHOUT_R1_5_PASS_CLOSED',
+    'STOP_ON_R1_1_THROUGH_R1_5_IDENTITY_DRIFT',
+    'STOP_BEFORE_R1_7_WITHOUT_R1_6_PASS_CLOSED',
     'STOP_BEFORE_PUBLIC_PROMOTION_WITHOUT_ACCEPTED_USER_DIFFERENTIAL'
   ]),
   currentIdentityReferences: Object.freeze([
     'C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR',
-    'f0a7c2b26448db2429feec8cbf45b58986da81d4',
-    'R1_5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS'
+    '7273cbb3dfd98f7fbca5d4e10ac51cd732678968',
+    'R1_6_RESTRAINED_SWASH_FOAM_AND_WETNESS'
   ]),
   lifecycleStatus: 'CANDIDATE',
   unresolvedFields: Object.freeze([])

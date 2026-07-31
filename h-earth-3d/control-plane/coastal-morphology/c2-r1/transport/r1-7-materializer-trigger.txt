@@ -1,6 +1,6 @@
 R1.7 assembly materializer trigger
-Base assembly head with unique potential-boundary smoothing gate: c1b3c83e9b7a865d1f179109001f4e58cb23a983
+Base assembly head with fourth cavity smoothing pass: 85ecf2570ccfbb03763cdfd517f54ca55e59faa3
 Target mutation ref: candidate/h-earth-c2-r1-r1-7-assembly-001
 Candidate branch mutation: prohibited
 Main mutation: prohibited
-Attempt: 7
+Attempt: 8

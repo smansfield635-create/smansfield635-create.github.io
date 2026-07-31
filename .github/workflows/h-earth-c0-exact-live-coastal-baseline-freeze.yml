@@ -6,14 +6,15 @@ on:
       - main
     paths:
       - '.github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml'
-      - 'h-earth-3d/control-plane/coastal-morphology/c0/**'
+      - 'h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.allowed-path-manifest.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.capture.mjs'
 
 permissions:
   contents: write
 
 concurrency:
   group: h-earth-c0-${{ github.event.pull_request.number }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   EXACT_MAIN_HEAD: 59df682501f63aec8a263cef8e1a5adacbc2a1a2
@@ -41,6 +42,37 @@ jobs:
           git cat-file -e "$EXACT_MAIN_HEAD^{commit}"
           test "$(git merge-base "$EXACT_MAIN_HEAD" HEAD)" = "$EXACT_MAIN_HEAD"
 
+      - name: Correct directory-route counterpart mapping once
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          target = Path('h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.capture.mjs')
+          text = target.read_text()
+          old = """function repositoryPathForUrl(url) {
+            const parsed = new URL(url);
+            return decodeURIComponent(parsed.pathname).replace(/^\\/+/, '');
+          }"""
+          new = """function repositoryPathForUrl(url) {
+            const parsed = new URL(url);
+            let repositoryPath = decodeURIComponent(parsed.pathname).replace(/^\\/+/, '');
+            if (repositoryPath.endsWith('/')) repositoryPath += 'index.html';
+            return repositoryPath;
+          }"""
+          if old in text:
+              target.write_text(text.replace(old, new, 1))
+          elif new not in text:
+              raise SystemExit('C0_ROUTE_MAPPING_SOURCE_SHAPE_UNRESOLVED')
+          PY
+          git config user.name "h-earth-c0-evidence"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$C0_ROOT/h-earth.c0.capture.mjs"
+          if ! git diff --cached --quiet; then
+            git commit -m "C0-A: map directory routes to index HTML"
+            git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          fi
+
       - name: Record registry scope limitation
         shell: bash
         run: |
@@ -60,7 +92,6 @@ jobs:
             --task "C0-A new evidence path scope recording" \
             --mutation-intent \
             --output /tmp/h-earth-c0-new-path-preflight.json
-          echo $? > /tmp/h-earth-c0-new-path-preflight.exit
           exit 0
 
       - name: Execute read-only product-source preflight
@@ -83,7 +114,6 @@ jobs:
             --paths-file /tmp/h-earth-c0-readonly-product-paths.txt \
             --task "C0-A read-only public occurrence source comparison" \
             --output /tmp/h-earth-c0-product-readonly-preflight.json
-          echo $? > /tmp/h-earth-c0-product-readonly-preflight.exit
           exit 0
 
       - name: Build durable preflight limitation receipt
@@ -91,11 +121,11 @@ jobs:
         run: |
           node <<'NODE'
           const fs = require('node:fs');
-          const output =
-            'h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.preflight-receipt.json';
+          const path = require('node:path');
           const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
           const newPath = read('/tmp/h-earth-c0-new-path-preflight.json');
           const product = read('/tmp/h-earth-c0-product-readonly-preflight.json');
+          const output = `${process.env.C0_EVIDENCE}/h-earth.c0.preflight-receipt.json`;
           const receipt = {
             receiptType: 'H_EARTH_C0_PREFLIGHT_RECONCILIATION_RECEIPT_v1',
             checkpointBlock: 'C0_A_PUBLIC_OCCURRENCE_AND_LINKAGE',
@@ -121,7 +151,7 @@ jobs:
             c1DiagnosisAuthorized: false,
             timestamp: new Date().toISOString()
           };
-          fs.mkdirSync(require('node:path').dirname(output), { recursive: true });
+          fs.mkdirSync(path.dirname(output), { recursive: true });
           fs.writeFileSync(output, `${JSON.stringify(receipt, null, 2)}\n`);
           console.log(JSON.stringify(receipt, null, 2));
           NODE

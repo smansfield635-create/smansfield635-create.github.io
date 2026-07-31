@@ -1,11 +1,11 @@
 {
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
-  "status": "R1_4_PASS_CLOSED",
+  "status": "R1_5_IMPLEMENTED_AWAITING_CURRENT_HEAD_WORKFLOWS",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
   "failedC2GeometryAsStartingSource": "PROHIBITED",
   "rollbackBranch": "rollback/h-earth-c2-r1-pre-mutation-001",
-  "latestCheckpointRollbackBranch": "rollback/h-earth-c2-r1-r1-3-closed-001",
+  "latestCheckpointRollbackBranch": "rollback/h-earth-c2-r1-r1-4-closed-001",
   "integrationBaseBranch": "integration/h-earth-c2-r1-baseline-001",
   "advanceToC3": false,
   "executionLaw": {
@@ -16,6 +16,8 @@
     "representativeCapturesRequiredBeforeHumanReview": true,
     "visualSuccessorRequiresAcceptedUserDifferential": true,
     "readFirstRealCurrentHeadFailureBeforeCorrection": true,
+    "oneCoherentCommitSetBeforeControllingHeadChecks": true,
+    "correctivePushProhibitedBeforeControllingHeadFailureReadback": true,
     "statusOnlyIntermediateCommitsProhibited": true
   },
   "passes": {
@@ -41,6 +43,8 @@
       "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "startingHead": "2c9e16e1340a11cf46277b641454db610d7c9b6c",
       "executionHead": "3f870c5dbe8f16d24829693db0359bc6e7dd37d8",
+      "durableClosureHead": "f0a7c2b26448db2429feec8cbf45b58986da81d4",
+      "rollbackBranch": "rollback/h-earth-c2-r1-r1-4-closed-001",
       "actualDepthUsed": true,
       "seabedVisibilityDepthDriven": true,
       "shallowWaterTurquoise": true,
@@ -62,7 +66,34 @@
     },
     "R1.5": {
       "name": "DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
-      "status": "NOT_STARTED"
+      "status": "IMPLEMENTED_AWAITING_CURRENT_HEAD_WORKFLOWS",
+      "startingHead": "f0a7c2b26448db2429feec8cbf45b58986da81d4",
+      "authorizedMutationScope": [
+        "BREAKER_ELIGIBILITY_FIELD",
+        "BREAKER_INTENSITY_FIELD",
+        "WAVE_APPROACH_DIRECTION",
+        "DEPTH_AND_SLOPE_THRESHOLDS",
+        "BREAKER_CREST_PHASE_PARAMETERS",
+        "R1_5_TESTS_RECEIPTS_AND_ENGINEERING_CAPTURES"
+      ],
+      "immutableInputs": [
+        "R1_1_COASTAL_GEOMETRY",
+        "R1_2_NORMALS_AND_SURFACE_GRADIENTS",
+        "R1_3_SEDIMENT_MEMBERSHIPS",
+        "R1_4_ACTUAL_DEPTH_WATER_OPTICS"
+      ],
+      "requiredPhysicalInputs": [
+        "LOCAL_WATER_DEPTH",
+        "SEABED_SLOPE",
+        "DEPTH_CHANGE_RATE",
+        "WAVE_DIRECTION",
+        "SHORELINE_ORIENTATION"
+      ],
+      "physicalLaw": "BREAKING_REQUIRES_POSITIVE_WATER_DEPTH_WITHIN_RANGE_AND_RISING_COMPATIBLE_SEABED_ALONG_INCOMING_WAVE_DIRECTION",
+      "fullSwashFoamAndTemporaryWetnessDeferredTo": "R1.6_RESTRAINED_SWASH_FOAM_AND_WETNESS",
+      "closureCondition": "R1_5_AND_AUTOMATIC_REGISTRY_PREFLIGHT_PASS_AT_SAME_CONTROLLING_HEAD",
+      "stoppingBoundary": "DEPTH_SLOPE_DIRECTION_AND_CONTINUITY_GAUGES_PASS_OR_FIRST_REAL_HARD_BLOCKER_REPORTED",
+      "productMutation": false
     },
     "R1.6": {
       "name": "RESTRAINED_SWASH_FOAM_AND_WETNESS",
@@ -88,9 +119,9 @@
     "purpose": "READ_ONLY_CANDIDATE_PATH_RESOLUTION",
     "mutationAuthorityCreated": false,
     "mergeAuthorityCreated": false,
-    "status": "PASS"
+    "status": "PENDING_CURRENT_HEAD_PREFLIGHT"
   },
   "productDefaultMutated": false,
-  "currentCheckpoint": "R1.4_ACTUAL_DEPTH_WATER_OPTICS",
+  "currentCheckpoint": "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
   "nextAuthorizedCheckpoint": "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS"
 }

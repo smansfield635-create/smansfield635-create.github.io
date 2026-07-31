@@ -11,10 +11,12 @@
     ".github/workflows/h-earth-c2-r1-r1-2-normals-lighting.yml",
     ".github/workflows/h-earth-c2-r1-r1-3-sediment-memberships.yml",
     ".github/workflows/h-earth-c2-r1-r1-4-actual-depth-water-optics.yml",
+    ".github/workflows/h-earth-c2-r1-r1-5-depth-slope-breakers.yml",
     "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
     "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
     "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
     "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+    "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
     "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
     "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js"
   ],
@@ -57,6 +59,7 @@
     "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js": {
       "checkpoint": "R1.4_ACTUAL_DEPTH_WATER_OPTICS",
       "candidateOnly": true,
+      "immutableAfterCheckpoint": true,
       "immutableGeometryInput": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
       "immutableNormalInput": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
       "immutableSedimentInput": "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
@@ -65,12 +68,25 @@
       "oceanAnimationBound": false,
       "rendererBound": false,
       "publicRouteBound": false
+    },
+    "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js": {
+      "checkpoint": "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
+      "candidateOnly": true,
+      "immutableGeometryInput": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+      "immutableNormalInput": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+      "immutableSedimentInput": "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+      "immutableWaterOpticsInput": "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+      "ownsBreakerEligibilityAndIntensityOnly": true,
+      "fullSwashFoamOrWetnessBound": false,
+      "openOceanDisplacementBound": false,
+      "rendererBound": false,
+      "publicRouteBound": false
     }
   },
   "registryPathDisposition": {
     "overlayPath": "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
     "controlPrefix": "/h-earth-3d/control-plane/coastal-morphology/c2-r1/",
-    "candidateExactPaths": 4,
+    "candidateExactPaths": 5,
     "readOnlyResolutionOnly": true,
     "mutationAuthorityCreated": false,
     "mergeAuthorityCreated": false

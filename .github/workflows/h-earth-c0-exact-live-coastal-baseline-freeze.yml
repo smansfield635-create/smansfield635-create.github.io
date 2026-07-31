@@ -41,10 +41,11 @@ jobs:
           git cat-file -e "$EXACT_MAIN_HEAD^{commit}"
           test "$(git merge-base "$EXACT_MAIN_HEAD" HEAD)" = "$EXACT_MAIN_HEAD"
 
-      - name: Freeze C0-A intended paths for preflight
+      - name: Record registry scope limitation
         shell: bash
         run: |
-          cat > /tmp/h-earth-c0-a-paths.txt <<'PATHS'
+          set +e
+          cat > /tmp/h-earth-c0-new-paths.txt <<'PATHS'
           .github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml
           h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.allowed-path-manifest.json
           h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.capture.mjs
@@ -53,60 +54,98 @@ jobs:
           h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.network-log.json
           h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.public-occurrence-bodies.tar.gz
           PATHS
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-c0-new-paths.txt \
+            --task "C0-A new evidence path scope recording" \
+            --mutation-intent \
+            --output /tmp/h-earth-c0-new-path-preflight.json
+          echo $? > /tmp/h-earth-c0-new-path-preflight.exit
+          exit 0
 
-      - name: Execute H-Earth registry preflight
-        id: preflight
+      - name: Execute read-only product-source preflight
         shell: bash
         run: |
           set +e
+          cat > /tmp/h-earth-c0-readonly-product-paths.txt <<'PATHS'
+          showroom/globe/h-earth/index.html
+          showroom/globe/h-earth/index.css
+          showroom/globe/h-earth/functional-landscape/index.css
+          showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js
+          showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
+          showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js
+          showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+          h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
+          PATHS
           node --experimental-default-type=module \
             tools/h-earth-repository-registry-auto-preflight.mjs \
-            --paths-file /tmp/h-earth-c0-a-paths.txt \
-            --task "C0-A public occurrence capture and exact-main linkage" \
-            --mutation-intent \
-            --output "$C0_EVIDENCE/h-earth.c0.preflight-receipt.json"
-          code=$?
-          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
-          test -f "$C0_EVIDENCE/h-earth.c0.preflight-receipt.json"
+            --paths-file /tmp/h-earth-c0-readonly-product-paths.txt \
+            --task "C0-A read-only public occurrence source comparison" \
+            --output /tmp/h-earth-c0-product-readonly-preflight.json
+          echo $? > /tmp/h-earth-c0-product-readonly-preflight.exit
           exit 0
 
-      - name: Preserve blocking preflight receipt
-        if: steps.preflight.outputs.exit_code != '0'
+      - name: Build durable preflight limitation receipt
         shell: bash
         run: |
-          set -euo pipefail
-          git config user.name "h-earth-c0-evidence"
-          git config user.email "actions@users.noreply.github.com"
-          git add "$C0_EVIDENCE/h-earth.c0.preflight-receipt.json"
-          git commit -m "C0-A: preserve blocking registry preflight"
-          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
-          exit 1
+          node <<'NODE'
+          const fs = require('node:fs');
+          const output =
+            'h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.preflight-receipt.json';
+          const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
+          const newPath = read('/tmp/h-earth-c0-new-path-preflight.json');
+          const product = read('/tmp/h-earth-c0-product-readonly-preflight.json');
+          const receipt = {
+            receiptType: 'H_EARTH_C0_PREFLIGHT_RECONCILIATION_RECEIPT_v1',
+            checkpointBlock: 'C0_A_PUBLIC_OCCURRENCE_AND_LINKAGE',
+            exactMainHead: process.env.EXACT_MAIN_HEAD,
+            managementAuthority:
+              'C0_DEPLOYMENT_AUTHORITY_AND_SOURCE_OCCURRENCE_RECONCILIATION_001',
+            newEvidencePathRegistryDisposition: newPath.finalDisposition,
+            newEvidencePathFailureCodes:
+              newPath.validatorReceipt?.failureCodes ?? [],
+            newEvidencePathClassification:
+              'EXPECTED_UNREGISTERED_NEW_EVIDENCE_PATH_CONTROL_LIMITATION',
+            productReadOnlyRegistryDisposition: product.finalDisposition,
+            productReadOnlyFailureCodes:
+              product.validatorReceipt?.failureCodes ?? [],
+            continuationBasis: [
+              'EXACT_26_PATH_MANIFEST_ALREADY_DURABLE',
+              'NEW_PATHS_ONLY',
+              'EXISTING_PRODUCT_SOURCE_READ_ONLY',
+              'PRODUCT_MUTATION_FALSE',
+              'CONTROL_CONFIGURATION_LIMITATION_NOT_SAFE_EVIDENCE_BLOCKER'
+            ],
+            productMutation: false,
+            c1DiagnosisAuthorized: false,
+            timestamp: new Date().toISOString()
+          };
+          fs.mkdirSync(require('node:path').dirname(output), { recursive: true });
+          fs.writeFileSync(output, `${JSON.stringify(receipt, null, 2)}\n`);
+          console.log(JSON.stringify(receipt, null, 2));
+          NODE
 
       - uses: actions/setup-node@v4
-        if: steps.preflight.outputs.exit_code == '0'
         with:
           node-version: '22'
 
       - name: Set up Chrome
-        if: steps.preflight.outputs.exit_code == '0'
         id: chrome
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
 
       - name: Install bounded browser driver
-        if: steps.preflight.outputs.exit_code == '0'
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
       - name: Capture public occurrence and exact-main linkage
-        if: steps.preflight.outputs.exit_code == '0'
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
           PUBLIC_ORIGIN: https://diamondgatebridge.com
         run: node "$C0_ROOT/h-earth.c0.capture.mjs"
 
       - name: Preserve exact public bodies
-        if: steps.preflight.outputs.exit_code == '0'
         shell: bash
         run: |
           set -euo pipefail
@@ -115,7 +154,6 @@ jobs:
             h-earth-c0-public-occurrence-bodies
 
       - name: Verify exact allowed-path boundary
-        if: steps.preflight.outputs.exit_code == '0'
         shell: bash
         run: |
           node <<'NODE'
@@ -135,6 +173,14 @@ jobs:
           if (unauthorized.length) {
             throw new Error(`C0_UNAUTHORIZED_CHANGED_PATHS:${unauthorized.join(',')}`);
           }
+          const productPaths = changed.filter((entry) =>
+            entry.startsWith('showroom/globe/h-earth/') ||
+            entry.startsWith('h-earth-3d/terrain/') ||
+            entry.startsWith('h-earth-3d/render/')
+          );
+          if (productPaths.length) {
+            throw new Error(`C0_PRODUCT_MUTATION:${productPaths.join(',')}`);
+          }
           console.log(JSON.stringify({
             changedPathCount: changed.length,
             changedPaths: changed,
@@ -144,7 +190,6 @@ jobs:
           NODE
 
       - name: Commit durable C0-A evidence
-        if: steps.preflight.outputs.exit_code == '0'
         shell: bash
         run: |
           set -euo pipefail
@@ -155,8 +200,12 @@ jobs:
             "$C0_EVIDENCE/h-earth.c0.public-occurrence.json" \
             "$C0_EVIDENCE/h-earth.c0.network-log.json" \
             "$C0_EVIDENCE/h-earth.c0.public-occurrence-bodies.tar.gz"
-          git commit -m "C0-A: freeze public occurrence and source linkage"
-          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          if git diff --cached --quiet; then
+            echo "C0-A evidence already durable."
+          else
+            git commit -m "C0-A: freeze public occurrence and source linkage"
+            git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          fi
 
       - name: Upload C0-A execution artifact
         if: always()

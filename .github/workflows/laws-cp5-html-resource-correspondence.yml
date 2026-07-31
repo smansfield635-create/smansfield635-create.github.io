@@ -1,0 +1,68 @@
+name: Laws CP5 HTML Resource Correspondence
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/laws-cp5-html-resource-correspondence.yml'
+      - 'laws/index.html'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'agent/laws-cp5-html-resource-correspondence-001'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Apply exact HTML resource correspondence
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('laws/index.html')
+          text = path.read_text(encoding='utf-8')
+          blob = 'be365cc331ee5643f916abee204d4f5f45376c04'
+          old_attr = 'data-laws-interactions="/laws/index.interactions.js"'
+          new_attr = f'data-laws-interactions="/laws/index.interactions.js?v={blob}"'
+          old_src = '"/laws/index.interactions.js?v=LAWS_CELESTIAL_GATEWAY_AUXILIARY_CLUSTERS_20260729A"'
+          new_src = f'"/laws/index.interactions.js?v={blob}"'
+
+          if text.count(old_attr) != 1:
+              raise SystemExit(f'expected one metadata reference, found {text.count(old_attr)}')
+          if text.count(old_src) != 1:
+              raise SystemExit(f'expected one staged-loader reference, found {text.count(old_src)}')
+
+          text = text.replace(old_attr, new_attr, 1)
+          text = text.replace(old_src, new_src, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+          grep -n 'data-laws-interactions="/laws/index.interactions.js?v=be365cc331ee5643f916abee204d4f5f45376c04"' laws/index.html
+          grep -n '"/laws/index.interactions.js?v=be365cc331ee5643f916abee204d4f5f45376c04"' laws/index.html
+
+      - name: Commit one-file final correction and remove constructor
+        shell: bash
+        run: |
+          rm .github/workflows/laws-cp5-html-resource-correspondence.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add laws/index.html .github/workflows/laws-cp5-html-resource-correspondence.yml
+          unexpected="$(git diff --cached --name-only | grep -v '^laws/index.html$' || true)"
+          if [ -n "$unexpected" ]; then
+            echo "Unexpected final changed path: $unexpected"
+            exit 1
+          fi
+          git commit -m 'Bind Laws CP5 interaction resource in HTML'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}

@@ -1,0 +1,19 @@
+name: H-Earth C1 Coastal Structure Diagnosis
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archived-observation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preserve bounded stopping boundary
+        run: |
+          echo "C0 post-merge public-byte confirmation already executed once."
+          echo "Observed SHA256: b875cd6243b4531b92cdf0f381f0b99b47e1bc5bc693059ebba11bf562499038"
+          echo "Expected SHA256: c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e"
+          echo "Automatic repeat is disabled."
+          exit 1

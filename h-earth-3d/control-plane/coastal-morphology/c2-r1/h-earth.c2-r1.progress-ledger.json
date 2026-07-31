@@ -6,7 +6,7 @@
   "passes": {
     "R1.0": {
       "status": "PASS_CLOSED",
-      "head": "f465a6e6f4c55acb2460543fde20deab990d3c29",
+      "receiptCommit": "9206d6c75b70e2807175dae7725de5b5ea039650",
       "productMutation": false,
       "facts": {
         "acceptedBaselineFrozen": true,
@@ -14,7 +14,8 @@
         "integrationBaseBranchCreated": true,
         "failedC2SourceExcluded": true,
         "representativeCaptureSetFrozen": true,
-        "functionalAndVisualClassificationSeparated": true
+        "functionalAndVisualClassificationSeparated": true,
+        "allowedPathBoundaryFrozen": true
       }
     },
     "R1.1": { "status": "NOT_STARTED" },

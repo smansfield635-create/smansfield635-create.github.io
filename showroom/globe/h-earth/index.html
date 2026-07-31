@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-h-earth-public-face-candidate="inactive">
+<html lang="en" data-h-earth-public-face-candidate="active" data-h-earth-public-face-default="promoted">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -52,13 +52,13 @@
         <a class="h-earth-3d-brand" href="/index.html" aria-label="Return to Compass"><span class="h-earth-3d-brand-mark" aria-hidden="true"><span>H</span></span><span class="h-earth-3d-brand-copy"><span id="h-earth-brand-context">Ground-View Matrix</span><strong>H-Earth</strong></span></a>
         <nav class="h-earth-3d-public-nav" aria-label="H-Earth public navigation">
           <a id="h-earth-return-to-compass" href="/index.html">Return to Compass</a>
-          <a id="h-earth-awards-link" href="/showroom/globe/h-earth/awards/" hidden>Awards</a>
+          <a id="h-earth-awards-link" href="/showroom/globe/h-earth/awards/">Awards</a>
           <a id="h-earth-3d-diagnostic-link" href="/showroom/globe/h-earth/diagnostic/">FD_05 Diagnostics</a>
           <a id="h-earth-observatory-link" href="/showroom/globe/h-earth/observatory/?candidate=H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001" hidden>How this world is preserved</a>
         </nav>
       </header>
 
-      <section id="h-earth-b10-hero" class="h-earth-b10-hero" aria-labelledby="h-earth-b10-title" hidden>
+      <section id="h-earth-b10-hero" class="h-earth-b10-hero" aria-labelledby="h-earth-b10-title">
         <p class="h-earth-b10-eyebrow">Diamond Gate Bridge · Mirrorland · Survival</p>
         <h1 id="h-earth-b10-title" class="h-earth-b10-title">Welcome to H-Earth.</h1>
         <p class="h-earth-b10-lede">A live interactive world inside the developing Mirrorland game platform. The environment below is available now; its gameplay systems, connected worlds, characters, and larger platform continue to develop.</p>
@@ -72,13 +72,13 @@
         </div>
       </section>
 
-      <section id="h-earth-baseline-arrival" class="h-earth-3d-arrival h-earth-live-arrival" aria-labelledby="h-earth-live-title">
+      <section id="h-earth-baseline-arrival" class="h-earth-3d-arrival h-earth-live-arrival" aria-labelledby="h-earth-live-title" hidden>
         <div class="h-earth-3d-arrival-copy"><p class="h-earth-3d-kicker">H-Earth · Navigable Ground View</p><h1 id="h-earth-live-title" class="h-earth-3d-title">Enter at the coast. Move inland.</h1><p class="h-earth-3d-lead">The current Run 8E environment remains the rendered world. The panel below observes that same production bootstrap.</p></div>
         <aside class="h-earth-3d-arrival-note" aria-label="Navigation guidance"><p><strong>Direct manipulation:</strong> drag to look, slide two fingers or use the mouse wheel to move, and pinch to zoom.</p><p id="route-status" class="h-earth-live-status" role="status" aria-live="polite">Starting current H-Earth GPU environment…</p></aside>
       </section>
 
       <section id="h-earth-live-world" class="h-earth-3d-world-shell" aria-label="H-Earth functional landscape">
-        <div id="h-earth-b10-world-heading" class="h-earth-b10-world-heading" hidden>
+        <div id="h-earth-b10-world-heading" class="h-earth-b10-world-heading">
           <div><p class="h-earth-b10-eyebrow">Live world arrival</p><h2>The coast is the entrance.</h2><p>Directly manipulate the live environment below. Look, travel, and zoom on desktop or touch devices.</p></div>
           <span class="h-earth-b10-live-mark">Live environment</span>
         </div>
@@ -88,7 +88,7 @@
         <details class="h-earth-live-details"><summary>Environment details</summary><dl class="telemetry" aria-label="Navigation telemetry"><div><dt>Position</dt><dd id="hud-position">—</dd></div><div><dt>Terrain</dt><dd id="hud-terrain">—</dd></div><div><dt>Clearance</dt><dd id="hud-clearance">—</dd></div><div><dt>Chunk</dt><dd id="hud-chunk">—</dd></div><div><dt>Formation</dt><dd id="hud-formation">—</dd></div><div><dt>Frame</dt><dd id="hud-frame">—</dd></div><div><dt>Surface</dt><dd id="hud-surface">—</dd></div><div><dt>Water</dt><dd id="hud-water">—</dd></div><div><dt>Biome</dt><dd id="hud-biome">—</dd></div><div><dt>Traversal</dt><dd id="hud-traversal">—</dd></div><div><dt>Lifecycle</dt><dd id="hud-lifecycle">—</dd></div><div><dt>Population</dt><dd id="hud-population">—</dd></div></dl></details>
       </section>
 
-      <section id="h-earth-b10-lenses" class="h-earth-b10-lens-section" aria-labelledby="h-earth-b10-lenses-title" hidden>
+      <section id="h-earth-b10-lenses" class="h-earth-b10-lens-section" aria-labelledby="h-earth-b10-lenses-title">
         <div class="h-earth-b10-lens-heading"><div><p class="h-earth-b10-eyebrow">Optional context</p><h2 id="h-earth-b10-lenses-title">Choose a lens.</h2></div><p>The page opens as presentation and live world. Context, practical guidance, engineering, and evidence remain closed until selected.</p></div>
 
         <details class="h-earth-b10-lens" data-b10-lens="PLATFORM_LENS"><summary><span>Platform lens</span><small>What is interactive now and what is developing</small></summary><div class="h-earth-b10-lens-body h-earth-b10-lens-grid"><article class="h-earth-b10-lens-card"><h3>Interactive now</h3><p>Enter the live H-Earth environment, directly control the view, travel across the existing terrain, and move between H-Earth, Mirrorland, and the Compass.</p></article><article class="h-earth-b10-lens-card"><h3>In active development</h3><p>Expanded gameplay, additional regions, connected worlds, deeper objectives, broader character systems, and the complete online game-platform relationship.</p></article></div></details>
@@ -113,7 +113,7 @@
       const publicFaceCandidateId = 'H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001';
       const candidate = parameters.get('candidate');
       const observatoryActive = candidate === observatoryCandidateId;
-      const publicFaceActive = candidate === publicFaceCandidateId;
+      const publicFaceActive = candidate !== observatoryCandidateId;
       const fd05 = document.getElementById('h-earth-3d-diagnostic-link');
       const observatory = document.getElementById('h-earth-observatory-link');
       const awards = document.getElementById('h-earth-awards-link');

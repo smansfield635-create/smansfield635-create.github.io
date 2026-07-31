@@ -1,0 +1,274 @@
+{
+  "receiptType": "H_EARTH_C0_PUBLIC_OCCURRENCE_AND_LINKAGE_RECEIPT_v1",
+  "operation": "C0_A_PUBLIC_OCCURRENCE_AND_LINKAGE",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "executedHead": "f5754a8ef5fd5accb8ff13bf7bc83dea0427e393",
+  "publicOrigin": "https://diamondgatebridge.com",
+  "publicRoute": "/showroom/globe/h-earth/",
+  "publicOccurrenceCaptured": true,
+  "captureTimestamp": "2026-07-31T04:31:34.862Z",
+  "routeCaptures": [
+    {
+      "requestedUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-1",
+      "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-1",
+      "redirectChain": [],
+      "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-1",
+      "httpStatus": 200,
+      "responseTimestamp": "2026-07-31T04:31:20.947Z",
+      "contentType": "text/html; charset=utf-8",
+      "contentLengthHeader": null,
+      "contentLength": 32796,
+      "etag": null,
+      "lastModified": "Fri, 31 Jul 2026 03:34:31 GMT",
+      "cacheControl": "max-age=600",
+      "age": "0",
+      "bodySha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "bodyFile": "../../../../../tmp/h-earth-c0-public-occurrence-bodies/route-1.html",
+      "repositoryPath": "showroom/globe/h-earth/index.html",
+      "exactMainCounterpartSha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "matchClassification": "EXACT_BYTE_MATCH"
+    },
+    {
+      "requestedUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-2",
+      "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-2",
+      "redirectChain": [],
+      "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-2",
+      "httpStatus": 200,
+      "responseTimestamp": "2026-07-31T04:31:21.393Z",
+      "contentType": "text/html; charset=utf-8",
+      "contentLengthHeader": null,
+      "contentLength": 32796,
+      "etag": null,
+      "lastModified": "Fri, 31 Jul 2026 03:34:31 GMT",
+      "cacheControl": "max-age=600",
+      "age": "0",
+      "bodySha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "bodyFile": "../../../../../tmp/h-earth-c0-public-occurrence-bodies/route-2.html",
+      "repositoryPath": "showroom/globe/h-earth/index.html",
+      "exactMainCounterpartSha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "matchClassification": "EXACT_BYTE_MATCH"
+    },
+    {
+      "requestedUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-3",
+      "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-3",
+      "redirectChain": [],
+      "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-3",
+      "httpStatus": 200,
+      "responseTimestamp": "2026-07-31T04:31:21.578Z",
+      "contentType": "text/html; charset=utf-8",
+      "contentLengthHeader": null,
+      "contentLength": 32796,
+      "etag": null,
+      "lastModified": "Fri, 31 Jul 2026 03:34:31 GMT",
+      "cacheControl": "max-age=600",
+      "age": "0",
+      "bodySha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "bodyFile": "../../../../../tmp/h-earth-c0-public-occurrence-bodies/route-3.html",
+      "repositoryPath": "showroom/globe/h-earth/index.html",
+      "exactMainCounterpartSha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "matchClassification": "EXACT_BYTE_MATCH"
+    }
+  ],
+  "boundedRetrievalsDeterministic": true,
+  "publicRouteBodySha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+  "publicCriticalAssetSha256s": {
+    "PUBLIC_H_EARTH_HTML": [
+      "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e"
+    ],
+    "PUBLIC_H_EARTH_CSS": [
+      "ff03cb9944e498ffc2d8958780c6a7d43b1346f78a9fda73117b42645a21b7e0",
+      "96317107e7d114dbc2345865b75786b2aa4d5f7a0414ea6f4f70790f610e8c81"
+    ],
+    "PUBLIC_RUNTIME_WRAPPER": [
+      "9cf8a5e020527fd88b96fec5f0f1ed1f0d21e0208c2e7d49b49ec6f4fb2091ab"
+    ],
+    "LIVE_RENDERER_ENTRY": [
+      "00b860d494603922db60ca4fffe4c31f427c51ade584e839c318c0768341ba49"
+    ],
+    "TERRAIN_OR_HEIGHTFIELD_ENTRY_ASSETS": [
+      "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643",
+      "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795",
+      "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad",
+      "0e3947f2c94db8b2a779666497ca003bf5db48f7e2d9a333d3432eea9866aa06",
+      "daf888d1e2e673ed058c87b390655ee2b82ea8b5f737727be4247d7f5f8c0d08",
+      "6e7a6e0ad335425121adff26f99f97e892f453b5c5958afed3f5f0a059e09fa3",
+      "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa",
+      "5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae"
+    ],
+    "WATER_OR_OCEAN_ENTRY_ASSETS": [
+      "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643",
+      "7a1bc16f593257ef7acb90aee35f0375506a006f2b636204f6f912d771dc7e26",
+      "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa",
+      "5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae",
+      "00b860d494603922db60ca4fffe4c31f427c51ade584e839c318c0768341ba49"
+    ]
+  },
+  "exactMainCounterpartSha256s": {
+    "PUBLIC_H_EARTH_HTML": [
+      "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e"
+    ],
+    "PUBLIC_H_EARTH_CSS": [
+      "ff03cb9944e498ffc2d8958780c6a7d43b1346f78a9fda73117b42645a21b7e0",
+      "96317107e7d114dbc2345865b75786b2aa4d5f7a0414ea6f4f70790f610e8c81"
+    ],
+    "PUBLIC_RUNTIME_WRAPPER": [
+      "9cf8a5e020527fd88b96fec5f0f1ed1f0d21e0208c2e7d49b49ec6f4fb2091ab"
+    ],
+    "LIVE_RENDERER_ENTRY": [
+      "00b860d494603922db60ca4fffe4c31f427c51ade584e839c318c0768341ba49"
+    ],
+    "TERRAIN_OR_HEIGHTFIELD_ENTRY_ASSETS": [
+      "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643",
+      "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795",
+      "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad",
+      "0e3947f2c94db8b2a779666497ca003bf5db48f7e2d9a333d3432eea9866aa06",
+      "daf888d1e2e673ed058c87b390655ee2b82ea8b5f737727be4247d7f5f8c0d08",
+      "6e7a6e0ad335425121adff26f99f97e892f453b5c5958afed3f5f0a059e09fa3",
+      "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa",
+      "5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae"
+    ],
+    "WATER_OR_OCEAN_ENTRY_ASSETS": [
+      "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643",
+      "7a1bc16f593257ef7acb90aee35f0375506a006f2b636204f6f912d771dc7e26",
+      "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa",
+      "5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae",
+      "00b860d494603922db60ca4fffe4c31f427c51ade584e839c318c0768341ba49"
+    ]
+  },
+  "assetByAssetMatchClassification": {
+    "PUBLIC_H_EARTH_HTML": [
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-1",
+        "repositoryPath": "showroom/globe/h-earth/index.html",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-2",
+        "repositoryPath": "showroom/globe/h-earth/index.html",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-3",
+        "repositoryPath": "showroom/globe/h-earth/index.html",
+        "classification": "EXACT_BYTE_MATCH"
+      }
+    ],
+    "PUBLIC_H_EARTH_CSS": [
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/index.css?v=gesture-shell-001",
+        "repositoryPath": "showroom/globe/h-earth/functional-landscape/index.css",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/index.css?v=b10-trophy-standard-001",
+        "repositoryPath": "showroom/globe/h-earth/index.css",
+        "classification": "EXACT_BYTE_MATCH"
+      }
+    ],
+    "PUBLIC_RUNTIME_WRAPPER": [
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=renderer-startup-receipt-v1",
+        "repositoryPath": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+        "classification": "EXACT_BYTE_MATCH"
+      }
+    ],
+    "LIVE_RENDERER_ENTRY": [
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+        "repositoryPath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+        "classification": "EXACT_BYTE_MATCH"
+      }
+    ],
+    "TERRAIN_OR_HEIGHTFIELD_ENTRY_ASSETS": [
+      {
+        "url": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "repositoryPath": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "repositoryPath": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/h-earth-3d/terrain/h-earth.terrain-field.js",
+        "repositoryPath": "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "repositoryPath": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "repositoryPath": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "repositoryPath": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "repositoryPath": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "repositoryPath": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "classification": "EXACT_BYTE_MATCH"
+      }
+    ],
+    "WATER_OR_OCEAN_ENTRY_ASSETS": [
+      {
+        "url": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "repositoryPath": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.water-state.js",
+        "repositoryPath": "h-earth-3d/environment/h-earth.water-state.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "repositoryPath": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "repositoryPath": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "classification": "EXACT_BYTE_MATCH"
+      },
+      {
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+        "repositoryPath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js",
+        "classification": "EXACT_BYTE_MATCH"
+      }
+    ]
+  },
+  "missingCriticalClasses": [],
+  "sourceOccurrenceLinkage": "VERIFIED_BY_CONTENT_IDENTITY",
+  "repositoryRollbackTarget": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "publicOccurrenceRollbackTarget": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "staleCrawlerRecordAuthority": false,
+  "pagesSettingsAvailable": false,
+  "pagesSettingsLimitation": "ADMINISTRATIVE_DEPLOYMENT_METADATA_NOT_REQUIRED_FOR_CONTENT_IDENTITY_LINKAGE",
+  "runtimeEvidence": {
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 404 ()"
+    ],
+    "pageErrors": [],
+    "requestFailures": [],
+    "sameOriginNetworkAssetCount": 57
+  },
+  "productMutation": false,
+  "c1DiagnosisAuthorized": false,
+  "nextC0Step": "C0_B_REPOSITORY_SOURCE_AND_AUTHORITY_CUSTODY"
+}

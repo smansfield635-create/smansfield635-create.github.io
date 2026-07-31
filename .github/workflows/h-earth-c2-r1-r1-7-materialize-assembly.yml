@@ -1,11 +1,11 @@
 name: H-Earth C2-R1 R1.7 Materialize Assembly
 
 on:
-  push:
+  pull_request:
     branches:
       - candidate/h-earth-c2-r1-r1-7-assembly-001
     paths:
-      - '.github/workflows/h-earth-c2-r1-r1-7-materialize-assembly.yml'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/transport/r1-7-materializer-trigger.txt'
 
 permissions:
   contents: write

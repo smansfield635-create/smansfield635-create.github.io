@@ -34,7 +34,7 @@ jobs:
         env:
           C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-3-sediment-memberships.mjs
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-3-sediment-memberships-corrected.mjs
 
       - name: Upload R1.3 receipt and engineering captures
         if: always()

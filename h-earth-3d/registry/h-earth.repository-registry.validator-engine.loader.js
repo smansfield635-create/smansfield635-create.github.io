@@ -2,10 +2,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-// Composes all prior accepted overlays through the executed Gratitude Region
-// final spatial placement disposition. The final-placement overlay establishes
-// placement authority only and does not create construction or product authority.
-import registryFacade, {
+// Composes all prior accepted overlays plus the bounded C2-R1 candidate path
+// disposition. The C2-R1 overlay adds read-only path resolution only and does
+// not create mutation, merge, renderer, route, deployment, or product authority.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js';
+import {
   H_EARTH_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_SCOPE_NODE as FINAL_PLACEMENT_NODE,
   H_EARTH_GRATITUDE_REGION_FINAL_SPATIAL_PLACEMENT_DISPOSITION_EVIDENCE as FINAL_PLACEMENT_EVIDENCE
 } from './accepted-amendments/h-earth.repository-registry.gratitude-region-final-spatial-placement-disposition.js';

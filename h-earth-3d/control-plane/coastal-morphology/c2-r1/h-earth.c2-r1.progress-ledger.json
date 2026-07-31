@@ -5,7 +5,7 @@
   "currentCheckpoint": "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS",
   "passes": {
     "R1.0": {
-      "status": "PASS_CLOSED",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "receiptCommit": "9206d6c75b70e2807175dae7725de5b5ea039650",
       "productMutation": false,
       "facts": {
@@ -19,7 +19,7 @@
       }
     },
     "R1.1": {
-      "status": "PASS_CLOSED",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "head": "01bda213a57333aa59f1795ec9db001a90836eaa",
       "result": "PASS_CLOSED",
       "actualDepthAvailable": true,
@@ -28,8 +28,9 @@
       "firstBlocker": null
     },
     "R1.2": {
-      "status": "PASS_CLOSED",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "executionHead": "518dce9fdd767f286dba88204673fb0bfdb4c044",
+      "acceptedClosureHead": "459cde065f461d0b4a8e53b1dc054059aa6abd20",
       "receiptCommit": "33a8f8b04dcc5e639b4ad3261543283d816354f0",
       "result": "PASS_CLOSED",
       "normalsRecomputed": true,
@@ -39,7 +40,18 @@
       "firstBlocker": null
     },
     "R1.3": {
-      "status": "NOT_STARTED"
+      "status": "IMPLEMENTED_LOCAL_PASS_AWAITING_CURRENT_HEAD_WORKFLOWS",
+      "startingHead": "459cde065f461d0b4a8e53b1dc054059aa6abd20",
+      "rollbackBranch": "rollback/h-earth-c2-r1-r1-2-closed-001",
+      "sedimentClassesPresentLocal": true,
+      "membershipNormalizedLocal": true,
+      "transitionsContinuousLocal": true,
+      "visibleBandingAbsentEngineeringGaugeLocal": true,
+      "representativeEngineeringCaptureDefinitions": 3,
+      "registryCandidatePathDispositionIncluded": true,
+      "productMutation": false,
+      "closureCondition": "R1_3_WORKFLOW_AND_AUTOMATIC_REGISTRY_PREFLIGHT_PASS_AT_SAME_CURRENT_HEAD",
+      "firstBlocker": null
     },
     "R1.4": {
       "status": "NOT_STARTED"
@@ -58,7 +70,9 @@
     }
   },
   "hardBlockers": [],
+  "registryPreflightStatus": "PENDING_CURRENT_HEAD_AFTER_ONE_TIME_PATH_DISPOSITION",
   "representativeCaptureCount": 0,
+  "engineeringCaptureDefinitionCount": 3,
   "liveReviewUrl": null,
   "functionalVerification": "NOT_STARTED",
   "visualSuccessorStatus": "NOT_ESTABLISHED",

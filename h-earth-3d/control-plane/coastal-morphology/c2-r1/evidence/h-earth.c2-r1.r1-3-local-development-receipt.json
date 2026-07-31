@@ -1,0 +1,57 @@
+{
+  "receiptType": "H_EARTH_C2_R1_R1_3_LOCAL_DEVELOPMENT_RECEIPT_v1",
+  "operation": "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS",
+  "status": "LOCAL_DEVELOPMENT_PASS_CURRENT_HEAD_WORKFLOWS_REQUIRED",
+  "startingHead": "459cde065f461d0b4a8e53b1dc054059aa6abd20",
+  "rollbackBranch": "rollback/h-earth-c2-r1-r1-2-closed-001",
+  "sourceInputs": {
+    "r11ProfileBlob": "45cbd83337c14bc94ce7d173b25f2157cb4eb84f",
+    "r12SurfaceFrameBlob": "c5a439f2833a4def90944e5eb1d03005ddb41e70",
+    "geometryImmutable": true,
+    "normalsImmutable": true,
+    "lightingImmutable": true
+  },
+  "implementation": {
+    "sedimentMembershipSourceSha256": "39bb972a013d0bcc3cb832143a3dec88dd9d363f75675a35ff8044b26fd0e87a",
+    "verificationSourceSha256": "68f19e1b1bd382778b5420c1302b9cd052f5a2af0d00597b8e22cb9d1abd999b",
+    "requiredClassCount": 6,
+    "multifactorInputCount": 6,
+    "singleDistanceExclusiveClassification": false,
+    "naturalNonLuminousMaterialParameters": true,
+    "engineeringCaptureDefinitions": 3
+  },
+  "localAudit": {
+    "sampleCount": 6025,
+    "transectCount": 25,
+    "allRequiredSedimentClassesPresent": true,
+    "maximumNormalizationError": 4.440892098500626e-16,
+    "maximumCrossShoreMembershipDelta": 0.06592516202471099,
+    "maximumAlongshoreMembershipDelta": 0.033218414305548456,
+    "maximumCompositeColorDelta": 0.009506655265783173,
+    "maximumDominantWeight": 0.848789172833228,
+    "minimumTransitionOverlapWidth": 39,
+    "adaptiveTransitionPairCount": 5,
+    "membershipNormalization": "PASS",
+    "crossShoreContinuity": "PASS",
+    "alongshoreContinuity": "PASS",
+    "noHardMembershipSeams": "PASS",
+    "visibleBandingEngineeringGauge": "PASS"
+  },
+  "registryPathDisposition": {
+    "status": "ONE_TIME_BOUNDED_OVERLAY_INCLUDED_IN_COHERENT_COMMIT_SET",
+    "controlPrefix": "/h-earth-3d/control-plane/coastal-morphology/c2-r1/",
+    "candidateTerrainPathCount": 3,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false
+  },
+  "remoteClosureRequired": {
+    "r13Workflow": "H-Earth C2-R1 R1.3 Sediment Memberships",
+    "automaticRegistryPreflight": "H-Earth Automatic Repository Registry Preflight",
+    "currentHeadOnly": true
+  },
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false,
+  "nextCheckpointBeforeRemotePass": "R1.3_REMAINS_OPEN"
+}

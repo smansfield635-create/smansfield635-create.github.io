@@ -1,11 +1,11 @@
 {
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
-  "status": "R1_2_PASS_CLOSED_R1_3_NEXT",
+  "status": "R1_3_IMPLEMENTED_LOCAL_PASS_CURRENT_HEAD_WORKFLOWS_PENDING",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
   "failedC2GeometryAsStartingSource": "PROHIBITED",
   "rollbackBranch": "rollback/h-earth-c2-r1-pre-mutation-001",
-  "latestCheckpointRollbackBranch": "rollback/h-earth-c2-r1-r1-1-closed-001",
+  "latestCheckpointRollbackBranch": "rollback/h-earth-c2-r1-r1-2-closed-001",
   "integrationBaseBranch": "integration/h-earth-c2-r1-baseline-001",
   "advanceToC3": false,
   "executionLaw": {
@@ -16,7 +16,10 @@
     "functionalDamageIsHardBlocking": true,
     "functionalVerificationDoesNotProveVisualSuccess": true,
     "representativeCapturesRequiredBeforeHumanReview": true,
-    "visualSuccessorRequiresAcceptedUserDifferential": true
+    "visualSuccessorRequiresAcceptedUserDifferential": true,
+    "developAndTestLocallyBeforeSinglePush": true,
+    "readFirstRealCurrentHeadFailureBeforeCorrection": true,
+    "statusOnlyIntermediateCommitsProhibited": true
   },
   "modelingRequirements": {
     "actualDepthLaw": "WATER_SURFACE_HEIGHT_MINUS_TERRAIN_HEIGHT_AT_XZ",
@@ -24,6 +27,14 @@
     "recomputeVertexNormalsAfterDisplacement": true,
     "normalContinuityCheck": true,
     "continuousSedimentMembership": true,
+    "sedimentMembershipInputs": [
+      "ELEVATION_RELATIVE_TO_WATER",
+      "ACTUAL_VERTICAL_WATER_DEPTH",
+      "LOCAL_SLOPE",
+      "SHORELINE_DISTANCE",
+      "SWASH_OR_MOISTURE_ENVELOPE",
+      "CURVATURE_OR_DEPOSITION_TENDENCY"
+    ],
     "breakerInputs": [
       "WAVE_DIRECTION",
       "LOCAL_WATER_DEPTH",
@@ -37,13 +48,13 @@
   "passes": {
     "R1.0": {
       "name": "BASELINE_PATH_ROLLBACK_AND_REVIEW_CONTROL",
-      "status": "PASS_CLOSED",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "productMutation": false,
       "stoppingBoundary": "BASELINE_AND_CONTROL_CUSTODY_DURABLE"
     },
     "R1.1": {
       "name": "CONTINUOUS_BEACH_AND_BATHYMETRY",
-      "status": "PASS_CLOSED",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "mutationScope": [
         "ISOLATED_CANDIDATE_COASTAL_PROFILE",
         "ISOLATED_CANDIDATE_SEABED_PROFILE"
@@ -52,14 +63,28 @@
     },
     "R1.2": {
       "name": "RECOMPUTED_NORMALS_AND_LIGHTING",
-      "status": "PASS_CLOSED",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "executionHead": "518dce9fdd767f286dba88204673fb0bfdb4c044",
+      "acceptedClosureHead": "459cde065f461d0b4a8e53b1dc054059aa6abd20",
       "stoppingBoundary": "NORMAL_CONTINUITY_AND_LIGHTING_PROJECTION_PASS"
     },
     "R1.3": {
       "name": "GRADUAL_SEDIMENT_MEMBERSHIPS",
-      "status": "NOT_STARTED",
-      "stoppingBoundary": "BLENDED_MEMBERSHIP_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
+      "status": "IMPLEMENTED_LOCAL_PASS_CURRENT_HEAD_WORKFLOWS_PENDING",
+      "startingHead": "459cde065f461d0b4a8e53b1dc054059aa6abd20",
+      "authorizedMutationScope": [
+        "SEDIMENT_CLASSIFICATION_FIELDS",
+        "CONTINUOUS_MEMBERSHIP_WEIGHTS",
+        "BLEND_WIDTHS",
+        "SEDIMENT_COLOR_AND_ROUGHNESS_PARAMETERS",
+        "R1_3_TESTS_AND_RECEIPTS"
+      ],
+      "immutableInputs": [
+        "R1_1_COASTAL_PROFILE",
+        "R1_2_SURFACE_NORMALS_AND_LIGHTING"
+      ],
+      "closureCondition": "R1_3_AND_REGISTRY_CURRENT_HEAD_WORKFLOWS_PASS",
+      "stoppingBoundary": "BLENDED_MEMBERSHIP_GAUGES_PASS_OR_FIRST_REAL_HARD_BLOCKER_REPORTED"
     },
     "R1.4": {
       "name": "ACTUAL_DEPTH_WATER_OPTICS",
@@ -99,6 +124,13 @@
     "functionallyReviewableCandidate": "ALLOWED_AFTER_R1_8_FUNCTIONAL_VERIFICATION",
     "visualSuccessor": "ONLY_AFTER_ACCEPTED_USER_DIFFERENTIAL",
     "userDifferentialReady": false
+  },
+  "registryPathDisposition": {
+    "overlayPath": "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
+    "purpose": "READ_ONLY_CANDIDATE_PATH_RESOLUTION",
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "status": "INCLUDD_PENDING_CURRENT_HEAD_PREFLIGHT"
   },
   "productDefaultMutated": false,
   "currentCheckpoint": "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS"

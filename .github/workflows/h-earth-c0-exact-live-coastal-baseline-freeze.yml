@@ -75,10 +75,10 @@ jobs:
           ], text=True)
           replacements = [
               ("const offsets=[80,60,42,34,24,14,8,4,2,0,-1.6,-3.2,-8,-14,-22,-32,-44,-58,-76,-96,-120];",
-               "const offsets=[80,60,42,34,24,14,8,4,2,0,-1.6,-3.2,-8,-14,-22,-32,-44,-58,-76,-96];"),
-              ("zMaximum:round(Math.max(...shoreValues)+120)", "zMaximum:round(Math.max(...shoreValues)+96)"),
-              ("center+120", "center+96"),
-              ("sampleCount>=63", "sampleCount>=60")
+               "const offsets=[80,60,42,34,24,14,8,4,2,0,-1.6,-3.2,-8,-14,-22,-32,-44,-58,-76];"),
+              ("zMaximum:round(Math.max(...shoreValues)+120)", "zMaximum:round(Math.max(...shoreValues)+76)"),
+              ("center+120", "center+76"),
+              ("sampleCount>=63", "sampleCount>=57")
           ]
           for old, new in replacements:
               if old not in source:

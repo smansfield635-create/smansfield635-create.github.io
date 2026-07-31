@@ -27,6 +27,6 @@
     "BOUNDED_MACRO_TERRAIN_EXPRESSION"
   ],
   "status": "HARD_BLOCKED",
-  "candidateHead": null,
-  "functionalVerification": "NOT_EXECUTED"
+  "candidateHead": "e42650d93e509ffa523e63356802d6303c8a7905",
+  "functionalVerification": "HARD_BLOCKED"
 }

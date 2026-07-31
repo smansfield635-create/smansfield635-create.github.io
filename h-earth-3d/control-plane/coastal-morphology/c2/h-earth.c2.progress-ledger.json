@@ -32,14 +32,14 @@
     },
     "C2.6": {
       "status": "HARD_BLOCKED",
-      "result": "NOT_EXECUTED"
+      "result": "HARD_BLOCKED"
     },
     "C2.7": {
       "status": "NOT_AUTHORIZED"
     }
   },
   "hardBlockers": [
-    null
+    "noPageErrors"
   ],
   "nonblockingDevelopmentConditions": [],
   "candidateUrl": null,

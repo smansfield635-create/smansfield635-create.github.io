@@ -6,7 +6,9 @@
     "h-earth-3d/control-plane/coastal-morphology/c2-r1/"
   ],
   "allowedExactPaths": [
-    ".github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml"
+    ".github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml",
+    ".github/workflows/h-earth-c2-r1-r1-1-continuous-profile.yml",
+    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js"
   ],
   "protectedPathPrefixes": [
     "showroom/globe/h-earth/",
@@ -14,6 +16,15 @@
     "h-earth-3d/environment/",
     "h-earth-3d/integration/"
   ],
+  "protectedPathExactExceptions": {
+    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js": {
+      "checkpoint": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
+      "candidateOnly": true,
+      "productionImportBound": false,
+      "publicRouteBound": false,
+      "failedC2SourceConsumed": false
+    }
+  },
   "protectedAuthorities": [
     "CAMERA",
     "NAVIGATION",

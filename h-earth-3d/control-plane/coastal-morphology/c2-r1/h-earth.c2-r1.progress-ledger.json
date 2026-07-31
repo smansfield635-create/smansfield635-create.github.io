@@ -3,7 +3,7 @@
   "branch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "currentCheckpoint": "R1.7_BOUNDED_TERRAIN_MACRO_EXPRESSION",
-  "nextCheckpointOnPass": "R1.8_FUNCTIONAL_VERIFICATION_AND_HUMAN_REVIEW",
+  "nextCheckpointOnPass": "R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW",
   "passes": {
     "R1.0": {
       "status": "PASS_CLOSED_DO_NOT_REOPEN",
@@ -135,7 +135,7 @@
       "startingHead": "7273cbb3dfd98f7fbca5d4e10ac51cd732678968",
       "firstExecutionHead": "182fc27d37068c650a4ef86b5c66afce2d09dfa5",
       "executionHead": "67c4da4211dfc5c1865d7e73d60e8afd77d32624",
-      "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+      "durableClosureHead": "59d84592039fae226b17ae2b1c6610144059cb61",
       "rollbackBranchAtStart": "rollback/h-earth-c2-r1-r1-5-closed-001",
       "implementationPushCount": 1,
       "correctivePushCount": 1,
@@ -194,16 +194,36 @@
       "firstBlocker": null
     },
     "R1.7": {
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
+      "rollbackBranch": "rollback/h-earth-c2-r1-r1-6-closed-001",
+      "implementationPushCount": 0,
+      "expectedRepresentativeCaptureCount": 3,
+      "expectedCaptureClasses": [
+        "COAST_TO_INLAND_OVERVIEW",
+        "GROUND_LEVEL_TERRAIN",
+        "DISTANT_LANDFORM"
+      ],
+      "architecture": "BOUNDED_PRECOMPUTED_CONTROL_FIELD_WITH_SINGLE_RUNTIME_SAMPLE",
+      "upstreamAuthoritiesImmutable": true,
+      "wholeWorldBake": false,
+      "multioctaveProceduralShader": false,
+      "geometryDisplacement": false,
+      "rendererLifecycleMutation": false,
+      "productMutation": false,
+      "publicRouteMutation": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialReady": false,
+      "firstBlocker": null
     },
     "R1.8": {
       "status": "NOT_STARTED"
     }
   },
   "hardBlockers": [],
-  "registryPreflightStatus": "PASS_AT_R1_6_EXECUTION_HEAD",
+  "registryPreflightStatus": "PASS_AT_R1_6_CLOSURE_HEAD",
   "representativeCaptureCount": 3,
-  "engineeringCaptureDefinitionCount": 18,
+  "engineeringCaptureDefinitionCount": 21,
   "liveReviewUrl": null,
   "functionalVerification": "NOT_STARTED",
   "visualSuccessorStatus": "NOT_ESTABLISHED",

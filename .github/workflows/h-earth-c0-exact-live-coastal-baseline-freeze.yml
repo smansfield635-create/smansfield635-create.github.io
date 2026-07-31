@@ -18,10 +18,10 @@ env:
   C0_BRANCH: agent/h-earth-c0-exact-live-coastal-baseline-freeze-001
   C0_ROOT: h-earth-3d/control-plane/coastal-morphology/c0
   C0_EVIDENCE: h-earth-3d/control-plane/coastal-morphology/c0/evidence
-  C0_EXECUTOR_COMMIT: 7d24052a5419a4ef2be2c5bdd4d734b70163d924
+  PUBLIC_ORIGIN: https://diamondgatebridge.com
 
 jobs:
-  c0-d-runtime-and-mobile-baseline:
+  c0-d-resumed-runtime-baseline:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Verify bounded C0-D state
+      - name: Verify corrected bounded C0-D state
         shell: bash
         run: |
           set -euo pipefail
@@ -40,8 +40,8 @@ jobs:
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.public-occurrence.json').sourceOccurrenceLinkage")" = "VERIFIED_BY_CONTENT_IDENTITY"
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.source-custody.json').result")" = "PASS_CLOSED"
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json').result")" = "PASS_CLOSED"
-          test ! -e "$C0_EVIDENCE/h-earth.c0.performance-baseline.json"
-          test ! -e "$C0_EVIDENCE/h-earth.c0.runtime-receipts.json"
+          test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.runtime-receipts.json').result")" = "OPEN_BLOCKED"
+          test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.runtime-receipts.json').firstBlocker")" = "FROZEN_SCENE_DEFINITIONS_NOT_SIX_DISTINCT_CAMERA_STATES"
 
       - uses: actions/setup-node@v4
         with:
@@ -55,55 +55,299 @@ jobs:
       - name: Install bounded browser driver
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
-      - name: Materialize corrected bounded C0-D executor
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 <<'PY'
-          import os, subprocess
-          source = subprocess.check_output([
-              'git', 'show',
-              f"{os.environ['C0_EXECUTOR_COMMIT']}:.github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml"
-          ], text=True)
-          start_marker = "          cat > /tmp/c0-d.mjs <<'NODE'\n"
-          end_marker = "\n          NODE\n          node /tmp/c0-d.mjs\n"
-          start = source.index(start_marker) + len(start_marker)
-          end = source.index(end_marker, start)
-          block = source[start:end]
-          lines = [(line[10:] if line.startswith('          ') else line) for line in block.splitlines()]
-          open('.c0-d.mjs', 'w').write('\n'.join(lines) + '\n')
-          PY
-
-      - name: Execute C0-D observability and desktop baseline
+      - name: Execute corrected C0-D runtime baseline
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-          PUBLIC_ORIGIN: https://diamondgatebridge.com
         shell: bash
         run: |
           set -euo pipefail
-          trap 'rm -f .c0-d.mjs' EXIT
-          node .c0-d.mjs
+          cat > .c0-d-resume.mjs <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import puppeteer from 'puppeteer-core';
 
-      - name: Verify mutation boundary and commit C0-D receipts
+          const exactMain = process.env.EXACT_MAIN_HEAD;
+          const root = process.env.C0_ROOT;
+          const evidence = process.env.C0_EVIDENCE;
+          const origin = process.env.PUBLIC_ORIGIN;
+          const fixed = JSON.parse(fs.readFileSync(`${root}/h-earth.c0.fixed-scenes.json`, 'utf8'));
+          const prior = JSON.parse(fs.readFileSync(`${evidence}/h-earth.c0.runtime-receipts.json`, 'utf8'));
+          const requiredSceneIds = [
+            'SHORELINE_APPROACH_VIEW',
+            'LATERAL_BEACH_VIEW',
+            'INLAND_TO_OPEN_WATER_VIEW',
+            'SHALLOW_WATER_VIEW',
+            'CURRENT_DARK_TERRAIN_TRANSITION_VIEW',
+            'TRAVERSAL_THROUGH_COAST_VIEW'
+          ];
+          const round = (value, places = 3) => Number(Number(value).toFixed(places));
+          const percentile = (values, q) => {
+            const sorted = [...values].sort((a, b) => a - b);
+            if (!sorted.length) return null;
+            const index = Math.min(sorted.length - 1, Math.max(0, Math.ceil(q * sorted.length) - 1));
+            return round(sorted[index]);
+          };
+          const frameStats = (values) => ({
+            minimum: values.length ? round(Math.min(...values)) : null,
+            median: percentile(values, 0.5),
+            p95: percentile(values, 0.95),
+            p99: percentile(values, 0.99),
+            maximum: values.length ? round(Math.max(...values)) : null,
+            longFrameCount: values.filter((value) => value > 33.334).length,
+            frameSampleCount: values.length
+          });
+          const sceneSignature = (scene) => JSON.stringify({
+            position: scene.primaryCapture.cameraPosition,
+            orientation: scene.primaryCapture.cameraOrientation,
+            fieldOfView: scene.primaryCapture.fieldOfView
+          });
+
+          const fixedById = new Map(fixed.scenes.map((scene) => [scene.sceneId, scene]));
+          const allSixPurposesRepresented = requiredSceneIds.every((sceneId) => fixedById.has(sceneId));
+          if (!allSixPurposesRepresented) throw new Error('C0_D_REQUIRED_EVIDENCE_PURPOSE_MISSING');
+
+          const signatureOrder = [];
+          const signatureToStateId = new Map();
+          for (const sceneId of requiredSceneIds) {
+            const signature = sceneSignature(fixedById.get(sceneId));
+            if (!signatureToStateId.has(signature)) {
+              signatureOrder.push(signature);
+              signatureToStateId.set(signature, `CAMERA_STATE_${String(signatureOrder.length).padStart(3, '0')}`);
+            }
+          }
+          const sceneAliasMapping = requiredSceneIds.map((sceneId) => {
+            const scene = fixedById.get(sceneId);
+            const signature = sceneSignature(scene);
+            const sharedWithSceneIds = requiredSceneIds.filter((candidateId) => candidateId !== sceneId && sceneSignature(fixedById.get(candidateId)) === signature);
+            return {
+              sceneId,
+              cameraStateId: signatureToStateId.get(signature),
+              evidencePurpose: sceneId,
+              sharedWithSceneIds,
+              cameraPosition: scene.primaryCapture.cameraPosition,
+              cameraOrientation: scene.primaryCapture.cameraOrientation,
+              fieldOfView: scene.primaryCapture.fieldOfView
+            };
+          });
+
+          const causality = prior.causalityTest ?? {};
+          const causalityVerified = causality.cameraStateChanged === true && causality.renderedCanvasBodyChanged === true && causality.presentedScreenRegionChanged === true;
+          if (!causalityVerified) throw new Error('C0_D_CAMERA_TO_PRESENTED_FRAME_CAUSALITY_NOT_VERIFIED');
+
+          const browser = await puppeteer.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: true,
+            args: ['--no-sandbox', '--disable-dev-shm-usage', '--enable-precise-memory-info']
+          });
+
+          async function ready(page) {
+            await page.waitForFunction(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true && document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady === 'true', { timeout: 240000 });
+            await page.waitForFunction(() => (window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.().counters?.gpuFramebufferPresentationCount ?? 0) > 0, { timeout: 240000 });
+          }
+
+          async function runtimeState(stateId) {
+            const page = await browser.newPage();
+            await page.setViewport({ width: 1365, height: 768, deviceScaleFactor: 1 });
+            const errors = { pageErrors: [], consoleErrors: [], requestFailures: [], ownedHttpErrors: [] };
+            page.on('pageerror', (error) => errors.pageErrors.push(error.message));
+            page.on('console', (message) => { if (message.type() === 'error') errors.consoleErrors.push(message.text()); });
+            page.on('requestfailed', (request) => errors.requestFailures.push({ url: request.url(), reason: request.failure()?.errorText ?? 'UNKNOWN' }));
+            page.on('response', (response) => {
+              if (response.status() >= 400 && new URL(response.url()).origin === origin) errors.ownedHttpErrors.push({ url: response.url(), status: response.status() });
+            });
+
+            const started = Date.now();
+            await page.goto(`${origin}/showroom/globe/h-earth/?c0d=${exactMain}&runtime=${stateId}`, { waitUntil: 'domcontentloaded', timeout: 240000 });
+            await ready(page);
+            const startupDurationMilliseconds = Date.now() - started;
+            const before = await page.evaluate(() => ({
+              cameraUpdates: window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().counters.acceptedNavigationProposalCount,
+              presents: window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().counters.gpuFramebufferPresentationCount
+            }));
+
+            const measurement = await page.evaluate(async (mode) => {
+              const canvas = document.querySelector('#h-earth-functional-landscape-canvas');
+              const intervals = [];
+              let last = null;
+              let timer = null;
+              let direction = 1;
+              const emitWheel = (deltaY) => canvas.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY, deltaMode: 0 }));
+              if (mode === 'CONTINUOUS_COASTAL_TRAVERSAL') timer = setInterval(() => emitWheel(-140), 180);
+              if (mode === 'OCEAN_VISIBLE_WITH_LIVE_MOTION') {
+                emitWheel(700);
+                timer = setInterval(() => { emitWheel(direction * 120); direction *= -1; }, 180);
+              }
+              const start = performance.now();
+              await new Promise((resolve) => {
+                function step(timestamp) {
+                  if (last !== null) intervals.push(timestamp - last);
+                  last = timestamp;
+                  if (timestamp - start < 8000) requestAnimationFrame(step);
+                  else resolve();
+                }
+                requestAnimationFrame(step);
+              });
+              if (timer) clearInterval(timer);
+              const resources = performance.getEntriesByType('resource');
+              return {
+                intervals,
+                duration: performance.now() - start,
+                resource: {
+                  requestCount: resources.length,
+                  transferBytes: resources.reduce((sum, item) => sum + (item.transferSize || 0), 0),
+                  decodedBytes: resources.reduce((sum, item) => sum + (item.decodedBodySize || 0), 0)
+                },
+                systemMemory: navigator.deviceMemory ?? null,
+                jsHeap: performance.memory ? {
+                  usedJSHeapSize: performance.memory.usedJSHeapSize,
+                  totalJSHeapSize: performance.memory.totalJSHeapSize,
+                  jsHeapSizeLimit: performance.memory.jsHeapSizeLimit
+                } : null
+              };
+            }, stateId);
+
+            const after = await page.evaluate(() => ({
+              cameraUpdates: window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().counters.acceptedNavigationProposalCount,
+              presents: window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().counters.gpuFramebufferPresentationCount
+            }));
+            await page.close();
+            return {
+              stateId,
+              measurementDurationMilliseconds: round(measurement.duration),
+              frameTime: frameStats(measurement.intervals),
+              cameraUpdateCount: after.cameraUpdates - before.cameraUpdates,
+              rendererPresentCount: after.presents - before.presents,
+              startupDurationMilliseconds,
+              downloadTransferBytes: measurement.resource.transferBytes,
+              decodedOrResourceBytes: measurement.resource.decodedBytes,
+              requestCount: measurement.resource.requestCount,
+              gpuMemoryBaseline: { status: 'UNAVAILABLE', method: 'WEB_PLATFORM_RUNTIME', reason: 'NO_STANDARD_WEB_API_EXPOSES_GPU_MEMORY' },
+              systemMemoryBaseline: measurement.systemMemory === null
+                ? { status: 'UNAVAILABLE', method: 'navigator.deviceMemory', reason: 'NOT_EXPOSED_BY_BROWSER' }
+                : { status: 'AVAILABLE_APPROXIMATE_DEVICE_GIB', value: measurement.systemMemory, method: 'navigator.deviceMemory' },
+              jsHeapMemory: measurement.jsHeap,
+              errors
+            };
+          }
+
+          const runtimeStates = [];
+          for (const stateId of ['STATIONARY_COASTAL_VIEW', 'CONTINUOUS_COASTAL_TRAVERSAL', 'OCEAN_VISIBLE_WITH_LIVE_MOTION']) runtimeStates.push(await runtimeState(stateId));
+          await browser.close();
+
+          const physicalMobile = {
+            deviceModel: 'DESIGNATED_SAMSUNG_REFERENCE_DEVICE',
+            physicalOrEmulated: 'PHYSICAL_REQUIRED',
+            executed: false,
+            status: 'NOT_EXECUTED',
+            reason: 'SIGNED_OFFLINE_REFERENCE_DEVICE_PACKAGE_EXISTS_BUT_NO_COMPLETED_PHYSICAL_EVIDENCE_JSON_OR_METRIC_RECEIPT_IS_AVAILABLE',
+            officialBaseline: false,
+            samsungSpecificImplementationAuthorized: false
+          };
+          const result = 'OPEN_BLOCKED';
+          const firstBlocker = 'PHYSICAL_MOBILE_BASELINE_NOT_EXECUTED';
+
+          const performanceReceipt = {
+            receiptType: 'H_EARTH_C0_D_PERFORMANCE_BASELINE_v2',
+            managementCorrection: 'C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001',
+            operation: 'C0_D_RUNTIME_AND_MOBILE_BASELINE',
+            result,
+            c0Overall: 'OPEN_IN_PROGRESS',
+            exactMainHead: exactMain,
+            desktopEnvironment: {
+              deviceModel: 'GITHUB_HOSTED_UBUNTU_RUNNER',
+              operatingSystem: 'Ubuntu 24.04',
+              browserAndVersion: 'GOOGLE_CHROME_STABLE',
+              physicalOrEmulated: 'HOSTED_DESKTOP_RUNTIME',
+              orientation: 'LANDSCAPE',
+              viewport: { width: 1365, height: 768 },
+              devicePixelRatio: 1,
+              networkProfile: 'RUNNER_DEFAULT',
+              cacheState: 'CLEAN_CONTEXT_PER_STATE',
+              batteryOrPowerState: 'EXTERNAL_RUNNER_POWER',
+              thermalState: { status: 'UNAVAILABLE', reason: 'NOT_EXPOSED' }
+            },
+            physicalMobile,
+            runtimeStates
+          };
+
+          const runtimeReceipt = {
+            receiptType: 'H_EARTH_C0_D_RUNTIME_RECEIPTS_v2',
+            managementCorrection: 'C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001',
+            withdrawnRequirement: 'DISTINCT_SCENE_CANVAS_HASH_COUNT_MUST_EQUAL_6',
+            operation: 'C0_D_RUNTIME_AND_MOBILE_BASELINE',
+            result,
+            c0Overall: 'OPEN_IN_PROGRESS',
+            exactMainHead: exactMain,
+            captureObservability: 'VERIFIED',
+            cameraToPresentedFrameCausality: 'VERIFIED',
+            sceneIdCount: requiredSceneIds.length,
+            uniqueCameraStateCount: signatureOrder.length,
+            allSixEvidencePurposesRepresented: allSixPurposesRepresented,
+            sceneAliasMappingRecorded: true,
+            sceneAliasMapping,
+            causalityTest: causality,
+            physicalMobileBaselineExecuted: false,
+            runtimeStateCount: runtimeStates.length,
+            allThreeRuntimeStatesMeasured: runtimeStates.length === 3,
+            frameTimePercentilesRecorded: runtimeStates.every((state) => state.frameTime.median !== null && state.frameTime.p95 !== null && state.frameTime.p99 !== null),
+            memoryFieldsRecordedOrExplicitlyUnavailable: runtimeStates.every((state) => state.gpuMemoryBaseline && state.systemMemoryBaseline),
+            downloadCostRecorded: runtimeStates.every((state) => Number.isFinite(state.downloadTransferBytes)),
+            errorBaselineRecorded: runtimeStates.every((state) => state.errors),
+            productMutation: false,
+            unauthorizedChangedPaths: 0,
+            firstBlocker,
+            nextAuthorizedC0Block: null,
+            c0EAuthorized: false,
+            c1Authorized: false,
+            phaseT: 'INACCESSIBLE'
+          };
+
+          fs.writeFileSync(`${evidence}/h-earth.c0.performance-baseline.json`, JSON.stringify(performanceReceipt, null, 2) + '\n');
+          fs.writeFileSync(`${evidence}/h-earth.c0.runtime-receipts.json`, JSON.stringify(runtimeReceipt, null, 2) + '\n');
+          console.log(JSON.stringify({
+            result,
+            captureObservability: runtimeReceipt.captureObservability,
+            cameraToPresentedFrameCausality: runtimeReceipt.cameraToPresentedFrameCausality,
+            sceneIdCount: runtimeReceipt.sceneIdCount,
+            uniqueCameraStateCount: runtimeReceipt.uniqueCameraStateCount,
+            allSixEvidencePurposesRepresented: runtimeReceipt.allSixEvidencePurposesRepresented,
+            physicalMobileExecuted: false,
+            runtimeStateCount: runtimeReceipt.runtimeStateCount,
+            firstBlocker
+          }, null, 2));
+          NODE
+          trap 'rm -f .c0-d-resume.mjs' EXIT
+          node .c0-d-resume.mjs
+
+      - name: Verify corrected receipts and commit
         shell: bash
         run: |
           set -euo pipefail
-          test ! -e .c0-d.mjs
+          test ! -e .c0-d-resume.mjs
           node <<'NODE'
-          const fs=require('node:fs'),cp=require('node:child_process');
-          const root=process.env.C0_ROOT,e=process.env.C0_EVIDENCE;
-          for(const f of [`${e}/h-earth.c0.performance-baseline.json`,`${e}/h-earth.c0.runtime-receipts.json`]) if(!fs.existsSync(f)) throw new Error(`C0_D_OUTPUT_MISSING:${f}`);
-          const allowed=new Set(require(`./${root}/h-earth.c0.allowed-path-manifest.json`).exactAllowedPaths);
-          const changed=cp.execFileSync('git',['diff','--name-only',process.env.EXACT_MAIN_HEAD],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
-          const unauthorized=changed.filter(f=>!allowed.has(f));
-          const product=changed.filter(f=>f.startsWith('showroom/globe/h-earth/')||f.startsWith('h-earth-3d/terrain/')||f.startsWith('h-earth-3d/environment/'));
-          if(unauthorized.length) throw new Error(`C0_UNAUTHORIZED_CHANGED_PATHS:${unauthorized.join(',')}`);
-          if(product.length) throw new Error(`C0_PRODUCT_MUTATION:${product.join(',')}`);
-          console.log(JSON.stringify({changedPathCount:changed.length,unauthorizedChangedPaths:0,productMutation:false},null,2));
+          const fs = require('node:fs');
+          const cp = require('node:child_process');
+          const root = process.env.C0_ROOT;
+          const evidence = process.env.C0_EVIDENCE;
+          const runtime = require(`./${evidence}/h-earth.c0.runtime-receipts.json`);
+          if (runtime.captureObservability !== 'VERIFIED') throw new Error('C0_D_CAPTURE_OBSERVABILITY_NOT_VERIFIED');
+          if (runtime.cameraToPresentedFrameCausality !== 'VERIFIED') throw new Error('C0_D_CAUSALITY_NOT_VERIFIED');
+          if (runtime.sceneIdCount !== 6 || runtime.uniqueCameraStateCount !== 4) throw new Error('C0_D_SCENE_MAPPING_UNEXPECTED');
+          if (runtime.allSixEvidencePurposesRepresented !== true || runtime.sceneAliasMappingRecorded !== true) throw new Error('C0_D_SCENE_PURPOSE_OR_ALIAS_MISSING');
+          if (runtime.runtimeStateCount !== 3 || runtime.allThreeRuntimeStatesMeasured !== true) throw new Error('C0_D_RUNTIME_STATES_INCOMPLETE');
+          if (runtime.frameTimePercentilesRecorded !== true || runtime.memoryFieldsRecordedOrExplicitlyUnavailable !== true || runtime.downloadCostRecorded !== true || runtime.errorBaselineRecorded !== true) throw new Error('C0_D_RUNTIME_FIELDS_INCOMPLETE');
+          if (runtime.firstBlocker !== 'PHYSICAL_MOBILE_BASELINE_NOT_EXECUTED') throw new Error('C0_D_FIRST_BLOCKER_UNEXPECTED');
+          const allowed = new Set(require(`./${root}/h-earth.c0.allowed-path-manifest.json`).exactAllowedPaths);
+          const changed = cp.execFileSync('git', ['diff', '--name-only', process.env.EXACT_MAIN_HEAD], { encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
+          const unauthorized = changed.filter((file) => !allowed.has(file));
+          const product = changed.filter((file) => file.startsWith('showroom/globe/h-earth/') || file.startsWith('h-earth-3d/terrain/') || file.startsWith('h-earth-3d/environment/'));
+          if (unauthorized.length) throw new Error(`C0_UNAUTHORIZED_CHANGED_PATHS:${unauthorized.join(',')}`);
+          if (product.length) throw new Error(`C0_PRODUCT_MUTATION:${product.join(',')}`);
+          console.log(JSON.stringify({ changedPathCount: changed.length, unauthorizedChangedPaths: 0, productMutation: false }, null, 2));
           NODE
           sha256sum "$C0_EVIDENCE/h-earth.c0.performance-baseline.json" "$C0_EVIDENCE/h-earth.c0.runtime-receipts.json"
           git config user.name "h-earth-c0-evidence"
           git config user.email "actions@users.noreply.github.com"
           git add "$C0_EVIDENCE/h-earth.c0.performance-baseline.json" "$C0_EVIDENCE/h-earth.c0.runtime-receipts.json"
-          git commit -m "C0-D: record capture observability and runtime baseline"
+          git commit -m "C0-D: record corrected runtime baseline and physical blocker"
           git push origin "HEAD:${{ github.event.pull_request.head.ref }}"

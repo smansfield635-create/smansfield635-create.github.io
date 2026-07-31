@@ -92,7 +92,9 @@ async function boundedFetch(initialUrl) {
 
 function repositoryPathForUrl(url) {
   const parsed = new URL(url);
-  return decodeURIComponent(parsed.pathname).replace(/^\/+/, '');
+  let repositoryPath = decodeURIComponent(parsed.pathname).replace(/^\/+/, '');
+  if (repositoryPath.endsWith('/')) repositoryPath += 'index.html';
+  return repositoryPath;
 }
 
 function readExactMainCounterpart(repoPath) {

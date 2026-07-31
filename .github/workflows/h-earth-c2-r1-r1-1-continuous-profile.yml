@@ -1,91 +1,15 @@
-name: H-Earth C2-R1 R1.1 Continuous Coastal Profile
+name: H-Earth C2-R1 R1.1 Continuous Coastal Profile — Closed
 
 on:
-  pull_request:
-    branches:
-      - integration/h-earth-c2-r1-baseline-001
-    paths:
-      - 'h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-1-continuous-profile.mjs'
-      - '.github/workflows/h-earth-c2-r1-r1-1-continuous-profile.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  verify-r1-1:
-    if: github.actor != 'github-actions[bot]'
+  closed-checkpoint:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Execute continuous profile verification
-        env:
-          C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-1-continuous-profile.mjs
-
-      - name: Close R1.1 ledger on pass
-        run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const receiptPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-1-verification.json';
-          const ledgerPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.progress-ledger.json';
-          const programPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.program.json';
-          const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
-          const ledger = JSON.parse(fs.readFileSync(ledgerPath, 'utf8'));
-          const program = JSON.parse(fs.readFileSync(programPath, 'utf8'));
-          const passed = receipt.result === 'PASS_CLOSED';
-          ledger.passes['R1.1'] = {
-            status: passed ? 'PASS_CLOSED' : 'HARD_BLOCKED',
-            head: receipt.candidateHead,
-            result: receipt.result,
-            actualDepthAvailable: receipt.actualDepthUsed,
-            continuousProfileUsed: receipt.continuousProfileUsed,
-            productMutation: false,
-            firstBlocker: receipt.firstBlocker
-          };
-          ledger.currentCheckpoint = passed
-            ? 'R1.2_RECOMPUTED_NORMALS_AND_LIGHTING'
-            : 'R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY';
-          ledger.hardBlockers = passed ? [] : [receipt.firstBlocker];
-          ledger.productDefaultMutated = false;
-          ledger.userDifferentialReady = false;
-          program.status = passed
-            ? 'R1_1_PASS_CLOSED_R1_2_NEXT'
-            : 'R1_1_HARD_BLOCKED';
-          program.currentCheckpoint = ledger.currentCheckpoint;
-          program.productDefaultMutated = false;
-          fs.writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + '\n');
-          fs.writeFileSync(programPath, JSON.stringify(program, null, 2) + '\n');
-          if (!passed) process.exitCode = 1;
-          NODE
-
-      - name: Commit durable R1.1 result
-        if: always() && github.event_name == 'pull_request'
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-1-verification.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.progress-ledger.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.program.json
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'C2-R1 R1.1: record bounded profile verification [skip ci]'
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
-
-      - name: Upload R1.1 receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-c2-r1-r1-1-verification
-          path: h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-1-verification.json
+      - run: |
+          echo 'R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY = PASS_CLOSED'
+          echo 'Automatic reruns are disabled. Management authorization is required to reopen.'

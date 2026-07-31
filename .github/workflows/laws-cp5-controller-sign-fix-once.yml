@@ -1,0 +1,58 @@
+name: Laws CP5 Controller Sign Fix Once
+
+on:
+  push:
+    branches:
+      - agent/laws-compass-checkpoint-2-bounded-construction-002
+
+permissions:
+  contents: write
+
+jobs:
+  apply-controller-sign-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-compass-checkpoint-2-bounded-construction-002
+          fetch-depth: 0
+
+      - name: Apply bounded controller correction and remove applicator
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('laws/index.controller.js')
+          source = path.read_text()
+
+          old_integrity = 'integrity:Object.freeze([0,0,-HALF_SQRT_TWO,HALF_SQRT_TWO])'
+          old_structure = 'structure:Object.freeze([0,0,HALF_SQRT_TWO,HALF_SQRT_TWO])'
+          new_integrity = 'integrity:Object.freeze([0,0,HALF_SQRT_TWO,HALF_SQRT_TWO])'
+          new_structure = 'structure:Object.freeze([0,0,-HALF_SQRT_TWO,HALF_SQRT_TWO])'
+
+          assert source.count(old_integrity) == 1, 'OLD_INTEGRITY_FRAGMENT_COUNT_INVALID'
+          assert source.count(old_structure) == 1, 'OLD_STRUCTURE_FRAGMENT_COUNT_INVALID'
+
+          corrected = source.replace(old_integrity, new_integrity).replace(old_structure, new_structure)
+
+          assert corrected.count(new_integrity) == 1, 'NEW_INTEGRITY_FRAGMENT_COUNT_INVALID'
+          assert corrected.count(new_structure) == 1, 'NEW_STRUCTURE_FRAGMENT_COUNT_INVALID'
+          assert corrected.count(old_integrity) == 0, 'OLD_INTEGRITY_FRAGMENT_REMAINS'
+          assert corrected.count(old_structure) == 0, 'OLD_STRUCTURE_FRAGMENT_REMAINS'
+
+          path.write_text(corrected)
+          Path('.github/workflows/laws-cp5-controller-sign-fix-once.yml').unlink()
+          PY
+
+          node --check laws/index.controller.js
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.controller.js .github/workflows/laws-cp5-controller-sign-fix-once.yml
+
+          test "$(git diff --cached --name-only | sort | tr '\n' ' ')" = ".github/workflows/laws-cp5-controller-sign-fix-once.yml laws/index.controller.js "
+
+          git commit -m "Checkpoint 5: correct Integrity Structure quaternion correspondence"
+          git push origin HEAD:agent/laws-compass-checkpoint-2-bounded-construction-002

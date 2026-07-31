@@ -1,10 +1,11 @@
 {
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
-  "status": "R1_1_PASS_CLOSED_R1_2_NEXT",
+  "status": "R1_2_PASS_CLOSED_R1_3_NEXT",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
   "failedC2GeometryAsStartingSource": "PROHIBITED",
   "rollbackBranch": "rollback/h-earth-c2-r1-pre-mutation-001",
+  "latestCheckpointRollbackBranch": "rollback/h-earth-c2-r1-r1-1-closed-001",
   "integrationBaseBranch": "integration/h-earth-c2-r1-baseline-001",
   "advanceToC3": false,
   "executionLaw": {
@@ -42,17 +43,18 @@
     },
     "R1.1": {
       "name": "CONTINUOUS_BEACH_AND_BATHYMETRY",
-      "status": "NOT_STARTED",
+      "status": "PASS_CLOSED",
       "mutationScope": [
         "ISOLATED_CANDIDATE_COASTAL_PROFILE",
         "ISOLATED_CANDIDATE_SEABED_PROFILE"
       ],
-      "stoppingBoundary": "CONTINUITY_AND_PROFILE_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
+      "stoppingBoundary": "CONTINUITY_AND_PROFILE_GAUGES_PASS"
     },
     "R1.2": {
       "name": "RECOMPUTED_NORMALS_AND_LIGHTING",
-      "status": "NOT_STARTED",
-      "stoppingBoundary": "NORMAL_CONTINUITY_PASS_OR_HARD_BLOCKER_REPORTED"
+      "status": "PASS_CLOSED",
+      "executionHead": "518dce9fdd767f286dba88204673fb0bfdb4c044",
+      "stoppingBoundary": "NORMAL_CONTINUITY_AND_LIGHTING_PROJECTION_PASS"
     },
     "R1.3": {
       "name": "GRADUAL_SEDIMENT_MEMBERSHIPS",
@@ -99,5 +101,5 @@
     "userDifferentialReady": false
   },
   "productDefaultMutated": false,
-  "currentCheckpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING"
+  "currentCheckpoint": "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS"
 }

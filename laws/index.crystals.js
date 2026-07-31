@@ -116,13 +116,13 @@
   constellation:
     Object.freeze({
       horizontalRadius:
-        1.50,
+        1.68,
 
       verticalRadius:
-        1.34,
+        1.5008,
 
       depthRadius:
-        1.16,
+        1.2992,
 
       primaryAnchor:
         Object.freeze([

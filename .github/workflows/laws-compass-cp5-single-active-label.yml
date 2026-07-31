@@ -1,0 +1,263 @@
+name: Laws Compass CP5 Single Active Label Candidate
+
+on:
+  push:
+    branches:
+      - agent/laws-compass-cp5-single-active-label-001
+
+permissions:
+  contents: write
+
+jobs:
+  construct-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-compass-cp5-single-active-label-001
+          fetch-depth: 0
+
+      - name: Verify exact main anchor
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "b8eb8783609ea584b9f2e0f132e706e23c211535"
+          test "$(git hash-object laws/index.interactions.js)" = "ffa47d116aecccab367d6cccdf65b2e18cea21bf"
+          test "$(git hash-object laws/index.crystals.js)" = "43bb3659e24094074b72a45a1990bc66bd79e2be"
+
+      - name: Construct bounded product and verifier candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+
+          def replace_once(text, old, new, label):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one occurrence, observed {count}")
+              return text.replace(old, new, 1)
+
+          interactions_path = Path("laws/index.interactions.js")
+          text = interactions_path.read_text()
+          text = replace_once(
+              text,
+              'version:"1.5.0-exact-two-object-field",build:"LAWS_COMPASS_CHECKPOINT_5_EXACT_TWO_OBJECT_RECONCILIATION_v2"',
+              'version:"1.6.0-single-active-outer-label",build:"LAWS_COMPASS_CHECKPOINT_5_SINGLE_ACTIVE_OUTER_LABEL_v1"',
+              "module identity"
+          )
+          text = replace_once(
+              text,
+              '}[data-laws-projected-category-label][data-depth-layer="rear"]',
+              '}[data-laws-projected-category-label][hidden]{display:none!important}[data-laws-projected-category-label][data-depth-layer="rear"]',
+              "hidden label style"
+          )
+          text = replace_once(
+              text,
+              '}S.labels.set(id,el);}let lawLayer=',
+              '}el.hidden=true;el.tabIndex=-1;el.setAttribute("aria-hidden","true");el.style.pointerEvents="none";S.labels.set(id,el);}let lawLayer=',
+              "initial label suppression"
+          )
+
+          start_marker = 'for(const id of D){const el=S.labels.get(id),r=categoryById.get(id);'
+          end_marker = '}const active=activeDirection()'
+          start = text.find(start_marker)
+          end = text.find(end_marker, start)
+          if start < 0 or end < 0:
+              raise SystemExit("category label projection loop markers not found")
+          new_loop = '''for(const id of D){const el=S.labels.get(id),r=categoryById.get(id),isPrimary=m===MODE.CONSTELLATION&&id===primary&&Boolean(r);if(!el)continue;el.hidden=!isPrimary;el.dataset.primary=String(isPrimary);el.tabIndex=isPrimary?0:-1;el.style.pointerEvents=isPrimary?"auto":"none";if(!isPrimary){el.setAttribute("aria-hidden","true");el.dataset.lawsProjectedPlacement="suppressed-nonprimary";continue;}el.removeAttribute("aria-hidden");el.style.left=`${r.x}px`;el.style.top=`${r.y}px`;el.style.zIndex=r.depthLayer==="rear"?"2":"9";el.dataset.depthLayer=r.depthLayer;el.dataset.lawsProjectedPlacement="primary-only-star-center-protected-tab";}const visibleOuterLabels=Array.from(S.labels.entries()).filter(([,el])=>!el.hidden);S.root.dataset.lawsVisibleOuterAuthorityLabelId=visibleOuterLabels[0]?.[0]||"";S.root.dataset.lawsVisibleOuterAuthorityLabelCount=String(visibleOuterLabels.length);'''
+          text = text[:start] + new_loop + 'const active=activeDirection()' + text[end + len(end_marker):]
+
+          text = replace_once(
+              text,
+              'projectedCategoryLabelsInstalled:S.labels.size===6,projectedLawLabelsInstalled:S.lawLabels.size===24',
+              'projectedCategoryLabelsInstalled:S.labels.size===6,singleActiveOuterAuthorityLabel:true,visibleOuterAuthorityLabelCount:Array.from(S.labels.values()).filter(el=>!el.hidden).length,activeOuterAuthorityLabelId:Array.from(S.labels.entries()).find(([,el])=>!el.hidden)?.[0]||"",projectedLawLabelsInstalled:S.lawLabels.size===24',
+              "interaction receipt label contract"
+          )
+          text = replace_once(
+              text,
+              'S.root.dataset.lawsConstellationLabels="flow-integrity-reality-structure-test-research";',
+              'S.root.dataset.lawsConstellationLabels="single-primary-only";S.root.dataset.lawsOuterAuthorityLabelIdentities="flow-integrity-reality-structure-test-research";',
+              "root label dataset"
+          )
+          text = replace_once(
+              text,
+              'projectedConstellationLabels:true,projectedActiveClusterLabels:true',
+              'projectedConstellationLabels:true,singleActiveOuterAuthorityLabel:true,projectedActiveClusterLabels:true',
+              "ready event label contract"
+          )
+          interactions_path.write_text(text)
+
+          source_path = Path("verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs")
+          bench = source_path.read_text()
+          bench = replace_once(bench, 'const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_BENCHMARK_RECONCILIATION_v5";', 'const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_SINGLE_ACTIVE_LABEL_RECONCILIATION_v1";', "benchmark reconciliation")
+          bench = replace_once(bench, 'const BASELINE_COMMIT = process.env.BASELINE_COMMIT || "3a6eafcb8c10c61849a452a0c068d34a12117cf5";', 'const BASELINE_COMMIT = process.env.BASELINE_COMMIT || "b8eb8783609ea584b9f2e0f132e706e23c211535";', "benchmark baseline")
+          bench = replace_once(bench, 'const OUT = "laws-six-authority-benchmark-v1.json";', 'const OUT = "laws-cp5-single-active-label-v1.json";', "benchmark output")
+          bench = replace_once(bench, 'const SHOTS = "laws-six-authority-benchmark-v1-screenshots";', 'const SHOTS = "laws-cp5-single-active-label-v1-screenshots";', "benchmark screenshots")
+          bench = replace_once(bench, 'id: "SIX_AUTHORITY_PROFILE",', 'id: "CP5_SINGLE_ACTIVE_OUTER_LABEL_PROFILE",', "benchmark profile")
+          paths_start = bench.index('const EXPECTED_PRODUCT_PATHS = Object.freeze([')
+          paths_end = bench.index('const PROTECTED_PATHS = new Set([', paths_start)
+          protected_end = bench.index(']);\nconst VIEWPORTS', paths_end) + 3
+          bench = bench[:paths_start] + '''const EXPECTED_PRODUCT_PATHS = Object.freeze([\n  "laws/index.interactions.js"\n]);\nconst PROTECTED_PATHS = new Set([\n  "laws/index.crystals.js",\n  "laws/index.controller.js",\n  "laws/index.compositor.js",\n  "laws/index.html",\n  "laws/index.css",\n  "laws/index.planet.js",\n  "laws/index.cosmos.js",\n  "assets/audralia/audralia.planet.js",\n  "laws/test/index.html",\n  "laws/research/index.html"\n]);\n''' + bench[protected_end:]
+          bench = replace_once(bench, 'checkpoint: "LAWS_COMPASS_CHECKPOINT_5_EXECUTED_VERIFICATION_v1",', 'checkpoint: "LAWS_COMPASS_CHECKPOINT_5_SINGLE_ACTIVE_LABEL_EXECUTED_VERIFICATION_v1",', "benchmark checkpoint")
+          bench = replace_once(
+              bench,
+              'assert(source.interactions.includes("projectedCategoryLabelsInstalled:S.labels.size===6"), "PROJECTED_SIX_AUTHORITY_LABEL_CONTRACT_MISSING");',
+              'assert(source.interactions.includes("projectedCategoryLabelsInstalled:S.labels.size===6"), "PROJECTED_SIX_AUTHORITY_LABEL_CONTRACT_MISSING");\nassert(source.interactions.includes("singleActiveOuterAuthorityLabel:true"), "SINGLE_ACTIVE_OUTER_AUTHORITY_LABEL_CONTRACT_MISSING");\nassert(source.interactions.includes("primary-only-star-center-protected-tab"), "PRIMARY_ONLY_LABEL_PLACEMENT_CONTRACT_MISSING");\nassert(source.crystals.includes("horizontalRadius:\\n        1.68") && source.crystals.includes("verticalRadius:\\n        1.5008") && source.crystals.includes("depthRadius:\\n        1.2992") && source.crystals.includes("gatewayBodyScale:\\n    0.7666667"), "ACCEPTED_RADIAL_OR_BODY_SCALE_CONTRACT_MISSING");',
+              "benchmark source assertions"
+          )
+          bench = replace_once(
+              bench,
+              '      visiblePrimaryCount: authorityLabels.filter(element => isVisible(element) && element.dataset.primary === "true").length,',
+              '''      visiblePrimaryCount: authorityLabels.filter(element => isVisible(element) && element.dataset.primary === "true").length,\n      soleVisibleLabelIdentity: authorityLabels.find(element => isVisible(element))?.dataset.direction || "",\n      outerAuthorityLabelStates: authorityLabels.map(element => ({\n        id: element.dataset.direction || "",\n        visible: isVisible(element),\n        hidden: Boolean(element.hidden),\n        primary: element.dataset.primary === "true",\n        tabIndex: Number(element.tabIndex),\n        tabindexAttribute: element.getAttribute("tabindex"),\n        ariaHidden: element.getAttribute("aria-hidden"),\n        pointerEvents: getComputedStyle(element).pointerEvents,\n        ariaLabel: element.getAttribute("aria-label") || ""\n      })),\n      centerCompassReachable: (() => {\n        const element = document.querySelector("[data-upstream-compass-control]");\n        if (!element || element.dataset.interactionEnabled === "false") return false;\n        const box = element.getBoundingClientRect();\n        return box.width > 0 && box.height > 0;\n      })(),''',
+              "runtime label state"
+          )
+          bench = replace_once(
+              bench,
+              'const profileEvidence = { profile: profile.id, inputType: profile.inputType, readinessSamples: [], runtimeReadiness:',
+              'const profileEvidence = { profile: profile.id, inputType: profile.inputType, labelStateLedger: [], readinessSamples: [], runtimeReadiness:',
+              "profile label ledger"
+          )
+          set_primary_tail = '''          await sleep(180);\n        };\n\n        const dragAndSettle'''
+          set_primary_replacement = '''          await sleep(180);\n          const labelState = await runtimeSnapshot(page);\n          const activeLabel = labelState.outerAuthorityLabelStates.find(record => record.id === id);\n          const suppressedLabels = labelState.outerAuthorityLabelStates.filter(record => record.id !== id);\n          profileEvidence.labelStateLedger.push({ phase: "PRIMARY_TRANSITION", authorityId: id, state: labelState.outerAuthorityLabelStates });\n          assert(labelState.visibleLabelCount === 1, "SOLE_VISIBLE_LABEL_COUNT_INVALID", labelState, profile.id);\n          assert(labelState.soleVisibleLabelIdentity === id && labelState.controllerPrimaryIdentity === id && labelState.projectionPrimaryIdentity === id, "SOLE_VISIBLE_LABEL_IDENTITY_INVALID", labelState, profile.id);\n          assert(Boolean(activeLabel && activeLabel.visible && activeLabel.primary && !activeLabel.hidden && activeLabel.tabIndex >= 0 && activeLabel.ariaHidden !== "true" && activeLabel.pointerEvents !== "none" && activeLabel.ariaLabel), "PRIMARY_LABEL_ACCESSIBILITY_OR_POINTER_STATE_INVALID", activeLabel, profile.id);\n          assert(suppressedLabels.length === 5 && suppressedLabels.every(record => !record.visible && record.hidden && record.tabIndex < 0 && record.ariaHidden === "true" && record.pointerEvents === "none" && record.ariaLabel), "NONPRIMARY_LABEL_SUPPRESSION_INVALID", suppressedLabels, profile.id);\n        };\n\n        const dragAndSettle'''
+          bench = replace_once(bench, set_primary_tail, set_primary_replacement, "primary transition assertions")
+          bench = replace_once(
+              bench,
+              '          profileEvidence.dragEvidence.push(evidence);\n          if (profile.inputType === "touch")',
+              '''          profileEvidence.dragEvidence.push(evidence);\n          await page.evaluate(() => {\n            const authorityIds = ["flow", "integrity", "reality", "structure", "test", "research"];\n            const root = document.querySelector("[data-laws-root]");\n            const monitor = { active: true, samples: [], last: "" };\n            const isVisible = element => {\n              if (!element || element.hidden) return false;\n              const style = getComputedStyle(element);\n              const rect = element.getBoundingClientRect();\n              return style.display !== "none" && style.visibility !== "hidden" && Number(style.opacity || 1) > 0.01 && rect.width > 0 && rect.height > 0;\n            };\n            const sample = () => {\n              const primary = root?.dataset.lawsSpatialPrimaryId || "";\n              const visibleIds = authorityIds.filter(authorityId => isVisible(document.querySelector(`[data-laws-projected-category-label="${authorityId}"]`)));\n              const signature = `${primary}:${visibleIds.join(",")}`;\n              if (signature !== monitor.last) { monitor.last = signature; monitor.samples.push({ primary, visibleIds }); }\n              if (monitor.active) requestAnimationFrame(sample);\n            };\n            globalThis.__LAWS_CP5_LABEL_MONITOR = monitor;\n            sample();\n          });\n          if (profile.inputType === "touch")''',
+              "motion label monitor start"
+          )
+          bench = replace_once(
+              bench,
+              '            evidence.after.settlementDelta = evidence.after.settlementCount - before.settlementCount;',
+              '''            evidence.after.settlementDelta = evidence.after.settlementCount - before.settlementCount;\n            evidence.motionLabelLedger = await page.evaluate(() => {\n              const monitor = globalThis.__LAWS_CP5_LABEL_MONITOR;\n              if (!monitor) return [];\n              monitor.active = false;\n              return monitor.samples.slice();\n            });\n            assert(evidence.motionLabelLedger.length > 0, "ORBIT_LABEL_MOTION_LEDGER_EMPTY", evidence, profile.id);\n            assert(evidence.motionLabelLedger.every(sample => sample.visibleIds.length === 1 && sample.visibleIds[0] === sample.primary), "ORBIT_LABEL_CONTINUITY_INVALID", evidence.motionLabelLedger, profile.id);\n            const settledLabelState = await runtimeSnapshot(page);\n            profileEvidence.labelStateLedger.push({ phase: "SETTLEMENT", authorityId: settledLabelState.controllerPrimaryIdentity, state: settledLabelState.outerAuthorityLabelStates });\n            assert(settledLabelState.visibleLabelCount === 1 && settledLabelState.soleVisibleLabelIdentity === settledLabelState.controllerPrimaryIdentity, "SETTLED_LABEL_STATE_INVALID", settledLabelState, profile.id);''',
+              "motion label monitor verification"
+          )
+          bench = replace_once(
+              bench,
+              '            evidence.timeout = { error: String(error?.stack || error), state: await runtimeSnapshot(page) };\n            throw error;',
+              '            await page.evaluate(() => { if (globalThis.__LAWS_CP5_LABEL_MONITOR) globalThis.__LAWS_CP5_LABEL_MONITOR.active = false; }).catch(() => {});\n            evidence.timeout = { error: String(error?.stack || error), state: await runtimeSnapshot(page) };\n            throw error;',
+              "motion label monitor failure stop"
+          )
+          bench = replace_once(bench, 'assert(initial.visibleLabelCount === 6, "VISIBLE_AUTHORITY_LABEL_COUNT_INVALID", initial, profile.id);', 'assert(initial.visibleLabelCount === 1, "VISIBLE_AUTHORITY_LABEL_COUNT_INVALID", initial, profile.id);\n        assert(initial.soleVisibleLabelIdentity === initial.controllerPrimaryIdentity, "INITIAL_SOLE_VISIBLE_LABEL_IDENTITY_INVALID", initial, profile.id);\n        assert(initial.outerAuthorityLabelStates.filter(record => !record.visible).length === 5 && initial.outerAuthorityLabelStates.filter(record => !record.visible).every(record => record.hidden && record.tabIndex < 0 && record.ariaHidden === "true" && record.pointerEvents === "none"), "INITIAL_NONPRIMARY_LABEL_SUPPRESSION_INVALID", initial.outerAuthorityLabelStates, profile.id);', "initial label requirement")
+          bench = replace_once(bench, 'assert(initial.globeSurfacePresent, "FIXED_CENTER_GLOBE_SURFACE_MISSING", initial, profile.id);', 'assert(initial.globeSurfacePresent, "FIXED_CENTER_GLOBE_SURFACE_MISSING", initial, profile.id);\n        assert(initial.centerCompassReachable, "CENTER_COMPASS_NOT_REACHABLE", initial, profile.id);', "center compass reachability")
+          bench = replace_once(bench, 'assert(profileEvidence.testCluster.clusterMemberIds.length === 4, "TEST_CLUSTER_MEMBER_COUNT_INVALID", profileEvidence.testCluster, profile.id);', 'assert(profileEvidence.testCluster.clusterMemberIds.length === 4, "TEST_CLUSTER_MEMBER_COUNT_INVALID", profileEvidence.testCluster, profile.id);\n        assert(profileEvidence.testCluster.visibleLabelCount === 0, "OUTER_LABEL_VISIBLE_DURING_TEST_CLUSTER", profileEvidence.testCluster, profile.id);', "test cluster label suppression")
+          bench = replace_once(bench, 'assert(profileEvidence.researchCluster.clusterMemberIds.length === 4, "RESEARCH_CLUSTER_MEMBER_COUNT_INVALID", profileEvidence.researchCluster, profile.id);', 'assert(profileEvidence.researchCluster.clusterMemberIds.length === 4, "RESEARCH_CLUSTER_MEMBER_COUNT_INVALID", profileEvidence.researchCluster, profile.id);\n        assert(profileEvidence.researchCluster.visibleLabelCount === 0, "OUTER_LABEL_VISIBLE_DURING_RESEARCH_CLUSTER", profileEvidence.researchCluster, profile.id);', "research cluster label suppression")
+          bench = replace_once(bench, 'assert(profileEvidence.lawCluster.clusterMemberIds.length === 4, "LAW_CLUSTER_MEMBER_COUNT_INVALID", profileEvidence.lawCluster, profile.id);', 'assert(profileEvidence.lawCluster.clusterMemberIds.length === 4, "LAW_CLUSTER_MEMBER_COUNT_INVALID", profileEvidence.lawCluster, profile.id);\n        assert(profileEvidence.lawCluster.visibleLabelCount === 0, "OUTER_LABEL_VISIBLE_DURING_LAW_CLUSTER", profileEvidence.lawCluster, profile.id);', "law cluster label suppression")
+
+          verifier_path = Path("verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/laws-compass-cp5-single-active-label.mjs")
+          verifier_path.parent.mkdir(parents=True, exist_ok=True)
+          verifier_path.write_text(bench)
+          PY
+
+          node --check laws/index.interactions.js
+          node --check verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/laws-compass-cp5-single-active-label.mjs
+          test "$(git hash-object laws/index.crystals.js)" = "43bb3659e24094074b72a45a1990bc66bd79e2be"
+
+      - name: Commit exact candidate
+        id: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.interactions.js verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/laws-compass-cp5-single-active-label.mjs
+          git commit -m "Checkpoint 5: enforce single active outer label"
+          git push origin HEAD:agent/laws-compass-cp5-single-active-label-001
+          candidate_head="$(git rev-parse HEAD)"
+          interaction_blob="$(git hash-object laws/index.interactions.js)"
+          printf 'candidate_head=%s\n' "$candidate_head" >> "$GITHUB_OUTPUT"
+          printf 'interaction_blob=%s\n' "$interaction_blob" >> "$GITHUB_OUTPUT"
+          git diff --name-only b8eb8783609ea584b9f2e0f132e706e23c211535 "$candidate_head" | sort | tee laws-cp5-single-active-label-changed-paths.txt
+          test "$(git diff --name-only b8eb8783609ea584b9f2e0f132e706e23c211535 "$candidate_head" | sort | tr '\n' '|')" = ".github/workflows/laws-compass-cp5-single-active-label.yml|laws/index.interactions.js|verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/laws-compass-cp5-single-active-label.mjs|"
+
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Start exact-head local runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ steps.candidate.outputs.candidate_head }}"
+          python3 -m http.server 4173 >/tmp/laws-cp5-server.log 2>&1 &
+          echo $! >/tmp/laws-cp5-server.pid
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/laws-cp5-server.log
+          exit 1
+
+      - name: Execute four-profile candidate verification
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          LAWS_SIX_ORIGIN: http://127.0.0.1:4173
+          EXECUTION_BRANCH: agent/laws-compass-cp5-single-active-label-001
+          EXECUTION_COMMIT: ${{ steps.candidate.outputs.candidate_head }}
+          BASELINE_COMMIT: b8eb8783609ea584b9f2e0f132e706e23c211535
+        run: node verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/laws-compass-cp5-single-active-label.mjs
+
+      - name: Validate candidate receipt
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ steps.candidate.outputs.candidate_head }}
+          EXPECTED_BLOB: ${{ steps.candidate.outputs.interaction_blob }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('laws-cp5-single-active-label-v1.json', 'utf8'));
+          if (receipt.execution?.commit !== process.env.EXPECTED_HEAD) throw new Error('EXACT_HEAD_MISMATCH');
+          if (receipt.pass !== true || receipt.failures?.length) throw new Error('CANDIDATE_RECEIPT_FAILED');
+          if (receipt.browserExecuted !== true) throw new Error('BROWSER_NOT_EXECUTED');
+          if (!Array.isArray(receipt.screenshotManifest) || receipt.screenshotManifest.length < 4) throw new Error('SCREENSHOTS_INCOMPLETE');
+          if (!Array.isArray(receipt.observations) || receipt.observations.length !== 4) throw new Error('PROFILE_COUNT_INVALID');
+          const ids = ['flow','integrity','reality','structure','test','research'];
+          for (const observation of receipt.observations) {
+            const transitions = (observation.labelStateLedger || []).filter(entry => entry.phase === 'PRIMARY_TRANSITION');
+            const observed = [...new Set(transitions.map(entry => entry.authorityId))].sort();
+            if (JSON.stringify(observed) !== JSON.stringify([...ids].sort())) throw new Error(`LABEL_LEDGER_INCOMPLETE:${observation.profile}`);
+            for (const entry of transitions) {
+              const visible = entry.state.filter(record => record.visible);
+              const suppressed = entry.state.filter(record => !record.visible);
+              if (visible.length !== 1 || visible[0].id !== entry.authorityId) throw new Error(`VISIBLE_LABEL_INVALID:${observation.profile}:${entry.authorityId}`);
+              if (suppressed.length !== 5 || suppressed.some(record => !record.hidden || record.tabIndex >= 0 || record.ariaHidden !== 'true' || record.pointerEvents !== 'none')) throw new Error(`SUPPRESSION_INVALID:${observation.profile}:${entry.authorityId}`);
+            }
+          }
+          const output = {
+            checkpoint: 'LAWS_CHAMBER_CHECKPOINT_5',
+            phase: 'SINGLE_ACTIVE_LABEL_CANDIDATE_VERIFICATION',
+            result: 'PASS_VERIFIED_CANDIDATE',
+            baseMain: 'b8eb8783609ea584b9f2e0f132e706e23c211535',
+            candidateHead: process.env.EXPECTED_HEAD,
+            interactionsBlob: process.env.EXPECTED_BLOB,
+            crystalsBlob: '43bb3659e24094074b72a45a1990bc66bd79e2be',
+            changedPaths: fs.readFileSync('laws-cp5-single-active-label-changed-paths.txt', 'utf8').trim().split(/\r?\n/),
+            profiles: receipt.observations.map(item => item.profile),
+            screenshotCount: receipt.screenshotManifest.length,
+            failures: receipt.failures,
+            merge: false,
+            deployment: false,
+            userDifferential: 'NOT_YET'
+          };
+          fs.writeFileSync('laws-cp5-single-active-label-candidate-receipt.json', JSON.stringify(output, null, 2) + '\n');
+          NODE
+
+      - name: Upload candidate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp5-single-active-label-candidate-${{ steps.candidate.outputs.candidate_head }}
+          path: |
+            laws-cp5-single-active-label-v1.json
+            laws-cp5-single-active-label-candidate-receipt.json
+            laws-cp5-single-active-label-changed-paths.txt
+            laws-cp5-single-active-label-v1-screenshots/**
+            /tmp/laws-cp5-server.log
+          retention-days: 30

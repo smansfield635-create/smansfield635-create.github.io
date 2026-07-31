@@ -1,0 +1,504 @@
+name: Laws CP5 R2 Solar Constructor 002
+
+on:
+  push:
+    branches:
+      - agent/laws-cp5-r2-solar-visual-correction-002
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp5-r2-solar-constructor-002
+  cancel-in-progress: false
+
+jobs:
+  mutate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact CP5-R2 branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp5-r2-solar-visual-correction-002
+          fetch-depth: 0
+
+      - name: Apply one-file solar correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="0ff5741803926a6c218415587955aa867f93a0f7"
+          test "$(git rev-parse "$base":laws/index.crystals.js)" = "43bb3659e24094074b72a45a1990bc66bd79e2be"
+          test "$(git hash-object laws/index.interactions.js)" = "be365cc331ee5643f916abee204d4f5f45376c04"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("laws/index.crystals.js")
+          text = path.read_text(encoding="utf-8")
+
+          def replace_once(old, new, label):
+              global text
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one match, found {count}")
+              text = text.replace(old, new, 1)
+
+          replace_once(
+              "Object.freeze({specular:0.18,rim:0.42,emissive:0.88,alpha:1.50,sparkle:0.00,halo:0.58,contrast:1.70}),",
+              "Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94}),",
+              "solar material"
+          )
+
+          replace_once(
+              "    uniform float uHaloExpansion;\n\n    varying vec3 vNormal;",
+              "    uniform float uHaloExpansion;\n    uniform float uTime;\n    uniform float uSolarBody;\n\n    varying vec3 vNormal;",
+              "vertex solar uniforms"
+          )
+
+          replace_once(
+              "      if (uHaloPass > 0.5) {\n        pos += normalize(aNormal) * uHaloExpansion;\n      }",
+              """      if (uHaloPass > 0.5) {
+        float expansionScale = 1.0;
+        if (uSolarBody > 0.5) {
+          vec3 direction = normalize(aPosition);
+          float plume =
+            sin(direction.x * 8.7 + direction.y * 5.1 + uTime * 0.31) * 0.46 +
+            sin(direction.y * 11.3 - direction.z * 6.4 - uTime * 0.23) * 0.32 +
+            sin(direction.z * 15.7 + direction.x * 4.9 + uTime * 0.17) * 0.22;
+          expansionScale = 0.12 + smoothstep(0.02, 0.76, plume) * 1.72;
+        }
+        pos += normalize(aNormal) * uHaloExpansion * expansionScale;
+      }""",
+              "irregular solar halo geometry"
+          )
+
+          replace_once(
+              "    uniform float uSaturation;\n",
+              "    uniform float uSaturation;\n    uniform float uSolarBody;\n",
+              "fragment solar uniform"
+          )
+
+          halo_start = text.index("      if (vHaloPass > 0.5) {")
+          halo_end = text.index("      float diffuse =", halo_start)
+          new_halo = """      if (vHaloPass > 0.5) {
+        if (uSolarBody > 0.5) {
+          float gasA = 0.5 + 0.5 * sin(n.x * 10.7 + n.y * 6.1 - n.z * 8.4 + uTime * 0.19);
+          float gasB = 0.5 + 0.5 * sin(n.x * 5.2 - n.y * 14.3 + n.z * 11.8 - uTime * 0.13);
+          float gasC = 0.5 + 0.5 * sin(n.z * 18.1 + n.x * 4.6 + uTime * 0.09);
+          float plume = gasA * 0.50 + gasB * 0.32 + gasC * 0.18;
+          float wisp = smoothstep(0.54, 0.83, plume);
+          float prominenceWisp = pow(max(plume - 0.63, 0.0) * 2.70, 1.45);
+          vec3 haloColor =
+            mix(
+              vec3(1.0, 0.20, 0.008),
+              vec3(1.0, 0.84, 0.25),
+              clamp(gasA * 0.72 + gasC * 0.28, 0.0, 1.0)
+            ) *
+            (0.46 + wisp * 0.90 + prominenceWisp * 0.74) *
+            uHaloStrength;
+          float haloAlpha =
+            clamp(
+              (0.012 + fresnel * 0.075 + sideRim * 0.035 + prominenceWisp * 0.15) *
+              wisp *
+              uProminence *
+              uHaloStrength,
+              0.0,
+              0.23
+            );
+          gl_FragColor = vec4(haloColor, haloAlpha);
+          return;
+        }
+
+        vec3 haloColor =
+          base *
+          (
+            0.70 +
+            fresnel * 1.18 +
+            sideRim * 0.42 +
+            rear * 0.24
+          ) *
+          uHaloStrength *
+          twinkle;
+
+        float haloAlpha =
+          clamp(
+            (
+              0.040 +
+              fresnel * 0.18 +
+              sideRim * 0.08
+            ) *
+            uProminence *
+            uHaloStrength,
+            0.0,
+            0.34
+          );
+
+        gl_FragColor = vec4(haloColor, haloAlpha);
+        return;
+      }
+
+      if (uSolarBody > 0.5) {
+        float centerToLimb = smoothstep(0.04, 0.92, max(facingToCamera, 0.0));
+        float limbBrightness = 0.68 + centerToLimb * 0.32;
+        float activity = clamp((base.r - base.g) * 1.12 + (0.34 - base.b) * 0.28, 0.0, 1.0);
+        vec3 solarColor = base * limbBrightness * (0.94 + uProminence * 0.08);
+        solarColor += vec3(1.0, 0.28, 0.012) * activity * 0.035;
+        solarColor *= 0.96 + key * 0.07 + fill * 0.025;
+        gl_FragColor = vec4(min(solarColor, vec3(1.0)), 1.0);
+        return;
+      }
+
+"""
+          text = text[:halo_start] + new_halo + text[halo_end:]
+
+          function_start = text.index("  function createCelestialSphereMesh(options = {}) {")
+          function_end = text.index("  function lawColorForDirection(direction) {", function_start)
+          new_function = r'''  function createCelestialSphereMesh(options = {}) {
+    const segments = Math.max(24, options.segments || 48);
+    const rings = Math.max(16, options.rings || 32);
+    const radius = options.radius || 0.66;
+    const mode = options.mode === "solar" ? "solar" : "lunar";
+    const positions = [];
+    const normals = [];
+    const colors = [];
+
+    /* CP5_R2_LUNAR_RELIEF_PRESERVED */
+    const craters = [
+      [0.42, 0.26, 0.86, 0.24, 0.052],
+      [-0.36, 0.54, 0.76, 0.19, 0.043],
+      [0.18, -0.48, 0.86, 0.16, 0.038],
+      [-0.58, -0.20, 0.79, 0.21, 0.046],
+      [0.64, -0.12, 0.76, 0.14, 0.033],
+      [-0.08, 0.78, 0.62, 0.13, 0.030],
+      [0.16, 0.08, 0.98, 0.09, 0.024],
+      [-0.28, -0.62, 0.73, 0.11, 0.027]
+    ].map(record => ({
+      center: normalizeVector(record.slice(0, 3)),
+      radius: record[3],
+      depth: record[4]
+    }));
+
+    /* CP5_R2_SOLAR_LARGE_CONVECTION_CELLS */
+    const solarCells = [
+      [0.16, 0.92, 0.36, 1.00], [-0.44, 0.78, 0.45, 0.74],
+      [0.66, 0.52, 0.54, 0.88], [0.82, 0.04, 0.57, 0.62],
+      [0.44, -0.52, 0.73, 0.91], [-0.18, -0.72, 0.67, 0.70],
+      [-0.72, -0.34, 0.61, 0.84], [-0.86, 0.18, 0.47, 0.58],
+      [0.08, 0.34, 0.94, 0.78], [0.55, -0.18, -0.81, 0.66],
+      [-0.38, 0.22, -0.90, 0.94], [0.18, -0.86, -0.47, 0.72],
+      [-0.78, -0.12, -0.61, 0.82], [0.72, 0.48, -0.49, 0.60]
+    ].map(record => ({
+      center: normalizeVector(record.slice(0, 3)),
+      energy: record[3]
+    }));
+
+    const solarActivity = [
+      [0.44, 0.18, 0.88, 0.16, 0.95],
+      [-0.34, -0.36, 0.87, 0.13, 0.82],
+      [0.62, -0.56, -0.54, 0.18, 0.70]
+    ].map(record => ({
+      center: normalizeVector(record.slice(0, 3)),
+      radius: record[3],
+      strength: record[4]
+    }));
+
+    function deterministicField(x, y, z, frequency, phase) {
+      return (
+        Math.sin((x * 1.73 + y * 2.11 + z * 2.67) * frequency + phase) * 0.50 +
+        Math.sin((x * 2.93 - y * 1.37 + z * 1.91) * frequency * 1.61 - phase * 0.73) * 0.30 +
+        Math.sin((-x * 1.17 + y * 2.51 + z * 3.07) * frequency * 2.37 + phase * 1.29) * 0.20
+      );
+    }
+
+    function smoothTransition(edge0, edge1, value) {
+      const amount = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+      return amount * amount * (3 - 2 * amount);
+    }
+
+    function mixColor(a, b, amount) {
+      const t = clamp(amount, 0, 1);
+      return [
+        a[0] + (b[0] - a[0]) * t,
+        a[1] + (b[1] - a[1]) * t,
+        a[2] + (b[2] - a[2]) * t
+      ];
+    }
+
+    function craterField(nx, ny, nz) {
+      let relief = 0;
+      let albedo = 0;
+      craters.forEach(crater => {
+        const angularDistance = Math.acos(
+          clamp(nx * crater.center[0] + ny * crater.center[1] + nz * crater.center[2], -1, 1)
+        );
+        const normalizedDistance = angularDistance / crater.radius;
+        const bowl = Math.exp(-normalizedDistance * normalizedDistance * 3.2);
+        const rim = Math.exp(-Math.pow((normalizedDistance - 0.84) * 6.2, 2));
+        const ejecta = Math.exp(-Math.pow((normalizedDistance - 1.18) * 3.4, 2));
+        relief += rim * crater.depth * 0.92 - bowl * crater.depth * 1.18 + ejecta * crater.depth * 0.12;
+        albedo += rim * 0.22 - bowl * 0.25 + ejecta * 0.035;
+      });
+      return { relief, albedo };
+    }
+
+    function nearestSolarCells(nx, ny, nz) {
+      let first = Infinity;
+      let second = Infinity;
+      let energy = 0.72;
+      solarCells.forEach(cell => {
+        const distance = Math.acos(
+          clamp(nx * cell.center[0] + ny * cell.center[1] + nz * cell.center[2], -1, 1)
+        );
+        if (distance < first) {
+          second = first;
+          first = distance;
+          energy = cell.energy;
+        } else if (distance < second) {
+          second = distance;
+        }
+      });
+      return { first, second, energy };
+    }
+
+    function solarPalette(tone) {
+      const darkRed = [0.42, 0.035, 0.006];
+      const redOrange = [0.78, 0.105, 0.008];
+      const deepOrange = [1.0, 0.285, 0.012];
+      const gold = [1.0, 0.665, 0.055];
+      const yellowWhite = [1.0, 0.985, 0.72];
+      if (tone < 0.18) return mixColor(darkRed, redOrange, tone / 0.18);
+      if (tone < 0.42) return mixColor(redOrange, deepOrange, (tone - 0.18) / 0.24);
+      if (tone < 0.72) return mixColor(deepOrange, gold, (tone - 0.42) / 0.30);
+      return mixColor(gold, yellowWhite, (tone - 0.72) / 0.28);
+    }
+
+    function surfaceSample(phi, theta) {
+      const nx = Math.sin(phi) * Math.cos(theta);
+      const ny = Math.cos(phi);
+      const nz = Math.sin(phi) * Math.sin(theta);
+      let relief = 1;
+      let surfaceColor;
+
+      if (mode === "solar") {
+        const cell = nearestSolarCells(nx, ny, nz);
+        const separation = cell.second - cell.first;
+        const boundary = 1 - smoothTransition(0.018, 0.145, separation);
+        const risingCenter = 1 - smoothTransition(0.07, 0.58, cell.first);
+        const broad = deterministicField(nx, ny, nz, 3.2, 0.73);
+        const turbulentFold = deterministicField(nx, ny, nz, 7.4, 2.17);
+        const fine = deterministicField(nx, ny, nz, 25.0, 1.31);
+        let activity = 0;
+        solarActivity.forEach(region => {
+          const angularDistance = Math.acos(
+            clamp(nx * region.center[0] + ny * region.center[1] + nz * region.center[2], -1, 1)
+          );
+          activity += Math.exp(-Math.pow(angularDistance / region.radius, 2) * 2.5) * region.strength;
+        });
+        activity = clamp(activity, 0, 1);
+        const cellEnergy = clamp(
+          0.24 +
+          risingCenter * (0.48 + cell.energy * 0.20) -
+          boundary * 0.50 +
+          broad * 0.09 +
+          turbulentFold * 0.085 +
+          fine * 0.035 -
+          activity * 0.33,
+          0,
+          1
+        );
+        /* CP5_R2_SOLAR_ORANGE_RED_ACTIVITY */
+        const tone = clamp(cellEnergy + (1 - boundary) * 0.08, 0, 1);
+        surfaceColor = solarPalette(tone);
+        relief +=
+          risingCenter * 0.0085 -
+          boundary * 0.0055 +
+          broad * 0.0038 +
+          turbulentFold * 0.0027 +
+          fine * 0.0012 +
+          activity * 0.0020;
+      } else {
+        const terrain = deterministicField(nx, ny, nz, 5.8, 1.43);
+        const fineTerrain = deterministicField(nx, ny, nz, 15.8, 0.39);
+        const crater = craterField(nx, ny, nz);
+        const light = normalizeVector([-0.62, 0.22, 0.75]);
+        const illumination = nx * light[0] + ny * light[1] + nz * light[2];
+        const terminator = 0.14 + 0.86 * smoothTransition(-0.20, 0.16, illumination);
+        const shade = clamp((0.66 + terrain * 0.11 + fineTerrain * 0.055 + crater.albedo) * terminator, 0.09, 1.02);
+        relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;
+        surfaceColor = [
+          clamp(0.52 * shade * 0.92, 0, 1),
+          clamp(0.34 * shade * 0.78, 0, 1),
+          clamp(1.00 * shade * 1.08, 0, 1)
+        ];
+      }
+
+      const radial = radius * relief;
+      return {
+        radialNormal: [nx, ny, nz],
+        position: [nx * radial, ny * radial, nz * radial],
+        color: surfaceColor
+      };
+    }
+
+    function localCross(a, b) {
+      return [
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0]
+      ];
+    }
+
+    function localSubtract(a, b) {
+      return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    }
+
+    function point(ring, segment) {
+      const phi = ring / rings * Math.PI;
+      const theta = segment / segments * Math.PI * 2;
+      const sample = surfaceSample(phi, theta);
+      const phiStep = Math.PI / rings * 0.32;
+      const thetaStep = Math.PI * 2 / segments * 0.32;
+      const phiMinus = Math.max(0.0001, phi - phiStep);
+      const phiPlus = Math.min(Math.PI - 0.0001, phi + phiStep);
+      const tangentTheta = localSubtract(
+        surfaceSample(phi, theta + thetaStep).position,
+        surfaceSample(phi, theta - thetaStep).position
+      );
+      const tangentPhi = localSubtract(
+        surfaceSample(phiPlus, theta).position,
+        surfaceSample(phiMinus, theta).position
+      );
+      let normal = normalizeVector(localCross(tangentTheta, tangentPhi), sample.radialNormal);
+      const outward = normal[0] * sample.radialNormal[0] + normal[1] * sample.radialNormal[1] + normal[2] * sample.radialNormal[2];
+      if (outward < 0) normal = normal.map(value => -value);
+      return { position: sample.position, normal, color: sample.color };
+    }
+
+    function push(vertex) {
+      positions.push(...vertex.position);
+      normals.push(...vertex.normal);
+      colors.push(...vertex.color);
+    }
+
+    for (let ring = 0; ring < rings; ring += 1) {
+      for (let segment = 0; segment < segments; segment += 1) {
+        const next = (segment + 1) % segments;
+        const a = point(ring, segment);
+        const b = point(ring + 1, segment);
+        const c = point(ring + 1, next);
+        const d = point(ring, next);
+        push(a); push(b); push(c); push(a); push(c); push(d);
+      }
+    }
+
+    return Object.freeze({
+      positions: new Float32Array(positions),
+      normals: new Float32Array(normals),
+      colors: new Float32Array(colors),
+      vertexCount: positions.length / 3
+    });
+  }
+
+'''
+          text = text[:function_start] + new_function + text[function_end:]
+
+          uniform_pattern = re.compile(
+              r'(\n\s*haloExpansion:\s*\n\s*gl\.getUniformLocation\(\s*\n\s*program,\s*\n\s*"uHaloExpansion"\s*\n\s*\),)'
+          )
+          text, count = uniform_pattern.subn(
+              r'\1\n\n        solarBody:\n          gl.getUniformLocation(\n            program,\n            "uSolarBody"\n          ),',
+              text,
+              count=1
+          )
+          if count != 1:
+              raise SystemExit(f"solar uniform map replacement count={count}")
+
+          replace_once(
+              """    const haloScale =
+      haloPass
+        ? 1 +
+          transform.halo *
+            0.10
+        : 1;""",
+              """    const haloScale =
+      haloPass
+        ? node.id === "test"
+          ? 1
+          : 1 + transform.halo * 0.10
+        : 1;""",
+              "solar non-ring model scale"
+          )
+
+          draw_pattern = re.compile(
+              r'(\n\s*gl\.uniform1f\(\s*\n\s*renderer\.uniforms\.haloPass,\s*\n\s*haloPass \? 1 : 0\s*\n\s*\);\s*\n)\s*gl\.uniform1f\(\s*\n\s*renderer\.uniforms\.haloExpansion,\s*\n\s*0\.075\s*\n\s*\);'
+          )
+          draw_replacement = r'''\1
+    gl.uniform1f(
+      renderer.uniforms.solarBody,
+      node.id === "test" ? 1 : 0
+    );
+
+    gl.uniform1f(
+      renderer.uniforms.haloExpansion,
+      node.id === "test" ? 0.14 : 0.075
+    );'''
+          text, count = draw_pattern.subn(draw_replacement, text, count=1)
+          if count != 1:
+              raise SystemExit(f"draw solar binding replacement count={count}")
+
+          draw_function = text.index("  function drawCrystalNodes(")
+          bloom_start = text.index("    if (!bloomDisabled) {", draw_function)
+          bloom_end = text.index("    gl.depthMask(true);", bloom_start)
+          new_bloom = """    const haloNodes =
+      bloomDisabled
+        ? nodes.filter(node => node.id === "test")
+        : nodes;
+
+    /* CP5_R2_SOLAR_IRREGULAR_GASEOUS_CORONA */
+    if (haloNodes.length) {
+      gl.depthMask(false);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+      haloNodes.forEach(node => {
+        drawCalls += drawNode(renderer, node, true);
+      });
+    }
+
+"""
+          text = text[:bloom_start] + new_bloom + text[bloom_end:]
+
+          required = [
+              "horizontalRadius:\n        1.68",
+              "verticalRadius:\n        1.5008",
+              "depthRadius:\n        1.2992",
+              "gatewayBodyScale:\n    0.7666667",
+              "CP5_R2_SOLAR_LARGE_CONVECTION_CELLS",
+              "CP5_R2_SOLAR_ORANGE_RED_ACTIVITY",
+              "CP5_R2_SOLAR_IRREGULAR_GASEOUS_CORONA",
+              "CP5_R2_LUNAR_RELIEF_PRESERVED",
+              "relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;"
+          ]
+          missing = [fragment for fragment in required if fragment not in text]
+          if missing:
+              raise SystemExit(f"preservation or solar markers missing: {missing}")
+
+          path.write_text(text, encoding="utf-8")
+          PY
+
+          node --check laws/index.crystals.js
+          git diff --check -- laws/index.crystals.js
+          test "$(git diff --name-only)" = "laws/index.crystals.js"
+          test "$(git hash-object laws/index.interactions.js)" = "be365cc331ee5643f916abee204d4f5f45376c04"
+
+      - name: Commit one-file result and remove constructor
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="0ff5741803926a6c218415587955aa867f93a0f7"
+          rm .github/workflows/laws-cp5-r2-solar-constructor-002.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add laws/index.crystals.js .github/workflows/laws-cp5-r2-solar-constructor-002.yml
+          git commit -m '[skip ci] Apply bounded Laws CP5-R2 solar visual correction'
+          test "$(git diff --name-only "$base" HEAD)" = "laws/index.crystals.js"
+          git push origin HEAD:agent/laws-cp5-r2-solar-visual-correction-002

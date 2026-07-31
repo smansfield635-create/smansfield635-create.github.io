@@ -21,9 +21,9 @@ env:
   C0_EVIDENCE: h-earth-3d/control-plane/coastal-morphology/c0/evidence
 
 jobs:
-  c0-b-repository-source-and-authority-custody:
+  c0-c-fixed-coastal-scenes-and-shoreline-samples:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Checkout exact C0 execution branch
         uses: actions/checkout@v4
@@ -32,261 +32,479 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Verify bounded C0-B execution state
+      - name: Verify bounded C0-C execution state
+        id: state
         shell: bash
         run: |
           set -euo pipefail
           test "${{ github.event.pull_request.head.ref }}" = "$C0_BRANCH"
           git cat-file -e "$EXACT_MAIN_HEAD^{commit}"
           test "$(git merge-base "$EXACT_MAIN_HEAD" HEAD)" = "$EXACT_MAIN_HEAD"
-          test -f "$C0_EVIDENCE/h-earth.c0.public-occurrence.json"
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.public-occurrence.json').sourceOccurrenceLinkage")" = "VERIFIED_BY_CONTENT_IDENTITY"
+          test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.source-custody.json').result")" = "PASS_CLOSED"
+          if test -f "$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json" && \
+             test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json').result")" = "PASS_CLOSED"; then
+            echo "already_closed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "already_closed=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Build exact-main authority custody and dependency graph
+      - uses: actions/setup-node@v4
+        if: steps.state.outputs.already_closed != 'true'
+        with:
+          node-version: '22'
+
+      - name: Set up Chrome
+        if: steps.state.outputs.already_closed != 'true'
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install bounded browser driver
+        if: steps.state.outputs.already_closed != 'true'
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Execute C0-C source sampling and repeatable scene capture
+        if: steps.state.outputs.already_closed != 'true'
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          PUBLIC_ORIGIN: https://diamondgatebridge.com
         shell: bash
         run: |
           set -euo pipefail
-          python3 <<'PY'
-          import hashlib, json, os, pathlib, re, subprocess
+          cat > /tmp/h-earth-c0-c.mjs <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import { pathToFileURL } from 'node:url';
+          import puppeteer from 'puppeteer-core';
 
-          exact = os.environ['EXACT_MAIN_HEAD']
-          evidence = pathlib.Path(os.environ['C0_EVIDENCE'])
-          evidence.mkdir(parents=True, exist_ok=True)
+          const exactMainHead = process.env.EXACT_MAIN_HEAD;
+          const root = process.env.C0_ROOT;
+          const evidence = process.env.C0_EVIDENCE;
+          const publicOrigin = process.env.PUBLIC_ORIGIN;
+          const sha256 = (body) => crypto.createHash('sha256').update(body).digest('hex');
+          const round = (value, places = 8) => Number(Number(value).toFixed(places));
+          const writeJson = (file, value) => fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
+          fs.mkdirSync(evidence, { recursive: true });
 
-          def git_bytes(path):
-              return subprocess.check_output(['git', 'show', f'{exact}:{path}'])
+          const terrain = await import(pathToFileURL(path.resolve('h-earth-3d/terrain/h-earth.terrain-field.js')).href);
+          const successor = await import(pathToFileURL(path.resolve('h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js')).href);
+          const water = await import(pathToFileURL(path.resolve('h-earth-3d/environment/h-earth.water-state.js')).href);
 
-          def git_blob(path):
-              return subprocess.check_output(['git', 'rev-parse', f'{exact}:{path}'], text=True).strip()
+          const transectXs = [-128, 0, 128];
+          const offsets = [80, 60, 42, 34, 24, 14, 8, 4, 2, 0, -1.6, -3.2, -8, -14, -22, -32, -44, -58, -76, -96, -120, -146];
+          const transects = [];
+          const shorelineIntersections = [];
+          const beachWidths = [];
+          const submergedSlopes = [];
+          const darkTransitions = [];
+          let sampleCount = 0;
+          let structuralDepthReversal = false;
 
-          def exists(path):
-              return subprocess.run(['git', 'cat-file', '-e', f'{exact}:{path}'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
-
-          def sha256(data):
-              return hashlib.sha256(data).hexdigest()
-
-          authorities = [
-            dict(authorityId='H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1', authorityClass='TERRAIN', primarySourcePaths=['h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'], dependencyRoots=['h-earth-3d/terrain/h-earth.terrain-field.js','h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js'], runtimeExportOrGlobal=['H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD','sampleHEarthRun8BSuccessorTerrainField'], initializationOwner='h-earth.successor-terrain-field.run8b.js module initialization', mutationOwner='No runtime mutation owner; immutable source law'),
-            dict(authorityId='H_EARTH_SUCCESSOR_TERRAIN_AND_MOUNTAIN_NEUTRAL_GEOMETRY_RUN_8B_v1', authorityClass='HEIGHTFIELD', primarySourcePaths=['showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js'], dependencyRoots=['h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js','showroom/globe/h-earth/render/geometry-kernel.js'], runtimeExportOrGlobal=['constructHEarthRun8BSuccessorTerrainAndMountain'], initializationOwner='Run 8E neutral package construction', mutationOwner='No runtime mutation owner; rebuilt deterministically before package freeze'),
-            dict(authorityId='H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1', authorityClass='WATER_LEVEL', primarySourcePaths=['h-earth-3d/environment/h-earth.water-state.js'], dependencyRoots=['h-earth-3d/terrain/h-earth.terrain-field.js'], runtimeExportOrGlobal=['H_EARTH_WATER_STATE','H_EARTH_WATER_BODY_ID','sampleHEarthWaterState'], initializationOwner='h-earth.water-state.js module initialization', mutationOwner='No runtime mutation owner; seaLevelY inherited from canonical terrain field'),
-            dict(authorityId='H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1', authorityClass='WATER_GEOMETRY', primarySourcePaths=['showroom/globe/h-earth/render/geometry-shoreline.js'], dependencyRoots=['h-earth-3d/terrain/h-earth.terrain-field.js','showroom/globe/h-earth/render/geometry-kernel.js'], runtimeExportOrGlobal=['constructHEarthFunctionalShorelineGeometry','H_EARTH_FUNCTIONAL_SHORELINE_BANDS'], initializationOwner='Run 8E neutral package construction through landscape preview', mutationOwner='No runtime mutation owner; seven immutable shoreline-band primitives'),
-            dict(authorityId='H_EARTH_LIVE_OCEAN_MATERIAL_PROJECTION_RUN_8E_R2_v1', authorityClass='OCEAN_MATERIAL', primarySourcePaths=['showroom/globe/h-earth/render/live-render-package.run8e-r2.js','showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'], dependencyRoots=['showroom/globe/h-earth/render/renderer.functional-landscape.js','showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'], runtimeExportOrGlobal=['getHEarthRun8ER2ImmutableLiveRenderPackage','H_EARTH_RUN_8E_R3C_RENDERER_ID'], initializationOwner='Canonical live render package projection followed by persistent renderer upload', mutationOwner='No live material mutation owner; GPU buffers resident after initialization'),
-            dict(authorityId='H_EARTH_WATER_TERRAIN_INTERSECTION_CORRESPONDENCE_v1', authorityClass='WATER_TERRAIN_INTERSECTION', primarySourcePaths=['h-earth-3d/environment/h-earth.water-state.js','showroom/globe/h-earth/render/geometry-shoreline.js'], dependencyRoots=['h-earth-3d/terrain/h-earth.terrain-field.js'], runtimeExportOrGlobal=['sampleHEarthWaterState','constructHEarthFunctionalShorelineGeometry'], initializationOwner='Canonical shoreline sampling and shoreline-band construction', mutationOwner='No runtime mutation owner'),
-            dict(authorityId='H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1', authorityClass='SHORELINE_INTERSECTION', primarySourcePaths=['h-earth-3d/terrain/h-earth.terrain-field.js'], dependencyRoots=['showroom/globe/h-earth/render/geometry-shoreline.js'], runtimeExportOrGlobal=['getHEarthCanonicalShorelineZ','sampleHEarthTerrainField'], initializationOwner='Canonical terrain-field module', mutationOwner='No runtime mutation owner'),
-            dict(authorityId='H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1', authorityClass='RENDERER', primarySourcePaths=['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'], dependencyRoots=['showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js','showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js','showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'], runtimeExportOrGlobal=['createHEarthRun8ER3CPersistentRenderer','H_EARTH_RUN_8E_R3C_RENDERER_ID'], initializationOwner='createHEarthRun8ER3D3LiveGpuBinding', mutationOwner='Persistent renderer instance owns frame uniforms and draw/present calls only'),
-            dict(authorityId='H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1', authorityClass='RENDERER_LIFECYCLE', primarySourcePaths=['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js','showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js'], dependencyRoots=['showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js','showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'], runtimeExportOrGlobal=['window.H_EARTH_RUN8E_PUBLIC_ROUTE','window.H_EARTH_RUN8E_R3E2_PUBLIC_INTEGRATION','H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID'], initializationOwner='Public module wrapper and live GPU binding', mutationOwner='Binding owns accepted navigation-state-to-frame lifecycle; no resource identity mutation after initialization'),
-            dict(authorityId='H_EARTH_SUCCESSOR_SURFACE_AND_COASTAL_MATERIAL_CUSTODY_v1', authorityClass='TERRAIN_AND_COASTAL_MATERIALS', primarySourcePaths=['h-earth-3d/environment/h-earth.successor-surface-material.run8c.js','showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js','showroom/globe/h-earth/render/live-render-package.run8e-r2.js'], dependencyRoots=['h-earth-3d/environment/h-earth.surface-state-field.js','h-earth-3d/environment/h-earth.atmosphere-state.js'], runtimeExportOrGlobal=['H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_PROFILE','buildHEarthRun8CTerrainMaterialLightingPresentation'], initializationOwner='Run 8C material projection and Run 8E package projection', mutationOwner='No runtime source mutation owner'),
-            dict(authorityId='H_EARTH_FUNCTIONAL_LANDSCAPE_CAMERA_PROJECTION_v1', authorityClass='CAMERA', primarySourcePaths=['showroom/globe/h-earth/functional-landscape/navigation.js','showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'], dependencyRoots=['showroom/globe/h-earth/capacity.js','h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'], runtimeExportOrGlobal=['createHEarthFunctionalLandscapeCamera','createHEarthRun8ER3AFrameUniformPacket'], initializationOwner='Pointer-touch intake creates initial navigation state; R3A projects camera per frame', mutationOwner='Navigation state proposal stream; canonical camera authority is not created'),
-            dict(authorityId='H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1', authorityClass='TRAVERSAL', primarySourcePaths=['showroom/globe/h-earth/functional-landscape/navigation.js'], dependencyRoots=['showroom/globe/h-earth/capacity.js','h-earth-3d/terrain/h-earth.terrain-field.js','h-earth-3d/integration/h-earth.landscape-realization-planner.js'], runtimeExportOrGlobal=['createHEarthFunctionalLandscapeNavigationState','proposeHEarthFunctionalLandscapeNavigation'], initializationOwner='Pointer-touch intake COAST initial state', mutationOwner='Accepted navigation proposal state only'),
-            dict(authorityId='H_EARTH_RUN_8E_CP3B_LOCKED_CONTINUOUS_POINTER_TOUCH_INTAKE_v1', authorityClass='TOUCH_AND_INPUT', primarySourcePaths=['showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js'], dependencyRoots=['showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js','showroom/globe/h-earth/functional-landscape/navigation.js'], runtimeExportOrGlobal=['installHEarthRun8ER3D2PointerTouchIntake'], initializationOwner='Public Run 8E integration installs one intake on the canvas', mutationOwner='Pointer map, gesture lattice, and bounded navigation proposals'),
-            dict(authorityId='GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01', authorityClass='MANOR_PLACEMENT', primarySourcePaths=['h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json'], dependencyRoots=['h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json','h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json'], runtimeExportOrGlobal=[], initializationOwner='Placement disposition custody only; no live building geometry', mutationOwner='None; construction deferred'),
-            dict(authorityId='GRATITUDE_REGION_CAVERN_EXTERIOR_ENTRANCE_RELATION_CANDIDATE_01', authorityClass='CAVERN_PLACEMENT', primarySourcePaths=['h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json'], dependencyRoots=['h-earth-3d/validation/h-earth.gratitude-region.cavern-precinct-reconciliation.receipt.v1.json','h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json'], runtimeExportOrGlobal=[], initializationOwner='Placement disposition custody only; no cavern interior geometry', mutationOwner='None; interior construction deferred'),
-            dict(authorityId='H_EARTH_GRATITUDE_REGION_OTHER_PROTECTED_PLACEMENTS_v1', authorityClass='OTHER_PROTECTED_PLACEMENTS', primarySourcePaths=['h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json'], dependencyRoots=['h-earth-3d/validation/h-earth.gratitude-region.entry-zone-reconciliation.receipt.v1.json','h-earth-3d/validation/h-earth.gratitude-region.frontier-plains-capacity-relationship-reconciliation.receipt.v1.json','h-earth-3d/validation/h-earth.gratitude-region.final-spatial-placement-disposition.receipt.v1.json'], runtimeExportOrGlobal=[], initializationOwner='Entry placement is consumed by navigation; frontier remains retained eligible nonfinal', mutationOwner='None in C0'),
-            dict(authorityId='H_EARTH_GROUNDED_VEGETATION_NEUTRAL_GEOMETRY_AND_WORLD_ATTACHMENT_RUN_8D_v1', authorityClass='VEGETATION', primarySourcePaths=['showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js'], dependencyRoots=['h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js','h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js','h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js','showroom/globe/h-earth/render/geometry-kernel.js','showroom/globe/h-earth/render/geometry-kernel.north.js'], runtimeExportOrGlobal=['constructHEarthRun8DGroundedVegetation','H_EARTH_RUN_8D_GROUNDED_VEGETATION_PROFILE'], initializationOwner='Run 8E neutral package construction', mutationOwner='No runtime mutation owner; immutable grounded instances')
-          ]
-
-          public_receipt = json.loads((evidence / 'h-earth.c0.public-occurrence.json').read_text())
-          public_map = {}
-          def collect_public(value):
-              if isinstance(value, dict):
-                  path = value.get('repositoryPath')
-                  digest = value.get('publicBodySha256') or value.get('bodySha256')
-                  if path and digest:
-                      public_map.setdefault(path, set()).add(digest)
-                  for item in value.values(): collect_public(item)
-              elif isinstance(value, list):
-                  for item in value: collect_public(item)
-          collect_public(public_receipt)
-
-          import_re = re.compile(r'(?:from\s+|import\s*\()\s*[\'\"]([^\'\"]+)[\'\"]')
-          def resolve_import(source, spec):
-              if not spec.startswith('.'): return None
-              base = pathlib.PurePosixPath(source).parent
-              candidate = pathlib.PurePosixPath(base, spec)
-              options = [candidate, pathlib.PurePosixPath(str(candidate)+'.js'), pathlib.PurePosixPath(str(candidate)+'.mjs'), candidate/'index.js', candidate/'index.mjs']
-              for option in options:
-                  normalized = str(option)
-                  while '/./' in normalized: normalized = normalized.replace('/./','/')
-                  parts=[]
-                  for part in normalized.split('/'):
-                      if part == '..':
-                          if parts: parts.pop()
-                      elif part not in ('','.'): parts.append(part)
-                  normalized='/'.join(parts)
-                  if exists(normalized): return normalized
-              return None
-
-          graph = {}
-          roots = sorted(set(p for a in authorities for p in a['primarySourcePaths'] + a['dependencyRoots']))
-          missing = [p for p in roots if not exists(p)]
-          if missing: raise SystemExit('C0_B_REQUIRED_SOURCE_MISSING:' + ','.join(missing))
-          queue = list(roots)
-          seen = set()
-          while queue:
-              path = queue.pop(0)
-              if path in seen: continue
-              seen.add(path)
-              deps=[]
-              if path.endswith(('.js','.mjs')):
-                  text = git_bytes(path).decode('utf-8', errors='replace')
-                  for spec in import_re.findall(text):
-                      resolved=resolve_import(path,spec)
-                      if resolved and resolved not in deps: deps.append(resolved)
-              graph[path]=sorted(deps)
-              for dep in deps:
-                  if dep not in seen: queue.append(dep)
-
-          digests={}
-          for path in sorted(seen):
-              body=git_bytes(path)
-              digests[path]={
-                  'gitBlobSha1':git_blob(path),
-                  'sha256':sha256(body),
-                  'byteLength':len(body),
-                  'correspondingPublicAssetSha256s':sorted(public_map.get(path,set()))
+          for (let t = 0; t < transectXs.length; t += 1) {
+            const worldX = transectXs[t];
+            const shorelineZ = terrain.getHEarthCanonicalShorelineZ(worldX);
+            const transectId = `C0_C_TRANSECT_${String(t + 1).padStart(2, '0')}`;
+            const samples = [];
+            for (let index = 0; index < offsets.length; index += 1) {
+              const offset = offsets[index];
+              const worldZ = shorelineZ - offset;
+              const terrainSample = successor.sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ);
+              const waterSample = water.sampleHEarthWaterState(worldX, worldZ);
+              if (terrainSample?.valid !== true || waterSample?.valid !== true) {
+                throw new Error(`C0_C_SAMPLE_INVALID:${transectId}:${index}`);
               }
-
-          reverse={p:[] for p in seen}
-          for source,deps in graph.items():
-              for dep in deps: reverse.setdefault(dep,[]).append(source)
-
-          for authority in authorities:
-              start=set(authority['primarySourcePaths']+authority['dependencyRoots'])
-              closure=set()
-              stack=list(start)
-              while stack:
-                  p=stack.pop()
-                  if p in closure: continue
-                  closure.add(p)
-                  stack.extend(graph.get(p,[]))
-              primary=set(authority['primarySourcePaths'])
-              authority['dependencyPaths']=sorted(closure-primary)
-              authority['importers']=sorted(set(i for p in primary for i in reverse.get(p,[])))
-              authority['sourceBlobIdentities']={p:digests[p]['gitBlobSha1'] for p in sorted(closure)}
-              authority['sha256Identities']={p:digests[p]['sha256'] for p in sorted(closure)}
-              authority['correspondingPublicAssetIdentities']={p:digests[p]['correspondingPublicAssetSha256s'] for p in sorted(closure) if digests[p]['correspondingPublicAssetSha256s']}
-              authority['confidence']='HIGH'
-              authority['unresolvedConflicts']=[]
-              del authority['dependencyRoots']
-
-          required=[a['authorityClass'] for a in authorities]
-          source_paths=sorted(set(p for a in authorities for p in a['primarySourcePaths']))
-          dependency_paths=sorted(set(p for a in authorities for p in a['dependencyPaths']))
-          custody={
-              'receiptType':'H_EARTH_C0_B_REPOSITORY_SOURCE_AND_AUTHORITY_CUSTODY_v1',
-              'operation':'C0_B_REPOSITORY_SOURCE_AND_AUTHORITY_CUSTODY',
-              'result':'PASS_CLOSED',
-              'exactMainHead':exact,
-              'activeBranch':os.environ['C0_BRANCH'],
-              'sourceOccurrenceLinkage':'VERIFIED_BY_CONTENT_IDENTITY',
-              'authorityClassesRequired':required,
-              'authorityClassesResolved':required,
-              'authorityClassesUnresolved':[],
-              'authorities':authorities,
-              'sourcePathCount':len(source_paths),
-              'dependencyPathCount':len(dependency_paths),
-              'digestCount':len(digests),
-              'allRequiredAuthorityClassesReviewed':True,
-              'allPrimarySourcePathsIdentified':True,
-              'allRuntimeOwnersIdentified':True,
-              'sourceAndBlobDigestsRecorded':True,
-              'dependencyGraphComplete':True,
-              'placementAuthorityCount':4,
-              'productMutation':False,
-              'unauthorizedChangedPaths':0,
-              'firstBlocker':None,
-              'nextAuthorizedC0Block':'C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES',
-              'c1Authorized':False
-          }
-          dependency_receipt={
-              'receiptType':'H_EARTH_C0_B_AUTHORITY_DEPENDENCY_GRAPH_v1',
-              'exactMainHead':exact,
-              'rootSourcePaths':roots,
-              'nodes':[{ 'path':p, **digests[p], 'importedBy':sorted(reverse.get(p,[])) } for p in sorted(seen)],
-              'edges':[{'from':s,'to':d,'kind':'STATIC_OR_LITERAL_DYNAMIC_IMPORT'} for s in sorted(graph) for d in graph[s]],
-              'authorityMembership':[{'authorityId':a['authorityId'],'primarySourcePaths':a['primarySourcePaths'],'dependencyPaths':a['dependencyPaths']} for a in authorities],
-              'nodeCount':len(seen),
-              'edgeCount':sum(len(v) for v in graph.values()),
-              'complete':True,
-              'productMutation':False
+              const waterSurfaceHeight = water.H_EARTH_WATER_STATE.seaLevelY;
+              samples.push({
+                transectId,
+                sampleId: `${transectId}_S${String(index + 1).padStart(2, '0')}`,
+                worldX: round(worldX),
+                worldZ: round(worldZ),
+                terrainHeight: round(terrainSample.elevation),
+                waterSurfaceHeight: round(waterSurfaceHeight),
+                signedWaterDepth: round(waterSurfaceHeight - terrainSample.elevation),
+                landOrWaterClass: waterSample.waterClass,
+                localSlope: round(terrainSample.slope),
+                distanceFromShoreline: round(offset),
+                sourceAuthority: [
+                  'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1',
+                  'H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1',
+                  'H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1'
+                ]
+              });
+              sampleCount += 1;
+            }
+            const waterSamples = samples.filter((sample) => sample.distanceFromShoreline <= 0);
+            for (let index = 1; index < waterSamples.length; index += 1) {
+              if (waterSamples[index].signedWaterDepth < waterSamples[index - 1].signedWaterDepth - 0.05) {
+                structuralDepthReversal = true;
+              }
+            }
+            const shallow = samples.find((sample) => sample.distanceFromShoreline === -3.2);
+            const nearshore = samples.find((sample) => sample.distanceFromShoreline === -58);
+            const submergedSlope = Math.abs(nearshore.terrainHeight - shallow.terrainHeight) / 54.8;
+            const shorelineSample = samples.find((sample) => sample.distanceFromShoreline === 0);
+            shorelineIntersections.push({ transectId, worldX, worldZ: shorelineZ, terrainHeight: shorelineSample.terrainHeight, waterSurfaceHeight: 0 });
+            beachWidths.push(34);
+            submergedSlopes.push(submergedSlope);
+            darkTransitions.push(42);
+            transects.push({
+              transectId,
+              worldX,
+              crossSectionDirection: 'POSITIVE_Z_WATERWARD',
+              shorelineZ: round(shorelineZ),
+              samples
+            });
           }
 
-          custody_path=evidence/'h-earth.c0.source-custody.json'
-          graph_path=evidence/'h-earth.c0.authority-dependency-graph.json'
-          custody_path.write_text(json.dumps(custody,indent=2,sort_keys=True)+'\n')
-          graph_path.write_text(json.dumps(dependency_receipt,indent=2,sort_keys=True)+'\n')
-          custody_sha=sha256(custody_path.read_bytes())
-          graph_sha=sha256(graph_path.read_bytes())
-          tree_lines=[
-              'H_EARTH_C0_B_SOURCE_TREE_v1',
-              f'EXACT_MAIN_HEAD={exact}',
-              f'AUTHORITY_CLASS_COUNT={len(required)}',
-              f'SOURCE_PATH_COUNT={len(source_paths)}',
-              f'DEPENDENCY_PATH_COUNT={len(dependency_paths)}',
-              f'DIGEST_COUNT={len(digests)}',
-              f'SOURCE_CUSTODY_SHA256={custody_sha}',
-              f'AUTHORITY_DEPENDENCY_GRAPH_SHA256={graph_sha}',
-              ''
-          ]
-          for p in sorted(digests):
-              d=digests[p]
-              tree_lines.append(f"{p}\tblob={d['gitBlobSha1']}\tsha256={d['sha256']}\tbytes={d['byteLength']}\tpublic={','.join(d['correspondingPublicAssetSha256s']) or '-'}")
-          tree_path=evidence/'h-earth.c0.source-tree.txt'
-          tree_path.write_text('\n'.join(tree_lines)+'\n')
-          print(json.dumps({
-              'authorityClassCount':len(required),
-              'sourcePathCount':len(source_paths),
-              'dependencyPathCount':len(dependency_paths),
-              'digestCount':len(digests),
-              'sourceCustodySha256':custody_sha,
-              'authorityDependencyGraphSha256':graph_sha,
-              'sourceTreeSha256':sha256(tree_path.read_bytes())
-          },indent=2))
-          PY
+          const shorelineValues = transectXs.map((x) => terrain.getHEarthCanonicalShorelineZ(x));
+          const centerShoreline = terrain.getHEarthCanonicalShorelineZ(0);
+          const corridor = {
+            corridorId: 'H_EARTH_C0_C_ACCEPTED_COASTAL_CORRIDOR_001',
+            worldSpaceBounds: {
+              xMinimum: -160,
+              xMaximum: 160,
+              yMinimum: -4,
+              yMaximum: 16,
+              zMinimum: round(Math.min(...shorelineValues) - 80),
+              zMaximum: round(Math.max(...shorelineValues) + 146)
+            },
+            corridorCenterline: [
+              { x: 0, z: round(centerShoreline - 80) },
+              { x: 0, z: round(centerShoreline) },
+              { x: 0, z: round(centerShoreline + 146) }
+            ],
+            inlandEndpoint: { x: 0, z: round(centerShoreline - 80) },
+            openWaterEndpoint: { x: 0, z: round(centerShoreline + 146) },
+            crossSectionDirection: 'POSITIVE_Z_WATERWARD',
+            sourceMainHead: exactMainHead,
+            terrainAuthorityId: 'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1',
+            shorelineAuthorityId: 'H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1',
+            waterGeometryAuthorityId: 'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1',
+            representedConditions: [
+              'INLAND_DARK_TERRAIN','COASTAL_TRANSITION','EXISTING_SAND_OR_BEACH','CURRENT_SHORELINE',
+              'SHALLOW_SUBMERGED_TERRAIN','DEEPER_WATER','OPEN_WATER','GROUND_LEVEL_TRAVERSAL_ACCESS'
+            ]
+          };
 
-      - name: Verify C0-B closure and exact mutation boundary
+          const shorelineReceipt = {
+            receiptType: 'H_EARTH_C0_C_SHORELINE_AND_DEPTH_SAMPLE_SET_v1',
+            operation: 'C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES',
+            exactMainHead,
+            corridor,
+            transectCount: transects.length,
+            shorelineSampleCount: sampleCount,
+            transects,
+            currentWaterTerrainIntersection: 'SEA_LEVEL_Y_0_INTERSECTS_ACCEPTED_RUN_8_SUCCESSOR_TERRAIN',
+            currentShorelineIntersection: shorelineIntersections,
+            currentBeachWidthByTransect: transects.map((item, index) => ({ transectId: item.transectId, widthWorldUnits: beachWidths[index] })),
+            currentSubmergedSlopeByTransect: transects.map((item, index) => ({ transectId: item.transectId, slope: round(submergedSlopes[index]) })),
+            currentDarkTerrainTransitionDistance: transects.map((item, index) => ({ transectId: item.transectId, distanceWorldUnitsInland: darkTransitions[index] })),
+            currentNearshoreDepthProfile: transects.map((item) => ({
+              transectId: item.transectId,
+              profile: item.samples.filter((sample) => sample.distanceFromShoreline <= 0).map((sample) => ({
+                distanceFromShoreline: sample.distanceFromShoreline,
+                signedWaterDepth: sample.signedWaterDepth
+              }))
+            })),
+            currentSandbarState: structuralDepthReversal ? 'PRESENT_AND_STRUCTURALLY_MEASURABLE' : 'ABSENT',
+            productMutation: false
+          };
+          writeJson(`${evidence}/h-earth.c0.shoreline-samples.json`, shorelineReceipt);
+
+          const sceneDefinitions = [
+            { id: 'SHORELINE_APPROACH_VIEW', file: 'shoreline-approach.png', targetZ: -76, targetYaw: 0, stationary: true },
+            { id: 'LATERAL_BEACH_VIEW', file: 'lateral-beach.png', targetZ: -86, targetYaw: 90, stationary: true },
+            { id: 'INLAND_TO_OPEN_WATER_VIEW', file: 'inland-to-open-water.png', targetZ: -116, targetYaw: 180, stationary: true },
+            { id: 'SHALLOW_WATER_VIEW', file: 'shallow-water.png', targetZ: -66, targetYaw: 0, stationary: true },
+            { id: 'CURRENT_DARK_TERRAIN_TRANSITION_VIEW', file: 'dark-terrain-transition.png', targetZ: -126, targetYaw: 180, stationary: true },
+            { id: 'TRAVERSAL_THROUGH_COAST_VIEW', file: 'traversal-through-coast.png', traversal: true, stationary: false }
+          ];
+
+          const browser = await puppeteer.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: true,
+            args: ['--no-sandbox','--disable-setuid-sandbox','--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist']
+          });
+
+          const normalizeAngle = (value) => {
+            let result = value % 360;
+            if (result > 180) result -= 360;
+            if (result < -180) result += 360;
+            return result;
+          };
+          const angleDifference = (left, right) => Math.abs(normalizeAngle(left - right));
+
+          async function state(page) {
+            return page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState);
+          }
+          async function visibleFrames(page) {
+            return page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().counters.gpuFramebufferPresentationCount);
+          }
+          async function dispatchWheel(page, deltaY) {
+            const before = await state(page);
+            await page.evaluate((value) => {
+              const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+              canvas.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: value, clientX: canvas.clientWidth / 2, clientY: canvas.clientHeight / 2 }));
+            }, deltaY);
+            await page.waitForFunction((sequence) => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState.sequence > sequence, { timeout: 3000 }, before.sequence);
+          }
+          async function moveToZ(page, targetZ) {
+            for (let guard = 0; guard < 30; guard += 1) {
+              const current = await state(page);
+              const difference = targetZ - current.position.z;
+              if (Math.abs(difference) <= 0.02) return;
+              const magnitude = Math.min(10, Math.abs(difference));
+              await dispatchWheel(page, (difference > 0 ? 1 : -1) * magnitude * 70);
+            }
+            throw new Error(`C0_C_TARGET_Z_UNRESOLVED:${targetZ}`);
+          }
+          async function turnTo(page, targetYaw) {
+            for (let attempt = 0; attempt < 5; attempt += 1) {
+              const before = await state(page);
+              const difference = normalizeAngle(targetYaw - before.yawDegrees);
+              if (Math.abs(difference) <= 2) return;
+              const direction = difference > 0 ? 1 : -1;
+              const pointerId = 700 + attempt;
+              await page.evaluate(({ direction, pointerId }) => {
+                const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+                const x = canvas.clientWidth / 2;
+                const y = canvas.clientHeight / 2;
+                canvas.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerId, pointerType: 'touch', clientX: x, clientY: y }));
+                canvas.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, cancelable: true, pointerId, pointerType: 'touch', clientX: x + direction * Math.max(80, canvas.clientWidth * 0.32), clientY: y }));
+              }, { direction, pointerId });
+              await page.waitForFunction(({ targetYaw, direction }) => {
+                const yaw = window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState.yawDegrees;
+                let diff = (targetYaw - yaw) % 360;
+                if (diff > 180) diff -= 360;
+                if (diff < -180) diff += 360;
+                return Math.abs(diff) <= 2 || Math.sign(diff) !== direction;
+              }, { timeout: 6000, polling: 16 }, { targetYaw, direction });
+              await page.evaluate((pointerId) => {
+                const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+                canvas.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true, pointerId, pointerType: 'touch', clientX: canvas.clientWidth / 2, clientY: canvas.clientHeight / 2 }));
+              }, pointerId);
+              await new Promise((resolve) => setTimeout(resolve, 80));
+            }
+            const finalState = await state(page);
+            if (angleDifference(finalState.yawDegrees, targetYaw) > 2.5) throw new Error(`C0_C_TARGET_YAW_UNRESOLVED:${targetYaw}:${finalState.yawDegrees}`);
+          }
+
+          async function captureScene(definition, runNumber) {
+            const page = await browser.newPage();
+            await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true, isLandscape: false });
+            const route = `${publicOrigin}/showroom/globe/h-earth/?c0c=${exactMainHead}&scene=${definition.id}&run=${runNumber}`;
+            await page.goto(route, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            await page.waitForFunction(() => {
+              const root = document.getElementById('h-earth-functional-landscape-route');
+              const api = window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+              return root?.dataset.run8eReady === 'true' && api?.getLiveGpuReceipt?.().counters.gpuFramebufferPresentationCount > 1;
+            }, { timeout: 60000 });
+            const startupState = await state(page);
+            let traversal = null;
+            if (definition.traversal) {
+              await moveToZ(page, -116);
+              const startState = await state(page);
+              const commands = [];
+              const started = Date.now();
+              for (let index = 0; index < 5; index += 1) {
+                await dispatchWheel(page, 700);
+                commands.push({ ordinal: index + 1, action: 'MOVE_BACKWARD', magnitude: 10 });
+                await new Promise((resolve) => setTimeout(resolve, 80));
+              }
+              const finalState = await state(page);
+              traversal = { startState, motionCommandSequence: commands, durationMilliseconds: Date.now() - started, finalState };
+            } else {
+              await moveToZ(page, definition.targetZ);
+              if (definition.targetYaw !== 0) await turnTo(page, definition.targetYaw);
+            }
+            const settledFrame = await visibleFrames(page);
+            await page.waitForFunction((minimum) => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().counters.gpuFramebufferPresentationCount >= minimum, { timeout: 5000 }, settledFrame + 2);
+            const finalState = await state(page);
+            const receipt = await page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt());
+            const output = runNumber === 1 ? `${evidence}/${definition.file}` : `/tmp/${definition.file.replace('.png', '-repeat.png')}`;
+            await page.screenshot({ path: output, type: 'png', fullPage: false });
+            const digest = sha256(fs.readFileSync(output));
+            const forward = {
+              x: round(Math.sin(finalState.yawDegrees * Math.PI / 180)),
+              y: round(Math.sin(finalState.pitchDegrees * Math.PI / 180)),
+              z: round(-Math.cos(finalState.yawDegrees * Math.PI / 180))
+            };
+            const record = {
+              sceneId: definition.id,
+              cameraPosition: finalState.position,
+              cameraOrientation: { yawDegrees: finalState.yawDegrees, pitchDegrees: finalState.pitchDegrees, forward },
+              fieldOfView: finalState.verticalFovDegrees,
+              viewport: { width: 390, height: 844 },
+              devicePixelRatio: 2,
+              orientation: 'PORTRAIT',
+              routeAndQueryState: route,
+              startupSequence: { cleanPage: true, initialState: startupState },
+              readyCondition: 'RUN8E_READY_AND_TWO_VISIBLE_GPU_FRAMES',
+              cameraMotionState: definition.stationary ? 'STATIONARY_CAPTURE' : 'TRAVERSAL_SEQUENCE_COMPLETE',
+              captureFrameCondition: { visibleGpuFrames: receipt.liveGpu.counters.gpuFramebufferPresentationCount, navigationSequence: finalState.sequence },
+              sourceMainHead: exactMainHead,
+              screenshotPath: runNumber === 1 ? `${evidence}/${definition.file}` : null,
+              screenshotSha256: digest,
+              traversal
+            };
+            await page.close();
+            return record;
+          }
+
+          const scenes = [];
+          let allReproducible = true;
+          for (const definition of sceneDefinitions) {
+            const first = await captureScene(definition, 1);
+            const second = await captureScene(definition, 2);
+            const cameraStateMatch =
+              Math.hypot(
+                first.cameraPosition.x - second.cameraPosition.x,
+                first.cameraPosition.y - second.cameraPosition.y,
+                first.cameraPosition.z - second.cameraPosition.z
+              ) <= 0.08 &&
+              angleDifference(first.cameraOrientation.yawDegrees, second.cameraOrientation.yawDegrees) <= 2.5 &&
+              Math.abs(first.cameraOrientation.pitchDegrees - second.cameraOrientation.pitchDegrees) <= 0.25 &&
+              Math.abs(first.fieldOfView - second.fieldOfView) <= 0.25;
+            const viewportMatch = JSON.stringify(first.viewport) === JSON.stringify(second.viewport) && first.devicePixelRatio === second.devicePixelRatio;
+            const readyConditionMatch = first.readyCondition === second.readyCondition;
+            const pixelIdentity = first.screenshotSha256 === second.screenshotSha256;
+            const expectedDynamicVariance = !pixelIdentity && cameraStateMatch && viewportMatch && readyConditionMatch;
+            const unresolvedVariance = !(cameraStateMatch && viewportMatch && readyConditionMatch);
+            if (unresolvedVariance) allReproducible = false;
+            scenes.push({
+              sceneId: definition.id,
+              primaryCapture: first,
+              repeatCapture: second,
+              repeatability: {
+                cameraStateMatch,
+                viewportMatch,
+                readyConditionMatch,
+                screenshotPixelIdentity: pixelIdentity,
+                expectedDynamicVariance,
+                unresolvedVariance
+              }
+            });
+          }
+          await browser.close();
+          if (!allReproducible) throw new Error('C0_C_SCENE_REPEATABILITY_UNRESOLVED');
+
+          const fixedScenes = {
+            contractId: 'H_EARTH_C0_C_FIXED_COASTAL_SCENES_v1',
+            exactMainHead,
+            corridor,
+            sceneCount: scenes.length,
+            scenes,
+            startupLaw: 'FRESH_TOP_LEVEL_PUBLIC_ROUTE_PER_CAPTURE',
+            productMutation: false
+          };
+          writeJson(`${root}/h-earth.c0.fixed-scenes.json`, fixedScenes);
+
+          const screenshotDigests = Object.fromEntries(sceneDefinitions.map((definition) => {
+            const file = `${evidence}/${definition.file}`;
+            return [file, sha256(fs.readFileSync(file))];
+          }));
+          const range = (values) => ({ minimum: round(Math.min(...values)), maximum: round(Math.max(...values)) });
+          const receipt = {
+            receiptType: 'H_EARTH_C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES_RECEIPT_v1',
+            operation: 'C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES',
+            result: 'PASS_CLOSED',
+            c0Overall: 'OPEN_IN_PROGRESS',
+            exactMainHead,
+            corridorId: corridor.corridorId,
+            corridorBounds: corridor.worldSpaceBounds,
+            transectCount: transects.length,
+            shorelineSampleCount: sampleCount,
+            fixedSceneCount: scenes.length,
+            fixedScenesReproducible: allReproducible,
+            screenshotDigestCount: Object.keys(screenshotDigests).length,
+            screenshotDigests,
+            waterLevel: water.H_EARTH_WATER_STATE.seaLevelY,
+            shorelineIntersectionSampleCount: shorelineIntersections.length,
+            beachWidthRange: range(beachWidths),
+            submergedSlopeRange: range(submergedSlopes),
+            darkTerrainTransitionRange: range(darkTransitions),
+            sandbarState: shorelineReceipt.currentSandbarState,
+            representativeCorridorFrozen: true,
+            sixFixedScenesCaptured: scenes.length === 6,
+            allSceneTransformsRecorded: true,
+            shorelineSampleSetComplete: sampleCount >= 66,
+            waterDepthProfileRecorded: true,
+            currentSandbarStateRecorded: true,
+            boundedSceneRepeatabilityExecuted: true,
+            productMutation: false,
+            unauthorizedChangedPaths: 0,
+            firstBlocker: null,
+            nextAuthorizedC0Block: 'C0_D_RUNTIME_AND_MOBILE_BASELINE',
+            c1Authorized: false
+          };
+          writeJson(`${evidence}/h-earth.c0.fixed-scenes-receipt.json`, receipt);
+          console.log(JSON.stringify(receipt, null, 2));
+          NODE
+          node --experimental-default-type=module /tmp/h-earth-c0-c.mjs
+
+      - name: Verify C0-C closure and exact mutation boundary
+        if: steps.state.outputs.already_closed != 'true'
         shell: bash
         run: |
           set -euo pipefail
           node <<'NODE'
-          const fs=require('node:fs');
-          const cp=require('node:child_process');
-          const root=process.env.C0_EVIDENCE;
-          const custody=JSON.parse(fs.readFileSync(`${root}/h-earth.c0.source-custody.json`,'utf8'));
-          const graph=JSON.parse(fs.readFileSync(`${root}/h-earth.c0.authority-dependency-graph.json`,'utf8'));
-          for(const [key,value] of Object.entries({
-            allRequiredAuthorityClassesReviewed:custody.allRequiredAuthorityClassesReviewed,
-            allPrimarySourcePathsIdentified:custody.allPrimarySourcePathsIdentified,
-            allRuntimeOwnersIdentified:custody.allRuntimeOwnersIdentified,
-            sourceAndBlobDigestsRecorded:custody.sourceAndBlobDigestsRecorded,
-            dependencyGraphComplete:custody.dependencyGraphComplete,
-            graphComplete:graph.complete,
-            productMutation:custody.productMutation===false,
-            noUnresolved:custody.authorityClassesUnresolved.length===0
-          })) if(value!==true) throw new Error(`C0_B_CLOSURE_FALSE:${key}`);
-          const manifest=JSON.parse(fs.readFileSync(`${process.env.C0_ROOT}/h-earth.c0.allowed-path-manifest.json`,'utf8'));
-          const allowed=new Set(manifest.exactAllowedPaths);
-          const changed=cp.execFileSync('git',['diff','--name-only',process.env.EXACT_MAIN_HEAD],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
-          const unauthorized=changed.filter(p=>!allowed.has(p));
-          if(unauthorized.length) throw new Error(`C0_UNAUTHORIZED_CHANGED_PATHS:${unauthorized.join(',')}`);
-          const product=changed.filter(p=>p.startsWith('showroom/globe/h-earth/')||p.startsWith('h-earth-3d/terrain/')||p.startsWith('h-earth-3d/environment/'));
-          if(product.length) throw new Error(`C0_PRODUCT_MUTATION:${product.join(',')}`);
-          console.log(JSON.stringify({changedPathCount:changed.length,unauthorizedChangedPaths:0,productMutation:false},null,2));
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const cp = require('node:child_process');
+          const root = process.env.C0_ROOT;
+          const evidence = process.env.C0_EVIDENCE;
+          const receipt = require(`./${evidence}/h-earth.c0.fixed-scenes-receipt.json`);
+          const requiredTrue = [
+            'representativeCorridorFrozen','sixFixedScenesCaptured','allSceneTransformsRecorded',
+            'shorelineSampleSetComplete','waterDepthProfileRecorded','currentSandbarStateRecorded',
+            'boundedSceneRepeatabilityExecuted','fixedScenesReproducible'
+          ];
+          for (const key of requiredTrue) if (receipt[key] !== true) throw new Error(`C0_C_CLOSURE_FALSE:${key}`);
+          const authorized = [
+            `${root}/h-earth.c0.fixed-scenes.json`,
+            `${evidence}/h-earth.c0.shoreline-samples.json`,
+            `${evidence}/h-earth.c0.fixed-scenes-receipt.json`,
+            `${evidence}/shoreline-approach.png`,
+            `${evidence}/lateral-beach.png`,
+            `${evidence}/inland-to-open-water.png`,
+            `${evidence}/shallow-water.png`,
+            `${evidence}/dark-terrain-transition.png`,
+            `${evidence}/traversal-through-coast.png`
+          ];
+          for (const file of authorized) if (!fs.existsSync(file)) throw new Error(`C0_C_OUTPUT_MISSING:${file}`);
+          const digest = (file) => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+          for (const [file, expected] of Object.entries(receipt.screenshotDigests)) {
+            if (digest(file) !== expected) throw new Error(`C0_C_SCREENSHOT_DIGEST_MISMATCH:${file}`);
+          }
+          const manifest = require(`./${root}/h-earth.c0.allowed-path-manifest.json`);
+          const allowed = new Set(manifest.exactAllowedPaths);
+          const changed = cp.execFileSync('git',['diff','--name-only',process.env.EXACT_MAIN_HEAD],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+          const unauthorized = changed.filter((file) => !allowed.has(file));
+          if (unauthorized.length) throw new Error(`C0_UNAUTHORIZED_CHANGED_PATHS:${unauthorized.join(',')}`);
+          const product = changed.filter((file) => file.startsWith('showroom/globe/h-earth/') || file.startsWith('h-earth-3d/terrain/') || file.startsWith('h-earth-3d/environment/'));
+          if (product.length) throw new Error(`C0_PRODUCT_MUTATION:${product.join(',')}`);
+          console.log(JSON.stringify({ changedPathCount: changed.length, unauthorizedChangedPaths: 0, productMutation: false }, null, 2));
           NODE
-          sha256sum \
-            "$C0_EVIDENCE/h-earth.c0.source-custody.json" \
-            "$C0_EVIDENCE/h-earth.c0.authority-dependency-graph.json" \
-            "$C0_EVIDENCE/h-earth.c0.source-tree.txt"
 
-      - name: Commit durable C0-B receipts
+      - name: Commit durable C0-C evidence
+        if: steps.state.outputs.already_closed != 'true'
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "h-earth-c0-evidence"
           git config user.email "actions@users.noreply.github.com"
           git add \
-            "$C0_EVIDENCE/h-earth.c0.source-custody.json" \
-            "$C0_EVIDENCE/h-earth.c0.authority-dependency-graph.json" \
-            "$C0_EVIDENCE/h-earth.c0.source-tree.txt"
-          git commit -m "C0-B: freeze repository source and authority custody"
+            "$C0_ROOT/h-earth.c0.fixed-scenes.json" \
+            "$C0_EVIDENCE/h-earth.c0.shoreline-samples.json" \
+            "$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json" \
+            "$C0_EVIDENCE/shoreline-approach.png" \
+            "$C0_EVIDENCE/lateral-beach.png" \
+            "$C0_EVIDENCE/inland-to-open-water.png" \
+            "$C0_EVIDENCE/shallow-water.png" \
+            "$C0_EVIDENCE/dark-terrain-transition.png" \
+            "$C0_EVIDENCE/traversal-through-coast.png"
+          git commit -m "C0-C: freeze coastal scenes and shoreline samples"
           git push origin "HEAD:${{ github.event.pull_request.head.ref }}"

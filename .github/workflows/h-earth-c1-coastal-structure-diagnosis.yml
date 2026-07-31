@@ -1,0 +1,107 @@
+name: H-Earth C1 Coastal Structure Diagnosis
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-c1-coastal-structure-diagnosis.yml'
+      - 'h-earth-3d/control-plane/coastal-morphology/c1/**'
+permissions:
+  contents: write
+concurrency:
+  group: h-earth-c1-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+env:
+  BASE: d3f53591fd040bc76ec4b6c604570298c67b346d
+  PRODUCT: 59df682501f63aec8a263cef8e1a5adacbc2a1a2
+  BRANCH: agent/h-earth-c1-coastal-structure-diagnosis-001
+  EXPECTED_HTML: c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e
+  ROOT: h-earth-3d/control-plane/coastal-morphology/c1
+  POST: h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.post-merge-custody.json
+jobs:
+  c1:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm public bytes and validate C1
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import https from 'node:https';
+          import crypto from 'node:crypto';
+          import cp from 'node:child_process';
+          const git = a => cp.execFileSync('git', a, {encoding:'utf8'}).trim();
+          const read = p => JSON.parse(fs.readFileSync(p,'utf8'));
+          const write = (p,v) => fs.writeFileSync(p,JSON.stringify(v,null,2)+'\n');
+          const hash = b => crypto.createHash('sha256').update(b).digest('hex');
+          if (process.env.HEAD_REF !== process.env.BRANCH) throw Error('C1_BRANCH_MISMATCH');
+          if (git(['merge-base',process.env.BASE,'HEAD']) !== process.env.BASE) throw Error('C1_BASE_MISMATCH');
+          const diagnosisPath=`${process.env.ROOT}/evidence/h-earth.c1.diagnosis.json`;
+          const receiptPath=`${process.env.ROOT}/evidence/h-earth.c1.receipt.json`;
+          const manifest=read(`${process.env.ROOT}/h-earth.c1.allowed-path-manifest.json`);
+          const diagnosis=read(diagnosisPath);
+          const receipt=read(receiptPath);
+          if (diagnosis.result!=='PASS_CLOSED'||receipt.c1!=='PASS_CLOSED') throw Error('C1_NOT_CLOSED');
+          if (diagnosis.mutationRequirements.geometryMutationRequired!==false) throw Error('GEOMETRY_DISPOSITION_INVALID');
+          if (receipt.c2CoastalSuccessor!=='NOT_AUTHORIZED_PENDING_MANAGEMENT') throw Error('C2_BOUNDARY_FAILED');
+          const url=`https://diamondgatebridge.com/showroom/globe/h-earth/?c0-post-merge=${process.env.BASE}`;
+          const response=await new Promise((resolve,reject)=>{
+            const req=https.get(url,{headers:{'Cache-Control':'no-cache','Pragma':'no-cache','User-Agent':'H-Earth-C0-Custody/1'},timeout:30000},res=>{
+              const chunks=[]; res.on('data',c=>chunks.push(c)); res.on('end',()=>resolve({status:res.statusCode,headers:res.headers,body:Buffer.concat(chunks)}));
+            });
+            req.on('timeout',()=>req.destroy(Error('PUBLIC_BYTE_TIMEOUT'))); req.on('error',reject);
+          });
+          const bodySha=hash(response.body);
+          if(response.status!==200) throw Error(`PUBLIC_STATUS_${response.status}`);
+          if(bodySha!==process.env.EXPECTED_HTML) throw Error(`PUBLIC_SHA_MISMATCH_${bodySha}`);
+          write(process.env.POST,{
+            receiptType:'H_EARTH_C0_POST_MERGE_PUBLIC_BYTE_CONFIRMATION_v1',
+            operation:'C0_CUSTODY_FINALIZATION_POST_MERGE_PUBLIC_BYTE_CONFIRMATION',
+            result:'PASS_CLOSED',
+            c0EvidenceMergeHead:process.env.BASE,
+            c0ProductBaselineHead:process.env.PRODUCT,
+            requestedUrl:url,
+            httpStatus:response.status,
+            contentType:response.headers['content-type']??null,
+            contentLength:response.body.length,
+            lastModified:response.headers['last-modified']??null,
+            bodySha256:bodySha,
+            expectedBodySha256:process.env.EXPECTED_HTML,
+            exactByteMatch:true,
+            retrievalCount:1,
+            c0Rerun:false,
+            deploymentAdministrationMetadataRequired:false,
+            productMutation:false
+          });
+          receipt.publicByteConfirmation='PASS_CLOSED';
+          receipt.publicHtmlBodySha256=bodySha;
+          receipt.c0EvidenceMergeHead=process.env.BASE;
+          receipt.c0ProductBaselineHead=process.env.PRODUCT;
+          receipt.diagnosisSha256=hash(fs.readFileSync(diagnosisPath));
+          write(receiptPath,receipt);
+          const changed=git(['diff','--name-only',process.env.BASE]).split(/\r?\n/).filter(Boolean).sort();
+          const allowed=[...manifest.exactAllowedPaths].sort();
+          if(JSON.stringify(changed)!==JSON.stringify(allowed)) throw Error(`C1_PATH_MISMATCH_${JSON.stringify(changed)}`);
+          const product=changed.filter(p=>p.startsWith('showroom/globe/h-earth/')||p.startsWith('h-earth-3d/terrain/')||p.startsWith('h-earth-3d/environment/')||p.startsWith('h-earth-3d/objects/')||p.startsWith('h-earth-3d/zones/'));
+          if(product.length) throw Error(`C1_PRODUCT_MUTATION_${product.join(',')}`);
+          console.log(JSON.stringify({result:'PASS_CLOSED',bodySha256:bodySha,changedPathCount:changed.length,productMutation:false},null,2));
+          NODE
+      - name: Commit durable receipts
+        run: |
+          set -euo pipefail
+          sha256sum "$POST" "$ROOT/evidence/h-earth.c1.diagnosis.json" "$ROOT/evidence/h-earth.c1.receipt.json"
+          git config user.name h-earth-c1-diagnosis
+          git config user.email actions@users.noreply.github.com
+          git add "$POST" "$ROOT"
+          git commit -m "C1: close coastal structure and presentation diagnosis"
+          git push origin "HEAD:$BRANCH"

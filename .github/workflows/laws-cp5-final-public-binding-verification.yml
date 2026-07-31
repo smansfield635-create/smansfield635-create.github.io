@@ -1,0 +1,155 @@
+name: Laws CP5 Final Public Binding Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-cp5-final-public-binding-verification
+  cancel-in-progress: false
+
+jobs:
+  verify-public-binding:
+    if: github.head_ref == 'verification/laws-cp5-final-public-binding-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact binding merge
+        uses: actions/checkout@v4
+        with:
+          ref: f104294243eec62b38496f0736a8f73a93d44723
+          fetch-depth: 1
+
+      - name: Wait once for normal Pages propagation
+        run: sleep 90
+
+      - name: Fetch public HTML and crystal resource once
+        shell: bash
+        run: |
+          set -euo pipefail
+          ORIGIN='https://diamondgatebridge.com'
+          TOKEN='e8c80f898acad0625e722f43be6d1b4f5541690f'
+          HTML_URL="${ORIGIN}/laws/?binding=f104294243eec62b38496f0736a8f73a93d44723"
+          CRYSTAL_URL="${ORIGIN}/laws/index.crystals.js?v=${TOKEN}"
+
+          curl --retry 0 -fsSL "$HTML_URL" -o /tmp/public-laws.html
+          test "$(grep -o "$TOKEN" /tmp/public-laws.html | wc -l)" -eq 2
+          test "$(grep -o '8133609c21f43a5910ec7a247d50310390152cbb' /tmp/public-laws.html | wc -l)" -eq 0
+          test "$(grep -o 'be365cc331ee5643f916abee204d4f5f45376c04' /tmp/public-laws.html | wc -l)" -eq 2
+          test "$(grep -o '/laws/index.crystals.js?v=' /tmp/public-laws.html | wc -l)" -eq 2
+
+          curl --retry 0 -fsSL "$CRYSTAL_URL" -o /tmp/public-index.crystals.js
+          test "$(git hash-object /tmp/public-index.crystals.js)" = "$TOKEN"
+          cmp --silent laws/index.crystals.js /tmp/public-index.crystals.js
+
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+        with:
+          chrome-version: stable
+
+      - name: Install bounded browser dependency
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Execute public Laws initialization check
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        shell: bash
+        run: |
+          cat > /tmp/laws-public-check.mjs <<'JS'
+          import fs from 'node:fs';
+          import puppeteer from 'puppeteer-core';
+
+          const token='e8c80f898acad0625e722f43be6d1b4f5541690f';
+          const route=`https://diamondgatebridge.com/laws/?public-check=f104294243eec62b38496f0736a8f73a93d44723`;
+          const telemetry={pageErrors:[],consoleErrors:[],requestFailures:[],httpErrors:[]};
+          const browser=await puppeteer.launch({
+            executablePath:process.env.CHROME_PATH,
+            headless:'new',
+            args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']
+          });
+          const page=await browser.newPage();
+          await page.setViewport({width:430,height:932,deviceScaleFactor:1,isMobile:true,hasTouch:true});
+          page.on('pageerror',error=>telemetry.pageErrors.push(String(error?.stack||error)));
+          page.on('console',message=>{
+            if(message.type()==='error'&&!message.text().includes('favicon')) telemetry.consoleErrors.push(message.text());
+          });
+          page.on('requestfailed',request=>{
+            if(!request.url().endsWith('/favicon.ico')) telemetry.requestFailures.push({url:request.url(),error:request.failure()?.errorText||''});
+          });
+          page.on('response',response=>{
+            if(response.status()>=400&&!response.url().endsWith('/favicon.ico')) telemetry.httpErrors.push({url:response.url(),status:response.status()});
+          });
+
+          const response=await page.goto(route,{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>Boolean(globalThis.DGBLawsStagedLoader&&globalThis.DGB_LAWS_CONTROLLER),{timeout:30000});
+          await page.evaluate(async()=>{
+            await globalThis.DGBLawsStagedLoader.loadOrbitSystems();
+            await globalThis.DGBLawsStagedLoader.loadInteractionSystems();
+          });
+          await page.waitForFunction(()=>{
+            const crystals=globalThis.DGB_LAWS_CRYSTALS_RECEIPT;
+            const compositor=globalThis.DGB_LAWS_COMPOSITOR_RECEIPT;
+            const interactions=globalThis.DGB_LAWS_INTERACTIONS_RECEIPT;
+            return crystals?.status==='available'&&crystals?.rendererInitialized===true&&compositor?.initialized===true&&interactions?.initialized===true;
+          },{timeout:45000});
+
+          const snapshot=await page.evaluate(expected=>{
+            const html=document.documentElement;
+            const crystals=globalThis.DGB_LAWS_CRYSTALS_RECEIPT||null;
+            const compositor=globalThis.DGB_LAWS_COMPOSITOR_RECEIPT||null;
+            const interactions=globalThis.DGB_LAWS_INTERACTIONS_RECEIPT||null;
+            return {
+              htmlCrystalBinding:html.dataset.lawsCrystals||'',
+              bindingMatches:(html.dataset.lawsCrystals||'').endsWith(`?v=${expected}`),
+              crystals,
+              compositor,
+              interactions,
+              controllerPresent:Boolean(globalThis.DGB_LAWS_CONTROLLER),
+              rootPresent:Boolean(document.querySelector('[data-laws-root]')),
+              centerGlobePresent:Boolean(document.querySelector('[data-upstream-compass-mount]')),
+              horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+            };
+          },token);
+
+          const failures=[];
+          if(![200,304].includes(response?.status())) failures.push(`ROUTE_STATUS:${response?.status()}`);
+          if(!snapshot.bindingMatches) failures.push(`HTML_BINDING:${snapshot.htmlCrystalBinding}`);
+          if(snapshot.crystals?.status!=='available'||snapshot.crystals?.rendererInitialized!==true) failures.push('CRYSTALS_NOT_INITIALIZED');
+          if(snapshot.compositor?.initialized!==true) failures.push('COMPOSITOR_NOT_INITIALIZED');
+          if(snapshot.interactions?.initialized!==true) failures.push('INTERACTIONS_NOT_INITIALIZED');
+          if(!snapshot.controllerPresent||!snapshot.rootPresent||!snapshot.centerGlobePresent) failures.push('PAGE_AUTHORITY_MISSING');
+          if(snapshot.horizontalOverflow>1) failures.push(`HORIZONTAL_OVERFLOW:${snapshot.horizontalOverflow}`);
+          if(telemetry.pageErrors.length||telemetry.consoleErrors.length||telemetry.requestFailures.length||telemetry.httpErrors.length) failures.push('ACTIONABLE_BROWSER_ERRORS');
+
+          const receipt={
+            phase:'LAWS_CP5_PUBLIC_BINDING_AND_DEPLOYMENT',
+            bindingMerge:'f104294243eec62b38496f0736a8f73a93d44723',
+            publicRoute:route,
+            expectedCrystalBlob:token,
+            routeStatus:response?.status()||null,
+            snapshot,
+            telemetry,
+            failures,
+            pass:failures.length===0,
+            physicalAcceptance:'NOT_CLAIMED'
+          };
+          fs.writeFileSync('laws-cp5-final-public-binding-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          await browser.close();
+          if(failures.length) process.exitCode=2;
+          JS
+          node /tmp/laws-public-check.mjs
+
+      - name: Upload public binding evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp5-final-public-binding-verification
+          path: laws-cp5-final-public-binding-receipt.json
+          if-no-files-found: ignore
+          retention-days: 30

@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import puppeteer from "puppeteer-core";
 
 const TOOL = "LAWS_COMPASS_SIX_AUTHORITY_BENCHMARK_v1";
-const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_BENCHMARK_RECONCILIATION_v2";
+const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_BENCHMARK_RECONCILIATION_v3";
 const ORIGIN = process.env.LAWS_SIX_ORIGIN || "http://127.0.0.1:4173";
 const CHROME_PATH = process.env.CHROME_PATH || process.env.CHROME_BIN || "/usr/bin/google-chrome";
 const EXECUTION_COMMIT = process.env.EXECUTION_COMMIT || process.env.GITHUB_SHA || "";
@@ -42,6 +42,9 @@ const PROFILE = Object.freeze({
 const AUTHORITY_IDS = Object.freeze(["flow", "integrity", "reality", "structure", "test", "research"]);
 const LAW_DIRECTIONS = new Set(["flow", "integrity", "reality", "structure"]);
 const EXPECTED_PRODUCT_PATHS = Object.freeze([
+  "laws/categories/flow/feedback/index.html",
+  "laws/categories/flow/handoffs/index.html",
+  "laws/categories/flow/signals/index.html",
   "laws/index.controller.js",
   "laws/index.crystals.js",
   "laws/index.css",
@@ -307,11 +310,57 @@ async function inspect(page, stateLabel) {
   return { stateLabel, ...await runtimeSnapshot(page) };
 }
 
-async function scrollSceneIntoView(page) {
-  await page.$eval("[data-laws-scene-field]", element => element.scrollIntoView({ block: "center", inline: "center", behavior: "auto" }));
-  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-  await sleep(180);
-  return page.$eval("[data-laws-scene-field]", element => {
+async function scrollSceneIntoView(page, timeout = 5000) {
+  await page.$eval("[data-laws-scene-field]", element => {
+    document.documentElement.style.setProperty("scroll-behavior", "auto", "important");
+    if (document.body) document.body.style.setProperty("scroll-behavior", "auto", "important");
+    element.scrollIntoView({ block: "center", inline: "center", behavior: "auto" });
+  });
+
+  const started = Date.now();
+  let previous = null;
+  let latest = null;
+  let stableSamples = 0;
+
+  while (Date.now() - started < timeout) {
+    latest = await page.$eval("[data-laws-scene-field]", element => {
+      const rect = element.getBoundingClientRect();
+      return {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height,
+        scrollX,
+        scrollY,
+        intersectionWidth: Math.max(0, Math.min(innerWidth, rect.right) - Math.max(0, rect.left)),
+        intersectionHeight: Math.max(0, Math.min(innerHeight, rect.bottom) - Math.max(0, rect.top))
+      };
+    });
+
+    const stable = Boolean(previous)
+      && Math.abs(latest.left - previous.left) <= 0.5
+      && Math.abs(latest.top - previous.top) <= 0.5
+      && Math.abs(latest.right - previous.right) <= 0.5
+      && Math.abs(latest.bottom - previous.bottom) <= 0.5
+      && Math.abs(latest.scrollX - previous.scrollX) <= 0.5
+      && Math.abs(latest.scrollY - previous.scrollY) <= 0.5;
+
+    stableSamples = stable ? stableSamples + 1 : 0;
+    if (stableSamples >= 2 && latest.intersectionWidth >= 80 && latest.intersectionHeight >= 60) break;
+    previous = latest;
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
+    await sleep(32);
+  }
+
+  if (!latest || stableSamples < 2 || latest.intersectionWidth < 80 || latest.intersectionHeight < 60) {
+    const error = new Error("SCENE_SCROLL_SETTLEMENT_TIMEOUT");
+    error.geometry = latest;
+    throw error;
+  }
+
+  return page.$eval("[data-laws-scene-field]", (element, settlement) => {
     const rect = element.getBoundingClientRect();
     const padding = 18;
     const usable = { left: Math.max(padding, rect.left + padding), top: Math.max(padding, rect.top + padding), right: Math.min(innerWidth - padding, rect.right - padding), bottom: Math.min(innerHeight - padding, rect.bottom - padding) };
@@ -326,9 +375,10 @@ async function scrollSceneIntoView(page) {
       rectangle: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height },
       usable: { ...usable, width, height }, start, end,
       startInsideViewport: insideViewport(start), endInsideViewport: insideViewport(end), startInsideField: insideField(start), endInsideField: insideField(end),
-      viewport: { width: innerWidth, height: innerHeight, scrollX, scrollY }
+      viewport: { width: innerWidth, height: innerHeight, scrollX, scrollY },
+      settlement
     };
-  });
+  }, { elapsedMs: Date.now() - started, stableSamples, finalSample: latest });
 }
 
 async function dispatchTouchDrag(page, start, end) {
@@ -532,7 +582,7 @@ if (failures.length) {
             try { profileEvidence.finalState = await runtimeSnapshot(page); } catch (error) { profileEvidence.finalStateCaptureError = String(error?.stack || error); }
           }
           if (!profileEvidence.failureTimeScreenshot) {
-            const finalFile = `${profile.id.toLowerCase()}-final-state.png`;
+            const finalFile = `${profileEvidence.profile.toLowerCase()}-final-state.png`;
             try { await page.screenshot({ path: path.join(SHOTS, finalFile), fullPage: true }); profileEvidence.finalStateScreenshot = finalFile; }
             catch (error) { profileEvidence.finalStateScreenshotError = String(error?.stack || error); }
           }

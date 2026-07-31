@@ -1,6 +1,6 @@
 R1.7 assembly materializer trigger
-Base assembly head with exact verifier: fab4ccde7d9f7098a347fbf2095e8ef072f7f363
+Base assembly head with bounded smoothing gate: bc2ed28ca45effd6f63485611a73759e7c2b3cb4
 Target mutation ref: candidate/h-earth-c2-r1-r1-7-assembly-001
 Candidate branch mutation: prohibited
 Main mutation: prohibited
-Attempt: 4
+Attempt: 5

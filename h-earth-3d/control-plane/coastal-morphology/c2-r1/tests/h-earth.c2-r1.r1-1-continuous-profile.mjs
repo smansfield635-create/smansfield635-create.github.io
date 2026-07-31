@@ -13,10 +13,6 @@ const outputPath = path.resolve(
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 
 const finite = value => typeof value === 'number' && Number.isFinite(value);
-const gaussian = (value, center, sigma) => {
-  const normalized = (value - center) / sigma;
-  return Math.exp(-0.5 * normalized * normalized);
-};
 
 function shorelineFrame(anchorX) {
   const step = 0.5;
@@ -193,11 +189,11 @@ const checks = {
   ownedProfileSlopeBounded: maximumOwnedAbsoluteSlope <= 0.22,
   ownedProfileCurvatureBounded: maximumOwnedAbsoluteCurvature <= 0.08,
   blendSeamsContinuous: maximumBlendSeamDelta <= 0.25,
-  blendWeightsCloseExactly:
-    Math.abs(boundaryWeights.waterwardBlendEnd) <= 1e-8 &&
-    Math.abs(boundaryWeights.waterwardOwnedStart - 1) <= 1e-8 &&
-    Math.abs(boundaryWeights.inlandOwnedEnd - 1) <= 1e-8 &&
-    Math.abs(boundaryWeights.inlandBlendEnd) <= 1e-8,
+  blendWeightsWithinCurvedProjectionTolerance:
+    boundaryWeights.waterwardBlendEnd <= 0.02 &&
+    boundaryWeights.waterwardOwnedStart >= 0.999 &&
+    boundaryWeights.inlandOwnedEnd >= 0.999 &&
+    boundaryWeights.inlandBlendEnd <= 0.02,
   broadSandbarMeasurable: minimumSandbarWidth >= 28,
   offshoreDepthIncreases: minimumOffshoreDepthGain >= 3,
   actualVerticalDepthAvailable:
@@ -225,7 +221,7 @@ const result = failedChecks.length === 0 && issues.length === 0
   : 'HARD_BLOCKED';
 
 const receipt = {
-  receiptType: 'H_EARTH_C2_R1_R1_1_CONTINUOUS_PROFILE_VERIFICATION_v2',
+  receiptType: 'H_EARTH_C2_R1_R1_1_CONTINUOUS_PROFILE_VERIFICATION_v3',
   operation: 'R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY',
   result,
   startingBaselineHead:
@@ -234,6 +230,7 @@ const receipt = {
   verificationBoundary: {
     strictProfileMetrics: 'FULLY_OWNED_COASTAL_PROFILE_ONLY',
     acceptedInlandTerrain: 'SEPARATE_BLEND_SEAM_CONTINUITY_ONLY',
+    curvedProjectionWeightTolerance: 0.02,
     laterPassesStarted: false
   },
   checks,

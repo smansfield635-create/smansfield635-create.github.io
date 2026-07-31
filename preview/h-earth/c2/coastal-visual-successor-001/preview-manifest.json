@@ -5,34 +5,17 @@
   "baseHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "branch": "agent/h-earth-c2-bounded-coastal-visual-successor-001",
   "previewPath": "/preview/h-earth/c2/coastal-visual-successor-001/",
-  "protectedAuthorities": [
-    "CAMERA",
-    "NAVIGATION",
-    "TRAVERSAL",
-    "TOUCH_AND_POINTER_INPUT",
-    "RENDERER_LIFECYCLE",
-    "GPU_PRESENTATION",
-    "MANOR_PLACEMENT",
-    "CAVERN_PLACEMENT",
-    "UNRELATED_ACCEPTED_PLACEMENTS",
-    "NONCOASTAL_WORLD_GEOMETRY",
-    "PUBLIC_DEFAULT_ROUTE"
-  ],
-  "candidateMutationScope": [
-    "BOUNDED_COASTAL_TERRAIN_GEOMETRY",
-    "COASTAL_MATERIAL_MEMBERSHIP",
-    "DEPTH_RESPONSIVE_WATER_PRESENTATION",
-    "SHORELINE_CONTACT_AND_FOAM",
-    "OCEAN_SURFACE_MOTION",
-    "BOUNDED_MACRO_TERRAIN_EXPRESSION"
-  ],
-  "status": "VERIFIED_READY_FOR_PUBLICATION",
-  "candidateHead": "cbe6b183aec86b2328c5b664d04ca6c979f89acf",
-  "functionalVerification": "PASS_CLOSED",
-  "presentationStateCorrection": {
-    "defaultFramebufferAntialias": false,
-    "blitFilter": "NEAREST",
-    "immediatePresentationErrorCheck": true,
-    "transportWorkflowRemoved": true
-  }
+  "status": "REJECTED_EXPERIMENTAL_CANDIDATE",
+  "approval": "NOT_APPROVED_FOR_PROMOTION",
+  "functionalVerification": "PASS",
+  "isolatedPublication": "PASS",
+  "visualSuccessor": "FAIL_REJECTED",
+  "userDifferential": "REJECTED",
+  "firstBlocker": "PHYSICALLY_AND_VISUALLY_INCOHERENT_COASTAL_MODEL",
+  "featureFlagsProveExecutionOnly": true,
+  "featureFlagsProveVisualSuccess": false,
+  "promotionToPublicDefault": "PROHIBITED",
+  "candidateHead": "618941cd569e3421c84043fcf68367299f7e673e",
+  "supersededStatus": "VERIFIED_READY_FOR_PUBLICATION",
+  "retentionPurpose": "ENGINEERING_EVIDENCE_ONLY"
 }

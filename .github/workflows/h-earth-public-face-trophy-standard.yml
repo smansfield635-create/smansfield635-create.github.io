@@ -59,6 +59,7 @@ jobs:
 
       - name: Execute B10 static and scope verification
         run: |
+          set -o pipefail
           node h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs \
             | tee /tmp/h-earth-public-face-trophy-standard-b10.static.log
 
@@ -94,6 +95,7 @@ jobs:
 
       - name: Execute B10 desktop mobile and awards browser verification
         run: |
+          set -o pipefail
           node h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.browser.mjs \
             | tee /tmp/h-earth-public-face-trophy-standard-b10.browser.log
 

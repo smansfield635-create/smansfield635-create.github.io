@@ -1,6 +1,6 @@
 {
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
-  "status": "R1_0_PASS_CLOSED_R1_1_NEXT",
+  "status": "R1_1_PASS_CLOSED_R1_2_NEXT",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
   "failedC2GeometryAsStartingSource": "PROHIBITED",
@@ -98,5 +98,6 @@
     "visualSuccessor": "ONLY_AFTER_ACCEPTED_USER_DIFFERENTIAL",
     "userDifferentialReady": false
   },
-  "productDefaultMutated": false
+  "productDefaultMutated": false,
+  "currentCheckpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING"
 }

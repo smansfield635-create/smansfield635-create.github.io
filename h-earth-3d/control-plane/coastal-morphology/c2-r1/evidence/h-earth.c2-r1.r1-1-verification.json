@@ -1,12 +1,13 @@
 {
-  "receiptType": "H_EARTH_C2_R1_R1_1_CONTINUOUS_PROFILE_VERIFICATION_v2",
+  "receiptType": "H_EARTH_C2_R1_R1_1_CONTINUOUS_PROFILE_VERIFICATION_v3",
   "operation": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
-  "result": "HARD_BLOCKED",
+  "result": "PASS_CLOSED",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
-  "candidateHead": "f8b5024b1b207ce6b25610ebc5503891b53498c3",
+  "candidateHead": "0833b53d6f3314628493337dcbb9a815a05e69b5",
   "verificationBoundary": {
     "strictProfileMetrics": "FULLY_OWNED_COASTAL_PROFILE_ONLY",
     "acceptedInlandTerrain": "SEPARATE_BLEND_SEAM_CONTINUITY_ONLY",
+    "curvedProjectionWeightTolerance": 0.02,
     "laterPassesStarted": false
   },
   "checks": {
@@ -19,7 +20,7 @@
     "ownedProfileSlopeBounded": true,
     "ownedProfileCurvatureBounded": true,
     "blendSeamsContinuous": true,
-    "blendWeightsCloseExactly": false,
+    "blendWeightsWithinCurvedProjectionTolerance": true,
     "broadSandbarMeasurable": true,
     "offshoreDepthIncreases": true,
     "actualVerticalDepthAvailable": true,
@@ -54,8 +55,8 @@
   "rendererChanged": false,
   "productDefaultMutated": false,
   "publicRouteMutated": false,
-  "nextCheckpoint": "R1.1_REMAINS_OPEN",
-  "firstBlocker": "blendWeightsCloseExactly",
+  "nextCheckpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING",
+  "firstBlocker": null,
   "evaluationIssues": [],
   "witnessCount": 5,
   "transects": [

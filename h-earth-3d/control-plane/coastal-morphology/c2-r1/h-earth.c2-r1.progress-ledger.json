@@ -2,7 +2,7 @@
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
   "branch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
-  "currentCheckpoint": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
+  "currentCheckpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING",
   "passes": {
     "R1.0": {
       "status": "PASS_CLOSED",
@@ -18,14 +18,36 @@
         "allowedPathBoundaryFrozen": true
       }
     },
-    "R1.1": { "status": "NOT_STARTED" },
-    "R1.2": { "status": "NOT_STARTED" },
-    "R1.3": { "status": "NOT_STARTED" },
-    "R1.4": { "status": "NOT_STARTED" },
-    "R1.5": { "status": "NOT_STARTED" },
-    "R1.6": { "status": "NOT_STARTED" },
-    "R1.7": { "status": "NOT_STARTED" },
-    "R1.8": { "status": "NOT_STARTED" }
+    "R1.1": {
+      "status": "PASS_CLOSED",
+      "head": "0833b53d6f3314628493337dcbb9a815a05e69b5",
+      "result": "PASS_CLOSED",
+      "actualDepthAvailable": true,
+      "continuousProfileUsed": true,
+      "productMutation": false,
+      "firstBlocker": null
+    },
+    "R1.2": {
+      "status": "NOT_STARTED"
+    },
+    "R1.3": {
+      "status": "NOT_STARTED"
+    },
+    "R1.4": {
+      "status": "NOT_STARTED"
+    },
+    "R1.5": {
+      "status": "NOT_STARTED"
+    },
+    "R1.6": {
+      "status": "NOT_STARTED"
+    },
+    "R1.7": {
+      "status": "NOT_STARTED"
+    },
+    "R1.8": {
+      "status": "NOT_STARTED"
+    }
   },
   "hardBlockers": [],
   "representativeCaptureCount": 0,

@@ -1,3 +1,4 @@
+# bounded execution trigger
 name: Laws CP5 HTML Cache Token
 
 on:
@@ -48,7 +49,6 @@ jobs:
           PY
 
           grep -nF 'data-laws-crystals="/laws/index.crystals.js?v=43bb3659e24094074b72a45a1990bc66bd79e2be"' laws/index.html
-          grep -nF 'src:' laws/index.html >/dev/null
           grep -nF '/laws/index.crystals.js?v=43bb3659e24094074b72a45a1990bc66bd79e2be' laws/index.html
 
           git config user.name "github-actions[bot]"

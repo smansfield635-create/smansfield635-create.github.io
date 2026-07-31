@@ -1,0 +1,51 @@
+name: Laws CP5 R4 HTML Crystal Correspondence
+
+on:
+  push:
+    branches:
+      - agent/laws-cp5-r4-html-crystal-correspondence-001
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp5-r4-html-crystal-correspondence-001
+          fetch-depth: 0
+      - name: Apply exact two-reference cache identity correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="33124618ff870f049eb4ae4497a5b2d301f4445b"
+          test "$(git hash-object laws/index.crystals.js)" = "8133609c21f43a5910ec7a247d50310390152cbb"
+          test "$(git hash-object laws/index.interactions.js)" = "be365cc331ee5643f916abee204d4f5f45376c04"
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('laws/index.html')
+          text=path.read_text()
+          old='43bb3659e24094074b72a45a1990bc66bd79e2be'
+          new='8133609c21f43a5910ec7a247d50310390152cbb'
+          count=text.count(old)
+          if count != 2:
+              raise SystemExit(f'OLD_CRYSTAL_IDENTITY_COUNT={count}')
+          updated=text.replace(old,new)
+          if updated.count(new) != 2 or updated.count(old) != 0:
+              raise SystemExit('CRYSTAL_IDENTITY_REPLACEMENT_INVALID')
+          path.write_text(updated)
+          PY
+          git diff --check -- laws/index.html
+          grep -Fq 'data-laws-crystals="/laws/index.crystals.js?v=8133609c21f43a5910ec7a247d50310390152cbb"' laws/index.html
+          test "$(grep -Fo '/laws/index.crystals.js?v=8133609c21f43a5910ec7a247d50310390152cbb' laws/index.html | wc -l | tr -d ' ')" = "2"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f .github/workflows/laws-cp5-r4-html-crystal-correspondence.yml .cp5-r4-html-trigger
+          git add laws/index.html
+          test "$(git diff --cached --name-only "$base")" = "laws/index.html"
+          git commit -m 'Bind Laws CP5 celestial crystal resource in HTML'
+          test "$(git diff --name-only "$base" HEAD)" = "laws/index.html"
+          git push origin HEAD:agent/laws-cp5-r4-html-crystal-correspondence-001

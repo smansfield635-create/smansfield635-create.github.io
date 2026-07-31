@@ -26,7 +26,13 @@
     "OCEAN_SURFACE_MOTION",
     "BOUNDED_MACRO_TERRAIN_EXPRESSION"
   ],
-  "status": "HARD_BLOCKED",
-  "candidateHead": "6a15cc4f160641578e3586836ae21590e6b77a45",
-  "functionalVerification": "HARD_BLOCKED"
+  "status": "VERIFICATION_REQUEUED",
+  "candidateHead": "5b65546a03ca5421c25a6246f1ac77d7159182cc",
+  "functionalVerification": "PENDING_REEXECUTION",
+  "presentationStateCorrection": {
+    "defaultFramebufferAntialias": false,
+    "blitFilter": "NEAREST",
+    "immediatePresentationErrorCheck": true,
+    "transportWorkflowRemoved": true
+  }
 }

@@ -1,0 +1,24 @@
+{
+  "evidenceType": "H_EARTH_C2_R1_R1_4_ENGINEERING_EVIDENCE_MANIFEST_v1",
+  "checkpoint": "R1.4_ACTUAL_DEPTH_WATER_OPTICS",
+  "executionHead": "3f870c5dbe8f16d24829693db0359bc6e7dd37d8",
+  "workflowRun": 30654154498,
+  "workflowJob": 91234321797,
+  "artifactId": 8802560928,
+  "artifactName": "h-earth-c2-r1-r1-4-engineering-evidence",
+  "artifactDigest": "sha256:61ae51f5e7bea90083413414ab078bd18e537610c4b427de999b060c1f9fbf53",
+  "artifactFiles": [
+    "h-earth.c2-r1.r1-4-verification.json",
+    "r1-4-engineering-captures/h-earth.c2-r1.r1-4-depth-response-curves.svg",
+    "r1-4-engineering-captures/h-earth.c2-r1.r1-4-coastal-color-transects.svg",
+    "r1-4-engineering-captures/h-earth.c2-r1.r1-4-alongshore-optical-continuity.svg"
+  ],
+  "representativeEngineeringCaptureCount": 3,
+  "repositoryPreservedFiles": [
+    "h-earth.c2-r1.r1-4-verification.json",
+    "r1-4-engineering-captures/h-earth.c2-r1.r1-4-depth-response-curves.svg"
+  ],
+  "classification": "ENGINEERING_EVIDENCE_ONLY",
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false
+}

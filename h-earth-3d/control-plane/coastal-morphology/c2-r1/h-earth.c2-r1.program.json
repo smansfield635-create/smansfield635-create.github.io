@@ -1,6 +1,6 @@
 {
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
-  "status": "R1_4_EXECUTION_CANDIDATE_CURRENT_HEAD_WORKFLOWS_PENDING",
+  "status": "R1_4_PASS_CLOSED",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
   "failedC2GeometryAsStartingSource": "PROHIBITED",
@@ -12,37 +12,11 @@
     "oneBoundedPassAtATime": true,
     "passCompletionRequiresDurableLedgerUpdate": true,
     "nextPassMayStartOnlyAfterPreviousPassStoppingBoundary": true,
-    "ordinaryVisualImperfectionIsNonblockingDuringDevelopment": true,
-    "functionalDamageIsHardBlocking": true,
     "functionalVerificationDoesNotProveVisualSuccess": true,
     "representativeCapturesRequiredBeforeHumanReview": true,
     "visualSuccessorRequiresAcceptedUserDifferential": true,
-    "developAndTestLocallyBeforeSinglePush": true,
     "readFirstRealCurrentHeadFailureBeforeCorrection": true,
     "statusOnlyIntermediateCommitsProhibited": true
-  },
-  "modelingRequirements": {
-    "actualDepthLaw": "WATER_SURFACE_HEIGHT_MINUS_TERRAIN_HEIGHT_AT_XZ",
-    "continuousProfile": true,
-    "recomputeVertexNormalsAfterDisplacement": true,
-    "normalContinuityCheck": true,
-    "continuousSedimentMembership": true,
-    "waterOpticsDepthControlledChannels": [
-      "SEABED_VISIBILITY",
-      "SHALLOW_TURQUOISE",
-      "OFFSHORE_DARKENING",
-      "SPECTRAL_ABSORPTION",
-      "TRANSPARENCY"
-    ],
-    "breakerInputs": [
-      "WAVE_DIRECTION",
-      "LOCAL_WATER_DEPTH",
-      "SEABED_SLOPE",
-      "DEPTH_CHANGE_RATE",
-      "SHORELINE_ORIENTATION"
-    ],
-    "antialiasingEnabled": true,
-    "featureFlagsProveVisualSuccess": false
   },
   "passes": {
     "R1.0": {
@@ -64,50 +38,49 @@
     },
     "R1.4": {
       "name": "ACTUAL_DEPTH_WATER_OPTICS",
-      "status": "EXECUTION_CANDIDATE_CURRENT_HEAD_WORKFLOWS_PENDING",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "startingHead": "2c9e16e1340a11cf46277b641454db610d7c9b6c",
-      "authorizedMutationScope": [
-        "ACTUAL_DEPTH_OPTICAL_FIELDS",
-        "SEABED_VISIBILITY",
-        "SHALLOW_TURQUOISE_RESPONSE",
-        "OFFSHORE_DARKENING",
-        "SPECTRAL_ABSORPTION_AND_TRANSPARENCY",
-        "R1_4_TESTS_RECEIPTS_AND_ENGINEERING_CAPTURES"
-      ],
-      "immutableInputs": [
-        "R1_1_COASTAL_PROFILE",
-        "R1_2_SURFACE_NORMALS_AND_LIGHTING",
-        "R1_3_SEDIMENT_MEMBERSHIPS"
-      ],
-      "prohibited": [
-        "GEOMETRY_CHANGE",
-        "NORMAL_OR_LIGHTING_CHANGE",
-        "SEDIMENT_MEMBERSHIP_CHANGE",
-        "BREAKERS_OR_FOAM",
-        "OCEAN_ANIMATION",
-        "RENDERER_LIFECYCLE",
-        "CAMERA_OR_TRAVERSAL",
-        "PUBLIC_ROUTE_OR_PRODUCT_DEFAULT"
-      ],
-      "closureCondition": "R1_4_AND_REGISTRY_CURRENT_HEAD_WORKFLOWS_PASS",
-      "stoppingBoundary": "DEPTH_CORRESPONDENCE_AND_OPTICAL_CONTINUITY_PASS_OR_FIRST_REAL_HARD_BLOCKER_REPORTED"
+      "executionHead": "3f870c5dbe8f16d24829693db0359bc6e7dd37d8",
+      "actualDepthUsed": true,
+      "seabedVisibilityDepthDriven": true,
+      "shallowWaterTurquoise": true,
+      "deepWaterDarkeningDepthDriven": true,
+      "absorptionDepthDriven": true,
+      "transparencyDepthDriven": true,
+      "crossShoreOpticalContinuity": true,
+      "alongshoreOpticalContinuity": true,
+      "geometryUnchanged": true,
+      "normalsUnchanged": true,
+      "sedimentMembershipsUnchanged": true,
+      "breakersOrFoamCreated": false,
+      "oceanAnimationCreated": false,
+      "rendererLifecycleChanged": false,
+      "productDefaultMutated": false,
+      "publicRouteMutated": false,
+      "registryPreflight": "PASS",
+      "firstBlocker": null
     },
-    "R1.5": { "name": "DEPTH_AND_SLOPE_ALIGNED_BREAKERS", "status": "NOT_STARTED" },
-    "R1.6": { "name": "RESTRAINED_SWASH_FOAM_AND_WETNESS", "status": "NOT_STARTED" },
-    "R1.7": { "name": "BOUNDED_TERRAIN_MACRO_EXPRESSION", "status": "NOT_STARTED" },
-    "R1.8": { "name": "FUNCTIONAL_VERIFICATION_AND_HUMAN_REVIEW", "status": "NOT_STARTED" }
+    "R1.5": {
+      "name": "DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
+      "status": "NOT_STARTED"
+    },
+    "R1.6": {
+      "name": "RESTRAINED_SWASH_FOAM_AND_WETNESS",
+      "status": "NOT_STARTED"
+    },
+    "R1.7": {
+      "name": "BOUNDED_TERRAIN_MACRO_EXPRESSION",
+      "status": "NOT_STARTED"
+    },
+    "R1.8": {
+      "name": "FUNCTIONAL_VERIFICATION_AND_HUMAN_REVIEW",
+      "status": "NOT_STARTED"
+    }
   },
-  "requiredRepresentativeCaptures": [
-    "LATERAL_BEACH_PROFILE",
-    "INLAND_TO_DEEP_WATER_PROFILE",
-    "SHALLOW_WATER_AND_SEABED",
-    "SANDBAR_OR_NEARSHORE_BATHYMETRY",
-    "GROUND_LEVEL_COASTAL_TRAVERSAL",
-    "DISTANT_COASTAL_LANDSCAPE"
-  ],
   "classificationLaw": {
     "functionallyReviewableCandidate": "ALLOWED_AFTER_R1_8_FUNCTIONAL_VERIFICATION",
     "visualSuccessor": "ONLY_AFTER_ACCEPTED_USER_DIFFERENTIAL",
+    "visualSuccessorStatus": "NOT_ESTABLISHED",
     "userDifferentialReady": false
   },
   "registryPathDisposition": {
@@ -115,8 +88,9 @@
     "purpose": "READ_ONLY_CANDIDATE_PATH_RESOLUTION",
     "mutationAuthorityCreated": false,
     "mergeAuthorityCreated": false,
-    "status": "R1_4_PATH_ADMITTED_CURRENT_HEAD_PREFLIGHT_PENDING"
+    "status": "PASS"
   },
   "productDefaultMutated": false,
-  "currentCheckpoint": "R1.4_ACTUAL_DEPTH_WATER_OPTICS"
+  "currentCheckpoint": "R1.4_ACTUAL_DEPTH_WATER_OPTICS",
+  "nextAuthorizedCheckpoint": "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS"
 }

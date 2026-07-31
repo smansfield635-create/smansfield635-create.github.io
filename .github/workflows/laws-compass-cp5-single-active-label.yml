@@ -1,136 +1,93 @@
-name: Laws Compass CP5 Single Active Label Candidate
+name: Laws CP5 R2 Lunar Materialization
 
 on:
   push:
     branches:
-      - agent/laws-compass-cp5-single-active-label-001
-  pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - synchronize
-      - reopened
+      - agent/laws-cp5-r2-celestial-visual-correction-001
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  verify-candidate:
+  materialize:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
-      - name: Checkout exact candidate branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          ref: agent/laws-compass-cp5-single-active-label-001
+          ref: agent/laws-cp5-r2-celestial-visual-correction-001
           fetch-depth: 0
 
-      - name: Verify exact candidate custody and scope
-        id: custody
+      - name: Apply bounded lunar correction
         shell: bash
         run: |
           set -euo pipefail
-          base="b8eb8783609ea584b9f2e0f132e706e23c211535"
-          candidate="$(git rev-parse HEAD)"
-          interactions_blob="$(git hash-object laws/index.interactions.js)"
-          crystals_blob="$(git hash-object laws/index.crystals.js)"
-          git cat-file -e "${base}^{commit}"
-          git merge-base --is-ancestor "$base" "$candidate"
-          test "$interactions_blob" = "be365cc331ee5643f916abee204d4f5f45376c04"
-          test "$crystals_blob" = "43bb3659e24094074b72a45a1990bc66bd79e2be"
-          git diff --name-only "$base" "$candidate" | sort | tee laws-cp5-single-active-label-changed-paths.txt
-          test "$(tr '\n' '|' < laws-cp5-single-active-label-changed-paths.txt)" = ".github/workflows/laws-compass-cp5-single-active-label.yml|laws/index.interactions.js|verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/laws-compass-cp5-single-active-label.mjs|"
-          node --check laws/index.interactions.js
-          node --check verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/laws-compass-cp5-single-active-label.mjs
-          printf 'candidate_head=%s\n' "$candidate" >> "$GITHUB_OUTPUT"
-          printf 'interactions_blob=%s\n' "$interactions_blob" >> "$GITHUB_OUTPUT"
+          test "$(git hash-object laws/index.crystals.js)" = "50685b9588f8a821afe320e4a5cdb13181e58443"
+          test "$(git hash-object laws/index.interactions.js)" = "be365cc331ee5643f916abee204d4f5f45376c04"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('laws/index.crystals.js')
+          t=p.read_text()
+          def r(a,b,n):
+              global t
+              c=t.count(a)
+              if c!=1: raise SystemExit(f'{n}: {c}')
+              t=t.replace(a,b,1)
+          r('"2.1.0-exact-two-object-field"','"2.2.1-cp5-r2-solar-lunar-visual-correction"','version')
+          r('''    research:
+      Object.freeze([
+        0.52,
+        0.34,
+        1.0
+      ]),''','''    research:
+      Object.freeze([
+        0.82,
+        0.83,
+        0.86
+      ]),''','palette')
+          r('Object.freeze({specular:0.08,rim:0.18,emissive:0.018,alpha:1.50,sparkle:0.00,halo:0.10,contrast:1.85}),','Object.freeze({specular:0.12,rim:0.16,emissive:0.006,alpha:1.00,sparkle:0.00,halo:0.045,contrast:1.76}),','material')
+          old='''        const terminator = 0.14 + 0.86 * smoothTransition(-0.20, 0.16, illumination);
+        const shade = clamp((0.66 + terrain * 0.11 + fineTerrain * 0.055 + crater.albedo) * terminator, 0.09, 1.02);
+        relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;
+        surfaceColor = [
+          clamp(color[0] * shade * 0.92, 0, 1),
+          clamp(color[1] * shade * 0.78, 0, 1),
+          clamp(color[2] * shade * 1.08, 0, 1)
+        ];'''
+          new='''        /* CP5_R2_LUNAR_NEUTRAL_MATERIAL */
+        const terminator = 0.10 + 0.90 * smoothTransition(-0.18, 0.18, illumination);
+        const highlands = smoothTransition(-0.12, 0.34, terrain + crater.albedo * 0.82);
+        const maria = smoothTransition(0.06, 0.52, -terrain - crater.albedo * 0.28);
+        const neutralAlbedo = clamp(0.56 + highlands * 0.24 - maria * 0.20 + fineTerrain * 0.045 + crater.albedo * 0.46, 0.22, 0.96);
+        const reliefLighting = clamp(0.78 + terrain * 0.10 + fineTerrain * 0.038 + crater.albedo * 0.34, 0.52, 1.08);
+        const shade = clamp(neutralAlbedo * reliefLighting * terminator, 0.055, 1.0);
+        const reflectedCoolTint = (1 - terminator) * 0.008;
+        relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;
+        surfaceColor = [
+          clamp(shade * 1.018, 0, 1),
+          clamp(shade * 1.012, 0, 1),
+          clamp(shade + reflectedCoolTint, 0, 1)
+        ];'''
+          r(old,new,'lunar branch')
+          for x in ['CP5_R2_SOLAR_LARGE_CONVECTION_CELLS','CP5_R2_SOLAR_IRREGULAR_GASEOUS_CORONA','CP5_R2_LUNAR_NEUTRAL_MATERIAL','gatewayBodyScale:\n    0.7666667','horizontalRadius:\n        1.68','verticalRadius:\n        1.5008','depthRadius:\n        1.2992']:
+              if x not in t: raise SystemExit(f'missing {x}')
+          p.write_text(t)
+          PY
+          node --check laws/index.crystals.js
+          git diff --check -- laws/index.crystals.js
+          test "$(git hash-object laws/index.interactions.js)" = "be365cc331ee5643f916abee204d4f5f45376c04"
 
-      - uses: browser-actions/setup-chrome@v1
-        id: chrome
-        with:
-          chrome-version: stable
-
-      - name: Install pinned browser driver
-        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-
-      - name: Start exact-head local runtime
+      - name: Commit one-file result
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "${{ steps.custody.outputs.candidate_head }}"
-          python3 -m http.server 4173 >/tmp/laws-cp5-server.log 2>&1 &
-          echo $! >/tmp/laws-cp5-server.pid
-          for attempt in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then exit 0; fi
-            sleep 1
-          done
-          cat /tmp/laws-cp5-server.log
-          exit 1
-
-      - name: Execute four-profile candidate verification
-        env:
-          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-          LAWS_SIX_ORIGIN: http://127.0.0.1:4173
-          EXECUTION_BRANCH: agent/laws-compass-cp5-single-active-label-001
-          EXECUTION_COMMIT: ${{ steps.custody.outputs.candidate_head }}
-          BASELINE_COMMIT: b8eb8783609ea584b9f2e0f132e706e23c211535
-        run: node verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/laws-compass-cp5-single-active-label.mjs
-
-      - name: Validate candidate receipt
-        shell: bash
-        env:
-          EXPECTED_HEAD: ${{ steps.custody.outputs.candidate_head }}
-          EXPECTED_BLOB: ${{ steps.custody.outputs.interactions_blob }}
-        run: |
-          set -euo pipefail
-          node <<'NODE'
-          const fs = require('node:fs');
-          const receipt = JSON.parse(fs.readFileSync('laws-cp5-single-active-label-v1.json', 'utf8'));
-          if (receipt.execution?.commit !== process.env.EXPECTED_HEAD) throw new Error('EXACT_HEAD_MISMATCH');
-          if (receipt.pass !== true || !Array.isArray(receipt.failures) || receipt.failures.length) throw new Error('CANDIDATE_RECEIPT_FAILED');
-          if (receipt.browserExecuted !== true) throw new Error('BROWSER_NOT_EXECUTED');
-          if (!Array.isArray(receipt.screenshotManifest) || receipt.screenshotManifest.length < 4) throw new Error('SCREENSHOTS_INCOMPLETE');
-          if (!Array.isArray(receipt.observations) || receipt.observations.length !== 4) throw new Error('PROFILE_COUNT_INVALID');
-          const ids = ['flow','integrity','reality','structure','test','research'];
-          for (const observation of receipt.observations) {
-            const transitions = (observation.labelStateLedger || []).filter(entry => entry.phase === 'PRIMARY_TRANSITION');
-            const observed = [...new Set(transitions.map(entry => entry.authorityId))].sort();
-            if (JSON.stringify(observed) !== JSON.stringify([...ids].sort())) throw new Error(`LABEL_LEDGER_INCOMPLETE:${observation.profile}`);
-            for (const entry of transitions) {
-              const visible = entry.state.filter(record => record.visible);
-              const suppressed = entry.state.filter(record => !record.visible);
-              if (visible.length !== 1 || visible[0].id !== entry.authorityId) throw new Error(`VISIBLE_LABEL_INVALID:${observation.profile}:${entry.authorityId}`);
-              if (suppressed.length !== 5 || suppressed.some(record => !record.hidden || record.tabIndex >= 0 || record.ariaHidden !== 'true' || record.pointerEvents !== 'none')) throw new Error(`SUPPRESSION_INVALID:${observation.profile}:${entry.authorityId}`);
-            }
-          }
-          const output = {
-            checkpoint: 'LAWS_CHAMBER_CHECKPOINT_5',
-            phase: 'SINGLE_ACTIVE_LABEL_CANDIDATE_VERIFICATION',
-            result: 'PASS_VERIFIED_CANDIDATE',
-            baseMain: 'b8eb8783609ea584b9f2e0f132e706e23c211535',
-            candidateHead: process.env.EXPECTED_HEAD,
-            interactionsBlob: process.env.EXPECTED_BLOB,
-            crystalsBlob: '43bb3659e24094074b72a45a1990bc66bd79e2be',
-            changedPaths: fs.readFileSync('laws-cp5-single-active-label-changed-paths.txt', 'utf8').trim().split(/\r?\n/),
-            profiles: receipt.observations.map(item => item.profile),
-            screenshotCount: receipt.screenshotManifest.length,
-            failures: receipt.failures,
-            merge: false,
-            deployment: false,
-            userDifferential: 'NOT_YET'
-          };
-          fs.writeFileSync('laws-cp5-single-active-label-candidate-receipt.json', JSON.stringify(output, null, 2) + '\n');
-          NODE
-
-      - name: Upload candidate evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: laws-cp5-single-active-label-candidate-${{ steps.custody.outputs.candidate_head }}
-          path: |
-            laws-cp5-single-active-label-v1.json
-            laws-cp5-single-active-label-candidate-receipt.json
-            laws-cp5-single-active-label-changed-paths.txt
-            laws-cp5-single-active-label-v1-screenshots/**
-            /tmp/laws-cp5-server.log
-          retention-days: 30
+          base="0ff5741803926a6c218415587955aa867f93a0f7"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout "$base" -- .github/workflows/laws-compass-cp5-single-active-label.yml
+          git rm -f .github/workflows/laws-cp5-r2-celestial-verification.yml .cp5-r2-lunar-trigger
+          git add laws/index.crystals.js
+          test "$(git diff --cached --name-only "$base")" = "laws/index.crystals.js"
+          git commit -m '[skip ci] Apply bounded Laws CP5-R2 lunar visual correction'
+          test "$(git diff --name-only "$base" HEAD)" = "laws/index.crystals.js"
+          git push origin HEAD:agent/laws-cp5-r2-celestial-visual-correction-001

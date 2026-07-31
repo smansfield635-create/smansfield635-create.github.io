@@ -1,0 +1,83 @@
+name: Laws CP5 Public Crystal Binding Materializer
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp5-public-crystal-binding-materializer
+  cancel-in-progress: false
+
+jobs:
+  materialize-binding:
+    if: github.head_ref == 'execution/laws-cp5-public-crystal-binding-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact binding branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp5-public-crystal-binding-001
+          fetch-depth: 0
+
+      - name: Apply exact two-occurrence crystal cache binding
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test "$(git rev-parse HEAD)" = "9b6f7bd25d0595b865d97c22b868375d36cb3a94"
+          test "$(git hash-object laws/index.html)" = "db6d50672ac54cb54849675c8309d513f9d75c35"
+          test "$(git hash-object laws/index.crystals.js)" = "e8c80f898acad0625e722f43be6d1b4f5541690f"
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('laws/index.html')
+          before = path.read_text()
+          old = '8133609c21f43a5910ec7a247d50310390152cbb'
+          new = 'e8c80f898acad0625e722f43be6d1b4f5541690f'
+          interactions = 'be365cc331ee5643f916abee204d4f5f45376c04'
+          crystal_path = '/laws/index.crystals.js?v='
+
+          if before.count(old) != 2:
+              raise SystemExit(f'OLD_BINDING_COUNT_INVALID:{before.count(old)}')
+          if before.count(new) != 0:
+              raise SystemExit(f'NEW_BINDING_PREEXISTS:{before.count(new)}')
+          if before.count(interactions) != 2:
+              raise SystemExit(f'INTERACTIONS_BINDING_COUNT_INVALID:{before.count(interactions)}')
+          if before.count(crystal_path) != 2:
+              raise SystemExit(f'CRYSTAL_PATH_COUNT_INVALID:{before.count(crystal_path)}')
+
+          after = before.replace(old, new)
+          if after != before.replace(old, new):
+              raise SystemExit('NONDETERMINISTIC_REPLACEMENT')
+          if after.count(old) != 0 or after.count(new) != 2:
+              raise SystemExit('BINDING_REPLACEMENT_INVALID')
+          if after.count(interactions) != 2:
+              raise SystemExit('INTERACTIONS_BINDING_CHANGED')
+          if after.count(crystal_path) != 2:
+              raise SystemExit('CRYSTAL_PATH_CHANGED')
+
+          path.write_text(after)
+          PY
+
+          test "$(git diff --name-only)" = "laws/index.html"
+          git diff --check
+
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('laws/index.html').read_text()
+          assert text.count('/laws/index.crystals.js?v=e8c80f898acad0625e722f43be6d1b4f5541690f') == 2
+          assert text.count('/laws/index.interactions.js?v=be365cc331ee5643f916abee204d4f5f45376c04') == 2
+          PY
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add laws/index.html
+          git commit -m 'Bind final Laws celestial crystal resource'
+          git push origin HEAD:refs/heads/agent/laws-cp5-public-crystal-binding-001

@@ -3,7 +3,7 @@
   "operation": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
   "result": "HARD_BLOCKED",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
-  "candidateHead": "978b10cde556ec6d8a12f5c4ea3e3c7ee3b01555",
+  "candidateHead": "67f669c17de0310808b711fa9066bcdaf10ffd77",
   "checks": {
     "sourceBaselineExact": true,
     "failedC2GeometryExcluded": true,

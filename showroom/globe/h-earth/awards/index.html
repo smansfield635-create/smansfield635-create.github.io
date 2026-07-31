@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" data-route="/showroom/globe/h-earth/awards/" data-awards-overview="DIAMOND_GATE_BRIDGE_AWARD_LANDSCAPE" data-claim-boundary="TARGETS_AND_RATIONALE_NOT_NOMINATIONS_OR_WINS">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#061014">
+  <meta name="description" content="A transparent overview of the award programs Diamond Gate Bridge is preparing to pursue and the project evidence behind each target.">
+  <title>Awards & Recognition · Diamond Gate Bridge</title>
+  <link rel="stylesheet" href="../index.css?v=b10-trophy-standard-001">
+  <style>
+    [hidden]{display:none!important}
+    .h-earth-awards-page{background:radial-gradient(circle at 20% -10%,rgba(108,191,159,.18),transparent 38rem),radial-gradient(circle at 90% 18%,rgba(228,199,129,.12),transparent 34rem),#020609}
+    .h-earth-awards-shell{gap:18px}
+    .h-earth-awards-hero{position:relative;isolation:isolate;overflow:hidden;display:grid;align-content:end;min-height:min(70vh,780px);padding:clamp(28px,7vw,88px);border:1px solid var(--h-earth-border);border-radius:clamp(26px,4vw,44px);background:linear-gradient(180deg,rgba(2,8,10,.06),rgba(2,8,10,.88)),radial-gradient(circle at 78% 20%,rgba(153,224,194,.2),transparent 34rem),linear-gradient(135deg,#102b2b,#071316 54%,#020609);box-shadow:0 38px 120px rgba(0,0,0,.55)}
+    .h-earth-awards-hero::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.34;background:radial-gradient(circle at 28% 20%,rgba(255,255,255,.22) 0 1px,transparent 1.9px);background-size:190px 190px;mask-image:linear-gradient(180deg,#000,transparent 90%)}
+    .h-earth-awards-title{max-width:1080px;margin:0;font-size:clamp(3rem,9vw,8.2rem);line-height:.84;letter-spacing:-.075em}
+    .h-earth-awards-lede{max-width:840px;margin:24px 0 0;color:var(--h-earth-muted);font-size:clamp(1.02rem,2.2vw,1.38rem)}
+    .h-earth-awards-status{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.h-earth-awards-status span{padding:8px 11px;border:1px solid var(--h-earth-border);border-radius:999px;background:rgba(0,0,0,.24);font-size:.74rem;font-weight:850}.h-earth-awards-status span[data-award-state="NOW"]{color:#b9f0ce}.h-earth-awards-status span[data-award-state="DEVELOPMENT"]{color:#ead39a}
+    .h-earth-awards-boundary{max-width:820px;margin:18px 0 0;padding:13px 15px;border-left:3px solid rgba(232,210,160,.72);color:var(--h-earth-muted);background:rgba(232,210,160,.06)}
+    .h-earth-awards-now,.h-earth-awards-lenses,.h-earth-awards-programs,.h-earth-awards-return{padding:clamp(22px,5vw,54px);border:1px solid var(--h-earth-border);border-radius:var(--h-earth-radius-xl);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.016)),rgba(5,11,14,.88);box-shadow:var(--h-earth-shadow-soft)}
+    .h-earth-awards-now{display:grid;grid-template-columns:minmax(0,.62fr) minmax(0,1.38fr);gap:clamp(22px,5vw,64px)}.h-earth-awards-now h2,.h-earth-awards-section-heading h2,.h-earth-awards-return h2{margin:0;font-size:clamp(2rem,5vw,4.8rem);line-height:.96;letter-spacing:-.055em}
+    .h-earth-awards-now-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.h-earth-awards-now-grid article,.h-earth-awards-program-grid article{padding:17px;border:1px solid var(--h-earth-border-soft);border-radius:17px;background:rgba(0,0,0,.16)}.h-earth-awards-now-grid strong{color:var(--h-earth-text)}.h-earth-awards-now-grid p,.h-earth-awards-program-grid p{margin:8px 0 0;color:var(--h-earth-muted)}
+    .h-earth-awards-section-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.62fr);gap:24px;align-items:end;margin-bottom:18px}.h-earth-awards-section-heading p{margin:0;color:var(--h-earth-muted)}
+    .h-earth-award-lens{margin-top:10px;border:1px solid var(--h-earth-border);border-radius:18px;background:rgba(255,255,255,.025)}.h-earth-award-lens>summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:17px 19px;list-style:none}.h-earth-award-lens>summary::-webkit-details-marker{display:none}.h-earth-award-lens>summary span{font-weight:900}.h-earth-award-lens>summary small{color:var(--h-earth-soft);text-align:right}.h-earth-award-lens[open]>summary{border-bottom:1px solid var(--h-earth-border-soft)}.h-earth-award-lens-body{padding:18px;color:var(--h-earth-muted)}.h-earth-award-lens-body p{margin:8px 0}
+    .h-earth-awards-program-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.h-earth-awards-program-grid h3{margin:0}.h-earth-awards-program-grid article{min-height:190px}
+    .h-earth-awards-return{text-align:center}.h-earth-awards-return p{max-width:720px;margin:12px auto;color:var(--h-earth-muted)}.h-earth-awards-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:18px}.h-earth-awards-actions .h-earth-3d-action-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;text-decoration:none}
+    @media(max-width:1050px){.h-earth-awards-program-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.h-earth-awards-program-grid article:last-child{grid-column:1/-1}}
+    @media(max-width:760px){.h-earth-awards-now,.h-earth-awards-section-heading{grid-template-columns:1fr}.h-earth-awards-now-grid{grid-template-columns:1fr}.h-earth-award-lens>summary{grid-template-columns:1fr}.h-earth-award-lens>summary small{text-align:left}}
+    @media(max-width:520px){.h-earth-awards-program-grid{grid-template-columns:1fr}.h-earth-awards-program-grid article:last-child{grid-column:auto}.h-earth-awards-hero{min-height:66vh}}
+  </style>
+</head>
+<body class="h-earth-awards-page">
+  <main class="h-earth-3d-route-root" data-h-earth-route="awards-overview">
+    <div class="h-earth-3d-shell h-earth-awards-shell">
+      <header class="h-earth-3d-public-header" aria-label="Awards overview navigation">
+        <a class="h-earth-3d-brand" href="/showroom/globe/h-earth/?candidate=H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001">
+          <span class="h-earth-3d-brand-mark" aria-hidden="true"><span>H</span></span>
+          <span class="h-earth-3d-brand-copy"><span>Diamond Gate Bridge</span><strong>Awards & Recognition</strong></span>
+        </a>
+        <nav class="h-earth-3d-public-nav" aria-label="Awards overview routes">
+          <a href="/">Compass</a>
+          <a href="/showroom/globe/">Mirrorland</a>
+          <a href="/showroom/globe/h-earth/?candidate=H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001">H-Earth</a>
+        </nav>
+      </header>
+
+      <section class="h-earth-awards-hero" aria-labelledby="awards-title">
+        <p class="h-earth-3d-kicker">The complete interactive estate</p>
+        <h1 id="awards-title" class="h-earth-awards-title">Why this work belongs in more than one award discipline.</h1>
+        <p class="h-earth-awards-lede">Diamond Gate Bridge is not being positioned as a single 3D demo or a collection of unrelated pages. It is a connected browser-native interactive universe: a spatial Compass, a Coherence Diagnostic, communicable AI characters, a developing narrative platform, and the live H-Earth world.</p>
+        <div class="h-earth-awards-status" aria-label="Award-page claim boundary">
+          <span data-award-state="TARGET">Award targets</span>
+          <span data-award-state="NOW">Interactive now</span>
+          <span data-award-state="DEVELOPMENT">In active development</span>
+        </div>
+        <p class="h-earth-awards-boundary"><strong>Transparency boundary:</strong> this page explains intended award targets and project fit. It does not claim that a submission, nomination, shortlist, or win has already occurred.</p>
+      </section>
+
+      <section class="h-earth-awards-now" aria-labelledby="award-object-title">
+        <div>
+          <p class="h-earth-3d-kicker">The award object</p>
+          <h2 id="award-object-title">The whole estate is the submission object.</h2>
+        </div>
+        <div class="h-earth-awards-now-grid">
+          <article><strong>Interactive now</strong><p>The four-Compass navigation grammar, live site traversal, Coherence Diagnostic, communicable guides Auren, Jeeves, and Elara, Mirrorland context, and the directly manipulable H-Earth environment.</p></article>
+          <article><strong>In active development</strong><p>Expanded gameplay, deeper character communication, additional worlds and routes, broader player objectives, continued environmental refinement, and stronger integration across the complete game platform.</p></article>
+        </div>
+      </section>
+
+      <section class="h-earth-awards-lenses" aria-labelledby="award-lenses-title">
+        <div class="h-earth-awards-section-heading">
+          <div><p class="h-earth-3d-kicker">Project-to-award correspondence</p><h2 id="award-lenses-title">Open a category lens.</h2></div>
+          <p>Each lens explains a distinct part of the same integrated project. All lenses remain closed until selected.</p>
+        </div>
+
+        <details class="h-earth-award-lens" data-award-lens="COMPASS_AND_NAVIGATION">
+          <summary><span>Compass & navigation</span><small>Spatial information architecture</small></summary>
+          <div class="h-earth-award-lens-body"><p>The Compass is not a decorative menu. It is the project’s spatial grammar: a central globe, cardinal authorities, stars, return paths, and learned traversal across the estate.</p><p><strong>Primary award correspondence:</strong> navigation, structure, user experience, interface design, and spatial interaction disciplines.</p></div>
+        </details>
+
+        <details class="h-earth-award-lens" data-award-lens="COHERENCE_DIAGNOSTIC">
+          <summary><span>Coherence Diagnostic</span><small>Systems reasoning made inspectable</small></summary>
+          <div class="h-earth-award-lens-body"><p>The diagnostic distinguishes pressure from failure, separates source, runtime, live, accepted, and default states, and prevents false health from being presented as completion.</p><p><strong>Primary award correspondence:</strong> technical achievement, responsible innovation, digital experience design, product evolution, and original IP.</p></div>
+        </details>
+
+        <details class="h-earth-award-lens" data-award-lens="AI_AND_COMMUNICABLE_CHARACTERS">
+          <summary><span>AI & communicable characters</span><small>Auren, Jeeves, Elara and role-scoped intelligence</small></summary>
+          <div class="h-earth-award-lens-body"><p>The characters are not generic chat widgets. They are role-scoped guides situated inside the estate, each carrying a distinct voice, responsibility, and relationship to the user’s movement through the platform.</p><p><strong>Primary award correspondence:</strong> AI experiences, real-time engagement, interactive character design, and the use of AI as part of an integrated world.</p></div>
+        </details>
+
+        <details class="h-earth-award-lens" data-award-lens="IMMERSIVE_3D_WORLD_AND_GAME_DESIGN">
+          <summary><span>3D interactive world & game design</span><small>H-Earth, Mirrorland and direct traversal</small></summary>
+          <div class="h-earth-award-lens-body"><p>H-Earth is a live browser-native environment with direct desktop and touch manipulation. Mirrorland supplies the larger narrative and spatial context; H-Earth is the Survival path and the current flagship playable world.</p><p><strong>Primary award correspondence:</strong> immersive storytelling, immersive technology, games, virtual worlds, and browser-native 3D experience design.</p></div>
+        </details>
+
+        <details class="h-earth-award-lens" data-award-lens="INTEGRATED_DIGITAL_EXPERIENCE_AND_IP">
+          <summary><span>Integrated digital experience & original IP</span><small>One estate, many distinct authorities</small></summary>
+          <div class="h-earth-award-lens-body"><p>The strongest claim is the relationship among the parts: Compass, Products, Mirrorland, Worlds, Laws, Gauges, instruments, characters, and live environments remain distinct while operating as one conceptual estate.</p><p><strong>Primary award correspondence:</strong> integrated digital experience, original IP, technical achievement, platform design, and complete-site recognition.</p></div>
+        </details>
+
+        <details class="h-earth-award-lens" data-award-lens="SOLO_MOBILE_NATIVE_CONSTRUCTION">
+          <summary><span>Solo mobile-native construction</span><small>Supporting evidence, not the substitute for quality</small></summary>
+          <div class="h-earth-award-lens-body"><p>The estate was constructed as a solo, browser-native project primarily from a mobile phone using HTML, CSS, JavaScript, Canvas, WebGL, and browser APIs. That construction story supports the work; the live experience must still stand on its own.</p><p><strong>Primary award correspondence:</strong> solo design and development, innovation, developer craft, and technical-achievement narratives.</p></div>
+        </details>
+      </section>
+
+      <section class="h-earth-awards-programs" aria-labelledby="programs-title">
+        <div class="h-earth-awards-section-heading">
+          <div><p class="h-earth-3d-kicker">Target programs</p><h2 id="programs-title">The programs currently being prepared for.</h2></div>
+          <p>Exact categories, dates, and eligibility will be rechecked against each active entry cycle before submission.</p>
+        </div>
+        <div class="h-earth-awards-program-grid">
+          <article data-award-program="WEBBY"><h3>The Webby Awards</h3><p>Potential fit across navigation, technical achievement, immersive storytelling, games, and AI experience disciplines.</p></article>
+          <article data-award-program="AWWWARDS"><h3>Awwwards</h3><p>Potential fit for complete-site, design, usability, innovation, and developer evaluation.</p></article>
+          <article data-award-program="CSSDA"><h3>CSS Design Awards</h3><p>Potential fit across innovation, interface design, user experience, special recognition, and solo work.</p></article>
+          <article data-award-program="DANDAD"><h3>D&amp;AD Awards</h3><p>Potential fit for digital experience design, original IP, AI and technology, games, and virtual worlds.</p></article>
+          <article data-award-program="LOVIE"><h3>The Lovie Awards</h3><p>Potential fit across websites, mobile experiences, immersive work, games, AI, and innovation.</p></article>
+        </div>
+      </section>
+
+      <section class="h-earth-awards-return" aria-labelledby="return-title">
+        <p class="h-earth-3d-kicker">Return to the work</p>
+        <h2 id="return-title">The evidence remains the live estate.</h2>
+        <p>The awards strategy does not replace the experience. Return to H-Earth, the Compass, or Mirrorland and inspect the work directly.</p>
+        <div class="h-earth-awards-actions">
+          <a class="h-earth-3d-action-button" href="/showroom/globe/h-earth/?candidate=H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001">Enter H-Earth</a>
+          <a class="h-earth-3d-action-button" href="/">Open the Compass</a>
+          <a class="h-earth-3d-action-button" href="/showroom/globe/">Enter Mirrorland</a>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script>
+    (() => {
+      const lenses = [...document.querySelectorAll('.h-earth-award-lens')];
+      lenses.forEach((lens) => {
+        lens.open = false;
+        lens.addEventListener('toggle', () => {
+          if (!lens.open) return;
+          lenses.forEach((other) => {
+            if (other !== lens) other.open = false;
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+name: Laws Compass Macro CP3 Live Closure
+
+on:
+  push:
+    branches:
+      - agent/laws-compass-celestial-refinement-cp2-001
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  live-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout published main head
+        uses: actions/checkout@v4
+        with:
+          ref: f79ea4d700d4df79d0e5e82316b01bd144ff5352
+          fetch-depth: 0
+
+      - name: Verify published source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "f79ea4d700d4df79d0e5e82316b01bd144ff5352"
+          test "$(git hash-object laws/index.crystals.js)" = "26e8e267b63a4f66609d4e14e631cec47dd470c6"
+          node --check laws/index.crystals.js
+
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Wait for exact public asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="26e8e267b63a4f66609d4e14e631cec47dd470c6"
+          matched=false
+          for attempt in $(seq 1 80); do
+            url="https://diamondgatebridge.com/laws/index.crystals.js?macro_cp3=${GITHUB_RUN_ID}-${attempt}"
+            if curl -fsSL --retry 2 --connect-timeout 10 "$url" -o /tmp/public-index.crystals.js; then
+              observed="$(git hash-object /tmp/public-index.crystals.js)"
+              if [ "$observed" = "$expected" ]; then
+                matched=true
+                break
+              fi
+            fi
+            sleep 5
+          done
+          test "$matched" = true
+          node --check /tmp/public-index.crystals.js
+
+      - name: Execute public four-profile benchmark
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          LAWS_SIX_ORIGIN: https://diamondgatebridge.com
+          EXECUTION_BRANCH: main
+          EXECUTION_COMMIT: f79ea4d700d4df79d0e5e82316b01bd144ff5352
+          BASELINE_COMMIT: 3a6eafcb8c10c61849a452a0c068d34a12117cf5
+        run: node verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs
+
+      - name: Validate live receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('laws-six-authority-benchmark-v1.json', 'utf8'));
+          if (receipt.execution?.commit !== 'f79ea4d700d4df79d0e5e82316b01bd144ff5352') throw new Error('LIVE_HEAD_MISMATCH');
+          if (receipt.browserExecuted !== true) throw new Error('LIVE_BROWSER_NOT_EXECUTED');
+          if (receipt.pass !== true || !Array.isArray(receipt.failures) || receipt.failures.length) throw new Error('LIVE_RECEIPT_FAILED');
+          if (!Array.isArray(receipt.screenshotManifest) || receipt.screenshotManifest.length < 4) throw new Error('LIVE_SCREENSHOTS_INCOMPLETE');
+          fs.writeFileSync('laws-compass-macro-cp3-live-closure.json', JSON.stringify({
+            checkpoint: 'LAWS_COMPASS_MACRO_CHECKPOINT_3',
+            result: 'PASS_CLOSED',
+            mergeCommit: 'f79ea4d700d4df79d0e5e82316b01bd144ff5352',
+            sourceBlob: '26e8e267b63a4f66609d4e14e631cec47dd470c6',
+            publicOrigin: 'https://diamondgatebridge.com',
+            browserExecuted: true,
+            fourProfileExecution: true,
+            failures: [],
+            screenshotCount: receipt.screenshotManifest.length,
+            userDifferential: 'PASS_USER_ACCEPTED'
+          }, null, 2) + '\n');
+          NODE
+
+      - name: Upload closure evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-compass-macro-cp3-live-closure
+          path: |
+            laws-compass-macro-cp3-live-closure.json
+            laws-six-authority-benchmark-v1.json
+            laws-six-authority-benchmark-v1-screenshots/**
+            /tmp/public-index.crystals.js
+          retention-days: 30
+
+      - name: Publish closure status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/f79ea4d700d4df79d0e5e82316b01bd144ff5352" \
+            -d "{\"state\":\"success\",\"context\":\"laws-compass-macro-cp3-live\",\"description\":\"public exact bytes and four-profile runtime passed\",\"target_url\":\"${run_url}\"}"

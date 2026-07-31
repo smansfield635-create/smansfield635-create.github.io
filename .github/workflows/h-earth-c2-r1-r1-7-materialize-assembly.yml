@@ -108,29 +108,26 @@ jobs:
               raise SystemExit('BUILD_MARKER_COUNT_INVALID')
           source = source.replace(marker, smoothing, 1)
 
-          before_steps = '''  const alongStep =
-            (corridor.alongshoreMaximum - corridor.alongshoreMinimum) /
-            Math.max(1, width - 1);
-          '''
-          after_steps = '''  smoothControlChannel(values, width, height, CHANNEL.ALBEDO_SCALE, 3);
+          step_marker = 'const alongStep ='
+          if source.count(step_marker) != 1:
+              raise SystemExit('STEP_MARKER_COUNT_INVALID')
+          source = source.replace(
+              step_marker,
+              '''smoothControlChannel(values, width, height, CHANNEL.ALBEDO_SCALE, 3);
             smoothControlChannel(values, width, height, CHANNEL.ROUGHNESS_OFFSET, 3);
             smoothControlChannel(values, width, height, CHANNEL.CAVITY_RESPONSE, 3);
             const smoothedPotentials = smoothScalarField(potentials, width, height, 3);
 
-            const alongStep =
-              (corridor.alongshoreMaximum - corridor.alongshoreMinimum) /
-              Math.max(1, width - 1);
-          '''
-          if source.count(before_steps) != 1:
-              raise SystemExit('STEP_MARKER_COUNT_INVALID')
-          source = source.replace(before_steps, after_steps, 1)
+            const alongStep =''',
+              1
+          )
 
-          potential_marker = '  const potentialAt = (x, y) => potentials[\n'
+          potential_marker = 'const potentialAt = (x, y) => potentials['
           if source.count(potential_marker) != 1:
               raise SystemExit('POTENTIAL_MARKER_COUNT_INVALID')
           source = source.replace(
               potential_marker,
-              '  const potentialAt = (x, y) => smoothedPotentials[\n',
+              'const potentialAt = (x, y) => smoothedPotentials[',
               1
           )
           path.write_text(source)

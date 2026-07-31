@@ -14,7 +14,7 @@
       "DGB_LAWS_CRYSTALS_EXACT_TWO_OBJECT_RECONCILIATION_v2",
 
     version:
-      "2.1.0-exact-two-object-field",
+      "2.2.1-cp5-r2-solar-lunar-visual-correction",
 
     file:
       "/laws/index.crystals.js",
@@ -268,9 +268,9 @@
 
     research:
       Object.freeze([
-        0.52,
-        0.34,
-        1.0
+        0.82,
+        0.83,
+        0.86
       ]),
 
     lawFlow:
@@ -355,10 +355,10 @@
           1.34
       }),
     AUTHORITY_SOLAR:
-      Object.freeze({specular:0.18,rim:0.42,emissive:0.88,alpha:1.50,sparkle:0.00,halo:0.58,contrast:1.70}),
+      Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94}),
 
     AUTHORITY_LUNAR:
-      Object.freeze({specular:0.08,rim:0.18,emissive:0.018,alpha:1.50,sparkle:0.00,halo:0.10,contrast:1.85}),
+      Object.freeze({specular:0.12,rim:0.16,emissive:0.006,alpha:1.00,sparkle:0.00,halo:0.045,contrast:1.76}),
 
     LAW_IDLE:
        Object.freeze({
@@ -719,6 +719,8 @@
   };
 
   const vertexShaderSource = `
+    precision mediump float;
+
     attribute vec3 aPosition;
     attribute vec3 aNormal;
     attribute vec3 aColor;
@@ -729,6 +731,8 @@
     uniform mat3 uNormalMatrix;
     uniform float uHaloPass;
     uniform float uHaloExpansion;
+    uniform float uTime;
+    uniform float uSolarBody;
 
     varying vec3 vNormal;
     varying vec3 vColor;
@@ -740,7 +744,16 @@
       vec3 pos = aPosition;
 
       if (uHaloPass > 0.5) {
-        pos += normalize(aNormal) * uHaloExpansion;
+        float expansionScale = 1.0;
+        if (uSolarBody > 0.5) {
+          vec3 direction = normalize(aPosition);
+          float plume =
+            sin(direction.x * 8.7 + direction.y * 5.1 + uTime * 0.31) * 0.46 +
+            sin(direction.y * 11.3 - direction.z * 6.4 - uTime * 0.23) * 0.32 +
+            sin(direction.z * 15.7 + direction.x * 4.9 + uTime * 0.17) * 0.22;
+          expansionScale = 0.10 + smoothstep(0.02, 0.76, plume) * 1.76;
+        }
+        pos += normalize(aNormal) * uHaloExpansion * expansionScale;
       }
 
       vec4 world = uModel * vec4(pos, 1.0);
@@ -776,6 +789,7 @@
     uniform float uContrast;
     uniform float uHaloStrength;
     uniform float uSaturation;
+    uniform float uSolarBody;
 
     uniform vec3 uKeyLight;
     uniform vec3 uFillLight;
@@ -976,16 +990,41 @@
         uTwinkle;
 
       if (vHaloPass > 0.5) {
+        if (uSolarBody > 0.5) {
+          float gasA = 0.5 + 0.5 * sin(n.x * 10.7 + n.y * 6.1 - n.z * 8.4 + uTime * 0.19);
+          float gasB = 0.5 + 0.5 * sin(n.x * 5.2 - n.y * 14.3 + n.z * 11.8 - uTime * 0.13);
+          float gasC = 0.5 + 0.5 * sin(n.z * 18.1 + n.x * 4.6 + uTime * 0.09);
+          float plume = gasA * 0.50 + gasB * 0.32 + gasC * 0.18;
+          float wisp = smoothstep(0.54, 0.83, plume);
+          float prominenceWisp = pow(max(plume - 0.63, 0.0) * 2.70, 1.45);
+          vec3 haloColor =
+            mix(
+              vec3(1.0, 0.20, 0.008),
+              vec3(1.0, 0.84, 0.25),
+              clamp(gasA * 0.72 + gasC * 0.28, 0.0, 1.0)
+            ) *
+            (0.46 + wisp * 0.90 + prominenceWisp * 0.74) *
+            uHaloStrength;
+          float haloAlpha =
+            clamp(
+              (0.012 + fresnel * 0.075 + sideRim * 0.035 + prominenceWisp * 0.15) *
+              wisp *
+              uProminence *
+              uHaloStrength,
+              0.0,
+              0.23
+            );
+          gl_FragColor = vec4(haloColor, haloAlpha);
+          return;
+        }
+
         vec3 haloColor =
           base *
           (
             0.70 +
-            fresnel *
-            1.18 +
-            sideRim *
-            0.42 +
-            rear *
-            0.24
+            fresnel * 1.18 +
+            sideRim * 0.42 +
+            rear * 0.24
           ) *
           uHaloStrength *
           twinkle;
@@ -994,10 +1033,8 @@
           clamp(
             (
               0.040 +
-              fresnel *
-              0.18 +
-              sideRim *
-              0.08
+              fresnel * 0.18 +
+              sideRim * 0.08
             ) *
             uProminence *
             uHaloStrength,
@@ -1005,12 +1042,18 @@
             0.34
           );
 
-        gl_FragColor =
-          vec4(
-            haloColor,
-            haloAlpha
-          );
+        gl_FragColor = vec4(haloColor, haloAlpha);
+        return;
+      }
 
+      if (uSolarBody > 0.5) {
+        float centerToLimb = smoothstep(0.04, 0.92, max(facingToCamera, 0.0));
+        float limbBrightness = 0.68 + centerToLimb * 0.32;
+        float activity = clamp((base.r - base.g) * 1.12 + (0.34 - base.b) * 0.28, 0.0, 1.0);
+        vec3 solarColor = base * limbBrightness * (0.94 + uProminence * 0.08);
+        solarColor += vec3(1.0, 0.28, 0.012) * activity * 0.035;
+        solarColor *= 0.96 + key * 0.07 + fill * 0.025;
+        gl_FragColor = vec4(min(solarColor, vec3(1.0)), 1.0);
         return;
       }
 
@@ -2262,6 +2305,39 @@
       depth: record[4]
     }));
 
+    /* CP5_R2_SOLAR_LARGE_CONVECTION_CELLS */
+    const solarCells = [
+      [0.16, 0.92, 0.36, 1.00], [-0.44, 0.78, 0.45, 0.74],
+      [0.66, 0.52, 0.54, 0.88], [0.82, 0.04, 0.57, 0.62],
+      [0.44, -0.52, 0.73, 0.91], [-0.18, -0.72, 0.67, 0.70],
+      [-0.72, -0.34, 0.61, 0.84], [-0.86, 0.18, 0.47, 0.58],
+      [0.08, 0.34, 0.94, 0.78], [0.55, -0.18, -0.81, 0.66],
+      [-0.38, 0.22, -0.90, 0.94], [0.18, -0.86, -0.47, 0.72],
+      [-0.78, -0.12, -0.61, 0.82], [0.72, 0.48, -0.49, 0.60]
+    ].map(record => ({
+      center: normalizeVector(record.slice(0, 3)),
+      energy: record[3]
+    }));
+
+    const solarActivity = [
+      [0.44, 0.18, 0.88, 0.16, 0.95],
+      [-0.34, -0.36, 0.87, 0.13, 0.82],
+      [0.62, -0.56, -0.54, 0.18, 0.70]
+    ].map(record => ({
+      center: normalizeVector(record.slice(0, 3)),
+      radius: record[3],
+      strength: record[4]
+    }));
+
+    function mixColor(a, b, amount) {
+      const t = clamp(amount, 0, 1);
+      return [
+        a[0] + (b[0] - a[0]) * t,
+        a[1] + (b[1] - a[1]) * t,
+        a[2] + (b[2] - a[2]) * t
+      ];
+    }
+
     function deterministicField(x, y, z, frequency, phase) {
       return (
         Math.sin((x * 1.73 + y * 2.11 + z * 2.67) * frequency + phase) * 0.50 +
@@ -2300,33 +2376,89 @@
       let surfaceColor;
 
       if (mode === "solar") {
-        const broad = deterministicField(nx, ny, nz, 4.6, 0.73);
-        const cells = deterministicField(nx, ny, nz, 13.6, 2.17);
-        const fine = deterministicField(nx, ny, nz, 31.0, 1.31);
-        const spotCenterA = normalizeVector([0.44, 0.18, 0.88]);
-        const spotCenterB = normalizeVector([-0.34, -0.36, 0.87]);
-        const spotA = Math.exp(-Math.pow(Math.acos(clamp(nx * spotCenterA[0] + ny * spotCenterA[1] + nz * spotCenterA[2], -1, 1)) / 0.14, 2) * 2.8);
-        const spotB = Math.exp(-Math.pow(Math.acos(clamp(nx * spotCenterB[0] + ny * spotCenterB[1] + nz * spotCenterB[2], -1, 1)) / 0.11, 2) * 3.2);
-        const shade = clamp(0.82 + broad * 0.09 + cells * 0.15 + fine * 0.055 - spotA * 0.24 - spotB * 0.18, 0.48, 1.10);
-        relief += broad * 0.0055 + cells * 0.0036 + fine * 0.0014;
-        surfaceColor = [
-          clamp(0.93 + shade * 0.12, 0, 1),
-          clamp(color[1] * (0.70 + shade * 0.30), 0, 1),
-          clamp(color[2] * (0.38 + shade * 0.50), 0, 1)
-        ];
+        let nearest = Infinity;
+        let second = Infinity;
+        let cellEnergyWeight = 0.72;
+        solarCells.forEach(cell => {
+          const distance = Math.acos(
+            clamp(nx * cell.center[0] + ny * cell.center[1] + nz * cell.center[2], -1, 1)
+          );
+          if (distance < nearest) {
+            second = nearest;
+            nearest = distance;
+            cellEnergyWeight = cell.energy;
+          } else if (distance < second) {
+            second = distance;
+          }
+        });
+
+        const boundary = 1 - smoothTransition(0.018, 0.145, second - nearest);
+        const risingCenter = 1 - smoothTransition(0.07, 0.58, nearest);
+        const broad = deterministicField(nx, ny, nz, 3.2, 0.73);
+        const turbulentFold = deterministicField(nx, ny, nz, 7.4, 2.17);
+        const fine = deterministicField(nx, ny, nz, 25.0, 1.31);
+        let activity = 0;
+        solarActivity.forEach(region => {
+          const angularDistance = Math.acos(
+            clamp(nx * region.center[0] + ny * region.center[1] + nz * region.center[2], -1, 1)
+          );
+          activity += Math.exp(-Math.pow(angularDistance / region.radius, 2) * 2.5) * region.strength;
+        });
+        activity = clamp(activity, 0, 1);
+
+        const heat = clamp(
+          0.24 +
+          risingCenter * (0.48 + cellEnergyWeight * 0.20) -
+          boundary * 0.50 +
+          broad * 0.09 +
+          turbulentFold * 0.085 +
+          fine * 0.035 -
+          activity * 0.33,
+          0,
+          1
+        );
+
+        const darkRed = [0.42, 0.035, 0.006];
+        const redOrange = [0.78, 0.105, 0.008];
+        const deepOrange = [1.0, 0.285, 0.012];
+        const gold = [1.0, 0.665, 0.055];
+        const yellowWhite = [1.0, 0.985, 0.72];
+        if (heat < 0.18) {
+          surfaceColor = mixColor(darkRed, redOrange, heat / 0.18);
+        } else if (heat < 0.42) {
+          surfaceColor = mixColor(redOrange, deepOrange, (heat - 0.18) / 0.24);
+        } else if (heat < 0.72) {
+          surfaceColor = mixColor(deepOrange, gold, (heat - 0.42) / 0.30);
+        } else {
+          surfaceColor = mixColor(gold, yellowWhite, (heat - 0.72) / 0.28);
+        }
+
+        relief +=
+          risingCenter * 0.0085 -
+          boundary * 0.0055 +
+          broad * 0.0038 +
+          turbulentFold * 0.0027 +
+          fine * 0.0012 +
+          activity * 0.0020;
       } else {
         const terrain = deterministicField(nx, ny, nz, 5.8, 1.43);
         const fineTerrain = deterministicField(nx, ny, nz, 15.8, 0.39);
         const crater = craterField(nx, ny, nz);
         const light = normalizeVector([-0.62, 0.22, 0.75]);
         const illumination = nx * light[0] + ny * light[1] + nz * light[2];
-        const terminator = 0.14 + 0.86 * smoothTransition(-0.20, 0.16, illumination);
-        const shade = clamp((0.66 + terrain * 0.11 + fineTerrain * 0.055 + crater.albedo) * terminator, 0.09, 1.02);
+        /* CP5_R2_LUNAR_NEUTRAL_MATERIAL */
+        const terminator = 0.10 + 0.90 * smoothTransition(-0.18, 0.18, illumination);
+        const highlands = smoothTransition(-0.12, 0.34, terrain + crater.albedo * 0.82);
+        const maria = smoothTransition(0.06, 0.52, -terrain - crater.albedo * 0.28);
+        const neutralAlbedo = clamp(0.56 + highlands * 0.24 - maria * 0.20 + fineTerrain * 0.045 + crater.albedo * 0.46, 0.22, 0.96);
+        const reliefLighting = clamp(0.78 + terrain * 0.10 + fineTerrain * 0.038 + crater.albedo * 0.34, 0.52, 1.08);
+        const shade = clamp(neutralAlbedo * reliefLighting * terminator, 0.055, 1.0);
+        const reflectedCoolTint = (1 - terminator) * 0.008;
         relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;
         surfaceColor = [
-          clamp(color[0] * shade * 0.92, 0, 1),
-          clamp(color[1] * shade * 0.78, 0, 1),
-          clamp(color[2] * shade * 1.08, 0, 1)
+          clamp(shade * 1.018, 0, 1),
+          clamp(shade * 1.012, 0, 1),
+          clamp(shade + reflectedCoolTint, 0, 1)
         ];
       }
 
@@ -2601,6 +2733,12 @@
           gl.getUniformLocation(
             program,
             "uHaloExpansion"
+          ),
+
+        solarBody:
+          gl.getUniformLocation(
+            program,
+            "uSolarBody"
           ),
 
         keyLight:
@@ -4252,9 +4390,9 @@ function validateClusterSphereContract() {
 
     const haloScale =
       haloPass
-        ? 1 +
-          transform.halo *
-            0.10
+        ? node.id === "test"
+          ? 1
+          : 1 + transform.halo * 0.10
         : 1;
 
     return multiply4(
@@ -4607,8 +4745,13 @@ function validateClusterSphereContract() {
     );
 
     gl.uniform1f(
+      renderer.uniforms.solarBody,
+      node.id === "test" ? 1 : 0
+    );
+
+    gl.uniform1f(
       renderer.uniforms.haloExpansion,
-      0.075
+      node.id === "test" ? 0.14 : 0.075
     );
 
     applyMaterial(
@@ -4662,24 +4805,18 @@ function validateClusterSphereContract() {
       layer.cssWidth <=
       QUALITY.bloomDisableWidthPx;
 
-    if (!bloomDisabled) {
+    const haloNodes =
+      bloomDisabled
+        ? nodes.filter(node => node.id === "test")
+        : nodes;
+
+    /* CP5_R2_SOLAR_IRREGULAR_GASEOUS_CORONA */
+    if (haloNodes.length) {
       gl.depthMask(false);
-
-      gl.blendFunc(
-        gl.SRC_ALPHA,
-        gl.ONE
-      );
-
-      nodes.forEach(
-        node => {
-          drawCalls +=
-            drawNode(
-              renderer,
-              node,
-              true
-            );
-        }
-      );
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+      haloNodes.forEach(node => {
+        drawCalls += drawNode(renderer, node, true);
+      });
     }
 
     gl.depthMask(true);

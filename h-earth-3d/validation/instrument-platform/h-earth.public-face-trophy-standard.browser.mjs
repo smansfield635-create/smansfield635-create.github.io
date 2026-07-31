@@ -7,8 +7,7 @@ const CANDIDATE_ID = 'H_EARTH_PUBLIC_FACE_TROPHY_STANDARD_RECONCILIATION_001';
 const CANDIDATE_PATH = `/showroom/globe/h-earth/?candidate=${CANDIDATE_ID}`;
 const BASELINE_PATH = '/showroom/globe/h-earth/';
 const AWARDS_PATH = '/showroom/globe/h-earth/awards/';
-const RECEIPT_PATH = process.env.H_EARTH_B10_BROWSER_RECEIPT
-  || '/tmp/h-earth-public-face-trophy-standard-b10.browser.receipt.json';
+const RECEIPT_PATH = process.env.H_EARTH_B10_BROWSER_RECEIPT || '/tmp/h-earth-public-face-trophy-standard-b10.browser.receipt.json';
 const candidateHead = process.env.CANDIDATE_HEAD || 'LOCAL_CANDIDATE';
 const publicVerificationPerformed = ORIGIN.startsWith('https://');
 
@@ -36,13 +35,11 @@ const captureErrors = (page, label) => {
   });
 };
 
-const digestCanvas = async (page) => sha256(
-  await page.locator('#h-earth-functional-landscape-canvas').screenshot({ type: 'png' })
-);
+const digestCanvas = async (page) => sha256(await page.locator('#h-earth-functional-landscape-canvas').screenshot({ type: 'png' }));
 
-const waitForHEarth = async (page, path) => {
+const waitForHEarth = async (page, path, idPrefix) => {
   const response = await page.goto(`${ORIGIN}${path}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
-  check(`${path === BASELINE_PATH ? 'BASELINE' : 'CANDIDATE'}_ROUTE_REACHABLE`, response?.ok() === true, response?.status());
+  check(`${idPrefix}_ROUTE_REACHABLE`, response?.ok() === true, response?.status());
   await page.locator('#h-earth-functional-landscape-canvas').waitFor({ state: 'visible', timeout: 30000 });
   await page.waitForFunction(() => {
     const route = document.getElementById('h-earth-functional-landscape-route');
@@ -52,13 +49,10 @@ const waitForHEarth = async (page, path) => {
   await page.waitForTimeout(700);
 };
 
-const gestureUsed = async (page) => page.evaluate(() => {
-  const nodes = [
-    document.getElementById('h-earth-3d-route-root'),
-    document.getElementById('h-earth-functional-landscape-route')
-  ];
-  return nodes.some((node) => node?.dataset.gestureUsed === 'true');
-});
+const gestureUsed = async (page) => page.evaluate(() => [
+  document.getElementById('h-earth-3d-route-root'),
+  document.getElementById('h-earth-functional-landscape-route')
+].some((node) => node?.dataset.gestureUsed === 'true'));
 
 const dispatchTouchSequence = async (page, frames) => {
   const client = await page.context().newCDPSession(page);
@@ -69,15 +63,16 @@ const dispatchTouchSequence = async (page, frames) => {
   }
 };
 
+const waitForSingleOpen = async (page, selector, attribute, expected) => {
+  await page.waitForFunction(({ selector, attribute, expected }) => {
+    const open = [...document.querySelectorAll(`${selector}[open]`)];
+    return open.length === 1 && open[0].getAttribute(attribute) === expected;
+  }, { selector, attribute, expected }, { timeout: 5000 });
+};
+
 const browser = await chromium.launch({
   headless: true,
-  args: [
-    '--use-gl=swiftshader',
-    '--enable-webgl',
-    '--ignore-gpu-blocklist',
-    '--disable-dev-shm-usage',
-    '--no-sandbox'
-  ]
+  args: ['--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage', '--no-sandbox']
 });
 
 try {
@@ -85,7 +80,7 @@ try {
 
   const baseline = await desktop.newPage();
   captureErrors(baseline, 'baseline-default');
-  await waitForHEarth(baseline, BASELINE_PATH);
+  await waitForHEarth(baseline, BASELINE_PATH, 'BASELINE');
   check('BASELINE_B10_GATE_INACTIVE', await baseline.locator('html').getAttribute('data-h-earth-public-face-candidate') === 'inactive');
   check('BASELINE_TROPHY_HERO_HIDDEN', await baseline.locator('#h-earth-b10-hero').isHidden());
   check('BASELINE_ARRIVAL_VISIBLE', await baseline.locator('#h-earth-baseline-arrival').isVisible());
@@ -96,7 +91,7 @@ try {
 
   const page = await desktop.newPage();
   captureErrors(page, 'desktop-candidate');
-  await waitForHEarth(page, CANDIDATE_PATH);
+  await waitForHEarth(page, CANDIDATE_PATH, 'CANDIDATE');
   check('CANDIDATE_GATE_ACTIVE', await page.locator('html').getAttribute('data-h-earth-public-face-candidate') === 'active');
   check('TROPHY_HERO_VISIBLE', await page.locator('#h-earth-b10-hero').isVisible());
   check('WELCOME_TO_H_EARTH_VISIBLE', (await page.locator('#h-earth-b10-title').textContent())?.trim() === 'Welcome to H-Earth.');
@@ -149,11 +144,14 @@ try {
   await page.locator('[data-b10-lens="PLATFORM_LENS"] > summary').click();
   check('PLATFORM_LENS_OPENS', await page.locator('[data-b10-lens="PLATFORM_LENS"]').evaluate((node) => node.open));
   await page.locator('[data-b10-lens="STORY_LENS"] > summary').click();
-  check('ONE_PUBLIC_LENS_AT_A_TIME', await page.locator('.h-earth-b10-lens[open]').count() === 1 && await page.locator('[data-b10-lens="STORY_LENS"]').evaluate((node) => node.open));
+  await waitForSingleOpen(page, '.h-earth-b10-lens', 'data-b10-lens', 'STORY_LENS');
+  check('ONE_PUBLIC_LENS_AT_A_TIME', await page.locator('.h-earth-b10-lens[open]').count() === 1);
 
   await page.locator('[data-b10-lens="ENGINEERING_LENS"] > summary').click();
+  await waitForSingleOpen(page, '.h-earth-b10-lens', 'data-b10-lens', 'ENGINEERING_LENS');
   check('ENGINEERING_LENS_REVEALS_RUNTIME_DIAGNOSTICS', await page.locator('details.h-earth-runtime-diagnostics').isVisible());
   await page.locator('[data-b10-lens="EVIDENCE_LENS"] > summary').click();
+  await waitForSingleOpen(page, '.h-earth-b10-lens', 'data-b10-lens', 'EVIDENCE_LENS');
   check('EVIDENCE_LENS_REVEALS_STARTUP_RECEIPT', await page.locator('details.h-earth-startup-receipt').isVisible());
   check('EVIDENCE_LENS_REVEALS_ENVIRONMENT_DETAILS', await page.locator('details.h-earth-live-details').isVisible());
 
@@ -171,16 +169,16 @@ try {
   check('AWARDS_RETURN_PRESERVES_CANDIDATE', (await awards.getByText('Enter H-Earth', { exact: true }).getAttribute('href'))?.includes(`candidate=${CANDIDATE_ID}`));
   await awards.locator('[data-award-lens="COMPASS_AND_NAVIGATION"] > summary').click();
   await awards.locator('[data-award-lens="COHERENCE_DIAGNOSTIC"] > summary').click();
-  check('ONE_AWARD_LENS_AT_A_TIME', await awards.locator('.h-earth-award-lens[open]').count() === 1 && await awards.locator('[data-award-lens="COHERENCE_DIAGNOSTIC"]').evaluate((node) => node.open));
+  await waitForSingleOpen(awards, '.h-earth-award-lens', 'data-award-lens', 'COHERENCE_DIAGNOSTIC');
+  check('ONE_AWARD_LENS_AT_A_TIME', await awards.locator('.h-earth-award-lens[open]').count() === 1);
   await awards.close();
-
   await page.close();
   await desktop.close();
 
   const mobile = await browser.newContext({ viewport: { width: 430, height: 860 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
   const mobilePage = await mobile.newPage();
   captureErrors(mobilePage, 'mobile-candidate');
-  await waitForHEarth(mobilePage, CANDIDATE_PATH);
+  await waitForHEarth(mobilePage, CANDIDATE_PATH, 'MOBILE_CANDIDATE');
   check('MOBILE_TROPHY_HERO_VISIBLE', await mobilePage.locator('#h-earth-b10-hero').isVisible());
   check('MOBILE_LENSES_CLOSED_ON_LOAD', await mobilePage.locator('.h-earth-b10-lens[open]').count() === 0);
 
@@ -254,9 +252,8 @@ try {
     assertions
   };
   const receiptSha256 = sha256(JSON.stringify(receiptBody));
-  const receipt = { ...receiptBody, receiptSha256 };
-  fs.writeFileSync(RECEIPT_PATH, `${JSON.stringify(receipt, null, 2)}\n`);
-  console.log(JSON.stringify(receipt, null, 2));
+  fs.writeFileSync(RECEIPT_PATH, `${JSON.stringify({ ...receiptBody, receiptSha256 }, null, 2)}\n`);
+  console.log(JSON.stringify({ ...receiptBody, receiptSha256 }, null, 2));
 } catch (error) {
   const receiptBody = {
     schemaVersion: publicVerificationPerformed

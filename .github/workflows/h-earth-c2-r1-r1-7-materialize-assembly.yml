@@ -1,0 +1,52 @@
+name: H-Earth C2-R1 R1.7 Materialize Assembly
+
+on:
+  push:
+    branches:
+      - candidate/h-earth-c2-r1-r1-7-assembly-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-r1-7-materialize-assembly.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize-r1-7:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: candidate/h-earth-c2-r1-r1-7-assembly-001
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Materialize verified R1.7 files and remove transport
+        run: |
+          set -euo pipefail
+          branch="candidate/h-earth-c2-r1-r1-7-assembly-001"
+          test "$(git branch --show-current)" = "$branch"
+
+          transport="h-earth-3d/control-plane/coastal-morphology/c2-r1/transport/r1-7"
+          macro="h-earth-3d/terrain/h-earth.coastal-macro-expression.c2-r1.js"
+          verifier="h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7-bounded-terrain-macro-expression.mjs"
+
+          mkdir -p "$(dirname "$macro")" "$(dirname "$verifier")"
+          cat "$transport"/macro.part*.b64 | base64 -d > "$macro"
+          cat "$transport"/test.part*.b64 | base64 -d > "$verifier"
+
+          test "$(sha256sum "$macro" | cut -d' ' -f1)" = "4fcd21dced7f12e74deff021ac727b65b93c61e429efc5de9c2a46449c70b9d7"
+          test "$(sha256sum "$verifier" | cut -d' ' -f1)" = "48647ae1b21f617c4a643055ad1d12d9a618160372634487823c64651ddda442"
+          test "$(git hash-object "$macro")" = "0da0e83166c0adaa07e3a082dc4fcff476b13c9b"
+          test "$(git hash-object "$verifier")" = "d08940d0c97afe2a4f62ea509c3405907df3b441"
+
+          node --check "$macro"
+          node --check "$verifier"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$macro" "$verifier"
+          git rm -r "$transport"
+          git rm .github/workflows/h-earth-c2-r1-r1-7-materialize-assembly.yml
+          git commit -m "R1.7 assembly: materialize verified macro authority and verifier"
+          git push origin "HEAD:$branch"

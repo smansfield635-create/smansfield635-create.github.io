@@ -34,40 +34,10 @@ jobs:
               if c!=1: raise SystemExit(f'{n}: {c}')
               t=t.replace(a,b,1)
           r('"2.1.0-exact-two-object-field"','"2.2.1-cp5-r2-solar-lunar-visual-correction"','version')
-          r('''    research:
-      Object.freeze([
-        0.52,
-        0.34,
-        1.0
-      ]),''','''    research:
-      Object.freeze([
-        0.82,
-        0.83,
-        0.86
-      ]),''','palette')
+          r('    research:\n      Object.freeze([\n        0.52,\n        0.34,\n        1.0\n      ]),','    research:\n      Object.freeze([\n        0.82,\n        0.83,\n        0.86\n      ]),','palette')
           r('Object.freeze({specular:0.08,rim:0.18,emissive:0.018,alpha:1.50,sparkle:0.00,halo:0.10,contrast:1.85}),','Object.freeze({specular:0.12,rim:0.16,emissive:0.006,alpha:1.00,sparkle:0.00,halo:0.045,contrast:1.76}),','material')
-          old='''        const terminator = 0.14 + 0.86 * smoothTransition(-0.20, 0.16, illumination);
-        const shade = clamp((0.66 + terrain * 0.11 + fineTerrain * 0.055 + crater.albedo) * terminator, 0.09, 1.02);
-        relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;
-        surfaceColor = [
-          clamp(color[0] * shade * 0.92, 0, 1),
-          clamp(color[1] * shade * 0.78, 0, 1),
-          clamp(color[2] * shade * 1.08, 0, 1)
-        ];'''
-          new='''        /* CP5_R2_LUNAR_NEUTRAL_MATERIAL */
-        const terminator = 0.10 + 0.90 * smoothTransition(-0.18, 0.18, illumination);
-        const highlands = smoothTransition(-0.12, 0.34, terrain + crater.albedo * 0.82);
-        const maria = smoothTransition(0.06, 0.52, -terrain - crater.albedo * 0.28);
-        const neutralAlbedo = clamp(0.56 + highlands * 0.24 - maria * 0.20 + fineTerrain * 0.045 + crater.albedo * 0.46, 0.22, 0.96);
-        const reliefLighting = clamp(0.78 + terrain * 0.10 + fineTerrain * 0.038 + crater.albedo * 0.34, 0.52, 1.08);
-        const shade = clamp(neutralAlbedo * reliefLighting * terminator, 0.055, 1.0);
-        const reflectedCoolTint = (1 - terminator) * 0.008;
-        relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;
-        surfaceColor = [
-          clamp(shade * 1.018, 0, 1),
-          clamp(shade * 1.012, 0, 1),
-          clamp(shade + reflectedCoolTint, 0, 1)
-        ];'''
+          old='        const terminator = 0.14 + 0.86 * smoothTransition(-0.20, 0.16, illumination);\n        const shade = clamp((0.66 + terrain * 0.11 + fineTerrain * 0.055 + crater.albedo) * terminator, 0.09, 1.02);\n        relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;\n        surfaceColor = [\n          clamp(color[0] * shade * 0.92, 0, 1),\n          clamp(color[1] * shade * 0.78, 0, 1),\n          clamp(color[2] * shade * 1.08, 0, 1)\n        ];'
+          new='        /* CP5_R2_LUNAR_NEUTRAL_MATERIAL */\n        const terminator = 0.10 + 0.90 * smoothTransition(-0.18, 0.18, illumination);\n        const highlands = smoothTransition(-0.12, 0.34, terrain + crater.albedo * 0.82);\n        const maria = smoothTransition(0.06, 0.52, -terrain - crater.albedo * 0.28);\n        const neutralAlbedo = clamp(0.56 + highlands * 0.24 - maria * 0.20 + fineTerrain * 0.045 + crater.albedo * 0.46, 0.22, 0.96);\n        const reliefLighting = clamp(0.78 + terrain * 0.10 + fineTerrain * 0.038 + crater.albedo * 0.34, 0.52, 1.08);\n        const shade = clamp(neutralAlbedo * reliefLighting * terminator, 0.055, 1.0);\n        const reflectedCoolTint = (1 - terminator) * 0.008;\n        relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;\n        surfaceColor = [\n          clamp(shade * 1.018, 0, 1),\n          clamp(shade * 1.012, 0, 1),\n          clamp(shade + reflectedCoolTint, 0, 1)\n        ];'
           r(old,new,'lunar branch')
           for x in ['CP5_R2_SOLAR_LARGE_CONVECTION_CELLS','CP5_R2_SOLAR_IRREGULAR_GASEOUS_CORONA','CP5_R2_LUNAR_NEUTRAL_MATERIAL','gatewayBodyScale:\n    0.7666667','horizontalRadius:\n        1.68','verticalRadius:\n        1.5008','depthRadius:\n        1.2992']:
               if x not in t: raise SystemExit(f'missing {x}')

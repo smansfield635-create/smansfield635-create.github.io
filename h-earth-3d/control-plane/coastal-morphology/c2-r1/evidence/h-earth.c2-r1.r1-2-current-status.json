@@ -1,0 +1,12 @@
+{
+  "checkpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING",
+  "status": "IN_PROGRESS_EXECUTABLE_VERIFICATION_PENDING",
+  "startingHead": "5827a6bf0ac90bafd91ab3b373872313253e3cbc",
+  "rollbackBranch": "rollback/h-earth-c2-r1-r1-1-closed-001",
+  "normalAuthorityAdded": true,
+  "lightingProjectionAdded": true,
+  "materialsStarted": false,
+  "waterOpticsStarted": false,
+  "rendererIntegrationStarted": false,
+  "productDefaultMutated": false
+}

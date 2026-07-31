@@ -1,0 +1,1 @@
+This sentinel prevents accidental scope expansion. No additional C2 paths are authorized beyond the reconciled manifest after this occurrence.

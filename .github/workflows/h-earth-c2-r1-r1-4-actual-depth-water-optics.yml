@@ -1,14 +1,6 @@
 name: H-Earth C2-R1 R1.4 Actual Depth Water Optics
 
 on:
-  pull_request:
-    branches:
-      - integration/h-earth-c2-r1-baseline-001
-    paths:
-      - 'h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/**'
-      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js'
-      - '.github/workflows/h-earth-c2-r1-r1-4-actual-depth-water-optics.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,13 +8,11 @@ permissions:
 
 jobs:
   verify-r1-4:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -31,7 +21,7 @@ jobs:
 
       - name: Execute actual-depth water-optics verification
         env:
-          C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          C2_R1_HEAD: ${{ github.sha }}
         run: |
           node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-4-actual-depth-water-optics.mjs
 

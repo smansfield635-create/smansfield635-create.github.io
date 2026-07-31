@@ -28,7 +28,7 @@ jobs:
     timeout-minutes: 45
     env:
       CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-      H_EARTH_OBSERVATORY_ORIGIN: ${{ github.event_name == 'push' && 'https://smansfield635-create.github.io' || 'http://127.0.0.1:4186' }}
+      H_EARTH_OBSERVATORY_ORIGIN: ${{ github.event_name == 'push' && 'https://diamondgatebridge.com' || 'http://127.0.0.1:4186' }}
       H_EARTH_OBSERVATORY_B5_RECEIPT: /tmp/h-earth-narrative-observatory-b5.receipt.json
       H_EARTH_OBSERVATORY_B6_RECEIPT: /tmp/h-earth-narrative-observatory-b6.browser.receipt.json
     steps:

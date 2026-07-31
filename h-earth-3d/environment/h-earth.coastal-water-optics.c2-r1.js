@@ -14,8 +14,8 @@ import {
 
 import {
   H_EARTH_C2_R1_SEDIMENT_MEMBERSHIP_CONTRACT_ID,
-  sampleHEarthC2R1CoastalSedimentMembership
-} from '../terrain/h-earth.coastal-sediment-membership.c2-r1.js';
+  sampleHEarthC2R1ContinuousCoastalSedimentMembership
+} from '../control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js';
 
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
@@ -188,7 +188,7 @@ export function sampleHEarthC2R1CoastalWaterOptics(worldX, worldZ) {
   }
 
   const terrain = sampleHEarthC2R1CoastalTerrainField(worldX, worldZ);
-  const sediment = sampleHEarthC2R1CoastalSedimentMembership(worldX, worldZ);
+  const sediment = sampleHEarthC2R1ContinuousCoastalSedimentMembership(worldX, worldZ);
   if (terrain?.valid !== true || sediment?.valid !== true || !terrain.coastalFrame) {
     return reject(worldX, worldZ, ['R1_1_OR_R1_3_INPUT_NOT_ELIGIBLE']);
   }

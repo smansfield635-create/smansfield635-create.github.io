@@ -5,9 +5,9 @@
   "baseHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "branch": "agent/h-earth-c2-bounded-coastal-visual-successor-001",
   "previewPath": "/preview/h-earth/c2/coastal-visual-successor-001/",
-  "status": "REJECTED_EXPERIMENTAL_CANDIDATE",
+  "status": "VERIFIED_READY_FOR_PUBLICATION",
   "approval": "NOT_APPROVED_FOR_PROMOTION",
-  "functionalVerification": "PASS",
+  "functionalVerification": "PASS_CLOSED",
   "isolatedPublication": "PASS",
   "visualSuccessor": "FAIL_REJECTED",
   "userDifferential": "REJECTED",
@@ -15,7 +15,7 @@
   "featureFlagsProveExecutionOnly": true,
   "featureFlagsProveVisualSuccess": false,
   "promotionToPublicDefault": "PROHIBITED",
-  "candidateHead": "618941cd569e3421c84043fcf68367299f7e673e",
+  "candidateHead": "71014f02de09a6fcc7cdb68b8360093182c4d63d",
   "supersededStatus": "VERIFIED_READY_FOR_PUBLICATION",
   "retentionPurpose": "ENGINEERING_EVIDENCE_ONLY"
 }

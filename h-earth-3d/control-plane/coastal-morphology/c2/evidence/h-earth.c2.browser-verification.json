@@ -2,7 +2,7 @@
   "receiptType": "H_EARTH_C2_BROWSER_VERIFICATION_v1",
   "operation": "C2.6_FUNCTIONAL_VERIFICATION",
   "result": "PASS_CLOSED",
-  "candidateHead": "cbe6b183aec86b2328c5b664d04ca6c979f89acf",
+  "candidateHead": "71014f02de09a6fcc7cdb68b8360093182c4d63d",
   "localCandidateUrl": "http://127.0.0.1:4173/preview/h-earth/c2/coastal-visual-successor-001/",
   "checks": {
     "pageLoads": true,
@@ -30,13 +30,13 @@
     "pixelCount": 494960,
     "nonClearPixelCount": 469690,
     "nonClearRatio": 0.9489453693227735,
-    "byteHash": "fnv1a32:44642c23"
+    "byteHash": "fnv1a32:33844844"
   },
   "finalColor": {
     "pixelCount": 494960,
     "nonClearPixelCount": 465545,
     "nonClearRatio": 0.9405709552287054,
-    "byteHash": "fnv1a32:5a009c78"
+    "byteHash": "fnv1a32:a29a81a0"
   },
   "rendererCounters": {
     "contextCreationCount": 1,
@@ -51,7 +51,7 @@
     "criticalGlErrorCount": 0,
     "postInitializationResourceCreationCount": 0,
     "postInitializationBufferUploadCount": 0,
-    "maximumRenderMs": 4.5
+    "maximumRenderMs": 2.8999999999941792
   },
   "inputCounters": {
     "eventListenerCount": 6,

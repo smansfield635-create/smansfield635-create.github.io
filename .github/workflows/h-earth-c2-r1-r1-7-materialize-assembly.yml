@@ -115,7 +115,7 @@ jobs:
               potential_marker,
               '''smoothControlChannel(values, width, height, CHANNEL.ALBEDO_SCALE, 3);
             smoothControlChannel(values, width, height, CHANNEL.ROUGHNESS_OFFSET, 3);
-            smoothControlChannel(values, width, height, CHANNEL.CAVITY_RESPONSE, 3);
+            smoothControlChannel(values, width, height, CHANNEL.CAVITY_RESPONSE, 4);
             const smoothedPotentials = smoothScalarField(potentials, width, height, 3);
 
             const potentialAt = (x, y) => smoothedPotentials[''',
@@ -132,7 +132,7 @@ jobs:
           echo "VERIFIER_GIT_BLOB=$verifier_blob"
 
           grep -q 'function smoothScalarField' "$macro"
-          grep -q 'smoothControlChannel(values, width, height, CHANNEL.CAVITY_RESPONSE, 3)' "$macro"
+          grep -q 'smoothControlChannel(values, width, height, CHANNEL.CAVITY_RESPONSE, 4)' "$macro"
           node --check "$macro"
           node --check "$verifier"
           R1_7_SKIP_GIT_ASSERTIONS=true node "$verifier"

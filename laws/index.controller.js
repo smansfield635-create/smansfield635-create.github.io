@@ -222,7 +222,7 @@
 
   const HALF_SQRT_TWO = Math.SQRT1_2;
 
-  const CANONICAL_CONSTELLATION_QUATERNIONS = Object.freeze({flow:Object.freeze([0,0,0,1]),integrity:Object.freeze([0,0,-HALF_SQRT_TWO,HALF_SQRT_TWO]),reality:Object.freeze([0,0,1,0]),structure:Object.freeze([0,0,HALF_SQRT_TWO,HALF_SQRT_TWO]),test:Object.freeze([-0.43283662594337136,0,0,0.9014723818520222]),research:Object.freeze([0.9014723818520223,0,0,0.4328366259433712])});
+  const CANONICAL_CONSTELLATION_QUATERNIONS = Object.freeze({flow:Object.freeze([0,0,0,1]),integrity:Object.freeze([0,0,HALF_SQRT_TWO,HALF_SQRT_TWO]),reality:Object.freeze([0,0,1,0]),structure:Object.freeze([0,0,-HALF_SQRT_TWO,HALF_SQRT_TWO]),test:Object.freeze([-0.43283662594337136,0,0,0.9014723818520222]),research:Object.freeze([0.9014723818520223,0,0,0.4328366259433712])});
   const AUTHORITY_FIELD=Object.freeze({contractId:'LAWS_COMPASS_EXACT_TWO_OBJECT_FIELD_v2',model:'FOUR_BASELINE_CARDINALS_PLUS_OPPOSED_DEPTH_POLES',coordinateSystem:'RIGHT_HANDED_EUCLIDEAN_XYZ',radius:1,primaryAnchor:Object.freeze([0,.78,.625]),vectors:Object.freeze({flow:Object.freeze([0,1,0]),integrity:Object.freeze([1,0,0]),reality:Object.freeze([0,-1,0]),structure:Object.freeze([-1,0,0]),test:Object.freeze([0,0,1]),research:Object.freeze([0,0,-1])}),lawStarIds:Object.freeze(['flow','integrity','reality','structure']),celestialSphereIds:Object.freeze(['test','research']),sharedRigidTransform:true,fixedCenterExcluded:true});
 
   const PRESENTATION_BY_STATE = Object.freeze({

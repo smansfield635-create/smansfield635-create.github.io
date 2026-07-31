@@ -1,0 +1,151 @@
+name: Laws CP5 R3 Celestial Candidate
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+
+jobs:
+  verify-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Verify custody, scope, syntax, and celestial contracts
+        id: custody
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="0ff5741803926a6c218415587955aa867f93a0f7"
+          head="$(git rev-parse HEAD)"
+          crystal_blob="$(git hash-object laws/index.crystals.js)"
+          interactions_blob="$(git hash-object laws/index.interactions.js)"
+          test "$head" = "${{ github.event.pull_request.head.sha }}"
+          test "$crystal_blob" = "04b92e73de18194c0447305fb3f9dd4654c6cd9a"
+          test "$interactions_blob" = "be365cc331ee5643f916abee204d4f5f45376c04"
+          test "$(git diff --name-only "$base" "$head" | grep '^laws/' | sort)" = "laws/index.crystals.js"
+          node --check laws/index.crystals.js
+          git diff --check "$base" "$head" -- laws/index.crystals.js
+          grep -Fq 'gatewayBodyScale:' laws/index.crystals.js
+          grep -Fq '    0.7666667' laws/index.crystals.js
+          grep -Fq 'horizontalRadius:' laws/index.crystals.js
+          grep -Fq '        1.68' laws/index.crystals.js
+          grep -Fq 'verticalRadius:' laws/index.crystals.js
+          grep -Fq '        1.5008' laws/index.crystals.js
+          grep -Fq 'depthRadius:' laws/index.crystals.js
+          grep -Fq '        1.2992' laws/index.crystals.js
+          grep -Fq 'CP5_R2_SOLAR_LARGE_CONVECTION_CELLS' laws/index.crystals.js
+          grep -Fq 'CP5_R2_SOLAR_IRREGULAR_GASEOUS_CORONA' laws/index.crystals.js
+          grep -Fq 'CP5_R2_LUNAR_NEUTRAL_MATERIAL' laws/index.crystals.js
+          grep -Fq '0.82,' laws/index.crystals.js
+          grep -Fq '0.83,' laws/index.crystals.js
+          grep -Fq '0.86' laws/index.crystals.js
+          printf 'head=%s\n' "$head" >> "$GITHUB_OUTPUT"
+          printf 'crystal_blob=%s\n' "$crystal_blob" >> "$GITHUB_OUTPUT"
+
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Prepare bounded four-profile preservation verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_file="verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/laws-compass-cp5-single-active-label.mjs"
+          runtime_file="verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/cp5-r3-celestial-runtime.mjs"
+          cp "$source_file" "$runtime_file"
+          node <<'NODE'
+          const fs = require('node:fs');
+          const file = 'verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/cp5-r3-celestial-runtime.mjs';
+          let text = fs.readFileSync(file, 'utf8');
+          const productOld = 'const EXPECTED_PRODUCT_PATHS = Object.freeze([\n  "laws/index.interactions.js"\n]);';
+          const productNew = 'const EXPECTED_PRODUCT_PATHS = Object.freeze([\n  "laws/index.crystals.js"\n]);';
+          const protectedOld = 'const PROTECTED_PATHS = new Set([\n  "laws/index.crystals.js",';
+          const protectedNew = 'const PROTECTED_PATHS = new Set([\n  "laws/index.interactions.js",';
+          if (!text.includes(productOld)) throw new Error('PRODUCT_SCOPE_PATCH_ANCHOR_MISSING');
+          if (!text.includes(protectedOld)) throw new Error('PROTECTED_SCOPE_PATCH_ANCHOR_MISSING');
+          text = text.replace(productOld, productNew).replace(protectedOld, protectedNew);
+          fs.writeFileSync(file, text);
+          NODE
+          node --check "$runtime_file"
+
+      - name: Start exact-head local runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ steps.custody.outputs.head }}"
+          python3 -m http.server 4173 >/tmp/laws-cp5-r3-server.log 2>&1 &
+          echo $! >/tmp/laws-cp5-r3-server.pid
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/laws-cp5-r3-server.log
+          exit 1
+
+      - name: Execute four-profile preservation verification
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          LAWS_SIX_ORIGIN: http://127.0.0.1:4173
+          EXECUTION_BRANCH: agent/laws-cp5-r2-celestial-visual-correction-001
+          EXECUTION_COMMIT: ${{ steps.custody.outputs.head }}
+          BASELINE_COMMIT: 0ff5741803926a6c218415587955aa867f93a0f7
+        run: node verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/cp5-r3-celestial-runtime.mjs
+
+      - name: Validate exact-head receipt
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ steps.custody.outputs.head }}
+          EXPECTED_CRYSTAL: ${{ steps.custody.outputs.crystal_blob }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('laws-cp5-single-active-label-v1.json', 'utf8'));
+          if (receipt.execution?.commit !== process.env.EXPECTED_HEAD) throw new Error('EXACT_HEAD_MISMATCH');
+          if (receipt.pass !== true || !Array.isArray(receipt.failures) || receipt.failures.length) throw new Error('FOUR_PROFILE_RECEIPT_FAILED');
+          if (receipt.browserExecuted !== true) throw new Error('BROWSER_NOT_EXECUTED');
+          if (!Array.isArray(receipt.observations) || receipt.observations.length !== 4) throw new Error('PROFILE_COUNT_INVALID');
+          if (!Array.isArray(receipt.screenshotManifest) || receipt.screenshotManifest.length < 4) throw new Error('SCREENSHOTS_INCOMPLETE');
+          const output = {
+            checkpoint: 'LAWS_CHAMBER_CHECKPOINT_5',
+            phase: 'CP5_R3_EXACT_HEAD_ENGINEERING_VERIFICATION',
+            result: 'PASS_CANDIDATE',
+            candidateHead: process.env.EXPECTED_HEAD,
+            crystalBlob: process.env.EXPECTED_CRYSTAL,
+            interactionsBlob: 'be365cc331ee5643f916abee204d4f5f45376c04',
+            productChangedPaths: ['laws/index.crystals.js'],
+            profiles: receipt.observations.map(item => item.profile),
+            screenshotCount: receipt.screenshotManifest.length,
+            failures: receipt.failures,
+            physicalAcceptance: 'NOT_CLAIMED'
+          };
+          fs.writeFileSync('laws-cp5-r3-celestial-candidate-receipt.json', JSON.stringify(output, null, 2) + '\n');
+          NODE
+
+      - name: Upload candidate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp5-r3-celestial-${{ steps.custody.outputs.head }}
+          path: |
+            laws-cp5-single-active-label-v1.json
+            laws-cp5-r3-celestial-candidate-receipt.json
+            laws-cp5-single-active-label-v1-screenshots/**
+            /tmp/laws-cp5-r3-server.log
+          retention-days: 30

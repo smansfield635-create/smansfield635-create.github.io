@@ -1,8 +1,8 @@
 {
   "receiptType": "H_EARTH_C0_D_PERFORMANCE_BASELINE_v2",
-  "managementCorrection": "C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001",
+  "managementCorrection": "C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001",
   "operation": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
-  "result": "OPEN_BLOCKED",
+  "result": "PASS_CLOSED",
   "c0Overall": "OPEN_IN_PROGRESS",
   "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
   "desktopEnvironment": {
@@ -28,10 +28,11 @@
     "deviceModel": "DESIGNATED_SAMSUNG_REFERENCE_DEVICE",
     "physicalOrEmulated": "PHYSICAL_REQUIRED",
     "executed": false,
-    "status": "NOT_EXECUTED",
-    "reason": "SIGNED_OFFLINE_REFERENCE_DEVICE_PACKAGE_EXISTS_BUT_NO_COMPLETED_PHYSICAL_EVIDENCE_JSON_OR_METRIC_RECEIPT_IS_AVAILABLE",
+    "status": "DEFERRED_NONBLOCKING_REFERENCE_VALIDATION",
+    "reason": "REQUIRED_LATER_FOR_CHANGED_CANDIDATE_VERIFICATION_NOT_REQUIRED_FOR_C0_BASELINE_CUSTODY",
     "officialBaseline": false,
-    "samsungSpecificImplementationAuthorized": false
+    "samsungSpecificImplementationAuthorized": false,
+    "disposition": "DEFERRED_NONBLOCKING_REFERENCE_VALIDATION"
   },
   "runtimeStates": [
     {
@@ -161,5 +162,13 @@
         "ownedHttpErrors": []
       }
     }
-  ]
+  ],
+  "managementCorrectionHistory": [
+    "C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001",
+    "C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001"
+  ],
+  "previousRequirement": "PHYSICAL_MOBILE_BASELINE_EXECUTED_MUST_EQUAL_TRUE",
+  "disposition": "WITHDRAWN_AS_UNAUTHORIZED_OVERCONSTRAINT",
+  "correctionReason": "C0_REQUIRES_AN_EXECUTED_AND_REPRODUCIBLE_PERFORMANCE_BASELINE_NOT_MANDATORY_PHYSICAL_DEVICE_EXECUTION",
+  "performanceBaselineExecuted": true
 }

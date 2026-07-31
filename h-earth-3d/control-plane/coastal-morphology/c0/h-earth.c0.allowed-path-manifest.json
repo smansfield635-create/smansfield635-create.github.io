@@ -5,23 +5,23 @@
   "boundedExecutionBlocks": [
     {
       "id": "C0_A_PUBLIC_OCCURRENCE_AND_LINKAGE",
-      "status": "AUTHORIZED_IN_PROGRESS"
+      "status": "PASS_CLOSED"
     },
     {
       "id": "C0_B_REPOSITORY_SOURCE_AND_AUTHORITY_CUSTODY",
-      "status": "NOT_STARTED"
+      "status": "PASS_CLOSED"
     },
     {
       "id": "C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES",
-      "status": "NOT_STARTED"
+      "status": "PASS_CLOSED"
     },
     {
       "id": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
-      "status": "NOT_STARTED"
+      "status": "PASS_CLOSED"
     },
     {
       "id": "C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT",
-      "status": "NOT_STARTED"
+      "status": "PASS_CLOSED"
     }
   ],
   "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
@@ -80,5 +80,8 @@
   ],
   "productMutationExpected": false,
   "pathExpansionAuthorized": false,
-  "laterCheckpointsAuthorized": false
+  "laterCheckpointsAuthorized": false,
+  "currentBlock": "C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT",
+  "c0Overall": "PASS_CLOSED",
+  "repositoryRollbackBranch": "rollback/h-earth-c0-exact-live-coastal-baseline-freeze-001"
 }

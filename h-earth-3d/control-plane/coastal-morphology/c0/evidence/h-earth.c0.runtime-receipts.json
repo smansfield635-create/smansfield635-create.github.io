@@ -1,9 +1,9 @@
 {
   "receiptType": "H_EARTH_C0_D_RUNTIME_RECEIPTS_v2",
-  "managementCorrection": "C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001",
+  "managementCorrection": "C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001",
   "withdrawnRequirement": "DISTINCT_SCENE_CANVAS_HASH_COUNT_MUST_EQUAL_6",
   "operation": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
-  "result": "OPEN_BLOCKED",
+  "result": "PASS_CLOSED",
   "c0Overall": "OPEN_IN_PROGRESS",
   "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
   "captureObservability": "VERIFIED",
@@ -223,9 +223,20 @@
   "errorBaselineRecorded": true,
   "productMutation": false,
   "unauthorizedChangedPaths": 0,
-  "firstBlocker": "PHYSICAL_MOBILE_BASELINE_NOT_EXECUTED",
-  "nextAuthorizedC0Block": null,
-  "c0EAuthorized": false,
+  "firstBlocker": null,
+  "nextAuthorizedC0Block": "C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT",
+  "c0EAuthorized": true,
   "c1Authorized": false,
-  "phaseT": "INACCESSIBLE"
+  "phaseT": "INACCESSIBLE",
+  "managementCorrectionHistory": [
+    "C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001",
+    "C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001"
+  ],
+  "previousRequirement": "PHYSICAL_MOBILE_BASELINE_EXECUTED_MUST_EQUAL_TRUE",
+  "disposition": "WITHDRAWN_AS_UNAUTHORIZED_OVERCONSTRAINT",
+  "correctionReason": "C0_REQUIRES_AN_EXECUTED_AND_REPRODUCIBLE_PERFORMANCE_BASELINE_NOT_MANDATORY_PHYSICAL_DEVICE_EXECUTION",
+  "performanceBaselineExecuted": true,
+  "frameTimeBaselineRecorded": true,
+  "memoryBaselineRecordedOrExplicitlyUnavailable": true,
+  "physicalMobileDisposition": "DEFERRED_NONBLOCKING_REFERENCE_VALIDATION"
 }

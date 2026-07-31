@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Materialize, execute, and clean verified R1.7 files
+      - name: Materialize macro, execute exact verifier, and clean transport
         run: |
           set -euo pipefail
           branch="candidate/h-earth-c2-r1-r1-7-assembly-001"
@@ -32,9 +32,8 @@ jobs:
           verifier="h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7-bounded-terrain-macro-expression.mjs"
           evidence="h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence"
 
-          mkdir -p "$(dirname "$macro")" "$(dirname "$verifier")"
+          mkdir -p "$(dirname "$macro")"
           cat "$transport"/macro.part*.b64 | base64 -d > "$macro"
-          cat "$transport"/test.part*.b64 | base64 -d > "$verifier"
 
           macro_sha="$(sha256sum "$macro" | cut -d' ' -f1)"
           verifier_sha="$(sha256sum "$verifier" | cut -d' ' -f1)"
@@ -46,9 +45,9 @@ jobs:
           echo "VERIFIER_GIT_BLOB=$verifier_blob"
 
           test "$macro_sha" = "42afe39c516b9e2a72255f5155022ead63d43762a940e28ec77762f575cd174e"
-          test "$verifier_sha" = "fd3d33e17f5d721872214a0b26d3ac37cf83b54b2dd7e53180b622fca2728317"
+          test "$verifier_sha" = "48647ae1b21f617c4a643055ad1d12d9a618160372634487823c64651ddda442"
           test "$macro_blob" = "0b72bae9838deac81c90f2ca3368307622d44568"
-          test "$verifier_blob" = "e89bcae08fee0936e1e4e388044f901f6771e778"
+          test "$verifier_blob" = "d08940d0c97afe2a4f62ea509c3405907df3b441"
 
           node --check "$macro"
           node --check "$verifier"
@@ -63,7 +62,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$macro" "$verifier"
+          git add "$macro"
           git rm -r "$transport"
           git rm .github/workflows/h-earth-c2-r1-r1-7-materialize-assembly.yml
           git commit -m "R1.7 assembly: materialize and locally verify macro authority"

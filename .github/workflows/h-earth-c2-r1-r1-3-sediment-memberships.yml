@@ -1,15 +1,6 @@
 name: H-Earth C2-R1 R1.3 Sediment Memberships
 
 on:
-  pull_request:
-    branches:
-      - integration/h-earth-c2-r1-baseline-001
-    paths:
-      - 'h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/**'
-      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js'
-      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
-      - '.github/workflows/h-earth-c2-r1-r1-3-sediment-memberships.yml'
   workflow_dispatch:
 
 permissions:
@@ -17,13 +8,11 @@ permissions:
 
 jobs:
   verify-r1-3:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -32,7 +21,7 @@ jobs:
 
       - name: Execute continuous sediment-membership verification
         env:
-          C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          C2_R1_HEAD: ${{ github.sha }}
         run: |
           node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-3-sediment-memberships-corrected.mjs
 

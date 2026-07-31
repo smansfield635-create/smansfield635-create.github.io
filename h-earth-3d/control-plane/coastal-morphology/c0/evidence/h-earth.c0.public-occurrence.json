@@ -2,11 +2,11 @@
   "receiptType": "H_EARTH_C0_PUBLIC_OCCURRENCE_AND_LINKAGE_RECEIPT_v1",
   "operation": "C0_A_PUBLIC_OCCURRENCE_AND_LINKAGE",
   "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
-  "executedHead": "eb3f5bf1202e1dbcfa813d2abdaeda210f5db457",
+  "executedHead": "f5754a8ef5fd5accb8ff13bf7bc83dea0427e393",
   "publicOrigin": "https://diamondgatebridge.com",
   "publicRoute": "/showroom/globe/h-earth/",
   "publicOccurrenceCaptured": true,
-  "captureTimestamp": "2026-07-31T04:28:34.150Z",
+  "captureTimestamp": "2026-07-31T04:31:34.862Z",
   "routeCaptures": [
     {
       "requestedUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-1",
@@ -14,7 +14,7 @@
       "redirectChain": [],
       "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-1",
       "httpStatus": 200,
-      "responseTimestamp": "2026-07-31T04:28:20.554Z",
+      "responseTimestamp": "2026-07-31T04:31:20.947Z",
       "contentType": "text/html; charset=utf-8",
       "contentLengthHeader": null,
       "contentLength": 32796,
@@ -24,9 +24,9 @@
       "age": "0",
       "bodySha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
       "bodyFile": "../../../../../tmp/h-earth-c0-public-occurrence-bodies/route-1.html",
-      "repositoryPath": "showroom/globe/h-earth/",
-      "exactMainCounterpartSha256": "e814911e0e6984761d35fc82558381fa560d80c4a3d5907339cb5da476a1a0d2",
-      "matchClassification": "CONTENT_MISMATCH"
+      "repositoryPath": "showroom/globe/h-earth/index.html",
+      "exactMainCounterpartSha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "matchClassification": "EXACT_BYTE_MATCH"
     },
     {
       "requestedUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-2",
@@ -34,7 +34,7 @@
       "redirectChain": [],
       "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-2",
       "httpStatus": 200,
-      "responseTimestamp": "2026-07-31T04:28:20.766Z",
+      "responseTimestamp": "2026-07-31T04:31:21.393Z",
       "contentType": "text/html; charset=utf-8",
       "contentLengthHeader": null,
       "contentLength": 32796,
@@ -44,9 +44,9 @@
       "age": "0",
       "bodySha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
       "bodyFile": "../../../../../tmp/h-earth-c0-public-occurrence-bodies/route-2.html",
-      "repositoryPath": "showroom/globe/h-earth/",
-      "exactMainCounterpartSha256": "e814911e0e6984761d35fc82558381fa560d80c4a3d5907339cb5da476a1a0d2",
-      "matchClassification": "CONTENT_MISMATCH"
+      "repositoryPath": "showroom/globe/h-earth/index.html",
+      "exactMainCounterpartSha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "matchClassification": "EXACT_BYTE_MATCH"
     },
     {
       "requestedUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-3",
@@ -54,7 +54,7 @@
       "redirectChain": [],
       "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-3",
       "httpStatus": 200,
-      "responseTimestamp": "2026-07-31T04:28:20.797Z",
+      "responseTimestamp": "2026-07-31T04:31:21.578Z",
       "contentType": "text/html; charset=utf-8",
       "contentLengthHeader": null,
       "contentLength": 32796,
@@ -64,9 +64,9 @@
       "age": "0",
       "bodySha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
       "bodyFile": "../../../../../tmp/h-earth-c0-public-occurrence-bodies/route-3.html",
-      "repositoryPath": "showroom/globe/h-earth/",
-      "exactMainCounterpartSha256": "e814911e0e6984761d35fc82558381fa560d80c4a3d5907339cb5da476a1a0d2",
-      "matchClassification": "CONTENT_MISMATCH"
+      "repositoryPath": "showroom/globe/h-earth/index.html",
+      "exactMainCounterpartSha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "matchClassification": "EXACT_BYTE_MATCH"
     }
   ],
   "boundedRetrievalsDeterministic": true,
@@ -107,9 +107,9 @@
   },
   "exactMainCounterpartSha256s": {
     "PUBLIC_H_EARTH_HTML": [
-      "e814911e0e6984761d35fc82558381fa560d80c4a3d5907339cb5da476a1a0d2",
-      "e814911e0e6984761d35fc82558381fa560d80c4a3d5907339cb5da476a1a0d2",
-      "e814911e0e6984761d35fc82558381fa560d80c4a3d5907339cb5da476a1a0d2"
+      "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e"
     ],
     "PUBLIC_H_EARTH_CSS": [
       "ff03cb9944e498ffc2d8958780c6a7d43b1346f78a9fda73117b42645a21b7e0",
@@ -143,18 +143,18 @@
     "PUBLIC_H_EARTH_HTML": [
       {
         "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-1",
-        "repositoryPath": "showroom/globe/h-earth/",
-        "classification": "CONTENT_MISMATCH"
+        "repositoryPath": "showroom/globe/h-earth/index.html",
+        "classification": "EXACT_BYTE_MATCH"
       },
       {
         "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-2",
-        "repositoryPath": "showroom/globe/h-earth/",
-        "classification": "CONTENT_MISMATCH"
+        "repositoryPath": "showroom/globe/h-earth/index.html",
+        "classification": "EXACT_BYTE_MATCH"
       },
       {
         "url": "https://diamondgatebridge.com/showroom/globe/h-earth/?c0=59df682501f63aec8a263cef8e1a5adacbc2a1a2-3",
-        "repositoryPath": "showroom/globe/h-earth/",
-        "classification": "CONTENT_MISMATCH"
+        "repositoryPath": "showroom/globe/h-earth/index.html",
+        "classification": "EXACT_BYTE_MATCH"
       }
     ],
     "PUBLIC_H_EARTH_CSS": [
@@ -254,9 +254,9 @@
     ]
   },
   "missingCriticalClasses": [],
-  "sourceOccurrenceLinkage": "LIVE_SOURCE_DIVERGENCE",
+  "sourceOccurrenceLinkage": "VERIFIED_BY_CONTENT_IDENTITY",
   "repositoryRollbackTarget": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
-  "publicOccurrenceRollbackTarget": "UNRESOLVED_PENDING_CONTENT_HISTORY_RECONCILIATION",
+  "publicOccurrenceRollbackTarget": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
   "staleCrawlerRecordAuthority": false,
   "pagesSettingsAvailable": false,
   "pagesSettingsLimitation": "ADMINISTRATIVE_DEPLOYMENT_METADATA_NOT_REQUIRED_FOR_CONTENT_IDENTITY_LINKAGE",
@@ -270,5 +270,5 @@
   },
   "productMutation": false,
   "c1DiagnosisAuthorized": false,
-  "nextC0Step": "C0_A_CONTENT_HISTORY_RECONCILIATION_THEN_C0_B"
+  "nextC0Step": "C0_B_REPOSITORY_SOURCE_AND_AUTHORITY_CUSTODY"
 }

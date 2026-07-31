@@ -1,0 +1,43 @@
+name: Laws CP5 R4 Public Deployment Verification
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.head_ref == 'verification/laws-cp5-r4-public-deployment-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: b7bd810a359af9d939b91dbac5b9794ce7da5d1e
+          fetch-depth: 0
+      - name: Verify merged source and public serving
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "b7bd810a359af9d939b91dbac5b9794ce7da5d1e"
+          test "$(git hash-object laws/index.crystals.js)" = "8133609c21f43a5910ec7a247d50310390152cbb"
+          mkdir -p public-evidence
+          passed=false
+          for attempt in $(seq 1 18); do
+            if curl -fsSL --connect-timeout 10 --max-time 30 -H 'Cache-Control: no-cache' 'https://diamondgatebridge.com/laws/?cp5=b7bd810a359af9d939b91dbac5b9794ce7da5d1e' -o public-evidence/laws.html && curl -fsSL --connect-timeout 10 --max-time 30 -H 'Cache-Control: no-cache' 'https://diamondgatebridge.com/laws/index.crystals.js?v=8133609c21f43a5910ec7a247d50310390152cbb' -o public-evidence/index.crystals.js; then
+              count="$(grep -Fo '8133609c21f43a5910ec7a247d50310390152cbb' public-evidence/laws.html | wc -l | tr -d ' ')"
+              blob="$(git hash-object public-evidence/index.crystals.js)"
+              if test "$count" = "2" && test "$blob" = "8133609c21f43a5910ec7a247d50310390152cbb"; then
+                passed=true
+                break
+              fi
+            fi
+            sleep 10
+          done
+          test "$passed" = "true"
+          printf '{"result":"PASS_PUBLIC_SERVING_CONFIRMED","main":"b7bd810a359af9d939b91dbac5b9794ce7da5d1e","crystalBlob":"8133609c21f43a5910ec7a247d50310390152cbb","physicalAcceptance":"NOT_CLAIMED"}\n' > public-evidence/receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp5-r4-public-deployment
+          path: public-evidence/**
+          retention-days: 30

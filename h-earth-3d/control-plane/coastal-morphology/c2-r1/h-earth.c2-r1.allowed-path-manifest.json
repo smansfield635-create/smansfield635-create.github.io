@@ -1,0 +1,34 @@
+{
+  "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
+  "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "allowedPathPrefixes": [
+    "preview/h-earth/c2-r1/physically-coherent-coastal-successor-001/",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/"
+  ],
+  "allowedExactPaths": [
+    ".github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml"
+  ],
+  "protectedPathPrefixes": [
+    "showroom/globe/h-earth/",
+    "h-earth-3d/terrain/",
+    "h-earth-3d/environment/",
+    "h-earth-3d/integration/"
+  ],
+  "protectedAuthorities": [
+    "CAMERA",
+    "NAVIGATION",
+    "TRAVERSAL",
+    "TOUCH_AND_POINTER_INPUT",
+    "PUBLIC_RENDERER_LIFECYCLE",
+    "PUBLIC_GPU_PRESENTATION",
+    "MANOR_PLACEMENT",
+    "CAVERN_PLACEMENT",
+    "UNRELATED_ACCEPTED_PLACEMENTS",
+    "NONCOASTAL_WORLD_GEOMETRY",
+    "PUBLIC_DEFAULT_ROUTE"
+  ],
+  "candidateMayImportProtectedSourcesWithoutMutation": true,
+  "productDefaultMutationAllowed": false,
+  "failedC2CandidateImportAllowed": false,
+  "failedC2CandidateCopyAllowed": false
+}

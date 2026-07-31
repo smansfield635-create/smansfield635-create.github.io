@@ -27,7 +27,7 @@ function at(x,d){const f=frame(x);return sample(f.x-f.nx*d,f.z-f.nz*d)}
 function svg(name,title,body,w=1200,h=520){fs.writeFileSync(path.join(OUT,name),`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="100%" height="100%" fill="white"/><text x="24" y="30" font-family="sans-serif" font-size="18">${title}</text>${body}</svg>\n`)}
 
 const rows=[],issues=[],counts=Object.fromEntries(CLASSES.map(k=>[k,0])),pairs=CLASSES.slice(0,-1).map((k,i)=>[k,CLASSES[i+1]]),widths=Object.fromEntries(pairs.map(([a,b])=>[`${a}|${b}`,[]]));
-let maxNorm=0,minW=1,maxW=0,maxCross=0,maxAlong=0,maxColor=0,maxDominant=0,minDominant=1,sampleCount=0,previous=null;
+let maxNorm=0,minW=1,maxW=0,maxCross=0,maxAlong=0,maxColor=0,maxDominant=0,minDominant=1,sampleCount=0;
 for(let xi=0;xi<25;xi++){
  const x=-184+368*xi/24,samples=[];let prev=null;
  for(let d=-120;d<=120;d++){
@@ -35,13 +35,16 @@ for(let xi=0;xi<25;xi++){
   if(s.valid!==true){issues.push(`INVALID:${xi}:${d}`);continue}
   const ws=CLASSES.map(k=>s.weights[k]); ws.forEach(w=>{if(!finite(w))issues.push(`NONFINITE:${xi}:${d}`);if(w<0||w>1)issues.push(`RANGE:${xi}:${d}`)});
   maxNorm=Math.max(maxNorm,Math.abs(sum(ws)-1));minW=Math.min(minW,...ws);maxW=Math.max(maxW,...ws);counts[s.dominantClass]++;
-  const dom=Math.max(...ws);maxDominant=Math.max(maxDominant,dom);minDominant=Math.min(minDominant,dom);
-  if(s.material.luminous===true)issues.push(`LUMINOUS:${xi}:${d}`);
-  if(prev){maxCross=Math.max(maxCross,l1(prev.weights,s.weights));maxColor=Math.max(maxColor,cdist(prev.material.colorLinear,s.material.colorLinear))} prev=s;
+ const dom=Math.max(...ws);maxDominant=Math.max(maxDominant,dom);minDominant=Math.min(minDominant,dom);
+ if(s.material.luminous===true+issues.push(`LUMINOUS:${xi}:${d}`);
+ if(prev){maxCross=Math.max(maxCross,l1(prev.weights,s.weights));maxColor=Math.max(maxColor,cdist(prev.material.colorLinear,s.material.colorLinear))} prev=s;
  }
  for(const [a,b] of pairs){const ds=samples.filter(({s})=>s.valid&&s.weights[a]>=.08&&s.weights[b]>=.08).map(e=>e.d);widths[`${a}|${b}`].push(ds.length>1?ds.at(-1)-ds[0]:0)}
- if(previous)for(let i=0;i<samples.length;i++){const a=previous[i].s,b=samples[i].s;if(a.valid&&b.valid)maxAlong=Math.max(maxAlong,l1(a.weights,b.weights))}
- rows.push({x,samples});previous=samples;
+ rows.push({x,samples});
+}
+for(const d of [-108,-82,-56,-30,-12,0,18,42,72,104]){
+ let prev=null;
+ for(let x=-184;x<=184;x+=1){const s=at(x,d);if(s.valid&&prev?.valid)maxAlong=Math.max(maxAlong,l1(prev.weights,s.weights));prev=s}
 }
 const overlap=Object.fromEntries(Object.entries(widths).map(([k,v])=>[k,{minimum:Math.min(...v),maximum:Math.max(...v),range:Math.max(...v)-Math.min(...v)}]));
 const minOverlap=Math.min(...Object.values(overlap).map(v=>v.minimum));

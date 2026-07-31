@@ -1,7 +1,7 @@
 {
   "receiptType": "H_EARTH_C2_R1_R1_3_LOCAL_DEVELOPMENT_RECEIPT_v1",
   "operation": "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS",
-  "status": "LOCAL_DEVELOPMENT_PASS_CURRENT_HEAD_WORKFLOWS_REQUIRED",
+  "status": "FIRST_CURRENT_HEAD_FAILURE_DIAGNOSED_CORRECTION_READY",
   "startingHead": "459cde065f461d0b4a8e53b1dc054059aa6abd20",
   "rollbackBranch": "rollback/h-earth-c2-r1-r1-2-closed-001",
   "sourceInputs": {
@@ -12,8 +12,8 @@
     "lightingImmutable": true
   },
   "implementation": {
-    "sedimentMembershipSourceSha256": "39bb972a013d0bcc3cb832143a3dec88dd9d363f75675a35ff8044b26fd0e87a",
-    "verificationSourceSha256": "68f19e1b1bd382778b5420c1302b9cd052f5a2af0d00597b8e22cb9d1abd999b",
+    "sedimentMembershipSourceSha256": "7e3737b97b4347765c96deb06102e4be51e03b1b7c1533940f292f3141f74623",
+    "verificationSourceSha256": "cfab9bc3a4e5624ea74982fee056208ce0b5d71ef478f8d097e02864189abfce",
     "requiredClassCount": 6,
     "multifactorInputCount": 6,
     "singleDistanceExclusiveClassification": false,
@@ -53,5 +53,20 @@
   "publicRouteMutated": false,
   "visualSuccessorStatus": "NOT_ESTABLISHED",
   "userDifferentialReady": false,
-  "nextCheckpointBeforeRemotePass": "R1.3_REMAINS_OPEN"
+  "nextCheckpointBeforeRemotePass": "R1.3_REMAINS_OPEN",
+  "firstCurrentHeadFailure": {
+    "executionHead": "0a2443b1110851af5b0a28ff95c9bdb1d9f7b8ef",
+    "workflowRunId": 30649436376,
+    "firstBlocker": "crossShoreContinuity",
+    "maximumCrossShoreMembershipDelta": 0.43542285436100997,
+    "maximumAlongshoreMembershipDelta": 0.5692917116516295,
+    "diagnosis": [
+      "RAW_CURVATURE_AND_MOISTURE_FACTOR_RESPONSE_REQUIRED_BOUNDED_SPATIAL_MIXING",
+      "ALONGSHORE_GAUGE_USED_15_33_WORLD_UNIT_TRANSECT_SPACING_INSTEAD_OF_LOCAL_ADJACENCY"
+    ],
+    "correction": [
+      "BOUNDED_COASTAL_FRAME_WEIGHTED_MEMBERSHIP_KERNEL",
+      "ONE_WORLD_UNIT_ALONGSHORE_CONTINUITY_GAUGE"
+    ]
+  }
 }

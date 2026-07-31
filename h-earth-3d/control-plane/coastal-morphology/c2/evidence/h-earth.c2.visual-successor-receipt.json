@@ -1,7 +1,7 @@
 {
   "receiptType": "H_EARTH_C2_BOUNDED_COASTAL_VISUAL_SUCCESSOR_v1",
   "operation": "C2_BOUNDED_COASTAL_AND_TERRAIN_VISUAL_SUCCESSOR",
-  "result": "IN_PROGRESS",
+  "result": "HARD_BLOCKED",
   "branch": "agent/h-earth-c2-bounded-coastal-visual-successor-001",
   "baseHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "visibleBeachCreated": false,
@@ -12,14 +12,15 @@
   "oceanMotionPresent": false,
   "swashOrFoamPresent": false,
   "macroTerrainDefinitionPresent": false,
-  "cameraWorks": null,
-  "traversalWorks": null,
-  "inputWorks": null,
-  "gpuPresentationWorks": null,
+  "cameraWorks": false,
+  "traversalWorks": false,
+  "inputWorks": false,
+  "gpuPresentationWorks": false,
   "criticalErrorCount": null,
   "performanceUsable": null,
   "liveCandidateUrl": null,
   "productDefaultMutated": false,
   "firstBlocker": null,
-  "userDifferentialReady": false
+  "userDifferentialReady": false,
+  "candidateHead": null
 }

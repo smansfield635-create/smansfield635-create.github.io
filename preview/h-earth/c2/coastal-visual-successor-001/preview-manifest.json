@@ -26,5 +26,7 @@
     "OCEAN_SURFACE_MOTION",
     "BOUNDED_MACRO_TERRAIN_EXPRESSION"
   ],
-  "status": "BUILDING"
+  "status": "HARD_BLOCKED",
+  "candidateHead": null,
+  "functionalVerification": "NOT_EXECUTED"
 }

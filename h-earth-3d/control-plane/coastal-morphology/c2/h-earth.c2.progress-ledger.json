@@ -6,16 +6,41 @@
   "rollbackHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "publicDefaultMutation": false,
   "passes": {
-    "C2.0": {"status": "PASS_CLOSED", "result": "ISOLATED_BRANCH_AND_ROLLBACK_ANCHORED"},
-    "C2.1": {"status": "IN_PROGRESS"},
-    "C2.2": {"status": "NOT_STARTED"},
-    "C2.3": {"status": "NOT_STARTED"},
-    "C2.4": {"status": "NOT_STARTED"},
-    "C2.5": {"status": "NOT_STARTED"},
-    "C2.6": {"status": "NOT_STARTED"},
-    "C2.7": {"status": "NOT_STARTED"}
+    "C2.0": {
+      "status": "PASS_CLOSED",
+      "result": "ISOLATED_BRANCH_AND_ROLLBACK_ANCHORED"
+    },
+    "C2.1": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.2": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.3": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.4": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.5": {
+      "status": "PASS_CLOSED",
+      "result": "CANDIDATE_FEATURE_IMPLEMENTED"
+    },
+    "C2.6": {
+      "status": "HARD_BLOCKED",
+      "result": "NOT_EXECUTED"
+    },
+    "C2.7": {
+      "status": "NOT_AUTHORIZED"
+    }
   },
-  "hardBlockers": [],
+  "hardBlockers": [
+    null
+  ],
   "nonblockingDevelopmentConditions": [],
   "candidateUrl": null,
   "userDifferentialReady": false

@@ -30,6 +30,36 @@ jobs:
           ref: agent/laws-cp5-final-celestial-naturalization-001
           fetch-depth: 0
 
+      - name: Apply single harness splice correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('verification/laws-cp5-final-celestial-naturalization.py')
+          text = path.read_text()
+          old = '    lunar_else_start = text.index("      } else {", solar_mode_start)'
+          new = r'    lunar_else_start = text.index("\n      } else {", solar_mode_start) + 1'
+          if old in text:
+              text = text.replace(old, new, 1)
+          elif new not in text:
+              raise SystemExit('LUNAR_SPLICE_TARGET_NOT_FOUND')
+          old_commit = '    run("git", "commit", "-m", "Naturalize final Laws Sun and Moon expression")'
+          new_commit = '    run("git", "commit", "-m", "Naturalize final Laws Sun and Moon expression [skip ci]")'
+          if old_commit in text:
+              text = text.replace(old_commit, new_commit, 1)
+          elif new_commit not in text:
+              raise SystemExit('PRODUCT_COMMIT_TARGET_NOT_FOUND')
+          path.write_text(text)
+          PY
+          if ! git diff --quiet -- verification/laws-cp5-final-celestial-naturalization.py; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add verification/laws-cp5-final-celestial-naturalization.py
+            git commit -m 'Correct CP5 final splice boundary [skip ci]'
+            git push origin HEAD:agent/laws-cp5-final-celestial-naturalization-001
+          fi
+
       - uses: browser-actions/setup-chrome@v1
         id: chrome
         with:

@@ -1,0 +1,60 @@
+name: Laws CP5 HTML Cache Token
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/laws-cp5-html-cache-token.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-cache-token:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Update Laws crystal cache token and remove helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+
+          path = Path('laws/index.html')
+          text = path.read_text()
+          blob = '43bb3659e24094074b72a45a1990bc66bd79e2be'
+
+          replacements = {
+              'data-laws-crystals="/laws/index.crystals.js"':
+                  f'data-laws-crystals="/laws/index.crystals.js?v={blob}"',
+              '/laws/index.crystals.js?v=LAWS_CELESTIAL_GATEWAY_AUXILIARY_CLUSTERS_20260729A':
+                  f'/laws/index.crystals.js?v={blob}',
+          }
+
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'CACHE_TOKEN_GUARD_FAILED:{old}:{count}')
+              text = text.replace(old, new, 1)
+
+          path.write_text(text)
+          PY
+
+          grep -nF 'data-laws-crystals="/laws/index.crystals.js?v=43bb3659e24094074b72a45a1990bc66bd79e2be"' laws/index.html
+          grep -nF 'src:' laws/index.html >/dev/null
+          grep -nF '/laws/index.crystals.js?v=43bb3659e24094074b72a45a1990bc66bd79e2be' laws/index.html
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.html
+          git commit -m "Checkpoint 5: refresh Laws crystal cache token"
+          git rm .github/workflows/laws-cp5-html-cache-token.yml
+          git commit -m "Checkpoint 5: remove cache-token helper"
+          git push origin HEAD:main

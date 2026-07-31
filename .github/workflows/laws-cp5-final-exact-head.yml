@@ -35,7 +35,7 @@ jobs:
           path: candidate
           fetch-depth: 0
 
-      - name: Prepare exact-head verifier without candidate mutation
+      - name: Prepare corrected exact-head verifier without candidate mutation
         shell: bash
         run: |
           set -euo pipefail
@@ -58,7 +58,7 @@ jobs:
           ]
           for old, new in replacements:
               if old not in text:
-                  raise SystemExit(f'PATCH_TARGET_NOT_FOUND:{old[:80]}')
+                  raise SystemExit(f'PATCH_TARGET_NOT_FOUND:{old[:100]}')
               text = text.replace(old, new, 1)
 
           expected_old = '''    expected = sorted([
@@ -83,27 +83,121 @@ jobs:
               raise SystemExit('EXACT_IDENTITY_PATCH_TARGET_NOT_FOUND')
           text = text.replace(identity_old, identity_new, 1)
 
-          visible_old = '''    await setPrimary(page,'test');
+          crop_old = '''async function cropAuthority(page,id,file,size=280){
+            const box=await authorityBox(page,id);
+            const clip=clipFromBox(box,page.viewport(),size);
+            await page.screenshot({path:path.join(SHOTS,file),clip});
+            return {box,clip};
+          }
+          '''
+          crop_new = '''function cropViewportBuffer(buffer,clip){
+            const source=PNG.sync.read(buffer);
+            const x=Math.max(0,Math.min(source.width-1,Math.round(clip.x)));
+            const y=Math.max(0,Math.min(source.height-1,Math.round(clip.y)));
+            const width=Math.max(1,Math.min(source.width-x,Math.round(clip.width)));
+            const height=Math.max(1,Math.min(source.height-y,Math.round(clip.height)));
+            const cropped=new PNG({width,height});
+            PNG.bitblt(source,cropped,x,y,width,height,0,0);
+            return PNG.sync.write(cropped);
+          }
+
+          async function captureAuthorityBuffer(page,id,size=280){
+            const box=await authorityBox(page,id);
+            const clip=clipFromBox(box,page.viewport(),size);
+            const viewportBuffer=await page.screenshot({fullPage:false,captureBeyondViewport:false});
+            return {box,clip,buffer:cropViewportBuffer(viewportBuffer,clip)};
+          }
+
+          async function cropAuthority(page,id,file,size=280){
+            const capture=await captureAuthorityBuffer(page,id,size);
+            fs.writeFileSync(path.join(SHOTS,file),capture.buffer);
+            return {box:capture.box,clip:capture.clip};
+          }
+
+          async function waitForAuthorityGeometryStable(page,id){
+            const samples=[];
+            let stableIntervals=0;
+            let prior=null;
+            for(let attempt=0;attempt<60;attempt+=1){
+              const sample=await page.evaluate(authorityId=>{
+                const element=document.querySelector(`[data-laws-category][data-direction="${authorityId}"]`);
+                const rect=element?.getBoundingClientRect?.();
+                return rect?{
+                  documentX:rect.left+scrollX,
+                  documentY:rect.top+scrollY,
+                  width:rect.width,
+                  height:rect.height,
+                  scrollY,
+                  scrollHeight:document.documentElement.scrollHeight,
+                  clientHeight:document.documentElement.clientHeight
+                }:null;
+              },id);
+              samples.push(sample);
+              if(sample&&prior){
+                const delta=Math.hypot(sample.documentX-prior.documentX,sample.documentY-prior.documentY);
+                stableIntervals=delta<=0.75?stableIntervals+1:0;
+                if(stableIntervals>=3)return {stable:true,samples:samples.slice(-8)};
+              }
+              prior=sample;
+              await sleep(120);
+            }
+            return {stable:false,samples:samples.slice(-12)};
+          }
+
+          async function settleAuthorityInViewport(page,id){
+            for(let attempt=0;attempt<3;attempt+=1){
+              await page.evaluate(authorityId=>{
+                document.documentElement.style.setProperty('scroll-behavior','auto','important');
+                document.body?.style.setProperty('scroll-behavior','auto','important');
+                const element=document.querySelector(`[data-laws-category][data-direction="${authorityId}"]`);
+                const rect=element?.getBoundingClientRect?.();
+                if(!rect)return;
+                const documentTop=rect.top+scrollY;
+                const maxScroll=Math.max(0,document.documentElement.scrollHeight-innerHeight);
+                const target=Math.max(0,Math.min(maxScroll,documentTop-(innerHeight-rect.height)/2));
+                scrollTo(0,target);
+              },id);
+              await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+              await sleep(120);
+            }
+            return page.evaluate(authorityId=>{
+              const element=document.querySelector(`[data-laws-category][data-direction="${authorityId}"]`);
+              const rect=element?.getBoundingClientRect?.();
+              return {
+                scrollY,
+                scrollHeight:document.documentElement.scrollHeight,
+                clientHeight:document.documentElement.clientHeight,
+                innerHeight,
+                scrollWidth:document.documentElement.scrollWidth,
+                clientWidth:document.documentElement.clientWidth,
+                box:rect?{x:rect.left,y:rect.top,width:rect.width,height:rect.height}:null
+              };
+            },id);
+          }
+          '''
+          if crop_old not in text:
+              raise SystemExit('VIEWPORT_CAPTURE_PATCH_TARGET_NOT_FOUND')
+          text = text.replace(crop_old, crop_new, 1)
+
+          sun_old = '''    await setPrimary(page,'test');
               await page.screenshot({path:path.join(SHOTS,`${profile.id.toLowerCase()}-test-primary.png`),fullPage:false});
               await cropAuthority(page,'test',`${profile.id.toLowerCase()}-sun-crop.png`);
           '''
-          visible_new = '''    await setPrimary(page,'test');
-              const settledScrollY=await page.evaluate(()=>{
-                const target=document.querySelector('[data-laws-category][data-direction="test"]');
-                target?.scrollIntoView({block:'center',inline:'center',behavior:'instant'});
-                return scrollY;
-              });
-              await sleep(500);
+          sun_new = '''    await setPrimary(page,'test');
+              const sunGeometry=await waitForAuthorityGeometryStable(page,'test');
+              assert(sunGeometry.stable,'SUN_AUTHORITY_GEOMETRY_NOT_SETTLED',profile.id,sunGeometry);
+              const sunSettlement=await settleAuthorityInViewport(page,'test');
+              const settledScrollY=sunSettlement.scrollY;
               const testBox=await authorityBox(page,'test');
               const testViewport=page.viewport();
               const testVisible=Boolean(testBox&&testBox.width>0&&testBox.height>0&&testBox.x+testBox.width>0&&testBox.y+testBox.height>0&&testBox.x<testViewport.width&&testBox.y<testViewport.height);
-              assert(testVisible,'SUN_NOT_VISIBLE_AT_ORDINARY_SCALE',profile.id,{testBox,testViewport});
-              await page.screenshot({path:path.join(SHOTS,`${profile.id.toLowerCase()}-test-primary.png`),fullPage:false});
+              assert(testVisible,'SUN_NOT_VISIBLE_AT_ORDINARY_SCALE',profile.id,{testBox,testViewport,sunSettlement});
+              await page.screenshot({path:path.join(SHOTS,`${profile.id.toLowerCase()}-test-primary.png`),fullPage:false,captureBeyondViewport:false});
               await cropAuthority(page,'test',`${profile.id.toLowerCase()}-sun-crop.png`);
           '''
-          if visible_old not in text:
-              raise SystemExit('SOLAR_VISIBILITY_PATCH_TARGET_NOT_FOUND')
-          text = text.replace(visible_old, visible_new, 1)
+          if sun_old not in text:
+              raise SystemExit('SOLAR_SETTLEMENT_PATCH_TARGET_NOT_FOUND')
+          text = text.replace(sun_old, sun_new, 1)
 
           arrays_old = '''      const buffers=[];
                 const centers=[];
@@ -112,23 +206,36 @@ jobs:
           arrays_new = '''      const buffers=[];
                 const centers=[];
                 const scrollPositions=[];
+                const scrollDimensions=[];
                 const frames=[];
           '''
           if arrays_old not in text:
               raise SystemExit('MOTION_ARRAY_PATCH_TARGET_NOT_FOUND')
           text = text.replace(arrays_old, arrays_new, 1)
 
-          sample_old = '''        buffers.push(buffer);
+          sample_old = '''        const box=await authorityBox(page,'test');
+                  const clip=clipFromBox(box,page.viewport(),280);
+                  const buffer=await page.screenshot({clip});
+                  fs.writeFileSync(path.join(SHOTS,`${profile.id.toLowerCase()}-sun-motion-${String(frame).padStart(2,'0')}.png`),buffer);
+                  buffers.push(buffer);
                   centers.push(box?{x:box.x+box.width/2,y:box.y+box.height/2}:null);
                   frames.push({frame,elapsedMs:frame*700});
           '''
-          sample_new = '''        buffers.push(buffer);
-                  centers.push(box?{x:box.x+box.width/2,y:box.y+box.height/2}:null);
+          sample_new = '''        const capture=await captureAuthorityBuffer(page,'test',280);
+                  fs.writeFileSync(path.join(SHOTS,`${profile.id.toLowerCase()}-sun-motion-${String(frame).padStart(2,'0')}.png`),capture.buffer);
+                  buffers.push(capture.buffer);
+                  centers.push(capture.box?{x:capture.box.x+capture.box.width/2,y:capture.box.y+capture.box.height/2}:null);
                   scrollPositions.push(await page.evaluate(()=>scrollY));
+                  scrollDimensions.push(await page.evaluate(()=>({
+                    scrollHeight:document.documentElement.scrollHeight,
+                    clientHeight:document.documentElement.clientHeight,
+                    scrollWidth:document.documentElement.scrollWidth,
+                    clientWidth:document.documentElement.clientWidth
+                  })));
                   frames.push({frame,elapsedMs:frame*700});
           '''
           if sample_old not in text:
-              raise SystemExit('MOTION_SAMPLE_PATCH_TARGET_NOT_FOUND')
+              raise SystemExit('MOTION_CAPTURE_PATCH_TARGET_NOT_FOUND')
           text = text.replace(sample_old, sample_new, 1)
 
           assertion_old = '''      const validCenters=centers.filter(Boolean);
@@ -142,9 +249,10 @@ jobs:
                 const pageScrollDrift=scrollPositions.length?Math.max(...scrollPositions.map(value=>Math.abs(value-settledScrollY))):null;
                 const viewport=page.viewport();
                 const targetVisible=centers.every(center=>center&&center.x>=0&&center.x<=viewport.width&&center.y>=0&&center.y<=viewport.height);
-                motionEvidence.push({profile:profile.id,frames,deltas,meanMotion,centers,centerDrift,scrollPositions,pageScrollDrift,settledCamera:true,sharedCompassRepositioningAllowed:true,sourceLocalRigidSpinDisabled:true});
+                motionEvidence.push({profile:profile.id,frames,deltas,meanMotion,centers,centerDrift,scrollPositions,scrollDimensions,pageScrollDrift,sunGeometry,sunSettlement,settledCamera:true,sourceLocalRigidSpinDisabled:true});
                 assert(meanMotion>0.45,'SOLAR_INTERNAL_EVOLUTION_NOT_MEASURABLE',profile.id,{deltas,meanMotion});
-                assert(Number.isFinite(pageScrollDrift)&&pageScrollDrift<=1.0,'SETTLED_PAGE_SCROLL_DRIFT_EXCESSIVE',profile.id,{settledScrollY,scrollPositions,pageScrollDrift});
+                assert(Number.isFinite(centerDrift)&&centerDrift<=4.0,'SOLAR_SETTLED_VIEW_DRIFT_EXCESSIVE',profile.id,{centerDrift,centers});
+                assert(Number.isFinite(pageScrollDrift)&&pageScrollDrift<=1.0,'SETTLED_PAGE_SCROLL_DRIFT_EXCESSIVE',profile.id,{settledScrollY,scrollPositions,scrollDimensions,pageScrollDrift});
                 assert(targetVisible,'SOLAR_TARGET_NOT_VISIBLE_DURING_MOTION',profile.id,{centers,viewport});
           '''
           if assertion_old not in text:
@@ -153,16 +261,24 @@ jobs:
 
           moon_old = '''    await setPrimary(page,'research');
               await page.screenshot({path:path.join(SHOTS,`${profile.id.toLowerCase()}-research-primary.png`),fullPage:false});
+              await cropAuthority(page,'research',`${profile.id.toLowerCase()}-moon-crop.png`);
+              await cropAuthority(page,'test',`${profile.id.toLowerCase()}-sun-nonprimary.png`);
           '''
           moon_new = '''    await setPrimary(page,'research');
+              const moonGeometry=await waitForAuthorityGeometryStable(page,'research');
+              assert(moonGeometry.stable,'MOON_AUTHORITY_GEOMETRY_NOT_SETTLED',profile.id,moonGeometry);
+              const moonSettlement=await settleAuthorityInViewport(page,'research');
               const moonBox=await authorityBox(page,'research');
               const moonViewport=page.viewport();
               const moonVisible=Boolean(moonBox&&moonBox.width>0&&moonBox.height>0&&moonBox.x+moonBox.width>0&&moonBox.y+moonBox.height>0&&moonBox.x<moonViewport.width&&moonBox.y<moonViewport.height);
-              assert(moonVisible,'MOON_NOT_VISIBLE_AT_ORDINARY_SCALE',profile.id,{moonBox,moonViewport});
-              await page.screenshot({path:path.join(SHOTS,`${profile.id.toLowerCase()}-research-primary.png`),fullPage:false});
+              assert(moonVisible,'MOON_NOT_VISIBLE_AT_ORDINARY_SCALE',profile.id,{moonBox,moonViewport,moonSettlement});
+              await page.screenshot({path:path.join(SHOTS,`${profile.id.toLowerCase()}-research-primary.png`),fullPage:false,captureBeyondViewport:false});
+              await cropAuthority(page,'research',`${profile.id.toLowerCase()}-moon-crop.png`);
+              await settleAuthorityInViewport(page,'test');
+              await cropAuthority(page,'test',`${profile.id.toLowerCase()}-sun-nonprimary.png`);
           '''
           if moon_old not in text:
-              raise SystemExit('LUNAR_VISIBILITY_PATCH_TARGET_NOT_FOUND')
+              raise SystemExit('LUNAR_SETTLEMENT_PATCH_TARGET_NOT_FOUND')
           text = text.replace(moon_old, moon_new, 1)
 
           path.write_text(text)

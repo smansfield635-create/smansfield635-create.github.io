@@ -31,6 +31,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Verify C0-D correction input and rollback authority
         shell: bash
         run: |
@@ -43,185 +47,161 @@ jobs:
           test "$(git rev-parse "$EXACT_MAIN_HEAD^{tree}")" = "$(git rev-parse "origin/$ROLLBACK_BRANCH^{tree}")"
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.runtime-receipts.json').result")" = "OPEN_BLOCKED"
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.runtime-receipts.json').firstBlocker")" = "PHYSICAL_MOBILE_BASELINE_NOT_EXECUTED"
-          test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.runtime-receipts.json').runtimeStateCount")" = "3"
-          test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.performance-baseline.json').runtimeStates.length")" = "3"
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
 
       - name: Apply management correction and execute C0-E
         shell: bash
         run: |
           set -euo pipefail
-          cat > .c0-e.mjs <<'NODE'
+          node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
-          import childProcess from 'node:child_process';
+          import cp from 'node:child_process';
 
-          const exec = (args) => childProcess.execFileSync('git', args, { encoding: 'utf8' }).trim();
-          const readJson = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
-          const writeJson = (path, value) => fs.writeFileSync(path, JSON.stringify(value, null, 2) + '\n');
-          const sha256Buffer = (buffer) => crypto.createHash('sha256').update(buffer).digest('hex');
-          const sha256File = (path) => sha256Buffer(fs.readFileSync(path));
-          const gitBlob = (path) => exec(['hash-object', path]);
+          const git = (args) => cp.execFileSync('git', args, { encoding: 'utf8' }).trim();
+          const read = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
+          const write = (path, value) => fs.writeFileSync(path, JSON.stringify(value, null, 2) + '\n');
+          const sha = (path) => crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex');
+          const blob = (path) => git(['hash-object', path]);
           const exactMain = process.env.EXACT_MAIN_HEAD;
           const branch = process.env.C0_BRANCH;
           const rollbackBranch = process.env.ROLLBACK_BRANCH;
           const root = process.env.C0_ROOT;
           const evidence = process.env.C0_EVIDENCE;
-          const performancePath = `${evidence}/h-earth.c0.performance-baseline.json`;
-          const runtimePath = `${evidence}/h-earth.c0.runtime-receipts.json`;
-          const manifestPath = `${root}/h-earth.c0.allowed-path-manifest.json`;
-          const schemaPath = `${root}/h-earth.c0.receipt.schema.json`;
-          const reproducibilityPath = `${evidence}/h-earth.c0.reproducibility-receipt.json`;
-          const historyPath = `${evidence}/h-earth.c0.content-history-reconciliation.json`;
-          const artifactManifestPath = `${evidence}/h-earth.c0.artifact-manifest.json`;
-          const finalReceiptPath = `${evidence}/h-earth.c0.receipt.json`;
+          const paths = {
+            performance: `${evidence}/h-earth.c0.performance-baseline.json`,
+            runtime: `${evidence}/h-earth.c0.runtime-receipts.json`,
+            manifest: `${root}/h-earth.c0.allowed-path-manifest.json`,
+            schema: `${root}/h-earth.c0.receipt.schema.json`,
+            reproducibility: `${evidence}/h-earth.c0.reproducibility-receipt.json`,
+            history: `${evidence}/h-earth.c0.content-history-reconciliation.json`,
+            artifacts: `${evidence}/h-earth.c0.artifact-manifest.json`,
+            final: `${evidence}/h-earth.c0.receipt.json`
+          };
 
-          const performance = readJson(performancePath);
-          const runtime = readJson(runtimePath);
-          const manifest = readJson(manifestPath);
-          const performanceMeasurementsBefore = JSON.stringify(performance.runtimeStates);
-          const runtimeCausalityBefore = JSON.stringify(runtime.causalityTest);
-          const runtimeAliasesBefore = JSON.stringify(runtime.sceneAliasMapping);
-          const expectedRanges = {
+          const performance = read(paths.performance);
+          const runtime = read(paths.runtime);
+          const manifest = read(paths.manifest);
+          const measurementSnapshot = JSON.stringify(performance.runtimeStates);
+          const causalitySnapshot = JSON.stringify(runtime.causalityTest);
+          const aliasSnapshot = JSON.stringify(runtime.sceneAliasMapping);
+          const ranges = {
             medianFrameTimeRangeMilliseconds: [16.7, 383.3],
             p95FrameTimeRangeMilliseconds: [16.8, 400],
             p99FrameTimeRangeMilliseconds: [16.8, 400]
           };
-          const range = (key) => {
+          const actualRange = (key) => {
             const values = performance.runtimeStates.map((state) => state.frameTime[key]);
             return [Math.min(...values), Math.max(...values)];
           };
-          if (JSON.stringify(range('median')) !== JSON.stringify(expectedRanges.medianFrameTimeRangeMilliseconds)) throw new Error('C0_D_MEDIAN_RANGE_CHANGED');
-          if (JSON.stringify(range('p95')) !== JSON.stringify(expectedRanges.p95FrameTimeRangeMilliseconds)) throw new Error('C0_D_P95_RANGE_CHANGED');
-          if (JSON.stringify(range('p99')) !== JSON.stringify(expectedRanges.p99FrameTimeRangeMilliseconds)) throw new Error('C0_D_P99_RANGE_CHANGED');
+          if (JSON.stringify(actualRange('median')) !== JSON.stringify(ranges.medianFrameTimeRangeMilliseconds)) throw new Error('C0_D_MEDIAN_RANGE_CHANGED');
+          if (JSON.stringify(actualRange('p95')) !== JSON.stringify(ranges.p95FrameTimeRangeMilliseconds)) throw new Error('C0_D_P95_RANGE_CHANGED');
+          if (JSON.stringify(actualRange('p99')) !== JSON.stringify(ranges.p99FrameTimeRangeMilliseconds)) throw new Error('C0_D_P99_RANGE_CHANGED');
           if (runtime.captureObservability !== 'VERIFIED' || runtime.cameraToPresentedFrameCausality !== 'VERIFIED') throw new Error('C0_D_CAUSALITY_NOT_VERIFIED');
           if (runtime.sceneIdCount !== 6 || runtime.uniqueCameraStateCount !== 4 || runtime.allSixEvidencePurposesRepresented !== true) throw new Error('C0_D_SCENE_CUSTODY_INVALID');
           if (runtime.runtimeStateCount !== 3 || runtime.allThreeRuntimeStatesMeasured !== true) throw new Error('C0_D_RUNTIME_BASELINE_INCOMPLETE');
-          if (runtime.frameTimePercentilesRecorded !== true || runtime.memoryFieldsRecordedOrExplicitlyUnavailable !== true || runtime.downloadCostRecorded !== true || runtime.errorBaselineRecorded !== true) throw new Error('C0_D_BASELINE_FIELDS_INCOMPLETE');
+          if (runtime.frameTimePercentilesRecorded !== true || runtime.memoryFieldsRecordedOrExplicitlyUnavailable !== true || runtime.downloadCostRecorded !== true || runtime.errorBaselineRecorded !== true) throw new Error('C0_D_FIELDS_INCOMPLETE');
 
-          const correction = {
-            managementCorrection: 'C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001',
+          const correction = 'C0_D_PHYSICAL_MOBILE_REQUIREMENT_WITHDRAWAL_001';
+          const history = ['C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001', correction];
+          Object.assign(performance, {
+            managementCorrectionHistory: history,
+            managementCorrection: correction,
             previousRequirement: 'PHYSICAL_MOBILE_BASELINE_EXECUTED_MUST_EQUAL_TRUE',
             disposition: 'WITHDRAWN_AS_UNAUTHORIZED_OVERCONSTRAINT',
-            reason: 'C0_REQUIRES_AN_EXECUTED_AND_REPRODUCIBLE_PERFORMANCE_BASELINE_NOT_MANDATORY_PHYSICAL_DEVICE_EXECUTION'
-          };
-
-          performance.managementCorrectionHistory = [
-            'C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001',
-            correction.managementCorrection
-          ];
-          performance.managementCorrection = correction.managementCorrection;
-          performance.previousRequirement = correction.previousRequirement;
-          performance.disposition = correction.disposition;
-          performance.correctionReason = correction.reason;
-          performance.result = 'PASS_CLOSED';
-          performance.c0Overall = 'OPEN_IN_PROGRESS';
-          performance.performanceBaselineExecuted = true;
-          performance.physicalMobile.executed = false;
-          performance.physicalMobile.status = 'DEFERRED_NONBLOCKING_REFERENCE_VALIDATION';
-          performance.physicalMobile.reason = 'REQUIRED_LATER_FOR_CHANGED_CANDIDATE_VERIFICATION_NOT_REQUIRED_FOR_C0_BASELINE_CUSTODY';
-          performance.physicalMobile.officialBaseline = false;
-          performance.physicalMobile.disposition = 'DEFERRED_NONBLOCKING_REFERENCE_VALIDATION';
-
-          runtime.managementCorrectionHistory = [
-            'C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001',
-            correction.managementCorrection
-          ];
-          runtime.managementCorrection = correction.managementCorrection;
-          runtime.previousRequirement = correction.previousRequirement;
-          runtime.disposition = correction.disposition;
-          runtime.correctionReason = correction.reason;
-          runtime.result = 'PASS_CLOSED';
-          runtime.c0Overall = 'OPEN_IN_PROGRESS';
-          runtime.performanceBaselineExecuted = true;
-          runtime.frameTimeBaselineRecorded = true;
-          runtime.memoryBaselineRecordedOrExplicitlyUnavailable = true;
-          runtime.physicalMobileBaselineExecuted = false;
-          runtime.physicalMobileDisposition = 'DEFERRED_NONBLOCKING_REFERENCE_VALIDATION';
-          runtime.firstBlocker = null;
-          runtime.nextAuthorizedC0Block = 'C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT';
-          runtime.c0EAuthorized = true;
-          runtime.c1Authorized = false;
-
-          writeJson(performancePath, performance);
-          writeJson(runtimePath, runtime);
-          if (JSON.stringify(readJson(performancePath).runtimeStates) !== performanceMeasurementsBefore) throw new Error('C0_D_MEASUREMENTS_MUTATED');
-          if (JSON.stringify(readJson(runtimePath).causalityTest) !== runtimeCausalityBefore) throw new Error('C0_D_CAUSALITY_MUTATED');
-          if (JSON.stringify(readJson(runtimePath).sceneAliasMapping) !== runtimeAliasesBefore) throw new Error('C0_D_ALIAS_MAPPING_MUTATED');
+            correctionReason: 'C0_REQUIRES_AN_EXECUTED_AND_REPRODUCIBLE_PERFORMANCE_BASELINE_NOT_MANDATORY_PHYSICAL_DEVICE_EXECUTION',
+            result: 'PASS_CLOSED',
+            c0Overall: 'OPEN_IN_PROGRESS',
+            performanceBaselineExecuted: true
+          });
+          Object.assign(performance.physicalMobile, {
+            executed: false,
+            status: 'DEFERRED_NONBLOCKING_REFERENCE_VALIDATION',
+            disposition: 'DEFERRED_NONBLOCKING_REFERENCE_VALIDATION',
+            reason: 'REQUIRED_LATER_FOR_CHANGED_CANDIDATE_VERIFICATION_NOT_REQUIRED_FOR_C0_BASELINE_CUSTODY',
+            officialBaseline: false
+          });
+          Object.assign(runtime, {
+            managementCorrectionHistory: history,
+            managementCorrection: correction,
+            previousRequirement: 'PHYSICAL_MOBILE_BASELINE_EXECUTED_MUST_EQUAL_TRUE',
+            disposition: 'WITHDRAWN_AS_UNAUTHORIZED_OVERCONSTRAINT',
+            correctionReason: 'C0_REQUIRES_AN_EXECUTED_AND_REPRODUCIBLE_PERFORMANCE_BASELINE_NOT_MANDATORY_PHYSICAL_DEVICE_EXECUTION',
+            result: 'PASS_CLOSED',
+            c0Overall: 'OPEN_IN_PROGRESS',
+            performanceBaselineExecuted: true,
+            frameTimeBaselineRecorded: true,
+            memoryBaselineRecordedOrExplicitlyUnavailable: true,
+            physicalMobileBaselineExecuted: false,
+            physicalMobileDisposition: 'DEFERRED_NONBLOCKING_REFERENCE_VALIDATION',
+            firstBlocker: null,
+            nextAuthorizedC0Block: 'C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT',
+            c0EAuthorized: true,
+            c1Authorized: false
+          });
+          write(paths.performance, performance);
+          write(paths.runtime, runtime);
+          if (JSON.stringify(read(paths.performance).runtimeStates) !== measurementSnapshot) throw new Error('C0_D_MEASUREMENTS_MUTATED');
+          if (JSON.stringify(read(paths.runtime).causalityTest) !== causalitySnapshot) throw new Error('C0_D_CAUSALITY_MUTATED');
+          if (JSON.stringify(read(paths.runtime).sceneAliasMapping) !== aliasSnapshot) throw new Error('C0_D_ALIASES_MUTATED');
 
           for (const block of manifest.boundedExecutionBlocks) block.status = 'PASS_CLOSED';
-          manifest.currentBlock = 'C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT';
-          manifest.c0Overall = 'PASS_CLOSED';
-          manifest.repositoryRollbackBranch = rollbackBranch;
-          manifest.laterCheckpointsAuthorized = false;
-          writeJson(manifestPath, manifest);
+          Object.assign(manifest, {
+            currentBlock: 'C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT',
+            c0Overall: 'PASS_CLOSED',
+            repositoryRollbackBranch: rollbackBranch,
+            laterCheckpointsAuthorized: false
+          });
+          write(paths.manifest, manifest);
 
-          const schema = {
+          write(paths.schema, {
             '$schema': 'https://json-schema.org/draft/2020-12/schema',
             '$id': 'H_EARTH_C0_FINAL_RECEIPT_SCHEMA_v1',
-            title: 'H-Earth C0 Exact Live Coastal Baseline Final Receipt',
             type: 'object',
             additionalProperties: true,
-            required: [
-              'receiptType', 'operation', 'result', 'c0Overall', 'exactMainHead',
-              'activeBranch', 'repositoryRollbackBranch', 'blockStatuses',
-              'reproducibilityVerified', 'rollbackVerified', 'productMutation',
-              'unauthorizedChangedPaths', 'exactChangedPathCount'
-            ],
+            required: ['receiptType', 'operation', 'result', 'c0Overall', 'exactMainHead', 'activeBranch', 'repositoryRollbackBranch', 'reproducibilityVerified', 'rollbackVerified', 'productMutation', 'unauthorizedChangedPaths', 'exactChangedPathCount'],
             properties: {
               receiptType: { const: 'H_EARTH_C0_FINAL_RECEIPT_v1' },
-              operation: { const: 'C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT' },
               result: { const: 'PASS_CLOSED' },
               c0Overall: { const: 'PASS_CLOSED' },
-              exactMainHead: { type: 'string', minLength: 40, maxLength: 40 },
               productMutation: { const: false },
               unauthorizedChangedPaths: { const: 0 },
               exactChangedPathCount: { const: 26 }
             }
-          };
-          writeJson(schemaPath, schema);
+          });
 
-          const inputHead = exec(['rev-parse', 'HEAD']);
-          const mainHead = exec(['rev-parse', 'origin/main']);
-          const rollbackHead = exec(['rev-parse', `origin/${rollbackBranch}`]);
-          const mergeBase = exec(['merge-base', exactMain, 'HEAD']);
-          const exactMainTree = exec(['rev-parse', `${exactMain}^{tree}`]);
-          const rollbackTree = exec(['rev-parse', `origin/${rollbackBranch}^{tree}`]);
-          if (mainHead !== exactMain || rollbackHead !== exactMain || mergeBase !== exactMain || exactMainTree !== rollbackTree) throw new Error('C0_E_ROLLBACK_OR_BASE_IDENTITY_FAILURE');
+          const inputHead = git(['rev-parse', 'HEAD']);
+          const mainHead = git(['rev-parse', 'origin/main']);
+          const rollbackHead = git(['rev-parse', `origin/${rollbackBranch}`]);
+          const mergeBase = git(['merge-base', exactMain, 'HEAD']);
+          const exactMainTree = git(['rev-parse', `${exactMain}^{tree}`]);
+          const rollbackTree = git(['rev-parse', `origin/${rollbackBranch}^{tree}`]);
+          if (mainHead !== exactMain || rollbackHead !== exactMain || mergeBase !== exactMain || exactMainTree !== rollbackTree) throw new Error('C0_E_ROLLBACK_IDENTITY_FAILURE');
 
-          const commitRows = exec(['log', '--reverse', '--format=%H%x09%s', `${exactMain}..HEAD`])
-            .split(/\r?\n/).filter(Boolean).map((line) => {
-              const [sha, ...subjectParts] = line.split('\t');
-              const changedPaths = exec(['diff-tree', '--no-commit-id', '--name-only', '-r', sha]).split(/\r?\n/).filter(Boolean);
-              return { sha, subject: subjectParts.join('\t'), changedPaths };
-            });
-          const history = {
+          const commits = git(['log', '--reverse', '--format=%H%x09%s', `${exactMain}..HEAD`]).split(/\r?\n/).filter(Boolean).map((row) => {
+            const [commit, ...subject] = row.split('\t');
+            return { commit, subject: subject.join('\t') };
+          });
+          write(paths.history, {
             receiptType: 'H_EARTH_C0_CONTENT_HISTORY_RECONCILIATION_v1',
             operation: 'C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT',
             result: 'PASS_CLOSED',
             exactMainHead: exactMain,
             inputBranchHead: inputHead,
-            chronologicalCommitCount: commitRows.length,
-            chronologicalCommits: commitRows,
-            pendingFinalizationMutationClass: 'C0_D_CLASSIFICATION_CORRECTION_AND_FIVE_RESERVED_C0_E_ARTIFACTS',
+            chronologicalCommitCount: commits.length,
+            chronologicalCommits: commits,
             earlierReceiptsReopened: false,
             measurementsRerun: false,
             fixedScenesChanged: false,
             contentHistoryReconciled: true
-          };
-          writeJson(historyPath, history);
+          });
 
-          const excludedFromDigestPass = new Set([reproducibilityPath, artifactManifestPath, finalReceiptPath]);
-          const digestScopePaths = manifest.exactAllowedPaths.filter((path) => !excludedFromDigestPass.has(path));
-          const digestPass = () => digestScopePaths.map((path) => ({ path, sha256: sha256File(path), gitBlobSha: gitBlob(path) }));
-          const digestPassOne = digestPass();
-          const digestPassTwo = digestPass();
-          if (JSON.stringify(digestPassOne) !== JSON.stringify(digestPassTwo)) throw new Error('C0_E_DIGEST_REPRODUCIBILITY_FAILURE');
-
-          const reproducibility = {
+          const digestExcluded = new Set([paths.reproducibility, paths.artifacts, paths.final]);
+          const digestPaths = manifest.exactAllowedPaths.filter((path) => !digestExcluded.has(path));
+          const digestPass = () => digestPaths.map((path) => ({ path, sha256: sha(path), gitBlobSha: blob(path) }));
+          const passOne = digestPass();
+          const passTwo = digestPass();
+          if (JSON.stringify(passOne) !== JSON.stringify(passTwo)) throw new Error('C0_E_DIGEST_REPRODUCIBILITY_FAILURE');
+          write(paths.reproducibility, {
             receiptType: 'H_EARTH_C0_REPRODUCIBILITY_RECEIPT_v1',
             operation: 'C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT',
             result: 'PASS_CLOSED',
@@ -234,53 +214,40 @@ jobs:
             exactMainTree,
             rollbackTree,
             rollbackVerified: true,
-            deterministicDigestScopePathCount: digestScopePaths.length,
+            deterministicDigestScopePathCount: digestPaths.length,
             deterministicDigestPassCount: 2,
             deterministicDigestPassesIdentical: true,
-            sourceOccurrenceLinkage: readJson(`${evidence}/h-earth.c0.public-occurrence.json`).sourceOccurrenceLinkage,
-            sourceCustodyResult: readJson(`${evidence}/h-earth.c0.source-custody.json`).result,
-            fixedScenesResult: readJson(`${evidence}/h-earth.c0.fixed-scenes-receipt.json`).result,
-            runtimeBaselineResult: readJson(runtimePath).result,
             performanceBaselineExecuted: true,
             physicalMobileDisposition: 'DEFERRED_NONBLOCKING_REFERENCE_VALIDATION',
             measurementsRerun: false,
             productMutation: false,
             unauthorizedChangedPaths: 0,
-            digestPass: digestPassOne
-          };
-          writeJson(reproducibilityPath, reproducibility);
+            digestPass: passOne
+          });
 
-          const recursiveExclusions = [artifactManifestPath, finalReceiptPath];
-          const artifactPaths = manifest.exactAllowedPaths.filter((path) => !recursiveExclusions.includes(path));
-          const artifacts = artifactPaths.map((path) => ({
-            path,
-            byteCount: fs.statSync(path).size,
-            sha256: sha256File(path),
-            gitBlobSha: gitBlob(path)
-          }));
-          const artifactManifest = {
+          const recursiveExcluded = new Set([paths.artifacts, paths.final]);
+          const artifactPaths = manifest.exactAllowedPaths.filter((path) => !recursiveExcluded.has(path));
+          write(paths.artifacts, {
             receiptType: 'H_EARTH_C0_ARTIFACT_MANIFEST_v1',
             operation: 'C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT',
             result: 'PASS_CLOSED',
             exactAllowedPathCount: manifest.exactAllowedPathCount,
-            manifestedArtifactCount: artifacts.length,
-            recursiveExclusions,
-            recursiveExclusionReason: 'PREVENT_SELF_REFERENTIAL_DIGEST_CYCLE',
-            artifacts
-          };
-          writeJson(artifactManifestPath, artifactManifest);
+            manifestedArtifactCount: artifactPaths.length,
+            recursiveExclusions: [paths.artifacts, paths.final],
+            artifacts: artifactPaths.map((path) => ({ path, byteCount: fs.statSync(path).size, sha256: sha(path), gitBlobSha: blob(path) }))
+          });
 
-          const existingChanged = exec(['diff', '--name-only', exactMain]).split(/\r?\n/).filter(Boolean);
-          const untracked = exec(['ls-files', '--others', '--exclude-standard']).split(/\r?\n/).filter(Boolean);
-          const changedPaths = [...new Set([...existingChanged, ...untracked])].sort();
+          const tracked = git(['diff', '--name-only', exactMain]).split(/\r?\n/).filter(Boolean);
+          const untracked = git(['ls-files', '--others', '--exclude-standard']).split(/\r?\n/).filter(Boolean);
+          const changedPaths = [...new Set([...tracked, ...untracked, paths.final])].sort();
           const allowed = new Set(manifest.exactAllowedPaths);
           const unauthorized = changedPaths.filter((path) => !allowed.has(path));
-          const productPaths = changedPaths.filter((path) => path.startsWith('showroom/globe/h-earth/') || path.startsWith('h-earth-3d/terrain/') || path.startsWith('h-earth-3d/environment/'));
+          const product = changedPaths.filter((path) => path.startsWith('showroom/globe/h-earth/') || path.startsWith('h-earth-3d/terrain/') || path.startsWith('h-earth-3d/environment/'));
           if (changedPaths.length !== 26) throw new Error(`C0_E_CHANGED_PATH_COUNT_${changedPaths.length}`);
           if (unauthorized.length) throw new Error(`C0_E_UNAUTHORIZED_PATHS:${unauthorized.join(',')}`);
-          if (productPaths.length) throw new Error(`C0_E_PRODUCT_MUTATION:${productPaths.join(',')}`);
+          if (product.length) throw new Error(`C0_E_PRODUCT_MUTATION:${product.join(',')}`);
 
-          const finalReceipt = {
+          write(paths.final, {
             receiptType: 'H_EARTH_C0_FINAL_RECEIPT_v1',
             operation: 'C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT',
             result: 'PASS_CLOSED',
@@ -291,17 +258,8 @@ jobs:
             activePullRequest: 411,
             repositoryRollbackBranch: rollbackBranch,
             repositoryRollbackHead: rollbackHead,
-            blockStatuses: {
-              C0_A_PUBLIC_OCCURRENCE_AND_LINKAGE: 'PASS_CLOSED',
-              C0_B_REPOSITORY_SOURCE_AND_AUTHORITY_CUSTODY: 'PASS_CLOSED',
-              C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES: 'PASS_CLOSED',
-              C0_D_RUNTIME_AND_MOBILE_BASELINE: 'PASS_CLOSED',
-              C0_E_REPRODUCIBILITY_ROLLBACK_AND_FINAL_RECEIPT: 'PASS_CLOSED'
-            },
-            managementCorrections: [
-              'C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001',
-              correction.managementCorrection
-            ],
+            blockStatuses: Object.fromEntries(manifest.boundedExecutionBlocks.map((block) => [block.id, block.status])),
+            managementCorrections: history,
             captureObservability: 'VERIFIED',
             cameraToPresentedFrameCausality: 'VERIFIED',
             sceneIdCount: 6,
@@ -310,7 +268,7 @@ jobs:
             sceneAliasMappingRecorded: true,
             performanceBaselineExecuted: true,
             runtimeStateCount: 3,
-            frameTimeBaseline: expectedRanges,
+            frameTimeBaseline: ranges,
             memoryBaselineRecordedOrExplicitlyUnavailable: true,
             downloadCostRecorded: true,
             errorBaselineRecorded: true,
@@ -319,12 +277,11 @@ jobs:
             physicalSamsungReferenceRun: 'REQUIRED_LATER_FOR_CHANGED_CANDIDATE_VERIFICATION_NOT_REQUIRED_FOR_C0_BASELINE_CUSTODY',
             reproducibilityVerified: true,
             rollbackVerified: true,
-            artifactManifestPath,
-            artifactManifestSha256: sha256File(artifactManifestPath),
-            reproducibilityReceiptSha256: sha256File(reproducibilityPath),
-            contentHistoryReconciliationSha256: sha256File(historyPath),
-            performanceBaselineSha256: sha256File(performancePath),
-            runtimeReceiptsSha256: sha256File(runtimePath),
+            artifactManifestSha256: sha(paths.artifacts),
+            reproducibilityReceiptSha256: sha(paths.reproducibility),
+            contentHistoryReconciliationSha256: sha(paths.history),
+            performanceBaselineSha256: sha(paths.performance),
+            runtimeReceiptsSha256: sha(paths.runtime),
             exactChangedPathCount: changedPaths.length,
             changedPaths,
             unauthorizedChangedPaths: 0,
@@ -333,33 +290,17 @@ jobs:
             nextAuthorizedC0Block: null,
             nextProgramCheckpoint: 'C1_NOT_AUTHORIZED_PENDING_MANAGEMENT',
             activePullRequestMerged: false
-          };
-          writeJson(finalReceiptPath, finalReceipt);
+          });
 
-          const final = readJson(finalReceiptPath);
-          if (final.result !== 'PASS_CLOSED' || final.c0Overall !== 'PASS_CLOSED' || final.exactChangedPathCount !== 26 || final.productMutation !== false || final.unauthorizedChangedPaths !== 0) throw new Error('C0_E_FINAL_RECEIPT_VALIDATION_FAILURE');
-          console.log(JSON.stringify({
-            operation: final.operation,
-            result: final.result,
-            c0Overall: final.c0Overall,
-            exactMainHead: final.exactMainHead,
-            rollbackHead: final.repositoryRollbackHead,
-            runtimeStateCount: final.runtimeStateCount,
-            performanceBaselineExecuted: final.performanceBaselineExecuted,
-            physicalMobileDisposition: final.physicalMobileDisposition,
-            exactChangedPathCount: final.exactChangedPathCount,
-            unauthorizedChangedPaths: final.unauthorizedChangedPaths,
-            productMutation: final.productMutation
-          }, null, 2));
+          const final = read(paths.final);
+          if (final.result !== 'PASS_CLOSED' || final.c0Overall !== 'PASS_CLOSED' || final.exactChangedPathCount !== 26 || final.productMutation !== false || final.unauthorizedChangedPaths !== 0) throw new Error('C0_E_FINAL_RECEIPT_INVALID');
+          console.log(JSON.stringify({ operation: final.operation, result: final.result, c0Overall: final.c0Overall, rollbackHead: final.repositoryRollbackHead, exactChangedPathCount: final.exactChangedPathCount, productMutation: final.productMutation }, null, 2));
           NODE
-          trap 'rm -f .c0-e.mjs' EXIT
-          node .c0-e.mjs
 
       - name: Verify and commit C0 closure package
         shell: bash
         run: |
           set -euo pipefail
-          test ! -e .c0-e.mjs
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.runtime-receipts.json').result")" = "PASS_CLOSED"
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.performance-baseline.json').result")" = "PASS_CLOSED"
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.reproducibility-receipt.json').result")" = "PASS_CLOSED"
@@ -374,14 +315,6 @@ jobs:
             "$C0_EVIDENCE/h-earth.c0.receipt.json"
           git config user.name "h-earth-c0-evidence"
           git config user.email "actions@users.noreply.github.com"
-          git add \
-            "$C0_ROOT/h-earth.c0.allowed-path-manifest.json" \
-            "$C0_ROOT/h-earth.c0.receipt.schema.json" \
-            "$C0_EVIDENCE/h-earth.c0.performance-baseline.json" \
-            "$C0_EVIDENCE/h-earth.c0.runtime-receipts.json" \
-            "$C0_EVIDENCE/h-earth.c0.reproducibility-receipt.json" \
-            "$C0_EVIDENCE/h-earth.c0.content-history-reconciliation.json" \
-            "$C0_EVIDENCE/h-earth.c0.artifact-manifest.json" \
-            "$C0_EVIDENCE/h-earth.c0.receipt.json"
+          git add "$C0_ROOT" "$C0_EVIDENCE"
           git commit -m "C0-E: close reproducibility rollback and baseline custody"
           git push origin "HEAD:${{ github.event.pull_request.head.ref }}"

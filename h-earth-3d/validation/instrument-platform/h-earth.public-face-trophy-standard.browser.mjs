@@ -90,8 +90,8 @@ try {
   check('BASELINE_TROPHY_HERO_HIDDEN', await baseline.locator('#h-earth-b10-hero').isHidden());
   check('BASELINE_ARRIVAL_VISIBLE', await baseline.locator('#h-earth-baseline-arrival').isVisible());
   check('BASELINE_AWARDS_TAB_HIDDEN', await baseline.locator('#h-earth-awards-link').isHidden());
-  check('BASELINE_RUNTIME_DIAGNOSTICS_PRIMARY_VISIBLE', await baseline.locator('.h-earth-runtime-diagnostics').isVisible());
-  check('BASELINE_STARTUP_RECEIPT_PRIMARY_VISIBLE', await baseline.locator('.h-earth-startup-receipt').isVisible());
+  check('BASELINE_RUNTIME_DIAGNOSTICS_PRIMARY_VISIBLE', await baseline.locator('details.h-earth-runtime-diagnostics').isVisible());
+  check('BASELINE_STARTUP_RECEIPT_PRIMARY_VISIBLE', await baseline.locator('details.h-earth-startup-receipt').isVisible());
   await baseline.close();
 
   const page = await desktop.newPage();
@@ -107,8 +107,9 @@ try {
   check('BASELINE_ARRIVAL_HIDDEN_IN_CANDIDATE', await page.locator('#h-earth-baseline-arrival').isHidden());
   check('SIX_PUBLIC_LENSES', await page.locator('.h-earth-b10-lens').count() === 6);
   check('ALL_PUBLIC_LENSES_CLOSED_ON_LOAD', await page.locator('.h-earth-b10-lens[open]').count() === 0);
-  check('RUNTIME_DIAGNOSTICS_BACKSTAGE', await page.locator('.h-earth-runtime-diagnostics').evaluate((node) => node.parentElement?.id === 'h-earth-b10-technical-host') && await page.locator('.h-earth-runtime-diagnostics').isHidden());
-  check('STARTUP_RECEIPT_BACKSTAGE', await page.locator('.h-earth-startup-receipt').evaluate((node) => node.parentElement?.id === 'h-earth-b10-evidence-host') && await page.locator('.h-earth-startup-receipt').isHidden());
+  check('RUNTIME_DIAGNOSTICS_BACKSTAGE', await page.locator('details.h-earth-runtime-diagnostics').evaluate((node) => node.parentElement?.id === 'h-earth-b10-technical-host') && await page.locator('details.h-earth-runtime-diagnostics').isHidden());
+  check('STARTUP_RECEIPT_BACKSTAGE', await page.locator('details.h-earth-startup-receipt').evaluate((node) => node.parentElement?.id === 'h-earth-b10-evidence-host') && await page.locator('details.h-earth-startup-receipt').isHidden());
+  check('ENVIRONMENT_DETAILS_BACKSTAGE', await page.locator('details.h-earth-live-details').evaluate((node) => node.parentElement?.id === 'h-earth-b10-evidence-host') && await page.locator('details.h-earth-live-details').isHidden());
   check('LIVE_CANVAS_VISIBLE', await page.locator('#h-earth-functional-landscape-canvas').isVisible());
 
   const mount = page.locator('#h-earth-functional-landscape-mount');
@@ -149,9 +150,10 @@ try {
   check('ONE_PUBLIC_LENS_AT_A_TIME', await page.locator('.h-earth-b10-lens[open]').count() === 1 && await page.locator('[data-b10-lens="STORY_LENS"]').evaluate((node) => node.open));
 
   await page.locator('[data-b10-lens="ENGINEERING_LENS"] > summary').click();
-  check('ENGINEERING_LENS_REVEALS_RUNTIME_DIAGNOSTICS', await page.locator('.h-earth-runtime-diagnostics').isVisible());
+  check('ENGINEERING_LENS_REVEALS_RUNTIME_DIAGNOSTICS', await page.locator('details.h-earth-runtime-diagnostics').isVisible());
   await page.locator('[data-b10-lens="EVIDENCE_LENS"] > summary').click();
-  check('EVIDENCE_LENS_REVEALS_STARTUP_RECEIPT', await page.locator('.h-earth-startup-receipt').isVisible());
+  check('EVIDENCE_LENS_REVEALS_STARTUP_RECEIPT', await page.locator('details.h-earth-startup-receipt').isVisible());
+  check('EVIDENCE_LENS_REVEALS_ENVIRONMENT_DETAILS', await page.locator('details.h-earth-live-details').isVisible());
 
   const awards = await desktop.newPage();
   captureErrors(awards, 'awards');

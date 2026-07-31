@@ -13,12 +13,15 @@
     ".github/workflows/h-earth-c2-r1-r1-4-actual-depth-water-optics.yml",
     ".github/workflows/h-earth-c2-r1-r1-5-depth-slope-breakers.yml",
     ".github/workflows/h-earth-c2-r1-r1-6-restrained-swash-foam-wetness.yml",
+    ".github/workflows/h-earth-c2-r1-r1-7-bounded-terrain-macro-expression.yml",
     "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
     "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
     "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+    "h-earth-3d/terrain/h-earth.coastal-macro-expression.c2-r1.js",
     "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
     "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
     "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+    "h-earth-3d/render/h-earth.coastal-macro-material-sampler.c2-r1.js",
     "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
     "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js"
   ],
@@ -26,6 +29,7 @@
     "showroom/globe/h-earth/",
     "h-earth-3d/terrain/",
     "h-earth-3d/environment/",
+    "h-earth-3d/render/",
     "h-earth-3d/integration/"
   ],
   "protectedPathExactExceptions": {
@@ -88,6 +92,7 @@
     "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js": {
       "checkpoint": "R1.6_RESTRAINED_SWASH_FOAM_AND_WETNESS",
       "candidateOnly": true,
+      "immutableAfterCheckpoint": true,
       "immutableGeometryInput": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
       "immutableNormalInput": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
       "immutableSedimentInput": "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
@@ -99,12 +104,37 @@
       "rendererLifecycleBound": false,
       "cameraOrTraversalBound": false,
       "publicRouteBound": false
+    },
+    "h-earth-3d/terrain/h-earth.coastal-macro-expression.c2-r1.js": {
+      "checkpoint": "R1.7_BOUNDED_TERRAIN_MACRO_EXPRESSION",
+      "candidateOnly": true,
+      "immutableGeometryInput": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+      "immutableNormalInput": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+      "boundedRepresentativeCorridorOnly": true,
+      "wholeWorldBake": false,
+      "proceduralMultioctaveShader": false,
+      "ownsMacroAlbedoRoughnessCavityAndSubtleNormalParametersOnly": true,
+      "geometryDisplacementBound": false,
+      "rendererLifecycleBound": false,
+      "publicRouteBound": false
+    },
+    "h-earth-3d/render/h-earth.coastal-macro-material-sampler.c2-r1.js": {
+      "checkpoint": "R1.7_BOUNDED_TERRAIN_MACRO_EXPRESSION",
+      "candidateOnly": true,
+      "sourceMacroField": "h-earth-3d/terrain/h-earth.coastal-macro-expression.c2-r1.js",
+      "sourceSedimentMemberships": "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+      "sourceNormalField": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+      "singleMacroControlFieldSample": true,
+      "rendererLifecycleOwned": false,
+      "publicRendererBound": false,
+      "publicRouteBound": false,
+      "productDefaultBound": false
     }
   },
   "registryPathDisposition": {
     "overlayPath": "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
     "controlPrefix": "/h-earth-3d/control-plane/coastal-morphology/c2-r1/",
-    "candidateExactPaths": 6,
+    "candidateExactPaths": 8,
     "readOnlyResolutionOnly": true,
     "mutationAuthorityCreated": false,
     "mergeAuthorityCreated": false
@@ -113,6 +143,7 @@
     "R1.3": "MANUAL_ONLY",
     "R1.4": "MANUAL_ONLY",
     "R1.5": "MANUAL_ONLY",
+    "R1.6": "MANUAL_ONLY",
     "reason": "PREVENT_AUTOMATIC_RERUN_OF_CLOSED_CHECKPOINTS"
   },
   "protectedAuthorities": [

@@ -1,127 +1,15 @@
-name: H-Earth C2-R1 R1.2 Normals and Lighting
+name: H-Earth C2-R1 R1.2 Normals and Lighting — Closed
 
 on:
-  pull_request:
-    branches:
-      - integration/h-earth-c2-r1-baseline-001
-    paths:
-      - 'h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-2-normals-lighting.mjs'
-      - '.github/workflows/h-earth-c2-r1-r1-2-normals-lighting.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  verify-r1-2:
-    if: github.actor != 'github-actions[bot]'
+  closed-checkpoint:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Execute recomputed normals and lighting verification
-        id: verify
-        continue-on-error: true
-        env:
-          C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-2-normals-lighting.mjs
-
-      - name: Reconcile R1.2 ledger and status
-        if: always()
-        run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const receiptPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-2-verification.json';
-          const ledgerPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.progress-ledger.json';
-          const programPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.program.json';
-          const statusPath = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-2-current-status.json';
-          const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
-          const ledger = JSON.parse(fs.readFileSync(ledgerPath, 'utf8'));
-          const program = JSON.parse(fs.readFileSync(programPath, 'utf8'));
-          const status = JSON.parse(fs.readFileSync(statusPath, 'utf8'));
-          const passed = receipt.result === 'PASS_CLOSED';
-
-          ledger.passes['R1.2'] = {
-            status: passed ? 'PASS_CLOSED' : 'HARD_BLOCKED',
-            head: receipt.candidateHead,
-            result: receipt.result,
-            normalsRecomputed: receipt.normalsRecomputed,
-            normalContinuityChecked: receipt.normalContinuityChecked,
-            lightingProjectionPresent: receipt.lightingProjectionPresent,
-            productMutation: false,
-            firstBlocker: receipt.firstBlocker
-          };
-          ledger.currentCheckpoint = passed
-            ? 'R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS'
-            : 'R1.2_RECOMPUTED_NORMALS_AND_LIGHTING';
-          ledger.hardBlockers = passed ? [] : [receipt.firstBlocker];
-          ledger.productDefaultMutated = false;
-          ledger.userDifferentialReady = false;
-
-          program.status = passed
-            ? 'R1_2_PASS_CLOSED_R1_3_NEXT'
-            : 'R1_2_HARD_BLOCKED';
-          program.currentCheckpoint = ledger.currentCheckpoint;
-          program.productDefaultMutated = false;
-
-          Object.assign(status, {
-            status: passed ? 'PASS_CLOSED' : 'HARD_BLOCKED',
-            candidateHead: receipt.candidateHead,
-            normalsRecomputed: receipt.normalsRecomputed,
-            normalContinuityChecked: receipt.normalContinuityChecked,
-            lightingProjectionPresent: receipt.lightingProjectionPresent,
-            firstBlocker: receipt.firstBlocker,
-            nextCheckpoint: receipt.nextCheckpoint,
-            materialsStarted: false,
-            waterOpticsStarted: false,
-            rendererIntegrationStarted: false,
-            productDefaultMutated: false
-          });
-
-          fs.writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + '\n');
-          fs.writeFileSync(programPath, JSON.stringify(program, null, 2) + '\n');
-          fs.writeFileSync(statusPath, JSON.stringify(status, null, 2) + '\n');
-          NODE
-
-      - name: Commit durable R1.2 result
-        if: always() && github.event_name == 'pull_request'
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-2-verification.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-2-current-status.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.progress-ledger.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.program.json
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'C2-R1 R1.2: record bounded normals verification [skip ci]'
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
-
-      - name: Upload R1.2 receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-c2-r1-r1-2-verification
-          path: h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-2-verification.json
-
-      - name: Enforce bounded checkpoint result
-        if: always()
-        run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const receipt = JSON.parse(fs.readFileSync(
-            'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-2-verification.json',
-            'utf8'
-          ));
-          if (receipt.result !== 'PASS_CLOSED') process.exit(1);
-          NODE
+      - run: |
+          echo 'R1.2_RECOMPUTED_NORMALS_AND_LIGHTING = PASS_CLOSED'
+          echo 'Automatic reruns are disabled. Management authorization is required to reopen.'

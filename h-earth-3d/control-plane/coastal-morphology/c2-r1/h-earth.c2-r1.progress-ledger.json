@@ -1,0 +1,36 @@
+{
+  "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
+  "branch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+  "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "currentCheckpoint": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
+  "passes": {
+    "R1.0": {
+      "status": "PASS_CLOSED",
+      "head": "f465a6e6f4c55acb2460543fde20deab990d3c29",
+      "productMutation": false,
+      "facts": {
+        "acceptedBaselineFrozen": true,
+        "rollbackBranchCreated": true,
+        "integrationBaseBranchCreated": true,
+        "failedC2SourceExcluded": true,
+        "representativeCaptureSetFrozen": true,
+        "functionalAndVisualClassificationSeparated": true
+      }
+    },
+    "R1.1": { "status": "NOT_STARTED" },
+    "R1.2": { "status": "NOT_STARTED" },
+    "R1.3": { "status": "NOT_STARTED" },
+    "R1.4": { "status": "NOT_STARTED" },
+    "R1.5": { "status": "NOT_STARTED" },
+    "R1.6": { "status": "NOT_STARTED" },
+    "R1.7": { "status": "NOT_STARTED" },
+    "R1.8": { "status": "NOT_STARTED" }
+  },
+  "hardBlockers": [],
+  "representativeCaptureCount": 0,
+  "liveReviewUrl": null,
+  "functionalVerification": "NOT_STARTED",
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false,
+  "productDefaultMutated": false
+}

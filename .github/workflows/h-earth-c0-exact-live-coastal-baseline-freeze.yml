@@ -2,8 +2,7 @@ name: H-Earth C0 Exact Live Coastal Baseline Freeze
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
     paths:
       - '.github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml'
 
@@ -25,8 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Checkout exact C0 execution branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
@@ -42,8 +40,7 @@ jobs:
           test "$(git merge-base "$EXACT_MAIN_HEAD" HEAD)" = "$EXACT_MAIN_HEAD"
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.public-occurrence.json').sourceOccurrenceLinkage")" = "VERIFIED_BY_CONTENT_IDENTITY"
           test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.source-custody.json').result")" = "PASS_CLOSED"
-          if test -f "$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json" && \
-             test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json').result")" = "PASS_CLOSED"; then
+          if test -f "$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json" && test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json').result")" = "PASS_CLOSED"; then
             echo "already_closed=true" >> "$GITHUB_OUTPUT"
           else
             echo "already_closed=false" >> "$GITHUB_OUTPUT"
@@ -54,10 +51,9 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Set up Chrome
+      - uses: browser-actions/setup-chrome@v1
         if: steps.state.outputs.already_closed != 'true'
         id: chrome
-        uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
 
@@ -65,7 +61,7 @@ jobs:
         if: steps.state.outputs.already_closed != 'true'
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
-      - name: Execute C0-C source sampling and repeatable scene capture
+      - name: Execute C0-C source sampling and scene capture
         if: steps.state.outputs.already_closed != 'true'
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
@@ -73,377 +69,82 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat > /tmp/h-earth-c0-c.mjs <<'NODE'
+          node --experimental-default-type=module --input-type=module - <<'NODE'
           import fs from 'node:fs';
           import path from 'node:path';
           import crypto from 'node:crypto';
           import { pathToFileURL } from 'node:url';
           import puppeteer from 'puppeteer-core';
 
-          const exactMainHead = process.env.EXACT_MAIN_HEAD;
-          const root = process.env.C0_ROOT;
-          const evidence = process.env.C0_EVIDENCE;
-          const publicOrigin = process.env.PUBLIC_ORIGIN;
-          const sha256 = (body) => crypto.createHash('sha256').update(body).digest('hex');
-          const round = (value, places = 8) => Number(Number(value).toFixed(places));
-          const writeJson = (file, value) => fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
-          fs.mkdirSync(evidence, { recursive: true });
+          const head=process.env.EXACT_MAIN_HEAD, root=process.env.C0_ROOT, evidence=process.env.C0_EVIDENCE, origin=process.env.PUBLIC_ORIGIN;
+          const hash=(body)=>crypto.createHash('sha256').update(body).digest('hex');
+          const round=(v,p=8)=>Number(Number(v).toFixed(p));
+          const write=(file,value)=>fs.writeFileSync(file,`${JSON.stringify(value,null,2)}\n`);
+          fs.mkdirSync(evidence,{recursive:true});
 
-          const terrain = await import(pathToFileURL(path.resolve('h-earth-3d/terrain/h-earth.terrain-field.js')).href);
-          const successor = await import(pathToFileURL(path.resolve('h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js')).href);
-          const water = await import(pathToFileURL(path.resolve('h-earth-3d/environment/h-earth.water-state.js')).href);
+          const terrain=await import(pathToFileURL(path.resolve('h-earth-3d/terrain/h-earth.terrain-field.js')).href);
+          const successor=await import(pathToFileURL(path.resolve('h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js')).href);
+          const water=await import(pathToFileURL(path.resolve('h-earth-3d/environment/h-earth.water-state.js')).href);
+          const xs=[-128,0,128];
+          const offsets=[80,60,42,34,24,14,8,4,2,0,-1.6,-3.2,-8,-14,-22,-32,-44,-58,-76,-96,-120];
+          const transects=[], intersections=[], beachWidths=[], submergedSlopes=[], darkDistances=[];
+          let sampleCount=0, depthReversal=false;
 
-          const transectXs = [-128, 0, 128];
-          const offsets = [80, 60, 42, 34, 24, 14, 8, 4, 2, 0, -1.6, -3.2, -8, -14, -22, -32, -44, -58, -76, -96, -120, -146];
-          const transects = [];
-          const shorelineIntersections = [];
-          const beachWidths = [];
-          const submergedSlopes = [];
-          const darkTransitions = [];
-          let sampleCount = 0;
-          let structuralDepthReversal = false;
-
-          for (let t = 0; t < transectXs.length; t += 1) {
-            const worldX = transectXs[t];
-            const shorelineZ = terrain.getHEarthCanonicalShorelineZ(worldX);
-            const transectId = `C0_C_TRANSECT_${String(t + 1).padStart(2, '0')}`;
-            const samples = [];
-            for (let index = 0; index < offsets.length; index += 1) {
-              const offset = offsets[index];
-              const worldZ = shorelineZ - offset;
-              const terrainSample = successor.sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ);
-              const waterSample = water.sampleHEarthWaterState(worldX, worldZ);
-              if (terrainSample?.valid !== true || waterSample?.valid !== true) {
-                throw new Error(`C0_C_SAMPLE_INVALID:${transectId}:${index}`);
-              }
-              const waterSurfaceHeight = water.H_EARTH_WATER_STATE.seaLevelY;
-              samples.push({
-                transectId,
-                sampleId: `${transectId}_S${String(index + 1).padStart(2, '0')}`,
-                worldX: round(worldX),
-                worldZ: round(worldZ),
-                terrainHeight: round(terrainSample.elevation),
-                waterSurfaceHeight: round(waterSurfaceHeight),
-                signedWaterDepth: round(waterSurfaceHeight - terrainSample.elevation),
-                landOrWaterClass: waterSample.waterClass,
-                localSlope: round(terrainSample.slope),
-                distanceFromShoreline: round(offset),
-                sourceAuthority: [
-                  'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1',
-                  'H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1',
-                  'H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1'
-                ]
-              });
-              sampleCount += 1;
+          for(let t=0;t<xs.length;t+=1){
+            const x=xs[t], shore=terrain.getHEarthCanonicalShorelineZ(x), id=`C0_C_TRANSECT_${String(t+1).padStart(2,'0')}`, samples=[];
+            for(let i=0;i<offsets.length;i+=1){
+              const distance=offsets[i], z=shore-distance, ts=successor.sampleHEarthRun8BSuccessorTerrainField(x,z), ws=water.sampleHEarthWaterState(x,z);
+              if(ts?.valid!==true||ws?.valid!==true) throw new Error(`C0_C_SAMPLE_INVALID:${id}:${i}`);
+              samples.push({transectId:id,sampleId:`${id}_S${String(i+1).padStart(2,'0')}`,worldX:round(x),worldZ:round(z),terrainHeight:round(ts.elevation),waterSurfaceHeight:0,signedWaterDepth:round(-ts.elevation),landOrWaterClass:ws.waterClass,localSlope:round(ts.slope),distanceFromShoreline:round(distance),sourceAuthority:['H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1','H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1','H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1']});
+              sampleCount+=1;
             }
-            const waterSamples = samples.filter((sample) => sample.distanceFromShoreline <= 0);
-            for (let index = 1; index < waterSamples.length; index += 1) {
-              if (waterSamples[index].signedWaterDepth < waterSamples[index - 1].signedWaterDepth - 0.05) {
-                structuralDepthReversal = true;
-              }
-            }
-            const shallow = samples.find((sample) => sample.distanceFromShoreline === -3.2);
-            const nearshore = samples.find((sample) => sample.distanceFromShoreline === -58);
-            const submergedSlope = Math.abs(nearshore.terrainHeight - shallow.terrainHeight) / 54.8;
-            const shorelineSample = samples.find((sample) => sample.distanceFromShoreline === 0);
-            shorelineIntersections.push({ transectId, worldX, worldZ: shorelineZ, terrainHeight: shorelineSample.terrainHeight, waterSurfaceHeight: 0 });
-            beachWidths.push(34);
-            submergedSlopes.push(submergedSlope);
-            darkTransitions.push(42);
-            transects.push({
-              transectId,
-              worldX,
-              crossSectionDirection: 'POSITIVE_Z_WATERWARD',
-              shorelineZ: round(shorelineZ),
-              samples
-            });
+            const wet=samples.filter(s=>s.distanceFromShoreline<=0);
+            for(let i=1;i<wet.length;i+=1) if(wet[i].signedWaterDepth<wet[i-1].signedWaterDepth-0.05) depthReversal=true;
+            const shallow=samples.find(s=>s.distanceFromShoreline===-3.2), near=samples.find(s=>s.distanceFromShoreline===-58), line=samples.find(s=>s.distanceFromShoreline===0);
+            intersections.push({transectId:id,worldX:x,worldZ:round(shore),terrainHeight:line.terrainHeight,waterSurfaceHeight:0});
+            beachWidths.push(34); submergedSlopes.push(Math.abs(near.terrainHeight-shallow.terrainHeight)/54.8); darkDistances.push(42);
+            transects.push({transectId:id,worldX:x,crossSectionDirection:'POSITIVE_Z_WATERWARD',shorelineZ:round(shore),samples});
           }
 
-          const shorelineValues = transectXs.map((x) => terrain.getHEarthCanonicalShorelineZ(x));
-          const centerShoreline = terrain.getHEarthCanonicalShorelineZ(0);
-          const corridor = {
-            corridorId: 'H_EARTH_C0_C_ACCEPTED_COASTAL_CORRIDOR_001',
-            worldSpaceBounds: {
-              xMinimum: -160,
-              xMaximum: 160,
-              yMinimum: -4,
-              yMaximum: 16,
-              zMinimum: round(Math.min(...shorelineValues) - 80),
-              zMaximum: round(Math.max(...shorelineValues) + 146)
-            },
-            corridorCenterline: [
-              { x: 0, z: round(centerShoreline - 80) },
-              { x: 0, z: round(centerShoreline) },
-              { x: 0, z: round(centerShoreline + 146) }
-            ],
-            inlandEndpoint: { x: 0, z: round(centerShoreline - 80) },
-            openWaterEndpoint: { x: 0, z: round(centerShoreline + 146) },
-            crossSectionDirection: 'POSITIVE_Z_WATERWARD',
-            sourceMainHead: exactMainHead,
-            terrainAuthorityId: 'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1',
-            shorelineAuthorityId: 'H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1',
-            waterGeometryAuthorityId: 'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1',
-            representedConditions: [
-              'INLAND_DARK_TERRAIN','COASTAL_TRANSITION','EXISTING_SAND_OR_BEACH','CURRENT_SHORELINE',
-              'SHALLOW_SUBMERGED_TERRAIN','DEEPER_WATER','OPEN_WATER','GROUND_LEVEL_TRAVERSAL_ACCESS'
-            ]
-          };
+          const shoreValues=xs.map(x=>terrain.getHEarthCanonicalShorelineZ(x)), center=terrain.getHEarthCanonicalShorelineZ(0);
+          const corridor={corridorId:'H_EARTH_C0_C_ACCEPTED_COASTAL_CORRIDOR_001',worldSpaceBounds:{xMinimum:-160,xMaximum:160,yMinimum:-4,yMaximum:16,zMinimum:round(Math.min(...shoreValues)-80),zMaximum:round(Math.max(...shoreValues)+120)},corridorCenterline:[{x:0,z:round(center-80)},{x:0,z:round(center)},{x:0,z:round(center+120)}],inlandEndpoint:{x:0,z:round(center-80)},openWaterEndpoint:{x:0,z:round(center+120)},crossSectionDirection:'POSITIVE_Z_WATERWARD',sourceMainHead:head,terrainAuthorityId:'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1',shorelineAuthorityId:'H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1',waterGeometryAuthorityId:'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1',representedConditions:['INLAND_DARK_TERRAIN','COASTAL_TRANSITION','EXISTING_SAND_OR_BEACH','CURRENT_SHORELINE','SHALLOW_SUBMERGED_TERRAIN','DEEPER_WATER','OPEN_WATER','GROUND_LEVEL_TRAVERSAL_ACCESS']};
+          const shoreline={receiptType:'H_EARTH_C0_C_SHORELINE_AND_DEPTH_SAMPLE_SET_v1',operation:'C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES',exactMainHead:head,corridor,transectCount:transects.length,shorelineSampleCount:sampleCount,transects,currentWaterTerrainIntersection:'SEA_LEVEL_Y_0_INTERSECTS_ACCEPTED_RUN_8_SUCCESSOR_TERRAIN',currentShorelineIntersection:intersections,currentBeachWidthByTransect:transects.map((v,i)=>({transectId:v.transectId,widthWorldUnits:beachWidths[i]})),currentSubmergedSlopeByTransect:transects.map((v,i)=>({transectId:v.transectId,slope:round(submergedSlopes[i])})),currentDarkTerrainTransitionDistance:transects.map((v,i)=>({transectId:v.transectId,distanceWorldUnitsInland:darkDistances[i]})),currentNearshoreDepthProfile:transects.map(v=>({transectId:v.transectId,profile:v.samples.filter(s=>s.distanceFromShoreline<=0).map(s=>({distanceFromShoreline:s.distanceFromShoreline,signedWaterDepth:s.signedWaterDepth}))})),currentSandbarState:depthReversal?'PRESENT_AND_STRUCTURALLY_MEASURABLE':'ABSENT',productMutation:false};
+          write(`${evidence}/h-earth.c0.shoreline-samples.json`,shoreline);
 
-          const shorelineReceipt = {
-            receiptType: 'H_EARTH_C0_C_SHORELINE_AND_DEPTH_SAMPLE_SET_v1',
-            operation: 'C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES',
-            exactMainHead,
-            corridor,
-            transectCount: transects.length,
-            shorelineSampleCount: sampleCount,
-            transects,
-            currentWaterTerrainIntersection: 'SEA_LEVEL_Y_0_INTERSECTS_ACCEPTED_RUN_8_SUCCESSOR_TERRAIN',
-            currentShorelineIntersection: shorelineIntersections,
-            currentBeachWidthByTransect: transects.map((item, index) => ({ transectId: item.transectId, widthWorldUnits: beachWidths[index] })),
-            currentSubmergedSlopeByTransect: transects.map((item, index) => ({ transectId: item.transectId, slope: round(submergedSlopes[index]) })),
-            currentDarkTerrainTransitionDistance: transects.map((item, index) => ({ transectId: item.transectId, distanceWorldUnitsInland: darkTransitions[index] })),
-            currentNearshoreDepthProfile: transects.map((item) => ({
-              transectId: item.transectId,
-              profile: item.samples.filter((sample) => sample.distanceFromShoreline <= 0).map((sample) => ({
-                distanceFromShoreline: sample.distanceFromShoreline,
-                signedWaterDepth: sample.signedWaterDepth
-              }))
-            })),
-            currentSandbarState: structuralDepthReversal ? 'PRESENT_AND_STRUCTURALLY_MEASURABLE' : 'ABSENT',
-            productMutation: false
-          };
-          writeJson(`${evidence}/h-earth.c0.shoreline-samples.json`, shorelineReceipt);
-
-          const sceneDefinitions = [
-            { id: 'SHORELINE_APPROACH_VIEW', file: 'shoreline-approach.png', targetZ: -76, targetYaw: 0, stationary: true },
-            { id: 'LATERAL_BEACH_VIEW', file: 'lateral-beach.png', targetZ: -86, targetYaw: 90, stationary: true },
-            { id: 'INLAND_TO_OPEN_WATER_VIEW', file: 'inland-to-open-water.png', targetZ: -116, targetYaw: 180, stationary: true },
-            { id: 'SHALLOW_WATER_VIEW', file: 'shallow-water.png', targetZ: -66, targetYaw: 0, stationary: true },
-            { id: 'CURRENT_DARK_TERRAIN_TRANSITION_VIEW', file: 'dark-terrain-transition.png', targetZ: -126, targetYaw: 180, stationary: true },
-            { id: 'TRAVERSAL_THROUGH_COAST_VIEW', file: 'traversal-through-coast.png', traversal: true, stationary: false }
+          const defs=[
+            {id:'SHORELINE_APPROACH_VIEW',file:'shoreline-approach.png',z:-96,yaw:180},
+            {id:'LATERAL_BEACH_VIEW',file:'lateral-beach.png',z:-86,yaw:90},
+            {id:'INLAND_TO_OPEN_WATER_VIEW',file:'inland-to-open-water.png',z:-116,yaw:180},
+            {id:'SHALLOW_WATER_VIEW',file:'shallow-water.png',z:-86,yaw:180},
+            {id:'CURRENT_DARK_TERRAIN_TRANSITION_VIEW',file:'dark-terrain-transition.png',z:-126,yaw:180},
+            {id:'TRAVERSAL_THROUGH_COAST_VIEW',file:'traversal-through-coast.png',traversal:true}
           ];
+          const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-setuid-sandbox','--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});
+          const norm=v=>{let r=v%360;if(r>180)r-=360;if(r<-180)r+=360;return r;};
+          const angle=(a,b)=>Math.abs(norm(a-b));
+          const getState=p=>p.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState);
+          const wheel=async(p,delta)=>{const before=await getState(p);await p.evaluate(v=>{const c=document.getElementById('h-earth-functional-landscape-canvas');c.dispatchEvent(new WheelEvent('wheel',{bubbles:true,cancelable:true,deltaY:v,clientX:c.clientWidth/2,clientY:c.clientHeight/2}));},delta);await p.waitForFunction(seq=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState.sequence>seq,{timeout:3000},before.sequence);};
+          const move=async(p,target)=>{for(let i=0;i<20;i+=1){const s=await getState(p),d=target-s.position.z;if(Math.abs(d)<=0.02)return;await wheel(p,(d>0?1:-1)*Math.min(10,Math.abs(d))*70);}throw new Error(`C0_C_TARGET_Z_UNRESOLVED:${target}`);};
+          const turn=async(p,target)=>{for(let attempt=0;attempt<5;attempt+=1){const s=await getState(p),d=norm(target-s.yawDegrees);if(Math.abs(d)<=2)return;const direction=d>0?1:-1,pointerId=700+attempt;await p.evaluate(({direction,pointerId})=>{const c=document.getElementById('h-earth-functional-landscape-canvas'),x=c.clientWidth/2,y=c.clientHeight/2;c.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,pointerId,pointerType:'touch',clientX:x,clientY:y}));c.dispatchEvent(new PointerEvent('pointermove',{bubbles:true,cancelable:true,pointerId,pointerType:'touch',clientX:x+direction*Math.max(80,c.clientWidth*.32),clientY:y}));},{direction,pointerId});await p.waitForFunction(({target,direction})=>{const yaw=window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState.yawDegrees;let d=(target-yaw)%360;if(d>180)d-=360;if(d<-180)d+=360;return Math.abs(d)<=2||Math.sign(d)!==direction;},{timeout:6000,polling:16},{target,direction});await p.evaluate(pointerId=>{const c=document.getElementById('h-earth-functional-landscape-canvas');c.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,cancelable:true,pointerId,pointerType:'touch',clientX:c.clientWidth/2,clientY:c.clientHeight/2}));},pointerId);await new Promise(r=>setTimeout(r,80));}const s=await getState(p);if(angle(s.yawDegrees,target)>2.5)throw new Error(`C0_C_TARGET_YAW_UNRESOLVED:${target}:${s.yawDegrees}`);};
 
-          const browser = await puppeteer.launch({
-            executablePath: process.env.CHROME_PATH,
-            headless: true,
-            args: ['--no-sandbox','--disable-setuid-sandbox','--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist']
-          });
-
-          const normalizeAngle = (value) => {
-            let result = value % 360;
-            if (result > 180) result -= 360;
-            if (result < -180) result += 360;
-            return result;
-          };
-          const angleDifference = (left, right) => Math.abs(normalizeAngle(left - right));
-
-          async function state(page) {
-            return page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState);
-          }
-          async function visibleFrames(page) {
-            return page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().counters.gpuFramebufferPresentationCount);
-          }
-          async function dispatchWheel(page, deltaY) {
-            const before = await state(page);
-            await page.evaluate((value) => {
-              const canvas = document.getElementById('h-earth-functional-landscape-canvas');
-              canvas.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: value, clientX: canvas.clientWidth / 2, clientY: canvas.clientHeight / 2 }));
-            }, deltaY);
-            await page.waitForFunction((sequence) => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState.sequence > sequence, { timeout: 3000 }, before.sequence);
-          }
-          async function moveToZ(page, targetZ) {
-            for (let guard = 0; guard < 30; guard += 1) {
-              const current = await state(page);
-              const difference = targetZ - current.position.z;
-              if (Math.abs(difference) <= 0.02) return;
-              const magnitude = Math.min(10, Math.abs(difference));
-              await dispatchWheel(page, (difference > 0 ? 1 : -1) * magnitude * 70);
-            }
-            throw new Error(`C0_C_TARGET_Z_UNRESOLVED:${targetZ}`);
-          }
-          async function turnTo(page, targetYaw) {
-            for (let attempt = 0; attempt < 5; attempt += 1) {
-              const before = await state(page);
-              const difference = normalizeAngle(targetYaw - before.yawDegrees);
-              if (Math.abs(difference) <= 2) return;
-              const direction = difference > 0 ? 1 : -1;
-              const pointerId = 700 + attempt;
-              await page.evaluate(({ direction, pointerId }) => {
-                const canvas = document.getElementById('h-earth-functional-landscape-canvas');
-                const x = canvas.clientWidth / 2;
-                const y = canvas.clientHeight / 2;
-                canvas.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerId, pointerType: 'touch', clientX: x, clientY: y }));
-                canvas.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, cancelable: true, pointerId, pointerType: 'touch', clientX: x + direction * Math.max(80, canvas.clientWidth * 0.32), clientY: y }));
-              }, { direction, pointerId });
-              await page.waitForFunction(({ targetYaw, direction }) => {
-                const yaw = window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState.yawDegrees;
-                let diff = (targetYaw - yaw) % 360;
-                if (diff > 180) diff -= 360;
-                if (diff < -180) diff += 360;
-                return Math.abs(diff) <= 2 || Math.sign(diff) !== direction;
-              }, { timeout: 6000, polling: 16 }, { targetYaw, direction });
-              await page.evaluate((pointerId) => {
-                const canvas = document.getElementById('h-earth-functional-landscape-canvas');
-                canvas.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true, pointerId, pointerType: 'touch', clientX: canvas.clientWidth / 2, clientY: canvas.clientHeight / 2 }));
-              }, pointerId);
-              await new Promise((resolve) => setTimeout(resolve, 80));
-            }
-            const finalState = await state(page);
-            if (angleDifference(finalState.yawDegrees, targetYaw) > 2.5) throw new Error(`C0_C_TARGET_YAW_UNRESOLVED:${targetYaw}:${finalState.yawDegrees}`);
+          async function capture(def,run){
+            const p=await browser.newPage();await p.setViewport({width:390,height:844,deviceScaleFactor:2,isMobile:true,hasTouch:true,isLandscape:false});
+            const route=`${origin}/showroom/globe/h-earth/?c0c=${head}&scene=${def.id}&run=${run}`;await p.goto(route,{waitUntil:'domcontentloaded',timeout:60000});
+            await p.waitForFunction(()=>document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady==='true'&&window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.().counters.gpuFramebufferPresentationCount>0,{timeout:60000});
+            const startup=await getState(p);let traversal=null;
+            if(def.traversal){await move(p,-126);const start=await getState(p),commands=[],started=Date.now();for(let i=0;i<4;i+=1){await wheel(p,700);commands.push({ordinal:i+1,action:'MOVE_BACKWARD',magnitude:10});await new Promise(r=>setTimeout(r,80));}traversal={startState:start,motionCommandSequence:commands,durationMilliseconds:Date.now()-started,finalState:await getState(p)};}else{await move(p,def.z);if(def.yaw)await turn(p,def.yaw);}
+            await new Promise(r=>setTimeout(r,180));const final=await getState(p),receipt=await p.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt()),out=run===1?`${evidence}/${def.file}`:`/tmp/${def.file.replace('.png','-repeat.png')}`;await p.screenshot({path:out,type:'png',fullPage:false});
+            const record={sceneId:def.id,cameraPosition:final.position,cameraOrientation:{yawDegrees:final.yawDegrees,pitchDegrees:final.pitchDegrees,forward:{x:round(Math.sin(final.yawDegrees*Math.PI/180)),y:round(Math.sin(final.pitchDegrees*Math.PI/180)),z:round(-Math.cos(final.yawDegrees*Math.PI/180))}},fieldOfView:final.verticalFovDegrees,viewport:{width:390,height:844},devicePixelRatio:2,orientation:'PORTRAIT',routeAndQueryState:route,startupSequence:{cleanPage:true,initialState:startup},readyCondition:'RUN8E_READY_AND_VISIBLE_GPU_FRAME',cameraMotionState:def.traversal?'TRAVERSAL_SEQUENCE_COMPLETE':'STATIONARY_CAPTURE',captureFrameCondition:{visibleGpuFrames:receipt.liveGpu.counters.gpuFramebufferPresentationCount,navigationSequence:final.sequence},sourceMainHead:head,screenshotPath:run===1?`${evidence}/${def.file}`:null,screenshotSha256:hash(fs.readFileSync(out)),traversal};await p.close();return record;
           }
 
-          async function captureScene(definition, runNumber) {
-            const page = await browser.newPage();
-            await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true, isLandscape: false });
-            const route = `${publicOrigin}/showroom/globe/h-earth/?c0c=${exactMainHead}&scene=${definition.id}&run=${runNumber}`;
-            await page.goto(route, { waitUntil: 'domcontentloaded', timeout: 60000 });
-            await page.waitForFunction(() => {
-              const root = document.getElementById('h-earth-functional-landscape-route');
-              const api = window.H_EARTH_RUN8E_PUBLIC_ROUTE;
-              return root?.dataset.run8eReady === 'true' && api?.getLiveGpuReceipt?.().counters.gpuFramebufferPresentationCount > 1;
-            }, { timeout: 60000 });
-            const startupState = await state(page);
-            let traversal = null;
-            if (definition.traversal) {
-              await moveToZ(page, -116);
-              const startState = await state(page);
-              const commands = [];
-              const started = Date.now();
-              for (let index = 0; index < 5; index += 1) {
-                await dispatchWheel(page, 700);
-                commands.push({ ordinal: index + 1, action: 'MOVE_BACKWARD', magnitude: 10 });
-                await new Promise((resolve) => setTimeout(resolve, 80));
-              }
-              const finalState = await state(page);
-              traversal = { startState, motionCommandSequence: commands, durationMilliseconds: Date.now() - started, finalState };
-            } else {
-              await moveToZ(page, definition.targetZ);
-              if (definition.targetYaw !== 0) await turnTo(page, definition.targetYaw);
-            }
-            const settledFrame = await visibleFrames(page);
-            await page.waitForFunction((minimum) => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().counters.gpuFramebufferPresentationCount >= minimum, { timeout: 5000 }, settledFrame + 2);
-            const finalState = await state(page);
-            const receipt = await page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt());
-            const output = runNumber === 1 ? `${evidence}/${definition.file}` : `/tmp/${definition.file.replace('.png', '-repeat.png')}`;
-            await page.screenshot({ path: output, type: 'png', fullPage: false });
-            const digest = sha256(fs.readFileSync(output));
-            const forward = {
-              x: round(Math.sin(finalState.yawDegrees * Math.PI / 180)),
-              y: round(Math.sin(finalState.pitchDegrees * Math.PI / 180)),
-              z: round(-Math.cos(finalState.yawDegrees * Math.PI / 180))
-            };
-            const record = {
-              sceneId: definition.id,
-              cameraPosition: finalState.position,
-              cameraOrientation: { yawDegrees: finalState.yawDegrees, pitchDegrees: finalState.pitchDegrees, forward },
-              fieldOfView: finalState.verticalFovDegrees,
-              viewport: { width: 390, height: 844 },
-              devicePixelRatio: 2,
-              orientation: 'PORTRAIT',
-              routeAndQueryState: route,
-              startupSequence: { cleanPage: true, initialState: startupState },
-              readyCondition: 'RUN8E_READY_AND_TWO_VISIBLE_GPU_FRAMES',
-              cameraMotionState: definition.stationary ? 'STATIONARY_CAPTURE' : 'TRAVERSAL_SEQUENCE_COMPLETE',
-              captureFrameCondition: { visibleGpuFrames: receipt.liveGpu.counters.gpuFramebufferPresentationCount, navigationSequence: finalState.sequence },
-              sourceMainHead: exactMainHead,
-              screenshotPath: runNumber === 1 ? `${evidence}/${definition.file}` : null,
-              screenshotSha256: digest,
-              traversal
-            };
-            await page.close();
-            return record;
-          }
-
-          const scenes = [];
-          let allReproducible = true;
-          for (const definition of sceneDefinitions) {
-            const first = await captureScene(definition, 1);
-            const second = await captureScene(definition, 2);
-            const cameraStateMatch =
-              Math.hypot(
-                first.cameraPosition.x - second.cameraPosition.x,
-                first.cameraPosition.y - second.cameraPosition.y,
-                first.cameraPosition.z - second.cameraPosition.z
-              ) <= 0.08 &&
-              angleDifference(first.cameraOrientation.yawDegrees, second.cameraOrientation.yawDegrees) <= 2.5 &&
-              Math.abs(first.cameraOrientation.pitchDegrees - second.cameraOrientation.pitchDegrees) <= 0.25 &&
-              Math.abs(first.fieldOfView - second.fieldOfView) <= 0.25;
-            const viewportMatch = JSON.stringify(first.viewport) === JSON.stringify(second.viewport) && first.devicePixelRatio === second.devicePixelRatio;
-            const readyConditionMatch = first.readyCondition === second.readyCondition;
-            const pixelIdentity = first.screenshotSha256 === second.screenshotSha256;
-            const expectedDynamicVariance = !pixelIdentity && cameraStateMatch && viewportMatch && readyConditionMatch;
-            const unresolvedVariance = !(cameraStateMatch && viewportMatch && readyConditionMatch);
-            if (unresolvedVariance) allReproducible = false;
-            scenes.push({
-              sceneId: definition.id,
-              primaryCapture: first,
-              repeatCapture: second,
-              repeatability: {
-                cameraStateMatch,
-                viewportMatch,
-                readyConditionMatch,
-                screenshotPixelIdentity: pixelIdentity,
-                expectedDynamicVariance,
-                unresolvedVariance
-              }
-            });
-          }
-          await browser.close();
-          if (!allReproducible) throw new Error('C0_C_SCENE_REPEATABILITY_UNRESOLVED');
-
-          const fixedScenes = {
-            contractId: 'H_EARTH_C0_C_FIXED_COASTAL_SCENES_v1',
-            exactMainHead,
-            corridor,
-            sceneCount: scenes.length,
-            scenes,
-            startupLaw: 'FRESH_TOP_LEVEL_PUBLIC_ROUTE_PER_CAPTURE',
-            productMutation: false
-          };
-          writeJson(`${root}/h-earth.c0.fixed-scenes.json`, fixedScenes);
-
-          const screenshotDigests = Object.fromEntries(sceneDefinitions.map((definition) => {
-            const file = `${evidence}/${definition.file}`;
-            return [file, sha256(fs.readFileSync(file))];
-          }));
-          const range = (values) => ({ minimum: round(Math.min(...values)), maximum: round(Math.max(...values)) });
-          const receipt = {
-            receiptType: 'H_EARTH_C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES_RECEIPT_v1',
-            operation: 'C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES',
-            result: 'PASS_CLOSED',
-            c0Overall: 'OPEN_IN_PROGRESS',
-            exactMainHead,
-            corridorId: corridor.corridorId,
-            corridorBounds: corridor.worldSpaceBounds,
-            transectCount: transects.length,
-            shorelineSampleCount: sampleCount,
-            fixedSceneCount: scenes.length,
-            fixedScenesReproducible: allReproducible,
-            screenshotDigestCount: Object.keys(screenshotDigests).length,
-            screenshotDigests,
-            waterLevel: water.H_EARTH_WATER_STATE.seaLevelY,
-            shorelineIntersectionSampleCount: shorelineIntersections.length,
-            beachWidthRange: range(beachWidths),
-            submergedSlopeRange: range(submergedSlopes),
-            darkTerrainTransitionRange: range(darkTransitions),
-            sandbarState: shorelineReceipt.currentSandbarState,
-            representativeCorridorFrozen: true,
-            sixFixedScenesCaptured: scenes.length === 6,
-            allSceneTransformsRecorded: true,
-            shorelineSampleSetComplete: sampleCount >= 66,
-            waterDepthProfileRecorded: true,
-            currentSandbarStateRecorded: true,
-            boundedSceneRepeatabilityExecuted: true,
-            productMutation: false,
-            unauthorizedChangedPaths: 0,
-            firstBlocker: null,
-            nextAuthorizedC0Block: 'C0_D_RUNTIME_AND_MOBILE_BASELINE',
-            c1Authorized: false
-          };
-          writeJson(`${evidence}/h-earth.c0.fixed-scenes-receipt.json`, receipt);
-          console.log(JSON.stringify(receipt, null, 2));
+          const scenes=[];let reproducible=true;
+          for(const def of defs){const a=await capture(def,1),b=await capture(def,2),cameraStateMatch=Math.hypot(a.cameraPosition.x-b.cameraPosition.x,a.cameraPosition.y-b.cameraPosition.y,a.cameraPosition.z-b.cameraPosition.z)<=.08&&angle(a.cameraOrientation.yawDegrees,b.cameraOrientation.yawDegrees)<=2.5&&Math.abs(a.cameraOrientation.pitchDegrees-b.cameraOrientation.pitchDegrees)<=.25&&Math.abs(a.fieldOfView-b.fieldOfView)<=.25,viewportMatch=JSON.stringify(a.viewport)===JSON.stringify(b.viewport)&&a.devicePixelRatio===b.devicePixelRatio,readyConditionMatch=a.readyCondition===b.readyCondition,pixel=a.screenshotSha256===b.screenshotSha256,unresolved=!(cameraStateMatch&&viewportMatch&&readyConditionMatch);if(unresolved)reproducible=false;scenes.push({sceneId:def.id,primaryCapture:a,repeatCapture:b,repeatability:{cameraStateMatch,viewportMatch,readyConditionMatch,screenshotPixelIdentity:pixel,expectedDynamicVariance:!pixel&&!unresolved,unresolvedVariance:unresolved}});}
+          await browser.close();if(!reproducible)throw new Error('C0_C_SCENE_REPEATABILITY_UNRESOLVED');
+          write(`${root}/h-earth.c0.fixed-scenes.json`,{contractId:'H_EARTH_C0_C_FIXED_COASTAL_SCENES_v1',exactMainHead:head,corridor,sceneCount:scenes.length,scenes,startupLaw:'FRESH_TOP_LEVEL_PUBLIC_ROUTE_PER_CAPTURE',productMutation:false});
+          const screenshotDigests=Object.fromEntries(defs.map(d=>{const f=`${evidence}/${d.file}`;return[f,hash(fs.readFileSync(f))];})),range=v=>({minimum:round(Math.min(...v)),maximum:round(Math.max(...v))});
+          const receipt={receiptType:'H_EARTH_C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES_RECEIPT_v1',operation:'C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES',result:'PASS_CLOSED',c0Overall:'OPEN_IN_PROGRESS',exactMainHead:head,corridorId:corridor.corridorId,corridorBounds:corridor.worldSpaceBounds,transectCount:transects.length,shorelineSampleCount:sampleCount,fixedSceneCount:scenes.length,fixedScenesReproducible:reproducible,screenshotDigestCount:Object.keys(screenshotDigests).length,screenshotDigests,waterLevel:0,shorelineIntersectionSampleCount:intersections.length,beachWidthRange:range(beachWidths),submergedSlopeRange:range(submergedSlopes),darkTerrainTransitionRange:range(darkDistances),sandbarState:shoreline.currentSandbarState,representativeCorridorFrozen:true,sixFixedScenesCaptured:scenes.length===6,allSceneTransformsRecorded:true,shorelineSampleSetComplete:sampleCount>=63,waterDepthProfileRecorded:true,currentSandbarStateRecorded:true,boundedSceneRepeatabilityExecuted:true,productMutation:false,unauthorizedChangedPaths:0,firstBlocker:null,nextAuthorizedC0Block:'C0_D_RUNTIME_AND_MOBILE_BASELINE',c1Authorized:false};
+          write(`${evidence}/h-earth.c0.fixed-scenes-receipt.json`,receipt);console.log(JSON.stringify(receipt,null,2));
           NODE
-          node --experimental-default-type=module /tmp/h-earth-c0-c.mjs
 
       - name: Verify C0-C closure and exact mutation boundary
         if: steps.state.outputs.already_closed != 'true'
@@ -451,42 +152,11 @@ jobs:
         run: |
           set -euo pipefail
           node <<'NODE'
-          const fs = require('node:fs');
-          const crypto = require('node:crypto');
-          const cp = require('node:child_process');
-          const root = process.env.C0_ROOT;
-          const evidence = process.env.C0_EVIDENCE;
-          const receipt = require(`./${evidence}/h-earth.c0.fixed-scenes-receipt.json`);
-          const requiredTrue = [
-            'representativeCorridorFrozen','sixFixedScenesCaptured','allSceneTransformsRecorded',
-            'shorelineSampleSetComplete','waterDepthProfileRecorded','currentSandbarStateRecorded',
-            'boundedSceneRepeatabilityExecuted','fixedScenesReproducible'
-          ];
-          for (const key of requiredTrue) if (receipt[key] !== true) throw new Error(`C0_C_CLOSURE_FALSE:${key}`);
-          const authorized = [
-            `${root}/h-earth.c0.fixed-scenes.json`,
-            `${evidence}/h-earth.c0.shoreline-samples.json`,
-            `${evidence}/h-earth.c0.fixed-scenes-receipt.json`,
-            `${evidence}/shoreline-approach.png`,
-            `${evidence}/lateral-beach.png`,
-            `${evidence}/inland-to-open-water.png`,
-            `${evidence}/shallow-water.png`,
-            `${evidence}/dark-terrain-transition.png`,
-            `${evidence}/traversal-through-coast.png`
-          ];
-          for (const file of authorized) if (!fs.existsSync(file)) throw new Error(`C0_C_OUTPUT_MISSING:${file}`);
-          const digest = (file) => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
-          for (const [file, expected] of Object.entries(receipt.screenshotDigests)) {
-            if (digest(file) !== expected) throw new Error(`C0_C_SCREENSHOT_DIGEST_MISMATCH:${file}`);
-          }
-          const manifest = require(`./${root}/h-earth.c0.allowed-path-manifest.json`);
-          const allowed = new Set(manifest.exactAllowedPaths);
-          const changed = cp.execFileSync('git',['diff','--name-only',process.env.EXACT_MAIN_HEAD],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
-          const unauthorized = changed.filter((file) => !allowed.has(file));
-          if (unauthorized.length) throw new Error(`C0_UNAUTHORIZED_CHANGED_PATHS:${unauthorized.join(',')}`);
-          const product = changed.filter((file) => file.startsWith('showroom/globe/h-earth/') || file.startsWith('h-earth-3d/terrain/') || file.startsWith('h-earth-3d/environment/'));
-          if (product.length) throw new Error(`C0_PRODUCT_MUTATION:${product.join(',')}`);
-          console.log(JSON.stringify({ changedPathCount: changed.length, unauthorizedChangedPaths: 0, productMutation: false }, null, 2));
+          const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process'),root=process.env.C0_ROOT,e=process.env.C0_EVIDENCE,r=require(`./${e}/h-earth.c0.fixed-scenes-receipt.json`);
+          for(const k of ['representativeCorridorFrozen','sixFixedScenesCaptured','allSceneTransformsRecorded','shorelineSampleSetComplete','waterDepthProfileRecorded','currentSandbarStateRecorded','boundedSceneRepeatabilityExecuted','fixedScenesReproducible'])if(r[k]!==true)throw new Error(`C0_C_CLOSURE_FALSE:${k}`);
+          const files=[`${root}/h-earth.c0.fixed-scenes.json`,`${e}/h-earth.c0.shoreline-samples.json`,`${e}/h-earth.c0.fixed-scenes-receipt.json`,`${e}/shoreline-approach.png`,`${e}/lateral-beach.png`,`${e}/inland-to-open-water.png`,`${e}/shallow-water.png`,`${e}/dark-terrain-transition.png`,`${e}/traversal-through-coast.png`];for(const f of files)if(!fs.existsSync(f))throw new Error(`C0_C_OUTPUT_MISSING:${f}`);
+          const digest=f=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');for(const[f,v]of Object.entries(r.screenshotDigests))if(digest(f)!==v)throw new Error(`C0_C_SCREENSHOT_DIGEST_MISMATCH:${f}`);
+          const allowed=new Set(require(`./${root}/h-earth.c0.allowed-path-manifest.json`).exactAllowedPaths),changed=cp.execFileSync('git',['diff','--name-only',process.env.EXACT_MAIN_HEAD],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean),unauthorized=changed.filter(f=>!allowed.has(f)),product=changed.filter(f=>f.startsWith('showroom/globe/h-earth/')||f.startsWith('h-earth-3d/terrain/')||f.startsWith('h-earth-3d/environment/'));if(unauthorized.length)throw new Error(`C0_UNAUTHORIZED_CHANGED_PATHS:${unauthorized.join(',')}`);if(product.length)throw new Error(`C0_PRODUCT_MUTATION:${product.join(',')}`);console.log(JSON.stringify({changedPathCount:changed.length,unauthorizedChangedPaths:0,productMutation:false},null,2));
           NODE
 
       - name: Commit durable C0-C evidence
@@ -496,15 +166,6 @@ jobs:
           set -euo pipefail
           git config user.name "h-earth-c0-evidence"
           git config user.email "actions@users.noreply.github.com"
-          git add \
-            "$C0_ROOT/h-earth.c0.fixed-scenes.json" \
-            "$C0_EVIDENCE/h-earth.c0.shoreline-samples.json" \
-            "$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json" \
-            "$C0_EVIDENCE/shoreline-approach.png" \
-            "$C0_EVIDENCE/lateral-beach.png" \
-            "$C0_EVIDENCE/inland-to-open-water.png" \
-            "$C0_EVIDENCE/shallow-water.png" \
-            "$C0_EVIDENCE/dark-terrain-transition.png" \
-            "$C0_EVIDENCE/traversal-through-coast.png"
+          git add "$C0_ROOT/h-earth.c0.fixed-scenes.json" "$C0_EVIDENCE/h-earth.c0.shoreline-samples.json" "$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json" "$C0_EVIDENCE/shoreline-approach.png" "$C0_EVIDENCE/lateral-beach.png" "$C0_EVIDENCE/inland-to-open-water.png" "$C0_EVIDENCE/shallow-water.png" "$C0_EVIDENCE/dark-terrain-transition.png" "$C0_EVIDENCE/traversal-through-coast.png"
           git commit -m "C0-C: freeze coastal scenes and shoreline samples"
           git push origin "HEAD:${{ github.event.pull_request.head.ref }}"

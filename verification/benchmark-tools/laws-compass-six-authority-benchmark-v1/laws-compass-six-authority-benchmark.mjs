@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import puppeteer from "puppeteer-core";
 
 const TOOL = "LAWS_COMPASS_SIX_AUTHORITY_BENCHMARK_v1";
-const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_REPOSITORY_RECONCILIATION_v1";
+const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_BENCHMARK_RECONCILIATION_v2";
 const ORIGIN = process.env.LAWS_SIX_ORIGIN || "http://127.0.0.1:4173";
 const CHROME_PATH = process.env.CHROME_PATH || process.env.CHROME_BIN || "/usr/bin/google-chrome";
 const EXECUTION_COMMIT = process.env.EXECUTION_COMMIT || process.env.GITHUB_SHA || "";
@@ -62,21 +62,36 @@ const VIEWPORTS = Object.freeze([
   { id: "TABLET_1024x1366", width: 1024, height: 1366, mobile: true, inputType: "touch" },
   { id: "DESKTOP_1440x1000", width: 1440, height: 1000, mobile: false, inputType: "mouse" }
 ]);
+const HALF_SQRT_TWO = Math.SQRT1_2;
 const CANONICAL = Object.freeze({
   flow: Object.freeze([0, 0, 0, 1]),
-  integrity: Object.freeze([0, 0, -0.5, 0.8660254037844386]),
-  reality: Object.freeze([0, 0, -0.8660254037844386, 0.5]),
-  structure: Object.freeze([0, 0, -1, 0]),
-  test: Object.freeze([0, 0, -0.8660254037844386, -0.5]),
-  research: Object.freeze([0, 0, -0.5, -0.8660254037844386])
+  integrity: Object.freeze([0, 0, HALF_SQRT_TWO, HALF_SQRT_TWO]),
+  reality: Object.freeze([0, 0, 1, 0]),
+  structure: Object.freeze([0, 0, -HALF_SQRT_TWO, HALF_SQRT_TWO]),
+  test: Object.freeze([-0.43283662594337136, 0, 0, 0.9014723818520222]),
+  research: Object.freeze([0.9014723818520223, 0, 0, 0.4328366259433712])
 });
+const AUTHORITY_FIELD_FRAGMENTS = Object.freeze([
+  "contractId:'LAWS_COMPASS_EXACT_TWO_OBJECT_FIELD_v2'",
+  "model:'FOUR_BASELINE_CARDINALS_PLUS_OPPOSED_DEPTH_POLES'",
+  "flow:Object.freeze([0,1,0])",
+  "integrity:Object.freeze([1,0,0])",
+  "reality:Object.freeze([0,-1,0])",
+  "structure:Object.freeze([-1,0,0])",
+  "test:Object.freeze([0,0,1])",
+  "research:Object.freeze([0,0,-1])",
+  "lawStarIds:Object.freeze(['flow','integrity','reality','structure'])",
+  "celestialSphereIds:Object.freeze(['test','research'])",
+  "sharedRigidTransform:true",
+  "fixedCenterExcluded:true"
+]);
 const CONTROLLER_ORIENTATION_FRAGMENTS = Object.freeze([
-  'flow: Object.freeze([0, 0, 0, 1])',
-  'integrity: Object.freeze([0, 0, -0.5, 0.8660254037844386])',
-  'reality: Object.freeze([0, 0, -0.8660254037844386, 0.5])',
-  'structure: Object.freeze([0, 0, -1, 0])',
-  'test: Object.freeze([0, 0, -0.8660254037844386, -0.5])',
-  'research: Object.freeze([0, 0, -0.5, -0.8660254037844386])'
+  'flow:Object.freeze([0,0,0,1])',
+  'integrity:Object.freeze([0,0,HALF_SQRT_TWO,HALF_SQRT_TWO])',
+  'reality:Object.freeze([0,0,1,0])',
+  'structure:Object.freeze([0,0,-HALF_SQRT_TWO,HALF_SQRT_TWO])',
+  'test:Object.freeze([-0.43283662594337136,0,0,0.9014723818520222])',
+  'research:Object.freeze([0.9014723818520223,0,0,0.4328366259433712])'
 ]);
 
 function openingTags(html) {
@@ -170,6 +185,7 @@ assert(testMembers.every(({ attrs }) => !has(attrs, "data-laws-law") && !has(att
 assert(researchMembers.every(({ attrs }) => !has(attrs, "data-laws-law") && !has(attrs, "data-laws-law-control")), "RESEARCH_MEMBERS_INCORRECTLY_CLASSIFIED_AS_LAWS", researchMembers.map(({ attrs }) => attrs["data-law-id"] || attrs["data-destination-id"]));
 assert(AUTHORITY_IDS.every(id => topLevel.some(({ attrs }) => attrs["data-direction"] === id)), "SIX_AUTHORITY_IDENTITIES_INCOMPLETE", topLevel.map(({ attrs }) => attrs["data-direction"]));
 assert(source.controller.includes('const DIRECTIONS = Object.freeze([\n    "flow",\n    "integrity",\n    "reality",\n    "structure",\n    "test",\n    "research"'), "CONTROLLER_SIX_AUTHORITY_IDENTITY_SET_MISSING");
+assert(AUTHORITY_FIELD_FRAGMENTS.every(fragment => source.controller.includes(fragment)), "CONTROLLER_AUTHORITY_FIELD_CONTRACT_MISMATCH", AUTHORITY_FIELD_FRAGMENTS.filter(fragment => !source.controller.includes(fragment)));
 assert(CONTROLLER_ORIENTATION_FRAGMENTS.every(fragment => source.controller.includes(fragment)), "CONTROLLER_ORIENTATION_AUTHORITY_MISMATCH", CONTROLLER_ORIENTATION_FRAGMENTS.filter(fragment => !source.controller.includes(fragment)));
 assert(source.interactions.includes('const D=Object.freeze(["flow","integrity","reality","structure","test","research"])'), "INTERACTIONS_SIX_AUTHORITY_IDENTITY_SET_MISSING");
 assert(source.interactions.includes("projectedCategoryLabelsInstalled:S.labels.size===6"), "PROJECTED_SIX_AUTHORITY_LABEL_CONTRACT_MISSING");

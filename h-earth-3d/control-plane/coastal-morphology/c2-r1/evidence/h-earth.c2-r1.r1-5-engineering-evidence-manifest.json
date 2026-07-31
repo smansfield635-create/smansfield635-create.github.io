@@ -1,0 +1,24 @@
+{
+  "evidenceType": "H_EARTH_C2_R1_R1_5_ENGINEERING_EVIDENCE_MANIFEST_v1",
+  "checkpoint": "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
+  "executionHead": "6412f0167fa226104058f428b2c1c4a9a1799fb4",
+  "workflowRun": 30656954892,
+  "workflowJob": 91243621326,
+  "artifactId": 8803625189,
+  "artifactName": "h-earth-c2-r1-r1-5-engineering-evidence",
+  "artifactDigest": "sha256:8bdc377d7d6f8379a6de1eaf2d9d029b7b02ba4a7e9c8d82e69bdf33b58f2d46",
+  "artifactFiles": [
+    "h-earth.c2-r1.r1-5-verification.json",
+    "r1-5-engineering-captures/h-earth.c2-r1.r1-5-physical-response-curves.svg",
+    "r1-5-engineering-captures/h-earth.c2-r1.r1-5-breaker-intensity-transects.svg",
+    "r1-5-engineering-captures/h-earth.c2-r1.r1-5-breaker-placement-map.svg"
+  ],
+  "representativeEngineeringCaptureCount": 3,
+  "repositoryPreservedFiles": [
+    "h-earth.c2-r1.r1-5-verification.json",
+    "r1-5-engineering-captures/h-earth.c2-r1.r1-5-physical-response-curves.svg"
+  ],
+  "classification": "ENGINEERING_EVIDENCE_ONLY",
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false
+}

@@ -898,7 +898,7 @@ def verify_browser(static: dict[str, object]) -> dict[str, object]:
         if not ready:
             raise RuntimeError("LOCAL_RUNTIME_UNAVAILABLE")
 
-        verifier = pathlib.Path("/tmp/laws-cp5-final-verifier.mjs")
+        verifier = REPO / "verification/.laws-cp5-final-verifier.mjs"
         verifier.write_text(NODE_VERIFIER)
         env = os.environ.copy()
         env["EXECUTION_COMMIT"] = str(static["head"])

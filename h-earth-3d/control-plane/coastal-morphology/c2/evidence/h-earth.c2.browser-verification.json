@@ -2,7 +2,7 @@
   "receiptType": "H_EARTH_C2_BROWSER_VERIFICATION_v1",
   "operation": "C2.6_FUNCTIONAL_VERIFICATION",
   "result": "HARD_BLOCKED",
-  "candidateHead": "e42650d93e509ffa523e63356802d6303c8a7905",
+  "candidateHead": "6a15cc4f160641578e3586836ae21590e6b77a45",
   "localCandidateUrl": "http://127.0.0.1:4173/preview/h-earth/c2/coastal-visual-successor-001/",
   "checks": {
     "pageLoads": true,
@@ -30,13 +30,13 @@
     "pixelCount": 494960,
     "nonClearPixelCount": 469690,
     "nonClearRatio": 0.9489453693227735,
-    "byteHash": "fnv1a32:6f4a051d"
+    "byteHash": "fnv1a32:b10146f2"
   },
   "finalColor": {
     "pixelCount": 494960,
-    "nonClearPixelCount": 465219,
-    "nonClearRatio": 0.9399123161467593,
-    "byteHash": "fnv1a32:9674c6c7"
+    "nonClearPixelCount": 463936,
+    "nonClearRatio": 0.9373201874898982,
+    "byteHash": "fnv1a32:e626e87c"
   },
   "rendererCounters": {
     "contextCreationCount": 1,
@@ -45,8 +45,8 @@
     "bufferCreateCount": 9,
     "bufferUploadCount": 9,
     "uploadedByteLength": 2145444,
-    "frameCount": 3,
-    "visiblePresentationCount": 3,
+    "frameCount": 4,
+    "visiblePresentationCount": 4,
     "colorReadbackCount": 1,
     "criticalGlErrorCount": 3,
     "postInitializationResourceCreationCount": 0,
@@ -63,19 +63,19 @@
     "touchPointerEventCount": 3,
     "mousePointerEventCount": 0,
     "penPointerEventCount": 0,
-    "navigationProposalCount": 4,
-    "acceptedNavigationProposalCount": 4,
+    "navigationProposalCount": 5,
+    "acceptedNavigationProposalCount": 5,
     "rejectedNavigationProposalCount": 0,
-    "oneFingerLookProposalCount": 3,
+    "oneFingerLookProposalCount": 4,
     "twoFingerTravelProposalCount": 0,
     "pinchProposalCount": 0,
     "wheelProposalCount": 1,
     "maximumActivePointerCount": 1,
-    "animationFrameCount": 138,
-    "activeIntentFrameCount": 3,
+    "animationFrameCount": 139,
+    "activeIntentFrameCount": 4,
     "gestureLockTransitionCount": 1,
     "releaseTerminationCount": 1,
-    "boundedElapsedClampCount": 6,
+    "boundedElapsedClampCount": 7,
     "deferredCommitCount": 0,
     "queuedNavigationChainCount": 0
   },

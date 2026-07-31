@@ -8,7 +8,9 @@
   "allowedExactPaths": [
     ".github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml",
     ".github/workflows/h-earth-c2-r1-r1-1-continuous-profile.yml",
-    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js"
+    ".github/workflows/h-earth-c2-r1-r1-2-normals-lighting.yml",
+    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+    "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js"
   ],
   "protectedPathPrefixes": [
     "showroom/globe/h-earth/",
@@ -21,6 +23,15 @@
       "checkpoint": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
       "candidateOnly": true,
       "productionImportBound": false,
+      "publicRouteBound": false,
+      "failedC2SourceConsumed": false
+    },
+    "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js": {
+      "checkpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING",
+      "candidateOnly": true,
+      "sourceProfile": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+      "productionImportBound": false,
+      "rendererBound": false,
       "publicRouteBound": false,
       "failedC2SourceConsumed": false
     }

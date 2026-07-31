@@ -421,7 +421,7 @@ def build_candidate() -> None:
       } else {'''
     text = text[:solar_mode_start] + solar_surface + text[outer_else + len("\n      } else {"):]
 
-    lunar_else_start = text.index("      } else {", solar_mode_start)
+    lunar_else_start = text.index("\n      } else {", solar_mode_start) + 1
     radial_start = text.index("\n      }\n\n      const radial = radius * relief;", lunar_else_start)
     lunar_surface = r'''      } else {
         const macroTerrain = deterministicField(nx, ny, nz, 2.25, 1.43);
@@ -560,7 +560,7 @@ def build_candidate() -> None:
     run("git", "config", "user.name", "github-actions[bot]")
     run("git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
     run("git", "add", str(PRODUCT))
-    run("git", "commit", "-m", "Naturalize final Laws Sun and Moon expression")
+    run("git", "commit", "-m", "Naturalize final Laws Sun and Moon expression [skip ci]")
     run("git", "push", "origin", f"HEAD:{BRANCH}")
 
 

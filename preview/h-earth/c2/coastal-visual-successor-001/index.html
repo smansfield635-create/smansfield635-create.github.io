@@ -37,6 +37,19 @@
     <div><dt>Coastal pass</dt><dd id="hud-pass">C2.1–C2.5</dd></div>
   </dl>
 </main>
+<script>
+(() => {
+  const prototype = globalThis.WebGL2RenderingContext?.prototype;
+  const original = prototype?.blitFramebuffer;
+  if (!prototype || typeof original !== 'function') return;
+  prototype.blitFramebuffer = function (...args) {
+    if ((args[8] & this.COLOR_BUFFER_BIT) !== 0 && args[9] === this.LINEAR) {
+      args[9] = this.NEAREST;
+    }
+    return original.apply(this, args);
+  };
+})();
+</script>
 <script type="module" src="./candidate-integration.js"></script>
 </body>
 </html>

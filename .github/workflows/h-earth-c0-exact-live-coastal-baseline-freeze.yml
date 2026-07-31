@@ -1,0 +1,172 @@
+name: H-Earth C0 Exact Live Coastal Baseline Freeze
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml'
+      - 'h-earth-3d/control-plane/coastal-morphology/c0/**'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-c0-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+env:
+  EXACT_MAIN_HEAD: 59df682501f63aec8a263cef8e1a5adacbc2a1a2
+  C0_BRANCH: agent/h-earth-c0-exact-live-coastal-baseline-freeze-001
+  C0_ROOT: h-earth-3d/control-plane/coastal-morphology/c0
+  C0_EVIDENCE: h-earth-3d/control-plane/coastal-morphology/c0/evidence
+
+jobs:
+  c0-a-public-occurrence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact C0 execution branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Verify exact-main ancestry and branch identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ github.event.pull_request.head.ref }}" = "$C0_BRANCH"
+          git cat-file -e "$EXACT_MAIN_HEAD^{commit}"
+          test "$(git merge-base "$EXACT_MAIN_HEAD" HEAD)" = "$EXACT_MAIN_HEAD"
+
+      - name: Freeze C0-A intended paths for preflight
+        shell: bash
+        run: |
+          cat > /tmp/h-earth-c0-a-paths.txt <<'PATHS'
+          .github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml
+          h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.allowed-path-manifest.json
+          h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.capture.mjs
+          h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.preflight-receipt.json
+          h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.public-occurrence.json
+          h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.network-log.json
+          h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.public-occurrence-bodies.tar.gz
+          PATHS
+
+      - name: Execute H-Earth registry preflight
+        id: preflight
+        shell: bash
+        run: |
+          set +e
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/h-earth-c0-a-paths.txt \
+            --task "C0-A public occurrence capture and exact-main linkage" \
+            --mutation-intent \
+            --output "$C0_EVIDENCE/h-earth.c0.preflight-receipt.json"
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          test -f "$C0_EVIDENCE/h-earth.c0.preflight-receipt.json"
+          exit 0
+
+      - name: Preserve blocking preflight receipt
+        if: steps.preflight.outputs.exit_code != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "h-earth-c0-evidence"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$C0_EVIDENCE/h-earth.c0.preflight-receipt.json"
+          git commit -m "C0-A: preserve blocking registry preflight"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          exit 1
+
+      - uses: actions/setup-node@v4
+        if: steps.preflight.outputs.exit_code == '0'
+        with:
+          node-version: '22'
+
+      - name: Set up Chrome
+        if: steps.preflight.outputs.exit_code == '0'
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install bounded browser driver
+        if: steps.preflight.outputs.exit_code == '0'
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Capture public occurrence and exact-main linkage
+        if: steps.preflight.outputs.exit_code == '0'
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          PUBLIC_ORIGIN: https://diamondgatebridge.com
+        run: node "$C0_ROOT/h-earth.c0.capture.mjs"
+
+      - name: Preserve exact public bodies
+        if: steps.preflight.outputs.exit_code == '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          tar -C /tmp -czf \
+            "$C0_EVIDENCE/h-earth.c0.public-occurrence-bodies.tar.gz" \
+            h-earth-c0-public-occurrence-bodies
+
+      - name: Verify exact allowed-path boundary
+        if: steps.preflight.outputs.exit_code == '0'
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const cp = require('node:child_process');
+          const manifest = JSON.parse(fs.readFileSync(
+            'h-earth-3d/control-plane/coastal-morphology/c0/h-earth.c0.allowed-path-manifest.json',
+            'utf8'
+          ));
+          const allowed = new Set(manifest.exactAllowedPaths);
+          const changed = cp.execFileSync(
+            'git',
+            ['diff', '--name-only', process.env.EXACT_MAIN_HEAD],
+            { encoding: 'utf8' }
+          ).trim().split(/\r?\n/).filter(Boolean);
+          const unauthorized = changed.filter((entry) => !allowed.has(entry));
+          if (unauthorized.length) {
+            throw new Error(`C0_UNAUTHORIZED_CHANGED_PATHS:${unauthorized.join(',')}`);
+          }
+          console.log(JSON.stringify({
+            changedPathCount: changed.length,
+            changedPaths: changed,
+            unauthorizedChangedPaths: unauthorized.length,
+            productMutation: false
+          }, null, 2));
+          NODE
+
+      - name: Commit durable C0-A evidence
+        if: steps.preflight.outputs.exit_code == '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "h-earth-c0-evidence"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            "$C0_EVIDENCE/h-earth.c0.preflight-receipt.json" \
+            "$C0_EVIDENCE/h-earth.c0.public-occurrence.json" \
+            "$C0_EVIDENCE/h-earth.c0.network-log.json" \
+            "$C0_EVIDENCE/h-earth.c0.public-occurrence-bodies.tar.gz"
+          git commit -m "C0-A: freeze public occurrence and source linkage"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+
+      - name: Upload C0-A execution artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c0-a-public-occurrence
+          path: |
+            h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.preflight-receipt.json
+            h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.public-occurrence.json
+            h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.network-log.json
+            h-earth-3d/control-plane/coastal-morphology/c0/evidence/h-earth.c0.public-occurrence-bodies.tar.gz
+          if-no-files-found: warn
+          retention-days: 30

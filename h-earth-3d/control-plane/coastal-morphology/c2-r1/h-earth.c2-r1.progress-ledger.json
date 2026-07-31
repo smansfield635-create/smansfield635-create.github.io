@@ -2,7 +2,7 @@
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
   "branch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
-  "currentCheckpoint": "R1.4_ACTUAL_DEPTH_WATER_OPTICS",
+  "currentCheckpoint": "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
   "nextAuthorizedCheckpoint": "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
   "passes": {
     "R1.0": {
@@ -39,7 +39,8 @@
       "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "startingHead": "2c9e16e1340a11cf46277b641454db610d7c9b6c",
       "executionHead": "3f870c5dbe8f16d24829693db0359bc6e7dd37d8",
-      "rollbackBranch": "rollback/h-earth-c2-r1-r1-3-closed-001",
+      "durableClosureHead": "f0a7c2b26448db2429feec8cbf45b58986da81d4",
+      "rollbackBranch": "rollback/h-earth-c2-r1-r1-4-closed-001",
       "actualDepthUsed": true,
       "shallowWaterTurquoise": true,
       "seabedVisibilityDepthDriven": true,
@@ -71,15 +72,40 @@
       "publicRouteMutation": false,
       "firstBlocker": null
     },
-    "R1.5": { "status": "NOT_STARTED" },
-    "R1.6": { "status": "NOT_STARTED" },
-    "R1.7": { "status": "NOT_STARTED" },
-    "R1.8": { "status": "NOT_STARTED" }
+    "R1.5": {
+      "status": "IMPLEMENTED_AWAITING_CURRENT_HEAD_WORKFLOWS",
+      "startingHead": "f0a7c2b26448db2429feec8cbf45b58986da81d4",
+      "rollbackBranch": "rollback/h-earth-c2-r1-r1-4-closed-001",
+      "breakerEligibilityFieldImplemented": true,
+      "breakerIntensityFieldImplemented": true,
+      "actualDepthInputImplemented": true,
+      "seabedSlopeInputImplemented": true,
+      "directionalDepthChangeImplemented": true,
+      "waveApproachDirectionImplemented": true,
+      "shorelineOrientationInputImplemented": true,
+      "restrainedCrestPhaseImplemented": true,
+      "fullSwashFoamAndWetnessDeferred": true,
+      "engineeringCaptureDefinitionCount": 3,
+      "closureCondition": "R1_5_AND_AUTOMATIC_REGISTRY_PREFLIGHT_PASS_AT_SAME_CONTROLLING_HEAD",
+      "registryPreflight": "PENDING_CURRENT_HEAD",
+      "productMutation": false,
+      "publicRouteMutation": false,
+      "firstBlocker": null
+    },
+    "R1.6": {
+      "status": "NOT_STARTED"
+    },
+    "R1.7": {
+      "status": "NOT_STARTED"
+    },
+    "R1.8": {
+      "status": "NOT_STARTED"
+    }
   },
   "hardBlockers": [],
-  "registryPreflightStatus": "PASS",
+  "registryPreflightStatus": "PENDING_CURRENT_HEAD",
   "representativeCaptureCount": 0,
-  "engineeringCaptureDefinitionCount": 9,
+  "engineeringCaptureDefinitionCount": 12,
   "liveReviewUrl": null,
   "functionalVerification": "NOT_STARTED",
   "visualSuccessorStatus": "NOT_ESTABLISHED",

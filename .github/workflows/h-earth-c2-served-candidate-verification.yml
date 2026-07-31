@@ -1,0 +1,114 @@
+name: H-Earth C2 Served Candidate Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-c2-served-candidate-verification.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify-served-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Confirm exact served preview bytes
+        env:
+          MERGE_HEAD: 74d830e849d848835bbf6d2924151a72b1f62f8e
+          LIVE_ROOT: https://diamondgatebridge.com/preview/h-earth/c2/coastal-visual-successor-001
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-c2-served
+
+          index_ok=false
+          for attempt in $(seq 1 60); do
+            status=$(curl -L -sS -o /tmp/h-earth-c2-served/index.html -w '%{http_code}' \
+              -H 'Cache-Control: no-cache' \
+              "$LIVE_ROOT/?c2=$MERGE_HEAD-$attempt" || true)
+            if [ "$status" = "200" ] && grep -q 'H-Earth C2 Coastal Visual Successor' /tmp/h-earth-c2-served/index.html; then
+              index_ok=true
+              break
+            fi
+            sleep 10
+          done
+          [ "$index_ok" = true ] || { echo "C2_SERVED_INDEX_UNAVAILABLE"; exit 1; }
+
+          fetch_asset() {
+            name="$1"
+            status=$(curl -L -sS -o "/tmp/h-earth-c2-served/$name" -w '%{http_code}' \
+              -H 'Cache-Control: no-cache' \
+              "$LIVE_ROOT/$name?c2=$MERGE_HEAD" || true)
+            [ "$status" = "200" ] || { echo "C2_SERVED_ASSET_UNAVAILABLE:$name:$status"; exit 1; }
+          }
+
+          fetch_asset candidate-integration.js
+          fetch_asset candidate-renderer.js
+          fetch_asset preview-manifest.json
+
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          root = Path('preview/h-earth/c2/coastal-visual-successor-001')
+          served = Path('/tmp/h-earth-c2-served')
+          pairs = {
+              'index.html': (root / 'index.html', served / 'index.html'),
+              'candidate-integration.js': (root / 'candidate-integration.js', served / 'candidate-integration.js'),
+              'candidate-renderer.js': (root / 'candidate-renderer.js', served / 'candidate-renderer.js'),
+              'preview-manifest.json': (root / 'preview-manifest.json', served / 'preview-manifest.json'),
+          }
+
+          records = {}
+          exact = True
+          for name, (repo_path, served_path) in pairs.items():
+              repo_bytes = repo_path.read_bytes()
+              served_bytes = served_path.read_bytes()
+              repo_sha = hashlib.sha256(repo_bytes).hexdigest()
+              served_sha = hashlib.sha256(served_bytes).hexdigest()
+              match = repo_sha == served_sha
+              exact = exact and match
+              records[name] = {
+                  'httpStatus': 200,
+                  'repositorySha256': repo_sha,
+                  'servedSha256': served_sha,
+                  'exactByteMatch': match,
+                  'servedByteLength': len(served_bytes),
+              }
+
+          receipt = {
+              'receiptType': 'H_EARTH_C2_SERVED_CANDIDATE_VERIFICATION_v1',
+              'operation': 'C2.7_ISOLATED_PREVIEW_PUBLICATION',
+              'result': 'PASS_CLOSED_USER_DIFFERENTIAL_READY' if exact else 'HARD_BLOCKED',
+              'c2MergeHead': os.environ['MERGE_HEAD'],
+              'liveCandidateUrl': os.environ['LIVE_ROOT'] + '/',
+              'servedOccurrencePresent': True,
+              'exactMergedBytesServed': exact,
+              'assets': records,
+              'productDefaultMutated': False,
+              'firstBlocker': None if exact else 'SERVED_BYTE_MISMATCH',
+              'userDifferentialReady': exact,
+          }
+          output = Path('h-earth-3d/control-plane/coastal-morphology/c2/evidence/h-earth.c2.served-candidate-verification.json')
+          output.write_text(json.dumps(receipt, indent=2) + '\n')
+          if not exact:
+              raise SystemExit('C2_SERVED_BYTE_MISMATCH')
+          PY
+
+      - name: Preserve receipt and remove transport
+        if: success()
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git rm .github/workflows/h-earth-c2-served-candidate-verification.yml
+          git add h-earth-3d/control-plane/coastal-morphology/c2/evidence/h-earth.c2.served-candidate-verification.json
+          git commit -m 'C2.7: record exact served candidate occurrence [skip ci]'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}

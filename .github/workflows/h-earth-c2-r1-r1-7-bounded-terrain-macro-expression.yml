@@ -1,0 +1,51 @@
+name: H-Earth C2-R1 R1.7 Bounded Terrain Macro Expression
+
+on:
+  pull_request:
+    branches:
+      - integration/h-earth-c2-r1-baseline-001
+    paths:
+      - 'h-earth-3d/terrain/h-earth.coastal-macro-expression.c2-r1.js'
+      - 'h-earth-3d/render/h-earth.coastal-macro-material-sampler.c2-r1.js'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.program.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.progress-ledger.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7-bounded-terrain-macro-expression.mjs'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js'
+      - '.github/workflows/h-earth-c2-r1-r1-7-bounded-terrain-macro-expression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r1-7:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Execute bounded terrain macro-expression verification
+        env:
+          C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7-bounded-terrain-macro-expression.mjs
+
+      - name: Upload R1.7 receipt and engineering captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-r1-7-engineering-evidence
+          path: |
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7-verification.json
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7-engineering-captures/*.svg
+          if-no-files-found: error
+          retention-days: 30

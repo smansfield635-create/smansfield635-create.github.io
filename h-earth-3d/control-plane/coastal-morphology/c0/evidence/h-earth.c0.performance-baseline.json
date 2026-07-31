@@ -1,0 +1,35 @@
+{
+  "receiptType": "H_EARTH_C0_D_PERFORMANCE_BASELINE_v1",
+  "operation": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
+  "result": "OPEN_BLOCKED",
+  "c0Overall": "OPEN_IN_PROGRESS",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "desktopEnvironment": {
+    "deviceModel": "GITHUB_HOSTED_UBUNTU_RUNNER",
+    "operatingSystem": "Ubuntu 24.04",
+    "browserAndVersion": "GOOGLE_CHROME_STABLE",
+    "physicalOrEmulated": "HOSTED_DESKTOP_RUNTIME",
+    "orientation": "LANDSCAPE",
+    "viewport": {
+      "width": 1365,
+      "height": 768
+    },
+    "devicePixelRatio": 1,
+    "networkProfile": "RUNNER_DEFAULT",
+    "cacheState": "CLEAN_CONTEXT_PER_STATE",
+    "batteryOrPowerState": "EXTERNAL_RUNNER_POWER",
+    "thermalState": {
+      "status": "UNAVAILABLE",
+      "reason": "NOT_EXPOSED"
+    }
+  },
+  "physicalMobile": {
+    "deviceModel": "DESIGNATED_SAMSUNG_REFERENCE_DEVICE",
+    "physicalOrEmulated": "PHYSICAL_REQUIRED",
+    "executed": false,
+    "status": "NOT_EXECUTED",
+    "reason": "NO_PHYSICAL_DEVICE_EXECUTION_CHANNEL_AVAILABLE_TO_GITHUB_ACTIONS; PRIOR_SIGNED_OFFLINE_PACKAGE_HAS physicalAcceptanceEmbedded=false AND DOES_NOT_BIND_TO_EXACT_MAIN_HEAD",
+    "officialBaseline": false
+  },
+  "runtimeStates": []
+}

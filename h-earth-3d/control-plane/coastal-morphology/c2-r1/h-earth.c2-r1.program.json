@@ -1,11 +1,11 @@
 {
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
-  "status": "R1_3_IMPLEMENTED_LOCAL_PASS_CURRENT_HEAD_WORKFLOWS_PENDING",
+  "status": "R1_4_EXECUTION_CANDIDATE_CURRENT_HEAD_WORKFLOWS_PENDING",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
   "failedC2GeometryAsStartingSource": "PROHIBITED",
   "rollbackBranch": "rollback/h-earth-c2-r1-pre-mutation-001",
-  "latestCheckpointRollbackBranch": "rollback/h-earth-c2-r1-r1-2-closed-001",
+  "latestCheckpointRollbackBranch": "rollback/h-earth-c2-r1-r1-3-closed-001",
   "integrationBaseBranch": "integration/h-earth-c2-r1-baseline-001",
   "advanceToC3": false,
   "executionLaw": {
@@ -27,13 +27,12 @@
     "recomputeVertexNormalsAfterDisplacement": true,
     "normalContinuityCheck": true,
     "continuousSedimentMembership": true,
-    "sedimentMembershipInputs": [
-      "ELEVATION_RELATIVE_TO_WATER",
-      "ACTUAL_VERTICAL_WATER_DEPTH",
-      "LOCAL_SLOPE",
-      "SHORELINE_DISTANCE",
-      "SWASH_OR_MOISTURE_ENVELOPE",
-      "CURVATURE_OR_DEPOSITION_TENDENCY"
+    "waterOpticsDepthControlledChannels": [
+      "SEABED_VISIBILITY",
+      "SHALLOW_TURQUOISE",
+      "OFFSHORE_DARKENING",
+      "SPECTRAL_ABSORPTION",
+      "TRANSPARENCY"
     ],
     "breakerInputs": [
       "WAVE_DIRECTION",
@@ -48,69 +47,55 @@
   "passes": {
     "R1.0": {
       "name": "BASELINE_PATH_ROLLBACK_AND_REVIEW_CONTROL",
-      "status": "PASS_CLOSED_DO_NOT_REOPEN",
-      "productMutation": false,
-      "stoppingBoundary": "BASELINE_AND_CONTROL_CUSTODY_DURABLE"
+      "status": "PASS_CLOSED_DO_NOT_REOPEN"
     },
     "R1.1": {
       "name": "CONTINUOUS_BEACH_AND_BATHYMETRY",
-      "status": "PASS_CLOSED_DO_NOT_REOPEN",
-      "mutationScope": [
-        "ISOLATED_CANDIDATE_COASTAL_PROFILE",
-        "ISOLATED_CANDIDATE_SEABED_PROFILE"
-      ],
-      "stoppingBoundary": "CONTINUITY_AND_PROFILE_GAUGES_PASS"
+      "status": "PASS_CLOSED_DO_NOT_REOPEN"
     },
     "R1.2": {
       "name": "RECOMPUTED_NORMALS_AND_LIGHTING",
-      "status": "PASS_CLOSED_DO_NOT_REOPEN",
-      "executionHead": "518dce9fdd767f286dba88204673fb0bfdb4c044",
-      "acceptedClosureHead": "459cde065f461d0b4a8e53b1dc054059aa6abd20",
-      "stoppingBoundary": "NORMAL_CONTINUITY_AND_LIGHTING_PROJECTION_PASS"
+      "status": "PASS_CLOSED_DO_NOT_REOPEN"
     },
     "R1.3": {
       "name": "GRADUAL_SEDIMENT_MEMBERSHIPS",
-      "status": "IMPLEMENTED_LOCAL_PASS_CURRENT_HEAD_WORKFLOWS_PENDING",
-      "startingHead": "459cde065f461d0b4a8e53b1dc054059aa6abd20",
-      "authorizedMutationScope": [
-        "SEDIMENT_CLASSIFICATION_FIELDS",
-        "CONTINUOUS_MEMBERSHIP_WEIGHTS",
-        "BLEND_WIDTHS",
-        "SEDIMENT_COLOR_AND_ROUGHNESS_PARAMETERS",
-        "R1_3_TESTS_AND_RECEIPTS"
-      ],
-      "immutableInputs": [
-        "R1_1_COASTAL_PROFILE",
-        "R1_2_SURFACE_NORMALS_AND_LIGHTING"
-      ],
-      "closureCondition": "R1_3_AND_REGISTRY_CURRENT_HEAD_WORKFLOWS_PASS",
-      "stoppingBoundary": "BLENDED_MEMBERSHIP_GAUGES_PASS_OR_FIRST_REAL_HARD_BLOCKER_REPORTED"
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
+      "executionHead": "2c9e16e1340a11cf46277b641454db610d7c9b6c"
     },
     "R1.4": {
       "name": "ACTUAL_DEPTH_WATER_OPTICS",
-      "status": "NOT_STARTED",
-      "stoppingBoundary": "DEPTH_CORRESPONDENCE_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
+      "status": "EXECUTION_CANDIDATE_CURRENT_HEAD_WORKFLOWS_PENDING",
+      "startingHead": "2c9e16e1340a11cf46277b641454db610d7c9b6c",
+      "authorizedMutationScope": [
+        "ACTUAL_DEPTH_OPTICAL_FIELDS",
+        "SEABED_VISIBILITY",
+        "SHALLOW_TURQUOISE_RESPONSE",
+        "OFFSHORE_DARKENING",
+        "SPECTRAL_ABSORPTION_AND_TRANSPARENCY",
+        "R1_4_TESTS_RECEIPTS_AND_ENGINEERING_CAPTURES"
+      ],
+      "immutableInputs": [
+        "R1_1_COASTAL_PROFILE",
+        "R1_2_SURFACE_NORMALS_AND_LIGHTING",
+        "R1_3_SEDIMENT_MEMBERSHIPS"
+      ],
+      "prohibited": [
+        "GEOMETRY_CHANGE",
+        "NORMAL_OR_LIGHTING_CHANGE",
+        "SEDIMENT_MEMBERSHIP_CHANGE",
+        "BREAKERS_OR_FOAM",
+        "OCEAN_ANIMATION",
+        "RENDERER_LIFECYCLE",
+        "CAMERA_OR_TRAVERSAL",
+        "PUBLIC_ROUTE_OR_PRODUCT_DEFAULT"
+      ],
+      "closureCondition": "R1_4_AND_REGISTRY_CURRENT_HEAD_WORKFLOWS_PASS",
+      "stoppingBoundary": "DEPTH_CORRESPONDENCE_AND_OPTICAL_CONTINUITY_PASS_OR_FIRST_REAL_HARD_BLOCKER_REPORTED"
     },
-    "R1.5": {
-      "name": "DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
-      "status": "NOT_STARTED",
-      "stoppingBoundary": "BREAKER_ELIGIBILITY_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
-    },
-    "R1.6": {
-      "name": "RESTRAINED_SWASH_FOAM_AND_WETNESS",
-      "status": "NOT_STARTED",
-      "stoppingBoundary": "TEMPORAL_CONTACT_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
-    },
-    "R1.7": {
-      "name": "BOUNDED_TERRAIN_MACRO_EXPRESSION",
-      "status": "NOT_STARTED",
-      "stoppingBoundary": "MACRO_EXPRESSION_BOUNDARY_PASS_OR_HARD_BLOCKER_REPORTED"
-    },
-    "R1.8": {
-      "name": "FUNCTIONAL_VERIFICATION_AND_HUMAN_REVIEW",
-      "status": "NOT_STARTED",
-      "stoppingBoundary": "FUNCTIONALLY_REVIEWABLE_LIVE_CANDIDATE_WITH_SIX_CAPTURES_OR_HARD_BLOCKER_REPORTED"
-    }
+    "R1.5": { "name": "DEPTH_AND_SLOPE_ALIGNED_BREAKERS", "status": "NOT_STARTED" },
+    "R1.6": { "name": "RESTRAINED_SWASH_FOAM_AND_WETNESS", "status": "NOT_STARTED" },
+    "R1.7": { "name": "BOUNDED_TERRAIN_MACRO_EXPRESSION", "status": "NOT_STARTED" },
+    "R1.8": { "name": "FUNCTIONAL_VERIFICATION_AND_HUMAN_REVIEW", "status": "NOT_STARTED" }
   },
   "requiredRepresentativeCaptures": [
     "LATERAL_BEACH_PROFILE",
@@ -130,8 +115,8 @@
     "purpose": "READ_ONLY_CANDIDATE_PATH_RESOLUTION",
     "mutationAuthorityCreated": false,
     "mergeAuthorityCreated": false,
-    "status": "INCLUDD_PENDING_CURRENT_HEAD_PREFLIGHT"
+    "status": "R1_4_PATH_ADMITTED_CURRENT_HEAD_PREFLIGHT_PENDING"
   },
   "productDefaultMutated": false,
-  "currentCheckpoint": "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS"
+  "currentCheckpoint": "R1.4_ACTUAL_DEPTH_WATER_OPTICS"
 }

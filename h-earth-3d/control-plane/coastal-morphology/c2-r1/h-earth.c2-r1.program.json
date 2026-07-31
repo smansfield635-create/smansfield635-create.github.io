@@ -1,11 +1,11 @@
 {
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
-  "status": "R1_6_PASS_CLOSED",
+  "status": "R1_7_IN_PROGRESS",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
   "failedC2GeometryAsStartingSource": "PROHIBITED",
   "rollbackBranch": "rollback/h-earth-c2-r1-pre-mutation-001",
-  "latestCheckpointRollbackBranch": "rollback/h-earth-c2-r1-r1-5-closed-001",
+  "latestCheckpointRollbackBranch": "rollback/h-earth-c2-r1-r1-6-closed-001",
   "integrationBaseBranch": "integration/h-earth-c2-r1-baseline-001",
   "advanceToC3": false,
   "executionLaw": {
@@ -109,7 +109,7 @@
       "startingHead": "7273cbb3dfd98f7fbca5d4e10ac51cd732678968",
       "firstExecutionHead": "182fc27d37068c650a4ef86b5c66afce2d09dfa5",
       "executionHead": "67c4da4211dfc5c1865d7e73d60e8afd77d32624",
-      "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+      "durableClosureHead": "59d84592039fae226b17ae2b1c6610144059cb61",
       "rollbackBranchAtStart": "rollback/h-earth-c2-r1-r1-5-closed-001",
       "immutableInputs": [
         "R1.1_COASTAL_GEOMETRY",
@@ -169,10 +169,41 @@
     },
     "R1.7": {
       "name": "BOUNDED_TERRAIN_MACRO_EXPRESSION",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
+      "rollbackBranch": "rollback/h-earth-c2-r1-r1-6-closed-001",
+      "immutableInputs": [
+        "R1.1_COASTAL_GEOMETRY",
+        "R1.2_NORMALS_AND_LIGHTING",
+        "R1.3_SEDIMENT_MEMBERSHIPS",
+        "R1.4_ACTUAL_DEPTH_OPTICS",
+        "R1.5_BREAKER_ELIGIBILITY_AND_INTENSITY",
+        "R1.6_SWASH_FOAM_AND_TEMPORARY_WETNESS"
+      ],
+      "architecture": "ACCEPTED_GEOMETRY_TO_BOUNDED_PRECOMPUTED_CONTROL_FIELD_TO_SINGLE_RUNTIME_SAMPLE",
+      "owns": [
+        "BOUNDED_MACRO_CONTROL_FIELD",
+        "MACRO_ALBEDO_PARAMETERS",
+        "MACRO_ROUGHNESS_PARAMETERS",
+        "MACRO_AO_OR_CAVITY_PARAMETERS",
+        "SUBTLE_MACRO_NORMAL_PARAMETERS",
+        "CANDIDATE_ONLY_SINGLE_SAMPLE_MATERIAL_ADAPTER"
+      ],
+      "wholeWorldBakeAuthorized": false,
+      "multioctaveProceduralShaderAuthorized": false,
+      "terrainGeometryDisplacementAuthorized": false,
+      "normalFieldRecomputationAuthorized": false,
+      "sedimentMembershipChangeAuthorized": false,
+      "waterOpticsChangeAuthorized": false,
+      "breakerOrSwashLawChangeAuthorized": false,
+      "rendererLifecycleChangeAuthorized": false,
+      "cameraOrTraversalChangeAuthorized": false,
+      "publicRouteOrProductDefaultChangeAuthorized": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialReady": false
     },
     "R1.8": {
-      "name": "FUNCTIONAL_VERIFICATION_AND_HUMAN_REVIEW",
+      "name": "INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW",
       "status": "NOT_STARTED"
     }
   },
@@ -199,5 +230,5 @@
   },
   "productDefaultMutated": false,
   "currentCheckpoint": "R1.7_BOUNDED_TERRAIN_MACRO_EXPRESSION",
-  "nextAuthorizedCheckpoint": "R1.7_BOUNDED_TERRAIN_MACRO_EXPRESSION"
+  "nextCheckpointOnPass": "R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW"
 }

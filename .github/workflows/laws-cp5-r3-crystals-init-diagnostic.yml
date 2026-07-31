@@ -1,4 +1,4 @@
-name: Laws CP5 R3 Crystals Init Diagnostic
+name: Laws CP5 R3 Crystals Init Correction
 
 on:
   pull_request:
@@ -6,70 +6,44 @@ on:
       - main
     types:
       - synchronize
-      - reopened
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  diagnose:
+  correct:
+    if: github.head_ref == 'agent/laws-cp5-r2-celestial-visual-correction-001'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: agent/laws-cp5-r2-celestial-visual-correction-001
           fetch-depth: 0
-      - uses: browser-actions/setup-chrome@v1
-        id: chrome
-        with:
-          chrome-version: stable
-      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-      - name: Start exact-head runtime
+      - name: Apply one bounded shader precision correction
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 >/tmp/laws-cp5-init-server.log 2>&1 &
-          for attempt in $(seq 1 30); do
-            curl -fsS http://127.0.0.1:4173/laws/ >/dev/null && exit 0
-            sleep 1
-          done
-          exit 1
-      - name: Capture exact initialization exception
-        env:
-          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-        shell: bash
-        run: |
-          mkdir -p verification/benchmark-tools/laws-compass-cp5-single-active-label-v1
-          cat > verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/cp5-init-diagnostic.mjs <<'NODE'
-          import puppeteer from 'puppeteer-core';
-          const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
-          const page=await browser.newPage();
-          await page.setViewport({width:430,height:932,deviceScaleFactor:1,isMobile:true,hasTouch:true});
-          const telemetry={pageErrors:[],console:[]};
-          page.on('pageerror',error=>telemetry.pageErrors.push(String(error?.stack||error)));
-          page.on('console',message=>telemetry.console.push({type:message.type(),text:message.text()}));
-          await page.goto('http://127.0.0.1:4173/laws/?cp5-init-diagnostic=1',{waitUntil:'domcontentloaded',timeout:45000});
-          await page.waitForFunction(()=>Boolean(globalThis.DGBLawsStagedLoader&&globalThis.DGB_LAWS_CONTROLLER),{timeout:20000});
-          await page.evaluate(()=>{
-            globalThis.__CP5_CRYSTALS_FAILURES=[];
-            globalThis.addEventListener('LAWS_CRYSTALS_RENDER_FAILURE',event=>{
-              globalThis.__CP5_CRYSTALS_FAILURES.push(event.detail||null);
-            });
-          });
-          await page.evaluate(async()=>{await globalThis.DGBLawsStagedLoader.loadOrbitSystems();});
-          await page.waitForFunction(()=>{
-            const receipt=globalThis.DGB_LAWS_CRYSTALS_RECEIPT;
-            return receipt?.status==='available'||receipt?.status==='held'||globalThis.__CP5_CRYSTALS_FAILURES?.length>0;
-          },{timeout:30000});
-          const result=await page.evaluate(()=>({
-            failures:globalThis.__CP5_CRYSTALS_FAILURES||[],
-            receipt:globalThis.DGB_LAWS_CRYSTALS_RECEIPT||null,
-            compositor:globalThis.DGB_LAWS_COMPOSITOR_RECEIPT||null,
-            loader:globalThis.DGBLawsStagedLoader?.status?.()||null
-          }));
-          console.log(JSON.stringify({result,telemetry},null,2));
-          await browser.close();
-          if(result.receipt?.status!=='available') process.exitCode=1;
-          NODE
-          node verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/cp5-init-diagnostic.mjs
+          test "$(git hash-object laws/index.crystals.js)" = "04b92e73de18194c0447305fb3f9dd4654c6cd9a"
+          test "$(git hash-object laws/index.interactions.js)" = "be365cc331ee5643f916abee204d4f5f45376c04"
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('laws/index.crystals.js')
+          text=path.read_text()
+          old='  const vertexShaderSource = `\n    attribute vec3 aPosition;'
+          new='  const vertexShaderSource = `\n    precision mediump float;\n\n    attribute vec3 aPosition;'
+          if text.count(old) != 1:
+              raise SystemExit(f'VERTEX_PRECISION_ANCHOR_COUNT={text.count(old)}')
+          path.write_text(text.replace(old,new,1))
+          PY
+          node --check laws/index.crystals.js
+          git diff --check -- laws/index.crystals.js
+          new_blob="$(git hash-object laws/index.crystals.js)"
+          test "$new_blob" != "04b92e73de18194c0447305fb3f9dd4654c6cd9a"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f .github/workflows/laws-cp5-r3-crystals-init-diagnostic.yml
+          git add laws/index.crystals.js
+          git commit -m 'Correct CP5 celestial shader uniform precision'
+          git push origin HEAD:agent/laws-cp5-r2-celestial-visual-correction-001
+          printf 'NEW_CRYSTAL_BLOB=%s\n' "$new_blob"

@@ -49,6 +49,7 @@ try {
   check('ONE_LENS_AT_A_TIME', await page.locator('.h-earth-b10-lens[open]').count() === 1 && await lenses.nth(1).getAttribute('open') !== null);
 
   const canvas = page.locator('#h-earth-functional-landscape-canvas');
+  await canvas.scrollIntoViewIfNeeded();
   const box = await canvas.boundingBox();
   check('CANVAS_HAS_VISIBLE_AREA', Boolean(box && box.width > 100 && box.height > 100), box);
   const before = await page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt?.()?.proposals?.length ?? 0);

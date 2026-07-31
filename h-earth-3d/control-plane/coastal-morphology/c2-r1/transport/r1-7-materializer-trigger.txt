@@ -1,0 +1,5 @@
+R1.7 assembly materializer trigger
+Base assembly head: 97fff6da2197f25bd6a61d018c973a669d568755
+Target mutation ref: candidate/h-earth-c2-r1-r1-7-assembly-001
+Candidate branch mutation: prohibited
+Main mutation: prohibited

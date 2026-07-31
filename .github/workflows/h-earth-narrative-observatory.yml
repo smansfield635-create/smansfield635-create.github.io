@@ -17,6 +17,12 @@ on:
       - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001.v1.mjs'
       - 'h-earth-3d/validation/instrument-platform/h-earth.narrative-observatory.*.mjs'
   workflow_dispatch:
+    inputs:
+      public_verification:
+        description: Run B8 against the canonical public H-Earth origin
+        required: true
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -28,7 +34,8 @@ jobs:
     timeout-minutes: 45
     env:
       CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-      H_EARTH_OBSERVATORY_ORIGIN: ${{ github.event_name == 'push' && 'https://diamondgatebridge.com' || 'http://127.0.0.1:4186' }}
+      PUBLIC_VERIFICATION: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.public_verification) }}
+      H_EARTH_OBSERVATORY_ORIGIN: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.public_verification)) && 'https://diamondgatebridge.com' || 'http://127.0.0.1:4186' }}
       H_EARTH_OBSERVATORY_B5_RECEIPT: /tmp/h-earth-narrative-observatory-b5.receipt.json
       H_EARTH_OBSERVATORY_B6_RECEIPT: /tmp/h-earth-narrative-observatory-b6.browser.receipt.json
     steps:
@@ -54,7 +61,7 @@ jobs:
             | tee /tmp/h-earth-narrative-observatory-b5.log
 
       - name: Start exact candidate server
-        if: ${{ github.event_name != 'push' }}
+        if: ${{ env.PUBLIC_VERIFICATION != 'true' }}
         run: |
           python3 -m http.server 4186 --bind 127.0.0.1 > /tmp/h-earth-narrative-observatory-server.log 2>&1 &
           for attempt in $(seq 1 90); do
@@ -67,7 +74,7 @@ jobs:
           exit 1
 
       - name: Wait for exact public candidate deployment
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ env.PUBLIC_VERIFICATION == 'true' }}
         run: |
           : > /tmp/h-earth-narrative-observatory-server.log
           for attempt in $(seq 1 40); do
@@ -94,7 +101,7 @@ jobs:
           import fs from 'node:fs';
           const b5 = JSON.parse(fs.readFileSync(process.env.H_EARTH_OBSERVATORY_B5_RECEIPT, 'utf8'));
           const b6 = JSON.parse(fs.readFileSync(process.env.H_EARTH_OBSERVATORY_B6_RECEIPT, 'utf8'));
-          const expectPublic = process.env.GITHUB_EVENT_NAME === 'push';
+          const expectPublic = process.env.PUBLIC_VERIFICATION === 'true';
           const valid =
             b5.status === 'PASS_CLOSED' &&
             b5.exactChangedPaths.length === 7 &&
@@ -122,7 +129,7 @@ jobs:
           NODE
 
       - name: Publish B8 public candidate receipt to PR 404
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ env.PUBLIC_VERIFICATION == 'true' }}
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

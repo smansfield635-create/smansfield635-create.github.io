@@ -1,0 +1,15 @@
+{
+  "receipt": "LAWS_COMPASS_CHECKPOINT_5_CONTROLLER_CORRECTION_EXACT_HEAD_TRIGGER_v1",
+  "purpose": "TRIGGER_EXACT_HEAD_EXECUTION_AFTER_BOUNDED_CONTROLLER_CORRECTION",
+  "parent_head": "333de20a176599229589da3e7303a4e08df88e17",
+  "controller_path": "laws/index.controller.js",
+  "controller_blob": "e6eef54a8d808c12ea0e5db85539bc521f29f3b2",
+  "benchmark_path": "verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs",
+  "benchmark_blob": "344bb52030e038a9e2549818f9804e3e9f6b1858",
+  "product_mutation_in_this_commit": false,
+  "benchmark_source_mutation_in_this_commit": false,
+  "workflow_mutation_in_this_commit": false,
+  "merge_authorized": false,
+  "deployment_authorized": false,
+  "physical_acceptance": "NOT_YET"
+}

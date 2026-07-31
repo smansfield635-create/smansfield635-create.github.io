@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import puppeteer from "puppeteer-core";
 
 const TOOL = "LAWS_COMPASS_SIX_AUTHORITY_BENCHMARK_v1";
-const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_BENCHMARK_RECONCILIATION_v4";
+const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_BENCHMARK_RECONCILIATION_v5";
 const ORIGIN = process.env.LAWS_SIX_ORIGIN || "http://127.0.0.1:4173";
 const CHROME_PATH = process.env.CHROME_PATH || process.env.CHROME_BIN || "/usr/bin/google-chrome";
 const EXECUTION_COMMIT = process.env.EXECUTION_COMMIT || process.env.GITHUB_SHA || "";
@@ -311,16 +311,21 @@ async function inspect(page, stateLabel) {
 }
 
 async function scrollSceneIntoView(page, timeout = 5000) {
-  await page.$eval("[data-laws-scene-field]", element => {
+  const target = await page.$eval("[data-laws-scene-field]", element => {
     document.documentElement.style.setProperty("scroll-behavior", "auto", "important");
     if (document.body) document.body.style.setProperty("scroll-behavior", "auto", "important");
-    element.scrollIntoView({ block: "center", inline: "center", behavior: "auto" });
+    const rect = element.getBoundingClientRect();
+    const absoluteTop = scrollY + rect.top;
+    const centeredTop = absoluteTop - Math.max(0, (innerHeight - rect.height) / 2);
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - innerHeight);
+    const targetY = Math.max(0, Math.min(maxScroll, centeredTop));
+    scrollTo({ left: 0, top: targetY, behavior: "instant" });
+    return { targetY, absoluteTop, maxScroll };
   });
 
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   const started = Date.now();
-  let previous = null;
   let latest = null;
-  let stableSamples = 0;
 
   while (Date.now() - started < timeout) {
     latest = await page.$eval("[data-laws-scene-field]", element => {
@@ -338,22 +343,14 @@ async function scrollSceneIntoView(page, timeout = 5000) {
         intersectionHeight: Math.max(0, Math.min(innerHeight, rect.bottom) - Math.max(0, rect.top))
       };
     });
-
-    const usable = latest.intersectionWidth >= 80 && latest.intersectionHeight >= 60;
-    const scrollStable = Boolean(previous)
-      && Math.abs(latest.scrollX - previous.scrollX) <= 0.5
-      && Math.abs(latest.scrollY - previous.scrollY) <= 0.5;
-
-    stableSamples = usable && scrollStable ? stableSamples + 1 : 0;
-    if (stableSamples >= 2) break;
-    previous = latest;
-    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
+    if (latest.intersectionWidth >= 80 && latest.intersectionHeight >= 60) break;
     await sleep(32);
   }
 
-  if (!latest || stableSamples < 2 || latest.intersectionWidth < 80 || latest.intersectionHeight < 60) {
-    const error = new Error("SCENE_SCROLL_SETTLEMENT_TIMEOUT");
+  if (!latest || latest.intersectionWidth < 80 || latest.intersectionHeight < 60) {
+    const error = new Error("SCENE_SCROLL_POSITIONING_FAILED");
     error.geometry = latest;
+    error.target = target;
     throw error;
   }
 
@@ -375,7 +372,7 @@ async function scrollSceneIntoView(page, timeout = 5000) {
       viewport: { width: innerWidth, height: innerHeight, scrollX, scrollY },
       settlement
     };
-  }, { elapsedMs: Date.now() - started, stableSamples, finalSample: latest });
+  }, { elapsedMs: Date.now() - started, target, finalSample: latest });
 }
 
 async function dispatchTouchDrag(page, start, end) {

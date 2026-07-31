@@ -1,42 +1,18 @@
 {
-  "receiptType": "H_EARTH_C2_SERVED_CANDIDATE_VERIFICATION_v1",
+  "receiptType": "H_EARTH_C2_SERVED_CANDIDATE_VERIFICATION_v2_SUPERSEDED",
   "operation": "C2.7_ISOLATED_PREVIEW_PUBLICATION",
-  "result": "PASS_CLOSED_USER_DIFFERENTIAL_READY",
+  "publicationResult": "PASS",
+  "visualSuccessor": "FAIL_REJECTED",
+  "userDifferential": "REJECTED",
   "c2MergeHead": "74d830e849d848835bbf6d2924151a72b1f62f8e",
   "liveCandidateUrl": "https://diamondgatebridge.com/preview/h-earth/c2/coastal-visual-successor-001/",
   "servedOccurrencePresent": true,
   "exactMergedBytesServed": true,
-  "assets": {
-    "index.html": {
-      "httpStatus": 200,
-      "repositorySha256": "4a65d998ea2eb331a1db5579619964e08acca3a21a9f94c56b63182db60922f4",
-      "servedSha256": "4a65d998ea2eb331a1db5579619964e08acca3a21a9f94c56b63182db60922f4",
-      "exactByteMatch": true,
-      "servedByteLength": 3558
-    },
-    "candidate-integration.js": {
-      "httpStatus": 200,
-      "repositorySha256": "97be498c3f17db80e41a37dc8f6ee380da833d2f43d848745b88de8cbb624630",
-      "servedSha256": "97be498c3f17db80e41a37dc8f6ee380da833d2f43d848745b88de8cbb624630",
-      "exactByteMatch": true,
-      "servedByteLength": 7048
-    },
-    "candidate-renderer.js": {
-      "httpStatus": 200,
-      "repositorySha256": "b552fa21db6d06915ca6d269261e415650fb0c793406c5280b7c59f14c49772a",
-      "servedSha256": "b552fa21db6d06915ca6d269261e415650fb0c793406c5280b7c59f14c49772a",
-      "exactByteMatch": true,
-      "servedByteLength": 20718
-    },
-    "preview-manifest.json": {
-      "httpStatus": 200,
-      "repositorySha256": "7a3f2b34f8b1c52fda843d9ef8bb470701a2f686435130b605118f08a64b6e5a",
-      "servedSha256": "7a3f2b34f8b1c52fda843d9ef8bb470701a2f686435130b605118f08a64b6e5a",
-      "exactByteMatch": true,
-      "servedByteLength": 1224
-    }
-  },
+  "failedCandidateDisposition": "REJECTED_EXPERIMENTAL_CANDIDATE_NOT_APPROVED_FOR_PROMOTION",
   "productDefaultMutated": false,
-  "firstBlocker": null,
-  "userDifferentialReady": true
+  "promotionToPublicDefault": "PROHIBITED",
+  "firstBlocker": "PHYSICALLY_AND_VISUALLY_INCOHERENT_COASTAL_MODEL",
+  "userDifferentialReady": false,
+  "supersededPriorResult": "PASS_CLOSED_USER_DIFFERENTIAL_READY",
+  "note": "Publication and byte identity remain valid engineering facts; neither establishes visual success."
 }

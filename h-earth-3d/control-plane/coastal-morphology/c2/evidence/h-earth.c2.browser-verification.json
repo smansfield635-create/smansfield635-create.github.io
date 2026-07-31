@@ -1,0 +1,10 @@
+{
+  "receiptType": "H_EARTH_C2_BROWSER_VERIFICATION_v1",
+  "operation": "C2.6_FUNCTIONAL_VERIFICATION",
+  "result": "NOT_EXECUTED",
+  "candidateHead": null,
+  "checks": {},
+  "criticalErrorCount": null,
+  "performanceUsable": null,
+  "candidateUrl": null
+}

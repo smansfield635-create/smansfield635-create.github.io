@@ -1,16 +1,13 @@
 /**
  * H_EARTH_C2_R1_CONTINUOUS_COASTAL_PROFILE_v1
  *
- * Isolated candidate terrain projection for C2-R1. This module begins from the
- * accepted pre-C2 Run 8B terrain field and replaces only a bounded coastal
- * corridor with a smooth inland-to-deep-water profile. It creates no renderer,
- * material, water-optics, wave, camera, navigation, route, or deployment
- * authority.
+ * Isolated C2-R1 candidate projection. It consumes the accepted pre-C2 Run 8B
+ * terrain field and replaces only a bounded coastal corridor with a continuous
+ * inland-to-deep-water elevation profile. It creates no renderer, material,
+ * water-optics, wave, camera, navigation, route, or deployment authority.
  */
 
-import {
-  getHEarthCanonicalShorelineZ
-} from './h-earth.terrain-field.js';
+import { getHEarthCanonicalShorelineZ } from './h-earth.terrain-field.js';
 import {
   sampleHEarthRun8BSuccessorTerrainField
 } from './h-earth.successor-terrain-field.run8b.js';
@@ -39,10 +36,12 @@ export const H_EARTH_C2_R1_COASTAL_PROFILE = freeze({
   failedC2GeometryConsumed: false,
   seaLevelY: 0,
   corridor: freeze({
+    alongshoreAnchorMinimum: -184,
+    alongshoreAnchorMaximum: 184,
     fullCandidateInlandDistance: 96,
     blendToBaselineInlandDistance: 136,
-    fullCandidateWaterwardDistance: 158,
-    blendToBaselineWaterwardDistance: 188
+    fullCandidateWaterwardDistance: 120,
+    blendToBaselineWaterwardDistance: 134
   }),
   profileSequence: freeze([
     'INLAND_TERRAIN',
@@ -86,11 +85,7 @@ function shorelineFrame(anchorX) {
   };
 }
 
-/**
- * Resolve a stable local cross-shore coordinate by iteratively projecting the
- * world point onto the curved canonical shoreline. Positive distance is inland;
- * negative distance is waterward.
- */
+/** Positive signed distance is inland; negative signed distance is waterward. */
 export function resolveHEarthC2R1CoastalFrame(worldX, worldZ) {
   if (!finite(worldX) || !finite(worldZ)) return null;
   let anchorX = worldX;
@@ -133,10 +128,10 @@ function alongshoreParameters(anchorX) {
 function candidateProfileElevation(signedInlandDistance, anchorX) {
   const parameters = alongshoreParameters(anchorX);
   if (signedInlandDistance >= 0) {
-    const d = signedInlandDistance / parameters.beachScale;
-    const baseRise = 0.034 * d + 0.000115 * d * d;
+    const inland = signedInlandDistance / parameters.beachScale;
+    const baseRise = 0.034 * inland + 0.000115 * inland * inland;
     const backshoreBerm =
-      0.48 * gaussian(d, 62, 29) * smoothstep(18, 44, d);
+      0.48 * gaussian(inland, 62, 29) * smoothstep(18, 44, inland);
     return baseRise + backshoreBerm;
   }
 
@@ -144,11 +139,10 @@ function candidateProfileElevation(signedInlandDistance, anchorX) {
   const baseDepth =
     (0.036 * waterward + 0.000145 * waterward * waterward) *
     parameters.offshoreSlopeScale;
-  const barOnset = smoothstep(24, 48, waterward);
   const broadSandbar =
     parameters.barAmplitude *
     gaussian(waterward, parameters.barCenter, parameters.barSigma) *
-    barOnset;
+    smoothstep(24, 48, waterward);
   return -baseDepth + broadSandbar;
 }
 
@@ -191,8 +185,7 @@ export function sampleHEarthC2R1CoastalTerrainField(worldX, worldZ) {
     });
   }
   const elevation = sampleHEarthC2R1CoastalElevation(worldX, worldZ);
-  const weight = corridorWeight(frame.signedInlandDistance);
-  const waterDepth = Math.max(0, H_EARTH_C2_R1_COASTAL_PROFILE.seaLevelY - elevation);
+  const candidateWeight = corridorWeight(frame.signedInlandDistance);
   return freeze({
     valid: finite(elevation),
     status: finite(elevation)
@@ -202,9 +195,12 @@ export function sampleHEarthC2R1CoastalTerrainField(worldX, worldZ) {
     world: freeze({ x: worldX, y: elevation, z: worldZ }),
     elevation,
     seaLevelY: H_EARTH_C2_R1_COASTAL_PROFILE.seaLevelY,
-    actualVerticalWaterDepth: waterDepth,
+    actualVerticalWaterDepth: Math.max(
+      0,
+      H_EARTH_C2_R1_COASTAL_PROFILE.seaLevelY - elevation
+    ),
     coastalFrame: frame,
-    candidateWeight: weight,
+    candidateWeight,
     baselineElevation: baseline.elevation,
     baselineContractId: baseline.contractId,
     normalsDeferredToCheckpoint: 'R1.2_RECOMPUTED_NORMALS_AND_LIGHTING',
@@ -226,12 +222,16 @@ export function evaluateHEarthC2R1CoastalProfile({
   let maximumAdjacentStep = 0;
   let minimumSandbarWidth = Number.POSITIVE_INFINITY;
   let maximumShorelineElevationError = 0;
+  const corridor = H_EARTH_C2_R1_COASTAL_PROFILE.corridor;
 
   for (let xIndex = 0; xIndex < xSamples; xIndex += 1) {
-    const anchorX = -224 + (448 * xIndex) / Math.max(1, xSamples - 1);
+    const anchorX = corridor.alongshoreAnchorMinimum +
+      ((corridor.alongshoreAnchorMaximum - corridor.alongshoreAnchorMinimum) * xIndex) /
+      Math.max(1, xSamples - 1);
     const frame = shorelineFrame(anchorX);
     const samples = [];
-    for (let d = -158; d <= 120 + 1e-9; d += crossShoreStep) {
+
+    for (let d = -132; d <= 120 + 1e-9; d += crossShoreStep) {
       const worldX = frame.shoreline.x - frame.waterwardNormal.x * d;
       const worldZ = frame.shoreline.z - frame.waterwardNormal.z * d;
       const elevation = sampleHEarthC2R1CoastalElevation(worldX, worldZ);
@@ -239,21 +239,29 @@ export function evaluateHEarthC2R1CoastalProfile({
       if (!finite(elevation)) issues.push(`NONFINITE_ELEVATION:${xIndex}:${d}`);
     }
 
-    const shoreline = samples.reduce((best, sample) =>
-      Math.abs(sample.d) < Math.abs(best.d) ? sample : best, samples[0]);
+    const finiteSamples = samples.filter(sample => finite(sample.elevation));
+    if (finiteSamples.length !== samples.length) {
+      issues.push(`TRANSECT_LEFT_VALID_WORLD_DOMAIN:${xIndex}`);
+      continue;
+    }
+
+    const shoreline = finiteSamples.reduce((best, sample) =>
+      Math.abs(sample.d) < Math.abs(best.d) ? sample : best, finiteSamples[0]);
     maximumShorelineElevationError = Math.max(
       maximumShorelineElevationError,
       Math.abs(shoreline.elevation)
     );
 
-    for (let index = 1; index < samples.length; index += 1) {
-      const step = Math.abs(samples[index].elevation - samples[index - 1].elevation);
-      maximumAdjacentStep = Math.max(maximumAdjacentStep, step);
+    for (let index = 1; index < finiteSamples.length; index += 1) {
+      maximumAdjacentStep = Math.max(
+        maximumAdjacentStep,
+        Math.abs(finiteSamples[index].elevation - finiteSamples[index - 1].elevation)
+      );
     }
-    for (let index = 1; index + 1 < samples.length; index += 1) {
-      const left = samples[index - 1];
-      const center = samples[index];
-      const right = samples[index + 1];
+    for (let index = 1; index + 1 < finiteSamples.length; index += 1) {
+      const left = finiteSamples[index - 1];
+      const center = finiteSamples[index];
+      const right = finiteSamples[index + 1];
       const slope = (right.elevation - left.elevation) / (2 * crossShoreStep);
       const curvature =
         (left.elevation - 2 * center.elevation + right.elevation) /
@@ -263,28 +271,32 @@ export function evaluateHEarthC2R1CoastalProfile({
     }
 
     const parameters = alongshoreParameters(anchorX);
-    const threshold = parameters.barAmplitude * 0.5;
-    const barSamples = samples.filter(sample => {
+    const barSamples = finiteSamples.filter(sample => {
       if (sample.d >= 0) return false;
       const waterward = -sample.d;
       const baseDepth =
         (0.036 * waterward + 0.000145 * waterward * waterward) *
         parameters.offshoreSlopeScale;
-      const uplift = sample.elevation + baseDepth;
-      return uplift >= threshold;
+      return sample.elevation + baseDepth >= parameters.barAmplitude * 0.5;
     });
     if (barSamples.length > 1) {
-      const width = Math.abs(
-        barSamples[barSamples.length - 1].d - barSamples[0].d
+      minimumSandbarWidth = Math.min(
+        minimumSandbarWidth,
+        Math.abs(barSamples[barSamples.length - 1].d - barSamples[0].d)
       );
-      minimumSandbarWidth = Math.min(minimumSandbarWidth, width);
     } else {
       issues.push(`SANDBAR_NOT_MEASURABLE:${xIndex}`);
     }
 
-    const shallow = samples.find(sample => Math.abs(sample.d + 18) < crossShoreStep / 2);
-    const offshore = samples.find(sample => Math.abs(sample.d + 150) < crossShoreStep / 2);
-    if (!(shallow?.elevation < -0.25)) issues.push(`SHALLOW_SEABED_NOT_SUBMERGED:${xIndex}`);
+    const shallow = finiteSamples.find(
+      sample => Math.abs(sample.d + 18) < crossShoreStep / 2
+    );
+    const offshore = finiteSamples.find(
+      sample => Math.abs(sample.d + 126) < crossShoreStep / 2
+    );
+    if (!(shallow?.elevation < -0.25)) {
+      issues.push(`SHALLOW_SEABED_NOT_SUBMERGED:${xIndex}`);
+    }
     if (!(offshore?.elevation < shallow?.elevation - 3)) {
       issues.push(`OFFSHORE_DEPTH_NOT_INCREASED:${xIndex}`);
     }

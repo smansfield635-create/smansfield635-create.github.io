@@ -113,6 +113,8 @@ try {
   check('LIVE_CANVAS_VISIBLE', await page.locator('#h-earth-functional-landscape-canvas').isVisible());
 
   const mount = page.locator('#h-earth-functional-landscape-mount');
+  await mount.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(250);
   const box = await mount.boundingBox();
   check('DESKTOP_STAGE_BOUNDS', Boolean(box && box.width > 200 && box.height > 200), box);
   const cx = box.x + box.width * 0.5;
@@ -183,6 +185,8 @@ try {
   check('MOBILE_LENSES_CLOSED_ON_LOAD', await mobilePage.locator('.h-earth-b10-lens[open]').count() === 0);
 
   const mobileMount = mobilePage.locator('#h-earth-functional-landscape-mount');
+  await mobileMount.scrollIntoViewIfNeeded();
+  await mobilePage.waitForTimeout(250);
   const mobileBox = await mobileMount.boundingBox();
   check('MOBILE_STAGE_BOUNDS', Boolean(mobileBox && mobileBox.width > 200 && mobileBox.height > 300), mobileBox);
   const mx = mobileBox.x + mobileBox.width * 0.5;

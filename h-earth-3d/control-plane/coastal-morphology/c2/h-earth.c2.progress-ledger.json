@@ -31,17 +31,15 @@
       "result": "CANDIDATE_FEATURE_IMPLEMENTED"
     },
     "C2.6": {
-      "status": "HARD_BLOCKED",
-      "result": "HARD_BLOCKED"
+      "status": "PASS_CLOSED",
+      "result": "PASS_CLOSED"
     },
     "C2.7": {
-      "status": "NOT_AUTHORIZED"
+      "status": "READY_FOR_PUBLICATION"
     }
   },
-  "hardBlockers": [
-    "noPageErrors"
-  ],
+  "hardBlockers": [],
   "nonblockingDevelopmentConditions": [],
-  "candidateUrl": null,
+  "candidateUrl": "https://diamondgatebridge.com/preview/h-earth/c2/coastal-visual-successor-001/",
   "userDifferentialReady": false
 }

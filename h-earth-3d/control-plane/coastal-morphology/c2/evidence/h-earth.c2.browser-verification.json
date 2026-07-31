@@ -1,8 +1,8 @@
 {
   "receiptType": "H_EARTH_C2_BROWSER_VERIFICATION_v1",
   "operation": "C2.6_FUNCTIONAL_VERIFICATION",
-  "result": "HARD_BLOCKED",
-  "candidateHead": "6a15cc4f160641578e3586836ae21590e6b77a45",
+  "result": "PASS_CLOSED",
+  "candidateHead": "cbe6b183aec86b2328c5b664d04ca6c979f89acf",
   "localCandidateUrl": "http://127.0.0.1:4173/preview/h-earth/c2/coastal-visual-successor-001/",
   "checks": {
     "pageLoads": true,
@@ -11,7 +11,7 @@
     "traversalWorks": true,
     "touchAndPointerInputWork": true,
     "noBlackOrFrozenCanvas": true,
-    "noPageErrors": false,
+    "noPageErrors": true,
     "noCriticalConsoleErrors": true,
     "noCriticalAssetFailures": true,
     "noUnrelatedPlacementDisplacement": true,
@@ -30,13 +30,13 @@
     "pixelCount": 494960,
     "nonClearPixelCount": 469690,
     "nonClearRatio": 0.9489453693227735,
-    "byteHash": "fnv1a32:b10146f2"
+    "byteHash": "fnv1a32:44642c23"
   },
   "finalColor": {
     "pixelCount": 494960,
-    "nonClearPixelCount": 463936,
-    "nonClearRatio": 0.9373201874898982,
-    "byteHash": "fnv1a32:e626e87c"
+    "nonClearPixelCount": 465545,
+    "nonClearRatio": 0.9405709552287054,
+    "byteHash": "fnv1a32:5a009c78"
   },
   "rendererCounters": {
     "contextCreationCount": 1,
@@ -45,13 +45,13 @@
     "bufferCreateCount": 9,
     "bufferUploadCount": 9,
     "uploadedByteLength": 2145444,
-    "frameCount": 4,
-    "visiblePresentationCount": 4,
+    "frameCount": 25,
+    "visiblePresentationCount": 25,
     "colorReadbackCount": 1,
-    "criticalGlErrorCount": 3,
+    "criticalGlErrorCount": 0,
     "postInitializationResourceCreationCount": 0,
     "postInitializationBufferUploadCount": 0,
-    "maximumRenderMs": 0.6000000000058208
+    "maximumRenderMs": 4.5
   },
   "inputCounters": {
     "eventListenerCount": 6,
@@ -63,19 +63,19 @@
     "touchPointerEventCount": 3,
     "mousePointerEventCount": 0,
     "penPointerEventCount": 0,
-    "navigationProposalCount": 5,
-    "acceptedNavigationProposalCount": 5,
+    "navigationProposalCount": 3,
+    "acceptedNavigationProposalCount": 3,
     "rejectedNavigationProposalCount": 0,
-    "oneFingerLookProposalCount": 4,
+    "oneFingerLookProposalCount": 2,
     "twoFingerTravelProposalCount": 0,
     "pinchProposalCount": 0,
     "wheelProposalCount": 1,
     "maximumActivePointerCount": 1,
-    "animationFrameCount": 139,
-    "activeIntentFrameCount": 4,
+    "animationFrameCount": 21,
+    "activeIntentFrameCount": 2,
     "gestureLockTransitionCount": 1,
     "releaseTerminationCount": 1,
-    "boundedElapsedClampCount": 7,
+    "boundedElapsedClampCount": 20,
     "deferredCommitCount": 0,
     "queuedNavigationChainCount": 0
   },
@@ -100,14 +100,10 @@
       "DARKER_INLAND_TERRAIN"
     ]
   },
-  "pageErrors": [
-    "Error: C2_DRAW_ERROR:1282",
-    "Error: C2_DRAW_ERROR:1282",
-    "Error: C2_DRAW_ERROR:1282"
-  ],
+  "pageErrors": [],
   "consoleErrors": [],
   "requestFailures": [],
-  "criticalErrorCount": 6,
+  "criticalErrorCount": 0,
   "performanceUsable": true,
-  "firstBlocker": "noPageErrors"
+  "firstBlocker": null
 }

@@ -6,12 +6,21 @@ on:
       - main
     paths:
       - .github/workflows/laws-cp5-final-celestial-naturalization.yml
+  pull_request:
+    branches:
+      - main
+    types: [synchronize, reopened]
 
 permissions:
   contents: write
 
+concurrency:
+  group: laws-cp5-final-celestial-naturalization
+  cancel-in-progress: false
+
 jobs:
   execute-candidate:
+    if: github.event_name == 'push' || github.head_ref == 'agent/laws-cp5-final-celestial-naturalization-001'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:

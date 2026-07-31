@@ -1,0 +1,48 @@
+name: H-Earth C2 Presentation State Correction
+
+on:
+  push:
+    branches:
+      - agent/h-earth-c2-bounded-coastal-visual-successor-001
+    paths:
+      - '.github/workflows/h-earth-c2-presentation-state-correction.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  correct-presentation-state:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-c2-bounded-coastal-visual-successor-001
+          fetch-depth: 0
+
+      - name: Remove framebuffer sample-count mismatch
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('preview/h-earth/c2/coastal-visual-successor-001/candidate-renderer.js')
+          text = path.read_text()
+          old_context = "antialias:true"
+          new_context = "antialias:false"
+          old_present = "function presentColorFrame(){gl.bindFramebuffer(gl.READ_FRAMEBUFFER,resources.framebuffer);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,null);gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.LINEAR);gl.bindFramebuffer(gl.FRAMEBUFFER,null);counters.visiblePresentationCount+=1;}"
+          new_present = "function presentColorFrame(){gl.bindFramebuffer(gl.READ_FRAMEBUFFER,resources.framebuffer);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,null);gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST);gl.bindFramebuffer(gl.FRAMEBUFFER,null);const error=gl.getError();if(error!==gl.NO_ERROR){counters.criticalGlErrorCount+=1;throw new Error(`C2_PRESENT_ERROR:${error}`);}counters.visiblePresentationCount+=1;}"
+          if text.count(old_context) != 1:
+              raise SystemExit('C2_CONTEXT_TARGET_COUNT_INVALID')
+          if text.count(old_present) != 1:
+              raise SystemExit('C2_PRESENT_TARGET_COUNT_INVALID')
+          text = text.replace(old_context, new_context, 1).replace(old_present, new_present, 1)
+          path.write_text(text)
+          PY
+
+      - name: Commit bounded correction and remove transport
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git rm .github/workflows/h-earth-c2-presentation-state-correction.yml
+          git add preview/h-earth/c2/coastal-visual-successor-001/candidate-renderer.js
+          git commit -m 'C2.6: correct framebuffer sample-count presentation state'
+          git push origin HEAD:agent/h-earth-c2-bounded-coastal-visual-successor-001

@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import puppeteer from "puppeteer-core";
 
 const TOOL = "LAWS_COMPASS_SIX_AUTHORITY_BENCHMARK_v1";
-const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_BENCHMARK_RECONCILIATION_v3";
+const RECONCILIATION = "LAWS_COMPASS_CHECKPOINT_5_BENCHMARK_RECONCILIATION_v4";
 const ORIGIN = process.env.LAWS_SIX_ORIGIN || "http://127.0.0.1:4173";
 const CHROME_PATH = process.env.CHROME_PATH || process.env.CHROME_BIN || "/usr/bin/google-chrome";
 const EXECUTION_COMMIT = process.env.EXECUTION_COMMIT || process.env.GITHUB_SHA || "";
@@ -119,7 +119,7 @@ function writeReceipt(extra = {}) {
   const receipt = {
     tool: TOOL,
     reconciliation: RECONCILIATION,
-    checkpoint: "LAWS_COMPASS_CHECKPOINT_3_EXECUTED_VERIFICATION_v1",
+    checkpoint: "LAWS_COMPASS_CHECKPOINT_5_EXECUTED_VERIFICATION_v1",
     profile: PROFILE,
     execution: {
       repository: process.env.GITHUB_REPOSITORY || "smansfield635-create/smansfield635-create.github.io",
@@ -339,16 +339,13 @@ async function scrollSceneIntoView(page, timeout = 5000) {
       };
     });
 
-    const stable = Boolean(previous)
-      && Math.abs(latest.left - previous.left) <= 0.5
-      && Math.abs(latest.top - previous.top) <= 0.5
-      && Math.abs(latest.right - previous.right) <= 0.5
-      && Math.abs(latest.bottom - previous.bottom) <= 0.5
+    const usable = latest.intersectionWidth >= 80 && latest.intersectionHeight >= 60;
+    const scrollStable = Boolean(previous)
       && Math.abs(latest.scrollX - previous.scrollX) <= 0.5
       && Math.abs(latest.scrollY - previous.scrollY) <= 0.5;
 
-    stableSamples = stable ? stableSamples + 1 : 0;
-    if (stableSamples >= 2 && latest.intersectionWidth >= 80 && latest.intersectionHeight >= 60) break;
+    stableSamples = usable && scrollStable ? stableSamples + 1 : 0;
+    if (stableSamples >= 2) break;
     previous = latest;
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
     await sleep(32);
@@ -424,13 +421,17 @@ if (failures.length) {
     browser = await puppeteer.launch({ executablePath: CHROME_PATH, headless: "new", args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--enable-webgl", "--ignore-gpu-blocklist", "--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
     for (const profile of VIEWPORTS) {
       let page = null;
-      const telemetry = { pageErrors: [], requestFailures: [], consoleErrors: [] };
+      const telemetry = { pageErrors: [], requestFailures: [], consoleErrors: [], httpErrors: [] };
       const profileEvidence = { profile: profile.id, inputType: profile.inputType, readinessSamples: [], runtimeReadiness: null, initial: null, orientationCorrespondence: [], dragEvidence: [], testPrimary: null, testCluster: null, researchPrimary: null, researchCluster: null, lawCluster: null, telemetry, failure: null, finalState: null, failureTimeScreenshot: "" };
       try {
         page = await browser.newPage();
         await page.setViewport({ width: profile.width, height: profile.height, deviceScaleFactor: 1, isMobile: profile.mobile, hasTouch: profile.mobile });
         page.on("pageerror", error => telemetry.pageErrors.push(String(error?.message || error)));
         page.on("requestfailed", request => telemetry.requestFailures.push({ url: request.url(), error: request.failure()?.errorText || "" }));
+        page.on("response", response => {
+          const status = response.status();
+          if (status >= 400) telemetry.httpErrors.push({ url: response.url(), status });
+        });
         page.on("console", message => { if (message.type() === "error") telemetry.consoleErrors.push(message.text()); });
         const response = await page.goto(`${ORIGIN}/laws/`, { waitUntil: "domcontentloaded", timeout: 45000 });
         await waitForRuntimeReadiness(page, profileEvidence, 45000);
@@ -571,7 +572,32 @@ if (failures.length) {
             assert(result.anchorExists, "DESTINATION_ROUTE_ANCHOR_MISSING", result, profile.id);
           }
         }
-        assert(telemetry.pageErrors.length === 0 && telemetry.requestFailures.length === 0 && telemetry.consoleErrors.length === 0, "RUNTIME_TELEMETRY_FAILURE", telemetry, profile.id);
+
+        const actionableHttpErrors = telemetry.httpErrors.filter(record => {
+          try {
+            return new URL(record.url).pathname !== "/favicon.ico";
+          } catch {
+            return true;
+          }
+        });
+        const favicon404Observed = telemetry.httpErrors.some(record => {
+          try {
+            return record.status === 404 && new URL(record.url).pathname === "/favicon.ico";
+          } catch {
+            return false;
+          }
+        });
+        const actionableConsoleErrors = telemetry.consoleErrors.filter(message => {
+          return !(favicon404Observed && actionableHttpErrors.length === 0 && message.includes("Failed to load resource"));
+        });
+        const actionableTelemetry = {
+          pageErrors: telemetry.pageErrors,
+          requestFailures: telemetry.requestFailures,
+          consoleErrors: actionableConsoleErrors,
+          httpErrors: actionableHttpErrors,
+          ignoredFavicon404: favicon404Observed
+        };
+        assert(actionableTelemetry.pageErrors.length === 0 && actionableTelemetry.requestFailures.length === 0 && actionableTelemetry.consoleErrors.length === 0 && actionableTelemetry.httpErrors.length === 0, "RUNTIME_TELEMETRY_FAILURE", actionableTelemetry, profile.id);
       } catch (error) {
         profileEvidence.failure = String(error?.stack || error);
         if (!failures.some(failure => failure.profile === profile.id && failure.id === "PROFILE_EXECUTION_ABORTED")) failures.push({ profile: profile.id, id: "PROFILE_EXECUTION_ABORTED", observed: profileEvidence.failure });

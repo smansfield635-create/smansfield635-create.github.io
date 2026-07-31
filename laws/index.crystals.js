@@ -14,7 +14,7 @@
       "DGB_LAWS_CRYSTALS_EXACT_TWO_OBJECT_RECONCILIATION_v2",
 
     version:
-      "2.2.1-cp5-r2-solar-lunar-visual-correction",
+      "2.3.0-cp5-final-celestial-naturalization",
 
     file:
       "/laws/index.crystals.js",
@@ -812,6 +812,90 @@
       );
     }
 
+    /* CP5_FINAL_CELESTIAL_NATURALIZATION */
+    float solarWave(vec3 p, float frequency, float phase) {
+      return
+        sin(dot(p, vec3(1.73, 2.11, 2.67)) * frequency + phase) * 0.48 +
+        sin(dot(p, vec3(-2.93, 1.37, 1.91)) * frequency * 1.61 - phase * 0.73) * 0.31 +
+        sin(dot(p, vec3(1.17, -2.51, 3.07)) * frequency * 2.37 + phase * 1.29) * 0.21;
+    }
+
+    vec3 solarAdvect(vec3 p, float t) {
+      float shearA = sin(p.y * 5.3 + p.z * 2.2 + t * 0.31) * 0.13;
+      float shearB = sin(p.z * 4.1 - p.x * 2.7 - t * 0.23) * 0.11;
+      float vortex = sin((p.x * p.y - p.z * p.z) * 8.0 + t * 0.47) * 0.09;
+      vec3 displacement = vec3(
+        shearA + sin(p.z * 7.0 - t * 0.19) * 0.08,
+        shearB + sin(p.x * 6.2 + t * 0.27) * 0.08,
+        vortex + sin(p.y * 5.7 - t * 0.33) * 0.07
+      );
+      return normalize(p + displacement);
+    }
+
+    float solarLargeField(vec3 p, float t) {
+      vec3 q = solarAdvect(p, t);
+      float collisionFold = sin((q.x * q.y + q.y * q.z - q.z * q.x) * 7.5 + t * 0.37);
+      return clamp(
+        solarWave(q, 1.05, t * 0.41) * 0.72 +
+        solarWave(q.yzx, 0.72, -t * 0.29) * 0.28 +
+        collisionFold * 0.16,
+        -1.0,
+        1.0
+      );
+    }
+
+    float solarMediumField(vec3 p, float t) {
+      vec3 q = solarAdvect(p, t * 1.13 + 0.7);
+      return clamp(
+        solarWave(q, 2.75, -t * 0.53) * 0.62 +
+        solarWave(q.zxy, 3.85, t * 0.36) * 0.38,
+        -1.0,
+        1.0
+      );
+    }
+
+    float solarFineField(vec3 p, float t) {
+      vec3 q = solarAdvect(p, t * 0.83 - 1.4);
+      return clamp(
+        solarWave(q, 9.8, t * 0.91) * 0.58 +
+        solarWave(q.yzx, 14.6, -t * 0.67) * 0.42,
+        -1.0,
+        1.0
+      );
+    }
+
+    float solarCollisionField(vec3 p, float t) {
+      float opposingA = sin(dot(p, vec3(3.7, 2.1, -1.9)) + t * 0.53);
+      float opposingB = sin(dot(p, vec3(-2.9, 3.4, 2.6)) - t * 0.47);
+      float compression = smoothstep(0.18, 0.94, -opposingA * opposingB);
+      float shear = 0.5 + 0.5 * sin((p.x * p.z - p.y * p.x) * 15.0 + t * 0.71);
+      return compression * (0.54 + shear * 0.46);
+    }
+
+    float solarRingField(vec3 p, float t) {
+      vec3 centerA = normalize(vec3(
+        0.48 + sin(t * 0.19) * 0.16,
+        -0.16 + cos(t * 0.23) * 0.18,
+        0.86 + sin(t * 0.11) * 0.08
+      ));
+      vec3 centerB = normalize(vec3(
+        -0.57 + cos(t * 0.17) * 0.14,
+        0.46 + sin(t * 0.29) * 0.16,
+        0.68 + cos(t * 0.13) * 0.09
+      ));
+      float distanceA = acos(clamp(dot(p, centerA), -1.0, 1.0));
+      float distanceB = acos(clamp(dot(p, centerB), -1.0, 1.0));
+      float radiusA = 0.28 + sin(t * 0.37) * 0.075;
+      float radiusB = 0.22 + cos(t * 0.31) * 0.060;
+      float ringA = exp(-pow((distanceA - radiusA) / 0.060, 2.0));
+      float ringB = exp(-pow((distanceB - radiusB) / 0.052, 2.0));
+      float lifeA = smoothstep(0.30, 0.72, 0.5 + 0.5 * sin(t * 0.43 + 0.8));
+      float lifeB = smoothstep(0.36, 0.78, 0.5 + 0.5 * sin(t * 0.37 + 3.1));
+      float partialA = smoothstep(0.08, 0.82, 0.5 + 0.5 * sin(dot(p, vec3(7.0, -9.0, 11.0)) + t * 0.61));
+      float partialB = smoothstep(0.12, 0.84, 0.5 + 0.5 * sin(dot(p, vec3(-10.0, 8.0, 6.0)) - t * 0.57));
+      return clamp(ringA * lifeA * partialA + ringB * lifeB * partialB, 0.0, 1.0);
+    }
+
     void main() {
       vec3 n =
         normalize(vNormal);
@@ -991,29 +1075,41 @@
 
       if (vHaloPass > 0.5) {
         if (uSolarBody > 0.5) {
-          float gasA = 0.5 + 0.5 * sin(n.x * 10.7 + n.y * 6.1 - n.z * 8.4 + uTime * 0.19);
-          float gasB = 0.5 + 0.5 * sin(n.x * 5.2 - n.y * 14.3 + n.z * 11.8 - uTime * 0.13);
-          float gasC = 0.5 + 0.5 * sin(n.z * 18.1 + n.x * 4.6 + uTime * 0.09);
-          float plume = gasA * 0.50 + gasB * 0.32 + gasC * 0.18;
-          float wisp = smoothstep(0.54, 0.83, plume);
-          float prominenceWisp = pow(max(plume - 0.63, 0.0) * 2.70, 1.45);
-          vec3 haloColor =
-            mix(
-              vec3(1.0, 0.20, 0.008),
-              vec3(1.0, 0.84, 0.25),
-              clamp(gasA * 0.72 + gasC * 0.28, 0.0, 1.0)
+          vec3 solarN = normalize(n);
+          vec3 advected = solarAdvect(solarN, uTime);
+          float large = solarLargeField(advected, uTime);
+          float medium = solarMediumField(advected, uTime);
+          float fine = solarFineField(advected, uTime);
+          float collision = solarCollisionField(advected, uTime);
+          float rings = solarRingField(advected, uTime);
+          float activity = clamp(
+            0.44 + large * 0.22 + medium * 0.17 + max(fine, 0.0) * 0.08 +
+            collision * 0.36 + rings * 0.32,
+            0.0,
+            1.0
+          );
+          float limbGate = smoothstep(0.16, 0.94, fresnel + sideRim * 0.65);
+          float wispMask = smoothstep(0.56, 0.88, activity + medium * 0.11 + rings * 0.18);
+          vec3 haloColor = mix(
+            vec3(0.78, 0.11, 0.008),
+            vec3(1.0, 0.74, 0.18),
+            clamp(activity + collision * 0.18 + rings * 0.14, 0.0, 1.0)
+          ) *
+          (0.42 + activity * 0.76 + collision * 0.24 + rings * 0.30) *
+          uHaloStrength;
+          float haloAlpha = clamp(
+            (
+              0.006 +
+              limbGate * (0.012 + activity * 0.082) +
+              collision * 0.022 +
+              rings * 0.048
             ) *
-            (0.46 + wisp * 0.90 + prominenceWisp * 0.74) *
-            uHaloStrength;
-          float haloAlpha =
-            clamp(
-              (0.012 + fresnel * 0.075 + sideRim * 0.035 + prominenceWisp * 0.15) *
-              wisp *
-              uProminence *
-              uHaloStrength,
-              0.0,
-              0.23
-            );
+            wispMask *
+            uProminence *
+            uHaloStrength,
+            0.0,
+            0.22
+          );
           gl_FragColor = vec4(haloColor, haloAlpha);
           return;
         }
@@ -1047,12 +1143,48 @@
       }
 
       if (uSolarBody > 0.5) {
+        vec3 solarN = normalize(n);
+        vec3 advected = solarAdvect(solarN, uTime);
+        float large = solarLargeField(advected, uTime);
+        float medium = solarMediumField(advected, uTime);
+        float fine = solarFineField(advected, uTime);
+        float collision = solarCollisionField(advected, uTime);
+        float rings = solarRingField(advected, uTime);
+        float channelSource = abs(medium * 0.78 + large * 0.22);
+        float branchingChannel = 1.0 - smoothstep(0.055, 0.29, channelSource);
+        float vortex = 0.5 + 0.5 * sin(
+          (advected.x * advected.y - advected.z * advected.x) * 18.0 +
+          large * 2.8 +
+          uTime * 0.71
+        );
+        float heat = clamp(
+          0.50 +
+          large * 0.20 +
+          medium * 0.14 +
+          fine * 0.060 +
+          collision * 0.18 +
+          rings * 0.13 +
+          vortex * 0.050 -
+          branchingChannel * 0.18,
+          0.0,
+          1.0
+        );
+        vec3 darkAmber = vec3(0.38, 0.070, 0.006);
+        vec3 burntOrange = vec3(0.72, 0.145, 0.008);
+        vec3 deepOrange = vec3(1.0, 0.335, 0.015);
+        vec3 plasmaGold = vec3(1.0, 0.690, 0.075);
+        vec3 hotGranule = vec3(1.0, 0.970, 0.67);
+        vec3 plasmaColor = mix(darkAmber, burntOrange, smoothstep(0.02, 0.30, heat));
+        plasmaColor = mix(plasmaColor, deepOrange, smoothstep(0.25, 0.56, heat));
+        plasmaColor = mix(plasmaColor, plasmaGold, smoothstep(0.52, 0.79, heat));
+        plasmaColor = mix(plasmaColor, hotGranule, smoothstep(0.77, 0.98, heat));
         float centerToLimb = smoothstep(0.04, 0.92, max(facingToCamera, 0.0));
-        float limbBrightness = 0.68 + centerToLimb * 0.32;
-        float activity = clamp((base.r - base.g) * 1.12 + (0.34 - base.b) * 0.28, 0.0, 1.0);
-        vec3 solarColor = base * limbBrightness * (0.94 + uProminence * 0.08);
-        solarColor += vec3(1.0, 0.28, 0.012) * activity * 0.035;
-        solarColor *= 0.96 + key * 0.07 + fill * 0.025;
+        float limbBrightness = 0.70 + centerToLimb * 0.30;
+        vec3 solarColor = mix(base, plasmaColor, 0.965);
+        solarColor *= limbBrightness * (0.95 + uProminence * 0.055);
+        solarColor *= 0.96 + key * 0.065 + fill * 0.025;
+        solarColor += vec3(1.0, 0.28, 0.010) * collision * 0.055;
+        solarColor += vec3(1.0, 0.62, 0.050) * rings * 0.050;
         gl_FragColor = vec4(min(solarColor, vec3(1.0)), 1.0);
         return;
       }
@@ -2290,39 +2422,60 @@
     const positions = [];
     const normals = [];
     const colors = [];
+    /* CP5_FINAL_LUNAR_CRATER_HIERARCHY_AND_MARIA */
     const craters = [
-      [0.42, 0.26, 0.86, 0.24, 0.052],
-      [-0.36, 0.54, 0.76, 0.19, 0.043],
-      [0.18, -0.48, 0.86, 0.16, 0.038],
-      [-0.58, -0.20, 0.79, 0.21, 0.046],
-      [0.64, -0.12, 0.76, 0.14, 0.033],
-      [-0.08, 0.78, 0.62, 0.13, 0.030],
-      [0.16, 0.08, 0.98, 0.09, 0.024],
-      [-0.28, -0.62, 0.73, 0.11, 0.027]
+      [0.34, 0.18, 0.92, 0.44, 0.058, 0.86, 0.18, 1.00, 0.22],
+      [-0.48, 0.52, 0.70, 0.36, 0.047, 0.62, 0.46, 0.92, 0.44],
+      [0.58, -0.34, 0.74, 0.27, 0.039, 0.78, 0.28, 0.96, 0.30],
+      [-0.62, -0.22, 0.75, 0.23, 0.034, 0.48, 0.62, 0.76, 0.68],
+      [0.12, 0.72, 0.68, 0.20, 0.030, 0.72, 0.34, 0.90, 0.36],
+      [0.76, 0.22, 0.61, 0.18, 0.027, 0.56, 0.54, 0.78, 0.58],
+      [-0.18, -0.66, 0.73, 0.16, 0.024, 0.82, 0.22, 0.92, 0.20],
+      [0.08, -0.18, 0.98, 0.14, 0.022, 0.68, 0.38, 0.86, 0.42],
+      [-0.34, 0.06, 0.94, 0.12, 0.018, 0.42, 0.70, 0.62, 0.74],
+      [0.44, 0.62, 0.65, 0.11, 0.017, 0.76, 0.26, 0.88, 0.26],
+      [-0.76, 0.34, 0.55, 0.10, 0.015, 0.52, 0.58, 0.68, 0.64],
+      [0.28, -0.78, 0.56, 0.095, 0.014, 0.84, 0.18, 0.86, 0.18],
+      [0.64, -0.02, -0.77, 0.19, 0.028, 0.60, 0.48, 0.80, 0.52],
+      [-0.42, 0.38, -0.82, 0.13, 0.019, 0.44, 0.68, 0.58, 0.76],
+      [0.16, -0.52, -0.84, 0.085, 0.012, 0.74, 0.32, 0.72, 0.34]
     ].map(record => ({
       center: normalizeVector(record.slice(0, 3)),
       radius: record[3],
-      depth: record[4]
+      depth: record[4],
+      rimSharpness: record[5],
+      erosion: record[6],
+      visibility: record[7],
+      partialBias: record[8]
     }));
 
-    /* CP5_R2_SOLAR_LARGE_CONVECTION_CELLS */
-    const solarCells = [
-      [0.16, 0.92, 0.36, 1.00], [-0.44, 0.78, 0.45, 0.74],
-      [0.66, 0.52, 0.54, 0.88], [0.82, 0.04, 0.57, 0.62],
-      [0.44, -0.52, 0.73, 0.91], [-0.18, -0.72, 0.67, 0.70],
-      [-0.72, -0.34, 0.61, 0.84], [-0.86, 0.18, 0.47, 0.58],
-      [0.08, 0.34, 0.94, 0.78], [0.55, -0.18, -0.81, 0.66],
-      [-0.38, 0.22, -0.90, 0.94], [0.18, -0.86, -0.47, 0.72],
-      [-0.78, -0.12, -0.61, 0.82], [0.72, 0.48, -0.49, 0.60]
+    const lunarMaria = [
+      [0.12, 0.30, 0.95, 0.56, 0.76],
+      [-0.56, -0.08, 0.82, 0.43, 0.60],
+      [0.61, -0.42, 0.67, 0.35, 0.48],
+      [-0.24, 0.72, -0.65, 0.39, 0.52]
     ].map(record => ({
       center: normalizeVector(record.slice(0, 3)),
-      energy: record[3]
+      radius: record[3],
+      strength: record[4]
     }));
 
+    const lunarPlains = [
+      [0.70, 0.38, 0.60, 0.46, 0.82],
+      [-0.12, -0.72, 0.68, 0.50, 0.88],
+      [-0.72, 0.46, -0.52, 0.42, 0.72]
+    ].map(record => ({
+      center: normalizeVector(record.slice(0, 3)),
+      radius: record[3],
+      strength: record[4]
+    }));
+
+    /* CP5_FINAL_SOLAR_OPEN_BRANCHING_BASE */
     const solarActivity = [
-      [0.44, 0.18, 0.88, 0.16, 0.95],
-      [-0.34, -0.36, 0.87, 0.13, 0.82],
-      [0.62, -0.56, -0.54, 0.18, 0.70]
+      [0.44, 0.18, 0.88, 0.18, 0.95],
+      [-0.34, -0.36, 0.87, 0.14, 0.82],
+      [0.62, -0.56, -0.54, 0.20, 0.70],
+      [-0.58, 0.48, 0.66, 0.16, 0.76]
     ].map(record => ({
       center: normalizeVector(record.slice(0, 3)),
       radius: record[3],
@@ -2351,21 +2504,55 @@
       return amount * amount * (3 - 2 * amount);
     }
 
+    function regionField(regions, nx, ny, nz, phase) {
+      let field = 0;
+      regions.forEach(region => {
+        const angularDistance = Math.acos(
+          clamp(nx * region.center[0] + ny * region.center[1] + nz * region.center[2], -1, 1)
+        );
+        const boundaryWarp = deterministicField(nx, ny, nz, 2.8, phase + region.radius * 7.3) * 0.12;
+        const normalizedDistance = angularDistance / region.radius + boundaryWarp;
+        const mask = 1 - smoothTransition(0.60, 1.08, normalizedDistance);
+        field = Math.max(field, mask * region.strength);
+      });
+      return clamp(field, 0, 1);
+    }
+
     function craterField(nx, ny, nz) {
       let relief = 0;
       let albedo = 0;
+      let basin = 0;
       craters.forEach(crater => {
         const angularDistance = Math.acos(
           clamp(nx * crater.center[0] + ny * crater.center[1] + nz * crater.center[2], -1, 1)
         );
         const normalizedDistance = angularDistance / crater.radius;
-        const bowl = Math.exp(-normalizedDistance * normalizedDistance * 3.2);
-        const rim = Math.exp(-Math.pow((normalizedDistance - 0.84) * 6.2, 2));
-        const ejecta = Math.exp(-Math.pow((normalizedDistance - 1.18) * 3.4, 2));
-        relief += rim * crater.depth * 0.92 - bowl * crater.depth * 1.18 + ejecta * crater.depth * 0.12;
-        albedo += rim * 0.22 - bowl * 0.25 + ejecta * 0.035;
+        const bowlFalloff = 2.05 + (1 - crater.erosion) * 1.85;
+        const bowl = Math.exp(-normalizedDistance * normalizedDistance * bowlFalloff);
+        const rimCenter = 0.80 + crater.erosion * 0.08;
+        const rimWidth = 4.1 + (1 - crater.erosion) * 4.8;
+        let rim = Math.exp(-Math.pow((normalizedDistance - rimCenter) * rimWidth, 2));
+        const partial = clamp(
+          0.66 + deterministicField(nx, ny, nz, 3.7, crater.partialBias * 5.3) * 0.34,
+          0.18,
+          1.0
+        );
+        rim *= 0.58 + partial * 0.42;
+        const ejecta = Math.exp(-Math.pow((normalizedDistance - 1.18) * (2.7 + crater.erosion * 1.4), 2));
+        const visibility = crater.visibility;
+        relief += (
+          rim * crater.depth * crater.rimSharpness * 0.88 -
+          bowl * crater.depth * (0.88 + (1 - crater.erosion) * 0.24) +
+          ejecta * crater.depth * (0.05 + (1 - crater.erosion) * 0.08)
+        ) * visibility;
+        albedo += (
+          rim * (0.11 + crater.rimSharpness * 0.12) -
+          bowl * (0.12 + crater.depth * 1.9) +
+          ejecta * 0.024
+        ) * visibility;
+        basin = Math.max(basin, bowl * visibility * smoothTransition(0.20, 0.42, crater.radius));
       });
-      return { relief, albedo };
+      return { relief, albedo, basin };
     }
 
     function surfaceSample(phi, theta) {
@@ -2376,89 +2563,86 @@
       let surfaceColor;
 
       if (mode === "solar") {
-        let nearest = Infinity;
-        let second = Infinity;
-        let cellEnergyWeight = 0.72;
-        solarCells.forEach(cell => {
-          const distance = Math.acos(
-            clamp(nx * cell.center[0] + ny * cell.center[1] + nz * cell.center[2], -1, 1)
-          );
-          if (distance < nearest) {
-            second = nearest;
-            nearest = distance;
-            cellEnergyWeight = cell.energy;
-          } else if (distance < second) {
-            second = distance;
-          }
-        });
-
-        const boundary = 1 - smoothTransition(0.018, 0.145, second - nearest);
-        const risingCenter = 1 - smoothTransition(0.07, 0.58, nearest);
-        const broad = deterministicField(nx, ny, nz, 3.2, 0.73);
-        const turbulentFold = deterministicField(nx, ny, nz, 7.4, 2.17);
-        const fine = deterministicField(nx, ny, nz, 25.0, 1.31);
+        const broad = deterministicField(nx, ny, nz, 2.65, 0.73);
+        const turbulentFold = deterministicField(nx, ny, nz, 6.9, 2.17);
+        const channelSource = Math.abs(deterministicField(nx, ny, nz, 4.2, 1.07));
+        const branchingChannel = 1 - smoothTransition(0.055, 0.31, channelSource);
+        const fine = deterministicField(nx, ny, nz, 24.0, 1.31);
         let activity = 0;
         solarActivity.forEach(region => {
           const angularDistance = Math.acos(
             clamp(nx * region.center[0] + ny * region.center[1] + nz * region.center[2], -1, 1)
           );
-          activity += Math.exp(-Math.pow(angularDistance / region.radius, 2) * 2.5) * region.strength;
+          activity += Math.exp(-Math.pow(angularDistance / region.radius, 2) * 2.2) * region.strength;
         });
         activity = clamp(activity, 0, 1);
 
         const heat = clamp(
-          0.24 +
-          risingCenter * (0.48 + cellEnergyWeight * 0.20) -
-          boundary * 0.50 +
-          broad * 0.09 +
-          turbulentFold * 0.085 +
-          fine * 0.035 -
-          activity * 0.33,
+          0.50 + broad * 0.18 + turbulentFold * 0.13 + fine * 0.050 -
+          branchingChannel * 0.17 + activity * 0.11,
           0,
           1
         );
 
-        const darkRed = [0.42, 0.035, 0.006];
-        const redOrange = [0.78, 0.105, 0.008];
-        const deepOrange = [1.0, 0.285, 0.012];
-        const gold = [1.0, 0.665, 0.055];
-        const yellowWhite = [1.0, 0.985, 0.72];
-        if (heat < 0.18) {
-          surfaceColor = mixColor(darkRed, redOrange, heat / 0.18);
-        } else if (heat < 0.42) {
-          surfaceColor = mixColor(redOrange, deepOrange, (heat - 0.18) / 0.24);
-        } else if (heat < 0.72) {
-          surfaceColor = mixColor(deepOrange, gold, (heat - 0.42) / 0.30);
+        const darkAmber = [0.38, 0.070, 0.006];
+        const burntOrange = [0.72, 0.145, 0.008];
+        const deepOrange = [1.0, 0.335, 0.015];
+        const plasmaGold = [1.0, 0.690, 0.075];
+        const hotGranule = [1.0, 0.970, 0.67];
+        if (heat < 0.25) {
+          surfaceColor = mixColor(darkAmber, burntOrange, heat / 0.25);
+        } else if (heat < 0.55) {
+          surfaceColor = mixColor(burntOrange, deepOrange, (heat - 0.25) / 0.30);
+        } else if (heat < 0.80) {
+          surfaceColor = mixColor(deepOrange, plasmaGold, (heat - 0.55) / 0.25);
         } else {
-          surfaceColor = mixColor(gold, yellowWhite, (heat - 0.72) / 0.28);
+          surfaceColor = mixColor(plasmaGold, hotGranule, (heat - 0.80) / 0.20);
         }
 
-        relief +=
-          risingCenter * 0.0085 -
-          boundary * 0.0055 +
-          broad * 0.0038 +
-          turbulentFold * 0.0027 +
-          fine * 0.0012 +
-          activity * 0.0020;
+        relief += broad * 0.0036 + turbulentFold * 0.0025 + fine * 0.0009 -
+          branchingChannel * 0.0014 + activity * 0.0018;
       } else {
-        const terrain = deterministicField(nx, ny, nz, 5.8, 1.43);
-        const fineTerrain = deterministicField(nx, ny, nz, 15.8, 0.39);
+        const macroTerrain = deterministicField(nx, ny, nz, 2.25, 1.43);
+        const highlandTerrain = deterministicField(nx, ny, nz, 5.1, 0.39);
+        const fineTerrain = deterministicField(nx, ny, nz, 16.2, 2.07);
         const crater = craterField(nx, ny, nz);
+        const maria = regionField(lunarMaria, nx, ny, nz, 0.83);
+        const plains = regionField(lunarPlains, nx, ny, nz, 2.19);
+        const calmTerrain = clamp(Math.max(plains, maria * 0.66), 0, 1);
+        const roughnessScale = 1 - calmTerrain * 0.74;
         const light = normalizeVector([-0.62, 0.22, 0.75]);
         const illumination = nx * light[0] + ny * light[1] + nz * light[2];
-        /* CP5_R2_LUNAR_NEUTRAL_MATERIAL */
-        const terminator = 0.10 + 0.90 * smoothTransition(-0.18, 0.18, illumination);
-        const highlands = smoothTransition(-0.12, 0.34, terrain + crater.albedo * 0.82);
-        const maria = smoothTransition(0.06, 0.52, -terrain - crater.albedo * 0.28);
-        const neutralAlbedo = clamp(0.56 + highlands * 0.24 - maria * 0.20 + fineTerrain * 0.045 + crater.albedo * 0.46, 0.22, 0.96);
-        const reliefLighting = clamp(0.78 + terrain * 0.10 + fineTerrain * 0.038 + crater.albedo * 0.34, 0.52, 1.08);
-        const shade = clamp(neutralAlbedo * reliefLighting * terminator, 0.055, 1.0);
-        const reflectedCoolTint = (1 - terminator) * 0.008;
-        relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;
+        const terminator = 0.17 + 0.83 * smoothTransition(-0.22, 0.22, illumination);
+        const highlands = smoothTransition(
+          -0.18,
+          0.40,
+          macroTerrain + highlandTerrain * 0.34 + crater.albedo * 0.62
+        ) * (1 - maria * 0.78);
+        const neutralAlbedo = clamp(
+          0.57 + highlands * 0.23 - maria * 0.25 + plains * 0.045 +
+          macroTerrain * 0.045 + crater.albedo * 0.39,
+          0.20,
+          0.95
+        );
+        const reliefLighting = clamp(
+          0.84 + macroTerrain * 0.055 + highlandTerrain * 0.075 * roughnessScale +
+          fineTerrain * 0.024 * roughnessScale + crater.albedo * 0.30 - crater.basin * 0.055,
+          0.58,
+          1.10
+        );
+        const shade = clamp(
+          neutralAlbedo * (0.35 + terminator * 0.65) * reliefLighting,
+          0.060,
+          1.0
+        );
+        const selectedRimHighlight = clamp(crater.albedo, 0, 1) * terminator * 0.035;
+        const reflectedCoolTint = (1 - terminator) * 0.006;
+        relief += macroTerrain * 0.0042 + highlandTerrain * 0.0056 * roughnessScale +
+          fineTerrain * 0.0016 * roughnessScale + crater.relief * (1 - maria * 0.22);
         surfaceColor = [
-          clamp(shade * 1.018, 0, 1),
-          clamp(shade * 1.012, 0, 1),
-          clamp(shade + reflectedCoolTint, 0, 1)
+          clamp(shade * 1.018 + selectedRimHighlight, 0, 1),
+          clamp(shade * 1.012 + selectedRimHighlight * 0.92, 0, 1),
+          clamp(shade + selectedRimHighlight * 0.82 + reflectedCoolTint, 0, 1)
         ];
       }
 
@@ -4328,7 +4512,8 @@ function validateClusterSphereContract() {
           }
         );
 
-        if (state.reducedMotion) {
+        /* CP5_FINAL_SOLAR_NO_LOCAL_RIGID_SPIN */
+        if (state.reducedMotion || node.id === "test") {
           node.transform.rx = 0;
           node.transform.ry = 0;
           node.transform.rz = 0;
@@ -4527,6 +4712,10 @@ function validateClusterSphereContract() {
         .cssWidth <=
       QUALITY.bloomDisableWidthPx;
 
+    /* CP5_FINAL_SOLAR_PHONE_GLOW_PRESERVATION */
+    const solarMaterial =
+      materialName === "AUTHORITY_SOLAR";
+
     gl.uniform1f(
       renderer.uniforms.twinkle,
       state.reducedMotion ? 0 : 1
@@ -4571,7 +4760,7 @@ function validateClusterSphereContract() {
 
     gl.uniform1f(
       renderer.uniforms.haloStrength,
-      bloomDisabled
+      bloomDisabled && !solarMaterial
         ? 0
         : material.halo *
           haloStrength

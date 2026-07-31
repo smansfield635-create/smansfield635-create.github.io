@@ -1,5 +1,6 @@
 {
-  "receiptType": "H_EARTH_C0_D_PERFORMANCE_BASELINE_v1",
+  "receiptType": "H_EARTH_C0_D_PERFORMANCE_BASELINE_v2",
+  "managementCorrection": "C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001",
   "operation": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
   "result": "OPEN_BLOCKED",
   "c0Overall": "OPEN_IN_PROGRESS",
@@ -28,8 +29,137 @@
     "physicalOrEmulated": "PHYSICAL_REQUIRED",
     "executed": false,
     "status": "NOT_EXECUTED",
-    "reason": "NO_PHYSICAL_DEVICE_EXECUTION_CHANNEL_AVAILABLE_TO_GITHUB_ACTIONS; PRIOR_SIGNED_OFFLINE_PACKAGE_HAS physicalAcceptanceEmbedded=false AND DOES_NOT_BIND_TO_EXACT_MAIN_HEAD",
-    "officialBaseline": false
+    "reason": "SIGNED_OFFLINE_REFERENCE_DEVICE_PACKAGE_EXISTS_BUT_NO_COMPLETED_PHYSICAL_EVIDENCE_JSON_OR_METRIC_RECEIPT_IS_AVAILABLE",
+    "officialBaseline": false,
+    "samsungSpecificImplementationAuthorized": false
   },
-  "runtimeStates": []
+  "runtimeStates": [
+    {
+      "stateId": "STATIONARY_COASTAL_VIEW",
+      "measurementDurationMilliseconds": 8015.6,
+      "frameTime": {
+        "minimum": 16.5,
+        "median": 16.7,
+        "p95": 16.8,
+        "p99": 16.8,
+        "maximum": 16.8,
+        "longFrameCount": 0,
+        "frameSampleCount": 480
+      },
+      "cameraUpdateCount": 0,
+      "rendererPresentCount": 0,
+      "startupDurationMilliseconds": 7370,
+      "downloadTransferBytes": 339085,
+      "decodedOrResourceBytes": 1598622,
+      "requestCount": 57,
+      "gpuMemoryBaseline": {
+        "status": "UNAVAILABLE",
+        "method": "WEB_PLATFORM_RUNTIME",
+        "reason": "NO_STANDARD_WEB_API_EXPOSES_GPU_MEMORY"
+      },
+      "systemMemoryBaseline": {
+        "status": "AVAILABLE_APPROXIMATE_DEVICE_GIB",
+        "value": 16,
+        "method": "navigator.deviceMemory"
+      },
+      "jsHeapMemory": {
+        "usedJSHeapSize": 280261149,
+        "totalJSHeapSize": 333125205,
+        "jsHeapSizeLimit": 4395630592
+      },
+      "errors": {
+        "pageErrors": [],
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 404 ()"
+        ],
+        "requestFailures": [],
+        "ownedHttpErrors": [
+          {
+            "url": "https://diamondgatebridge.com/favicon.ico",
+            "status": 404
+          }
+        ]
+      }
+    },
+    {
+      "stateId": "CONTINUOUS_COASTAL_TRAVERSAL",
+      "measurementDurationMilliseconds": 8122.1,
+      "frameTime": {
+        "minimum": 16.5,
+        "median": 16.8,
+        "p95": 350,
+        "p99": 383.2,
+        "maximum": 383.2,
+        "longFrameCount": 25,
+        "frameSampleCount": 51
+      },
+      "cameraUpdateCount": 26,
+      "rendererPresentCount": 26,
+      "startupDurationMilliseconds": 6639,
+      "downloadTransferBytes": 300,
+      "decodedOrResourceBytes": 1597962,
+      "requestCount": 56,
+      "gpuMemoryBaseline": {
+        "status": "UNAVAILABLE",
+        "method": "WEB_PLATFORM_RUNTIME",
+        "reason": "NO_STANDARD_WEB_API_EXPOSES_GPU_MEMORY"
+      },
+      "systemMemoryBaseline": {
+        "status": "AVAILABLE_APPROXIMATE_DEVICE_GIB",
+        "value": 16,
+        "method": "navigator.deviceMemory"
+      },
+      "jsHeapMemory": {
+        "usedJSHeapSize": 311914314,
+        "totalJSHeapSize": 351299834,
+        "jsHeapSizeLimit": 4395630592
+      },
+      "errors": {
+        "pageErrors": [],
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ownedHttpErrors": []
+      }
+    },
+    {
+      "stateId": "OCEAN_VISIBLE_WITH_LIVE_MOTION",
+      "measurementDurationMilliseconds": 8388.3,
+      "frameTime": {
+        "minimum": 16.6,
+        "median": 383.3,
+        "p95": 400,
+        "p99": 400,
+        "maximum": 400,
+        "longFrameCount": 21,
+        "frameSampleCount": 30
+      },
+      "cameraUpdateCount": 22,
+      "rendererPresentCount": 22,
+      "startupDurationMilliseconds": 6582,
+      "downloadTransferBytes": 300,
+      "decodedOrResourceBytes": 1597962,
+      "requestCount": 56,
+      "gpuMemoryBaseline": {
+        "status": "UNAVAILABLE",
+        "method": "WEB_PLATFORM_RUNTIME",
+        "reason": "NO_STANDARD_WEB_API_EXPOSES_GPU_MEMORY"
+      },
+      "systemMemoryBaseline": {
+        "status": "AVAILABLE_APPROXIMATE_DEVICE_GIB",
+        "value": 16,
+        "method": "navigator.deviceMemory"
+      },
+      "jsHeapMemory": {
+        "usedJSHeapSize": 277676953,
+        "totalJSHeapSize": 339763133,
+        "jsHeapSizeLimit": 4395630592
+      },
+      "errors": {
+        "pageErrors": [],
+        "consoleErrors": [],
+        "requestFailures": [],
+        "ownedHttpErrors": []
+      }
+    }
+  ]
 }

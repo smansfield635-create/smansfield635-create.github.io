@@ -1,14 +1,154 @@
 {
-  "receiptType": "H_EARTH_C0_D_RUNTIME_RECEIPTS_v1",
+  "receiptType": "H_EARTH_C0_D_RUNTIME_RECEIPTS_v2",
+  "managementCorrection": "C0_D_SCENE_UNIQUENESS_REQUIREMENT_WITHDRAWAL_001",
+  "withdrawnRequirement": "DISTINCT_SCENE_CANVAS_HASH_COUNT_MUST_EQUAL_6",
   "operation": "C0_D_RUNTIME_AND_MOBILE_BASELINE",
   "result": "OPEN_BLOCKED",
   "c0Overall": "OPEN_IN_PROGRESS",
   "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
-  "captureObservability": "UNRESOLVED",
-  "distinctSceneCameraStateCount": 4,
-  "distinctSceneCanvasHashCount": 4,
-  "distinctFullPageScreenshotHashCount": 4,
-  "cameraToPresentedFrameCausality": "UNRESOLVED",
+  "captureObservability": "VERIFIED",
+  "cameraToPresentedFrameCausality": "VERIFIED",
+  "sceneIdCount": 6,
+  "uniqueCameraStateCount": 4,
+  "allSixEvidencePurposesRepresented": true,
+  "sceneAliasMappingRecorded": true,
+  "sceneAliasMapping": [
+    {
+      "sceneId": "SHORELINE_APPROACH_VIEW",
+      "cameraStateId": "CAMERA_STATE_001",
+      "evidencePurpose": "SHORELINE_APPROACH_VIEW",
+      "sharedWithSceneIds": [],
+      "cameraPosition": {
+        "x": 0,
+        "y": 3.776628584078394,
+        "z": -96
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "LATERAL_BEACH_VIEW",
+      "cameraStateId": "CAMERA_STATE_002",
+      "evidencePurpose": "LATERAL_BEACH_VIEW",
+      "sharedWithSceneIds": [
+        "SHALLOW_WATER_VIEW",
+        "TRAVERSAL_THROUGH_COAST_VIEW"
+      ],
+      "cameraPosition": {
+        "x": 0,
+        "y": 2.1676559232966333,
+        "z": -86
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "INLAND_TO_OPEN_WATER_VIEW",
+      "cameraStateId": "CAMERA_STATE_003",
+      "evidencePurpose": "INLAND_TO_OPEN_WATER_VIEW",
+      "sharedWithSceneIds": [],
+      "cameraPosition": {
+        "x": 0,
+        "y": 6.678759970430365,
+        "z": -116
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "SHALLOW_WATER_VIEW",
+      "cameraStateId": "CAMERA_STATE_002",
+      "evidencePurpose": "SHALLOW_WATER_VIEW",
+      "sharedWithSceneIds": [
+        "LATERAL_BEACH_VIEW",
+        "TRAVERSAL_THROUGH_COAST_VIEW"
+      ],
+      "cameraPosition": {
+        "x": 0,
+        "y": 2.1676559232966333,
+        "z": -86
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "CURRENT_DARK_TERRAIN_TRANSITION_VIEW",
+      "cameraStateId": "CAMERA_STATE_004",
+      "evidencePurpose": "CURRENT_DARK_TERRAIN_TRANSITION_VIEW",
+      "sharedWithSceneIds": [],
+      "cameraPosition": {
+        "x": 0,
+        "y": 3.9616255734540466,
+        "z": -126
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    },
+    {
+      "sceneId": "TRAVERSAL_THROUGH_COAST_VIEW",
+      "cameraStateId": "CAMERA_STATE_002",
+      "evidencePurpose": "TRAVERSAL_THROUGH_COAST_VIEW",
+      "sharedWithSceneIds": [
+        "LATERAL_BEACH_VIEW",
+        "SHALLOW_WATER_VIEW"
+      ],
+      "cameraPosition": {
+        "x": 0,
+        "y": 2.1676559232966333,
+        "z": -86
+      },
+      "cameraOrientation": {
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "forward": {
+          "x": 0,
+          "y": -0.1391731,
+          "z": -1
+        }
+      },
+      "fieldOfView": 56
+    }
+  ],
   "causalityTest": {
     "startCamera": {
       "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
@@ -74,252 +214,16 @@
     "startFullPageHash": "32baf81987bb3357862a78b364752c84f578abc9e6e5884ec161126da2416364",
     "finalFullPageHash": "7c706b6087134d1fee8836319c96d7d6bf5d7825a5313d03e0ca3f11fcd28ae4"
   },
-  "sceneObservations": [
-    {
-      "sceneId": "SHORELINE_APPROACH_VIEW",
-      "cameraPosition": {
-        "x": 0,
-        "y": 3.776628584078394,
-        "z": -96
-      },
-      "cameraOrientation": {
-        "yawDegrees": 0,
-        "pitchDegrees": -8,
-        "verticalFovDegrees": 56
-      },
-      "rendererFrameCounterBefore": 1,
-      "rendererFrameCounterAfter": 1,
-      "canvasWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "webglDrawingBufferWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "canvasPixelOrFramebufferHash": "8369eb0d916d8786ccb4e00f5f9a34f237ea309d67839e1ef9ac82b15f1b865f",
-      "framebufferSampleHash": "4f28f00881205029429caad8d1538ce8ec46eba115c0bdbca806ed2748723609",
-      "fullPageScreenshotHash": "32baf81987bb3357862a78b364752c84f578abc9e6e5884ec161126da2416364",
-      "visibleCanvasBoundingRect": {
-        "x": 19,
-        "y": 963.03125,
-        "width": 352,
-        "height": 557.03125
-      },
-      "run8eReadyState": true,
-      "liveGpuPresentingState": "RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE",
-      "pageErrors": [],
-      "consoleErrors": [
-        "Failed to load resource: the server responded with a status of 404 ()"
-      ],
-      "requestFailures": [],
-      "ownedHttpErrors": [
-        {
-          "url": "https://diamondgatebridge.com/favicon.ico",
-          "status": 404
-        }
-      ]
-    },
-    {
-      "sceneId": "LATERAL_BEACH_VIEW",
-      "cameraPosition": {
-        "x": 0,
-        "y": 2.1676559232966333,
-        "z": -86
-      },
-      "cameraOrientation": {
-        "yawDegrees": 0,
-        "pitchDegrees": -8,
-        "verticalFovDegrees": 56
-      },
-      "rendererFrameCounterBefore": 1,
-      "rendererFrameCounterAfter": 2,
-      "canvasWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "webglDrawingBufferWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "canvasPixelOrFramebufferHash": "1ed9849a8c03b4dba1038d1f9f4d9348e7f07d310fd77de93310acf470d80aae",
-      "framebufferSampleHash": "11cf6975f2b50a5d84bc48c50ed93ed15b6d99cd618945ac819f8bf1eaf67d97",
-      "fullPageScreenshotHash": "7c706b6087134d1fee8836319c96d7d6bf5d7825a5313d03e0ca3f11fcd28ae4",
-      "visibleCanvasBoundingRect": {
-        "x": 19,
-        "y": 963.03125,
-        "width": 352,
-        "height": 557.03125
-      },
-      "run8eReadyState": true,
-      "liveGpuPresentingState": "RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE",
-      "pageErrors": [],
-      "consoleErrors": [],
-      "requestFailures": [],
-      "ownedHttpErrors": []
-    },
-    {
-      "sceneId": "INLAND_TO_OPEN_WATER_VIEW",
-      "cameraPosition": {
-        "x": 0,
-        "y": 6.678759970430365,
-        "z": -116
-      },
-      "cameraOrientation": {
-        "yawDegrees": 0,
-        "pitchDegrees": -8,
-        "verticalFovDegrees": 56
-      },
-      "rendererFrameCounterBefore": 1,
-      "rendererFrameCounterAfter": 3,
-      "canvasWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "webglDrawingBufferWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "canvasPixelOrFramebufferHash": "553e7f31e22a173e0b168296b38fc8dbd126b2026d5a881abc47d69e86bf2daa",
-      "framebufferSampleHash": "9908adc1bd7b5b074c15eae59d384eb7fc8edc98b0dbd4b8048295e7ef674dcb",
-      "fullPageScreenshotHash": "ba10e5ffa5ff8d900113a8fef1c2aeece5da12e977c0e89acdad3b5fc4d52fec",
-      "visibleCanvasBoundingRect": {
-        "x": 19,
-        "y": 963.03125,
-        "width": 352,
-        "height": 557.03125
-      },
-      "run8eReadyState": true,
-      "liveGpuPresentingState": "RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE",
-      "pageErrors": [],
-      "consoleErrors": [],
-      "requestFailures": [],
-      "ownedHttpErrors": []
-    },
-    {
-      "sceneId": "SHALLOW_WATER_VIEW",
-      "cameraPosition": {
-        "x": 0,
-        "y": 2.1676559232966333,
-        "z": -86
-      },
-      "cameraOrientation": {
-        "yawDegrees": 0,
-        "pitchDegrees": -8,
-        "verticalFovDegrees": 56
-      },
-      "rendererFrameCounterBefore": 1,
-      "rendererFrameCounterAfter": 2,
-      "canvasWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "webglDrawingBufferWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "canvasPixelOrFramebufferHash": "1ed9849a8c03b4dba1038d1f9f4d9348e7f07d310fd77de93310acf470d80aae",
-      "framebufferSampleHash": "11cf6975f2b50a5d84bc48c50ed93ed15b6d99cd618945ac819f8bf1eaf67d97",
-      "fullPageScreenshotHash": "7c706b6087134d1fee8836319c96d7d6bf5d7825a5313d03e0ca3f11fcd28ae4",
-      "visibleCanvasBoundingRect": {
-        "x": 19,
-        "y": 963.03125,
-        "width": 352,
-        "height": 557.03125
-      },
-      "run8eReadyState": true,
-      "liveGpuPresentingState": "RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE",
-      "pageErrors": [],
-      "consoleErrors": [],
-      "requestFailures": [],
-      "ownedHttpErrors": []
-    },
-    {
-      "sceneId": "CURRENT_DARK_TERRAIN_TRANSITION_VIEW",
-      "cameraPosition": {
-        "x": 0,
-        "y": 3.9616255734540466,
-        "z": -126
-      },
-      "cameraOrientation": {
-        "yawDegrees": 0,
-        "pitchDegrees": -8,
-        "verticalFovDegrees": 56
-      },
-      "rendererFrameCounterBefore": 1,
-      "rendererFrameCounterAfter": 4,
-      "canvasWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "webglDrawingBufferWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "canvasPixelOrFramebufferHash": "c53b2bfd118c53cb613db94052df92e8410c6cfcfd2ecce436a53fe8f16b2a9b",
-      "framebufferSampleHash": "395d8c8e4c41118d541eae4b41f5a5bc0611b5b84aa2fb8c2c9fca647ee2a495",
-      "fullPageScreenshotHash": "3b300868b9c74f61c436dd823db8d3ae2295a64de629c97de2a03d99ebcf9e70",
-      "visibleCanvasBoundingRect": {
-        "x": 19,
-        "y": 963.03125,
-        "width": 352,
-        "height": 557.03125
-      },
-      "run8eReadyState": true,
-      "liveGpuPresentingState": "RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE",
-      "pageErrors": [],
-      "consoleErrors": [],
-      "requestFailures": [],
-      "ownedHttpErrors": []
-    },
-    {
-      "sceneId": "TRAVERSAL_THROUGH_COAST_VIEW",
-      "cameraPosition": {
-        "x": 0,
-        "y": 2.1676559232966333,
-        "z": -86
-      },
-      "cameraOrientation": {
-        "yawDegrees": 0,
-        "pitchDegrees": -8,
-        "verticalFovDegrees": 56
-      },
-      "rendererFrameCounterBefore": 1,
-      "rendererFrameCounterAfter": 8,
-      "canvasWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "webglDrawingBufferWidthAndHeight": {
-        "width": 352,
-        "height": 557
-      },
-      "canvasPixelOrFramebufferHash": "1ed9849a8c03b4dba1038d1f9f4d9348e7f07d310fd77de93310acf470d80aae",
-      "framebufferSampleHash": "11cf6975f2b50a5d84bc48c50ed93ed15b6d99cd618945ac819f8bf1eaf67d97",
-      "fullPageScreenshotHash": "7c706b6087134d1fee8836319c96d7d6bf5d7825a5313d03e0ca3f11fcd28ae4",
-      "visibleCanvasBoundingRect": {
-        "x": 19,
-        "y": 963.03125,
-        "width": 352,
-        "height": 557.03125
-      },
-      "run8eReadyState": true,
-      "liveGpuPresentingState": "RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE",
-      "pageErrors": [],
-      "consoleErrors": [],
-      "requestFailures": [],
-      "ownedHttpErrors": []
-    }
-  ],
   "physicalMobileBaselineExecuted": false,
-  "allThreeRuntimeStatesMeasured": false,
-  "frameTimePercentilesRecorded": false,
-  "memoryFieldsRecordedOrExplicitlyUnavailable": false,
-  "downloadCostRecorded": false,
-  "errorBaselineRecorded": false,
+  "runtimeStateCount": 3,
+  "allThreeRuntimeStatesMeasured": true,
+  "frameTimePercentilesRecorded": true,
+  "memoryFieldsRecordedOrExplicitlyUnavailable": true,
+  "downloadCostRecorded": true,
+  "errorBaselineRecorded": true,
   "productMutation": false,
   "unauthorizedChangedPaths": 0,
-  "firstBlocker": "FROZEN_SCENE_DEFINITIONS_NOT_SIX_DISTINCT_CAMERA_STATES",
+  "firstBlocker": "PHYSICAL_MOBILE_BASELINE_NOT_EXECUTED",
   "nextAuthorizedC0Block": null,
   "c0EAuthorized": false,
   "c1Authorized": false,

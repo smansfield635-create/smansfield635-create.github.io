@@ -13,7 +13,7 @@ permissions:
 jobs:
   materialize-r1-7:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Materialize verified R1.7 files and remove transport
+      - name: Materialize, execute, and clean verified R1.7 files
         run: |
           set -euo pipefail
           branch="candidate/h-earth-c2-r1-r1-7-assembly-001"
@@ -30,6 +30,7 @@ jobs:
           transport="h-earth-3d/control-plane/coastal-morphology/c2-r1/transport/r1-7"
           macro="h-earth-3d/terrain/h-earth.coastal-macro-expression.c2-r1.js"
           verifier="h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7-bounded-terrain-macro-expression.mjs"
+          evidence="h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence"
 
           mkdir -p "$(dirname "$macro")" "$(dirname "$verifier")"
           cat "$transport"/macro.part*.b64 | base64 -d > "$macro"
@@ -44,18 +45,26 @@ jobs:
           echo "MACRO_GIT_BLOB=$macro_blob"
           echo "VERIFIER_GIT_BLOB=$verifier_blob"
 
-          test "$macro_sha" = "4fcd21dced7f12e74deff021ac727b65b93c61e429efc5de9c2a46449c70b9d7"
-          test "$verifier_sha" = "48647ae1b21f617c4a643055ad1d12d9a618160372634487823c64651ddda442"
-          test "$macro_blob" = "0da0e83166c0adaa07e3a082dc4fcff476b13c9b"
-          test "$verifier_blob" = "d08940d0c97afe2a4f62ea509c3405907df3b441"
+          test "$macro_sha" = "42afe39c516b9e2a72255f5155022ead63d43762a940e28ec77762f575cd174e"
+          test "$verifier_sha" = "fd3d33e17f5d721872214a0b26d3ac37cf83b54b2dd7e53180b622fca2728317"
+          test "$macro_blob" = "0b72bae9838deac81c90f2ca3368307622d44568"
+          test "$verifier_blob" = "e89bcae08fee0936e1e4e388044f901f6771e778"
 
           node --check "$macro"
           node --check "$verifier"
+          R1_7_SKIP_GIT_ASSERTIONS=true node "$verifier"
+
+          test -s "$evidence/h-earth.c2-r1.r1-7-verification.json"
+          test "$(find "$evidence/r1-7-engineering-captures" -maxdepth 1 -type f -name '*.svg' | wc -l)" -eq 3
+          grep -q '"result": "PASS_ENGINEERING"' "$evidence/h-earth.c2-r1.r1-7-verification.json"
+
+          rm -f "$evidence/h-earth.c2-r1.r1-7-verification.json"
+          rm -rf "$evidence/r1-7-engineering-captures"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$macro" "$verifier"
           git rm -r "$transport"
           git rm .github/workflows/h-earth-c2-r1-r1-7-materialize-assembly.yml
-          git commit -m "R1.7 assembly: materialize verified macro authority and verifier"
+          git commit -m "R1.7 assembly: materialize and locally verify macro authority"
           git push origin "HEAD:$branch"

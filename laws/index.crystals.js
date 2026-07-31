@@ -116,13 +116,13 @@
   constellation:
     Object.freeze({
       horizontalRadius:
-        1.50,
+        1.68,
 
       verticalRadius:
-        1.34,
+        1.5008,
 
       depthRadius:
-        1.16,
+        1.2992,
 
       primaryAnchor:
         Object.freeze([
@@ -192,6 +192,9 @@
 
   auxiliaryScale:
     1.10,
+
+  gatewayBodyScale:
+    0.7666667,
 
   lawScale:
     0.88,
@@ -352,10 +355,10 @@
           1.34
       }),
     AUTHORITY_SOLAR:
-      Object.freeze({specular:1.30,rim:1.62,emissive:0.54,alpha:0.99,sparkle:0.18,halo:1.58,contrast:1.24}),
+      Object.freeze({specular:0.72,rim:1.16,emissive:0.68,alpha:1.00,sparkle:0.04,halo:0.86,contrast:1.38}),
 
     AUTHORITY_LUNAR:
-      Object.freeze({specular:0.72,rim:1.18,emissive:0.09,alpha:0.98,sparkle:0.05,halo:0.82,contrast:1.30}),
+      Object.freeze({specular:0.24,rim:0.72,emissive:0.035,alpha:0.99,sparkle:0.00,halo:0.34,contrast:1.48}),
 
     LAW_IDLE:
        Object.freeze({
@@ -2236,19 +2239,125 @@
 
 
   function createCelestialSphereMesh(options = {}) {
-    const segments=Math.max(12,options.segments||28), rings=Math.max(8,options.rings||18), radius=options.radius||0.64;
-    const color=options.color||[1,1,1], mode=options.mode==="solar"?"solar":"lunar";
-    const positions=[],normals=[],colors=[];
-    function point(ring,segment){
-      const v=ring/rings,u=segment/segments,phi=v*Math.PI,theta=u*Math.PI*2;
-      const nx=Math.sin(phi)*Math.cos(theta),ny=Math.cos(phi),nz=Math.sin(phi)*Math.sin(theta);
-      const relief=mode==="lunar"?1+0.035*Math.sin(theta*7+phi*3)*Math.sin(phi*9)-0.020*Math.max(0,Math.cos(theta*5-phi*8)):1+0.012*Math.sin(theta*11+phi*7);
-      const shade=mode==="solar"?0.86+0.14*Math.sin(theta*5+phi*9)**2:0.62+0.30*(ny*0.5+0.5)+0.08*Math.sin(theta*9-phi*4);
-      return {position:[nx*radius*relief,ny*radius*relief,nz*radius*relief],normal:normalizeVector([nx,ny,nz]),color:[clamp(color[0]*shade,0,1),clamp(color[1]*shade,0,1),clamp(color[2]*shade,0,1)]};
+    const segments = Math.max(12, options.segments || 30);
+    const rings = Math.max(8, options.rings || 20);
+    const radius = options.radius || 0.66;
+    const color = options.color || [1, 1, 1];
+    const mode = options.mode === "solar" ? "solar" : "lunar";
+    const positions = [];
+    const normals = [];
+    const colors = [];
+
+    function deterministicField(x, y, z, frequency, phase) {
+      return (
+        Math.sin((x * 1.73 + y * 2.11 + z * 2.67) * frequency + phase) * 0.50 +
+        Math.sin((x * 2.93 - y * 1.37 + z * 1.91) * frequency * 1.61 - phase * 0.73) * 0.30 +
+        Math.sin((-x * 1.17 + y * 2.51 + z * 3.07) * frequency * 2.37 + phase * 1.29) * 0.20
+      );
     }
-    function push(v){positions.push(...v.position);normals.push(...v.normal);colors.push(...v.color);}
-    for(let ring=0;ring<rings;ring+=1){for(let segment=0;segment<segments;segment+=1){const next=(segment+1)%segments,a=point(ring,segment),b=point(ring+1,segment),c=point(ring+1,next),d=point(ring,next);push(a);push(b);push(c);push(a);push(c);push(d);}}
-    return Object.freeze({positions:new Float32Array(positions),normals:new Float32Array(normals),colors:new Float32Array(colors),vertexCount:positions.length/3});
+
+    function smoothTransition(edge0, edge1, value) {
+      const amount = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+      return amount * amount * (3 - 2 * amount);
+    }
+
+    function craterField(nx, ny, nz) {
+      const craters = [
+        [0.42, 0.26, 0.86, 0.19, 0.032],
+        [-0.36, 0.54, 0.76, 0.15, 0.026],
+        [0.18, -0.48, 0.86, 0.13, 0.024],
+        [-0.58, -0.20, 0.79, 0.17, 0.028],
+        [0.64, -0.12, 0.76, 0.11, 0.020],
+        [-0.08, 0.78, 0.62, 0.10, 0.018]
+      ];
+
+      let relief = 0;
+      let albedo = 0;
+
+      craters.forEach(crater => {
+        const center = normalizeVector(crater.slice(0, 3));
+        const angularDistance = Math.acos(
+          clamp(nx * center[0] + ny * center[1] + nz * center[2], -1, 1)
+        );
+        const normalizedDistance = angularDistance / crater[3];
+        const bowl = Math.exp(-normalizedDistance * normalizedDistance * 3.8);
+        const rim = Math.exp(-Math.pow((normalizedDistance - 0.88) * 5.4, 2));
+        relief += rim * crater[4] * 0.72 - bowl * crater[4];
+        albedo += rim * 0.10 - bowl * 0.13;
+      });
+
+      return { relief, albedo };
+    }
+
+    function point(ring, segment) {
+      const v = ring / rings;
+      const u = segment / segments;
+      const phi = v * Math.PI;
+      const theta = u * Math.PI * 2;
+      const nx = Math.sin(phi) * Math.cos(theta);
+      const ny = Math.cos(phi);
+      const nz = Math.sin(phi) * Math.sin(theta);
+
+      let relief = 1;
+      let shade = 1;
+
+      if (mode === "solar") {
+        const broad = deterministicField(nx, ny, nz, 4.2, 0.73);
+        const granulation = deterministicField(nx, ny, nz, 11.8, 2.17);
+        const fine = deterministicField(nx, ny, nz, 25.0, 1.31);
+        relief += broad * 0.0045 + granulation * 0.0030 + fine * 0.0012;
+        shade = clamp(0.89 + broad * 0.055 + granulation * 0.075 + fine * 0.030, 0.72, 1.06);
+      } else {
+        const terrain = deterministicField(nx, ny, nz, 5.6, 1.43);
+        const fineTerrain = deterministicField(nx, ny, nz, 14.4, 0.39);
+        const crater = craterField(nx, ny, nz);
+        const light = normalizeVector([0.64, 0.24, 0.73]);
+        const illumination = nx * light[0] + ny * light[1] + nz * light[2];
+        const terminator = 0.24 + 0.76 * smoothTransition(-0.12, 0.24, illumination);
+        relief += terrain * 0.010 + fineTerrain * 0.004 + crater.relief;
+        shade = clamp((0.72 + terrain * 0.10 + fineTerrain * 0.045 + crater.albedo) * terminator, 0.16, 0.98);
+      }
+
+      const radial = radius * relief;
+      return {
+        position: [nx * radial, ny * radial, nz * radial],
+        normal: normalizeVector([nx, ny, nz]),
+        color: [
+          clamp(color[0] * shade, 0, 1),
+          clamp(color[1] * shade, 0, 1),
+          clamp(color[2] * shade, 0, 1)
+        ]
+      };
+    }
+
+    function push(vertex) {
+      positions.push(...vertex.position);
+      normals.push(...vertex.normal);
+      colors.push(...vertex.color);
+    }
+
+    for (let ring = 0; ring < rings; ring += 1) {
+      for (let segment = 0; segment < segments; segment += 1) {
+        const next = (segment + 1) % segments;
+        const a = point(ring, segment);
+        const b = point(ring + 1, segment);
+        const c = point(ring + 1, next);
+        const d = point(ring, next);
+        push(a);
+        push(b);
+        push(c);
+        push(a);
+        push(c);
+        push(d);
+      }
+    }
+
+    return Object.freeze({
+      positions: new Float32Array(positions),
+      normals: new Float32Array(normals),
+      colors: new Float32Array(colors),
+      vertexCount: positions.length / 3
+    });
   }
 
   function lawColorForDirection(direction) {
@@ -3657,7 +3766,10 @@ function validateClusterSphereContract() {
 
         const gateway=GATEWAY_IDS.includes(direction);
         node.material=direction === "test" ? "AUTHORITY_SOLAR" : direction === "research" ? "AUTHORITY_LUNAR" : primary ? "CATEGORY_FOCUSED" : "CATEGORY_IDLE";
-        const scale=(gateway ? QUALITY.auxiliaryScale : primary ? QUALITY.focusedCategoryScale : QUALITY.categoryScale) * (gateway ? 0.78 + sphere.depth * 0.34 : 0.72 + sphere.depth * 0.42);
+        const scale = gateway
+          ? QUALITY.gatewayBodyScale
+          : (primary ? QUALITY.focusedCategoryScale : QUALITY.categoryScale) *
+            (0.72 + sphere.depth * 0.42);
 
         Object.assign(
           node.target,

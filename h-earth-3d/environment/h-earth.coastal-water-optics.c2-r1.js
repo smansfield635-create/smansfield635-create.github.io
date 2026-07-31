@@ -53,6 +53,7 @@ export const H_EARTH_C2_R1_WATER_OPTICS = freeze({
   shallowVolumeColorLinear: freeze([0.035, 0.34, 0.40]),
   deepVolumeColorLinear: freeze([0.008, 0.045, 0.115]),
   neutralSurfaceReflectionLinear: freeze([0.055, 0.09, 0.13]),
+  waterPresenceRampDepth: freeze({ start: 0.01, fullPresence: 0.34 }),
   ownership: freeze({
     ownsCandidateWaterOpticalProjection: true,
     ownsProductionWaterState: false,
@@ -157,7 +158,11 @@ export function deriveHEarthC2R1WaterOpticsFromFactors({
       reflectionStrength
   )));
 
-  const waterPresence = smoothstep(0.01, 0.18, depth);
+  const waterPresence = smoothstep(
+    H_EARTH_C2_R1_WATER_OPTICS.waterPresenceRampDepth.start,
+    H_EARTH_C2_R1_WATER_OPTICS.waterPresenceRampDepth.fullPresence,
+    depth
+  );
   const surfaceOpacity = waterPresence * clamp(
     0.14 + 0.75 * (1 - seabedVisibility) + 0.08 * deepWaterDarkening,
     0,

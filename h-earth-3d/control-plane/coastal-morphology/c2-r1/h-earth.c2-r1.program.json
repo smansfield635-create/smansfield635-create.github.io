@@ -1,10 +1,22 @@
 {
   "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
-  "status": "AUTHORIZED_INITIALIZED",
+  "status": "R1_0_PASS_CLOSED_R1_1_NEXT",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
   "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
   "failedC2GeometryAsStartingSource": "PROHIBITED",
+  "rollbackBranch": "rollback/h-earth-c2-r1-pre-mutation-001",
+  "integrationBaseBranch": "integration/h-earth-c2-r1-baseline-001",
   "advanceToC3": false,
+  "executionLaw": {
+    "oneBoundedPassAtATime": true,
+    "passCompletionRequiresDurableLedgerUpdate": true,
+    "nextPassMayStartOnlyAfterPreviousPassStoppingBoundary": true,
+    "ordinaryVisualImperfectionIsNonblockingDuringDevelopment": true,
+    "functionalDamageIsHardBlocking": true,
+    "functionalVerificationDoesNotProveVisualSuccess": true,
+    "representativeCapturesRequiredBeforeHumanReview": true,
+    "visualSuccessorRequiresAcceptedUserDifferential": true
+  },
   "modelingRequirements": {
     "actualDepthLaw": "WATER_SURFACE_HEIGHT_MINUS_TERRAIN_HEIGHT_AT_XZ",
     "continuousProfile": true,
@@ -21,16 +33,58 @@
     "antialiasingEnabled": true,
     "featureFlagsProveVisualSuccess": false
   },
-  "passOrder": [
-    "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
-    "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING",
-    "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS",
-    "R1.4_ACTUAL_DEPTH_WATER_OPTICS",
-    "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
-    "R1.6_RESTRAINED_SWASH_FOAM_AND_WETNESS",
-    "R1.7_BOUNDED_TERRAIN_MACRO_EXPRESSION",
-    "R1.8_FUNCTIONAL_VERIFICATION_AND_HUMAN_REVIEW"
-  ],
+  "passes": {
+    "R1.0": {
+      "name": "BASELINE_PATH_ROLLBACK_AND_REVIEW_CONTROL",
+      "status": "PASS_CLOSED",
+      "productMutation": false,
+      "stoppingBoundary": "BASELINE_AND_CONTROL_CUSTODY_DURABLE"
+    },
+    "R1.1": {
+      "name": "CONTINUOUS_BEACH_AND_BATHYMETRY",
+      "status": "NOT_STARTED",
+      "mutationScope": [
+        "ISOLATED_CANDIDATE_COASTAL_PROFILE",
+        "ISOLATED_CANDIDATE_SEABED_PROFILE"
+      ],
+      "stoppingBoundary": "CONTINUITY_AND_PROFILE_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
+    },
+    "R1.2": {
+      "name": "RECOMPUTED_NORMALS_AND_LIGHTING",
+      "status": "NOT_STARTED",
+      "stoppingBoundary": "NORMAL_CONTINUITY_PASS_OR_HARD_BLOCKER_REPORTED"
+    },
+    "R1.3": {
+      "name": "GRADUAL_SEDIMENT_MEMBERSHIPS",
+      "status": "NOT_STARTED",
+      "stoppingBoundary": "BLENDED_MEMBERSHIP_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
+    },
+    "R1.4": {
+      "name": "ACTUAL_DEPTH_WATER_OPTICS",
+      "status": "NOT_STARTED",
+      "stoppingBoundary": "DEPTH_CORRESPONDENCE_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
+    },
+    "R1.5": {
+      "name": "DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
+      "status": "NOT_STARTED",
+      "stoppingBoundary": "BREAKER_ELIGIBILITY_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
+    },
+    "R1.6": {
+      "name": "RESTRAINED_SWASH_FOAM_AND_WETNESS",
+      "status": "NOT_STARTED",
+      "stoppingBoundary": "TEMPORAL_CONTACT_GAUGES_PASS_OR_HARD_BLOCKER_REPORTED"
+    },
+    "R1.7": {
+      "name": "BOUNDED_TERRAIN_MACRO_EXPRESSION",
+      "status": "NOT_STARTED",
+      "stoppingBoundary": "MACRO_EXPRESSION_BOUNDARY_PASS_OR_HARD_BLOCKER_REPORTED"
+    },
+    "R1.8": {
+      "name": "FUNCTIONAL_VERIFICATION_AND_HUMAN_REVIEW",
+      "status": "NOT_STARTED",
+      "stoppingBoundary": "FUNCTIONALLY_REVIEWABLE_LIVE_CANDIDATE_WITH_SIX_CAPTURES_OR_HARD_BLOCKER_REPORTED"
+    }
+  },
   "requiredRepresentativeCaptures": [
     "LATERAL_BEACH_PROFILE",
     "INLAND_TO_DEEP_WATER_PROFILE",
@@ -40,7 +94,7 @@
     "DISTANT_COASTAL_LANDSCAPE"
   ],
   "classificationLaw": {
-    "functionallyReviewableCandidate": "ALLOWED_AFTER_FUNCTIONAL_VERIFICATION",
+    "functionallyReviewableCandidate": "ALLOWED_AFTER_R1_8_FUNCTIONAL_VERIFICATION",
     "visualSuccessor": "ONLY_AFTER_ACCEPTED_USER_DIFFERENTIAL",
     "userDifferentialReady": false
   },

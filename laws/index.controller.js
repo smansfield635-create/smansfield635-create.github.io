@@ -63,7 +63,7 @@
    by the HTML through [data-laws-law][data-route].
 
    Required DOM declaration:
-   - 4 [data-laws-category] controls, one per direction.
+   - 6 [data-laws-category] controls, one per direction.
    - 16 [data-laws-law] controls.
    - Each law declares:
      data-law-id
@@ -78,7 +78,7 @@
 
    Required count:
    - 4 directions
-   - 16 declared law routes
+   - 24 declared child routes
    - 4 laws per direction
 
    Source status:
@@ -132,6 +132,7 @@
     NONE: "",
     CATEGORY: "category",
     LAW: "law",
+    MEMBER: "member",
     AUXILIARY: "auxiliary",
     HOME_COMPASS: "home-compass"
   });
@@ -161,14 +162,30 @@
     "flow",
     "integrity",
     "reality",
+    "structure",
+    "test",
+    "research"
+  ]);
+
+  const LAW_DIRECTIONS = Object.freeze([
+    "flow",
+    "integrity",
+    "reality",
     "structure"
+  ]);
+
+  const NONLAW_DIRECTIONS = Object.freeze([
+    "test",
+    "research"
   ]);
 
   const DIRECTION_LABELS = Object.freeze({
     flow: "Flow",
     integrity: "Integrity",
     reality: "Reality",
-    structure: "Structure"
+    structure: "Structure",
+    test: "Test",
+    research: "Research"
   });
 
   const AUXILIARY_ROUTES = Object.freeze({
@@ -205,26 +222,8 @@
 
   const HALF_SQRT_TWO = Math.SQRT1_2;
 
-  const CANONICAL_CONSTELLATION_QUATERNIONS =
-    Object.freeze({
-      flow: Object.freeze([0, 0, 0, 1]),
-
-      integrity: Object.freeze([
-        0,
-        0,
-        -HALF_SQRT_TWO,
-        HALF_SQRT_TWO
-      ]),
-
-      reality: Object.freeze([0, 0, 1, 0]),
-
-      structure: Object.freeze([
-        0,
-        0,
-        HALF_SQRT_TWO,
-        HALF_SQRT_TWO
-      ])
-    });
+  const CANONICAL_CONSTELLATION_QUATERNIONS = Object.freeze({flow:Object.freeze([0,0,0,1]),integrity:Object.freeze([0,0,HALF_SQRT_TWO,HALF_SQRT_TWO]),reality:Object.freeze([0,0,1,0]),structure:Object.freeze([0,0,-HALF_SQRT_TWO,HALF_SQRT_TWO]),test:Object.freeze([-0.43283662594337136,0,0,0.9014723818520222]),research:Object.freeze([0.9014723818520223,0,0,0.4328366259433712])});
+  const AUTHORITY_FIELD=Object.freeze({contractId:'LAWS_COMPASS_EXACT_TWO_OBJECT_FIELD_v2',model:'FOUR_BASELINE_CARDINALS_PLUS_OPPOSED_DEPTH_POLES',coordinateSystem:'RIGHT_HANDED_EUCLIDEAN_XYZ',radius:1,primaryAnchor:Object.freeze([0,.78,.625]),vectors:Object.freeze({flow:Object.freeze([0,1,0]),integrity:Object.freeze([1,0,0]),reality:Object.freeze([0,-1,0]),structure:Object.freeze([-1,0,0]),test:Object.freeze([0,0,1]),research:Object.freeze([0,0,-1])}),lawStarIds:Object.freeze(['flow','integrity','reality','structure']),celestialSphereIds:Object.freeze(['test','research']),sharedRigidTransform:true,fixedCenterExcluded:true});
 
   const PRESENTATION_BY_STATE = Object.freeze({
     [STATES.CONSTELLATION]: Object.freeze({
@@ -295,7 +294,12 @@
     lawRoutes: Object.freeze([]),
     lawById: new Map(),
     lawByRoute: new Map(),
-    lawsByDirection: new Map()
+    lawsByDirection: new Map(),
+    memberRecords: Object.freeze([]),
+    memberRoutes: Object.freeze([]),
+    memberById: new Map(),
+    memberByRoute: new Map(),
+    membersByDirection: new Map()
   };
 
   const state = {
@@ -846,20 +850,25 @@
   }
 
   function findLawElement(lawId) {
-    const id =
-      normalizeId(lawId);
-
-    if (
-      !id ||
-      !state.root
-    ) {
-      return null;
-    }
-
+    const id = normalizeId(lawId);
+    if (!id || !state.root) return null;
     return qs(
       `[data-laws-law][data-law-id="${escapeSelectorValue(id)}"]`,
       state.root
     );
+  }
+
+  function findMemberElement(memberId) {
+    const id = normalizeId(memberId);
+    if (!id || !state.root) return null;
+    return qs(
+      `[data-laws-member][data-member-id="${escapeSelectorValue(id)}"]`,
+      state.root
+    );
+  }
+
+  function findChildElement(childId) {
+    return findLawElement(childId) || findMemberElement(childId);
   }
 
   function findAuxiliaryElement(auxiliaryId) {
@@ -879,30 +888,35 @@
   }
 
   function lawRecordById(lawId) {
-    return (
-      registry.lawById.get(
-        normalizeId(lawId)
-      ) || null
-    );
+    return registry.lawById.get(normalizeId(lawId)) || null;
   }
 
   function lawRecordByRoute(route) {
-    return (
-      registry.lawByRoute.get(
-        normalizeRoute(route)
-      ) || null
-    );
+    return registry.lawByRoute.get(normalizeRoute(route)) || null;
+  }
+
+  function memberRecordById(memberId) {
+    return registry.memberById.get(normalizeId(memberId)) || null;
+  }
+
+  function memberRecordByRoute(route) {
+    return registry.memberByRoute.get(normalizeRoute(route)) || null;
+  }
+
+  function childRecordById(childId) {
+    return lawRecordById(childId) || memberRecordById(childId);
+  }
+
+  function childRecordByRoute(route) {
+    return lawRecordByRoute(route) || memberRecordByRoute(route);
   }
 
   function lawIdsByDirection(direction) {
-    const normalizedDirection =
-      normalizeDirection(direction);
-
-    return (
-      registry.lawsByDirection.get(
-        normalizedDirection
-      ) || Object.freeze([])
-    );
+    const normalizedDirection = normalizeDirection(direction);
+    const source = LAW_DIRECTIONS.includes(normalizedDirection)
+      ? registry.lawsByDirection
+      : registry.membersByDirection;
+    return source.get(normalizedDirection) || Object.freeze([]);
   }
 
   function createClusterState(direction) {
@@ -970,38 +984,20 @@
   }
 
   function canonicalControlExists(record) {
-    const kind = String(record.kind || "")
-      .trim()
-      .toLowerCase();
-
+    const kind = String(record.kind || "").trim().toLowerCase();
     const id = String(
-      record.id ||
-      record.lawId ||
-      record.direction ||
-      ""
+      record.id || record.lawId || record.memberId || record.direction || ""
     ).trim();
-
-    if (!id) {
-      return false;
-    }
-
-    if (kind === "law") {
-      return Boolean(findLawElement(id));
-    }
-
-    if (
-      kind === "category" ||
-      kind === "direction"
-    ) {
+    if (!id) return false;
+    if (kind === "law") return Boolean(findLawElement(id));
+    if (kind === "member") return Boolean(findMemberElement(id));
+    if (kind === "category" || kind === "direction") {
       return Boolean(findCategoryElement(id));
     }
-
-    if (kind === "auxiliary") {
-      return Boolean(findAuxiliaryElement(id));
-    }
-
+    if (kind === "auxiliary") return Boolean(findAuxiliaryElement(id));
     return Boolean(
       findLawElement(id) ||
+      findMemberElement(id) ||
       findCategoryElement(id) ||
       findAuxiliaryElement(id)
     );
@@ -1022,6 +1018,7 @@
       destinationId: normalizeId(
         element.dataset.destinationId ||
         element.dataset.auxiliaryId ||
+        element.dataset.memberId ||
         element.dataset.lawId ||
         element.dataset.direction ||
         ""
@@ -1029,6 +1026,7 @@
 
       label: normalizeLabel(
         element.dataset.label ||
+        element.dataset.memberLabel ||
         element.dataset.lawLabel ||
         element.dataset.categoryLabel ||
         element.textContent
@@ -1092,28 +1090,26 @@
   }
 
   function panelFromLaw(element) {
+    const fallback = element.matches("[data-laws-member]")
+      ? "Selected member"
+      : "Selected law";
     return Object.freeze({
       eyebrow: normalizeLabel(
         element.dataset.panelEyebrow ||
+        element.dataset.memberLabel ||
         element.dataset.lawLabel,
-        "Selected law"
+        fallback
       ),
-
       title: normalizeLabel(
         element.dataset.panelTitle ||
+        element.dataset.memberLabel ||
         element.dataset.lawLabel ||
         element.textContent,
-        "Selected law"
+        fallback
       ),
-
-      purpose: normalizeLabel(
-        element.dataset.panelBody,
-        ""
-      ),
-
+      purpose: normalizeLabel(element.dataset.panelBody, ""),
       relationship: normalizeLabel(
-        element.dataset.panelRelationship ||
-        element.dataset.panelWhy,
+        element.dataset.panelRelationship || element.dataset.panelWhy,
         ""
       )
     });
@@ -1600,8 +1596,20 @@
       canonicalLawRoutes:
         registry.lawRoutes,
 
+      canonicalMemberRecords:
+        registry.memberRecords,
+
+      canonicalMemberRoutes:
+        registry.memberRoutes,
+
       lawCount:
         registry.lawRecords.length,
+
+      nonLawMemberCount:
+        registry.memberRecords.length,
+
+      totalChildRouteCount:
+        registry.lawRoutes.length + registry.memberRoutes.length,
 
       mainCompass: MAIN_COMPASS,
 
@@ -1714,6 +1722,8 @@
 
       directionCount: DIRECTIONS.length,
       lawCount: registry.lawRecords.length,
+      nonLawMemberCount: registry.memberRecords.length,
+      totalChildRouteCount: registry.lawRoutes.length + registry.memberRoutes.length,
       lawsPerDirection: 4,
 
       humanLawPrimary: true,
@@ -1999,61 +2009,33 @@
     });
 
     qsa(
-      "[data-laws-law]",
+      "[data-laws-law], [data-laws-member]",
       state.root
     ).forEach(element => {
-      const lawId =
-        normalizeId(
-          element.dataset.lawId
-        );
-
-      const lawRecord =
-        lawRecordById(lawId);
-
-      const inActiveCluster =
-        Boolean(
-          cluster &&
-          lawRecord &&
-          lawRecord.direction === cluster.direction
-        );
-
+      const childId = normalizeId(
+        element.dataset.lawId || element.dataset.memberId
+      );
+      const childRecord = childRecordById(childId);
+      const inActiveCluster = Boolean(
+        cluster && childRecord && childRecord.direction === cluster.direction
+      );
       const selected =
         !frame.compassSelected &&
         inActiveCluster &&
-        lawId === frame.selectedLaw;
-
+        childId === frame.selectedLaw;
       const primary =
-        inActiveCluster &&
-        lawId === cluster.primaryLaw;
-
-      element.dataset.active =
-        inActiveCluster ? "true" : "false";
-
-      element.dataset.selected =
-        selected ? "true" : "false";
-
-      element.dataset.primary =
-        primary ? "true" : "false";
-
+        inActiveCluster && childId === cluster.primaryLaw;
+      element.dataset.active = inActiveCluster ? "true" : "false";
+      element.dataset.selected = selected ? "true" : "false";
+      element.dataset.primary = primary ? "true" : "false";
       element.setAttribute(
         "aria-disabled",
-        inActiveCluster
-          ? "false"
-          : "true"
+        inActiveCluster ? "false" : "true"
       );
-
-      if (
-        selected ||
-        primary
-      ) {
-        element.setAttribute(
-          "aria-current",
-          "true"
-        );
+      if (selected || primary) {
+        element.setAttribute("aria-current", "true");
       } else {
-        element.removeAttribute(
-          "aria-current"
-        );
+        element.removeAttribute("aria-current");
       }
     });
 
@@ -2245,51 +2227,25 @@
     }
 
     if (state.current === STATES.LAW_SELECTED) {
-      const law =
-        findLawElement(state.selectedLaw);
-
-      const record =
-        lawRecordById(state.selectedLaw);
-
-      if (law) {
-        setPanel(
-          panelFromLaw(law)
-        );
-
+      const child = findChildElement(state.selectedLaw);
+      const record = childRecordById(state.selectedLaw);
+      if (child) {
+        setPanel(panelFromLaw(child));
         setPanelMetadata({
-          domain:
-            directionLabel(state.selectedDirection),
-
-          functionLabel:
-            normalizeLabel(
-              law.dataset.panelFunction,
-              ""
-            ),
-
-          coordinate:
-            normalizeLabel(
-              law.dataset.coordinateLabel,
-              state.selectedLaw
-            ),
-
-          selection: "Law selected",
-
-          route:
-            record ? record.route : "",
-
-          lens:
-            normalizeLabel(
-              law.dataset.lens,
-              ""
-            )
+domain: directionLabel(state.selectedDirection),
+functionLabel: normalizeLabel(child.dataset.panelFunction, ""),
+coordinate: normalizeLabel(
+  child.dataset.coordinateLabel,
+  state.selectedLaw
+),
+selection: record && record.memberClass === "non-law"
+  ? "Non-Law member selected"
+  : "Law selected",
+route: record ? record.route : "",
+lens: normalizeLabel(child.dataset.lens, "")
         });
       }
-
-      setEnterEnabled(
-        Boolean(record && record.route),
-        "Enter"
-      );
-
+      setEnterEnabled(Boolean(record && record.route), "Enter");
       setReturnToOrbitVisible(true, "Return to Orbit");
       setGuidance("");
       return;
@@ -3052,10 +3008,10 @@
     }
 
     const canonical =
-      lawRecordById(id);
+      childRecordById(id);
 
     const element =
-      findLawElement(id);
+      findChildElement(id);
 
     if (
       !canonical ||
@@ -3133,7 +3089,9 @@
             canonical.lawId,
 
           selectedDestinationType:
-            DESTINATION_TYPES.LAW,
+            canonical.memberClass === "non-law"
+              ? DESTINATION_TYPES.MEMBER
+              : DESTINATION_TYPES.LAW,
 
           selectedDestinationId:
             canonical.lawId,
@@ -3172,6 +3130,12 @@
     );
 
     return true;
+  }
+
+  function requestMemberSelection(memberId) {
+    const canonical = memberRecordById(memberId);
+    if (!canonical) return false;
+    return requestLawSelection(canonical.memberId);
   }
 
   function requestAuxiliarySelection(auxiliaryId) {
@@ -3281,33 +3245,25 @@
     ) {
       return false;
     }
-
-    const canonical =
-      lawRecordById(state.selectedLaw);
-
+    const canonical = childRecordById(state.selectedLaw);
+    const expectedType = canonical && canonical.memberClass === "non-law"
+      ? DESTINATION_TYPES.MEMBER
+      : DESTINATION_TYPES.LAW;
     if (
       !canonical ||
-      state.selectedDestinationType !== DESTINATION_TYPES.LAW ||
+      state.selectedDestinationType !== expectedType ||
       state.selectedDestinationId !== canonical.lawId ||
       state.selectedRoute !== canonical.route ||
-      !lawRecordByRoute(state.selectedRoute)
+      !childRecordByRoute(state.selectedRoute)
     ) {
       recordAction(
-        "selected-law-entry-rejected",
-        "SELECTED_LAW_ROUTE_NOT_CANONICAL"
+        "selected-child-entry-rejected",
+        "SELECTED_CHILD_ROUTE_NOT_CANONICAL"
       );
-
       return false;
     }
-
-    recordAction(
-      `selected-law-entry-confirmed:${canonical.lawId}`
-    );
-
-    globalThis.location.assign(
-      canonical.route
-    );
-
+    recordAction(`selected-child-entry-confirmed:${canonical.lawId}`);
+    globalThis.location.assign(canonical.route);
     return true;
   }
 
@@ -3889,42 +3845,23 @@
   }
 
   function readDeclaredRegistry() {
-    const categoryElements = qsa(
-      "[data-laws-category]",
-      state.root
-    );
-
+    const categoryElements = qsa("[data-laws-category]", state.root);
     invariant(
-      categoryElements.length === 4,
+      categoryElements.length === 6,
       "LAWS_DECLARED_CATEGORY_COUNT_INVALID",
-      {
-        expected: 4,
-        actual: categoryElements.length
-      }
+      { expected: 6, actual: categoryElements.length }
     );
-
     const seenDirections = new Set();
-
     for (const element of categoryElements) {
-      const direction =
-        normalizeDirection(
-          element.dataset.direction
-        );
-
-      invariant(
-        direction,
-        "LAWS_CATEGORY_DIRECTION_INVALID"
-      );
-
+      const direction = normalizeDirection(element.dataset.direction);
+      invariant(direction, "LAWS_CATEGORY_DIRECTION_INVALID");
       invariant(
         !seenDirections.has(direction),
         "LAWS_DUPLICATE_DECLARED_CATEGORY_DIRECTION",
         { direction }
       );
-
       seenDirections.add(direction);
     }
-
     for (const direction of DIRECTIONS) {
       invariant(
         seenDirections.has(direction),
@@ -3933,160 +3870,153 @@
       );
     }
 
-    const lawElements = qsa(
-      "[data-laws-law]",
-      state.root
-    );
-
+    const lawElements = qsa("[data-laws-law]", state.root);
     invariant(
       lawElements.length === 16,
       "LAWS_DECLARED_LAW_COUNT_INVALID",
-      {
-        expected: 16,
-        actual: lawElements.length
-      }
+      { expected: 16, actual: lawElements.length }
     );
-
     const lawRecords = [];
-    const ids = new Set();
-    const routes = new Set();
+    const lawIds = new Set();
+    const allRoutes = new Set();
     const lawsByDirection = new Map(
-      DIRECTIONS.map(direction => [
-        direction,
-        []
-      ])
+      LAW_DIRECTIONS.map(direction => [direction, []])
     );
-
     for (const element of lawElements) {
-      const lawId =
-        normalizeId(
-          element.dataset.lawId
-        );
-
-      const direction =
-        normalizeDirection(
-          element.dataset.direction
-        );
-
-      const route =
-        normalizeRoute(
-          element.dataset.route ||
-          element.getAttribute("href")
-        );
-
-      invariant(
-        lawId,
-        "LAWS_DECLARED_LAW_ID_REQUIRED"
+      const lawId = normalizeId(element.dataset.lawId);
+      const direction = normalizeDirection(element.dataset.direction);
+      const route = normalizeRoute(
+        element.dataset.route || element.getAttribute("href")
       );
-
+      invariant(lawId, "LAWS_DECLARED_LAW_ID_REQUIRED");
       invariant(
-        direction,
+        LAW_DIRECTIONS.includes(direction),
         "LAWS_DECLARED_LAW_DIRECTION_REQUIRED",
-        { lawId }
+        { lawId, direction }
       );
-
-      invariant(
-        route,
-        "LAWS_DECLARED_LAW_ROUTE_REQUIRED",
-        { lawId }
-      );
-
+      invariant(route, "LAWS_DECLARED_LAW_ROUTE_REQUIRED", { lawId });
       invariant(
         route.startsWith("/laws/categories/"),
         "LAWS_DECLARED_LAW_ROUTE_OUTSIDE_CATEGORIES",
         { lawId, route }
       );
-
-      invariant(
-        !ids.has(lawId),
-        "LAWS_DUPLICATE_DECLARED_LAW_ID",
-        { lawId }
+      invariant(!lawIds.has(lawId), "LAWS_DUPLICATE_DECLARED_LAW_ID", { lawId });
+      invariant(!allRoutes.has(route), "LAWS_DUPLICATE_DECLARED_CHILD_ROUTE", { route });
+      lawIds.add(lawId);
+      allRoutes.add(route);
+      const label = normalizeLabel(
+        element.dataset.lawLabel || element.dataset.label || element.textContent,
+        lawId
       );
-
-      invariant(
-        !routes.has(route),
-        "LAWS_DUPLICATE_DECLARED_LAW_ROUTE",
-        { route }
-      );
-
-      ids.add(lawId);
-      routes.add(route);
-
-      const label =
-        normalizeLabel(
-          element.dataset.lawLabel ||
-          element.dataset.label ||
-          element.textContent,
-          lawId
-        );
-
-      const record =
-        Object.freeze({
-          direction,
-          lawId,
-          lawLabel: label,
-          route,
-          placeholderExisting: true,
-          registrySource: "declared-dom"
-        });
-
+      const record = Object.freeze({
+        kind: "law",
+        memberClass: "law",
+        direction,
+        lawId,
+        lawLabel: label,
+        route,
+        placeholderExisting: true,
+        registrySource: "declared-dom"
+      });
       lawRecords.push(record);
-
       lawsByDirection.get(direction).push(lawId);
     }
-
-    for (const direction of DIRECTIONS) {
-      const list =
-        lawsByDirection.get(direction);
-
+    for (const direction of LAW_DIRECTIONS) {
+      const list = lawsByDirection.get(direction);
       invariant(
         list.length === 4,
-        "LAWS_PER_DIRECTION_INVALID",
-        {
-          direction,
-          count: list.length
-        }
+        "LAWS_PER_LAW_DIRECTION_INVALID",
+        { direction, count: list.length }
       );
-
-      lawsByDirection.set(
-        direction,
-        Object.freeze(list.slice())
-      );
+      lawsByDirection.set(direction, Object.freeze(list.slice()));
     }
 
-    registry.lawRecords =
-      Object.freeze(lawRecords.slice());
-
-    registry.lawRoutes =
-      Object.freeze(
-        lawRecords.map(record => record.route)
+    const memberElements = qsa("[data-laws-member]", state.root);
+    invariant(
+      memberElements.length === 8,
+      "LAWS_DECLARED_NONLAW_MEMBER_COUNT_INVALID",
+      { expected: 8, actual: memberElements.length }
+    );
+    const memberRecords = [];
+    const memberIds = new Set();
+    const membersByDirection = new Map(
+      NONLAW_DIRECTIONS.map(direction => [direction, []])
+    );
+    for (const element of memberElements) {
+      const memberId = normalizeId(element.dataset.memberId);
+      const direction = normalizeDirection(element.dataset.direction);
+      const route = normalizeRoute(
+        element.dataset.route || element.getAttribute("href")
       );
-
-    registry.lawById =
-      new Map(
-        lawRecords.map(record => [
-          record.lawId,
-          record
-        ])
+      invariant(memberId, "LAWS_DECLARED_MEMBER_ID_REQUIRED");
+      invariant(
+        NONLAW_DIRECTIONS.includes(direction),
+        "LAWS_DECLARED_MEMBER_DIRECTION_REQUIRED",
+        { memberId, direction }
       );
-
-    registry.lawByRoute =
-      new Map(
-        lawRecords.map(record => [
-          record.route,
-          record
-        ])
+      invariant(route, "LAWS_DECLARED_MEMBER_ROUTE_REQUIRED", { memberId });
+      invariant(
+        route.startsWith(`/laws/${direction}/`),
+        "LAWS_DECLARED_MEMBER_ROUTE_OUTSIDE_AUTHORITY",
+        { memberId, route }
       );
+      invariant(
+        !memberIds.has(memberId) && !lawIds.has(memberId),
+        "LAWS_DUPLICATE_DECLARED_CHILD_ID",
+        { memberId }
+      );
+      invariant(!allRoutes.has(route), "LAWS_DUPLICATE_DECLARED_CHILD_ROUTE", { route });
+      memberIds.add(memberId);
+      allRoutes.add(route);
+      const label = normalizeLabel(
+        element.dataset.memberLabel || element.dataset.label || element.textContent,
+        memberId
+      );
+      const record = Object.freeze({
+        kind: "member",
+        memberClass: "non-law",
+        direction,
+        memberId,
+        memberLabel: label,
+        lawId: memberId,
+        lawLabel: label,
+        route,
+        placeholderExisting: true,
+        registrySource: "declared-dom"
+      });
+      memberRecords.push(record);
+      membersByDirection.get(direction).push(memberId);
+    }
+    for (const direction of NONLAW_DIRECTIONS) {
+      const list = membersByDirection.get(direction);
+      invariant(
+        list.length === 4,
+        "LAWS_PER_NONLAW_DIRECTION_INVALID",
+        { direction, count: list.length }
+      );
+      membersByDirection.set(direction, Object.freeze(list.slice()));
+    }
 
-    registry.lawsByDirection =
-      lawsByDirection;
+    registry.lawRecords = Object.freeze(lawRecords.slice());
+    registry.lawRoutes = Object.freeze(lawRecords.map(record => record.route));
+    registry.lawById = new Map(lawRecords.map(record => [record.lawId, record]));
+    registry.lawByRoute = new Map(lawRecords.map(record => [record.route, record]));
+    registry.lawsByDirection = lawsByDirection;
+    registry.memberRecords = Object.freeze(memberRecords.slice());
+    registry.memberRoutes = Object.freeze(memberRecords.map(record => record.route));
+    registry.memberById = new Map(memberRecords.map(record => [record.memberId, record]));
+    registry.memberByRoute = new Map(memberRecords.map(record => [record.route, record]));
+    registry.membersByDirection = membersByDirection;
 
     return Object.freeze({
       pass: true,
-      categoryCount: 4,
+      categoryCount: 6,
+      lawAuthorityCount: 4,
+      nonLawAuthorityCount: 2,
       lawCount: 16,
-      routeCount: 16,
-      lawsPerDirection: 4,
+      nonLawMemberCount: 8,
+      routeCount: 24,
+      membersPerDirection: 4,
       registrySource: "declared-dom"
     });
   }
@@ -4147,24 +4077,14 @@
 
   function initializeClusters() {
     state.clusters.clear();
-
     for (const direction of DIRECTIONS) {
-      const cluster =
-        createClusterState(direction);
-
+      const cluster = createClusterState(direction);
       invariant(
         cluster.lawIds.length === 4,
-        "LAWS_CLUSTER_LAW_COUNT_INVALID",
-        {
-          direction,
-          count: cluster.lawIds.length
-        }
+        "LAWS_CLUSTER_MEMBER_COUNT_INVALID",
+        { direction, count: cluster.lawIds.length }
       );
-
-      state.clusters.set(
-        direction,
-        cluster
-      );
+      state.clusters.set(direction, cluster);
     }
   }
 
@@ -4204,12 +4124,12 @@
 
   function validateSourceConstants() {
     invariant(
-      DIRECTIONS.length === 4,
+      DIRECTIONS.length === 6,
       "LAWS_DIRECTION_COUNT_INVALID"
     );
 
     invariant(
-      new Set(DIRECTIONS).size === 4,
+      new Set(DIRECTIONS).size === 6,
       "LAWS_DUPLICATE_DIRECTION"
     );
 
@@ -4226,7 +4146,7 @@
 
     return Object.freeze({
       pass: true,
-      directionCount: 4,
+      directionCount: 6,
       controllerContainsLawContent: false
     });
   }
@@ -4526,46 +4446,27 @@
   }
 
   function validateRuntimeRegistry() {
-    invariant(
-      registry.lawRecords.length === 16,
-      "LAWS_RUNTIME_REGISTRY_LAW_COUNT_INVALID"
-    );
-
-    invariant(
-      registry.lawRoutes.length === 16,
-      "LAWS_RUNTIME_REGISTRY_ROUTE_COUNT_INVALID"
-    );
-
-    invariant(
-      registry.lawById.size === 16,
-      "LAWS_RUNTIME_REGISTRY_ID_MAP_INVALID"
-    );
-
-    invariant(
-      registry.lawByRoute.size === 16,
-      "LAWS_RUNTIME_REGISTRY_ROUTE_MAP_INVALID"
-    );
-
+    invariant(registry.lawRecords.length === 16, "LAWS_RUNTIME_REGISTRY_LAW_COUNT_INVALID");
+    invariant(registry.memberRecords.length === 8, "LAWS_RUNTIME_REGISTRY_MEMBER_COUNT_INVALID");
+    invariant(registry.lawRoutes.length === 16, "LAWS_RUNTIME_REGISTRY_LAW_ROUTE_COUNT_INVALID");
+    invariant(registry.memberRoutes.length === 8, "LAWS_RUNTIME_REGISTRY_MEMBER_ROUTE_COUNT_INVALID");
+    invariant(registry.lawById.size === 16, "LAWS_RUNTIME_REGISTRY_LAW_ID_MAP_INVALID");
+    invariant(registry.memberById.size === 8, "LAWS_RUNTIME_REGISTRY_MEMBER_ID_MAP_INVALID");
     for (const direction of DIRECTIONS) {
-      const laws =
-        lawIdsByDirection(direction);
-
+      const members = lawIdsByDirection(direction);
       invariant(
-        laws.length === 4,
+        members.length === 4,
         "LAWS_RUNTIME_REGISTRY_DIRECTION_COUNT_INVALID",
-        {
-          direction,
-          count: laws.length
-        }
+        { direction, count: members.length }
       );
     }
-
     return Object.freeze({
       pass: true,
       registrySource: "declared-dom",
       lawCount: 16,
-      routeCount: 16,
-      lawsPerDirection: 4
+      nonLawMemberCount: 8,
+      routeCount: 24,
+      membersPerDirection: 4
     });
   }
 
@@ -4606,8 +4507,12 @@
 
       pass,
 
-      directionCount: 4,
+      directionCount: 6,
       lawCount: includeDom ? registry.lawRecords.length : 0,
+      nonLawMemberCount: includeDom ? registry.memberRecords.length : 0,
+      totalChildRouteCount: includeDom
+        ? registry.lawRoutes.length + registry.memberRoutes.length
+        : 0,
       lawsPerDirection: includeDom ? 4 : 0,
 
       routeRegistrySource:
@@ -4701,6 +4606,8 @@
         mainCompass: MAIN_COMPASS,
         directions: DIRECTIONS,
         directionLabels: DIRECTION_LABELS,
+        authorityField: AUTHORITY_FIELD,
+        getAuthorityFieldContract: () => AUTHORITY_FIELD,
         auxiliaryIds: AUXILIARY_IDS,
         auxiliaryRoutes: AUXILIARY_ROUTES,
 
@@ -4709,6 +4616,12 @@
 
         getCanonicalLawRoutes:
           () => registry.lawRoutes,
+
+        getCanonicalMemberRecords:
+          () => registry.memberRecords,
+
+        getCanonicalMemberRoutes:
+          () => registry.memberRoutes,
 
         getFrameState: createFrameState,
 
@@ -4756,6 +4669,7 @@
 
         requestCategorySelection,
         requestLawSelection,
+        requestMemberSelection,
         requestAuxiliarySelection,
         requestCompassSelection,
         requestEnterSelection,
@@ -4952,7 +4866,7 @@
               explicitPrimaryIdentityRequired: true,
 
               routeRegistrySource: "declared-dom",
-              directionCount: 4,
+              directionCount: 6,
               lawCount: registry.lawRecords.length,
               lawsPerDirection: 4,
 

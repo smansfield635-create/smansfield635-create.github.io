@@ -20,7 +20,7 @@
     },
     "R1.1": {
       "status": "PASS_CLOSED",
-      "head": "0833b53d6f3314628493337dcbb9a815a05e69b5",
+      "head": "872aef9001625fd6bfd5adcad71f36c6e638d0d3",
       "result": "PASS_CLOSED",
       "actualDepthAvailable": true,
       "continuousProfileUsed": true,

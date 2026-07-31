@@ -3,7 +3,7 @@
   "operation": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
   "result": "PASS_CLOSED",
   "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
-  "candidateHead": "0833b53d6f3314628493337dcbb9a815a05e69b5",
+  "candidateHead": "872aef9001625fd6bfd5adcad71f36c6e638d0d3",
   "verificationBoundary": {
     "strictProfileMetrics": "FULLY_OWNED_COASTAL_PROFILE_ONLY",
     "acceptedInlandTerrain": "SEPARATE_BLEND_SEAM_CONTINUITY_ONLY",

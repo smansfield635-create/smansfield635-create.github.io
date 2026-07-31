@@ -60,6 +60,7 @@ jobs:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         shell: bash
         run: |
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/node_modules
           cat > /tmp/laws-public-check.mjs <<'JS'
           import fs from 'node:fs';
           import puppeteer from 'puppeteer-core';

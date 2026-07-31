@@ -1,0 +1,1255 @@
+{
+  "receiptType": "H_EARTH_C0_C_SHORELINE_AND_DEPTH_SAMPLE_SET_v1",
+  "operation": "C0_C_FIXED_COASTAL_SCENES_AND_SHORELINE_SAMPLES",
+  "exactMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+  "corridor": {
+    "corridorId": "H_EARTH_C0_C_ACCEPTED_COASTAL_CORRIDOR_001",
+    "worldSpaceBounds": {
+      "xMinimum": -160,
+      "xMaximum": 160,
+      "yMinimum": -4,
+      "yMaximum": 16,
+      "zMinimum": -165.49265495,
+      "zMaximum": 2.42720326
+    },
+    "corridorCenterline": [
+      {
+        "x": 0,
+        "z": -159.25507841
+      },
+      {
+        "x": 0,
+        "z": -79.25507841
+      },
+      {
+        "x": 0,
+        "z": -3.25507841
+      }
+    ],
+    "inlandEndpoint": {
+      "x": 0,
+      "z": -159.25507841
+    },
+    "openWaterEndpoint": {
+      "x": 0,
+      "z": -3.25507841
+    },
+    "crossSectionDirection": "POSITIVE_Z_WATERWARD",
+    "sourceMainHead": "59df682501f63aec8a263cef8e1a5adacbc2a1a2",
+    "terrainAuthorityId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+    "shorelineAuthorityId": "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1",
+    "waterGeometryAuthorityId": "H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1",
+    "representedConditions": [
+      "INLAND_DARK_TERRAIN",
+      "COASTAL_TRANSITION",
+      "EXISTING_SAND_OR_BEACH",
+      "CURRENT_SHORELINE",
+      "SHALLOW_SUBMERGED_TERRAIN",
+      "DEEPER_WATER",
+      "OPEN_WATER",
+      "GROUND_LEVEL_TRAVERSAL_ACCESS"
+    ]
+  },
+  "transectCount": 3,
+  "shorelineSampleCount": 57,
+  "transects": [
+    {
+      "transectId": "C0_C_TRANSECT_01",
+      "worldX": -128,
+      "crossSectionDirection": "POSITIVE_Z_WATERWARD",
+      "shorelineZ": -85.49265495,
+      "samples": [
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S01",
+          "worldX": -128,
+          "worldZ": -165.49265495,
+          "terrainHeight": -2.06083608,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 2.06083608,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.1119365,
+          "distanceFromShoreline": 80,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S02",
+          "worldX": -128,
+          "worldZ": -145.49265495,
+          "terrainHeight": -2.40382588,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 2.40382588,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.10730963,
+          "distanceFromShoreline": 60,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S03",
+          "worldX": -128,
+          "worldZ": -127.49265495,
+          "terrainHeight": -0.04734796,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.04734796,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.16761128,
+          "distanceFromShoreline": 42,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S04",
+          "worldX": -128,
+          "worldZ": -119.49265495,
+          "terrainHeight": 0.86528927,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -0.86528927,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.06090837,
+          "distanceFromShoreline": 34,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S05",
+          "worldX": -128,
+          "worldZ": -109.49265495,
+          "terrainHeight": 0.62864554,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -0.62864554,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.08277236,
+          "distanceFromShoreline": 24,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S06",
+          "worldX": -128,
+          "worldZ": -99.49265495,
+          "terrainHeight": -0.19142288,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.19142288,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.06902774,
+          "distanceFromShoreline": 14,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S07",
+          "worldX": -128,
+          "worldZ": -93.49265495,
+          "terrainHeight": -0.4890511,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.4890511,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.03938277,
+          "distanceFromShoreline": 8,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S08",
+          "worldX": -128,
+          "worldZ": -89.49265495,
+          "terrainHeight": -0.60160631,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.60160631,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.02744589,
+          "distanceFromShoreline": 4,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S09",
+          "worldX": -128,
+          "worldZ": -87.49265495,
+          "terrainHeight": -0.64378595,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.64378595,
+          "landOrWaterClass": "SHORELINE_CONTACT",
+          "localSlope": 0.02424328,
+          "distanceFromShoreline": 2,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S10",
+          "worldX": -128,
+          "worldZ": -85.49265495,
+          "terrainHeight": -0.6820519,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.6820519,
+          "landOrWaterClass": "SHORELINE_CONTACT",
+          "localSlope": 0.4520647,
+          "distanceFromShoreline": 0,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S11",
+          "worldX": -128,
+          "worldZ": -83.89265495,
+          "terrainHeight": -0.37879997,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.37879997,
+          "landOrWaterClass": "SHORELINE_CONTACT",
+          "localSlope": 0.01800413,
+          "distanceFromShoreline": -1.6,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S12",
+          "worldX": -128,
+          "worldZ": -82.29265495,
+          "terrainHeight": -0.40759999,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.40759999,
+          "landOrWaterClass": "SHALLOW_WATER",
+          "localSlope": 0.01800413,
+          "distanceFromShoreline": -3.2,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S13",
+          "worldX": -128,
+          "worldZ": -77.49265495,
+          "terrainHeight": -0.49400002,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.49400002,
+          "landOrWaterClass": "SHALLOW_WATER",
+          "localSlope": 0.01800413,
+          "distanceFromShoreline": -8,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S14",
+          "worldX": -128,
+          "worldZ": -71.49265495,
+          "terrainHeight": -0.602,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.602,
+          "landOrWaterClass": "SHALLOW_WATER",
+          "localSlope": 0.01800413,
+          "distanceFromShoreline": -14,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S15",
+          "worldX": -128,
+          "worldZ": -63.49265495,
+          "terrainHeight": -0.75681603,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.75681603,
+          "landOrWaterClass": "NEARSHORE_WATER",
+          "localSlope": 0.0210981,
+          "distanceFromShoreline": -22,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S16",
+          "worldX": -128,
+          "worldZ": -53.49265495,
+          "terrainHeight": -0.88849598,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.88849598,
+          "landOrWaterClass": "NEARSHORE_WATER",
+          "localSlope": 0.01217104,
+          "distanceFromShoreline": -32,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S17",
+          "worldX": -128,
+          "worldZ": -41.49265495,
+          "terrainHeight": -1.042,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.042,
+          "landOrWaterClass": "NEARSHORE_WATER",
+          "localSlope": 0.01200275,
+          "distanceFromShoreline": -44,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S18",
+          "worldX": -128,
+          "worldZ": -27.49265495,
+          "terrainHeight": -1.20999998,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.20999998,
+          "landOrWaterClass": "OPEN_WATER",
+          "localSlope": 0.01200275,
+          "distanceFromShoreline": -58,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_01",
+          "sampleId": "C0_C_TRANSECT_01_S19",
+          "worldX": -128,
+          "worldZ": -9.49265495,
+          "terrainHeight": -1.426,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.426,
+          "landOrWaterClass": "OPEN_WATER",
+          "localSlope": 0.01200275,
+          "distanceFromShoreline": -76,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        }
+      ]
+    },
+    {
+      "transectId": "C0_C_TRANSECT_02",
+      "worldX": 0,
+      "crossSectionDirection": "POSITIVE_Z_WATERWARD",
+      "shorelineZ": -79.25507841,
+      "samples": [
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S01",
+          "worldX": 0,
+          "worldZ": -159.25507841,
+          "terrainHeight": -3.53655684,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 3.53655684,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.18742039,
+          "distanceFromShoreline": 80,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S02",
+          "worldX": 0,
+          "worldZ": -139.25507841,
+          "terrainHeight": -1.73241627,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.73241627,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.18378759,
+          "distanceFromShoreline": 60,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S03",
+          "worldX": 0,
+          "worldZ": -121.25507841,
+          "terrainHeight": 3.2373932,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -3.2373932,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.29398769,
+          "distanceFromShoreline": 42,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S04",
+          "worldX": 0,
+          "worldZ": -113.25507841,
+          "terrainHeight": 4.68125433,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -4.68125433,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.05022517,
+          "distanceFromShoreline": 34,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S05",
+          "worldX": 0,
+          "worldZ": -103.25507841,
+          "terrainHeight": 3.37688738,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -3.37688738,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.25436255,
+          "distanceFromShoreline": 24,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S06",
+          "worldX": 0,
+          "worldZ": -93.25507841,
+          "terrainHeight": 0.938963,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -0.938963,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.1973771,
+          "distanceFromShoreline": 14,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S07",
+          "worldX": 0,
+          "worldZ": -87.25507841,
+          "terrainHeight": 0.04277873,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -0.04277873,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.10918023,
+          "distanceFromShoreline": 8,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S08",
+          "worldX": 0,
+          "worldZ": -83.25507841,
+          "terrainHeight": -0.2984944,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.2984944,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.06794972,
+          "distanceFromShoreline": 4,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S09",
+          "worldX": 0,
+          "worldZ": -81.25507841,
+          "terrainHeight": -0.41734576,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.41734576,
+          "landOrWaterClass": "SHORELINE_CONTACT",
+          "localSlope": 0.054326,
+          "distanceFromShoreline": 2,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S10",
+          "worldX": 0,
+          "worldZ": -79.25507841,
+          "terrainHeight": -0.51363945,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.51363945,
+          "landOrWaterClass": "SHORELINE_CONTACT",
+          "localSlope": 0.20581842,
+          "distanceFromShoreline": 0,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S11",
+          "worldX": 0,
+          "worldZ": -77.65507841,
+          "terrainHeight": -0.37879997,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.37879997,
+          "landOrWaterClass": "SHORELINE_CONTACT",
+          "localSlope": 0.01813025,
+          "distanceFromShoreline": -1.6,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S12",
+          "worldX": 0,
+          "worldZ": -76.05507841,
+          "terrainHeight": -0.40759999,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.40759999,
+          "landOrWaterClass": "SHALLOW_WATER",
+          "localSlope": 0.01813025,
+          "distanceFromShoreline": -3.2,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S13",
+          "worldX": 0,
+          "worldZ": -71.25507841,
+          "terrainHeight": -0.49400002,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.49400002,
+          "landOrWaterClass": "SHALLOW_WATER",
+          "localSlope": 0.01813025,
+          "distanceFromShoreline": -8,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S14",
+          "worldX": 0,
+          "worldZ": -65.25507841,
+          "terrainHeight": -0.602,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.602,
+          "landOrWaterClass": "SHALLOW_WATER",
+          "localSlope": 0.01813025,
+          "distanceFromShoreline": -14,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S15",
+          "worldX": 0,
+          "worldZ": -57.25507841,
+          "terrainHeight": -0.75681603,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.75681603,
+          "landOrWaterClass": "NEARSHORE_WATER",
+          "localSlope": 0.02124625,
+          "distanceFromShoreline": -22,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S16",
+          "worldX": 0,
+          "worldZ": -47.25507841,
+          "terrainHeight": -0.88849598,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.88849598,
+          "landOrWaterClass": "NEARSHORE_WATER",
+          "localSlope": 0.01225648,
+          "distanceFromShoreline": -32,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S17",
+          "worldX": 0,
+          "worldZ": -35.25507841,
+          "terrainHeight": -1.042,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.042,
+          "landOrWaterClass": "NEARSHORE_WATER",
+          "localSlope": 0.01208683,
+          "distanceFromShoreline": -44,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S18",
+          "worldX": 0,
+          "worldZ": -21.25507841,
+          "terrainHeight": -1.20999998,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.20999998,
+          "landOrWaterClass": "OPEN_WATER",
+          "localSlope": 0.01208683,
+          "distanceFromShoreline": -58,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_02",
+          "sampleId": "C0_C_TRANSECT_02_S19",
+          "worldX": 0,
+          "worldZ": -3.25507841,
+          "terrainHeight": -1.426,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.426,
+          "landOrWaterClass": "OPEN_WATER",
+          "localSlope": 0.01208683,
+          "distanceFromShoreline": -76,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        }
+      ]
+    },
+    {
+      "transectId": "C0_C_TRANSECT_03",
+      "worldX": 128,
+      "crossSectionDirection": "POSITIVE_Z_WATERWARD",
+      "shorelineZ": -73.57279674,
+      "samples": [
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S01",
+          "worldX": 128,
+          "worldZ": -153.57279674,
+          "terrainHeight": 7.88885063,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -7.88885063,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.32487395,
+          "distanceFromShoreline": 80,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S02",
+          "worldX": 128,
+          "worldZ": -133.57279674,
+          "terrainHeight": 4.66063756,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -4.66063756,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.17176831,
+          "distanceFromShoreline": 60,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S03",
+          "worldX": 128,
+          "worldZ": -115.57279674,
+          "terrainHeight": 4.41479433,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -4.41479433,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.06481588,
+          "distanceFromShoreline": 42,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S04",
+          "worldX": 128,
+          "worldZ": -107.57279674,
+          "terrainHeight": 4.33616978,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -4.33616978,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.09166255,
+          "distanceFromShoreline": 34,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S05",
+          "worldX": 128,
+          "worldZ": -97.57279674,
+          "terrainHeight": 2.91675419,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -2.91675419,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.19930355,
+          "distanceFromShoreline": 24,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S06",
+          "worldX": 128,
+          "worldZ": -87.57279674,
+          "terrainHeight": 1.13392788,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -1.13392788,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.14824808,
+          "distanceFromShoreline": 14,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S07",
+          "worldX": 128,
+          "worldZ": -81.57279674,
+          "terrainHeight": 0.42654687,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -0.42654687,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.09485383,
+          "distanceFromShoreline": 8,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S08",
+          "worldX": 128,
+          "worldZ": -77.57279674,
+          "terrainHeight": 0.1060378,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": -0.1060378,
+          "landOrWaterClass": "NO_WATER",
+          "localSlope": 0.07016751,
+          "distanceFromShoreline": 4,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S09",
+          "worldX": 128,
+          "worldZ": -75.57279674,
+          "terrainHeight": -0.02351671,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.02351671,
+          "landOrWaterClass": "SHORELINE_CONTACT",
+          "localSlope": 0.0619275,
+          "distanceFromShoreline": 2,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S10",
+          "worldX": 128,
+          "worldZ": -73.57279674,
+          "terrainHeight": -0.13949317,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.13949317,
+          "landOrWaterClass": "SHORELINE_CONTACT",
+          "localSlope": 0.3288051,
+          "distanceFromShoreline": 0,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S11",
+          "worldX": 128,
+          "worldZ": -71.97279674,
+          "terrainHeight": -0.37879997,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.37879997,
+          "landOrWaterClass": "SHORELINE_CONTACT",
+          "localSlope": 0.01819614,
+          "distanceFromShoreline": -1.6,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S12",
+          "worldX": 128,
+          "worldZ": -70.37279674,
+          "terrainHeight": -0.40759999,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.40759999,
+          "landOrWaterClass": "SHALLOW_WATER",
+          "localSlope": 0.01819614,
+          "distanceFromShoreline": -3.2,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S13",
+          "worldX": 128,
+          "worldZ": -65.57279674,
+          "terrainHeight": -0.49400002,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.49400002,
+          "landOrWaterClass": "SHALLOW_WATER",
+          "localSlope": 0.01819614,
+          "distanceFromShoreline": -8,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S14",
+          "worldX": 128,
+          "worldZ": -59.57279674,
+          "terrainHeight": -0.602,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.602,
+          "landOrWaterClass": "SHALLOW_WATER",
+          "localSlope": 0.01819614,
+          "distanceFromShoreline": -14,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S15",
+          "worldX": 128,
+          "worldZ": -51.57279674,
+          "terrainHeight": -0.75681603,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.75681603,
+          "landOrWaterClass": "NEARSHORE_WATER",
+          "localSlope": 0.02132364,
+          "distanceFromShoreline": -22,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S16",
+          "worldX": 128,
+          "worldZ": -41.57279674,
+          "terrainHeight": -0.88849598,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 0.88849598,
+          "landOrWaterClass": "NEARSHORE_WATER",
+          "localSlope": 0.01230112,
+          "distanceFromShoreline": -32,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S17",
+          "worldX": 128,
+          "worldZ": -29.57279674,
+          "terrainHeight": -1.042,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.042,
+          "landOrWaterClass": "NEARSHORE_WATER",
+          "localSlope": 0.01213076,
+          "distanceFromShoreline": -44,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S18",
+          "worldX": 128,
+          "worldZ": -15.57279674,
+          "terrainHeight": -1.20999998,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.20999998,
+          "landOrWaterClass": "OPEN_WATER",
+          "localSlope": 0.01213076,
+          "distanceFromShoreline": -58,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        },
+        {
+          "transectId": "C0_C_TRANSECT_03",
+          "sampleId": "C0_C_TRANSECT_03_S19",
+          "worldX": 128,
+          "worldZ": 2.42720326,
+          "terrainHeight": -1.426,
+          "waterSurfaceHeight": 0,
+          "signedWaterDepth": 1.426,
+          "landOrWaterClass": "OPEN_WATER",
+          "localSlope": 0.01213076,
+          "distanceFromShoreline": -76,
+          "sourceAuthority": [
+            "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+            "H_EARTH_CANONICAL_WATER_STATE_RUN_7D_v1",
+            "H_EARTH_CANONICAL_SHORELINE_Z_RUN_6B_v1"
+          ]
+        }
+      ]
+    }
+  ],
+  "currentWaterTerrainIntersection": "SEA_LEVEL_Y_0_INTERSECTS_ACCEPTED_RUN_8_SUCCESSOR_TERRAIN",
+  "currentShorelineIntersection": [
+    {
+      "transectId": "C0_C_TRANSECT_01",
+      "worldX": -128,
+      "worldZ": -85.49265495,
+      "terrainHeight": -0.6820519,
+      "waterSurfaceHeight": 0
+    },
+    {
+      "transectId": "C0_C_TRANSECT_02",
+      "worldX": 0,
+      "worldZ": -79.25507841,
+      "terrainHeight": -0.51363945,
+      "waterSurfaceHeight": 0
+    },
+    {
+      "transectId": "C0_C_TRANSECT_03",
+      "worldX": 128,
+      "worldZ": -73.57279674,
+      "terrainHeight": -0.13949317,
+      "waterSurfaceHeight": 0
+    }
+  ],
+  "currentBeachWidthByTransect": [
+    {
+      "transectId": "C0_C_TRANSECT_01",
+      "widthWorldUnits": 34
+    },
+    {
+      "transectId": "C0_C_TRANSECT_02",
+      "widthWorldUnits": 34
+    },
+    {
+      "transectId": "C0_C_TRANSECT_03",
+      "widthWorldUnits": 34
+    }
+  ],
+  "currentSubmergedSlopeByTransect": [
+    {
+      "transectId": "C0_C_TRANSECT_01",
+      "slope": 0.01464234
+    },
+    {
+      "transectId": "C0_C_TRANSECT_02",
+      "slope": 0.01464234
+    },
+    {
+      "transectId": "C0_C_TRANSECT_03",
+      "slope": 0.01464234
+    }
+  ],
+  "currentDarkTerrainTransitionDistance": [
+    {
+      "transectId": "C0_C_TRANSECT_01",
+      "distanceWorldUnitsInland": 42
+    },
+    {
+      "transectId": "C0_C_TRANSECT_02",
+      "distanceWorldUnitsInland": 42
+    },
+    {
+      "transectId": "C0_C_TRANSECT_03",
+      "distanceWorldUnitsInland": 42
+    }
+  ],
+  "currentNearshoreDepthProfile": [
+    {
+      "transectId": "C0_C_TRANSECT_01",
+      "profile": [
+        {
+          "distanceFromShoreline": 0,
+          "signedWaterDepth": 0.6820519
+        },
+        {
+          "distanceFromShoreline": -1.6,
+          "signedWaterDepth": 0.37879997
+        },
+        {
+          "distanceFromShoreline": -3.2,
+          "signedWaterDepth": 0.40759999
+        },
+        {
+          "distanceFromShoreline": -8,
+          "signedWaterDepth": 0.49400002
+        },
+        {
+          "distanceFromShoreline": -14,
+          "signedWaterDepth": 0.602
+        },
+        {
+          "distanceFromShoreline": -22,
+          "signedWaterDepth": 0.75681603
+        },
+        {
+          "distanceFromShoreline": -32,
+          "signedWaterDepth": 0.88849598
+        },
+        {
+          "distanceFromShoreline": -44,
+          "signedWaterDepth": 1.042
+        },
+        {
+          "distanceFromShoreline": -58,
+          "signedWaterDepth": 1.20999998
+        },
+        {
+          "distanceFromShoreline": -76,
+          "signedWaterDepth": 1.426
+        }
+      ]
+    },
+    {
+      "transectId": "C0_C_TRANSECT_02",
+      "profile": [
+        {
+          "distanceFromShoreline": 0,
+          "signedWaterDepth": 0.51363945
+        },
+        {
+          "distanceFromShoreline": -1.6,
+          "signedWaterDepth": 0.37879997
+        },
+        {
+          "distanceFromShoreline": -3.2,
+          "signedWaterDepth": 0.40759999
+        },
+        {
+          "distanceFromShoreline": -8,
+          "signedWaterDepth": 0.49400002
+        },
+        {
+          "distanceFromShoreline": -14,
+          "signedWaterDepth": 0.602
+        },
+        {
+          "distanceFromShoreline": -22,
+          "signedWaterDepth": 0.75681603
+        },
+        {
+          "distanceFromShoreline": -32,
+          "signedWaterDepth": 0.88849598
+        },
+        {
+          "distanceFromShoreline": -44,
+          "signedWaterDepth": 1.042
+        },
+        {
+          "distanceFromShoreline": -58,
+          "signedWaterDepth": 1.20999998
+        },
+        {
+          "distanceFromShoreline": -76,
+          "signedWaterDepth": 1.426
+        }
+      ]
+    },
+    {
+      "transectId": "C0_C_TRANSECT_03",
+      "profile": [
+        {
+          "distanceFromShoreline": 0,
+          "signedWaterDepth": 0.13949317
+        },
+        {
+          "distanceFromShoreline": -1.6,
+          "signedWaterDepth": 0.37879997
+        },
+        {
+          "distanceFromShoreline": -3.2,
+          "signedWaterDepth": 0.40759999
+        },
+        {
+          "distanceFromShoreline": -8,
+          "signedWaterDepth": 0.49400002
+        },
+        {
+          "distanceFromShoreline": -14,
+          "signedWaterDepth": 0.602
+        },
+        {
+          "distanceFromShoreline": -22,
+          "signedWaterDepth": 0.75681603
+        },
+        {
+          "distanceFromShoreline": -32,
+          "signedWaterDepth": 0.88849598
+        },
+        {
+          "distanceFromShoreline": -44,
+          "signedWaterDepth": 1.042
+        },
+        {
+          "distanceFromShoreline": -58,
+          "signedWaterDepth": 1.20999998
+        },
+        {
+          "distanceFromShoreline": -76,
+          "signedWaterDepth": 1.426
+        }
+      ]
+    }
+  ],
+  "currentSandbarState": "PRESENT_AND_STRUCTURALLY_MEASURABLE",
+  "productMutation": false
+}

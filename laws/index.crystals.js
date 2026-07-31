@@ -14,7 +14,7 @@
       "DGB_LAWS_CRYSTALS_EXACT_TWO_OBJECT_RECONCILIATION_v2",
 
     version:
-      "2.1.0-exact-two-object-field",
+      "2.2.1-cp5-r2-solar-lunar-visual-correction",
 
     file:
       "/laws/index.crystals.js",
@@ -268,9 +268,9 @@
 
     research:
       Object.freeze([
-        0.52,
-        0.34,
-        1.0
+        0.82,
+        0.83,
+        0.86
       ]),
 
     lawFlow:
@@ -358,7 +358,7 @@
       Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94}),
 
     AUTHORITY_LUNAR:
-      Object.freeze({specular:0.08,rim:0.18,emissive:0.018,alpha:1.50,sparkle:0.00,halo:0.10,contrast:1.85}),
+      Object.freeze({specular:0.12,rim:0.16,emissive:0.006,alpha:1.00,sparkle:0.00,halo:0.045,contrast:1.76}),
 
     LAW_IDLE:
        Object.freeze({
@@ -2444,13 +2444,19 @@
         const crater = craterField(nx, ny, nz);
         const light = normalizeVector([-0.62, 0.22, 0.75]);
         const illumination = nx * light[0] + ny * light[1] + nz * light[2];
-        const terminator = 0.14 + 0.86 * smoothTransition(-0.20, 0.16, illumination);
-        const shade = clamp((0.66 + terrain * 0.11 + fineTerrain * 0.055 + crater.albedo) * terminator, 0.09, 1.02);
+        /* CP5_R2_LUNAR_NEUTRAL_MATERIAL */
+        const terminator = 0.10 + 0.90 * smoothTransition(-0.18, 0.18, illumination);
+        const highlands = smoothTransition(-0.12, 0.34, terrain + crater.albedo * 0.82);
+        const maria = smoothTransition(0.06, 0.52, -terrain - crater.albedo * 0.28);
+        const neutralAlbedo = clamp(0.56 + highlands * 0.24 - maria * 0.20 + fineTerrain * 0.045 + crater.albedo * 0.46, 0.22, 0.96);
+        const reliefLighting = clamp(0.78 + terrain * 0.10 + fineTerrain * 0.038 + crater.albedo * 0.34, 0.52, 1.08);
+        const shade = clamp(neutralAlbedo * reliefLighting * terminator, 0.055, 1.0);
+        const reflectedCoolTint = (1 - terminator) * 0.008;
         relief += terrain * 0.013 + fineTerrain * 0.0055 + crater.relief;
         surfaceColor = [
-          clamp(color[0] * shade * 0.92, 0, 1),
-          clamp(color[1] * shade * 0.78, 0, 1),
-          clamp(color[2] * shade * 1.08, 0, 1)
+          clamp(shade * 1.018, 0, 1),
+          clamp(shade * 1.012, 0, 1),
+          clamp(shade + reflectedCoolTint, 0, 1)
         ];
       }
 

@@ -78,7 +78,17 @@ jobs:
                "const offsets=[80,60,42,34,24,14,8,4,2,0,-1.6,-3.2,-8,-14,-22,-32,-44,-58,-76];"),
               ("zMaximum:round(Math.max(...shoreValues)+120)", "zMaximum:round(Math.max(...shoreValues)+76)"),
               ("center+120", "center+76"),
-              ("sampleCount>=63", "sampleCount>=57")
+              ("sampleCount>=63", "sampleCount>=57"),
+              ("{id:'SHORELINE_APPROACH_VIEW',file:'shoreline-approach.png',z:-96,yaw:180}",
+               "{id:'SHORELINE_APPROACH_VIEW',file:'shoreline-approach.png',z:-96,yaw:0}"),
+              ("{id:'LATERAL_BEACH_VIEW',file:'lateral-beach.png',z:-86,yaw:90}",
+               "{id:'LATERAL_BEACH_VIEW',file:'lateral-beach.png',z:-86,yaw:0}"),
+              ("{id:'INLAND_TO_OPEN_WATER_VIEW',file:'inland-to-open-water.png',z:-116,yaw:180}",
+               "{id:'INLAND_TO_OPEN_WATER_VIEW',file:'inland-to-open-water.png',z:-116,yaw:0}"),
+              ("{id:'SHALLOW_WATER_VIEW',file:'shallow-water.png',z:-86,yaw:180}",
+               "{id:'SHALLOW_WATER_VIEW',file:'shallow-water.png',z:-86,yaw:0}"),
+              ("{id:'CURRENT_DARK_TERRAIN_TRANSITION_VIEW',file:'dark-terrain-transition.png',z:-126,yaw:180}",
+               "{id:'CURRENT_DARK_TERRAIN_TRANSITION_VIEW',file:'dark-terrain-transition.png',z:-126,yaw:0}")
           ]
           for old, new in replacements:
               if old not in source:
@@ -121,6 +131,10 @@ jobs:
           if(product.length) throw new Error(`C0_PRODUCT_MUTATION:${product.join(',')}`);
           console.log(JSON.stringify({changedPathCount:changed.length,unauthorizedChangedPaths:0,productMutation:false},null,2));
           NODE
+          sha256sum \
+            "$C0_ROOT/h-earth.c0.fixed-scenes.json" \
+            "$C0_EVIDENCE/h-earth.c0.shoreline-samples.json" \
+            "$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json"
 
       - name: Commit durable C0-C evidence
         if: steps.state.outputs.already_closed != 'true'

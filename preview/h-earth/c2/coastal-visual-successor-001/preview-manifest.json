@@ -1,0 +1,30 @@
+{
+  "candidateId": "H_EARTH_C2_COASTAL_VISUAL_SUCCESSOR_001",
+  "nonProduction": true,
+  "publicDefaultMutated": false,
+  "baseHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "branch": "agent/h-earth-c2-bounded-coastal-visual-successor-001",
+  "previewPath": "/preview/h-earth/c2/coastal-visual-successor-001/",
+  "protectedAuthorities": [
+    "CAMERA",
+    "NAVIGATION",
+    "TRAVERSAL",
+    "TOUCH_AND_POINTER_INPUT",
+    "RENDERER_LIFECYCLE",
+    "GPU_PRESENTATION",
+    "MANOR_PLACEMENT",
+    "CAVERN_PLACEMENT",
+    "UNRELATED_ACCEPTED_PLACEMENTS",
+    "NONCOASTAL_WORLD_GEOMETRY",
+    "PUBLIC_DEFAULT_ROUTE"
+  ],
+  "candidateMutationScope": [
+    "BOUNDED_COASTAL_TERRAIN_GEOMETRY",
+    "COASTAL_MATERIAL_MEMBERSHIP",
+    "DEPTH_RESPONSIVE_WATER_PRESENTATION",
+    "SHORELINE_CONTACT_AND_FOAM",
+    "OCEAN_SURFACE_MOTION",
+    "BOUNDED_MACRO_TERRAIN_EXPRESSION"
+  ],
+  "status": "BUILDING"
+}

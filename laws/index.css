@@ -2857,3 +2857,10 @@ FALSE
 [data-laws-projected-law-label]{display:grid;min-width:clamp(4.8rem,12vw,7rem);gap:.05rem;border-radius:.8rem;white-space:normal}
 [data-laws-projected-law-label] [data-laws-label-line]{display:block}
 [data-laws-projected-law-label] [data-laws-label-line="ampersand"]{font-size:.72em;line-height:.82;opacity:.82}
+
+/* LAWS_COMPASS_CHECKPOINT_5_EXACT_TWO_OBJECT_RECONCILIATION_v2 */
+[data-laws-category][data-direction="test"],[data-laws-category][data-direction="research"]{top:50%;left:50%;right:auto;bottom:auto;transform:translate(-50%,-50%)}
+[data-laws-category][data-direction="test"]{z-index:7;opacity:1}
+[data-laws-category][data-direction="research"]{z-index:2;opacity:.72;filter:saturate(.72) brightness(.72)}
+[data-laws-category][data-direction="test"]>.laws-authority-label,[data-laws-category][data-direction="research"]>.laws-authority-label{position:absolute;left:50%;top:74%;display:block!important;min-width:max-content;transform:translate(-50%,-50%);pointer-events:none}
+[data-laws-root][data-active-cluster-direction="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-selected-direction="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-active-cluster="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-laws-active-cluster="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-laws-active-category="test"] [data-laws-member][data-direction="test"],[data-laws-root][data-active-cluster-direction="research"] [data-laws-member][data-direction="research"],[data-laws-root][data-selected-direction="research"] [data-laws-member][data-direction="research"],[data-laws-root][data-active-cluster="research"] [data-laws-member][data-direction="research"],[data-laws-root][data-laws-active-cluster="research"] [data-laws-member][data-direction="research"],[data-laws-root][data-laws-active-category="research"] [data-laws-member][data-direction="research"]{visibility:visible;opacity:1;pointer-events:auto}

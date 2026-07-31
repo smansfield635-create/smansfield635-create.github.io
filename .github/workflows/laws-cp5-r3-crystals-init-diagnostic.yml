@@ -40,7 +40,8 @@ jobs:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         shell: bash
         run: |
-          cat > /tmp/cp5-init-diagnostic.mjs <<'NODE'
+          mkdir -p verification/benchmark-tools/laws-compass-cp5-single-active-label-v1
+          cat > verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/cp5-init-diagnostic.mjs <<'NODE'
           import puppeteer from 'puppeteer-core';
           const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
           const page=await browser.newPage();
@@ -71,4 +72,4 @@ jobs:
           await browser.close();
           if(result.receipt?.status!=='available') process.exitCode=1;
           NODE
-          node /tmp/cp5-init-diagnostic.mjs
+          node verification/benchmark-tools/laws-compass-cp5-single-active-label-v1/cp5-init-diagnostic.mjs

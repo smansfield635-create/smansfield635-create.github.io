@@ -1,0 +1,43 @@
+name: Laws CP5 R3 Verifier Custody Patch
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - synchronize
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.head_ref == 'agent/laws-cp5-r2-celestial-visual-correction-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp5-r2-celestial-visual-correction-001
+          fetch-depth: 0
+      - name: Bind verifier to corrected crystal blob
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object laws/index.crystals.js)" = "8133609c21f43a5910ec7a247d50310390152cbb"
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('.github/workflows/laws-cp5-r3-celestial-candidate.yml')
+          text=path.read_text()
+          old='04b92e73de18194c0447305fb3f9dd4654c6cd9a'
+          new='8133609c21f43a5910ec7a247d50310390152cbb'
+          if text.count(old) != 2:
+              raise SystemExit(f'EXPECTED_OLD_BLOB_COUNT={text.count(old)}')
+          path.write_text(text.replace(old,new))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f .github/workflows/laws-cp5-r3-verifier-custody-patch.yml
+          git add .github/workflows/laws-cp5-r3-celestial-candidate.yml
+          git commit -m 'Bind CP5-R3 verifier to corrected celestial blob'
+          git push origin HEAD:agent/laws-cp5-r2-celestial-visual-correction-001

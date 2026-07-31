@@ -9,54 +9,126 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: h-earth-c0-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  EXACT_MAIN_HEAD: 59df682501f63aec8a263cef8e1a5adacbc2a1a2
+  C0_BRANCH: agent/h-earth-c0-exact-live-coastal-baseline-freeze-001
+  C0_ROOT: h-earth-3d/control-plane/coastal-morphology/c0
+  C0_EVIDENCE: h-earth-3d/control-plane/coastal-morphology/c0/evidence
+  C0_EXECUTOR_COMMIT: 5accf46e88fa1f256fc96e9d5db2d44eb0217bbe
+
 jobs:
-  c0-c-bound-offshore-domain:
+  c0-c-fixed-coastal-scenes-and-shoreline-samples:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 2
+          fetch-depth: 0
           persist-credentials: true
-      - name: Restore bounded C0-C executor with valid offshore endpoint
+
+      - name: Verify bounded C0-C state
+        id: state
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ github.event.pull_request.head.ref }}" = "$C0_BRANCH"
+          git cat-file -e "$EXACT_MAIN_HEAD^{commit}"
+          test "$(git merge-base "$EXACT_MAIN_HEAD" HEAD)" = "$EXACT_MAIN_HEAD"
+          test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.public-occurrence.json').sourceOccurrenceLinkage")" = "VERIFIED_BY_CONTENT_IDENTITY"
+          test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.source-custody.json').result")" = "PASS_CLOSED"
+          if test -f "$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json" && test "$(node -p "require('./$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json').result")" = "PASS_CLOSED"; then
+            echo "already_closed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "already_closed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.state.outputs.already_closed != 'true'
+        with:
+          node-version: '22'
+
+      - uses: browser-actions/setup-chrome@v1
+        if: steps.state.outputs.already_closed != 'true'
+        id: chrome
+        with:
+          chrome-version: stable
+
+      - name: Install bounded browser driver
+        if: steps.state.outputs.already_closed != 'true'
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Materialize corrected bounded executor
+        if: steps.state.outputs.already_closed != 'true'
         shell: bash
         run: |
           set -euo pipefail
           python3 <<'PY'
-          from pathlib import Path
-          import subprocess
-
-          target = Path('.github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml')
-          text = subprocess.check_output(
-              ['git', 'show', f'HEAD^:{target.as_posix()}'],
-              text=True
-          )
+          import os, subprocess
+          source = subprocess.check_output([
+              'git', 'show',
+              f"{os.environ['C0_EXECUTOR_COMMIT']}:.github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml"
+          ], text=True)
           replacements = [
-              (
-                  "const offsets=[80,60,42,34,24,14,8,4,2,0,-1.6,-3.2,-8,-14,-22,-32,-44,-58,-76,-96,-120];",
-                  "const offsets=[80,60,42,34,24,14,8,4,2,0,-1.6,-3.2,-8,-14,-22,-32,-44,-58,-76,-96];"
-              ),
-              (
-                  "zMaximum:round(Math.max(...shoreValues)+120)",
-                  "zMaximum:round(Math.max(...shoreValues)+96)"
-              ),
-              (
-                  "center+120",
-                  "center+96"
-              ),
-              (
-                  "sampleCount>=63",
-                  "sampleCount>=60"
-              )
+              ("const offsets=[80,60,42,34,24,14,8,4,2,0,-1.6,-3.2,-8,-14,-22,-32,-44,-58,-76,-96,-120];",
+               "const offsets=[80,60,42,34,24,14,8,4,2,0,-1.6,-3.2,-8,-14,-22,-32,-44,-58,-76,-96];"),
+              ("zMaximum:round(Math.max(...shoreValues)+120)", "zMaximum:round(Math.max(...shoreValues)+96)"),
+              ("center+120", "center+96"),
+              ("sampleCount>=63", "sampleCount>=60")
           ]
           for old, new in replacements:
-              if old not in text:
+              if old not in source:
                   raise SystemExit(f'C0_C_EXPECTED_SOURCE_FRAGMENT_MISSING:{old}')
-              text = text.replace(old, new)
-          target.write_text(text)
+              source = source.replace(old, new)
+          marker = "      - name: Execute C0-C source sampling and scene capture\n"
+          start = source.index(marker)
+          run_start = source.index("        run: |\n", start) + len("        run: |\n")
+          end = source.index("\n      - name: Verify C0-C closure and exact mutation boundary", run_start)
+          block = source[run_start:end]
+          lines = [(line[10:] if line.startswith('          ') else line) for line in block.splitlines()]
+          open('/tmp/h-earth-c0-c-executor.sh', 'w').write('\n'.join(lines) + '\n')
           PY
+          chmod +x /tmp/h-earth-c0-c-executor.sh
+
+      - name: Execute C0-C capture
+        if: steps.state.outputs.already_closed != 'true'
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          PUBLIC_ORIGIN: https://diamondgatebridge.com
+        run: /tmp/h-earth-c0-c-executor.sh
+
+      - name: Verify C0-C closure and mutation boundary
+        if: steps.state.outputs.already_closed != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process'),root=process.env.C0_ROOT,e=process.env.C0_EVIDENCE,r=require(`./${e}/h-earth.c0.fixed-scenes-receipt.json`);
+          for(const k of ['representativeCorridorFrozen','sixFixedScenesCaptured','allSceneTransformsRecorded','shorelineSampleSetComplete','waterDepthProfileRecorded','currentSandbarStateRecorded','boundedSceneRepeatabilityExecuted','fixedScenesReproducible']) if(r[k]!==true) throw new Error(`C0_C_CLOSURE_FALSE:${k}`);
+          const files=[`${root}/h-earth.c0.fixed-scenes.json`,`${e}/h-earth.c0.shoreline-samples.json`,`${e}/h-earth.c0.fixed-scenes-receipt.json`,`${e}/shoreline-approach.png`,`${e}/lateral-beach.png`,`${e}/inland-to-open-water.png`,`${e}/shallow-water.png`,`${e}/dark-terrain-transition.png`,`${e}/traversal-through-coast.png`];
+          for(const f of files) if(!fs.existsSync(f)) throw new Error(`C0_C_OUTPUT_MISSING:${f}`);
+          const digest=f=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+          for(const [f,v] of Object.entries(r.screenshotDigests)) if(digest(f)!==v) throw new Error(`C0_C_SCREENSHOT_DIGEST_MISMATCH:${f}`);
+          const allowed=new Set(require(`./${root}/h-earth.c0.allowed-path-manifest.json`).exactAllowedPaths);
+          const changed=cp.execFileSync('git',['diff','--name-only',process.env.EXACT_MAIN_HEAD],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+          const unauthorized=changed.filter(f=>!allowed.has(f));
+          const product=changed.filter(f=>f.startsWith('showroom/globe/h-earth/')||f.startsWith('h-earth-3d/terrain/')||f.startsWith('h-earth-3d/environment/'));
+          if(unauthorized.length) throw new Error(`C0_UNAUTHORIZED_CHANGED_PATHS:${unauthorized.join(',')}`);
+          if(product.length) throw new Error(`C0_PRODUCT_MUTATION:${product.join(',')}`);
+          console.log(JSON.stringify({changedPathCount:changed.length,unauthorizedChangedPaths:0,productMutation:false},null,2));
+          NODE
+
+      - name: Commit durable C0-C evidence
+        if: steps.state.outputs.already_closed != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
           git config user.name "h-earth-c0-evidence"
           git config user.email "actions@users.noreply.github.com"
-          git add .github/workflows/h-earth-c0-exact-live-coastal-baseline-freeze.yml
-          git commit -m "C0-C: use valid open-water sample endpoint"
+          git add "$C0_ROOT/h-earth.c0.fixed-scenes.json" "$C0_EVIDENCE/h-earth.c0.shoreline-samples.json" "$C0_EVIDENCE/h-earth.c0.fixed-scenes-receipt.json" "$C0_EVIDENCE/shoreline-approach.png" "$C0_EVIDENCE/lateral-beach.png" "$C0_EVIDENCE/inland-to-open-water.png" "$C0_EVIDENCE/shallow-water.png" "$C0_EVIDENCE/dark-terrain-transition.png" "$C0_EVIDENCE/traversal-through-coast.png"
+          git commit -m "C0-C: freeze coastal scenes and shoreline samples"
           git push origin "HEAD:${{ github.event.pull_request.head.ref }}"

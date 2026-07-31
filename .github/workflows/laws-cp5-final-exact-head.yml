@@ -182,7 +182,9 @@ jobs:
         working-directory: candidate
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-        run: python3 /tmp/laws-cp5-final-exact-head-verifier.py
+        run: |
+          ln -s "$GITHUB_WORKSPACE/candidate/node_modules" /tmp/node_modules
+          python3 /tmp/laws-cp5-final-exact-head-verifier.py
 
       - name: Write carrier identity manifest
         if: always()

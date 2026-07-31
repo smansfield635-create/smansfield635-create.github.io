@@ -379,7 +379,13 @@ const alongshoreFoam = [];
 const alongshoreReach = [];
 const alongshoreFragments = [];
 for (let anchorX = -160; anchorX <= 160; anchorX += 8) {
-  const sample = at(anchorX, 4, maximumTime);
+  const shorelineProbe = at(anchorX, 0, maximumTime);
+  if (shorelineProbe.valid !== true) continue;
+  const sample = at(
+    anchorX,
+    shorelineProbe.frontSignedInlandDistance,
+    maximumTime
+  );
   if (sample.valid !== true) continue;
   alongshoreFoam.push(sample.foamIntensity);
   alongshoreReach.push(sample.maximumLandwardReach);

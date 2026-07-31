@@ -35,10 +35,19 @@ jobs:
           cat "$transport"/macro.part*.b64 | base64 -d > "$macro"
           cat "$transport"/test.part*.b64 | base64 -d > "$verifier"
 
-          test "$(sha256sum "$macro" | cut -d' ' -f1)" = "4fcd21dced7f12e74deff021ac727b65b93c61e429efc5de9c2a46449c70b9d7"
-          test "$(sha256sum "$verifier" | cut -d' ' -f1)" = "48647ae1b21f617c4a643055ad1d12d9a618160372634487823c64651ddda442"
-          test "$(git hash-object "$macro")" = "0da0e83166c0adaa07e3a082dc4fcff476b13c9b"
-          test "$(git hash-object "$verifier")" = "d08940d0c97afe2a4f62ea509c3405907df3b441"
+          macro_sha="$(sha256sum "$macro" | cut -d' ' -f1)"
+          verifier_sha="$(sha256sum "$verifier" | cut -d' ' -f1)"
+          macro_blob="$(git hash-object "$macro")"
+          verifier_blob="$(git hash-object "$verifier")"
+          echo "MACRO_SHA256=$macro_sha"
+          echo "VERIFIER_SHA256=$verifier_sha"
+          echo "MACRO_GIT_BLOB=$macro_blob"
+          echo "VERIFIER_GIT_BLOB=$verifier_blob"
+
+          test "$macro_sha" = "4fcd21dced7f12e74deff021ac727b65b93c61e429efc5de9c2a46449c70b9d7"
+          test "$verifier_sha" = "48647ae1b21f617c4a643055ad1d12d9a618160372634487823c64651ddda442"
+          test "$macro_blob" = "0da0e83166c0adaa07e3a082dc4fcff476b13c9b"
+          test "$verifier_blob" = "d08940d0c97afe2a4f62ea509c3405907df3b441"
 
           node --check "$macro"
           node --check "$verifier"

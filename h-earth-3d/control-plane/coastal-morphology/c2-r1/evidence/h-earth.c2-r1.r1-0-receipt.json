@@ -1,0 +1,21 @@
+{
+  "receiptType": "H_EARTH_C2_R1_R1_0_BASELINE_AND_CONTROL_CUSTODY_v1",
+  "operation": "R1.0_BASELINE_PATH_ROLLBACK_AND_REVIEW_CONTROL",
+  "result": "PASS_CLOSED",
+  "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "startingSource": "ACCEPTED_PRE_C2_PRODUCT_BASELINE",
+  "failedC2GeometryAsStartingSource": "PROHIBITED",
+  "candidateBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+  "rollbackBranch": "rollback/h-earth-c2-r1-pre-mutation-001",
+  "integrationBaseBranch": "integration/h-earth-c2-r1-baseline-001",
+  "rollbackAvailable": true,
+  "boundedPassArchitectureEstablished": true,
+  "onePassAtATime": true,
+  "functionalVerificationSeparatedFromVisualAcceptance": true,
+  "representativeCaptureCountRequired": 6,
+  "candidatePathIsolationRequired": true,
+  "productDefaultMutated": false,
+  "productMutation": false,
+  "nextCheckpoint": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
+  "firstBlocker": null
+}

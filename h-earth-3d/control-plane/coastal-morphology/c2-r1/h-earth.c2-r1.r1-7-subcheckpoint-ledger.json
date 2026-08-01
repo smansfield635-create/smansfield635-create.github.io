@@ -2,7 +2,7 @@
   "ledger": "H_EARTH_C2_R1_R1_7_SUBCHECKPOINT_PROGRESS_LEDGER_v1",
   "candidateBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
-  "currentSubcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+  "currentSubcheckpoint": "R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
   "entries": [
     {
       "subcheckpoint": "R1.7A_LANDFORM_ANALYSIS_AND_MACRO_FIELD_CONTRACT",
@@ -12,17 +12,6 @@
       "durableClosureHead": "0498da0f3f4fe522659830499bd55ef8f018f776",
       "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-start-001",
       "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-closed-001",
-      "derivedChannels": [
-        "ELEVATION_NORMALIZED",
-        "SLOPE_NORMALIZED",
-        "CONCAVITY",
-        "CONVEXITY",
-        "DRAINAGE_TENDENCY",
-        "COASTAL_MOISTURE_INFLUENCE",
-        "INLAND_TRANSITION",
-        "CAVITY_AO_HINT",
-        "MACRO_NORMAL_STRENGTH_HINT"
-      ],
       "metrics": {
         "sampleCount": 901,
         "validSampleCount": 901,
@@ -52,17 +41,12 @@
     },
     {
       "subcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
-      "status": "IMPLEMENTED_VERIFICATION_PENDING",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "startingHead": "0498da0f3f4fe522659830499bd55ef8f018f776",
+      "passingExecutionHead": "f1ba63b088f89c6539d92d5293ba1eb651644480",
+      "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
       "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7b-start-001",
-      "changedImplementationPaths": [
-        ".github/workflows/h-earth-c2-r1-r1-7b-baked-macro-control-field.yml",
-        "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
-        "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json",
-        "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json",
-        "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7b-baked-macro-control-field.mjs",
-        "h-earth-3d/control-plane/coastal-morphology/c2-r1/tools/h-earth.c2-r1.r1-7b-bake-macro-control-field.mjs"
-      ],
+      "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7b-closed-001",
       "fieldDimensions": {
         "alongshoreCount": 17,
         "crossShoreCount": 53,
@@ -75,6 +59,40 @@
         "CAVITY_RESPONSE",
         "MACRO_NORMAL_STRENGTH"
       ],
+      "metrics": {
+        "validSampleCount": 901,
+        "byteLength": 14416,
+        "uniqueControlRatio": 0.9445061043285239,
+        "maximumAdjacentCrossShoreDelta": [
+          0.004016876220703125,
+          0.004267003852874041,
+          0.009975969791412354,
+          0.002381899394094944
+        ],
+        "maximumAdjacentAlongshoreDelta": [
+          0.004949331283569336,
+          0.003945456817746162,
+          0.00701063871383667,
+          0.0010737888514995575
+        ],
+        "maximumSecondDifference": [
+          0.0021359920501708984,
+          0.0029896851629018784,
+          0.004972934722900391,
+          0.0009413594380021095
+        ],
+        "fieldValuesSha256": "4377ff9e9fc60a6218478b289acbff99075eab08d4e518a6eb68b1a12b98f866"
+      },
+      "workflow": {
+        "run": 30679342931,
+        "job": 91313062274,
+        "artifactId": 8811649872,
+        "artifactDigest": "sha256:6516110abe68a14160b64b4dbc0ed5dd3996128260806d4c21f773edb82b9ae4",
+        "result": "PASS",
+        "dispositionAfterClosure": "MANUAL_ONLY"
+      },
+      "registryPreflight": "PASS",
+      "representativeEngineeringCaptureCount": 3,
       "bakedMacroControlFieldCreated": true,
       "rendererSamplingIntegrationCreated": false,
       "wholeWorldBakeCreated": false,
@@ -83,7 +101,7 @@
       "publicRouteMutated": false,
       "visualSuccessorStatus": "NOT_ESTABLISHED",
       "userDifferentialReady": false,
-      "firstBlocker": "CONTROLLING_HEAD_CHECKS_PENDING"
+      "firstBlocker": null
     },
     {
       "subcheckpoint": "R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
@@ -94,7 +112,7 @@
       "status": "NOT_STARTED"
     }
   ],
-  "nextAuthorizedSubcheckpoint": "R1.7B_ENGINEERING_VERIFICATION",
+  "nextAuthorizedSubcheckpoint": "R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
   "r1_7OverallStatus": "IN_PROGRESS",
   "r1_8Status": "NOT_STARTED",
   "productDefaultMutated": false,

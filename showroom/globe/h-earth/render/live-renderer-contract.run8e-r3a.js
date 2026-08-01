@@ -1,4 +1,4 @@
-/** H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1 */
+/** H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v2 */
 import {
   H_EARTH_RUN_8E_R3_CONTRACT_ID,
   evaluateHEarthRun8ER3Control
@@ -10,7 +10,8 @@ import {
 } from '../functional-landscape/navigation.js';
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import {
-  getHEarthRun8ER2CanonicalLiveRenderPackage
+  getHEarthRun8ER2CanonicalLiveRenderPackage,
+  getHEarthRun8ER2CanonicalSourcePackage
 } from './live-render-package.run8e-r2.canonical.js';
 import {
   evaluateHEarthRun8ER2ImmutableLiveRenderPackage
@@ -20,26 +21,29 @@ import {
   createHEarthRun8ER2DCanonicalGPUUploadViews,
   evaluateHEarthRun8ER2DCanonicalGPUUploadViews
 } from './gpu-upload-views.run8e-r2d.js';
+import {
+  evaluateHEarthC2R1CompleteWorldRenderPackage
+} from '../../../../h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js';
 
-const finite = (value) => typeof value === 'number' && Number.isFinite(value);
+const finite = value => typeof value === 'number' && Number.isFinite(value);
 const freeze = (value, seen = new WeakSet()) => {
   if (value === null || typeof value !== 'object' || Object.isFrozen(value) || seen.has(value)) return value;
   seen.add(value);
-  Object.values(value).forEach((nested) => freeze(nested, seen));
+  Object.values(value).forEach(nested => freeze(nested, seen));
   return Object.freeze(value);
 };
-const frozenNumbers = (values) => Object.freeze(Array.from(values, (value) => Number(value)));
+const frozenNumbers = values => Object.freeze(Array.from(values, value => Number(value)));
 const subtract = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
 const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
 const cross = (a, b) => ({ x: a.y * b.z - a.z * b.y, y: a.z * b.x - a.x * b.z, z: a.x * b.y - a.y * b.x });
-const normalize = (value) => {
+const normalize = value => {
   const length = Math.hypot(value.x, value.y, value.z);
   if (!(length > Number.EPSILON)) throw new Error('R3A_VECTOR_NORMALIZATION_FAILED');
   return { x: value.x / length, y: value.y / length, z: value.z / length };
 };
 
 export const H_EARTH_RUN_8E_R3A_CONTRACT_ID =
-  'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1';
+  'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v2';
 
 function lookAt(position, target, up) {
   const forward = normalize(subtract(target, position));
@@ -76,6 +80,23 @@ function multiply4(left, right) {
   return frozenNumbers(output);
 }
 
+function resolveActiveRenderPackage(packageRecord = null) {
+  const selectedPackage = packageRecord ?? getHEarthRun8ER2CanonicalLiveRenderPackage();
+  const canonicalPackage = getHEarthRun8ER2CanonicalSourcePackage();
+  const completeWorld =
+    typeof selectedPackage?.completeWorldContractId === 'string' ||
+    typeof selectedPackage?.parentPackageIdentity === 'string';
+  const evaluation = completeWorld
+    ? evaluateHEarthC2R1CompleteWorldRenderPackage(selectedPackage, canonicalPackage)
+    : evaluateHEarthRun8ER2ImmutableLiveRenderPackage(selectedPackage);
+  if (evaluation.eligible !== true) {
+    throw new Error(
+      `R3A_PACKAGE_REJECTED:${evaluation.rootRejectionCode ?? evaluation.issues.join(',')}`
+    );
+  }
+  return selectedPackage;
+}
+
 export function reconcileHEarthRun8ER3APresentationState(navigationState) {
   if (navigationState?.contractId !== H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID) {
     throw new TypeError('R3A_NAVIGATION_STATE_CONTRACT_INVALID');
@@ -107,7 +128,8 @@ export function reconcileHEarthRun8ER3APresentationState(navigationState) {
 export function createHEarthRun8ER3AFrameUniformPacket({
   navigationState,
   viewport = { width: 640, height: 360, pixelRatio: 1 },
-  frameSequence = 1
+  frameSequence = 1,
+  packageRecord = null
 } = {}) {
   const control = evaluateHEarthRun8ER3Control();
   if (control.eligible !== true) throw new Error(`R3A_CONTROL_REJECTED:${control.issues.join(',')}`);
@@ -124,13 +146,11 @@ export function createHEarthRun8ER3AFrameUniformPacket({
   const viewMatrix = lookAt(camera.position, camera.target, camera.up);
   const projectionMatrix = perspective(camera.verticalFovDegrees, width / height, camera.nearPlane, camera.farPlane);
   const viewProjectionMatrix = multiply4(projectionMatrix, viewMatrix);
-  const packageRecord = getHEarthRun8ER2CanonicalLiveRenderPackage();
-  const packageEvaluation = evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord);
-  if (packageEvaluation.eligible !== true) throw new Error(`R3A_PACKAGE_REJECTED:${packageEvaluation.issues.join(',')}`);
-  const gpuViews = createHEarthRun8ER2DCanonicalGPUUploadViews(packageRecord);
+  const activePackage = resolveActiveRenderPackage(packageRecord);
+  const gpuViews = createHEarthRun8ER2DCanonicalGPUUploadViews(activePackage);
   const gpuEvaluation = evaluateHEarthRun8ER2DCanonicalGPUUploadViews(gpuViews);
   if (gpuEvaluation.eligible !== true) throw new Error(`R3A_GPU_VIEWS_REJECTED:${gpuEvaluation.issues.join(',')}`);
-  const environment = packageRecord.environmentDefaults;
+  const environment = activePackage.environmentDefaults;
   return freeze({
     contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
     parentContractId: H_EARTH_RUN_8E_R3_CONTRACT_ID,
@@ -167,8 +187,11 @@ export function createHEarthRun8ER3AFrameUniformPacket({
       maximumFogFactor: environment.maximumFogFactor,
       distanceDesaturationStrength: environment.distanceDesaturationStrength
     },
-    packageIdentity: packageRecord.packageIdentity,
-    packageContentDigest: packageRecord.contentDigest,
+    packageIdentity: activePackage.packageIdentity,
+    packageContentDigest: activePackage.contentDigest,
+    parentPackageIdentity: activePackage.parentPackageIdentity ?? null,
+    integratedCompleteWorldPackage:
+      activePackage.completeWorldBinding?.exactBindingCacheActive === true,
     gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
     gpuBufferElementCounts: {
       positions: gpuViews.positions.length,
@@ -181,7 +204,7 @@ export function createHEarthRun8ER3AFrameUniformPacket({
       roleCodes: gpuViews.roleCodes.length,
       indices: gpuViews.indices.length
     },
-    drawRanges: packageRecord.drawRanges.map((range) => ({ ...range, primitiveIds: [...range.primitiveIds] })),
+    drawRanges: activePackage.drawRanges.map(range => ({ ...range, primitiveIds: [...range.primitiveIds] })),
     worldBuiltBecauseCameraMoved: false,
     webglContextCreated: false,
     shaderOrProgramCreated: false,
@@ -192,12 +215,15 @@ export function createHEarthRun8ER3AFrameUniformPacket({
   });
 }
 
-export function getHEarthRun8ER3ALiveRendererInterface() {
-  const packageRecord = getHEarthRun8ER2CanonicalLiveRenderPackage();
+export function getHEarthRun8ER3ALiveRendererInterface(packageRecord = null) {
+  const activePackage = resolveActiveRenderPackage(packageRecord);
   return freeze({
     contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
-    packageIdentity: packageRecord.packageIdentity,
-    packageContentDigest: packageRecord.contentDigest,
+    packageIdentity: activePackage.packageIdentity,
+    packageContentDigest: activePackage.contentDigest,
+    parentPackageIdentity: activePackage.parentPackageIdentity ?? null,
+    integratedCompleteWorldPackage:
+      activePackage.completeWorldBinding?.exactBindingCacheActive === true,
     gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
     attributeLayout: [
       { location: 0, name: 'aPosition', components: 3, buffer: 'positions' },
@@ -215,7 +241,7 @@ export function getHEarthRun8ER3ALiveRendererInterface() {
       'uSunColor', 'uSkyZenithColor', 'uSkyHorizonColor', 'uGroundHazeColor',
       'uFogStartDistance', 'uFogFalloff', 'uMaximumFogFactor', 'uDistanceDesaturationStrength'
     ],
-    drawRanges: packageRecord.drawRanges.map((range) => ({ ...range, primitiveIds: [...range.primitiveIds] })),
+    drawRanges: activePackage.drawRanges.map(range => ({ ...range, primitiveIds: [...range.primitiveIds] })),
     packageUploadedOnceRequired: true,
     cameraUniformsUpdatedPerFrameRequired: true,
     worldRebuildPerCameraMoveProhibited: true,
@@ -229,11 +255,13 @@ export function getHEarthRun8ER3ALiveRendererInterface() {
 
 export function evaluateHEarthRun8ER3AFrameUniformPacket(packet) {
   const issues = [];
+  const activePackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
   if (packet?.contractId !== H_EARTH_RUN_8E_R3A_CONTRACT_ID) issues.push('R3A_PACKET_CONTRACT_MISMATCH');
-  if (packet?.packageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898') issues.push('R3A_PACKAGE_IDENTITY_MISMATCH');
+  if (packet?.packageIdentity !== activePackage.packageIdentity) issues.push('R3A_PACKAGE_IDENTITY_MISMATCH');
+  if (packet?.packageContentDigest !== activePackage.contentDigest) issues.push('R3A_PACKAGE_DIGEST_MISMATCH');
   for (const name of ['viewMatrix', 'projectionMatrix', 'viewProjectionMatrix']) {
     const matrix = packet?.camera?.[name];
-    if (!Array.isArray(matrix) || matrix.length !== 16 || matrix.some((value) => !finite(value))) {
+    if (!Array.isArray(matrix) || matrix.length !== 16 || matrix.some(value => !finite(value))) {
       issues.push(`R3A_MATRIX_INVALID:${name}`);
     }
   }
@@ -244,7 +272,9 @@ export function evaluateHEarthRun8ER3AFrameUniformPacket(packet) {
   }
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R3A_FRAME_UNIFORM_PACKET_PASS' : 'RUN_8E_R3A_FRAME_UNIFORM_PACKET_FAIL',
+    status: issues.length === 0
+      ? 'RUN_8E_R3A_FRAME_UNIFORM_PACKET_PASS'
+      : 'RUN_8E_R3A_FRAME_UNIFORM_PACKET_FAIL',
     issues
   });
 }
@@ -252,7 +282,11 @@ export function evaluateHEarthRun8ER3AFrameUniformPacket(packet) {
 export function buildHEarthRun8ER3AWaypointPacket(waypointId, viewport, frameSequence = 1) {
   const navigation = createHEarthFunctionalLandscapeNavigationState({ waypointId });
   if (navigation?.ok !== true) throw new Error(`R3A_NAVIGATION_INITIALIZATION_FAILED:${waypointId}`);
-  return createHEarthRun8ER3AFrameUniformPacket({ navigationState: navigation.state, viewport, frameSequence });
+  return createHEarthRun8ER3AFrameUniformPacket({
+    navigationState: navigation.state,
+    viewport,
+    frameSequence
+  });
 }
 
 export default getHEarthRun8ER3ALiveRendererInterface;

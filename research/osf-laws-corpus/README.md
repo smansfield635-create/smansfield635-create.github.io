@@ -2,7 +2,7 @@
 
 Profile: https://osf.io/g5294/
 
-Generated: `2026-08-01T06:34:55.491814+00:00`
+Generated: `2026-08-01T06:43:14.672418+00:00`
 
 Resources harvested: **29**
 
@@ -15,10 +15,10 @@ This directory is a provenance-preserving discovery corpus. It does not validate
 | Score | Candidate band | Resource | OSF | Extractable files | Data | Code |
 |---:|---|---|---|---:|:---:|:---:|
 | 37 | CORE_LAWS_CANDIDATE | [Law of Transitory Coherence](projects/9u6vd/metadata.json) | [OSF](https://osf.io/9u6vd/) | 0 | N | N |
+| 36 | CORE_LAWS_CANDIDATE | [Universal Law of Coherence Dynamics](projects/7jnxq/metadata.json) | [OSF](https://osf.io/7jnxq/) | 5 | N | N |
 | 35 | CORE_LAWS_CANDIDATE | [Alignment Diagnostics, an Integrity-Based Platform](projects/9ut2z/metadata.json) | [OSF](https://osf.io/9ut2z/) | 2 | N | N |
 | 29 | CORE_LAWS_CANDIDATE | [APPLIED FORMALISM (INSTANTIATION) M256 Coherence Geometry](projects/edg9f/metadata.json) | [OSF](https://osf.io/edg9f/) | 2 | N | N |
 | 28 | CORE_LAWS_CANDIDATE | [As Easy as A–B–C–D: Diagnosing Coherence Before Collapse](projects/7vkgs/metadata.json) | [OSF](https://osf.io/7vkgs/) | 0 | N | N |
-| 26 | CORE_LAWS_CANDIDATE | [Universal Law of Coherence Dynamics](projects/7jnxq/metadata.json) | [OSF](https://osf.io/7jnxq/) | 0 | N | N |
 | 23 | CORE_LAWS_CANDIDATE | [The Circle of Life](projects/4vmtc/metadata.json) | [OSF](https://osf.io/4vmtc/) | 0 | N | N |
 | 22 | CORE_LAWS_CANDIDATE | [Formal Falsification Path — Break This If You Can](projects/n82xh/metadata.json) | [OSF](https://osf.io/n82xh/) | 0 | N | N |
 | 20 | CORE_LAWS_CANDIDATE | [The If-and-Only-If Boundary A Governing Quotient for Universal Systemic Dynamic Closure using Coherence Constraint Mathematics + Method (CCMM)](projects/pyd6g/metadata.json) | [OSF](https://osf.io/pyd6g/) | 0 | N | N |

@@ -45,28 +45,34 @@
   "osf_url": "https://osf.io/7jnxq/",
   "api_url": "https://api.osf.io/v2/registrations/7jnxq/",
   "source_collection": "user_registrations",
-  "harvested_at": "2026-08-01T06:34:55.489388+00:00",
-  "file_inventory_count": 0,
-  "file_errors": [
-    "providers:7jnxq: failed JSON request https://api.osf.io/v2/nodes/7jnxq/files/?page%5Bsize%5D=100: 404 Client Error: Not Found for url: https://api.osf.io/v2/nodes/7jnxq/files/?page%5Bsize%5D=100"
-  ],
+  "harvested_at": "2026-08-01T06:43:14.671754+00:00",
+  "file_inventory_count": 6,
+  "file_errors": [],
   "relevance_discovery": {
     "candidate_band": "CORE_LAWS_CANDIDATE",
-    "law_relevance_score": 26,
+    "law_relevance_score": 36,
     "law_term_hits": [
       "law",
       "coherence",
       "constraint",
       "invariant",
+      "falsification",
+      "failure",
       "trajectory",
       "diagnostic",
-      "alignment"
+      "alignment",
+      "boundary"
     ],
-    "evidence_signal_score": 4,
+    "evidence_signal_score": 14,
     "evidence_term_hits": [
-      "falsif"
+      "method",
+      "methods",
+      "experiment",
+      "falsif",
+      "appendix",
+      "table"
     ],
-    "extractable_file_count": 0,
+    "extractable_file_count": 5,
     "has_data_file": false,
     "has_code_file": false,
     "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."

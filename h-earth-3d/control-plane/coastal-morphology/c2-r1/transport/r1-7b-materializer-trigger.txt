@@ -1,0 +1,4 @@
+R1.7B isolated staging materializer trigger
+Target staging ref: staging/h-earth-c2-r1-r1-7b-baked-macro-field-001
+Candidate ref mutation: prohibited
+Main mutation: prohibited

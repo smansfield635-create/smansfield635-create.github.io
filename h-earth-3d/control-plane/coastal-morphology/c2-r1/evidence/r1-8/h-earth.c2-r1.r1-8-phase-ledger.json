@@ -1,36 +1,37 @@
 {
   "ledgerType": "H_EARTH_C2_R1_R1_8_BOUNDED_PHASE_LEDGER_v1",
   "operation": "R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW",
+  "correctiveOperation": "R1.8A_C1_WORKFLOW_EVENT_HEAD_IDENTITY_RECONCILIATION",
   "startingHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+  "correctiveStartingHead": "64fc5eff5049b0f8c9de0cd1a0afa87c50514f75",
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
-  "controllingStatus": "R1.8_BLOCKED_AT_R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
-  "phases": [
+  "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8a-c1-start-001",
+  "controllingStatus": "R1.8A_C1_AUTHORIZED_PENDING_EXECUTION",
+  "executionIdentityLaw": {
+    "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+    "pullRequestExpectedCandidateHead": "github.event.pull_request.head.sha",
+    "checkedOutCandidateHead": "git rev-parse HEAD",
+    "requiredComparison": "CHECKED_OUT_CANDIDATE_HEAD_EQUALS_EXPECTED_CANDIDATE_HEAD",
+    "manualExpectedCandidateHead": "REQUIRED_EXPLICIT_WORKFLOW_INPUT_AND_REMOTE_BRANCH_MATCH",
+    "pullRequestSyntheticMergeSha": "RECORD_ONLY_NOT_CANDIDATE_AUTHORITY"
+  },
+  "historicalBlockers": [
     {
-      "id": "R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
-      "status": "BLOCKED",
-      "recordedAt": "2026-08-01T05:28:11.587Z",
-      "evidence": {},
-      "blocker": {
-        "code": "WORKFLOW_EVENT_HEAD_MISMATCH",
-        "detail": {
-          "eventHead": "8cfd65cee9752053a729fa5c75540f5e4bbeeef0",
-          "triggerHead": "b7d348d122099eeadff7cc711555330aaadb411d"
-        },
-        "phase": "R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
-        "recordedAt": "2026-08-01T05:28:11.586Z"
-      }
+      "operation": "R1.8_INITIAL_EXECUTION",
+      "phase": "R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
+      "code": "WORKFLOW_EVENT_HEAD_MISMATCH",
+      "workflowRun": 30685867240,
+      "workflowJob": 91331392760,
+      "artifactId": 8813879754,
+      "artifactDigest": "sha256:5a3b9e822f19255c655e1208fa4aae3ec4f50e42a1da48d1598cff9ac4b4abf5",
+      "checkedOutCandidateHead": "8cfd65cee9752053a729fa5c75540f5e4bbeeef0",
+      "syntheticMergeShaIncorrectlyUsedAsExpectedHead": "b7d348d122099eeadff7cc711555330aaadb411d",
+      "productRegressionEstablished": false
     }
   ],
-  "firstBlocker": {
-    "code": "WORKFLOW_EVENT_HEAD_MISMATCH",
-    "detail": {
-      "eventHead": "8cfd65cee9752053a729fa5c75540f5e4bbeeef0",
-      "triggerHead": "b7d348d122099eeadff7cc711555330aaadb411d"
-    },
-    "phase": "R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
-    "recordedAt": "2026-08-01T05:28:11.586Z"
-  },
+  "phases": [],
+  "firstBlocker": null,
   "visualSuccessorStatus": "NOT_ESTABLISHED",
   "userDifferentialReady": false,
   "productDefaultMutated": false,
@@ -39,6 +40,5 @@
   "pr418Merged": false,
   "r1_8Closed": false,
   "r1_8eStarted": false,
-  "updatedAt": "2026-08-01T05:28:11.587Z",
   "completedPhaseCount": 0
 }

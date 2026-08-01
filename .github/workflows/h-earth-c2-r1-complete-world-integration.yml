@@ -27,20 +27,23 @@ jobs:
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
           fetch-depth: 0
-      - name: Verify exact candidate head
+      - name: Verify exact candidate and rollback heads
         shell: bash
         env:
           EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          git fetch origin rollback/h-earth-c2-r1-complete-world-integration-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-complete-world-integration-start-001
+          git fetch origin \
+            rollback/h-earth-c2-r1-complete-world-integration-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-complete-world-integration-start-001 \
+            rollback/h-earth-c2-r1-browser-transport-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-browser-transport-start-001
           test "$(git rev-parse origin/rollback/h-earth-c2-r1-complete-world-integration-start-001)" = "e03f211a472fd564b1ed4b8a00096c923a077528"
-      - name: Verify exact operation path boundary
+          test "$(git rev-parse origin/rollback/h-earth-c2-r1-browser-transport-start-001)" = "f2a7fbdb6e328b05130957e2ade3f9d06f3b1f97"
+      - name: Verify exact overall and corrective path boundaries
         shell: bash
         run: |
           set -euo pipefail
-          cat > /tmp/expected-paths <<'PATHS'
+          cat > /tmp/expected-overall-paths <<'PATHS'
           .github/workflows/h-earth-c2-r1-complete-world-integration.yml
           h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
@@ -53,7 +56,434 @@ jobs:
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html
           h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
           PATHS
-          git diff --name-only e03f211a472fd564b1ed4b8a00096c923a077528...HEAD | sort > /tmp/actual-paths
-          diff -u /tmp/expected-paths /tmp/actual-paths
+          git diff --name-only e03f211a472fd564b1ed4b8a00096c923a077528...HEAD | sort > /tmp/actual-overall-paths
+          diff -u /tmp/expected-overall-paths /tmp/actual-overall-paths
+
+          cat > /tmp/expected-corrective-paths <<'PATHS'
+          .github/workflows/h-earth-c2-r1-complete-world-integration.yml
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
+          PATHS
+          git diff --name-only f2a7fbdb6e328b05130957e2ade3f9d06f3b1f97...HEAD | sort > /tmp/actual-corrective-paths
+          diff -u /tmp/expected-corrective-paths /tmp/actual-corrective-paths
       - name: Run static complete-world construction test
         run: node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
+
+  browser-execution-transport:
+    needs: exact-head-and-static-construction
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
+      REVIEW_URL: http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html
+      PLAYWRIGHT_VERSION: 1.55.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
+          fetch-depth: 0
+      - name: Verify exact checked-out head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - name: Provision pinned Playwright Chromium ephemerally
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/h-earth-browser-transport"
+          cd "$RUNNER_TEMP/h-earth-browser-transport"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+      - name: Start exact-head same-origin static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/h-earth-browser-artifacts"
+          python3 -m http.server 4188 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" \
+            >"$RUNNER_TEMP/h-earth-browser-artifacts/server.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/h-earth-browser-artifacts/server.pid"
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent --show-error "$REVIEW_URL" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/h-earth-browser-artifacts/server.log"
+          exit 1
+      - name: Execute desktop and touch-enabled mobile transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/h-earth-browser-transport/verify.mjs" <<'SCRIPT'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import process from 'node:process';
+          import { chromium } from 'playwright';
+
+          const reviewUrl = process.env.REVIEW_URL;
+          const expectedHead = process.env.EXPECTED_HEAD;
+          const artifactDirectory = path.join(process.env.RUNNER_TEMP, 'h-earth-browser-artifacts');
+          fs.mkdirSync(artifactDirectory, { recursive: true });
+
+          const assert = (condition, code, detail = null) => {
+            if (!condition) {
+              const error = new Error(code);
+              error.detail = detail;
+              throw error;
+            }
+          };
+          const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+          const safeName = value => value.replace(/[^a-z0-9_-]+/gi, '-').toLowerCase();
+
+          async function dispatchTouchGesture(page, steps) {
+            await page.evaluate(async gestureSteps => {
+              const canvas = document.getElementById('complete-world-canvas');
+              if (!(canvas instanceof HTMLCanvasElement)) throw new Error('COMPLETE_WORLD_CANVAS_NOT_FOUND');
+              const delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+              const dispatch = (type, point) => {
+                const released = type === 'pointerup' || type === 'pointercancel';
+                canvas.dispatchEvent(new PointerEvent(type, {
+                  bubbles: true,
+                  cancelable: true,
+                  composed: true,
+                  pointerId: point.id,
+                  pointerType: 'touch',
+                  isPrimary: point.id === 1,
+                  clientX: point.x,
+                  clientY: point.y,
+                  screenX: point.x,
+                  screenY: point.y,
+                  buttons: released ? 0 : 1,
+                  button: type === 'pointerdown' ? 0 : released ? 0 : -1,
+                  pressure: released ? 0 : 0.5,
+                  width: 12,
+                  height: 12
+                }));
+              };
+              for (const step of gestureSteps) {
+                for (const point of step.points) dispatch(step.type, point);
+                await delay(step.waitMilliseconds ?? 80);
+              }
+            }, steps);
+          }
+
+          async function performDesktopInput(page) {
+            const canvas = page.locator('#complete-world-canvas');
+            const box = await canvas.boundingBox();
+            assert(box, 'DESKTOP_CANVAS_BOUNDING_BOX_MISSING');
+            const centerX = box.x + box.width * 0.5;
+            const centerY = box.y + box.height * 0.5;
+            await page.mouse.move(centerX, centerY);
+            await page.mouse.down();
+            await page.mouse.move(centerX + Math.max(100, box.width * 0.14), centerY, { steps: 12 });
+            await sleep(350);
+            await page.mouse.up();
+            await page.mouse.wheel(0, -240);
+            await sleep(180);
+            await page.mouse.wheel(0, 240);
+            await sleep(180);
+            await page.keyboard.down('Control');
+            await page.mouse.wheel(0, -180);
+            await sleep(180);
+            await page.mouse.wheel(0, 180);
+            await page.keyboard.up('Control');
+            await sleep(400);
+          }
+
+          async function performMobileInput(page) {
+            await dispatchTouchGesture(page, [
+              { type: 'pointerdown', points: [{ id: 1, x: 110, y: 220 }], waitMilliseconds: 80 },
+              { type: 'pointermove', points: [{ id: 1, x: 205, y: 220 }], waitMilliseconds: 380 },
+              { type: 'pointerup', points: [{ id: 1, x: 205, y: 220 }], waitMilliseconds: 120 }
+            ]);
+            await dispatchTouchGesture(page, [
+              { type: 'pointerdown', points: [{ id: 1, x: 105, y: 360 }, { id: 2, x: 225, y: 360 }], waitMilliseconds: 80 },
+              { type: 'pointermove', points: [{ id: 1, x: 105, y: 275 }, { id: 2, x: 225, y: 275 }], waitMilliseconds: 420 },
+              { type: 'pointerup', points: [{ id: 1, x: 105, y: 275 }, { id: 2, x: 225, y: 275 }], waitMilliseconds: 120 }
+            ]);
+            await dispatchTouchGesture(page, [
+              { type: 'pointerdown', points: [{ id: 1, x: 125, y: 330 }, { id: 2, x: 205, y: 330 }], waitMilliseconds: 80 },
+              { type: 'pointermove', points: [{ id: 1, x: 70, y: 330 }, { id: 2, x: 260, y: 330 }], waitMilliseconds: 420 },
+              { type: 'pointerup', points: [{ id: 1, x: 70, y: 330 }, { id: 2, x: 260, y: 330 }], waitMilliseconds: 120 }
+            ]);
+          }
+
+          async function runScenario(browser, configuration) {
+            const scenario = safeName(configuration.name);
+            const context = await browser.newContext({
+              viewport: configuration.viewport,
+              deviceScaleFactor: configuration.deviceScaleFactor,
+              isMobile: configuration.mobile,
+              hasTouch: configuration.mobile
+            });
+            await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
+            const page = await context.newPage();
+            const consoleRecords = [];
+            const pageErrors = [];
+            const requestFailures = [];
+            const httpRecords = [];
+
+            page.on('console', message => {
+              consoleRecords.push({
+                type: message.type(),
+                text: message.text(),
+                location: message.location()
+              });
+            });
+            page.on('pageerror', error => {
+              pageErrors.push({ name: error.name, message: error.message, stack: error.stack ?? null });
+            });
+            page.on('requestfailed', request => {
+              requestFailures.push({
+                url: request.url(),
+                method: request.method(),
+                failure: request.failure()
+              });
+            });
+            page.on('response', response => {
+              const headers = response.headers();
+              httpRecords.push({
+                url: response.url(),
+                status: response.status(),
+                contentType: headers['content-type'] ?? null,
+                contentLength: headers['content-length'] ?? null
+              });
+            });
+            await page.addInitScript(() => {
+              window.__H_EARTH_BROWSER_METRICS__ = { longTasks: [], layoutShifts: [] };
+              try {
+                new PerformanceObserver(list => {
+                  window.__H_EARTH_BROWSER_METRICS__.longTasks.push(
+                    ...list.getEntries().map(entry => ({
+                      name: entry.name,
+                      startTime: entry.startTime,
+                      duration: entry.duration
+                    }))
+                  );
+                }).observe({ type: 'longtask', buffered: true });
+              } catch {}
+              try {
+                new PerformanceObserver(list => {
+                  window.__H_EARTH_BROWSER_METRICS__.layoutShifts.push(
+                    ...list.getEntries().filter(entry => !entry.hadRecentInput).map(entry => ({
+                      value: entry.value,
+                      startTime: entry.startTime
+                    }))
+                  );
+                }).observe({ type: 'layout-shift', buffered: true });
+              } catch {}
+            });
+
+            let stopped = false;
+            try {
+              await page.goto(reviewUrl, { waitUntil: 'domcontentloaded', timeout: 120000 });
+              await page.waitForFunction(
+                () => window.H_EARTH_C2_R1_COMPLETE_WORLD?.ready === true,
+                null,
+                { timeout: 180000 }
+              );
+              const before = await page.evaluate(() => window.H_EARTH_C2_R1_COMPLETE_WORLD.getReceipt());
+              await page.screenshot({
+                path: path.join(artifactDirectory, `${scenario}-before.png`),
+                fullPage: true
+              });
+
+              if (configuration.mobile) await performMobileInput(page);
+              else await performDesktopInput(page);
+
+              const after = await page.evaluate(() => window.H_EARTH_C2_R1_COMPLETE_WORLD.getReceipt());
+              const runtimeTrace = await page.evaluate(() =>
+                JSON.parse(JSON.stringify(window.__H_EARTH_COMPLETE_WORLD_TRACE__?.rows ?? []))
+              );
+              const performanceRecord = await page.evaluate(() => ({
+                navigation: performance.getEntriesByType('navigation').map(entry => entry.toJSON()),
+                resources: performance.getEntriesByType('resource').map(entry => entry.toJSON()),
+                paint: performance.getEntriesByType('paint').map(entry => entry.toJSON()),
+                observers: window.__H_EARTH_BROWSER_METRICS__
+              }));
+              const webgl2Bound = await page.evaluate(() => {
+                const canvas = document.getElementById('complete-world-canvas');
+                return canvas?.getContext('webgl2') instanceof WebGL2RenderingContext;
+              });
+              await page.screenshot({
+                path: path.join(artifactDirectory, `${scenario}-after.png`),
+                fullPage: true
+              });
+
+              const rendererBefore = before.renderer.counters;
+              const rendererAfter = after.renderer.counters;
+              const intakeBefore = before.intake.counters;
+              const intakeAfter = after.intake.counters;
+              const unresolvedConsoleErrors = consoleRecords.filter(record => record.type === 'error');
+              const unresolvedHttpFailures = httpRecords.filter(record =>
+                record.status >= 400 && !record.url.endsWith('/favicon.ico')
+              );
+
+              assert(before.eligible === true && after.eligible === true, 'COMPLETE_WORLD_RECEIPT_NOT_ELIGIBLE');
+              assert(webgl2Bound === true, 'WEBGL2_CONTEXT_NOT_BOUND');
+              assert(rendererAfter.contextCreationCount === 1, 'WEBGL2_CONTEXT_COUNT_NOT_ONE', rendererAfter);
+              assert(rendererAfter.rendererInitializationCount === 1, 'RENDERER_INITIALIZATION_COUNT_NOT_ONE', rendererAfter);
+              assert(rendererAfter.visiblePresentationCount > rendererBefore.visiblePresentationCount, 'VISIBLE_FRAME_DID_NOT_ADVANCE', { rendererBefore, rendererAfter });
+              assert(rendererAfter.postInitializationResourceCreationCount === 0, 'POST_INITIALIZATION_RESOURCE_CREATION_DETECTED', rendererAfter);
+              assert(rendererAfter.postInitializationBufferUploadCount === 0, 'POST_INITIALIZATION_BUFFER_UPLOAD_DETECTED', rendererAfter);
+              assert(rendererAfter.worldRebuildCount === 0, 'WORLD_REBUILD_DETECTED', rendererAfter);
+              assert(after.packageBinding?.counters?.boundTerrainVertexCount > 0, 'COASTAL_TERRAIN_BINDING_MISSING');
+              assert(after.packageBinding?.counters?.boundShorelineVertexCount > 0, 'COASTAL_SHORELINE_BINDING_MISSING');
+              assert(intakeAfter.navigationProposalCount > intakeBefore.navigationProposalCount, 'NAVIGATION_PROPOSALS_DID_NOT_ADVANCE', { intakeBefore, intakeAfter });
+              assert(unresolvedConsoleErrors.length === 0, 'PRODUCT_CONSOLE_ERROR', unresolvedConsoleErrors);
+              assert(pageErrors.length === 0, 'PAGE_ERROR', pageErrors);
+              assert(requestFailures.length === 0, 'REQUEST_FAILURE', requestFailures);
+              assert(unresolvedHttpFailures.length === 0, 'HTTP_FAILURE', unresolvedHttpFailures);
+
+              if (configuration.mobile) {
+                assert(intakeAfter.touchPointerEventCount > intakeBefore.touchPointerEventCount, 'TOUCH_POINTER_EVENTS_NOT_RECORDED');
+                assert(intakeAfter.oneFingerLookProposalCount > intakeBefore.oneFingerLookProposalCount, 'ONE_FINGER_LOOK_NOT_RECORDED');
+                assert(intakeAfter.twoFingerTravelProposalCount > intakeBefore.twoFingerTravelProposalCount, 'TWO_FINGER_TRAVEL_NOT_RECORDED');
+                assert(intakeAfter.pinchProposalCount > intakeBefore.pinchProposalCount, 'PINCH_ZOOM_NOT_RECORDED');
+                assert(intakeAfter.releaseTerminationCount > intakeBefore.releaseTerminationCount, 'TOUCH_RELEASE_TERMINATION_NOT_RECORDED');
+              } else {
+                assert(intakeAfter.mousePointerEventCount > intakeBefore.mousePointerEventCount, 'DESKTOP_POINTER_EVENTS_NOT_RECORDED');
+                assert(intakeAfter.oneFingerLookProposalCount > intakeBefore.oneFingerLookProposalCount, 'DESKTOP_LOOK_NOT_RECORDED');
+                assert(intakeAfter.wheelEventCount > intakeBefore.wheelEventCount, 'DESKTOP_WHEEL_INPUT_NOT_RECORDED');
+              }
+
+              const record = {
+                receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_TRANSPORT_SCENARIO_v1',
+                roleBoundary: 'ROLE_1_TRANSPORT_CONSTRUCTION_ONLY_NOT_ROLE_3_CERTIFICATION',
+                expectedHead,
+                reviewUrl,
+                scenario: configuration,
+                browserVersion: browser.version(),
+                webgl2Bound,
+                before,
+                after,
+                runtimeTrace,
+                consoleRecords,
+                pageErrors,
+                requestFailures,
+                httpRecords,
+                performanceRecord,
+                assertions: {
+                  eligible: true,
+                  rendererAndWebgl: true,
+                  frameAdvancement: true,
+                  navigationAndInput: true,
+                  consoleHttpAndPerformanceRecorded: true
+                }
+              };
+              fs.writeFileSync(
+                path.join(artifactDirectory, `${scenario}-receipt.json`),
+                JSON.stringify(record, null, 2)
+              );
+              await context.tracing.stop({
+                path: path.join(artifactDirectory, `${scenario}-trace.zip`)
+              });
+              stopped = true;
+              return record;
+            } catch (error) {
+              fs.writeFileSync(
+                path.join(artifactDirectory, `${scenario}-failure.json`),
+                JSON.stringify({
+                  receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_TRANSPORT_FAILURE_v1',
+                  expectedHead,
+                  reviewUrl,
+                  scenario: configuration,
+                  error: {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack ?? null,
+                    detail: error.detail ?? null
+                  },
+                  consoleRecords,
+                  pageErrors,
+                  requestFailures,
+                  httpRecords
+                }, null, 2)
+              );
+              throw error;
+            } finally {
+              if (!stopped) {
+                await context.tracing.stop({
+                  path: path.join(artifactDirectory, `${scenario}-trace.zip`)
+                }).catch(() => {});
+              }
+              await context.close();
+            }
+          }
+
+          const browser = await chromium.launch({
+            headless: true,
+            args: [
+              '--use-angle=swiftshader',
+              '--enable-webgl',
+              '--ignore-gpu-blocklist',
+              '--disable-dev-shm-usage'
+            ]
+          });
+
+          try {
+            const scenarios = [
+              {
+                name: 'desktop-1440x900',
+                viewport: { width: 1440, height: 900 },
+                deviceScaleFactor: 1,
+                mobile: false
+              },
+              {
+                name: 'mobile-412x915',
+                viewport: { width: 412, height: 915 },
+                deviceScaleFactor: 2.625,
+                mobile: true
+              },
+              {
+                name: 'mobile-390x844',
+                viewport: { width: 390, height: 844 },
+                deviceScaleFactor: 3,
+                mobile: true
+              }
+            ];
+            const receipts = [];
+            for (const scenario of scenarios) receipts.push(await runScenario(browser, scenario));
+            fs.writeFileSync(
+              path.join(artifactDirectory, 'browser-transport-summary.json'),
+              JSON.stringify({
+                receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_TRANSPORT_SUMMARY_v1',
+                operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_TRANSPORT_CORRECTION_001',
+                roleBoundary: 'ROLE_1_TRANSPORT_PROVISIONED_NOT_INDEPENDENT_ROLE_3_PASS',
+                expectedHead,
+                reviewUrl,
+                scenarioCount: receipts.length,
+                scenarios: receipts.map(receipt => ({
+                  name: receipt.scenario.name,
+                  assertions: receipt.assertions,
+                  rendererCounters: receipt.after.renderer.counters,
+                  intakeCounters: receipt.after.intake.counters
+                }))
+              }, null, 2)
+            );
+          } finally {
+            await browser.close();
+          }
+          SCRIPT
+          cd "$RUNNER_TEMP/h-earth-browser-transport"
+          node verify.mjs
+      - name: Record exact artifact digests
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/h-earth-browser-artifacts"
+          find . -maxdepth 1 -type f ! -name 'artifact-sha256.txt' -print0 \
+            | sort -z \
+            | xargs -0 sha256sum > artifact-sha256.txt
+      - name: Upload browser receipts logs traces and captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-complete-world-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-browser-artifacts
+          if-no-files-found: error
+          retention-days: 30

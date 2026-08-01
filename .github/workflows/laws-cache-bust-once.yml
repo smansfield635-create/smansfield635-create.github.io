@@ -1,8 +1,8 @@
 name: Laws cache bust once
 
 on:
-  pull_request_target:
-    types: [opened, reopened]
+  pull_request:
+    types: [synchronize]
     branches:
       - main
 

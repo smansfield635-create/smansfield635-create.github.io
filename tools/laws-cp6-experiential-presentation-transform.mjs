@@ -10,9 +10,11 @@ if (html.includes(marker)) {
 }
 
 function replaceOnce(pattern, replacement, label) {
-  const matches = html.match(pattern);
-  if (!matches || matches.length !== 1) {
-    throw new Error(`${label}: expected exactly one match.`);
+  const flags = pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`;
+  const scanner = new RegExp(pattern.source, flags);
+  const matches = Array.from(html.matchAll(scanner));
+  if (matches.length !== 1) {
+    throw new Error(`${label}: expected exactly one match; found ${matches.length}.`);
   }
   html = html.replace(pattern, replacement);
 }

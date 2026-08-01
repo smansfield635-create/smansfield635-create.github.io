@@ -24,7 +24,6 @@ jobs:
       PREVIEW_ROOT: preview/h-earth/c2-r1/a699c5a64e2bf54d950a69c839c3d9ee41b6514f
       PREVIEW_URL_PATH: /preview/h-earth/c2-r1/a699c5a64e2bf54d950a69c839c3d9ee41b6514f/index.html
       PLAYWRIGHT_VERSION: 1.55.0
-      V2_WORKFLOW: .github/workflows/h-earth-c2-r1-immutable-preview-builder-v2.yml
     steps:
       - name: Check out publication branch
         uses: actions/checkout@v4
@@ -55,6 +54,7 @@ jobs:
           npm init -y >/dev/null
           npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
           npx playwright install --with-deps chromium
+          cp "$GITHUB_WORKSPACE/publication/.github/scripts/h-earth-c2-r1-immutable-preview-browser-v5.mjs" "$RUNNER_TEMP/pw/verify.mjs"
 
       - name: Execute desktop and touch-mobile local proof
         shell: bash
@@ -71,16 +71,6 @@ jobs:
             sleep 1
           done
           test "$local_ready" = true
-          python3 - <<'PY'
-          import os,re,textwrap
-          from pathlib import Path
-          workflow=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['V2_WORKFLOW']
-          text=workflow.read_text()
-          match=re.search(r"cat > \"\$RUNNER_TEMP/pw/verify\.mjs\" <<'JS'\n(.*?)\n          JS",text,re.S)
-          if not match:
-              raise RuntimeError('BROWSER_VERIFIER_BLOCK_NOT_FOUND')
-          (Path(os.environ['RUNNER_TEMP'])/'pw'/'verify.mjs').write_text(textwrap.dedent(match.group(1)))
-          PY
           cd "$RUNNER_TEMP/pw"
           node verify.mjs
           python3 - <<'PY'

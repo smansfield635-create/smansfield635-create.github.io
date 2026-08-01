@@ -1,0 +1,73 @@
+{
+  "manifestType": "H_EARTH_C2_R1_R1_7C_EVIDENCE_MANIFEST_v1",
+  "operation": "R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
+  "status": "PASS_ENGINEERING_DURABLE_CLOSURE_COMMITTED",
+  "startingHead": "591b54210f177ad6627bc3656f960d664430c4c9",
+  "passingExecutionHead": "e8d7519f96f90fc7d4ac7adfb0d1a33c0ededdb1",
+  "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+  "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7c-start-001",
+  "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7c-closed-001",
+  "workflow": {
+    "runId": 30682582313,
+    "jobId": 91322382094,
+    "result": "PASS",
+    "artifactId": 8812783662,
+    "artifactName": "h-earth-c2-r1-r1-7c-engineering-evidence",
+    "artifactDigest": "sha256:dd1d5159cf29da0597e7d6cd20d0c878a68f0233dbb9b0072392e010b9cd2e49",
+    "artifactSizeBytes": 100261
+  },
+  "automaticRegistryPreflight": {
+    "runId": 30682582286,
+    "jobId": 91322381985,
+    "result": "PASS",
+    "artifactId": 8812786986,
+    "artifactDigest": "sha256:227b0aa1ddb93cde315e0071bd1ce4b1dc2aa7f1865de4eb1d4211f725ec5e63"
+  },
+  "exactWorkflowArtifactFiles": {
+    "h-earth.c2-r1.r1-7c-verification.json": {
+      "sha256": "974a8ffb79005a2fb8299d5539aa63f8ff87694886e4cb549ecb2dc531f60963"
+    },
+    "r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-runtime-macro-controls.svg": {
+      "sha256": "55a19e550b8795994704e48074cc745505620c4aa557f5b247bfd8836f2b26db"
+    },
+    "r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-bounded-material-response.svg": {
+      "sha256": "38639757d3ab5ae3f4fec1c2ddc7bb35da0460e5d52249526f2684504d16b816"
+    },
+    "r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-coastal-readability.svg": {
+      "sha256": "9b561dadbbed835968a3d7a39c8bd38d4c9496e738d85ea2ae8ef174c3d3a5d9"
+    }
+  },
+  "changedPathSet": [
+    ".github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7c-candidate-renderer-sampling.mjs"
+  ],
+  "controlFieldBoundToCandidateRenderer": true,
+  "singleRuntimeSampleConfirmed": true,
+  "boundedMacroChannelApplicationConfirmed": true,
+  "visibleTilingAbsentEngineeringGauge": true,
+  "hardBandingAbsentEngineeringGauge": true,
+  "coastalReadabilityPreservedEngineeringGauge": true,
+  "metrics": {
+    "macroRuntimeSampleCount": 6825,
+    "candidateRendererSampleCount": 72,
+    "uniqueRuntimeControlRatio": 1,
+    "maximumBoundaryGap": 3.523827640794508e-8,
+    "maximumFineAdjacentDelta": 0.004987984895706177,
+    "maximumAlbedoChange": 0.0004447294881163577,
+    "maximumRoughnessChange": 0.0014108291392748162,
+    "minimumCavityResponse": 0.994114374732543,
+    "minimumReadabilityRatio": 0.9981642262491339
+  },
+  "upstreamAuthoritiesUnchanged": true,
+  "registryPreflight": "PASS",
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "passingReceiptPreserved": true,
+  "repositoryReadbackConfirmed": true,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false,
+  "firstBlocker": null,
+  "workflowDisposition": "MANUAL_ONLY_AFTER_DURABLE_CLOSURE"
+}

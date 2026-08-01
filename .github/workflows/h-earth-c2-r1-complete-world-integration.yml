@@ -1,0 +1,59 @@
+name: H-Earth C2-R1 Complete World Integration
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_candidate_head:
+        description: Exact candidate head to verify
+        required: true
+        type: string
+  pull_request:
+    branches: [integration/h-earth-c2-r1-baseline-001]
+    paths:
+      - '.github/workflows/h-earth-c2-r1-complete-world-integration.yml'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/**'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/**'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-and-static-construction:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
+          fetch-depth: 0
+      - name: Verify exact candidate head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          git fetch origin rollback/h-earth-c2-r1-complete-world-integration-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-complete-world-integration-start-001
+          test "$(git rev-parse origin/rollback/h-earth-c2-r1-complete-world-integration-start-001)" = "e03f211a472fd564b1ed4b8a00096c923a077528"
+      - name: Verify exact operation path boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/expected-paths <<'PATHS'
+          .github/workflows/h-earth-c2-r1-complete-world-integration.yml
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-persistent-renderer.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
+          PATHS
+          git diff --name-only e03f211a472fd564b1ed4b8a00096c923a077528...HEAD | sort > /tmp/actual-paths
+          diff -u /tmp/expected-paths /tmp/actual-paths
+      - name: Run static complete-world construction test
+        run: node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs

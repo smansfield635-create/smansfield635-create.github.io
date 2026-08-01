@@ -6,5 +6,8 @@
   "destination": "research/osf-laws-corpus",
   "claim_boundary": "Discovery and provenance recovery only. No validation, empirical-claim upgrade, novelty claim, or Laws Chamber admission authority.",
   "requested_by": "Sean Mansfield",
-  "status": "REQUESTED"
+  "status": "HARVEST_COMPLETE",
+  "generated_at": "2026-08-01T06:32:38.811688+00:00",
+  "public_resource_count": 29,
+  "discovery_error_count": 0
 }

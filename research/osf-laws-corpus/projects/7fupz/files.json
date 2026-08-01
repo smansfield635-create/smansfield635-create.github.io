@@ -1,0 +1,18 @@
+[
+  {
+    "node_id": "7fupz",
+    "provider": "osfstorage",
+    "name": "Attribution_and_Credit_Coherence_as_a_Field_Phenomenon.pdf",
+    "kind": "file",
+    "materialized_path": "/Attribution_and_Credit_Coherence_as_a_Field_Phenomenon.pdf",
+    "size": 2553,
+    "content_type": null,
+    "date_modified": "2026-02-03T04:12:21.266452",
+    "download_url": "https://osf.io/download/698175a54df1dc818ebb5371/",
+    "osf_file_id": "698175a54df1dc818ebb5371",
+    "extraction_status": "EXTRACTED",
+    "extracted_chars": 1188,
+    "sha256": "6c34f38e6568de8d93f77fd937e469695d491bb4bde46750b5761a40814f0bcf",
+    "error": null
+  }
+]

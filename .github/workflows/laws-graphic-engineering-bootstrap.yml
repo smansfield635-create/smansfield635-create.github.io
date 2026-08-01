@@ -28,6 +28,7 @@ jobs:
           cat .github/bootstrap/laws-program.part* | base64 -d > /tmp/laws-program.tar.gz
           tar -tzf /tmp/laws-program.tar.gz >/dev/null
           tar -xzf /tmp/laws-program.tar.gz -C .
+          rm .github/workflows/laws-graphic-engineering-integration.yml
           rm -rf .github/bootstrap
           rm .github/workflows/laws-graphic-engineering-bootstrap.yml
           git config user.name "github-actions[bot]"

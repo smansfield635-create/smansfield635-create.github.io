@@ -72,6 +72,37 @@ jobs:
           assert old_link_check in source, 'Expected internal-link check block not found'
           source = source.replace(old_link_check, new_link_check, 1)
 
+          old_diagnostics = '''          (() => {{
+            "use strict";
+            let errors = 0;
+            window.addEventListener("error", () => {{ errors += 1; }});
+            window.addEventListener("unhandledrejection", () => {{ errors += 1; }});
+            window.addEventListener("load", () => {{
+              requestAnimationFrame(() => {{
+                const root = document.documentElement;
+                const overflow = Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1;
+                root.dataset.cp6BrowserErrors = String(errors);
+                root.dataset.cp6Overflow = overflow ? "1" : "0";
+              }});
+            }}, {{ once:true }});
+          }})();'''
+          new_diagnostics = '''          (() => {{
+            "use strict";
+            const root = document.documentElement;
+            let errors = 0;
+            const publish = () => {{
+              const overflow = Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1;
+              root.dataset.cp6BrowserErrors = String(errors);
+              root.dataset.cp6Overflow = overflow ? "1" : "0";
+            }};
+            publish();
+            window.addEventListener("error", () => {{ errors += 1; publish(); }});
+            window.addEventListener("unhandledrejection", () => {{ errors += 1; publish(); }});
+            window.addEventListener("load", () => {{ requestAnimationFrame(publish); }}, {{ once:true }});
+          }})();'''
+          assert old_diagnostics in source, 'Expected browser diagnostics block not found'
+          source = source.replace(old_diagnostics, new_diagnostics, 1)
+
           Path('/tmp/cp62_builder.py').write_text(source, encoding='utf-8')
           PY
           python3 /tmp/cp62_builder.py

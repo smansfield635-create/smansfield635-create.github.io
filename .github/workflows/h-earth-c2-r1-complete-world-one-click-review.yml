@@ -1,0 +1,151 @@
+name: H-Earth C2-R1 Complete World One-Click Review
+
+on:
+  pull_request:
+    branches:
+      - integration/h-earth-c2-r1-baseline-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-complete-world-one-click-review.yml'
+
+concurrency:
+  group: h-earth-c2-r1-complete-world-one-click-review
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  publish-exact-verified-complete-world:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 140
+    env:
+      EXACT_CANDIDATE_HEAD: a699c5a64e2bf54d950a69c839c3d9ee41b6514f
+      REVIEW_ENTRY: h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html
+      LOCAL_ORIGIN: http://127.0.0.1:4188
+      SESSION_SECONDS: '7200'
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out exact verified candidate
+        uses: actions/checkout@v4
+        with:
+          ref: a699c5a64e2bf54d950a69c839c3d9ee41b6514f
+          fetch-depth: 0
+
+      - name: Verify exact candidate identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXACT_CANDIDATE_HEAD"
+          test -f "$REVIEW_ENTRY"
+          test -f h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
+          test -f h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
+
+      - name: Install Cloudflare tunnel runtime
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 5 --retry-all-errors \
+            https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
+            --output /tmp/cloudflared
+          chmod +x /tmp/cloudflared
+          /tmp/cloudflared --version
+          sha256sum /tmp/cloudflared | tee /tmp/cloudflared.sha256
+
+      - name: Launch and verify exact one-click occurrence
+        run: |
+          set -euo pipefail
+          cleanup() {
+            if [ -f /tmp/cloudflared.pid ]; then kill "$(cat /tmp/cloudflared.pid)" 2>/dev/null || true; fi
+            if [ -f /tmp/origin.pid ]; then kill "$(cat /tmp/origin.pid)" 2>/dev/null || true; fi
+          }
+          trap cleanup EXIT
+
+          python3 -m http.server 4188 --bind 127.0.0.1 > /tmp/origin.log 2>&1 &
+          echo $! > /tmp/origin.pid
+
+          local_ready=false
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent --show-error \
+              "$LOCAL_ORIGIN/$REVIEW_ENTRY" \
+              --output /tmp/local-index.html; then
+              local_ready=true
+              break
+            fi
+            sleep 1
+          done
+          test "$local_ready" = true
+          test -s /tmp/local-index.html
+
+          /tmp/cloudflared tunnel \
+            --url "$LOCAL_ORIGIN" \
+            --no-autoupdate \
+            --protocol http2 \
+            > /tmp/cloudflared.log 2>&1 &
+          echo $! > /tmp/cloudflared.pid
+
+          public_base=''
+          for attempt in $(seq 1 120); do
+            public_base="$(grep -Eo 'https://[-a-z0-9]+\.trycloudflare\.com' /tmp/cloudflared.log | head -1 || true)"
+            if [ -n "$public_base" ]; then
+              break
+            fi
+            sleep 1
+          done
+          if [ -z "$public_base" ]; then
+            cat /tmp/cloudflared.log >&2
+            exit 1
+          fi
+
+          occurrence_url="${public_base}/${REVIEW_ENTRY}"
+          public_ready=false
+          for attempt in $(seq 1 120); do
+            if curl --fail --silent --show-error \
+              "$occurrence_url" \
+              --output /tmp/public-index.html \
+              && curl --fail --silent --show-error \
+              "${public_base}/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js" \
+              --output /tmp/public-complete-world.js \
+              && curl --fail --silent --show-error \
+              "${public_base}/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js" \
+              --output /tmp/public-render-package.js; then
+              public_ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [ "$public_ready" != true ]; then
+            cat /tmp/cloudflared.log >&2
+            exit 1
+          fi
+
+          cmp --silent /tmp/local-index.html /tmp/public-index.html
+          cmp --silent \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js \
+            /tmp/public-complete-world.js
+          cmp --silent \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js \
+            /tmp/public-render-package.js
+
+          printf '%s\n' "$occurrence_url" | tee /tmp/complete-world-one-click-url.txt
+          sha256sum \
+            /tmp/public-index.html \
+            /tmp/public-complete-world.js \
+            /tmp/public-render-package.js \
+            | tee /tmp/public-byte-digests.sha256
+
+          body="VERIFIED_COMPLETE_WORLD_REVIEW_OCCURRENCE = ACTIVE_USER_ACCESSIBLE_ONE_CLICK_URL
+
+Exact verified head: \`$EXACT_CANDIDATE_HEAD\`
+
+[Open the complete H-Earth world review]($occurrence_url)
+
+This is a temporary nondefault same-origin review occurrence. No merge or public-default promotion occurred."
+          gh api \
+            "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" \
+            -f body="$body"
+
+          deadline=$((SECONDS + SESSION_SECONDS))
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            curl --fail --silent --show-error "$occurrence_url" --output /dev/null
+            sleep 60
+          done

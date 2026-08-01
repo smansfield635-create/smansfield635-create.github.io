@@ -1,0 +1,28 @@
+{
+  "recordType": "H_EARTH_C2_R1_COMPLETE_WORLD_SOURCE_CUSTODY_v1",
+  "operationId": "H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001",
+  "branch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+  "operationStartingHead": "e03f211a472fd564b1ed4b8a00096c923a077528",
+  "resultingHead": "COMMIT_CONTAINING_THIS_RECORD",
+  "acceptedBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "acceptedCoastalComponentSourceHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+  "rollbackBranch": "rollback/h-earth-c2-r1-complete-world-integration-start-001",
+  "rollbackHead": "e03f211a472fd564b1ed4b8a00096c923a077528",
+  "canonicalCompleteWorldPackage": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+  "canonicalPackageConsumption": "READ_ONLY",
+  "closedCoastalSourceConsumption": "READ_ONLY",
+  "mutablePathCount": 11,
+  "protectedInvariants": [
+    "R1_1_THROUGH_R1_7_SOURCES_UNCHANGED",
+    "CAMERA_NAVIGATION_TRAVERSAL_TOUCH_UNCHANGED",
+    "PUBLIC_RENDERER_LIFECYCLE_AND_GPU_PRESENTATION_UNCHANGED",
+    "MANOR_CAVERN_AND_OTHER_ACCEPTED_PLACEMENTS_UNCHANGED",
+    "NONCOASTAL_WORLD_GEOMETRY_UNCHANGED",
+    "PUBLIC_DEFAULT_H_EARTH_ROUTE_UNCHANGED",
+    "MAIN_UNCHANGED"
+  ],
+  "failedC2CandidateImportedOrCopied": false,
+  "publicDefaultRouteMutation": false,
+  "mainMutation": false,
+  "pr418Merge": false
+}

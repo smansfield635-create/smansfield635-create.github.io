@@ -1,0 +1,337 @@
+name: Laws CP5 Final Moon Review Capture
+
+on:
+  pull_request:
+    branches:
+      - verification/laws-cp5-final-moon-review-001
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-cp5-final-moon-review-capture
+  cancel-in-progress: false
+
+jobs:
+  capture-exact-candidate:
+    if: github.head_ref == 'trigger/laws-cp5-final-moon-review-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Moon candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 1651479e205c62cd4eccdc20515a096f054c3d7f
+          path: candidate
+          fetch-depth: 0
+
+      - name: Confirm exact custody and protected Sun source
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "1651479e205c62cd4eccdc20515a096f054c3d7f"
+          test "$(git hash-object laws/index.crystals.js)" = "27577c49250f42b03d123f8105e1d55d59c3a4b4"
+          test "$(git diff --name-only f104294243eec62b38496f0736a8f73a93d44723 HEAD)" = "laws/index.crystals.js"
+          node --check laws/index.crystals.js
+          git diff --check f104294243eec62b38496f0736a8f73a93d44723 HEAD
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          from pathlib import Path
+
+          base_sha = 'f104294243eec62b38496f0736a8f73a93d44723'
+          current = Path('laws/index.crystals.js').read_text()
+          baseline = subprocess.check_output(
+              ['git', 'show', f'{base_sha}:laws/index.crystals.js'], text=True
+          )
+
+          def span(text, start_marker, end_marker, start_at=0):
+              start = text.index(start_marker, start_at)
+              end = text.index(end_marker, start)
+              return text[start:end]
+
+          def solar_surface(text):
+              surface = text.index('    function surfaceSample')
+              solar = text.index('      if (mode === "solar") {', surface)
+              lunar = text.index('\n      } else {', solar)
+              return text[solar:lunar]
+
+          selectors = {
+              'vertexShader': lambda text: span(text, '  const vertexShaderSource = `', '  const fragmentShaderSource = `'),
+              'fragmentShader': lambda text: span(text, '  const fragmentShaderSource = `', '  function invariant('),
+              'solarActivity': lambda text: span(text, '    /* CP5_FINAL_SOLAR_OPEN_BRANCHING_BASE */', '    function mixColor'),
+              'solarSurface': solar_surface,
+              'solarRotation': lambda text: span(text, '        /* CP5_FINAL_SOLAR_NO_LOCAL_RIGID_SPIN */', '  function nodeFloatY'),
+          }
+
+          hashes = {}
+          for name, selector in selectors.items():
+              before = hashlib.sha256(selector(baseline).encode()).hexdigest()
+              after = hashlib.sha256(selector(current).encode()).hexdigest()
+              if before != after:
+                  raise SystemExit(f'SUN_PROTECTED_SOURCE_CHANGED:{name}:{before}:{after}')
+              hashes[name] = after
+
+          solar_material = 'Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94})'
+          if baseline.count(solar_material) != 1 or current.count(solar_material) != 1:
+              raise SystemExit('SUN_MATERIAL_IDENTITY_CHANGED')
+
+          locked = {
+              'gatewayBodyScale': 'gatewayBodyScale:\n    0.7666667',
+              'horizontalRadius': 'horizontalRadius:\n        1.68',
+              'verticalRadius': 'verticalRadius:\n        1.5008',
+              'depthRadius': 'depthRadius:\n        1.2992',
+          }
+          for name, marker in locked.items():
+              if marker not in current:
+                  raise SystemExit(f'LOCKED_CONSTANT_MISSING:{name}')
+
+          baseline_raf = baseline.count('requestAnimationFrame')
+          current_raf = current.count('requestAnimationFrame')
+          if baseline_raf != current_raf:
+              raise SystemExit(f'RENDER_LOOP_COUNT_CHANGED:{baseline_raf}:{current_raf}')
+
+          receipt = {
+              'candidateHead': '1651479e205c62cd4eccdc20515a096f054c3d7f',
+              'candidateCrystalBlob': '27577c49250f42b03d123f8105e1d55d59c3a4b4',
+              'baseMain': base_sha,
+              'actualChangedPaths': ['laws/index.crystals.js'],
+              'sunProtectedSourceHashes': hashes,
+              'sunMaterialUnchanged': True,
+              'newRenderLoop': False,
+              'lockedConstants': {
+                  'gatewayBodyScale': 0.7666667,
+                  'horizontalRadius': 1.68,
+                  'verticalRadius': 1.5008,
+                  'depthRadius': 1.2992,
+              },
+          }
+          Path('laws-cp5-final-moon-sun-custody.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          PY
+
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+        with:
+          chrome-version: stable
+
+      - name: Install bounded capture dependencies
+        working-directory: candidate
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0 pngjs@7.0.0
+
+      - name: Start exact-head local runtime
+        working-directory: candidate
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-cp5-final-moon-review-server.log 2>&1 &
+          echo $! > /tmp/laws-cp5-final-moon-review-server.pid
+          for attempt in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-cp5-final-moon-review-server.log
+          exit 1
+
+      - name: Capture Samsung Moon review material
+        working-directory: candidate
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        shell: bash
+        run: |
+          cat > laws-cp5-final-moon-review-capture.mjs <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import puppeteer from 'puppeteer-core';
+          import { PNG } from 'pngjs';
+
+          const HEAD='1651479e205c62cd4eccdc20515a096f054c3d7f';
+          const CRYSTAL='27577c49250f42b03d123f8105e1d55d59c3a4b4';
+          const ORIGIN='http://127.0.0.1:4173';
+          const OUT='laws-cp5-final-moon-review-materials';
+          fs.rmSync(OUT,{recursive:true,force:true});
+          fs.mkdirSync(OUT,{recursive:true});
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const h=Math.SQRT1_2;
+          const quaternions={
+            flow:[0,0,0,1],
+            test:[-0.43283662594337136,0,0,0.9014723818520222],
+            research:[0.9014723818520223,0,0,0.4328366259433712]
+          };
+          const telemetry={pageErrors:[],consoleErrors:[],requestFailures:[],httpErrors:[]};
+          const browser=await puppeteer.launch({
+            executablePath:process.env.CHROME_PATH,
+            headless:'new',
+            args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']
+          });
+          const page=await browser.newPage();
+          await page.setViewport({width:430,height:932,deviceScaleFactor:1,isMobile:true,hasTouch:true});
+          page.on('pageerror',error=>telemetry.pageErrors.push(String(error?.stack||error)));
+          page.on('console',message=>{
+            if(message.type()==='error'&&!message.text().includes('Failed to load resource: the server responded with a status of 404')) telemetry.consoleErrors.push(message.text());
+          });
+          page.on('requestfailed',request=>{
+            if(!request.url().endsWith('/favicon.ico')) telemetry.requestFailures.push({url:request.url(),error:request.failure()?.errorText||''});
+          });
+          page.on('response',response=>{
+            if(response.status()>=400&&!response.url().endsWith('/favicon.ico')) telemetry.httpErrors.push({url:response.url(),status:response.status()});
+          });
+
+          const response=await page.goto(`${ORIGIN}/laws/?moon-review=${HEAD}`,{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>Boolean(globalThis.DGBLawsStagedLoader&&globalThis.DGB_LAWS_CONTROLLER),{timeout:30000});
+          await page.evaluate(async()=>{
+            await globalThis.DGBLawsStagedLoader.loadOrbitSystems();
+            await globalThis.DGBLawsStagedLoader.loadInteractionSystems();
+          });
+          await page.waitForFunction(()=>{
+            const crystals=globalThis.DGB_LAWS_CRYSTALS_RECEIPT;
+            const compositor=globalThis.DGB_LAWS_COMPOSITOR_RECEIPT;
+            const interactions=globalThis.DGB_LAWS_INTERACTIONS_RECEIPT;
+            return crystals?.status==='available'&&crystals?.rendererInitialized===true&&compositor?.initialized===true&&interactions?.initialized===true;
+          },{timeout:45000});
+          await page.evaluate(()=>document.querySelector('[data-upstream-compass-mount]')?.scrollIntoView({block:'center',inline:'center',behavior:'instant'}));
+          await sleep(700);
+
+          async function setPrimary(id){
+            const q=quaternions[id];
+            const result=await page.evaluate((authorityId,quaternion)=>{
+              const controller=globalThis.DGB_LAWS_CONTROLLER;
+              const begun=controller?.beginOrbitGesture?.()!==false;
+              const preview=begun&&controller?.requestOrbitPreview?.({quaternion,primaryId:authorityId})!==false;
+              const committed=preview&&controller?.requestOrbitCommit?.()!==false;
+              return {begun,preview,committed};
+            },id,q);
+            await page.waitForFunction(authorityId=>{
+              const root=document.querySelector('[data-laws-root]');
+              const frame=globalThis.DGB_LAWS_CONTROLLER?.getFrameState?.();
+              return (root?.dataset.lawsSpatialPrimaryId||frame?.orbitFocus||'')===authorityId;
+            },{timeout:15000},id);
+            await page.evaluate(()=>document.querySelector('[data-upstream-compass-mount]')?.scrollIntoView({block:'center',inline:'center',behavior:'instant'}));
+            await sleep(650);
+            return result;
+          }
+
+          async function authorityBox(id){
+            return page.evaluate(authorityId=>{
+              const element=document.querySelector(`[data-laws-category][data-direction="${authorityId}"]`);
+              const rect=element?.getBoundingClientRect?.();
+              return rect?{x:rect.left,y:rect.top,width:rect.width,height:rect.height}:null;
+            },id);
+          }
+
+          async function viewportShot(file){
+            const buffer=await page.screenshot({type:'png',fullPage:false});
+            fs.writeFileSync(path.join(OUT,file),buffer);
+            return buffer;
+          }
+
+          function cropPng(buffer,box,file,padding=54){
+            if(!box) throw new Error(`MISSING_BOX:${file}`);
+            const source=PNG.sync.read(buffer);
+            const left=Math.max(0,Math.floor(box.x-padding));
+            const top=Math.max(0,Math.floor(box.y-padding));
+            const right=Math.min(source.width,Math.ceil(box.x+box.width+padding));
+            const bottom=Math.min(source.height,Math.ceil(box.y+box.height+padding));
+            const width=Math.max(1,right-left);
+            const height=Math.max(1,bottom-top);
+            const target=new PNG({width,height});
+            PNG.bitblt(source,target,left,top,width,height,0,0);
+            fs.writeFileSync(path.join(OUT,file),PNG.sync.write(target));
+            return {left,top,width,height};
+          }
+
+          const captures=[];
+          captures.push({file:'01-samsung-full-compass.png',state:'initial',buffer:await viewportShot('01-samsung-full-compass.png')});
+
+          const researchCommit=await setPrimary('research');
+          const researchBuffer=await viewportShot('02-moon-primary-research.png');
+          const researchBox=await authorityBox('research');
+          const moonCrop=cropPng(researchBuffer,researchBox,'03-moon-close.png',72);
+          captures.push({file:'02-moon-primary-research.png',state:'research-primary'});
+          captures.push({file:'03-moon-close.png',state:'research-primary-close',crop:moonCrop});
+
+          const testCommit=await setPrimary('test');
+          const testBuffer=await viewportShot('04-moon-nonprimary-sun-primary.png');
+          const testBox=await authorityBox('test');
+          const sunCrop=cropPng(testBuffer,testBox,'05-protected-sun-close.png',72);
+          captures.push({file:'04-moon-nonprimary-sun-primary.png',state:'test-primary-moon-nonprimary'});
+          captures.push({file:'05-protected-sun-close.png',state:'protected-sun-close',crop:sunCrop});
+
+          const flowCommit=await setPrimary('flow');
+          await viewportShot('06-combined-sun-and-moon.png');
+          captures.push({file:'06-combined-sun-and-moon.png',state:'flow-primary-combined'});
+
+          const snapshot=await page.evaluate(()=>{
+            const visible=element=>{
+              if(!element||element.hidden) return false;
+              const style=getComputedStyle(element);
+              const rect=element.getBoundingClientRect();
+              return style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect.width>0&&rect.height>0;
+            };
+            const root=document.querySelector('[data-laws-root]');
+            const labels=[...document.querySelectorAll('[data-laws-projected-category-label]')];
+            return {
+              contractVersion:globalThis.DGB_LAWS_CRYSTALS_RECEIPT?.contractVersion||'',
+              rendererInitialized:globalThis.DGB_LAWS_CRYSTALS_RECEIPT?.rendererInitialized===true,
+              compositorInitialized:globalThis.DGB_LAWS_COMPOSITOR_RECEIPT?.initialized===true,
+              interactionsInitialized:globalThis.DGB_LAWS_INTERACTIONS_RECEIPT?.initialized===true,
+              visibleOuterLabels:labels.filter(visible).map(element=>element.dataset.direction||''),
+              centerGlobePresent:Boolean(document.querySelector('[data-upstream-compass-mount]')),
+              authorityCount:document.querySelectorAll('[data-laws-category]').length,
+              horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+              state:root?.dataset.lawsControllerState||'',
+              primary:root?.dataset.lawsSpatialPrimaryId||''
+            };
+          });
+
+          const failures=[];
+          if(![200,304].includes(response?.status())) failures.push(`ROUTE_STATUS:${response?.status()}`);
+          if(snapshot.contractVersion!=='2.3.1-cp5-final-public-moon-definition') failures.push(`CONTRACT_VERSION:${snapshot.contractVersion}`);
+          if(!snapshot.rendererInitialized||!snapshot.compositorInitialized||!snapshot.interactionsInitialized) failures.push('RUNTIME_INITIALIZATION');
+          if(snapshot.visibleOuterLabels.length!==1) failures.push(`VISIBLE_LABEL_COUNT:${snapshot.visibleOuterLabels.length}`);
+          if(!snapshot.centerGlobePresent) failures.push('CENTER_GLOBE_MISSING');
+          if(snapshot.authorityCount!==6) failures.push(`AUTHORITY_COUNT:${snapshot.authorityCount}`);
+          if(snapshot.horizontalOverflow>1) failures.push(`HORIZONTAL_OVERFLOW:${snapshot.horizontalOverflow}`);
+          if(telemetry.pageErrors.length||telemetry.consoleErrors.length||telemetry.requestFailures.length||telemetry.httpErrors.length) failures.push('ACTIONABLE_BROWSER_ERRORS');
+
+          const receipt={
+            phase:'FINAL_PUBLIC_MOON_DEFINITION_USER_REVIEW',
+            candidateHead:HEAD,
+            candidateCrystalBlob:CRYSTAL,
+            viewport:{width:430,height:932,isMobile:true,hasTouch:true},
+            researchCommit,
+            testCommit,
+            flowCommit,
+            researchBox,
+            testBox,
+            snapshot,
+            telemetry,
+            captures:captures.map(({buffer,...entry})=>entry),
+            failures,
+            pass:failures.length===0,
+            formalVerificationPerformed:false,
+            mergeAuthorized:false,
+            deploymentAuthorized:false
+          };
+          fs.writeFileSync('laws-cp5-final-moon-review-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          await browser.close();
+          if(failures.length) process.exitCode=2;
+          JS
+          node laws-cp5-final-moon-review-capture.mjs
+
+      - name: Upload inspectable Moon review materials
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp5-final-moon-review-materials
+          path: |
+            candidate/laws-cp5-final-moon-review-materials/**
+            candidate/laws-cp5-final-moon-review-receipt.json
+            candidate/laws-cp5-final-moon-sun-custody.json
+            /tmp/laws-cp5-final-moon-review-server.log
+          if-no-files-found: error
+          retention-days: 30

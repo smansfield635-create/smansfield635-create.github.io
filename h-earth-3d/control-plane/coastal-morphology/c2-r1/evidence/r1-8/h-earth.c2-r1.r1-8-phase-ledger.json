@@ -7,7 +7,7 @@
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
   "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8b-c1-start-001",
-  "controllingStatus": "R1.8B_C1_DIAGNOSIS_PROVEN_CORRECTION_APPLIED_PENDING_RERUN",
+  "controllingStatus": "R1.8A_PASS_RECORDED",
   "executionIdentityLaw": {
     "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "pullRequestExpectedCandidateHead": "github.event.pull_request.head.sha",
@@ -44,9 +44,9 @@
     {
       "id": "R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
       "status": "PASS_RECORDED",
-      "recordedAt": "2026-08-01T05:39:33.429Z",
+      "recordedAt": "2026-08-01T06:07:20.837Z",
       "evidence": {
-        "eventHead": "37840476a74cfa655847113655a3178fae7838fa",
+        "eventHead": "9a4c8aa90c65bd8aea4741de681e8e0890234a85",
         "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
         "rollbackHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
         "changedPaths": [
@@ -79,18 +79,18 @@
           "draft": true,
           "merged": false,
           "head": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
-          "headSha": "37840476a74cfa655847113655a3178fae7838fa"
+          "headSha": "f45f039ff36c27705e71df7c2b065ed64c612f0a"
         },
         "reviewPackage": {
           "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
-          "materializationBasisHead": "37840476a74cfa655847113655a3178fae7838fa",
+          "materializationBasisHead": "9a4c8aa90c65bd8aea4741de681e8e0890234a85",
           "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
           "files": [
             {
               "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
-              "gitBlob": "377a3b550c42639e41a511489017b54f0d53bde1",
-              "sha256": "52a3232ae98a67932ea9048cabb55113b98c2cdb06cc46c1fa1cae2114d9716e",
-              "byteCount": 2742
+              "gitBlob": "4cd14ba7579cf7ca2c7c72fb8dd3ecb7b198dc94",
+              "sha256": "444ef2004a730a58b37b0a297fdcf0e5427df460c163262e3d3a43623a956958",
+              "byteCount": 3186
             },
             {
               "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
@@ -131,14 +131,14 @@
   "completedPhaseCount": 1,
   "reviewPackage": {
     "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
-    "materializationBasisHead": "37840476a74cfa655847113655a3178fae7838fa",
+    "materializationBasisHead": "9a4c8aa90c65bd8aea4741de681e8e0890234a85",
     "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
     "files": [
       {
         "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
-        "gitBlob": "377a3b550c42639e41a511489017b54f0d53bde1",
-        "sha256": "52a3232ae98a67932ea9048cabb55113b98c2cdb06cc46c1fa1cae2114d9716e",
-        "byteCount": 2742
+        "gitBlob": "4cd14ba7579cf7ca2c7c72fb8dd3ecb7b198dc94",
+        "sha256": "444ef2004a730a58b37b0a297fdcf0e5427df460c163262e3d3a43623a956958",
+        "byteCount": 3186
       },
       {
         "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
@@ -160,7 +160,7 @@
       }
     ]
   },
-  "updatedAt": "2026-08-01T06:07:18.520Z",
+  "updatedAt": "2026-08-01T06:07:20.837Z",
   "r18aHead": "45d4117dd1ed49da5de38e5c4f573497ac58cd46",
   "r1_8bC1Diagnosis": {
     "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c1-startup-diagnosis.json",

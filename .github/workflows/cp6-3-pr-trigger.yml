@@ -98,13 +98,13 @@ jobs:
           '''
           source = source.replace(needle, textwrap.dedent(correction) + needle, 1)
 
-          ledger_needle = "'shared_foundation_references': shared_reference_rows,\n              'rows': migration_ledger_rows,"
-          ledger_replacement = "'shared_foundation_references': shared_reference_rows,\n              'normalized_source_route_links': normalized_source_route_links,\n              'rows': migration_ledger_rows,"
+          ledger_needle = "    'shared_foundation_references': shared_reference_rows,\n    'rows': migration_ledger_rows,"
+          ledger_replacement = "    'shared_foundation_references': shared_reference_rows,\n    'normalized_source_route_links': normalized_source_route_links,\n    'rows': migration_ledger_rows,"
           assert source.count(ledger_needle) == 1
           source = source.replace(ledger_needle, ledger_replacement, 1)
 
-          receipt_needle = "'broken_internal_links': len(broken_links),\n              'orphaned_destinations': len(orphaned),"
-          receipt_replacement = "'broken_internal_links': len(broken_links),\n              'normalized_source_route_link_count': len(normalized_source_route_links),\n              'normalized_source_route_links': normalized_source_route_links,\n              'orphaned_destinations': len(orphaned),"
+          receipt_needle = "    'broken_internal_links': len(broken_links),\n    'orphaned_destinations': len(orphaned),"
+          receipt_replacement = "    'broken_internal_links': len(broken_links),\n    'normalized_source_route_link_count': len(normalized_source_route_links),\n    'normalized_source_route_links': normalized_source_route_links,\n    'orphaned_destinations': len(orphaned),"
           assert source.count(receipt_needle) == 1
           source = source.replace(receipt_needle, receipt_replacement, 1)
 

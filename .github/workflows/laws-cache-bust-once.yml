@@ -1,22 +1,22 @@
 name: Laws cache bust once
 
-# Retriggered after the merge event did not publish the one-shot commit.
 on:
-  push:
+  pull_request_target:
+    types: [opened]
     branches:
       - main
-    paths:
-      - .github/workflows/laws-cache-bust-once.yml
 
 permissions:
   contents: write
 
 jobs:
   cache-bust:
+    if: github.event.pull_request.head.ref == 'agent/laws-cache-bust-trigger-001'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Replace exact Laws asset versions

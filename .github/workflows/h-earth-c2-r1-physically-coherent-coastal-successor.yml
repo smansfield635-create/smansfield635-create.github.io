@@ -7,6 +7,11 @@ on:
     paths:
       - '.github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml'
   workflow_dispatch:
+    inputs:
+      candidate_head:
+        description: Exact candidate branch head to verify and serve
+        required: true
+        type: string
 
 concurrency:
   group: h-earth-c2-r1-r1-8-isolated-review
@@ -23,23 +28,75 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GITHUB_TOKEN: ${{ github.token }}
+      R1_8_TARGET_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.candidate_head }}
           fetch-depth: 0
 
-      - name: Gate bounded launch commit
+      - name: Gate bounded corrective execution commit
         id: gate
         run: |
           set -euo pipefail
           message="$(git log -1 --format=%s)"
-          if [ "$message" = "R1.8: install isolated review and execution workflow" ]; then
+          if [ "$message" = "R1.8A-C1: correct workflow event head identity" ]; then
             echo "execute=true" >> "$GITHUB_OUTPUT"
           else
             echo "execute=false" >> "$GITHUB_OUTPUT"
-            echo "R1.8 execution skipped for non-launch commit: $message"
+            echo "R1.8 execution skipped for non-corrective commit: $message"
           fi
+
+      - name: Resolve exact candidate execution identity
+        id: identity
+        if: steps.gate.outputs.execute == 'true'
+        env:
+          EVENT_PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          EVENT_SYNTHETIC_SHA: ${{ github.sha }}
+          MANUAL_CANDIDATE_HEAD: ${{ inputs.candidate_head }}
+        run: |
+          set -euo pipefail
+
+          case "$GITHUB_EVENT_NAME" in
+            pull_request)
+              expected_candidate_head="$EVENT_PR_HEAD"
+              synthetic_merge_sha="$EVENT_SYNTHETIC_SHA"
+              ;;
+            workflow_dispatch)
+              expected_candidate_head="$MANUAL_CANDIDATE_HEAD"
+              synthetic_merge_sha="$EVENT_SYNTHETIC_SHA"
+              ;;
+            *)
+              echo "Unsupported workflow event: $GITHUB_EVENT_NAME" >&2
+              exit 1
+              ;;
+          esac
+
+          if ! [[ "$expected_candidate_head" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Expected candidate head is not an exact SHA-1 identity" >&2
+            exit 1
+          fi
+
+          checked_out_candidate_head="$(git rev-parse HEAD)"
+          if [ "$checked_out_candidate_head" != "$expected_candidate_head" ]; then
+            echo "Checked-out candidate head does not match expected candidate head" >&2
+            echo "checked_out=$checked_out_candidate_head expected=$expected_candidate_head" >&2
+            exit 1
+          fi
+
+          remote_candidate_head="$(git ls-remote origin "refs/heads/$R1_8_TARGET_BRANCH" | awk '{print $1}')"
+          if [ "$remote_candidate_head" != "$expected_candidate_head" ]; then
+            echo "Expected candidate head does not match the independently anchored remote branch" >&2
+            echo "remote=$remote_candidate_head expected=$expected_candidate_head" >&2
+            exit 1
+          fi
+
+          echo "expected_candidate_head=$expected_candidate_head" >> "$GITHUB_OUTPUT"
+          echo "checked_out_candidate_head=$checked_out_candidate_head" >> "$GITHUB_OUTPUT"
+          echo "synthetic_merge_sha=$synthetic_merge_sha" >> "$GITHUB_OUTPUT"
+          echo "checked_out_head_matches_expected_candidate_head=true" >> "$GITHUB_OUTPUT"
+          echo "product_authority_head_unchanged=true" >> "$GITHUB_OUTPUT"
+          echo "synthetic_merge_sha_not_used_as_candidate_authority=true" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v4
         if: steps.gate.outputs.execute == 'true'
@@ -55,7 +112,16 @@ jobs:
 
       - name: Execute R1.8A through R1.8D and stop for user differential
         if: steps.gate.outputs.execute == 'true'
+        env:
+          R1_8_EXPECTED_CANDIDATE_HEAD: ${{ steps.identity.outputs.expected_candidate_head }}
+          R1_8_CHECKED_OUT_CANDIDATE_HEAD: ${{ steps.identity.outputs.checked_out_candidate_head }}
+          R1_8_SYNTHETIC_MERGE_SHA: ${{ steps.identity.outputs.synthetic_merge_sha }}
+          R1_8_CHECKED_OUT_HEAD_MATCHES_EXPECTED_CANDIDATE_HEAD: ${{ steps.identity.outputs.checked_out_head_matches_expected_candidate_head }}
+          R1_8_PRODUCT_AUTHORITY_HEAD_UNCHANGED: ${{ steps.identity.outputs.product_authority_head_unchanged }}
+          R1_8_SYNTHETIC_MERGE_SHA_NOT_USED_AS_CANDIDATE_AUTHORITY: ${{ steps.identity.outputs.synthetic_merge_sha_not_used_as_candidate_authority }}
         run: |
+          set -euo pipefail
+          GITHUB_SHA="$R1_8_EXPECTED_CANDIDATE_HEAD" \
           node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs
 
       - name: Upload bounded R1.8 evidence

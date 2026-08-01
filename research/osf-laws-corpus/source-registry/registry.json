@@ -1,0 +1,1670 @@
+{
+  "registry_id": "OSF_LAWS_CHAMBER_SOURCE_REGISTRY_v1",
+  "generated_at": "2026-08-01T16:49:00.254267+00:00",
+  "source_repository": "smansfield635-create/smansfield635-create.github.io",
+  "source_branch": "agent/osf-laws-source-registry-001",
+  "source_head": "a87a64bca76faf332f32e54b44dc0de0dcb59814",
+  "source_manifest_generated_at": "2026-08-01T07:59:03.189206+00:00",
+  "claim_boundary": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+  "summary": {
+    "resource_count": 31,
+    "registration_count": 1,
+    "public_file_count": 10,
+    "resources_with_files": 4,
+    "datasets_detected": 0,
+    "analytic_code_detected": 0,
+    "result_tables_detected": 0,
+    "unclassified_count": 0,
+    "admission_counts": {
+      "SOURCE_RECOVERED": 2,
+      "FILES_REVIEWED": 1,
+      "ADMITTED_AS_METHOD": 5,
+      "ADMITTED_AS_FORMALISM": 1,
+      "HELD": 13,
+      "TECHNICAL_REVIEW_REQUIRED": 1,
+      "ADMITTED_AS_CONTEXT": 5,
+      "ADMITTED_AS_STUDY_DESIGN": 1,
+      "EXCLUDED": 2
+    },
+    "wiki_status_counts": {
+      "ABSENT": 15,
+      "REVIEWED": 16
+    }
+  },
+  "resources": [
+    {
+      "OSF_ID": "9u6vd",
+      "TITLE": "Law of Transitory Coherence",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/9u6vd/",
+      "VERSION": "v1.0",
+      "DATE": {
+        "created": "2026-01-11T20:11:10.057554",
+        "modified": "2026-08-01T06:08:13.224538",
+        "harvested": "2026-08-01T07:57:18.876751+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "CANONICAL_PROPOSITION",
+      "LAW_CLASS": "LAW_OF_TRANSITORY_COHERENCE",
+      "METHOD_CLASS": "NONE",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "FORMAL_LAW_AND_STUDY_PROGRAM",
+      "RESULT_CLASS": "NO_EXECUTED_RESULT",
+      "EMPIRICAL_STATUS": "NO_PUBLIC_DATASET_CODE_OR_EXECUTED_STUDY",
+      "FALSIFICATION_STATUS": "EXPLICIT_SOURCE_CONDITIONS",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "SCIENTIFIC_LAW",
+        "FINDINGS_AND_BOUNDARIES"
+      ],
+      "ADMISSION_STATUS": "SOURCE_RECOVERED",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "4dc252e380c712509f6a3c5e72acc5da2f01171997fea14b96ba99d3d7e201aa"
+    },
+    {
+      "OSF_ID": "7jnxq",
+      "TITLE": "Universal Law of Coherence Dynamics",
+      "RESOURCE_TYPE": "registrations",
+      "PROJECT_OR_REGISTRATION": "REGISTRATION",
+      "PUBLIC_URL": "https://osf.io/7jnxq/",
+      "VERSION": "FROZEN_REGISTRATION",
+      "DATE": {
+        "created": "2026-01-12T01:40:23.811229",
+        "modified": "2026-01-12T01:23:46.617914",
+        "harvested": "2026-08-01T07:59:03.188508+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 5,
+      "ATTACHMENTS_REVIEWED": 5,
+      "FILE_HASHES": {
+        "Diagnostic_Rules_Coherence_Framework.pdf": "514175c7c619adf7d208260fe47702771895e199d5bef36fd18dd3a81d2c6ced",
+        "Methods_Appendix_Diagnostic_Framework.pdf": "5bb824f8c4291403ab486fd9412f2069aa9d2e49fbd4f508ada68f54caceb18f",
+        "Diagnostic_Protocol_Rulebook.pdf": "8c1e9e23d58f88c2922eb949db0a7da70fa1b33b50365da74b4c3b16273da1a6",
+        "Case_Selection_and_Evidence_Windows-1.pdf": "6de1a6f746dc0c9bbcbdcdd2a7b3631418f46cfc9b31ba211e3960d34d2fe2e3",
+        "Observer_Replication_Guide.pdf": "d4d7d5a005f300d5230ee6ace3711f1689583202b17cfbc538fa42a0113e6b55"
+      },
+      "EXTRACTION_STATUS": [
+        "EXTRACTED"
+      ],
+      "SOURCE_CLASS": "FROZEN_REGISTRATION",
+      "LAW_CLASS": "UNIVERSAL_LAW_OF_COHERENCE_DYNAMICS",
+      "METHOD_CLASS": "FIXED_EVIDENCE_WINDOWS_AND_OBSERVER_PROTOCOL",
+      "INSTRUMENT_CLASS": "CAD_CTD_CFD_IMD_TD",
+      "STUDY_CLASS": "NON_EXPERIMENTAL_CLASSIFICATION_PROTOCOL",
+      "RESULT_CLASS": "FROZEN_PROVENANCE_NOT_RESULT",
+      "EMPIRICAL_STATUS": "REGISTRATION_IS_CUSTODY_NOT_VALIDATION",
+      "FALSIFICATION_STATUS": "EXPLICIT_OBSERVER_CONVERGENCE_TEST",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "EVIDENCE_AND_SOURCES",
+        "METHODS_AND_MODELS",
+        "ADMISSION_AND_BASELINE",
+        "REVERSE_AUDIT"
+      ],
+      "ADMISSION_STATUS": "FILES_REVIEWED",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "NOT_APPLICABLE",
+        "components_count": 0,
+        "registrations_status": "SELF_REGISTRATION",
+        "registrations_count": 1,
+        "file_versions_status": "REVIEWED",
+        "file_version_count": 5
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "467beb4017f844fddd7328d69b654483324235d4f941b031e4a7eb20004c5530"
+    },
+    {
+      "OSF_ID": "9ut2z",
+      "TITLE": "Alignment Diagnostics, an Integrity-Based Platform",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/9ut2z/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-02-09T00:09:34.948852",
+        "modified": "2026-08-01T06:05:13.740618",
+        "harvested": "2026-08-01T07:55:21.255840+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 2,
+      "ATTACHMENTS_REVIEWED": 2,
+      "FILE_HASHES": {
+        "Integral_Platform_HOW_TO-2.pdf": "6bf9d21f9e06768e2eb829dae5641ac76bc3b74f98b1d4061910b09bb4ab8e3a",
+        "Integral_Platform_Method_Explained.pdf": "13adead582dfca3140137ac7eb9d32774c53a74920cc5c104dc99a9216250343"
+      },
+      "EXTRACTION_STATUS": [
+        "EXTRACTED"
+      ],
+      "SOURCE_CLASS": "METHOD_SPECIFICATION",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "OBSERVE_HYPOTHESIZE_1_2_3_REDUCE_FALSIFY_ITERATE_TERMINATE_11_12_13",
+      "INSTRUMENT_CLASS": "ALIGNMENT_DIAGNOSTIC_ASSESSMENT",
+      "STUDY_CLASS": "METHOD_ONLY",
+      "RESULT_CLASS": "NO_EXECUTED_RESULT",
+      "EMPIRICAL_STATUS": "TWO_METHOD_PDFS_NO_VALIDATION_STUDY",
+      "FALSIFICATION_STATUS": "CLEAN_CLAIM_COLLAPSE_ALLOWED",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS",
+        "FORWARD_CONSTRUCTION",
+        "RESULT_AND_RECORD"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_METHOD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "REVIEWED",
+        "file_version_count": 2
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "82735851ff27ee32bb19c5ac5cf99da57805d8dc3be48bdad83dd24be6799a2f"
+    },
+    {
+      "OSF_ID": "edg9f",
+      "TITLE": "APPLIED FORMALISM (INSTANTIATION) M256 Coherence Geometry",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/edg9f/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-02-02T19:29:47.367406",
+        "modified": "2026-08-01T06:03:45.174485",
+        "harvested": "2026-08-01T07:55:30.151989+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 2,
+      "ATTACHMENTS_REVIEWED": 2,
+      "FILE_HASHES": {
+        "Definitive_Mathematical_Closure_CCM.pdf": "8da75f88fc833e418fc03af8e49c19f00b9a1a4e38820698feabfe166c6fd148",
+        "formalism.pdf": "fb75c4e462954f40d31fd627b2d960259b011b8fda0ee47200a116226a334d93"
+      },
+      "EXTRACTION_STATUS": [
+        "EXTRACTED"
+      ],
+      "SOURCE_CLASS": "FORMALISM",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "QUOTIENT_ADMISSIBILITY_AND_CLOSED_TRANSITIONS",
+      "INSTRUMENT_CLASS": "M256_CCM",
+      "STUDY_CLASS": "FORMAL_TECHNICAL_REVIEW_CANDIDATE",
+      "RESULT_CLASS": "FORMAL_CONSTRUCTION_NOT_VERIFIED_PROOF",
+      "EMPIRICAL_STATUS": "NO_EXECUTABLE_REFERENCE_OR_MACHINE_TESTS",
+      "FALSIFICATION_STATUS": "PARTIAL_FORMAL_BOUNDARIES",
+      "MATHEMATICAL_REVIEW_STATUS": "REQUIRED_SYMBOL_AND_PROOF_REVIEW",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS",
+        "FINDINGS_AND_BOUNDARIES"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_FORMALISM",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "REVIEWED",
+        "file_version_count": 2
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "4976195de6f6103e7ba348b1a47c04d72029c662cc35f93ca8b5ed9b4164bad1"
+    },
+    {
+      "OSF_ID": "7vkgs",
+      "TITLE": "As Easy as A–B–C–D: Diagnosing Coherence Before Collapse",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/7vkgs/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-11T23:17:18.485890",
+        "modified": "2026-08-01T06:06:30.754430",
+        "harvested": "2026-08-01T07:55:37.917429+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "METHOD_SPECIFICATION",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "ABCD_INTERNAL_COHERENCE_CONSTRAINT_ALIGNMENT_FRAGMENTATION_TRAJECTORY",
+      "INSTRUMENT_CLASS": "ABCD_DIAGNOSTIC",
+      "STUDY_CLASS": "OBSERVER_CLASSIFICATION_PROCEDURE",
+      "RESULT_CLASS": "NO_EXECUTED_CASES",
+      "EMPIRICAL_STATUS": "PROCEDURE_ONLY",
+      "FALSIFICATION_STATUS": "OBSERVER_CONVERGENCE_REQUIRED",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS",
+        "FORWARD_CONSTRUCTION",
+        "APPLIED_INVESTIGATIONS"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_METHOD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "d77b87050afb73108e62c34aae8a54d93cc04756785c0bdc2dfc31b1900df979"
+    },
+    {
+      "OSF_ID": "4vmtc",
+      "TITLE": "The Circle of Life",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/4vmtc/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-24T04:30:27.440709",
+        "modified": "2026-08-01T06:05:39.489930",
+        "harvested": "2026-08-01T07:57:49.712116+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "APPLIED_OR_PHILOSOPHICAL_PROPOSITION",
+      "LAW_CLASS": "BROAD_LIFE_COHERENCE_BOUNDARY_CLAIM",
+      "METHOD_CLASS": "NONE",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "AUTHOR_DECLARED_CLOSED_NOT_RESULT",
+      "EMPIRICAL_STATUS": "BROAD_CROSS_DOMAIN_CLAIMS_WITHOUT_DOMAIN_EVIDENCE",
+      "FALSIFICATION_STATUS": "NOT_OPERATIONALIZED",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "FINDINGS_AND_BOUNDARIES"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "47159570f911f43c610a06d9e18b12219a18651c3bb5db58a1e470a0df2bab95"
+    },
+    {
+      "OSF_ID": "n82xh",
+      "TITLE": "Formal Falsification Path — Break This If You Can",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/n82xh/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-09T15:01:00.375035",
+        "modified": "2026-08-01T06:07:54.721117",
+        "harvested": "2026-08-01T07:57:03.418739+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "METHOD_AND_STUDY_DESIGN",
+      "LAW_CLASS": "SYSTEMIC_DYNAMIC_TRAJECTORY_LAW_TEST_TARGET",
+      "METHOD_CLASS": "FORMAL_FALSIFICATION_PATH",
+      "INSTRUMENT_CLASS": "DOMAIN_MANEUVERABILITY_METRICS",
+      "STUDY_CLASS": "MINIMUM_VIABLE_FALSIFICATION_STUDY",
+      "RESULT_CLASS": "NO_EXECUTED_RESULT",
+      "EMPIRICAL_STATUS": "PROTOCOL_WITHOUT_DATASET_OR_RESULTS",
+      "FALSIFICATION_STATUS": "FALSE_POSITIVE_FALSE_NEGATIVE_NON_SPECIFICITY_OBSERVER_INTERVENTION",
+      "MATHEMATICAL_REVIEW_STATUS": "DOMAIN_METRIC_REVIEW_REQUIRED",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS",
+        "REVERSE_AUDIT",
+        "APPLIED_INVESTIGATIONS"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_METHOD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "12d75fd447aa5686c695264bf9387d35546d02933644eafbdaed251ed141cada"
+    },
+    {
+      "OSF_ID": "pyd6g",
+      "TITLE": "The If-and-Only-If Boundary A Governing Quotient for Universal Systemic Dynamic Closure using Coherence Constraint Mathematics + Method (CCMM)",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/pyd6g/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-02-02T18:12:15.945431",
+        "modified": "2026-08-01T06:02:25.721396",
+        "harvested": "2026-08-01T07:57:57.396740+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "FORMALISM_DESCRIPTION",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "IF_AND_ONLY_IF_ADMISSIBILITY_BOUNDARY",
+      "INSTRUMENT_CLASS": "CCMM",
+      "STUDY_CLASS": "IMPLEMENTATION_CORRESPONDENCE_REVIEW",
+      "RESULT_CLASS": "LIVE_PROOF_CLAIM_NOT_OSF_VERIFIED",
+      "EMPIRICAL_STATUS": "DESCRIPTION_ONLY",
+      "FALSIFICATION_STATUS": "NOT_OPERATIONALIZED_IN_NODE",
+      "MATHEMATICAL_REVIEW_STATUS": "REQUIRED",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS",
+        "EVIDENCE_AND_SOURCES"
+      ],
+      "ADMISSION_STATUS": "TECHNICAL_REVIEW_REQUIRED",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "d7e0787166ff93ca167af881f401976076e99c2e5766fd0e1267c8ce4b3c2291"
+    },
+    {
+      "OSF_ID": "bgd86",
+      "TITLE": "Did Metaphysics Ever Exist",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/bgd86/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-10T22:43:52.742818",
+        "modified": "2026-08-01T06:07:25.599218",
+        "harvested": "2026-08-01T07:56:40.196824+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "PHILOSOPHICAL_CONTEXT",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "BRIDGE_DIAGNOSTIC_TRANSLATION",
+      "INSTRUMENT_CLASS": "CAD_CTD_CFD_IMD_TD_CONTEXT_USE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NO_EXECUTED_RESULT",
+      "EMPIRICAL_STATUS": "INTERPRETIVE_APPLICATION",
+      "FALSIFICATION_STATUS": "NO_METAPHYSICAL_TRUTH_ADJUDICATION",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "FINDINGS_AND_BOUNDARIES"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_CONTEXT",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "78c497b2b6adc2349d5cdb6208935b03055979f38d113caebe7a27d20fae4c3c"
+    },
+    {
+      "OSF_ID": "rjdms",
+      "TITLE": "Methods Appendix: Diagnostic Application and Evaluation Protocol",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/rjdms/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-11T20:39:35.631042",
+        "modified": "2026-08-01T06:08:05.235507",
+        "harvested": "2026-08-01T07:57:26.593545+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "METHOD_SPECIFICATION",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "ADMISSIBLE_EVIDENCE_FIXED_WINDOWS_OBSERVER_INVARIANCE",
+      "INSTRUMENT_CLASS": "DIAGNOSTIC_EVALUATION_PROTOCOL",
+      "STUDY_CLASS": "PREREGISTERED_EVALUATION_PROTOCOL",
+      "RESULT_CLASS": "NO_EXECUTED_RESULT",
+      "EMPIRICAL_STATUS": "METHODS_SPECIFICATION_ONLY",
+      "FALSIFICATION_STATUS": "OBSERVER_CONVERGENCE_REQUIRED",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS",
+        "ADMISSION_AND_BASELINE",
+        "REVERSE_AUDIT"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_METHOD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "695a0d8ccb59b57135758a2ea89b54b5c27119f74024b98de6da1becc8bf437c"
+    },
+    {
+      "OSF_ID": "6ehrj",
+      "TITLE": "Coherence Constraint Instantiation System (CCIS)",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/6ehrj/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-02-08T08:38:19.786276",
+        "modified": "2026-08-01T06:03:10.632772",
+        "harvested": "2026-08-01T07:56:09.360307+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "INSTRUMENT_SPECIFICATION",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "CONSTRAINT_INSTANTIATION",
+      "INSTRUMENT_CLASS": "CCIS",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NO_RUN_RECORD",
+      "EMPIRICAL_STATUS": "SPECIFICATION_ONLY",
+      "FALSIFICATION_STATUS": "HOLD_OR_FAIL_NOT_SCORED",
+      "MATHEMATICAL_REVIEW_STATUS": "TECHNICAL_SPECIFICATION_REQUIRED",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "APPLIED_INVESTIGATIONS",
+        "METHODS_AND_MODELS"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "5e6bf26e5278a380a3f360a58ece95a6666704095e76c8fb4e1a2d790db2ce41"
+    },
+    {
+      "OSF_ID": "etn4d",
+      "TITLE": "Detecting Institutional Hypocrisy: An X–Y–Z Coherence Test",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/etn4d/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-12T02:27:34.791061",
+        "modified": "2026-08-01T06:07:09.290686",
+        "harvested": "2026-08-01T07:56:24.801184+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "INSTRUMENT_SPECIFICATION",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "XYZ_COMMITMENT_ACTION_OUTCOME",
+      "INSTRUMENT_CLASS": "XYZ_COHERENCE_TEST",
+      "STUDY_CLASS": "CASE_EXECUTION_CANDIDATE",
+      "RESULT_CLASS": "NO_EXECUTED_CASE_TABLE",
+      "EMPIRICAL_STATUS": "SPECIFICATION_NO_PUBLIC_CASES",
+      "FALSIFICATION_STATUS": "MISSING_EVIDENCE_IS_NO_CONCLUSION",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "APPLIED_INVESTIGATIONS",
+        "FORWARD_CONSTRUCTION",
+        "RESULT_AND_RECORD"
+      ],
+      "ADMISSION_STATUS": "SOURCE_RECOVERED",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "2973b874c87f063cefd7d578a486231e833ea5802177a7a691d49444923238e2"
+    },
+    {
+      "OSF_ID": "9y2p5",
+      "TITLE": "First Order of Cyclical Dynamics (Transitory Science)",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/9y2p5/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-22T23:17:34.057619",
+        "modified": "2026-08-01T06:05:30.984209",
+        "harvested": "2026-08-01T07:56:48.016539+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "APPLIED_CONTEXT",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "PHASE_TRAJECTORY_DRIFT_REALIGNMENT",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NO_NEW_MEASUREMENT",
+      "EMPIRICAL_STATUS": "INTERPRETIVE_FRAMEWORK",
+      "FALSIFICATION_STATUS": "NOT_SPECIFIED",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "9e37527211f1764edf65ef8227a2df2543e4aae7cb60e996592b26005ea68681"
+    },
+    {
+      "OSF_ID": "z64am",
+      "TITLE": "Coherence as a Constraint: A Universal Gap Bridged Across History, Science, and Society (The Missing Link Was Structural)",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/z64am/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-23T22:23:09.980080",
+        "modified": "2026-08-01T06:44:07.835628",
+        "harvested": "2026-08-01T07:55:53.361042+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "CONTEXTUAL_PROPOSITION",
+      "LAW_CLASS": "COHERENCE_AS_COMPATIBILITY_CONSTRAINT",
+      "METHOD_CLASS": "NARRATIVE_REDUCTION",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "BROAD_COMPLETION_CLAIM_NOT_EVIDENCED",
+      "EMPIRICAL_STATUS": "METADATA_ONLY_BROAD_CLAIMS",
+      "FALSIFICATION_STATUS": "NOT_OPERATIONALIZED",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "FINDINGS_AND_BOUNDARIES"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [
+        "Broad cross-domain completion language lacks attached operational tests."
+      ],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "34f05ed4f70e762fb349a60e06098abd70e7b14ef1ff420d47724e498005ed95"
+    },
+    {
+      "OSF_ID": "vazr6",
+      "TITLE": "Priority Knowledge Why Failure Is Predictable Before It Appears",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/vazr6/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-10T22:47:30.805434",
+        "modified": "2026-08-01T06:08:52.169947",
+        "harvested": "2026-08-01T07:57:34.258993+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "CANDIDATE_LAW_PROGRAM",
+      "LAW_CLASS": "PRIORITY_KNOWLEDGE_CANDIDATE",
+      "METHOD_CLASS": "PRIORITY_INVERSION_TEST",
+      "INSTRUMENT_CLASS": "PRIORITY_ORDERING_DIAGNOSTIC",
+      "STUDY_CLASS": "CROSS_DOMAIN_PILOT_CANDIDATE",
+      "RESULT_CLASS": "AUTHOR_REPORTED_PILOT_NO_RESULT",
+      "EMPIRICAL_STATUS": "PILOT_CLAIMS_NO_DATA_ANALYSIS_OR_TABLES",
+      "FALSIFICATION_STATUS": "EXPLICIT_PRIORITY_INVERSION_FAILURES",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "APPLIED_INVESTIGATIONS",
+        "SCIENTIFIC_LAW"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [
+        "Claims pilot evidence; no dataset, coding protocol, analysis, or result table recovered."
+      ],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "aa77b4580c8b7c1df22bf82fc600f5e962d16cf0527f1f12d038ad1ab6d8004c"
+    },
+    {
+      "OSF_ID": "2hvbg",
+      "TITLE": "The Propagation–Failure Quotient (PFQ)",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/2hvbg/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-02-04T02:48:44.308414",
+        "modified": "2026-08-01T06:02:57.767876",
+        "harvested": "2026-08-01T07:58:20.571377+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "INSTRUMENT_SPECIFICATION",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "PROPAGATION_VERSUS_FAILURE_ORIGIN",
+      "INSTRUMENT_CLASS": "PFQ",
+      "STUDY_CLASS": "RELIABILITY_STUDY_REQUIRED",
+      "RESULT_CLASS": "NO_EXECUTED_RESULT",
+      "EMPIRICAL_STATUS": "RUBRIC_AND_VALIDATION_PENDING",
+      "FALSIFICATION_STATUS": "NOT_OPERATIONALIZED",
+      "MATHEMATICAL_REVIEW_STATUS": "RUBRIC_REVIEW_REQUIRED",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "APPLIED_INVESTIGATIONS",
+        "METHODS_AND_MODELS"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "6b997f067b3eb331a6000b74fa1b1509faa9866831bf4d20d042efdd19fb9396"
+    },
+    {
+      "OSF_ID": "bnhq3",
+      "TITLE": "Global Cross-Era Pilot v2: Coherence Constraint Violations (X–Y–Z)",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/bnhq3/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-12T02:17:05.693009",
+        "modified": "2026-08-01T06:10:09.091417",
+        "harvested": "2026-08-01T07:57:11.173614+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "STUDY_DESIGN",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "FROZEN_XYZ_CROSS_ERA_CODING",
+      "INSTRUMENT_CLASS": "XYZ_COHERENCE_INSTRUMENT",
+      "STUDY_CLASS": "RETROSPECTIVE_20_WINDOW_PILOT",
+      "RESULT_CLASS": "NO_CASE_LEDGER_OR_RESULTS",
+      "EMPIRICAL_STATUS": "STUDY_DESIGN_ONLY",
+      "FALSIFICATION_STATUS": "EXPLICIT_CASE_CONTROL_OBSERVER_TIMING_FAILURES",
+      "MATHEMATICAL_REVIEW_STATUS": "STATISTICAL_REVIEW_REQUIRED",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "APPLIED_INVESTIGATIONS",
+        "FORWARD_CONSTRUCTION",
+        "REVERSE_AUDIT"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_STUDY_DESIGN",
+      "SOURCE_CONFLICTS": [
+        "Calls itself execution; recovered material is a study design without case ledger or results."
+      ],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "cc145de7b0b1dfa41602b2c7823ada7ff1db6027b2b100e83821511e3a7beae8"
+    },
+    {
+      "OSF_ID": "j4kr2",
+      "TITLE": "Coherence Geometry: The 6-5-4-1-2-3 Compression of Science",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/j4kr2/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-24T04:14:32.880517",
+        "modified": "2026-08-01T06:43:24.908621",
+        "harvested": "2026-08-01T07:56:17.072511+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "FORMALISM_CANDIDATE",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "SCALE_ADMISSIBILITY_BOUNDARIES_COHERENCE_CONSTRAINTS_TRAJECTORIES",
+      "INSTRUMENT_CLASS": "654123_COMPRESSION",
+      "STUDY_CLASS": "FORMAL_REDUCTION_REVIEW",
+      "RESULT_CLASS": "CONDENSATION_CLAIM_NO_DERIVATION",
+      "EMPIRICAL_STATUS": "METADATA_ONLY",
+      "FALSIFICATION_STATUS": "CLAIMED_NOT_ATTACHED",
+      "MATHEMATICAL_REVIEW_STATUS": "REQUIRED",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS",
+        "FINDINGS_AND_BOUNDARIES"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [
+        "Claims frozen axioms and reduction protocol; no files recovered."
+      ],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "4512644cfdfe4a78ee175961c965ae41168a3e0f7f52c1c1913e3471a7b589a3"
+    },
+    {
+      "OSF_ID": "pw8ua",
+      "TITLE": "Universal First-Order Discipline:Structural Symptoms of Incoherence",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/pw8ua/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-25T22:00:55.049938",
+        "modified": "2026-08-01T06:05:51.511813",
+        "harvested": "2026-08-01T07:58:59.098935+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "GOVERNANCE_CONTEXT",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "FIRST_ORDER_ADMISSIBILITY_DISCIPLINE",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NO_EXECUTED_RESULT",
+      "EMPIRICAL_STATUS": "BROAD_CLAIM_NO_OPERATIONAL_TEST",
+      "FALSIFICATION_STATUS": "NOT_SPECIFIED",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "ADMISSION_AND_BASELINE"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "24b658559033fa04cf7d9f6c9e76a8b93d3bbd7700fd6a03714ca6bb0f1d4ee5"
+    },
+    {
+      "OSF_ID": "7fupz",
+      "TITLE": "Coherence as a Field Phenomenon",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/7fupz/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-02-02T18:12:06.788905",
+        "modified": "2026-08-01T06:03:56.539022",
+        "harvested": "2026-08-01T07:56:01.655325+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 1,
+      "ATTACHMENTS_REVIEWED": 1,
+      "FILE_HASHES": {
+        "Attribution_and_Credit_Coherence_as_a_Field_Phenomenon.pdf": "6c34f38e6568de8d93f77fd937e469695d491bb4bde46750b5761a40814f0bcf"
+      },
+      "EXTRACTION_STATUS": [
+        "EXTRACTED"
+      ],
+      "SOURCE_CLASS": "APPLIED_RESEARCH_LEAD",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "FIELD_FLOW_RESISTANCE_THRESHOLD_PHASE",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "DIAMOND_GROWTH_APPLICATION_CANDIDATE",
+      "RESULT_CLASS": "ONLY_ATTRIBUTION_FILE_RECOVERED",
+      "EMPIRICAL_STATUS": "PRIMARY_TECHNICAL_AND_MEASUREMENT_EVIDENCE_MISSING",
+      "FALSIFICATION_STATUS": "NOT_AVAILABLE_IN_PUBLIC_ARTIFACT",
+      "MATHEMATICAL_REVIEW_STATUS": "TECHNICAL_REVIEW_REQUIRED",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "APPLIED_INVESTIGATIONS",
+        "FINDINGS_AND_BOUNDARIES"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [
+        "Only attribution PDF recovered; primary technical record absent."
+      ],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "REVIEWED",
+        "file_version_count": 1
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "2feb3d932625e4d72fc38c9b1843b31cfe66e7f2697e390cc630faefb317f0c9"
+    },
+    {
+      "OSF_ID": "2cg9k",
+      "TITLE": "Diamond Dynamics: Possibility, Trajectory, and Use in Coherent Systems",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/2cg9k/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-15T03:55:51.151413",
+        "modified": "2026-08-01T06:06:16.012671",
+        "harvested": "2026-08-01T07:56:32.483670+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "APPLIED_RESEARCH_CONTEXT",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "POST_ADMISSIBILITY_TRAJECTORY_EXPLORATION",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "EXPLORATORY",
+      "RESULT_CLASS": "NO_PUBLIC_RESULTS",
+      "EMPIRICAL_STATUS": "EXPLORATORY_CONTEXT",
+      "FALSIFICATION_STATUS": "NOT_FOUND",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "APPLIED_INVESTIGATIONS"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_CONTEXT",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "7cafc9f1ab0d647b177a4656ffdfc5dfdce4246fe1c7f471544889d5583fd780"
+    },
+    {
+      "OSF_ID": "h9k5z",
+      "TITLE": "Translating Coherence Across Domains",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/h9k5z/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-15T03:59:24.281943",
+        "modified": "2026-08-01T06:06:07.127101",
+        "harvested": "2026-08-01T07:58:43.709075+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "TRANSLATION_POLICY",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "CROSS_DOMAIN_ANTI_CONTAMINATION_BOUNDARY",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NO_RESULT",
+      "EMPIRICAL_STATUS": "COMMUNICATION_AND_APPLICATION_SURFACE",
+      "FALSIFICATION_STATUS": "NOT_APPLICABLE",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "FINDINGS_AND_BOUNDARIES",
+        "APPLIED_INVESTIGATIONS"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_CONTEXT",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "3997ceafce35889b12c6c77957f1e7b1140435c52986fc88ecaa256fedbf170a"
+    },
+    {
+      "OSF_ID": "ju7qr",
+      "TITLE": "The Octave of Change Subtitle: An Eight-Phase Transitory Dynamics Map",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/ju7qr/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-02-05T03:01:13.137376",
+        "modified": "2026-08-01T06:04:23.952254",
+        "harvested": "2026-08-01T07:58:12.836964+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "DESCRIPTIVE_TAXONOMY",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "EIGHT_PHASE_TRANSITORY_MAP",
+      "INSTRUMENT_CLASS": "OCTAVE_OF_CHANGE",
+      "STUDY_CLASS": "RELIABILITY_STUDY_REQUIRED",
+      "RESULT_CLASS": "NO_DERIVATION_OR_RESULT",
+      "EMPIRICAL_STATUS": "TAXONOMY_ONLY",
+      "FALSIFICATION_STATUS": "NOT_SPECIFIED",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "9613ba636f88ba8e9feed40fc7bb9443038db6c02dfea3dadf16b1ffdae7380b"
+    },
+    {
+      "OSF_ID": "ar4cd",
+      "TITLE": "Social Order and Disorder as Coherence Phenomena",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/ar4cd/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-11T23:24:26.933429",
+        "modified": "2026-08-01T06:08:24.813390",
+        "harvested": "2026-08-01T07:57:41.965979+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "APPLIED_CONTEXT",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "NORM_ENFORCEMENT_OUTCOME_COHERENCE",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NO_CASES_OR_DATA",
+      "EMPIRICAL_STATUS": "CONCEPTUAL_DESCRIPTION_ONLY",
+      "FALSIFICATION_STATUS": "NOT_SPECIFIED",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "APPLIED_INVESTIGATIONS"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_CONTEXT",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "b039fb09aab55fd08fcb1ca5e5b8c40a63d4942f9ec9fb4dd9b67c622d813f86"
+    },
+    {
+      "OSF_ID": "2fh4g",
+      "TITLE": "The Scientific Method as a Constraint System",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/2fh4g/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-10T06:36:12.237022",
+        "modified": "2026-08-01T06:06:55.461047",
+        "harvested": "2026-08-01T07:58:28.292527+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "METHODOLOGICAL_INTERPRETATION",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "SCIENTIFIC_METHOD_AS_CONSTRAINT_ELIMINATION",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NO_RESULT",
+      "EMPIRICAL_STATUS": "METHOD_INTERPRETATION",
+      "FALSIFICATION_STATUS": "GENERAL_REPEATED_TESTING_BOUNDARY",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_METHOD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "289ee088e5bb52b89668aff695d11bcfcb97267b2d9064350e17adf718a2ef23"
+    },
+    {
+      "OSF_ID": "ck5m2",
+      "TITLE": "The Seven Invariants: A Placement Guide for Coherent Systems",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/ck5m2/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-30T20:49:41.446045",
+        "modified": "2026-08-01T06:03:29.938927",
+        "harvested": "2026-08-01T07:58:36.016016+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "SOURCE_CONFLICT",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "INVARIANT_VERSUS_VARIANT_PLACEMENT",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NO_ENUMERATED_SOURCE",
+      "EMPIRICAL_STATUS": "TITLE_DESCRIPTION_MISMATCH",
+      "FALSIFICATION_STATUS": "NOT_APPLICABLE",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "FINDINGS_AND_BOUNDARIES"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [
+        "Title says Seven Invariants; description says Seven Variants and enumerates neither."
+      ],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "ce94e275cd649cdeb065bb020454dcdb35a35e48b5a953e6547c786a0c717493"
+    },
+    {
+      "OSF_ID": "54es8",
+      "TITLE": "Fork of Metaphysics framework closed",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/54es8/",
+      "VERSION": "v1.0.0",
+      "DATE": {
+        "created": "2026-01-03T20:15:02.409612",
+        "modified": "2026-08-01T06:09:32.937024",
+        "harvested": "2026-08-01T07:56:55.746124+00:00"
+      },
+      "WIKI_STATUS": "ABSENT",
+      "WIKI_HISTORY_STATUS": "ABSENT",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "PHILOSOPHICAL_CONTEXT_WITH_UNSUPPORTED_VALIDATION_CLAIMS",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "MODEL_ADMISSIBILITY_BOUNDARY",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "CLAIMED_STRESS_AND_EMPIRICAL_TESTS",
+      "RESULT_CLASS": "CLAIMED_REPORTS_NOT_PRESENT",
+      "EMPIRICAL_STATUS": "VALIDATION_CLAIMS_UNSUPPORTED_BY_FILE_INVENTORY",
+      "FALSIFICATION_STATUS": "CLAIMED_NOT_INSPECTABLE",
+      "MATHEMATICAL_REVIEW_STATUS": "TECHNICAL_REVIEW_REQUIRED",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "FINDINGS_AND_BOUNDARIES"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [
+        "Claims validation reports and frozen artifacts; public file inventory is empty."
+      ],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "ABSENT",
+        "wiki_history_status": "ABSENT",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "347f5be4de92e978abebac75f647f5f4729ad67c9b4969e1462b220811b3f3e2"
+    },
+    {
+      "OSF_ID": "5vgfd",
+      "TITLE": "8️⃣ Energy Distribution Under Closed-Loop Abundance",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/5vgfd/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-02-09T16:35:39.128092",
+        "modified": "2026-08-01T06:04:55.992108",
+        "harvested": "2026-08-01T07:55:10.733497+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "APPLIED_CONTEXT",
+      "LAW_CLASS": "ENERGY_DISTRIBUTION_PRINCIPLE_CANDIDATE",
+      "METHOD_CLASS": "UPSTREAM_GENERATION_STORAGE_DISPATCH_DOWNSTREAM_ENDPOINTS",
+      "INSTRUMENT_CLASS": "A3D_E_PCR_SEPARATE_LANE",
+      "STUDY_CLASS": "SEPARATE_ENGINEERING_EVIDENCE_LANE",
+      "RESULT_CLASS": "NO_OSF_ENGINEERING_RESULT",
+      "EMPIRICAL_STATUS": "ARCHITECTURAL_PRINCIPLE_ONLY",
+      "FALSIFICATION_STATUS": "NOT_PRESENT_IN_NODE",
+      "MATHEMATICAL_REVIEW_STATUS": "ENGINEERING_REVIEW_SEPARATE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "APPLIED_INVESTIGATIONS"
+      ],
+      "ADMISSION_STATUS": "ADMITTED_AS_CONTEXT",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "84bf5939903f41150249ffb822446d8dfdb1dc085b24796cb53ac103df134a05"
+    },
+    {
+      "OSF_ID": "s6dzj",
+      "TITLE": "The Metaverse Didn’t Stop — It Changed Layers",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/s6dzj/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-03-22T03:47:12.641944",
+        "modified": "2026-05-04T02:39:31.391701",
+        "harvested": "2026-08-01T07:58:05.126908+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "PROJECT_HISTORY",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "NONE",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NONE",
+      "EMPIRICAL_STATUS": "NO_DIRECT_LAWS_SUPPORT",
+      "FALSIFICATION_STATUS": "NOT_APPLICABLE",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "EXCLUDED_FROM_LAWS_CHAMBER"
+      ],
+      "ADMISSION_STATUS": "EXCLUDED",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "c07e46d99c7ef59cf2c4c4674a776e6e813a21f6559baa7a1201ca7c3294c57f"
+    },
+    {
+      "OSF_ID": "qeabr",
+      "TITLE": "Universal Archetype: Monoclosure Execution Engine (UA-MEE)",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/qeabr/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-01-26T08:53:32.639874",
+        "modified": "2026-08-01T06:02:44.434748",
+        "harvested": "2026-08-01T07:58:51.371830+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "GOVERNANCE_INSTRUMENT_CONCEPT",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "MONOCLOSURE_PROCEED_HALT_GATE",
+      "INSTRUMENT_CLASS": "UA_MEE",
+      "STUDY_CLASS": "CALIBRATION_AND_IMPLEMENTATION_REQUIRED",
+      "RESULT_CLASS": "NO_EQUATIONS_IMPLEMENTATION_OR_TESTS",
+      "EMPIRICAL_STATUS": "CONCEPTUAL_ONLY",
+      "FALSIFICATION_STATUS": "BINARY_GATE_NOT_CALIBRATED",
+      "MATHEMATICAL_REVIEW_STATUS": "REQUIRED",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "METHODS_AND_MODELS",
+        "ADMISSION_AND_BASELINE"
+      ],
+      "ADMISSION_STATUS": "HELD",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "ae5631a49f3ea9eb5270fb11ff4376fa406da2ff89f8a53741108f74ee6d4f35"
+    },
+    {
+      "OSF_ID": "sfjn6",
+      "TITLE": "Broke the Four-Minute Mile in Tech",
+      "RESOURCE_TYPE": "nodes",
+      "PROJECT_OR_REGISTRATION": "PROJECT",
+      "PUBLIC_URL": "https://osf.io/sfjn6/",
+      "VERSION": "UNVERSIONED_EDITABLE_PROJECT",
+      "DATE": {
+        "created": "2026-05-04T02:42:33.270607",
+        "modified": "2026-05-04T02:46:18.246516",
+        "harvested": "2026-08-01T07:55:45.682789+00:00"
+      },
+      "WIKI_STATUS": "REVIEWED",
+      "WIKI_HISTORY_STATUS": "PENDING",
+      "FILES_INVENTORIED": 0,
+      "ATTACHMENTS_REVIEWED": 0,
+      "FILE_HASHES": {},
+      "EXTRACTION_STATUS": [
+        "NO_PUBLIC_FILES"
+      ],
+      "SOURCE_CLASS": "PROMOTIONAL_NARRATIVE",
+      "LAW_CLASS": "NONE",
+      "METHOD_CLASS": "NONE",
+      "INSTRUMENT_CLASS": "NONE",
+      "STUDY_CLASS": "NONE",
+      "RESULT_CLASS": "NO_EVIDENCE_PACKAGE",
+      "EMPIRICAL_STATUS": "PROMOTIONAL_POSITIONING",
+      "FALSIFICATION_STATUS": "NOT_APPLICABLE",
+      "MATHEMATICAL_REVIEW_STATUS": "NOT_APPLICABLE",
+      "CLAIM_BOUNDARY": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+      "CANONICAL_DESTINATION": [
+        "EXCLUDED_FROM_LAWS_CHAMBER"
+      ],
+      "ADMISSION_STATUS": "EXCLUDED",
+      "SOURCE_CONFLICTS": [],
+      "REVIEW_SURFACES": {
+        "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
+        "wiki_status": "REVIEWED",
+        "wiki_history_status": "PENDING",
+        "components_status": "REVIEWED",
+        "components_count": 0,
+        "registrations_status": "REVIEWED",
+        "registrations_count": 0,
+        "file_versions_status": "NOT_APPLICABLE",
+        "file_version_count": 0
+      },
+      "DATASETS_DETECTED": false,
+      "ANALYTIC_CODE_DETECTED": false,
+      "RESULT_TABLES_DETECTED": false,
+      "METADATA_SHA256": "f97655a0913e25f3042fb723adac799b9805cd182bcd69e34c612d00f2cbaabf"
+    }
+  ]
+}

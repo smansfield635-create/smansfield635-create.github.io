@@ -4,23 +4,40 @@ import {
 import { getHEarthCanonicalShorelineZ } from '../../../../../terrain/h-earth.terrain-field.js';
 
 export const H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT = Object.freeze({
-  contractId: 'H_EARTH_C2_R1_R1_8_DETERMINISTIC_REVIEW_MESH_v1',
+  contractId: 'H_EARTH_C2_R1_R1_8_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH_v1',
   sourceHead: 'c53362c6f74b01c4e0b53be526b0e3a0b73edede',
-  option: 'OPTION_A_DETERMINISTIC_INCREMENTAL_CONSTRUCTION',
+  option: 'OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH',
+  assetFile: 'h-earth.c2-r1.r1-8-review-mesh.bin',
+  assetFormat: 'H_EARTH_C2_R1_R1_8_REVIEW_MESH_BINARY_LE_v1',
+  headerByteLength: 128,
   alongCount: 49,
   crossCount: 73,
   alongMin: -180,
   alongMax: 180,
   inlandMin: -115,
   inlandMax: 135,
-  fixedSampleOrder: true,
-  fixedBatchSize: 24,
-  fixedBatchBoundaries: true,
   completeSampleCount: 3577,
+  terrainVertexCount: 3577,
+  terrainIndexCount: 20736,
+  waterRowCount: 37,
+  waterVertexCount: 1813,
+  waterIndexCount: 10368,
+  fixedSampleOrder: true,
+  fixedBatchBoundaries: [
+    'TERRAIN_POSITIONS',
+    'TERRAIN_NORMALS',
+    'TERRAIN_MATERIAL_CONTROLS',
+    'TERRAIN_INDICES',
+    'WATER_POSITIONS',
+    'WATER_NORMALS',
+    'WATER_MATERIAL_CONTROLS',
+    'WATER_INDICES'
+  ],
   finalOutputIndependentOfScheduling: true,
   canonicalEncoding: 'LITTLE_ENDIAN_FLOAT32_AND_UINT32_TYPED_ARRAY_BYTES'
 });
 
+const MAGIC = new TextEncoder().encode('HERC2R1R18MESH1!');
 const finite = Number.isFinite;
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 const mix = (a, b, t) => a + (b - a) * t;
@@ -39,22 +56,15 @@ const normalize3 = value => {
 };
 const yieldToMainThread = () => new Promise(resolve => setTimeout(resolve, 0));
 
-function shorelineFrame(anchorX) {
+export function getHEarthC2R1ReviewWorldAt(anchorX, signedInlandDistance) {
   const step = 0.5;
   const z0 = getHEarthCanonicalShorelineZ(anchorX - step);
   const z1 = getHEarthCanonicalShorelineZ(anchorX + step);
   const tangent = normalize3(vec3(2 * step, 0, z1 - z0));
   let waterward = normalize3(vec3(-tangent[2], 0, tangent[0]));
   if (waterward[2] < 0) waterward = scale3(waterward, -1);
-  return {
-    shoreline: vec3(anchorX, 0, getHEarthCanonicalShorelineZ(anchorX)),
-    inlandNormal: scale3(waterward, -1)
-  };
-}
-
-function worldAt(anchorX, signedInlandDistance) {
-  const frame = shorelineFrame(anchorX);
-  return add3(frame.shoreline, scale3(frame.inlandNormal, signedInlandDistance));
+  const shoreline = vec3(anchorX, 0, getHEarthCanonicalShorelineZ(anchorX));
+  return add3(shoreline, scale3(waterward, -signedInlandDistance));
 }
 
 function terrainNormal(records, row, column) {
@@ -93,11 +103,15 @@ function makeCanonicalArrays(records, { water = false } = {}) {
         const preserved = sample.preservedCandidateResponses;
         const waterColor = preserved.waterSurfaceColorLinear;
         const foam = clamp(preserved.foamIntensity * preserved.foamOpacity, 0, 1);
-        color = waterColor.map((channel, index) => clamp(mix(channel, preserved.foamColorLinear[index], foam), 0, 1));
+        color = waterColor.map((channel, index) =>
+          clamp(mix(channel, preserved.foamColorLinear[index], foam), 0, 1)
+        );
         alpha = clamp(preserved.waterSurfaceOpacity + foam * 0.18, 0.24, 0.88);
       } else {
         const ao = sample.material.cavityOrAmbientOcclusion;
-        color = sample.material.colorLinear.map(channel => clamp(channel * (0.76 + 0.24 * ao), 0, 1));
+        color = sample.material.colorLinear.map(channel =>
+          clamp(channel * (0.76 + 0.24 * ao), 0, 1)
+        );
       }
       positions.set(position, offset * 3);
       normals.set(normal, offset * 3);
@@ -120,100 +134,227 @@ function makeCanonicalArrays(records, { water = false } = {}) {
   return { positions, normals, materialControls, indices, vertexCount, indexCount: indices.length };
 }
 
-function finalize(records, counters) {
+export function buildHEarthC2R1ReviewMeshSynchronously() {
+  const contract = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT;
+  const records = new Array(contract.completeSampleCount);
+  let candidateMaterialSampleCount = 0;
+  let macroDifferentialCount = 0;
+  for (let sampleIndex = 0; sampleIndex < contract.completeSampleCount; sampleIndex += 1) {
+    const row = Math.floor(sampleIndex / contract.alongCount);
+    const column = sampleIndex % contract.alongCount;
+    const inland = mix(contract.inlandMin, contract.inlandMax, row / (contract.crossCount - 1));
+    const anchor = mix(contract.alongMin, contract.alongMax, column / (contract.alongCount - 1));
+    const world = getHEarthC2R1ReviewWorldAt(anchor, inland);
+    const sample = sampleHEarthC2R1CandidateRendererMaterial(world[0], world[2], { timeSeconds: 0 });
+    if (sample?.valid !== true || !finite(sample.world?.x) || !finite(sample.world?.y) || !finite(sample.world?.z)) {
+      throw new Error(`R1_8_CANDIDATE_SAMPLE_FAILED:${anchor}:${inland}`);
+    }
+    candidateMaterialSampleCount += 1;
+    const base = sample.baseMaterialBeforeMacro.colorLinear;
+    const applied = sample.material.colorLinear;
+    if (applied.some((value, index) => Math.abs(value - base[index]) > 1e-12)) {
+      macroDifferentialCount += 1;
+    }
+    records[sampleIndex] = {
+      anchor,
+      inland,
+      world: vec3(sample.world.x, sample.world.y, sample.world.z),
+      sample
+    };
+  }
   const terrain = makeCanonicalArrays(records);
   const water = makeCanonicalArrays(records, { water: true });
   return {
-    contract: H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT,
-    records,
+    contract,
     terrain,
     water,
     completeSampleCount: records.length,
-    candidateMaterialSampleCount: counters.candidateMaterialSampleCount,
-    macroDifferentialCount: counters.macroDifferentialCount,
-    canonical: {
-      completeSampleCount: records.length,
-      vertexCount: terrain.vertexCount + water.vertexCount,
-      indexCount: terrain.indexCount + water.indexCount,
-      positionBufferByteLength: terrain.positions.byteLength + water.positions.byteLength,
-      normalBufferByteLength: terrain.normals.byteLength + water.normals.byteLength,
-      materialControlBufferByteLength: terrain.materialControls.byteLength + water.materialControls.byteLength,
-      indexBufferByteLength: terrain.indices.byteLength + water.indices.byteLength
+    candidateMaterialSampleCount,
+    macroDifferentialCount
+  };
+}
+
+function arraySections(mesh) {
+  return [
+    ['TERRAIN_POSITIONS', mesh.terrain.positions, Float32Array],
+    ['TERRAIN_NORMALS', mesh.terrain.normals, Float32Array],
+    ['TERRAIN_MATERIAL_CONTROLS', mesh.terrain.materialControls, Float32Array],
+    ['TERRAIN_INDICES', mesh.terrain.indices, Uint32Array],
+    ['WATER_POSITIONS', mesh.water.positions, Float32Array],
+    ['WATER_NORMALS', mesh.water.normals, Float32Array],
+    ['WATER_MATERIAL_CONTROLS', mesh.water.materialControls, Float32Array],
+    ['WATER_INDICES', mesh.water.indices, Uint32Array]
+  ];
+}
+
+function writeHeader(view, mesh, totalByteLength) {
+  const contract = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT;
+  new Uint8Array(view.buffer, 0, 16).set(MAGIC);
+  view.setUint32(16, 1, true);
+  view.setUint32(20, contract.headerByteLength, true);
+  view.setUint32(24, totalByteLength, true);
+  view.setUint32(28, mesh.completeSampleCount, true);
+  view.setUint32(32, mesh.terrain.vertexCount, true);
+  view.setUint32(36, mesh.terrain.indexCount, true);
+  view.setUint32(40, mesh.water.vertexCount, true);
+  view.setUint32(44, mesh.water.indexCount, true);
+  let offset = 48;
+  for (const [, array] of arraySections(mesh)) {
+    view.setUint32(offset, array.length, true);
+    offset += 4;
+  }
+}
+
+function readHeader(buffer) {
+  const contract = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT;
+  const bytes = new Uint8Array(buffer, 0, 16);
+  if (bytes.some((value, index) => value !== MAGIC[index])) throw new Error('R1_8_REVIEW_MESH_MAGIC_MISMATCH');
+  const view = new DataView(buffer);
+  const version = view.getUint32(16, true);
+  const headerByteLength = view.getUint32(20, true);
+  const totalByteLength = view.getUint32(24, true);
+  if (version !== 1 || headerByteLength !== contract.headerByteLength || totalByteLength !== buffer.byteLength) {
+    throw new Error('R1_8_REVIEW_MESH_HEADER_MISMATCH');
+  }
+  const header = {
+    version,
+    headerByteLength,
+    totalByteLength,
+    completeSampleCount: view.getUint32(28, true),
+    terrainVertexCount: view.getUint32(32, true),
+    terrainIndexCount: view.getUint32(36, true),
+    waterVertexCount: view.getUint32(40, true),
+    waterIndexCount: view.getUint32(44, true),
+    sectionLengths: []
+  };
+  for (let offset = 48; offset < 80; offset += 4) header.sectionLengths.push(view.getUint32(offset, true));
+  if (
+    header.completeSampleCount !== contract.completeSampleCount ||
+    header.terrainVertexCount !== contract.terrainVertexCount ||
+    header.terrainIndexCount !== contract.terrainIndexCount ||
+    header.waterVertexCount !== contract.waterVertexCount ||
+    header.waterIndexCount !== contract.waterIndexCount
+  ) throw new Error('R1_8_REVIEW_MESH_COUNT_IDENTITY_MISMATCH');
+  return header;
+}
+
+export function serializeHEarthC2R1ReviewMesh(mesh) {
+  const contract = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT;
+  const sections = arraySections(mesh);
+  const dataByteLength = sections.reduce((sum, [, array]) => sum + array.byteLength, 0);
+  const buffer = new ArrayBuffer(contract.headerByteLength + dataByteLength);
+  const view = new DataView(buffer);
+  writeHeader(view, mesh, buffer.byteLength);
+  let byteOffset = contract.headerByteLength;
+  for (const [, array] of sections) {
+    new Uint8Array(buffer, byteOffset, array.byteLength).set(
+      new Uint8Array(array.buffer, array.byteOffset, array.byteLength)
+    );
+    byteOffset += array.byteLength;
+  }
+  return new Uint8Array(buffer);
+}
+
+function decodeSections(buffer, header, copier) {
+  const constructors = [
+    Float32Array, Float32Array, Float32Array, Uint32Array,
+    Float32Array, Float32Array, Float32Array, Uint32Array
+  ];
+  const names = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT.fixedBatchBoundaries;
+  let byteOffset = header.headerByteLength;
+  return names.map((name, index) => {
+    const Constructor = constructors[index];
+    const length = header.sectionLengths[index];
+    const byteLength = length * Constructor.BYTES_PER_ELEMENT;
+    const source = new Constructor(buffer, byteOffset, length);
+    const value = copier(source, name, index);
+    byteOffset += byteLength;
+    return [name, value];
+  });
+}
+
+function assembleParsedMesh(header, entries) {
+  const map = Object.fromEntries(entries);
+  return {
+    contract: H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT,
+    completeSampleCount: header.completeSampleCount,
+    candidateMaterialSampleCount: header.completeSampleCount,
+    terrain: {
+      positions: map.TERRAIN_POSITIONS,
+      normals: map.TERRAIN_NORMALS,
+      materialControls: map.TERRAIN_MATERIAL_CONTROLS,
+      indices: map.TERRAIN_INDICES,
+      vertexCount: header.terrainVertexCount,
+      indexCount: header.terrainIndexCount
+    },
+    water: {
+      positions: map.WATER_POSITIONS,
+      normals: map.WATER_NORMALS,
+      materialControls: map.WATER_MATERIAL_CONTROLS,
+      indices: map.WATER_INDICES,
+      vertexCount: header.waterVertexCount,
+      indexCount: header.waterIndexCount
     }
   };
 }
 
-function sampleOne(sampleIndex, records, counters) {
-  const {
-    alongCount,
-    crossCount,
-    alongMin,
-    alongMax,
-    inlandMin,
-    inlandMax
-  } = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT;
-  const row = Math.floor(sampleIndex / alongCount);
-  const column = sampleIndex % alongCount;
-  const inland = mix(inlandMin, inlandMax, row / (crossCount - 1));
-  const anchor = mix(alongMin, alongMax, column / (alongCount - 1));
-  const world = worldAt(anchor, inland);
-  const sample = sampleHEarthC2R1CandidateRendererMaterial(world[0], world[2], { timeSeconds: 0 });
-  if (sample?.valid !== true || !finite(sample.world?.x) || !finite(sample.world?.y) || !finite(sample.world?.z)) {
-    throw new Error(`R1_8_CANDIDATE_SAMPLE_FAILED:${anchor}:${inland}`);
-  }
-  counters.candidateMaterialSampleCount += 1;
-  const base = sample.baseMaterialBeforeMacro.colorLinear;
-  const applied = sample.material.colorLinear;
-  if (applied.some((value, index) => Math.abs(value - base[index]) > 1e-12)) counters.macroDifferentialCount += 1;
-  records[sampleIndex] = {
-    anchor,
-    inland,
-    world: vec3(sample.world.x, sample.world.y, sample.world.z),
-    sample
-  };
+export function parseHEarthC2R1ReviewMeshSynchronously(bufferLike) {
+  const buffer = bufferLike instanceof ArrayBuffer
+    ? bufferLike
+    : bufferLike.buffer.slice(bufferLike.byteOffset, bufferLike.byteOffset + bufferLike.byteLength);
+  const header = readHeader(buffer);
+  const entries = decodeSections(buffer, header, source => source.slice());
+  return assembleParsedMesh(header, entries);
 }
 
-export function buildHEarthC2R1ReviewMeshSynchronously() {
-  const { completeSampleCount } = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT;
-  const records = new Array(completeSampleCount);
-  const counters = { candidateMaterialSampleCount: 0, macroDifferentialCount: 0 };
-  for (let sampleIndex = 0; sampleIndex < completeSampleCount; sampleIndex += 1) {
-    sampleOne(sampleIndex, records, counters);
-  }
-  return finalize(records, counters);
-}
-
-export async function buildHEarthC2R1ReviewMeshIncrementally({
-  batchSize = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT.fixedBatchSize,
-  onBatch = null
-} = {}) {
-  const { completeSampleCount } = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT;
-  if (batchSize !== H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT.fixedBatchSize) {
-    throw new Error('R1_8_REVIEW_MESH_BATCH_SIZE_NOT_CANONICAL');
-  }
-  const records = new Array(completeSampleCount);
-  const counters = { candidateMaterialSampleCount: 0, macroDifferentialCount: 0 };
-  let batchIndex = 0;
-  for (let start = 0; start < completeSampleCount; start += batchSize) {
-    const end = Math.min(completeSampleCount, start + batchSize);
+export async function parseHEarthC2R1ReviewMeshIncrementally(bufferLike, { onBatch = null } = {}) {
+  const buffer = bufferLike instanceof ArrayBuffer
+    ? bufferLike
+    : bufferLike.buffer.slice(bufferLike.byteOffset, bufferLike.byteOffset + bufferLike.byteLength);
+  const header = readHeader(buffer);
+  const entries = [];
+  const constructors = [
+    Float32Array, Float32Array, Float32Array, Uint32Array,
+    Float32Array, Float32Array, Float32Array, Uint32Array
+  ];
+  const names = H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT.fixedBatchBoundaries;
+  let byteOffset = header.headerByteLength;
+  for (let index = 0; index < names.length; index += 1) {
     const startedAt = performance.now();
-    for (let sampleIndex = start; sampleIndex < end; sampleIndex += 1) {
-      sampleOne(sampleIndex, records, counters);
-    }
+    const Constructor = constructors[index];
+    const length = header.sectionLengths[index];
+    const byteLength = length * Constructor.BYTES_PER_ELEMENT;
+    const value = new Constructor(buffer, byteOffset, length).slice();
+    byteOffset += byteLength;
+    entries.push([names[index], value]);
     onBatch?.({
-      batchIndex,
-      start,
-      end,
-      completedSampleCount: end,
+      batchIndex: index,
+      name: names[index],
+      byteLength,
       durationMilliseconds: performance.now() - startedAt
     });
-    batchIndex += 1;
-    if (end < completeSampleCount) await yieldToMainThread();
+    if (index < names.length - 1) await yieldToMainThread();
   }
-  return finalize(records, counters);
+  return assembleParsedMesh(header, entries);
 }
 
-export async function sha256TypedArray(view) {
+function concatenate(a, b, Constructor) {
+  const output = new Constructor(a.length + b.length);
+  output.set(a, 0);
+  output.set(b, a.length);
+  return output;
+}
+
+export function canonicalHEarthC2R1ReviewMeshArrays(mesh) {
+  return {
+    positions: concatenate(mesh.terrain.positions, mesh.water.positions, Float32Array),
+    normals: concatenate(mesh.terrain.normals, mesh.water.normals, Float32Array),
+    materialControls: concatenate(mesh.terrain.materialControls, mesh.water.materialControls, Float32Array),
+    indices: concatenate(mesh.terrain.indices, mesh.water.indices, Uint32Array)
+  };
+}
+
+async function sha256TypedArray(view) {
   if (!globalThis.crypto?.subtle) throw new Error('R1_8_SUBTLE_CRYPTO_UNAVAILABLE');
   const bytes = new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
   const digest = await globalThis.crypto.subtle.digest('SHA-256', bytes);
@@ -221,21 +362,18 @@ export async function sha256TypedArray(view) {
 }
 
 export async function digestHEarthC2R1ReviewMesh(mesh) {
-  const concatenate = (a, b, Constructor) => {
-    const output = new Constructor(a.length + b.length);
-    output.set(a, 0);
-    output.set(b, a.length);
-    return output;
-  };
-  const positions = concatenate(mesh.terrain.positions, mesh.water.positions, Float32Array);
-  const normals = concatenate(mesh.terrain.normals, mesh.water.normals, Float32Array);
-  const materialControls = concatenate(mesh.terrain.materialControls, mesh.water.materialControls, Float32Array);
-  const indices = concatenate(mesh.terrain.indices, mesh.water.indices, Uint32Array);
+  const arrays = canonicalHEarthC2R1ReviewMeshArrays(mesh);
   return {
-    ...mesh.canonical,
-    finalPositionDataSha256: await sha256TypedArray(positions),
-    finalNormalDataSha256: await sha256TypedArray(normals),
-    finalMaterialControlDataSha256: await sha256TypedArray(materialControls),
-    finalIndexDataSha256: await sha256TypedArray(indices)
+    completeSampleCount: mesh.completeSampleCount,
+    vertexCount: mesh.terrain.vertexCount + mesh.water.vertexCount,
+    indexCount: mesh.terrain.indexCount + mesh.water.indexCount,
+    positionBufferByteLength: arrays.positions.byteLength,
+    normalBufferByteLength: arrays.normals.byteLength,
+    materialControlBufferByteLength: arrays.materialControls.byteLength,
+    indexBufferByteLength: arrays.indices.byteLength,
+    finalPositionDataSha256: await sha256TypedArray(arrays.positions),
+    finalNormalDataSha256: await sha256TypedArray(arrays.normals),
+    finalMaterialControlDataSha256: await sha256TypedArray(arrays.materialControls),
+    finalIndexDataSha256: await sha256TypedArray(arrays.indices)
   };
 }

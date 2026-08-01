@@ -1,20 +1,10 @@
 name: H-Earth C2-R1 R1.7B Baked Macro Control Field
 
 on:
-  pull_request:
-    branches:
-      - integration/h-earth-c2-r1-baseline-001
-    paths:
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tools/h-earth.c2-r1.r1-7b-bake-macro-control-field.mjs'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7b-baked-macro-control-field.mjs'
-      - '.github/workflows/h-earth-c2-r1-r1-7b-baked-macro-control-field.yml'
   workflow_dispatch:
 
 concurrency:
-  group: h-earth-c2-r1-r1-7b-${{ github.event.pull_request.number || github.ref }}
+  group: h-earth-c2-r1-r1-7b-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -22,13 +12,12 @@ permissions:
 
 jobs:
   verify-r1-7b:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -37,7 +26,7 @@ jobs:
 
       - name: Verify deterministic bounded baked macro control field
         env:
-          C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          C2_R1_HEAD: ${{ github.sha }}
         run: |
           node h-earth-3d/control-plane/coastal-morphology/c2-r1/tools/h-earth.c2-r1.r1-7b-bake-macro-control-field.mjs --check
           node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7b-baked-macro-control-field.mjs

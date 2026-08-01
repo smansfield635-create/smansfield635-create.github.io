@@ -20,7 +20,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
-      - name: Finalize Role 1 receipt and restore verification workflow
+      - name: Finalize Role 1 receipt records
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -29,7 +29,16 @@ jobs:
           set -euo pipefail
           LEDGER='h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json'
           ROLE3='h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json'
-          WORKFLOW='.github/workflows/h-earth-c2-r1-complete-world-integration.yml'
+          if python3 - "$LEDGER" <<'PY'
+          import json,sys
+          try: done=json.load(open(sys.argv[1])).get('status')=='ROLE_1_DONE_READY_FOR_INDEPENDENT_ROLE_3_VERIFICATION'
+          except Exception: done=False
+          raise SystemExit(0 if done else 1)
+          PY
+          then
+            echo 'Final Role 1 handoff records already installed.'
+            exit 0
+          fi
           mkdir -p "$RUNNER_TEMP/finalize/cache" "$RUNNER_TEMP/finalize/browser"
 
           curl --fail --location --silent --show-error \
@@ -57,101 +66,24 @@ jobs:
           import base64,gzip,json,sys
           from pathlib import Path
           cache_path,summary_path,ledger_path,role3_path=map(Path,sys.argv[1:])
-          raw=cache_path.read_bytes()
-          cache=json.loads(raw)
-          summary=json.loads(summary_path.read_text())
+          raw=cache_path.read_bytes(); cache=json.loads(raw); summary=json.loads(summary_path.read_text())
           assert summary['expectedHead']=='18c2eb77f399b91c308c880ab59fbe7f80c8b991'
           scenarios={row['name']:row for row in summary['scenarios']}
           assert set(scenarios)=={'desktop-1440x900','mobile-412x915','mobile-390x844'}
           assert all(row['startupMilliseconds']<=120000 for row in scenarios.values())
           assert all(row['constructionMilliseconds']<=105000 for row in scenarios.values())
           encoded=base64.b64encode(gzip.compress(raw,compresslevel=9,mtime=0)).decode()
-          midpoint=(len(encoded)//2//4)*4
-          part1,part2=encoded[:midpoint],encoded[midpoint:]
+          midpoint=(len(encoded)//2//4)*4; part1,part2=encoded[:midpoint],encoded[midpoint:]
           common={
-            'objectId':'H_EARTH:C2_R1:COASTAL_SUCCESSOR',
-            'executionHistoryId':'H_EARTH:C2_R1:PR_418:HISTORY_001',
-            'activeEdgeId':'H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE',
-            'branch':'agent/h-earth-c2-r1-physically-coherent-coastal-successor-001',
-            'operationStartingHead':'e03f211a472fd564b1ed4b8a00096c923a077528',
-            'startupPerformanceStartingHead':'f171852f3b453a1535fc29ed2798430814351084',
-            'acceptedBaselineHead':'4bc08c26548c36ab9fd96bdaead7434ca08cf8ac',
-            'acceptedCoastalComponentSourceHead':'c53362c6f74b01c4e0b53be526b0e3a0b73edede',
-            'rollbackBranch':'rollback/h-earth-c2-r1-startup-performance-start-001',
-            'rollbackHead':'f171852f3b453a1535fc29ed2798430814351084',
-            'externalizedHeadBinding':'EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_RESTORED_VERIFICATION_WORKFLOW',
-            'role1PassingValidationHead':'18c2eb77f399b91c308c880ab59fbe7f80c8b991',
-            'role1PassingWorkflowRun':30714717118,
-            'staticArtifactId':8823011291,
-            'staticArtifactDigest':'sha256:a9b860aad0fd07a62f93cf697efb5516a70d0d6a5ba971c764f23e872a3de8a0',
-            'browserArtifactId':8823029257,
-            'browserArtifactDigest':'sha256:951def4aae2647f210357c5f4208bf0d9fc13be6f354a93fb663cc259b63c159',
-            'cacheArtifactId':8822791254,
-            'cacheArtifactZipDigest':'sha256:ac78a365c21748ac946d96ee53f29241ca6cdd1c87cf7b430f5ade88675707a7',
-            'cacheJsonDigest':'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1',
-            'cacheSourceHead':'5fed66e1747391ab15c6dd55c86de0215a2c39db',
-            'completeWorldPackageIdentity':cache['completeWorldPackageIdentity'],
-            'completeWorldPackageContentDigest':cache['completeWorldPackageContentDigest'],
-            'candidateSampleFailureCount':cache['counters']['candidateSampleFailureCount'],
-            'boundTerrainVertexCount':cache['counters']['boundTerrainVertexCount'],
-            'boundShorelineVertexCount':cache['counters']['boundShorelineVertexCount'],
-            'adapterBoundaryExcludedVertexCount':cache['counters']['adapterBoundaryExcludedVertexCount'],
-            'exactBoundaryExclusion':{'vertexIndex':24327,'roleCode':1,'worldX':128,'worldZ':64},
-            'correctivePathCount':6,
-            'overallCompleteWorldPathCount':11,
-            'exactSixPathCorrectionMatch':True,
-            'overallElevenPathSetPreserved':True,
-            'staticConstructionResult':'PASS',
-            'desktopBrowserResult':'PASS',
-            'mobile412Result':'PASS',
-            'mobile390Result':'PASS',
-            'browserScenarioSummary':summary['scenarios'],
-            'closedComponentSourceMutation':False,
-            'completeWorldRendererMutation':False,
-            'publicRouteMutation':False,
-            'mainMutation':False,
-            'independentRole3Verification':'NOT_PERFORMED_BY_ROLE_1',
-            'userDifferential':'NOT_PERFORMED',
-            'mergePromotionOrClosure':'NOT_AUTHORIZED'
+            'objectId':'H_EARTH:C2_R1:COASTAL_SUCCESSOR','executionHistoryId':'H_EARTH:C2_R1:PR_418:HISTORY_001','activeEdgeId':'H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE','branch':'agent/h-earth-c2-r1-physically-coherent-coastal-successor-001','operationStartingHead':'e03f211a472fd564b1ed4b8a00096c923a077528','startupPerformanceStartingHead':'f171852f3b453a1535fc29ed2798430814351084','acceptedBaselineHead':'4bc08c26548c36ab9fd96bdaead7434ca08cf8ac','acceptedCoastalComponentSourceHead':'c53362c6f74b01c4e0b53be526b0e3a0b73edede','rollbackBranch':'rollback/h-earth-c2-r1-startup-performance-start-001','rollbackHead':'f171852f3b453a1535fc29ed2798430814351084','externalizedHeadBinding':'EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_FINAL_VERIFICATION_WORKFLOW','role1PassingValidationHead':'18c2eb77f399b91c308c880ab59fbe7f80c8b991','role1PassingWorkflowRun':30714717118,'staticArtifactId':8823011291,'staticArtifactDigest':'sha256:a9b860aad0fd07a62f93cf697efb5516a70d0d6a5ba971c764f23e872a3de8a0','browserArtifactId':8823029257,'browserArtifactDigest':'sha256:951def4aae2647f210357c5f4208bf0d9fc13be6f354a93fb663cc259b63c159','cacheArtifactId':8822791254,'cacheArtifactZipDigest':'sha256:ac78a365c21748ac946d96ee53f29241ca6cdd1c87cf7b430f5ade88675707a7','cacheJsonDigest':'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1','cacheSourceHead':'5fed66e1747391ab15c6dd55c86de0215a2c39db','completeWorldPackageIdentity':cache['completeWorldPackageIdentity'],'completeWorldPackageContentDigest':cache['completeWorldPackageContentDigest'],'candidateSampleFailureCount':cache['counters']['candidateSampleFailureCount'],'boundTerrainVertexCount':cache['counters']['boundTerrainVertexCount'],'boundShorelineVertexCount':cache['counters']['boundShorelineVertexCount'],'adapterBoundaryExcludedVertexCount':cache['counters']['adapterBoundaryExcludedVertexCount'],'exactBoundaryExclusion':{'vertexIndex':24327,'roleCode':1,'worldX':128,'worldZ':64},'correctivePathCount':6,'overallCompleteWorldPathCount':11,'exactSixPathCorrectionMatch':True,'overallElevenPathSetPreserved':True,'staticConstructionResult':'PASS','desktopBrowserResult':'PASS','mobile412Result':'PASS','mobile390Result':'PASS','browserScenarioSummary':summary['scenarios'],'closedComponentSourceMutation':False,'completeWorldRendererMutation':False,'publicRouteMutation':False,'mainMutation':False,'independentRole3Verification':'NOT_PERFORMED_BY_ROLE_1','userDifferential':'NOT_PERFORMED','mergePromotionOrClosure':'NOT_AUTHORIZED'
           }
-          ledger={
-            'ledgerType':'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_OPERATION_LEDGER_v4',
-            'operationId':'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001',
-            'correctiveOperationId':'H_EARTH_C2_R1_COMPLETE_WORLD_REAL_PACKAGE_ADAPTER_CORRECTION_001',
-            'performanceCorrectionOperationId':'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',
-            'fromRole':'ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY',
-            'nextRole':'ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY',
-            **common,
-            'status':'ROLE_1_DONE_READY_FOR_INDEPENDENT_ROLE_3_VERIFICATION',
-            'exactBindingCacheCarrier':{'partIndex':1,'partCount':2,'encoding':'BASE64_GZIP_JSON','value':part1},
-            'stopBoundary':['NO_ROLE_1_SELF_CERTIFICATION','NO_USER_DIFFERENTIAL','NO_MERGE','NO_PROMOTION','NO_FINAL_CLOSURE']
-          }
-          role3={
-            'entryType':'H_EARTH_C2_R1_COMPLETE_WORLD_ROLE_3_ENTRY_v4',
-            'operationId':'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001',
-            'performanceCorrectionOperationId':'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',
-            **common,
-            'reviewEntry':'/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html',
-            'workflow':'.github/workflows/h-earth-c2-r1-complete-world-integration.yml',
-            'staticJob':'exact-head-and-static-construction',
-            'browserJob':'browser-execution-transport',
-            'currentRole1Status':'DONE_READY_FOR_INDEPENDENT_ROLE_3_VERIFICATION',
-            'exactBindingCacheCarrier':{'partIndex':2,'partCount':2,'encoding':'BASE64_GZIP_JSON','value':part2},
-            'browserMatrix':[
-              {'name':'desktop-1440x900','width':1440,'height':900,'touchEnabled':False},
-              {'name':'mobile-412x915','width':412,'height':915,'deviceScaleFactor':2.625,'touchEnabled':True},
-              {'name':'mobile-390x844','width':390,'height':844,'deviceScaleFactor':3,'touchEnabled':True}
-            ],
-            'requiredRole3Disposition':'INDEPENDENT_PASS_FAIL_OR_BLOCKED',
-            'stopBoundary':['NO_SOURCE_REPAIR_BY_ROLE_3','NO_USER_DIFFERENTIAL','NO_PROJECT_EDGE_ADJUDICATION','NO_MERGE_PROMOTION_OR_FINAL_CLOSURE']
-          }
-          ledger_path.write_text(json.dumps(ledger,separators=(',',':'))+'\n')
-          role3_path.write_text(json.dumps(role3,separators=(',',':'))+'\n')
+          ledger={'ledgerType':'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_OPERATION_LEDGER_v4','operationId':'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001','correctiveOperationId':'H_EARTH_C2_R1_COMPLETE_WORLD_REAL_PACKAGE_ADAPTER_CORRECTION_001','performanceCorrectionOperationId':'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001','fromRole':'ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY','nextRole':'ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY',**common,'status':'ROLE_1_DONE_READY_FOR_INDEPENDENT_ROLE_3_VERIFICATION','exactBindingCacheCarrier':{'partIndex':1,'partCount':2,'encoding':'BASE64_GZIP_JSON','value':part1},'stopBoundary':['NO_ROLE_1_SELF_CERTIFICATION','NO_USER_DIFFERENTIAL','NO_MERGE','NO_PROMOTION','NO_FINAL_CLOSURE']}
+          role3={'entryType':'H_EARTH_C2_R1_COMPLETE_WORLD_ROLE_3_ENTRY_v4','operationId':'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001','performanceCorrectionOperationId':'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',**common,'reviewEntry':'/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html','workflow':'.github/workflows/h-earth-c2-r1-complete-world-integration.yml','staticJob':'exact-head-and-static-construction','browserJob':'browser-execution-transport','currentRole1Status':'DONE_READY_FOR_INDEPENDENT_ROLE_3_VERIFICATION','exactBindingCacheCarrier':{'partIndex':2,'partCount':2,'encoding':'BASE64_GZIP_JSON','value':part2},'browserMatrix':[{'name':'desktop-1440x900','width':1440,'height':900,'touchEnabled':False},{'name':'mobile-412x915','width':412,'height':915,'deviceScaleFactor':2.625,'touchEnabled':True},{'name':'mobile-390x844','width':390,'height':844,'deviceScaleFactor':3,'touchEnabled':True}],'requiredRole3Disposition':'INDEPENDENT_PASS_FAIL_OR_BLOCKED','stopBoundary':['NO_SOURCE_REPAIR_BY_ROLE_3','NO_USER_DIFFERENTIAL','NO_PROJECT_EDGE_ADJUDICATION','NO_MERGE_PROMOTION_OR_FINAL_CLOSURE']}
+          ledger_path.write_text(json.dumps(ledger,separators=(',',':'))+'\n'); role3_path.write_text(json.dumps(role3,separators=(',',':'))+'\n')
           PY
 
-          git show HEAD^:"$WORKFLOW" > "$WORKFLOW"
           git config user.name 'h-earth-role1-finalizer'
           git config user.email 'actions@users.noreply.github.com'
-          git add "$LEDGER" "$ROLE3" "$WORKFLOW"
-          git commit -m 'C2-R1: finalize Role 1 complete-world handoff'
+          git add "$LEDGER" "$ROLE3"
+          git commit -m 'C2-R1: finalize Role 1 complete-world handoff records'
           git push origin "HEAD:$TARGET_BRANCH"

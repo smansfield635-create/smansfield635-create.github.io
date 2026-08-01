@@ -1,0 +1,4 @@
+R1.7B bounded durable closure transport
+Base candidate head: f1ba63b088f89c6539d92d5293ba1eb651644480
+Target staging branch: closure/h-earth-c2-r1-r1-7b-durable-001
+No main mutation authorized.

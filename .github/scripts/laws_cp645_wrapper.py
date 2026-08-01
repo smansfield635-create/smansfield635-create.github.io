@@ -60,7 +60,13 @@ paths_replacement = """carrier_paths = {
     '.github/workflows/laws-cp6-4-5-execution-carrier.yml',
     '.github/scripts/laws_cp645_wrapper.py',
 }
-changed_paths = sorted(line[3:] for line in status_lines if line and line[3:] not in carrier_paths)"""
+def porcelain_path(line):
+    path = line[3:]
+    if path.startswith('github/'):
+        path = '.' + path
+    return path
+status_paths = [porcelain_path(line) for line in status_lines if line]
+changed_paths = sorted(path for path in status_paths if path not in carrier_paths)"""
 assert source.count(paths_needle) == 1
 source = source.replace(paths_needle, paths_replacement, 1)
 

@@ -3,26 +3,20 @@ import {
   H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING_CONTRACT_ID,
   sampleHEarthC2R1CandidateRendererMaterial
 } from '../../h-earth.c2-r1.candidate-renderer-sampling.js';
-import { getHEarthCanonicalShorelineZ } from '../../../../../terrain/h-earth.terrain-field.js';
+import {
+  H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT,
+  getHEarthC2R1ReviewWorldAt,
+  parseHEarthC2R1ReviewMeshIncrementally,
+  digestHEarthC2R1ReviewMesh
+} from './h-earth.c2-r1.r1-8-review-mesh-materializer.js';
 
 const SOURCE_HEAD = 'c53362c6f74b01c4e0b53be526b0e3a0b73edede';
 const OCCURRENCE = 'H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001';
-const canvas = document.getElementById('r18-review-canvas');
-const statusOutput = document.getElementById('runtime-status');
-const runtimeDetail = document.getElementById('runtime-detail');
-const root = document.getElementById('r18-review-root');
-const gl = canvas.getContext('webgl2', {
-  alpha: false,
-  antialias: true,
-  depth: true,
-  preserveDrawingBuffer: true,
-  powerPreference: 'high-performance'
-});
-if (!gl) throw new Error('R1_8_WEBGL2_CONTEXT_UNAVAILABLE');
-
-const finite = Number.isFinite;
+const trace = (event, detail = null) => {
+  window.__R1_8_RUNTIME_TRACE__?.emit?.(event, detail);
+};
+const now = () => performance.now();
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
-const mix = (a, b, t) => a + (b - a) * t;
 const vec3 = (x = 0, y = 0, z = 0) => new Float32Array([x, y, z]);
 const copy3 = value => vec3(value[0], value[1], value[2]);
 const add3 = (a, b) => vec3(a[0] + b[0], a[1] + b[1], a[2] + b[2]);
@@ -38,6 +32,21 @@ const normalize3 = value => {
   const length = Math.hypot(value[0], value[1], value[2]) || 1;
   return vec3(value[0] / length, value[1] / length, value[2] / length);
 };
+const canvas = document.getElementById('r18-review-canvas');
+const statusOutput = document.getElementById('runtime-status');
+const runtimeDetail = document.getElementById('runtime-detail');
+const root = document.getElementById('r18-review-root');
+
+trace('WEBGL_CONTEXT_REQUESTED');
+const gl = canvas.getContext('webgl2', {
+  alpha: false,
+  antialias: true,
+  depth: true,
+  preserveDrawingBuffer: true,
+  powerPreference: 'high-performance'
+});
+trace('WEBGL_CONTEXT_ESTABLISHED', { established: Boolean(gl) });
+if (!gl) throw new Error('R1_8_WEBGL2_CONTEXT_UNAVAILABLE');
 
 function perspective(out, fovRadians, aspect, near, far) {
   const f = 1 / Math.tan(fovRadians / 2);
@@ -128,35 +137,11 @@ const uniforms = {
   waterPass: gl.getUniformLocation(program, 'uWaterPass')
 };
 
-function shorelineFrame(anchorX) {
-  const step = 0.5;
-  const z0 = getHEarthCanonicalShorelineZ(anchorX - step);
-  const z1 = getHEarthCanonicalShorelineZ(anchorX + step);
-  const tangent = normalize3(vec3(2 * step, 0, z1 - z0));
-  let waterward = normalize3(vec3(-tangent[2], 0, tangent[0]));
-  if (waterward[2] < 0) waterward = scale3(waterward, -1);
-  return {
-    shoreline: vec3(anchorX, 0, getHEarthCanonicalShorelineZ(anchorX)),
-    inlandNormal: scale3(waterward, -1)
-  };
-}
-
-function worldAt(anchorX, signedInlandDistance) {
-  const frame = shorelineFrame(anchorX);
-  return add3(frame.shoreline, scale3(frame.inlandNormal, signedInlandDistance));
-}
-
-const ALONG_COUNT = 49;
-const CROSS_COUNT = 73;
-const ALONG_MIN = -180;
-const ALONG_MAX = 180;
-const INLAND_MIN = -115;
-const INLAND_MAX = 135;
-const terrainRecords = [];
 const runtime = {
   sourceHead: SOURCE_HEAD,
   occurrence: OCCURRENCE,
   contractId: H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING_CONTRACT_ID,
+  meshContractId: H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT.contractId,
   webgl2ContextEstablished: true,
   meshReady: false,
   frameCount: 0,
@@ -170,100 +155,137 @@ const runtime = {
   cameraRevision: 0,
   lastView: null,
   lastWaterSample: null,
-  startedAt: performance.now(),
-  readyAt: null
+  startedAt: now(),
+  readyAt: null,
+  constructionStartedAt: null,
+  constructionCompletedAt: null,
+  firstGpuUploadAt: null,
+  allGpuUploadsAt: null,
+  firstFrameAt: null,
+  batchDurations: [],
+  longestSingleMainThreadBlockMs: 0,
+  mainThreadHeartbeatCountDuringConstruction: 0,
+  gpuUploadDurationMs: null,
+  totalConstructionDurationMs: null,
+  totalReadyDurationMs: null,
+  meshIdentity: null,
+  expectedMeshIdentity: null,
+  asset: null
 };
 
-for (let row = 0; row < CROSS_COUNT; row += 1) {
-  const inland = mix(INLAND_MIN, INLAND_MAX, row / (CROSS_COUNT - 1));
-  for (let column = 0; column < ALONG_COUNT; column += 1) {
-    const anchor = mix(ALONG_MIN, ALONG_MAX, column / (ALONG_COUNT - 1));
-    const world = worldAt(anchor, inland);
-    const sample = sampleHEarthC2R1CandidateRendererMaterial(world[0], world[2], { timeSeconds: 0 });
-    if (sample?.valid !== true) throw new Error(`R1_8_CANDIDATE_SAMPLE_FAILED:${anchor}:${inland}`);
-    runtime.candidateMaterialSampleCount += 1;
-    const base = sample.baseMaterialBeforeMacro.colorLinear;
-    const applied = sample.material.colorLinear;
-    if (applied.some((value, index) => Math.abs(value - base[index]) > 1e-12)) runtime.macroDifferentialCount += 1;
-    terrainRecords.push({ anchor, inland, world: vec3(sample.world.x, sample.world.y, sample.world.z), sample });
-  }
-}
+trace('CANDIDATE_CONSTRUCTION_STARTED', { option: H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT.option });
+runtime.constructionStartedAt = now();
+let heartbeatPrior = now();
+const heartbeat = setInterval(() => {
+  const current = now();
+  const drift = Math.max(0, current - heartbeatPrior - 25);
+  runtime.longestSingleMainThreadBlockMs = Math.max(runtime.longestSingleMainThreadBlockMs, drift);
+  runtime.mainThreadHeartbeatCountDuringConstruction += 1;
+  heartbeatPrior = current;
+  trace('MAIN_THREAD_HEARTBEAT', {
+    count: runtime.mainThreadHeartbeatCountDuringConstruction,
+    driftMilliseconds: drift
+  });
+}, 25);
+await new Promise(resolve => setTimeout(resolve, 30));
 
-function recordAt(row, column) {
-  return terrainRecords[row * ALONG_COUNT + column];
+const identityResponse = await fetch('./identity.json', { cache: 'no-store' });
+if (!identityResponse.ok) throw new Error(`R1_8_IDENTITY_HTTP_${identityResponse.status}`);
+const identity = await identityResponse.json();
+const assetDescriptor = identity.reviewMeshAsset;
+if (!assetDescriptor?.file || !assetDescriptor?.sha256 || !assetDescriptor?.canonicalIdentity) {
+  throw new Error('R1_8_REVIEW_MESH_ASSET_IDENTITY_MISSING');
 }
+const assetFetchStartedAt = now();
+const assetResponse = await fetch(`./${assetDescriptor.file}`, { cache: 'no-store' });
+if (!assetResponse.ok) throw new Error(`R1_8_REVIEW_MESH_ASSET_HTTP_${assetResponse.status}`);
+const assetBuffer = await assetResponse.arrayBuffer();
+const assetDigestBytes = new Uint8Array(await crypto.subtle.digest('SHA-256', assetBuffer));
+const assetSha256 = Array.from(assetDigestBytes, value => value.toString(16).padStart(2, '0')).join('');
+if (assetSha256 !== assetDescriptor.sha256) throw new Error('R1_8_REVIEW_MESH_ASSET_DIGEST_MISMATCH');
+if (assetBuffer.byteLength !== assetDescriptor.byteLength) throw new Error('R1_8_REVIEW_MESH_ASSET_BYTE_LENGTH_MISMATCH');
+runtime.asset = {
+  file: assetDescriptor.file,
+  byteLength: assetBuffer.byteLength,
+  sha256: assetSha256,
+  fetchDurationMs: now() - assetFetchStartedAt,
+  format: assetDescriptor.format
+};
 
-function terrainNormal(row, column) {
-  const left = recordAt(row, Math.max(0, column - 1)).world;
-  const right = recordAt(row, Math.min(ALONG_COUNT - 1, column + 1)).world;
-  const down = recordAt(Math.max(0, row - 1), column).world;
-  const up = recordAt(Math.min(CROSS_COUNT - 1, row + 1), column).world;
-  return normalize3(cross3(sub3(up, down), sub3(right, left)));
-}
-
-function createMesh({ water = false } = {}) {
-  const vertices = [];
-  const indices = [];
-  const rowMap = [];
-  for (let row = 0; row < CROSS_COUNT; row += 1) {
-    const source = recordAt(row, 0);
-    if (water && source.inland > 10) continue;
-    rowMap.push(row);
-    for (let column = 0; column < ALONG_COUNT; column += 1) {
-      const record = recordAt(row, column);
-      const sample = record.sample;
-      const normal = water ? vec3(0, 1, 0) : terrainNormal(row, column);
-      let position = record.world;
-      let color;
-      let alpha = 1;
-      if (water) {
-        position = vec3(record.world[0], 0.18, record.world[2]);
-        const preserved = sample.preservedCandidateResponses;
-        const waterColor = preserved.waterSurfaceColorLinear;
-        const foam = clamp(preserved.foamIntensity * preserved.foamOpacity, 0, 1);
-        color = waterColor.map((channel, index) => clamp(mix(channel, preserved.foamColorLinear[index], foam), 0, 1));
-        alpha = clamp(preserved.waterSurfaceOpacity + foam * 0.18, 0.24, 0.88);
-      } else {
-        const ao = sample.material.cavityOrAmbientOcclusion;
-        color = sample.material.colorLinear.map(channel => clamp(channel * (0.76 + 0.24 * ao), 0, 1));
-      }
-      vertices.push(
-        position[0], position[1], position[2],
-        color[0], color[1], color[2], alpha,
-        normal[0], normal[1], normal[2]
-      );
+let firstBatch = true;
+const mesh = await parseHEarthC2R1ReviewMeshIncrementally(assetBuffer, {
+  onBatch(batch) {
+    runtime.batchDurations.push(batch);
+    runtime.longestSingleMainThreadBlockMs = Math.max(
+      runtime.longestSingleMainThreadBlockMs,
+      batch.durationMilliseconds
+    );
+    if (firstBatch) {
+      firstBatch = false;
+      trace('FIRST_CONSTRUCTION_BATCH_COMPLETED', batch);
+    }
+    if (batch.batchIndex === H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT.fixedBatchBoundaries.length - 1) {
+      trace('LAST_CONSTRUCTION_BATCH_COMPLETED', batch);
     }
   }
-  for (let rowIndex = 0; rowIndex < rowMap.length - 1; rowIndex += 1) {
-    for (let column = 0; column < ALONG_COUNT - 1; column += 1) {
-      const a = rowIndex * ALONG_COUNT + column;
-      const b = a + 1;
-      const c = a + ALONG_COUNT;
-      const d = c + 1;
-      indices.push(a, c, b, b, c, d);
-    }
+});
+runtime.meshIdentity = await digestHEarthC2R1ReviewMesh(mesh);
+runtime.expectedMeshIdentity = assetDescriptor.canonicalIdentity;
+for (const key of Object.keys(runtime.expectedMeshIdentity)) {
+  if (runtime.meshIdentity[key] !== runtime.expectedMeshIdentity[key]) {
+    throw new Error(`R1_8_REVIEW_MESH_CANONICAL_IDENTITY_MISMATCH:${key}`);
   }
+}
+runtime.candidateMaterialSampleCount = mesh.completeSampleCount;
+runtime.macroDifferentialCount = Number(assetDescriptor.macroDifferentialCount || 0);
+runtime.constructionCompletedAt = now();
+runtime.totalConstructionDurationMs = runtime.constructionCompletedAt - runtime.constructionStartedAt;
+clearInterval(heartbeat);
+trace('CANDIDATE_CONSTRUCTION_COMPLETED', {
+  completeSampleCount: mesh.completeSampleCount,
+  durationMilliseconds: runtime.totalConstructionDurationMs,
+  mainThreadHeartbeatCount: runtime.mainThreadHeartbeatCountDuringConstruction,
+  longestSingleMainThreadBlockMilliseconds: runtime.longestSingleMainThreadBlockMs
+});
+
+let uploadCount = 0;
+const uploadStart = now();
+function uploadBuffer(target, data) {
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(target, buffer);
+  gl.bufferData(target, data, gl.STATIC_DRAW);
+  uploadCount += 1;
+  if (uploadCount === 1) {
+    runtime.firstGpuUploadAt = now();
+    trace('FIRST_GPU_BUFFER_UPLOAD', { byteLength: data.byteLength });
+  }
+  return buffer;
+}
+
+function createMeshBuffers(source) {
   const vao = gl.createVertexArray();
   gl.bindVertexArray(vao);
-  const vertexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-  const indexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(indices), gl.STATIC_DRAW);
-  const stride = 10 * 4;
+  uploadBuffer(gl.ARRAY_BUFFER, source.positions);
   gl.enableVertexAttribArray(0);
-  gl.vertexAttribPointer(0, 3, gl.FLOAT, false, stride, 0);
+  gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+  uploadBuffer(gl.ARRAY_BUFFER, source.materialControls);
   gl.enableVertexAttribArray(1);
-  gl.vertexAttribPointer(1, 4, gl.FLOAT, false, stride, 3 * 4);
+  gl.vertexAttribPointer(1, 4, gl.FLOAT, false, 0, 0);
+  uploadBuffer(gl.ARRAY_BUFFER, source.normals);
   gl.enableVertexAttribArray(2);
-  gl.vertexAttribPointer(2, 3, gl.FLOAT, false, stride, 7 * 4);
+  gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 0, 0);
+  uploadBuffer(gl.ELEMENT_ARRAY_BUFFER, source.indices);
   gl.bindVertexArray(null);
-  return { vao, count: indices.length };
+  return { vao, count: source.indices.length };
 }
-
-const terrainMesh = createMesh();
-const waterMesh = createMesh({ water: true });
+const terrainMesh = createMeshBuffers(mesh.terrain);
+const waterMesh = createMeshBuffers(mesh.water);
+runtime.allGpuUploadsAt = now();
+runtime.gpuUploadDurationMs = runtime.allGpuUploadsAt - uploadStart;
+trace('ALL_GPU_BUFFERS_UPLOADED', {
+  uploadCount,
+  durationMilliseconds: runtime.gpuUploadDurationMs
+});
 runtime.meshReady = true;
 
 const views = Object.freeze({
@@ -276,18 +298,6 @@ const views = Object.freeze({
 });
 let camera = { position: vec3(), target: vec3(), fov: 50 };
 
-function setView(id) {
-  const view = views[id];
-  if (!view) throw new Error(`R1_8_UNKNOWN_VIEW:${id}`);
-  camera = { position: copy3(view.position), target: copy3(view.target), fov: view.fov };
-  runtime.cameraRevision += 1;
-  runtime.lastView = id;
-  document.querySelectorAll('[data-view]').forEach(button => {
-    button.setAttribute('aria-pressed', String(button.dataset.view === id));
-  });
-  return getCameraSnapshot();
-}
-
 function getCameraSnapshot() {
   const direction = normalize3(sub3(camera.target, camera.position));
   return {
@@ -298,6 +308,18 @@ function getCameraSnapshot() {
     revision: runtime.cameraRevision,
     view: runtime.lastView
   };
+}
+
+function setView(id) {
+  const view = views[id];
+  if (!view) throw new Error(`R1_8_UNKNOWN_VIEW:${id}`);
+  camera = { position: copy3(view.position), target: copy3(view.target), fov: view.fov };
+  runtime.cameraRevision += 1;
+  runtime.lastView = id;
+  document.querySelectorAll('[data-view]').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.view === id));
+  });
+  return getCameraSnapshot();
 }
 setView('DISTANT_LANDSCAPE');
 
@@ -402,13 +424,16 @@ function resize() {
 const projection = new Float32Array(16);
 const viewMatrix = new Float32Array(16);
 let waterPulse = 0;
+let firstFrameResolve;
+const firstFramePromise = new Promise(resolve => { firstFrameResolve = resolve; });
+
 function render(timeMilliseconds) {
   resize();
   const timeSeconds = timeMilliseconds / 1000;
   if (runtime.frameCount % 6 === 0) {
     const anchor = Math.sin(timeSeconds * 0.13) * 110;
     const inland = -18 + Math.cos(timeSeconds * 0.21) * 9;
-    const world = worldAt(anchor, inland);
+    const world = getHEarthC2R1ReviewWorldAt(anchor, inland);
     const sample = sampleHEarthC2R1CandidateRendererMaterial(world[0], world[2], { timeSeconds });
     if (sample?.valid === true) {
       runtime.waterBreakerSwashRuntimeSampleCount += 1;
@@ -451,24 +476,37 @@ function render(timeMilliseconds) {
   gl.bindVertexArray(null);
   runtime.frameCount += 1;
   runtime.presentationCount += 1;
-  if (!runtime.readyAt && runtime.frameCount >= 3 && runtime.waterBreakerSwashRuntimeSampleCount > 0) {
-    runtime.readyAt = performance.now();
-    document.documentElement.dataset.r1_8Review = 'ready';
-    document.documentElement.dataset.webgl2 = 'true';
-    root.dataset.ready = 'true';
-    statusOutput.textContent = 'Candidate runtime active';
-    runtimeDetail.textContent = 'WebGL 2 active; C2-R1 terrain, coastal material, water/breaker/swash response, macro field, touch intake, camera, and live frame presentation are available for review.';
+  if (!runtime.firstFrameAt) {
+    runtime.firstFrameAt = now();
+    trace('FIRST_FRAME_PRESENTED', { frameCount: runtime.frameCount });
+    firstFrameResolve();
   }
   requestAnimationFrame(render);
 }
 requestAnimationFrame(render);
+await firstFramePromise;
+
+runtime.readyAt = now();
+runtime.totalReadyDurationMs = runtime.readyAt - runtime.startedAt;
+document.documentElement.dataset.r1_8Review = 'ready';
+document.documentElement.dataset.webgl2 = 'true';
+root.dataset.ready = 'true';
+statusOutput.textContent = 'Candidate runtime active';
+runtimeDetail.textContent = 'WebGL 2 active; the exact C2-R1 pre-materialized terrain and coastal material mesh, touch intake, camera, and live frame presentation are available for review.';
+trace('READY_SENTINEL_WRITTEN', {
+  totalReadyDurationMilliseconds: runtime.totalReadyDurationMs,
+  firstFramePresented: true
+});
 
 const getReceipt = () => ({
-  schema: 'H_EARTH_C2_R1_R1_8_REVIEW_RUNTIME_RECEIPT_v1',
+  schema: 'H_EARTH_C2_R1_R1_8_REVIEW_RUNTIME_RECEIPT_v2',
   sourceHead: SOURCE_HEAD,
   occurrence: OCCURRENCE,
   contractId: runtime.contractId,
   rendererContract: H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING.contractId,
+  meshContractId: runtime.meshContractId,
+  materializationOption: H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT.option,
+  asset: runtime.asset,
   webgl2ContextEstablished: runtime.webgl2ContextEstablished,
   meshReady: runtime.meshReady,
   frameCount: runtime.frameCount,
@@ -477,7 +515,8 @@ const getReceipt = () => ({
   waterBreakerSwashRuntimeSampleCount: runtime.waterBreakerSwashRuntimeSampleCount,
   macroDifferentialCount: runtime.macroDifferentialCount,
   macroExpressionActive: runtime.macroDifferentialCount > 0,
-  coastalMaterialChainActive: runtime.candidateMaterialSampleCount === ALONG_COUNT * CROSS_COUNT,
+  coastalMaterialChainActive:
+    runtime.candidateMaterialSampleCount === H_EARTH_C2_R1_R1_8_REVIEW_MESH_CONTRACT.completeSampleCount,
   waterBreakerSwashChainActive: runtime.waterBreakerSwashRuntimeSampleCount > 0,
   pointerEventCount: runtime.pointerEventCount,
   touchEventCount: runtime.touchEventCount,
@@ -485,6 +524,22 @@ const getReceipt = () => ({
   cameraRevision: runtime.cameraRevision,
   camera: getCameraSnapshot(),
   lastWaterSample: runtime.lastWaterSample,
+  meshIdentity: runtime.meshIdentity,
+  expectedMeshIdentity: runtime.expectedMeshIdentity,
+  exactReviewGeometryPreserved:
+    JSON.stringify(runtime.meshIdentity) === JSON.stringify(runtime.expectedMeshIdentity),
+  construction: {
+    totalConstructionDurationMs: runtime.totalConstructionDurationMs,
+    longestSingleMainThreadBlockMs: runtime.longestSingleMainThreadBlockMs,
+    mainThreadHeartbeatCountDuringConstruction: runtime.mainThreadHeartbeatCountDuringConstruction,
+    batchDurations: runtime.batchDurations,
+    firstGpuBufferUploadAt: runtime.firstGpuUploadAt,
+    allGpuBuffersUploadedAt: runtime.allGpuUploadsAt,
+    gpuUploadDurationMs: runtime.gpuUploadDurationMs,
+    firstFrameAt: runtime.firstFrameAt,
+    readyAt: runtime.readyAt,
+    totalReadyDurationMs: runtime.totalReadyDurationMs
+  },
   noBitmapDragFallback: true,
   rendererLifecycleMutated: false,
   terrainGeometryMutated: false,
@@ -492,9 +547,14 @@ const getReceipt = () => ({
   productDefaultMutated: false,
   visualSuccessorStatus: 'NOT_ESTABLISHED',
   userDifferentialRequired: true,
-  viewport: { width: canvas.width, height: canvas.height, devicePixelRatio: window.devicePixelRatio || 1 },
+  viewport: {
+    width: canvas.width,
+    height: canvas.height,
+    devicePixelRatio: window.devicePixelRatio || 1
+  },
   ready: document.documentElement.dataset.r1_8Review === 'ready'
 });
+
 window.H_EARTH_C2_R1_R1_8_REVIEW = Object.freeze({
   sourceHead: SOURCE_HEAD,
   occurrence: OCCURRENCE,

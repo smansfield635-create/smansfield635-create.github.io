@@ -1,0 +1,204 @@
+name: OSF z64am Inspection
+
+on:
+  push:
+    branches:
+      - agent/osf-z64am-inspection-001
+    paths:
+      - .github/workflows/osf-z64am-inspection.yml
+  pull_request:
+    branches:
+      - agent/osf-laws-corpus-harvest-001
+    paths:
+      - .github/workflows/osf-z64am-inspection.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: osf-z64am-isolated-inspection
+  cancel-in-progress: true
+
+jobs:
+  inspect:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/osf-z64am-inspection-001
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install extraction dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests pypdf python-docx openpyxl python-pptx
+      - name: Inspect z64am directly
+        shell: bash
+        run: |
+          rm -rf research/osf-z64am-inspection
+          python - <<'PY'
+          from __future__ import annotations
+          import csv, hashlib, io, json, re
+          from pathlib import Path
+          import requests
+          from pypdf import PdfReader
+          from docx import Document
+          from openpyxl import load_workbook
+          from pptx import Presentation
+
+          GUID='z64am'
+          ROOT=Path('research/osf-z64am-inspection')
+          ROOT.mkdir(parents=True, exist_ok=True)
+          session=requests.Session()
+          session.headers['User-Agent']='DiamondGateBridge-OSF-Inspection/1.0'
+
+          def get_json(url):
+              r=session.get(url, timeout=45)
+              r.raise_for_status()
+              return r.json()
+
+          resource_type='nodes'
+          url=f'https://api.osf.io/v2/nodes/{GUID}/'
+          r=session.get(url, timeout=45)
+          if r.status_code == 404:
+              resource_type='registrations'
+              url=f'https://api.osf.io/v2/registrations/{GUID}/'
+              r=session.get(url, timeout=45)
+          r.raise_for_status()
+          payload=r.json()['data']
+          attrs=payload.get('attributes', {})
+          rel=payload.get('relationships', {})
+          metadata={
+              'id': GUID,
+              'type': resource_type,
+              'title': attrs.get('title'),
+              'description': attrs.get('description'),
+              'public': attrs.get('public'),
+              'registration': resource_type == 'registrations',
+              'date_created': attrs.get('date_created'),
+              'date_modified': attrs.get('date_modified'),
+              'category': attrs.get('category'),
+              'tags': attrs.get('tags', []),
+              'subjects': attrs.get('subjects', []),
+              'osf_url': f'https://osf.io/{GUID}/',
+              'api_url': url,
+              'claim_boundary': 'Isolated assessment only; no canonical corpus admission, empirical validation, novelty finding, or Laws Chamber claim upgrade.'
+          }
+
+          def paged(url):
+              while url:
+                  page=get_json(url)
+                  for item in page.get('data', []):
+                      yield item
+                  url=page.get('links', {}).get('next')
+
+          providers_url=rel.get('files', {}).get('links', {}).get('related', {}).get('href')
+          files=[]
+          def walk(url, provider):
+              for item in paged(url):
+                  a=item.get('attributes', {})
+                  rr=item.get('relationships', {})
+                  kind=a.get('kind')
+                  row={
+                      'provider': provider,
+                      'name': a.get('name'),
+                      'kind': kind,
+                      'materialized_path': a.get('materialized_path'),
+                      'size': a.get('size'),
+                      'content_type': a.get('content_type'),
+                      'date_modified': a.get('date_modified'),
+                      'download_url': item.get('links', {}).get('download'),
+                      'osf_file_id': item.get('id')
+                  }
+                  files.append(row)
+                  if kind == 'folder':
+                      child=rr.get('files', {}).get('links', {}).get('related', {}).get('href')
+                      if child: walk(child, provider)
+
+          if providers_url:
+              for provider in paged(providers_url):
+                  pname=provider.get('attributes', {}).get('name') or provider.get('id')
+                  root_url=provider.get('relationships', {}).get('files', {}).get('links', {}).get('related', {}).get('href')
+                  if root_url: walk(root_url, pname)
+
+          extracted=[]
+          for row in files:
+              if row['kind'] != 'file' or not row.get('download_url'):
+                  row['extraction_status']='NOT_FILE'
+                  continue
+              name=(row.get('name') or '').lower()
+              try:
+                  rr=session.get(row['download_url'], timeout=90)
+                  rr.raise_for_status()
+                  data=rr.content
+                  row['sha256']=hashlib.sha256(data).hexdigest()
+                  text=''
+                  if name.endswith('.pdf'):
+                      reader=PdfReader(io.BytesIO(data))
+                      text='\n\n'.join(f'--- PAGE {i+1} ---\n'+(p.extract_text() or '') for i,p in enumerate(reader.pages))
+                  elif name.endswith('.docx'):
+                      doc=Document(io.BytesIO(data)); text='\n'.join(p.text for p in doc.paragraphs)
+                  elif name.endswith(('.txt','.md','.csv','.json','.yaml','.yml','.py','.js','.mjs','.html','.css')):
+                      text=data.decode('utf-8', errors='replace')
+                  elif name.endswith('.xlsx'):
+                      wb=load_workbook(io.BytesIO(data), read_only=True, data_only=True)
+                      chunks=[]
+                      for ws in wb.worksheets:
+                          chunks.append(f'## SHEET: {ws.title}')
+                          for values in ws.iter_rows(values_only=True):
+                              chunks.append('\t'.join('' if v is None else str(v) for v in values))
+                      text='\n'.join(chunks)
+                  elif name.endswith('.pptx'):
+                      prs=Presentation(io.BytesIO(data)); chunks=[]
+                      for i,slide in enumerate(prs.slides,1):
+                          chunks.append(f'--- SLIDE {i} ---')
+                          for shape in slide.shapes:
+                              if hasattr(shape,'text'): chunks.append(shape.text)
+                      text='\n'.join(chunks)
+                  else:
+                      row['extraction_status']='UNSUPPORTED'
+                      continue
+                  row['extraction_status']='EXTRACTED'
+                  row['extracted_chars']=len(text)
+                  extracted.append((row['name'], row.get('materialized_path'), row['sha256'], text))
+              except Exception as exc:
+                  row['extraction_status']='ERROR'; row['error']=str(exc)
+
+          metadata['file_inventory_count']=len(files)
+          metadata['extractable_file_count']=sum(1 for f in files if f.get('extraction_status')=='EXTRACTED')
+          metadata['has_data_file']=any((f.get('name') or '').lower().endswith(('.csv','.tsv','.xlsx','.xls','.json','.parquet','.sav','.rdata')) for f in files)
+          metadata['has_code_file']=any((f.get('name') or '').lower().endswith(('.py','.r','.ipynb','.js','.mjs','.mat','.do')) for f in files)
+          (ROOT/'metadata.json').write_text(json.dumps(metadata, indent=2)+'\n')
+          (ROOT/'files.json').write_text(json.dumps(files, indent=2)+'\n')
+          md=[f"# Extracted text — {metadata.get('title')}", '', f"OSF project: https://osf.io/{GUID}/", '', 'Machine-extracted for isolated assessment. Consult source files for equations, figures, and layout.', '']
+          for name,path,sha,text in extracted:
+              md += [f'## FILE: {name}', '', f'- Path: `{path}`', f'- SHA-256: `{sha}`', '', '```text', text, '```', '']
+          (ROOT/'extracted-text.md').write_text('\n'.join(md))
+          receipt={
+              'inspection_id':'OSF_Z64AM_ISOLATED_INSPECTION_v1',
+              'status':'RECOVERED_FOR_ASSESSMENT_ONLY',
+              'project_id':GUID,
+              'title':metadata.get('title'),
+              'resource_type':resource_type,
+              'file_inventory_count':metadata['file_inventory_count'],
+              'extractable_file_count':metadata['extractable_file_count'],
+              'has_data_file':metadata['has_data_file'],
+              'has_code_file':metadata['has_code_file'],
+              'claim_boundary':metadata['claim_boundary']
+          }
+          (ROOT/'Z64AM_INSPECTION_RECEIPT.json').write_text(json.dumps(receipt, indent=2)+'\n')
+          print(json.dumps(receipt, indent=2))
+          PY
+      - name: Commit isolated inspection output
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/osf-z64am-inspection
+          git commit -m "Inspect OSF z64am in isolation"
+          git push origin HEAD:agent/osf-z64am-inspection-001

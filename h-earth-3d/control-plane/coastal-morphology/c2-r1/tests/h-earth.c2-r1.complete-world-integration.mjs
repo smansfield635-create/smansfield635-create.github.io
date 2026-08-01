@@ -99,6 +99,7 @@ assert.equal(syntheticResult.eligible, true);
 assert.equal(syntheticResult.completeWorldBinding.counters.boundTerrainVertexCount, 1);
 assert.equal(syntheticResult.completeWorldBinding.counters.boundShorelineVertexCount, 1);
 assert.equal(syntheticResult.completeWorldBinding.counters.candidateSampleFailureCount, 0);
+assert.equal(syntheticResult.completeWorldBinding.counters.adapterBoundaryExcludedVertexCount, 0);
 assert.deepEqual(syntheticCanonicalPackage, syntheticBefore, 'synthetic canonical package was mutated');
 assert.deepEqual(syntheticResult.primitiveIds, syntheticBefore.primitiveIds);
 assert.deepEqual(syntheticResult.primitiveSpans, syntheticBefore.primitiveSpans);
@@ -122,31 +123,45 @@ const realResult = await buildHEarthC2R1CompleteWorldRenderPackage({
   stopAfterFirstFailure: true
 });
 const realEvaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(realResult, realCanonicalPackage);
+const counters = realResult.completeWorldBinding?.counters ?? realResult.counters ?? null;
+const boundaryExclusions = realResult.completeWorldBinding?.boundaryExclusionDiagnostics ?? [];
+const identityPreservation = {
+  primitiveIds: JSON.stringify(realResult.primitiveIds) === JSON.stringify(realCanonicalPackage.primitiveIds),
+  primitiveSpans: JSON.stringify(realResult.primitiveSpans) === JSON.stringify(realCanonicalPackage.primitiveSpans),
+  drawRanges: JSON.stringify(realResult.drawRanges) === JSON.stringify(realCanonicalPackage.drawRanges),
+  indexBytes: JSON.stringify(realResult.buffers?.indices) === JSON.stringify(realCanonicalPackage.buffers.indices)
+};
 const realDiagnostic = {
-  testType: 'H_EARTH_C2_R1_REAL_CANONICAL_PACKAGE_INTEGRATION_TEST_v1',
+  testType: 'H_EARTH_C2_R1_REAL_CANONICAL_PACKAGE_INTEGRATION_TEST_v2',
   eligible: realResult.eligible === true && realEvaluation.eligible === true,
   rootRejectionCode: realResult.rootRejectionCode ?? null,
   issues: realEvaluation.issues,
-  counters: realResult.completeWorldBinding?.counters ?? realResult.counters ?? null,
+  counters,
+  adapterBoundaryExclusions: boundaryExclusions,
   failureDiagnostics: realResult.completeWorldBinding?.failureDiagnostics ?? realResult.failureDiagnostics ?? [],
-  identityPreservation: {
-    primitiveIds: JSON.stringify(realResult.primitiveIds) === JSON.stringify(realCanonicalPackage.primitiveIds),
-    primitiveSpans: JSON.stringify(realResult.primitiveSpans) === JSON.stringify(realCanonicalPackage.primitiveSpans),
-    drawRanges: JSON.stringify(realResult.drawRanges) === JSON.stringify(realCanonicalPackage.drawRanges),
-    indexBytes: JSON.stringify(realResult.buffers?.indices) === JSON.stringify(realCanonicalPackage.buffers.indices)
-  }
+  identityPreservation
 };
 console.log(`REAL_PACKAGE_DIAGNOSTIC:${JSON.stringify(realDiagnostic)}`);
 assert.equal(realResult.eligible, true, JSON.stringify(realDiagnostic));
 assert.equal(realEvaluation.eligible, true, JSON.stringify(realDiagnostic));
-assert.equal(realResult.completeWorldBinding.counters.candidateSampleFailureCount, 0);
-assert(realResult.completeWorldBinding.counters.boundTerrainVertexCount > 0);
-assert(realResult.completeWorldBinding.counters.boundShorelineVertexCount > 0);
+assert.equal(counters.candidateSampleFailureCount, 0);
+assert.equal(counters.adapterBoundaryExcludedVertexCount, 1);
+assert(counters.boundTerrainVertexCount > 0);
+assert(counters.boundShorelineVertexCount > 0);
+assert.equal(boundaryExclusions.length, 1);
+assert.equal(boundaryExclusions[0].vertexIndex, 24327);
+assert.equal(boundaryExclusions[0].roleCode, 1);
+assert.equal(boundaryExclusions[0].worldX, 128);
+assert.equal(boundaryExclusions[0].worldZ, 64);
+assert(boundaryExclusions[0].material.issues.includes('R1_1_R1_3_OR_R1_6_CANDIDATE_INPUT_NOT_ELIGIBLE'));
+assert(boundaryExclusions[0].swash.issues.includes('R1_1_R1_3_R1_4_OR_R1_5_INPUT_NOT_ELIGIBLE'));
+assert(boundaryExclusions[0].breaker.issues.includes('DIRECTIONAL_DEPTH_SAMPLE_INVALID'));
 assert.deepEqual(realCanonicalPackage, realBefore, 'real canonical package was mutated');
 assert.deepEqual(realResult.primitiveIds, realBefore.primitiveIds);
 assert.deepEqual(realResult.primitiveSpans, realBefore.primitiveSpans);
 assert.deepEqual(realResult.drawRanges, realBefore.drawRanges);
 assert.deepEqual(realResult.buffers.indices, realBefore.buffers.indices);
+assert(Object.values(identityPreservation).every(Boolean));
 
 const manifest = JSON.parse(await readFile(resolve(root, 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'), 'utf8'));
 assert.deepEqual([...manifest.completeWorldIntegrationOperation.exactMutablePaths].sort(), authorizedPaths);
@@ -166,10 +181,17 @@ console.log(JSON.stringify({
   status: 'PASS',
   contractId: realResult.completeWorldContractId,
   packageIdentity: realResult.packageIdentity,
-  candidateSampleFailureCount: realResult.completeWorldBinding.counters.candidateSampleFailureCount,
-  boundTerrainVertexCount: realResult.completeWorldBinding.counters.boundTerrainVertexCount,
-  boundShorelineVertexCount: realResult.completeWorldBinding.counters.boundShorelineVertexCount,
-  unchangedVertexCount: realResult.completeWorldBinding.counters.unchangedVertexCount,
+  candidateSampleFailureCount: counters.candidateSampleFailureCount,
+  adapterBoundaryExcludedVertexCount: counters.adapterBoundaryExcludedVertexCount,
+  exactBoundaryExclusionVertex: {
+    vertexIndex: boundaryExclusions[0].vertexIndex,
+    roleCode: boundaryExclusions[0].roleCode,
+    worldX: boundaryExclusions[0].worldX,
+    worldZ: boundaryExclusions[0].worldZ
+  },
+  boundTerrainVertexCount: counters.boundTerrainVertexCount,
+  boundShorelineVertexCount: counters.boundShorelineVertexCount,
+  unchangedVertexCount: counters.unchangedVertexCount,
   identityPreservationResult: 'PASS',
   exactMutablePathCount: authorizedPaths.length,
   protectedAuthoritiesUnchanged: true

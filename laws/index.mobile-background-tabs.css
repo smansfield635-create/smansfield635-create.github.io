@@ -30,12 +30,17 @@ html[data-cp6-experiential-presentation="candidate"] :is(.laws-shell, .laws-foot
   z-index: 2;
 }
 
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+  align-items: start;
+}
+
 html[data-cp6-experiential-presentation="candidate"] [data-laws-scene-field] > canvas[data-laws-spacecraft-layer],
 html[data-cp6-experiential-presentation="candidate"] [data-laws-scene-field] > canvas[data-laws-spacecraft-background-layer] {
   display: none !important;
 }
 
 html[data-cp6-experiential-presentation="candidate"] .laws-visitor-paths[data-laws-tabs-mounted="true"] {
+  display: block !important;
   width: 100%;
   margin: clamp(1.5rem, 4vh, 3rem) 0 0;
   padding: 0;

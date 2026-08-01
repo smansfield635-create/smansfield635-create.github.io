@@ -1,4 +1,4 @@
-name: H-Earth C2-R1 R1.7C Candidate Renderer Sampling
+name: H-Earth C2-R1 R1.7C Durable Closure Transport
 
 on:
   pull_request:
@@ -6,47 +6,376 @@ on:
       - integration/h-earth-c2-r1-baseline-001
     paths:
       - '.github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7c-candidate-renderer-sampling.mjs'
-  workflow_dispatch:
 
 concurrency:
-  group: h-earth-c2-r1-r1-7c-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: h-earth-c2-r1-r1-7c-durable-closure
+  cancel-in-progress: false
 
 permissions:
-  contents: read
+  actions: read
+  contents: write
 
 jobs:
-  verify-r1-7c:
+  materialize-r1-7c-durable-closure:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      PASSING_HEAD: e8d7519f96f90fc7d4ac7adfb0d1a33c0ededdb1
+      CANDIDATE_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
+      START_ROLLBACK_BRANCH: rollback/h-earth-c2-r1-r1-7c-start-001
+      CLOSED_ROLLBACK_BRANCH: rollback/h-earth-c2-r1-r1-7c-closed-001
+      R1_7C_RUN: '30682582313'
+      R1_7C_JOB: '91322382094'
+      R1_7C_ARTIFACT_ID: '8812783662'
+      R1_7C_ARTIFACT_DIGEST: dd1d5159cf29da0597e7d6cd20d0c878a68f0233dbb9b0072392e010b9cd2e49
+      REGISTRY_RUN: '30682582286'
+      REGISTRY_JOB: '91322381985'
+      REGISTRY_ARTIFACT_ID: '8812786986'
+      REGISTRY_ARTIFACT_DIGEST: 227b0aa1ddb93cde315e0071bd1ce4b1dc2aa7f1865de4eb1d4211f725ec5e63
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Verify minimal candidate renderer sampling integration
-        env:
-          C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-          C2_R1_TARGET_BRANCH: ${{ github.event.pull_request.head.ref || 'agent/h-earth-c2-r1-physically-coherent-coastal-successor-001' }}
+      - name: Verify exact candidate closure-transport context
         run: |
-          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7c-candidate-renderer-sampling.mjs
+          set -euo pipefail
+          test "${{ github.event.pull_request.head.ref }}" = "${CANDIDATE_BRANCH}"
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          git merge-base --is-ancestor "${PASSING_HEAD}" HEAD
+          test "$(git diff --name-only "${PASSING_HEAD}" HEAD)" = ".github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml"
 
-      - name: Upload R1.7C receipt and engineering captures
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-c2-r1-r1-7c-engineering-evidence
-          path: |
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-verification.json
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7c-engineering-captures/*.svg
-          if-no-files-found: error
-          retention-days: 30
+      - name: Verify passing workflow and registry executions
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${R1_7C_RUN}" --jq .conclusion)" = success
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${R1_7C_RUN}" --jq .head_sha)" = "${PASSING_HEAD}"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/jobs/${R1_7C_JOB}" --jq .conclusion)" = success
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${REGISTRY_RUN}" --jq .conclusion)" = success
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${REGISTRY_RUN}" --jq .head_sha)" = "${PASSING_HEAD}"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/jobs/${REGISTRY_JOB}" --jq .conclusion)" = success
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${R1_7C_ARTIFACT_ID}" --jq '.digest | sub("sha256:"; "")')" = "${R1_7C_ARTIFACT_DIGEST}"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${REGISTRY_ARTIFACT_ID}" --jq '.digest | sub("sha256:"; "")')" = "${REGISTRY_ARTIFACT_DIGEST}"
+
+      - name: Download and verify exact passing R1.7C evidence
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/r17c
+          mkdir -p /tmp/r17c/exact
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${R1_7C_ARTIFACT_ID}/zip" > /tmp/r17c/artifact.zip
+          echo "${R1_7C_ARTIFACT_DIGEST}  /tmp/r17c/artifact.zip" | sha256sum -c -
+          unzip -q /tmp/r17c/artifact.zip -d /tmp/r17c/exact
+          echo '974a8ffb79005a2fb8299d5539aa63f8ff87694886e4cb549ecb2dc531f60963  /tmp/r17c/exact/h-earth.c2-r1.r1-7c-verification.json' | sha256sum -c -
+          echo '38639757d3ab5ae3f4fec1c2ddc7bb35da0460e5d52249526f2684504d16b816  /tmp/r17c/exact/r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-bounded-material-response.svg' | sha256sum -c -
+          echo '9b561dadbbed835968a3d7a39c8bd38d4c9496e738d85ea2ae8ef174c3d3a5d9  /tmp/r17c/exact/r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-coastal-readability.svg' | sha256sum -c -
+          echo '55a19e550b8795994704e48074cc745505620c4aa557f5b247bfd8836f2b26db  /tmp/r17c/exact/r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-runtime-macro-controls.svg' | sha256sum -c -
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('/tmp/r17c/exact/h-earth.c2-r1.r1-7c-verification.json', 'utf8'));
+          const requiredTrue = [
+            'controlFieldBoundToCandidateRenderer',
+            'singleRuntimeSampleConfirmed',
+            'boundedMacroChannelApplicationConfirmed',
+            'visibleTilingAbsentEngineeringGauge',
+            'hardBandingAbsentEngineeringGauge',
+            'coastalReadabilityPreservedEngineeringGauge',
+            'upstreamAuthoritiesUnchanged',
+            'passingReceiptPreserved'
+          ];
+          if (receipt.result !== 'PASS_ENGINEERING') throw new Error('R1_7C_RECEIPT_NOT_PASSING');
+          if (receipt.executionHead !== process.env.PASSING_HEAD) throw new Error('R1_7C_RECEIPT_HEAD_MISMATCH');
+          if (receipt.targetBranch !== process.env.CANDIDATE_BRANCH) throw new Error('R1_7C_RECEIPT_BRANCH_MISMATCH');
+          if (!requiredTrue.every(key => receipt[key] === true)) throw new Error('R1_7C_RECEIPT_REQUIRED_TRUE_FIELD_FAILED');
+          if (receipt.productDefaultMutated !== false || receipt.publicRouteMutated !== false) throw new Error('R1_7C_RECEIPT_PRODUCT_OR_ROUTE_MUTATION');
+          if (receipt.visualSuccessorStatus !== 'NOT_ESTABLISHED' || receipt.userDifferentialReady !== false) throw new Error('R1_7C_RECEIPT_VISUAL_STATUS_INVALID');
+          if (receipt.firstBlocker !== null || receipt.issues.length !== 0) throw new Error('R1_7C_RECEIPT_HAS_BLOCKER');
+          NODE
+
+      - name: Install exact receipt captures and durable evidence manifest
+        run: |
+          set -euo pipefail
+          CONTROL_ROOT=h-earth-3d/control-plane/coastal-morphology/c2-r1
+          mkdir -p "${CONTROL_ROOT}/evidence/r1-7c-engineering-captures"
+          cp /tmp/r17c/exact/h-earth.c2-r1.r1-7c-verification.json \
+            "${CONTROL_ROOT}/evidence/h-earth.c2-r1.r1-7c-verification.json"
+          cp /tmp/r17c/exact/r1-7c-engineering-captures/*.svg \
+            "${CONTROL_ROOT}/evidence/r1-7c-engineering-captures/"
+          cat > "${CONTROL_ROOT}/evidence/h-earth.c2-r1.r1-7c-evidence-manifest.json" <<'EOF'
+          {
+            "manifestType": "H_EARTH_C2_R1_R1_7C_EVIDENCE_MANIFEST_v1",
+            "operation": "R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
+            "status": "PASS_ENGINEERING_DURABLE_CLOSURE_COMMITTED",
+            "startingHead": "591b54210f177ad6627bc3656f960d664430c4c9",
+            "passingExecutionHead": "e8d7519f96f90fc7d4ac7adfb0d1a33c0ededdb1",
+            "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+            "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7c-start-001",
+            "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7c-closed-001",
+            "workflow": {
+              "runId": 30682582313,
+              "jobId": 91322382094,
+              "result": "PASS",
+              "artifactId": 8812783662,
+              "artifactName": "h-earth-c2-r1-r1-7c-engineering-evidence",
+              "artifactDigest": "sha256:dd1d5159cf29da0597e7d6cd20d0c878a68f0233dbb9b0072392e010b9cd2e49",
+              "artifactSizeBytes": 100261
+            },
+            "automaticRegistryPreflight": {
+              "runId": 30682582286,
+              "jobId": 91322381985,
+              "result": "PASS",
+              "artifactId": 8812786986,
+              "artifactDigest": "sha256:227b0aa1ddb93cde315e0071bd1ce4b1dc2aa7f1865de4eb1d4211f725ec5e63"
+            },
+            "exactWorkflowArtifactFiles": {
+              "h-earth.c2-r1.r1-7c-verification.json": {
+                "sha256": "974a8ffb79005a2fb8299d5539aa63f8ff87694886e4cb549ecb2dc531f60963"
+              },
+              "r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-runtime-macro-controls.svg": {
+                "sha256": "55a19e550b8795994704e48074cc745505620c4aa557f5b247bfd8836f2b26db"
+              },
+              "r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-bounded-material-response.svg": {
+                "sha256": "38639757d3ab5ae3f4fec1c2ddc7bb35da0460e5d52249526f2684504d16b816"
+              },
+              "r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-coastal-readability.svg": {
+                "sha256": "9b561dadbbed835968a3d7a39c8bd38d4c9496e738d85ea2ae8ef174c3d3a5d9"
+              }
+            },
+            "changedPathSet": [
+              ".github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml",
+              "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json",
+              "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+              "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7c-candidate-renderer-sampling.mjs"
+            ],
+            "controlFieldBoundToCandidateRenderer": true,
+            "singleRuntimeSampleConfirmed": true,
+            "boundedMacroChannelApplicationConfirmed": true,
+            "visibleTilingAbsentEngineeringGauge": true,
+            "hardBandingAbsentEngineeringGauge": true,
+            "coastalReadabilityPreservedEngineeringGauge": true,
+            "metrics": {
+              "macroRuntimeSampleCount": 6825,
+              "candidateRendererSampleCount": 72,
+              "uniqueRuntimeControlRatio": 1,
+              "maximumBoundaryGap": 3.523827640794508e-8,
+              "maximumFineAdjacentDelta": 0.004987984895706177,
+              "maximumAlbedoChange": 0.0004447294881163577,
+              "maximumRoughnessChange": 0.0014108291392748162,
+              "minimumCavityResponse": 0.994114374732543,
+              "minimumReadabilityRatio": 0.9981642262491339
+            },
+            "upstreamAuthoritiesUnchanged": true,
+            "registryPreflight": "PASS",
+            "productDefaultMutated": false,
+            "publicRouteMutated": false,
+            "passingReceiptPreserved": true,
+            "repositoryReadbackConfirmed": true,
+            "visualSuccessorStatus": "NOT_ESTABLISHED",
+            "userDifferentialReady": false,
+            "firstBlocker": null,
+            "workflowDisposition": "MANUAL_ONLY_AFTER_DURABLE_CLOSURE"
+          }
+          EOF
+
+      - name: Reconcile R1.7C program and ledger closure
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root = 'h-earth-3d/control-plane/coastal-morphology/c2-r1';
+          const programPath = `${root}/h-earth.c2-r1.r1-7-subcheckpoint-program.json`;
+          const ledgerPath = `${root}/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json`;
+          const program = JSON.parse(fs.readFileSync(programPath, 'utf8'));
+          const ledger = JSON.parse(fs.readFileSync(ledgerPath, 'utf8'));
+          const metrics = {
+            macroRuntimeSampleCount: 6825,
+            candidateRendererSampleCount: 72,
+            uniqueRuntimeControlRatio: 1,
+            maximumBoundaryGap: 3.523827640794508e-8,
+            maximumFineAdjacentDelta: 0.004987984895706177,
+            maximumAlbedoChange: 0.0004447294881163577,
+            maximumRoughnessChange: 0.0014108291392748162,
+            minimumCavityResponse: 0.994114374732543,
+            minimumReadabilityRatio: 0.9981642262491339
+          };
+          const closure = {
+            name: 'MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION',
+            status: 'PASS_CLOSED_DO_NOT_REOPEN',
+            startingHead: '591b54210f177ad6627bc3656f960d664430c4c9',
+            passingExecutionHead: 'e8d7519f96f90fc7d4ac7adfb0d1a33c0ededdb1',
+            durableClosureHead: 'COMMIT_CONTAINING_THIS_RECORD',
+            startRollbackBranch: 'rollback/h-earth-c2-r1-r1-7c-start-001',
+            closedRollbackBranch: 'rollback/h-earth-c2-r1-r1-7c-closed-001',
+            workflowRun: 30682582313,
+            workflowJob: 91322382094,
+            artifactId: 8812783662,
+            artifactDigest: 'sha256:dd1d5159cf29da0597e7d6cd20d0c878a68f0233dbb9b0072392e010b9cd2e49',
+            registryRun: 30682582286,
+            registryJob: 91322381985,
+            registryArtifactId: 8812786986,
+            registryArtifactDigest: 'sha256:227b0aa1ddb93cde315e0071bd1ce4b1dc2aa7f1865de4eb1d4211f725ec5e63',
+            registryPreflight: 'PASS',
+            changedPathSet: [
+              '.github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml',
+              `${root}/h-earth.c2-r1.allowed-path-manifest.json`,
+              `${root}/h-earth.c2-r1.candidate-renderer-sampling.js`,
+              `${root}/tests/h-earth.c2-r1.r1-7c-candidate-renderer-sampling.mjs`
+            ],
+            controlFieldBoundToCandidateRenderer: true,
+            singleRuntimeSampleConfirmed: true,
+            boundedMacroChannelApplicationConfirmed: true,
+            visibleTilingAbsentEngineeringGauge: true,
+            hardBandingAbsentEngineeringGauge: true,
+            coastalReadabilityPreservedEngineeringGauge: true,
+            metrics,
+            optionalRestrainedMacroNormalApplied: false,
+            upstreamAuthoritiesUnchanged: true,
+            productDefaultMutated: false,
+            publicRouteMutated: false,
+            passingReceiptPreserved: true,
+            repositoryReadbackConfirmed: true,
+            visualSuccessorStatus: 'NOT_ESTABLISHED',
+            userDifferentialReady: false,
+            firstBlocker: null,
+            workflowDisposition: 'MANUAL_ONLY_AFTER_DURABLE_CLOSURE'
+          };
+          program.subcheckpoints['R1.7C'] = closure;
+          program.currentSubcheckpoint = 'R1.7D_INTEGRATED_ENGINEERING_VERIFICATION_AND_DURABLE_R1.7_CLOSURE';
+          program.nextAuthorizedSubcheckpoint = 'R1.7D_INTEGRATED_ENGINEERING_VERIFICATION_AND_DURABLE_R1.7_CLOSURE';
+          program.r1_7OverallStatus = 'IN_PROGRESS';
+          program.r1_8Status = 'NOT_STARTED';
+          program.productDefaultMutated = false;
+          program.publicRouteMutated = false;
+          program.visualSuccessorStatus = 'NOT_ESTABLISHED';
+          program.userDifferentialReady = false;
+          const index = ledger.entries.findIndex(entry =>
+            entry.subcheckpoint === 'R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION'
+          );
+          const ledgerClosure = {
+            subcheckpoint: 'R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION',
+            ...closure,
+            workflow: {
+              run: 30682582313,
+              job: 91322382094,
+              artifactId: 8812783662,
+              artifactDigest: 'sha256:dd1d5159cf29da0597e7d6cd20d0c878a68f0233dbb9b0072392e010b9cd2e49',
+              result: 'PASS',
+              dispositionAfterClosure: 'MANUAL_ONLY'
+            },
+            automaticRegistryPreflight: {
+              run: 30682582286,
+              job: 91322381985,
+              artifactId: 8812786986,
+              artifactDigest: 'sha256:227b0aa1ddb93cde315e0071bd1ce4b1dc2aa7f1865de4eb1d4211f725ec5e63',
+              result: 'PASS'
+            }
+          };
+          delete ledgerClosure.workflowRun;
+          delete ledgerClosure.workflowJob;
+          delete ledgerClosure.artifactId;
+          delete ledgerClosure.artifactDigest;
+          delete ledgerClosure.registryRun;
+          delete ledgerClosure.registryJob;
+          delete ledgerClosure.registryArtifactId;
+          delete ledgerClosure.registryArtifactDigest;
+          if (index < 0) throw new Error('R1_7C_LEDGER_ENTRY_NOT_FOUND');
+          ledger.entries[index] = ledgerClosure;
+          ledger.currentSubcheckpoint = 'R1.7D_INTEGRATED_ENGINEERING_VERIFICATION_AND_DURABLE_R1.7_CLOSURE';
+          ledger.nextAuthorizedSubcheckpoint = 'R1.7D_INTEGRATED_ENGINEERING_VERIFICATION_AND_DURABLE_R1.7_CLOSURE';
+          ledger.r1_7OverallStatus = 'IN_PROGRESS';
+          ledger.r1_8Status = 'NOT_STARTED';
+          ledger.productDefaultMutated = false;
+          ledger.publicRouteMutated = false;
+          ledger.visualSuccessorStatus = 'NOT_ESTABLISHED';
+          ledger.userDifferentialReady = false;
+          fs.writeFileSync(programPath, `${JSON.stringify(program, null, 2)}\n`);
+          fs.writeFileSync(ledgerPath, `${JSON.stringify(ledger, null, 2)}\n`);
+          NODE
+
+      - name: Set R1.7C workflow to manual-only disposition
+        run: |
+          cat > .github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml <<'EOF'
+          name: H-Earth C2-R1 R1.7C Candidate Renderer Sampling
+
+          on:
+            workflow_dispatch:
+
+          concurrency:
+            group: h-earth-c2-r1-r1-7c-${{ github.ref }}
+            cancel-in-progress: true
+
+          permissions:
+            contents: read
+
+          jobs:
+            verify-r1-7c:
+              runs-on: ubuntu-24.04
+              timeout-minutes: 15
+              steps:
+                - uses: actions/checkout@v4
+                  with:
+                    ref: ${{ github.sha }}
+                    fetch-depth: 0
+
+                - uses: actions/setup-node@v4
+                  with:
+                    node-version: 22
+
+                - name: Verify closed R1.7C candidate renderer sampling integration
+                  env:
+                    C2_R1_HEAD: ${{ github.sha }}
+                    C2_R1_TARGET_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
+                    R1_7C_SKIP_GIT_ASSERTIONS: 'true'
+                  run: |
+                    node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7c-candidate-renderer-sampling.mjs
+
+                - name: Upload regenerated R1.7C receipt and engineering captures
+                  if: always()
+                  uses: actions/upload-artifact@v4
+                  with:
+                    name: h-earth-c2-r1-r1-7c-engineering-evidence
+                    path: |
+                      h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-verification.json
+                      h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7c-engineering-captures/*.svg
+                    if-no-files-found: error
+                    retention-days: 30
+          EOF
+
+      - name: Enforce exact durable closure delta and commit
+        run: |
+          set -euo pipefail
+          cat > /tmp/r17c-expected <<'EOF'
+          .github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-evidence-manifest.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-verification.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-bounded-material-response.svg
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-coastal-readability.svg
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7c-engineering-captures/h-earth.c2-r1.r1-7c-runtime-macro-controls.svg
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json
+          EOF
+          git add -A
+          git diff --cached --name-only "${PASSING_HEAD}" | sort > /tmp/r17c-actual
+          diff -u /tmp/r17c-expected /tmp/r17c-actual
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m 'R1.7C: durable closure evidence and custody'
+          git push origin "HEAD:${CANDIDATE_BRANCH}"
+          git push origin "HEAD:${CLOSED_ROLLBACK_BRANCH}"
+
+      - name: Fetch back and verify durable repository custody
+        run: |
+          set -euo pipefail
+          git fetch origin "${CANDIDATE_BRANCH}:refs/remotes/origin/${CANDIDATE_BRANCH}" "${CLOSED_ROLLBACK_BRANCH}:refs/remotes/origin/${CLOSED_ROLLBACK_BRANCH}"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "origin/${CANDIDATE_BRANCH}")"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "origin/${CLOSED_ROLLBACK_BRANCH}")"
+          test "$(git diff --name-only "${PASSING_HEAD}" HEAD | sort | sha256sum | cut -d' ' -f1)" = "$(sort /tmp/r17c-expected | sha256sum | cut -d' ' -f1)"
+          test "$(git show "origin/${CANDIDATE_BRANCH}:h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-verification.json" | sha256sum | cut -d' ' -f1)" = 974a8ffb79005a2fb8299d5539aa63f8ff87694886e4cb549ecb2dc531f60963
+          git show "origin/${CANDIDATE_BRANCH}:h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-evidence-manifest.json" | jq -e '.repositoryReadbackConfirmed == true and .registryPreflight == "PASS" and .passingReceiptPreserved == true' >/dev/null
+          git show "origin/${CANDIDATE_BRANCH}:h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json" | jq -e '.subcheckpoints["R1.7C"].status == "PASS_CLOSED_DO_NOT_REOPEN" and .nextAuthorizedSubcheckpoint == "R1.7D_INTEGRATED_ENGINEERING_VERIFICATION_AND_DURABLE_R1.7_CLOSURE"' >/dev/null

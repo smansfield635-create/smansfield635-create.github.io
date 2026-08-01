@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/osf-laws-source-registry.yml
       - tools/osf-laws-corpus/build_source_registry.py
+      - tools/osf-laws-corpus/finalize_wiki_history_review.py
       - research/osf-laws-corpus/manifest.json
       - research/osf-laws-corpus/projects/**
   workflow_dispatch:
@@ -46,6 +47,12 @@ jobs:
             --output research/osf-laws-corpus/source-registry \
             --live-osf-review
 
+      - name: Complete wiki-history review
+        run: |
+          python tools/osf-laws-corpus/finalize_wiki_history_review.py \
+            --registry research/osf-laws-corpus/source-registry/registry.json \
+            --receipt research/osf-laws-corpus/source-registry/LANE_2_COMPLETION_RECEIPT.json
+
       - name: Validate Lane 2 contract
         run: |
           python - <<'PY'
@@ -57,6 +64,7 @@ jobs:
           receipt = json.loads((root / 'source-registry/LANE_2_COMPLETION_RECEIPT.json').read_text(encoding='utf-8'))
           assessment = json.loads((root / 'laws-chamber-assessment.json').read_text(encoding='utf-8'))
           manifest = json.loads((root / 'manifest.json').read_text(encoding='utf-8'))
+          allowed_review_states = {'REVIEWED', 'ABSENT', 'PRESENT_BUT_UNAVAILABLE'}
 
           ids = [r['OSF_ID'] for r in registry['resources']]
           assert registry['registry_id'] == 'OSF_LAWS_CHAMBER_SOURCE_REGISTRY_v1'
@@ -74,6 +82,10 @@ jobs:
           assert receipt['classified_resource_count'] == 31
           assert receipt['source_to_destination_complete'] is True
           assert receipt['product_files_changed'] is False
+          assert receipt['wiki_review_complete'] is True
+          assert receipt['status'] == 'PASS_COMPLETE'
+          assert all(r['WIKI_STATUS'] in allowed_review_states for r in registry['resources'])
+          assert all(r['WIKI_HISTORY_STATUS'] in allowed_review_states for r in registry['resources'])
           assert all(r['CLAIM_BOUNDARY'] for r in registry['resources'])
           assert all(r['CANONICAL_DESTINATION'] for r in registry['resources'])
           assert all(r['ADMISSION_STATUS'] not in {'', None, 'DISCOVERED'} for r in registry['resources'])
@@ -82,6 +94,7 @@ jobs:
               'resources': 31,
               'files': 10,
               'wiki_status_counts': registry['summary']['wiki_status_counts'],
+              'wiki_history_status_counts': registry['summary']['wiki_history_status_counts'],
               'admission_counts': registry['summary']['admission_counts'],
           }, indent=2))
           PY

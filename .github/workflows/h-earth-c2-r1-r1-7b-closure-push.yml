@@ -1,0 +1,60 @@
+name: H-Earth C2-R1 R1.7B Closure Push
+on:
+  push:
+    branches:
+      - closure/h-earth-c2-r1-r1-7b-durable-001
+    paths:
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/transport/r1-7b-closure-trigger.txt'
+permissions:
+  contents: write
+jobs:
+  close:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      BASE_HEAD: f1ba63b088f89c6539d92d5293ba1eb651644480
+      TARGET_BRANCH: closure/h-earth-c2-r1-r1-7b-durable-001
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: closure/h-earth-c2-r1-r1-7b-durable-001
+          fetch-depth: 0
+      - name: Verify target and download artifact
+        run: |
+          git merge-base --is-ancestor "$BASE_HEAD" HEAD
+          mkdir -p /tmp/r17b/exact
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/8811649872/zip" > /tmp/r17b/artifact.zip
+          echo '6516110abe68a14160b64b4dbc0ed5dd3996128260806d4c21f773edb82b9ae4  /tmp/r17b/artifact.zip' | sha256sum -c -
+          unzip -q /tmp/r17b/artifact.zip -d /tmp/r17b/exact
+          echo '0927022ab382e046a7d5fa32e81e7ebe64b6876bf22576b1b5916f024222d003  /tmp/r17b/exact/h-earth.c2-r1.r1-7b-verification.json' | sha256sum -c -
+          echo '78a1915a82415b29ca9ae844f5ce1ef3871a518a071fc0b597498eaa913ee615  /tmp/r17b/exact/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-albedo-roughness.svg' | sha256sum -c -
+          echo '4fb1c6379500d1ea81c68fbf3896e82f9faf49005dbcc9052461940638ca8bee  /tmp/r17b/exact/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-cavity-normal.svg' | sha256sum -c -
+          echo '018fac4b0f6f6038444116d01fdd6b760000063e620290491a18ec45589b2938  /tmp/r17b/exact/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-coastal-preservation.svg' | sha256sum -c -
+      - name: Materialize closure and remove transport
+        run: |
+          python3 h-earth-3d/control-plane/coastal-morphology/c2-r1/tools/h-earth.c2-r1.r1-7b-close-from-artifact.py /tmp/r17b/exact
+          rm .github/workflows/h-earth-c2-r1-r1-7b-closure-transport.yml
+          rm .github/workflows/h-earth-c2-r1-r1-7b-closure-push.yml
+          rm h-earth-3d/control-plane/coastal-morphology/c2-r1/tools/h-earth.c2-r1.r1-7b-close-from-artifact.py
+          rm h-earth-3d/control-plane/coastal-morphology/c2-r1/transport/r1-7b-closure-trigger.txt
+      - name: Enforce exact final delta and commit
+        run: |
+          cat > /tmp/expected <<'EOF'
+          .github/workflows/h-earth-c2-r1-r1-7b-baked-macro-control-field.yml
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-evidence-manifest.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-verification.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-albedo-roughness.svg
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-cavity-normal.svg
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-coastal-preservation.svg
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json
+          EOF
+          git diff --name-only "$BASE_HEAD" | sort > /tmp/actual
+          diff -u /tmp/expected /tmp/actual
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'R1.7B: durable closure evidence and custody'
+          git push origin "HEAD:${TARGET_BRANCH}"

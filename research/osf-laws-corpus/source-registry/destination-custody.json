@@ -1,0 +1,83 @@
+{
+  "registry_id": "OSF_LAWS_CHAMBER_SOURCE_REGISTRY_v1",
+  "source_count": 31,
+  "sources_without_destination": [],
+  "destinations": {
+    "ADMISSION_AND_BASELINE": [
+      "7jnxq",
+      "rjdms",
+      "pw8ua",
+      "qeabr"
+    ],
+    "APPLIED_INVESTIGATIONS": [
+      "7vkgs",
+      "n82xh",
+      "6ehrj",
+      "etn4d",
+      "vazr6",
+      "2hvbg",
+      "bnhq3",
+      "7fupz",
+      "2cg9k",
+      "h9k5z",
+      "ar4cd",
+      "5vgfd"
+    ],
+    "EVIDENCE_AND_SOURCES": [
+      "7jnxq",
+      "pyd6g"
+    ],
+    "EXCLUDED_FROM_LAWS_CHAMBER": [
+      "s6dzj",
+      "sfjn6"
+    ],
+    "FINDINGS_AND_BOUNDARIES": [
+      "9u6vd",
+      "edg9f",
+      "4vmtc",
+      "bgd86",
+      "z64am",
+      "j4kr2",
+      "7fupz",
+      "h9k5z",
+      "ck5m2",
+      "54es8"
+    ],
+    "FORWARD_CONSTRUCTION": [
+      "9ut2z",
+      "7vkgs",
+      "etn4d",
+      "bnhq3"
+    ],
+    "METHODS_AND_MODELS": [
+      "7jnxq",
+      "9ut2z",
+      "edg9f",
+      "7vkgs",
+      "n82xh",
+      "pyd6g",
+      "rjdms",
+      "6ehrj",
+      "9y2p5",
+      "2hvbg",
+      "j4kr2",
+      "ju7qr",
+      "2fh4g",
+      "qeabr"
+    ],
+    "RESULT_AND_RECORD": [
+      "9ut2z",
+      "etn4d"
+    ],
+    "REVERSE_AUDIT": [
+      "7jnxq",
+      "n82xh",
+      "rjdms",
+      "bnhq3"
+    ],
+    "SCIENTIFIC_LAW": [
+      "9u6vd",
+      "vazr6"
+    ]
+  }
+}

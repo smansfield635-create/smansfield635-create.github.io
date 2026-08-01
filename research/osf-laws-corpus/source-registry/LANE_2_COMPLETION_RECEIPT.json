@@ -1,0 +1,21 @@
+{
+  "receipt_id": "OSF_LAWS_CHAMBER_LANE_2_SOURCE_AUTHORITY_COMPLETION_v1",
+  "status": "PASS_COMPLETE",
+  "generated_at": "2026-08-01T16:52:18.521399+00:00",
+  "source_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d",
+  "resource_count": 31,
+  "classified_resource_count": 31,
+  "unclassified_resource_count": 0,
+  "source_to_destination_complete": true,
+  "metadata_and_file_review_complete": true,
+  "wiki_review_complete": true,
+  "product_files_changed": false,
+  "merge_authorized": false,
+  "deployment_authorized": false,
+  "claim_boundary": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
+  "wiki_history_status_counts": {
+    "ABSENT": 15,
+    "REVIEWED": 16
+  },
+  "wiki_history_review_completed_at": "2026-08-01T16:52:28.431944+00:00"
+}

@@ -36,6 +36,10 @@ const freeze = (value, seen = new WeakSet()) => {
   Object.values(value).forEach(nested => freeze(nested, seen));
   return Object.isFrozen(value) ? value : Object.freeze(value);
 };
+const boundedHint = (value, scale, maximum = 0.48) => {
+  const positive = Math.max(0, value);
+  return maximum * positive / (positive + scale);
+};
 
 export const H_EARTH_C2_R1_LANDFORM_ANALYSIS_CONTRACT_ID =
   'H_EARTH_C2_R1_LANDFORM_ANALYSIS_AND_MACRO_FIELD_CONTRACT_v1';
@@ -49,6 +53,7 @@ export const H_EARTH_C2_R1_LANDFORM_ANALYSIS = freeze({
     H_EARTH_C2_R1_COASTAL_SURFACE_FRAME_CONTRACT_ID,
   sourceSedimentContractId: H_EARTH_C2_R1_SEDIMENT_MEMBERSHIP_CONTRACT_ID,
   derivativeStepWorldUnits: 8,
+  maximumShapeHintAmplitude: 0.48,
   fieldChannels: freeze([
     'ELEVATION_NORMALIZED',
     'SLOPE_NORMALIZED',
@@ -67,6 +72,8 @@ export const H_EARTH_C2_R1_LANDFORM_ANALYSIS = freeze({
     drainageSource: 'SLOPE_PLUS_POSITIVE_CONCAVITY_TENDENCY',
     moistureSource: 'CLOSED_R1_3_CONTINUOUS_SEDIMENT_MEMBERSHIPS',
     transitionSource: 'ACCEPTED_SIGNED_COASTAL_FRAME_DISTANCE',
+    channelEnvelope:
+      'BOUNDED_MONOTONE_MACRO_HINTS_WITHOUT_THRESHOLD_BANDING',
     periodicNoiseUsed: false,
     randomNoiseUsed: false,
     textureTilingUsed: false,
@@ -135,8 +142,8 @@ function deriveCurvature(worldX, worldZ, centerElevation) {
     magnitude,
     macroGradientX: (xPlus - xMinus) / (2 * step),
     macroGradientZ: (zPlus - zMinus) / (2 * step),
-    concavity: smoothstep(0.0004, 0.028, laplacian),
-    convexity: smoothstep(0.0004, 0.028, -laplacian)
+    concavity: boundedHint(laplacian, 0.035),
+    convexity: boundedHint(-laplacian, 0.035)
   });
 }
 
@@ -146,13 +153,14 @@ function deriveMoisture(weights, actualVerticalWaterDepth) {
   const wet = clamp01(weights.WET_FORESHORE_SAND ?? 0);
   const saturated = clamp01(weights.SATURATED_OR_SUBMERGED_SAND ?? 0);
   const submergedContribution = smoothstep(0.05, 2.5, actualVerticalWaterDepth);
-  return clamp01(
+  const rawMoisture = clamp01(
     dry * 0.08 +
     damp * 0.48 +
     wet * 0.82 +
     saturated +
     submergedContribution * 0.18
   );
+  return 0.1 + 0.5 * rawMoisture;
 }
 
 export function sampleHEarthC2R1LandformAnalysis(worldX, worldZ) {
@@ -188,14 +196,16 @@ export function sampleHEarthC2R1LandformAnalysis(worldX, worldZ) {
     });
   }
 
-  const elevationNormalized = smoothstep(-5, 12, terrain.elevation);
+  const elevationNormalized =
+    0.25 + 0.5 * smoothstep(-12, 30, terrain.elevation);
   const macroSlope = Math.hypot(
     curvature.macroGradientX,
     curvature.macroGradientZ
   );
-  const slopeNormalized = smoothstep(0.002, 0.42, macroSlope);
-  const drainageTendency = clamp01(
-    slopeNormalized * (0.3 + 0.7 * curvature.concavity)
+  const slopeNormalized = boundedHint(macroSlope, 0.16);
+  const drainageTendency = boundedHint(
+    slopeNormalized * (0.3 + 0.7 * curvature.concavity),
+    0.12
   );
   const coastalMoistureInfluence = deriveMoisture(
     sediment.weights,
@@ -203,12 +213,14 @@ export function sampleHEarthC2R1LandformAnalysis(worldX, worldZ) {
   );
   const signedInlandDistance = terrain.coastalFrame.signedInlandDistance;
   const inlandTransition = smoothstep(18, 118, signedInlandDistance);
-  const cavityAOHint = clamp01(
-    curvature.concavity * 0.72 + drainageTendency * 0.28
+  const cavityAOHint = boundedHint(
+    curvature.concavity * 0.72 + drainageTendency * 0.28,
+    0.1
   );
-  const curvatureNormalized = smoothstep(0.0003, 0.05, curvature.magnitude);
-  const macroNormalStrengthHint = clamp01(
-    slopeNormalized * 0.6 + curvatureNormalized * 0.4
+  const curvatureNormalized = boundedHint(curvature.magnitude, 0.05);
+  const macroNormalStrengthHint = boundedHint(
+    slopeNormalized * 0.6 + curvatureNormalized * 0.4,
+    0.12
   );
 
   const channels = freeze({

@@ -2,9 +2,9 @@
 
 Profile: https://osf.io/g5294/
 
-Generated: `2026-08-01T06:43:14.672418+00:00`
+Generated: `2026-08-01T06:53:12.616446+00:00`
 
-Resources harvested: **29**
+Resources harvested: **31**
 
 ## Evidence boundary
 
@@ -27,9 +27,11 @@ This directory is a provenance-preserving discovery corpus. It does not validate
 | 17 | STRONG_SUPPORTING_CANDIDATE | [Coherence Constraint Instantiation System (CCIS)](projects/6ehrj/metadata.json) | [OSF](https://osf.io/6ehrj/) | 0 | N | N |
 | 17 | STRONG_SUPPORTING_CANDIDATE | [Detecting Institutional Hypocrisy: An X–Y–Z Coherence Test](projects/etn4d/metadata.json) | [OSF](https://osf.io/etn4d/) | 0 | N | N |
 | 17 | STRONG_SUPPORTING_CANDIDATE | [First Order of Cyclical Dynamics (Transitory Science)](projects/9y2p5/metadata.json) | [OSF](https://osf.io/9y2p5/) | 0 | N | N |
+| 16 | STRONG_SUPPORTING_CANDIDATE | [Coherence as a Constraint: A Universal Gap Bridged Across History, Science, and Society (The Missing Link Was Structural)](projects/z64am/metadata.json) | [OSF](https://osf.io/z64am/) | 0 | N | N |
 | 16 | STRONG_SUPPORTING_CANDIDATE | [Priority Knowledge Why Failure Is Predictable Before It Appears](projects/vazr6/metadata.json) | [OSF](https://osf.io/vazr6/) | 0 | N | N |
 | 15 | STRONG_SUPPORTING_CANDIDATE | [The Propagation–Failure Quotient (PFQ)](projects/2hvbg/metadata.json) | [OSF](https://osf.io/2hvbg/) | 0 | N | N |
 | 14 | STRONG_SUPPORTING_CANDIDATE | [Global Cross-Era Pilot v2: Coherence Constraint Violations (X–Y–Z)](projects/bnhq3/metadata.json) | [OSF](https://osf.io/bnhq3/) | 0 | N | N |
+| 13 | STRONG_SUPPORTING_CANDIDATE | [Coherence Geometry: The 6-5-4-1-2-3 Compression of Science](projects/j4kr2/metadata.json) | [OSF](https://osf.io/j4kr2/) | 0 | N | N |
 | 13 | STRONG_SUPPORTING_CANDIDATE | [Universal First-Order Discipline:Structural Symptoms of Incoherence](projects/pw8ua/metadata.json) | [OSF](https://osf.io/pw8ua/) | 0 | N | N |
 | 12 | STRONG_SUPPORTING_CANDIDATE | [Coherence as a Field Phenomenon](projects/7fupz/metadata.json) | [OSF](https://osf.io/7fupz/) | 1 | N | N |
 | 12 | STRONG_SUPPORTING_CANDIDATE | [Diamond Dynamics: Possibility, Trajectory, and Use in Coherent Systems](projects/2cg9k/metadata.json) | [OSF](https://osf.io/2cg9k/) | 0 | N | N |

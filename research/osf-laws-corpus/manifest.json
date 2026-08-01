@@ -2,9 +2,9 @@
   "corpus_id": "OSF_PUBLIC_LAWS_DISCOVERY_CORPUS_v1",
   "osf_user_id": "g5294",
   "osf_profile_url": "https://osf.io/g5294/",
-  "generated_at": "2026-08-01T06:43:14.672418+00:00",
-  "public_resource_count": 29,
-  "root_project_count": 29,
+  "generated_at": "2026-08-01T06:53:12.616446+00:00",
+  "public_resource_count": 31,
+  "root_project_count": 31,
   "component_count": 0,
   "registration_count": 1,
   "downloaded_bytes": 28509,
@@ -33,7 +33,7 @@
       "osf_url": "https://osf.io/9u6vd/",
       "api_url": "https://api.osf.io/v2/nodes/9u6vd/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:41:23.373068+00:00",
+      "harvested_at": "2026-08-01T06:51:29.082558+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -110,7 +110,7 @@
       "osf_url": "https://osf.io/7jnxq/",
       "api_url": "https://api.osf.io/v2/registrations/7jnxq/",
       "source_collection": "user_registrations",
-      "harvested_at": "2026-08-01T06:43:14.671754+00:00",
+      "harvested_at": "2026-08-01T06:53:12.615792+00:00",
       "file_inventory_count": 6,
       "file_errors": [],
       "relevance_discovery": {
@@ -166,7 +166,7 @@
       "osf_url": "https://osf.io/9ut2z/",
       "api_url": "https://api.osf.io/v2/nodes/9ut2z/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:39:37.465054+00:00",
+      "harvested_at": "2026-08-01T06:49:32.824808+00:00",
       "file_inventory_count": 2,
       "file_errors": [],
       "relevance_discovery": {
@@ -219,7 +219,7 @@
       "osf_url": "https://osf.io/edg9f/",
       "api_url": "https://api.osf.io/v2/nodes/edg9f/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:39:47.364775+00:00",
+      "harvested_at": "2026-08-01T06:49:41.872170+00:00",
       "file_inventory_count": 2,
       "file_errors": [],
       "relevance_discovery": {
@@ -269,7 +269,7 @@
       "osf_url": "https://osf.io/7vkgs/",
       "api_url": "https://api.osf.io/v2/nodes/7vkgs/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:39:55.260961+00:00",
+      "harvested_at": "2026-08-01T06:49:49.366419+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -318,7 +318,7 @@
       "osf_url": "https://osf.io/4vmtc/",
       "api_url": "https://api.osf.io/v2/nodes/4vmtc/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:41:55.057194+00:00",
+      "harvested_at": "2026-08-01T06:51:59.108352+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -366,7 +366,7 @@
       "osf_url": "https://osf.io/n82xh/",
       "api_url": "https://api.osf.io/v2/nodes/n82xh/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:41:07.561626+00:00",
+      "harvested_at": "2026-08-01T06:51:14.035465+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -416,7 +416,7 @@
       "osf_url": "https://osf.io/pyd6g/",
       "api_url": "https://api.osf.io/v2/nodes/pyd6g/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:42:02.996194+00:00",
+      "harvested_at": "2026-08-01T06:52:06.816439+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -463,7 +463,7 @@
       "osf_url": "https://osf.io/bgd86/",
       "api_url": "https://api.osf.io/v2/nodes/bgd86/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:40:43.884926+00:00",
+      "harvested_at": "2026-08-01T06:50:51.293728+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -508,7 +508,7 @@
       "osf_url": "https://osf.io/rjdms/",
       "api_url": "https://api.osf.io/v2/nodes/rjdms/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:41:31.237413+00:00",
+      "harvested_at": "2026-08-01T06:51:36.612059+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -558,7 +558,7 @@
       "osf_url": "https://osf.io/6ehrj/",
       "api_url": "https://api.osf.io/v2/nodes/6ehrj/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:40:20.136409+00:00",
+      "harvested_at": "2026-08-01T06:50:21.123499+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -601,7 +601,7 @@
       "osf_url": "https://osf.io/etn4d/",
       "api_url": "https://api.osf.io/v2/nodes/etn4d/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:40:28.087241+00:00",
+      "harvested_at": "2026-08-01T06:50:36.219224+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -647,7 +647,7 @@
       "osf_url": "https://osf.io/9y2p5/",
       "api_url": "https://api.osf.io/v2/nodes/9y2p5/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:40:51.776952+00:00",
+      "harvested_at": "2026-08-01T06:50:58.863389+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -663,6 +663,53 @@
         "evidence_signal_score": 5,
         "evidence_term_hits": [
           "data",
+          "empirical"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "z64am",
+      "type": "nodes",
+      "title": "Coherence as a Constraint: A Universal Gap Bridged Across History, Science, and Society (The Missing Link Was Structural)",
+      "description": "In many fragmented domains, unresolved gaps are treated as missing objects rather than missing constraints. This leads to prolonged searches for entities, explanations, or artifacts that can never resolve the inconsistency. In such cases, the missing link is not something to be discovered, but a structural rule that was never applied. Introducing coherence as a constraint resolves these gaps without requiring new objects to be found.\nWe completed a long-standing fragmentation not only in science, but across the broader landscape of human understanding by enforcing coherence as an explicit constraint—without rewriting or replacing existing results, doctrines, or traditions. This project addresses a foundational but largely unexamined limitation shared across disciplines: fragmentation that emerges when locally correct frameworks evolve in isolation without an enforceable global standard of compatibility. Science, philosophy, theology, and culture each produced internally consistent truths, yet lacked a mechanism to reconcile them when they diverged. Fragmentation did not arise from error, but from the absence of a constraint capable of integrating correct but incompatible interpretations across scale, domain, and time.\nHistorically, different doctrines recognized this limitation through metaphor—light and darkness, alignment and misalignment, order and chaos—but lacked the instrumentation to enforce it operationally. As specialization increased and distraction and drift accumulated, coherence was assumed rather than constrained, allowing narrative substitution, semantic drift, and speculative reconciliation to persist. This work introduces coherence as an objective, operational constraint that applies uniformly across domains, independent of belief system or explanatory language. By making coherence enforceable rather than implicit, the project shows how fragmentation can be repaired without invalidating scientific results, philosophical insights, or spiritual wisdom, and without introducing new empirical laws.\nThe core claim is modest but structural: knowledge systems were not broken—they were fragmented. Enforcing coherence collapses narrative variance, reduces admissible interpretations, and restores definitive resolution using existing information. The result is not the replacement of any doctrine, but a unifying constraint that allows distinct domains to align where they must, diverge where they legitimately can, and close questions that were previously deferred indefinitely.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-23T22:23:09.980080",
+      "date_modified": "2026-08-01T06:44:07.835628",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/z64am/",
+      "api_url": "https://api.osf.io/v2/nodes/z64am/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T06:50:04.425134+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 16,
+        "law_term_hits": [
+          "law",
+          "coherence",
+          "constraint",
+          "alignment"
+        ],
+        "evidence_signal_score": 8,
+        "evidence_term_hits": [
+          "result",
+          "results",
           "empirical"
         ],
         "extractable_file_count": 0,
@@ -694,7 +741,7 @@
       "osf_url": "https://osf.io/vazr6/",
       "api_url": "https://api.osf.io/v2/nodes/vazr6/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:41:39.123245+00:00",
+      "harvested_at": "2026-08-01T06:51:44.146648+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -742,7 +789,7 @@
       "osf_url": "https://osf.io/2hvbg/",
       "api_url": "https://api.osf.io/v2/nodes/2hvbg/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:42:27.017430+00:00",
+      "harvested_at": "2026-08-01T06:52:29.361976+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -788,7 +835,7 @@
       "osf_url": "https://osf.io/bnhq3/",
       "api_url": "https://api.osf.io/v2/nodes/bnhq3/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:41:15.489715+00:00",
+      "harvested_at": "2026-08-01T06:51:21.575530+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -805,6 +852,53 @@
           "falsif",
           "table",
           "pilot"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "j4kr2",
+      "type": "nodes",
+      "title": "Coherence Geometry: The 6-5-4-1-2-3 Compression of Science",
+      "description": "This project documents a condensation result: across domains and methodologies, viable approaches collapse into a minimal, observer-invariant coherence geometry. The work removes intent-inference, narrative explanation, and redundant frameworks, leaving a closed coordinate system defined by coherence, constraints, trajectories, boundaries (phase transitions), admissibility, and scale.\nThe core finding is an ordering principle—6-5-4-1-2-3—that describes how scientific description stabilizes when compressed: Scale → Admissibility → Boundaries → Coherence → Constraints → Trajectories. Under this ordering, “methods” become interface layers; the underlying structure is shared. The project provides the frozen axiom set, reduction protocol, and falsifiability conditions, and shows how prior methodologies either (a) collapse cleanly into geometry, (b) become shorthand/UX, or (c) are non-admissible if they require intent or non-observable primitives.\nThis is not a new “field” replacing existing sciences. It is a unifying coordinate system for describing constraint-governed behavior across scales, with clear boundaries, admissibility rules, and kill conditions.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-24T04:14:32.880517",
+      "date_modified": "2026-08-01T06:43:24.908621",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/j4kr2/",
+      "api_url": "https://api.osf.io/v2/nodes/j4kr2/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T06:50:28.636074+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 13,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "invariant"
+        ],
+        "evidence_signal_score": 10,
+        "evidence_term_hits": [
+          "method",
+          "methods",
+          "result",
+          "falsif"
         ],
         "extractable_file_count": 0,
         "has_data_file": false,
@@ -835,7 +929,7 @@
       "osf_url": "https://osf.io/pw8ua/",
       "api_url": "https://api.osf.io/v2/nodes/pw8ua/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:43:06.865761+00:00",
+      "harvested_at": "2026-08-01T06:53:07.246620+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -879,7 +973,7 @@
       "osf_url": "https://osf.io/7fupz/",
       "api_url": "https://api.osf.io/v2/nodes/7fupz/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:40:12.282746+00:00",
+      "harvested_at": "2026-08-01T06:50:13.425348+00:00",
       "file_inventory_count": 1,
       "file_errors": [],
       "relevance_discovery": {
@@ -923,7 +1017,7 @@
       "osf_url": "https://osf.io/2cg9k/",
       "api_url": "https://api.osf.io/v2/nodes/2cg9k/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:40:36.006519+00:00",
+      "harvested_at": "2026-08-01T06:50:43.759948+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -969,7 +1063,7 @@
       "osf_url": "https://osf.io/h9k5z/",
       "api_url": "https://api.osf.io/v2/nodes/h9k5z/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:42:51.042694+00:00",
+      "harvested_at": "2026-08-01T06:52:52.061852+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1014,7 +1108,7 @@
       "osf_url": "https://osf.io/ju7qr/",
       "api_url": "https://api.osf.io/v2/nodes/ju7qr/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:42:18.727194+00:00",
+      "harvested_at": "2026-08-01T06:52:21.859117+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1056,7 +1150,7 @@
       "osf_url": "https://osf.io/ar4cd/",
       "api_url": "https://api.osf.io/v2/nodes/ar4cd/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:41:47.090701+00:00",
+      "harvested_at": "2026-08-01T06:51:51.647635+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1097,7 +1191,7 @@
       "osf_url": "https://osf.io/2fh4g/",
       "api_url": "https://api.osf.io/v2/nodes/2fh4g/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:42:34.982119+00:00",
+      "harvested_at": "2026-08-01T06:52:36.938990+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1142,7 +1236,7 @@
       "osf_url": "https://osf.io/ck5m2/",
       "api_url": "https://api.osf.io/v2/nodes/ck5m2/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:42:43.081855+00:00",
+      "harvested_at": "2026-08-01T06:52:44.532525+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1183,7 +1277,7 @@
       "osf_url": "https://osf.io/54es8/",
       "api_url": "https://api.osf.io/v2/nodes/54es8/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:40:59.672828+00:00",
+      "harvested_at": "2026-08-01T06:51:06.467020+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1230,7 +1324,7 @@
       "osf_url": "https://osf.io/5vgfd/",
       "api_url": "https://api.osf.io/v2/nodes/5vgfd/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:39:27.359213+00:00",
+      "harvested_at": "2026-08-01T06:49:23.890688+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1270,7 +1364,7 @@
       "osf_url": "https://osf.io/s6dzj/",
       "api_url": "https://api.osf.io/v2/nodes/s6dzj/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:42:10.862702+00:00",
+      "harvested_at": "2026-08-01T06:52:14.329097+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1310,7 +1404,7 @@
       "osf_url": "https://osf.io/qeabr/",
       "api_url": "https://api.osf.io/v2/nodes/qeabr/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:42:58.907906+00:00",
+      "harvested_at": "2026-08-01T06:52:59.639824+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1352,7 +1446,7 @@
       "osf_url": "https://osf.io/sfjn6/",
       "api_url": "https://api.osf.io/v2/nodes/sfjn6/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:40:03.165928+00:00",
+      "harvested_at": "2026-08-01T06:49:56.907823+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {

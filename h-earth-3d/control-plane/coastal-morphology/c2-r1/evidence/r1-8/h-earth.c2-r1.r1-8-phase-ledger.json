@@ -7,7 +7,7 @@
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
   "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8b-c3-start-001",
-  "controllingStatus": "R1.8C_PASS_RECORDED",
+  "controllingStatus": "R1.8_BLOCKED_AT_R1.8D_SERVED_OCCURRENCE_VERIFICATION_AND_REPRESENTATIVE_CAPTURE_PACKAGE",
   "executionIdentityLaw": {
     "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "pullRequestExpectedCandidateHead": "github.event.pull_request.head.sha",
@@ -184,9 +184,28 @@
         "mainMutated": false
       },
       "blocker": null
+    },
+    {
+      "id": "R1.8D_SERVED_OCCURRENCE_VERIFICATION_AND_REPRESENTATIVE_CAPTURE_PACKAGE",
+      "status": "BLOCKED",
+      "recordedAt": "2026-08-01T07:27:30.800Z",
+      "evidence": {},
+      "blocker": {
+        "code": "page.waitForFunction: Timeout 60000ms exceeded.",
+        "detail": "page.waitForFunction: Timeout 60000ms exceeded.\n    at inspectPage (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:416:14)\n    at async verifyOccurrence (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:569:21)\n    at async main (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:829:24)\n    at async file:///home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:951:3",
+        "phase": "R1.8D_SERVED_OCCURRENCE_VERIFICATION_AND_REPRESENTATIVE_CAPTURE_PACKAGE",
+        "recordedAt": "2026-08-01T07:27:30.800Z",
+        "productRegressionEstablished": false
+      }
     }
   ],
-  "firstBlocker": null,
+  "firstBlocker": {
+    "code": "page.waitForFunction: Timeout 60000ms exceeded.",
+    "detail": "page.waitForFunction: Timeout 60000ms exceeded.\n    at inspectPage (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:416:14)\n    at async verifyOccurrence (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:569:21)\n    at async main (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:829:24)\n    at async file:///home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:951:3",
+    "phase": "R1.8D_SERVED_OCCURRENCE_VERIFICATION_AND_REPRESENTATIVE_CAPTURE_PACKAGE",
+    "recordedAt": "2026-08-01T07:27:30.800Z",
+    "productRegressionEstablished": false
+  },
   "visualSuccessorStatus": "NOT_ESTABLISHED",
   "userDifferentialReady": false,
   "productDefaultMutated": false,
@@ -227,7 +246,7 @@
       }
     ]
   },
-  "updatedAt": "2026-08-01T07:26:29.414Z",
+  "updatedAt": "2026-08-01T07:27:30.800Z",
   "r18aHead": "e08c92535eef29785867bd798393f346eacc101a",
   "r1_8bC1Diagnosis": {
     "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c1-startup-diagnosis.json",

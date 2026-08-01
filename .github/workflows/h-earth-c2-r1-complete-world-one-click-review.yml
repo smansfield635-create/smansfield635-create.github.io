@@ -1,3 +1,4 @@
+# Synchronization trigger for bounded Role 3 publication workflow.
 name: H-Earth C2-R1 Complete World One-Click Review
 
 on:

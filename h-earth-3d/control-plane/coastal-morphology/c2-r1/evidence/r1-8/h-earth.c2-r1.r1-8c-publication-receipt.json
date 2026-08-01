@@ -1,0 +1,37 @@
+{
+  "receiptType": "H_EARTH_C2_R1_R1_8C_ISOLATED_NON_DEFAULT_PUBLICATION_v1",
+  "result": "PASS_PUBLISHED_ISOLATED_NON_DEFAULT",
+  "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+  "materializationHead": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+  "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+  "reviewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/c77ecf9f047daf8dc11adfbb3a3e100410ba6a31/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+  "publicationModel": "COMMIT_PINNED_ISOLATED_STATIC_REVIEW",
+  "provider": {
+    "name": "rawgit.hack",
+    "endpoint": "rawcdn.githack.com",
+    "repositoryAffiliation": "THIRD_PARTY_NOT_GITHUB",
+    "immutableCommitPinnedCache": true,
+    "formalUptimeGuarantee": false
+  },
+  "availability": {
+    "attempt": 1,
+    "status": 200,
+    "finalUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/c77ecf9f047daf8dc11adfbb3a3e100410ba6a31/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+    "contentType": "text/html; charset=utf-8",
+    "containsIdentity": true
+  },
+  "asset": {
+    "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+    "byteLength": 340144,
+    "sha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77"
+  },
+  "independentlyRemovable": true,
+  "ordinaryHEarthRouteRedirected": false,
+  "publicDefaultHEarthRouteReplaced": false,
+  "productDefaultChanged": false,
+  "pr418Merged": false,
+  "mainMutated": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false,
+  "firstBlocker": null
+}

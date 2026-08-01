@@ -7,7 +7,7 @@
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
   "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8b-c3-start-001",
-  "controllingStatus": "R1.8B_PASS_RECORDED",
+  "controllingStatus": "R1.8C_PASS_RECORDED",
   "executionIdentityLaw": {
     "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "pullRequestExpectedCandidateHead": "github.event.pull_request.head.sha",
@@ -165,6 +165,25 @@
         "publicDefaultRouteMutated": false
       },
       "blocker": null
+    },
+    {
+      "id": "R1.8C_ISOLATED_NON_DEFAULT_CANDIDATE_PUBLICATION",
+      "status": "PASS_RECORDED",
+      "recordedAt": "2026-08-01T07:26:29.414Z",
+      "evidence": {
+        "receipt": {
+          "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8c-publication-receipt.json",
+          "sha256": "2abf404c5df993025a2f0a1fb673043d71902c611e3c52f740a2d6d269dd0e57"
+        },
+        "reviewUrl": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/c77ecf9f047daf8dc11adfbb3a3e100410ba6a31/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+        "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+        "materializationHead": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+        "publicDefaultHEarthRouteReplaced": false,
+        "productDefaultChanged": false,
+        "pr418Merged": false,
+        "mainMutated": false
+      },
+      "blocker": null
     }
   ],
   "firstBlocker": null,
@@ -176,7 +195,7 @@
   "pr418Merged": false,
   "r1_8Closed": false,
   "r1_8eStarted": false,
-  "completedPhaseCount": 2,
+  "completedPhaseCount": 3,
   "reviewPackage": {
     "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "materializationBasisHead": "9a4c8aa90c65bd8aea4741de681e8e0890234a85",
@@ -208,7 +227,7 @@
       }
     ]
   },
-  "updatedAt": "2026-08-01T07:26:27.114Z",
+  "updatedAt": "2026-08-01T07:26:29.414Z",
   "r18aHead": "e08c92535eef29785867bd798393f346eacc101a",
   "r1_8bC1Diagnosis": {
     "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c1-startup-diagnosis.json",
@@ -242,5 +261,7 @@
     "reviewWrapperDefectEstablished": true,
     "actualCandidateRuntimeStartupFailureEstablished": false,
     "productRegressionEstablished": false
-  }
+  },
+  "reviewOccurrence": "https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/c77ecf9f047daf8dc11adfbb3a3e100410ba6a31/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+  "publicationHead": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31"
 }

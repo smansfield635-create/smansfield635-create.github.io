@@ -1,1 +1,2 @@
 Trigger only. This file must not be merged.
+Synchronization event armed after workflow indexing.

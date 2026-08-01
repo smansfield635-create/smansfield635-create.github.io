@@ -25,7 +25,22 @@ jobs:
       - name: Fetch exact current main authority
         run: git fetch origin main
 
-      - name: Correct verifier assumptions
+      - name: Install final presentation stylesheet link
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          target = Path('laws/index.html')
+          source = target.read_text()
+          href = '/laws/index.experience.polish.css?v=LAWS_CP6_EXPERIENTIAL_POLISH_20260801A'
+          if href not in source:
+              link = f'<link data-laws-experience-polish-css="true" href="{href}" rel="stylesheet"/>\n'
+              if '</head>' not in source:
+                  raise SystemExit('Missing document head close.')
+              source = source.replace('</head>', f'{link}</head>', 1)
+              target.write_text(source)
+          PY
+
+      - name: Correct verifier assumptions for current candidate
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -33,58 +48,30 @@ jobs:
           source = target.read_text()
           replacements = {
               "assert(!/serif/i.test(metrics.fontFamily), `${viewport.name}: display typography still resolves to serif.`, metrics.fontFamily);": "const resolvedFamilies = metrics.fontFamily.toLowerCase().split(',').map(value => value.trim().replace(/^['\\\"]|['\\\"]$/g, ''));\n    assert(!resolvedFamilies.includes('serif'), `${viewport.name}: display typography still resolves to serif.`, metrics.fontFamily);",
-              "assert(metrics.speaker === 'Choose a direction', `${viewport.name}: default Compass speaker copy is wrong.`, metrics.speaker);": "assert(metrics.speaker === 'What changed?', `${viewport.name}: preserved initial Flow focus is not reflected by the Compass speaker.`, metrics.speaker);"
+              "assert(metrics.speaker === 'Choose a direction', `${viewport.name}: default Compass speaker copy is wrong.`, metrics.speaker);": "assert(metrics.speaker === 'What changed?', `${viewport.name}: preserved initial Flow focus is not reflected by the Compass speaker.`, metrics.speaker);",
+              "    'laws/index.experience.js',": "    'laws/index.experience.js',\n    'laws/index.experience.polish.css',"
           }
           for previous, replacement in replacements.items():
               if previous in source:
                   if source.count(previous) != 1:
-                      raise SystemExit(f'Expected exactly one verifier assertion: {previous}')
+                      raise SystemExit(f'Expected exactly one verifier target: {previous}')
                   source = source.replace(previous, replacement)
           target.write_text(source)
           PY
 
-      - name: Verify transformation syntax
+      - name: Verify source syntax
         run: |
           node --check tools/laws-cp6-experiential-presentation-transform.mjs
           node --check tools/laws-cp6-experiential-presentation-verify.mjs
           node --check laws/index.experience.js
 
-      - name: Apply experiential presentation rebuild
-        run: node tools/laws-cp6-experiential-presentation-transform.mjs
-
-      - name: Apply captured-frame polish
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          target = Path('laws/index.html')
-          source = target.read_text()
-          marker = 'data-laws-experience-final-polish="true"'
-          if marker not in source:
-              polish = (
-                  '<style data-laws-experience-final-polish="true">\n'
-                  'html[data-cp6-experiential-presentation="candidate"] .shell.laws-shell,\n'
-                  'html[data-cp6-experiential-presentation="candidate"] .laws-estate,\n'
-                  'html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero{\n'
-                  'border:0!important;border-radius:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;}\n'
-                  'html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary{\n'
-                  'width:auto!important;min-width:6.25rem!important;max-width:none!important;overflow:visible!important;white-space:nowrap!important;}\n'
-                  'html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary>span{\n'
-                  'display:inline!important;width:auto!important;max-width:none!important;overflow:visible!important;white-space:nowrap!important;text-overflow:clip!important;}\n'
-                  '</style>\n'
-              )
-              if '</head>' not in source:
-                  raise SystemExit('Missing document head close.')
-              source = source.replace('</head>', f'{polish}</head>', 1)
-              target.write_text(source)
-          PY
-
-      - name: Commit candidate product mutation locally
+      - name: Commit exact product mutation locally
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add laws/index.html laws/index.experience.css laws/index.experience.js
+          git add laws/index.html
           if ! git diff --cached --quiet; then
-            git commit -m "Polish Laws CP6 experiential presentation candidate"
+            git commit -m "Complete Laws experiential wide-stage presentation"
           fi
 
       - name: Verify protected architecture and static presentation
@@ -114,42 +101,85 @@ jobs:
           EVIDENCE_DIR: cp6-experience-evidence
         run: node tools/laws-cp6-experiential-presentation-verify.mjs browser
 
-      - name: Verify captured-frame polish
+      - name: Verify captured-frame visual choreography
         run: |
           node --input-type=module <<'NODE'
           import { chromium } from 'playwright';
           const browser = await chromium.launch({ headless: true });
-          for (const javaScriptEnabled of [true, false]) {
-            const context = await browser.newContext({
-              viewport: { width: 390, height: 844 },
-              javaScriptEnabled
-            });
+
+          for (const spec of [
+            { name: 'phone', width: 390, height: 844 },
+            { name: 'tablet', width: 820, height: 1180 },
+            { name: 'desktop', width: 1440, height: 1000 }
+          ]) {
+            const context = await browser.newContext({ viewport: { width: spec.width, height: spec.height } });
             const page = await context.newPage();
-            await page.goto('http://127.0.0.1:4173/laws/', {
-              waitUntil: javaScriptEnabled ? 'networkidle' : 'domcontentloaded'
-            });
-            const proof = await page.evaluate(() => {
+            await page.goto('http://127.0.0.1:4173/laws/', { waitUntil: 'networkidle' });
+
+            const shellProof = await page.evaluate(() => {
               const summary = document.querySelector('.laws-minimal-nav > summary');
               const shell = document.querySelector('.shell.laws-shell');
+              const root = document.querySelector('[data-laws-root]');
               const hero = document.querySelector('.laws-experience-hero');
-              const shellStyle = shell ? getComputedStyle(shell) : null;
-              const heroStyle = hero ? getComputedStyle(hero) : null;
+              const style = node => node ? getComputedStyle(node) : null;
+              const pseudo = (node, which) => node ? getComputedStyle(node, which) : null;
               return {
                 label: summary?.innerText?.trim() || '',
                 summaryClientWidth: summary?.clientWidth || 0,
                 summaryScrollWidth: summary?.scrollWidth || 0,
-                shellBorder: shellStyle?.borderTopWidth || '',
-                shellRadius: shellStyle?.borderTopLeftRadius || '',
-                heroBorder: heroStyle?.borderTopWidth || '',
-                heroRadius: heroStyle?.borderTopLeftRadius || ''
+                shellBorder: style(shell)?.borderTopWidth || '',
+                shellRadius: style(shell)?.borderTopLeftRadius || '',
+                heroBorder: style(hero)?.borderTopWidth || '',
+                heroRadius: style(hero)?.borderTopLeftRadius || '',
+                shellBeforeContent: pseudo(shell, '::before')?.content || '',
+                rootBeforeContent: pseudo(root, '::before')?.content || ''
               };
             });
-            if (proof.label !== 'Explore') throw new Error(`Navigation label clipped: ${JSON.stringify(proof)}`);
-            if (proof.summaryScrollWidth > proof.summaryClientWidth + 1) throw new Error(`Navigation label overflows: ${JSON.stringify(proof)}`);
-            if (proof.shellBorder !== '0px' || proof.heroBorder !== '0px') throw new Error(`Inherited hero border remains: ${JSON.stringify(proof)}`);
-            if (proof.shellRadius !== '0px' || proof.heroRadius !== '0px') throw new Error(`Inherited hero radius remains: ${JSON.stringify(proof)}`);
+
+            if (shellProof.label !== 'Explore') throw new Error(`${spec.name}: navigation label clipped: ${JSON.stringify(shellProof)}`);
+            if (shellProof.summaryScrollWidth > shellProof.summaryClientWidth + 1) throw new Error(`${spec.name}: navigation label overflows: ${JSON.stringify(shellProof)}`);
+            if (shellProof.shellBorder !== '0px' || shellProof.heroBorder !== '0px') throw new Error(`${spec.name}: inherited hero border remains: ${JSON.stringify(shellProof)}`);
+            if (shellProof.shellRadius !== '0px' || shellProof.heroRadius !== '0px') throw new Error(`${spec.name}: inherited hero radius remains: ${JSON.stringify(shellProof)}`);
+            if (!['none', 'normal'].includes(shellProof.shellBeforeContent) || !['none', 'normal'].includes(shellProof.rootBeforeContent)) {
+              throw new Error(`${spec.name}: inherited fixed shell pseudo-element remains: ${JSON.stringify(shellProof)}`);
+            }
+
+            await page.locator('[data-laws-first-disclosure] > summary').click();
+            await page.waitForTimeout(120);
+
+            const sequence = await page.evaluate(() => {
+              const body = document.querySelector('.laws-first__disclosure-body');
+              const orbit = document.querySelector('#laws-orbit');
+              const panel = document.querySelector('#laws-entry-panel');
+              const questions = Array.from(document.querySelectorAll('.laws-first__question-grid article'));
+              const rect = node => node?.getBoundingClientRect().toJSON() || null;
+              return {
+                body: rect(body),
+                orbit: rect(orbit),
+                panel: rect(panel),
+                questions: questions.map(rect),
+                viewportWidth: innerWidth,
+                overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth
+              };
+            });
+
+            if (sequence.overflow > 2) throw new Error(`${spec.name}: expanded sequence causes horizontal overflow: ${JSON.stringify(sequence)}`);
+            if (sequence.questions.length !== 5) throw new Error(`${spec.name}: five-question sequence missing: ${JSON.stringify(sequence)}`);
+            for (const question of sequence.questions) {
+              if (!question || question.left < -1 || question.right > sequence.viewportWidth + 1 || question.width < 55) {
+                throw new Error(`${spec.name}: question beat is clipped: ${JSON.stringify(sequence)}`);
+              }
+            }
+            if (spec.width > 780) {
+              const compassBottom = Math.max(sequence.orbit?.bottom || 0, sequence.panel?.bottom || 0);
+              if (!sequence.body || sequence.body.top < compassBottom - 4) {
+                throw new Error(`${spec.name}: question sequence overlaps the Compass composition: ${JSON.stringify(sequence)}`);
+              }
+            }
+
             await context.close();
           }
+
           await browser.close();
           NODE
 

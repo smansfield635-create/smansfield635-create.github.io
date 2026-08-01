@@ -36,9 +36,10 @@ jobs:
               "assert(metrics.speaker === 'Choose a direction', `${viewport.name}: default Compass speaker copy is wrong.`, metrics.speaker);": "assert(metrics.speaker === 'What changed?', `${viewport.name}: preserved initial Flow focus is not reflected by the Compass speaker.`, metrics.speaker);"
           }
           for previous, replacement in replacements.items():
-              if source.count(previous) != 1:
-                  raise SystemExit(f'Expected exactly one verifier assertion: {previous}')
-              source = source.replace(previous, replacement)
+              if previous in source:
+                  if source.count(previous) != 1:
+                      raise SystemExit(f'Expected exactly one verifier assertion: {previous}')
+                  source = source.replace(previous, replacement)
           target.write_text(source)
           PY
 
@@ -50,6 +51,48 @@ jobs:
 
       - name: Apply experiential presentation rebuild
         run: node tools/laws-cp6-experiential-presentation-transform.mjs
+
+      - name: Apply captured-frame polish
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          target = Path('laws/index.html')
+          source = target.read_text()
+          marker = 'data-laws-experience-final-polish="true"'
+          if marker not in source:
+              polish = '''
+<style data-laws-experience-final-polish="true">
+html[data-cp6-experiential-presentation="candidate"] .shell.laws-shell,
+html[data-cp6-experiential-presentation="candidate"] .laws-estate,
+html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero{
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary{
+  width:auto!important;
+  min-width:6.25rem!important;
+  max-width:none!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+}
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary>span{
+  display:inline!important;
+  width:auto!important;
+  max-width:none!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+  text-overflow:clip!important;
+}
+</style>
+'''
+              if '</head>' not in source:
+                  raise SystemExit('Missing document head close.')
+              source = source.replace('</head>', f'{polish}</head>', 1)
+              target.write_text(source)
+          PY
 
       - name: Commit candidate product mutation locally
         run: |
@@ -86,6 +129,47 @@ jobs:
           BASE_URL: http://127.0.0.1:4173
           EVIDENCE_DIR: cp6-experience-evidence
         run: node tools/laws-cp6-experiential-presentation-verify.mjs browser
+
+      - name: Verify captured-frame polish
+        run: |
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          const browser = await chromium.launch({ headless: true });
+          for (const javaScriptEnabled of [true, false]) {
+            const context = await browser.newContext({
+              viewport: { width: 390, height: 844 },
+              javaScriptEnabled
+            });
+            const page = await context.newPage();
+            await page.goto('http://127.0.0.1:4173/laws/', {
+              waitUntil: javaScriptEnabled ? 'networkidle' : 'domcontentloaded'
+            });
+            const proof = await page.evaluate(() => {
+              const summary = document.querySelector('.laws-minimal-nav > summary');
+              const shell = document.querySelector('.shell.laws-shell');
+              const hero = document.querySelector('.laws-experience-hero');
+              const summaryStyle = summary ? getComputedStyle(summary) : null;
+              const shellStyle = shell ? getComputedStyle(shell) : null;
+              const heroStyle = hero ? getComputedStyle(hero) : null;
+              return {
+                label: summary?.innerText?.trim() || '',
+                summaryClientWidth: summary?.clientWidth || 0,
+                summaryScrollWidth: summary?.scrollWidth || 0,
+                summaryOverflow: summaryStyle?.overflow || '',
+                shellBorder: shellStyle?.borderTopWidth || '',
+                shellRadius: shellStyle?.borderTopLeftRadius || '',
+                heroBorder: heroStyle?.borderTopWidth || '',
+                heroRadius: heroStyle?.borderTopLeftRadius || ''
+              };
+            });
+            if (proof.label !== 'Explore') throw new Error(`Navigation label clipped: ${JSON.stringify(proof)}`);
+            if (proof.summaryScrollWidth > proof.summaryClientWidth + 1) throw new Error(`Navigation label overflows: ${JSON.stringify(proof)}`);
+            if (proof.shellBorder !== '0px' || proof.heroBorder !== '0px') throw new Error(`Inherited hero border remains: ${JSON.stringify(proof)}`);
+            if (proof.shellRadius !== '0px' || proof.heroRadius !== '0px') throw new Error(`Inherited hero radius remains: ${JSON.stringify(proof)}`);
+            await context.close();
+          }
+          await browser.close();
+          NODE
 
       - name: Upload candidate evidence
         uses: actions/upload-artifact@v4

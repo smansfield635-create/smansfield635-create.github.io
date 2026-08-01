@@ -11,7 +11,8 @@ import {
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import {
   getHEarthRun8ER2CanonicalLiveRenderPackage,
-  getHEarthRun8ER2CanonicalSourcePackage
+  getHEarthRun8ER2CanonicalSourcePackage,
+  getHEarthRun8ER2RuntimePackageSelectionReceipt
 } from './live-render-package.run8e-r2.canonical.js';
 import {
   evaluateHEarthRun8ER2ImmutableLiveRenderPackage
@@ -83,9 +84,11 @@ function multiply4(left, right) {
 function resolveActiveRenderPackage(packageRecord = null) {
   const selectedPackage = packageRecord ?? getHEarthRun8ER2CanonicalLiveRenderPackage();
   const canonicalPackage = getHEarthRun8ER2CanonicalSourcePackage();
-  const completeWorld =
+  const rendererCompatibilityAlias = selectedPackage?.runtimeCompatibilityAlias === true;
+  const completeWorld = !rendererCompatibilityAlias && (
     typeof selectedPackage?.completeWorldContractId === 'string' ||
-    typeof selectedPackage?.parentPackageIdentity === 'string';
+    typeof selectedPackage?.parentPackageIdentity === 'string'
+  );
   const evaluation = completeWorld
     ? evaluateHEarthC2R1CompleteWorldRenderPackage(selectedPackage, canonicalPackage)
     : evaluateHEarthRun8ER2ImmutableLiveRenderPackage(selectedPackage);
@@ -93,6 +96,15 @@ function resolveActiveRenderPackage(packageRecord = null) {
     throw new Error(
       `R3A_PACKAGE_REJECTED:${evaluation.rootRejectionCode ?? evaluation.issues.join(',')}`
     );
+  }
+  if (
+    rendererCompatibilityAlias &&
+    (
+      typeof selectedPackage.integratedPackageIdentity !== 'string' ||
+      typeof selectedPackage.integratedPackageContentDigest !== 'string'
+    )
+  ) {
+    throw new Error('R3A_RENDERER_COMPATIBILITY_ALIAS_IDENTITY_MISSING');
   }
   return selectedPackage;
 }
@@ -147,6 +159,7 @@ export function createHEarthRun8ER3AFrameUniformPacket({
   const projectionMatrix = perspective(camera.verticalFovDegrees, width / height, camera.nearPlane, camera.farPlane);
   const viewProjectionMatrix = multiply4(projectionMatrix, viewMatrix);
   const activePackage = resolveActiveRenderPackage(packageRecord);
+  const packageSelection = getHEarthRun8ER2RuntimePackageSelectionReceipt();
   const gpuViews = createHEarthRun8ER2DCanonicalGPUUploadViews(activePackage);
   const gpuEvaluation = evaluateHEarthRun8ER2DCanonicalGPUUploadViews(gpuViews);
   if (gpuEvaluation.eligible !== true) throw new Error(`R3A_GPU_VIEWS_REJECTED:${gpuEvaluation.issues.join(',')}`);
@@ -191,7 +204,14 @@ export function createHEarthRun8ER3AFrameUniformPacket({
     packageContentDigest: activePackage.contentDigest,
     parentPackageIdentity: activePackage.parentPackageIdentity ?? null,
     integratedCompleteWorldPackage:
+      activePackage.runtimeCompatibilityAlias === true ||
       activePackage.completeWorldBinding?.exactBindingCacheActive === true,
+    integratedPackageIdentity:
+      activePackage.integratedPackageIdentity ?? packageSelection.runtimePackageIdentity,
+    integratedPackageContentDigest:
+      activePackage.integratedPackageContentDigest ?? packageSelection.runtimePackageContentDigest,
+    rendererCompatibilityAliasActive:
+      activePackage.runtimeCompatibilityAlias === true,
     gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
     gpuBufferElementCounts: {
       positions: gpuViews.positions.length,
@@ -217,13 +237,21 @@ export function createHEarthRun8ER3AFrameUniformPacket({
 
 export function getHEarthRun8ER3ALiveRendererInterface(packageRecord = null) {
   const activePackage = resolveActiveRenderPackage(packageRecord);
+  const packageSelection = getHEarthRun8ER2RuntimePackageSelectionReceipt();
   return freeze({
     contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
     packageIdentity: activePackage.packageIdentity,
     packageContentDigest: activePackage.contentDigest,
     parentPackageIdentity: activePackage.parentPackageIdentity ?? null,
     integratedCompleteWorldPackage:
+      activePackage.runtimeCompatibilityAlias === true ||
       activePackage.completeWorldBinding?.exactBindingCacheActive === true,
+    integratedPackageIdentity:
+      activePackage.integratedPackageIdentity ?? packageSelection.runtimePackageIdentity,
+    integratedPackageContentDigest:
+      activePackage.integratedPackageContentDigest ?? packageSelection.runtimePackageContentDigest,
+    rendererCompatibilityAliasActive:
+      activePackage.runtimeCompatibilityAlias === true,
     gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
     attributeLayout: [
       { location: 0, name: 'aPosition', components: 3, buffer: 'positions' },
@@ -259,6 +287,12 @@ export function evaluateHEarthRun8ER3AFrameUniformPacket(packet) {
   if (packet?.contractId !== H_EARTH_RUN_8E_R3A_CONTRACT_ID) issues.push('R3A_PACKET_CONTRACT_MISMATCH');
   if (packet?.packageIdentity !== activePackage.packageIdentity) issues.push('R3A_PACKAGE_IDENTITY_MISMATCH');
   if (packet?.packageContentDigest !== activePackage.contentDigest) issues.push('R3A_PACKAGE_DIGEST_MISMATCH');
+  if (
+    activePackage.runtimeCompatibilityAlias === true &&
+    packet?.integratedPackageIdentity !== activePackage.integratedPackageIdentity
+  ) {
+    issues.push('R3A_INTEGRATED_PACKAGE_IDENTITY_MISMATCH');
+  }
   for (const name of ['viewMatrix', 'projectionMatrix', 'viewProjectionMatrix']) {
     const matrix = packet?.camera?.[name];
     if (!Array.isArray(matrix) || matrix.length !== 16 || matrix.some(value => !finite(value))) {

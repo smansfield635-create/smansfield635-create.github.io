@@ -1,0 +1,139 @@
+/*
+ * Laws CP6 captured-frame presentation corrections.
+ * Presentation only. No Compass, route, record, evidence, or claim authority.
+ */
+
+html[data-cp6-experiential-presentation="candidate"] :is(
+  [data-laws-root],
+  .shell.laws-shell,
+  .laws-estate,
+  .laws-experience-hero
+)::before,
+html[data-cp6-experiential-presentation="candidate"] :is(
+  [data-laws-root],
+  .shell.laws-shell,
+  .laws-estate,
+  .laws-experience-hero
+)::after {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] :is(
+  [data-laws-root],
+  .shell.laws-shell,
+  .laws-estate,
+  .laws-experience-hero
+) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav > summary {
+  width: auto !important;
+  min-width: 6.25rem !important;
+  max-width: none !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav > summary > span {
+  display: inline !important;
+  width: auto !important;
+  max-width: none !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+}
+
+@media (min-width: 781px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero:has(.laws-first__disclosure[open]) {
+    min-height: max(100svh, 58rem);
+    padding-bottom: clamp(15.5rem, 20vw, 19rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero:has(.laws-first__disclosure[open]) .laws-first {
+    position: static;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__disclosure-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(2rem, 4vh, 3.5rem);
+    z-index: 24;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 1.65rem 0 0;
+    border-top: 1px solid var(--laws-experience-line);
+    background:
+      linear-gradient(180deg, rgba(3, 7, 20, 0), rgba(3, 7, 20, 0.42) 28%, rgba(3, 7, 20, 0.86));
+    backdrop-filter: blur(2px);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid {
+    width: 100%;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(0.8rem, 2vw, 2rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid article {
+    min-width: 0;
+    padding-right: clamp(0.5rem, 1vw, 1rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid p {
+    max-width: 18rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__research-record {
+    grid-template-columns: minmax(7rem, 0.16fr) minmax(0, 1fr);
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+}
+
+@media (min-width: 781px) and (max-width: 1080px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero:has(.laws-first__disclosure[open]) {
+    min-height: max(100svh, 66rem);
+    padding-bottom: 22rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid a {
+    font-size: 0.66rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure[open] .laws-first__question-grid p {
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 780px) {
+  html[data-cp6-experiential-presentation="candidate"] :is(
+    [data-laws-root],
+    .shell.laws-shell,
+    .laws-estate,
+    .laws-experience-hero
+  ) {
+    border-radius: 0 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure-body {
+    backdrop-filter: none;
+  }
+}

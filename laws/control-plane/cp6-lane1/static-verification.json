@@ -3,7 +3,7 @@
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "branch": "agent/laws-cp6-compass-first-progressive-disclosure-001",
   "baseHead": "c009f2a03c19a6b54ebad62dfba658f808f0b4c1",
-  "inspectedHead": "e73bb172dcc2d2b629a34ccd36a028a39bd608a3",
+  "inspectedHead": "bac02169b39006cfa1926734fe54e08d85273606",
   "mergeBase": "c009f2a03c19a6b54ebad62dfba658f808f0b4c1",
   "baseline": {
     "acceptedMainPageBlockCount": 86,
@@ -69,6 +69,8 @@
   "destinationPageMutationCount": 0,
   "changedPaths": [
     ".github/workflows/laws-cp6-lane1-build-verify.yml",
+    "laws/control-plane/cp6-lane1/content-disposition.json",
+    "laws/control-plane/cp6-lane1/static-verification.json",
     "laws/index.css",
     "laws/index.html",
     "tools/laws-cp6-lane1-transform.mjs",

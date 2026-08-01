@@ -1,0 +1,23 @@
+{
+  "ledgerType": "H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_OPERATION_LEDGER_v1",
+  "operationId": "H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001",
+  "objectId": "H_EARTH:C2_R1:COASTAL_SUCCESSOR",
+  "executionHistoryId": "H_EARTH:C2_R1:PR_418:HISTORY_001",
+  "activeEdgeId": "H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE",
+  "fromRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
+  "nextRole": "ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY",
+  "branch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+  "startingHead": "e03f211a472fd564b1ed4b8a00096c923a077528",
+  "resultingHead": "COMMIT_CONTAINING_THIS_RECORD",
+  "rollbackBranch": "rollback/h-earth-c2-r1-complete-world-integration-start-001",
+  "rollbackHead": "e03f211a472fd564b1ed4b8a00096c923a077528",
+  "status": "ROLE_1_CONSTRUCTION_COMPLETE_AWAITING_INDEPENDENT_ROLE_3_VERIFICATION",
+  "changedPathCount": 11,
+  "exactElevenPathSetMatch": true,
+  "staticConstructionResult": "PASS_AT_ROLE_1_CONSTRUCTION",
+  "host": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html",
+  "role3Entry": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json",
+  "independentExecutionPass": "NOT_PERFORMED_BY_ROLE_1",
+  "userDifferential": "NOT_PERFORMED",
+  "mergePromotionOrClosure": "NOT_AUTHORIZED"
+}

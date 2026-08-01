@@ -19,7 +19,7 @@ jobs:
           ref: agent/laws-cp5-final-moon-binding-001
           fetch-depth: 0
 
-      - name: Update only crystal cache identity
+      - name: Update both crystal cache identities
         shell: bash
         run: |
           set -euo pipefail
@@ -32,14 +32,19 @@ jobs:
           text=path.read_text()
           old='/laws/index.crystals.js?v=e8c80f898acad0625e722f43be6d1b4f5541690f'
           new='/laws/index.crystals.js?v=27577c49250f42b03d123f8105e1d55d59c3a4b4'
-          if text.count(old)!=1: raise SystemExit(f'OLD_BINDING_COUNT:{text.count(old)}')
-          if new in text: raise SystemExit('NEW_BINDING_ALREADY_PRESENT')
-          path.write_text(text.replace(old,new,1))
+          if text.count(old)!=2:
+              raise SystemExit(f'OLD_BINDING_COUNT:{text.count(old)}')
+          if text.count(new)!=0:
+              raise SystemExit(f'NEW_BINDING_PREEXISTING_COUNT:{text.count(new)}')
+          updated=text.replace(old,new)
+          if updated.count(old)!=0 or updated.count(new)!=2:
+              raise SystemExit('BINDING_REPLACEMENT_CARDINALITY_INVALID')
+          path.write_text(updated)
           PY
           test "$(git diff --name-only)" = "laws/index.html"
           git diff --check -- laws/index.html
-          grep -Fq '/laws/index.crystals.js?v=27577c49250f42b03d123f8105e1d55d59c3a4b4' laws/index.html
-          ! grep -Fq '/laws/index.crystals.js?v=e8c80f898acad0625e722f43be6d1b4f5541690f' laws/index.html
+          test "$(grep -Fo '/laws/index.crystals.js?v=27577c49250f42b03d123f8105e1d55d59c3a4b4' laws/index.html | wc -l)" = "2"
+          test "$(grep -Fo '/laws/index.crystals.js?v=e8c80f898acad0625e722f43be6d1b4f5541690f' laws/index.html | wc -l)" = "0"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add laws/index.html

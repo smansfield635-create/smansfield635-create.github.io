@@ -11,11 +11,11 @@ permissions:
 
 concurrency:
   group: laws-cp6-lane1-pr-browser-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   compare:
-    if: github.head_ref == 'agent/laws-cp6-compass-first-progressive-disclosure-001'
+    if: github.head_ref == 'agent/laws-cp6-compass-first-progressive-disclosure-001' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -26,32 +26,22 @@ jobs:
           ref: agent/laws-cp6-compass-first-progressive-disclosure-001
           fetch-depth: 0
 
-      - name: Reconcile verifier carrier scope and confirm candidate
+      - name: Apply bounded browser correction and confirm static acceptance
         shell: bash
         run: |
           set -euo pipefail
           BASE=c009f2a03c19a6b54ebad62dfba658f808f0b4c1
           test "$(git merge-base HEAD "$BASE")" = "$BASE"
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('tools/laws-cp6-lane1-verify.mjs')
-          text = path.read_text(encoding='utf-8')
-          old = "      file === '.github/workflows/laws-cp6-lane1-build-verify.yml' ||\n      file.startsWith(`${CONTROL}/`)"
-          new = "      file === '.github/workflows/laws-cp6-lane1-build-verify.yml' ||\n      file === '.github/workflows/laws-cp6-lane1-pr-browser.yml' ||\n      file.startsWith(`${CONTROL}/`)"
-          if old in text:
-              text = text.replace(old, new, 1)
-              path.write_text(text, encoding='utf-8')
-          elif new not in text:
-              raise SystemExit('verifier carrier allowlist pattern not found')
-          PY
-          if ! git diff --quiet -- tools/laws-cp6-lane1-verify.mjs; then
+          node tools/laws-cp6-lane1-browser-correction.mjs
+          if ! git diff --quiet -- laws/index.css tools/laws-cp6-lane1-verify.mjs; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add tools/laws-cp6-lane1-verify.mjs
+            git add laws/index.css tools/laws-cp6-lane1-verify.mjs
             git diff --cached --check
-            git commit -m "Authorize inspectable Laws CP6 Lane 1 browser carrier"
+            git commit -m "Fit Laws CP6 live phone compass presentation"
             git push origin HEAD:agent/laws-cp6-compass-first-progressive-disclosure-001
           fi
+          echo "CANDIDATE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
           node tools/laws-cp6-lane1-verify.mjs static
           test "$(git diff --name-only "$BASE" -- laws/index.compositor.js laws/index.controller.js laws/index.cosmos.js laws/index.crystals.js laws/index.interactions.js laws/index.planet.js assets/audralia/audralia.planet.js | wc -l)" -eq 0
 
@@ -97,13 +87,32 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add laws/control-plane/cp6-lane1
-          if git diff --cached --quiet; then
-            exit 0
+          if ! git diff --cached --quiet; then
+            git diff --cached --check
+            git commit -m "Record Laws CP6 Lane 1 browser comparison evidence"
+            git pull --rebase origin agent/laws-cp6-compass-first-progressive-disclosure-001
+            git push origin HEAD:agent/laws-cp6-compass-first-progressive-disclosure-001
           fi
-          git diff --cached --check
-          git commit -m "Record Laws CP6 Lane 1 browser comparison evidence"
-          git pull --rebase origin agent/laws-cp6-compass-first-progressive-disclosure-001
-          git push origin HEAD:agent/laws-cp6-compass-first-progressive-disclosure-001
+          echo "EVIDENCE_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Build executable candidate package
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/laws-cp6-lane1-review
+          cat > /tmp/laws-cp6-lane1-review/RUN_CANDIDATE.md <<EOF
+          # Laws CP6 Lane 1 executable candidate
+
+          Product candidate head: ${CANDIDATE_HEAD}
+          Evidence head: ${EVIDENCE_HEAD}
+          Base head: c009f2a03c19a6b54ebad62dfba658f808f0b4c1
+
+          Extract the archive, run `python3 -m http.server 8080` from its root, and open `http://127.0.0.1:8080/laws/`.
+          EOF
+          git archive --format=tar.gz --output=/tmp/laws-cp6-lane1-review/laws-cp6-lane1-candidate.tar.gz HEAD
+          cp laws/control-plane/cp6-lane1/browser-comparison.json /tmp/laws-cp6-lane1-review/
+          cp laws/control-plane/cp6-lane1/browser-comparison.md /tmp/laws-cp6-lane1-review/
 
       - name: Upload browser evidence
         if: always()
@@ -112,4 +121,13 @@ jobs:
           name: laws-cp6-lane1-pr-browser-${{ github.run_id }}
           path: laws/control-plane/cp6-lane1
           if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload executable candidate
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-lane1-executable-candidate-${{ github.run_id }}
+          path: /tmp/laws-cp6-lane1-review
+          if-no-files-found: error
           retention-days: 30

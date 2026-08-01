@@ -162,7 +162,9 @@ async function bindIntegratedCompleteWorldPackage() {
     selectionReceipt.runtimePackageContentDigest !== 'fnv1a32:218f37ae' ||
     selectionReceipt.candidateSampleFailureCount !== 0 ||
     selectionReceipt.boundTerrainVertexCount !== 10419 ||
-    selectionReceipt.boundShorelineVertexCount !== 299
+    selectionReceipt.boundShorelineVertexCount !== 299 ||
+    selectionReceipt.rendererCompatibilityAliasActive !== true ||
+    selectionReceipt.exactIntegratedBuffersPresentedByAcceptedRenderer !== true
   ) {
     throw new Error('C2_R1_LIVE_RUNTIME_PACKAGE_SELECTION_IDENTITY_MISMATCH');
   }
@@ -250,10 +252,50 @@ function activeModuleSources() {
     .map(script => new URL(script.src, document.baseURI).pathname);
 }
 
+function buildIntegratedLiveGpuReceipt() {
+  if (!binding) return null;
+  const rawBindingReceipt = binding.getReceipt();
+  const packageSelection = getHEarthRun8ER2RuntimePackageSelectionReceipt();
+  return clone({
+    ...rawBindingReceipt,
+    resources: {
+      ...rawBindingReceipt.resources,
+      package: {
+        ...rawBindingReceipt.resources.package,
+        rendererCompatibilityRuntimeIdentity:
+          rawBindingReceipt.resources.package.runtimeIdentity,
+        rendererCompatibilityRuntimeContentDigest:
+          rawBindingReceipt.resources.package.runtimeContentDigest,
+        runtimeIdentity: packageSelection.runtimePackageIdentity,
+        runtimeContentDigest: packageSelection.runtimePackageContentDigest,
+        rendererCompatibilityAliasActive:
+          packageSelection.rendererCompatibilityAliasActive === true,
+        exactIntegratedBuffersPresented:
+          packageSelection.exactIntegratedBuffersPresentedByAcceptedRenderer === true,
+        boundTerrainVertexCount:
+          packageSelection.boundTerrainVertexCount ?? null,
+        boundShorelineVertexCount:
+          packageSelection.boundShorelineVertexCount ?? null,
+        candidateSampleFailureCount:
+          packageSelection.candidateSampleFailureCount ?? null
+      }
+    },
+    correspondence: {
+      ...rawBindingReceipt.correspondence,
+      exactIntegratedPackageIdentityExternalized: true,
+      acceptedRendererIdentityPreserved:
+        rawBindingReceipt.resources.package.runtimeIdentity ===
+          packageSelection.rendererCompatibilityPackageIdentity,
+      exactIntegratedBuffersPresentedByAcceptedRenderer:
+        packageSelection.exactIntegratedBuffersPresentedByAcceptedRenderer === true
+    }
+  });
+}
+
 function buildPublicReceipt() {
   if (!intake || !binding || !integratedPackageBinding) return null;
   const intakeReceipt = intake.getReceipt();
-  const bindingReceipt = binding.getReceipt();
+  const bindingReceipt = buildIntegratedLiveGpuReceipt();
   const moduleSources = activeModuleSources();
   const packageSelection = getHEarthRun8ER2RuntimePackageSelectionReceipt();
   const legacySources = [
@@ -294,12 +336,15 @@ function buildPublicReceipt() {
       resourceIdentityStable: bindingReceipt.correspondence.resourceIdentityStable,
       canonicalPackageReplacedInSource: false,
       exactRuntimePackageOverrideActive:
-        packageSelection.status === 'R2_RUNTIME_PACKAGE_OVERRIDE_ACTIVE'
+        packageSelection.status === 'R2_RUNTIME_PACKAGE_OVERRIDE_ACTIVE',
+      rendererCompatibilityAliasActive:
+        packageSelection.rendererCompatibilityAliasActive === true
     },
     diagnostics: window.H_EARTH_RUNTIME_DIAGNOSTICS?.getSnapshot?.() ?? null,
     boundaries: {
       candidateBranchComposition: true,
       acceptedLiveRuntimePreserved: true,
+      acceptedRendererIdentityPreserved: true,
       acceptedCameraNavigationTouchPreserved: true,
       acceptedInlandGeometryAndPlacementsPreserved: true,
       acceptedCoastalComponentBoundIntoLivePackage: true,
@@ -340,12 +385,22 @@ try {
   });
 
   const bindingReceipt = binding.getReceipt();
+  const packageSelection = getHEarthRun8ER2RuntimePackageSelectionReceipt();
   const contextCount = bindingReceipt?.resources?.counters?.contextCreationCount ?? 0;
   const rendererCount = bindingReceipt?.counters?.rendererInitializationCount ?? 0;
-  const runtimeIdentity = bindingReceipt?.resources?.package?.runtimeIdentity;
+  const rendererRuntimeIdentity = bindingReceipt?.resources?.package?.runtimeIdentity;
+  const rendererRuntimeContentDigest =
+    bindingReceipt?.resources?.package?.runtimeContentDigest;
 
-  if (runtimeIdentity !== 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE') {
-    throw new Error(`R3E2_LIVE_RUNTIME_PACKAGE_NOT_INTEGRATED:${runtimeIdentity}`);
+  if (
+    rendererRuntimeIdentity !==
+      packageSelection.rendererCompatibilityPackageIdentity ||
+    rendererRuntimeContentDigest !==
+      packageSelection.rendererCompatibilityPackageContentDigest
+  ) {
+    throw new Error(
+      `R3E2_ACCEPTED_RENDERER_COMPATIBILITY_IDENTITY_MISMATCH:${rendererRuntimeIdentity}:${rendererRuntimeContentDigest}`
+    );
   }
 
   emitDiagnosticStage(
@@ -358,13 +413,17 @@ try {
     rendererCount > 0 ? 'PASS' : 'FAIL',
     {
       rendererInitializationCount: rendererCount,
-      runtimePackageIdentity: runtimeIdentity
+      rendererCompatibilityPackageIdentity: rendererRuntimeIdentity,
+      exactIntegratedPackageIdentity: packageSelection.runtimePackageIdentity,
+      exactIntegratedBuffersPresented:
+        packageSelection.exactIntegratedBuffersPresentedByAcceptedRenderer
     }
   );
   emitDiagnosticStage('RENDERER_MOUNTED', 'PASS', {
     canvasConnected: canvas.isConnected,
     mountConnected: mount.isConnected,
-    runtimePackageIdentity: runtimeIdentity
+    rendererCompatibilityPackageIdentity: rendererRuntimeIdentity,
+    exactIntegratedPackageIdentity: packageSelection.runtimePackageIdentity
   });
 } catch (error) {
   root.dataset.run8eReady = 'false';
@@ -399,7 +458,7 @@ export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
   getRuntimePackageSelectionReceipt:
     getHEarthRun8ER2RuntimePackageSelectionReceipt,
   getIntakeReceipt: () => intake.getReceipt(),
-  getLiveGpuReceipt: () => binding.getReceipt()
+  getLiveGpuReceipt: buildIntegratedLiveGpuReceipt
 });
 
 window.H_EARTH_RUN8E_PUBLIC_ROUTE = H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;

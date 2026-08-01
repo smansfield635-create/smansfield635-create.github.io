@@ -1,4 +1,4 @@
-name: H-Earth C2-R1 R1.8B-C3 Exact Review Materialization
+name: H-Earth C2-R1 R1.8D-C1 Served Transport Reconciliation
 
 on:
   pull_request:
@@ -9,12 +9,12 @@ on:
   workflow_dispatch:
     inputs:
       candidate_head:
-        description: Exact candidate branch head to verify, materialize, and serve
+        description: Exact candidate branch head to diagnose and verify
         required: true
         type: string
 
 concurrency:
-  group: h-earth-c2-r1-r1-8b-c3-exact-review-materialization
+  group: h-earth-c2-r1-r1-8d-c1-served-transport
   cancel-in-progress: false
 
 permissions:
@@ -22,35 +22,37 @@ permissions:
   pull-requests: read
 
 jobs:
-  execute-r1-8b-c3-through-r1-8d:
+  execute-r1-8d-c1:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 35
     env:
       GH_TOKEN: ${{ github.token }}
       GITHUB_TOKEN: ${{ github.token }}
       R1_8_TARGET_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
       R1_8_PRODUCT_AUTHORITY_HEAD: c53362c6f74b01c4e0b53be526b0e3a0b73edede
-      R1_8_CORRECTIVE_STARTING_HEAD: c5ec156d0d00979ea2296972374b13f43678f4bf
-      R1_8_CORRECTIVE_ROLLBACK_BRANCH: rollback/h-earth-c2-r1-r1-8b-c3-start-001
+      R1_8B_PASS_HEAD: c77ecf9f047daf8dc11adfbb3a3e100410ba6a31
+      R1_8D_C1_STARTING_HEAD: 042a488fb7d84654e0f1cde120fd25af30b9ee5e
+      R1_8_C3_STARTING_HEAD: c5ec156d0d00979ea2296972374b13f43678f4bf
+      R1_8D_C1_ROLLBACK_BRANCH: rollback/h-earth-c2-r1-r1-8d-c1-start-001
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.candidate_head }}
           fetch-depth: 0
 
-      - name: Gate exact review materialization execution
+      - name: Gate authorized R1.8D-C1 execution
         id: gate
         run: |
           set -euo pipefail
           message="$(git log -1 --format=%s)"
-          if [ "$message" = "R1.8B-C3: execute exact prematerialized review workflow" ]; then
+          if [ "$message" = "R1.8D-C1: execute served transport reconciliation" ]; then
             echo "execute=true" >> "$GITHUB_OUTPUT"
           else
             echo "execute=false" >> "$GITHUB_OUTPUT"
-            echo "R1.8B-C3 skipped for non-launch commit: $message"
+            echo "R1.8D-C1 skipped for non-launch commit: $message"
           fi
 
-      - name: Resolve exact candidate and rollback identities
+      - name: Resolve exact launch and rollback identities
         id: identity
         if: steps.gate.outputs.execute == 'true'
         env:
@@ -60,43 +62,31 @@ jobs:
         run: |
           set -euo pipefail
           case "$GITHUB_EVENT_NAME" in
-            pull_request)
-              expected_candidate_head="$EVENT_PR_HEAD"
-              ;;
-            workflow_dispatch)
-              expected_candidate_head="$MANUAL_CANDIDATE_HEAD"
-              ;;
-            *)
-              echo "Unsupported workflow event: $GITHUB_EVENT_NAME" >&2
-              exit 1
-              ;;
+            pull_request) expected_candidate_head="$EVENT_PR_HEAD" ;;
+            workflow_dispatch) expected_candidate_head="$MANUAL_CANDIDATE_HEAD" ;;
+            *) echo "Unsupported workflow event: $GITHUB_EVENT_NAME" >&2; exit 1 ;;
           esac
-
           if ! [[ "$expected_candidate_head" =~ ^[0-9a-f]{40}$ ]]; then
             echo "Expected candidate head is not an exact SHA-1 identity" >&2
             exit 1
           fi
-
           checked_out_head="$(git rev-parse HEAD)"
           remote_head="$(git ls-remote origin "refs/heads/$R1_8_TARGET_BRANCH" | awk '{print $1}')"
-          rollback_head="$(git ls-remote origin "refs/heads/$R1_8_CORRECTIVE_ROLLBACK_BRANCH" | awk '{print $1}')"
-
-          if [ "$checked_out_head" != "$expected_candidate_head" ]; then
-            echo "Checked-out head mismatch: $checked_out_head != $expected_candidate_head" >&2
+          rollback_head="$(git ls-remote origin "refs/heads/$R1_8D_C1_ROLLBACK_BRANCH" | awk '{print $1}')"
+          if [ "$checked_out_head" != "$expected_candidate_head" ] || [ "$remote_head" != "$expected_candidate_head" ]; then
+            echo "Exact launch identity mismatch" >&2
+            echo "checked_out=$checked_out_head remote=$remote_head expected=$expected_candidate_head" >&2
             exit 1
           fi
-          if [ "$remote_head" != "$expected_candidate_head" ]; then
-            echo "Remote target branch mismatch: $remote_head != $expected_candidate_head" >&2
+          if [ "$rollback_head" != "$R1_8D_C1_STARTING_HEAD" ]; then
+            echo "Corrective rollback mismatch: $rollback_head" >&2
             exit 1
           fi
-          if [ "$rollback_head" != "$R1_8_CORRECTIVE_STARTING_HEAD" ]; then
-            echo "Corrective rollback mismatch: $rollback_head != $R1_8_CORRECTIVE_STARTING_HEAD" >&2
-            exit 1
-          fi
-
           git merge-base --is-ancestor "$R1_8_PRODUCT_AUTHORITY_HEAD" "$checked_out_head"
+          git fetch origin \
+            "+refs/heads/$R1_8_TARGET_BRANCH:refs/remotes/origin/$R1_8_TARGET_BRANCH" \
+            "+refs/heads/$R1_8D_C1_ROLLBACK_BRANCH:refs/remotes/origin/$R1_8D_C1_ROLLBACK_BRANCH"
           echo "expected_candidate_head=$expected_candidate_head" >> "$GITHUB_OUTPUT"
-          echo "checked_out_head=$checked_out_head" >> "$GITHUB_OUTPUT"
           echo "synthetic_merge_sha=$EVENT_SYNTHETIC_SHA" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v4
@@ -104,13 +94,13 @@ jobs:
         with:
           node-version: 22
 
-      - name: Check bounded implementation syntax
+      - name: Check bounded diagnosis syntax
         if: steps.gate.outputs.execute == 'true'
         run: |
           set -euo pipefail
-          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js
-          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js
-          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8d-c1-carrier-trace.js
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8d-c1-served-verifier.js
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8d-c1-served-transport.mjs
 
       - name: Install bounded browser verification environment
         if: steps.gate.outputs.execute == 'true'
@@ -119,35 +109,81 @@ jobs:
           npm install --no-save --no-package-lock playwright@1.52.0
           npx playwright install --with-deps chromium
 
-      - name: Generate exact asset and execute R1.8B through R1.8D
+      - name: Run exact-head registry sequence reconciliation
+        if: steps.gate.outputs.execute == 'true'
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/r1-8d-c1-c77 /tmp/r1-8d-c1-042
+          git worktree add --detach /tmp/r1-8d-c1-c77 "$R1_8B_PASS_HEAD"
+          git worktree add --detach /tmp/r1-8d-c1-042 "$R1_8D_C1_STARTING_HEAD"
+
+          git diff --name-only "$R1_8_C3_STARTING_HEAD" "$R1_8B_PASS_HEAD" \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+            | sort -u > /tmp/r1-8d-c1-paths-c77.txt || true
+          git diff --name-only "$R1_8_C3_STARTING_HEAD" "$R1_8D_C1_STARTING_HEAD" \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+            | sort -u > /tmp/r1-8d-c1-paths-042.txt || true
+
+          node --experimental-default-type=module /tmp/r1-8d-c1-c77/tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/r1-8d-c1-paths-c77.txt \
+            --task "Exact R1.8B pass-head registry preflight before R1.8D-C1 served diagnosis" \
+            --mutation-intent \
+            --output /tmp/r1-8d-c1-preflight-c77.json
+          node --experimental-default-type=module /tmp/r1-8d-c1-042/tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/r1-8d-c1-paths-042.txt \
+            --task "Exact R1.8D-C1 starting-head registry preflight before served diagnosis" \
+            --mutation-intent \
+            --output /tmp/r1-8d-c1-preflight-042.json
+          cat /tmp/r1-8d-c1-preflight-c77.json
+          cat /tmp/r1-8d-c1-preflight-042.json
+
+      - name: Diagnose, reconcile, verify, and preserve R1.8D
         if: steps.gate.outputs.execute == 'true'
         env:
           R1_8_EXPECTED_CANDIDATE_HEAD: ${{ steps.identity.outputs.expected_candidate_head }}
           R1_8_PULL_REQUEST_SYNTHETIC_MERGE_SHA: ${{ steps.identity.outputs.synthetic_merge_sha }}
+          R1_8D_C1_PREFLIGHT_C77: /tmp/r1-8d-c1-preflight-c77.json
+          R1_8D_C1_PREFLIGHT_042: /tmp/r1-8d-c1-preflight-042.json
+          R1_8D_C1_PATHS_C77: /tmp/r1-8d-c1-paths-c77.txt
+          R1_8D_C1_PATHS_042: /tmp/r1-8d-c1-paths-042.txt
         run: |
           set -euo pipefail
-          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8d-c1-served-transport.mjs
 
       - name: Run exact resulting-head repository registry preflight
         if: steps.gate.outputs.execute == 'true'
         run: |
           set -euo pipefail
-          git diff --name-only "$R1_8_CORRECTIVE_STARTING_HEAD" HEAD > /tmp/r1-8b-c3-paths.txt
+          resulting_head="$(git rev-parse HEAD)"
+          remote_head="$(git ls-remote origin "refs/heads/$R1_8_TARGET_BRANCH" | awk '{print $1}')"
+          if [ "$resulting_head" != "$remote_head" ]; then
+            echo "Resulting head mismatch: local=$resulting_head remote=$remote_head" >&2
+            exit 1
+          fi
+          git diff --name-only "$R1_8D_C1_STARTING_HEAD" "$resulting_head" \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+            | sort -u > /tmp/r1-8d-c1-resulting-paths.txt || true
           node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
-            --paths-file /tmp/r1-8b-c3-paths.txt \
-            --task "R1.8B-C3 exact pre-materialized isolated review mesh, R1.8B verification, R1.8C publication, and R1.8D served capture preparation" \
+            --paths-file /tmp/r1-8d-c1-resulting-paths.txt \
+            --task "Exact resulting-head R1.8D-C1 served transport reconciliation and human-review evidence" \
             --mutation-intent \
-            --output /tmp/r1-8b-c3-registry-preflight.json
-          cat /tmp/r1-8b-c3-registry-preflight.json
+            --output /tmp/r1-8d-c1-resulting-registry-preflight.json
+          cat /tmp/r1-8d-c1-resulting-registry-preflight.json
+          echo "R1_8D_C1_EXACT_RESULTING_HEAD=$resulting_head"
 
-      - name: Upload bounded R1.8B-C3 through R1.8D evidence
+      - name: Upload bounded R1.8D-C1 evidence
         if: always() && steps.gate.outputs.execute == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-c2-r1-r1-8b-c3-through-r1-8d-evidence
+          name: h-earth-c2-r1-r1-8d-c1-served-transport-evidence
           path: |
             h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin
+            /tmp/r1-8d-c1-preflight-c77.json
+            /tmp/r1-8d-c1-preflight-042.json
+            /tmp/r1-8d-c1-resulting-registry-preflight.json
+            /tmp/r1-8d-c1-resulting-paths.txt
           if-no-files-found: error
           retention-days: 30

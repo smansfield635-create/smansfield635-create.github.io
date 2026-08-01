@@ -1,0 +1,59 @@
+name: Laws CP5 Final Moon Definition Push Runner
+
+on:
+  push:
+    branches:
+      - execution/laws-cp5-final-moon-definition-001
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp5-final-moon-definition-push-runner
+  cancel-in-progress: false
+
+jobs:
+  run-frozen-materializer:
+    if: github.ref_name == 'execution/laws-cp5-final-moon-definition-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout execution carrier
+        uses: actions/checkout@v4
+        with:
+          ref: execution/laws-cp5-final-moon-definition-001
+          path: carrier
+          fetch-depth: 1
+
+      - name: Checkout exact product branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp5-final-moon-definition-001
+          path: product
+          fetch-depth: 0
+
+      - name: Execute frozen bounded materializer once
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          source = Path('carrier/.github/workflows/laws-cp5-final-moon-definition-materializer.yml').read_text()
+          marker = '        run: |\n'
+          if source.count(marker) != 1:
+              raise SystemExit(f'MATERIALIZER_RUN_BLOCK_COUNT_INVALID:{source.count(marker)}')
+          block = source.split(marker, 1)[1]
+          lines = block.splitlines()
+          normalized = []
+          for line in lines:
+              if line.startswith('          '):
+                  normalized.append(line[10:])
+              elif not line.strip():
+                  normalized.append('')
+              else:
+                  raise SystemExit(f'MATERIALIZER_INDENTATION_INVALID:{line[:80]}')
+          Path('/tmp/laws-cp5-final-moon-materializer.sh').write_text('\n'.join(normalized) + '\n')
+          PY
+          cd product
+          bash /tmp/laws-cp5-final-moon-materializer.sh

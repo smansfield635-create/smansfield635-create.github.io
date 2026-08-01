@@ -39,6 +39,11 @@ for number in (88, 90):
 '''
 source = source.replace(payload_needle, textwrap.dedent(route_normalization) + payload_needle, 1)
 
+boundary_needle = "assert 'not itself validation' in canonical_text(expected_payloads[cid(80)]).lower()"
+boundary_replacement = "assert 'not itself validation' in norm(canonical_text(expected_payloads[cid(80)])).lower()"
+assert source.count(boundary_needle) == 1
+source = source.replace(boundary_needle, boundary_replacement, 1)
+
 source = source.replace(
     "/laws/research/applied-investigations/#route-maturity-and-infrastructure-pathways",
     "/laws/research/applied-investigations/",

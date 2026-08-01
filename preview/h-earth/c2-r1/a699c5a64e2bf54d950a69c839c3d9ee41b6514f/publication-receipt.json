@@ -1,0 +1,13 @@
+{
+  "operationId": "H_EARTH_C2_R1_COMPLETE_WORLD_IMMUTABLE_PREVIEW_PUBLICATION_001",
+  "status": "ROLE_1_PREMERGE_PROOF_PASS",
+  "sourceHead": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+  "previewFileCount": 116,
+  "dependencyClosureResult": "PASS",
+  "byteManifestResult": "PASS",
+  "manifestDigest": "sha256:7b728987891f7dccb331a8773bebee9770055bc2de276bf351dbbd08b581a9c1",
+  "localPreviewResult": "PASS",
+  "webgl2Result": "PASS_SINGLE_INITIALIZATION",
+  "cameraNavigationAndTouchResult": "PASS",
+  "consolePageRequestHttpResult": "PASS_ZERO_FAILURES"
+}

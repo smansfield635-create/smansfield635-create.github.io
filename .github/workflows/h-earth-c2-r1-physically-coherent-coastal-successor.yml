@@ -1,0 +1,57 @@
+name: H-Earth C2-R1 R1.7D Integrated Engineering Verification
+
+on:
+  pull_request:
+    branches:
+      - integration/h-earth-c2-r1-baseline-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7d-integrated-engineering-verification.mjs'
+  workflow_dispatch:
+
+concurrency:
+  group: h-earth-c2-r1-r1-7d-integrated-engineering-verification
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r1-7d-bounded-phases:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Execute R1.7D_1 through R1.7D_3 with cumulative phase custody
+        env:
+          C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          C2_R1_TARGET_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
+        run: |
+          set +e
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7d-integrated-engineering-verification.mjs
+          status=$?
+          evidence=h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d
+          if test -d "$evidence"; then
+            find "$evidence" -type f ! -name 'h-earth.c2-r1.r1-7d-artifact-file-digests.sha256' -print0 \
+              | sort -z \
+              | xargs -0 sha256sum \
+              > "$evidence/h-earth.c2-r1.r1-7d-artifact-file-digests.sha256"
+          fi
+          exit "$status"
+
+      - name: Upload cumulative R1.7D phase ledger, receipt, captures, and digests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-r1-7d-integrated-engineering-evidence
+          path: h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/
+          if-no-files-found: error
+          retention-days: 30

@@ -1,66 +1,45 @@
 {
-  "ledgerType": "H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_OPERATION_LEDGER_v1",
+  "ledgerType": "H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_OPERATION_LEDGER_v2",
   "operationId": "H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001",
+  "correctiveOperationId": "H_EARTH_C2_R1_COMPLETE_WORLD_REAL_PACKAGE_ADAPTER_CORRECTION_001",
   "objectId": "H_EARTH:C2_R1:COASTAL_SUCCESSOR",
   "executionHistoryId": "H_EARTH:C2_R1:PR_418:HISTORY_001",
   "activeEdgeId": "H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE",
   "fromRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
   "nextRole": "ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY",
   "branch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
-  "startingHead": "e03f211a472fd564b1ed4b8a00096c923a077528",
+  "integrationStartingHead": "e03f211a472fd564b1ed4b8a00096c923a077528",
+  "browserTransportStartingHead": "f2a7fbdb6e328b05130957e2ade3f9d06f3b1f97",
+  "realPackageAdapterStartingHead": "8d41e4eb85a8ef6a2162e46c2bc5d0a92892dc55",
   "resultingHead": "COMMIT_CONTAINING_THIS_RECORD",
-  "rollbackBranch": "rollback/h-earth-c2-r1-complete-world-integration-start-001",
-  "rollbackHead": "e03f211a472fd564b1ed4b8a00096c923a077528",
-  "status": "ROLE_1_BROWSER_TRANSPORT_PROVISIONED_AWAITING_INDEPENDENT_ROLE_3_EXECUTION",
-  "changedPathCount": 11,
-  "exactElevenPathSetMatch": true,
-  "staticConstructionResult": "PASS_AT_ROLE_1_CONSTRUCTION",
-  "host": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html",
-  "role3Entry": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json",
-  "browserTransportCorrection": {
-    "operationId": "H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_TRANSPORT_CORRECTION_001",
-    "correctionClass": "VERIFICATION_HARNESS_TRANSPORT_ONLY",
-    "startingHead": "f2a7fbdb6e328b05130957e2ade3f9d06f3b1f97",
-    "resultingHead": "COMMIT_CONTAINING_THIS_RECORD",
-    "rollbackBranch": "rollback/h-earth-c2-r1-browser-transport-start-001",
-    "rollbackHead": "f2a7fbdb6e328b05130957e2ade3f9d06f3b1f97",
-    "correctiveDiffPathCount": 4,
-    "exactFourPathCorrectionMatch": true,
-    "overallElevenPathSetPreserved": true,
-    "staticJob": "exact-head-and-static-construction",
-    "browserJob": "browser-execution-transport",
-    "browserMatrix": [
-      {
-        "name": "desktop-1440x900",
-        "viewport": {
-          "width": 1440,
-          "height": 900
-        },
-        "touchEnabled": false
-      },
-      {
-        "name": "mobile-412x915",
-        "viewport": {
-          "width": 412,
-          "height": 915
-        },
-        "deviceScaleFactor": 2.625,
-        "touchEnabled": true
-      },
-      {
-        "name": "mobile-390x844",
-        "viewport": {
-          "width": 390,
-          "height": 844
-        },
-        "deviceScaleFactor": 3,
-        "touchEnabled": true
-      }
-    ],
-    "artifactName": "h-earth-c2-r1-complete-world-browser-${{ github.run_id }}-${{ github.run_attempt }}",
-    "transportStatus": "PROVISIONED",
-    "role1ExecutionDisposition": "TRANSPORT_CONSTRUCTION_ONLY_NOT_INDEPENDENT_ROLE_3_PASS"
+  "rollbackBranch": "rollback/h-earth-c2-r1-real-package-adapter-start-001",
+  "rollbackHead": "8d41e4eb85a8ef6a2162e46c2bc5d0a92892dc55",
+  "status": "ROLE_1_REAL_PACKAGE_ADAPTER_DIAGNOSIS_IN_PROGRESS",
+  "correctivePathCount": 6,
+  "overallCompleteWorldPathCount": 11,
+  "priorBrowserFailure": {
+    "workflowRunId": 30709713649,
+    "rootRejection": "CANDIDATE_SAMPLE_FAILURES:1",
+    "transportFailure": false,
+    "secondaryIdentityMismatchNoisePresent": true
   },
+  "requiredDiagnosis": [
+    "EXACT_FAILED_VERTEX_INDEX",
+    "ROLE_CODE",
+    "WORLD_X",
+    "WORLD_Z",
+    "COASTAL_FRAME",
+    "UPSTREAM_SAMPLE_ISSUES"
+  ],
+  "realPackageIntegrationTest": "PENDING_DIAGNOSTIC_EXECUTION",
+  "candidateSampleFailureCount": "PENDING_DIAGNOSTIC_EXECUTION",
+  "boundTerrainVertexCount": "PENDING_DIAGNOSTIC_EXECUTION",
+  "boundShorelineVertexCount": "PENDING_DIAGNOSTIC_EXECUTION",
+  "identityPreservationResult": "PENDING_DIAGNOSTIC_EXECUTION",
+  "closedComponentSourceMutation": false,
+  "completeWorldRendererMutation": false,
+  "publicRouteMutation": false,
+  "mainMutation": false,
   "independentExecutionPass": "NOT_PERFORMED_BY_ROLE_1",
   "userDifferential": "NOT_PERFORMED",
   "mergePromotionOrClosure": "NOT_AUTHORIZED"

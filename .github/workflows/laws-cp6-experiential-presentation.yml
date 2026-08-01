@@ -1,0 +1,82 @@
+name: Laws CP6 experiential presentation
+
+on:
+  pull_request:
+    paths:
+      - 'laws/**'
+      - 'tools/laws-cp6-experiential-presentation-*.mjs'
+      - '.github/workflows/laws-cp6-experiential-presentation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-verify:
+    if: github.head_ref == 'agent/laws-cp6-experiential-presentation-rebuild-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Fetch exact current main authority
+        run: git fetch origin main
+
+      - name: Verify transformation syntax
+        run: |
+          node --check tools/laws-cp6-experiential-presentation-transform.mjs
+          node --check tools/laws-cp6-experiential-presentation-verify.mjs
+          node --check laws/index.experience.js
+
+      - name: Apply experiential presentation rebuild
+        run: node tools/laws-cp6-experiential-presentation-transform.mjs
+
+      - name: Commit candidate product mutation locally
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.html laws/index.experience.css laws/index.experience.js
+          if ! git diff --cached --quiet; then
+            git commit -m "Build Laws CP6 experiential presentation candidate"
+          fi
+
+      - name: Verify protected architecture and static presentation
+        env:
+          EVIDENCE_DIR: cp6-experience-evidence
+        run: node tools/laws-cp6-experiential-presentation-verify.mjs static
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-cp6-experience-server.log 2>&1 &
+          echo $! > /tmp/laws-cp6-experience-server.pid
+          for attempt in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/laws/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/laws-cp6-experience-server.log
+          exit 1
+
+      - name: Verify full motion reduced motion and static presentation
+        env:
+          BASE_URL: http://127.0.0.1:4173
+          EVIDENCE_DIR: cp6-experience-evidence
+        run: node tools/laws-cp6-experiential-presentation-verify.mjs browser
+
+      - name: Upload candidate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-experiential-presentation
+          path: cp6-experience-evidence
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Publish verified candidate head
+        run: git push origin HEAD:${{ github.head_ref }}

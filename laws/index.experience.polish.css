@@ -3,6 +3,8 @@
  * Presentation only. No Compass, route, record, evidence, or claim authority.
  */
 
+@import url("/laws/index.stellar-continuity.css?v=LAWS_STELLAR_CONTINUITY_20260801A");
+
 html[data-cp6-experiential-presentation="candidate"] :is(
   [data-laws-root],
   .shell.laws-shell,

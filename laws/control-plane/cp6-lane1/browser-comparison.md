@@ -1,7 +1,7 @@
 # Laws CP6 Lane 1 browser comparison
 
 - Base: `c009f2a03c19a6b54ebad62dfba658f808f0b4c1`
-- Candidate: `a8f68ec005e6ba8b8266390bb033fd846c5272ae`
+- Candidate: `587c7b2db9a994f2eefa4807951920bdaccd16f8`
 - Result: **PASS**
 - Canonical destinations reachable: 8/8
 - Protected runtime diff: 0

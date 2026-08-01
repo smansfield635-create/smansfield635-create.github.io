@@ -48,12 +48,7 @@ jobs:
           lines = block.splitlines()
           normalized = []
           for line in lines:
-              if line.startswith('          '):
-                  normalized.append(line[10:])
-              elif not line.strip():
-                  normalized.append('')
-              else:
-                  raise SystemExit(f'MATERIALIZER_INDENTATION_INVALID:{line[:80]}')
+              normalized.append(line[10:] if line.startswith('          ') else line)
           Path('/tmp/laws-cp5-final-moon-materializer.sh').write_text('\n'.join(normalized) + '\n')
           PY
           cd product

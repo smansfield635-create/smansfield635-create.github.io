@@ -60,34 +60,18 @@ jobs:
           source = target.read_text()
           marker = 'data-laws-experience-final-polish="true"'
           if marker not in source:
-              polish = '''
-<style data-laws-experience-final-polish="true">
-html[data-cp6-experiential-presentation="candidate"] .shell.laws-shell,
-html[data-cp6-experiential-presentation="candidate"] .laws-estate,
-html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero{
-  border:0!important;
-  border-radius:0!important;
-  outline:0!important;
-  box-shadow:none!important;
-  background:transparent!important;
-}
-html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary{
-  width:auto!important;
-  min-width:6.25rem!important;
-  max-width:none!important;
-  overflow:visible!important;
-  white-space:nowrap!important;
-}
-html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary>span{
-  display:inline!important;
-  width:auto!important;
-  max-width:none!important;
-  overflow:visible!important;
-  white-space:nowrap!important;
-  text-overflow:clip!important;
-}
-</style>
-'''
+              polish = (
+                  '<style data-laws-experience-final-polish="true">\n'
+                  'html[data-cp6-experiential-presentation="candidate"] .shell.laws-shell,\n'
+                  'html[data-cp6-experiential-presentation="candidate"] .laws-estate,\n'
+                  'html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero{\n'
+                  'border:0!important;border-radius:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;}\n'
+                  'html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary{\n'
+                  'width:auto!important;min-width:6.25rem!important;max-width:none!important;overflow:visible!important;white-space:nowrap!important;}\n'
+                  'html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary>span{\n'
+                  'display:inline!important;width:auto!important;max-width:none!important;overflow:visible!important;white-space:nowrap!important;text-overflow:clip!important;}\n'
+                  '</style>\n'
+              )
               if '</head>' not in source:
                   raise SystemExit('Missing document head close.')
               source = source.replace('</head>', f'{polish}</head>', 1)
@@ -100,7 +84,7 @@ html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary>s
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add laws/index.html laws/index.experience.css laws/index.experience.js
           if ! git diff --cached --quiet; then
-            git commit -m "Build Laws CP6 experiential presentation candidate"
+            git commit -m "Polish Laws CP6 experiential presentation candidate"
           fi
 
       - name: Verify protected architecture and static presentation
@@ -148,14 +132,12 @@ html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav>summary>s
               const summary = document.querySelector('.laws-minimal-nav > summary');
               const shell = document.querySelector('.shell.laws-shell');
               const hero = document.querySelector('.laws-experience-hero');
-              const summaryStyle = summary ? getComputedStyle(summary) : null;
               const shellStyle = shell ? getComputedStyle(shell) : null;
               const heroStyle = hero ? getComputedStyle(hero) : null;
               return {
                 label: summary?.innerText?.trim() || '',
                 summaryClientWidth: summary?.clientWidth || 0,
                 summaryScrollWidth: summary?.scrollWidth || 0,
-                summaryOverflow: summaryStyle?.overflow || '',
                 shellBorder: shellStyle?.borderTopWidth || '',
                 shellRadius: shellStyle?.borderTopLeftRadius || '',
                 heroBorder: heroStyle?.borderTopWidth || '',

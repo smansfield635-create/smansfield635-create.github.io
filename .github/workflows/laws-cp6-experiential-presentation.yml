@@ -25,17 +25,21 @@ jobs:
       - name: Fetch exact current main authority
         run: git fetch origin main
 
-      - name: Correct typography family classification
+      - name: Correct verifier assumptions
         run: |
           python3 - <<'PY'
           from pathlib import Path
           target = Path('tools/laws-cp6-experiential-presentation-verify.mjs')
           source = target.read_text()
-          previous = "assert(!/serif/i.test(metrics.fontFamily), `${viewport.name}: display typography still resolves to serif.`, metrics.fontFamily);"
-          replacement = "const resolvedFamilies = metrics.fontFamily.toLowerCase().split(',').map(value => value.trim().replace(/^['\\\"]|['\\\"]$/g, ''));\n    assert(!resolvedFamilies.includes('serif'), `${viewport.name}: display typography still resolves to serif.`, metrics.fontFamily);"
-          if source.count(previous) != 1:
-              raise SystemExit('Expected exactly one obsolete serif assertion.')
-          target.write_text(source.replace(previous, replacement))
+          replacements = {
+              "assert(!/serif/i.test(metrics.fontFamily), `${viewport.name}: display typography still resolves to serif.`, metrics.fontFamily);": "const resolvedFamilies = metrics.fontFamily.toLowerCase().split(',').map(value => value.trim().replace(/^['\\\"]|['\\\"]$/g, ''));\n    assert(!resolvedFamilies.includes('serif'), `${viewport.name}: display typography still resolves to serif.`, metrics.fontFamily);",
+              "assert(metrics.speaker === 'Choose a direction', `${viewport.name}: default Compass speaker copy is wrong.`, metrics.speaker);": "assert(metrics.speaker === 'What changed?', `${viewport.name}: preserved initial Flow focus is not reflected by the Compass speaker.`, metrics.speaker);"
+          }
+          for previous, replacement in replacements.items():
+              if source.count(previous) != 1:
+                  raise SystemExit(f'Expected exactly one verifier assertion: {previous}')
+              source = source.replace(previous, replacement)
+          target.write_text(source)
           PY
 
       - name: Verify transformation syntax

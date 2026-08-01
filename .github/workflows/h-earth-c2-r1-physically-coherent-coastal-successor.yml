@@ -1,4 +1,4 @@
-name: H-Earth C2-R1 R1.8 Runtime Readiness Trace
+name: H-Earth C2-R1 R1.8B-C3 Exact Review Materialization
 
 on:
   pull_request:
@@ -9,12 +9,12 @@ on:
   workflow_dispatch:
     inputs:
       candidate_head:
-        description: Exact candidate branch head to trace and verify
+        description: Exact candidate branch head to verify, materialize, and serve
         required: true
         type: string
 
 concurrency:
-  group: h-earth-c2-r1-r1-8-runtime-readiness
+  group: h-earth-c2-r1-r1-8b-c3-exact-review-materialization
   cancel-in-progress: false
 
 permissions:
@@ -22,34 +22,35 @@ permissions:
   pull-requests: read
 
 jobs:
-  trace-runtime-readiness:
+  execute-r1-8b-c3-through-r1-8d:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 45
     env:
       GH_TOKEN: ${{ github.token }}
       GITHUB_TOKEN: ${{ github.token }}
       R1_8_TARGET_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
       R1_8_PRODUCT_AUTHORITY_HEAD: c53362c6f74b01c4e0b53be526b0e3a0b73edede
-      R1_8_CORRECTIVE_ROLLBACK_BRANCH: rollback/h-earth-c2-r1-r1-8b-c2-start-001
+      R1_8_CORRECTIVE_STARTING_HEAD: c5ec156d0d00979ea2296972374b13f43678f4bf
+      R1_8_CORRECTIVE_ROLLBACK_BRANCH: rollback/h-earth-c2-r1-r1-8b-c3-start-001
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.candidate_head }}
           fetch-depth: 0
 
-      - name: Gate comprehensive runtime-readiness trace
+      - name: Gate exact review materialization execution
         id: gate
         run: |
           set -euo pipefail
           message="$(git log -1 --format=%s)"
-          if [ "$message" = "R1.8B-C2: execute comprehensive runtime-readiness trace" ]; then
+          if [ "$message" = "R1.8B-C3: execute exact prematerialized review workflow" ]; then
             echo "execute=true" >> "$GITHUB_OUTPUT"
           else
             echo "execute=false" >> "$GITHUB_OUTPUT"
-            echo "R1.8B-C2 trace skipped for non-trace commit: $message"
+            echo "R1.8B-C3 skipped for non-launch commit: $message"
           fi
 
-      - name: Resolve exact candidate execution identity
+      - name: Resolve exact candidate and rollback identities
         id: identity
         if: steps.gate.outputs.execute == 'true'
         env:
@@ -70,22 +71,29 @@ jobs:
               exit 1
               ;;
           esac
+
           if ! [[ "$expected_candidate_head" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "Expected candidate head is not an exact SHA-1" >&2
+            echo "Expected candidate head is not an exact SHA-1 identity" >&2
             exit 1
           fi
+
           checked_out_head="$(git rev-parse HEAD)"
           remote_head="$(git ls-remote origin "refs/heads/$R1_8_TARGET_BRANCH" | awk '{print $1}')"
           rollback_head="$(git ls-remote origin "refs/heads/$R1_8_CORRECTIVE_ROLLBACK_BRANCH" | awk '{print $1}')"
-          if [ "$checked_out_head" != "$expected_candidate_head" ] || [ "$remote_head" != "$expected_candidate_head" ]; then
-            echo "Exact candidate identity mismatch" >&2
-            echo "checked_out=$checked_out_head remote=$remote_head expected=$expected_candidate_head" >&2
+
+          if [ "$checked_out_head" != "$expected_candidate_head" ]; then
+            echo "Checked-out head mismatch: $checked_out_head != $expected_candidate_head" >&2
             exit 1
           fi
-          if [ "$rollback_head" != "d2f2887d6fc6af70eb43e8d98d07a7dd516cfd87" ]; then
-            echo "Corrective rollback identity mismatch: $rollback_head" >&2
+          if [ "$remote_head" != "$expected_candidate_head" ]; then
+            echo "Remote target branch mismatch: $remote_head != $expected_candidate_head" >&2
             exit 1
           fi
+          if [ "$rollback_head" != "$R1_8_CORRECTIVE_STARTING_HEAD" ]; then
+            echo "Corrective rollback mismatch: $rollback_head != $R1_8_CORRECTIVE_STARTING_HEAD" >&2
+            exit 1
+          fi
+
           git merge-base --is-ancestor "$R1_8_PRODUCT_AUTHORITY_HEAD" "$checked_out_head"
           echo "expected_candidate_head=$expected_candidate_head" >> "$GITHUB_OUTPUT"
           echo "checked_out_head=$checked_out_head" >> "$GITHUB_OUTPUT"
@@ -96,498 +104,50 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install bounded browser trace environment
+      - name: Check bounded implementation syntax
+        if: steps.gate.outputs.execute == 'true'
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs
+
+      - name: Install bounded browser verification environment
         if: steps.gate.outputs.execute == 'true'
         run: |
           set -euo pipefail
           npm install --no-save --no-package-lock playwright@1.52.0
           npx playwright install --with-deps chromium
 
-      - name: Execute comprehensive runtime-readiness trace
-        id: trace
+      - name: Generate exact asset and execute R1.8B through R1.8D
         if: steps.gate.outputs.execute == 'true'
         env:
-          EXPECTED_CANDIDATE_HEAD: ${{ steps.identity.outputs.expected_candidate_head }}
-          CHECKED_OUT_CANDIDATE_HEAD: ${{ steps.identity.outputs.checked_out_head }}
-          SYNTHETIC_MERGE_SHA: ${{ steps.identity.outputs.synthetic_merge_sha }}
+          R1_8_EXPECTED_CANDIDATE_HEAD: ${{ steps.identity.outputs.expected_candidate_head }}
+          R1_8_PULL_REQUEST_SYNTHETIC_MERGE_SHA: ${{ steps.identity.outputs.synthetic_merge_sha }}
         run: |
           set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import path from 'node:path';
-          import net from 'node:net';
-          import crypto from 'node:crypto';
-          import { spawn, execFileSync } from 'node:child_process';
-          import { chromium } from 'playwright';
-
-          const ROOT = process.cwd();
-          const PORT = 4188;
-          const BIND_ADDRESS = '127.0.0.1';
-          const ORIGIN = `http://${BIND_ADDRESS}:${PORT}`;
-          const CONTROL_ROOT = 'h-earth-3d/control-plane/coastal-morphology/c2-r1';
-          const REVIEW_ROOT = `${CONTROL_ROOT}/review/r1-8`;
-          const REVIEW_PATH = `${REVIEW_ROOT}/index.html`;
-          const REVIEW_URL = `${ORIGIN}/${REVIEW_PATH}`;
-          const EVIDENCE_ROOT = path.join(ROOT, CONTROL_ROOT, 'evidence/r1-8');
-          const LEDGER_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-8-phase-ledger.json');
-          const TRACE_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-8b-c2-runtime-readiness-trace.json');
-          const EXPECTED_HEAD = process.env.EXPECTED_CANDIDATE_HEAD;
-          const TARGET_BRANCH = process.env.R1_8_TARGET_BRANCH;
-          const PRODUCT_AUTHORITY_HEAD = process.env.R1_8_PRODUCT_AUTHORITY_HEAD;
-          const CORRECTIVE_ROLLBACK_BRANCH = process.env.R1_8_CORRECTIVE_ROLLBACK_BRANCH;
-          const now = () => new Date().toISOString();
-          const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
-          const elapsed = start => Number(process.hrtime.bigint() - start) / 1e6;
-          const sha256 = value => crypto.createHash('sha256').update(value).digest('hex');
-          const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
-          const requireCondition = (condition, code, detail = null) => {
-            if (!condition) {
-              const error = new Error(code);
-              error.code = code;
-              error.detail = detail;
-              throw error;
-            }
-          };
-
-          const checkedOutHead = git('rev-parse', 'HEAD');
-          requireCondition(checkedOutHead === EXPECTED_HEAD, 'TRACE_HEAD_IDENTITY_MISMATCH', { checkedOutHead, EXPECTED_HEAD });
-          requireCondition(process.env.CHECKED_OUT_CANDIDATE_HEAD === EXPECTED_HEAD, 'WORKFLOW_IDENTITY_OUTPUT_MISMATCH');
-
-          fs.mkdirSync(EVIDENCE_ROOT, { recursive: true });
-          let serverStdout = '';
-          let serverStderr = '';
-          const serverStartedAt = now();
-          const server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', BIND_ADDRESS], {
-            cwd: ROOT,
-            stdio: ['ignore', 'pipe', 'pipe']
-          });
-          server.stdout.on('data', chunk => { serverStdout += chunk.toString(); });
-          server.stderr.on('data', chunk => { serverStderr += chunk.toString(); });
-
-          const tcpProbe = () => new Promise(resolve => {
-            const socket = net.createConnection({ host: BIND_ADDRESS, port: PORT });
-            const finish = result => {
-              socket.removeAllListeners();
-              socket.destroy();
-              resolve(result);
-            };
-            socket.setTimeout(500);
-            socket.once('connect', () => finish(true));
-            socket.once('timeout', () => finish(false));
-            socket.once('error', () => finish(false));
-          });
-
-          const directFetches = [];
-          async function fetchDirect(url, expectedKind) {
-            const started = process.hrtime.bigint();
-            const response = await fetch(url, { cache: 'no-store', redirect: 'follow' });
-            const body = await response.text();
-            const record = {
-              url,
-              status: response.status,
-              contentType: response.headers.get('content-type'),
-              byteCount: Buffer.byteLength(body),
-              sha256: sha256(body),
-              elapsedMilliseconds: elapsed(started),
-              expectedKind
-            };
-            directFetches.push(record);
-            return { response, body, record };
-          }
-
-          async function waitForServer() {
-            const started = process.hrtime.bigint();
-            for (let attempt = 1; attempt <= 80; attempt += 1) {
-              const tcp = await tcpProbe();
-              if (tcp) {
-                try {
-                  const target = await fetchDirect(REVIEW_URL, 'text/html');
-                  if (target.response.status === 200 && target.body.length > 0) {
-                    return { tcp: true, attempt, elapsedMilliseconds: elapsed(started), target };
-                  }
-                } catch {}
-              }
-              await sleep(125);
-            }
-            return { tcp: false, attempt: 80, elapsedMilliseconds: elapsed(started), target: null };
-          }
-
-          function staticImportSpecifiers(source) {
-            const values = [];
-            const pattern = /\b(?:import|export)\s+(?:[^'";]*?\s+from\s+)?['"]([^'"]+)['"]/g;
-            for (const match of source.matchAll(pattern)) values.push(match[1]);
-            return [...new Set(values)];
-          }
-
-          async function fetchModuleGraph(entryUrl) {
-            const queue = [entryUrl];
-            const visited = new Set();
-            const graph = [];
-            while (queue.length > 0) {
-              const url = queue.shift();
-              if (visited.has(url)) continue;
-              visited.add(url);
-              const item = await fetchDirect(url, 'javascript-module');
-              graph.push(item.record);
-              if (item.response.status !== 200) continue;
-              for (const specifier of staticImportSpecifiers(item.body)) {
-                if (!specifier.startsWith('.')) continue;
-                const dependencyUrl = new URL(specifier, url).href;
-                if (dependencyUrl.startsWith(`${ORIGIN}/`)) queue.push(dependencyUrl);
-              }
-            }
-            return graph;
-          }
-
-          const trace = {
-            traceType: 'H_EARTH_C2_R1_R1_8B_C2_COMPREHENSIVE_RUNTIME_READINESS_TRACE_v1',
-            operation: 'R1.8B_C2_COMPREHENSIVE_RUNTIME_READINESS_TRACE',
-            startingHead: 'd2f2887d6fc6af70eb43e8d98d07a7dd516cfd87',
-            executionHead: EXPECTED_HEAD,
-            productAuthorityHead: PRODUCT_AUTHORITY_HEAD,
-            correctiveRollbackBranch: CORRECTIVE_ROLLBACK_BRANCH,
-            targetBranch: TARGET_BRANCH,
-            identity: {
-              checkedOutCandidateHead: checkedOutHead,
-              expectedCandidateHead: EXPECTED_HEAD,
-              pullRequestSyntheticMergeSha: process.env.SYNTHETIC_MERGE_SHA,
-              syntheticMergeShaUsedAsCandidateAuthority: false
-            },
-            server: {
-              processId: server.pid,
-              bindAddress: BIND_ADDRESS,
-              port: PORT,
-              startTimestamp: serverStartedAt
-            },
-            directFetches,
-            browserEvents: [],
-            runtimeTraceEvents: [],
-            pageErrors: [],
-            consoleErrors: [],
-            failedNetworkRequests: [],
-            httpFailures: [],
-            firstBlocker: null,
-            productRegressionEstablished: false,
-            visualSuccessorStatus: 'NOT_ESTABLISHED'
-          };
-
-          let browser;
-          let context;
-          let page;
-          let exitCode = 1;
-          try {
-            const readiness = await waitForServer();
-            trace.server.tcpPortAcceptingConnections = readiness.tcp;
-            trace.server.readinessAttempt = readiness.attempt;
-            trace.server.readinessElapsedMilliseconds = readiness.elapsedMilliseconds;
-            requireCondition(readiness.tcp === true, 'LOCAL_SERVER_NOT_READY');
-            requireCondition(readiness.target?.response.status === 200, 'TARGET_DOCUMENT_NOT_SERVED', readiness.target?.record);
-            requireCondition(String(readiness.target.record.contentType || '').toLowerCase().includes('text/html'), 'TARGET_DOCUMENT_BAD_MIME', readiness.target.record);
-            requireCondition(readiness.target.record.byteCount > 0, 'TARGET_DOCUMENT_EMPTY', readiness.target.record);
-
-            const css = await fetchDirect(`${ORIGIN}/${REVIEW_ROOT}/review.css`, 'text/css');
-            requireCondition(css.response.status === 200, 'STATIC_RESOURCE_404_OR_BAD_MIME', css.record);
-            requireCondition(String(css.record.contentType || '').toLowerCase().includes('text/css'), 'STATIC_RESOURCE_404_OR_BAD_MIME', css.record);
-            const moduleGraph = await fetchModuleGraph(`${ORIGIN}/${REVIEW_ROOT}/review.js`);
-            trace.moduleGraph = moduleGraph;
-            requireCondition(moduleGraph.every(row => row.status === 200 && row.byteCount > 0), 'MODULE_GRAPH_LOAD_FAILURE', moduleGraph.filter(row => row.status !== 200 || row.byteCount === 0));
-
-            browser = await chromium.launch({
-              headless: true,
-              args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage']
-            });
-            context = await browser.newContext({ viewport: { width: 1280, height: 820 }, deviceScaleFactor: 1 });
-            page = await context.newPage();
-            const navigationStart = process.hrtime.bigint();
-            const event = (type, detail = null) => trace.browserEvents.push({
-              type,
-              elapsedMilliseconds: elapsed(navigationStart),
-              detail
-            });
-            let resolveDomContentLoaded;
-            const domContentLoadedPromise = new Promise(resolve => { resolveDomContentLoaded = resolve; });
-
-            page.on('request', request => event('request', {
-              url: request.url(),
-              method: request.method(),
-              resourceType: request.resourceType()
-            }));
-            page.on('response', response => {
-              const detail = {
-                url: response.url(),
-                status: response.status(),
-                contentType: response.headers()['content-type'] || null
-              };
-              event('response', detail);
-              if (response.status() >= 400) trace.httpFailures.push(detail);
-            });
-            page.on('requestfailed', request => {
-              const detail = { url: request.url(), failure: request.failure() };
-              event('requestfailed', detail);
-              trace.failedNetworkRequests.push(detail);
-            });
-            page.on('console', message => {
-              const detail = { type: message.type(), text: message.text() };
-              event('console', detail);
-              if (message.text().startsWith('R1_8_TRACE:')) {
-                try {
-                  const row = JSON.parse(message.text().slice('R1_8_TRACE:'.length));
-                  trace.runtimeTraceEvents.push({
-                    ...row,
-                    observedElapsedMilliseconds: elapsed(navigationStart)
-                  });
-                } catch (error) {
-                  trace.consoleErrors.push({ type: 'TRACE_PARSE_ERROR', text: String(error) });
-                }
-              } else if (message.type() === 'error') {
-                trace.consoleErrors.push(detail);
-              }
-            });
-            page.on('pageerror', error => {
-              const detail = String(error?.stack || error);
-              event('pageerror', detail);
-              trace.pageErrors.push(detail);
-            });
-            page.on('crash', () => event('crash'));
-            page.on('frameattached', frame => event('frameattached', { url: frame.url() }));
-            page.on('framenavigated', frame => event('framenavigated', { url: frame.url() }));
-            page.on('domcontentloaded', () => {
-              event('domcontentloaded');
-              resolveDomContentLoaded();
-            });
-            page.on('load', () => event('load'));
-
-            const response = await page.goto(REVIEW_URL, { waitUntil: 'commit', timeout: 15000 });
-            trace.timings = {
-              responseCommitMilliseconds: elapsed(navigationStart),
-              responseStatus: response?.status() ?? null,
-              responseContentType: await response?.headerValue('content-type')
-            };
-            requireCondition(response?.status() === 200, 'TARGET_DOCUMENT_NOT_SERVED', trace.timings);
-
-            const domContentLoadedWithin60Seconds = await Promise.race([
-              domContentLoadedPromise.then(() => true),
-              sleep(Math.max(0, 60000 - elapsed(navigationStart))).then(() => false)
-            ]);
-            trace.timings.domContentLoadedMilliseconds = trace.browserEvents.find(row => row.type === 'domcontentloaded')?.elapsedMilliseconds ?? null;
-            trace.domContentLoadedWithin60Seconds = domContentLoadedWithin60Seconds;
-            requireCondition(domContentLoadedWithin60Seconds, 'DOMCONTENTLOADED_NOT_REACHED_WITHIN_60_SECONDS');
-
-            const readinessStart = process.hrtime.bigint();
-            const pageReadyPromise = page.waitForFunction(
-              () => document.documentElement.dataset.r1_8Review === 'ready',
-              null,
-              { timeout: 60000 }
-            ).then(() => ({ ready: true, source: 'PAGE_SENTINEL' })).catch(error => ({
-              ready: false,
-              source: 'PAGE_WAIT_REJECTED',
-              error: String(error?.stack || error)
-            }));
-            const readinessResult = await Promise.race([
-              pageReadyPromise,
-              sleep(60000).then(() => ({ ready: false, source: 'NODE_SIDE_60_SECOND_DEADLINE' }))
-            ]);
-            trace.timings.runtimeReadinessWaitMilliseconds = elapsed(readinessStart);
-            trace.runtimeReadinessResult = readinessResult;
-
-            const events = new Set(trace.runtimeTraceEvents.map(row => row.event));
-            const seen = eventName => events.has(eventName);
-            const lastHeartbeat = [...trace.runtimeTraceEvents].reverse().find(row => row.event === 'MAIN_THREAD_HEARTBEAT') || null;
-            const requiredEventMatrix = {
-              dynamicImportStarted: seen('DYNAMIC_IMPORT_STARTED'),
-              dynamicImportResolved: seen('DYNAMIC_IMPORT_RESOLVED'),
-              dynamicImportRejected: seen('DYNAMIC_IMPORT_REJECTED'),
-              moduleException: seen('MODULE_EXCEPTION') || trace.pageErrors.length > 0,
-              pageErrorCount: trace.pageErrors.length,
-              consoleErrorCount: trace.consoleErrors.length,
-              failedNetworkRequestCount: trace.failedNetworkRequests.length,
-              webglContextRequested: seen('WEBGL_CONTEXT_REQUESTED'),
-              webglContextEstablished: trace.runtimeTraceEvents.some(row => row.event === 'WEBGL_CONTEXT_ESTABLISHED' && row.detail?.established === true),
-              candidateConstructionStarted: seen('CANDIDATE_CONSTRUCTION_STARTED'),
-              candidateConstructionCompleted: seen('CANDIDATE_CONSTRUCTION_COMPLETED'),
-              firstFramePresented: seen('FIRST_FRAME_PRESENTED'),
-              readySentinelWritten: seen('READY_SENTINEL_WRITTEN'),
-              lastMainThreadHeartbeat: lastHeartbeat
-            };
-            trace.requiredEventMatrix = requiredEventMatrix;
-
-            let classification;
-            let reviewWrapperDefectEstablished = false;
-            let actualCandidateRuntimeStartupFailureEstablished = false;
-            if (readinessResult.ready === true && requiredEventMatrix.readySentinelWritten) {
-              classification = 'RUNTIME_READY_SENTINEL_REACHED_WITHIN_60_SECONDS';
-              exitCode = 0;
-            } else if (requiredEventMatrix.dynamicImportRejected &&
-                       (trace.failedNetworkRequests.length > 0 || trace.httpFailures.length > 0)) {
-              classification = 'REVIEW_MODULE_IMPORT_REJECTED_BY_RESOURCE_FAILURE';
-              reviewWrapperDefectEstablished = true;
-            } else if (requiredEventMatrix.dynamicImportRejected || requiredEventMatrix.moduleException) {
-              classification = 'ACTUAL_CANDIDATE_RUNTIME_STARTUP_EXCEPTION';
-              actualCandidateRuntimeStartupFailureEstablished = true;
-            } else if (requiredEventMatrix.webglContextRequested && !requiredEventMatrix.webglContextEstablished) {
-              classification = 'ACTUAL_CANDIDATE_RUNTIME_WEBGL_CONTEXT_FAILURE';
-              actualCandidateRuntimeStartupFailureEstablished = true;
-            } else if (requiredEventMatrix.candidateConstructionStarted && !requiredEventMatrix.candidateConstructionCompleted) {
-              classification = 'REVIEW_WRAPPER_SYNCHRONOUS_CANDIDATE_CONSTRUCTION_EXCEEDS_60_SECONDS';
-              reviewWrapperDefectEstablished = true;
-            } else if (requiredEventMatrix.candidateConstructionCompleted && !requiredEventMatrix.dynamicImportResolved) {
-              classification = 'REVIEW_WRAPPER_MESH_OR_MODULE_FINALIZATION_EXCEEDS_60_SECONDS';
-              reviewWrapperDefectEstablished = true;
-            } else if (requiredEventMatrix.dynamicImportResolved && requiredEventMatrix.firstFramePresented && !requiredEventMatrix.readySentinelWritten) {
-              classification = 'READY_SENTINEL_WRONG_OR_NEVER_SET';
-              reviewWrapperDefectEstablished = true;
-            } else if (requiredEventMatrix.dynamicImportResolved && !requiredEventMatrix.firstFramePresented) {
-              classification = 'ACTUAL_CANDIDATE_RUNTIME_FIRST_FRAME_FAILURE';
-              actualCandidateRuntimeStartupFailureEstablished = true;
-            } else {
-              classification = 'UNRESOLVED_RUNTIME_READINESS_BOUNDARY';
-            }
-
-            trace.classification = classification;
-            trace.reviewWrapperDefectEstablished = reviewWrapperDefectEstablished;
-            trace.actualCandidateRuntimeStartupFailureEstablished = actualCandidateRuntimeStartupFailureEstablished;
-            trace.productRegressionEstablished = false;
-            trace.r1_7Reopened = false;
-            trace.productDefaultMutated = false;
-            trace.publicDefaultRouteMutated = false;
-            trace.mainMutated = false;
-            trace.completedAt = now();
-            trace.server.stdout = serverStdout;
-            trace.server.stderr = serverStderr;
-            fs.writeFileSync(TRACE_PATH, `${JSON.stringify(trace, null, 2)}\n`);
-
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, `classification=${classification}\n`);
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, `ready=${exitCode === 0 ? 'true' : 'false'}\n`);
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, `trace_sha256=${sha256(fs.readFileSync(TRACE_PATH))}\n`);
-
-            if (exitCode !== 0) {
-              const ledger = JSON.parse(fs.readFileSync(LEDGER_PATH, 'utf8'));
-              const blocker = {
-                code: classification,
-                phase: 'R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION',
-                traceHead: EXPECTED_HEAD,
-                tracePath: path.relative(ROOT, TRACE_PATH).split(path.sep).join('/'),
-                traceSha256: sha256(fs.readFileSync(TRACE_PATH)),
-                reviewWrapperDefectEstablished,
-                actualCandidateRuntimeStartupFailureEstablished,
-                productRegressionEstablished: false,
-                recordedAt: now()
-              };
-              ledger.correctiveOperation = 'R1.8B_C2_COMPREHENSIVE_RUNTIME_READINESS_TRACE';
-              ledger.correctiveStartRollbackBranch = CORRECTIVE_ROLLBACK_BRANCH;
-              ledger.controllingStatus = `R1.8_BLOCKED_AT_R1.8B_${classification}`;
-              ledger.historicalBlockers ||= [];
-              if (!ledger.historicalBlockers.some(row => row.workflowRun === 30687077974)) {
-                ledger.historicalBlockers.push({
-                  operation: 'R1.8B_C1_CORRECTED_REVIEW_BOOTSTRAP_EXECUTION',
-                  phase: 'R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION',
-                  code: 'RUNTIME_READY_SENTINEL_TIMEOUT_UNDIAGNOSED',
-                  workflowRun: 30687077974,
-                  workflowJob: 91334924513,
-                  artifactId: 8814360562,
-                  artifactDigest: 'sha256:780aa0520d031834cb9bb0cf3c0679116403e2c8f7ee88b74d577ad6dab08efa',
-                  productRegressionEstablished: false
-                });
-              }
-              const phase = {
-                id: 'R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION',
-                status: 'BLOCKED_DIAGNOSED',
-                recordedAt: now(),
-                evidence: {
-                  traceHead: EXPECTED_HEAD,
-                  tracePath: blocker.tracePath,
-                  traceSha256: blocker.traceSha256,
-                  classification,
-                  requiredEventMatrix,
-                  localServerReadyBeforeBrowser: true,
-                  targetDocumentHttp200: true,
-                  dependencyChainReachable: true,
-                  domContentLoadedWithin60Seconds: true,
-                  productRegressionEstablished: false
-                },
-                blocker
-              };
-              const phaseIndex = ledger.phases.findIndex(row => row.id === phase.id);
-              if (phaseIndex >= 0) ledger.phases[phaseIndex] = phase;
-              else ledger.phases.push(phase);
-              ledger.firstBlocker = blocker;
-              ledger.r1_8bC2RuntimeReadinessTrace = {
-                classification,
-                traceHead: EXPECTED_HEAD,
-                tracePath: blocker.tracePath,
-                traceSha256: blocker.traceSha256,
-                requiredEventMatrix,
-                reviewWrapperDefectEstablished,
-                actualCandidateRuntimeStartupFailureEstablished,
-                productRegressionEstablished: false
-              };
-              ledger.visualSuccessorStatus = 'NOT_ESTABLISHED';
-              ledger.userDifferentialReady = false;
-              ledger.productDefaultMutated = false;
-              ledger.publicDefaultRouteMutated = false;
-              ledger.mainMutated = false;
-              ledger.pr418Merged = false;
-              ledger.r1_8Closed = false;
-              ledger.r1_8eStarted = false;
-              ledger.completedPhaseCount = ledger.phases.filter(row => String(row.status).startsWith('PASS')).length;
-              ledger.updatedAt = now();
-              fs.writeFileSync(LEDGER_PATH, `${JSON.stringify(ledger, null, 2)}\n`);
-              git('config', 'user.name', 'github-actions[bot]');
-              git('config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com');
-              git('add', '--', path.relative(ROOT, LEDGER_PATH));
-              try {
-                execFileSync('git', ['diff', '--cached', '--quiet'], { cwd: ROOT });
-              } catch {
-                git('commit', '-m', 'R1.8B-C2: preserve definitive runtime-readiness classification');
-                git('push', 'origin', `HEAD:${TARGET_BRANCH}`);
-              }
-              console.error(JSON.stringify({ result: 'BLOCKED_DIAGNOSED', classification, blocker }, null, 2));
-            } else {
-              console.log(JSON.stringify({ result: 'RUNTIME_READINESS_PASS', classification }, null, 2));
-            }
-          } catch (error) {
-            trace.firstBlocker = {
-              code: error.code || error.message || 'R1_8B_C2_TRACE_FAILURE',
-              detail: error.detail || String(error?.stack || error),
-              recordedAt: now()
-            };
-            trace.classification = trace.classification || 'TRACE_EXECUTION_FAILURE';
-            trace.server.stdout = serverStdout;
-            trace.server.stderr = serverStderr;
-            trace.completedAt = now();
-            fs.writeFileSync(TRACE_PATH, `${JSON.stringify(trace, null, 2)}\n`);
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, `classification=${trace.classification}\n`);
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'ready=false\n');
-            throw error;
-          } finally {
-            if (context) await context.close().catch(() => {});
-            if (browser) await browser.close().catch(() => {});
-            server.kill('SIGTERM');
-          }
-
-          if (exitCode !== 0) process.exit(1);
-          NODE
-
-      - name: Continue existing R1.8B through R1.8D after readiness pass
-        if: steps.gate.outputs.execute == 'true' && steps.trace.outputs.ready == 'true'
-        env:
-          R1_8_TRACE_HEAD: ${{ steps.identity.outputs.expected_candidate_head }}
-        run: |
-          set -euo pipefail
-          checked_out="$(git rev-parse HEAD)"
-          remote="$(git ls-remote origin "refs/heads/$R1_8_TARGET_BRANCH" | awk '{print $1}')"
-          if [ "$checked_out" != "$R1_8_TRACE_HEAD" ] || [ "$remote" != "$R1_8_TRACE_HEAD" ]; then
-            echo "Trace-pass execution head identity mismatch" >&2
-            exit 1
-          fi
-          GITHUB_SHA="$R1_8_TRACE_HEAD" \
           node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs
 
-      - name: Upload comprehensive runtime-readiness evidence
+      - name: Run exact resulting-head repository registry preflight
+        if: steps.gate.outputs.execute == 'true'
+        run: |
+          set -euo pipefail
+          git diff --name-only "$R1_8_CORRECTIVE_STARTING_HEAD" HEAD > /tmp/r1-8b-c3-paths.txt
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/r1-8b-c3-paths.txt \
+            --task "R1.8B-C3 exact pre-materialized isolated review mesh, R1.8B verification, R1.8C publication, and R1.8D served capture preparation" \
+            --mutation-intent \
+            --output /tmp/r1-8b-c3-registry-preflight.json
+          cat /tmp/r1-8b-c3-registry-preflight.json
+
+      - name: Upload bounded R1.8B-C3 through R1.8D evidence
         if: always() && steps.gate.outputs.execute == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-c2-r1-r1-8b-c2-runtime-readiness-trace
-          path: h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8
+          name: h-earth-c2-r1-r1-8b-c3-through-r1-8d-evidence
+          path: |
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin
           if-no-files-found: error
           retention-days: 30

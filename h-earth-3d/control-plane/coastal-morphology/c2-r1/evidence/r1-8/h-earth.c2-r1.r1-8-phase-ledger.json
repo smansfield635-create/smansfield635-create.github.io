@@ -4,9 +4,33 @@
   "startingHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
-  "controllingStatus": "AUTHORIZED_NOT_STARTED",
-  "phases": [],
-  "firstBlocker": null,
+  "controllingStatus": "R1.8_BLOCKED_AT_R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
+  "phases": [
+    {
+      "id": "R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
+      "status": "BLOCKED",
+      "recordedAt": "2026-08-01T05:28:11.587Z",
+      "evidence": {},
+      "blocker": {
+        "code": "WORKFLOW_EVENT_HEAD_MISMATCH",
+        "detail": {
+          "eventHead": "8cfd65cee9752053a729fa5c75540f5e4bbeeef0",
+          "triggerHead": "b7d348d122099eeadff7cc711555330aaadb411d"
+        },
+        "phase": "R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
+        "recordedAt": "2026-08-01T05:28:11.586Z"
+      }
+    }
+  ],
+  "firstBlocker": {
+    "code": "WORKFLOW_EVENT_HEAD_MISMATCH",
+    "detail": {
+      "eventHead": "8cfd65cee9752053a729fa5c75540f5e4bbeeef0",
+      "triggerHead": "b7d348d122099eeadff7cc711555330aaadb411d"
+    },
+    "phase": "R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
+    "recordedAt": "2026-08-01T05:28:11.586Z"
+  },
   "visualSuccessorStatus": "NOT_ESTABLISHED",
   "userDifferentialReady": false,
   "productDefaultMutated": false,
@@ -14,5 +38,7 @@
   "mainMutated": false,
   "pr418Merged": false,
   "r1_8Closed": false,
-  "r1_8eStarted": false
+  "r1_8eStarted": false,
+  "updatedAt": "2026-08-01T05:28:11.587Z",
+  "completedPhaseCount": 0
 }

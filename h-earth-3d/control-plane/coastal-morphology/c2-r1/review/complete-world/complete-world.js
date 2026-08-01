@@ -8,6 +8,28 @@ import { installHEarthRun8ER3D2PointerTouchIntake } from '/showroom/globe/h-eart
 import { createHEarthRun8ER3AFrameUniformPacket } from '/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js';
 import { getHEarthRun8ER2CanonicalLiveRenderPackage } from '/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
 
+async function loadExactBindingCacheBase64() {
+  const ledgerPath = '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json';
+  const role3Path = '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json';
+  const [ledgerResponse, role3Response] = await Promise.all([
+    fetch(ledgerPath, { cache: 'no-store' }),
+    fetch(role3Path, { cache: 'no-store' })
+  ]);
+  if (!ledgerResponse.ok || !role3Response.ok) {
+    throw new Error(`EXACT_BINDING_CACHE_CARRIER_HTTP_FAILURE:${ledgerResponse.status}:${role3Response.status}`);
+  }
+  const [ledger, role3] = await Promise.all([ledgerResponse.json(), role3Response.json()]);
+  const first = ledger?.exactBindingCacheCarrier;
+  const second = role3?.exactBindingCacheCarrier;
+  if (first?.partIndex !== 1 || second?.partIndex !== 2 ||
+      first?.partCount !== 2 || second?.partCount !== 2 ||
+      first?.encoding !== 'BASE64_GZIP_JSON' || second?.encoding !== 'BASE64_GZIP_JSON' ||
+      typeof first?.value !== 'string' || typeof second?.value !== 'string') {
+    throw new Error('EXACT_BINDING_CACHE_CARRIER_IDENTITY_INVALID');
+  }
+  return first.value + second.value;
+}
+
 const root = document.getElementById('complete-world-root');
 const canvas = document.getElementById('complete-world-canvas');
 const status = document.getElementById('complete-world-status');
@@ -61,8 +83,11 @@ try {
     yieldEveryVertices: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserYieldEveryVertices
   });
   const canonicalPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
+  const exactBindingCacheBase64 = await loadExactBindingCacheBase64();
   packageRecord = await buildHEarthC2R1CompleteWorldRenderPackage({
     canonicalPackage,
+    exactBindingCacheBase64,
+    exactBindingCacheArtifactDigest: 'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1',
     startupBudgetMilliseconds: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserBudgetMilliseconds,
     yieldEveryVertices: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserYieldEveryVertices,
     onProgress(progressReceipt) {
@@ -73,7 +98,7 @@ try {
         ? 'Finalizing complete-world package identity'
         : `Constructing complete-world package · ${percent}%`;
       details.textContent = progressReceipt.counters
-        ? `${progressReceipt.counters.candidateMaterialSampleInvocationCount} unique coastal material samples · ${progressReceipt.counters.candidateMaterialSampleCacheHitCount} cached reuses`
+        ? `${progressReceipt.counters.boundTerrainVertexCount ?? 0} terrain vertices · ${progressReceipt.counters.boundShorelineVertexCount ?? 0} shoreline vertices`
         : 'Preparing canonical complete-world package';
     }
   });

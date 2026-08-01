@@ -306,6 +306,14 @@ export async function buildHEarthC2R1CompleteWorldRenderPackage(options = {}) {
       failureDiagnostics.push(sampleDiagnostic(
         dependencies, vertexIndex, role, worldX, worldZ, terrain, material, timeSeconds
       ));
+      if (options.stopAfterFirstFailure === true) {
+        return rejected(
+          'REAL_PACKAGE_CANDIDATE_SAMPLE_REJECTION',
+          [`CANDIDATE_SAMPLE_FAILURES:${counters.candidateSampleFailureCount}`],
+          counters,
+          failureDiagnostics
+        );
+      }
       continue;
     }
 
@@ -319,6 +327,14 @@ export async function buildHEarthC2R1CompleteWorldRenderPackage(options = {}) {
           ...sampleDiagnostic(dependencies, vertexIndex, role, worldX, worldZ, terrain, material, timeSeconds),
           surface: { valid: false, status: surface?.status ?? null, issues: cleanIssues(surface) }
         }));
+        if (options.stopAfterFirstFailure === true) {
+          return rejected(
+            'REAL_PACKAGE_SURFACE_SAMPLE_REJECTION',
+            [`CANDIDATE_SAMPLE_FAILURES:${counters.candidateSampleFailureCount}`],
+            counters,
+            failureDiagnostics
+          );
+        }
         continue;
       }
       set3(buffers.positions, vertexIndex, [worldX, terrain.world.y, worldZ]);

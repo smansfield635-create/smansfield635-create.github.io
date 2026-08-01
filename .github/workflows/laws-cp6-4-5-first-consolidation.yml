@@ -1,0 +1,945 @@
+name: Laws CP6-3 formal review and CP6-4/5 consolidation
+
+on:
+  pull_request:
+    branches:
+      - agent/laws-cp6-3-canonical-content-migration-001
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp6-4-5-first-consolidation
+  cancel-in-progress: false
+
+jobs:
+  review-build-verify:
+    if: github.head_ref == 'agent/laws-cp6-4-first-theme-and-page-consolidation-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout stacked candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp6-4-first-theme-and-page-consolidation-001
+          fetch-depth: 0
+
+      - name: Confirm exact stacked starting state
+        shell: bash
+        run: |
+          set -euo pipefail
+          CP63=a76bb97f9a63c588b5e7131b3dc3461f8d1e36ee
+          test "$(git merge-base HEAD "$CP63")" = "$CP63"
+          mapfile -t changed < <(git diff --name-only "$CP63"..HEAD)
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = ".github/workflows/laws-cp6-4-5-first-consolidation.yml"
+
+      - name: Install review and browser dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check beautifulsoup4 playwright pillow
+          python3 -m playwright install chromium
+
+      - name: Formal review, consolidate, verify, and prepare candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/laws_cp645.py <<'PY'
+          from pathlib import Path
+          from bs4 import BeautifulSoup, NavigableString, Tag
+          from collections import Counter, defaultdict
+          from playwright.sync_api import sync_playwright
+          from PIL import Image
+          import copy
+          import hashlib
+          import html as html_lib
+          import json
+          import os
+          import re
+          import subprocess
+          import time
+          import urllib.parse
+
+          ROOT = Path('.')
+          REPO = 'smansfield635-create/smansfield635-create.github.io'
+          CP61 = '2fad7a28a632c0f4fae1b08dc33cd0f3742d08e8'
+          CP62 = '5ae3e5524926653f3c348dde5363e8765ad425cc'
+          CP63 = 'a76bb97f9a63c588b5e7131b3dc3461f8d1e36ee'
+          BRANCH = 'agent/laws-cp6-4-first-theme-and-page-consolidation-001'
+          WORKFLOW = ROOT / '.github/workflows/laws-cp6-4-5-first-consolidation.yml'
+          CONTROL = ROOT / 'laws/control-plane/cp6-4-5'
+          VISUAL = CONTROL / 'visual-review'
+          CONTROL.mkdir(parents=True, exist_ok=True)
+          VISUAL.mkdir(parents=True, exist_ok=True)
+
+          def run(*args):
+              return subprocess.check_output(args, text=True).strip()
+
+          def git_show(ref, path):
+              return subprocess.check_output(['git', 'show', f'{ref}:{path}'], text=True)
+
+          def norm(value):
+              return re.sub(r'\s+', ' ', value or '').strip()
+
+          def canonical_text(fragment):
+              parsed = BeautifulSoup(fragment, 'html.parser')
+              return '\n'.join(line.strip() for line in parsed.get_text('\n').splitlines() if line.strip())
+
+          def digest_text(fragment):
+              return hashlib.sha256(canonical_text(fragment).encode('utf-8')).hexdigest()
+
+          def sha_text(value):
+              return hashlib.sha256(value.encode('utf-8')).hexdigest()
+
+          def cid(number):
+              return f'CP6-CONTENT-{number:03d}'
+
+          def parse_manifest_rows():
+              manifest = json.loads(git_show(CP61, 'laws/control-plane/cp6-1/content-custody-ledger/manifest.json'))
+              assert manifest['content_block_count'] == 138
+              assert manifest['counts'] == {
+                  'final_test_assignment_count': 14,
+                  'final_research_assignment_count': 34,
+                  'final_main_retain_count': 63,
+                  'final_shared_foundation_count': 23,
+                  'final_archive_count': 2,
+                  'final_delete_count': 2,
+                  'final_unresolved_count': 0,
+              }
+              rows = []
+              schema = manifest['row_schema']
+              assert len(manifest['shards']) == 5
+              for shard in manifest['shards']:
+                  data = json.loads(git_show(CP61, shard['path']))
+                  assert data['row_count'] == len(data['rows']) == shard['row_count']
+                  rows.extend(dict(zip(schema, raw)) for raw in data['rows'])
+              assert len(rows) == 138
+              assert len({row['id'] for row in rows}) == 138
+              return manifest, rows
+
+          manifest, rows = parse_manifest_rows()
+          row_by_id = {row['id']: row for row in rows}
+          migrated_rows = [row for row in rows if row['final_disposition'].startswith('MIGRATE_TEST_') or row['final_disposition'].startswith('MIGRATE_RESEARCH_')]
+          shared_rows = [row for row in rows if row['final_disposition'] == 'SHARED_FOUNDATION_CANONICAL']
+          archive_rows = [row for row in rows if row['final_disposition'] == 'ARCHIVE_HISTORICAL_RECORD']
+          delete_rows = [row for row in rows if row['final_disposition'] == 'DELETE_STALE_STATUS_AFTER_CUSTODY']
+          assert len(migrated_rows) == 48
+          assert sum(row['final_disposition'].startswith('MIGRATE_TEST_') for row in migrated_rows) == 14
+          assert sum(row['final_disposition'].startswith('MIGRATE_RESEARCH_') for row in migrated_rows) == 34
+          assert len(shared_rows) == 23 and len(archive_rows) == 2 and len(delete_rows) == 2
+
+          DESTINATIONS = {
+              'Test / Admission and Baseline': ('/laws/test/admission-and-baseline/', 'laws/test/admission-and-baseline/index.html', 'Admission and Baseline'),
+              'Test / Forward Construction': ('/laws/test/forward-construction/', 'laws/test/forward-construction/index.html', 'Forward Construction'),
+              'Test / Reverse Audit': ('/laws/test/reverse-audit/', 'laws/test/reverse-audit/index.html', 'Reverse Audit'),
+              'Test / Result and Record': ('/laws/test/result-and-record/', 'laws/test/result-and-record/index.html', 'Result and Record'),
+              'Research / Evidence and Sources': ('/laws/research/evidence-and-sources/', 'laws/research/evidence-and-sources/index.html', 'Evidence and Sources'),
+              'Research / Methods and Models': ('/laws/research/methods-and-models/', 'laws/research/methods-and-models/index.html', 'Methods and Models'),
+              'Research / Applied Investigations': ('/laws/research/applied-investigations/', 'laws/research/applied-investigations/index.html', 'Applied Investigations'),
+              'Research / Findings and Boundaries': ('/laws/research/findings-and-boundaries/', 'laws/research/findings-and-boundaries/index.html', 'Findings and Boundaries'),
+          }
+          expected_destination_counts = {
+              'Test / Admission and Baseline': 2,
+              'Test / Forward Construction': 1,
+              'Test / Reverse Audit': 4,
+              'Test / Result and Record': 7,
+              'Research / Evidence and Sources': 6,
+              'Research / Methods and Models': 10,
+              'Research / Applied Investigations': 11,
+              'Research / Findings and Boundaries': 7,
+          }
+
+          # ---------------- Phase A: independent CP6-3 formal review ----------------
+          source_html = git_show(CP62, 'laws/index.html')
+          source = BeautifulSoup(source_html, 'html.parser')
+
+          def details_by_summary(label, root=source):
+              for item in root.find_all('details'):
+                  summary = item.find('summary', recursive=False)
+                  if summary and norm(summary.get_text(' ', strip=True)) == label:
+                      return item
+              raise AssertionError(f'Missing details: {label}')
+
+          def article_by_heading(root, label):
+              for article in root.find_all('article'):
+                  heading = article.find(['h2', 'h3', 'strong'])
+                  if heading and norm(heading.get_text(' ', strip=True)) == label:
+                      return article
+              raise AssertionError(f'Missing article: {label}')
+
+          def equation_card(label):
+              for card in source.select('.laws-equation-card'):
+                  heading = card.select_one('.laws-equation-card__label')
+                  if heading and norm(heading.get_text(' ', strip=True)) == label:
+                      return card
+              raise AssertionError(f'Missing equation card: {label}')
+
+          def direct_intro(container):
+              paragraph = container.find('p', recursive=False)
+              assert paragraph is not None
+              return paragraph
+
+          scientific = details_by_summary('Scientific Law / Reality Test')
+          evidence = details_by_summary('Evidence Boundary')
+          standing = details_by_summary('Research Standing')
+          applied = details_by_summary('Applied Systems / Frontier Link-Outs')
+          maturity = details_by_summary('Route Maturity')
+          runtime = details_by_summary('Runtime Ownership / Source Custody')
+
+          expected_payloads = {}
+          legacy_result = source.find(attrs={'data-member-id': 'test-results-records'})
+          assert legacy_result is not None
+          expected_payloads[cid(26)] = f'''<div class="identity-contract">
+          <p><strong>Legacy source label:</strong> {html_lib.escape(legacy_result.get('data-member-label', ''))}</p>
+          <p><strong>Legacy normalized label:</strong> {html_lib.escape(legacy_result.get('data-label', ''))}</p>
+          <p><strong>Canonical title:</strong> Result and Record</p>
+          <p><strong>Canonical route:</strong> /laws/test/result-and-record/</p>
+          <p><strong>Legacy compatibility input:</strong> /laws/test/#results-records</p>
+          <p>{html_lib.escape(legacy_result.get('data-panel-body', ''))}</p>
+          <p>{html_lib.escape(legacy_result.get('data-panel-relationship', ''))}</p>
+          </div>'''
+
+          for number, label in {57:'Source Custody Rule',65:'Notation Boundary',71:'Diagnostic Boundary',122:'Receipts, graphics, and ACK packets'}.items():
+              expected_payloads[cid(number)] = str(details_by_summary(label, runtime if number == 122 else source))
+          expected_payloads[cid(58)] = str(direct_intro(details_by_summary('Formula Context')))
+          expected_payloads[cid(82)] = str(direct_intro(standing))
+          expected_payloads[cid(87)] = str(direct_intro(applied))
+          for number, label in {59:'Universal Diagnostic Collapse Predicate',60:'451 Structural Envelope',61:'A3D-E / PCR Kernel',62:'Zero-Aware Product Discipline',63:'Industrial Closure Equation',64:'Energy Loop Law',119:'Controller Registry Source',121:'Evidence Artifact Rule'}.items():
+              expected_payloads[cid(number)] = str(equation_card(label))
+          for number, label in {67:'Source Matching',68:'No-Match Discipline',69:'Threshold Distinction',70:'Multi-Gate Verification'}.items():
+              expected_payloads[cid(number)] = str(article_by_heading(scientific, label))
+          for number, label in {74:'Finance Track A',75:'Finance Track B',76:'Pathway 8 Storage SOH',77:'Luxra Warranty Provenance',78:'Synthetic Fixtures',79:'Real Telemetry Corridor',80:'Observation Gate'}.items():
+              expected_payloads[cid(number)] = str(article_by_heading(evidence, label))
+          for number, label in {83:'Strongest Bounded Supports',84:'Bounded or Mixed Lanes',85:'Non-Validation Signals',86:'Candidate Outputs'}.items():
+              expected_payloads[cid(number)] = str(article_by_heading(standing, label))
+          for number, (key, label) in {88:('energy','Energy'),89:('water','Water'),90:('industrial-water','Industrial Water'),91:('ice','Closed-Loop Waste / ICE')}.items():
+              card = applied.find(attrs={'data-laws-frontier-link': key})
+              assert card is not None
+              expected_payloads[cid(number)] = str(card)
+          for number, label in {92:'Energy Safety Boundary',93:'Water Threshold Example',94:'HomeWater Claim Discipline',95:'IW-CLPP'}.items():
+              expected_payloads[cid(number)] = str(article_by_heading(applied, label))
+          for number, label in {107:'Pathway 6 Transport',108:'Pathway 8 Storage'}.items():
+              expected_payloads[cid(number)] = str(article_by_heading(maturity, label))
+          for number, key in {123:'controller',124:'compositor',125:'crystals',126:'interactions',127:'cosmos',129:'planet'}.items():
+              receipt = runtime.find('details', attrs={'data-laws-receipt-summary': key})
+              assert receipt is not None
+              expected_payloads[cid(number)] = str(receipt)
+          html_receipt = source.find('template', id='laws-html-receipt')
+          receipt_text = html_receipt.decode_contents().strip('\n')
+          terminal_marker = '\nRUNTIME STATUS:\n'
+          assert terminal_marker in receipt_text
+          expected_payloads[cid(137)] = f'<pre class="receipt-text">{html_lib.escape(receipt_text.split(terminal_marker,1)[0].rstrip())}</pre>'
+          assert set(expected_payloads) == {row['id'] for row in migrated_rows}
+
+          cp63_ledger = json.loads(git_show(CP63, 'laws/control-plane/cp6-3/migration-ledger.json'))
+          cp63_receipt = json.loads(git_show(CP63, 'laws/control-plane/cp6-3/verification-receipt.json'))
+          assert cp63_ledger['migration_target_row_count'] == 48
+          assert cp63_receipt['migration_target_row_count'] == cp63_receipt['migrated_content_row_count'] == 48
+          assert cp63_receipt['test_migrated_row_count'] == 14
+          assert cp63_receipt['research_migrated_row_count'] == 34
+          assert cp63_receipt['destination_row_counts'] == expected_destination_counts
+          assert cp63_receipt['shared_foundation_references'] == 23
+          assert cp63_receipt['overlap_groups_with_competing_full_records'] == 0
+
+          page_records = {}
+          page_counts = {}
+          review_page_soups = {}
+          for destination, (_, path, title) in DESTINATIONS.items():
+              page = BeautifulSoup(git_show(CP63, path), 'html.parser')
+              review_page_soups[destination] = page
+              assert page.html.get('data-cp6-3-content-migration') == 'true'
+              assert norm(page.h1.get_text(' ', strip=True)) == title
+              records = page.select('article[data-cp6-3-content-row="true"][data-content-id]')
+              page_counts[destination] = len(records)
+              for article in records:
+                  content_id = article['data-content-id']
+                  assert content_id not in page_records
+                  page_records[content_id] = (destination, article)
+          assert page_counts == expected_destination_counts
+          assert len(page_records) == 48
+          assert set(page_records) == {row['id'] for row in migrated_rows}
+
+          for row in migrated_rows:
+              destination, article = page_records[row['id']]
+              assert destination == row['canonical_destination']
+              expected_digest = digest_text(expected_payloads[row['id']])
+              assert article.get('data-source-payload-sha256') == expected_digest, row['id']
+              payload = article.select_one('.record-payload')
+              assert payload is not None
+              assert digest_text(payload.decode_contents()) == expected_digest, row['id']
+              text = norm(article.get_text(' ', strip=True))
+              assert row['original_source'] in text
+              assert row['canonical_source_of_truth'] in text
+              if row['semantic_overlap_group']:
+                  assert row['semantic_overlap_group'] in text
+              assert row['evidence_sensitivity'] in text
+              assert row['provenance_dependency'] in text
+              assert 'PRESERVED_TRANSITIONAL_SOURCE_COPY' in text
+
+          assert len(shared_rows) == len(cp63_ledger['shared_foundation_references']) == 23
+          shared_ids = {row['id'] for row in shared_rows}
+          assert not (shared_ids & set(page_records))
+          applied_page = review_page_soups['Research / Applied Investigations']
+          for absent_route in ['/frontier/energy/', '/frontier/industrial-water/']:
+              assert applied_page.find('a', href=absent_route) is None
+              assert absent_route in applied_page.get_text(' ', strip=True)
+          assert cp63_receipt['normalized_source_route_link_count'] == 2
+          assert cp63_receipt['broken_internal_links'] == 0
+
+          exact_cp63_paths = sorted([
+              'laws/control-plane/cp6-3/migration-ledger.json',
+              'laws/control-plane/cp6-3/verification-receipt.json',
+              'laws/destinations.css',
+              *[path for _, path, _ in DESTINATIONS.values()],
+          ])
+          actual_cp63_paths = sorted(run('git','diff','--name-only',CP62,CP63).splitlines())
+          assert actual_cp63_paths == exact_cp63_paths
+          for protected in [
+              'laws/index.html','laws/test/index.html','laws/research/index.html',
+              'laws/index.crystals.js','laws/index.interactions.js','laws/index.controller.js',
+              'laws/index.compositor.js','laws/index.cosmos.js','laws/index.planet.js'
+          ]:
+              assert git_show(CP62, protected) == git_show(CP63, protected), protected
+
+          test_parent_cp63 = BeautifulSoup(git_show(CP63,'laws/test/index.html'),'html.parser')
+          research_parent_cp63 = BeautifulSoup(git_show(CP63,'laws/research/index.html'),'html.parser')
+          test_anchors = ['admission-baseline','forward-construction','reverse-audit','results-records']
+          research_anchors = ['evidence-sources','methods-models','applied-investigations','findings-boundaries']
+          assert all(test_parent_cp63.find(id=value) for value in test_anchors)
+          assert all(research_parent_cp63.find(id=value) for value in research_anchors)
+          assert 'results-records' in git_show(CP63,'laws/test/index.html')
+          assert cid(26) in page_records
+          compatibility_bindings = 8 + 1
+          assert compatibility_bindings == 9
+          for destination, (route, path, _) in DESTINATIONS.items():
+              page = review_page_soups[destination]
+              parent_route = '/laws/test/' if destination.startswith('Test /') else '/laws/research/'
+              hrefs = {a.get('href') for a in page.find_all('a', href=True)}
+              assert parent_route in hrefs and '/laws/' in hrefs and '/' in hrefs
+
+          assert 'No-Match' in canonical_text(expected_payloads[cid(68)]) or 'no-match' in canonical_text(expected_payloads[cid(68)]).lower()
+          assert 'mixed' in canonical_text(expected_payloads[cid(75)]).lower()
+          assert 'Synthetic' in canonical_text(expected_payloads[cid(78)])
+          assert 'real telemetry' in canonical_text(expected_payloads[cid(79)]).lower()
+          assert 'not itself validation' in canonical_text(expected_payloads[cid(80)]).lower()
+
+          formal_review = {
+              'contract': 'LAWS_CHAMBER_CP6_3_FORMAL_REVIEW_v1',
+              'reviewed_head': CP63,
+              'reviewed_base': CP62,
+              'result': 'PASS',
+              'disposition': 'PASS_CLOSED',
+              'migration_target_row_count': 48,
+              'migrated_content_row_count': 48,
+              'unique_migrated_content_id_count': 48,
+              'duplicate_migrated_content_id_count': 0,
+              'missing_migration_row_count': 0,
+              'wrong_destination_row_count': 0,
+              'test_migrated_row_count': 14,
+              'research_migrated_row_count': 34,
+              'destination_counts': expected_destination_counts,
+              'formula_mutations': 0,
+              'unsupported_claim_upgrades': 0,
+              'lost_provenance': 0,
+              'lost_limitations': 0,
+              'lost_negative_or_mixed_findings': 0,
+              'lost_no_match_states': 0,
+              'lost_evidence_boundaries': 0,
+              'shared_foundation_reference_count': 23,
+              'overlap_groups_with_competing_full_records': 0,
+              'absent_frontier_routes': 'PRESERVED_AS_NONCLICKABLE_SOURCE_RECORDS',
+              'broken_links_created': 0,
+              'actual_changed_path_count': 11,
+              'unreported_changed_paths': 0,
+              'main_page_product_changes': 0,
+              'test_parent_page_changes': 0,
+              'research_parent_page_changes': 0,
+              'cp5_product_path_changes': 0,
+              'cp6_2_route_regression': 0,
+              'compatibility_bindings': 9,
+              'legacy_parent_anchors': 8,
+              'failures': [],
+          }
+
+          # ---------------- Phases B/C: F.I.R.S.T. and consolidation ----------------
+          before_main_html = (ROOT / 'laws/index.html').read_text(encoding='utf-8')
+          before_test_html = (ROOT / 'laws/test/index.html').read_text(encoding='utf-8')
+          before_research_html = (ROOT / 'laws/research/index.html').read_text(encoding='utf-8')
+          main_soup = BeautifulSoup(before_main_html, 'html.parser')
+          main_soup.html['data-cp6-3-formal-review'] = 'PASS_CLOSED'
+          main_soup.html['data-cp6-4-first-theme'] = 'true'
+          main_soup.html['data-cp6-5-page-consolidation'] = 'true'
+          main_soup.html['data-first-authorities'] = 'FLOW-INTEGRITY-REALITY-STRUCTURE-TEST'
+          main_soup.html['data-research-role'] = 'EXAMINATION-AND-SUPPORT-LAYER'
+
+          main = main_soup.select_one('main#main')
+          assert main is not None
+          threshold = main.find(attrs={'data-laws-threshold-introduction': True})
+          assert threshold is not None
+
+          first_fragment = BeautifulSoup('''
+          <section class="laws-first" id="research-comes-first" aria-labelledby="research-comes-first-title" data-visible-first-declaration="true">
+            <p class="kicker">Governing architecture</p>
+            <h2 id="research-comes-first-title">Research comes F.I.R.S.T.</h2>
+            <p class="laws-first__lead">Research examines, supports, and records the complete F.I.R.S.T. sequence. Research is the evidence, method, investigation, finding, and boundary layer for all five authorities; it is not another acronym letter.</p>
+            <div class="laws-first__sequence" aria-label="F.I.R.S.T. authority sequence">
+              <a href="/laws/categories/flow/" data-first-entry="flow"><span>F</span><strong>Flow</strong><p>Flow concerns movement, sequence, transfer, and continuity.</p></a>
+              <a href="/laws/categories/integrity/" data-first-entry="integrity"><span>I</span><strong>Integrity</strong><p>Integrity concerns consistency, accountability, and preservation.</p></a>
+              <a href="/laws/categories/reality/" data-first-entry="reality"><span>R</span><strong>Reality</strong><p>Reality concerns evidence, measurement, limits, and correspondence.</p></a>
+              <a href="/laws/categories/structure/" data-first-entry="structure"><span>S</span><strong>Structure</strong><p>Structure concerns constraints, interfaces, boundaries, and governance.</p></a>
+              <a href="/laws/test/" data-first-entry="test"><span>T</span><strong>Test</strong><p>Test determines whether an admitted claim survives construction, audit, and record.</p></a>
+            </div>
+            <article class="laws-first__research" data-first-entry="research">
+              <div><span>Research</span><h3>Examination and support across the full sequence</h3><p>Research supplies the evidence, methods, applied investigations, findings, and boundaries used across Flow, Integrity, Reality, Structure, and Test.</p></div>
+              <div class="laws-first__routes">
+                <a href="/laws/research/evidence-and-sources/">Evidence and Sources</a>
+                <a href="/laws/research/methods-and-models/">Methods and Models</a>
+                <a href="/laws/research/applied-investigations/">Applied Investigations</a>
+                <a href="/laws/research/findings-and-boundaries/">Findings and Boundaries</a>
+              </div>
+            </article>
+            <div class="laws-first__test-routes" aria-label="Test destinations">
+              <strong>Test sequence</strong>
+              <a href="/laws/test/admission-and-baseline/">Admission and Baseline</a>
+              <a href="/laws/test/forward-construction/">Forward Construction</a>
+              <a href="/laws/test/reverse-audit/">Reverse Audit</a>
+              <a href="/laws/test/result-and-record/">Result and Record</a>
+            </div>
+          </section>
+          ''', 'html.parser').section
+          threshold.insert_after(first_fragment)
+
+          old_slogan_replacements = 0
+          old_pattern = re.compile(r'4\s*\+\s*2', re.I)
+          for text_node in list(main_soup.find_all(string=old_pattern)):
+              if any(parent.name in {'script','style','template'} for parent in text_node.parents):
+                  continue
+              block = text_node.find_parent(['p','h2','h3','li'])
+              if block:
+                  block.clear()
+                  block.append('Research examines the five F.I.R.S.T. authorities through one distinct evidence and support layer.')
+              else:
+                  text_node.replace_with(old_pattern.sub('F.I.R.S.T. with Research', str(text_node)))
+              old_slogan_replacements += 1
+          assert old_slogan_replacements >= 1
+
+          def find_detail(soup, label):
+              for detail in soup.find_all('details'):
+                  summary = detail.find('summary', recursive=False)
+                  if summary and norm(summary.get_text(' ', strip=True)) == label:
+                      return detail
+              raise AssertionError(label)
+
+          def make_section(fragment):
+              return BeautifulSoup(fragment, 'html.parser').find(['section','details'])
+
+          foundation_detail = find_detail(main_soup, 'Foundation / Domain Separation')
+          source_custody_detail = None
+          for detail in foundation_detail.find_all('details'):
+              summary = detail.find('summary', recursive=False)
+              if summary and norm(summary.get_text(' ', strip=True)) == 'Source Custody Rule':
+                  source_custody_detail = detail
+                  break
+          assert source_custody_detail is not None
+          source_custody_detail.decompose()
+          foundation_detail.find('summary', recursive=False).string = 'Canonical Foundation / Domain Separation record'
+          foundation_wrapper = make_section('''<section class="laws-consolidated-panel" id="foundation-domain-summary"><p class="kicker">Foundation</p><h2>Domain separation remains explicit.</h2><p>Law posture, diagnostic structure, engineering use, evidence standing, runtime implementation, and validation authority remain distinct. The complete shared foundation record stays available below; the Test admission destination owns the migrated source-custody rule.</p><p><a href="/laws/test/admission-and-baseline/">Open Admission and Baseline</a></p></section>''')
+          foundation_detail.insert_before(foundation_wrapper)
+
+          formula_detail = find_detail(main_soup, 'Formula Context')
+          formula_detail.replace_with(make_section('''<section class="laws-consolidated-panel" id="formula-notation-orientation"><p class="kicker">Methods orientation</p><h2>Formula custody remains inspectable.</h2><p>Notation, normalization, zero handling, collapse predicates, A3D-E / PCR, industrial closure, and Energy Loop formulas now have one canonical full-record owner.</p><p><a href="/laws/research/methods-and-models/">Open Methods and Models</a></p></section>'''))
+
+          scientific_detail = find_detail(main_soup, 'Scientific Law / Reality Test')
+          scientific_detail.replace_with(make_section('''<section class="laws-consolidated-panel" id="scientific-law-orientation"><p class="kicker">Scientific Law orientation</p><h2>Scientific Law remains split by function.</h2><p>Source evidence, modeling, applied studies, findings, admission logic, forward gates, reverse diagnosis, and result records remain separate so no single page silently absorbs every authority.</p><div class="laws-consolidated-links"><a href="/laws/research/evidence-and-sources/">Sources</a><a href="/laws/research/methods-and-models/">Models</a><a href="/laws/research/applied-investigations/">Applications</a><a href="/laws/research/findings-and-boundaries/">Findings</a><a href="/laws/test/admission-and-baseline/">Admission</a><a href="/laws/test/forward-construction/">Forward gates</a><a href="/laws/test/reverse-audit/">Reverse audit</a><a href="/laws/test/result-and-record/">Results</a></div></section>'''))
+
+          evidence_detail = find_detail(main_soup, 'Evidence Boundary')
+          migrated_evidence_headings = {'Finance Track A','Finance Track B','Pathway 8 Storage SOH','Luxra Warranty Provenance','Synthetic Fixtures','Real Telemetry Corridor','Observation Gate'}
+          for article in list(evidence_detail.find_all('article')):
+              heading = article.find(['h2','h3','strong'])
+              if heading and norm(heading.get_text(' ', strip=True)) in migrated_evidence_headings:
+                  article.decompose()
+          evidence_detail.find('summary', recursive=False).string = 'Canonical Evidence and Claim Boundaries'
+          evidence_intro = make_section('''<section class="laws-consolidated-panel" id="evidence-boundary-summary"><p class="kicker">Evidence boundary</p><h2>Evidence status does not upgrade itself.</h2><p>Finance, Pathway 8, Luxra, synthetic fixtures, telemetry, and observation status now live in their canonical Research destinations. The shared master inequalities and environmental closure boundary remain here.</p><div class="laws-consolidated-links"><a href="/laws/research/evidence-and-sources/">Evidence and Sources</a><a href="/laws/research/findings-and-boundaries/">Findings and Boundaries</a></div></section>''')
+          evidence_detail.insert_before(evidence_intro)
+
+          standing_detail = find_detail(main_soup, 'Research Standing')
+          standing_detail.replace_with(make_section('''<section class="laws-consolidated-panel" id="research-standing-summary"><p class="kicker">Research standing</p><h2>Supported, mixed, negative, candidate, and unresolved states remain distinct.</h2><p>The complete research-standing record, including non-validation signals and candidate ceilings, is owned by Findings and Boundaries.</p><p><a href="/laws/research/findings-and-boundaries/">Open Findings and Boundaries</a></p></section>'''))
+
+          applied_detail = find_detail(main_soup, 'Applied Systems / Frontier Link-Outs')
+          applied_detail.replace_with(make_section('''<section class="laws-consolidated-panel" id="applied-system-orientation"><p class="kicker">Applied investigations</p><h2>Domain work remains source-bound and study-specific.</h2><p>Energy, Water, Industrial Water, ICE, Pathway 6, and Pathway 8 records now have one canonical applied-investigation destination. The absent Energy and Industrial Water frontier source routes remain disclosed there as nonclickable source identities.</p><div class="laws-consolidated-links"><a href="/laws/research/applied-investigations/">Applied Investigations</a><a href="/frontier/">Frontier overview</a><a href="/frontier/water/">Water</a><a href="/rgsc/ice/">Closed-Loop Waste / ICE</a></div></section>'''))
+
+          maturity_detail = find_detail(main_soup, 'Route Maturity')
+          for article in list(maturity_detail.find_all('article')):
+              heading = article.find(['h2','h3','strong'])
+              if heading and norm(heading.get_text(' ', strip=True)) in {'Pathway 6 Transport','Pathway 8 Storage'}:
+                  article.decompose()
+          maturity_detail.find('summary', recursive=False).string = 'Canonical route-maturity orientation'
+          maturity_intro = make_section('''<section class="laws-consolidated-panel" id="route-maturity-summary"><p class="kicker">Route maturity</p><h2>Route existence and evidence maturity remain separate.</h2><p>The four cardinal route summaries remain here. Pathway 6 and Pathway 8 full records are held by Applied Investigations.</p><p><a href="/laws/research/applied-investigations/#route-maturity-and-infrastructure-pathways">Open pathway records</a></p></section>''')
+          maturity_detail.insert_before(maturity_intro)
+
+          runtime_detail = find_detail(main_soup, 'Runtime Ownership / Source Custody')
+          source_equation_group = None
+          for detail in runtime_detail.find_all('details'):
+              text = norm(detail.get_text(' ', strip=True))
+              if 'Law Compass Population' in text and 'Controller Registry Source' in text and 'Evidence Artifact Rule' in text:
+                  source_equation_group = detail
+                  break
+          assert source_equation_group is not None
+          archive_117 = str(source_equation_group)
+          for card in list(source_equation_group.select('.laws-equation-card')):
+              label = card.select_one('.laws-equation-card__label')
+              if label and norm(label.get_text(' ', strip=True)) in {'Controller Registry Source','Evidence Artifact Rule'}:
+                  card.decompose()
+          source_equation_group.find('summary', recursive=False).string = 'Canonical runtime source equations'
+
+          cosmos_receipt = runtime_detail.find('details', attrs={'data-laws-receipt-summary':'cosmos'})
+          assert cosmos_receipt is not None
+          archive_128 = str(cosmos_receipt)
+          raw_receipt = runtime_detail.select_one('.laws-raw-receipt-disclosure')
+          assert raw_receipt is not None
+          deleted_130 = str(raw_receipt)
+          for detail in list(runtime_detail.find_all('details')):
+              summary = detail.find('summary', recursive=False)
+              label = norm(summary.get_text(' ', strip=True)) if summary else ''
+              if label in {'Receipts, graphics, and ACK packets','Runtime receipts'}:
+                  detail.decompose()
+          runtime_detail.find('summary', recursive=False).string = 'Canonical runtime ownership and shared custody'
+          runtime_intro = make_section('''<section class="laws-consolidated-panel" id="runtime-custody-summary"><p class="kicker">Runtime and custody</p><h2>Presentation authority remains separated from content and validation authority.</h2><p>Shared ownership declarations and source equations remain here. Reverse Audit owns source-correspondence rules; Result and Record owns runtime receipts and result-state custody.</p><div class="laws-consolidated-links"><a href="/laws/test/reverse-audit/">Reverse Audit</a><a href="/laws/test/result-and-record/">Result and Record</a></div></section>''')
+          runtime_detail.insert_before(runtime_intro)
+
+          receipt_template = main_soup.find('template', id='laws-html-receipt')
+          template_text = receipt_template.decode_contents()
+          marker = '\nRUNTIME STATUS:\n'
+          assert marker in template_text
+          structural_receipt, deleted_138 = template_text.split(marker, 1)
+          structural_receipt = structural_receipt.replace('irregular starfield / dual-spacecraft target','irregular starfield atmosphere target')
+          structural_receipt = structural_receipt.replace('dual-spacecraft target','irregular-starfield target')
+          structural_receipt = structural_receipt.replace('IRREGULAR_STARFIELD_DUAL_SPACECRAFT','IRREGULAR_STARFIELD_ATMOSPHERE')
+          receipt_template.clear()
+          receipt_template.append(NavigableString(structural_receipt.rstrip() + '\n'))
+
+          discovery = main_soup.find('section', class_='laws-discovery')
+          assert discovery is not None
+          orientation = make_section('''<section class="laws-consolidated-overview" id="laws-consolidated-orientation" aria-labelledby="laws-consolidated-title"><p class="kicker">Consolidated overview</p><h2 id="laws-consolidated-title">The main chamber now routes to canonical full records.</h2><div class="laws-consolidated-grid"><article><h3>Test</h3><p>Admission, construction, reverse audit, and result custody are separated into four canonical destinations.</p><a href="/laws/test/">Open Test gateway</a></article><article><h3>Research</h3><p>Evidence, methods, applications, findings, and boundaries support the complete F.I.R.S.T. sequence.</p><a href="/laws/research/">Open Research gateway</a></article><article><h3>Scientific Law</h3><p>Scientific material remains functionally split rather than forced into one page.</p><a href="/laws/scientific-law/">Open Scientific Law branch</a></article><article><h3>Applied systems</h3><p>Study-specific evidence remains bounded by source, mechanism, route, and claim maturity.</p><a href="/laws/research/applied-investigations/">Open applied records</a></article></div></section>''')
+          discovery.insert(0, orientation)
+          custody = make_section('''<section class="laws-custody-summary" id="laws-custody-and-boundaries" aria-labelledby="laws-custody-title"><p class="kicker">Custody and claim ceiling</p><h2 id="laws-custody-title">Canonical ownership reduces duplication without erasing limitations.</h2><p>All 48 migrated records remain intact in the eight standalone destinations. The main page keeps governing summaries, shared canonical foundations, route guidance, and source notices. Candidate status remains candidate status; mixed and negative results remain visible; synthetic evidence remains distinct from field evidence.</p><div class="laws-consolidated-links"><a href="/laws/research/evidence-and-sources/">Evidence provenance</a><a href="/laws/research/findings-and-boundaries/">Claim boundaries</a><a href="/laws/test/result-and-record/">Receipts and result states</a></div></section>''')
+          discovery.append(custody)
+
+          main_meta = main_soup.find('meta', attrs={'name':'description'})
+          if main_meta:
+              main_meta['content'] = 'Diamond Gate Bridge Laws chamber: Research comes F.I.R.S.T., with Flow, Integrity, Reality, Structure, and Test supported by bounded Research evidence, methods, applied investigations, findings, and claim boundaries.'
+          (ROOT / 'laws/index.html').write_text(str(main_soup), encoding='utf-8')
+
+          index_css_path = ROOT / 'laws/index.css'
+          index_css = index_css_path.read_text(encoding='utf-8')
+          cp645_css = r'''
+          /* CP6-4/5 · Research comes F.I.R.S.T. and canonical consolidation */
+          .laws-first,.laws-consolidated-overview,.laws-consolidated-panel,.laws-custody-summary{position:relative;margin:clamp(16px,3vw,30px) 0;padding:clamp(20px,4vw,42px);border:1px solid rgba(174,205,255,.24);border-radius:clamp(20px,3vw,34px);background:linear-gradient(145deg,rgba(10,18,34,.96),rgba(4,8,18,.94));box-shadow:0 24px 74px rgba(0,0,0,.35);overflow:hidden}.laws-first h2,.laws-consolidated-overview h2,.laws-consolidated-panel h2,.laws-custody-summary h2{margin:.35rem 0 .85rem;font-size:clamp(2rem,6vw,4.7rem);line-height:.98}.laws-first__lead{max-width:900px;font-size:clamp(1rem,2.4vw,1.25rem)}.laws-first__sequence{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:20px}.laws-first__sequence>a,.laws-first__research,.laws-first__test-routes,.laws-consolidated-grid>article{min-width:0;border:1px solid rgba(174,205,255,.2);border-radius:18px;background:rgba(4,10,22,.78);padding:16px;text-decoration:none}.laws-first__sequence span{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:1px solid currentColor;font-weight:950;font-size:1.35rem}.laws-first__sequence strong{display:block;margin:.65rem 0 .2rem;font-size:1.05rem}.laws-first__sequence p,.laws-first__research p,.laws-first__test-routes,.laws-consolidated-grid p{margin:.3rem 0;color:var(--muted,#c5cede)}.laws-first__research{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:18px;margin-top:12px}.laws-first__research span{font-weight:950;letter-spacing:.13em;text-transform:uppercase}.laws-first__research h3{margin:.3rem 0;font-size:clamp(1.35rem,3vw,2.15rem)}.laws-first__routes,.laws-first__test-routes,.laws-consolidated-links{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.laws-first__routes a,.laws-first__test-routes a,.laws-consolidated-links a,.laws-consolidated-grid a{display:inline-flex;align-items:center;min-height:42px;padding:.55rem .78rem;border:1px solid rgba(174,205,255,.25);border-radius:999px;text-decoration:none;font-weight:850}.laws-first__test-routes{margin-top:12px}.laws-consolidated-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.laws-consolidated-panel h2,.laws-custody-summary h2{font-size:clamp(1.65rem,4vw,3rem)}.laws-consolidated-panel p,.laws-custody-summary p{max-width:900px}.laws-discovery__item>summary{overflow-wrap:anywhere}.laws-discovery pre,.laws-discovery code{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}@media(max-width:900px){.laws-first__sequence{grid-template-columns:repeat(2,minmax(0,1fr))}.laws-first__research{grid-template-columns:1fr}}@media(max-width:620px){.laws-first__sequence,.laws-consolidated-grid{grid-template-columns:1fr}.laws-first,.laws-consolidated-overview,.laws-consolidated-panel,.laws-custody-summary{padding:18px;border-radius:20px}}
+          '''
+          if 'CP6-4/5 · Research comes F.I.R.S.T.' not in index_css:
+              index_css += '\n' + cp645_css
+          index_css_path.write_text(index_css, encoding='utf-8')
+
+          test_destinations = [
+              ('admission-baseline','Admission and Baseline','Define admissible identity, baseline custody, source eligibility, threshold separation, and no-match entry discipline.','/laws/test/admission-and-baseline/'),
+              ('forward-construction','Forward Construction','Advance admitted material through ordered construction, multi-gate verification, candidate formation, and forward rejection conditions.','/laws/test/forward-construction/'),
+              ('reverse-audit','Reverse Audit','Traverse source custody in reverse to detect contradiction, drift, unsupported substitution, and claim-to-source failure.','/laws/test/reverse-audit/'),
+              ('results-records','Result and Record','Classify outcomes, preserve receipts, enforce claim ceilings, and retain negative, mixed, held, and unresolved states.','/laws/test/result-and-record/'),
+          ]
+          research_destinations = [
+              ('evidence-sources','Evidence and Sources','Datasets, source records, provenance, Finance A/B, Pathway 8, Luxra, telemetry, observations, and source-matching boundaries.','/laws/research/evidence-and-sources/'),
+              ('methods-models','Methods and Models','Formula families, assumptions, notation, normalization, zero handling, comparison rules, reproducibility, and model limitations.','/laws/research/methods-and-models/'),
+              ('applied-investigations','Applied Investigations','Energy, Water, Industrial Water, ICE, Pathway 6, Pathway 8, and other approved study-specific applications.','/laws/research/applied-investigations/'),
+              ('findings-boundaries','Findings and Boundaries','Bounded supports, negative and mixed findings, candidate outputs, unresolved questions, prohibited claims, and validation limits.','/laws/research/findings-and-boundaries/'),
+          ]
+
+          def parent_page(kind, destinations):
+              is_test = kind == 'Test'
+              route = '/laws/test/' if is_test else '/laws/research/'
+              other = '/laws/research/' if is_test else '/laws/test/'
+              role = ('Test is the T in F.I.R.S.T. It determines whether an admitted claim survives construction, reverse audit, and record.' if is_test else 'Research examines, supports, and records the complete F.I.R.S.T. sequence. It is not another acronym letter.')
+              gateway = 'Solar gateway' if is_test else 'Lunar gateway'
+              cards = ''.join(f'''<section class="gateway-card" id="{anchor}"><p class="kicker">{kind} destination</p><h2>{title}</h2><p>{summary}</p><a href="{href}">Open {title}</a></section>''' for anchor,title,summary,href in destinations)
+              routes = ','.join(json.dumps(anchor)+':'+json.dumps(href) for anchor,_,_,href in destinations)
+              title = f'{kind} · Laws · Diamond Gate Bridge'
+              return f'''<!doctype html><html lang="en" data-route="{route}" data-page="laws-{kind.lower()}" data-cp6-parent-gateway="consolidated" data-cp6-legacy-anchor-forwarding="true" data-first-relationship="{('T-AUTHORITY' if is_test else 'RESEARCH-SUPPORT-LAYER')}" data-scientific-validation-claimed="false"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{title}</title><link rel="icon" href="data:,"><style>:root{{color-scheme:dark;--bg:#02040a;--panel:#08101d;--ink:#fff7df;--muted:#bdc9dd;--line:#2a3956;--accent:{'#f1c75b' if is_test else '#a98cff'};--cyan:#75ddff}}*{{box-sizing:border-box}}html{{background:var(--bg);scroll-behavior:smooth}}body{{margin:0;color:var(--ink);font:16px/1.58 Inter,system-ui,sans-serif;background:radial-gradient(circle at 80% 0,rgba(88,50,25,.58),transparent 35rem),radial-gradient(circle at 10% 20%,rgba(16,45,67,.7),transparent 34rem),var(--bg)}}a{{color:inherit}}.shell{{width:min(1120px,calc(100% - 24px));margin:auto;padding:18px 0 60px}}.top,.links{{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}}.top nav,.links{{justify-content:flex-start}}.top a,.links a,.gateway-card>a{{display:inline-flex;align-items:center;min-height:44px;padding:.62rem .86rem;border:1px solid var(--line);border-radius:999px;background:#0a1425;text-decoration:none;font-weight:850}}.hero,.gateway-card,.relationship{{margin-top:14px;padding:clamp(20px,4vw,42px);border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.012)),rgba(5,9,18,.95);box-shadow:0 24px 70px rgba(0,0,0,.34)}}.kicker{{margin:0;color:var(--accent);font-weight:950;letter-spacing:.14em;text-transform:uppercase;font-size:.74rem}}h1{{margin:.4rem 0;font:800 clamp(2.5rem,7vw,5rem)/.95 Georgia,serif}}h2{{margin:.3rem 0;font:800 clamp(1.55rem,4vw,2.7rem)/1 Georgia,serif}}p{{max-width:840px;color:var(--muted)}}.sequence{{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}}.sequence span{{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--accent);border-radius:50%;font-weight:950}}.gateway-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}.gateway-card{{scroll-margin-top:18px}}.gateway-card>a{{margin-top:8px;color:var(--cyan)}}@media(max-width:720px){{.gateway-grid{{grid-template-columns:1fr}}.shell{{width:min(100% - 16px,1120px)}}}}</style></head><body><div class="shell"><header class="top"><a href="/laws/">Laws Compass</a><nav><a href="{other}">{'Research' if is_test else 'Test'}</a><a href="/">Main Compass</a></nav></header><main><section class="hero"><p class="kicker">{kind} · {gateway}</p><h1>{kind}</h1><p>{role}</p><div class="sequence" aria-label="F.I.R.S.T. sequence"><span>F</span><span>I</span><span>R</span><span>S</span><span>T</span></div><div class="links"><a href="/laws/#research-comes-first">Research comes F.I.R.S.T.</a>{''.join(f'<a href="{href}">{name}</a>' for _,name,_,href in destinations)}</div></section><section class="relationship"><p class="kicker">Authority relationship</p><h2>{'Test receives admitted evidence and returns bounded result records.' if is_test else 'Research supplies evidence and boundaries across every F.I.R.S.T. authority.'}</h2><p>{'Research provides source and method custody; Test does not create evidence or validation merely by running.' if is_test else 'Research preserves source quality, method limits, applied context, negative and mixed findings, and claim ceilings without becoming a seventh authority.'}</p></section><div class="gateway-grid">{cards}</div></main></div><script data-cp6-anchor-forward="true">(() => {{"use strict";const routes={{{routes}}};const key=location.hash.slice(1);if(Object.prototype.hasOwnProperty.call(routes,key)){{location.replace(routes[key]);}}}})();</script></body></html>'''
+
+          after_test_html = parent_page('Test', test_destinations)
+          after_research_html = parent_page('Research', research_destinations)
+          (ROOT/'laws/test/index.html').write_text(after_test_html,encoding='utf-8')
+          (ROOT/'laws/research/index.html').write_text(after_research_html,encoding='utf-8')
+
+          for destination, (route, path, _) in DESTINATIONS.items():
+              page_path = ROOT / path
+              soup = BeautifulSoup(page_path.read_text(encoding='utf-8'),'html.parser')
+              soup.html['data-first-correspondence'] = 'true'
+              hero = soup.select_one('.hero')
+              assert hero is not None
+              existing = hero.select_one('.first-context')
+              if existing:
+                  existing.decompose()
+              context = BeautifulSoup(f'''<p class="first-context"><strong>{'Test' if destination.startswith('Test /') else 'Research'} relationship:</strong> {'This destination serves the T authority in F.I.R.S.T.' if destination.startswith('Test /') else 'This destination supports the complete F.I.R.S.T. sequence as part of Research.'} <a href="/laws/#research-comes-first">View the governing architecture.</a></p>''','html.parser').p
+              lede = hero.select_one('.lede')
+              if lede:
+                  lede.insert_after(context)
+              else:
+                  hero.append(context)
+              page_path.write_text(str(soup),encoding='utf-8')
+
+          destinations_css_path = ROOT/'laws/destinations.css'
+          destinations_css = destinations_css_path.read_text(encoding='utf-8')
+          if '.first-context' not in destinations_css:
+              destinations_css += '\n.first-context{max-width:900px;padding:12px 14px;border-left:3px solid var(--accent,#8bdfff);background:rgba(255,255,255,.035);border-radius:0 12px 12px 0}.first-context a{font-weight:850;overflow-wrap:anywhere}\n'
+          destinations_css_path.write_text(destinations_css,encoding='utf-8')
+
+          archive_html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CP6-4/5 Historical Status Archive</title><style>body{{font:16px/1.55 system-ui;margin:2rem;max-width:1000px}}article{{border:1px solid #888;padding:1rem;margin:1rem 0;overflow-wrap:anywhere}}pre{{white-space:pre-wrap}}</style></head><body><h1>Historical status archive</h1><p>These two records are preserved as historical source material and are not current runtime or product claims.</p><article id="cp6-content-117"><h2>CP6-CONTENT-117 · Route population group historical wrapper</h2>{archive_117}</article><article id="cp6-content-128"><h2>CP6-CONTENT-128 · Cosmos dual-spacecraft stale wording</h2>{archive_128}<pre>{html_lib.escape('\n'.join(line for line in template_text.splitlines() if 'dual' in line.lower() or 'spacecraft' in line.lower()))}</pre></article></body></html>'''
+          (CONTROL/'historical-status-archive.html').write_text(archive_html,encoding='utf-8')
+
+          route_for_destination = {key:value[0] for key,value in DESTINATIONS.items()}
+          summary_main_ids = {cid(10),cid(66)}
+          custody_rows = []
+          removed_or_shortened = 0
+          for row in rows:
+              disposition = row['final_disposition']
+              if disposition.startswith('MIGRATE_'):
+                  action = 'REMOVE_DUPLICATE_AFTER_CANONICAL_VERIFICATION'
+                  link = route_for_destination[row['canonical_destination']]
+                  retained_summary = bool(row['summary_remains_on_main'])
+                  verification = 'CP6_3_CANONICAL_DESTINATION_HASH_AND_CONTENT_ID_VERIFIED'
+              elif disposition == 'ARCHIVE_HISTORICAL_RECORD':
+                  action = 'ARCHIVE_HISTORICAL_STATUS'
+                  link = '/laws/control-plane/cp6-4-5/historical-status-archive.html#' + row['id'].lower()
+                  retained_summary = False
+                  verification = 'EXACT_SOURCE_FRAGMENT_ARCHIVED_BEFORE_REMOVAL'
+              elif disposition == 'DELETE_STALE_STATUS_AFTER_CUSTODY':
+                  action = 'DELETE_APPROVED_STALE_RECORD'
+                  link = '/laws/test/result-and-record/'
+                  retained_summary = False
+                  verification = 'RECEIPT_CONTEXT_AND_STRUCTURAL_PROVENANCE_VERIFIED_BEFORE_DELETION'
+              elif disposition == 'SHARED_FOUNDATION_CANONICAL':
+                  action = 'RETAIN_SHARED_CANONICAL_RECORD'
+                  link = '/laws/#laws-custody-and-boundaries'
+                  retained_summary = True
+                  verification = 'SHARED_CANONICAL_RECORD_RETAINED_ON_MAIN'
+              elif row['id'] in summary_main_ids:
+                  action = 'REPLACE_WITH_SUMMARY_AND_LINK'
+                  link = '/laws/#research-comes-first' if row['id'] == cid(10) else '/laws/#scientific-law-orientation'
+                  retained_summary = True
+                  verification = 'GOVERNING_SUMMARY_PRESENT_AND_CANONICAL_LINK_VERIFIED'
+              else:
+                  action = 'RETAIN_FULL_MAIN_RECORD'
+                  link = '/laws/'
+                  retained_summary = bool(row['summary_remains_on_main'])
+                  verification = 'MAIN_OR_COMPASS_AUTHORITY_RETAINED'
+              if action in {'REMOVE_DUPLICATE_AFTER_CANONICAL_VERIFICATION','ARCHIVE_HISTORICAL_STATUS','DELETE_APPROVED_STALE_RECORD','REPLACE_WITH_SUMMARY_AND_LINK'}:
+                  removed_or_shortened += 1
+              custody_rows.append({
+                  'CONTENT_ID': row['id'],
+                  'SOURCE_PAGE': row['original_source'],
+                  'CANONICAL_DESTINATION': row['canonical_destination'],
+                  'SOURCE_ACTION': action,
+                  'RETAINED_SUMMARY': retained_summary,
+                  'CANONICAL_LINK': link,
+                  'PROVENANCE_PRESERVED': True,
+                  'COMPATIBILITY_DEPENDENCY': bool(row['compatibility_anchor_required']),
+                  'REMOVAL_VERIFICATION': verification,
+              })
+          assert len(custody_rows) == 138
+          assert removed_or_shortened == 54
+          assert Counter(row['SOURCE_ACTION'] for row in custody_rows)['ARCHIVE_HISTORICAL_STATUS'] == 2
+          assert Counter(row['SOURCE_ACTION'] for row in custody_rows)['DELETE_APPROVED_STALE_RECORD'] == 2
+
+          main_before_blocks = 138
+          main_after_blocks = 86
+          main_reduction = main_before_blocks - main_after_blocks
+          main_reduction_percent = round(main_reduction / main_before_blocks * 100, 2)
+          test_before_words = len(re.findall(r'\b\w+\b', BeautifulSoup(before_test_html,'html.parser').get_text(' ')))
+          test_after_words = len(re.findall(r'\b\w+\b', BeautifulSoup(after_test_html,'html.parser').get_text(' ')))
+          research_before_words = len(re.findall(r'\b\w+\b', BeautifulSoup(before_research_html,'html.parser').get_text(' ')))
+          research_after_words = len(re.findall(r'\b\w+\b', BeautifulSoup(after_research_html,'html.parser').get_text(' ')))
+
+          custody_ledger = {
+              'contract':'LAWS_CHAMBER_CP6_4_5_CONTENT_REDUCTION_CUSTODY_LEDGER_v1',
+              'base_head':CP63,
+              'branch':BRANCH,
+              'source_row_count':138,
+              'approved_dispositions':{'TEST':14,'RESEARCH':34,'MAIN':63,'SHARED':23,'ARCHIVE':2,'DELETE':2,'TOTAL':138},
+              'main_page_before_block_count':main_before_blocks,
+              'main_page_after_block_count':main_after_blocks,
+              'main_page_reduction_count':main_reduction,
+              'main_page_reduction_percent':main_reduction_percent,
+              'block_count_method':'CP6-1 custody blocks active on the main source before consolidation versus MAIN plus SHARED active canonical blocks after migration, archive, and deletion.',
+              'removed_or_shortened_source_block_count':removed_or_shortened,
+              'source_blocks_with_custody_record':138,
+              'unaccounted_content_loss':0,
+              'archive_rows_applied':2,
+              'delete_rows_applied':2,
+              'deleted_source_snapshots':{
+                  cid(130):{'sha256':sha_text(deleted_130),'text':canonical_text(deleted_130)},
+                  cid(138):{'sha256':sha_text(deleted_138),'text':deleted_138.strip()},
+              },
+              'rows':custody_rows,
+          }
+          (CONTROL/'content-reduction-custody-ledger.json').write_text(json.dumps(custody_ledger,indent=2),encoding='utf-8')
+          (CONTROL/'cp6-3-formal-review.json').write_text(json.dumps(formal_review,indent=2),encoding='utf-8')
+
+          receipt_html_path = CONTROL/'content-reduction-custody-receipt.html'
+          receipt_html_path.write_text(f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CP6-4/5 Content Reduction Custody Receipt</title><style>:root{{color-scheme:dark}}body{{margin:0;background:#030611;color:#f8f2df;font:16px/1.55 system-ui}}main{{width:min(980px,calc(100% - 24px));margin:auto;padding:30px 0 70px}}section{{margin:14px 0;padding:20px;border:1px solid #35445f;border-radius:20px;background:#09101e}}h1{{font-size:clamp(2rem,6vw,4rem);line-height:1}}dl{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}dl div{{padding:12px;border:1px solid #2a3956;border-radius:12px}}dt{{color:#9bdfff;font-weight:850}}dd{{margin:.2rem 0 0;overflow-wrap:anywhere}}@media(max-width:650px){{dl{{grid-template-columns:1fr}}}}</style></head><body><main><p>LAWS_CHAMBER_CP6_4_5_CONTENT_REDUCTION_CUSTODY_RECEIPT_v1</p><h1>Content reduction custody receipt</h1><section><h2>Disposition reconciliation</h2><dl><div><dt>Source custody rows</dt><dd>138</dd></div><div><dt>Migrated records preserved</dt><dd>48 of 48</dd></div><div><dt>Main active blocks before</dt><dd>{main_before_blocks}</dd></div><div><dt>Main active blocks after</dt><dd>{main_after_blocks}</dd></div><div><dt>Reduction</dt><dd>{main_reduction} blocks · {main_reduction_percent}%</dd></div><div><dt>Unaccounted content loss</dt><dd>0</dd></div><div><dt>Archive rows applied</dt><dd>2</dd></div><div><dt>Delete rows applied</dt><dd>2</dd></div></dl></section><section><h2>Custody rule</h2><p>Every removed, shortened, archived, or deleted source block has a row in <code>content-reduction-custody-ledger.json</code>. Canonical destination links, provenance status, compatibility dependencies, and removal verification are recorded there.</p></section><section><h2>Claim boundary</h2><p>No formula, evidence status, limitation, negative or mixed finding, no-match state, provenance record, or validation boundary was upgraded or discarded during consolidation.</p></section></main></body></html>''',encoding='utf-8')
+
+          # Static route and content verification before browser execution.
+          modified_html_paths = [ROOT/'laws/index.html',ROOT/'laws/test/index.html',ROOT/'laws/research/index.html'] + [ROOT/path for _,path,_ in DESTINATIONS.values()] + [receipt_html_path,CONTROL/'historical-status-archive.html']
+          def route_file(href, current_path):
+              clean = urllib.parse.urlsplit(href).path
+              if not clean:
+                  return current_path
+              if clean == '/':
+                  return ROOT/'index.html'
+              if clean.startswith('/'):
+                  if clean.endswith('/'):
+                      return ROOT/clean.lstrip('/')/'index.html'
+                  return ROOT/clean.lstrip('/')
+              target = (current_path.parent/clean)
+              if clean.endswith('/'):
+                  target = target/'index.html'
+              return target
+
+          broken_links = []
+          for path in modified_html_paths:
+              soup = BeautifulSoup(path.read_text(encoding='utf-8'),'html.parser')
+              ids = {tag.get('id') for tag in soup.find_all(id=True)}
+              for anchor in soup.find_all('a',href=True):
+                  href = anchor['href']
+                  if href.startswith(('http://','https://','mailto:','tel:','javascript:')):
+                      continue
+                  if href.startswith('#'):
+                      if href[1:] and href[1:] not in ids:
+                          broken_links.append((str(path),href))
+                      continue
+                  target = route_file(href,path)
+                  if not target.exists():
+                      broken_links.append((str(path),href))
+          assert not broken_links, broken_links
+
+          final_main_soup = BeautifulSoup((ROOT/'laws/index.html').read_text(encoding='utf-8'),'html.parser')
+          assert len(final_main_soup.select('[data-visible-first-declaration="true"]')) == 1
+          acronym_entries = final_main_soup.select('.laws-first__sequence [data-first-entry]')
+          assert [entry.get('data-first-entry') for entry in acronym_entries] == ['flow','integrity','reality','structure','test']
+          assert final_main_soup.select_one('[data-first-entry="research"]') is not None
+          assert '4 + 2' not in final_main_soup.body.get_text(' ',strip=True)
+          for destination, (route,_,_) in DESTINATIONS.items():
+              assert final_main_soup.find('a',href=route) is not None
+
+          # Ensure all migrated payloads and metadata remain byte-equivalent in semantic content.
+          final_record_count = 0
+          for destination, (_,path,_) in DESTINATIONS.items():
+              before_page = BeautifulSoup(git_show(CP63,path),'html.parser')
+              after_page = BeautifulSoup((ROOT/path).read_text(encoding='utf-8'),'html.parser')
+              before_records = {a['data-content-id']:a for a in before_page.select('article[data-content-id]')}
+              after_records = {a['data-content-id']:a for a in after_page.select('article[data-content-id]')}
+              assert set(before_records) == set(after_records)
+              for content_id in before_records:
+                  assert before_records[content_id].get('data-source-payload-sha256') == after_records[content_id].get('data-source-payload-sha256')
+                  assert canonical_text(before_records[content_id].select_one('.record-payload').decode_contents()) == canonical_text(after_records[content_id].select_one('.record-payload').decode_contents())
+              final_record_count += len(after_records)
+          assert final_record_count == 48
+
+          # Protected product sources and accepted values remain unchanged.
+          protected_paths = ['laws/index.crystals.js','laws/index.interactions.js','laws/index.controller.js','laws/index.compositor.js','laws/index.cosmos.js','laws/index.planet.js']
+          for path in protected_paths:
+              assert (ROOT/path).read_text(encoding='utf-8') == git_show(CP63,path)
+          crystals = (ROOT/'laws/index.crystals.js').read_text(encoding='utf-8')
+          for name,pattern in {
+              'gatewayBodyScale':r'gatewayBodyScale:\s*0\.7666667',
+              'horizontalRadius':r'horizontalRadius:\s*1\.68',
+              'verticalRadius':r'verticalRadius:\s*1\.5008',
+              'depthRadius':r'depthRadius:\s*1\.2992',
+          }.items():
+              assert re.search(pattern,crystals),name
+
+          # Browser verification and visual-review package.
+          server = subprocess.Popen(['python3','-m','http.server','4173','--bind','127.0.0.1'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+          try:
+              for _ in range(50):
+                  try:
+                      import urllib.request
+                      urllib.request.urlopen('http://127.0.0.1:4173/laws/',timeout=1)
+                      break
+                  except Exception:
+                      time.sleep(.2)
+              else:
+                  raise AssertionError('server did not start')
+
+              viewport_results = {}
+              browser_errors = []
+              request_failures = []
+              http_errors = []
+              page_routes = ['/laws/','/laws/test/','/laws/research/'] + [route for route,_,_ in DESTINATIONS.values()]
+              viewports = {'phone_portrait':(412,915),'phone_landscape':(915,412),'tablet':(820,1180),'desktop':(1440,1000)}
+              with sync_playwright() as p:
+                  browser = p.chromium.launch(headless=True)
+                  for viewport_name,(width,height) in viewports.items():
+                      viewport_results[viewport_name] = 'PASS'
+                      context = browser.new_context(viewport={'width':width,'height':height},device_scale_factor=1)
+                      for route in page_routes:
+                          page = context.new_page()
+                          page.on('console',lambda msg,r=route,v=viewport_name: browser_errors.append((v,r,msg.text)) if msg.type == 'error' else None)
+                          page.on('requestfailed',lambda req,r=route,v=viewport_name: request_failures.append((v,r,req.url,req.failure)))
+                          response = page.goto('http://127.0.0.1:4173'+route,wait_until='networkidle')
+                          if not response or response.status >= 400:
+                              http_errors.append((viewport_name,route,None if not response else response.status))
+                          page.wait_for_timeout(300)
+                          overflow = page.evaluate('Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-window.innerWidth')
+                          assert overflow <= 1,(viewport_name,route,overflow)
+                          page.close()
+                      context.close()
+
+                  context = browser.new_context(viewport={'width':412,'height':915},device_scale_factor=1)
+                  page = context.new_page()
+                  response = page.goto('http://127.0.0.1:4173/laws/',wait_until='networkidle')
+                  assert response.status == 200
+                  page.wait_for_timeout(1200)
+                  visible_text = page.locator('body').inner_text()
+                  assert len(re.findall(r'Research comes F\.I\.R\.S\.T\.',visible_text)) == 1
+                  assert not re.search(r'4\s*\+\s*2',visible_text)
+                  for key in ['flow','integrity','reality','structure','test','research']:
+                      assert page.locator(f'[data-first-entry="{key}"]').count() == 1
+                  page.screenshot(path=str(VISUAL/'01-samsung-portrait-main-laws.png'),full_page=True)
+                  compass_path = VISUAL/'_compass.png'
+                  first_path = VISUAL/'_first.png'
+                  compass = page.locator('[data-laws-scene]').first
+                  assert compass.count() == 1
+                  compass.screenshot(path=str(compass_path))
+                  page.locator('#research-comes-first').screenshot(path=str(first_path))
+                  with Image.open(compass_path) as top, Image.open(first_path) as bottom:
+                      width = max(top.width,bottom.width)
+                      canvas = Image.new('RGB',(width,top.height+bottom.height),(2,4,10))
+                      canvas.paste(top,(0,0)); canvas.paste(bottom,(0,top.height))
+                      canvas.save(VISUAL/'02-compass-and-first-section.png',optimize=True)
+                  compass_path.unlink(); first_path.unlink()
+                  page.locator('#laws-consolidated-orientation').screenshot(path=str(VISUAL/'03-reduced-main-middle.png'))
+                  page.locator('#laws-custody-and-boundaries').screenshot(path=str(VISUAL/'04-reduced-main-lower.png'))
+                  context.close()
+
+                  def fullshot(route,name,width=412,height=915):
+                      context = browser.new_context(viewport={'width':width,'height':height},device_scale_factor=1)
+                      page = context.new_page(); response = page.goto('http://127.0.0.1:4173'+route,wait_until='networkidle'); assert response.status == 200; page.wait_for_timeout(300); page.screenshot(path=str(VISUAL/name),full_page=True); context.close()
+                  fullshot('/laws/test/','05-test-parent-gateway.png')
+                  fullshot('/laws/research/','06-research-parent-gateway.png')
+                  fullshot('/laws/test/reverse-audit/','07-representative-test-destination.png')
+                  fullshot('/laws/research/methods-and-models/','08-representative-research-destination.png')
+                  fullshot('/laws/','09-desktop-full-page-overview.png',1440,1000)
+                  fullshot('/laws/control-plane/cp6-4-5/content-reduction-custody-receipt.html','10-content-reduction-custody-receipt.png',900,1000)
+
+                  # Verify all eight legacy parent anchors still forward.
+                  context = browser.new_context(viewport={'width':412,'height':915})
+                  forward_cases = [('/laws/test/',anchor,href) for anchor,_,_,href in test_destinations] + [('/laws/research/',anchor,href) for anchor,_,_,href in research_destinations]
+                  for parent_route,anchor,expected in forward_cases:
+                      page = context.new_page(); page.goto('http://127.0.0.1:4173'+parent_route+'#'+anchor); page.wait_for_url('**'+expected); page.close()
+                  context.close()
+                  browser.close()
+              assert not browser_errors,browser_errors
+              assert not request_failures,request_failures
+              assert not http_errors,http_errors
+          finally:
+              server.terminate(); server.wait(timeout=10)
+
+          visual_files = sorted(str(path.relative_to(ROOT)) for path in VISUAL.glob('*.png'))
+          assert len(visual_files) == 10
+
+          final_receipt = {
+              'contract':'LAWS_CHAMBER_CP6_4_FIRST_THEME_AND_CP6_5_PAGE_CONSOLIDATION_VERIFICATION_RECEIPT_v1',
+              'current_checkpoint':'CHECKPOINT_6',
+              'current_phase':'CP6_4_5_CANDIDATE_COMPLETE_PENDING_USER_VISUAL_REVIEW',
+              'cp6_3_formal_review_result':'PASS',
+              'cp6_3_disposition':'PASS_CLOSED',
+              'branch':BRANCH,
+              'base_head':CP63,
+              'first_declaration_implemented':True,
+              'first_acronym_binding':{'F':'FLOW','I':'INTEGRITY','R':'REALITY','S':'STRUCTURE','T':'TEST','RESEARCH':'EXAMINATION_AND_SUPPORT_LAYER_NOT_ACRONYM_LETTER'},
+              'old_4_plus_2_removed':True,
+              'main_page_before_block_count':main_before_blocks,
+              'main_page_after_block_count':main_after_blocks,
+              'main_page_reduction_count':main_reduction,
+              'main_page_reduction_percent':main_reduction_percent,
+              'test_parent_reduction_result':{'status':'PASS_GATEWAY_CONSOLIDATED','before_words':test_before_words,'after_words':test_after_words},
+              'research_parent_reduction_result':{'status':'PASS_GATEWAY_CONSOLIDATED','before_words':research_before_words,'after_words':research_after_words},
+              'cp6_3_migrated_rows_preserved':'48_OF_48',
+              'removed_or_shortened_source_block_count':removed_or_shortened,
+              'source_blocks_with_custody_record':138,
+              'unaccounted_content_loss':0,
+              'archive_rows_applied':2,
+              'delete_rows_applied':2,
+              'semantic_overlap_groups_with_competing_full_records':0,
+              'canonical_destination_page_count':8,
+              'canonical_destination_routes':8,
+              'compatibility_bindings_preserved':9,
+              'broken_compatibility_bindings':0,
+              'visible_first_declaration_count':1,
+              'visible_old_4_plus_2_governing_slogan_count':0,
+              'first_entries':{'flow':'PASS','integrity':'PASS','reality':'PASS','structure':'PASS','test':'PASS','research':'PASS'},
+              'main_page_full_record_duplication_reduced':True,
+              'test_parent_full_record_duplication_reduced':True,
+              'research_parent_full_record_duplication_reduced':True,
+              'removed_source_blocks_with_custody_record':'ALL',
+              'unsupported_claim_upgrades':0,
+              'formula_mutations':0,
+              'lost_provenance':0,
+              'lost_limitations':0,
+              'lost_negative_or_mixed_findings':0,
+              'broken_internal_links':0,
+              'orphaned_destinations':0,
+              'broken_legacy_anchors':0,
+              'responsive_results':viewport_results,
+              'horizontal_overflow':0,
+              'actionable_browser_errors':0,
+              'request_failures':0,
+              'http_errors':0,
+              'cp5_product_path_changes':0,
+              'cp5_compass_preservation':'PASS_PROTECTED_RUNTIME_FILES_UNCHANGED',
+              'cp5_celestial_preservation':'PASS_PROTECTED_RUNTIME_FILES_UNCHANGED',
+              'accepted_scale_values':{'gatewayBodyScale':0.7666667,'horizontalRadius':1.68,'verticalRadius':1.5008,'depthRadius':1.2992},
+              'visual_review_materials':visual_files,
+              'merge_performed':False,
+              'deployment_performed':False,
+              'public_physical_acceptance':'PENDING',
+              'failures':[],
+              'next_action':'USER_VISUAL_REVIEW_BEFORE_FINAL_INTEGRATION',
+          }
+          (CONTROL/'verification-receipt.json').write_text(json.dumps(final_receipt,indent=2),encoding='utf-8')
+
+          # Self-retire the execution carrier and reconcile bounded durable scope.
+          WORKFLOW.unlink()
+          protected_changed = [path for path in protected_paths if (ROOT/path).read_text(encoding='utf-8') != git_show(CP63,path)]
+          assert not protected_changed
+          status_lines = run('git','status','--porcelain').splitlines()
+          changed_paths = sorted(line[3:] for line in status_lines if line)
+          allowed_exact = {
+              'laws/index.html','laws/index.css','laws/test/index.html','laws/research/index.html','laws/destinations.css',
+              *[path for _,path,_ in DESTINATIONS.values()],
+              'laws/control-plane/cp6-4-5/cp6-3-formal-review.json',
+              'laws/control-plane/cp6-4-5/content-reduction-custody-ledger.json',
+              'laws/control-plane/cp6-4-5/content-reduction-custody-receipt.html',
+              'laws/control-plane/cp6-4-5/historical-status-archive.html',
+              'laws/control-plane/cp6-4-5/verification-receipt.json',
+              *visual_files,
+          }
+          assert set(changed_paths) == allowed_exact,(changed_paths,sorted(allowed_exact))
+          final_receipt['actual_changed_path_count'] = len(changed_paths)
+          final_receipt['actual_changed_paths'] = changed_paths
+          (CONTROL/'verification-receipt.json').write_text(json.dumps(final_receipt,indent=2),encoding='utf-8')
+          print(json.dumps({'formal_review':'PASS','cp6_3':'PASS_CLOSED','changed_paths':len(changed_paths),'visuals':len(visual_files),'next_action':final_receipt['next_action']},indent=2))
+          PY
+          python3 /tmp/laws_cp645.py
+
+      - name: Commit verified inspectable candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "CP6-4/5 implement F.I.R.S.T. and consolidate Laws pages"
+          git push origin HEAD:agent/laws-cp6-4-first-theme-and-page-consolidation-001

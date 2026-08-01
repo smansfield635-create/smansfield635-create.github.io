@@ -74,7 +74,7 @@ html[data-cp6-experiential-presentation="candidate"] [data-laws-scene-field] {
     .laws-orbit__field,
     [data-laws-scene-field]
   ) {
-    min-height: max(34rem, 92svh) !important;
+    min-height: max(40rem, 105svh) !important;
   }
 }
 

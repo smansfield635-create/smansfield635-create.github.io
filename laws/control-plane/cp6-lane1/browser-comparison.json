@@ -1,0 +1,1656 @@
+{
+  "contract": "LAWS_CHAMBER_CP6_LANE_1_BASE_AND_CANDIDATE_BROWSER_COMPARISON_v1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-cp6-compass-first-progressive-disclosure-001",
+  "baseHead": "c009f2a03c19a6b54ebad62dfba658f808f0b4c1",
+  "candidateHead": "587c7b2db9a994f2eefa4807951920bdaccd16f8",
+  "browser": "chromium-playwright",
+  "measurementMethod": {
+    "renderedBlockCount": "Visible section, article, nav, aside, and details elements under main at initial load.",
+    "duplicateRouteLinkCount": "Repeated visible main-page anchor hrefs at initial load; links inside closed disclosures are excluded as not rendered.",
+    "offscreenControls": "Visible anchors, buttons, and summaries extending horizontally outside the viewport.",
+    "compassFirst": "No visible direct main child precedes the Laws Compass wrapper. No cosmetic position threshold is imposed."
+  },
+  "staticVerification": {
+    "contract": "LAWS_CHAMBER_CP6_LANE_1_STATIC_VERIFICATION_v1",
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "branch": "agent/laws-cp6-compass-first-progressive-disclosure-001",
+    "baseHead": "c009f2a03c19a6b54ebad62dfba658f808f0b4c1",
+    "inspectedHead": "587c7b2db9a994f2eefa4807951920bdaccd16f8",
+    "mergeBase": "c009f2a03c19a6b54ebad62dfba658f808f0b4c1",
+    "baseline": {
+      "acceptedMainPageBlockCount": 86,
+      "migratedRecordCustody": "48_OF_48",
+      "canonicalDestinationCount": 8,
+      "acceptedHorizontalOverflow": 0,
+      "acceptedActionableBrowserErrors": 0,
+      "acceptedResponsiveResults": {
+        "phone_portrait": "PASS",
+        "phone_landscape": "PASS",
+        "tablet": "PASS",
+        "desktop": "PASS"
+      }
+    },
+    "sourceDomOrder": [
+      {
+        "name": "LAWS_COMPASS",
+        "position": 71
+      },
+      {
+        "name": "PRACTICAL_OPENING",
+        "position": 38200
+      },
+      {
+        "name": "COMPACT_RESEARCH_COMES_FIRST",
+        "position": 38768
+      },
+      {
+        "name": "COLLAPSED_ORIENTATION_PANELS",
+        "position": 40084
+      }
+    ],
+    "sourceDomOrderPass": true,
+    "immediateCapabilityRouteDeckCount": 0,
+    "supportingPanelCount": 3,
+    "defaultSupportingPanelMarkupClosed": true,
+    "authorizedResearchStatementCount": 1,
+    "osfMainPageInsertion": "ONE_BOUNDED_STATEMENT_ONLY",
+    "routePresence": {
+      "/laws/test/admission-and-baseline/": true,
+      "/laws/test/forward-construction/": true,
+      "/laws/test/reverse-audit/": true,
+      "/laws/test/result-and-record/": true,
+      "/laws/research/evidence-and-sources/": true,
+      "/laws/research/methods-and-models/": true,
+      "/laws/research/applied-investigations/": true,
+      "/laws/research/findings-and-boundaries/": true
+    },
+    "destinationRoutesReachableInSource": true,
+    "migratedRecordCustody": "48_OF_48",
+    "protectedPaths": [
+      "laws/index.compositor.js",
+      "laws/index.controller.js",
+      "laws/index.cosmos.js",
+      "laws/index.crystals.js",
+      "laws/index.interactions.js",
+      "laws/index.planet.js",
+      "assets/audralia/audralia.planet.js"
+    ],
+    "protectedRuntimeDiff": [],
+    "protectedRuntimeDiffCount": 0,
+    "destinationPageDiff": [],
+    "destinationPageMutationCount": 0,
+    "changedPaths": [
+      ".github/workflows/laws-cp6-lane1-build-verify.yml",
+      ".github/workflows/laws-cp6-lane1-pr-browser.yml",
+      "laws/control-plane/cp6-lane1/browser-comparison.json",
+      "laws/control-plane/cp6-lane1/browser-comparison.md",
+      "laws/control-plane/cp6-lane1/browser-evidence/base-desktop.png",
+      "laws/control-plane/cp6-lane1/browser-evidence/base-phone.png",
+      "laws/control-plane/cp6-lane1/browser-evidence/base-tablet.png",
+      "laws/control-plane/cp6-lane1/browser-evidence/candidate-desktop.png",
+      "laws/control-plane/cp6-lane1/browser-evidence/candidate-phone.png",
+      "laws/control-plane/cp6-lane1/browser-evidence/candidate-tablet.png",
+      "laws/control-plane/cp6-lane1/content-disposition.json",
+      "laws/control-plane/cp6-lane1/static-verification.json",
+      "laws/index.css",
+      "laws/index.html",
+      "tools/laws-cp6-lane1-browser-correction.mjs",
+      "tools/laws-cp6-lane1-transform.mjs",
+      "tools/laws-cp6-lane1-verify.mjs"
+    ],
+    "changedPathViolations": [],
+    "lane2MutationCount": 0,
+    "cssSentinelPresent": true,
+    "pass": true
+  },
+  "results": {
+    "base": {
+      "phone": {
+        "state": "base",
+        "viewportName": "phone",
+        "origin": "http://127.0.0.1:4173",
+        "metrics": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "pageHeight": 11569,
+          "documentWidth": 390,
+          "horizontalOverflowWidth": 0,
+          "renderedStructuralBlockCount": 52,
+          "sourceAndRenderedDomOrder": [
+            "laws-threshold.laws-threshold--compact",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "laws-value-deck",
+            "laws-orbit-intro",
+            "laws-orbit",
+            "laws-entry-panel",
+            "laws-discovery",
+            "laws-closing",
+            "laws-accessibility-note"
+          ],
+          "visibleBlocksBeforeCompass": [
+            "laws-threshold.laws-threshold--compact",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "laws-value-deck",
+            "laws-orbit-intro"
+          ],
+          "visibleBlocksBelowCompass": [
+            "laws-entry-panel",
+            "laws-discovery",
+            "laws-closing",
+            "laws-accessibility-note"
+          ],
+          "compassPrimaryBoundingBox": {
+            "top": 3763.69,
+            "bottom": 4243.69,
+            "left": 14,
+            "right": 376,
+            "width": 362,
+            "height": 480,
+            "topViewportRatio": 4.4593,
+            "bottomViewportRatio": 5.0281
+          },
+          "compassSceneBoundingBox": {
+            "top": 3763.69,
+            "bottom": 4243.69,
+            "left": 14,
+            "right": 376,
+            "width": 362,
+            "height": 480,
+            "topViewportRatio": 4.4593,
+            "bottomViewportRatio": 5.0281
+          },
+          "headerBoundingBox": {
+            "top": 14,
+            "bottom": 200.66,
+            "left": 14,
+            "right": 376,
+            "width": 362,
+            "height": 186.66,
+            "topViewportRatio": 0.0166,
+            "bottomViewportRatio": 0.2377
+          },
+          "headerOverlap": false,
+          "initialExpandedSupportingPanelCount": 0,
+          "supportingPanelCount": 0,
+          "immediateCapabilityRouteDeckCount": 1,
+          "duplicateRouteDirectoryCount": 1,
+          "duplicateRouteLinks": [
+            {
+              "href": "/laws/test/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/evidence-and-sources/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/research/methods-and-models/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/research/applied-investigations/",
+              "duplicateCount": 4
+            },
+            {
+              "href": "/laws/research/findings-and-boundaries/",
+              "duplicateCount": 4
+            },
+            {
+              "href": "/laws/test/admission-and-baseline/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/test/forward-construction/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/test/reverse-audit/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/test/result-and-record/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/scientific-law/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/frontier/",
+              "duplicateCount": 1
+            }
+          ],
+          "duplicateRouteLinkCount": 25,
+          "offscreenControls": [],
+          "offscreenControlCount": 0
+        },
+        "consoleErrors": [],
+        "pageErrors": [],
+        "linkHrefs": [
+          "#laws-orbit",
+          "#main",
+          "/",
+          "/frontier/",
+          "/frontier/water/",
+          "/gauges/",
+          "/home/",
+          "/laws/categories/",
+          "/laws/categories/flow/",
+          "/laws/categories/integrity/",
+          "/laws/categories/reality/",
+          "/laws/categories/structure/",
+          "/laws/core-invariants/",
+          "/laws/fusion-readiness/",
+          "/laws/hybrid-collapse/",
+          "/laws/industrial-posture/",
+          "/laws/research/",
+          "/laws/research/applied-investigations/",
+          "/laws/research/evidence-and-sources/",
+          "/laws/research/findings-and-boundaries/",
+          "/laws/research/methods-and-models/",
+          "/laws/scientific-law/",
+          "/laws/test/",
+          "/laws/test/admission-and-baseline/",
+          "/laws/test/forward-construction/",
+          "/laws/test/result-and-record/",
+          "/laws/test/reverse-audit/",
+          "/rgsc/ice/"
+        ],
+        "screenshot": "laws/control-plane/cp6-lane1/browser-evidence/base-phone.png"
+      },
+      "tablet": {
+        "state": "base",
+        "viewportName": "tablet",
+        "origin": "http://127.0.0.1:4173",
+        "metrics": {
+          "viewport": {
+            "width": 820,
+            "height": 1180
+          },
+          "pageHeight": 8780,
+          "documentWidth": 820,
+          "horizontalOverflowWidth": 0,
+          "renderedStructuralBlockCount": 52,
+          "sourceAndRenderedDomOrder": [
+            "laws-threshold.laws-threshold--compact",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "laws-value-deck",
+            "laws-orbit-intro",
+            "laws-orbit",
+            "laws-entry-panel",
+            "laws-discovery",
+            "laws-closing",
+            "laws-accessibility-note"
+          ],
+          "visibleBlocksBeforeCompass": [
+            "laws-threshold.laws-threshold--compact",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "laws-value-deck",
+            "laws-orbit-intro"
+          ],
+          "visibleBlocksBelowCompass": [
+            "laws-entry-panel",
+            "laws-discovery",
+            "laws-closing",
+            "laws-accessibility-note"
+          ],
+          "compassPrimaryBoundingBox": {
+            "top": 2612.52,
+            "bottom": 3132.52,
+            "left": 14,
+            "right": 806,
+            "width": 792,
+            "height": 520,
+            "topViewportRatio": 2.214,
+            "bottomViewportRatio": 2.6547
+          },
+          "compassSceneBoundingBox": {
+            "top": 2612.52,
+            "bottom": 3132.52,
+            "left": 14,
+            "right": 806,
+            "width": 792,
+            "height": 520,
+            "topViewportRatio": 2.214,
+            "bottomViewportRatio": 2.6547
+          },
+          "headerBoundingBox": {
+            "top": 14,
+            "bottom": 157.81,
+            "left": 14,
+            "right": 806,
+            "width": 792,
+            "height": 143.81,
+            "topViewportRatio": 0.0119,
+            "bottomViewportRatio": 0.1337
+          },
+          "headerOverlap": false,
+          "initialExpandedSupportingPanelCount": 0,
+          "supportingPanelCount": 0,
+          "immediateCapabilityRouteDeckCount": 1,
+          "duplicateRouteDirectoryCount": 1,
+          "duplicateRouteLinks": [
+            {
+              "href": "/laws/test/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/evidence-and-sources/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/research/methods-and-models/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/research/applied-investigations/",
+              "duplicateCount": 4
+            },
+            {
+              "href": "/laws/research/findings-and-boundaries/",
+              "duplicateCount": 4
+            },
+            {
+              "href": "/laws/test/admission-and-baseline/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/test/forward-construction/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/test/reverse-audit/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/test/result-and-record/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/scientific-law/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/frontier/",
+              "duplicateCount": 1
+            }
+          ],
+          "duplicateRouteLinkCount": 25,
+          "offscreenControls": [],
+          "offscreenControlCount": 0
+        },
+        "consoleErrors": [],
+        "pageErrors": [],
+        "linkHrefs": [
+          "#laws-orbit",
+          "#main",
+          "/",
+          "/frontier/",
+          "/frontier/water/",
+          "/gauges/",
+          "/home/",
+          "/laws/categories/",
+          "/laws/categories/flow/",
+          "/laws/categories/integrity/",
+          "/laws/categories/reality/",
+          "/laws/categories/structure/",
+          "/laws/core-invariants/",
+          "/laws/fusion-readiness/",
+          "/laws/hybrid-collapse/",
+          "/laws/industrial-posture/",
+          "/laws/research/",
+          "/laws/research/applied-investigations/",
+          "/laws/research/evidence-and-sources/",
+          "/laws/research/findings-and-boundaries/",
+          "/laws/research/methods-and-models/",
+          "/laws/scientific-law/",
+          "/laws/test/",
+          "/laws/test/admission-and-baseline/",
+          "/laws/test/forward-construction/",
+          "/laws/test/result-and-record/",
+          "/laws/test/reverse-audit/",
+          "/rgsc/ice/"
+        ],
+        "screenshot": "laws/control-plane/cp6-lane1/browser-evidence/base-tablet.png"
+      },
+      "desktop": {
+        "state": "base",
+        "viewportName": "desktop",
+        "origin": "http://127.0.0.1:4173",
+        "metrics": {
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "pageHeight": 9438,
+          "documentWidth": 1440,
+          "horizontalOverflowWidth": 0,
+          "renderedStructuralBlockCount": 52,
+          "sourceAndRenderedDomOrder": [
+            "laws-threshold.laws-threshold--compact",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "laws-value-deck",
+            "laws-orbit-intro",
+            "laws-orbit",
+            "laws-entry-panel",
+            "laws-discovery",
+            "laws-closing",
+            "laws-accessibility-note"
+          ],
+          "visibleBlocksBeforeCompass": [
+            "laws-threshold.laws-threshold--compact",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "laws-value-deck",
+            "laws-orbit-intro"
+          ],
+          "visibleBlocksBelowCompass": [
+            "laws-entry-panel",
+            "laws-discovery",
+            "laws-closing",
+            "laws-accessibility-note"
+          ],
+          "compassPrimaryBoundingBox": {
+            "top": 2319.61,
+            "bottom": 2899.61,
+            "left": 172,
+            "right": 1268,
+            "width": 1096,
+            "height": 580,
+            "topViewportRatio": 2.3196,
+            "bottomViewportRatio": 2.8996
+          },
+          "compassSceneBoundingBox": {
+            "top": 2319.61,
+            "bottom": 2899.61,
+            "left": 172,
+            "right": 1268,
+            "width": 1096,
+            "height": 580,
+            "topViewportRatio": 2.3196,
+            "bottomViewportRatio": 2.8996
+          },
+          "headerBoundingBox": {
+            "top": 42,
+            "bottom": 128,
+            "left": 172,
+            "right": 1268,
+            "width": 1096,
+            "height": 86,
+            "topViewportRatio": 0.042,
+            "bottomViewportRatio": 0.128
+          },
+          "headerOverlap": false,
+          "initialExpandedSupportingPanelCount": 0,
+          "supportingPanelCount": 0,
+          "immediateCapabilityRouteDeckCount": 1,
+          "duplicateRouteDirectoryCount": 1,
+          "duplicateRouteLinks": [
+            {
+              "href": "/laws/test/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/evidence-and-sources/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/research/methods-and-models/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/research/applied-investigations/",
+              "duplicateCount": 4
+            },
+            {
+              "href": "/laws/research/findings-and-boundaries/",
+              "duplicateCount": 4
+            },
+            {
+              "href": "/laws/test/admission-and-baseline/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/test/forward-construction/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/test/reverse-audit/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/test/result-and-record/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/scientific-law/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/frontier/",
+              "duplicateCount": 1
+            }
+          ],
+          "duplicateRouteLinkCount": 25,
+          "offscreenControls": [],
+          "offscreenControlCount": 0
+        },
+        "consoleErrors": [],
+        "pageErrors": [],
+        "linkHrefs": [
+          "#laws-orbit",
+          "#main",
+          "/",
+          "/frontier/",
+          "/frontier/water/",
+          "/gauges/",
+          "/home/",
+          "/laws/categories/",
+          "/laws/categories/flow/",
+          "/laws/categories/integrity/",
+          "/laws/categories/reality/",
+          "/laws/categories/structure/",
+          "/laws/core-invariants/",
+          "/laws/fusion-readiness/",
+          "/laws/hybrid-collapse/",
+          "/laws/industrial-posture/",
+          "/laws/research/",
+          "/laws/research/applied-investigations/",
+          "/laws/research/evidence-and-sources/",
+          "/laws/research/findings-and-boundaries/",
+          "/laws/research/methods-and-models/",
+          "/laws/scientific-law/",
+          "/laws/test/",
+          "/laws/test/admission-and-baseline/",
+          "/laws/test/forward-construction/",
+          "/laws/test/result-and-record/",
+          "/laws/test/reverse-audit/",
+          "/rgsc/ice/"
+        ],
+        "screenshot": "laws/control-plane/cp6-lane1/browser-evidence/base-desktop.png"
+      }
+    },
+    "candidate": {
+      "phone": {
+        "state": "candidate",
+        "viewportName": "phone",
+        "origin": "http://127.0.0.1:4174",
+        "metrics": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "pageHeight": 3219,
+          "documentWidth": 390,
+          "horizontalOverflowWidth": 0,
+          "renderedStructuralBlockCount": 51,
+          "sourceAndRenderedDomOrder": [
+            "LAWS_COMPASS",
+            "PRACTICAL_OPENING",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "COLLAPSED_ORIENTATION_PANELS",
+            "laws-accessibility-note"
+          ],
+          "visibleBlocksBeforeCompass": [],
+          "visibleBlocksBelowCompass": [
+            "PRACTICAL_OPENING",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "COLLAPSED_ORIENTATION_PANELS",
+            "laws-accessibility-note"
+          ],
+          "compassPrimaryBoundingBox": {
+            "top": 185.58,
+            "bottom": 1432.97,
+            "left": 14,
+            "right": 376,
+            "width": 362,
+            "height": 1247.39,
+            "topViewportRatio": 0.2199,
+            "bottomViewportRatio": 1.6978
+          },
+          "compassSceneBoundingBox": {
+            "top": 185.58,
+            "bottom": 665.58,
+            "left": 14,
+            "right": 376,
+            "width": 362,
+            "height": 480,
+            "topViewportRatio": 0.2199,
+            "bottomViewportRatio": 0.7886
+          },
+          "headerBoundingBox": {
+            "top": 14,
+            "bottom": 177.58,
+            "left": 14,
+            "right": 376,
+            "width": 362,
+            "height": 163.58,
+            "topViewportRatio": 0.0166,
+            "bottomViewportRatio": 0.2104
+          },
+          "headerOverlap": false,
+          "initialExpandedSupportingPanelCount": 0,
+          "supportingPanelCount": 3,
+          "immediateCapabilityRouteDeckCount": 0,
+          "duplicateRouteDirectoryCount": 0,
+          "duplicateRouteLinks": [
+            {
+              "href": "/laws/test/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/scientific-law/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/applied-investigations/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/test/admission-and-baseline/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/methods-and-models/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/evidence-and-sources/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/research/findings-and-boundaries/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/test/reverse-audit/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/test/result-and-record/",
+              "duplicateCount": 2
+            }
+          ],
+          "duplicateRouteLinkCount": 15,
+          "offscreenControls": [],
+          "offscreenControlCount": 0
+        },
+        "consoleErrors": [],
+        "pageErrors": [],
+        "linkHrefs": [
+          "#laws-orbit",
+          "#main",
+          "/",
+          "/frontier/",
+          "/frontier/water/",
+          "/gauges/",
+          "/home/",
+          "/laws/categories/",
+          "/laws/categories/flow/",
+          "/laws/categories/integrity/",
+          "/laws/categories/reality/",
+          "/laws/categories/structure/",
+          "/laws/core-invariants/",
+          "/laws/fusion-readiness/",
+          "/laws/hybrid-collapse/",
+          "/laws/industrial-posture/",
+          "/laws/research/",
+          "/laws/research/applied-investigations/",
+          "/laws/research/evidence-and-sources/",
+          "/laws/research/findings-and-boundaries/",
+          "/laws/research/methods-and-models/",
+          "/laws/scientific-law/",
+          "/laws/test/",
+          "/laws/test/admission-and-baseline/",
+          "/laws/test/forward-construction/",
+          "/laws/test/result-and-record/",
+          "/laws/test/reverse-audit/",
+          "/rgsc/ice/"
+        ],
+        "screenshot": "laws/control-plane/cp6-lane1/browser-evidence/candidate-phone.png"
+      },
+      "tablet": {
+        "state": "candidate",
+        "viewportName": "tablet",
+        "origin": "http://127.0.0.1:4174",
+        "metrics": {
+          "viewport": {
+            "width": 820,
+            "height": 1180
+          },
+          "pageHeight": 2393,
+          "documentWidth": 820,
+          "horizontalOverflowWidth": 0,
+          "renderedStructuralBlockCount": 51,
+          "sourceAndRenderedDomOrder": [
+            "LAWS_COMPASS",
+            "PRACTICAL_OPENING",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "COLLAPSED_ORIENTATION_PANELS",
+            "laws-accessibility-note"
+          ],
+          "visibleBlocksBeforeCompass": [],
+          "visibleBlocksBelowCompass": [
+            "PRACTICAL_OPENING",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "COLLAPSED_ORIENTATION_PANELS",
+            "laws-accessibility-note"
+          ],
+          "compassPrimaryBoundingBox": {
+            "top": 157.98,
+            "bottom": 1192.06,
+            "left": 14,
+            "right": 806,
+            "width": 792,
+            "height": 1034.08,
+            "topViewportRatio": 0.1339,
+            "bottomViewportRatio": 1.0102
+          },
+          "compassSceneBoundingBox": {
+            "top": 157.98,
+            "bottom": 677.98,
+            "left": 14,
+            "right": 806,
+            "width": 792,
+            "height": 520,
+            "topViewportRatio": 0.1339,
+            "bottomViewportRatio": 0.5746
+          },
+          "headerBoundingBox": {
+            "top": 14,
+            "bottom": 145.69,
+            "left": 14,
+            "right": 806,
+            "width": 792,
+            "height": 131.69,
+            "topViewportRatio": 0.0119,
+            "bottomViewportRatio": 0.1235
+          },
+          "headerOverlap": false,
+          "initialExpandedSupportingPanelCount": 0,
+          "supportingPanelCount": 3,
+          "immediateCapabilityRouteDeckCount": 0,
+          "duplicateRouteDirectoryCount": 0,
+          "duplicateRouteLinks": [
+            {
+              "href": "/laws/test/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/scientific-law/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/applied-investigations/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/test/admission-and-baseline/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/methods-and-models/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/evidence-and-sources/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/research/findings-and-boundaries/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/test/reverse-audit/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/test/result-and-record/",
+              "duplicateCount": 2
+            }
+          ],
+          "duplicateRouteLinkCount": 15,
+          "offscreenControls": [],
+          "offscreenControlCount": 0
+        },
+        "consoleErrors": [],
+        "pageErrors": [],
+        "linkHrefs": [
+          "#laws-orbit",
+          "#main",
+          "/",
+          "/frontier/",
+          "/frontier/water/",
+          "/gauges/",
+          "/home/",
+          "/laws/categories/",
+          "/laws/categories/flow/",
+          "/laws/categories/integrity/",
+          "/laws/categories/reality/",
+          "/laws/categories/structure/",
+          "/laws/core-invariants/",
+          "/laws/fusion-readiness/",
+          "/laws/hybrid-collapse/",
+          "/laws/industrial-posture/",
+          "/laws/research/",
+          "/laws/research/applied-investigations/",
+          "/laws/research/evidence-and-sources/",
+          "/laws/research/findings-and-boundaries/",
+          "/laws/research/methods-and-models/",
+          "/laws/scientific-law/",
+          "/laws/test/",
+          "/laws/test/admission-and-baseline/",
+          "/laws/test/forward-construction/",
+          "/laws/test/result-and-record/",
+          "/laws/test/reverse-audit/",
+          "/rgsc/ice/"
+        ],
+        "screenshot": "laws/control-plane/cp6-lane1/browser-evidence/candidate-tablet.png"
+      },
+      "desktop": {
+        "state": "candidate",
+        "viewportName": "desktop",
+        "origin": "http://127.0.0.1:4174",
+        "metrics": {
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "pageHeight": 2532,
+          "documentWidth": 1440,
+          "horizontalOverflowWidth": 0,
+          "renderedStructuralBlockCount": 51,
+          "sourceAndRenderedDomOrder": [
+            "LAWS_COMPASS",
+            "PRACTICAL_OPENING",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "COLLAPSED_ORIENTATION_PANELS",
+            "laws-accessibility-note"
+          ],
+          "visibleBlocksBeforeCompass": [],
+          "visibleBlocksBelowCompass": [
+            "PRACTICAL_OPENING",
+            "COMPACT_RESEARCH_COMES_FIRST",
+            "COLLAPSED_ORIENTATION_PANELS",
+            "laws-accessibility-note"
+          ],
+          "compassPrimaryBoundingBox": {
+            "top": 143.19,
+            "bottom": 1255.47,
+            "left": 172,
+            "right": 1268,
+            "width": 1096,
+            "height": 1112.28,
+            "topViewportRatio": 0.1432,
+            "bottomViewportRatio": 1.2555
+          },
+          "compassSceneBoundingBox": {
+            "top": 143.19,
+            "bottom": 723.19,
+            "left": 172,
+            "right": 1268,
+            "width": 1096,
+            "height": 580,
+            "topViewportRatio": 0.1432,
+            "bottomViewportRatio": 0.7232
+          },
+          "headerBoundingBox": {
+            "top": 42,
+            "bottom": 127.19,
+            "left": 172,
+            "right": 1268,
+            "width": 1096,
+            "height": 85.19,
+            "topViewportRatio": 0.042,
+            "bottomViewportRatio": 0.1272
+          },
+          "headerOverlap": false,
+          "initialExpandedSupportingPanelCount": 0,
+          "supportingPanelCount": 3,
+          "immediateCapabilityRouteDeckCount": 0,
+          "duplicateRouteDirectoryCount": 0,
+          "duplicateRouteLinks": [
+            {
+              "href": "/laws/test/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/scientific-law/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/applied-investigations/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/test/admission-and-baseline/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/methods-and-models/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/research/evidence-and-sources/",
+              "duplicateCount": 2
+            },
+            {
+              "href": "/laws/research/findings-and-boundaries/",
+              "duplicateCount": 3
+            },
+            {
+              "href": "/laws/test/reverse-audit/",
+              "duplicateCount": 1
+            },
+            {
+              "href": "/laws/test/result-and-record/",
+              "duplicateCount": 2
+            }
+          ],
+          "duplicateRouteLinkCount": 15,
+          "offscreenControls": [],
+          "offscreenControlCount": 0
+        },
+        "consoleErrors": [],
+        "pageErrors": [],
+        "linkHrefs": [
+          "#laws-orbit",
+          "#main",
+          "/",
+          "/frontier/",
+          "/frontier/water/",
+          "/gauges/",
+          "/home/",
+          "/laws/categories/",
+          "/laws/categories/flow/",
+          "/laws/categories/integrity/",
+          "/laws/categories/reality/",
+          "/laws/categories/structure/",
+          "/laws/core-invariants/",
+          "/laws/fusion-readiness/",
+          "/laws/hybrid-collapse/",
+          "/laws/industrial-posture/",
+          "/laws/research/",
+          "/laws/research/applied-investigations/",
+          "/laws/research/evidence-and-sources/",
+          "/laws/research/findings-and-boundaries/",
+          "/laws/research/methods-and-models/",
+          "/laws/scientific-law/",
+          "/laws/test/",
+          "/laws/test/admission-and-baseline/",
+          "/laws/test/forward-construction/",
+          "/laws/test/result-and-record/",
+          "/laws/test/reverse-audit/",
+          "/rgsc/ice/"
+        ],
+        "screenshot": "laws/control-plane/cp6-lane1/browser-evidence/candidate-desktop.png"
+      }
+    }
+  },
+  "comparisons": {
+    "phone": {
+      "renderedBlockCountBefore": 52,
+      "renderedBlockCountAfter": 51,
+      "renderedBlockCountDirectionPass": true,
+      "pageHeightBefore": 11569,
+      "pageHeightAfter": 3219,
+      "pageHeightDirectionPass": true,
+      "visibleBlocksBeforeCompassBefore": [
+        "laws-threshold.laws-threshold--compact",
+        "COMPACT_RESEARCH_COMES_FIRST",
+        "laws-value-deck",
+        "laws-orbit-intro"
+      ],
+      "visibleBlocksBeforeCompassAfter": [],
+      "compassBefore": {
+        "top": 3763.69,
+        "bottom": 4243.69,
+        "left": 14,
+        "right": 376,
+        "width": 362,
+        "height": 480,
+        "topViewportRatio": 4.4593,
+        "bottomViewportRatio": 5.0281
+      },
+      "compassAfter": {
+        "top": 185.58,
+        "bottom": 665.58,
+        "left": 14,
+        "right": 376,
+        "width": 362,
+        "height": 480,
+        "topViewportRatio": 0.2199,
+        "bottomViewportRatio": 0.7886
+      },
+      "headerBefore": {
+        "top": 14,
+        "bottom": 200.66,
+        "left": 14,
+        "right": 376,
+        "width": 362,
+        "height": 186.66,
+        "topViewportRatio": 0.0166,
+        "bottomViewportRatio": 0.2377
+      },
+      "headerAfter": {
+        "top": 14,
+        "bottom": 177.58,
+        "left": 14,
+        "right": 376,
+        "width": 362,
+        "height": 163.58,
+        "topViewportRatio": 0.0166,
+        "bottomViewportRatio": 0.2104
+      },
+      "initialExpandedPanelsBefore": 0,
+      "initialExpandedPanelsAfter": 0,
+      "duplicateRouteLinkCountBefore": 25,
+      "duplicateRouteLinkCountAfter": 15,
+      "duplicateRouteDirectoryCountBefore": 1,
+      "duplicateRouteDirectoryCountAfter": 0,
+      "offscreenControlsBefore": 0,
+      "offscreenControlsAfter": 0,
+      "horizontalOverflowBefore": 0,
+      "horizontalOverflowAfter": 0,
+      "headerOverlapAfter": false,
+      "consoleErrorsAfter": [],
+      "pageErrorsAfter": []
+    },
+    "tablet": {
+      "renderedBlockCountBefore": 52,
+      "renderedBlockCountAfter": 51,
+      "renderedBlockCountDirectionPass": true,
+      "pageHeightBefore": 8780,
+      "pageHeightAfter": 2393,
+      "pageHeightDirectionPass": true,
+      "visibleBlocksBeforeCompassBefore": [
+        "laws-threshold.laws-threshold--compact",
+        "COMPACT_RESEARCH_COMES_FIRST",
+        "laws-value-deck",
+        "laws-orbit-intro"
+      ],
+      "visibleBlocksBeforeCompassAfter": [],
+      "compassBefore": {
+        "top": 2612.52,
+        "bottom": 3132.52,
+        "left": 14,
+        "right": 806,
+        "width": 792,
+        "height": 520,
+        "topViewportRatio": 2.214,
+        "bottomViewportRatio": 2.6547
+      },
+      "compassAfter": {
+        "top": 157.98,
+        "bottom": 677.98,
+        "left": 14,
+        "right": 806,
+        "width": 792,
+        "height": 520,
+        "topViewportRatio": 0.1339,
+        "bottomViewportRatio": 0.5746
+      },
+      "headerBefore": {
+        "top": 14,
+        "bottom": 157.81,
+        "left": 14,
+        "right": 806,
+        "width": 792,
+        "height": 143.81,
+        "topViewportRatio": 0.0119,
+        "bottomViewportRatio": 0.1337
+      },
+      "headerAfter": {
+        "top": 14,
+        "bottom": 145.69,
+        "left": 14,
+        "right": 806,
+        "width": 792,
+        "height": 131.69,
+        "topViewportRatio": 0.0119,
+        "bottomViewportRatio": 0.1235
+      },
+      "initialExpandedPanelsBefore": 0,
+      "initialExpandedPanelsAfter": 0,
+      "duplicateRouteLinkCountBefore": 25,
+      "duplicateRouteLinkCountAfter": 15,
+      "duplicateRouteDirectoryCountBefore": 1,
+      "duplicateRouteDirectoryCountAfter": 0,
+      "offscreenControlsBefore": 0,
+      "offscreenControlsAfter": 0,
+      "horizontalOverflowBefore": 0,
+      "horizontalOverflowAfter": 0,
+      "headerOverlapAfter": false,
+      "consoleErrorsAfter": [],
+      "pageErrorsAfter": []
+    },
+    "desktop": {
+      "renderedBlockCountBefore": 52,
+      "renderedBlockCountAfter": 51,
+      "renderedBlockCountDirectionPass": true,
+      "pageHeightBefore": 9438,
+      "pageHeightAfter": 2532,
+      "pageHeightDirectionPass": true,
+      "visibleBlocksBeforeCompassBefore": [
+        "laws-threshold.laws-threshold--compact",
+        "COMPACT_RESEARCH_COMES_FIRST",
+        "laws-value-deck",
+        "laws-orbit-intro"
+      ],
+      "visibleBlocksBeforeCompassAfter": [],
+      "compassBefore": {
+        "top": 2319.61,
+        "bottom": 2899.61,
+        "left": 172,
+        "right": 1268,
+        "width": 1096,
+        "height": 580,
+        "topViewportRatio": 2.3196,
+        "bottomViewportRatio": 2.8996
+      },
+      "compassAfter": {
+        "top": 143.19,
+        "bottom": 723.19,
+        "left": 172,
+        "right": 1268,
+        "width": 1096,
+        "height": 580,
+        "topViewportRatio": 0.1432,
+        "bottomViewportRatio": 0.7232
+      },
+      "headerBefore": {
+        "top": 42,
+        "bottom": 128,
+        "left": 172,
+        "right": 1268,
+        "width": 1096,
+        "height": 86,
+        "topViewportRatio": 0.042,
+        "bottomViewportRatio": 0.128
+      },
+      "headerAfter": {
+        "top": 42,
+        "bottom": 127.19,
+        "left": 172,
+        "right": 1268,
+        "width": 1096,
+        "height": 85.19,
+        "topViewportRatio": 0.042,
+        "bottomViewportRatio": 0.1272
+      },
+      "initialExpandedPanelsBefore": 0,
+      "initialExpandedPanelsAfter": 0,
+      "duplicateRouteLinkCountBefore": 25,
+      "duplicateRouteLinkCountAfter": 15,
+      "duplicateRouteDirectoryCountBefore": 1,
+      "duplicateRouteDirectoryCountAfter": 0,
+      "offscreenControlsBefore": 0,
+      "offscreenControlsAfter": 0,
+      "horizontalOverflowBefore": 0,
+      "horizontalOverflowAfter": 0,
+      "headerOverlapAfter": false,
+      "consoleErrorsAfter": [],
+      "pageErrorsAfter": []
+    }
+  },
+  "links": {
+    "base": [
+      {
+        "href": "#laws-orbit",
+        "status": "ANCHOR_CHECKED_IN_SOURCE",
+        "ok": true
+      },
+      {
+        "href": "#main",
+        "status": "ANCHOR_CHECKED_IN_SOURCE",
+        "ok": true
+      },
+      {
+        "href": "/",
+        "url": "http://127.0.0.1:4173/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/frontier/",
+        "url": "http://127.0.0.1:4173/frontier/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/frontier/water/",
+        "url": "http://127.0.0.1:4173/frontier/water/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/gauges/",
+        "url": "http://127.0.0.1:4173/gauges/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/home/",
+        "url": "http://127.0.0.1:4173/home/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/",
+        "url": "http://127.0.0.1:4173/laws/categories/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/flow/",
+        "url": "http://127.0.0.1:4173/laws/categories/flow/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/integrity/",
+        "url": "http://127.0.0.1:4173/laws/categories/integrity/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/reality/",
+        "url": "http://127.0.0.1:4173/laws/categories/reality/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/structure/",
+        "url": "http://127.0.0.1:4173/laws/categories/structure/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/core-invariants/",
+        "url": "http://127.0.0.1:4173/laws/core-invariants/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/fusion-readiness/",
+        "url": "http://127.0.0.1:4173/laws/fusion-readiness/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/hybrid-collapse/",
+        "url": "http://127.0.0.1:4173/laws/hybrid-collapse/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/industrial-posture/",
+        "url": "http://127.0.0.1:4173/laws/industrial-posture/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/",
+        "url": "http://127.0.0.1:4173/laws/research/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/applied-investigations/",
+        "url": "http://127.0.0.1:4173/laws/research/applied-investigations/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/evidence-and-sources/",
+        "url": "http://127.0.0.1:4173/laws/research/evidence-and-sources/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/findings-and-boundaries/",
+        "url": "http://127.0.0.1:4173/laws/research/findings-and-boundaries/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/methods-and-models/",
+        "url": "http://127.0.0.1:4173/laws/research/methods-and-models/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/scientific-law/",
+        "url": "http://127.0.0.1:4173/laws/scientific-law/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/",
+        "url": "http://127.0.0.1:4173/laws/test/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/admission-and-baseline/",
+        "url": "http://127.0.0.1:4173/laws/test/admission-and-baseline/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/forward-construction/",
+        "url": "http://127.0.0.1:4173/laws/test/forward-construction/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/result-and-record/",
+        "url": "http://127.0.0.1:4173/laws/test/result-and-record/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/reverse-audit/",
+        "url": "http://127.0.0.1:4173/laws/test/reverse-audit/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/rgsc/ice/",
+        "url": "http://127.0.0.1:4173/rgsc/ice/",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "candidate": [
+      {
+        "href": "#laws-orbit",
+        "status": "ANCHOR_CHECKED_IN_SOURCE",
+        "ok": true
+      },
+      {
+        "href": "#main",
+        "status": "ANCHOR_CHECKED_IN_SOURCE",
+        "ok": true
+      },
+      {
+        "href": "/",
+        "url": "http://127.0.0.1:4174/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/frontier/",
+        "url": "http://127.0.0.1:4174/frontier/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/frontier/water/",
+        "url": "http://127.0.0.1:4174/frontier/water/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/gauges/",
+        "url": "http://127.0.0.1:4174/gauges/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/home/",
+        "url": "http://127.0.0.1:4174/home/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/",
+        "url": "http://127.0.0.1:4174/laws/categories/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/flow/",
+        "url": "http://127.0.0.1:4174/laws/categories/flow/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/integrity/",
+        "url": "http://127.0.0.1:4174/laws/categories/integrity/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/reality/",
+        "url": "http://127.0.0.1:4174/laws/categories/reality/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/categories/structure/",
+        "url": "http://127.0.0.1:4174/laws/categories/structure/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/core-invariants/",
+        "url": "http://127.0.0.1:4174/laws/core-invariants/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/fusion-readiness/",
+        "url": "http://127.0.0.1:4174/laws/fusion-readiness/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/hybrid-collapse/",
+        "url": "http://127.0.0.1:4174/laws/hybrid-collapse/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/industrial-posture/",
+        "url": "http://127.0.0.1:4174/laws/industrial-posture/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/",
+        "url": "http://127.0.0.1:4174/laws/research/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/applied-investigations/",
+        "url": "http://127.0.0.1:4174/laws/research/applied-investigations/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/evidence-and-sources/",
+        "url": "http://127.0.0.1:4174/laws/research/evidence-and-sources/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/findings-and-boundaries/",
+        "url": "http://127.0.0.1:4174/laws/research/findings-and-boundaries/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/research/methods-and-models/",
+        "url": "http://127.0.0.1:4174/laws/research/methods-and-models/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/scientific-law/",
+        "url": "http://127.0.0.1:4174/laws/scientific-law/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/",
+        "url": "http://127.0.0.1:4174/laws/test/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/admission-and-baseline/",
+        "url": "http://127.0.0.1:4174/laws/test/admission-and-baseline/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/forward-construction/",
+        "url": "http://127.0.0.1:4174/laws/test/forward-construction/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/result-and-record/",
+        "url": "http://127.0.0.1:4174/laws/test/result-and-record/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/laws/test/reverse-audit/",
+        "url": "http://127.0.0.1:4174/laws/test/reverse-audit/",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "href": "/rgsc/ice/",
+        "url": "http://127.0.0.1:4174/rgsc/ice/",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "brokenCandidateLinks": []
+  },
+  "canonicalRouteChecks": {
+    "/laws/test/admission-and-baseline/": {
+      "base": {
+        "href": "/laws/test/admission-and-baseline/",
+        "url": "http://127.0.0.1:4173/laws/test/admission-and-baseline/",
+        "status": 200,
+        "ok": true
+      },
+      "candidate": {
+        "href": "/laws/test/admission-and-baseline/",
+        "url": "http://127.0.0.1:4174/laws/test/admission-and-baseline/",
+        "status": 200,
+        "ok": true
+      }
+    },
+    "/laws/test/forward-construction/": {
+      "base": {
+        "href": "/laws/test/forward-construction/",
+        "url": "http://127.0.0.1:4173/laws/test/forward-construction/",
+        "status": 200,
+        "ok": true
+      },
+      "candidate": {
+        "href": "/laws/test/forward-construction/",
+        "url": "http://127.0.0.1:4174/laws/test/forward-construction/",
+        "status": 200,
+        "ok": true
+      }
+    },
+    "/laws/test/reverse-audit/": {
+      "base": {
+        "href": "/laws/test/reverse-audit/",
+        "url": "http://127.0.0.1:4173/laws/test/reverse-audit/",
+        "status": 200,
+        "ok": true
+      },
+      "candidate": {
+        "href": "/laws/test/reverse-audit/",
+        "url": "http://127.0.0.1:4174/laws/test/reverse-audit/",
+        "status": 200,
+        "ok": true
+      }
+    },
+    "/laws/test/result-and-record/": {
+      "base": {
+        "href": "/laws/test/result-and-record/",
+        "url": "http://127.0.0.1:4173/laws/test/result-and-record/",
+        "status": 200,
+        "ok": true
+      },
+      "candidate": {
+        "href": "/laws/test/result-and-record/",
+        "url": "http://127.0.0.1:4174/laws/test/result-and-record/",
+        "status": 200,
+        "ok": true
+      }
+    },
+    "/laws/research/evidence-and-sources/": {
+      "base": {
+        "href": "/laws/research/evidence-and-sources/",
+        "url": "http://127.0.0.1:4173/laws/research/evidence-and-sources/",
+        "status": 200,
+        "ok": true
+      },
+      "candidate": {
+        "href": "/laws/research/evidence-and-sources/",
+        "url": "http://127.0.0.1:4174/laws/research/evidence-and-sources/",
+        "status": 200,
+        "ok": true
+      }
+    },
+    "/laws/research/methods-and-models/": {
+      "base": {
+        "href": "/laws/research/methods-and-models/",
+        "url": "http://127.0.0.1:4173/laws/research/methods-and-models/",
+        "status": 200,
+        "ok": true
+      },
+      "candidate": {
+        "href": "/laws/research/methods-and-models/",
+        "url": "http://127.0.0.1:4174/laws/research/methods-and-models/",
+        "status": 200,
+        "ok": true
+      }
+    },
+    "/laws/research/applied-investigations/": {
+      "base": {
+        "href": "/laws/research/applied-investigations/",
+        "url": "http://127.0.0.1:4173/laws/research/applied-investigations/",
+        "status": 200,
+        "ok": true
+      },
+      "candidate": {
+        "href": "/laws/research/applied-investigations/",
+        "url": "http://127.0.0.1:4174/laws/research/applied-investigations/",
+        "status": 200,
+        "ok": true
+      }
+    },
+    "/laws/research/findings-and-boundaries/": {
+      "base": {
+        "href": "/laws/research/findings-and-boundaries/",
+        "url": "http://127.0.0.1:4173/laws/research/findings-and-boundaries/",
+        "status": 200,
+        "ok": true
+      },
+      "candidate": {
+        "href": "/laws/research/findings-and-boundaries/",
+        "url": "http://127.0.0.1:4174/laws/research/findings-and-boundaries/",
+        "status": 200,
+        "ok": true
+      }
+    }
+  },
+  "reachableCanonicalDestinationRoutes": 8,
+  "protectedRuntimeDiff": 0,
+  "migratedRecordCustody": "48_OF_48",
+  "failures": [],
+  "pass": true
+}

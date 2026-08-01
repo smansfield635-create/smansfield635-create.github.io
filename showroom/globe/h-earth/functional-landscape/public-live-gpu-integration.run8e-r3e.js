@@ -1,8 +1,20 @@
 import { installHEarthRun8ER3D2PointerTouchIntake } from '../diagnostic/run8e-r3d/pointer-touch-intake.js';
 import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js';
+import {
+  getHEarthRun8ER2CanonicalSourcePackage,
+  getHEarthRun8ER2RuntimePackageSelectionReceipt,
+  installHEarthRun8ER2RuntimePackageOverride
+} from '../render/live-render-package.run8e-r2.canonical.js';
+import {
+  buildHEarthC2R1CompleteWorldRenderPackage,
+  evaluateHEarthC2R1CompleteWorldRenderPackage,
+  H_EARTH_C2_R1_COMPLETE_WORLD_BINDING
+} from '../../../../h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js';
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =
-  'H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1';
+  'H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v2';
+export const H_EARTH_C2_R1_LIVE_ENVIRONMENT_INTEGRATION_OPERATION_ID =
+  'H_EARTH_C2_R1_INTEGRATED_ENVIRONMENT_COHERENCE_CORRECTION_001';
 
 const emitDiagnosticStage = (stage, status = 'PASS', detail = null) => {
   window.dispatchEvent(new CustomEvent('h-earth-runtime-diagnostic-stage', {
@@ -16,7 +28,8 @@ const emitDiagnosticStage = (stage, status = 'PASS', detail = null) => {
 };
 
 emitDiagnosticStage('BOOT_STARTED', 'PASS', {
-  integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID
+  integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID,
+  operationId: H_EARTH_C2_R1_LIVE_ENVIRONMENT_INTEGRATION_OPERATION_ID
 });
 
 const root = document.getElementById('h-earth-functional-landscape-route');
@@ -55,7 +68,7 @@ const hud = Object.freeze({
   population: document.getElementById('hud-population')
 });
 
-const clone = (value) => JSON.parse(JSON.stringify(value));
+const clone = value => JSON.parse(JSON.stringify(value));
 const round = (value, precision = 2) => {
   const factor = 10 ** precision;
   return Math.round(Number(value) * factor) / factor;
@@ -73,11 +86,118 @@ function deriveInitialViewport() {
   });
 }
 
+async function loadExactBindingCacheBase64() {
+  const ledgerPath = '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json';
+  const role3Path = '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json';
+  const [ledgerResponse, role3Response] = await Promise.all([
+    fetch(ledgerPath, { cache: 'no-store' }),
+    fetch(role3Path, { cache: 'no-store' })
+  ]);
+  if (!ledgerResponse.ok || !role3Response.ok) {
+    throw new Error(`C2_R1_LIVE_BINDING_CACHE_HTTP_FAILURE:${ledgerResponse.status}:${role3Response.status}`);
+  }
+  const [ledger, role3] = await Promise.all([
+    ledgerResponse.json(),
+    role3Response.json()
+  ]);
+  const first = ledger?.exactBindingCacheCarrier;
+  const second = role3?.exactBindingCacheCarrier;
+  if (
+    first?.partIndex !== 1 ||
+    second?.partIndex !== 2 ||
+    first?.partCount !== 2 ||
+    second?.partCount !== 2 ||
+    first?.encoding !== 'BASE64_GZIP_JSON' ||
+    second?.encoding !== 'BASE64_GZIP_JSON' ||
+    typeof first?.value !== 'string' ||
+    typeof second?.value !== 'string'
+  ) {
+    throw new Error('C2_R1_LIVE_BINDING_CACHE_CARRIER_INVALID');
+  }
+  return first.value + second.value;
+}
+
+async function bindIntegratedCompleteWorldPackage() {
+  const canonicalPackage = getHEarthRun8ER2CanonicalSourcePackage();
+  if (canonicalPackage?.eligible !== true) {
+    throw new Error('C2_R1_LIVE_CANONICAL_PACKAGE_NOT_ELIGIBLE');
+  }
+  const exactBindingCacheBase64 = await loadExactBindingCacheBase64();
+  const packageRecord = await buildHEarthC2R1CompleteWorldRenderPackage({
+    canonicalPackage,
+    exactBindingCacheBase64,
+    exactBindingCacheArtifactDigest:
+      'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1',
+    startupBudgetMilliseconds:
+      H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserBudgetMilliseconds,
+    yieldEveryVertices:
+      H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserYieldEveryVertices,
+    onProgress(progressReceipt) {
+      const percent = Math.max(
+        0,
+        Math.min(100, Math.floor((progressReceipt.progressRatio ?? 0) * 100))
+      );
+      root.dataset.c2R1IntegrationProgress = String(percent);
+      statusNode.textContent = progressReceipt.phase === 'COMPLETE_WORLD_DIGEST'
+        ? 'Finalizing integrated H-Earth package identity'
+        : `Integrating accepted coast into the live H-Earth environment · ${percent}%`;
+    }
+  });
+  const evaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(
+    packageRecord,
+    canonicalPackage
+  );
+  if (evaluation.eligible !== true) {
+    throw new Error(
+      `C2_R1_LIVE_COMPLETE_WORLD_PACKAGE_REJECTED:${evaluation.rootRejectionCode ?? evaluation.issues.join(',')}`
+    );
+  }
+  const selectionReceipt = installHEarthRun8ER2RuntimePackageOverride({
+    packageRecord,
+    operationId: H_EARTH_C2_R1_LIVE_ENVIRONMENT_INTEGRATION_OPERATION_ID
+  });
+  if (
+    selectionReceipt.runtimePackageIdentity !==
+      'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE' ||
+    selectionReceipt.runtimePackageContentDigest !== 'fnv1a32:218f37ae' ||
+    selectionReceipt.candidateSampleFailureCount !== 0 ||
+    selectionReceipt.boundTerrainVertexCount !== 10419 ||
+    selectionReceipt.boundShorelineVertexCount !== 299
+  ) {
+    throw new Error('C2_R1_LIVE_RUNTIME_PACKAGE_SELECTION_IDENTITY_MISMATCH');
+  }
+  return Object.freeze({ packageRecord, selectionReceipt });
+}
+
 const viewport = deriveInitialViewport();
 let intake = null;
 let binding = null;
 let lastPresentedFrame = null;
 let firstFramePublished = false;
+let integratedPackageBinding = null;
+
+emitDiagnosticStage('C2_R1_INTEGRATED_PACKAGE_BOUND', 'PENDING', {
+  operationId: H_EARTH_C2_R1_LIVE_ENVIRONMENT_INTEGRATION_OPERATION_ID
+});
+try {
+  integratedPackageBinding = await bindIntegratedCompleteWorldPackage();
+  root.dataset.c2R1IntegratedEnvironment = 'true';
+  root.dataset.c2R1PackageIdentity =
+    integratedPackageBinding.selectionReceipt.runtimePackageIdentity;
+  root.dataset.c2R1IntegrationProgress = '100';
+  emitDiagnosticStage('C2_R1_INTEGRATED_PACKAGE_BOUND', 'PASS',
+    integratedPackageBinding.selectionReceipt);
+} catch (error) {
+  root.dataset.c2R1IntegratedEnvironment = 'false';
+  root.dataset.run8eReady = 'false';
+  root.dataset.run8eError = 'true';
+  emitDiagnosticStage('C2_R1_INTEGRATED_PACKAGE_BOUND', 'FAIL', {
+    name: error?.name ?? 'Error',
+    message: error?.message ?? String(error),
+    stack: error?.stack ?? null
+  });
+  throw error;
+}
 
 function updateHud() {
   if (!intake || !binding) return;
@@ -86,23 +206,31 @@ function updateHud() {
   const state = intakeReceipt.currentNavigationState;
   const frame = lastPresentedFrame ?? bindingReceipt.frameRecords.at(-1) ?? null;
   const resources = bindingReceipt.resources;
+  const packageSelection = getHEarthRun8ER2RuntimePackageSelectionReceipt();
 
   if (hud.waypoint) hud.waypoint.textContent = state.physicalRole ?? 'Coastal entry';
   if (hud.address) hud.address.textContent = state.selectedSemanticAddressId ?? 'Address pending';
   if (hud.position) hud.position.textContent = `${round(state.position.x)}, ${round(state.position.y)}, ${round(state.position.z)}`;
-  if (hud.terrain) hud.terrain.textContent = `${round(state.terrainElevation)} successor elevation`;
+  if (hud.terrain) hud.terrain.textContent = `${round(state.terrainElevation)} integrated elevation`;
   if (hud.clearance) hud.clearance.textContent = `${round(state.clearance)} clearance`;
-  if (hud.chunk) hud.chunk.textContent = state.chunkId ?? 'Successor domain';
-  if (hud.formation) hud.formation.textContent = state.formationIds?.length ? state.formationIds.join(' · ') : 'Coastal terrain';
-  if (hud.frame) hud.frame.textContent = frame ? `GPU frame ${frame.frameSequence} · navigation ${frame.navigationSequence}` : 'GPU frame pending';
+  if (hud.chunk) hud.chunk.textContent = state.chunkId ?? 'Integrated world domain';
+  if (hud.formation) hud.formation.textContent = state.formationIds?.length
+    ? state.formationIds.join(' · ')
+    : 'Integrated coastal terrain';
+  if (hud.frame) hud.frame.textContent = frame
+    ? `GPU frame ${frame.frameSequence} · navigation ${frame.navigationSequence}`
+    : 'GPU frame pending';
   if (hud.surface) hud.surface.textContent = 'Persistent WebGL2 surface';
-  if (hud.water) hud.water.textContent = 'Governed shoreline draw range';
-  if (hud.biome) hud.biome.textContent = 'Grounded coastal vegetation';
-  if (hud.traversal) hud.traversal.textContent = 'Direct proposal-to-frame response';
-  if (hud.lifecycle) hud.lifecycle.textContent = resources.packageUploadedOnce ? 'Canonical package resident' : 'Package initialization pending';
+  if (hud.water) hud.water.textContent = 'Accepted C2-R1 coast bound into live world';
+  if (hud.biome) hud.biome.textContent = 'Existing inland environment preserved';
+  if (hud.traversal) hud.traversal.textContent = 'One navigation stream across coast and interior';
+  if (hud.lifecycle) hud.lifecycle.textContent = resources.packageUploadedOnce
+    ? 'Integrated package resident'
+    : 'Integrated package initialization pending';
   if (hud.population) hud.population.textContent = `${resources.counters?.bufferCreateCount ?? 0} persistent GPU buffers`;
 
-  statusNode.textContent = `Run 8E live GPU route active · ${bindingReceipt.counters.gpuFramebufferPresentationCount} visible frames · ${intakeReceipt.counters.navigationProposalCount} navigation proposals`;
+  statusNode.textContent =
+    `Integrated H-Earth environment active · ${bindingReceipt.counters.gpuFramebufferPresentationCount} visible frames · ${intakeReceipt.counters.navigationProposalCount} navigation proposals · coast ${packageSelection.boundShorelineVertexCount ?? 0} shoreline vertices`;
 
   window.dispatchEvent(new CustomEvent('h-earth-runtime-diagnostic-facts', {
     detail: {
@@ -111,6 +239,7 @@ function updateHud() {
       visibleFrames: bindingReceipt.counters.gpuFramebufferPresentationCount,
       resources: bindingReceipt.resources,
       correspondence: bindingReceipt.correspondence,
+      runtimePackageSelection: packageSelection,
       timestamp: new Date().toISOString()
     }
   }));
@@ -118,14 +247,15 @@ function updateHud() {
 
 function activeModuleSources() {
   return [...document.querySelectorAll('script[type="module"][src]')]
-    .map((script) => new URL(script.src, document.baseURI).pathname);
+    .map(script => new URL(script.src, document.baseURI).pathname);
 }
 
 function buildPublicReceipt() {
-  if (!intake || !binding) return null;
+  if (!intake || !binding || !integratedPackageBinding) return null;
   const intakeReceipt = intake.getReceipt();
   const bindingReceipt = binding.getReceipt();
   const moduleSources = activeModuleSources();
+  const packageSelection = getHEarthRun8ER2RuntimePackageSelectionReceipt();
   const legacySources = [
     '/showroom/globe/h-earth/functional-landscape/index.js',
     '/showroom/globe/h-earth/functional-landscape/environment-integration.js',
@@ -135,15 +265,19 @@ function buildPublicReceipt() {
   return clone({
     receiptType: 'H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_BROWSER_RECEIPT',
     eligible: true,
-    status: 'RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_ACTIVE',
+    status: 'RUN_8E_R3E2_INTEGRATED_COMPLETE_WORLD_GPU_COMPOSITION_ACTIVE',
     integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID,
+    operationId: H_EARTH_C2_R1_LIVE_ENVIRONMENT_INTEGRATION_OPERATION_ID,
     viewport,
     moduleSources,
+    runtimePackageSelection: packageSelection,
+    completeWorldBinding:
+      integratedPackageBinding.packageRecord.completeWorldBinding,
     intake: intakeReceipt,
     liveGpu: bindingReceipt,
     runtimeExclusivity: {
       activePublicModuleScriptCount: moduleSources.length,
-      legacyModuleScriptCount: legacySources.filter((path) => moduleSources.includes(path)).length,
+      legacyModuleScriptCount: legacySources.filter(path => moduleSources.includes(path)).length,
       activeWebGL2ContextCount: bindingReceipt.resources.counters.contextCreationCount,
       activePersistentRendererCount: bindingReceipt.counters.rendererInitializationCount,
       activeNavigationStateStreamCount: 1,
@@ -157,16 +291,22 @@ function buildPublicReceipt() {
       duplicatePointerListeners: false,
       deferredPublicRefresh: bindingReceipt.counters.deferredRenderCommitCount !== 0,
       packageUploadedOnce: bindingReceipt.correspondence.packageUploadedOnce,
-      resourceIdentityStable: bindingReceipt.correspondence.resourceIdentityStable
+      resourceIdentityStable: bindingReceipt.correspondence.resourceIdentityStable,
+      canonicalPackageReplacedInSource: false,
+      exactRuntimePackageOverrideActive:
+        packageSelection.status === 'R2_RUNTIME_PACKAGE_OVERRIDE_ACTIVE'
     },
     diagnostics: window.H_EARTH_RUNTIME_DIAGNOSTICS?.getSnapshot?.() ?? null,
     boundaries: {
-      publicRouteBranchComposition: true,
-      browserAuthorityExclusivityAcceptance: false,
-      publicRouteBrowserExecutionAcceptance: false,
-      deploymentPerformed: false,
-      physicalDeviceAcceptancePerformed: false,
-      run8EPassClosed: false
+      candidateBranchComposition: true,
+      acceptedLiveRuntimePreserved: true,
+      acceptedCameraNavigationTouchPreserved: true,
+      acceptedInlandGeometryAndPlacementsPreserved: true,
+      acceptedCoastalComponentBoundIntoLivePackage: true,
+      publicDefaultPromotionPerformed: false,
+      mainMutated: false,
+      userDifferentialPerformed: false,
+      role1SelfCertification: false
     }
   });
 }
@@ -182,13 +322,14 @@ try {
     }
   });
 
-  emitDiagnosticStage('RENDERER_CONSTRUCTED', 'PENDING', 'Live GPU binding construction requested.');
+  emitDiagnosticStage('RENDERER_CONSTRUCTED', 'PENDING',
+    'Integrated live GPU binding construction requested.');
 
   binding = createHEarthRun8ER3D3LiveGpuBinding({
     canvas,
     initialNavigationState: intake.getNavigationState(),
     viewport,
-    onFramePresented: (frameRecord) => {
+    onFramePresented: frameRecord => {
       lastPresentedFrame = frameRecord;
       if (!firstFramePublished) {
         firstFramePublished = true;
@@ -201,6 +342,11 @@ try {
   const bindingReceipt = binding.getReceipt();
   const contextCount = bindingReceipt?.resources?.counters?.contextCreationCount ?? 0;
   const rendererCount = bindingReceipt?.counters?.rendererInitializationCount ?? 0;
+  const runtimeIdentity = bindingReceipt?.resources?.package?.runtimeIdentity;
+
+  if (runtimeIdentity !== 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE') {
+    throw new Error(`R3E2_LIVE_RUNTIME_PACKAGE_NOT_INTEGRATED:${runtimeIdentity}`);
+  }
 
   emitDiagnosticStage(
     'WEBGL2_CONTEXT_ACQUIRED',
@@ -210,11 +356,15 @@ try {
   emitDiagnosticStage(
     'RENDERER_CONSTRUCTED',
     rendererCount > 0 ? 'PASS' : 'FAIL',
-    { rendererInitializationCount: rendererCount }
+    {
+      rendererInitializationCount: rendererCount,
+      runtimePackageIdentity: runtimeIdentity
+    }
   );
   emitDiagnosticStage('RENDERER_MOUNTED', 'PASS', {
     canvasConnected: canvas.isConnected,
-    mountConnected: mount.isConnected
+    mountConnected: mount.isConnected,
+    runtimePackageIdentity: runtimeIdentity
   });
 } catch (error) {
   root.dataset.run8eReady = 'false';
@@ -236,14 +386,18 @@ root.dataset.run8eError = 'false';
 root.dataset.run8ePublicRoute = 'true';
 root.dataset.r3e2PublicGpuComposition = 'true';
 root.dataset.publicRoute = 'true';
+root.dataset.c2R1IntegratedEnvironment = 'true';
 
 updateHud();
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
   integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID,
+  operationId: H_EARTH_C2_R1_LIVE_ENVIRONMENT_INTEGRATION_OPERATION_ID,
   ready: true,
   getReceipt: buildPublicReceipt,
   getSnapshot: () => buildPublicReceipt(),
+  getRuntimePackageSelectionReceipt:
+    getHEarthRun8ER2RuntimePackageSelectionReceipt,
   getIntakeReceipt: () => intake.getReceipt(),
   getLiveGpuReceipt: () => binding.getReceipt()
 });
@@ -254,16 +408,20 @@ window.H_EARTH_RUN8E_R3E2_PUBLIC_INTEGRATION = H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_
 const readyDetail = {
   type: 'H_EARTH_RUN8E_READY',
   integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID,
+  operationId: H_EARTH_C2_R1_LIVE_ENVIRONMENT_INTEGRATION_OPERATION_ID,
+  runtimePackageIdentity:
+    getHEarthRun8ER2RuntimePackageSelectionReceipt().runtimePackageIdentity,
   timestamp: new Date().toISOString()
 };
 window.dispatchEvent(new CustomEvent('h-earth-run8e-ready', { detail: readyDetail }));
 emitDiagnosticStage('READY_EVENT_EMITTED', 'PASS', readyDetail);
 
 if (window.parent === window) {
-  emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');
+  emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE',
+    'Top-level route has no parent host.');
 } else {
   window.parent.postMessage(readyDetail, window.location.origin);
-  window.addEventListener('message', (event) => {
+  window.addEventListener('message', event => {
     if (event.origin !== window.location.origin) return;
     if (event.data?.type === 'H_EARTH_RUN8E_READY_ACK') {
       emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'PASS', event.data);

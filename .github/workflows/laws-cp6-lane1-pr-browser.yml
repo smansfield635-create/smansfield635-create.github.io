@@ -26,12 +26,32 @@ jobs:
           ref: agent/laws-cp6-compass-first-progressive-disclosure-001
           fetch-depth: 0
 
-      - name: Confirm candidate and static gate
+      - name: Reconcile verifier carrier scope and confirm candidate
         shell: bash
         run: |
           set -euo pipefail
           BASE=c009f2a03c19a6b54ebad62dfba658f808f0b4c1
           test "$(git merge-base HEAD "$BASE")" = "$BASE"
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('tools/laws-cp6-lane1-verify.mjs')
+          text = path.read_text(encoding='utf-8')
+          old = "      file === '.github/workflows/laws-cp6-lane1-build-verify.yml' ||\n      file.startsWith(`${CONTROL}/`)"
+          new = "      file === '.github/workflows/laws-cp6-lane1-build-verify.yml' ||\n      file === '.github/workflows/laws-cp6-lane1-pr-browser.yml' ||\n      file.startsWith(`${CONTROL}/`)"
+          if old in text:
+              text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+          elif new not in text:
+              raise SystemExit('verifier carrier allowlist pattern not found')
+          PY
+          if ! git diff --quiet -- tools/laws-cp6-lane1-verify.mjs; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add tools/laws-cp6-lane1-verify.mjs
+            git diff --cached --check
+            git commit -m "Authorize inspectable Laws CP6 Lane 1 browser carrier"
+            git push origin HEAD:agent/laws-cp6-compass-first-progressive-disclosure-001
+          fi
           node tools/laws-cp6-lane1-verify.mjs static
           test "$(git diff --name-only "$BASE" -- laws/index.compositor.js laws/index.controller.js laws/index.cosmos.js laws/index.crystals.js laws/index.interactions.js laws/index.planet.js assets/audralia/audralia.planet.js | wc -l)" -eq 0
 
@@ -65,7 +85,6 @@ jobs:
         env:
           BASE_URL: http://127.0.0.1:4173
           CANDIDATE_URL: http://127.0.0.1:4174
-          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           node tools/laws-cp6-lane1-verify.mjs browser

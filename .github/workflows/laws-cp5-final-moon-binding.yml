@@ -1,0 +1,47 @@
+name: Laws CP5 Final Moon Binding
+
+on:
+  pull_request:
+    branches: [execution/laws-cp5-final-moon-binding-001]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  bind-final-moon:
+    if: github.head_ref == 'trigger/laws-cp5-final-moon-binding-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp5-final-moon-binding-001
+          fetch-depth: 0
+
+      - name: Update only crystal cache identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "f597a8103f4600e814fce9e4c4bfb7eb8def3a7b"
+          test "$(git hash-object laws/index.html)" = "f9b63e7b871bb6ce4cbd38bc4eda4d6d0527f780"
+          test "$(git hash-object laws/index.crystals.js)" = "27577c49250f42b03d123f8105e1d55d59c3a4b4"
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('laws/index.html')
+          text=path.read_text()
+          old='/laws/index.crystals.js?v=e8c80f898acad0625e722f43be6d1b4f5541690f'
+          new='/laws/index.crystals.js?v=27577c49250f42b03d123f8105e1d55d59c3a4b4'
+          if text.count(old)!=1: raise SystemExit(f'OLD_BINDING_COUNT:{text.count(old)}')
+          if new in text: raise SystemExit('NEW_BINDING_ALREADY_PRESENT')
+          path.write_text(text.replace(old,new,1))
+          PY
+          test "$(git diff --name-only)" = "laws/index.html"
+          git diff --check -- laws/index.html
+          grep -Fq '/laws/index.crystals.js?v=27577c49250f42b03d123f8105e1d55d59c3a4b4' laws/index.html
+          ! grep -Fq '/laws/index.crystals.js?v=e8c80f898acad0625e722f43be6d1b4f5541690f' laws/index.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add laws/index.html
+          git commit -m 'Bind final Laws Moon crystal identity [skip ci]'
+          git push origin HEAD:agent/laws-cp5-final-moon-binding-001

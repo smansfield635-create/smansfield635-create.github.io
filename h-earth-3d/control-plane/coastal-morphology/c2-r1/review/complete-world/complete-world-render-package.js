@@ -276,8 +276,19 @@ export async function buildHEarthC2R1CompleteWorldRenderPackage(options = {}) {
   const unchangedVertexIndices = [];
   const failureDiagnostics = [];
   const timeSeconds = Number(options.timeSeconds ?? 0);
+  const vertexOrder = Array.from({ length: validation.vertexCount }, (_, index) => index);
+  if (options.stopAfterFirstFailure === true) {
+    const priority = roleCode => roleCode === H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.roleCodes.SHORELINE
+      ? 0
+      : roleCode === H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.roleCodes.TERRAIN
+        ? 1
+        : 2;
+    vertexOrder.sort((left, right) =>
+      priority(sourceBuffers.roleCodes[left]) - priority(sourceBuffers.roleCodes[right]) || left - right
+    );
+  }
 
-  for (let vertexIndex = 0; vertexIndex < validation.vertexCount; vertexIndex += 1) {
+  for (const vertexIndex of vertexOrder) {
     const role = sourceBuffers.roleCodes[vertexIndex];
     if (role === H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.roleCodes.TERRAIN) counters.terrainVertexCount += 1;
     else if (role === H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.roleCodes.SHORELINE) counters.shorelineVertexCount += 1;

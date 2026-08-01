@@ -3103,3 +3103,17 @@ FALSE
     grid-column: auto;
   }
 }
+
+
+/* LAWS_CP6_LANE1_PHONE_CRYSTAL_FIT_v1
+   Presentation-only fit for live crystal canvases and their matching semantic
+   hit layer. Runtime projection, geometry authority, routes, and interaction
+   sequencing remain unchanged. */
+@media (max-width: 430px) {
+  .laws-orbit__field > canvas[data-laws-compositor-layer],
+  .laws-orbit__field > .laws-object-layer,
+  .laws-orbit__field > [data-laws-objects] {
+    transform: scale(0.72);
+    transform-origin: 50% 50%;
+  }
+}

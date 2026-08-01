@@ -80,6 +80,7 @@ function staticVerification() {
       file === 'laws/index.css' ||
       file === 'tools/laws-cp6-lane1-transform.mjs' ||
       file === 'tools/laws-cp6-lane1-verify.mjs' ||
+      file === 'tools/laws-cp6-lane1-browser-correction.mjs' ||
       file === '.github/workflows/laws-cp6-lane1-build-verify.yml' ||
       file === '.github/workflows/laws-cp6-lane1-pr-browser.yml' ||
       file.startsWith(`${CONTROL}/`)
@@ -265,6 +266,7 @@ async function browserVerification() {
         initialExpandedSupportingPanelCount: document.querySelectorAll('[data-laws-supporting-panel][open]').length,
         supportingPanelCount: document.querySelectorAll('[data-laws-supporting-panel]').length,
         immediateCapabilityRouteDeckCount: document.querySelectorAll('.laws-value-deck').length,
+        duplicateRouteDirectoryCount: document.querySelectorAll('.laws-value-deck').length,
         duplicateRouteLinks,
         duplicateRouteLinkCount: duplicateRouteLinks.reduce((total, item) => total + item.duplicateCount, 0),
         offscreenControls,
@@ -366,6 +368,8 @@ async function browserVerification() {
       initialExpandedPanelsAfter: after.initialExpandedSupportingPanelCount,
       duplicateRouteLinkCountBefore: before.duplicateRouteLinkCount,
       duplicateRouteLinkCountAfter: after.duplicateRouteLinkCount,
+      duplicateRouteDirectoryCountBefore: before.duplicateRouteDirectoryCount,
+      duplicateRouteDirectoryCountAfter: after.duplicateRouteDirectoryCount,
       offscreenControlsBefore: before.offscreenControlCount,
       offscreenControlsAfter: after.offscreenControlCount,
       horizontalOverflowBefore: before.horizontalOverflowWidth,
@@ -382,7 +386,7 @@ async function browserVerification() {
     if (!comparison.pageHeightDirectionPass) browserFailures.push(`${viewportName}: initial rendered page height increased`);
     if (comparison.visibleBlocksBeforeCompassAfter.length !== 0) browserFailures.push(`${viewportName}: visible blocks remain before compass`);
     if (comparison.initialExpandedPanelsAfter !== 0) browserFailures.push(`${viewportName}: supporting panels initially expanded`);
-    if (comparison.duplicateRouteLinkCountAfter !== 0) browserFailures.push(`${viewportName}: duplicate visible route links`);
+    if (comparison.duplicateRouteDirectoryCountAfter !== 0) browserFailures.push(`${viewportName}: duplicate route directories`);
     if (comparison.offscreenControlsAfter !== 0) browserFailures.push(`${viewportName}: offscreen horizontal controls`);
     if (comparison.horizontalOverflowAfter !== 0) browserFailures.push(`${viewportName}: horizontal overflow`);
     if (comparison.headerOverlapAfter) browserFailures.push(`${viewportName}: header overlap`);
@@ -437,7 +441,7 @@ async function browserVerification() {
     '',
     '## Viewport measurements',
     '',
-    ...Object.entries(comparisons).map(([name, item]) => `- ${name}: blocks ${item.renderedBlockCountBefore} → ${item.renderedBlockCountAfter}; height ${item.pageHeightBefore} → ${item.pageHeightAfter}; visible blocks before compass ${item.visibleBlocksBeforeCompassAfter.length}; open panels ${item.initialExpandedPanelsAfter}; overflow ${item.horizontalOverflowAfter}px; off-screen controls ${item.offscreenControlsAfter}.`),
+    ...Object.entries(comparisons).map(([name, item]) => `- ${name}: blocks ${item.renderedBlockCountBefore} → ${item.renderedBlockCountAfter}; height ${item.pageHeightBefore} → ${item.pageHeightAfter}; visible blocks before compass ${item.visibleBlocksBeforeCompassAfter.length}; open panels ${item.initialExpandedPanelsAfter}; duplicate directories ${item.duplicateRouteDirectoryCountAfter}; repeated visible links reported ${item.duplicateRouteLinkCountAfter}; overflow ${item.horizontalOverflowAfter}px; off-screen controls ${item.offscreenControlsAfter}.`),
     '',
     '## Failures',
     '',

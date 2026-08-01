@@ -14,7 +14,7 @@
       "DGB_LAWS_CRYSTALS_EXACT_TWO_OBJECT_RECONCILIATION_v2",
 
     version:
-      "2.3.0-cp5-final-celestial-naturalization",
+      "2.3.1-cp5-final-public-moon-definition",
 
     file:
       "/laws/index.crystals.js",
@@ -358,7 +358,7 @@
       Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94}),
 
     AUTHORITY_LUNAR:
-      Object.freeze({specular:0.12,rim:0.16,emissive:0.006,alpha:1.00,sparkle:0.00,halo:0.045,contrast:1.76}),
+      Object.freeze({specular:0.06,rim:0.14,emissive:0.003,alpha:1.00,sparkle:0.00,halo:0.025,contrast:1.98}),
 
     LAW_IDLE:
        Object.freeze({
@@ -2422,23 +2422,23 @@
     const positions = [];
     const normals = [];
     const colors = [];
-    /* CP5_FINAL_LUNAR_CRATER_HIERARCHY_AND_MARIA */
+    /* CP5_FINAL_PUBLIC_MOON_DEFINITION */
     const craters = [
-      [0.34, 0.18, 0.92, 0.44, 0.058, 0.86, 0.18, 1.00, 0.22],
-      [-0.48, 0.52, 0.70, 0.36, 0.047, 0.62, 0.46, 0.92, 0.44],
-      [0.58, -0.34, 0.74, 0.27, 0.039, 0.78, 0.28, 0.96, 0.30],
-      [-0.62, -0.22, 0.75, 0.23, 0.034, 0.48, 0.62, 0.76, 0.68],
-      [0.12, 0.72, 0.68, 0.20, 0.030, 0.72, 0.34, 0.90, 0.36],
-      [0.76, 0.22, 0.61, 0.18, 0.027, 0.56, 0.54, 0.78, 0.58],
-      [-0.18, -0.66, 0.73, 0.16, 0.024, 0.82, 0.22, 0.92, 0.20],
-      [0.08, -0.18, 0.98, 0.14, 0.022, 0.68, 0.38, 0.86, 0.42],
-      [-0.34, 0.06, 0.94, 0.12, 0.018, 0.42, 0.70, 0.62, 0.74],
-      [0.44, 0.62, 0.65, 0.11, 0.017, 0.76, 0.26, 0.88, 0.26],
-      [-0.76, 0.34, 0.55, 0.10, 0.015, 0.52, 0.58, 0.68, 0.64],
-      [0.28, -0.78, 0.56, 0.095, 0.014, 0.84, 0.18, 0.86, 0.18],
-      [0.64, -0.02, -0.77, 0.19, 0.028, 0.60, 0.48, 0.80, 0.52],
-      [-0.42, 0.38, -0.82, 0.13, 0.019, 0.44, 0.68, 0.58, 0.76],
-      [0.16, -0.52, -0.84, 0.085, 0.012, 0.74, 0.32, 0.72, 0.34]
+      [0.34, 0.18, 0.92, 0.46, 0.072, 0.94, 0.12, 1.00, 0.18],
+      [-0.48, 0.52, 0.70, 0.37, 0.054, 0.64, 0.48, 0.94, 0.48],
+      [0.58, -0.34, 0.74, 0.29, 0.046, 0.84, 0.22, 0.98, 0.26],
+      [-0.62, -0.22, 0.75, 0.24, 0.034, 0.42, 0.70, 0.74, 0.72],
+      [0.12, 0.72, 0.68, 0.205, 0.032, 0.76, 0.30, 0.92, 0.34],
+      [0.76, 0.22, 0.61, 0.175, 0.026, 0.52, 0.60, 0.78, 0.64],
+      [-0.18, -0.66, 0.73, 0.158, 0.025, 0.88, 0.16, 0.94, 0.16],
+      [0.08, -0.18, 0.98, 0.137, 0.021, 0.70, 0.40, 0.88, 0.44],
+      [-0.34, 0.06, 0.94, 0.116, 0.017, 0.36, 0.78, 0.62, 0.80],
+      [0.44, 0.62, 0.65, 0.108, 0.016, 0.80, 0.22, 0.90, 0.22],
+      [-0.76, 0.34, 0.55, 0.098, 0.014, 0.46, 0.66, 0.66, 0.70],
+      [0.28, -0.78, 0.56, 0.091, 0.013, 0.88, 0.14, 0.88, 0.14],
+      [0.64, -0.02, -0.77, 0.195, 0.028, 0.62, 0.48, 0.82, 0.52],
+      [-0.42, 0.38, -0.82, 0.132, 0.019, 0.40, 0.72, 0.60, 0.78],
+      [0.16, -0.52, -0.84, 0.083, 0.011, 0.74, 0.34, 0.74, 0.34]
     ].map(record => ({
       center: normalizeVector(record.slice(0, 3)),
       radius: record[3],
@@ -2450,10 +2450,10 @@
     }));
 
     const lunarMaria = [
-      [0.12, 0.30, 0.95, 0.56, 0.76],
-      [-0.56, -0.08, 0.82, 0.43, 0.60],
-      [0.61, -0.42, 0.67, 0.35, 0.48],
-      [-0.24, 0.72, -0.65, 0.39, 0.52]
+      [0.12, 0.30, 0.95, 0.57, 0.88],
+      [-0.56, -0.08, 0.82, 0.44, 0.75],
+      [0.61, -0.42, 0.67, 0.36, 0.62],
+      [-0.24, 0.72, -0.65, 0.40, 0.58]
     ].map(record => ({
       center: normalizeVector(record.slice(0, 3)),
       radius: record[3],
@@ -2461,9 +2461,9 @@
     }));
 
     const lunarPlains = [
-      [0.70, 0.38, 0.60, 0.46, 0.82],
-      [-0.12, -0.72, 0.68, 0.50, 0.88],
-      [-0.72, 0.46, -0.52, 0.42, 0.72]
+      [0.70, 0.38, 0.60, 0.47, 0.90],
+      [-0.12, -0.72, 0.68, 0.52, 0.94],
+      [-0.72, 0.46, -0.52, 0.43, 0.82]
     ].map(record => ({
       center: normalizeVector(record.slice(0, 3)),
       radius: record[3],
@@ -2524,33 +2524,38 @@
       let basin = 0;
       craters.forEach(crater => {
         const angularDistance = Math.acos(
-          clamp(nx * crater.center[0] + ny * crater.center[1] + nz * crater.center[2], -1, 1)
+clamp(nx * crater.center[0] + ny * crater.center[1] + nz * crater.center[2], -1, 1)
         );
         const normalizedDistance = angularDistance / crater.radius;
-        const bowlFalloff = 2.05 + (1 - crater.erosion) * 1.85;
+        const bowlFalloff = 2.30 + (1 - crater.erosion) * 2.35;
         const bowl = Math.exp(-normalizedDistance * normalizedDistance * bowlFalloff);
-        const rimCenter = 0.80 + crater.erosion * 0.08;
-        const rimWidth = 4.1 + (1 - crater.erosion) * 4.8;
+        const wallCenter = 0.57 + crater.erosion * 0.10;
+        const wallWidth = 2.9 + (1 - crater.erosion) * 3.2;
+        const wall = Math.exp(-Math.pow((normalizedDistance - wallCenter) * wallWidth, 2));
+        const rimCenter = 0.82 + crater.erosion * 0.06;
+        const rimWidth = 4.3 + (1 - crater.erosion) * 6.7;
         let rim = Math.exp(-Math.pow((normalizedDistance - rimCenter) * rimWidth, 2));
         const partial = clamp(
-          0.66 + deterministicField(nx, ny, nz, 3.7, crater.partialBias * 5.3) * 0.34,
-          0.18,
-          1.0
+0.58 + deterministicField(nx, ny, nz, 3.7, crater.partialBias * 5.3) * 0.42,
+0.10,
+1.0
         );
-        rim *= 0.58 + partial * 0.42;
-        const ejecta = Math.exp(-Math.pow((normalizedDistance - 1.18) * (2.7 + crater.erosion * 1.4), 2));
+        rim *= 0.44 + partial * 0.56;
+        const ejecta = Math.exp(-Math.pow((normalizedDistance - 1.19) * (2.6 + crater.erosion * 1.6), 2));
         const visibility = crater.visibility;
         relief += (
-          rim * crater.depth * crater.rimSharpness * 0.88 -
-          bowl * crater.depth * (0.88 + (1 - crater.erosion) * 0.24) +
-          ejecta * crater.depth * (0.05 + (1 - crater.erosion) * 0.08)
+rim * crater.depth * crater.rimSharpness * 1.08 +
+wall * crater.depth * (0.12 + (1 - crater.erosion) * 0.09) -
+bowl * crater.depth * (1.02 + (1 - crater.erosion) * 0.30) +
+ejecta * crater.depth * (0.05 + (1 - crater.erosion) * 0.09)
         ) * visibility;
         albedo += (
-          rim * (0.11 + crater.rimSharpness * 0.12) -
-          bowl * (0.12 + crater.depth * 1.9) +
-          ejecta * 0.024
+rim * (0.14 + crater.rimSharpness * 0.18) +
+wall * 0.035 -
+bowl * (0.15 + crater.depth * 2.10) +
+ejecta * 0.030
         ) * visibility;
-        basin = Math.max(basin, bowl * visibility * smoothTransition(0.20, 0.42, crater.radius));
+        basin = Math.max(basin, bowl * visibility * smoothTransition(0.20, 0.44, crater.radius));
       });
       return { relief, albedo, basin };
     }
@@ -2602,47 +2607,52 @@
         relief += broad * 0.0036 + turbulentFold * 0.0025 + fine * 0.0009 -
           branchingChannel * 0.0014 + activity * 0.0018;
       } else {
-        const macroTerrain = deterministicField(nx, ny, nz, 2.25, 1.43);
-        const highlandTerrain = deterministicField(nx, ny, nz, 5.1, 0.39);
-        const fineTerrain = deterministicField(nx, ny, nz, 16.2, 2.07);
+        const macroTerrain = deterministicField(nx, ny, nz, 2.10, 1.43);
+        const highlandTerrain = deterministicField(nx, ny, nz, 5.4, 0.39);
+        const ridgeTerrain = deterministicField(nx, ny, nz, 8.6, 1.17);
+        const fineTerrain = deterministicField(nx, ny, nz, 18.8, 2.07);
         const crater = craterField(nx, ny, nz);
         const maria = regionField(lunarMaria, nx, ny, nz, 0.83);
         const plains = regionField(lunarPlains, nx, ny, nz, 2.19);
-        const calmTerrain = clamp(Math.max(plains, maria * 0.66), 0, 1);
-        const roughnessScale = 1 - calmTerrain * 0.74;
+        const calmTerrain = clamp(Math.max(plains, maria * 0.70), 0, 1);
+        const roughnessScale = 1 - calmTerrain * 0.82;
         const light = normalizeVector([-0.62, 0.22, 0.75]);
         const illumination = nx * light[0] + ny * light[1] + nz * light[2];
-        const terminator = 0.17 + 0.83 * smoothTransition(-0.22, 0.22, illumination);
+        const terminator = 0.14 + 0.86 * smoothTransition(-0.20, 0.22, illumination);
         const highlands = smoothTransition(
-          -0.18,
-          0.40,
-          macroTerrain + highlandTerrain * 0.34 + crater.albedo * 0.62
-        ) * (1 - maria * 0.78);
+-0.20,
+0.34,
+macroTerrain + highlandTerrain * 0.43 + ridgeTerrain * 0.14 + crater.albedo * 0.68
+        ) * (1 - maria * 0.84);
         const neutralAlbedo = clamp(
-          0.57 + highlands * 0.23 - maria * 0.25 + plains * 0.045 +
-          macroTerrain * 0.045 + crater.albedo * 0.39,
-          0.20,
-          0.95
+0.54 + highlands * 0.30 - maria * 0.32 + plains * 0.055 +
+macroTerrain * 0.050 + crater.albedo * 0.45,
+0.16,
+0.97
         );
         const reliefLighting = clamp(
-          0.84 + macroTerrain * 0.055 + highlandTerrain * 0.075 * roughnessScale +
-          fineTerrain * 0.024 * roughnessScale + crater.albedo * 0.30 - crater.basin * 0.055,
-          0.58,
-          1.10
+0.82 + macroTerrain * 0.060 + highlandTerrain * 0.100 * roughnessScale +
+ridgeTerrain * 0.055 * roughnessScale + fineTerrain * 0.018 * roughnessScale +
+crater.albedo * 0.36 - crater.basin * 0.075,
+0.50,
+1.16
         );
         const shade = clamp(
-          neutralAlbedo * (0.35 + terminator * 0.65) * reliefLighting,
-          0.060,
-          1.0
+neutralAlbedo * (0.31 + terminator * 0.69) * reliefLighting,
+0.045,
+1.0
         );
-        const selectedRimHighlight = clamp(crater.albedo, 0, 1) * terminator * 0.035;
-        const reflectedCoolTint = (1 - terminator) * 0.006;
-        relief += macroTerrain * 0.0042 + highlandTerrain * 0.0056 * roughnessScale +
-          fineTerrain * 0.0016 * roughnessScale + crater.relief * (1 - maria * 0.22);
+        const selectedRimHighlight =
+clamp(crater.albedo, 0, 1) * smoothTransition(-0.02, 0.55, illumination) * 0.065;
+        const bowlShadow = clamp(-crater.albedo, 0, 1) * (0.018 + terminator * 0.024);
+        const reflectedCoolTint = (1 - terminator) * 0.003;
+        relief += macroTerrain * 0.0048 + highlandTerrain * 0.0068 * roughnessScale +
+ridgeTerrain * 0.0034 * roughnessScale + fineTerrain * 0.0013 * roughnessScale +
+crater.relief * (1 - maria * 0.16);
         surfaceColor = [
-          clamp(shade * 1.018 + selectedRimHighlight, 0, 1),
-          clamp(shade * 1.012 + selectedRimHighlight * 0.92, 0, 1),
-          clamp(shade + selectedRimHighlight * 0.82 + reflectedCoolTint, 0, 1)
+clamp(shade * 1.018 + selectedRimHighlight - bowlShadow, 0, 1),
+clamp(shade * 1.012 + selectedRimHighlight * 0.92 - bowlShadow * 0.98, 0, 1),
+clamp(shade + selectedRimHighlight * 0.82 - bowlShadow * 0.96 + reflectedCoolTint, 0, 1)
         ];
       }
 
@@ -2728,7 +2738,7 @@
     DIRECTIONS.forEach(direction => {
       const gateway=GATEWAY_IDS.includes(direction);
       const warm=direction === "reality" || direction === "structure" || direction === "test";
-      meshes.set(`category-${direction}`, gateway ? createCelestialSphereMesh({segments:48,rings:32,radius:0.66,color:PALETTE[direction],mode:direction === "test" ? "solar" : "lunar"}) : createDiamondStarMesh({points:QUALITY.categorySegments,radius:0.72,inner:0.30,depth:0.42,crown:0.20,color:PALETTE[direction],warmth:warm ? 0.10 : 0.02}));
+      meshes.set(`category-${direction}`, gateway ? createCelestialSphereMesh({segments:direction === "research" ? 64 : 48,rings:direction === "research" ? 44 : 32,radius:0.66,color:PALETTE[direction],mode:direction === "test" ? "solar" : "lunar"}) : createDiamondStarMesh({points:QUALITY.categorySegments,radius:0.72,inner:0.30,depth:0.42,crown:0.20,color:PALETTE[direction],warmth:warm ? 0.10 : 0.02}));
       meshes.set(`law-${direction}`,createDiamondStarMesh({points:gateway?8:QUALITY.lawSegments,radius:gateway?0.48:0.42,inner:gateway?0.21:0.20,depth:gateway?0.29:0.25,crown:gateway?0.13:0.10,color:lawColorForDirection(direction),warmth:warm?0.08:0.02}));
     });
 

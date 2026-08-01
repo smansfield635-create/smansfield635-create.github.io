@@ -1,0 +1,16 @@
+{
+  "manifestType": "H_EARTH_C2_R1_R1_8_EXACT_HEAD_REVIEW_OCCURRENCE_IDENTITY_v1",
+  "operation": "R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW",
+  "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+  "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+  "materializationHeadAuthority": "COMMIT_PINNED_BY_R1_8C_PUBLICATION_RECEIPT",
+  "nonDefault": true,
+  "independentlyRemovable": true,
+  "ordinaryHEarthRouteRedirected": false,
+  "publicDefaultHEarthRouteReplaced": false,
+  "productDefaultChanged": false,
+  "mainMutationAuthorized": false,
+  "pr418MergeAuthorized": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialRequired": true
+}

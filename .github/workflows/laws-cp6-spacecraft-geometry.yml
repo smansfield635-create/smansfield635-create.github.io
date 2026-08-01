@@ -63,19 +63,36 @@ jobs:
               target.write_text(source)
           PY
 
+      - name: Correct spacecraft canvas verifier identity
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          target = Path('tools/laws-cp6-spacecraft-geometry-verify.mjs')
+          source = target.read_text()
+          previous = 'document.querySelectorAll("[data-laws-spacecraft-layer]")'
+          replacement = 'document.querySelectorAll("canvas[data-laws-spacecraft-layer]")'
+          count = source.count(previous)
+
+          if count != 3:
+              raise SystemExit(f'EXPECTED_THREE_SPACECRAFT_LAYER_SELECTORS_FOUND_{count}')
+
+          target.write_text(source.replace(previous, replacement))
+          PY
+
       - name: Verify source syntax
         run: |
           node --check tools/laws-cp6-spacecraft-geometry-verify.mjs
           node --input-type=module --check < laws/index.spacecraft.geometry.js
           node --input-type=module --check < laws/index.spacecraft.js
 
-      - name: Commit bounded loader mutation locally
+      - name: Commit bounded loader and verifier corrections locally
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add laws/index.html
+          git add laws/index.html tools/laws-cp6-spacecraft-geometry-verify.mjs
           if ! git diff --cached --quiet; then
-            git commit -m "Activate kernel-admitted Laws spacecraft participant"
+            git commit -m "Activate and verify kernel-admitted Laws spacecraft participant"
           fi
 
       - name: Verify North East South West construction and admission

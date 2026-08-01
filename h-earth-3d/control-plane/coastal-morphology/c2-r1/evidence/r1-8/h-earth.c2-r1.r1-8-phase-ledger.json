@@ -7,7 +7,7 @@
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
   "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8a-c1-start-001",
-  "controllingStatus": "R1.8A_C1_AUTHORIZED_PENDING_EXECUTION",
+  "controllingStatus": "R1.8A_PASS_RECORDED",
   "executionIdentityLaw": {
     "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "pullRequestExpectedCandidateHead": "github.event.pull_request.head.sha",
@@ -30,7 +30,85 @@
       "productRegressionEstablished": false
     }
   ],
-  "phases": [],
+  "phases": [
+    {
+      "id": "R1.8A_EXACT_HEAD_FREEZE_AND_REVIEW_OCCURRENCE_CONTRACT",
+      "status": "PASS_RECORDED",
+      "recordedAt": "2026-08-01T05:39:33.429Z",
+      "evidence": {
+        "eventHead": "37840476a74cfa655847113655a3178fae7838fa",
+        "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+        "rollbackHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+        "changedPaths": [
+          ".github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8-phase-ledger.json",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs"
+        ],
+        "immutableReadback": {
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.landform-analysis.js": "dba3fe2898b127addaa5a62081d466e55370da72",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js": "a97b3df57ae01626a2ff5cbedf510e2afdf06912",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js": "c0e103b0cbb51eac30105f0e8ae68c37e8fac281",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js": "d4681c64230e75c362daa702a60c6f2fee3720a4",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7a-verification.json": "000c72cd37b12c7e7abfe783f26bdd139d69901d",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-verification.json": "c15d880bda64279f220ee810721909941f4b6424",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-verification.json": "5b7a9650a5f39ffee2ba394334fb24806d771d0e",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/h-earth.c2-r1.r1-7d-verification.json": "55cb8397e8c57e541ae014a9df0232c64459087e",
+          "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js": "45cbd83337c14bc94ce7d173b25f2157cb4eb84f",
+          "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js": "c5a439f2833a4def90944e5eb1d03005ddb41e70",
+          "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js": "3eb689c5a030c40ebede52c6eaef300207742a7c",
+          "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js": "2094bcafb1e5ae1c291066a9cf1dd3820a22d0b1",
+          "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js": "1ac2ee902fc0cfb74413db37dd139bc51dbd9e46",
+          "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js": "0fa4b8434a5883e9858d2b73bb2e05e4b1a60c5c"
+        },
+        "pr418": {
+          "state": "open",
+          "draft": true,
+          "merged": false,
+          "head": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+          "headSha": "37840476a74cfa655847113655a3178fae7838fa"
+        },
+        "reviewPackage": {
+          "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+          "materializationBasisHead": "37840476a74cfa655847113655a3178fae7838fa",
+          "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+          "files": [
+            {
+              "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+              "gitBlob": "377a3b550c42639e41a511489017b54f0d53bde1",
+              "sha256": "52a3232ae98a67932ea9048cabb55113b98c2cdb06cc46c1fa1cae2114d9716e",
+              "byteCount": 2742
+            },
+            {
+              "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+              "gitBlob": "2aca2b1df96d15bc39a6e0c2ec43d375378622aa",
+              "sha256": "5d758e106c11fd29f8f323610e4f94d81fb791835141213bd2ac174ef946b388",
+              "byteCount": 3580
+            },
+            {
+              "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+              "gitBlob": "ffd14a644a7211ace933e2dc9ef74a5d90a7a2aa",
+              "sha256": "2db23b4c5eb8bca2c58fa345ef2532f05cd130509cd85328bb6f8e186bfd1cab",
+              "byteCount": 19600
+            },
+            {
+              "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+              "gitBlob": "14c4ee12b3e6bd1719b2ddf49c24d8386ffd6f22",
+              "sha256": "915b3d76e69e99789dd183cdda327b9820046a8a1470c54eded192a31927b1ff",
+              "byteCount": 1759
+            }
+          ]
+        },
+        "productDefaultMutated": false,
+        "publicDefaultRouteMutated": false,
+        "mainMutated": false
+      },
+      "blocker": null
+    }
+  ],
   "firstBlocker": null,
   "visualSuccessorStatus": "NOT_ESTABLISHED",
   "userDifferentialReady": false,
@@ -40,5 +118,37 @@
   "pr418Merged": false,
   "r1_8Closed": false,
   "r1_8eStarted": false,
-  "completedPhaseCount": 0
+  "completedPhaseCount": 1,
+  "reviewPackage": {
+    "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+    "materializationBasisHead": "37840476a74cfa655847113655a3178fae7838fa",
+    "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+    "files": [
+      {
+        "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+        "gitBlob": "377a3b550c42639e41a511489017b54f0d53bde1",
+        "sha256": "52a3232ae98a67932ea9048cabb55113b98c2cdb06cc46c1fa1cae2114d9716e",
+        "byteCount": 2742
+      },
+      {
+        "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+        "gitBlob": "2aca2b1df96d15bc39a6e0c2ec43d375378622aa",
+        "sha256": "5d758e106c11fd29f8f323610e4f94d81fb791835141213bd2ac174ef946b388",
+        "byteCount": 3580
+      },
+      {
+        "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+        "gitBlob": "ffd14a644a7211ace933e2dc9ef74a5d90a7a2aa",
+        "sha256": "2db23b4c5eb8bca2c58fa345ef2532f05cd130509cd85328bb6f8e186bfd1cab",
+        "byteCount": 19600
+      },
+      {
+        "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+        "gitBlob": "14c4ee12b3e6bd1719b2ddf49c24d8386ffd6f22",
+        "sha256": "915b3d76e69e99789dd183cdda327b9820046a8a1470c54eded192a31927b1ff",
+        "byteCount": 1759
+      }
+    ]
+  },
+  "updatedAt": "2026-08-01T05:39:33.429Z"
 }

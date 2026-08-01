@@ -1,79 +1,68 @@
-name: H-Earth C2-R1 R1.7D Closed Manual Verification
+name: H-Earth C2-R1 R1.8 Isolated Review Execution
 
 on:
+  pull_request:
+    branches:
+      - integration/h-earth-c2-r1-baseline-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml'
   workflow_dispatch:
 
+concurrency:
+  group: h-earth-c2-r1-r1-8-isolated-review
+  cancel-in-progress: false
+
 permissions:
-  contents: read
+  contents: write
+  pull-requests: read
 
 jobs:
-  verify-closed-r1-7d-record:
+  execute-r1-8-through-served-review:
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Gate bounded launch commit
+        id: gate
+        run: |
+          set -euo pipefail
+          message="$(git log -1 --format=%s)"
+          if [ "$message" = "R1.8: install isolated review and execution workflow" ]; then
+            echo "execute=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "execute=false" >> "$GITHUB_OUTPUT"
+            echo "R1.8 execution skipped for non-launch commit: $message"
+          fi
 
       - uses: actions/setup-node@v4
+        if: steps.gate.outputs.execute == 'true'
         with:
           node-version: 22
 
-      - name: Verify closed R1.7D repository record
+      - name: Install bounded browser verifier
+        if: steps.gate.outputs.execute == 'true'
         run: |
-          node - <<'NODE'
-          const fs = require('fs');
-          const root = 'h-earth-3d/control-plane/coastal-morphology/c2-r1';
-          const program = JSON.parse(fs.readFileSync(
-            `${root}/h-earth.c2-r1.r1-7-subcheckpoint-program.json`,
-            'utf8'
-          ));
-          const ledger = JSON.parse(fs.readFileSync(
-            `${root}/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json`,
-            'utf8'
-          ));
-          const manifest = JSON.parse(fs.readFileSync(
-            `${root}/evidence/h-earth.c2-r1.r1-7d-evidence-manifest.json`,
-            'utf8'
-          ));
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright@1.52.0
+          npx playwright install --with-deps chromium
 
-          if (
-            program.subcheckpoints?.['R1.7D']?.status !==
-              'PASS_CLOSED_DO_NOT_REOPEN'
-          ) {
-            throw new Error('R1_7D_PROGRAM_NOT_CLOSED');
-          }
-          if (program.r1_7OverallStatus !== 'PASS_CLOSED_DO_NOT_REOPEN') {
-            throw new Error('R1_7_PROGRAM_NOT_CLOSED');
-          }
+      - name: Execute R1.8A through R1.8D and stop for user differential
+        if: steps.gate.outputs.execute == 'true'
+        run: |
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs
 
-          const entry = ledger.entries.find(row =>
-            row.subcheckpoint.startsWith('R1.7D_')
-          );
-          if (entry?.status !== 'PASS_CLOSED_DO_NOT_REOPEN') {
-            throw new Error('R1_7D_LEDGER_NOT_CLOSED');
-          }
-
-          if (
-            manifest.result !== 'PASS_CLOSED_DO_NOT_REOPEN' ||
-            manifest.exactClosurePathCount !== 9
-          ) {
-            throw new Error('R1_7D_MANIFEST_NOT_CLOSED');
-          }
-          if (manifest.productDefaultMutated || manifest.publicRouteMutated) {
-            throw new Error('PROHIBITED_MUTATION_RECORDED');
-          }
-          if (
-            manifest.visualSuccessorStatus !== 'NOT_ESTABLISHED' ||
-            manifest.userDifferentialReady !== false
-          ) {
-            throw new Error('VISUAL_STATUS_INVALID');
-          }
-          if (
-            manifest.nextAuthorizedCheckpoint !==
-              'R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW' ||
-            manifest.r1_8AutomaticStart !== false
-          ) {
-            throw new Error('R1_8_AUTHORITY_INVALID');
-          }
-
-          console.log('R1.7D PASS_CLOSED_DO_NOT_REOPEN');
-          NODE
+      - name: Upload bounded R1.8 evidence
+        if: always() && steps.gate.outputs.execute == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-r1-8-review-evidence
+          path: h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8
+          if-no-files-found: error
+          retention-days: 30

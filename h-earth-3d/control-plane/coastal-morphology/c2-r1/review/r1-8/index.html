@@ -45,6 +45,29 @@
       <p id="runtime-detail">Waiting for WebGL 2, candidate material sampling, coastal water/swash response, and live frame advancement.</p>
     </section>
   </main>
+  <script>
+    (() => {
+      const emitted = new Set();
+      const mark = event => {
+        if (emitted.has(event)) return;
+        emitted.add(event);
+        const trace = window.__H_EARTH_C2_R1_R1_8_STARTUP_TRACE__ ||= { marks: [] };
+        trace.marks.push({ event, performanceNow: performance.now(), epochMilliseconds: Date.now() });
+        const beacon = new Image();
+        beacon.src = `/__r18_startup_trace__?event=${encodeURIComponent(event)}&t=${encodeURIComponent(performance.now())}`;
+      };
+      mark('DOCUMENT_ELEMENT_AVAILABLE');
+      document.addEventListener('DOMContentLoaded', () => mark('DOMCONTENTLOADED'), { once: true });
+      window.addEventListener('load', () => mark('LOAD'), { once: true });
+      const timer = setInterval(() => {
+        if (window.H_EARTH_C2_R1_R1_8_REVIEW) mark('REVIEW_BOOTSTRAP_SENTINEL');
+        if (document.documentElement.dataset.r1_8Review === 'ready') {
+          mark('CANDIDATE_RUNTIME_SENTINEL');
+          clearInterval(timer);
+        }
+      }, 10);
+    })();
+  </script>
   <script type="module" src="./review.js"></script>
 </body>
 </html>

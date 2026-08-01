@@ -1,4 +1,4 @@
-/** H_EARTH_C2_R1_COMPLETE_WORLD_PERSISTENT_WEBGL2_RENDERER_v1 */
+/** H_EARTH_C2_R1_COMPLETE_WORLD_PERSISTENT_WEBGL2_RENDERER_v2 */
 
 const clone = value => JSON.parse(JSON.stringify(value));
 
@@ -43,6 +43,17 @@ function link(gl) {
     throw new Error(`COMPLETE_WORLD_PROGRAM_LINK_FAILED:${gl.getProgramInfoLog(program)}`);
   }
   return program;
+}
+
+function rgba8ToNormalizedRgb(value, label) {
+  if (!Array.isArray(value) || (value.length !== 3 && value.length !== 4)) {
+    throw new TypeError(`COMPLETE_WORLD_COLOR_AUTHORITY_ARRAY_INVALID:${label}`);
+  }
+  const source = value.slice(0, 3);
+  if (source.some(channel => !Number.isFinite(channel) || channel < 0 || channel > 255)) {
+    throw new RangeError(`COMPLETE_WORLD_COLOR_AUTHORITY_CHANNEL_INVALID:${label}`);
+  }
+  return Object.freeze(source.map(channel => Math.min(1, Math.max(0, channel / 255))));
 }
 
 export function createHEarthC2R1CompleteWorldPersistentRenderer({ canvas, packageRecord, viewport }) {
@@ -143,18 +154,23 @@ export function createHEarthC2R1CompleteWorldPersistentRenderer({ canvas, packag
   function renderFrame(packet) {
     if (!initialized) throw new Error('COMPLETE_WORLD_RENDERER_NOT_INITIALIZED');
     const env = packet.environmentUniforms;
+    const sunColor = rgba8ToNormalizedRgb(env.sunColor, 'SUN_COLOR');
+    const skyZenithColor = rgba8ToNormalizedRgb(env.skyZenithColor, 'SKY_ZENITH_COLOR');
+    const skyHorizonColor = rgba8ToNormalizedRgb(env.skyHorizonColor, 'SKY_HORIZON_COLOR');
+    const groundHazeColor = rgba8ToNormalizedRgb(env.groundHazeColor, 'GROUND_HAZE_COLOR');
+
     gl.viewport(0, 0, width, height);
-    gl.clearColor(env.skyHorizonColor[0], env.skyHorizonColor[1], env.skyHorizonColor[2], 1);
+    gl.clearColor(skyHorizonColor[0], skyHorizonColor[1], skyHorizonColor[2], 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(program);
     gl.uniformMatrix4fv(uniform('uViewProjection'), false, packet.camera.viewProjectionMatrix);
     gl.uniform3f(uniform('uCameraPosition'), packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
     gl.uniform3f(uniform('uSunDirection'), env.sunDirection.x, env.sunDirection.y, env.sunDirection.z);
     gl.uniform1f(uniform('uSunIntensity'), env.sunIntensity);
-    gl.uniform3fv(uniform('uSunColor'), env.sunColor);
-    gl.uniform3fv(uniform('uSkyZenithColor'), env.skyZenithColor);
-    gl.uniform3fv(uniform('uSkyHorizonColor'), env.skyHorizonColor);
-    gl.uniform3fv(uniform('uGroundHazeColor'), env.groundHazeColor);
+    gl.uniform3f(uniform('uSunColor'), sunColor[0], sunColor[1], sunColor[2]);
+    gl.uniform3f(uniform('uSkyZenithColor'), skyZenithColor[0], skyZenithColor[1], skyZenithColor[2]);
+    gl.uniform3f(uniform('uSkyHorizonColor'), skyHorizonColor[0], skyHorizonColor[1], skyHorizonColor[2]);
+    gl.uniform3f(uniform('uGroundHazeColor'), groundHazeColor[0], groundHazeColor[1], groundHazeColor[2]);
     gl.uniform1f(uniform('uFogStartDistance'), env.fogStartDistance);
     gl.uniform1f(uniform('uFogFalloff'), env.fogFalloff);
     gl.uniform1f(uniform('uMaximumFogFactor'), env.maximumFogFactor);
@@ -190,7 +206,10 @@ export function createHEarthC2R1CompleteWorldPersistentRenderer({ canvas, packag
         noPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0,
         worldRebuildPerCameraMove: false,
         persistentRenderer: true,
-        oneWebGL2Context: counters.contextCreationCount === 1
+        oneWebGL2Context: counters.contextCreationCount === 1,
+        rgba8AuthorityPreserved: true,
+        normalizedRgbTransport: true,
+        vec3UniformArity: 3
       },
       boundaries: {
         publicRendererSourceMutated: false,

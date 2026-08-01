@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * H_EARTH_C2_R1_R1_7D_C1_BOUNDED_DARKENING_RECONCILIATION_VERIFIER_v1
+ * H_EARTH_C2_R1_R1_7D_C2_ULP_SAFE_DARKENING_FLOOR_VERIFIER_v1
  *
- * Corrective verification only. R1.7D_1 remains a recorded pass. This harness
- * re-verifies only affected R1.7D_2 runtime assertions and R1.7D_3 fixed-view
- * engineering findings after one bounded downstream albedo-floor correction.
+ * Re-verifies only the affected runtime assertions and R1.7D_3 after the
+ * implementation-side 1e-12 albedo-floor safety margin. The original exact
+ * readability comparison is retained without tolerance or approximation.
  */
 
 import fs from 'node:fs';
@@ -30,15 +30,13 @@ import {
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../../../');
 const CONTROL_ROOT = 'h-earth-3d/control-plane/coastal-morphology/c2-r1';
-const STARTING_HEAD = '128f2a3c96309db84268a38f85c4bf5582b26d2b';
+const STARTING_HEAD = 'fe6359d700346a9792b130cc4c9772359a663b2e';
 const HISTORICAL_R1_7C_CLOSURE_HEAD = '0a4ca0d7be7f569905a8ad38fbd7436619172c31';
 const TARGET_BRANCH = 'agent/h-earth-c2-r1-physically-coherent-coastal-successor-001';
-const START_ROLLBACK_BRANCH = 'rollback/h-earth-c2-r1-r1-7d-c1-start-001';
-const WORKFLOW_RUN_FAILURE = 30683749569;
-const WORKFLOW_JOB_FAILURE = 91325597315;
-const FAILURE_ARTIFACT_ID = 8813180082;
-const FAILURE_ARTIFACT_DIGEST = 'sha256:f84ea69d5bdda146691e3f570d424d2505e40c5880335103dbf3e3ec46503fa5';
+const START_ROLLBACK_BRANCH = 'rollback/h-earth-c2-r1-r1-7d-c2-start-001';
 const REQUIRED_MINIMUM_LUMINANCE_RATIO = 0.9981642262491339;
+const IMPLEMENTATION_SAFETY_MARGIN = 1e-12;
+const TARGET_MEASURED_RATIO = 0.9981642262501339;
 const RENDERER_PATH = `${CONTROL_ROOT}/h-earth.c2-r1.candidate-renderer-sampling.js`;
 const HARNESS_PATH = `${CONTROL_ROOT}/tests/h-earth.c2-r1.r1-7d-integrated-engineering-verification.mjs`;
 const EXPECTED_CORRECTIVE_PATHS = [RENDERER_PATH, HARNESS_PATH].sort();
@@ -46,8 +44,24 @@ const EVIDENCE_ROOT = path.join(ROOT, CONTROL_ROOT, 'evidence/r1-7d');
 const CAPTURE_ROOT = path.join(EVIDENCE_ROOT, 'fixed-view-engineering-captures');
 const PHASE_LEDGER_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-7d-phase-ledger.json');
 const RECEIPT_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-7d-verification.json');
+const EXECUTION_MANIFEST_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-7d-c2-execution-manifest.json');
 
-const IMMUTABLE_BLOBS = {
+const FAILURE_EVIDENCE = Object.freeze({
+  initialR17D3: Object.freeze({
+    workflowRun: 30683749569,
+    workflowJob: 91325597315,
+    artifactId: 8813180082,
+    artifactDigest: 'sha256:f84ea69d5bdda146691e3f570d424d2505e40c5880335103dbf3e3ec46503fa5'
+  }),
+  r17dC1OneUlpShortfall: Object.freeze({
+    workflowRun: 30683997023,
+    workflowJob: 91326273440,
+    artifactId: 8813265376,
+    artifactDigest: 'sha256:e5c1b20d956861cc82954288bcbe66ed19c3f8ae0e35f76c213cac1cf41aa11e'
+  })
+});
+
+const IMMUTABLE_BLOBS = Object.freeze({
   [`${CONTROL_ROOT}/h-earth.c2-r1.landform-analysis.js`]: 'dba3fe2898b127addaa5a62081d466e55370da72',
   [`${CONTROL_ROOT}/h-earth.c2-r1.baked-macro-control-field.js`]: 'a97b3df57ae01626a2ff5cbedf510e2afdf06912',
   [`${CONTROL_ROOT}/evidence/h-earth.c2-r1.r1-7a-verification.json`]: '000c72cd37b12c7e7abfe783f26bdd139d69901d',
@@ -60,13 +74,13 @@ const IMMUTABLE_BLOBS = {
   'h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js': '2094bcafb1e5ae1c291066a9cf1dd3820a22d0b1',
   'h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js': '1ac2ee902fc0cfb74413db37dd139bc51dbd9e46',
   'h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js': '0fa4b8434a5883e9858d2b73bb2e05e4b1a60c5c'
-};
+});
 
 const BEFORE = Object.freeze({
-  minimumLuminanceRatio: 0.9932902477776671,
-  macroSignalEnergy: 0.0005586672326610291,
-  landformMacroCovariance: 0.0037182627873164013,
-  distantDefinitionSignalEnergy: 0.0013815703634252412,
+  minimumLuminanceRatio: 0.9981642262491338,
+  macroSignalEnergy: 0.00055844446920518,
+  landformMacroCovariance: 0.003717705198923025,
+  distantDefinitionSignalEnergy: 0.0013810560194828106,
   uniqueRuntimeControlRatio: 0.9808917197452229,
   maximumAdjacentMacroDelta: 0.052542983495015294
 });
@@ -82,31 +96,27 @@ const minimum = values => values.reduce((m, value) => Math.min(m, value), Number
 const mean = values => values.reduce((sum, value) => sum + value, 0) / Math.max(1, values.length);
 const luminance = color => color[0] * 0.2126 + color[1] * 0.7152 + color[2] * 0.0722;
 const round = value => Number(value.toFixed(15));
+const relative = filePath => path.relative(ROOT, filePath);
 
+fs.rmSync(EVIDENCE_ROOT, { recursive: true, force: true });
 fs.mkdirSync(CAPTURE_ROOT, { recursive: true });
 
 const executionHead = process.env.C2_R1_HEAD || git('rev-parse', 'HEAD');
 const targetBranch = process.env.C2_R1_TARGET_BRANCH || TARGET_BRANCH;
 const phaseLedger = {
-  ledgerType: 'H_EARTH_C2_R1_R1_7D_BOUNDED_PHASE_LEDGER_v2',
-  operation: 'R1.7D_C1_BOUNDED_DARKENING_RECONCILIATION',
-  controllingStatus: 'R1.7D_BLOCKED_AT_R1.7D_3',
+  ledgerType: 'H_EARTH_C2_R1_R1_7D_BOUNDED_PHASE_LEDGER_v3',
+  operation: 'R1.7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION',
+  controllingStatus: 'R1.7D_BLOCKED_AT_R1.7D_3_ONE_ULP_SHORTFALL',
   correctiveStartingHead: STARTING_HEAD,
   historicalR17CClosureHead: HISTORICAL_R1_7C_CLOSURE_HEAD,
   executionHead,
   targetBranch,
   startRollbackBranch: START_ROLLBACK_BRANCH,
-  failureEvidence: {
-    workflowRun: WORKFLOW_RUN_FAILURE,
-    workflowJob: WORKFLOW_JOB_FAILURE,
-    artifactId: FAILURE_ARTIFACT_ID,
-    artifactDigest: FAILURE_ARTIFACT_DIGEST
-  },
+  failureEvidence: FAILURE_EVIDENCE,
   phases: [
     {
       id: 'R1.7D_1_EXACT_HEAD_AND_STATIC_CORRESPONDENCE',
       status: 'PASS_RECORDED_INHERITED',
-      sourceWorkflowRun: WORKFLOW_RUN_FAILURE,
       repeated: false
     }
   ],
@@ -198,10 +208,10 @@ function captureSvg({ title, camera, samples, mode }) {
   const elevations = samples.map(sample => sample.world.y);
   const minElevation = minimum(elevations);
   const maxElevation = maximum(elevations);
-  const minX = minimum(samples.map(sample => sample.distance));
-  const maxX = maximum(samples.map(sample => sample.distance));
+  const minDistance = minimum(samples.map(sample => sample.distance));
+  const maxDistance = maximum(samples.map(sample => sample.distance));
   const projectX = value => margin + plotWidth *
-    (value - minX) / Math.max(1e-9, maxX - minX);
+    (value - minDistance) / Math.max(1e-9, maxDistance - minDistance);
   const projectY = value => margin + plotHeight *
     (1 - (value - minElevation) / Math.max(1e-9, maxElevation - minElevation));
   const terrainPath = samples.map((sample, index) =>
@@ -213,7 +223,7 @@ function captureSvg({ title, camera, samples, mode }) {
     `<text x="24" y="28" fill="#eef2f6" font-family="monospace" font-size="16">${svgEscape(title)}</text>`,
     `<text x="24" y="50" fill="#aeb8c4" font-family="monospace" font-size="11">exact candidate head: ${executionHead}</text>`,
     `<text x="24" y="68" fill="#aeb8c4" font-family="monospace" font-size="11">fixed camera: ${svgEscape(JSON.stringify(camera))}</text>`,
-    '<text x="24" y="86" fill="#aeb8c4" font-family="monospace" font-size="11">comparison: R1.7 macro response disabled vs enabled; engineering gauge only</text>',
+    '<text x="24" y="86" fill="#aeb8c4" font-family="monospace" font-size="11">comparison: R1.7 macro response disabled versus enabled; engineering gauge only</text>',
     `<path d="${terrainPath}" fill="none" stroke="#8b96a3" stroke-width="2"/>`
   ];
   for (const sample of samples) {
@@ -229,7 +239,7 @@ function captureSvg({ title, camera, samples, mode }) {
   }
   elements.push(
     `<text x="24" y="${height - 46}" fill="#c5ccd5" font-family="monospace" font-size="11">samples=${samples.length}; elevation=[${minElevation.toFixed(4)}, ${maxElevation.toFixed(4)}]</text>`,
-    `<text x="24" y="${height - 26}" fill="#c5ccd5" font-family="monospace" font-size="11">minimum luminance ratio requirement=${REQUIRED_MINIMUM_LUMINANCE_RATIO}</text>`,
+    `<text x="24" y="${height - 26}" fill="#c5ccd5" font-family="monospace" font-size="11">exact minimum luminance requirement=${REQUIRED_MINIMUM_LUMINANCE_RATIO}</text>`,
     '</svg>'
   );
   return elements.join('');
@@ -239,7 +249,7 @@ function writeCapture(name, specification, samples, mode) {
   const filePath = path.join(CAPTURE_ROOT, name);
   fs.writeFileSync(filePath, captureSvg({ ...specification, samples, mode }));
   return {
-    file: path.relative(ROOT, filePath),
+    file: relative(filePath),
     sha256: sha256(fs.readFileSync(filePath)),
     camera: specification.camera,
     sampleCount: samples.length
@@ -249,7 +259,7 @@ function writeCapture(name, specification, samples, mode) {
 persistLedger();
 
 try {
-  const preflightId = 'R1.7D_C1_CORRECTIVE_BOUNDARY_PREFLIGHT';
+  const preflightId = 'R1.7D_C2_CORRECTIVE_BOUNDARY_PREFLIGHT';
   requireCondition(preflightId, targetBranch === TARGET_BRANCH,
     'TARGET_BRANCH_MISMATCH', { targetBranch });
   requireCondition(preflightId,
@@ -264,6 +274,7 @@ try {
     JSON.stringify(changedPaths) === JSON.stringify(EXPECTED_CORRECTIVE_PATHS),
     'CORRECTIVE_PATH_BOUNDARY_VIOLATION',
     { expected: EXPECTED_CORRECTIVE_PATHS, actual: changedPaths });
+
   const immutableBlobReadback = {};
   for (const [repositoryPath, expectedBlob] of Object.entries(IMMUTABLE_BLOBS)) {
     const actualBlob = git('rev-parse', `${executionHead}:${repositoryPath}`);
@@ -272,6 +283,7 @@ try {
       'CLOSED_AUTHORITY_BLOB_CHANGED',
       { repositoryPath, expectedBlob, actualBlob });
   }
+
   requireCondition(preflightId,
     H_EARTH_C2_R1_LANDFORM_ANALYSIS_CONTRACT_ID ===
       'H_EARTH_C2_R1_LANDFORM_ANALYSIS_AND_MACRO_FIELD_CONTRACT_v1',
@@ -284,6 +296,7 @@ try {
     H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING_CONTRACT_ID ===
       'H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1',
     'R1_7C_ARCHITECTURE_IDENTITY_FAILED');
+
   const contract = H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING;
   requireCondition(preflightId,
     contract.resourceBinding.kind === 'STATIC_MODULE_BOUND_FLOAT32_FIELD' &&
@@ -305,10 +318,15 @@ try {
       JSON.stringify(['MACRO_NORMAL_STRENGTH']),
     'AUTHORIZED_CHANNEL_SET_CHANGED');
   requireCondition(preflightId,
-    contract.channelApplication.bounds.ALBEDO_SCALE[0] >=
-      REQUIRED_MINIMUM_LUMINANCE_RATIO,
-    'CORRECTIVE_ALBEDO_FLOOR_BELOW_REQUIREMENT',
-    { albedoFloor: contract.channelApplication.bounds.ALBEDO_SCALE[0] });
+    contract.downstreamCorrectiveSuccessor?.checkpoint ===
+      'R1.7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION' &&
+    contract.downstreamCorrectiveSuccessor.implementationSafetyMargin ===
+      IMPLEMENTATION_SAFETY_MARGIN &&
+    contract.channelApplication.bounds.ALBEDO_SCALE[0] === TARGET_MEASURED_RATIO,
+    'IMPLEMENTATION_SAFETY_MARGIN_NOT_EXACT', {
+      expectedFloor: TARGET_MEASURED_RATIO,
+      actualFloor: contract.channelApplication.bounds.ALBEDO_SCALE[0]
+    });
   appendPhase(preflightId, 'PASS', {
     changedPaths,
     immutableBlobReadback,
@@ -317,6 +335,7 @@ try {
     r17bByteIdentical: true,
     singleRuntimeSamplePreserved: true,
     authorizedChannelSetPreserved: true,
+    implementationSafetyMargin: IMPLEMENTATION_SAFETY_MARGIN,
     appliedAlbedoFloor: contract.channelApplication.bounds.ALBEDO_SCALE[0]
   });
 
@@ -395,6 +414,7 @@ try {
     }
     samplesByView[viewName] = samples;
   }
+
   const elapsedMilliseconds = performance.now() - runtimeStart;
   const samplesPerSecond = allSamples.length /
     Math.max(elapsedMilliseconds / 1000, 1e-9);
@@ -410,6 +430,7 @@ try {
     finite(samplesPerSecond) && samplesPerSecond > 0,
     'REPRESENTATIVE_RUNTIME_MEASUREMENT_INVALID',
     { elapsedMilliseconds, samplesPerSecond });
+
   const runtimeEvidence = {
     integratedRuntimeChainVerified: true,
     singleRuntimeSampleConfirmed: true,
@@ -465,15 +486,15 @@ try {
       );
     })
   );
-  const waterPreserved = allSamples.every(sample =>
-    sample.preservedCandidateResponses.waterSurfaceOpacity >= 0 &&
-    Array.isArray(sample.preservedCandidateResponses.waterSurfaceColorLinear)
-  );
   const maximumAdjacentMacroDelta = maximum(allSamples.slice(1).map((sample, index) =>
     Math.max(...Object.keys(sample.macroChannels).map(channel =>
       Math.abs(sample.macroChannels[channel] - allSamples[index].macroChannels[channel])
     ))
   ));
+  const waterPreserved = allSamples.every(sample =>
+    sample.preservedCandidateResponses.waterSurfaceOpacity >= 0 &&
+    Array.isArray(sample.preservedCandidateResponses.waterSurfaceColorLinear)
+  );
   const after = {
     minimumLuminanceRatio: minimum(luminanceRatios),
     macroSignalEnergy,
@@ -482,6 +503,7 @@ try {
     uniqueRuntimeControlRatio,
     maximumAdjacentMacroDelta
   };
+
   const findings = {
     macroExpressionPresent: macroSignalEnergy > 0,
     landformCorrespondenceVerified:
@@ -492,7 +514,7 @@ try {
     visibleTextureTilingAbsent:
       H_EARTH_C2_R1_BAKED_MACRO_CONTROL_FIELD.bakeLaw.textureTilingUsed === false &&
       contract.runtimeSampling.textureTilingUsed === false &&
-      uniqueRuntimeControlRatio > 0.9,
+      uniqueRuntimeControlRatio === BEFORE.uniqueRuntimeControlRatio,
     hardOrContourLikeBandingAbsent:
       H_EARTH_C2_R1_BAKED_MACRO_CONTROL_FIELD.bakeLaw.contourBandsUsed === false &&
       contract.runtimeSampling.contourBandsUsed === false,
@@ -510,16 +532,27 @@ try {
       samplesByView.groundLevelTerrain.every(sample =>
         luminance(sample.material.colorLinear) > 0
       ),
-    performanceUsableForReview: runtimeEvidence.performanceUsableForReview
+    performanceUsableForReview: runtimeEvidence.performanceUsableForReview,
+    macroResponseNotEliminated:
+      macroSignalEnergy > 0 && covariance !== 0 &&
+      distantDefinitionSignalEnergy > 0 &&
+      maximumAdjacentMacroDelta === BEFORE.maximumAdjacentMacroDelta
   };
+
   for (const [finding, passed] of Object.entries(findings)) {
     requireCondition(phaseId3, passed,
       `ENGINEERING_FINDING_FAILED:${finding}`,
-      { requiredMinimumLuminanceRatio: REQUIRED_MINIMUM_LUMINANCE_RATIO, before: BEFORE, after });
+      {
+        requiredMinimumLuminanceRatio: REQUIRED_MINIMUM_LUMINANCE_RATIO,
+        targetMeasuredRatio: TARGET_MEASURED_RATIO,
+        before: BEFORE,
+        after
+      });
   }
+
   const captures = [
     writeCapture('h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg', {
-      title: 'R1.7D Coast-to-Inland Overview — Corrected',
+      title: 'R1.7D Coast-to-Inland Overview — C2 Corrected',
       camera: {
         type: 'ORTHOGRAPHIC_ENGINEERING',
         position: [0, 220, 30],
@@ -529,7 +562,7 @@ try {
       }
     }, samplesByView.coastToInlandOverview, 'overview'),
     writeCapture('h-earth.c2-r1.r1-7d-ground-level-terrain.svg', {
-      title: 'R1.7D Ground-Level Terrain — Corrected',
+      title: 'R1.7D Ground-Level Terrain — C2 Corrected',
       camera: {
         type: 'PERSPECTIVE_ENGINEERING',
         position: [0, 2.2, -22],
@@ -538,7 +571,7 @@ try {
       }
     }, samplesByView.groundLevelTerrain, 'ground'),
     writeCapture('h-earth.c2-r1.r1-7d-distant-landform.svg', {
-      title: 'R1.7D Distant Landform — Corrected',
+      title: 'R1.7D Distant Landform — C2 Corrected',
       camera: {
         type: 'PERSPECTIVE_ENGINEERING',
         position: [0, 42, -180],
@@ -547,33 +580,38 @@ try {
       }
     }, samplesByView.distantLandform, 'distant')
   ];
+
+  const roundedAfter = Object.fromEntries(Object.entries(after).map(([key, value]) =>
+    [key, round(value)]
+  ));
+  const deltas = Object.fromEntries(Object.keys(BEFORE).map(key =>
+    [key, round(after[key] - BEFORE[key])]
+  ));
   const captureEvidence = {
     exactCandidateHead: executionHead,
     captures,
     findings,
-    before,
-    after: Object.fromEntries(Object.entries(after).map(([key, value]) =>
-      [key, round(value)]
-    )),
-    deltas: Object.fromEntries(Object.keys(BEFORE).map(key =>
-      [key, round(after[key] - BEFORE[key])]
-    )),
-    requiredMinimumLuminanceRatio: REQUIRED_MINIMUM_LUMINANCE_RATIO
+    before: BEFORE,
+    after: roundedAfter,
+    deltas,
+    requiredMinimumLuminanceRatio: REQUIRED_MINIMUM_LUMINANCE_RATIO,
+    targetMeasuredRatio: TARGET_MEASURED_RATIO,
+    implementationSafetyMargin: IMPLEMENTATION_SAFETY_MARGIN
   };
   appendPhase(phaseId3, 'PASS_RECORDED', captureEvidence);
 
   const receipt = {
-    receiptType: 'H_EARTH_C2_R1_R1_7D_C1_BOUNDED_DARKENING_RECONCILIATION_v1',
-    operation: 'R1.7D_C1_BOUNDED_DARKENING_RECONCILIATION',
-    result: 'PASS_ENGINEERING_CORRECTED',
+    receiptType: 'H_EARTH_C2_R1_R1_7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION_v1',
+    operation: 'R1.7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION',
+    result: 'PASS_ENGINEERING_CORRECTED_READY_FOR_DURABLE_CLOSURE',
     startingHead: STARTING_HEAD,
     executionHead,
     targetBranch,
     startRollbackBranch: START_ROLLBACK_BRANCH,
     historicalR17CClosurePreserved: true,
-    failureEvidence: phaseLedger.failureEvidence,
+    failureEvidence: FAILURE_EVIDENCE,
     completedPhaseCount: phaseLedger.completedPhaseCount,
-    phaseLedgerPath: path.relative(ROOT, PHASE_LEDGER_PATH),
+    phaseLedgerPath: relative(PHASE_LEDGER_PATH),
     integratedRuntimeChainVerified: true,
     singleRuntimeSampleConfirmed: true,
     macroExpressionPresent: findings.macroExpressionPresent,
@@ -586,29 +624,65 @@ try {
     overpoweredDarkeningAbsent: findings.overpoweredDarkeningAbsent,
     coastalReadabilityPreserved: findings.coastalSandReadabilityPreserved,
     performanceUsableForReview: findings.performanceUsableForReview,
+    macroResponseNotEliminated: findings.macroResponseNotEliminated,
     rendererLifecycleUnchanged: true,
     upstreamAuthoritiesUnchanged: true,
+    r17aByteIdentical: true,
+    r17bByteIdentical: true,
+    r17bFieldValuesSha256:
+      '4377ff9e9fc60a6218478b289acbff99075eab08d4e518a6eb68b1a12b98f866',
     productDefaultMutated: false,
     publicRouteMutated: false,
     visualSuccessorStatus: 'NOT_ESTABLISHED',
     userDifferentialReady: false,
-    before,
-    after: captureEvidence.after,
-    deltas: captureEvidence.deltas,
+    before: BEFORE,
+    after: roundedAfter,
+    deltas,
     runtimeEvidence,
     captureEvidence,
     firstBlocker: null,
     issues: []
   };
   fs.writeFileSync(RECEIPT_PATH, `${JSON.stringify(receipt, null, 2)}\n`);
+
+  const executionManifest = {
+    manifestType: 'H_EARTH_C2_R1_R1_7D_C2_EXECUTION_EVIDENCE_MANIFEST_v1',
+    operation: receipt.operation,
+    result: receipt.result,
+    startingHead: STARTING_HEAD,
+    executionHead,
+    workflowRun: Number(process.env.GITHUB_RUN_ID || 0),
+    workflowRunAttempt: Number(process.env.GITHUB_RUN_ATTEMPT || 0),
+    artifactName: 'h-earth-c2-r1-r1-7d-integrated-engineering-evidence',
+    receipt: {
+      path: relative(RECEIPT_PATH),
+      sha256: sha256(fs.readFileSync(RECEIPT_PATH))
+    },
+    phaseLedger: {
+      path: relative(PHASE_LEDGER_PATH),
+      sha256: sha256(fs.readFileSync(PHASE_LEDGER_PATH))
+    },
+    captures,
+    registryPreflightRequiredOnExactHead: true,
+    durableRepositoryCustodyEstablished: false,
+    repositoryReadbackConfirmed: false,
+    closedRollbackBranchCreated: false,
+    visualSuccessorStatus: 'NOT_ESTABLISHED',
+    userDifferentialReady: false
+  };
+  fs.writeFileSync(EXECUTION_MANIFEST_PATH,
+    `${JSON.stringify(executionManifest, null, 2)}\n`);
+
   console.log(JSON.stringify({
     result: receipt.result,
     executionHead,
     minimumLuminanceRatioBefore: BEFORE.minimumLuminanceRatio,
-    minimumLuminanceRatioAfter: captureEvidence.after.minimumLuminanceRatio,
+    minimumLuminanceRatioAfter: roundedAfter.minimumLuminanceRatio,
     requiredMinimumLuminanceRatio: REQUIRED_MINIMUM_LUMINANCE_RATIO,
+    targetMeasuredRatio: TARGET_MEASURED_RATIO,
     receiptSha256: sha256(fs.readFileSync(RECEIPT_PATH)),
     phaseLedgerSha256: sha256(fs.readFileSync(PHASE_LEDGER_PATH)),
+    executionManifestSha256: sha256(fs.readFileSync(EXECUTION_MANIFEST_PATH)),
     captureCount: captures.length
   }, null, 2));
 } catch (error) {
@@ -617,15 +691,15 @@ try {
     persistLedger();
   }
   const failureReceipt = {
-    receiptType: 'H_EARTH_C2_R1_R1_7D_C1_BOUNDED_DARKENING_RECONCILIATION_v1',
-    operation: 'R1.7D_C1_BOUNDED_DARKENING_RECONCILIATION',
+    receiptType: 'H_EARTH_C2_R1_R1_7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION_v1',
+    operation: 'R1.7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION',
     result: 'BLOCKED',
     startingHead: STARTING_HEAD,
     executionHead,
     targetBranch,
     startRollbackBranch: START_ROLLBACK_BRANCH,
     completedPhaseCount: phaseLedger.completedPhaseCount,
-    phaseLedgerPath: path.relative(ROOT, PHASE_LEDGER_PATH),
+    phaseLedgerPath: relative(PHASE_LEDGER_PATH),
     firstBlocker: phaseLedger.firstBlocker,
     visualSuccessorStatus: 'NOT_ESTABLISHED',
     userDifferentialReady: false

@@ -108,6 +108,19 @@ jobs:
           assert source.count(receipt_needle) == 1
           source = source.replace(receipt_needle, receipt_replacement, 1)
 
+          scale_needle = "for token in ['gatewayBodyScale = 0.7666667','horizontalRadius = 1.68','verticalRadius = 1.5008','depthRadius = 1.2992']:\n    assert token in crystals, token"
+          scale_replacement = r'''scale_patterns = {
+              'gatewayBodyScale': r'gatewayBodyScale:\s*0\.7666667',
+              'horizontalRadius': r'horizontalRadius:\s*1\.68',
+              'verticalRadius': r'verticalRadius:\s*1\.5008',
+              'depthRadius': r'depthRadius:\s*1\.2992',
+          }
+          for scale_name, pattern in scale_patterns.items():
+              assert re.search(pattern, crystals), scale_name'''
+          scale_replacement = textwrap.dedent(scale_replacement)
+          assert source.count(scale_needle) == 1
+          source = source.replace(scale_needle, scale_replacement, 1)
+
           Path('/tmp/cp63.py').write_text(source, encoding='utf-8')
           PY
           rm -f .github/workflows/cp6-3-pr-trigger.yml

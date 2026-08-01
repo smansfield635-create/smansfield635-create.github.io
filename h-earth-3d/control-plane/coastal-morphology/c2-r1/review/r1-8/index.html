@@ -42,12 +42,12 @@
 
     <section class="review-boundary" aria-label="Review boundary">
       <p><strong>Review only.</strong> Automated checks establish engineering readiness, not visual acceptance. Physical user inspection is required for R1.8E.</p>
-      <p id="runtime-detail">Waiting for WebGL 2, candidate material sampling, coastal water/swash response, and live frame advancement.</p>
+      <p id="runtime-detail">Waiting for WebGL 2, exact review-mesh materialization, coastal water/swash response, and live frame advancement.</p>
     </section>
   </main>
   <script>
     (() => {
-      const traceRows = [];
+      const rows = [];
       let sequence = 0;
       const emit = (event, detail = null) => {
         const row = {
@@ -56,12 +56,11 @@
           performanceMilliseconds: Number(performance.now().toFixed(3)),
           detail
         };
-        traceRows.push(row);
+        rows.push(row);
         console.info(`R1_8_TRACE:${JSON.stringify(row)}`);
         return row;
       };
-      window.__R18_RUNTIME_TRACE__ = traceRows;
-      window.__R18_TRACE_EMIT__ = emit;
+      window.__R1_8_RUNTIME_TRACE__ = Object.freeze({ rows, emit });
       emit('DOCUMENT_ELEMENT_AVAILABLE');
 
       window.addEventListener('error', event => {
@@ -79,91 +78,6 @@
           reason: String(event.reason?.stack || event.reason)
         });
       });
-
-      const contextProxyByContext = new WeakMap();
-      const originalGetContext = HTMLCanvasElement.prototype.getContext;
-      HTMLCanvasElement.prototype.getContext = function patchedGetContext(type, ...args) {
-        if (type !== 'webgl2') return originalGetContext.call(this, type, ...args);
-        emit('WEBGL_CONTEXT_REQUESTED', { type });
-        const context = originalGetContext.call(this, type, ...args);
-        emit('WEBGL_CONTEXT_ESTABLISHED', { established: Boolean(context), type });
-        if (!context) return context;
-        if (contextProxyByContext.has(context)) return contextProxyByContext.get(context);
-        let programLinked = false;
-        let firstBufferUpload = false;
-        let firstDraw = false;
-        const proxy = new Proxy(context, {
-          get(target, property) {
-            const value = Reflect.get(target, property, target);
-            if (typeof value !== 'function') return value;
-            return (...methodArgs) => {
-              if (property === 'linkProgram' && !programLinked) {
-                const result = value.apply(target, methodArgs);
-                programLinked = true;
-                emit('WEBGL_PROGRAM_LINKED');
-                emit('CANDIDATE_CONSTRUCTION_STARTED', {
-                  boundary: 'PROGRAM_LINKED_BEFORE_TERRAIN_SAMPLE_CONSTRUCTION'
-                });
-                return result;
-              }
-              if (property === 'bufferData' && !firstBufferUpload) {
-                firstBufferUpload = true;
-                emit('CANDIDATE_CONSTRUCTION_COMPLETED', {
-                  boundary: 'FIRST_GPU_BUFFER_UPLOAD'
-                });
-              }
-              if (property === 'drawElements' && !firstDraw) {
-                firstDraw = true;
-                emit('FIRST_FRAME_PRESENTED', {
-                  boundary: 'FIRST_DRAW_ELEMENTS_CALL'
-                });
-              }
-              return value.apply(target, methodArgs);
-            };
-          }
-        });
-        contextProxyByContext.set(context, proxy);
-        return proxy;
-      };
-
-      const originalRequestAnimationFrame = window.requestAnimationFrame.bind(window);
-      let firstAnimationFrameRequested = false;
-      let firstAnimationFrameCompleted = false;
-      window.requestAnimationFrame = callback => {
-        if (!firstAnimationFrameRequested) {
-          firstAnimationFrameRequested = true;
-          emit('ANIMATION_FRAME_REQUESTED');
-        }
-        return originalRequestAnimationFrame(timestamp => {
-          const isFirst = !firstAnimationFrameCompleted;
-          if (isFirst) emit('ANIMATION_FRAME_CALLBACK_STARTED');
-          const result = callback(timestamp);
-          if (isFirst) {
-            firstAnimationFrameCompleted = true;
-            emit('ANIMATION_FRAME_CALLBACK_COMPLETED');
-          }
-          return result;
-        });
-      };
-
-      const readyObserver = new MutationObserver(() => {
-        if (document.documentElement.dataset.r1_8Review === 'ready' &&
-            !traceRows.some(row => row.event === 'READY_SENTINEL_WRITTEN')) {
-          emit('READY_SENTINEL_WRITTEN', {
-            value: document.documentElement.dataset.r1_8Review
-          });
-        }
-      });
-      readyObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['data-r1-8-review']
-      });
-
-      let heartbeat = 0;
-      setInterval(() => {
-        heartbeat += 1;
-        emit('MAIN_THREAD_HEARTBEAT', { heartbeat });
-      }, 1000);
 
       const startReview = () => {
         emit('DYNAMIC_IMPORT_STARTED');

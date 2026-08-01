@@ -25,7 +25,12 @@ replaceOnce(
   'root presentation marker'
 );
 
-const cssLink = '<link data-laws-experience-css="true" href="/laws/index.experience.css?v=LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801A" rel="stylesheet"/>';
+const cssLink = `<link data-laws-experience-css="true" href="/laws/index.experience.css?v=LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801A" rel="stylesheet"/>
+<style data-laws-experience-critical="true">
+html[data-cp6-experiential-presentation="candidate"] .laws-topbar{height:4rem!important;min-height:0!important;padding:0!important;align-items:center!important;flex-wrap:nowrap!important}
+html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav:not([open])>.laws-nav{display:none!important}
+@media(max-width:780px){html[data-cp6-experiential-presentation="candidate"] .laws-topbar{height:3.5rem!important}html[data-cp6-experiential-presentation="candidate"] .laws-chamber-identity,html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav{align-self:center!important;margin:0!important}}
+</style>`;
 replaceOnce(
   /(<link data-laws-page-css="true"[^>]+rel="stylesheet"\/>)/,
   `$1\n${cssLink}`,

@@ -181,7 +181,7 @@ async function verifyBrowser() {
     const beforeImpact = await page.evaluate(() => {
       const snapshot = globalThis.DGB_LAWS_SPACECRAFT.snapshot();
       const root = document.querySelector("[data-laws-root]");
-      const canvases = Array.from(document.querySelectorAll("[data-laws-spacecraft-layer]"));
+      const canvases = Array.from(document.querySelectorAll("canvas[data-laws-spacecraft-layer]"));
       return {
         snapshot,
         route: location.pathname,
@@ -241,7 +241,7 @@ async function verifyBrowser() {
     await reducedPage.waitForTimeout(250);
     const reduced = await reducedPage.evaluate(() => ({
       snapshot: globalThis.DGB_LAWS_SPACECRAFT.snapshot(),
-      layers: Array.from(document.querySelectorAll("[data-laws-spacecraft-layer]")).map(canvas => ({
+      layers: Array.from(document.querySelectorAll("canvas[data-laws-spacecraft-layer]")).map(canvas => ({
         hidden: canvas.hidden,
         display: getComputedStyle(canvas).display
       })),
@@ -263,7 +263,7 @@ async function verifyBrowser() {
     const staticPage = await staticContext.newPage();
     await staticPage.goto(`${baseUrl}/laws/`, { waitUntil: "load" });
     const staticResult = await staticPage.evaluate(() => ({
-      spacecraftLayerCount: document.querySelectorAll("[data-laws-spacecraft-layer]").length,
+      spacecraftLayerCount: document.querySelectorAll("canvas[data-laws-spacecraft-layer]").length,
       compassPresent: Boolean(document.querySelector("#laws-orbit")),
       heading: document.querySelector("h1")?.textContent?.trim() || "",
       overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth

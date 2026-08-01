@@ -1,0 +1,126 @@
+name: Laws CP5 Final Moon Live Deployment
+
+on:
+  pull_request:
+    branches: [verification/laws-cp5-final-moon-live-deployment-001]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-samsung:
+    if: github.head_ref == 'trigger/laws-cp5-final-moon-live-deployment-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 68c9c2c2235f927bb4aaa7bff855063f20d3e498
+          fetch-depth: 0
+
+      - name: Wait for exact public binding and contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='/laws/index.crystals.js?v=27577c49250f42b03d123f8105e1d55d59c3a4b4'
+          old='/laws/index.crystals.js?v=e8c80f898acad0625e722f43be6d1b4f5541690f'
+          for attempt in $(seq 1 40); do
+            stamp="68c9c2c2235f927bb4aaa7bff855063f20d3e498-${attempt}-$(date +%s)"
+            if curl -fsSL -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/?cp5-final-moon=${stamp}" -o /tmp/laws-live.html; then
+              new_count="$(grep -Fo "$expected" /tmp/laws-live.html | wc -l || true)"
+              old_count="$(grep -Fo "$old" /tmp/laws-live.html | wc -l || true)"
+              if [ "$new_count" = "2" ] && [ "$old_count" = "0" ]; then
+                curl -fsSL -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.crystals.js?v=27577c49250f42b03d123f8105e1d55d59c3a4b4&live=${stamp}" -o /tmp/laws-live-crystals.js
+                if grep -Fq '2.3.1-cp5-final-public-moon-definition' /tmp/laws-live-crystals.js; then
+                  printf '{"publicBindingCount":2,"oldBindingCount":0,"contract":"2.3.1-cp5-final-public-moon-definition","deploymentObserved":true}\n' > laws-cp5-final-moon-live-binding.json
+                  exit 0
+                fi
+              fi
+            fi
+            sleep 15
+          done
+          printf '%s\n' 'PUBLIC_DEPLOYMENT_NOT_OBSERVED_WITHIN_WINDOW'
+          if [ -f /tmp/laws-live.html ]; then grep -Fo '/laws/index.crystals.js?v=[a-f0-9]*' /tmp/laws-live.html | sort | uniq -c || true; fi
+          exit 1
+
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+        with:
+          chrome-version: stable
+
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Execute live Samsung-profile runtime inspection
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        shell: bash
+        run: |
+          cat > laws-cp5-final-moon-live-samsung.mjs <<'JS'
+          import fs from 'node:fs';
+          import puppeteer from 'puppeteer-core';
+          const failures=[];
+          const telemetry={pageErrors:[],consoleErrors:[],requestFailures:[],httpErrors:[]};
+          const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+          const page=await browser.newPage();
+          await page.setViewport({width:430,height:932,deviceScaleFactor:1,isMobile:true,hasTouch:true});
+          page.on('pageerror',error=>telemetry.pageErrors.push(String(error?.stack||error)));
+          page.on('console',message=>{if(message.type()==='error'&&!message.text().includes('status of 404'))telemetry.consoleErrors.push(message.text())});
+          page.on('requestfailed',request=>{if(!request.url().endsWith('/favicon.ico'))telemetry.requestFailures.push({url:request.url(),error:request.failure()?.errorText||''})});
+          page.on('response',response=>{if(response.status()>=400&&!response.url().endsWith('/favicon.ico'))telemetry.httpErrors.push({url:response.url(),status:response.status()})});
+          const response=await page.goto(`https://diamondgatebridge.com/laws/?cp5-live-samsung=68c9c2c2235f927bb4aaa7bff855063f20d3e498-${Date.now()}`,{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>Boolean(globalThis.DGBLawsStagedLoader&&globalThis.DGB_LAWS_CONTROLLER),{timeout:30000});
+          await page.evaluate(async()=>{await DGBLawsStagedLoader.loadOrbitSystems();await DGBLawsStagedLoader.loadInteractionSystems()});
+          await page.waitForFunction(()=>DGB_LAWS_CRYSTALS_RECEIPT?.rendererInitialized===true&&DGB_LAWS_COMPOSITOR_RECEIPT?.initialized===true&&DGB_LAWS_INTERACTIONS_RECEIPT?.initialized===true,{timeout:45000});
+          await page.evaluate(()=>document.querySelector('[data-upstream-compass-mount]')?.scrollIntoView({block:'center',inline:'center',behavior:'instant'}));
+          await new Promise(resolve=>setTimeout(resolve,500));
+          const snapshot=await page.evaluate(()=>{
+            const visible=element=>{if(!element||element.hidden)return false;const style=getComputedStyle(element),rect=element.getBoundingClientRect();return style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect.width>0&&rect.height>0};
+            const labels=[...document.querySelectorAll('[data-laws-projected-category-label]')].filter(visible).map(element=>element.dataset.direction||'');
+            const categories=[...document.querySelectorAll('[data-laws-category]')].map(element=>element.dataset.direction).filter(Boolean).sort();
+            return {
+              contractVersion:DGB_LAWS_CRYSTALS_RECEIPT?.contractVersion||'',
+              rendererInitialized:DGB_LAWS_CRYSTALS_RECEIPT?.rendererInitialized===true,
+              compositorInitialized:DGB_LAWS_COMPOSITOR_RECEIPT?.initialized===true,
+              interactionsInitialized:DGB_LAWS_INTERACTIONS_RECEIPT?.initialized===true,
+              categories,
+              visibleLabels:labels,
+              centerGlobePresent:Boolean(document.querySelector('[data-laws-planet-world-pass-participant]')),
+              horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+              boundSource:document.documentElement.dataset.lawsCrystals||''
+            };
+          });
+          const expect=(value,id,observed=null)=>{if(!value)failures.push({id,observed})};
+          expect([200,304].includes(response?.status()),'ROUTE_STATUS',response?.status());
+          expect(snapshot.contractVersion==='2.3.1-cp5-final-public-moon-definition','CONTRACT',snapshot.contractVersion);
+          expect(snapshot.boundSource==='/laws/index.crystals.js?v=27577c49250f42b03d123f8105e1d55d59c3a4b4','BOUND_SOURCE',snapshot.boundSource);
+          expect(snapshot.rendererInitialized&&snapshot.compositorInitialized&&snapshot.interactionsInitialized,'RUNTIME_INITIALIZATION',snapshot);
+          expect(JSON.stringify(snapshot.categories)===JSON.stringify(['flow','integrity','reality','research','structure','test']),'AUTHORITY_IDENTITIES',snapshot.categories);
+          expect(snapshot.visibleLabels.length===1,'VISIBLE_LABEL_COUNT',snapshot.visibleLabels);
+          expect(snapshot.centerGlobePresent,'CENTER_GLOBE');
+          expect(snapshot.horizontalOverflow<=1,'HORIZONTAL_OVERFLOW',snapshot.horizontalOverflow);
+          expect(telemetry.pageErrors.length===0,'PAGE_ERRORS',telemetry.pageErrors);
+          expect(telemetry.consoleErrors.length===0,'CONSOLE_ERRORS',telemetry.consoleErrors);
+          expect(telemetry.requestFailures.length===0,'REQUEST_FAILURES',telemetry.requestFailures);
+          expect(telemetry.httpErrors.length===0,'HTTP_ERRORS',telemetry.httpErrors);
+          await page.screenshot({path:'laws-cp5-final-moon-live-samsung.png',fullPage:false});
+          await browser.close();
+          const receipt={publicRoute:'https://diamondgatebridge.com/laws/',mainHead:'68c9c2c2235f927bb4aaa7bff855063f20d3e498',crystalBlob:'27577c49250f42b03d123f8105e1d55d59c3a4b4',profile:'SAMSUNG_PHONE_PORTRAIT_430x932',snapshot,telemetry,failures,pass:failures.length===0};
+          fs.writeFileSync('laws-cp5-final-moon-live-samsung.json',JSON.stringify(receipt,null,2)+'\n');
+          if(failures.length){console.error(JSON.stringify(failures,null,2));process.exit(1)}
+          JS
+          node laws-cp5-final-moon-live-samsung.mjs
+
+      - name: Upload live evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp5-final-moon-live-deployment
+          path: |
+            laws-cp5-final-moon-live-binding.json
+            laws-cp5-final-moon-live-samsung.json
+            laws-cp5-final-moon-live-samsung.png
+            /tmp/laws-live.html
+            /tmp/laws-live-crystals.js
+          retention-days: 30
+          if-no-files-found: warn

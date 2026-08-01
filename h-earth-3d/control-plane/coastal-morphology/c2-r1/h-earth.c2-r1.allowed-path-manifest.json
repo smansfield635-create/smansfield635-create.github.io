@@ -13,6 +13,7 @@
     ".github/workflows/h-earth-c2-r1-r1-4-actual-depth-water-optics.yml",
     ".github/workflows/h-earth-c2-r1-r1-5-depth-slope-breakers.yml",
     ".github/workflows/h-earth-c2-r1-r1-6-restrained-swash-foam-wetness.yml",
+    ".github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml",
     "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
     "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
     "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",

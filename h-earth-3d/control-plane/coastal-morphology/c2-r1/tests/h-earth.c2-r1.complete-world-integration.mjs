@@ -118,7 +118,8 @@ const realResult = await buildHEarthC2R1CompleteWorldRenderPackage({
   sampleSwash: sampleHEarthC2R1CoastalSwashFoamWetness,
   sampleWaterOptics: sampleHEarthC2R1CoastalWaterOptics,
   sampleBreaker: sampleHEarthC2R1CoastalBreakerField,
-  timeSeconds: 0
+  timeSeconds: 0,
+  stopAfterFirstFailure: true
 });
 const realEvaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(realResult, realCanonicalPackage);
 const realDiagnostic = {

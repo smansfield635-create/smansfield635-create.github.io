@@ -8,6 +8,8 @@
   "use strict";
 
   const CONTRACT = "LAWS_CP6_EXPERIENTIAL_PRESENTATION_v1";
+  const STELLAR_STYLE = "/laws/index.stellar-continuity.css?v=LAWS_STELLAR_CONTINUITY_20260801A";
+  const STELLAR_SCRIPT = "/laws/index.background-cosmos.js?v=LAWS_BACKGROUND_COSMOS_20260801A";
 
   const COPY = Object.freeze({
     idle: Object.freeze({
@@ -274,7 +276,27 @@
     }, { passive: true });
   }
 
+  function installStellarContinuity() {
+    if (!document.querySelector('link[data-laws-stellar-continuity-css]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = STELLAR_STYLE;
+      link.dataset.lawsStellarContinuityCss = "true";
+      document.head.append(link);
+    }
+
+    if (!document.querySelector('script[data-laws-background-cosmos]')) {
+      const script = document.createElement("script");
+      script.src = STELLAR_SCRIPT;
+      script.defer = true;
+      script.dataset.lawsBackgroundCosmos = "true";
+      script.dataset.lawsPresentationOnly = "true";
+      document.head.append(script);
+    }
+  }
+
   function initialize() {
+    installStellarContinuity();
     documentElement.dataset.lawsExperience = "active";
     applyCopy(deriveDirection(readControllerState()), "initialize");
     observeRootState();

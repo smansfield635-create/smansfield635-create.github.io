@@ -1,0 +1,91 @@
+name: H-Earth C2-R1 R1.7B Exact Receipt Transport
+
+on:
+  pull_request:
+    branches:
+      - integration/h-earth-c2-r1-baseline-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-r1-7b-exact-receipt-transport.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-c2-r1-r1-7b-exact-receipt-transport
+  cancel-in-progress: false
+
+jobs:
+  materialize-final-closure-branch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      BASE_HEAD: f1ba63b088f89c6539d92d5293ba1eb651644480
+      CANDIDATE_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
+      DIRECT_BRANCH: closure/h-earth-c2-r1-r1-7b-direct-001
+      FINAL_BRANCH: closure/h-earth-c2-r1-r1-7b-final-001
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
+          fetch-depth: 0
+
+      - name: Verify candidate and prepare final branch
+        run: |
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          git fetch origin "${DIRECT_BRANCH}:refs/remotes/origin/${DIRECT_BRANCH}"
+          git switch -C "${FINAL_BRANCH}"
+
+      - name: Copy seven verified closure files
+        run: |
+          git checkout "origin/${DIRECT_BRANCH}" -- \
+            .github/workflows/h-earth-c2-r1-r1-7b-baked-macro-control-field.yml \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-evidence-manifest.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-albedo-roughness.svg \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-cavity-normal.svg \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-coastal-preservation.svg \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json
+
+      - name: Download and install exact passing receipt
+        run: |
+          mkdir -p /tmp/r17b h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/8811649872/zip" > /tmp/r17b/artifact.zip
+          echo '6516110abe68a14160b64b4dbc0ed5dd3996128260806d4c21f773edb82b9ae4  /tmp/r17b/artifact.zip' | sha256sum -c -
+          unzip -q /tmp/r17b/artifact.zip -d /tmp/r17b/exact
+          echo '0927022ab382e046a7d5fa32e81e7ebe64b6876bf22576b1b5916f024222d003  /tmp/r17b/exact/h-earth.c2-r1.r1-7b-verification.json' | sha256sum -c -
+          cp /tmp/r17b/exact/h-earth.c2-r1.r1-7b-verification.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-verification.json
+
+      - name: Remove transport and enforce exact closure identities
+        run: |
+          rm .github/workflows/h-earth-c2-r1-r1-7b-exact-receipt-transport.yml
+          echo '33b497544f1fd2ba2e580b792e1e6604facd6c10fc755ebbd97c0c2b66f35ff1  .github/workflows/h-earth-c2-r1-r1-7b-baked-macro-control-field.yml' | sha256sum -c -
+          echo 'f7a42e599a9d99420a8fd725e3a4162b695aabebdc0e8d864756db14c15443c2  h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-evidence-manifest.json' | sha256sum -c -
+          echo '0927022ab382e046a7d5fa32e81e7ebe64b6876bf22576b1b5916f024222d003  h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-verification.json' | sha256sum -c -
+          echo '254087169e9188d3daec07ea155720e16b886f55f2f6a1eb524ae8b2ad083ebc  h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-albedo-roughness.svg' | sha256sum -c -
+          echo '8592ada0e19fcd321857510bb86556eea9022ef2c750996fc5965d06c5f0c4d9  h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-cavity-normal.svg' | sha256sum -c -
+          echo '7ec8f9c3af5c3dde02c7b72f0705ce9b1b01be133bf40d218150460f00bc2471  h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-coastal-preservation.svg' | sha256sum -c -
+          echo 'b0dc5024d289ddb67d390ecdc0e8172c86dfbb5d57b46e3cf0d8c751a3bc9c10  h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json' | sha256sum -c -
+          echo '1b6f3fd725b6c6804c6b828e94f22da5b2e5936def0510ade2e36bb6d4483d35  h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json' | sha256sum -c -
+          cat > /tmp/expected <<'EOF'
+          .github/workflows/h-earth-c2-r1-r1-7b-baked-macro-control-field.yml
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-evidence-manifest.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-verification.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-albedo-roughness.svg
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-cavity-normal.svg
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-coastal-preservation.svg
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json
+          EOF
+          git diff --name-only "${BASE_HEAD}" | sort > /tmp/actual
+          diff -u /tmp/expected /tmp/actual
+
+      - name: Commit final closure staging state
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'R1.7B: exact durable closure evidence and custody'
+          git push --force-with-lease origin "HEAD:${FINAL_BRANCH}"

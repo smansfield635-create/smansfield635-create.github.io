@@ -1,0 +1,67 @@
+name: OSF z64am Inspection
+
+on:
+  push:
+    branches:
+      - agent/osf-z64am-inspection-001
+    paths:
+      - .github/workflows/osf-z64am-inspection.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/osf-z64am-inspection-001
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install extraction dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install requests beautifulsoup4 pypdf python-docx openpyxl python-pptx
+      - name: Harvest current public OSF profile
+        run: |
+          rm -rf research/osf-z64am-inspection
+          python tools/osf-laws-corpus/harvest_osf_corpus_with_registrations.py \
+            --user g5294 \
+            --output research/osf-z64am-inspection
+      - name: Require z64am and write inspection receipt
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('research/osf-z64am-inspection')
+          manifest = json.loads((root / 'manifest.json').read_text())
+          ids = {p['id'] for p in manifest['projects']}
+          assert 'z64am' in ids, f'z64am not found; recovered={len(ids)}'
+          item = next(p for p in manifest['projects'] if p['id'] == 'z64am')
+          receipt = {
+              'inspection_id': 'OSF_Z64AM_ISOLATED_INSPECTION_v1',
+              'status': 'RECOVERED_FOR_ASSESSMENT_ONLY',
+              'project_id': 'z64am',
+              'title': item.get('title'),
+              'file_inventory_count': item.get('file_inventory_count'),
+              'registration': item.get('registration'),
+              'candidate_band': item.get('relevance_discovery', {}).get('candidate_band'),
+              'claim_boundary': 'Isolated assessment only; no canonical corpus admission or Laws Chamber claim upgrade.'
+          }
+          (root / 'Z64AM_INSPECTION_RECEIPT.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          PY
+      - name: Commit isolated inspection output
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/osf-z64am-inspection
+          git commit -m "Inspect OSF z64am in isolation"
+          git push origin HEAD:agent/osf-z64am-inspection-001

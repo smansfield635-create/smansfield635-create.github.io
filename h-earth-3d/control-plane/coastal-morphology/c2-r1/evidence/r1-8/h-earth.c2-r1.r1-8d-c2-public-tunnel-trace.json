@@ -1,0 +1,1577 @@
+{
+  "traceType": "H_EARTH_C2_R1_R1_8D_C2_PUBLIC_QUICK_TUNNEL_TRACE_v1",
+  "exactServedCommit": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+  "graph": [
+    "h-earth-3d/cells/ground-cell-001.js",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+    "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+    "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+    "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+    "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+    "h-earth-3d/h-earth.matrix.js",
+    "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+    "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+    "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+    "h-earth-3d/objects/ground-cell-001.objects.js",
+    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+    "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+    "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+    "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "h-earth-3d/terrain/h-earth.terrain-field.js",
+    "h-earth-3d/terrain/h-earth.terrain-formations.js",
+    "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+    "h-earth-3d/zones/ground-cell-001.zones.js",
+    "showroom/globe/h-earth/render/geometry-distant-context.js",
+    "showroom/globe/h-earth/render/geometry-kernel.east.js",
+    "showroom/globe/h-earth/render/geometry-kernel.js",
+    "showroom/globe/h-earth/render/geometry-kernel.north.js",
+    "showroom/globe/h-earth/render/geometry-kernel.south.js",
+    "showroom/globe/h-earth/render/geometry-kernel.west.js",
+    "showroom/globe/h-earth/render/geometry-landscape.js"
+  ],
+  "trace": {
+    "carrier": {
+      "id": "CLOUDFLARE_QUICK_TUNNEL",
+      "baseUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/",
+      "host": "liability-cos-flexibility-acquired.trycloudflare.com"
+    },
+    "direct": {
+      "carrier": "CLOUDFLARE_QUICK_TUNNEL",
+      "baseUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/",
+      "resourceCount": 34,
+      "allHttp200": true,
+      "allByteIdentical": true,
+      "allMimeCompatible": true,
+      "resources": [
+        {
+          "repositoryPath": "h-earth-3d/cells/ground-cell-001.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/cells/ground-cell-001.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/cells/ground-cell-001.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 31945,
+          "responseSha256": "e2175ef2ddb0399d5d325d2478a72c34e8e67feb9ae28f92b77ebdc1a4b615f2",
+          "expectedRepositoryByteLength": 31945,
+          "expectedRepositorySha256": "e2175ef2ddb0399d5d325d2478a72c34e8e67feb9ae28f92b77ebdc1a4b615f2",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 23247,
+          "responseSha256": "fdb811b35e9e87fdd71aaa324c68edf5d6911a3a239f033f726623ee75ea411a",
+          "expectedRepositoryByteLength": 23247,
+          "expectedRepositorySha256": "fdb811b35e9e87fdd71aaa324c68edf5d6911a3a239f033f726623ee75ea411a",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 12068,
+          "responseSha256": "8a2b7bbf60d42a5fab9b318699ef41fb9d09d1533727eecadb3319457627944c",
+          "expectedRepositoryByteLength": 12068,
+          "expectedRepositorySha256": "8a2b7bbf60d42a5fab9b318699ef41fb9d09d1533727eecadb3319457627944c",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 5256,
+          "responseSha256": "7f16fd9461f305535b532877ba714347a189ef415ba433bb9b3c1d051caac7c1",
+          "expectedRepositoryByteLength": 5256,
+          "expectedRepositorySha256": "7f16fd9461f305535b532877ba714347a189ef415ba433bb9b3c1d051caac7c1",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 15737,
+          "responseSha256": "72f8a888f2e17bf1ec49ae1ce042252016df8901526f1926b34811edb7b6510b",
+          "expectedRepositoryByteLength": 15737,
+          "expectedRepositorySha256": "72f8a888f2e17bf1ec49ae1ce042252016df8901526f1926b34811edb7b6510b",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+          "httpStatus": 200,
+          "contentType": "application/octet-stream",
+          "contentLength": "340144",
+          "contentEncoding": null,
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 340144,
+          "responseSha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77",
+          "expectedRepositoryByteLength": 340144,
+          "expectedRepositorySha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": true
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 3176,
+          "responseSha256": "79c9bd298fcc7e76322e7015ad8c5b40b7d643f48a93027e28b6012a5d5fe66b",
+          "expectedRepositoryByteLength": 3176,
+          "expectedRepositorySha256": "79c9bd298fcc7e76322e7015ad8c5b40b7d643f48a93027e28b6012a5d5fe66b",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 4514,
+          "responseSha256": "224bde57cb4edf3b4e61bf821468813aa2f4463529dfc1e1e6722aebc9fc7a90",
+          "expectedRepositoryByteLength": 4514,
+          "expectedRepositorySha256": "224bde57cb4edf3b4e61bf821468813aa2f4463529dfc1e1e6722aebc9fc7a90",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+          "httpStatus": 200,
+          "contentType": "text/css; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 3580,
+          "responseSha256": "5d758e106c11fd29f8f323610e4f94d81fb791835141213bd2ac174ef946b388",
+          "expectedRepositoryByteLength": 3580,
+          "expectedRepositorySha256": "5d758e106c11fd29f8f323610e4f94d81fb791835141213bd2ac174ef946b388",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 21850,
+          "responseSha256": "a11ee6ce57286a518df3aaad57fdc59e76605651adcdd89f9ff081fe64a7988a",
+          "expectedRepositoryByteLength": 21850,
+          "expectedRepositorySha256": "a11ee6ce57286a518df3aaad57fdc59e76605651adcdd89f9ff081fe64a7988a",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 25303,
+          "responseSha256": "cdb5bd7f54bb8071b5b8a411a761e46d050d956337fc0d4926b9bc1172b8d3e7",
+          "expectedRepositoryByteLength": 25303,
+          "expectedRepositorySha256": "cdb5bd7f54bb8071b5b8a411a761e46d050d956337fc0d4926b9bc1172b8d3e7",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 18316,
+          "responseSha256": "7607773fc1f1bbefa5d2c9721b891b3fba7fecd9268717bfeac4d696d9a0ec15",
+          "expectedRepositoryByteLength": 18316,
+          "expectedRepositorySha256": "7607773fc1f1bbefa5d2c9721b891b3fba7fecd9268717bfeac4d696d9a0ec15",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 22709,
+          "responseSha256": "274a2313395dfcfe3489d3a0bdbb6a893cc7f1e15232e3244d046fc0b82a2d00",
+          "expectedRepositoryByteLength": 22709,
+          "expectedRepositorySha256": "274a2313395dfcfe3489d3a0bdbb6a893cc7f1e15232e3244d046fc0b82a2d00",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 10611,
+          "responseSha256": "f0bae40205cac0fbbb2d58842f870fdf08889d3f341630013eb3f379d3b65934",
+          "expectedRepositoryByteLength": 10611,
+          "expectedRepositorySha256": "f0bae40205cac0fbbb2d58842f870fdf08889d3f341630013eb3f379d3b65934",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/h-earth.matrix.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/h-earth.matrix.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/h-earth.matrix.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 35389,
+          "responseSha256": "1aa461d7502cb53401a7281b54da4728e05cd897527bf4efc262f4c905d7f9c5",
+          "expectedRepositoryByteLength": 35389,
+          "expectedRepositorySha256": "1aa461d7502cb53401a7281b54da4728e05cd897527bf4efc262f4c905d7f9c5",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 13010,
+          "responseSha256": "734a91b0953aa1d7f5a712dde2b6fbcd4989493a32608cbbac701770dbf6046a",
+          "expectedRepositoryByteLength": 13010,
+          "expectedRepositorySha256": "734a91b0953aa1d7f5a712dde2b6fbcd4989493a32608cbbac701770dbf6046a",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 43060,
+          "responseSha256": "9dce05bd365cc2e4512289a0cf0cc387ed7ebca2aa42a198a2d145b47daed523",
+          "expectedRepositoryByteLength": 43060,
+          "expectedRepositorySha256": "9dce05bd365cc2e4512289a0cf0cc387ed7ebca2aa42a198a2d145b47daed523",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 34235,
+          "responseSha256": "0b7ce4277ed2611162c207ce4956b8e31e607483e78bdb4e97755329e825a544",
+          "expectedRepositoryByteLength": 34235,
+          "expectedRepositorySha256": "0b7ce4277ed2611162c207ce4956b8e31e607483e78bdb4e97755329e825a544",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/objects/ground-cell-001.objects.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/objects/ground-cell-001.objects.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/objects/ground-cell-001.objects.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 104797,
+          "responseSha256": "c187a98b96249f3ff8e142e58916815b11040c0e42e5cd3b522e4dec76ca284b",
+          "expectedRepositoryByteLength": 104797,
+          "expectedRepositorySha256": "c187a98b96249f3ff8e142e58916815b11040c0e42e5cd3b522e4dec76ca284b",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 12882,
+          "responseSha256": "bd9e61e07374b6f761e5587c55183a51ec09b7bd70ffc08ff2f6fc45751953d9",
+          "expectedRepositoryByteLength": 12882,
+          "expectedRepositorySha256": "bd9e61e07374b6f761e5587c55183a51ec09b7bd70ffc08ff2f6fc45751953d9",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 11528,
+          "responseSha256": "7e3737b97b4347765c96deb06102e4be51e03b1b7c1533940f292f3141f74623",
+          "expectedRepositoryByteLength": 11528,
+          "expectedRepositorySha256": "7e3737b97b4347765c96deb06102e4be51e03b1b7c1533940f292f3141f74623",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 12571,
+          "responseSha256": "eace053e72c1c291115002601d4152d0021aeb44348fd604faf6670c97b96f3a",
+          "expectedRepositoryByteLength": 12571,
+          "expectedRepositorySha256": "eace053e72c1c291115002601d4152d0021aeb44348fd604faf6670c97b96f3a",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 8557,
+          "responseSha256": "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795",
+          "expectedRepositoryByteLength": 8557,
+          "expectedRepositorySha256": "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/terrain/h-earth.terrain-field.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.terrain-field.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.terrain-field.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 7882,
+          "responseSha256": "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad",
+          "expectedRepositoryByteLength": 7882,
+          "expectedRepositorySha256": "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.terrain-formations.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.terrain-formations.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 6275,
+          "responseSha256": "1755606f285666f09cb4eaea872305be0a7000cd1c22aa75f3754f7ab4d2d53b",
+          "expectedRepositoryByteLength": 6275,
+          "expectedRepositorySha256": "1755606f285666f09cb4eaea872305be0a7000cd1c22aa75f3754f7ab4d2d53b",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 68680,
+          "responseSha256": "766348f5499685719a126642a8b3bb93ac082afaf4ff7f7bc972e158c306d482",
+          "expectedRepositoryByteLength": 68680,
+          "expectedRepositorySha256": "766348f5499685719a126642a8b3bb93ac082afaf4ff7f7bc972e158c306d482",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "h-earth-3d/zones/ground-cell-001.zones.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/zones/ground-cell-001.zones.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/zones/ground-cell-001.zones.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 107753,
+          "responseSha256": "c270aaef1fdf7aac5d934457e9ce9dcc9ed1563847f6d06760ea1a83d4d0ddfe",
+          "expectedRepositoryByteLength": 107753,
+          "expectedRepositorySha256": "c270aaef1fdf7aac5d934457e9ce9dcc9ed1563847f6d06760ea1a83d4d0ddfe",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "showroom/globe/h-earth/render/geometry-distant-context.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-distant-context.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-distant-context.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 4421,
+          "responseSha256": "37ed73b064c72c8d41245720392f4a02a3833bcb47c71b13d0a6284767d129d2",
+          "expectedRepositoryByteLength": 4421,
+          "expectedRepositorySha256": "37ed73b064c72c8d41245720392f4a02a3833bcb47c71b13d0a6284767d129d2",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.east.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.east.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 128728,
+          "responseSha256": "4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba",
+          "expectedRepositoryByteLength": 128728,
+          "expectedRepositorySha256": "4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "showroom/globe/h-earth/render/geometry-kernel.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 40459,
+          "responseSha256": "dca2673d76c46358d4e66b8392f24457c6caf4f07128f653250ee26768824817",
+          "expectedRepositoryByteLength": 40459,
+          "expectedRepositorySha256": "dca2673d76c46358d4e66b8392f24457c6caf4f07128f653250ee26768824817",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "showroom/globe/h-earth/render/geometry-kernel.north.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.north.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.north.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 127118,
+          "responseSha256": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0",
+          "expectedRepositoryByteLength": 127118,
+          "expectedRepositorySha256": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.south.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.south.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 145913,
+          "responseSha256": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877",
+          "expectedRepositoryByteLength": 145913,
+          "expectedRepositorySha256": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.west.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.west.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 73706,
+          "responseSha256": "bd95314b232086d3a410ddc643557f54c161c24d3134be7ba356d47203b3d970",
+          "expectedRepositoryByteLength": 73706,
+          "expectedRepositorySha256": "bd95314b232086d3a410ddc643557f54c161c24d3134be7ba356d47203b3d970",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        },
+        {
+          "repositoryPath": "showroom/globe/h-earth/render/geometry-landscape.js",
+          "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-landscape.js",
+          "finalUrlAfterRedirects": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-landscape.js",
+          "httpStatus": 200,
+          "contentType": "text/javascript; charset=utf-8",
+          "contentLength": null,
+          "contentEncoding": "gzip",
+          "etag": null,
+          "cacheControl": "no-store",
+          "age": null,
+          "accessControlAllowOrigin": null,
+          "contentSecurityPolicy": null,
+          "responseByteLength": 8875,
+          "responseSha256": "f2beb4059f9f458434cf43990196defaa4a55ec828a1d936d51a6aef5bf15a6f",
+          "expectedRepositoryByteLength": 8875,
+          "expectedRepositorySha256": "f2beb4059f9f458434cf43990196defaa4a55ec828a1d936d51a6aef5bf15a6f",
+          "byteIdentityMatch": true,
+          "mimeIdentityMatch": true,
+          "htmlFallbackReturned": false,
+          "redirectedToDifferentHost": false,
+          "assetResource": false
+        }
+      ]
+    },
+    "browser": {
+      "requestedUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+      "navigation": {
+        "status": 200,
+        "finalUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+        "durationMs": 111.84779699999945
+      },
+      "navigationError": null,
+      "ready": true,
+      "readyError": null,
+      "readyDurationMs": 650.6553449999992,
+      "observed": {
+        "requests": [
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+            "method": "GET",
+            "resourceType": "document"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+            "method": "GET",
+            "resourceType": "stylesheet"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.terrain-field.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.terrain-formations.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-landscape.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-distant-context.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.north.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.east.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.south.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.west.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/objects/ground-cell-001.objects.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/zones/ground-cell-001.zones.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/cells/ground-cell-001.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/h-earth.matrix.js",
+            "method": "GET",
+            "resourceType": "script"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+            "method": "GET",
+            "resourceType": "fetch"
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+            "method": "GET",
+            "resourceType": "fetch"
+          }
+        ],
+        "responses": [
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.terrain-field.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/terrain/h-earth.terrain-formations.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-landscape.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-distant-context.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.north.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.west.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/objects/ground-cell-001.objects.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.south.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/showroom/globe/h-earth/render/geometry-kernel.east.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/zones/ground-cell-001.zones.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/cells/ground-cell-001.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/h-earth.matrix.js",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+            "status": 200
+          },
+          {
+            "url": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+            "status": 200
+          }
+        ],
+        "requestFailures": [],
+        "console": [
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":1,\"event\":\"DOCUMENT_ELEMENT_AVAILABLE\",\"performanceMilliseconds\":98,\"detail\":null}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":2,\"event\":\"DOMCONTENTLOADED\",\"performanceMilliseconds\":108.5,\"detail\":null}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":3,\"event\":\"DYNAMIC_IMPORT_STARTED\",\"performanceMilliseconds\":108.6,\"detail\":null}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":4,\"event\":\"WEBGL_CONTEXT_REQUESTED\",\"performanceMilliseconds\":418.3,\"detail\":null}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":5,\"event\":\"WEBGL_CONTEXT_ESTABLISHED\",\"performanceMilliseconds\":426.5,\"detail\":{\"established\":true}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":6,\"event\":\"CANDIDATE_CONSTRUCTION_STARTED\",\"performanceMilliseconds\":427.5,\"detail\":{\"option\":\"OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH\"}}"
+          },
+          {
+            "type": "warning",
+            "text": "[GroupMarkerNotSet(crbug.com/242999)!:A0C0530644120000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content."
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":7,\"event\":\"MAIN_THREAD_HEARTBEAT\",\"performanceMilliseconds\":452.8,\"detail\":{\"count\":1,\"driftMilliseconds\":0.19999999999708962}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":8,\"event\":\"MAIN_THREAD_HEARTBEAT\",\"performanceMilliseconds\":477.7,\"detail\":{\"count\":2,\"driftMilliseconds\":0}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":9,\"event\":\"MAIN_THREAD_HEARTBEAT\",\"performanceMilliseconds\":502.8,\"detail\":{\"count\":3,\"driftMilliseconds\":0}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":10,\"event\":\"FIRST_CONSTRUCTION_BATCH_COMPLETED\",\"performanceMilliseconds\":516.4,\"detail\":{\"batchIndex\":0,\"name\":\"TERRAIN_POSITIONS\",\"byteLength\":42924,\"durationMilliseconds\":0.09999999999126885}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":11,\"event\":\"LAST_CONSTRUCTION_BATCH_COMPLETED\",\"performanceMilliseconds\":521,\"detail\":{\"batchIndex\":7,\"name\":\"WATER_INDICES\",\"byteLength\":41472,\"durationMilliseconds\":0}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":12,\"event\":\"CANDIDATE_CONSTRUCTION_COMPLETED\",\"performanceMilliseconds\":523.3,\"detail\":{\"completeSampleCount\":3577,\"durationMilliseconds\":95.69999999999709,\"mainThreadHeartbeatCount\":3,\"longestSingleMainThreadBlockMilliseconds\":0.19999999999708962}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":13,\"event\":\"FIRST_GPU_BUFFER_UPLOAD\",\"performanceMilliseconds\":523.6,\"detail\":{\"byteLength\":42924}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":14,\"event\":\"ALL_GPU_BUFFERS_UPLOADED\",\"performanceMilliseconds\":524.2,\"detail\":{\"uploadCount\":8,\"durationMilliseconds\":0.8000000000029104}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":15,\"event\":\"FIRST_FRAME_PRESENTED\",\"performanceMilliseconds\":632.4,\"detail\":{\"frameCount\":1}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":16,\"event\":\"READY_SENTINEL_WRITTEN\",\"performanceMilliseconds\":632.9,\"detail\":{\"totalReadyDurationMilliseconds\":205.20000000001164,\"firstFramePresented\":true}}"
+          },
+          {
+            "type": "info",
+            "text": "R1_8_TRACE:{\"sequence\":17,\"event\":\"DYNAMIC_IMPORT_RESOLVED\",\"performanceMilliseconds\":633,\"detail\":null}"
+          }
+        ],
+        "pageErrors": [],
+        "crashes": []
+      },
+      "pageState": {
+        "href": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+        "ready": "ready",
+        "bootstrap": "resolved",
+        "runtimeTrace": [
+          {
+            "sequence": 1,
+            "event": "DOCUMENT_ELEMENT_AVAILABLE",
+            "performanceMilliseconds": 98,
+            "detail": null
+          },
+          {
+            "sequence": 2,
+            "event": "DOMCONTENTLOADED",
+            "performanceMilliseconds": 108.5,
+            "detail": null
+          },
+          {
+            "sequence": 3,
+            "event": "DYNAMIC_IMPORT_STARTED",
+            "performanceMilliseconds": 108.6,
+            "detail": null
+          },
+          {
+            "sequence": 4,
+            "event": "WEBGL_CONTEXT_REQUESTED",
+            "performanceMilliseconds": 418.3,
+            "detail": null
+          },
+          {
+            "sequence": 5,
+            "event": "WEBGL_CONTEXT_ESTABLISHED",
+            "performanceMilliseconds": 426.5,
+            "detail": {
+              "established": true
+            }
+          },
+          {
+            "sequence": 6,
+            "event": "CANDIDATE_CONSTRUCTION_STARTED",
+            "performanceMilliseconds": 427.5,
+            "detail": {
+              "option": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH"
+            }
+          },
+          {
+            "sequence": 7,
+            "event": "MAIN_THREAD_HEARTBEAT",
+            "performanceMilliseconds": 452.8,
+            "detail": {
+              "count": 1,
+              "driftMilliseconds": 0.19999999999708962
+            }
+          },
+          {
+            "sequence": 8,
+            "event": "MAIN_THREAD_HEARTBEAT",
+            "performanceMilliseconds": 477.7,
+            "detail": {
+              "count": 2,
+              "driftMilliseconds": 0
+            }
+          },
+          {
+            "sequence": 9,
+            "event": "MAIN_THREAD_HEARTBEAT",
+            "performanceMilliseconds": 502.8,
+            "detail": {
+              "count": 3,
+              "driftMilliseconds": 0
+            }
+          },
+          {
+            "sequence": 10,
+            "event": "FIRST_CONSTRUCTION_BATCH_COMPLETED",
+            "performanceMilliseconds": 516.4,
+            "detail": {
+              "batchIndex": 0,
+              "name": "TERRAIN_POSITIONS",
+              "byteLength": 42924,
+              "durationMilliseconds": 0.09999999999126885
+            }
+          },
+          {
+            "sequence": 11,
+            "event": "LAST_CONSTRUCTION_BATCH_COMPLETED",
+            "performanceMilliseconds": 521,
+            "detail": {
+              "batchIndex": 7,
+              "name": "WATER_INDICES",
+              "byteLength": 41472,
+              "durationMilliseconds": 0
+            }
+          },
+          {
+            "sequence": 12,
+            "event": "CANDIDATE_CONSTRUCTION_COMPLETED",
+            "performanceMilliseconds": 523.3,
+            "detail": {
+              "completeSampleCount": 3577,
+              "durationMilliseconds": 95.69999999999709,
+              "mainThreadHeartbeatCount": 3,
+              "longestSingleMainThreadBlockMilliseconds": 0.19999999999708962
+            }
+          },
+          {
+            "sequence": 13,
+            "event": "FIRST_GPU_BUFFER_UPLOAD",
+            "performanceMilliseconds": 523.6,
+            "detail": {
+              "byteLength": 42924
+            }
+          },
+          {
+            "sequence": 14,
+            "event": "ALL_GPU_BUFFERS_UPLOADED",
+            "performanceMilliseconds": 524.2,
+            "detail": {
+              "uploadCount": 8,
+              "durationMilliseconds": 0.8000000000029104
+            }
+          },
+          {
+            "sequence": 15,
+            "event": "FIRST_FRAME_PRESENTED",
+            "performanceMilliseconds": 632.4,
+            "detail": {
+              "frameCount": 1
+            }
+          },
+          {
+            "sequence": 16,
+            "event": "READY_SENTINEL_WRITTEN",
+            "performanceMilliseconds": 632.9,
+            "detail": {
+              "totalReadyDurationMilliseconds": 205.20000000001164,
+              "firstFramePresented": true
+            }
+          },
+          {
+            "sequence": 17,
+            "event": "DYNAMIC_IMPORT_RESOLVED",
+            "performanceMilliseconds": 633,
+            "detail": null
+          }
+        ],
+        "carrierTrace": [
+          {
+            "sequence": 1,
+            "event": "WEBGL_CONTEXT_ESTABLISHED",
+            "performanceMilliseconds": 426.5,
+            "detail": {
+              "established": true
+            }
+          },
+          {
+            "sequence": 2,
+            "event": "MESH_FETCH_STARTED",
+            "performanceMilliseconds": 482.6,
+            "detail": {
+              "requested": "./h-earth.c2-r1.r1-8-review-mesh.bin"
+            }
+          },
+          {
+            "sequence": 3,
+            "event": "MESH_FETCH_COMPLETED",
+            "performanceMilliseconds": 507.9,
+            "detail": {
+              "requested": "./h-earth.c2-r1.r1-8-review-mesh.bin",
+              "finalUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+              "status": 200,
+              "contentType": "application/octet-stream",
+              "contentLength": "340144"
+            }
+          }
+        ],
+        "receipt": {
+          "schema": "H_EARTH_C2_R1_R1_8_REVIEW_RUNTIME_RECEIPT_v2",
+          "sourceHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+          "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+          "contractId": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+          "rendererContract": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+          "meshContractId": "H_EARTH_C2_R1_R1_8_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH_v1",
+          "materializationOption": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH",
+          "asset": {
+            "file": "h-earth.c2-r1.r1-8-review-mesh.bin",
+            "byteLength": 340144,
+            "sha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77",
+            "fetchDurationMs": 33.5,
+            "format": "H_EARTH_C2_R1_R1_8_REVIEW_MESH_BINARY_LE_v1"
+          },
+          "webgl2ContextEstablished": true,
+          "meshReady": true,
+          "frameCount": 3,
+          "presentationCount": 3,
+          "candidateMaterialSampleCount": 3577,
+          "waterBreakerSwashRuntimeSampleCount": 1,
+          "macroDifferentialCount": 3577,
+          "macroExpressionActive": true,
+          "coastalMaterialChainActive": true,
+          "waterBreakerSwashChainActive": true,
+          "pointerEventCount": 0,
+          "touchEventCount": 0,
+          "navigationEventCount": 0,
+          "cameraRevision": 1,
+          "camera": {
+            "position": [
+              0,
+              58,
+              -205
+            ],
+            "target": [
+              0,
+              12,
+              112
+            ],
+            "direction": [
+              0,
+              -0.143606,
+              0.989635
+            ],
+            "fovDegrees": 44,
+            "revision": 1,
+            "view": "DISTANT_LANDSCAPE"
+          },
+          "lastWaterSample": {
+            "foamIntensity": 0.28416881245165343,
+            "foamOpacity": 0.19323479246712436,
+            "temporaryWetness": 0,
+            "waterSurfaceOpacity": 0.3428370610146527
+          },
+          "meshIdentity": {
+            "completeSampleCount": 3577,
+            "vertexCount": 5390,
+            "indexCount": 31104,
+            "positionBufferByteLength": 64680,
+            "normalBufferByteLength": 64680,
+            "materialControlBufferByteLength": 86240,
+            "indexBufferByteLength": 124416,
+            "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+            "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+            "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+            "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+          },
+          "expectedMeshIdentity": {
+            "completeSampleCount": 3577,
+            "vertexCount": 5390,
+            "indexCount": 31104,
+            "positionBufferByteLength": 64680,
+            "normalBufferByteLength": 64680,
+            "materialControlBufferByteLength": 86240,
+            "indexBufferByteLength": 124416,
+            "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+            "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+            "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+            "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+          },
+          "exactReviewGeometryPreserved": true,
+          "construction": {
+            "totalConstructionDurationMs": 95.69999999999709,
+            "longestSingleMainThreadBlockMs": 0.19999999999708962,
+            "mainThreadHeartbeatCountDuringConstruction": 3,
+            "batchDurations": [
+              {
+                "batchIndex": 0,
+                "name": "TERRAIN_POSITIONS",
+                "byteLength": 42924,
+                "durationMilliseconds": 0.09999999999126885
+              },
+              {
+                "batchIndex": 1,
+                "name": "TERRAIN_NORMALS",
+                "byteLength": 42924,
+                "durationMilliseconds": 0
+              },
+              {
+                "batchIndex": 2,
+                "name": "TERRAIN_MATERIAL_CONTROLS",
+                "byteLength": 57232,
+                "durationMilliseconds": 0.10000000000582077
+              },
+              {
+                "batchIndex": 3,
+                "name": "TERRAIN_INDICES",
+                "byteLength": 82944,
+                "durationMilliseconds": 0.09999999999126885
+              },
+              {
+                "batchIndex": 4,
+                "name": "WATER_POSITIONS",
+                "byteLength": 21756,
+                "durationMilliseconds": 0
+              },
+              {
+                "batchIndex": 5,
+                "name": "WATER_NORMALS",
+                "byteLength": 21756,
+                "durationMilliseconds": 0
+              },
+              {
+                "batchIndex": 6,
+                "name": "WATER_MATERIAL_CONTROLS",
+                "byteLength": 29008,
+                "durationMilliseconds": 0
+              },
+              {
+                "batchIndex": 7,
+                "name": "WATER_INDICES",
+                "byteLength": 41472,
+                "durationMilliseconds": 0
+              }
+            ],
+            "firstGpuBufferUploadAt": 523.6000000000058,
+            "allGpuBuffersUploadedAt": 524.2000000000116,
+            "gpuUploadDurationMs": 0.8000000000029104,
+            "firstFrameAt": 632.4000000000087,
+            "readyAt": 632.7000000000116,
+            "totalReadyDurationMs": 205.20000000001164
+          },
+          "noBitmapDragFallback": true,
+          "rendererLifecycleMutated": false,
+          "terrainGeometryMutated": false,
+          "publicDefaultRouteMutated": false,
+          "productDefaultMutated": false,
+          "visualSuccessorStatus": "NOT_ESTABLISHED",
+          "userDifferentialRequired": true,
+          "viewport": {
+            "width": 1254,
+            "height": 590,
+            "devicePixelRatio": 1
+          },
+          "ready": true
+        }
+      }
+    },
+    "classifications": []
+  },
+  "mixedOrigins": [],
+  "recordedAt": "2026-08-01T08:26:50.539Z"
+}

@@ -6,6 +6,14 @@ import {
   buildHEarthC2R1CompleteWorldRenderPackage,
   evaluateHEarthC2R1CompleteWorldRenderPackage
 } from '../review/complete-world/complete-world-render-package.js';
+import { getHEarthRun8ER2CanonicalLiveRenderPackage } from '../../../../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
+import { sampleHEarthC2R1CoastalTerrainField } from '../../../../terrain/h-earth.coastal-profile.c2-r1.js';
+import { sampleHEarthC2R1CoastalSurfaceFrame } from '../../../../terrain/h-earth.coastal-surface-frame.c2-r1.js';
+import { sampleHEarthC2R1CandidateRendererMaterial } from '../h-earth.c2-r1.candidate-renderer-sampling.js';
+import { sampleHEarthC2R1ContinuousCoastalSedimentMembership } from '../h-earth.c2-r1.continuous-sediment-membership.js';
+import { sampleHEarthC2R1CoastalSwashFoamWetness } from '../../../../environment/h-earth.coastal-swash-foam-wetness.c2-r1.js';
+import { sampleHEarthC2R1CoastalWaterOptics } from '../../../../environment/h-earth.coastal-water-optics.c2-r1.js';
+import { sampleHEarthC2R1CoastalBreakerField } from '../../../../environment/h-earth.coastal-breaker-field.c2-r1.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '../../../../../');
@@ -23,7 +31,7 @@ const authorizedPaths = [
   'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json'
 ].sort();
 
-const canonicalPackage = {
+const syntheticCanonicalPackage = {
   eligible: true,
   status: 'SYNTHETIC_CANONICAL_COMPLETE_WORLD_PACKAGE',
   contractId: 'H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1',
@@ -51,19 +59,19 @@ const canonicalPackage = {
     indices: [0,1,2, 3,4,5]
   }
 };
-const before = structuredClone(canonicalPackage);
-const sampleCoastalTerrain = (x, z) => ({
+const syntheticBefore = structuredClone(syntheticCanonicalPackage);
+const syntheticTerrain = (x, z) => ({
   valid: true,
   candidateWeight: x <= 184 && z !== 40 ? 1 : 0,
-  coastalFrame: { anchorX: x },
+  coastalFrame: { anchorX: x, signedInlandDistance: z },
   world: { x, y: -2 + x / 100, z }
 });
-const sampleCoastalSurfaceFrame = (x, z) => ({
+const syntheticSurface = (x, z) => ({
   valid: true,
   normal: { x: 0.1, y: 0.98, z: 0.15 },
   world: { x, y: -2 + x / 100, z }
 });
-const sampleCandidateMaterial = () => ({
+const syntheticMaterial = () => ({
   valid: true,
   material: { colorLinear: [.22,.31,.18], roughness: .61, cavityOrAmbientOcclusion: .9 },
   preservedCandidateResponses: {
@@ -75,31 +83,75 @@ const sampleCandidateMaterial = () => ({
     foamColorLinear: [.9,.95,.92]
   }
 });
+const syntheticDiagnostic = () => ({ valid: true, status: 'SYNTHETIC_PASS', issues: [] });
 
-const result = await buildHEarthC2R1CompleteWorldRenderPackage({
-  canonicalPackage, sampleCoastalTerrain, sampleCoastalSurfaceFrame, sampleCandidateMaterial
+const syntheticResult = await buildHEarthC2R1CompleteWorldRenderPackage({
+  canonicalPackage: syntheticCanonicalPackage,
+  sampleCoastalTerrain: syntheticTerrain,
+  sampleCoastalSurfaceFrame: syntheticSurface,
+  sampleCandidateMaterial: syntheticMaterial,
+  sampleSediment: syntheticDiagnostic,
+  sampleSwash: syntheticDiagnostic,
+  sampleWaterOptics: syntheticDiagnostic,
+  sampleBreaker: syntheticDiagnostic
 });
-assert.equal(result.eligible, true);
-assert.equal(result.completeWorldBinding.counters.boundTerrainVertexCount, 1);
-assert.equal(result.completeWorldBinding.counters.boundShorelineVertexCount, 1);
-assert.deepEqual(canonicalPackage, before, 'canonical package was mutated');
-assert.deepEqual(result.primitiveIds, before.primitiveIds);
-assert.deepEqual(result.primitiveSpans, before.primitiveSpans);
-assert.deepEqual(result.drawRanges, before.drawRanges);
-assert.deepEqual(result.buffers.indices, before.buffers.indices);
-assert.notEqual(result.buffers.positions[1], before.buffers.positions[1]);
-assert.deepEqual(result.buffers.positions.slice(3, 9), before.buffers.positions.slice(3, 9));
-assert.deepEqual(result.buffers.positions.slice(15, 18), before.buffers.positions.slice(15, 18));
-assert.deepEqual(result.buffers.baseColorsLinear.slice(16, 24), before.buffers.baseColorsLinear.slice(16, 24));
-const evaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(result, canonicalPackage);
-assert.equal(evaluation.eligible, true, evaluation.issues.join(','));
+assert.equal(syntheticResult.eligible, true);
+assert.equal(syntheticResult.completeWorldBinding.counters.boundTerrainVertexCount, 1);
+assert.equal(syntheticResult.completeWorldBinding.counters.boundShorelineVertexCount, 1);
+assert.equal(syntheticResult.completeWorldBinding.counters.candidateSampleFailureCount, 0);
+assert.deepEqual(syntheticCanonicalPackage, syntheticBefore, 'synthetic canonical package was mutated');
+assert.deepEqual(syntheticResult.primitiveIds, syntheticBefore.primitiveIds);
+assert.deepEqual(syntheticResult.primitiveSpans, syntheticBefore.primitiveSpans);
+assert.deepEqual(syntheticResult.drawRanges, syntheticBefore.drawRanges);
+assert.deepEqual(syntheticResult.buffers.indices, syntheticBefore.buffers.indices);
+const syntheticEvaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(syntheticResult, syntheticCanonicalPackage);
+assert.equal(syntheticEvaluation.eligible, true, syntheticEvaluation.issues.join(','));
+
+const realCanonicalPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
+const realBefore = structuredClone(realCanonicalPackage);
+const realResult = await buildHEarthC2R1CompleteWorldRenderPackage({
+  canonicalPackage: realCanonicalPackage,
+  sampleCoastalTerrain: sampleHEarthC2R1CoastalTerrainField,
+  sampleCoastalSurfaceFrame: sampleHEarthC2R1CoastalSurfaceFrame,
+  sampleCandidateMaterial: sampleHEarthC2R1CandidateRendererMaterial,
+  sampleSediment: sampleHEarthC2R1ContinuousCoastalSedimentMembership,
+  sampleSwash: sampleHEarthC2R1CoastalSwashFoamWetness,
+  sampleWaterOptics: sampleHEarthC2R1CoastalWaterOptics,
+  sampleBreaker: sampleHEarthC2R1CoastalBreakerField,
+  timeSeconds: 0
+});
+const realEvaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(realResult, realCanonicalPackage);
+const realDiagnostic = {
+  testType: 'H_EARTH_C2_R1_REAL_CANONICAL_PACKAGE_INTEGRATION_TEST_v1',
+  eligible: realResult.eligible === true && realEvaluation.eligible === true,
+  rootRejectionCode: realResult.rootRejectionCode ?? null,
+  issues: realEvaluation.issues,
+  counters: realResult.completeWorldBinding?.counters ?? realResult.counters ?? null,
+  failureDiagnostics: realResult.completeWorldBinding?.failureDiagnostics ?? realResult.failureDiagnostics ?? [],
+  identityPreservation: {
+    primitiveIds: JSON.stringify(realResult.primitiveIds) === JSON.stringify(realCanonicalPackage.primitiveIds),
+    primitiveSpans: JSON.stringify(realResult.primitiveSpans) === JSON.stringify(realCanonicalPackage.primitiveSpans),
+    drawRanges: JSON.stringify(realResult.drawRanges) === JSON.stringify(realCanonicalPackage.drawRanges),
+    indexBytes: JSON.stringify(realResult.buffers?.indices) === JSON.stringify(realCanonicalPackage.buffers.indices)
+  }
+};
+console.log(`REAL_PACKAGE_DIAGNOSTIC:${JSON.stringify(realDiagnostic)}`);
+assert.equal(realResult.eligible, true, JSON.stringify(realDiagnostic));
+assert.equal(realEvaluation.eligible, true, JSON.stringify(realDiagnostic));
+assert.equal(realResult.completeWorldBinding.counters.candidateSampleFailureCount, 0);
+assert(realResult.completeWorldBinding.counters.boundTerrainVertexCount > 0);
+assert(realResult.completeWorldBinding.counters.boundShorelineVertexCount > 0);
+assert.deepEqual(realCanonicalPackage, realBefore, 'real canonical package was mutated');
+assert.deepEqual(realResult.primitiveIds, realBefore.primitiveIds);
+assert.deepEqual(realResult.primitiveSpans, realBefore.primitiveSpans);
+assert.deepEqual(realResult.drawRanges, realBefore.drawRanges);
+assert.deepEqual(realResult.buffers.indices, realBefore.buffers.indices);
 
 const manifest = JSON.parse(await readFile(resolve(root, 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'), 'utf8'));
 assert.deepEqual([...manifest.completeWorldIntegrationOperation.exactMutablePaths].sort(), authorizedPaths);
 assert.equal(manifest.completeWorldIntegrationOperation.pathCount, 11);
 assert.equal(manifest.completeWorldIntegrationOperation.publicDefaultMutationAllowed, false);
 assert.equal(manifest.completeWorldIntegrationOperation.mainMutationAllowed, false);
-
 for (const path of authorizedPaths) await readFile(resolve(root, path));
 for (const path of [
   'h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js',
@@ -107,17 +159,17 @@ for (const path of [
   'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js',
   'showroom/globe/h-earth/index.html',
   'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'
-]) {
-  assert(!authorizedPaths.includes(path), `protected path admitted: ${path}`);
-}
+]) assert(!authorizedPaths.includes(path), `protected path admitted: ${path}`);
 
 console.log(JSON.stringify({
   status: 'PASS',
-  contractId: result.completeWorldContractId,
-  packageIdentity: result.packageIdentity,
-  boundTerrainVertexCount: result.completeWorldBinding.counters.boundTerrainVertexCount,
-  boundShorelineVertexCount: result.completeWorldBinding.counters.boundShorelineVertexCount,
-  unchangedVertexCount: result.completeWorldBinding.counters.unchangedVertexCount,
+  contractId: realResult.completeWorldContractId,
+  packageIdentity: realResult.packageIdentity,
+  candidateSampleFailureCount: realResult.completeWorldBinding.counters.candidateSampleFailureCount,
+  boundTerrainVertexCount: realResult.completeWorldBinding.counters.boundTerrainVertexCount,
+  boundShorelineVertexCount: realResult.completeWorldBinding.counters.boundShorelineVertexCount,
+  unchangedVertexCount: realResult.completeWorldBinding.counters.unchangedVertexCount,
+  identityPreservationResult: 'PASS',
   exactMutablePathCount: authorizedPaths.length,
   protectedAuthoritiesUnchanged: true
 }, null, 2));

@@ -1,0 +1,74 @@
+name: CP6-3 pull-request execution carrier
+
+on:
+  pull_request:
+    branches:
+      - agent/laws-cp6-2-eight-standalone-destinations-001
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cp6-3-pull-request-execution-carrier
+  cancel-in-progress: false
+
+jobs:
+  execute-existing-program:
+    if: github.head_ref == 'agent/laws-cp6-3-canonical-content-migration-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact CP6-3 branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Confirm bounded carrier state
+        shell: bash
+        run: |
+          set -euo pipefail
+          CP62=5ae3e5524926653f3c348dde5363e8765ad425cc
+          mapfile -t paths < <(git diff --name-only "$CP62"..HEAD | sort)
+          printf '%s\n' "${paths[@]}"
+          test "${#paths[@]}" -eq 2
+          test "${paths[0]}" = ".github/workflows/cp6-3-canonical-content-migration.yml"
+          test "${paths[1]}" = ".github/workflows/cp6-3-pr-trigger.yml"
+
+      - name: Install extraction and browser dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check beautifulsoup4 playwright
+          python3 -m playwright install chromium
+
+      - name: Extract and execute the controlling CP6-3 program
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import textwrap
+          workflow = Path('.github/workflows/cp6-3-canonical-content-migration.yml').read_text(encoding='utf-8')
+          start_marker = "cat > /tmp/cp63.py <<'PY'\n"
+          start = workflow.index(start_marker) + len(start_marker)
+          end = workflow.index("\n          PY\n          python3 /tmp/cp63.py", start)
+          Path('/tmp/cp63.py').write_text(textwrap.dedent(workflow[start:end]), encoding='utf-8')
+          PY
+          rm -f .github/workflows/cp6-3-pr-trigger.yml
+          python3 /tmp/cp63.py
+
+      - name: Commit verified CP6-3 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "CP6-3 migrate and verify 48 canonical content rows"
+          git push origin HEAD:agent/laws-cp6-3-canonical-content-migration-001

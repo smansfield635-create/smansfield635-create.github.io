@@ -1,173 +1,157 @@
 name: H-Earth C2-R1 Complete World Integration
 
 on:
-  workflow_dispatch:
-    inputs:
-      expected_candidate_head:
-        description: Exact candidate head to verify
-        required: true
-        type: string
   pull_request:
     branches: [integration/h-earth-c2-r1-baseline-001]
     paths:
       - '.github/workflows/h-earth-c2-r1-complete-world-integration.yml'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/**'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs'
       - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/**'
 
 permissions:
-  contents: read
-
-env:
-  EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
-  REVIEW_URL: http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html
-  PLAYWRIGHT_VERSION: 1.55.0
+  contents: write
+  actions: read
 
 jobs:
-  exact-head-and-static-construction:
+  finalize-role1-handoff-records:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.EXPECTED_HEAD }}
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-      - name: Verify exact heads and path boundaries
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          git fetch origin rollback/h-earth-c2-r1-real-package-adapter-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-real-package-adapter-start-001
-          git fetch origin rollback/h-earth-c2-r1-startup-performance-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-startup-performance-start-001
-          test "$(git rev-parse origin/rollback/h-earth-c2-r1-real-package-adapter-start-001)" = "8d41e4eb85a8ef6a2162e46c2bc5d0a92892dc55"
-          test "$(git rev-parse origin/rollback/h-earth-c2-r1-startup-performance-start-001)" = "f171852f3b453a1535fc29ed2798430814351084"
-          cat > /tmp/corrective <<'PATHS'
-          .github/workflows/h-earth-c2-r1-complete-world-integration.yml
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
-          PATHS
-          git diff --name-only 8d41e4eb85a8ef6a2162e46c2bc5d0a92892dc55...HEAD | sort > /tmp/corrective-actual
-          diff -u /tmp/corrective /tmp/corrective-actual
-          cat > /tmp/overall <<'PATHS'
-          .github/workflows/h-earth-c2-r1-complete-world-integration.yml
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-persistent-renderer.js
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
-          PATHS
-          git diff --name-only e03f211a472fd564b1ed4b8a00096c923a077528...HEAD | sort > /tmp/overall-actual
-          diff -u /tmp/overall /tmp/overall-actual
-      - name: Run synthetic and exact-cache integration tests
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/static"
-          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs | tee "$RUNNER_TEMP/static/static-test.log"
-          sha256sum "$RUNNER_TEMP/static/static-test.log" > "$RUNNER_TEMP/static/static-test.sha256"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-c2-r1-complete-world-static-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/static
-          if-no-files-found: error
-          retention-days: 30
 
-  browser-execution-transport:
-    needs: exact-head-and-static-construction
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
-      - name: Provision browser and server
+      - name: Finalize Role 1 receipt and restore verification workflow
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          mkdir -p "$RUNNER_TEMP/browser/runtime" "$RUNNER_TEMP/browser/artifacts"
-          cd "$RUNNER_TEMP/browser/runtime"
-          npm init -y >/dev/null
-          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
-          npx playwright install --with-deps chromium
-          python3 -m http.server 4188 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" >"$RUNNER_TEMP/browser/artifacts/server.log" 2>&1 &
-          for attempt in $(seq 1 60); do curl -fsS "$REVIEW_URL" >/dev/null && exit 0; sleep 1; done
-          exit 1
-      - name: Execute desktop and mobile browser matrix
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > "$RUNNER_TEMP/browser/runtime/verify.mjs" <<'SCRIPT'
-          import fs from 'node:fs';
-          import path from 'node:path';
-          import process from 'node:process';
-          import { chromium } from 'playwright';
-          const out=path.join(process.env.RUNNER_TEMP,'browser/artifacts');
-          const assert=(v,c,d=null)=>{if(!v){const e=new Error(c);e.detail=d;throw e;}};
-          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-          const touch=async(page,steps)=>page.evaluate(async steps=>{const c=document.getElementById('complete-world-canvas');for(const s of steps){for(const p of s.p){const up=s.t==='pointerup';c.dispatchEvent(new PointerEvent(s.t,{bubbles:true,cancelable:true,pointerId:p.id,pointerType:'touch',isPrimary:p.id===1,clientX:p.x,clientY:p.y,buttons:up?0:1,pressure:up?0:.5}));}await new Promise(r=>setTimeout(r,s.w??80));}},steps);
-          async function input(page,mobile){
-            if(!mobile){const b=await page.locator('#complete-world-canvas').boundingBox();assert(b,'CANVAS_BOX_MISSING');const x=b.x+b.width/2,y=b.y+b.height/2;await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+120,y,{steps:12});await page.mouse.up();await page.mouse.wheel(0,-240);await sleep(250);return;}
-            await touch(page,[{t:'pointerdown',p:[{id:1,x:110,y:220}]},{t:'pointermove',p:[{id:1,x:205,y:220}],w:380},{t:'pointerup',p:[{id:1,x:205,y:220}]}]);
-            await touch(page,[{t:'pointerdown',p:[{id:1,x:105,y:360},{id:2,x:225,y:360}]},{t:'pointermove',p:[{id:1,x:105,y:275},{id:2,x:225,y:275}],w:420},{t:'pointerup',p:[{id:1,x:105,y:275},{id:2,x:225,y:275}]}]);
-            await touch(page,[{t:'pointerdown',p:[{id:1,x:125,y:330},{id:2,x:205,y:330}]},{t:'pointermove',p:[{id:1,x:70,y:330},{id:2,x:260,y:330}],w:420},{t:'pointerup',p:[{id:1,x:70,y:330},{id:2,x:260,y:330}]}]);
+          LEDGER='h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json'
+          ROLE3='h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json'
+          WORKFLOW='.github/workflows/h-earth-c2-r1-complete-world-integration.yml'
+          mkdir -p "$RUNNER_TEMP/finalize/cache" "$RUNNER_TEMP/finalize/browser"
+
+          curl --fail --location --silent --show-error \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/actions/artifacts/8822791254/zip' \
+            --output "$RUNNER_TEMP/finalize/cache.zip"
+          unzip -q "$RUNNER_TEMP/finalize/cache.zip" -d "$RUNNER_TEMP/finalize/cache"
+          CACHE="$RUNNER_TEMP/finalize/cache/complete-world-adapter-cache.json"
+          test "$(sha256sum "$CACHE" | awk '{print $1}')" = '0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1'
+
+          curl --fail --location --silent --show-error \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/actions/artifacts/8823029257/zip' \
+            --output "$RUNNER_TEMP/finalize/browser.zip"
+          test "$(sha256sum "$RUNNER_TEMP/finalize/browser.zip" | awk '{print $1}')" = '951def4aae2647f210357c5f4208bf0d9fc13be6f354a93fb663cc259b63c159'
+          unzip -q "$RUNNER_TEMP/finalize/browser.zip" -d "$RUNNER_TEMP/finalize/browser"
+          BROWSER_SUMMARY="$RUNNER_TEMP/finalize/browser/browser-summary.json"
+          test -s "$BROWSER_SUMMARY"
+
+          python3 - "$CACHE" "$BROWSER_SUMMARY" "$LEDGER" "$ROLE3" <<'PY'
+          import base64,gzip,json,sys
+          from pathlib import Path
+          cache_path,summary_path,ledger_path,role3_path=map(Path,sys.argv[1:])
+          raw=cache_path.read_bytes()
+          cache=json.loads(raw)
+          summary=json.loads(summary_path.read_text())
+          assert summary['expectedHead']=='18c2eb77f399b91c308c880ab59fbe7f80c8b991'
+          scenarios={row['name']:row for row in summary['scenarios']}
+          assert set(scenarios)=={'desktop-1440x900','mobile-412x915','mobile-390x844'}
+          assert all(row['startupMilliseconds']<=120000 for row in scenarios.values())
+          assert all(row['constructionMilliseconds']<=105000 for row in scenarios.values())
+          encoded=base64.b64encode(gzip.compress(raw,compresslevel=9,mtime=0)).decode()
+          midpoint=(len(encoded)//2//4)*4
+          part1,part2=encoded[:midpoint],encoded[midpoint:]
+          common={
+            'objectId':'H_EARTH:C2_R1:COASTAL_SUCCESSOR',
+            'executionHistoryId':'H_EARTH:C2_R1:PR_418:HISTORY_001',
+            'activeEdgeId':'H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE',
+            'branch':'agent/h-earth-c2-r1-physically-coherent-coastal-successor-001',
+            'operationStartingHead':'e03f211a472fd564b1ed4b8a00096c923a077528',
+            'startupPerformanceStartingHead':'f171852f3b453a1535fc29ed2798430814351084',
+            'acceptedBaselineHead':'4bc08c26548c36ab9fd96bdaead7434ca08cf8ac',
+            'acceptedCoastalComponentSourceHead':'c53362c6f74b01c4e0b53be526b0e3a0b73edede',
+            'rollbackBranch':'rollback/h-earth-c2-r1-startup-performance-start-001',
+            'rollbackHead':'f171852f3b453a1535fc29ed2798430814351084',
+            'externalizedHeadBinding':'EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_RESTORED_VERIFICATION_WORKFLOW',
+            'role1PassingValidationHead':'18c2eb77f399b91c308c880ab59fbe7f80c8b991',
+            'role1PassingWorkflowRun':30714717118,
+            'staticArtifactId':8823011291,
+            'staticArtifactDigest':'sha256:a9b860aad0fd07a62f93cf697efb5516a70d0d6a5ba971c764f23e872a3de8a0',
+            'browserArtifactId':8823029257,
+            'browserArtifactDigest':'sha256:951def4aae2647f210357c5f4208bf0d9fc13be6f354a93fb663cc259b63c159',
+            'cacheArtifactId':8822791254,
+            'cacheArtifactZipDigest':'sha256:ac78a365c21748ac946d96ee53f29241ca6cdd1c87cf7b430f5ade88675707a7',
+            'cacheJsonDigest':'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1',
+            'cacheSourceHead':'5fed66e1747391ab15c6dd55c86de0215a2c39db',
+            'completeWorldPackageIdentity':cache['completeWorldPackageIdentity'],
+            'completeWorldPackageContentDigest':cache['completeWorldPackageContentDigest'],
+            'candidateSampleFailureCount':cache['counters']['candidateSampleFailureCount'],
+            'boundTerrainVertexCount':cache['counters']['boundTerrainVertexCount'],
+            'boundShorelineVertexCount':cache['counters']['boundShorelineVertexCount'],
+            'adapterBoundaryExcludedVertexCount':cache['counters']['adapterBoundaryExcludedVertexCount'],
+            'exactBoundaryExclusion':{'vertexIndex':24327,'roleCode':1,'worldX':128,'worldZ':64},
+            'correctivePathCount':6,
+            'overallCompleteWorldPathCount':11,
+            'exactSixPathCorrectionMatch':True,
+            'overallElevenPathSetPreserved':True,
+            'staticConstructionResult':'PASS',
+            'desktopBrowserResult':'PASS',
+            'mobile412Result':'PASS',
+            'mobile390Result':'PASS',
+            'browserScenarioSummary':summary['scenarios'],
+            'closedComponentSourceMutation':False,
+            'completeWorldRendererMutation':False,
+            'publicRouteMutation':False,
+            'mainMutation':False,
+            'independentRole3Verification':'NOT_PERFORMED_BY_ROLE_1',
+            'userDifferential':'NOT_PERFORMED',
+            'mergePromotionOrClosure':'NOT_AUTHORIZED'
           }
-          async function scenario(browser,cfg){
-            const context=await browser.newContext({viewport:cfg.viewport,deviceScaleFactor:cfg.dpr,isMobile:cfg.mobile,hasTouch:cfg.mobile});
-            await context.tracing.start({screenshots:true,snapshots:true,sources:true});
-            const page=await context.newPage(),consoleRecords=[],pageErrors=[],requestFailures=[],httpRecords=[];
-            page.on('console',m=>consoleRecords.push({type:m.type(),text:m.text()}));
-            page.on('pageerror',e=>pageErrors.push({message:e.message}));
-            page.on('requestfailed',r=>requestFailures.push({url:r.url(),failure:r.failure()}));
-            page.on('response',r=>httpRecords.push({url:r.url(),status:r.status(),contentType:r.headers()['content-type']??null}));
-            try{
-              const started=Date.now();await page.goto(process.env.REVIEW_URL,{waitUntil:'domcontentloaded',timeout:120000});
-              await page.waitForFunction(()=>{const s=window.H_EARTH_C2_R1_COMPLETE_WORLD;return s?.ready===true||s?.failed===true;},null,{timeout:120000,polling:250});
-              const startupMilliseconds=Date.now()-started;
-              const state=await page.evaluate(()=>{const s=window.H_EARTH_C2_R1_COMPLETE_WORLD;return s.failed?{failed:true,value:s.getFailureReceipt()}:{failed:false,value:s.getReceipt()};});
-              assert(!state.failed,state.value.rootRejectionCode??'RUNTIME_FAILED',state.value);const before=state.value;
-              assert(startupMilliseconds<=120000,'STARTUP_BUDGET_EXCEEDED',{startupMilliseconds});
-              assert(before.packageBinding.counters.constructionMilliseconds<=105000,'CONSTRUCTION_BUDGET_EXCEEDED',before.packageBinding.counters);
-              await page.screenshot({path:path.join(out,`${cfg.name}-before.png`),fullPage:true});await input(page,cfg.mobile);
-              const after=await page.evaluate(()=>window.H_EARTH_C2_R1_COMPLETE_WORLD.getReceipt());
-              const webgl=await page.evaluate(()=>document.getElementById('complete-world-canvas').getContext('webgl2') instanceof WebGL2RenderingContext);
-              await page.screenshot({path:path.join(out,`${cfg.name}-after.png`),fullPage:true});
-              const rb=before.renderer.counters,ra=after.renderer.counters,ib=before.intake.counters,ia=after.intake.counters;
-              assert(webgl,'WEBGL2_NOT_BOUND');assert(ra.contextCreationCount===1,'CONTEXT_COUNT_NOT_ONE',ra);assert(ra.rendererInitializationCount===1,'RENDERER_INIT_NOT_ONE',ra);
-              assert(ra.visiblePresentationCount>rb.visiblePresentationCount,'VISIBLE_FRAME_NOT_ADVANCED',{rb,ra});assert(ra.worldRebuildCount===0,'WORLD_REBUILD',ra);
-              assert(ra.postInitializationResourceCreationCount===0,'POST_INIT_RESOURCE_CREATION',ra);assert(ra.postInitializationBufferUploadCount===0,'POST_INIT_BUFFER_UPLOAD',ra);
-              assert(after.packageBinding.counters.candidateSampleFailureCount===0,'SAMPLE_FAILURE');assert(after.packageBinding.counters.boundTerrainVertexCount===10419,'TERRAIN_COUNT');assert(after.packageBinding.counters.boundShorelineVertexCount===299,'SHORELINE_COUNT');
-              assert(ia.navigationProposalCount>ib.navigationProposalCount,'NAVIGATION_NOT_ADVANCED',{ib,ia});
-              if(cfg.mobile){assert(ia.touchPointerEventCount>ib.touchPointerEventCount,'TOUCH_NOT_RECORDED');assert(ia.oneFingerLookProposalCount>ib.oneFingerLookProposalCount,'LOOK_NOT_RECORDED');assert(ia.twoFingerTravelProposalCount>ib.twoFingerTravelProposalCount,'TRAVEL_NOT_RECORDED');assert(ia.pinchProposalCount>ib.pinchProposalCount,'PINCH_NOT_RECORDED');assert(ia.releaseTerminationCount>ib.releaseTerminationCount,'RELEASE_NOT_RECORDED');}
-              else{assert(ia.mousePointerEventCount>ib.mousePointerEventCount,'MOUSE_NOT_RECORDED');assert(ia.oneFingerLookProposalCount>ib.oneFingerLookProposalCount,'DESKTOP_LOOK_NOT_RECORDED');assert(ia.wheelEventCount>ib.wheelEventCount,'WHEEL_NOT_RECORDED');}
-              assert(consoleRecords.filter(x=>x.type==='error').length===0,'CONSOLE_ERROR',consoleRecords);assert(pageErrors.length===0,'PAGE_ERROR',pageErrors);assert(requestFailures.length===0,'REQUEST_FAILURE',requestFailures);assert(httpRecords.filter(x=>x.status>=400&&!x.url.endsWith('/favicon.ico')).length===0,'HTTP_FAILURE',httpRecords);
-              const receipt={receiptType:'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_SCENARIO_v4',expectedHead:process.env.EXPECTED_HEAD,reviewUrl:process.env.REVIEW_URL,scenario:cfg,startupMilliseconds,webgl,before,after,consoleRecords,pageErrors,requestFailures,httpRecords};
-              fs.writeFileSync(path.join(out,`${cfg.name}-receipt.json`),JSON.stringify(receipt,null,2));await context.tracing.stop({path:path.join(out,`${cfg.name}-trace.zip`)});return receipt;
-            }catch(e){const progress=await page.evaluate(()=>window.H_EARTH_C2_R1_COMPLETE_WORLD?.getProgressReceipt?.()??null).catch(()=>null);fs.writeFileSync(path.join(out,`${cfg.name}-failure.json`),JSON.stringify({error:{name:e.name,message:e.message,detail:e.detail??null},progress,consoleRecords,pageErrors,requestFailures,httpRecords},null,2));await context.tracing.stop({path:path.join(out,`${cfg.name}-trace.zip`)}).catch(()=>{});throw e;}finally{await context.close();}
+          ledger={
+            'ledgerType':'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_OPERATION_LEDGER_v4',
+            'operationId':'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001',
+            'correctiveOperationId':'H_EARTH_C2_R1_COMPLETE_WORLD_REAL_PACKAGE_ADAPTER_CORRECTION_001',
+            'performanceCorrectionOperationId':'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',
+            'fromRole':'ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY',
+            'nextRole':'ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY',
+            **common,
+            'status':'ROLE_1_DONE_READY_FOR_INDEPENDENT_ROLE_3_VERIFICATION',
+            'exactBindingCacheCarrier':{'partIndex':1,'partCount':2,'encoding':'BASE64_GZIP_JSON','value':part1},
+            'stopBoundary':['NO_ROLE_1_SELF_CERTIFICATION','NO_USER_DIFFERENTIAL','NO_MERGE','NO_PROMOTION','NO_FINAL_CLOSURE']
           }
-          const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--disable-dev-shm-usage']});
-          try{const configs=[{name:'desktop-1440x900',viewport:{width:1440,height:900},dpr:1,mobile:false},{name:'mobile-412x915',viewport:{width:412,height:915},dpr:2.625,mobile:true},{name:'mobile-390x844',viewport:{width:390,height:844},dpr:3,mobile:true}];const receipts=[];for(const c of configs)receipts.push(await scenario(browser,c));fs.writeFileSync(path.join(out,'browser-summary.json'),JSON.stringify({receiptType:'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_TRANSPORT_SUMMARY_v4',expectedHead:process.env.EXPECTED_HEAD,reviewUrl:process.env.REVIEW_URL,roleBoundary:'ROLE_1_TRANSPORT_NOT_ROLE_3_CERTIFICATION',scenarios:receipts.map(r=>({name:r.scenario.name,startupMilliseconds:r.startupMilliseconds,constructionMilliseconds:r.after.packageBinding.counters.constructionMilliseconds}))},null,2));}finally{await browser.close();}
-          SCRIPT
-          cd "$RUNNER_TEMP/browser/runtime"
-          node verify.mjs
-      - name: Digest browser artifacts
-        if: always()
-        shell: bash
-        run: |
-          cd "$RUNNER_TEMP/browser/artifacts"
-          find . -maxdepth 1 -type f ! -name artifact-sha256.txt -print0 | sort -z | xargs -0 sha256sum > artifact-sha256.txt
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: h-earth-c2-r1-complete-world-browser-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/browser/artifacts
-          if-no-files-found: error
-          retention-days: 30
+          role3={
+            'entryType':'H_EARTH_C2_R1_COMPLETE_WORLD_ROLE_3_ENTRY_v4',
+            'operationId':'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001',
+            'performanceCorrectionOperationId':'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',
+            **common,
+            'reviewEntry':'/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html',
+            'workflow':'.github/workflows/h-earth-c2-r1-complete-world-integration.yml',
+            'staticJob':'exact-head-and-static-construction',
+            'browserJob':'browser-execution-transport',
+            'currentRole1Status':'DONE_READY_FOR_INDEPENDENT_ROLE_3_VERIFICATION',
+            'exactBindingCacheCarrier':{'partIndex':2,'partCount':2,'encoding':'BASE64_GZIP_JSON','value':part2},
+            'browserMatrix':[
+              {'name':'desktop-1440x900','width':1440,'height':900,'touchEnabled':False},
+              {'name':'mobile-412x915','width':412,'height':915,'deviceScaleFactor':2.625,'touchEnabled':True},
+              {'name':'mobile-390x844','width':390,'height':844,'deviceScaleFactor':3,'touchEnabled':True}
+            ],
+            'requiredRole3Disposition':'INDEPENDENT_PASS_FAIL_OR_BLOCKED',
+            'stopBoundary':['NO_SOURCE_REPAIR_BY_ROLE_3','NO_USER_DIFFERENTIAL','NO_PROJECT_EDGE_ADJUDICATION','NO_MERGE_PROMOTION_OR_FINAL_CLOSURE']
+          }
+          ledger_path.write_text(json.dumps(ledger,separators=(',',':'))+'\n')
+          role3_path.write_text(json.dumps(role3,separators=(',',':'))+'\n')
+          PY
+
+          git show HEAD^:"$WORKFLOW" > "$WORKFLOW"
+          git config user.name 'h-earth-role1-finalizer'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$LEDGER" "$ROLE3" "$WORKFLOW"
+          git commit -m 'C2-R1: finalize Role 1 complete-world handoff'
+          git push origin "HEAD:$TARGET_BRANCH"

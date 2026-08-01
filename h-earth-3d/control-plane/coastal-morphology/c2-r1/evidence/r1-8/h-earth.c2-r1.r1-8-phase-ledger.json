@@ -7,7 +7,7 @@
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
   "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8a-c1-start-001",
-  "controllingStatus": "R1.8A_PASS_RECORDED",
+  "controllingStatus": "R1.8_BLOCKED_AT_R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
   "executionIdentityLaw": {
     "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "pullRequestExpectedCandidateHead": "github.event.pull_request.head.sha",
@@ -107,9 +107,26 @@
         "mainMutated": false
       },
       "blocker": null
+    },
+    {
+      "id": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
+      "status": "BLOCKED",
+      "recordedAt": "2026-08-01T05:40:34.900Z",
+      "evidence": {},
+      "blocker": {
+        "code": "page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html\", waiting until \"domcontentloaded\"\n",
+        "detail": "page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html\", waiting until \"domcontentloaded\"\n\n    at inspectPage (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:218:31)\n    at verifyOccurrence (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:337:27)\n    at async main (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:414:20)\n    at async file:///home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:635:3",
+        "phase": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
+        "recordedAt": "2026-08-01T05:40:34.900Z"
+      }
     }
   ],
-  "firstBlocker": null,
+  "firstBlocker": {
+    "code": "page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html\", waiting until \"domcontentloaded\"\n",
+    "detail": "page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html\", waiting until \"domcontentloaded\"\n\n    at inspectPage (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:218:31)\n    at verifyOccurrence (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:337:27)\n    at async main (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:414:20)\n    at async file:///home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:635:3",
+    "phase": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
+    "recordedAt": "2026-08-01T05:40:34.900Z"
+  },
   "visualSuccessorStatus": "NOT_ESTABLISHED",
   "userDifferentialReady": false,
   "productDefaultMutated": false,
@@ -150,5 +167,6 @@
       }
     ]
   },
-  "updatedAt": "2026-08-01T05:39:33.429Z"
+  "updatedAt": "2026-08-01T05:40:34.900Z",
+  "r18aHead": "45d4117dd1ed49da5de38e5c4f573497ac58cd46"
 }

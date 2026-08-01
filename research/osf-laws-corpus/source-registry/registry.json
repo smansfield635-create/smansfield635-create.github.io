@@ -1,9 +1,9 @@
 {
   "registry_id": "OSF_LAWS_CHAMBER_SOURCE_REGISTRY_v1",
-  "generated_at": "2026-08-01T16:49:00.254267+00:00",
+  "generated_at": "2026-08-01T16:52:18.521399+00:00",
   "source_repository": "smansfield635-create/smansfield635-create.github.io",
   "source_branch": "agent/osf-laws-source-registry-001",
-  "source_head": "a87a64bca76faf332f32e54b44dc0de0dcb59814",
+  "source_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d",
   "source_manifest_generated_at": "2026-08-01T07:59:03.189206+00:00",
   "claim_boundary": "Source review and placement only. Registration, public availability, file recovery, or Chamber admission does not establish correctness, novelty, empirical validation, replication, or cross-domain generality.",
   "summary": {
@@ -27,6 +27,10 @@
       "EXCLUDED": 2
     },
     "wiki_status_counts": {
+      "ABSENT": 15,
+      "REVIEWED": 16
+    },
+    "wiki_history_status_counts": {
       "ABSENT": 15,
       "REVIEWED": 16
     }
@@ -77,7 +81,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -137,7 +143,9 @@
         "registrations_status": "SELF_REGISTRATION",
         "registrations_count": 1,
         "file_versions_status": "REVIEWED",
-        "file_version_count": 5
+        "file_version_count": 5,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -157,7 +165,7 @@
         "harvested": "2026-08-01T07:55:21.255840+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 2,
       "ATTACHMENTS_REVIEWED": 2,
       "FILE_HASHES": {
@@ -187,13 +195,52 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "REVIEWED",
-        "file_version_count": 2
+        "file_version_count": 2,
+        "wiki_history_version_count": 21,
+        "wiki_history_details": [
+          {
+            "wiki_id": "mtdbs",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/mtdbs/versions/"
+          },
+          {
+            "wiki_id": "rwqp5",
+            "status": "REVIEWED",
+            "version_count": 6,
+            "url": "https://api.osf.io/v2/wikis/rwqp5/versions/"
+          },
+          {
+            "wiki_id": "f65mu",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/f65mu/versions/"
+          },
+          {
+            "wiki_id": "ahzsy",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/ahzsy/versions/"
+          },
+          {
+            "wiki_id": "sg6an",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/sg6an/versions/"
+          },
+          {
+            "wiki_id": "w2kux",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/w2kux/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -213,7 +260,7 @@
         "harvested": "2026-08-01T07:55:30.151989+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 2,
       "ATTACHMENTS_REVIEWED": 2,
       "FILE_HASHES": {
@@ -242,13 +289,46 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "REVIEWED",
-        "file_version_count": 2
+        "file_version_count": 2,
+        "wiki_history_version_count": 18,
+        "wiki_history_details": [
+          {
+            "wiki_id": "hjkcp",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/hjkcp/versions/"
+          },
+          {
+            "wiki_id": "e6kpn",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/e6kpn/versions/"
+          },
+          {
+            "wiki_id": "2zc7f",
+            "status": "REVIEWED",
+            "version_count": 5,
+            "url": "https://api.osf.io/v2/wikis/2zc7f/versions/"
+          },
+          {
+            "wiki_id": "j5fup",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/j5fup/versions/"
+          },
+          {
+            "wiki_id": "p3c2a",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/p3c2a/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -301,7 +381,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -352,7 +434,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -405,7 +489,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -425,7 +511,7 @@
         "harvested": "2026-08-01T07:57:57.396740+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -451,13 +537,40 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 16,
+        "wiki_history_details": [
+          {
+            "wiki_id": "74ru3",
+            "status": "REVIEWED",
+            "version_count": 10,
+            "url": "https://api.osf.io/v2/wikis/74ru3/versions/"
+          },
+          {
+            "wiki_id": "6bq9t",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/6bq9t/versions/"
+          },
+          {
+            "wiki_id": "zd9nr",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/zd9nr/versions/"
+          },
+          {
+            "wiki_id": "4eysa",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/4eysa/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -508,7 +621,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -561,7 +676,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -581,7 +698,7 @@
         "harvested": "2026-08-01T07:56:09.360307+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -607,13 +724,52 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 24,
+        "wiki_history_details": [
+          {
+            "wiki_id": "hvkf4",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/hvkf4/versions/"
+          },
+          {
+            "wiki_id": "7qkjf",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/7qkjf/versions/"
+          },
+          {
+            "wiki_id": "74bkg",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/74bkg/versions/"
+          },
+          {
+            "wiki_id": "etfvj",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/etfvj/versions/"
+          },
+          {
+            "wiki_id": "9s54w",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/9s54w/versions/"
+          },
+          {
+            "wiki_id": "z57qy",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/z57qy/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -666,7 +822,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -686,7 +844,7 @@
         "harvested": "2026-08-01T07:56:48.016539+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -711,13 +869,28 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 8,
+        "wiki_history_details": [
+          {
+            "wiki_id": "zejfq",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/zejfq/versions/"
+          },
+          {
+            "wiki_id": "8dw3n",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/8dw3n/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -737,7 +910,7 @@
         "harvested": "2026-08-01T07:55:53.361042+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -764,13 +937,46 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 14,
+        "wiki_history_details": [
+          {
+            "wiki_id": "yw84h",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/yw84h/versions/"
+          },
+          {
+            "wiki_id": "ch2qy",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/ch2qy/versions/"
+          },
+          {
+            "wiki_id": "9c3bm",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/9c3bm/versions/"
+          },
+          {
+            "wiki_id": "w6hbg",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/w6hbg/versions/"
+          },
+          {
+            "wiki_id": "7f2hm",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/7f2hm/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -824,7 +1030,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -844,7 +1052,7 @@
         "harvested": "2026-08-01T07:58:20.571377+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -870,13 +1078,40 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 13,
+        "wiki_history_details": [
+          {
+            "wiki_id": "z3fdx",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/z3fdx/versions/"
+          },
+          {
+            "wiki_id": "8u3yk",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/8u3yk/versions/"
+          },
+          {
+            "wiki_id": "sn3fy",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/sn3fy/versions/"
+          },
+          {
+            "wiki_id": "jf35g",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/jf35g/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -931,7 +1166,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -951,7 +1188,7 @@
         "harvested": "2026-08-01T07:56:17.072511+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -979,13 +1216,28 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 5,
+        "wiki_history_details": [
+          {
+            "wiki_id": "y4zsh",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/y4zsh/versions/"
+          },
+          {
+            "wiki_id": "2awy6",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/2awy6/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1005,7 +1257,7 @@
         "harvested": "2026-08-01T07:58:59.098935+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -1030,13 +1282,34 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 9,
+        "wiki_history_details": [
+          {
+            "wiki_id": "6sq9r",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/6sq9r/versions/"
+          },
+          {
+            "wiki_id": "s9jvy",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/s9jvy/versions/"
+          },
+          {
+            "wiki_id": "e3prj",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/e3prj/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1056,7 +1329,7 @@
         "harvested": "2026-08-01T07:56:01.655325+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 1,
       "ATTACHMENTS_REVIEWED": 1,
       "FILE_HASHES": {
@@ -1086,13 +1359,46 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "REVIEWED",
-        "file_version_count": 1
+        "file_version_count": 1,
+        "wiki_history_version_count": 11,
+        "wiki_history_details": [
+          {
+            "wiki_id": "kuzp3",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/kuzp3/versions/"
+          },
+          {
+            "wiki_id": "tckun",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/tckun/versions/"
+          },
+          {
+            "wiki_id": "zmdpc",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/zmdpc/versions/"
+          },
+          {
+            "wiki_id": "ck32n",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/ck32n/versions/"
+          },
+          {
+            "wiki_id": "63rmf",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/63rmf/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1143,7 +1449,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1195,7 +1503,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1215,7 +1525,7 @@
         "harvested": "2026-08-01T07:58:12.836964+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -1240,13 +1550,46 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 10,
+        "wiki_history_details": [
+          {
+            "wiki_id": "hzqma",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/hzqma/versions/"
+          },
+          {
+            "wiki_id": "kumy7",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/kumy7/versions/"
+          },
+          {
+            "wiki_id": "wga6b",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/wga6b/versions/"
+          },
+          {
+            "wiki_id": "47vse",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/47vse/versions/"
+          },
+          {
+            "wiki_id": "6jqve",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/6jqve/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1297,7 +1640,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1348,7 +1693,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1368,7 +1715,7 @@
         "harvested": "2026-08-01T07:58:36.016016+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -1395,13 +1742,46 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 28,
+        "wiki_history_details": [
+          {
+            "wiki_id": "fhezg",
+            "status": "REVIEWED",
+            "version_count": 5,
+            "url": "https://api.osf.io/v2/wikis/fhezg/versions/"
+          },
+          {
+            "wiki_id": "hk578",
+            "status": "REVIEWED",
+            "version_count": 5,
+            "url": "https://api.osf.io/v2/wikis/hk578/versions/"
+          },
+          {
+            "wiki_id": "t4bj7",
+            "status": "REVIEWED",
+            "version_count": 6,
+            "url": "https://api.osf.io/v2/wikis/t4bj7/versions/"
+          },
+          {
+            "wiki_id": "nt5zv",
+            "status": "REVIEWED",
+            "version_count": 6,
+            "url": "https://api.osf.io/v2/wikis/nt5zv/versions/"
+          },
+          {
+            "wiki_id": "p7jkb",
+            "status": "REVIEWED",
+            "version_count": 6,
+            "url": "https://api.osf.io/v2/wikis/p7jkb/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1454,7 +1834,9 @@
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 0,
+        "wiki_history_details": []
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1474,7 +1856,7 @@
         "harvested": "2026-08-01T07:55:10.733497+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -1499,13 +1881,52 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 19,
+        "wiki_history_details": [
+          {
+            "wiki_id": "e7ckf",
+            "status": "REVIEWED",
+            "version_count": 5,
+            "url": "https://api.osf.io/v2/wikis/e7ckf/versions/"
+          },
+          {
+            "wiki_id": "cm6ta",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/cm6ta/versions/"
+          },
+          {
+            "wiki_id": "tb3wr",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/tb3wr/versions/"
+          },
+          {
+            "wiki_id": "cm3qy",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/cm3qy/versions/"
+          },
+          {
+            "wiki_id": "b2sf9",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/b2sf9/versions/"
+          },
+          {
+            "wiki_id": "xd8h5",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/xd8h5/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1525,7 +1946,7 @@
         "harvested": "2026-08-01T07:58:05.126908+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -1550,13 +1971,46 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 25,
+        "wiki_history_details": [
+          {
+            "wiki_id": "3yvts",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/3yvts/versions/"
+          },
+          {
+            "wiki_id": "4fc93",
+            "status": "REVIEWED",
+            "version_count": 3,
+            "url": "https://api.osf.io/v2/wikis/4fc93/versions/"
+          },
+          {
+            "wiki_id": "gc5m7",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/gc5m7/versions/"
+          },
+          {
+            "wiki_id": "4uybr",
+            "status": "REVIEWED",
+            "version_count": 5,
+            "url": "https://api.osf.io/v2/wikis/4uybr/versions/"
+          },
+          {
+            "wiki_id": "fnsv4",
+            "status": "REVIEWED",
+            "version_count": 10,
+            "url": "https://api.osf.io/v2/wikis/fnsv4/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1576,7 +2030,7 @@
         "harvested": "2026-08-01T07:58:51.371830+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -1602,13 +2056,34 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 14,
+        "wiki_history_details": [
+          {
+            "wiki_id": "w8jct",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/w8jct/versions/"
+          },
+          {
+            "wiki_id": "ekr4m",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/ekr4m/versions/"
+          },
+          {
+            "wiki_id": "gxhbf",
+            "status": "REVIEWED",
+            "version_count": 10,
+            "url": "https://api.osf.io/v2/wikis/gxhbf/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
@@ -1628,7 +2103,7 @@
         "harvested": "2026-08-01T07:55:45.682789+00:00"
       },
       "WIKI_STATUS": "REVIEWED",
-      "WIKI_HISTORY_STATUS": "PENDING",
+      "WIKI_HISTORY_STATUS": "REVIEWED",
       "FILES_INVENTORIED": 0,
       "ATTACHMENTS_REVIEWED": 0,
       "FILE_HASHES": {},
@@ -1653,18 +2128,53 @@
       "REVIEW_SURFACES": {
         "landing_page_status": "REVIEWED_VIA_PUBLIC_OSF_API_METADATA",
         "wiki_status": "REVIEWED",
-        "wiki_history_status": "PENDING",
+        "wiki_history_status": "REVIEWED",
         "components_status": "REVIEWED",
         "components_count": 0,
         "registrations_status": "REVIEWED",
         "registrations_count": 0,
         "file_versions_status": "NOT_APPLICABLE",
-        "file_version_count": 0
+        "file_version_count": 0,
+        "wiki_history_version_count": 12,
+        "wiki_history_details": [
+          {
+            "wiki_id": "pynrt",
+            "status": "REVIEWED",
+            "version_count": 4,
+            "url": "https://api.osf.io/v2/wikis/pynrt/versions/"
+          },
+          {
+            "wiki_id": "9y5pg",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/9y5pg/versions/"
+          },
+          {
+            "wiki_id": "ugrsa",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/ugrsa/versions/"
+          },
+          {
+            "wiki_id": "vs9ut",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/vs9ut/versions/"
+          },
+          {
+            "wiki_id": "m4ern",
+            "status": "REVIEWED",
+            "version_count": 2,
+            "url": "https://api.osf.io/v2/wikis/m4ern/versions/"
+          }
+        ]
       },
       "DATASETS_DETECTED": false,
       "ANALYTIC_CODE_DETECTED": false,
       "RESULT_TABLES_DETECTED": false,
       "METADATA_SHA256": "f97655a0913e25f3042fb723adac799b9805cd182bcd69e34c612d00f2cbaabf"
     }
-  ]
+  ],
+  "wiki_history_review_completed_at": "2026-08-01T16:52:28.431944+00:00",
+  "wiki_history_review_source_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d"
 }

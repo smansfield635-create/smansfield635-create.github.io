@@ -2,7 +2,7 @@
   "receipt_id": "OSF_PUBLIC_LAWS_DISCOVERY_CORPUS_HARVEST_COMPLETION_v2_31_RESOURCE_RECONCILED",
   "status": "PASS_COMPLETE",
   "source_snapshot_branch": "agent/osf-laws-source-registry-001",
-  "source_snapshot_head": "a87a64bca76faf332f32e54b44dc0de0dcb59814",
+  "source_snapshot_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d",
   "source_profile": "https://osf.io/g5294/",
   "generated_at": "2026-08-01T07:59:03.189206+00:00",
   "public_resources_harvested": 31,

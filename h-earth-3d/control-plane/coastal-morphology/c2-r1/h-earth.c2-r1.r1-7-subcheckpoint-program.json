@@ -1,0 +1,66 @@
+{
+  "program": "H_EARTH_C2_R1_R1_7_BOUNDED_TERRAIN_MACRO_EXPRESSION",
+  "status": "IN_PROGRESS",
+  "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
+  "candidateBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+  "executionLaw": {
+    "oneSubcheckpointAtATime": true,
+    "implementationBeforeVerification": true,
+    "verificationBeforeDurableClosure": true,
+    "durableCommitBeforeNextSubcheckpoint": true,
+    "rollbackReferenceRequiredPerSubcheckpoint": true,
+    "upstreamBlobIdentityRequired": true,
+    "closedSubcheckpointWorkflowManualOnly": true,
+    "visualSuccessRequiresLaterUserDifferential": true
+  },
+  "subcheckpoints": {
+    "R1.7A": {
+      "name": "LANDFORM_ANALYSIS_AND_MACRO_FIELD_CONTRACT",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
+      "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
+      "passingExecutionHead": "02118302eff1b6d24e8a90fbda9efa51bbf2ece4",
+      "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+      "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-start-001",
+      "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-closed-001",
+      "workflowRun": 30675657736,
+      "workflowJob": 91302241616,
+      "artifactId": 8810353024,
+      "artifactDigest": "sha256:abca46c001acf13890f5dd45a84e5fafee54151687666f5eddef413072d2c2b4",
+      "registryPreflight": "PASS",
+      "sampleCount": 901,
+      "validSampleCount": 901,
+      "channelCount": 9,
+      "maximumCrossShoreChannelDelta": 0.16232351935440625,
+      "maximumAlongshoreChannelDelta": 0.2883149065874908,
+      "upstreamAuthoritiesUnchanged": true,
+      "bakedTextureCreated": false,
+      "rendererSamplingCreated": false,
+      "productDefaultMutated": false,
+      "publicRouteMutated": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialReady": false,
+      "firstBlocker": null,
+      "workflowDisposition": "MANUAL_ONLY_AFTER_DURABLE_CLOSURE"
+    },
+    "R1.7B": {
+      "name": "BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+      "status": "NOT_STARTED"
+    },
+    "R1.7C": {
+      "name": "MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
+      "status": "NOT_STARTED"
+    },
+    "R1.7D": {
+      "name": "INTEGRATED_ENGINEERING_VERIFICATION_CAPTURES_AND_DURABLE_CLOSURE",
+      "status": "NOT_STARTED"
+    }
+  },
+  "currentSubcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+  "nextAuthorizedSubcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+  "r1_7OverallStatus": "IN_PROGRESS",
+  "r1_8Status": "NOT_STARTED",
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false
+}

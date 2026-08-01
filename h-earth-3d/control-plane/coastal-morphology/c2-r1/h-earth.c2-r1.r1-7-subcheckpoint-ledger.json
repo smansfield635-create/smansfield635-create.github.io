@@ -1,0 +1,82 @@
+{
+  "ledger": "H_EARTH_C2_R1_R1_7_SUBCHECKPOINT_PROGRESS_LEDGER_v1",
+  "candidateBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+  "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
+  "currentSubcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+  "entries": [
+    {
+      "subcheckpoint": "R1.7A_LANDFORM_ANALYSIS_AND_MACRO_FIELD_CONTRACT",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
+      "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
+      "passingExecutionHead": "02118302eff1b6d24e8a90fbda9efa51bbf2ece4",
+      "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+      "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-start-001",
+      "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-closed-001",
+      "changedImplementationPaths": [
+        ".github/workflows/h-earth-c2-r1-r1-7a-landform-analysis.yml",
+        "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.landform-analysis.js",
+        "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7a-landform-analysis.mjs"
+      ],
+      "derivedChannels": [
+        "ELEVATION_NORMALIZED",
+        "SLOPE_NORMALIZED",
+        "CONCAVITY",
+        "CONVEXITY",
+        "DRAINAGE_TENDENCY",
+        "COASTAL_MOISTURE_INFLUENCE",
+        "INLAND_TRANSITION",
+        "CAVITY_AO_HINT",
+        "MACRO_NORMAL_STRENGTH_HINT"
+      ],
+      "metrics": {
+        "sampleCount": 901,
+        "validSampleCount": 901,
+        "transectCount": 17,
+        "channelCount": 9,
+        "maximumCrossShoreChannelDelta": 0.16232351935440625,
+        "maximumAlongshoreChannelDelta": 0.2883149065874908,
+        "meanNearCoastMoisture": 0.35883875820391176,
+        "meanDeepInlandMoisture": 0.14165756470262625,
+        "meanNearCoastTransition": 0.00019733333373031183,
+        "meanDeepInlandTransition": 0.9020741594962584
+      },
+      "workflow": {
+        "run": 30675657736,
+        "job": 91302241616,
+        "artifactId": 8810353024,
+        "artifactDigest": "sha256:abca46c001acf13890f5dd45a84e5fafee54151687666f5eddef413072d2c2b4",
+        "result": "PASS",
+        "dispositionAfterClosure": "MANUAL_ONLY"
+      },
+      "registryPreflight": "PASS",
+      "representativeEngineeringCaptureCount": 3,
+      "bakedMacroControlFieldCreated": false,
+      "rendererSamplingIntegrationCreated": false,
+      "upstreamAuthoritiesUnchanged": true,
+      "productDefaultMutated": false,
+      "publicRouteMutated": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialReady": false,
+      "firstBlocker": null
+    },
+    {
+      "subcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+      "status": "NOT_STARTED"
+    },
+    {
+      "subcheckpoint": "R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
+      "status": "NOT_STARTED"
+    },
+    {
+      "subcheckpoint": "R1.7D_INTEGRATED_ENGINEERING_VERIFICATION_CAPTURES_AND_DURABLE_CLOSURE",
+      "status": "NOT_STARTED"
+    }
+  ],
+  "nextAuthorizedSubcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+  "r1_7OverallStatus": "IN_PROGRESS",
+  "r1_8Status": "NOT_STARTED",
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false
+}

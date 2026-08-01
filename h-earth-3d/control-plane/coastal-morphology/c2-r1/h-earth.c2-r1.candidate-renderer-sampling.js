@@ -1,12 +1,12 @@
 /**
  * H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1
  *
- * Candidate-only R1.7C material sampling adapter. It binds the closed R1.7B
- * baked macro-control field through one clamped bilinear runtime sample and
- * applies only bounded albedo, roughness, and cavity/AO responses to the
- * already established C2-R1 candidate material output. The optional macro
- * normal channel is exposed but is not applied in R1.7C, so accepted normal
- * authority remains unchanged.
+ * Candidate-only R1.7C material sampling adapter with the authorized R1.7D-C1
+ * downstream darkening reconciliation. It binds the closed R1.7B baked
+ * macro-control field through one clamped bilinear runtime sample and applies
+ * only bounded albedo, roughness, and cavity/AO responses to the established
+ * C2-R1 candidate material output. The optional macro-normal channel remains
+ * exposed but unapplied, so accepted normal authority remains unchanged.
  */
 
 import {
@@ -44,8 +44,9 @@ const FIELD_VALUES = copyHEarthC2R1BakedMacroControlFieldValues();
 const CHANNEL_INDEX = freeze(Object.fromEntries(
   FIELD.channels.map((channel, index) => [channel, index])
 ));
+const R1_7D_C1_MINIMUM_LUMINANCE_RATIO = 0.9981642262491339;
 const CHANNEL_BOUNDS = freeze({
-  ALBEDO_SCALE: freeze([0.94, 1.07]),
+  ALBEDO_SCALE: freeze([0.998164226249134, 1.07]),
   ROUGHNESS_OFFSET: freeze([-0.045, 0.065]),
   CAVITY_RESPONSE: freeze([0.84, 1]),
   MACRO_NORMAL_STRENGTH: freeze([0, 0.035])
@@ -57,6 +58,13 @@ export const H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING_CONTRACT_ID =
 export const H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING = freeze({
   contractId: H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING_CONTRACT_ID,
   checkpoint: 'R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION',
+  downstreamCorrectiveSuccessor: freeze({
+    checkpoint: 'R1.7D_C1_BOUNDED_DARKENING_RECONCILIATION',
+    historicalR17CClosurePreserved: true,
+    correctionType: 'BOUNDED_ALBEDO_RESPONSE_FLOOR',
+    requiredMinimumLuminanceRatio: R1_7D_C1_MINIMUM_LUMINANCE_RATIO,
+    appliedAlbedoScaleFloor: CHANNEL_BOUNDS.ALBEDO_SCALE[0]
+  }),
   sourceFieldContractId:
     H_EARTH_C2_R1_BAKED_MACRO_CONTROL_FIELD_CONTRACT_ID,
   sourceProfileContractId: H_EARTH_C2_R1_COASTAL_PROFILE_CONTRACT_ID,

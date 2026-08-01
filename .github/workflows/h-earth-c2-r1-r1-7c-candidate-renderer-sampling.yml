@@ -1,0 +1,52 @@
+name: H-Earth C2-R1 R1.7C Candidate Renderer Sampling
+
+on:
+  pull_request:
+    branches:
+      - integration/h-earth-c2-r1-baseline-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7c-candidate-renderer-sampling.mjs'
+  workflow_dispatch:
+
+concurrency:
+  group: h-earth-c2-r1-r1-7c-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r1-7c:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify minimal candidate renderer sampling integration
+        env:
+          C2_R1_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          C2_R1_TARGET_BRANCH: ${{ github.event.pull_request.head.ref || 'agent/h-earth-c2-r1-physically-coherent-coastal-successor-001' }}
+        run: |
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7c-candidate-renderer-sampling.mjs
+
+      - name: Upload R1.7C receipt and engineering captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-r1-7c-engineering-evidence
+          path: |
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-verification.json
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7c-engineering-captures/*.svg
+          if-no-files-found: error
+          retention-days: 30

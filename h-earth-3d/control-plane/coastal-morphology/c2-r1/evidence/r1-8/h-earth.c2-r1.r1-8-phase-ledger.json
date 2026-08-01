@@ -7,7 +7,7 @@
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
   "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8d-c1-start-001",
-  "controllingStatus": "R1.8D_C1_PHASE_1_REGISTRY_SEQUENCE_RECONCILIATION_PASS",
+  "controllingStatus": "R1.8_BLOCKED_AT_R1.8D_C1_PHASE_2_SERVED_OCCURRENCE_TRANSPORT_TRACE",
   "executionIdentityLaw": {
     "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "pullRequestExpectedCandidateHead": "github.event.pull_request.head.sha",
@@ -216,9 +216,72 @@
         "r1_8bLocalFunctionalVerification": "PASS_RECORDED_DO_NOT_REOPEN"
       },
       "blocker": null
+    },
+    {
+      "id": "R1.8D_C1_PHASE_2_SERVED_OCCURRENCE_TRANSPORT_TRACE",
+      "status": "BLOCKED",
+      "recordedAt": "2026-08-01T08:01:36.716Z",
+      "evidence": {},
+      "blocker": {
+        "code": "NO_ISOLATED_CARRIER_REACHED_EXACT_READY_REVIEW_BOUNDARY",
+        "detail": [
+          {
+            "carrier": "RAWCDN_GITHACK",
+            "classifications": [
+              "REDIRECT_TO_NON_RAW_CONTENT",
+              "RELATIVE_PATH_OR_BASE_URL_FAILURE",
+              "THIRD_PARTY_CARRIER_MODULE_INCOMPATIBILITY"
+            ],
+            "ready": false,
+            "allByteIdentical": true,
+            "allMimeCompatible": true
+          },
+          {
+            "carrier": "JSDELIVR_GITHUB_COMMIT_PINNED",
+            "classifications": [
+              "INCORRECT_MIME_TYPE"
+            ],
+            "ready": false,
+            "allByteIdentical": true,
+            "allMimeCompatible": false
+          }
+        ],
+        "phase": "R1.8D_C1_PHASE_2_SERVED_OCCURRENCE_TRANSPORT_TRACE",
+        "recordedAt": "2026-08-01T08:01:36.716Z",
+        "productRegressionEstablished": false,
+        "candidateFailureEstablished": false
+      }
     }
   ],
-  "firstBlocker": null,
+  "firstBlocker": {
+    "code": "NO_ISOLATED_CARRIER_REACHED_EXACT_READY_REVIEW_BOUNDARY",
+    "detail": [
+      {
+        "carrier": "RAWCDN_GITHACK",
+        "classifications": [
+          "REDIRECT_TO_NON_RAW_CONTENT",
+          "RELATIVE_PATH_OR_BASE_URL_FAILURE",
+          "THIRD_PARTY_CARRIER_MODULE_INCOMPATIBILITY"
+        ],
+        "ready": false,
+        "allByteIdentical": true,
+        "allMimeCompatible": true
+      },
+      {
+        "carrier": "JSDELIVR_GITHUB_COMMIT_PINNED",
+        "classifications": [
+          "INCORRECT_MIME_TYPE"
+        ],
+        "ready": false,
+        "allByteIdentical": true,
+        "allMimeCompatible": false
+      }
+    ],
+    "phase": "R1.8D_C1_PHASE_2_SERVED_OCCURRENCE_TRANSPORT_TRACE",
+    "recordedAt": "2026-08-01T08:01:36.716Z",
+    "productRegressionEstablished": false,
+    "candidateFailureEstablished": false
+  },
   "visualSuccessorStatus": "NOT_ESTABLISHED",
   "userDifferentialReady": false,
   "productDefaultMutated": false,
@@ -259,7 +322,7 @@
       }
     ]
   },
-  "updatedAt": "2026-08-01T07:59:01.657Z",
+  "updatedAt": "2026-08-01T08:01:36.716Z",
   "r18aHead": "e08c92535eef29785867bd798393f346eacc101a",
   "r1_8bC1Diagnosis": {
     "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c1-startup-diagnosis.json",

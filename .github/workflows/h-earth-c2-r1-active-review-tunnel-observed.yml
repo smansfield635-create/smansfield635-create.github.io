@@ -1,0 +1,177 @@
+name: H-Earth C2-R1 Observable Active Review
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-c2-r1-active-review-tunnel-observed.yml'
+
+concurrency:
+  group: h-earth-c2-r1-active-review-tunnel
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  publish-observed-active-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 135
+    env:
+      SERVE_COMMIT: 1e16d25ad83f891e14fdc347dca9306032f9cd78
+      VERIFIED_PRODUCT_HEAD: a699c5a64e2bf54d950a69c839c3d9ee41b6514f
+      REVIEW_ENTRY: preview/h-earth/c2-r1/a699c5a64e2bf54d950a69c839c3d9ee41b6514f/index.html
+      KEY_MODULE: preview/h-earth/c2-r1/a699c5a64e2bf54d950a69c839c3d9ee41b6514f/_source/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
+      RENDER_MODULE: preview/h-earth/c2-r1/a699c5a64e2bf54d950a69c839c3d9ee41b6514f/_source/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-persistent-renderer.js
+      LOCAL_ORIGIN: http://127.0.0.1:4188
+      SESSION_SECONDS: '7200'
+      TARGET_PR: '418'
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Report execution start
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${TARGET_PR}/comments" \
+            -f body="ACTIVE_COMPLETE_WORLD_REVIEW_TRANSPORT_STARTED\n\nWorkflow run: ${GITHUB_RUN_ID}\nExact product head: ${VERIFIED_PRODUCT_HEAD}\nNo user link has been issued yet; public verification is executing."
+
+      - name: Check out immutable publication commit
+        uses: actions/checkout@v4
+        with:
+          ref: 1e16d25ad83f891e14fdc347dca9306032f9cd78
+          fetch-depth: 0
+
+      - name: Verify carriers
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SERVE_COMMIT"
+          test -f "$REVIEW_ENTRY"
+          test -f "$KEY_MODULE"
+          test -f "$RENDER_MODULE"
+
+      - name: Install browser and tunnel runtime
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+          curl --fail --location --retry 5 --retry-all-errors \
+            https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
+            --output /tmp/cloudflared
+          chmod +x /tmp/cloudflared
+          /tmp/cloudflared --version
+
+      - name: Launch verify publish and hold
+        run: |
+          set -euo pipefail
+          cleanup() {
+            if [ -f /tmp/cloudflared.pid ]; then kill "$(cat /tmp/cloudflared.pid)" 2>/dev/null || true; fi
+            if [ -f /tmp/origin.pid ]; then kill "$(cat /tmp/origin.pid)" 2>/dev/null || true; fi
+          }
+          trap cleanup EXIT
+
+          python3 -m http.server 4188 --bind 127.0.0.1 > /tmp/origin.log 2>&1 &
+          echo $! > /tmp/origin.pid
+          for attempt in $(seq 1 60); do
+            curl --fail --silent --show-error "$LOCAL_ORIGIN/$REVIEW_ENTRY" --output /tmp/local-index.html && break
+            sleep 1
+          done
+          test -s /tmp/local-index.html
+
+          /tmp/cloudflared tunnel --url "$LOCAL_ORIGIN" --no-autoupdate --protocol http2 > /tmp/cloudflared.log 2>&1 &
+          echo $! > /tmp/cloudflared.pid
+
+          public_base=''
+          for attempt in $(seq 1 120); do
+            public_base="$(grep -Eo 'https://[-a-z0-9]+\.trycloudflare\.com' /tmp/cloudflared.log | head -1 || true)"
+            [ -n "$public_base" ] && break
+            sleep 1
+          done
+          test -n "$public_base"
+          occurrence_url="${public_base}/${REVIEW_ENTRY}"
+
+          public_ready=false
+          for attempt in $(seq 1 120); do
+            if curl --fail --silent --show-error "$occurrence_url" --output /tmp/public-index.html \
+              && curl --fail --silent --show-error "${public_base}/${KEY_MODULE}" --output /tmp/public-complete-world.js \
+              && curl --fail --silent --show-error "${public_base}/${RENDER_MODULE}" --output /tmp/public-renderer.js; then
+              public_ready=true
+              break
+            fi
+            sleep 1
+          done
+          test "$public_ready" = true
+
+          curl --fail --silent --show-error --head "$occurrence_url" > /tmp/public-index.headers
+          curl --fail --silent --show-error --head "${public_base}/${KEY_MODULE}" > /tmp/public-js.headers
+          grep -Eiq '^content-type: *text/html' /tmp/public-index.headers
+          grep -Eiq '^content-type: *(text|application)/(javascript|ecmascript)' /tmp/public-js.headers
+          cmp --silent "$REVIEW_ENTRY" /tmp/public-index.html
+          cmp --silent "$KEY_MODULE" /tmp/public-complete-world.js
+          cmp --silent "$RENDER_MODULE" /tmp/public-renderer.js
+
+          cat > /tmp/verify-public.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          const url = process.env.OCCURRENCE_URL;
+          const browser = await chromium.launch({ headless: true });
+          const context = await browser.newContext({ viewport: { width: 412, height: 915 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
+          const page = await context.newPage();
+          const consoleErrors = [], pageErrors = [], requestFailures = [], httpFailures = [];
+          page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });
+          page.on('pageerror', e => pageErrors.push(e.message));
+          page.on('requestfailed', r => requestFailures.push({ url: r.url(), failure: r.failure()?.errorText ?? 'UNKNOWN' }));
+          page.on('response', r => { if (r.status() >= 400) httpFailures.push({ url: r.url(), status: r.status() }); });
+          await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 180000 });
+          await page.waitForFunction(() => {
+            const api = globalThis.H_EARTH_C2_R1_COMPLETE_WORLD;
+            return api?.ready === true || api?.failed === true;
+          }, null, { timeout: 720000 });
+          const result = await page.evaluate(() => {
+            const api = globalThis.H_EARTH_C2_R1_COMPLETE_WORLD;
+            return {
+              ready: api?.ready === true,
+              failed: api?.failed === true,
+              receipt: api?.ready === true ? api.getReceipt() : null,
+              failure: api?.failed === true ? api.getFailureReceipt() : null,
+              rootReady: document.getElementById('complete-world-root')?.dataset.ready === 'true'
+            };
+          });
+          await browser.close();
+          const receipt = result.receipt;
+          const c = receipt?.packageBinding?.counters;
+          const r = receipt?.renderer;
+          const valid = result.ready && !result.failed && result.rootReady
+            && receipt?.packageIdentity === 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE'
+            && receipt?.packageContentDigest === 'fnv1a32:218f37ae'
+            && c?.candidateSampleFailureCount === 0
+            && c?.boundTerrainVertexCount === 10419
+            && c?.boundShorelineVertexCount === 299
+            && r?.counters?.contextCreationCount === 1
+            && r?.counters?.rendererInitializationCount === 1
+            && r?.counters?.visiblePresentationCount >= 1
+            && consoleErrors.length === 0 && pageErrors.length === 0
+            && requestFailures.length === 0 && httpFailures.length === 0;
+          if (!valid) {
+            console.error(JSON.stringify({ result, consoleErrors, pageErrors, requestFailures, httpFailures }, null, 2));
+            process.exit(1);
+          }
+          NODE
+          OCCURRENCE_URL="$occurrence_url" node /tmp/verify-public.mjs
+
+          started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          expected_expiration="$(date -u -d "+120 minutes" +%Y-%m-%dT%H:%M:%SZ)"
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${TARGET_PR}/comments" \
+            -f body="VERIFIED_COMPLETE_WORLD_REVIEW_OCCURRENCE = ACTIVE_USER_ACCESSIBLE_ONE_CLICK_URL\n\nExact verified product head: ${VERIFIED_PRODUCT_HEAD}\nPublication commit served: ${SERVE_COMMIT}\nWorkflow run: ${GITHUB_RUN_ID}\nStarted: ${started_at}\nExpected expiration: ${expected_expiration}\n\n[OPEN THE COMPLETE H-EARTH WORLD REVIEW](${occurrence_url})\n\nPublic MIME, exact bytes, WebGL2 startup, package identity, visible frame, and zero console/page/request/HTTP failures verified before handoff."
+
+          deadline=$((SECONDS + SESSION_SECONDS))
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            curl --fail --silent --show-error --retry 3 "$occurrence_url" --output /dev/null
+            sleep 30
+          done
+
+      - name: Report exact transport failure
+        if: failure()
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${TARGET_PR}/comments" \
+            -f body="ACTIVE_COMPLETE_WORLD_REVIEW_TRANSPORT_BLOCKED\n\nWorkflow run: ${GITHUB_RUN_ID}\nExact product head: ${VERIFIED_PRODUCT_HEAD}\nThe active link was not issued because the observable transport run failed before verified handoff."

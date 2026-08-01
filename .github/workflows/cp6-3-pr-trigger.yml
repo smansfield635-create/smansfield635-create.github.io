@@ -46,18 +46,70 @@ jobs:
           python3 -m pip install --disable-pip-version-check beautifulsoup4 playwright
           python3 -m playwright install chromium
 
-      - name: Extract and execute the controlling CP6-3 program
+      - name: Extract, normalize source routes, and execute CP6-3
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
           import textwrap
-          workflow = Path('.github/workflows/cp6-3-canonical-content-migration.yml').read_text(encoding='utf-8')
+
+          workflow_path = Path('.github/workflows/cp6-3-canonical-content-migration.yml')
+          workflow = workflow_path.read_text(encoding='utf-8')
           start_marker = "cat > /tmp/cp63.py <<'PY'\n"
           start = workflow.index(start_marker) + len(start_marker)
           end = workflow.index("\n          PY\n          python3 /tmp/cp63.py", start)
-          Path('/tmp/cp63.py').write_text(textwrap.dedent(workflow[start:end]), encoding='utf-8')
+          source = textwrap.dedent(workflow[start:end])
+
+          needle = "\nexpected_ids = {row['id'] for row in migrated_rows}\n"
+          assert source.count(needle) == 1
+          correction = r'''
+
+# Preserve source-declared routes without publishing broken navigation from the
+# canonical destination copies. The route identity remains visible in text.
+def source_route_file(href):
+    clean = href.split('?', 1)[0]
+    if clean == '/':
+        return ROOT / 'index.html'
+    if clean.endswith('/'):
+        return ROOT / clean.lstrip('/') / 'index.html'
+    return ROOT / clean.lstrip('/')
+
+normalized_source_route_links = []
+for content_id, source_payload in list(payloads.items()):
+    fragment = BeautifulSoup(source_payload, 'html.parser')
+    changed = False
+    for link in fragment.find_all('a', href=True):
+        href = link['href']
+        if href.startswith('/') and '#' not in href and not source_route_file(href).exists():
+            replacement = fragment.new_tag('article')
+            replacement['class'] = list(link.get('class', [])) + ['source-route-record']
+            for child in list(link.contents):
+                replacement.append(child.extract())
+            declaration = fragment.new_tag('p')
+            declaration['class'] = ['declared-source-route']
+            declaration.string = f'Declared source route retained without broken navigation: {href}'
+            replacement.append(declaration)
+            link.replace_with(replacement)
+            normalized_source_route_links.append({'content_id': content_id, 'declared_route': href})
+            changed = True
+    if changed:
+        payloads[content_id] = str(fragment)
+'''
+          source = source.replace(needle, correction + needle, 1)
+
+          # Record the bounded route normalization in both durable control records.
+          ledger_needle = "'shared_foundation_references': shared_reference_rows,\n              'rows': migration_ledger_rows,"
+          ledger_replacement = "'shared_foundation_references': shared_reference_rows,\n              'normalized_source_route_links': normalized_source_route_links,\n              'rows': migration_ledger_rows,"
+          assert source.count(ledger_needle) == 1
+          source = source.replace(ledger_needle, ledger_replacement, 1)
+
+          receipt_needle = "'broken_internal_links': len(broken_links),\n              'orphaned_destinations': len(orphaned),"
+          receipt_replacement = "'broken_internal_links': len(broken_links),\n              'normalized_source_route_link_count': len(normalized_source_route_links),\n              'normalized_source_route_links': normalized_source_route_links,\n              'orphaned_destinations': len(orphaned),"
+          assert source.count(receipt_needle) == 1
+          source = source.replace(receipt_needle, receipt_replacement, 1)
+
+          Path('/tmp/cp63.py').write_text(source, encoding='utf-8')
           PY
           rm -f .github/workflows/cp6-3-pr-trigger.yml
           python3 /tmp/cp63.py

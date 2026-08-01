@@ -48,7 +48,7 @@ export const H_EARTH_C2_R1_LANDFORM_ANALYSIS = freeze({
   sourceSurfaceFrameContractId:
     H_EARTH_C2_R1_COASTAL_SURFACE_FRAME_CONTRACT_ID,
   sourceSedimentContractId: H_EARTH_C2_R1_SEDIMENT_MEMBERSHIP_CONTRACT_ID,
-  derivativeStepWorldUnits: 3,
+  derivativeStepWorldUnits: 8,
   fieldChannels: freeze([
     'ELEVATION_NORMALIZED',
     'SLOPE_NORMALIZED',
@@ -63,7 +63,7 @@ export const H_EARTH_C2_R1_LANDFORM_ANALYSIS = freeze({
   derivationLaw: freeze({
     geometrySource: 'CLOSED_R1_1_CONTINUOUS_COASTAL_PROFILE',
     slopeSource: 'CLOSED_R1_2_RECOMPUTED_SURFACE_FRAME',
-    curvatureSource: 'BOUNDED_SECOND_DERIVATIVE_OF_CLOSED_R1_1_PROFILE',
+    curvatureSource: 'MACRO_SCALE_SECOND_DERIVATIVE_OF_CLOSED_R1_1_PROFILE',
     drainageSource: 'SLOPE_PLUS_POSITIVE_CONCAVITY_TENDENCY',
     moistureSource: 'CLOSED_R1_3_CONTINUOUS_SEDIMENT_MEMBERSHIPS',
     transitionSource: 'ACCEPTED_SIGNED_COASTAL_FRAME_DISTANCE',
@@ -133,8 +133,10 @@ function deriveCurvature(worldX, worldZ, centerElevation) {
     mixedXZ,
     laplacian,
     magnitude,
-    concavity: smoothstep(0.00015, 0.0075, laplacian),
-    convexity: smoothstep(0.00015, 0.0075, -laplacian)
+    macroGradientX: (xPlus - xMinus) / (2 * step),
+    macroGradientZ: (zPlus - zMinus) / (2 * step),
+    concavity: smoothstep(0.0004, 0.028, laplacian),
+    convexity: smoothstep(0.0004, 0.028, -laplacian)
   });
 }
 
@@ -187,7 +189,11 @@ export function sampleHEarthC2R1LandformAnalysis(worldX, worldZ) {
   }
 
   const elevationNormalized = smoothstep(-5, 12, terrain.elevation);
-  const slopeNormalized = smoothstep(0.004, 0.16, surface.slope);
+  const macroSlope = Math.hypot(
+    curvature.macroGradientX,
+    curvature.macroGradientZ
+  );
+  const slopeNormalized = smoothstep(0.002, 0.42, macroSlope);
   const drainageTendency = clamp01(
     slopeNormalized * (0.3 + 0.7 * curvature.concavity)
   );
@@ -200,7 +206,7 @@ export function sampleHEarthC2R1LandformAnalysis(worldX, worldZ) {
   const cavityAOHint = clamp01(
     curvature.concavity * 0.72 + drainageTendency * 0.28
   );
-  const curvatureNormalized = smoothstep(0.0001, 0.012, curvature.magnitude);
+  const curvatureNormalized = smoothstep(0.0003, 0.05, curvature.magnitude);
   const macroNormalStrengthHint = clamp01(
     slopeNormalized * 0.6 + curvatureNormalized * 0.4
   );
@@ -226,6 +232,7 @@ export function sampleHEarthC2R1LandformAnalysis(worldX, worldZ) {
     actualVerticalWaterDepth: terrain.actualVerticalWaterDepth,
     signedInlandDistance,
     slope: surface.slope,
+    macroSlope,
     gradient: surface.gradient,
     normal: surface.normal,
     curvature,

@@ -19,7 +19,7 @@
       "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
       "passingExecutionHead": "02118302eff1b6d24e8a90fbda9efa51bbf2ece4",
-      "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+      "durableClosureHead": "0498da0f3f4fe522659830499bd55ef8f018f776",
       "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-start-001",
       "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-closed-001",
       "workflowRun": 30675657736,
@@ -44,7 +44,29 @@
     },
     "R1.7B": {
       "name": "BOUNDED_BAKED_MACRO_CONTROL_FIELD",
-      "status": "NOT_STARTED"
+      "status": "IMPLEMENTED_VERIFICATION_PENDING",
+      "startingHead": "0498da0f3f4fe522659830499bd55ef8f018f776",
+      "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7b-start-001",
+      "sourceAuthority": "R1.7A_LANDFORM_ANALYSIS_AND_MACRO_FIELD_CONTRACT",
+      "fieldArchitecture": "BOUNDED_STATIC_FLOAT32_CONTROL_FIELD",
+      "fieldGrid": {
+        "alongshoreCount": 17,
+        "crossShoreCount": 53,
+        "sampleCount": 901,
+        "channelCount": 4
+      },
+      "fieldChannels": [
+        "ALBEDO_SCALE",
+        "ROUGHNESS_OFFSET",
+        "CAVITY_RESPONSE",
+        "MACRO_NORMAL_STRENGTH"
+      ],
+      "rendererSamplingIntegrationCreated": false,
+      "wholeWorldBakeCreated": false,
+      "productDefaultMutated": false,
+      "publicRouteMutated": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialReady": false
     },
     "R1.7C": {
       "name": "MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
@@ -56,7 +78,7 @@
     }
   },
   "currentSubcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
-  "nextAuthorizedSubcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+  "nextAuthorizedSubcheckpoint": "R1.7B_ENGINEERING_VERIFICATION",
   "r1_7OverallStatus": "IN_PROGRESS",
   "r1_8Status": "NOT_STARTED",
   "productDefaultMutated": false,

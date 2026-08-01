@@ -9,14 +9,9 @@
       "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
       "passingExecutionHead": "02118302eff1b6d24e8a90fbda9efa51bbf2ece4",
-      "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+      "durableClosureHead": "0498da0f3f4fe522659830499bd55ef8f018f776",
       "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-start-001",
       "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-closed-001",
-      "changedImplementationPaths": [
-        ".github/workflows/h-earth-c2-r1-r1-7a-landform-analysis.yml",
-        "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.landform-analysis.js",
-        "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7a-landform-analysis.mjs"
-      ],
       "derivedChannels": [
         "ELEVATION_NORMALIZED",
         "SLOPE_NORMALIZED",
@@ -34,11 +29,7 @@
         "transectCount": 17,
         "channelCount": 9,
         "maximumCrossShoreChannelDelta": 0.16232351935440625,
-        "maximumAlongshoreChannelDelta": 0.2883149065874908,
-        "meanNearCoastMoisture": 0.35883875820391176,
-        "meanDeepInlandMoisture": 0.14165756470262625,
-        "meanNearCoastTransition": 0.00019733333373031183,
-        "meanDeepInlandTransition": 0.9020741594962584
+        "maximumAlongshoreChannelDelta": 0.2883149065874908
       },
       "workflow": {
         "run": 30675657736,
@@ -61,7 +52,38 @@
     },
     {
       "subcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
-      "status": "NOT_STARTED"
+      "status": "IMPLEMENTED_VERIFICATION_PENDING",
+      "startingHead": "0498da0f3f4fe522659830499bd55ef8f018f776",
+      "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7b-start-001",
+      "changedImplementationPaths": [
+        ".github/workflows/h-earth-c2-r1-r1-7b-baked-macro-control-field.yml",
+        "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+        "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json",
+        "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json",
+        "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7b-baked-macro-control-field.mjs",
+        "h-earth-3d/control-plane/coastal-morphology/c2-r1/tools/h-earth.c2-r1.r1-7b-bake-macro-control-field.mjs"
+      ],
+      "fieldDimensions": {
+        "alongshoreCount": 17,
+        "crossShoreCount": 53,
+        "sampleCount": 901,
+        "channelCount": 4
+      },
+      "fieldChannels": [
+        "ALBEDO_SCALE",
+        "ROUGHNESS_OFFSET",
+        "CAVITY_RESPONSE",
+        "MACRO_NORMAL_STRENGTH"
+      ],
+      "bakedMacroControlFieldCreated": true,
+      "rendererSamplingIntegrationCreated": false,
+      "wholeWorldBakeCreated": false,
+      "upstreamAuthoritiesUnchanged": true,
+      "productDefaultMutated": false,
+      "publicRouteMutated": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialReady": false,
+      "firstBlocker": "CONTROLLING_HEAD_CHECKS_PENDING"
     },
     {
       "subcheckpoint": "R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
@@ -72,7 +94,7 @@
       "status": "NOT_STARTED"
     }
   ],
-  "nextAuthorizedSubcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+  "nextAuthorizedSubcheckpoint": "R1.7B_ENGINEERING_VERIFICATION",
   "r1_7OverallStatus": "IN_PROGRESS",
   "r1_8Status": "NOT_STARTED",
   "productDefaultMutated": false,

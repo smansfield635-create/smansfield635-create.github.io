@@ -1,0 +1,60 @@
+name: H-Earth C2-R1 R1.7B Staging Materializer
+
+on:
+  push:
+    branches:
+      - staging/h-earth-c2-r1-r1-7b-baked-macro-field-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-r1-7b-materialize-staging.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-c2-r1-r1-7b-materialize-staging
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: staging/h-earth-c2-r1-r1-7b-baked-macro-field-001
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Materialize and verify the bounded baked field
+        env:
+          R1_7B_SKIP_GIT_ASSERTIONS: 'true'
+        run: |
+          set -euo pipefail
+          branch='staging/h-earth-c2-r1-r1-7b-baked-macro-field-001'
+          control='h-earth-3d/control-plane/coastal-morphology/c2-r1'
+          transport="$control/transport/r1-7b"
+          verifier="$control/tests/h-earth.c2-r1.r1-7b-baked-macro-control-field.mjs"
+          field="$control/h-earth.c2-r1.baked-macro-control-field.js"
+          receipt="$control/evidence/h-earth.c2-r1.r1-7b-verification.json"
+          captures="$control/evidence/r1-7b-engineering-captures"
+          summary="$control/evidence/h-earth.c2-r1.r1-7b-bake-summary.json"
+          test "$(git branch --show-current)" = "$branch"
+          mkdir -p "$(dirname "$verifier")"
+          cat "$transport"/verifier.part*.b64 | tr -d '\n' | base64 -d > "$verifier"
+          node --check "$verifier"
+          node "$control/tools/h-earth.c2-r1.r1-7b-bake-macro-control-field.mjs" --write
+          node "$verifier"
+          test -s "$field"
+          grep -q '"result": "PASS_ENGINEERING"' "$receipt"
+          rm -f "$summary" "$receipt"
+          rm -rf "$captures"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$field" "$verifier"
+          git rm -r "$transport"
+          git rm .github/workflows/h-earth-c2-r1-r1-7b-materialize-staging.yml
+          git commit -m 'R1.7B staging: materialize verified baked macro field'
+          git push origin "HEAD:$branch"

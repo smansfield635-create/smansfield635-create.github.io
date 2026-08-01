@@ -66,6 +66,7 @@ jobs:
         run: |
           set -euo pipefail
           cleanup() {
+            rm -f .active-review-verifier.mjs
             if [ -f /tmp/cloudflared.pid ]; then kill "$(cat /tmp/cloudflared.pid)" 2>/dev/null || true; fi
             if [ -f /tmp/origin.pid ]; then kill "$(cat /tmp/origin.pid)" 2>/dev/null || true; fi
           }
@@ -73,17 +74,22 @@ jobs:
 
           python3 -m http.server 4188 --bind 127.0.0.1 > /tmp/origin.log 2>&1 &
           echo $! > /tmp/origin.pid
+          local_ready=false
           for attempt in $(seq 1 60); do
-            curl --fail --silent --show-error "$LOCAL_ORIGIN/$REVIEW_ENTRY" --output /tmp/local-index.html && break
+            if curl --fail --silent --show-error "$LOCAL_ORIGIN/$REVIEW_ENTRY" --output /tmp/local-index.html; then
+              local_ready=true
+              break
+            fi
             sleep 1
           done
+          test "$local_ready" = true
           test -s /tmp/local-index.html
 
           /tmp/cloudflared tunnel --url "$LOCAL_ORIGIN" --no-autoupdate --protocol http2 > /tmp/cloudflared.log 2>&1 &
           echo $! > /tmp/cloudflared.pid
 
           public_base=''
-          for attempt in $(seq 1 120); do
+          for attempt in $(seq 1 180); do
             public_base="$(grep -Eo 'https://[-a-z0-9]+\.trycloudflare\.com' /tmp/cloudflared.log | head -1 || true)"
             [ -n "$public_base" ] && break
             sleep 1
@@ -92,10 +98,10 @@ jobs:
           occurrence_url="${public_base}/${REVIEW_ENTRY}"
 
           public_ready=false
-          for attempt in $(seq 1 120); do
-            if curl --fail --silent --show-error "$occurrence_url" --output /tmp/public-index.html \
-              && curl --fail --silent --show-error "${public_base}/${KEY_MODULE}" --output /tmp/public-complete-world.js \
-              && curl --fail --silent --show-error "${public_base}/${RENDER_MODULE}" --output /tmp/public-renderer.js; then
+          for attempt in $(seq 1 180); do
+            if curl --fail --silent --show-error --retry 2 --retry-all-errors --retry-delay 1 "$occurrence_url" --output /tmp/public-index.html \
+              && curl --fail --silent --show-error --retry 2 --retry-all-errors --retry-delay 1 "${public_base}/${KEY_MODULE}" --output /tmp/public-complete-world.js \
+              && curl --fail --silent --show-error --retry 2 --retry-all-errors --retry-delay 1 "${public_base}/${RENDER_MODULE}" --output /tmp/public-renderer.js; then
               public_ready=true
               break
             fi
@@ -103,15 +109,15 @@ jobs:
           done
           test "$public_ready" = true
 
-          curl --fail --silent --show-error --head "$occurrence_url" > /tmp/public-index.headers
-          curl --fail --silent --show-error --head "${public_base}/${KEY_MODULE}" > /tmp/public-js.headers
+          curl --fail --silent --show-error --retry 3 --retry-all-errors --head "$occurrence_url" > /tmp/public-index.headers
+          curl --fail --silent --show-error --retry 3 --retry-all-errors --head "${public_base}/${KEY_MODULE}" > /tmp/public-js.headers
           grep -Eiq '^content-type: *text/html' /tmp/public-index.headers
           grep -Eiq '^content-type: *(text|application)/(javascript|ecmascript)' /tmp/public-js.headers
           cmp --silent "$REVIEW_ENTRY" /tmp/public-index.html
           cmp --silent "$KEY_MODULE" /tmp/public-complete-world.js
           cmp --silent "$RENDER_MODULE" /tmp/public-renderer.js
 
-          cat > /tmp/verify-public.mjs <<'NODE'
+          cat > .active-review-verifier.mjs <<'NODE'
           import { chromium } from 'playwright';
           const url = process.env.OCCURRENCE_URL;
           const browser = await chromium.launch({ headless: true });
@@ -157,7 +163,8 @@ jobs:
             process.exit(1);
           }
           NODE
-          OCCURRENCE_URL="$occurrence_url" node /tmp/verify-public.mjs
+          OCCURRENCE_URL="$occurrence_url" node ./.active-review-verifier.mjs
+          rm -f .active-review-verifier.mjs
 
           started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           expected_expiration="$(date -u -d "+120 minutes" +%Y-%m-%dT%H:%M:%SZ)"
@@ -166,7 +173,7 @@ jobs:
 
           deadline=$((SECONDS + SESSION_SECONDS))
           while [ "$SECONDS" -lt "$deadline" ]; do
-            curl --fail --silent --show-error --retry 3 "$occurrence_url" --output /dev/null
+            curl --fail --silent --show-error --retry 3 --retry-all-errors "$occurrence_url" --output /dev/null
             sleep 30
           done
 

@@ -1,10 +1,10 @@
 /**
- * H_EARTH_C2_R1_COMPLETE_WORLD_RENDER_PACKAGE_v2
+ * H_EARTH_C2_R1_COMPLETE_WORLD_RENDER_PACKAGE_v3
  *
- * Isolated package-level binding of the accepted C2-R1 coastal component into
- * the canonical complete H-Earth package. Canonical package and closed coastal
- * sources are consumed read-only. This adapter records exact real-package
- * sample failures and stops evaluation at the root rejection.
+ * Isolated complete-world adapter. Canonical package and closed coastal
+ * sources are consumed read-only. The adapter excludes only the diagnosed
+ * waterward blend-tail vertex whose closed breaker stencil leaves the valid
+ * source domain; every other candidate-sampler rejection remains fatal.
  */
 
 const finite = value => typeof value === 'number' && Number.isFinite(value);
@@ -19,7 +19,7 @@ const copy = values => Array.from(values ?? []);
 const cleanIssues = sample => Array.isArray(sample?.issues) ? [...sample.issues] : [];
 
 export const H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_CONTRACT_ID =
-  'H_EARTH_C2_R1_COMPLETE_WORLD_RENDER_PACKAGE_v2';
+  'H_EARTH_C2_R1_COMPLETE_WORLD_RENDER_PACKAGE_v3';
 
 export const H_EARTH_C2_R1_COMPLETE_WORLD_BINDING = freeze({
   contractId: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_CONTRACT_ID,
@@ -33,6 +33,15 @@ export const H_EARTH_C2_R1_COMPLETE_WORLD_BINDING = freeze({
   acceptedCoastalComponentSourceHead: 'c53362c6f74b01c4e0b53be526b0e3a0b73edede',
   corridor: freeze({ alongshoreAnchorMinimum: -184, alongshoreAnchorMaximum: 184 }),
   roleCodes: freeze({ TERRAIN: 1, SHORELINE: 2, VEGETATION: 3 }),
+  adapterBoundaryClassification: freeze({
+    code: 'WATERWARD_BLEND_TAIL_DIRECTIONAL_STENCIL_OUTSIDE_VALID_SOURCE_DOMAIN',
+    requiresBlendWeight: true,
+    requiresWaterwardTail: true,
+    requiredMaterialIssue: 'R1_1_R1_3_OR_R1_6_CANDIDATE_INPUT_NOT_ELIGIBLE',
+    requiredSwashIssue: 'R1_1_R1_3_R1_4_OR_R1_5_INPUT_NOT_ELIGIBLE',
+    requiredBreakerIssue: 'DIRECTIONAL_DEPTH_SAMPLE_INVALID',
+    mutationDisposition: 'PRESERVE_CANONICAL_VERTEX_BYTES'
+  }),
   ownership: freeze({
     ownsIsolatedCompleteWorldPackageProjection: true,
     ownsCanonicalCompleteWorldSource: false,
@@ -240,6 +249,23 @@ function sampleDiagnostic(dependencies, vertexIndex, roleCode, worldX, worldZ, t
   });
 }
 
+function includesIssue(sample, issue) {
+  return Array.isArray(sample?.issues) && sample.issues.includes(issue);
+}
+
+function isDiagnosedAdapterBoundaryExclusion(terrain, diagnostic) {
+  const classification = H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.adapterBoundaryClassification;
+  return terrain?.valid === true &&
+    finite(terrain?.candidateWeight) && terrain.candidateWeight > 0 && terrain.candidateWeight < 1 &&
+    finite(terrain?.coastalFrame?.signedInlandDistance) && terrain.coastalFrame.signedInlandDistance < 0 &&
+    diagnostic?.material?.valid === false &&
+    diagnostic?.swash?.valid === false &&
+    diagnostic?.breaker?.valid === false &&
+    includesIssue(diagnostic.material, classification.requiredMaterialIssue) &&
+    includesIssue(diagnostic.swash, classification.requiredSwashIssue) &&
+    includesIssue(diagnostic.breaker, classification.requiredBreakerIssue);
+}
+
 function rejected(rootCode, issues, counters, failureDiagnostics = []) {
   return freeze({
     eligible: false,
@@ -269,26 +295,17 @@ export async function buildHEarthC2R1CompleteWorldRenderPackage(options = {}) {
     vegetationVertexCount: 0,
     boundTerrainVertexCount: 0,
     boundShorelineVertexCount: 0,
+    adapterBoundaryExcludedVertexCount: 0,
     unchangedVertexCount: 0,
     candidateSampleFailureCount: 0
   };
   const changedVertexIndices = [];
   const unchangedVertexIndices = [];
+  const boundaryExclusionDiagnostics = [];
   const failureDiagnostics = [];
   const timeSeconds = Number(options.timeSeconds ?? 0);
-  const vertexOrder = Array.from({ length: validation.vertexCount }, (_, index) => index);
-  if (options.stopAfterFirstFailure === true) {
-    const priority = roleCode => roleCode === H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.roleCodes.SHORELINE
-      ? 0
-      : roleCode === H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.roleCodes.TERRAIN
-        ? 1
-        : 2;
-    vertexOrder.sort((left, right) =>
-      priority(sourceBuffers.roleCodes[left]) - priority(sourceBuffers.roleCodes[right]) || left - right
-    );
-  }
 
-  for (const vertexIndex of vertexOrder) {
+  for (let vertexIndex = 0; vertexIndex < validation.vertexCount; vertexIndex += 1) {
     const role = sourceBuffers.roleCodes[vertexIndex];
     if (role === H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.roleCodes.TERRAIN) counters.terrainVertexCount += 1;
     else if (role === H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.roleCodes.SHORELINE) counters.shorelineVertexCount += 1;
@@ -311,12 +328,20 @@ export async function buildHEarthC2R1CompleteWorldRenderPackage(options = {}) {
 
     const material = dependencies.sampleCandidateMaterial(worldX, worldZ, { timeSeconds });
     if (material?.valid !== true) {
+      const diagnostic = sampleDiagnostic(
+        dependencies, vertexIndex, role, worldX, worldZ, terrain, material, timeSeconds
+      );
+      if (isDiagnosedAdapterBoundaryExclusion(terrain, diagnostic)) {
+        counters.adapterBoundaryExcludedVertexCount += 1;
+        counters.unchangedVertexCount += 1;
+        unchangedVertexIndices.push(vertexIndex);
+        boundaryExclusionDiagnostics.push(diagnostic);
+        continue;
+      }
       counters.candidateSampleFailureCount += 1;
       counters.unchangedVertexCount += 1;
       unchangedVertexIndices.push(vertexIndex);
-      failureDiagnostics.push(sampleDiagnostic(
-        dependencies, vertexIndex, role, worldX, worldZ, terrain, material, timeSeconds
-      ));
+      failureDiagnostics.push(diagnostic);
       if (options.stopAfterFirstFailure === true) {
         return rejected(
           'REAL_PACKAGE_CANDIDATE_SAMPLE_REJECTION',
@@ -412,6 +437,7 @@ export async function buildHEarthC2R1CompleteWorldRenderPackage(options = {}) {
     completeWorldBinding: {
       ...H_EARTH_C2_R1_COMPLETE_WORLD_BINDING,
       counters,
+      boundaryExclusionDiagnostics,
       failureDiagnostics,
       changedVertexIndices,
       unchangedVertexIndices,

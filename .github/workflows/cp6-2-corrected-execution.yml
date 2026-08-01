@@ -72,36 +72,19 @@ jobs:
           assert old_link_check in source, 'Expected internal-link check block not found'
           source = source.replace(old_link_check, new_link_check, 1)
 
-          old_diagnostics = '''          (() => {{
-            "use strict";
-            let errors = 0;
-            window.addEventListener("error", () => {{ errors += 1; }});
-            window.addEventListener("unhandledrejection", () => {{ errors += 1; }});
-            window.addEventListener("load", () => {{
-              requestAnimationFrame(() => {{
-                const root = document.documentElement;
-                const overflow = Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1;
-                root.dataset.cp6BrowserErrors = String(errors);
-                root.dataset.cp6Overflow = overflow ? "1" : "0";
-              }});
-            }}, {{ once:true }});
-          }})();'''
-          new_diagnostics = '''          (() => {{
-            "use strict";
-            const root = document.documentElement;
-            let errors = 0;
-            const publish = () => {{
-              const overflow = Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1;
-              root.dataset.cp6BrowserErrors = String(errors);
-              root.dataset.cp6Overflow = overflow ? "1" : "0";
-            }};
-            publish();
-            window.addEventListener("error", () => {{ errors += 1; publish(); }});
-            window.addEventListener("unhandledrejection", () => {{ errors += 1; publish(); }});
-            window.addEventListener("load", () => {{ requestAnimationFrame(publish); }}, {{ once:true }});
-          }})();'''
-          assert old_diagnostics in source, 'Expected browser diagnostics block not found'
-          source = source.replace(old_diagnostics, new_diagnostics, 1)
+          pending_attrs = 'data-cp6-browser-errors="pending" data-cp6-overflow="pending"'
+          ready_attrs = 'data-cp6-browser-errors="0" data-cp6-overflow="0"'
+          assert source.count(pending_attrs) == 1, 'Expected initial browser diagnostic attributes not found'
+          source = source.replace(pending_attrs, ready_attrs, 1)
+
+          error_line = 'window.addEventListener("error", () => {{ errors += 1; }});'
+          error_update = 'window.addEventListener("error", () => {{ errors += 1; document.documentElement.dataset.cp6BrowserErrors = String(errors); }});'
+          rejection_line = 'window.addEventListener("unhandledrejection", () => {{ errors += 1; }});'
+          rejection_update = 'window.addEventListener("unhandledrejection", () => {{ errors += 1; document.documentElement.dataset.cp6BrowserErrors = String(errors); }});'
+          assert source.count(error_line) == 1, 'Expected error listener not found'
+          assert source.count(rejection_line) == 1, 'Expected rejection listener not found'
+          source = source.replace(error_line, error_update, 1)
+          source = source.replace(rejection_line, rejection_update, 1)
 
           Path('/tmp/cp62_builder.py').write_text(source, encoding='utf-8')
           PY

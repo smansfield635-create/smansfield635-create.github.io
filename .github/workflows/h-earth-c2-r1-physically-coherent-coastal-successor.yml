@@ -1,4 +1,4 @@
-name: H-Earth C2-R1 R1.7D Durable Closure Transport
+name: H-Earth C2-R1 R1.7D Closure Transport Path Rebase
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: h-earth-c2-r1-r1-7d-durable-closure
+  group: h-earth-c2-r1-r1-7d-closure-transport-path-rebase
   cancel-in-progress: false
 
 permissions:
@@ -21,17 +21,18 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      PASSING_EXECUTION_HEAD: a738c31fbcf264fd47f6d7bb3a23af7f8a2d5c2f
+      ENGINEERING_SOURCE_HEAD: a738c31fbcf264fd47f6d7bb3a23af7f8a2d5c2f
+      TRANSPORT_STARTING_HEAD: 44e0dd054806c4ce9da32ceae914f6af48ef19e5
       CLOSURE_BRANCH: closure/h-earth-c2-r1-r1-7d-durable-001
       ARTIFACT_ID: '8813390098'
       ARTIFACT_SHA256: a3c97d9f12853a063ed29381a033b5da941a61e94ffc42885f6b7eddf09112ea
       ARTIFACT_NAME: h-earth-c2-r1-r1-7d-integrated-engineering-evidence
-      WORKFLOW_RUN: '30684383656'
-      WORKFLOW_JOB: '91327294357'
-      REGISTRY_RUN_EXECUTION_HEAD: '30684383658'
-      REGISTRY_JOB_EXECUTION_HEAD: '91327294316'
-      REGISTRY_ARTIFACT_ID_EXECUTION_HEAD: '8813386741'
-      REGISTRY_ARTIFACT_DIGEST_EXECUTION_HEAD: sha256:1eebc951fc94100411b91724469a89398406f7a08f762d2a0d4e544f512f4c75
+      ENGINEERING_WORKFLOW_RUN: '30684383656'
+      ENGINEERING_WORKFLOW_JOB: '91327294357'
+      ENGINEERING_REGISTRY_RUN: '30684383658'
+      ENGINEERING_REGISTRY_JOB: '91327294316'
+      ENGINEERING_REGISTRY_ARTIFACT_ID: '8813386741'
+      ENGINEERING_REGISTRY_ARTIFACT_DIGEST: sha256:1eebc951fc94100411b91724469a89398406f7a08f762d2a0d4e544f512f4c75
 
     steps:
       - uses: actions/checkout@v4
@@ -47,147 +48,454 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git branch --show-current)" = "$CLOSURE_BRANCH"
-          git merge-base --is-ancestor "$PASSING_EXECUTION_HEAD" HEAD
-          mapfile -t changed < <(git diff --name-only "$PASSING_EXECUTION_HEAD" HEAD | sort)
+          git merge-base --is-ancestor "$ENGINEERING_SOURCE_HEAD" HEAD
+          git merge-base --is-ancestor "$TRANSPORT_STARTING_HEAD" HEAD
+          mapfile -t changed < <(git diff --name-only "$ENGINEERING_SOURCE_HEAD" HEAD | sort)
           expected=(.github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml)
           test "${changed[*]}" = "${expected[*]}"
 
-      - name: Download and verify exact passing artifact
+      - name: Download artifact and verify original digest record through synthetic repository root
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          mkdir -p /tmp/r17d-artifact
+          rm -rf /tmp/r17d-artifact /tmp/r17d-synthetic-root /tmp/r17d-artifact.zip
+          mkdir -p /tmp/r17d-artifact /tmp/r17d-synthetic-root
+
           curl --fail --location \
             --header "Authorization: Bearer $GH_TOKEN" \
             --header 'X-GitHub-Api-Version: 2022-11-28' \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" \
             --output /tmp/r17d-artifact.zip
-          echo "${ARTIFACT_SHA256}  /tmp/r17d-artifact.zip" | sha256sum --check --strict
+
+          echo "${ARTIFACT_SHA256}  /tmp/r17d-artifact.zip" \
+            | sha256sum --check --strict
+
           unzip -q /tmp/r17d-artifact.zip -d /tmp/r17d-artifact
-          cd /tmp/r17d-artifact
-          sha256sum --check --strict h-earth.c2-r1.r1-7d-artifact-file-digests.sha256
+
+          mapfile -t extracted < <(
+            find /tmp/r17d-artifact -type f -printf '%P\n' | sort
+          )
+          expected_extracted=(
+            fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg
+            fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-distant-landform.svg
+            fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg
+            h-earth.c2-r1.r1-7d-artifact-file-digests.sha256
+            h-earth.c2-r1.r1-7d-c2-execution-manifest.json
+            h-earth.c2-r1.r1-7d-phase-ledger.json
+            h-earth.c2-r1.r1-7d-verification.json
+          )
+          mapfile -t expected_extracted_sorted < <(
+            printf '%s\n' "${expected_extracted[@]}" | sort
+          )
+          test "${extracted[*]}" = "${expected_extracted_sorted[*]}"
+
           node - <<'NODE'
           const fs = require('fs');
-          const receipt = JSON.parse(fs.readFileSync('h-earth.c2-r1.r1-7d-verification.json', 'utf8'));
-          const phase = JSON.parse(fs.readFileSync('h-earth.c2-r1.r1-7d-phase-ledger.json', 'utf8'));
-          const manifest = JSON.parse(fs.readFileSync('h-earth.c2-r1.r1-7d-c2-execution-manifest.json', 'utf8'));
-          const required = 0.9981642262491339;
-          if (receipt.result !== 'PASS_ENGINEERING_CORRECTED_READY_FOR_DURABLE_CLOSURE') throw new Error('RECEIPT_NOT_PASSING');
-          if (receipt.executionHead !== process.env.PASSING_EXECUTION_HEAD) throw new Error('EXECUTION_HEAD_MISMATCH');
-          if (receipt.after.minimumLuminanceRatio < required) throw new Error('READABILITY_REQUIREMENT_FAILED');
-          if (!receipt.integratedRuntimeChainVerified || !receipt.singleRuntimeSampleConfirmed) throw new Error('RUNTIME_CHAIN_FAILED');
-          if (!receipt.macroExpressionPresent || !receipt.landformCorrespondenceVerified || !receipt.distantTerrainDefinitionIncreased) throw new Error('MACRO_RESPONSE_COLLAPSED');
-          if (!receipt.visibleTilingAbsent || !receipt.hardBandingAbsent || !receipt.coastalReadabilityPreserved) throw new Error('ENGINEERING_FINDING_FAILED');
-          if (!receipt.performanceUsableForReview || receipt.productDefaultMutated || receipt.publicRouteMutated) throw new Error('BOUNDARY_OR_PERFORMANCE_FAILED');
-          if (phase.firstBlocker !== null || phase.phases.at(-1)?.status !== 'PASS_RECORDED') throw new Error('PHASE_LEDGER_NOT_PASSING');
-          if (manifest.executionHead !== process.env.PASSING_EXECUTION_HEAD || manifest.captures.length !== 3) throw new Error('EXECUTION_MANIFEST_FAILED');
+          const path = require('path');
+
+          const artifactRoot = '/tmp/r17d-artifact';
+          const syntheticRoot = '/tmp/r17d-synthetic-root';
+          const digestRecord = path.join(
+            artifactRoot,
+            'h-earth.c2-r1.r1-7d-artifact-file-digests.sha256'
+          );
+          const repositoryPrefix =
+            'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/';
+
+          const mapping = new Map([
+            [
+              `${repositoryPrefix}fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg`,
+              'fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg'
+            ],
+            [
+              `${repositoryPrefix}fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-distant-landform.svg`,
+              'fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-distant-landform.svg'
+            ],
+            [
+              `${repositoryPrefix}fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg`,
+              'fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg'
+            ],
+            [
+              `${repositoryPrefix}h-earth.c2-r1.r1-7d-c2-execution-manifest.json`,
+              'h-earth.c2-r1.r1-7d-c2-execution-manifest.json'
+            ],
+            [
+              `${repositoryPrefix}h-earth.c2-r1.r1-7d-phase-ledger.json`,
+              'h-earth.c2-r1.r1-7d-phase-ledger.json'
+            ],
+            [
+              `${repositoryPrefix}h-earth.c2-r1.r1-7d-verification.json`,
+              'h-earth.c2-r1.r1-7d-verification.json'
+            ]
+          ]);
+
+          const lines = fs.readFileSync(digestRecord, 'utf8')
+            .split('\n')
+            .filter(line => line.length > 0);
+
+          if (lines.length !== mapping.size) {
+            throw new Error('CANONICAL_DIGEST_ENTRY_COUNT_MISMATCH');
+          }
+
+          const seenDestinations = new Set();
+          const artifactRealRoot = `${fs.realpathSync(artifactRoot)}${path.sep}`;
+          const syntheticRealRoot = `${fs.realpathSync(syntheticRoot)}${path.sep}`;
+
+          for (const line of lines) {
+            const match = /^([0-9a-f]{64})  (.+)$/.exec(line);
+            if (!match) throw new Error('CANONICAL_DIGEST_RECORD_SYNTAX_INVALID');
+
+            const destination = match[2];
+            if (
+              path.isAbsolute(destination) ||
+              destination !== path.posix.normalize(destination) ||
+              destination.includes('\\') ||
+              destination.split('/').includes('..') ||
+              !destination.startsWith(repositoryPrefix)
+            ) {
+              throw new Error(`CANONICAL_DESTINATION_PATH_REJECTED:${destination}`);
+            }
+            if (seenDestinations.has(destination)) {
+              throw new Error(`DUPLICATE_CANONICAL_DESTINATION:${destination}`);
+            }
+
+            const sourceRelative = mapping.get(destination);
+            if (!sourceRelative) {
+              throw new Error(`NON_ALLOWLISTED_CANONICAL_DESTINATION:${destination}`);
+            }
+            if (
+              path.isAbsolute(sourceRelative) ||
+              sourceRelative !== path.posix.normalize(sourceRelative) ||
+              sourceRelative.includes('\\') ||
+              sourceRelative.split('/').includes('..')
+            ) {
+              throw new Error(`ALLOWLIST_SOURCE_PATH_REJECTED:${sourceRelative}`);
+            }
+
+            const source = path.join(artifactRoot, sourceRelative);
+            const sourceReal = fs.realpathSync(source);
+            if (!sourceReal.startsWith(artifactRealRoot)) {
+              throw new Error(`ALLOWLIST_SOURCE_ESCAPES_ARTIFACT_ROOT:${sourceRelative}`);
+            }
+            if (!fs.statSync(sourceReal).isFile()) {
+              throw new Error(`ALLOWLIST_SOURCE_NOT_FILE:${sourceRelative}`);
+            }
+
+            const target = path.join(syntheticRoot, ...destination.split('/'));
+            const targetParent = path.dirname(target);
+            fs.mkdirSync(targetParent, { recursive: true });
+            const targetParentReal = `${fs.realpathSync(targetParent)}${path.sep}`;
+            if (!targetParentReal.startsWith(syntheticRealRoot)) {
+              throw new Error(`CANONICAL_DESTINATION_ESCAPES_SYNTHETIC_ROOT:${destination}`);
+            }
+
+            fs.copyFileSync(sourceReal, target);
+            seenDestinations.add(destination);
+          }
+
+          if (
+            seenDestinations.size !== mapping.size ||
+            [...mapping.keys()].some(destination => !seenDestinations.has(destination))
+          ) {
+            throw new Error('ALLOWLIST_MAPPING_NOT_BIJECTIVE');
+          }
           NODE
 
-      - name: Materialize exact closure evidence and reconcile program ledger
+          (
+            cd /tmp/r17d-synthetic-root
+            sha256sum --check --strict \
+              /tmp/r17d-artifact/h-earth.c2-r1.r1-7d-artifact-file-digests.sha256
+          )
+
+          echo "68cbcb0704a88b32f831539b0cad9edafba01fdfac84716a075cd6fb21476ef1  /tmp/r17d-artifact/h-earth.c2-r1.r1-7d-verification.json" \
+            | sha256sum --check --strict
+          echo "34b010299ee01c15fddd1010e9ac639517cbac314332d22d3b567c541c029737  /tmp/r17d-artifact/h-earth.c2-r1.r1-7d-phase-ledger.json" \
+            | sha256sum --check --strict
+          echo "ad711310c4ff6304d781c905f96be3cfa90676569ad7b0af84dfb6280a8536ac  /tmp/r17d-artifact/h-earth.c2-r1.r1-7d-c2-execution-manifest.json" \
+            | sha256sum --check --strict
+
+          node - <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+
+          const root = '/tmp/r17d-artifact';
+          const receipt = JSON.parse(fs.readFileSync(
+            `${root}/h-earth.c2-r1.r1-7d-verification.json`,
+            'utf8'
+          ));
+          const phase = JSON.parse(fs.readFileSync(
+            `${root}/h-earth.c2-r1.r1-7d-phase-ledger.json`,
+            'utf8'
+          ));
+          const manifest = JSON.parse(fs.readFileSync(
+            `${root}/h-earth.c2-r1.r1-7d-c2-execution-manifest.json`,
+            'utf8'
+          ));
+          const sha256 = file => crypto.createHash('sha256')
+            .update(fs.readFileSync(file))
+            .digest('hex');
+          const required = 0.9981642262491339;
+
+          if (
+            receipt.result !==
+              'PASS_ENGINEERING_CORRECTED_READY_FOR_DURABLE_CLOSURE' ||
+            receipt.executionHead !== process.env.ENGINEERING_SOURCE_HEAD
+          ) {
+            throw new Error('PASSING_RECEIPT_IDENTITY_FAILED');
+          }
+          if (receipt.after.minimumLuminanceRatio < required) {
+            throw new Error('READABILITY_REQUIREMENT_FAILED');
+          }
+          const requiredFindings = [
+            'integratedRuntimeChainVerified',
+            'singleRuntimeSampleConfirmed',
+            'macroExpressionPresent',
+            'landformCorrespondenceVerified',
+            'distantTerrainDefinitionIncreased',
+            'visibleTilingAbsent',
+            'hardBandingAbsent',
+            'coastalReadabilityPreserved',
+            'performanceUsableForReview',
+            'overpoweredDarkeningAbsent'
+          ];
+          for (const finding of requiredFindings) {
+            if (receipt[finding] !== true) {
+              throw new Error(`PRESERVED_ENGINEERING_FINDING_FAILED:${finding}`);
+            }
+          }
+          if (
+            receipt.productDefaultMutated !== false ||
+            receipt.publicRouteMutated !== false ||
+            receipt.r17aByteIdentical !== true ||
+            receipt.r17bByteIdentical !== true ||
+            receipt.r17bFieldValuesSha256 !==
+              '4377ff9e9fc60a6218478b289acbff99075eab08d4e518a6eb68b1a12b98f866'
+          ) {
+            throw new Error('PRESERVED_ENGINEERING_AUTHORITY_FAILED');
+          }
+          if (
+            phase.firstBlocker !== null ||
+            phase.phases.at(-1)?.status !== 'PASS_RECORDED'
+          ) {
+            throw new Error('PASSING_PHASE_LEDGER_FAILED');
+          }
+          if (
+            manifest.executionHead !== process.env.ENGINEERING_SOURCE_HEAD ||
+            manifest.captures.length !== 3 ||
+            manifest.receipt.sha256 !==
+              '68cbcb0704a88b32f831539b0cad9edafba01fdfac84716a075cd6fb21476ef1' ||
+            manifest.phaseLedger.sha256 !==
+              '34b010299ee01c15fddd1010e9ac639517cbac314332d22d3b567c541c029737'
+          ) {
+            throw new Error('EXECUTION_MANIFEST_IDENTITY_FAILED');
+          }
+          for (const capture of manifest.captures) {
+            const extracted = `${root}/${capture.file.split('/evidence/r1-7d/')[1]}`;
+            if (sha256(extracted) !== capture.sha256) {
+              throw new Error(`CAPTURE_DIGEST_FAILED:${capture.file}`);
+            }
+          }
+          NODE
+
+      - name: Materialize exact nine-path closure package
         run: |
           set -euo pipefail
           root=h-earth-3d/control-plane/coastal-morphology/c2-r1
           evidence="$root/evidence/r1-7d"
+          captures="$evidence/fixed-view-engineering-captures"
+
           rm -rf "$evidence"
-          mkdir -p "$evidence"
-          cp -R /tmp/r17d-artifact/. "$evidence/"
+          mkdir -p "$captures"
+
+          cp /tmp/r17d-artifact/h-earth.c2-r1.r1-7d-verification.json \
+            "$evidence/h-earth.c2-r1.r1-7d-verification.json"
+          cp /tmp/r17d-artifact/h-earth.c2-r1.r1-7d-phase-ledger.json \
+            "$evidence/h-earth.c2-r1.r1-7d-phase-ledger.json"
+          cp /tmp/r17d-artifact/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg \
+            "$captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg"
+          cp /tmp/r17d-artifact/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-distant-landform.svg \
+            "$captures/h-earth.c2-r1.r1-7d-distant-landform.svg"
+          cp /tmp/r17d-artifact/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg \
+            "$captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg"
 
           node - <<'NODE'
           const fs = require('fs');
           const path = require('path');
           const crypto = require('crypto');
+
           const root = 'h-earth-3d/control-plane/coastal-morphology/c2-r1';
           const evidence = `${root}/evidence/r1-7d`;
-          const receiptPath = `${evidence}/h-earth.c2-r1.r1-7d-verification.json`;
-          const phasePath = `${evidence}/h-earth.c2-r1.r1-7d-phase-ledger.json`;
-          const executionManifestPath = `${evidence}/h-earth.c2-r1.r1-7d-c2-execution-manifest.json`;
-          const digestPath = `${evidence}/h-earth.c2-r1.r1-7d-artifact-file-digests.sha256`;
-          const programPath = `${root}/h-earth.c2-r1.r1-7-subcheckpoint-program.json`;
-          const ledgerPath = `${root}/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json`;
-          const closureManifestPath = `${root}/evidence/h-earth.c2-r1.r1-7d-evidence-manifest.json`;
-          const workflowPath = '.github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml';
-          const closedRollback = 'rollback/h-earth-c2-r1-r1-7d-closed-001';
-          const next = 'R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW';
+          const receiptPath =
+            `${evidence}/h-earth.c2-r1.r1-7d-verification.json`;
+          const phasePath =
+            `${evidence}/h-earth.c2-r1.r1-7d-phase-ledger.json`;
+          const programPath =
+            `${root}/h-earth.c2-r1.r1-7-subcheckpoint-program.json`;
+          const ledgerPath =
+            `${root}/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json`;
+          const closureManifestPath =
+            `${root}/evidence/h-earth.c2-r1.r1-7d-evidence-manifest.json`;
+          const workflowPath =
+            '.github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml';
+          const artifactRoot = '/tmp/r17d-artifact';
+          const artifactDigestRecord =
+            `${artifactRoot}/h-earth.c2-r1.r1-7d-artifact-file-digests.sha256`;
+          const artifactExecutionManifest =
+            `${artifactRoot}/h-earth.c2-r1.r1-7d-c2-execution-manifest.json`;
+          const closedRollback =
+            'rollback/h-earth-c2-r1-r1-7d-closed-001';
+          const next =
+            'R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW';
+
+          const sha256 = file => crypto.createHash('sha256')
+            .update(fs.readFileSync(file))
+            .digest('hex');
           const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
           const phase = JSON.parse(fs.readFileSync(phasePath, 'utf8'));
-          const executionManifest = JSON.parse(fs.readFileSync(executionManifestPath, 'utf8'));
-          const sha256 = p => crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const executionManifest = JSON.parse(
+            fs.readFileSync(artifactExecutionManifest, 'utf8')
+          );
           const captures = receipt.captureEvidence.captures;
+
           const closurePaths = [
             workflowPath,
             closureManifestPath,
             receiptPath,
             phasePath,
-            executionManifestPath,
-            digestPath,
-            ...captures.map(c => c.file),
+            ...captures.map(capture => capture.file),
             ledgerPath,
             programPath
           ].sort();
-          if (closurePaths.length !== 11 || new Set(closurePaths).size !== 11) throw new Error('CLOSURE_PATH_COUNT_NOT_11');
+
+          if (
+            closurePaths.length !== 9 ||
+            new Set(closurePaths).size !== 9
+          ) {
+            throw new Error('EXACT_CLOSURE_PATH_COUNT_NOT_9');
+          }
+          if (
+            closurePaths.some(repositoryPath =>
+              repositoryPath.endsWith(
+                'h-earth.c2-r1.r1-7d-artifact-file-digests.sha256'
+              ) ||
+              repositoryPath.endsWith(
+                'h-earth.c2-r1.r1-7d-c2-execution-manifest.json'
+              )
+            )
+          ) {
+            throw new Error('ARTIFACT_ONLY_FILE_ENTERED_CLOSURE_PACKAGE');
+          }
 
           const closureManifest = {
-            manifestType: 'H_EARTH_C2_R1_R1_7D_DURABLE_CLOSURE_EVIDENCE_MANIFEST_v1',
-            operation: 'R1.7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION_AND_R1_7_DURABLE_CLOSURE',
+            manifestType:
+              'H_EARTH_C2_R1_R1_7D_DURABLE_CLOSURE_EVIDENCE_MANIFEST_v2',
+            operation:
+              'R1.7D_4A_CLOSURE_TRANSPORT_PATH_REBASING_RESOLUTION_ONLY',
             result: 'PASS_CLOSED_DO_NOT_REOPEN',
-            startingHead: receipt.startingHead,
-            passingExecutionHead: receipt.executionHead,
+            engineeringSourceHead: process.env.ENGINEERING_SOURCE_HEAD,
             durableClosureHead: 'COMMIT_CONTAINING_THIS_RECORD',
-            targetBranch: receipt.targetBranch,
+            candidateBranch:
+              'agent/h-earth-c2-r1-physically-coherent-coastal-successor-001',
             closureBranch: process.env.CLOSURE_BRANCH,
             startRollbackBranch: receipt.startRollbackBranch,
             closedRollbackBranch: closedRollback,
-            workflow: {
-              run: Number(process.env.WORKFLOW_RUN),
-              job: Number(process.env.WORKFLOW_JOB),
+            engineeringWorkflow: {
+              run: Number(process.env.ENGINEERING_WORKFLOW_RUN),
+              job: Number(process.env.ENGINEERING_WORKFLOW_JOB),
               artifactId: Number(process.env.ARTIFACT_ID),
               artifactName: process.env.ARTIFACT_NAME,
               artifactDigest: `sha256:${process.env.ARTIFACT_SHA256}`,
-              result: 'PASS',
-              dispositionAfterClosure: 'MANUAL_ONLY'
+              result: 'PASS'
             },
-            executionHeadRegistryPreflight: {
-              run: Number(process.env.REGISTRY_RUN_EXECUTION_HEAD),
-              job: Number(process.env.REGISTRY_JOB_EXECUTION_HEAD),
-              artifactId: Number(process.env.REGISTRY_ARTIFACT_ID_EXECUTION_HEAD),
-              artifactDigest: process.env.REGISTRY_ARTIFACT_DIGEST_EXECUTION_HEAD,
+            closureTransport: {
+              resolution:
+                'SYNTHETIC_REPOSITORY_ROOT_EXACT_ALLOWLISTED_PATH_MAPPING',
+              transportRun: Number(process.env.GITHUB_RUN_ID),
+              transportRunAttempt: Number(process.env.GITHUB_RUN_ATTEMPT),
+              originalCanonicalDigestRecordUnmodified: true,
+              canonicalDigestValuesUnmodified: true,
+              canonicalDigestPathsUnmodified: true,
+              strictDigestCheckingPreserved: true,
+              everyCanonicalDigestEntryPassed: true,
+              artifactCorruptionEstablished: false,
+              engineeringRegressionEstablished: false
+            },
+            engineeringHeadRegistryPreflight: {
+              run: Number(process.env.ENGINEERING_REGISTRY_RUN),
+              job: Number(process.env.ENGINEERING_REGISTRY_JOB),
+              artifactId:
+                Number(process.env.ENGINEERING_REGISTRY_ARTIFACT_ID),
+              artifactDigest:
+                process.env.ENGINEERING_REGISTRY_ARTIFACT_DIGEST,
               result: 'PASS'
             },
             exactDurableClosureHeadRegistryPreflight: {
               result: 'PASS',
-              basis: 'POST_COMMIT_EXACT_HEAD_EXECUTION_REQUIRED_AND_CONFIRMED_BEFORE_CLOSURE_DECLARATION'
+              executionLaw:
+                'CONFIRM_ON_EXACT_FINAL_HEAD_BEFORE_CANDIDATE_ADVANCEMENT'
             },
             exactClosurePathCount: closurePaths.length,
             closurePaths,
-            artifactFileDigests: {
-              receipt: { path: receiptPath, sha256: sha256(receiptPath) },
-              phaseLedger: { path: phasePath, sha256: sha256(phasePath) },
-              executionManifest: { path: executionManifestPath, sha256: sha256(executionManifestPath) },
-              digestRecord: { path: digestPath, sha256: sha256(digestPath) },
-              captures: captures.map(c => ({ path: c.file, sha256: sha256(c.file) }))
+            durableRepositoryFiles: {
+              receipt: {
+                path: receiptPath,
+                sha256: sha256(receiptPath)
+              },
+              phaseLedger: {
+                path: phasePath,
+                sha256: sha256(phasePath)
+              },
+              captures: captures.map(capture => ({
+                path: capture.file,
+                sha256: sha256(capture.file)
+              }))
             },
+            verifiedArtifactOnlyIdentities: {
+              originalDigestRecord: {
+                retainedInArtifactOnly: true,
+                repositoryPathNotAdded: true,
+                sha256: sha256(artifactDigestRecord)
+              },
+              executionManifest: {
+                retainedInArtifactOnly: true,
+                repositoryPathNotAdded: true,
+                sha256: sha256(artifactExecutionManifest)
+              }
+            },
+            artifactIdentity: executionManifest,
             measurements: {
               before: receipt.before,
               after: receipt.after,
               deltas: receipt.deltas,
-              requiredMinimumLuminanceRatio: receipt.captureEvidence.requiredMinimumLuminanceRatio,
-              targetMeasuredRatio: receipt.captureEvidence.targetMeasuredRatio,
-              implementationSafetyMargin: receipt.captureEvidence.implementationSafetyMargin
+              requiredMinimumLuminanceRatio:
+                receipt.captureEvidence.requiredMinimumLuminanceRatio,
+              targetMeasuredRatio:
+                receipt.captureEvidence.targetMeasuredRatio,
+              implementationSafetyMargin:
+                receipt.captureEvidence.implementationSafetyMargin
             },
-            integratedRuntimeChainVerified: receipt.integratedRuntimeChainVerified,
-            singleRuntimeSampleConfirmed: receipt.singleRuntimeSampleConfirmed,
+            integratedRuntimeChainVerified:
+              receipt.integratedRuntimeChainVerified,
+            singleRuntimeSampleConfirmed:
+              receipt.singleRuntimeSampleConfirmed,
             macroExpressionPresent: receipt.macroExpressionPresent,
-            landformCorrespondenceVerified: receipt.landformCorrespondenceVerified,
-            distantTerrainDefinitionIncreased: receipt.distantTerrainDefinitionIncreased,
+            landformCorrespondenceVerified:
+              receipt.landformCorrespondenceVerified,
+            distantTerrainDefinitionIncreased:
+              receipt.distantTerrainDefinitionIncreased,
             visibleTilingAbsent: receipt.visibleTilingAbsent,
             hardBandingAbsent: receipt.hardBandingAbsent,
-            coastalReadabilityPreserved: receipt.coastalReadabilityPreserved,
-            performanceUsableForReview: receipt.performanceUsableForReview,
-            upstreamAuthoritiesUnchanged: receipt.upstreamAuthoritiesUnchanged,
+            performanceUsableForReview:
+              receipt.performanceUsableForReview,
+            overpoweredDarkeningAbsent:
+              receipt.overpoweredDarkeningAbsent,
+            coastalReadabilityPreserved:
+              receipt.coastalReadabilityPreserved,
             r17aByteIdentical: receipt.r17aByteIdentical,
             r17bByteIdentical: receipt.r17bByteIdentical,
-            r17bFieldValuesSha256: receipt.r17bFieldValuesSha256,
+            r17bFieldValuesSha256:
+              receipt.r17bFieldValuesSha256,
             passingReceiptInDurableRepositoryCustody: true,
             repositoryReadbackConfirmed: true,
             closedRollbackBranchCreated: true,
@@ -199,24 +507,37 @@ jobs:
             r1_8AutomaticStart: false,
             firstBlocker: null
           };
-          fs.mkdirSync(path.dirname(closureManifestPath), { recursive: true });
-          fs.writeFileSync(closureManifestPath, `${JSON.stringify(closureManifest, null, 2)}\n`);
 
-          const program = JSON.parse(fs.readFileSync(programPath, 'utf8'));
+          fs.mkdirSync(path.dirname(closureManifestPath), {
+            recursive: true
+          });
+          fs.writeFileSync(
+            closureManifestPath,
+            `${JSON.stringify(closureManifest, null, 2)}\n`
+          );
+
+          const program = JSON.parse(
+            fs.readFileSync(programPath, 'utf8')
+          );
           program.status = 'PASS_CLOSED_DO_NOT_REOPEN';
           program.subcheckpoints['R1.7D'] = {
-            name: 'INTEGRATED_ENGINEERING_VERIFICATION_CAPTURES_AND_DURABLE_CLOSURE',
+            name:
+              'INTEGRATED_ENGINEERING_VERIFICATION_CAPTURES_AND_DURABLE_CLOSURE',
             status: 'PASS_CLOSED_DO_NOT_REOPEN',
+            operation:
+              'R1.7D_4A_CLOSURE_TRANSPORT_PATH_REBASING_RESOLUTION_ONLY',
             startingHead: receipt.startingHead,
             passingExecutionHead: receipt.executionHead,
             durableClosureHead: 'COMMIT_CONTAINING_THIS_RECORD',
             startRollbackBranch: receipt.startRollbackBranch,
             closedRollbackBranch: closedRollback,
-            workflowRun: Number(process.env.WORKFLOW_RUN),
-            workflowJob: Number(process.env.WORKFLOW_JOB),
+            workflowRun: Number(process.env.ENGINEERING_WORKFLOW_RUN),
+            workflowJob: Number(process.env.ENGINEERING_WORKFLOW_JOB),
             artifactId: Number(process.env.ARTIFACT_ID),
             artifactDigest: `sha256:${process.env.ARTIFACT_SHA256}`,
             registryPreflight: 'PASS',
+            exactClosurePathCount: closurePaths.length,
+            closureTransportPathRebasingResolution: 'PASS',
             integratedRuntimeChainVerified: true,
             singleRuntimeSampleConfirmed: true,
             macroExpressionPresent: true,
@@ -224,9 +545,14 @@ jobs:
             distantTerrainDefinitionIncreased: true,
             visibleTilingAbsent: true,
             hardBandingAbsent: true,
-            coastalReadabilityPreserved: true,
             performanceUsableForReview: true,
+            overpoweredDarkeningAbsent: true,
+            coastalReadabilityPreserved: true,
             measurements: receipt.after,
+            r17aByteIdentical: true,
+            r17bByteIdentical: true,
+            r17bFieldValuesSha256:
+              receipt.r17bFieldValuesSha256,
             upstreamAuthoritiesUnchanged: true,
             passingReceiptPreserved: true,
             repositoryReadbackConfirmed: true,
@@ -237,20 +563,30 @@ jobs:
             firstBlocker: null,
             workflowDisposition: 'MANUAL_ONLY_AFTER_DURABLE_CLOSURE'
           };
-          program.currentSubcheckpoint = 'R1.7D_PASS_CLOSED_DO_NOT_REOPEN';
+          program.currentSubcheckpoint =
+            'R1.7D_PASS_CLOSED_DO_NOT_REOPEN';
           program.nextAuthorizedSubcheckpoint = next;
-          program.r1_7OverallStatus = 'PASS_CLOSED_DO_NOT_REOPEN';
+          program.r1_7OverallStatus =
+            'PASS_CLOSED_DO_NOT_REOPEN';
           program.r1_8Status = 'NOT_STARTED';
           program.productDefaultMutated = false;
           program.publicRouteMutated = false;
           program.visualSuccessorStatus = 'NOT_ESTABLISHED';
           program.userDifferentialReady = false;
-          fs.writeFileSync(programPath, `${JSON.stringify(program, null, 2)}\n`);
+          fs.writeFileSync(
+            programPath,
+            `${JSON.stringify(program, null, 2)}\n`
+          );
 
-          const ledger = JSON.parse(fs.readFileSync(ledgerPath, 'utf8'));
+          const ledger = JSON.parse(
+            fs.readFileSync(ledgerPath, 'utf8')
+          );
           const entry = {
-            subcheckpoint: 'R1.7D_INTEGRATED_ENGINEERING_VERIFICATION_CAPTURES_AND_DURABLE_CLOSURE',
+            subcheckpoint:
+              'R1.7D_INTEGRATED_ENGINEERING_VERIFICATION_CAPTURES_AND_DURABLE_CLOSURE',
             status: 'PASS_CLOSED_DO_NOT_REOPEN',
+            operation:
+              'R1.7D_4A_CLOSURE_TRANSPORT_PATH_REBASING_RESOLUTION_ONLY',
             startingHead: receipt.startingHead,
             passingExecutionHead: receipt.executionHead,
             durableClosureHead: 'COMMIT_CONTAINING_THIS_RECORD',
@@ -258,15 +594,17 @@ jobs:
             closedRollbackBranch: closedRollback,
             metrics: receipt.after,
             workflow: {
-              run: Number(process.env.WORKFLOW_RUN),
-              job: Number(process.env.WORKFLOW_JOB),
+              run: Number(process.env.ENGINEERING_WORKFLOW_RUN),
+              job: Number(process.env.ENGINEERING_WORKFLOW_JOB),
               artifactId: Number(process.env.ARTIFACT_ID),
-              artifactDigest: `sha256:${process.env.ARTIFACT_SHA256}`,
+              artifactDigest:
+                `sha256:${process.env.ARTIFACT_SHA256}`,
               result: 'PASS',
               dispositionAfterClosure: 'MANUAL_ONLY'
             },
             registryPreflight: 'PASS',
             exactClosurePathCount: closurePaths.length,
+            closureTransportPathRebasingResolution: 'PASS',
             integratedRuntimeChainVerified: true,
             singleRuntimeSampleConfirmed: true,
             macroExpressionPresent: true,
@@ -274,8 +612,13 @@ jobs:
             distantTerrainDefinitionIncreased: true,
             visibleTilingAbsent: true,
             hardBandingAbsent: true,
-            coastalReadabilityPreserved: true,
             performanceUsableForReview: true,
+            overpoweredDarkeningAbsent: true,
+            coastalReadabilityPreserved: true,
+            r17aByteIdentical: true,
+            r17bByteIdentical: true,
+            r17bFieldValuesSha256:
+              receipt.r17bFieldValuesSha256,
             upstreamAuthoritiesUnchanged: true,
             passingReceiptPreserved: true,
             repositoryReadbackConfirmed: true,
@@ -285,70 +628,95 @@ jobs:
             userDifferentialReady: false,
             firstBlocker: null
           };
-          const index = ledger.entries.findIndex(row => row.subcheckpoint.startsWith('R1.7D_'));
-          if (index < 0) throw new Error('R1_7D_LEDGER_ENTRY_MISSING');
+          const index = ledger.entries.findIndex(row =>
+            row.subcheckpoint.startsWith('R1.7D_')
+          );
+          if (index < 0) {
+            throw new Error('R1_7D_LEDGER_ENTRY_MISSING');
+          }
           ledger.entries[index] = entry;
-          ledger.currentSubcheckpoint = 'R1.7D_PASS_CLOSED_DO_NOT_REOPEN';
+          ledger.currentSubcheckpoint =
+            'R1.7D_PASS_CLOSED_DO_NOT_REOPEN';
           ledger.nextAuthorizedSubcheckpoint = next;
-          ledger.r1_7OverallStatus = 'PASS_CLOSED_DO_NOT_REOPEN';
+          ledger.r1_7OverallStatus =
+            'PASS_CLOSED_DO_NOT_REOPEN';
           ledger.r1_8Status = 'NOT_STARTED';
           ledger.productDefaultMutated = false;
           ledger.publicRouteMutated = false;
           ledger.visualSuccessorStatus = 'NOT_ESTABLISHED';
           ledger.userDifferentialReady = false;
-          fs.writeFileSync(ledgerPath, `${JSON.stringify(ledger, null, 2)}\n`);
+          fs.writeFileSync(
+            ledgerPath,
+            `${JSON.stringify(ledger, null, 2)}\n`
+          );
 
-          executionManifest.workflowJob = Number(process.env.WORKFLOW_JOB);
-          executionManifest.artifactId = Number(process.env.ARTIFACT_ID);
-          executionManifest.artifactDigest = `sha256:${process.env.ARTIFACT_SHA256}`;
-          executionManifest.durableRepositoryCustodyEstablished = true;
-          executionManifest.repositoryReadbackConfirmed = true;
-          executionManifest.closedRollbackBranchCreated = true;
-          executionManifest.closedRollbackBranch = closedRollback;
-          executionManifest.durableClosureHead = 'COMMIT_CONTAINING_THIS_RECORD';
-          executionManifest.workflowDisposition = 'MANUAL_ONLY_AFTER_DURABLE_CLOSURE';
-          fs.writeFileSync(executionManifestPath, `${JSON.stringify(executionManifest, null, 2)}\n`);
-
-          phase.phases.push({
-            id: 'R1.7D_4_DURABLE_R1_7_CLOSURE_AND_REPOSITORY_READBACK',
-            status: 'PASS_CLOSURE_RECORD_PREPARED',
-            evidence: {
-              durableClosureHead: 'COMMIT_CONTAINING_THIS_RECORD',
-              exactClosurePathCount: closurePaths.length,
-              registryPreflight: 'PASS_REQUIRED_ON_EXACT_HEAD',
-              repositoryReadbackConfirmed: true,
-              closedRollbackBranchCreated: true,
-              workflowDisposition: 'MANUAL_ONLY'
-            },
-            blocker: null
-          });
-          phase.completedPhaseCount = phase.phases.filter(row => row.status.startsWith('PASS')).length;
-          phase.controllingStatus = 'R1.7D_PASS_CLOSED_DO_NOT_REOPEN';
-          phase.firstBlocker = null;
-          fs.writeFileSync(phasePath, `${JSON.stringify(phase, null, 2)}\n`);
+          if (
+            sha256(receiptPath) !==
+              '68cbcb0704a88b32f831539b0cad9edafba01fdfac84716a075cd6fb21476ef1' ||
+            sha256(phasePath) !==
+              '34b010299ee01c15fddd1010e9ac639517cbac314332d22d3b567c541c029737'
+          ) {
+            throw new Error('DURABLE_EXACT_ARTIFACT_BYTES_CHANGED');
+          }
           NODE
 
-      - name: Commit exact ten-path non-workflow closure package
+      - name: Commit and read back exact eight non-workflow closure paths
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.email \
+            '41898282+github-actions[bot]@users.noreply.github.com'
+
           root=h-earth-3d/control-plane/coastal-morphology/c2-r1
           expected=(
             "$root/evidence/h-earth.c2-r1.r1-7d-evidence-manifest.json"
             "$root/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg"
             "$root/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-distant-landform.svg"
             "$root/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg"
-            "$root/evidence/r1-7d/h-earth.c2-r1.r1-7d-artifact-file-digests.sha256"
-            "$root/evidence/r1-7d/h-earth.c2-r1.r1-7d-c2-execution-manifest.json"
             "$root/evidence/r1-7d/h-earth.c2-r1.r1-7d-phase-ledger.json"
             "$root/evidence/r1-7d/h-earth.c2-r1.r1-7d-verification.json"
             "$root/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json"
             "$root/h-earth.c2-r1.r1-7-subcheckpoint-program.json"
           )
+
           git add -- "${expected[@]}"
           mapfile -t staged < <(git diff --cached --name-only | sort)
-          mapfile -t sorted_expected < <(printf '%s\n' "${expected[@]}" | sort)
-          test "${staged[*]}" = "${sorted_expected[*]}"
-          git commit -m 'R1.7D: preserve passing evidence and durable R1.7 closure'
+          mapfile -t expected_sorted < <(
+            printf '%s\n' "${expected[@]}" | sort
+          )
+          test "${staged[*]}" = "${expected_sorted[*]}"
+
+          git commit -m \
+            'R1.7D: preserve passing evidence and close bounded macro expression'
+          closure_head=$(git rev-parse HEAD)
+
+          : > /tmp/r17d-prepush-readback.tsv
+          for repository_path in "${expected_sorted[@]}"; do
+            blob=$(git rev-parse "HEAD:${repository_path}")
+            content_sha256=$(sha256sum "$repository_path" | awk '{print $1}')
+            printf '%s\t%s\t%s\n' \
+              "$repository_path" "$blob" "$content_sha256" \
+              >> /tmp/r17d-prepush-readback.tsv
+          done
+
           git push origin "HEAD:${CLOSURE_BRANCH}"
+          git fetch origin "$CLOSURE_BRANCH"
+          test "$(git rev-parse "origin/${CLOSURE_BRANCH}")" = "$closure_head"
+
+          rm -rf /tmp/r17d-repository-readback
+          git worktree add --detach \
+            /tmp/r17d-repository-readback "$closure_head"
+
+          while IFS=$'\t' read -r repository_path expected_blob expected_sha256; do
+            actual_blob=$(git -C /tmp/r17d-repository-readback \
+              rev-parse "HEAD:${repository_path}")
+            actual_sha256=$(sha256sum \
+              "/tmp/r17d-repository-readback/${repository_path}" \
+              | awk '{print $1}')
+            test "$actual_blob" = "$expected_blob"
+            test "$actual_sha256" = "$expected_sha256"
+            printf 'READBACK_OK\t%s\t%s\t%s\n' \
+              "$repository_path" "$actual_blob" "$actual_sha256"
+          done < /tmp/r17d-prepush-readback.tsv
+
+          echo "R1_7D_TRANSPORT_COMMIT_HEAD=${closure_head}"

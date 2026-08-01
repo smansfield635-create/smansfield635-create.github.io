@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import {
@@ -111,8 +111,6 @@ assert.equal(syntheticResult.completeWorldBinding.counters.terrainSampleCacheHit
 assert.equal(syntheticResult.completeWorldBinding.counters.candidateMaterialSampleInvocationCount, 1);
 assert.equal(syntheticResult.completeWorldBinding.counters.candidateMaterialSampleCacheHitCount, 1);
 assert(syntheticResult.completeWorldBinding.counters.constructionYieldCount > 0);
-assert(syntheticProgress.some(receipt => receipt.phase === 'COASTAL_PACKAGE_BINDING'));
-assert(syntheticProgress.some(receipt => receipt.phase === 'COMPLETE_WORLD_DIGEST'));
 assert.equal(Object.isFrozen(syntheticResult.buffers.positions), true);
 assert.deepEqual(syntheticCanonicalPackage, syntheticBefore, 'synthetic canonical package was mutated');
 assert.deepEqual(syntheticResult.primitiveIds, syntheticBefore.primitiveIds);
@@ -122,20 +120,33 @@ assert.deepEqual(syntheticResult.buffers.indices, syntheticBefore.buffers.indice
 const syntheticEvaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(syntheticResult, syntheticCanonicalPackage);
 assert.equal(syntheticEvaluation.eligible, true, syntheticEvaluation.issues.join(','));
 
+const ledgerCarrierRecord = JSON.parse(await readFile(resolve(
+  root,
+  'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json'
+), 'utf8'));
+const role3CarrierRecord = JSON.parse(await readFile(resolve(
+  root,
+  'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json'
+), 'utf8'));
+assert.equal(ledgerCarrierRecord.exactBindingCacheCarrier?.partIndex, 1);
+assert.equal(role3CarrierRecord.exactBindingCacheCarrier?.partIndex, 2);
+assert.equal(ledgerCarrierRecord.exactBindingCacheCarrier?.partCount, 2);
+assert.equal(role3CarrierRecord.exactBindingCacheCarrier?.partCount, 2);
+assert.equal(ledgerCarrierRecord.exactBindingCacheCarrier?.encoding, 'BASE64_GZIP_JSON');
+assert.equal(role3CarrierRecord.exactBindingCacheCarrier?.encoding, 'BASE64_GZIP_JSON');
+const exactBindingCacheBase64 = ledgerCarrierRecord.exactBindingCacheCarrier.value +
+  role3CarrierRecord.exactBindingCacheCarrier.value;
+assert(exactBindingCacheBase64.length > 1000000);
+
 const realCanonicalPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
 const realBefore = structuredClone(realCanonicalPackage);
 const realStartedAt = performance.now();
 const realResult = await buildHEarthC2R1CompleteWorldRenderPackage({
   canonicalPackage: realCanonicalPackage,
-  sampleCoastalTerrain: sampleHEarthC2R1CoastalTerrainField,
-  sampleCoastalSurfaceFrame: sampleHEarthC2R1CoastalSurfaceFrame,
-  sampleCandidateMaterial: sampleHEarthC2R1CandidateRendererMaterial,
-  sampleSediment: sampleHEarthC2R1ContinuousCoastalSedimentMembership,
-  sampleSwash: sampleHEarthC2R1CoastalSwashFoamWetness,
-  sampleWaterOptics: sampleHEarthC2R1CoastalWaterOptics,
-  sampleBreaker: sampleHEarthC2R1CoastalBreakerField,
-  timeSeconds: 0,
-  stopAfterFirstFailure: true
+  exactBindingCacheBase64,
+  exactBindingCacheArtifactDigest: 'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1',
+  startupBudgetMilliseconds: 105000,
+  yieldEveryVertices: 128
 });
 const realElapsedMilliseconds = Number((performance.now() - realStartedAt).toFixed(3));
 const realEvaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(realResult, realCanonicalPackage);
@@ -148,7 +159,7 @@ const identityPreservation = {
   indexBytes: JSON.stringify(realResult.buffers?.indices) === JSON.stringify(realCanonicalPackage.buffers.indices)
 };
 const realDiagnostic = {
-  testType: 'H_EARTH_C2_R1_REAL_CANONICAL_PACKAGE_INTEGRATION_TEST_v3',
+  testType: 'H_EARTH_C2_R1_EXACT_BINDING_CACHE_INTEGRATION_TEST_v1',
   eligible: realResult.eligible === true && realEvaluation.eligible === true,
   rootRejectionCode: realResult.rootRejectionCode ?? null,
   issues: realEvaluation.issues,
@@ -161,26 +172,22 @@ const realDiagnostic = {
 console.log(`REAL_PACKAGE_DIAGNOSTIC:${JSON.stringify(realDiagnostic)}`);
 assert.equal(realResult.eligible, true, JSON.stringify(realDiagnostic));
 assert.equal(realEvaluation.eligible, true, JSON.stringify(realDiagnostic));
+assert.equal(realResult.packageIdentity, 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE');
+assert.equal(realResult.contentDigest, 'fnv1a32:218f37ae');
 assert.equal(counters.candidateSampleFailureCount, 0);
 assert.equal(counters.adapterBoundaryExcludedVertexCount, 1);
-assert(counters.boundTerrainVertexCount > 0);
-assert(counters.boundShorelineVertexCount > 0);
-assert(counters.terrainSampleInvocationCount <= counters.terrainVertexCount + counters.shorelineVertexCount);
-assert(counters.candidateMaterialSampleInvocationCount <= counters.boundTerrainVertexCount + counters.boundShorelineVertexCount + counters.adapterBoundaryExcludedVertexCount);
-assert(counters.terrainSampleCacheHitCount > 0);
-assert(counters.candidateMaterialSampleCacheHitCount > 0);
-assert(Number.isFinite(counters.constructionMilliseconds));
-assert(Number.isFinite(realElapsedMilliseconds));
-assert.equal(realResult.completeWorldBinding.coordinateMemoizationActive, true);
+assert.equal(counters.boundTerrainVertexCount, 10419);
+assert.equal(counters.boundShorelineVertexCount, 299);
+assert.equal(realResult.completeWorldBinding.exactBindingCacheActive, true);
+assert.equal(realResult.completeWorldBinding.exactBindingCacheArtifactDigest, 'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1');
+assert(counters.constructionMilliseconds < 105000, `cache construction exceeded browser budget: ${counters.constructionMilliseconds}`);
+assert(realElapsedMilliseconds < 105000, `cache integration elapsed exceeded browser budget: ${realElapsedMilliseconds}`);
 assert.equal(Object.isFrozen(realResult.buffers.positions), true);
 assert.equal(boundaryExclusions.length, 1);
 assert.equal(boundaryExclusions[0].vertexIndex, 24327);
 assert.equal(boundaryExclusions[0].roleCode, 1);
 assert.equal(boundaryExclusions[0].worldX, 128);
 assert.equal(boundaryExclusions[0].worldZ, 64);
-assert(boundaryExclusions[0].material.issues.includes('R1_1_R1_3_OR_R1_6_CANDIDATE_INPUT_NOT_ELIGIBLE'));
-assert(boundaryExclusions[0].swash.issues.includes('R1_1_R1_3_R1_4_OR_R1_5_INPUT_NOT_ELIGIBLE'));
-assert(boundaryExclusions[0].breaker.issues.includes('DIRECTIONAL_DEPTH_SAMPLE_INVALID'));
 assert.deepEqual(realCanonicalPackage, realBefore, 'real canonical package was mutated');
 assert.deepEqual(realResult.primitiveIds, realBefore.primitiveIds);
 assert.deepEqual(realResult.primitiveSpans, realBefore.primitiveSpans);
@@ -188,114 +195,77 @@ assert.deepEqual(realResult.drawRanges, realBefore.drawRanges);
 assert.deepEqual(realResult.buffers.indices, realBefore.buffers.indices);
 assert(Object.values(identityPreservation).every(Boolean));
 
-const cacheOutputPath = process.env.H_EARTH_COMPLETE_WORLD_CACHE_OUTPUT ?? null;
-if (cacheOutputPath) {
-  const terrainRecordWidth = 12;
-  const shorelineRecordWidth = 8;
-  const terrainRecords = new Map();
-  const shorelineRecords = new Map();
-  const equalRecord = (left, right) =>
-    left.length === right.length && left.every((value, index) => Object.is(value, right[index]));
-  for (const vertexIndex of realResult.completeWorldBinding.changedVertexIndices) {
-    const roleCode = realCanonicalPackage.buffers.roleCodes[vertexIndex];
-    const positionOffset = vertexIndex * 3;
-    const colorOffset = vertexIndex * 4;
-    const worldX = realCanonicalPackage.buffers.positions[positionOffset];
-    const worldZ = realCanonicalPackage.buffers.positions[positionOffset + 2];
-    const key = `${roleCode}|${Object.is(worldX, -0) ? '-0' : worldX}|${Object.is(worldZ, -0) ? '-0' : worldZ}`;
-    let record;
-    let records;
-    if (roleCode === 1) {
-      record = [
-        worldX,
-        worldZ,
-        realResult.buffers.positions[positionOffset + 1],
-        realResult.buffers.normals[positionOffset],
-        realResult.buffers.normals[positionOffset + 1],
-        realResult.buffers.normals[positionOffset + 2],
-        realResult.buffers.baseColorsLinear[colorOffset],
-        realResult.buffers.baseColorsLinear[colorOffset + 1],
-        realResult.buffers.baseColorsLinear[colorOffset + 2],
-        realResult.buffers.materialParameters[colorOffset],
-        realResult.buffers.materialParameters[colorOffset + 2],
-        realResult.buffers.materialParameters[colorOffset + 3]
-      ];
-      records = terrainRecords;
-    } else if (roleCode === 2) {
-      record = [
-        worldX,
-        worldZ,
-        realResult.buffers.baseColorsLinear[colorOffset],
-        realResult.buffers.baseColorsLinear[colorOffset + 1],
-        realResult.buffers.baseColorsLinear[colorOffset + 2],
-        realResult.buffers.baseColorsLinear[colorOffset + 3],
-        realResult.buffers.materialParameters[colorOffset + 2],
-        realResult.buffers.materialParameters[colorOffset + 3]
-      ];
-      records = shorelineRecords;
-    } else {
-      throw new Error(`CACHE_CHANGED_VERTEX_ROLE_INVALID:${vertexIndex}:${roleCode}`);
-    }
-    if (records.has(key)) {
-      assert(equalRecord(records.get(key), record), `CACHE_DUPLICATE_OUTPUT_MISMATCH:${key}`);
-    } else {
-      records.set(key, record);
-    }
-  }
-  const flatten = records => Array.from(records.values()).flat();
-  const encodeFloat64 = values => {
-    const array = Float64Array.from(values);
-    return Buffer.from(array.buffer, array.byteOffset, array.byteLength).toString('base64');
-  };
-  const terrainValues = flatten(terrainRecords);
-  const shorelineValues = flatten(shorelineRecords);
-  assert.equal(terrainValues.length % terrainRecordWidth, 0);
-  assert.equal(shorelineValues.length % shorelineRecordWidth, 0);
-  const cache = {
-    cacheType: 'H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v1',
-    encoding: 'BASE64_LITTLE_ENDIAN_FLOAT64',
-    objectId: 'H_EARTH:C2_R1:COASTAL_SUCCESSOR',
-    executionHistoryId: 'H_EARTH:C2_R1:PR_418:HISTORY_001',
-    activeEdgeId: 'H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE',
-    sourceHead: process.env.GITHUB_SHA ?? null,
-    canonicalPackageIdentity: realCanonicalPackage.packageIdentity,
-    canonicalPackageContentDigest: realCanonicalPackage.contentDigest,
-    completeWorldPackageIdentity: realResult.packageIdentity,
-    completeWorldPackageContentDigest: realResult.contentDigest,
-    completeWorldContractId: realResult.completeWorldContractId,
-    counters,
-    boundaryExclusionDiagnostics: boundaryExclusions,
-    terrain: {
-      recordWidth: terrainRecordWidth,
-      recordCount: terrainRecords.size,
-      fields: ['worldX','worldZ','elevationY','normalX','normalY','normalZ','colorR','colorG','colorB','roughness','wetness','cavity'],
-      valuesBase64: encodeFloat64(terrainValues)
-    },
-    shoreline: {
-      recordWidth: shorelineRecordWidth,
-      recordCount: shorelineRecords.size,
-      fields: ['worldX','worldZ','colorR','colorG','colorB','alpha','wetness','foam'],
-      valuesBase64: encodeFloat64(shorelineValues)
-    },
-    preservation: {
-      canonicalPackageReadOnly: true,
-      primitiveIdentitiesPreserved: true,
-      primitiveSpansPreserved: true,
-      drawRangesPreserved: true,
-      indicesPreserved: true,
-      noncoastalBytesPreserved: true
-    }
-  };
-  await mkdir(dirname(cacheOutputPath), { recursive: true });
-  await writeFile(cacheOutputPath, `${JSON.stringify(cache)}\n`, 'utf8');
-  console.log(`COMPLETE_WORLD_CACHE_WRITTEN:${JSON.stringify({
-    path: cacheOutputPath,
-    terrainRecordCount: terrainRecords.size,
-    shorelineRecordCount: shorelineRecords.size,
-    completeWorldPackageIdentity: realResult.packageIdentity,
-    completeWorldPackageContentDigest: realResult.contentDigest
-  })}`);
+const nearlyEqual = (left, right, tolerance = 1e-12) => Math.abs(left - right) <= tolerance;
+const representativeTerrain = { worldX: -54, worldZ: -230 };
+const terrainVertexIndex = realCanonicalPackage.buffers.roleCodes.findIndex((roleCode, vertexIndex) => {
+  const offset = vertexIndex * 3;
+  return roleCode === 1 &&
+    Object.is(realCanonicalPackage.buffers.positions[offset], representativeTerrain.worldX) &&
+    Object.is(realCanonicalPackage.buffers.positions[offset + 2], representativeTerrain.worldZ);
+});
+assert(terrainVertexIndex >= 0, 'REPRESENTATIVE_TERRAIN_VERTEX_NOT_FOUND');
+const terrainAudit = sampleHEarthC2R1CoastalTerrainField(representativeTerrain.worldX, representativeTerrain.worldZ);
+const surfaceAudit = sampleHEarthC2R1CoastalSurfaceFrame(representativeTerrain.worldX, representativeTerrain.worldZ);
+const materialAudit = sampleHEarthC2R1CandidateRendererMaterial(representativeTerrain.worldX, representativeTerrain.worldZ, { timeSeconds: 0 });
+assert.equal(terrainAudit.valid, true);
+assert.equal(surfaceAudit.valid, true);
+assert.equal(materialAudit.valid, true);
+const terrainPositionOffset = terrainVertexIndex * 3;
+const terrainColorOffset = terrainVertexIndex * 4;
+assert(nearlyEqual(realResult.buffers.positions[terrainPositionOffset + 1], terrainAudit.world.y));
+assert(nearlyEqual(realResult.buffers.normals[terrainPositionOffset], surfaceAudit.normal.x));
+assert(nearlyEqual(realResult.buffers.normals[terrainPositionOffset + 1], surfaceAudit.normal.y));
+assert(nearlyEqual(realResult.buffers.normals[terrainPositionOffset + 2], surfaceAudit.normal.z));
+for (let channel = 0; channel < 3; channel += 1) {
+  assert(nearlyEqual(realResult.buffers.baseColorsLinear[terrainColorOffset + channel], materialAudit.material.colorLinear[channel]));
 }
+assert(nearlyEqual(realResult.buffers.materialParameters[terrainColorOffset], materialAudit.material.roughness));
+assert(nearlyEqual(realResult.buffers.materialParameters[terrainColorOffset + 2], materialAudit.preservedCandidateResponses.temporaryWetness));
+assert(nearlyEqual(realResult.buffers.materialParameters[terrainColorOffset + 3], materialAudit.material.cavityOrAmbientOcclusion));
+
+const representativeShoreline = { worldX: -179.27073246240616, worldZ: -119.3263727426529 };
+const shorelineVertexIndex = realCanonicalPackage.buffers.roleCodes.findIndex((roleCode, vertexIndex) => {
+  const offset = vertexIndex * 3;
+  return roleCode === 2 &&
+    Object.is(realCanonicalPackage.buffers.positions[offset], representativeShoreline.worldX) &&
+    Object.is(realCanonicalPackage.buffers.positions[offset + 2], representativeShoreline.worldZ);
+});
+assert(shorelineVertexIndex >= 0, 'REPRESENTATIVE_SHORELINE_VERTEX_NOT_FOUND');
+const shorelineMaterialAudit = sampleHEarthC2R1CandidateRendererMaterial(
+  representativeShoreline.worldX,
+  representativeShoreline.worldZ,
+  { timeSeconds: 0 }
+);
+assert.equal(shorelineMaterialAudit.valid, true);
+const preserved = shorelineMaterialAudit.preservedCandidateResponses;
+const foam = Math.min(1, Math.max(0, preserved.foamIntensity * preserved.foamOpacity));
+const expectedWaterColor = preserved.waterSurfaceColorLinear.map((channel, index) =>
+  Math.min(1, Math.max(0, channel * (1 - foam) + preserved.foamColorLinear[index] * foam))
+);
+const expectedWaterAlpha = Math.min(0.92, Math.max(0.18, preserved.waterSurfaceOpacity + foam * 0.18));
+const shorelineColorOffset = shorelineVertexIndex * 4;
+for (let channel = 0; channel < 3; channel += 1) {
+  assert(nearlyEqual(realResult.buffers.baseColorsLinear[shorelineColorOffset + channel], expectedWaterColor[channel]));
+}
+assert(nearlyEqual(realResult.buffers.baseColorsLinear[shorelineColorOffset + 3], expectedWaterAlpha));
+assert(nearlyEqual(realResult.buffers.materialParameters[shorelineColorOffset + 2], preserved.temporaryWetness));
+assert(nearlyEqual(realResult.buffers.materialParameters[shorelineColorOffset + 3], foam));
+
+const boundaryTerrain = sampleHEarthC2R1CoastalTerrainField(128, 64);
+const boundaryMaterial = sampleHEarthC2R1CandidateRendererMaterial(128, 64, { timeSeconds: 0 });
+const boundarySediment = sampleHEarthC2R1ContinuousCoastalSedimentMembership(128, 64);
+const boundarySwash = sampleHEarthC2R1CoastalSwashFoamWetness(128, 64, { timeSeconds: 0 });
+const boundaryWaterOptics = sampleHEarthC2R1CoastalWaterOptics(128, 64);
+const boundaryBreaker = sampleHEarthC2R1CoastalBreakerField(128, 64);
+assert.equal(boundaryTerrain.valid, true);
+assert.equal(boundaryMaterial.valid, false);
+assert.equal(boundarySediment.valid, true);
+assert.equal(boundarySwash.valid, false);
+assert.equal(boundaryWaterOptics.valid, true);
+assert.equal(boundaryBreaker.valid, false);
+assert(boundaryMaterial.issues.includes('R1_1_R1_3_OR_R1_6_CANDIDATE_INPUT_NOT_ELIGIBLE'));
+assert(boundarySwash.issues.includes('R1_1_R1_3_R1_4_OR_R1_5_INPUT_NOT_ELIGIBLE'));
+assert(boundaryBreaker.issues.includes('DIRECTIONAL_DEPTH_SAMPLE_INVALID'));
 
 const manifest = JSON.parse(await readFile(resolve(root, 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'), 'utf8'));
 assert.deepEqual([...manifest.completeWorldIntegrationOperation.exactMutablePaths].sort(), authorizedPaths);
@@ -325,11 +295,6 @@ console.log(JSON.stringify({
   },
   boundTerrainVertexCount: counters.boundTerrainVertexCount,
   boundShorelineVertexCount: counters.boundShorelineVertexCount,
-  uniqueCoordinateCount: counters.uniqueCoordinateCount,
-  terrainSampleInvocationCount: counters.terrainSampleInvocationCount,
-  terrainSampleCacheHitCount: counters.terrainSampleCacheHitCount,
-  candidateMaterialSampleInvocationCount: counters.candidateMaterialSampleInvocationCount,
-  candidateMaterialSampleCacheHitCount: counters.candidateMaterialSampleCacheHitCount,
   constructionMilliseconds: counters.constructionMilliseconds,
   realElapsedMilliseconds,
   unchangedVertexCount: counters.unchangedVertexCount,

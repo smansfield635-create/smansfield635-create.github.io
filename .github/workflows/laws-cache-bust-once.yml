@@ -1,5 +1,6 @@
 name: Laws cache bust once
 
+# Retriggered after the merge event did not publish the one-shot commit.
 on:
   push:
     branches:

@@ -1,13 +1,13 @@
 {
   "ledgerType": "H_EARTH_C2_R1_R1_8_BOUNDED_PHASE_LEDGER_v1",
   "operation": "R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW",
-  "correctiveOperation": "R1.8B_C2_COMPREHENSIVE_RUNTIME_READINESS_TRACE",
+  "correctiveOperation": "R1.8B_C3_DETERMINISTIC_NONBLOCKING_REVIEW_MESH_MATERIALIZATION",
   "startingHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
-  "correctiveStartingHead": "64fc5eff5049b0f8c9de0cd1a0afa87c50514f75",
+  "correctiveStartingHead": "c5ec156d0d00979ea2296972374b13f43678f4bf",
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
-  "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8b-c2-start-001",
-  "controllingStatus": "R1.8_BLOCKED_AT_R1.8B_REVIEW_WRAPPER_SYNCHRONOUS_CANDIDATE_CONSTRUCTION_EXCEEDS_60_SECONDS",
+  "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8b-c3-start-001",
+  "controllingStatus": "R1.8B_PASS_RECORDED",
   "executionIdentityLaw": {
     "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "pullRequestExpectedCandidateHead": "github.event.pull_request.head.sha",
@@ -130,59 +130,44 @@
     },
     {
       "id": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
-      "status": "BLOCKED_DIAGNOSED",
-      "recordedAt": "2026-08-01T06:38:10.561Z",
+      "status": "PASS_RECORDED",
+      "recordedAt": "2026-08-01T07:26:27.114Z",
       "evidence": {
-        "traceHead": "ed02f93accf887bd73ad042c25966fc06933c641",
-        "tracePath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c2-runtime-readiness-trace.json",
-        "traceSha256": "9c4821badb5318d1362c66f40f13f222626e9396040807f51e27c148f4f81f8b",
-        "classification": "REVIEW_WRAPPER_SYNCHRONOUS_CANDIDATE_CONSTRUCTION_EXCEEDS_60_SECONDS",
-        "requiredEventMatrix": {
-          "dynamicImportStarted": true,
-          "dynamicImportResolved": false,
-          "dynamicImportRejected": false,
-          "moduleException": false,
-          "pageErrorCount": 0,
-          "consoleErrorCount": 0,
-          "failedNetworkRequestCount": 0,
-          "webglContextRequested": true,
-          "webglContextEstablished": true,
-          "candidateConstructionStarted": true,
-          "candidateConstructionCompleted": false,
-          "firstFramePresented": false,
-          "readySentinelWritten": false,
-          "lastMainThreadHeartbeat": null
+        "receipt": {
+          "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-functional-verification.json",
+          "sha256": "b10669c678c55abe7194a1fea93ad00a856159a37af1bd24972309d04b41eb9c"
         },
-        "localServerReadyBeforeBrowser": true,
-        "targetDocumentHttp200": true,
-        "dependencyChainReachable": true,
-        "domContentLoadedWithin60Seconds": true,
-        "productRegressionEstablished": false
+        "materializationReceipt": {
+          "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c3-materialization-identity.json",
+          "sha256": "a20800aa3ce6d661f1c1809f58a2ff2524838f5b226ccd2f45583a1c80b03e52"
+        },
+        "runtimeTrace": {
+          "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c3-runtime-trace.json",
+          "sha256": "bb294b9bc173a65d39600718f3a399b917ddc96800d3339884c4ec45989d72b3"
+        },
+        "asset": {
+          "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+          "byteLength": 340144,
+          "sha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77"
+        },
+        "webglRendererStarts": true,
+        "candidateWorldLoads": true,
+        "cameraResponseFunctional": true,
+        "touchInputFunctional": true,
+        "navigationFunctional": true,
+        "liveFrameAdvancementConfirmed": true,
+        "noBitmapDragFallback": true,
+        "noRendererLifecycleRegression": true,
+        "r1_7MacroExpressionActive": true,
+        "performanceUsableForPhysicalReview": true,
+        "exactReviewGeometryPreserved": true,
+        "productDefaultMutated": false,
+        "publicDefaultRouteMutated": false
       },
-      "blocker": {
-        "code": "REVIEW_WRAPPER_SYNCHRONOUS_CANDIDATE_CONSTRUCTION_EXCEEDS_60_SECONDS",
-        "phase": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
-        "traceHead": "ed02f93accf887bd73ad042c25966fc06933c641",
-        "tracePath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c2-runtime-readiness-trace.json",
-        "traceSha256": "9c4821badb5318d1362c66f40f13f222626e9396040807f51e27c148f4f81f8b",
-        "reviewWrapperDefectEstablished": true,
-        "actualCandidateRuntimeStartupFailureEstablished": false,
-        "productRegressionEstablished": false,
-        "recordedAt": "2026-08-01T06:38:10.561Z"
-      }
+      "blocker": null
     }
   ],
-  "firstBlocker": {
-    "code": "REVIEW_WRAPPER_SYNCHRONOUS_CANDIDATE_CONSTRUCTION_EXCEEDS_60_SECONDS",
-    "phase": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
-    "traceHead": "ed02f93accf887bd73ad042c25966fc06933c641",
-    "tracePath": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c2-runtime-readiness-trace.json",
-    "traceSha256": "9c4821badb5318d1362c66f40f13f222626e9396040807f51e27c148f4f81f8b",
-    "reviewWrapperDefectEstablished": true,
-    "actualCandidateRuntimeStartupFailureEstablished": false,
-    "productRegressionEstablished": false,
-    "recordedAt": "2026-08-01T06:38:10.561Z"
-  },
+  "firstBlocker": null,
   "visualSuccessorStatus": "NOT_ESTABLISHED",
   "userDifferentialReady": false,
   "productDefaultMutated": false,
@@ -191,7 +176,7 @@
   "pr418Merged": false,
   "r1_8Closed": false,
   "r1_8eStarted": false,
-  "completedPhaseCount": 1,
+  "completedPhaseCount": 2,
   "reviewPackage": {
     "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "materializationBasisHead": "9a4c8aa90c65bd8aea4741de681e8e0890234a85",
@@ -223,7 +208,7 @@
       }
     ]
   },
-  "updatedAt": "2026-08-01T06:38:10.561Z",
+  "updatedAt": "2026-08-01T07:26:27.114Z",
   "r18aHead": "e08c92535eef29785867bd798393f346eacc101a",
   "r1_8bC1Diagnosis": {
     "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c1-startup-diagnosis.json",

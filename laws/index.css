@@ -3117,3 +3117,195 @@ FALSE
     transform-origin: 50% 50%;
   }
 }
+
+
+/* LAWS_CP6_DIRECT_LANGUAGE_AND_HIERARCHY_CORRECTION_v1 */
+.laws-first.laws-first--direct {
+  width: min(76rem, calc(100% - 2rem));
+  margin: clamp(0.55rem, 1.4vw, 0.9rem) auto 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.laws-first__disclosure {
+  border: 1px solid rgba(216, 184, 106, 0.34);
+  border-radius: clamp(0.9rem, 2vw, 1.3rem);
+  background: linear-gradient(145deg, rgba(12, 19, 34, 0.96), rgba(5, 9, 18, 0.96));
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  overflow: clip;
+}
+
+.laws-first__disclosure > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.4rem);
+  min-height: clamp(7.2rem, 13vw, 9.2rem);
+  padding: clamp(1rem, 2.6vw, 1.55rem) clamp(1rem, 3vw, 1.8rem);
+}
+
+.laws-first__disclosure > summary::after {
+  right: clamp(0.75rem, 2vw, 1.2rem);
+}
+
+.laws-first__summary-copy {
+  min-width: 0;
+  padding-right: clamp(1.7rem, 4vw, 2.7rem);
+}
+
+.laws-first__summary-copy .kicker {
+  margin: 0;
+}
+
+.laws-first__summary-copy h1 {
+  max-width: 18ch;
+  margin: 0.2rem 0 0.45rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 4.8vw, 3.65rem);
+  line-height: 0.98;
+}
+
+.laws-first__summary-copy p:last-child {
+  max-width: 76ch;
+  margin: 0;
+  color: var(--laws-ink-soft);
+  font-size: clamp(0.92rem, 1.6vw, 1.04rem);
+  line-height: 1.48;
+}
+
+.laws-first__expand-label {
+  margin-right: 2.35rem;
+  color: var(--laws-gold-hot);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.laws-first__disclosure[open] {
+  border-color: rgba(243, 217, 139, 0.56);
+}
+
+.laws-first__disclosure-body {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0 clamp(1rem, 3vw, 1.8rem) clamp(1rem, 3vw, 1.65rem);
+  border-top: 1px solid rgba(216, 184, 106, 0.16);
+}
+
+.laws-first__question-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.55rem;
+  padding-top: clamp(0.9rem, 2vw, 1.25rem);
+}
+
+.laws-first__question-grid article,
+.laws-first__research-record {
+  min-width: 0;
+  padding: 0.8rem 0.85rem;
+  border: 1px solid rgba(174, 205, 255, 0.18);
+  border-radius: 0.8rem;
+  background: rgba(5, 10, 21, 0.72);
+}
+
+.laws-first__question-grid a,
+.laws-first__research-record a {
+  color: var(--laws-gold-hot);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+
+.laws-first__question-grid a:hover,
+.laws-first__question-grid a:focus-visible,
+.laws-first__research-record a:hover,
+.laws-first__research-record a:focus-visible {
+  color: #fff4c3;
+  text-decoration: underline;
+  text-underline-offset: 0.22rem;
+}
+
+.laws-first__question-grid p,
+.laws-first__research-record p {
+  margin: 0.4rem 0 0;
+  color: var(--laws-ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.laws-first__research-record {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.28fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 0.75rem;
+}
+
+.laws-first__research-record p {
+  margin-top: 0;
+}
+
+.laws-first--direct + .laws-compass-primary {
+  margin-top: clamp(0.6rem, 1.6vw, 1rem);
+}
+
+.laws-practical-opening h2 {
+  max-width: 24ch;
+  margin-block: 0.25rem 0.55rem;
+  font-size: clamp(1.55rem, 4vw, 2.55rem);
+}
+
+.skip:not(:focus):not(:focus-visible) {
+  position: fixed;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 860px) {
+  .laws-first__question-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .laws-first__research-record {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .laws-first.laws-first--direct {
+    width: calc(100% - 0.5rem);
+    margin-top: 0.35rem;
+  }
+
+  .laws-first__disclosure > summary {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 0.9rem 0.9rem 1rem;
+  }
+
+  .laws-first__summary-copy {
+    padding-right: 2rem;
+  }
+
+  .laws-first__summary-copy h1 {
+    font-size: clamp(1.65rem, 9.5vw, 2.65rem);
+  }
+
+  .laws-first__expand-label {
+    margin: -0.15rem 2.25rem 0 0;
+    font-size: 0.69rem;
+  }
+
+  .laws-first__question-grid {
+    grid-template-columns: 1fr;
+  }
+}

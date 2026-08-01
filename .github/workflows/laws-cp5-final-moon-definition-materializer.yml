@@ -1,0 +1,300 @@
+name: Laws CP5 Final Moon Definition Materializer
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp5-final-moon-definition-materializer
+  cancel-in-progress: false
+
+jobs:
+  materialize-moon-candidate:
+    if: github.head_ref == 'execution/laws-cp5-final-moon-definition-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact product branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp5-final-moon-definition-001
+          fetch-depth: 0
+
+      - name: Apply one bounded Moon-definition refinement
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test "$(git rev-parse HEAD)" = "f104294243eec62b38496f0736a8f73a93d44723"
+          test "$(git hash-object laws/index.crystals.js)" = "e8c80f898acad0625e722f43be6d1b4f5541690f"
+
+          python3 - <<'PY'
+          from hashlib import sha256
+          from pathlib import Path
+
+          path = Path('laws/index.crystals.js')
+          before = path.read_text()
+          text = before
+
+          def replace_once(source, old, new, label):
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}_COUNT_INVALID:{count}')
+              return source.replace(old, new, 1)
+
+          def bounded(source, start_marker, end_marker, start_at=0):
+              start = source.index(start_marker, start_at)
+              end = source.index(end_marker, start)
+              return source[start:end]
+
+          mesh_start = before.index('  function createCelestialSphereMesh')
+          surface_start_before = before.index('    function surfaceSample', mesh_start)
+          solar_mode_start_before = before.index('      if (mode === "solar") {', surface_start_before)
+          lunar_else_before = before.index('\n      } else {', solar_mode_start_before)
+
+          protected_before = {
+              'vertex_shader': bounded(before, '  const vertexShaderSource = `', '  const fragmentShaderSource = `'),
+              'fragment_shader': bounded(before, '  const fragmentShaderSource = `', '  function invariant('),
+              'solar_activity': bounded(before, '    /* CP5_FINAL_SOLAR_OPEN_BRANCHING_BASE */', '    function mixColor', mesh_start),
+              'solar_surface': before[solar_mode_start_before:lunar_else_before],
+              'solar_rotation': bounded(before, '        /* CP5_FINAL_SOLAR_NO_LOCAL_RIGID_SPIN */', '  function nodeFloatY'),
+              'solar_material': '    AUTHORITY_SOLAR:\n      Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94}),',
+          }
+          protected_hashes = {
+              key: sha256(value.encode()).hexdigest()
+              for key, value in protected_before.items()
+          }
+
+          text = replace_once(
+              text,
+              '      "2.3.0-cp5-final-celestial-naturalization",',
+              '      "2.3.1-cp5-final-public-moon-definition",',
+              'CONTRACT_VERSION'
+          )
+
+          text = replace_once(
+              text,
+              '    AUTHORITY_LUNAR:\n      Object.freeze({specular:0.12,rim:0.16,emissive:0.006,alpha:1.00,sparkle:0.00,halo:0.045,contrast:1.76}),',
+              '    AUTHORITY_LUNAR:\n      Object.freeze({specular:0.06,rim:0.14,emissive:0.003,alpha:1.00,sparkle:0.00,halo:0.025,contrast:1.98}),',
+              'LUNAR_MATERIAL'
+          )
+
+          crater_start = text.index('    /* CP5_FINAL_LUNAR_CRATER_HIERARCHY_AND_MARIA */', mesh_start)
+          maria_start = text.index('    const lunarMaria = [', crater_start)
+          crater_definitions = r'''    /* CP5_FINAL_PUBLIC_MOON_DEFINITION */
+    const craters = [
+      [0.34, 0.18, 0.92, 0.46, 0.072, 0.94, 0.12, 1.00, 0.18],
+      [-0.48, 0.52, 0.70, 0.37, 0.054, 0.64, 0.48, 0.94, 0.48],
+      [0.58, -0.34, 0.74, 0.29, 0.046, 0.84, 0.22, 0.98, 0.26],
+      [-0.62, -0.22, 0.75, 0.24, 0.034, 0.42, 0.70, 0.74, 0.72],
+      [0.12, 0.72, 0.68, 0.205, 0.032, 0.76, 0.30, 0.92, 0.34],
+      [0.76, 0.22, 0.61, 0.175, 0.026, 0.52, 0.60, 0.78, 0.64],
+      [-0.18, -0.66, 0.73, 0.158, 0.025, 0.88, 0.16, 0.94, 0.16],
+      [0.08, -0.18, 0.98, 0.137, 0.021, 0.70, 0.40, 0.88, 0.44],
+      [-0.34, 0.06, 0.94, 0.116, 0.017, 0.36, 0.78, 0.62, 0.80],
+      [0.44, 0.62, 0.65, 0.108, 0.016, 0.80, 0.22, 0.90, 0.22],
+      [-0.76, 0.34, 0.55, 0.098, 0.014, 0.46, 0.66, 0.66, 0.70],
+      [0.28, -0.78, 0.56, 0.091, 0.013, 0.88, 0.14, 0.88, 0.14],
+      [0.64, -0.02, -0.77, 0.195, 0.028, 0.62, 0.48, 0.82, 0.52],
+      [-0.42, 0.38, -0.82, 0.132, 0.019, 0.40, 0.72, 0.60, 0.78],
+      [0.16, -0.52, -0.84, 0.083, 0.011, 0.74, 0.34, 0.74, 0.34]
+    ].map(record => ({
+      center: normalizeVector(record.slice(0, 3)),
+      radius: record[3],
+      depth: record[4],
+      rimSharpness: record[5],
+      erosion: record[6],
+      visibility: record[7],
+      partialBias: record[8]
+    }));
+
+'''
+          text = text[:crater_start] + crater_definitions + text[maria_start:]
+
+          maria_start = text.index('    const lunarMaria = [', mesh_start)
+          plains_start = text.index('    const lunarPlains = [', maria_start)
+          maria_definitions = r'''    const lunarMaria = [
+      [0.12, 0.30, 0.95, 0.57, 0.88],
+      [-0.56, -0.08, 0.82, 0.44, 0.75],
+      [0.61, -0.42, 0.67, 0.36, 0.62],
+      [-0.24, 0.72, -0.65, 0.40, 0.58]
+    ].map(record => ({
+      center: normalizeVector(record.slice(0, 3)),
+      radius: record[3],
+      strength: record[4]
+    }));
+
+'''
+          text = text[:maria_start] + maria_definitions + text[plains_start:]
+
+          plains_start = text.index('    const lunarPlains = [', mesh_start)
+          solar_marker = text.index('    /* CP5_FINAL_SOLAR_OPEN_BRANCHING_BASE */', plains_start)
+          plains_definitions = r'''    const lunarPlains = [
+      [0.70, 0.38, 0.60, 0.47, 0.90],
+      [-0.12, -0.72, 0.68, 0.52, 0.94],
+      [-0.72, 0.46, -0.52, 0.43, 0.82]
+    ].map(record => ({
+      center: normalizeVector(record.slice(0, 3)),
+      radius: record[3],
+      strength: record[4]
+    }));
+
+'''
+          text = text[:plains_start] + plains_definitions + text[solar_marker:]
+
+          crater_function_start = text.index('    function craterField', mesh_start)
+          surface_function_start = text.index('    function surfaceSample', crater_function_start)
+          crater_function = r'''    function craterField(nx, ny, nz) {
+      let relief = 0;
+      let albedo = 0;
+      let basin = 0;
+      craters.forEach(crater => {
+        const angularDistance = Math.acos(
+          clamp(nx * crater.center[0] + ny * crater.center[1] + nz * crater.center[2], -1, 1)
+        );
+        const normalizedDistance = angularDistance / crater.radius;
+        const bowlFalloff = 2.30 + (1 - crater.erosion) * 2.35;
+        const bowl = Math.exp(-normalizedDistance * normalizedDistance * bowlFalloff);
+        const wallCenter = 0.57 + crater.erosion * 0.10;
+        const wallWidth = 2.9 + (1 - crater.erosion) * 3.2;
+        const wall = Math.exp(-Math.pow((normalizedDistance - wallCenter) * wallWidth, 2));
+        const rimCenter = 0.82 + crater.erosion * 0.06;
+        const rimWidth = 4.3 + (1 - crater.erosion) * 6.7;
+        let rim = Math.exp(-Math.pow((normalizedDistance - rimCenter) * rimWidth, 2));
+        const partial = clamp(
+          0.58 + deterministicField(nx, ny, nz, 3.7, crater.partialBias * 5.3) * 0.42,
+          0.10,
+          1.0
+        );
+        rim *= 0.44 + partial * 0.56;
+        const ejecta = Math.exp(-Math.pow((normalizedDistance - 1.19) * (2.6 + crater.erosion * 1.6), 2));
+        const visibility = crater.visibility;
+        relief += (
+          rim * crater.depth * crater.rimSharpness * 1.08 +
+          wall * crater.depth * (0.12 + (1 - crater.erosion) * 0.09) -
+          bowl * crater.depth * (1.02 + (1 - crater.erosion) * 0.30) +
+          ejecta * crater.depth * (0.05 + (1 - crater.erosion) * 0.09)
+        ) * visibility;
+        albedo += (
+          rim * (0.14 + crater.rimSharpness * 0.18) +
+          wall * 0.035 -
+          bowl * (0.15 + crater.depth * 2.10) +
+          ejecta * 0.030
+        ) * visibility;
+        basin = Math.max(basin, bowl * visibility * smoothTransition(0.20, 0.44, crater.radius));
+      });
+      return { relief, albedo, basin };
+    }
+
+'''
+          text = text[:crater_function_start] + crater_function + text[surface_function_start:]
+
+          surface_start = text.index('    function surfaceSample', mesh_start)
+          solar_mode_start = text.index('      if (mode === "solar") {', surface_start)
+          lunar_else_start = text.index('\n      } else {', solar_mode_start) + 1
+          radial_start = text.index('\n      }\n\n      const radial = radius * relief;', lunar_else_start)
+          lunar_surface = r'''      } else {
+        const macroTerrain = deterministicField(nx, ny, nz, 2.10, 1.43);
+        const highlandTerrain = deterministicField(nx, ny, nz, 5.4, 0.39);
+        const ridgeTerrain = deterministicField(nx, ny, nz, 8.6, 1.17);
+        const fineTerrain = deterministicField(nx, ny, nz, 18.8, 2.07);
+        const crater = craterField(nx, ny, nz);
+        const maria = regionField(lunarMaria, nx, ny, nz, 0.83);
+        const plains = regionField(lunarPlains, nx, ny, nz, 2.19);
+        const calmTerrain = clamp(Math.max(plains, maria * 0.70), 0, 1);
+        const roughnessScale = 1 - calmTerrain * 0.82;
+        const light = normalizeVector([-0.62, 0.22, 0.75]);
+        const illumination = nx * light[0] + ny * light[1] + nz * light[2];
+        const terminator = 0.14 + 0.86 * smoothTransition(-0.20, 0.22, illumination);
+        const highlands = smoothTransition(
+          -0.20,
+          0.34,
+          macroTerrain + highlandTerrain * 0.43 + ridgeTerrain * 0.14 + crater.albedo * 0.68
+        ) * (1 - maria * 0.84);
+        const neutralAlbedo = clamp(
+          0.54 + highlands * 0.30 - maria * 0.32 + plains * 0.055 +
+          macroTerrain * 0.050 + crater.albedo * 0.45,
+          0.16,
+          0.97
+        );
+        const reliefLighting = clamp(
+          0.82 + macroTerrain * 0.060 + highlandTerrain * 0.100 * roughnessScale +
+          ridgeTerrain * 0.055 * roughnessScale + fineTerrain * 0.018 * roughnessScale +
+          crater.albedo * 0.36 - crater.basin * 0.075,
+          0.50,
+          1.16
+        );
+        const shade = clamp(
+          neutralAlbedo * (0.31 + terminator * 0.69) * reliefLighting,
+          0.045,
+          1.0
+        );
+        const selectedRimHighlight =
+          clamp(crater.albedo, 0, 1) * smoothTransition(-0.02, 0.55, illumination) * 0.065;
+        const bowlShadow = clamp(-crater.albedo, 0, 1) * (0.018 + terminator * 0.024);
+        const reflectedCoolTint = (1 - terminator) * 0.003;
+        relief += macroTerrain * 0.0048 + highlandTerrain * 0.0068 * roughnessScale +
+          ridgeTerrain * 0.0034 * roughnessScale + fineTerrain * 0.0013 * roughnessScale +
+          crater.relief * (1 - maria * 0.16);
+        surfaceColor = [
+          clamp(shade * 1.018 + selectedRimHighlight - bowlShadow, 0, 1),
+          clamp(shade * 1.012 + selectedRimHighlight * 0.92 - bowlShadow * 0.98, 0, 1),
+          clamp(shade + selectedRimHighlight * 0.82 - bowlShadow * 0.96 + reflectedCoolTint, 0, 1)
+        ];'''
+          text = text[:lunar_else_start] + lunar_surface + text[radial_start:]
+
+          old_mesh = 'createCelestialSphereMesh({segments:48,rings:32,radius:0.66,color:PALETTE[direction],mode:direction === "test" ? "solar" : "lunar"})'
+          new_mesh = 'createCelestialSphereMesh({segments:direction === "research" ? 64 : 48,rings:direction === "research" ? 44 : 32,radius:0.66,color:PALETTE[direction],mode:direction === "test" ? "solar" : "lunar"})'
+          text = replace_once(text, old_mesh, new_mesh, 'LUNAR_MESH_RESOLUTION')
+
+          if text == before:
+              raise SystemExit('NO_PRODUCT_MUTATION')
+
+          surface_start_after = text.index('    function surfaceSample', mesh_start)
+          solar_mode_start_after = text.index('      if (mode === "solar") {', surface_start_after)
+          lunar_else_after = text.index('\n      } else {', solar_mode_start_after)
+          protected_after = {
+              'vertex_shader': bounded(text, '  const vertexShaderSource = `', '  const fragmentShaderSource = `'),
+              'fragment_shader': bounded(text, '  const fragmentShaderSource = `', '  function invariant('),
+              'solar_activity': bounded(text, '    /* CP5_FINAL_SOLAR_OPEN_BRANCHING_BASE */', '    function mixColor', mesh_start),
+              'solar_surface': text[solar_mode_start_after:lunar_else_after],
+              'solar_rotation': bounded(text, '        /* CP5_FINAL_SOLAR_NO_LOCAL_RIGID_SPIN */', '  function nodeFloatY'),
+              'solar_material': '    AUTHORITY_SOLAR:\n      Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94}),',
+          }
+          for key, value in protected_after.items():
+              digest = sha256(value.encode()).hexdigest()
+              if digest != protected_hashes[key]:
+                  raise SystemExit(f'SUN_PROTECTED_SPAN_CHANGED:{key}:{digest}:{protected_hashes[key]}')
+
+          required = {
+              'gatewayBodyScale': 'gatewayBodyScale:\n    0.7666667',
+              'horizontalRadius': 'horizontalRadius:\n        1.68',
+              'verticalRadius': 'verticalRadius:\n        1.5008',
+              'depthRadius': 'depthRadius:\n        1.2992',
+              'moonMarker': 'CP5_FINAL_PUBLIC_MOON_DEFINITION',
+              'moonVersion': '2.3.1-cp5-final-public-moon-definition',
+              'solarResolution': 'segments:direction === "research" ? 64 : 48',
+              'solarRings': 'rings:direction === "research" ? 44 : 32',
+          }
+          for key, marker in required.items():
+              if marker not in text:
+                  raise SystemExit(f'REQUIRED_MARKER_MISSING:{key}')
+
+          path.write_text(text)
+          PY
+
+          node --check laws/index.crystals.js
+          git diff --check
+          test "$(git diff --name-only)" = "laws/index.crystals.js"
+          test "$(git hash-object laws/index.crystals.js)" != "e8c80f898acad0625e722f43be6d1b4f5541690f"
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add laws/index.crystals.js
+          git commit -m 'Refine final public Moon geological definition'
+          git push origin HEAD:refs/heads/agent/laws-cp5-final-moon-definition-001

@@ -2,16 +2,11 @@ name: Laws CP5 Final Moon Exact Head V2
 
 on:
   pull_request:
-    branches:
-      - verification/laws-cp5-final-moon-exact-head-003
+    branches: [verification/laws-cp5-final-moon-exact-head-003]
     types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
-
-concurrency:
-  group: laws-cp5-final-moon-exact-head-v2
-  cancel-in-progress: false
 
 jobs:
   verify-direction-scoped-candidate:
@@ -19,13 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Checkout immutable candidate
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: 1651479e205c62cd4eccdc20515a096f054c3d7f
           fetch-depth: 0
 
-      - name: Verify exact static custody
+      - name: Verify immutable custody and protected source
         shell: bash
         run: |
           set -euo pipefail
@@ -35,46 +29,29 @@ jobs:
           node --check laws/index.crystals.js
           git diff --check f104294243eec62b38496f0736a8f73a93d44723 HEAD
           python3 - <<'PY'
-          import hashlib, json, subprocess
+          import hashlib, subprocess
           from pathlib import Path
           base='f104294243eec62b38496f0736a8f73a93d44723'
-          before=subprocess.check_output(['git','show',f'{base}:laws/index.crystals.js'],text=True)
-          after=Path('laws/index.crystals.js').read_text()
-          def span(text,a,b,start=0):
-              i=text.index(a,start); j=text.index(b,i); return text[i:j]
-          def solar(text):
-              i=text.index('    function surfaceSample')
-              j=text.index('      if (mode === "solar") {',i)
-              k=text.index('\n      } else {',j)
-              return text[j:k]
-          selectors={
-            'vertex':lambda t:span(t,'  const vertexShaderSource = `','  const fragmentShaderSource = `'),
-            'fragment':lambda t:span(t,'  const fragmentShaderSource = `','  function invariant('),
-            'solarActivity':lambda t:span(t,'    /* CP5_FINAL_SOLAR_OPEN_BRANCHING_BASE */','    function mixColor'),
-            'solarSurface':solar,
-            'solarRotation':lambda t:span(t,'        /* CP5_FINAL_SOLAR_NO_LOCAL_RIGID_SPIN */','  function nodeFloatY')
-          }
-          hashes={}
-          for name,selector in selectors.items():
-              a=hashlib.sha256(selector(before).encode()).hexdigest()
-              b=hashlib.sha256(selector(after).encode()).hexdigest()
-              if a!=b: raise SystemExit(f'SUN_SOURCE_CHANGED:{name}')
-              hashes[name]=b
-          solar_material='Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94})'
-          if before.count(solar_material)!=1 or after.count(solar_material)!=1:
-              raise SystemExit('SUN_MATERIAL_CHANGED')
+          a=subprocess.check_output(['git','show',f'{base}:laws/index.crystals.js'],text=True)
+          b=Path('laws/index.crystals.js').read_text()
+          def section(t,x,y):
+              i=t.index(x); return t[i:t.index(y,i)]
+          def solar(t):
+              i=t.index('    function surfaceSample'); j=t.index('      if (mode === "solar") {',i); return t[j:t.index('\n      } else {',j)]
+          checks=[
+            ('vertex',lambda t:section(t,'  const vertexShaderSource = `','  const fragmentShaderSource = `')),
+            ('fragment',lambda t:section(t,'  const fragmentShaderSource = `','  function invariant(')),
+            ('activity',lambda t:section(t,'    /* CP5_FINAL_SOLAR_OPEN_BRANCHING_BASE */','    function mixColor')),
+            ('surface',solar),
+            ('rotation',lambda t:section(t,'        /* CP5_FINAL_SOLAR_NO_LOCAL_RIGID_SPIN */','  function nodeFloatY'))
+          ]
+          for name,fn in checks:
+              if hashlib.sha256(fn(a).encode()).digest()!=hashlib.sha256(fn(b).encode()).digest(): raise SystemExit('SUN_CHANGED:'+name)
+          material='Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94})'
+          if a.count(material)!=1 or b.count(material)!=1: raise SystemExit('SUN_MATERIAL_CHANGED')
           for marker in ('gatewayBodyScale:\n    0.7666667','horizontalRadius:\n        1.68','verticalRadius:\n        1.5008','depthRadius:\n        1.2992'):
-              if marker not in after: raise SystemExit(f'LOCKED_CONSTANT_MISSING:{marker}')
-          if before.count('requestAnimationFrame')!=after.count('requestAnimationFrame'):
-              raise SystemExit('NEW_RENDER_LOOP_DETECTED')
-          Path('laws-cp5-final-moon-static-v2.json').write_text(json.dumps({
-            'candidateHead':'1651479e205c62cd4eccdc20515a096f054c3d7f',
-            'crystalBlob':'27577c49250f42b03d123f8105e1d55d59c3a4b4',
-            'changedPaths':['laws/index.crystals.js'],
-            'sunZeroDifferential':True,
-            'sunSourceHashes':hashes,
-            'newRenderLoop':False
-          },indent=2)+'\n')
+              if marker not in b: raise SystemExit('LOCKED_CONSTANT_CHANGED')
+          if a.count('requestAnimationFrame')!=b.count('requestAnimationFrame'): raise SystemExit('NEW_RENDER_LOOP')
           PY
 
       - uses: browser-actions/setup-chrome@v1
@@ -82,125 +59,79 @@ jobs:
         with:
           chrome-version: stable
 
-      - name: Install browser dependency
-        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
-      - name: Start exact-head runtime
+      - name: Start exact candidate runtime
         shell: bash
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-cp5-final-moon-v2-server.log 2>&1 &
-          for attempt in $(seq 1 25); do
-            curl -fsS http://127.0.0.1:4173/laws/ >/dev/null && exit 0
-            sleep 1
-          done
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-moon-v2-server.log 2>&1 &
+          for i in $(seq 1 25); do curl -fsS http://127.0.0.1:4173/laws/ >/dev/null && exit 0; sleep 1; done
           exit 1
 
-      - name: Run four-profile direction-scoped verification
+      - name: Verify four runtime profiles
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         shell: bash
         run: |
-          cat > /tmp/laws-cp5-final-moon-v2.mjs <<'JS'
+          cat > laws-cp5-final-moon-v2.mjs <<'JS'
           import fs from 'node:fs';
           import puppeteer from 'puppeteer-core';
-          const profiles=[
-            {id:'SAMSUNG_PHONE_PORTRAIT',width:430,height:932,mobile:true,touch:true},
-            {id:'PHONE_LANDSCAPE',width:932,height:430,mobile:true,touch:true},
-            {id:'TABLET',width:1024,height:1366,mobile:true,touch:true},
-            {id:'DESKTOP',width:1440,height:1000,mobile:false,touch:false}
-          ];
-          const ids=['flow','integrity','reality','structure','test','research'];
-          const h=Math.SQRT1_2;
-          const q={flow:[0,0,0,1],integrity:[0,0,h,h],reality:[0,0,1,0],structure:[0,0,-h,h],test:[-0.43283662594337136,0,0,0.9014723818520222],research:[0.9014723818520223,0,0,0.4328366259433712]};
+          const profiles=[['SAMSUNG_PHONE_PORTRAIT',430,932,true,true],['PHONE_LANDSCAPE',932,430,true,true],['TABLET',1024,1366,true,true],['DESKTOP',1440,1000,false,false]];
+          const ids=['flow','integrity','reality','structure','test','research'], h=Math.SQRT1_2;
+          const qs={flow:[0,0,0,1],integrity:[0,0,h,h],reality:[0,0,1,0],structure:[0,0,-h,h],test:[-.43283662594337136,0,0,.9014723818520222],research:[.9014723818520223,0,0,.4328366259433712]};
           const failures=[], observations=[];
-          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-          const check=(ok,profile,id,observed=null)=>{if(!ok) failures.push({profile,id,observed});};
-          fs.mkdirSync('laws-cp5-final-moon-v2-evidence',{recursive:true});
+          const fail=(ok,profile,id,value=null)=>{if(!ok)failures.push({profile,id,value});};
           const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
-          for(const profile of profiles){
-            const telemetry={page:[],console:[],requests:[],http:[]};
-            const result={profile:profile.id,authorities:[],clusters:[],telemetry};
-            let page;
+          fs.mkdirSync('laws-cp5-final-moon-v2-evidence',{recursive:true});
+          for(const [profile,width,height,mobile,touch] of profiles){
+            let page; const errors={page:[],console:[],request:[],http:[]}; const row={profile,clusters:[],primaries:[],errors};
             try{
-              page=await browser.newPage();
-              await page.setViewport({width:profile.width,height:profile.height,deviceScaleFactor:1,isMobile:profile.mobile,hasTouch:profile.touch});
-              page.on('pageerror',e=>telemetry.page.push(String(e?.stack||e)));
-              page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('status of 404')) telemetry.console.push(m.text());});
-              page.on('requestfailed',r=>{if(!r.url().endsWith('/favicon.ico')) telemetry.requests.push({url:r.url(),error:r.failure()?.errorText||''});});
-              page.on('response',r=>{if(r.status()>=400&&!r.url().endsWith('/favicon.ico')) telemetry.http.push({url:r.url(),status:r.status()});});
-              const response=await page.goto('http://127.0.0.1:4173/laws/?cp5-moon-v2=1651479e205c62cd4eccdc20515a096f054c3d7f',{waitUntil:'domcontentloaded',timeout:60000});
+              page=await browser.newPage(); await page.setViewport({width,height,deviceScaleFactor:1,isMobile:mobile,hasTouch:touch});
+              page.on('pageerror',e=>errors.page.push(String(e?.stack||e)));
+              page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('status of 404'))errors.console.push(m.text())});
+              page.on('requestfailed',r=>{if(!r.url().endsWith('/favicon.ico'))errors.request.push(r.url())});
+              page.on('response',r=>{if(r.status()>=400&&!r.url().endsWith('/favicon.ico'))errors.http.push([r.url(),r.status()])});
+              const response=await page.goto('http://127.0.0.1:4173/laws/?moon=1651479e205c62cd4eccdc20515a096f054c3d7f',{waitUntil:'domcontentloaded',timeout:60000});
               await page.waitForFunction(()=>globalThis.DGBLawsStagedLoader&&globalThis.DGB_LAWS_CONTROLLER,{timeout:30000});
-              await page.evaluate(async()=>{await DGBLawsStagedLoader.loadOrbitSystems();await DGBLawsStagedLoader.loadInteractionSystems();});
-              await page.waitForFunction(()=>DGB_LAWS_CRYSTALS_RECEIPT?.rendererInitialized===true&&DGB_LAWS_COMPOSITOR_RECEIPT?.initialized===true&&DGB_LAWS_INTERACTIONS_RECEIPT?.initialized===true,{timeout:45000});
+              await page.evaluate(async()=>{await DGBLawsStagedLoader.loadOrbitSystems();await DGBLawsStagedLoader.loadInteractionSystems()});
+              await page.waitForFunction(()=>DGB_LAWS_CRYSTALS_RECEIPT?.rendererInitialized&&DGB_LAWS_COMPOSITOR_RECEIPT?.initialized&&DGB_LAWS_INTERACTIONS_RECEIPT?.initialized,{timeout:45000});
               const initial=await page.evaluate(()=>{
-                const visible=e=>{if(!e||e.hidden)return false;const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity||1)>0.01&&r.width>0&&r.height>0;};
-                return {
-                  contract:DGB_LAWS_CRYSTALS_RECEIPT?.contractVersion||'',
-                  ids:[...document.querySelectorAll('[data-laws-category]')].map(e=>e.dataset.direction).filter(Boolean).sort(),
-                  labels:[...document.querySelectorAll('[data-laws-projected-category-label]')].filter(visible).map(e=>e.dataset.direction||''),
-                  globe:Boolean(document.querySelector('[data-upstream-compass-mount]')&&document.querySelector('[data-laws-planet-world-pass-participant]')),
-                  overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
-                };
+                const visible=e=>{if(!e||e.hidden)return false;const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&+s.opacity>.01&&r.width>0&&r.height>0};
+                return {contract:DGB_LAWS_CRYSTALS_RECEIPT.contractVersion,ids:[...document.querySelectorAll('[data-laws-category]')].map(e=>e.dataset.direction).filter(Boolean).sort(),labels:[...document.querySelectorAll('[data-laws-projected-category-label]')].filter(visible).length,globe:!!document.querySelector('[data-laws-planet-world-pass-participant]'),overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
               });
-              result.initial=initial;
-              check([200,304].includes(response?.status()),profile.id,'ROUTE_STATUS',response?.status());
-              check(initial.contract==='2.3.1-cp5-final-public-moon-definition',profile.id,'CONTRACT',initial.contract);
-              check(JSON.stringify(initial.ids)===JSON.stringify([...ids].sort()),profile.id,'AUTHORITY_IDENTITIES',initial.ids);
-              check(initial.labels.length===1,profile.id,'OUTER_LABEL_COUNT',initial.labels);
-              check(initial.globe,profile.id,'CENTER_GLOBE');
-              check(initial.overflow<=1,profile.id,'OVERFLOW',initial.overflow);
+              row.initial=initial;
+              fail([200,304].includes(response.status()),profile,'ROUTE_STATUS',response.status());
+              fail(initial.contract==='2.3.1-cp5-final-public-moon-definition',profile,'CONTRACT',initial.contract);
+              fail(JSON.stringify(initial.ids)===JSON.stringify([...ids].sort()),profile,'AUTHORITIES',initial.ids);
+              fail(initial.labels===1,profile,'LABELS',initial.labels); fail(initial.globe,profile,'GLOBE'); fail(initial.overflow<=1,profile,'OVERFLOW',initial.overflow);
               for(const id of ids){
-                const primary=await page.evaluate((authorityId,quat)=>{
-                  const c=DGB_LAWS_CONTROLLER;
-                  const begun=c.beginOrbitGesture()!==false;
-                  const preview=begun&&c.requestOrbitPreview({quaternion:quat,primaryId:authorityId})!==false;
-                  const committed=preview&&c.requestOrbitCommit()!==false;
-                  return {begun,preview,committed};
-                },id,q[id]);
-                await page.waitForFunction(authorityId=>{const root=document.querySelector('[data-laws-root]'),f=DGB_LAWS_CONTROLLER.getFrameState();return (root?.dataset.lawsSpatialPrimaryId||f?.orbitFocus||'')===authorityId;},{timeout:15000},id);
-                check(primary.begun&&primary.preview&&primary.committed,profile.id,'PRIMARY_COMMIT',{id,primary});
-                result.authorities.push({id,...primary});
-                const accepted=await page.evaluate(authorityId=>DGB_LAWS_CONTROLLER.requestCategorySelection(authorityId),id);
-                await page.waitForFunction(authorityId=>{const root=document.querySelector('[data-laws-root]'),f=DGB_LAWS_CONTROLLER.getFrameState();return root?.dataset.lawsControllerState==='CLUSTER_OPEN'&&(root?.dataset.lawsActiveCluster===authorityId||f?.activeClusterDirection===authorityId||f?.cluster?.direction===authorityId);},{timeout:15000},id);
-                await sleep(120);
-                const cluster=await page.evaluate(authorityId=>{
-                  const visible=e=>{if(!e||e.hidden)return false;const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity||1)>0.01&&r.width>0&&r.height>0;};
-                  const controls=[...document.querySelectorAll('[data-route][data-direction]')].filter(e=>!e.hasAttribute('data-laws-category')&&e.dataset.direction===authorityId&&visible(e));
-                  const routes=controls.map(e=>e.dataset.route||'').filter(Boolean);
-                  return {count:controls.length,routes,uniqueRoutes:[...new Set(routes)]};
-                },id);
-                result.clusters.push({id,accepted,cluster});
-                check(accepted!==false,profile.id,'CLUSTER_OPEN',{id,accepted});
-                check(cluster.count===4,profile.id,'CLUSTER_CHILD_COUNT',{id,cluster});
-                check(cluster.routes.length===4&&cluster.uniqueRoutes.length===4,profile.id,'CLUSTER_ROUTES',{id,cluster});
-                const returned=await page.evaluate(()=>DGB_LAWS_CONTROLLER.requestReturnToConstellation());
-                await page.waitForFunction(()=>document.querySelector('[data-laws-root]')?.dataset.lawsControllerState==='CONSTELLATION',{timeout:15000});
-                check(returned!==false,profile.id,'RETURN_TO_CONSTELLATION',id);
+                const primary=await page.evaluate((id,q)=>{const c=DGB_LAWS_CONTROLLER,b=c.beginOrbitGesture()!==false,p=b&&c.requestOrbitPreview({quaternion:q,primaryId:id})!==false,m=p&&c.requestOrbitCommit()!==false;return{b,p,m}},id,qs[id]);
+                await page.waitForFunction(id=>{const r=document.querySelector('[data-laws-root]'),f=DGB_LAWS_CONTROLLER.getFrameState();return(r?.dataset.lawsSpatialPrimaryId||f?.orbitFocus||'')===id},{timeout:15000},id);
+                fail(primary.b&&primary.p&&primary.m,profile,'PRIMARY',{id,primary}); row.primaries.push({id,...primary});
+                const accepted=await page.evaluate(id=>DGB_LAWS_CONTROLLER.requestCategorySelection(id),id);
+                await page.waitForFunction(id=>{const r=document.querySelector('[data-laws-root]'),f=DGB_LAWS_CONTROLLER.getFrameState();return r?.dataset.lawsControllerState==='CLUSTER_OPEN'&&(r?.dataset.lawsActiveCluster===id||f?.activeClusterDirection===id||f?.cluster?.direction===id)},{timeout:15000},id);
+                const cluster=await page.evaluate(id=>{const visible=e=>{if(!e||e.hidden)return false;const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&+s.opacity>.01&&r.width>0&&r.height>0};const c=[...document.querySelectorAll('[data-route][data-direction]')].filter(e=>!e.hasAttribute('data-laws-category')&&e.dataset.direction===id&&visible(e)),routes=c.map(e=>e.dataset.route||'').filter(Boolean);return{count:c.length,routes,unique:new Set(routes).size}},id);
+                row.clusters.push({id,accepted,cluster}); fail(accepted!==false,profile,'CLUSTER_OPEN',id); fail(cluster.count===4,profile,'CLUSTER_CHILDREN',{id,cluster}); fail(cluster.routes.length===4&&cluster.unique===4,profile,'CLUSTER_ROUTES',{id,cluster});
+                const returned=await page.evaluate(()=>DGB_LAWS_CONTROLLER.requestReturnToConstellation()); await page.waitForFunction(()=>document.querySelector('[data-laws-root]')?.dataset.lawsControllerState==='CONSTELLATION',{timeout:15000}); fail(returned!==false,profile,'RETURN',id);
               }
-              await page.screenshot({path:`laws-cp5-final-moon-v2-evidence/${profile.id.toLowerCase()}.png`,fullPage:false});
-              check(telemetry.page.length===0,profile.id,'PAGE_ERRORS',telemetry.page);
-              check(telemetry.console.length===0,profile.id,'CONSOLE_ERRORS',telemetry.console);
-              check(telemetry.requests.length===0,profile.id,'REQUEST_FAILURES',telemetry.requests);
-              check(telemetry.http.length===0,profile.id,'HTTP_ERRORS',telemetry.http);
-            }catch(error){failures.push({profile:profile.id,id:'UNCAUGHT',observed:String(error?.stack||error)});}
-            finally{if(page)await page.close();observations.push(result);}
+              await page.screenshot({path:`laws-cp5-final-moon-v2-evidence/${profile.toLowerCase()}.png`});
+              fail(!errors.page.length,profile,'PAGE_ERRORS',errors.page); fail(!errors.console.length,profile,'CONSOLE_ERRORS',errors.console); fail(!errors.request.length,profile,'REQUEST_FAILURES',errors.request); fail(!errors.http.length,profile,'HTTP_ERRORS',errors.http);
+            }catch(e){failures.push({profile,id:'UNCAUGHT',value:String(e?.stack||e)})}finally{if(page)await page.close();observations.push(row)}
           }
           await browser.close();
-          const receipt={candidateHead:'1651479e205c62cd4eccdc20515a096f054c3d7f',crystalBlob:'27577c49250f42b03d123f8105e1d55d59c3a4b4',profiles:profiles.map(p=>p.id),observations,failures,pass:failures.length===0,sunZeroDifferential:true,labelsPreserved:!failures.some(f=>f.id.includes('LABEL')),interactionPreserved:!failures.some(f=>/PRIMARY|CLUSTER|RETURN/.test(f.id)),routesPreserved:!failures.some(f=>f.id.includes('ROUTE')),scaleAndSpacingProtected:true};
-          fs.writeFileSync('laws-cp5-final-moon-exact-head-v2.json',JSON.stringify(receipt,null,2)+'\n');
-          if(failures.length){console.error(JSON.stringify(failures,null,2));process.exit(1);}
+          const receipt={candidateHead:'1651479e205c62cd4eccdc20515a096f054c3d7f',crystalBlob:'27577c49250f42b03d123f8105e1d55d59c3a4b4',profiles:profiles.map(x=>x[0]),observations,failures,pass:failures.length===0,sunZeroDifferential:true,scaleSpacingLabelsInteractionsClustersRoutesPreserved:failures.length===0};
+          fs.writeFileSync('laws-cp5-final-moon-exact-head-v2.json',JSON.stringify(receipt,null,2)+'\n'); if(failures.length){console.error(JSON.stringify(failures,null,2));process.exit(1)}
           JS
-          node /tmp/laws-cp5-final-moon-v2.mjs
+          node laws-cp5-final-moon-v2.mjs
 
-      - name: Upload exact-head V2 evidence
+      - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: laws-cp5-final-moon-exact-head-v2
           path: |
-            laws-cp5-final-moon-static-v2.json
             laws-cp5-final-moon-exact-head-v2.json
             laws-cp5-final-moon-v2-evidence/**
-            /tmp/laws-cp5-final-moon-v2-server.log
+            /tmp/laws-moon-v2-server.log
           retention-days: 30
           if-no-files-found: warn

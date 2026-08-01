@@ -2,6 +2,11 @@
 name: H-Earth C2-R1 Complete World One-Click Review
 
 on:
+  push:
+    branches:
+      - verification/h-earth-c2-r1-complete-world-one-click-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-complete-world-one-click-review.yml'
   pull_request:
     branches:
       - integration/h-earth-c2-r1-baseline-001
@@ -26,6 +31,7 @@ jobs:
       REVIEW_ENTRY: h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html
       LOCAL_ORIGIN: http://127.0.0.1:4188
       SESSION_SECONDS: '7200'
+      REVIEW_PR_NUMBER: '470'
       GH_TOKEN: ${{ github.token }}
     steps:
       - name: Check out exact verified candidate
@@ -142,7 +148,7 @@ Exact verified head: \`$EXACT_CANDIDATE_HEAD\`
 
 This is a temporary nondefault same-origin review occurrence. No merge or public-default promotion occurred."
           gh api \
-            "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" \
+            "repos/${GITHUB_REPOSITORY}/issues/${REVIEW_PR_NUMBER}/comments" \
             -f body="$body"
 
           deadline=$((SECONDS + SESSION_SECONDS))

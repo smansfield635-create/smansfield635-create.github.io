@@ -1,13 +1,13 @@
 {
   "ledgerType": "H_EARTH_C2_R1_R1_8_BOUNDED_PHASE_LEDGER_v1",
   "operation": "R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW",
-  "correctiveOperation": "R1.8A_C1_WORKFLOW_EVENT_HEAD_IDENTITY_RECONCILIATION",
+  "correctiveOperation": "R1.8B_C1_LOCAL_REVIEW_NAVIGATION_STARTUP_DIAGNOSIS_AND_BOUNDED_HARNESS_RESOLUTION",
   "startingHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
   "correctiveStartingHead": "64fc5eff5049b0f8c9de0cd1a0afa87c50514f75",
   "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
   "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
-  "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8a-c1-start-001",
-  "controllingStatus": "R1.8_BLOCKED_AT_R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
+  "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8b-c1-start-001",
+  "controllingStatus": "R1.8B_C1_DIAGNOSIS_PROVEN_CORRECTION_APPLIED_PENDING_RERUN",
   "executionIdentityLaw": {
     "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
     "pullRequestExpectedCandidateHead": "github.event.pull_request.head.sha",
@@ -27,6 +27,16 @@
       "artifactDigest": "sha256:5a3b9e822f19255c655e1208fa4aae3ec4f50e42a1da48d1598cff9ac4b4abf5",
       "checkedOutCandidateHead": "8cfd65cee9752053a729fa5c75540f5e4bbeeef0",
       "syntheticMergeShaIncorrectlyUsedAsExpectedHead": "b7d348d122099eeadff7cc711555330aaadb411d",
+      "productRegressionEstablished": false
+    },
+    {
+      "operation": "R1.8A_C1_CORRECTED_EXECUTION",
+      "phase": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
+      "code": "LOCAL_REVIEW_DOMCONTENTLOADED_TIMEOUT",
+      "workflowRun": 30686232460,
+      "workflowJob": 91332523912,
+      "artifactId": 8814022100,
+      "artifactDigest": "sha256:59ffd5b3ba18e8df92c270a76c572ca97f3842d2b6a6833958140aff7ea118f7",
       "productRegressionEstablished": false
     }
   ],
@@ -107,26 +117,9 @@
         "mainMutated": false
       },
       "blocker": null
-    },
-    {
-      "id": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
-      "status": "BLOCKED",
-      "recordedAt": "2026-08-01T05:40:34.900Z",
-      "evidence": {},
-      "blocker": {
-        "code": "page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html\", waiting until \"domcontentloaded\"\n",
-        "detail": "page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html\", waiting until \"domcontentloaded\"\n\n    at inspectPage (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:218:31)\n    at verifyOccurrence (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:337:27)\n    at async main (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:414:20)\n    at async file:///home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:635:3",
-        "phase": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
-        "recordedAt": "2026-08-01T05:40:34.900Z"
-      }
     }
   ],
-  "firstBlocker": {
-    "code": "page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html\", waiting until \"domcontentloaded\"\n",
-    "detail": "page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html\", waiting until \"domcontentloaded\"\n\n    at inspectPage (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:218:31)\n    at verifyOccurrence (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:337:27)\n    at async main (/home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:414:20)\n    at async file:///home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs:635:3",
-    "phase": "R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION",
-    "recordedAt": "2026-08-01T05:40:34.900Z"
-  },
+  "firstBlocker": null,
   "visualSuccessorStatus": "NOT_ESTABLISHED",
   "userDifferentialReady": false,
   "productDefaultMutated": false,
@@ -167,6 +160,14 @@
       }
     ]
   },
-  "updatedAt": "2026-08-01T05:40:34.900Z",
-  "r18aHead": "45d4117dd1ed49da5de38e5c4f573497ac58cd46"
+  "updatedAt": "2026-08-01T06:07:18.520Z",
+  "r18aHead": "45d4117dd1ed49da5de38e5c4f573497ac58cd46",
+  "r1_8bC1Diagnosis": {
+    "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c1-startup-diagnosis.json",
+    "sha256": "62c879366a80055c9c6f174767550146de8137026c14cd4606cb26994ef239a1",
+    "classification": "REVIEW_BOOTSTRAP_DEADLOCK",
+    "exactCause": "REVIEW_ONLY_SYNCHRONOUS_MODULE_EVALUATION_BLOCKED_DOMCONTENTLOADED",
+    "correction": "ORDER_DYNAMIC_REVIEW_IMPORT_AFTER_DOMCONTENTLOADED",
+    "productFailureEstablished": false
+  }
 }

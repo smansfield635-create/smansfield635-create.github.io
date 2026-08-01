@@ -8,6 +8,13 @@ on:
       - .github/workflows/osf-laws-corpus-harvest.yml
       - tools/osf-laws-corpus/**
       - research/osf-laws-corpus/harvest.request.json
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/osf-laws-corpus-harvest.yml
+      - tools/osf-laws-corpus/**
+      - research/osf-laws-corpus/harvest.request.json
   workflow_dispatch:
 
 permissions:

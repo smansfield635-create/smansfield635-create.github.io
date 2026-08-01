@@ -1,0 +1,135 @@
+name: Laws CP6 spacecraft geometry and interaction
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.html'
+      - 'laws/index.spacecraft.js'
+      - 'laws/index.spacecraft.geometry.js'
+      - 'showroom/globe/h-earth/render/geometry-kernel*.js'
+      - 'tools/laws-cp6-spacecraft-geometry-verify.mjs'
+      - '.github/workflows/laws-cp6-spacecraft-geometry.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  construct-admit-render-verify:
+    if: github.head_ref == 'agent/laws-cp6-spacecraft-geometry-interaction-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Fetch exact current main authority
+        run: git fetch origin main
+
+      - name: Install isolated staged spacecraft module
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          target = Path('laws/index.html')
+          source = target.read_text()
+          spacecraft_source = '/laws/index.spacecraft.js?v=LAWS_CP6_TRUE_3D_SPACECRAFT_20260801A'
+
+          if spacecraft_source not in source:
+              start = source.find('  const orbitScripts = [')
+              if start < 0:
+                  raise SystemExit('LAWS_ORBIT_SCRIPT_ARRAY_NOT_FOUND')
+
+              close = source.find('\n  ];', start)
+              if close < 0:
+                  raise SystemExit('LAWS_ORBIT_SCRIPT_ARRAY_CLOSE_NOT_FOUND')
+
+              record = '''
+          ,
+              {
+                src:
+                  "/laws/index.spacecraft.js?v=LAWS_CP6_TRUE_3D_SPACECRAFT_20260801A",
+                attributes: {
+                  "data-laws-child": "spacecraft",
+                  "data-laws-staged-group": "orbit",
+                  "data-laws-spacecraft-authority": "presentation-and-hit-response-only",
+                  "type": "module"
+                }
+              }'''
+
+              source = source[:close] + record + source[close:]
+              target.write_text(source)
+          PY
+
+      - name: Verify source syntax
+        run: |
+          node --check tools/laws-cp6-spacecraft-geometry-verify.mjs
+          node --input-type=module --check < laws/index.spacecraft.geometry.js
+          node --input-type=module --check < laws/index.spacecraft.js
+
+      - name: Commit bounded loader mutation locally
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Activate kernel-admitted Laws spacecraft participant"
+          fi
+
+      - name: Verify North East South West construction and admission
+        env:
+          EVIDENCE_DIR: cp6-spacecraft-evidence
+        run: node tools/laws-cp6-spacecraft-geometry-verify.mjs static
+
+      - name: Verify protected Laws authorities remain unchanged
+        run: |
+          protected=(
+            laws/index.controller.js
+            laws/index.compositor.js
+            laws/index.crystals.js
+            laws/index.interactions.js
+            laws/index.cosmos.js
+            laws/index.planet.js
+            assets/audralia/audralia.planet.js
+          )
+
+          changed="$(git diff --name-only origin/main...HEAD -- "${protected[@]}")"
+          if [ -n "$changed" ]; then
+            printf 'Protected runtime mutation detected:\n%s\n' "$changed"
+            exit 1
+          fi
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-cp6-spacecraft-server.log 2>&1 &
+          echo $! > /tmp/laws-cp6-spacecraft-server.pid
+          for attempt in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/laws/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/laws-cp6-spacecraft-server.log
+          exit 1
+
+      - name: Verify world-space flight impact recovery and fallbacks
+        env:
+          BASE_URL: http://127.0.0.1:4173
+          EVIDENCE_DIR: cp6-spacecraft-evidence
+        run: node tools/laws-cp6-spacecraft-geometry-verify.mjs browser
+
+      - name: Upload candidate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-spacecraft-geometry-interaction
+          path: cp6-spacecraft-evidence
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Publish verified candidate head
+        run: git push origin HEAD:${{ github.head_ref }}

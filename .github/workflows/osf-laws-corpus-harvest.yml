@@ -49,7 +49,7 @@ jobs:
 
       - name: Harvest public OSF projects and registrations
         run: |
-          python tools/osf-laws-corpus/harvest_osf_corpus.py \
+          python tools/osf-laws-corpus/harvest_osf_corpus_with_registrations.py \
             --user g5294 \
             --output research/osf-laws-corpus
 

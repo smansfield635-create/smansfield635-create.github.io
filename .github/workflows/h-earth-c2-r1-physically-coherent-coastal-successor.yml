@@ -195,12 +195,13 @@ jobs:
         run: |
           set -euo pipefail
           cleanup() {
+            rm -f .r1-8d-c2-runner.mjs
             if [ -f /tmp/r1-8d-c2-tunnel.pid ]; then kill "$(cat /tmp/r1-8d-c2-tunnel.pid)" 2>/dev/null || true; fi
             if [ -f /tmp/r1-8d-c2-origin.pid ]; then kill "$(cat /tmp/r1-8d-c2-origin.pid)" 2>/dev/null || true; fi
           }
           trap cleanup EXIT
 
-          cat > /tmp/r1-8d-c2-runner.mjs <<'NODE'
+          cat > .r1-8d-c2-runner.mjs <<'NODE'
           import fs from 'node:fs';
           import path from 'node:path';
           import crypto from 'node:crypto';
@@ -503,20 +504,27 @@ jobs:
           fi
           public_base="${public_base%/}/"
           expected_end="$(date -u -d "+${R1_8_SESSION_MINUTES} minutes" +%Y-%m-%dT%H:%M:%SZ)"
+          public_ready=false
           for attempt in $(seq 1 90); do
             if curl --fail --silent --show-error \
               "${public_base}${R1_8_REVIEW_ENTRY}" \
               --output /tmp/r1-8d-c2-public-index.html; then
+              public_ready=true
               break
             fi
             sleep 1
           done
-          test -s /tmp/r1-8d-c2-public-index.html
+          if [ "$public_ready" != true ] || [ ! -s /tmp/r1-8d-c2-public-index.html ]; then
+            cat /tmp/r1-8d-c2-cloudflared.log >&2
+            echo "TUNNEL_PUBLIC_DOCUMENT_UNREACHABLE" >&2
+            exit 1
+          fi
 
           R1_8_PUBLIC_BASE_URL="$public_base" \
           R1_8_TUNNEL_START_TIMESTAMP="$tunnel_start" \
           R1_8_EXPECTED_SESSION_END_TIMESTAMP="$expected_end" \
-          node /tmp/r1-8d-c2-runner.mjs
+          node ./.r1-8d-c2-runner.mjs
+          rm -f .r1-8d-c2-runner.mjs
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -544,7 +552,7 @@ jobs:
           node -e '
             const fs = require("fs");
             const value = JSON.parse(fs.readFileSync("/tmp/r1-8d-c2-resulting-registry-preflight.json", "utf8"));
-            if (["BLOCK", "STOP"].includes(value.finalDisposition)) process.exit(1);
+            if (value.finalDisposition !== "PASS") process.exit(1);
           '
 
           occurrence_url="$(cat /tmp/r1-8d-c2-public-url.txt)"

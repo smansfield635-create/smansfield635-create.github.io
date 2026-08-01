@@ -6,6 +6,11 @@ on:
       - staging/h-earth-c2-r1-r1-7b-baked-macro-field-001
     paths:
       - '.github/workflows/h-earth-c2-r1-r1-7b-materialize-staging.yml'
+  pull_request:
+    branches:
+      - staging/h-earth-c2-r1-r1-7b-baked-macro-field-001
+    paths:
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/transport/r1-7b-materializer-trigger.txt'
 
 permissions:
   contents: write

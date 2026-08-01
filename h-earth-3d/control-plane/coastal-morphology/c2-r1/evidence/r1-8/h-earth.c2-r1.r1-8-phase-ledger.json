@@ -1,0 +1,18 @@
+{
+  "ledgerType": "H_EARTH_C2_R1_R1_8_BOUNDED_PHASE_LEDGER_v1",
+  "operation": "R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW",
+  "startingHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+  "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+  "startRollbackBranch": "rollback/h-earth-c2-r1-r1-8-start-001",
+  "controllingStatus": "AUTHORIZED_NOT_STARTED",
+  "phases": [],
+  "firstBlocker": null,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false,
+  "productDefaultMutated": false,
+  "publicDefaultRouteMutated": false,
+  "mainMutated": false,
+  "pr418Merged": false,
+  "r1_8Closed": false,
+  "r1_8eStarted": false
+}

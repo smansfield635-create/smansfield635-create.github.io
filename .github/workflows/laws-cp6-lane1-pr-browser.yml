@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: laws-cp6-lane1-pr-browser-${{ github.event.pull_request.number }}
+  group: laws-cp6-lane1-pr-browser-v2-${{ github.event.pull_request.number }}
   cancel-in-progress: false
 
 jobs:
@@ -101,15 +101,15 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/laws-cp6-lane1-review
-          cat > /tmp/laws-cp6-lane1-review/RUN_CANDIDATE.md <<EOF
-          # Laws CP6 Lane 1 executable candidate
-
-          Product candidate head: ${CANDIDATE_HEAD}
-          Evidence head: ${EVIDENCE_HEAD}
-          Base head: c009f2a03c19a6b54ebad62dfba658f808f0b4c1
-
-          Extract the archive, run `python3 -m http.server 8080` from its root, and open `http://127.0.0.1:8080/laws/`.
-          EOF
+          {
+            echo '# Laws CP6 Lane 1 executable candidate'
+            echo
+            echo "Product candidate head: ${CANDIDATE_HEAD}"
+            echo "Evidence head: ${EVIDENCE_HEAD}"
+            echo 'Base head: c009f2a03c19a6b54ebad62dfba658f808f0b4c1'
+            echo
+            echo 'Extract the archive, run `python3 -m http.server 8080` from its root, and open `http://127.0.0.1:8080/laws/`.'
+          } > /tmp/laws-cp6-lane1-review/RUN_CANDIDATE.md
           git archive --format=tar.gz --output=/tmp/laws-cp6-lane1-review/laws-cp6-lane1-candidate.tar.gz HEAD
           cp laws/control-plane/cp6-lane1/browser-comparison.json /tmp/laws-cp6-lane1-review/
           cp laws/control-plane/cp6-lane1/browser-comparison.md /tmp/laws-cp6-lane1-review/

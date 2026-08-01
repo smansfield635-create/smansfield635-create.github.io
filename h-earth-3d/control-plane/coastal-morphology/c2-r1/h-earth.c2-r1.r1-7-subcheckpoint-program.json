@@ -44,9 +44,17 @@
     },
     "R1.7B": {
       "name": "BOUNDED_BAKED_MACRO_CONTROL_FIELD",
-      "status": "IMPLEMENTED_VERIFICATION_PENDING",
+      "status": "PASS_CLOSED_DO_NOT_REOPEN",
       "startingHead": "0498da0f3f4fe522659830499bd55ef8f018f776",
+      "passingExecutionHead": "f1ba63b088f89c6539d92d5293ba1eb651644480",
+      "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
       "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7b-start-001",
+      "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7b-closed-001",
+      "workflowRun": 30679342931,
+      "workflowJob": 91313062274,
+      "artifactId": 8811649872,
+      "artifactDigest": "sha256:6516110abe68a14160b64b4dbc0ed5dd3996128260806d4c21f773edb82b9ae4",
+      "registryPreflight": "PASS",
       "sourceAuthority": "R1.7A_LANDFORM_ANALYSIS_AND_MACRO_FIELD_CONTRACT",
       "fieldArchitecture": "BOUNDED_STATIC_FLOAT32_CONTROL_FIELD",
       "fieldGrid": {
@@ -61,12 +69,19 @@
         "CAVITY_RESPONSE",
         "MACRO_NORMAL_STRENGTH"
       ],
+      "fieldValuesSha256": "4377ff9e9fc60a6218478b289acbff99075eab08d4e518a6eb68b1a12b98f866",
+      "uniqueControlRatio": 0.9445061043285239,
+      "bakedMacroControlFieldCreated": true,
       "rendererSamplingIntegrationCreated": false,
       "wholeWorldBakeCreated": false,
+      "upstreamAuthoritiesUnchanged": true,
+      "representativeEngineeringCaptureCount": 3,
       "productDefaultMutated": false,
       "publicRouteMutated": false,
       "visualSuccessorStatus": "NOT_ESTABLISHED",
-      "userDifferentialReady": false
+      "userDifferentialReady": false,
+      "firstBlocker": null,
+      "workflowDisposition": "MANUAL_ONLY_AFTER_DURABLE_CLOSURE"
     },
     "R1.7C": {
       "name": "MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
@@ -77,8 +92,8 @@
       "status": "NOT_STARTED"
     }
   },
-  "currentSubcheckpoint": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
-  "nextAuthorizedSubcheckpoint": "R1.7B_ENGINEERING_VERIFICATION",
+  "currentSubcheckpoint": "R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
+  "nextAuthorizedSubcheckpoint": "R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION",
   "r1_7OverallStatus": "IN_PROGRESS",
   "r1_8Status": "NOT_STARTED",
   "productDefaultMutated": false,

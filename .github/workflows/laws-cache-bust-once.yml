@@ -28,19 +28,25 @@ jobs:
           page = Path('laws/index.html')
           text = page.read_text(encoding='utf-8')
 
-          replacements = {
-              'LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801A':
-                  'LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801B',
-              'LAWS_CP6_EXPERIENTIAL_POLISH_20260801A':
-                  'LAWS_CP6_EXPERIENTIAL_POLISH_20260801B',
-          }
+          presentation_old = 'LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801A'
+          presentation_new = 'LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801B'
+          polish_old = 'LAWS_CP6_EXPERIENTIAL_POLISH_20260801A'
+          polish_new = 'LAWS_CP6_EXPERIENTIAL_POLISH_20260801B'
 
-          for old, new in replacements.items():
-              count = text.count(old)
-              if count != 1:
-                  raise SystemExit(f'Expected exactly one {old!r}; found {count}')
-              text = text.replace(old, new, 1)
+          presentation_count = text.count(presentation_old)
+          polish_count = text.count(polish_old)
 
+          if presentation_count != 2:
+              raise SystemExit(
+                  f'Expected two presentation identities; found {presentation_count}'
+              )
+          if polish_count != 1:
+              raise SystemExit(
+                  f'Expected one polish identity; found {polish_count}'
+              )
+
+          text = text.replace(presentation_old, presentation_new)
+          text = text.replace(polish_old, polish_new, 1)
           page.write_text(text, encoding='utf-8')
 
           workflow = Path('.github/workflows/laws-cache-bust-once.yml')
@@ -53,11 +59,12 @@ jobs:
         shell: bash
         run: |
           git diff -- laws/index.html .github/workflows/laws-cache-bust-once.yml
-          test "$(git diff --numstat -- laws/index.html | awk '{print $1+$2}')" -eq 2
+          test "$(git diff --numstat -- laws/index.html | awk '{print $1+$2}')" -eq 6
+          grep -q 'index.experience.css?v=LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801B' laws/index.html
           grep -q 'index.experience.js?v=LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801B' laws/index.html
           grep -q 'index.experience.polish.css?v=LAWS_CP6_EXPERIENTIAL_POLISH_20260801B' laws/index.html
-          ! grep -q 'index.experience.js?v=LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801A' laws/index.html
-          ! grep -q 'index.experience.polish.css?v=LAWS_CP6_EXPERIENTIAL_POLISH_20260801A' laws/index.html
+          ! grep -q 'LAWS_CP6_EXPERIENTIAL_PRESENTATION_20260801A' laws/index.html
+          ! grep -q 'LAWS_CP6_EXPERIENTIAL_POLISH_20260801A' laws/index.html
 
       - name: Publish cache identity correction
         shell: bash

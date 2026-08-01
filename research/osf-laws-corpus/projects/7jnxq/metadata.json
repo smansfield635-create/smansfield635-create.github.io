@@ -45,7 +45,7 @@
   "osf_url": "https://osf.io/7jnxq/",
   "api_url": "https://api.osf.io/v2/registrations/7jnxq/",
   "source_collection": "user_registrations",
-  "harvested_at": "2026-08-01T06:32:38.811175+00:00",
+  "harvested_at": "2026-08-01T06:34:03.521526+00:00",
   "file_inventory_count": 0,
   "file_errors": [
     "providers:7jnxq: failed JSON request https://api.osf.io/v2/nodes/7jnxq/files/?page%5Bsize%5D=100: 404 Client Error: Not Found for url: https://api.osf.io/v2/nodes/7jnxq/files/?page%5Bsize%5D=100"

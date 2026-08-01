@@ -2,7 +2,7 @@
   "corpus_id": "OSF_PUBLIC_LAWS_DISCOVERY_CORPUS_v1",
   "osf_user_id": "g5294",
   "osf_profile_url": "https://osf.io/g5294/",
-  "generated_at": "2026-08-01T06:32:38.811688+00:00",
+  "generated_at": "2026-08-01T06:34:03.522037+00:00",
   "public_resource_count": 29,
   "root_project_count": 29,
   "component_count": 0,
@@ -33,7 +33,7 @@
       "osf_url": "https://osf.io/9u6vd/",
       "api_url": "https://api.osf.io/v2/nodes/9u6vd/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:26.761096+00:00",
+      "harvested_at": "2026-08-01T06:33:51.975454+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -85,7 +85,7 @@
       "osf_url": "https://osf.io/9ut2z/",
       "api_url": "https://api.osf.io/v2/nodes/9ut2z/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:18.606226+00:00",
+      "harvested_at": "2026-08-01T06:33:44.831104+00:00",
       "file_inventory_count": 2,
       "file_errors": [],
       "relevance_discovery": {
@@ -138,7 +138,7 @@
       "osf_url": "https://osf.io/edg9f/",
       "api_url": "https://api.osf.io/v2/nodes/edg9f/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:21.787513+00:00",
+      "harvested_at": "2026-08-01T06:33:46.590550+00:00",
       "file_inventory_count": 2,
       "file_errors": [],
       "relevance_discovery": {
@@ -188,7 +188,7 @@
       "osf_url": "https://osf.io/7vkgs/",
       "api_url": "https://api.osf.io/v2/nodes/7vkgs/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:22.152106+00:00",
+      "harvested_at": "2026-08-01T06:33:47.039815+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -262,7 +262,7 @@
       "osf_url": "https://osf.io/7jnxq/",
       "api_url": "https://api.osf.io/v2/registrations/7jnxq/",
       "source_collection": "user_registrations",
-      "harvested_at": "2026-08-01T06:32:38.811175+00:00",
+      "harvested_at": "2026-08-01T06:34:03.521526+00:00",
       "file_inventory_count": 0,
       "file_errors": [
         "providers:7jnxq: failed JSON request https://api.osf.io/v2/nodes/7jnxq/files/?page%5Bsize%5D=100: 404 Client Error: Not Found for url: https://api.osf.io/v2/nodes/7jnxq/files/?page%5Bsize%5D=100"
@@ -312,7 +312,7 @@
       "osf_url": "https://osf.io/4vmtc/",
       "api_url": "https://api.osf.io/v2/nodes/4vmtc/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:28.285690+00:00",
+      "harvested_at": "2026-08-01T06:33:53.282296+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -360,7 +360,7 @@
       "osf_url": "https://osf.io/n82xh/",
       "api_url": "https://api.osf.io/v2/nodes/n82xh/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:25.938600+00:00",
+      "harvested_at": "2026-08-01T06:33:51.425643+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -410,7 +410,7 @@
       "osf_url": "https://osf.io/pyd6g/",
       "api_url": "https://api.osf.io/v2/nodes/pyd6g/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:28.711303+00:00",
+      "harvested_at": "2026-08-01T06:33:53.566566+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -457,7 +457,7 @@
       "osf_url": "https://osf.io/bgd86/",
       "api_url": "https://api.osf.io/v2/nodes/bgd86/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:24.821144+00:00",
+      "harvested_at": "2026-08-01T06:33:50.335749+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -502,7 +502,7 @@
       "osf_url": "https://osf.io/rjdms/",
       "api_url": "https://api.osf.io/v2/nodes/rjdms/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:27.124458+00:00",
+      "harvested_at": "2026-08-01T06:33:52.322089+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -552,7 +552,7 @@
       "osf_url": "https://osf.io/6ehrj/",
       "api_url": "https://api.osf.io/v2/nodes/6ehrj/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:23.650106+00:00",
+      "harvested_at": "2026-08-01T06:33:49.394256+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -595,7 +595,7 @@
       "osf_url": "https://osf.io/etn4d/",
       "api_url": "https://api.osf.io/v2/nodes/etn4d/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:24.090600+00:00",
+      "harvested_at": "2026-08-01T06:33:49.703997+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -641,7 +641,7 @@
       "osf_url": "https://osf.io/9y2p5/",
       "api_url": "https://api.osf.io/v2/nodes/9y2p5/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:25.142577+00:00",
+      "harvested_at": "2026-08-01T06:33:50.697211+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -688,7 +688,7 @@
       "osf_url": "https://osf.io/vazr6/",
       "api_url": "https://api.osf.io/v2/nodes/vazr6/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:27.410986+00:00",
+      "harvested_at": "2026-08-01T06:33:52.662844+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -736,7 +736,7 @@
       "osf_url": "https://osf.io/2hvbg/",
       "api_url": "https://api.osf.io/v2/nodes/2hvbg/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:29.738968+00:00",
+      "harvested_at": "2026-08-01T06:33:54.523656+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -782,7 +782,7 @@
       "osf_url": "https://osf.io/bnhq3/",
       "api_url": "https://api.osf.io/v2/nodes/bnhq3/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:26.368327+00:00",
+      "harvested_at": "2026-08-01T06:33:51.697922+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -829,7 +829,7 @@
       "osf_url": "https://osf.io/pw8ua/",
       "api_url": "https://api.osf.io/v2/nodes/pw8ua/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:31.607067+00:00",
+      "harvested_at": "2026-08-01T06:33:56.308136+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -873,7 +873,7 @@
       "osf_url": "https://osf.io/7fupz/",
       "api_url": "https://api.osf.io/v2/nodes/7fupz/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:23.354788+00:00",
+      "harvested_at": "2026-08-01T06:33:49.094834+00:00",
       "file_inventory_count": 1,
       "file_errors": [],
       "relevance_discovery": {
@@ -917,7 +917,7 @@
       "osf_url": "https://osf.io/2cg9k/",
       "api_url": "https://api.osf.io/v2/nodes/2cg9k/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:24.405647+00:00",
+      "harvested_at": "2026-08-01T06:33:50.041628+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -963,7 +963,7 @@
       "osf_url": "https://osf.io/h9k5z/",
       "api_url": "https://api.osf.io/v2/nodes/h9k5z/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:30.935659+00:00",
+      "harvested_at": "2026-08-01T06:33:55.699854+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1008,7 +1008,7 @@
       "osf_url": "https://osf.io/ju7qr/",
       "api_url": "https://api.osf.io/v2/nodes/ju7qr/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:29.417096+00:00",
+      "harvested_at": "2026-08-01T06:33:54.236118+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1050,7 +1050,7 @@
       "osf_url": "https://osf.io/ar4cd/",
       "api_url": "https://api.osf.io/v2/nodes/ar4cd/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:27.827375+00:00",
+      "harvested_at": "2026-08-01T06:33:52.995374+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1091,7 +1091,7 @@
       "osf_url": "https://osf.io/2fh4g/",
       "api_url": "https://api.osf.io/v2/nodes/2fh4g/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:30.195544+00:00",
+      "harvested_at": "2026-08-01T06:33:55.055387+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1136,7 +1136,7 @@
       "osf_url": "https://osf.io/ck5m2/",
       "api_url": "https://api.osf.io/v2/nodes/ck5m2/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:30.615020+00:00",
+      "harvested_at": "2026-08-01T06:33:55.341652+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1177,7 +1177,7 @@
       "osf_url": "https://osf.io/54es8/",
       "api_url": "https://api.osf.io/v2/nodes/54es8/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:25.565707+00:00",
+      "harvested_at": "2026-08-01T06:33:51.071388+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1224,7 +1224,7 @@
       "osf_url": "https://osf.io/5vgfd/",
       "api_url": "https://api.osf.io/v2/nodes/5vgfd/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:15.917062+00:00",
+      "harvested_at": "2026-08-01T06:33:42.979164+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1264,7 +1264,7 @@
       "osf_url": "https://osf.io/s6dzj/",
       "api_url": "https://api.osf.io/v2/nodes/s6dzj/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:29.046544+00:00",
+      "harvested_at": "2026-08-01T06:33:53.938220+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1304,7 +1304,7 @@
       "osf_url": "https://osf.io/qeabr/",
       "api_url": "https://api.osf.io/v2/nodes/qeabr/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:31.253493+00:00",
+      "harvested_at": "2026-08-01T06:33:56.017659+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {
@@ -1346,7 +1346,7 @@
       "osf_url": "https://osf.io/sfjn6/",
       "api_url": "https://api.osf.io/v2/nodes/sfjn6/",
       "source_collection": "user_nodes",
-      "harvested_at": "2026-08-01T06:32:22.521743+00:00",
+      "harvested_at": "2026-08-01T06:33:47.495363+00:00",
       "file_inventory_count": 0,
       "file_errors": [],
       "relevance_discovery": {

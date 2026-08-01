@@ -1,0 +1,79 @@
+name: CP6-2 corrected bounded execution
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cp6-2-corrected-bounded-execution
+  cancel-in-progress: false
+
+jobs:
+  construct-verify-commit:
+    if: github.head_ref == 'agent/laws-cp6-2-eight-standalone-destinations-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Extract corrected builder and execute
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/cp6-2-pr-construction.yml').read_text(encoding='utf-8')
+          start_marker = "cat > /tmp/cp62_builder.py <<'PY'\n"
+          start = workflow.index(start_marker) + len(start_marker)
+          end = workflow.index("\n          PY\n          python3 /tmp/cp62_builder.py", start)
+          source = textwrap.dedent(workflow[start:end])
+
+          old = '''nav_marker = '<nav class="nav">'
+          assert theory.count(nav_marker) == 1
+          theory = theory.replace(
+              nav_marker,
+              nav_marker + '<a data-cp6-reality-theory-transition="true" href="/laws/categories/reality/#theory">Canonical Theory</a>',
+              1
+          )'''
+          new = '''nav_match = re.search(r'<nav\\b[^>]*>', theory)
+          assert nav_match is not None
+          transition_link = '<a data-cp6-reality-theory-transition="true" href="/laws/categories/reality/#theory">Canonical Theory</a>'
+          theory = theory[:nav_match.end()] + transition_link + theory[nav_match.end():]'''
+          assert old in source, 'Expected Reality navigation insertion block not found'
+          source = source.replace(old, new, 1)
+
+          stylesheet = '<link rel="stylesheet" href="/laws/destinations.css?v=CP6_2_DESTINATION_FRAME_V1">'
+          assert source.count(stylesheet) == 1
+          source = source.replace(stylesheet, '<link rel="icon" href="data:,">\n' + stylesheet, 1)
+
+          Path('/tmp/cp62_builder.py').write_text(source, encoding='utf-8')
+          PY
+          python3 /tmp/cp62_builder.py
+
+      - name: Commit verified candidate and retire workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/cp6-2-bounded-construction.yml
+          rm -f .github/workflows/cp6-2-pr-construction.yml
+          rm -f .github/workflows/cp6-2-corrected-execution.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "CP6-2 construct and verify standalone destinations"
+          git push origin "HEAD:${{ github.head_ref }}"

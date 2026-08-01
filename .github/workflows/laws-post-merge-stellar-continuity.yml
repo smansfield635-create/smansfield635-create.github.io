@@ -1,0 +1,70 @@
+name: Laws post-merge stellar continuity
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.background-cosmos.js'
+      - 'laws/index.experience.js'
+      - 'laws/index.experience.polish.css'
+      - 'laws/index.stellar-continuity.css'
+      - 'tools/laws-post-merge-stellar-continuity-verify.mjs'
+      - '.github/workflows/laws-post-merge-stellar-continuity.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.head_ref == 'agent/laws-post-merge-stellar-continuity-mobile-framing-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Fetch current main authority
+        run: git fetch origin main
+
+      - name: Verify source syntax
+        run: |
+          node --check laws/index.experience.js
+          node --check laws/index.background-cosmos.js
+          node --check tools/laws-post-merge-stellar-continuity-verify.mjs
+
+      - name: Verify bounded source and authority
+        env:
+          EVIDENCE_DIR: laws-stellar-continuity-evidence
+        run: node tools/laws-post-merge-stellar-continuity-verify.mjs static
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-stellar-server.log 2>&1 &
+          echo $! > /tmp/laws-stellar-server.pid
+          for attempt in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/laws/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/laws-stellar-server.log
+          exit 1
+
+      - name: Verify stellar continuity and compact framing
+        env:
+          BASE_URL: http://127.0.0.1:4173
+          EVIDENCE_DIR: laws-stellar-continuity-evidence
+        run: node tools/laws-post-merge-stellar-continuity-verify.mjs browser
+
+      - name: Upload verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-post-merge-stellar-continuity
+          path: laws-stellar-continuity-evidence
+          if-no-files-found: error
+          retention-days: 90

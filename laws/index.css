@@ -2868,3 +2868,238 @@ FALSE
 
 /* CP6-4/5 · Research comes F.I.R.S.T. and canonical consolidation */
 .laws-first,.laws-consolidated-overview,.laws-consolidated-panel,.laws-custody-summary{position:relative;margin:clamp(16px,3vw,30px) 0;padding:clamp(20px,4vw,42px);border:1px solid rgba(174,205,255,.24);border-radius:clamp(20px,3vw,34px);background:linear-gradient(145deg,rgba(10,18,34,.96),rgba(4,8,18,.94));box-shadow:0 24px 74px rgba(0,0,0,.35);overflow:hidden}.laws-first h2,.laws-consolidated-overview h2,.laws-consolidated-panel h2,.laws-custody-summary h2{margin:.35rem 0 .85rem;font-size:clamp(2rem,6vw,4.7rem);line-height:.98}.laws-first__lead{max-width:900px;font-size:clamp(1rem,2.4vw,1.25rem)}.laws-first__sequence{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:20px}.laws-first__sequence>a,.laws-first__research,.laws-first__test-routes,.laws-consolidated-grid>article{min-width:0;border:1px solid rgba(174,205,255,.2);border-radius:18px;background:rgba(4,10,22,.78);padding:16px;text-decoration:none}.laws-first__sequence span{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:1px solid currentColor;font-weight:950;font-size:1.35rem}.laws-first__sequence strong{display:block;margin:.65rem 0 .2rem;font-size:1.05rem}.laws-first__sequence p,.laws-first__research p,.laws-first__test-routes,.laws-consolidated-grid p{margin:.3rem 0;color:var(--muted,#c5cede)}.laws-first__research{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:18px;margin-top:12px}.laws-first__research span{font-weight:950;letter-spacing:.13em;text-transform:uppercase}.laws-first__research h3{margin:.3rem 0;font-size:clamp(1.35rem,3vw,2.15rem)}.laws-first__routes,.laws-first__test-routes,.laws-consolidated-links{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.laws-first__routes a,.laws-first__test-routes a,.laws-consolidated-links a,.laws-consolidated-grid a{display:inline-flex;align-items:center;min-height:42px;padding:.55rem .78rem;border:1px solid rgba(174,205,255,.25);border-radius:999px;text-decoration:none;font-weight:850}.laws-first__test-routes{margin-top:12px}.laws-consolidated-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.laws-consolidated-panel h2,.laws-custody-summary h2{font-size:clamp(1.65rem,4vw,3rem)}.laws-consolidated-panel p,.laws-custody-summary p{max-width:900px}.laws-discovery__item>summary{overflow-wrap:anywhere}.laws-discovery pre,.laws-discovery code{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}@media(max-width:900px){.laws-first__sequence{grid-template-columns:repeat(2,minmax(0,1fr))}.laws-first__research{grid-template-columns:1fr}}@media(max-width:620px){.laws-first__sequence,.laws-consolidated-grid{grid-template-columns:1fr}.laws-first,.laws-consolidated-overview,.laws-consolidated-panel,.laws-custody-summary{padding:18px;border-radius:20px}}
+
+
+/* LAWS_CP6_LANE1_COMPASS_FIRST_PROGRESSIVE_DISCLOSURE_v1 */
+.laws-topbar {
+  gap: clamp(0.65rem, 1.8vw, 1.25rem);
+  padding-block: clamp(0.55rem, 1.4vw, 0.85rem);
+}
+
+.laws-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem 0.55rem;
+  min-width: 0;
+}
+
+.laws-nav a {
+  min-height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+  font-size: clamp(0.72rem, 1.2vw, 0.82rem);
+  white-space: nowrap;
+}
+
+.laws-estate,
+.laws-compass-primary,
+.laws-practical-opening,
+.laws-first--compact,
+.laws-discovery--collapsed,
+.laws-orientation-panel,
+.laws-orientation-panel__body {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.laws-compass-primary {
+  display: grid;
+  gap: clamp(0.8rem, 2vw, 1.35rem);
+  margin-top: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+.laws-compass-primary > .laws-orbit {
+  margin-top: 0;
+}
+
+.laws-practical-opening {
+  width: min(76rem, calc(100% - 2rem));
+  margin: clamp(1rem, 2.5vw, 1.8rem) auto 0;
+  padding: clamp(1rem, 2.5vw, 1.6rem);
+  border: 1px solid rgba(213, 184, 105, 0.28);
+  border-radius: 1rem;
+  background: rgba(10, 15, 27, 0.72);
+}
+
+.laws-practical-opening h1 {
+  max-width: 24ch;
+  margin-block: 0.25rem 0.55rem;
+  font-size: clamp(1.55rem, 4vw, 2.55rem);
+}
+
+.laws-practical-opening p:last-child {
+  max-width: 76ch;
+  margin-bottom: 0;
+}
+
+.laws-first--compact {
+  width: min(76rem, calc(100% - 2rem));
+  margin: clamp(0.85rem, 2vw, 1.35rem) auto 0;
+  padding: clamp(0.9rem, 2.2vw, 1.35rem);
+}
+
+.laws-first__compact-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.laws-first__compact-heading h2,
+.laws-first__compact-heading p {
+  margin-bottom: 0;
+}
+
+.laws-first__compact-heading > p {
+  color: rgba(240, 224, 177, 0.82);
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.laws-first__compact-sequence {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.laws-first__compact-sequence a {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid rgba(213, 184, 105, 0.24);
+  border-radius: 0.7rem;
+  background: rgba(255, 255, 255, 0.025);
+  text-decoration: none;
+}
+
+.laws-first__compact-sequence span {
+  display: inline-grid;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 50%;
+  background: rgba(213, 184, 105, 0.14);
+  color: #f1dfaa;
+  font-weight: 800;
+}
+
+.laws-first__compact-research {
+  margin: 0.8rem 0 0;
+  max-width: 92ch;
+  font-size: 0.94rem;
+}
+
+.laws-discovery--collapsed {
+  width: min(76rem, calc(100% - 2rem));
+  margin: clamp(0.9rem, 2.5vw, 1.6rem) auto 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.laws-orientation-panel {
+  border: 1px solid rgba(213, 184, 105, 0.24);
+  border-radius: 0.85rem;
+  background: rgba(8, 13, 24, 0.78);
+  overflow: clip;
+}
+
+.laws-orientation-panel > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.25rem;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  list-style: none;
+  touch-action: manipulation;
+}
+
+.laws-orientation-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.laws-orientation-panel > summary span {
+  font-weight: 750;
+  color: #f3e4b9;
+}
+
+.laws-orientation-panel > summary small {
+  color: rgba(226, 231, 241, 0.72);
+  line-height: 1.35;
+}
+
+.laws-orientation-panel[open] > summary {
+  border-bottom: 1px solid rgba(213, 184, 105, 0.18);
+}
+
+.laws-orientation-panel__body {
+  padding: clamp(0.75rem, 2vw, 1.2rem);
+}
+
+.laws-orientation-panel__body > :first-child {
+  margin-top: 0;
+}
+
+.laws-value-deck {
+  display: none !important;
+}
+
+.laws-practical-opening,
+.laws-first--compact,
+.laws-orientation-panel,
+.laws-orientation-panel__body,
+.laws-orientation-panel__body * {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .laws-topbar {
+    align-items: flex-start;
+  }
+
+  .laws-nav {
+    justify-content: flex-start;
+  }
+
+  .laws-first__compact-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .laws-first__compact-sequence {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .laws-first__compact-sequence a:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .laws-orientation-panel > summary {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .laws-practical-opening,
+  .laws-first--compact,
+  .laws-discovery--collapsed {
+    width: min(100% - 1rem, 76rem);
+  }
+
+  .laws-first__compact-sequence {
+    grid-template-columns: 1fr;
+  }
+
+  .laws-first__compact-sequence a:last-child {
+    grid-column: auto;
+  }
+}

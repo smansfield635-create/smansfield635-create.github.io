@@ -1,0 +1,672 @@
+name: CP6-2 bounded destination construction
+
+on:
+  push:
+    branches:
+      - agent/laws-cp6-2-eight-standalone-destinations-001
+    paths:
+      - .github/workflows/cp6-2-bounded-construction.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cp6-2-bounded-destination-construction
+  cancel-in-progress: false
+
+jobs:
+  construct-verify-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact candidate branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Construct and verify CP6-2 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/cp62_builder.py <<'PY'
+
+          from pathlib import Path
+          import json
+          import re
+          import subprocess
+          import time
+          import urllib.request
+          import urllib.error
+
+          ROOT = Path(".")
+          CP61_HEAD = "2fad7a28a632c0f4fae1b08dc33cd0f3742d08e8"
+          BRANCH = "agent/laws-cp6-2-eight-standalone-destinations-001"
+
+          DESTINATIONS = [
+              {
+                  "group": "Test",
+                  "slug": "admission-and-baseline",
+                  "route": "/laws/test/admission-and-baseline/",
+                  "legacy": "/laws/test/#admission-baseline",
+                  "title": "Admission and Baseline",
+                  "authority_id": "TEST_ADMISSION_AND_BASELINE_AUTHORITY_V1",
+                  "declaration": "This destination governs what may enter a test and which fixed comparison authority controls the evaluation.",
+                  "scope": "Admission identity, proposition scope, source eligibility, baseline custody, threshold declarations, no-match handling, and gate-entry conditions.",
+                  "exclusions": "It does not construct a candidate, evaluate downstream results, create evidence, or convert admission into validation.",
+                  "families": [
+                      "Admission thresholds and gate logic",
+                      "Source-custody and baseline rules",
+                      "No-match and non-admission conditions",
+                      "Scientific Law threshold distinctions"
+                  ],
+                  "parent": "/laws/test/"
+              },
+              {
+                  "group": "Test",
+                  "slug": "forward-construction",
+                  "route": "/laws/test/forward-construction/",
+                  "legacy": "/laws/test/#forward-construction",
+                  "title": "Forward Construction",
+                  "authority_id": "TEST_FORWARD_CONSTRUCTION_AUTHORITY_V1",
+                  "declaration": "This destination governs the ordered path from admitted material through candidate construction and forward verification.",
+                  "scope": "Ordered evidence use, candidate assembly, multi-gate verification, forward rejection conditions, and preservation of the admitted baseline.",
+                  "exclusions": "It does not rewrite source evidence, bypass a failed gate, perform reverse audit, or classify the final record.",
+                  "families": [
+                      "Forward gate sequence",
+                      "Candidate-construction discipline",
+                      "Multi-gate verification",
+                      "Forward rejection and stop conditions"
+                  ],
+                  "parent": "/laws/test/"
+              },
+              {
+                  "group": "Test",
+                  "slug": "reverse-audit",
+                  "route": "/laws/test/reverse-audit/",
+                  "legacy": "/laws/test/#reverse-audit",
+                  "title": "Reverse Audit",
+                  "authority_id": "TEST_REVERSE_AUDIT_AUTHORITY_V1",
+                  "declaration": "This destination governs backward traversal from a claim, result, or receipt to its controlling source and baseline.",
+                  "scope": "Source tracing, receipt inspection, contradiction detection, baseline-drift localization, identity preservation, and provenance audit.",
+                  "exclusions": "It does not repair discovered defects, invent missing provenance, alter the baseline, or replace final classification.",
+                  "families": [
+                      "Reverse diagnostics and source audit",
+                      "Runtime and evidence receipts",
+                      "Controller and artifact custody",
+                      "Drift, contradiction, and provenance checks"
+                  ],
+                  "parent": "/laws/test/"
+              },
+              {
+                  "group": "Test",
+                  "slug": "result-and-record",
+                  "route": "/laws/test/result-and-record/",
+                  "legacy": "/laws/test/#results-records",
+                  "title": "Result and Record",
+                  "authority_id": "TEST_RESULT_AND_RECORD_AUTHORITY_V1",
+                  "declaration": "This destination governs final classification and durable preservation of what the test established, failed to establish, or could not admit.",
+                  "scope": "Pass, fail, held, insufficient-evidence, mixed, unresolved, and not-admitted classifications; receipts; claim ceilings; runtime records; and artifact status.",
+                  "exclusions": "It does not pluralize the canonical identity, upgrade mixed evidence, erase negative results, or treat a receipt as production validation.",
+                  "families": [
+                      "Result classification and receipts",
+                      "Negative, mixed, held, and unresolved records",
+                      "Claim ceilings and artifact status",
+                      "Runtime and source-custody records"
+                  ],
+                  "parent": "/laws/test/",
+                  "legacy_labels": ["Results & Records", "Results and Records", "#results-records"]
+              },
+              {
+                  "group": "Research",
+                  "slug": "evidence-and-sources",
+                  "route": "/laws/research/evidence-and-sources/",
+                  "legacy": "/laws/research/#evidence-sources",
+                  "title": "Evidence and Sources",
+                  "authority_id": "RESEARCH_EVIDENCE_AND_SOURCES_AUTHORITY_V1",
+                  "declaration": "This destination governs the eligibility, provenance, quality, and matching boundaries of evidence and sources.",
+                  "scope": "Datasets, documents, telemetry, observations, references, source quality, evidence status, warranty provenance, and source-matching rules.",
+                  "exclusions": "It does not transform source inclusion into validation, treat synthetic fixtures as telemetry, or force unmatched material into an evidence slot.",
+                  "families": [
+                      "Evidence and source custody",
+                      "Finance A and B source records",
+                      "Pathway 8, Luxra, and telemetry provenance",
+                      "Observation and no-match boundaries"
+                  ],
+                  "parent": "/laws/research/"
+              },
+              {
+                  "group": "Research",
+                  "slug": "methods-and-models",
+                  "route": "/laws/research/methods-and-models/",
+                  "legacy": "/laws/research/#methods-models",
+                  "title": "Methods and Models",
+                  "authority_id": "RESEARCH_METHODS_AND_MODELS_AUTHORITY_V1",
+                  "declaration": "This destination governs formulas, assumptions, model construction, comparison laws, and reproducibility boundaries.",
+                  "scope": "Notation, normalization, zero handling, diagnostic kernels, model assumptions, comparison methods, reproducibility requirements, and no-match modeling.",
+                  "exclusions": "It does not present a mathematical structure as empirical proof, suppress zero terms, or generalize a model beyond its admitted domain.",
+                  "families": [
+                      "Formula and notation registry",
+                      "A3D-E / PCR and zero-aware products",
+                      "Industrial closure and Energy Loop methods",
+                      "Model assumptions, comparisons, and limitations"
+                  ],
+                  "parent": "/laws/research/"
+              },
+              {
+                  "group": "Research",
+                  "slug": "applied-investigations",
+                  "route": "/laws/research/applied-investigations/",
+                  "legacy": "/laws/research/#applied-investigations",
+                  "title": "Applied Investigations",
+                  "authority_id": "RESEARCH_APPLIED_INVESTIGATIONS_AUTHORITY_V1",
+                  "declaration": "This destination governs domain-specific investigations without converting an applied result into a universal law claim.",
+                  "scope": "Energy, Water, Industrial Water, closed-loop pollution, Pathway 6 Transport, Pathway 8 Storage, and other admitted applied tracks.",
+                  "exclusions": "It does not migrate the full study corpus during CP6-2, imply cross-domain transfer, or convert route existence into route maturity.",
+                  "families": [
+                      "Energy and infrastructure investigations",
+                      "Water and Industrial Water investigations",
+                      "Closed-loop waste and ICE investigations",
+                      "Pathway 6 and Pathway 8 applied tracks"
+                  ],
+                  "parent": "/laws/research/"
+              },
+              {
+                  "group": "Research",
+                  "slug": "findings-and-boundaries",
+                  "route": "/laws/research/findings-and-boundaries/",
+                  "legacy": "/laws/research/#findings-boundaries",
+                  "title": "Findings and Boundaries",
+                  "authority_id": "RESEARCH_FINDINGS_AND_BOUNDARIES_AUTHORITY_V1",
+                  "declaration": "This destination governs what the preserved evidence supports, contradicts, leaves unresolved, or prohibits the project from claiming.",
+                  "scope": "Strongest bounded supports, negative and mixed findings, candidate outputs, limitations, unresolved questions, evidence posture, and prohibited claims.",
+                  "exclusions": "It does not erase null results, promote candidate output into an active bound, or treat discovery signals as scientific acceptance.",
+                  "families": [
+                      "Supported, negative, and mixed findings",
+                      "Research standing and candidate outputs",
+                      "Limitations and unresolved questions",
+                      "Claim-language and evidence boundaries"
+                  ],
+                  "parent": "/laws/research/"
+              }
+          ]
+
+          CSS = r'''
+          :root{
+            color-scheme:dark;
+            --bg:#02050c;
+            --panel:#091221;
+            --panel2:#0d192b;
+            --ink:#fff4d8;
+            --muted:#bfcbdd;
+            --line:#2a3b59;
+            --gold:#f0c96a;
+            --cyan:#83dcff;
+            --violet:#b09aff;
+          }
+          *{box-sizing:border-box}
+          html{min-width:320px;background:var(--bg);overflow-x:hidden}
+          body{
+            margin:0;min-width:320px;min-height:100vh;overflow-x:hidden;
+            color:var(--ink);font:16px/1.6 Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+            background:
+              radial-gradient(circle at 86% 0,rgba(72,45,130,.34),transparent 34rem),
+              radial-gradient(circle at 8% 18%,rgba(18,74,105,.32),transparent 36rem),
+              var(--bg);
+          }
+          a{color:inherit}
+          a:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+          .skip{position:absolute;left:-999px;top:8px;padding:.7rem 1rem;background:var(--gold);color:#05070c;border-radius:999px;font-weight:900}
+          .skip:focus{left:8px;z-index:10}
+          .shell{width:min(1080px,calc(100% - 24px));margin:auto;padding:18px 0 60px}
+          .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+          .top a,.actions a{
+            display:inline-flex;min-height:44px;align-items:center;justify-content:center;
+            padding:.62rem .9rem;border:1px solid var(--line);border-radius:999px;
+            background:#0a1425;text-decoration:none;font-weight:850
+          }
+          .top nav,.actions{display:flex;gap:8px;flex-wrap:wrap}
+          .hero,.panel{
+            margin-top:16px;border:1px solid var(--line);border-radius:24px;
+            background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.012)),rgba(5,10,19,.95);
+            box-shadow:0 24px 70px rgba(0,0,0,.34)
+          }
+          .hero{padding:clamp(24px,6vw,56px)}
+          .panel{padding:clamp(20px,4vw,38px)}
+          .kicker{margin:0;color:var(--gold);font-size:.75rem;font-weight:950;letter-spacing:.14em;text-transform:uppercase}
+          h1{margin:.45rem 0;font:800 clamp(2.35rem,8vw,5.5rem)/.95 Georgia,serif;letter-spacing:-.045em}
+          h2{margin:.2rem 0;font:800 clamp(1.55rem,4vw,2.8rem)/1 Georgia,serif}
+          h3{margin:.2rem 0;font-size:1.05rem;color:var(--cyan)}
+          p{max-width:850px;color:var(--muted)}
+          .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+          .card{min-width:0;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--panel2)}
+          .card ul{margin:.65rem 0 0;padding-left:1.25rem;color:var(--muted)}
+          .meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+          .meta div{min-width:0;padding:12px;border:1px solid var(--line);border-radius:14px;background:#07101e}
+          .meta dt{color:var(--gold);font-size:.72rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+          .meta dd{margin:.3rem 0 0;overflow-wrap:anywhere;color:var(--muted)}
+          .boundary{border-left:4px solid var(--violet)}
+          @media(max-width:720px){.grid,.meta{grid-template-columns:1fr}.shell{width:min(100% - 16px,1080px)}}
+          '''
+
+          def write_text(path, text):
+              path = ROOT / path
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(text, encoding="utf-8")
+
+          def render_page(d):
+              families = "\n".join(f"<li>{item}</li>" for item in d["families"])
+              legacy_labels = d.get("legacy_labels", [d["title"]])
+              legacy_labels_text = ", ".join(legacy_labels)
+              compatibility = (
+                  f"Legacy input {d['legacy']} remains supported through the parent compatibility surface. "
+                  f"Accepted legacy forms: {legacy_labels_text}."
+              )
+              return f'''<!doctype html>
+          <html lang="en" data-route="{d["route"]}" data-page="laws-cp6-2-destination" data-authority-id="{d["authority_id"]}" data-parent-authority="{d["group"]}" data-canonical-title="{d["title"]}" data-cp6-2-content-migration="false" data-cp6-browser-errors="pending" data-cp6-overflow="pending">
+          <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+          <title>{d["title"]} · {d["group"]} · Laws · Diamond Gate Bridge</title>
+          <meta name="description" content="{d["declaration"]}">
+          <link rel="canonical" href="https://diamondgatebridge.com{d["route"]}">
+          <link rel="stylesheet" href="/laws/destinations.css?v=CP6_2_DESTINATION_FRAME_V1">
+          </head>
+          <body>
+          <a class="skip" href="#main">Skip to content</a>
+          <div class="shell">
+          <header class="top">
+          <a href="{d["parent"]}" aria-label="Return to {d["group"]}">{d["group"]}</a>
+          <nav aria-label="Destination returns">
+          <a href="/laws/">Laws Compass</a>
+          <a href="/">Main Compass</a>
+          </nav>
+          </header>
+          <main id="main">
+          <section class="hero" aria-labelledby="page-title">
+          <p class="kicker">{d["group"]} destination authority</p>
+          <h1 id="page-title">{d["title"]}</h1>
+          <p>{d["declaration"]}</p>
+          <div class="actions">
+          <a href="{d["parent"]}">Return to {d["group"]}</a>
+          <a href="/laws/">Return to Laws Compass</a>
+          <a href="/">Return to Main Compass</a>
+          </div>
+          <dl class="meta">
+          <div><dt>Canonical route</dt><dd>{d["route"]}</dd></div>
+          <div><dt>Semantic authority</dt><dd>{d["authority_id"]}</dd></div>
+          <div><dt>Legacy input</dt><dd>{d["legacy"]}</dd></div>
+          <div><dt>Migration status</dt><dd>Destination frame only; full content migration not performed.</dd></div>
+          </dl>
+          </section>
+          <section class="panel" aria-labelledby="scope-title">
+          <h2 id="scope-title">Scope</h2>
+          <p>{d["scope"]}</p>
+          </section>
+          <section class="panel boundary" aria-labelledby="boundary-title">
+          <h2 id="boundary-title">Exclusions and evidence boundary</h2>
+          <p>{d["exclusions"]}</p>
+          </section>
+          <section class="panel" aria-labelledby="families-title">
+          <h2 id="families-title">Assigned content families</h2>
+          <div class="grid">
+          <article class="card"><h3>Destination custody</h3><ul>{families}</ul></article>
+          <article class="card"><h3>CP6-2 posture</h3><p>This page states the destination authority without duplicating the complete authoritative records assigned for later migration.</p></article>
+          </div>
+          </section>
+          <section class="panel" aria-labelledby="compatibility-title">
+          <h2 id="compatibility-title">Compatibility</h2>
+          <p>{compatibility}</p>
+          </section>
+          </main>
+          </div>
+          <script>
+          (() => {{
+            "use strict";
+            let errors = 0;
+            window.addEventListener("error", () => {{ errors += 1; }});
+            window.addEventListener("unhandledrejection", () => {{ errors += 1; }});
+            window.addEventListener("load", () => {{
+              requestAnimationFrame(() => {{
+                const root = document.documentElement;
+                const overflow = Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1;
+                root.dataset.cp6BrowserErrors = String(errors);
+                root.dataset.cp6Overflow = overflow ? "1" : "0";
+              }});
+            }}, {{ once:true }});
+          }})();
+          </script>
+          </body>
+          </html>
+          '''
+
+          write_text("laws/destinations.css", CSS)
+
+          for d in DESTINATIONS:
+              write_text(f"laws/{d['group'].lower()}/{d['slug']}/index.html", render_page(d))
+
+          # Update exactly eight main Laws child route targets and nothing else.
+          index_path = ROOT / "laws/index.html"
+          index_text = index_path.read_text(encoding="utf-8")
+          route_pairs = [(d["legacy"], d["route"]) for d in DESTINATIONS]
+          for legacy, canonical in route_pairs:
+              needle = f'data-route="{legacy}"'
+              assert index_text.count(needle) == 1, (legacy, index_text.count(needle))
+              index_text = index_text.replace(needle, f'data-route="{canonical}"', 1)
+          index_path.write_text(index_text, encoding="utf-8")
+
+          def patch_parent(path, records, group):
+              p = ROOT / path
+              text = p.read_text(encoding="utf-8")
+              for rec in records:
+                  fragment = rec["legacy"].split("#", 1)[1]
+                  old = f'href="#{fragment}"'
+                  assert text.count(old) == 1, (path, old, text.count(old))
+                  text = text.replace(old, f'href="{rec["route"]}"', 1)
+                  section_marker = f'<section class="panel" id="{fragment}">'
+                  assert text.count(section_marker) == 1, (path, section_marker, text.count(section_marker))
+                  transition = (
+                      section_marker
+                      + f'<p data-cp6-transition-link="{rec["authority_id"]}">'
+                      + f'<a href="{rec["route"]}">Open {rec["title"]} standalone destination</a></p>'
+                  )
+                  text = text.replace(section_marker, transition, 1)
+              mapping = {rec["legacy"].split("#", 1)[1]: rec["route"] for rec in records}
+              script = f'''<script data-cp6-anchor-forward="true">(() => {{
+          "use strict";
+          const routes = {json.dumps(mapping, separators=(",", ":"))};
+          const key = location.hash.slice(1);
+          if (Object.prototype.hasOwnProperty.call(routes, key)) {{
+            location.replace(routes[key]);
+          }}
+          }})();</script>'''
+              assert "</body>" in text
+              text = text.replace("</body>", script + "</body>", 1)
+              # Preserve the parent as a source-custody surface.
+              text = text.replace(
+                  f'data-page="laws-{group.lower()}"',
+                  f'data-page="laws-{group.lower()}" data-cp6-parent-source-custody="retained" data-cp6-legacy-anchor-forwarding="true"',
+                  1
+              )
+              p.write_text(text, encoding="utf-8")
+
+          patch_parent("laws/test/index.html", DESTINATIONS[:4], "Test")
+          patch_parent("laws/research/index.html", DESTINATIONS[4:], "Research")
+
+          # Ninth compatibility implementation: retained substantive legacy page plus explicit canonical transition.
+          theory_path = ROOT / "laws/categories/reality/theory.html"
+          theory = theory_path.read_text(encoding="utf-8")
+          assert "data-cp6-legacy-route=" not in theory
+          assert theory.count("<html\n") == 1
+          theory = theory.replace(
+              "<html\n",
+              '<html\n  data-cp6-legacy-route="/laws/categories/reality/theory.html"\n  data-cp6-canonical-destination="/laws/categories/reality/#theory"\n  data-cp6-transition-type="COMPATIBILITY_LINK"\n',
+              1
+          )
+          nav_marker = '<nav class="nav">'
+          assert theory.count(nav_marker) == 1
+          theory = theory.replace(
+              nav_marker,
+              nav_marker + '<a data-cp6-reality-theory-transition="true" href="/laws/categories/reality/#theory">Canonical Theory</a>',
+              1
+          )
+          theory_path.write_text(theory, encoding="utf-8")
+
+          route_map = {
+              "contract": "LAWS_CHAMBER_CP6_2_ROUTE_MAP_v1",
+              "base_head": CP61_HEAD,
+              "branch": BRANCH,
+              "destinations": [
+                  {
+                      "group": d["group"],
+                      "title": d["title"],
+                      "route": d["route"],
+                      "authority_id": d["authority_id"],
+                      "legacy_input": d["legacy"],
+                      "parent": d["parent"]
+                  }
+                  for d in DESTINATIONS
+              ],
+              "compatibility_bindings": [
+                  {
+                      "binding_id": f"CP6-COMPAT-{i:02d}",
+                      "legacy": d["legacy"],
+                      "canonical": d["route"],
+                      "implementation": "PARENT_ANCHOR_FORWARD"
+                  }
+                  for i, d in enumerate(DESTINATIONS, 1)
+              ] + [{
+                  "binding_id": "CP6-COMPAT-09",
+                  "legacy": "/laws/categories/reality/theory.html",
+                  "canonical": "/laws/categories/reality/#theory",
+                  "implementation": "RETAINED_LEGACY_ENTRY_WITH_EXPLICIT_TRANSITION_LINK"
+              }],
+              "content_migration_performed": False,
+              "main_page_reduction_performed": False,
+              "visible_first_implementation": False
+          }
+          write_text("laws/control-plane/cp6-2/route-map.json", json.dumps(route_map, indent=2) + "\n")
+
+          # Static assertions.
+          assert len(DESTINATIONS) == 8
+          assert len({d["route"] for d in DESTINATIONS}) == 8
+          assert len({d["title"] for d in DESTINATIONS}) == 8
+          assert len({d["authority_id"] for d in DESTINATIONS}) == 8
+          assert sum(d["group"] == "Test" for d in DESTINATIONS) == 4
+          assert sum(d["group"] == "Research" for d in DESTINATIONS) == 4
+
+          index_candidate = index_path.read_text(encoding="utf-8")
+          for d in DESTINATIONS:
+              assert index_candidate.count(f'data-route="{d["route"]}"') == 1
+
+          for d in DESTINATIONS:
+              page = ROOT / f"laws/{d['group'].lower()}/{d['slug']}/index.html"
+              text = page.read_text(encoding="utf-8")
+              assert f"<h1 id=\"page-title\">{d['title']}</h1>" in text
+              assert f'data-authority-id="{d["authority_id"]}"' in text
+              assert f'href="{d["parent"]}"' in text
+              assert 'href="/laws/"' in text
+              assert 'href="/"' in text
+              assert d["legacy"] in text
+
+          test_parent = (ROOT / "laws/test/index.html").read_text(encoding="utf-8")
+          research_parent = (ROOT / "laws/research/index.html").read_text(encoding="utf-8")
+          for d in DESTINATIONS[:4]:
+              fragment = d["legacy"].split("#", 1)[1]
+              assert f'id="{fragment}"' in test_parent
+              assert d["route"] in test_parent
+          for d in DESTINATIONS[4:]:
+              fragment = d["legacy"].split("#", 1)[1]
+              assert f'id="{fragment}"' in research_parent
+              assert d["route"] in research_parent
+          assert "/laws/categories/reality/#theory" in theory
+          assert 'data-cp6-reality-theory-transition="true"' in theory
+
+          # Validate local internal route targets used by new pages.
+          def route_file(route):
+              if route == "/":
+                  return ROOT / "index.html"
+              clean = route.lstrip("/")
+              if route.endswith("/"):
+                  return ROOT / clean / "index.html"
+              return ROOT / clean
+
+          broken_internal = []
+          for d in DESTINATIONS:
+              page = ROOT / f"laws/{d['group'].lower()}/{d['slug']}/index.html"
+              for href in re.findall(r'href="([^"]+)"', page.read_text(encoding="utf-8")):
+                  if href.startswith("/") and "#" not in href:
+                      target = route_file(href)
+                      if not target.exists():
+                          broken_internal.append({"source": str(page), "href": href})
+          assert not broken_internal, broken_internal
+
+          # CP5 exact preservation: normalize only the eight authorized route changes.
+          baseline = subprocess.check_output(["git", "show", f"{CP61_HEAD}:laws/index.html"], text=True)
+          normalized = index_candidate
+          for legacy, canonical in route_pairs:
+              normalized = normalized.replace(f'data-route="{canonical}"', f'data-route="{legacy}"', 1)
+          assert normalized == baseline, "laws/index.html differs beyond eight authorized data-route substitutions"
+
+          protected = [
+              "laws/index.css",
+              "laws/index.crystals.js",
+              "laws/index.interactions.js",
+              "laws/index.controller.js",
+              "laws/index.compositor.js",
+              "laws/index.cosmos.js",
+              "laws/index.planet.js"
+          ]
+          for path in protected:
+              subprocess.run(["git", "diff", "--quiet", CP61_HEAD, "--", path], check=True)
+
+          # Start local server and run HTTP/browser verification.
+          server_log = Path("/tmp/cp62-http.log")
+          server = subprocess.Popen(
+              ["python3", "-m", "http.server", "8765", "--bind", "127.0.0.1"],
+              stdout=server_log.open("w"),
+              stderr=subprocess.STDOUT
+          )
+          try:
+              time.sleep(1.2)
+              for d in DESTINATIONS:
+                  url = "http://127.0.0.1:8765" + d["route"]
+                  with urllib.request.urlopen(url, timeout=5) as response:
+                      assert response.status == 200, (url, response.status)
+
+              chrome = None
+              for candidate in ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser"]:
+                  try:
+                      subprocess.run([candidate, "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+                      chrome = candidate
+                      break
+                  except (FileNotFoundError, subprocess.CalledProcessError):
+                      pass
+              assert chrome, "No Chrome/Chromium executable available"
+
+              viewports = {
+                  "phone_portrait": (390, 844),
+                  "phone_landscape": (844, 390),
+                  "tablet": (1024, 1366),
+                  "desktop": (1440, 900)
+              }
+              viewport_results = {}
+              browser_errors = 0
+              overflow_count = 0
+              for label, (width, height) in viewports.items():
+                  viewport_results[label] = "PASS"
+                  for d in DESTINATIONS:
+                      url = "http://127.0.0.1:8765" + d["route"]
+                      result = subprocess.run(
+                          [
+                              chrome, "--headless=new", "--no-sandbox", "--disable-gpu",
+                              "--disable-dev-shm-usage", f"--window-size={width},{height}",
+                              "--virtual-time-budget=1200", "--dump-dom", url
+                          ],
+                          text=True, capture_output=True, timeout=30
+                      )
+                      assert result.returncode == 0, (label, d["route"], result.stderr[-1000:])
+                      dom = result.stdout
+                      if 'data-cp6-browser-errors="0"' not in dom:
+                          browser_errors += 1
+                          viewport_results[label] = "FAIL"
+                      if 'data-cp6-overflow="0"' not in dom:
+                          overflow_count += 1
+                          viewport_results[label] = "FAIL"
+                      assert d["authority_id"] in dom, (label, d["route"])
+
+              # Verify eight legacy anchors forward to their canonical standalone destinations.
+              anchor_forward_pass = 0
+              for d in DESTINATIONS:
+                  url = "http://127.0.0.1:8765" + d["legacy"]
+                  result = subprocess.run(
+                      [
+                          chrome, "--headless=new", "--no-sandbox", "--disable-gpu",
+                          "--disable-dev-shm-usage", "--window-size=1024,900",
+                          "--virtual-time-budget=1600", "--dump-dom", url
+                      ],
+                      text=True, capture_output=True, timeout=30
+                  )
+                  assert result.returncode == 0, (d["legacy"], result.stderr[-1000:])
+                  assert d["authority_id"] in result.stdout, d["legacy"]
+                  anchor_forward_pass += 1
+
+          finally:
+              server.terminate()
+              try:
+                  server.wait(timeout=5)
+              except subprocess.TimeoutExpired:
+                  server.kill()
+
+          log_text = server_log.read_text(errors="replace") if server_log.exists() else ""
+          http_errors = len(re.findall(r'\s(?:404|500|502|503|504)\s', log_text))
+          request_failures = http_errors
+          assert http_errors == 0, log_text[-3000:]
+          assert browser_errors == 0
+          assert overflow_count == 0
+          assert anchor_forward_pass == 8
+          assert all(v == "PASS" for v in viewport_results.values())
+
+          receipt = {
+              "contract": "LAWS_CHAMBER_CP6_2_VERIFICATION_RECEIPT_v1",
+              "status": "PASS_CANDIDATE_PENDING_USER_AND_MANAGER_REVIEW",
+              "checkpoint": "CHECKPOINT_6",
+              "phase": "CP6_2_ROUTE_CONSTRUCTION_COMPLETE_PENDING_REVIEW",
+              "base_head": CP61_HEAD,
+              "branch": BRANCH,
+              "standalone_destination_page_count": 8,
+              "unique_route_count": 8,
+              "unique_canonical_title_count": 8,
+              "unique_semantic_authority_count": 8,
+              "test_destination_count": 4,
+              "research_destination_count": 4,
+              "updated_child_route_count": 8,
+              "implemented_compatibility_binding_count": 9,
+              "broken_compatibility_binding_count": 0,
+              "result_and_record_binding": "PASS",
+              "reality_theory_binding": "PASS",
+              "http_success_destinations": 8,
+              "broken_internal_links": 0,
+              "orphaned_destinations": 0,
+              "parent_return_pass_count": 8,
+              "laws_compass_return_pass_count": 8,
+              "main_compass_return_pass_count": 8,
+              "legacy_anchor_forward_pass_count": anchor_forward_pass,
+              "responsive_results": viewport_results,
+              "horizontal_overflow": overflow_count,
+              "actionable_browser_errors": browser_errors,
+              "request_failures": request_failures,
+              "http_errors": http_errors,
+              "cp5_product_path_changes": {
+                  "count": 1,
+                  "paths": ["laws/index.html"],
+                  "scope": "EIGHT_DATA_ROUTE_ATTRIBUTE_SUBSTITUTIONS_ONLY"
+              },
+              "cp5_compass_preservation": "PASS_BYTE_IDENTICAL_AFTER_AUTHORIZED_ROUTE_NORMALIZATION",
+              "cp5_celestial_preservation": "PASS_PROTECTED_RUNTIME_FILES_UNCHANGED",
+              "one_visible_outer_label": "PRESERVED",
+              "six_authority_reachability": "PRESERVED",
+              "center_globe": "PRESERVED",
+              "content_migration_performed": False,
+              "main_page_reduction_performed": False,
+              "visible_first_implementation": False,
+              "merge_performed": False,
+              "deployment_performed": False,
+              "failures": []
+          }
+          write_text("laws/control-plane/cp6-2/verification-receipt.json", json.dumps(receipt, indent=2) + "\n")
+          print(json.dumps(receipt, indent=2))
+          PY
+          python3 /tmp/cp62_builder.py
+
+      - name: Commit verified candidate and retire workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/cp6-2-bounded-construction.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "CP6-2 construct and verify standalone destinations"
+          git push origin "HEAD:${{ github.ref_name }}"

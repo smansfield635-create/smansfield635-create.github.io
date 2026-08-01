@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       candidate_head:
-        description: Exact candidate branch head to verify and serve
+        description: Exact candidate branch head to diagnose, verify, and serve
         required: true
         type: string
 
@@ -29,22 +29,23 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GITHUB_TOKEN: ${{ github.token }}
       R1_8_TARGET_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
+      R1_8_PRODUCT_AUTHORITY_HEAD: c53362c6f74b01c4e0b53be526b0e3a0b73edede
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.candidate_head }}
           fetch-depth: 0
 
-      - name: Gate bounded corrective execution commit
+      - name: Gate bounded R1.8B-C1 diagnostic commit
         id: gate
         run: |
           set -euo pipefail
           message="$(git log -1 --format=%s)"
-          if [ "$message" = "R1.8A-C1: correct workflow event head identity" ]; then
+          if [ "$message" = "R1.8B-C1: install startup diagnosis and bounded resolution" ]; then
             echo "execute=true" >> "$GITHUB_OUTPUT"
           else
             echo "execute=false" >> "$GITHUB_OUTPUT"
-            echo "R1.8 execution skipped for non-corrective commit: $message"
+            echo "R1.8B-C1 execution skipped for non-diagnostic commit: $message"
           fi
 
       - name: Resolve exact candidate execution identity
@@ -94,9 +95,6 @@ jobs:
           echo "expected_candidate_head=$expected_candidate_head" >> "$GITHUB_OUTPUT"
           echo "checked_out_candidate_head=$checked_out_candidate_head" >> "$GITHUB_OUTPUT"
           echo "synthetic_merge_sha=$synthetic_merge_sha" >> "$GITHUB_OUTPUT"
-          echo "checked_out_head_matches_expected_candidate_head=true" >> "$GITHUB_OUTPUT"
-          echo "product_authority_head_unchanged=true" >> "$GITHUB_OUTPUT"
-          echo "synthetic_merge_sha_not_used_as_candidate_authority=true" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v4
         if: steps.gate.outputs.execute == 'true'
@@ -110,18 +108,378 @@ jobs:
           npm install --no-save --no-package-lock playwright@1.52.0
           npx playwright install --with-deps chromium
 
-      - name: Execute R1.8A through R1.8D and stop for user differential
+      - name: Diagnose navigation boundary and apply only proven harness correction
+        id: diagnosis
         if: steps.gate.outputs.execute == 'true'
         env:
-          R1_8_EXPECTED_CANDIDATE_HEAD: ${{ steps.identity.outputs.expected_candidate_head }}
-          R1_8_CHECKED_OUT_CANDIDATE_HEAD: ${{ steps.identity.outputs.checked_out_candidate_head }}
-          R1_8_SYNTHETIC_MERGE_SHA: ${{ steps.identity.outputs.synthetic_merge_sha }}
-          R1_8_CHECKED_OUT_HEAD_MATCHES_EXPECTED_CANDIDATE_HEAD: ${{ steps.identity.outputs.checked_out_head_matches_expected_candidate_head }}
-          R1_8_PRODUCT_AUTHORITY_HEAD_UNCHANGED: ${{ steps.identity.outputs.product_authority_head_unchanged }}
-          R1_8_SYNTHETIC_MERGE_SHA_NOT_USED_AS_CANDIDATE_AUTHORITY: ${{ steps.identity.outputs.synthetic_merge_sha_not_used_as_candidate_authority }}
+          EXPECTED_CANDIDATE_HEAD: ${{ steps.identity.outputs.expected_candidate_head }}
+          CHECKED_OUT_CANDIDATE_HEAD: ${{ steps.identity.outputs.checked_out_candidate_head }}
+          SYNTHETIC_MERGE_SHA: ${{ steps.identity.outputs.synthetic_merge_sha }}
         run: |
           set -euo pipefail
-          GITHUB_SHA="$R1_8_EXPECTED_CANDIDATE_HEAD" \
+          node <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import net from 'node:net';
+          import crypto from 'node:crypto';
+          import { spawn, execFileSync } from 'node:child_process';
+          import { chromium } from 'playwright';
+
+          const ROOT = process.cwd();
+          const PORT = 4188;
+          const BIND_ADDRESS = '127.0.0.1';
+          const ORIGIN = `http://${BIND_ADDRESS}:${PORT}`;
+          const CONTROL_ROOT = 'h-earth-3d/control-plane/coastal-morphology/c2-r1';
+          const REVIEW_ROOT = `${CONTROL_ROOT}/review/r1-8`;
+          const REVIEW_PATH = `${REVIEW_ROOT}/index.html`;
+          const REVIEW_URL = `${ORIGIN}/${REVIEW_PATH}`;
+          const INDEX_PATH = path.join(ROOT, REVIEW_PATH);
+          const REVIEW_JS_PATH = path.join(ROOT, REVIEW_ROOT, 'review.js');
+          const LEDGER_PATH = path.join(ROOT, CONTROL_ROOT, 'evidence/r1-8/h-earth.c2-r1.r1-8-phase-ledger.json');
+          const DIAGNOSTIC_PATH = path.join(ROOT, CONTROL_ROOT, 'evidence/r1-8/h-earth.c2-r1.r1-8b-c1-startup-diagnosis.json');
+          const EXPECTED_HEAD = process.env.EXPECTED_CANDIDATE_HEAD;
+          const CHECKED_OUT_HEAD = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+          const TARGET_BRANCH = process.env.R1_8_TARGET_BRANCH;
+          const now = () => new Date().toISOString();
+          const elapsed = start => Number(process.hrtime.bigint() - start) / 1e6;
+          const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+          const sha256 = value => crypto.createHash('sha256').update(value).digest('hex');
+          const requireCondition = (condition, code, detail = null) => {
+            if (!condition) {
+              const error = new Error(code);
+              error.code = code;
+              error.detail = detail;
+              throw error;
+            }
+          };
+
+          requireCondition(CHECKED_OUT_HEAD === EXPECTED_HEAD, 'DIAGNOSTIC_HEAD_IDENTITY_MISMATCH', { CHECKED_OUT_HEAD, EXPECTED_HEAD });
+
+          let stdout = '';
+          let stderr = '';
+          const serverStartTimestamp = now();
+          const server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', BIND_ADDRESS], {
+            cwd: ROOT,
+            stdio: ['ignore', 'pipe', 'pipe']
+          });
+          server.stdout.on('data', chunk => { stdout += chunk.toString(); });
+          server.stderr.on('data', chunk => { stderr += chunk.toString(); });
+
+          const tcpProbe = () => new Promise(resolve => {
+            const socket = net.createConnection({ host: BIND_ADDRESS, port: PORT });
+            const finish = result => {
+              socket.removeAllListeners();
+              socket.destroy();
+              resolve(result);
+            };
+            socket.setTimeout(500);
+            socket.once('connect', () => finish(true));
+            socket.once('timeout', () => finish(false));
+            socket.once('error', () => finish(false));
+          });
+
+          const directFetches = [];
+          async function fetchDirect(url, expectedKind) {
+            const start = process.hrtime.bigint();
+            const response = await fetch(url, { cache: 'no-store', redirect: 'follow' });
+            const body = await response.text();
+            const record = {
+              url,
+              status: response.status,
+              contentType: response.headers.get('content-type'),
+              byteCount: Buffer.byteLength(body),
+              sha256: sha256(body),
+              elapsedMilliseconds: elapsed(start),
+              expectedKind
+            };
+            directFetches.push(record);
+            return { response, body, record };
+          }
+
+          async function waitForReadiness() {
+            const start = process.hrtime.bigint();
+            let tcp = false;
+            let target = null;
+            for (let attempt = 1; attempt <= 80; attempt += 1) {
+              tcp = await tcpProbe();
+              if (tcp) {
+                try {
+                  const result = await fetchDirect(REVIEW_URL, 'text/html');
+                  if (result.response.status === 200 && result.body.length > 0) {
+                    target = result;
+                    return { tcp, target, attempt, elapsedMilliseconds: elapsed(start) };
+                  }
+                } catch {}
+              }
+              await sleep(125);
+            }
+            return { tcp, target, attempt: 80, elapsedMilliseconds: elapsed(start) };
+          }
+
+          function staticImportSpecifiers(source) {
+            const specifiers = [];
+            const pattern = /\b(?:import|export)\s+(?:[^'";]*?\s+from\s+)?['"]([^'"]+)['"]/g;
+            for (const match of source.matchAll(pattern)) specifiers.push(match[1]);
+            return [...new Set(specifiers)];
+          }
+
+          async function fetchModuleGraph(entryUrl) {
+            const queue = [entryUrl];
+            const visited = new Set();
+            const graph = [];
+            while (queue.length > 0) {
+              const url = queue.shift();
+              if (visited.has(url)) continue;
+              visited.add(url);
+              const { response, body, record } = await fetchDirect(url, 'javascript-module');
+              graph.push(record);
+              if (response.status !== 200) continue;
+              for (const specifier of staticImportSpecifiers(body)) {
+                if (!specifier.startsWith('.')) continue;
+                const dependencyUrl = new URL(specifier, url).href;
+                if (dependencyUrl.startsWith(`${ORIGIN}/`)) queue.push(dependencyUrl);
+              }
+            }
+            return graph;
+          }
+
+          const diagnostic = {
+            diagnosticType: 'H_EARTH_C2_R1_R1_8B_C1_LOCAL_REVIEW_NAVIGATION_STARTUP_DIAGNOSIS_v1',
+            operation: 'R1.8B_C1_LOCAL_REVIEW_NAVIGATION_STARTUP_DIAGNOSIS_AND_BOUNDED_HARNESS_RESOLUTION',
+            startingHead: 'a4685f4c538721cad4ee48eff8ca7066049b3f86',
+            executionHead: CHECKED_OUT_HEAD,
+            productAuthorityHead: process.env.R1_8_PRODUCT_AUTHORITY_HEAD,
+            targetBranch: TARGET_BRANCH,
+            server: {
+              processId: server.pid,
+              bindAddress: BIND_ADDRESS,
+              port: PORT,
+              startTimestamp: serverStartTimestamp
+            },
+            identity: {
+              expectedCandidateHead: EXPECTED_HEAD,
+              checkedOutCandidateHead: CHECKED_OUT_HEAD,
+              syntheticPullRequestMergeSha: process.env.SYNTHETIC_MERGE_SHA,
+              syntheticMergeShaUsedAsCandidateAuthority: false
+            },
+            browserEvents: [],
+            startupBeacons: [],
+            directFetches,
+            firstBlocker: null
+          };
+
+          let browser;
+          try {
+            const readiness = await waitForReadiness();
+            diagnostic.server.tcpPortAcceptingConnections = readiness.tcp;
+            diagnostic.server.readinessAttempt = readiness.attempt;
+            diagnostic.server.readinessElapsedMilliseconds = readiness.elapsedMilliseconds;
+            requireCondition(readiness.tcp === true, 'LOCAL_SERVER_NOT_READY');
+            requireCondition(readiness.target?.response.status === 200, 'TARGET_DOCUMENT_NOT_SERVED', readiness.target?.record);
+            requireCondition(String(readiness.target.record.contentType || '').toLowerCase().includes('text/html'), 'TARGET_DOCUMENT_BAD_MIME', readiness.target.record);
+            requireCondition(readiness.target.record.byteCount > 0, 'TARGET_DOCUMENT_EMPTY', readiness.target.record);
+
+            const cssUrl = `${ORIGIN}/${REVIEW_ROOT}/review.css`;
+            const reviewJsUrl = `${ORIGIN}/${REVIEW_ROOT}/review.js`;
+            const css = await fetchDirect(cssUrl, 'text/css');
+            requireCondition(css.response.status === 200, 'STATIC_RESOURCE_404_OR_BAD_MIME', css.record);
+            requireCondition(String(css.record.contentType || '').toLowerCase().includes('text/css'), 'STATIC_RESOURCE_404_OR_BAD_MIME', css.record);
+            const moduleGraph = await fetchModuleGraph(reviewJsUrl);
+            diagnostic.moduleGraph = moduleGraph;
+            requireCondition(moduleGraph.every(row => row.status === 200 && row.byteCount > 0), 'MODULE_GRAPH_LOAD_FAILURE', moduleGraph.filter(row => row.status !== 200 || row.byteCount === 0));
+
+            browser = await chromium.launch({
+              headless: true,
+              args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage']
+            });
+            const context = await browser.newContext({ viewport: { width: 1280, height: 820 }, deviceScaleFactor: 1 });
+            const page = await context.newPage();
+            const navigationStart = process.hrtime.bigint();
+            const event = (type, detail = null) => diagnostic.browserEvents.push({ type, elapsedMilliseconds: elapsed(navigationStart), detail });
+            let domContentLoadedResolved;
+            const domContentLoadedPromise = new Promise(resolve => { domContentLoadedResolved = resolve; });
+            let loadResolved;
+            const loadPromise = new Promise(resolve => { loadResolved = resolve; });
+
+            page.on('request', request => {
+              const requestUrl = request.url();
+              event('request', { url: requestUrl, method: request.method(), resourceType: request.resourceType() });
+              try {
+                const parsed = new URL(requestUrl);
+                if (parsed.pathname === '/__r18_startup_trace__') {
+                  const row = { event: parsed.searchParams.get('event'), sourcePerformanceNow: Number(parsed.searchParams.get('t')), observedElapsedMilliseconds: elapsed(navigationStart) };
+                  diagnostic.startupBeacons.push(row);
+                }
+              } catch {}
+            });
+            page.on('response', response => event('response', { url: response.url(), status: response.status(), contentType: response.headers()['content-type'] || null }));
+            page.on('requestfailed', request => event('requestfailed', { url: request.url(), failure: request.failure() }));
+            page.on('console', message => event('console', { type: message.type(), text: message.text() }));
+            page.on('pageerror', error => event('pageerror', String(error?.stack || error)));
+            page.on('crash', () => event('crash'));
+            page.on('frameattached', frame => event('frameattached', { url: frame.url() }));
+            page.on('framenavigated', frame => event('framenavigated', { url: frame.url() }));
+            page.on('domcontentloaded', () => { event('domcontentloaded'); domContentLoadedResolved(); });
+            page.on('load', () => { event('load'); loadResolved(); });
+
+            const response = await page.goto(REVIEW_URL, { waitUntil: 'commit', timeout: 15000 });
+            diagnostic.timings = {
+              responseCommitMilliseconds: elapsed(navigationStart),
+              responseStatus: response?.status() ?? null,
+              responseContentType: await response?.headerValue('content-type')
+            };
+            requireCondition(response?.status() === 200, 'TARGET_DOCUMENT_NOT_SERVED', diagnostic.timings);
+
+            const deadlineMilliseconds = 60000;
+            const waitRemaining = () => Math.max(0, deadlineMilliseconds - elapsed(navigationStart));
+            const dclWithinWindow = await Promise.race([
+              domContentLoadedPromise.then(() => true),
+              sleep(waitRemaining()).then(() => false)
+            ]);
+            diagnostic.timings.domContentLoadedMilliseconds = dclWithinWindow ? diagnostic.browserEvents.find(row => row.type === 'domcontentloaded')?.elapsedMilliseconds ?? null : null;
+            diagnostic.timings.documentElementAvailableMilliseconds = diagnostic.startupBeacons.find(row => row.event === 'DOCUMENT_ELEMENT_AVAILABLE')?.observedElapsedMilliseconds ?? null;
+            diagnostic.timings.reviewBootstrapSentinelMilliseconds = diagnostic.startupBeacons.find(row => row.event === 'REVIEW_BOOTSTRAP_SENTINEL')?.observedElapsedMilliseconds ?? null;
+            diagnostic.timings.candidateRuntimeSentinelMilliseconds = diagnostic.startupBeacons.find(row => row.event === 'CANDIDATE_RUNTIME_SENTINEL')?.observedElapsedMilliseconds ?? null;
+            diagnostic.timings.loadMilliseconds = diagnostic.browserEvents.find(row => row.type === 'load')?.elapsedMilliseconds ?? null;
+            diagnostic.domContentLoadedWithin60Seconds = dclWithinWindow;
+            diagnostic.pageCrash = diagnostic.browserEvents.some(row => row.type === 'crash');
+            diagnostic.requestFailures = diagnostic.browserEvents.filter(row => row.type === 'requestfailed');
+            diagnostic.pageErrors = diagnostic.browserEvents.filter(row => row.type === 'pageerror');
+            diagnostic.consoleErrors = diagnostic.browserEvents.filter(row => row.type === 'console' && row.detail?.type === 'error');
+            diagnostic.ownedHttpFailures = diagnostic.browserEvents.filter(row => row.type === 'response' && row.detail?.status >= 400 && !String(row.detail.url).includes('/__r18_startup_trace__'));
+
+            const reviewSource = fs.readFileSync(REVIEW_JS_PATH, 'utf8');
+            const synchronousCandidateGridPresent = reviewSource.includes('for (let row = 0; row < CROSS_COUNT; row += 1)');
+            const topLevelAwaitPresent = /^\s*await\b/m.test(reviewSource);
+            diagnostic.sourceClassification = { synchronousCandidateGridPresent, topLevelAwaitPresent };
+
+            const dependenciesReachable = moduleGraph.every(row => row.status === 200 && row.byteCount > 0);
+            const documentElementObserved = diagnostic.timings.documentElementAvailableMilliseconds !== null;
+            const noFatalTransportOrBrowserFailure = !diagnostic.pageCrash && diagnostic.requestFailures.length === 0 && diagnostic.pageErrors.length === 0 && diagnostic.ownedHttpFailures.length === 0;
+
+            if (!dclWithinWindow && documentElementObserved && dependenciesReachable && noFatalTransportOrBrowserFailure && synchronousCandidateGridPresent && !topLevelAwaitPresent) {
+              diagnostic.classification = 'REVIEW_BOOTSTRAP_DEADLOCK';
+              diagnostic.exactCause = 'REVIEW_ONLY_SYNCHRONOUS_MODULE_EVALUATION_BLOCKED_DOMCONTENTLOADED';
+              diagnostic.candidateRuntimeStartupReached = diagnostic.timings.reviewBootstrapSentinelMilliseconds !== null;
+              diagnostic.productFailureEstablished = false;
+            } else if (dclWithinWindow) {
+              diagnostic.classification = 'BROWSER_OR_HARNESS_NAVIGATION_DEFECT_NOT_REPRODUCED';
+              diagnostic.exactCause = 'NO_CORRECTION_PROVEN';
+              diagnostic.productFailureEstablished = false;
+            } else {
+              diagnostic.classification = 'UNRESOLVED_STARTUP_BOUNDARY';
+              diagnostic.exactCause = 'TRACE_DID_NOT_AUTHORIZE_A_BOUNDED_CORRECTION';
+              diagnostic.productFailureEstablished = false;
+            }
+
+            fs.mkdirSync(path.dirname(DIAGNOSTIC_PATH), { recursive: true });
+            diagnostic.server.stdout = stdout;
+            diagnostic.server.stderr = stderr;
+            fs.writeFileSync(DIAGNOSTIC_PATH, `${JSON.stringify(diagnostic, null, 2)}\n`);
+
+            requireCondition(
+              diagnostic.classification === 'REVIEW_BOOTSTRAP_DEADLOCK' && diagnostic.exactCause === 'REVIEW_ONLY_SYNCHRONOUS_MODULE_EVALUATION_BLOCKED_DOMCONTENTLOADED',
+              'R1_8B_C1_DIAGNOSIS_DID_NOT_PROVE_AUTHORIZED_CORRECTION',
+              { classification: diagnostic.classification, exactCause: diagnostic.exactCause }
+            );
+
+            const currentIndex = fs.readFileSync(INDEX_PATH, 'utf8');
+            const diagnosticBootstrapPattern = /\n  <script>\n    \(\(\) => \{\n      const emitted = new Set\(\);[\s\S]*?\n  <script type="module" src="\.\/review\.js"><\/script>/;
+            requireCondition(diagnosticBootstrapPattern.test(currentIndex), 'DIAGNOSTIC_INDEX_BOOTSTRAP_PATTERN_NOT_EXACT');
+            const correctedBootstrap = `
+  <script>
+    (() => {
+      const startReview = () => {
+        document.documentElement.dataset.r1_8Bootstrap = 'importing';
+        import('./review.js').catch(error => {
+          document.documentElement.dataset.r1_8Bootstrap = 'failed';
+          console.error(error);
+        });
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startReview, { once: true });
+      } else {
+        startReview();
+      }
+    })();
+  </script>`;
+            const correctedIndex = currentIndex.replace(diagnosticBootstrapPattern, correctedBootstrap);
+            requireCondition(correctedIndex !== currentIndex, 'BOUNDED_BOOTSTRAP_CORRECTION_NOT_APPLIED');
+            requireCondition(!correctedIndex.includes('/__r18_startup_trace__'), 'DIAGNOSTIC_BEACON_LEAKED_INTO_CORRECTED_REVIEW');
+            requireCondition(!correctedIndex.includes('<script type="module" src="./review.js"></script>'), 'BLOCKING_STATIC_MODULE_BOOTSTRAP_REMAINED');
+            fs.writeFileSync(INDEX_PATH, correctedIndex);
+
+            const ledger = JSON.parse(fs.readFileSync(LEDGER_PATH, 'utf8'));
+            ledger.correctiveOperation = 'R1.8B_C1_LOCAL_REVIEW_NAVIGATION_STARTUP_DIAGNOSIS_AND_BOUNDED_HARNESS_RESOLUTION';
+            ledger.correctiveStartRollbackBranch = 'rollback/h-earth-c2-r1-r1-8b-c1-start-001';
+            ledger.controllingStatus = 'R1.8B_C1_DIAGNOSIS_PROVEN_CORRECTION_APPLIED_PENDING_RERUN';
+            ledger.historicalBlockers ||= [];
+            if (!ledger.historicalBlockers.some(row => row.workflowRun === 30686232460)) {
+              ledger.historicalBlockers.push({
+                operation: 'R1.8A_C1_CORRECTED_EXECUTION',
+                phase: 'R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION',
+                code: 'LOCAL_REVIEW_DOMCONTENTLOADED_TIMEOUT',
+                workflowRun: 30686232460,
+                workflowJob: 91332523912,
+                artifactId: 8814022100,
+                artifactDigest: 'sha256:59ffd5b3ba18e8df92c270a76c572ca97f3842d2b6a6833958140aff7ea118f7',
+                productRegressionEstablished: false
+              });
+            }
+            ledger.phases = (ledger.phases || []).filter(row => row.id !== 'R1.8B_INTEGRATED_FUNCTIONAL_AND_REGRESSION_VERIFICATION');
+            ledger.firstBlocker = null;
+            ledger.completedPhaseCount = ledger.phases.filter(row => String(row.status).startsWith('PASS')).length;
+            ledger.r1_8bC1Diagnosis = {
+              path: path.relative(ROOT, DIAGNOSTIC_PATH).split(path.sep).join('/'),
+              sha256: sha256(fs.readFileSync(DIAGNOSTIC_PATH)),
+              classification: diagnostic.classification,
+              exactCause: diagnostic.exactCause,
+              correction: 'ORDER_DYNAMIC_REVIEW_IMPORT_AFTER_DOMCONTENTLOADED',
+              productFailureEstablished: false
+            };
+            ledger.updatedAt = now();
+            fs.writeFileSync(LEDGER_PATH, `${JSON.stringify(ledger, null, 2)}\n`);
+
+            execFileSync('git', ['config', 'user.name', 'github-actions[bot]']);
+            execFileSync('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com']);
+            execFileSync('git', ['add', '--', path.relative(ROOT, INDEX_PATH), path.relative(ROOT, LEDGER_PATH)]);
+            execFileSync('git', ['commit', '-m', 'R1.8B-C1: order review bootstrap after DOMContentLoaded'], { stdio: 'inherit' });
+            const correctedHead = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+            execFileSync('git', ['push', 'origin', `HEAD:${TARGET_BRANCH}`], { stdio: 'inherit' });
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `corrected_head=${correctedHead}\n`);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `diagnostic_path=${path.relative(ROOT, DIAGNOSTIC_PATH).split(path.sep).join('/')}\n`);
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `diagnostic_classification=${diagnostic.classification}\n`);
+            await context.close();
+          } catch (error) {
+            diagnostic.firstBlocker = {
+              code: error.code || error.message || 'R1_8B_C1_DIAGNOSTIC_FAILURE',
+              detail: error.detail || String(error?.stack || error),
+              recordedAt: now()
+            };
+            diagnostic.server.stdout = stdout;
+            diagnostic.server.stderr = stderr;
+            fs.mkdirSync(path.dirname(DIAGNOSTIC_PATH), { recursive: true });
+            fs.writeFileSync(DIAGNOSTIC_PATH, `${JSON.stringify(diagnostic, null, 2)}\n`);
+            throw error;
+          } finally {
+            if (browser) await browser.close().catch(() => {});
+            server.kill('SIGTERM');
+          }
+          NODE
+
+      - name: Execute corrected R1.8B through R1.8D and stop for user differential
+        if: steps.gate.outputs.execute == 'true' && steps.diagnosis.outputs.corrected_head != ''
+        env:
+          R1_8_CORRECTED_HEAD: ${{ steps.diagnosis.outputs.corrected_head }}
+        run: |
+          set -euo pipefail
+          checked_out="$(git rev-parse HEAD)"
+          remote="$(git ls-remote origin "refs/heads/$R1_8_TARGET_BRANCH" | awk '{print $1}')"
+          if [ "$checked_out" != "$R1_8_CORRECTED_HEAD" ] || [ "$remote" != "$R1_8_CORRECTED_HEAD" ]; then
+            echo "Corrected execution head identity mismatch" >&2
+            exit 1
+          fi
+          GITHUB_SHA="$R1_8_CORRECTED_HEAD" \
           node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8-integrated-functional-publication.mjs
 
       - name: Upload bounded R1.8 evidence

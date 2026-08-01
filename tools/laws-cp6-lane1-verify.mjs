@@ -81,6 +81,7 @@ function staticVerification() {
       file === 'tools/laws-cp6-lane1-transform.mjs' ||
       file === 'tools/laws-cp6-lane1-verify.mjs' ||
       file === '.github/workflows/laws-cp6-lane1-build-verify.yml' ||
+      file === '.github/workflows/laws-cp6-lane1-pr-browser.yml' ||
       file.startsWith(`${CONTROL}/`)
     );
   });

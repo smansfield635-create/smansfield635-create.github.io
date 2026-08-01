@@ -1,4 +1,7 @@
 R1.7B isolated staging materializer trigger
 Target staging ref: staging/h-earth-c2-r1-r1-7b-baked-macro-field-001
+Target staging head: a3641c3d49a1a8281224ec84d4894d6c7cc7ee88
+Correction: verifier metric ownership only
 Candidate ref mutation: prohibited
 Main mutation: prohibited
+Attempt: 2

@@ -41,7 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           message="$(git log -1 --format=%s)"
-          if [ "$message" = "R1.8B-C1: install startup diagnosis and bounded resolution" ]; then
+          if [ "$message" = "R1.8B-C1: repair diagnostic workflow YAML and execute" ]; then
             echo "execute=true" >> "$GITHUB_OUTPUT"
           else
             echo "execute=false" >> "$GITHUB_OUTPUT"
@@ -57,7 +57,6 @@ jobs:
           MANUAL_CANDIDATE_HEAD: ${{ inputs.candidate_head }}
         run: |
           set -euo pipefail
-
           case "$GITHUB_EVENT_NAME" in
             pull_request)
               expected_candidate_head="$EVENT_PR_HEAD"
@@ -72,26 +71,20 @@ jobs:
               exit 1
               ;;
           esac
-
           if ! [[ "$expected_candidate_head" =~ ^[0-9a-f]{40}$ ]]; then
             echo "Expected candidate head is not an exact SHA-1 identity" >&2
             exit 1
           fi
-
           checked_out_candidate_head="$(git rev-parse HEAD)"
           if [ "$checked_out_candidate_head" != "$expected_candidate_head" ]; then
             echo "Checked-out candidate head does not match expected candidate head" >&2
-            echo "checked_out=$checked_out_candidate_head expected=$expected_candidate_head" >&2
             exit 1
           fi
-
           remote_candidate_head="$(git ls-remote origin "refs/heads/$R1_8_TARGET_BRANCH" | awk '{print $1}')"
           if [ "$remote_candidate_head" != "$expected_candidate_head" ]; then
             echo "Expected candidate head does not match the independently anchored remote branch" >&2
-            echo "remote=$remote_candidate_head expected=$expected_candidate_head" >&2
             exit 1
           fi
-
           echo "expected_candidate_head=$expected_candidate_head" >> "$GITHUB_OUTPUT"
           echo "checked_out_candidate_head=$checked_out_candidate_head" >> "$GITHUB_OUTPUT"
           echo "synthetic_merge_sha=$synthetic_merge_sha" >> "$GITHUB_OUTPUT"
@@ -198,43 +191,40 @@ jobs:
 
           async function waitForReadiness() {
             const start = process.hrtime.bigint();
-            let tcp = false;
-            let target = null;
             for (let attempt = 1; attempt <= 80; attempt += 1) {
-              tcp = await tcpProbe();
+              const tcp = await tcpProbe();
               if (tcp) {
                 try {
-                  const result = await fetchDirect(REVIEW_URL, 'text/html');
-                  if (result.response.status === 200 && result.body.length > 0) {
-                    target = result;
+                  const target = await fetchDirect(REVIEW_URL, 'text/html');
+                  if (target.response.status === 200 && target.body.length > 0) {
                     return { tcp, target, attempt, elapsedMilliseconds: elapsed(start) };
                   }
                 } catch {}
               }
               await sleep(125);
             }
-            return { tcp, target, attempt: 80, elapsedMilliseconds: elapsed(start) };
+            return { tcp: false, target: null, attempt: 80, elapsedMilliseconds: elapsed(start) };
           }
 
           function staticImportSpecifiers(source) {
-            const specifiers = [];
+            const values = [];
             const pattern = /\b(?:import|export)\s+(?:[^'";]*?\s+from\s+)?['"]([^'"]+)['"]/g;
-            for (const match of source.matchAll(pattern)) specifiers.push(match[1]);
-            return [...new Set(specifiers)];
+            for (const match of source.matchAll(pattern)) values.push(match[1]);
+            return [...new Set(values)];
           }
 
           async function fetchModuleGraph(entryUrl) {
             const queue = [entryUrl];
             const visited = new Set();
             const graph = [];
-            while (queue.length > 0) {
+            while (queue.length) {
               const url = queue.shift();
               if (visited.has(url)) continue;
               visited.add(url);
-              const { response, body, record } = await fetchDirect(url, 'javascript-module');
-              graph.push(record);
-              if (response.status !== 200) continue;
-              for (const specifier of staticImportSpecifiers(body)) {
+              const item = await fetchDirect(url, 'javascript-module');
+              graph.push(item.record);
+              if (item.response.status !== 200) continue;
+              for (const specifier of staticImportSpecifiers(item.body)) {
                 if (!specifier.startsWith('.')) continue;
                 const dependencyUrl = new URL(specifier, url).href;
                 if (dependencyUrl.startsWith(`${ORIGIN}/`)) queue.push(dependencyUrl);
@@ -279,12 +269,9 @@ jobs:
             requireCondition(String(readiness.target.record.contentType || '').toLowerCase().includes('text/html'), 'TARGET_DOCUMENT_BAD_MIME', readiness.target.record);
             requireCondition(readiness.target.record.byteCount > 0, 'TARGET_DOCUMENT_EMPTY', readiness.target.record);
 
-            const cssUrl = `${ORIGIN}/${REVIEW_ROOT}/review.css`;
-            const reviewJsUrl = `${ORIGIN}/${REVIEW_ROOT}/review.js`;
-            const css = await fetchDirect(cssUrl, 'text/css');
-            requireCondition(css.response.status === 200, 'STATIC_RESOURCE_404_OR_BAD_MIME', css.record);
-            requireCondition(String(css.record.contentType || '').toLowerCase().includes('text/css'), 'STATIC_RESOURCE_404_OR_BAD_MIME', css.record);
-            const moduleGraph = await fetchModuleGraph(reviewJsUrl);
+            const css = await fetchDirect(`${ORIGIN}/${REVIEW_ROOT}/review.css`, 'text/css');
+            requireCondition(css.response.status === 200 && String(css.record.contentType || '').toLowerCase().includes('text/css'), 'STATIC_RESOURCE_404_OR_BAD_MIME', css.record);
+            const moduleGraph = await fetchModuleGraph(`${ORIGIN}/${REVIEW_ROOT}/review.js`);
             diagnostic.moduleGraph = moduleGraph;
             requireCondition(moduleGraph.every(row => row.status === 200 && row.byteCount > 0), 'MODULE_GRAPH_LOAD_FAILURE', moduleGraph.filter(row => row.status !== 200 || row.byteCount === 0));
 
@@ -296,10 +283,8 @@ jobs:
             const page = await context.newPage();
             const navigationStart = process.hrtime.bigint();
             const event = (type, detail = null) => diagnostic.browserEvents.push({ type, elapsedMilliseconds: elapsed(navigationStart), detail });
-            let domContentLoadedResolved;
-            const domContentLoadedPromise = new Promise(resolve => { domContentLoadedResolved = resolve; });
-            let loadResolved;
-            const loadPromise = new Promise(resolve => { loadResolved = resolve; });
+            let resolveDcl;
+            const dclPromise = new Promise(resolve => { resolveDcl = resolve; });
 
             page.on('request', request => {
               const requestUrl = request.url();
@@ -307,8 +292,11 @@ jobs:
               try {
                 const parsed = new URL(requestUrl);
                 if (parsed.pathname === '/__r18_startup_trace__') {
-                  const row = { event: parsed.searchParams.get('event'), sourcePerformanceNow: Number(parsed.searchParams.get('t')), observedElapsedMilliseconds: elapsed(navigationStart) };
-                  diagnostic.startupBeacons.push(row);
+                  diagnostic.startupBeacons.push({
+                    event: parsed.searchParams.get('event'),
+                    sourcePerformanceNow: Number(parsed.searchParams.get('t')),
+                    observedElapsedMilliseconds: elapsed(navigationStart)
+                  });
                 }
               } catch {}
             });
@@ -319,8 +307,8 @@ jobs:
             page.on('crash', () => event('crash'));
             page.on('frameattached', frame => event('frameattached', { url: frame.url() }));
             page.on('framenavigated', frame => event('framenavigated', { url: frame.url() }));
-            page.on('domcontentloaded', () => { event('domcontentloaded'); domContentLoadedResolved(); });
-            page.on('load', () => { event('load'); loadResolved(); });
+            page.on('domcontentloaded', () => { event('domcontentloaded'); resolveDcl(); });
+            page.on('load', () => event('load'));
 
             const response = await page.goto(REVIEW_URL, { waitUntil: 'commit', timeout: 15000 });
             diagnostic.timings = {
@@ -330,16 +318,16 @@ jobs:
             };
             requireCondition(response?.status() === 200, 'TARGET_DOCUMENT_NOT_SERVED', diagnostic.timings);
 
-            const deadlineMilliseconds = 60000;
-            const waitRemaining = () => Math.max(0, deadlineMilliseconds - elapsed(navigationStart));
+            const remaining = () => Math.max(0, 60000 - elapsed(navigationStart));
             const dclWithinWindow = await Promise.race([
-              domContentLoadedPromise.then(() => true),
-              sleep(waitRemaining()).then(() => false)
+              dclPromise.then(() => true),
+              sleep(remaining()).then(() => false)
             ]);
+            const beaconTime = name => diagnostic.startupBeacons.find(row => row.event === name)?.observedElapsedMilliseconds ?? null;
+            diagnostic.timings.documentElementAvailableMilliseconds = beaconTime('DOCUMENT_ELEMENT_AVAILABLE');
             diagnostic.timings.domContentLoadedMilliseconds = dclWithinWindow ? diagnostic.browserEvents.find(row => row.type === 'domcontentloaded')?.elapsedMilliseconds ?? null : null;
-            diagnostic.timings.documentElementAvailableMilliseconds = diagnostic.startupBeacons.find(row => row.event === 'DOCUMENT_ELEMENT_AVAILABLE')?.observedElapsedMilliseconds ?? null;
-            diagnostic.timings.reviewBootstrapSentinelMilliseconds = diagnostic.startupBeacons.find(row => row.event === 'REVIEW_BOOTSTRAP_SENTINEL')?.observedElapsedMilliseconds ?? null;
-            diagnostic.timings.candidateRuntimeSentinelMilliseconds = diagnostic.startupBeacons.find(row => row.event === 'CANDIDATE_RUNTIME_SENTINEL')?.observedElapsedMilliseconds ?? null;
+            diagnostic.timings.reviewBootstrapSentinelMilliseconds = beaconTime('REVIEW_BOOTSTRAP_SENTINEL');
+            diagnostic.timings.candidateRuntimeSentinelMilliseconds = beaconTime('CANDIDATE_RUNTIME_SENTINEL');
             diagnostic.timings.loadMilliseconds = diagnostic.browserEvents.find(row => row.type === 'load')?.elapsedMilliseconds ?? null;
             diagnostic.domContentLoadedWithin60Seconds = dclWithinWindow;
             diagnostic.pageCrash = diagnostic.browserEvents.some(row => row.type === 'crash');
@@ -349,18 +337,23 @@ jobs:
             diagnostic.ownedHttpFailures = diagnostic.browserEvents.filter(row => row.type === 'response' && row.detail?.status >= 400 && !String(row.detail.url).includes('/__r18_startup_trace__'));
 
             const reviewSource = fs.readFileSync(REVIEW_JS_PATH, 'utf8');
-            const synchronousCandidateGridPresent = reviewSource.includes('for (let row = 0; row < CROSS_COUNT; row += 1)');
-            const topLevelAwaitPresent = /^\s*await\b/m.test(reviewSource);
-            diagnostic.sourceClassification = { synchronousCandidateGridPresent, topLevelAwaitPresent };
-
+            diagnostic.sourceClassification = {
+              synchronousCandidateGridPresent: reviewSource.includes('for (let row = 0; row < CROSS_COUNT; row += 1)'),
+              topLevelAwaitPresent: /^\s*await\b/m.test(reviewSource)
+            };
             const dependenciesReachable = moduleGraph.every(row => row.status === 200 && row.byteCount > 0);
-            const documentElementObserved = diagnostic.timings.documentElementAvailableMilliseconds !== null;
             const noFatalTransportOrBrowserFailure = !diagnostic.pageCrash && diagnostic.requestFailures.length === 0 && diagnostic.pageErrors.length === 0 && diagnostic.ownedHttpFailures.length === 0;
 
-            if (!dclWithinWindow && documentElementObserved && dependenciesReachable && noFatalTransportOrBrowserFailure && synchronousCandidateGridPresent && !topLevelAwaitPresent) {
+            if (
+              !dclWithinWindow &&
+              diagnostic.timings.documentElementAvailableMilliseconds !== null &&
+              dependenciesReachable &&
+              noFatalTransportOrBrowserFailure &&
+              diagnostic.sourceClassification.synchronousCandidateGridPresent &&
+              !diagnostic.sourceClassification.topLevelAwaitPresent
+            ) {
               diagnostic.classification = 'REVIEW_BOOTSTRAP_DEADLOCK';
               diagnostic.exactCause = 'REVIEW_ONLY_SYNCHRONOUS_MODULE_EVALUATION_BLOCKED_DOMCONTENTLOADED';
-              diagnostic.candidateRuntimeStartupReached = diagnostic.timings.reviewBootstrapSentinelMilliseconds !== null;
               diagnostic.productFailureEstablished = false;
             } else if (dclWithinWindow) {
               diagnostic.classification = 'BROWSER_OR_HARNESS_NAVIGATION_DEFECT_NOT_REPRODUCED';
@@ -376,7 +369,6 @@ jobs:
             diagnostic.server.stdout = stdout;
             diagnostic.server.stderr = stderr;
             fs.writeFileSync(DIAGNOSTIC_PATH, `${JSON.stringify(diagnostic, null, 2)}\n`);
-
             requireCondition(
               diagnostic.classification === 'REVIEW_BOOTSTRAP_DEADLOCK' && diagnostic.exactCause === 'REVIEW_ONLY_SYNCHRONOUS_MODULE_EVALUATION_BLOCKED_DOMCONTENTLOADED',
               'R1_8B_C1_DIAGNOSIS_DID_NOT_PROVE_AUTHORIZED_CORRECTION',
@@ -384,26 +376,28 @@ jobs:
             );
 
             const currentIndex = fs.readFileSync(INDEX_PATH, 'utf8');
-            const diagnosticBootstrapPattern = /\n  <script>\n    \(\(\) => \{\n      const emitted = new Set\(\);[\s\S]*?\n  <script type="module" src="\.\/review\.js"><\/script>/;
-            requireCondition(diagnosticBootstrapPattern.test(currentIndex), 'DIAGNOSTIC_INDEX_BOOTSTRAP_PATTERN_NOT_EXACT');
-            const correctedBootstrap = `
-  <script>
-    (() => {
-      const startReview = () => {
-        document.documentElement.dataset.r1_8Bootstrap = 'importing';
-        import('./review.js').catch(error => {
-          document.documentElement.dataset.r1_8Bootstrap = 'failed';
-          console.error(error);
-        });
-      };
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', startReview, { once: true });
-      } else {
-        startReview();
-      }
-    })();
-  </script>`;
-            const correctedIndex = currentIndex.replace(diagnosticBootstrapPattern, correctedBootstrap);
+            const pattern = /\n  <script>\n    \(\(\) => \{\n      const emitted = new Set\(\);[\s\S]*?\n  <script type="module" src="\.\/review\.js"><\/script>/;
+            requireCondition(pattern.test(currentIndex), 'DIAGNOSTIC_INDEX_BOOTSTRAP_PATTERN_NOT_EXACT');
+            const correctedBootstrap = [
+              '',
+              '  <script>',
+              '    (() => {',
+              '      const startReview = () => {',
+              "        document.documentElement.dataset.r1_8Bootstrap = 'importing';",
+              "        import('./review.js').catch(error => {",
+              "          document.documentElement.dataset.r1_8Bootstrap = 'failed';",
+              '          console.error(error);',
+              '        });',
+              '      };',
+              "      if (document.readyState === 'loading') {",
+              "        document.addEventListener('DOMContentLoaded', startReview, { once: true });",
+              '      } else {',
+              '        startReview();',
+              '      }',
+              '    })();',
+              '  </script>'
+            ].join('\n');
+            const correctedIndex = currentIndex.replace(pattern, correctedBootstrap);
             requireCondition(correctedIndex !== currentIndex, 'BOUNDED_BOOTSTRAP_CORRECTION_NOT_APPLIED');
             requireCondition(!correctedIndex.includes('/__r18_startup_trace__'), 'DIAGNOSTIC_BEACON_LEAKED_INTO_CORRECTED_REVIEW');
             requireCondition(!correctedIndex.includes('<script type="module" src="./review.js"></script>'), 'BLOCKING_STATIC_MODULE_BOOTSTRAP_REMAINED');

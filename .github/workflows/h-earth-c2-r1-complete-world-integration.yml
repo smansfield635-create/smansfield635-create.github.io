@@ -40,6 +40,8 @@ jobs:
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
           git fetch origin rollback/h-earth-c2-r1-real-package-adapter-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-real-package-adapter-start-001
           test "$(git rev-parse origin/rollback/h-earth-c2-r1-real-package-adapter-start-001)" = "8d41e4eb85a8ef6a2162e46c2bc5d0a92892dc55"
+          git fetch origin rollback/h-earth-c2-r1-startup-performance-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-startup-performance-start-001
+          test "$(git rev-parse origin/rollback/h-earth-c2-r1-startup-performance-start-001)" = "f171852f3b453a1535fc29ed2798430814351084"
 
       - name: Verify exact overall and corrective path boundaries
         shell: bash
@@ -73,7 +75,24 @@ jobs:
           diff -u /tmp/expected-overall-paths /tmp/actual-overall-paths
 
       - name: Run synthetic and real complete-world integration tests
-        run: node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
+        shell: bash
+        env:
+          H_EARTH_COMPLETE_WORLD_CACHE_OUTPUT: ${{ runner.temp }}/h-earth-static-artifacts/complete-world-adapter-cache.json
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/h-earth-static-artifacts"
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs \
+            | tee "$RUNNER_TEMP/h-earth-static-artifacts/static-test.log"
+          test -s "$H_EARTH_COMPLETE_WORLD_CACHE_OUTPUT"
+          sha256sum "$H_EARTH_COMPLETE_WORLD_CACHE_OUTPUT" > "$RUNNER_TEMP/h-earth-static-artifacts/complete-world-adapter-cache.sha256"
+
+      - name: Upload exact binding cache and static receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-complete-world-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-static-artifacts
+          if-no-files-found: error
+          retention-days: 30
 
   browser-execution-transport:
     needs: exact-head-and-static-construction
@@ -144,11 +163,21 @@ jobs:
                 for (const point of step.points) {
                   const released = step.type === 'pointerup' || step.type === 'pointercancel';
                   canvas.dispatchEvent(new PointerEvent(step.type, {
-                    bubbles: true, cancelable: true, composed: true,
-                    pointerId: point.id, pointerType: 'touch', isPrimary: point.id === 1,
-                    clientX: point.x, clientY: point.y, screenX: point.x, screenY: point.y,
-                    buttons: released ? 0 : 1, button: step.type === 'pointerdown' ? 0 : released ? 0 : -1,
-                    pressure: released ? 0 : 0.5, width: 12, height: 12
+                    bubbles: true,
+                    cancelable: true,
+                    composed: true,
+                    pointerId: point.id,
+                    pointerType: 'touch',
+                    isPrimary: point.id === 1,
+                    clientX: point.x,
+                    clientY: point.y,
+                    screenX: point.x,
+                    screenY: point.y,
+                    buttons: released ? 0 : 1,
+                    button: step.type === 'pointerdown' ? 0 : released ? 0 : -1,
+                    pressure: released ? 0 : 0.5,
+                    width: 12,
+                    height: 12
                   }));
                 }
                 await delay(step.waitMilliseconds ?? 80);
@@ -193,7 +222,12 @@ jobs:
 
           async function runScenario(browser, configuration) {
             const scenario = safeName(configuration.name);
-            const context = await browser.newContext({ viewport: configuration.viewport, deviceScaleFactor: configuration.deviceScaleFactor, isMobile: configuration.mobile, hasTouch: configuration.mobile });
+            const context = await browser.newContext({
+              viewport: configuration.viewport,
+              deviceScaleFactor: configuration.deviceScaleFactor,
+              isMobile: configuration.mobile,
+              hasTouch: configuration.mobile
+            });
             await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
             const page = await context.newPage();
             const consoleRecords = [];
@@ -205,18 +239,27 @@ jobs:
             page.on('requestfailed', request => requestFailures.push({ url: request.url(), method: request.method(), failure: request.failure() }));
             page.on('response', response => {
               const headers = response.headers();
-              httpRecords.push({ url: response.url(), status: response.status(), contentType: headers['content-type'] ?? null, contentLength: headers['content-length'] ?? null });
+              httpRecords.push({
+                url: response.url(),
+                status: response.status(),
+                contentType: headers['content-type'] ?? null,
+                contentLength: headers['content-length'] ?? null
+              });
             });
             let traceStopped = false;
             try {
+              const scenarioStartedAt = Date.now();
               await page.goto(reviewUrl, { waitUntil: 'domcontentloaded', timeout: 120000 });
               await page.waitForFunction(() => {
                 const state = window.H_EARTH_C2_R1_COMPLETE_WORLD;
                 return state?.ready === true || state?.failed === true;
-              }, null, { timeout: 120000 });
+              }, null, { timeout: 120000, polling: 250 });
+              const startupMilliseconds = Date.now() - scenarioStartedAt;
               const startup = await page.evaluate(() => {
                 const state = window.H_EARTH_C2_R1_COMPLETE_WORLD;
-                return state.failed ? { failed: true, failure: state.getFailureReceipt() } : { failed: false, receipt: state.getReceipt() };
+                return state.failed
+                  ? { failed: true, failure: state.getFailureReceipt() }
+                  : { failed: false, receipt: state.getReceipt() };
               });
               if (startup.failed) {
                 const error = new Error(startup.failure.rootRejectionCode || 'COMPLETE_WORLD_RUNTIME_FAILED');
@@ -224,6 +267,8 @@ jobs:
                 throw error;
               }
               const before = startup.receipt;
+              assert(startupMilliseconds <= 120000, 'STARTUP_ACCEPTANCE_BUDGET_EXCEEDED', { startupMilliseconds });
+              assert(before.packageBinding.counters.constructionMilliseconds <= 105000, 'PACKAGE_CONSTRUCTION_BUDGET_EXCEEDED', before.packageBinding.counters);
               await page.screenshot({ path: path.join(artifactDirectory, `${scenario}-before.png`), fullPage: true });
               if (configuration.mobile) await performMobileInput(page);
               else await performDesktopInput(page);
@@ -264,13 +309,43 @@ jobs:
                 assert(ia.oneFingerLookProposalCount > ib.oneFingerLookProposalCount, 'DESKTOP_LOOK_NOT_RECORDED');
                 assert(ia.wheelEventCount > ib.wheelEventCount, 'DESKTOP_WHEEL_INPUT_NOT_RECORDED');
               }
-              const record = { receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_SCENARIO_v2', expectedHead, reviewUrl, scenario: configuration, browserVersion: browser.version(), webgl2Bound, before, after, runtimeTrace, consoleRecords, pageErrors, requestFailures, httpRecords };
+              const record = {
+                receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_SCENARIO_v3',
+                expectedHead,
+                reviewUrl,
+                scenario: configuration,
+                browserVersion: browser.version(),
+                startupMilliseconds,
+                webgl2Bound,
+                before,
+                after,
+                runtimeTrace,
+                consoleRecords,
+                pageErrors,
+                requestFailures,
+                httpRecords
+              };
               fs.writeFileSync(path.join(artifactDirectory, `${scenario}-receipt.json`), JSON.stringify(record, null, 2));
               await context.tracing.stop({ path: path.join(artifactDirectory, `${scenario}-trace.zip`) });
               traceStopped = true;
               return record;
             } catch (error) {
-              fs.writeFileSync(path.join(artifactDirectory, `${scenario}-failure.json`), JSON.stringify({ receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_FAILURE_v2', expectedHead, reviewUrl, scenario: configuration, error: { name: error.name, message: error.message, stack: error.stack ?? null, detail: error.detail ?? null }, consoleRecords, pageErrors, requestFailures, httpRecords }, null, 2));
+              const progressReceipt = await page.evaluate(() => {
+                const state = window.H_EARTH_C2_R1_COMPLETE_WORLD;
+                return state?.getProgressReceipt?.() ?? null;
+              }).catch(() => null);
+              fs.writeFileSync(path.join(artifactDirectory, `${scenario}-failure.json`), JSON.stringify({
+                receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_FAILURE_v3',
+                expectedHead,
+                reviewUrl,
+                scenario: configuration,
+                progressReceipt,
+                error: { name: error.name, message: error.message, stack: error.stack ?? null, detail: error.detail ?? null },
+                consoleRecords,
+                pageErrors,
+                requestFailures,
+                httpRecords
+              }, null, 2));
               throw error;
             } finally {
               if (!traceStopped) await context.tracing.stop({ path: path.join(artifactDirectory, `${scenario}-trace.zip`) }).catch(() => {});
@@ -278,7 +353,10 @@ jobs:
             }
           }
 
-          const browser = await chromium.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage'] });
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage']
+          });
           try {
             const scenarios = [
               { name: 'desktop-1440x900', viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, mobile: false },
@@ -287,7 +365,21 @@ jobs:
             ];
             const receipts = [];
             for (const scenario of scenarios) receipts.push(await runScenario(browser, scenario));
-            fs.writeFileSync(path.join(artifactDirectory, 'browser-transport-summary.json'), JSON.stringify({ receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_TRANSPORT_SUMMARY_v2', operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_REAL_PACKAGE_ADAPTER_CORRECTION_001', roleBoundary: 'ROLE_1_TRANSPORT_NOT_ROLE_3_CERTIFICATION', expectedHead, reviewUrl, scenarioCount: receipts.length, scenarios: receipts.map(receipt => ({ name: receipt.scenario.name, rendererCounters: receipt.after.renderer.counters, intakeCounters: receipt.after.intake.counters })) }, null, 2));
+            fs.writeFileSync(path.join(artifactDirectory, 'browser-transport-summary.json'), JSON.stringify({
+              receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_TRANSPORT_SUMMARY_v3',
+              operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',
+              roleBoundary: 'ROLE_1_TRANSPORT_NOT_ROLE_3_CERTIFICATION',
+              expectedHead,
+              reviewUrl,
+              scenarioCount: receipts.length,
+              scenarios: receipts.map(receipt => ({
+                name: receipt.scenario.name,
+                startupMilliseconds: receipt.startupMilliseconds,
+                constructionMilliseconds: receipt.after.packageBinding.counters.constructionMilliseconds,
+                rendererCounters: receipt.after.renderer.counters,
+                intakeCounters: receipt.after.intake.counters
+              }))
+            }, null, 2));
           } finally {
             await browser.close();
           }

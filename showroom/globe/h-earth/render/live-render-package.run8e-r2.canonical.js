@@ -1,4 +1,4 @@
-/** H_EARTH_RUN_8E_R2_CANONICAL_LIVE_RENDER_PACKAGE_v1 */
+/** H_EARTH_RUN_8E_R2_CANONICAL_LIVE_RENDER_PACKAGE_v2 */
 import {
   getHEarthRun8ER2ImmutableLiveRenderPackage as getRawPackage,
   evaluateHEarthRun8ER2ImmutableLiveRenderPackage
@@ -111,11 +111,115 @@ function buildCanonicalPackage() {
   return packageRecord;
 }
 
-let cachedPackage = null;
+let cachedCanonicalPackage = null;
+let runtimePackageOverride = null;
+let runtimePackageOverrideReceipt = null;
+
+function canonicalSourcePackage() {
+  if (!cachedCanonicalPackage) cachedCanonicalPackage = buildCanonicalPackage();
+  return cachedCanonicalPackage;
+}
+
+function evaluateRuntimePackageOverride(packageRecord, canonicalPackage) {
+  const issues = [];
+  if (packageRecord?.eligible !== true) issues.push('R2_RUNTIME_OVERRIDE_NOT_ELIGIBLE');
+  if (!/^H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_[0-9A-F]{8}$/.test(packageRecord?.packageIdentity ?? '')) {
+    issues.push('R2_RUNTIME_OVERRIDE_IDENTITY_INVALID');
+  }
+  if (!/^fnv1a32:[0-9a-f]{8}$/.test(packageRecord?.contentDigest ?? '')) {
+    issues.push('R2_RUNTIME_OVERRIDE_DIGEST_INVALID');
+  }
+  if (packageRecord?.parentPackageIdentity !== canonicalPackage?.packageIdentity) {
+    issues.push('R2_RUNTIME_OVERRIDE_PARENT_IDENTITY_MISMATCH');
+  }
+  if (packageRecord?.parentPackageContentDigest !== canonicalPackage?.contentDigest) {
+    issues.push('R2_RUNTIME_OVERRIDE_PARENT_DIGEST_MISMATCH');
+  }
+  if (packageRecord?.completeWorldBinding?.counters?.candidateSampleFailureCount !== 0) {
+    issues.push('R2_RUNTIME_OVERRIDE_CANDIDATE_SAMPLE_FAILURES_PRESENT');
+  }
+  if (packageRecord?.completeWorldBinding?.counters?.boundTerrainVertexCount !== 10419) {
+    issues.push('R2_RUNTIME_OVERRIDE_TERRAIN_BINDING_COUNT_MISMATCH');
+  }
+  if (packageRecord?.completeWorldBinding?.counters?.boundShorelineVertexCount !== 299) {
+    issues.push('R2_RUNTIME_OVERRIDE_SHORELINE_BINDING_COUNT_MISMATCH');
+  }
+  if (!packageRecord?.buffers || !Array.isArray(packageRecord?.drawRanges)) {
+    issues.push('R2_RUNTIME_OVERRIDE_RENDER_DATA_MISSING');
+  }
+  return freezeRecord({
+    eligible: issues.length === 0,
+    status: issues.length === 0
+      ? 'R2_RUNTIME_PACKAGE_OVERRIDE_PASS'
+      : 'R2_RUNTIME_PACKAGE_OVERRIDE_FAIL',
+    issues: freezeArray(issues)
+  });
+}
+
+export function getHEarthRun8ER2CanonicalSourcePackage() {
+  return canonicalSourcePackage();
+}
+
+export function installHEarthRun8ER2RuntimePackageOverride({
+  packageRecord,
+  operationId = 'UNSPECIFIED_RUNTIME_PACKAGE_OVERRIDE'
+} = {}) {
+  const canonicalPackage = canonicalSourcePackage();
+  const evaluation = evaluateRuntimePackageOverride(packageRecord, canonicalPackage);
+  if (evaluation.eligible !== true) {
+    throw new Error(`R2_RUNTIME_PACKAGE_OVERRIDE_REJECTED:${evaluation.issues.join(',')}`);
+  }
+  if (runtimePackageOverride) {
+    if (
+      runtimePackageOverride.packageIdentity !== packageRecord.packageIdentity ||
+      runtimePackageOverride.contentDigest !== packageRecord.contentDigest
+    ) {
+      throw new Error('R2_RUNTIME_PACKAGE_OVERRIDE_ALREADY_BOUND_TO_DIFFERENT_PACKAGE');
+    }
+    return runtimePackageOverrideReceipt;
+  }
+  runtimePackageOverride = packageRecord;
+  runtimePackageOverrideReceipt = freezeRecord({
+    receiptType: 'H_EARTH_RUN_8E_R2_RUNTIME_PACKAGE_OVERRIDE_RECEIPT_v1',
+    eligible: true,
+    status: 'R2_RUNTIME_PACKAGE_OVERRIDE_ACTIVE',
+    operationId,
+    canonicalPackageIdentity: canonicalPackage.packageIdentity,
+    canonicalPackageContentDigest: canonicalPackage.contentDigest,
+    runtimePackageIdentity: packageRecord.packageIdentity,
+    runtimePackageContentDigest: packageRecord.contentDigest,
+    boundTerrainVertexCount:
+      packageRecord.completeWorldBinding.counters.boundTerrainVertexCount,
+    boundShorelineVertexCount:
+      packageRecord.completeWorldBinding.counters.boundShorelineVertexCount,
+    candidateSampleFailureCount:
+      packageRecord.completeWorldBinding.counters.candidateSampleFailureCount,
+    canonicalSourcePackageMutated: false,
+    runtimeSelectionOnly: true,
+    publicDefaultPromotionPerformed: false
+  });
+  return runtimePackageOverrideReceipt;
+}
+
+export function getHEarthRun8ER2RuntimePackageSelectionReceipt() {
+  const canonicalPackage = canonicalSourcePackage();
+  return runtimePackageOverrideReceipt ?? freezeRecord({
+    receiptType: 'H_EARTH_RUN_8E_R2_RUNTIME_PACKAGE_OVERRIDE_RECEIPT_v1',
+    eligible: true,
+    status: 'R2_CANONICAL_RUNTIME_PACKAGE_ACTIVE',
+    operationId: null,
+    canonicalPackageIdentity: canonicalPackage.packageIdentity,
+    canonicalPackageContentDigest: canonicalPackage.contentDigest,
+    runtimePackageIdentity: canonicalPackage.packageIdentity,
+    runtimePackageContentDigest: canonicalPackage.contentDigest,
+    canonicalSourcePackageMutated: false,
+    runtimeSelectionOnly: false,
+    publicDefaultPromotionPerformed: false
+  });
+}
 
 export function getHEarthRun8ER2CanonicalLiveRenderPackage() {
-  if (!cachedPackage) cachedPackage = buildCanonicalPackage();
-  return cachedPackage;
+  return runtimePackageOverride ?? canonicalSourcePackage();
 }
 
 export default getHEarthRun8ER2CanonicalLiveRenderPackage;

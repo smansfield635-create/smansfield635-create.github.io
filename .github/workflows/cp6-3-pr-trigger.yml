@@ -126,6 +126,11 @@ jobs:
           assert source.count(migrated_needle) == 1
           source = source.replace(migrated_needle, migrated_replacement, 1)
 
+          changed_paths_needle = "changed_paths = [line for line in run('git','diff','--name-only',CP62).splitlines() if line]"
+          changed_paths_replacement = "subprocess.check_call(['git','add','-N',str(ledger_path),str(receipt_path)])\nchanged_paths = [line for line in run('git','diff','--name-only',CP62).splitlines() if line]"
+          assert source.count(changed_paths_needle) == 1
+          source = source.replace(changed_paths_needle, changed_paths_replacement, 1)
+
           Path('/tmp/cp63.py').write_text(source, encoding='utf-8')
           PY
           rm -f .github/workflows/cp6-3-pr-trigger.yml

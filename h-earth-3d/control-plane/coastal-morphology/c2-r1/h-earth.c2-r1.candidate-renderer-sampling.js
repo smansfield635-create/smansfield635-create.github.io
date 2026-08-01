@@ -1,12 +1,13 @@
 /**
  * H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1
  *
- * Candidate-only R1.7C material sampling adapter with the authorized R1.7D-C1
- * downstream darkening reconciliation. It binds the closed R1.7B baked
- * macro-control field through one clamped bilinear runtime sample and applies
- * only bounded albedo, roughness, and cavity/AO responses to the established
- * C2-R1 candidate material output. The optional macro-normal channel remains
- * exposed but unapplied, so accepted normal authority remains unchanged.
+ * Candidate-only R1.7C material sampling adapter with the authorized R1.7D-C2
+ * downstream ULP-safe darkening-floor reconciliation. It binds the closed
+ * R1.7B baked macro-control field through one clamped bilinear runtime sample
+ * and applies only bounded albedo, roughness, and cavity/AO responses to the
+ * established C2-R1 candidate material output. The optional macro-normal
+ * channel remains exposed but unapplied, so accepted normal authority remains
+ * unchanged.
  */
 
 import {
@@ -44,9 +45,11 @@ const FIELD_VALUES = copyHEarthC2R1BakedMacroControlFieldValues();
 const CHANNEL_INDEX = freeze(Object.fromEntries(
   FIELD.channels.map((channel, index) => [channel, index])
 ));
-const R1_7D_C1_MINIMUM_LUMINANCE_RATIO = 0.9981642262491339;
+const R1_7D_C2_REQUIRED_MINIMUM_LUMINANCE_RATIO = 0.9981642262491339;
+const R1_7D_C2_IMPLEMENTATION_SAFETY_MARGIN = 1e-12;
+const R1_7D_C2_TARGET_ALBEDO_SCALE_FLOOR = 0.9981642262501339;
 const CHANNEL_BOUNDS = freeze({
-  ALBEDO_SCALE: freeze([0.998164226249134, 1.07]),
+  ALBEDO_SCALE: freeze([R1_7D_C2_TARGET_ALBEDO_SCALE_FLOOR, 1.07]),
   ROUGHNESS_OFFSET: freeze([-0.045, 0.065]),
   CAVITY_RESPONSE: freeze([0.84, 1]),
   MACRO_NORMAL_STRENGTH: freeze([0, 0.035])
@@ -59,10 +62,13 @@ export const H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING = freeze({
   contractId: H_EARTH_C2_R1_CANDIDATE_RENDERER_SAMPLING_CONTRACT_ID,
   checkpoint: 'R1.7C_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION',
   downstreamCorrectiveSuccessor: freeze({
-    checkpoint: 'R1.7D_C1_BOUNDED_DARKENING_RECONCILIATION',
+    checkpoint: 'R1.7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION',
     historicalR17CClosurePreserved: true,
     correctionType: 'BOUNDED_ALBEDO_RESPONSE_FLOOR',
-    requiredMinimumLuminanceRatio: R1_7D_C1_MINIMUM_LUMINANCE_RATIO,
+    requiredMinimumLuminanceRatio:
+      R1_7D_C2_REQUIRED_MINIMUM_LUMINANCE_RATIO,
+    implementationSafetyMargin: R1_7D_C2_IMPLEMENTATION_SAFETY_MARGIN,
+    targetMeasuredRatio: R1_7D_C2_TARGET_ALBEDO_SCALE_FLOOR,
     appliedAlbedoScaleFloor: CHANNEL_BOUNDS.ALBEDO_SCALE[0]
   }),
   sourceFieldContractId:

@@ -6,6 +6,11 @@ on:
       - agent/osf-z64am-inspection-001
     paths:
       - .github/workflows/osf-z64am-inspection.yml
+  pull_request:
+    branches:
+      - agent/osf-laws-corpus-harvest-001
+    paths:
+      - .github/workflows/osf-z64am-inspection.yml
   workflow_dispatch:
 
 permissions:

@@ -1,0 +1,226 @@
+{
+  "manifestType": "H_EARTH_C2_R1_R1_7D_DURABLE_CLOSURE_EVIDENCE_MANIFEST_v2",
+  "operation": "R1.7D_4A_CLOSURE_TRANSPORT_PATH_REBASING_RESOLUTION_ONLY",
+  "result": "PASS_CLOSED_DO_NOT_REOPEN",
+  "engineeringSourceHead": "a738c31fbcf264fd47f6d7bb3a23af7f8a2d5c2f",
+  "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+  "candidateBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+  "closureBranch": "closure/h-earth-c2-r1-r1-7d-durable-001",
+  "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7d-c2-start-001",
+  "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7d-closed-001",
+  "engineeringWorkflow": {
+    "run": 30684383656,
+    "job": 91327294357,
+    "artifactId": 8813390098,
+    "artifactName": "h-earth-c2-r1-r1-7d-integrated-engineering-evidence",
+    "artifactDigest": "sha256:a3c97d9f12853a063ed29381a033b5da941a61e94ffc42885f6b7eddf09112ea",
+    "result": "PASS"
+  },
+  "closureTransport": {
+    "resolution": "SYNTHETIC_REPOSITORY_ROOT_EXACT_ALLOWLISTED_PATH_MAPPING",
+    "transportRun": 30684790754,
+    "transportRunAttempt": 1,
+    "originalCanonicalDigestRecordUnmodified": true,
+    "canonicalDigestValuesUnmodified": true,
+    "canonicalDigestPathsUnmodified": true,
+    "strictDigestCheckingPreserved": true,
+    "everyCanonicalDigestEntryPassed": true,
+    "artifactCorruptionEstablished": false,
+    "engineeringRegressionEstablished": false
+  },
+  "engineeringHeadRegistryPreflight": {
+    "run": 30684383658,
+    "job": 91327294316,
+    "artifactId": 8813386741,
+    "artifactDigest": "sha256:1eebc951fc94100411b91724469a89398406f7a08f762d2a0d4e544f512f4c75",
+    "result": "PASS"
+  },
+  "exactDurableClosureHeadRegistryPreflight": {
+    "result": "PASS",
+    "executionLaw": "CONFIRM_ON_EXACT_FINAL_HEAD_BEFORE_CANDIDATE_ADVANCEMENT"
+  },
+  "exactClosurePathCount": 9,
+  "closurePaths": [
+    ".github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7d-evidence-manifest.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-distant-landform.svg",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/h-earth.c2-r1.r1-7d-phase-ledger.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/h-earth.c2-r1.r1-7d-verification.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json"
+  ],
+  "durableRepositoryFiles": {
+    "receipt": {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/h-earth.c2-r1.r1-7d-verification.json",
+      "sha256": "68cbcb0704a88b32f831539b0cad9edafba01fdfac84716a075cd6fb21476ef1"
+    },
+    "phaseLedger": {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/h-earth.c2-r1.r1-7d-phase-ledger.json",
+      "sha256": "34b010299ee01c15fddd1010e9ac639517cbac314332d22d3b567c541c029737"
+    },
+    "captures": [
+      {
+        "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg",
+        "sha256": "afeae7b2d49eaad356b1c30e2dfd2084fbdfa3201821b8e0c2c60247b5002eb4"
+      },
+      {
+        "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg",
+        "sha256": "990930c993d3130471f46e188594c0e01298645cb3e788117bb83f920b049298"
+      },
+      {
+        "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-distant-landform.svg",
+        "sha256": "5087bf67c18c004263440f17474ea3f72c1b27b98399a1ca8c76408c40033d68"
+      }
+    ]
+  },
+  "verifiedArtifactOnlyIdentities": {
+    "originalDigestRecord": {
+      "retainedInArtifactOnly": true,
+      "repositoryPathNotAdded": true,
+      "sha256": "f254cc4ac8d1b109d623bc9ad41155dd5be351d9beb210e29c87cf6d03f83dd5"
+    },
+    "executionManifest": {
+      "retainedInArtifactOnly": true,
+      "repositoryPathNotAdded": true,
+      "sha256": "ad711310c4ff6304d781c905f96be3cfa90676569ad7b0af84dfb6280a8536ac"
+    }
+  },
+  "artifactIdentity": {
+    "manifestType": "H_EARTH_C2_R1_R1_7D_C2_EXECUTION_EVIDENCE_MANIFEST_v1",
+    "operation": "R1.7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION",
+    "result": "PASS_ENGINEERING_CORRECTED_READY_FOR_DURABLE_CLOSURE",
+    "startingHead": "fe6359d700346a9792b130cc4c9772359a663b2e",
+    "executionHead": "a738c31fbcf264fd47f6d7bb3a23af7f8a2d5c2f",
+    "workflowRun": 30684383656,
+    "workflowRunAttempt": 1,
+    "artifactName": "h-earth-c2-r1-r1-7d-integrated-engineering-evidence",
+    "receipt": {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/h-earth.c2-r1.r1-7d-verification.json",
+      "sha256": "68cbcb0704a88b32f831539b0cad9edafba01fdfac84716a075cd6fb21476ef1"
+    },
+    "phaseLedger": {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/h-earth.c2-r1.r1-7d-phase-ledger.json",
+      "sha256": "34b010299ee01c15fddd1010e9ac639517cbac314332d22d3b567c541c029737"
+    },
+    "captures": [
+      {
+        "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg",
+        "sha256": "afeae7b2d49eaad356b1c30e2dfd2084fbdfa3201821b8e0c2c60247b5002eb4",
+        "camera": {
+          "type": "ORTHOGRAPHIC_ENGINEERING",
+          "position": [
+            0,
+            220,
+            30
+          ],
+          "target": [
+            0,
+            0,
+            25
+          ],
+          "near": 0.1,
+          "far": 700
+        },
+        "sampleCount": 72
+      },
+      {
+        "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg",
+        "sha256": "990930c993d3130471f46e188594c0e01298645cb3e788117bb83f920b049298",
+        "camera": {
+          "type": "PERSPECTIVE_ENGINEERING",
+          "position": [
+            0,
+            2.2,
+            -22
+          ],
+          "target": [
+            0,
+            1.2,
+            76
+          ],
+          "fovDegrees": 58
+        },
+        "sampleCount": 40
+      },
+      {
+        "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-distant-landform.svg",
+        "sha256": "5087bf67c18c004263440f17474ea3f72c1b27b98399a1ca8c76408c40033d68",
+        "camera": {
+          "type": "PERSPECTIVE_ENGINEERING",
+          "position": [
+            0,
+            42,
+            -180
+          ],
+          "target": [
+            0,
+            14,
+            112
+          ],
+          "fovDegrees": 44
+        },
+        "sampleCount": 45
+      }
+    ],
+    "registryPreflightRequiredOnExactHead": true,
+    "durableRepositoryCustodyEstablished": false,
+    "repositoryReadbackConfirmed": false,
+    "closedRollbackBranchCreated": false,
+    "visualSuccessorStatus": "NOT_ESTABLISHED",
+    "userDifferentialReady": false
+  },
+  "measurements": {
+    "before": {
+      "minimumLuminanceRatio": 0.9981642262491338,
+      "macroSignalEnergy": 0.00055844446920518,
+      "landformMacroCovariance": 0.003717705198923025,
+      "distantDefinitionSignalEnergy": 0.0013810560194828106,
+      "uniqueRuntimeControlRatio": 0.9808917197452229,
+      "maximumAdjacentMacroDelta": 0.052542983495015294
+    },
+    "after": {
+      "minimumLuminanceRatio": 0.998164226250134,
+      "macroSignalEnergy": 0.000558444469205,
+      "landformMacroCovariance": 0.003717705198923,
+      "distantDefinitionSignalEnergy": 0.001381056019483,
+      "uniqueRuntimeControlRatio": 0.980891719745223,
+      "maximumAdjacentMacroDelta": 0.052542983495015
+    },
+    "deltas": {
+      "minimumLuminanceRatio": 1e-12,
+      "macroSignalEnergy": 0,
+      "landformMacroCovariance": 0,
+      "distantDefinitionSignalEnergy": 0,
+      "uniqueRuntimeControlRatio": 0,
+      "maximumAdjacentMacroDelta": 0
+    },
+    "requiredMinimumLuminanceRatio": 0.9981642262491339,
+    "targetMeasuredRatio": 0.9981642262501339,
+    "implementationSafetyMargin": 1e-12
+  },
+  "integratedRuntimeChainVerified": true,
+  "singleRuntimeSampleConfirmed": true,
+  "macroExpressionPresent": true,
+  "landformCorrespondenceVerified": true,
+  "distantTerrainDefinitionIncreased": true,
+  "visibleTilingAbsent": true,
+  "hardBandingAbsent": true,
+  "performanceUsableForReview": true,
+  "overpoweredDarkeningAbsent": true,
+  "coastalReadabilityPreserved": true,
+  "r17aByteIdentical": true,
+  "r17bByteIdentical": true,
+  "r17bFieldValuesSha256": "4377ff9e9fc60a6218478b289acbff99075eab08d4e518a6eb68b1a12b98f866",
+  "passingReceiptInDurableRepositoryCustody": true,
+  "repositoryReadbackConfirmed": true,
+  "closedRollbackBranchCreated": true,
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false,
+  "nextAuthorizedCheckpoint": "R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW",
+  "r1_8AutomaticStart": false,
+  "firstBlocker": null
+}

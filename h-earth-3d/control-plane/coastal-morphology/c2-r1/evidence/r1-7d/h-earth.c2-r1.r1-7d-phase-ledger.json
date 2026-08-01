@@ -1,0 +1,200 @@
+{
+  "ledgerType": "H_EARTH_C2_R1_R1_7D_BOUNDED_PHASE_LEDGER_v3",
+  "operation": "R1.7D_C2_ULP_SAFE_DARKENING_FLOOR_RECONCILIATION",
+  "controllingStatus": "R1.7D_BLOCKED_AT_R1.7D_3_ONE_ULP_SHORTFALL",
+  "correctiveStartingHead": "fe6359d700346a9792b130cc4c9772359a663b2e",
+  "historicalR17CClosureHead": "0a4ca0d7be7f569905a8ad38fbd7436619172c31",
+  "executionHead": "a738c31fbcf264fd47f6d7bb3a23af7f8a2d5c2f",
+  "targetBranch": "agent/h-earth-c2-r1-physically-coherent-coastal-successor-001",
+  "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7d-c2-start-001",
+  "failureEvidence": {
+    "initialR17D3": {
+      "workflowRun": 30683749569,
+      "workflowJob": 91325597315,
+      "artifactId": 8813180082,
+      "artifactDigest": "sha256:f84ea69d5bdda146691e3f570d424d2505e40c5880335103dbf3e3ec46503fa5"
+    },
+    "r17dC1OneUlpShortfall": {
+      "workflowRun": 30683997023,
+      "workflowJob": 91326273440,
+      "artifactId": 8813265376,
+      "artifactDigest": "sha256:e5c1b20d956861cc82954288bcbe66ed19c3f8ae0e35f76c213cac1cf41aa11e"
+    }
+  },
+  "phases": [
+    {
+      "id": "R1.7D_1_EXACT_HEAD_AND_STATIC_CORRESPONDENCE",
+      "status": "PASS_RECORDED_INHERITED",
+      "repeated": false
+    },
+    {
+      "id": "R1.7D_C2_CORRECTIVE_BOUNDARY_PREFLIGHT",
+      "status": "PASS",
+      "completedAt": "2026-08-01T04:40:23.605Z",
+      "evidence": {
+        "changedPaths": [
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7d-integrated-engineering-verification.mjs"
+        ],
+        "immutableBlobReadback": {
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.landform-analysis.js": "dba3fe2898b127addaa5a62081d466e55370da72",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js": "a97b3df57ae01626a2ff5cbedf510e2afdf06912",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7a-verification.json": "000c72cd37b12c7e7abfe783f26bdd139d69901d",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-verification.json": "c15d880bda64279f220ee810721909941f4b6424",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-verification.json": "5b7a9650a5f39ffee2ba394334fb24806d771d0e",
+          "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js": "45cbd83337c14bc94ce7d173b25f2157cb4eb84f",
+          "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js": "c5a439f2833a4def90944e5eb1d03005ddb41e70",
+          "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js": "3eb689c5a030c40ebede52c6eaef300207742a7c",
+          "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js": "c0e103b0cbb51eac30105f0e8ae68c37e8fac281",
+          "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js": "2094bcafb1e5ae1c291066a9cf1dd3820a22d0b1",
+          "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js": "1ac2ee902fc0cfb74413db37dd139bc51dbd9e46",
+          "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js": "0fa4b8434a5883e9858d2b73bb2e05e4b1a60c5c"
+        },
+        "historicalR17CClosurePreserved": true,
+        "r17aByteIdentical": true,
+        "r17bByteIdentical": true,
+        "singleRuntimeSamplePreserved": true,
+        "authorizedChannelSetPreserved": true,
+        "implementationSafetyMargin": 1e-12,
+        "appliedAlbedoFloor": 0.9981642262501339
+      },
+      "blocker": null
+    },
+    {
+      "id": "R1.7D_2_AFFECTED_RUNTIME_ASSERTIONS_REVERIFIED",
+      "status": "PASS_REVERIFIED",
+      "completedAt": "2026-08-01T04:40:37.486Z",
+      "evidence": {
+        "integratedRuntimeChainVerified": true,
+        "singleRuntimeSampleConfirmed": true,
+        "sampleCount": 157,
+        "fixedViewCount": 3,
+        "elapsedMilliseconds": 13880.225032999999,
+        "samplesPerSecond": 11.311055809739047,
+        "performanceUsableForReview": true,
+        "resourceBindingStable": true,
+        "noPerFrameTextureRecreation": true,
+        "rendererLifecycleUnchanged": true,
+        "terrainGeometryUnchanged": true,
+        "cameraOrTraversalUnchanged": true,
+        "waterBreakerSwashWetnessUnchanged": true
+      },
+      "blocker": null
+    },
+    {
+      "id": "R1.7D_3_FIXED_VIEW_ENGINEERING_CAPTURE_AND_GAUGE",
+      "status": "PASS_RECORDED",
+      "completedAt": "2026-08-01T04:40:37.490Z",
+      "evidence": {
+        "exactCandidateHead": "a738c31fbcf264fd47f6d7bb3a23af7f8a2d5c2f",
+        "captures": [
+          {
+            "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-coast-to-inland-overview.svg",
+            "sha256": "afeae7b2d49eaad356b1c30e2dfd2084fbdfa3201821b8e0c2c60247b5002eb4",
+            "camera": {
+              "type": "ORTHOGRAPHIC_ENGINEERING",
+              "position": [
+                0,
+                220,
+                30
+              ],
+              "target": [
+                0,
+                0,
+                25
+              ],
+              "near": 0.1,
+              "far": 700
+            },
+            "sampleCount": 72
+          },
+          {
+            "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-ground-level-terrain.svg",
+            "sha256": "990930c993d3130471f46e188594c0e01298645cb3e788117bb83f920b049298",
+            "camera": {
+              "type": "PERSPECTIVE_ENGINEERING",
+              "position": [
+                0,
+                2.2,
+                -22
+              ],
+              "target": [
+                0,
+                1.2,
+                76
+              ],
+              "fovDegrees": 58
+            },
+            "sampleCount": 40
+          },
+          {
+            "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/fixed-view-engineering-captures/h-earth.c2-r1.r1-7d-distant-landform.svg",
+            "sha256": "5087bf67c18c004263440f17474ea3f72c1b27b98399a1ca8c76408c40033d68",
+            "camera": {
+              "type": "PERSPECTIVE_ENGINEERING",
+              "position": [
+                0,
+                42,
+                -180
+              ],
+              "target": [
+                0,
+                14,
+                112
+              ],
+              "fovDegrees": 44
+            },
+            "sampleCount": 45
+          }
+        ],
+        "findings": {
+          "macroExpressionPresent": true,
+          "landformCorrespondenceVerified": true,
+          "distantTerrainDefinitionIncreased": true,
+          "visibleTextureTilingAbsent": true,
+          "hardOrContourLikeBandingAbsent": true,
+          "unrelatedRandomNoiseAbsent": true,
+          "muddyUniformTerrainAbsent": true,
+          "overpoweredDarkeningAbsent": true,
+          "coastalSandReadabilityPreserved": true,
+          "waterReadabilityPreserved": true,
+          "groundLevelReadabilityPreserved": true,
+          "performanceUsableForReview": true,
+          "macroResponseNotEliminated": true
+        },
+        "before": {
+          "minimumLuminanceRatio": 0.9981642262491338,
+          "macroSignalEnergy": 0.00055844446920518,
+          "landformMacroCovariance": 0.003717705198923025,
+          "distantDefinitionSignalEnergy": 0.0013810560194828106,
+          "uniqueRuntimeControlRatio": 0.9808917197452229,
+          "maximumAdjacentMacroDelta": 0.052542983495015294
+        },
+        "after": {
+          "minimumLuminanceRatio": 0.998164226250134,
+          "macroSignalEnergy": 0.000558444469205,
+          "landformMacroCovariance": 0.003717705198923,
+          "distantDefinitionSignalEnergy": 0.001381056019483,
+          "uniqueRuntimeControlRatio": 0.980891719745223,
+          "maximumAdjacentMacroDelta": 0.052542983495015
+        },
+        "deltas": {
+          "minimumLuminanceRatio": 1e-12,
+          "macroSignalEnergy": 0,
+          "landformMacroCovariance": 0,
+          "distantDefinitionSignalEnergy": 0,
+          "uniqueRuntimeControlRatio": 0,
+          "maximumAdjacentMacroDelta": 0
+        },
+        "requiredMinimumLuminanceRatio": 0.9981642262491339,
+        "targetMeasuredRatio": 0.9981642262501339,
+        "implementationSafetyMargin": 1e-12
+      },
+      "blocker": null
+    }
+  ],
+  "firstBlocker": null,
+  "createdAt": "2026-08-01T04:40:23.564Z",
+  "updatedAt": "2026-08-01T04:40:37.490Z",
+  "completedPhaseCount": 4
+}

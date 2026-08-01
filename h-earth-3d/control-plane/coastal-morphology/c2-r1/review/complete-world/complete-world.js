@@ -1,6 +1,7 @@
 import {
   buildHEarthC2R1CompleteWorldRenderPackage,
-  evaluateHEarthC2R1CompleteWorldRenderPackage
+  evaluateHEarthC2R1CompleteWorldRenderPackage,
+  H_EARTH_C2_R1_COMPLETE_WORLD_BINDING
 } from './complete-world-render-package.js';
 import { createHEarthC2R1CompleteWorldPersistentRenderer } from './complete-world-persistent-renderer.js';
 import { installHEarthRun8ER3D2PointerTouchIntake } from '/showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js';
@@ -36,11 +37,46 @@ const viewport = () => {
 
 let packageRecord = null;
 let packageEvaluation = null;
+let startupProgress = Object.freeze({
+  phase: 'BOOTSTRAP',
+  processedVertexCount: 0,
+  vertexCount: 0,
+  progressRatio: 0,
+  counters: null
+});
+const startupApi = Object.freeze({
+  ready: false,
+  failed: false,
+  building: true,
+  getProgressReceipt: () => JSON.parse(JSON.stringify(startupProgress))
+});
+window.H_EARTH_C2_R1_COMPLETE_WORLD = startupApi;
+root.dataset.ready = 'false';
+root.dataset.failed = 'false';
+root.dataset.building = 'true';
 
 try {
-  trace('PACKAGE_CONSTRUCTION_STARTED');
+  trace('PACKAGE_CONSTRUCTION_STARTED', {
+    startupBudgetMilliseconds: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserBudgetMilliseconds,
+    yieldEveryVertices: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserYieldEveryVertices
+  });
   const canonicalPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
-  packageRecord = await buildHEarthC2R1CompleteWorldRenderPackage({ canonicalPackage });
+  packageRecord = await buildHEarthC2R1CompleteWorldRenderPackage({
+    canonicalPackage,
+    startupBudgetMilliseconds: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserBudgetMilliseconds,
+    yieldEveryVertices: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserYieldEveryVertices,
+    onProgress(progressReceipt) {
+      startupProgress = progressReceipt;
+      const percent = Math.max(0, Math.min(100, Math.floor((progressReceipt.progressRatio ?? 0) * 100)));
+      root.dataset.buildProgress = String(percent);
+      status.textContent = progressReceipt.phase === 'COMPLETE_WORLD_DIGEST'
+        ? 'Finalizing complete-world package identity'
+        : `Constructing complete-world package · ${percent}%`;
+      details.textContent = progressReceipt.counters
+        ? `${progressReceipt.counters.candidateMaterialSampleInvocationCount} unique coastal material samples · ${progressReceipt.counters.candidateMaterialSampleCacheHitCount} cached reuses`
+        : 'Preparing canonical complete-world package';
+    }
+  });
   packageEvaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(packageRecord, canonicalPackage);
   if (packageEvaluation.eligible !== true) {
     const rejection = new Error(`COMPLETE_WORLD_PACKAGE_EVALUATION_FAILED:${packageEvaluation.rootRejectionCode ?? packageEvaluation.issues.join(',')}`);
@@ -77,7 +113,7 @@ try {
   trace('FIRST_VISIBLE_FRAME', latestFrame);
 
   const receipt = Object.freeze({
-    receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_ISOLATED_OCCURRENCE_RECEIPT',
+    receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_ISOLATED_OCCURRENCE_RECEIPT_v2',
     eligible: true,
     status: 'COMPLETE_WORLD_ISOLATED_OCCURRENCE_READY_FOR_ROLE_3',
     objectId: 'H_EARTH:C2_R1:COASTAL_SUCCESSOR',
@@ -85,6 +121,7 @@ try {
     activeEdgeId: 'H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE',
     operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001',
     correctiveOperationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_REAL_PACKAGE_ADAPTER_CORRECTION_001',
+    performanceCorrectionId: 'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',
     packageIdentity: packageRecord.packageIdentity,
     packageContentDigest: packageRecord.contentDigest,
     packageBinding: packageRecord.completeWorldBinding,
@@ -102,28 +139,33 @@ try {
   window.H_EARTH_C2_R1_COMPLETE_WORLD = Object.freeze({
     ready: true,
     failed: false,
+    building: false,
     packageRecord,
+    getProgressReceipt: () => JSON.parse(JSON.stringify(startupProgress)),
     getReceipt: () => JSON.parse(JSON.stringify({ ...receipt, renderer: renderer.getReceipt(), intake: intake.getReceipt() }))
   });
   root.dataset.ready = 'true';
   root.dataset.failed = 'false';
+  root.dataset.building = 'false';
+  root.dataset.buildProgress = '100';
   status.textContent = 'Complete-world candidate ready for independent Role 3 verification';
-  details.textContent = `${packageRecord.completeWorldBinding.counters.boundTerrainVertexCount} terrain vertices and ${packageRecord.completeWorldBinding.counters.boundShorelineVertexCount} shoreline vertices bound; noncoastal package preserved.`;
+  details.textContent = `${packageRecord.completeWorldBinding.counters.boundTerrainVertexCount} terrain vertices and ${packageRecord.completeWorldBinding.counters.boundShorelineVertexCount} shoreline vertices bound in ${packageRecord.completeWorldBinding.counters.constructionMilliseconds} ms; noncoastal package preserved.`;
   window.dispatchEvent(new CustomEvent('h-earth-complete-world-ready', { detail: receipt }));
   trace('READY_EVENT_EMITTED', receipt);
 } catch (error) {
   const failureReceipt = Object.freeze({
-    receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_RUNTIME_FAILURE_RECEIPT_v1',
+    receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_RUNTIME_FAILURE_RECEIPT_v2',
     eligible: false,
     status: 'COMPLETE_WORLD_ISOLATED_OCCURRENCE_FAILED',
     objectId: 'H_EARTH:C2_R1:COASTAL_SUCCESSOR',
     executionHistoryId: 'H_EARTH:C2_R1:PR_418:HISTORY_001',
     activeEdgeId: 'H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE',
-    operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_REAL_PACKAGE_ADAPTER_CORRECTION_001',
+    operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',
     rootRejectionCode: packageEvaluation?.rootRejectionCode ?? packageRecord?.rootRejectionCode ?? error?.message ?? 'COMPLETE_WORLD_RUNTIME_FAILURE',
     issues: packageEvaluation?.issues ?? packageRecord?.issues ?? [],
-    counters: packageEvaluation?.counters ?? packageRecord?.counters ?? null,
+    counters: packageEvaluation?.counters ?? packageRecord?.counters ?? startupProgress?.counters ?? null,
     failureDiagnostics: packageEvaluation?.failureDiagnostics ?? packageRecord?.failureDiagnostics ?? [],
+    startupProgress,
     error: { name: error?.name ?? 'Error', message: error?.message ?? String(error), stack: error?.stack ?? null },
     reviewEntry: location.pathname,
     boundaries: {
@@ -138,10 +180,13 @@ try {
   window.H_EARTH_C2_R1_COMPLETE_WORLD = Object.freeze({
     ready: false,
     failed: true,
+    building: false,
+    getProgressReceipt: () => JSON.parse(JSON.stringify(startupProgress)),
     getFailureReceipt: () => JSON.parse(JSON.stringify(failureReceipt))
   });
   root.dataset.ready = 'false';
   root.dataset.failed = 'true';
+  root.dataset.building = 'false';
   root.dataset.error = 'true';
   status.textContent = 'Complete-world candidate failed to initialize';
   details.textContent = failureReceipt.rootRejectionCode;

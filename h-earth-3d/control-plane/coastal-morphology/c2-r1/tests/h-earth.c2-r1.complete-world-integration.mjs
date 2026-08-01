@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import {
   buildHEarthC2R1CompleteWorldRenderPackage,
-  evaluateHEarthC2R1CompleteWorldRenderPackage
+  evaluateHEarthC2R1CompleteWorldRenderPackage,
+  H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_CONTRACT_ID
 } from '../review/complete-world/complete-world-render-package.js';
 import { getHEarthRun8ER2CanonicalLiveRenderPackage } from '../../../../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
 import { sampleHEarthC2R1CoastalTerrainField } from '../../../../terrain/h-earth.coastal-profile.c2-r1.js';
@@ -84,6 +85,7 @@ const syntheticMaterial = () => ({
   }
 });
 const syntheticDiagnostic = () => ({ valid: true, status: 'SYNTHETIC_PASS', issues: [] });
+const syntheticProgress = [];
 
 const syntheticResult = await buildHEarthC2R1CompleteWorldRenderPackage({
   canonicalPackage: syntheticCanonicalPackage,
@@ -93,13 +95,25 @@ const syntheticResult = await buildHEarthC2R1CompleteWorldRenderPackage({
   sampleSediment: syntheticDiagnostic,
   sampleSwash: syntheticDiagnostic,
   sampleWaterOptics: syntheticDiagnostic,
-  sampleBreaker: syntheticDiagnostic
+  sampleBreaker: syntheticDiagnostic,
+  yieldEveryVertices: 2,
+  startupBudgetMilliseconds: 10000,
+  onProgress: receipt => syntheticProgress.push(receipt)
 });
+assert.equal(H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_CONTRACT_ID, 'H_EARTH_C2_R1_COMPLETE_WORLD_RENDER_PACKAGE_v4');
 assert.equal(syntheticResult.eligible, true);
 assert.equal(syntheticResult.completeWorldBinding.counters.boundTerrainVertexCount, 1);
 assert.equal(syntheticResult.completeWorldBinding.counters.boundShorelineVertexCount, 1);
 assert.equal(syntheticResult.completeWorldBinding.counters.candidateSampleFailureCount, 0);
 assert.equal(syntheticResult.completeWorldBinding.counters.adapterBoundaryExcludedVertexCount, 0);
+assert.equal(syntheticResult.completeWorldBinding.counters.terrainSampleInvocationCount, 3);
+assert.equal(syntheticResult.completeWorldBinding.counters.terrainSampleCacheHitCount, 2);
+assert.equal(syntheticResult.completeWorldBinding.counters.candidateMaterialSampleInvocationCount, 1);
+assert.equal(syntheticResult.completeWorldBinding.counters.candidateMaterialSampleCacheHitCount, 1);
+assert(syntheticResult.completeWorldBinding.counters.constructionYieldCount > 0);
+assert(syntheticProgress.some(receipt => receipt.phase === 'COASTAL_PACKAGE_BINDING'));
+assert(syntheticProgress.some(receipt => receipt.phase === 'COMPLETE_WORLD_DIGEST'));
+assert.equal(Object.isFrozen(syntheticResult.buffers.positions), true);
 assert.deepEqual(syntheticCanonicalPackage, syntheticBefore, 'synthetic canonical package was mutated');
 assert.deepEqual(syntheticResult.primitiveIds, syntheticBefore.primitiveIds);
 assert.deepEqual(syntheticResult.primitiveSpans, syntheticBefore.primitiveSpans);
@@ -110,6 +124,7 @@ assert.equal(syntheticEvaluation.eligible, true, syntheticEvaluation.issues.join
 
 const realCanonicalPackage = getHEarthRun8ER2CanonicalLiveRenderPackage();
 const realBefore = structuredClone(realCanonicalPackage);
+const realStartedAt = performance.now();
 const realResult = await buildHEarthC2R1CompleteWorldRenderPackage({
   canonicalPackage: realCanonicalPackage,
   sampleCoastalTerrain: sampleHEarthC2R1CoastalTerrainField,
@@ -122,6 +137,7 @@ const realResult = await buildHEarthC2R1CompleteWorldRenderPackage({
   timeSeconds: 0,
   stopAfterFirstFailure: true
 });
+const realElapsedMilliseconds = Number((performance.now() - realStartedAt).toFixed(3));
 const realEvaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(realResult, realCanonicalPackage);
 const counters = realResult.completeWorldBinding?.counters ?? realResult.counters ?? null;
 const boundaryExclusions = realResult.completeWorldBinding?.boundaryExclusionDiagnostics ?? [];
@@ -132,14 +148,15 @@ const identityPreservation = {
   indexBytes: JSON.stringify(realResult.buffers?.indices) === JSON.stringify(realCanonicalPackage.buffers.indices)
 };
 const realDiagnostic = {
-  testType: 'H_EARTH_C2_R1_REAL_CANONICAL_PACKAGE_INTEGRATION_TEST_v2',
+  testType: 'H_EARTH_C2_R1_REAL_CANONICAL_PACKAGE_INTEGRATION_TEST_v3',
   eligible: realResult.eligible === true && realEvaluation.eligible === true,
   rootRejectionCode: realResult.rootRejectionCode ?? null,
   issues: realEvaluation.issues,
   counters,
   adapterBoundaryExclusions: boundaryExclusions,
   failureDiagnostics: realResult.completeWorldBinding?.failureDiagnostics ?? realResult.failureDiagnostics ?? [],
-  identityPreservation
+  identityPreservation,
+  realElapsedMilliseconds
 };
 console.log(`REAL_PACKAGE_DIAGNOSTIC:${JSON.stringify(realDiagnostic)}`);
 assert.equal(realResult.eligible, true, JSON.stringify(realDiagnostic));
@@ -148,6 +165,14 @@ assert.equal(counters.candidateSampleFailureCount, 0);
 assert.equal(counters.adapterBoundaryExcludedVertexCount, 1);
 assert(counters.boundTerrainVertexCount > 0);
 assert(counters.boundShorelineVertexCount > 0);
+assert(counters.terrainSampleInvocationCount <= counters.terrainVertexCount + counters.shorelineVertexCount);
+assert(counters.candidateMaterialSampleInvocationCount <= counters.boundTerrainVertexCount + counters.boundShorelineVertexCount + counters.adapterBoundaryExcludedVertexCount);
+assert(counters.terrainSampleCacheHitCount > 0);
+assert(counters.candidateMaterialSampleCacheHitCount > 0);
+assert(counters.constructionMilliseconds < 105000, `construction exceeded browser budget: ${counters.constructionMilliseconds}`);
+assert(realElapsedMilliseconds < 105000, `real integration elapsed exceeded browser budget: ${realElapsedMilliseconds}`);
+assert.equal(realResult.completeWorldBinding.coordinateMemoizationActive, true);
+assert.equal(Object.isFrozen(realResult.buffers.positions), true);
 assert.equal(boundaryExclusions.length, 1);
 assert.equal(boundaryExclusions[0].vertexIndex, 24327);
 assert.equal(boundaryExclusions[0].roleCode, 1);
@@ -191,6 +216,13 @@ console.log(JSON.stringify({
   },
   boundTerrainVertexCount: counters.boundTerrainVertexCount,
   boundShorelineVertexCount: counters.boundShorelineVertexCount,
+  uniqueCoordinateCount: counters.uniqueCoordinateCount,
+  terrainSampleInvocationCount: counters.terrainSampleInvocationCount,
+  terrainSampleCacheHitCount: counters.terrainSampleCacheHitCount,
+  candidateMaterialSampleInvocationCount: counters.candidateMaterialSampleInvocationCount,
+  candidateMaterialSampleCacheHitCount: counters.candidateMaterialSampleCacheHitCount,
+  constructionMilliseconds: counters.constructionMilliseconds,
+  realElapsedMilliseconds,
   unchangedVertexCount: counters.unchangedVertexCount,
   identityPreservationResult: 'PASS',
   exactMutablePathCount: authorizedPaths.length,

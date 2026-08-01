@@ -1,0 +1,178 @@
+{
+  "packet_id": "LAWS_RESEARCH_GAP_CLOSURE_PACKET_v1",
+  "date": "2026-08-01",
+  "status": "RESEARCH_DISCOVERY_AND_EVIDENCE_CROSSWALK_COMPLETE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/osf-laws-corpus-harvest-001",
+  "pull_request": 461,
+  "authority_boundary": {
+    "laws_chamber_mutation": false,
+    "claim_upgrade": false,
+    "scientific_validation_claim": false,
+    "independent_replication_claim": false,
+    "relativity_closure_claim": false
+  },
+  "osf_corpus": {
+    "profile_id": "g5294",
+    "public_resources": 31,
+    "root_projects": 31,
+    "components": 0,
+    "registrations": 1,
+    "public_datasets_detected": 0,
+    "public_analytic_code_files_detected": 0,
+    "discovery_errors": 0,
+    "count_reconciliation": "31_CONTROLS; PR_DESCRIPTION_29_IS_STALE"
+  },
+  "relativity": {
+    "research_memory": "PRESENT",
+    "source_artifact": "NOT_RECOVERED",
+    "osf_project": "NOT_IDENTIFIED",
+    "equations_or_tests": "NOT_RECOVERED",
+    "closure": "NOT_VERIFIED",
+    "disposition": "RECOVERY_HOLD"
+  },
+  "scientific_method": {
+    "source_custody": "CLOSED",
+    "primary_sources": [
+      "9ut2z",
+      "7jnxq",
+      "2fh4g",
+      "n82xh",
+      "rjdms",
+      "7vkgs"
+    ],
+    "sequence": [
+      "OBSERVE",
+      "HYPOTHESIZE",
+      "REDUCE_1_2_3",
+      "FALSIFY",
+      "ITERATE",
+      "TERMINATE",
+      "COMPRESS_11_12_13"
+    ],
+    "recovered_controls": [
+      "EXTERNALLY_OBSERVABLE_EVIDENCE",
+      "FIXED_EVIDENCE_WINDOWS",
+      "UNIFORM_RULE_APPLICATION",
+      "NO_POST_HOC_TUNING",
+      "OBSERVER_CONVERGENCE",
+      "PRESERVE_FAILED_RESULTS"
+    ],
+    "empirical_validation_claim": false
+  },
+  "osf_study_status": {
+    "n82xh": "STUDY_DESIGN_COMPLETE_ENOUGH_FOR_PREREGISTRATION_EXECUTION_NOT_PRESENT_IN_OSF",
+    "bnhq3": "PROTOCOL_DEFINED_PUBLIC_CASE_LEDGER_AND_RESULTS_NOT_PRESENT",
+    "vazr6": "CANDIDATE_LAW_PROGRAM_AUTHOR_REPORTED_PILOTS_PUBLIC_DATA_NOT_RECOVERED",
+    "etn4d": "OPERATIONAL_INSTRUMENT_CANDIDATE_EXECUTED_CASE_TABLE_NOT_RECOVERED",
+    "2hvbg": "CONCEPTUAL_METRIC_RUBRIC_RELIABILITY_AND_DATASET_PENDING",
+    "6ehrj": "SPECIFICATION_ONLY_IN_OSF",
+    "edg9f": "FORMAL_MODEL_INDEPENDENT_MATHEMATICAL_REVIEW_REQUIRED",
+    "pyd6g": "FORMAL_MODEL_INDEPENDENT_MATHEMATICAL_REVIEW_REQUIRED"
+  },
+  "project_wide_empirical_results": [
+    {
+      "id": "DFW_MAY_2024",
+      "class": "RETROSPECTIVE_MEASUREMENT_DEVELOPMENT",
+      "rows": 31,
+      "primary_metric": "COMPOSITE_AUROC",
+      "value": 0.810345,
+      "best_comparator": "TEMPERATURE_RANGE_AUROC",
+      "comparator_value": 0.87931,
+      "disposition": "COMPOSITE_BELOW_BEST_SCALAR_NO_GENERALIZATION"
+    },
+    {
+      "id": "IDA_ADJUSTED_2021",
+      "class": "RETROSPECTIVE_POST_OUTCOME_CONSTRUCT_REFINEMENT",
+      "rows": 31,
+      "primary_metric": "ADJUSTED_AUROC",
+      "value": 0.923077,
+      "best_comparator": "AVERAGE_WIND_AUROC",
+      "comparator_value": 1.0,
+      "disposition": "IMPROVED_RETROSPECTIVE_FIT_NO_INCREMENTAL_OR_PROSPECTIVE_VALIDITY"
+    },
+    {
+      "id": "CLOUD_TEST_1_ALIBABA",
+      "class": "HELD_OUT_EXPLORATORY_LAUNCH_TIME_TEST",
+      "evaluation_rows": 242834,
+      "hard_mq_balanced_accuracy": 0.551562,
+      "hard_mq_sensitivity": 0.151996,
+      "h_star_auroc": 0.448109,
+      "logistic_auroc": 0.72446,
+      "disposition": "WEAK_DISCRETE_SIGNAL_H_STAR_CONTRADICTED_BASELINE_SUPERIOR"
+    },
+    {
+      "id": "CLOUD_TEST_1B_ALIBABA_INSTANCE_CAPACITY",
+      "class": "HELD_OUT_POST_PLACEMENT_PRE_TERMINAL_TEST",
+      "evaluation_rows": 247145,
+      "hard_mq_balanced_accuracy": 0.5053556574482039,
+      "hard_mq_sensitivity": 0.040479873241030674,
+      "h_star_auroc": 0.4476527589968575,
+      "raw_logistic_auroc": 0.8607738684152598,
+      "mq_augmentation_delta": -0.0072586675955356,
+      "h_star_augmentation_delta": -0.0226291307356933,
+      "disposition": "PRESSURE_SIGNAL_MATERIAL_MQ_H_STAR_AND_WEAKEST_AXIS_NOT_SUPPORTED"
+    },
+    {
+      "id": "CLOUD_TEST_1C_ALIBABA_FINAL_CLOSURE",
+      "class": "FRESH_USER_DISJOINT_HELD_OUT_CLOSURE",
+      "fresh_holdout_rows": 388004,
+      "user_overlap": 0,
+      "hard_mq_balanced_accuracy": 0.50132091360977,
+      "hard_mq_sensitivity": 0.02969707998544192,
+      "h_star_auroc": 0.3902531771361645,
+      "raw_logistic_auroc": 0.818580411247453,
+      "mq_augmentation_supported": false,
+      "h_star_augmentation_supported": false,
+      "disposition": "NEGATIVE_FOR_CURRENT_REALIZATION"
+    },
+    {
+      "id": "BATTERY_TEST_1_CALCE_CS2",
+      "class": "CELL_DISJOINT_RUN_TO_FAILURE_TEST",
+      "evaluation_cycles": 1653,
+      "event_prevalence": 0.036297640653357534,
+      "axis_logistic_auroc": 0.9394433982004604,
+      "burden_auroc": 0.9704174513496547,
+      "h_star_auroc": 0.7711550533584431,
+      "hard_mq_true_positives": 0,
+      "hard_mq_balanced_accuracy": 0.49937225360954174,
+      "mq_augmentation_delta": -0.0017367650136010937,
+      "h_star_augmentation_delta": -0.007961916718978834,
+      "disposition": "STRONG_AXIS_AND_BURDEN_SIGNAL_HARD_MQ_AND_AUGMENTATION_NOT_SUPPORTED"
+    }
+  ],
+  "cross_domain_conclusion": {
+    "executed_empirical_results": "RECOVERED_AND_MIXED",
+    "negative_results_preserved": true,
+    "domain_specific_signal": "PRESENT",
+    "hard_universal_threshold_support": "NOT_ESTABLISHED",
+    "universal_law_confirmation": "NOT_ESTABLISHED",
+    "independent_observer_convergence": "NOT_EXECUTED",
+    "independent_provider_cloud_replication": "NOT_EXECUTED",
+    "prospective_cross_domain_confirmation": "NOT_EXECUTED"
+  },
+  "closed_gaps": [
+    "OSF_RESOURCE_COUNT",
+    "OSF_REGISTRATION_CUSTODY",
+    "SCIENTIFIC_METHOD_SOURCE_MAP",
+    "RELATIVITY_CORPUS_SEARCH_NO_ARTIFACT",
+    "OSF_VS_PROJECT_EXECUTION_SEPARATION",
+    "PROJECT_EMPIRICAL_RESULTS_RECOVERY",
+    "NEGATIVE_RESULT_CLASSIFICATION",
+    "STUDY_STATUS_LEDGER",
+    "CLAIM_CEILING"
+  ],
+  "open_research_operations": [
+    "RELATIVITY_PRIMARY_ARTIFACT_RECOVERY",
+    "INDEPENDENT_OBSERVER_CONVERGENCE_STUDY",
+    "FALSE_POSITIVE_FALSE_NEGATIVE_CONTROL_BENCHMARK",
+    "PROSPECTIVE_PREREGISTERED_CROSS_DOMAIN_STUDY",
+    "INDEPENDENT_PROVIDER_CLOUD_REPLICATION",
+    "SECOND_PHYSICAL_DOMAIN_REPLICATION",
+    "M256_CCMM_INDEPENDENT_FORMAL_REVIEW",
+    "PUBLIC_OSF_DEPOSITION_OF_DATA_CODE_AND_RESULT_RECEIPTS",
+    "SECOND_INDEPENDENT_CODING_TEAM"
+  ],
+  "next_phase": "INDEPENDENT_EXECUTION_AND_REVIEW",
+  "claim_boundary": "Research discovery and evidence crosswalk only. No Laws Chamber mutation or universal claim upgrade is authorized."
+}

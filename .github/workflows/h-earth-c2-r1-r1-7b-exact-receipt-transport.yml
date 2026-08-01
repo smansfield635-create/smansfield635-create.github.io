@@ -79,6 +79,7 @@ jobs:
           h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-ledger.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.r1-7-subcheckpoint-program.json
           EOF
+          git add -N h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-verification.json
           git diff --name-only "${BASE_HEAD}" | sort > /tmp/actual
           diff -u /tmp/expected /tmp/actual
 

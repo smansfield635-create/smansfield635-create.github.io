@@ -113,6 +113,7 @@ function buildCanonicalPackage() {
 
 let cachedCanonicalPackage = null;
 let runtimePackageOverride = null;
+let runtimeRendererCompatibilityPackage = null;
 let runtimePackageOverrideReceipt = null;
 
 function canonicalSourcePackage() {
@@ -156,8 +157,43 @@ function evaluateRuntimePackageOverride(packageRecord, canonicalPackage) {
   });
 }
 
+function createRendererCompatibilityPackage(packageRecord, canonicalPackage) {
+  const compatibilityPackage = freezeRecord({
+    ...packageRecord,
+    packageIdentity: canonicalPackage.packageIdentity,
+    contentDigest: canonicalPackage.contentDigest,
+    runtimeCompatibilityAlias: true,
+    integratedPackageIdentity: packageRecord.packageIdentity,
+    integratedPackageContentDigest: packageRecord.contentDigest,
+    integratedPackageParentIdentity: packageRecord.parentPackageIdentity,
+    integratedPackageParentContentDigest: packageRecord.parentPackageContentDigest,
+    sourceAuthorities: freezeRecord({
+      ...packageRecord.sourceAuthorities,
+      runtimeCompatibilityAliasContract:
+        'H_EARTH_C2_R1_ACCEPTED_RENDERER_IDENTITY_COMPATIBILITY_ADAPTER_v1',
+      rendererIdentityPreserved: true,
+      integratedPackageIdentity: packageRecord.packageIdentity,
+      integratedPackageContentDigest: packageRecord.contentDigest,
+      packageBuffersMutatedByAlias: false
+    })
+  });
+  const evaluation = evaluateHEarthRun8ER2ImmutableLiveRenderPackage(
+    compatibilityPackage
+  );
+  if (evaluation.eligible !== true) {
+    throw new Error(
+      `R2_RENDERER_COMPATIBILITY_PACKAGE_REJECTED:${evaluation.issues.join(',')}`
+    );
+  }
+  return compatibilityPackage;
+}
+
 export function getHEarthRun8ER2CanonicalSourcePackage() {
   return canonicalSourcePackage();
+}
+
+export function getHEarthRun8ER2ExactIntegratedPackage() {
+  return runtimePackageOverride;
 }
 
 export function installHEarthRun8ER2RuntimePackageOverride({
@@ -179,8 +215,12 @@ export function installHEarthRun8ER2RuntimePackageOverride({
     return runtimePackageOverrideReceipt;
   }
   runtimePackageOverride = packageRecord;
+  runtimeRendererCompatibilityPackage = createRendererCompatibilityPackage(
+    packageRecord,
+    canonicalPackage
+  );
   runtimePackageOverrideReceipt = freezeRecord({
-    receiptType: 'H_EARTH_RUN_8E_R2_RUNTIME_PACKAGE_OVERRIDE_RECEIPT_v1',
+    receiptType: 'H_EARTH_RUN_8E_R2_RUNTIME_PACKAGE_OVERRIDE_RECEIPT_v2',
     eligible: true,
     status: 'R2_RUNTIME_PACKAGE_OVERRIDE_ACTIVE',
     operationId,
@@ -188,6 +228,14 @@ export function installHEarthRun8ER2RuntimePackageOverride({
     canonicalPackageContentDigest: canonicalPackage.contentDigest,
     runtimePackageIdentity: packageRecord.packageIdentity,
     runtimePackageContentDigest: packageRecord.contentDigest,
+    rendererCompatibilityPackageIdentity:
+      runtimeRendererCompatibilityPackage.packageIdentity,
+    rendererCompatibilityPackageContentDigest:
+      runtimeRendererCompatibilityPackage.contentDigest,
+    rendererCompatibilityAliasActive: true,
+    rendererCompatibilityAliasContract:
+      'H_EARTH_C2_R1_ACCEPTED_RENDERER_IDENTITY_COMPATIBILITY_ADAPTER_v1',
+    exactIntegratedBuffersPresentedByAcceptedRenderer: true,
     boundTerrainVertexCount:
       packageRecord.completeWorldBinding.counters.boundTerrainVertexCount,
     boundShorelineVertexCount:
@@ -204,7 +252,7 @@ export function installHEarthRun8ER2RuntimePackageOverride({
 export function getHEarthRun8ER2RuntimePackageSelectionReceipt() {
   const canonicalPackage = canonicalSourcePackage();
   return runtimePackageOverrideReceipt ?? freezeRecord({
-    receiptType: 'H_EARTH_RUN_8E_R2_RUNTIME_PACKAGE_OVERRIDE_RECEIPT_v1',
+    receiptType: 'H_EARTH_RUN_8E_R2_RUNTIME_PACKAGE_OVERRIDE_RECEIPT_v2',
     eligible: true,
     status: 'R2_CANONICAL_RUNTIME_PACKAGE_ACTIVE',
     operationId: null,
@@ -212,6 +260,10 @@ export function getHEarthRun8ER2RuntimePackageSelectionReceipt() {
     canonicalPackageContentDigest: canonicalPackage.contentDigest,
     runtimePackageIdentity: canonicalPackage.packageIdentity,
     runtimePackageContentDigest: canonicalPackage.contentDigest,
+    rendererCompatibilityPackageIdentity: canonicalPackage.packageIdentity,
+    rendererCompatibilityPackageContentDigest: canonicalPackage.contentDigest,
+    rendererCompatibilityAliasActive: false,
+    exactIntegratedBuffersPresentedByAcceptedRenderer: false,
     canonicalSourcePackageMutated: false,
     runtimeSelectionOnly: false,
     publicDefaultPromotionPerformed: false
@@ -219,7 +271,7 @@ export function getHEarthRun8ER2RuntimePackageSelectionReceipt() {
 }
 
 export function getHEarthRun8ER2CanonicalLiveRenderPackage() {
-  return runtimePackageOverride ?? canonicalSourcePackage();
+  return runtimeRendererCompatibilityPackage ?? canonicalSourcePackage();
 }
 
 export default getHEarthRun8ER2CanonicalLiveRenderPackage;

@@ -121,6 +121,11 @@ jobs:
           assert source.count(scale_needle) == 1
           source = source.replace(scale_needle, scale_replacement, 1)
 
+          migrated_needle = "migrated: document.documentElement.dataset.cp6_3ContentMigration,"
+          migrated_replacement = "migrated: document.documentElement.getAttribute('data-cp6-3-content-migration'),"
+          assert source.count(migrated_needle) == 1
+          source = source.replace(migrated_needle, migrated_replacement, 1)
+
           Path('/tmp/cp63.py').write_text(source, encoding='utf-8')
           PY
           rm -f .github/workflows/cp6-3-pr-trigger.yml

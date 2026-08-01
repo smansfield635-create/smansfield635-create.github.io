@@ -60,6 +60,18 @@ jobs:
           assert source.count(stylesheet) == 1
           source = source.replace(stylesheet, '<link rel="icon" href="data:,">\n' + stylesheet, 1)
 
+          old_link_check = '''if href.startswith("/") and "#" not in href:
+                      target = route_file(href)
+                      if not target.exists():
+                          broken_internal.append({"source": str(page), "href": href})'''
+          new_link_check = '''if href.startswith("/") and "#" not in href:
+                      href_path = href.split("?", 1)[0]
+                      target = route_file(href_path)
+                      if not target.exists():
+                          broken_internal.append({"source": str(page), "href": href})'''
+          assert old_link_check in source, 'Expected internal-link check block not found'
+          source = source.replace(old_link_check, new_link_check, 1)
+
           Path('/tmp/cp62_builder.py').write_text(source, encoding='utf-8')
           PY
           python3 /tmp/cp62_builder.py

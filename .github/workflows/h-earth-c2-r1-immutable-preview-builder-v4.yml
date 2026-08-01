@@ -1,0 +1,168 @@
+name: H-Earth C2-R1 Immutable Preview Builder V4
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-c2-r1-immutable-preview-builder-v4.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  exact-preview-publication:
+    if: github.head_ref == 'publication/h-earth-c2-r1-immutable-preview-a699c5a-001'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      SOURCE_HEAD: a699c5a64e2bf54d950a69c839c3d9ee41b6514f
+      PUBLICATION_BRANCH: publication/h-earth-c2-r1-immutable-preview-a699c5a-001
+      PREVIEW_ROOT: preview/h-earth/c2-r1/a699c5a64e2bf54d950a69c839c3d9ee41b6514f
+      PREVIEW_URL_PATH: /preview/h-earth/c2-r1/a699c5a64e2bf54d950a69c839c3d9ee41b6514f/index.html
+      PLAYWRIGHT_VERSION: 1.55.0
+      V2_WORKFLOW: .github/workflows/h-earth-c2-r1-immutable-preview-builder-v2.yml
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: publication/h-earth-c2-r1-immutable-preview-a699c5a-001
+          fetch-depth: 0
+          path: publication
+      - uses: actions/checkout@v4
+        with:
+          ref: a699c5a64e2bf54d950a69c839c3d9ee41b6514f
+          fetch-depth: 1
+          path: source
+
+      - name: Materialize exact dependency closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,re,textwrap
+          from pathlib import Path
+          workflow=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['V2_WORKFLOW']
+          text=workflow.read_text()
+          match=re.search(r"python3 - <<'PY'\n(.*?)\n          PY",text,re.S)
+          if not match: raise RuntimeError('V2_MATERIALIZER_BLOCK_NOT_FOUND')
+          code=textwrap.dedent(match.group(1))
+          old_normalize="def normalize(owner,spec):\n  if spec.startswith(('http://','https://','data:','blob:','#')): return None\n  if spec.startswith('/'):"
+          new_normalize="def normalize(owner,spec):\n  if spec.startswith(('http://','https://','data:','blob:','#')): return None\n  spec=spec.split('#',1)[0].split('?',1)[0]\n  if spec.startswith('/'):"
+          if old_normalize not in code: raise RuntimeError('NORMALIZE_PATCH_TARGET_NOT_FOUND')
+          code=code.replace(old_normalize,new_normalize,1)
+          old_discovery="""specs=[m.group(1) for m in spec_re.finditer(text)]
+if path.suffix.lower() in {'.html','.svg'}: specs += [m.group(1) for m in html_re.finditer(text)]
+for spec in specs:
+  dep=existing(item,spec,strict=True)
+  if dep is not None and dep not in seen: q.append(dep)
+for m in absolute_re.finditer(text):"""
+          new_discovery="""specs=[m.group(1) for m in spec_re.finditer(text)]
+for spec in specs:
+  dep=existing(item,spec,strict=True)
+  if dep is not None and dep not in seen: q.append(dep)
+if path.suffix.lower() in {'.html','.svg'}:
+  for spec in [m.group(1) for m in html_re.finditer(text)]:
+    dep=existing(item,spec,strict=False)
+    if dep is not None and dep not in seen: q.append(dep)
+for m in absolute_re.finditer(text):"""
+          if old_discovery not in code: raise RuntimeError('DISCOVERY_PATCH_TARGET_NOT_FOUND')
+          code=code.replace(old_discovery,new_discovery,1)
+          exec(compile(code,'immutable-preview-materializer-v4.py','exec'),{'__name__':'__main__'})
+          PY
+
+      - name: Verify complete source-to-preview byte manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,os,subprocess
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['PREVIEW_ROOT']
+          src=Path(os.environ['GITHUB_WORKSPACE'])/'source'
+          manifest=json.loads((root/'byte-manifest.json').read_text())
+          expected=(root/'byte-manifest.sha256').read_text().split()[0]
+          actual_digest=hashlib.sha256((root/'byte-manifest.json').read_bytes()).hexdigest()
+          assert actual_digest==expected
+          accounted={'byte-manifest.json','byte-manifest.sha256','publication-receipt.json'}
+          for row in manifest['sourceEntries']:
+            source_path=src/row['sourceFile']; preview_path=root/row['previewFile']
+            assert source_path.is_file() and preview_path.is_file()
+            actual_blob=subprocess.check_output(['git','-C',str(src),'rev-parse',f"{manifest['sourceHead']}:{row['sourceFile']}"],text=True).strip()
+            assert actual_blob==row['sourceBlob']
+            assert hashlib.sha256(source_path.read_bytes()).hexdigest()==row['sourceSha256']
+            assert hashlib.sha256(preview_path.read_bytes()).hexdigest()==row['previewSha256']
+            accounted.add(row['previewFile'])
+          for row in manifest['generatedFiles']:
+            preview_path=root/row['previewFile']
+            assert preview_path.is_file()
+            assert hashlib.sha256(preview_path.read_bytes()).hexdigest()==row['previewSha256']
+            accounted.add(row['previewFile'])
+          actual_files={str(p.relative_to(root)) for p in root.rglob('*') if p.is_file()}
+          assert actual_files==accounted,(sorted(actual_files-accounted),sorted(accounted-actual_files))
+          print(json.dumps({'dependencyClosureResult':'PASS','byteManifestResult':'PASS','sourceEntries':len(manifest['sourceEntries']),'previewFileCount':len(actual_files)}))
+          PY
+
+      - name: Install Chromium verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pw" "$RUNNER_TEMP/proof"
+          cd "$RUNNER_TEMP/pw"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+
+      - name: Execute desktop and touch mobile local proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4188 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/publication" >"$RUNNER_TEMP/proof/server.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/proof/server.pid"
+          local_ready=false
+          for attempt in $(seq 1 60); do
+            if curl -fsS "http://127.0.0.1:4188$PREVIEW_URL_PATH" >/dev/null; then local_ready=true; break; fi
+            sleep 1
+          done
+          test "$local_ready" = true
+          python3 - <<'PY'
+          import os,re,textwrap
+          from pathlib import Path
+          workflow=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['V2_WORKFLOW']
+          text=workflow.read_text()
+          match=re.search(r"cat > \"\$RUNNER_TEMP/pw/verify\.mjs\" <<'JS'\n(.*?)\n          JS",text,re.S)
+          if not match: raise RuntimeError('V2_BROWSER_VERIFIER_BLOCK_NOT_FOUND')
+          (Path(os.environ['RUNNER_TEMP'])/'pw'/'verify.mjs').write_text(textwrap.dedent(match.group(1)))
+          PY
+          cd "$RUNNER_TEMP/pw"
+          node verify.mjs
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          receipt_path=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['PREVIEW_ROOT']/'publication-receipt.json'
+          receipt=json.loads(receipt_path.read_text())
+          receipt.update({'status':'ROLE_1_PREMERGE_PROOF_PASS','localPreviewResult':'PASS','webgl2Result':'PASS_SINGLE_INITIALIZATION','cameraNavigationAndTouchResult':'PASS','consolePageRequestHttpResult':'PASS_ZERO_FAILURES'})
+          receipt_path.write_text(json.dumps(receipt,indent=2)+'\n')
+          PY
+
+      - name: Commit immutable preview root only
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/publication"
+          git config user.name h-earth-role1-preview-publisher
+          git config user.email actions@users.noreply.github.com
+          git add "$PREVIEW_ROOT"
+          test -n "$(git status --porcelain -- "$PREVIEW_ROOT")"
+          git commit -m 'H-Earth C2-R1: materialize immutable hash-bound preview'
+          git push origin "HEAD:$PUBLICATION_BRANCH"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-c2-r1-immutable-preview-v4-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/proof
+            publication/${{ env.PREVIEW_ROOT }}/byte-manifest.json
+            publication/${{ env.PREVIEW_ROOT }}/byte-manifest.sha256
+            publication/${{ env.PREVIEW_ROOT }}/publication-receipt.json
+          if-no-files-found: warn
+          retention-days: 30

@@ -5,6 +5,7 @@ on:
     paths:
       - 'laws/**'
       - 'tools/laws-cp6-direct-language-hierarchy-*.mjs'
+      - 'tools/laws-cp6-first-css-cache-bust.mjs'
       - '.github/workflows/laws-cp6-direct-language-hierarchy.yml'
 
 permissions:
@@ -12,7 +13,7 @@ permissions:
 
 jobs:
   correct-and-verify:
-    if: github.head_ref == 'agent/laws-cp6-direct-language-hierarchy-correction-001'
+    if: github.head_ref == 'agent/laws-cp6-first-css-cache-bust-001'
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
@@ -22,11 +23,14 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
 
-      - name: Fetch exact merged Lane 1 baseline
+      - name: Fetch current main baseline
         run: git fetch origin main --depth=1
 
-      - name: Apply direct product correction
+      - name: Preserve direct product correction
         run: node tools/laws-cp6-direct-language-hierarchy-transform.mjs
+
+      - name: Apply bounded CSS cache bust
+        run: node tools/laws-cp6-first-css-cache-bust.mjs
 
       - name: Commit exact product mutation locally
         run: |
@@ -34,13 +38,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add laws/index.html laws/index.css
           if ! git diff --cached --quiet; then
-            git commit -m "Correct Laws CP6 language and public hierarchy"
+            git commit -m "Bust Laws CP6 F.I.R.S.T. stylesheet cache"
           fi
 
       - name: Verify JavaScript syntax
         run: |
           node --check tools/laws-cp6-direct-language-hierarchy-transform.mjs
           node --check tools/laws-cp6-direct-language-hierarchy-verify.mjs
+          node --check tools/laws-cp6-first-css-cache-bust.mjs
 
       - name: Verify protected custody and source hierarchy
         env:
@@ -72,10 +77,10 @@ jobs:
       - name: Upload candidate evidence
         uses: actions/upload-artifact@v4
         with:
-          name: laws-cp6-direct-language-hierarchy
+          name: laws-cp6-direct-language-hierarchy-cache-bust
           path: cp6-direct-evidence
           if-no-files-found: error
           retention-days: 90
 
-      - name: Publish verified candidate head
+      - name: Publish verified cache-bust head
         run: git push origin HEAD:${{ github.head_ref }}

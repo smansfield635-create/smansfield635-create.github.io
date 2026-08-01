@@ -1,0 +1,354 @@
+name: Laws CP5 Final Moon Exact Head
+
+on:
+  pull_request:
+    branches:
+      - verification/laws-cp5-final-moon-exact-head-002
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-cp5-final-moon-exact-head
+  cancel-in-progress: false
+
+jobs:
+  verify-exact-candidate:
+    if: github.head_ref == 'trigger/laws-cp5-final-moon-exact-head-002'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout immutable Moon candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 1651479e205c62cd4eccdc20515a096f054c3d7f
+          path: candidate
+          fetch-depth: 0
+
+      - name: Verify exact custody and protected authorities
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "1651479e205c62cd4eccdc20515a096f054c3d7f"
+          test "$(git hash-object laws/index.crystals.js)" = "27577c49250f42b03d123f8105e1d55d59c3a4b4"
+          test "$(git diff --name-only f104294243eec62b38496f0736a8f73a93d44723 HEAD)" = "laws/index.crystals.js"
+          node --check laws/index.crystals.js
+          git diff --check f104294243eec62b38496f0736a8f73a93d44723 HEAD
+          python3 - <<'PY'
+          import hashlib, json, subprocess
+          from pathlib import Path
+
+          base='f104294243eec62b38496f0736a8f73a93d44723'
+          current=Path('laws/index.crystals.js').read_text()
+          baseline=subprocess.check_output(['git','show',f'{base}:laws/index.crystals.js'],text=True)
+
+          def span(text,start_marker,end_marker,start_at=0):
+              start=text.index(start_marker,start_at)
+              end=text.index(end_marker,start)
+              return text[start:end]
+
+          def solar_surface(text):
+              surface=text.index('    function surfaceSample')
+              solar=text.index('      if (mode === "solar") {',surface)
+              lunar=text.index('\n      } else {',solar)
+              return text[solar:lunar]
+
+          selectors={
+              'vertexShader':lambda text:span(text,'  const vertexShaderSource = `','  const fragmentShaderSource = `'),
+              'fragmentShader':lambda text:span(text,'  const fragmentShaderSource = `','  function invariant('),
+              'solarActivity':lambda text:span(text,'    /* CP5_FINAL_SOLAR_OPEN_BRANCHING_BASE */','    function mixColor'),
+              'solarSurface':solar_surface,
+              'solarRotation':lambda text:span(text,'        /* CP5_FINAL_SOLAR_NO_LOCAL_RIGID_SPIN */','  function nodeFloatY'),
+          }
+          hashes={}
+          for name,selector in selectors.items():
+              before=hashlib.sha256(selector(baseline).encode()).hexdigest()
+              after=hashlib.sha256(selector(current).encode()).hexdigest()
+              if before != after:
+                  raise SystemExit(f'SUN_PROTECTED_SOURCE_CHANGED:{name}')
+              hashes[name]=after
+
+          solar_material='Object.freeze({specular:0.03,rim:0.10,emissive:0.22,alpha:1.00,sparkle:0.00,halo:0.78,contrast:1.94})'
+          if baseline.count(solar_material)!=1 or current.count(solar_material)!=1:
+              raise SystemExit('SUN_MATERIAL_IDENTITY_CHANGED')
+
+          locked={
+              'gatewayBodyScale':'gatewayBodyScale:\n    0.7666667',
+              'horizontalRadius':'horizontalRadius:\n        1.68',
+              'verticalRadius':'verticalRadius:\n        1.5008',
+              'depthRadius':'depthRadius:\n        1.2992',
+          }
+          for name,marker in locked.items():
+              if marker not in current:
+                  raise SystemExit(f'LOCKED_CONSTANT_MISSING:{name}')
+
+          if baseline.count('requestAnimationFrame') != current.count('requestAnimationFrame'):
+              raise SystemExit('NEW_RENDER_LOOP_DETECTED')
+
+          Path('laws-cp5-final-moon-static-receipt.json').write_text(json.dumps({
+              'candidateHead':'1651479e205c62cd4eccdc20515a096f054c3d7f',
+              'crystalBlob':'27577c49250f42b03d123f8105e1d55d59c3a4b4',
+              'baseMain':base,
+              'actualChangedPaths':['laws/index.crystals.js'],
+              'sunProtectedSourceHashes':hashes,
+              'sunMaterialUnchanged':True,
+              'newRenderLoop':False,
+              'lockedConstants':{'gatewayBodyScale':0.7666667,'horizontalRadius':1.68,'verticalRadius':1.5008,'depthRadius':1.2992}
+          },indent=2)+'\n')
+          PY
+
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser dependencies
+        working-directory: candidate
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0 pngjs@7.0.0
+
+      - name: Start exact-head runtime
+        working-directory: candidate
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-cp5-final-moon-exact-head-server.log 2>&1 &
+          for attempt in $(seq 1 25); do
+            curl -fsS http://127.0.0.1:4173/laws/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/laws-cp5-final-moon-exact-head-server.log
+          exit 1
+
+      - name: Execute four-profile exact-head verification
+        working-directory: candidate
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        shell: bash
+        run: |
+          cat > laws-cp5-final-moon-exact-head.mjs <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import puppeteer from 'puppeteer-core';
+
+          const HEAD='1651479e205c62cd4eccdc20515a096f054c3d7f';
+          const CRYSTAL='27577c49250f42b03d123f8105e1d55d59c3a4b4';
+          const ORIGIN='http://127.0.0.1:4173';
+          const OUT='laws-cp5-final-moon-exact-head-evidence';
+          const ids=['flow','integrity','reality','structure','test','research'];
+          const h=Math.SQRT1_2;
+          const quaternions={
+            flow:[0,0,0,1],
+            integrity:[0,0,h,h],
+            reality:[0,0,1,0],
+            structure:[0,0,-h,h],
+            test:[-0.43283662594337136,0,0,0.9014723818520222],
+            research:[0.9014723818520223,0,0,0.4328366259433712]
+          };
+          const profiles=[
+            {id:'SAMSUNG_PHONE_PORTRAIT',width:430,height:932,mobile:true,touch:true},
+            {id:'PHONE_LANDSCAPE',width:932,height:430,mobile:true,touch:true},
+            {id:'TABLET',width:1024,height:1366,mobile:true,touch:true},
+            {id:'DESKTOP',width:1440,height:1000,mobile:false,touch:false}
+          ];
+          const failures=[];
+          const observations=[];
+          const screenshots=[];
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const assert=(value,id,profile,observed=null)=>{if(!value) failures.push({profile,id,observed});};
+          fs.rmSync(OUT,{recursive:true,force:true});
+          fs.mkdirSync(OUT,{recursive:true});
+
+          async function setPrimary(page,id){
+            const result=await page.evaluate((authorityId,q)=>{
+              const controller=globalThis.DGB_LAWS_CONTROLLER;
+              const begun=controller?.beginOrbitGesture?.()!==false;
+              const preview=begun&&controller?.requestOrbitPreview?.({quaternion:q,primaryId:authorityId})!==false;
+              const committed=preview&&controller?.requestOrbitCommit?.()!==false;
+              return {begun,preview,committed};
+            },id,quaternions[id]);
+            await page.waitForFunction(authorityId=>{
+              const root=document.querySelector('[data-laws-root]');
+              const frame=globalThis.DGB_LAWS_CONTROLLER?.getFrameState?.();
+              return (root?.dataset.lawsSpatialPrimaryId||frame?.orbitFocus||'')===authorityId;
+            },{timeout:15000},id);
+            await sleep(260);
+            return result;
+          }
+
+          async function openCluster(page,id){
+            const accepted=await page.evaluate(authorityId=>globalThis.DGB_LAWS_CONTROLLER?.requestCategorySelection?.(authorityId),id);
+            await page.waitForFunction(authorityId=>{
+              const root=document.querySelector('[data-laws-root]');
+              const frame=globalThis.DGB_LAWS_CONTROLLER?.getFrameState?.();
+              return root?.dataset.lawsControllerState==='CLUSTER_OPEN' &&
+                (root?.dataset.lawsActiveCluster===authorityId||frame?.activeClusterDirection===authorityId||frame?.cluster?.direction===authorityId);
+            },{timeout:15000},id);
+            await sleep(220);
+            const snapshot=await page.evaluate(()=>{
+              const visible=element=>{
+                if(!element||element.hidden) return false;
+                const style=getComputedStyle(element),rect=element.getBoundingClientRect();
+                return style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect.width>0&&rect.height>0;
+              };
+              const root=document.querySelector('[data-laws-root]');
+              const controls=[...document.querySelectorAll('[data-route][data-direction]')]
+                .filter(element=>!element.hasAttribute('data-laws-category')&&visible(element));
+              return {
+                state:root?.dataset.lawsControllerState||'',
+                active:root?.dataset.lawsActiveCluster||'',
+                visibleChildCount:controls.length,
+                routes:controls.map(element=>element.dataset.route||'').filter(Boolean),
+                directions:controls.map(element=>element.dataset.direction||'').filter(Boolean)
+              };
+            });
+            return {accepted,snapshot};
+          }
+
+          async function returnHome(page){
+            const accepted=await page.evaluate(()=>globalThis.DGB_LAWS_CONTROLLER?.requestReturnToConstellation?.());
+            await page.waitForFunction(()=>document.querySelector('[data-laws-root]')?.dataset.lawsControllerState==='CONSTELLATION',{timeout:15000});
+            await sleep(180);
+            return accepted;
+          }
+
+          const browser=await puppeteer.launch({
+            executablePath:process.env.CHROME_PATH,
+            headless:'new',
+            args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']
+          });
+
+          for(const profile of profiles){
+            const telemetry={pageErrors:[],consoleErrors:[],requestFailures:[],httpErrors:[]};
+            const observation={profile:profile.id,telemetry,primaryStates:[],clusters:[]};
+            let page;
+            try{
+              page=await browser.newPage();
+              await page.setViewport({width:profile.width,height:profile.height,deviceScaleFactor:1,isMobile:profile.mobile,hasTouch:profile.touch});
+              page.on('pageerror',error=>telemetry.pageErrors.push(String(error?.stack||error)));
+              page.on('console',message=>{if(message.type()==='error'&&!message.text().includes('Failed to load resource: the server responded with a status of 404')) telemetry.consoleErrors.push(message.text());});
+              page.on('requestfailed',request=>{if(!request.url().endsWith('/favicon.ico')) telemetry.requestFailures.push({url:request.url(),error:request.failure()?.errorText||''});});
+              page.on('response',response=>{if(response.status()>=400&&!response.url().endsWith('/favicon.ico')) telemetry.httpErrors.push({url:response.url(),status:response.status()});});
+
+              const response=await page.goto(`${ORIGIN}/laws/?cp5-moon-exact=${HEAD}`,{waitUntil:'domcontentloaded',timeout:60000});
+              await page.waitForFunction(()=>Boolean(globalThis.DGBLawsStagedLoader&&globalThis.DGB_LAWS_CONTROLLER),{timeout:30000});
+              await page.evaluate(async()=>{
+                await globalThis.DGBLawsStagedLoader.loadOrbitSystems();
+                await globalThis.DGBLawsStagedLoader.loadInteractionSystems();
+              });
+              await page.waitForFunction(()=>{
+                const crystals=globalThis.DGB_LAWS_CRYSTALS_RECEIPT;
+                const compositor=globalThis.DGB_LAWS_COMPOSITOR_RECEIPT;
+                const interactions=globalThis.DGB_LAWS_INTERACTIONS_RECEIPT;
+                return crystals?.status==='available'&&crystals?.rendererInitialized===true&&compositor?.initialized===true&&interactions?.initialized===true;
+              },{timeout:45000});
+              await page.evaluate(()=>document.querySelector('[data-upstream-compass-mount]')?.scrollIntoView({block:'center',inline:'center',behavior:'instant'}));
+              await sleep(450);
+
+              const initial=await page.evaluate(()=>{
+                const visible=element=>{
+                  if(!element||element.hidden) return false;
+                  const style=getComputedStyle(element),rect=element.getBoundingClientRect();
+                  return style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect.width>0&&rect.height>0;
+                };
+                const labels=[...document.querySelectorAll('[data-laws-projected-category-label]')];
+                const categories=[...document.querySelectorAll('[data-laws-category]')];
+                return {
+                  contractVersion:globalThis.DGB_LAWS_CRYSTALS_RECEIPT?.contractVersion||'',
+                  rendererInitialized:globalThis.DGB_LAWS_CRYSTALS_RECEIPT?.rendererInitialized===true,
+                  compositorInitialized:globalThis.DGB_LAWS_COMPOSITOR_RECEIPT?.initialized===true,
+                  interactionsInitialized:globalThis.DGB_LAWS_INTERACTIONS_RECEIPT?.initialized===true,
+                  categoryIds:categories.map(element=>element.dataset.direction).filter(Boolean).sort(),
+                  visibleLabels:labels.filter(visible).map(element=>element.dataset.direction||''),
+                  centerGlobePresent:Boolean(document.querySelector('[data-upstream-compass-mount]')&&document.querySelector('[data-laws-planet-world-pass-participant]')),
+                  horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+                };
+              });
+              observation.initial=initial;
+              assert([200,304].includes(response?.status()),'ROUTE_STATUS_INVALID',profile.id,response?.status());
+              assert(initial.contractVersion==='2.3.1-cp5-final-public-moon-definition','CONTRACT_VERSION_INVALID',profile.id,initial.contractVersion);
+              assert(initial.rendererInitialized&&initial.compositorInitialized&&initial.interactionsInitialized,'RUNTIME_INITIALIZATION_INVALID',profile.id,initial);
+              assert(JSON.stringify(initial.categoryIds)===JSON.stringify([...ids].sort()),'AUTHORITY_IDENTITIES_INVALID',profile.id,initial.categoryIds);
+              assert(initial.visibleLabels.length===1,'VISIBLE_OUTER_LABEL_COUNT_INVALID',profile.id,initial.visibleLabels);
+              assert(initial.centerGlobePresent,'CENTER_GLOBE_MISSING',profile.id);
+              assert(initial.horizontalOverflow<=1,'HORIZONTAL_OVERFLOW',profile.id,initial.horizontalOverflow);
+
+              const prefix=profile.id.toLowerCase();
+              for(const [index,id] of ids.entries()){
+                const primary=await setPrimary(page,id);
+                observation.primaryStates.push({id,...primary});
+                assert(primary.begun&&primary.preview&&primary.committed,'PRIMARY_COMMIT_REJECTED',profile.id,{id,primary});
+                if(id==='research'||id==='test'||id==='flow'){
+                  const file=`${prefix}-${String(index+1).padStart(2,'0')}-${id}-primary.png`;
+                  await page.screenshot({path:path.join(OUT,file),fullPage:false});
+                  screenshots.push(file);
+                }
+                const cluster=await openCluster(page,id);
+                observation.clusters.push({id,...cluster});
+                assert(cluster.accepted!==false,'CLUSTER_OPEN_REJECTED',profile.id,{id,cluster});
+                assert(cluster.snapshot.state==='CLUSTER_OPEN','CLUSTER_STATE_INVALID',profile.id,{id,cluster:cluster.snapshot});
+                assert(cluster.snapshot.visibleChildCount===4,'CLUSTER_CHILD_COUNT_INVALID',profile.id,{id,cluster:cluster.snapshot});
+                assert(cluster.snapshot.routes.length===4,'CLUSTER_ROUTE_COUNT_INVALID',profile.id,{id,cluster:cluster.snapshot});
+                if(id==='research'){
+                  const file=`${prefix}-research-cluster.png`;
+                  await page.screenshot({path:path.join(OUT,file),fullPage:false});
+                  screenshots.push(file);
+                }
+                const returned=await returnHome(page);
+                assert(returned!==false,'RETURN_TO_CONSTELLATION_REJECTED',profile.id,id);
+              }
+
+              await setPrimary(page,'flow');
+              const file=`${prefix}-final-constellation.png`;
+              await page.screenshot({path:path.join(OUT,file),fullPage:false});
+              screenshots.push(file);
+
+              assert(telemetry.pageErrors.length===0,'PAGE_ERRORS',profile.id,telemetry.pageErrors);
+              assert(telemetry.consoleErrors.length===0,'CONSOLE_ERRORS',profile.id,telemetry.consoleErrors);
+              assert(telemetry.requestFailures.length===0,'REQUEST_FAILURES',profile.id,telemetry.requestFailures);
+              assert(telemetry.httpErrors.length===0,'HTTP_ERRORS',profile.id,telemetry.httpErrors);
+            }catch(error){
+              failures.push({profile:profile.id,id:'UNCAUGHT_VERIFICATION_ERROR',observed:String(error?.stack||error)});
+            }finally{
+              if(page) await page.close();
+              observations.push(observation);
+            }
+          }
+          await browser.close();
+
+          const receipt={
+            candidateHead:HEAD,
+            crystalBlob:CRYSTAL,
+            profiles:profiles.map(profile=>profile.id),
+            profileCount:profiles.length,
+            screenshotCount:screenshots.length,
+            screenshots,
+            observations,
+            failures,
+            pass:failures.length===0,
+            sunZeroDifferential:true,
+            labelsPreserved:failures.every(failure=>!failure.id.includes('LABEL')),
+            interactionPreserved:failures.every(failure=>!failure.id.includes('PRIMARY')&&!failure.id.includes('CLUSTER')&&!failure.id.includes('RETURN')),
+            routesPreserved:failures.every(failure=>!failure.id.includes('ROUTE')),
+            scaleAndSpacingProtected:true
+          };
+          fs.writeFileSync('laws-cp5-final-moon-exact-head-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          if(failures.length){
+            console.error(JSON.stringify(failures,null,2));
+            process.exit(1);
+          }
+          JS
+          node laws-cp5-final-moon-exact-head.mjs
+
+      - name: Upload exact-head verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp5-final-moon-exact-head
+          path: |
+            candidate/laws-cp5-final-moon-static-receipt.json
+            candidate/laws-cp5-final-moon-exact-head-receipt.json
+            candidate/laws-cp5-final-moon-exact-head-evidence/**
+            /tmp/laws-cp5-final-moon-exact-head-server.log
+          if-no-files-found: warn
+          retention-days: 30

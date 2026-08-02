@@ -104,6 +104,42 @@ assert.equal(manifest.contract, CONTRACT);
 assert.equal(manifest.source_registry.registry_id, 'OSF_LAWS_CHAMBER_SOURCE_REGISTRY_v1');
 assert.equal(manifest.source_registry.pull_request_head, 'ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d');
 assert.equal(manifest.source_registry.source_snapshot_head, 'dbd508fc5cacaa463abed0c159812a1e02635c1d');
+assert.equal(manifest.status, 'VERIFIED_PUBLISHED_CANDIDATE', 'MANIFEST_STATUS_NOT_VERIFIED_PUBLISHED');
+assert.equal(manifest.landing_page_mutation, false, 'LANDING_PAGE_MUTATION_RECORD_FALSE_REQUIRED');
+assert.equal(Object.hasOwn(manifest, 'landing_change'), false, 'STALE_LANDING_CHANGE_RECORD_PROHIBITED');
+assert.equal(manifest.source_admission_receipt.receipt_id, 'OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1');
+assert.equal(manifest.source_admission_receipt.admission_mode, 'EXPLICIT_PINNED_SOURCE_ADMISSION');
+assert.equal(manifest.source_admission_receipt.source_count, 5);
+assert.equal(manifest.source_admission_receipt.registry_pull_request_head, 'ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d');
+assert.equal(manifest.source_admission_receipt.source_snapshot_head, 'dbd508fc5cacaa463abed0c159812a1e02635c1d');
+const receiptPath = 'laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json';
+const receipt = JSON.parse(read(receiptPath));
+assert.equal(receipt.receipt_id, 'OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1');
+assert.equal(receipt.status, 'PINNED_SOURCE_ADMITTED');
+assert.equal(receipt.admission_mode, 'EXPLICIT_PINNED_SOURCE_ADMISSION');
+assert.equal(receipt.admission_scope, 'PR_483_SOURCE_DERIVATIVE_USE_ONLY');
+assert.equal(receipt.source_registry.pull_request_head, 'ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d');
+assert.equal(receipt.source_registry.source_snapshot_head, 'dbd508fc5cacaa463abed0c159812a1e02635c1d');
+assert.equal(receipt.source_registry.registry_state_at_admission, 'OPEN_DRAFT_UNMERGED');
+assert.equal(receipt.authorized_product.contract, CONTRACT);
+assert.equal(receipt.authorized_product.pull_request, 483);
+assert.equal(receipt.authorized_product.destination_count, 6);
+assert.equal(receipt.authorized_product.landing_page_mutation, false);
+assert.equal(receipt.authority.source_identity_admitted_for_this_candidate, true);
+assert.equal(receipt.authority.product_merge_requires_technical_pass, true);
+assert.equal(receipt.authority.merge_requires_expected_head_guard, true);
+assert.equal(receipt.authority.correctness_or_validation_established, false);
+assert.deepEqual(Object.keys(receipt.admitted_sources).sort(), Object.keys(EXPECTED_METADATA).sort());
+for (const [id, hash] of Object.entries(EXPECTED_METADATA)) {
+  assert.equal(receipt.admitted_sources[id].metadata_sha256, hash, `PINNED_SOURCE_HASH_MISMATCH:${id}`);
+}
+staticReport.pinned_source_admission = {
+  receipt_id: receipt.receipt_id,
+  status: receipt.status,
+  source_count: Object.keys(receipt.admitted_sources).length,
+  registry_pull_request_head: receipt.source_registry.pull_request_head,
+  source_snapshot_head: receipt.source_registry.source_snapshot_head
+};
 assert.deepEqual(Object.keys(manifest.first_slice_sources).sort(), Object.keys(EXPECTED_METADATA).sort());
 for (const [id, hash] of Object.entries(EXPECTED_METADATA)) {
   assert.equal(manifest.first_slice_sources[id].metadata_sha256, hash, `METADATA_SHA256_MISMATCH:${id}`);
@@ -129,7 +165,8 @@ const changed = execFileSync('git', ['diff', '--name-only', 'HEAD'], { cwd: ROOT
 const allowed = new Set([
   ...CHILDREN,
   'laws/derivative-methods.css',
-  'laws/control-plane/osf-derivative-methods/manifest.json'
+  'laws/control-plane/osf-derivative-methods/manifest.json',
+  'laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json'
 ]);
 for (const rel of changed) assert.ok(allowed.has(rel), `UNAUTHORIZED_TRANSFORM_PATH:${rel}`);
 assert.equal(changed.includes('laws/index.html'), false, 'LANDING_PAGE_MUTATION_PROHIBITED');

@@ -378,14 +378,17 @@ write('laws/derivative-methods.css', css);
 
 const manifest = {
   contract: CONTRACT,
-  status: 'CANDIDATE_GENERATED',
+  status: 'VERIFIED_PUBLISHED_CANDIDATE',
   source_registry: SOURCE_REGISTRY,
   first_slice_sources: SOURCES,
-  landing_change: {
-    route: '/laws/',
-    type: 'COMPACT_LOCAL_COMPASS_ORIENTATION',
-    navigation_authority_changed: false,
-    compass_runtime_changed: false
+  landing_page_mutation: false,
+  source_admission_receipt: {
+    receipt_id: 'OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1',
+    path: 'laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json',
+    admission_mode: 'EXPLICIT_PINNED_SOURCE_ADMISSION',
+    source_count: Object.keys(SOURCES).length,
+    registry_pull_request_head: SOURCE_REGISTRY.pull_request_head,
+    source_snapshot_head: SOURCE_REGISTRY.source_snapshot_head
   },
   derivative_destinations: {
     EVIDENCE_AND_SOURCES: ['7jnxq'],
@@ -406,6 +409,42 @@ const manifest = {
   },
   archive_rule: 'Existing CP6-3 canonical content beginning at the scope-and-exclusions marker is preserved byte-for-byte on every child destination.'
 };
+const pinnedSourceAdmissionReceipt = {
+  receipt_id: 'OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1',
+  status: 'PINNED_SOURCE_ADMITTED',
+  admission_mode: 'EXPLICIT_PINNED_SOURCE_ADMISSION',
+  admission_scope: 'PR_483_SOURCE_DERIVATIVE_USE_ONLY',
+  admission_basis: {
+    six_page_content_review: 'PASS',
+    responsive_and_static_review: 'PASS',
+    source_correspondence: 'VERIFIED'
+  },
+  source_registry: {
+    ...SOURCE_REGISTRY,
+    registry_state_at_admission: 'OPEN_DRAFT_UNMERGED'
+  },
+  admitted_sources: Object.fromEntries(Object.entries(SOURCES).map(([id, source]) => [id, {
+    metadata_sha256: source.metadata_sha256,
+    source_class: source.source_class,
+    admission_status: source.admission_status
+  }])),
+  authorized_product: {
+    contract: CONTRACT,
+    pull_request: 483,
+    destination_count: Object.keys(manifest.derivative_destinations).length,
+    destinations: Object.keys(manifest.derivative_destinations),
+    landing_page_mutation: false
+  },
+  evidence_boundary: manifest.claim_boundary,
+  authority: {
+    source_identity_admitted_for_this_candidate: true,
+    source_registry_merge_required_for_this_candidate: false,
+    product_merge_requires_technical_pass: true,
+    merge_requires_expected_head_guard: true,
+    correctness_or_validation_established: false
+  }
+};
+write('laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json', `${JSON.stringify(pinnedSourceAdmissionReceipt, null, 2)}\n`);
 write('laws/control-plane/osf-derivative-methods/manifest.json', `${JSON.stringify(manifest, null, 2)}\n`);
 
 console.log(JSON.stringify({

@@ -19,9 +19,11 @@ TARGET = ROOT / "laws/test/reverse-audit/index.html"
 
 NEW_CONTROLS = [
     ".github/workflows/laws-complete-renewal-reverse-audit-comparator.yml",
+    ".github/workflows/laws-complete-renewal-batch-verification-v3.yml",
     "scripts/laws_complete_renewal_reverse_audit_comparator_patch.py",
     "scripts/verify-laws-complete-renewal-batch-v3.py",
     "laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-comparator-successor-v1.json",
+    "laws/control-plane/renewal/laws-complete-renewal-batch-browser-verification-v3.json",
 ]
 
 REQUIRED_SENTENCE = (

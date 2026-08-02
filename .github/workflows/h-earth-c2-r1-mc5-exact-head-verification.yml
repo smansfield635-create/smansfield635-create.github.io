@@ -172,8 +172,8 @@ jobs:
           check(custody.canonicalPositionsByteIdentical === true && custody.canonicalNormalsByteIdentical === true, 'CUSTODY_CANONICAL_GEOMETRY_NOT_IDENTICAL');
           check(custody.terrainPositionMutationCount === 0 && custody.terrainNormalMutationCount === 0, 'CUSTODY_GEOMETRY_MUTATION');
           check(custody.inlandWaterMembershipViolationCount === 0, 'CUSTODY_INLAND_WATER_VIOLATION');
-          check(ledger.resultingHeadBinding === 'EXACT_COMMIT_CONTAINING_THIS_RECORD', 'LEDGER_HEAD_BINDING_INVALID');
-          check(role3.resultingHeadBinding === 'EXACT_COMMIT_CONTAINING_THIS_RECORD', 'ROLE3_HEAD_BINDING_INVALID');
+          check(ledger.externalizedHeadBinding === 'EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_FINAL_VERIFICATION_WORKFLOW', 'LEDGER_HEAD_BINDING_INVALID');
+          check(role3.externalizedHeadBinding === 'EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_FINAL_VERIFICATION_WORKFLOW', 'ROLE3_HEAD_BINDING_INVALID');
           check(ledger.candidateBranch === branch && role3.candidateBranch === branch, 'EVIDENCE_BRANCH_MISMATCH');
           check(ledger.completeWorldPackageIdentity === packageIdentity && role3.completeWorldPackageIdentity === packageIdentity, 'EVIDENCE_PACKAGE_MISMATCH');
           check(ledger.completeWorldPackageContentDigest === packageDigest && role3.completeWorldPackageContentDigest === packageDigest, 'EVIDENCE_DIGEST_MISMATCH');

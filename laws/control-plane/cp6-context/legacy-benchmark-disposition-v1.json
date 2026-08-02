@@ -1,7 +1,7 @@
 {
   "record_id": "LAWS_CP6_LEGACY_BENCHMARK_DISPOSITION_v1",
   "checkpoint": "CHECKPOINT_6_LAWS_CHAMBER_RENEWAL",
-  "candidate_head_examined": "53e65434aa8b2f4e864a589fe47ee0b2583f15a5",
+  "candidate_head_first_examined": "53e65434aa8b2f4e864a589fe47ee0b2583f15a5",
   "purpose": "Classify legacy Laws benchmark failures without changing product authority or dismissing material regressions.",
   "current_compass_contract": {
     "top_level_authorities": 6,
@@ -42,7 +42,8 @@
       }
     ],
     "material_findings_after_classification": [],
-    "product_correction_required_from_this_run": false
+    "product_correction_required_from_this_run": false,
+    "successor_check": "Laws Four-Compass Exact-Head Regression with explicit superseded-finding classification and current-contract source assertions"
   },
   "six_authority_benchmark": {
     "workflow_run_id": 30729087792,
@@ -53,14 +54,21 @@
     "protected_compass_runtime_changed_in_current_pr": false,
     "failure_ids": ["PRODUCT_CHANGED_PATH_SET_INVALID", "PROTECTED_PATH_CHANGED"],
     "disposition": "HISTORICAL_CONSTRUCTION_PROOF_NOT_APPLICABLE_TO_CONTENT_ONLY_SUCCESSOR",
-    "product_correction_required_from_this_run": false
+    "product_correction_required_from_this_run": false,
+    "successor_check": "Laws Compass Six-Authority Benchmark current-contract classification with historical construction proof conditional on protected runtime mutation"
+  },
+  "first_test_benchmark": {
+    "legacy_contract": "four visible cardinal labels plus cross-cutting-no-fifth-star marker and data-laws-first-method panel",
+    "current_contract": "six authorities plus single active outer label plus current F.I.R.S.T. progressive disclosure",
+    "disposition": "REPLACED_FOR_CURRENT_PRODUCT_BY_EXACT_HEAD_CURRENT_CONTRACT_BROWSER_PROOF",
+    "successor_check": "Laws Compass CURRENT FIRST Test Benchmark v2"
   },
   "current_controlling_verification": {
     "workflow": "Laws CP6 contextual integrated verification",
     "required_checks": [
       "protected runtime diff",
       "six-authority current contract",
-      "single-active outer-label behavior",
+      "single-active outer-label browser behavior",
       "eight canonical Research and Test destinations",
       "48 migrated records",
       "nine compatibility bindings",
@@ -71,7 +79,7 @@
       "JavaScript-disabled static presentation",
       "current Frontier study return"
     ],
-    "status_at_record_creation": "QUEUED_NOT_YET_PASSED"
+    "status_at_record_update": "QUEUED_NOT_YET_PASSED"
   },
   "authority_boundary": {
     "frontier_files_mutated": 0,

@@ -1,0 +1,108 @@
+name: Laws complete renewal batch materialize
+
+on:
+  push:
+    branches:
+      - agent/laws-complete-renewal-batch-001
+    paths:
+      - .github/workflows/laws-complete-renewal-batch-materialize.yml
+      - scripts/laws_complete_renewal_batch.py
+      - assets/laws-destination/renewal-batch.css
+      - laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json
+      - laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-complete-renewal-batch-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.ref == 'refs/heads/agent/laws-complete-renewal-batch-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact batch branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-complete-renewal-batch-001
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Materialize complete chamber and battery pathway
+        run: python scripts/laws_complete_renewal_batch.py
+
+      - name: Verify generated route and presentation markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('.')
+          receipt = json.loads((root / 'laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json').read_text())
+          assert receipt['remaining_child_routes_materialized'] == 20
+          assert receipt['battery_public_surface_scope'] == 27
+          assert receipt['product_file_count'] == 29
+
+          for path in receipt['product_files_written']:
+              text = (root / path).read_text(encoding='utf-8')
+              if path == 'laws/index.html':
+                  assert 'lr-battery-landing' in text
+                  assert 'BATTERY_COHERENCE_HELDOUT_STUDY_v1' in text
+                  continue
+              assert 'data-laws-complete-renewal="v1"' in text, path
+              assert '/assets/laws-destination/renewal.css' in text, path
+              assert '/assets/laws-destination/renewal-navigation.css' in text, path
+              assert '/assets/laws-destination/renewal-batch.css' in text, path
+              assert '/assets/laws-destination/renewal.js' in text, path
+              assert 'lr-topbar' in text and 'lr-nav' in text, path
+              assert 'lr-boundary' in text, path
+              assert 'lr-audit' in text, path
+          print('Generated presentation contract: PASS')
+          PY
+
+      - name: Check HTML and whitespace integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          receipt = Path('laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json')
+          assert receipt.exists()
+          for path in Path('laws').rglob('*.html'):
+              text = path.read_text(encoding='utf-8', errors='strict')
+              if 'data-laws-complete-renewal="v1"' not in text:
+                  continue
+              assert re.search(r'<!doctype html>', text, re.I), path
+              assert re.search(r'<html\b', text, re.I), path
+              assert re.search(r'</html>', text, re.I), path
+              assert text.count('id="main"') == 1, path
+          print('Generated HTML structural checks: PASS')
+          PY
+
+      - name: Commit materialized product candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'No materialization changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            laws \
+            frontier/energy/battery-coherence-study/index.html
+          git commit -m 'Materialize complete Laws chamber and battery pathway renewal'
+          git push origin HEAD:agent/laws-complete-renewal-batch-001

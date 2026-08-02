@@ -1,0 +1,203 @@
+name: H-Earth C2-R1 MC5 Exact-Head Verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_branch:
+        description: Exact registered candidate branch
+        required: true
+        default: agent/h-earth-c2-r1-material-only-binding-implementation-001
+        type: string
+      candidate_head:
+        description: Exact immutable candidate head
+        required: true
+        default: 44019e27c3d52c59cc59bba7c833b6317d014273
+        type: string
+      pull_request_number:
+        description: Candidate pull request number
+        required: true
+        default: '484'
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  EXPECTED_REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  EXPECTED_PR: '484'
+  EXPECTED_BRANCH: agent/h-earth-c2-r1-material-only-binding-implementation-001
+  EXPECTED_HEAD: 44019e27c3d52c59cc59bba7c833b6317d014273
+  EXPECTED_PACKAGE: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E
+  RUNTIME_PATH_1: showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+  RUNTIME_PATH_2: showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+
+concurrency:
+  group: h-earth-c2-r1-mc5-exact-head-verification
+  cancel-in-progress: false
+
+jobs:
+  verify-exact-head:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Validate dispatch inputs against frozen registration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ inputs.candidate_branch }}" = "$EXPECTED_BRANCH"
+          test "${{ inputs.candidate_head }}" = "$EXPECTED_HEAD"
+          test "${{ inputs.pull_request_number }}" = "$EXPECTED_PR"
+
+      - name: Checkout current main control plane
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          path: control-plane
+
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate_head }}
+          fetch-depth: 0
+          path: candidate
+
+      - name: MC5.1 verify branch and immutable head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C candidate rev-parse HEAD)" = "$EXPECTED_HEAD"
+          remote_head="$(git -C candidate ls-remote origin "refs/heads/$EXPECTED_BRANCH" | awk '{print $1}')"
+          test "$remote_head" = "$EXPECTED_HEAD"
+
+      - name: MC5.2 verify PR 484 exact identity
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$EXPECTED_REPOSITORY/pulls/$EXPECTED_PR" > /tmp/pr-484.json
+          test "$(jq -r '.number' /tmp/pr-484.json)" = "$EXPECTED_PR"
+          test "$(jq -r '.head.ref' /tmp/pr-484.json)" = "$EXPECTED_BRANCH"
+          test "$(jq -r '.head.sha' /tmp/pr-484.json)" = "$EXPECTED_HEAD"
+          test "$(jq -r '.state' /tmp/pr-484.json)" = "open"
+          test "$(jq -r '.merged' /tmp/pr-484.json)" = "false"
+
+      - name: MC5.3 verify registry exact-head registration
+        shell: bash
+        working-directory: control-plane
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module <<'NODE'
+          import {
+            loadHEarthRepositoryRegistryValidatorDependencies
+          } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          import {
+            H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_REGISTRATION as registration
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js';
+
+          const expected = {
+            pr: 484,
+            branch: 'agent/h-earth-c2-r1-material-only-binding-implementation-001',
+            head: '44019e27c3d52c59cc59bba7c833b6317d014273',
+            packageIdentity: 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E',
+            paths: [
+              '/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js',
+              '/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
+            ]
+          };
+          const dependencies = loadHEarthRepositoryRegistryValidatorDependencies();
+          if (dependencies.materialOnlyExactHeadVerified !== true) {
+            throw new Error('MC5_REGISTRY_LOADER_EXACT_HEAD_NOT_VERIFIED');
+          }
+          if (registration.pullRequestNumber !== expected.pr ||
+              registration.candidateBranch !== expected.branch ||
+              registration.candidateHead !== expected.head ||
+              registration.packageIdentity !== expected.packageIdentity) {
+            throw new Error('MC5_REGISTRATION_IDENTITY_MISMATCH');
+          }
+          for (const repositoryPath of expected.paths) {
+            const resolution = dependencies.registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
+            if (resolution?.resolved !== true) {
+              throw new Error(`MC5_RUNTIME_PATH_UNREGISTERED:${repositoryPath}`);
+            }
+            const occurrence = (resolution.occurrences ?? []).find((entry) =>
+              entry.refName === expected.branch &&
+              entry.commitSha === expected.head &&
+              entry.path === repositoryPath
+            );
+            if (!occurrence) {
+              throw new Error(`MC5_EXACT_OCCURRENCE_MISSING:${repositoryPath}`);
+            }
+          }
+          NODE
+
+      - name: MC5.4 verify both runtime files and package identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "candidate/$RUNTIME_PATH_1"
+          test -f "candidate/$RUNTIME_PATH_2"
+          node --check "candidate/$RUNTIME_PATH_1"
+          node --check "candidate/$RUNTIME_PATH_2"
+          grep -F "$EXPECTED_PACKAGE" "candidate/$RUNTIME_PATH_1"
+          grep -F "H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v2" "candidate/$RUNTIME_PATH_2"
+          grep -F "boundShorelineVertexCount !== 154" "candidate/$RUNTIME_PATH_2"
+
+      - name: MC5.5 execute automatic preflight against registered runtime paths
+        shell: bash
+        working-directory: control-plane
+        run: |
+          set -euo pipefail
+          printf '%s\n' \
+            "$RUNTIME_PATH_1" \
+            "$RUNTIME_PATH_2" > /tmp/mc5-runtime-paths.txt
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/mc5-runtime-paths.txt \
+            --task "MC5 exact-head verification of PR 484 material-only runtime binding" \
+            --output /tmp/mc5-preflight-receipt.json
+          node <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync('/tmp/mc5-preflight-receipt.json', 'utf8'));
+          const classifications = receipt.pathClassification?.classifications ?? [];
+          if (classifications.length !== 2 ||
+              classifications.some((entry) => entry.registered !== true || entry.classification !== 'REGISTERED_H_EARTH_PATH')) {
+            throw new Error(`MC5_PREFLIGHT_RUNTIME_REGISTRATION_FAILED:${JSON.stringify(classifications)}`);
+          }
+          if (receipt.finalDisposition === 'BLOCK' || receipt.finalDisposition === 'STOP') {
+            throw new Error(`MC5_PREFLIGHT_DISPOSITION_FAILED:${receipt.finalDisposition}`);
+          }
+          NODE
+
+      - name: Write exact-head verification receipt
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p mc5-evidence
+          cp /tmp/pr-484.json mc5-evidence/pr-484.json 2>/dev/null || true
+          cp /tmp/mc5-preflight-receipt.json mc5-evidence/mc5-preflight-receipt.json 2>/dev/null || true
+          cat > mc5-evidence/mc5-exact-head-verification.json <<JSON
+          {
+            "operationId": "H_EARTH_C2_R1_MC5_REGISTRY_WORKFLOW_DEADLOCK_RESOLUTION_001",
+            "pullRequestNumber": 484,
+            "candidateBranch": "$EXPECTED_BRANCH",
+            "candidateHead": "$EXPECTED_HEAD",
+            "packageIdentity": "$EXPECTED_PACKAGE",
+            "runtimePathCount": 2,
+            "productMutation": false,
+            "materializationRerun": false,
+            "mergePerformed": false,
+            "workflowRunId": "$GITHUB_RUN_ID"
+          }
+          JSON
+
+      - name: Upload MC5 exact-head evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-mc5-exact-head-${{ github.run_id }}-${{ github.run_attempt }}
+          path: mc5-evidence
+          if-no-files-found: error
+          retention-days: 30

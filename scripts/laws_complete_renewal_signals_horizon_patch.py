@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# CP6_RECOVERY_TRIGGER_20260802
 """Add the exact 20-cycle study target to the accepted Signals empirical reading.
 
 This is the one representative-page factual completeness correction authorized by

@@ -92,3 +92,5 @@ jobs:
           git diff --cached --check
           git commit -m "Integrate source-bound OSF derivative methods"
           git push origin HEAD:${GITHUB_REF_NAME}
+
+# Explicit retrigger after workflow installation on the candidate branch.

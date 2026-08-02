@@ -67,7 +67,9 @@ function verifySourceContracts() {
     assert.ok(!html.includes('aria-selected="true"'), `${page.name}: preselected reading control remains in source`);
     assert.ok(tabCount > 0, `${page.name}: reading controls missing`);
     assert.equal(collapsedTabCount, tabCount, `${page.name}: every reading control must enter collapsed in source`);
-    assert.ok(!/<details class="(?:lr-page-facts|lr-audit)"[^>]*\sopen(?:\s|>)/.test(html), `${page.name}: source disclosure must not be open`);
+    assert.ok(html.includes('<details class="lr-page-facts" open>'), `${page.name}: static Page facts fallback must be open in source`);
+    assert.ok(html.includes('<details class="lr-audit" open>'), `${page.name}: static audit fallback must be open in source`);
+    assert.ok(html.includes("document.documentElement.classList.add('lr-js')"), `${page.name}: pre-paint enhanced-entry bootstrap missing`);
   }
   record('source_contracts', 'PASS', 'Five pages carry native Page facts, V3 assets, and zero preselected reading controls.');
 }

@@ -184,6 +184,7 @@
 
   root.dataset.lrAuditPresentation = 'translated';
   root.dataset.lrEntryDisclosureState = 'collapsed';
+  root.classList.add('lr-runtime-ready');
 
   let errors = 0;
   const updateHealth = () => {

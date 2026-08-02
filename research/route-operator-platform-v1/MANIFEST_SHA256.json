@@ -1,0 +1,13 @@
+{
+  "files": {
+    "ARCHITECTURE.md": "46108204467018ff5da18df4b2e8bc34bf871dc050bda89cbcd97857552dea26",
+    "IMI_PACKAGE_POINTER.json": "10f7f948810b34110ad33d488c8a1111cf60cdf7a76f2b3b05c36e8b24aac15e",
+    "PLATFORM_AUTHORITY.json": "d3eb3ffaf54044155bb76d7f7f72e696b7f6b9edabfcb4b2f1559a2f2f67db92",
+    "README.md": "01115134f6e10c5d4381fac73ecda480379598be8f6722d053abbc4a59afc76e",
+    "demo_route_operator_platform_v1.py": "e548d2dd1be3a8110d1a84319fbb76400ab3f9975428b196a15974ce3a739cdf",
+    "route_operator_platform_v1.py": "30cafb62d896c2203e5aa3165e2ee74c9846fc423d9fad924c6cc59faa84ccfe",
+    "test_route_operator_platform_v1.py": "f283cc4b2f0925df1ae9b8a0797f4cf1a8664c56dc0df47b6138850fee72a817"
+  },
+  "platform_id": "ROUTE_OPERATOR_RESEARCH_PLATFORM_v1",
+  "platform_version": "1.0.0"
+}

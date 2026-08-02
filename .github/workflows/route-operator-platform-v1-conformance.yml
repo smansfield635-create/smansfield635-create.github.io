@@ -1,0 +1,39 @@
+name: Route Operator Platform v1 conformance
+
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/**'
+      - '.github/workflows/route-operator-platform-v1-conformance.yml'
+  push:
+    paths:
+      - 'research/route-operator-platform-v1/**'
+      - '.github/workflows/route-operator-platform-v1-conformance.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run platform tests
+        working-directory: research/route-operator-platform-v1
+        run: python -m unittest -v test_route_operator_platform_v1.py
+      - name: Run shadow demonstration
+        working-directory: research/route-operator-platform-v1
+        run: python demo_route_operator_platform_v1.py > route-operator-platform-v1-demo.receipt.json
+      - name: Validate JSON authority and pointer records
+        run: |
+          python -m json.tool research/route-operator-platform-v1/PLATFORM_AUTHORITY.json >/dev/null
+          python -m json.tool research/route-operator-platform-v1/IMI_PACKAGE_POINTER.json >/dev/null
+      - name: Upload demonstration receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: route-operator-platform-v1-demo-${{ github.sha }}
+          path: research/route-operator-platform-v1/route-operator-platform-v1-demo.receipt.json
+          retention-days: 30

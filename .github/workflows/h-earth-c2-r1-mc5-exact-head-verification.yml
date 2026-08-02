@@ -25,7 +25,7 @@ concurrency:
 env:
   TARGET_PR: '484'
   TARGET_BRANCH: agent/h-earth-c2-r1-material-only-binding-implementation-001
-  TARGET_HEAD: 44019e27c3d52c59cc59bba7c833b6317d014273
+  TARGET_HEAD: 501505fe66dbeede467240d8c7d93f194f7d10d2
   STARTING_HEAD: 4f0491f00fae794ecdefbae36f4ee86c8a1bd21a
   ROLLBACK_BRANCH: rollback/h-earth-c2-r1-material-only-binding-start-001
   TARGET_PACKAGE: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E
@@ -74,7 +74,7 @@ jobs:
           staged_blob="$(git -C "$control_root" hash-object --no-filters "$control_root/$source_path")"
           test "$staged_blob" = "$CANDIDATE_REGISTRY_SOURCE_BLOB_SHA"
 
-      - name: Run automatic integrated registry preflight for all nine PR 484 paths
+      - name: Run automatic integrated registry preflight for all eleven PR 484 paths
         shell: bash
         run: |
           set -euo pipefail
@@ -94,13 +94,13 @@ jobs:
           if (dependencies.integratedEnvironmentVerified !== true) {
             throw new Error(`INTEGRATED_ENVIRONMENT_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
           }
-          if (H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS.length !== 9) throw new Error('PR_484_CHANGED_PATH_COUNT_NOT_NINE');
+          if (H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS.length !== 11) throw new Error('PR_484_CHANGED_PATH_COUNT_NOT_ELEVEN');
           const receipt = await runHEarthC2R1MC5AutomaticRegistryPreflight();
           if (receipt.finalDisposition !== 'PASS') throw new Error(`REGISTRY_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
           fs.writeFileSync(process.env.MC5_RECEIPT, `${JSON.stringify(receipt, null, 2)}\n`);
           NODE
 
-      - name: Verify exact branch head rollback and nine-path custody
+      - name: Verify exact branch head rollback and eleven-path custody
         shell: bash
         run: |
           set -euo pipefail
@@ -110,10 +110,12 @@ jobs:
           test "$(git rev-parse "refs/remotes/origin/$TARGET_BRANCH")" = "$TARGET_HEAD"
           git fetch --no-tags origin "$ROLLBACK_BRANCH:refs/remotes/origin/$ROLLBACK_BRANCH"
           test "$(git rev-parse "refs/remotes/origin/$ROLLBACK_BRANCH")" = "$STARTING_HEAD"
-          cat > /tmp/mc5-pr484-nine-paths <<'PATHS'
+          cat > /tmp/mc5-pr484-eleven-paths <<'PATHS'
           .github/workflows/h-earth-c2-r1-complete-world-integration.yml
           h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
@@ -121,9 +123,9 @@ jobs:
           showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
           showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
           PATHS
-          sort -u /tmp/mc5-pr484-nine-paths -o /tmp/mc5-pr484-nine-paths
+          sort -u /tmp/mc5-pr484-eleven-paths -o /tmp/mc5-pr484-eleven-paths
           git diff --name-only "$STARTING_HEAD...$TARGET_HEAD" | sort -u > /tmp/mc5-actual-paths
-          diff -u /tmp/mc5-pr484-nine-paths /tmp/mc5-actual-paths
+          diff -u /tmp/mc5-pr484-eleven-paths /tmp/mc5-actual-paths
           test -z "$(git status --porcelain)"
 
       - name: Verify cache v2 package identity and material-only invariants
@@ -209,7 +211,7 @@ jobs:
             candidateHead: head,
             rollbackBranch: process.env.ROLLBACK_BRANCH,
             rollbackHead: process.env.STARTING_HEAD,
-            exactChangedPathCount: 9,
+            exactChangedPathCount: 11,
             cacheSchema: schema,
             cacheJsonSha256: sha256(cacheBytes),
             cacheGzipSha256: sha256(gzipBytes),

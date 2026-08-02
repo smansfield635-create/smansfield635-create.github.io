@@ -2,7 +2,7 @@ name: Laws FIRST rail staged-loader reconciliation once
 
 on:
   pull_request:
-    types: [synchronize]
+    types: [synchronize, ready_for_review]
     paths:
       - '.github/workflows/laws-first-rail-staged-loader-reconciliation-once.yml'
 
@@ -29,25 +29,6 @@ jobs:
 
           html_path = Path('laws/index.html')
           html = html_path.read_text()
-          old = '''    observeSection(
-              "#laws-orbit",
-              reason => {
-                runWhenIdle(
-                  () => {
-                    loadOrbitSystems(reason);
-                    loadInteractionSystems("orbit-visible");
-                  },
-                  500
-                );
-              },
-              {
-                rootMargin:
-                  "620px 0px"
-              }
-            );'''.replace('          ', '')
-
-          # The source block is indented with four spaces. Build it directly
-          # instead of normalizing indentation globally.
           old = '''    observeSection(
       "#laws-orbit",
       reason => {
@@ -89,11 +70,7 @@ jobs:
           if preload_marker not in html:
               if architecture_marker not in html:
                   raise SystemExit('FIRST rail architecture marker not found')
-              html = html.replace(
-                  architecture_marker,
-                  architecture_marker + ' ' + preload_marker,
-                  1
-              )
+              html = html.replace(architecture_marker, architecture_marker + ' ' + preload_marker, 1)
           html_path.write_text(html)
 
           verifier_path = Path('scripts/verify-laws-first-rail-architecture.mjs')

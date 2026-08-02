@@ -25,7 +25,9 @@ jobs:
 
       - name: Run expanded platform conformance
         working-directory: research/route-operator-platform-v1
-        run: python -m unittest -v test_route_operator_platform_v1.py
+        run: |
+          python -m unittest -v test_route_operator_platform_v1.py
+          python -m unittest -v test_pointer_custody_v1.py
 
       - name: Run identity-safe shadow demonstration
         working-directory: research/route-operator-platform-v1

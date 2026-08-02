@@ -12,6 +12,8 @@
       "/laws/research/findings-and-boundaries/",
       "/laws/industrial-posture/"
     ],
+    "accepted_child_route_count": 4,
+    "accepted_auxiliary_surface_count": 1,
     "disposition": "PASS_VISUAL_DIRECTION",
     "user_statement": "The reviewed pages look fantastic and the presentation should be adopted across the remaining Laws pages.",
     "accepted_characteristics": [
@@ -40,7 +42,10 @@
     ]
   },
   "batch_authority": {
-    "remaining_child_pages": 19,
+    "total_child_routes": 24,
+    "accepted_child_routes": 4,
+    "remaining_child_pages": 20,
+    "auxiliary_equation_surface_already_accepted": "/laws/industrial-posture/",
     "all_24_child_pages_final_standard": true,
     "surviving_public_back_pages": "AUTHORIZED_PER_FROZEN_COMPLETENESS_AMENDMENT",
     "canonical_record_presentations": 48,
@@ -64,7 +69,7 @@
   "implementation_sequence": [
     "SHARED_COLLAPSIBLE_HEADER_CORRECTION",
     "REVERIFY_ACCEPTED_FIVE_PAGE_COHORT",
-    "MIGRATE_REMAINING_19_CHILD_PAGES_BY_FROZEN_NARRATIVE_ROLE",
+    "MIGRATE_REMAINING_20_CHILD_PAGES_BY_FROZEN_NARRATIVE_ROLE",
     "RENEW_OR_WRAP_SURVIVING_PUBLIC_BACK_PAGES",
     "VERIFY_48_CANONICAL_RECORD_PRESENTATIONS_AND_CUSTODY",
     "EXECUTE_DESKTOP_TABLET_PHONE_AND_STATIC_MATRIX",

@@ -1,6 +1,6 @@
 {
   "contract": "LAWS_CP6_OSF_DERIVATIVE_METHODS_V1",
-  "status": "CANDIDATE_GENERATED",
+  "status": "VERIFIED_PUBLISHED_CANDIDATE",
   "source_registry": {
     "registry_id": "OSF_LAWS_CHAMBER_SOURCE_REGISTRY_v1",
     "branch": "agent/osf-laws-source-registry-001",
@@ -91,11 +91,14 @@
       ]
     }
   },
-  "landing_change": {
-    "route": "/laws/",
-    "type": "COMPACT_LOCAL_COMPASS_ORIENTATION",
-    "navigation_authority_changed": false,
-    "compass_runtime_changed": false
+  "landing_page_mutation": false,
+  "source_admission_receipt": {
+    "receipt_id": "OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1",
+    "path": "laws/control-plane/osf-derivative-methods/PINNED_SOURCE_ADMISSION_RECEIPT.json",
+    "admission_mode": "EXPLICIT_PINNED_SOURCE_ADMISSION",
+    "source_count": 5,
+    "registry_pull_request_head": "ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d",
+    "source_snapshot_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d"
   },
   "derivative_destinations": {
     "EVIDENCE_AND_SOURCES": [

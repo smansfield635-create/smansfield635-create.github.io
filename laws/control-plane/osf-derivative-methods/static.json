@@ -1,7 +1,7 @@
 {
   "contract": "LAWS_CP6_OSF_DERIVATIVE_METHODS_V1",
   "status": "PASS",
-  "checked_at": "2026-08-02T01:03:24.518Z",
+  "checked_at": "2026-08-02T01:17:43.983Z",
   "destination_pages": 6,
   "child_archive_byte_preservation": {
     "laws/test/admission-and-baseline/index.html": true,
@@ -60,12 +60,14 @@
     "executed_result_tables_recovered": false,
     "derivative_is_new_method": false
   },
+  "pinned_source_admission": {
+    "receipt_id": "OSF_LAWS_CP6_PINNED_SOURCE_ADMISSION_RECEIPT_v1",
+    "status": "PINNED_SOURCE_ADMITTED",
+    "source_count": 5,
+    "registry_pull_request_head": "ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d",
+    "source_snapshot_head": "dbd508fc5cacaa463abed0c159812a1e02635c1d"
+  },
   "changed_paths": [
-    "laws/research/evidence-and-sources/index.html",
-    "laws/research/methods-and-models/index.html",
-    "laws/test/admission-and-baseline/index.html",
-    "laws/test/forward-construction/index.html",
-    "laws/test/result-and-record/index.html",
-    "laws/test/reverse-audit/index.html"
+    "laws/control-plane/osf-derivative-methods/manifest.json"
   ]
 }

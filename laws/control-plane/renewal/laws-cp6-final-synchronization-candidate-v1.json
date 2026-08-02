@@ -1,5 +1,6 @@
 {
   "contract": "LAWS_CP6_FINAL_SYNCHRONIZATION_CANDIDATE_v1",
+  "candidate_revision": 2,
   "status": "CANDIDATE_PENDING_EXACT_HEAD_VERIFICATION_AND_MERGE",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "base_main": "f61595847d14afa0810584de388ec24fa8e523c0",
@@ -41,7 +42,16 @@
     "unrelated_h_earth_runs_expected": 0,
     "unrelated_metaverse_runs_expected": 0,
     "obsolete_batch_runs_expected": 0,
-    "retained_laws_acceptance_suites": 4
+    "manual_archive_suites": [
+      "Laws Renewal Collapsed Entry Verification",
+      "Laws post-merge stellar continuity"
+    ],
+    "retained_laws_acceptance_suites": [
+      "Laws CP6 Final Synchronization Verification",
+      "Laws CP6 contextual integrated verification",
+      "Laws Four-Compass Exact-Head Regression",
+      "Laws FIRST Indicator Restoration Verification"
+    ]
   },
   "merge_authority": "AFTER_EXACT_HEAD_PASS"
 }

@@ -38,8 +38,8 @@ const corrections = [
     label: 'premature FIRST transition sample',
   },
   {
-    from: `assert.equal(record.backgroundColor, 'rgb(7, 16, 31)', \`${profileName}/${record.direction}: inactive light is not the subdued outline state.\`);`,
-    to: `const inactiveChannels = (record.backgroundColor.match(/\\d+/g) || []).slice(0, 3).map(Number);\n      assert.equal(inactiveChannels.length, 3, \`${profileName}/${record.direction}: inactive light color is unreadable.\`);\n      assert.ok(Math.max(...inactiveChannels) <= 80, \`${profileName}/${record.direction}: inactive light is not visually subdued.\`);\n      assert.notEqual(record.backgroundColor, 'rgb(121, 234, 255)', \`${profileName}/${record.direction}: inactive light incorrectly uses the active cyan fill.\`);`,
+    from: "assert.equal(record.backgroundColor, 'rgb(7, 16, 31)', `${profileName}/${record.direction}: inactive light is not the subdued outline state.`);",
+    to: "const inactiveChannels = (record.backgroundColor.match(/\\d+/g) || []).slice(0, 3).map(Number);\n      assert.equal(inactiveChannels.length, 3, `${profileName}/${record.direction}: inactive light color is unreadable.`);\n      assert.ok(Math.max(...inactiveChannels) <= 80, `${profileName}/${record.direction}: inactive light is not visually subdued.`);\n      assert.notEqual(record.backgroundColor, 'rgb(121, 234, 255)', `${profileName}/${record.direction}: inactive light incorrectly uses the active cyan fill.`);",
     expected: 1,
     label: 'over-specific inactive-light RGB assertion',
   },

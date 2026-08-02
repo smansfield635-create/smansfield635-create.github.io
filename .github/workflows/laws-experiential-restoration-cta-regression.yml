@@ -33,8 +33,10 @@ concurrency:
 env:
   EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
   EXPECTED_MAIN_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
+  FORMER_ROOT_REFERENCE: 9ad029eb1fbffe05525041c94eeeaee3378d2e58
   BASE_URL: http://127.0.0.1:4173
   EVIDENCE_DIR: artifacts/laws-experiential-restoration/cta-regression
+  BASELINE_DIR: artifacts/laws-experiential-restoration/root-baselines
 
 jobs:
   reproduce-and-verify:
@@ -56,6 +58,28 @@ jobs:
           set -euo pipefail
           git fetch origin main
           test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
+          git cat-file -e "$FORMER_ROOT_REFERENCE^{commit}"
+
+      - name: Capture current and former root source baselines
+        shell: bash
+        run: |
+          set -euo pipefail
+          current="$BASELINE_DIR/current-$EXECUTION_COMMIT"
+          former="$BASELINE_DIR/former-$FORMER_ROOT_REFERENCE"
+          mkdir -p "$current/laws" "$former/laws"
+          for path in \
+            laws/index.html \
+            laws/index.experience.css \
+            laws/index.experience.polish.css \
+            laws/index.experience.js
+          do
+            cp "$path" "$current/$path"
+            git show "$FORMER_ROOT_REFERENCE:$path" > "$former/$path"
+          done
+          (
+            cd "$BASELINE_DIR"
+            find . -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
+          )
 
       - name: Install pinned browser verifier
         run: |
@@ -80,13 +104,13 @@ jobs:
       - name: Execute tablet CTA fixture
         run: node tools/laws-experiential-restoration-cta-regression.mjs
 
-      - name: Upload CTA regression evidence
+      - name: Upload CTA regression evidence and source baselines
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: laws-experiential-restoration-cta-${{ env.EXECUTION_COMMIT }}
           path: |
-            artifacts/laws-experiential-restoration/cta-regression/**
+            artifacts/laws-experiential-restoration/**
             /tmp/laws-experiential-restoration-server.log
           if-no-files-found: warn
           retention-days: 30

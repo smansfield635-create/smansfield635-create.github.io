@@ -1,0 +1,40 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_SIGNALS_BATTERY_HORIZON_CORRECTION_v1",
+  "mode": "BOUNDED_REPRESENTATIVE_FACT_COMPLETENESS_CORRECTION",
+  "status": "AUTHORIZED_BY_COMPLETE_BATTERY_PATHWAY_REQUIREMENT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pr": 493,
+  "target": {
+    "route": "/laws/categories/flow/signals/",
+    "path": "laws/categories/flow/signals/index.html",
+    "study": "BATTERY_COHERENCE_HELDOUT_STUDY_v1"
+  },
+  "reason": "The accepted representative page preserves the held-out cells, record count, combined AUROC, stronger burden comparator, negative component result, and threshold failure, but omits the explicitly declared 20-cycle warning target required across all 27 battery-study public surfaces.",
+  "authorized_change": {
+    "scope": "ONE_EMPIRICAL_PARAGRAPH_FACT_ADDITION",
+    "required_text_fact": "The defined near-term event was evaluated within the next 20 cycles.",
+    "visual_structure_change": false,
+    "tab_structure_change": false,
+    "route_change": false,
+    "equation_or_metric_change": false,
+    "evidence_status_upgrade": false,
+    "claim_ceiling_upgrade": false,
+    "canonical_owner_change": false
+  },
+  "preserved": [
+    "USER_ACCEPTED_VISUAL_DIRECTION",
+    "SIGNALS_PAGE_ROLE_AND_QUESTION",
+    "PRACTICAL_ENGINEERING_EMPIRICAL_LENS_STRUCTURE",
+    "ALL_EXISTING_POSITIVE_NEGATIVE_MIXED_AND_LIMITING_RESULTS",
+    "COLLAPSED_AUDIT_AND_ROUTE_CUSTODY",
+    "FRONTIER_COMPLETE_RECORD_OWNERSHIP"
+  ],
+  "verification": [
+    "EXACT_20_CYCLE_FACT_VISIBLE_IN_PUBLIC_EMPIRICAL_LAYER",
+    "NO_OTHER_REPRESENTATIVE_HTML_MUTATION",
+    "PHONE_TABLET_DESKTOP_BROWSER_PASS",
+    "STATIC_NO_JAVASCRIPT_FACT_VISIBILITY",
+    "NO_CLAIM_OR_EVIDENCE_UPGRADE"
+  ],
+  "merge_authority": false
+}

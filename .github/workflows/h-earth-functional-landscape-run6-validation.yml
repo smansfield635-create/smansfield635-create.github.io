@@ -1,175 +1,18 @@
-name: H-Earth Functional Landscape Run 6 Validation
+name: H-Earth Functional Landscape Run 6 Validation — archived
 
 on:
-  push:
-    branches:
-      - agent/h-earth-functional-landscape-run6-001
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  validate-run6:
+  archive-notice:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
     steps:
-      - name: Check out branch
-        uses: actions/checkout@v4
-
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Run checkpoint 6A contract
+      - name: Report archived verification custody
         run: |
-          node --experimental-default-type=module --input-type=module <<'NODE'
-          import {
-            evaluateHEarthFunctionalLandscapeRun6Program
-          } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6.program.js';
-          import {
-            evaluateHEarthFunctionalLandscapeRun6FAmendment
-          } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6f.amendment.js';
-          import {
-            evaluateHEarthRun6FVisualCaptureAmendment
-          } from './h-earth-3d/control-plane/run-6/h-earth.functional-landscape-run-6f-visual-capture.amendment.js';
-          const program = evaluateHEarthFunctionalLandscapeRun6Program();
-          const amendment = evaluateHEarthFunctionalLandscapeRun6FAmendment();
-          const visualCapture = evaluateHEarthRun6FVisualCaptureAmendment();
-          console.log(JSON.stringify({ program, amendment, visualCapture }, null, 2));
-          if (!program.eligible || !amendment.eligible || !visualCapture.eligible) process.exit(1);
-          NODE
-
-      - name: Run checkpoint 6B
-        run: |
-          node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6b.harness.mjs | tee run6b.log
-
-      - name: Run checkpoint 6C with captured diagnostics
-        id: run6c
-        continue-on-error: true
-        run: |
-          set +e
-          node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6c.harness.mjs > run6c.log 2>&1
-          code=$?
-          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
-          cat run6c.log
-          exit $code
-
-      - name: Upload checkpoint 6C diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-run6c-diagnostic
-          path: run6c.log
-          if-no-files-found: error
-          retention-days: 7
-
-      - name: Enforce checkpoint 6C pass
-        if: steps.run6c.outcome == 'failure'
-        run: exit 1
-
-      - name: Run checkpoint 6D
-        run: |
-          node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6d.harness.mjs | tee run6d.log
-
-      - name: Run checkpoint 6E
-        run: |
-          node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6e.harness.mjs | tee run6e.log
-
-      - name: Run checkpoint 6F navigation and camera
-        run: |
-          node --experimental-default-type=module h-earth-3d/validation/h-earth.functional-landscape.run6f.harness.mjs | tee run6f-node.log
-
-      - name: Install bounded Chromium validation dependency
-        run: |
-          npm install --no-save --package-lock=false playwright
-          npx playwright install --with-deps chromium
-
-      - name: Start bounded static server
-        run: |
-          python3 -m http.server 4173 > run6f-server.log 2>&1 &
-          echo $! > run6f-server.pid
-          for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/functional-landscape/ > /dev/null; then
-              exit 0
-            fi
-            sleep 1
-          done
-          cat run6f-server.log
-          exit 1
-
-      - name: Run checkpoint 6F Chromium matrix
-        id: run6f_browser
-        continue-on-error: true
-        env:
-          H_EARTH_RUN6F_URL: http://127.0.0.1:4173/showroom/globe/h-earth/functional-landscape/
-          H_EARTH_RUN6F_ARTIFACT_DIR: h-earth-run6f-browser-artifacts
-        run: |
-          set +e
-          node h-earth-3d/validation/h-earth.functional-landscape.run6f.browser.mjs > run6f-browser.log 2>&1
-          code=$?
-          cat run6f-browser.log
-          exit $code
-
-      - name: Capture checkpoint 6F geographic waypoints
-        id: run6f_visual_capture
-        continue-on-error: true
-        env:
-          H_EARTH_RUN6F_URL: http://127.0.0.1:4173/showroom/globe/h-earth/functional-landscape/
-          H_EARTH_RUN6F_VISUAL_DIR: h-earth-run6f-visual-capture
-        run: |
-          set +e
-          node h-earth-3d/validation/h-earth.functional-landscape.run6f.visual-capture.mjs > run6f-visual-capture.log 2>&1
-          code=$?
-          cat run6f-visual-capture.log
-          exit $code
-
-      - name: Stop bounded static server
-        if: always()
-        run: |
-          if [ -f run6f-server.pid ]; then
-            kill "$(cat run6f-server.pid)" || true
-          fi
-
-      - name: Upload checkpoint logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-run6-checkpoint-logs
-          path: |
-            run6b.log
-            run6c.log
-            run6d.log
-            run6e.log
-            run6f-node.log
-            run6f-browser.log
-            run6f-visual-capture.log
-            run6f-server.log
-          if-no-files-found: warn
-          retention-days: 7
-
-      - name: Upload checkpoint 6F browser evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-run6f-browser-evidence
-          path: h-earth-run6f-browser-artifacts
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Upload checkpoint 6F waypoint capture
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-run6f-waypoint-capture
-          path: h-earth-run6f-visual-capture
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Enforce checkpoint 6F browser pass
-        if: steps.run6f_browser.outcome == 'failure' || steps.run6f_visual_capture.outcome == 'failure'
-        run: exit 1
+          echo 'This fixed-branch Run 6 validation is retired from automatic pull-request execution.'
+          echo 'Original repository commit: 5efe5118e0addfa6965a2f00511b531afa8c8d8a'
+          echo 'Original workflow blob: 32af5e41d8235b3e6ae3f21a6c838dc9cb7762c5'
+          echo 'The original YAML remains recoverable from Git history; this manual entry creates no product or validation claim.'

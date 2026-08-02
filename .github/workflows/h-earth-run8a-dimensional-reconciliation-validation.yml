@@ -8,6 +8,13 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/h-earth-run8a-dimensional-reconciliation-validation.yml'
+      - 'h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8a-dimensional-reconciliation-scope.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+      - 'h-earth-3d/validation/h-earth.run8a.dimensional-reconciliation.harness.mjs'
+      - 'h-earth-3d/validation/h-earth.run8a.dimensional-reconciliation.receipt.json'
   workflow_dispatch:
 
 permissions:

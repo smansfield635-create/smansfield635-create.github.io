@@ -1,0 +1,67 @@
+name: Laws Renewal Collapsed Entry Verification
+
+on:
+  pull_request:
+    paths:
+      - 'laws/categories/flow/signals/index.html'
+      - 'laws/categories/reality/measure.html'
+      - 'laws/test/reverse-audit/index.html'
+      - 'laws/research/findings-and-boundaries/index.html'
+      - 'laws/industrial-posture/index.html'
+      - 'assets/laws-destination/renewal.css'
+      - 'assets/laws-destination/renewal-core-v1.css'
+      - 'assets/laws-destination/renewal-public-audit-v2.css'
+      - 'assets/laws-destination/renewal-collapsed-entry-v3.css'
+      - 'assets/laws-destination/renewal.js'
+      - 'scripts/verify-laws-renewal-collapsed-entry.mjs'
+      - '.github/workflows/laws-renewal-collapsed-entry-verification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-collapsed-entry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save playwright@1.52.0
+          npx playwright install --with-deps chromium
+
+      - name: Start static candidate server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-renewal-server.log 2>&1 &
+          echo $! > /tmp/laws-renewal-server.pid
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4173/laws/test/reverse-audit/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-renewal-server.log
+          exit 1
+
+      - name: Run five-page source and browser matrix
+        env:
+          LAWS_BASE_URL: http://127.0.0.1:4173
+        run: node scripts/verify-laws-renewal-collapsed-entry.mjs
+
+      - name: Upload verification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-renewal-collapsed-entry-verification-${{ github.sha }}
+          path: artifacts/laws-renewal-collapsed-entry-verification.json
+          if-no-files-found: warn
+          retention-days: 30

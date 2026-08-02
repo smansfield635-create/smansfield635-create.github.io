@@ -1,0 +1,41 @@
+{
+  "adaptation_class": "MANIFEST_RELATIVE_RESET_SUCCESSOR",
+  "drive_file_id": "1U0muLHB2vA390B6plzpNzz5yIZT2wRt2",
+  "drive_file_url": "https://drive.google.com/file/d/1U0muLHB2vA390B6plzpNzz5yIZT2wRt2/view?usp=drivesdk",
+  "drive_folder_id": "1Dk-6dqjQ09w9a9bVhyh5_bjX3qcJMM8Q",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1Dk-6dqjQ09w9a9bVhyh5_bjX3qcJMM8Q",
+  "empirical_reliability_and_validity": "OPEN",
+  "executable_release_receipt_sha256": "dd1e6d11585011944b10018707f41708d503a7fa57e64fb5495c777d039c7fd3",
+  "h_earth_product_changed": false,
+  "imi_core_changed": false,
+  "observer_grade_imi_instrument_available": true,
+  "platform_binding": {
+    "platform_id": "ROUTE_OPERATOR_RESEARCH_PLATFORM_v1",
+    "platform_merge_commit_sha": "cffa9889430d6700c3fad548d29dfada3dd04e61",
+    "platform_version": "1.0.0"
+  },
+  "predecessor_release": {
+    "merge_commit_sha": "5efe5118e0addfa6965a2f00511b531afa8c8d8a",
+    "release_id": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v2",
+    "route_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v2",
+    "route_version": "2.0.0"
+  },
+  "private_imi_dependency": {
+    "custody_state": "BYTE_VERIFIED_EXTERNAL_INSTRUMENT_DEPENDENCY",
+    "package_id": "IMI_OBSERVER_GRADE_INSTRUMENT_v1",
+    "package_version": "1.0.0",
+    "repository_mirror": false,
+    "runtime_mount_required": true,
+    "zip_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87"
+  },
+  "release_bundle_file": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v3.zip",
+  "release_bundle_file_count": 44,
+  "release_bundle_sha256": "871f58ca8e8dc39606d1cf37c5fd4575a0b093471c902902663b9a0a26e6e93b",
+  "release_bundle_size_bytes": 72597,
+  "release_id": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v3",
+  "release_version": "3.0.0",
+  "route_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v3",
+  "route_version": "3.0.0",
+  "v1_immutable": true,
+  "v2_immutable": true
+}

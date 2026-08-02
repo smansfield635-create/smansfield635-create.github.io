@@ -1,86 +1,18 @@
-name: H-Earth Run 8E R1 Reference Device and Mobile Compatibility
+name: H-Earth Run 8E R1 Reference Device and Mobile Compatibility — archived
 
 on:
-  push:
-    branches:
-      - agent/h-earth-run8e-reference-device-mobile-compatibility-001
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  validate-reference-device-mobile-compatibility:
+  archive-notice:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      H_EARTH_RUN8E_REFERENCE_DEVICE_OUTPUT: /tmp/h-earth-run8e-reference-device
     steps:
-      - name: Check out correction branch
-        uses: actions/checkout@v4
-        with:
-          ref: agent/h-earth-run8e-reference-device-mobile-compatibility-001
-          fetch-depth: 0
-
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Verify JavaScript syntax
+      - name: Report archived verification custody
         run: |
-          node --check h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r1.reference-device-and-mobile-compatibility-amendment.js
-          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-reference-device-mobile-compatibility-scope.js
-          node --check h-earth-3d/validation/h-earth.run8e-r1.reference-device-mobile-compatibility.validation.mjs
-          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
-
-      - name: Execute device-neutral correction validation
-        run: node h-earth-3d/validation/h-earth.run8e-r1.reference-device-mobile-compatibility.validation.mjs
-
-      - name: Verify bounded non-product scope
-        run: |
-          set -euo pipefail
-          git diff --check
-          BASE_SHA=$(git merge-base origin/main HEAD)
-          git diff --name-only "$BASE_SHA"...HEAD | sort >/tmp/h-earth-run8e-reference-device-paths.txt
-          python3 - <<'PY'
-          from pathlib import Path
-          paths = [line.strip() for line in Path('/tmp/h-earth-run8e-reference-device-paths.txt').read_text().splitlines() if line.strip()]
-          allowed = {
-              '.github/workflows/h-earth-run8e-r1-reference-device-mobile-compatibility.yml',
-              'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r1.reference-device-and-mobile-compatibility-amendment.js',
-              'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-reference-device-mobile-compatibility-scope.js',
-              'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
-              'h-earth-3d/validation/h-earth.run8e-r1.reference-device-mobile-compatibility.validation.mjs',
-              'h-earth-3d/validation/h-earth.run8e-r1.reference-device-mobile-compatibility.correction.receipt.json'
-          }
-          unexpected = sorted(set(paths) - allowed)
-          missing = sorted(allowed - set(paths))
-          if unexpected:
-              raise SystemExit(f'REFERENCE_DEVICE_SCOPE_UNEXPECTED_PATHS:{unexpected}')
-          if missing:
-              raise SystemExit(f'REFERENCE_DEVICE_SCOPE_REQUIRED_PATHS_MISSING:{missing}')
-          forbidden_prefixes = (
-              'showroom/globe/h-earth/render/',
-              'showroom/globe/h-earth/functional-landscape/',
-              'showroom/globe/h-earth/run-8/',
-          )
-          forbidden = [path for path in paths if path.startswith(forbidden_prefixes)]
-          if forbidden:
-              raise SystemExit(f'REFERENCE_DEVICE_PRODUCT_MUTATION:{forbidden}')
-          print({'pathCount': len(paths), 'paths': paths})
-          PY
-
-      - name: Upload correction validation evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-run8e-r1-reference-device-mobile-compatibility-evidence
-          path: |
-            /tmp/h-earth-run8e-reference-device
-            /tmp/h-earth-run8e-reference-device-paths.txt
-          if-no-files-found: warn
-          retention-days: 90
+          echo 'This fixed-branch Run 8E reference-device validation is retired from automatic pull-request execution.'
+          echo 'Original repository commit: 5efe5118e0addfa6965a2f00511b531afa8c8d8a'
+          echo 'Original workflow blob: 7014ca2025802ed822f52f90de93d00d3c9421d6'
+          echo 'The original YAML remains recoverable from Git history; this manual entry creates no product or validation claim.'

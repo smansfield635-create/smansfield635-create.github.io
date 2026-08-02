@@ -7,6 +7,14 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/h-earth-run8e-r1-material-ledger.yml'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-scope.js'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-r1-material-ledger-execution-scope.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+      - 'h-earth-3d/validation/h-earth.run8e-r1.material-ledger.validation.mjs'
+      - 'h-earth-3d/validation/h-earth.run8e-r1.material-ledger-execution.validation.mjs'
+      - 'h-earth-3d/validation/run-8e-r1-material-ledger/**'
   workflow_dispatch:
 
 permissions:

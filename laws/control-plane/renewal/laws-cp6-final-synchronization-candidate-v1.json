@@ -1,6 +1,6 @@
 {
   "contract": "LAWS_CP6_FINAL_SYNCHRONIZATION_CANDIDATE_v1",
-  "candidate_revision": 2,
+  "candidate_revision": 3,
   "status": "CANDIDATE_PENDING_EXACT_HEAD_VERIFICATION_AND_MERGE",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "base_main": "f61595847d14afa0810584de388ec24fa8e523c0",
@@ -35,6 +35,7 @@
     "evidence_status_upgrade": false,
     "claim_ceiling_upgrade": false,
     "frontier_complete_record_owner_preserved": true,
+    "authorized_frontier_path": "frontier/energy/battery-coherence-study/index.html",
     "imi_empirical_reliability_and_validity": "OPEN"
   },
   "workflow_control": {
@@ -44,14 +45,15 @@
     "obsolete_batch_runs_expected": 0,
     "manual_archive_suites": [
       "Laws Renewal Collapsed Entry Verification",
-      "Laws post-merge stellar continuity"
+      "Laws post-merge stellar continuity",
+      "Laws CP6 contextual integrated verification"
     ],
-    "retained_laws_acceptance_suites": [
+    "retained_premerge_acceptance_suites": [
       "Laws CP6 Final Synchronization Verification",
-      "Laws CP6 contextual integrated verification",
       "Laws Four-Compass Exact-Head Regression",
       "Laws FIRST Indicator Restoration Verification"
-    ]
+    ],
+    "retained_postmerge_suite": "Laws CP6 Post-Merge Smoke"
   },
   "merge_authority": "AFTER_EXACT_HEAD_PASS"
 }

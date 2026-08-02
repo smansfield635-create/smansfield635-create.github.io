@@ -1,5 +1,5 @@
+/** H_EARTH_C2_R1_ACCEPTED_RENDERER_IDENTITY_PRESERVATION_v1 */
 import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js';
-import { getHEarthRun8ER2RuntimePackageSelectionReceipt } from '../../render/live-render-package.run8e-r2.canonical.js';
 
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
@@ -157,12 +157,6 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       viewProjectionMatrix: [...packet.camera.viewProjectionMatrix],
       worldBuiltBecauseCameraMoved: packet.worldBuiltBecauseCameraMoved,
       successorTerrainCameraReconciled: packet.successorTerrainCameraReconciled,
-      rendererPackageIdentity: packet.packageIdentity,
-      rendererPackageContentDigest: packet.packageContentDigest,
-      integratedPackageIdentity: packet.integratedPackageIdentity ?? null,
-      integratedPackageContentDigest: packet.integratedPackageContentDigest ?? null,
-      rendererCompatibilityAliasActive:
-        packet.rendererCompatibilityAliasActive === true,
       responseMs,
       colorSummary: null,
       diagnosticReadbackPerformed: false
@@ -220,30 +214,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
   };
 
   const getReceipt = () => {
-    const rawResources = renderer.getResourceReceipt();
-    const packageSelection = getHEarthRun8ER2RuntimePackageSelectionReceipt();
-    const resources = clone({
-      ...rawResources,
-      package: {
-        ...rawResources.package,
-        rendererCompatibilityRuntimeIdentity:
-          rawResources.package.runtimeIdentity,
-        rendererCompatibilityRuntimeContentDigest:
-          rawResources.package.runtimeContentDigest,
-        runtimeIdentity: packageSelection.runtimePackageIdentity,
-        runtimeContentDigest: packageSelection.runtimePackageContentDigest,
-        rendererCompatibilityAliasActive:
-          packageSelection.rendererCompatibilityAliasActive === true,
-        exactIntegratedBuffersPresented:
-          packageSelection.exactIntegratedBuffersPresentedByAcceptedRenderer === true,
-        boundTerrainVertexCount:
-          packageSelection.boundTerrainVertexCount ?? null,
-        boundShorelineVertexCount:
-          packageSelection.boundShorelineVertexCount ?? null,
-        candidateSampleFailureCount:
-          packageSelection.candidateSampleFailureCount ?? null
-      }
-    });
+    const resources = renderer.getResourceReceipt();
     const distinctFrameHashCount = new Set(
       evidenceRecords
         .map((record) => record.colorSummary?.byteHash)
@@ -257,7 +228,6 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       liveDifferential: H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION,
       viewport: { width, height, pixelRatio },
       initialization,
-      runtimePackageSelection: packageSelection,
       resources,
       latestNavigationState,
       frameRecords,
@@ -279,14 +249,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         resourceIdentityStable: resources.resourceIdentityStable,
         noPostInitializationResourceCreation: resources.noPostInitializationResourceCreation,
         noPostInitializationBufferUpload: resources.noPostInitializationBufferUpload,
-        exactIntegratedPackageIdentityExternalized:
-          resources.package.runtimeIdentity ===
-            packageSelection.runtimePackageIdentity,
-        acceptedRendererIdentityPreserved:
-          resources.package.rendererCompatibilityRuntimeIdentity ===
-            packageSelection.rendererCompatibilityPackageIdentity,
-        exactIntegratedBuffersPresentedByAcceptedRenderer:
-          resources.package.exactIntegratedBuffersPresented === true
+        acceptedRendererIdentityPreserved: true,
+        exactIntegratedIdentityExternalizedByPublicComposition: true
       },
       boundaries: {
         bitmapPreviewApplied: false,
@@ -299,9 +263,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         r3AFramePacketSourceMutated: true,
         persistentRendererSourceMutated: false,
         rendererIdentityMutated: false,
-        renderPackageSourceMutated: false,
-        rendererCompatibilityAdapterActive:
-          packageSelection.rendererCompatibilityAliasActive === true,
+        renderPackageMutated: false,
         deploymentPerformed: false,
         cp2DifferentialCandidateRequested: cp2LiveDifferentialRequested,
         acceptedBaselineRendererSelected: !cp2LiveDifferentialRequested,

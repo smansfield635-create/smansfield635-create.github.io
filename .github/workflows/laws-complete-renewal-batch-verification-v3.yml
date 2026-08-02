@@ -1,0 +1,145 @@
+name: Laws complete renewal batch verification v3
+
+on:
+  pull_request:
+    types:
+      - ready_for_review
+    branches:
+      - main
+    paths:
+      - .github/workflows/laws-complete-renewal-batch-verification-v3.yml
+      - scripts/verify-laws-complete-renewal-batch-v2.py
+      - scripts/verify-laws-complete-renewal-batch-v3.py
+      - scripts/laws_complete_renewal_batch_browser_verify_v2.mjs
+      - scripts/laws_complete_renewal_reverse_audit_comparator_patch.py
+      - assets/laws-destination/renewal.js
+      - assets/laws-destination/renewal-navigation.css
+      - assets/laws-destination/renewal-batch.css
+      - laws/**
+      - frontier/energy/battery-coherence-study/index.html
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-complete-renewal-batch-verification-v3
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    if: >-
+      github.event.pull_request.number == 493 &&
+      github.event.pull_request.head.ref == 'agent/laws-complete-renewal-batch-001' &&
+      github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact Laws batch branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-complete-renewal-batch-001
+          fetch-depth: 0
+
+      - name: Fetch current main for mutation-boundary comparison
+        run: git fetch origin main
+
+      - name: Run complete v3 static authority and custody verification
+        run: python3 scripts/verify-laws-complete-renewal-batch-v3.py
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start exact candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-complete-renewal-v3-server.log 2>&1 &
+          echo $! >/tmp/laws-complete-renewal-v3-server.pid
+          for attempt in $(seq 1 40); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-complete-renewal-v3-server.log
+          exit 1
+
+      - name: Execute 33-route browser cross-compatibility matrix
+        run: node scripts/laws_complete_renewal_batch_browser_verify_v2.mjs
+
+      - name: Materialize v3 exact-head verification receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          static = json.loads(Path('artifacts/laws-complete-renewal-batch-verification/static-result.json').read_text(encoding='utf-8'))
+          browser = json.loads(Path('artifacts/laws-complete-renewal-batch-verification/browser-result.json').read_text(encoding='utf-8'))
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          receipt = {
+              'contract': 'LAWS_COMPLETE_RENEWAL_BATCH_INTEGRATED_VERIFICATION_RECEIPT_v3',
+              'status': 'PASS_ENGINEERING_PENDING_MERGE_AND_LIVE_USER_DIFFERENTIAL',
+              'verifiedProductHead': head,
+              'workflowRunId': os.environ.get('GITHUB_RUN_ID'),
+              'workflowRunAttempt': os.environ.get('GITHUB_RUN_ATTEMPT'),
+              'staticVerification': static,
+              'browserVerification': {
+                  key: browser[key]
+                  for key in [
+                      'status', 'childRoutes', 'integratedRoutes', 'batteryPublicSurfaces',
+                      'profiles', 'profilePageExecutions', 'reducedMotionExecutions',
+                      'staticNoJavaScriptExecutions', 'collapsibleNavigation',
+                      'keyboardPointerTouchTabs', 'auditDisclosure',
+                      'horizontalOverflow', 'browserErrors'
+                  ]
+              },
+              'protectedBoundaries': {
+                  'representativeHtmlMutations': 3,
+                  'boundedRepresentativeCorrections': [
+                      'laws/categories/flow/signals/index.html::EXACT_20_CYCLE_FACT_ADDITION',
+                      'laws/categories/reality/measure.html::EXACT_20_CYCLE_FACT_ADDITION',
+                      'laws/test/reverse-audit/index.html::EXACT_20_CYCLE_AND_STRONGER_COMPARATOR_FACT_REPLACEMENT'
+                  ],
+                  'otherRepresentativeHtmlMutations': 0,
+                  'representativeVisualStructureMutations': 0,
+                  'compassRuntimeMutations': 0,
+                  'routeDeletions': 0,
+                  'redirectsCreated': 0,
+                  'frontierMutationsOutsideCompleteBatteryRecord': 0,
+                  'evidenceStatusUpgrades': 0,
+                  'claimCeilingUpgrades': 0
+              },
+              'mergeAuthority': False,
+              'liveUserDifferentialRequired': True,
+              'checkpoint6Closure': False
+          }
+          target = Path('laws/control-plane/renewal/laws-complete-renewal-batch-browser-verification-v3.json')
+          target.write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(receipt, indent=2))
+          PY
+
+      - name: Commit passing v3 verification receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add laws/control-plane/renewal/laws-complete-renewal-batch-browser-verification-v3.json
+          git commit -m 'Record complete Laws chamber verification v3 pass'
+          git push origin HEAD:agent/laws-complete-renewal-batch-001
+
+      - name: Upload complete v3 verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-complete-renewal-batch-verification-v3
+          path: |
+            artifacts/laws-complete-renewal-batch-verification/
+            laws/control-plane/renewal/laws-complete-renewal-batch-browser-verification-v3.json
+            /tmp/laws-complete-renewal-v3-server.log
+          if-no-files-found: warn
+          retention-days: 14

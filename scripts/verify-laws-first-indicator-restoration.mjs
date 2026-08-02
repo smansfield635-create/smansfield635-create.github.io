@@ -90,6 +90,22 @@ async function selectDirection(page, direction) {
     },
     direction
   );
+
+  await page.waitForFunction(
+    (nextDirection) => {
+      const records = Array.from(document.querySelectorAll('.laws-first__question-grid [data-laws-experience-question]'));
+      if (records.length !== 5) return false;
+      const cyan = 'rgb(121, 234, 255)';
+      const inactive = 'rgb(7, 16, 31)';
+      return records.every((record) => {
+        const active = record.dataset.lawsExperienceActive === 'true';
+        const expectedActive = record.dataset.lawsExperienceQuestion === nextDirection;
+        const background = getComputedStyle(record, '::before').backgroundColor;
+        return active === expectedActive && background === (expectedActive ? cyan : inactive);
+      });
+    },
+    direction
+  );
 }
 
 async function inspectIndicators(page) {
@@ -189,7 +205,7 @@ async function verifyViewport(browser, profile) {
   assert.deepEqual(errors, [], `${profile.name}: browser errors: ${errors.join(' | ')}`);
   await page.screenshot({ path: `artifacts/laws-first-indicators-${profile.name}.png`, fullPage: true });
   await context.close();
-  record(`interactive_${profile.name}`, 'PASS', 'Five Compass selections, each separated by the accepted return-to-constellation procedure, produced one visible in-bounds active light with no overflow or browser errors.');
+  record(`interactive_${profile.name}`, 'PASS', 'Five Compass selections, each separated by the accepted return-to-constellation procedure, produced one settled, visible, in-bounds active light with no overflow or browser errors.');
   return observations;
 }
 

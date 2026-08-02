@@ -3,7 +3,7 @@ name: H-Earth C2-R1 Material-Only Binding Materialization
 on:
   pull_request:
     branches:
-      - integration/h-earth-c2-r1-baseline-001
+      - rollback/h-earth-c2-r1-material-only-binding-start-001
     paths:
       - '.github/workflows/h-earth-c2-r1-complete-world-integration.yml'
       - '.github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml'

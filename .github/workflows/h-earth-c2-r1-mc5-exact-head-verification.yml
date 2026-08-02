@@ -200,8 +200,27 @@ jobs:
           check(cache.terrain.recordWidth === 8 && cache.shoreline.recordWidth === 8, 'CACHE_RECORD_WIDTH_MISMATCH');
           check(JSON.stringify(cache.terrain.fields) === JSON.stringify(['worldX','worldZ','colorR','colorG','colorB','roughness','wetness','cavity']), 'CACHE_TERRAIN_FIELDS_MISMATCH');
           check(JSON.stringify(cache.shoreline.fields) === JSON.stringify(['worldX','worldZ','colorR','colorG','colorB','alpha','wetness','foam']), 'CACHE_SHORELINE_FIELDS_MISMATCH');
-          check(runtimeText.includes(packageIdentity) && runtimeText.includes(packageDigest), 'RUNTIME_PACKAGE_BINDING_MISSING');
-          check(packageText.includes(packageIdentity) && packageText.includes(packageDigest), 'PACKAGE_OVERRIDE_BINDING_MISSING');
+          check(
+            runtimeText.includes('installHEarthRun8ER2RuntimePackageOverride') &&
+            runtimeText.includes(packageIdentity) &&
+            runtimeText.includes(packageDigest) &&
+            runtimeText.includes('selectionReceipt.runtimePackageIdentity') &&
+            runtimeText.includes('selectionReceipt.runtimePackageContentDigest') &&
+            runtimeText.includes('rendererCompatibilityAliasActive') &&
+            runtimeText.includes('exactIntegratedBuffersPresentedByAcceptedRenderer'),
+            'RUNTIME_EXACT_PACKAGE_OVERRIDE_BINDING_MISSING'
+          );
+          check(
+            packageText.includes('export function installHEarthRun8ER2RuntimePackageOverride') &&
+            packageText.includes('R2_RUNTIME_PACKAGE_OVERRIDE_ACTIVE') &&
+            packageText.includes('runtimePackageIdentity: packageRecord.packageIdentity') &&
+            packageText.includes('runtimePackageContentDigest: packageRecord.contentDigest') &&
+            packageText.includes('rendererCompatibilityAliasActive: true') &&
+            packageText.includes('exactIntegratedBuffersPresentedByAcceptedRenderer: true') &&
+            packageText.includes('/^H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_[0-9A-F]{8}$/') &&
+            packageText.includes('/^fnv1a32:[0-9a-f]{8}$/'),
+            'GENERIC_PACKAGE_OVERRIDE_ADAPTER_CONTRACT_MISSING'
+          );
           check(runtimeText.includes('boundShorelineVertexCount !== 154'), 'RUNTIME_SHORELINE_COUNT_GUARD_MISSING');
           check(packageText.includes('boundShorelineVertexCount !== 154'), 'PACKAGE_SHORELINE_COUNT_GUARD_MISSING');
           const receipt = {

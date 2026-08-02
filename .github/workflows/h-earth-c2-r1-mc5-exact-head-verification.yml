@@ -35,6 +35,8 @@ env:
   TARGET_CACHE_GZIP_SHA256: 8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b
   TARGET_TERRAIN_COUNT: '10419'
   TARGET_SHORELINE_COUNT: '154'
+  CANDIDATE_REGISTRY_SOURCE_PATH: h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js
+  CANDIDATE_REGISTRY_SOURCE_BLOB_SHA: a195eea704df0a3f754f626817181b63114178fd
   LIVE_REVIEW_URL: http://127.0.0.1:4188/showroom/globe/h-earth/index.html?cp2=round1-1f520809
   PLAYWRIGHT_VERSION: 1.55.0
 
@@ -57,13 +59,29 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Run automatic registry preflight for all nine PR 484 paths
+      - name: Stage frozen C2-R1 candidate registry member runner-local
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate_root="$GITHUB_WORKSPACE/candidate"
+          control_root="$GITHUB_WORKSPACE/control-plane"
+          source_path="$CANDIDATE_REGISTRY_SOURCE_PATH"
+          test "$(git -C "$candidate_root" rev-parse HEAD)" = "$TARGET_HEAD"
+          actual_blob="$(git -C "$candidate_root" rev-parse "HEAD:$source_path")"
+          test "$actual_blob" = "$CANDIDATE_REGISTRY_SOURCE_BLOB_SHA"
+          mkdir -p "$(dirname "$control_root/$source_path")"
+          cp "$candidate_root/$source_path" "$control_root/$source_path"
+          staged_blob="$(git -C "$control_root" hash-object --no-filters "$control_root/$source_path")"
+          test "$staged_blob" = "$CANDIDATE_REGISTRY_SOURCE_BLOB_SHA"
+
+      - name: Run automatic integrated registry preflight for all nine PR 484 paths
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/mc5-static"
           cd "$GITHUB_WORKSPACE/control-plane"
-          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js
+          node --check "$CANDIDATE_REGISTRY_SOURCE_PATH"
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-gratitude-integrated-environment.js
           node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
           MC5_RECEIPT="$RUNNER_TEMP/mc5-static/registry-preflight-receipt.json" node --input-type=module <<'NODE'
           import fs from 'node:fs';
@@ -73,8 +91,8 @@ jobs:
           } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
           const dependencies = load();
           if (dependencies.identityVerified !== true) throw new Error('REGISTRY_IDENTITY_NOT_VERIFIED');
-          if (dependencies.exactHeadRegistrationVerified !== true) {
-            throw new Error(`EXACT_HEAD_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
+          if (dependencies.integratedEnvironmentVerified !== true) {
+            throw new Error(`INTEGRATED_ENVIRONMENT_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
           }
           if (H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS.length !== 9) throw new Error('PR_484_CHANGED_PATH_COUNT_NOT_NINE');
           const receipt = await runHEarthC2R1MC5AutomaticRegistryPreflight();

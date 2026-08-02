@@ -51,10 +51,10 @@ jobs:
       - name: Remove temporary installers and commit durable files
         shell: bash
         run: |
-          git rm tools/laws-first-rail-architecture-transform.cjs
+          git rm -f tools/laws-first-rail-architecture-transform.cjs
           git rm -f .github/workflows/laws-first-rail-architecture-pr-once.yml
           git rm -f .github/workflows/laws-first-rail-architecture-once.yml
-          git rm .github/workflows/laws-first-rail-transform-fix-once.yml
+          git rm -f .github/workflows/laws-first-rail-transform-fix-once.yml
           git rm -f .github/.laws-first-rail-trigger
           git add laws/index.html laws/index.experience.js laws/index.experience.polish.css \
             scripts/verify-laws-first-rail-architecture.mjs \

@@ -41,6 +41,7 @@ battery_scope = load("laws/control-plane/renewal/laws-complete-renewal-battery-s
 receipt = load("laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json")
 battery = load("laws/control-plane/cp6-context/laws-battery-study-contextual-interpretation-record-v1.json")
 route_contract = load("laws/control-plane/cp6-1/cp6-2-route-contract.json")
+signals_correction = load("laws/control-plane/renewal/laws-complete-renewal-signals-battery-horizon-correction-v1.json")
 
 story_to_served = {
     "/laws/categories/reality/theory/": "/laws/categories/reality/theory.html",
@@ -69,6 +70,11 @@ require(receipt["remaining_child_routes_materialized"] == 20, "Twenty-route mate
 require(receipt["battery_public_surface_scope"] == 27, "Battery receipt scope drift")
 require(receipt["product_file_count"] == 29, "Materialized product-file count drift")
 require(battery_scope["public_surface_count"] == 27, "Battery authority scope drift")
+require(signals_correction["status"] == "AUTHORIZED_BY_COMPLETE_BATTERY_PATHWAY_REQUIREMENT", "Signals correction authority drift")
+require(
+    receipt.get("representative_battery_completeness_correction", {}).get("path") == "laws/categories/flow/signals/index.html",
+    "Signals representative correction receipt missing",
+)
 
 no_study: list[str] = []
 battery_children: list[str] = []
@@ -211,7 +217,15 @@ representatives = {
     "laws/research/findings-and-boundaries/index.html",
     "laws/industrial-posture/index.html",
 }
-require(not changed.intersection(representatives), f"Accepted representative HTML mutated: {sorted(changed.intersection(representatives))}")
+authorized_representative_changes = {"laws/categories/flow/signals/index.html"}
+actual_representative_changes = changed.intersection(representatives)
+require(
+    actual_representative_changes == authorized_representative_changes,
+    f"Representative mutation boundary drift: {sorted(actual_representative_changes)}",
+)
+signals_public = read("laws/categories/flow/signals/index.html").split('<details class="lr-audit"', 1)[0]
+require("the defined near-term event was evaluated within the next 20 cycles" in signals_public, "Authorized Signals horizon fact is not public")
+require("AUROC 0.9394" in signals_public and "AUROC 0.9704" in signals_public, "Signals metrics changed or disappeared")
 compass_runtime = {
     "laws/index.controller.js", "laws/index.compositor.js", "laws/index.interactions.js",
     "laws/index.crystals.js", "laws/index.cosmos.js", "laws/index.planet.js",
@@ -228,6 +242,7 @@ allowed_controls = {
     "assets/laws-destination/renewal.js",
     "scripts/laws_complete_renewal_batch.py",
     "scripts/laws_complete_renewal_batch_polish.py",
+    "scripts/laws_complete_renewal_signals_horizon_patch.py",
     "scripts/verify-laws-complete-renewal-batch.py",
     "scripts/verify-laws-complete-renewal-batch-v2.py",
     "scripts/laws_complete_renewal_batch_browser_verify.mjs",
@@ -235,10 +250,11 @@ allowed_controls = {
     "laws/control-plane/renewal/laws-complete-renewal-user-visual-acceptance-and-batch-authorization-v1.json",
     "laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json",
     "laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json",
+    "laws/control-plane/renewal/laws-complete-renewal-signals-battery-horizon-correction-v1.json",
     "laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json",
     "laws/control-plane/renewal/laws-complete-renewal-batch-browser-verification-v1.json",
 }
-unexpected = sorted(changed - product_files - allowed_controls)
+unexpected = sorted(changed - product_files - authorized_representative_changes - allowed_controls)
 require(not unexpected, f"Unexpected changed paths: {unexpected}")
 
 result = {
@@ -253,7 +269,8 @@ result = {
     "compatibilityBindings": 9,
     "productFilesWritten": 29,
     "frontierChanges": frontier_changes,
-    "representativeHtmlMutations": 0,
+    "representativeHtmlMutations": 1,
+    "boundedRepresentativeCorrections": sorted(authorized_representative_changes),
     "compassRuntimeMutations": 0,
     "routeDeletions": 0,
     "nextGate": "EXECUTED_BROWSER_CROSS_COMPATIBILITY",

@@ -189,16 +189,24 @@
 .lr-frontier-grid p { margin: 0; color: var(--lr-soft); }
 
 .lr-battery-landing {
+  --lr-ink: #f8f2df;
+  --lr-soft: rgba(232,241,255,.82);
+  --lr-muted: rgba(232,241,255,.62);
+  --lr-gold: #f2ca72;
+  --lr-gold-2: #ffe9a8;
   display: grid;
   gap: .8rem;
   margin: clamp(1rem,3vw,2rem) auto;
   padding: clamp(1rem,3vw,1.5rem);
   border: 1px solid rgba(242,202,114,.25);
   border-radius: 1.4rem;
+  color: var(--lr-ink);
   background: radial-gradient(circle at 90% 10%, rgba(130,230,255,.1), transparent 18rem), linear-gradient(145deg, rgba(242,202,114,.075), rgba(6,12,28,.9));
 }
 .lr-battery-landing h2,
 .lr-battery-landing p { margin: 0; }
+.lr-battery-landing .lr-study-stats,
+.lr-battery-landing .lr-action-row { width: 100%; }
 
 @media (max-width: 920px) {
   .lr-study-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }

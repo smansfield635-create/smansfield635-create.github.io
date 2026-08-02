@@ -1,0 +1,32 @@
+name: IMI H-Earth Ground Inspection v1 release records
+
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1/**'
+      - '.github/workflows/imi-h-earth-ground-inspection-v1-conformance.yml'
+  push:
+    paths:
+      - 'research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1/**'
+      - '.github/workflows/imi-h-earth-ground-inspection-v1-conformance.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify deployable release identity, byte custody, versions, and conformance receipt
+        working-directory: research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1
+        run: python verify_release_records_v1.py
+      - name: Validate JSON records
+        working-directory: research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1
+        run: find . -maxdepth 1 -name '*.json' -print0 | xargs -0 -n1 python -m json.tool >/dev/null
+      - name: Compile verifier
+        working-directory: research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1
+        run: python -m py_compile verify_release_records_v1.py

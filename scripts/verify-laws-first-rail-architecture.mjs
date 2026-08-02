@@ -1,4 +1,3 @@
-// Verification source revision: trigger bounded Compass-zone preload delivery.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -20,6 +19,7 @@ function verifySource() {
   const html = fs.readFileSync('laws/index.html', 'utf8');
   const css = fs.readFileSync('laws/index.experience.polish.css', 'utf8');
   const js = fs.readFileSync('laws/index.experience.js', 'utf8');
+  const control = JSON.parse(fs.readFileSync('laws/control-plane/renewal/laws-first-persistent-rail-and-tablet-reflow-v2.json', 'utf8'));
   assert.ok(html.includes('data-laws-first-rail=""'), 'Persistent rail missing from HTML.');
   assert.equal((html.match(/data-laws-experience-indicator="(?:flow|integrity|reality|structure|test)"/g) || []).length, 5, 'Exactly five persistent indicators required.');
   assert.ok(html.includes('data-laws-first-rail-architecture="persistent-compass-zone-v2"'), 'Architecture marker missing.');
@@ -29,16 +29,26 @@ function verifySource() {
   assert.ok(css.includes('@media (max-width: 1100px)'), 'Tablet reflow breakpoint missing.');
   assert.ok(js.includes('const indicatorNodes ='), 'Persistent indicator registry missing.');
   assert.ok(js.includes('node.dataset.lawsExperienceIndicator'), 'Persistent indicator correspondence missing.');
+  assert.ok(js.includes('const COMPASS_PRELOAD_MARGIN = "1200px 0px";'), 'Compass preload margin missing.');
+  assert.ok(js.includes('function installCompassPreload()'), 'Compass preload installer missing.');
+  assert.ok(js.includes('globalThis.DGBLawsStagedLoader'), 'Existing staged-loader surface is not used.');
+  assert.ok(js.includes('loader.loadOrbitSystems();'), 'Orbit preload request missing.');
+  assert.ok(js.includes('loader.loadInteractionSystems();'), 'Interaction preload request missing.');
+  assert.equal(control.preload_contract?.target, '.laws-compass-primary', 'Control record preload target mismatch.');
+  assert.equal(control.preload_contract?.root_margin, '1200px 0px', 'Control record preload margin mismatch.');
+  assert.equal(control.preload_contract?.loader_surface, 'DGBLawsStagedLoader', 'Control record loader surface mismatch.');
+  assert.equal(control.temporary_workflows_allowed_in_final_scope, false, 'Control record permits temporary workflows in final scope.');
   assert.ok(!html.includes('<a class="laws-first-rail__item"'), 'Rail must not create navigation controls.');
-  record('source_contract', 'PASS', 'Source-native five-light rail, cache tokens, tablet reflow, and read-only correspondence are present.');
+  record('source_contract', 'PASS', 'Source-native five-light rail, cache tokens, tablet reflow, read-only correspondence, and Compass-zone preload are present.');
 }
 
 async function waitForRuntimeReady(page) {
   await page.waitForFunction(() => {
     const root = document.querySelector('[data-laws-root]');
-    return Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER) &&
+    return Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER && globalThis.DGBLawsStagedLoader) &&
       root?.dataset.lawsControllerStatus === 'ready' &&
-      root?.dataset.lawsInteractionsStatus === 'ready';
+      root?.dataset.lawsInteractionsStatus === 'ready' &&
+      document.documentElement.dataset.lawsExperiencePreload === 'compass-zone-proximity';
   });
 }
 

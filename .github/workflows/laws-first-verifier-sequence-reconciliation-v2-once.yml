@@ -1,0 +1,108 @@
+name: Laws FIRST verifier sequence reconciliation v2 once
+
+on:
+  pull_request:
+    types: [synchronize]
+    paths:
+      - '.github/workflows/laws-first-verifier-sequence-reconciliation-v2-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile-verifier-sequence:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: macos-latest
+    steps:
+      - name: Check out exact correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-first-indicator-cache-bust-001
+          fetch-depth: 0
+
+      - name: Reconcile readiness and visual settlement waits
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          readiness = """async function waitForRuntimeReady(page) {
+            await page.waitForFunction(() => {
+              const root = document.querySelector('[data-laws-root]');
+              return Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER) &&
+                root?.dataset.lawsControllerStatus === 'ready' &&
+                root?.dataset.lawsInteractionsStatus === 'ready';
+            });
+          }
+
+          """.replace('          ', '')
+
+          new_path = Path('scripts/verify-laws-first-rail-architecture.mjs')
+          new_text = new_path.read_text()
+          marker = 'async function ensureConstellation(page) {'
+          if 'async function waitForRuntimeReady(page)' not in new_text:
+              if marker not in new_text:
+                  raise SystemExit('new verifier ensure marker missing')
+              new_text = new_text.replace(marker, readiness + marker, 1)
+          old_select = "async function select(page, direction) {\n  await ensureConstellation(page);\n  await page.evaluate((next) => {"
+          new_select = "async function select(page, direction) {\n  await ensureConstellation(page);\n  await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION');\n  await page.waitForTimeout(120);\n  await page.evaluate((next) => {"
+          if old_select in new_text:
+              new_text = new_text.replace(old_select, new_select, 1)
+          elif new_select not in new_text:
+              raise SystemExit('new verifier select marker missing')
+          old_ready = "await page.waitForFunction(() => Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER));"
+          if new_text.count(old_ready) not in (0, 2):
+              raise SystemExit('unexpected new verifier readiness count')
+          new_text = new_text.replace(old_ready, 'await waitForRuntimeReady(page);')
+          new_path.write_text(new_text)
+
+          legacy_path = Path('scripts/verify-laws-first-indicator-restoration.mjs')
+          legacy_text = legacy_path.read_text()
+          marker = 'async function openFirstDisclosure(page) {'
+          if 'async function waitForRuntimeReady(page)' not in legacy_text:
+              if marker not in legacy_text:
+                  raise SystemExit('legacy disclosure marker missing')
+              legacy_text = legacy_text.replace(marker, readiness + marker, 1)
+
+          function_start = legacy_text.index('async function selectDirection(page, direction) {')
+          snapshot_start = legacy_text.index('\nasync function snapshotIndicators', function_start)
+          function_text = legacy_text[function_start:snapshot_start]
+          style_marker = "  await page.waitForFunction(\n    (nextDirection) => {\n      const records = Array.from(document.querySelectorAll('.laws-first__question-grid [data-laws-experience-question]'));\n      if (records.length !== 5) return false;"
+          style_start = function_text.find(style_marker)
+          if style_start >= 0:
+              style_end = function_text.find('\n  );\n}', style_start)
+              if style_end < 0:
+                  raise SystemExit('legacy style wait end missing')
+              style_end += len('\n  );')
+              replacement = """  await page.waitForFunction(
+                (nextDirection) => {
+                  const records = Array.from(document.querySelectorAll('.laws-first__question-grid [data-laws-experience-question]'));
+                  return records.length === 5 && records.every((record) => {
+                    const active = record.dataset.lawsExperienceActive === 'true';
+                    const expectedActive = record.dataset.lawsExperienceQuestion === nextDirection;
+                    return active === expectedActive;
+                  });
+                },
+                direction
+              );
+              await page.waitForTimeout(260);""".replace('              ', '')
+              function_text = function_text[:style_start] + replacement + function_text[style_end:]
+              legacy_text = legacy_text[:function_start] + function_text + legacy_text[snapshot_start:]
+          elif 'await page.waitForTimeout(260);' not in function_text:
+              raise SystemExit('legacy style wait start missing')
+
+          old_ready = "await page.waitForFunction(() => Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER));"
+          if legacy_text.count(old_ready) not in (0, 2):
+              raise SystemExit('unexpected legacy readiness count')
+          legacy_text = legacy_text.replace(old_ready, 'await waitForRuntimeReady(page);')
+          legacy_path.write_text(legacy_text)
+          PY
+
+      - name: Commit verifier-only reconciliation
+        shell: bash
+        run: |
+          git add scripts/verify-laws-first-rail-architecture.mjs scripts/verify-laws-first-indicator-restoration.mjs
+          git config user.name "laws-first-verifier-sequence-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "Reconcile FIRST verifier readiness and settlement sequence"
+          git push origin HEAD:agent/laws-first-indicator-cache-bust-001

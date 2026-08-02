@@ -4,7 +4,8 @@
 The v2 verifier remains the complete chamber verifier. This successor adapts only the
 superseded v2 control registry and one-path representative mutation boundary to the
 three exact user-authorized factual corrections, executes every remaining v2 invariant,
-and then requires the Reverse Audit comparator authority, receipt, and public sentence.
+and then requires the Reverse Audit sample, horizon, comparator authority, receipt, and
+public sentence.
 """
 
 from __future__ import annotations
@@ -15,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 V2 = ROOT / "scripts/verify-laws-complete-renewal-batch-v2.py"
-AUTHORITY = ROOT / "laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-comparator-successor-v1.json"
+AUTHORITY = ROOT / "laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-sample-successor-v2.json"
 RECEIPT = ROOT / "laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json"
 TARGET = ROOT / "laws/test/reverse-audit/index.html"
 FAILURE_PATH = ROOT / "artifacts/laws-complete-renewal-batch-verification/static-failure.json"
@@ -34,13 +35,15 @@ NEW_CONTROLS = [
     "scripts/verify-laws-complete-renewal-batch-v3.py",
     "laws/control-plane/renewal/laws-complete-renewal-representative-battery-horizon-completeness-successor-v1.json",
     "laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-comparator-successor-v1.json",
+    "laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-sample-successor-v2.json",
     "laws/control-plane/renewal/laws-complete-renewal-batch-browser-verification-v3.json",
 ]
 
 REQUIRED_SENTENCE = (
-    "The defined battery event was evaluated within the next 20 cycles, and reverse challenge preserved "
-    "the stronger conventional aging-burden comparator at AUROC 0.9704 against the combined model at "
-    "AUROC 0.9394 before component ablations and threshold behavior were considered."
+    "The defined battery event was evaluated within the next 20 cycles across 1,653 final-test cycle records "
+    "from three held-out cells, and reverse challenge preserved the stronger conventional aging-burden "
+    "comparator at AUROC 0.9704 against the combined model at AUROC 0.9394 before component ablations and "
+    "threshold behavior were considered."
 )
 
 
@@ -80,8 +83,8 @@ def run_v2_with_successor_adapters() -> None:
 
 def main() -> int:
     authority = json.loads(AUTHORITY.read_text(encoding="utf-8"))
-    require(authority.get("status") == "ACTIVE_FOR_PR_493", "Reverse Audit comparator authority is not active")
-    require(authority.get("required_public_sentence") == REQUIRED_SENTENCE, "Authority sentence drift")
+    require(authority.get("status") == "ACTIVE_FOR_PR_493", "Reverse Audit sample-context authority is not active")
+    require(authority.get("required_public_sentence") == REQUIRED_SENTENCE, "Reverse Audit sample-context authority sentence drift")
     require(
         set(authority.get("final_representative_mutation_boundary", {}).get("authorized_paths", []))
         == AUTHORIZED_REPRESENTATIVE_PATHS,
@@ -94,15 +97,27 @@ def main() -> int:
     normalized_public = " ".join(public.split())
     require(
         normalized_public.count(REQUIRED_SENTENCE) == 1,
-        "Exact Reverse Audit comparator sentence is not singular in the public layer",
+        "Exact Reverse Audit sample-context sentence is not singular in the public layer",
     )
-    for marker in ("next 20 cycles", "AUROC 0.9704", "AUROC 0.9394", "stronger conventional aging-burden comparator"):
-        require(marker in normalized_public, f"Reverse Audit comparator context missing: {marker}")
+    for marker in (
+        "three held-out cells",
+        "1,653 final-test cycle records",
+        "next 20 cycles",
+        "AUROC 0.9704",
+        "AUROC 0.9394",
+        "stronger conventional aging-burden comparator",
+    ):
+        require(marker in normalized_public, f"Reverse Audit sample/comparator context missing: {marker}")
 
     receipt = json.loads(RECEIPT.read_text(encoding="utf-8"))
-    correction = receipt.get("reverse_audit_battery_comparator_successor", {})
-    require(correction.get("status") == "APPLIED_PENDING_EXECUTED_VERIFICATION", "Reverse Audit comparator receipt missing")
-    require(correction.get("path") == "laws/test/reverse-audit/index.html", "Reverse Audit comparator receipt path drift")
+    correction = receipt.get("reverse_audit_battery_sample_successor_v2", {})
+    require(correction.get("status") == "APPLIED_PENDING_EXECUTED_VERIFICATION", "Reverse Audit sample-context receipt missing")
+    require(correction.get("path") == "laws/test/reverse-audit/index.html", "Reverse Audit sample-context receipt path drift")
+    require(correction.get("held_out_cells") == 3, "Reverse Audit held-out cell receipt drift")
+    require(correction.get("final_test_cycle_records") == 1653, "Reverse Audit final-test record receipt drift")
+    require(correction.get("warning_horizon_cycles") == 20, "Reverse Audit horizon receipt drift")
+    require(correction.get("combined_model_auroc") == 0.9394, "Reverse Audit combined AUROC receipt drift")
+    require(correction.get("burden_comparator_auroc") == 0.9704, "Reverse Audit burden AUROC receipt drift")
     for boundary in (
         "visual_structure_change",
         "tab_structure_change",
@@ -115,12 +130,12 @@ def main() -> int:
     result_path = ROOT / "artifacts/laws-complete-renewal-batch-verification/static-result.json"
     result = json.loads(result_path.read_text(encoding="utf-8"))
     result["contract"] = "LAWS_COMPLETE_RENEWAL_BATCH_STATIC_VERIFICATION_v3"
-    result["reverseAuditComparatorSuccessor"] = "PASS"
+    result["reverseAuditSampleSuccessorV2"] = "PASS"
     result["representativeHtmlMutations"] = 3
     result["boundedRepresentativeCorrections"] = [
         "laws/categories/flow/signals/index.html::EXACT_20_CYCLE_FACT_ADDITION",
         "laws/categories/reality/measure.html::EXACT_20_CYCLE_FACT_ADDITION",
-        "laws/test/reverse-audit/index.html::EXACT_20_CYCLE_AND_STRONGER_COMPARATOR_FACT_REPLACEMENT",
+        "laws/test/reverse-audit/index.html::EXACT_SAMPLE_HORIZON_AND_STRONGER_COMPARATOR_FACT_REPLACEMENT",
     ]
     result["otherRepresentativeHtmlMutations"] = 0
     result["representativeVisualStructureMutations"] = 0

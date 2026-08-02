@@ -1,0 +1,84 @@
+name: Laws CP6 contextual integrated verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - laws/**
+      - scripts/laws_cp6_contextual_browser_verify.mjs
+      - .github/workflows/laws-cp6-contextual-browser-verification.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-cp6-contextual-browser-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify protected mutation boundary
+        run: |
+          git fetch origin main
+          changed="$(git diff --name-only origin/main...HEAD)"
+          printf '%s\n' "$changed"
+          if printf '%s\n' "$changed" | grep -E '^frontier/'; then
+            echo 'Frontier route or record mutation is prohibited in Checkpoint 6.' >&2
+            exit 1
+          fi
+          if printf '%s\n' "$changed" | grep -E '^laws/index\.(controller|compositor|interactions|crystals|cosmos)\.js$|^laws/index\.planet\.js$'; then
+            echo 'Compass runtime mutation is prohibited.' >&2
+            exit 1
+          fi
+          if git diff --name-status origin/main...HEAD | grep -E '^D[[:space:]]'; then
+            echo 'Route or file deletion is prohibited.' >&2
+            exit 1
+          fi
+
+      - name: Validate authority records
+        run: |
+          python3 -m json.tool laws/control-plane/cp6-context/laws-frontier-compatibility-crosswalk-v1.json >/dev/null
+          python3 -m json.tool laws/control-plane/cp6-context/laws-battery-study-contextual-interpretation-record-v1.json >/dev/null
+          python3 -m json.tool laws/control-plane/cp6-context/contextual-renewal-verification-v1.json >/dev/null
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start static candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-cp6-server.log 2>&1 &
+          echo $! >/tmp/laws-cp6-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-cp6-server.log
+          exit 1
+
+      - name: Run integrated phone tablet desktop reduced-motion static and input verification
+        run: node scripts/laws_cp6_contextual_browser_verify.mjs
+
+      - name: Upload verification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-contextual-integrated-verification
+          path: |
+            artifacts/laws-cp6-contextual-verification/
+            /tmp/laws-cp6-server.log
+          if-no-files-found: warn
+          retention-days: 14

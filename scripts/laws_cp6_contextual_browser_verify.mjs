@@ -387,7 +387,7 @@ async function verifyCohortPage(page, cohort, profileName) {
   assert(!(await pageFacts.evaluate(element => element.open)), `${profileName}/${cohort.name}: Page facts did not close`);
 
   const audit = page.locator('.lr-audit');
-  await audit.locator('summary').click();
+  await audit.locator(':scope > summary').click();
   assert(await audit.evaluate(element => element.open), `${profileName}/${cohort.name}: native audit disclosure failed`);
   assert(await audit.locator('.lr-audit__body').isVisible(), `${profileName}/${cohort.name}: audit body did not become visible`);
 

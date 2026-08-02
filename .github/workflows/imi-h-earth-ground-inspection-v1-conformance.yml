@@ -22,8 +22,11 @@ jobs:
         with:
           python-version: '3.12'
       - name: Verify deployable release identity, byte custody, versions, and conformance receipt
+        shell: bash
         working-directory: research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1
-        run: python verify_release_records_v1.py | tee IMI_REPOSITORY_RECORD_CONFORMANCE_RECEIPT_v1.json
+        run: |
+          set -o pipefail
+          python verify_release_records_v1.py | tee IMI_REPOSITORY_RECORD_CONFORMANCE_RECEIPT_v1.json
       - name: Validate JSON records
         working-directory: research/route-operator-platform-v1/deployments/imi-h-earth-ground-inspection-v1
         run: find . -maxdepth 1 -name '*.json' -print0 | xargs -0 -n1 python -m json.tool >/dev/null

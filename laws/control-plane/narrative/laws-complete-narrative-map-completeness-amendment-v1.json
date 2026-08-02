@@ -11,7 +11,7 @@
     "amendment_relationship": "CONTROLLING_COMPLETENESS_SUCCESSOR"
   },
   "disposition": {
-    "pr_489_current_disposition": "CONDITIONALLY_ACCEPTED_PENDING_COMPLETENESS_AMENDMENT",
+    "pr_489_current_disposition": "AMENDMENT_COMPLETE_PENDING_USER_FREEZE",
     "core_24_route_narrative": "ACCEPTED",
     "complete_chamber_authority": "AMENDED_AND_FREEZE_ELIGIBLE",
     "product_implementation": "HELD",

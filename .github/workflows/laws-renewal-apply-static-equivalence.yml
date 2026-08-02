@@ -1,0 +1,53 @@
+name: Laws Renewal Apply Static Equivalence
+
+on:
+  push:
+    branches:
+      - agent/laws-renewal-public-audit-translation-001
+    paths:
+      - scripts/laws-renewal-apply-static-equivalence.mjs
+      - .github/workflows/laws-renewal-apply-static-equivalence.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-static-equivalence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-renewal-public-audit-translation-001
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Apply static equivalence
+        run: node scripts/laws-renewal-apply-static-equivalence.mjs
+
+      - name: Validate patch integrity
+        run: git diff --check
+
+      - name: Commit static-equivalence changes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No static-equivalence changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            assets/laws-destination/renewal.js \
+            laws/categories/flow/signals/index.html \
+            laws/categories/reality/measure.html \
+            laws/test/reverse-audit/index.html \
+            laws/research/findings-and-boundaries/index.html \
+            laws/industrial-posture/index.html \
+            scripts/verify-laws-renewal-collapsed-entry.mjs
+          git commit -m "Complete Laws static and enhanced collapsed-entry equivalence"
+          git push origin HEAD:agent/laws-renewal-public-audit-translation-001

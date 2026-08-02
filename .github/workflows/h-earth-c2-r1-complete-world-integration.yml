@@ -1,4 +1,4 @@
-name: H-Earth C2-R1 Material-Only Binding Recovery
+name: H-Earth C2-R1 Material-Only Binding Materialization
 
 on:
   pull_request:
@@ -17,42 +17,36 @@ on:
       - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json'
       - 'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'
       - 'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
-  workflow_dispatch:
-    inputs:
-      expected_candidate_head:
-        required: true
-        type: string
 
 permissions:
-  contents: read
+  contents: write
+  actions: read
 
 env:
-  EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+  CANDIDATE_BRANCH: ${{ github.event.pull_request.head.ref }}
   STARTING_HEAD: 4f0491f00fae794ecdefbae36f4ee86c8a1bd21a
   ROLLBACK_BRANCH: rollback/h-earth-c2-r1-material-only-binding-start-001
 
 jobs:
-  material-only-static-construction:
+  materialize-exact-packet:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.EXPECTED_HEAD }}
           fetch-depth: 0
+          persist-credentials: true
 
-      - name: Verify exact head and rollback custody
+      - name: MC4.1 verify exact branch rollback and twelve-path corridor
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
           git fetch origin "$ROLLBACK_BRANCH:refs/remotes/origin/$ROLLBACK_BRANCH"
           test "$(git rev-parse "refs/remotes/origin/$ROLLBACK_BRANCH")" = "$STARTING_HEAD"
-
-      - name: Verify bounded twelve-path corridor
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > /tmp/allowed-paths <<'PATHS'
+          cat > /tmp/allowed <<'PATHS'
           .github/workflows/h-earth-c2-r1-complete-world-integration.yml
           .github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml
           h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
@@ -66,43 +60,86 @@ jobs:
           showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
           showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
           PATHS
-          sort -u /tmp/allowed-paths -o /tmp/allowed-paths
-          git diff --name-only "$STARTING_HEAD...HEAD" | sort -u > /tmp/actual-paths
-          test ! -s <(comm -23 /tmp/actual-paths /tmp/allowed-paths)
-          test "$(wc -l < /tmp/allowed-paths)" -eq 12
+          sort -u /tmp/allowed -o /tmp/allowed
+          git diff --name-only "$STARTING_HEAD...HEAD" | sort -u > /tmp/current
+          test ! -s <(comm -23 /tmp/current /tmp/allowed)
+          test "$(wc -l < /tmp/allowed)" -eq 12
 
-      - name: Check syntax and JSON surfaces
+      - name: MC4.2 detect completed materialization
+        id: state
         shell: bash
         run: |
-          set -euo pipefail
-          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
-          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
-          node -e "JSON.parse(require('fs').readFileSync('h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json','utf8'))"
+          if grep -q 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_IDENTITY_v1' \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json; then
+            echo 'already=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'already=false' >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Generate and verify exact material-only cache v2
+      - name: MC4.3 acquire exact passing cache-v2 artifact
+        if: steps.state.outputs.already != 'true'
         shell: bash
         env:
-          H_EARTH_MATERIAL_ONLY_CACHE_JSON_OUTPUT: ${{ runner.temp }}/material-only/complete-world-material-only-cache-v2.json
-          H_EARTH_MATERIAL_ONLY_CACHE_GZIP_OUTPUT: ${{ runner.temp }}/material-only/complete-world-material-only-cache-v2.json.gz
-          H_EARTH_MATERIAL_ONLY_CACHE_CARRIER_1_OUTPUT: ${{ runner.temp }}/material-only/cache-carrier-part-1.txt
-          H_EARTH_MATERIAL_ONLY_CACHE_CARRIER_2_OUTPUT: ${{ runner.temp }}/material-only/cache-carrier-part-2.txt
-          H_EARTH_MATERIAL_ONLY_STATIC_RECEIPT_OUTPUT: ${{ runner.temp }}/material-only/material-only-static-receipt.json
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/material-only"
-          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs \
-            | tee "$RUNNER_TEMP/material-only/static-test.log"
-          test -s "$H_EARTH_MATERIAL_ONLY_CACHE_JSON_OUTPUT"
-          test -s "$H_EARTH_MATERIAL_ONLY_CACHE_GZIP_OUTPUT"
-          test -s "$H_EARTH_MATERIAL_ONLY_CACHE_CARRIER_1_OUTPUT"
-          test -s "$H_EARTH_MATERIAL_ONLY_CACHE_CARRIER_2_OUTPUT"
-          test -s "$H_EARTH_MATERIAL_ONLY_STATIC_RECEIPT_OUTPUT"
-          sha256sum "$RUNNER_TEMP/material-only"/* > "$RUNNER_TEMP/material-only/artifact-files.sha256"
+          gh api -H 'Accept: application/vnd.github+json' \
+            "/repos/${GITHUB_REPOSITORY}/actions/artifacts/8827148247/zip" \
+            > "$RUNNER_TEMP/material-only-artifact.zip"
+          unzip -q "$RUNNER_TEMP/material-only-artifact.zip" -d "$RUNNER_TEMP/material-only"
+          cd "$RUNNER_TEMP/material-only"
+          echo '2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5  complete-world-material-only-cache-v2.json' | sha256sum -c -
+          echo '8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b  complete-world-material-only-cache-v2.json.gz' | sha256sum -c -
+          echo '5a2fb743de644c4c12b3c8b7ed79394ca60602848f2011bb29f46923d193cf04  complete-world-material-only-cache-v2.zip' | sha256sum -c -
 
-      - name: Upload material-only cache and static receipt
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-c2-r1-material-only-static-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/material-only
-          if-no-files-found: error
-          retention-days: 30
+      - name: MC4.4 materialize identity runtime custody and carriers
+        if: steps.state.outputs.already != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs --materialize
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
+          node --check showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          node --check showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+          for path in \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$path','utf8'))"
+          done
+
+      - name: MC4.5 verify eleven materialized paths and commit once
+        if: steps.state.outputs.already != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/expected-eleven <<'PATHS'
+          .github/workflows/h-earth-c2-r1-complete-world-integration.yml
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
+          showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+          PATHS
+          sort -u /tmp/expected-eleven -o /tmp/expected-eleven
+          git diff --name-only "$STARTING_HEAD" | sort -u > /tmp/materialized
+          diff -u /tmp/expected-eleven /tmp/materialized
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json \
+            showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js \
+            showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+          git commit -m 'C2-R1 MC4: materialize exact material-only cache v2 package'
+          git push origin "HEAD:$CANDIDATE_BRANCH"

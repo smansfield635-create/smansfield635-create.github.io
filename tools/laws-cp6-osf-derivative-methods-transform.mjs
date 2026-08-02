@@ -68,9 +68,9 @@ const SOURCES = {
     title: 'Formal Falsification Path — Break This If You Can',
     source_class: 'METHOD_AND_STUDY_DESIGN',
     admission_status: 'ADMITTED_AS_METHOD',
-    method_class: 'DOMAIN_SPECIFIC_SDTL_FALSIFICATION',
+    method_class: 'FORMAL_FALSIFICATION_PATH',
     empirical_status: 'PROTOCOL_WITHOUT_DATASET_OR_RESULTS',
-    metadata_sha256: '8b88e6605d4b3afee7a46aa2439a51a941c4f3ffbc3fd7d6cd8f7e2b5c1e44cf',
+    metadata_sha256: '12d75fd447aa5686c695264bf9387d35546d02933644eafbdaed251ed141cada',
     public_files: {},
     canonical_destinations: ['METHODS_AND_MODELS', 'REVERSE_AUDIT', 'APPLIED_INVESTIGATIONS']
   },
@@ -78,9 +78,9 @@ const SOURCES = {
     title: 'Methods Appendix: Diagnostic Application and Evaluation Protocol',
     source_class: 'METHOD_SPECIFICATION',
     admission_status: 'ADMITTED_AS_METHOD',
-    method_class: 'ADMISSIBLE_EVIDENCE_WINDOWS_OBSERVER_INVARIANCE_CLASSIFICATION_RULES',
+    method_class: 'ADMISSIBLE_EVIDENCE_FIXED_WINDOWS_OBSERVER_INVARIANCE',
     empirical_status: 'METHODS_SPECIFICATION_ONLY',
-    metadata_sha256: 'c38419126a445f240982fb4f3a667bdf4227840c7db1e2670acc75c35a0c7219',
+    metadata_sha256: '695a0d8ccb59b57135758a2ea89b54b5c27119f74024b98de6da1becc8bf437c',
     public_files: {},
     canonical_destinations: ['METHODS_AND_MODELS', 'ADMISSION_AND_BASELINE', 'REVERSE_AUDIT']
   }

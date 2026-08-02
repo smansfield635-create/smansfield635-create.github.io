@@ -2,7 +2,7 @@ name: Laws FIRST rail staged-loader reconciliation v2 once
 
 on:
   pull_request:
-    types: [synchronize]
+    types: [synchronize, reopened]
     paths:
       - '.github/workflows/laws-first-rail-staged-loader-reconciliation-v2-once.yml'
 

@@ -54,14 +54,14 @@ function record(check, status, detail = '') {
 function verifySourceContracts() {
   for (const page of pages) {
     const html = fs.readFileSync(page.file, 'utf8');
-    const pageFactsCount = (html.match(/<details class="lr-page-facts">/g) || []).length;
+    const pageFactsCount = (html.match(/<details class="lr-page-facts"(?: open)?>/g) || []).length;
     const statusGridCount = (html.match(/class="lr-status-grid"/g) || []).length;
     const tabCount = (html.match(/class="lr-tab"/g) || []).length;
     const collapsedTabCount = (html.match(/aria-selected="false" aria-expanded="false" type="button"/g) || []).length;
 
     assert.equal(pageFactsCount, 1, `${page.name}: expected one native Page facts disclosure`);
     assert.equal(statusGridCount, 1, `${page.name}: expected one hero fact grid`);
-    assert.ok(html.indexOf('<details class="lr-page-facts">') < html.indexOf('class="lr-status-grid"'), `${page.name}: fact grid must be owned by Page facts disclosure`);
+    assert.ok(html.indexOf('<details class="lr-page-facts" open>') < html.indexOf('class="lr-status-grid"'), `${page.name}: fact grid must be owned by Page facts disclosure`);
     assert.ok(html.includes('LAWS_COMPLETE_RENEWAL_V3'), `${page.name}: shared asset version must be V3`);
     assert.ok(!html.includes('LAWS_COMPLETE_RENEWAL_V1'), `${page.name}: stale shared asset version remains`);
     assert.ok(!html.includes('aria-selected="true"'), `${page.name}: preselected reading control remains in source`);

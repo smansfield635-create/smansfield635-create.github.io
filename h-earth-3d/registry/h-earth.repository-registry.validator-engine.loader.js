@@ -31,12 +31,12 @@ const EXPECTED_RUNTIME_PATHS=Object.freeze([
 const EXPECTED_REGISTRY_PATHS=Object.freeze([EXPECTED_CONTROL_PREFIX,...EXPECTED_COASTAL_PATHS,...EXPECTED_RUNTIME_PATHS]);
 export const H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS=Object.freeze([
   '/.github/workflows/h-earth-c2-r1-complete-world-integration.yml',
-  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json',
-  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json',
+  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json',
   '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json',
   '/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js',
   '/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js',
   '/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json',
+  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs',
   ...EXPECTED_RUNTIME_PATHS
 ]);
 const EXPECTED_OUTSIDE_PATH='/.github/workflows/h-earth-c2-r1-complete-world-integration.yml';

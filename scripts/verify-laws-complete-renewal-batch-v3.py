@@ -10,6 +10,7 @@ and then requires the Reverse Audit comparator authority, receipt, and public se
 from __future__ import annotations
 
 import json
+import traceback
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +18,7 @@ V2 = ROOT / "scripts/verify-laws-complete-renewal-batch-v2.py"
 AUTHORITY = ROOT / "laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-comparator-successor-v1.json"
 RECEIPT = ROOT / "laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json"
 TARGET = ROOT / "laws/test/reverse-audit/index.html"
+FAILURE_PATH = ROOT / "artifacts/laws-complete-renewal-batch-verification/static-failure.json"
 
 AUTHORIZED_REPRESENTATIVE_PATHS = {
     "laws/categories/flow/signals/index.html",
@@ -128,4 +130,18 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        exit_code = main()
+    except BaseException as exc:
+        FAILURE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        failure = {
+            "contract": "LAWS_COMPLETE_RENEWAL_BATCH_STATIC_FAILURE_DIAGNOSTIC_v1",
+            "status": "FAIL",
+            "exceptionType": type(exc).__name__,
+            "message": str(exc),
+            "traceback": traceback.format_exc(),
+        }
+        FAILURE_PATH.write_text(json.dumps(failure, indent=2) + "\n", encoding="utf-8")
+        print(json.dumps(failure, indent=2))
+        raise
+    raise SystemExit(exit_code)

@@ -1,4 +1,4 @@
-name: Laws Reverse Audit battery comparator correction
+name: Laws Reverse Audit battery sample-context correction v2
 
 on:
   pull_request:
@@ -9,13 +9,13 @@ on:
     paths:
       - .github/workflows/laws-complete-renewal-reverse-audit-comparator.yml
       - scripts/laws_complete_renewal_reverse_audit_comparator_patch.py
-      - laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-comparator-successor-v1.json
+      - laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-sample-successor-v2.json
 
 permissions:
   contents: write
 
 concurrency:
-  group: laws-reverse-audit-battery-comparator-correction
+  group: laws-reverse-audit-battery-sample-context-v2
   cancel-in-progress: false
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
           ref: agent/laws-complete-renewal-batch-001
           fetch-depth: 0
 
-      - name: Apply exact Reverse Audit comparator correction
+      - name: Apply exact Reverse Audit sample-context successor
         run: python3 scripts/laws_complete_renewal_reverse_audit_comparator_patch.py
 
       - name: Verify bounded mutation
@@ -46,12 +46,14 @@ jobs:
           path = Path('laws/test/reverse-audit/index.html')
           text = path.read_text(encoding='utf-8')
           public = text.split('<details class="lr-audit"', 1)[0]
+          normalized = ' '.join(public.split())
           sentence = (
-              'The defined battery event was evaluated within the next 20 cycles, and reverse challenge '
-              'preserved the stronger conventional aging-burden comparator at AUROC 0.9704 against the '
-              'combined model at AUROC 0.9394 before component ablations and threshold behavior were considered.'
+              'The defined battery event was evaluated within the next 20 cycles across 1,653 final-test '
+              'cycle records from three held-out cells, and reverse challenge preserved the stronger '
+              'conventional aging-burden comparator at AUROC 0.9704 against the combined model at AUROC '
+              '0.9394 before component ablations and threshold behavior were considered.'
           )
-          assert public.count(sentence) == 1
+          assert normalized.count(sentence) == 1
           assert public.count('role="tab"') == 5
           assert public.count('role="tabpanel"') == 5
           assert public.count('aria-selected="true"') == 1
@@ -65,22 +67,29 @@ jobs:
               'AUROC 0.6743 was above chance but remained preliminary',
               'zero true positives',
               'balanced accuracy 0.4994',
+              'three held-out cells',
+              '1,653 final-test cycle records',
+              'next 20 cycles',
               'stronger conventional aging-burden comparator',
               'AUROC 0.9704',
-              'AUROC 0.9394',
-              'next 20 cycles'
+              'AUROC 0.9394'
           ):
-              assert marker in public, marker
+              assert marker in normalized, marker
 
           receipt = json.loads(Path('laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json').read_text())
-          correction = receipt['reverse_audit_battery_comparator_successor']
+          correction = receipt['reverse_audit_battery_sample_successor_v2']
           assert correction['path'] == 'laws/test/reverse-audit/index.html'
+          assert correction['held_out_cells'] == 3
+          assert correction['final_test_cycle_records'] == 1653
+          assert correction['warning_horizon_cycles'] == 20
+          assert correction['combined_model_auroc'] == 0.9394
+          assert correction['burden_comparator_auroc'] == 0.9704
           assert correction['visual_structure_change'] is False
           assert correction['tab_structure_change'] is False
           assert correction['metric_change'] is False
           assert correction['evidence_status_upgrade'] is False
           assert correction['claim_ceiling_upgrade'] is False
-          print('Reverse Audit comparator completeness correction: PASS')
+          print('Reverse Audit complete sample-context correction v2: PASS')
           PY
           git diff --check
           changed="$(git diff --name-only)"
@@ -99,5 +108,5 @@ jobs:
           git add \
             laws/test/reverse-audit/index.html \
             laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json
-          git commit -m 'Complete Reverse Audit battery comparator context'
+          git commit -m 'Complete Reverse Audit battery sample context'
           git push origin HEAD:agent/laws-complete-renewal-batch-001

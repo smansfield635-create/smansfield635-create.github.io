@@ -234,3 +234,227 @@ html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid 
     transition: none !important;
   }
 }
+
+
+/*
+ * LAWS_FIRST_PERSISTENT_COMPASS_RAIL_AND_TABLET_REFLOW_v2
+ * One source-native F.I.R.S.T. indicator rail remains in the Compass zone.
+ * It consumes the existing presentation correspondence and creates no control.
+ */
+html[data-cp6-experiential-presentation="candidate"] .laws-compass-primary {
+  grid-auto-flow: row;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-orbit {
+  order: 1;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail {
+  order: 2;
+  position: relative;
+  z-index: 12;
+  width: 100%;
+  margin: -1rem 0 1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__list {
+  isolation: isolate;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__list::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0.47rem;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(121, 234, 255, 0.52), var(--laws-experience-line), rgba(121, 234, 255, 0.26));
+  box-shadow: 0 0 12px rgba(121, 234, 255, 0.12);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item {
+  position: relative;
+  min-width: 0;
+  padding: 1.55rem 0.8rem 0.75rem 0;
+  opacity: 0.58;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__light {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 2px solid rgba(116, 229, 255, 0.58);
+  border-radius: 50%;
+  background: #07101f;
+  box-shadow: 0 0 12px rgba(116, 229, 255, 0.2);
+  transform: scale(1);
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 220ms ease, transform 180ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__label,
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__question {
+  display: block;
+  min-width: 0;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__label {
+  color: var(--laws-experience-ink);
+  font-size: 0.7rem;
+  font-weight: 760;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__question {
+  margin-top: 0.55rem;
+  color: var(--laws-experience-muted);
+  font-size: clamp(0.76rem, 0.92vw, 0.9rem);
+  line-height: 1.4;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item[data-laws-experience-active="true"] {
+  opacity: 1;
+  transform: translateY(-0.12rem);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item[data-laws-experience-active="true"] .laws-first-rail__light {
+  border-color: #e7fcff;
+  background: #79eaff;
+  box-shadow: 0 0 0 4px rgba(121, 234, 255, 0.12), 0 0 12px rgba(121, 234, 255, 0.92), 0 0 28px rgba(121, 234, 255, 0.74);
+  transform: scale(1.16);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
+  order: 3;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-width: 1px;
+  box-shadow: 0 0 8px rgba(116, 229, 255, 0.16);
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"]::before {
+  background: rgba(121, 234, 255, 0.72);
+  box-shadow: 0 0 12px rgba(121, 234, 255, 0.52);
+  transform: scale(1.05);
+}
+
+@media (max-width: 1100px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: clamp(1.25rem, 3.5vw, 2.75rem);
+    padding: clamp(2rem, 5vh, 4rem) 0 clamp(3.5rem, 7vh, 5.5rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-atmosphere span:nth-child(3) {
+    display: none;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first {
+    width: min(100%, 56rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure-body {
+    width: 100%;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-compass-primary {
+    position: relative;
+    top: auto;
+    width: 100%;
+    align-self: stretch;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail {
+    order: 1;
+    margin: 0 0 0.5rem;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-orbit {
+    order: 2;
+    min-height: clamp(31rem, 76vw, 42rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
+    order: 3;
+    width: min(100%, 44rem);
+    margin: -3rem auto 0;
+  }
+}
+
+@media (max-width: 780px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
+    gap: 0.85rem;
+    padding-top: clamp(1.75rem, 5vh, 3rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail {
+    margin-bottom: 0;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-orbit {
+    min-height: min(118vw, 36rem);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
+    margin-top: -1.75rem;
+  }
+}
+
+@media (max-width: 600px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item {
+    padding: 1.45rem 0.2rem 0.55rem;
+    text-align: center;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__light {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item[data-laws-experience-active="true"] {
+    transform: none;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item[data-laws-experience-active="true"] .laws-first-rail__light {
+    transform: translateX(-50%) scale(1.16);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__label {
+    font-size: clamp(0.55rem, 2.55vw, 0.68rem);
+    letter-spacing: 0.035em;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__question {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item,
+  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__light {
+    transition: none !important;
+  }
+}

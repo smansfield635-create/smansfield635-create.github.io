@@ -7,7 +7,7 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_CP6_EXPERIENTIAL_PRESENTATION_v1";
+  const CONTRACT = "LAWS_CP6_EXPERIENTIAL_PRESENTATION_v2";
   const STELLAR_STYLE = "/laws/index.stellar-continuity.css?v=LAWS_STELLAR_CONTINUITY_20260801A";
   const STELLAR_SCRIPT = "/laws/index.background-cosmos.js?v=LAWS_BACKGROUND_COSMOS_20260801A";
 
@@ -72,6 +72,7 @@
   const speakerBody = document.querySelector("[data-laws-experience-speaker-body]");
   const speakerState = document.querySelector("[data-laws-experience-speaker-state]");
   const questionNodes = Array.from(document.querySelectorAll("[data-laws-experience-question]"));
+  const indicatorNodes = Array.from(document.querySelectorAll("[data-laws-experience-indicator]"));
   const stageNodes = Array.from(document.querySelectorAll("[data-laws-experience-stage]"));
 
   let unsubscribeCompass = null;
@@ -137,6 +138,13 @@
     for (const node of questionNodes) {
       const nodeDirection = normalizeDirection(node.dataset.lawsExperienceQuestion);
       node.dataset.lawsExperienceActive = String(Boolean(normalized && nodeDirection === normalized));
+    }
+
+    for (const node of indicatorNodes) {
+      const nodeDirection = normalizeDirection(node.dataset.lawsExperienceIndicator);
+      const isActive = Boolean(normalized && nodeDirection === normalized);
+      node.dataset.lawsExperienceActive = String(isActive);
+      node.setAttribute("aria-current", isActive ? "true" : "false");
     }
 
     globalThis.dispatchEvent(

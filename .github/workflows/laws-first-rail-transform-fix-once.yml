@@ -48,17 +48,12 @@ jobs:
       - name: Apply full-file architectural correction
         run: node tools/laws-first-rail-architecture-transform.cjs
 
-      - name: Remove temporary installers and commit durable files
+      - name: Commit product files without workflow mutation
         shell: bash
         run: |
-          git rm -f tools/laws-first-rail-architecture-transform.cjs
-          git rm -f .github/workflows/laws-first-rail-architecture-pr-once.yml
-          git rm -f .github/workflows/laws-first-rail-architecture-once.yml
-          git rm -f .github/workflows/laws-first-rail-transform-fix-once.yml
-          git rm -f .github/.laws-first-rail-trigger
+          rm -f .github/workflows/laws-first-rail-architecture-verification.yml
           git add laws/index.html laws/index.experience.js laws/index.experience.polish.css \
             scripts/verify-laws-first-rail-architecture.mjs \
-            .github/workflows/laws-first-rail-architecture-verification.yml \
             laws/control-plane/renewal/laws-first-persistent-rail-and-tablet-reflow-v2.json
           git config user.name "laws-rail-architecture-bot"
           git config user.email "actions@users.noreply.github.com"

@@ -11,6 +11,7 @@ on:
       - integration/h-earth-c2-r1-baseline-001
     paths:
       - '.github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml'
+      - 'showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js'
       - 'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'
       - 'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
       - 'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'
@@ -32,7 +33,7 @@ jobs:
           ref: ${{ env.EXPECTED_HEAD }}
           fetch-depth: 0
 
-      - name: Verify exact head rollback and four-path boundary
+      - name: Verify exact head rollback and five-path boundary
         shell: bash
         run: |
           set -euo pipefail
@@ -41,6 +42,7 @@ jobs:
           test "$(git rev-parse origin/rollback/h-earth-c2-r1-integrated-environment-coherence-start-001)" = d13872aff39f2fb6cb4e5677953fad2101cea5de
           printf '%s\n' \
             .github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml \
+            showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js \
             showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js \
             showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js \
             showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js | sort > /tmp/expected-paths
@@ -51,6 +53,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          node --check showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
           node --check showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
           node --check showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
           node --check showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js

@@ -1,3 +1,4 @@
+// Verification source revision: trigger bounded Compass-zone preload delivery.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';

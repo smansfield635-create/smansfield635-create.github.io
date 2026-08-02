@@ -7,6 +7,10 @@ on:
     paths:
       - scripts/laws-renewal-reconcile-legacy-verifier.mjs
       - .github/workflows/laws-renewal-reconcile-legacy-verifier.yml
+  pull_request:
+    paths:
+      - scripts/laws-renewal-reconcile-legacy-verifier.mjs
+      - .github/workflows/laws-renewal-reconcile-legacy-verifier.yml
 
 permissions:
   contents: write

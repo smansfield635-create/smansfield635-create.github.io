@@ -1,0 +1,74 @@
+{
+  "all_manifest_entries_match": true,
+  "artifact_classification": [
+    {
+      "classification": "AUTHORITATIVE",
+      "path": "IMI_OBSERVER_GRADE_SCORING_INSTRUMENT_SPECIFICATION_v1.md",
+      "sha256": "d90e8c32bcc1b46c802859d0c6472f35469e5034b6e44eea404ca3089104b773"
+    },
+    {
+      "classification": "AUTHORITATIVE",
+      "path": "IMI_OBSERVER_RELIABILITY_PILOT_PREREGISTRATION_v1.md",
+      "sha256": "6e8b8a6b20083fba5ef552f52226fbf0d762709cc8a55f00d2b21d38efcc0e2c"
+    },
+    {
+      "classification": "AUTHORITATIVE_INTEGRITY_CONTROL",
+      "path": "MANIFEST_SHA256.json",
+      "sha256": "fd4de96ec3c2827ca54aac3cf1928ff90eb6e79b3dc3d3aaadb2a80c2780e0c2"
+    },
+    {
+      "classification": "NONAUTHORITATIVE_EXPLANATORY",
+      "path": "README.md",
+      "sha256": "3fff590b6c67a04975d9ef54b93a69a7e1988cfc19f2f9504ef6a398ac524489"
+    },
+    {
+      "classification": "AUTHORITATIVE_TEMPLATE_NOT_DEPLOYED_INSTANCE",
+      "path": "imi_factor_dictionary_template_v1.csv",
+      "sha256": "7ab183e90d4bc4ddeb00b14868ef7206bb0bd6a5f94ccf234e4e099a34f82335"
+    },
+    {
+      "classification": "AUTHORITATIVE",
+      "path": "imi_output_schema_v1.json",
+      "sha256": "7a62ff0b31bb09ef898868c216b83c5e6f669998bd5803f56b2e719633d38650"
+    },
+    {
+      "classification": "AUTHORITATIVE",
+      "path": "imi_reference_v1.py",
+      "sha256": "b56f9c330953445c3051c83f39e331801ecd33f13f00514c43793faedd4625ca"
+    },
+    {
+      "classification": "AUTHORITATIVE",
+      "path": "imi_source_registry_v1.json",
+      "sha256": "ff88625d6c55ca68ca3bf3683587bb3282a73e398c45990619ebeead607fb1c5"
+    },
+    {
+      "classification": "AUTHORITATIVE_TEMPLATE_NOT_DEPLOYED_INSTANCE",
+      "path": "imi_study_route_profile_template_v1.json",
+      "sha256": "4985a69aa7c71a530b902c681032472337925ff1b2785bb0ae7f85c4cadc1b6c"
+    },
+    {
+      "classification": "AUTHORITATIVE",
+      "path": "imi_synthetic_fixtures_v1.json",
+      "sha256": "58b4dddcfd0709c668cf61f3d73082907f5c962d0c620841ac7a9f43289a9ee0"
+    },
+    {
+      "classification": "AUTHORITATIVE",
+      "path": "test_imi_conformance_v1.py",
+      "sha256": "799a40145a7f0d161ec58b0b34d25cc513cf13812e631730b6d7b575744db827"
+    }
+  ],
+  "custody_state": "BYTE_VERIFIED_EXTERNAL_INSTRUMENT_DEPENDENCY",
+  "drive_file_id": "14WDLwcbHbc32sKoqWrmTonqbfs6EHOj-",
+  "expected_zip_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87",
+  "internal_manifest_sha256": "fd4de96ec3c2827ca54aac3cf1928ff90eb6e79b3dc3d3aaadb2a80c2780e0c2",
+  "manifest_entry_count": 10,
+  "observed_size_bytes": 38893,
+  "observed_zip_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87",
+  "receipt_id": "IMI_BYTE_CUSTODY_RECEIPT_v1",
+  "receipt_sha256": "72f28edbdda57a7b8ee116738ecf99337983d1281e04b1cac69896a846240d2f",
+  "source": "GOOGLE_DRIVE_PRIVATE_FROZEN_PACKAGE",
+  "unmanifested_payload_files": [],
+  "verified_at": "2026-08-02T19:38:54Z",
+  "verified_by": "OPENAI_ASSISTANT_CONTROLLED_BUILD_WORKSPACE",
+  "zip_hash_match": true
+}

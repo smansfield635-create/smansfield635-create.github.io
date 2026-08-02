@@ -1,0 +1,32 @@
+{
+  "drive_file_id": "1CZmtVtBWT1olIdGhndqm6f7dS5gVV0Nx",
+  "drive_file_url": "https://drive.google.com/file/d/1CZmtVtBWT1olIdGhndqm6f7dS5gVV0Nx/view?usp=drivesdk",
+  "drive_folder_id": "1F07dqiv4uW6UMXe4ixCUSaUi_6VYSOJt",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1F07dqiv4uW6UMXe4ixCUSaUi_6VYSOJt",
+  "empirical_reliability_and_validity": "OPEN",
+  "executable_release_receipt_sha256": "83d1b6e765962e8dc5fbccbeebd331d67091cc5b7a16e28297ee0223dc9f8ecd",
+  "final_gratitude_coordinate_claim": false,
+  "observer_grade_imi_instrument_available": true,
+  "platform_binding": {
+    "platform_id": "ROUTE_OPERATOR_RESEARCH_PLATFORM_v1",
+    "platform_merge_commit_sha": "cffa9889430d6700c3fad548d29dfada3dd04e61",
+    "platform_version": "1.0.0"
+  },
+  "private_imi_dependency": {
+    "custody_state": "BYTE_VERIFIED_EXTERNAL_INSTRUMENT_DEPENDENCY",
+    "package_id": "IMI_OBSERVER_GRADE_INSTRUMENT_v1",
+    "package_version": "1.0.0",
+    "repository_mirror": false,
+    "runtime_mount_required": true,
+    "zip_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87"
+  },
+  "release_bundle_file": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v1.zip",
+  "release_bundle_file_count": 35,
+  "release_bundle_sha256": "9e2046fdf200e3c6b4445f854602ea1530ceed3da0a46dea74e73f3f68e3fd6d",
+  "release_bundle_size_bytes": 58786,
+  "release_id": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v1",
+  "release_version": "1.0.0",
+  "route_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v1",
+  "route_version": "1.0.0",
+  "runtime_mutation": false
+}

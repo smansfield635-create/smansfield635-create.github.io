@@ -1,0 +1,85 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_REMAINING_20_ROUTE_MIGRATION_MANIFEST_v1",
+  "mode": "BATCH_MIGRATION_INVENTORY_AND_NO_OMISSION_AUTHORITY",
+  "status": "FROZEN_FOR_SUCCESSOR_IMPLEMENTATION",
+  "baseline": "54d79db4f8d17367bf6bbe6388b114e243ec0bd0",
+  "accepted_child_routes": [
+    "/laws/categories/flow/signals/",
+    "/laws/categories/reality/measure.html",
+    "/laws/test/reverse-audit/",
+    "/laws/research/findings-and-boundaries/"
+  ],
+  "accepted_auxiliary_surface": "/laws/industrial-posture/",
+  "remaining_child_route_count": 20,
+  "migration_waves": [
+    {
+      "wave": 1,
+      "family": "FLOW",
+      "routes": [
+        {"story_route":"/laws/categories/flow/feedback/","source_path":"laws/categories/flow/feedback/index.html","source_shape":"FAMILY_SECTION_ALIAS"},
+        {"story_route":"/laws/categories/flow/cycles/","source_path":"laws/categories/flow/cycles/index.html","source_shape":"STANDALONE_SLASH_PAGE"},
+        {"story_route":"/laws/categories/flow/handoffs/","source_path":"laws/categories/flow/handoffs/index.html","source_shape":"FAMILY_SECTION_ALIAS"}
+      ]
+    },
+    {
+      "wave": 2,
+      "family": "INTEGRITY",
+      "routes": [
+        {"story_route":"/laws/categories/integrity/consistency/","source_path":"laws/categories/integrity/consistency/index.html","source_shape":"STANDALONE_SLASH_PAGE"},
+        {"story_route":"/laws/categories/integrity/accountability/","source_path":"laws/categories/integrity/accountability/index.html","source_shape":"STANDALONE_SLASH_PAGE"},
+        {"story_route":"/laws/categories/integrity/continuity/","source_path":"laws/categories/integrity/continuity/index.html","source_shape":"STANDALONE_SLASH_PAGE"},
+        {"story_route":"/laws/categories/integrity/coherence/","source_path":"laws/categories/integrity/coherence/index.html","source_shape":"STANDALONE_SLASH_PAGE"}
+      ]
+    },
+    {
+      "wave": 3,
+      "family": "REALITY",
+      "routes": [
+        {"story_route":"/laws/categories/reality/theory/","source_path":"laws/categories/reality/theory.html","source_shape":"LEGACY_HTML_CHILD_WITH_SLASH_STORY_IDENTITY"},
+        {"story_route":"/laws/categories/reality/evidence/","source_path":"laws/categories/reality/evidence.html","source_shape":"LEGACY_HTML_CHILD_WITH_SLASH_STORY_IDENTITY"},
+        {"story_route":"/laws/categories/reality/limits/","source_path":"laws/categories/reality/limits.html","source_shape":"LEGACY_HTML_CHILD_WITH_SLASH_STORY_IDENTITY"}
+      ]
+    },
+    {
+      "wave": 4,
+      "family": "STRUCTURE",
+      "routes": [
+        {"story_route":"/laws/categories/structure/constraints/","source_path":"laws/categories/structure/constraints.html","source_shape":"LEGACY_HTML_CHILD_WITH_SLASH_STORY_IDENTITY"},
+        {"story_route":"/laws/categories/structure/interfaces/","source_path":"laws/categories/structure/interfaces.html","source_shape":"LEGACY_HTML_CHILD_WITH_SLASH_STORY_IDENTITY"},
+        {"story_route":"/laws/categories/structure/boundaries/","source_path":"laws/categories/structure/boundaries.html","source_shape":"LEGACY_HTML_CHILD_WITH_SLASH_STORY_IDENTITY"},
+        {"story_route":"/laws/categories/structure/governance/","source_path":"laws/categories/structure/governance.html","source_shape":"LEGACY_HTML_CHILD_WITH_SLASH_STORY_IDENTITY"}
+      ]
+    },
+    {
+      "wave": 5,
+      "family": "TEST",
+      "routes": [
+        {"story_route":"/laws/test/admission-and-baseline/","source_path":"laws/test/admission-and-baseline/index.html","source_shape":"CANONICAL_DESTINATION"},
+        {"story_route":"/laws/test/forward-construction/","source_path":"laws/test/forward-construction/index.html","source_shape":"CANONICAL_DESTINATION"},
+        {"story_route":"/laws/test/result-and-record/","source_path":"laws/test/result-and-record/index.html","source_shape":"CANONICAL_DESTINATION"}
+      ]
+    },
+    {
+      "wave": 6,
+      "family": "RESEARCH",
+      "routes": [
+        {"story_route":"/laws/research/applied-investigations/","source_path":"laws/research/applied-investigations/index.html","source_shape":"CANONICAL_DESTINATION"},
+        {"story_route":"/laws/research/evidence-and-sources/","source_path":"laws/research/evidence-and-sources/index.html","source_shape":"CANONICAL_DESTINATION"},
+        {"story_route":"/laws/research/methods-and-models/","source_path":"laws/research/methods-and-models/index.html","source_shape":"CANONICAL_DESTINATION"}
+      ]
+    }
+  ],
+  "per_route_requirements": [
+    "FROZEN_PAGE_ROLE_AND_QUESTION",
+    "FROZEN_PREVIOUS_AND_NEXT_STORY_CONTEXT",
+    "PAGE_SPECIFIC_VISUAL_OR_EQUATION",
+    "PRACTICAL_ENGINEERING_EMPIRICAL_SEPARATION",
+    "VISIBLE_CLAIM_BOUNDARY",
+    "COLLAPSED_AUDIT_OR_CUSTODY",
+    "SHARED_COLLAPSIBLE_NAVIGATION",
+    "STATIC_NO_JAVASCRIPT_COMPLETE_READING",
+    "CURRENT_PUBLIC_URL_PRESERVED",
+    "CURRENT_CANONICAL_OWNER_PRESERVED"
+  ],
+  "completion_law": "The batch cannot be declared complete unless all 20 listed source paths are renewed and the accepted four child routes plus Industrial Posture pass regression under the corrected shared navigation engine."
+}

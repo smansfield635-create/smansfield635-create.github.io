@@ -1,0 +1,83 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_USER_VISUAL_ACCEPTANCE_AND_BATCH_AUTHORIZATION_v1",
+  "mode": "USER_VISUAL_ACCEPTANCE_AND_SUCCESSOR_IMPLEMENTATION_AUTHORITY",
+  "status": "ACTIVE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "accepted_main_baseline": "54d79db4f8d17367bf6bbe6388b114e243ec0bd0",
+  "user_visual_evidence": {
+    "accepted_cohort": [
+      "/laws/categories/flow/signals/",
+      "/laws/categories/reality/measure.html",
+      "/laws/test/reverse-audit/",
+      "/laws/research/findings-and-boundaries/",
+      "/laws/industrial-posture/"
+    ],
+    "accepted_child_route_count": 4,
+    "accepted_auxiliary_surface_count": 1,
+    "disposition": "PASS_VISUAL_DIRECTION",
+    "user_statement": "The reviewed pages look fantastic and the presentation should be adopted across the remaining Laws pages.",
+    "accepted_characteristics": [
+      "MAIN_COMPASS_LEVEL_ATMOSPHERE",
+      "PAGE_SPECIFIC_STORY_SLICE",
+      "SELECTABLE_READING_LAYERS",
+      "COLLAPSED_SECONDARY_AND_AUDIT_CONTENT",
+      "VISUAL_MATHEMATICAL_EXPRESSION",
+      "CROSS_FAMILY_PRESENTATION_COHERENCE"
+    ]
+  },
+  "required_correction": {
+    "surface": "PERSISTENT_TOP_NAVIGATION",
+    "evidence": "Mobile review showed the sticky route menu consuming excessive viewport height while following the reader.",
+    "required_behavior": "COLLAPSIBLE_COMPACT_IDENTITY_BAR",
+    "default_mobile_state": "COLLAPSED",
+    "default_desktop_state": "COMPACT_WITH_USER_TOGGLE",
+    "static_no_javascript_state": "NAVIGATION_REMAINS_VISIBLE_AND_USABLE",
+    "accessibility": [
+      "BUTTON_WITH_ARIA_EXPANDED",
+      "ARIA_CONTROLS",
+      "KEYBOARD_OPERABLE",
+      "TOUCH_AND_POINTER_OPERABLE",
+      "FOCUS_PRESERVED",
+      "NO_CONTENT_LOSS"
+    ]
+  },
+  "batch_authority": {
+    "total_child_routes": 24,
+    "accepted_child_routes": 4,
+    "remaining_child_pages": 20,
+    "auxiliary_equation_surface_already_accepted": "/laws/industrial-posture/",
+    "all_24_child_pages_final_standard": true,
+    "surviving_public_back_pages": "AUTHORIZED_PER_FROZEN_COMPLETENESS_AMENDMENT",
+    "canonical_record_presentations": 48,
+    "compatibility_wrappers": "AUTHORIZED_PER_FROZEN_DISPOSITION",
+    "collapsed_audit_and_custody_layers": "REQUIRED",
+    "shared_engine_reuse": "MANDATORY",
+    "page_specific_visual_logic": "MANDATORY",
+    "independent_page_forks": "PROHIBITED_UNLESS_NAMED_COMPATIBILITY_EXCEPTION"
+  },
+  "preserved_boundaries": {
+    "main_laws_compass_presentation": "PRESERVE",
+    "compass_runtime_mutation": false,
+    "frontier_product_mutation": false,
+    "route_deletion_rename_or_normalization": false,
+    "canonical_record_owner_mutation": false,
+    "equation_identity_mutation": false,
+    "evidence_status_upgrade": false,
+    "claim_ceiling_upgrade": false,
+    "complete_frontier_study_duplication": false
+  },
+  "implementation_sequence": [
+    "SHARED_COLLAPSIBLE_HEADER_CORRECTION",
+    "REVERIFY_ACCEPTED_FIVE_PAGE_COHORT",
+    "MIGRATE_REMAINING_20_CHILD_PAGES_BY_FROZEN_NARRATIVE_ROLE",
+    "RENEW_OR_WRAP_SURVIVING_PUBLIC_BACK_PAGES",
+    "VERIFY_48_CANONICAL_RECORD_PRESENTATIONS_AND_CUSTODY",
+    "EXECUTE_DESKTOP_TABLET_PHONE_AND_STATIC_MATRIX",
+    "PRESENT_INTEGRATED_LIVE_CHAMBER_FOR_FINAL_USER_DIFFERENTIAL"
+  ],
+  "merge_boundary": {
+    "current_successor_merge_authority": false,
+    "engineering_and_browser_pass_required": true,
+    "live_user_differential_required_before_final_cp6_closure": true
+  }
+}

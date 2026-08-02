@@ -82,6 +82,24 @@ jobs:
           print('Generated presentation contract: PASS')
           PY
 
+      - name: Normalize generated whitespace
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          receipt_path = Path('laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json')
+          receipt = json.loads(receipt_path.read_text(encoding='utf-8'))
+          for raw_path in receipt['product_files_written']:
+              path = Path(raw_path)
+              text = path.read_text(encoding='utf-8')
+              normalized = '\n'.join(line.rstrip() for line in text.splitlines()) + '\n'
+              path.write_text(normalized, encoding='utf-8')
+          print('Generated whitespace normalization: PASS')
+          PY
+
       - name: Check HTML and whitespace integrity
         shell: bash
         run: |

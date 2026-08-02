@@ -27,7 +27,7 @@ permissions:
 
 concurrency:
   group: laws-cp6-osf-derivative-methods-${{ github.event.pull_request.head.ref || github.ref_name }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-and-verify:
@@ -75,6 +75,11 @@ jobs:
       - name: Build derivative-method candidate
         run: node tools/laws-cp6-osf-derivative-methods-transform.mjs
 
+      - name: Enforce exact six-page product scope
+        run: |
+          git checkout -- laws/index.html
+          test -z "$(git diff --name-only -- laws/index.html)"
+
       - name: Install browser verifier
         run: |
           npm install --no-save --no-package-lock playwright@1.54.2
@@ -94,7 +99,6 @@ jobs:
       - name: Commit exact verified candidate
         run: |
           git add \
-            laws/index.html \
             laws/derivative-methods.css \
             laws/test/admission-and-baseline/index.html \
             laws/test/forward-construction/index.html \

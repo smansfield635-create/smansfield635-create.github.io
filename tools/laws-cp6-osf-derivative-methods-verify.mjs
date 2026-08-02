@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, spawn } from 'node:child_process';
+import { get as httpGet } from 'node:http';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from 'playwright';
 
@@ -137,15 +138,42 @@ const server = spawn('python3', ['-m', 'http.server', '4173', '--directory', ROO
 let serverError = '';
 server.stderr.on('data', (chunk) => { serverError += chunk.toString(); });
 
+function probeServer(url) {
+  return new Promise((resolve) => {
+    const request = httpGet(url, { headers: { Connection: 'close' } }, (response) => {
+      const statusCode = response.statusCode ?? 0;
+      response.resume();
+      response.once('end', () => resolve(statusCode >= 200 && statusCode < 400));
+      response.once('error', () => resolve(false));
+    });
+    request.setTimeout(1000, () => request.destroy(new Error('LOCAL_SERVER_PROBE_TIMEOUT')));
+    request.once('error', () => resolve(false));
+  });
+}
+
 async function waitForServer() {
   for (let i = 0; i < 40; i += 1) {
-    try {
-      const response = await fetch('http://127.0.0.1:4173/laws/');
-      if (response.ok) return;
-    } catch {}
+    if (await probeServer('http://127.0.0.1:4173/laws/')) return;
     await delay(250);
   }
   throw new Error(`LOCAL_SERVER_NOT_READY:${serverError}`);
+}
+
+async function stopServer() {
+  if (server.exitCode !== null) return;
+  let exited = false;
+  const exitPromise = new Promise((resolve) => {
+    server.once('exit', () => {
+      exited = true;
+      resolve();
+    });
+  });
+  server.kill('SIGTERM');
+  await Promise.race([exitPromise, delay(2000)]);
+  if (!exited && server.exitCode === null) {
+    server.kill('SIGKILL');
+    await Promise.race([exitPromise, delay(1000)]);
+  }
 }
 
 const profiles = [
@@ -238,7 +266,7 @@ try {
   await staticContext.close();
 } finally {
   if (browser) await browser.close();
-  server.kill('SIGTERM');
+  await stopServer();
 }
 
 fs.writeFileSync(path.join(OUT, 'browser.json'), `${JSON.stringify(browserReport, null, 2)}\n`, 'utf8');

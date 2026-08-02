@@ -1,0 +1,91 @@
+name: H-Earth C2-R1 MC5 Exact-Head Verification
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-c2-r1-mc5-exact-head-verification.yml'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-c2-r1-mc5-exact-head-verification
+  cancel-in-progress: true
+
+env:
+  TARGET_PR: '484'
+  TARGET_BRANCH: agent/h-earth-c2-r1-material-only-binding-implementation-001
+  TARGET_HEAD: 44019e27c3d52c59cc59bba7c833b6317d014273
+  TARGET_PACKAGE: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E
+  RUNTIME_PATH_1: showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+  RUNTIME_BLOB_1: 4b1d9e685711478a6d1a314031ac9448c49f78c9
+  RUNTIME_PATH_2: showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+  RUNTIME_BLOB_2: 2b8103b182cfb5fcee84c94afaecd2a1cf329a7f
+
+jobs:
+  verify-pr-484-exact-head:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout installed control plane
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify control-plane loader and registry admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          node --input-type=module <<'NODE'
+          import load from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const result = load();
+          if (result.identityVerified !== true) throw new Error('REGISTRY_IDENTITY_NOT_VERIFIED');
+          if (result.exactHeadRegistrationVerified !== true) {
+            throw new Error(`MC5_EXACT_HEAD_REGISTRATION_FAILED:${JSON.stringify(result.exactHeadChecks)}`);
+          }
+          console.log(JSON.stringify({
+            loaderId: result.loaderId,
+            exactHeadRegistrationVerified: result.exactHeadRegistrationVerified,
+            exactHeadChecks: result.exactHeadChecks
+          }, null, 2));
+          NODE
+
+      - name: Fetch frozen PR 484 candidate branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$TARGET_BRANCH:refs/remotes/origin/$TARGET_BRANCH"
+          test "$(git rev-parse "refs/remotes/origin/$TARGET_BRANCH")" = "$TARGET_HEAD"
+
+      - name: Verify exact runtime blob identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$TARGET_HEAD:$RUNTIME_PATH_1")" = "$RUNTIME_BLOB_1"
+          test "$(git rev-parse "$TARGET_HEAD:$RUNTIME_PATH_2")" = "$RUNTIME_BLOB_2"
+
+      - name: Verify exact package registration in both runtime files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show "$TARGET_HEAD:$RUNTIME_PATH_1" | grep -F "$TARGET_PACKAGE"
+          git show "$TARGET_HEAD:$RUNTIME_PATH_2" | grep -F "$TARGET_PACKAGE"
+
+      - name: Verify operation remains control-plane only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$TARGET_PR" = '484'
+          test "$TARGET_HEAD" = '44019e27c3d52c59cc59bba7c833b6317d014273'
+          test "$TARGET_BRANCH" = 'agent/h-earth-c2-r1-material-only-binding-implementation-001'
+          echo 'PR 484 mutation: prohibited'
+          echo 'Product mutation: prohibited'
+          echo 'Materialization rerun: prohibited'
+          echo 'Merge: prohibited'

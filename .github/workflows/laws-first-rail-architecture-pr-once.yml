@@ -2,9 +2,11 @@ name: Laws FIRST rail architecture PR once
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - 'tools/laws-first-rail-architecture-transform.cjs'
       - '.github/workflows/laws-first-rail-architecture-pr-once.yml'
+      - '.github/.laws-first-rail-trigger'
 
 permissions:
   contents: write
@@ -29,6 +31,7 @@ jobs:
           git rm tools/laws-first-rail-architecture-transform.cjs
           git rm .github/workflows/laws-first-rail-architecture-pr-once.yml
           git rm -f .github/workflows/laws-first-rail-architecture-once.yml
+          git rm -f .github/.laws-first-rail-trigger
           git add laws/index.html laws/index.experience.js laws/index.experience.polish.css \
             scripts/verify-laws-first-rail-architecture.mjs \
             .github/workflows/laws-first-rail-architecture-verification.yml \

@@ -1,0 +1,17 @@
+{
+  "all_manifest_entries_match": true,
+  "custody_state": "BYTE_VERIFIED_EXTERNAL_INSTRUMENT_DEPENDENCY",
+  "drive_file_id": "14WDLwcbHbc32sKoqWrmTonqbfs6EHOj-",
+  "expected_zip_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87",
+  "internal_manifest_sha256": "fd4de96ec3c2827ca54aac3cf1928ff90eb6e79b3dc3d3aaadb2a80c2780e0c2",
+  "manifest_entry_count": 10,
+  "observed_size_bytes": 38893,
+  "observed_zip_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87",
+  "receipt_id": "IMI_BYTE_CUSTODY_RECEIPT_v1",
+  "receipt_sha256": "72f28edbdda57a7b8ee116738ecf99337983d1281e04b1cac69896a846240d2f",
+  "source": "GOOGLE_DRIVE_PRIVATE_FROZEN_PACKAGE",
+  "unmanifested_payload_files": [],
+  "verified_at": "2026-08-02T19:38:54Z",
+  "verified_by": "OPENAI_ASSISTANT_CONTROLLED_BUILD_WORKSPACE",
+  "zip_hash_match": true
+}

@@ -1,0 +1,39 @@
+name: Laws FIRST rail architecture PR once
+
+on:
+  pull_request:
+    paths:
+      - 'tools/laws-first-rail-architecture-transform.cjs'
+      - '.github/workflows/laws-first-rail-architecture-pr-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-first-indicator-cache-bust-001
+          fetch-depth: 0
+
+      - name: Apply full-file architectural correction
+        run: node tools/laws-first-rail-architecture-transform.cjs
+
+      - name: Remove temporary installers and commit durable files
+        shell: bash
+        run: |
+          git rm tools/laws-first-rail-architecture-transform.cjs
+          git rm .github/workflows/laws-first-rail-architecture-pr-once.yml
+          git rm -f .github/workflows/laws-first-rail-architecture-once.yml
+          git add laws/index.html laws/index.experience.js laws/index.experience.polish.css \
+            scripts/verify-laws-first-rail-architecture.mjs \
+            .github/workflows/laws-first-rail-architecture-verification.yml \
+            laws/control-plane/renewal/laws-first-persistent-rail-and-tablet-reflow-v2.json
+          git config user.name "laws-rail-architecture-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "Restore persistent FIRST rail and tablet hero reflow"
+          git push origin HEAD:agent/laws-first-indicator-cache-bust-001
